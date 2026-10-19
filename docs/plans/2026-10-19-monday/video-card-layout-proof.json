@@ -1,0 +1,210 @@
+[
+  {
+    "id": "google",
+    "shape": "16x9",
+    "heading": "Google's Gemini launch price ends",
+    "question": "What changes, and when?",
+    "layout": "fits",
+    "source_note": "Google launch pricing \u2022 public rates \u2022 as discussed 19 Oct 2026"
+  },
+  {
+    "id": "rivals",
+    "shape": "16x9",
+    "heading": "Google, OpenAI and Anthropic keep changing prices",
+    "question": "How do the three offers differ?",
+    "layout": "fits",
+    "source_note": "Provider announcements \u2022 dates and conditions matter"
+  },
+  {
+    "id": "same",
+    "shape": "16x9",
+    "heading": "Google, OpenAI and Anthropic keep changing prices",
+    "question": "Where have their top-model prices landed?",
+    "layout": "fits",
+    "source_note": "US dollars \u2022 selected models in this story \u2022 not every product"
+  },
+  {
+    "id": "lockin",
+    "shape": "16x9",
+    "heading": "Why a cheap AI tool can be costly to leave",
+    "question": "Why can switching become expensive?",
+    "layout": "fits",
+    "source_note": "Commercial explanation \u2022 Krish\u2019s assessment"
+  },
+  {
+    "id": "reuse",
+    "shape": "16x9",
+    "heading": "AI discounts can change too",
+    "question": "What does the AI reuse?",
+    "layout": "fits",
+    "source_note": "Google context caching \u2022 qualifying repeated input"
+  },
+  {
+    "id": "bill",
+    "shape": "16x9",
+    "heading": "AI discounts can change too",
+    "question": "Does the discount protect the whole bill?",
+    "layout": "fits",
+    "source_note": "Worked example from the article \u2022 not a company invoice"
+  },
+  {
+    "id": "jobs",
+    "shape": "16x9",
+    "heading": "What does each completed AI task cost?",
+    "question": "How do you compare cheaper AI properly?",
+    "layout": "fits",
+    "source_note": "Decision rule \u2022 check actual work, not just the token price"
+  },
+  {
+    "id": "rules",
+    "shape": "16x9",
+    "heading": "Three rules for your AI budget",
+    "question": "What holds when the next offer changes?",
+    "layout": "fits",
+    "source_note": "Krish\u2019s three rules \u2022 for the person who owns the AI budget"
+  },
+  {
+    "id": "budget",
+    "shape": "16x9",
+    "heading": "Budget at the full price",
+    "question": "What number belongs in the budget?",
+    "layout": "fits",
+    "source_note": "Rule 01 \u2022 budgeting judgment"
+  },
+  {
+    "id": "contract",
+    "shape": "16x9",
+    "heading": "Agree a price and an end date",
+    "question": "What needs to be agreed in writing?",
+    "layout": "fits",
+    "source_note": "Rule 02 \u2022 check your own contract"
+  },
+  {
+    "id": "switch",
+    "shape": "16x9",
+    "heading": "Keep the freedom to switch",
+    "question": "What makes another AI a real option?",
+    "layout": "fits",
+    "source_note": "Rule 03 \u2022 Krish\u2019s practical recommendation"
+  },
+  {
+    "id": "prediction",
+    "shape": "16x9",
+    "heading": "My AI price prediction for the end of 2026",
+    "question": "What is the specific call?",
+    "layout": "fits",
+    "source_note": "Prediction \u2022 personal judgment, not a provider commitment"
+  },
+  {
+    "id": "questions",
+    "shape": "16x9",
+    "heading": "Questions for whoever owns your AI budget",
+    "question": "What should you ask next?",
+    "layout": "fits",
+    "source_note": "Monday\u2019s action \u2022 from the recorded long cut"
+  },
+  {
+    "id": "google",
+    "shape": "9x16",
+    "heading": "Google's Gemini launch price ends",
+    "question": "What changes, and when?",
+    "layout": "fits",
+    "source_note": "Google launch pricing \u2022 public rates \u2022 as discussed 19 Oct 2026"
+  },
+  {
+    "id": "rivals",
+    "shape": "9x16",
+    "heading": "Google, OpenAI and Anthropic keep changing prices",
+    "question": "How do the three offers differ?",
+    "layout": "fits",
+    "source_note": "Provider announcements \u2022 dates and conditions matter"
+  },
+  {
+    "id": "same",
+    "shape": "9x16",
+    "heading": "Google, OpenAI and Anthropic keep changing prices",
+    "question": "Where have their top-model prices landed?",
+    "layout": "fits",
+    "source_note": "US dollars \u2022 selected models in this story \u2022 not every product"
+  },
+  {
+    "id": "lockin",
+    "shape": "9x16",
+    "heading": "Why a cheap AI tool can be costly to leave",
+    "question": "Why can switching become expensive?",
+    "layout": "fits",
+    "source_note": "Commercial explanation \u2022 Krish\u2019s assessment"
+  },
+  {
+    "id": "reuse",
+    "shape": "9x16",
+    "heading": "AI discounts can change too",
+    "question": "What does the AI reuse?",
+    "layout": "fits",
+    "source_note": "Google context caching \u2022 qualifying repeated input"
+  },
+  {
+    "id": "bill",
+    "shape": "9x16",
+    "heading": "AI discounts can change too",
+    "question": "Does the discount protect the whole bill?",
+    "layout": "fits",
+    "source_note": "Worked example from the article \u2022 not a company invoice"
+  },
+  {
+    "id": "jobs",
+    "shape": "9x16",
+    "heading": "What does each completed AI task cost?",
+    "question": "How do you compare cheaper AI properly?",
+    "layout": "fits",
+    "source_note": "Decision rule \u2022 check actual work, not just the token price"
+  },
+  {
+    "id": "rules",
+    "shape": "9x16",
+    "heading": "Three rules for your AI budget",
+    "question": "What holds when the next offer changes?",
+    "layout": "fits",
+    "source_note": "Krish\u2019s three rules \u2022 for the person who owns the AI budget"
+  },
+  {
+    "id": "budget",
+    "shape": "9x16",
+    "heading": "Budget at the full price",
+    "question": "What number belongs in the budget?",
+    "layout": "fits",
+    "source_note": "Rule 01 \u2022 budgeting judgment"
+  },
+  {
+    "id": "contract",
+    "shape": "9x16",
+    "heading": "Agree a price and an end date",
+    "question": "What needs to be agreed in writing?",
+    "layout": "fits",
+    "source_note": "Rule 02 \u2022 check your own contract"
+  },
+  {
+    "id": "switch",
+    "shape": "9x16",
+    "heading": "Keep the freedom to switch",
+    "question": "What makes another AI a real option?",
+    "layout": "fits",
+    "source_note": "Rule 03 \u2022 Krish\u2019s practical recommendation"
+  },
+  {
+    "id": "prediction",
+    "shape": "9x16",
+    "heading": "My AI price prediction for the end of 2026",
+    "question": "What is the specific call?",
+    "layout": "fits",
+    "source_note": "Prediction \u2022 personal judgment, not a provider commitment"
+  },
+  {
+    "id": "questions",
+    "shape": "9x16",
+    "heading": "Questions for whoever owns your AI budget",
+    "question": "What should you ask next?",
+    "layout": "fits",
+    "source_note": "Monday\u2019s action \u2022 from the recorded long cut"
+  }
+]

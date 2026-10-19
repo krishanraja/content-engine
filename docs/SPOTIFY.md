@@ -17,13 +17,13 @@ through it can't earn.
 
 ## What an episode is
 
-1. **Now:** the 16:9 long cut (about 3 minutes) as a video episode, with the
+1. **Now:** the 16:9 long cut (about 5 minutes) as a video episode, with the
    90-second tall cut as its Spotify clip. The four long cuts already made
    (5, 7, 12 and 14 October) go up first, so the show opens with four
    episodes, past Spotify's three-episode bar.
 2. **From 16 October: the week's deep cut** (house rule DEEP_CUT,
    `config/deep-cuts.json`). One piece a week, picked by its breakout score,
-   records 8 to 12 minutes in place of its 3-minute cut. That deep cut is
+   records 8 to 12 minutes in place of its 5-minute cut. That deep cut is
    the week's Spotify video episode and the YouTube long-form video. The
    first is Friday 16 October. The other pieces' long cuts can still go up
    as shorter episodes. The audio edition below is the same script.

@@ -6,7 +6,7 @@ cost outlays." One six-day session read 1,086M tokens because every step re-read
 (docs/COST_AUDIT_2026-10-18.md). A rule in a document can be skipped; this hook cannot. Exit 2 blocks a tool call
 and tells the session why. Wired in .claude/settings.json.
 
-G1  context nudge: past 200k tokens of context each prompt is told to write its handover and start a fresh session.
+G1  context nudge: past 500k tokens of context each prompt is told to write its handover and start a fresh session.
     It only advises; nothing is refused for the size of the context.
 G5  no full board in the chat: an `Artifact read` of a week's board link (config/boards.json) is refused; the
     builder reads the saved copy (`week_board.py --previous`).
@@ -22,7 +22,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-WARN = 200_000
+WARN = 500_000
 TAIL_BYTES = 4_000_000
 
 # Database tools are never refused, whatever any rule below says (Krish, 2026-10-18).

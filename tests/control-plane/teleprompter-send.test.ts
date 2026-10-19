@@ -60,7 +60,7 @@ describe('config/teleprompter.json holds Krish\'s rulings, verbatim', () => {
     expect([...cfg.update_fields].sort()).toEqual(['duration', 'text'])
     expect(cfg.create_fields).not.toContain('fontSize')
     expect(cfg.folder_examples).toEqual([NAME, 'Fri 16 Oct mind.the.gap - Why so many AIs'])
-    expect(cfg.title_examples).toEqual(['Mon 12 Oct - 3-minute - Who gets paid for AI songs', 'Fri 16 Oct - 90-second - Why so many AIs'])
+    expect(cfg.title_examples).toEqual(['Mon 12 Oct - 5-minute - Who gets paid for AI songs', 'Fri 16 Oct - 90-second - Why so many AIs'])
     expect(cfg.words_per_minute).toBe(150)
   })
 })
@@ -80,7 +80,7 @@ print(json.dumps([making.teleprompter_patch('long', error='HTTP 503', previous=p
     const { patch, problems } = parseMakingPatch({ ...sent, by: 'Claude Code' }, '2026-10-12T16:00:00Z')
     expect(problems).toEqual([])
     expect(patch.teleprompter).toEqual(sent.teleprompter)
-    expect(patch.teleprompter!.cuts.long!.title).toBe('Mon 12 Oct - 3-minute - Who gets paid for AI songs')
+    expect(patch.teleprompter!.cuts.long!.title).toBe('Mon 12 Oct - 5-minute - Who gets paid for AI songs')
   })
 
   it('a failed send, on its script, in its folder, or alone: accepted as written', () => {

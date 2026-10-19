@@ -116,8 +116,28 @@ export function exclamationMarks(body: string): string[] {
   return String(body || '').replace(/"[^"\n]*"|“[^”\n]*”/g, '').match(/[A-Za-z0-9)\]'’]!/g) || []
 }
 
-/** Where a confidence starts to read as a clear stance (Krish, 2026-09-26). */
-export const CLEAR_STANCE_AT = 70
+/** Where a confidence starts to read as a clear stance. Krish, 2026-09-26, set
+ *  it at 70; on 2026-10-19 he raised it and made it hold the piece: "I'm done
+ *  with sitting on the fence and putting predictions a year away: 55%. There's
+ *  no point in that." */
+export const CLEAR_STANCE_AT = 80
+
+/** The furthest a prediction's date may sit from the day it is checked, in days
+ *  (about three months; Krish, 2026-10-19, same words). */
+export const CALL_HORIZON_DAYS = 92
+
+/** Whether the call's date falls inside the horizon: after today, and no more
+ *  than CALL_HORIZON_DAYS away. Null when the piece has no readable call. */
+export function callHorizon(body: string, now: Date = new Date()): { ok: boolean; detail: string } | null {
+  const reading = readPieceCall(String(body || ''))
+  if ('reason' in reading) return null
+  const due = new Date(`${reading.call.due}T00:00:00Z`)
+  const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()))
+  const days = Math.round((due.getTime() - today.getTime()) / 86_400_000)
+  if (days < 1) return { ok: false, detail: `The prediction's date, ${reading.call.due}, has already passed. Name an event still to come.` }
+  if (days > CALL_HORIZON_DAYS) return { ok: false, detail: `The prediction is due ${reading.call.due}, ${days} days away. Name what you believe happens within about three months (${CALL_HORIZON_DAYS} days at most), not a year away.` }
+  return { ok: true, detail: `Due ${reading.call.due}, ${days} days away.` }
+}
 
 /** The confidence in the prediction, as a number, or null when unset. Reads
  *  "How sure we are: 75%" and piece 1's "Confidence: 70%", with the same
@@ -198,7 +218,7 @@ export function bareScores(body: string): Array<{ number: string; sentence: stri
 
 /** Every mechanical check a piece must pass before it can be approved or
  *  published. `factGate` is the fact gate's own verdict for this exact text. */
-export function publishChecks(body: string, factGate: { ok: boolean; reason: string | null }): Check[] {
+export function publishChecks(body: string, factGate: { ok: boolean; reason: string | null }, now: Date = new Date()): Check[] {
   const text = String(body || '')
   const checks: Check[] = []
   checks.push({ id: 'FACTS', name: 'Every fact checked twice', blocking: true, ok: factGate.ok, detail: factGate.ok ? 'This exact version passed the fact check.' : (factGate.reason || 'The facts have not passed yet.') })
@@ -229,18 +249,19 @@ export function publishChecks(body: string, factGate: { ok: boolean; reason: str
   })
   const call = predictionCheck(text)
   checks.push({ id: 'CALL', name: 'A dated prediction with a confidence', blocking: true, ok: call.ok, detail: call.detail })
-  // A warning, never a block: the number is Krish's, and he may choose a
-  // middling one on purpose. 70% is where "clear" starts in this check, set
-  // from his own pair of examples (60% fence-sitting, 75% clear).
+  const horizon = callHorizon(text, now)
+  checks.push({ id: 'CALL_HORIZON', name: 'A prediction due within about three months', blocking: true, ok: horizon?.ok ?? false, detail: horizon?.detail ?? 'No readable prediction date yet.' })
+  // A block since 2026-10-19 (Krish: "I'm done with sitting on the fence"):
+  // the call is what we believe will happen, backed at 80% or more.
   // Green only on a number it has read. A confidence it cannot read is not a
   // clear stance, whatever CALL makes of the section.
   const sure = confidenceOf(text)
   checks.push({
-    id: 'CLEAR_STANCE', name: 'Take a clear stance', blocking: false,
+    id: 'CLEAR_STANCE', name: 'Take a clear stance', blocking: true,
     ok: sure !== null && sure >= CLEAR_STANCE_AT,
     detail: sure === null
       ? (call.ok
-        ? 'The prediction has a percentage this check cannot read as its confidence. Write it as "How sure we are: 75%".'
+        ? 'The prediction has a percentage this check cannot read as its confidence. Write it as "How sure we are: 85%".'
         : 'No confidence set yet.')
       : sure >= CLEAR_STANCE_AT ? `${sure}% is a clear stance.`
       : `${sure}% reads as sitting on the fence. Back the outcome we believe with a clearer number.`,

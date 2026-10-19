@@ -63,17 +63,18 @@ def steps(p):
 
     Krish, 2026-10-11: "I always want a 3-minute video and a 90-second
     version. I always want to repost to YouTube and then Shorts, TikTok, and
-    Instagram." Those five come first, every time. LinkedIn and Spotify follow.
+    Instagram." The long video became 5 minutes on 2026-10-19 (Krish: "let's
+    make the 3-minute scripts into 5-minute scripts and videos"). Those five come first, every time. LinkedIn and Spotify follow.
     WhatsApp and Substack Notes were dropped on 2026-10-14 (Krish: "I don't think
     I need Substack notes or WhatsApp to be honest, right now")."""
     f = p.get('files') or {}
-    # The long cut is the 3-minute video, or the week's deep cut (house rule DEEP_CUT). Friday 16 Oct's publish
+    # The long cut is the 5-minute video (3-minute until 2026-10-19), or the week's deep cut (house rule DEEP_CUT). Friday 16 Oct's publish
     # page said "the 3-minute video" for a 14-minute deep cut that was not made yet (Krish, 18 Oct: "not
     # downloading or linking the right assets"), so the piece's words name it, and say when it is not ready.
-    long_name = p.get('long_name') or '3-minute video'
+    long_name = p.get('long_name') or '5-minute video'
     waiting = p.get('long_waiting')
     wait = [f'Not ready yet: {waiting}. Everything else in this step is ready.'] if waiting else []
-    long_video = f.get('long_video') or '3 Video/ the 3-minute wide (16:9) video'
+    long_video = f.get('long_video') or '3 Video/ the 5-minute wide (16:9) video'
     short_video = f.get('short_video') or '3 Video/ the 90-second tall (9:16) video'
     cover = f.get('cover') or '2 Covers and images/substack-cover-1200x630.png'
     wide_thumb = f.get('wide_thumbnail') or '3 Video/ the wide (16:9) thumbnail'
@@ -296,7 +297,7 @@ def self_test():
     named = dict(sample, files={'wide_thumbnail': '3 Video/W - wide 16x9 - thumbnail.jpg'})
     by_where = {x['where']: x for x in steps(named)}
     vertical = '2 Covers and images/vertical-cover-1080x1920-shorts-tiktok-reels.png'
-    for where, name in (('Substack', '3 Video/W - wide 16x9 - thumbnail.jpg'), ('YouTube (the 3-minute video)', '3 Video/W - wide 16x9 - thumbnail.jpg'),
+    for where, name in (('Substack', '3 Video/W - wide 16x9 - thumbnail.jpg'), ('YouTube (the 5-minute video)', '3 Video/W - wide 16x9 - thumbnail.jpg'),
                         ('YouTube Shorts', vertical), ('TikTok', vertical), ('Instagram Reels', vertical),
                         ('Instagram Reels', '2 Covers and images/square-1080x1080.png'), ('LinkedIn', '2 Covers and images/share-card-1200x675.png')):
         step = by_where[where]

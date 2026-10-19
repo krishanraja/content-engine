@@ -1,5 +1,5 @@
 // Video script formats, 15 seconds to 20 minutes. Every piece uses two of
-// them: 3min (the long cut) and 90s (the short cut), house rule TWO_CUTS.
+// them: 5min (the long cut; 3min until 2026-10-19) and 90s (the short cut), house rule TWO_CUTS.
 //
 // The engine could already produce a "YouTube script" — one length, roughly
 // five to nine minutes, prose in a spoken register with the beats marked. That
@@ -28,8 +28,8 @@ export interface VideoFormat {
 
 /** The most spoken words a script of this format may carry: the ceiling the
  *  writer is told and the line above which it is asked again. For the two
- *  cuts (TWO_CUTS) it is 495 for 3min and 220 for 90s, both inside the
- *  bounds scripts/post-pack/story_check.py holds (405 to 495, 160 to 225). */
+ *  cuts (TWO_CUTS) it is 825 for 5min and 220 for 90s, both inside the
+ *  bounds scripts/post-pack/story_check.py holds (675 to 825, 160 to 225). */
 export function wordCeiling(f: Pick<VideoFormat, 'words'>): number {
   return Math.round(f.words * 1.1)
 }
@@ -79,7 +79,7 @@ export const VIDEO_FORMATS: VideoFormat[] = [
     ].join(' '),
   },
   {
-    id: '3min', label: '3 minutes', seconds: 180, words: 450,
+    id: '5min', label: '5 minutes', seconds: 300, words: 750,
     shape: [
       'Hook (one plain question the whole script answers), then three beats, then verdict, then a short spoken outro.',
       'Each beat makes ONE point and carries its own evidence. A beat that restates the one above it is cut.',
@@ -173,13 +173,15 @@ export interface VideoBeat { t: string; say: string; shot: string }
 // .agents/skills/make-piece/SKILL.md gives a Claude Code session's two
 // readers (tests/control-plane/house-rules.test.ts holds the two together).
 export const READ_BACK_READERS: readonly string[] = Object.freeze([
-  'You are a sharp but ordinary 12-year-old in the UK. You know what an app, AI, a company, a court and a deal are, but you have never studied law, business, money or technology. You hear this video script read aloud once (no rewinding). List every word, phrase or sentence that would genuinely lose you: one you would not understand, or that would make you stop following. Say "nothing" if nothing lost you. Then retell the whole video in three sentences.',
-  'Pretend you are 12 years old, in Year 7. You use apps and have heard of AI, but you know nothing about how lawsuits, contracts, companies or money work. Someone reads you this video script out loud, once. Which words or sentences would you not understand, or would make you lose the thread? List each one exactly as it is said, or say "nothing" if you followed all of it. Then tell the whole video back in three sentences.',
+  'You are a smart, busy manager at a 200-person company in the UK. You run a team and sign off budgets, but you are not technical and have never worked in tech or AI. You hear this video script read aloud once (no rewinding). List every word, phrase or sentence that would genuinely lose you: one you would not understand, that would make you stop following, or that talks down to you. Say "nothing" if nothing lost you. Then retell the whole video in three sentences.',
+  'Pretend you run the finance or operations team at a 200-person company. You use AI tools at work but know nothing about how they are built or priced. Someone reads you this video script out loud, once. Which words or sentences would you not understand, would make you lose the thread, or would feel like they talk down to you? List each one exactly as it is said, or say "nothing" if you followed all of it. Then tell the whole video back in three sentences.',
+  // C, the narrator (Krish, 2026-10-19, of a line he could not say on camera: "I felt like I couldn't explain what that meant.")
+  'You are the presenter. You will read this video script aloud to camera, to leaders of medium-sized companies, and a viewer may stop you after any sentence and ask "what does that mean, and why does it matter to me?" Go through it sentence by sentence. List every sentence you could not answer that for in one plain sentence of your own, exactly as it is written, with what is missing: the thing it refers to, the step it skips, or why it matters to the viewer. Say "nothing" if you could explain every sentence. Then retell the whole video in three sentences.',
 ])
 
 /** One reader's answer: what lost them (empty when nothing did), and their
  *  retelling in three sentences. */
-export interface ReadBackReader { reader: 'A' | 'B'; lost: string[]; retell: string; error?: string }
+export interface ReadBackReader { reader: 'A' | 'B' | 'C'; lost: string[]; retell: string; error?: string }
 /** The read-back of a script the engine wrote: passed only when both readers
  *  answered and nothing lost either. Whether each retelling matches the
  *  script's point is for the session that makes the piece, which reads them. */
@@ -189,7 +191,7 @@ export interface ReadBack { passed: boolean; readers: ReadBackReader[]; checked_
  *  script once, in parallel. A reader whose call fails is said, and the
  *  read-back does not pass. */
 export async function readBack(script: string, call: (o: { system: string; user: string }) => Promise<string>): Promise<ReadBack> {
-  const ask = async (prompt: string, reader: 'A' | 'B'): Promise<ReadBackReader> => {
+  const ask = async (prompt: string, reader: 'A' | 'B' | 'C'): Promise<ReadBackReader> => {
     try {
       const out = await call({
         system: `${prompt}\n\nAnswer as JSON only: {"lost": [each word, phrase or sentence exactly as it is said, or none], "retell": "your three sentences"}.`,
@@ -203,7 +205,7 @@ export async function readBack(script: string, call: (o: { system: string; user:
       return { reader, lost: [], retell: '', error: String((e as Error)?.message || e).slice(0, 200) }
     }
   }
-  const readers = await Promise.all([ask(READ_BACK_READERS[0]!, 'A'), ask(READ_BACK_READERS[1]!, 'B')])
+  const readers = await Promise.all([ask(READ_BACK_READERS[0]!, 'A'), ask(READ_BACK_READERS[1]!, 'B'), ask(READ_BACK_READERS[2]!, 'C')])
   return { passed: readers.every(r => !r.error && r.retell && r.lost.length === 0), readers, checked_at: new Date().toISOString() }
 }
 

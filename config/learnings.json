@@ -578,11 +578,156 @@
   {
    "id": "narrative-before-making",
    "on": "2026-10-19",
-   "krish": "I want to be crystal clear on the overarching end message and checkpoints of the piece so that we can't randomly go off track and take ages to iterate",
+   "krish": "I want to be crystal clear on the overarching end message and checkpoints of the piece so that we can't randomly go off track and take ages to iterate / [made standing, 19 Oct] \"Narrative-before-making rule: make it standing as a step in `make-piece`.\"",
    "why": "Pieces drift while being made and each correction costs a long iteration; he wants the end message and the checkpoints fixed before anything is made.",
-   "means": "Proposed, awaiting his word on making it standing: a piece starts from a one-page editorial narrative (the end message in one sentence, who it is for, what they do differently, named checkpoints each with a test, and what is out of scope), and every making session's prompt carries it. Trialled on 19 Oct (docs/handovers/2026-10-19-editorial-narrative.md).",
+   "means": "A piece starts from a one-page editorial narrative (the end message in one sentence, who it is for and what they do differently on Monday, four or five checkpoints each with a pass test and what he signs, the one picture, what is out of scope, the drift rule), signed by him in words before anything is made; any change to the end message or a checkpoint goes back to him first. Made standing by Krish on 19 Oct.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": ".agents/skills/make-piece/SKILL.md",
+     "contains": "| Narrative (before anything is made) |",
+     "how": "the first step of make-piece: no workroom, draft, script or visual until the narrative is signed"
+    },
+    {
+     "file": ".claude/skills/make-piece/SKILL.md",
+     "contains": "**Drift rule:** any change to the end message",
+     "how": "the Claude Code copy of the same step"
+    }
+   ]
+  },
+  {
+   "id": "workroom-on-brand",
+   "on": "2026-10-19",
+   "krish": "Are you just using this workroom as the iteration tool before we get this in to https://claude.ai/artifact/CDgS3JDULpzvRnxkHwLkVk? If so it needs to be on brand.",
+   "why": "The first workroom for Monday's piece used a palette and fonts of its own; what he iterates on should look like what ships, so his judgement of it carries onto the board.",
+   "means": "Every workroom (and any page he iterates a piece on before the week's publish board) uses the publish page's own tokens and fonts from its first version: cream, ink and mint, Anton uppercase headings, Archivo body, IBM Plex Mono labels.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": ".agents/skills/make-piece/SKILL.md",
+     "contains": "so it is on brand from its first version",
+     "how": "the make-piece Workroom step"
+    },
+    {
+     "file": ".claude/skills/make-piece/SKILL.md",
+     "contains": "so it is on brand from its first version",
+     "how": "the Claude Code copy"
+    }
+   ]
+  },
+  {
+   "id": "readers-are-mid-sized-firms",
+   "on": "2026-10-19",
+   "krish": "We need to stop referring to businesses as shops and talking about a mum and dad shop. My customers are medium sized enterprises. This script is 20% too \"Dumbed down\" / [19 Oct, to the proposal] \"agree on all 4\"",
+   "why": "Four rounds of 12-year-old read-backs pushed the 90-second script to a corner-shop example and over-explained words; his audience runs medium-sized companies and felt talked down to.",
+   "means": "Examples and framing are pitched at the leader of a medium-sized company (a finance team, a customer-service team, a contract with a supplier), never a shop or a family business. The two read-back readers are a smart, non-technical manager at a 200-person company, hearing it once, who also lists anything that talks down to them. Plain words and the reading gate stay.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": ".agents/skills/make-piece/SKILL.md",
+     "contains": "You are a smart, busy manager at a 200-person company",
+     "how": "read-back reader A"
+    },
+    {
+     "file": ".claude/skills/make-piece/SKILL.md",
+     "contains": "Pretend you run the finance or operations team at a 200-person company",
+     "how": "read-back reader B, the Claude Code copy"
+    },
+    {
+     "file": "apps/control-plane/api/_houseRules.ts",
+     "contains": "a smart, non-technical manager at a 200-person company hearing it once",
+     "how": "house rule R7"
+    }
+   ]
+  },
+  {
+   "id": "five-minute-long-cut",
+   "on": "2026-10-19",
+   "krish": "from here moving forward, let's make the 3-minute scripts into 5-minute scripts and videos. Scrap the 3-minute format in favor of the 5-minute format.",
+   "why": "The 3-minute cut could not carry the explanation and the business consequence together; he wants room for the substance.",
+   "means": "The long cut is a 5-minute video, 675 to 825 spoken words (house rule TWO_CUTS), for every piece from 19 Oct; the 90-second cut and the weekly deep cut are unchanged.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "scripts/post-pack/story_check.py",
+     "contains": "(675, 825, 'a 5-minute video')",
+     "how": "the script check refuses a long cut outside 675 to 825 words"
+    },
+    {
+     "file": "apps/control-plane/api/_houseRules.ts",
+     "contains": "A five-minute video and a ninety-second one",
+     "how": "house rule TWO_CUTS"
+    }
+   ]
+  },
+  {
+   "id": "big-ai-firms-short-term-offers",
+   "on": "2026-10-19",
+   "krish": "I think the point of this article is to get the message across that the Big AI firms (call it that) are always trying to tweak their short term offers given how cut throat their competitors are, and give business owners an idea of what actually is durable thinking amidst all this.",
+   "why": "A single-vendor price story leaves the reader with one fact that dates; what he wants them to keep is how to think about AI prices that keep moving.",
+   "means": "A follow.the.money piece about one firm's price puts it beside the other big AI firms' moves from their own pages, and ends on the durable rule a business owner can apply whatever the next offer is.",
    "status": "open",
    "encoded": []
+  },
+  {
+   "id": "near-term-backed-predictions",
+   "on": "2026-10-19",
+   "krish": "I changed the prediction to 95% by the end of this year, 2026 ... I'm done with sitting on the fence and putting predictions a year away: 55%. There's no point in that. Given how this article reads it's pretty obvious someone's going to shift their price again in the next month.",
+   "why": "House rule SHARP_PREDICTION told writers to avoid the obvious outcome and give a bolder call a lower number, so calls drifted to long shots a year out at 15 to 55%, which read as fence-sitting and help no reader decide anything.",
+   "means": "Every prediction is what we believe happens next, due within about three months (92 days) and backed at 80% or more. Both are blocking publish checks.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "apps/control-plane/api/_publishChecks.ts",
+     "contains": "export const CALL_HORIZON_DAYS = 92",
+     "how": "CALL_HORIZON blocks a call due more than 92 days out or already past"
+    },
+    {
+     "file": "apps/control-plane/api/_publishChecks.ts",
+     "contains": "export const CLEAR_STANCE_AT = 80",
+     "how": "CLEAR_STANCE now blocks below 80%"
+    },
+    {
+     "file": "apps/control-plane/api/_houseRules.ts",
+     "contains": "A near-term prediction we back, that a reader can check",
+     "how": "house rule SHARP_PREDICTION, read by the writers"
+    }
+   ]
+  },
+  {
+   "id": "boards-live-on-content-site",
+   "on": "2026-10-19",
+   "krish": "we are now retiring the Claude artefact permanently and we are working in content.krishraja.com for all published board updates ... Make sure the entire engine never ever Produces another artefact in the future and always pushes to that URL and merges to main automatically.",
+   "why": "Two Claude accounts, two artifact links that drift apart, comments that cannot be sent to Claude, and builds a session must republish by hand; one site he owns removes all of that.",
+   "means": "No session or tool publishes a Claude artifact again. Every board update (the week's board, a day's tab in draft, publish pages) goes to content.krishraja.com, and engine work merges to main automatically once its checks pass.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "scripts/hooks/artifact_gate.py",
+     "contains": "Claude artifacts are retired",
+     "how": "the PreToolUse hook refuses every Artifact publish and every ArtifactData write; reads pass"
+    },
+    {
+     "file": ".claude/settings.json",
+     "contains": "\"matcher\": \"Artifact|ArtifactData\"",
+     "how": "the hook is wired on both tools"
+    },
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "default='web'",
+     "how": "the board builds for content.krishraja.com unless told otherwise"
+    },
+    {
+     "file": ".agents/skills/make-piece/SKILL.md",
+     "contains": "Claude artifacts are retired for good",
+     "how": "make-piece, plan-week, produce-video and the week-board reference say no step makes one"
+    },
+    {
+     "file": "AGENTS.md",
+     "contains": "turn on auto-merge, so GitHub merges it to main once CI passes",
+     "how": "the standing rule every agent reads: verify, push, PR, auto-merge"
+    }
+   ]
   },
   {
    "id": "deep-cut-music-always-under",
@@ -648,6 +793,26 @@
      "file": "CLAUDE.md",
      "contains": "files he asks for are sent to him as files",
      "how": "rule read at the start of every Claude Code session"
+    }
+   ]
+  },
+  {
+   "id": "no-scheduled-board-updates",
+   "on": "2026-10-19",
+   "krish": "I am deleting the publish board Claude schedules from both accounts FYI, scrub them from everywhere. We are not ready for this yet",
+   "why": "The scheduled board-videos task ran on its own on both accounts while the board moved to content.krishraja.com; he wants board updates to come only from sessions he starts.",
+   "means": "No session creates or relies on a scheduled task that builds, updates or publishes a publish board, and no current document names one, until he says he is ready.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "AGENTS.md",
+     "contains": "No session creates a scheduled task (a routine, a trigger, a cron) that builds, updates or publishes a publish board",
+     "how": "the standing rule every agent reads"
+    },
+    {
+     "file": "WORKBENCH.md",
+     "contains": "No schedule puts the videos on the board",
+     "how": "the handover no longer points sessions at the deleted schedule"
     }
    ]
   }

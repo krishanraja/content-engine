@@ -11,9 +11,15 @@ Follow `docs/PUBLISH_BOARDS.md` before touching a weekly publish board. It owns
 current web addresses, all six collection reads, build/download/publication,
 making-record attribution and rollback. Check `config/boards.json.web_cutover`:
 while pending, source migration is unfinished; once active, use only the web
-board for new interactions. Any ArtifactData, ArtifactComments, or dual-account
-publish instructions below apply only before cutover or to explicit legacy
-artifact work. Never synchronize preserved Claude boards after active cutover.
+board for new interactions. Claude artifacts are retired for good (Krish,
+2026-10-19: "we are now retiring the Claude artefact permanently and we are
+working in content.krishraja.com for all published board updates"): no step
+makes or publishes one. The week's board, a day's tab in draft, the workroom and
+the publish page all go to content.krishraja.com (`week_board.py --target web`,
+then `board_web.py publish-web`), and `scripts/hooks/artifact_gate.py` refuses
+every Artifact publish and every ArtifactData write. Any Artifact, ArtifactData,
+ArtifactComments or dual-account step below is history: read an old artifact
+only to recover what it holds.
 
 Krish, 2026-10-11: "Every Sunday we're going to decide which of the three
 pieces are going to go out on Monday, Wednesday, and Friday. We're going to
@@ -22,7 +28,7 @@ leaving Wednesday and Friday as topic confirmed and waiting on me", and the
 only question he wants asked: "What are we writing about this week? Here are
 your ideas and options. Do you want to drop in any other ideas that we can
 flesh out?" Never ask him anything else on a Sunday: the standing answers are
-in `docs/CADENCE.md` (a 3-minute video and a 90-second cut, every piece; Substack
+in `docs/CADENCE.md` (a 5-minute video and a 90-second cut, every piece; Substack
 and YouTube, then Shorts, TikTok and Instagram).
 
 The week runs Monday to Friday. On Sunday it is the coming week.
@@ -142,7 +148,7 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    piece breaks a tie. Write the pick to `config/deep-cuts.json` under the
    week's Monday, with the scores and the reason, and say it in one line on
    the board. Krish can swap it. That piece records an 8 to 12 minute deep
-   cut instead of its 3-minute cut; every piece keeps its 90-second cut.
+   cut instead of its 5-minute cut; every piece keeps its 90-second cut.
 7. **Make the week's publish board**, last, once the options are written.
    Krish, 2026-10-12: "just give me one ... Publish Manager for the ...
    whole week with 3 tabs on it for Mon / Weds / Fri, which we need to get

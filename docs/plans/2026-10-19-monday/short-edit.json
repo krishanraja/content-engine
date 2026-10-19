@@ -1,0 +1,98 @@
+{
+  "name": "why-ai-prices-keep-changing-short",
+  "source": "../../../recordings/Mon 19 Oct - 90-second - Why AI prices keep changing.mp4",
+  "crop": [
+    1080,
+    1920,
+    0,
+    0
+  ],
+  "subject": "Why AI prices keep changing",
+  "date": "2026-10-19",
+  "piece_id": "5b5bfadc-a60c-4d0a-be8e-b2e9bf43d092",
+  "tiktok": true,
+  "intro": {
+    "16x9": "../story/intro-16x9.mp4",
+    "9x16": "../story/intro-9x16.mp4"
+  },
+  "music": "no-curves-instrumental",
+  "script": "short-script.txt",
+  "remove": [],
+  "replacements": [
+    [
+      "can sort of price rise",
+      "cancelled a price rise"
+    ],
+    [
+      "And thropics",
+      "Anthropic's"
+    ],
+    [
+      "And a thropic",
+      "Anthropic"
+    ],
+    [
+      "and anthropic",
+      "and Anthropic"
+    ],
+    [
+      "clawed AIs",
+      "Claude AIs"
+    ],
+    [
+      "Re -rival",
+      "Three rivals"
+    ],
+    [
+      "canceled",
+      "cancelled"
+    ]
+  ],
+  "endcard": {
+    "16x9": "../story/outro-16x9.mp4",
+    "9x16": "../story/outro-9x16.mp4"
+  },
+  "frame16": "frame-16x9.png",
+  "strap": false,
+  "cues": [
+    {
+      "id": "google",
+      "panel": "panels/google-{aspect}.png",
+      "start": "on 1st of December",
+      "end": "2 to 4"
+    },
+    {
+      "id": "rivals",
+      "panel": "panels/rivals-{aspect}.png",
+      "start": "OpenAI cut its best",
+      "end": "prices move this year"
+    },
+    {
+      "id": "rules",
+      "panel": "panels/rules-{aspect}.png",
+      "start": "three rules are going to hold",
+      "end": "freedom to switch"
+    }
+  ],
+  "kit": {
+    "made_by": "scripts/quick-edit/kit.py",
+    "post": "C:\\Users\\krish\\dev\\mindmake\\content-engine-monday-video\\docs\\plans\\2026-10-19-monday\\post.json",
+    "cut": "short",
+    "shape": "9x16",
+    "plan": "python scripts/quick-edit/make.py \"C:\\Users\\krish\\dev\\mindmake\\content-engine-monday-video\\.cache\\produce\\2026-10-19-5b5bfadc\\kit\\short.json\" --out <render folder> --only 9x16 --plan",
+    "note": "The cue words are the script's. Run --plan on the recording; where a cue is not found, put the words Krish said there. \"remove\" and \"replacements\" are for the stumbles and misheard names the plan shows."
+  },
+  "face": [
+    210,
+    920
+  ],
+  "voice": "repair",
+  "reframe": false,
+  "max_gap": 0.9,
+  "pad_before": 0.2,
+  "pad_after": 0.3,
+  "intro_override": "Krish, 2026-10-19: Approve set A and the listed treatment",
+  "music_seconds": 90,
+  "series": "follow_the_money",
+  "captions": true
+}

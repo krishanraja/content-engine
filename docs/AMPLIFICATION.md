@@ -24,7 +24,7 @@ rest of the work below (an article with a video dropped in gets none of it).
 own outro (house rule TWO_CUTS). Krish, 2026-10-11: "I always want a 3-minute
 video and a 90-second version. I always want to repost to YouTube and then
 Shorts, TikTok, and Instagram."
-- The long cut (wide, 16:9, about 3 minutes: 405 to 495 spoken words) lives on
+- The long cut (wide, 16:9, about 5 minutes: 675 to 825 spoken words; 3 minutes until Krish, 2026-10-19: "let's make the 3-minute scripts into 5-minute scripts and videos. Scrap the 3-minute format in favor of the 5-minute format.") lives on
   Substack and YouTube.
 - The short cut (tall, 9:16, at most 90 seconds: 160 to 225 spoken words) goes
   to YouTube Shorts, TikTok and Instagram Reels, every time; and to LinkedIn,
@@ -44,8 +44,8 @@ optional and never hold a piece back.
 
 | # | Channel | What goes up | Where the link goes |
 |---|---|---|---|
-| 1 | Substack | Video post: the 3-minute cut on top with the wide thumbnail, the article under it, the 3:2 cover as the post's cover image. Settings: YouTube upload on with the watermark off; Shorts and LinkedIn clips off | It is the link |
-| 2 | YouTube | Substack uploads the 3-minute cut as private. Swap in the engine's title and description, upload the wide thumbnail, make it public, pin a comment | The description's read line and the pinned comment |
+| 1 | Substack | Video post: the 5-minute cut on top with the wide thumbnail, the article under it, the 3:2 cover as the post's cover image. Settings: YouTube upload on with the watermark off; Shorts and LinkedIn clips off | It is the link |
+| 2 | YouTube | Substack uploads the 5-minute cut as private. Swap in the engine's title and description, upload the wide thumbnail, make it public, pin a comment | The description's read line and the pinned comment |
 | 3 | YouTube Shorts | The 90-second cut, with Related video set to the long one | Related video (links in Shorts are not clickable) |
 | 4 | TikTok | The 90-second cut, with the caption and the tall thumbnail as its cover | Said out loud in the video; makeyourmindup.ai in the profile |
 | 5 | Instagram Reels | The 90-second cut, with the caption and the tall thumbnail as its cover | Link in bio (makeyourmindup.ai) |

@@ -316,6 +316,18 @@ describe('the pure helpers', () => {
     })
   })
 
+  it('makingSteps: a fact check Krish signed through is done; one line unsigned keeps it failed', () => {
+    const claims = [
+      { sentence: 'A checked line.', verdict: 'verified_on_file' },
+      { sentence: 'Our own sum: $980.', verdict: 'unverified' },
+    ]
+    const signed = [{ sentence: 'Our own sum: $980.', said: 'the example is our own maths', at: 'x' }]
+    const step = (fc: any) => makingSteps({ state: 'drafting', meta: { fact_check: fc } }).find(s => s.key === 'draft')!.state
+    expect(step({ passed: false, blocking: 1, ran_at: 'x', claims, signed_off: signed })).toBe('done')
+    expect(step({ passed: false, blocking: 1, ran_at: 'x', claims })).toBe('failed')
+    expect(step({ passed: false, blocking: 1, unchecked: 1, ran_at: 'x', claims, signed_off: signed })).toBe('failed')
+  })
+
   it('takeCounts: no hash on the take, no hash on the check, or the same script', () => {
     const check = { passed: true, checked_at: 'x', problems: [], hashes: { long: SHA('a') } }
     expect(takeCounts({ cut: 'long' }, check)).toBe(true)

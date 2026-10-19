@@ -151,7 +151,7 @@ def deep_cut_piece(monday, path=DEEP_CUTS):
 STANDING = sum(1 for *_, s in STEPS if s)
 # A channel section of the day page, by its heading (publish_kit.steps "where"), and the step it ticks.
 SECTION_STEP = {
-    'Substack': 'substack', 'YouTube (the 3-minute video)': 'youtube', 'YouTube Shorts': 'shorts',
+    'Substack': 'substack', 'YouTube (the 5-minute video)': 'youtube', 'YouTube Shorts': 'shorts',
     'TikTok': 'tiktok', 'Instagram Reels': 'reels', 'LinkedIn': 'linkedin', 'Spotify': 'spotify',
 }
 # The two cuts (house rule TWO_CUTS): the cut, its tick, its name, how it is filmed.
@@ -1428,7 +1428,7 @@ def build(args, get=None):
     if previous is not None:
         keep_previous(previous, manifest['days'], unpick, monday, fresh)
     manifest['warnings'] = warnings + more
-    if getattr(args, 'target', 'artifact') == 'web':
+    if getattr(args, 'target', 'web') == 'web':
         from board_web import web_page
         page, manifest = web_page(page, manifest)
     return page, manifest
@@ -2002,7 +2002,7 @@ def parser():
     ap.add_argument('--json', action='store_true', help='with --show: as JSON')
     ap.add_argument('--out', default='week-board.html', help='the page; the manifest is written beside it as .json')
     ap.add_argument('--self-test', action='store_true')
-    ap.add_argument('--target', choices=['artifact', 'web'], default='artifact', help='runtime for the same board; artifact stays the default')
+    ap.add_argument('--target', choices=['artifact', 'web'], default='web', help='web (content.krishraja.com) is the default and the only one that is published; artifact builds a legacy copy for comparison only (Claude artifacts are retired, Krish 2026-10-19)')
     return ap
 
 

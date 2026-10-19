@@ -140,7 +140,7 @@
     {
      "file": "scripts/post-pack/making.py",
      "contains": "def drive_link_patch",
-     "how": "drive-link records it; the 13:25 routine runs it"
+     "how": "drive-link records it; a session runs it (the scheduled board-videos task was retired, Krish 2026-10-19)"
     }
    ]
   },
@@ -673,6 +673,44 @@
      "file": "scripts/post-pack/publish_kit.py",
      "contains": "long_waiting",
      "how": "the long cut is named by the piece (the deep cut, or the 3-minute video), and a step whose video is not made says so first"
+    }
+   ]
+  },
+  {
+   "id": "work-left-off-the-board",
+   "on": "2026-10-19",
+   "krish": "Why have you stopped working in https://claude.ai/artifact/CDgS3JDULpzvRnxkHwLkVk even though this is the third time I've asked you ? We have a protocol.",
+   "what": "He opened the session with \"Working in this board\", then asked for the editorial decisions \"before you go off and build the board\", then asked whether the workroom was only the iteration tool before the board. The session made a separate workroom artifact and kept the outline, draft and scripts there and in chat, and put nothing on Monday's tab until he asked a third time. make-piece put the week board only at the publish-page step, so nothing told a session to work the draft on the board.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": ".agents/skills/make-piece/SKILL.md",
+     "contains": "The board is where the piece is worked, from the first draft.",
+     "how": "a Before-anything step: the day goes on its tab in draft, with review boxes and the calls waiting on him, and is republished whenever the words change"
+    },
+    {
+     "file": ".claude/skills/make-piece/SKILL.md",
+     "contains": "The board is where the piece is worked, from the first draft.",
+     "how": "the Claude Code copy"
+    }
+   ]
+  },
+  {
+   "id": "script-line-he-could-not-narrate",
+   "on": "2026-10-19",
+   "krish": "I also found that the first reuse is really difficult to narrate. I felt like I couldn't explain what that meant. ... What does that even mean? How do we gate that for the next time?",
+   "what": "The 5-minute script explained a mechanism (Google charging less for a reread policy document) that passed the script check and two listener read-backs, because listeners only report what loses them. Nobody checked whether the presenter could explain each line if stopped, and narrative v1 had put how reuse works out of scope before v2 brought it back.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "apps/control-plane/api/_video.ts",
+     "contains": "You are the presenter. You will read this video script aloud to camera",
+     "how": "reader C, the narrator, runs on every script the engine writes; the read-back passes only when C can explain every sentence"
+    },
+    {
+     "file": ".agents/skills/make-piece/SKILL.md",
+     "contains": "Reader C, the narrator, word for word",
+     "how": "the Scripts step requires the narrator reader for every script a session sends"
     }
    ]
   },

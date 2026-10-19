@@ -1287,10 +1287,12 @@ The mechanical checks a piece must pass before it can be approved or
 - `function emDashes(body: string): string[]`
 - `function exclamationMarks(body: string): string[]`
 - `const CLEAR_STANCE_AT`
+- `const CALL_HORIZON_DAYS`
+- `function callHorizon(body: string, now: Date = new Date()): { ok: boolean; detail: string } | null`
 - `function confidenceOf(body: string): number | null`
 - `function predictionCheck(body: string): { ok: boolean; detail: string }`
 - `function bareScores(body: string): Array<{ number: string; sentence: string }>`
-- `function publishChecks(body: string, factGate: { ok: boolean; reason: string | null }): Check[]`
+- `function publishChecks(body: string, factGate: { ok: boolean; reason: string | null }, now: Date = new Date()): Check[]`
 - `function publishStatus(checks: Check[]): { ok: boolean; reason: string | null; failing: Check[] }`
 
 ### `apps/control-plane/api/_publishWatch.ts`

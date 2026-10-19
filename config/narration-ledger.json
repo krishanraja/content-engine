@@ -219,6 +219,72 @@
     "restart": 0.07,
     "contraction": 0.07
    }
+  },
+  {
+   "take": "long.words",
+   "cut": "long",
+   "date": "2026-10-19",
+   "piece": "5b5bfadc-a60c-4d0a-be8e-b2e9bf43d092",
+   "script_words": 812,
+   "said_words": 1014,
+   "said_more_pct": 24.9,
+   "own_words_pct": 41.7,
+   "script_kept_pct": 72.8,
+   "minutes": 5.89,
+   "words_a_minute": 172.3,
+   "words_a_minute_talking": 175.6,
+   "sentence_words_said": 11.7,
+   "sentence_words_script": 9.2,
+   "sentences_starting_with_a_joiner_pct": {
+    "said": 47.1,
+    "script": 31.8
+   },
+   "tags_a_minute": {
+    "rephrase": 7.82,
+    "number": 3.23,
+    "aside": 1.87,
+    "to the viewer": 1.36,
+    "filler": 0.85,
+    "intensifier": 0.85,
+    "hedge": 0.85,
+    "addition": 0.85,
+    "skip": 0.68,
+    "signpost": 0.51,
+    "restart": 0.34,
+    "dropped": 0.17,
+    "contraction": 0.17
+   }
+  },
+  {
+   "take": "short.words",
+   "cut": "short",
+   "date": "2026-10-19",
+   "piece": "5b5bfadc-a60c-4d0a-be8e-b2e9bf43d092",
+   "script_words": 198,
+   "said_words": 235,
+   "said_more_pct": 18.7,
+   "own_words_pct": 44.3,
+   "script_kept_pct": 66.2,
+   "minutes": 1.29,
+   "words_a_minute": 182.8,
+   "words_a_minute_talking": 184.8,
+   "sentence_words_said": 15.7,
+   "sentence_words_script": 9.0,
+   "sentences_starting_with_a_joiner_pct": {
+    "said": 60.0,
+    "script": 36.4
+   },
+   "tags_a_minute": {
+    "rephrase": 7.0,
+    "aside": 3.89,
+    "to the viewer": 3.11,
+    "number": 3.11,
+    "skip": 2.33,
+    "addition": 1.56,
+    "hedge": 1.56,
+    "filler": 1.56,
+    "signpost": 0.78
+   }
   }
  ]
 }

@@ -304,7 +304,7 @@ def show(piece_id, call=None):
 # Teleprompter: what teleprompter_send.py put in Krish's teleprompter.com account for each cut.
 TELEPROMPTER_ID = re.compile(r'^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$')  # the engine's rule
 MAX_NAME = 200  # Teleprompter's limit on a folder name and a script title
-CUT_NAME = {'long': '3-minute', 'short': '90-second'}
+CUT_NAME = {'long': '5-minute', 'short': '90-second'}
 
 
 def _tp_id(value, what):
@@ -376,7 +376,7 @@ def teleprompter_lines(record):
 
 
 def title_for(folder_name, cut):
-    """'Mon 12 Oct - 3-minute - Who gets paid for AI songs' from the folder
+    """'Mon 12 Oct - 5-minute - Who gets paid for AI songs' from the folder
     'Mon 12 Oct follow.the.money - Who gets paid for AI songs', or None."""
     hit = re.match(r'^([A-Z][a-z]{2} \d{1,2} [A-Z][a-z]{2}) \S+ - (.+)$', str(folder_name or '').strip())
     return f'{hit.group(1)} - {CUT_NAME[cut]} - {hit.group(2)}' if hit else None
@@ -533,7 +533,7 @@ def spine_gate(paths, piece_id, call):
 
 def spine_problem(piece_id, call):
     """The engine's judge on the body it holds now, or why it has not passed."""
-    status, text = call('GET', f'/api/content-ideas/{piece_id}/spine-check', None)
+    status, text = (call or _engine_call)('GET', f'/api/content-ideas/{piece_id}/spine-check', None)
     try:
         data = json.loads(text) if text else {}
     except ValueError:
@@ -1167,7 +1167,7 @@ def self_test():
                 check(f'{len(wrong)} scripts is refused', 'no error', 'error')
             except MakingError as e:
                 check(f'{len(wrong)} scripts is refused', 'long cut first' in str(e), True)
-        # The real story check, once: a two-line script is no 3-minute cut.
+        # The real story check, once: a two-line script is no 5-minute cut.
         real = scripts_patch([t / 'long.md', t / 'short.md'], warn=warned.append)['script_check']
         check('the real story check fails a script that is far too short', (real['passed'], any('long.md' in x for x in real['problems'])), (False, True))
 
@@ -1558,7 +1558,7 @@ def self_test():
           (bool(read_back_of(held, 'long')), read_back_of(held, 'short'),
            read_back_of({'script_check': {**read, 'hashes': {'long': 'c' * 64, 'short': 'b' * 64}}}, 'long')), (True, None, None))
     check('show: the read-back of each cut', read_back_lines(held),
-          ['Read back, 3-minute cut: nothing lost (2 readers, 2026-10-12T15:55:00Z)',
+          ['Read back, 5-minute cut: nothing lost (2 readers, 2026-10-12T15:55:00Z)',
            'Read back, 90-second cut: not yet for these words; two fresh readers hear it as a 12-year-old (make-piece, "The Scripts step"), '
            'then making.py PIECE read-back short'])
     with tempfile.TemporaryDirectory() as tmp:
@@ -1613,8 +1613,12 @@ def self_test():
     sent = teleprompter_patch('long', folder.lower(), script.lower(), 'a' * 64, folder_name=name, sent_at='2026-10-12T15:34:07Z', by='Claude Code')
     check('teleprompter: one cut, the ids in upper case, its title made from the folder\'s name', sent,
           {'teleprompter': {'folder_id': folder, 'folder_name': name, 'cuts': {'long': {
-              'script_id': script, 'title': 'Mon 12 Oct - 3-minute - Who gets paid for AI songs', 'script_sha256': 'a' * 64,
+              'script_id': script, 'title': 'Mon 12 Oct - 5-minute - Who gets paid for AI songs', 'script_sha256': 'a' * 64,
               'sent_at': '2026-10-12T15:34:07Z', 'by': 'Claude Code'}}}})
+    old = {'script_id': script, 'title': 'Mon 12 Oct - 3-minute - Who gets paid for AI songs', 'script_sha256': 'a' * 64, 'sent_at': '2026-10-12T15:34:07Z'}
+    check('teleprompter: a script already sent keeps its stored 3-minute title (never renamed to 5-minute)',
+          teleprompter_patch('long', folder, script, 'b' * 64, folder_name=name, previous=old, sent_at='2026-10-19T09:00:00Z')['teleprompter']['cuts']['long']['title'],
+          'Mon 12 Oct - 3-minute - Who gets paid for AI songs')
     good = dict(folder=folder, script=script, sha='a' * 64, title='T')
     for label, change, words in (
             ('a folder id that is not a uuid', {'folder': 'my folder'}, 'uppercase UUID'),
@@ -1655,10 +1659,10 @@ def self_test():
         'long': {**previous, 'script_sha256': 'c' * 64}, 'short': alone['cuts']['short']}}}), ['older', 'failed'])
     check('teleprompter: nothing to say before the scripts pass with hashes', teleprompter_state({'script_check': {'passed': False}}, 'long'), (None, None))
     check('show: each cut\'s place in Teleprompter', teleprompter_lines(held_tp),
-          ['Teleprompter, 3-minute cut: holds the current words (sent 2026-10-12T15:34:07Z), script Mon 12 Oct - 3-minute - Who gets paid for AI songs',
+          ['Teleprompter, 5-minute cut: holds the current words (sent 2026-10-12T15:34:07Z), script Mon 12 Oct - 5-minute - Who gets paid for AI songs',
            'Teleprompter, 90-second cut: not sent yet; send it with teleprompter_send.py plan'])
     check('show: older words say to update them', teleprompter_lines({**passed, 'teleprompter': {'folder_id': folder, 'cuts': {'long': {**previous, 'script_sha256': 'c' * 64}}}})[0],
-          'Teleprompter, 3-minute cut: holds older words, update it with teleprompter_send.py plan, script Mon 12 Oct - 3-minute - Who gets paid for AI songs')
+          'Teleprompter, 5-minute cut: holds older words, update it with teleprompter_send.py plan, script Mon 12 Oct - 5-minute - Who gets paid for AI songs')
 
     def holds_tp(method, path, body):
         seen.append((method, path, body))
@@ -1675,7 +1679,7 @@ def self_test():
     code, err = run([pid, 'teleprompter', 'short', '--folder', 'DD28154B-B6D1-47DB-803A-79410D83196D', '--script', script, '--sha', 'b' * 64], holds_tp)
     check('teleprompter: another folder is refused, nothing written', (code, 'are in folder' in err, len([x for x in seen if x[0] == 'POST'])), (1, True, before))
     check('show: prints the read-back and the Teleprompter lines', ('Teleprompter, 90-second cut: not sent yet' in show(pid, holds_tp),
-                                                                      'Read back, 3-minute cut' in show(pid, holds_tp)), (True, True))
+                                                                      'Read back, 5-minute cut' in show(pid, holds_tp)), (True, True))
     try:
         with contextlib.redirect_stderr(io.StringIO()):
             main([pid, 'descript', 'long'], call=fake)

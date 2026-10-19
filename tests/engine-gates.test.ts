@@ -37,7 +37,7 @@ describe('the engine gates', () => {
     expect(r.stdout.trim(), r.stderr).toBe('krish,krish-pointing,krish-this-guy,krish,krish-pointing')
   })
 
-  it('the publish hook blocks a hand-edited board and lets an engine-built one through', () => {
+  it('the publish hook refuses every artifact publish and lets a read through', () => {
     const dir = mkdtempSync(join(tmpdir(), 'gate-'))
     const made = py(['-c', [
       'import sys; sys.path.insert(0, "scripts/post-pack"); import engine_stamp',
@@ -50,9 +50,13 @@ describe('the engine gates', () => {
     writeFileSync(edited, made.stdout.replace('<p>x</p>', '<p>y</p>'))
     const hook = (file: string) => py(['scripts/hooks/artifact_gate.py'],
       JSON.stringify({ tool_name: 'Artifact', tool_input: { file_path: file, url: 'https://claude.ai/artifact/x' } }))
-    expect(hook(good).status).toBe(0)
-    const blocked = hook(edited)
-    expect(blocked.status).toBe(2)
-    expect(blocked.stderr).toContain('hand edit')
+    // Claude artifacts are retired (Krish, 2026-10-19): even an engine-built board is refused
+    const retired = hook(good)
+    expect(retired.status).toBe(2)
+    expect(retired.stderr).toContain('content.krishraja.com')
+    expect(hook(edited).status).toBe(2)
+    const read = py(['scripts/hooks/artifact_gate.py'],
+      JSON.stringify({ tool_name: 'Artifact', tool_input: { action: 'read', url: 'https://claude.ai/artifact/x' } }))
+    expect(read.status).toBe(0)
   })
 })

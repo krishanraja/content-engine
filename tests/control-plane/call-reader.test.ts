@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { describe, test } from 'vitest'
-import { confidenceOf, predictionCheck, publishChecks, publishStatus } from '../../apps/control-plane/api/_publishChecks.js'
+import { callHorizon, confidenceOf, predictionCheck, publishChecks, publishStatus } from '../../apps/control-plane/api/_publishChecks.js'
 import { readPieceCall } from '../../packages/contracts/src/call.js'
 
 // predictionCheck and confidenceOf now read the call with the Studio's reader
@@ -98,8 +98,8 @@ describe('the publish checks read the call with the Studio\'s reader', () => {
   test('piece 2 as approved passes the CALL check, and the Studio reads the same call from it', () => {
     const checks = publishChecks(EDITION, factsOk)
     assert.deepEqual(checks.find(c => c.id === 'CALL'), { id: 'CALL', name: 'A dated prediction with a confidence', blocking: true, ok: true, detail: 'Has a date to check by and a confidence.' })
-    assert.deepEqual(checks.find(c => c.id === 'CLEAR_STANCE'), { id: 'CLEAR_STANCE', name: 'Take a clear stance', blocking: false, ok: true, detail: '75% is a clear stance.' })
-    assert.equal(publishStatus(checks).ok, true)
+    // Piece 2's 75% a year out was approved under the old rules; since 2026-10-19 it would be held.
+    assert.deepEqual(checks.find(c => c.id === 'CLEAR_STANCE'), { id: 'CLEAR_STANCE', name: 'Take a clear stance', blocking: true, ok: false, detail: '75% reads as sitting on the fence. Back the outcome we believe with a clearer number.' })
     const reading = readPieceCall(EDITION)
     assert.ok(reading.ok)
     assert.equal(reading.call.confidence_percent, confidenceOf(EDITION))
@@ -123,5 +123,26 @@ describe('the publish checks read the call with the Studio\'s reader', () => {
     assert.equal(reading.call.confidence_percent, 60)
     assert.equal(confidenceOf(piece1), 60)
     assert.deepEqual(publishChecks(piece1, factsOk).find(c => c.id === 'CLEAR_STANCE')?.detail, '60% reads as sitting on the fence. Back the outcome we believe with a clearer number.')
+  })
+})
+
+describe('the call is near-term and backed (Krish, 2026-10-19)', () => {
+  const call = (when: string, sure: number) => `Intro.\n\n**Our prediction.** By ${when}, one of the three firms will cut its top price below $4 and $20. How sure we are: ${sure}%.\n`
+  const now = new Date('2026-10-19T12:00:00Z')
+  test('a call due within three months at 95% passes both checks', () => {
+    const checks = publishChecks(call('31 December 2026', 95), { ok: true, reason: null }, now)
+    assert.equal(checks.find(c => c.id === 'CALL_HORIZON')!.ok, true)
+    assert.equal(checks.find(c => c.id === 'CLEAR_STANCE')!.ok, true)
+  })
+  test('a call a year away at 55% is refused on both, and both block', () => {
+    const checks = publishChecks(call('31 March 2027', 55), { ok: true, reason: null }, now)
+    const horizon = checks.find(c => c.id === 'CALL_HORIZON')!
+    const stance = checks.find(c => c.id === 'CLEAR_STANCE')!
+    assert.equal(horizon.ok, false); assert.equal(horizon.blocking, true)
+    assert.match(horizon.detail, /within about three months/)
+    assert.equal(stance.ok, false); assert.equal(stance.blocking, true)
+  })
+  test('a call whose date has passed is refused', () => {
+    assert.equal(callHorizon(call('1 October 2026', 90), now)!.ok, false)
   })
 })

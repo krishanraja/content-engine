@@ -53,7 +53,7 @@ const RETIRED_CHANNELS: Record<string, string> = {
 const FALLBACK_HINT: Record<string, string> = {
   substack: 'Adapt for Substack: 1000-1400 words, never more (house rule ARTICLE_LENGTH), full evidence, one genuine counterpoint held properly, a verdict rather than a summary.',
   linkedin: 'Adapt for LinkedIn: 150-250 words, one idea, open mid-argument, short paragraphs, no hashtags and no "thoughts?" closer.',
-  youtube: 'Turn into a spoken first-person YouTube script, about three minutes: 405 to 495 spoken words (the long cut, house rule TWO_CUTS), one analogy carried the whole way including where it breaks, plain words, dry humour aimed at the industry and never the viewer.',
+  youtube: 'Turn into a spoken first-person YouTube script, about five minutes: 675 to 825 spoken words (the long cut, house rule TWO_CUTS), one analogy carried the whole way including where it breaks, plain words, dry humour aimed at the industry and never the viewer.',
   // TikTok is a standing channel (Krish, 2026-10-11). The video is the
   // 90-second short cut, so what is cut here is its caption.
   tiktok: 'Write the TikTok caption for the 90-second short cut: one or two plain sentences that state the claim the video opens on, then say the full article is free at makeyourmindup.ai, named as text because links in TikTok captions are not clickable. Under 300 characters.',

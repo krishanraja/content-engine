@@ -141,7 +141,7 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
   },
   {
     id: 'R7', name: 'Reading age 12, with humour',
-    text: `Write for a reading age of 12: short sentences, everyday words, and real humour and personality. The joke points at the hype, never the reader, and never replaces the finding. Every video script must be understood by an ordinary 12-year-old hearing it once, and a hard gate holds it to that before it is recorded, packed or sent: no spoken sentence over ${SCRIPT_READING.max_sentence_words} words; at most ${SCRIPT_READING.max_average_words} words a sentence on average; a reading grade of ${SCRIPT_READING.max_grade} or less; no quotation longer than ${SCRIPT_READING.max_quote_words} words (a quote cannot be heard as one, and it brings in grown-up language: say it in plain words); and none of these words unless the same sentence says what it means in plain words: ${JARGON_LIST}. Then two fresh readers, each an ordinary 12-year-old hearing it once, must find nothing that loses them, and their retellings must match the script's point.`,
+    text: `Write for a reading age of 12: short sentences, everyday words, and real humour and personality. The joke points at the hype, never the reader, and never replaces the finding. Every video script must be understood by a smart, non-technical manager at a 200-person company hearing it once (Krish, 2026-10-19: "My customers are medium sized enterprises. This script is 20% too dumbed down", then "agree on all 4"), and a hard gate holds it to that before it is recorded, packed or sent: no spoken sentence over ${SCRIPT_READING.max_sentence_words} words; at most ${SCRIPT_READING.max_average_words} words a sentence on average; a reading grade of ${SCRIPT_READING.max_grade} or less; no quotation longer than ${SCRIPT_READING.max_quote_words} words (a quote cannot be heard as one, and it brings in grown-up language: say it in plain words); and none of these words unless the same sentence says what it means in plain words: ${JARGON_LIST}. Then two fresh readers, each an ordinary 12-year-old hearing it once, must find nothing that loses them, and their retellings must match the script's point.`,
     said: 'This entire media channel needs to be radically simplistic with an average reading age of 12 and a huge sense of humour and fun and personality. Then, 2026-10-12, of the scripts on his teleprompter: I also feel like these scripts are too complicated for a layman to understand. Every single script should be understandable by a 12-year-old. I can\'t even understand what I\'m reading off the teleprompter. I thought we had hard gates for this?',
     on: '2026-09-25', source: 'walk log R7; the hard gate on every script (2026-10-12): scripts/post-pack/story_check.py reads SCRIPT_READING in this file and refuses a script that breaks it, then make-piece\'s two read-back readers, recorded on the making record\'s script check (read_back)', status: 'live',
     stages: ['judge_idea', 'judge_draft', 'write', 'final_pass', 'publish_check'],
@@ -162,7 +162,7 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
   },
   {
     id: 'CLEAR_STANCE', name: 'Take a clear stance',
-    text: 'Our prediction takes a clear stance. Back the outcome we believe with a confident number; a confidence of 60% or so reads as sitting on the fence.',
+    text: 'Our prediction takes a clear stance. Back the outcome we believe with a confident number, 80% or more; anything lower reads as sitting on the fence, and the publish check refuses it (Krish, 2026-10-19).',
     said: "In general I think I'd rather take a clearer stance than sit on the fence all the time and say 60%.",
     on: '2026-09-26', source: 'setting piece 2 at 75% instead of the 60% proposed', status: 'live',
     stages: ['write', 'judge_draft', 'final_pass', 'publish_check'],
@@ -355,10 +355,10 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
     stages: ['write', 'judge_draft', 'final_pass'],
   },
   {
-    id: 'TWO_CUTS', name: 'A three-minute video and a ninety-second one',
-    text: 'Every piece gets two videos, each recorded from its own script with its own hook and its own outro. The long cut is about three minutes: 405 to 495 spoken words at an unhurried 150 a minute, wide, for the Substack post and YouTube. The short cut is at most 90 seconds: 160 to 225 spoken words, tall, for YouTube Shorts, TikTok and Instagram Reels. Both keep the hook and the call to action (HOOK_AND_CTA). Material that does not fit is cut, never spoken faster.',
-    said: 'I always want a 3-minute video and a 90-second version. I always want to repost to YouTube and then Shorts, TikTok, and Instagram.',
-    on: '2026-10-11', source: 'chat, weekly planning; checked by scripts/post-pack/story_check.py (the cut lengths)', status: 'live',
+    id: 'TWO_CUTS', name: 'A five-minute video and a ninety-second one',
+    text: 'Every piece gets two videos, each recorded from its own script with its own hook and its own outro. The long cut is about five minutes: 675 to 825 spoken words at an unhurried 150 a minute, wide, for the Substack post and YouTube. The short cut is at most 90 seconds: 160 to 225 spoken words, tall, for YouTube Shorts, TikTok and Instagram Reels. Both keep the hook and the call to action (HOOK_AND_CTA). Material that does not fit is cut, never spoken faster.',
+    said: 'I always want a 3-minute video and a 90-second version. I always want to repost to YouTube and then Shorts, TikTok, and Instagram. Then, 2026-10-19: "from here moving forward, let\'s make the 3-minute scripts into 5-minute scripts and videos. Scrap the 3-minute format in favor of the 5-minute format."',
+    on: '2026-10-19', source: 'chat, weekly planning; checked by scripts/post-pack/story_check.py (the cut lengths)', status: 'live',
     stages: ['write', 'final_pass'],
   },
   {
@@ -404,10 +404,10 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
     stages: ['write', 'judge_draft', 'final_pass'],
   },
   {
-    id: 'SHARP_PREDICTION', name: 'A prediction a reader can check, and that is not already happening',
-    text: 'Every prediction names one specific event that a reader can check on a stated date. It must not be under way already in the piece\'s own evidence, and it must not be the safe, obvious outcome. Its confidence is honest: a bolder call carries a lower number. A vague trend ("more deals", "more options") is never a prediction.',
-    said: 'The current one feels pretty obvious that its going to happen in hindsight. (Asked which prediction Monday\'s piece should make, he chose: "Keep the current one. Leave the article and videos as they are, so they match, and post today. Use the sharper style of prediction from Wednesday.")',
-    on: '2026-10-12', source: 'chat, on Monday\'s prediction (Universal or Sony make a deal with Suno by 31 December 2027, 70%)', status: 'live',
+    id: 'SHARP_PREDICTION', name: 'A near-term prediction we back, that a reader can check',
+    text: 'Every prediction names one specific event that a reader can check on a stated date no more than about three months away (92 days; the publish check CALL_HORIZON refuses a later one). It is what we believe will happen next, given the piece\'s own evidence, backed at 80% or more (CLEAR_STANCE refuses less). It must not already have happened. Never a long shot pushed a year out to look bold, and never a middling number. A vague trend ("more deals", "more options") is never a prediction.',
+    said: 'The current one feels pretty obvious that its going to happen in hindsight. (2026-10-12.) Then, 2026-10-19, after changing Monday\'s call to 95% by the end of 2026 as he recorded it: "I\'m done with sitting on the fence and putting predictions a year away: 55%. There\'s no point in that. Given how this article reads it\'s pretty obvious someone\'s going to shift their price again in the next month."',
+    on: '2026-10-19', source: 'chat, on Monday\'s prediction (Universal or Sony make a deal with Suno by 31 December 2027, 70%)', status: 'live',
     stages: ['write', 'judge_draft', 'final_pass'],
   },
   {

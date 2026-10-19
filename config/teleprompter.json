@@ -36,11 +36,11 @@
   ],
   "script_title": "<Ddd D Mon> - <cut name> - <short subject>",
   "title_examples": [
-    "Mon 12 Oct - 3-minute - Who gets paid for AI songs",
+    "Mon 12 Oct - 5-minute - Who gets paid for AI songs",
     "Fri 16 Oct - 90-second - Why so many AIs"
   ],
   "cuts": {
-    "long": { "name": "3-minute" },
+    "long": { "name": "5-minute" },
     "short": { "name": "90-second" }
   },
   "words_per_minute": 150,

@@ -106,4 +106,4 @@ like you're just off doing more random shit. I asked you to heal the engine, not
 
 The six cost rules are in AGENTS.md. In Claude Code they come down to: search the map, never open
 files to browse; cap command output (`| tail -20`, logs to `.cache/logs/`); and when the guard G1
-nudges past 200k tokens, write the handover and start a fresh session.
+nudges past 500k tokens, write the handover and start a fresh session.

@@ -27,10 +27,36 @@ Last updated: 2026-10-19, by the idea-queue build session (Claude Code, cloud).
 
 ## The idea queue: read it first
 
+### Monday 19 October: Codex video preparation
+
+Both Monday takes are recorded against the current signed-off scripts and downloaded with verified hashes. Production is isolated from Friday's repair checkout. See `docs/production/2026-10-19-monday-video.md` for source measurements, stabilisation judgment and the explicit visual quality requirements. The current publish board is https://content.krishraja.com/board/2026-10-19; the completed web cutover on main supersedes historical artifact routing elsewhere on this editorial branch.
+
+Krish approved set A and its listed treatment, then the fourth paid v2 fact-check run. Both takes are transcribed; the long confirms 95% by the end of 2026. The live article's prediction was corrected and read back. The paid gate completed despite a dropped client connection, cost $0.35 against a $0.10 last-run estimate, and left 11 unresolved entries (10 distinct sentences). Source review and exact entries are in `docs/plans/2026-10-19-monday/fact-review.md`; his manual-sign-off question is pending. Do not launch another paid run on the fourth-run approval.
+
+Both thumbnails, all 26 explanatory panels, and four story intro/outro clips are drawn. Their automated layout checks pass; contact sheets have been reviewed. Full video renders are running in the Monday worktree. `docs/plans/2026-10-19-monday/render_video.py` bounds FFmpeg threads and uses an ultrafast CRF-10 intermediate; final encoding and guards are unchanged. Original scripts are unchanged. The short is planned at 85.5 seconds including intro/outro without speed-up. No blanket stabilisation is planned after sample comparisons; individual jolts remain an edit review item. No final archive/library delivery or video-complete record is claimed yet.
+
 Every planning or making session starts with `python3 scripts/engine.py GET /api/idea-queue`: the ideas Krish
 queued from any Ideas tab, with his triage (story, angle, cute, curious but not convinced, with his reason). One
 queue, in the engine (`content_ideas.queued_at`); Control Center's Queue page triages it A/B; nothing purges it.
 Offer from it before new research. Handover: `docs/handovers/2026-10-19-idea-queue.md`.
+
+### 19 Oct, Monday in review on the board
+
+Monday is on its tab of https://claude.ai/artifact/CDgS3JDULpzvRnxkHwLkVk in draft (version 5): outline, article and both scripts in review boxes, and one call waiting on him (sign off both scripts). Fact gate open (three runs, $0.43 then less, his sign-offs on the example month and three framing lines); spine judge passed; scripts pass story_check and four read-back rounds, waiting on his words, then Teleprompter. The other board link (4SZR…) is his other account: a session there republishes the same file. Workroom: https://claude.ai/artifact/DdBDf3JPCAdjkmDj7ss6na. Still to do: cover and thumbnails, publish page, pack.
+
+### 19 Oct, later: three narratives written, waiting on his sign-off
+
+He answered the seven questions (his words are in each narrative file). The three narratives are in
+`docs/plans/2026-10-19-week/narrative-mon.md`, `-wed.md` and `-fri.md`; nothing is made until he signs each.
+Monday's end message changed: Google's pricing page (read 19 Oct, updated 16 Oct) shows the reused-input rate
+doubles too ($0.10 to $0.20), so reuse makes the bill smaller but does not stop it doubling; the figure is
+"about 95% cheaper", never "a tenth". The research he pasted is in `research-mon-argon.md` (unchecked leads
+except the Standard rows read at Google's page). Wednesday's line-up is his: Muse, Grok Bot, dots, Gemini
+Spark and Poke scored, OpenClaw as the origin only, Viktor out. "Narrative before making" is now standing:
+the first step of `make-piece` (learning `narrative-before-making`, encoded). Parked ideas: `parked.md`
+(the AI-shopper rulebook parked, three let go; none was in the queue, so nothing was written). Other board
+link (`4SZR…`): per his 14 Oct ruling, a session on his other account rebuilds and republishes it; that link
+returns 404 from this account. Monday's narrative is signed and its outline approved (`docs/plans/2026-10-19-outline.md`, with his downgrade section). Monday's workroom and draft are done (handover, "Done in the first session"); the fact gate waits on his yes to the paid run. **Next:** `docs/handovers/2026-10-19-monday-argon-make.md`; Wednesday and Friday still wait on his sign-off.
 
 ### 19 Oct: queue live, picks saved, next is the editorial narrative
 
@@ -257,9 +283,9 @@ All on main; each has its tests.
   GitHub renders both cuts end to end (his choice: "GitHub always renders");
   the Run workflow button is the one click. The secret ENGINE_OPERATOR_TOKEN
   is set. A stop writes one board item `videos-<date>` saying what stopped.
-  The routine "Publish board: add the day's videos" (trig_016L3CTo8wQh7WF5hpAwrT3A,
-  13:25 New York, Drive and the repo attached by Krish) puts the links on
-  the day's tab.
+  No schedule puts the videos on the board: Krish deleted the publish board
+  schedules from both accounts on 19 Oct ("We are not ready for this yet").
+  A session links them when he asks (`making.py <piece> drive-link`).
 - **Video tool** (`scripts/quick-edit/make.py`): pictures ease in and
   crossfade, the speaker slides aside, no gap flashes the frame behind
   ("the title card flashes up for about 0.1s ... unacceptable"); true peaks

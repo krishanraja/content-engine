@@ -1,0 +1,84 @@
+{
+  "subchannel": "follow.the.money",
+  "date": "2026-10-19",
+  "headline": "Why AI prices keep changing",
+  "video_title": "Why Google, OpenAI and Anthropic keep changing AI prices",
+  "video_title_emphasis": "AI prices",
+  "comment_question": "WHAT WILL AI COST NEXT?",
+  "cover": {
+    "headline": [
+      "WHAT WILL AI",
+      "COST NEXT?"
+    ],
+    "portrait": true,
+    "rows": [
+      {
+        "name": "Google",
+        "logo": "logos/google-cream.svg",
+        "tag": "Gemini",
+        "colour": "butter"
+      },
+      {
+        "name": "OpenAI",
+        "logo": "logos/openai-symbol-cream.svg",
+        "tag": "ChatGPT",
+        "colour": "mint"
+      },
+      {
+        "name": "Anthropic",
+        "logo": "logos/anthropic-symbol-cream.svg",
+        "tag": "Claude",
+        "colour": "lilac"
+      }
+    ]
+  },
+  "thumbs": {
+    "headline": [
+      "WHAT WILL AI",
+      "COST NEXT?"
+    ],
+    "portrait": true,
+    "rows": [
+      {
+        "name": "Google",
+        "logo": "logos/google-cream.svg",
+        "tag": "Gemini",
+        "colour": "butter"
+      },
+      {
+        "name": "OpenAI",
+        "logo": "logos/openai-symbol-cream.svg",
+        "tag": "ChatGPT",
+        "colour": "mint"
+      },
+      {
+        "name": "Anthropic",
+        "logo": "logos/anthropic-symbol-cream.svg",
+        "tag": "Claude",
+        "colour": "lilac"
+      }
+    ]
+  },
+  "standoff": {
+    "left": {
+      "label": "Google",
+      "logos": [
+        "logos/google-cream.svg"
+      ]
+    },
+    "right": [
+      {
+        "label": "OpenAI",
+        "logos": [
+          "logos/openai-symbol-cream.svg"
+        ]
+      },
+      {
+        "label": "Anthropic",
+        "logos": [
+          "logos/anthropic-symbol-cream.svg"
+        ]
+      }
+    ]
+  }
+}

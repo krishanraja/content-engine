@@ -17,6 +17,10 @@ import { VOICE_ABSOLUTES } from '../../apps/control-plane/api/_finalPass.js'
 const PASSED = readFileSync('editions/2026-09-who-picks-your-ai/body.md', 'utf8')
 const UNSET = PASSED.replace('How sure we are: 75%.', 'How sure we are: [Krish to set]')
 const factsOk = { ok: true, reason: null }
+// Krish, 2026-10-19: a call must fall within 92 days. PASSED is due 30 September 2027 and
+// the Call in the other fixtures 30 June 2027, so a fixed `now` keeps each inside the window.
+const NOW_SEP = new Date('2027-07-15T12:00:00Z')
+const NOW_JUN = new Date('2027-04-15T12:00:00Z')
 
 describe('a script makes sense out loud and tells one story (walk log F75)', () => {
   test('both rules are live and reach the writers, both judge gates and the final pass', () => {
@@ -211,19 +215,23 @@ describe('every ruling carries his words and reaches a stage', () => {
 })
 
 describe('the checks before approval, on real text', () => {
-  test('piece 2 as it passed the fact gate clears everything but the confidence Krish sets', () => {
-    const checks = publishChecks(UNSET, factsOk)
+  test('piece 2 as it passed the fact gate clears everything but the confidence Krish sets (CALL, CALL_HORIZON and CLEAR_STANCE block)', () => {
+    const checks = publishChecks(UNSET, factsOk, NOW_SEP)
     const failing = publishStatus(checks).failing.map(c => c.id)
-    assert.deepEqual(failing, ['CALL'])
+    assert.deepEqual(failing, ['CALL', 'CALL_HORIZON', 'CLEAR_STANCE'])
     assert.match(checks.find(c => c.id === 'CALL')!.detail, /no confidence yet/)
     assert.ok(readingGrade(PASSED) <= 8)
   })
-  test('with Krish\'s 75% set, it is ready, and the fact check still holds', () => {
+  test('with a clear 85% set and the call within 92 days, it is ready, and the fact check still holds', () => {
     // Krish, 2026-09-26: 75%. The confidence is his judgement, not a fact, so
     // setting it leaves the passed check in force (api/_factGate.ts bodyHash).
     const set = PASSED
     assert.ok(set.includes('How sure we are: 75%.') && UNSET !== set)
-    assert.equal(publishStatus(publishChecks(set, factsOk)).ok, true)
+    const clear = set.replace('75%.', '85%.')
+    assert.equal(publishStatus(publishChecks(clear, factsOk, NOW_SEP)).ok, true)
+    // Krish, 2026-10-19: 75% is now a fence-sit and blocks; a year-out call is held by CALL_HORIZON.
+    assert.deepEqual(publishStatus(publishChecks(set, factsOk, NOW_SEP)).failing.map(c => c.id), ['CLEAR_STANCE'])
+    assert.deepEqual(publishStatus(publishChecks(clear, factsOk, new Date('2026-10-19T12:00:00Z'))).failing.map(c => c.id), ['CALL_HORIZON'])
     assert.equal(bodyHash(UNSET), bodyHash(set))
     const edition = JSON.parse(readFileSync('editions/2026-09-who-picks-your-ai/edition.json', 'utf8'))
     assert.equal(bodyHash(set.trim()), edition.fact_check.body_hash)
@@ -234,38 +242,51 @@ describe('the checks before approval, on real text', () => {
     assert.notEqual(bodyHash(set.replace('75%.', '75%, because OpenAI said so.')), bodyHash(set))
     assert.notEqual(bodyHash(set.replace('By 30 September 2027', 'By 30 September 2028')), bodyHash(set))
   })
-  test('a fence-sitting confidence warns, and never blocks', () => {
-    const at = (n: number) => publishChecks(PASSED.replace('75%.', `${n}%.`), factsOk).find(c => c.id === 'CLEAR_STANCE')!
-    assert.equal(at(60).ok, false); assert.equal(at(60).blocking, false); assert.match(at(60).detail, /sitting on the fence/)
-    assert.equal(at(75).ok, true)
-    assert.equal(publishStatus(publishChecks(PASSED.replace('75%.', '60%.'), factsOk)).ok, true)
+  test('a fence-sitting confidence now blocks, and only 80% or more is a clear stance', () => {
+    const at = (n: number) => publishChecks(PASSED.replace('75%.', `${n}%.`), factsOk, NOW_SEP).find(c => c.id === 'CLEAR_STANCE')!
+    assert.equal(at(60).ok, false); assert.equal(at(60).blocking, true); assert.match(at(60).detail, /sitting on the fence/)
+    assert.equal(at(75).ok, false)
+    assert.equal(at(79).ok, false)
+    assert.equal(at(80).ok, true)
+    assert.equal(at(85).ok, true)
+    assert.equal(publishStatus(publishChecks(PASSED.replace('75%.', '60%.'), factsOk, NOW_SEP)).ok, false)
   })
-  test('piece 1\'s "Confidence: 70%" is read, so the stance is judged on its number', () => {
+  test('the call must fall after today and within 92 days (CALL_HORIZON blocks)', () => {
+    const body = PASSED.replace('75%.', '85%.')
+    const horizon = (now: Date) => publishChecks(body, factsOk, now).find(c => c.id === 'CALL_HORIZON')!
+    assert.equal(horizon(NOW_SEP).ok, true)
+    assert.equal(horizon(NOW_SEP).blocking, true)
+    const far = horizon(new Date('2026-10-19T12:00:00Z'))
+    assert.equal(far.ok, false)
+    assert.match(far.detail, /days away/)
+    assert.equal(horizon(new Date('2027-10-01T12:00:00Z')).ok, false)
+  })
+  test('piece 1\'s "Confidence: 85%" is read, so the stance is judged on its number', () => {
     // Walk log F35: v10 ends "**The Call.** ... Confidence: 70%." and the
     // check read only "How sure we are:", so CLEAR_STANCE showed green over
-    // "No confidence set yet".
+    // "No confidence set yet". The label is still read; the bar is now 80%.
     const call = (line: string) => `Amazon's move is about ads.\n\n**The Call.** By 30 June 2027, Amazon opens an authorised route for shopping agents. ${line}`
     assert.equal(confidenceOf(call('Confidence: 70%.')), 70)
     assert.equal(confidenceOf('How sure we are: 75%.'), 75)
-    const stance = (line: string) => publishChecks(call(line), factsOk).find(c => c.id === 'CLEAR_STANCE')!
-    assert.equal(stance('Confidence: 70%.').ok, true)
-    assert.equal(stance('Confidence: 70%.').detail, '70% is a clear stance.')
-    assert.equal(stance('Confidence: 60%.').ok, false)
-    assert.match(stance('Confidence: 60%.').detail, /sitting on the fence/)
+    const stance = (line: string) => publishChecks(call(line), factsOk, NOW_JUN).find(c => c.id === 'CLEAR_STANCE')!
+    assert.equal(stance('Confidence: 85%.').ok, true)
+    assert.equal(stance('Confidence: 85%.').detail, '85% is a clear stance.')
+    assert.equal(stance('Confidence: 70%.').ok, false)
+    assert.match(stance('Confidence: 70%.').detail, /sitting on the fence/)
   })
   test('a confidence without its label blocks the call and is never green', () => {
     // The Studio cannot tell which number is the confidence, so the call card
     // could not be drawn: CALL now refuses what the Studio refuses (H32).
     const text = 'Amazon\'s move is about ads.\n\n**The Call.** By 30 June 2027, Amazon opens an authorised route. We are 70% sure.'
-    const checks = publishChecks(text, factsOk)
+    const checks = publishChecks(text, factsOk, NOW_JUN)
     const call = checks.find(c => c.id === 'CALL')!
     assert.equal(call.ok, false)
     assert.equal(call.blocking, true)
     assert.match(call.detail, /without "How sure we are:"/)
     const stance = checks.find(c => c.id === 'CLEAR_STANCE')!
     assert.equal(stance.ok, false)
-    assert.equal(stance.blocking, false)
-    const unset = publishChecks(UNSET, factsOk).find(c => c.id === 'CLEAR_STANCE')!
+    assert.equal(stance.blocking, true)
+    const unset = publishChecks(UNSET, factsOk, NOW_SEP).find(c => c.id === 'CLEAR_STANCE')!
     assert.equal(unset.ok, false)
     assert.equal(unset.detail, 'No confidence set yet.')
   })
@@ -429,7 +450,7 @@ describe('two cuts, each from its own script, inside the lengths story_check hol
       assert.ok(m, cut)
       return [Number(m[1]), Number(m[2])]
     }
-    for (const [id, cut, ceiling] of [['3min', 'long', 495], ['90s', 'short', 195]] as const) {
+    for (const [id, cut, ceiling] of [['5min', 'long', 825], ['90s', 'short', 195]] as const) {
       const f = video.VIDEO_FORMATS.find(x => x.id === id)!
       const [lo, hi] = bounds(cut)
       assert.ok(f.words >= lo && f.words <= hi, `${id} target ${f.words} inside ${lo}-${hi}`)
@@ -622,18 +643,21 @@ describe('reading age 12 is a hard gate on every script (R7, Krish, 2026-10-12)'
   })
   test('the read-back: the engine\'s two readers are the ones make-piece gives a session, word for word', async () => {
     const { READ_BACK_READERS } = await import('../../apps/control-plane/api/_video.js')
-    assert.equal(READ_BACK_READERS.length, 2)
+    assert.equal(READ_BACK_READERS.length, 3)
     const skill = readFileSync('.agents/skills/make-piece/SKILL.md', 'utf8').replace(/\s+/g, ' ')
     for (const prompt of READ_BACK_READERS) assert.ok(skill.includes(prompt), prompt.slice(0, 60))
     for (const prompt of READ_BACK_READERS) assert.doesNotMatch(prompt, /music/)
     assert.match(skill, /making\.py <uuid> read-back/)
   })
-  test('the read-back passes only when both readers answered and nothing lost either', async () => {
+  test('the read-back passes only when all three readers answered and nothing lost any (C, the narrator, since 2026-10-19)', async () => {
     const { readBack } = await import('../../apps/control-plane/api/_video.js')
-    const answers = ['{"lost": ["nothing"], "retell": "One. Two. Three."}', '{"lost": [], "retell": "A. B. C."}']
+    const answers = ['{"lost": ["nothing"], "retell": "One. Two. Three."}', '{"lost": [], "retell": "A. B. C."}', '{"lost": [], "retell": "X. Y. Z."}']
     const ok = await readBack('Script.', async () => answers.shift()!)
     assert.equal(ok.passed, true)
-    assert.deepEqual(ok.readers.map(r => [r.reader, r.lost]), [['A', []], ['B', []]])
+    assert.deepEqual(ok.readers.map(r => [r.reader, r.lost]), [['A', []], ['B', []], ['C', []]])
+    const unsaid = await readBack('Script.', async ({ system }) => (system.startsWith('You are the presenter') ? '{"lost": ["Google spots that repeat, and charges 95% less for it."], "retell": "x"}' : '{"lost": [], "retell": "y"}'))
+    assert.equal(unsaid.passed, false)
+    assert.deepEqual(unsaid.readers.find(r => r.reader === 'C')!.lost, ['Google spots that repeat, and charges 95% less for it.'])
     const lost = await readBack('Script.', async ({ system }) => (system.startsWith('Pretend') ? '{"lost": ["fair use"], "retell": "x"}' : '{"lost": [], "retell": "y"}'))
     assert.equal(lost.passed, false)
     assert.deepEqual(lost.readers.find(r => r.reader === 'B')!.lost, ['fair use'])
