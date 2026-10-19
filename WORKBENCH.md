@@ -283,9 +283,9 @@ All on main; each has its tests.
   GitHub renders both cuts end to end (his choice: "GitHub always renders");
   the Run workflow button is the one click. The secret ENGINE_OPERATOR_TOKEN
   is set. A stop writes one board item `videos-<date>` saying what stopped.
-  The routine "Publish board: add the day's videos" (trig_016L3CTo8wQh7WF5hpAwrT3A,
-  13:25 New York, Drive and the repo attached by Krish) puts the links on
-  the day's tab.
+  No schedule puts the videos on the board: Krish deleted the publish board
+  schedules from both accounts on 19 Oct ("We are not ready for this yet").
+  A session links them when he asks (`making.py <piece> drive-link`).
 - **Video tool** (`scripts/quick-edit/make.py`): pictures ease in and
   crossfade, the speaker slides aside, no gap flashes the frame behind
   ("the title card flashes up for about 0.1s ... unacceptable"); true peaks
