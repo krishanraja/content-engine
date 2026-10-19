@@ -47,7 +47,7 @@ Here's a made-up month for a customer-service team. Say it sends 100,000 request
 - Without reuse: $2,500 a month now. $5,000 from December.
 - With reuse: $980 a month now. $1,960 from December.
 
-Reuse saves about 60%. The reused price doubles as well, so the bill still doubles. And Anthropic changed its reuse prices twice in a month, so the discount itself moves.
+Reuse saves about 60%. The reused price doubles as well, so the bill still doubles. And Anthropic has changed its reuse prices twice since the start of September, so the discount itself moves.
 
 The second is a cheaper model. Sometimes that's smart. Sanchit Vir Gogia, chief analyst at Greyhound Research, put the catch well in Computerworld: "Cheap per token and cheap per task are different claims, and only the second one reaches the budget." A cheaper AI that needs three tries, or gets it wrong and needs a person to fix it, can cost you more for the same job. So test it on ten real jobs your team does every week, and count the cost of each finished job, fixes included.
 

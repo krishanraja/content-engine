@@ -1,13 +1,13 @@
 I've been following how money is changing because of AI. I'm Krish.
 
-So I've been reading up on Google's newest AI. Its price doubles on 1 December, and I wanted to break it down for you. So what does that do to your AI bill?
+So I've been reading the price pages of the big AI firms. And I wanted to break it down for you. On 1 December, Google's newest AI doubles in price. So what should a sensible business do when AI prices keep moving?
 
-Businesses pay Google each time its AI reads their words. Picture a shop's help bot. Before each answer, it rereads the shop's long list of rules. And Google spots the repeat. So it charges 95% less for that list.
+Google isn't alone. In ten weeks, I counted at least six price moves. OpenAI cut a top AI's price, but only as a promotion with an end date. Anthropic cancelled a price rise, then launched a cheaper top AI.
 
-But lots of businesses think that discount keeps them safe from the price rise. I reckon they're in for a shock. The discount price doubles too.
+Now all three top AIs cost the same: $4 for reading and $20 for writing. And every one of those numbers moved this year.
 
-Say a shop pays Google $980 a month, with the discount. So from December, it pays $1,960.
+So I think three rules hold. Budget at the full price. Put the price in your contract, with a date. And keep the freedom to switch.
 
-So on Monday, find whoever runs AI where you work. Ask how much of your bill gets that 95% discount. And ask if your deal with Google locks the price, so it can't rise on 1 December.
+On Monday, ask whoever runs AI where you work: was next year's budget built at the full price?
 
-The full story is free at makeyourmindup.ai. Tell me in the comments: did you know your bill could double? Send this to anyone using Google's AI. Make your mind up.
+The full story is free at makeyourmindup.ai. Tell me in the comments: has your AI bill changed this year? Send this to anyone who signs off an AI budget. Make your mind up.
