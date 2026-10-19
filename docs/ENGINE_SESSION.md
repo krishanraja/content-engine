@@ -80,3 +80,22 @@ Consumer clients may require a one-time connector approval. GitHub access alone 
 Codex and Claude Code use the committed stdio proxy in `.codex/config.toml` and `.mcp.json`. The proxy reads `MindmakeVideoStudio/studio-mcp-token-v2` directly from Windows Credential Manager inside its own process, pins the production endpoint, and never prints or persists the value. No parent-process environment variable or special client launch command is required.
 
 Claude.ai and ChatGPT require the separately released OAuth connector. Until that release exists, those clients may read and reason from the repository but must report `read_only_untracked`; they must not reuse the local bearer token.
+
+## Running from Claude Code
+
+The Codex loop above, step for step, in Claude Code. Nothing here changes the contract; it says where each
+step lives.
+
+| Step | Codex | Claude Code |
+|---|---|---|
+| Rules | `AGENTS.md` | `CLAUDE.md`, which imports `AGENTS.md` (`@AGENTS.md`) and adds only the routing table, models, hooks and checks |
+| Session start | `docs/NORTH_STAR.md`, `WORKBENCH.md`, `python3 scripts/check_failures.py` | The same. For Studio work, then `studio.session.open` through the `mindmake-studio` server in `.mcp.json`; without a tracked session the session stays read-only and says it is untracked |
+| A piece, the week, the videos | `$make-piece`, `$plan-week`, `$produce-video` from `.agents/skills` | `/make-piece`, `/plan-week`, `/produce-video` from `.claude/skills`, exact copies held by `npm run skills:validate` |
+| A Studio station | the `mindmake-video` skill and the gateway tools | the gateway tools in a tracked session; `mindmake-video` is not loaded as a Claude Code skill (`scripts/validate-skills.py`, `NOT_FOR_CLAUDE`) |
+| Models | `.codex/config.toml`, profile `production` for mechanical work | Opus by default (`.claude/settings.json`); subagents `repo-scout` (Haiku), `executor` (Sonnet), `reviewer` (Opus) in `.claude/agents/`; `produce-video` on Sonnet by its frontmatter |
+| Verification | `npm run verify` | `npm run verify`; the Stop hook (`.claude/hooks/stop-check.mjs`) also typechecks and runs the related tests whenever a turn changed code |
+| Guardrails | AGENTS.md and the sandbox | AGENTS.md plus the hooks in `.claude/settings.json`: secrets and `.env` refused, the North Star refused, every publish, send, deploy, push to main and taste-rule edit put to Krish in person, the cost guards |
+
+Observations are recorded the same way from both: only through the gateway's tool-backed actions and feedback
+tools, as `observation_only` unless Krish's own words make a decision, never by capturing the chat.
+

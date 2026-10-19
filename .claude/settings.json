@@ -1,4 +1,8 @@
 {
+  "model": "opus",
+  "fallbackModel": [
+    "sonnet"
+  ],
   "permissions": {
     "allow": [
       "Bash(python3 scripts/engine.py GET *)",
@@ -14,7 +18,56 @@
       "Bash(git status *)",
       "Bash(git diff *)",
       "Bash(git log *)",
-      "Bash(git show *)"
+      "Bash(git show *)",
+      "Bash(npm run verify)",
+      "Bash(npm run typecheck)",
+      "Bash(npm run typecheck:control-plane)",
+      "Bash(npm run test)",
+      "Bash(npm run test *)",
+      "Bash(npm run check:*)",
+      "Bash(npm run skills:validate)",
+      "Bash(npm run repo-map)",
+      "Bash(npx vitest run *)",
+      "Bash(npx tsc --noEmit *)",
+      "Bash(python3 scripts/validate-skills.py *)",
+      "Bash(node scripts/gen-repo-map.mjs *)"
+    ],
+    "deny": [
+      "Bash(git push --force *)",
+      "Bash(git push -f *)",
+      "Bash(git push * --force *)",
+      "Bash(git push * --force-with-lease *)",
+      "Bash(git push origin main *)",
+      "Bash(git push origin main)",
+      "Bash(git push origin HEAD:main *)",
+      "Bash(git reset --hard *)",
+      "Bash(git clean -f *)",
+      "Bash(git clean -fd *)",
+      "Bash(git branch -D *)",
+      "Bash(git checkout -- *)",
+      "Bash(git restore *)",
+      "Bash(vercel deploy *)",
+      "Bash(vercel --prod *)",
+      "Bash(vercel promote *)",
+      "Bash(npx vercel *)",
+      "Bash(supabase db push *)",
+      "Bash(npx supabase db push *)",
+      "Read(./node_modules/**)",
+      "Read(./dist/**)",
+      "Read(./coverage/**)",
+      "Read(./.cache/**)",
+      "Read(./.runtime/**)",
+      "Read(./.artifacts/**)",
+      "Read(./jobs/**)",
+      "Read(./archive/**)",
+      "Read(./**/renders/**)",
+      "Read(./package-lock.json)",
+      "Read(./requirements.lock.txt)",
+      "Read(./requirements-ci.txt)",
+      "Read(./docs/plans/**/build/**)",
+      "Read(./**/*.ttf)",
+      "Read(./**/*.otf)",
+      "Read(./**/*.woff2)"
     ]
   },
   "hooks": {
@@ -38,6 +91,36 @@
             "timeout": 60
           }
         ]
+      },
+      {
+        "matcher": "Bash|Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/secret-guard.mjs\"",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Bash|mcp__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/publish-guard.mjs\"",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/taste-guard.mjs\"",
+            "timeout": 10
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -59,6 +142,17 @@
             "type": "command",
             "command": "python3 \"$CLAUDE_PROJECT_DIR/scripts/hooks/cost_gate.py\"",
             "timeout": 15
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/stop-check.mjs\"",
+            "timeout": 300
           }
         ]
       }

@@ -17,7 +17,7 @@ Use the repository CLI as the system of record. Do not improvise job state in ch
 - For revisions, preferences, external edits, analytics, or rule changes, read [references/learning.md](references/learning.md).
 - For carousel visual production from a completed content idea, read [references/carousel-direction.md](references/carousel-direction.md). Do not use the carousel route for topic, recording, argument, or content ideation.
 
-Read only the references relevant to the current operation. Apply `$krish-voice` to public wording and `$content-corpus` to series and channel decisions.
+Read only the references relevant to the current operation. Apply Krish's account-wide `$krish-voice` skill to public wording and his account-wide `$content-corpus` skill to series and channel decisions (the repository copies were retired on 2026-10-19).
 
 ## Load the exact production station
 

@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs'
-import { readFile } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
 import { execFileSync } from 'node:child_process'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -39,14 +39,21 @@ describe('repository operating contracts', () => {
 
     const environment = await readFile(join(repoRoot, '.env.example'), 'utf8')
     const launcher = await readFile(join(repoRoot, '.agents', 'skills', 'video-engine', 'SKILL.md'), 'utf8')
-    const voiceSkill = await readFile(join(repoRoot, '.agents', 'skills', 'krish-voice', 'SKILL.md'), 'utf8')
-    const voiceMetadata = await readFile(join(repoRoot, '.agents', 'skills', 'krish-voice', 'agents', 'openai.yaml'), 'utf8')
+    // The repository's own krish-voice and content-corpus copies were retired on 2026-10-19 for Krish's account-wide
+    // skills, so the naming rule now holds every skill that is left.
+    const skillNames = (await readdir(join(repoRoot, '.agents', 'skills'), { withFileTypes: true })).filter((entry) => entry.isDirectory()).map((entry) => entry.name)
+    expect(skillNames).not.toContain('krish-voice')
+    expect(skillNames).not.toContain('content-corpus')
+    const skillTexts = await Promise.all(skillNames.flatMap((name) => [
+      readFile(join(repoRoot, '.agents', 'skills', name, 'SKILL.md'), 'utf8'),
+      readFile(join(repoRoot, '.agents', 'skills', name, 'agents', 'openai.yaml'), 'utf8').catch(() => ''),
+    ]))
     const pathSource = await readFile(join(repoRoot, 'packages', 'core', 'src', 'paths.ts'), 'utf8')
     expect(environment).toContain(`MINDMAKE_DRIVE_ROOT=${exactMediaRoot}`)
     expect(environment).toContain(`MINDMAKE_MEDIA_INBOX=${exactMediaRoot}\\Inbox`)
     expect(launcher).toContain(exactMediaRoot)
     expect(launcher).not.toMatch(/Krish(?:an)? Raja/)
-    expect(`${voiceSkill}\n${voiceMetadata}`).not.toMatch(/Krish(?:an)? Raja/)
+    for (const text of skillTexts) expect(text).not.toMatch(/Krish(?:an)? Raja/)
     expect(pathSource).toContain("export const DEFAULT_WINDOWS_DRIVE_ROOT = 'H:\\\\My Drive\\\\Ventures\\\\Active\\\\makeyourmindup\\\\Video Engine'")
     expect(studio.runtime.drive_root).not.toMatch(/^G:/)
     expect(environment).toContain(`MINDMAKE_ARCHIVE_ROOT=${exactMediaRoot}\\Archive`)
