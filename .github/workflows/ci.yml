@@ -251,6 +251,10 @@ jobs:
           psql_in supabase/migrations/20261021100000_manual_is_his_words.sql
           psql_in supabase/migrations/20261021100000_manual_is_his_words.sql
           psql_in tests/fixtures/control-plane/manual-is-his-words.sql
+          # Step 3, PR 8: the CHECK validates over every row the fixture kept,
+          # and runs twice.
+          psql_in supabase/migrations/20261101120000_manual_is_his_words_validated.sql
+          psql_in supabase/migrations/20261101120000_manual_is_his_words_validated.sql
           # Last, because it commits a seed that fences every later claim: an
           # open claim holds the active role row, so a switch must wait for it
           # and then refuse.

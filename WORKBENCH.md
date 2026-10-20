@@ -826,33 +826,16 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
-- 2026-10-17, about 07:15 UTC: **Friday's packaging is signed off; the session is finishing it without him.**
-  - The sheet (`docs/plans/2026-10-09-friday/signoff-sheet.md`, SIGNED OFF): Krish, "Fine with everything except for
-    \"soon you won't pick your AI.\" ... I would suggest something along the lines of \"ChatGPT and Claude are releasing
-    new models faster than ever. But does it even make a difference?\"". Every pick and the rejection are in
-    `config/title-verdicts.json`. His line (cut to "ChatGPT and Claude: faster than ever. Does it matter?" where space is
-    short; a colon because a comma dropped into the next line on the tall covers) is on the cover, the Shorts title, the
-    tall thumbnail and the title card; the wide thumbnail is "ANOTHER CLAUDE?". Four headings and four chapters gained a
-    product name so the filter passes them (title_check now reads number words beside a name).
-  - Learned today, all encoded and guarded: SIGN_OFF_FIRST (one sheet, then finish without him), CHANNEL_HEADINGS
-    (headings in one channel style, never pasted from the transcript), STORY_FIRST (every line judged against the
-    piece's story: his `story.md`, the outline's spine, the series' question; `title_check.py lessons --plan`), and the
-    hidden-pointer refusal ("one setting", "the setting behind it").
-  - 90 seconds: the shorter v7 (a cut of his v6, his words only, about 1:22) is on the record with his words and in
-    Teleprompter (updated in place 06:57 UTC). He records it in the morning.
-  - Done: cover (every shape) and both thumbnails drawn and looked at; channel copy v2 with his titles
-    (`publish-copy-v2.json`); the 10 missing evidence captures (`shots-v6-sources.json`; WIRED's two lines are paywalled,
-    the reporter's own post stands in).
-  - Running: the cards (workflow friday-long-cut-cards: logos, approved headings, divider cues, draw, two skeptics);
-    the Substack exhibits Krish asked for ("heavyweight beautiful stunning visual intel as to what difference models
-    versus thinking levels make to intelligence and how that correlates to the cost of it ... enterprise-grade and
-    available inside the substack"; workflow friday-visual-intel, live Artificial Analysis data, three skeptics); the
-    story intro and outro render; the long-cut draft render (stage 2).
-  - Next: final long render with cards, intro and outro; frame-by-frame review; page.json for the v5 article with the
-    exhibits as figures; pack; library; publish board on both links (approved: "Fine with everything"). Posting is his.
-  - Style trial A rendered (`.cache/style-trial/trial-a.mp4`): captions still far too small; fix before showing him.
+- 2026-10-20, about 14:30 UTC: **`manual` means his words, for every row** (step 3
+  PR 8, the last step of the design entropy session). Migration
+  `20261101120000_manual_is_his_words_validated.sql` validates
+  `content_ideas_manual_is_his_words`; read back `convalidated = true`. 0 stored
+  rows broke it. The engine's request log could not be read from the session,
+  so the quiet week rests on the database: no idea came through Control
+  Center's door, and 75 from the engine's own sources landed. Control Center
+  deletes the session's handoff and skill in the same change.
 
-- Older handoffs (12 to 17 October): `docs/history/2026-10-18-WORKBENCH-handoffs.md`. This section holds only the
+- Older handoffs (12 to 20 October): `docs/history/2026-10-18-WORKBENCH-handoffs.md`. This section holds only the
   newest one: when you write a new handoff, move the one it replaces to the top of that file (G11, `scripts/check_workbench.py`).
 
 ## What costs money
