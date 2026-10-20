@@ -1,3 +1,5 @@
+> Historical research brief. The current approved direction is five everyday tasks and separate Messenger/X showcases. Use wednesday-scorecard.md, wednesday-narrative-ready.md and wednesday-test-packet.md for the 20 October draft. The structured fixtures below are background only.
+
 # Wednesday 21 October: five assistants, four ordinary jobs
 
 Piece: d7a20885-7001-4661-b444-9d7ca1043416. Brief for Krish's decision; no test results invented and no paid testing commissioned. Prepared after Monday's live release. This develops narrative-wed.md and keeps the lineup Krish chose on 19 October.

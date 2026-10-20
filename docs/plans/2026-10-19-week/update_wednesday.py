@@ -38,9 +38,13 @@ def build():
           '--review',f'wed=Scorecard and narrative|{PLAN}/wednesday-scorecard.md',
           '--review',f'wed=Four draft-only tests|{PLAN}/wednesday-test-packet.md',
           '--review',f'wed=Live draft-test results|{PLAN}/test-results/README.md',
-          '--waiting','wed=Narrative and scorecard ready for review. Grok and Muse: four draft checks each; Gemini Pro: email baseline. dots and Poke: research only.',
+          '--review',f'wed=Article draft|{PLAN}/wednesday-article-draft.md',
+          '--review',f'wed=Messenger and X showcases|{PLAN}/wednesday-showcases.md',
+          '--waiting','wed=Review the five-job scorecard, narrative and article draft. Choose any changes before recording scripts. Draft-only trials; no sends or spending. dots and Poke remain untested.',
           '--ideas',str(PLAN/'ideas.json'),'--queue',str(CACHE/'queue.json')]
     page,meta=board.build(board.parser().parse_args(args))
+    # Keep the existing review ID for saved edits/comments while updating its display label.
+    page=page.replace('Four draft-only tests','Five everyday tests')
     mappings=[]
     for aid,spec in state['manifest']['assets'].items():
         relative=f'/api/board/2026-10-19/assets/{aid}?sha={spec["sha256"]}'

@@ -1,77 +1,59 @@
-# Which AI assistant should you try first?
+# Five jobs, three assistants: what it handed you, what it left you
 
-**Working scorecard, updated 20 October 2026.** Research-backed shortlist with a first live draft-test batch. Four Grok Bot drafts, four Muse drafts and one Gemini Pro chat baseline are complete; this is not a completed five-agent comparison. No sends, purchases or paid calls were made.
+Scorecard draft, rewritten with Krish on 20 October 2026. Observed sessions on 20 October, drafts only. Pick the job you care about and read the row.
 
-## First live results
+Status: shape AGREED (score = what it left you). Wording is a draft for Krish's review. Cells marked HOLD wait on a fact Krish confirms.
 
-| Observed surface | Email | Meeting | Purchase | Policy |
-|---|---|---|---|---|
-| Grok Bot Windows, batched | 3 / 0 | 3 / 0 | 3 / 0 | 3 / 0 |
-| Muse at muse.ai | 3 / 0 | 3 / 0 | 3 / 0 | 2 / 1 |
-| Gemini Pro chat baseline | 3 / 0 | Not tested | Not tested | Not tested |
+Grok Bot (Windows app) · Muse (Meta, at muse.ai) · Gemini (consumer chat, a different personal inbox, not a verified Gemini Spark run). dots and Poke: not tested.
 
-Cells show USEFUL / COULD BREAK, each out of 3; lower is better only for the second score. One output per job, not reliability rates or integration-safety proof. Muse got the policy right but wrote “I've passed your request to the support manager” without doing so. A small correction is required before using that reply. The original ambiguous purchase prompt was excluded; the dated replacement passed.
+## 1. Find me the cheapest flight to New York
 
-Exact prompts, responses and scoring limits are in the Live draft-test results review. Muse's new-chat title also says muso; its relationship to the corpus's Meta Muse needs confirmation before combining those evidence sets. Gemini's Scheduled surface routed to Gemini Pro chat, so no Spark agent score is claimed. Grok met all four draft requirements, including a 96-word policy reply with a proposed referral. Its four cases were submitted together in a fresh bot; Muse used separate chats. This is a method difference, not an identical controlled benchmark. dots and Poke remain untested.
+Same trip for all three: London, five nights in November, one adult, cabin bag. Prices are what each assistant reported on 20 October. Treat them as history.
 
-The simple message: **Find your job. Pick the assistant. Know what to check.**
+**GROK.** Handed you: the cheapest it found, about £335 via Lisbon, with the 29-hour stop called out, plus a sensible pick at £448 with one short stop. Left you: checking the bag rules and fare details, which it said it hadn't checked.
 
-## Where you use it
+**MUSE.** Handed you: the same Lisbon deal (£328 through an agent, £335 direct), flight numbers, and a sensible pick, a £478 nonstop. It said clearly what it couldn't check. Left you: confirming the price at checkout. It said the cheap trip gave four nights in New York; by its own times it gives three.
 
-Add a small access line to each row: browser, desktop app or messaging, with plan or region restrictions only where they change the choice. This is separate from where the agent runs its work.
+**GEMINI.** Handed you: the same £478 nonstop and some cheaper one-stop options. Left you: checking two confident claims. It said the cabin bag was "definitely" included, and that a few sampled dates were close to the month's cheapest. It never showed the £335 fare the other two found.
 
-The built-in browser reaches the signed-in Muse and Gemini sessions. The earlier Skyvern error was a tool-route failure. Gemini's Scheduled page is visible, but the test ran in Gemini Pro chat. Grok Bot was inspected and tested in its Windows app. Krish has no Poke account and reports dots unavailable to his UK account.
+## 2. Find a subscription I could cancel
 
-**Grok is not universally desktop-only.** Its [3 October release notes](https://grok.com/release-notes/oct-03-2026) say browser Bot access is available to SuperGrok Plus and Heavy subscribers. Its [desktop download page](https://cursor.com/download/bot) lists Windows, macOS and Linux. Checked 19 October. The useful distinction for the card is access by surface and plan, not a blanket Windows requirement. An installed interface also does not mean local execution: the [official computer guide](https://docs.x.ai/grok-bot/computer-and-apps) says Bot work runs on a separate cloud computer.
+**GROK.** HOLD (YouTube TV). Handed you: one clear pick, a US-only TV service at $82.99 a month paid from the UK, with how and when to cancel. Also flagged a possible duplicate plan and two smaller subscriptions. Left you: checking nobody still uses it.
 
-| Assistant | Most useful starting point in the evidence | What to check | Evidence behind the call |
-|---|---|---|---|
-| **Grok Bot** | Repeated business tasks with clear instructions | That every promised action actually happened | Strongest of three in one published simulated-business comparison; operator reports also describe forgotten tasks. A useful shortlist, not a reliability guarantee. [1, corpus R012–R019] |
-| **dots** | Work spread across documents, apps and coding tasks | Missing details and unfinished follow-through | Official work integrations; mixed outcomes in the same business comparison. [1, 2] |
-| **Muse** | Research using your Instagram context and personal web errands | Claims of completion, especially on continuing business admin | A reviewer demonstrated useful saved-post research but weak ongoing customer-service execution. [1, peer corpus Y19–Y21] |
-| **Gemini / Spark tasks** | Recurring Google-connected summaries, where available | Eligibility first; then scope and output | Google documents scheduled tasks and connected sources. Current task access excludes the UK and work/school accounts. This is a capability-led suggestion, not a comparative performance win. [3] |
-| **Poke** | Briefings and reminders delivered through messages | Dates, attendees and calendar changes | Current product supports integrations and reminders. Older users report useful briefings and calendar mistakes; those reports cannot establish today's failure rate. [4–6] |
+**MUSE.** Handed you: a $30-a-month data service with six months of receipts, a cancellation email ready to review, and the right question: "is it wired into anything you run?" It ruled out a new app the store depends on. Left you: answering that question.
 
-**Access note for dots:** Pro access excludes the UK, EEA and Switzerland. Business Premium and Enterprise are rolling out worldwide; Enterprise requires administrator enablement. Check the actual account. [2]
+**GEMINI.** Handed you: a cancellation email for an automatic top-up worth about A$11, then "Do you want to send it now?" The reason came after two more questions. Left you: working out what it was actually cancelling.
 
-## What the four-job evidence actually supports
+## 3. Help me get through the emails that need me
 
-| Job | What we can say now | What we cannot score yet |
-|---|---|---|
-| Summarise an email and draft a reply | Third-party business testing includes customer replies from Grok Bot, dots and Muse. | Our identical thread, correction effort and boundary score for all five. |
-| Prepare a meeting | Product capabilities and user anecdotes exist; current account access matters. | A fair five-way comparison of attendees, conflicts and time zones. |
-| Prepare a purchase | The peer corpus contains same-prompt travel shortlisting; this is useful background. | Our specified item, full delivered price and budget adherence. Travel results are not an office-purchase score. |
-| Answer from company documents | The simulated-business comparison is relevant but includes tools and actions beyond a draft. | Our shared policy question, supporting paragraph and resistance to inventing a policy. |
+**GROK.** Handed you: seven emails that need you, most urgent first, and it skipped about seven "I'd like to order six products" emails as likely scams. They were scams. It asked for your fee instead of inventing one, and took a "less formal, no date" correction while keeping the right recipients. Left you: one invented pleasantry, which it flagged itself and the correction removed.
 
-Only the completed outputs above receive 0–3 scores; all other cells remain untested. The numeric scoring definitions in wednesday-brief.md remain approved for those tests. Missing access is NOT TESTED, never zero.
+**MUSE.** Handed you: a tidy queue and a polished reply, matched to the store's refund policy, to the first scam email. It put that reply first on today's to-do list and listed four similar "customer" questions. It took the correction but left a duplicate draft it couldn't delete; it said so, and Gmail confirmed both. Left you: spotting the scams, deleting the spare draft, and checking a claim it added about a past lesson going well.
 
-## The narrative
+**GEMINI.** (Different inbox, so it never saw the scams.) Handed you: a draft reply to the first email it chose, a personal medical email, then "Do you want to send it now?" Asked again for the list, it drafted another reply. Left you: the sorting you asked for.
 
-Opening: **“Five AI assistants. Which one is worth trying for your work? Start with the job.”**
+## 4. Turn my inbox into a plan for today
 
-Show the whole card immediately. Then explain it in three short moves:
+**GROK.** Handed you: a timed plan built from your follow-ups, a nudge to check an unexpected security alert, and the scam warning. It said it only read two days of email. Left you: deciding the times, since none were real appointments, and it said so.
 
-1. **Choose your row.** Business routines, connected work, personal research, Google summaries or messages. One concrete example per assistant. The viewer gets the answer before the explanation.
-2. **Read the check beside it.** Show one relevant output detail, not a long failure story. A correct date, an omitted commitment or proof that a task actually happened makes the distinction tangible.
-3. **Save the card.** “Pick the job you repeat every week. This tells you where to start, and what to check before you hand over more.”
+**MUSE.** Handed you: the one timed event today, correctly marked as an invitation you hadn't accepted, plus an order for the rest and what's coming up. Left you: the scam reply it put at the top.
 
-For the long version, use the four jobs to explain the evidence behind the card. For the short, keep the five rows, one check each and the access note. No scandal hook, investigation framing, invented winner or prediction is needed to make this useful. OpenClaw remains brief historical context in the long version, not a sixth scored product; verify the precise origin wording before scripting it.
+**GEMINI.** Handed you: three priorities, then the source emails and UK times after one more ask. Left you: building the actual day.
 
-## Proposed visual treatment
+## 5. Catch me up on the creator economy
 
-- One readable card: assistant / start here / check this. Product names are large; checks are concrete. A small visible line says RESEARCH SHORTLIST — PARTIAL DRAFT TESTS.
-- During narration, isolate one row at a time. Keep the same column order and wording so the viewer learns the card once.
-- The eventual four-job test panel uses two short labels: USEFUL and CHECK NEEDED, with plain-language score keys. No decimals, invented averages or league-table winner.
-- Keep the eligibility note beside Gemini and dots. It changes the reader's choice.
-- Put source numbers on the card and full links in the accompanying article. Evidence dates and “reported test” labels travel with any exported image.
+**GROK.** Handed you: eight dated, linked stories, each with why it matters. Left you: checking dates. One forecast it called October news was published in April.
 
-## Sources and limits
+**MUSE.** Handed you: six themes, with links and dates after one more ask. It dated that same forecast correctly. Left you: checking the secondhand sources it leaned on.
 
-1. [Pat Simmons, same-task comparison](https://www.aiformortals.co/blog/grok-bot-vs-meta-muse-vs-chatgpt-dots), page dated 6 October, checked 19 October. Three assistants, one operator; business simulation scored by an LLM against an answer key. It is a reported test, not our experiment or a measure of real-world success rates. The corpus listed 7 October; use the article's date for the article.
-2. [OpenAI, Meet dots](https://learn.chatgpt.com/docs/dots), checked 19 October. Official capability and eligibility, not performance evidence.
-3. [Google, Manage tasks and workflows](https://support.google.com/gemini/answer/17094507), checked 19 October. This current page uses “tasks”; older research calls the product Spark. Do not silently treat an older product label and current access rules as unchanged.
-4. [Poke product and integrations](https://poke.com/), checked 19 October. Official claims only.
-5. [Poke user briefing example](https://www.reddit.com/r/PokeAssistant/comments/1qteryo/are_there_any_other_products_like_poke/), re-opened 19 October; approximately eight months old. Anecdotal and potentially stale.
-6. [Poke calendar complaints](https://www.reddit.com/r/PokeAssistant/comments/1rfu1iy/poke_fails_at_calendar_and_email_tasks_multiple/), re-opened 19 October; approximately eight months old. Useful test cases, not a current blanket verdict.
+**GEMINI.** Handed you: four themes with why they matter. Left you: checking all of it.
 
-The two retrieved workbooks contain 50 and 41 evidence rows respectively; the deep corpus is additional source material. Records and sources overlap, so these must not be presented as 91 independent studies or 91 tests. Extracted source text is preserved in `_corpus/2026-10-21-assistants/`; these are connector text extractions, not byte-identical original workbooks.
+## Two extras (shown separately and unscored)
+
+**MUSE ON MESSENGER.** Found five conversations I'd left hanging and two that could wait, then drafted a catch-up reply that apologised without promising a time. Five found does not prove it found every one.
+
+**GROK ON X.** Found three small creator-economy conversations, linked the posts and replies, drafted a reply, and noticed a story its own earlier briefing had missed. The underlying posts weren't independently checked.
+
+## The small print
+
+One run per job, on personal accounts with different inboxes. Muse gained email access during the test. Gemini's day plan fell back from Pro under demand. No winner, average or success rate. Nothing was sent, posted, cancelled or booked, and every draft still needs a person to approve it.
