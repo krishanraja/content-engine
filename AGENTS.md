@@ -180,8 +180,8 @@ in `WORKBENCH.md`, "The board".
 `source_type` `manual` is one he said, filed by Control Center's one door
 with `source_ref` `said:<said_parts id>`. Name your own source instead.
 The engine refuses a `manual` idea without that ref (400
-`manual_needs_his_words`), and so does the database once
-`20261021100000_manual_is_his_words.sql` is applied. No code under `apps/`
+`manual_needs_his_words`), and so does the database: the CHECK
+`content_ideas_manual_is_his_words` holds every row (validated 2026-10-20). No code under `apps/`
 calls a transcription API: his spoken ideas come in through Control
 Center's one door. Board
 items whose id starts `said-` are filed by Control Center from his words,
