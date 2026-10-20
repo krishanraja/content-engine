@@ -1,5 +1,28 @@
 # Workbench: where we are and what's next
 
+## 20 October: Wednesday rewritten with Krish (Claude, editorial session)
+
+Live: https://content.krishraja.com/board/2026-10-19#wednesday, build
+`b3b53907…e468` (readback hash matches the built file; Monday, Friday and Ideas
+panels byte-identical; 24 assets kept; 28 comments, 0 edits, 0 ticks unchanged).
+Sources: `docs/plans/2026-10-19-week/` (Codex's newer local Wednesday files
+synced from the board's evidence pack first, then rewritten).
+
+- **Agreed with Krish.** Krish confirmed the "order six products" emails were
+  scams ("They were scams, go with the first framing"), so the inbox beat is
+  "the most useful thing an assistant did all day was tell me not to reply".
+  The score is now what each assistant handed you and what it left you, led by
+  the Lisbon flight (about £335, 29-hour stop, three nights in New York on a
+  five-night trip).
+- **Waiting on Krish** (holds in `wednesday-narrative-ready.md`): is YouTube TV
+  already being cancelled (Gemini saw a 27 Oct notice); is Podchaser in use;
+  whether to name Heartside; whether to mention the medical email; the two
+  Claude plans stay private unless he says otherwise. Titles after recording.
+- **Next:** finish editorial review with Krish, then recording scripts (series
+  line, reading gate, read-back) and the Teleprompter send. The superseded
+  four-task paragraph below is history. No sends, posts or spending; Monday's
+  no-spend hold remains.
+
 ## 19 October: Friday ready; Monday final release
 
 Friday is publish-ready on https://content.krishraja.com/board/2026-10-12#friday.
