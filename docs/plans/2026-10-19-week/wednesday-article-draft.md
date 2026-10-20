@@ -1,80 +1,75 @@
-# Five everyday jobs for an AI assistant
+# Five everyday jobs for an AI assistant (working title, decided after recording)
 
-Article draft for review, based on observed sessions on 20 October 2026.
+Article draft for review, rewritten with Krish on 20 October 2026. Based on observed sessions that day. HOLD items are marked and wait on Krish.
 
-An assistant should make your week easier. Find a bill you could stop paying. Help you answer the people waiting on you. Work out what needs doing today.
+I asked three AI assistants to find me the cheapest flight to New York.
 
-So those were the questions we asked.
+Two of them found the same one. £335 return. It comes with 29 hours in Lisbon.
 
-We tested Grok Bot on Windows, Muse in the browser and consumer Gemini as a baseline. Ordinary requests, followed by a conversation. Nothing was sent, cancelled or booked.
+By the assistant's own flight times, you land in Newark late on Thursday and fly home just after midnight on Monday. That's a five-night trip with three nights in New York. To be fair to both, they spotted it. One called it "really a bonus day in Portugal" and suggested something saner at about £450.
 
-The result is a scorecard organised by job. Find the row you care about and see what still needed a person.
+That's the whole test in one example. An assistant can do a lot of the work. The question is how much it hands back to you.
 
-## Help me get through my replies
+So I gave Grok Bot, Meta's Muse and Google's Gemini five boring jobs from a normal week, in plain English. Nothing was sent, cancelled or booked. Here's the scorecard, so you don't have to go and use them all.
 
-Grok produced a queue. When a reply depended on commercial terms, it asked rather than picking them. We left that decision aside and moved to another email.
+## The flight
 
-It prepared a reply for approval. Then came a normal correction: make it less formal, and don't promise a date.
+Same brief for all three: London, five nights in November, one adult, cabin bag only.
 
-The revised draft was shorter. It kept the recipients and didn't add a date. It still needed a human to decide whether to send it.
+Grok and Muse found the Lisbon deal and steered me away from it. Muse gave flight numbers and listed what it couldn't check. Gemini found the same sensible nonstop at £478, but told me a cabin bag was "definitely" included and that a few dates it sampled were about as cheap as November gets. It never showed the £335 fare.
 
-Gemini went straight to drafting. After another request for the list of work emails needing replies, it produced another draft without the list. The writing had moved forward, but the sorting hadn't.
+What it left you: checking the bag and the final price yourself.
 
-Muse produced a queue and saved a draft in Gmail. A wording correction detached it from the original conversation. Muse recreated it in the right thread, but left a spare because it lacked deletion permission. It disclosed the problem, and a separate Gmail check confirmed both drafts. Useful progress, with cleanup still left to do.
+## Saving money
 
-## Find a subscription I could cancel
+I asked each one to find a subscription worth cancelling.
 
-Finding a receipt is only the beginning. You need the cost, a reason to cancel and an explanation of what would stop working.
+HOLD (YouTube TV): Grok found a US-only TV service I was paying $82.99 a month for, from London. It said how to cancel, when, and what I'd lose.
 
-Grok found a recurring charge and a cancellation route. A useful candidate for review, but not proof that the service was unused.
+Grok and Muse both suggested a $30-a-month data service. Only Muse asked the question that matters before you cancel anything: is it wired into something you still run?
 
-Muse recognised Heartside's store app as connected to the business. It proposed another subscription, prepared a cancellation email and asked whether that service powered anything still running.
+Gemini went straight to writing a cancellation email for an automatic top-up worth about A$11, then asked if I wanted to send it. It took two more questions to find out what it was actually cancelling.
 
-Gemini initially prepared a cancellation draft with ambiguous scope. After two questions, it explained that it meant stopping automatic extra-usage payments rather than the underlying plan.
+What it left you: knowing what stops working when you cancel.
 
-Those are different actions. A useful recommendation makes the difference clear before you act.
+## The inbox
 
-## Make sense of today
+This is where it got interesting.
 
-An inbox contains appointments, invitations, deadlines, suggestions and plenty of things that don't need you at all.
+My online store had a run of emails that all read a bit like this: "Hey! I'm thinking of ordering six of your products. Is your payment process secure?"
 
-Grok separated suggested work blocks from actual appointments. Muse identified a timed invitation and said explicitly that it wasn't a confirmed booking. Gemini returned priorities and added sources after a follow-up.
+Grok flagged them. The email "never names a product, which is common with buyer-scam emails", it said, and it skipped about seven of them.
 
-That distinction should survive onto the screen. "You could do this at ten" must look different from "you have agreed to be there at ten".
+Muse wrote a polite, well-researched reply to the first one, matched to my refund policy, and put it at the top of my to-do list for the day.
 
-## Catch me up
+They were scams.
 
-All three produced creator-economy briefings. That gives you fewer pages to read and an explanation of why each item might matter.
+The most useful thing an assistant did all day was tell me not to reply.
 
-The source still counts. Muse supplied links and dates when asked. Grok linked its briefing, yet one item presented as recent came from an older article.
+Muse was strong elsewhere. It sorted my real work emails cleanly and took a correction well. When I asked for a reply that sounded less formal, it lost track of its own draft, recreated it in the right place and left a spare copy it couldn't delete. It told me. Gmail confirmed both drafts.
 
-For this job, look for a short explanation, a source you can open and a visible date. A fluent paragraph alone doesn't establish that the news is current.
+Gemini was connected to a different inbox, so it never saw the scams. Asked for a list of emails needing replies, it drafted a reply instead, to a personal medical email (HOLD: Krish approves this mention), and asked if I wanted to send it.
 
-## Find a cheap flight
+What it left you: deciding who's real.
 
-We used the same example: London to New York, a five-night return in November, one adult and a cabin bag.
+## Today's plan and the news
 
-Several low fares involved very long stops. Muse's later response pointed out that the date range didn't mean five nights in New York. Grok admitted it hadn't confirmed the baggage conditions. Gemini checked several date pairs but spoke more broadly about the cheapest option for the month.
+Both are quicker jobs.
 
-The scorecard keeps four things together: fare, baggage, travel time and time at the destination.
+For the day plan, the good ones separated real appointments from suggestions. Muse marked an online event as an invitation I hadn't accepted. Grok said its timings were suggestions and that it had only read two days of email.
 
-All three produced options to investigate. None established the cheapest complete trip to the standard needed to book without another check.
+For the news, all three gave a useful briefing. Grok called a forecast from April "October" news. Muse dated the same forecast correctly. If it says "right now", check the date.
 
-## The extra value
+## Two extras
 
-Grok's X test went beyond headlines. It returned smaller creator-economy conversations, linked the posts and replies, and drafted a contribution to one of them. That is a promising use: help me find where I have something useful to add. The claims in those posts still need checking before reuse.
+Muse went through Facebook Messenger, which I barely open, and found five conversations I'd left hanging, including a catch-up I'd suggested and never followed up. Its draft reply apologised and didn't promise a time I hadn't agreed.
 
-Muse's Messenger result is shown separately in the board. Its job is practical: recover conversations worth returning to from an inbox you barely open.
+Grok searched X for small creator-economy conversations worth joining, linked the original posts and drafted a reply. It even pointed out a story its own earlier briefing had missed.
 
-These are distinctive uses, not bonus points deducted from a competitor.
+These are different strengths. They don't count against the others.
 
 ## Use the scorecard
 
-These were personalised accounts, not identical laboratory conditions. The connected inboxes differed. Muse gained email access during testing. Gemini's day-plan run visibly switched models because of demand. dots and Poke were not tested.
+These were personal accounts, one run per job, with different inboxes. They show what happened that day. They can't tell you how often it happens. dots and Poke weren't tested.
 
-The results show what happened in these sessions. They don't establish how often each product succeeds.
-
-Start with a job you repeat. Ask normally. See whether the assistant finds the right information, takes a correction and leaves something useful for approval.
-
-The best row on the scorecard is the one that gives you time back.
-
+Find the job you'd most like off your plate. Give it to the assistant that handed that job back finished. And check the thing it left you: the bag, the dependency, the sender.

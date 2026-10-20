@@ -1,57 +1,59 @@
-# Five jobs: the practical scorecard
+# Five jobs, three assistants: what it handed you, what it left you
 
-Observed sessions, 20 October 2026. Draft-only testing. Pick the job that matters to you; read the result and the work left over.
+Scorecard draft, rewritten with Krish on 20 October 2026. Observed sessions on 20 October, drafts only. Pick the job you care about and read the row.
 
-## Save me money
+Status: shape AGREED (score = what it left you). Wording is a draft for Krish's review. Cells marked HOLD wait on a fact Krish confirms.
 
-GROK BOT: Found a real recurring receipt and a cancellation route. Useful shortlist; continuing use was not established. Needs checking.
+Grok Bot (Windows app) · Muse (Meta, at muse.ai) · Gemini (consumer chat, a different personal inbox, not a verified Gemini Spark run). dots and Poke: not tested.
 
-MUSE: Recognised Heartside's store app as business-related. Recommended another subscription, prepared a cancellation draft and asked whether it powered anything still in use. Ready to review, with the dependency question outstanding. No saving has been realised.
+## 1. Find me the cheapest flight to New York
 
-GEMINI: Prepared a draft before explaining its recommendation. After two follow-ups, explained stopping extra-usage auto-recharge; its first draft's scope was broader and ambiguous. Needs checking.
+Same trip for all three: London, five nights in November, one adult, cabin bag. Prices are what each assistant reported on 20 October. Treat them as history.
 
-## Plan my day
+**GROK.** Handed you: the cheapest it found, about £335 via Lisbon, with the 29-hour stop called out, plus a sensible pick at £448 with one short stop. Left you: checking the bag rules and fare details, which it said it hadn't checked.
 
-GROK BOT: Proposed work blocks and explicitly separated them from appointments. Stated a two-day email search window. Ready to review within that scope.
+**MUSE.** Handed you: the same Lisbon deal (£328 through an agent, £335 direct), flight numbers, and a sensible pick, a £478 nonstop. It said clearly what it couldn't check. Left you: confirming the price at checkout. It said the cheap trip gave four nights in New York; by its own times it gives three.
 
-MUSE: Stated a 37-message search over two days plus targeted date searches. Distinguished an invitation with an RSVP from a confirmed booking, suggested an order for work and excluded informational mail. Ready to review within that scope.
+**GEMINI.** Handed you: the same £478 nonstop and some cheaper one-stop options. Left you: checking two confident claims. It said the cabin bag was "definitely" included, and that a few sampled dates were close to the month's cheapest. It never showed the £335 fare the other two found.
 
-GEMINI: Returned three priorities, then sources and a timezone conversion after a follow-up. Useful prioritisation; not a full timed itinerary. Needs checking.
+## 2. Find a subscription I could cancel
 
-## Help me get through replies
+**GROK.** HOLD (YouTube TV). Handed you: one clear pick, a US-only TV service at $82.99 a month paid from the UK, with how and when to cancel. Also flagged a possible duplicate plan and two smaller subscriptions. Left you: checking nobody still uses it.
 
-GROK BOT: Produced seven candidates, including optional outreach. Asked for missing commercial terms, moved to the next message on request and produced an approval card. A natural correction made it shorter without changing recipients or adding a date. Ready to review; the list is not proof every item required a reply.
+**MUSE.** Handed you: a $30-a-month data service with six months of receipts, a cancellation email ready to review, and the right question: "is it wired into anything you run?" It ruled out a new app the store depends on. Left you: answering that question.
 
-MUSE: Returned separate customer and work queues and drafted replies. The same webinar email used in the Grok trial was saved in Gmail. A natural wording correction detached the draft from its thread; Muse recreated it correctly but left a duplicate because deletion needed extra permission. Muse disclosed this, and Gmail readback confirmed both drafts. Useful result, cleanup needed. The scan is not proof it found every outstanding reply.
+**GEMINI.** Handed you: a cancellation email for an automatic top-up worth about A$11, then "Do you want to send it now?" The reason came after two more questions. Left you: working out what it was actually cancelling.
 
-GEMINI: Produced a draft rather than the requested queue. A follow-up asking for work emails and the list produced another draft without a queue. Missed the queue request; writing help was delivered.
+## 3. Help me get through the emails that need me
 
-## Catch me up on the creator economy
+**GROK.** Handed you: seven emails that need you, most urgent first, and it skipped about seven "I'd like to order six products" emails as likely scams. They were scams. It asked for your fee instead of inventing one, and took a "less formal, no date" correction while keeping the right recipients. Left you: one invented pleasantry, which it flagged itself and the correction removed.
 
-GROK BOT: Linked briefing with explanations. One source labelled as recent was actually older. Needs checking.
+**MUSE.** Handed you: a tidy queue and a polished reply, matched to the store's refund policy, to the first scam email. It put that reply first on today's to-do list and listed four similar "customer" questions. It took the correction but left a duplicate draft it couldn't delete; it said so, and Gmail confirmed both. Left you: spotting the scams, deleting the spare draft, and checking a claim it added about a past lesson going well.
 
-MUSE: Contextual briefing; source links and dates appeared after one follow-up. Several claims depended on secondary reporting. Needs checking.
+**GEMINI.** (Different inbox, so it never saw the scams.) Handed you: a draft reply to the first email it chose, a personal medical email, then "Do you want to send it now?" Asked again for the list, it drafted another reply. Left you: the sorting you asked for.
 
-GEMINI: Briefing with source controls returned. Claims have not been independently verified. Needs checking.
+## 4. Turn my inbox into a plan for today
 
-## Find a cheap New York flight
+**GROK.** Handed you: a timed plan built from your follow-ups, a nudge to check an unexpected security alert, and the scam warning. It said it only read two days of email. Left you: deciding the times, since none were real appointments, and it said so.
 
-Shared example: London return, five nights in November, one adult with a cabin bag. These are test outputs, not current bookable quotes.
+**MUSE.** Handed you: the one timed event today, correctly marked as an invitation you hadn't accepted, plus an order for the rest and what's coming up. Left you: the scam reply it put at the top.
 
-GROK BOT: Shortlist with trade-offs, but incomplete baggage checks. Cheapest examples arrived a day after departure. Needs checking.
+**GEMINI.** Handed you: three priorities, then the source emails and UK times after one more ask. Left you: building the actual day.
 
-MUSE: Asked the trip basics. Returned flight numbers and baggage fields, then revised its shortlist when a slower search finished. Disclosed missing coverage, seller-price uncertainty and destination time lost to a long stop. Needs checking; the cheap option did not establish five nights in New York.
+## 5. Catch me up on the creator economy
 
-GEMINI: Initially chose dates without asking. After clarification and a challenge, sampled more dates but used broader monthly-cheapest language. Its cheapest example also had a long stop. Needs checking.
+**GROK.** Handed you: eight dated, linked stories, each with why it matters. Left you: checking dates. One forecast it called October news was published in April.
 
-## What the comparison can and cannot tell you
+**MUSE.** Handed you: six themes, with links and dates after one more ask. It dated that same forecast correctly. Left you: checking the secondhand sources it leaned on.
 
-These results show what happened, not success rates. The inboxes differ. Muse gained email access during testing; its completed connected-email results replace the earlier access block. Consumer Gemini is a baseline, not verified Gemini Spark. Its day-plan run fell back from Pro due to demand.
+**GEMINI.** Handed you: four themes with why they matter. Left you: checking all of it.
 
-dots: not tested; Krish reports no access in the UK. Poke: not tested; no account available. Neither receives a zero or an inferred verdict.
+## Two extras (shown separately and unscored)
 
-The research corpus from last week remains background. It does not count as this week's hands-on trial. Earlier structured fixtures are also background, not the main scorecard.
+**MUSE ON MESSENGER.** Found five conversations I'd left hanging and two that could wait, then drafted a catch-up reply that apologised without promising a time. Five found does not prove it found every one.
 
-No emails, social replies, bookings or cancellations were executed. No new paid service was authorised. Every ready-to-review item still belongs to the human to approve.
+**GROK ON X.** Found three small creator-economy conversations, linked the posts and replies, drafted a reply, and noticed a story its own earlier briefing had missed. The underlying posts weren't independently checked.
 
+## The small print
 
+One run per job, on personal accounts with different inboxes. Muse gained email access during the test. Gemini's day plan fell back from Pro under demand. No winner, average or success rate. Nothing was sent, posted, cancelled or booked, and every draft still needs a person to approve it.

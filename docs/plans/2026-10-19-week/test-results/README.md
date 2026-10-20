@@ -36,3 +36,15 @@ Muse produced the requested webinar-email draft and a Messenger catch-up draft w
 The same source thread and recipient/cc fields underpin the Grok and Muse webinar follow-up, giving that narrow comparison a common source. This does not make every earlier inbox search equally scoped. Muse's rewritten reply also retains a claim about the prior lesson going well; that claim still needs Krish's confirmation before use.
 
 A scoped sent-mail search for the two email test recipients returned no messages sent today. This is scoped evidence, not a full-account or Messenger audit. The Messenger reply is visible in chat; no saved Messenger draft is claimed.
+
+## Claude's read of the raw readouts, 20 October
+
+Checked against the private readouts in the evidence pack. These change or add to the findings above.
+
+- **Scams confirmed.** Krish, 20 Oct: "They were scams." Grok flagged the "order six products" emails as likely buyer scams in three separate tasks and skipped about seven of them in the reply queue. Muse drafted a policy-accurate reply to the first, listed four similar questions as customers waiting, and put that reply first on its day plan. Gemini's inbox was a different personal account and did not contain them.
+- **Muse identity settled.** The "muso" chat title is a name Krish gave it on 19 October (visible in the readout); its links route through l.meta.ai. The tested surface is Meta's Muse at muse.ai.
+- **Destination nights.** Muse's quoted TAP itinerary arrives at Newark on Thu 19 Nov at 22:10 and departs on Mon 23 Nov at 00:10: three nights in New York, not the four Muse stated. Grok and Muse independently reached the same fare (Grok £335; Muse £328 through an agent, £335 direct).
+- **Grok's subscription pick** was YouTube TV at $82.99 a month (US-only, paid from the UK, YouTube Premium already paid), plus a possible duplicate Claude Max plan, Podchaser ($30) and Financial Modeling Prep ($29). Gemini separately read a Google Play notice in the same personal account about a YouTube subscription ending on 27 October; whether YouTube TV was already being cancelled is unconfirmed. Muse also picked Podchaser and asked whether it powered anything still running; Podchaser is connected to Krish's tools, so use is plausible and awaits his word.
+- **Gemini's first reply draft** went to a forwarded personal medical email, followed by "Do you want to send it now?". Its subscription task opened the same way. Mention publicly only as "a personal medical email", and only with Krish's approval.
+- **Same forecast, two dates.** Grok labelled the eMarketer creator-boosting forecast as 9 October; Muse cited the same forecast as published in April 2026.
+- **CV contradiction.** On one thread, Grok's day plan said the CV had been sent and Muse's said it found no sent CV. Unresolved; not used in the piece.

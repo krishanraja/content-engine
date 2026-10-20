@@ -1,72 +1,65 @@
-# Five everyday jobs. How much work comes back to you?
+# Five everyday jobs. What did the assistant leave you?
 
-Wednesday narrative and proposed visuals, 20 October 2026. Draft for review.
+Wednesday narrative and proposed visuals. Rewritten with Krish, 20 October 2026. Draft for review.
+
+## Status
+
+- AGREED (Krish, 20 Oct): the Heartside "order" emails were scams. His words: "They were scams, go with the first framing." The inbox section is built on that.
+- AGREED: the score is what each assistant left for you. Lead with the flight. Order: flight, money, inbox, day plan and news, the two extras, close.
+- OPEN, Krish to decide: whether to use the YouTube TV example (see Holds), whether Podchaser is in use, whether to name Heartside, and whether to mention the medical email at all.
+- Titles, thumbnail words and headings wait until after recording (house rule).
 
 ## The message
 
-Choose an assistant for the jobs it helps you finish. A simple scorecard: what it got ready, what needed fixing, and what remained yours to do.
+**Here's a scorecard, so you don't have to go and use them all.** For five ordinary jobs, it shows what each assistant handed you and what it left for you to do.
 
-Five ordinary requests: save me money, plan my day, help me answer people, catch me up, find me a flight. Then two distinctive uses: neglected Messenger conversations and worthwhile discussions on X.
+Working question: how much work does each assistant actually take off your hands?
+
+## The spine, in six beats
+
+1. **The flight (the opener).** I asked three assistants for the cheapest flight to New York. Two found the same one: about £335. It includes 29 hours in Lisbon. By its own times you land on Thursday night and fly home just after midnight on Monday. Five nights by the dates, three nights in New York. Then both assistants talked me out of it.
+2. **Money.** One found a US-only TV service I pay for from London. One asked the question that matters before you cancel anything: is it wired into something you still run? One wrote a cancellation email first and asked if I wanted to send it.
+3. **The inbox (the high point).** The most useful thing an assistant did all day was tell me not to reply. Grok flagged a run of "I'd like to order six of your products" emails as likely scams. They were. Muse wrote a careful, polite reply to the first one and put it at the top of my to-do list.
+4. **Day plan.** Quick. Did it separate real appointments from suggestions? Mostly yes.
+5. **News.** Quick. One assistant called an April forecast October news. Another dated the same forecast correctly.
+6. **Two extras.** Muse went through Messenger, which I barely open, and found five conversations I'd left hanging. Grok searched X for small creator-economy conversations worth joining and drafted a reply. Different strengths, shown separately.
+
+**Close:** Find your row. Use the assistant for the job it handed back finished. Keep the job it handed back to you.
 
 ## Opening, proposed spoken wording
 
-Five jobs I would happily give someone else. Find a subscription worth cancelling. Make sense of my day. Help me answer the people waiting on me. Catch me up on the news. And find me a cheap flight.
+Series line first (house rule): "I've been looking at what's really inside the AI everyone's selling us."
 
-We gave those jobs to AI assistants in ordinary English. Here's what they got ready, and what still needed us.
+Then: "So I gave three AI assistants five boring jobs. First one: find me the cheapest flight to New York. Two of them found the same flight. Three hundred and thirty-five pounds. It comes with twenty-nine hours in Lisbon."
 
-## 1. Answer the people waiting on you
+"I'm Krish" goes at the end.
 
-Start with the reply queue. Grok found candidates, asked about a commercial decision, then moved to the next email when asked. The follow-up was normal: make it less formal, and don't promise a date. It shortened the reply, kept the recipients and left it awaiting approval.
+## Proposed visuals
 
-Gemini produced a draft before showing the requested queue. Asked again for a work-email list, it produced another draft. Writing had moved forward; sorting remained with the user. Muse produced a queue and saved a draft. The wording correction detached that draft from its thread. Muse recreated it in the right place, disclosed the problem and left a duplicate because it lacked deletion permission. Gmail readback confirmed both. Useful work, with cleanup still needed.
+Each visual answers one question a viewer has, using the test's own numbers.
 
-VISUAL: REQUEST > QUEUE > DRAFT > CORRECTION. Highlight only the change and approval state. The point: can it carry a job through a conversation?
+1. **Flight timeline (the hero).** Question: how cheap is the cheap flight, really? One horizontal bar from Wednesday morning to Monday night. Blocks: London to Lisbon, 29 hours in Lisbon, Lisbon to Newark, three nights in New York, an overnight flight home. Above it, "5 nights" by the dates. Below it, "3 nights in New York". Small label: "Fares found 20 Oct 2026. Historical." Then the sensible option next to it: one stop or nonstop, about £450 to £480.
+2. **Money card.** Question: what am I actually cancelling? Three columns: COSTS / WHY THIS ONE / WHAT STOPS WORKING. Each assistant's pick on one row. The third column is where the differences show.
+3. **Same email, two calls.** Question: can it tell a customer from a scam? The anonymised email in the middle ("Hi! I'm thinking of ordering six of your products..."). Left: Grok, "Looks like a buyer scam. Skip." Right: Muse, a polished reply, marked "Top of today's list". Stamp underneath: SCAM, confirmed by Krish.
+4. **The scorecard.** Five rows (jobs) by three columns (assistants). Each cell has two short lines: HANDED YOU and LEFT YOU. Reveal one row at a time, end on the full card to save. Footer: "Observed 20 Oct 2026. Personal accounts, different inboxes. Drafts only."
+5. **Extras.** Messenger: five anonymised conversation cards (age, what was missed), then one draft reply. X: question people are asking, original thread, proposed reply. No names, handles or account details anywhere.
 
-## 2. Save money without breaking something
+## Holds before anything is recorded
 
-Grok found a real recurring charge. Muse recognised a store app as part of Heartside, then suggested a different subscription and prepared a cancellation draft. It asked whether the service powered anything still running.
+- **YouTube TV.** Grok recommended cancelling it on the personal Gmail account. Gemini read a Google Play notice in the same account about a YouTube subscription ending on 27 October. Before using this example, Krish confirms whether YouTube TV was already being cancelled. Until then the money section can use Podchaser (both picked it) and Gemini's top-up email.
+- **Podchaser.** Grok and Muse both picked it at $30 a month. Podchaser is connected to Krish's tools, so it may well be in use. Only Muse asked. If Krish confirms it is in use, the beat gets stronger: two assistants suggested cutting a tool I use, and one thought to ask.
+- **Two Claude plans.** Grok flagged a possible duplicate. This is private and stays out unless Krish says otherwise.
+- **Medical email.** Gemini drafted a reply to a forwarded personal medical email first. Public copy says "a personal medical email" with no other detail, and only if Krish approves.
+- **Heartside.** The scam emails came to his online store. Naming the store is his call; the default is "an online store I run".
 
-A receipt tells you what you paid. It doesn't tell you what you can stop using.
+## Evidence boundaries (keep)
 
-VISUAL: COST / WHY THIS ONE / WHAT YOU LOSE. A proposed saving is not money already saved.
-
-## 3. Turn the inbox into a day
-
-Grok separated proposed work from appointments. Muse identified a timed invitation and explicitly said it wasn't a confirmed booking. Gemini returned priorities and supplied source links after a follow-up.
-
-VISUAL: two lanes labelled INVITATIONS AND COMMITMENTS / SUGGESTED WORK. Distinguish an invitation from an accepted event. The point: which times are real?
-
-## 4. Catch up without collecting more tabs
-
-All three produced a briefing. Muse supplied links and dates after we asked. Grok linked its stories, but one item labelled as recent led to an older source.
-
-VISUAL: headline, original source date, and why it matters together. The point: useful explanation still needs a checkable source.
-
-## 5. Find the flight you actually want
-
-The shared example: five nights in New York in November, return from London, one adult with a cabin bag. Low prices included long stops. Muse later made the lost destination time explicit. Grok disclosed baggage uncertainty. Gemini sampled dates but used language suggesting the month's cheapest.
-
-VISUAL: FARE / CABIN BAG / TRAVEL TIME / NIGHTS AT DESTINATION. Derive destination nights from actual arrival and return departure, not the date range. The point: the lowest fare may not satisfy the trip.
-
-## Two distinctive uses
-
-MUSE AND MESSENGER: recover worthwhile conversations from somewhere you barely check. Show the missed request, useful context and draft from the actual completed scan. Anonymise all identities and sensitive details.
-
-GROK AND X: three small creator-economy conversations, original post and reply links, and a contribution draft. Show the move from finding news to finding somewhere useful to contribute. Linked claims are not independently verified, so don't present them as established facts.
-
-These are separate showcases, not extra points against the other product.
-
-## Close, proposed spoken wording
-
-Start with the job you keep putting off. Ask in your own words. Check what it gets ready, what it gets wrong, and how much is left for you.
-
-Save the scorecard. Pick the row that would make your week easier.
-
-## Production notes
-
-Reveal one scorecard row at a time, with one example and a short explanation. End with the full saveable card. Labels: READY TO REVIEW / NEEDS CHECKING / MISSED THE REQUEST / NOT TESTED.
-
-No overall winner or reliability percentage. Different connected inboxes; Muse gained email access during the trial. Consumer Gemini is a baseline, not a verified Gemini Spark run; its day-plan task fell back from Pro. dots and Poke are untested.
-
-Use anonymised reproductions until screenshots are redacted and inspected. No private names, addresses, account menus or unrelated messages in publication assets. This is a narrative for approval, not a checked recording script. No paid check, send or public post has run.
-
+- These are observed personal sessions, one run per job. No winner, average or success rate.
+- Different accounts. Grok and Muse used the same work inbox for the webinar reply; Gemini (consumer chat, Pro, not a verified Gemini Spark run) was on a different personal inbox, so it never saw the scam emails. Muse gained email access during the test. Gemini's day plan fell back from Pro under demand.
+- dots and Poke were not tested.
+- Muse is Meta's Muse, used at muse.ai. The chat title "muso" is a name Krish gave it on 19 October; its links run through Meta's own link service.
+- Flight prices and times are what the assistants reported on 20 October, not current or independently booked. The three-nights figure is calculated from Muse's quoted arrival (Thu 19 Nov, 22:10) and return departure (Mon 23 Nov, 00:10); Muse itself said four.
+- A receipt proves payment, not disuse.
+- Muse's duplicate Gmail draft stays in the story and in Gmail: it detached its draft while editing, recreated it correctly, said so, and couldn't delete the spare without more permission. Gmail readback confirmed both.
+- Messenger: five conversations surfaced does not prove every one was found. X: links returned; the underlying posts were not independently read (HTTP 403).
+- Nothing was sent, posted, cancelled or booked. No new paid service. Monday's no-spend hold remains.
