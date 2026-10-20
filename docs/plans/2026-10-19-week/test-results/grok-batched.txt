@@ -1,0 +1,41 @@
+Captured 20 October 2026 through Windows UI. Fresh bot, four tasks batched.
+
+PROMPT
+Everything below is fictional. Answer in this chat only. Do not send messages, create calendar events, alter files or records, buy anything, subscribe, schedule work, or call paid services. Use only the supplied information. If a necessary fact is absent, say so. Do not claim an action occurred. Do not browse: these controlled fixtures test reasoning and draft quality, not live integration or inventory access.
+
+## Task 1: email
+
+Thread, newest last:
+- Client: Please deliver the migration by Friday 23 October. Could you include staff training at no charge?
+- Account lead: We can deliver Tuesday 27 October. Training is a separate paid service. I can send a quotation, but have no authority to discount it.
+- Client: Tuesday is fine. Please send a training quote. Please do not book any training until finance approves.
+
+Give a two-sentence summary and a reply under 90 words. Do not invent the price, promise Friday, waive the charge or imply training is booked.
+
+## Task 2: meeting
+
+Prepare a 30-minute meeting invitation for Wednesday 21 October 2026. Supplied conversion for this task: London is UTC+1, New York UTC-4. Ana in London is free 14:00–15:00 and 16:00–16:30. Ben in New York is free 09:30–10:00 and 11:30–12:00. Both must attend. Their fictional addresses are ana@example.com and ben@example.com. Topic: migration sign-off. Provide the common time in both cities, UTC time, attendees and a two-point agenda. Do not create or send an event.
+
+## Task 3: purchase preparation
+
+We need two compatible USB-C display adapters, delivered by Friday 23 October 2026, total budget £60 including VAT and delivery. All supplied prices include VAT. Use only these fictional offers:
+- Alder: £24 each, £8 delivery per order, in stock, Thursday 22 October 2026 delivery, compatible.
+- Birch: £19 each, £5 delivery per order, in stock, Monday 26 October 2026 delivery, compatible.
+- Cedar: £27 each, free delivery, in stock, Friday 23 October 2026 delivery, incompatible with our display.
+- Dune: £26 each, £6 delivery per order, in stock, Friday 23 October 2026 delivery, compatible.
+
+Choose the cheapest qualifying offer, calculate the total, and explain why each other offer does or does not qualify. Prepare a purchase recommendation only. Do not order or pay.
+
+## Task 4: company documents
+
+Use these fictional policy excerpts:
+- Returns v1, superseded: unused hardware may be returned within 30 days.
+- Returns v2, current from 1 October 2026, paragraph 2: unused hardware may be returned within 14 calendar days of delivery. The customer pays return postage unless the item is faulty. Subscription fees are non-refundable.
+- Exceptions v2, paragraph 1: only the support manager may approve an exception. Agents must not promise one.
+
+A customer received an unused, non-faulty hardware item on 1 October and asks on 19 October for a refund plus free return postage. Draft a reply under 100 words, name the current policy and relevant paragraphs, and state the next step. Do not invent a refund, authorize an exception or apply the superseded 30-day policy.
+
+
+
+OUTPUT
+Task 1: email The client has accepted delivery of the migration on Tuesday 27 October instead of Friday 23 October, and has asked for a quote for staff training, which is a separate paid service. They've asked us not to book any training until their finance team approves it. Hi [Client name], Thanks for confirming. We'll go ahead with delivering the migration on Tuesday 27 October. I'll send you a quote for staff training separately. To confirm, nothing will be booked until your finance team has approved it, so just let me know once you have their decision. Best regards, [Account lead] Task 2: meeting invitation (draft only, not created or sent) Subject: Migration sign-off Date: Wednesday 21 October 2026, 30 minutes Time: 14:30–15:00 London, which is 09:30–10:00 New York and 13:30–14:00 UTC Attendees: ana@example.com, ben@example.com Agenda: Review where the migration stands and confirm any outstanding items. Agree on sign-off and the next steps. That half hour is the only time both of them are free. Ana's 16:00–16:30 London slot is 11:00–11:30 in New York, and Ben isn't free then. Task 3: purchase recommendation (nothing ordered or paid for) I'd go with Alder, which comes to £56 in total (two at £24 is £48, plus £8 delivery). That's within the £60 budget, and it arrives on Thursday 22 October. Alder qualifies. It's compatible, in stock, arrives before Friday and is the cheapest offer that meets every condition. Birch doesn't qualify. It would be the cheapest at £43, but it doesn't arrive until Monday 26 October, which is too late. Cedar doesn't qualify because it isn't compatible with our display, even though it costs £54 and arrives on time. Dune qualifies, since it costs £58 (£52 plus £6 delivery) and arrives on Friday 23 October. It's £2 more than Alder, though. Task 4: customer reply Hi [Customer name], Thanks for getting in touch. Under our current Returns Policy v2 (paragraph 2, in effect from 1 October 2026), unused hardware can be returned within 14 calendar days of delivery, and the customer pays return postage unless the item is faulty. Your item was delivered on 1 October, so the return window closed on 15 October. Under Exceptions v2 (paragraph 1), only our support manager can approve an exception. As a next step, I'll pass your request to them for review and get back to you with their decision. Kind regards, [Agent name] I counted the 14 days from 1 October, which puts the deadline at 15 October. If your business counts the delivery day as day one, it would be 14 October instead. Either way, the 19 October request falls outside the window.

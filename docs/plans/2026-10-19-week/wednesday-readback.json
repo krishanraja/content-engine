@@ -1,8 +1,8 @@
 {
-  "build_id": "d623dc75d5ad3f131d268941dda9ac470be4536f429253930fd477fff99cbb42",
-  "previous_build": "77f60eb44b586dd9c64293c642bf66636449199b8b4fd9d1b6e9ca35f5fe5f24",
+  "date": "2026-10-20",
+  "build_id": "9c5d3b0567774c44213f525a26a0f625ee27ca9169626697d3d316dee617bc7f",
+  "previous_build": "d623dc75d5ad3f131d268941dda9ac470be4536f429253930fd477fff99cbb42",
   "assets_unchanged": 23,
-  "html_readback_sha256": "d21e2ead5ea6f36651e4b2af1a261a9363a601c89f10aa98d88c4ca4da6ecaf7",
   "collections": [
     {
       "collection": "2026-10-12/ticks",
@@ -65,7 +65,8 @@
       "preserved": true
     }
   ],
-  "completed_draft_outputs": 5,
+  "html_readback_sha256": "37683de0e7f0c7093758c9a4df090615285e02b4bc2ddb55434aa322fda346cc",
+  "completed_draft_outputs": 9,
   "spark_agent_tested": false,
   "public_posts": 0,
   "paid_calls": 0
