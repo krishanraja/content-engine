@@ -9,7 +9,7 @@ Krish's (20 Oct, his words in quotes):
 - **The order emails were scams.** "They were scams, go with the first framing."
 - **Angle:** "A mix of the first 2, with the scorecard as the takeaway". The argument is that the most useful thing an assistant does is say no at the right moment. The texture is three personalities: Grok the sceptic, Muse the brilliant new hire, Gemini with a finger on the send button.
 - **Reader:** leaders at mid-sized firms, a smart non-technical manager at a 200-person company.
-- **Ending he picked**, adjusted for house rule R2 (no "not X, Y" in either order): "If your team is about to get one of these, pick the one that says no at the right moment." His preview read "don't ask which is smartest. Ask which one says no at the right moment." Krish to confirm the adjusted wording.
+- **Ending he picked**, adjusted for house rule R2 (no "not X, Y" in either order): "If your team is about to get one of these, pick the one that says no at the right moment." His preview read "don't ask which is smartest. Ask which one says no at the right moment." Krish, 20 Oct: "Keep your closing line".
 - **Privacy:** anonymise everything private, redact sensitive detail, and Codex blurs any screenshot. No personal subscription specifics. "Forget about my subscriptions."
 
 Routine calls Claude made (for Krish to overrule):
@@ -18,10 +18,7 @@ Routine calls Claude made (for Krish to overrule):
 - Order: scam, the three personalities, flight, emails, cancellation, where saying no went missing, the extras, then the card.
 - Countercase in its own section: confidence where a "not sure" belonged, from all three.
 
-Open for Krish:
-
-- The adjusted closing line (above).
-- The two-word marks on the card ("Said no", "Said wait"): keep, or use plain cells only?
+- **Card:** plain cells, no "Said no" or "Said wait" marks. Krish, 20 Oct: "drop the marks".
 
 ## The message
 
@@ -53,7 +50,7 @@ Each one answers a question the viewer has, using the test's own outputs. All pe
 1. **Same email, two calls (cold open).** Question: can it tell a customer from a scam? The anonymised email in the centre. Left, Grok: "never names a product, which is common with buyer-scam emails". Right, Muse: the polished reply, tagged "First on today's list". Stamp: SCAM.
 2. **The trip timeline.** Question: how cheap is the cheap flight, really? One bar from Wednesday morning to Monday. London to Lisbon, 29 hours in Lisbon, Lisbon to Newark, three nights in New York, the flight home at 00:10 Monday. Above: "5 nights". Below: "3 in New York". Label: "Fares found 20 Oct 2026. Historical."
 3. **Send it now?** Question: who presses send? Gemini's two identical prompts, "Do you want to send it now?", on the two jobs where it appeared. No email content visible.
-4. **The card.** Five jobs by three assistants, short cells, with a "Said no" or "Said wait" mark where one pushed back. Reveal row by row, end on the full card to save. Footer: "Observed 20 Oct 2026. One run per job. Personal accounts, different inboxes. Drafts only."
+4. **The card.** Five jobs by three assistants, short plain cells. Reveal row by row, end on the full card to save. Footer: "Observed 20 Oct 2026. One run per job. Personal accounts, different inboxes. Drafts only."
 5. **Extras.** Messenger: five anonymised conversation cards, then the reply that leaves the time to me. X: the question people were asking, the thread, the proposed reply. No names or handles.
 
 Production note for Codex: blur every screenshot before use (names, addresses, subjects, amounts, account menus, unrelated messages). Prefer anonymised reproductions over screenshots.

@@ -3,7 +3,7 @@
 ## 20 October: Wednesday rewritten with Krish (Claude, editorial session)
 
 Live: https://content.krishraja.com/board/2026-10-19#wednesday, build
-`8bab0fa0…a6d` (readback hash matches the built file; Monday, Friday and Ideas
+`63bbc0e6…9db7` (readback hash matches the built file; Monday, Friday and Ideas
 panels byte-identical; 24 assets kept; 28 comments, 0 edits, 0 ticks unchanged).
 Sources: `docs/plans/2026-10-19-week/` (`wednesday-narrative-ready.md` holds
 his decisions, `wednesday-article-draft.md` the piece, `wednesday-scorecard.md`
@@ -14,8 +14,9 @@ the takeaway card).
   brilliant new hire, Gemini with a finger on send), scorecard as the
   takeaway. Reader: leaders at mid-sized firms. Everything private anonymised,
   no personal subscription specifics, Codex blurs screenshots.
-- **Open for Krish:** the closing line, adjusted for rule R2; whether to keep
-  the "Said no / Said wait" marks on the card. Titles after recording.
+- **Also decided:** closing line "If your team is about to get one of these,
+  pick the one that says no at the right moment."; plain card cells, no marks.
+  Titles after recording.
 - **Lesson (Krish, 20 Oct):** bring strategic editorial choices (angle, reader,
   structure) to him as decisions; never spend questions on his private test
   data.

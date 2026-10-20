@@ -82,9 +82,9 @@ One run per job, on personal accounts. It shows what happened that day, and it c
 
 | Job | Grok Bot | Muse | Gemini |
 |---|---|---|---|
-| Emails that need me | Flagged the scams. Asked for the fee. **Said no.** | Sorted it well. Replied to a scammer. | Drafted instead of sorting. "Send it now?" |
-| Cheapest flight | Found £335, called out Lisbon. **Said no.** | Same deal, nonstop pick, listed its gaps. **Said no.** | Found the nonstop. Too sure about the bag. |
-| Something to cancel | Real pick, checked who uses it. **Said wait.** | Real pick, asked what breaks. **Said wait.** | Cancellation email first, reason later. |
+| Emails that need me | Flagged the scams. Asked for the fee. | Sorted it well. Replied to a scammer. | Drafted instead of sorting. "Send it now?" |
+| Cheapest flight | Found £335, called out Lisbon. | Same deal, nonstop pick, listed its gaps. | Found the nonstop. Too sure about the bag. |
+| Something to cancel | Real pick, checked who uses it. | Real pick, asked what breaks. | Cancellation email first, reason later. |
 | Plan my day | Suggested times, said which were real. | Marked the one invitation clearly. | Three priorities, links on request. |
 | Catch me up | Best briefing. One old story dated as new. | Good briefing. Dated it correctly. | Useful themes, unchecked. |
 

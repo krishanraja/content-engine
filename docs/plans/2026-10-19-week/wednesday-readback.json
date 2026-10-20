@@ -43,5 +43,21 @@
       "edits": 0,
       "ticks": 0
     }
+  },
+  "claude_editorial_2026_10_20_v3": {
+    "build_id": "63bbc0e648754d97567c6f5824abc8197ecf33cd43c6600440fba1fe6de09db7",
+    "replaced_build": "8bab0fa0fc628709ad4622b61c981daab86e9ec60fe0ce421c84220bbcd4ea6d",
+    "html_sha256": "d97ebfbde3168d8f4216e94a141fb77598bbccdeeecd2c1ca1c5a6329f99c4f6",
+    "assets_kept": 24,
+    "unchanged_panels": [
+      "ideas",
+      "monday",
+      "friday"
+    ],
+    "stores_after": {
+      "comments": 28,
+      "edits": 0,
+      "ticks": 0
+    }
   }
 }
