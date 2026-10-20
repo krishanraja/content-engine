@@ -4,6 +4,16 @@ Narrative and proposed visuals, 20 October 2026. Draft for Krish's review. The a
 
 ## Decisions
 
+### Recording-script brief, Codex session, 20 October
+
+Krish authorised drafting the five-minute and short scripts and putting both on the live Wednesday board for edits and comments. His exact direction: "Make the long one feel like a science experiment, with humour and real-world visuals planned throughout which will come after the copy is approved."
+
+The board's saved article edit is incorporated in `wednesday-article-draft.md`: "They were scams. Well crafted phishing emails." The saved visual direction was read back from the comment on `rvs-wed-messenger-and-x-showcases`.
+
+Spoken drafts: `../2026-10-21-draft-script.md` and `../2026-10-21-draft-script-90s.md`. The separate `wednesday-script-visual-plan.md` plans evidence coverage throughout both cuts; it is not rendered media. Copy remains in review, visual production waits for copy approval, and titles follow recording. No Teleprompter send in this draft-review step.
+
+The supplied Wednesday handover explicitly puts the series line first and "I'm Krish" at the end. The shared automated series checker still expects his name at the start. Follow the piece-specific handover, preserve the checker findings in `wednesday-script-checks.json`, and do not silently claim the shared check passed or change the global house rule.
+
 Krish's (20 Oct, his words in quotes):
 
 - **The order emails were scams.** "They were scams, go with the first framing."

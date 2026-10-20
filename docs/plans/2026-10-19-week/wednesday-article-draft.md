@@ -12,7 +12,7 @@ I'd asked three assistants to go through my inbox and get replies ready. Grok Bo
 
 Meta's Muse wrote the sender a lovely reply. Polite, accurate, matched line by line to my refund policy. Then it put that reply at the top of my to-do list for the day.
 
-They were scams.
+They were scams. Well crafted phishing emails.
 
 So I gave Grok, Muse and Google's Gemini five boring jobs from a normal week, the kind every manager would happily hand to someone else. Clear the emails that need me. Plan my day. Catch me up on the news. Find a subscription worth cancelling. Find me the cheapest flight to New York. I asked in plain English, followed up like a normal person, and let nothing get sent, cancelled or booked.
 
