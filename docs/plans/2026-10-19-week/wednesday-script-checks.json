@@ -1,0 +1,112 @@
+{
+  "status": "drafts for editorial review; not recording approval",
+  "series_override": {
+    "source": "Krish supplied Wednesday handover, 20 Oct 2026",
+    "instruction": "Wednesday series line first; I am Krish at the end",
+    "scope": "this piece only; shared rules unchanged"
+  },
+  "cuts": {
+    "long": {
+      "file": "docs/plans/2026-10-21-draft-script.md",
+      "sha256": "54fc91d6af1011ff8e44f56a99b72e5601cd1ee0853a4d69be65230842f47bac",
+      "words": 788,
+      "reading": {
+        "sentences": 96,
+        "words": 788,
+        "average": 8.2,
+        "grade": 3.5,
+        "long_sentences": [],
+        "quotes": [],
+        "jargon": {},
+        "long_word_share": 0.071,
+        "long_words": [
+          "Gemini",
+          "Several",
+          "actually",
+          "another",
+          "article",
+          "assistant",
+          "assistants",
+          "beautifully",
+          "cancellation",
+          "cancelled",
+          "cancelling",
+          "comparing",
+          "comparison",
+          "compliment",
+          "confident",
+          "connected",
+          "conversations",
+          "correction",
+          "definitely",
+          "different",
+          "every",
+          "everyone's",
+          "evidence",
+          "forecast",
+          "happily",
+          "included",
+          "likely",
+          "lovely",
+          "makeyourmindup.ai",
+          "personal",
+          "policy",
+          "questioning",
+          "regular",
+          "separate",
+          "something",
+          "suggested",
+          "thirty-five",
+          "twenty-nine",
+          "useful",
+          "verify"
+        ]
+      },
+      "problems_without_series": [],
+      "full_series_check_findings": [
+        "it does not open with its series line, word for word, said first and before the hook: \"I've been looking at what's really inside the AI everyone's selling us. I'm Krish.\" (house rule SERIES_OPENER, Krish, 2026-10-12). It opens: \"I've been looking at what's really inside the AI everyone's selling us. I've been trying three assistants on the jobs I'\"",
+        "it says \"I'm Krish\" again after the series line: his name is said once, in that line, and the close ends without it (house rule SERIES_OPENER; Krish, 2026-10-12: \"Drop it at the end\")"
+      ],
+      "piece_opener_check": true,
+      "piece_name_check": true
+    },
+    "short": {
+      "file": "docs/plans/2026-10-21-draft-script-90s.md",
+      "sha256": "2b1bb56dcec1c5ddd49262f3f1857b0e658817afa4cab1ab4f9e29384835d7af",
+      "words": 189,
+      "reading": {
+        "sentences": 24,
+        "words": 189,
+        "average": 7.9,
+        "grade": 3.7,
+        "long_sentences": [],
+        "quotes": [],
+        "jargon": {},
+        "long_word_share": 0.079,
+        "long_words": [
+          "Gemini",
+          "article",
+          "assistants",
+          "comparison",
+          "different",
+          "everyday",
+          "everyone's",
+          "included",
+          "likely",
+          "lovely",
+          "makeyourmindup.ai",
+          "personal",
+          "thirty-five",
+          "twenty-nine-hour"
+        ]
+      },
+      "problems_without_series": [],
+      "full_series_check_findings": [
+        "it does not open with its series line, word for word, said first and before the hook: \"I've been looking at what's really inside the AI everyone's selling us. I'm Krish.\" (house rule SERIES_OPENER, Krish, 2026-10-12). It opens: \"I've been looking at what's really inside the AI everyone's selling us. I've been trying three AI assistants on everyday\"",
+        "it says \"I'm Krish\" again after the series line: his name is said once, in that line, and the close ends without it (house rule SERIES_OPENER; Krish, 2026-10-12: \"Drop it at the end\")"
+      ],
+      "piece_opener_check": true,
+      "piece_name_check": true
+    }
+  }
+}

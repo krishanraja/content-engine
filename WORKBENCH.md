@@ -1,5 +1,15 @@
 # Workbench: where we are and what's next
 
+## 20 October: Wednesday recording drafts live (Codex)
+
+Review: https://content.krishraja.com/board/2026-10-19#wednesday, build
+`ad2aa410...82eeb`. Both scripts (788/189 words) and the later visual plan
+are editable/commentable. Other panels, 24 assets and all feedback kept.
+Copy awaits Krish; visuals follow approval, titles follow recording.
+Checks, reader gaps, sources and the identity-placement exception:
+`docs/plans/2026-10-19-week/wednesday-script-review.md`. No Teleprompter send
+or spend. Repeat exact-text read-backs after edits, before recording.
+
 ## 20 October: Wednesday rewritten with Krish (Claude, editorial session)
 
 Live: https://content.krishraja.com/board/2026-10-19#wednesday, build
