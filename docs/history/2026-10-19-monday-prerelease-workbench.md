@@ -1,3 +1,7 @@
+> **Historical.** Banner added 2026-10-20 by the docs steward; moved here from `WORKBENCH.md` on 2026-10-19 by the working session. Not current guidance.
+> Replaced by: `WORKBENCH.md` and `NOW.md`.
+> Reason: Monday's pre-release hold detail, superseded by its final release (`WORKBENCH.md`, "19 October: Friday ready; Monday final release").
+
 ## 19 October: Friday and Monday publishing materials
 
 Finished media and Spotify delivery cards are live on both publishing weeks.

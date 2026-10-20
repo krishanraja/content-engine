@@ -1,3 +1,7 @@
+> **Historical.** Banner added 2026-10-20 by the docs steward; moved here from `WORKBENCH.md` on 2026-10-19 by the working session. Not current guidance.
+> Replaced by: `WORKBENCH.md` and `NOW.md`.
+> Reason: completed Friday delivery detail, archived to keep `WORKBENCH.md` within its size limit.
+
 ## Friday repairs delivered — Codex, 19 October
 
 Both complete files were accepted by Krish with sound, then passed their exact-file
