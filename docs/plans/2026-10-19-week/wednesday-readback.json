@@ -1,73 +1,15 @@
 {
-  "date": "2026-10-20",
-  "build_id": "9c5d3b0567774c44213f525a26a0f625ee27ca9169626697d3d316dee617bc7f",
-  "previous_build": "d623dc75d5ad3f131d268941dda9ac470be4536f429253930fd477fff99cbb42",
-  "assets_unchanged": 23,
-  "collections": [
-    {
-      "collection": "2026-10-12/ticks",
-      "records": 18,
-      "preserved": true
-    },
-    {
-      "collection": "2026-10-12/links",
-      "records": 0,
-      "preserved": true
-    },
-    {
-      "collection": "2026-10-12/edits",
-      "records": 3,
-      "preserved": true
-    },
-    {
-      "collection": "2026-10-12/picks",
-      "records": 0,
-      "preserved": true
-    },
-    {
-      "collection": "2026-10-12/queue",
-      "records": 0,
-      "preserved": true
-    },
-    {
-      "collection": "2026-10-12/comments",
-      "records": 24,
-      "preserved": true
-    },
-    {
-      "collection": "2026-10-19/ticks",
-      "records": 0,
-      "preserved": true
-    },
-    {
-      "collection": "2026-10-19/links",
-      "records": 0,
-      "preserved": true
-    },
-    {
-      "collection": "2026-10-19/edits",
-      "records": 0,
-      "preserved": true
-    },
-    {
-      "collection": "2026-10-19/picks",
-      "records": 3,
-      "preserved": true
-    },
-    {
-      "collection": "2026-10-19/queue",
-      "records": 11,
-      "preserved": true
-    },
-    {
-      "collection": "2026-10-19/comments",
-      "records": 28,
-      "preserved": true
-    }
-  ],
-  "html_readback_sha256": "37683de0e7f0c7093758c9a4df090615285e02b4bc2ddb55434aa322fda346cc",
-  "completed_draft_outputs": 9,
-  "spark_agent_tested": false,
-  "public_posts": 0,
-  "paid_calls": 0
+  "week": "2026-10-19",
+  "build_id": "25c25992848fbfd89a0696aececf33f5e2fd90ad7906e4c965a224dd759c2b8a",
+  "previous_build": "9c5d3b0567774c44213f525a26a0f625ee27ca9169626697d3d316dee617bc7f",
+  "html_sha256": "f283bd6aa78b9016c444919f05d60ffa95973e82635068da9c534114c6a768e5",
+  "html_bytes": 1949728,
+  "unchanged_assets": 23,
+  "unchanged_store_snapshots": 12,
+  "review_content_verified": true,
+  "scope": "Wednesday draft content only; no public posting or paid work",
+  "board_self_checks": 110,
+  "browser_verified_sections": 6,
+  "article_comment_control": "opened and closed without writing",
+  "screenshot": "C:/Users/krish/.scratch/wednesday-real-email/wednesday-live-board.png"
 }

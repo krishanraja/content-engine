@@ -1,66 +1,72 @@
-# Five AI assistants: where to start
+# Five everyday jobs. How much work comes back to you?
 
-Editorial narrative for review, 20 October 2026. Draft only. This is a research shortlist with limited hands-on draft checks, not a completed five-product benchmark or a recording script.
+Wednesday narrative and proposed visuals, 20 October 2026. Draft for review.
 
 ## The message
 
-**Pick the job you want off your plate. This card shows where to start and what to check.**
+Choose an assistant for the jobs it helps you finish. A simple scorecard: what it got ready, what needed fixing, and what remained yours to do.
 
-## Opening
+Five ordinary requests: save me money, plan my day, help me answer people, catch me up, find me a flight. Then two distinctive uses: neglected Messenger conversations and worthwhile discussions on X.
 
-Five AI assistants. You do not need five new accounts to work out which one deserves a look.
+## Opening, proposed spoken wording
 
-Start with the job you keep putting off. Replying to emails. Finding something across your work apps. Turning saved research into something useful. Getting a regular briefing. Keeping up through messages.
+Five jobs I would happily give someone else. Find a subscription worth cancelling. Make sense of my day. Help me answer the people waiting on me. Catch me up on the news. And find me a cheap flight.
 
-Here is the shortlist, with one check beside each choice.
+We gave those jobs to AI assistants in ordinary English. Here's what they got ready, and what still needed us.
 
-## The card
+## 1. Answer the people waiting on you
 
-| Your job | Research shortlist | Check before relying on it |
-|---|---|---|
-| Repeat a clear business routine | Grok Bot | Did it finish every step? |
-| Work across documents and apps | dots | Did it miss a detail or leave work unfinished? |
-| Turn personal research into a useful starting point | Muse | Does a claim of completion match what happened? |
-| Get regular Google-connected summaries | Gemini tasks | Does your account have the task feature you need? |
-| Receive briefings through messages | Poke | Are the dates and calendar details right? |
+Start with the reply queue. Grok found candidates, asked about a commercial decision, then moved to the next email when asked. The follow-up was normal: make it less formal, and don't promise a date. It shortened the reply, kept the recipients and left it awaiting approval.
 
-These rows come from the existing research, not five products we have tested equally. Grok and the Muse browser surface have draft checks below; ordinary Gemini chat has one email check. dots and Poke were not tested in this session. Verify Muse's product identity before attributing its browser results to the Meta Muse research. Keep the source links and access notes from wednesday-scorecard.md attached to the final card.
+Gemini produced a draft before showing the requested queue. Asked again for a work-email list, it produced another draft. Writing had moved forward; sorting remained with the user. Muse produced a queue and saved a draft. The wording correction detached that draft from its thread. Muse recreated it in the right place, disclosed the problem and left a duplicate because it lacked deletion permission. Gmail readback confirmed both. Useful work, with cleanup still needed.
 
-## Show what a good answer actually looks like
+VISUAL: REQUEST > QUEUE > DRAFT > CORRECTION. Highlight only the change and approval state. The point: can it carry a job through a conversation?
 
-Take a simple purchase. Two adapters. A £60 budget. Needed by Friday.
+## 2. Save money without breaking something
 
-The cheapest listing is £43. It arrives the following Monday, so it is useless for this job. Another costs £54 and arrives on time, but does not fit the display. The right answer is £56, including delivery.
+Grok found a real recurring charge. Muse recognised a store app as part of Heartside, then suggested a different subscription and prepared a cancellation draft. It asked whether the service powered anything still running.
 
-Grok Bot and the Muse browser test both picked it. That is useful: the answer follows the whole brief, not just the cheapest number.
+A receipt tells you what you paid. It doesn't tell you what you can stop using.
 
-**Visual:** four offers, with total price, delivery date and compatibility. Cross out the late offer and the incompatible one. Leave £56 highlighted. All figures labelled FICTIONAL TEST.
+VISUAL: COST / WHY THIS ONE / WHAT YOU LOSE. A proposed saving is not money already saved.
 
-## The one sentence worth checking
+## 3. Turn the inbox into a day
 
-Now a customer asks for a refund outside the return window. Only a manager can make an exception.
+Grok separated proposed work from appointments. Muse identified a timed invitation and explicitly said it wasn't a confirmed booking. Gemini returned priorities and supplied source links after a follow-up.
 
-Both answers found the current policy. Both understood that the manager decides.
+VISUAL: two lanes labelled INVITATIONS AND COMMITMENTS / SUGGESTED WORK. Distinguish an invitation from an accepted event. The point: which times are real?
 
-But one draft said, “I've passed your request to the support manager.” Nothing had been passed on. The other said, “As a next step, I'll pass your request to them for review.”
+## 4. Catch up without collecting more tabs
 
-One small sentence changes what the customer thinks has happened.
+All three produced a briefing. Muse supplied links and dates after we asked. Grok linked its stories, but one item labelled as recent led to an older source.
 
-Before using an assistant's draft, check three things: the date, the promise, and any claim that a job is already done.
+VISUAL: headline, original source date, and why it matters together. The point: useful explanation still needs a checkable source.
 
-**Visual:** two short extracts beside the same policy. Highlight only “I've passed” and “As a next step”. Label the actual observed products and test conditions. Do not turn one error into a product-wide failure verdict.
+## 5. Find the flight you actually want
 
-## Close
+The shared example: five nights in New York in November, return from London, one adult with a cabin bag. Low prices included long stops. Muse later made the lost destination time explicit. Grok disclosed baggage uncertainty. Gemini sampled dates but used language suggesting the month's cheapest.
 
-Pick one job you repeat every week. Choose the assistant that fits where you already work. Give it a clear brief and check the first result.
+VISUAL: FARE / CABIN BAG / TRAVEL TIME / NIGHTS AT DESTINATION. Derive destination nights from actual arrival and return departure, not the date range. The point: the lowest fare may not satisfy the trip.
 
-Save the card. You can choose where to start without spending your week trying everything.
+## Two distinctive uses
 
-## Delivery shape
+MUSE AND MESSENGER: recover worthwhile conversations from somewhere you barely check. Show the missed request, useful context and draft from the actual completed scan. Anonymise all identities and sensitive details.
 
-- Show the entire five-row card in the opening seconds; reveal one row at a time only when explaining it.
-- The short version needs the card, the £56 example and the three checks. The long version can include the policy comparison and access details.
-- Keep a visible distinction between RESEARCH SHORTLIST and OUR DRAFT CHECKS. No overall winner, invented average or success rate.
-- Access is part of usefulness. Krish has no Poke account and reports dots unavailable to his UK account. Grok was tested in its Windows app; this does not establish a universal Windows requirement. Gemini Pro chat is not evidence of Gemini task execution.
-- Grok received all four cases together in a fresh test bot to minimise desktop time. Muse received separate side chats. Preserve this difference beside results; do not call the runs an identical controlled benchmark.
-- No email was sent, event created, order placed or paid service called by this test session. The test establishes draft quality only.
+GROK AND X: three small creator-economy conversations, original post and reply links, and a contribution draft. Show the move from finding news to finding somewhere useful to contribute. Linked claims are not independently verified, so don't present them as established facts.
+
+These are separate showcases, not extra points against the other product.
+
+## Close, proposed spoken wording
+
+Start with the job you keep putting off. Ask in your own words. Check what it gets ready, what it gets wrong, and how much is left for you.
+
+Save the scorecard. Pick the row that would make your week easier.
+
+## Production notes
+
+Reveal one scorecard row at a time, with one example and a short explanation. End with the full saveable card. Labels: READY TO REVIEW / NEEDS CHECKING / MISSED THE REQUEST / NOT TESTED.
+
+No overall winner or reliability percentage. Different connected inboxes; Muse gained email access during the trial. Consumer Gemini is a baseline, not a verified Gemini Spark run; its day-plan task fell back from Pro. dots and Poke are untested.
+
+Use anonymised reproductions until screenshots are redacted and inspected. No private names, addresses, account menus or unrelated messages in publication assets. This is a narrative for approval, not a checked recording script. No paid check, send or public post has run.
+
