@@ -3,25 +3,26 @@
 ## 20 October: Wednesday rewritten with Krish (Claude, editorial session)
 
 Live: https://content.krishraja.com/board/2026-10-19#wednesday, build
-`b3b53907…e468` (readback hash matches the built file; Monday, Friday and Ideas
+`63bbc0e6…9db7` (readback hash matches the built file; Monday, Friday and Ideas
 panels byte-identical; 24 assets kept; 28 comments, 0 edits, 0 ticks unchanged).
-Sources: `docs/plans/2026-10-19-week/` (Codex's newer local Wednesday files
-synced from the board's evidence pack first, then rewritten).
+Sources: `docs/plans/2026-10-19-week/` (`wednesday-narrative-ready.md` holds
+his decisions, `wednesday-article-draft.md` the piece, `wednesday-scorecard.md`
+the takeaway card).
 
-- **Agreed with Krish.** Krish confirmed the "order six products" emails were
-  scams ("They were scams, go with the first framing"), so the inbox beat is
-  "the most useful thing an assistant did all day was tell me not to reply".
-  The score is now what each assistant handed you and what it left you, led by
-  the Lisbon flight (about £335, 29-hour stop, three nights in New York on a
-  five-night trip).
-- **Waiting on Krish** (holds in `wednesday-narrative-ready.md`): is YouTube TV
-  already being cancelled (Gemini saw a 27 Oct notice); is Podchaser in use;
-  whether to name Heartside; whether to mention the medical email; the two
-  Claude plans stay private unless he says otherwise. Titles after recording.
-- **Next:** finish editorial review with Krish, then recording scripts (series
-  line, reading gate, read-back) and the Teleprompter send. The superseded
-  four-task paragraph below is history. No sends, posts or spending; Monday's
-  no-spend hold remains.
+- **Krish decided:** the "order six products" emails were scams. Angle: "the
+  one that says no" mixed with three personalities (Grok the sceptic, Muse the
+  brilliant new hire, Gemini with a finger on send), scorecard as the
+  takeaway. Reader: leaders at mid-sized firms. Everything private anonymised,
+  no personal subscription specifics, Codex blurs screenshots.
+- **Also decided:** closing line "If your team is about to get one of these,
+  pick the one that says no at the right moment."; plain card cells, no marks.
+  Titles after recording.
+- **Lesson (Krish, 20 Oct):** bring strategic editorial choices (angle, reader,
+  structure) to him as decisions; never spend questions on his private test
+  data.
+- **Next:** his review of the article, then recording scripts (series line,
+  reading gate, read-back) and the Teleprompter send. No sends, posts or
+  spending; Monday's no-spend hold remains.
 
 ## 19 October: Friday ready; Monday final release
 
