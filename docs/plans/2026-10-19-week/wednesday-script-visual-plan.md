@@ -1,54 +1,45 @@
-# Wednesday recording scripts: visual plan for after copy approval
+# Wednesday: visual plan after copy approval
 
-Piece: d7a20885-7001-4661-b444-9d7ca1043416. Draft plan, 20 October 2026.
+Working headline: Muse vs Grok Bot: Head to Head on Running My Life.
 
-Krish's direction: the five-minute video narrates like a science experiment, with humour and real-world visuals throughout. This plan accompanies the spoken drafts. No visuals have been produced. Copy approval comes first; titles follow recording.
+This is the updated plan for the personal-life piece. Krish's tests and last week's corpus each inform the story and scorecard equally. No images, screenshots or video assets have been produced. Copy approval comes first; actual timings come from the later recording.
 
-## The experiment on screen
+## How the experiment feels
 
-Follow the same sequence as the narration: question, jobs, observed results, checks on the findings, limits, useful decision. Treat this as a small field test. Never dress the runs up as a controlled experiment or use a winner, average, success rate or invented score.
+Keep a question visible through the episode: are these done-for-you assistants worth the hype on the jobs in your life? Follow the request, the result, the check, then the consequence. Return to Krish for the judgement and humour. The test is a small personal field trial, not a controlled benchmark. No trophies, invented ratings, fake failures or science props.
 
-Keep the evidence moving while Krish speaks: the original request, the relevant assistant response, the consequence, then the next question. A long section should keep changing what the viewer can inspect. Use selective highlights, short scrolls, side-by-side comparisons and the trip timeline. Avoid a succession of static text slides or decorative science footage.
+Use continuous real evidence rather than static quote slides: show the prompt, highlight the relevant response, reveal what happened next, then cut back. Each row below is several changes of view, not a picture held for the whole passage.
 
-Each row below is a sequence of visual changes, not one picture held for the whole passage. Use spoken anchors now; set timings from the approved recording later. Return to Krish between evidence beats so he carries the judgement and the humour.
+## Long-cut coverage
 
-## Five-minute cut
-
-| Spoken anchor | What the viewer should understand | Planned visual sequence after approval | Evidence and limits |
-|---|---|---|---|
-| Series line, then the scam hook | These assistants handled real everyday work and made different calls. | Krish; three clearly named assistant lanes; brief preview of the anonymised scam and the two different responses. | Grok Bot, Meta's Muse and consumer Gemini. No Spark label. |
-| The subjects and five jobs | The same broad jobs structure the test. | Show the five original task briefs in plain language; move through the jobs as he names them. Keep one-run-per-job visible. | No identical-account or controlled-condition claim. |
-| Nothing got sent | The experiment stopped at drafts and advice. | An explicit small boundary beside the work: drafts and advice only. Show an unsent draft state only where the source supports it. | No invented completed action, send animation, booking or cancellation receipt. |
-| Six products, no product named | The useful clue is the vague purchase request. | Anonymised reproduction of the email; highlight the request for six products, then the missing product name. | Label it an anonymised reproduction. Remove sender, recipient, business, links and unrelated messages. |
-| Grok flagged it; Muse polished a reply | The responses disagree about whether the job should happen. | Same email remains central; reveal Grok's warning alongside Muse's policy-based reply; then reveal Muse's first-item day-plan placement. | Actual supplied output, safely reproduced. No invented wording presented as a quote. |
-| They were scams | Polished execution can still pursue the wrong task. | Hold the polished reply beside the scam classification. Cut to Krish for the dry observation, then back to the evidence. | Scam/phishing classification comes from Krish's explicit confirmation and saved article wording. No invented theft mechanism. |
-| Gemini had a different inbox | Gemini never faced this scam test. | Show the work-inbox bracket over Grok and Muse; a separate personal-inbox lane for Gemini. | No names, addresses or inbox screenshots. No failure mark against Gemini for unseen emails. |
-| Cheap New York flight | The fare and the time cost belong together. | Reproduce the fare result; reveal about £335 return, then the 29-hour Lisbon stop on the same itinerary. | Historical assistant-reported fares, 20 Oct 2026. Never imply bookable current prices. |
-| Quite a lot of Portugal | The stop consumes a substantial part of the trip. | Let the Lisbon section occupy its truthful share of a time-based route bar. Brief return to Krish for the joke. | No tourist stock footage as a substitute for the itinerary. |
-| Muse's own flight times | Its four-night description conflicts with its times. | Exact reported arrival: Thu 19 Nov, 22:10. Exact departure: Mon 23 Nov, 00:10. Highlight Thursday, Friday and Saturday nights; show the reported four beside the calculated three. | Explain the overnight count explicitly. Do not quietly change the supplied flight times. |
-| Both steered me away | Finding the cheapest option and recommending it are different actions. | Highlight each assistant's warning and alternative: Grok's shorter stop, Muse's direct flight. | Retain attribution and any stated gaps. No fabricated booking screen. |
-| Gemini said yes about the bag | Its confidence exceeded what the search established. | Cabin-bag question; Gemini's answer; search evidence with the unconfirmed fare-specific bag rules clearly labelled. | Do not claim the bag was excluded. Its inclusion remained unverified. |
-| Make it less formal; no date | A revision must retain the practical constraints. | Reproduce the shared correction once, then show each revised draft. Track recipients and the date promise through the change. | Names and addresses replaced consistently; no client details. |
-| Grok caught its invented compliment | An admission can prevent a false line reaching someone. | Highlight the invented pleasantry and Grok's own warning. Show the source email contains no corresponding compliment. | Reproduce only the minimum safe excerpt. |
-| Muse created a second draft | Its honest disclosure did not remove the duplicate. | Trace draft one, the detached edit, and draft two in the correct thread. Then show the independent Gmail readback containing both. | Reproduce the readback with two clearly labelled drafts; no invented send event. |
-| What fee to quote | Price remains a decision for the person doing the work. | Show Grok asking Krish for the fee; leave the price unfilled. Return to Krish for the line about keeping that part of his job. | No real fee or commercial client information. |
-| Gemini drafted a personal reply | It asked to send, but had skipped the requested sorting task. | Show the original request for a list, a generic draft silhouette with no personal content, then the actual send-permission prompt. | State that it asked permission and nothing went out. Never reproduce the private email. |
-| Cancellation | The order of advice matters. | Grok and Muse's dependency/use questions beside Gemini's draft-first sequence; reveal that the explanation followed two questions. | Generic service labels. No service names, bills, subscription details or amounts. |
-| Check our findings | Every assistant had an overconfidence example. | Three separate evidence comparisons: April forecast versus October label; four nights versus three; bag certainty versus missing confirmation. | Each comparison uses its own evidence. No ranking, numeric grades or coloured pass/fail marks. |
-| Limits of the test | A few personal runs cannot establish a winner. | Quiet method strip: one run per job; personal accounts; different inboxes; consumer Gemini; drafts only. | Also retain in production notes: no verified Spark run; dots and Poke untested. |
-| Messenger and X extras | These were useful observations outside the shared jobs. | Anonymised conversation cards and a proposed reply; safely reproduced X search output and proposed reply. | No names or handles. Label completeness and underlying X posts unverified. Never depict a post as independently read or a reply as sent. |
-| Table and closing judgement | The useful takeaway is what to test in the viewer's own team. | Reveal the existing plain-cell scorecard row by row; end on the complete table and Krish's closing line. | Use wednesday-scorecard.md. No marks, trophies or winner. Keep the historical date and method footer. |
+| Spoken beat | Reader's question | Planned sequence and evidence |
+|---|---|---|
+| Done-for-you opening; private appeal for leaders | Is this about the life I actually lead? | Krish, then the five real tasks as brief readable requests. Show a personal trip beside an anonymised work reply, not an enterprise rollout diagram. |
+| Five jobs and method | What was actually tested? | Five task briefs; small method strip: one personal run per job, different inboxes, drafts only. Gemini labelled regular chat, not Spark. |
+| Scam clue | What should have made the assistant pause? | Reproduce the vague six-product email. Highlight the absent product name. No names, addresses, business details or live links. Label anonymised reproduction. |
+| Grok warning versus Muse reply | What did each assistant make the next job? | Grok's actual warning; Muse's polished reply; then its first-place day-plan item. Hold those side by side while Krish delivers the joke. Scam status is his confirmed classification. |
+| The corpus interrupts | Does Muse always miss scams? | Clearly switch the source label from MY TEST to REPORTED TEST. Show a minimal cited summary of the separate coffee-business scam cases and its stated method. Muse resisted those scams. Never make that footage look like Krish's run. |
+| £335 and Lisbon | How much trip did the cheap fare buy? | Assistant-reported fare, labelled historical, 20 Oct 2026; route bar with 29 hours in Lisbon. Let the truthful duration carry the Portugal joke. |
+| Three nights, not four | Does the itinerary match the description? | Muse's reported Thu 19 Nov 22:10 arrival and Mon 23 Nov 00:10 departure. Highlight the three overnight stays. Compare with Muse's four-night claim. |
+| The bag promise | What remains unchecked? | The cabin-bag question, Gemini's yes and a clear unverified-inclusion label. Do not claim the bag was excluded. No invented charge at an airport. |
+| Same correction | Did the rewrite retain what mattered? | Show the shared less-formal/no-date correction. Trace the recipients and date promise. Highlight Grok's invented compliment and its own correction. |
+| Muse's duplicate draft | What really exists after the assistant says it fixed it? | A minimal two-draft diagram tied to the independent Gmail readback. One draft in the right thread; the first remains. No private subject or email content. |
+| The fee | Does it leave my decisions to me? | Grok asks for the fee, with no fee filled in. Return to Krish for keeping that part of his job. |
+| Grok's warning from the research | Does a good afternoon prove a reliable week? | A paying-user routine and failed lead scout, then the separate brokerage report. Label individual user reports, source date/scope and no measured failure rate. Avoid presenting repeated corpus rows as repeated independent tests. |
+| Cancellation and confidence misses | Does it explain the consequence before preparing the action? | Generic service labels only. Reveal Grok/Muse's use/dependency checks and Gemini's draft-first sequence. Brief three-column correction strip: old news, night count, unverified bag. |
+| Messenger and X | Which useful corners of my life does it reach? | Anonymised Messenger catch-up and proposed reply; X discovery shortlist and draft reply. Caption both as session demonstrations, not exclusive features. State X-source and completeness limitations. |
+| Personal-life research | Is there evidence beyond my own inbox? | Distinct labels for Meta's recipe-to-grocery promise and the reported wiper-shopping approval example. A vendor claim and an individual report must never look like two verified transactions. |
+| Last week's privacy piece | How much of my life am I connecting? | A later verified reference to that published piece, plus a plain access-boundary prompt. Do not invent its published title or URL. No unverified current price or privacy promise. |
+| The combined card and verdict | What would I try first, and what must I check? | Plain cells with MY TESTS 50% and RESEARCH 50%. Reveal each practical call beside both evidence columns. Missing research says not established. End on the personal-use shortlist and Krish's hairy-moments close. |
 
 ## Short cut
 
-The short is a trailer with its own complete argument. Follow its spoken anchors: three assistants; scam clue; Grok warning versus Muse reply and day plan; £335 plus 29-hour stop; Muse's night-count error; Gemini's unsupported bag certainty; method limits; full comparison table.
+Use the short's own spoken sequence: head-to-head opening, scam clue, divergent replies, research countercase, Lisbon fare and personal shortlist. Show the same distinction between MY TEST and REPORTED TEST. Put Gemini's consumer-chat and different-inbox limit on screen. Label the fare historical, 20 Oct 2026. Finish on a simple two-product starting-point card, with the full comparison in the article.
 
-Keep the scam comparison and trip timeline readable at 9:16. Reframe the relevant evidence for the narrow screen, rather than shrinking the long cut. Briefly return to Krish for each judgement. Do not add the correction, cancellation or extras scenes that this script does not narrate.
+Reframe evidence for 9:16. Do not shrink the long-cut scorecard or introduce visual scenes the short does not narrate. The personal judgement is conditional; no winner animation or numerical reliability claim.
 
-The short's spoken price is the same historical result as the long's. Put “Assistant-reported fare, 20 Oct 2026” alongside it. The short uses consumer Gemini, not a verified Spark run. dots and Poke were not tested. Its opening and closing preserve the same series and identity placement as the long cut.
+## Privacy and later production
 
-## Privacy and production gate
+Prefer anonymised reproductions. If a screenshot is used, Codex blurs names, handles, addresses, subjects, account menus, private amounts, links and unrelated content before any review or export, then checks the exported pixels. Reproductions must preserve the evidence and identify themselves. Do not export originals to the board or pack.
 
-Prefer anonymised reproductions. If a screenshot is necessary, Codex blurs names, handles, addresses, subjects, account menus, links, private amounts and unrelated content before use, and checks the exported pixels. Never place an unredacted source in a board, pack or visual review. Reproductions must identify themselves and preserve the evidence's meaning.
-
-Approval of these words does not approve invented interfaces, imagery, titles or a final visual treatment. After copy approval, prepare the evidence-based visual treatment for review. After recording, align it to the actual take and choose titles with Krish.
+After copy approval, prepare a concrete treatment using licensed or otherwise usable sources. Review source permissions before reproducing another reviewer's media. Small attributed summaries are enough when source imagery cannot be used. No visual title card, thumbnail or production image is authorised merely by this plan.

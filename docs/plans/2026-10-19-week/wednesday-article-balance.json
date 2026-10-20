@@ -1,0 +1,51 @@
+{
+  "sections": [
+    {
+      "heading": "# Muse vs Grok Bot: Head to Head on Running My Life",
+      "words": 170,
+      "lane": "synthesis"
+    },
+    {
+      "heading": "Muse made the wrong job look beautifully finished",
+      "words": 204,
+      "lane": "tests"
+    },
+    {
+      "heading": "The research won't let that become a verdict on Muse",
+      "words": 190,
+      "lane": "corpus"
+    },
+    {
+      "heading": "The cheap flight came with quite a lot of Portugal",
+      "words": 206,
+      "lane": "tests"
+    },
+    {
+      "heading": "What other people actually hand to Muse",
+      "words": 200,
+      "lane": "corpus"
+    },
+    {
+      "heading": "The draft that bred, and the fee that stayed mine",
+      "words": 218,
+      "lane": "tests"
+    },
+    {
+      "heading": "Grok's best case is the job you keep repeating",
+      "words": 238,
+      "lane": "corpus"
+    },
+    {
+      "heading": "So which one would I actually try?",
+      "words": 235,
+      "lane": "synthesis"
+    }
+  ],
+  "test_words": 628,
+  "corpus_words": 628,
+  "evidence_narrative_share": {
+    "tests": 0.5,
+    "corpus": 0.5
+  },
+  "synthesis": "Opening and close combine both lanes and are not assigned exclusively to either."
+}

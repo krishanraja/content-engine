@@ -1,91 +1,87 @@
-# Wednesday article draft (working title, decided after recording)
+# Muse vs Grok Bot: Head to Head on Running My Life
 
-Draft for Krish's review, 20 October 2026. Angle, reader and ending chosen by Krish (see `wednesday-narrative-ready.md`, "Decisions"). Everything private is anonymised; Codex blurs any screenshot before use.
+I've been trying these new done-for-you AI assistants. Muse, Grok Bot, and Google's Gemini alongside them. Flights, emails, the day plan, the things I keep meaning to cancel. The sort of jobs that make an assistant sound very attractive at half past ten on a Tuesday.
 
----
+And if you're a leader secretly trying one on your own life, I get the appeal. Your holiday search sits beside a work email. Your personal calendar already contains half your job. We can probably stop pretending those are two entirely separate people.
 
-The most useful thing an AI assistant did for me this week was tell me not to reply.
+I ran five head-to-head tests. One assistant wrote a lovely reply to a scammer. So are they worth the hype? Let's dive in.
 
-A small online business I run had a run of emails that all read roughly the same. "Hey! I'm thinking of ordering six of your products. Is your payment process secure?" Friendly, keen, and oddly vague about which products.
+Half of this comparison comes from my own tests. Half comes from the research collected last week: hands-on reviews, user accounts and product documentation. They get equal weight in the verdict. My tests tell me what happened on my accounts; the research tells me where that result holds up, where it gets contradicted, and what I haven't tried.
 
-I'd asked three assistants to go through my inbox and get replies ready. Grok Bot looked at that email and said it "never names a product, which is common with buyer-scam emails". It skipped about seven of them.
+## Muse made the wrong job look beautifully finished
 
-Meta's Muse wrote the sender a lovely reply. Polite, accurate, matched line by line to my refund policy. Then it put that reply at the top of my to-do list for the day.
+I started by checking my inbox for emails I should be replying to. Several messages asked much the same thing: someone wanted six of my products and reassurance that payment was secure. None named a product.
+
+Grok Bot flagged likely buyer scams and left about seven out of the reply queue. Muse checked my refund policy and wrote a polished reply. Then it put that reply first on my to-do list.
 
 They were scams. Well crafted phishing emails.
 
-So I gave Grok, Muse and Google's Gemini five boring jobs from a normal week, the kind every manager would happily hand to someone else. Clear the emails that need me. Plan my day. Catch me up on the news. Find a subscription worth cancelling. Find me the cheapest flight to New York. I asked in plain English, followed up like a normal person, and let nothing get sent, cancelled or booked.
+That's quite a thing to automate: the job of being lovely to someone who is trying it on. The reply itself was accurate. The decision to make replying my next job was the problem.
 
-By the end of it, three personalities had emerged. Grok is the sceptic who reads the small print. Muse is the brilliant new hire who does everything you ask and a bit more, including being lovely to scammers. Gemini keeps a finger hovering over the send button.
+Gemini had a different personal inbox and never saw those scams. It cannot earn or lose a point for spotting something it wasn't shown. I used its regular consumer chat, not a verified Spark run. That limits the comparison before we even get to its answers.
 
-The moments that saved me the most work all had one thing in common. The assistant stopped me.
+The other jobs were to plan my day, catch me up on the news, find something worth cancelling and find a cheap New York flight. I asked in plain English and followed up as I would with a person. Nothing got sent, posted, cancelled or booked.
 
-## The cheap flight
+## The research won't let that become a verdict on Muse
 
-Same brief for all three: London to New York, five nights in November, one adult, cabin bag only.
+The strongest corrective in last week's corpus is Pat Simmons's multi-agent test at AI for Mortals. He ran a simulated coffee business with separate accounts and an answer key. In his scam cases, Muse, Grok Bot and ChatGPT Dots all resisted the traps. Muse also exposed a useful view of its actions. That is a different result from my inbox, under different conditions. [His test and method](https://www.aiformortals.co/blog/grok-bot-vs-meta-muse-vs-chatgpt-dots) matter precisely because they interrupt an easy story.
 
-Grok and Muse found the same cheapest deal on their own, about £335 return. The catch was a 29-hour stop in Lisbon on the way out. Grok called it "really a bonus day in Portugal rather than a quick trip".
+The research contains a warning for Grok too. A brokerage operator described forgotten instructions and duplicate messages after trying a small bot team. It is one person's account, not a failure rate. Still, it challenges the leap from spotting a scam in my inbox to managing everything without me. [The original account](https://www.reddit.com/r/cursor/comments/1vxjipg/grok_bot_review/) is much less flattering than a launch demonstration.
 
-Here's what that actually means. On the flight times Muse quoted, you land in Newark at ten past ten on Thursday night and your flight home leaves at ten past midnight on Monday morning. Five nights by the dates. Three nights in New York.
+Those reports change how I use my results. Catching my scams earns Grok credit for that session. It doesn't certify its judgement across my life. Muse's miss remains a real miss, alongside evidence that it handled other traps. Buying an assistant on either anecdote alone would make the headline do more work than the evidence.
 
-Both of them steered me away from it. Grok pointed to a one-stop flight at £448. Muse recommended a nonstop at £478 and listed exactly what it hadn't been able to check.
+## The cheap flight came with quite a lot of Portugal
 
-Gemini found that same nonstop. Then I asked whether a cabin bag was definitely included, and it said "Yes", with more certainty than any of the searches gave. Grok, on the same question, admitted Google only says "bag fees may apply".
+Same brief: London to New York, five nights in November, one adult, cabin bag only.
 
-The cheapest flight was the wrong answer. The two useful assistants said so.
+Grok and Muse each found a return for about Â£335. The catch was a twenty-nine-hour stop in Lisbon on the way out. That's quite a lot of Portugal for a trip to New York.
 
-## The email you shouldn't send
+Muse said I would get four nights in New York. Its own quoted arrival and departure leave three overnight stays there. Both assistants steered me away from the cheapest fare. Grok offered a shorter stop; Muse suggested a direct flight and listed what it couldn't check. These are the fares they found on 20 October, not prices you can book from this article.
 
-Back to the inbox, because the scams were only half of it.
+Gemini found that same direct flight. When I asked whether a cabin bag was definitely included, it said yes. Its searches hadn't confirmed the bag rules for that fare. I still had to do the final check.
 
-Grok sorted my real work emails and picked out seven it said needed me. On the first, a client asking what a monthly retainer would cost, it asked me what fee I wanted to propose. It didn't make one up. That is exactly the right moment to say "over to you".
+The cancellation job exposed a similar choice. Grok and Muse found real recurring charges and asked who still used the service, or what would break. Gemini opened with a cancellation draft and a question about sending. It took two more questions to explain what I would lose. I would rather find that out before the email leaves.
 
-Then I gave both Grok and Muse the same correction on a partnership invitation: "That sounds too formal. Make it sound like me, and don't promise a date."
+## What other people actually hand to Muse
 
-Grok shortened it and kept the right people copied in. Its first version had thanked the sender for "kind words" they never wrote, and Grok flagged that itself before I spotted it.
+The personal-life case has substance in the corpus. One user described Muse researching windscreen wipers, filling in the shop's form, showing delivery costs and waiting for confirmation before purchase. It's a self-report with no independently checked transaction, but it describes a concrete job and a clear stopping point. That is useful evidence for someone trying to get an errand out of their head. [The original post](https://www.reddit.com/r/singularity/comments/1wqu5wa/wait_metas_muse_agent_is_actually_amazing/) also has replies warning about the supervision involved.
 
-Muse rewrote it nicely too, but lost track of its own draft along the way. It recreated the draft in the right thread and left a spare copy it didn't have permission to delete. To its credit, it told me straight away, and a separate check of Gmail found both drafts sitting there. It also added a line about a past session going well, which it had no way of knowing.
+Meta's own announcement describes using saved Instagram recipes to make a grocery list and talking to Muse through WhatsApp. Those are product claims, rather than independent results. They do explain the intended personal fit. The useful input may already be buried in something you saved, rather than in a carefully written brief. [Meta's description](https://about.fb.com/news/2026/09/introducing-muse-personal-ai-agent/) is the source for that promise.
 
-Gemini was connected to a different, personal inbox, so it never saw the scams. Asked for a list of emails needing replies, it skipped the list, drafted a reply to a private personal email, and asked: "Do you want to send it now?"
+So I would judge a personal assistant partly on the life it can see. A perfect answer to a question I never remember to ask has limited value. Surfacing a forgotten message or turning a collection of saved ideas into something I can use is a different kind of help. The evidence makes that worth trying; it doesn't make every connected account a sensible next step.
 
-## The thing you're about to cancel
+## The draft that bred, and the fee that stayed mine
 
-I asked each one to find a subscription I could cut.
+I gave Grok and Muse the same correction on a work email. Make it less formal. Don't promise a date.
 
-Grok and Muse each found a real one, with receipts. Both added a warning before going any further. Grok asked me to check nobody else was still watching it. Muse asked whether the service was "wired into anything you run", because cancelling would switch that off too.
+Grok kept the right people copied in. It had thanked the sender for a compliment they never gave, then flagged its own mistake. Muse rewrote its reply but lost track of the draft. It created a second draft in the right thread and couldn't delete the first. But it told me. A separate Gmail check found both. I can fix a mistake I know about.
 
-Gemini opened with a cancellation email, ready to go, and the same question: did I want to send it now? The explanation of what it was cancelling, and what I'd lose, came two questions later.
+On another email, Grok asked me what fee to quote. It left the price to me. I'd quite like to keep that bit of my job.
 
-A receipt tells you what you paid. The useful assistant asked what would break.
+Gemini drafted a reply to a personal email and asked if I wanted to send it. It did ask; nothing went out. But I had requested a list of emails that needed me.
 
-## Where saying no went missing
+All three sounded too sure somewhere. Grok treated an April forecast as fresh October news. Muse got the nights wrong. Gemini promised the bag.
 
-None of them was perfect, and the misses had the same shape: confidence where a "not sure" belonged.
+The extras were more interesting. Muse found Messenger chats I'd left hanging and helped draft a reply. Grok found conversations on X worth joining and drafted a reply. I didn't independently check the underlying X posts or whether Muse found every chat. Those remain useful demonstrations, with those limits attached.
 
-To my eye, Grok's news briefing was the most useful of the three, with eight linked stories and why each mattered. It also called a forecast from April "October" news. Muse cited the same forecast and dated it correctly.
+## Grok's best case is the job you keep repeating
 
-Muse told me the Lisbon flight still gave me four nights in New York. Its own times say three.
+Chris Alarcon's week-one account offers a useful contrast to the whole-life pitch. He describes a regular news collector and analytics work that found a place in his routine. A lead scout disappointed him. The value came from a specific job he could inspect, and he reported the dud alongside the wins. [His account](https://christopheralarcon.com/blog/what-is-grok-bot) supports trying a recurring routine before assuming the assistant can take open-ended ownership.
 
-Gemini's cabin bag "Yes" is the clearest example. A confident answer that the search can't back up costs you more than an honest "I couldn't check", because you only find out at the airport.
+Nate Herk's short comparison, recorded in last week's research, praised Muse's visible memory and task controls. A short review cannot establish long-term reliability. It does give me a useful question to ask of either product: can I see what it remembers and what it actually did? [His comparison](https://www.youtube.com/watch?v=BvvfZKKz4Yo) contributes evidence about the experience of using an assistant, rather than proof that every task will finish correctly.
 
-## What only one of them did
+That distinction matters once personal admin bleeds into work. Finding an email is one thing. Sending it, changing a date or cancelling something gives the mistake somewhere to go. My test boundary prevented those consequences; it didn't prove what would happen after I removed it. The research therefore contributes an equal check on the flattering parts of my own afternoon, as well as examples of jobs worth trying.
 
-Some of the best work came from jobs I only gave one assistant, so I've kept them out of the scorecard.
+The three collections overlap. A travel test can appear as several rows, then again in another workbook. I've counted that as one source. Enthusiastic posts and vendor promises remain useful leads, with less weight than a demonstrated result.
 
-Muse went through my Facebook Messenger, which I barely open, and found five conversations I'd left hanging, including a catch-up I'd suggested and never followed up. It drafted a reply that apologised and left the timing to me. Five found doesn't prove it found every one, but it beat my own record.
+## So which one would I actually try?
 
-Grok searched X for small creator-economy conversations worth joining, linked the original posts, and drafted a reply. It also noticed a story its own earlier news briefing had missed.
+For repeatable admin that crosses into work, I'd start with Grok Bot. For personal errands and a life already spread across Meta's apps, Muse deserves a look. If you are obsessed with X/Twitter, you might love Grok Bot. Likewise if your entire social circle is in WhatsApp, Instagram and Facebook, Muse might be pretty helpful. These are practical starting points, not exclusive features or a universal winner.
 
-## The scorecard
+The scorecard beside this article shows my test evidence and the corpus evidence with equal editorial weight. Where one side is missing, it says so. A vendor promise doesn't get promoted into a successful test, and three rows from one review don't become three independent reviewers. Gemini remains a limited chat baseline; I didn't test Spark, dots or Poke here.
 
-One run per job, on personal accounts. It shows what happened that day, and it can't tell you how often. dots and Poke weren't tested.
+I did a piece last week on this, and what price you pay for these conveniences. More of your life in one place can make an assistant useful. Deciding how much to connect is still your job.
 
-| Job | Grok Bot | Muse | Gemini |
-|---|---|---|---|
-| Emails that need me | Flagged the scams. Asked for the fee. | Sorted it well. Replied to a scammer. | Drafted instead of sorting. "Send it now?" |
-| Cheapest flight | Found £335, called out Lisbon. | Same deal, nonstop pick, listed its gaps. | Found the nonstop. Too sure about the bag. |
-| Something to cancel | Real pick, checked who uses it. | Real pick, asked what breaks. | Cancellation email first, reason later. |
-| Plan my day | Suggested times, said which were real. | Marked the one invitation clearly. | Three priorities, links on request. |
-| Catch me up | Best briefing. One old story dated as new. | Good briefing. Dated it correctly. | Useful themes, unchecked. |
+The useful tests are telling them to go as far as they can. Without spending money, deleting anything or impacting anything external. Then see if they stop anywhere to check anything with you.
 
-If your team is about to get one of these, pick the one that says no at the right moment.
+If you're a leader thinking these new shiny hypey tools are too good to be true, they're not. But they also are. Just make sure you or it says no at the right moment when things get hairy.

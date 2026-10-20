@@ -84,5 +84,34 @@
     },
     "stores_unchanged": true,
     "status": "copy in review; visual production and Teleprompter pending approval"
+  },
+  "codex_holistic_feedback_2026_10_20": {
+    "build_id": "0874694604f1cbe128f707b804ec22af460a9edfbd007bde204418a29499758f",
+    "html_sha256": "722d0a87784efb5603844382164733e6d1941435c48ec949360fa87c4455a046",
+    "assets_kept": 24,
+    "unchanged_panels": [
+      "ideas",
+      "monday",
+      "friday"
+    ],
+    "review_content_matches": {
+      "narrative-and-proposed-visuals": true,
+      "scorecard-and-narrative": true,
+      "article-draft": true,
+      "five-minute-script": true,
+      "short-script": true,
+      "visual-plan-after-copy-approval": true
+    },
+    "stores_after": {
+      "edits": 3,
+      "comments": 34,
+      "ticks": 0,
+      "links": 0,
+      "picks": 3,
+      "queue": 11
+    },
+    "stores_unchanged": true,
+    "browser_scope": "No fresh authenticated browser interaction; existing controls retained, saved user feedback read independently",
+    "status": "Holistic copy review; visuals and Teleprompter wait for copy approval"
   }
 }

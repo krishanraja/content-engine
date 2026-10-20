@@ -1,14 +1,13 @@
 # Workbench: where we are and what's next
 
-## 20 October: Wednesday recording drafts live (Codex)
+## 20 October: Wednesday feedback revised (Codex)
 
-Review: https://content.krishraja.com/board/2026-10-19#wednesday, build
-`ad2aa410...82eeb`. Both scripts (788/189 words) and the later visual plan
-are editable/commentable. Other panels, 24 assets and all feedback kept.
-Copy awaits Krish; visuals follow approval, titles follow recording.
-Checks, reader gaps, sources and the identity-placement exception:
-`docs/plans/2026-10-19-week/wednesday-script-review.md`. No Teleprompter send
-or spend. Repeat exact-text read-backs after edits, before recording.
+Review: https://content.krishraja.com/board/2026-10-19#wednesday,
+build `08746946...758f`. Scripts 765/195 words; article/card now 50% tests,
+50% corpus. Actual wording retained; personal-use angle. All feedback,
+other panels and 24 assets kept. Working headline: Muse vs Grok Bot.
+Checks and reader gaps: `docs/plans/2026-10-19-week/wednesday-script-review.md`.
+Copy awaits Krish; visuals/Teleprompter follow approval. No spend.
 
 ## 20 October: Wednesday rewritten with Krish (Claude, editorial session)
 

@@ -1,59 +1,51 @@
-I've been looking at what's really inside the AI everyone's selling us.
+I've been trying these new done-for-you AI assistants: Muse, Grok Bot and Gemini. I ran five head-to-head tests. And one wrote a lovely reply to a scammer. So are they worth the hype? Let's dive in.
 
-I've been trying three assistants on the jobs I'd happily hand over. And one wrote a lovely reply to a scammer. So here's the question: can an AI assistant tell when to stop?
+And if you're a leader secretly trying one on your life, I get the appeal. Some work stuff will creep in too.
 
-The subjects were Grok Bot, Meta's Muse and Google's Gemini. I gave each five jobs. Sort my emails. Plan my day. Catch me up on the news. Find something worth cancelling. Find a cheap flight.
+So I gave each five jobs. Sort my emails. Plan my day. Catch me up on the news. Find something worth cancelling. Find a cheap flight.
 
-I wanted to see whether useful help meant knowing when to push back. So I asked in plain English, then followed up. Nothing got sent, posted, cancelled or booked.
+Nothing got sent, posted, cancelled or booked. I checked other people's results too.
 
 First, the inbox. Several emails had the same vague request. One said someone wanted six of my products. It asked whether payment was safe. But it never named a product.
 
-Grok spotted that and flagged a likely scam. It said about seven of those emails didn't need replies.
+Grok spotted that and flagged a likely scam. Muse checked my refund policy and wrote a polished reply. Then it put that reply first on my list for the day.
 
-Muse checked my refund policy and wrote a polished reply. Then it put that reply first on my list for the day.
+They were scams. Well crafted phishing emails. Muse had made the wrong job look beautifully finished.
 
-I can confirm those emails were scams. Muse had made the wrong job look beautifully finished.
+But another reviewer's fake coffee business tells a different story. Muse caught those scams. My inbox is one result.
 
-Gemini had a different personal inbox, so it never saw those emails. We can't give it a mark for this test.
+Next, a five-night New York trip. Cabin bag only.
 
-Next, the flight. London to New York. Five nights in November. One adult, cabin bag only.
+Grok and Muse each found a return for about three hundred and thirty-five pounds. The catch was twenty-nine hours in Lisbon on the way out. That's quite a lot of Portugal for a trip to New York.
 
-Grok and Muse each found a return for about three hundred and thirty-five pounds. Those were the fares they found on the twentieth of October.
+Muse said I'd get four nights there. Its own flight times leave three. Both assistants steered me away from the cheap fare. Muse suggested a direct flight. Those were prices found on the twentieth of October.
 
-The catch was twenty-nine hours in Lisbon on the way out. That's quite a lot of Portugal for a trip to New York.
+Gemini found the same direct flight as Muse. It said a cabin bag was included. Its searches hadn't confirmed that. I tested Gemini's chat app. Gemini also had a different inbox and never saw the scams.
 
-Muse said I'd get four nights in New York. The flight times it quoted leave just three nights before the trip home.
-
-Both assistants steered me away from the cheap fare. Muse suggested a direct flight instead. Grok offered a shorter stop.
-
-Gemini found the same direct flight. I asked if the cabin bag was definitely included. It said yes. Its searches hadn't confirmed the bag rules for that fare.
-
-So the useful result was someone questioning the bargain. I still needed to check the bag and final price.
-
-Now for a different test. Could they handle a correction?
-
-I gave Grok and Muse the same request on a work email. Make it less formal. Don't promise a date.
+Then I corrected a work email. Make it less formal. Don't promise a date.
 
 Grok kept the right people copied in. It had thanked the sender for a compliment they'd never given. Then it flagged its own mistake.
 
-Muse rewrote its reply, but lost track of the draft. It created a second draft in the right email thread. It couldn't delete the first.
-
-But it told me. A separate Gmail check found both drafts. That matters when you're handing over real work. I can fix a mistake I know about.
+Muse rewrote its reply, but lost track of the draft. It created a second draft and couldn't delete the first. But it told me. A separate Gmail check found both.
 
 On another email, Grok asked me what fee to quote. It left the price to me. I'd quite like to keep that bit of my job.
 
-Gemini, in its separate inbox, drafted a reply to a personal email. Then it asked whether I wanted to send it. It did ask. Nothing went out. But I'd asked for a list of emails needing me.
+The research gives Grok a warning label too. One user liked its regular news checks. But the bot meant to find new customers was a dud. Another reported forgotten jobs and duplicate messages. Those are individual reports. Still, a good afternoon doesn't prove it'll run your week.
 
-Next, I asked for something worth cancelling. Grok and Muse found real charges. Both paused to ask who used the service, or what would break.
+Both Grok and Muse also paused over things I could cancel. They asked who still used it, or what would break. Gemini drafted the cancellation first. I had to ask what I'd lose.
 
-Gemini opened with a draft cancellation email and asked about sending. It explained what I'd lose only after two more questions.
+Grok's news briefing also dated an April forecast as October news. So yes, all three still need checking.
 
-Now check the confident answers against the evidence. All three had a miss. In its news briefing, Grok treated an old forecast as fresh news. That forecast came out in April, six months before my test. Muse got the nights wrong. Gemini promised the bag.
+Now for where these tools get interesting. Muse found Messenger chats I'd left hanging and helped draft a reply. Grok found conversations on X worth joining and drafted a reply.
 
-So yes, I'd still check their work.
+If you are obsessed with X/Twitter, you might love Grok Bot. Likewise if your entire social circle is in WhatsApp, Instagram and Facebook, Muse might be pretty helpful.
 
-These were personal accounts, one run per job, with different inboxes. This can't tell us who wins, or how often they get things right. I used Gemini's regular chat with my inbox connected. These findings don't cover its other versions.
+That's backed by more than my inbox. Meta, which owns those apps, describes turning saved Instagram recipes into grocery lists. A user reported Muse finding the right wipers, showing delivery costs and waiting before purchase. Meta's own promise needs checking. The shopping story is one person's experience.
 
-I've put what happened on all five jobs into a table. Two extra jobs stay outside that comparison. Muse found Messenger chats I'd left hanging and helped draft a reply. Grok found conversations on X worth joining and drafted a reply. I didn't check whether Muse found every chat or verify those posts myself.
+I did a piece last week on this, and what price you pay for these conveniences. I mean access to your data, as well as the bill. You decide how much of your life to connect.
 
-I reckon the useful test is work your team would actually hand over. Watch what the assistant questions. Check what it leaves for you. The full article and table comparing all five jobs are at makeyourmindup.ai. If your team is about to get one of these, pick the one that says no at the right moment. I'm Krish.
+I base half my verdict on my tests. The other half comes from the research. Other people's results show where mine might mislead. I'd try Grok on one repeatable admin job. Muse gets a look for personal errands and those apps. Neither gets free rein.
+
+The useful tests are telling them to go as far as they can. Without spending money, deleting anything or impacting anything external. Ask them to look things up and prepare drafts. Require your approval for any action beyond that. Then see if they stop anywhere to check anything with you.
+
+The full article and comparison table are at makeyourmindup.ai. Just make sure you or it says no at the right moment when things get hairy. I'm Krish.
