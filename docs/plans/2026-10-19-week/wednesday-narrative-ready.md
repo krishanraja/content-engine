@@ -1,65 +1,70 @@
-# Five everyday jobs. What did the assistant leave you?
+# Wednesday: the one that says no
 
-Wednesday narrative and proposed visuals. Rewritten with Krish, 20 October 2026. Draft for review.
+Narrative and proposed visuals, 20 October 2026. Draft for Krish's review. The article itself is `wednesday-article-draft.md`; the takeaway card is `wednesday-scorecard.md`.
 
-## Status
+## Decisions
 
-- AGREED (Krish, 20 Oct): the Heartside "order" emails were scams. His words: "They were scams, go with the first framing." The inbox section is built on that.
-- AGREED: the score is what each assistant left for you. Lead with the flight. Order: flight, money, inbox, day plan and news, the two extras, close.
-- OPEN, Krish to decide: whether to use the YouTube TV example (see Holds), whether Podchaser is in use, whether to name Heartside, and whether to mention the medical email at all.
-- Titles, thumbnail words and headings wait until after recording (house rule).
+Krish's (20 Oct, his words in quotes):
+
+- **The order emails were scams.** "They were scams, go with the first framing."
+- **Angle:** "A mix of the first 2, with the scorecard as the takeaway". The argument is that the most useful thing an assistant does is say no at the right moment. The texture is three personalities: Grok the sceptic, Muse the brilliant new hire, Gemini with a finger on the send button.
+- **Reader:** leaders at mid-sized firms, a smart non-technical manager at a 200-person company.
+- **Ending he picked**, adjusted for house rule R2 (no "not X, Y" in either order): "If your team is about to get one of these, pick the one that says no at the right moment." His preview read "don't ask which is smartest. Ask which one says no at the right moment." Krish to confirm the adjusted wording.
+- **Privacy:** anonymise everything private, redact sensitive detail, and Codex blurs any screenshot. No personal subscription specifics. "Forget about my subscriptions."
+
+Routine calls Claude made (for Krish to overrule):
+
+- Open on the scam scene; the flight is the second beat.
+- Order: scam, the three personalities, flight, emails, cancellation, where saying no went missing, the extras, then the card.
+- Countercase in its own section: confidence where a "not sure" belonged, from all three.
+
+Open for Krish:
+
+- The adjusted closing line (above).
+- The two-word marks on the card ("Said no", "Said wait"): keep, or use plain cells only?
 
 ## The message
 
-**Here's a scorecard, so you don't have to go and use them all.** For five ordinary jobs, it shows what each assistant handed you and what it left for you to do.
+The most useful thing an AI assistant did all week was tell me not to reply. Judgement takes more work off your hands than effort does, and here's a card showing which one did it for which job.
 
-Working question: how much work does each assistant actually take off your hands?
+## The spine
 
-## The spine, in six beats
+1. **Cold open, the scam.** Same "I'd like to order six of your products" email. Grok: likely scam, skip it. Muse: a lovely, accurate reply, first on today's to-do list. They were scams.
+2. **The setup.** Five boring jobs, three assistants, plain English, nothing sent. Three personalities emerge.
+3. **The flight.** £335, 29 hours in Lisbon, five nights by the dates, three in New York. Two assistants talked me out of it. One said "Yes" to the cabin bag with more certainty than the search gave.
+4. **The emails.** Grok asked for the fee instead of inventing it. The same correction to both: Grok kept the right people copied and flagged its own invented pleasantry; Muse lost its draft, recreated it, left a spare, and told me. Gemini drafted a reply to a private email and asked to send it.
+5. **The cancellation.** Two asked what would break before cancelling. One opened with "Do you want to send it now?"
+6. **Where saying no went missing.** An April forecast dated as October news (Grok). Four nights that were really three (Muse). A bag promised (Gemini).
+7. **What only one did.** Messenger catch-up (Muse). Finding conversations on X worth joining (Grok).
+8. **The card, then the verdict.**
 
-1. **The flight (the opener).** I asked three assistants for the cheapest flight to New York. Two found the same one: about £335. It includes 29 hours in Lisbon. By its own times you land on Thursday night and fly home just after midnight on Monday. Five nights by the dates, three nights in New York. Then both assistants talked me out of it.
-2. **Money.** One found a US-only TV service I pay for from London. One asked the question that matters before you cancel anything: is it wired into something you still run? One wrote a cancellation email first and asked if I wanted to send it.
-3. **The inbox (the high point).** The most useful thing an assistant did all day was tell me not to reply. Grok flagged a run of "I'd like to order six of your products" emails as likely scams. They were. Muse wrote a careful, polite reply to the first one and put it at the top of my to-do list.
-4. **Day plan.** Quick. Did it separate real appointments from suggestions? Mostly yes.
-5. **News.** Quick. One assistant called an April forecast October news. Another dated the same forecast correctly.
-6. **Two extras.** Muse went through Messenger, which I barely open, and found five conversations I'd left hanging. Grok searched X for small creator-economy conversations worth joining and drafted a reply. Different strengths, shown separately.
-
-**Close:** Find your row. Use the assistant for the job it handed back finished. Keep the job it handed back to you.
-
-## Opening, proposed spoken wording
+## Opening, proposed spoken wording (long cut)
 
 Series line first (house rule): "I've been looking at what's really inside the AI everyone's selling us."
 
-Then: "So I gave three AI assistants five boring jobs. First one: find me the cheapest flight to New York. Two of them found the same flight. Three hundred and thirty-five pounds. It comes with twenty-nine hours in Lisbon."
+Then: "And the most useful thing an AI assistant did for me this week was tell me not to reply. I'd asked three of them to clear my inbox. One looked at an email from someone keen to order six of my products and said: this looks like a scam. Another wrote them a lovely reply. It was a scam."
 
-"I'm Krish" goes at the end.
+"I'm Krish" goes at the end. The short cut runs scam, flight, card, verdict.
 
 ## Proposed visuals
 
-Each visual answers one question a viewer has, using the test's own numbers.
+Each one answers a question the viewer has, using the test's own outputs. All personal details are reproduced and anonymised, never screenshotted raw.
 
-1. **Flight timeline (the hero).** Question: how cheap is the cheap flight, really? One horizontal bar from Wednesday morning to Monday night. Blocks: London to Lisbon, 29 hours in Lisbon, Lisbon to Newark, three nights in New York, an overnight flight home. Above it, "5 nights" by the dates. Below it, "3 nights in New York". Small label: "Fares found 20 Oct 2026. Historical." Then the sensible option next to it: one stop or nonstop, about £450 to £480.
-2. **Money card.** Question: what am I actually cancelling? Three columns: COSTS / WHY THIS ONE / WHAT STOPS WORKING. Each assistant's pick on one row. The third column is where the differences show.
-3. **Same email, two calls.** Question: can it tell a customer from a scam? The anonymised email in the middle ("Hi! I'm thinking of ordering six of your products..."). Left: Grok, "Looks like a buyer scam. Skip." Right: Muse, a polished reply, marked "Top of today's list". Stamp underneath: SCAM, confirmed by Krish.
-4. **The scorecard.** Five rows (jobs) by three columns (assistants). Each cell has two short lines: HANDED YOU and LEFT YOU. Reveal one row at a time, end on the full card to save. Footer: "Observed 20 Oct 2026. Personal accounts, different inboxes. Drafts only."
-5. **Extras.** Messenger: five anonymised conversation cards (age, what was missed), then one draft reply. X: question people are asking, original thread, proposed reply. No names, handles or account details anywhere.
+1. **Same email, two calls (cold open).** Question: can it tell a customer from a scam? The anonymised email in the centre. Left, Grok: "never names a product, which is common with buyer-scam emails". Right, Muse: the polished reply, tagged "First on today's list". Stamp: SCAM.
+2. **The trip timeline.** Question: how cheap is the cheap flight, really? One bar from Wednesday morning to Monday. London to Lisbon, 29 hours in Lisbon, Lisbon to Newark, three nights in New York, the flight home at 00:10 Monday. Above: "5 nights". Below: "3 in New York". Label: "Fares found 20 Oct 2026. Historical."
+3. **Send it now?** Question: who presses send? Gemini's two identical prompts, "Do you want to send it now?", on the two jobs where it appeared. No email content visible.
+4. **The card.** Five jobs by three assistants, short cells, with a "Said no" or "Said wait" mark where one pushed back. Reveal row by row, end on the full card to save. Footer: "Observed 20 Oct 2026. One run per job. Personal accounts, different inboxes. Drafts only."
+5. **Extras.** Messenger: five anonymised conversation cards, then the reply that leaves the time to me. X: the question people were asking, the thread, the proposed reply. No names or handles.
 
-## Holds before anything is recorded
-
-- **YouTube TV.** Grok recommended cancelling it on the personal Gmail account. Gemini read a Google Play notice in the same account about a YouTube subscription ending on 27 October. Before using this example, Krish confirms whether YouTube TV was already being cancelled. Until then the money section can use Podchaser (both picked it) and Gemini's top-up email.
-- **Podchaser.** Grok and Muse both picked it at $30 a month. Podchaser is connected to Krish's tools, so it may well be in use. Only Muse asked. If Krish confirms it is in use, the beat gets stronger: two assistants suggested cutting a tool I use, and one thought to ask.
-- **Two Claude plans.** Grok flagged a possible duplicate. This is private and stays out unless Krish says otherwise.
-- **Medical email.** Gemini drafted a reply to a forwarded personal medical email first. Public copy says "a personal medical email" with no other detail, and only if Krish approves.
-- **Heartside.** The scam emails came to his online store. Naming the store is his call; the default is "an online store I run".
+Production note for Codex: blur every screenshot before use (names, addresses, subjects, amounts, account menus, unrelated messages). Prefer anonymised reproductions over screenshots.
 
 ## Evidence boundaries (keep)
 
-- These are observed personal sessions, one run per job. No winner, average or success rate.
-- Different accounts. Grok and Muse used the same work inbox for the webinar reply; Gemini (consumer chat, Pro, not a verified Gemini Spark run) was on a different personal inbox, so it never saw the scam emails. Muse gained email access during the test. Gemini's day plan fell back from Pro under demand.
+- Observed personal sessions, one run per job. No winner, average or success rate.
+- Grok and Muse used the same work inbox; Gemini (consumer chat, not a verified Gemini Spark run) was on a different personal inbox and never saw the scams. Muse gained email access during the test. Gemini's day plan fell back from Pro under demand.
 - dots and Poke were not tested.
-- Muse is Meta's Muse, used at muse.ai. The chat title "muso" is a name Krish gave it on 19 October; its links run through Meta's own link service.
-- Flight prices and times are what the assistants reported on 20 October, not current or independently booked. The three-nights figure is calculated from Muse's quoted arrival (Thu 19 Nov, 22:10) and return departure (Mon 23 Nov, 00:10); Muse itself said four.
-- A receipt proves payment, not disuse.
-- Muse's duplicate Gmail draft stays in the story and in Gmail: it detached its draft while editing, recreated it correctly, said so, and couldn't delete the spare without more permission. Gmail readback confirmed both.
-- Messenger: five conversations surfaced does not prove every one was found. X: links returned; the underlying posts were not independently read (HTTP 403).
+- Muse is Meta's Muse at muse.ai ("muso" is a name Krish gave it).
+- Flight prices and times are what the assistants reported on 20 October. Three nights is calculated from Muse's quoted arrival (Thu 19 Nov, 22:10) and return departure (Mon 23 Nov, 00:10); Muse said four.
+- Muse's duplicate Gmail draft stays in the story: it detached its draft while editing, recreated it, said so, and lacked permission to delete the spare. A separate Gmail readback confirmed both.
+- Messenger: five conversations surfaced does not prove every one was found. X: links returned; the underlying posts were not independently read.
 - Nothing was sent, posted, cancelled or booked. No new paid service. Monday's no-spend hold remains.
