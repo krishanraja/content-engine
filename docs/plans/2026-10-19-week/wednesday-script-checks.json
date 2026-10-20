@@ -1,112 +1,176 @@
 {
-  "status": "drafts for editorial review; not recording approval",
-  "series_override": {
-    "source": "Krish supplied Wednesday handover, 20 Oct 2026",
-    "instruction": "Wednesday series line first; I am Krish at the end",
-    "scope": "this piece only; shared rules unchanged"
-  },
+  "status": "holistic editorial drafts; not recording approval",
+  "source": "saved Wednesday edits/comments and Krish chat instruction, 20 Oct 2026",
+  "authority_exceptions": [
+    "Saved openings replace series sentence for this piece",
+    "Keep user-authored Lets dive in despite stock-phrase flag",
+    "Long sign-off retained; short preserves edited ending"
+  ],
   "cuts": {
     "long": {
       "file": "docs/plans/2026-10-21-draft-script.md",
-      "sha256": "54fc91d6af1011ff8e44f56a99b72e5601cd1ee0853a4d69be65230842f47bac",
-      "words": 788,
+      "sha256_lf": "7f2c8c96e3c687203123fccc633c2d4d35aa73872298ff0c06c98571764e4f2d",
+      "words": 765,
       "reading": {
         "sentences": 96,
-        "words": 788,
-        "average": 8.2,
-        "grade": 3.5,
+        "words": 766,
+        "average": 8.0,
+        "grade": 3.8,
         "long_sentences": [],
         "quotes": [],
         "jargon": {},
-        "long_word_share": 0.071,
+        "long_word_share": 0.081,
         "long_words": [
+          "Another",
           "Gemini",
+          "Likewise",
           "Several",
-          "actually",
+          "afternoon",
           "another",
+          "anything",
+          "anywhere",
+          "approval",
           "article",
-          "assistant",
           "assistants",
           "beautifully",
+          "business",
           "cancellation",
           "cancelled",
           "cancelling",
-          "comparing",
           "comparison",
           "compliment",
-          "confident",
-          "connected",
+          "conveniences",
           "conversations",
-          "correction",
-          "definitely",
+          "corrected",
+          "customers",
+          "deleting",
+          "delivery",
           "different",
-          "every",
-          "everyone's",
-          "evidence",
+          "done-for-you",
+          "duplicate",
+          "experience",
+          "external",
+          "five-night",
           "forecast",
-          "happily",
+          "forgotten",
+          "grocery",
+          "head-to-head",
+          "impacting",
           "included",
+          "individual",
+          "interesting",
           "likely",
           "lovely",
           "makeyourmindup.ai",
           "personal",
           "policy",
-          "questioning",
           "regular",
+          "repeatable",
+          "reported",
+          "reviewer's",
+          "secretly",
           "separate",
           "something",
           "suggested",
           "thirty-five",
           "twenty-nine",
-          "useful",
-          "verify"
+          "useful"
         ]
       },
-      "problems_without_series": [],
-      "full_series_check_findings": [
-        "it does not open with its series line, word for word, said first and before the hook: \"I've been looking at what's really inside the AI everyone's selling us. I'm Krish.\" (house rule SERIES_OPENER, Krish, 2026-10-12). It opens: \"I've been looking at what's really inside the AI everyone's selling us. I've been trying three assistants on the jobs I'\"",
+      "non_series_problems": [],
+      "full_series_findings": [
+        "it does not open with its series line, word for word, said first and before the hook: \"I've been looking at what's really inside the AI everyone's selling us. I'm Krish.\" (house rule SERIES_OPENER, Krish, 2026-10-12). It opens: \"I've been trying these new done-for-you AI assistants: Muse, Grok Bot and Gemini. I ran five head-to-head tests.\"",
         "it says \"I'm Krish\" again after the series line: his name is said once, in that line, and the close ends without it (house rule SERIES_OPENER; Krish, 2026-10-12: \"Drop it at the end\")"
       ],
-      "piece_opener_check": true,
-      "piece_name_check": true
+      "voice_check": {
+        "score": 11.6,
+        "max_score": 6,
+        "passes": false,
+        "paragraphs": 26,
+        "words": 765,
+        "findings": [
+          {
+            "where": "whole piece",
+            "habit": "an even beat",
+            "detail": "sentence lengths barely vary (spread 0.42; a person writes above 0.45). Mix in very short sentences and the odd long one that runs on the way he talks"
+          },
+          {
+            "where": "paragraph 1: \"I've been trying these new done-for-you AI assistants: Muse, Grok Bot ...\"",
+            "habit": "stock phrases",
+            "detail": "dive in, let's dive"
+          },
+          {
+            "where": "paragraph 1: \"I've been trying these new done-for-you AI assistants: Muse, Grok Bot ...\"",
+            "habit": "a question answered at once",
+            "detail": "\"So are they worth the hype?\" then \"Let's dive in.\""
+          },
+          {
+            "where": "whole piece",
+            "habit": "lists of three, again and again",
+            "detail": "5 in 765 words. Keep the one that matters; give two, or four"
+          },
+          {
+            "where": "whole piece",
+            "habit": "no asides or questions",
+            "detail": "1 brackets or questions in 765 words. Add a (small) aside or a question you then sit with"
+          },
+          {
+            "where": "whole piece",
+            "habit": "too few specifics",
+            "detail": "8 numbers, dates and names (10 per 1,000; aim above 25)"
+          }
+        ]
+      }
     },
     "short": {
       "file": "docs/plans/2026-10-21-draft-script-90s.md",
-      "sha256": "2b1bb56dcec1c5ddd49262f3f1857b0e658817afa4cab1ab4f9e29384835d7af",
-      "words": 189,
+      "sha256_lf": "307982da73af77d039a4c5a0107ec74ffb3ad7fc48f0bbf6eeae37f6c583afba",
+      "words": 195,
       "reading": {
-        "sentences": 24,
-        "words": 189,
-        "average": 7.9,
-        "grade": 3.7,
+        "sentences": 23,
+        "words": 195,
+        "average": 8.5,
+        "grade": 4.3,
         "long_sentences": [],
         "quotes": [],
         "jargon": {},
-        "long_word_share": 0.079,
+        "long_word_share": 0.087,
         "long_words": [
-          "Gemini",
           "article",
           "assistants",
           "comparison",
           "different",
+          "done-for-you",
+          "equally",
           "everyday",
-          "everyone's",
-          "included",
-          "likely",
           "lovely",
           "makeyourmindup.ai",
           "personal",
+          "repeatable",
+          "resisted",
+          "separate",
           "thirty-five",
           "twenty-nine-hour"
         ]
       },
-      "problems_without_series": [],
-      "full_series_check_findings": [
-        "it does not open with its series line, word for word, said first and before the hook: \"I've been looking at what's really inside the AI everyone's selling us. I'm Krish.\" (house rule SERIES_OPENER, Krish, 2026-10-12). It opens: \"I've been looking at what's really inside the AI everyone's selling us. I've been trying three AI assistants on everyday\"",
-        "it says \"I'm Krish\" again after the series line: his name is said once, in that line, and the close ends without it (house rule SERIES_OPENER; Krish, 2026-10-12: \"Drop it at the end\")"
+      "non_series_problems": [],
+      "full_series_findings": [
+        "it does not open with its series line, word for word, said first and before the hook: \"I've been looking at what's really inside the AI everyone's selling us. I'm Krish.\" (house rule SERIES_OPENER, Krish, 2026-10-12). It opens: \"I put Muse, Grok Bot and Gemini head to head on five everyday jobs. The new wave of done-for-you personal AI assistants.\""
       ],
-      "piece_opener_check": true,
-      "piece_name_check": true
+      "voice_check": {
+        "score": 2.9,
+        "max_score": 6,
+        "passes": true,
+        "paragraphs": 6,
+        "words": 195,
+        "findings": [
+          {
+            "where": "whole piece",
+            "habit": "too few specifics",
+            "detail": "2 numbers, dates and names (10 per 1,000; aim above 25)"
+          }
+        ]
+      }
     }
   }
 }

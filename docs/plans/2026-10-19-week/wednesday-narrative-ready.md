@@ -1,77 +1,55 @@
-# Wednesday: the one that says no
+# Muse vs Grok Bot: Head to Head on Running My Life
 
-Narrative and proposed visuals, 20 October 2026. Draft for Krish's review. The article itself is `wednesday-article-draft.md`; the takeaway card is `wednesday-scorecard.md`.
+Current editorial brief, 20 October 2026. This revision reconciles Krish's saved article/script edits, board comments and latest chat instruction. It supersedes the earlier business-deployment framing and the earlier title hold for this working headline. The exact saved copy is preserved in `wednesday-feedback-2026-10-20.json` and the reconciliation in `wednesday-feedback-synthesis.md`.
 
-## Decisions
+## Who this is for
 
-### Recording-script brief, Codex session, 20 October
+A leader considering one of the new done-for-you assistants for their own life. Everyday tasks may bleed into work. Cheekily acknowledge that they may be trying it privately. Speak to that person, rather than a company deploying agents to a team.
 
-Krish authorised drafting the five-minute and short scripts and putting both on the live Wednesday board for edits and comments. His exact direction: "Make the long one feel like a science experiment, with humour and real-world visuals planned throughout which will come after the copy is approved."
+## What the piece says
 
-The board's saved article edit is incorporated in `wednesday-article-draft.md`: "They were scams. Well crafted phishing emails." The saved visual direction was read back from the comment on `rvs-wed-messenger-and-x-showcases`.
+Are they worth the hype? Useful things happened, including warnings at the right moment. Polished mistakes happened too. My personal runs and last week's research each get half the weight. Grok is my first try for repeatable admin that crosses into work; Muse deserves a look for personal errands and a life spread across Meta apps. Both judgements are scoped starting points, with supervision and evidence gaps visible.
 
-Spoken drafts: `../2026-10-21-draft-script.md` and `../2026-10-21-draft-script-90s.md`. The separate `wednesday-script-visual-plan.md` plans evidence coverage throughout both cuts; it is not rendered media. Copy remains in review, visual production waits for copy approval, and titles follow recording. No Teleprompter send in this draft-review step.
+## What stays in Krish's words
 
-The supplied Wednesday handover explicitly puts the series line first and "I'm Krish" at the end. The shared automated series checker still expects his name at the start. Follow the piece-specific handover, preserve the checker findings in `wednesday-script-checks.json`, and do not silently claim the shared check passed or change the global house rule.
+- "I've been trying these new done-for-you AI assistants" and "I ran five head-to-head tests."
+- "And one wrote a lovely reply to a scammer. So are they worth the hype? Let's dive in."
+- "They were scams. Well crafted phishing emails."
+- "That's quite a lot of Portugal for a trip to New York."
+- "If you are obsessed with X/Twitter, you might love Grok Bot. Likewise if your entire social circle is in WhatsApp, Instagram and Facebook, Muse might be pretty helpful."
+- "I did a piece last week on this, and what price you pay for these conveniences."
+- His safe exploratory test: go as far as they can without spending money, deleting anything or affecting anything external, then see where they check with him.
+- "If you're a leader thinking these new shiny hypey tools are too good to be true, they're not. But they also are. Just make sure you or it says no at the right moment when things get hairy."
 
-Krish's (20 Oct, his words in quotes):
+Keep these as voice, rather than smoothing them back into generic advice. Small punctuation/grammar changes make them sayable. The saved openings remove the series sentence; preserve that piece-specific choice. The long keeps his sign-off, and the short keeps his edited ending. Do not rewrite shared house rules to hide the resulting checker exception.
 
-- **The order emails were scams.** "They were scams, go with the first framing."
-- **Angle:** "A mix of the first 2, with the scorecard as the takeaway". The argument is that the most useful thing an assistant does is say no at the right moment. The texture is three personalities: Grok the sceptic, Muse the brilliant new hire, Gemini with a finger on the send button.
-- **Reader:** leaders at mid-sized firms, a smart non-technical manager at a 200-person company.
-- **Ending he picked**, adjusted for house rule R2 (no "not X, Y" in either order): "If your team is about to get one of these, pick the one that says no at the right moment." His preview read "don't ask which is smartest. Ask which one says no at the right moment." Krish, 20 Oct: "Keep your closing line".
-- **Privacy:** anonymise everything private, redact sensitive detail, and Codex blurs any screenshot. No personal subscription specifics. "Forget about my subscriptions."
+## The evidence and scorecard
 
-Routine calls Claude made (for Krish to overrule):
+The three corpus extracts are preserved under `_corpus/2026-10-21-assistants`. They overlap. The article's six evidence-led sections divide equally between personal tests and corpus research; opening and verdict combine the two. `wednesday-article-balance.json` records the section audit.
 
-- Open on the scam scene; the flight is the second beat.
-- Order: scam, the three personalities, flight, emails, cancellation, where saying no went missing, the extras, then the card.
-- Countercase in its own section: confidence where a "not sure" belonged, from all three.
+The plain-cell scorecard has two explicit, equally weighted columns: my tests 50%, research 50%. It addresses usefulness and what still needs checking for each job, plus personal-life fit. Missing comparable research leaves a combined rating not established. Conflicting evidence is part of the judgement. No fabricated numerical reliability score, row-count voting, or generic product winner.
 
-- **Card:** plain cells, no "Said no" or "Said wait" marks. Krish, 20 Oct: "drop the marks".
+## The story through the formats
 
-## The message
+1. Krish's done-for-you opening, everyday jobs and the private appeal for leaders.
+2. Scam scene: Grok's warning, Muse's polished reply and first-item day plan.
+3. Research countercase: Muse resisted another reviewer's scams. Do not generalise the personal miss into a permanent trait.
+4. Flight: about £335, 29 hours in Lisbon, three New York overnight stays, bag inclusion left unverified.
+5. Correction: Grok's candid admission and fee hand-off; Muse's disclosed duplicate draft.
+6. Research gives Grok a warning too: repeated news/analytics can help while follow-through still fails.
+7. Cancellation, all-three confidence misses and Gemini's limited baseline.
+8. Personal fit: Messenger/X examples and research-backed personal errands or connected-context use.
+9. Equal-evidence scorecard, practical personal shortlist and Krish's hairy-moments close.
 
-The most useful thing an AI assistant did all week was tell me not to reply. Judgement takes more work off your hands than effort does, and here's a card showing which one did it for which job.
+The short is its own trailer: his head-to-head opening, scam plus research countercase, flight and conditional personal verdict. Keep it under the short-cut length limit. The long retains the small field-experiment feel, with evidence planned throughout.
 
-## The spine
+## Boundaries carried through every format
 
-1. **Cold open, the scam.** Same "I'd like to order six of your products" email. Grok: likely scam, skip it. Muse: a lovely, accurate reply, first on today's to-do list. They were scams.
-2. **The setup.** Five boring jobs, three assistants, plain English, nothing sent. Three personalities emerge.
-3. **The flight.** £335, 29 hours in Lisbon, five nights by the dates, three in New York. Two assistants talked me out of it. One said "Yes" to the cabin bag with more certainty than the search gave.
-4. **The emails.** Grok asked for the fee instead of inventing it. The same correction to both: Grok kept the right people copied and flagged its own invented pleasantry; Muse lost its draft, recreated it, left a spare, and told me. Gemini drafted a reply to a private email and asked to send it.
-5. **The cancellation.** Two asked what would break before cancelling. One opened with "Do you want to send it now?"
-6. **Where saying no went missing.** An April forecast dated as October news (Grok). Four nights that were really three (Muse). A bag promised (Gemini).
-7. **What only one did.** Messenger catch-up (Muse). Finding conversations on X worth joining (Grok).
-8. **The card, then the verdict.**
-
-## Opening, proposed spoken wording (long cut)
-
-Series line first (house rule): "I've been looking at what's really inside the AI everyone's selling us."
-
-Then: "And the most useful thing an AI assistant did for me this week was tell me not to reply. I'd asked three of them to clear my inbox. One looked at an email from someone keen to order six of my products and said: this looks like a scam. Another wrote them a lovely reply. It was a scam."
-
-"I'm Krish" goes at the end. The short cut runs scam, flight, card, verdict.
-
-## Proposed visuals
-
-Each one answers a question the viewer has, using the test's own outputs. All personal details are reproduced and anonymised, never screenshotted raw.
-
-1. **Same email, two calls (cold open).** Question: can it tell a customer from a scam? The anonymised email in the centre. Left, Grok: "never names a product, which is common with buyer-scam emails". Right, Muse: the polished reply, tagged "First on today's list". Stamp: SCAM.
-2. **The trip timeline.** Question: how cheap is the cheap flight, really? One bar from Wednesday morning to Monday. London to Lisbon, 29 hours in Lisbon, Lisbon to Newark, three nights in New York, the flight home at 00:10 Monday. Above: "5 nights". Below: "3 in New York". Label: "Fares found 20 Oct 2026. Historical."
-3. **Send it now?** Question: who presses send? Gemini's two identical prompts, "Do you want to send it now?", on the two jobs where it appeared. No email content visible.
-4. **The card.** Five jobs by three assistants, short plain cells. Reveal row by row, end on the full card to save. Footer: "Observed 20 Oct 2026. One run per job. Personal accounts, different inboxes. Drafts only."
-5. **Extras.** Messenger: five anonymised conversation cards, then the reply that leaves the time to me. X: the question people were asking, the thread, the proposed reply. No names or handles.
-
-Production note for Codex: blur every screenshot before use (names, addresses, subjects, amounts, account menus, unrelated messages). Prefer anonymised reproductions over screenshots.
-
-## Evidence boundaries (keep)
-
-- Observed personal sessions, one run per job. No winner, average or success rate.
-- Grok and Muse used the same work inbox; Gemini (consumer chat, not a verified Gemini Spark run) was on a different personal inbox and never saw the scams. Muse gained email access during the test. Gemini's day plan fell back from Pro under demand.
-- dots and Poke were not tested.
-- Muse is Meta's Muse at muse.ai ("muso" is a name Krish gave it).
-- Flight prices and times are what the assistants reported on 20 October. Three nights is calculated from Muse's quoted arrival (Thu 19 Nov, 22:10) and return departure (Mon 23 Nov, 00:10); Muse said four.
-- Muse's duplicate Gmail draft stays in the story: it detached its draft while editing, recreated it, said so, and lacked permission to delete the spare. A separate Gmail readback confirmed both.
-- Messenger: five conversations surfaced does not prove every one was found. X: links returned; the underlying posts were not independently read.
-- Nothing was sent, posted, cancelled or booked. No new paid service. Monday's no-spend hold remains.
+- One personal run per job, personal accounts, different inboxes. No success rate or universal winner.
+- Gemini was consumer chat, not a verified Spark test. His edited Spark label is corrected for that reason. dots and Poke remain untested here.
+- The £335 fare is historical, found 20 October. The price was in pounds; the short's unqualified bucks is corrected.
+- The Messenger/X demos are not exclusive-feature proof. Complete Messenger coverage and underlying X posts remain unverified.
+- The external coffee-business test is somebody else's simulated task and uses a model grader. Its results are attributed separately.
+- Some extracted author/date fields disagree with original posts. Use checked original content and flag the limits; never silently launder the old summary into a current fact.
+- Keep personal subscriptions, email contents, names, addresses and account detail private. No sensitive details were added by the rewrite.
+- No send, post, booking, cancellation, paid lookup, Teleprompter send or visual production. Copy approval comes first. All visual ideas remain a later production plan.

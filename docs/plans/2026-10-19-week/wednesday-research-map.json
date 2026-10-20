@@ -1,0 +1,71 @@
+{
+  "evidence_weights": {
+    "personal_tests": 0.5,
+    "corpus": 0.5
+  },
+  "sources": [
+    {
+      "key": "A",
+      "corpus": "peer Y19-Y21",
+      "url": "https://www.aiformortals.co/blog/grok-bot-vs-meta-muse-vs-chatgpt-dots",
+      "kind": "reviewer simulated test",
+      "fresh_read": "20 Oct 2026",
+      "finding": "Muse also resisted this reviewers scams; different conditions"
+    },
+    {
+      "key": "B",
+      "corpus": "followup R012",
+      "url": "https://www.reddit.com/r/cursor/comments/1vxjipg/grok_bot_review/",
+      "kind": "one user self-report",
+      "fresh_read": "20 Oct 2026",
+      "finding": "Forgotten tasks and duplicate messages"
+    },
+    {
+      "key": "C",
+      "corpus": "peer Y16-Y17 and Y23-Y24",
+      "urls": [
+        "https://www.aiformortals.co/blog/grok-bot-vs-meta-muse-vs-chatgpt-dots",
+        "https://www.youtube.com/watch?v=i_n9ZyinZEs"
+      ],
+      "kind": "two reviewers travel comparisons",
+      "fresh_read": "First original blog checked 20 Oct 2026; second uses historical supplied extraction",
+      "finding": "Useful travel preparation under different conditions; not a repeated trial of the personal flight test",
+      "deduplication": "First travel case shares underlying source group A; not an independent extra vote"
+    },
+    {
+      "key": "D",
+      "corpus": "followup R019",
+      "url": "https://christopheralarcon.com/blog/what-is-grok-bot",
+      "kind": "paying user short review",
+      "fresh_read": "20 Oct 2026",
+      "finding": "Recurring news and analytics useful; lead scout failed"
+    },
+    {
+      "key": "E",
+      "corpus": "deep Meta announcement",
+      "url": "https://about.fb.com/news/2026/09/introducing-muse-personal-ai-agent/",
+      "kind": "vendor claim",
+      "fresh_read": "20 Oct 2026",
+      "finding": "Connected personal context and approval design"
+    },
+    {
+      "key": "F",
+      "corpus": "deep shopping-use entry",
+      "url": "https://www.reddit.com/r/singularity/comments/1wqu5wa/wait_metas_muse_agent_is_actually_amazing/",
+      "kind": "one user self-report",
+      "fresh_read": "20 Oct 2026",
+      "finding": "Wiper-shopping preparation with approval; extracted attribution fields disputed"
+    },
+    {
+      "key": "G",
+      "corpus": "peer Y01-Y04",
+      "url": "https://www.youtube.com/watch?v=BvvfZKKz4Yo",
+      "kind": "historical extracted reviewer notes",
+      "fresh_read": "blocked in text reader",
+      "finding": "Visible memory and controls; original not freshly checked"
+    }
+  ],
+  "deduplication": "Canonical source, not workbook row; independent source groups only",
+  "research_scope": "Existing three corpuses; bounded original-source refresh; no new paid research",
+  "stop_rule": "Enough attributed support and contrary evidence for each surviving editorial judgement; missing comparative evidence remains unscored"
+}
