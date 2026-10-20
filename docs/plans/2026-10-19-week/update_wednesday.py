@@ -34,10 +34,11 @@ def build():
     get=board.live_reader(); save(CACHE/'queue.json',get('/api/idea-queue'))
     args=['--week','2026-10-19','--previous',str(CACHE/'before.html'),'--keep','mon','--target','web','--live',
           '--piece','wed=d7a20885-7001-4661-b444-9d7ca1043416','--draft','wed',
+          '--review',f'wed=Narrative and proposed visuals|{PLAN}/wednesday-narrative-ready.md',
           '--review',f'wed=Scorecard and narrative|{PLAN}/wednesday-scorecard.md',
           '--review',f'wed=Four draft-only tests|{PLAN}/wednesday-test-packet.md',
           '--review',f'wed=Live draft-test results|{PLAN}/test-results/README.md',
-          '--waiting','wed=First live draft results ready: four Muse tasks and one Gemini Pro baseline. Remaining agent surfaces need confirmation; no sends or spending.',
+          '--waiting','wed=Narrative and scorecard ready for review. Grok and Muse: four draft checks each; Gemini Pro: email baseline. dots and Poke: research only.',
           '--ideas',str(PLAN/'ideas.json'),'--queue',str(CACHE/'queue.json')]
     page,meta=board.build(board.parser().parse_args(args))
     mappings=[]

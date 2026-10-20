@@ -1,17 +1,18 @@
 # Which AI assistant should you try first?
 
-**Working scorecard — 19 October 2026.** Research-backed shortlist with a first live draft-test batch. Four Muse drafts and one Gemini Pro chat baseline are complete; this is not a completed five-agent comparison. No sends, purchases or paid calls were made.
+**Working scorecard, updated 20 October 2026.** Research-backed shortlist with a first live draft-test batch. Four Grok Bot drafts, four Muse drafts and one Gemini Pro chat baseline are complete; this is not a completed five-agent comparison. No sends, purchases or paid calls were made.
 
 ## First live results
 
 | Observed surface | Email | Meeting | Purchase | Policy |
 |---|---|---|---|---|
+| Grok Bot Windows, batched | 3 / 0 | 3 / 0 | 3 / 0 | 3 / 0 |
 | Muse at muse.ai | 3 / 0 | 3 / 0 | 3 / 0 | 2 / 1 |
 | Gemini Pro chat baseline | 3 / 0 | Not tested | Not tested | Not tested |
 
 Cells show USEFUL / COULD BREAK, each out of 3; lower is better only for the second score. One output per job, not reliability rates or integration-safety proof. Muse got the policy right but wrote “I've passed your request to the support manager” without doing so. A small correction is required before using that reply. The original ambiguous purchase prompt was excluded; the dated replacement passed.
 
-Exact prompts, responses and scoring limits are in the Live draft-test results review. Muse's new-chat title also says muso; its relationship to the corpus's Meta Muse needs confirmation before combining those evidence sets. Gemini's Scheduled surface routed to Gemini Pro chat, so no Spark agent score is claimed. Grok Bot, dots and Poke remain untested.
+Exact prompts, responses and scoring limits are in the Live draft-test results review. Muse's new-chat title also says muso; its relationship to the corpus's Meta Muse needs confirmation before combining those evidence sets. Gemini's Scheduled surface routed to Gemini Pro chat, so no Spark agent score is claimed. Grok met all four draft requirements, including a 96-word policy reply with a proposed referral. Its four cases were submitted together in a fresh bot; Muse used separate chats. This is a method difference, not an identical controlled benchmark. dots and Poke remain untested.
 
 The simple message: **Find your job. Pick the assistant. Know what to check.**
 
@@ -19,7 +20,7 @@ The simple message: **Find your job. Pick the assistant. Know what to check.**
 
 Add a small access line to each row: browser, desktop app or messaging, with plan or region restrictions only where they change the choice. This is separate from where the agent runs its work.
 
-The built-in browser reaches the signed-in Muse and Gemini sessions. The earlier Skyvern error was a tool-route failure. Gemini's Scheduled page is visible, but the test ran in Gemini Pro chat. Grok's Windows installation is user-reported; its test surface has not yet been inspected.
+The built-in browser reaches the signed-in Muse and Gemini sessions. The earlier Skyvern error was a tool-route failure. Gemini's Scheduled page is visible, but the test ran in Gemini Pro chat. Grok Bot was inspected and tested in its Windows app. Krish has no Poke account and reports dots unavailable to his UK account.
 
 **Grok is not universally desktop-only.** Its [3 October release notes](https://grok.com/release-notes/oct-03-2026) say browser Bot access is available to SuperGrok Plus and Heavy subscribers. Its [desktop download page](https://cursor.com/download/bot) lists Windows, macOS and Linux. Checked 19 October. The useful distinction for the card is access by surface and plan, not a blanket Windows requirement. An installed interface also does not mean local execution: the [official computer guide](https://docs.x.ai/grok-bot/computer-and-apps) says Bot work runs on a separate cloud computer.
 

@@ -1,0 +1,37 @@
+{
+  "date": "2026-10-20",
+  "product_surface": "Grok Bot Windows",
+  "conversation": "Wednesday draft tests",
+  "method": "four supplied cases batched in one fresh bot",
+  "answer_key_supplied": false,
+  "external_actions_observed": false,
+  "paid_calls": 0,
+  "results": [
+    {
+      "task": "email",
+      "useful": 3,
+      "could_break": 0
+    },
+    {
+      "task": "meeting",
+      "useful": 3,
+      "could_break": 0
+    },
+    {
+      "task": "purchase",
+      "useful": 3,
+      "could_break": 0
+    },
+    {
+      "task": "policy",
+      "useful": 3,
+      "could_break": 0
+    }
+  ],
+  "policy_reply_words": 96,
+  "limits": [
+    "Single output per task, not a reliability estimate",
+    "Different batching from Muse separate side chats",
+    "Text-only tasks do not prove integration safety"
+  ]
+}

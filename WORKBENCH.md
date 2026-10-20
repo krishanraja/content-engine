@@ -23,14 +23,16 @@ clarified: "Here's a scorecard, so you don't have to go and use them all."
 It is live in Wednesday's review workroom with the identical four-task packet.
 The 50-record follow-up and 41-record peer workbooks plus deep corpus were read;
 their extracted text is in `_corpus/2026-10-21-assistants/`. Counts overlap.
-Built-in browser access now works. Four Muse drafts completed (email, meeting,
-purchase 3/0; policy 2/1 for falsely claiming a manager referral); one Gemini Pro
-email baseline passed 3/0. Raw outputs and limits: the week's test-results/.
-Gemini Scheduled routed to chat, not a verified Spark agent run. Muse's muso
-new-chat label requires identity reconciliation with the Meta Muse corpus.
-Grok Bot is open on Windows but its chat screen is not yet reachable by automation.
-Krish has no Poke account and reports dots unavailable in the UK. All three are untested. No sends or spending. Purchase fixture
-now has explicit dates; the ambiguous original trial is retained unscored.
+20 October: Grok Bot Windows completed all four draft checks, 3/0 each.
+The four cases were batched in a fresh bot to minimise desktop time; Muse used
+separate chats. Desktop released immediately after submission. Exact Grok prompt
+and output are in test-results/grok-batched.txt. Muse scores remain 3/0 for email,
+meeting and purchase, 2/1 for the false policy referral claim. Gemini Pro email
+is a separate 3/0 baseline, not a Spark agent result. dots and Poke are research
+only: Krish reports no UK dots access and has no Poke account. Muse/muso surface
+identity still needs reconciling before claiming it is the corpus's Meta Muse.
+Narrative and proposed visuals: wednesday-narrative-ready.md, linked in the board.
+No spending or public posting. PR 117 merged; its full local verify passed.
 The live readback preserved all 23 Monday assets and all 12 week/store snapshots.
 Batch decisions and keep
 routine production separate from reusable engine work; Krish flagged throughput.
