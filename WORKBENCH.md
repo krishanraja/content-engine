@@ -31,7 +31,7 @@ when he calls one ("Yes, replace it" the weekly deep cut).
   `week_board.py` draws weeks from 26 Oct only in it (`--brief DAY=json` new),
   phone layout (viewport, bottom tab bar, 44px targets), comments as a sheet;
   `verify()` and `npm run check:board-layout` (CI) refuse any other shape;
-  `.claude/hooks/board-ui-guard.mjs` puts layout edits to Krish. House rule
+  `.claude/hooks/board-ui-guard.mjs` (unregistered by Krish 21 Oct; CI holds the layout). House rule
   FEATURE replaced DEEP_CUT (`config/features.json`, `story_check --cut feature`).
 - **Part 2 handover:** `docs/handovers/2026-10-21-publish-board-part2.md` (start a fresh session from it).
 - **Next:** part 2, Sunday Ideas gathered from every source plus Queue
