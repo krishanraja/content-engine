@@ -86,6 +86,11 @@ CUTS = {
     # score, records 8 to 12 minutes in place of its 5-minute cut, for YouTube long-form and Spotify. Krish,
     # 2026-10-14: "perhaps the third video length also becomes the Spotify audio track".
     'deep': (1200, 1700, 'the week\'s deep video of about 8 to 12 minutes'),
+    # A special feature (house rule FEATURE; config/features.json), only when Krish calls one: about 15 minutes, a
+    # third cut beside the 5-minute and the 90-second. Krish, 2026-10-21: "all videos are generally 90 sec and 5 min.
+    # From time to time I might do a special 15 min feature"; it replaced the weekly deep cut. The long cut's pace
+    # (675 to 825 words for 5 minutes), times three.
+    'feature': (2025, 2475, 'a special feature of about 15 minutes'),
 }
 # The close, as scripts/quick-edit/kit.py finds the paragraph a picture may not cover: it names makeyourmindup
 # and, in a script recorded on the old lines, the full article (house rule HOOK_AND_CTA).
@@ -373,6 +378,10 @@ def spoken_paragraphs(text):
 def cut_of(name):
     """The cut a file name says it is, or None."""
     n = str(name or '').lower()
+    # A word of its own, so a slug ("the-feature-store") or a date ("2026-11-15-minimum") is never taken for one.
+    if re.search(r'(?:^|[^a-z0-9])(?:feature|fifteen)(?:[^a-z0-9]|$)|(?:^|[^0-9])15[ _-]?min(?:ute)?s?(?:[^a-z0-9]|$)', n) \
+            and not re.search(r'(?:^|[^a-z0-9])(?:90|short|vertical|tall)(?:[^a-z0-9]|$)', n):
+        return 'feature'
     if re.search(r'deep', n):
         return 'deep'
     if re.search(r'audio|spotify|podcast', n):
@@ -382,6 +391,11 @@ def cut_of(name):
     if re.search(r'long|[35].?min|wide|three|five', n):
         return 'long'
     return None
+
+
+# The rule each longer cut answers to. DEEP_CUT was retired on 2026-10-21 for FEATURE; a deep cut already recorded is
+# still checked at its own length, under its old name.
+RULE_OF = {'deep': 'DEEP_CUT, retired 2026-10-21', 'feature': 'FEATURE'}
 
 
 def length_problem(words, cut):
@@ -394,16 +408,16 @@ def length_problem(words, cut):
     when = f'{secs // 60}:{secs % 60:02d}'
     if n > high:
         return (f'the {cut} cut runs {n} spoken words, about {when} at an unhurried pace, and Krish asked for {asked}: '
-                f'cut it to {low} to {high} words (house rule {"DEEP_CUT" if cut == "deep" else "TWO_CUTS"})')
+                f'cut it to {low} to {high} words (house rule {RULE_OF.get(cut, "TWO_CUTS")})')
     if n < low:
         return (f'the {cut} cut is {n} spoken words, about {when}, short of {asked}: '
-                f'it should run {low} to {high} words (house rule {"DEEP_CUT" if cut == "deep" else "TWO_CUTS"})')
+                f'it should run {low} to {high} words (house rule {RULE_OF.get(cut, "TWO_CUTS")})')
     return None
 
 
 # How long each cut may run as he says it (seconds): the 90-second cut under 89 s (TWO_CUTS, the platforms' line),
 # the 5-minute cut by about 5:30, the deep cut 8 to 12 minutes (DEEP_CUT).
-SPOKEN_CAP_S = {'short': 89, 'long': 330, 'deep': 720}
+SPOKEN_CAP_S = {'short': 89, 'long': 330, 'deep': 720, 'feature': 990}
 
 
 def spoken_length_warning(words, cut, ledger=None):
@@ -835,6 +849,12 @@ def self_test():
     check('a file named audio is the Spotify audio edition', cut_of('2026-10-12-warner-suno-audio.md'), 'audio')
     check('a file named deep is the week\'s deep cut', cut_of('2026-10-09-draft-script-deep.md'), 'deep')
     check('a 1,500-word deep cut passes the length rule', length_problem(filler(1500).split(), 'deep'), None)
+    check('a file named feature or 15-minute is the special feature', (cut_of('2026-11-02-script-feature.md'), cut_of('15-min.md')), ('feature', 'feature'))
+    check('a date on the 15th, a word holding "feature" or a 90-second file named after a feature is never the feature',
+          (cut_of('2026-11-15-minimum-wage-short.md'), cut_of('2026-10-15-mind-the-gap-90.md'), cut_of('the-features-long.md'),
+           cut_of('the-feature-store-short.md')), ('short', 'short', 'long', 'short'))
+    check('a 2,200-word feature passes its length, and a 900-word one is refused naming FEATURE',
+          (length_problem(filler(2200).split(), 'feature'), 'FEATURE' in (length_problem(filler(900).split(), 'feature') or '')), (None, True))
     check('a 450-word deep cut is refused, naming DEEP_CUT', 'DEEP_CUT' in (length_problem(filler(450).split(), 'deep') or ''), True)
     check('a 1,400-word audio edition passes the length rule', length_problem(filler(1400).split(), 'audio'), None)
     check('a plain name says nothing', cut_of('script.md'), None)

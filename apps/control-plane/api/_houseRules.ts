@@ -378,10 +378,10 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
     stages: ['write', 'final_pass'],
   },
   {
-    id: 'DEEP_CUT', name: 'One deep video a week, for YouTube long-form and Spotify',
-    text: 'Once a week, the piece with the highest breakout score (the shareability score in its pack; a concept piece breaks a tie) gets a deep cut of 8 to 12 minutes, 1,200 to 1,700 spoken words, wide, in place of its 3-minute cut. It is recorded in the same sitting, goes to YouTube as long-form and to Spotify as the week\'s video episode, and is written from the full article for the ear, opening straight on the hook (SERIES_OPENER), at reading age 12, and closing as SCRIPT_CLOSE says. Every piece keeps its 90-second cut. plan-week records the pick in config/deep-cuts.json; Krish can swap it.',
-    said: 'I like your logic for the pick on the shareability score approach.',
-    on: '2026-10-14', source: 'chat, after "perhaps the third video length also becomes the Spotify audio track"; checked by scripts/post-pack/story_check.py (--cut deep) and making.py (deep_piece)', status: 'live',
+    id: 'FEATURE', name: 'A 15-minute feature, only when Krish calls one',
+    text: 'Every piece is a 90-second and a 5-minute video (TWO_CUTS). From time to time Krish calls a special feature for one piece: about 15 minutes, 2,025 to 2,475 spoken words, wide, recorded as a third cut beside the other two, for YouTube long-form and Spotify, and written from the full article for the ear, opening straight on the hook (SERIES_OPENER), at reading age 12, and closing as SCRIPT_CLOSE says. Only he calls one; no session proposes one each week. His call is recorded in config/features.json. It replaced the weekly 8 to 12 minute deep cut (DEEP_CUT, 2026-10-14 to 2026-10-21); deep cuts already recorded in config/deep-cuts.json stay as they were.',
+    said: 'Bear in mind that all videos are generally 90 sec and 5 min. From time to time I might do a special 15 min feature. Asked whether that replaces the weekly deep cut: "Yes, replace it".',
+    on: '2026-10-21', source: 'chat, standardising the publish board; checked by scripts/post-pack/story_check.py (--cut feature) and shown by week_board.py (config/board-layout.json cuts)', status: 'live',
     stages: ['write', 'final_pass', 'production'],
   },
   {

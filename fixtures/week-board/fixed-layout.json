@@ -1,0 +1,213 @@
+{
+ "_about": "The fixed layout of the publish board, as check_board_layout.py reads it from three fed weeks. A change here is a change to the board Krish works in: only with him.",
+ "layout_version": 2,
+ "weeks": {
+  "empty": {
+   "tabs": [
+    "ideas",
+    "queue",
+    "monday",
+    "wednesday",
+    "friday"
+   ],
+   "days": {
+    "monday": {
+     "brief": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "drafts": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "record": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "publish": [
+      "p.st-what",
+      "div.slot-empty"
+     ]
+    },
+    "wednesday": {
+     "brief": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "drafts": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "record": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "publish": [
+      "p.st-what",
+      "div.slot-empty"
+     ]
+    },
+    "friday": {
+     "brief": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "drafts": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "record": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "publish": [
+      "p.st-what",
+      "div.slot-empty"
+     ]
+    }
+   }
+  },
+  "sunday": {
+   "tabs": [
+    "ideas",
+    "queue",
+    "monday",
+    "wednesday",
+    "friday"
+   ],
+   "days": {
+    "monday": {
+     "brief": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "drafts": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "record": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "publish": [
+      "p.st-what",
+      "div.slot-empty"
+     ]
+    },
+    "wednesday": {
+     "brief": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "drafts": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "record": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "publish": [
+      "p.st-what",
+      "div.slot-empty"
+     ]
+    },
+    "friday": {
+     "brief": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "drafts": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "record": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "publish": [
+      "p.st-what",
+      "div.slot-empty"
+     ]
+    }
+   }
+  },
+  "midweek": {
+   "tabs": [
+    "ideas",
+    "queue",
+    "monday",
+    "wednesday",
+    "friday"
+   ],
+   "days": {
+    "monday": {
+     "brief": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "drafts": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "record": [
+      "p.st-what",
+      "div.rec",
+      "div.rec-scripts"
+     ],
+     "publish": [
+      "p.st-what",
+      "div.rec",
+      "div.ticks",
+      "div.card links",
+      "nav.toc",
+      "section",
+      "section",
+      "section",
+      "section",
+      "section",
+      "section",
+      "section",
+      "p.save-note"
+     ]
+    },
+    "wednesday": {
+     "brief": [
+      "p.st-what",
+      "div.card brief"
+     ],
+     "drafts": [
+      "p.st-what",
+      "div.rec rv"
+     ],
+     "record": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "publish": [
+      "p.st-what",
+      "div.ticks"
+     ]
+    },
+    "friday": {
+     "brief": [
+      "p.st-what",
+      "div.card brief"
+     ],
+     "drafts": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "record": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "publish": [
+      "p.st-what",
+      "div.ticks"
+     ]
+    }
+   }
+  }
+ }
+}

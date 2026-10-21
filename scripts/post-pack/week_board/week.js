@@ -228,11 +228,43 @@ function select(day, opts = {}){
   if (opts.hash) { try { history.replaceState(null, "", "#" + day) } catch {} remember(day) }
   if (changed && opts.top) window.scrollTo(0, 0);
 }
+// The day's four steps in the fixed layout (Brief, Drafts, Record, Publish), each a tab inside the day; a link
+// to #monday/publish opens one, and a link to any id inside a step opens that step first.
+function selectSub(panel, sub, opts = {}){
+  const nav = panel && panel.querySelector(":scope > .steps"); if (!nav) return;
+  const btns = [...nav.querySelectorAll("[role=tab]")]; const b = btns.find(x => x.dataset.sub === sub); if (!b) return;
+  for (const x of btns) {
+    const on = x === b;
+    x.setAttribute("aria-selected", on ? "true" : "false"); x.tabIndex = on ? 0 : -1;
+    document.getElementById(x.getAttribute("aria-controls")).hidden = !on;
+  }
+  if (opts.focus) b.focus();
+  if (opts.hash) { try { history.replaceState(null, "", "#" + panel.id.replace(/^panel-/, "") + "/" + sub) } catch {} }
+  if (opts.top) { const y = nav.getBoundingClientRect().top + window.scrollY - bar.offsetHeight - 8; if (window.scrollY > y) window.scrollTo(0, Math.max(0, y)) }
+}
+document.querySelectorAll(".pm.fixed > .steps").forEach(nav => {
+  const panel = nav.parentElement, btns = [...nav.querySelectorAll("[role=tab]")];
+  btns.forEach((b, i) => {
+    b.addEventListener("click", () => selectSub(panel, b.dataset.sub, { hash: true, top: true }));
+    b.addEventListener("keydown", e => {
+      let j = null;
+      if (e.key === "ArrowRight") j = (i + 1) % btns.length;
+      else if (e.key === "ArrowLeft") j = (i - 1 + btns.length) % btns.length;
+      else if (e.key === "Home") j = 0;
+      else if (e.key === "End") j = btns.length - 1;
+      if (j === null) return;
+      e.preventDefault(); selectSub(panel, btns[j].dataset.sub, { focus: true, hash: true });
+    });
+  });
+});
+const openStepOf = el => { const sp = el && el.closest(".subpanel"); if (sp) selectSub(sp.closest(".pm"), sp.dataset.sub) };
 function fromHash(){
   const h = decodeURIComponent((location.hash || "").slice(1));
   if (!h) return false;
   if (tabs.some(t => t.dataset.day === h)) { select(h, { top: true }); return true }
-  for (const p in PREFIX) if (h.startsWith(p)) { select(PREFIX[p]); const el = document.getElementById(h); if (el) el.scrollIntoView(); return true }
+  const step = /^([a-z]+)\/([a-z]+)$/.exec(h);
+  if (step && tabs.some(t => t.dataset.day === step[1])) { select(step[1], { top: true }); selectSub(document.getElementById("panel-" + step[1]), step[2]); return true }
+  for (const p in PREFIX) if (h.startsWith(p)) { select(PREFIX[p]); const el = document.getElementById(h); if (el) { openStepOf(el); el.scrollIntoView() } return true }
   return false;
 }
 tabs.forEach((t, i) => {

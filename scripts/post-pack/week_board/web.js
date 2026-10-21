@@ -10,16 +10,35 @@
   const unsaved = () => !!document.querySelector('[data-unsaved="true"]') || !!editor?.value.trim();
   let leavingConfirmed = false;
   window.addEventListener('beforeunload', e => { if (!leavingConfirmed && unsaved()) { e.preventDefault(); e.returnValue = ''; } });
+  // The week links and the comments sheet take the board's own colours (its :root tokens), light or dark, and on a
+  // phone the comments open as a sheet from the bottom. One stylesheet, here, so no element carries its own look.
+  const look = document.createElement('style');
+  look.textContent = [
+    '.wb-weeks{display:flex;flex-wrap:wrap;gap:8px;margin:0 auto;padding:16px 16px 12px;max-width:820px;border-bottom:1px solid var(--line,#b5b4aa)}',
+    '.wb-week{display:inline-flex;align-items:center;min-height:44px;padding:8px 16px;border:1px solid var(--line,#222);border-radius:999px;color:var(--ink,#171b19);text-decoration:none;font:700 14px Archivo,system-ui,sans-serif;background:var(--card,#f7f6ef)}',
+    '.wb-week[aria-current=page]{background:var(--ink,#171b19);color:var(--bg,#fff);border-color:var(--ink,#171b19)}',
+    '.wb-note{font-size:13px;color:var(--muted,#555);align-self:center}',
+    '.wb-comments{display:inline-flex;align-items:center;min-height:44px;padding:8px 16px;border-radius:999px;border:1px solid var(--mint,#7EF0C0);background:var(--mint,#7EF0C0);color:#0C1512;font:700 13px Archivo,system-ui,sans-serif;cursor:pointer}',
+    '.wb-sheet{width:min(620px,92vw);max-height:85dvh;padding:20px;border:1px solid var(--line,#888);border-radius:16px;overflow:auto;background:var(--card,#fff);color:var(--ink,#111)}',
+    '.wb-sheet::backdrop{background:rgba(12,21,18,.45)}',
+    '.wb-sheet h2{font:400 26px/1.05 Anton,Impact,sans-serif;text-transform:uppercase;margin:0 0 8px}',
+    '.wb-sheet button{min-height:44px;padding:8px 16px;border-radius:999px;border:1px solid var(--line,#888);background:transparent;color:inherit;font:700 14px Archivo,system-ui,sans-serif;cursor:pointer;margin:6px 6px 0 0}',
+    '.wb-sheet .wb-save{background:var(--mint,#7EF0C0);border-color:var(--mint,#7EF0C0);color:#0C1512}',
+    '.wb-sheet textarea{width:100%;box-sizing:border-box;margin-top:12px;min-height:120px;padding:12px;border:1px solid var(--line,#888);border-radius:10px;background:var(--bg,#fff);color:inherit;font:16px/1.5 system-ui,sans-serif}',
+    '.wb-thread{padding:12px 0;border-bottom:1px solid var(--line,#888)}.wb-thread small{display:block;margin-top:6px;color:var(--muted,#555)}.wb-thread p{white-space:pre-wrap;margin:4px 0}',
+    '@media (max-width:640px){.wb-sheet{width:100%;max-width:100%;margin:auto 0 0;border-radius:16px 16px 0 0;max-height:90dvh;padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px))}}'
+  ].join('\n');
+  document.head.append(look);
   const navigation = document.createElement('nav');
   navigation.setAttribute('aria-label', 'Publishing weeks');
-  navigation.style.cssText = 'display:flex;flex-wrap:wrap;gap:8px;margin:0 auto;padding:16px 16px 12px;max-width:820px;border-bottom:1px solid #b5b4aa';
+  navigation.className = 'wb-weeks';
   function showWeeks(weeks) {
     navigation.replaceChildren();
     for (const date of [...new Set([week, ...weeks])].sort()) {
       if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) continue;
       const link = document.createElement('a'); link.href = `/board/${date}`;
       link.textContent = 'Week of ' + new Date(date + 'T12:00:00Z').toLocaleDateString('en-GB', {day:'numeric',month:'short',timeZone:'UTC'});
-      link.style.cssText = 'display:inline-flex;align-items:center;min-height:44px;padding:8px 16px;border:1px solid #222;border-radius:8px;color:#171b19;text-decoration:none;font-weight:700;box-sizing:border-box;background:' + (date === week ? '#c8f4de' : '#f7f6ef');
+      link.className = 'wb-week';
       if (date === week) link.setAttribute('aria-current', 'page');
       link.onclick = e => {
         if (date === week) { e.preventDefault(); return; }
@@ -39,7 +58,7 @@
     if (!response.ok || !data.ok || !Array.isArray(data.weeks)) throw new Error('weeks_unavailable');
     showWeeks(data.weeks);
   }).catch(() => {
-    const message = document.createElement('span'); message.setAttribute('role','status');
+    const message = document.createElement('span'); message.setAttribute('role','status'); message.className = 'wb-note';
     message.textContent = 'Other weeks could not be loaded. Reload to try again.'; navigation.append(message);
   });
   async function request(path, options = {}) {
@@ -146,7 +165,7 @@
     const roots = all.filter(([id, d]) => d.body.thread_id === id && (anchor === "board-root" || d.body.anchor === anchor));
     roots.sort((a,b) => String(a[1].body.at).localeCompare(String(b[1].body.at)));
     for (const [id, d] of roots) {
-      const section = document.createElement("section"); section.style.cssText = "padding:12px 0;border-bottom:1px solid #888";
+      const section = document.createElement("section"); section.className = "wb-thread";
       const title = document.createElement("strong"); title.textContent = d.body.anchor === "board-root" ? "Whole board" : d.body.anchor; section.append(title);
       const original = d.body.original_metadata || {};
       const threadState = document.createElement("span");
@@ -158,10 +177,9 @@
       for (const [, entry] of [ [id,d], ...all.filter(([rid,r]) => rid !== id && r.body.thread_id === id).sort((a,b) => String(a[1].body.at).localeCompare(String(b[1].body.at))) ]) {
         const metadata = entry.body.original_metadata || {};
         const byline = document.createElement('small');
-        byline.style.cssText = 'display:block;margin-top:6px';
         byline.textContent = [metadata.author_display || metadata.author_label || 'Krish', metadata.at_as_reported || entry.body.at].filter(Boolean).join(' · ');
         section.append(byline);
-        const p = document.createElement("p"); p.style.whiteSpace = "pre-wrap"; p.textContent = entry.body.text; section.append(p);
+        const p = document.createElement("p"); p.textContent = entry.body.text; section.append(p);
       }
       const reply = document.createElement("button"); reply.type = "button"; reply.textContent = "Reply";
       reply.onclick = () => { replyTo = id; status.textContent = `Replying to ${d.body.anchor}`; editor.focus() }; section.append(reply); list.append(section);
@@ -184,12 +202,12 @@
       anchor = await anchorFor(element); replyTo = null;
       if (!dialog) {
         dialog = document.createElement("dialog"); dialog.setAttribute("aria-label", "Board comments");
-        dialog.style.cssText = "width:min(620px,92vw);max-height:85dvh;padding:20px;border:1px solid #888;border-radius:12px;overflow:auto";
+        dialog.className = "wb-sheet";
         const heading = document.createElement("h2"); heading.textContent = "Comments";
         const close = document.createElement("button"); close.textContent = "Close"; close.onclick = () => dialog.close();
-        list = document.createElement("div"); editor = document.createElement("textarea"); editor.setAttribute("aria-label", "Your comment"); editor.rows = 5; editor.maxLength = 30000; editor.style.cssText = "width:100%;box-sizing:border-box;margin-top:12px";
+        list = document.createElement("div"); editor = document.createElement("textarea"); editor.setAttribute("aria-label", "Your comment"); editor.rows = 5; editor.maxLength = 30000;
         status = document.createElement("p"); status.setAttribute("role", "status");
-        const save = document.createElement("button"); save.textContent = "Save comment";
+        const save = document.createElement("button"); save.textContent = "Save comment"; save.className = "wb-save";
         save.onclick = async () => {
           const text = editor.value.trim(); if (!text) { status.textContent = "Write a comment first."; return }
           save.disabled = true;
@@ -202,7 +220,7 @@
       status.textContent = ""; dialog.showModal(); renderComments(); editor.focus();
     }
   };
-  const button = document.createElement("button"); button.type = "button"; button.textContent = "Comments";
+  const button = document.createElement("button"); button.type = "button"; button.textContent = "Comments"; button.className = "wb-comments";
   button.onclick = () => comments.openComposer();
   (document.querySelector(".wk-week") || document.querySelector("header") || document.body).append(button);
   const downloads = { save: async ({ filename, data }) => {

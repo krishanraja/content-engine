@@ -6,6 +6,47 @@ board becomes the sole place for new interactions after verified migration.
 The four Claude artifacts and the default artifact generator remain preserved;
 there is no ongoing synchronization with them after cutover.
 
+## The fixed layout: feed it, never shape it
+
+Krish, 2026-10-21: "the rest of the content engine needs to know how to feed it
+and not be permitted to change random parts of the UI and UX but feed it in the
+right way consistently. That applies to Claude and to Codex." From the week of
+26 October 2026 (`config/board-layout.json`, `layout_from`) every board has one
+layout, the same every week:
+
+- **Five tabs, in this order:** Ideas, Queue, Monday, Wednesday, Friday. On a
+  phone they are a bar at the bottom.
+- **Four steps in every day, in this order:** Brief, Drafts, Record, Publish.
+  A step with nothing yet says when it fills (the brief by the night before,
+  the drafts by the morning of the day, from the layout's `rhythm`).
+
+A session feeds the slots and nothing else:
+
+| Step | What feeds it | Input |
+|---|---|---|
+| Ideas | the week's checked ideas | `--ideas ideas.json` (plan-week) |
+| Queue | the idea queue | `--queue queue.json` (GET /api/idea-queue) |
+| Brief | the record-ready brief: idea, 3 to 6 beats, ending, takeaway, angle, tone, reader | `--brief DAY=brief.json` (kept on rebuild) |
+| Drafts | the article and scripts in review | `--draft DAY --review DAY=...` |
+| Record | the Teleprompter scripts and the scripts to read | `--teleprompter`, the publish page's scripts |
+| Publish | files first, then each place to post with its tick | `--materials DAY=...`, the publish page (`--day`), the videos on the record |
+| Heading | what waits on Krish | `--waiting DAY=...` |
+
+Never add a section, a banner, a style or a script to a built board, and never
+patch its HTML: `week_board.verify()` refuses any other shape (one stylesheet,
+each day exactly its heading, its steps and their panels), and
+`npm run check:board-layout` (in `npm run verify` and CI, so Codex too) holds
+the build to `fixtures/week-board/fixed-layout.json`, checks every view at
+390px for sideways scroll and 44px targets (`--browser`), and fails any file
+outside the board's builders that stamps a board. A change to the layout
+itself is Krish's: `.claude/hooks/board-ui-guard.mjs` puts every edit to the
+generator, its templates, `scripts/post-pack/tokens.css`, the layout file or
+the snapshot to him in person.
+
+Videos: every piece is a 90-second and a 5-minute video. A 15-minute feature
+appears as a third cut only on a piece Krish called one for
+(`config/features.json`, house rule FEATURE).
+
 ## Finished files while editorial review remains open
 
 Use `week_board.py --materials DAY=materials.json` for finished downloads and
