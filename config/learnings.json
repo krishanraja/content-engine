@@ -1177,6 +1177,21 @@
      "how": "the Scripts step every making session follows"
     }
    ]
+  },
+  {
+   "id": "finish-to-completion-when-told",
+   "on": "2026-10-21",
+   "krish": "just get it all done now, to full completion",
+   "why": "The session kept stopping at the context nudge to hand the next part to a fresh session, when he wanted the whole job finished and merged.",
+   "means": "When he says to finish a job to completion, the context nudge does not split it: finish every part, merge when green, then write the handover.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "docs/COST_GUARDS.md",
+     "contains": "the job is finished first and the handover written after",
+     "how": "the G1 context nudge row every session reads"
+    }
+   ]
   }
  ]
 }

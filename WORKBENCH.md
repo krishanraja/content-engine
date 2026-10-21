@@ -1,38 +1,25 @@
 # Workbench: where we are and what's next
 
-## 21 October: the Publish step is one run-sheet (Claude, part 4 of 4)
+## 21 October: the publish board, parts 2 to 4 and the 15-minute feature (Claude)
 
-- **Krish:** "have a think about where I publish, how I publish, what I need to download, when, and in what order.
-  Just make everything as beautiful and user-friendly as possible." (learning `publish-run-sheet`)
-- **Built (branch `claude/publish-board-part4`, on part 3 plus part 2's review fixes):** a made day's Publish step in
-  weeks from 26 Oct is `week_board.py` `run_sheet`: the checklist meter and its steps, then Download first (videos,
-  thumbnails, Substack cover, vertical cover, other covers, article HTML, its pictures, `--materials`; Download all;
-  the post's folder `3 Posts/<post folder>` named), then one card per place in `publish_steps` order, each with
-  files, copy, do, link box and tick; LinkedIn, Spotify and a feature under "When you want them". Built from data:
-  `publish_manager.py` now writes its words into each page (`pm-data`), and `publish_kit.steps(words, on_board=True)`
-  gives the words. Section ticks, the contents bar and the separate videos card are gone in fixed weeks only.
-  `verify()` refuses a missing Download first, a card out of order, a tick with no card.
-- **Waiting on Krish:** the layout snapshot is stale (part 3's Drafts and this Publish step); it updates only with his
-  words: `python3 scripts/check_board_layout.py --update --approved "Krish, YYYY-MM-DD: <his exact words>"`.
-- **Then:** his approval, push, PR with auto-merge; rebuild the 26 Oct board once its first piece is made.
-
-## 21 October: Sunday's ideas from every source, and Could combine (Claude, part 2 of 4)
-
-- **Built (branch `claude/content-publish-board-ux-4dl7ai`):** `GET /api/week/options?include=sources`
-  (`api/_weekSources.ts`): his ideas, his inspo folder's and the engine's, his first, then near something he liked
-  (`why_here`), then the ladder score; judges stay blind (`check-judges.ts`). `GET /api/idea-queue?combine=1`
-  (`combineCandidates`). synthesize takes queued ideas out of the queue, only on his word (`queued_needs_his_word`).
-  `scripts/post-pack/board_feed.py gather <Monday>` writes `docs/plans/<Monday>-week/sources.json`. The board: source
-  chip, why line and beats on each idea card; `--combine combine.json` cards with a Combine button saving
-  `queue/combine-<n>`. plan-week updated.
-- **His ideas:** Control Center files them as `manual` only through its one door, whose table `said_parts` went live
-  today (migration `one_door`, 21 Oct), so none were lost; ideas he gives chat sessions are relayed as `krish-ideas-*`
-  board items, now in `his_relayed`. Topics he asks Control Center to research count as his (`requested_by: Krish`).
-- **The layout lock is CI now** (Ruling, Krish, 2026-10-21: no approval prompts). The snapshot holds the hashes of
-  `config/board-layout.json` and `tokens.css` and `approved`, his words; `--update` needs `--approved`.
-- **Approved and recorded:** part 2's new card fields and Combine card, with his words "just get it all done now,
-  to full completion" (21 Oct) in the layout snapshot; the old guard file is deleted.
-- **Then:** deploy, then `board_feed.py gather 2026-10-26` live (today the live engine has no `include=sources` yet).
+- **Krish:** "just get it all done now, to full completion", then "merge it when green and keep going".
+- **Built (PR #128, branch `claude/content-publish-board-ux-4dl7ai`, merged to main when CI is green):**
+  - Part 2: `GET /api/week/options?include=sources` (`api/_weekSources.ts`) gathers his ideas, his inspo folder's and
+    the engine's, his first, then near something he liked (`why_here`); judges stay blind (`check-judges.ts`).
+    `GET /api/idea-queue?combine=1` and the Queue tab's Combine button (his tap only, `combine_is_his_tap`).
+    `scripts/post-pack/board_feed.py gather <Monday>` and `taps` feed plan-week.
+  - Part 3: the Drafts editor (tap to edit, select to comment, one Save bar); `edit_sweep.py` carries a number or
+    fact change only where its neighbouring words match, shows it under "Also changed" with Undo, and never touches a
+    recorded script. Only his saves count (`edit_is_his_save`, `tap_is_his`). The ledger takes the `publish_board`
+    surface (migration applied live on his yes and read back).
+  - Part 4: the Publish step is a run-sheet: Download first, then one card per place in posting order.
+  - The feature is a third cut (`making.py`, `teleprompter_send.py`, `recording_match.py`, `publish_kit.py`,
+    `build.py`, `_making.ts`), with YouTube long-form and Spotify cards on feature pieces only.
+- **Layout lock:** CI (`npm run check:board-layout`); every change in this PR is recorded with his words in
+  `fixtures/week-board/fixed-layout.json`. No approval prompts (Ruling, Krish, 2026-10-21).
+- **Next:** once deployed, run `python3 scripts/post-pack/board_feed.py gather 2026-10-26` against the live engine
+  and check each source's count. Control Center's mirror `src/lib/making.ts` does not know the feature cut yet: a
+  change in `krishanraja/control-center`, to confirm with Krish first.
 
 ## 21 October, afternoon: Wednesday drafts from Krish's board edits (Claude)
 
