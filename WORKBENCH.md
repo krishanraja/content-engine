@@ -18,8 +18,11 @@ do with this info if I were you" and ends "The full deep dive is at
 makeyourmindup.ai." (SCRIPT_CLOSE, refused by story_check); every article ends
 "3 things you can do tomorrow" (THREE_THINGS_TOMORROW, a non-blocking publish
 check for now so older articles keep their fact-check hashes). Both Wednesday
-cuts pass story_check (long 807 words, short 195). He approved Teleprompter,
-board republish and merge "after this round of feedback is complete".
+cuts pass story_check (long 807 words, short 195). Done on his approval ("After this round of feedback is complete"): both
+Teleprompter scripts updated in place (long b50061ae, short 90398a98; read back
+by two fresh readers each, on the making record), and the web board republished
+(build 973df9eb, readback hash matches; `update_wednesday_21oct.py`).
+**Next:** Krish records both cuts; titles and thumbnail words after recording.
 
 ## 21 October: Wednesday scripts in Teleprompter (Codex)
 

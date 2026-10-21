@@ -45,5 +45,24 @@
   },
   "provider_retry": "Short create returned unavailable; folder read showed no partial short; one retry succeeded. One script per cut.",
   "feedback_stores_unchanged": true,
-  "next": "Krish records both cuts. Visuals and final publication remain separate steps."
+  "next": "Krish records both cuts. Visuals and final publication remain separate steps.",
+  "update_2026_10_21": {
+    "approval_words": "2. After this round of feedback is complete.",
+    "action": "update_script in place, text and duration only",
+    "long": {
+      "script_id": "CDE12E50-3A6D-4D75-B6D0-3BBF8CDF352D",
+      "sha256": "b50061ae664aa8627ddc1721e6f7d7635647adc9663b77c28e4722054580e0c9",
+      "words": 802,
+      "duration": 321
+    },
+    "short": {
+      "script_id": "5D4B9696-EFAD-4C0A-8D19-BAFD115EF2E8",
+      "sha256": "90398a987cd118e38849b6921231cf43cfc2f191ded9f77f77a0d98d5726bf41",
+      "words": 195,
+      "duration": 78
+    },
+    "plan_after": "Nothing to send",
+    "read_back": "two fresh readers per cut on the exact words, recorded on the making record",
+    "dated_outline": "none for this piece; recorded through scripts_patch and read_back_patch as on 20 October"
+  }
 }

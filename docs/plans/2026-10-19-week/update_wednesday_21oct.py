@@ -50,6 +50,12 @@ def build():
         relative=f'/api/board/{WEEK}/assets/{aid}?sha={spec["sha256"]}'
         page=page.replace('https://content.krishraja.com'+relative,relative)
         if relative in page: mappings.append({'id':aid,'source_url':relative,'existing_sha256':spec['sha256']})
+    # Monday's four downloads still render as Drive links: point them at their stored copies.
+    drive={'1U0XZgpSXatqqgxEvZUSnnWFTdtJpnR9x':'monday-long-review','1jB2GX4NO37YmANe2rE2ox7AUp4a_94I3':'monday-short-review',
+           '1G-hgoUF7bCCJmj4BIBZN76Pqxgmpx0nT':'monday-wide-thumbnail','1fEjy6WKrZbXkmOrziEeC1A6P21BSd7iq':'monday-tall-thumbnail'}
+    for did,aid in drive.items():
+        target=next(m['source_url'] for m in mappings if m['id']==aid)
+        page=page.replace(f'https://drive.usercontent.google.com/download?id={did}&amp;export=download',target)
     missing=sorted(set(state['manifest']['assets'])-{m['id'] for m in mappings})
     page=board.engine_stamp.stamp(page,'week_board')
     problems=board.verify(page)
