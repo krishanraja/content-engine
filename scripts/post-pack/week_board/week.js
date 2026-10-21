@@ -546,9 +546,12 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
   const saved = {}, busy = {};
   let qdb = null, comments = null, mode = "loading";
   const say = (cid, msg, bad) => { const s = document.querySelector(`[data-combinestate="${cid}"]`); if (s) { s.textContent = msg; s.classList.toggle("bad", !!bad) } };
+  // A tap counts for this card only when it was for these same ideas: a later week's combine-1 may be another group.
+  const members = c => (c.dataset.members || "").split(",").filter(Boolean);
+  const same = (a, b) => Array.isArray(a) && Array.isArray(b) && a.length === b.length && new Set(a).size === a.length && b.every(x => a.includes(x));
   function render(){
     for (const c of cards) {
-      const cid = c.dataset.combine, on = !!(saved[cid] && saved[cid].combine);
+      const cid = c.dataset.combine, on = !!(saved[cid] && saved[cid].combine && same(saved[cid].members, members(c)));
       const b = c.querySelector('[data-act="combine"]');
       if (b) { b.disabled = mode !== "live" || on || !!busy[cid]; b.textContent = on ? "Combine asked" : "Combine these" }
       c.classList.toggle("on", on);
@@ -573,13 +576,14 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
     const b = e.target.closest && e.target.closest('[data-act="combine"]'); if (!b) return;
     const cid = b.dataset.for, c = document.getElementById(cid);
     if (!c || mode !== "live" || !qdb || busy[cid]) { render(); return }
-    const body = { combine: true, members: (c.dataset.members || "").split(",").filter(Boolean), pick: cid, at: new Date().toISOString() };
+    const body = { combine: true, members: members(c), pick: cid, at: new Date().toISOString() };
     busy[cid] = true; say(cid, "Saving…"); render();
     let stored = false;
     try { await qdb.doc("queue/" + cid).set(body); saved[cid] = body; stored = true } catch {}
     if (stored && comments) try {
       const anchor = await comments.anchorFor(c);
-      await comments.create({ anchor, text: `COMBINE ${cid} ${body.members.join(" ")}\n${body.at}\n\n${c.querySelector(".q-sowhat")?.textContent || ""}` });
+      // The tap only: the card's thesis is a session's words, never his, so it is not posted as if he said it.
+      await comments.create({ anchor, text: `COMBINE ${cid} ${body.members.join(" ")}\n${body.at}` });
     } catch {}
     delete busy[cid]; render();
     if (!stored) say(cid, "Not saved. Tap Combine again.", true);

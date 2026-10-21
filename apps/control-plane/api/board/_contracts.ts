@@ -46,6 +46,11 @@ export function validBody(collection: string, id: string, body: unknown): boolea
   if (collection === 'comments') return text('text', 30000) && text('thread_id', 160) && validId(String(body.thread_id)) && text('anchor', 160) && validId(String(body.anchor))
   return false
 }
+/** A Combine tap is his word to combine queued ideas, so only Krish writes one (the access-cookie actor); a session
+ *  holding the operator key could otherwise write a tap that the next session relays as his. */
+export function combineWriterRefused(collection: string, body: unknown, who: string | null): boolean {
+  return collection === 'queue' && object(body) && body.combine !== undefined && who !== 'Krish'
+}
 // Source archives retain the export's selectors, missing anchors and synthesized
 // reply identifiers verbatim. Canonical comments still use validBody above.
 export function validSourceBody(collection: string, id: unknown, body: unknown): boolean {

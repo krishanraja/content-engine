@@ -8,8 +8,8 @@
 // Three pools, by where an idea came from:
 //   his     what Krish put in himself: a 'manual' row (his words through Control Center's one door, source_ref
 //           said:<part>; the database refuses any other manual row), or a topic he asked the engine to research
-//           from Control Center ('requested_research' whose record says requested_by 'Krish'). Since the Monday
-//           before the week.
+//           from Control Center ('requested_research' whose record says requested_by 'Krish'). Last 14 days,
+//           the same window as the engine's, so none of his is dropped while the engine's from that day stays.
 //   inspo   what the Drive scan of his Cold Ideas and Inspo folder wrote ('inspiration_sweep'), last 14 days.
 //   engine  every other source, still seeded or researching, last 14 days, with its ladder score.
 // Never offered: buried, absorbed, dropped or library rows, anything scheduled or published, and queued ideas
@@ -54,11 +54,10 @@ export interface TasteItem { id: string; idea: string; kind: TasteKind; angle: s
 /** The two windows, from the Monday of the week being planned. */
 export function windows(weekStart: string) {
   const monday = Date.parse(`${weekStart}T00:00:00Z`)
-  return {
-    his_since: new Date(monday - 7 * DAY).toISOString(),
-    // Fourteen days back from the Sunday the week is planned on.
-    pool_since: new Date(monday - (POOL_DAYS + 1) * DAY).toISOString(),
-  }
+  // Fourteen days back from the Sunday the week is planned on, for every source: an idea he said eight days ago is
+  // never dropped while engine research from the same day stays.
+  const since = new Date(monday - (POOL_DAYS + 1) * DAY).toISOString()
+  return { his_since: since, pool_since: since }
 }
 
 /** Where an idea came from, or null when the record cannot say. `his` only when the record shows Krish put it there. */

@@ -132,6 +132,8 @@ describe('could combine (Krish, 2026-10-21: nothing in the queue is combined wit
     expect(patch.queued_at).toBeNull()
     expect(patch.meta.other).toBe(1)
     expect(patch.meta.queue).toMatchObject({ so_what: 'x', absorbed_into: 'parent-id', combined_by: 'Krish', combined_said: 'combine these two' })
+    // A bare tap carries no words of his: said stays null, never the board's own text.
+    expect(absorbedQueuePatch({ id: 'b', meta: {} }, 'parent-id', 'Krish', null, '2026-10-25T10:00:00Z').meta.queue.combined_said).toBeNull()
     const src = readFileSync('apps/control-plane/api/content-ideas/synthesize.ts', 'utf8')
     expect(src).toMatch(/operatorBearerAllowed\(req\) \? \(body\.decided_by === 'Krish' \? 'Krish' : null\) : 'Krish'/)
     expect(src).toMatch(/queued_needs_his_word/)

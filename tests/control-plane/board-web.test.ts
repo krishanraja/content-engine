@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { createHash } from 'node:crypto'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { actor, canonical, digest, monday, validBody, validManifest } from '../../apps/control-plane/api/board/_contracts.js'
+import { actor, canonical, combineWriterRefused, digest, monday, validBody, validManifest } from '../../apps/control-plane/api/board/_contracts.js'
 import { createBoardHandler } from '../../apps/control-plane/api/board/_handler.js'
 
 const previous = { ...process.env }
@@ -47,6 +47,27 @@ describe('board access and contracts', () => {
     expect(validManifest('2026-10-19', manifest)).toBe(true)
     expect(validManifest('2026-10-12', manifest)).toBe(false)
     expect(validManifest('2026-10-19', { ...manifest, html: { ...manifest.html, key: 'private/other' } })).toBe(false)
+  })
+  it('takes a Combine tap only from Krish: a session holding the operator key is refused before the store', async () => {
+    process.env.ACCESS_CODE = 'synthetic-board-test'
+    process.env.ENGINE_OPERATOR_TOKEN = 'synthetic-operator'
+    const cookie = `cc_access=${createHash('sha256').update(process.env.ACCESS_CODE).digest('hex')}`
+    const members = ['11111111-2222-4333-8444-555555555555', '22222222-3333-4444-8555-666666666666']
+    const body = { combine: true, members, pick: 'combine-1', at: '2026-10-25T10:00:00Z' }
+    const saves: unknown[] = []
+    const db = { rpc: async (_: string, args: unknown) => { saves.push(args); return { data: { ok: true, revision: 1, body }, error: null } } }
+    const handler = createBoardHandler(async () => db as never)
+    const put = async (headers: Record<string, string>) => {
+      let status = 0; let out: any
+      const res = { setHeader() {}, status(code: number) { status = code; return this }, json(value: unknown) { out = value } } as unknown as VercelResponse
+      await handler({ method: 'PUT', headers, query: { week: '2026-10-26', collection: 'queue', id: 'combine-1' }, body: { body, revision: 0 } } as unknown as VercelRequest, res)
+      return { status, out }
+    }
+    const session = await put({ authorization: 'Bearer synthetic-operator' })
+    expect(session.status).toBe(403); expect(session.out.error).toBe('combine_is_his_tap'); expect(saves).toHaveLength(0)
+    const his = await put({ cookie, origin: 'https://content.krishraja.com' })
+    expect(his.status).not.toBe(403); expect(saves).toHaveLength(1)
+    expect(combineWriterRefused('queue', { pick: 'mon-1', queued: true }, 'engine_operator')).toBe(false)
   })
   it('checks authentication before constructing any database client', async () => {
     delete process.env.ACCESS_CODE; delete process.env.ENGINE_OPERATOR_TOKEN

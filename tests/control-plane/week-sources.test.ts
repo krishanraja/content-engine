@@ -47,14 +47,15 @@ describe('the three pools', () => {
     expect(out.skipped).toEqual({ scheduled: 1, absorbed: 1 })
   })
 
-  it('his window starts the Monday before; the others look back fourteen days from the Sunday', () => {
+  it('every source looks back fourteen days from the Sunday: his idea from eight days ago stays beside the engine\'s', () => {
     const w = windows(WEEK)
-    expect(w.his_since.slice(0, 10)).toBe('2026-10-19')
+    expect(w.his_since.slice(0, 10)).toBe('2026-10-11')
     expect(w.pool_since.slice(0, 10)).toBe('2026-10-11')
     const out = buildSources({ weekStart: WEEK, series: ['follow_the_money'], tasteRows: [], rows: [
-      row('old-his', { source_type: 'manual', source_ref: 'said:1', created_at: at('2026-10-15') }), row('engine-15', { created_at: at('2026-10-15') }),
+      row('his-8-days', { source_type: 'manual', source_ref: 'said:1', created_at: at('2026-10-17') }), row('engine-8-days', { created_at: at('2026-10-17') }),
+      row('his-too-old', { source_type: 'manual', source_ref: 'said:2', created_at: at('2026-10-05') }),
       row('too-old', { created_at: at('2026-10-05') }), row('drafting-engine', { state: 'drafting' })] })
-    expect(out.series[0].pool.map(c => c.id)).toEqual(['engine-15'])
+    expect(out.series[0].pool.map(c => c.id)).toEqual(['his-8-days', 'engine-8-days'])
   })
 
   it('names the empty source and why', () => {

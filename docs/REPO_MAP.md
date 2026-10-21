@@ -1764,6 +1764,7 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `const revision = (n: unknown) =>`
 - `function actor(req: VercelRequest, operatorOnly = false): string | null`
 - `function validBody(collection: string, id: string, body: unknown): boolean`
+- `function combineWriterRefused(collection: string, body: unknown, who: string | null): boolean`
 - `function validSourceBody(collection: string, id: unknown, body: unknown): boolean`
 - `type BoardFile`
 - `type Manifest`
