@@ -52,6 +52,7 @@ import story_check  # noqa: E402
 import visual_gate  # noqa: E402
 import making  # noqa: E402  records the pack on the piece's board row
 import edge_check  # noqa: E402
+import plan_files  # noqa: E402  USUAL: each cut's script name in the pack
 from library import ARTICLE, COVERS, POST_README, POSTS, PUBLISH, SOCIAL, VIDEO, LibraryError, archive, brand  # noqa: E402
 
 DEFAULT_OUT = library.ROOT / '.cache' / 'post-pack'
@@ -270,7 +271,7 @@ def plan(post, base):
                 raise PackError(f'{label}: "text" is empty')
             if kind == 'video-script':
                 story_gate(entry, entry['text'], label, series)
-            name = entry.get('name') or (fixed if '.' in fixed else f'{fixed}.md')
+            name = entry.get('name') or script_name(entry, '.md') or (fixed if '.' in fixed else f'{fixed}.md')
             planned.append({'kind': kind, 'logos': [l for l in (entry.get('logos') or []) if isinstance(l, str)], 'evidence': entry.get('evidence') if isinstance(entry.get('evidence'), dict) else None, 'section': section, 'name': safe_name(name), 'purpose': purpose,
                             'text': entry['text'].strip() + '\n'})
             continue
@@ -284,6 +285,8 @@ def plan(post, base):
             continue
         if entry.get('name'):
             name = entry['name']
+        elif kind == 'video-script' and script_name(entry, source.suffix.lower() or '.md'):
+            name = script_name(entry, source.suffix.lower() or '.md')
         elif fixed and '.' in fixed:
             name = fixed
         elif fixed:
@@ -439,6 +442,18 @@ def warn(message):
     if message not in _warned:
         _warned.add(message)
         print(f'post-pack: WARNING {message}', file=sys.stderr)
+
+
+def script_name(entry, suffix):
+    """The pack name of a video script given no "name", by its cut: the short
+    and the 15-minute feature (house rule FEATURE) each get their own
+    (plan_files.USUAL, where recording_match.py looks for them), so neither
+    lands on the long script's video-script.md. None for the long cut, or a
+    script that names no cut: it keeps video-script.<ext>."""
+    cut = entry.get('cut') if entry.get('cut') in plan_files.USUAL else None
+    if cut in (None, 'long'):
+        return None
+    return Path(plan_files.USUAL[cut]).stem + (suffix or '.md')
 
 
 def story_gate(entry, text, label, series=None):
@@ -779,6 +794,21 @@ def self_test():
         launch = variant(launch=True, subchannel=None, subject='Launch hello', files=[{'kind': 'video-script', 'text': 'Why are we here? Hello.'}])
         check('a launch post', launch['folder'], '2026-10-05 Launch - Launch hello')
         check('text given in the post file', (tmp / 'other' / launch['folder'] / '3 Video' / 'video-script.md').read_text(encoding='utf-8'), 'Why are we here? Hello.\n')
+        # The 15-minute feature (house rule FEATURE): a third script given no "name" gets its own file, never the long one's.
+        (work / 'scripts').mkdir()
+        (work / 'scripts' / 'long.md').write_text('The long words.\n', encoding='utf-8')
+        (work / 'scripts' / 'feature.md').write_text('The feature words.\n', encoding='utf-8')
+        his = 'Krish, 2026-10-21: record it as it is'
+        three = variant(subject='Three cuts', files=[
+            {'kind': 'video-script', 'file': 'scripts/long.md', 'cut': 'long', 'story_check_override': his},
+            {'kind': 'video-script', 'text': 'The short words.', 'cut': 'short', 'story_check_override': his},
+            {'kind': 'video-script', 'file': 'scripts/feature.md', 'cut': 'feature', 'story_check_override': his}])
+        video = tmp / 'other' / three['folder'] / '3 Video'
+        check('long, short and feature scripts with no "name" are three distinct files in the pack, each with its own words',
+              {n: (video / n).read_text(encoding='utf-8') for n in ('video-script.md', 'video-script-90-seconds.md', 'video-script-feature.md')},
+              {'video-script.md': 'The long words.\n', 'video-script-90-seconds.md': 'The short words.\n', 'video-script-feature.md': 'The feature words.\n'})
+        check('the pack names are where recording_match.py looks for each cut', [script_name({'cut': c}, '.md') for c in ('long', 'short', 'feature', None)],
+              [None, 'video-script-90-seconds.md', 'video-script-feature.md', None])
         (out / folder / MANIFEST).unlink()
         refused('a folder this tool did not make', lambda: build(work / 'post.json', out, replace=True), 'was not made by this tool')
         check('a folder this tool did not make is left alone', (out / folder / POST_README).is_file(), True)
