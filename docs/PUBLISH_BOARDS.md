@@ -24,8 +24,9 @@ A session feeds the slots and nothing else:
 
 | Step | What feeds it | Input |
 |---|---|---|
-| Ideas | the week's checked ideas | `--ideas ideas.json` (plan-week) |
+| Ideas | the week's checked ideas, each with `source_kind` (`his`, `inspo` or `engine`, required from the fixed layout on, shown as its chip), `why_here` (the nearest idea he liked, from the gather) and `beats` (3 to 5 lines of the sketch) | `--ideas ideas.json` (plan-week, from `board_feed.py gather`) |
 | Queue | the idea queue | `--queue queue.json` (GET /api/idea-queue) |
+| Queue: Could combine | two to five queued ideas that make one bigger piece: `[{"members": [queued ids], "series", "thesis", "joins": [3 to 5 beats]}]`, each a card with a Combine button that saves `queue/combine-<n>`; the next session runs synthesize on his tap (decided_by Krish) | `--combine combine.json` (with `--queue`; groups from GET /api/idea-queue?combine=1) |
 | Brief | the record-ready brief: idea, 3 to 6 beats, ending, takeaway, angle, tone, reader | `--brief DAY=brief.json` (kept on rebuild) |
 | Drafts | the article and scripts in review | `--draft DAY --review DAY=...` |
 | Record | the Teleprompter scripts and the scripts to read | `--teleprompter`, the publish page's scripts |
@@ -39,9 +40,25 @@ each day exactly its heading, its steps and their panels), and
 the build to `fixtures/week-board/fixed-layout.json`, checks every view at
 390px for sideways scroll and 44px targets (`--browser`), and fails any file
 outside the board's builders that stamps a board. A change to the layout
-itself is Krish's: `.claude/hooks/board-ui-guard.mjs` puts every edit to the
-generator, its templates, `scripts/post-pack/tokens.css`, the layout file or
-the snapshot to him in person.
+itself is Krish's, and there are no approval prompts for board edits: the
+layout is held by CI and changes only with his recorded words (Ruling, Krish,
+2026-10-21). The snapshot records the sha256 of `config/board-layout.json` and
+`scripts/post-pack/tokens.css`, the structure of three fed weeks, and
+`approved`, the words he approved the last change in. The check fails when
+either file or the structure differs, until
+`python3 scripts/check_board_layout.py --update --approved "Krish, YYYY-MM-DD: <his exact words>"`
+writes the change with his words.
+
+Sunday's sources: `python3 scripts/post-pack/board_feed.py gather <Monday>`
+reads `GET /api/week/options?include=sources` and `GET /api/idea-queue?combine=1`
+(read-only, no spend) into `docs/plans/<Monday>-week/sources.json`: each
+series' pool, his ideas first, then near something he liked, then the ladder
+score, each with `source_kind` and `why_here`, the queue and its combine groups,
+and which source is empty and why. His ideas are `manual` rows (his words
+through Control Center's one door) and topics he asked the engine to research
+in Control Center (`requested_research` with `requested_by: Krish`); board items
+that relay his words (`krish-ideas-*`, `said-*`) come as `his_relayed`. His
+taste steers this sourcing and ranking only; the judges stay blind.
 
 Videos: every piece is a 90-second and a 5-minute video. A 15-minute feature
 appears as a third cut only on a piece Krish called one for

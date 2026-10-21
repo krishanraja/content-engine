@@ -64,7 +64,8 @@ export function windows(weekStart: string) {
 /** Where an idea came from, or null when the record cannot say. `his` only when the record shows Krish put it there. */
 export function sourceKind(row: Row): { kind: SourceKind; via: HisVia | null } {
   const type = String(row.source_type || '')
-  if (type === 'manual') return { kind: 'his', via: 'said' }
+  // His words carry a said:<part> ref (the database refuses a manual row without one), so the ref is the mark.
+  if (/^said:/.test(String(row.source_ref || ''))) return { kind: 'his', via: 'said' }
   if (type === 'requested_research' && row.meta?.requested_by === 'Krish') return { kind: 'his', via: 'research' }
   if (type === 'inspiration_sweep') return { kind: 'inspo', via: null }
   return { kind: 'engine', via: null }

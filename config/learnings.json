@@ -952,9 +952,9 @@
      "how": "npm run check:board-layout (CI, so Codex too) holds the build to the snapshot, fits every view at 390px and fails any script that patches and re-stamps a board"
     },
     {
-     "file": ".claude/hooks/board-ui-guard.mjs",
-     "contains": "a change to it runs only when he approves it in person",
-     "how": "every edit to the board's generator, templates, colours, layout or snapshot goes to Krish"
+     "file": "scripts/check_board_layout.py",
+     "contains": "def lock_problems(want, weeks_seen, files):",
+     "how": "CI fails when the layout file, the colours or the board's structure differ from the snapshot, until --update --approved records the change with his words (Ruling, Krish, 2026-10-21: no approval prompts; the layout is held by CI)"
     },
     {
      "file": "config/board-layout.json",
@@ -1012,7 +1012,44 @@
    "krish": "the ideas tab should, on a Sunday, contain a fresh batch of ideas that sources from all my different sources of ideas ... The ideas engine should have learnt from what I previously liked talking about ... there will be an overflow of ideas I queued for later and whatnot. I need to see that cue somewhere. You also need to pick up on whether there are multiple things in the queue that could be consolidated into one bigger piece that's more high-level and threads different things together.",
    "why": "plan-week hand-writes the ideas, nothing gathers Control Center, the Cold Ideas and Inspo folder and the engine together, and queued ideas sat only inside each day's ideas with nothing joining them.",
    "means": "Sunday's Ideas tab is gathered from every source and ranked by what he picked and marked before (the judges stay blind, Krish, 21 Oct); the Queue tab (built 21 Oct) also shows 'could combine' proposals, combined only on his word.",
-   "status": "open"
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "apps/control-plane/api/_weekSources.ts",
+     "contains": "export function buildSources(",
+     "how": "GET /api/week/options?include=sources: his ideas, his inspo folder and the engine's, his first, then near something he liked (why_here), then the ladder score; evidence only, no model"
+    },
+    {
+     "file": "apps/control-plane/scripts/check-judges.ts",
+     "contains": "his taste steers sourcing, the judges stay blind",
+     "how": "the ladder and the arc scorer may not read the taste evidence"
+    },
+    {
+     "file": "apps/control-plane/api/_ideaQueue.ts",
+     "contains": "export function combineCandidates(",
+     "how": "GET /api/idea-queue?combine=1: queued ideas that could combine, from stored embeddings, no model"
+    },
+    {
+     "file": "apps/control-plane/api/content-ideas/synthesize.ts",
+     "contains": "queued_needs_his_word",
+     "how": "queued ideas combine only on his tap or words, and leave the queue with combined_by Krish"
+    },
+    {
+     "file": "scripts/post-pack/board_feed.py",
+     "contains": "def gather(week, call=None, out_dir=None):",
+     "how": "one read-only gather writes sources.json and names any empty source"
+    },
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "def read_combine(data, queue, where='--combine'):",
+     "how": "the Queue tab's Could combine cards with a Combine button; every idea card says where it came from, why it is here and its beats"
+    },
+    {
+     "file": ".agents/skills/plan-week/SKILL.md",
+     "contains": "python3 scripts/post-pack/board_feed.py gather <Monday>",
+     "how": "the Sunday session gathers first, writes ideas.json and combine.json from it, and copies his Combine taps into synthesize"
+    }
+   ]
   }
  ]
 }

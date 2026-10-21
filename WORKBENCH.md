@@ -1,5 +1,25 @@
 # Workbench: where we are and what's next
 
+## 21 October: Sunday's ideas from every source, and Could combine (Claude, part 2 of 4)
+
+- **Built (branch `claude/content-publish-board-ux-4dl7ai`):** `GET /api/week/options?include=sources`
+  (`api/_weekSources.ts`): his ideas, his inspo folder's and the engine's, his first, then near something he liked
+  (`why_here`), then the ladder score; judges stay blind (`check-judges.ts`). `GET /api/idea-queue?combine=1`
+  (`combineCandidates`). synthesize takes queued ideas out of the queue, only on his word (`queued_needs_his_word`).
+  `scripts/post-pack/board_feed.py gather <Monday>` writes `docs/plans/<Monday>-week/sources.json`. The board: source
+  chip, why line and beats on each idea card; `--combine combine.json` cards with a Combine button saving
+  `queue/combine-<n>`. plan-week updated.
+- **His ideas:** Control Center files them as `manual` only through its one door, whose table `said_parts` went live
+  today (migration `one_door`, 21 Oct), so none were lost; ideas he gives chat sessions are relayed as `krish-ideas-*`
+  board items, now in `his_relayed`. Topics he asks Control Center to research count as his (`requested_by: Krish`).
+- **The layout lock is CI now** (Ruling, Krish, 2026-10-21: no approval prompts). The snapshot holds the hashes of
+  `config/board-layout.json` and `tokens.css` and `approved`, his words; `--update` needs `--approved`.
+- **Waits on Krish:** the snapshot update for part 2's new card fields and Combine card. `npm run check:board-layout` is
+  red until `python3 scripts/check_board_layout.py --update --approved "Krish, 2026-10-21: <his words>"` runs (a session
+  may not write his approval). `.claude/hooks/board-ui-guard.mjs` is still on disk, unregistered; deleting it was
+  refused to a session.
+- **Then:** deploy, then `board_feed.py gather 2026-10-26` live (today the live engine has no `include=sources` yet).
+
 ## 21 October: the publish board has one fixed layout (Claude, part 1 of 4)
 
 Krish asked to standardise and lock the board so the engine only feeds it. He

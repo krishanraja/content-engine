@@ -508,7 +508,7 @@ OpenAI text-embedding-3-small. Used for two purposes:
 - `interface EmbedInput`
 - `async function embed(input: EmbedInput): Promise<number[] | null>`
 - `async function embedBatch(inputs: EmbedInput[]): Promise<(number[] | null)[]>`
-- `function cosine(a: number[], b: number[]): number`
+- `export { cosine } from './_vectors.js'`
 - `function vectorLiteral(v: number[]): string`
 
 ### `apps/control-plane/api/_enrich.ts`
@@ -881,6 +881,12 @@ The one idea queue (Krish, 2026-10-19: "mark ideas for a queue instead of select
 - `function queueMeta(mark: QueueMark | null, prior: Record<string, any> | undefined, at: string, by: string): Record<stri…`
 - `function present(row: Record<string, any>)`
 - `function nextPair(rows: Array<ReturnType<typeof present>>): [typeof rows[number], typeof rows[number]] | null`
+- `const COMBINE_COSINE`
+- `const COMBINE_MIN`
+- `const COMBINE_MAX`
+- `interface CombineGroup`
+- `function combineCandidates(rows: Array<Record<string, any>>, threshold = COMBINE_COSINE): CombineGroup[]`
+- `function absorbedQueuePatch(row: Record<string, any>, parentId: string, by: 'Krish', said: string | null, at: string)`
 
 ### `apps/control-plane/api/_investigation.ts`
 
@@ -1601,6 +1607,13 @@ The news-vs-shift separator, ported from mm-ctrl `_shared/news-trends.ts` and
 - `function slugifyShift(title: string): string`
 - `function titleJaccard(a: string, b: string): number`
 
+### `apps/control-plane/api/_vectors.ts`
+
+Stored embeddings, read without a model call. Pure: no imports, so a unit test and a pure module
+
+- `function parseVec(r: { embedding?: unknown; _vec?: number[] | null } | null | undefined): number[] | null`
+- `function cosine(a: number[], b: number[]): number`
+
 ### `apps/control-plane/api/_video.ts`
 
 Video script formats, 15 seconds to 20 minutes. Every piece uses two of
@@ -1657,6 +1670,29 @@ The week's options, as the Sunday session writes them onto the pieces.
 - `function isMonday(ymd: string): boolean`
 - `function keepThroughWeek(expiresAt: string | null | undefined, weekStart: string): string | null`
 - `function parseOptions(body: unknown): { week_start: string; series: string; options: WeekOptionInput[]; problems: strin…`
+
+### `apps/control-plane/api/_weekSources.ts`
+
+Sunday's idea pool from every source, and the evidence of Krish's taste (GET /api/week/options?include=sources).
+
+- `const LIKED_COSINE`
+- `const POOL_DAYS`
+- `type SourceKind = 'his' | 'inspo' | 'engine'`
+- `type HisVia = 'said' | 'research'`
+- `type Row = Record<string, any>`
+- `interface Candidate`
+- `type TasteKind = 'story' | 'angle' | 'pick' | 'ab_win' | 'drop'`
+- `interface TasteItem`
+- `function windows(weekStart: string)`
+- `function sourceKind(row: Row): { kind: SourceKind; via: HisVia | null }`
+- `function excluded(row: Row): string | null`
+- `function tasteOf(rows: Row[]): TasteItem[]`
+- `function nearest(vec: number[] | null, taste: TasteItem[], selfId?: string)`
+- `function candidate(row: Row, taste: TasteItem[]): Candidate`
+- `function rank(a: Candidate, b: Candidate): number`
+- `function inWindow(row: Row, kind: SourceKind, win: ReturnType<typeof windows>): boolean`
+- `interface Relayed`
+- `function buildSources(input: { weekStart: string; series: string[]; rows: Row[]; tasteRows: Row[]; relayed?: Row[] })`
 
 ### `apps/control-plane/api/_weeks.ts`
 

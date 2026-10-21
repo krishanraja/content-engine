@@ -22,7 +22,7 @@ describe('the three pools', () => {
     expect(sourceKind({ source_type: 'pool_headline' }).kind).toBe('engine')
     const out = buildSources({
       weekStart: WEEK, series: ['follow_the_money'], tasteRows: [],
-      rows: [row('a', { source_type: 'manual', state: 'drafting' }), row('b', { source_type: 'inspiration_sweep' }), row('c')],
+      rows: [row('a', { source_type: 'manual', source_ref: 'said:11111111-2222-4333-8444-555555555555', state: 'drafting' }), row('b', { source_type: 'inspiration_sweep' }), row('c')],
     })
     expect(out.counts).toEqual({ his: 1, inspo: 1, engine: 1 })
     expect(out.series[0].pool.map(c => [c.id, c.source_kind])).toEqual([['a', 'his'], ['b', 'inspo'], ['c', 'engine']])
@@ -52,7 +52,7 @@ describe('the three pools', () => {
     expect(w.his_since.slice(0, 10)).toBe('2026-10-19')
     expect(w.pool_since.slice(0, 10)).toBe('2026-10-11')
     const out = buildSources({ weekStart: WEEK, series: ['follow_the_money'], tasteRows: [], rows: [
-      row('old-his', { source_type: 'manual', created_at: at('2026-10-15') }), row('engine-15', { created_at: at('2026-10-15') }),
+      row('old-his', { source_type: 'manual', source_ref: 'said:1', created_at: at('2026-10-15') }), row('engine-15', { created_at: at('2026-10-15') }),
       row('too-old', { created_at: at('2026-10-05') }), row('drafting-engine', { state: 'drafting' })] })
     expect(out.series[0].pool.map(c => c.id)).toEqual(['engine-15'])
   })
@@ -97,7 +97,7 @@ describe('his taste, as evidence', () => {
     const score = (s: number) => ({ ladder: { final: { score: s } } })
     const out = buildSources({ weekStart: WEEK, series: ['follow_the_money'], tasteRows: [liked], rows: [
       row('top-score', { meta: score(9) }), row('low-score', { meta: score(2) }), row('near', { embedding: vec(5), meta: score(1) }),
-      row('his', { source_type: 'manual', meta: score(0) })] })
+      row('his', { source_type: 'manual', source_ref: 'said:2', meta: score(0) })] })
     expect(out.series[0].pool.map(c => c.id)).toEqual(['his', 'near', 'top-score', 'low-score'])
   })
 

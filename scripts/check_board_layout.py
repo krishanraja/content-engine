@@ -3,20 +3,26 @@
 
 Krish, 2026-10-21: "Once that's all done the rest of the content engine needs to know how to feed it and not be
 permitted to change random parts of the UI and UX but feed it in the right way consistently. That applies to Claude
-and to Codex." Hooks stop a Claude session; this check stops everything else, Codex included, because CI runs it on
-every pull request (npm run verify).
+and to Codex." Then: no approval prompts for board edits; the layout is held by CI and changes only with his recorded
+words (Ruling, Krish, 2026-10-21). This check is that lock, for Claude and Codex alike, because CI runs it on every pull
+request (npm run verify).
 
     python3 scripts/check_board_layout.py            # the checks
     python3 scripts/check_board_layout.py --browser  # also: no sideways scroll and 44px targets at 390px (Playwright)
-    python3 scripts/check_board_layout.py --update   # rewrite the layout snapshot (only with Krish: board-ui-guard)
+    python3 scripts/check_board_layout.py --update --approved "Krish, YYYY-MM-DD: <his exact words>"
+                                                     # rewrite the snapshot, with the words he approved the change in
 
 1. Three fed weeks (empty, Sunday's ideas, mid-week) build, pass week_board.verify(), and have exactly the structure
    recorded in fixtures/week-board/fixed-layout.json: the tabs, each day's steps, and what sits in each step.
 2. Nothing but the board's own builders stamps a board: a script that patches a built board and stamps it again is
    how the layout drifted before (docs/plans/2026-10-19-*). The three that did it are named and frozen.
-3. --browser: at 390px wide no tab scrolls sideways and every button, link button, tick and tab is at least 44px tall.
+3. The lock: the snapshot also records the sha256 of the layout file and the colours (LOCKED) and the words Krish
+   approved the last change in (`approved`). The check fails when either file or the structure differs from the
+   snapshot, so a layout change passes CI only once --update has written it with his recorded words.
+4. --browser: at 390px wide no tab scrolls sideways and every button, link button, tick and tab is at least 44px tall.
 """
 import argparse
+import hashlib
 import json
 import re
 import sys
@@ -30,6 +36,9 @@ import week_board as wb  # noqa: E402
 import title_check  # noqa: E402
 
 SNAPSHOT = ROOT / 'fixtures' / 'week-board' / 'fixed-layout.json'
+# The files the layout and its colours are made of, held by their hash: a change to either needs his recorded words.
+LOCKED = ('config/board-layout.json', 'scripts/post-pack/tokens.css')
+APPROVED = re.compile(r'^Krish, (\d{4}-\d{2}-\d{2}): (\S.{9,})$', re.S)
 # The board's builders, its gate and its tests may stamp a page; nothing else.
 STAMPERS = {'scripts/post-pack/week_board.py', 'scripts/post-pack/board_web.py', 'scripts/post-pack/publish_manager.py',
             'scripts/post-pack/engine_stamp.py', 'scripts/hooks/artifact_gate.py', 'scripts/check_board_layout.py',
@@ -177,38 +186,113 @@ def browser(pages, tmp):
                 if shown != [True, True, '#monday/record']:
                     problems.append(f'midweek: tapping Record did not open it alone ({shown})')
                 page.locator('#mon-sub-record button[data-act="text"]').first.click()
+            if name == 'sunday':
+                # His Combine tap saves queue/combine-1 through the board API, with its members (Krish, 2026-10-21:
+                # nothing in the queue is combined without his word; the tap is that word).
+                week = wb.LAYOUT_FROM.isoformat()
+                saved = []
+
+                def api(route):
+                    req = route.request
+                    path = req.url.split('board.test', 1)[1].split('?')[0]
+                    if path == '/sunday.html':
+                        return route.fulfill(status=200, content_type='text/html', body=web)
+                    if req.method == 'PUT':
+                        body = json.loads(req.post_data or '{}').get('body')
+                        saved.append((path, body))
+                        return route.fulfill(status=200, content_type='application/json', body=json.dumps({'ok': True, 'revision': 1, 'body': body}))
+                    answer = {'ok': True, 'weeks': [week]} if path == '/api/board/weeks' else {'ok': True, 'documents': [], 'next_offset': None}
+                    return route.fulfill(status=200, content_type='application/json', body=json.dumps(answer))
+                page.route(re.compile(r'^https://board\.test/'), api)
+                page.goto('https://board.test/sunday.html#queue')
+                page.wait_for_timeout(300)
+                page.click('[data-act="combine"][data-for="combine-1"]')
+                page.wait_for_timeout(300)
+                hit = [b for p, b in saved if p == f'/api/board/{week}/queue/combine-1']
+                if not hit or hit[0].get('combine') is not True or hit[0].get('pick') != 'combine-1' or len(hit[0].get('members') or []) != 2:
+                    problems.append(f'sunday: tapping Combine did not save queue/combine-1 with its members ({saved})')
+                page.unroute(re.compile(r'^https://board\.test/'))
         if errors:
             problems.append(f'page errors: {errors[:3]}')
         b.close()
     return problems
 
 
+def hashes(root=ROOT):
+    return {rel: hashlib.sha256((root / rel).read_bytes()).hexdigest() for rel in LOCKED}
+
+
+def approved_problem(words):
+    """Why these are not his recorded words for a layout change, or None."""
+    if not APPROVED.match(str(words or '').strip()):
+        return '--approved must be "Krish, YYYY-MM-DD: <his exact words>", the words he approved this layout change in'
+    return None
+
+
+def snapshot_of(weeks_seen, files, approved):
+    return {'_about': 'The fixed layout of the publish board, as check_board_layout.py reads it from three fed weeks, the hash of '
+                      'its layout file and colours, and the words Krish approved it in. It changes only with --update --approved '
+                      '(Ruling, Krish, 2026-10-21: the layout is held by CI and changes only with his recorded words).',
+            'layout_version': wb.LAYOUT['version'], 'approved': approved, 'files': files, 'weeks': weeks_seen}
+
+
+def lock_problems(want, weeks_seen, files):
+    """Why the board as built is not the one the snapshot holds with his words, or []."""
+    out = []
+    fix = f'If Krish approved the change, run --update --approved "Krish, YYYY-MM-DD: <his words>" and commit {SNAPSHOT.relative_to(ROOT)}.'
+    if approved_problem(want.get('approved')):
+        out.append(f'{SNAPSHOT.relative_to(ROOT)} records no words of Krish approving the layout. {fix}')
+    for rel, digest in files.items():
+        if (want.get('files') or {}).get(rel) != digest:
+            out.append(f'{rel} changed since the layout Krish approved (its sha256 differs from the snapshot). {fix}')
+    for name in weeks_seen:
+        if (want.get('weeks') or {}).get(name) != weeks_seen[name]:
+            out.append(f'{name}: the board\'s structure differs from {SNAPSHOT.relative_to(ROOT)}: the layout changed. {fix}')
+    return out
+
+
+def self_test():
+    """The lock itself: a changed layout file, colour file or structure fails, and only his recorded words pass it."""
+    words = 'Krish, 2026-10-21: change the queue so I can combine ideas'
+    seen = {'sunday': {'tabs': ['ideas', 'queue']}}
+    files = {rel: 'a' * 64 for rel in LOCKED}
+    good = snapshot_of(seen, files, words)
+    checks = {
+        'a snapshot with his words, the same files and the same structure passes': lock_problems(good, seen, files) == [],
+        'a changed layout file fails': any('board-layout.json changed' in p for p in lock_problems(good, seen, dict(files, **{LOCKED[0]: 'b' * 64}))),
+        'a changed colour file fails': any('tokens.css changed' in p for p in lock_problems(good, seen, dict(files, **{LOCKED[1]: 'b' * 64}))),
+        'a changed structure fails': any('structure differs' in p for p in lock_problems(good, {'sunday': {'tabs': ['ideas']}}, files)),
+        'a snapshot with no approved words fails': any('records no words' in p for p in lock_problems(dict(good, approved=None), seen, files)),
+        'an update without his words is refused': approved_problem(None) is not None and approved_problem('looks fine') is not None,
+        'an update with a date and his words is accepted': approved_problem(words) is None,
+    }
+    return [f'self-test: {name}' for name, ok in checks.items() if not ok]
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split('\n')[0])
-    ap.add_argument('--update', action='store_true')
+    ap.add_argument('--update', action='store_true', help='rewrite the snapshot; needs --approved')
+    ap.add_argument('--approved', metavar='WORDS', help='"Krish, YYYY-MM-DD: <his exact words>" approving this layout change')
     ap.add_argument('--browser', action='store_true')
     args = ap.parse_args(argv)
-    problems = []
+    if args.update and approved_problem(args.approved):
+        print(f'check:board-layout --update refused: {approved_problem(args.approved)}')
+        return 2
+    problems = self_test()
     with tempfile.TemporaryDirectory() as tmp, title_check.picked_for_tests([TITLE], tmp):
         pages = weeks(tmp)
         for name, page in pages.items():
             problems += [f'{name}: {p}' for p in wb.verify(page)]
         got = {name: structure(page) for name, page in pages.items()}
         if args.update:
-            SNAPSHOT.write_text(json.dumps({'_about': 'The fixed layout of the publish board, as check_board_layout.py reads it from three '
-                                            'fed weeks. A change here is a change to the board Krish works in: only with him.',
-                                            'layout_version': wb.LAYOUT['version'], 'weeks': got}, indent=1) + '\n', encoding='utf-8')
-            print(f'check:board-layout: wrote {SNAPSHOT.relative_to(ROOT)}')
+            SNAPSHOT.write_text(json.dumps(snapshot_of(got, hashes(), args.approved.strip()), indent=1) + '\n', encoding='utf-8')
+            print(f'check:board-layout: wrote {SNAPSHOT.relative_to(ROOT)}, approved: {args.approved.strip()}')
         else:
             try:
                 want = json.loads(SNAPSHOT.read_text(encoding='utf-8'))
             except (OSError, ValueError):
                 want = {}
-            if want.get('weeks') != got:
-                for name in got:
-                    if (want.get('weeks') or {}).get(name) != got[name]:
-                        problems.append(f'{name}: the board\'s structure differs from {SNAPSHOT.relative_to(ROOT)}: the layout changed. '
-                                        'If Krish approved the change, run with --update and commit the snapshot with his words.')
+            problems += lock_problems(want, got, hashes())
         if args.browser:
             problems += browser(pages, tmp)
     problems += [f'{rel}: stamps a board outside the board\'s builders (engine_stamp); feed week_board.py instead of patching its page'
@@ -216,7 +300,7 @@ def main(argv=None):
     if problems:
         print('check:board-layout FAILED:\n  ' + '\n  '.join(problems))
         return 1
-    print('check:board-layout passed: three fed weeks in the fixed layout, nothing else stamps a board'
+    print('check:board-layout passed: three fed weeks in the fixed layout Krish approved, its files unchanged, nothing else stamps a board'
           + (', and every view fits a phone' if args.browser else ''))
     return 0
 

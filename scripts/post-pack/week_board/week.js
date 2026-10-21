@@ -582,6 +582,6 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
       await comments.create({ anchor, text: `COMBINE ${cid} ${body.members.join(" ")}\n${body.at}\n\n${c.querySelector(".q-sowhat")?.textContent || ""}` });
     } catch {}
     delete busy[cid]; render();
-    if (stored) toast("Saved: combine these"); else say(cid, "Not saved. Tap Combine again.", true);
+    if (!stored) say(cid, "Not saved. Tap Combine again.", true);
   });
 })();
