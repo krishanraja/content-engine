@@ -1013,6 +1013,21 @@
    "why": "plan-week hand-writes the ideas, nothing gathers Control Center, the Cold Ideas and Inspo folder and the engine together, and queued ideas sat only inside each day's ideas with nothing joining them.",
    "means": "Sunday's Ideas tab is gathered from every source and ranked by what he picked and marked before (the judges stay blind, Krish, 21 Oct); the Queue tab (built 21 Oct) also shows 'could combine' proposals, combined only on his word.",
    "status": "open"
+  },
+  {
+   "id": "plain-score-words",
+   "on": "2026-10-21",
+   "krish": "what does \"a split\" mean? I have no idea",
+   "why": "The five-round scoring used a shorthand label for a shared round, which he could not read on the teleprompter.",
+   "means": "Scores and tallies in scripts and articles use only win, lose or draw (and plain counts); a shared round is a draw, with the reason said in words.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": ".agents/skills/make-piece/SKILL.md",
+     "contains": "Score in plain words: win, lose or draw",
+     "how": "the Scripts step every making session follows"
+    }
+   ]
   }
  ]
 }

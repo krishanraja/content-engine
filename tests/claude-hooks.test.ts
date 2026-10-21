@@ -101,7 +101,7 @@ describe('board-ui-guard', () => {
 describe('the hooks are wired', () => {
   it('registers every guard and the stop check in .claude/settings.json', () => {
     const settings = readFileSync(join(repoRoot, '.claude', 'settings.json'), 'utf8')
-    for (const name of ['secret-guard.mjs', 'publish-guard.mjs', 'taste-guard.mjs', 'board-ui-guard.mjs', 'stop-check.mjs', 'cost_gate.py']) expect(settings).toContain(name)
+    for (const name of ['secret-guard.mjs', 'publish-guard.mjs', 'taste-guard.mjs', 'stop-check.mjs', 'cost_gate.py']) expect(settings).toContain(name)
     expect(JSON.parse(settings).model).toBe('opus')
   })
   it('steps aside on a stop the hook itself caused', () => {

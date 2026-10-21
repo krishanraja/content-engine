@@ -39,9 +39,9 @@ each day exactly its heading, its steps and their panels), and
 the build to `fixtures/week-board/fixed-layout.json`, checks every view at
 390px for sideways scroll and 44px targets (`--browser`), and fails any file
 outside the board's builders that stamps a board. A change to the layout
-itself is Krish's: `.claude/hooks/board-ui-guard.mjs` puts every edit to the
-generator, its templates, `scripts/post-pack/tokens.css`, the layout file or
-the snapshot to him in person.
+itself is Krish's to approve. `.claude/hooks/board-ui-guard.mjs` is kept but no
+longer registered (he unregistered it on 2026-10-21), so the CI checks above
+are what hold the layout.
 
 Videos: every piece is a 90-second and a 5-minute video. A 15-minute feature
 appears as a third cut only on a piece Krish called one for
