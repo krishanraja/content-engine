@@ -84,7 +84,11 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    ladder score, each with `source_kind` and `why_here`; the queue and its
    combine groups; `his_relayed` board items; and which source is empty and
    why. Say the counts and every empty source in your reply. His taste
-   steers this ranking only; never pass it to a judge.
+   steers this ranking only; never pass it to a judge. Most ideas arrive
+   with no series yet (`unassigned`: 77 of 89 on 21 Oct, when
+   under.the.hood's pool was empty), so read `unassigned` too and place
+   each idea in the series whose mandate it fits, or leave it out; the
+   placing is your judgment, said in your reply, never recorded as his.
    Then read `docs/CADENCE.md` and each series' mandate and the material on hand:
    `python3 scripts/engine.py GET "/api/week/options?week_start=<Monday>" --full`
    (mandates, options already written, what is in flight or scheduled, the

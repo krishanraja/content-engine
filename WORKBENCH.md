@@ -17,9 +17,12 @@
     `build.py`, `_making.ts`), with YouTube long-form and Spotify cards on feature pieces only.
 - **Layout lock:** CI (`npm run check:board-layout`); every change in this PR is recorded with his words in
   `fixtures/week-board/fixed-layout.json`. No approval prompts (Ruling, Krish, 2026-10-21).
-- **Next:** once deployed, run `python3 scripts/post-pack/board_feed.py gather 2026-10-26` against the live engine
-  and check each source's count. Control Center's mirror `src/lib/making.ts` does not know the feature cut yet: a
-  change in `krishanraja/control-center`, to confirm with Krish first.
+- **Live gather ran (21 Oct, after the deploy):** `docs/plans/2026-10-26-week/sources.json`: his 0 (none since
+  11 Oct; 1 relayed board item holds his words), inspo 36, engine 53, queue 4, no combine group. 77 of the 89 have no
+  series yet, and under.the.hood's pool is empty; plan-week now places the unassigned by mandate. No idea scored close
+  enough to one he liked for a `why_here` line (only 3 liked ideas so far).
+- **Next:** Control Center's mirror `src/lib/making.ts` does not know the feature cut yet: a change in
+  `krishanraja/control-center`, to confirm with Krish first.
 
 ## 21 October, afternoon: Wednesday drafts from Krish's board edits (Claude)
 
