@@ -16,11 +16,11 @@ Round two, a cheap flight. Five nights in New York, cabin bag only.
 
 And both found a return for about three hundred and thirty-five pounds. The catch was twenty-nine hours in Lisbon on the way out. That's quite a lot of Portugal for a trip to New York.
 
-To be fair, both steered me away. Sensible. Slightly disappointing for Portugal. But Muse said I'd get four nights in New York. Its own flight times only gave me three. Close. But it's counting. It's not meant to be close.
+To be fair, both steered me away from it. But Muse said I'd get four nights in New York. Its own flight times only gave me three. Off by a night, on a job that is basically counting.
 
 Another travel test in the community preferred Grok for speed and value. So round two: my score, Grok, just. The community's, Grok.
 
-Round three, something to cancel. Both found a real charge. And both paused and asked who still used it, or what would break. Which is more thought than most of us give a gym membership. No one else had tested this one. So round three: my score, a draw.
+Round three, something to cancel. Both found a real charge. And both paused and asked who still used it, or what would break. Which is more thought than most of us give a gym membership. No community result. So round three: my score, a draw. Halfway, on my tests: Grok two, Muse nil.
 
 Round four, plan my day. Both kept their suggestions apart from my real meetings.
 
@@ -40,7 +40,7 @@ Now the fun bit. Muse found Messenger chats I'd left hanging and helped draft a 
 
 If you are obsessed with X/Twitter, you might love Grok Bot. Likewise if your entire social circle is in WhatsApp, Instagram and Facebook, Muse might be pretty helpful.
 
-And the community backs that up. One user had Muse find the right wipers and wait before buying. Living the dream.
+The community likes Muse for errands. One user had it find windscreen wipers, then wait for a yes before buying.
 
 So, the scores. On my tests, Grok wins. It caught the scam Muse answered. Add the community, and it gets closer. Muse is more careful than my inbox made it look. And Grok can slip when you leave it running.
 

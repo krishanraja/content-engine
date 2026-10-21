@@ -26,7 +26,7 @@ London to New York, five nights in November, cabin bag only.
 
 Both found a return for about £335. The catch was twenty-nine hours in Lisbon on the way out. That's quite a lot of Portugal for a trip to New York.
 
-To be fair, both steered me away from it. Sensible, if slightly disappointing for Portugal. Grok offered a shorter stop. Muse suggested a direct flight and listed what it couldn't check. It also told me I'd get four nights in New York. Its own flight times left three. Close, but this is counting. It isn't meant to be close.
+To be fair, both steered me away from it. Grok offered a shorter stop. Muse suggested a direct flight and listed what it couldn't check. It also told me I'd get four nights in New York. Its own flight times left three. Off by a night, on a job that is basically counting.
 
 Another travel comparison in the community preferred Grok for speed and value.
 

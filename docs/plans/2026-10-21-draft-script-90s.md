@@ -4,7 +4,7 @@ First, my inbox. An email wanted six of my products, but never said which. Grok 
 
 But Muse passed another tester's scam traps. So Grok wins my inbox. Other people's tests: a draw.
 
-Then, a cheap New York flight. About three hundred and thirty-five pounds, with twenty-nine hours in Lisbon. That's quite a lot of Portugal for a trip to New York. Both steered me away. Slightly disappointing for Portugal.
+Then, a cheap New York flight. About three hundred and thirty-five pounds, with twenty-nine hours in Lisbon. That's quite a lot of Portugal for a trip to New York. Both steered me away. But Muse miscounted my nights.
 
 So on my tests, Grok wins. Add other people's, and it's closer.
 
