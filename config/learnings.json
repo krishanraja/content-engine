@@ -842,6 +842,21 @@
      "how": "the handover no longer points sessions at the deleted schedule"
     }
    ]
+  },
+  {
+   "id": "say-the-result-not-the-method",
+   "on": "2026-10-21",
+   "krish": "the two video scripts just overlay bare pointless caveats and ifs and buts and asterisks about what I tested ... The scripts just need to be catchy, direct: what was tested, what the result was, which one won, and what that means. The article is similar ... it's overexplaining.",
+   "why": "Wednesday's brief listed every evidence boundary (equal weighting, test dates, chat-only Gemini, single reports) and the rewrite spoke each one aloud, so the scripts and article narrated the method instead of the result.",
+   "means": "Scripts and articles say what was tested, what happened, who won and what it means. Truth gates still hold, but limits, weighting and source detail live in the scorecard and a one-line footnote, never as spoken caveats. Comparisons are scored round by round: his test against the community's results, without naming every source in the script.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": ".agents/skills/make-piece/SKILL.md",
+     "contains": "Say the result, never the method.",
+     "how": "the Scripts step every making session follows"
+    }
+   ]
   }
  ]
 }

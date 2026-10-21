@@ -1,5 +1,21 @@
 # Workbench: where we are and what's next
 
+## 21 October: Wednesday cut back to the result (Claude)
+
+Krish: the scripts and article were "overexplaining" with caveats. Rewritten as
+five scored rounds, each "my score" against "the community's", plus a bonus round
+and the verdict (Grok wins on his tests, closer with the community). Gemini is
+out of the scripts (one line in the article). Limits sit in the scorecard and a
+one-line footnote. Files: `docs/plans/2026-10-21-draft-script.md` (807 words, 5 min),
+`-90s.md` (194 words), `2026-10-19-week/wednesday-article-draft.md` and
+`wednesday-scorecard.md`. Two fresh readers heard the earlier version; their
+confusions were fixed, but the final words have not had a second read-back.
+Learning `say-the-result-not-the-method`.
+**Waiting on Krish:** whether the series line goes back in (story_check
+refuses both cuts without it; his 20 Oct edits took it out), and his yes to
+update both Teleprompter scripts in place and republish the web board. Teleprompter still
+holds the 20 October words (`wednesday-teleprompter.json`).
+
 ## 21 October: Wednesday scripts in Teleprompter (Codex)
 
 Krish approved transfer. Folder: Wed 21 Oct under.the.hood - Muse vs Grok Bot:

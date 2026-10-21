@@ -130,6 +130,13 @@ session calls it, and nothing is sent there.
 Do these in order for both cuts; a script that fails any of them is
 rewritten and checked again from the top.
 
+Say the result, never the method. A script says what was tested, what
+happened, who won and what it means. Limits, weighting, dates and where each
+source came from belong in the article's footnote and the scorecard, never
+as spoken caveats (Krish, 2026-10-21: "The scripts just need to be catchy,
+direct: what was tested, what the result was, which one won, and what that
+means."; learning `say-the-result-not-the-method`).
+
 1. **Write each script with its series line first.** Every video script
    opens with its series line, word for word, said first, then the hook
    (house rule SERIES_OPENER). Krish, 2026-10-12: "We need something catchy
