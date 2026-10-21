@@ -2,7 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from './_supabase.js'
 import { guardEngine } from './_auth.js'
 import { canonicalUrl, contentHash, titleNorm } from './_text.js'
-import { VERDICTS, nextPair, parseMark, parseTriage, present, queueMeta, type QueueMark, type TriageInput } from './_ideaQueue.js'
+import { VERDICTS, combineCandidates, nextPair, parseMark, parseTriage, present, queueMeta, type QueueMark, type TriageInput } from './_ideaQueue.js'
 
 // The one idea queue. GET reads it; POST queues an idea, triages a queued one, or takes one out.
 //
@@ -13,6 +13,10 @@ import { VERDICTS, nextPair, parseMark, parseTriage, present, queueMeta, type Qu
 //
 //   GET  /api/idea-queue
 //     -> { queue: [idea], pair }   every queued idea, the oldest untriaged two as the A/B pair
+//   GET  /api/idea-queue?combine=1
+//     -> adds { combine: [group] }  queued ideas that could combine into one bigger piece: two to five, joined by their
+//                                   stored embeddings (combineCandidates); no model call, nothing written. Combining
+//                                   is synthesize, run only on his Combine tap or words.
 //   POST /api/idea-queue { action: 'queue', id?|idea+so_what, why_now, fact, source_url, series, from_week, from_pick,
 //                          verdict?, reason?, angle?, decided_by?: 'Krish', said? }
 //   POST /api/idea-queue { action: 'triage', id, verdict, reason?, angle?, decided_by: 'Krish', said? }
@@ -43,7 +47,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     if (req.method === 'GET') {
       const queue = await readQueue()
-      return res.status(200).json({ ok: true, queue, pair: nextPair(queue), verdicts: VERDICTS })
+      const out: Record<string, unknown> = { ok: true, queue, pair: nextPair(queue), verdicts: VERDICTS }
+      if (['1', 'true'].includes(String(req.query?.combine || ''))) {
+        const { data, error } = await supabase.from('content_ideas').select('id,idea,state,lane_slot,queued_at,embedding,meta')
+          .not('queued_at', 'is', null).limit(500)
+        if (error) return res.status(500).json({ ok: false, error: error.message })
+        out.combine = combineCandidates((data || []) as Array<Record<string, any>>)
+      }
+      return res.status(200).json(out)
     }
 
     const b = (typeof req.body === 'string' ? JSON.parse(req.body || '{}') : req.body) || {}

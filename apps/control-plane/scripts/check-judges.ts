@@ -600,6 +600,12 @@ assert.match(ROSTER_VERSION, /^[a-z0-9][a-z0-9._-]{0,39}$/)
   // the verdicts. This is the same shape as check-slate-calibration's rule.
   const scorer = read('api/_arcScore.ts')
   assert.doesNotMatch(scorer, /judge_verdicts|content_edit_events|panel_runs/, 'the arc scorer must not read the panel or the edit ledger: form and craft may inform it, a record of what Krish liked may not')
+  // His taste steers Sunday's sourcing and ranking only; the judges stay blind (Krish, 2026-10-21). The ladder and
+  // the scorer never read the sources block, his queue marks or his picks.
+  for (const [name, src] of [['judge/ladder.ts', read('api/judge/ladder.ts')], ['_arcScore.ts', scorer]] as const) {
+    assert.doesNotMatch(src, /_weekSources|why_here|meta\.queue|meta\?\.queue|week_option/,
+      `${name} must not read Sunday's taste evidence (_weekSources.ts, meta.queue, week_option): his taste steers sourcing, the judges stay blind`)
+  }
 }
 
 // ── 5. The spread is preserved, never averaged ──────────────────────────────

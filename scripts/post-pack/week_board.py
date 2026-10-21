@@ -557,6 +557,8 @@ def review_card(day, items, built_at=None, kept_at=None):
 
 MIN_IDEAS = 4  # Krish, 2026-10-18: "at least three content ideas for each day", then "give me more than 3 from all my
 # suggested sources and the ones I threw at other sessions last week"
+# Where an idea came from, as its chip says it (GET /api/week/options?include=sources, _weekSources.ts).
+SOURCE_KINDS = {'his': 'Your idea', 'inspo': 'From your inspo folder', 'engine': 'Engine research'}
 
 
 def read_ideas(data, monday, where='--ideas'):
@@ -589,6 +591,19 @@ def read_ideas(data, monday, where='--ideas'):
                 problems.append(f'{weekday} idea {n}: id {idea["id"]!r} is not a piece id')
             if idea.get('title'):
                 problems.append(f'{weekday} idea {n}: a title; titles are signed off after he records (TITLES_AFTER_RECORDING)')
+            # Where it came from, why it is here and its sketch (Krish, 2026-10-21; board_feed.py gather): in the fixed
+            # layout every idea names its source, his own, his inspo folder or the engine's research.
+            kind = idea.get('source_kind')
+            if kind is not None and kind not in SOURCE_KINDS:
+                problems.append(f'{weekday} idea {n}: source_kind {kind!r} is not one of {", ".join(SOURCE_KINDS)}')
+            elif kind is None and fixed_layout(monday):
+                problems.append(f'{weekday} idea {n}: no source_kind (his, inspo or engine); every idea says where it came from')
+            if idea.get('why_here') is not None and not str(idea['why_here']).strip():
+                problems.append(f'{weekday} idea {n}: why_here is empty; leave it out or say which of his marks it is close to')
+            beats = idea.get('beats')
+            if beats is not None and (not isinstance(beats, list) or not 3 <= len(beats) <= 5
+                                      or not all(isinstance(b, str) and b.strip() for b in beats)):
+                problems.append(f'{weekday} idea {n}: beats are 3 to 5 lines of the narrative sketch')
             pick = f'{key}-{n}'
             if pick in seen:
                 problems.append(f'{weekday}: {pick} twice')
@@ -661,8 +676,11 @@ def ideas_panel(monday, ideas, hidden, queue=None):
                      f'<p class="id-state" data-pickstate="{key}" aria-live="polite"></p>' + queue_block(queue, key, slug))
         for idea in ideas.get(key, []):
             pid, src = idea['pick'], idea['source']
-            flags = ''.join(f'<span class="id-flag{c}">{t}</span>' for c, t, on in (
-                (' his', 'Your idea', idea.get('his')), ('', 'Recommended', idea.get('recommended'))) if on)
+            kind = idea.get('source_kind')
+            flags = (f'<span class="id-flag id-src {E(kind)}" data-source-kind="{E(kind)}">{E(SOURCE_KINDS[kind])}</span>' if kind else '') + ''.join(
+                f'<span class="id-flag{c}">{t}</span>' for c, t, on in (
+                    (' his', 'Your idea', idea.get('his') and not kind), ('', 'Recommended', idea.get('recommended'))) if on)
+            beats = ''.join(f'<li>{E(b.strip())}</li>' for b in idea.get('beats') or [])
             parts.append(
                 f'<article class="id-card" id="idea-{pid}" data-pick-card="{pid}" data-series="{slug}" data-week="{monday.isoformat()}">'
                 f'<label class="pick"><input type="radio" name="pick-{key}" data-pick="{key}" value="{pid}" '
@@ -672,6 +690,8 @@ def ideas_panel(monday, ideas, hidden, queue=None):
                 + (f'<div class="id-flags">{flags}</div>' if flags else '') +
                 f'<p class="id-sowhat">{E(idea["so_what"])}</p>'
                 f'<p class="id-story">{E(idea["story"])}</p>'
+                + (f'<ol class="id-beats" aria-label="The story, beat by beat">{beats}</ol>' if beats else '')
+                + (f'<p class="id-why"><span class="id-why-k">Why it is here</span> {E(str(idea["why_here"]).strip())}</p>' if idea.get('why_here') else '') +
                 f'<dl class="id-facts"><dt>Why now</dt><dd>{E(idea["why_now"])}</dd>'
                 f'<dt>Strongest checked fact</dt><dd>{E(idea["fact"])}</dd>'
                 f'<dt>Source</dt><dd><a href="{E(src["url"])}" target="_blank" rel="noopener">{E(src.get("label") or src["url"])}</a></dd>'
@@ -953,21 +973,80 @@ def ideas_waiting_panel(monday, hidden):
             + '</div>')
 
 
-def queue_panel(monday, queue, hidden):
+COMBINE_MIN, COMBINE_MAX = 2, 5
+
+
+def read_combine(data, queue, where='--combine'):
+    """The groups the session judged worth combining (docs/plans/<week>/combine.json): each two to five queued ideas,
+    the higher-level argument that threads them (thesis) and the 3 to 5 beats that join them. Proposed from
+    GET /api/idea-queue?combine=1; nothing is combined until Krish taps Combine or says so (Krish, 2026-10-21)."""
+    groups = data.get('combine') if isinstance(data, dict) else data
+    if not isinstance(groups, list):
+        raise BoardError(f'{where}: give a list of {{"members": [queued ids], "series": ..., "thesis": ..., "joins": [3 to 5 beats]}}')
+    if queue is None:
+        raise BoardError(f'{where}: give --queue too; a group is made of queued ideas and the board shows each one')
+    queued = {str(q.get('id')): q for q in queue if isinstance(q, dict) and q.get('id')}
+    series = {slug for *_, slug, _ in DAYS}
+    out, problems = [], []
+    for n, g in enumerate(groups, 1):
+        g = g if isinstance(g, dict) else {}
+        members = g.get('members') if isinstance(g.get('members'), list) else []
+        ids = [str(m.get('id') if isinstance(m, dict) else m) for m in members]
+        if not COMBINE_MIN <= len(ids) <= COMBINE_MAX or len(set(ids)) != len(ids):
+            problems.append(f'group {n}: {len(ids)} member(s); a group is {COMBINE_MIN} to {COMBINE_MAX} different queued ideas')
+        bad = [i for i in ids if not UUID.match(i) or i not in queued]
+        if bad:
+            problems.append(f'group {n}: {", ".join(bad)} {"is" if len(bad) == 1 else "are"} not in the queue')
+        if g.get('series') not in (None, '', *series):
+            problems.append(f'group {n}: series {g.get("series")!r} is not one of {", ".join(sorted(series))}')
+        if not str(g.get('thesis') or '').strip():
+            problems.append(f'group {n}: no thesis, the one bigger argument the ideas make together')
+        joins = g.get('joins')
+        if not isinstance(joins, list) or not 3 <= len(joins) <= 5 or not all(isinstance(j, str) and j.strip() for j in joins):
+            problems.append(f'group {n}: joins are 3 to 5 beats that thread the ideas into one piece')
+        out.append({'id': f'combine-{n}', 'members': ids, 'series': g.get('series') or None,
+                    'thesis': str(g.get('thesis') or '').strip(), 'joins': [str(j).strip() for j in joins or [] if isinstance(j, str)]})
+    if problems:
+        raise BoardError(f'{where} is not ready to show:\n  ' + '\n  '.join(problems))
+    return out
+
+
+def combine_card(group, queued):
+    """One "Could combine" card: the members, the thesis, the beats that join them, and his Combine button. The tap
+    saves queue/combine-<n> ({combine: true, members, pick}); the next session runs synthesize on his word."""
+    label = {slug: lab for *_, slug, lab in DAYS}
+    cid = group['id']
+    members = ''.join(f'<li class="q-member" data-queued-id="{E(m)}">{E((queued.get(m) or {}).get("so_what") or (queued.get(m) or {}).get("idea") or m)}</li>'
+                      for m in group['members'])
+    joins = ''.join(f'<li>{E(j)}</li>' for j in group['joins'])
+    return (f'<article class="q-combo" id="{cid}" data-combine="{cid}" data-members="{E(",".join(group["members"]))}">'
+            + (f'<p class="q-meta"><span class="chip">{E(label.get(group["series"], group["series"]))}</span></p>' if group.get('series') else '')
+            + f'<p class="q-sowhat">{E(group["thesis"])}</p>'
+            f'<h3 class="q-h">The ideas</h3><ul class="q-members">{members}</ul>'
+            f'<h3 class="q-h">What joins them</h3><ol class="q-joins">{joins}</ol>'
+            f'<button type="button" class="btn-s" data-act="combine" data-for="{cid}" disabled>Combine these</button>'
+            f'<p class="q-state" data-combinestate="{cid}" aria-live="polite"></p></article>')
+
+
+def queue_panel(monday, queue, hidden, combine=None):
     """The Queue tab: every idea Krish saved for later, by series, with his verdict and his reason or angle, and
     the ideas that could combine into one bigger piece (Krish, 2026-10-21: "I need to see that queue somewhere. You
     also need to pick up on whether there are multiple things in the queue that could be consolidated")."""
     queue = [q for q in queue or [] if isinstance(q, dict)]
     groups = [(label, slug) for _, _, _, _, slug, label in DAYS] + [('Any day', '')]
     norm = lambda q: (q.get('series') or '').replace('.', '_').replace('-', '_')
+    queued = {str(q.get('id')): q for q in queue if q.get('id')}
+    combos = ''.join(combine_card(g, queued) for g in combine or [])
     parts = [f'<div class="pm fixed" id="panel-queue" role="tabpanel" aria-labelledby="tab-queue" data-day="queue" '
              f'data-state="queue" tabindex="-1"{" hidden" if hidden else ""}>'
              f'<div class="day-head"><div class="kick">{E(week_span(monday))}</div><h1>Queue</h1></div>'
              '<p class="st-what">Ideas you saved for later. Mark them on the Ideas tab or in Control Center; '
              'each week\'s ideas start with the ones here that fit.</p>'
              '<section class="q-combine" id="queue-combine"><h2>Could combine</h2>'
-             + slot_empty('When two or more queued ideas would thread into one bigger piece, they appear here with what joins them. '
-                          'Nothing is combined until you say so.') + '</section>']
+             + (f'<p class="q-how">Each card is queued ideas that would make one bigger piece together. Tap Combine and Claude '
+                f'writes them up as one; nothing is combined until you do.</p>{combos}' if combos else
+                slot_empty('When two or more queued ideas would thread into one bigger piece, they appear here with what joins them. '
+                           'Nothing is combined until you say so.')) + '</section>']
     known = {slug for _, slug in groups}
     for label, slug in groups:
         fit = [q for q in queue if norm(q) == slug or (slug == '' and norm(q) not in known)]
@@ -1389,7 +1468,7 @@ def fixed_day(key, name, weekday, when, series_label, page, piece, pick, title, 
 
 
 def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pending=None, kept=None, videos=None, review=None,
-          draft=(), calls=None, posted=None, kept_at=None, ideas=None, queue=None, materials=None, briefs=None):
+          draft=(), calls=None, posted=None, kept_at=None, ideas=None, queue=None, materials=None, briefs=None, combine=None):
     """(page, manifest, warnings). ideas: {day: [idea]} from read_ideas(),
     shown as a first tab, Ideas, opened while no day is made. pages: {day: publish page text};
     pieces: {day: uuid}; teleprompter: {day: teleprompter_info}; picks:
@@ -1421,7 +1500,7 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
             f'aria-selected="{"true" if opened == "ideas" else "false"}" tabindex="{"0" if opened == "ideas" else "-1"}" data-day="ideas">'
             f'<span class="t-day">Ideas</span><span class="t-dot"> · </span>'
             f'<span class="t-prog" data-tabprog="ideas">{f"pick {n}" if n else "not yet"}</span><span class="t-ch">Sunday</span></button>')
-        panels.append(queue_panel(monday, queue, True))
+        panels.append(queue_panel(monday, queue, True, combine))
         tabs.append(
             '<button type="button" role="tab" id="tab-queue" aria-controls="panel-queue" aria-selected="false" tabindex="-1" data-day="queue">'
             f'<span class="t-day">Queue</span><span class="t-dot"> · </span>'
@@ -1587,12 +1666,16 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
             'links': {'doc_id': '<day>', 'fields': ['article', 'youtube', 'at']},
             'edits': {'doc_id': '<day>-<item>', 'fields': ['text', 'day', 'item', 'base_sha256', 'at']},
             'picks': {'doc_id': '<day>', 'fields': ['pick', 'idea_id', 'series', 'story', 'day', 'at']},
-            'queue': {'doc_id': '<pick>', 'fields': ['pick', 'queued', 'verdict', 'reason', 'angle', 'so_what', 'story', 'idea_id', 'series', 'week', 'at']},
+            'queue': {'doc_id': '<pick>', 'fields': ['pick', 'queued', 'verdict', 'reason', 'angle', 'so_what', 'story', 'idea_id', 'series', 'week', 'at'],
+                      'combine': {'doc_id': 'combine-<n>', 'fields': ['combine', 'members', 'pick', 'at'],
+                                  'then': 'POST /api/content-ideas/synthesize with the members, decided_by Krish'}},
         },
+        'combine': [{'id': g['id'], 'members': g['members'], 'series': g['series'], 'thesis': g['thesis']} for g in combine or []],
         'queue': [{'id': q.get('id'), 'so_what': q.get('so_what'), 'series': q.get('series'), 'triage': (q.get('triage') or {}).get('verdict')}
                   for q in (queue or [])],
-        'ideas': {k: [{'pick': i['pick'], 'idea_id': i.get('id'), 'his': bool(i.get('his')), 'so_what': i['so_what'], 'story': i['story'],
-                       'why_now': i['why_now'], 'fact': i['fact'], 'source': i['source']} for i in v]
+        'ideas': {k: [{'pick': i['pick'], 'idea_id': i.get('id'), 'his': bool(i.get('his') or i.get('source_kind') == 'his'), 'so_what': i['so_what'], 'story': i['story'],
+                       'why_now': i['why_now'], 'fact': i['fact'], 'source': i['source'], 'source_kind': i.get('source_kind'),
+                       'why_here': i.get('why_here'), 'beats': i.get('beats') or []} for i in v]
                   for k, v in (ideas or {}).items()},
         'review': {k: [{'item': slug, 'label': label, 'words': len(t.split()),
                         'sha256': hashlib.sha256(t.encode('utf-8')).hexdigest(),
@@ -1654,6 +1737,7 @@ def verify(page):
     if '<main id="week" data-layout="' in page:
         out += fixed_problems(page)
     ideas_at = max(page.find('<div class="pm" id="panel-ideas"'), page.find('<div class="pm fixed" id="panel-ideas"'))
+    fixed = '<main id="week" data-layout="' in page
     if ideas_at >= 0 and 'data-state="ideas-waiting"' not in page[ideas_at:ideas_at + 400]:
         tab = page[ideas_at:next((s for s in starts if s > ideas_at), len(page))]
         for key, _, weekday, *_ in DAYS:
@@ -1661,9 +1745,10 @@ def verify(page):
             cards = re.findall(r'<article class="id-card".*?</article>', day.group(0), re.S) if day else []
             checked = [c for c in cards if 'data-pick="' in c and re.search(r'<dt>Source</dt><dd><a href="https://', c)
                        and '<dt>Strongest checked fact</dt><dd>' in c and 'class="id-sowhat"' in c and 'data-triage="story"' in c
-                       and 'data-queue-mark="' in c]
+                       and 'data-queue-mark="' in c and (not fixed or 'data-source-kind="' in c)]
             if len(checked) < MIN_IDEAS:
-                out.append(f'ideas: {weekday} has {len(checked)} checked idea(s) with a pick box; it needs {MIN_IDEAS}, each with what a business person finds out, a pick box, the triage buttons and a Queue mark')
+                out.append(f'ideas: {weekday} has {len(checked)} checked idea(s) with a pick box; it needs {MIN_IDEAS}, each with what a business person finds out, a pick box, the triage buttons and a Queue mark'
+                           + (', and where it came from' if fixed else ''))
     for a, b in zip(starts, starts[1:]):
         panel = page[a:b]
         head = re.match(r'<div class="pm(?: fixed)?" id="panel-(\w+)"[^>]*>', panel)
@@ -1733,6 +1818,14 @@ def fixed_problems(page):
         if name in ('ideas', 'queue'):
             if not kinds or kinds[0] != 'day-head':
                 out.append(f'layout: {name} does not open with its heading')
+            if name == 'queue':
+                # A "Could combine" card is queued ideas and his Combine button, never a card drawn by hand.
+                for card in re.findall(r'<article class="q-combo".*?</article>', panel, re.S):
+                    cid = re.search(r'data-combine="([^"]*)"', card)
+                    ids = (re.search(r'data-members="([^"]*)"', card) or [None, ''])[1].split(',')
+                    if (not cid or not re.fullmatch(r'combine-\d{1,3}', cid.group(1)) or not COMBINE_MIN <= len(ids) <= COMBINE_MAX
+                            or not all(UUID.match(i) for i in ids) or f'data-act="combine" data-for="{cid.group(1)}"' not in card):
+                        out.append('layout: a Could combine card without its queued members or its Combine button')
             continue
         want = ['day-head', 'steps'] + ['subpanel'] * len(DAY_STEPS)
         if kinds != want:
@@ -1924,6 +2017,11 @@ def build(args, get=None):
         queue = saved.get('queue') if isinstance(saved, dict) else saved
         if not isinstance(queue, list):
             raise BoardError('--queue: give the saved answer of GET /api/idea-queue ({"queue": [...]})')
+    combine = None
+    if getattr(args, 'combine', None):
+        if not fixed_layout(monday):
+            raise BoardError(f'--combine: the week of {monday.isoformat()} has no Queue tab; Could combine is on boards from {LAYOUT_FROM.isoformat()}')
+        combine = read_combine(read_json(args.combine, '--combine'), queue)
     materials = board_materials.previous(Path(args.previous).read_text(encoding='utf-8-sig')) if args.previous else {}
     for key, path in by_day(getattr(args, 'materials', None), '--materials').items():
         materials[key] = read_json(path, '--materials')
@@ -1937,7 +2035,7 @@ def build(args, get=None):
     for key in unpick:
         briefs.pop(key, None)
     page, manifest, more = board(monday, pages, pieces, scripts, picks, pending, kept, videos, review, draft, calls, posted, kept_at,
-                                 ideas, queue, materials, briefs)
+                                 ideas, queue, materials, briefs, combine)
     if previous is not None:
         keep_previous(previous, manifest['days'], unpick, monday, fresh)
     manifest['warnings'] = warnings + more
@@ -2274,6 +2372,7 @@ def _self_test():
     _draft_checks(check, page, fri)
     _ideas_checks(check)
     _fixed_checks(check, mon)
+    _sources_checks(check)
     delivery = {'piece_id': MON_ID, 'status': 'review', 'note': 'Fact review is still open.', 'sections': [
         {'id': 'spotify', 'title': 'Spotify', 'files': [{'label': 'Video', 'url': 'https://example.com/video.mp4'}],
          'copy': [{'label': 'Description', 'text': 'Quoted "words" & <safe text>'}]}]}
@@ -2386,6 +2485,73 @@ def _fixed_checks(check, mon):
     use_layout(date(2026, 10, 12))
     check('the old layout comes back for an old week: its labels as they were published',
           LABEL['record-long'] == 'Record the 3-minute cut (Teleprompter)' and 'record-feature' not in LABEL)
+
+
+def _sources_checks(check):
+    """Sunday's ideas from every source and the Queue's Could combine (Krish, 2026-10-21; learning
+    queue-consolidation-and-fresh-sunday-ideas): each idea says where it came from and why it is here, and queued
+    ideas that would make one piece are shown together with a Combine button, combined only on his word."""
+    week = LAYOUT_FROM
+    kinds = ('his', 'inspo', 'engine', 'engine')
+    one = lambda k, n, **kw: dict({'so_what': f'A leader finds out {k}{n}.', 'story': f'Story {k}{n}.', 'why_now': 'This week.',
+                                   'fact': 'A fact.', 'source': {'label': 'Src', 'url': 'https://example.com/s'},
+                                   'source_kind': kinds[n - 1], 'beats': ['What happened', 'Why it matters', 'What to do']}, **kw)
+    data = lambda **kw: {'week_start': week.isoformat(), 'days': {k: [one(k, n, **kw) for n in (1, 2, 3, 4)] for k, *_ in DAYS}}
+    ideas = read_ideas(data(why_here='close to your Story mark on "Who pays"'), week)
+    queue = [{'id': MON_ID, 'so_what': 'Who pays for a free AI picture.', 'series': 'follow_the_money', 'triage': {'verdict': 'story'}},
+             {'id': WED_ID, 'so_what': 'What your AI can read in your Gmail.', 'series': 'follow_the_money', 'triage': None},
+             {'id': FRI_ID, 'so_what': 'A third saved idea.', 'series': None, 'triage': None}]
+    combine = read_combine([{'members': [MON_ID, WED_ID], 'series': 'follow_the_money', 'thesis': 'Free AI is paid for with your data.',
+                             'joins': ['The free picture', 'The plugged-in inbox', 'The same bill']}], queue)
+    page, manifest, _ = board(week, ideas=ideas, queue=queue, combine=combine)
+    check('sources: a fed Sunday with combine groups passes verify', verify(page) == [])
+    check('sources: every idea carries its source chip, his own marked as his',
+          page.count('data-source-kind="') == 12 and page.count('data-source-kind="his"') == 3
+          and 'From your inspo folder' in page and 'Engine research' in page and 'class="id-flag his"' not in page)
+    check('sources: every idea shows why it is here and its beats',
+          page.count('class="id-why"') == 12 and page.count('<ol class="id-beats"') == 12 and '<li>Why it matters</li>' in page)
+    check('sources: the manifest carries where each idea came from and its beats',
+          manifest['ideas']['mon'][0]['source_kind'] == 'his' and manifest['ideas']['mon'][0]['his'] is True
+          and len(manifest['ideas']['wed'][1]['beats']) == 3)
+
+    def refused(fn):
+        try:
+            fn()
+            return False
+        except BoardError:
+            return True
+    plain = data()
+    for d in plain['days'].values():
+        for i in d:
+            i.pop('source_kind')
+    check('sources: an idea with no source_kind is refused in a fixed week', refused(lambda: read_ideas(plain, week)))
+    check('sources: an idea with no source_kind is still fine in a week in the old layout',
+          not refused(lambda: read_ideas(dict(plain, week_start='2026-10-19'), date(2026, 10, 19))))
+    check('sources: an unknown source_kind is refused', refused(lambda: read_ideas(data(source_kind='friend'), week)))
+    check('sources: two beats are refused (3 to 5)', refused(lambda: read_ideas(data(beats=['One', 'Two']), week)))
+    chipless = page.replace('data-source-kind="', 'data-was-kind="', 1)
+    check('sources: verify refuses a fixed board whose idea lost its source chip', any('where it came from' in x for x in verify(chipless)))
+    check('combine: the Could combine card shows the members, what joins them and a Combine button',
+          'data-combine="combine-1"' in page and f'data-members="{MON_ID},{WED_ID}"' in page
+          and 'data-act="combine" data-for="combine-1"' in page and 'The plugged-in inbox' in page
+          and 'Who pays for a free AI picture.' in page[page.index('id="queue-combine"'):page.index('id="queue-follow_the_money"')])
+    check('combine: the manifest says where a Combine tap is saved and what runs then',
+          manifest['combine'][0]['members'] == [MON_ID, WED_ID] and manifest['db']['queue']['combine']['doc_id'] == 'combine-<n>')
+    check('combine: no groups, the slot says it fills when there are some',
+          'class="slot-empty"' in board(week, ideas=ideas, queue=queue)[0].split('id="queue-combine"')[1][:400])
+    tampered = page.replace(f'data-members="{MON_ID},{WED_ID}"', f'data-members="{MON_ID}"')
+    check('combine: verify refuses a Could combine card without its queued members', any('Could combine' in x for x in verify(tampered)))
+    group = {'members': [MON_ID, WED_ID], 'series': None, 'thesis': 'One argument.', 'joins': ['A', 'B', 'C']}
+    for bad, label in [(dict(group, members=[MON_ID]), 'one member'), (dict(group, members=[MON_ID, '44444444-5555-4666-8777-888888888888']), 'a member not in the queue'),
+                       (dict(group, thesis=''), 'no thesis'), (dict(group, joins=['A', 'B']), 'two joins'), (dict(group, series='retired'), 'a series that is not one')]:
+        check(f'combine: a group with {label} is refused', refused(lambda: read_combine([bad], queue)))
+    check('combine: a group with no --queue is refused', refused(lambda: read_combine([group], None)))
+    contracts = (Path(__file__).resolve().parents[2] / 'apps/control-plane/api/board/_contracts.ts').read_text(encoding='utf-8')
+    check('combine: the board API accepts the Combine tap (queue/combine-<n> with its members)',
+          'body.combine === true && body.pick === id' in contracts and 'combine-' in contracts)
+    js = template('week.js')
+    check('combine: the tap saves queue/combine-<n> with combine true and its members, and posts a comment',
+          'qdb.doc("queue/" + cid).set(body)' in js and 'combine: true, members' in js and 'COMBINE ${cid}' in js)
 
 
 def _ideas_checks(check):
@@ -2621,6 +2787,9 @@ def parser():
                     'with at least three per day and a pick box for each')
     ap.add_argument('--queue', metavar='PATH', help='the saved answer of GET /api/idea-queue: the Ideas tab shows "From your queue" '
                     'first on each day the queued ideas fit; read it fresh at the start of the build, never from memory')
+    ap.add_argument('--combine', metavar='PATH', help='the queued ideas worth combining (docs/plans/<week>/combine.json, from '
+                    'GET /api/idea-queue?combine=1): [{"members": [queued ids], "series", "thesis", "joins": [3 to 5 beats]}]; '
+                    'the Queue tab shows each with a Combine button (needs --queue)')
     ap.add_argument('--verify', metavar='PAGE', help='say why this built board may not be published (the publish hook runs it); exit 1 if it may not')
     ap.add_argument('--show', metavar='BOARD', help='print the days a board holds: its week-board.json, or its page as Artifact read saved it')
     ap.add_argument('--json', action='store_true', help='with --show: as JSON')

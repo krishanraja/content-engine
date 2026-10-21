@@ -26,6 +26,7 @@ export function actor(req: VercelRequest, operatorOnly = false): string | null {
   }
   return 'Krish'
 }
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 const object = (v: unknown): v is Record<string, unknown> => !!v && typeof v === 'object' && !Array.isArray(v)
 export function validBody(collection: string, id: string, body: unknown): boolean {
   if (!validId(id) || !object(body) || Buffer.byteLength(JSON.stringify(body)) > 256 * 1024) return false
@@ -36,6 +37,11 @@ export function validBody(collection: string, id: string, body: unknown): boolea
   if (collection === 'links') return day(id) && ['article', 'youtube'].every(k => text(k, 2048) && (!body[k] || /^https?:\/\//.test(body[k] as string)))
   if (collection === 'edits') return text('text') && day(body.day) && text('item', 100) && id === `${body.day}-${body.item}`
   if (collection === 'picks') return day(id) && day(body.day) && text('pick', 160) && text('story')
+  // A Combine tap on the Queue tab's "Could combine" card: his choice only, recorded as queue/combine-<n>; the next
+  // session runs synthesize on his word (Krish, 2026-10-21: nothing in the queue is combined without it).
+  if (collection === 'queue' && body.combine !== undefined) return /^combine-\d{1,3}$/.test(id) && body.combine === true && body.pick === id
+    && Array.isArray(body.members) && body.members.length >= 2 && body.members.length <= 5
+    && body.members.every(m => typeof m === 'string' && UUID.test(m)) && new Set(body.members).size === body.members.length
   if (collection === 'queue') return text('pick', 160) && typeof body.queued === 'boolean'
   if (collection === 'comments') return text('text', 30000) && text('thread_id', 160) && validId(String(body.thread_id)) && text('anchor', 160) && validId(String(body.anchor))
   return false

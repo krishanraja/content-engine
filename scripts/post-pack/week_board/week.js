@@ -535,3 +535,53 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
     save(m.dataset.queueMark, { queued: m.checked });
   });
 })();
+
+// Could combine, on the Queue tab (week_board.py combine_card). Krish, 2026-10-21: queued ideas that would make one
+// bigger piece are shown together, and nothing is combined without his word. His Combine tap is saved at once in
+// queue/combine-<n> ({ combine: true, members, pick }) and posted as a comment ("COMBINE combine-<n> ..."); the next
+// session runs synthesize on it with decided_by "Krish". Nothing here writes to the engine.
+(() => {
+  const cards = [...document.querySelectorAll(".q-combo[data-combine]")];
+  if (!cards.length) return;
+  const saved = {}, busy = {};
+  let qdb = null, comments = null, mode = "loading";
+  const say = (cid, msg, bad) => { const s = document.querySelector(`[data-combinestate="${cid}"]`); if (s) { s.textContent = msg; s.classList.toggle("bad", !!bad) } };
+  function render(){
+    for (const c of cards) {
+      const cid = c.dataset.combine, on = !!(saved[cid] && saved[cid].combine);
+      const b = c.querySelector('[data-act="combine"]');
+      if (b) { b.disabled = mode !== "live" || on || !!busy[cid]; b.textContent = on ? "Combine asked" : "Combine these" }
+      c.classList.toggle("on", on);
+      if (!busy[cid]) say(cid, mode === "off" ? "Combine is not saving in this view. Open the board in a browser." : on
+        ? "You asked to combine these. Claude writes them up as one piece next session. Saved." : "", mode === "off");
+    }
+  }
+  render();
+  (async () => {
+    try { qdb = window.claude?.use ? await window.claude.use("db") : null } catch { qdb = null }
+    try { comments = window.claude?.use ? await window.claude.use("comments") : null } catch { comments = null }
+    if (!qdb) { mode = "off"; render(); return }
+    try {
+      qdb.collection("queue").onSnapshot(snap => {
+        for (const k of Object.keys(saved)) delete saved[k];
+        for (const d of snap.docs) if (d.exists && /^combine-\d+$/.test(d.id)) saved[d.id] = d.data() || {};
+        mode = "live"; render();
+      }, () => { mode = "broken"; for (const c of cards) say(c.dataset.combine, "Saved choices could not load. Reload the page to try again.", true) });
+    } catch { mode = "broken"; render() }
+  })();
+  document.addEventListener("click", async e => {
+    const b = e.target.closest && e.target.closest('[data-act="combine"]'); if (!b) return;
+    const cid = b.dataset.for, c = document.getElementById(cid);
+    if (!c || mode !== "live" || !qdb || busy[cid]) { render(); return }
+    const body = { combine: true, members: (c.dataset.members || "").split(",").filter(Boolean), pick: cid, at: new Date().toISOString() };
+    busy[cid] = true; say(cid, "Saving…"); render();
+    let stored = false;
+    try { await qdb.doc("queue/" + cid).set(body); saved[cid] = body; stored = true } catch {}
+    if (stored && comments) try {
+      const anchor = await comments.anchorFor(c);
+      await comments.create({ anchor, text: `COMBINE ${cid} ${body.members.join(" ")}\n${body.at}\n\n${c.querySelector(".q-sowhat")?.textContent || ""}` });
+    } catch {}
+    delete busy[cid]; render();
+    if (stored) toast("Saved: combine these"); else say(cid, "Not saved. Tap Combine again.", true);
+  });
+})();

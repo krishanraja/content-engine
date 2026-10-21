@@ -50,14 +50,19 @@ def weeks(tmp):
     monday = wb.LAYOUT_FROM
     mon = wb.stand_in(tmp, 'mon', TITLE, 'follow.the.money')
     one = lambda k, n: {'so_what': f'What a leader finds out {k}{n}.', 'story': f'The story {k}{n}.', 'why_now': 'This week.',
-                        'fact': 'A checked fact.', 'source': {'label': 'Source', 'url': 'https://example.com/source'}}
+                        'fact': 'A checked fact.', 'source': {'label': 'Source', 'url': 'https://example.com/source'},
+                        'source_kind': ('his', 'inspo', 'engine', 'engine')[n - 1],
+                        'why_here': 'close to your Story mark on "Who pays for a free AI picture"' if n == 2 else None,
+                        'beats': ['What happened', 'Why it matters to a leader', 'What they would do']}
     ideas = wb.read_ideas({'week_start': monday.isoformat(), 'days': {k: [one(k, n) for n in range(1, 5)] for k, *_ in wb.DAYS}}, monday)
     queue = [{'id': wb.FRI_ID, 'so_what': 'A saved idea.', 'series': 'mind_the_gap', 'triage': {'verdict': 'angle', 'angle': 'who pays'}},
              {'id': wb.WED_ID, 'so_what': 'Another saved idea.', 'series': None, 'triage': None}]
+    combine = wb.read_combine([{'members': [wb.FRI_ID, wb.WED_ID], 'series': 'mind_the_gap', 'thesis': 'Two saved ideas make one argument.',
+                                'joins': ['The first idea', 'What links them', 'The bigger point']}], queue)
     brief = wb.read_brief({'idea': 'The idea.', 'flow': ['One', 'Two', 'Three'], 'ending': 'The end.', 'takeaway': 'The takeaway.',
                            'angle': 'The angle.', 'tone': 'Warm.', 'reader': 'Leaders at mid-sized firms.', 'agreed': True})
     out = {'empty': wb.board(monday)[0],
-           'sunday': wb.board(monday, ideas=ideas, queue=queue)[0],
+           'sunday': wb.board(monday, ideas=ideas, queue=queue, combine=combine)[0],
            'midweek': wb.board(monday, {'mon': mon}, {'mon': wb.MON_ID, 'wed': wb.WED_ID, 'fri': wb.FRI_ID},
                                review={'wed': [('article', 'Article draft', 'Words.'), ('long', 'Five-minute script', 'Said.')]},
                                videos={'mon': [video('long', 'a', 305), video('short', 'c', 86)]},
@@ -98,6 +103,17 @@ def structure(page):
             inner = inner[inner.index('>') + 1:-len('</div>')]
             day[sub] = blocks(inner)
         out['days'][name] = day
+    # The Ideas and Queue tabs are fed too: what one idea card holds, and the Queue tab's top-level blocks (with a
+    # Could combine card when there is one).
+    card = re.search(r'<article class="id-card".*?</article>', page, re.S)
+    if card:
+        out['idea_card'] = blocks(card.group(0)[card.group(0).index('>') + 1:-len('</article>')])
+    start = page.rfind('<div', 0, page.find('id="panel-queue"'))
+    queue = wb.div_at(page, start)
+    out['queue'] = blocks(queue[queue.index('>') + 1:-len('</div>')])
+    combo = re.search(r'<article class="q-combo".*?</article>', queue, re.S)
+    if combo:
+        out['combine_card'] = blocks(combo.group(0)[combo.group(0).index('>') + 1:-len('</article>')])
     return out
 
 

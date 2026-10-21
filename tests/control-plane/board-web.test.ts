@@ -30,6 +30,14 @@ describe('board access and contracts', () => {
     expect(validBody('links', 'mon', { article: 'javascript:alert(1)', youtube: '' })).toBe(false)
     expect(validBody('ticks', '../mon', { done: true })).toBe(false)
     expect(validBody('queue', 'mon-1', { pick: 'mon-1', queued: false })).toBe(true)
+    // A Combine tap: his choice of two to five queued ideas, saved as queue/combine-<n>.
+    const m = ['11111111-2222-4333-8444-555555555555', '22222222-3333-4444-8555-666666666666']
+    expect(validBody('queue', 'combine-1', { combine: true, members: m, pick: 'combine-1', at: '2026-10-25T10:00:00Z' })).toBe(true)
+    expect(validBody('queue', 'combine-1', { combine: true, members: [m[0]], pick: 'combine-1' })).toBe(false)
+    expect(validBody('queue', 'combine-1', { combine: true, members: [m[0], m[0]], pick: 'combine-1' })).toBe(false)
+    expect(validBody('queue', 'combine-1', { combine: true, members: [m[0], 'not-a-uuid'], pick: 'combine-1' })).toBe(false)
+    expect(validBody('queue', 'combine-1', { combine: true, members: m, pick: 'combine-2' })).toBe(false)
+    expect(validBody('queue', 'mon-1', { combine: true, members: m, pick: 'mon-1' })).toBe(false)
     expect(validBody('edits', 'mon-article', { text: 'new', day: 'mon', item: 'article' })).toBe(true)
   })
   it('makes canonical hashes order-independent and bounds immutable paths', () => {
