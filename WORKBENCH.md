@@ -1,5 +1,26 @@
 # Workbench: where we are and what's next
 
+## 21 October: the publish board, parts 2 to 4 and the 15-minute feature (Claude)
+
+- **Krish:** "just get it all done now, to full completion", then "merge it when green and keep going".
+- **Built (PR #128, branch `claude/content-publish-board-ux-4dl7ai`, merged to main when CI is green):**
+  - Part 2: `GET /api/week/options?include=sources` (`api/_weekSources.ts`) gathers his ideas, his inspo folder's and
+    the engine's, his first, then near something he liked (`why_here`); judges stay blind (`check-judges.ts`).
+    `GET /api/idea-queue?combine=1` and the Queue tab's Combine button (his tap only, `combine_is_his_tap`).
+    `scripts/post-pack/board_feed.py gather <Monday>` and `taps` feed plan-week.
+  - Part 3: the Drafts editor (tap to edit, select to comment, one Save bar); `edit_sweep.py` carries a number or
+    fact change only where its neighbouring words match, shows it under "Also changed" with Undo, and never touches a
+    recorded script. Only his saves count (`edit_is_his_save`, `tap_is_his`). The ledger takes the `publish_board`
+    surface (migration applied live on his yes and read back).
+  - Part 4: the Publish step is a run-sheet: Download first, then one card per place in posting order.
+  - The feature is a third cut (`making.py`, `teleprompter_send.py`, `recording_match.py`, `publish_kit.py`,
+    `build.py`, `_making.ts`), with YouTube long-form and Spotify cards on feature pieces only.
+- **Layout lock:** CI (`npm run check:board-layout`); every change in this PR is recorded with his words in
+  `fixtures/week-board/fixed-layout.json`. No approval prompts (Ruling, Krish, 2026-10-21).
+- **Next:** once deployed, run `python3 scripts/post-pack/board_feed.py gather 2026-10-26` against the live engine
+  and check each source's count. Control Center's mirror `src/lib/making.ts` does not know the feature cut yet: a
+  change in `krishanraja/control-center`, to confirm with Krish first.
+
 ## 21 October, afternoon: Wednesday drafts from Krish's board edits (Claude)
 
 Read his 13:21 board edit of the short script and his comment on the long
@@ -15,33 +36,6 @@ the making record. **Teleprompter updated on his "push to teleprompter"**
 (plan: nothing to send). **Next:** Krish records; the board still shows the
 morning's scripts until he asks for a republish.
 
-## 21 October: the publish board has one fixed layout (Claude, part 1 of 4)
-
-Krish asked to standardise and lock the board so the engine only feeds it. He
-decided: new layout from the week of 26 Oct (12 and 19 Oct stay as they are);
-an edit is carried to every draft and shown back with undo; his taste steers
-idea sourcing and ranking, judges stay blind; order is frame and phone, then
-Ideas and Queue, then Drafts editing and learning, then the publish list. Also:
-every piece is a 90-second and a 5-minute video, and a 15-minute feature only
-when he calls one ("Yes, replace it" the weekly deep cut).
-
-- **Built (branch `claude/content-publish-board-ux-4dl7ai`):**
-  `config/board-layout.json` (tabs Ideas, Queue, Mon, Wed, Fri; steps Brief,
-  Drafts, Record, Publish; brief due the night before, drafts that morning);
-  `week_board.py` draws weeks from 26 Oct only in it (`--brief DAY=json` new),
-  phone layout (viewport, bottom tab bar, 44px targets), comments as a sheet;
-  `verify()` and `npm run check:board-layout` (CI) refuse any other shape;
-  `.claude/hooks/board-ui-guard.mjs` (unregistered by Krish 21 Oct; CI holds the layout). House rule
-  FEATURE replaced DEEP_CUT (`config/features.json`, `story_check --cut feature`).
-- **Part 2 handover:** `docs/handovers/2026-10-21-publish-board-part2.md` (start a fresh session from it).
-- **Next:** part 2, Sunday Ideas gathered from every source plus Queue
-  "could combine" (learning `queue-consolidation-and-fresh-sunday-ideas`),
-  ready for Sunday 25 Oct; part 3, Drafts editing that carries changes across
-  and teaches (`edits-propagate-and-teach`); part 4, the publish list. Plan:
-  `docs/plans/2026-10-21-publish-board/plan.md`; the rules in `docs/PUBLISH_BOARDS.md`, "The fixed layout".
-- **Not yet:** the feature as a third cut in `making.py` scripts,
-  `teleprompter_send.py`, `recording_match.py` and produce-video (board,
-  story check, house rule and skills know it already).
 ## 21 October: Wednesday cut back to the result (Claude)
 
 Krish: the scripts and article were "overexplaining" with caveats. Rewritten as
@@ -73,30 +67,6 @@ Head to Head on Running My Life. Both cuts read back exactly (765/195 words).
 IDs, hashes, approval and checks: `docs/plans/2026-10-19-week/wednesday-teleprompter.json`.
 Live making record holds both. Next: Krish records; visuals/article remain separate.
 Board and all feedback kept: https://content.krishraja.com/board/2026-10-19#wednesday.
-
-## 20 October: Wednesday rewritten with Krish (Claude, editorial session)
-
-Live: https://content.krishraja.com/board/2026-10-19#wednesday, build
-`63bbc0e6…9db7` (readback hash matches the built file; Monday, Friday and Ideas
-panels byte-identical; 24 assets kept; 28 comments, 0 edits, 0 ticks unchanged).
-Sources: `docs/plans/2026-10-19-week/` (`wednesday-narrative-ready.md` holds
-his decisions, `wednesday-article-draft.md` the piece, `wednesday-scorecard.md`
-the takeaway card).
-
-- **Krish decided:** the "order six products" emails were scams. Angle: "the
-  one that says no" mixed with three personalities (Grok the sceptic, Muse the
-  brilliant new hire, Gemini with a finger on send), scorecard as the
-  takeaway. Reader: leaders at mid-sized firms. Everything private anonymised,
-  no personal subscription specifics, Codex blurs screenshots.
-- **Also decided:** closing line "If your team is about to get one of these,
-  pick the one that says no at the right moment."; plain card cells, no marks.
-  Titles after recording.
-- **Lesson (Krish, 20 Oct):** bring strategic editorial choices (angle, reader,
-  structure) to him as decisions; never spend questions on his private test
-  data.
-- **Next:** his review of the article, then recording scripts (series line,
-  reading gate, read-back) and the Teleprompter send. No sends, posts or
-  spending; Monday's no-spend hold remains.
 
 ## 19 October: both publish boards live, web cutover verified
 

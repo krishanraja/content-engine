@@ -3,7 +3,7 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 import { createHash } from 'node:crypto'
 import { Readable } from 'node:stream'
 import { pipeline } from 'node:stream/promises'
-import { actor, canonical, collections, digest, fileSpec, monday, revision, validBody, validSourceBody, validId, validManifest, type BoardFile, type Manifest } from './_contracts.js'
+import { actor, canonical, collections, digest, hisOnlyRefusal, fileSpec, monday, revision, validBody, validSourceBody, validId, validManifest, type BoardFile, type Manifest } from './_contracts.js'
 
 const BUCKET = 'content-library'
 const TTL = 300
@@ -92,6 +92,8 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>) {
           return res.status(200).json({ ok: true, week, collection, next_offset: data.length === PAGE_SIZE ? offset + PAGE_SIZE : null, documents: data.map(r => ({ id: r.tick_id || r.doc_id, body: r.body, revision: r.revision, updated_at: r.updated_at, updated_by: r.updated_by })) })
         }
         if (method !== 'PUT' || !validBody(collection, id, req.body?.body) || !revision(req.body?.revision)) throw new BoardError(400, 'invalid_document_write')
+        const refused = hisOnlyRefusal(collection, req.body.body, who)
+        if (refused) throw new BoardError(403, refused)
         if (collection === 'comments' && req.body.body.thread_id !== id) {
           const parent = await db.from('board_documents').select('body').eq('week', week).eq('collection', 'comments').eq('doc_id', req.body.body.thread_id).maybeSingle()
           must(parent)

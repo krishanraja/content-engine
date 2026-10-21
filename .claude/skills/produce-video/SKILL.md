@@ -296,7 +296,7 @@ after reading a script out loud than I do creating a script."
   (SCRIPT: the cut's current words; WORDS.json: make.py's words file once
   `--plan` has heard the take; `--fixes LONG.json` folds in the config's
   verified caption fixes), then
-  `python scripts/post-pack/narration_diff.py ledger WORK/narration.json --cut short|long|deep --date YYYY-MM-DD --piece PIECE_ID`.
+  `python scripts/post-pack/narration_diff.py ledger WORK/narration.json --cut short|long|feature --date YYYY-MM-DD --piece PIECE_ID`.
   story_check reads the ledger to warn when the next script will run long.
 - **The packaging round comes now, never earlier**: the Substack headline and
   cover words, the YouTube title and thumbnail words, the Shorts title, the
@@ -466,6 +466,28 @@ as cues and `"chapters"` for the description's chapter list,
 YouTube, `"end_screen_s": 20`, and `"music_mode": "episode"` with
 `"music_seconds"` so a three-minute track covers the open, the chapter lifts
 and the close. The short cut keeps the house look.
+
+A 15-minute feature goes through that same one-shot episode path; it is a
+third cut beside the 5-minute and the 90-second, which are made as usual.
+Only a piece in `config/features.json` has one (Krish's call alone; never
+make a feature for any other piece). What changes for it:
+
+- **Its own cut, `feature`.** Its take is placed on the `feature` cut by
+  the feature script's hash (`recording_match.py`: its words, its
+  Teleprompter title, a name saying "feature", or a raw length of 10:00 and
+  over), and fetched like any take (`recording.py get`).
+- **Its own spoken-length cap**, `SPOKEN_CAP_S['feature']` in
+  `scripts/post-pack/story_check.py` (990 seconds, 16:30), not the 5-minute
+  cut's 330 or the retired deep cut's 720. Measure the take against the
+  feature's script and keep it in the ledger with `--cut feature`, so the
+  next feature's script is warned against his own pace on features.
+- **Its own wide thumbnail and record.** Draw a 1280 x 720 thumbnail for it
+  and record it as `making.py PIECE video feature NAME PATH --thumb ...
+  --thumb-file ...`, then `drive-link feature`. The record's Record and
+  Video assets steps wait for the feature on such a piece.
+- **Its own publish steps.** The publish page adds a YouTube long-form step
+  and a Spotify episode step for it, beside the 5-minute ones
+  (`publish_kit.py`).
 
 ## 5. A thumbnail for every size
 

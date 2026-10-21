@@ -73,6 +73,15 @@ How it decides, in order:
    without the words' bar, unless its words are surely another piece's or
    its length is surely the other cut's (then unsure).
 
+8. The 15-minute feature (house rule FEATURE). A piece Krish called a
+   feature for holds a third cut, the feature, once its script check holds
+   the feature's hash (making.py scripts long short feature). Its takes are
+   placed the same way, by words, title, length or name, and stamped with
+   the feature script's hash: a take of 10:00 and over on such a piece is
+   the feature, one between 8:00 and 10:00 is said to be unsure unless its
+   words or its name decide, and the piece waits until the feature is
+   recorded too. A piece with no feature hash never takes a feature.
+
 Anything unsure is said in one plain line for that file, and nothing is
 recorded for it. Exit 0 when every new recording is placed (or there are
 none), 2 when any is unsure, 1 when something failed.
@@ -142,17 +151,21 @@ STUDIO_CONFIG = REPO / 'config' / 'studio.json'
 PACK_OUT = REPO / '.cache' / 'post-pack'  # build.py's default: <folder>/3 Video/<name>
 POSTS, VIDEO = '3 Posts', '3 Video'       # the library: 3 Posts/<folder>/3 Video/<name>
 INBOX_MARKER = '.mindmake-inbox-id-v1.json'
-CUTS = making.CUTS
+CUTS = making.CUTS  # the two every piece gets
+ALL_CUTS = making.ALL_CUTS  # and the 15-minute feature, on a piece whose script check holds its hash
+FEATURE = making.FEATURE
 HEAD_SECONDS = 45
 MODEL = 'small.en'
 SURE = 0.72         # the Studio's own bar for a take against its script (OPERATIONS.md, short-native)
 MARGIN = 0.15       # clear of the next piece, and of the other cut when the words decide it
 LONG_FROM = 150     # a raw long take runs about 2:30 and over (3:38, 2:52, 2:26 so far)
 SHORT_UP_TO = 135   # a raw short take about 2:15 and under
+LONG_UP_TO = 480    # on a feature piece, a raw long (5-minute) take runs 8:00 and under
+FEATURE_FROM = 600  # and a raw 15-minute feature take 10:00 and over (2,025 words at 150 a minute is 13:30)
 SETTLING = 120      # seconds unchanged before a file counts as finished (the recordings upload's rule)
 LANE_LIMIT = 500 * 1024 * 1024  # the recordings upload skips files over 500 MiB
 MIN_HEAD_WORDS = 12
-PACK_NAMES = {'long': 'video-script.md', 'short': 'video-script-90-seconds.md'}
+PACK_NAMES = {'long': 'video-script.md', 'short': 'video-script-90-seconds.md', 'feature': 'video-script-feature.md'}  # plan_files.USUAL
 SHA = re.compile(r'[0-9a-f]{64}')
 ANSWERED = 'answered.json'   # .cache/recordings/answered.json: the takes already asked about, or left alone
 BOARD_PATH = '/api/workbench'
@@ -307,6 +320,36 @@ def began_at(record):
     return min(times).isoformat().replace('+00:00', 'Z') if times else None
 
 
+def cuts_of(piece):
+    """The cuts a waiting piece is recorded in: the two, and the feature
+    when its script check holds the feature's hash (waiting_pieces)."""
+    cuts = piece.get('cuts') if isinstance(piece, dict) else None
+    return tuple(c for c in ALL_CUTS if c in cuts) if cuts else CUTS
+
+
+def length_cut(seconds, cuts=CUTS):
+    """The cut a raw take's length says it is, or None when it is between
+    two. On a feature piece a long take runs up to LONG_UP_TO and the
+    feature FEATURE_FROM and over."""
+    if not isinstance(seconds, (int, float)):
+        return None
+    if FEATURE in cuts:
+        if seconds >= FEATURE_FROM:
+            return FEATURE
+        if seconds > LONG_UP_TO:
+            return None
+    return 'long' if seconds >= LONG_FROM else 'short' if seconds <= SHORT_UP_TO else None
+
+
+def length_bands(cuts):
+    """The lengths length_cut reads, in words, for a reason line."""
+    bands = f'a long take ({clock(LONG_FROM)} and over) and a short one ({clock(SHORT_UP_TO)} and under)'
+    if FEATURE in cuts:
+        bands = (f'a long take ({clock(LONG_FROM)} to {clock(LONG_UP_TO)}), a short one ({clock(SHORT_UP_TO)} and under) and '
+                 f'the 15-minute feature ({clock(FEATURE_FROM)} and over)')
+    return bands
+
+
 def cut_changed(piece, cut=None):
     """When the words of this cut of the piece last changed: its
     script_check.changed_at for the cut (making.py scripts keeps one per
@@ -315,7 +358,7 @@ def cut_changed(piece, cut=None):
     at = piece.get('changed_at') if isinstance(piece.get('changed_at'), dict) else {}
     if cut:
         return parse_time(at.get(cut)) or parse_time(piece.get('checked_at'))
-    times = [parse_time(at.get(c)) for c in CUTS if parse_time(at.get(c))]
+    times = [parse_time(at.get(c)) for c in cuts_of(piece) if parse_time(at.get(c))]
     return max(times) if times else parse_time(piece.get('checked_at'))
 
 
@@ -323,7 +366,7 @@ def first_changed(piece):
     """The earlier of the two cuts' times: a take after it is of the current
     words of at least one cut."""
     at = piece.get('changed_at') if isinstance(piece.get('changed_at'), dict) else {}
-    times = [parse_time(at.get(c)) for c in CUTS if parse_time(at.get(c))]
+    times = [parse_time(at.get(c)) for c in cuts_of(piece) if parse_time(at.get(c))]
     return min(times) if times else parse_time(piece.get('checked_at'))
 
 
@@ -356,14 +399,19 @@ def waiting_pieces(call, monday):
         for rec in recordings:
             claimed.update(SHA.findall(str(rec.get('path') or '').lower()))
         steps = {s.get('key'): s for s in data.get('steps') or [] if isinstance(s, dict)}
-        if (steps.get('scripts') or {}).get('state') != 'done' or (steps.get('record') or {}).get('state') == 'done':
+        if (steps.get('scripts') or {}).get('state') != 'done':
             continue
         hashes = making.current_hashes(record)
+        # The feature is a cut of this piece only when its script check holds the feature's hash (a piece Krish called one for).
+        cuts = tuple(c for c in ALL_CUTS if c in CUTS or c in hashes)
+        piece['cuts'] = list(cuts)
         # A cut counts as recorded only with a take of its current words.
-        piece['recorded'] = sorted({r.get('cut') for r in recordings if r.get('cut') in CUTS and take_counts(r, hashes)})
+        piece['recorded'] = sorted({r.get('cut') for r in recordings if r.get('cut') in cuts and take_counts(r, hashes)})
+        if (steps.get('record') or {}).get('state') == 'done' and all(c in piece['recorded'] for c in cuts):
+            continue
         piece['hashes'] = hashes
         # Takes on the record whose script's words changed after them: asked about, never used.
-        piece['older_takes'] = [r for r in recordings if r.get('cut') in CUTS and not take_counts(r, hashes) and r.get('cut') not in piece['recorded']]
+        piece['older_takes'] = [r for r in recordings if r.get('cut') in cuts and not take_counts(r, hashes) and r.get('cut') not in piece['recorded']]
         piece['checked_at'] = (record.get('script_check') or {}).get('checked_at')
         piece['changed_at'] = (record.get('script_check') or {}).get('changed_at') or {}
         piece['began'] = began_at(record)
@@ -371,7 +419,7 @@ def waiting_pieces(call, monday):
         # Each cut's script in Teleprompter, whose title names the recording he makes from it.
         tp = record.get('teleprompter') if isinstance(record.get('teleprompter'), dict) else {}
         tp_cuts = tp.get('cuts') if isinstance(tp.get('cuts'), dict) else {}
-        piece['titles'] = {cut: c['title'] for cut, c in tp_cuts.items() if cut in CUTS and isinstance(c, dict) and isinstance(c.get('title'), str)}
+        piece['titles'] = {cut: c['title'] for cut, c in tp_cuts.items() if cut in cuts and isinstance(c, dict) and isinstance(c.get('title'), str)}
         waiting.append(piece)
     waiting.sort(key=lambda p: (p.get('scheduled_for') or '9999-12-31', p['id']))
     return waiting, claimed
@@ -462,13 +510,14 @@ def scripts_for(piece, plans=PLANS, roots=None, show=committed):
     roots = library_roots() if roots is None else roots
     folder = piece.get('folder')
     hashes = piece.get('hashes') if isinstance(piece.get('hashes'), dict) else {}
-    copies = {cut: [] for cut in CUTS}
+    cuts = cuts_of(piece)  # a feature piece's feature too
+    copies = {cut: [] for cut in cuts}
     post_path, post = find_post(piece['id'], plans)
     for entry in (post or {}).get('files') or []:
         if not isinstance(entry, dict) or entry.get('kind') != 'video-script':
             continue
-        cut = entry.get('cut') if entry.get('cut') in CUTS else story_check.cut_of(entry.get('name') or entry.get('file') or '')
-        if cut not in CUTS:
+        cut = entry.get('cut') if entry.get('cut') in ALL_CUTS else story_check.cut_of(entry.get('name') or entry.get('file') or '')
+        if cut not in cuts:
             continue
         if isinstance(entry.get('text'), str) and entry['text'].strip():
             copies[cut].append({'text': entry['text'], 'from': f'{_shown(post_path)} (its text)'})
@@ -481,11 +530,11 @@ def scripts_for(piece, plans=PLANS, roots=None, show=committed):
         if raw and dated:
             places.append(post_path.parent.parent / f'{dated.group(1)}-draft-{Path(raw).name}')
         copies[cut] += [{'place': place} for place in places]
-    for cut in CUTS:
+    for cut in cuts:
         if folder:
             copies[cut] += [{'place': root / folder / VIDEO / PACK_NAMES[cut]} for root in roots]
     found = {}
-    for cut in CUTS:
+    for cut in cuts:
         texts = []
         for copy in copies[cut]:
             if 'text' in copy:
@@ -522,7 +571,7 @@ def titled(name, pieces):
     Teleprompter script on a waiting piece's record, else None."""
     key = title_key(name)
     hits = [(piece, cut) for piece in pieces for cut, title in (piece.get('titles') or {}).items()
-            if cut in CUTS and title and title_key(title) == key]
+            if cut in cuts_of(piece) and title and title_key(title) == key]
     return hits[0] if len(hits) == 1 else None
 
 
@@ -831,7 +880,7 @@ def decide(item, said, seconds, pieces, scripts):
     for piece in pieces:
         texts = scripts.get(piece['id']) or {}
         if texts:
-            scores[piece['id']] = {cut: opening_score(head, words(texts[cut]['text'])) for cut in CUTS if cut in texts}
+            scores[piece['id']] = {cut: opening_score(head, words(texts[cut]['text'])) for cut in cuts_of(piece) if cut in texts}
     answer['scores'] = scores
     by_id = {p['id']: p for p in pieces}
     named = titled(item.get('name'), pieces)
@@ -849,19 +898,21 @@ def decide(item, said, seconds, pieces, scripts):
     if best - runner < MARGIN:
         return {**answer, 'piece_id': None, 'reason': f'it could be {label(piece)} ({best:.2f}) or {label(by_id[ranked[1][1]])} ({runner:.2f})'}
     own = scores[pid]
-    by_words = max(own, key=own.get) if len(own) == 2 and abs(own['long'] - own['short']) >= MARGIN else None
+    # The words decide when the best cut's script is clear of every other cut's (the feature's too, on a feature piece).
+    ranked_cuts = sorted(own.items(), key=lambda kv: kv[1], reverse=True)
+    by_words = ranked_cuts[0][0] if len(ranked_cuts) >= 2 and ranked_cuts[0][1] - ranked_cuts[1][1] >= MARGIN else None
     if not isinstance(seconds, (int, float)):
         return {**answer, 'reason': f'it is {label(piece)}, but how long it runs could not be read (ffprobe), so the cut is not checked'}
-    by_length = 'long' if seconds >= LONG_FROM else 'short' if seconds <= SHORT_UP_TO else None
+    by_length = length_cut(seconds, cuts_of(piece))
     if by_words and by_length and by_words != by_length:
         return {**answer, 'reason': f'its words are {label(piece)}\'s {by_words} script, but it runs {clock(seconds)}, '
                                     f'which is a {by_length} take'}
     cut, how = (by_words, 'words') if by_words else (by_length, 'length')
     if not cut:
         hint = story_check.cut_of(item['name'])
+        hint = hint if hint in cuts_of(piece) else None
         if not hint:
-            return {**answer, 'reason': f'it is {label(piece)}, but it runs {clock(seconds)}, between a long take '
-                                        f'({clock(LONG_FROM)} and over) and a short one ({clock(SHORT_UP_TO)} and under)'}
+            return {**answer, 'reason': f'it is {label(piece)}, but it runs {clock(seconds)}, between {length_bands(cuts_of(piece))}'}
         cut, how = hint, 'name'
     if cut in (piece.get('recorded') or []):
         return {**answer, 'cut': cut, 'reason': f'it looks like a new take of {label(piece)}\'s {cut} cut, which is already recorded; left alone'}
@@ -882,7 +933,7 @@ def by_title(answer, named, scores, seconds, by_id):
                                                     f'{label(by_id[others[0][1]])}\'s ({others[0][0]:.2f})'}
     if not isinstance(seconds, (int, float)):
         return {**answer, 'reason': f'its name is {label(piece)}\'s {cut} script, but how long it runs could not be read (ffprobe)'}
-    by_length = 'long' if seconds >= LONG_FROM else 'short' if seconds <= SHORT_UP_TO else None
+    by_length = length_cut(seconds, cuts_of(piece))
     if by_length and by_length != cut:
         return {**answer, 'reason': f'its name is {label(piece)}\'s {cut} script, but it runs {clock(seconds)}, which is a {by_length} take'}
     if cut in (piece.get('recorded') or []):
@@ -996,7 +1047,8 @@ def board_item(answer, pieces):
                'records it with making.py.')
     elif tied:
         title = f'Which cut is the take "{shown}"?'
-        ask = 'A session works out the cut (the 3-minute or the 90-second) and records it with making.py, or asks Krish in its reply.'
+        ask = ('A session works out the cut (the 5-minute, the 90-second' + (' or the 15-minute feature' if FEATURE in cuts_of(by_id[pid]) else '')
+               + ') and records it with making.py, or asks Krish in its reply.')
     else:
         title = f'Which piece and cut is the take "{shown}"?'
         ask = ('No piece is known for it, so a session works out its piece and cut and records it with making.py, or asks Krish '
@@ -1134,19 +1186,19 @@ def run(opts, call, list_items, get_file=local_copy, transcribe=transcribe_head,
     for piece in pieces:
         scripts[piece['id']] = scripts_for(piece, plans, roots)
         report['waiting'].append({'id': piece['id'], 'day': day_of(piece.get('scheduled_for')), 'subject': subject_of(piece),
-                                  'cuts': [c for c in CUTS if c not in piece['recorded']],
+                                  'cuts': [c for c in cuts_of(piece) if c not in piece['recorded']],
                                   'scripts': {c: s['from'] for c, s in scripts[piece['id']].items()}})
     if pieces:
         out('Waiting for a recording: ' + '; '.join(
-            f'{label(p)} ({" and ".join(c for c in CUTS if c not in p["recorded"])})' for p in pieces) + '.')
+            f'{label(p)} ({" and ".join(c for c in cuts_of(p) if c not in p["recorded"])})' for p in pieces) + '.')
     else:
         out('No piece this week or next is waiting for a recording (its Scripts step done and its Record step not).')
     for piece in pieces:
-        missing = [c for c in CUTS if c not in scripts[piece['id']]]
+        missing = [c for c in cuts_of(piece) if c not in scripts[piece['id']]]
         if missing:
             out(f'note: no {" or ".join(missing)} script found for {label(piece)} (docs/plans post.json, the draft beside it, '
                 f'or the pack), so it is matched on what there is.')
-        stale = [c for c in CUTS if c in scripts[piece['id']] and piece.get('hashes', {}).get(c) and not scripts[piece['id']][c].get('current')]
+        stale = [c for c in cuts_of(piece) if c in scripts[piece['id']] and piece.get('hashes', {}).get(c) and not scripts[piece['id']][c].get('current')]
         if stale:
             out(f'note: no copy of the current {" or ".join(stale)} words of {label(piece)} is on this machine or on main (its record\'s hash), '
                 f'so the nearest copy is used: pull main, or the take may be unsure.')
@@ -1212,7 +1264,7 @@ def run(opts, call, list_items, get_file=local_copy, transcribe=transcribe_head,
     by_id = {p['id']: p for p in pieces}
     order = {p['id']: n for n, p in enumerate(pieces)}
     # Written piece by piece, the nearest first, the long cut before the short.
-    placed = sorted((a for a in answers if a['status'] == 'placed'), key=lambda a: (order[a['piece_id']], CUTS.index(a['cut'])))
+    placed = sorted((a for a in answers if a['status'] == 'placed'), key=lambda a: (order[a['piece_id']], ALL_CUTS.index(a['cut'])))
     for answer in placed:
         if opts.get('record'):
             piece = by_id[answer['piece_id']]
@@ -1798,6 +1850,93 @@ def self_test():
             subprocess.run(['ffmpeg', '-v', 'error', '-f', 'lavfi', '-i', 'anullsrc=r=48000:cl=stereo', '-t', '1', '-c:a', 'aac',
                             '-metadata', 'creation_time=2026-10-12T08:01:02.000000Z', str(stamped)], capture_output=True)
             check('ffprobe: when the file says it was made', probe_seconds(stamped)['recorded_at'], '2026-10-12T08:01:02Z')
+
+    # The 15-minute feature (house rule FEATURE): a third cut on a piece whose script check holds the feature's hash.
+    FEAT = 'a1b2c3d4-0000-4000-8000-00000000fea7'
+    feat_long, feat_short, feat_feature = _prose(21, 450), None, _prose(22, 2100)
+    feat_short = feat_long[:60] + _prose(23, 140)
+    same_open = feat_long[:200] + _prose(24, 1900)  # a feature that opens exactly as the long does
+    feat_hashes = {'long': making.script_hash(' '.join(feat_long)), 'short': making.script_hash(' '.join(feat_short)),
+                   'feature': making.script_hash(' '.join(feat_feature))}
+    feat_title = 'Mon 2 Nov - 15-minute feature - Who gets paid for AI songs'
+    feat_record = {'making': {'workroom': {'url': 'https://claude.ai/artifact/f', 'at': '2026-10-28T09:00:00Z'},
+                              'script_check': {'passed': True, 'checked_at': '2026-10-29T10:00:00Z', 'hashes': feat_hashes,
+                                               'changed_at': {c: '2026-10-29T10:00:00Z' for c in ALL_CUTS}},
+                              'teleprompter': {'folder_id': '86B6F74B-2F8A-4477-AE44-8DA1119D1CD9', 'cuts': {
+                                  'feature': {'script_id': '0C3E7F55-9C1B-4F6A-8E2D-3B5A1C7D9E01', 'title': feat_title}}},
+                              # Long and short are recorded: an engine from before the feature calls Record done on them.
+                              'recordings': [{'cut': 'long', 'path': 'recordings/' + '1' * 64 + '.mp4', 'script_sha256': feat_hashes['long']},
+                                             {'cut': 'short', 'path': 'recordings/' + '2' * 64 + '.mp4', 'script_sha256': feat_hashes['short']}]},
+                   'steps': [{'key': 'scripts', 'state': 'done'}, {'key': 'record', 'state': 'done'}]}
+    feat_posts = []
+
+    def feat_engine(method, path, body):
+        if method == 'POST':
+            feat_posts.append((path, body))
+            return 200, json.dumps({'ok': True, 'steps': []})
+        if path.startswith('/api/week/options'):
+            inflight = [{'id': FEAT, 'idea': 'Songs', 'state': 'review', 'scheduled_for': '2026-11-02'}] if 'week_start=2026-11-02' in path else []
+            return 200, json.dumps({'ok': True, 'series': [{'slug': 'follow_the_money', 'in_flight': inflight}]})
+        return 200, json.dumps({'ok': True, **feat_record})
+    feat_pieces, _ = waiting_pieces(feat_engine, week_monday('2026-11-02'))
+    check('feature: a feature piece with its long and short recorded still waits for its feature, which is its third cut',
+          ([p['id'] for p in feat_pieces], feat_pieces[0]['cuts'] if feat_pieces else None, feat_pieces[0]['recorded'] if feat_pieces else None,
+           feat_pieces[0]['titles'] if feat_pieces else None),
+          ([FEAT], ['long', 'short', 'feature'], ['long', 'short'], {'feature': feat_title}))
+    check('feature: a piece with no feature hash has only its two cuts', (cuts_of(pieces[0]), cuts_of({'cuts': ['long', 'short']})), (CUTS, CUTS))
+    check('feature: lengths on a feature piece: 15:05 the feature, 7:00 the long, 9:00 between, 1:35 the short; a piece without one reads 15:05 as long',
+          (length_cut(905.0, ALL_CUTS), length_cut(420.0, ALL_CUTS), length_cut(540.0, ALL_CUTS), length_cut(95.0, ALL_CUTS), length_cut(905.0, CUTS)),
+          ('feature', 'long', None, 'short', 'long'))
+    feat_scripts = {FEAT: {'long': {'text': ' '.join(feat_long)}, 'short': {'text': ' '.join(feat_short)}, 'feature': {'text': ' '.join(feat_feature)}}}
+    take = {'name': 'take.mp4', 'at': '2026-10-30T08:00:00Z'}
+    a = decide(take, _heard(feat_feature[:110], junk=4, slips=12), 905.0, feat_pieces, feat_scripts)
+    check('feature: a take of the feature\'s words, its length agreeing, is placed on the feature',
+          (a['status'], a.get('piece_id'), a.get('cut'), a.get('by')), ('placed', FEAT, 'feature', 'words'))
+    a = decide(take, _heard(feat_feature[:110]), 180.0, feat_pieces, feat_scripts)
+    check('feature: the feature\'s words in a take that runs like a long one are unsure', (a['status'], 'which is a long take' in a.get('reason', '')), ('unsure', True))
+    same_scripts = {FEAT: {**feat_scripts[FEAT], 'feature': {'text': ' '.join(same_open)}}}
+    a = decide(take, _heard(feat_long[:110]), 905.0, feat_pieces, same_scripts)
+    check('feature: a feature that opens as the long does is told apart by length (feature)', (a['status'], a.get('cut'), a.get('by')), ('placed', 'feature', 'length'))
+    a = decide(take, _heard(feat_long[:110]), 420.0, [dict(feat_pieces[0], recorded=[])], same_scripts)
+    check('feature: ... and (long, on a piece whose long is not recorded yet)', (a['status'], a.get('cut'), a.get('by')), ('placed', 'long', 'length'))
+    a = decide(take, _heard(feat_long[:110]), 540.0, feat_pieces, same_scripts)
+    check('feature: a length between the long and the feature is unsure, naming the three lengths',
+          (a['status'], '15-minute feature (10:00 and over)' in a.get('reason', '')), ('unsure', True))
+    a = decide({'name': 'IMG_15 feature take.mov', 'at': take['at']}, _heard(feat_long[:110]), 540.0, feat_pieces, same_scripts)
+    check('feature: ... unless the file name says it is the feature', (a['status'], a.get('cut'), a.get('by')), ('placed', 'feature', 'name'))
+    a = decide({'name': 'feature.mov', 'at': take['at']}, _heard(fri_long[:110]), 142.0, pieces, scripts)
+    check('feature: a name saying feature decides nothing on a piece with no feature', a['status'], 'unsure')
+    a = decide({'name': feat_title + '.mp4', 'at': take['at']}, _heard(feat_feature[:110]), 905.0, feat_pieces, feat_scripts)
+    check('feature: a take named after the feature\'s Teleprompter script is the feature', (a['status'], a.get('cut'), a.get('by')), ('placed', 'feature', 'title'))
+    a = decide({'name': feat_title + '.mp4', 'at': take['at']}, _heard(feat_feature[:110]), 180.0, feat_pieces, feat_scripts)
+    check('feature: ... unless it runs like a long take', (a['status'], 'which is a long take' in a.get('reason', '')), ('unsure', True))
+    done_feature = [dict(feat_pieces[0], recorded=['long', 'short', 'feature'])]
+    a = decide(take, _heard(feat_feature[:110]), 905.0, done_feature, feat_scripts)
+    check('feature: a new take of a feature already recorded is left alone', (a['status'], 'feature cut, which is already recorded' in a.get('reason', '')), ('unsure', True))
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp)
+        feat_plans = tmp / 'plans' / '2026-11-02-monday'
+        feat_plans.mkdir(parents=True)
+        for cut, text in (('long', feat_long), ('short', feat_short), ('feature', feat_feature)):
+            (feat_plans / f'{cut}.md').write_text(' '.join(text), encoding='utf-8')
+        (feat_plans / 'post.json').write_text(json.dumps({'piece_id': FEAT, 'files': [{'kind': 'video-script', 'file': f'{c}.md', 'cut': c} for c in ALL_CUTS]}))
+        found = scripts_for(feat_pieces[0], tmp / 'plans', [], show=None)
+        check('feature: the feature\'s script is found by its cut in post.json, its words the record\'s', (sorted(found), found['feature']['current']),
+              (['feature', 'long', 'short'], True))
+        check('feature: a piece with no feature never reads a feature script', sorted(scripts_for({**feat_pieces[0], 'cuts': ['long', 'short']}, tmp / 'plans', [], show=None)),
+              ['long', 'short'])
+        data = b'the fifteen-minute feature take'
+        listing = [{'name': 'IMG_2001.mov', 'sha256': hashlib.sha256(data).hexdigest(), 'uploaded_at': '2026-10-30T09:00:00Z', 'bytes': len(data),
+                    'download': {'url': f'https://store.invalid{recording.DOWNLOAD_PATH}f'}}]
+        lines = []
+        code, report = run({'week': '2026-11-02', 'by': 'Codex', 'record': True}, feat_engine, lambda: engine_recordings(listing),
+                           get_file=lambda i, cache: i['name'], transcribe=lambda src: _heard(feat_feature[:110], junk=3),
+                           probe=lambda src: 912.0, out=lines.append, cache=tmp / 'cache', plans=tmp / 'plans', roots=[])
+        check('feature: --record places the take on the feature, stamped with the feature script\'s hash',
+              (code, [(p.split('/')[3], b['recordings']) for p, b in feat_posts]),
+              (0, [(FEAT, [{'cut': 'feature', 'path': f'recordings/{hashlib.sha256(data).hexdigest()}.mov', 'seconds': 912,
+                            'script_sha256': feat_hashes['feature']}])]))
+        check('feature: the run says the piece waits for its feature', any('(feature)' in line for line in lines if line.startswith('Waiting')), True)
     if fails:
         print('recording match self-test FAILED:\n  ' + '\n  '.join(fails))
         return 1

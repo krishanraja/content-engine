@@ -26,6 +26,9 @@ export interface EditRow {
   value: string | null
   subject_id: string
   occurred_at: string
+  /** Where his hand was, and the class a board edit was given (edit_sweep.py). Optional: older reads lack them. */
+  surface?: string | null
+  reason_code?: string | null
 }
 
 export interface CalibrationRow {
@@ -159,6 +162,58 @@ export function handRewriteProposals(rows: EditRow[]): Proposal[] {
   }]
 }
 
+
+// The classes edit_sweep.py gives a saved board edit, in the board's own words (week_board.py EDIT_KINDS).
+const BOARD_EDIT_LABELS: Record<string, string> = {
+  number_fact: 'number or fact', claim: 'claim', structure: 'structure', tone: 'tone', wording: 'wording',
+}
+
+/** The same class of change, made by his hand on the publish board three or more times in the lookback: a
+ *  candidate standing rule, so the drafts make that change before he has to. Krish, 2026-10-21: "learn why I'm
+ *  giving that feedback and figure out what patterns it's observing", and his ruling that a change becomes a
+ *  standing rule only when he approves it. So this proposes and never applies; the proposal waits in the
+ *  learning store and on the board's "What I learned from your edits" until he rules. Keyed on the class (form),
+ *  never on what the piece was about (ANTI-ECHO). */
+export function repeatedEditClassProposals(rows: EditRow[], now: number = Date.now()): Proposal[] {
+  const since = now - LOOKBACK_DAYS * 86_400_000
+  const byClass = new Map<string, { n: number; pieces: Set<string>; evidence: string[] }>()
+  for (const row of rows) {
+    if (row.surface !== 'publish_board' || row.action !== 'manual_edit') continue
+    const cls = row.reason_code || ''
+    if (!(cls in BOARD_EDIT_LABELS)) continue
+    const at = Date.parse(row.occurred_at)
+    if (!Number.isFinite(at) || at < since || at > now) continue
+    const entry = byClass.get(cls) ?? { n: 0, pieces: new Set<string>(), evidence: [] }
+    entry.n += 1
+    entry.pieces.add(row.subject_id)
+    if (row.event_id) entry.evidence.push(row.event_id)
+    byClass.set(cls, entry)
+  }
+  const proposals: Proposal[] = []
+  for (const [cls, e] of byClass) {
+    if (e.n < MIN_INSTANCES) continue
+    const label = BOARD_EDIT_LABELS[cls]!
+    const pieces = e.pieces.size
+    proposals.push({
+      proposal_class: 'taste',
+      assertion: `On the publish board Krish made ${e.n} ${label} edits in ${LOOKBACK_DAYS} days, on ${pieces} piece${pieces === 1 ? '' : 's'}. `
+        + `Proposed: the drafts make this kind of change before he sees them. It stays a proposal until he approves it.`,
+      scope: { level: 'global', key: `board_edit:${cls}` },
+      evidence_count: e.n,
+      evidence_ids: evidenceIds(e.evidence),
+      counterexamples: [
+        pieces === 1 ? 'every one of these edits was on one piece, which may be that piece and not a habit' : `spread over ${pieces} pieces`,
+        'pieces he did not edit this way are not counted here',
+      ],
+      regression_cases: [
+        `Read the changes themselves (delta_features) before writing the rule: the class alone is too broad to be the rule.`,
+        `Once a rule is approved, the next drafts should need fewer ${label} edits on the board; if they do not, the rule is not the cause.`,
+      ],
+      proposed_change: { kind: 'standing_rule_from_board_edits', edit_class: cls, edits: e.n, pieces },
+    })
+  }
+  return proposals
+}
 
 /** The table holds 1 to 100 evidence ids. Unique, in the order observed, capped. */
 export const MAX_EVIDENCE = 100

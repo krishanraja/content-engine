@@ -2,6 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from '../_supabase.js'
 import { guardEngine, operatorBearerAllowed } from '../_auth.js'
 import { isMonday, keepThroughWeek, parseOptions, type WeekOptionMeta } from '../_weekOptions.js'
+import { buildSources, windows } from '../_weekSources.js'
 
 // GET  /api/week/options?week_start=YYYY-MM-DD
 //        what the Sunday session needs to plan the week: each publishing
@@ -14,6 +15,12 @@ import { isMonday, keepThroughWeek, parseOptions, type WeekOptionMeta } from '..
 //        holds it while Krish posts the rest (the week's publish board reads
 //        each day's piece from here; Control Center's weekPlan counts the
 //        same states as picked).
+// GET  /api/week/options?week_start=YYYY-MM-DD&include=sources
+//        adds `sources`: Sunday's idea pool from every source (his, his inspo
+//        folder, the engine's research), each idea ranked his first, then near
+//        something he liked, then its ladder score, with the evidence of his
+//        taste beside it (_weekSources.ts). Evidence only: no model, no write,
+//        and the judges never read it.
 // POST /api/week/options  { week_start, series, options: [{ id, rank, pitch, why_now, recommended }] }
 //        writes meta.week_option on each option's row (and its series, when
 //        the row has none), keeps each option alive through its week (a seed's
@@ -67,7 +74,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           .map(r => ({ id: r.id, idea: r.idea, thesis: r.thesis, state: r.state, score: score(r), band: r.meta?.ladder?.final?.band ?? null })),
       }
     })
-    return res.status(200).json({ ok: true, week_start: week, series, dropped_by_krish: dropped.data || [] })
+    const out: Record<string, unknown> = { ok: true, week_start: week, series, dropped_by_krish: dropped.data || [] }
+    if (String(req.query.include || '').split(',').includes('sources')) {
+      try {
+        out.sources = await readSources(week, series.map(s => String(s.slug)))
+      } catch (e) {
+        return res.status(500).json({ ok: false, error: `sources: ${(e as Error).message}` })
+      }
+    }
+    return res.status(200).json(out)
   }
 
   const { week_start, series, options, problems } = parseOptions(req.body)
@@ -114,4 +129,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (!up.error) cleared.push(r.id)
   }
   return res.status(200).json({ ok: true, week_start, series, written, cleared })
+}
+
+const SOURCE_COLS = 'id,idea,thesis,state,lane_slot,source_type,source_url,source_ref,origin,created_at,scheduled_for,published_at,buried_at,library_at,queued_at,embedding,meta'
+const TASTE_COLS = 'id,idea,state,scheduled_for,embedding,meta'
+
+/** The reads behind `sources`: candidates from the last fifteen days, the rows that may carry his marks, and the
+ *  open board items holding his relayed words. Read-only. */
+async function readSources(week: string, slugs: string[]) {
+  const win = windows(week)
+  const since90 = new Date(Date.parse(`${week}T00:00:00Z`) - 90 * 86_400_000).toISOString().slice(0, 10)
+  const [rows, marked, picked, chosen, relayed] = await Promise.all([
+    supabase.from('content_ideas').select(SOURCE_COLS).gte('created_at', win.pool_since).order('created_at', { ascending: false }).limit(600),
+    supabase.from('content_ideas').select(TASTE_COLS).not('meta->queue', 'is', null).limit(500),
+    supabase.from('content_ideas').select(TASTE_COLS).not('scheduled_for', 'is', null).gte('scheduled_for', since90).limit(200),
+    supabase.from('content_ideas').select(TASTE_COLS).eq('meta->week_option->>by', 'Krish').limit(200),
+    supabase.from('work_board_items').select('id,title,detail,created_at,lane,closed_by')
+      .or('id.like.krish-ideas-%,id.like.said-%').is('closed_by', null).not('lane', 'in', '(done,archived)').limit(50),
+  ])
+  const failed = rows.error || marked.error || picked.error || chosen.error || relayed.error
+  if (failed) throw new Error(failed.message)
+  const tasteRows = [...(marked.data || []), ...(picked.data || []), ...(chosen.data || [])] as Array<Record<string, any>>
+  return buildSources({ weekStart: week, series: slugs, rows: (rows.data || []) as Array<Record<string, any>>, tasteRows, relayed: (relayed.data || []) as Array<Record<string, any>> })
 }

@@ -169,7 +169,7 @@ describe('the making record', () => {
     for (const hashes of [{ long: 'ABC' }, { long: SHA('A') }, { wide: SHA('a') }, 'not an object', { short: 42 }]) {
       const bad = await call('POST', { script_check: { passed: true, problems: [], hashes } })
       expect(bad.status).toBe(400)
-      expect(bad.body.problems).toEqual(["script_check.hashes is the sha256 of each cut's script: {long, short}, each 64 lowercase hex characters"])
+      expect(bad.body.problems).toEqual(["script_check.hashes is the sha256 of each cut's script: {long, short, feature}, each 64 lowercase hex characters"])
     }
     expect(db.writes).toHaveLength(0)
   })
@@ -206,6 +206,40 @@ describe('the making record', () => {
     expect(legacy.body.steps.find((s: Row) => s.key === 'record')).toMatchObject({ state: 'done' })
   })
 
+  // House rule FEATURE (Krish, 2026-10-21: "From time to time I might do a special 15 min feature"): a third cut,
+  // only on a piece he called one for; making.py records its hash only there.
+  it('a feature piece holds a third cut: its hash, read-back and take are kept, and Record and Video wait for it', async () => {
+    const out = await call('POST', { script_check: { passed: true, problems: [], cuts: ['long', 'short', 'feature'],
+      hashes: { long: SHA('a'), short: SHA('b'), feature: SHA('c') }, changed_at: { feature: '2026-10-21T12:00:00Z' } } })
+    expect(out.status).toBe(200)
+    expect(out.body.making.script_check).toMatchObject({ cuts: ['long', 'short', 'feature'], hashes: { feature: SHA('c') }, changed_at: { feature: '2026-10-21T12:00:00Z' } })
+    expect(out.body.steps.find((s: Row) => s.key === 'scripts')).toMatchObject({ state: 'done', note: 'long and short and feature; not in Teleprompter yet' })
+    const two = await call('POST', { recordings: [{ cut: 'long', path: `recordings/${SHA('d')}.mp4`, script_sha256: SHA('a') }, { cut: 'short', path: `recordings/${SHA('e')}.mp4`, script_sha256: SHA('b') }] })
+    expect(two.body.steps.find((s: Row) => s.key === 'record')).toMatchObject({ state: 'now', note: 'feature cut still to record' })
+    const older = await call('POST', { recordings: [{ cut: 'feature', path: `recordings/${SHA('f')}.mp4`, seconds: 905, script_sha256: SHA('9') }] })
+    expect(older.body.steps.find((s: Row) => s.key === 'record')).toMatchObject({ state: 'now', note: 'feature cut recorded from an older script' })
+    const three = await call('POST', { recordings: [{ cut: 'feature', path: `recordings/${SHA('f')}.mp4`, seconds: 905, script_sha256: SHA('c') }] })
+    expect(three.body.steps.find((s: Row) => s.key === 'record')).toMatchObject({ state: 'done' })
+    const assets = await call('POST', { video_assets: [
+      { cut: 'long', name: 'Substack video', path: 'long.mp4', thumbnail: { path: 'wide.jpg' } },
+      { cut: 'short', name: 'Shorts video', path: 'short.mp4', thumbnail: { path: 'tall.jpg' } },
+    ] })
+    expect(assets.body.steps.find((s: Row) => s.key === 'video')).toMatchObject({ state: 'now', note: 'feature cut still to produce' })
+    const feature = await call('POST', { video_assets: [{ cut: 'feature', name: 'YouTube feature', path: 'feature.mp4', thumbnail: { path: 'feature-wide.jpg' } }] })
+    expect(feature.body.steps.find((s: Row) => s.key === 'video')).toMatchObject({ state: 'done' })
+  })
+
+  it('a piece with no feature hash needs only its two cuts; an unknown cut is still refused', async () => {
+    await call('POST', { script_check: { passed: true, problems: [], hashes: { long: SHA('a'), short: SHA('b') } } })
+    const out = await call('POST', { recordings: [{ cut: 'long', path: 'recordings/l.mp4' }, { cut: 'short', path: 'recordings/s.mp4' }] })
+    expect(out.body.steps.find((s: Row) => s.key === 'record')).toMatchObject({ state: 'done' })
+    db.writes = []
+    const bad = await call('POST', { recordings: [{ cut: 'deep', path: 'recordings/d.mp4' }] })
+    expect(bad.status).toBe(400)
+    expect(bad.body.problems).toEqual(['each recording needs cut (long, short or feature) and path'])
+    expect(db.writes).toHaveLength(0)
+  })
+
   it('the scripts keep when each cut\'s words last changed; a bad time is refused by name', async () => {
     const ok = await call('POST', { script_check: { passed: true, problems: [], hashes: { long: SHA('a'), short: SHA('b') },
       changed_at: { long: '2026-10-12T12:00:00Z', short: '2026-10-11T19:14:16Z' } } })
@@ -215,7 +249,7 @@ describe('the making record', () => {
     for (const changed_at of [{ long: 'yesterday' }, { wide: '2026-10-12T12:00:00Z' }, 'not an object']) {
       const bad = await call('POST', { script_check: { passed: true, problems: [], changed_at } })
       expect(bad.status).toBe(400)
-      expect(bad.body.problems).toEqual(["script_check.changed_at is when each cut's words last changed: {long, short}, each a time"])
+      expect(bad.body.problems).toEqual(["script_check.changed_at is when each cut's words last changed: {long, short, feature}, each a time"])
     }
     expect(db.writes).toHaveLength(0)
   })
@@ -274,6 +308,14 @@ describe('the making record', () => {
     const bad = await call('POST', { channels: { myspace: {} } })
     expect(bad.status).toBe(400)
     expect(bad.body.problems[0]).toMatch(/unknown channel "myspace"/)
+  })
+
+  it('the 15-minute feature\'s two board cards record as their own channels, and never count toward the five', async () => {
+    const one = await call('POST', { channels: { substack: {}, feature_youtube: { url: 'https://youtu.be/feature' }, feature_spotify: {} } }, 'krish')
+    expect(one.status).toBe(200)
+    expect(Object.keys(one.body.making.channels).sort()).toEqual(['feature_spotify', 'feature_youtube', 'substack'])
+    expect(one.body.making.channels.feature_youtube.url).toBe('https://youtu.be/feature')
+    expect(one.body.steps.find((s: Row) => s.key === 'publish')).toMatchObject({ note: '1 of 5 channels' })
   })
 
   it('a bad link, an empty patch and a missing piece are refused with reasons', async () => {
@@ -434,7 +476,7 @@ describe('Teleprompter on the making record', () => {
       [{ folder_id: FOLDER.toLowerCase(), cuts: { long: sentCut(LONG, SHA('a')) } }, "teleprompter.folder_id is the folder's id, an uppercase UUID"],
       [{ folder_id: FOLDER, folder_name: 'x'.repeat(201), cuts: { long: sentCut(LONG, SHA('a')) } }, "teleprompter.folder_name is the folder's name, one line of at most 200 characters"],
       [{ folder_id: FOLDER, cuts: {} }, 'teleprompter.cuts needs the long or short cut'],
-      [{ folder_id: FOLDER, cuts: { wide: sentCut(LONG, SHA('a')) } }, 'unknown cut "wide" in teleprompter.cuts (long, short)'],
+      [{ folder_id: FOLDER, cuts: { wide: sentCut(LONG, SHA('a')) } }, 'unknown cut "wide" in teleprompter.cuts (long, short, feature)'],
       [{ folder_id: FOLDER, cuts: { long: sentCut(LONG, SHA('a'), { script_id: LONG.id.toLowerCase() }) } }, "teleprompter.cuts.long.script_id is the script's id, an uppercase UUID"],
       [{ folder_id: FOLDER, cuts: { long: sentCut(LONG, SHA('a'), { title: 'one\ntwo' }) } }, "teleprompter.cuts.long.title is the script's title, one line of at most 200 characters"],
       [{ folder_id: FOLDER, cuts: { long: sentCut(LONG, 'abc') } }, 'teleprompter.cuts.long.script_sha256 is the sha256 of the words the script holds, 64 lowercase hex characters'],

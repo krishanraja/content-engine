@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { createHash } from 'node:crypto'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { actor, canonical, digest, monday, validBody, validManifest } from '../../apps/control-plane/api/board/_contracts.js'
+import { actor, canonical, combineWriterRefused, digest, hisOnlyRefusal, monday, validBody, validManifest } from '../../apps/control-plane/api/board/_contracts.js'
 import { createBoardHandler } from '../../apps/control-plane/api/board/_handler.js'
 
 const previous = { ...process.env }
@@ -30,7 +30,32 @@ describe('board access and contracts', () => {
     expect(validBody('links', 'mon', { article: 'javascript:alert(1)', youtube: '' })).toBe(false)
     expect(validBody('ticks', '../mon', { done: true })).toBe(false)
     expect(validBody('queue', 'mon-1', { pick: 'mon-1', queued: false })).toBe(true)
+    // A Combine tap: his choice of two to five queued ideas, saved as queue/combine-<n>.
+    const m = ['11111111-2222-4333-8444-555555555555', '22222222-3333-4444-8555-666666666666']
+    expect(validBody('queue', 'combine-1', { combine: true, members: m, pick: 'combine-1', at: '2026-10-25T10:00:00Z' })).toBe(true)
+    expect(validBody('queue', 'combine-1', { combine: true, members: [m[0]], pick: 'combine-1' })).toBe(false)
+    expect(validBody('queue', 'combine-1', { combine: true, members: [m[0], m[0]], pick: 'combine-1' })).toBe(false)
+    expect(validBody('queue', 'combine-1', { combine: true, members: [m[0], 'not-a-uuid'], pick: 'combine-1' })).toBe(false)
+    expect(validBody('queue', 'combine-1', { combine: true, members: m, pick: 'combine-2' })).toBe(false)
+    expect(validBody('queue', 'mon-1', { combine: true, members: m, pick: 'mon-1' })).toBe(false)
     expect(validBody('edits', 'mon-article', { text: 'new', day: 'mon', item: 'article' })).toBe(true)
+    // The Drafts editor's save keeps the store's fields and adds the hash of the words it was made on.
+    expect(validBody('edits', 'mon-article', { text: 'new', day: 'mon', item: 'article', base_sha256: 'a'.repeat(64), at: '2026-10-26T07:00:00Z' })).toBe(true)
+  })
+  it('takes a comment pinned to a passage, and his taps on Also changed and What I learned, and nothing looser', () => {
+    const c = { thread_id: 't1', anchor: 'rvp-mon-article-3', text: 'Too strong', at: '2026-10-26T07:00:00Z' }
+    expect(validBody('comments', 't1', c)).toBe(true)
+    expect(validBody('comments', 't1', { ...c, box: 'mon-article', paragraph: 3, quote: 'about 40% of firms' })).toBe(true)
+    expect(validBody('comments', 't1', { ...c, paragraph: -1 })).toBe(false)
+    expect(validBody('comments', 't1', { ...c, paragraph: 1.5 })).toBe(false)
+    expect(validBody('comments', 't1', { ...c, box: '../mon' })).toBe(false)
+    expect(validBody('comments', 't1', { ...c, quote: '' })).toBe(false)
+    expect(validBody('comments', 't1', { ...c, quote: 'x'.repeat(2001) })).toBe(false)
+    expect(validBody('comments', 't1', { ...c, anchor: 'mon-also-1', act: 'undo', ref: 's1' })).toBe(true)
+    expect(validBody('comments', 't1', { ...c, anchor: 'mon-lesson-1', act: 'lesson_yes', ref: '11111111-2222-4333-8444-555555555555' })).toBe(true)
+    expect(validBody('comments', 't1', { ...c, act: 'delete', ref: 's1' })).toBe(false)
+    expect(validBody('comments', 't1', { ...c, act: 'undo' })).toBe(false)
+    expect(validBody('comments', 't1', { ...c, ref: 's1' })).toBe(false)
   })
   it('makes canonical hashes order-independent and bounds immutable paths', () => {
     expect(digest(canonical({ b: 2, a: 1 }))).toBe(digest(canonical({ a: 1, b: 2 })))
@@ -39,6 +64,63 @@ describe('board access and contracts', () => {
     expect(validManifest('2026-10-19', manifest)).toBe(true)
     expect(validManifest('2026-10-12', manifest)).toBe(false)
     expect(validManifest('2026-10-19', { ...manifest, html: { ...manifest.html, key: 'private/other' } })).toBe(false)
+  })
+  it('takes a Combine tap only from Krish: a session holding the operator key is refused before the store', async () => {
+    process.env.ACCESS_CODE = 'synthetic-board-test'
+    process.env.ENGINE_OPERATOR_TOKEN = 'synthetic-operator'
+    const cookie = `cc_access=${createHash('sha256').update(process.env.ACCESS_CODE).digest('hex')}`
+    const members = ['11111111-2222-4333-8444-555555555555', '22222222-3333-4444-8555-666666666666']
+    const body = { combine: true, members, pick: 'combine-1', at: '2026-10-25T10:00:00Z' }
+    const saves: unknown[] = []
+    const db = { rpc: async (_: string, args: unknown) => { saves.push(args); return { data: { ok: true, revision: 1, body }, error: null } } }
+    const handler = createBoardHandler(async () => db as never)
+    const put = async (headers: Record<string, string>) => {
+      let status = 0; let out: any
+      const res = { setHeader() {}, status(code: number) { status = code; return this }, json(value: unknown) { out = value } } as unknown as VercelResponse
+      await handler({ method: 'PUT', headers, query: { week: '2026-10-26', collection: 'queue', id: 'combine-1' }, body: { body, revision: 0 } } as unknown as VercelRequest, res)
+      return { status, out }
+    }
+    const session = await put({ authorization: 'Bearer synthetic-operator' })
+    expect(session.status).toBe(403); expect(session.out.error).toBe('combine_is_his_tap'); expect(saves).toHaveLength(0)
+    const his = await put({ cookie, origin: 'https://content.krishraja.com' })
+    expect(his.status).not.toBe(403); expect(saves).toHaveLength(1)
+    expect(combineWriterRefused('queue', { pick: 'mon-1', queued: true }, 'engine_operator')).toBe(false)
+  })
+  it('takes a saved edit and his taps on a change or a lesson only from Krish; a plain engine comment still saves', async () => {
+    process.env.ACCESS_CODE = 'synthetic-board-test'
+    process.env.ENGINE_OPERATOR_TOKEN = 'synthetic-operator'
+    const cookie = `cc_access=${createHash('sha256').update(process.env.ACCESS_CODE).digest('hex')}`
+    const saves: unknown[] = []
+    const db = {
+      rpc: async (_: string, args: unknown) => { saves.push(args); return { data: { ok: true, revision: 1 }, error: null } },
+    }
+    const handler = createBoardHandler(async () => db as never)
+    const put = async (collection: string, id: string, body: unknown, headers: Record<string, string>) => {
+      let status = 0; let out: any
+      const res = { setHeader() {}, status(code: number) { status = code; return this }, json(value: unknown) { out = value } } as unknown as VercelResponse
+      await handler({ method: 'PUT', headers, query: { week: '2026-10-26', collection, id }, body: { body, revision: 0 } } as unknown as VercelRequest, res)
+      return { status, out }
+    }
+    const operator = { authorization: 'Bearer synthetic-operator' }
+    const his = { cookie, origin: 'https://content.krishraja.com' }
+    const edit = { text: 'About 38% of firms', day: 'mon', item: 'article', base_sha256: 'a'.repeat(64), at: '2026-10-26T07:00:00Z' }
+    const tap = { text: 'Undo', thread_id: 'c1', anchor: 'mon-also-s1', act: 'undo', ref: 's1' }
+    const lesson = { ...tap, anchor: 'mon-lesson-1', act: 'lesson_yes', ref: 'l1' }
+    const note = { text: 'Rebuilt with your edits', thread_id: 'c2', anchor: 'mon-drafts' }
+    expect(await put('edits', 'mon-article', edit, operator)).toMatchObject({ status: 403, out: { error: 'edit_is_his_save' } })
+    expect(await put('comments', 'c1', tap, operator)).toMatchObject({ status: 403, out: { error: 'tap_is_his' } })
+    expect(await put('comments', 'c1', lesson, operator)).toMatchObject({ status: 403, out: { error: 'tap_is_his' } })
+    expect(saves).toHaveLength(0)
+    expect((await put('comments', 'c2', note, operator)).status).toBe(200)
+    expect(saves).toHaveLength(1)
+    for (const [collection, id, body] of [['edits', 'mon-article', edit], ['comments', 'c1', tap], ['comments', 'c1', lesson]] as const) {
+      expect((await put(collection, id, body, his)).status).toBe(200)
+    }
+    expect(saves).toHaveLength(4)
+    expect((saves[1] as { p_actor: string }).p_actor).toBe('Krish')
+    expect(hisOnlyRefusal('comments', { ...tap, act: 'apply' }, 'engine_operator')).toBe('tap_is_his')
+    expect(hisOnlyRefusal('comments', { ...tap, act: 'lesson_no' }, null)).toBe('tap_is_his')
+    expect(hisOnlyRefusal('ticks', { done: true }, 'engine_operator')).toBeNull()
   })
   it('checks authentication before constructing any database client', async () => {
     delete process.env.ACCESS_CODE; delete process.env.ENGINE_OPERATOR_TOKEN

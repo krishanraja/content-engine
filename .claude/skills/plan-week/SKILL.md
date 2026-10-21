@@ -63,6 +63,28 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    `angle`, `decided_by: "Krish"`, the idea's `so_what`, `story` as `idea`,
    `source_url`, `series`, `from_week`, `from_pick`). A mark with no verdict
    is only queued. Never write a verdict he did not give.
+   Copy his Combine taps the same way: `python3 scripts/post-pack/board_feed.py taps <last Monday>`
+   prints a synthesize body for every `queue/combine-<n>` doc Krish wrote
+   himself (`updated_by: "Krish"`; it skips any other writer and says so,
+   and the board API refuses a session's tap). Send each to
+   `POST /api/content-ideas/synthesize` with its series as `lane_slot`,
+   `decided_by: "Krish"` and `said: null`. The `COMBINE combine-<n>`
+   comment the tap posts carries the board's own words, which a session
+   wrote, so it is never his `said`; set `said` only to words he typed
+   himself in a comment of his own about that group. synthesize takes the
+   members out of the queue, recording `absorbed_into` and
+   `combined_by: "Krish"`. Never combine queued ideas without his tap or
+   words: the route refuses (`queued_needs_his_word`).
+   **Then gather every source in one read** (Krish, 2026-10-21: "a fresh
+   batch of ideas that sources from all my different sources of ideas ...
+   learnt from what I previously liked"): `python3 scripts/post-pack/board_feed.py gather <Monday>`.
+   It reads `GET /api/week/options?include=sources` and `GET /api/idea-queue?combine=1`
+   (no spend) into `docs/plans/<Monday>-week/sources.json`: each series'
+   pool with his ideas first, then ideas near something he liked, then the
+   ladder score, each with `source_kind` and `why_here`; the queue and its
+   combine groups; `his_relayed` board items; and which source is empty and
+   why. Say the counts and every empty source in your reply. His taste
+   steers this ranking only; never pass it to a judge.
    Then read `docs/CADENCE.md` and each series' mandate and the material on hand:
    `python3 scripts/engine.py GET "/api/week/options?week_start=<Monday>" --full`
    (mandates, options already written, what is in flight or scheduled, the
@@ -86,6 +108,17 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    and `said-` items on `GET /api/workbench`, `dropped_by_krish`, his cold
    ideas in the Inspo folder), then the sources `docs/prompts/sunday-ideas-tab.md`
    lists (his saved inspiration posts, the people he follows, the radar).
+   Start from `sources.json`: his ideas, then his inspo folder's, then the
+   engine's, in its order. Every idea carries `source_kind` (`his`,
+   `inspo` or `engine`; the board refuses one without it from 26 Oct),
+   `why_here` copied from the gather when it has one (never invented), and
+   `beats`, three to five lines of the narrative sketch
+   (`docs/prompts/sunday-ideas-tab.md`). Leave out a candidate with
+   `near_drop` unless something new answers why he dropped its neighbour.
+   Then write `docs/plans/<Monday>-week/combine.json` from the gather's
+   combine groups: for each group that threads into one higher-level
+   argument, `{"members": [its ids], "series", "thesis", "joins": [3 to 5 beats]}`;
+   drop a group that does not, and say why in your reply.
    Write at least four a day to `docs/plans/<Monday>-week/ideas.json`, each
    with `so_what` first (what a business person finds out, in one plain
    sentence, the consequence before any mechanism; Krish, 2026-10-19: "In
@@ -159,12 +192,13 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    - **Feed the fixed layout, never shape it** (from the week of 26
      October: Ideas, Queue, then each day's Brief, Drafts, Record and
      Publish; `docs/PUBLISH_BOARDS.md`, "The fixed layout"). Give
-     `--ideas` and `--queue` every Sunday; each pick's record-ready brief
+     `--ideas`, `--queue` and `--combine` every Sunday; each pick's record-ready brief
      goes on its day with `--brief DAY=brief.json` once it is drafted, due
      the night before its day. Never patch the built page.
    - **Build it** with all three tabs, from the week's picks as they stand:
      `python3 scripts/post-pack/week_board.py --week <Monday> --live --ideas
-     docs/plans/<Monday>-week/ideas.json --queue .cache/week-board/<Monday>/queue.json --out
+     docs/plans/<Monday>-week/ideas.json --queue .cache/week-board/<Monday>/queue.json
+     --combine docs/plans/<Monday>-week/combine.json --out
      .cache/week-board/<Monday>/week-board.html`. Its title names the week,
      "This Week's Publish Board (wC 19 Oct)". A day whose piece already
      has a publish page (a pick carried over) is a made tab: `Artifact`

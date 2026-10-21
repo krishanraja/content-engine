@@ -56,3 +56,54 @@ default), the 90-second take's caption fixes and cues (`short-cut/short.json`), 
 panels' spec, 51 long-cut cards (open faults listed), five Substack exhibits (checks not run).
 Not done: both renders and their frame checks, the Substack page, pack, library, board video tabs.
 
+## 21 October: the publish board has one fixed layout (Claude, part 1 of 4)
+
+Krish asked to standardise and lock the board so the engine only feeds it. He
+decided: new layout from the week of 26 Oct (12 and 19 Oct stay as they are);
+an edit is carried to every draft and shown back with undo; his taste steers
+idea sourcing and ranking, judges stay blind; order is frame and phone, then
+Ideas and Queue, then Drafts editing and learning, then the publish list. Also:
+every piece is a 90-second and a 5-minute video, and a 15-minute feature only
+when he calls one ("Yes, replace it" the weekly deep cut).
+
+- **Built (branch `claude/content-publish-board-ux-4dl7ai`):**
+  `config/board-layout.json` (tabs Ideas, Queue, Mon, Wed, Fri; steps Brief,
+  Drafts, Record, Publish; brief due the night before, drafts that morning);
+  `week_board.py` draws weeks from 26 Oct only in it (`--brief DAY=json` new),
+  phone layout (viewport, bottom tab bar, 44px targets), comments as a sheet;
+  `verify()` and `npm run check:board-layout` (CI) refuse any other shape;
+  the layout changes only with his recorded words (no approval prompts). House rule
+  FEATURE replaced DEEP_CUT (`config/features.json`, `story_check --cut feature`).
+- **Part 2 handover:** `docs/handovers/2026-10-21-publish-board-part2.md` (start a fresh session from it).
+- **Next:** part 2, Sunday Ideas gathered from every source plus Queue
+  "could combine" (learning `queue-consolidation-and-fresh-sunday-ideas`),
+  ready for Sunday 25 Oct; part 3, Drafts editing that carries changes across
+  and teaches (`edits-propagate-and-teach`); part 4, the publish list. Plan:
+  `docs/plans/2026-10-21-publish-board/plan.md`; the rules in `docs/PUBLISH_BOARDS.md`, "The fixed layout".
+- **Not yet:** the feature as a third cut in `making.py` scripts,
+  `teleprompter_send.py`, `recording_match.py` and produce-video (board,
+  story check, house rule and skills know it already).
+
+## 20 October: Wednesday rewritten with Krish (Claude, editorial session)
+
+Live: https://content.krishraja.com/board/2026-10-19#wednesday, build
+`63bbc0e6…9db7` (readback hash matches the built file; Monday, Friday and Ideas
+panels byte-identical; 24 assets kept; 28 comments, 0 edits, 0 ticks unchanged).
+Sources: `docs/plans/2026-10-19-week/` (`wednesday-narrative-ready.md` holds
+his decisions, `wednesday-article-draft.md` the piece, `wednesday-scorecard.md`
+the takeaway card).
+
+- **Krish decided:** the "order six products" emails were scams. Angle: "the
+  one that says no" mixed with three personalities (Grok the sceptic, Muse the
+  brilliant new hire, Gemini with a finger on send), scorecard as the
+  takeaway. Reader: leaders at mid-sized firms. Everything private anonymised,
+  no personal subscription specifics, Codex blurs screenshots.
+- **Also decided:** closing line "If your team is about to get one of these,
+  pick the one that says no at the right moment."; plain card cells, no marks.
+  Titles after recording.
+- **Lesson (Krish, 20 Oct):** bring strategic editorial choices (angle, reader,
+  structure) to him as decisions; never spend questions on his private test
+  data.
+- **Next:** his review of the article, then recording scripts (series line,
+  reading gate, read-back) and the Teleprompter send. No sends, posts or
+  spending; Monday's no-spend hold remains.
