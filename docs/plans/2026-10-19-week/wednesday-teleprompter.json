@@ -1,0 +1,49 @@
+{
+  "piece_id": "d7a20885-7001-4661-b444-9d7ca1043416",
+  "approved_by": "Krish",
+  "approved_at_date": "2026-10-21",
+  "approval_words": "about that yes - lets get the scripts in to teleprompter",
+  "approval_scope": "The two reviewed scripts and their Teleprompter transfer; no article publication or visual approval inferred",
+  "source_board_build": "0874694604f1cbe128f707b804ec22af460a9edfbd007bde204418a29499758f",
+  "teleprompter": {
+    "cuts": {
+      "long": {
+        "by": "Codex",
+        "title": "Wed 21 Oct - 5-minute - Muse vs Grok Bot: Head to Head on Running My Life",
+        "sent_at": "2026-10-21T06:56:04.878035Z",
+        "script_id": "CDE12E50-3A6D-4D75-B6D0-3BBF8CDF352D",
+        "script_sha256": "7f2c8c96e3c687203123fccc633c2d4d35aa73872298ff0c06c98571764e4f2d"
+      },
+      "short": {
+        "by": "Codex",
+        "title": "Wed 21 Oct - 90-second - Muse vs Grok Bot: Head to Head on Running My Life",
+        "sent_at": "2026-10-21T06:56:48.163574Z",
+        "script_id": "5D4B9696-EFAD-4C0A-8D19-BAFD115EF2E8",
+        "script_sha256": "307982da73af77d039a4c5a0107ec74ffb3ad7fc48f0bbf6eeae37f6c583afba"
+      }
+    },
+    "folder_id": "AA7BE84E-9C81-4CF8-B8E9-CCA880C9EBA2",
+    "folder_name": "Wed 21 Oct under.the.hood - Muse vs Grok Bot: Head to Head on Running My Life"
+  },
+  "verification": {
+    "long": {
+      "exact_text_readback": true,
+      "words": 765,
+      "estimated_seconds_at_150_wpm": 306
+    },
+    "short": {
+      "exact_text_readback": true,
+      "words": 195,
+      "estimated_seconds_at_150_wpm": 78
+    }
+  },
+  "checks": {
+    "non_series_reading_and_length": "both pass",
+    "series_placement": "retained user-edited openings; recorded as user-approved exception with raw findings",
+    "read_back": "user approval on exact script hashes, not a claimed unanimous reader pass",
+    "dated_outline_cli": "separate dated outline missing; no outline or paid spine-judge pass invented. Used existing scripts_patch and read_back_patch with explicit user approval on the reviewed exact text"
+  },
+  "provider_retry": "Short create returned unavailable; folder read showed no partial short; one retry succeeded. One script per cut.",
+  "feedback_stores_unchanged": true,
+  "next": "Krish records both cuts. Visuals and final publication remain separate steps."
+}
