@@ -362,7 +362,9 @@ def spoken_paragraphs(text):
 def cut_of(name):
     """The cut a file name says it is, or None."""
     n = str(name or '').lower()
-    if re.search(r'feature|15.?min|fifteen', n):
+    # A word of its own, so a slug ("the-feature-store") or a date ("2026-11-15-minimum") is never taken for one.
+    if re.search(r'(?:^|[^a-z0-9])(?:feature|fifteen)(?:[^a-z0-9]|$)|(?:^|[^0-9])15[ _-]?min(?:ute)?s?(?:[^a-z0-9]|$)', n) \
+            and not re.search(r'(?:^|[^a-z0-9])(?:90|short|vertical|tall)(?:[^a-z0-9]|$)', n):
         return 'feature'
     if re.search(r'deep', n):
         return 'deep'
@@ -814,6 +816,9 @@ def self_test():
     check('a file named deep is the week\'s deep cut', cut_of('2026-10-09-draft-script-deep.md'), 'deep')
     check('a 1,500-word deep cut passes the length rule', length_problem(filler(1500).split(), 'deep'), None)
     check('a file named feature or 15-minute is the special feature', (cut_of('2026-11-02-script-feature.md'), cut_of('15-min.md')), ('feature', 'feature'))
+    check('a date on the 15th, a word holding "feature" or a 90-second file named after a feature is never the feature',
+          (cut_of('2026-11-15-minimum-wage-short.md'), cut_of('2026-10-15-mind-the-gap-90.md'), cut_of('the-features-long.md'),
+           cut_of('the-feature-store-short.md')), ('short', 'short', 'long', 'short'))
     check('a 2,200-word feature passes its length, and a 900-word one is refused naming FEATURE',
           (length_problem(filler(2200).split(), 'feature'), 'FEATURE' in (length_problem(filler(900).split(), 'feature') or '')), (None, True))
     check('a 450-word deep cut is refused, naming DEEP_CUT', 'DEEP_CUT' in (length_problem(filler(450).split(), 'deep') or ''), True)

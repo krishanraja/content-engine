@@ -717,7 +717,8 @@ def previous_draft(page, key):
             return [], []
         return ([f'{key}-{it.get("item")}' for it in (manifest.get('review') or {}).get(key) or []], list(day.get('waiting') or []))
     name = next(n for k, n, *_ in DAYS if k == key)
-    start = page.find(f'<div class="pm" id="panel-{name}"')
+    start = page.find(f'id="panel-{name}"')
+    start = page.rfind('<div class="pm', 0, start) if start >= 0 else -1
     if start < 0 or 'data-state="draft"' not in page[start:start + 400]:
         return [], []
     panel = div_at(page, start)
@@ -1133,7 +1134,8 @@ def kept_panel(text, key):
     A banner any session laid over it by hand (class "stage") is dropped:
     the board draws its own."""
     name = next(n for k, n, *_ in DAYS if k == key)
-    start = text.find(f'<div class="pm" id="panel-{name}"')
+    start = text.find(f'id="panel-{name}"')
+    start = text.rfind('<div class="pm', 0, start) if start >= 0 else -1
     if start < 0 or f'data-prefix="{key}-"' not in text[start:start + 400]:
         raise BoardError(f'--keep {key}: the previous board has no made {name} tab to keep')
     panel = div_at(text, start)
@@ -1306,6 +1308,13 @@ def fixed_day(key, name, weekday, when, series_label, page, piece, pick, title, 
     p = f'{key}-'
     feature = feature_piece(piece)
     brief = briefs.get(key)
+    if brief and brief.get('piece_id') and piece and brief['piece_id'] != piece:
+        # A brief carried from the board being replaced was for another piece: never shown under a new pick.
+        warnings.append(f'{weekday}: the brief on the board was for piece {brief["piece_id"]}, not {piece}; it is dropped')
+        briefs.pop(key)
+        brief = None
+    if brief and piece and not brief.get('piece_id'):
+        brief['piece_id'] = piece
     rv = (review or {}).get(key)
     tp = teleprompter.get(key) or {}
     delivery = None
@@ -1444,7 +1453,7 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
             if FIXED and not kept[key].startswith('<div class="pm fixed"'):
                 raise BoardError(f'--keep {key}: that tab is in the old layout; rebuild {weekday} with --day {key}=<its publish page> '
                                  'so it takes the fixed layout')
-            panel = re.sub(r'^(<div class="pm"[^>]*?)( hidden)?>', lambda m: m.group(1) + (' hidden' if key != opened else '') + '>', kept[key], count=1)
+            panel = re.sub(r'^(<div class="pm(?: fixed)?"[^>]*?)( hidden)?>', lambda m: m.group(1) + (' hidden' if key != opened else '') + '>', kept[key], count=1)
             card = videos_card(key, f'{key}-', (videos or {}).get(key), bool(piece) and piece == deep_piece)
             if card:
                 # The kept day's finished videos come from the record, as every other day's do.
@@ -1750,6 +1759,7 @@ def write(page, manifest, out):
 def build(args, get=None):
     """(page, manifest). get: the engine reader (live_reader()); --live makes one."""
     monday = monday_of(args.week)
+    use_layout(monday)  # the inputs below (Teleprompter cuts, steps) are read in this week's layout
     warnings = []
     pages = {}
     for k, v in by_day(args.day, '--day').items():
@@ -1924,6 +1934,8 @@ def build(args, get=None):
         # A brief already on the board stays on it until a new one is given.
         for k, b in previous_briefs(Path(args.previous).read_text(encoding='utf-8-sig')).items():
             briefs.setdefault(k, b)
+    for key in unpick:
+        briefs.pop(key, None)
     page, manifest, more = board(monday, pages, pieces, scripts, picks, pending, kept, videos, review, draft, calls, posted, kept_at,
                                  ideas, queue, materials, briefs)
     if previous is not None:
@@ -2361,6 +2373,16 @@ def _fixed_checks(check, mon):
             FEATURES_FILE = saved
     check('fixed layout: a feature piece gets its 15-minute feature tick and a third cut; other pieces do not',
           'data-tick="mon-record-feature"' in feat and 'Three cuts' in feat and 'data-tick="mon-record-feature"' not in page)
+    check('fixed layout: a rebuild from the page finds the day in review, its boxes and what waits on him',
+          previous_draft(page, 'wed') == (['wed-article', 'wed-long'], ['Pick the closing line']))
+    kept_mon = kept_panel(page, 'mon')
+    again, _, _ = board(week, kept={'mon': kept_mon}, pieces={'mon': MON_ID})
+    check('fixed layout: a made day can be kept from the page, as it stands, and still passes verify',
+          kept_mon.startswith('<div class="pm fixed" id="panel-monday"') and verify(again) == [])
+    stale = {'wed': dict(read_brief(brief), piece_id=FRI_ID)}
+    moved, _, moved_warnings = board(week, pieces={'wed': WED_ID}, briefs=stale)
+    check('fixed layout: a brief carried from the old board for another piece never shows under the new pick',
+          'id="wed-brief-card"' not in moved and any('dropped' in w for w in moved_warnings))
     use_layout(date(2026, 10, 12))
     check('the old layout comes back for an old week: its labels as they were published',
           LABEL['record-long'] == 'Record the 3-minute cut (Teleprompter)' and 'record-feature' not in LABEL)

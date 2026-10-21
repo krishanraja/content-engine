@@ -83,6 +83,10 @@ describe('board-ui-guard', () => {
     expect(hook('board-ui-guard.mjs', bash('python3 scripts/post-pack/week_board.py --week 2026-10-26 --brief mon=brief.json --out b.html'))).toBeUndefined()
     expect(hook('board-ui-guard.mjs', bash('cat scripts/post-pack/week_board/week.css'))).toBeUndefined()
     expect(hook('board-ui-guard.mjs', bash('python3 scripts/check_board_layout.py --browser'))).toBeUndefined()
+    // A log redirect while feeding or checking the board is not a change to it (CLAUDE.md: logs to .cache/logs/).
+    expect(hook('board-ui-guard.mjs', bash('python3 scripts/post-pack/week_board.py --self-test 2>&1 | tail -5'))).toBeUndefined()
+    expect(hook('board-ui-guard.mjs', bash('python3 scripts/post-pack/week_board.py --week 2026-10-26 --out b.html > .cache/logs/b.log'))).toBeUndefined()
+    expect(hook('board-ui-guard.mjs', bash('cp scripts/post-pack/week_board/week.css /tmp/x.css'))).toBeUndefined()
   })
   it('puts every change to how the board looks or is laid out to Krish', () => {
     for (const path of ['scripts/post-pack/week_board.py', 'scripts/post-pack/week_board/week.css', 'scripts/post-pack/week_board/web.js',
