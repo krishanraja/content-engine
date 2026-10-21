@@ -857,6 +857,21 @@
      "how": "the Scripts step every making session follows"
     }
    ]
+  },
+  {
+   "id": "dry-wit",
+   "on": "2026-10-21",
+   "krish": "Bit of dry wit and hannah fry sarcasm too",
+   "why": "Even once the caveats were cut, the Wednesday scripts read as a flat report of results; he wants them to entertain while they inform.",
+   "means": "Scripts carry short, deadpan asides that tease what actually happened (Hannah Fry style), built only on true details, never mean to real people, and never at the cost of the length or reading gates.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": ".agents/skills/make-piece/SKILL.md",
+     "contains": "Then give it dry wit",
+     "how": "the Scripts step every making session follows"
+    }
+   ]
   }
  ]
 }

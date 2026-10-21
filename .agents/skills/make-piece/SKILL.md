@@ -136,6 +136,10 @@ source came from belong in the article's footnote and the scorecard, never
 as spoken caveats (Krish, 2026-10-21: "The scripts just need to be catchy,
 direct: what was tested, what the result was, which one won, and what that
 means."; learning `say-the-result-not-the-method`).
+Then give it dry wit: short, deadpan asides that tease what really
+happened, in the manner of Hannah Fry, never at a real person's expense and
+never inventing a fact for the joke (Krish, 2026-10-21: "Bit of dry wit and
+hannah fry sarcasm too"; learning `dry-wit`).
 
 1. **Write each script with its series line first.** Every video script
    opens with its series line, word for word, said first, then the hook

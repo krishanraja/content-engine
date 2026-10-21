@@ -12,11 +12,11 @@ Every round gets two scores: mine, and the community's, meaning other people who
 
 I asked each for the emails I should be replying to. Several messages asked much the same thing: someone wanted six of my products and reassurance that payment was secure. None named a product.
 
-Grok flagged them as likely scams and kept them out of my reply queue. Muse checked my refund policy and wrote a polished reply. Then it put that reply first on my to-do list.
+Grok flagged them as likely scams and kept them out of my reply queue. Muse checked my refund policy and wrote a polished reply. Then it put that reply first on my to-do list. Customer service, for people trying to rob me.
 
 They were scams. Well crafted phishing emails. The reply was accurate. Making it my next job was the problem. Muse made the wrong job look beautifully finished.
 
-The community result is kinder to Muse. [AI for Mortals ran a fake coffee business](https://www.aiformortals.co/blog/grok-bot-vs-meta-muse-vs-chatgpt-dots) with scam traps built in, and neither Muse nor Grok fell for them.
+The community result is kinder to Muse. [AI for Mortals ran a fake coffee business](https://www.aiformortals.co/blog/grok-bot-vs-meta-muse-vs-chatgpt-dots) with scam traps built in, and neither Muse nor Grok fell for them. Reassuring for Muse. Quite flattering for my scammers.
 
 **My test: Grok. Community: level.**
 
@@ -26,7 +26,7 @@ London to New York, five nights in November, cabin bag only.
 
 Both found a return for about £335. The catch was twenty-nine hours in Lisbon on the way out. That's quite a lot of Portugal for a trip to New York.
 
-To be fair, both steered me away from it. Grok offered a shorter stop. Muse suggested a direct flight and listed what it couldn't check. It also told me I'd get four nights in New York. Its own flight times left three.
+To be fair, both steered me away from it. Sensible, if slightly disappointing for Portugal. Grok offered a shorter stop. Muse suggested a direct flight and listed what it couldn't check. It also told me I'd get four nights in New York. Its own flight times left three. Close, but this is counting. It isn't meant to be close.
 
 Another travel comparison in the community preferred Grok for speed and value.
 
@@ -34,7 +34,7 @@ Another travel comparison in the community preferred Grok for speed and value.
 
 ## Round three: something to cancel
 
-Both found a real recurring charge. Both paused and asked who still used it, or what would break. That's what you want before anything gets cancelled.
+Both found a real recurring charge. Both paused and asked who still used it, or what would break. That's more thought than most of us give a gym membership.
 
 I found no community test of this job for both tools.
 
@@ -44,13 +44,13 @@ I found no community test of this job for both tools.
 
 Grok kept its suggested times apart from my real meetings. Muse clearly marked the real invitation. Both were useful.
 
-The community adds a warning on Grok. [One operator running a small team of Grok bots](https://www.reddit.com/r/cursor/comments/1vxjipg/grok_bot_review/) reported forgotten instructions and duplicate messages. A good afternoon doesn't prove it will run your week.
+The community adds a warning on Grok. [One operator running a small team of Grok bots](https://www.reddit.com/r/cursor/comments/1vxjipg/grok_bot_review/) reported forgotten instructions and duplicate messages, which also describes most group chats. A good afternoon doesn't prove it will run your week.
 
 **My test: draw. Community: a caution on Grok.**
 
 ## Round five: catch me up on the news
 
-Grok's briefing was the more useful one. It also served up an April forecast as October news. Muse got the date right.
+Grok's briefing was the more useful one. It also served up an April forecast as October news. Breaking news, six months late. Muse got the date right.
 
 [Chris Alarcon's first week with Grok](https://christopheralarcon.com/blog/what-is-grok-bot) found the same strength: a regular news round-up earned a place in his routine. His lead-finding bot was a dud.
 
@@ -60,7 +60,7 @@ Grok's briefing was the more useful one. It also served up an April forecast as 
 
 I gave both the same correction. Make it less formal. Don't promise a date.
 
-Grok kept the right people copied in. It had also thanked the sender for a compliment they never gave, then flagged its own mistake. Muse rewrote its reply but lost track of the draft. It made a second one and couldn't delete the first. But it told me. I can fix a mistake I know about.
+Grok kept the right people copied in. It had also thanked the sender for a compliment they never gave, then flagged its own mistake. Generous, then honest. In that order. Muse rewrote its reply but lost track of the draft. It made a second one and couldn't delete the first. So now I had two. Progress. But it told me. I can fix a mistake I know about.
 
 On another email, Grok asked me what fee to quote. It left the price to me. I'd quite like to keep that bit of my job.
 
