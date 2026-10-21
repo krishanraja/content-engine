@@ -289,7 +289,11 @@ checked; a file name that says `long`, `5min`, `short` or `90` does the same.
 An entry that says neither is packed with a warning that its length was
 checked against neither cut. `making.py <piece id> scripts long.md short.md`
 checks both and records them on the piece, the long cut first; one script
-alone never passes. It records each script's hash and when each cut's words
+alone never passes. A piece Krish called a 15-minute feature for
+(`config/features.json`, house rule FEATURE) takes the feature third,
+`scripts long.md short.md feature.md`, checked with `story_check.py --cut
+feature` (its entry's `"cut": "feature"`); three scripts for any other piece
+are refused. It records each script's hash and when each cut's words
 last changed, and when a cut's words change while a take of it is on the
 piece, it asks Krish on the board whether to use that take (one item,
 `take-<sha12>`, never reopened once answered). The story check also warns
@@ -673,6 +677,7 @@ six hours ago is held back until its words change or `--retry`.
 
     python scripts/post-pack/teleprompter_send.py pending [--week YYYY-MM-DD] [--retry]
     python scripts/post-pack/teleprompter_send.py plan PIECE long.md short.md [--post post.json]
+    python scripts/post-pack/teleprompter_send.py plan PIECE long.md short.md feature.md   # a 15-minute feature piece: a third script, same folder
     python scripts/post-pack/teleprompter_send.py record PIECE CUT --folder ID --script ID --sha SHA256 [--title T] | --error "what Teleprompter said"
     python scripts/post-pack/teleprompter_send.py --self-test
 

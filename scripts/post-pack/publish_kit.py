@@ -43,6 +43,17 @@ cover on Shorts, TikTok and Reels, the square on the Instagram feed, the
 (substack-cover-1200x630.png), the 1.91:1 Substack's upload box asks for: it
 crops any other shape itself (Krish, 2026-10-12).
 
+A piece Krish called a 15-minute feature for (house rule FEATURE; Krish,
+2026-10-21: "From time to time I might do a special 15 min feature";
+config/features.json, or "feature": true in publish.json) gets two steps
+more, beside the 5-minute ones: the feature on YouTube as its own long-form
+video, after the 5-minute YouTube step, and the feature as its own Spotify
+episode, after the 5-minute episode. Their words are "feature_youtube_title",
+"feature_youtube_description", "feature_spotify_title",
+"feature_spotify_description" and "feature_spotify_chapters", and their
+files "feature_video" and "feature_thumbnail" (its own wide thumbnail);
+"feature_waiting" says what is not made yet. No other piece gets them.
+
 Any text may hold {ARTICLE_URL} and {YOUTUBE_URL}. The page has a box for
 each: paste the link once and every Copy button carries it. Nothing here
 posts anything; Krish publishes every step by hand.
@@ -56,6 +67,59 @@ from pathlib import Path
 ARTICLE = '{ARTICLE_URL}'
 YOUTUBE = '{YOUTUBE_URL}'
 VERTICAL_MAX_SECONDS = 90  # the short cut, house rule TWO_CUTS; inside WhatsApp Status's limit too
+FEATURE_NAME = '15-minute feature'  # making.CUT_NAME['feature']; config/board-layout.json cuts.feature
+# Named so the board's YouTube tick (week_board.py, "YouTube (the ...)") stays the 5-minute video's alone.
+FEATURE_YOUTUBE = f'YouTube long-form (the {FEATURE_NAME})'
+FEATURE_SPOTIFY = f'Spotify (the {FEATURE_NAME})'
+
+
+def is_feature(p):
+    """True for a piece Krish called a 15-minute feature for: "feature" in
+    publish.json, or its piece_id in config/features.json (making.feature_piece,
+    on his call alone)."""
+    if p.get('feature') is True:
+        return True
+    if not p.get('piece_id'):
+        return False
+    here = str(Path(__file__).resolve().parent)
+    if here not in sys.path:
+        sys.path.insert(0, here)
+    import making  # noqa: E402  feature_piece: the one reader of config/features.json here
+    return making.feature_piece(str(p['piece_id']))
+
+
+def feature_steps(p, f, article_q):
+    """The feature's own two steps (house rule FEATURE): YouTube long-form and a Spotify episode."""
+    waiting = p.get('feature_waiting')
+    wait = [f'Not ready yet: {waiting}. Everything else in this step is ready.'] if waiting else []
+    video = f.get('feature_video') or f'3 Video/ the {FEATURE_NAME} wide (16:9) video'
+    thumb = f.get('feature_thumbnail') or f'3 Video/ the {FEATURE_NAME}\'s own wide (16:9) thumbnail'
+    youtube = {
+        'where': FEATURE_YOUTUBE, 'tag': 'Its own video, uploaded by you',
+        'why': f'The {FEATURE_NAME} is a video of its own on YouTube, beside the 5-minute one. Substack does not carry it, '
+               'so it is uploaded straight to YouTube.',
+        'files': [video, thumb],
+        'do': wait + [
+            f'In YouTube Studio, Create, then Upload videos: the {FEATURE_NAME} (wide, 16:9).',
+            'Paste the title and description below. The article link sits at the end of the description, under the read line.',
+            f'Under Thumbnail, upload the feature\'s own wide thumbnail, {thumb}. Make it public, then pin the comment below.',
+        ],
+        'copy': [('Title', p.get('feature_youtube_title')), ('Description', p.get('feature_youtube_description')),
+                 ('Pinned comment', f'The full article, with every source, free: {ARTICLE}' + (f'\n\n{article_q}' if article_q else ''))],
+    }
+    spotify = {
+        'where': FEATURE_SPOTIFY, 'tag': 'Its own video episode, with its chapters',
+        'why': f'Spotify plays the {FEATURE_NAME} as an episode of its own, beside the 5-minute one. '
+               'Upload it in Spotify for Creators (not through Substack).',
+        'files': [video, thumb],
+        'do': wait + [f'In Spotify for Creators, New episode: upload the {FEATURE_NAME} (wide, 16:9).',
+                      f'Set the episode thumbnail to {thumb}. Leave episode art empty: the show art is used.',
+                      'Paste the title and description below, then the chapters into the description. Publish.'],
+        'copy': [('Episode title', p.get('feature_spotify_title') or p.get('feature_youtube_title')),
+                 ('Description', p.get('feature_spotify_description') or p.get('feature_youtube_description')),
+                 ('Chapters', p.get('feature_spotify_chapters'))],
+    }
+    return youtube, spotify
 
 
 def steps(p):
@@ -85,7 +149,7 @@ def steps(p):
     copy_page = f.get('substack_copy') or '1 Article/substack-copy.html'
     q = p.get('comment_question') or ''
     short_caption = p.get('short_caption')
-    return [
+    out = [
         {
             'where': 'Substack', 'tag': 'The home: one post, one email',
             'why': f'One post holds the {long_name} at the top and the whole article under it, so subscribers get one email '
@@ -173,6 +237,13 @@ def steps(p):
                      ('Chapters', p.get('spotify_chapters'))],
         },
     ]
+    if is_feature(p):
+        # Beside the 5-minute steps: the feature's YouTube after the 5-minute YouTube, its episode after the 5-minute one.
+        youtube, spotify = feature_steps(p, f, q)
+        at = next(i for i, x in enumerate(out) if x['where'].startswith('YouTube (the '))
+        out.insert(at + 1, youtube)
+        out.insert(next(i for i, x in enumerate(out) if x['where'] == 'Spotify') + 1, spotify)
+    return out
 
 
 CSS = '''
@@ -318,7 +389,31 @@ def self_test():
         failures.append('Spotify must use its dedicated thumbnail in both files and instructions')
     if named['files']['wide_thumbnail'] not in by_where['Spotify']['files']:
         failures.append('Spotify must retain the existing wide-thumbnail fallback')
-    checks = 20
+    # The 15-minute feature (house rule FEATURE): two steps more, beside the 5-minute ones, only on a feature piece.
+    feature = dict(sample, feature=True, feature_youtube_title='FT', feature_youtube_description='FD',
+                   files={'feature_video': '3 Video/F - feature.mp4', 'feature_thumbnail': '3 Video/F - feature - wide 16x9 - thumbnail.jpg'})
+    wheres = [x['where'] for x in steps(feature)]
+    if wheres != ['Substack', 'YouTube (the 5-minute video)', FEATURE_YOUTUBE, 'YouTube Shorts', 'TikTok', 'Instagram Reels', 'LinkedIn',
+                  'Spotify', FEATURE_SPOTIFY]:
+        failures.append(f'a feature piece gets its YouTube long-form step after the 5-minute YouTube and its episode after Spotify, not {wheres}')
+    if any(FEATURE_NAME in x['where'] for x in steps(sample)) or any(FEATURE_NAME in x['where'] for x in steps({'title': 'T', 'piece_id': 'not-a-feature'})):
+        failures.append('a piece Krish did not call a feature for never gets the feature\'s steps')
+    by_feature = {x['where']: x for x in steps(feature)}
+    for where in (FEATURE_YOUTUBE, FEATURE_SPOTIFY):
+        step = by_feature[where]
+        if '3 Video/F - feature.mp4' not in step['files'] or not any('3 Video/F - feature - wide 16x9 - thumbnail.jpg' in d for d in step['do']):
+            failures.append(f'{where} must upload the feature video with its own wide thumbnail')
+    if dict(by_feature[FEATURE_YOUTUBE]['copy'])['Title'] != 'FT' or dict(by_feature[FEATURE_SPOTIFY]['copy'])['Episode title'] != 'FT':
+        failures.append('the feature\'s YouTube words are its own, and its episode falls back to them')
+    if 'Not written yet' not in page(dict(feature, feature_youtube_title=None)) or '15-minute feature' not in page(feature):
+        failures.append('the feature\'s steps are on the page, and a missing title says so')
+    import re
+    if any(re.fullmatch(r'YouTube \(the .+\)', w) for w in (FEATURE_YOUTUBE, FEATURE_SPOTIFY)):
+        failures.append('the feature\'s steps never take the board\'s 5-minute YouTube tick')
+    waiting = {x['where']: x for x in steps(dict(feature, feature_waiting='being cut'))}
+    if not all(any('Not ready yet: being cut' in d for d in waiting[w]['do']) for w in (FEATURE_YOUTUBE, FEATURE_SPOTIFY)):
+        failures.append('a feature not made yet says so in its steps')
+    checks = 27
     if failures:
         print('publish kit self-test FAILED:\n  ' + '\n  '.join(failures))
         return 1

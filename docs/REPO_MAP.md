@@ -1052,7 +1052,8 @@ The making record: where one piece is on its way from the workroom to
 - `type MakingChannel = (typeof MAKING_CHANNELS)[number]`
 - `const CORE_CHANNELS: readonly MakingChannel[]`
 - `const MAKING_CUTS`
-- `type MakingCut = (typeof MAKING_CUTS)[number]`
+- `const MAKING_ALL_CUTS`
+- `type MakingCut = (typeof MAKING_ALL_CUTS)[number]`
 - `interface MakingCheck`
 - `type MakingScriptCheck`
 - `interface MakingReadBack`
@@ -1080,6 +1081,7 @@ The making record: where one piece is on its way from the workroom to
 - `type TeleprompterState = 'in' | 'older' | 'failed' | 'missing'`
 - `function teleprompterStates(m: Partial<Making>): Partial<Record<MakingCut, TeleprompterState>>`
 - `function teleprompterNote(m: Partial<Making>): string`
+- `function makingCuts(m: Partial<Making>): MakingCut[]`
 - `const MAKING_OWNERS: Record<string, MakingOwner>`
 - `function makingSteps(row: { state?: string | null; body?: string | null; meta?: Record<string, any> | null }): MakingSt…`
 - `interface PieceState`

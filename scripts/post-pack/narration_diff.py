@@ -15,7 +15,7 @@ how he starts a sentence) are what the next script is written to, and
 
     python scripts/post-pack/narration_diff.py SCRIPT WORDS.json [--md OUT.md] [--json OUT.json] [--label NAME]
     python scripts/post-pack/narration_diff.py patterns A.json B.json ... [--md OUT.md]
-    python scripts/post-pack/narration_diff.py ledger REPORT.json --cut short|long|deep --date YYYY-MM-DD [--piece ID]
+    python scripts/post-pack/narration_diff.py ledger REPORT.json --cut short|long|deep|feature --date YYYY-MM-DD [--piece ID]
                                      keep the take's rates in config/narration-ledger.json, which
                                      story_check reads to say how long a script will run when he says it
     python scripts/post-pack/narration_diff.py --self-test
@@ -540,7 +540,7 @@ def main(argv=None):
     if argv[:1] == ['ledger']:
         ap = argparse.ArgumentParser(prog='narration_diff.py ledger')
         ap.add_argument('report')
-        ap.add_argument('--cut', required=True, choices=['short', 'long', 'deep'])
+        ap.add_argument('--cut', required=True, choices=['short', 'long', 'deep', 'feature'])  # feature: house rule FEATURE
         ap.add_argument('--date', required=True)
         ap.add_argument('--piece')
         a = ap.parse_args(argv[1:])
