@@ -1,5 +1,29 @@
 # Workbench: where we are and what's next
 
+## 21 October: Wednesday cut back to the result (Claude)
+
+Krish: the scripts and article were "overexplaining" with caveats. Rewritten as
+five scored rounds, each "my score" against "the community's", plus a bonus round
+and the verdict (Grok wins on his tests, closer with the community). Gemini is
+out of the scripts (one line in the article). Limits sit in the scorecard and a
+one-line footnote. Files: `docs/plans/2026-10-21-draft-script.md` (807 words, 5 min),
+`-90s.md` (194 words), `2026-10-19-week/wednesday-article-draft.md` and
+`wednesday-scorecard.md`. Two fresh readers heard the earlier version; their
+confusions were fixed, but the final words have not had a second read-back.
+Learning `say-the-result-not-the-method`.
+**Later the same day (Krish's rulings):** dry, observational, positive wit
+(house rule TONE_OBSERVANT_WITTY); no series line in any script (SERIES_OPENER
+reworded; `seriesOpener()` returns null); every script closes on "Here's what I'd
+do with this info if I were you" and ends "The full deep dive is at
+makeyourmindup.ai." (SCRIPT_CLOSE, refused by story_check); every article ends
+"3 things you can do tomorrow" (THREE_THINGS_TOMORROW, a non-blocking publish
+check for now so older articles keep their fact-check hashes). Both Wednesday
+cuts pass story_check (long 807 words, short 195). Done on his approval ("After this round of feedback is complete"): both
+Teleprompter scripts updated in place (long b50061ae, short 90398a98; read back
+by two fresh readers each, on the making record), and the web board republished
+(build 973df9eb, readback hash matches; `update_wednesday_21oct.py`).
+**Next:** Krish records both cuts; titles and thumbnail words after recording.
+
 ## 21 October: Wednesday scripts in Teleprompter (Codex)
 
 Krish approved transfer. Folder: Wed 21 Oct under.the.hood - Muse vs Grok Bot:

@@ -1,5 +1,7 @@
 # Muse vs Grok Bot: Head to Head on Running My Life
 
+> **21 October update.** The scripts and article now run as five scored rounds (Krish's test, then the community's), with Gemini out of the scripts, dry wit, a straight-in opening and the close "Here's what I'd do with this info if I were you". Where this document says otherwise, the scripts, article and scorecard win.
+
 Current editorial brief, 20 October 2026. This revision reconciles Krish's saved article/script edits, board comments and latest chat instruction. It supersedes the earlier business-deployment framing and the earlier title hold for this working headline. The exact saved copy is preserved in `wednesday-feedback-2026-10-20.json` and the reconciliation in `wednesday-feedback-synthesis.md`.
 
 ## Who this is for

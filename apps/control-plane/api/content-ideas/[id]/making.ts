@@ -22,8 +22,9 @@ import { askChecksForPiece } from '../../_controlCenter.js'
 // hold is kept as it is and read by nothing.
 //
 // The GET answer also carries the piece's lane_slot, its series, so
-// making.py scripts can check each script opens with its series line
-// (house rule SERIES_OPENER).
+// making.py scripts can pass it to the story check. The series line is
+// retired since 2026-10-21 (house rule SERIES_OPENER): nothing is checked
+// for it, and the series is only passed on.
 //
 // Every write lands on content_ideas.meta.making, so Control Center's realtime
 // subscription on content_ideas shows it within a second. A Claude Code

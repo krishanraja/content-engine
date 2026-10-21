@@ -234,6 +234,24 @@ export function bareScores(body: string): Array<{ number: string; sentence: stri
   return found
 }
 
+/** House rule THREE_THINGS_TOMORROW (Krish, 2026-10-21: "The articles all need
+ *  to have a really clear "3 things you can do tomorrow" at the end of every
+ *  piece"): the last section is headed "3 things you can do tomorrow" and holds
+ *  exactly three list items (bullets or a numbered list). */
+export function threeThingsTomorrow(body: string): { ok: boolean; detail: string } {
+  const lines = String(body || '').replace(/\r\n/g, '\n').split('\n')
+  const heading = (l: string) => /^\s{0,3}#{1,6}\s+\S/.test(l)
+  const at = lines.map((l, i) => (heading(l) && /3\s+things\s+you\s+can\s+do\s+tomorrow/i.test(l) ? i : -1)).filter(i => i >= 0).pop()
+  if (at === undefined) return { ok: false, detail: 'No section headed "3 things you can do tomorrow". End the article with one, holding exactly three concrete actions.' }
+  const rest = lines.slice(at + 1)
+  const next = rest.findIndex(heading)
+  const section = next < 0 ? rest : rest.slice(0, next)
+  const items = section.filter(l => /^\s*(?:[-*\u2022]|\d+[.)])\s+\S/.test(l)).length
+  if (items !== 3) return { ok: false, detail: `"3 things you can do tomorrow" has ${items} list item${items === 1 ? '' : 's'}; it needs exactly three.` }
+  if (next >= 0) return { ok: false, detail: '"3 things you can do tomorrow" is not the last section; move it to the end of the article.' }
+  return { ok: true, detail: 'Ends with "3 things you can do tomorrow" and its three actions.' }
+}
+
 /** Every mechanical check a piece must pass before it can be approved or
  *  published. `factGate` is the fact gate's own verdict for this exact text. */
 export function publishChecks(body: string, factGate: { ok: boolean; reason: string | null }, now: Date = new Date(), pieceId?: string): Check[] {
@@ -287,6 +305,11 @@ export function publishChecks(body: string, factGate: { ok: boolean; reason: str
   // One entry per word: "token" and "tokens" are the same thing to fix.
   const jargon = [...new Set((text.match(JARGON) || []).map(w => w.toLowerCase().replace(/s$/, '')))]
     .map(w => /^(api|llm|gpu|rag)$/.test(w) ? w.toUpperCase() : w)
+  // Not blocking yet: a block would stop every article already written and fact-checked without the section, and
+  // adding it changes the body the fact gate signed. The writers, judges and final pass hold it (THREE_THINGS_TOMORROW);
+  // making it blocking is a one-word change once Krish has seen the pieces carry it.
+  const three = threeThingsTomorrow(text)
+  checks.push({ id: 'THREE_THINGS_TOMORROW', name: 'Ends with "3 things you can do tomorrow"', blocking: false, ok: three.ok, detail: three.detail })
   checks.push({ id: 'R6', name: 'Plain words', blocking: false, ok: jargon.length === 0, detail: jargon.length ? `Make sure each is explained where it first appears: ${jargon.join(', ')}.` : 'No listed jargon found.' })
   return checks
 }

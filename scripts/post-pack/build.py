@@ -188,7 +188,7 @@ def plan(post, base):
     folder = library.post_folder(post.get('date'), post.get('subject'), post.get('subchannel'),
                                  bool(post.get('launch')), post.get('day'))
     subject = folder.split(' - ', 1)[1]
-    # Its series: every video script of it opens with the series line (house rule SERIES_OPENER).
+    # Its series, passed to the story gate; the series line itself is retired (house rule SERIES_OPENER, 2026-10-21).
     series = None if post.get('launch') else library.subchannel_name(post.get('subchannel')).replace('.', '_')
     entries = post.get('files')
     if not isinstance(entries, list) or not entries:
@@ -444,17 +444,19 @@ def warn(message):
 def story_gate(entry, text, label, series=None):
     """Krish, 2026-10-06 (walk log F75): a script that does not make sense out
     loud, or stops dead on the number, is not packed; nor one a 12-year-old
-    could not follow (house rule R7), nor one that does not open with its
-    series' line (series, the post's subchannel as a lane_slot; house rule
-    SERIES_OPENER). Only his own words in "story_check_override" let one
-    through."""
+    could not follow (house rule R7), nor one of a minute or more that does
+    not close on "Here's what I'd do with this info if I were you" and end
+    on "The full deep dive is at makeyourmindup.ai." (house rule SCRIPT_CLOSE;
+    series is the post's subchannel as a lane_slot, passed on and no longer
+    checked: the series line is retired, house rule SERIES_OPENER). Only his
+    own words in "story_check_override" let one through."""
     # The cut a script says it is ("cut": "long" or "short", or its name),
     # so the length rule holds (house rule TWO_CUTS, Krish 2026-10-11).
     cut = entry.get('cut') if entry.get('cut') in story_check.CUTS else story_check.cut_of(entry.get('name') or entry.get('file') or '')
     if cut is None:
         warn(f'{label}: the script\'s length was checked against neither cut, so a 3-minute or 90-second '
              f'script of the wrong length would pass (house rule TWO_CUTS). Add "cut": "long" or "short" to the entry.')
-    found = story_check.problems(text, cut, series if series in story_check.series_openers() else None)
+    found = story_check.problems(text, cut, series)
     override = entry.get('story_check_override')
     if found and not (isinstance(override, str) and override.strip().lower().startswith('krish')):
         raise PackError(f'{label}: the script fails the story check:\n  - ' + '\n  - '.join(found) +
