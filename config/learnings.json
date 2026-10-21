@@ -870,6 +870,66 @@
      "file": ".agents/skills/make-piece/SKILL.md",
      "contains": "Then give it dry wit",
      "how": "the Scripts step every making session follows"
+    },
+    {
+     "file": "apps/control-plane/api/_houseRules.ts",
+     "contains": "id: 'TONE_OBSERVANT_WITTY'",
+     "how": "a house rule every writer and draft judge reads: his answer, 2026-10-21, that observational, witty and positive applies to every series"
+    }
+   ]
+  },
+  {
+   "id": "script-opens-on-hook-closes-on-actions",
+   "on": "2026-10-21",
+   "krish": "we need to cut that opening line from every content piece moving forward and just launch straight in to \"I put GrokBot and Muse head to head\" etc. Also trim the closing to \"the full deep dive is at makeyourmindup.ai.\" right after a \"Here's what I'd do with this info if I were you\" closing line. That needs to be the format moving forward for all scripts.",
+   "why": "The series line and the sign-off with his name delayed the hook and the ending asked for too much; he wants the script to start on what he did and end on what the listener can do, with one line to the full piece.",
+   "means": "No script carries a series line or \"I'm Krish\". After the call it closes on a beat that starts \"Here's what I'd do with this info if I were you\" and says the actions, and its last sentence is exactly \"The full deep dive is at makeyourmindup.ai.\" with nothing after it. This replaces the 2026-10-12 series line for every series and both cuts.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "apps/control-plane/api/_houseRules.ts",
+     "contains": "id: 'SCRIPT_CLOSE'",
+     "how": "a house rule the writers, draft judges and final pass read"
+    },
+    {
+     "file": "scripts/post-pack/story_check.py",
+     "contains": "def close_problems",
+     "how": "refuses a script of a minute or more with no such beat or any other last sentence; build.py and making.py scripts run it"
+    },
+    {
+     "file": "apps/control-plane/api/_video.ts",
+     "contains": "export const SCRIPT_OPENING",
+     "how": "the script writer opens straight on the hook"
+    },
+    {
+     "file": ".agents/skills/make-piece/SKILL.md",
+     "contains": "Write each script opening straight on the hook",
+     "how": "the Scripts step every making session follows"
+    }
+   ]
+  },
+  {
+   "id": "three-things-tomorrow",
+   "on": "2026-10-21",
+   "krish": "The articles all need to have a really clear \"3 things you can do tomorrow\" at the end of every piece too.",
+   "why": "A piece should leave the reader with something to do, not only something to know.",
+   "means": "Every article ends with a last section headed \"3 things you can do tomorrow\" holding exactly three concrete actions that follow from its checked evidence. It is not an outline section.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "apps/control-plane/api/_houseRules.ts",
+     "contains": "id: 'THREE_THINGS_TOMORROW'",
+     "how": "a house rule the writers, draft judges, final pass and publish check read"
+    },
+    {
+     "file": "apps/control-plane/api/_publishChecks.ts",
+     "contains": "export function threeThingsTomorrow",
+     "how": "the publish check THREE_THINGS_TOMORROW reads the heading and the three items (not blocking yet)"
+    },
+    {
+     "file": "scripts/post-pack/spine_check.py",
+     "contains": "THREE_THINGS = re.compile",
+     "how": "the section is no section added on top of the approved outline"
     }
    ]
   }

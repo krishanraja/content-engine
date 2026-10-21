@@ -51,7 +51,7 @@ export function sectionsOf(body: string): SpineSection[] {
 
 export const SPINE_SYSTEM = [
   'You are a strict editor. A piece must answer ONE question, its spine, and every section must earn its place by helping answer it.',
-  'For each section you are given, decide: does this section directly help the reader reach the spine\'s answer? A section that is interesting, true or related but answers a different question is a NO. A section that sets up, proves, complicates or applies the answer is a YES. The opening is a YES when it raises the spine question; the prediction is a YES when it is a call about the spine\'s answer.',
+  'For each section you are given, decide: does this section directly help the reader reach the spine\'s answer? A section that is interesting, true or related but answers a different question is a NO. A section that sets up, proves, complicates or applies the answer is a YES. The opening is a YES when it raises the spine question; the prediction is a YES when it is a call about the spine\'s answer; a closing "3 things you can do tomorrow" section is a YES when each action applies the answer.',
   'Be specific in "why": name the question the section actually answers when it is a NO.',
   'Reply ONLY with JSON: {"sections":[{"heading":"<as given>","answers":true|false,"why":"<one short sentence>"}]}',
 ].join('\n')

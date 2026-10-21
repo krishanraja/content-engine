@@ -75,25 +75,38 @@ piece is fetched by the path its record holds: `recording.py get "recordings/<sh
 one way a take comes back: Krish drops it at the top of the Video Engine
 Inbox.
 
-**Every video script opens with its series line, and a 12-year-old can
-follow it.** Krish, 2026-10-12: "We need something catchy at the start of a
-video script like "Here's what you need to know about how money is changing
-because of AI. I'm Krish." at the start of follow.the.money videos. And then
-similar for the weds and fri scripts." He picked the Wednesday and Friday
-lines, and "Drop it at the end" for the closing "I'm Krish", so his name is
-said once. The three lines live once, as `SERIES_OPENERS` in
-`apps/control-plane/api/_houseRules.ts` (house rule `SERIES_OPENER`). The
-same day: "I also feel like these scripts are too complicated for a layman
+**Every video script opens straight on its hook, closes on what he would do,
+and a 12-year-old can follow it; every article ends with "3 things you can do
+tomorrow".** Krish, 2026-10-21: "we need to cut that opening line from every
+content piece moving forward and just launch straight in to "I put GrokBot
+and Muse head to head" etc. Also trim the closing to "the full deep dive is
+at makeyourmindup.ai." right after a "Here's what I'd do with this info if I
+were you" closing line. That needs to be the format moving forward for all
+scripts. The articles all need to have a really clear "3 things you can do
+tomorrow" at the end of every piece too." So a script has no series line and
+no "I'm Krish" (house rule `SERIES_OPENER`, which retires the lines he
+picked on 2026-10-12; they stay in `SERIES_OPENERS` in
+`apps/control-plane/api/_houseRules.ts` only for records made under them).
+After the call it closes on a beat that starts "Here's what I'd do with this
+info if I were you" and says the actions, and its final sentence is exactly
+"The full deep dive is at makeyourmindup.ai." (house rule `SCRIPT_CLOSE`,
+refused by `scripts/post-pack/story_check.py`). An article ends with a
+section headed "3 things you can do tomorrow" holding exactly three concrete
+actions (house rule `THREE_THINGS_TOMORROW`, read by the publish check of the
+same name). The tone in every series is observational, witty and positive,
+with a dry Hannah Fry edge on true details only (house rule
+`TONE_OBSERVANT_WITTY`; his words: "Generally yes - observational and witty
+and positive are my general go tos"). The reading gate stays, from
+2026-10-12: "I also feel like these scripts are too complicated for a layman
 to understand. Every single script should be understandable by a
 12-year-old. I can't even understand what I'm reading off the teleprompter.
 I thought we had hard gates for this?" House rule `R7` is that hard gate on
 every script: `scripts/post-pack/story_check.py` refuses a script that
-breaks the series line or the reading gate (`SCRIPT_READING`, beside the
-lines), and two fresh readers, each a smart, non-technical manager at a
-200-person company hearing it once (Krish, 2026-10-19: "My customers are
-medium sized enterprises"),
-must find nothing that loses them before it is sent (`make-piece`, "The
-Scripts step"; `making.py <piece> read-back`).
+breaks the close or the reading gate (`SCRIPT_READING`), and two fresh
+readers, each a smart, non-technical manager at a 200-person company
+hearing it once (Krish, 2026-10-19: "My customers are medium sized
+enterprises"), must find nothing that loses them before it is sent
+(`make-piece`, "The Scripts step"; `making.py <piece> read-back`).
 
 **Each checked script goes to Krish's teleprompter.com account, and nothing
 there is ever deleted.** Krish, 2026-10-12: "Also note that Descript is

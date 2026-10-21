@@ -126,9 +126,9 @@ describe('a pack Krish reads', () => {
     }
     // A picture must be whole to be packed (edge check, 2026-10-07): a plain one is.
     writeFileSync(join(work, 'stack.png'), Buffer.from('iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAGUlEQVR4nGPcvuw/AymAiSTVoxpGNQwpDQBpOQJ8Y386+gAAAABJRU5ErkJggg==', 'base64'))
-    // A script must pass the story check to be packed (walk log F75), opening
-    // with its series line (house rule SERIES_OPENER, Krish, 2026-10-12).
-    writeFileSync(join(work, 'script.md'), "I've been looking at what's really inside the AI everyone's selling us. I'm Krish.\n\nWhy does this matter? Say this.\n")
+    // A script must pass the story check to be packed (walk log F75). It opens straight on the hook, with no
+    // series line (house rule SERIES_OPENER, Krish, 2026-10-21); a short one has no room for the close (SCRIPT_CLOSE).
+    writeFileSync(join(work, 'script.md'), "I put Koa and the old way head to head.\n\nWhy does this matter? Say this.\n")
     // the house drawer's receipt beside the cover, so the visual gate takes it (visual_gate.py)
     writeFileSync(join(work, 'cover.json'), JSON.stringify({ sha256: createHash('sha256').update(readFileSync(join(work, 'cover.png'))).digest('hex'), portrait: true, rows: [] }))
     // A cover for every place it is shown, beside cover.png with its receipt (scripts/pages/build.py --cover).

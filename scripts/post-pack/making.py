@@ -36,8 +36,10 @@ through report(), credit Codex when Codex runs them, with nothing to set.
 
 The scripts' words. `scripts` runs story_check.py on each script with the
 piece's series (--series, its lane_slot from the engine, or --series given
-here), so a script that does not open with its series line, or says "I'm
-Krish" again after it, fails (house rule SERIES_OPENER). It records the
+here; the series line is retired since 2026-10-21, so it is passed on and
+no longer checked, house rule SERIES_OPENER). A script of a minute or more
+must close on "Here's what I'd do with this info if I were you" and end on
+"The full deep dive is at makeyourmindup.ai." (house rule SCRIPT_CLOSE). It records the
 sha256 of each script's words
 (script_hash: NFC, LF line endings, trailing spaces stripped, blank lines
 trimmed at both ends) and when each cut's words last changed (changed_at),
@@ -565,9 +567,9 @@ def scripts_patch(paths, run=None, warn=None, previous=None, series=None, deep=F
     proves nothing about the words, so it counts as changed: checked_at and
     changed_at are now.
 
-    series is the piece's lane_slot: each script must then open with its
-    series line and never say "I'm Krish" again (story_check --series,
-    house rule SERIES_OPENER).
+    series is the piece's lane_slot, passed on to story_check --series. The
+    series line is retired (house rule SERIES_OPENER, 2026-10-21): it is
+    accepted and nothing is checked for it.
 
     krish is Krish's own words ("Krish, DATE: ...") putting scripts he wrote
     himself through although their story check fails (Krish, 2026-10-16, of
@@ -1513,7 +1515,7 @@ def self_test():
         check('scripts: the question is held for a session to ask Krish in its reply, never on his list',
               (item.get('only_you'), 'link' in item, 'prompt' in item, 'asks Krish in its reply' in item.get('detail', '')), (None, False, False, True))
 
-    # The series line: `scripts` checks each script with the piece's series (house rule SERIES_OPENER).
+    # The series is still passed to the story check (the line itself is retired, house rule SERIES_OPENER).
     with tempfile.TemporaryDirectory() as tmp:
         (Path(tmp) / 'long.md').write_text('the long script\n', encoding='utf-8')
         (Path(tmp) / 'short.md').write_text('the short script\n', encoding='utf-8')
@@ -1544,8 +1546,9 @@ def self_test():
         finally:
             globals()['_story_check'] = real_check
     import story_check
-    check('the real story check refuses a script with no series line once the series is known',
-          'SERIES_OPENER' in _story_check('long', Path(__file__).resolve().parents[2] / 'scripts' / 'post-pack' / 'README.md', 'follow_the_money')[1], True)
+    check('the real story check takes the series and asks a long script for its close, not for a series line',
+          ('SCRIPT_CLOSE' in _story_check('long', Path(__file__).resolve().parents[2] / 'scripts' / 'post-pack' / 'README.md', 'follow_the_money')[1],
+           'does not open with its series line' in _story_check('long', Path(__file__).resolve().parents[2] / 'scripts' / 'post-pack' / 'README.md', 'follow_the_money')[1]), (True, False))
 
     # The read-back: two fresh readers, "nothing lost", tied to the words they heard.
     passed = {'script_check': {'passed': True, 'checked_at': '2026-10-12T15:50:00Z', 'problems': [], 'cuts': ['long', 'short'],
@@ -1767,15 +1770,8 @@ def main(argv=None, call=None):
             # The record first: checked_at stays put while the words do.
             answer = read(a.piece_id, call)
             previous = (answer.get('making') or {}).get('script_check') if isinstance(answer.get('making'), dict) else None
-            # The piece's series: each script opens with its line (house rule SERIES_OPENER).
-            import story_check
+            # The piece's series is still passed on; the series line is retired (house rule SERIES_OPENER, 2026-10-21).
             series = a.series or series_of(a.piece_id, answer, call)
-            if series and series not in story_check.series_openers():
-                print(f'making: the piece\'s series "{series}" has no series line, so the scripts are checked without one', file=sys.stderr)
-                series = None
-            elif not series:
-                print('making: the engine names no series for the piece, so the series line was not checked; give --series '
-                      'follow_the_money, under_the_hood or mind_the_gap', file=sys.stderr)
             patch = scripts_patch(a.args, previous=previous, series=series, deep=deep_piece(a.piece_id), krish=a.krish_words)
             if a.krish_words is not None and patch['script_check']['problems'][:1] and \
                     patch['script_check']['problems'][0].startswith(WAIVED_BY_KRISH):

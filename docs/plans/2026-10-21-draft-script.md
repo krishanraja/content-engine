@@ -48,6 +48,6 @@ So my call? Grok for weekly admin, especially the bits that creep into work. Mus
 
 I did a piece last week on this, and what price you pay for these conveniences. I mean access to your data, as well as the bill.
 
-Here's what I'd do with this info if I were you. Pick one boring job you do every week, and hand it to one of them. Tell it to go as far as it can, without spending money, deleting anything or impacting anything external. Then see if it stops to check anything with you. If it does, lovely. If it doesn't, make sure you say no at the right moment when things get hairy.
+Here's what I'd do with this info if I were you. Pick one boring weekly job and hand it to one of them. Tell it to go as far as it can, without spending money, deleting anything or impacting anything external. Then see if it stops to check anything with you. If it does, lovely. If it doesn't, make sure you say no at the right moment when things get hairy.
 
 The full deep dive is at makeyourmindup.ai.

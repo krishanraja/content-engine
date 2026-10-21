@@ -11,10 +11,15 @@ one-line footnote. Files: `docs/plans/2026-10-21-draft-script.md` (807 words, 5 
 `wednesday-scorecard.md`. Two fresh readers heard the earlier version; their
 confusions were fixed, but the final words have not had a second read-back.
 Learning `say-the-result-not-the-method`.
-**Waiting on Krish:** whether the series line goes back in (story_check
-refuses both cuts without it; his 20 Oct edits took it out), and his yes to
-update both Teleprompter scripts in place and republish the web board. Teleprompter still
-holds the 20 October words (`wednesday-teleprompter.json`).
+**Later the same day (Krish's rulings):** dry, observational, positive wit
+(house rule TONE_OBSERVANT_WITTY); no series line in any script (SERIES_OPENER
+reworded; `seriesOpener()` returns null); every script closes on "Here's what I'd
+do with this info if I were you" and ends "The full deep dive is at
+makeyourmindup.ai." (SCRIPT_CLOSE, refused by story_check); every article ends
+"3 things you can do tomorrow" (THREE_THINGS_TOMORROW, a non-blocking publish
+check for now so older articles keep their fact-check hashes). Both Wednesday
+cuts pass story_check (long 807 words, short 195). He approved Teleprompter,
+board republish and merge "after this round of feedback is complete".
 
 ## 21 October: Wednesday scripts in Teleprompter (Codex)
 

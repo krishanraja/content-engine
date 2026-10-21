@@ -424,9 +424,9 @@ describe('a script is only the words, opening on a provocation and closing on th
     assert.match(HOUSE_RULES.find(x => x.id === 'SCRIPT_ONLY')!.said, /literally just scripts/)
     assert.match(HOUSE_RULES.find(x => x.id === 'HOOK_AND_CTA')!.text, /makeyourmindup\.ai/)
   })
-  test('the script writer keeps "say" to spoken words and its outro sends people to the article', async () => {
+  test('the script writer keeps "say" to spoken words and its close sends people to the deep dive', async () => {
     const video = await import('../../apps/control-plane/api/_video.js')
-    assert.match(video.STORY_OUTRO, /full article/)
+    assert.match(video.STORY_OUTRO, /full deep dive/)
     assert.match(video.SCRIPT_STORY, /HOOK_AND_CTA/)
     assert.doesNotMatch(video.SCRIPT_STORY, /Offer two options for each joke, marked/)
   })
@@ -566,35 +566,50 @@ describe('the sting, the music bed and a thumbnail for every size (Krish, 2026-1
   })
 })
 
-describe('every video opens with its series line, and Krish says his name once (SERIES_OPENER, Krish, 2026-10-12)', () => {
-  test('the rule is live, carries his words and the three lines he picked, and reaches the writers, the draft judges and the final pass', async () => {
-    const { SERIES_OPENERS, seriesOpener } = await import('../../apps/control-plane/api/_houseRules.js')
+describe('every script opens straight on the hook: the series line is retired (SERIES_OPENER, Krish, 2026-10-21)', () => {
+  test('the rule is live, carries his words, and reaches the writers, the draft judges and the final pass', async () => {
+    const { SERIES_OPENERS, seriesOpener, retiredSeriesOpener } = await import('../../apps/control-plane/api/_houseRules.js')
     const r = HOUSE_RULES.find(x => x.id === 'SERIES_OPENER')
     assert.ok(r)
     assert.equal(r.status, 'live')
-    assert.equal(r.on, '2026-10-12')
-    assert.ok(r.said.startsWith('We need something catchy at the start of a video script like "Here\'s what you need to know about how money is changing because of AI. I\'m Krish." at the start of follow.the.money videos. And then similar for the weds and fri scripts.'))
+    assert.equal(r.on, '2026-10-21')
+    assert.ok(r.said.startsWith('we need to cut that opening line from every content piece moving forward and just launch straight in to "I put GrokBot and Muse head to head" etc.'))
     assert.match(r.said, /Drop it at the end/)
+    assert.match(r.text, /opens straight on the hook/)
+    assert.match(r.text, /no "I'm Krish" anywhere/)
+    for (const o of Object.values(SERIES_OPENERS)) assert.ok(!r.text.includes(o.line), o.series)
+    for (const stage of ['write', 'judge_draft', 'final_pass'] as Stage[]) assert.ok(r.stages.includes(stage), stage)
+    // The writers stop using the lines; the lines themselves stay, unchanged, for the records made under them.
+    for (const series of ['follow_the_money', 'under_the_hood', 'mind_the_gap', 'money_of_ai', null]) assert.equal(seriesOpener(series), null)
+    assert.equal(retiredSeriesOpener('mind_the_gap'), SERIES_OPENERS.mind_the_gap!.line)
     assert.deepEqual(Object.fromEntries(Object.entries(SERIES_OPENERS).map(([k, v]) => [k, v.line])), {
       follow_the_money: "I've been following how money is changing because of AI. I'm Krish.",
       under_the_hood: "I've been looking at what's really inside the AI everyone's selling us. I'm Krish.",
       mind_the_gap: "I've been keeping a beady eye on what's coming with AI, before everyone notices. I'm Krish.",
     })
-    for (const o of Object.values(SERIES_OPENERS)) assert.ok(r.text.includes(o.line), o.series)
-    assert.match(r.text, /the close never repeats "I'm Krish"/)
-    for (const stage of ['write', 'judge_draft', 'final_pass'] as Stage[]) assert.ok(r.stages.includes(stage), stage)
-    assert.equal(seriesOpener('mind_the_gap'), SERIES_OPENERS.mind_the_gap!.line)
-    assert.equal(seriesOpener('money_of_ai'), null)
-    assert.equal(seriesOpener(null), null)
   })
-  test('HOOK_AND_CTA puts the hook after the series line and ends without his name again', () => {
+  test('HOOK_AND_CTA opens straight on the hook and closes as SCRIPT_CLOSE says', () => {
     const r = HOUSE_RULES.find(x => x.id === 'HOOK_AND_CTA')!
-    assert.match(r.text, /opens with its series line \(SERIES_OPENER\), then the hook/)
-    assert.match(r.text, /in the first two sentences after the series line/)
-    assert.match(r.text, /without repeating "I'm Krish": his name is said once, in the series line/)
-    assert.match(r.text, /makeyourmindup\.ai/)
+    assert.match(r.text, /opens straight on the hook \(SERIES_OPENER\)/)
+    assert.match(r.text, /It never opens on a series line, a greeting/)
+    assert.match(r.text, /closes as SCRIPT_CLOSE says/)
+    assert.match(r.text, /The full deep dive is at makeyourmindup\.ai\./)
+    assert.match(r.text, /No question for the comments and no sign-off/)
+    assert.match(r.said, /launch straight in to "I put GrokBot and Muse head to head"/)
   })
-  test('one source: story_check.py reads the lines from the house rules, and the script writer opens on them', async () => {
+  test('the script writer opens on the hook with no series line, whatever the series', async () => {
+    const video = await import('../../apps/control-plane/api/_video.js')
+    assert.match(video.SCRIPT_OPENING, /starts straight on the hook/)
+    assert.match(video.SCRIPT_OPENING, /I put X and Y head to head/)
+    assert.match(video.SCRIPT_OPENING, /No series line, no greeting, no "I'm Krish"/)
+    assert.match(video.SCRIPT_STORY, /Open straight on the hook, with no series line, greeting or "I'm Krish" \(SERIES_OPENER\)/)
+    const src = readFileSync('apps/control-plane/api/_video.ts', 'utf8')
+    assert.doesNotMatch(src, /seriesOpener/)
+    assert.match(src, /^\s+SCRIPT_OPENING,$/m)
+    const route = readFileSync('apps/control-plane/api/content-ideas/[id]/video-script.ts', 'utf8')
+    assert.match(route, /series: \(idea as any\)\.lane_slot/)
+  })
+  test('one source: story_check.py still reads the retired lines and the reading gate from the house rules, and takes --series without checking it', async () => {
     const { SERIES_OPENERS } = await import('../../apps/control-plane/api/_houseRules.js')
     const ts = readFileSync('apps/control-plane/api/_houseRules.ts', 'utf8')
     const block = ts.split('// SERIES_OPENERS:BEGIN')[1]!.split('// SERIES_OPENERS:END')[0]!
@@ -602,19 +617,104 @@ describe('every video opens with its series line, and Krish says his name once (
     const check = readFileSync('scripts/post-pack/story_check.py', 'utf8')
     assert.match(check, /house_block\('SERIES_OPENERS'\)/)
     const { spawnSync } = await import('node:child_process')
-    const read = spawnSync(process.platform === 'win32' ? 'python' : 'python3', ['-c', 'import json, story_check; print(json.dumps([story_check.series_openers(), story_check.reading_rules()]))'],
+    const py = process.platform === 'win32' ? 'python' : 'python3'
+    const read = spawnSync(py, ['-c', 'import json, story_check; print(json.dumps([story_check.series_openers(), story_check.reading_rules(), story_check.series_problems(["x"], "nothing_at_all")]))'],
       { cwd: join(__dirname, '../../scripts/post-pack'), encoding: 'utf8' })
     assert.equal(read.status, 0, read.stderr)
-    const [lines, reading] = JSON.parse(read.stdout)
+    const [lines, reading, series] = JSON.parse(read.stdout)
     assert.deepEqual(lines, Object.fromEntries(Object.entries(SERIES_OPENERS).map(([k, v]) => [k, v.line])))
+    assert.deepEqual(series, [])
     const { SCRIPT_READING } = await import('../../apps/control-plane/api/_houseRules.js')
     assert.deepEqual(reading, SCRIPT_READING)
-    const video = readFileSync('apps/control-plane/api/_video.ts', 'utf8')
-    assert.match(video, /seriesOpener\(o\.series\)/)
-    const route = readFileSync('apps/control-plane/api/content-ideas/[id]/video-script.ts', 'utf8')
-    assert.match(route, /series: \(idea as any\)\.lane_slot/)
     const making = readFileSync('scripts/post-pack/making.py', 'utf8')
     assert.match(making, /command \+= \['--series', series\]/)
+  })
+})
+
+describe('every script closes on what he would do, then the deep dive line (SCRIPT_CLOSE, Krish, 2026-10-21)', () => {
+  test('the rule is live, carries his words, and reaches the writers, the draft judges and the final pass', () => {
+    const r = HOUSE_RULES.find(x => x.id === 'SCRIPT_CLOSE')
+    assert.ok(r)
+    assert.equal(r.status, 'live')
+    assert.equal(r.on, '2026-10-21')
+    assert.equal(r.said, 'Also trim the closing to "the full deep dive is at makeyourmindup.ai." right after a "Here\'s what I\'d do with this info if I were you" closing line. That needs to be the format moving forward for all scripts.')
+    assert.match(r.text, /starts exactly "Here's what I'd do with this info if I were you"/)
+    assert.match(r.text, /final sentence is exactly "The full deep dive is at makeyourmindup\.ai\." with nothing after it/)
+    assert.match(r.text, /no sign-off, no "I'm Krish", no question for the comments/)
+    for (const stage of ['write', 'judge_draft', 'final_pass'] as Stage[]) assert.ok(r.stages.includes(stage), stage)
+    assert.ok(existsSync('scripts/post-pack/story_check.py') && r.source.includes('scripts/post-pack/story_check.py'))
+  })
+  test('the writer prompt closes on it, and story_check.py refuses a script that does not', async () => {
+    const video = await import('../../apps/control-plane/api/_video.js')
+    assert.match(video.STORY_OUTRO, /starts exactly "Here's what I'd do with this info if I were you"/)
+    assert.match(video.STORY_OUTRO, /exactly "The full deep dive is at makeyourmindup\.ai\." with nothing after it/)
+    for (const f of video.VIDEO_FORMATS.filter(x => x.seconds >= 60)) assert.match(f.shape, /STORY_OUTRO/, f.id)
+    const { spawnSync } = await import('node:child_process')
+    const py = process.platform === 'win32' ? 'python' : 'python3'
+    const ask = (code: string) => {
+      const out = spawnSync(py, ['-c', `import json, story_check as s\n${code}`], { cwd: join(__dirname, '../../scripts/post-pack'), encoding: 'utf8' })
+      assert.equal(out.status, 0, out.stderr)
+      return JSON.parse(out.stdout)
+    }
+    const found = ask([
+      'body = " ".join(["More words that fill the middle of the script."] * 20)',
+      'good = "I put two AI helpers head to head. So which one would you trust?\\n\\n" + body + "\\n\\nSo here is my call.\\n\\nHere\'s what I\'d do with this info if I were you. Check what you pay for.\\n\\nThe full deep dive is at makeyourmindup.ai."',
+      'old = good.replace("The full deep dive is at makeyourmindup.ai.", "The full teardown is free at makeyourmindup.ai. What do you think? I\'m Krish.")',
+      'skipped = good.replace("Here\'s what I\'d do with this info if I were you. ", "")',
+      'print(json.dumps([[p for p in s.problems(t) if "SCRIPT_CLOSE" in p] for t in (good, old, skipped)]))',
+    ].join('\n'))
+    assert.deepEqual(found[0], [])
+    assert.equal(found[1].length, 1)
+    assert.match(found[1][0], /last sentence must be exactly "The full deep dive is at makeyourmindup\.ai\."/)
+    assert.equal(found[2].length, 1)
+    assert.match(found[2][0], /Here's what I'd do with this info if I were you/)
+  })
+})
+
+describe('every article ends with "3 things you can do tomorrow" (THREE_THINGS_TOMORROW, Krish, 2026-10-21)', () => {
+  test('the rule is live, carries his words, reaches the writers, judges, final pass and the publish check', () => {
+    const r = HOUSE_RULES.find(x => x.id === 'THREE_THINGS_TOMORROW')
+    assert.ok(r)
+    assert.equal(r.status, 'live')
+    assert.equal(r.said, 'The articles all need to have a really clear "3 things you can do tomorrow" at the end of every piece too.')
+    assert.match(r.text, /clearly headed section, "3 things you can do tomorrow"/)
+    assert.match(r.text, /exactly three concrete actions/)
+    for (const stage of ['write', 'judge_draft', 'final_pass', 'publish_check'] as Stage[]) assert.ok(r.stages.includes(stage), stage)
+    assert.ok(VOICE_GUARDRAILS.includes(r.text))
+    assert.match(HOUSE_RULES.find(x => x.id === 'ONE_SPINE')!.text, /"3 things you can do tomorrow" section \(THREE_THINGS_TOMORROW\), which is not an outline section/)
+  })
+  test('the publish check reads the heading and the three items, and does not block yet', () => {
+    const three = (body: string) => publishChecks(body, factsOk, NOW_SEP).find(c => c.id === 'THREE_THINGS_TOMORROW')!
+    const ok = `${PASSED}\n\n## 3 things you can do tomorrow\n\n- Check what your plan costs.\n- Ask which model your app uses.\n- Write down the one task you hand over first.\n`
+    assert.equal(three(ok).ok, true)
+    assert.equal(three(ok).blocking, false)
+    assert.equal(three(ok.replace('## 3 things', '## Three things')).ok, false)
+    assert.equal(three(PASSED).ok, false)
+    assert.match(three(PASSED).detail, /No section headed "3 things you can do tomorrow"/)
+    assert.match(three(ok.replace(/- Write down.*\n/, '')).detail, /has 2 list items; it needs exactly three/)
+    assert.match(three(ok + '- A fourth one.\n').detail, /has 4 list items/)
+    assert.match(three(ok.replace('\n\n## 3 things', '\n\n## 3 THINGS YOU CAN DO TOMORROW')).detail, /Ends with/)
+    assert.match(three(ok + '\n## Sources\n\n- one\n').detail, /not the last section/)
+    assert.match(three(ok.replace(/^- /gm, '1. ')).detail, /Ends with/)
+    // Not blocking: the pieces already written and fact-checked are not stopped by it.
+    assert.deepEqual(publishStatus(publishChecks(PASSED.replace('75%.', '85%.'), factsOk, NOW_SEP)).failing.map(c => c.id), [])
+  })
+})
+
+describe('Krish\'s tone is observational, witty and positive (TONE_OBSERVANT_WITTY, Krish, 2026-10-21)', () => {
+  test('the rule is live and reaches the writers and the draft judges, with the dry Hannah Fry edge and the limits on it', () => {
+    const r = HOUSE_RULES.find(x => x.id === 'TONE_OBSERVANT_WITTY')
+    assert.ok(r)
+    assert.equal(r.status, 'live')
+    assert.match(r.said, /Generally yes - observational and witty and positive are my general go tos/)
+    assert.match(r.text, /observational/)
+    assert.match(r.text, /witty and positive/)
+    assert.match(r.text, /Hannah Fry/)
+    assert.match(r.text, /never an invented one/)
+    assert.match(r.text, /never at a real person/)
+    for (const stage of ['write', 'judge_draft'] as Stage[]) assert.ok(r.stages.includes(stage), stage)
+    assert.ok(VOICE_GUARDRAILS.includes(r.text))
+    assert.ok(houseRulesBlock('judge_draft').includes(r.text))
   })
 })
 
@@ -693,22 +793,24 @@ describe('a story intro, its audio treatment and an outro card, in every format 
 })
 
 // Monday's and Wednesday's were recorded and keep their words. Friday's v5 is
-// the last version the gate passed: both cuts open on the mind.the.gap line
-// and pass at their lengths (deep 1,200 to 1,700 words, short 160 to 195).
-// What he records is v6, his own edit of both at 21:32 UTC on 16 October,
-// put through on his words ("just put them in teleprompter"; making.py
-// scripts --krish-words keeps every finding on the record), so it is not
-// held to the gate here.
-describe('this week\'s unrecorded scripts pass the gate they are held to (SERIES_OPENER and R7)', () => {
-  test('Friday\'s deep cut and 90-second cut open with the series line, say "I\'m Krish" once, fit their lengths, and a 12-year-old can follow them', async () => {
+// the last version the gate passed before the 2026-10-21 ruling: both cuts
+// opened on the mind.the.gap line and passed at their lengths (deep 1,200 to
+// 1,700 words, short 160 to 195). What he records is v6, his own edit of both
+// at 21:32 UTC on 16 October, put through on his words, so it is not held to
+// the gate here. Since 2026-10-21 the series line is retired and every script
+// closes as SCRIPT_CLOSE says, so v5 keeps every old gate (length, reading
+// age, the story) and fails on nothing but that close.
+describe('this week\'s unrecorded scripts keep every gate but the new close (R7, SCRIPT_CLOSE)', () => {
+  test('Friday\'s v5 deep cut and 90-second cut fit their lengths and a 12-year-old can follow them; only the close of 2026-10-21 is missing', async () => {
     const { spawnSync } = await import('node:child_process')
     for (const [file, cut, series] of [
       ['docs/plans/2026-10-09-script-deep-v5.md', 'deep', 'mind_the_gap'],
       ['docs/plans/2026-10-09-script-90s-v5.md', 'short', 'mind_the_gap'],
     ] as const) {
       const out = spawnSync(process.platform === 'win32' ? 'python' : 'python3', ['scripts/post-pack/story_check.py', '--cut', cut, '--series', series, file], { encoding: 'utf8' })
-      assert.equal(out.status, 0, `${file}: ${out.stdout}${out.stderr}`)
-      assert.match(out.stdout, /^ready /m)
+      const found = out.stdout.split('\n').filter(l => l.startsWith('  - '))
+      assert.ok(found.length > 0, `${file}: v5 predates the new close and should be told so`)
+      for (const line of found) assert.match(line, /SCRIPT_CLOSE/, `${file}: ${line}`)
     }
   })
 })

@@ -61,7 +61,7 @@ export const VIDEO_FORMATS: VideoFormat[] = [
       'The hook is the surprising claim, inside ten seconds, with no throat-clearing.',
       'The proof grounds it in named specifics.',
       'The turn is the part the viewer did not see coming: the second-order effect, the counter-reading, the part that inverts the obvious take.',
-      'The verdict is hard and forward-looking and answers the hook. No summary, no question. Then one short spoken outro line (STORY_OUTRO).',
+      'The verdict is hard and forward-looking and answers the hook. No summary, no question. Then the close (STORY_OUTRO).',
     ].join(' '),
   },
   {
@@ -73,19 +73,19 @@ export const VIDEO_FORMATS: VideoFormat[] = [
     // 2026-10-14: "sometimes my reels are getting cut off").
     id: '90s', label: '90 seconds', seconds: 90, words: 177,
     shape: [
-      'Hook (the most provocative true thing, then the one question), then two beats, then the call, then a one-line spoken outro.',
+      'Hook (the most provocative true thing, then the one question), then two beats, then the call, then the close.',
       'Each beat is one point with its one number. No third beat: there is no room.',
-      'The call answers the question in one sentence. The outro says the full article is free at makeyourmindup.ai and asks one question for the comments (STORY_OUTRO).',
+      'The call answers the question in one sentence. The close is the actions beat and then the deep dive line at makeyourmindup.ai, nothing else (STORY_OUTRO).',
     ].join(' '),
   },
   {
     id: '5min', label: '5 minutes', seconds: 300, words: 750,
     shape: [
-      'Hook (one plain question the whole script answers), then three beats, then verdict, then a short spoken outro.',
+      'Hook (one plain question the whole script answers), then three beats, then verdict, then the close.',
       'Each beat makes ONE point and carries its own evidence. A beat that restates the one above it is cut.',
       'Beats escalate: the third should be the one that would not have been believed at the start.',
       'Mark the beats explicitly so the edit has cut points.',
-      'The verdict answers the hook\'s question, then makes the call. It is a hard forward-looking read and never a recap of the three beats. The spoken outro follows it (STORY_OUTRO).',
+      'The verdict answers the hook\'s question, then makes the call. It is a hard forward-looking read and never a recap of the three beats. The close follows it (STORY_OUTRO).',
     ].join(' '),
   },
   {
@@ -96,7 +96,7 @@ export const VIDEO_FORMATS: VideoFormat[] = [
       'Each of the four sections advances the argument and ends on a hook into the next. A section that could be reordered freely is a list, not an argument.',
       'Pick ONE analogy and carry it the whole way, including through the part where it breaks, and say out loud where it stops working.',
       'Hold one genuine counterpoint, in full, before answering it.',
-      'The close answers the cold open\'s question, gives a hard verdict plus the specific thing to watch next, then the spoken outro (STORY_OUTRO).',
+      'The close answers the cold open\'s question, gives a hard verdict plus the specific thing to watch next, then the close (STORY_OUTRO).',
     ].join(' '),
   },
   {
@@ -107,7 +107,7 @@ export const VIDEO_FORMATS: VideoFormat[] = [
       'One analogy, carried the whole way, broken honestly where it stops mapping.',
       'Hold the strongest counterpoint in its best form, not a straw version, and answer it or concede it.',
       'Say plainly where the knowable record ends rather than papering over it.',
-      'Close by answering the question the cold open asked, then a hard verdict and the terminal question the evidence actually leaves open, then the spoken outro (STORY_OUTRO).',
+      'Close by answering the question the cold open asked, then a hard verdict and the terminal question the evidence actually leaves open, then the close (STORY_OUTRO).',
       'At this length the viewer will forgive slowness but not padding: every section must move the argument or come out.',
     ].join(' '),
   },
@@ -124,15 +124,18 @@ export function videoFormat(id?: string | null): VideoFormat | null {
 // approved the same evening, as the script writer reads it. The house rules
 // FOR_THE_EAR and STORY_ARC carry it to every other stage, and
 // scripts/post-pack/story_check.py refuses to pack a script that fails it.
-export const STORY_OUTRO = 'STORY_OUTRO: a script of a minute or more ends with one or two spoken lines after the call: what this was (the subchannel or makeyourmindup), that there is a full article, what it has that the video does not, that it is free and where it is (makeyourmindup.ai, said out loud so it works on every channel), one question for the comments, and Krish signing off without repeating his name, which the series line already said (HOOK_AND_CTA, SERIES_OPENER). This outro is the only call to action a script makes, and it never asks for likes or subscribes.'
+export const STORY_OUTRO = 'STORY_OUTRO (house rule SCRIPT_CLOSE, Krish 2026-10-21): a script of a minute or more closes in two parts, after the call. First a beat that starts exactly "Here\'s what I\'d do with this info if I were you" and says, in plain words, the concrete things the listener can do. Then the final sentence of the script, exactly "The full deep dive is at makeyourmindup.ai." with nothing after it: no sign-off, no "I\'m Krish", no question for the comments, no ask to like or subscribe. That is the only call to action a script makes.'
+
+/** How a script opens (house rule SERIES_OPENER, retired series line, Krish 2026-10-21). */
+export const SCRIPT_OPENING = 'THE OPENING (SERIES_OPENER, Krish 2026-10-21): the first beat\'s "say" starts straight on the hook, the most provocative true thing in the piece, such as what you did, for example "I put X and Y head to head" (X and Y being the things in THIS piece). No series line, no greeting, no "I\'m Krish", anywhere in the script. The one question the script answers follows at once.'
 
 export const SCRIPT_STORY = [
   'THE STORY CHECK (Krish, 2026-10-06). Before you answer, check the script against all five and fix any that fail:',
-  '1. One opening question, said out loud in the first beat, that the whole script answers. Before it, in the first two sentences after the series line (SERIES_OPENER), the most provocative true thing in the piece (HOOK_AND_CTA).',
+  '1. Open straight on the hook, with no series line, greeting or "I\'m Krish" (SERIES_OPENER): in the first two sentences, the most provocative true thing in the piece, such as what you did ("I put X and Y head to head") (HOOK_AND_CTA). One opening question, said out loud in the first beat, that the whole script answers.',
   '2. Every beat sets that question up or answers it, and follows from the beat before. A beat that could be moved anywhere is a list item: cut it or connect it.',
   '3. Every claim is set up before it is judged: say what was claimed and why it matters before calling it real or theatre.',
   '4. Every takeaway follows from a beat already told. Name the beat it comes from in your head; if there is none, cut the takeaway.',
-  '5. The ending answers the opening question, then the call, then the spoken outro. Never end on the number.',
+  '5. The ending answers the opening question, then the call, then the close (STORY_OUTRO). Never end on the number.',
   '6. It sounds like Krish, with opinion (VOICE_ON_CAMERA): at least three of a dry self-deprecating line, a sarcastic line at the hype, an exaggeration obvious by its size, an analogy a twelve-year-old gets, and an opinion said as opinion ("my bet", "I think"). No joke inside a checked fact. Put a second option for each joke in "notes", never inside "say", so Krish can swap or cut.',
   'And it must make sense out loud: say what the thing is before taking it apart, explain each number as it is said, and never speak an article heading or a label the listener has not heard explained.',
   STORY_OUTRO,
@@ -160,7 +163,7 @@ import {
   robustJson, sanitizeVoice, type Material,
 } from './_content.js'
 import { UTILITY_MODEL } from './_models.js'
-import { houseRulesBlock, seriesOpener } from './_houseRules.js'
+import { houseRulesBlock } from './_houseRules.js'
 
 export interface VideoBeat { t: string; say: string; shot: string }
 
@@ -239,8 +242,8 @@ export async function buildVideoScript(o: {
   citations?: string[]
   materials?: Material[]
   hint?: string | null
-  /** The piece's series (lane_slot): its script opens with that series'
-   *  line (house rule SERIES_OPENER). */
+  /** The piece's series (lane_slot). Kept for callers; since 2026-10-21 no
+   *  script opens with a series line (house rule SERIES_OPENER). */
   series?: string | null
 }): Promise<VideoScript> {
   const citations = (o.citations || []).filter(Boolean).slice(0, 8)
@@ -254,7 +257,6 @@ export async function buildVideoScript(o: {
   const register = corpusForChannel(corpus, 'youtube')
   const f = o.format
   const ceiling = wordCeiling(f)
-  const opener = seriesOpener(o.series)
 
   const system = [
     'You are cutting an existing piece into a spoken video script. The argument does not change. The length, register and scaffolding do.',
@@ -264,9 +266,9 @@ export async function buildVideoScript(o: {
     `This is a hard ceiling, not a style note: ${f.words} words is what fits in ${f.seconds} seconds at an unhurried pace. Going over does not produce a longer ${f.label}, it produces a script that overruns, and at the short lengths that is the difference between a hook and a rambling clip. If the material will not fit, cut material. Do not speed up the delivery to make room.`,
     `STRUCTURE FOR THIS LENGTH (not a suggestion, this is what this length can carry):\n${f.shape}`,
     SPOKEN_RULES,
-    // Krish, 2026-10-12: every video script of a series opens with its line,
-    // and his name is said once, there (house rule SERIES_OPENER).
-    opener ? `THE SERIES LINE (SERIES_OPENER): the first beat's "say" starts with exactly these words, then the hook: "${opener}" They count toward the ${ceiling}-word ceiling. Never say "I'm Krish" again after it, in the outro or anywhere else.` : '',
+    // Krish, 2026-10-21: every script opens straight on the hook and closes on the actions and the deep dive line
+    // (house rules SERIES_OPENER and SCRIPT_CLOSE). The close sits in STORY_OUTRO, inside SCRIPT_STORY.
+    SCRIPT_OPENING,
     // Formats under a minute have no room for the outro; everything longer carries the full story check.
     f.seconds >= 60 ? SCRIPT_STORY : 'THE STORY CHECK, short form: one clear question or claim, answered by the last line. Explain any number as it is said.',
     // Krish's house rules reach the spoken words and the shots. Before 2026-10-05 a script
@@ -334,9 +336,8 @@ export async function buildVideoScript(o: {
 
   const { parsed, beats } = attempt
   if (!beats.length) throw new Error('script came back empty')
-  // The series line is said first, word for word: when the writer left it
-  // out, it is put in front of the first beat rather than trusted to a retry.
-  if (opener && !beats[0]!.say.startsWith(opener)) beats.unshift({ t: '0:00', say: opener, shot: 'Krish to camera, the series line' })
+  // No series line is put in front any more (house rule SERIES_OPENER, retired 2026-10-21), and the close (SCRIPT_CLOSE)
+  // is not patched in either: a script that misses it is refused by scripts/post-pack/story_check.py, not papered over.
 
   const spoken = beats.map(x => x.say).join(' ')
   // Same check channel-cut runs. A script is read to camera, so an invented

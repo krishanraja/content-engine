@@ -602,24 +602,32 @@ places them (`-RequirePlacing` makes it a stop).
 It never writes to the Inbox, never sends anything outside the engine, and
 never produces a video: that is `.agents/skills/produce-video`.
 
-## The scripts: the series line, reading age 12 and the read-back
+## The scripts: the close, reading age 12 and the read-back
 
 `story_check.py --cut long|short --series <lane_slot> SCRIPT` refuses a
-script that does not open with its series line, word for word, or says
-"I'm Krish" again after it (house rule SERIES_OPENER; Krish, 2026-10-12: "We
-need something catchy at the start of a video script like "Here's what you
-need to know about how money is changing because of AI. I'm Krish." at the
-start of follow.the.money videos. And then similar for the weds and fri
-scripts", and "Drop it at the end"), and one a 12-year-old could not follow
+script of a minute or more that does not close the way Krish ruled on
+2026-10-21 (house rule SCRIPT_CLOSE): "trim the closing to "the full deep
+dive is at makeyourmindup.ai." right after a "Here's what I'd do with this
+info if I were you" closing line. That needs to be the format moving forward
+for all scripts." So a beat in its last three beats has the sentence "Here's
+what I'd do with this info if I were you" (a trailing colon, full stop or
+comma and curly apostrophes are fine), and the last sentence is exactly "The
+full deep dive is at makeyourmindup.ai." with nothing after it. The series
+line is retired the same day (house rule SERIES_OPENER; "we need to cut that
+opening line from every content piece moving forward and just launch
+straight in to "I put GrokBot and Muse head to head" etc."): nothing asks
+for it or for "I'm Krish", and `--series` is still accepted and ignored so
+older callers work. It also refuses one a 12-year-old could not follow
 heard once (house rule R7; Krish, 2026-10-12: "Every single script should
 be understandable by a 12-year-old. I can't even understand what I'm
 reading off the teleprompter. I thought we had hard gates for this?"): a
 spoken sentence over 20 words, more than 12 words a sentence on average, a
 reading grade over 6, a quotation over four words, or a word on its list
 (licensing, settlement, revenue, model and the rest) its sentence does not
-explain. The lines and the gate's numbers are read from
-`apps/control-plane/api/_houseRules.ts` (`SERIES_OPENERS`, `SCRIPT_READING`),
-the one place they live. `making.py scripts` runs it with the piece's
+explain. The gate's numbers are read from
+`apps/control-plane/api/_houseRules.ts` (`SCRIPT_READING`), the one place
+they live; the old series lines stay beside them (`SERIES_OPENERS`) for the
+records made under them. `making.py scripts` runs it with the piece's
 series, and `build.py` with the post's subchannel. Then two fresh readers,
 each an ordinary 12-year-old hearing the script once, must find nothing that
 loses them (their prompts are in `.agents/skills/make-piece/SKILL.md`, "The

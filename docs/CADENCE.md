@@ -32,7 +32,7 @@ Times are Krish's, in New York (`system_config.operator_timezone`).
 | Sunday, early morning | A Claude Code session ("Plan the week" routine, `.agents/skills/plan-week`) | Copies the ending week's ticks onto the records; researches three or four options for Monday, Wednesday and Friday, fleshes out what he dropped in the Cold Ideas & Inspo folder, stress-tests them, and writes them onto the pieces (`/api/week/options`); then makes the week's publish board (`scripts/post-pack/week_board.py`): one private page with a tab for each day and a tick for every step, its link on the week's own board item `week-publish-board-<Monday>` (on him, at the top) and in `WORKBENCH.md`; the ending week's board stays read until every day on it is at 100% | Claude Code |
 | Sunday, 8am (7am in winter) | The work board | One item asks the Sunday question and links to the week page (`control-center api/content/slate.ts`, refreshed every morning, done when all three days have a piece) | Control Center |
 | Sunday | Control Center, the week page (`#/week`) | He picks a piece for each day, or drops in an idea to flesh out. A pick holds its day (scheduled_for) | Krish |
-| Sunday, on the Monday pick | Claude Code ("Make a piece" routine, `.agents/skills/make-piece`) | Monday's piece is made through to its publish board: workroom, fact-checked article, visual gate, both scripts (each opening with its series line, held to a reading age of 12 and read back by two fresh readers, then sent to his teleprompter.com account: one folder for the piece, one script per cut), publish page, pack. The week's publish board is rebuilt with the picks and Monday's page and republished to its link, so its ticks stay | Claude Code |
+| Sunday, on the Monday pick | Claude Code ("Make a piece" routine, `.agents/skills/make-piece`) | Monday's piece is made through to its publish board: workroom, fact-checked article, visual gate, both scripts (each opening straight on the hook and closing on the deep dive line, held to a reading age of 12 and read back by two fresh readers, then sent to his teleprompter.com account: one folder for the piece, one script per cut), publish page, pack. The week's publish board is rebuilt with the picks and Monday's page and republished to its link, so its ticks stay | Claude Code |
 | Monday morning | teleprompter.com on his phone or laptop, and his camera | He records Monday's two cuts, each read from its own script in Teleprompter, then drops each take as its own file at the top of the Video Engine Inbox (any name), the one way a take comes back. Then he tells Codex or Claude Code "I've recorded" | Krish |
 | Within about 15 minutes of an Inbox drop | Whichever home computer is on (the recordings upload, every five minutes) | Each take reaches the engine, and the same lane places it on its piece and cut by itself (`recording_match.py --record --board --by "Recordings lane"`), stamped with the script it was read from; a take it is unsure of becomes one board item held for a session, never on his list (the session asks him in its reply) | the home computers |
 | Monday, Wednesday and Friday, 12:00 | GitHub's machine, on its own (`.github/workflows/produce-day.yml`, `scripts/produce_day.py`; Krish, 2026-10-12: "GitHub always renders"); its Run workflow button runs it at any time | Waits for both takes on the day's piece, fetches them, the licensed music and the pictures from the engine, renders the story intro and outro for the piece, makes both cuts and their thumbnails, sends them to the post's `3 Video` folder (Library Sync puts them in Drive) and records them on the piece; a stop is one board item saying exactly what stopped. At 13:30 a Claude Code routine puts the videos on the day's tab of the publish board | GitHub, then Claude Code |
@@ -226,10 +226,13 @@ What could be misread, and what stops it:
     a child on its ideas, so two fresh readers hear each script once, and
     `teleprompter_send.py plan` sends no cut whose current words they have
     not passed (`script_check.read_back`).
-17. **A script without its series line, or "I'm Krish" said twice.**
-    `story_check.py --series` refuses both; `making.py scripts` passes the
-    piece's series from the engine, `build.py` from the post's subchannel,
-    and the engine's script writer puts the line first itself.
+17. **A script that does not close the way Krish ruled (2026-10-21).**
+    The series line and "I'm Krish" are retired: a script opens straight on
+    the hook. `story_check.py` refuses a script of a minute or more with no
+    "Here's what I'd do with this info if I were you" beat in its last beats,
+    or that does not end on exactly "The full deep dive is at
+    makeyourmindup.ai." (house rule SCRIPT_CLOSE). `--series` is still
+    taken, from `making.py scripts` and `build.py`, and no longer checked.
 18. **A tick that never reaches the record.** A tick lives only on the
     week's board until a Claude Code session copies it, at the start and
     end of every making session; Codex cannot read the board. Each tick is
