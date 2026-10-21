@@ -26,7 +26,8 @@ import { activeManualReviews, bodyHash, effectiveBlocking } from './_factGate.js
  *  YouTube and then Shorts, TikTok, and Instagram." The first five are the
  *  standing set; LinkedIn, WhatsApp and Substack Notes stay available when
  *  he wants them and never hold a piece back. */
-export const MAKING_CHANNELS = ['substack', 'youtube', 'shorts', 'tiktok', 'reels', 'linkedin', 'whatsapp', 'notes', 'spotify'] as const
+// feature_youtube and feature_spotify: the 15-minute feature's own two posts, on a feature piece only (config/board-layout.json).
+export const MAKING_CHANNELS = ['substack', 'youtube', 'shorts', 'tiktok', 'reels', 'linkedin', 'whatsapp', 'notes', 'spotify', 'feature_youtube', 'feature_spotify'] as const
 export type MakingChannel = (typeof MAKING_CHANNELS)[number]
 export const CORE_CHANNELS: readonly MakingChannel[] = ['substack', 'youtube', 'shorts', 'tiktok', 'reels']
 /** The two cuts every piece gets (house rule TWO_CUTS). */

@@ -94,6 +94,7 @@ same every week:
    Download first), each piece of copy with one-tap Copy, what to do, the link box
    where the step has one (the article on Substack, the video on YouTube), and its
    tick. The tick ids are unchanged (`<day>-<step>`), so no saved tick is orphaned.
+   On a feature piece only (Krish, 2026-10-21: "Yes, add the cards"), two cards more, not counted: "YouTube long-form (the 15-minute feature)" right after the YouTube card and "Spotify (the 15-minute feature)" right after Spotify, ticks `<day>-feature-youtube` and `<day>-feature-spotify` (recorded as `making.py <piece> posted feature_youtube|feature_spotify`); `verify()` and `check_page` refuse them on any other piece.
 
 The words, the files and what to do come from `publish_kit.steps(words,
 on_board=True)` on the publish page's own words, which `publish_manager.py`

@@ -1405,6 +1405,11 @@ def run_sheet(day, p, page, data, videos, delivery, feature, folder, warnings):
     label_of = {'video-long': LAYOUT['cuts']['long']['name'], 'video-short': LAYOUT['cuts']['short']['name'],
                 'thumb-long': f'Thumbnail for the {LAYOUT["cuts"]["long"]["name"]}', 'video-feature': LAYOUT['cuts']['feature']['name'],
                 'article': 'The article (HTML)'}
+    if feature:
+        # The feature's two cards name its video and its own wide thumbnail; both are in Download first on a feature piece.
+        item_of.setdefault(names['feature_video'], 'video-feature')
+        item_of.setdefault(names['feature_thumbnail'], 'thumb-feature')
+        label_of['thumb-feature'] = f'Thumbnail for the {LAYOUT["cuts"]["feature"]["name"]}'
     # The files after the videos, in the order he uses them: the Substack cover, the vertical cover, the covers for
     # the other places, then the article and the pictures in it. Each picture once, wherever the page showed it.
     files = []
@@ -1453,8 +1458,14 @@ def run_sheet(day, p, page, data, videos, delivery, feature, folder, warnings):
                       '<p class="rec-how">Everything you need today, before you open Substack. The videos come first, then the pictures, '
                       'then the article.</p>' + groups + every + '</div>')
     # The places to post, in config/board-layout.json's order; the optional ones under their own heading.
-    kit = section_kit(day, publish_kit.steps(words, on_board=True), data.get('headings') or [])
+    kit_steps = publish_kit.steps(words, on_board=True)
+    if feature and not any(x['where'] == publish_kit.FEATURE_YOUTUBE for x in kit_steps):
+        # The board knows the piece is a feature (config/features.json) even when its page's words do not name the
+        # piece: the feature's two cards still take their files, words and do-steps from the kit.
+        kit_steps += publish_kit.feature_steps(words, words.get('files') or {}, words.get('comment_question') or '', on_board=True)
+    kit = section_kit(day, kit_steps, data.get('headings') or [])
     standing, optional, jump, n = [], [], [], 0
+    group = standing
     for key, label, channel, counted in STEPS:
         if not counted and key in FEATURE_ONLY and not feature:
             continue
@@ -1464,7 +1475,10 @@ def run_sheet(day, p, page, data, videos, delivery, feature, folder, warnings):
             continue
         n += 1
         card = run_card(day, p, n, key, label, kit.get(key), sections, article, item_of, label_of, feature, warnings)
-        (standing if counted else optional).append(card)
+        # A feature's posting card is never counted and sits right after the card it follows (its YouTube long-form
+        # after the 5-minute YouTube, its episode after Spotify), so he posts in one order; every other card by counted.
+        group = group if key in FEATURE_ONLY and channel else (standing if counted else optional)
+        group.append(card)
         if counted:
             jump.append(f'<li><a href="#{p}{kit[key][2] if key in kit else "run-" + key}" data-tickstate="{day}-{key}">'
                         f'{E(label.split(":")[0])}</a></li>')
@@ -1523,12 +1537,14 @@ def pic_extra(p, x):
 
 def run_card(day, p, n, key, label, kit, sections, article, item_of, label_of, feature, warnings):
     """One place to post: the files it needs, its words to copy, what to do, its link box where it has one, its tick."""
-    if key in FEATURE_ONLY:
+    recording = key in FEATURE_ONLY and not next(ch for k2, _, ch, _ in STEPS if k2 == key)
+    if recording:
         c = LAYOUT['cuts']['feature']
         sid, where, tag = 'run-feature', c['name'][0].upper() + c['name'][1:], c['shape']
         why = 'Only on a piece you called a feature. Record it from its script under Record, then post it where it goes.'
         copy = []
-        do =['Record it from Teleprompter: its script is under Record.', f'Then upload it to {c["for"]}, as you did the 5-minute video.']
+        do = ['Record it from Teleprompter: its script is under Record.',
+              f'Then post it from its own cards above: YouTube long-form and Spotify.']
         files = [('video-feature', label_of['video-feature'])]
     else:
         if not kit:
@@ -1582,7 +1598,7 @@ def run_card(day, p, n, key, label, kit, sections, article, item_of, label_of, f
             + f'<div class="run-part"><span class="lab">Do</span><ol class="do">{"".join(f"<li>{E(d)}</li>" for d in do)}</ol></div>'
             + box
             + f'<label class="tick run-tick">{tick_box(f"{day}-{key}", label)}<span class="t-label">'
-              f'{"Recorded: tick it" if key in FEATURE_ONLY else "Done: tick it once it is live"}</span>{TICK_TAIL}</label></section>')
+              f'{"Recorded: tick it" if recording else "Done: tick it once it is live"}</span>{TICK_TAIL}</label></section>')
 
 
 def run_sheet_problems(name, panel, tag):
@@ -1603,7 +1619,7 @@ def run_sheet_problems(name, panel, tag):
     elif runs and dl > runs[0].start():
         out.append(f'{name}: Download first is not above the places to post')
     feature = 'data-feature="true"' in tag
-    want = [s['key'] for s in LAYOUT['publish_steps']['steps'] if s.get('channel') or (s.get('feature_only') and feature)]
+    want = [s['key'] for s in LAYOUT['publish_steps']['steps'] if (feature if s.get('feature_only') else s.get('channel'))]
     got = [m.group(1) for m in runs]
     if got != want:
         out.append(f'{name}: the places to post are {got}, not {want}, the order of config/board-layout.json')
@@ -2407,10 +2423,15 @@ def check_page(page):
     if dangling:
         problems.append(f'references to no id: {dangling[:8]}')
     keys = {k for k, *_ in STEPS}
+    # The days whose piece Krish called a 15-minute feature: only their tabs may hold the feature's ticks.
+    featured = {re.search(r'data-prefix="(\w+)-"', t).group(1) for t in re.findall(r'<div class="pm(?: fixed)?" id="panel-\w+"[^>]*>', page)
+                if 'data-feature="true"' in t and 'data-prefix="' in t}
     for tid in set(re.findall(r'data-tick="([^"]+)"', page)):
         day, _, step = tid.partition('-')
         if day not in {k for k, *_ in DAYS} or step not in keys:
             problems.append(f'a tick for no step: {tid}')
+        elif step in FEATURE_ONLY and day not in featured:
+            problems.append(f'a 15-minute feature tick on a day that is not a feature: {tid}')
     if page.count('<label class="tick') != page.count('data-tick="'):
         problems.append('a tick label without its box')
     if 'Mark done' in page:
@@ -3221,7 +3242,7 @@ def _runsheet_checks(check, week, mon):
           and 'data-dl="material"' in sub[sub.index('id="mon-dl-img-pic"'):])
     runs = re.findall(r'<section class="run(?: opt)?" id="mon-([a-z0-9-]+)" data-run="([a-z-]+)"', sub)
     check('run-sheet: one card per place to post, in config/board-layout.json\'s order, under the ids the page gave them',
-          [k for _, k in runs] == [s['key'] for s in LAYOUT['publish_steps']['steps'] if s.get('channel')]
+          [k for _, k in runs] == [s['key'] for s in LAYOUT['publish_steps']['steps'] if s.get('channel') and not s.get('feature_only')]
           and [i for i, _ in runs][:3] == ['substack', 's2', 's3'])
     check('run-sheet: the progress at the top, then Download first, then the cards, then the optional ones under their heading',
           sub.index('data-meter="mon"') < sub.index('id="mon-download"') < sub.index('data-run="substack"')
@@ -3302,6 +3323,7 @@ def _runsheet_checks(check, week, mon):
           verify(after) == [] and 'record-feature' in now and all(now[k] == v for k, v in was.items())
           and 'TikTok words' in ' '.join(now['tiktok'])
           and 'Shorts words' not in ' '.join(now['tiktok']))
+    _feature_card_checks(check, week, videos, sub)
     for bad, said in [(plain.replace('<h2>4. TikTok</h2>', '<h2>4. Threads</h2>'), 'that no publish step names'),
                       (plain.replace('<h2>4. TikTok</h2>', '<h2>4. Instagram Reels</h2>'), 'two sections for')]:
         try:
@@ -3325,6 +3347,68 @@ def _runsheet_checks(check, week, mon):
     check('run-sheet: an older week\'s made day is byte for byte what it was before the run-sheet',
           hashlib.sha256(made.encode('utf-8')).hexdigest() == '55798f3f552d6772471d9a5f51e2c67516cd09ed5e935e6af1fa351c5e8400ec')
     use_layout(week)
+
+
+def _feature_card_checks(check, week, videos, plain_sub):
+    """The 15-minute feature's two posting cards (Krish, 2026-10-21: "Yes, add the cards"): on a feature piece only,
+    YouTube long-form right after the 5-minute YouTube card and its Spotify episode right after the Spotify card, each
+    with its files, its words to copy, its do-steps and its own tick. Every other piece's run-sheet is as it was."""
+    global FEATURES_FILE
+    import making  # publish_kit.is_feature reads config/features.json through it
+    check('feature cards: a piece that is not a feature has a run-sheet byte for byte what it was, with neither card',
+          hashlib.sha256(plain_sub.encode('utf-8')).hexdigest() == '11ff14804ab8494f7dd7e193b496b72a88fdb292c92e5eb7f4f948c2e5d2ac36'
+          and 'feature-youtube' not in plain_sub and 'feature-spotify' not in plain_sub)
+    words = {'piece_id': MON_ID, 'feature_youtube_title': 'The feature title', 'feature_youtube_description': 'The feature description',
+             'feature_spotify_chapters': '0:00 Start\n7:30 The deal',
+             'files': {'feature_video': '3 Video/F - feature.mp4', 'feature_thumbnail': '3 Video/F - feature - thumb.jpg'}}
+    vids = {'mon': videos['mon'] + [{'cut': 'feature', 'url': f'https://drive.google.com/file/d/{"e" * 25}/view', 'seconds': 905,
+                                     'thumbnail': {'url': f'https://drive.google.com/file/d/{"f" * 25}/view'}}]}
+    with tempfile.TemporaryDirectory() as tmp:
+        saved, saved_making, FEATURES_FILE = FEATURES_FILE, making.FEATURES, Path(tmp) / 'features.json'
+        making.FEATURES = FEATURES_FILE
+        try:
+            FEATURES_FILE.write_text(json.dumps({'pieces': {MON_ID: {'called_on': '2026-10-25'}}}), encoding='utf-8')
+            page_words = stand_in(tmp, 'mon', 'Warner sued Suno. Now it takes a cut.', 'follow.the.money', words)
+            feat, _, _ = board(week, {'mon': page_words}, {'mon': MON_ID}, videos=vids)
+            use_layout(week)
+            feat_problems, feat_page = verify(feat), check_page(feat)
+        finally:
+            FEATURES_FILE, making.FEATURES = saved, saved_making
+    with tempfile.TemporaryDirectory() as tmp:
+        page_plain = stand_in(tmp, 'mon', 'Warner sued Suno. Now it takes a cut.', 'follow.the.money', words)
+    plain, _, _ = board(week, {'mon': page_plain}, {'mon': MON_ID}, videos=videos)
+    use_layout(week)
+    fsub = div_at(feat, feat.find('<div class="subpanel" role="tabpanel" id="mon-sub-publish"'))
+    runs = [m.group(1) for m in re.finditer(r'<section class="run(?: opt)?" id="[^"]+" data-run="([^"]+)"', fsub)]
+    check('feature cards: a feature piece posts in one order, YouTube long-form after the 5-minute YouTube, its episode after Spotify',
+          runs == ['substack', 'youtube', 'feature-youtube', 'shorts', 'tiktok', 'reels', 'linkedin', 'spotify', 'feature-spotify', 'record-feature'])
+    card = {k: re.search(rf'<section class="run(?: opt)?" id="[^"]+" data-run="{k}"[^>]*>.*?</section>', fsub, re.S).group(0)
+            for k in ('feature-youtube', 'feature-spotify')}
+    yt, sp = card['feature-youtube'], card['feature-spotify']
+    check('feature cards: each is headed by its place and holds its own one tick, not counted toward 100%',
+          '>YouTube long-form (the 15-minute feature)</h3>' in yt and '>Spotify (the 15-minute feature)</h3>' in sp
+          and re.findall(r'data-tick="([^"]+)"', yt) == ['mon-feature-youtube'] and re.findall(r'data-tick="([^"]+)"', sp) == ['mon-feature-spotify']
+          and yt.startswith('<section class="run opt"') and sp.startswith('<section class="run opt"')
+          and 'Done: tick it once it is live' in yt and 'data-tickstate="mon-feature-' not in fsub)
+    check('feature cards: their files are the feature video and its wide thumbnail, linked to Download first',
+          all('href="#mon-dl-video-feature"' in c and 'href="#mon-dl-thumb-feature"' in c for c in (yt, sp))
+          and 'id="mon-dl-video-feature"' in fsub and 'id="mon-dl-thumb-feature"' in fsub)
+    check('feature cards: their words to copy, each with one-tap Copy (title, description, chapters)',
+          all(re.search(rf'<pre class="txt" id="[^"]+" data-raw="{re.escape(t)}"', c) and 'data-act="text"' in c
+              for c, t in ((yt, 'The feature title'), (yt, 'The feature description'), (sp, 'The feature title'),
+                           (sp, 'The feature description'), (sp, '0:00 Start\n7:30 The deal'))))
+    check('feature cards: their do-steps, uploading the feature to YouTube Studio and to Spotify for Creators',
+          '<ol class="do">' in yt and 'YouTube Studio' in yt and 'Spotify for Creators' in sp and '3 Video/F - feature - thumb.jpg' in sp)
+    check('feature cards: a feature board with both cards passes verify and the page check',
+          feat_problems == [] and feat_page == [])
+    psub = div_at(plain, plain.find('<div class="subpanel" role="tabpanel" id="mon-sub-publish"'))
+    check('feature cards: the same words on a piece that is not a feature show neither card and pass verify',
+          verify(plain) == [] and check_page(plain) == [] and 'data-run="feature-' not in psub and 'data-tick="mon-feature-' not in plain)
+    loose = plain.replace('<h2 class="run-h">When you want them</h2>', yt + '<h2 class="run-h">When you want them</h2>', 1)
+    check('feature cards: a feature card on a piece that is not a feature is refused by verify and the page check',
+          any('places to post are' in x for x in verify(loose)) and any('not a feature: mon-feature-youtube' in x for x in check_page(loose)))
+    dropped = feat.replace(sp, '', 1)
+    check('feature cards: a feature piece without its Spotify card is refused', any('places to post are' in x for x in verify(dropped)))
 
 
 def _editor_checks(check, week):

@@ -93,8 +93,8 @@ def feature_steps(p, f, article_q, on_board=False):
     words_at = 'above' if on_board else 'below'
     waiting = p.get('feature_waiting')
     wait = [f'Not ready yet: {waiting}. Everything else in this step is ready.'] if waiting else []
-    video = f.get('feature_video') or f'3 Video/ the {FEATURE_NAME} wide (16:9) video'
-    thumb = f.get('feature_thumbnail') or f'3 Video/ the {FEATURE_NAME}\'s own wide (16:9) thumbnail'
+    names = file_names({'files': f})
+    video, thumb = names['feature_video'], names['feature_thumbnail']
     youtube = {
         'where': FEATURE_YOUTUBE, 'tag': 'Its own video, uploaded by you',
         'why': f'The {FEATURE_NAME} is a video of its own on YouTube, beside the 5-minute one. Substack does not carry it, '
@@ -139,6 +139,9 @@ def file_names(p):
         'share_card': f.get('share_card') or '2 Covers and images/share-card-1200x675.png',
         'square': f.get('square') or '2 Covers and images/square-1080x1080.png',
         'substack_copy': f.get('substack_copy') or '1 Article/substack-copy.html',
+        # The 15-minute feature's own files, named only on a feature piece's two steps (feature_steps).
+        'feature_video': f.get('feature_video') or f'3 Video/ the {FEATURE_NAME} wide (16:9) video',
+        'feature_thumbnail': f.get('feature_thumbnail') or f'3 Video/ the {FEATURE_NAME}\'s own wide (16:9) thumbnail',
     }
 
 
@@ -420,6 +423,9 @@ def self_test():
         failures.append('publish.html keeps its own words: the steps above, the link boxes at the top')
     if file_names({})['spotify_thumbnail'] != file_names({})['wide_thumbnail'] or file_names({'files': {'cover': 'c.png'}})['cover'] != 'c.png':
         failures.append('file_names: the standing names, the words\' own, and Spotify falling back to the wide thumbnail')
+    if (file_names({'files': {'feature_video': 'v.mp4'}})['feature_video'] != 'v.mp4'
+            or FEATURE_NAME not in file_names({})['feature_thumbnail']):
+        failures.append('file_names: the feature\'s video and thumbnail, its words\' own or the standing ones, so the board links them')
     # The 15-minute feature (house rule FEATURE): two steps more, beside the 5-minute ones, only on a feature piece.
     # A feature is only a piece in config/features.json: a "feature": true in publish.json is never read (review,
     # 2026-10-21), so the checks below call one through a features file of their own.
@@ -466,7 +472,7 @@ def self_test():
             failures.append(f'{where}: its words are above its steps on the board and below them on publish.html')
     making.FEATURES = saved_features
     tmp.cleanup()
-    checks = 33
+    checks = 34
     if failures:
         print('publish kit self-test FAILED:\n  ' + '\n  '.join(failures))
         return 1

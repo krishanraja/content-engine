@@ -310,6 +310,14 @@ describe('the making record', () => {
     expect(bad.body.problems[0]).toMatch(/unknown channel "myspace"/)
   })
 
+  it('the 15-minute feature\'s two board cards record as their own channels, and never count toward the five', async () => {
+    const one = await call('POST', { channels: { substack: {}, feature_youtube: { url: 'https://youtu.be/feature' }, feature_spotify: {} } }, 'krish')
+    expect(one.status).toBe(200)
+    expect(Object.keys(one.body.making.channels).sort()).toEqual(['feature_spotify', 'feature_youtube', 'substack'])
+    expect(one.body.making.channels.feature_youtube.url).toBe('https://youtu.be/feature')
+    expect(one.body.steps.find((s: Row) => s.key === 'publish')).toMatchObject({ note: '1 of 5 channels' })
+  })
+
   it('a bad link, an empty patch and a missing piece are refused with reasons', async () => {
     expect((await call('POST', { workroom: 'http://plain' })).body.problems).toEqual(['workroom needs an https url'])
     expect((await call('POST', { nothing: 1 })).body.error).toBe('empty_patch')

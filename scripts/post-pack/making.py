@@ -137,7 +137,8 @@ sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE.parent))
 import engine  # noqa: E402
 
-CHANNELS = ('substack', 'youtube', 'shorts', 'tiktok', 'reels', 'linkedin', 'whatsapp', 'notes', 'spotify')
+CHANNELS = ('substack', 'youtube', 'shorts', 'tiktok', 'reels', 'linkedin', 'whatsapp', 'notes', 'spotify',
+            'feature_youtube', 'feature_spotify')  # the 15-minute feature's own two posts (config/board-layout.json)
 CUTS = ('long', 'short')  # the two cuts every piece gets (house rule TWO_CUTS)
 FEATURE = 'feature'
 # Every cut a record can hold: the feature only on a piece Krish called a 15-minute feature for (house rule FEATURE).
@@ -1832,6 +1833,19 @@ def self_test():
     except SystemExit as stop:
         retired = stop.code != 0
     check('descript: retired on 2026-10-12, so the command line no longer takes it', retired, True)
+
+    # The 15-minute feature's two posting cards on the board (config/board-layout.json) record as their own channels.
+    for channel in ('feature_youtube', 'feature_spotify'):
+        code, _ = run([pid, 'posted', channel, 'https://youtu.be/feature'])
+        check(f'posted: the feature\'s {channel} card records as its own channel', (code, seen[-1][2].get('channels')),
+              (0, {channel: {'url': 'https://youtu.be/feature'}}))
+    try:
+        with contextlib.redirect_stderr(io.StringIO()):
+            main([pid, 'posted', 'feature'], call=fake)
+        refused = False
+    except SystemExit as stop:
+        refused = stop.code != 0
+    check('posted: a channel no card names is refused', refused, True)
 
     run(['--by', 'Codex', pid, 'session', 'https://chatgpt.com/codex/tasks/x'])
     check('session: the session says who runs it', seen[-1][2]['session'], {'url': 'https://chatgpt.com/codex/tasks/x', 'by': 'Codex'})

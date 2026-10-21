@@ -33,11 +33,13 @@
       {"key": "record-short", "label": "Record the 90-second cut (Teleprompter)", "channel": null, "counted": true},
       {"key": "substack", "label": "Substack: video post with the article", "channel": "substack", "counted": true},
       {"key": "youtube", "label": "YouTube: the 5-minute video", "channel": "youtube", "counted": true},
+      {"key": "feature-youtube", "label": "YouTube long-form: the 15-minute feature", "channel": "feature_youtube", "counted": false, "feature_only": true},
       {"key": "shorts", "label": "YouTube Shorts", "channel": "shorts", "counted": true},
       {"key": "tiktok", "label": "TikTok", "channel": "tiktok", "counted": true},
       {"key": "reels", "label": "Instagram Reels", "channel": "reels", "counted": true},
       {"key": "linkedin", "label": "LinkedIn", "channel": "linkedin", "counted": false},
       {"key": "spotify", "label": "Spotify: the video episode, its clip and chapters", "channel": "spotify", "counted": false},
+      {"key": "feature-spotify", "label": "Spotify: the 15-minute feature episode", "channel": "feature_spotify", "counted": false, "feature_only": true},
       {"key": "record-feature", "label": "Record the 15-minute feature (Teleprompter)", "channel": null, "counted": false, "feature_only": true}
     ],
     "sections": {
@@ -47,7 +49,9 @@
       "TikTok": "tiktok",
       "Instagram Reels": "reels",
       "LinkedIn": "linkedin",
-      "Spotify": "spotify"
+      "Spotify": "spotify",
+      "YouTube long-form (the 15-minute feature)": "feature-youtube",
+      "Spotify (the 15-minute feature)": "feature-spotify"
     },
     "dropped_channels": {"whatsapp": "WhatsApp", "notes": "Substack Notes"}
   }
