@@ -222,6 +222,7 @@ def gate(title, source=None, data=None, *, piece_id=None):
     # suppress a name/number absent from the source or affect another piece.
     override = v.get('editorial_override') if isinstance(v, dict) else None
     if (v and v.get('verdict') == 'picked' and piece_id and v.get('piece') == piece_id
+            and isinstance(v.get('krish'), str) and v['krish'].strip()
             and isinstance(override, dict) and override.get('said') == v.get('krish')):
         allowed = set(override.get('findings') or []) & set(problems(title))
         out = [finding for finding in out if finding not in allowed]
@@ -506,6 +507,10 @@ def self_test():
     changed = {'lessons': [], 'verdicts': [{**picked, 'krish': 'Different approval words'}]}
     check('approval words must match the exact override record',
           bool(gate('Muse vs Grok Bot', data=changed, piece_id='test-piece')), True)
+    empty = {'lessons': [], 'verdicts': [{**picked, 'krish': None, 'editorial_override': {
+        'said': None, 'findings': problems('Muse vs Grok Bot')}}]}
+    check('two absent approval values cannot authorise a taste override',
+          bool(gate('Muse vs Grok Bot', data=empty, piece_id='test-piece')), True)
     if fails:
         print('title_check self-test FAILED:\n  ' + '\n  '.join(fails))
         return 1
