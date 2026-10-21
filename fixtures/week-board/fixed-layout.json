@@ -1,6 +1,11 @@
 {
- "_about": "The fixed layout of the publish board, as check_board_layout.py reads it from three fed weeks. A change here is a change to the board Krish works in: only with him.",
+ "_about": "The fixed layout of the publish board, as check_board_layout.py reads it from three fed weeks, the hash of its layout file and colours, and the words Krish approved it in. It changes only with --update --approved (Ruling, Krish, 2026-10-21: the layout is held by CI and changes only with his recorded words).",
  "layout_version": 2,
+ "approved": "Krish, 2026-10-21: just get it all done now, to full completion",
+ "files": {
+  "config/board-layout.json": "7d36335c3c6f0c6f121b68664a7713938b4109383c59a274ed0a102aac6d1d05",
+  "scripts/post-pack/tokens.css": "a38811b2df781b9169b3576986fa59cca5d870469190560bf8f5e9515c4de42f"
+ },
  "weeks": {
   "empty": {
    "tabs": [
@@ -65,7 +70,16 @@
       "div.slot-empty"
      ]
     }
-   }
+   },
+   "queue": [
+    "div.day-head",
+    "p.st-what",
+    "section.q-combine",
+    "section.q-day",
+    "section.q-day",
+    "section.q-day",
+    "section.q-day"
+   ]
   },
   "sunday": {
    "tabs": [
@@ -130,7 +144,38 @@
       "div.slot-empty"
      ]
     }
-   }
+   },
+   "idea_card": [
+    "label.pick",
+    "div.id-flags",
+    "p.id-sowhat",
+    "p.id-story",
+    "ol.id-beats",
+    "dl.id-facts",
+    "div.tri-row",
+    "label.qmark",
+    "div.tri-why",
+    "p.tri-state"
+   ],
+   "queue": [
+    "div.day-head",
+    "p.st-what",
+    "section.q-combine",
+    "section.q-day",
+    "section.q-day",
+    "section.q-day",
+    "section.q-day"
+   ],
+   "combine_card": [
+    "p.q-meta",
+    "p.q-sowhat",
+    "h3.q-h",
+    "ul.q-members",
+    "h3.q-h",
+    "ol.q-joins",
+    "button.btn-s",
+    "p.q-state"
+   ]
   },
   "midweek": {
    "tabs": [
@@ -207,7 +252,28 @@
       "div.ticks"
      ]
     }
-   }
+   },
+   "idea_card": [
+    "label.pick",
+    "div.id-flags",
+    "p.id-sowhat",
+    "p.id-story",
+    "ol.id-beats",
+    "dl.id-facts",
+    "div.tri-row",
+    "label.qmark",
+    "div.tri-why",
+    "p.tri-state"
+   ],
+   "queue": [
+    "div.day-head",
+    "p.st-what",
+    "section.q-combine",
+    "section.q-day",
+    "section.q-day",
+    "section.q-day",
+    "section.q-day"
+   ]
   }
  }
 }
