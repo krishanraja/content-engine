@@ -63,14 +63,18 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    `angle`, `decided_by: "Krish"`, the idea's `so_what`, `story` as `idea`,
    `source_url`, `series`, `from_week`, `from_pick`). A mark with no verdict
    is only queued. Never write a verdict he did not give.
-   Copy his Combine taps the same way: every `queue/combine-<n>` doc
-   (`{combine: true, members}`) and `COMBINE combine-<n>` comment on last
-   week's board goes to `POST /api/content-ideas/synthesize` with
-   `source_idea_ids` = its members, `target_lane: "publication"`, its
-   series as `lane_slot`, `decided_by: "Krish"` and `said` = the comment's
-   words; synthesize takes the members out of the queue, recording
-   `absorbed_into` and `combined_by: "Krish"`. Never combine queued ideas
-   without his tap or words: the route refuses (`queued_needs_his_word`).
+   Copy his Combine taps the same way: `python3 scripts/post-pack/board_feed.py taps <last Monday>`
+   prints a synthesize body for every `queue/combine-<n>` doc Krish wrote
+   himself (`updated_by: "Krish"`; it skips any other writer and says so,
+   and the board API refuses a session's tap). Send each to
+   `POST /api/content-ideas/synthesize` with its series as `lane_slot`,
+   `decided_by: "Krish"` and `said: null`. The `COMBINE combine-<n>`
+   comment the tap posts carries the board's own words, which a session
+   wrote, so it is never his `said`; set `said` only to words he typed
+   himself in a comment of his own about that group. synthesize takes the
+   members out of the queue, recording `absorbed_into` and
+   `combined_by: "Krish"`. Never combine queued ideas without his tap or
+   words: the route refuses (`queued_needs_his_word`).
    **Then gather every source in one read** (Krish, 2026-10-21: "a fresh
    batch of ideas that sources from all my different sources of ideas ...
    learnt from what I previously liked"): `python3 scripts/post-pack/board_feed.py gather <Monday>`.

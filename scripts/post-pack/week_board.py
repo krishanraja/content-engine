@@ -2958,6 +2958,9 @@ def _sources_checks(check):
     js = template('week.js')
     check('combine: the tap saves queue/combine-<n> with combine true and its members, and posts a comment',
           'qdb.doc("queue/" + cid).set(body)' in js and 'combine: true, members' in js and 'COMBINE ${cid}' in js)
+    check('combine: a saved tap shows only on the card for those same ideas, and its comment carries no board words as his',
+          'same(saved[cid].members, members(c))' in js and '`COMBINE ${cid} ${body.members.join(" ")}\\n${body.at}`' in js
+          and 'q-sowhat")?.textContent' not in js)
 
 
 def _ideas_checks(check):

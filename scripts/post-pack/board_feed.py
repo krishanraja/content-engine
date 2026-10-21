@@ -17,6 +17,7 @@ and builds with --ideas --queue --combine.
 """
 import argparse
 import json
+import re
 import sys
 from datetime import date
 from pathlib import Path
@@ -90,6 +91,39 @@ def gather(week, call=None, out_dir=None):
     return path, lines
 
 
+COMBINE_DOC = re.compile(r'^combine-\d{1,3}$')
+
+
+def his_taps(documents, series=None):
+    """(synthesize bodies, skipped lines) from a board's queue documents. Only a Combine tap Krish wrote himself
+    (updated_by 'Krish', the access-cookie writer) is relayed; the board API refuses a session's, and this refuses one
+    that got there anyway. `said` stays None: the board's own words (the thesis a session wrote) are never his. A
+    session adds `said` only from a comment Krish typed himself."""
+    bodies, skipped = [], []
+    for d in documents or []:
+        if not isinstance(d, dict) or not COMBINE_DOC.match(str(d.get('id') or '')):
+            continue
+        body = d.get('body') if isinstance(d.get('body'), dict) else {}
+        if body.get('combine') is not True:
+            continue
+        if d.get('updated_by') != 'Krish':
+            skipped.append(f'{d.get("id")}: written by {d.get("updated_by")!r}, not Krish; not relayed')
+            continue
+        bodies.append({'tap': d['id'], 'source_idea_ids': list(body.get('members') or []), 'target_lane': 'publication',
+                       'lane_slot': (series or {}).get(d['id']), 'decided_by': 'Krish', 'said': None})
+    return bodies, skipped
+
+
+def taps(week, read=None):
+    """His Combine taps on a week's board, ready for POST /api/content-ideas/synthesize. Read-only."""
+    wk = monday(week).isoformat()
+    if read is None:
+        import board_web
+        read = lambda path: board_web.call('GET', path)
+    answer = read(f'/api/board/{wk}/queue')
+    return his_taps((answer or {}).get('documents') if isinstance(answer, dict) else [])
+
+
 def self_test():
     """No engine: a fake answer for each route, then what gather writes and says."""
     import tempfile
@@ -128,6 +162,17 @@ def self_test():
         problems.append('an engine error must be said, never written as an empty pool')
     except FeedError:
         pass
+    m = ['11111111-2222-4333-8444-555555555555', '22222222-3333-4444-8555-666666666666']
+    docs = [{'id': 'combine-1', 'updated_by': 'Krish', 'body': {'combine': True, 'members': m, 'pick': 'combine-1'}},
+            {'id': 'combine-2', 'updated_by': 'engine_operator', 'body': {'combine': True, 'members': m, 'pick': 'combine-2'}},
+            {'id': 'mon-1', 'updated_by': 'Krish', 'body': {'pick': 'mon-1', 'queued': True}}]
+    bodies, skipped = taps('2026-10-26', lambda path: {'ok': True, 'documents': docs})
+    if [b['tap'] for b in bodies] != ['combine-1'] or bodies[0]['source_idea_ids'] != m or bodies[0]['decided_by'] != 'Krish':
+        problems.append('only a Combine tap Krish wrote is relayed, with its members')
+    if bodies and bodies[0]['said'] is not None:
+        problems.append('a tap carries no said: the board\'s words are never his')
+    if not skipped or 'combine-2' not in skipped[0]:
+        problems.append('a tap a session wrote is skipped and said so')
     return problems
 
 
@@ -137,8 +182,20 @@ def main(argv=None):
     g = sub.add_parser('gather', help='read every source and the queue into docs/plans/<Monday>-week/sources.json')
     g.add_argument('week', help='the Monday the week starts on, YYYY-MM-DD')
     g.add_argument('--out-dir', help='write sources.json here instead (a test)')
+    t = sub.add_parser('taps', help='his Combine taps on a week\'s board, as synthesize bodies (only those Krish wrote)')
+    t.add_argument('week', help='the Monday of the board the taps are on, YYYY-MM-DD')
     sub.add_parser('self-test')
     args = ap.parse_args(argv)
+    if args.cmd == 'taps':
+        try:
+            bodies, skipped = taps(args.week)
+        except (FeedError, ValueError, OSError) as error:
+            print(f'board_feed taps: {error}', file=sys.stderr)
+            return 1
+        for line in skipped:
+            print(f'skipped {line}', file=sys.stderr)
+        print(json.dumps(bodies, indent=1))
+        return 0
     if args.cmd == 'self-test':
         problems = self_test()
         print('board_feed self-test ' + ('FAILED:\n  ' + '\n  '.join(problems) if problems else 'passed'))

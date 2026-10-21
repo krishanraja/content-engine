@@ -212,16 +212,26 @@ def browser(pages, tmp):
                         body = json.loads(req.post_data or '{}').get('body')
                         saved.append((path, body))
                         return route.fulfill(status=200, content_type='application/json', body=json.dumps({'ok': True, 'revision': 1, 'body': body}))
-                    answer = {'ok': True, 'weeks': [week]} if path == '/api/board/weeks' else {'ok': True, 'documents': [], 'next_offset': None}
+                    # A stale combine-1 from another group: its tap must not show on this card.
+                    stale = [{'id': 'combine-1', 'revision': 1, 'updated_by': 'Krish',
+                              'body': {'combine': True, 'pick': 'combine-1', 'members': [wb.MON_ID, wb.WED_ID]}}]
+                    answer = ({'ok': True, 'weeks': [week]} if path == '/api/board/weeks' else
+                              {'ok': True, 'documents': stale if path == f'/api/board/{week}/queue' else [], 'next_offset': None})
                     return route.fulfill(status=200, content_type='application/json', body=json.dumps(answer))
                 page.route(re.compile(r'^https://board\.test/'), api)
                 page.goto('https://board.test/sunday.html#queue')
                 page.wait_for_timeout(300)
-                page.click('[data-act="combine"][data-for="combine-1"]')
-                page.wait_for_timeout(300)
-                hit = [b for p, b in saved if p == f'/api/board/{week}/queue/combine-1']
-                if not hit or hit[0].get('combine') is not True or hit[0].get('pick') != 'combine-1' or len(hit[0].get('members') or []) != 2:
-                    problems.append(f'sunday: tapping Combine did not save queue/combine-1 with its members ({saved})')
+                state = page.evaluate('''() => { const b = document.querySelector('[data-act="combine"][data-for="combine-1"]');
+                    return [b.disabled, b.textContent, document.getElementById('combine-1').classList.contains('on')] }''')
+                if state != [False, 'Combine these', False]:
+                    problems.append(f'sunday: a tap saved for other ideas shows as asked on this Combine card ({state})')
+                else:
+                    page.click('[data-act="combine"][data-for="combine-1"]')
+                    page.wait_for_timeout(300)
+                    hit = [b for p, b in saved if p == f'/api/board/{week}/queue/combine-1']
+                    if (not hit or hit[0].get('combine') is not True or hit[0].get('pick') != 'combine-1'
+                            or sorted(hit[0].get('members') or []) != sorted([wb.FRI_ID, wb.WED_ID])):
+                        problems.append(f'sunday: tapping Combine did not save queue/combine-1 with its members ({saved})')
                 page.unroute(re.compile(r'^https://board\.test/'))
         if errors:
             problems.append(f'page errors: {errors[:3]}')
@@ -305,8 +315,13 @@ def editor_in_browser(page, web):
     return problems
 
 
+def file_hash(path):
+    """sha256 of a text file with CRLF line ends read as LF, so git's Windows checkout hashes the same as Linux's."""
+    return hashlib.sha256(Path(path).read_bytes().replace(b'\r\n', b'\n')).hexdigest()
+
+
 def hashes(root=ROOT):
-    return {rel: hashlib.sha256((root / rel).read_bytes()).hexdigest() for rel in LOCKED}
+    return {rel: file_hash(root / rel) for rel in LOCKED}
 
 
 def approved_problem(words):
@@ -326,15 +341,15 @@ def snapshot_of(weeks_seen, files, approved):
 def lock_problems(want, weeks_seen, files):
     """Why the board as built is not the one the snapshot holds with his words, or []."""
     out = []
-    fix = f'If Krish approved the change, run --update --approved "Krish, YYYY-MM-DD: <his words>" and commit {SNAPSHOT.relative_to(ROOT)}.'
+    fix = f'If Krish approved the change, run --update --approved "Krish, YYYY-MM-DD: <his words>" and commit {SNAPSHOT.relative_to(ROOT).as_posix()}.'
     if approved_problem(want.get('approved')):
-        out.append(f'{SNAPSHOT.relative_to(ROOT)} records no words of Krish approving the layout. {fix}')
+        out.append(f'{SNAPSHOT.relative_to(ROOT).as_posix()} records no words of Krish approving the layout. {fix}')
     for rel, digest in files.items():
         if (want.get('files') or {}).get(rel) != digest:
             out.append(f'{rel} changed since the layout Krish approved (its sha256 differs from the snapshot). {fix}')
     for name in weeks_seen:
         if (want.get('weeks') or {}).get(name) != weeks_seen[name]:
-            out.append(f'{name}: the board\'s structure differs from {SNAPSHOT.relative_to(ROOT)}: the layout changed. {fix}')
+            out.append(f'{name}: the board\'s structure differs from {SNAPSHOT.relative_to(ROOT).as_posix()}: the layout changed. {fix}')
     return out
 
 
@@ -353,6 +368,14 @@ def self_test():
         'an update without his words is refused': approved_problem(None) is not None and approved_problem('looks fine') is not None,
         'an update with a date and his words is accepted': approved_problem(words) is None,
     }
+    # Windows checks the layout file out with CRLF line ends; it is the same file and must hash the same.
+    with tempfile.TemporaryDirectory() as tmp:
+        lf = (ROOT / LOCKED[0]).read_bytes().replace(b'\r\n', b'\n')
+        crlf, changed = Path(tmp) / 'crlf.json', Path(tmp) / 'changed.json'
+        crlf.write_bytes(lf.replace(b'\n', b'\r\n'))
+        changed.write_bytes(lf.replace(b'"layout_from"', b'"layout_frum"', 1))
+        checks['a CRLF copy of the layout file hashes the same as the LF copy'] = file_hash(crlf) == file_hash(ROOT / LOCKED[0])
+        checks['a real change to the layout file still changes its hash'] = file_hash(changed) != file_hash(ROOT / LOCKED[0])
     return [f'self-test: {name}' for name, ok in checks.items() if not ok]
 
 
@@ -373,7 +396,7 @@ def main(argv=None):
         got = {name: structure(page) for name, page in pages.items()}
         if args.update:
             SNAPSHOT.write_text(json.dumps(snapshot_of(got, hashes(), args.approved.strip()), indent=1) + '\n', encoding='utf-8')
-            print(f'check:board-layout: wrote {SNAPSHOT.relative_to(ROOT)}, approved: {args.approved.strip()}')
+            print(f'check:board-layout: wrote {SNAPSHOT.relative_to(ROOT).as_posix()}, approved: {args.approved.strip()}')
         else:
             try:
                 want = json.loads(SNAPSHOT.read_text(encoding='utf-8'))

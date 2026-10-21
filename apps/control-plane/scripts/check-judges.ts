@@ -38,12 +38,16 @@
 //
 //   npx tsx scripts/check-judges.ts
 import assert from 'node:assert/strict'
-import { readFileSync } from 'node:fs'
+import { readdirSync, readFileSync } from 'node:fs'
 import { DRAFT_JUDGES, IDEA_JUDGES, ROSTER_VERSION, rosterFor } from '../api/_judges/roster.js'
 import { buildJudgePrompt, parseVerdict, summarise, standing } from '../api/_judges/panel.js'
 import { deterministicFindings, voiceMechanics } from '../api/_judges/deterministic.js'
 
 const read = (rel: string) => readFileSync(new URL(`../${rel}`, import.meta.url), 'utf8')
+/** The first read of Krish's taste evidence in a judge's source, or null: the queue marks (by path or destructured from
+ *  meta), the week options he chose, and Sunday's sources block. The judges stay blind (Krish, 2026-10-21). */
+const TASTE_READ = /\bqueue\b[^\n]*=\s*[^\n]*\bmeta\b|meta\??\.queue|week_option|_weekSources|why_here/
+const tasteRead = (src: string): string | null => src.match(TASTE_READ)?.[0] ?? null
 
 // ── 1. One judge, one question ──────────────────────────────────────────────
 for (const [gate, roster] of [['idea', IDEA_JUDGES], ['draft', DRAFT_JUDGES]] as const) {
@@ -602,10 +606,21 @@ assert.match(ROSTER_VERSION, /^[a-z0-9][a-z0-9._-]{0,39}$/)
   assert.doesNotMatch(scorer, /judge_verdicts|content_edit_events|panel_runs/, 'the arc scorer must not read the panel or the edit ledger: form and craft may inform it, a record of what Krish liked may not')
   // His taste steers Sunday's sourcing and ranking only; the judges stay blind (Krish, 2026-10-21). The ladder and
   // the scorer never read the sources block, his queue marks or his picks.
-  for (const [name, src] of [['judge/ladder.ts', read('api/judge/ladder.ts')], ['_arcScore.ts', scorer]] as const) {
-    assert.doesNotMatch(src, /_weekSources|why_here|meta\.queue|meta\?\.queue|week_option/,
-      `${name} must not read Sunday's taste evidence (_weekSources.ts, meta.queue, week_option): his taste steers sourcing, the judges stay blind`)
+  const judgeFiles = [
+    ...readdirSync(new URL('../api/_judges/', import.meta.url)).filter(f => f.endsWith('.ts')).map(f => `api/_judges/${f}`),
+    'api/judge/sweep.ts', 'api/content-ideas/[id]/judge.ts', 'api/judge/ladder.ts', 'api/_arcScore.ts',
+  ]
+  assert.ok(judgeFiles.length >= 11, `the blindness check must cover every judge file, found ${judgeFiles.length}`)
+  for (const name of judgeFiles) {
+    const taste = tasteRead(read(name))
+    assert.equal(taste, null, `${name} must not read Sunday's taste evidence (${taste}): his taste steers sourcing, the judges stay blind`)
   }
+  // The check must be able to fail: a planted read of each kind is caught.
+  for (const planted of ['const q = row.meta.queue', 'const { queue } = row.meta', 'const { queue: q } = r.meta ?? {}', 'r.meta?.queue?.triage',
+    "import { buildSources } from '../_weekSources.js'", 'c.why_here', 'meta.week_option']) {
+    assert.ok(tasteRead(planted), `the blindness check misses a planted read: ${planted}`)
+  }
+  assert.equal(tasteRead('const queue = []\nconst m = row.meta'), null, 'the blindness check must not flag an unrelated queue variable')
 }
 
 // ── 5. The spread is preserved, never averaged ──────────────────────────────
