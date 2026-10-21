@@ -29,7 +29,13 @@ const ACTIONS = new Set([
 ])
 const ARTIFACT_KINDS = new Set(['draft', 'brief_section', 'headline', 'thesis', 'caption', 'script', 'external_final'])
 const SUBJECT_TABLES = new Set(['content_ideas', 'weekly_briefs', 'video_studio_jobs'])
-const SURFACES = new Set(['composer', 'brief_editor', 'mobile_deck', 'video_review', 'carousel_review', 'triage', 'api'])
+// publish_board: an edit Krish saved on the week's publish board (content.krishraja.com), which a session relays here
+// after edit_sweep.py has classified it (reason_code: number_fact, claim, structure, tone or wording). Krish,
+// 2026-10-21: "The system needs to not just capture it but learn why I'm giving that feedback and figure out what
+// patterns it's observing." Migration 20261102090000_edit_events_publish_board_surface.sql adds it to the CHECK.
+const SURFACES = new Set(['composer', 'brief_editor', 'mobile_deck', 'video_review', 'carousel_review', 'triage', 'api', 'publish_board'])
+/** The classes edit_sweep.py gives a board edit, stored as its reason_code. */
+export const BOARD_EDIT_CLASSES = ['number_fact', 'claim', 'structure', 'tone', 'wording'] as const
 const CLIENTS = new Set(['desktop', 'mobile', 'codex', 'claude_code', 'claude_ai', 'chatgpt', 'runner', 'cron'])
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 const SHA256 = /^[a-f0-9]{64}$/
@@ -60,7 +66,8 @@ export const AGENT_CLIENTS = new Set(['codex', 'claude_code', 'claude_ai', 'chat
 export const DECISION_ACTIONS = new Set(['approved', 'binned', 'published'])
 
 export interface OperatorAttribution {
-  surface: 'api'
+  /** 'publish_board' only when the session relays an edit Krish saved on the board; otherwise the session's own 'api'. */
+  surface: 'api' | 'publish_board'
   client: string
   actor: string
   /** True unless the session is relaying Krish's own decision. */
@@ -76,7 +83,9 @@ export function operatorAttribution(authorization: unknown, body: unknown): Oper
   const b = (body && typeof body === 'object' ? body : {}) as Record<string, unknown>
   const client = typeof b.client === 'string' && AGENT_CLIENTS.has(b.client) ? b.client : 'claude_code'
   const relayed = b.decided_by === 'Krish'
-  return { surface: 'api', client, actor: relayed ? 'Krish' : client, observation: !relayed }
+  // His saved board edit, relayed: the surface says where his hand was. An unrelayed row is the session's, on 'api'.
+  const surface = relayed && b.surface === 'publish_board' ? 'publish_board' : 'api'
+  return { surface, client, actor: relayed ? 'Krish' : client, observation: !relayed }
 }
 
 export interface EditEventInput {
@@ -157,6 +166,13 @@ export function validateEditEvent(input: unknown): { ok: true; value: EditEventI
 
   const delta = b.delta_features
   if (delta !== undefined && !Array.isArray(delta)) return { ok: false, error: 'delta_features_must_be_an_array' }
+
+  // A board edit says what it was: his hand (manual_edit), on a draft or a script, with the class edit_sweep.py gave it,
+  // so the compiler can count the classes (repeatedEditClassProposals in learning/_patterns.ts).
+  if (surface === 'publish_board') {
+    if (action !== 'manual_edit') return { ok: false, error: 'a_board_edit_is_a_manual_edit' }
+    if (!(BOARD_EDIT_CLASSES as readonly string[]).includes(str('reason_code') || '')) return { ok: false, error: 'a_board_edit_needs_its_class' }
+  }
 
   return {
     ok: true,

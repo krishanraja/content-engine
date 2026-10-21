@@ -70,13 +70,23 @@ def weeks(tmp):
                                 'joins': ['The first idea', 'What links them', 'The bigger point']}], queue)
     brief = wb.read_brief({'idea': 'The idea.', 'flow': ['One', 'Two', 'Three'], 'ending': 'The end.', 'takeaway': 'The takeaway.',
                            'angle': 'The angle.', 'tone': 'Warm.', 'reader': 'Leaders at mid-sized firms.', 'agreed': True})
+    # The Drafts step fed in full: what his saved edit carried (Also changed), and what was learned from his edits.
+    sweep = wb.read_sweep({'day': 'wed', 'piece_id': wb.WED_ID,
+                           'also_changed': [{'id': 's1', 'where': 'Wednesday, Five-minute script', 'kind': 'number_fact',
+                                             'from': '40 percent', 'to': '38 percent', 'context': 'About 38 percent of firms pay.'}],
+                           'suggestions': [{'id': 't1', 'where': 'Friday, Article', 'kind': 'tone', 'from': 'really cheap', 'to': 'cheap'}],
+                           'held': [{'where': 'Wednesday, 90-second script', 'why': 'you have recorded it'}],
+                           'gates': [{'where': 'Wednesday, Five-minute script', 'check': 'story_check', 'ok': True, 'problems': []}]})
+    lessons = wb.read_lessons([{'id': 'lesson-1', 'assertion': 'On the publish board Krish made 3 number or fact edits in 28 days.',
+                                'evidence_count': 3, 'kind': 'number_fact', 'status': 'proposed'}])
     out = {'empty': wb.board(monday)[0],
            'sunday': wb.board(monday, ideas=ideas, queue=queue, combine=combine)[0],
            'midweek': wb.board(monday, {'mon': mon}, {'mon': wb.MON_ID, 'wed': wb.WED_ID, 'fri': wb.FRI_ID},
-                               review={'wed': [('article', 'Article draft', 'Words.'), ('long', 'Five-minute script', 'Said.')]},
+                               review={'wed': [('article', 'Article draft', '# The heading\n\nWords.\n\nMore words here.'),
+                                               ('long', 'Five-minute script', 'Said.')]},
                                videos={'mon': [video('long', 'a', 305), video('short', 'c', 86)]},
                                draft={'wed'}, calls={'wed': ['A call to make']}, queue=queue, ideas=ideas,
-                               briefs={'wed': brief, 'fri': dict(brief, agreed=False)})[0]}
+                               briefs={'wed': brief, 'fri': dict(brief, agreed=False)}, sweeps={'wed': sweep}, lessons=lessons)[0]}
     return out
 
 
@@ -186,6 +196,7 @@ def browser(pages, tmp):
                 if shown != [True, True, '#monday/record']:
                     problems.append(f'midweek: tapping Record did not open it alone ({shown})')
                 page.locator('#mon-sub-record button[data-act="text"]').first.click()
+                problems += editor_in_browser(page, web)
             if name == 'sunday':
                 # His Combine tap saves queue/combine-1 through the board API, with its members (Krish, 2026-10-21:
                 # nothing in the queue is combined without his word; the tap is that word).
@@ -215,6 +226,82 @@ def browser(pages, tmp):
         if errors:
             problems.append(f'page errors: {errors[:3]}')
         b.close()
+    return problems
+
+
+def editor_in_browser(page, web):
+    """The Drafts editor by touch, through the board API (Krish, 2026-10-21: "edit in line myself and save changes to
+    get picked up"): tap a paragraph, change it, Done, the bar counts it, Save, Saved, and the save is edits/wed-article
+    with the store's fields and the hash of the words it was made on; then picked words get a comment pinned to their
+    paragraph; then a save that meets another session's save says it was not saved."""
+    import hashlib as _h
+    week = wb.LAYOUT_FROM.isoformat()
+    saved, state = [], {'conflict': False}
+    base = '# The heading\n\nWords.\n\nMore words here.'
+
+    def api(route):
+        req = route.request
+        path = req.url.split('board.test', 1)[1].split('?')[0]
+        if path == '/midweek.html':
+            return route.fulfill(status=200, content_type='text/html', body=web)
+        if req.method == 'PUT':
+            body = json.loads(req.post_data or '{}').get('body')
+            if state['conflict'] and '/edits/' in path:
+                return route.fulfill(status=409, content_type='application/json',
+                                     body=json.dumps({'ok': False, 'error': 'revision_conflict', 'body': {'text': 'theirs'}, 'revision': 7}))
+            saved.append((path, body))
+            return route.fulfill(status=200, content_type='application/json', body=json.dumps({'ok': True, 'revision': 1, 'body': body}))
+        answer = {'ok': True, 'weeks': [week]} if path == '/api/board/weeks' else {'ok': True, 'documents': [], 'next_offset': None}
+        return route.fulfill(status=200, content_type='application/json', body=json.dumps(answer))
+    problems = []
+    page.route(re.compile(r'^https://board\.test/'), api)
+    try:
+        page.goto('https://board.test/midweek.html#wednesday/drafts')
+        page.wait_for_timeout(300)
+        count = page.locator('.rv-save[data-save-day="wed"] .rv-count')
+        page.click('#rvp-wed-article-1')
+        page.fill('.rv-pedit .rv-ptext', 'Fewer words.')
+        page.click('.rv-pedit button:text("Done")')
+        if count.inner_text().strip() != '1 unsaved change':
+            problems.append(f'midweek: an edited paragraph is not counted on the Save bar ({count.inner_text()!r})')
+        page.click('[data-act="save-all"][data-day="wed"]')
+        page.wait_for_timeout(400)
+        hit = [b for p, b in saved if p == f'/api/board/{week}/edits/wed-article']
+        want = base.replace('Words.', 'Fewer words.')
+        if not hit or hit[-1].get('text') != want or hit[-1].get('day') != 'wed' or hit[-1].get('item') != 'article' \
+                or hit[-1].get('base_sha256') != _h.sha256(base.encode()).hexdigest() or not hit[-1].get('at'):
+            problems.append(f'midweek: Save did not keep the paragraph in edits/wed-article with its fields ({hit})')
+        if not count.inner_text().startswith('Saved'):
+            problems.append(f'midweek: after Save the bar does not say Saved ({count.inner_text()!r})')
+        if page.locator('#rvp-wed-article-1').inner_text().strip() != 'Fewer words.':
+            problems.append('midweek: the saved paragraph does not read as he wrote it')
+        # Picked words, then Comment on this: the comment carries its draft, paragraph and the words.
+        page.evaluate('''() => { const p = document.querySelector('#rvp-wed-article-2 p'); const r = document.createRange();
+            r.selectNodeContents(p); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }''')
+        page.wait_for_timeout(400)
+        if not page.locator('.rv-cbtn').is_visible():
+            problems.append('midweek: picking words in a draft does not offer Comment on this')
+        else:
+            page.click('.rv-cbtn')
+            page.fill('dialog.wb-sheet textarea', 'Say who.')
+            page.click('dialog.wb-sheet .wb-save')
+            page.wait_for_timeout(400)
+            note = [b for p, b in saved if p.startswith(f'/api/board/{week}/comments/')]
+            if not note or note[-1].get('quote') != 'More words here.' or note[-1].get('paragraph') != 2 \
+                    or note[-1].get('box') != 'wed-article' or note[-1].get('anchor') != 'rvp-wed-article-2':
+                problems.append(f'midweek: the comment is not pinned to its draft, paragraph and words ({note})')
+            page.keyboard.press('Escape')
+        # A save that meets another session's: said, never lost silently.
+        state['conflict'] = True
+        page.click('#rvp-wed-article-2', timeout=5000)
+        page.fill('.rv-pedit .rv-ptext', 'Other words.')
+        page.click('.rv-pedit button:text("Done")')
+        page.click('[data-act="save-all"][data-day="wed"]')
+        page.wait_for_timeout(600)
+        if not count.inner_text().startswith('Not saved'):
+            problems.append(f'midweek: a save that met another session\'s is not said ({count.inner_text()!r})')
+    finally:
+        page.unroute(re.compile(r'^https://board\.test/'))
     return problems
 
 

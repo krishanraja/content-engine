@@ -39,6 +39,23 @@ describe('board access and contracts', () => {
     expect(validBody('queue', 'combine-1', { combine: true, members: m, pick: 'combine-2' })).toBe(false)
     expect(validBody('queue', 'mon-1', { combine: true, members: m, pick: 'mon-1' })).toBe(false)
     expect(validBody('edits', 'mon-article', { text: 'new', day: 'mon', item: 'article' })).toBe(true)
+    // The Drafts editor's save keeps the store's fields and adds the hash of the words it was made on.
+    expect(validBody('edits', 'mon-article', { text: 'new', day: 'mon', item: 'article', base_sha256: 'a'.repeat(64), at: '2026-10-26T07:00:00Z' })).toBe(true)
+  })
+  it('takes a comment pinned to a passage, and his taps on Also changed and What I learned, and nothing looser', () => {
+    const c = { thread_id: 't1', anchor: 'rvp-mon-article-3', text: 'Too strong', at: '2026-10-26T07:00:00Z' }
+    expect(validBody('comments', 't1', c)).toBe(true)
+    expect(validBody('comments', 't1', { ...c, box: 'mon-article', paragraph: 3, quote: 'about 40% of firms' })).toBe(true)
+    expect(validBody('comments', 't1', { ...c, paragraph: -1 })).toBe(false)
+    expect(validBody('comments', 't1', { ...c, paragraph: 1.5 })).toBe(false)
+    expect(validBody('comments', 't1', { ...c, box: '../mon' })).toBe(false)
+    expect(validBody('comments', 't1', { ...c, quote: '' })).toBe(false)
+    expect(validBody('comments', 't1', { ...c, quote: 'x'.repeat(2001) })).toBe(false)
+    expect(validBody('comments', 't1', { ...c, anchor: 'mon-also-1', act: 'undo', ref: 's1' })).toBe(true)
+    expect(validBody('comments', 't1', { ...c, anchor: 'mon-lesson-1', act: 'lesson_yes', ref: '11111111-2222-4333-8444-555555555555' })).toBe(true)
+    expect(validBody('comments', 't1', { ...c, act: 'delete', ref: 's1' })).toBe(false)
+    expect(validBody('comments', 't1', { ...c, act: 'undo' })).toBe(false)
+    expect(validBody('comments', 't1', { ...c, ref: 's1' })).toBe(false)
   })
   it('makes canonical hashes order-independent and bounds immutable paths', () => {
     expect(digest(canonical({ b: 2, a: 1 }))).toBe(digest(canonical({ a: 1, b: 2 })))

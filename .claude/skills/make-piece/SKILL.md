@@ -67,6 +67,28 @@ chat that started it.
    decisions beside it; it never replaces the day's tab (Krish, 2026-10-19:
    "Why have you stopped working in [the board] even though this is the
    third time I've asked you ? We have a protocol.").
+7. **His saved edits are carried, written to the ledger, and shown back.**
+   Krish, 2026-10-21: "If I make a statistical change or a narrative style
+   change in one place, just make sure that those changes propagate and the
+   next draft is consistent." When `board_web.py read WEEK edits` holds a
+   save for the day newer than the board: `python3
+   scripts/post-pack/edit_sweep.py <day> --week <Monday> --edits <saved
+   edits> --review ...` (the same `--review` boxes as the build, for this
+   day and every later day in draft), `--piece <day>=<uuid>`, and
+   `--making <day>=<saved making record>` so a recorded cut is never
+   touched. Read what it says, then run it again with `--apply`, and with
+   `--post-ledger` to write one row per save to the edit ledger as his
+   (surface `publish_board`, his own saved words, `decided_by: 'Krish'`).
+   Rebuild with `--sweep <day>=<the sweep file>` so "Also changed" shows
+   under the drafts, and `--lessons` (the saved GET
+   /api/video-studio/learning-proposals) for "What I learned from your
+   edits". His taps come back as comments with `act` and `ref`: `undo`
+   (`edit_sweep.py --undo SWEEP ID --apply`), `apply` (`--accept SWEEP ID
+   --apply`), `lesson_yes` and `lesson_no` (relay to POST
+   /api/video-studio/learning-proposals with his decision; a yes becomes a
+   standing rule only once it lands in code or config with its learning
+   entry). A failed gate after the sweep is fixed before the rebuild.
+   `references/week-board.md`, "Krish's edits on the board".
 
 Then do the first step that is not done.
 

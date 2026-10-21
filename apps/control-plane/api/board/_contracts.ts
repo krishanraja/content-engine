@@ -44,7 +44,22 @@ export function validBody(collection: string, id: string, body: unknown): boolea
     && body.members.every(m => typeof m === 'string' && UUID.test(m)) && new Set(body.members).size === body.members.length
   if (collection === 'queue') return text('pick', 160) && typeof body.queued === 'boolean'
   if (collection === 'comments') return text('text', 30000) && text('thread_id', 160) && validId(String(body.thread_id)) && text('anchor', 160) && validId(String(body.anchor))
+    && commentExtras(body)
   return false
+}
+// What a comment may carry beyond its words (Krish, 2026-10-21: comment on any passage of a draft, and his taps on
+// "Also changed" and "What I learned from your edits"): where in which draft and the words he picked, or one of his
+// taps (act) on one change or proposal (ref). Each optional, each bounded; nothing else is checked here.
+export const COMMENT_ACTS = ['undo', 'apply', 'lesson_yes', 'lesson_no'] as const
+function commentExtras(body: Record<string, unknown>): boolean {
+  if ('box' in body && !(typeof body.box === 'string' && validId(body.box))) return false
+  if ('paragraph' in body && !(Number.isSafeInteger(body.paragraph) && Number(body.paragraph) >= 0 && Number(body.paragraph) < 10000)) return false
+  if ('quote' in body && !(typeof body.quote === 'string' && body.quote.length > 0 && body.quote.length <= 2000)) return false
+  if ('act' in body || 'ref' in body) {
+    if (!(COMMENT_ACTS as readonly string[]).includes(String(body.act))) return false
+    if (!(typeof body.ref === 'string' && validId(body.ref))) return false
+  }
+  return true
 }
 // Source archives retain the export's selectors, missing anchors and synthesized
 // reply identifiers verbatim. Canonical comments still use validBody above.

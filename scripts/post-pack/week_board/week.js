@@ -292,7 +292,8 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
 // paragraphs it changed): a board's store can only be read from the account
 // that owns it, but its comments can be read from either of Krish's accounts.
 (() => {
-  const boxes = [...document.querySelectorAll("textarea[data-review-id]")];
+  // The fixed layout's editor (.rv-ed, below) owns its own boxes.
+  const boxes = [...document.querySelectorAll("textarea[data-review-id]")].filter(b => !b.closest(".rv-ed"));
   if (!boxes.length) return;
   const stateOf = id => document.querySelector(`[data-state-for="${id}"]`);
   const say = (id, text, bad) => { const s = stateOf(id); if (s) { s.textContent = text; s.className = "rv-state" + (bad ? " bad" : "") } };
@@ -361,7 +362,7 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
     if (!comments && !rdb) for (const b of boxes) say(b.dataset.reviewId, "Saving isn't available in this view.", true) })();
   document.addEventListener("click", async e => {
     const btn = e.target.closest && e.target.closest('[data-act="save-review"],[data-act="comment-review"]'); if (!btn) return;
-    const id = btn.dataset.for, box = document.querySelector(`textarea[data-review-id="${id}"]`); if (!box) return;
+    const id = btn.dataset.for, box = document.querySelector(`textarea[data-review-id="${id}"]`); if (!box || box.closest(".rv-ed")) return;
     if (btn.dataset.act === "comment-review") {
       if (!comments) return;
       try { await comments.openComposer({ element: box.closest(".rv-item") || box }) } catch { say(id, "The comment box didn't open. Try the page's comment button.", true) }
@@ -385,6 +386,254 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
       : saveError?.message || "Not saved. Press Save again.", !(stored || posted));
     btn.disabled = false;
   });
+})();
+
+// The Drafts step's editor (week_board.py editor_card, the fixed layout). Krish, 2026-10-21: "I need to be able to
+// comment on them to iterate or just edit in line myself and save changes to get picked up", and "On mobile it's just
+// a desktop site on mobile." Each draft reads as it will read; a tap on a paragraph opens it; picked words offer
+// "Comment on this", pinned to {box, paragraph, quote}; one bar per day says how many changes are unsaved and saves
+// them to edits/<day>-<item> (text, day, item, base_sha256, at), the store a session reads with board_web.py.
+// Also changed (Undo, Change it too) and What I learned (Make it a rule, Not a rule) save his taps as comments with
+// an act and a ref, which the next session relays.
+(() => {
+  const sections = [...document.querySelectorAll(".rv-ed[data-review]")];
+  const acts = document.querySelectorAll('[data-act="undo-also"],[data-act="apply-also"],[data-act="lesson-yes"],[data-act="lesson-no"]');
+  if (!sections.length && !acts.length) return;
+  const SPLIT = /(\n(?:[ \t]*\n)+)/;
+  const parts = t => t.split(SPLIT); // even places: the paragraphs; odd: the blank lines between them
+  const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#x27;");
+  const INLINE = [[/`([^`\n]+)`/g, "<code>$1</code>"], [/\*\*([^*\n]+)\*\*/g, "<strong>$1</strong>"],
+    [/(^|[^\w*])\*([^*\n]+)\*(?![\w*])/g, "$1<em>$2</em>"], [/(^|[^\w_])_([^_\n]+)_(?![\w_])/g, "$1<em>$2</em>"],
+    [/\[([^\]\n]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" rel="noopener" target="_blank">$1</a>']];
+  const inline = line => INLINE.reduce((out, [re, to]) => out.replace(re, to), esc(line));
+  // The same rules as md_block() in week_board.py.
+  function mdBlock(text){
+    const out = [], run = []; let kind = null;
+    const flush = () => {
+      if (!run.length) return;
+      if (kind === "ul" || kind === "ol") out.push(`<${kind}>` + run.map(x => `<li>${inline(x)}</li>`).join("") + `</${kind}>`);
+      else if (kind === "q") out.push("<blockquote><p>" + run.map(inline).join("<br>") + "</p></blockquote>");
+      else out.push("<p>" + run.map(inline).join("<br>") + "</p>");
+      run.length = 0;
+    };
+    for (const line of text.split("\n")) {
+      const heading = line.match(/^\s{0,3}(#{1,6})\s+(.*?)\s*#*\s*$/), rule = /^\s*([-*_])\s*(?:\1\s*){2,}$/.test(line);
+      const item = line.match(/^\s*(?:[-*+]|(\d+)[.)])\s+(.*)$/), quote = line.match(/^\s*>\s?(.*)$/);
+      if (heading || rule) { flush(); kind = null; out.push(heading ? `<h4 class="rv-h">${inline(heading[2])}</h4>` : "<hr>"); continue }
+      const k = item ? (item[1] ? "ol" : "ul") : quote ? "q" : "p";
+      if (k !== kind) { flush(); kind = k }
+      run.push(item ? item[2] : quote ? quote[1] : line);
+    }
+    flush();
+    return out.join("");
+  }
+  const box = {};
+  for (const sec of sections) {
+    const id = sec.dataset.review, ta = sec.querySelector("textarea[data-review-id]");
+    if (ta) box[id] = { sec, ta, read: sec.querySelector(".rv-read"), saved: ta.value, built: ta.value, day: ta.dataset.day };
+  }
+  const stateOf = id => document.querySelector(`[data-state-for="${id}"]`);
+  const say = (id, text, bad) => { const s = stateOf(id); if (s) { s.textContent = text; s.className = "rv-state" + (bad ? " bad" : "") } };
+  const paras = t => parts(t).filter((_, i) => i % 2 === 0).map(p => p.trim()).filter(Boolean);
+  function draw(id){
+    const b = box[id], built = paras(b.built);
+    b.read.replaceChildren();
+    parts(b.ta.value).forEach((p, i) => {
+      if (i % 2) return;
+      const d = document.createElement("div"); d.className = "rv-p"; d.id = `rvp-${id}-${i / 2}`; d.dataset.para = String(i / 2); d.tabIndex = 0;
+      d.innerHTML = mdBlock(p);
+      if (!built.includes(p.trim())) d.classList.add("changed");
+      b.read.append(d);
+    });
+    const n = b.sec.querySelector(".rv-n");
+    const count = b.ta.value.split(/\s+/).filter(Boolean).length;
+    if (n) n.textContent = count.toLocaleString("en-US") + (count === 1 ? " word" : " words");
+  }
+  // How many changes a box holds over its last save: the paragraphs taken out or put in, whichever is more.
+  const changes = (was, now) => {
+    if (was === now) return 0;
+    const a = paras(was), b = paras(now), inA = new Set(a), inB = new Set(b);
+    return Math.max(1, a.filter(p => !inB.has(p)).length, b.filter(p => !inA.has(p)).length);
+  };
+  let rdb = null, comments = null, ready = false;
+  const saveState = {}; // day -> {text, cls}
+  function tally(day){
+    const bar = document.querySelector(`.rv-save[data-save-day="${day}"]`); if (!bar) return;
+    const n = Object.values(box).filter(b => b.day === day).reduce((sum, b) => sum + changes(b.saved, b.ta.value), 0);
+    const count = bar.querySelector(".rv-count"), btn = bar.querySelector('[data-act="save-all"]');
+    const kept = saveState[day];
+    if (n) { count.textContent = `${n} unsaved change${n === 1 ? "" : "s"}`; bar.className = "rv-save dirty" }
+    else { count.textContent = kept?.text || "No unsaved changes"; bar.className = "rv-save" + (kept?.cls ? " " + kept.cls : "") }
+    btn.disabled = !n || !ready;
+    if (n && !ready) count.textContent += ": saving isn't available in this view";
+  }
+  const days = [...new Set(Object.values(box).map(b => b.day))];
+  function setText(id, text){
+    const b = box[id];
+    b.ta.value = text;
+    b.ta.dispatchEvent(new Event("input", { bubbles: true })); // the web runtime's own change tracking
+    b.ta.dataset.unsaved = String(text !== b.saved);
+    saveState[b.day] = null;
+    draw(id); tally(b.day);
+  }
+  let open = null;
+  function startEdit(el){
+    if (open && open.el === el) return;
+    if (open) {
+      // Closing the open paragraph redraws its draft, so find the tapped one again by its place.
+      const sid = el.closest(".rv-ed")?.dataset.review, pn = el.dataset.para;
+      finish(true);
+      el = document.getElementById(`rvp-${sid}-${pn}`) || el;
+      if (!el.isConnected) return;
+    }
+    const sec = el.closest(".rv-ed"), id = sec.dataset.review, n = Number(el.dataset.para), b = box[id]; if (!b) return;
+    const original = parts(b.ta.value)[2 * n] ?? "";
+    const wrap = document.createElement("div"); wrap.className = "rv-pedit";
+    const ed = document.createElement("textarea"); ed.className = "rv-ptext"; ed.value = original; ed.spellcheck = true;
+    ed.setAttribute("aria-label", `Paragraph ${n + 1} of ${sec.querySelector("h3")?.textContent || "the draft"}`);
+    const fit = () => { ed.style.height = "auto"; ed.style.height = Math.max(120, ed.scrollHeight + 4) + "px" };
+    ed.addEventListener("input", fit);
+    const bar = document.createElement("div"); bar.className = "btns";
+    const mk = (label, cls, fn) => { const x = document.createElement("button"); x.type = "button"; x.className = "btn-s" + (cls ? " " + cls : ""); x.textContent = label; x.onclick = fn; bar.append(x); return x };
+    mk("Done", "", () => finish(true));
+    mk("Cancel", "ghost", () => finish(false));
+    mk("Comment on this paragraph", "ghost", () => { const o = open; finish(true); comment(document.getElementById(`rvp-${id}-${n}`) || o?.el, id, n, original.replace(/\s+/g, " ").trim().slice(0, 300)) });
+    wrap.append(ed, bar);
+    el.hidden = true; el.after(wrap);
+    open = { id, n, el, wrap, ed, original };
+    fit(); ed.focus();
+    ed.addEventListener("keydown", e => {
+      if (e.key === "Escape") { e.preventDefault(); finish(false) }
+      else if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) { e.preventDefault(); finish(true) }
+    });
+    wrap.addEventListener("focusout", e => { if (open?.wrap === wrap && !(e.relatedTarget && wrap.contains(e.relatedTarget))) setTimeout(() => { if (open?.wrap === wrap && !wrap.contains(document.activeElement)) finish(true) }, 0) });
+  }
+  function finish(keep){
+    const o = open; open = null; if (!o) return;
+    o.wrap.remove(); o.el.hidden = false;
+    const v = o.ed.value.replace(/^(?:[ \t]*\n)+/, "").replace(/(?:\n[ \t]*)+$/, "");
+    if (!keep || v === o.original) return;
+    const ps = parts(box[o.id].ta.value);
+    if (!v.trim()) {
+      // A paragraph emptied is taken out, with the blank line before it (or after, for the first).
+      if (o.n > 0) ps.splice(2 * o.n - 1, 2); else ps.splice(0, Math.min(2, ps.length));
+    } else ps[2 * o.n] = v;
+    setText(o.id, ps.join(""));
+    document.getElementById(`rvp-${o.id}-${o.n}`)?.focus({ preventScroll: true });
+  }
+  document.addEventListener("click", e => {
+    const p = e.target.closest && e.target.closest(".rv-ed .rv-p"); if (!p || e.target.closest("a")) return;
+    const sel = getSelection(); if (sel && !sel.isCollapsed && p.contains(sel.anchorNode)) return; // picking words, not opening
+    startEdit(p);
+  });
+  document.addEventListener("keydown", e => {
+    const p = e.target.closest && e.target.closest(".rv-ed .rv-p");
+    if (p && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); startEdit(p) }
+  });
+  // Comment on picked words: a button in thumb reach while some words of one draft are selected.
+  const cbtn = document.createElement("button"); cbtn.type = "button"; cbtn.className = "btn-s rv-cbtn"; cbtn.textContent = "Comment on this"; cbtn.hidden = true;
+  if (sections.length) document.body.append(cbtn);
+  let picked = null, timer = 0;
+  const nodeEl = n => n && (n.nodeType === 1 ? n : n.parentElement);
+  document.addEventListener("selectionchange", () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      const s = getSelection();
+      const a = nodeEl(s?.anchorNode)?.closest(".rv-ed .rv-p"), f = nodeEl(s?.focusNode)?.closest(".rv-ed .rv-read");
+      const quote = s && !s.isCollapsed ? s.toString().replace(/\s+/g, " ").trim().slice(0, 500) : "";
+      if (!a || !quote || a.closest(".rv-read") !== f) { if (document.activeElement !== cbtn) { cbtn.hidden = true; picked = null } return }
+      picked = { el: a, id: a.closest(".rv-ed").dataset.review, n: Number(a.dataset.para), quote };
+      cbtn.hidden = false;
+    }, 120);
+  });
+  cbtn.addEventListener("pointerdown", e => e.preventDefault()); // keep the words selected
+  cbtn.addEventListener("click", () => { const p = picked; cbtn.hidden = true; picked = null; if (p) comment(p.el, p.id, p.n, p.quote) });
+  async function comment(el, id, n, quote){
+    if (!comments) { say(id, "Comments aren't available in this view.", true); return }
+    try { await comments.openComposer({ element: el || box[id]?.sec, box: id, paragraph: n, quote }) }
+    catch { say(id, "The comment box didn't open. Try the Comments button at the top.", true) }
+  }
+  async function saveDay(day){
+    if (open) finish(true);
+    const dirty = Object.entries(box).filter(([, b]) => b.day === day && b.ta.value !== b.saved);
+    if (!dirty.length || !rdb) return;
+    const bar = document.querySelector(`.rv-save[data-save-day="${day}"]`), btn = bar?.querySelector('[data-act="save-all"]');
+    if (btn) btn.disabled = true;
+    if (bar) bar.querySelector(".rv-count").textContent = "Saving…";
+    let failed = null;
+    for (const [id, b] of dirty) {
+      const text = b.ta.value;
+      try {
+        await rdb.doc("edits/" + id).set({ text, day: b.ta.dataset.day, item: b.ta.dataset.item, at: new Date().toISOString(),
+          words: text.trim().split(/\s+/).length, base_sha256: b.ta.dataset.baseSha256 });
+        b.saved = text;
+        if (b.ta.value === text) b.ta.dataset.unsaved = "false";
+        say(id, "");
+      } catch (e) { failed = e; say(id, e.status === 409 ? "Not saved: this draft changed in another session." : e.message || "Not saved.", true) }
+    }
+    const at = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    saveState[day] = failed ? { text: failed.status === 409 ? "Not saved: a draft changed in another session. Reload to see the latest, then make your change again."
+      : (failed.message || "Not saved. Press Save again."), cls: "bad" } : { text: `Saved ${at}. Claude picks your changes up from here.`, cls: "ok" };
+    tally(day);
+    if (failed && bar) { bar.querySelector(".rv-count").textContent = saveState[day].text; bar.className = "rv-save bad" }
+  }
+  document.addEventListener("click", e => {
+    const btn = e.target.closest && e.target.closest('[data-act="save-all"]'); if (btn) { saveDay(btn.dataset.day); return }
+    const whole = e.target.closest && e.target.closest('.rv-ed [data-act="comment-review"]');
+    if (whole) comment(box[whole.dataset.for]?.sec, whole.dataset.for, undefined, undefined);
+  });
+  // His taps on Also changed and What I learned, saved as comments a session relays.
+  const ACT = { "undo-also": "undo", "apply-also": "apply", "lesson-yes": "lesson_yes", "lesson-no": "lesson_no" };
+  const SAID = { undo: "UNDO: put this back as it was", apply: "APPLY: make this change here too", lesson_yes: "LESSON: yes, make it a rule", lesson_no: "LESSON: no, not a rule" };
+  const DONE = { undo: "Undo saved. The next version puts it back.", apply: "Saved. The next version makes this change too.",
+    lesson_yes: "Your yes is saved. The next session makes it a rule.", lesson_no: "Saved: not a rule." };
+  const stateFor = (act, ref) => document.querySelector(act.startsWith("lesson") ? `[data-lesson-state="${ref}"]` : `[data-also-state="${ref}"]`);
+  function mark(act, ref){
+    const s = stateFor(act, ref); if (s) { s.textContent = DONE[act]; s.className = s.className.replace(/ (ok|bad)$/, "") + " ok" }
+    const scope = s?.closest(".ac-row,.ls-item");
+    for (const b of scope ? scope.querySelectorAll("button[data-act]") : []) b.disabled = true;
+  }
+  document.addEventListener("click", async e => {
+    const b = e.target.closest && e.target.closest(Object.keys(ACT).map(k => `[data-act="${k}"]`).join(",")); if (!b) return;
+    const act = ACT[b.dataset.act], ref = b.dataset.for, holder = b.closest(".ac-row,.ls-item"), s = stateFor(act, ref);
+    if (!comments) { if (s) { s.textContent = "This view can't save that. Use the Comments button at the top."; s.className += " bad" } return }
+    b.disabled = true; if (s) s.textContent = "Saving…";
+    const what = (holder?.querySelector(".ac-where,.ls-says")?.textContent || "").trim();
+    const diff = (holder?.querySelector(".ac-diff")?.textContent || "").trim();
+    try {
+      await comments.create({ anchor: holder?.id || "board-root", text: `${SAID[act]} (${ref})\n\n${what}${diff ? "\n" + diff : ""}`, act, ref });
+      mark(act, ref);
+    } catch (err) { if (s) { s.textContent = err.message || "Not saved. Try again."; s.className += " bad" } b.disabled = false }
+  });
+  (async () => {
+    try { rdb = window.claude?.use ? await window.claude.use("db") : null } catch { rdb = null }
+    try { comments = window.claude?.use ? await window.claude.use("comments") : null } catch { comments = null }
+    ready = !!rdb;
+    for (const d of days) tally(d);
+    if (!comments) for (const b of document.querySelectorAll('.rv-ed [data-act="comment-review"]')) b.hidden = true;
+    if (!rdb) { for (const id in box) say(id, "Saving isn't available in this view." + (comments ? " Use Comment instead." : ""), true); return }
+    for (const [id, b] of Object.entries(box)) {
+      rdb.doc("edits/" + id).onSnapshot(snap => {
+        if (!snap.exists) return;
+        const v = snap.data() || {};
+        if (typeof v.text !== "string") return;
+        // A save older than this build was folded into these words by a session: never shown over them.
+        if (b.ta.dataset.builtAt && v.at && v.at < b.ta.dataset.builtAt) { say(id, "Your edit saved " + new Date(v.at).toLocaleString() + " is in this version."); return }
+        if (b.ta.value !== b.saved || open?.id === id) return; // never over unsaved words
+        b.saved = v.text;
+        if (b.ta.value !== v.text) { b.ta.value = v.text; draw(id) }
+        say(id, "Your edit, saved " + (v.at ? new Date(v.at).toLocaleString() : "") + ".");
+        tally(b.day);
+      }, () => {});
+    }
+    // Taps already saved (from this phone or another) show as done.
+    try {
+      rdb.collection("comments").onSnapshot(snap => {
+        const known = new Set(Object.values(ACT));
+        for (const d of snap.docs || []) { const v = d.data() || {}; if (known.has(v.act) && v.ref) mark(v.act, v.ref) }
+      }, () => {});
+    } catch {}
+  })();
 })();
 
 // The Ideas tab (week_board.py ideas_panel). Krish picks one idea a day; the

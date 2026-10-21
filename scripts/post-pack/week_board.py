@@ -533,6 +533,8 @@ def review_card(day, items, built_at=None, kept_at=None):
     Krish made after the last build behind "is in this version"."""
     if not items:
         return ''
+    if FIXED:
+        return editor_card(day, items, built_at, kept_at)
     kept_at = kept_at or {}
     parts = [f'{REVIEW_START}<div class="rec rv" id="{day}-review">'
              '<div class="rec-head"><h2>Review the words</h2></div>'
@@ -553,6 +555,290 @@ def review_card(day, items, built_at=None, kept_at=None):
             f'<span class="rv-state" data-state-for="{E(rid)}" aria-live="polite"></span></div></section>')
     parts.append(f'</div>{REVIEW_END}')
     return ''.join(parts)
+
+
+# ------------------------------------------------------------------ the Drafts step's editor (the fixed layout)
+# Krish, 2026-10-21: "On Monday, Wednesday, and Friday mornings I need to be able to see the draft video scripts and the
+# draft article. I need to be able to comment on them to iterate or just edit in line myself and save changes to get
+# picked up", and "The Comment and Save Changes UIs are not that nice right now ... On mobile it's just a desktop site
+# on mobile." So each draft is a clean read view (its Markdown drawn, no # signs); tapping a paragraph edits it,
+# selecting words offers "Comment on this", and one bar at the bottom says how many changes are unsaved and saves them.
+# The raw words stay in the same textarea (hidden), so the store (edits/<day>-<item>), its fields, the built-at guard
+# and a rebuild's REVIEW_BOX read are unchanged. week.js splits and draws paragraphs exactly as below.
+
+PARA_SPLIT = re.compile(r'(\n(?:[ \t]*\n)+)')
+
+
+def paragraphs(text):
+    """A draft's paragraphs, numbered as the editor numbers them (week.js splits on the same blank lines)."""
+    return PARA_SPLIT.split(text)[0::2]
+
+
+_INLINE = (
+    (re.compile(r'`([^`\n]+)`'), r'<code>\1</code>'),
+    (re.compile(r'\*\*([^*\n]+)\*\*'), r'<strong>\1</strong>'),
+    (re.compile(r'(^|[^\w*])\*([^*\n]+)\*(?![\w*])'), r'\1<em>\2</em>'),
+    (re.compile(r'(^|[^\w_])_([^_\n]+)_(?![\w_])'), r'\1<em>\2</em>'),
+    (re.compile(r'\[([^\]\n]+)\]\((https?://[^\s)]+)\)'), r'<a href="\2" rel="noopener" target="_blank">\1</a>'),
+)
+
+
+def md_inline(line):
+    out = E(line)
+    for pattern, repl in _INLINE:
+        out = pattern.sub(repl, out)
+    return out
+
+
+def md_block(text):
+    """One paragraph of a draft drawn as it reads: headings without their # signs, lists, quotes, a rule, and
+    plain lines kept as he wrote them. The same rules as mdBlock() in week.js."""
+    out, run, kind = [], [], None
+
+    def flush():
+        if not run:
+            return
+        if kind in ('ul', 'ol'):
+            out.append(f'<{kind}>' + ''.join(f'<li>{md_inline(x)}</li>' for x in run) + f'</{kind}>')
+        elif kind == 'q':
+            out.append('<blockquote><p>' + '<br>'.join(md_inline(x) for x in run) + '</p></blockquote>')
+        else:
+            out.append('<p>' + '<br>'.join(md_inline(x) for x in run) + '</p>')
+        run.clear()
+    for line in text.split('\n'):
+        heading = re.match(r'^\s{0,3}(#{1,6})\s+(.*?)\s*#*\s*$', line)
+        rule = re.match(r'^\s*([-*_])\s*(?:\1\s*){2,}$', line)
+        item = re.match(r'^\s*(?:[-*+]|(\d+)[.)])\s+(.*)$', line)
+        quote = re.match(r'^\s*>\s?(.*)$', line)
+        if heading or rule:
+            flush()
+            kind = None
+            out.append(f'<h4 class="rv-h">{md_inline(heading.group(2))}</h4>' if heading else '<hr>')
+            continue
+        k = ('ol' if item.group(1) else 'ul') if item else 'q' if quote else 'p'
+        if k != kind:
+            flush()
+            kind = k
+        run.append(item.group(2) if item else quote.group(1) if quote else line)
+    flush()
+    return ''.join(out)
+
+
+def editor_card(day, items, built_at=None, kept_at=None):
+    """The Drafts step's words: each draft as a read view whose paragraphs he taps to edit, the raw words in the
+    hidden textarea the store and a rebuild read (its id, data-built-at and words as review_card writes them), and
+    one Save bar for the day."""
+    kept_at = kept_at or {}
+    parts = [f'{REVIEW_START}<div class="rec rv ed" id="{day}-review">'
+             '<div class="rec-head"><h2>Your drafts</h2><span class="kick">Tap a paragraph to edit it</span></div>'
+             '<p class="rv-how">Tap any paragraph to change it, or select some words and press Comment on this. Save keeps '
+             'your changes; Claude carries a changed number or fact into every other draft, and lists each place under '
+             'Also changed, where you can undo it.</p>']
+    for slug, label, text in items:
+        rid = f'{day}-{slug}'
+        at = kept_at.get(rid) or built_at
+        paras = ''.join(f'<div class="rv-p" id="rvp-{E(rid)}-{n}" data-para="{n}" tabindex="0">{md_block(para)}</div>'
+                        for n, para in enumerate(paragraphs(text)))
+        parts.append(
+            f'<section class="rv-item rv-ed" id="rvs-{E(rid)}" data-review="{E(rid)}"><div class="sec-head"><h3>{E(label)}</h3>'
+            f'<span class="rv-n">{len(text.split()):,} word{"" if len(text.split()) == 1 else "s"}</span></div>'
+            f'<div class="rv-read" data-read-for="{E(rid)}">{paras}</div>'
+            f'<textarea class="rv-text" id="rv-{E(rid)}" data-review-id="{E(rid)}" data-day="{day}" data-item="{E(slug)}" '
+            + (f'data-built-at="{E(at)}" ' if at else '') +
+            f'data-base-sha256="{hashlib.sha256(text.encode("utf-8")).hexdigest()}" rows="14" spellcheck="true" '
+            f'aria-label="{E(label)}" hidden>{E(text)}</textarea>'
+            f'<div class="rv-bar"><button type="button" class="btn-s ghost" data-act="comment-review" data-for="{E(rid)}">'
+            f'Comment on the whole draft</button><span class="rv-state" data-state-for="{E(rid)}" aria-live="polite"></span></div></section>')
+    parts.append(f'<div class="rv-save" data-save-day="{day}"><span class="rv-count" data-unsaved-count="{day}" aria-live="polite">'
+                 f'No unsaved changes</span><button type="button" class="btn-s" data-act="save-all" data-day="{day}" disabled>Save</button></div>'
+                 f'</div>{REVIEW_END}')
+    return ''.join(parts)
+
+
+# What edit_sweep.py writes (scripts/post-pack/edit_sweep.py): Krish, 2026-10-21, "If I make a statistical change or a
+# narrative style change in one place, just make sure that those changes propagate and the next draft is consistent";
+# asked how, he chose to apply the change everywhere in the piece and in later drafts and to be shown "also changed
+# in" with an undo. The kinds are the classes the sweep and the ledger use (reason_code on content_edit_events).
+EDIT_KINDS = {'number_fact': 'Number or fact', 'claim': 'Claim', 'structure': 'Structure', 'tone': 'Tone', 'wording': 'Wording'}
+SWEEP_ID = re.compile(r'^[a-z0-9][a-z0-9-]{0,39}$')
+SWEEP_GATES = {'story_check': 'the story check', 'voice_check': 'the voice check'}
+LESSON_ID = re.compile(r'^[A-Za-z0-9][A-Za-z0-9_.:-]{0,159}$')
+
+
+def read_sweep(data, where='--sweep'):
+    """One day's sweep: {day?, piece_id?, swept_at?, also_changed: [change], suggestions: [change], held: [{where, why,
+    from?, to?}], gates: [{where, check, ok, problems}]}. A change is {id, where, kind, from, to, context?, applied?}.
+    Fed, never shaped: a field the board has no place for is refused."""
+    if not isinstance(data, dict):
+        raise BoardError(f'{where}: give the JSON edit_sweep.py wrote ({{"also_changed": [...], ...}})')
+    unknown = set(data) - {'day', 'piece_id', 'swept_at', 'also_changed', 'suggestions', 'held', 'gates', 'ledger', 'edits'}
+    if unknown:
+        raise BoardError(f'{where}: fields the board has no place for: {sorted(unknown)}')
+    text = lambda v, n: isinstance(v, str) and len(v) <= n
+    seen = set()
+
+    def change(c, applied, i):
+        if not isinstance(c, dict):
+            raise BoardError(f'{where}: change {i} is not an object')
+        cid = str(c.get('id') or '')
+        if not SWEEP_ID.match(cid) or cid in seen:
+            raise BoardError(f'{where}: change {i} needs its own id (a-z, 0-9 and -), not {cid!r}')
+        seen.add(cid)
+        if c.get('kind') not in EDIT_KINDS:
+            raise BoardError(f'{where}: change {cid} has kind {c.get("kind")!r}, not one of {sorted(EDIT_KINDS)}')
+        if not (text(c.get('where'), 200) and c['where'].strip()):
+            raise BoardError(f'{where}: change {cid} does not say where it is')
+        a, b = c.get('from', ''), c.get('to', '')
+        if not (text(a, 600) and text(b, 600)) or a == b:
+            raise BoardError(f'{where}: change {cid} needs from and to (at most 600 characters each, not the same)')
+        if c.get('context') is not None and not text(c['context'], 600):
+            raise BoardError(f'{where}: change {cid} has a context over 600 characters')
+        return {'id': cid, 'where': c['where'].strip(), 'kind': c['kind'], 'from': a, 'to': b,
+                'context': (c.get('context') or '').strip(), 'applied': applied}
+    lists = {}
+    for key, applied in (('also_changed', True), ('suggestions', False)):
+        value = data.get(key) or []
+        if not isinstance(value, list) or len(value) > 60:
+            raise BoardError(f'{where}: {key} must be a list of at most 60 changes')
+        lists[key] = [change(c, applied, i) for i, c in enumerate(value)]
+    held = []
+    for i, h in enumerate(data.get('held') or []):
+        if not (isinstance(h, dict) and text(h.get('where'), 200) and text(h.get('why'), 300) and h['where'].strip() and h['why'].strip()):
+            raise BoardError(f'{where}: held {i} needs where and why')
+        held.append({'where': h['where'].strip(), 'why': h['why'].strip(), 'from': str(h.get('from') or '')[:600], 'to': str(h.get('to') or '')[:600]})
+    gates = []
+    for i, g in enumerate(data.get('gates') or []):
+        if not (isinstance(g, dict) and text(g.get('where'), 200) and g.get('check') in SWEEP_GATES and isinstance(g.get('ok'), bool)):
+            raise BoardError(f'{where}: gate {i} needs where, check ({", ".join(SWEEP_GATES)}) and ok')
+        gates.append({'where': g['where'].strip(), 'check': g['check'], 'ok': g['ok'],
+                      'problems': [str(x)[:300] for x in (g.get('problems') or [])[:10]]})
+    return {'day': data.get('day') if data.get('day') in DAY_KEYS.values() else None,
+            'piece_id': data.get('piece_id') if UUID.match(str(data.get('piece_id') or '')) else None,
+            'swept_at': data.get('swept_at') if isinstance(data.get('swept_at'), str) else None,
+            'also_changed': lists['also_changed'], 'suggestions': lists['suggestions'], 'held': held, 'gates': gates}
+
+
+def _diff(c):
+    a, b = E(c['from']), E(c['to'])
+    if not c['from']:
+        return f'<p class="ac-diff"><span class="ac-w">added</span> <ins>{b}</ins></p>'
+    if not c['to']:
+        return f'<p class="ac-diff"><span class="ac-w">taken out</span> <del>{a}</del></p>'
+    return f'<p class="ac-diff"><del>{a}</del> <span class="ac-w">is now</span> <ins>{b}</ins></p>'
+
+
+def sweep_card(p, sweep):
+    """Also changed: where his saved change was carried, each with Undo; what is worth changing too, each with Change
+    it too; what was left alone because he has recorded it; and what the checks said after."""
+    rows = []
+    for i, c in enumerate(sweep['also_changed'], 1):
+        rows.append(
+            f'<li class="ac-row" id="{p}also-{i}" data-also="{E(c["id"])}"><div class="ac-where"><strong>{E(c["where"])}</strong> '
+            f'<span class="chip">{E(EDIT_KINDS[c["kind"]])}</span></div>{_diff(c)}'
+            + (f'<p class="ac-ctx">{E(c["context"])}</p>' if c['context'] else '') +
+            f'<div class="btns"><button type="button" class="btn-s ghost" data-act="undo-also" data-for="{E(c["id"])}">Undo</button>'
+            f'<span class="ac-state" data-also-state="{E(c["id"])}" aria-live="polite"></span></div></li>')
+    tips = []
+    for i, c in enumerate(sweep['suggestions'], 1):
+        tips.append(
+            f'<li class="ac-row" id="{p}tip-{i}" data-also="{E(c["id"])}"><div class="ac-where"><strong>{E(c["where"])}</strong> '
+            f'<span class="chip">{E(EDIT_KINDS[c["kind"]])}</span></div>{_diff(c)}'
+            + (f'<p class="ac-ctx">{E(c["context"])}</p>' if c['context'] else '') +
+            f'<div class="btns"><button type="button" class="btn-s ghost" data-act="apply-also" data-for="{E(c["id"])}">Change it too</button>'
+            f'<span class="ac-state" data-also-state="{E(c["id"])}" aria-live="polite"></span></div></li>')
+    n = len(rows)
+    out = [f'<div class="card also" id="{p}also"><div class="row"><span class="lab">Also changed</span>'
+           f'<span class="chip">{n} place{"" if n == 1 else "s"}</span></div>'
+           '<p class="ac-how">Your saved changes, carried into the other drafts of this piece and into later drafts. '
+           'Undo puts one back in the next version.</p>']
+    out.append(f'<ol class="ac-list">{"".join(rows)}</ol>' if rows else
+               '<p class="ac-none">Nothing else needed changing: your edit was the only place it appeared.</p>')
+    if tips:
+        out.append('<h3 class="ac-h">Worth changing too? Not changed yet</h3>'
+                   '<p class="ac-how">A change of tone or wording is only suggested elsewhere, never made for you.</p>'
+                   f'<ol class="ac-list">{"".join(tips)}</ol>')
+    if sweep['held']:
+        out.append('<h3 class="ac-h">Left alone: already recorded</h3><ul class="ac-held">'
+                   + ''.join(f'<li><strong>{E(h["where"])}</strong>: {E(h["why"])}</li>' for h in sweep['held']) + '</ul>')
+    if sweep['gates']:
+        said = []
+        for g in sweep['gates']:
+            said.append(f'<li class="{"ok" if g["ok"] else "bad"}">{E(g["where"])}: '
+                        + (f'passes {SWEEP_GATES[g["check"]]}' if g['ok'] else
+                           f'fails {SWEEP_GATES[g["check"]]}: ' + E('; '.join(g['problems']) or 'see the session'))
+                        + '</li>')
+        out.append(f'<h3 class="ac-h">The checks, run again after the change</h3><ul class="ac-gates">{"".join(said)}</ul>')
+    out.append('</div>')
+    return ''.join(out)
+
+
+def read_lessons(data, where='--lessons'):
+    """What the weekly compiler proposed from his board edits: GET /api/video-studio/learning-proposals's answer (only
+    proposals whose scope.key starts board_edit:), or a list of {id, assertion, evidence_count, kind?, status?}.
+    Each stays a proposal until he approves it (AGENTS.md: every durable taste rule needs his explicit approval)."""
+    rows = data.get('proposals', data.get('lessons')) if isinstance(data, dict) else data
+    if not isinstance(rows, list):
+        raise BoardError(f'{where}: give the saved answer of GET /api/video-studio/learning-proposals, or a list of lessons')
+    out = []
+    for i, r in enumerate(rows):
+        if not isinstance(r, dict):
+            raise BoardError(f'{where}: lesson {i} is not an object')
+        key = str((r.get('scope') or {}).get('key') or '') if isinstance(r.get('scope'), dict) else ''
+        if 'scope' in r and not key.startswith('board_edit:'):
+            continue  # another surface's proposal: it is ruled on where it came from
+        kind = r.get('kind') or (key.split(':', 1)[1] if key.startswith('board_edit:') else None)
+        lid, says = str(r.get('id') or ''), str(r.get('assertion') or '').strip()
+        count = r.get('evidence_count', r.get('independent_session_count'))
+        status = r.get('status') or 'proposed'
+        if not LESSON_ID.match(lid) or not says or len(says) > 1600 or not isinstance(count, int) or count < 1:
+            raise BoardError(f'{where}: lesson {i} needs an id, its assertion (at most 1600 characters) and how often it was seen')
+        if kind not in EDIT_KINDS or status not in ('proposed', 'approved', 'rejected'):
+            raise BoardError(f'{where}: lesson {lid} has kind {kind!r} or status {status!r} the board does not know')
+        out.append({'id': lid, 'assertion': says, 'evidence_count': count, 'kind': kind, 'status': status})
+    if len(out) > 12:
+        raise BoardError(f'{where}: {len(out)} lessons; give the 12 newest at most')
+    return out
+
+
+def lessons_card(p, lessons):
+    items = []
+    for i, ls in enumerate(lessons, 1):
+        chip = {'proposed': 'Proposed: yours to approve', 'approved': 'Approved: a standing rule', 'rejected': 'Not a rule'}[ls['status']]
+        buttons = (f'<div class="btns"><button type="button" class="btn-s" data-act="lesson-yes" data-for="{E(ls["id"])}">Make it a rule</button>'
+                   f'<button type="button" class="btn-s ghost" data-act="lesson-no" data-for="{E(ls["id"])}">Not a rule</button>'
+                   f'<span class="ls-state" data-lesson-state="{E(ls["id"])}" aria-live="polite"></span></div>') if ls['status'] == 'proposed' else ''
+        items.append(f'<article class="ls-item" id="{p}lesson-{i}" data-lesson="{E(ls["id"])}"><p class="ls-says">{E(ls["assertion"])}</p>'
+                     f'<p class="ls-meta"><span class="chip{" ok" if ls["status"] == "approved" else ""}">{E(chip)}</span> '
+                     f'{E(EDIT_KINDS[ls["kind"]])} edits, seen {ls["evidence_count"]} times in 28 days</p>{buttons}</article>')
+    return (f'<div class="card lessons" id="{p}lessons"><div class="row"><span class="lab">What I learned from your edits</span></div>'
+            '<p class="ls-how">Patterns in the changes you saved on this board. Each stays a proposal until you say yes; only then '
+            'does it become a rule the drafts follow.</p>' + ''.join(items) + '</div>')
+
+
+def previous_sweeps(text):
+    """{day: sweep} the board being replaced carries in its CONF (or manifest)."""
+    data = None
+    stripped = text.lstrip()
+    if stripped.startswith('{'):
+        try:
+            data = json.loads(stripped).get('sweeps')
+        except (ValueError, AttributeError):
+            data = None
+    else:
+        m = CONF_RE.search(text)
+        if m:
+            try:
+                data = json.loads(m.group(1)).get('sweeps')
+            except ValueError:
+                data = None
+    out = {}
+    for k, s in (data or {}).items() if isinstance(data, dict) else []:
+        if k in DAY_KEYS.values():
+            try:
+                out[k] = read_sweep(s, f'the previous board\'s {k} sweep')
+            except BoardError:
+                continue
+    return out
 
 
 MIN_IDEAS = 4  # Krish, 2026-10-18: "at least three content ideas for each day", then "give me more than 3 from all my
@@ -1380,7 +1666,7 @@ def previous_briefs(text):
 
 
 def fixed_day(key, name, weekday, when, series_label, page, piece, pick, title, pending, draft, calls, review, materials,
-              briefs, teleprompter, videos, ideas, hidden, panels, warnings, built_at, kept_at):
+              briefs, teleprompter, videos, ideas, hidden, panels, warnings, built_at, kept_at, sweeps=None, lessons=None):
     """A day in the fixed layout, appended to panels; its state. Each step is filled from data, in the same place every
     week: Brief (the agreed brief), Drafts (the words to review), Record (Teleprompter, the scripts), Publish (the
     files first, then each place to post, each with its tick)."""
@@ -1405,6 +1691,14 @@ def fixed_day(key, name, weekday, when, series_label, page, piece, pick, title, 
     brief_due, drafts_due = due(when, LAYOUT['rhythm']['brief']), due(when, LAYOUT['rhythm']['drafts'])
     files = board_materials.render(key, delivery) if delivery else ''
     attrs = ' data-feature="true"' if feature else ''
+    sweep = (sweeps or {}).get(key)
+    if sweep and not (rv and (page or key in draft)):
+        raise BoardError(f'--sweep {key}: {weekday} has no drafts in review, so where the change was carried would not show; '
+                         f'give it with --draft {key} and --review')
+    if sweep and sweep.get('piece_id') and piece and sweep['piece_id'] != piece:
+        raise BoardError(f'--sweep {key}: the sweep is for piece {sweep["piece_id"]}, and {weekday} holds {piece}')
+    # Below the drafts, in this order: where his change was carried, then what was learned from his edits.
+    after = (sweep_card(p, sweep) if sweep else '') + (lessons_card(p, lessons) if lessons and rv else '')
     if page:
         if not piece:
             raise BoardError(f'{weekday} is made but has no piece id: give --piece {key}=<uuid>, or --options or --live '
@@ -1414,7 +1708,7 @@ def fixed_day(key, name, weekday, when, series_label, page, piece, pick, title, 
         head = parts['head']
         slots = {
             'brief': brief_card(p, brief) if brief else slot_empty('This piece was made before its brief was kept on the board.'),
-            'drafts': (review_card(key, rv, built_at, kept_at) if rv else
+            'drafts': (review_card(key, rv, built_at, kept_at) + after if rv else
                        slot_empty('The words are signed off. The article is under Publish, in its first step; the scripts are under Record.')),
             'record': parts['record'] + parts['scripts'],
             'publish': files + parts['videos'] + parts['checklist'] + parts['link_state'] + drop_scripts_section(parts['publish'], p) + SAVE_NOTE,
@@ -1457,7 +1751,7 @@ def fixed_day(key, name, weekday, when, series_label, page, piece, pick, title, 
             head = fixed_head(f'{series_label} · {when_s} · in review, not ready to post', f'{weekday}\'s words, in review',
                               calls.get(key) or ())
             slots = {'brief': brief_card(p, brief) if brief else slot_empty('No brief is on the board for this piece.'),
-                     'drafts': review_card(key, rv or [], built_at, kept_at) or slot_empty('No words are on the board for review yet.'),
+                     'drafts': (review_card(key, rv or [], built_at, kept_at) or slot_empty('No words are on the board for review yet.')) + after,
                      'record': record, 'publish': files + checklist(key, p, feature)}
             notes = {'brief': 'agreed' if brief and brief['agreed'] else '', 'drafts': 'in review', 'publish': f'{STANDING} steps'}
     panel = fixed_day_panel(key, name, weekday, when, series_label, state, hidden, head, slots, notes, attrs)
@@ -1468,7 +1762,8 @@ def fixed_day(key, name, weekday, when, series_label, page, piece, pick, title, 
 
 
 def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pending=None, kept=None, videos=None, review=None,
-          draft=(), calls=None, posted=None, kept_at=None, ideas=None, queue=None, materials=None, briefs=None, combine=None):
+          draft=(), calls=None, posted=None, kept_at=None, ideas=None, queue=None, materials=None, briefs=None, combine=None,
+          sweeps=None, lessons=None):
     """(page, manifest, warnings). ideas: {day: [idea]} from read_ideas(),
     shown as a first tab, Ideas, opened while no day is made. pages: {day: publish page text};
     pieces: {day: uuid}; teleprompter: {day: teleprompter_info}; picks:
@@ -1482,6 +1777,10 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
     if briefs and not FIXED:
         raise BoardError(f'--brief: the week of {monday.isoformat()} is in the layout it was published in, which has no Brief step; '
                          f'briefs are on boards from {LAYOUT_FROM.isoformat()}')
+    sweeps = sweeps or {}
+    if (sweeps or lessons) and not FIXED:
+        raise BoardError(f'--sweep and --lessons: the week of {monday.isoformat()} is in the layout it was published in; '
+                         f'Also changed and What I learned are in the Drafts step of boards from {LAYOUT_FROM.isoformat()}')
     pages, pieces, teleprompter, picks, pending, kept = pages or {}, pieces or {}, teleprompter or {}, picks or {}, pending or {}, kept or {}
     calls, posted = calls or {}, posted or {}
     deep_piece = None if FIXED else deep_cut_piece(monday)
@@ -1544,7 +1843,8 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
             panels.append(panel)
         elif FIXED:
             state = fixed_day(key, name, weekday, when, series_label, page, piece, pick, title, pending, draft, calls, review,
-                              materials, briefs, teleprompter, videos, ideas, key != opened, panels, warnings, built_at, kept_at)
+                              materials, briefs, teleprompter, videos, ideas, key != opened, panels, warnings, built_at, kept_at,
+                              sweeps, lessons)
         elif page:
             if not piece:
                 raise BoardError(f'{weekday} is made but has no piece id: give --piece {key}=<uuid>, or --options or --live '
@@ -1631,6 +1931,9 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
         # The briefs ride in the page, so a rebuild from the downloaded board (--previous) keeps them.
         conf['layout'] = LAYOUT['version']
         conf['briefs'] = briefs
+        conf['sweeps'] = sweeps  # carried on a rebuild while the words they changed stand (build(), previous_sweeps)
+        if lessons and not any((review or {}).get(k) for k in order):
+            warnings.append('--lessons: no day has drafts on the board, so What I learned from your edits shows nowhere')
     # The fixed layout has one stylesheet: publish_manager's, never a day page's own copy of it.
     css = publish_manager.CSS.strip() if FIXED else '\n'.join(blocks or [publish_manager.CSS.strip()])
     page = fill(template('page.html'), {
@@ -1694,6 +1997,13 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
     if FIXED:
         manifest['layout'] = LAYOUT['version']
         manifest['briefs'] = briefs
+        manifest['sweeps'] = sweeps
+        manifest['lessons'] = [{'id': ls['id'], 'kind': ls['kind'], 'status': ls['status']} for ls in lessons or []]
+        manifest['db']['comments'] = {
+            'doc_id': '<uuid>', 'fields': ['thread_id', 'anchor', 'text', 'at', 'box', 'paragraph', 'quote', 'act', 'ref'],
+            'acts': {'undo': 'put the also-changed ref back (edit_sweep.py --undo)', 'apply': 'make the suggested ref too',
+                     'lesson_yes': 'his yes to the proposal ref: relay it, decided_by Krish',
+                     'lesson_no': 'his no to the proposal ref: relay it, decided_by Krish'}}
     return page, manifest, warnings
 
 
@@ -2034,8 +2344,17 @@ def build(args, get=None):
             briefs.setdefault(k, b)
     for key in unpick:
         briefs.pop(key, None)
+    sweeps = {k: dict(read_sweep(read_json(v, f'--sweep {k}'), f'--sweep {k}'), day=k)
+              for k, v in by_day(getattr(args, 'sweep', None), '--sweep').items()}
+    if args.previous and fixed_layout(monday):
+        # Also changed stays on the board while the words it describes stand: every box of that day unchanged.
+        for k, s in previous_sweeps(Path(args.previous).read_text(encoding='utf-8-sig')).items():
+            rids = [f'{k}-{slug}' for slug, _, _ in review.get(k, [])]
+            if k not in sweeps and rids and all(r in kept_at for r in rids):
+                sweeps[k] = s
+    lessons = read_lessons(read_json(args.lessons, '--lessons')) if getattr(args, 'lessons', None) else None
     page, manifest, more = board(monday, pages, pieces, scripts, picks, pending, kept, videos, review, draft, calls, posted, kept_at,
-                                 ideas, queue, materials, briefs, combine)
+                                 ideas, queue, materials, briefs, combine, sweeps, lessons)
     if previous is not None:
         keep_previous(previous, manifest['days'], unpick, monday, fresh)
     manifest['warnings'] = warnings + more
@@ -2482,9 +2801,96 @@ def _fixed_checks(check, mon):
     moved, _, moved_warnings = board(week, pieces={'wed': WED_ID}, briefs=stale)
     check('fixed layout: a brief carried from the old board for another piece never shows under the new pick',
           'id="wed-brief-card"' not in moved and any('dropped' in w for w in moved_warnings))
+    _editor_checks(check, week)
     use_layout(date(2026, 10, 12))
     check('the old layout comes back for an old week: its labels as they were published',
           LABEL['record-long'] == 'Record the 3-minute cut (Teleprompter)' and 'record-feature' not in LABEL)
+
+
+def _editor_checks(check, week):
+    """The Drafts step (learning edits-propagate-and-teach): the editor's read view, Also changed, What I learned."""
+    article = '# Who pays\n\nAbout **40%** of firms pay.\nA second line.\n\n- one\n- two\n\n> A quote\n\n---'
+    review = {'wed': [('article', 'Article draft', article), ('long', 'Five-minute script', 'Said words.')]}
+    sweep = read_sweep({'day': 'wed', 'piece_id': WED_ID, 'also_changed': [
+        {'id': 's1', 'where': 'Wednesday, Five-minute script', 'kind': 'number_fact', 'from': '40 percent', 'to': '38 percent',
+         'context': 'About 38 percent of firms pay.', 'undo': {'path': 'x'}}],
+        'suggestions': [{'id': 't1', 'where': 'Friday, Article', 'kind': 'tone', 'from': 'really cheap', 'to': 'cheap'}],
+        'held': [{'where': 'Wednesday, 90-second script', 'why': 'you have recorded it'}],
+        'gates': [{'where': 'Wednesday, Five-minute script', 'check': 'story_check', 'ok': True, 'problems': []}],
+        'ledger': [], 'edits': []})
+    lessons = read_lessons({'ok': True, 'proposals': [
+        {'id': '44444444-5555-4666-8777-888888888888', 'assertion': 'On the publish board Krish made 3 number or fact edits.',
+         'independent_session_count': 3, 'status': 'proposed', 'scope': {'level': 'global', 'key': 'board_edit:number_fact'}},
+        {'id': '55555555-5555-4666-8777-888888888888', 'assertion': 'A preset is never kept.', 'independent_session_count': 4,
+         'status': 'proposed', 'scope': {'level': 'global', 'key': 'tone:punchier'}}]})
+    page, manifest, warnings = board(week, pieces={'wed': WED_ID}, review=review, draft={'wed'}, sweeps={'wed': sweep}, lessons=lessons)
+    check('editor: a fed week with the editor, Also changed and What I learned passes verify', verify(page) == [])
+    card = page[page.index('<div class="rec rv ed" id="wed-review">'):page.index(REVIEW_END)]
+    check('editor: each draft is a read view, its heading drawn without its # signs',
+          '<h4 class="rv-h">Who pays</h4>' in card and '# Who pays' not in card.split('<textarea')[0])
+    check('editor: bold, line breaks, lists, quotes and a rule are drawn',
+          '<strong>40%</strong>' in card and 'firms pay.<br>A second line.' in card and '<ul><li>one</li><li>two</li></ul>' in card
+          and '<blockquote><p>A quote</p></blockquote>' in card and '<hr>' in card)
+    check('editor: one tappable block per paragraph, numbered as week.js numbers them',
+          [int(n) for n in re.findall(r'id="rvp-wed-article-(\d+)"', card)] == list(range(len(paragraphs(article)))) == list(range(5)))
+    check('editor: the raw words stay in the hidden box with the hash of what was built',
+          f'data-base-sha256="{hashlib.sha256(article.encode()).hexdigest()}"' in card and 'aria-label="Article draft" hidden>' in card)
+    check('editor: one Save bar for the day, saying nothing is unsaved yet',
+          card.count('data-act="save-all" data-day="wed"') == 1 and 'No unsaved changes' in card)
+    check('editor: a rebuild still finds the words he can edit, and their build time', previous_review_times(page, review) != {}
+          and previous_draft(page, 'wed')[0] == ['wed-article', 'wed-long'])
+    drafts = page[page.index('id="wed-sub-drafts"'):page.index('id="wed-sub-record"')]
+    check('Also changed sits under the drafts, each carried change with its Undo', drafts.index('id="wed-review"') < drafts.index('id="wed-also"')
+          and 'data-act="undo-also" data-for="s1"' in drafts and '<del>40 percent</del>' in drafts and '<ins>38 percent</ins>' in drafts)
+    check('a tone suggestion is offered, never made; the recorded script is listed; the checks are said',
+          'data-act="apply-also" data-for="t1"' in drafts and 'Left alone: already recorded' in drafts and 'passes the story check' in drafts)
+    check('What I learned shows only the proposals from his board edits, each waiting for his yes',
+          'What I learned from your edits' in drafts and drafts.index('id="wed-also"') < drafts.index('id="wed-lessons"')
+          and 'data-act="lesson-yes" data-for="44444444-5555-4666-8777-888888888888"' in drafts and 'A preset is never kept' not in page)
+    check('the sweep rides in the page, so a rebuild with the same words keeps it',
+          previous_sweeps(page).get('wed', {}).get('also_changed', [{}])[0].get('id') == 's1' and manifest['sweeps']['wed']['day'] == 'wed')
+    check('the manifest says what a comment may carry and what each of his taps means',
+          'quote' in manifest['db']['comments']['fields'] and set(manifest['db']['comments']['acts']) == {'undo', 'apply', 'lesson_yes', 'lesson_no'})
+    approved = [dict(lessons[0], status='approved')]
+    shown, _, _ = board(week, pieces={'wed': WED_ID}, review=review, draft={'wed'}, lessons=approved)
+    shown = shown[:shown.index('<script>')]  # the page's script names every button it handles
+    check('an approved lesson says so and asks nothing', 'Approved: a standing rule' in shown and 'data-act="lesson-yes"' not in shown)
+    for bad, label in [({'also_changed': [{'id': 'S 1', 'where': 'x', 'kind': 'tone', 'from': 'a', 'to': 'b'}]}, 'an id with a space'),
+                       ({'also_changed': [{'id': 's1', 'where': 'x', 'kind': 'vibes', 'from': 'a', 'to': 'b'}]}, 'an unknown kind'),
+                       ({'also_changed': [{'id': 's1', 'where': 'x', 'kind': 'tone', 'from': 'a', 'to': 'a'}]}, 'no change'),
+                       ({'banner': 'Hello'}, 'a field with no place')]:
+        try:
+            read_sweep(bad)
+            refused = False
+        except BoardError:
+            refused = True
+        check(f'a sweep with {label} is refused', refused)
+    try:
+        board(week, pieces={'wed': WED_ID}, sweeps={'wed': sweep})
+        refused = False
+    except BoardError as error:
+        refused = 'no drafts in review' in str(error)
+    check('a sweep for a day with no drafts on the board is refused, never dropped', refused)
+    try:
+        board(week, pieces={'wed': FRI_ID}, review=review, draft={'wed'}, sweeps={'wed': sweep})
+        refused = False
+    except BoardError as error:
+        refused = 'is for piece' in str(error)
+    check('a sweep for another piece is refused', refused)
+    _, _, lonely = board(week, lessons=lessons)
+    check('lessons with no day in draft are said, not silently lost', any('--lessons' in w for w in lonely))
+    use_layout(date(2026, 10, 19))
+    legacy = review_card('fri', [('article', 'Article', '# Head\n\nHello *world*.'), ('long', 'Five-minute script', 'Said.')],
+                         '2026-10-19T00:00:00Z', {'fri-long': '2026-10-18T00:00:00Z'})
+    check('an older week\'s review card is byte for byte what it was before the editor',
+          hashlib.sha256(legacy.encode('utf-8')).hexdigest() == '134b7fc49be5d170c1136ef9888aa645ddc039bed50270ac7bc7e9af31f67f23')
+    try:
+        board(date(2026, 10, 19), pieces={'fri': FRI_ID}, review={'fri': review['wed']}, draft={'fri'}, sweeps={'fri': sweep})
+        refused = False
+    except BoardError:
+        refused = True
+    check('a sweep for a week in the old layout is refused', refused)
+    use_layout(week)
 
 
 def _sources_checks(check):
@@ -2790,6 +3196,12 @@ def parser():
     ap.add_argument('--combine', metavar='PATH', help='the queued ideas worth combining (docs/plans/<week>/combine.json, from '
                     'GET /api/idea-queue?combine=1): [{"members": [queued ids], "series", "thesis", "joins": [3 to 5 beats]}]; '
                     'the Queue tab shows each with a Combine button (needs --queue)')
+    ap.add_argument('--sweep', action='append', metavar='DAY=JSON', help='what edit_sweep.py carried from his saved edits '
+                    '(boards from the fixed layout on): shown under the day\'s drafts as Also changed, each with Undo; kept on '
+                    'a rebuild while the day\'s words are unchanged')
+    ap.add_argument('--lessons', metavar='JSON', help='the saved answer of GET /api/video-studio/learning-proposals: the '
+                    'proposals learned from his board edits (scope board_edit:*), shown under each day\'s drafts as What I '
+                    'learned from your edits; each stays a proposal until he approves it')
     ap.add_argument('--verify', metavar='PAGE', help='say why this built board may not be published (the publish hook runs it); exit 1 if it may not')
     ap.add_argument('--show', metavar='BOARD', help='print the days a board holds: its week-board.json, or its page as Artifact read saved it')
     ap.add_argument('--json', action='store_true', help='with --show: as JSON')

@@ -28,7 +28,9 @@ A session feeds the slots and nothing else:
 | Queue | the idea queue | `--queue queue.json` (GET /api/idea-queue) |
 | Queue: Could combine | two to five queued ideas that make one bigger piece: `[{"members": [queued ids], "series", "thesis", "joins": [3 to 5 beats]}]`, each a card with a Combine button that saves `queue/combine-<n>`; the next session runs synthesize on his tap (decided_by Krish) | `--combine combine.json` (with `--queue`; groups from GET /api/idea-queue?combine=1) |
 | Brief | the record-ready brief: idea, 3 to 6 beats, ending, takeaway, angle, tone, reader | `--brief DAY=brief.json` (kept on rebuild) |
-| Drafts | the article and scripts in review | `--draft DAY --review DAY=...` |
+| Drafts | the article and scripts in review: a read view (Markdown drawn, no `#` signs) where a tap edits a paragraph, picked words take "Comment on this" (the comment carries `box`, `paragraph` and `quote`), and one Save bar per day saves `edits/<day>-<item>` (`text`, `day`, `item`, `base_sha256`, `at`) | `--draft DAY --review DAY=...` |
+| Drafts: Also changed | where his saved edit was carried (`scripts/post-pack/edit_sweep.py`): each change with Undo, suggestions with Change it too, recorded scripts left alone, and the gates run again; kept on a rebuild while that day's words are unchanged | `--sweep DAY=sweep.json` (the file edit_sweep.py writes) |
+| Drafts: What I learned from your edits | the compiler's proposals from his board edits (scope `board_edit:<class>`), each with Make it a rule and Not a rule; it stays a proposal until he says yes | `--lessons lessons.json` (GET /api/video-studio/learning-proposals) |
 | Record | the Teleprompter scripts and the scripts to read | `--teleprompter`, the publish page's scripts |
 | Publish | files first, then each place to post with its tick | `--materials DAY=...`, the publish page (`--day`), the videos on the record |
 | Heading | what waits on Krish | `--waiting DAY=...` |
