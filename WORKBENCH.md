@@ -1,13 +1,12 @@
 # Workbench: where we are and what's next
 
-## 20 October: Wednesday feedback revised (Codex)
+## 21 October: Wednesday scripts in Teleprompter (Codex)
 
-Review: https://content.krishraja.com/board/2026-10-19#wednesday,
-build `08746946...758f`. Scripts 765/195 words; article/card now 50% tests,
-50% corpus. Actual wording retained; personal-use angle. All feedback,
-other panels and 24 assets kept. Working headline: Muse vs Grok Bot.
-Checks and reader gaps: `docs/plans/2026-10-19-week/wednesday-script-review.md`.
-Copy awaits Krish; visuals/Teleprompter follow approval. No spend.
+Krish approved transfer. Folder: Wed 21 Oct under.the.hood - Muse vs Grok Bot:
+Head to Head on Running My Life. Both cuts read back exactly (765/195 words).
+IDs, hashes, approval and checks: `docs/plans/2026-10-19-week/wednesday-teleprompter.json`.
+Live making record holds both. Next: Krish records; visuals/article remain separate.
+Board and all feedback kept: https://content.krishraja.com/board/2026-10-19#wednesday.
 
 ## 20 October: Wednesday rewritten with Krish (Claude, editorial session)
 
