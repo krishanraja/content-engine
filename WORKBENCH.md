@@ -18,33 +18,21 @@
   to full completion" (21 Oct) in the layout snapshot; the old guard file is deleted.
 - **Then:** deploy, then `board_feed.py gather 2026-10-26` live (today the live engine has no `include=sources` yet).
 
-## 21 October: the publish board has one fixed layout (Claude, part 1 of 4)
+## 21 October, afternoon: Wednesday drafts from Krish's board edits (Claude)
 
-Krish asked to standardise and lock the board so the engine only feeds it. He
-decided: new layout from the week of 26 Oct (12 and 19 Oct stay as they are);
-an edit is carried to every draft and shown back with undo; his taste steers
-idea sourcing and ranking, judges stay blind; order is frame and phone, then
-Ideas and Queue, then Drafts editing and learning, then the publish list. Also:
-every piece is a 90-second and a 5-minute video, and a 15-minute feature only
-when he calls one ("Yes, replace it" the weekly deep cut).
+Read his 13:21 board edit of the short script and his comment on the long
+("what does "a split" mean? I have no idea"). New drafts in
+`docs/plans/2026-10-21-draft-script.md` (804 words, "split" replaced by
+"draw") and `-90s.md` (195 words, his edits kept; two changes for the gates: his
+" - " pause is a full stop, and "lots of other people report that they're neck
+and neck" became "in another tester's trial, both caught every scam. Neck and
+neck." because the evidence is one tester). Learning `plain-score-words`.
+Two fresh readers per cut on the final words (short: nothing lost; long: only
+his retained "I did a piece last week" and one "X conversations" query), on
+the making record. **Teleprompter updated on his "push to teleprompter"**
+(plan: nothing to send). **Next:** Krish records; the board still shows the
+morning's scripts until he asks for a republish.
 
-- **Built (branch `claude/content-publish-board-ux-4dl7ai`):**
-  `config/board-layout.json` (tabs Ideas, Queue, Mon, Wed, Fri; steps Brief,
-  Drafts, Record, Publish; brief due the night before, drafts that morning);
-  `week_board.py` draws weeks from 26 Oct only in it (`--brief DAY=json` new),
-  phone layout (viewport, bottom tab bar, 44px targets), comments as a sheet;
-  `verify()` and `npm run check:board-layout` (CI) refuse any other shape;
-  the layout changes only with his recorded words (no approval prompts). House rule
-  FEATURE replaced DEEP_CUT (`config/features.json`, `story_check --cut feature`).
-- **Part 2 handover:** `docs/handovers/2026-10-21-publish-board-part2.md` (start a fresh session from it).
-- **Next:** part 2, Sunday Ideas gathered from every source plus Queue
-  "could combine" (learning `queue-consolidation-and-fresh-sunday-ideas`),
-  ready for Sunday 25 Oct; part 3, Drafts editing that carries changes across
-  and teaches (`edits-propagate-and-teach`); part 4, the publish list. Plan:
-  `docs/plans/2026-10-21-publish-board/plan.md`; the rules in `docs/PUBLISH_BOARDS.md`, "The fixed layout".
-- **Not yet:** the feature as a third cut in `making.py` scripts,
-  `teleprompter_send.py`, `recording_match.py` and produce-video (board,
-  story check, house rule and skills know it already).
 ## 21 October: Wednesday cut back to the result (Claude)
 
 Krish: the scripts and article were "overexplaining" with caveats. Rewritten as

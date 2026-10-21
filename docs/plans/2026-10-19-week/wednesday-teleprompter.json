@@ -64,5 +64,20 @@
     "plan_after": "Nothing to send",
     "read_back": "two fresh readers per cut on the exact words, recorded on the making record",
     "dated_outline": "none for this piece; recorded through scripts_patch and read_back_patch as on 20 October"
+  },
+  "update_2026_10_21_pm": {
+    "approval_words": "push to teleprompter",
+    "action": "update_script in place, text and duration only",
+    "long": {
+      "script_id": "CDE12E50-3A6D-4D75-B6D0-3BBF8CDF352D",
+      "sha256_prefix": "84f1d94167e5",
+      "duration": 319
+    },
+    "short": {
+      "script_id": "5D4B9696-EFAD-4C0A-8D19-BAFD115EF2E8",
+      "sha256_prefix": "e46ce6a0c2e1",
+      "duration": 78
+    },
+    "plan_after": "Nothing to send"
   }
 }

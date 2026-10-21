@@ -4,11 +4,11 @@ And if you're a leader secretly trying one on your own life? Your secret's safe 
 
 Five everyday jobs, from my inbox to a cheap flight. Each round gets two scores. Mine, and the community's: other people who've tested them.
 
-Round one, the inbox. A few emails asked the same thing. Someone wanted to buy six of my products, and was payment safe? But none said which product.
+Round one, the inbox. A few emails asked the same thing. Someone wanted to buy six of my products, and asked if payment was safe. But none said which product.
 
 Grok flagged a likely scam. Muse checked my refund policy and wrote a polished reply. Then it made that reply my top job. Customer service, for people trying to rob me.
 
-They were scams. Well crafted phishing emails. Muse made the wrong job look beautifully finished.
+They were scams. Well crafted phishing emails.
 
 Now the community. Another tester ran a fake coffee business with scam traps. Muse didn't fall for them. Neither did Grok. Reassuring for Muse. Quite flattering for my scammers. So round one: my score, Grok. The community's, a draw.
 
@@ -26,7 +26,7 @@ Round four, plan my day. Both drafted my day, and kept their ideas apart from me
 
 But in the community, one Grok user reported forgotten jobs and duplicate messages. Which also describes most group chats. So round four: my score, a draw. The community's, a point against Grok.
 
-Round five, catch me up on the news. Grok's briefing was the more useful one. But it served up an old April forecast as October news. Breaking news, six months late. And Muse got the date right. Another Grok user kept it for his daily news. So round five: my score, split. Grok for being useful, Muse for being right. The community's, Grok.
+Round five, catch me up on the news. Grok's briefing was the more useful one. But it served up an old April forecast as October news. Breaking news, six months late. And Muse got the date right. Another Grok user kept it for his daily news. So round five: my score, a draw. Grok for being useful, Muse for being right. The community's, Grok.
 
 A bonus round. I asked each to fix a work email.
 
@@ -42,7 +42,7 @@ If you are obsessed with X/Twitter, you might love Grok Bot. Likewise if your en
 
 The community likes Muse for errands. One user had it find windscreen wipers, then wait for a yes before buying.
 
-So, the final score. On my tests, Grok wins: two rounds, two draws and a split. It caught the scam Muse answered. Add the community, and it gets closer. Other testers found Muse safe with scams, and Grok forgetful when left running.
+So, the final score. On my tests, Grok wins two rounds, and the other three are draws. It caught the scam Muse answered. Add the community, and it gets closer. Other testers found Muse safe with scams, and Grok forgetful when left running.
 
 So my call? Grok for weekly admin, especially the bits that creep into work. Muse for personal errands, if your life runs through Meta's apps. Neither gets free rein.
 

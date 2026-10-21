@@ -1050,6 +1050,21 @@
      "how": "the Sunday session gathers first, writes ideas.json and combine.json from it, and copies his Combine taps into synthesize"
     }
    ]
+  },
+  {
+   "id": "plain-score-words",
+   "on": "2026-10-21",
+   "krish": "what does \"a split\" mean? I have no idea",
+   "why": "The five-round scoring used a shorthand label for a shared round, which he could not read on the teleprompter.",
+   "means": "Scores and tallies in scripts and articles use only win, lose or draw (and plain counts); a shared round is a draw, with the reason said in words.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": ".agents/skills/make-piece/SKILL.md",
+     "contains": "Score in plain words: win, lose or draw",
+     "how": "the Scripts step every making session follows"
+    }
+   ]
   }
  ]
 }
