@@ -32,7 +32,7 @@ A session feeds the slots and nothing else:
 | Drafts: Also changed | where his saved edit was carried (`scripts/post-pack/edit_sweep.py`): each change with Undo, suggestions with Change it too, recorded scripts left alone, and the gates run again; kept on a rebuild while that day's words are unchanged | `--sweep DAY=sweep.json` (the file edit_sweep.py writes) |
 | Drafts: What I learned from your edits | the compiler's proposals from his board edits (scope `board_edit:<class>`), each with Make it a rule and Not a rule; it stays a proposal until he says yes | `--lessons lessons.json` (GET /api/video-studio/learning-proposals) |
 | Record | the Teleprompter scripts and the scripts to read | `--teleprompter`, the publish page's scripts |
-| Publish | files first, then each place to post with its tick | `--materials DAY=...`, the publish page (`--day`), the videos on the record |
+| Publish | a made day's run-sheet (below): the day's progress, Download first, then one card per place to post, each with its tick | the publish page (`--day`, read as data), the videos and the pack folder on the record, `--materials DAY=...` |
 | Heading | what waits on Krish | `--waiting DAY=...` |
 
 Never add a section, a banner, a style or a script to a built board, and never
@@ -65,6 +65,49 @@ taste steers this sourcing and ranking only; the judges stay blind.
 Videos: every piece is a 90-second and a 5-minute video. A 15-minute feature
 appears as a third cut only on a piece Krish called one for
 (`config/features.json`, house rule FEATURE).
+
+### The Publish run-sheet
+
+Krish, 2026-10-21: "have a think about where I publish, how I publish, what I
+need to download, when, and in what order. Just make everything as beautiful
+and user-friendly as possible." So in the fixed layout a made day's Publish step
+is one ordered run-sheet (`week_board.py` `run_sheet`), drawn from data and the
+same every week:
+
+1. **The checklist** at the top: the day's meter and count, and each step that
+   counts toward 100% as a link that shows its tick (the two recordings point to
+   Record, where their ticks are).
+2. **Download first**: every file for the day, numbered in the order he uses
+   them, each with one big Download: the 5-minute and 90-second videos, then
+   their thumbnails (Drive links from the making record's `video_assets`), the
+   Substack cover, the vertical cover, the covers for the other places, the
+   Spotify thumbnail when it is its own file, the article as an HTML file, the
+   pictures in the article, then the `--materials` files and copy. Download all
+   saves every file the page holds; the videos come from Drive one tap each, and
+   the line under it names the post's library folder
+   (`3 Posts/<post folder>`, from the record's `pack.folder` or a video's path)
+   to download everything at once.
+3. **One card per place to post**, in `config/board-layout.json`
+   `publish_steps` order (Substack, YouTube, Shorts, TikTok, Reels), then LinkedIn,
+   Spotify and, on a feature piece, the feature under "When you want them". Every
+   card has the same parts in the same order: the files it needs (links back to
+   Download first), each piece of copy with one-tap Copy, what to do, the link box
+   where the step has one (the article on Substack, the video on YouTube), and its
+   tick. The tick ids are unchanged (`<day>-<step>`), so no saved tick is orphaned.
+
+The words, the files and what to do come from `publish_kit.steps(words,
+on_board=True)` on the publish page's own words, which `publish_manager.py`
+writes into every page as data (`<script type="application/json" id="pm-data">`:
+the words and each picture's role). The pictures and the copy are the page's,
+under the ids they always had (`mon-c3`, `mon-img-cover`, `mon-art`), so a saved
+comment and a `copy_updates` refresh still find their box. A page made before it
+carried its words still draws, with a warning, and names the standing files.
+The old section ticks, the contents bar and the separate Finished videos card are
+gone from fixed weeks; weeks before 26 October keep their markup byte for byte.
+`verify()` refuses a made day whose Publish step has no Download first, has it
+below a card, has a card out of order or without its own one tick, or has a tick
+outside a card, and still refuses a picture with no bytes or link and a finished
+video without its Drive link or its thumbnail's.
 
 ## Finished files while editorial review remains open
 

@@ -5,7 +5,7 @@ const CONF = __WEEK_BOARD_CONF__;
 const toastEl = document.getElementById("toast");
 const toast = m => { toastEl.textContent = m; toastEl.classList.add("on"); clearTimeout(toastEl._h); toastEl._h = setTimeout(() => toastEl.classList.remove("on"), 2200) };
 function report(btn, how){
-  const s = btn.closest(".card,.pic")?.querySelector(".status"); const ok = how !== "failed";
+  const s = btn.closest(".card,.pic,.dl-item")?.querySelector(".status"); const ok = how !== "failed";
   const said = { clipboard: "Copied. Paste it straight in.", command: "Copied (browser copy). Paste it straight in.", failed: "This browser blocked copying here. Use Download, or select and copy." }[how];
   if (s) { s.textContent = said; s.className = "status " + (ok ? "ok" : "bad") }
   toast(ok ? "Copied" : "Copy blocked: use Download");
@@ -47,22 +47,26 @@ let downloads = null;
 const downloadsReady = (async () => { try { downloads = window.claude?.use ? await window.claude.use("downloads") : null } catch { downloads = null } return downloads })();
 async function download(src, name){
   let blob;
-  try { blob = await pngBlob(src) } catch (e) { toast("Could not read this picture (" + ((e && e.message) || "unknown") + "). Use Copy picture."); return }
+  try { blob = await pngBlob(src) } catch (e) { toast("Could not read this picture (" + ((e && e.message) || "unknown") + "). Use Copy picture."); return false }
+  return saveBlob(blob, name);
+}
+// Hands one file to the viewer's save (or the browser's), and says why a save did not happen. True once handed over.
+async function saveBlob(blob, name){
   // Wait for the save capability (it answers a moment after load), and say why a save did not happen.
   const saver = downloads || (window.claude ? await downloadsReady : null);
   if (saver) {
-    try { await saver.save({ filename: name, data: blob }); toast("Saved " + name); return }
+    try { await saver.save({ filename: name, data: blob }); toast("Saved " + name); return true }
     catch (e) {
       const code = e && e.code;
-      if (code === "declined") return;
-      if (code === "rate_limited") { toast("Another save is still open. Finish it, then tap Download again."); return }
-      if (code === "too_large") { toast("This file is too big to save here. Use Copy picture."); return }
-      toast("This app view cannot save files (" + (code || "unknown") + "). Open the board in a browser, or use Copy picture."); return
+      if (code === "declined") return false;
+      if (code === "rate_limited") { toast("Another save is still open. Finish it, then tap Download again."); return false }
+      if (code === "too_large") { toast("This file is too big to save here. Use Copy picture."); return false }
+      toast("This app view cannot save files (" + (code || "unknown") + "). Open the board in a browser, or use Copy picture."); return false
     }
   }
-  if (window.claude) { toast("This app view cannot save files. Open the board in a browser, or use Copy picture."); return }
+  if (window.claude) { toast("This app view cannot save files. Open the board in a browser, or use Copy picture."); return false }
   const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(() => URL.revokeObjectURL(a.href), 4000); toast("Downloading " + name);
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000); toast("Downloading " + name); return true;
 }
 const hhmm = iso => {
   const d = new Date(iso); if (isNaN(d)) return "";
@@ -80,6 +84,10 @@ document.querySelectorAll(".pm[data-prefix]").forEach(root => {
   const st = { article: "", youtube: "" };
   const fill = t => String(t).replaceAll("{ARTICLE_URL}", st.article || "{ARTICLE_URL}").replaceAll("{YOUTUBE_URL}", st.youtube || "{YOUTUBE_URL}");
   const refill = () => root.querySelectorAll("pre[data-raw]").forEach(p => p.textContent = fill(p.dataset.raw));
+  // A Download is a picture (its own bytes) or, on the run-sheet, the article as an HTML file with the links he pasted.
+  const fileOf = (el, b) => el.tagName === "IMG" ? download(el.src, b.dataset.name)
+    : saveBlob(new Blob(['<!doctype html>\n<html lang="en-GB"><head><meta charset="utf-8"><title>' + (b.dataset.title || "").replace(/[<&]/g, "") + "</title></head><body>\n"
+        + fill(el.innerHTML) + "\n</body></html>\n"], { type: "text/html" }), b.dataset.name);
   root.addEventListener("click", async e => {
     const b = e.target.closest("button[data-act]"); if (!b || !root.contains(b)) return;
     const act = b.dataset.act, ref = b.dataset.ref, el = byId(ref);
@@ -87,10 +95,19 @@ document.querySelectorAll(".pm[data-prefix]").forEach(root => {
     if (act === "text") report(b, await copyText(fill(el.textContent)));
     if (act === "article") report(b, await copyRich(fill(el.innerHTML), fill((byId(ref + "-text") || el).textContent)));
     if (act === "image") report(b, await copyImage(el.src));
-    if (act === "download") await download(el.src, b.dataset.name);
+    if (act === "download") await fileOf(el, b);
+    if (act === "download-all") {
+      // Download first's Download all: every file this page holds, one after another, in the list's order.
+      const all = [...el.querySelectorAll('button[data-act="download"]')]; let n = 0;
+      b.disabled = true;
+      for (const x of all) { const t = byId(x.dataset.ref); if (t && await fileOf(t, x)) n++ }
+      b.disabled = false;
+      const s = el.querySelector(".dl-all .status");
+      if (s) { s.textContent = n === all.length ? `All ${n} files handed over.` : `${n} of ${all.length} files handed over: tap the others one by one.`; s.className = "status " + (n === all.length ? "ok" : "bad") }
+    }
   });
   const inputs = { article: byId(P + "link-article"), youtube: byId(P + "link-youtube") };
-  const linkState = root.querySelector("[data-linkstate]");
+  const linkState = [...root.querySelectorAll("[data-linkstate]")];
   panels[day] = { root, st, refill, inputs, linkState, timer: null, saving: Promise.resolve() };
   refill();
 });
@@ -122,6 +139,8 @@ function render(){
     l.querySelector(".t-when").textContent = id in pending ? "saving" : (on && saved.done && saved.at ? "ticked " + hhmm(saved.at) : "");
     l.querySelector(".t-err").textContent = errs[id] || "";
   });
+  // The run-sheet's list of steps at the top of Publish: each says whether its tick is done.
+  document.querySelectorAll("[data-tickstate]").forEach(el => el.classList.toggle("on", doneOf(el.dataset.tickstate)));
   let wDone = 0, wAll = 0;
   const live = mode === "live";
   for (const d of DAYS) {
@@ -166,7 +185,7 @@ function saveLinks(day){
     p.timer = null;
     if (!db || mode !== "live") return;
     const body = { article: p.st.article, youtube: p.st.youtube, at: new Date().toISOString() };
-    const said = (text, bad) => { if (p.linkState) { p.linkState.textContent = text; p.linkState.className = "link-state" + (bad ? " bad" : "") } };
+    const said = (text, bad) => { for (const ls of p.linkState) { ls.textContent = text; ls.className = "link-state" + (bad ? " bad" : "") } };
     p.saving = p.saving.then(() => db.doc("links/" + day).set(body)).then(
       () => { for (const [key, el] of Object.entries(p.inputs)) if (el && el.value.trim() === body[key]) el.dataset.unsaved = "false"; said("Links saved " + hhmm(body.at) + ".", false) },
       () => said("Links not saved. Type again to retry.", true));
@@ -201,7 +220,7 @@ render();
           const val = typeof v[k] === "string" ? v[k] : "";
           p.st[k] = val; el.value = val;
         }
-        if (s.exists && v.at && p.linkState) { p.linkState.textContent = "Links saved " + hhmm(v.at) + "."; p.linkState.className = "link-state" }
+        if (s.exists && v.at) for (const ls of p.linkState) { ls.textContent = "Links saved " + hhmm(v.at) + "."; ls.className = "link-state" }
         p.refill();
       }, () => {});
     }

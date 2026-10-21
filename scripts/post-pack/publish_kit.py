@@ -58,7 +58,26 @@ YOUTUBE = '{YOUTUBE_URL}'
 VERTICAL_MAX_SECONDS = 90  # the short cut, house rule TWO_CUTS; inside WhatsApp Status's limit too
 
 
-def steps(p):
+def file_names(p):
+    """{role: the file's name in the post's folder} for every file a step names: the words' own names, or the
+    standing ones. The board's run-sheet (week_board.py) matches each step's files to its Download first list by
+    these roles."""
+    f = p.get('files') or {}
+    wide_thumb = f.get('wide_thumbnail') or '3 Video/ the wide (16:9) thumbnail'
+    return {
+        'long_video': f.get('long_video') or '3 Video/ the 5-minute wide (16:9) video',
+        'short_video': f.get('short_video') or '3 Video/ the 90-second tall (9:16) video',
+        'wide_thumbnail': wide_thumb,
+        'spotify_thumbnail': f.get('spotify_thumbnail') or wide_thumb,
+        'cover': f.get('cover') or '2 Covers and images/substack-cover-1200x630.png',
+        'vertical_cover': f.get('vertical_cover') or '2 Covers and images/vertical-cover-1080x1920-shorts-tiktok-reels.png',
+        'share_card': f.get('share_card') or '2 Covers and images/share-card-1200x675.png',
+        'square': f.get('square') or '2 Covers and images/square-1080x1080.png',
+        'substack_copy': f.get('substack_copy') or '1 Article/substack-copy.html',
+    }
+
+
+def steps(p, on_board=False):
     """The channels, in the order they are published (docs/AMPLIFICATION.md).
 
     Krish, 2026-10-11: "I always want a 3-minute video and a 90-second
@@ -67,24 +86,24 @@ def steps(p):
     make the 3-minute scripts into 5-minute scripts and videos"). Those five come first, every time. LinkedIn and Spotify follow.
     WhatsApp and Substack Notes were dropped on 2026-10-14 (Krish: "I don't think
     I need Substack notes or WhatsApp to be honest, right now")."""
-    f = p.get('files') or {}
+    names = file_names(p)
     # The long cut is the 5-minute video (3-minute until 2026-10-19), or the week's deep cut (house rule DEEP_CUT). Friday 16 Oct's publish
     # page said "the 3-minute video" for a 14-minute deep cut that was not made yet (Krish, 18 Oct: "not
     # downloading or linking the right assets"), so the piece's words name it, and say when it is not ready.
     long_name = p.get('long_name') or '5-minute video'
     waiting = p.get('long_waiting')
     wait = [f'Not ready yet: {waiting}. Everything else in this step is ready.'] if waiting else []
-    long_video = f.get('long_video') or '3 Video/ the 5-minute wide (16:9) video'
-    short_video = f.get('short_video') or '3 Video/ the 90-second tall (9:16) video'
-    cover = f.get('cover') or '2 Covers and images/substack-cover-1200x630.png'
-    wide_thumb = f.get('wide_thumbnail') or '3 Video/ the wide (16:9) thumbnail'
-    spotify_thumb = f.get('spotify_thumbnail') or wide_thumb
-    vertical = f.get('vertical_cover') or '2 Covers and images/vertical-cover-1080x1920-shorts-tiktok-reels.png'
-    share_card = f.get('share_card') or '2 Covers and images/share-card-1200x675.png'
-    square = f.get('square') or '2 Covers and images/square-1080x1080.png'
-    copy_page = f.get('substack_copy') or '1 Article/substack-copy.html'
+    long_video, short_video, cover = names['long_video'], names['short_video'], names['cover']
+    wide_thumb, spotify_thumb, vertical = names['wide_thumbnail'], names['spotify_thumbnail'], names['vertical_cover']
+    share_card, square, copy_page = names['share_card'], names['square'], names['substack_copy']
     q = p.get('comment_question') or ''
     short_caption = p.get('short_caption')
+    # On the week's board each step is a card with its words above what to do and its link box below that
+    # (week_board.py run_sheet); on publish.html the words follow the steps and the link boxes are at the top.
+    words_at = 'above' if on_board else 'below'
+    link_box = 'below' if on_board else 'at the top of this page'
+    paste_post = ('Press Copy article above and paste it into the text under the video.' if on_board else
+                  f'Open {copy_page}, press Copy post, and paste it into the text under the video.')
     return [
         {
             'where': 'Substack', 'tag': 'The home: one post, one email',
@@ -94,12 +113,12 @@ def steps(p):
             'do': wait + [
                 f'Create, then choose Video (not Article). Upload the {long_name} (wide, 16:9).',
                 f'Set the video\'s thumbnail to the wide thumbnail, {wide_thumb}.',
-                'Paste the title and subtitle below.',
-                f'Open {copy_page}, press Copy post, and paste it into the text under the video.',
+                f'Paste the title and subtitle {words_at}.',
+                paste_post,
                 f'In the post\'s settings, use the cover, {cover}, as the cover image.',
                 'Settings, before you publish: YouTube upload on, with the Substack watermark off. '
                 'Shorts clips off and LinkedIn clips off (you post your own 90-second cut in steps 3 to 5).',
-                'Publish and send to everyone. Then paste the post\'s link into the Article link box at the top of this page.',
+                f'Publish and send to everyone. Then paste the post\'s link into the Article link box {link_box}.',
             ],
             'copy': [('Title', p.get('title')), ('Subtitle', p.get('subtitle'))],
         },
@@ -109,9 +128,9 @@ def steps(p):
             'files': [wide_thumb],
             'do': wait + [
                 'In YouTube Studio, open the private video Substack just uploaded.',
-                'Replace the title and description with the ones below. The article link sits at the end of the description, under the read line.',
-                f'Under Thumbnail, upload the wide thumbnail, {wide_thumb}. Make it public, then pin the comment below.',
-                'Paste the video\'s link into the YouTube link box at the top of this page.',
+                f'Replace the title and description with the ones {words_at}. The article link sits at the end of the description, under the read line.',
+                f'Under Thumbnail, upload the wide thumbnail, {wide_thumb}. Make it public, then pin the comment {words_at}.',
+                f'Paste the video\'s link into the YouTube link box {link_box}.',
             ],
             'copy': [('Title', p.get('youtube_title')), ('Description', p.get('youtube_description')),
                      ('Pinned comment', f'The full article, with every source, free: {ARTICLE}' + (f'\n\n{q}' if q else ''))],
@@ -120,7 +139,7 @@ def steps(p):
             'where': 'YouTube Shorts', 'tag': f'The {VERTICAL_MAX_SECONDS}-second cut, linked to the full video',
             'why': 'Links in Shorts are not clickable, so the Short points to the full video instead.',
             'files': [short_video, vertical],
-            'do': ['Upload the tall video as a Short with the title below.',
+            'do': [f'Upload the tall video as a Short with the title {words_at}.',
                    f'Set its cover to the vertical cover, {vertical}, where YouTube lets you add a picture; '
                    'where it offers only a frame, pick the one where you look at the camera.',
                    'Under Related video, choose the full video from step 2.'],
@@ -131,7 +150,7 @@ def steps(p):
             'why': 'Links in TikTok captions are not clickable, and a clickable link in your profile needs 1,000 followers '
                    'or a business account. The video says makeyourmindup.ai out loud, so the caption only has to name it.',
             'files': [short_video, vertical],
-            'do': ['Upload the tall video and paste the caption below.',
+            'do': [f'Upload the tall video and paste the caption {words_at}.',
                    f'Edit cover, and set it to the vertical cover, {vertical}. Then post.',
                    'Put makeyourmindup.ai in your profile, as a link once TikTok offers the Website field, as text until then.'],
             'copy': [('Caption', p.get('tiktok_caption') or short_caption)],
@@ -140,7 +159,7 @@ def steps(p):
             'where': 'Instagram Reels', 'tag': f'The same {VERTICAL_MAX_SECONDS}-second cut',
             'why': 'Reel captions cannot hold a clickable link, so the caption sends people to the link in your bio.',
             'files': [short_video, vertical, square],
-            'do': ['New Reel, add the tall video and paste the caption below.',
+            'do': [f'New Reel, add the tall video and paste the caption {words_at}.',
                    f'Edit cover, add from your camera roll and choose the vertical cover, {vertical}. Then share.',
                    'Check the link in your bio is makeyourmindup.ai.',
                    f'For the feed, when you want it: post the square cover, {square}, with the same caption.'],
@@ -150,8 +169,8 @@ def steps(p):
             'where': 'LinkedIn', 'tag': 'Optional: the same cut, uploaded natively',
             'why': 'When you want it: a native video travels further on LinkedIn than a link card. The link goes in the first comment.',
             'files': [short_video, share_card],
-            'do': ['Start a post, add the tall video, paste the post text below and publish.',
-                   'Straight away, add the first comment below.',
+            'do': [f'Start a post, add the tall video, paste the post text {words_at} and publish.',
+                   f'Straight away, add the first comment {words_at}.',
                    f'Posting a picture with the link instead of the video? Attach the share card, {share_card}.'],
             'copy': [('Post text', p.get('linkedin_post')),
                      ('First comment', f'The full article, free, with every source: {ARTICLE}')],
@@ -166,7 +185,7 @@ def steps(p):
             'files': [long_video, spotify_thumb, short_video],
             'do': wait + [f'In Spotify for Creators, New episode: upload the {long_name} (wide, 16:9).',
                    f'Set the episode thumbnail to {spotify_thumb}. Leave episode art empty: the show art is used.',
-                   'Paste the title and description below, then the chapters into the description.',
+                   f'Paste the title and description {words_at}, then the chapters into the description.',
                    'Add the 90-second tall video as the episode\'s clip. Publish.'],
             'copy': [('Episode title', p.get('spotify_title') or p.get('youtube_title')),
                      ('Description', p.get('spotify_description') or p.get('youtube_description')),
@@ -318,7 +337,18 @@ def self_test():
         failures.append('Spotify must use its dedicated thumbnail in both files and instructions')
     if named['files']['wide_thumbnail'] not in by_where['Spotify']['files']:
         failures.append('Spotify must retain the existing wide-thumbnail fallback')
-    checks = 20
+    # On the week's board (week_board.py run_sheet) a step's words sit above what to do and its link box below it.
+    board = steps(sample, on_board=True)
+    if not (any('Copy article above' in d for d in board[0]['do']) and any('Article link box below' in d for d in board[0]['do'])
+            and any('the ones above' in d for d in board[1]['do']) and not any(' below.' in d for s in board for d in s['do'][:-1] if 'link box' not in d)):
+        failures.append('on the board, the words are above each step\'s list and its link box below it')
+    if steps(sample)[0]['do'] != [d.replace('Press Copy article above and paste', 'Open 1 Article/substack-copy.html, press Copy post, and paste')
+                                   .replace('box below', 'box at the top of this page').replace('subtitle above', 'subtitle below')
+                                   for d in board[0]['do']]:
+        failures.append('publish.html keeps its own words: the steps above, the link boxes at the top')
+    if file_names({})['spotify_thumbnail'] != file_names({})['wide_thumbnail'] or file_names({'files': {'cover': 'c.png'}})['cover'] != 'c.png':
+        failures.append('file_names: the standing names, the words\' own, and Spotify falling back to the wide thumbnail')
+    checks = 23
     if failures:
         print('publish kit self-test FAILED:\n  ' + '\n  '.join(failures))
         return 1

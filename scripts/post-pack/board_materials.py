@@ -56,8 +56,38 @@ def update_copy(panel, day, data):
 
 
 def previous(page):
+    """The materials a board carries, by day: from its own card, or from a made day's Download first (render_group)."""
     return {day: json.loads(html.unescape(raw)) for day, raw in re.findall(
-        r'<div class="rec" id="(mon|wed|fri)-materials" data-materials="([^"]*)"', page)}
+        r'<div class="(?:rec|dl-group mat)" id="(mon|wed|fri)-materials" data-materials="([^"]*)"', page)}
+
+
+def render_group(day, data):
+    """The same materials inside a made day's Download first, on boards in the fixed layout (week_board.py
+    run_sheet): each file one big button in the day's one list of downloads, the copy beside it, under the ids
+    render() gives them, so a rebuild (previous) and a copy refresh (update_copy) still find them."""
+    e = html.escape
+    parts = [f'<div class="dl-group mat" id="{day}-materials" data-materials="{e(json.dumps(data), quote=True)}">',
+             f'<h3 class="dl-h">Prepared for this piece: {"on a review hold" if data["status"] == "review" else "ready"}</h3>',
+             f'<p class="dl-note">{e(data["note"])}</p>']
+    for section in data['sections']:
+        sid = f'{day}-materials-{section["id"]}'
+        parts += [f'<section class="sec" id="{sid}"><h4 class="dl-sub">{e(section["title"])}</h4>']
+        if section.get('note'):
+            parts += [f'<p class="dl-note">{e(section["note"])}</p>']
+        if section.get('files'):
+            parts += ['<ol class="dl-list">']
+            for item in section['files']:
+                parts += [f'<li class="dl-item" data-dl="material"><a class="btnlink dl-btn" href="{e(item["url"], quote=True)}" '
+                          f'target="_blank" rel="noopener">{e(item["label"])}</a></li>']
+            parts += ['</ol>']
+        for i, item in enumerate(section.get('copy', [])):
+            cid = f'{sid}-copy-{i}'
+            parts += [f'<div class="card"><div class="row"><span class="lab">{e(item["label"])}</span><div class="btns">'
+                      f'<button type="button" data-act="text" data-ref="{cid}">Copy</button></div></div>',
+                      f'<pre class="txt" id="{cid}" data-raw="{e(item["text"], quote=True)}">{e(item["text"])}</pre>',
+                      '<div class="status" aria-live="polite"></div></div>']
+        parts += ['</section>']
+    return ''.join(parts) + '</div>'
 
 
 def render(day, data):

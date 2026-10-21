@@ -969,6 +969,41 @@
    ]
   },
   {
+   "id": "publish-run-sheet",
+   "on": "2026-10-21",
+   "krish": "After that workflow work is done, have a think about where I publish, how I publish, what I need to download, when, and in what order. Just make everything as beautiful and user-friendly as possible.",
+   "why": "Publishing a day meant scrolling the publish page's own sections: the files were named in each step but downloaded from different places (the videos card, the picture cards, the covers section), ticks sat on section headings and again in a checklist, and nothing put what to download first or in which order he would use it.",
+   "means": "A made day's Publish step is one ordered run-sheet built from data: the checklist meter, then Download first (every file in the order he uses it, each with one big Download, Download all, and the post's library folder named), then one card per place to post in config/board-layout.json's order, each with its files, its copy, what to do, its link box and its tick. Tick ids never change. Weeks before 26 October keep their markup.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "def run_sheet(day, p, page, data, videos, delivery, feature, folder, warnings):",
+     "how": "the Publish step of a made day in the fixed layout is drawn from the page's data and the record, never from its markup"
+    },
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "def run_sheet_problems(name, panel, tag):",
+     "how": "verify() refuses a Publish step with no Download first, a card out of order, a card without its own tick or a tick with no card"
+    },
+    {
+     "file": "scripts/post-pack/publish_manager.py",
+     "contains": "id=\"pm-data\"",
+     "how": "every publish page carries its words and its pictures' roles as data for the run-sheet"
+    },
+    {
+     "file": "scripts/post-pack/buttons_in_browser.py",
+     "contains": "Download all handed over",
+     "how": "CI clicks every Download, Copy and Download all on a fixed week's run-sheet in a real browser"
+    },
+    {
+     "file": "docs/PUBLISH_BOARDS.md",
+     "contains": "### The Publish run-sheet",
+     "how": "the run-sheet's order and how a session feeds it"
+    }
+   ]
+  },
+  {
    "id": "two-cuts-and-an-occasional-feature",
    "on": "2026-10-21",
    "krish": "Bear in mind that all videos are generally 90 sec and 5 min. From time to time I might do a special 15 min feature. (Asked whether that replaces the weekly deep cut: \"Yes, replace it\".)",

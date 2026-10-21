@@ -237,3 +237,67 @@ label.qmark input:disabled + .box{opacity:.4}
 #week[data-layout] ~ .rv-cbtn,.rv-cbtn{bottom:calc(env(safe-area-inset-bottom,0px) + 140px)}
 .rv-p{font-size:16.5px}
 }
+/* The Publish step's run-sheet (week_board.py run_sheet): the day's progress, Download first (every file, numbered in the
+   order he uses them, each with one big Download), then a card per place to post, each with the same parts in the same
+   order: its files, its words to copy, what to do, its link box and its tick. Phone first: every target 44px or more. */
+.rs-jump{list-style:none;margin:4px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.rs-jump a{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:6px 12px;border:1px solid var(--line);border-radius:999px;background:var(--bg);color:var(--ink);text-decoration:none;font:700 13.5px/1.2 Archivo,system-ui,sans-serif}
+.rs-jump a::before{content:"";flex:none;width:14px;height:14px;border:2px solid var(--ink);border-radius:4px}
+.rs-jump a.on{border-color:var(--ok)}
+.rs-jump a.on::before{background:var(--ok);border-color:var(--ok)}
+.rs-jump a:focus-visible,.run-file:focus-visible{outline:3px solid var(--ok);outline-offset:2px}
+.rec.dl{counter-reset:dl}
+.dl-list{list-style:none;margin:0;padding:0;display:grid}
+.dl-item{counter-increment:dl;display:grid;grid-template-columns:32px minmax(0,1fr);gap:8px 12px;align-items:start;padding:12px 0;border-top:1px solid var(--line);scroll-margin-top:calc(env(safe-area-inset-top,0px) + var(--tabh) + 80px)}
+.dl-item::before{content:counter(dl);grid-row:1 / span 4;width:30px;height:30px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;font:700 13px "IBM Plex Mono",ui-monospace,monospace}
+.dl-item>*{grid-column:2;min-width:0}
+.dl-item:target{outline:3px solid var(--ok);outline-offset:4px;border-radius:8px}
+.dl-what{display:grid;gap:2px}
+.dl-name{font-weight:900;font-size:17px;line-height:1.3;overflow-wrap:anywhere}
+.dl-for{font-size:13.5px;line-height:1.4;color:var(--muted)}
+.dl-act{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.dl-act .btnlink,.dl-act button,.mat .dl-item>.btnlink,.dl-all button{display:inline-flex;align-items:center;justify-content:center;min-height:48px}
+.dl-btn{min-width:150px}
+button.dl-btn{font:700 15px/1 Archivo,system-ui,sans-serif;padding:12px 20px;border-radius:999px;border:0;background:var(--mint);color:#0C1512;cursor:pointer}
+button.dl-btn:disabled{opacity:.6;cursor:default}
+.dl-act button.ghost{min-height:48px;padding:12px 16px;font-size:14px}
+.dl-item[data-state="waiting"] .dl-name,.dl-item[data-state="pending"] .dl-name{color:var(--muted)}
+.dl-pic{display:block;width:auto;height:auto;max-width:min(100%,200px);max-height:200px;border-radius:8px;border:1px solid var(--line)}
+.dl-h{margin:14px 0 2px;font:700 16px/1.3 Archivo,system-ui,sans-serif}
+.dl-sub{margin:12px 0 2px;font:700 15px/1.3 Archivo,system-ui,sans-serif}
+.dl-note{margin:0;font-size:14px;line-height:1.45;color:var(--muted);max-width:65ch}
+.dl-group.mat{border-top:1px solid var(--line);padding-top:4px}
+.mat .dl-item>.btnlink{justify-self:start;max-width:100%;white-space:normal;line-height:1.3}
+.dl-all{display:grid;gap:8px;padding-top:12px;border-top:1px solid var(--line)}
+.dl-all button{justify-self:start}
+.run-h{font:400 26px/1.05 Anton,Impact,sans-serif;text-transform:uppercase;margin:28px 0 4px}
+.run-how{margin:0;color:var(--muted);font-size:14.5px}
+.run{border:1px solid var(--line);border-radius:12px;background:var(--card);padding:14px;margin:12px 0;display:grid;gap:14px;scroll-margin-top:calc(env(safe-area-inset-top,0px) + var(--tabh) + 80px)}
+.run:target{outline:3px solid var(--ok);outline-offset:2px}
+.run.opt{border-style:dashed}
+.run-head{display:flex;gap:12px;align-items:flex-start}
+.run-n{flex:none;width:38px;height:38px;border-radius:50%;background:var(--mint);color:#0C1512;display:grid;place-items:center;font:400 20px/1 Anton,Impact,sans-serif}
+.run.opt .run-n{background:var(--line);color:var(--ink)}
+.run-t{min-width:0}
+.run-t h3{margin:0;font:400 24px/1.1 Anton,Impact,sans-serif;text-transform:uppercase;overflow-wrap:anywhere}
+.run-tag{margin:2px 0 0;font-size:14px;color:var(--muted)}
+.run>.why{margin:0}
+.run-part{display:grid;gap:6px;min-width:0}
+.run-part>.lab{color:var(--muted)}
+.run-part .card{margin:0}
+.run-files{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.run-file{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:6px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);text-decoration:none;font-weight:700;font-size:14px;line-height:1.25}
+.run-file::before{content:"\2193";font-weight:900}
+.run-nofile{display:inline-block;padding:6px 0;font:12.5px/1.4 "IBM Plex Mono",ui-monospace,monospace;color:var(--muted);overflow-wrap:anywhere}
+.run .do{display:grid;gap:6px;line-height:1.5}
+.run-link label{display:grid;gap:4px;font-weight:700;font-size:14px}
+.run-link input{font:inherit;font-weight:400;min-height:48px;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);width:100%}
+.run-link input:focus-visible{outline:3px solid var(--ok);outline-offset:1px}
+.run-link .files{margin:0}
+.run-tick{border-top:1px solid var(--line);padding-top:6px}
+.run-tick .t-when{margin-left:auto}
+@media (max-width:640px){
+.run-h{font-size:22px}.run-t h3{font-size:21px}
+.run{padding:12px}
+.dl-btn{flex:1 1 150px}
+}

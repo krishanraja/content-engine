@@ -1,5 +1,21 @@
 # Workbench: where we are and what's next
 
+## 21 October: the Publish step is one run-sheet (Claude, part 4 of 4)
+
+- **Krish:** "have a think about where I publish, how I publish, what I need to download, when, and in what order.
+  Just make everything as beautiful and user-friendly as possible." (learning `publish-run-sheet`)
+- **Built (branch `claude/publish-board-part4`, on part 3 plus part 2's review fixes):** a made day's Publish step in
+  weeks from 26 Oct is `week_board.py` `run_sheet`: the checklist meter and its steps, then Download first (videos,
+  thumbnails, Substack cover, vertical cover, other covers, article HTML, its pictures, `--materials`; Download all;
+  the post's folder `3 Posts/<post folder>` named), then one card per place in `publish_steps` order, each with
+  files, copy, do, link box and tick; LinkedIn, Spotify and a feature under "When you want them". Built from data:
+  `publish_manager.py` now writes its words into each page (`pm-data`), and `publish_kit.steps(words, on_board=True)`
+  gives the words. Section ticks, the contents bar and the separate videos card are gone in fixed weeks only.
+  `verify()` refuses a missing Download first, a card out of order, a tick with no card.
+- **Waiting on Krish:** the layout snapshot is stale (part 3's Drafts and this Publish step); it updates only with his
+  words: `python3 scripts/check_board_layout.py --update --approved "Krish, YYYY-MM-DD: <his exact words>"`.
+- **Then:** his approval, push, PR with auto-merge; rebuild the 26 Oct board once its first piece is made.
+
 ## 21 October: Sunday's ideas from every source, and Could combine (Claude, part 2 of 4)
 
 - **Built (branch `claude/content-publish-board-ux-4dl7ai`):** `GET /api/week/options?include=sources`
@@ -76,30 +92,6 @@ Head to Head on Running My Life. Both cuts read back exactly (765/195 words).
 IDs, hashes, approval and checks: `docs/plans/2026-10-19-week/wednesday-teleprompter.json`.
 Live making record holds both. Next: Krish records; visuals/article remain separate.
 Board and all feedback kept: https://content.krishraja.com/board/2026-10-19#wednesday.
-
-## 20 October: Wednesday rewritten with Krish (Claude, editorial session)
-
-Live: https://content.krishraja.com/board/2026-10-19#wednesday, build
-`63bbc0e6…9db7` (readback hash matches the built file; Monday, Friday and Ideas
-panels byte-identical; 24 assets kept; 28 comments, 0 edits, 0 ticks unchanged).
-Sources: `docs/plans/2026-10-19-week/` (`wednesday-narrative-ready.md` holds
-his decisions, `wednesday-article-draft.md` the piece, `wednesday-scorecard.md`
-the takeaway card).
-
-- **Krish decided:** the "order six products" emails were scams. Angle: "the
-  one that says no" mixed with three personalities (Grok the sceptic, Muse the
-  brilliant new hire, Gemini with a finger on send), scorecard as the
-  takeaway. Reader: leaders at mid-sized firms. Everything private anonymised,
-  no personal subscription specifics, Codex blurs screenshots.
-- **Also decided:** closing line "If your team is about to get one of these,
-  pick the one that says no at the right moment."; plain card cells, no marks.
-  Titles after recording.
-- **Lesson (Krish, 20 Oct):** bring strategic editorial choices (angle, reader,
-  structure) to him as decisions; never spend questions on his private test
-  data.
-- **Next:** his review of the article, then recording scripts (series line,
-  reading gate, read-back) and the Teleprompter send. No sends, posts or
-  spending; Monday's no-spend hold remains.
 
 ## 19 October: both publish boards live, web cutover verified
 

@@ -22,7 +22,8 @@ Record and Publish, each filled from data (--brief, --review, --teleprompter, th
 same place every week. verify() refuses a board in any other shape, and npm run check:board-layout holds it to
 fixtures/week-board/fixed-layout.json (Krish, 2026-10-21: "the rest of the content engine needs to know how to feed
 it and not be permitted to change random parts of the UI and UX"). docs/PUBLISH_BOARDS.md, "The fixed layout".
-Weeks before keep the layout below, the one they were published in.
+In it a made day's Publish step is one run-sheet drawn from data (run_sheet): Download first, then a card per place to
+post in the layout's order. Weeks before keep the layout below, the one they were published in.
 
 --week is the Monday. Each tab is one of:
 
@@ -356,9 +357,20 @@ def parse_day_page(text, where):
                          'teach week_board/week.js first')
     h1 = re.search(r'<h1>(.*?)</h1>', body, re.S)
     piece = attr(m.group(1), 'data-piece')
+    # The page's words and its pictures' roles, as data (publish_manager.page_data): the run-sheet is built from them.
+    words, images = None, []
+    block = PM_DATA.search(text)
+    if block:
+        try:
+            data = json.loads(block.group(1))
+        except ValueError as error:
+            raise BoardError(f'{where}: its words (pm-data) cannot be read ({error})')
+        if isinstance(data, dict) and isinstance(data.get('words'), dict):
+            words = data['words']
+            images = [i for i in data.get('images') or [] if isinstance(i, dict) and i.get('id')]
     return {'css': css.group(1).strip(), 'post': attr(m.group(1), 'data-post') or '', 'body': body,
             'title': html.unescape(re.sub(r'<[^>]+>', '', h1.group(1))).strip() if h1 else '',
-            'piece': piece if piece and UUID.match(piece) else None}
+            'piece': piece if piece and UUID.match(piece) else None, 'words': words, 'images': images}
 
 
 def tick_box(tid, label):
@@ -1243,10 +1255,346 @@ def fixed_head(kick, heading, calls=()):
     return f'<div class="kick">{E(kick)}</div><h1>{E(heading)}</h1>{waiting}'
 
 
-def drop_scripts_section(publish, p):
-    """The publish page's Scripts section: in the fixed layout its cards are under Record, so they are said once."""
-    publish = re.sub(rf'<section id="{re.escape(p)}scripts">.*?</section>', '', publish, flags=re.S)
-    return re.sub(rf'<a href="#{re.escape(p)}scripts">[^<]*</a>', '', publish)
+# ------------------------------------------------------------------ the Publish step's run-sheet (the fixed layout)
+# Krish, 2026-10-21: "have a think about where I publish, how I publish, what I need to download, when, and in what
+# order. Just make everything as beautiful and user-friendly as possible." So a made day's Publish step is one ordered
+# run-sheet, drawn here from data: the day's progress at the top, then Download first (every file for the day, in the
+# order he uses them, each with one big Download), then one card per place to post, in config/board-layout.json's
+# order, each with the same parts in the same order: the files it needs (links back to Download first), its words to
+# copy, what to do, its link box where it has one, and its tick. The words, the files and what to do come from
+# publish_kit.steps() on the page's own words (its pm-data block); the pictures and the copy are the publish page's,
+# under the ids they always had, so a saved comment or a copy_updates refresh still finds its box. Nothing in it comes
+# from a session's markup.
+
+PM_DATA = re.compile(r'<script type="application/json" id="pm-data">(.*?)</script>', re.S)
+PM_SECTION = re.compile(r'<section id="([^"]+)"><h2>(.*?)</h2><p class="why">(.*?)</p>(.*?)'
+                        r'<div class="btns"><button class="ghost" data-act="done" data-ref="\1">Mark done</button></div></section>', re.S)
+PM_COPY = re.compile(r'<div class="card"><div class="row"><span class="lab">(?P<label>[^<]*)</span><div class="btns">'
+                     r'<button data-act="text" data-ref="(?P<cid>c\d+)">Copy</button></div></div>'
+                     r'<pre class="txt" id="(?P=cid)" data-raw="(?P<raw>[^"]*)">'
+                     r'|<div class="card"><span class="lab">(?P<missing>[^<]*)</span><span class="missing">')
+PM_PIC = re.compile(r'<div class="card pic"><div class="row"><span class="lab">([^<]*)</span><div class="btns">.*?'
+                    r'data-name="([^"]*)">Download</button></div></div><img id="img-([^"]+)" src="([^"]+)" alt="([^"]*)">'
+                    r'(?:<div class="files">([^<]*)</div>)?', re.S)
+PM_ARTICLE = re.compile(r'<div class="article" id="art">(.*?)</div>\n<pre id="art-text" hidden>(.*?)</pre>', re.S)
+# A picture's role on the publish page (publish_manager.COVER_ROLES, and "cover"), and the file name each stands for.
+COVER_ORDER = ('cover', 'vertical-cover', 'square-cover', 'share-card-cover')
+ROLE_FILE = {'cover': 'cover', 'vertical-cover': 'vertical_cover', 'square-cover': 'square', 'share-card-cover': 'share_card'}
+ROLE_LABEL = {'cover': ('Substack cover (1200 x 630)', "Substack: the post's cover image and the email thumbnail"),
+              'vertical-cover': ('Vertical cover (1080 x 1920)', 'Shorts, TikTok and Reels: the cover of the 90-second video'),
+              'square-cover': ('Square cover (1080 x 1080)', 'The Instagram feed, when you want it'),
+              'share-card-cover': ('Share card (1200 x 675)', 'LinkedIn, when you post a picture with the link')}
+LINK_BOX = {'substack': ('article', 'Article link, once the post is live', 'https://...'),
+            'youtube': ('youtube', 'YouTube link, once the video is public', 'https://youtu.be/...')}
+
+
+def publish_data(page, name, warnings):
+    """A made day's publish page as data: its words (for publish_kit.steps), the copy of each of its sections by the
+    ids the page gave them, its pictures with their roles and bytes, and the article as Substack takes it."""
+    body = page['body']
+    words = page.get('words')
+    if words is None:
+        warnings.append(f'{name}: its publish page was made before it carried its words as data, so the run-sheet names '
+                        'the standing files; make the page again with publish_manager.py to name its own')
+        words = {'title': page.get('title') or ''}
+    sections = {}
+    for m in PM_SECTION.finditer(body):
+        copy = []
+        for c in PM_COPY.finditer(m.group(4)):
+            if c.group('cid'):
+                copy.append({'label': html.unescape(c.group('label')), 'cid': c.group('cid'), 'text': html.unescape(c.group('raw'))})
+            else:
+                copy.append({'label': html.unescape(c.group('missing')), 'cid': None, 'text': None})
+        sections[m.group(1)] = copy
+    meta = {i['id']: i for i in page.get('images') or []}
+    guess = {v: k for k, v in publish_manager.COVER_ROLES.items()}
+    pictures, seen = [], set()
+    for label, fname, iid, src, alt, caption in PM_PIC.findall(body):
+        if iid in seen:
+            continue
+        seen.add(iid)
+        label = html.unescape(label)
+        role = (meta.get(iid) or {}).get('role') or guess.get(label) or ('cover' if label.startswith('Cover and email thumbnail') else None)
+        if role and role not in ROLE_FILE:
+            role = None
+        shown = re.sub(r'^Picture \d+: ', '', label)
+        pictures.append({'id': iid, 'role': role, 'label': shown, 'name': html.unescape(fname), 'src': src,
+                         'alt': html.unescape(alt), 'caption': html.unescape(caption) if caption else ''})
+    art = PM_ARTICLE.search(body)
+    return {'words': words, 'sections': sections, 'pictures': pictures,
+            'article': {'html': art.group(1), 'text': art.group(2)} if art else None}
+
+
+def post_folder(folder, videos):
+    """The post's folder in his library, '3 Posts/<post folder>': the record's pack, else a video's library path."""
+    if isinstance(folder, str) and folder.strip():
+        return folder.strip().removeprefix('3 Posts/').strip('/')
+    for v in videos or []:
+        m = re.match(r'3 Posts/([^/]+)/', str((v or {}).get('path') or '') if isinstance(v, dict) else '')
+        if m:
+            return m.group(1)
+    return None
+
+
+def drive_links(url):
+    """(download, view) for a Drive file link, or None."""
+    m = DRIVE_ID.search(str(url or ''))
+    if not m:
+        return None
+    fid = m.group(1)
+    return f'https://drive.usercontent.google.com/download?id={fid}&export=download', f'https://drive.google.com/file/d/{fid}/view'
+
+
+def dl_item(p, iid, name, used_for, actions, state, extra=''):
+    return (f'<li class="dl-item" id="{p}dl-{iid}" data-dl="{iid}" data-state="{state}"><div class="dl-what">'
+            f'<span class="dl-name">{E(name)}</span><span class="dl-for">{E(used_for)}</span></div>'
+            f'<div class="dl-act">{actions}</div>{extra}</li>')
+
+
+def drive_actions(url, what='Download'):
+    down, view = drive_links(url)
+    return (f'<a class="btnlink dl-btn" href="{E(down)}" target="_blank" rel="noopener">{E(what)}</a>'
+            f'<a class="btnlink ghost" href="{E(view)}" target="_blank" rel="noopener">Open in Drive</a>')
+
+
+def dl_videos(p, videos, feature):
+    """The first files in Download first: each finished video, then each one's thumbnail, from the making record.
+    Krish, 2026-10-14: "You should always link the Google Drive videos because I need to actually download them onto
+    my computer"; 2026-10-12: "I always want a video thumbnail for all video sizes produced as an asset every time".
+    Its own group, so a kept day's videos are drawn again from the record (board(), --keep)."""
+    by_cut = {v['cut']: v for v in videos or [] if isinstance(v, dict) and v.get('cut') in ('long', 'short', 'feature')}
+    cuts = LAYOUT['cuts']
+    rows, thumbs = [], []
+    for cut, label, where in video_cuts(feature):
+        v = by_cut.get(cut)
+        name = cuts[cut]['name']
+        if not v:
+            rows.append(dl_item(p, f'video-{cut}', label, f'For {where}', '<span class="rec-none">Not made yet</span>', 'waiting'))
+            thumbs.append(dl_item(p, f'thumb-{cut}', f'Thumbnail for the {name}', f'For {where}',
+                                  '<span class="rec-none">Not made yet</span>', 'waiting'))
+            continue
+        secs = v.get('seconds')
+        length = f'. {int(secs) // 60} min {int(secs) % 60:02d} s' if isinstance(secs, (int, float)) and secs else ''
+        if drive_links(v.get('url')):
+            rows.append(dl_item(p, f'video-{cut}', label, f'For {where}{length}', drive_actions(v['url']), 'ready'))
+        else:
+            rows.append(dl_item(p, f'video-{cut}', label, f'For {where}{length}',
+                                f'<span class="rec-none">Not in Drive yet: it is in the post\'s folder as {E(v.get("name") or "")}, '
+                                'and its link joins this list once Library Sync has written it</span>', 'pending'))
+        thumb = v.get('thumbnail') if isinstance(v.get('thumbnail'), dict) else {}
+        if drive_links(thumb.get('url')):
+            thumbs.append(dl_item(p, f'thumb-{cut}', f'Thumbnail for the {name}', f'For {where}', drive_actions(thumb['url']), 'ready'))
+        elif thumb.get('path'):
+            thumbs.append(dl_item(p, f'thumb-{cut}', f'Thumbnail for the {name}', f'For {where}',
+                                  f'<span class="rec-none">In the same folder as {E(Path(thumb["path"]).name)}; its link joins this '
+                                  'list once recorded</span>', 'pending'))
+        else:
+            thumbs.append(dl_item(p, f'thumb-{cut}', f'Thumbnail for the {name}', f'For {where}',
+                                  '<span class="rec-none">No thumbnail on the record yet; its link joins this list once recorded</span>', 'pending'))
+    return '<div class="dl-group" data-dl-group="videos"><ol class="dl-list">' + ''.join(rows + thumbs) + '</ol></div>'
+
+
+def run_sheet(day, p, page, data, videos, delivery, feature, folder, warnings):
+    """A made day's Publish step in the fixed layout: its progress, Download first, and a card per place to post."""
+    words, sections, pictures = data['words'], data['sections'], data['pictures']
+    names = publish_kit.file_names(words)
+    slug = re.sub(r'[^a-z0-9]+', '-', (page.get('title') or 'post').lower()).strip('-')[:40] or 'post'
+    item_of = {names['long_video']: 'video-long', names['short_video']: 'video-short', names['wide_thumbnail']: 'thumb-long'}
+    label_of = {'video-long': LAYOUT['cuts']['long']['name'], 'video-short': LAYOUT['cuts']['short']['name'],
+                'thumb-long': f'Thumbnail for the {LAYOUT["cuts"]["long"]["name"]}', 'video-feature': LAYOUT['cuts']['feature']['name'],
+                'article': 'The article (HTML)'}
+    # The files after the videos, in the order he uses them: the Substack cover, the vertical cover, the covers for
+    # the other places, then the article and the pictures in it. Each picture once, wherever the page showed it.
+    files = []
+    covers = sorted((x for x in pictures if x['role']), key=lambda x: COVER_ORDER.index(x['role']))
+    for x in covers:
+        name, used_for = ROLE_LABEL[x['role']]
+        iid = f'img-{x["id"]}'
+        item_of.setdefault(names[ROLE_FILE[x['role']]], iid)
+        label_of[iid] = name
+        files.append(dl_item(p, iid, name, f'For {used_for}', pic_actions(p, x), 'ready', pic_extra(p, x)))
+    if names['spotify_thumbnail'] != names['wide_thumbnail']:
+        link = ((words.get('links') or {}).get(names['spotify_thumbnail']) or '')
+        item_of[names['spotify_thumbnail']] = 'thumb-spotify'
+        label_of['thumb-spotify'] = 'Spotify thumbnail (1920 x 1080)'
+        files.append(dl_item(p, 'thumb-spotify', 'Spotify thumbnail (1920 x 1080)', 'For Spotify: the episode thumbnail',
+                             drive_actions(link) if drive_links(link) else
+                             f'<span class="rec-none">In the post\'s folder as {E(names["spotify_thumbnail"])}</span>',
+                             'ready' if drive_links(link) else 'pending'))
+    article = data['article']
+    if article:
+        item_of[names['substack_copy']] = 'article'
+        files.append(dl_item(p, 'article', 'The article (HTML)', 'For Substack, if pasting it from the Substack card does not work, and to keep',
+                             f'<button type="button" class="dl-btn" data-act="download" data-ref="{p}art" data-name="{E(slug)}-article.html" '
+                             f'data-title="{E(page.get("title") or "")}">Download</button>', 'ready', '<div class="status" aria-live="polite"></div>'))
+    else:
+        warnings.append(f'{day}: its publish page has no article to copy; the Substack card says so')
+    for n, x in enumerate((x for x in pictures if not x['role']), 1):
+        iid = f'img-{x["id"]}'
+        label_of[iid] = f'Picture {n} in the article'
+        files.append(dl_item(p, iid, f'Picture {n} in the article: {x["label"]}', 'For Substack, if a picture does not come through with the article',
+                             pic_actions(p, x), 'ready', pic_extra(p, x)))
+    groups = dl_videos(p, videos, feature) + ('<div class="dl-group" data-dl-group="files"><ol class="dl-list">' + ''.join(files) + '</ol></div>'
+                                             if files else '')
+    if delivery:
+        groups += board_materials.render_group(day, delivery)
+    on_page = len(re.findall(r'data-act="download"', groups))
+    where = (f'In Drive: makeyourmindup, 3 Posts, {folder}.' if folder else
+             'In Drive: makeyourmindup, 3 Posts, in the post\'s own folder.')
+    every = (f'<div class="dl-all">' + (f'<button type="button" class="dl-btn" data-act="download-all" data-ref="{p}download">'
+                                         f'Download all {on_page} files on this page</button><div class="status" aria-live="polite"></div>'
+                                         if on_page >= 2 else '')
+             + f'<p class="dl-note">The videos and thumbnails download from Drive, one tap each. Everything for this post is also '
+               f'in its library folder. {E(where)} Download that folder to get every file at once.</p></div>')
+    download_first = (f'<div class="rec dl" id="{p}download" role="region" aria-labelledby="{p}download-h"><div class="rec-head">'
+                      f'<h2 id="{p}download-h">Download first</h2><span class="kick">In the order you use them</span></div>'
+                      '<p class="rec-how">Everything you need today, before you open Substack. The videos come first, then the pictures, '
+                      'then the article.</p>' + groups + every + '</div>')
+    # The places to post, in config/board-layout.json's order; the optional ones under their own heading.
+    kit = {}
+    for k, s in enumerate(publish_kit.steps(words, on_board=True), 1):
+        key = SECTION_STEP.get(s['where']) or ('youtube' if re.fullmatch(r'YouTube \(the .+\)', s['where']) else None)
+        if key:
+            kit[key] = (k, s, 'substack' if k == 1 else f's{k}')
+    standing, optional, jump, n = [], [], [], 0
+    for key, label, channel, counted in STEPS:
+        if not counted and key in FEATURE_ONLY and not feature:
+            continue
+        if not channel and key not in FEATURE_ONLY:
+            # A recording: its tick is under Record, and the list at the top points there.
+            jump.append(f'<li><a href="#{p}record" data-tickstate="{day}-{key}">{E(label.split(" (")[0])}</a></li>')
+            continue
+        n += 1
+        card = run_card(day, p, n, key, label, kit.get(key), sections, article, item_of, label_of, feature, warnings)
+        (standing if counted else optional).append(card)
+        if counted:
+            jump.append(f'<li><a href="#{p}{kit[key][2] if key in kit else "run-" + key}" data-tickstate="{day}-{key}">'
+                        f'{E(label.split(":")[0])}</a></li>')
+    top = (f'<div class="ticks rs-top" id="{p}ticks" role="region" aria-labelledby="{p}ticks-h">'
+           f'<div class="ticks-head"><h2 id="{p}ticks-h">Publish checklist</h2>'
+           f'<span class="ticks-count" data-count="{day}">{STANDING} steps</span></div>'
+           f'<div class="meter" aria-hidden="true"><span data-meter="{day}"></span></div>'
+           f'<p class="tick-note" data-note="{day}">Loading saved ticks.</p>'
+           f'<ol class="rs-jump" aria-label="The steps that make 100%">{"".join(jump)}</ol></div>')
+    return (top + download_first
+            + '<h2 class="run-h">Then post, in this order</h2>' + ''.join(standing)
+            + ('<h2 class="run-h">When you want them</h2><p class="run-how">Not counted toward 100%.</p>' + ''.join(optional) if optional else '')
+            + SAVE_NOTE)
+
+
+def pic_actions(p, x):
+    return (f'<button type="button" class="dl-btn" data-act="download" data-ref="{p}img-{x["id"]}" data-name="{E(x["name"])}">Download</button>'
+            f'<button type="button" class="ghost" data-act="image" data-ref="{p}img-{x["id"]}">Copy picture</button>')
+
+
+def pic_extra(p, x):
+    return (f'<img class="dl-pic" id="{p}img-{x["id"]}" src="{x["src"]}" alt="{E(x["alt"])}">'
+            + (f'<p class="dl-note">{E(x["caption"])}</p>' if x['caption'] else '') + '<div class="status" aria-live="polite"></div>')
+
+
+def run_card(day, p, n, key, label, kit, sections, article, item_of, label_of, feature, warnings):
+    """One place to post: the files it needs, its words to copy, what to do, its link box where it has one, its tick."""
+    if key in FEATURE_ONLY:
+        c = LAYOUT['cuts']['feature']
+        sid, where, tag = 'run-feature', c['name'][0].upper() + c['name'][1:], c['shape']
+        why = 'Only on a piece you called a feature. Record it from its script under Record, then post it where it goes.'
+        copy = []
+        do =['Record it from Teleprompter: its script is under Record.', f'Then upload it to {c["for"]}, as you did the 5-minute video.']
+        files = [('video-feature', label_of['video-feature'])]
+    else:
+        if not kit:
+            raise BoardError(f'{day}: publish_kit.steps() has no step for {key}; the run-sheet cannot draw its card')
+        k, s, sid = kit
+        where, tag, why, do = s['where'], s['tag'], s['why'], s['do']
+        files = []
+        for f in s['files']:
+            iid = item_of.get(f)
+            if (iid, label_of.get(iid)) not in files:
+                files.append((iid, label_of.get(iid) if iid else f))
+        copy = sections.get(sid)
+        if copy is None:
+            warnings.append(f'{day}: its publish page has no {where} section, so its copy comes from its words')
+            copy = [{'label': lab, 'cid': None, 'text': t if isinstance(t, str) and t.strip() else None} for lab, t in s['copy']]
+    links = ''.join((f'<li><a class="run-file" href="#{p}dl-{iid}">{E(name)}</a></li>' if iid else
+                     f'<li><span class="run-nofile">{E(name)}, in the post\'s folder</span></li>') for iid, name in files)
+    cards = []
+    for i, c in enumerate(copy):
+        cid = f'{p}{c["cid"]}' if c['cid'] else f'{p}run-{key}-{i}'
+        if c['text'] and str(c['text']).strip():
+            text = str(c['text']).strip()
+            cards.append(f'<div class="card"><div class="row"><span class="lab">{E(c["label"])}</span><div class="btns">'
+                         f'<button data-act="text" data-ref="{cid}">Copy</button></div></div>'
+                         f'<pre class="txt" id="{cid}" data-raw="{E(text)}">{E(text)}</pre><div class="status" aria-live="polite"></div></div>')
+        else:
+            cards.append(f'<div class="card"><span class="lab">{E(c["label"])}</span><span class="missing">Not written yet: ask the '
+                         'engine for it before publishing.</span></div>')
+    if key == 'substack':
+        if article:
+            cards.append(f'<div class="card"><div class="row"><span class="lab">The article, with its pictures in place</span><div class="btns">'
+                         f'<button data-act="article" data-ref="{p}art">Copy article</button></div></div>'
+                         f'<div class="article" id="{p}art">{article["html"]}</div><pre id="{p}art-text" hidden>{article["text"]}</pre>'
+                         '<div class="status" aria-live="polite"></div><p class="files">Pastes as formatted text with headings and every '
+                         'picture in place. If a picture does not come through, download it from Download first.</p></div>')
+        else:
+            cards.append('<div class="card"><span class="lab">The article</span><span class="missing">Not on its publish page: '
+                         'make the page again before publishing.</span></div>')
+    box = ''
+    if key in LINK_BOX:
+        field, said, hint = LINK_BOX[key]
+        box = (f'<div class="run-part run-link"><label for="{p}link-{field}">{E(said)}'
+               f'<input id="{p}link-{field}" type="url" inputmode="url" autocomplete="off" placeholder="{E(hint)}"></label>'
+               '<p class="files">Paste it once: every Copy button on this day carries it. <span class="link-state" data-linkstate></span></p></div>')
+    opt = '' if next(c for k2, _, _, c in STEPS if k2 == key) else ' opt'
+    return (f'<section class="run{opt}" id="{p}{sid}" data-run="{key}" aria-labelledby="{p}{sid}-h">'
+            f'<div class="run-head"><span class="run-n" aria-hidden="true">{n}</span><div class="run-t">'
+            f'<h3 id="{p}{sid}-h">{E(where)}</h3><p class="run-tag">{E(tag)}</p></div></div><p class="why">{E(why)}</p>'
+            + (f'<div class="run-part"><span class="lab">Files</span><ul class="run-files">{links}</ul></div>' if links else '')
+            + (f'<div class="run-part"><span class="lab">Copy</span>{"".join(cards)}</div>' if cards else '')
+            + f'<div class="run-part"><span class="lab">Do</span><ol class="do">{"".join(f"<li>{E(d)}</li>" for d in do)}</ol></div>'
+            + box
+            + f'<label class="tick run-tick">{tick_box(f"{day}-{key}", label)}<span class="t-label">'
+              f'{"Recorded: tick it" if key in FEATURE_ONLY else "Done: tick it once it is live"}</span>{TICK_TAIL}</label></section>')
+
+
+def run_sheet_problems(name, panel, tag):
+    """Why a made day's Publish step in the fixed layout is not its run-sheet: Download first, before every card; one
+    card per place to post in config/board-layout.json's order; each card's one tick its own; no tick outside a card;
+    and each finished video and its thumbnail with their Drive links."""
+    out = []
+    p = (re.search(r'data-prefix="([^"]*)"', tag) or [None, ''])[1]
+    day = p.rstrip('-')
+    at = panel.find(f'<div class="subpanel" role="tabpanel" id="{p}sub-publish"')
+    if at < 0:
+        return [f'{name}: no Publish step']
+    publish = div_at(panel, at)
+    dl = publish.find(f'<div class="rec dl" id="{p}download"')
+    runs = list(re.finditer(r'<section class="run(?: opt)?" id="[^"]+" data-run="([^"]+)"[^>]*>(.*?)</section>', publish, re.S))
+    if dl < 0:
+        out.append(f'{name}: its Publish step has no Download first')
+    elif runs and dl > runs[0].start():
+        out.append(f'{name}: Download first is not above the places to post')
+    feature = 'data-feature="true"' in tag
+    want = [s['key'] for s in LAYOUT['publish_steps']['steps'] if s.get('channel') or (s.get('feature_only') and feature)]
+    got = [m.group(1) for m in runs]
+    if got != want:
+        out.append(f'{name}: the places to post are {got}, not {want}, the order of config/board-layout.json')
+    for m in runs:
+        ticks = re.findall(r'data-tick="([^"]+)"', m.group(2))
+        if ticks != [f'{day}-{m.group(1)}']:
+            out.append(f'{name}: the {m.group(1)} card holds the ticks {ticks}, not its own one')
+    rest = re.sub(r'<section class="run(?: opt)?" id="[^"]+" data-run="[^"]+"[^>]*>.*?</section>', '', publish, flags=re.S)
+    loose = re.findall(r'data-tick="([^"]+)"', rest)
+    if loose:
+        out.append(f'{name}: {len(loose)} tick(s) in its Publish step with no card: {loose[:4]}')
+    if dl >= 0:
+        box = div_at(publish, dl)
+        if 'Not in Drive yet' in box:
+            out.append(f'{name}: a finished video with no Drive link; record it (making.py PIECE drive-link CUT URL --thumb-url URL)')
+        for cut in re.findall(r'data-dl="video-(long|short|feature)" data-state="ready"', box):
+            if f'data-dl="thumb-{cut}" data-state="ready"' not in box:
+                out.append(f'{name}: a finished video with no thumbnail link; record it (making.py PIECE drive-link CUT URL --thumb-url URL)')
+                break
+    return out
 
 
 def ideas_waiting_panel(monday, hidden):
@@ -1666,7 +2014,8 @@ def previous_briefs(text):
 
 
 def fixed_day(key, name, weekday, when, series_label, page, piece, pick, title, pending, draft, calls, review, materials,
-              briefs, teleprompter, videos, ideas, hidden, panels, warnings, built_at, kept_at, sweeps=None, lessons=None):
+              briefs, teleprompter, videos, ideas, hidden, panels, warnings, built_at, kept_at, sweeps=None, lessons=None,
+              folders=None):
     """A day in the fixed layout, appended to panels; its state. Each step is filled from data, in the same place every
     week: Brief (the agreed brief), Drafts (the words to review), Record (Teleprompter, the scripts), Publish (the
     files first, then each place to post, each with its tick)."""
@@ -1711,7 +2060,9 @@ def fixed_day(key, name, weekday, when, series_label, page, piece, pick, title, 
             'drafts': (review_card(key, rv, built_at, kept_at) + after if rv else
                        slot_empty('The words are signed off. The article is under Publish, in its first step; the scripts are under Record.')),
             'record': parts['record'] + parts['scripts'],
-            'publish': files + parts['videos'] + parts['checklist'] + parts['link_state'] + drop_scripts_section(parts['publish'], p) + SAVE_NOTE,
+            # One ordered run-sheet, drawn from the page's data: never the page's own sections, ticks or contents.
+            'publish': run_sheet(key, p, page, publish_data(page, weekday, warnings), (videos or {}).get(key), delivery, feature,
+                                 post_folder((folders or {}).get(key), (videos or {}).get(key)), warnings),
         }
         notes = {'brief': 'agreed' if brief and brief['agreed'] else '', 'drafts': 'in review' if rv else 'signed off',
                  'record': '', 'publish': f'{STANDING} steps'}
@@ -1763,8 +2114,8 @@ def fixed_day(key, name, weekday, when, series_label, page, piece, pick, title, 
 
 def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pending=None, kept=None, videos=None, review=None,
           draft=(), calls=None, posted=None, kept_at=None, ideas=None, queue=None, materials=None, briefs=None, combine=None,
-          sweeps=None, lessons=None):
-    """(page, manifest, warnings). ideas: {day: [idea]} from read_ideas(),
+          sweeps=None, lessons=None, folders=None):
+    """(page, manifest, warnings). folders: {day: the post's library folder, from its making record's pack}. ideas: {day: [idea]} from read_ideas(),
     shown as a first tab, Ideas, opened while no day is made. pages: {day: publish page text};
     pieces: {day: uuid}; teleprompter: {day: teleprompter_info}; picks:
     {day: {'id', 'title'}} from the week options; pending: {day: title};
@@ -1832,7 +2183,12 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
                 raise BoardError(f'--keep {key}: that tab is in the old layout; rebuild {weekday} with --day {key}=<its publish page> '
                                  'so it takes the fixed layout')
             panel = re.sub(r'^(<div class="pm(?: fixed)?"[^>]*?)( hidden)?>', lambda m: m.group(1) + (' hidden' if key != opened else '') + '>', kept[key], count=1)
-            card = videos_card(key, f'{key}-', (videos or {}).get(key), bool(piece) and piece == deep_piece)
+            card = None if FIXED else videos_card(key, f'{key}-', (videos or {}).get(key), bool(piece) and piece == deep_piece)
+            group = panel.find('<div class="dl-group" data-dl-group="videos">') if FIXED else -1
+            if group >= 0 and (videos or {}).get(key):
+                # The kept day's finished videos and thumbnails come from the record, as every other day's do.
+                feature = 'data-feature="true"' in panel.split('>', 1)[0]
+                panel = panel.replace(div_at(panel, group), dl_videos(f'{key}-', videos[key], feature), 1)
             if card:
                 # The kept day's finished videos come from the record, as every other day's do.
                 at = panel.find(f'<div class="rec" id="{key}-videos"')
@@ -1844,7 +2200,7 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
         elif FIXED:
             state = fixed_day(key, name, weekday, when, series_label, page, piece, pick, title, pending, draft, calls, review,
                               materials, briefs, teleprompter, videos, ideas, key != opened, panels, warnings, built_at, kept_at,
-                              sweeps, lessons)
+                              sweeps, lessons, folders)
         elif page:
             if not piece:
                 raise BoardError(f'{weekday} is made but has no piece id: give --piece {key}=<uuid>, or --options or --live '
@@ -2078,6 +2434,8 @@ def verify(page):
                  if '${' not in t and not re.search(r'\ssrc="(?:data:image/|https://)', t)]
         if empty:
             out.append(f'{name}: {len(empty)} picture(s) with nothing to show, download or copy')
+        if fixed and 'class="pm fixed"' in tag:
+            out += run_sheet_problems(name, panel, tag)
         vid = re.search(r'<div class="rec" id="' + re.escape(p) + r'videos".*?<p class="rec-how">', panel, re.S)
         if vid:
             card = vid.group(0)
@@ -2221,7 +2579,7 @@ def build(args, get=None):
                 pieces[key] = held
     for key in sorted(draft & (set(pages) | set(kept))):
         raise BoardError(f'--draft {key} with --day or --keep {key}: a day in review shows its review card, never an older publish page')
-    scripts, unmade, videos, posted, fresh = {}, [], {}, {}, set()
+    scripts, unmade, videos, posted, fresh, folders = {}, [], {}, {}, set(), {}
     held_draft = {k for k, d in ((previous or {}).get('days') or {}).items() if d.get('state') == 'draft'}
     for key, _, weekday, *_ in DAYS:
         # The same order as board(): --piece, then the publish page's own, then the week's pick.
@@ -2243,6 +2601,9 @@ def build(args, get=None):
                 making_rec = ((answer.get('making') or {}) if isinstance(answer, dict) else {})
                 if isinstance(making_rec.get('video_assets'), list):
                     videos[key] = making_rec['video_assets']
+                pack = making_rec.get('pack')
+                if isinstance(pack, dict) and isinstance(pack.get('folder'), str) and pack['folder'].strip():
+                    folders[key] = pack['folder'].strip()  # the post's library folder, named in Download first
                 made_at = (making_rec.get('publish_manager') or {})
                 url = made_at.get('url') if isinstance(made_at, dict) else None
                 is_posted = isinstance(answer, dict) and answer.get('state') == 'published'
@@ -2354,7 +2715,7 @@ def build(args, get=None):
                 sweeps[k] = s
     lessons = read_lessons(read_json(args.lessons, '--lessons')) if getattr(args, 'lessons', None) else None
     page, manifest, more = board(monday, pages, pieces, scripts, picks, pending, kept, videos, review, draft, calls, posted, kept_at,
-                                 ideas, queue, materials, briefs, combine, sweeps, lessons)
+                                 ideas, queue, materials, briefs, combine, sweeps, lessons, folders)
     if previous is not None:
         keep_previous(previous, manifest['days'], unpick, monday, fresh)
     manifest['warnings'] = warnings + more
@@ -2802,9 +3163,102 @@ def _fixed_checks(check, mon):
     check('fixed layout: a brief carried from the old board for another piece never shows under the new pick',
           'id="wed-brief-card"' not in moved and any('dropped' in w for w in moved_warnings))
     _editor_checks(check, week)
+    _runsheet_checks(check, week, mon)
     use_layout(date(2026, 10, 12))
     check('the old layout comes back for an old week: its labels as they were published',
           LABEL['record-long'] == 'Record the 3-minute cut (Teleprompter)' and 'record-feature' not in LABEL)
+
+
+def _runsheet_checks(check, week, mon):
+    """The Publish step's run-sheet (Krish, 2026-10-21: "where I publish, how I publish, what I need to download, when,
+    and in what order"): Download first, then a card per place to post in the layout's order, each with its own tick."""
+    global FEATURES_FILE
+    drive = lambda c: f'https://drive.google.com/file/d/{c * 25}/view'
+    videos = {'mon': [{'cut': 'long', 'url': drive('a'), 'seconds': 305, 'path': '3 Posts/2026-10-26 Mon follow.the.money - Suno/3 Video/l.mp4',
+                       'thumbnail': {'url': drive('b')}},
+                      {'cut': 'short', 'url': drive('c'), 'seconds': 86, 'thumbnail': {'url': drive('d')}}]}
+    mats = {'mon': {'piece_id': MON_ID, 'status': 'review', 'note': 'Held for one fact.',
+                    'sections': [{'id': 'captions', 'title': 'Captions', 'files': [{'label': 'Download the captions', 'url': 'https://example.com/c.srt'}],
+                                  'copy': [{'label': 'Chapters', 'text': '0:00 Start'}]}],
+                    'copy_updates': {'mon-c3': 'A refreshed YouTube title'}}}
+    page, _, _ = board(week, {'mon': mon}, {'mon': MON_ID}, videos=videos, materials=mats)
+    use_layout(week)
+    sub = div_at(page, page.find('<div class="subpanel" role="tabpanel" id="mon-sub-publish"'))
+    check('run-sheet: a made day with its videos passes verify', verify(page) == [])
+    order = re.findall(r'<li class="dl-item" id="mon-dl-([^"]+)"', sub)
+    check('run-sheet: Download first holds every file in the order he uses them (videos, thumbnails, the Substack cover, '
+          'the article, its pictures, then the prepared files)',
+          order[:7] == ['video-long', 'video-short', 'thumb-long', 'thumb-short', 'img-cover', 'article', 'img-pic']
+          and 'data-dl="material"' in sub[sub.index('id="mon-dl-img-pic"'):])
+    runs = re.findall(r'<section class="run(?: opt)?" id="mon-([a-z0-9-]+)" data-run="([a-z-]+)"', sub)
+    check('run-sheet: one card per place to post, in config/board-layout.json\'s order, under the ids the page gave them',
+          [k for _, k in runs] == [s['key'] for s in LAYOUT['publish_steps']['steps'] if s.get('channel')]
+          and [i for i, _ in runs][:3] == ['substack', 's2', 's3'])
+    check('run-sheet: the progress at the top, then Download first, then the cards, then the optional ones under their heading',
+          sub.index('data-meter="mon"') < sub.index('id="mon-download"') < sub.index('data-run="substack"')
+          < sub.index('When you want them') < sub.index('data-run="linkedin"'))
+    check('run-sheet: each card has its own one tick, and no tick sits outside a card',
+          all(re.findall(r'data-tick="([^"]+)"', c.group(2)) == [f'mon-{c.group(1)}'] for c in
+              re.finditer(r'<section class="run(?: opt)?" id="[^"]+" data-run="([^"]+)"[^>]*>(.*?)</section>', sub, re.S))
+          and 'data-tick="' not in re.sub(r'<section class="run.*?</section>', '', sub, flags=re.S))
+    sub_card = re.search(r'<section class="run" id="mon-substack".*?</section>', sub, re.S).group(0)
+    check('run-sheet: a card\'s parts in one order (files, copy, do, link box, tick), its files linking to Download first',
+          sub_card.index('href="#mon-dl-video-long"') < sub_card.index('data-ref="mon-c1"') < sub_card.index('<ol class="do">')
+          < sub_card.index('id="mon-link-article"') < sub_card.index('data-tick="mon-substack"')
+          and 'Press Copy article above' in sub_card and 'data-act="article" data-ref="mon-art"' in sub_card)
+    check('run-sheet: the old section ticks, the contents bar and the Finished videos card are gone from a fixed week',
+          'sec-tick' not in sub and 'nav class="toc"' not in sub and 'id="mon-videos"' not in sub and 'Mark done' not in page)
+    check('run-sheet: a copy box keeps its id, so copy_updates still refreshes it and a comment on it still finds it',
+          'id="mon-c3" data-raw="A refreshed YouTube title"' in sub)
+    check('run-sheet: the prepared files ride in Download first and a rebuild reads them back',
+          board_materials.previous(page).get('mon', {}).get('note') == 'Held for one fact.' and 'id="mon-materials-captions-copy-0"' in sub)
+    check('run-sheet: Download all for the files the page holds, and the post\'s library folder said plainly',
+          'data-act="download-all" data-ref="mon-download">Download all 3 files on this page' in sub
+          and '3 Posts, 2026-10-26 Mon follow.the.money - Suno.' in sub)
+    check('run-sheet: the list at the top says each step, the recordings pointing to Record',
+          '<a href="#mon-record" data-tickstate="mon-record-long">' in sub and '<a href="#mon-s2" data-tickstate="mon-youtube">' in sub)
+    # Refusals: what a hand edit might do to a run-sheet.
+    no_dl = page.replace(div_at(page, page.find('<div class="rec dl" id="mon-download"')), '', 1)
+    check('run-sheet: a Publish step with no Download first is refused', any('no Download first' in x for x in verify(no_dl)))
+    a = re.search(r'<section class="run" id="mon-s3".*?</section>', page, re.S).group(0)
+    b = re.search(r'<section class="run" id="mon-s4".*?</section>', page, re.S).group(0)
+    swapped = page.replace(a, '\0').replace(b, a).replace('\0', b)
+    check('run-sheet: cards out of order are refused', any('places to post are' in x for x in verify(swapped)))
+    loose = page.replace('<h2 class="run-h">Then post', row_tick('mon', 'tiktok') + '<h2 class="run-h">Then post', 1)
+    check('run-sheet: a tick with no card is refused', any('with no card' in x for x in verify(loose)))
+    untick = page.replace(re.search(r'<label class="tick run-tick"><input type="checkbox" data-tick="mon-reels".*?</label>', page, re.S).group(0), '', 1)
+    check('run-sheet: a card without its tick is refused', any('the reels card holds' in x for x in verify(untick)))
+    held = {'mon': [dict(videos['mon'][0], url=None, name='l.mp4'), dict(videos['mon'][1], thumbnail={'path': 'x/t.jpg'})]}
+    gaps, _, _ = board(week, {'mon': mon}, {'mon': MON_ID}, videos=held)
+    problems = verify(gaps)
+    check('run-sheet: a video with no Drive link and a video with no thumbnail link are refused, as before',
+          any('no Drive link' in x for x in problems) and any('no thumbnail link' in x for x in problems))
+    kept, _, _ = board(week, kept={'mon': kept_panel(gaps, 'mon')}, pieces={'mon': MON_ID}, videos=videos)
+    check('run-sheet: a kept day draws its videos again from the record', verify(kept) == [] and 'data-dl="video-long" data-state="ready"' in kept)
+    with tempfile.TemporaryDirectory() as tmp:
+        saved, FEATURES_FILE = FEATURES_FILE, Path(tmp) / 'features.json'
+        try:
+            FEATURES_FILE.write_text(json.dumps({'pieces': {MON_ID: {'called_on': '2026-10-25'}}}), encoding='utf-8')
+            feat, _, _ = board(week, {'mon': mon}, {'mon': MON_ID}, videos=videos)
+        finally:
+            FEATURES_FILE = saved
+    fsub = div_at(feat, feat.find('<div class="subpanel" role="tabpanel" id="mon-sub-publish"'))
+    check('run-sheet: a feature piece has its feature card last, under When you want them, and its video in Download first',
+          verify(feat) == [] and fsub.index('When you want them') < fsub.index('data-run="record-feature"')
+          and 'id="mon-dl-video-feature"' in fsub and 'href="#mon-dl-video-feature"' in fsub)
+    old = re.sub(r'<script type="application/json" id="pm-data">.*?</script>', '', mon, flags=re.S)
+    _, _, warned = board(week, {'mon': old}, {'mon': MON_ID})
+    check('run-sheet: a publish page with no words as data still draws, and says it names the standing files',
+          any('standing files' in w for w in warned))
+    with tempfile.TemporaryDirectory() as tmp:
+        legacy = stand_in(tmp, 'mon', 'Warner sued Suno. Now it takes a cut.', 'follow.the.money')
+    use_layout(date(2026, 10, 12))
+    vids = [{'cut': c, 'seconds': 90, 'url': f'https://drive.google.com/file/d/1{c}VideoAAAAAAAAAAAAAAAAAAAAAAAA/view',
+             'thumbnail': {'url': f'https://drive.google.com/file/d/1{c}ThumbAAAAAAAAAAAAAAAAAAAAAAAA/view'}} for c in ('long', 'short')]
+    made = made_panel(parse_day_page(legacy, 'mon'), 'mon', 'monday', 'mon-', {}, False, [], vids)
+    check('run-sheet: an older week\'s made day is byte for byte what it was before the run-sheet',
+          hashlib.sha256(made.encode('utf-8')).hexdigest() == '55798f3f552d6772471d9a5f51e2c67516cd09ed5e935e6af1fa351c5e8400ec')
+    use_layout(week)
 
 
 def _editor_checks(check, week):
