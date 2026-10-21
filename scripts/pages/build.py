@@ -909,7 +909,7 @@ def cover_html(facts, base, refresh=False):
     if not isinstance(head, str) and len(head) != 2:
         brand.fail('"cover": "headline" is one line of text, or two: the words in cream, then the last line in the subchannel\'s colour')
     lead, last = split_headline(head) if isinstance(head, str) else head
-    why = title_check.gate(f'{lead} {last}')
+    why = title_check.gate(f'{lead} {last}', piece_id=facts.get('piece_id'))
     if why:
         brand.fail(f'the cover headline "{lead} {last}" is not ready (house rule TITLE_EARNS_THE_CLICK: the anti-dumb floor, then only a title Krish picked): ' + '; '.join(why))
     colours = {'mint': t['mint'], **PALETTE}
@@ -1182,7 +1182,7 @@ def cover_shape_html(facts, base, shape, refresh=False):
     if not isinstance(head, str) and len(head) != 2:
         brand.fail('"cover": "headline" is one line of text, or two: the words in cream, then the last line in the subchannel\'s colour')
     lead, last = split_headline(head) if isinstance(head, str) else head
-    why = title_check.gate(f'{lead} {last}')
+    why = title_check.gate(f'{lead} {last}', piece_id=facts.get('piece_id'))
     if why:
         brand.fail(f'the cover headline "{lead} {last}" is not ready (house rule TITLE_EARNS_THE_CLICK: the anti-dumb floor, then only a title Krish picked): ' + '; '.join(why))
     colours = {'mint': t['mint'], **PALETTE}
@@ -1550,7 +1550,7 @@ def thumb_html(facts, base, shape, refresh=False):
     if not head or (not isinstance(head, str) and len(head) != 2):
         brand.fail('the thumbnail\'s "headline" is one line of text, or two: the words in cream, then the last line in the subchannel\'s colour')
     lead, last = split_headline(head) if isinstance(head, str) else head
-    why = title_check.gate(f'{lead} {last}')
+    why = title_check.gate(f'{lead} {last}', piece_id=facts.get('piece_id'))
     if why:
         brand.fail(f'the cover headline "{lead} {last}" is not ready (house rule TITLE_EARNS_THE_CLICK: the anti-dumb floor, then only a title Krish picked): ' + '; '.join(why))
     colours = {'mint': t['mint'], **PALETTE}

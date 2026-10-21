@@ -174,11 +174,11 @@ seventeen eighteen nineteen twenty thirty forty fifty sixty seventy eighty ninet
 first second third fourth fifth half quarter percent per cent""".split())
 
 
-def frame_title_problems(title):
+def frame_title_problems(title, piece_id=None):
     """Why the title beside his face may not be drawn: title_check's gate (his pick, and the floor)."""
     sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'post-pack'))
     import title_check
-    return title_check.gate(title)
+    return title_check.gate(title, piece_id=piece_id)
 
 
 class KitError(Exception):
@@ -1145,7 +1145,7 @@ def make_kit(post_path, cut, recording, out, roots=(), force=False, drawer=None,
         # A title Krish has not picked is never drawn (house rule TITLE_EARNS_THE_CLICK): on 17 October the plate
         # still read the subject "Why so many AIs", a line he had rejected, the second time a plate showed a stale title.
         on_frame = post.get('video_title') or post['subject']
-        why_not = frame_title_problems(on_frame)
+        why_not = frame_title_problems(on_frame, post.get('piece_id'))
         if why_not:
             raise KitError(f'the title beside his face, {on_frame!r}, cannot be drawn: ' + '; '.join(why_not) +
                            '. Put the title card he picked in post.json as "video_title".')

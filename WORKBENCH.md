@@ -1,5 +1,37 @@
 # Workbench: where we are and what's next
 
+## 21 October: Wednesday recordings and review pack (Codex)
+
+The article, scorecard, covers, thumbnails and editable channel copy are live
+on the private Wednesday board. First verified production build:
+`6e4e5a33371257fae7eda99d50a08730e6d4ba844af6bd0fffeef96524d734be`.
+Ideas, Monday and Friday were byte-identical; all 24 original assets remain.
+All six stores for both weeks were read; no feedback was lost or rewritten.
+PR #120 was confirmed merged before this work.
+
+Production inputs and exact recorded scripts:
+`docs/plans/2026-10-21-wednesday/README.md`. Media working folder:
+`C:\Users\krish\.scratch\wednesday-production-2026-10-21`.
+Library destination: `3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot`.
+Unaccepted video exports stay in `3 Video/Working - review`; they are not
+released deliverables. Source takes remain unchanged in the recording lane.
+
+Krish approved the post-recording packaging set. He approved one fact check
+with a $1 budget; it ran once at $0.50. It did not clear the gate. See
+`release-review.md` and `claim-review.md` in the production plan. No rerun,
+public post, invented prediction confidence or playback acceptance is authorised.
+The article's evidence prose is 435 personal-test words and 434 corpus words;
+its recorded authored wording and the latest “level, for different reasons”
+news call are retained. The local model scan passed (4.482 / 1.079).
+
+Both original takes passed six calibrated sync windows within 40 ms; no
+one-second file offset was found. Exports use steady 24 fps. Exact final
+export measurements, contact sheets and validation receipts travel with the
+review files. A complete human playback check is still required. Caption
+spelling corrections include Meta’s Muse and “the sender”; no speech was sped up.
+The code checks found a pre-existing missing registration of board-ui-guard;
+it was wired to its existing hook, and all 12 hook tests passed on rerun.
+
 ## 21 October: the publish board has one fixed layout (Claude, part 1 of 4)
 
 Krish asked to standardise and lock the board so the engine only feeds it. He

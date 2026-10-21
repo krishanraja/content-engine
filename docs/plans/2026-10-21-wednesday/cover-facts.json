@@ -1,0 +1,69 @@
+{
+  "subchannel": "under.the.hood",
+  "date": "2026-10-21",
+  "headline": "Can Meta’s Muse or Grok Bot run my life? I tested both",
+  "video_title": "Muse vs Grok Bot: Five everyday jobs",
+  "video_title_emphasis": "Five everyday jobs",
+  "comment_question": "Which job would you hand over?",
+  "cover": {
+    "headline": [
+      "MUSE vs GROK BOT",
+      "FIVE REAL-LIFE TESTS"
+    ],
+    "portrait": true,
+    "rows": [
+      {
+        "name": "Grok Bot",
+        "logo": "logos/grok.svg",
+        "tag": "Grok",
+        "colour": "mint"
+      },
+      {
+        "name": "Muse",
+        "logo": "logos/meta-cream.svg",
+        "tag": "Meta",
+        "colour": "lilac"
+      }
+    ]
+  },
+  "thumbs": {
+    "headline": [
+      "MUSE vs GROK BOT",
+      "FIVE REAL-LIFE TESTS"
+    ],
+    "portrait": true,
+    "rows": [
+      {
+        "name": "Grok Bot",
+        "logo": "logos/grok.svg",
+        "tag": "Grok",
+        "colour": "mint"
+      },
+      {
+        "name": "Muse",
+        "logo": "logos/meta-cream.svg",
+        "tag": "Meta",
+        "colour": "lilac"
+      }
+    ]
+  },
+  "standoff": {
+    "left": {
+      "label": "Grok Bot",
+      "logos": [
+        "logos/grok.svg"
+      ],
+      "tag": "Five everyday jobs"
+    },
+    "right": [
+      {
+        "label": "Meta’s Muse",
+        "logos": [
+          "logos/meta-cream.svg"
+        ],
+        "tag": "Tested head to head"
+      }
+    ]
+  },
+  "piece_id": "d7a20885-7001-4661-b444-9d7ca1043416"
+}

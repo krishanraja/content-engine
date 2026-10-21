@@ -186,7 +186,7 @@ def video_title(facts, where='cover-facts.json'):
     if len(said) > TITLE_MAX_CHARS:
         raise StoryError(f'{where}: the video title "{said}" is {len(said)} characters; a title card holds at most '
                          f'{TITLE_MAX_CHARS}. Write a shorter "video_title".')
-    why = title_check.gate(said)
+    why = title_check.gate(said, piece_id=facts.get('piece_id'))
     if why:
         raise StoryError(f'{where}: the video title "{said}" is not ready (house rule TITLE_EARNS_THE_CLICK: the anti-dumb floor, then only a title Krish picked): ' + '; '.join(why))
     return said

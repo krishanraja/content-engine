@@ -1,4 +1,4 @@
-# Muse vs Grok Bot: Head to Head on Running My Life
+# Can Meta’s Muse or Grok Bot run my life? I tested both
 
 I put Elon Musk's Grok Bot and Meta's Muse head to head, two of the new done-for-you AI assistants. Flights, emails, the day plan, the things I keep meaning to cancel. The sort of jobs that make an assistant sound very attractive at half past ten on a Tuesday.
 
@@ -8,7 +8,9 @@ I ran five head-to-head tests. One assistant wrote a lovely reply to a scammer. 
 
 Every round gets two scores: mine, and the community's, meaning other people who have tested the same tools.
 
-## Round one: the inbox
+The two sets of evidence get equal weight in what I'd try next. Mine show one run on my accounts. The research adds other jobs, people and longer runs. Five anecdotes in a spreadsheet still aren't a clinical trial.
+
+## The inbox
 
 I asked each for the emails I should be replying to. Several messages asked much the same thing: someone wanted six of my products and reassurance that payment was secure. None named a product.
 
@@ -18,9 +20,11 @@ They were scams. Well crafted phishing emails. The reply was accurate. Making it
 
 The community result is kinder to Muse. [AI for Mortals ran a fake coffee business](https://www.aiformortals.co/blog/grok-bot-vs-meta-muse-vs-chatgpt-dots) with scam traps built in, and neither Muse nor Grok fell for them. Reassuring for Muse. Quite flattering for my scammers.
 
+That test used separate copies of the same business. A pass elsewhere earns Muse another look. It doesn't make the reply in my draft folder a good idea. The trap and the inbox still matter.
+
 **My test: Grok. Community: level.**
 
-## Round two: a cheap flight
+## The flight
 
 London to New York, five nights in November, cabin bag only.
 
@@ -28,35 +32,41 @@ Both found a return for about £335. The catch was twenty-nine hours in Lisbon o
 
 To be fair, both steered me away from it. Grok offered a shorter stop. Muse suggested a direct flight and listed what it couldn't check. It also told me I'd get four nights in New York. Its own flight times left three. Off by a night, on a job that is basically counting.
 
-Another travel comparison in the community preferred Grok for speed and value.
+[The Montreal comparison in the research collection](https://www.aiformortals.co/blog/grok-bot-vs-meta-muse-vs-chatgpt-dots) preferred Grok for speed and value. Both tools completed the search, but Muse's options cost more. [Desktheory's timed travel test](https://www.youtube.com/watch?v=i_n9ZyinZEs) also had Grok finish ahead of Muse. Those are different journeys from mine, with different constraints. They support a useful starting shortlist; they don't establish which will find your cheapest ticket tomorrow. I'd still open the itinerary and count the nights myself. Apparently this now qualifies as specialist expertise.
 
 **My test: Grok, on points. Community: Grok.**
 
-## Round three: something to cancel
+## What to cancel
 
 Both found a real recurring charge. Both paused and asked who still used it, or what would break. That's more thought than most of us give a gym membership.
 
 I found no community test of this job for both tools.
 
+The collection includes reports of Muse helping with subscriptions. They don't supply the missing comparison or prove a cancellation completed. Giving half the verdict to the research means taking its gaps seriously too.
+
 **My test: draw. Community: no result.**
 
-## Round four: plan my day
+## My day
 
 Grok kept its suggested times apart from my real meetings. Muse clearly marked the real invitation. Both were useful.
 
 The community adds a warning on Grok. [One operator running a small team of Grok bots](https://www.reddit.com/r/cursor/comments/1vxjipg/grok_bot_review/) reported forgotten instructions and duplicate messages, which also describes most group chats. A good afternoon doesn't prove it will run your week.
 
+They reported expired approval cards and a shared work board losing progress. I haven't inspected those accounts. It is one report, with a more complicated setup than mine. My next test would leave it the same small job for a week and inspect what actually happened each day.
+
 **My test: draw. Community: a caution on Grok.**
 
-## Round five: catch me up on the news
+## The news
 
 Grok's briefing was the more useful one. It also served up an April forecast as October news. Breaking news, six months late. Muse got the date right.
 
 [Chris Alarcon's first week with Grok](https://christopheralarcon.com/blog/what-is-grok-bot) found the same strength: a regular news round-up earned a place in his routine. His lead-finding bot was a dud.
 
-**My test: split. Grok for being useful, Muse for being right. Community: Grok for a repeatable briefing.**
+A recurring briefing has a clear output to inspect. Finding customers leaves more room to look busy. Alarcon's account gives me a first job to try. It doesn't check my dates for me. Useful and accurate remain separate things to look for.
 
-## Bonus round: fixing a work email
+**My test: level, for different reasons. Grok for being useful, Muse for being right. Community: Grok for a repeatable briefing.**
+
+## The work email
 
 I gave both the same correction. Make it less formal. Don't promise a date.
 
@@ -72,9 +82,11 @@ If you are obsessed with X/Twitter, you might love Grok Bot. Likewise if your en
 
 The community backs that up. [One user had Muse research windscreen wipers](https://www.reddit.com/r/singularity/comments/1wqu5wa/wait_metas_muse_agent_is_actually_amazing/), show the delivery cost and wait for a yes before buying. [Meta pitches it](https://about.fb.com/news/2026/09/introducing-muse-personal-ai-agent/) turning saved Instagram recipes into a grocery list.
 
+The wiper example has a clear moment to stop. The author reports that pause explicitly. Other reports cover forms, flight check-in and shopping. These are self-reports, with no shared prompt or complete failure log. Meta's examples are product claims. They make errands a plausible place to begin; sustained reliability stays open.
+
 And Google's Gemini, which I tried alongside them in its chat app? It told me a cabin bag was included on that direct flight. Its own searches hadn't confirmed it.
 
-## The scores
+## The verdict
 
 On my tests, Grok wins. It caught the scam Muse answered, and it was never clearly behind on anything else.
 

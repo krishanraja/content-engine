@@ -253,6 +253,7 @@ SHOWS = {
     'evidence': 'real pages piled up ("evidence")',
     'quote': 'a real quote, from its source',
     'logos': 'the companies\' own logos',
+    'reconstruction': 'an explicitly labelled reconstruction, with its source and scope',
 }
 
 
@@ -282,6 +283,9 @@ def real_thing_problems(post):
                              'is better, and draw that on the chart too, so no number on it is bare (house rule PLAIN_SCORES)')
         elif shows == 'evidence' and not (f.get('evidence') or {}).get('pages'):
             found.append(f'"{label}" says it shows evidence but lists no "evidence" pages')
+        elif shows == 'reconstruction':
+            if not str(f.get('data_source') or '').strip() or not str(f.get('scope') or '').strip():
+                found.append(f'"{label}" is a reconstruction without its source and scope; name both and label it as reconstructed')
     return found
 
 
@@ -417,6 +421,16 @@ def self_test():
               len(real_thing_problems({'date': '2026-10-19', 'files': [{'kind': 'image', 'name': 'c.png', 'shows': 'chart'}]})), 2)
         check('"shows": "analogy" is not a real thing',
               len(real_thing_problems({'date': '2026-10-19', 'files': [race | {'shows': 'analogy'}]})), 1)
+        reconstruction = {'kind': 'image', 'name': 'inbox.png', 'shows': 'reconstruction',
+                          'data_source': 'Redacted test readback, 20 October 2026',
+                          'scope': 'Anonymised reconstruction of the observed draft; no screenshot claimed.'}
+        check('a source-bound reconstruction is distinct from an evidence screenshot',
+              real_thing_problems({'date': '2026-10-21', 'files': [reconstruction]}), [])
+        for missing in ('data_source', 'scope'):
+            check('a reconstruction requires '+missing,
+                  len(real_thing_problems({'date': '2026-10-21', 'files': [reconstruction | {missing: ''}]})), 1)
+        check('calling a reconstruction an evidence pile still needs real pages',
+              len(real_thing_problems({'date': '2026-10-21', 'files': [reconstruction | {'shows': 'evidence'}]})), 1)
         check('the real-thing check runs through problems()',
               any('ANALOGY_IN_SCRIPTS_ONLY' in x for x in problems({'date': '2026-10-16', 'files': [race]}, full + thumbs, body, t, reg)), True)
         check('volume words are found', about_volume('Claude Code lists more than a dozen models.'), True)
