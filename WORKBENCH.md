@@ -9,8 +9,11 @@ Read his 13:21 board edit of the short script and his comment on the long
 " - " pause is a full stop, and "lots of other people report that they're neck
 and neck" became "in another tester's trial, both caught every scam. Neck and
 neck." because the evidence is one tester). Learning `plain-score-words`.
-**Waiting on Krish:** his yes on the drafts, then Teleprompter update and
-board republish (Teleprompter still holds the morning's words).
+Two fresh readers per cut on the final words (short: nothing lost; long: only
+his retained "I did a piece last week" and one "X conversations" query), on
+the making record. **Teleprompter updated on his "push to teleprompter"**
+(plan: nothing to send). **Next:** Krish records; the board still shows the
+morning's scripts until he asks for a republish.
 
 ## 21 October: the publish board has one fixed layout (Claude, part 1 of 4)
 
