@@ -19,6 +19,7 @@ DAY_OR_PIECE is the day whose edits to sweep (mon, wed, fri) or its piece id (wi
 answer of `board_web.py read WEEK edits`. --review takes the same DAY=LABEL|PATH as week_board.py: every draft of the
 day (article, scripts, captions) and the drafts of later days still in review.
 
+Only his saves count: a document whose updated_by is not Krish (the board's access-cookie writer) is left out and named.
 For each saved edit (edits/<day>-<item>: text, base_sha256, at) it:
 
   1. checks the save was made on the words in the file (base_sha256); one made on older words is listed, never guessed;
@@ -29,7 +30,10 @@ For each saved edit (edits/<day>-<item>: text, base_sha256, at) it:
   3. finds the same figure, phrase or claim in every other draft of the piece and in later drafts (and elsewhere in the
      draft he edited), and changes it there: a number or fact, or a claim, is changed; a change of tone or wording is
      only listed as a suggestion; a script he has already recorded is never touched, only listed (its take would stop
-     counting);
+     counting), and on a day with recordings neither is a script whose cut cannot be told (a deep cut is the long one).
+     A number is changed only where it counts the same thing: the same noun next to it ("of firms"), or two shared
+     content words that are not claim or filler words; anything weaker is a suggestion, and no number his edit does not
+     hold is ever put into a draft;
   4. runs the gates again on every draft that changed: story_check.py on a script, voice_check.py on the article;
   5. writes the sweep (default docs/plans/<Monday>-week/<day>-sweep.json) for week_board.py --sweep DAY=..., which
      shows it under the drafts as "Also changed", each with Undo, and one ledger row per edit (surface publish_board,
@@ -230,6 +234,54 @@ def content(text):
     return {w for w in words(text) if len(w) >= 4 and w not in STOP and not NUMBERISH.search(w)}
 
 
+FILLER = STOP | CLAIM_WORDS | TONE_WORDS
+
+
+def stem(w):
+    """A word without a plural s, so "firm" and "firms" are one noun."""
+    w = w.lower().replace('’', "'")
+    return w[:-1] if len(w) > 3 and w.endswith('s') and not w.endswith('ss') else w
+
+
+def meaningful(text):
+    """The content words of a sentence that say what it is about: no claim, tone or filler words ("about", "only")."""
+    return {stem(w) for w in content(text) if w not in FILLER}
+
+
+def neighbours(text, start, end, reach=3):
+    """The noun right before and right after a figure, inside its sentence: (before, after), each a word or None.
+    "About 40% of firms" gives (None, "firm"): "about" is a claim word and "of" is filler."""
+    pre, post = text[max(0, start - 120):start], text[end:end + 120]
+    cut = max(pre.rfind(m) for m in ('. ', '? ', '! ', '\n'))
+    pre = pre[cut + 1:] if cut >= 0 else pre
+    ends = [i for i in (post.find('. '), post.find('? '), post.find('! '), post.find('\n')) if i >= 0]
+    post = post[:min(ends)] if ends else post
+
+    def pick(ws):
+        return next((stem(w) for w in ws if w not in FILLER and not NUMBERISH.search(w)), None)
+    return pick(list(reversed(words(pre)))[:reach]), pick(words(post)[:reach])
+
+
+def same_quantity(near, sentence, text, f):
+    """Whether a figure in another draft counts the same thing as the figure he changed: the same noun next to it ("of
+    firms"), or at least two content words shared with his sentence that are not claim or filler words. A different
+    noun right after the figure ("of staff" against "of firms") is another quantity, whatever else the sentences share.
+    Anything weaker is only a suggestion (Krish's "About 40% of firms" must never move "about 40 percent of staff")."""
+    sb, sa = near or (None, None)
+    tb, ta = neighbours(text, f['start'], f['end'])
+    if sa and ta:
+        return sa == ta
+    if sb and tb and sb == tb:
+        return True
+    return len(meaningful(sentence) & meaningful(sentence_at(text, f['start']))) >= 2
+
+
+def from_his_edit(new, his):
+    """Every figure in new words is one his saved words hold: a number never enters a draft from anywhere else."""
+    have = {(f['value'], f['unit']) for f in figures(his)}
+    return all((f['value'], f['unit']) in have for f in figures(new))
+
+
 def excerpt(text, at, end, width=90):
     a, b = max(0, at - width), min(len(text), end + width)
     return ('...' if a else '') + re.sub(r'\s+', ' ', text[a:b]).strip() + ('...' if b < len(text) else '')
@@ -274,6 +326,7 @@ def word_changes(pa, pb):
         frm, to = pa[a0:a1], pb[b0:b1]
         out.append({'from': frm, 'to': to, 'region_a': region_a, 'region_b': region_b, 'sentence': sentence_at(pa, a0),
                     'fig_a': fa[0] if len(fa) == 1 else None, 'fig_b': fb[0] if len(fb) == 1 else None,
+                    'near': neighbours(pa, fa[0]['start'], fa[0]['end']) if len(fa) == 1 else None,
                     'kind': classify(frm, to, pa, pb), 'excerpt': excerpt(pb, b0, b1)})
     return out
 
@@ -326,12 +379,11 @@ def matches_in(change, text, skip=None):
     found = []
     fa, fb = change['fig_a'], change['fig_b']
     if change['kind'] == 'number_fact' and fa and fb and not same_figure(fa, fb):
-        want = content(change['sentence'])
         for f in figures(text):
             if not same_figure(f, fa) or (skip and f['start'] < skip[1] and f['end'] > skip[0]):
                 continue
             sent = sentence_at(text, f['start'])
-            found.append((f['start'], f['end'], restyle(f, fb), sent, bool(want & content(sent))))
+            found.append((f['start'], f['end'], restyle(f, fb), sent, same_quantity(change.get('near'), change['sentence'], text, f)))
         return found
     region_a, region_b = change['region_a'], change['region_b']
     if len([w for w in words(region_a) if w not in STOP]) < 2 or len(words(region_a)) < 3 or region_a == region_b:
@@ -368,18 +420,33 @@ def read_reviews(values):
     return out
 
 
+HIS = 'Krish'  # the board API's updated_by for the access-cookie writer (apps/control-plane/api/board/_contracts.ts actor())
+
+
 def read_edits(path):
-    """{doc id: body} from the saved answer of board_web.py read WEEK edits (or a list of {id, body}, or {id: body})."""
+    """({doc id: body}, [what was left out]) from the saved answer of board_web.py read WEEK edits.
+
+    Only his saves count: a document whose updated_by is not Krish (the access-cookie writer) is left out and named, so a
+    save written with the operator key is never relayed as his words. A file that does not say who wrote each document
+    (a bare {id: body}, or rows with no updated_by) gives nothing to sweep."""
     try:
         data = json.loads(Path(path).read_text(encoding='utf-8'))
     except (OSError, ValueError) as error:
         raise SweepError(f'--edits {path}: cannot read it as JSON ({error})')
     rows = data.get('documents') if isinstance(data, dict) and 'documents' in data else data
     if isinstance(rows, dict):
-        return {k: v for k, v in rows.items() if isinstance(v, dict)}
-    if isinstance(rows, list):
-        return {r['id']: r.get('body') or {} for r in rows if isinstance(r, dict) and isinstance(r.get('id'), str)}
-    raise SweepError(f'--edits {path}: give the saved answer of board_web.py read WEEK edits')
+        rows = [{'id': k, 'body': v} for k, v in rows.items()]
+    if not isinstance(rows, list):
+        raise SweepError(f'--edits {path}: give the saved answer of board_web.py read WEEK edits')
+    kept, left = {}, []
+    for r in rows:
+        if not (isinstance(r, dict) and isinstance(r.get('id'), str)):
+            continue
+        if r.get('updated_by') != HIS:
+            left.append(f'{r["id"]}: written by {r.get("updated_by") or "nobody named"}, not Krish; not relayed as his')
+            continue
+        kept[r['id']] = r.get('body') or {}
+    return kept, left
 
 
 def is_script(d):
@@ -390,6 +457,11 @@ def cut_of(d):
     return story_check.cut_of(d['label']) or story_check.cut_of(d['path'].name)
 
 
+def as_recorded(cut):
+    """A cut as the recordings name it: a deep cut is the long one (the five-minute script, story_check's "deep")."""
+    return 'long' if cut == 'deep' else cut
+
+
 def recorded_cuts(args):
     """{day: {cut}} he has recorded: --recorded DAY=CUT, and the recordings on a saved making record (--making DAY=PATH)."""
     out = {}
@@ -398,7 +470,7 @@ def recorded_cuts(args):
         day = DAY_KEYS.get(k.strip().lower())
         if not day or cut.strip() not in ('long', 'short', 'feature', 'deep'):
             raise SweepError(f'--recorded {v}: give DAY=CUT, CUT long, short or feature')
-        out.setdefault(day, set()).add(cut.strip())
+        out.setdefault(day, set()).add(as_recorded(cut.strip()))
     for v in args.making or []:
         k, _, path = v.partition('=')
         day = DAY_KEYS.get(k.strip().lower())
@@ -409,7 +481,7 @@ def recorded_cuts(args):
         making = data.get('making') if isinstance(data, dict) and isinstance(data.get('making'), dict) else data
         for rec in (making or {}).get('recordings') or []:
             if isinstance(rec, dict) and rec.get('cut'):
-                out.setdefault(day, set()).add(rec['cut'])
+                out.setdefault(day, set()).add(as_recorded(rec['cut']))
     return out
 
 
@@ -444,8 +516,21 @@ def sweep(day, drafts, edits, pieces=None, recorded=None, week=None):
     def where(d):
         return f'{DAY_NAME[d["day"]]}, {d["label"]}'
 
+    def held_why(d):
+        """Why a script is left alone: it is recorded, or that day has takes and its cut cannot be told. None: free."""
+        cuts = {as_recorded(c) for c in recorded.get(d['day'], set())}
+        if not (is_script(d) and cuts):
+            return None
+        cut = as_recorded(cut_of(d))
+        if cut is None:
+            return ('you have recordings that day and I cannot tell which cut this script is, so it is left alone '
+                    'in case its take would stop counting')
+        if cut in cuts:
+            return f'you have recorded it; changing it would make your {cut} take stop counting'
+        return None
+
     def is_recorded(d):
-        return is_script(d) and cut_of(d) in recorded.get(d['day'], set())
+        return held_why(d) is not None
     for d in mine:
         rid = f'{day}-{d["slug"]}'
         body = edits.get(rid)
@@ -465,8 +550,8 @@ def sweep(day, drafts, edits, pieces=None, recorded=None, week=None):
         changes = changes_of(base, saved)
         texts[str(d['path'])] = saved  # his own words, first
         if is_recorded(d):
-            notes.append(f'{rid}: you changed the {cut_of(d)} script you have recorded; its take of the old words stops counting '
-                         'once making.py scripts checks the new words')
+            notes.append(f'{rid}: you changed the {cut_of(d) or "uncut"} script on a day with recordings; a take of the old words '
+                         'stops counting once making.py scripts checks the new words')
         for c in changes:
             if c['kind'] == 'structure':
                 continue  # a paragraph added, taken out or moved is his, here; it is not carried by rule
@@ -487,12 +572,15 @@ def sweep(day, drafts, edits, pieces=None, recorded=None, week=None):
                     entry = {'where': where(t), 'kind': c['kind'], 'from': old, 'to': new,
                              'context': excerpt(text[:start] + new + text[end:], start, start + len(new)),
                              'undo': {'path': key, 'before': text[max(0, start - 40):start], 'after': text[end:end + 40]}}
+                    if not from_his_edit(new, saved):
+                        notes.append(f'{rid}: "{new}" for "{old}" in {where(t)} would put a number his edit does not hold; '
+                                     'left alone')
+                        continue
                     if is_recorded(t):
                         k = (key, old, new)
                         if k not in seen_held:
                             seen_held.add(k)
-                            held.append({'where': where(t), 'why': f'you have recorded it; changing it would make your {cut_of(t)} '
-                                                                  'take stop counting', 'from': old, 'to': new})
+                            held.append({'where': where(t), 'why': held_why(t), 'from': old, 'to': new})
                         continue
                     if applied_kind and contextual:
                         text = text[:start] + new + text[end:]
@@ -655,6 +743,54 @@ def self_test():
         rows = []
         post_ledger(result['ledger'], lambda m, p, b: rows.append((m, p, b)) or (200, '{"ok":true}'))
         check('the ledger rows go to POST /api/content-edits', rows and rows[0][:2] == ('POST', '/api/content-edits'))
+
+        # A number moves only where it counts the same thing (review, 2026-10-21: "About 40% of firms" to 38% had also
+        # changed "Only about 40 percent of staff trust the results", which shares nothing with it but "about").
+        (t / 'a2.md').write_text('About 40% of firms now pay for AI pictures.\n', encoding='utf-8')
+        (t / 'l2.md').write_text('Forty percent of firms now pay for AI pictures. Only about 40 percent of staff trust the '
+                                 'results. Staff at 40% of companies now pay for AI pictures, like firms.\n', encoding='utf-8')
+        r3 = read_reviews([f'mon=Article|{t / "a2.md"}', f'mon=Five-minute script|{t / "l2.md"}'])
+        b3 = r3['mon'][0]['text']
+        e3 = {'mon-article': {'text': b3.replace('40%', '38%'), 'base_sha256': sha(b3)}}
+        res3, ch3 = sweep('mon', r3, e3, {}, {}, '2026-10-26')
+        l3 = ch3.get(str(t / 'l2.md'), '')
+        check('a number moves where the same noun sits next to it ("of firms")', 'Thirty-eight percent of firms' in l3)
+        check('a number never moves into a sentence that shares only a claim word ("about 40 percent of staff")',
+              'Only about 40 percent of staff' in l3 and any(e['from'] == '40 percent' and 'staff' in e['context']
+                                                              for e in res3['suggestions']))
+        check('another noun next to the figure is another quantity, whatever else the sentences share',
+              '40% of companies' in l3)
+        check('every number put in a draft came from his edit', all(from_his_edit(e['to'], e3['mon-article']['text'])
+                                                                   for e in res3['also_changed']))
+        check('a number his edit does not hold is refused', not from_his_edit('41 percent', 'About 38% of firms')
+              and from_his_edit('thirty-eight percent', 'About 38% of firms'))
+
+        # On a day with recordings, a script whose cut cannot be told is held; a deep cut is the long one.
+        (t / 'dl.md').write_text('Forty percent of firms now pay for AI pictures.\n', encoding='utf-8')
+        (t / 'un.md').write_text('Forty percent of firms now pay for AI pictures.\n', encoding='utf-8')
+        r4 = read_reviews([f'mon=Article|{t / "a2.md"}', f'mon=Deep-cut script|{t / "dl.md"}', f'mon=Script|{t / "un.md"}'])
+        res4, ch4 = sweep('mon', r4, e3, {}, {'mon': {'long'}}, '2026-10-26')
+        check('a deep-cut script counts as the recorded long cut and is held', str(t / 'dl.md') not in ch4
+              and any(h['where'] == 'Monday, Deep-cut script' and 'recorded' in h['why'] for h in res4['held']))
+        check('a script of unknown cut on a day with recordings is held, never changed', str(t / 'un.md') not in ch4
+              and any(h['where'] == 'Monday, Script' and 'cannot tell' in h['why'] for h in res4['held']))
+        res5, ch5 = sweep('mon', r4, e3, {}, {}, '2026-10-26')
+        check('with no recordings that day the same scripts are changed', str(t / 'un.md') in ch5 and str(t / 'dl.md') in ch5)
+        args = argparse.Namespace(recorded=['mon=deep'], making=None)
+        check('a recorded deep cut is the long one', recorded_cuts(args) == {'mon': {'long'}})
+
+        # Only his saves count: the board stamps his access-cookie writes "Krish"; anything else is left out.
+        saved_edits = t / 'edits.json'
+        saved_edits.write_text(json.dumps({'documents': [
+            {'id': 'mon-article', 'body': e3['mon-article'], 'updated_by': 'Krish'},
+            {'id': 'mon-five-minute-script', 'body': {'text': 'x'}, 'updated_by': 'engine_operator'},
+            {'id': 'wed-article', 'body': {'text': 'y'}}]}), encoding='utf-8')
+        kept, left = read_edits(saved_edits)
+        check('only documents Krish wrote are relayed', set(kept) == {'mon-article'} and len(left) == 2
+              and any('engine_operator' in x for x in left))
+        bare = t / 'bare.json'
+        bare.write_text(json.dumps({'mon-article': e3['mon-article']}), encoding='utf-8')
+        check('a file that does not say who wrote it gives nothing to sweep', read_edits(bare)[0] == {})
     for p in problems:
         print(f'FAIL {p}')
     print(f'edit sweep self-test {"FAILED" if problems else "passed"}')
@@ -702,7 +838,9 @@ def main(argv=None):
         drafts = read_reviews(a.review)
         if day not in drafts:
             raise SweepError(f'no --review for {DAY_NAME[day]}: give every draft of the day')
-        result, changed = sweep(day, drafts, read_edits(a.edits), pieces, recorded_cuts(a), monday.isoformat())
+        edits, left = read_edits(a.edits)
+        result, changed = sweep(day, drafts, edits, pieces, recorded_cuts(a), monday.isoformat())
+        result['edits'] += [{'note': n} for n in left]
         out = Path(a.out) if a.out else ROOT / 'docs' / 'plans' / f'{monday.isoformat()}-week' / f'{day}-sweep.json'
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(json.dumps(result, indent=1, ensure_ascii=False) + '\n', encoding='utf-8')

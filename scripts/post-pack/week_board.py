@@ -1297,8 +1297,10 @@ def publish_data(page, name, warnings):
         warnings.append(f'{name}: its publish page was made before it carried its words as data, so the run-sheet names '
                         'the standing files; make the page again with publish_manager.py to name its own')
         words = {'title': page.get('title') or ''}
-    sections = {}
+    sections, headings = {}, []
     for m in PM_SECTION.finditer(body):
+        if m.group(1) == 'substack' or re.fullmatch(r's\d+', m.group(1)):
+            headings.append((m.group(1), re.sub(r'^\d+\.\s*', '', html.unescape(re.sub(r'<[^>]+>', '', m.group(2)))).strip()))
         copy = []
         for c in PM_COPY.finditer(m.group(4)):
             if c.group('cid'):
@@ -1321,7 +1323,7 @@ def publish_data(page, name, warnings):
         pictures.append({'id': iid, 'role': role, 'label': shown, 'name': html.unescape(fname), 'src': src,
                          'alt': html.unescape(alt), 'caption': html.unescape(caption) if caption else ''})
     art = PM_ARTICLE.search(body)
-    return {'words': words, 'sections': sections, 'pictures': pictures,
+    return {'words': words, 'sections': sections, 'headings': headings, 'pictures': pictures,
             'article': {'html': art.group(1), 'text': art.group(2)} if art else None}
 
 
@@ -1451,11 +1453,7 @@ def run_sheet(day, p, page, data, videos, delivery, feature, folder, warnings):
                       '<p class="rec-how">Everything you need today, before you open Substack. The videos come first, then the pictures, '
                       'then the article.</p>' + groups + every + '</div>')
     # The places to post, in config/board-layout.json's order; the optional ones under their own heading.
-    kit = {}
-    for k, s in enumerate(publish_kit.steps(words, on_board=True), 1):
-        key = SECTION_STEP.get(s['where']) or ('youtube' if re.fullmatch(r'YouTube \(the .+\)', s['where']) else None)
-        if key:
-            kit[key] = (k, s, 'substack' if k == 1 else f's{k}')
+    kit = section_kit(day, publish_kit.steps(words, on_board=True), data.get('headings') or [])
     standing, optional, jump, n = [], [], [], 0
     for key, label, channel, counted in STEPS:
         if not counted and key in FEATURE_ONLY and not feature:
@@ -1480,6 +1478,37 @@ def run_sheet(day, p, page, data, videos, delivery, feature, folder, warnings):
             + '<h2 class="run-h">Then post, in this order</h2>' + ''.join(standing)
             + ('<h2 class="run-h">When you want them</h2><p class="run-how">Not counted toward 100%.</p>' + ''.join(optional) if optional else '')
             + SAVE_NOTE)
+
+
+def step_where(a, b):
+    """Whether a page section's heading and a publish step's where name one place: the same words, or both the long
+    cut's YouTube ("YouTube (the 5-minute video)", or the deep cut's on an older page)."""
+    yt = r'YouTube \(the .+\)'
+    return a == b or bool(re.fullmatch(yt, a) and re.fullmatch(yt, b))
+
+
+def section_kit(day, steps, headings):
+    """{step key: (n, step, the page section id holding its copy)}. Each section of the publish page is matched to its
+    step by its heading (the step's where), never by its place: a page made before the feature's two steps were added
+    keeps every caption on its own card. A section no step names, or two sections for one step, is refused."""
+    dropped = set(DROPPED_CHANNELS.values())
+    sid_of = {}
+    for sid, where in headings:
+        if where in dropped:
+            continue
+        match = next((s['where'] for s in steps if step_where(where, s['where'])), None)
+        if match is None:
+            raise BoardError(f'{day}: its publish page has a section "{where}" that no publish step names; make the page '
+                             'again with publish_manager.py, so no card takes another place\'s words')
+        if match in sid_of:
+            raise BoardError(f'{day}: its publish page has two sections for "{match}"; make the page again with publish_manager.py')
+        sid_of[match] = sid
+    kit = {}
+    for k, s in enumerate(steps, 1):
+        key = SECTION_STEP.get(s['where']) or ('youtube' if re.fullmatch(r'YouTube \(the .+\)', s['where']) else None)
+        if key:
+            kit[key] = (k, s, sid_of.get(s['where'], f'run-{key}'))
+    return kit
 
 
 def pic_actions(p, x):
@@ -2735,7 +2764,7 @@ TP_FOLDER, TP_LONG, TP_SHORT = '86B6F74B-2F8A-4477-AE44-8DA1119D1CD9', '45F414D8
 TP_FOLDER_FRI, TP_LONG_FRI, TP_SHORT_FRI = 'DD28154B-B6D1-47DB-803A-79410D83196D', '185F739E-733F-43B9-B5B2-66846CB5EC44', '1165370C-68A6-444E-88D5-A326A131E58C'
 
 
-def stand_in(tmp, name, title, kicker):
+def stand_in(tmp, name, title, kicker, words=None):
     """A small publish page, made by publish_manager.py itself."""
     import base64
     d = Path(tmp) / name
@@ -2743,7 +2772,7 @@ def stand_in(tmp, name, title, kicker):
     (d / 'a.png').write_bytes(base64.b64decode(PNG))
     (d / 'body.md').write_text(f'{title}\n\n## THE PART\n\nA **bold** fact.\n', encoding='utf-8')
     (d / 'words.json').write_text(json.dumps({'title': title, 'youtube_title': title, 'short_caption': 'C',
-                                              'linkedin_post': 'L {ARTICLE_URL}'}), encoding='utf-8')
+                                              'linkedin_post': 'L {ARTICLE_URL}', **(words or {})}), encoding='utf-8')
     (d / 'long.md').write_text('The long script, said out loud.\n', encoding='utf-8')
     (d / 'short.md').write_text('The short script.\n', encoding='utf-8')
     (d / 'm.json').write_text(json.dumps({
@@ -3246,6 +3275,43 @@ def _runsheet_checks(check, week, mon):
     check('run-sheet: a feature piece has its feature card last, under When you want them, and its video in Download first',
           verify(feat) == [] and fsub.index('When you want them') < fsub.index('data-run="record-feature"')
           and 'id="mon-dl-video-feature"' in fsub and 'href="#mon-dl-video-feature"' in fsub)
+    # Each card finds its copy by its section's heading, never by its place (review, 2026-10-21: a page made before the
+    # feature's two steps were added put the Shorts caption on the TikTok card once the piece became a feature).
+    with tempfile.TemporaryDirectory() as tmp:
+        plain = stand_in(tmp, 'mon', 'Warner sued Suno. Now it takes a cut.', 'follow.the.money',
+                         {'piece_id': MON_ID, 'youtube_description': 'YT words', 'shorts_caption': 'Shorts words',
+                          'tiktok_caption': 'TikTok words', 'reels_caption': 'Reels words', 'spotify_title': 'Spotify words'})
+    def copies(built):
+        sub = div_at(built, built.find('<div class="subpanel" role="tabpanel" id="mon-sub-publish"'))
+        return {m.group(1): re.findall(r'data-raw="([^"]*)"', m.group(2)) for m in
+                re.finditer(r'<section class="run(?: opt)?" id="[^"]+" data-run="([^"]+)"[^>]*>(.*?)</section>', sub, re.S)}
+    before, _, _ = board(week, {'mon': plain}, {'mon': MON_ID})
+    use_layout(week)
+    import making  # publish_kit.is_feature reads config/features.json through it
+    with tempfile.TemporaryDirectory() as tmp:
+        saved, saved_making, FEATURES_FILE = FEATURES_FILE, making.FEATURES, Path(tmp) / 'features.json'
+        making.FEATURES = FEATURES_FILE
+        try:
+            FEATURES_FILE.write_text(json.dumps({'pieces': {MON_ID: {'called_on': '2026-10-25'}}}), encoding='utf-8')
+            after, _, _ = board(week, {'mon': plain}, {'mon': MON_ID})
+            use_layout(week)
+        finally:
+            FEATURES_FILE, making.FEATURES = saved, saved_making
+    was, now = copies(before), copies(after)
+    check('run-sheet: a page made before the piece was a feature keeps every caption on its own card on a feature board',
+          verify(after) == [] and 'record-feature' in now and all(now[k] == v for k, v in was.items())
+          and 'TikTok words' in ' '.join(now['tiktok'])
+          and 'Shorts words' not in ' '.join(now['tiktok']))
+    for bad, said in [(plain.replace('<h2>4. TikTok</h2>', '<h2>4. Threads</h2>'), 'that no publish step names'),
+                      (plain.replace('<h2>4. TikTok</h2>', '<h2>4. Instagram Reels</h2>'), 'two sections for')]:
+        try:
+            board(week, {'mon': bad}, {'mon': MON_ID})
+            refused = ''
+        except BoardError as error:
+            refused = str(error)
+        use_layout(week)
+        check(f'run-sheet: a publish page section {"no step names" if "names" in said else "doubling another"} is refused',
+              said in refused)
     old = re.sub(r'<script type="application/json" id="pm-data">.*?</script>', '', mon, flags=re.S)
     _, _, warned = board(week, {'mon': old}, {'mon': MON_ID})
     check('run-sheet: a publish page with no words as data still draws, and says it names the standing files',

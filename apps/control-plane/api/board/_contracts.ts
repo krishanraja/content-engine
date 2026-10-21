@@ -66,6 +66,16 @@ function commentExtras(body: Record<string, unknown>): boolean {
 export function combineWriterRefused(collection: string, body: unknown, who: string | null): boolean {
   return collection === 'queue' && object(body) && body.combine !== undefined && who !== 'Krish'
 }
+/** The writes a session relays as his words: a Combine tap, a saved edit of a draft (edit_sweep.py carries it into
+ *  every other draft and the ledger as decided_by Krish), and his taps on a change or a lesson (a comment with act).
+ *  Only Krish writes them; any other writer gets the code to refuse with. A plain comment stays open to the engine. */
+export function hisOnlyRefusal(collection: string, body: unknown, who: string | null): string | null {
+  if (who === 'Krish') return null
+  if (combineWriterRefused(collection, body, who)) return 'combine_is_his_tap'
+  if (collection === 'edits') return 'edit_is_his_save'
+  if (collection === 'comments' && object(body) && 'act' in body) return 'tap_is_his'
+  return null
+}
 // Source archives retain the export's selectors, missing anchors and synthesized
 // reply identifiers verbatim. Canonical comments still use validBody above.
 export function validSourceBody(collection: string, id: unknown, body: unknown): boolean {

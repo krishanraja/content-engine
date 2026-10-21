@@ -1769,6 +1769,7 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `function validBody(collection: string, id: string, body: unknown): boolean`
 - `const COMMENT_ACTS`
 - `function combineWriterRefused(collection: string, body: unknown, who: string | null): boolean`
+- `function hisOnlyRefusal(collection: string, body: unknown, who: string | null): string | null`
 - `function validSourceBody(collection: string, id: unknown, body: unknown): boolean`
 - `type BoardFile`
 - `type Manifest`

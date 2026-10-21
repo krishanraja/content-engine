@@ -69,6 +69,16 @@ paragraph to edit it, picks words for "Comment on this" (the comment carries
    proposes a rule after three edits of one class in 28 days
    (`repeatedEditClassProposals`); a yes becomes a standing rule only once it
    lands in code or config with its `config/learnings.json` entry.
+5. Only documents Krish wrote are relayed. The board stamps each save with
+   its writer (`updated_by`); an edit or a comment with `act` whose writer is
+   not `Krish` is never swept, written to the ledger or relayed as his
+   decision. `edit_sweep.py` reads only his saves and names any other, and
+   the board refuses an edit or a tap written with the operator key
+   (`edit_is_his_save`, `tap_is_his`). A number is carried into another
+   draft only where it counts the same thing (the same noun next to it, or
+   two shared content words that are not claim or filler words); anything
+   weaker is only a suggestion. On a day with recordings a script whose cut
+   cannot be told is held, and a deep cut counts as the long one.
 
 **Krish's edits on the board.** A day's "Review the words" card (built with
 `week_board.py --review`) holds the article and each script in an editable

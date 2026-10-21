@@ -45,7 +45,8 @@ crops any other shape itself (Krish, 2026-10-12).
 
 A piece Krish called a 15-minute feature for (house rule FEATURE; Krish,
 2026-10-21: "From time to time I might do a special 15 min feature";
-config/features.json, or "feature": true in publish.json) gets two steps
+its piece_id in config/features.json, on his call alone; a "feature" flag in
+publish.json counts for nothing) gets two steps
 more, beside the 5-minute ones: the feature on YouTube as its own long-form
 video, after the 5-minute YouTube step, and the feature as its own Spotify
 episode, after the 5-minute episode. Their words are "feature_youtube_title",
@@ -74,11 +75,9 @@ FEATURE_SPOTIFY = f'Spotify (the {FEATURE_NAME})'
 
 
 def is_feature(p):
-    """True for a piece Krish called a 15-minute feature for: "feature" in
-    publish.json, or its piece_id in config/features.json (making.feature_piece,
-    on his call alone)."""
-    if p.get('feature') is True:
-        return True
+    """True for a piece Krish called a 15-minute feature for: its piece_id in
+    config/features.json (making.feature_piece, on his call alone). A "feature"
+    flag in publish.json is never read: a session could set it without his word."""
     if not p.get('piece_id'):
         return False
     here = str(Path(__file__).resolve().parent)
@@ -88,8 +87,10 @@ def is_feature(p):
     return making.feature_piece(str(p['piece_id']))
 
 
-def feature_steps(p, f, article_q):
-    """The feature's own two steps (house rule FEATURE): YouTube long-form and a Spotify episode."""
+def feature_steps(p, f, article_q, on_board=False):
+    """The feature's own two steps (house rule FEATURE): YouTube long-form and a Spotify episode. Its words sit above
+    the steps on the week's board and below them on publish.html, as in every other step."""
+    words_at = 'above' if on_board else 'below'
     waiting = p.get('feature_waiting')
     wait = [f'Not ready yet: {waiting}. Everything else in this step is ready.'] if waiting else []
     video = f.get('feature_video') or f'3 Video/ the {FEATURE_NAME} wide (16:9) video'
@@ -101,8 +102,8 @@ def feature_steps(p, f, article_q):
         'files': [video, thumb],
         'do': wait + [
             f'In YouTube Studio, Create, then Upload videos: the {FEATURE_NAME} (wide, 16:9).',
-            'Paste the title and description below. The article link sits at the end of the description, under the read line.',
-            f'Under Thumbnail, upload the feature\'s own wide thumbnail, {thumb}. Make it public, then pin the comment below.',
+            f'Paste the title and description {words_at}. The article link sits at the end of the description, under the read line.',
+            f'Under Thumbnail, upload the feature\'s own wide thumbnail, {thumb}. Make it public, then pin the comment {words_at}.',
         ],
         'copy': [('Title', p.get('feature_youtube_title')), ('Description', p.get('feature_youtube_description')),
                  ('Pinned comment', f'The full article, with every source, free: {ARTICLE}' + (f'\n\n{article_q}' if article_q else ''))],
@@ -114,7 +115,7 @@ def feature_steps(p, f, article_q):
         'files': [video, thumb],
         'do': wait + [f'In Spotify for Creators, New episode: upload the {FEATURE_NAME} (wide, 16:9).',
                       f'Set the episode thumbnail to {thumb}. Leave episode art empty: the show art is used.',
-                      'Paste the title and description below, then the chapters into the description. Publish.'],
+                      f'Paste the title and description {words_at}, then the chapters into the description. Publish.'],
         'copy': [('Episode title', p.get('feature_spotify_title') or p.get('feature_youtube_title')),
                  ('Description', p.get('feature_spotify_description') or p.get('feature_youtube_description')),
                  ('Chapters', p.get('feature_spotify_chapters'))],
@@ -258,7 +259,7 @@ def steps(p, on_board=False):
     ]
     if is_feature(p):
         # Beside the 5-minute steps: the feature's YouTube after the 5-minute YouTube, its episode after the 5-minute one.
-        youtube, spotify = feature_steps(p, p.get('files') or {}, q)
+        youtube, spotify = feature_steps(p, p.get('files') or {}, q, on_board)
         at = next(i for i, x in enumerate(out) if x['where'].startswith('YouTube (the '))
         out.insert(at + 1, youtube)
         out.insert(next(i for i, x in enumerate(out) if x['where'] == 'Spotify') + 1, spotify)
@@ -420,7 +421,21 @@ def self_test():
     if file_names({})['spotify_thumbnail'] != file_names({})['wide_thumbnail'] or file_names({'files': {'cover': 'c.png'}})['cover'] != 'c.png':
         failures.append('file_names: the standing names, the words\' own, and Spotify falling back to the wide thumbnail')
     # The 15-minute feature (house rule FEATURE): two steps more, beside the 5-minute ones, only on a feature piece.
-    feature = dict(sample, feature=True, feature_youtube_title='FT', feature_youtube_description='FD',
+    # A feature is only a piece in config/features.json: a "feature": true in publish.json is never read (review,
+    # 2026-10-21), so the checks below call one through a features file of their own.
+    import tempfile
+    here = str(Path(__file__).resolve().parent)
+    if here not in sys.path:
+        sys.path.insert(0, here)
+    import making
+    feature_id = '11111111-2222-4333-8444-555555555555'
+    flagged = dict(sample, feature=True, piece_id='22222222-2222-4333-8444-555555555555')
+    tmp = tempfile.TemporaryDirectory()
+    saved_features, making.FEATURES = making.FEATURES, Path(tmp.name) / 'features.json'
+    making.FEATURES.write_text(json.dumps({'pieces': {feature_id: {'called_on': '2026-10-25'}}}), encoding='utf-8')
+    if is_feature(dict(sample, feature=True)) or is_feature(flagged) or any(FEATURE_NAME in x['where'] for x in steps(flagged)):
+        failures.append('a "feature": true in publish.json makes no feature: only config/features.json does')
+    feature = dict(sample, piece_id=feature_id, feature_youtube_title='FT', feature_youtube_description='FD',
                    files={'feature_video': '3 Video/F - feature.mp4', 'feature_thumbnail': '3 Video/F - feature - wide 16x9 - thumbnail.jpg'})
     wheres = [x['where'] for x in steps(feature)]
     if wheres != ['Substack', 'YouTube (the 5-minute video)', FEATURE_YOUTUBE, 'YouTube Shorts', 'TikTok', 'Instagram Reels', 'LinkedIn',
@@ -443,7 +458,15 @@ def self_test():
     waiting = {x['where']: x for x in steps(dict(feature, feature_waiting='being cut'))}
     if not all(any('Not ready yet: being cut' in d for d in waiting[w]['do']) for w in (FEATURE_YOUTUBE, FEATURE_SPOTIFY)):
         failures.append('a feature not made yet says so in its steps')
-    checks = 31
+    # On the board the feature's words are above its steps, as every other step's are; on publish.html below.
+    on_board = {x['where']: x for x in steps(feature, on_board=True)}
+    for where in (FEATURE_YOUTUBE, FEATURE_SPOTIFY):
+        said = ' '.join(on_board[where]['do'])
+        if ' below' in said or ' above' not in said or ' above' in ' '.join(by_feature[where]['do']):
+            failures.append(f'{where}: its words are above its steps on the board and below them on publish.html')
+    making.FEATURES = saved_features
+    tmp.cleanup()
+    checks = 33
     if failures:
         print('publish kit self-test FAILED:\n  ' + '\n  '.join(failures))
         return 1

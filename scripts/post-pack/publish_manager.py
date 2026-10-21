@@ -327,8 +327,9 @@ def page(m, base):
     others = [i for i in images if i.get('role') in COVER_ROLES]
     covers = ''.join(pic_card({**i, 'label': COVER_ROLES[i['role']]}, slug) for i in others)
 
-    # 2 onwards: every other channel, from the same plan as publish_kit.py
-    for k, s in enumerate(publish_kit.steps(words)[1:], 2):
+    # 2 onwards: every other channel, from the same plan as publish_kit.py. Each section is headed with its step's where,
+    # which is how the week's board finds its copy (week_board.section_kit), never by its number or its id.
+    for k, s in enumerate((s for s in publish_kit.steps(words) if s['where'] != 'Substack'), 2):
         cards = ''.join(text_card(cid(), label, text) for label, text in s['copy'])
         files = ''.join(file_item(f, links) for f in s['files'])
         do = ''.join(f'<li>{E(d)}</li>' for d in s['do'])

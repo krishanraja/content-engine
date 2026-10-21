@@ -501,6 +501,10 @@ def feature_piece(piece_id, path=None):
 NOT_A_FEATURE = ('three scripts are for a piece Krish called a 15-minute feature for, and this piece is not one: it goes into '
                  'config/features.json only on Krish\'s call, in his words, never a session\'s (house rule FEATURE). Give the two '
                  'scripts, the long cut first: scripts long.md short.md')
+FEATURE_NOT_RECHECKED = ('making: this piece is a 15-minute feature and only the long and the short scripts were given: they are '
+                         'checked now, and the feature\'s recorded check (its hash, when its words changed, its read-back) is carried '
+                         'as it was. The feature script was NOT checked again: give it third (scripts long.md short.md feature.md) '
+                         'if its words have changed')
 FEATURE_TO_COME = ('making: this piece is a 15-minute feature (config/features.json), and no feature script was given: the long and '
                    'the short are checked now; give the feature third once it is written (scripts long.md short.md feature.md)')
 
@@ -636,8 +640,9 @@ def scripts_patch(paths, run=None, warn=None, previous=None, series=None, deep=F
     if not paths or len(paths) > len(order):
         raise MakingError('give the two scripts, the long cut first: scripts long.md short.md' +
                           (', and the 15-minute feature third: scripts long.md short.md feature.md' if feature else ''))
+    prev_feature = current_hashes({'script_check': previous}).get('feature') if isinstance(previous, dict) else None
     if feature and len(paths) == len(CUTS):
-        warn(FEATURE_TO_COME)
+        warn(FEATURE_NOT_RECHECKED if prev_feature else FEATURE_TO_COME)
     problems, cuts, hashes, found = [], [], {}, []
     for cut, p in zip(order, paths):
         name = Path(p).name
@@ -675,6 +680,12 @@ def scripts_patch(paths, run=None, warn=None, previous=None, series=None, deep=F
         same_words = passed_before and before.get(cut) == h
         kept_at = were.get(cut) if isinstance(were.get(cut), str) else prev.get('checked_at')
         changed_at[cut] = kept_at if same_words else stamp
+    if feature and 'feature' not in hashes and prev_feature:
+        # A re-run with the two scripts on a feature piece: the feature's entry is carried as it was recorded (its hash,
+        # when its words last changed, its read-back below), never dropped; it was not checked again this time.
+        hashes['feature'] = prev_feature
+        if isinstance(were.get('feature'), str):
+            changed_at['feature'] = were['feature']
     same = bool(hashes) and all(before.get(cut) == h for cut, h in hashes.items())
     kept = prev['checked_at'] if passed_before and same else None
     check = {'passed': not problems, 'problems': problems or waived, 'cuts': cuts, 'hashes': hashes,
@@ -1345,6 +1356,14 @@ def self_test():
         two = scripts_patch([t / 'long.md', t / 'short.md'], ok, told.append, feature=True)['script_check']
         check('a feature piece given only its two scripts passes on them, told the feature is still to come',
               (two['passed'], sorted(two['hashes']), told), (True, ['long', 'short'], [FEATURE_TO_COME]))
+        read_three = read_back_patch({'script_check': three}, 'feature', ['reader A: nothing lost', 'reader B: nothing lost'],
+                                     '2026-10-21T12:00:00Z', 'Claude Code')['script_check']
+        told = []
+        rerun = scripts_patch([t / 'long.md', t / 'short.md'], ok, told.append, previous=read_three, feature=True)['script_check']
+        check('a two-script re-run on a feature piece carries the feature\'s hash, changed_at and read-back unchanged, and says '
+              'the feature was not checked again',
+              (rerun['hashes'].get('feature'), rerun['changed_at'].get('feature'), rerun.get('read_back', {}).get('feature'), told),
+              (read_three['hashes']['feature'], read_three['changed_at']['feature'], read_three['read_back']['feature'], [FEATURE_NOT_RECHECKED]))
         check('a feature\'s cut is a cut a record can hold, named "15-minute feature", with a wide thumbnail',
               (_cut('feature'), CUT_NAME['feature'], THUMB_FOR['feature'], current_hashes({'script_check': three})), ('feature', '15-minute feature', 'wide', three['hashes']))
         check('a read-back of the feature\'s words is recorded once its check passed with its hash',

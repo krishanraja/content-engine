@@ -87,7 +87,14 @@ chat that started it.
    --apply`), `lesson_yes` and `lesson_no` (relay to POST
    /api/video-studio/learning-proposals with his decision; a yes becomes a
    standing rule only once it lands in code or config with its learning
-   entry). A failed gate after the sweep is fixed before the rebuild.
+   entry). Only documents Krish wrote are relayed: an edit or a tap whose
+   `updated_by` is not `Krish` (the board's access-cookie writer) is never
+   carried, written to the ledger or relayed as his; `edit_sweep.py` leaves
+   it out and names it, and the board refuses such a write from the
+   operator key. A number is carried only where the same noun sits next to
+   it or two content words match; anything weaker is a suggestion. On a day
+   with recordings a script whose cut cannot be told is left alone. A failed
+   gate after the sweep is fixed before the rebuild.
    `references/week-board.md`, "Krish's edits on the board".
 
 Then do the first step that is not done.
