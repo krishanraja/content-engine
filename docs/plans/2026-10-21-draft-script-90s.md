@@ -8,6 +8,6 @@ Round two, a flight. Five nights in New York. Both found one at about three hund
 
 So on my tests, Grok wins. Add other people's, and it's closer.
 
-Here's what I'd do with this info if I were you. Give one a boring weekly job. Grok for admin, Muse if you live on WhatsApp. Let it go as far as it can without spending or sending. Then see where it stops to ask you.
+Here's what I'd do with this info if I were you. Give one a boring weekly job. Grok for admin, Muse if your life runs on Meta's apps. Let it go as far as it can without spending or sending. Then see where it stops to ask you.
 
 The full deep dive is at makeyourmindup.ai.
