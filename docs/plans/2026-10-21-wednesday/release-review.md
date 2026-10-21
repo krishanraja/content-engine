@@ -24,6 +24,8 @@ The current publish checks also require a dated prediction. This piece is an emp
 
 The voice scan flags authored phrases including “let’s dive in” and the question about Gemini, repeated score-call formatting, and the privacy-redacted level of specificity. Krish explicitly asked that his copy edits be retained. Those words remain; the failed scan is recorded honestly. The separate local model scan is filed when complete.
 
+The local model scan passed: log perplexity 4.482 and Binoculars 1.079, above its 3.2 and 1.02 floors. Primary verbatim excerpts from AI for Mortals, Chris Alarcon, the Grok operator's Reddit report and the Muse errands post have since been filed. These strengthen the evidence pack; they do not change the failed automated result or authorise a second paid run.
+
 ## Authority
 
 All material is for the private review board and asset library. Nothing has been posted on a public channel. Existing comments, edits, ticks and other days’ materials are preserved. Public release remains held until the open editorial and playback decisions are settled.

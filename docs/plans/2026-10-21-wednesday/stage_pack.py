@@ -5,6 +5,7 @@ The exact validation receipts travel with them, including unresolved checks.
 """
 import argparse
 import json
+import shutil
 import sys
 import zipfile
 from pathlib import Path
@@ -44,9 +45,9 @@ def main():
     item(ROOT/'docs/plans/2026-10-19-week/wednesday-scorecard.md',category='article',
          purpose='Five plain-cell round results with links to the research. Personal and community evidence stay separate.')
     item(PLAN/'publishing-copy.md',category='social',purpose='Editable channel copy for review; no public posts have been made.')
-    for name in ['release-review.md','claim-review.md','packaging-approval.json']:
+    for name in ['release-review.md','claim-review.md','packaging-approval.json','chapters.txt','chapters.json']:
         item(PLAN/name,category='publish',purpose='Review status, evidence and the exact recorded approval. Read before posting.')
-    folders=['cards','article-cards','story','kit-short','kit-long','review-short','review-long']
+    folders=['cards','article-cards','story','kit-short','kit-long','review-short','review-long-corrected']
     archive=w/'production-working.zip'
     with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED) as z:
         for folder in folders:
@@ -54,27 +55,42 @@ def main():
                 if p.is_file() and (not p.name.startswith('frame-') or p.suffix=='.json'):
                     z.write(p,p.relative_to(w).as_posix())
         for name in ['short.words.json','long.words.json','long-removals.json','fact-result.json',
-                     'fact-after.json','voice-check.json','ai-scan.log']:
+                     'fact-after.json','voice-check.json','ai-scan.log','primary-source-filings.json',
+                     'primary-reddit-filings.json','field-source-filing.json','video-technical-review.json','board-readback.json']:
             p=w/name
             if p.is_file():z.write(p,p.name)
-        for folder in ['sync-short-source','sync-long-source','sync-short-final','sync-long-final-corrected']:
+        for folder in ['sync-short-source','sync-long-source','sync-short-final','sync-long-final-music']:
             p=w/folder/'sync-report.json'
             if p.is_file():z.write(p,p.relative_to(w).as_posix())
-    item(archive,category='video',name='Working - review/production-working.zip',
-         purpose='Working graphics, bookends, source transcription, cue clocks and review evidence. No delivery acceptance is implied.')
+        for folder,stem in [('render-short','muse-vs-grok-short-9x16'),('render-long-music','muse-vs-grok-long-16x9')]:
+            p=w/folder/(stem+'.heard.json')
+            if p.is_file():z.write(p,p.relative_to(w).as_posix())
+    # The standard pack builder intentionally makes flat filenames. Its
+    # `name` field cannot create a Working directory. Use the native sender's
+    # explicit --as lane for held media instead of flattening a slash.
+    held=[archive]
     if a.videos:
-        for cut,shape,folder in [('short','9x16','render-short'),('long','16x9','render-long-corrected')]:
+        for cut,shape,folder in [('short','9x16','render-short'),('long','16x9','render-long-music')]:
             base=w/folder/f'muse-vs-grok-{cut}-{shape}'
             for suffix in ['.mp4','.srt','.mp4.validation.json']:
                 p=base.with_suffix(suffix)
-                item(p,category='video',name='Working - review/'+p.name,
-                     purpose='Review export or its exact captions and receipt. Playback acceptance and any failed checks remain open.')
+                held.append(p)
     post=json.loads((PLAN/'post.json').read_text(encoding='utf-8'));post['files']=files
     post['release_status']='review';post['readiness_note']='Open fact findings and playback acceptance. Nothing has been publicly posted.'
     p=w/'review-post.json';p.write_text(json.dumps(post,indent=2,ensure_ascii=False),encoding='utf-8')
     result=build.build(p,out=w/'packs',replace=True)
+    review=w/'review-media';review.mkdir(exist_ok=True)
+    expected={p.name for p in held}
+    if any(p.name not in expected for p in review.iterdir()):
+        raise ValueError('Unexpected file in review media folder; preserve and inspect it before sending')
+    for p in held:shutil.copy2(p,review/p.name)
+    library_plan={'folder':str(review),'prefix':f'3 Posts/{result["folder"]}/3 Video/Working - review',
+                  'purpose':'Review exports, captions and exact check receipts. Failed checks and continuous playback acceptance remain open.',
+                  'files':[p.name for p in held]}
+    (w/'review-library-plan.json').write_text(json.dumps(library_plan,indent=2),encoding='utf-8')
     (w/'pack-result.json').write_text(json.dumps(result,indent=2,default=str),encoding='utf-8')
-    print(json.dumps({'folder':result['folder'],'path':str(result['path']),'files':len(result['files'])}))
+    print(json.dumps({'folder':result['folder'],'path':str(result['path']),'files':len(result['files']),
+                      'held_media':library_plan}))
 
 
 if __name__=='__main__':main()

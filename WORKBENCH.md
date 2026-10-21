@@ -2,9 +2,10 @@
 
 ## 21 October: Wednesday recordings and review pack (Codex)
 
-The article, scorecard, covers, thumbnails and editable channel copy are live
-on the private Wednesday board. First verified production build:
-`6e4e5a33371257fae7eda99d50a08730e6d4ba844af6bd0fffeef96524d734be`.
+Both review videos and captions, the article, scorecard, covers, thumbnails,
+chapters and editable channel copy are live on the private Wednesday board.
+Verified build: `15bbcc9b68fc0436b3747f683741faf499a3a096975e4caced1a1579593c5d95`.
+All 22 Wednesday downloads were independently hash-verified (46 assets total).
 Ideas, Monday and Friday were byte-identical; all 24 original assets remain.
 All six stores for both weeks were read; no feedback was lost or rewritten.
 PR #120 was confirmed merged before this work.
@@ -13,8 +14,14 @@ Production inputs and exact recorded scripts:
 `docs/plans/2026-10-21-wednesday/README.md`. Media working folder:
 `C:\Users\krish\.scratch\wednesday-production-2026-10-21`.
 Library destination: `3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot`.
+All 34 newest library downloads were independently hash-verified; the receipt
+is `docs/plans/2026-10-21-wednesday/production-readback.json`.
 Unaccepted video exports stay in `3 Video/Working - review`; they are not
 released deliverables. Source takes remain unchanged in the recording lane.
+The final long folder is `render-long-music` (5:42); the short is
+`render-short` (1:39). Both have the licensed music; neither is sped up.
+Final SyncNet checks pass all six calibrated windows per export, within 40 ms.
+The long music finish copies the identical compressed picture stream.
 
 Krish approved the post-recording packaging set. He approved one fact check
 with a $1 budget; it ran once at $0.50. It did not clear the gate. See
@@ -24,13 +31,8 @@ The article's evidence prose is 435 personal-test words and 434 corpus words;
 its recorded authored wording and the latest “level, for different reasons”
 news call are retained. The local model scan passed (4.482 / 1.079).
 
-Both original takes passed six calibrated sync windows within 40 ms; no
-one-second file offset was found. Exports use steady 24 fps. Exact final
-export measurements, contact sheets and validation receipts travel with the
-review files. A complete human playback check is still required. Caption
-spelling corrections include Meta’s Muse and “the sender”; no speech was sped up.
-The code checks found a pre-existing missing registration of board-ui-guard;
-it was wired to its existing hook, and all 12 hook tests passed on rerun.
+No one-second source offset was found. Exports use steady 24 fps; the exact
+receipts retain heard-check differences and the open full-playback check.
 
 ## 21 October: the publish board has one fixed layout (Claude, part 1 of 4)
 

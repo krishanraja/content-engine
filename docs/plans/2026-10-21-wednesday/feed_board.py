@@ -80,7 +80,7 @@ def main():
     if a.videos:
         files=[]
         for cut,shape in [('long','16x9'),('short','9x16')]:
-            base=work/('render-long-corrected' if cut=='long' else 'render-short')/f'muse-vs-grok-{cut}-{shape}'
+            base=work/('render-long-music' if cut=='long' else 'render-short')/f'muse-vs-grok-{cut}-{shape}'
             # A completed renderer receipt is required even for a review copy.
             receipt=base.with_suffix('.mp4.validation.json')
             data=json.loads(receipt.read_text(encoding='utf-8'))
@@ -92,6 +92,7 @@ def main():
                          'note':'Review exports. Technical measurements accompany the files; continuous playback acceptance is still open.'})
     sections.append({'id':'evidence','title':'Visuals and checks','files':[
         file('wed-graphics-overview',work/'cards/sheet.png','All evidence graphics'),
+        file('wed-test-observations',ROOT/'docs/plans/2026-10-19-week/test-results/README.md','Redacted test observations'),
         file('wed-release-review',PLAN/'release-review.md','Release status and remaining decisions'),
         file('wed-claim-review',PLAN/'claim-review.md','Detailed fact-check findings')]})
     historic=state['manifest']['assets'].get('wednesday-claude-evidence')
@@ -100,9 +101,10 @@ def main():
             'url':f'/api/board/{WEEK}/assets/wednesday-claude-evidence?sha={historic["sha256"]}'})
     copy=(PLAN/'publishing-copy.md').read_text(encoding='utf-8')
     sections.append({'id':'channel-copy','title':'Channel copy','files':[
-        file('wed-channel-copy',PLAN/'publishing-copy.md','Download all channel copy')],
-        'copy':[{'label':'Approved title','text':'Can Meta’s Muse or Grok Bot run my life? I tested both'},
-                {'label':'Channel copy','text':copy}],
+        file('wed-channel-copy',PLAN/'publishing-copy.md','Download all channel copy'),
+        file('wed-chapters',PLAN/'chapters.txt','YouTube and Spotify chapters')],
+        'copy':[{'label':label.strip(),'text':text.strip()} for label,text in
+                re.findall(r'^## ([^\n]+)\n(.*?)(?=^## |\Z)',copy,re.M|re.S)],
         'note':'The Publishing copy review box is editable and commentable.'})
     material={'piece_id':PIECE,'status':'review',
               'note':'Production files prepared for review. Final playback acceptance and article fact-gate findings remain open. Nothing has been publicly posted.',
@@ -111,7 +113,7 @@ def main():
     week=ROOT/'docs/plans/2026-10-19-week'
     reviews=[('Narrative and proposed visuals',week/'wednesday-narrative-ready.md'),
              ('Scorecard and narrative',week/'wednesday-scorecard.md'),
-             ('Four draft-only tests',week/'wednesday-test-packet.md'),
+             ('Five everyday tests',week/'wednesday-test-packet.md'),
              ('Live draft-test results',week/'test-results/README.md'),
              ('Article draft',week/'wednesday-article-draft.md'),
              ('Messenger and X showcases',week/'wednesday-showcases.md'),
@@ -124,6 +126,12 @@ def main():
           '--piece',f'wed={PIECE}','--draft','wed','--materials',f'wed={out/"materials.json"}',
           '--waiting','wed=Review the article, scorecard and channel copy; final video playback and fact findings remain open.',
           '--ideas',str(week/'ideas.json'),'--queue',str(out/'queue.json')]
+    if 'id="wed-four-draft-only-tests"' in old:
+        for collection in ('edits','comments'):
+            feedback=web.call('GET',f'/api/board/{WEEK}/{collection}')
+            if 'four-draft-only-tests' in json.dumps(feedback):
+                raise ValueError('The historic test-packet anchor has feedback; preserve it before changing its label')
+        args += ['--drop-review','wed=four-draft-only-tests']
     for label,path in reviews:
         args += ['--review',f'wed={label}|{path}']
     page,meta=board.build(board.parser().parse_args(args))

@@ -53,6 +53,7 @@ def prepare(work, cut):
     out.mkdir(exist_ok=True)
     raw = json.loads((work/f'{cut}.words.json').read_text(encoding='utf-8'))['words']
     source = work/'sources'/f'{cut}-original.mp4'
+    make.FPS = make.render_fps({}, source)
     duration = 462.239089 if cut == 'long' else 97.705278
     removals = json.loads((work/'long-removals.json').read_text(encoding='utf-8')) if cut == 'long' else []
     segs, total = make.segments(raw, make.resolve_removals(raw, removals), .35,.18,.25,duration, protect_removals=True)

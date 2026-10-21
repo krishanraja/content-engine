@@ -20,6 +20,17 @@ The full deep dive and scorecard are at https://makeyourmindup.ai.
 
 Personal tests: 20 October 2026, one run per job on personal accounts. Fares are historical. Nothing was sent, booked, bought or cancelled. Community reports are attributed in the article; these are different jobs and conditions, with no pooled success rate.
 
+Chapters:
+
+00:00 Muse vs Grok Bot · Five everyday jobs
+00:32 The inbox
+01:13 The flight
+01:48 What to cancel
+02:06 My day
+02:40 The news
+03:11 The work email
+04:22 The verdict
+
 Research featured:
 
 - AI for Mortals: https://www.aiformortals.co/blog/grok-bot-vs-meta-muse-vs-chatgpt-dots
@@ -61,3 +72,11 @@ My results + other testers’ reports. Nothing sent, booked, bought or cancelled
 Full deep dive and scorecard at makeyourmindup.ai.
 
 #AI #Grok #MetaMuse
+
+## Spotify description
+
+I put Grok Bot and Meta’s Muse head to head on five everyday jobs, then compared my results with other testers’ reports. One wrote a lovely reply to a scammer. Both found a cheap flight with a 29-hour stop in Lisbon.
+
+The full deep dive and scorecard are at https://makeyourmindup.ai.
+
+One run per job on personal accounts, 20 October 2026. Nothing sent, booked, bought or cancelled.
