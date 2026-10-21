@@ -1,4 +1,4 @@
-I've been trying these new done-for-you AI assistants: Meta's Muse and Elon Musk's Grok Bot. I ran five head-to-head tests. And one wrote a lovely reply to a scammer. So are they worth the hype? Let's dive in.
+I put Elon Musk's Grok Bot and Meta's Muse head to head. Two of the new done-for-you AI assistants, five everyday jobs. And one wrote a lovely reply to a scammer. So are they worth the hype? Let's dive in.
 
 And if you're a leader secretly trying one on your own life? Your secret's safe with me.
 
@@ -48,6 +48,6 @@ So my call? Grok for weekly admin, especially the bits that creep into work. Mus
 
 I did a piece last week on this, and what price you pay for these conveniences. I mean access to your data, as well as the bill.
 
-The useful test is telling them to go as far as they can. Without spending money, deleting anything or impacting anything external. Then see if they stop anywhere to check anything with you.
+Here's what I'd do with this info if I were you. Pick one boring job you do every week, and hand it to one of them. Tell it to go as far as it can, without spending money, deleting anything or impacting anything external. Then see if it stops to check anything with you. If it does, lovely. If it doesn't, make sure you say no at the right moment when things get hairy.
 
-The full article and scorecard are at makeyourmindup.ai. If you're a leader thinking these new shiny hypey tools are too good to be true, they're not. But they also are. Just make sure you or it says no at the right moment when things get hairy. I'm Krish.
+The full deep dive is at makeyourmindup.ai.

@@ -1,6 +1,6 @@
 # Muse vs Grok Bot: Head to Head on Running My Life
 
-I've been trying these new done-for-you AI assistants: Meta's Muse and Elon Musk's Grok Bot. Flights, emails, the day plan, the things I keep meaning to cancel. The sort of jobs that make an assistant sound very attractive at half past ten on a Tuesday.
+I put Elon Musk's Grok Bot and Meta's Muse head to head, two of the new done-for-you AI assistants. Flights, emails, the day plan, the things I keep meaning to cancel. The sort of jobs that make an assistant sound very attractive at half past ten on a Tuesday.
 
 And if you're a leader secretly trying one on your own life, I get the appeal. Your holiday search sits beside a work email. Your personal calendar already holds half your job. We can probably stop pretending those are two separate people.
 
@@ -84,8 +84,12 @@ So my call. For repeatable admin that creeps into work, start with Grok Bot. For
 
 I did a piece last week on this, and what price you pay for these conveniences: access to your data, as well as the bill. Deciding how much of your life to connect is still your job.
 
-The useful test is telling them to go as far as they can. Without spending money, deleting anything or impacting anything external. Then see if they stop anywhere to check anything with you.
-
 If you're a leader thinking these new shiny hypey tools are too good to be true, they're not. But they also are. Just make sure you or it says no at the right moment when things get hairy.
+
+## 3 things you can do tomorrow
+
+1. **Hand one boring weekly job to one assistant.** Grok if the job touches work, Muse if it lives in WhatsApp, Instagram or Facebook. Just the one. You can promote it later.
+2. **Tell it to go as far as it can without spending money, deleting anything or affecting anything outside.** Then watch where it stops to check with you. That pause is the most useful thing it does.
+3. **Check the boring facts before you act on anything it hands you.** Dates, nights and who an email is really from. Those are exactly where they slipped in my tests.
 
 *One run per job on my own accounts, 20 October 2026. Fares are what they found that day. Nothing was sent, booked, bought or cancelled.*
