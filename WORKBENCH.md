@@ -18,6 +18,7 @@ when he calls one ("Yes, replace it" the weekly deep cut).
   `verify()` and `npm run check:board-layout` (CI) refuse any other shape;
   `.claude/hooks/board-ui-guard.mjs` puts layout edits to Krish. House rule
   FEATURE replaced DEEP_CUT (`config/features.json`, `story_check --cut feature`).
+- **Part 2 handover:** `docs/handovers/2026-10-21-publish-board-part2.md` (start a fresh session from it).
 - **Next:** part 2, Sunday Ideas gathered from every source plus Queue
   "could combine" (learning `queue-consolidation-and-fresh-sunday-ideas`),
   ready for Sunday 25 Oct; part 3, Drafts editing that carries changes across

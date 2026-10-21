@@ -854,40 +854,6 @@ Krish's house rules, in one place.
 - `function subchannelRulesBlock(stage: Stage, subchannel?: string | null): string`
 - `function houseRulesBlock(stage: Stage, subchannel?: string | null): string`
 
-### `apps/control-plane/api/_houseRules.ts`
-
-Krish's house rules, in one place.
-
-- `type Stage`
-- `interface HouseRule`
-- `interface SeriesOpener`
-- `const SERIES_OPENERS: Readonly<Record<string, SeriesOpener>>`
-- `function seriesOpener(_series?: string | null): string | null`
-- `function retiredSeriesOpener(series?: string | null): string | null`
-- `interface ScriptReading`
-- `const SCRIPT_READING: Readonly<ScriptReading>`
-- `const HOUSE_RULES: readonly HouseRule[]`
-- `function rulesFor(stage: Stage, subchannel?: string | null): HouseRule[]`
-- `function subchannelRulesBlock(stage: Stage, subchannel?: string | null): string`
-- `function houseRulesBlock(stage: Stage, subchannel?: string | null): string`
-
-### `apps/control-plane/api/_houseRules.ts`
-
-Krish's house rules, in one place.
-
-- `type Stage`
-- `interface HouseRule`
-- `interface SeriesOpener`
-- `const SERIES_OPENERS: Readonly<Record<string, SeriesOpener>>`
-- `function seriesOpener(_series?: string | null): string | null`
-- `function retiredSeriesOpener(series?: string | null): string | null`
-- `interface ScriptReading`
-- `const SCRIPT_READING: Readonly<ScriptReading>`
-- `const HOUSE_RULES: readonly HouseRule[]`
-- `function rulesFor(stage: Stage, subchannel?: string | null): HouseRule[]`
-- `function subchannelRulesBlock(stage: Stage, subchannel?: string | null): string`
-- `function houseRulesBlock(stage: Stage, subchannel?: string | null): string`
-
 ### `apps/control-plane/api/_humor.ts`
 
 _humor — the humour engine for the Content composer's "Humor" adjust chips.
