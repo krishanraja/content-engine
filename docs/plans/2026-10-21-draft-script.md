@@ -18,11 +18,11 @@ And both found a return for about three hundred and thirty-five pounds. The catc
 
 To be fair, both steered me away from it. But Muse said I'd get four nights in New York. Its own flight times only gave me three. Off by a night, on a job that is basically counting.
 
-Another travel test in the community preferred Grok for speed and value. So round two: my score, Grok, just. The community's, Grok.
+Another travel tester preferred Grok for speed and value. So round two: my score, Grok, just. The community's, Grok.
 
 Round three, something to cancel. Both found a subscription still charging me. And both paused and asked who still used it, or what would break. Which is more thought than most of us give a gym membership. No community result. So round three: my score, a draw. Three rounds in, on my tests: Grok two, Muse nil.
 
-Round four, plan my day. Both kept their suggestions apart from my real meetings.
+Round four, plan my day. Both drafted my day, and kept their ideas apart from meetings I'd actually booked.
 
 But in the community, one Grok user reported forgotten jobs and duplicate messages. Which also describes most group chats. So round four: my score, a draw. The community's, a point against Grok.
 
@@ -42,7 +42,7 @@ If you are obsessed with X/Twitter, you might love Grok Bot. Likewise if your en
 
 The community likes Muse for errands. One user had it find windscreen wipers, then wait for a yes before buying.
 
-So, the final score. On my tests, Grok wins: two rounds, two draws and a split. It caught the scam Muse answered. Add the community, and it gets closer. Muse is more careful than my inbox made it look. And Grok can slip when you leave it running.
+So, the final score. On my tests, Grok wins: two rounds, two draws and a split. It caught the scam Muse answered. Add the community, and it gets closer. Other testers found Muse safe with scams, and Grok forgetful when left running.
 
 So my call? Grok for weekly admin, especially the bits that creep into work. Muse for personal errands, if your life runs through Meta's apps. Neither gets free rein.
 
