@@ -1,117 +1,136 @@
 {
-  "week": "2026-10-19",
-  "build_id": "25c25992848fbfd89a0696aececf33f5e2fd90ad7906e4c965a224dd759c2b8a",
-  "previous_build": "9c5d3b0567774c44213f525a26a0f625ee27ca9169626697d3d316dee617bc7f",
-  "html_sha256": "f283bd6aa78b9016c444919f05d60ffa95973e82635068da9c534114c6a768e5",
-  "html_bytes": 1949728,
-  "unchanged_assets": 23,
-  "unchanged_store_snapshots": 12,
-  "review_content_verified": true,
-  "scope": "Wednesday draft content only; no public posting or paid work",
-  "board_self_checks": 110,
-  "browser_verified_sections": 6,
-  "article_comment_control": "opened and closed without writing",
-  "screenshot": "C:/Users/krish/.scratch/wednesday-real-email/wednesday-live-board.png",
-  "claude_editorial_2026_10_20": {
-    "build_id": "b3b53907a44ea6d24c0c86f7aeb843170545b36cfca6aee7fcc58a8c3513e468",
-    "replaced_build": "73a686bee3afc6a97f507d5e2d8f32626e867a8c1d9f3759bd8d18924c9e398a",
-    "html_sha256": "be94494f1582e271c71efa4e47792d0a3e8d9ff97749120933dc2ca362012644",
-    "assets_kept": 24,
-    "unchanged_panels": [
-      "ideas",
-      "monday",
-      "friday"
-    ],
-    "stores_after": {
-      "comments": 28,
-      "edits": 0,
-      "ticks": 0
-    }
-  },
-  "claude_editorial_2026_10_20_v2": {
-    "build_id": "8bab0fa0fc628709ad4622b61c981daab86e9ec60fe0ce421c84220bbcd4ea6d",
-    "replaced_build": "b3b53907a44ea6d24c0c86f7aeb843170545b36cfca6aee7fcc58a8c3513e468",
-    "html_sha256": "d8a8abfbb5ee17371a33be5cc947a7be61e71b5c8a70cac4daf98f2c6d973494",
-    "assets_kept": 24,
-    "unchanged_panels": [
-      "ideas",
-      "monday",
-      "friday"
-    ],
-    "stores_after": {
-      "comments": 28,
-      "edits": 0,
-      "ticks": 0
-    }
-  },
-  "claude_editorial_2026_10_20_v3": {
-    "build_id": "63bbc0e648754d97567c6f5824abc8197ecf33cd43c6600440fba1fe6de09db7",
-    "replaced_build": "8bab0fa0fc628709ad4622b61c981daab86e9ec60fe0ce421c84220bbcd4ea6d",
-    "html_sha256": "d97ebfbde3168d8f4216e94a141fb77598bbccdeeecd2c1ca1c5a6329f99c4f6",
-    "assets_kept": 24,
-    "unchanged_panels": [
-      "ideas",
-      "monday",
-      "friday"
-    ],
-    "stores_after": {
-      "comments": 28,
-      "edits": 0,
-      "ticks": 0
-    }
-  },
-  "codex_recording_drafts_2026_10_20": {
-    "build_id": "ad2aa410e9f2cc40335ac42d17523623911bc9cdf6ab397a5921046f0b182eeb",
-    "html_sha256": "2425bf59415c1aa1befb402d5e0bb0ed262a3710e796a0e0db8b9ad3c26e93c2",
-    "assets_kept": 24,
-    "unchanged_panels": [
-      "ideas",
-      "monday",
-      "friday"
-    ],
-    "review_content_matches": {
-      "five-minute-script": true,
-      "short-script": true,
-      "visual-plan-after-copy-approval": true
-    },
-    "stores_after": {
-      "edits": 1,
-      "comments": 30,
-      "ticks": 0,
-      "links": 0,
-      "picks": 3,
-      "queue": 11
-    },
-    "stores_unchanged": true,
-    "status": "copy in review; visual production and Teleprompter pending approval"
-  },
-  "codex_holistic_feedback_2026_10_20": {
-    "build_id": "0874694604f1cbe128f707b804ec22af460a9edfbd007bde204418a29499758f",
-    "html_sha256": "722d0a87784efb5603844382164733e6d1941435c48ec949360fa87c4455a046",
-    "assets_kept": 24,
-    "unchanged_panels": [
-      "ideas",
-      "monday",
-      "friday"
-    ],
-    "review_content_matches": {
-      "narrative-and-proposed-visuals": true,
-      "scorecard-and-narrative": true,
-      "article-draft": true,
-      "five-minute-script": true,
-      "short-script": true,
-      "visual-plan-after-copy-approval": true
-    },
-    "stores_after": {
-      "edits": 3,
-      "comments": 34,
-      "ticks": 0,
-      "links": 0,
-      "picks": 3,
-      "queue": 11
-    },
-    "stores_unchanged": true,
-    "browser_scope": "No fresh authenticated browser interaction; existing controls retained, saved user feedback read independently",
-    "status": "Holistic copy review; visuals and Teleprompter wait for copy approval"
+ "week": "2026-10-19",
+ "build_id": "25c25992848fbfd89a0696aececf33f5e2fd90ad7906e4c965a224dd759c2b8a",
+ "previous_build": "9c5d3b0567774c44213f525a26a0f625ee27ca9169626697d3d316dee617bc7f",
+ "html_sha256": "f283bd6aa78b9016c444919f05d60ffa95973e82635068da9c534114c6a768e5",
+ "html_bytes": 1949728,
+ "unchanged_assets": 23,
+ "unchanged_store_snapshots": 12,
+ "review_content_verified": true,
+ "scope": "Wednesday draft content only; no public posting or paid work",
+ "board_self_checks": 110,
+ "browser_verified_sections": 6,
+ "article_comment_control": "opened and closed without writing",
+ "screenshot": "C:/Users/krish/.scratch/wednesday-real-email/wednesday-live-board.png",
+ "claude_editorial_2026_10_20": {
+  "build_id": "b3b53907a44ea6d24c0c86f7aeb843170545b36cfca6aee7fcc58a8c3513e468",
+  "replaced_build": "73a686bee3afc6a97f507d5e2d8f32626e867a8c1d9f3759bd8d18924c9e398a",
+  "html_sha256": "be94494f1582e271c71efa4e47792d0a3e8d9ff97749120933dc2ca362012644",
+  "assets_kept": 24,
+  "unchanged_panels": [
+   "ideas",
+   "monday",
+   "friday"
+  ],
+  "stores_after": {
+   "comments": 28,
+   "edits": 0,
+   "ticks": 0
   }
+ },
+ "claude_editorial_2026_10_20_v2": {
+  "build_id": "8bab0fa0fc628709ad4622b61c981daab86e9ec60fe0ce421c84220bbcd4ea6d",
+  "replaced_build": "b3b53907a44ea6d24c0c86f7aeb843170545b36cfca6aee7fcc58a8c3513e468",
+  "html_sha256": "d8a8abfbb5ee17371a33be5cc947a7be61e71b5c8a70cac4daf98f2c6d973494",
+  "assets_kept": 24,
+  "unchanged_panels": [
+   "ideas",
+   "monday",
+   "friday"
+  ],
+  "stores_after": {
+   "comments": 28,
+   "edits": 0,
+   "ticks": 0
+  }
+ },
+ "claude_editorial_2026_10_20_v3": {
+  "build_id": "63bbc0e648754d97567c6f5824abc8197ecf33cd43c6600440fba1fe6de09db7",
+  "replaced_build": "8bab0fa0fc628709ad4622b61c981daab86e9ec60fe0ce421c84220bbcd4ea6d",
+  "html_sha256": "d97ebfbde3168d8f4216e94a141fb77598bbccdeeecd2c1ca1c5a6329f99c4f6",
+  "assets_kept": 24,
+  "unchanged_panels": [
+   "ideas",
+   "monday",
+   "friday"
+  ],
+  "stores_after": {
+   "comments": 28,
+   "edits": 0,
+   "ticks": 0
+  }
+ },
+ "codex_recording_drafts_2026_10_20": {
+  "build_id": "ad2aa410e9f2cc40335ac42d17523623911bc9cdf6ab397a5921046f0b182eeb",
+  "html_sha256": "2425bf59415c1aa1befb402d5e0bb0ed262a3710e796a0e0db8b9ad3c26e93c2",
+  "assets_kept": 24,
+  "unchanged_panels": [
+   "ideas",
+   "monday",
+   "friday"
+  ],
+  "review_content_matches": {
+   "five-minute-script": true,
+   "short-script": true,
+   "visual-plan-after-copy-approval": true
+  },
+  "stores_after": {
+   "edits": 1,
+   "comments": 30,
+   "ticks": 0,
+   "links": 0,
+   "picks": 3,
+   "queue": 11
+  },
+  "stores_unchanged": true,
+  "status": "copy in review; visual production and Teleprompter pending approval"
+ },
+ "codex_holistic_feedback_2026_10_20": {
+  "build_id": "0874694604f1cbe128f707b804ec22af460a9edfbd007bde204418a29499758f",
+  "html_sha256": "722d0a87784efb5603844382164733e6d1941435c48ec949360fa87c4455a046",
+  "assets_kept": 24,
+  "unchanged_panels": [
+   "ideas",
+   "monday",
+   "friday"
+  ],
+  "review_content_matches": {
+   "narrative-and-proposed-visuals": true,
+   "scorecard-and-narrative": true,
+   "article-draft": true,
+   "five-minute-script": true,
+   "short-script": true,
+   "visual-plan-after-copy-approval": true
+  },
+  "stores_after": {
+   "edits": 3,
+   "comments": 34,
+   "ticks": 0,
+   "links": 0,
+   "picks": 3,
+   "queue": 11
+  },
+  "stores_unchanged": true,
+  "browser_scope": "No fresh authenticated browser interaction; existing controls retained, saved user feedback read independently",
+  "status": "Holistic copy review; visuals and Teleprompter wait for copy approval"
+ },
+ "claude_new_frame_2026_10_21": {
+  "build_id": "973df9ebd15c89e5ff053cf946a834fcab4fd638ebad2ac4d1afe3ff61a7e8d3",
+  "previous_build": "0874694604f1cbe128f707b804ec22af460a9edfbd007bde204418a29499758f",
+  "html_sha256": "f2bac29e7b7a15b31cbd1d4d7ee7bb46465f93f427f39c1cd0a9fbc382598842",
+  "readback_matches_built_file": true,
+  "assets_kept": 24,
+  "unchanged_panels": [
+   "ideas-mon",
+   "ideas-wed",
+   "monday (all sections)",
+   "wed four-draft-only-tests, live-draft-test-results, messenger-and-x-showcases"
+  ],
+  "changed": [
+   "wed narrative, scorecard, article, five-minute script, short script, visual plan",
+   "Monday's header in the Friday ideas panel now reads its live status: posted on Substack 20 Oct"
+  ],
+  "builder": "docs/plans/2026-10-19-week/update_wednesday_21oct.py",
+  "status": "Five scored rounds, straight-in open, what-I'd-do close, 3 things tomorrow; scripts in Teleprompter; Krish records next"
+ }
 }

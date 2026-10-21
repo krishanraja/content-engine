@@ -1,11 +1,13 @@
-I put Muse, Grok Bot and Gemini head to head on five everyday jobs. The new wave of done-for-you personal AI assistants. One wrote a lovely reply to a scammer. So which one wins?
+I put Elon Musk's Grok Bot and Meta's Muse head to head. One wrote a lovely reply to a scammer. So which one wins?
 
-I started by checking my inbox for emails I should be replying to. An email asked to buy six products, without naming any. Grok flagged the scam. Muse wrote a polished reply and put it first on my to-do list.
+Round one, my inbox. An email wanted six of my products, but never said which. Grok flagged the scam. Muse wrote a polished reply, then put it top of my to-do list. Customer service, for people trying to rob me.
 
-A separate test found Muse resisted different scams. So I checked my results against last week's research too. My tests and research count equally in the full comparison.
+In another tester's trial, both caught every scam. So round one: Grok on my test, a draw on theirs.
 
-Next, a cheap New York flight. About three hundred and thirty-five pounds return. With a twenty-nine-hour stop in Lisbon. Grok and Muse both steered me away.
+Round two, a flight. Five nights in New York. Both found one at about three hundred and thirty-five pounds, with twenty-nine hours in Lisbon. That's quite a lot of Portugal for a trip to New York. And Muse got my nights wrong. Round two: Grok.
 
-My call: Grok for repeatable admin. Muse for personal errands and your social apps.
+So on my tests, Grok wins. Add other people's, and it's closer.
 
-The full article and comparison table are at makeyourmindup.ai. If you're a leader thinking these new shiny hypey tools are too good to be true, they're not. But they also are. They help. They still need checking. Just make sure you or it says no at the right moment when things get hairy.
+Here's what I'd do with this info if I were you. Give one a boring weekly job. Grok for admin, Muse if your life runs on Meta's apps. Let it go as far as it can without spending or sending. Then see where it stops to ask you.
+
+The full deep dive is at makeyourmindup.ai.

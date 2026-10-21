@@ -72,8 +72,13 @@ def outline_problems(text):
     return out
 
 
+# The closing "3 things you can do tomorrow" section (house rule THREE_THINGS_TOMORROW, Krish, 2026-10-21)
+# is on every article and is not an outline section, so it is neither extra nor counted in the six.
+THREE_THINGS = re.compile(r'^\W*3\s+things\s+you\s+can\s+do\s+tomorrow\W*$', re.I)
+
+
 def headings(body):
-    return [m.group(1).strip() for m in re.finditer(r'^##\s+(.+?)\s*$', body, re.M)]
+    return [h for h in (m.group(1).strip() for m in re.finditer(r'^##\s+(.+?)\s*$', body, re.M)) if not THREE_THINGS.match(h)]
 
 
 def draft_problems(body, outline_text):
@@ -127,6 +132,8 @@ def self_test():
         ('the draft matching the outline passes', draft_problems(body, good), []),
         ('a section added on top is refused, naming it', any('WHY SIRI' in p and 'new spine' in p for p in draft_problems(added, good)), True),
         ('a missing section is named', any('WHOEVER PICKS' in p for p in draft_problems(body.replace('## WHOEVER PICKS, PRICES\ny\n\n', ''), good)), True),
+        ('the closing "3 things you can do tomorrow" section is no section added on top',
+         draft_problems(body + '\n## 3 things you can do tomorrow\n- a\n- b\n- c\n', good), []),
         ('the outline\'s date decides the rule', dated('docs/plans/2026-10-21-outline.md') >= SPINE_FROM > dated('docs/plans/2026-10-09-outline.md'), True),
     ]
     fails = [f'{n}: got {g!r}, want {w!r}' for n, g, w in checks if g != w]

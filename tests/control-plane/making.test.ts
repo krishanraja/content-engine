@@ -536,7 +536,7 @@ describe('the read-back on the script check', () => {
 })
 
 describe('the GET carries the piece\'s series', () => {
-  it('lane_slot, so making.py scripts checks each script\'s series line', async () => {
+  it('lane_slot, so making.py scripts can pass the series on to the story check (the series line itself is retired, SERIES_OPENER, 2026-10-21)', async () => {
     db.tables.content_ideas[0]!.lane_slot = 'mind_the_gap'
     expect((await call('GET')).body.lane_slot).toBe('mind_the_gap')
     delete db.tables.content_ideas[0]!.lane_slot

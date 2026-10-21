@@ -53,7 +53,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       citations: [idea.source_url, ...(Array.isArray(meta.research) ? meta.research : []), ...(Array.isArray(meta.sources) ? meta.sources : [])].filter(Boolean),
       materials: readMaterials(meta),
       hint: b.hint,
-      // Its series line opens the script (house rule SERIES_OPENER).
+      // Passed on for the writer; the series line itself is retired (house rule SERIES_OPENER, 2026-10-21).
       series: (idea as any).lane_slot ?? null,
     })
 

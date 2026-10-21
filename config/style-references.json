@@ -7,7 +7,7 @@
    "config/golden-examples.json (his own lines, e.g. the personal intro)",
    "config/title-verdicts.json (titles he picked and rejected, and the lessons)",
    "config/hook-playbook.json (hooks by surface)",
-   "scripts/post-pack/voice_check.py and story_check.py (sounds like Krish; reading age 12; series line; outro)"
+   "scripts/post-pack/voice_check.py and story_check.py (sounds like Krish; reading age 12; the close)"
   ]
  },
  "layers": [
@@ -386,7 +386,7 @@
      "number-in-scene"
     ]
    },
-   "keeps_from_base": "the series line, his personal intro beat, reading age 12, the dated prediction, the outro to the article",
+   "keeps_from_base": "his personal intro beat, reading age 12, the dated prediction, the close (SCRIPT_CLOSE; the series line was retired on 2026-10-21)",
    "status": "scripts written on outline v2 (docs/plans/2026-10-09-script-deep-v2.md, -90s-v2.md); waiting on Krish before Teleprompter"
   }
  ]

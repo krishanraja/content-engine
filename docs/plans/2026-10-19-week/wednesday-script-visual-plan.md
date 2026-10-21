@@ -1,5 +1,7 @@
 # Wednesday: visual plan after copy approval
 
+> **21 October update.** The scripts and article now run as five scored rounds (Krish's test, then the community's), with Gemini out of the scripts, dry wit, a straight-in opening and the close "Here's what I'd do with this info if I were you". Where this document says otherwise, the scripts, article and scorecard win.
+
 Working headline: Muse vs Grok Bot: Head to Head on Running My Life.
 
 This is the updated plan for the personal-life piece. Krish's tests and last week's corpus each inform the story and scorecard equally. No images, screenshots or video assets have been produced. Copy approval comes first; actual timings come from the later recording.

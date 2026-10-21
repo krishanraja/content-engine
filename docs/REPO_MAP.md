@@ -845,7 +845,42 @@ Krish's house rules, in one place.
 - `interface HouseRule`
 - `interface SeriesOpener`
 - `const SERIES_OPENERS: Readonly<Record<string, SeriesOpener>>`
-- `function seriesOpener(series?: string | null): string | null`
+- `function seriesOpener(_series?: string | null): string | null`
+- `function retiredSeriesOpener(series?: string | null): string | null`
+- `interface ScriptReading`
+- `const SCRIPT_READING: Readonly<ScriptReading>`
+- `const HOUSE_RULES: readonly HouseRule[]`
+- `function rulesFor(stage: Stage, subchannel?: string | null): HouseRule[]`
+- `function subchannelRulesBlock(stage: Stage, subchannel?: string | null): string`
+- `function houseRulesBlock(stage: Stage, subchannel?: string | null): string`
+
+### `apps/control-plane/api/_houseRules.ts`
+
+Krish's house rules, in one place.
+
+- `type Stage`
+- `interface HouseRule`
+- `interface SeriesOpener`
+- `const SERIES_OPENERS: Readonly<Record<string, SeriesOpener>>`
+- `function seriesOpener(_series?: string | null): string | null`
+- `function retiredSeriesOpener(series?: string | null): string | null`
+- `interface ScriptReading`
+- `const SCRIPT_READING: Readonly<ScriptReading>`
+- `const HOUSE_RULES: readonly HouseRule[]`
+- `function rulesFor(stage: Stage, subchannel?: string | null): HouseRule[]`
+- `function subchannelRulesBlock(stage: Stage, subchannel?: string | null): string`
+- `function houseRulesBlock(stage: Stage, subchannel?: string | null): string`
+
+### `apps/control-plane/api/_houseRules.ts`
+
+Krish's house rules, in one place.
+
+- `type Stage`
+- `interface HouseRule`
+- `interface SeriesOpener`
+- `const SERIES_OPENERS: Readonly<Record<string, SeriesOpener>>`
+- `function seriesOpener(_series?: string | null): string | null`
+- `function retiredSeriesOpener(series?: string | null): string | null`
 - `interface ScriptReading`
 - `const SCRIPT_READING: Readonly<ScriptReading>`
 - `const HOUSE_RULES: readonly HouseRule[]`
@@ -1297,6 +1332,7 @@ The mechanical checks a piece must pass before it can be approved or
 - `function confidenceOf(body: string): number | null`
 - `function predictionCheck(body: string): { ok: boolean; detail: string }`
 - `function bareScores(body: string): Array<{ number: string; sentence: string }>`
+- `function threeThingsTomorrow(body: string): { ok: boolean; detail: string }`
 - `function publishChecks(body: string, factGate: { ok: boolean; reason: string | null }, now: Date = new Date(), pieceId?…`
 - `function publishStatus(checks: Check[]): { ok: boolean; reason: string | null; failing: Check[] }`
 
@@ -1608,6 +1644,7 @@ Video script formats, 15 seconds to 20 minutes. Every piece uses two of
 - `const VIDEO_FORMATS: VideoFormat[]`
 - `function videoFormat(id?: string | null): VideoFormat | null`
 - `const STORY_OUTRO`
+- `const SCRIPT_OPENING`
 - `const SCRIPT_STORY`
 - `const SPOKEN_RULES`
 - `interface VideoBeat`

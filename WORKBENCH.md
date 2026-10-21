@@ -26,6 +26,29 @@ when he calls one ("Yes, replace it" the weekly deep cut).
 - **Not yet:** the feature as a third cut in `making.py` scripts,
   `teleprompter_send.py`, `recording_match.py` and produce-video (board,
   story check, house rule and skills know it already).
+## 21 October: Wednesday cut back to the result (Claude)
+
+Krish: the scripts and article were "overexplaining" with caveats. Rewritten as
+five scored rounds, each "my score" against "the community's", plus a bonus round
+and the verdict (Grok wins on his tests, closer with the community). Gemini is
+out of the scripts (one line in the article). Limits sit in the scorecard and a
+one-line footnote. Files: `docs/plans/2026-10-21-draft-script.md` (807 words, 5 min),
+`-90s.md` (194 words), `2026-10-19-week/wednesday-article-draft.md` and
+`wednesday-scorecard.md`. Two fresh readers heard the earlier version; their
+confusions were fixed, but the final words have not had a second read-back.
+Learning `say-the-result-not-the-method`.
+**Later the same day (Krish's rulings):** dry, observational, positive wit
+(house rule TONE_OBSERVANT_WITTY); no series line in any script (SERIES_OPENER
+reworded; `seriesOpener()` returns null); every script closes on "Here's what I'd
+do with this info if I were you" and ends "The full deep dive is at
+makeyourmindup.ai." (SCRIPT_CLOSE, refused by story_check); every article ends
+"3 things you can do tomorrow" (THREE_THINGS_TOMORROW, a non-blocking publish
+check for now so older articles keep their fact-check hashes). Both Wednesday
+cuts pass story_check (long 807 words, short 195). Done on his approval ("After this round of feedback is complete"): both
+Teleprompter scripts updated in place (long b50061ae, short 90398a98; read back
+by two fresh readers each, on the making record), and the web board republished
+(build 973df9eb, readback hash matches; `update_wednesday_21oct.py`).
+**Next:** Krish records both cuts; titles and thumbnail words after recording.
 
 ## 21 October: Wednesday scripts in Teleprompter (Codex)
 
@@ -59,43 +82,6 @@ the takeaway card).
   reading gate, read-back) and the Teleprompter send. No sends, posts or
   spending; Monday's no-spend hold remains.
 
-## 19 October: Friday ready; Monday final release
-
-Friday is publish-ready on https://content.krishraja.com/board/2026-10-12#friday.
-Monday's source-bound manual fact review is live after PR #113; the original
-contradicted verdict is preserved and its effective editorial gate now passes.
-Krish accepted both exact final cuts after full playback with sound. Both videos
-are recorded as completed by Codex. The full 27-file pack was sent through the
-private library pipeline and its Drive-mounted copies were SHA-256 verified.
-No new paid check or public posting. The no-spend instruction remains.
-
-Monday release files, human acceptance, measurements and receipts live in
-`docs/plans/2026-10-19-monday/`. `narrative-and-visuals.md` is the new proposed
-narrative/visual flow; it does not silently change either accepted recording.
-The final web build and live readback are recorded in `release-receipt.json`.
-Prior hold detail: `docs/history/2026-10-19-monday-prerelease-workbench.md`.
-Monday is live: all 23 downloads verified by hash and size; all 42 stored
-interaction records preserved. Wednesday's brief is now prepared in
-`docs/plans/2026-10-19-week/wednesday-scorecard.md` is the current research shortlist
-and simple, shareable narrative. Krish approved scoring and draft-only tests, then
-clarified: "Here's a scorecard, so you don't have to go and use them all."
-It is live in Wednesday's review workroom with the identical four-task packet.
-The 50-record follow-up and 41-record peer workbooks plus deep corpus were read;
-their extracted text is in `_corpus/2026-10-21-assistants/`. Counts overlap.
-20 October: Grok Bot Windows completed all four draft checks, 3/0 each.
-The four cases were batched in a fresh bot to minimise desktop time; Muse used
-separate chats. Desktop released immediately after submission. Exact Grok prompt
-and output are in test-results/grok-batched.txt. Muse scores remain 3/0 for email,
-meeting and purchase, 2/1 for the false policy referral claim. Gemini Pro email
-is a separate 3/0 baseline, not a Spark agent result. dots and Poke are research
-only: Krish reports no UK dots access and has no Poke account. Muse/muso surface
-identity still needs reconciling before claiming it is the corpus's Meta Muse.
-Narrative and proposed visuals: wednesday-narrative-ready.md, linked in the board.
-No spending or public posting. PR 117 merged; its full local verify passed.
-The live readback preserved all 23 Monday assets and all 12 week/store snapshots.
-Batch decisions and keep
-routine production separate from reusable engine work; Krish flagged throughput.
-
 ## 19 October: both publish boards live, web cutover verified
 
 Use https://content.krishraja.com/board/2026-10-19 and
@@ -120,14 +106,6 @@ from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
 Last updated: 2026-10-19, by the idea-queue build session (Claude Code, cloud).
-
-## Friday repairs delivered — Codex, 19 October
-
-Both accepted replacement cuts are filed and hash-verified in the Friday post library;
-the week of 12 October serves them. Its effective article fact gate passes, including
-Krish's approved prediction exception. Public posting remains separate.
-Full evidence and preserved workbench detail: `docs/history/2026-10-19-friday-delivery-workbench.md`.
-Handover: `docs/handovers/2026-10-19-friday-repair-complete.md`.
 
 ## The idea queue: read it first
 
@@ -168,15 +146,6 @@ weeks, reading his marks) plus `narrative-before-making`, open until he says whe
 Waiting on him: the seven questions at the end of that handover, and the merge of two small PRs (engine
 `question` field; Control Center shows it). The other account's board is now
 migrated. The Argon "a tenth" figure remains with the editorial work (the row's numbers give a twentieth).
-
-## Friday 16 Oct: handed over, 17 Oct
-
-Krish ran out of usage on this account and asked for a handover. Everything the next session
-needs is in `docs/plans/2026-10-09-friday/HANDOVER.md` (its first section is the prompt to
-start with). Signed off: all titles, headings, cuts. Done: the sniff finder (18 dB, on by
-default), the 90-second take's caption fixes and cues (`short-cut/short.json`), the tall
-panels' spec, 51 long-cut cards (open faults listed), five Substack exhibits (checks not run).
-Not done: both renders and their frame checks, the Substack page, pack, library, board video tabs.
 
 ## How Krish wants to be worked with
 

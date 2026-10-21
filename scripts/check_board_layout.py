@@ -36,7 +36,7 @@ STAMPERS = {'scripts/post-pack/week_board.py', 'scripts/post-pack/board_web.py',
             'tests/board_web_test.py', 'tests/engine-gates.test.ts'}
 # Written before the fixed layout, each patching a built board by hand; kept as history, never a pattern.
 FROZEN = {'docs/plans/2026-10-19-monday/build_release_board.py', 'docs/plans/2026-10-19-week/update_wednesday.py',
-          'docs/plans/2026-10-19-board-delivery/build_boards.py'}
+          'docs/plans/2026-10-19-board-delivery/build_boards.py', 'docs/plans/2026-10-19-week/update_wednesday_21oct.py'}
 TITLE = 'Warner sued Suno. Now it takes a cut.'
 
 
