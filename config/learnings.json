@@ -969,6 +969,41 @@
    ]
   },
   {
+   "id": "publish-run-sheet",
+   "on": "2026-10-21",
+   "krish": "After that workflow work is done, have a think about where I publish, how I publish, what I need to download, when, and in what order. Just make everything as beautiful and user-friendly as possible.",
+   "why": "Publishing a day meant scrolling the publish page's own sections: the files were named in each step but downloaded from different places (the videos card, the picture cards, the covers section), ticks sat on section headings and again in a checklist, and nothing put what to download first or in which order he would use it.",
+   "means": "A made day's Publish step is one ordered run-sheet built from data: the checklist meter, then Download first (every file in the order he uses it, each with one big Download, Download all, and the post's library folder named), then one card per place to post in config/board-layout.json's order, each with its files, its copy, what to do, its link box and its tick. Tick ids never change. Weeks before 26 October keep their markup.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "def run_sheet(day, p, page, data, videos, delivery, feature, folder, warnings):",
+     "how": "the Publish step of a made day in the fixed layout is drawn from the page's data and the record, never from its markup"
+    },
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "def run_sheet_problems(name, panel, tag):",
+     "how": "verify() refuses a Publish step with no Download first, a card out of order, a card without its own tick or a tick with no card"
+    },
+    {
+     "file": "scripts/post-pack/publish_manager.py",
+     "contains": "id=\"pm-data\"",
+     "how": "every publish page carries its words and its pictures' roles as data for the run-sheet"
+    },
+    {
+     "file": "scripts/post-pack/buttons_in_browser.py",
+     "contains": "Download all handed over",
+     "how": "CI clicks every Download, Copy and Download all on a fixed week's run-sheet in a real browser"
+    },
+    {
+     "file": "docs/PUBLISH_BOARDS.md",
+     "contains": "### The Publish run-sheet",
+     "how": "the run-sheet's order and how a session feeds it"
+    }
+   ]
+  },
+  {
    "id": "two-cuts-and-an-occasional-feature",
    "on": "2026-10-21",
    "krish": "Bear in mind that all videos are generally 90 sec and 5 min. From time to time I might do a special 15 min feature. (Asked whether that replaces the weekly deep cut: \"Yes, replace it\".)",
@@ -1004,7 +1039,54 @@
    "krish": "I need to be able to comment on them to iterate or just edit in line myself and save changes to get picked up. The system needs to not just capture it but learn why I'm giving that feedback and figure out what patterns it's observing. If I make a statistical change or a narrative style change in one place, just make sure that those changes propagate and the next draft is consistent. Don't just think about that one surgical edit I made because I may have missed another place in another script for example.",
    "why": "Board edits are applied by hand to the one box he changed and never reach the edit ledger, so the same fix has to be made again in the other cut, the article or the next piece.",
    "means": "Each saved edit is classified (number or fact, claim, structure, tone, wording), applied to every draft of the piece and to later drafts, shown back as 'also changed in' with undo (Krish, 21 Oct: apply everywhere, show me), and written to the ledger so repeated patterns become proposed rules for his approval.",
-   "status": "open"
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "def editor_card(day, items, built_at=None, kept_at=None):",
+     "how": "the Drafts step in the fixed layout: each draft a read view (Markdown drawn, no # signs), a paragraph opened by a tap, one Save bar per day; the store edits/<day>-<item> and its built-at guard unchanged"
+    },
+    {
+     "file": "scripts/post-pack/week_board/week.js",
+     "contains": "async function saveDay(day)",
+     "how": "tap to edit, picked words get Comment on this pinned to {box, paragraph, quote}, N unsaved changes then Saved, the 409 path said; Undo, Change it too, Make it a rule and Not a rule saved as comments with act and ref"
+    },
+    {
+     "file": "apps/control-plane/api/board/_contracts.ts",
+     "contains": "export const COMMENT_ACTS",
+     "how": "a comment may carry box, paragraph, quote, and one of his taps (act, ref), each bounded"
+    },
+    {
+     "file": "scripts/post-pack/edit_sweep.py",
+     "contains": "def sweep(day, drafts, edits, pieces=None, recorded=None, week=None):",
+     "how": "each save diffed against base_sha256, each change classified by rule (number or fact, claim, structure, tone, wording), numbers, facts and claims carried into every draft of the piece and later drafts, tone and wording only suggested, recorded cuts left alone, the gates run again, Undo and Change it too by id"
+    },
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "def sweep_card(p, sweep):",
+     "how": "--sweep DAY=sweep.json shows Also changed under the drafts, each with Undo; --lessons shows What I learned from your edits, each waiting for his yes"
+    },
+    {
+     "file": "apps/control-plane/api/_editEvents.ts",
+     "contains": "a_board_edit_needs_its_class",
+     "how": "the ledger takes surface publish_board: his relayed board edit, a manual_edit with its class as reason_code (migration 20261102090000 widens the CHECK)"
+    },
+    {
+     "file": "apps/control-plane/api/learning/_patterns.ts",
+     "contains": "export function repeatedEditClassProposals(",
+     "how": "three board edits of one class in 28 days become a proposal, never a rule, until he approves it"
+    },
+    {
+     "file": ".agents/skills/make-piece/SKILL.md",
+     "contains": "His saved edits are carried, written to the ledger, and shown back.",
+     "how": "the session that picks up his edits runs edit_sweep.py, posts the ledger rows and rebuilds with --sweep and --lessons"
+    },
+    {
+     "file": "scripts/check_board_layout.py",
+     "contains": "def editor_in_browser(page, web):",
+     "how": "CI taps a paragraph, edits it, saves, sees Saved and the store's fields, pins a comment to picked words and sees a 409 said"
+    }
+   ]
   },
   {
    "id": "queue-consolidation-and-fresh-sunday-ideas",

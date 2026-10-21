@@ -25,6 +25,7 @@
     '.wb-sheet button{min-height:44px;padding:8px 16px;border-radius:999px;border:1px solid var(--line,#888);background:transparent;color:inherit;font:700 14px Archivo,system-ui,sans-serif;cursor:pointer;margin:6px 6px 0 0}',
     '.wb-sheet .wb-save{background:var(--mint,#7EF0C0);border-color:var(--mint,#7EF0C0);color:#0C1512}',
     '.wb-sheet textarea{width:100%;box-sizing:border-box;margin-top:12px;min-height:120px;padding:12px;border:1px solid var(--line,#888);border-radius:10px;background:var(--bg,#fff);color:inherit;font:16px/1.5 system-ui,sans-serif}',
+    '.wb-quote{margin:10px 0 0;padding:6px 12px;border-left:3px solid var(--mint,#7EF0C0);color:var(--muted,#555);font:15px/1.45 system-ui,sans-serif;white-space:pre-wrap}',
     '.wb-thread{padding:12px 0;border-bottom:1px solid var(--line,#888)}.wb-thread small{display:block;margin-top:6px;color:var(--muted,#555)}.wb-thread p{white-space:pre-wrap;margin:4px 0}',
     '@media (max-width:640px){.wb-sheet{width:100%;max-width:100%;margin:auto 0 0;border-radius:16px 16px 0 0;max-height:90dvh;padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px))}}'
   ].join('\n');
@@ -153,11 +154,23 @@
     }
   });
 
-  const anchorFor = async element => {
+  // The id a comment is pinned to. With pick (the Drafts editor), also where in which draft and the words he picked:
+  // {anchor, box, paragraph, quote}, so a comment on a sentence can be found again after the words move.
+  const anchorFor = async (element, pick) => {
     const target = element?.closest("[id]") || element?.querySelector("[id]");
-    return target?.id || "board-root";
+    const id = target?.id || "board-root";
+    if (!pick) return id;
+    const out = { anchor: id };
+    const box = pick.box || element?.closest?.("[data-review]")?.dataset.review;
+    if (box) out.box = box;
+    if (Number.isInteger(pick.paragraph) && pick.paragraph >= 0) out.paragraph = pick.paragraph;
+    if (pick.quote) out.quote = String(pick.quote).slice(0, 2000);
+    return out;
   };
-  let dialog, list, editor, status, anchor = "board-root", replyTo = null;
+  // Optional fields a comment may carry (api/board/_contracts.ts checks each).
+  const EXTRA = ["box", "paragraph", "quote", "act", "ref"];
+  const extra = fields => Object.fromEntries(EXTRA.filter(k => fields?.[k] !== undefined && fields[k] !== null && fields[k] !== "").map(k => [k, fields[k]]));
+  let dialog, list, editor, status, quoted, anchor = "board-root", pinned = {}, replyTo = null;
   function renderComments() {
     if (!dialog?.open) return;
     list.replaceChildren();
@@ -166,7 +179,11 @@
     roots.sort((a,b) => String(a[1].body.at).localeCompare(String(b[1].body.at)));
     for (const [id, d] of roots) {
       const section = document.createElement("section"); section.className = "wb-thread";
-      const title = document.createElement("strong"); title.textContent = d.body.anchor === "board-root" ? "Whole board" : d.body.anchor; section.append(title);
+      const title = document.createElement("strong");
+      title.textContent = d.body.anchor === "board-root" ? "Whole board"
+        : Number.isInteger(d.body.paragraph) && d.body.box ? `Paragraph ${d.body.paragraph + 1} of ${d.body.box}` : d.body.anchor;
+      section.append(title);
+      if (d.body.quote) { const q = document.createElement("blockquote"); q.className = "wb-quote"; q.textContent = d.body.quote; section.append(q) }
       const original = d.body.original_metadata || {};
       const threadState = document.createElement("span");
       threadState.textContent = original.resolved || original.thread_status?.resolved ? " · Resolved in source" : " · Open";
@@ -188,9 +205,11 @@
   }
   const comments = {
     anchorFor,
-    create: async ({ anchor: a, text }) => {
+    create: async ({ anchor: a, text, ...fields }) => {
       const id = crypto.randomUUID();
-      await doc("comments", id).set({ thread_id: id, anchor: a, text, at: new Date().toISOString() }); return { threadId: id };
+      const where = typeof a === "object" && a ? a : { anchor: a };
+      await doc("comments", id).set({ thread_id: id, anchor: where.anchor, text, at: new Date().toISOString(), ...extra({ ...where, ...fields }) });
+      return { threadId: id };
     },
     reply: async (threadId, text) => {
       if (!states.has("comments")) await refresh("comments");
@@ -198,8 +217,9 @@
       if (!parent) throw new Error("Thread not found");
       await doc("comments", crypto.randomUUID()).set({ thread_id: threadId, anchor: parent.body.anchor, text, at: new Date().toISOString() });
     },
-    openComposer: async ({ element } = {}) => {
-      anchor = await anchorFor(element); replyTo = null;
+    openComposer: async ({ element, box, paragraph, quote } = {}) => {
+      const where = await anchorFor(element, { box, paragraph, quote });
+      anchor = where.anchor; pinned = extra(where); delete pinned.anchor; replyTo = null;
       if (!dialog) {
         dialog = document.createElement("dialog"); dialog.setAttribute("aria-label", "Board comments");
         dialog.className = "wb-sheet";
@@ -207,16 +227,18 @@
         const close = document.createElement("button"); close.textContent = "Close"; close.onclick = () => dialog.close();
         list = document.createElement("div"); editor = document.createElement("textarea"); editor.setAttribute("aria-label", "Your comment"); editor.rows = 5; editor.maxLength = 30000;
         status = document.createElement("p"); status.setAttribute("role", "status");
+        quoted = document.createElement("blockquote"); quoted.className = "wb-quote"; quoted.hidden = true;
         const save = document.createElement("button"); save.textContent = "Save comment"; save.className = "wb-save";
         save.onclick = async () => {
           const text = editor.value.trim(); if (!text) { status.textContent = "Write a comment first."; return }
           save.disabled = true;
-          try { if (replyTo) await comments.reply(replyTo, text); else await comments.create({ anchor, text }); if (editor.value.trim() === text) editor.value = ""; replyTo = null; status.textContent = "Comment saved."; renderComments() }
+          try { if (replyTo) await comments.reply(replyTo, text); else await comments.create({ anchor, text, ...pinned }); if (editor.value.trim() === text) editor.value = ""; replyTo = null; status.textContent = "Comment saved."; renderComments() }
           catch (e) { status.textContent = e.message } finally { save.disabled = false }
         };
-        dialog.append(heading, close, list, editor, save, status); document.body.append(dialog);
+        dialog.append(heading, close, list, quoted, editor, save, status); document.body.append(dialog);
         subscribe("comments", null, renderComments, e => { status.textContent = e.message });
       }
+      quoted.textContent = pinned.quote ? `On: ${pinned.quote}` : ""; quoted.hidden = !pinned.quote;
       status.textContent = ""; dialog.showModal(); renderComments(); editor.focus();
     }
   };

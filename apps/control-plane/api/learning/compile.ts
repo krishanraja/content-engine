@@ -4,7 +4,7 @@ import { withContentRun } from '../_runs.js'
 import { supabase } from '../_supabase.js'
 import {
   LOOKBACK_DAYS, MIN_INSTANCES,
-  presetProposals, judgeProposals, handRewriteProposals, toProposalRow,
+  presetProposals, judgeProposals, handRewriteProposals, repeatedEditClassProposals, toProposalRow,
   type CalibrationRow, type EditRow,
 } from './_patterns.js'
 
@@ -29,6 +29,11 @@ import {
 //   ceremony; retiring it makes the panel cheaper and its disagreement more
 //   meaningful. This is the mechanism that stops the panel becoming theatre.
 //
+//   The same class of change, made again and again on the publish board. His
+//   saved board edits reach the ledger with the class edit_sweep.py gave them
+//   (number or fact, claim, structure, tone, wording). Three of one class in
+//   the lookback is a candidate standing rule, proposed and never applied.
+//
 //   What he rewrites by hand after the machine writes it. The highest-signal
 //   thing in the product: a manual edit immediately after an accepted machine
 //   edit is him fixing something the machine got wrong in a way no rubric
@@ -47,7 +52,7 @@ async function handler(req: VercelRequest, res: VercelResponse) {
   const [edits, calibration] = await Promise.all([
     supabase
       .from('content_edit_events')
-      .select('event_id, action, mode, value, subject_id, occurred_at')
+      .select('event_id, action, mode, value, subject_id, occurred_at, surface, reason_code')
       // His hand only. An agent session's own drafts and rewrites are
       // recorded as observations (see operatorAttribution in _editEvents.ts)
       // and are never evidence of his taste.
@@ -83,6 +88,7 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     ...presetProposals(editRows),
     ...judgeProposals(calibrationRows),
     ...handRewriteProposals(editRows),
+    ...repeatedEditClassProposals(editRows),
   ]
 
   if (!proposals.length) {
