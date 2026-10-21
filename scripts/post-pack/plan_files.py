@@ -61,8 +61,9 @@ STAGED = REPO / '.cache' / 'post-pack'  # build.py's default: <pack folder>/<sec
 STUDIO_CONFIG = REPO / 'config' / 'studio.json'
 SECTION = {'video-script': library.VIDEO, 'image': library.COVERS}  # build.KINDS
 FIXED = {'video-script': 'video-script'}  # build.KINDS: the name the pack gives a kind, the file's type kept
-USUAL = {'long': 'video-script.md', 'short': 'video-script-90-seconds.md'}  # recording_match.PACK_NAMES
-CUTS = ('long', 'short')
+# recording_match.PACK_NAMES. The feature is a third cut only on a piece Krish called one for (house rule FEATURE).
+USUAL = {'long': 'video-script.md', 'short': 'video-script-90-seconds.md', 'feature': 'video-script-feature.md'}
+CUTS = ('long', 'short', 'feature')
 DATED_PLAN = re.compile(r'^(\d{4}-\d{2}-\d{2})-')
 POST_FOLDER = re.compile(r'^\d{4}-\d{2}-\d{2} ')  # 2026-10-12 Mon follow.the.money - Who gets paid
 SEARCH_DEPTH = 3

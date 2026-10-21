@@ -1030,6 +1030,36 @@
      "file": ".agents/skills/plan-week/SKILL.md",
      "contains": "Never propose a feature.",
      "how": "plan-week no longer proposes a weekly deep cut"
+    },
+    {
+     "file": "scripts/post-pack/making.py",
+     "contains": "NOT_A_FEATURE = (",
+     "how": "making.py scripts takes a third, feature script only on a piece in config/features.json, checked with story_check --cut feature, and refuses three scripts for any other piece"
+    },
+    {
+     "file": "apps/control-plane/api/_making.ts",
+     "contains": "export function makingCuts(",
+     "how": "the engine keeps the feature's hash, read-back and takes, and holds Record and Video assets open until a feature piece's feature is recorded and produced"
+    },
+    {
+     "file": "scripts/post-pack/teleprompter_send.py",
+     "contains": "'feature_left': making.FEATURE in hashes",
+     "how": "teleprompter_send.py plans the feature as a third script in the piece's folder, titled \"15-minute feature\", only for a feature piece"
+    },
+    {
+     "file": "scripts/post-pack/recording_match.py",
+     "contains": "FEATURE_FROM = 600",
+     "how": "recording_match.py places a take on the feature cut, stamped with the feature script's hash"
+    },
+    {
+     "file": ".agents/skills/produce-video/SKILL.md",
+     "contains": "Its own spoken-length cap",
+     "how": "produce-video makes the feature through the one-shot episode path, with its own spoken-length cap"
+    },
+    {
+     "file": "scripts/post-pack/publish_kit.py",
+     "contains": "FEATURE_YOUTUBE = f'YouTube long-form (the {FEATURE_NAME})'",
+     "how": "the publish page adds a YouTube long-form step and a Spotify episode step for a feature piece"
     }
    ]
   },

@@ -41,7 +41,8 @@
   ],
   "cuts": {
     "long": { "name": "5-minute" },
-    "short": { "name": "90-second" }
+    "short": { "name": "90-second" },
+    "feature": { "name": "15-minute feature", "only_when_called": "a third script, only on a piece Krish called a 15-minute feature for (config/features.json, house rule FEATURE); the same terms: one script, in the piece's folder, updated in place, never deleted" }
   },
   "words_per_minute": 150,
   "duration": "the script's spoken words / 150 minutes, in whole seconds",

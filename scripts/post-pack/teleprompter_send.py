@@ -15,11 +15,16 @@ its status is "confirmed".
 One folder per piece, named "<Ddd D Mon> <series> - <subject>" ("Mon 12 Oct
 follow.the.money - Who gets paid for AI songs"), holding one script per
 cut, titled "<Ddd D Mon> - <cut> - <subject>" ("Mon 12 Oct - 5-minute - Who
-gets paid for AI songs"). A script's text is the script file's spoken
+gets paid for AI songs"). A piece Krish called a 15-minute feature for
+(config/features.json, house rule FEATURE) gets a third script in the same
+folder, on the same terms, titled with "15-minute feature" ("Mon 2 Nov -
+15-minute feature - Who gets paid for AI songs"): plan takes it third, and
+only for such a piece. A script's text is the script file's spoken
 words, any markdown stripped, its paragraphs separated by a blank line; its
 duration is those words at 150 a minute, in whole seconds.
 
     python teleprompter_send.py plan PIECE long.md short.md [--post post.json] [--json]
+    python teleprompter_send.py plan PIECE long.md short.md feature.md     # a 15-minute feature piece
     python teleprompter_send.py record PIECE CUT --folder ID --script ID --sha SHA256
                    [--title TITLE] [--folder-name NAME] [--sent-at TIME]
     python teleprompter_send.py record PIECE CUT [--folder ID] --error "what Teleprompter said"
@@ -80,7 +85,8 @@ import library  # noqa: E402  subchannel_name: the series as the brand writes it
 CONFIG = REPO / 'config' / 'teleprompter.json'
 PLANS = REPO / 'docs' / 'plans'
 WORKBENCH = REPO / 'WORKBENCH.md'
-CUTS = making.CUTS
+CUTS = making.CUTS  # the two every piece gets
+ALL_CUTS = making.ALL_CUTS  # and the 15-minute feature, only on a piece Krish called one for
 PY = 'python' if os.name == 'nt' else 'python3'
 SELF = 'scripts/post-pack/teleprompter_send.py'
 DAYS = ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun')
@@ -94,7 +100,7 @@ FOLDER = re.compile(r'^([A-Z][a-z]{2} \d{1,2} [A-Z][a-z]{2}) (\S+) - (.+)$')
 UUID_ANY = r'[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}'
 # A send made by hand, as WORKBENCH.md keeps its record line (12 October's four).
 HAND_LINE = re.compile(r'(python3? \S*making\.py\b.*?\b([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\s+teleprompter\s+'
-                       r'(long|short)\b.*?--script\s+' + UUID_ANY + r'.*)$')
+                       r'(long|short|feature)\b.*?--script\s+' + UUID_ANY + r'.*)$')
 
 
 class TeleprompterError(making.MakingError):
@@ -116,7 +122,7 @@ def load_config(path=CONFIG):
     for key in ('said', 'allowed_tools', 'folder_name', 'script_title', 'cuts', 'words_per_minute', 'update_fields', 'create_fields'):
         if not cfg.get(key):
             raise TeleprompterError(f'{name} has no {key}')
-    for cut in CUTS:
+    for cut in ALL_CUTS:
         if not isinstance(cfg['cuts'].get(cut), dict) or not cfg['cuts'][cut].get('name'):
             raise TeleprompterError(f'{name} has no cuts.{cut}')
     if any('delete' in str(tool).lower() for tool in cfg['allowed_tools']):
@@ -282,15 +288,23 @@ def hand_made(piece_id, cut, workbench=WORKBENCH):
     return None
 
 
-def plan(piece_id, script_paths, call=None, cfg=None, post_path=None, plans=PLANS, workbench=WORKBENCH):
-    """What to send for each cut, and the calls that send it. Sends nothing."""
+def plan(piece_id, script_paths, call=None, cfg=None, post_path=None, plans=PLANS, workbench=WORKBENCH, features=None):
+    """What to send for each cut, and the calls that send it. Sends nothing.
+    A third script is the 15-minute feature, taken only for a piece Krish
+    called one for (making.feature_piece; features is its file, for the
+    self-test)."""
     cfg = cfg or load_config()
     if not making.UUID.match(piece_id or ''):
         raise TeleprompterError('the piece id is the content_ideas uuid (post.json "piece_id")')
     piece_id = piece_id.lower()
     script_paths = list(script_paths or [])
-    if len(script_paths) != len(CUTS):
-        raise TeleprompterError('give both scripts, the long cut first: plan PIECE long.md short.md')
+    if len(script_paths) == len(ALL_CUTS) and not making.feature_piece(piece_id, features):
+        raise TeleprompterError('a third script is the 15-minute feature, only for a piece Krish called one for (config/features.json, '
+                                'on his call alone), and this piece is not one: plan PIECE long.md short.md')
+    if len(script_paths) not in (len(CUTS), len(ALL_CUTS)):
+        raise TeleprompterError('give both scripts, the long cut first: plan PIECE long.md short.md (and, for a 15-minute feature piece, '
+                                'the feature third: plan PIECE long.md short.md feature.md)')
+    cuts = ALL_CUTS[:len(script_paths)]
     record = making.record_of(piece_id, call)
     check = record.get('script_check') if isinstance(record.get('script_check'), dict) else {}
     if check.get('passed') is not True:
@@ -298,9 +312,10 @@ def plan(piece_id, script_paths, call=None, cfg=None, post_path=None, plans=PLAN
                                 'first; nothing is sent')
     hashes = making.current_hashes(record)
     texts = {}
-    for cut, path in zip(CUTS, script_paths):
+    for cut, path in zip(cuts, script_paths):
         if cut not in hashes:
-            raise TeleprompterError(f'the record holds no hash for the {cut} script: run making.py PIECE scripts long.md short.md again')
+            raise TeleprompterError(f'the record holds no hash for the {cut} script: run making.py PIECE scripts long.md short.md'
+                                    f'{" feature.md" if cut == making.FEATURE else ""} again')
         try:
             texts[cut] = Path(path).read_text(encoding='utf-8-sig')
         except (OSError, UnicodeDecodeError) as error:
@@ -310,10 +325,12 @@ def plan(piece_id, script_paths, call=None, cfg=None, post_path=None, plans=PLAN
             raise TeleprompterError(f'{Path(path).name} does not hold the {cut} words the check passed (its words hash {got[:12]}, the '
                                     f'record holds {hashes[cut][:12]}): give the files making.py scripts checked, or check these first')
     held = record.get('teleprompter') if isinstance(record.get('teleprompter'), dict) else {}
-    out = {'piece_id': piece_id, 'cuts': [], 'hand_made': {}}
-    states = {cut: making.teleprompter_state(record, cut) for cut in CUTS}
+    # A feature's words on the record with no file given: planned when it is given third.
+    out = {'piece_id': piece_id, 'cuts': [], 'hand_made': {},
+           'feature_left': making.FEATURE in hashes and making.FEATURE not in cuts}
+    states = {cut: making.teleprompter_state(record, cut) for cut in cuts}
     # Words Krish reads on the teleprompter were heard first by two fresh 12-year-old readers (house rule R7).
-    unread = [cut for cut in CUTS if states[cut][0] != 'in' and not making.read_back_of(record, cut)]
+    unread = [cut for cut in cuts if states[cut][0] != 'in' and not making.read_back_of(record, cut)]
     if unread:
         raise TeleprompterError(f'the {" and ".join(making.CUT_NAME[c] for c in unread)} script{"s" if len(unread) > 1 else ""}\' current words '
                                 'have not been read back: two fresh readers, each an ordinary 12-year-old hearing it once, must find nothing '
@@ -330,7 +347,7 @@ def plan(piece_id, script_paths, call=None, cfg=None, post_path=None, plans=PLAN
     folder_id = held.get('folder_id') if making.TELEPROMPTER_ID.match(str(held.get('folder_id') or '')) else None
     name = held.get('folder_name') if folder_id and held.get('folder_name') else folder_name(names)
     out.update(names=names, names_from=where, folder_id=folder_id, folder_name=name)
-    for cut, path in zip(CUTS, script_paths):
+    for cut, path in zip(cuts, script_paths):
         state, entry = states[cut]
         entry = entry or {}
         text, seconds = spoken_text(texts[cut]), duration_seconds(texts[cut], cfg)
@@ -382,6 +399,9 @@ def show_plan(p, cfg=None):
         if c['action'] == 'none':
             lines.append(f'{c["name"]} cut: Teleprompter already holds these words (sent {c.get("sent_at")}), script "{c.get("title")}"; '
                          'nothing to do.')
+    if p.get('feature_left'):
+        lines.append(f'{making.CUT_NAME[making.FEATURE]}: its words are on the record, but no file was given for it, so it is not in '
+                     'this plan: plan again with it third (plan PIECE long.md short.md feature.md).')
     sending = [c for c in p['cuts'] if c['action'] != 'none']
     if not sending:
         lines.append('Nothing to send.')
@@ -453,11 +473,11 @@ def _get(call, path):
 
 
 def scripts_of(post_path):
-    """{cut: path} of the piece's two scripts on this machine (plan_files)."""
+    """{cut: path} of the piece's scripts on this machine (plan_files): the two, and a feature piece's feature."""
     import plan_files
     found = {}
     for item in plan_files.video_files(post_path):
-        if item['kind'] == 'video-script' and item.get('cut') in CUTS and item.get('path') and item['cut'] not in found:
+        if item['kind'] == 'video-script' and item.get('cut') in ALL_CUTS and item.get('path') and item['cut'] not in found:
             found[item['cut']] = item['path']
     return found
 
@@ -514,7 +534,8 @@ def pending(call=None, monday=None, plans=PLANS, retry=False, now=None, workbenc
     for piece in seen.values():
         record = _get(call, f'/api/content-ideas/{piece["id"]}/making').get('making') or {}
         waiting, held, hand = {}, {}, {}
-        for cut in CUTS:
+        # The feature has a state only on a record holding its hash: a piece Krish called a feature for.
+        for cut in ALL_CUTS:
             state, entry = making.teleprompter_state(record, cut)
             if state not in ('missing', 'older', 'failed'):
                 continue
@@ -530,18 +551,19 @@ def pending(call=None, monday=None, plans=PLANS, retry=False, now=None, workbenc
             continue
         post_path = find_post(piece['id'], plans)
         scripts = scripts_of(post_path) if post_path else {}
+        needed = [c for c in ALL_CUTS if c in CUTS or c in making.current_hashes(record)]
         if hand:
             line = None
             why = 'a send made by hand is not on the record yet: run its line below first, then pending again (no second script)'
         elif not waiting:
             line, why = None, 'held back'
-        elif post_path and all(cut in scripts for cut in CUTS):
-            line = ' '.join(_q(x) for x in [PY, SELF, 'plan', piece['id'], _shown(scripts['long']), _shown(scripts['short'])])
+        elif post_path and all(cut in scripts for cut in needed):
+            line = ' '.join(_q(x) for x in [PY, SELF, 'plan', piece['id']] + [_shown(scripts[c]) for c in needed])
             why = None
         else:
             line = None
             why = ('no post.json in docs/plans names it' if not post_path
-                   else 'its scripts are not on this machine (' + ', '.join(c for c in CUTS if c not in scripts) + ')')
+                   else 'its scripts are not on this machine (' + ', '.join(c for c in needed if c not in scripts) + ')')
         out.append({**piece, 'cuts': waiting, 'held': held, 'hand_made': hand, 'plan': line, 'why': why})
     out.sort(key=lambda p: (p.get('scheduled_for') or '9999-12-31', p['id']))
     return out
@@ -818,6 +840,96 @@ def self_test():
         check('pending: the real WORKBENCH lines of 12 October are read, while it keeps them',
               bool(hand_made('904658db-4df2-4537-a0ed-ebe93e081db7', 'long')) or 'teleprompter long' not in WORKBENCH.read_text(encoding='utf-8'), True)
 
+    # The 15-minute feature (house rule FEATURE): a third script in the same folder, on the same terms, only on a feature piece.
+    check('config: the feature has its name, "15-minute feature"', cfg['cuts']['feature']['name'], '15-minute feature')
+    check('names: the feature\'s title, in the same pattern', script_title(names, 'feature', cfg), 'Mon 12 Oct - 15-minute feature - Who gets paid for AI songs')
+    with tempfile.TemporaryDirectory() as tmp:
+        t = Path(tmp)
+        bench = t / 'WORKBENCH.md'
+        bench.write_text('# Workbench\n', encoding='utf-8')
+        plans_dir = t / 'plans' / '2026-10-12-monday'
+        plans_dir.mkdir(parents=True)
+        words = {'long': 'The long script.\n', 'short': 'The short script.\n', 'feature': 'The feature script.\n\nIt runs fifteen minutes.\n'}
+        for cut, text in words.items():
+            (plans_dir / f'{cut}.md').write_text(text, encoding='utf-8')
+        (plans_dir / 'post.json').write_text(json.dumps({**post, 'files': [{'kind': 'video-script', 'file': f'{c}.md', 'cut': c} for c in words]}),
+                                             encoding='utf-8')
+        shas = {c: making.script_hash(w) for c, w in words.items()}
+        read = lambda sha: {'script_sha256': sha, 'at': '2026-10-21T12:00:00Z', 'by': 'Claude Code', 'readers': ['A', 'B'], 'found': 'nothing lost'}
+        feature_id = '0C3E7F55-9C1B-4F6A-8E2D-3B5A1C7D9E01'
+        sent = {c: {'script_id': long_id if c == 'long' else short_id, 'title': 't', 'script_sha256': shas[c], 'sent_at': 'x', 'by': 'y'} for c in CUTS}
+        feature_record = {'script_check': {'passed': True, 'checked_at': '2026-10-21T12:00:00Z', 'problems': [], 'hashes': dict(shas),
+                                           'read_back': {c: read(s) for c, s in shas.items()}},
+                          'teleprompter': {'folder_id': folder, 'folder_name': folder_name(names), 'cuts': dict(sent)}}
+        features = t / 'features.json'
+        features.write_text(json.dumps({'pieces': {pid: {'said': 'Krish, 2026-10-21: a feature for this one'}}}), encoding='utf-8')
+        not_features = t / 'none.json'
+        not_features.write_text(json.dumps({'pieces': {}}), encoding='utf-8')
+        feature_engine = lambda method, path, body: (200, json.dumps({'ok': True, 'making': feature_record, 'steps': []}))
+        three = [plans_dir / f'{c}.md' for c in words]
+        p = plan(pid, three, feature_engine, cfg, post_path=plans_dir / 'post.json', workbench=bench, features=features)
+        made = [c for c in p['cuts'] if c['cut'] == 'feature'][0]
+        check('feature: a third script in the piece\'s own folder, made with create_script and the 15-minute feature title',
+              ([c['action'] for c in p['cuts']], p['new_folder'], made['call']['tool'], made['call']['args']['folderId'], made['call']['args']['title'],
+               sorted(made['call']['args'])),
+              (['none', 'none', 'create'], False, 'create_script', folder, 'Mon 12 Oct - 15-minute feature - Who gets paid for AI songs',
+               ['duration', 'folderId', 'text', 'title']))
+        shown = show_plan(p, cfg)
+        check('feature: the plan lists the folder first, never a second folder, and the record line for the feature',
+              ('create_folder {' in shown, f'record {pid} feature --folder {folder}' in shown), (False, True))
+        refused('feature: a third script for a piece Krish did not call a feature for is refused',
+                lambda: plan(pid, three, feature_engine, cfg, post_path=plans_dir / 'post.json', workbench=bench, features=not_features), 'on his call alone')
+        no_hash = {**feature_record, 'script_check': {**feature_record['script_check'], 'hashes': {c: shas[c] for c in CUTS}}}
+        refused('feature: a feature piece whose record holds no feature hash is sent nothing',
+                lambda: plan(pid, three, lambda m, path, b: (200, json.dumps({'ok': True, 'making': no_hash, 'steps': []})), cfg,
+                             post_path=plans_dir / 'post.json', workbench=bench, features=features), 'scripts long.md short.md feature.md again')
+        unread = {**feature_record, 'script_check': {**feature_record['script_check'], 'read_back': {c: read(shas[c]) for c in CUTS}}}
+        refused('feature: the feature\'s words are read back before they are sent',
+                lambda: plan(pid, three, lambda m, path, b: (200, json.dumps({'ok': True, 'making': unread, 'steps': []})), cfg,
+                             post_path=plans_dir / 'post.json', workbench=bench, features=features), 'have not been read back')
+        two = plan(pid, three[:2], feature_engine, cfg, post_path=plans_dir / 'post.json', workbench=bench, features=features)
+        check('feature: plan with only the two says the feature is left for a plan with it third',
+              (two['feature_left'], [c['cut'] for c in two['cuts']], 'plan again with it third' in show_plan(two, cfg)), (True, ['long', 'short'], True))
+        updated = {**feature_record, 'teleprompter': {**feature_record['teleprompter'], 'cuts': {**sent, 'feature': {
+            'script_id': feature_id, 'title': 'Mon 12 Oct - 15-minute feature - Who gets paid for AI songs', 'script_sha256': 'e' * 64, 'sent_at': 'x', 'by': 'y'}}}}
+        again = plan(pid, three, lambda m, path, b: (200, json.dumps({'ok': True, 'making': updated, 'steps': []})), cfg,
+                     post_path=plans_dir / 'post.json', workbench=bench, features=features)
+        check('feature: changed feature words update its own script in place, text and duration only',
+              (again['cuts'][2]['action'], again['cuts'][2]['call']['tool'], sorted(again['cuts'][2]['call']['args']), again['cuts'][2]['call']['args']['id']),
+              ('update', 'update_script', ['duration', 'id', 'text'], feature_id))
+        check('feature: a hand-made feature send in WORKBENCH.md is read', bool(HAND_LINE.search(
+            f'python3 scripts/post-pack/making.py {pid} teleprompter feature --folder {folder} --script {feature_id} --sha {"a" * 64}')), True)
+
+        def feature_week(method, path, body):
+            if path.startswith('/api/week/options'):
+                inflight = [{'id': pid, 'idea': 'songs', 'scheduled_for': '2026-10-12'}] if 'week_start=2026-10-12' in path else []
+                return 200, json.dumps({'series': [{'in_flight': inflight}]})
+            return 200, json.dumps({'ok': True, 'making': feature_record, 'steps': []})
+        found = pending(feature_week, date(2026, 10, 12), plans=t / 'plans', workbench=bench)
+        check('pending: a feature piece\'s feature not sent is listed, with a plan line naming all three scripts',
+              ([(f['id'], f['cuts']) for f in found], found[0]['plan'].endswith(' '.join(_shown(x) for x in three))),
+              ([(pid, {'feature': 'missing'})], True))
+        check('pending: said as the 15-minute feature', '15-minute feature: not sent' in show_pending(found), True)
+        sent_all = {**feature_record, 'teleprompter': {**feature_record['teleprompter'], 'cuts': {**sent, 'feature': {
+            'script_id': feature_id, 'title': 't', 'script_sha256': shas['feature'], 'sent_at': 'x', 'by': 'y'}}}}
+        check('pending: once Teleprompter holds the feature\'s words, nothing is pending',
+              pending(lambda m, path, b: feature_week(m, path, b) if path.startswith('/api/week') else
+                      (200, json.dumps({'ok': True, 'making': sent_all, 'steps': []})), date(2026, 10, 12), plans=t / 'plans', workbench=bench), [])
+        posts = []
+
+        def writer(method, path, body):
+            if method == 'POST':
+                posts.append(body)
+                return 200, json.dumps({'ok': True, 'making': {**feature_record, **body}, 'steps': []})
+            return 200, json.dumps({'ok': True, 'making': feature_record, 'steps': []})
+        ns = lambda **kw: argparse.Namespace(**{'folder': None, 'script': None, 'sha': None, 'title': None, 'folder_name': None,
+                                                'sent_at': None, 'error': None, **kw})
+        record(pid, 'feature', ns(folder=folder, script=feature_id.lower(), sha=shas['feature'], sent_at='2026-10-21T12:30:00Z'), writer, 'Claude Code', cfg)
+        check('record: the feature\'s script is recorded in the piece\'s folder, titled from it',
+              (posts[-1]['teleprompter']['folder_id'], posts[-1]['teleprompter']['cuts']['feature']['script_id'],
+               posts[-1]['teleprompter']['cuts']['feature']['title']),
+              (folder, feature_id, 'Mon 12 Oct - 15-minute feature - Who gets paid for AI songs'))
+
     # A failed send waits six hours, unless its words changed or --retry.
     at = datetime(2026, 10, 12, 15, 0, tzinfo=timezone.utc)
     rec = {'script_check': {'passed': True, 'changed_at': {'long': '2026-10-12T09:00:00Z'}}}
@@ -860,8 +972,8 @@ def main(argv=None, call=None):
         ap.error('say what to do: plan, record or pending')
     try:
         if a.what == 'plan':
-            if len(a.args) != 3:
-                ap.error('plan PIECE long.md short.md')
+            if len(a.args) not in (3, 4):
+                ap.error('plan PIECE long.md short.md (and feature.md third, for a 15-minute feature piece)')
             cfg = load_config()
             p = plan(a.args[0], a.args[1:], call, cfg, post_path=a.post)
             print(json.dumps(p, indent=1, ensure_ascii=False) if a.json else show_plan(p, cfg))
