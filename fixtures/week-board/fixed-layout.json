@@ -1,9 +1,9 @@
 {
  "_about": "The fixed layout of the publish board, as check_board_layout.py reads it from three fed weeks, the hash of its layout file and colours, and the words Krish approved it in. It changes only with --update --approved (Ruling, Krish, 2026-10-21: the layout is held by CI and changes only with his recorded words).",
  "layout_version": 2,
- "approved": "Krish, 2026-10-21: Yes, record it (asked to approve part 3's Drafts layout, and again part 4's Publish run-sheet)",
+ "approved": "Krish, 2026-10-21: Yes, add the cards (asked whether the board's publish list gets the 15-minute feature's YouTube long-form and Spotify cards)",
  "files": {
-  "config/board-layout.json": "7d36335c3c6f0c6f121b68664a7713938b4109383c59a274ed0a102aac6d1d05",
+  "config/board-layout.json": "b8eb9b2b8ed539409f047be31d90fe63120ebdaaa41297fb1c94a1a4ca325666",
   "scripts/post-pack/tokens.css": "a38811b2df781b9169b3576986fa59cca5d870469190560bf8f5e9515c4de42f"
  },
  "weeks": {
