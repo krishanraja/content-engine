@@ -907,7 +907,8 @@ def self_test():
             return 200, json.dumps({'ok': True, 'making': feature_record, 'steps': []})
         found = pending(feature_week, date(2026, 10, 12), plans=t / 'plans', workbench=bench)
         check('pending: a feature piece\'s feature not sent is listed, with a plan line naming all three scripts',
-              ([(f['id'], f['cuts']) for f in found], found[0]['plan'].endswith(' '.join(_shown(x) for x in three))),
+              # Quoted as the printed command quotes them: a Windows temp folder (RUNNER~1) needs quoting.
+              ([(f['id'], f['cuts']) for f in found], found[0]['plan'].endswith(' '.join(_q(_shown(x)) for x in three))),
               ([(pid, {'feature': 'missing'})], True))
         check('pending: said as the 15-minute feature', '15-minute feature: not sent' in show_pending(found), True)
         sent_all = {**feature_record, 'teleprompter': {**feature_record['teleprompter'], 'cuts': {**sent, 'feature': {
