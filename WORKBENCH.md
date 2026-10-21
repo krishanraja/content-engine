@@ -1,5 +1,17 @@
 # Workbench: where we are and what's next
 
+## 21 October, afternoon: Wednesday drafts from Krish's board edits (Claude)
+
+Read his 13:21 board edit of the short script and his comment on the long
+("what does "a split" mean? I have no idea"). New drafts in
+`docs/plans/2026-10-21-draft-script.md` (804 words, "split" replaced by
+"draw") and `-90s.md` (195 words, his edits kept; two changes for the gates: his
+" - " pause is a full stop, and "lots of other people report that they're neck
+and neck" became "in another tester's trial, both caught every scam. Neck and
+neck." because the evidence is one tester). Learning `plain-score-words`.
+**Waiting on Krish:** his yes on the drafts, then Teleprompter update and
+board republish (Teleprompter still holds the morning's words).
+
 ## 21 October: the publish board has one fixed layout (Claude, part 1 of 4)
 
 Krish asked to standardise and lock the board so the engine only feeds it. He
