@@ -16,6 +16,14 @@ we're done, and then I check off the list what I have done as I do it."
     python week_board.py --show BOARD [--json]
     python week_board.py --self-test
 
+From the week of 26 October 2026 (config/board-layout.json, layout_from) every week is drawn in one fixed
+layout: five tabs, Ideas, Queue, Monday, Wednesday and Friday, and in each day the same four steps, Brief, Drafts,
+Record and Publish, each filled from data (--brief, --review, --teleprompter, the publish page, --materials) in the
+same place every week. verify() refuses a board in any other shape, and npm run check:board-layout holds it to
+fixtures/week-board/fixed-layout.json (Krish, 2026-10-21: "the rest of the content engine needs to know how to feed
+it and not be permitted to change random parts of the UI and UX"). docs/PUBLISH_BOARDS.md, "The fixed layout".
+Weeks before keep the layout below, the one they were published in.
+
 --week is the Monday. Each tab is one of:
 
   - made: a piece's whole publish page (publish_manager.py's page, given
@@ -163,6 +171,87 @@ CUTS = (
 # What the day page's buttons do; the board's script handles these and only these.
 KNOWN_ACTS = {'text', 'article', 'image', 'download', 'done'}
 
+# ------------------------------------------------------------------ the fixed layout
+# Krish, 2026-10-21: "how do you recommend we standardise and lock in this publish board so the content engine can
+# just feed it? ... For each publish session things move around." From layout_from on, every week is drawn from
+# config/board-layout.json: five tabs (Ideas, Queue, Monday, Wednesday, Friday), and in each day the same four steps
+# (Brief, Drafts, Record, Publish), each with its own slots. A session feeds the slots; it never adds a section, moves
+# one or brings its own styles, and verify() refuses a board that does. Weeks before layout_from keep the layout they
+# were published in, so a rebuild of one changes nothing he has seen.
+LAYOUT_FILE = Path(__file__).resolve().parents[2] / 'config' / 'board-layout.json'
+FEATURES_FILE = Path(__file__).resolve().parents[2] / 'config' / 'features.json'
+TOP_TABS = ('ideas', 'queue', 'monday', 'wednesday', 'friday')
+DAY_STEPS = ('brief', 'drafts', 'record', 'publish')
+
+
+def load_layout(path=LAYOUT_FILE):
+    """config/board-layout.json, checked: the tabs and the day's steps in their one order, the cuts, and every
+    publish step with a key the saved ticks already use."""
+    try:
+        data = json.loads(Path(path).read_text(encoding='utf-8'))
+    except (OSError, ValueError) as error:
+        raise BoardError(f'{path}: the board layout cannot be read ({error})')
+    tabs = tuple(t.get('key') for t in data.get('tabs') or [])
+    steps = tuple(s.get('key') for s in data.get('day_steps') or [])
+    if tabs != TOP_TABS or steps != DAY_STEPS:
+        raise BoardError(f'{path}: the tabs must be {TOP_TABS} and the day steps {DAY_STEPS}, in that order')
+    keys = [s.get('key') for s in (data.get('publish_steps') or {}).get('steps') or []]
+    for need in ('record-long', 'record-short', 'substack', 'youtube', 'shorts', 'tiktok', 'reels'):
+        if need not in keys:
+            raise BoardError(f'{path}: the publish step {need} is missing; its saved ticks would be orphaned')
+    for cut in ('long', 'short', 'feature'):
+        if not isinstance((data.get('cuts') or {}).get(cut), dict):
+            raise BoardError(f'{path}: no {cut} cut')
+    date.fromisoformat(data['layout_from'])
+    return data
+
+
+LAYOUT = load_layout()
+LAYOUT_FROM = date.fromisoformat(LAYOUT['layout_from'])
+FIXED = False  # whether the board being built is in the fixed layout; set by use_layout()
+FEATURE_ONLY = set()
+LEGACY_LAYOUT = {'STEPS': STEPS, 'SECTION_STEP': SECTION_STEP, 'CUTS': CUTS,
+                 'DROPPED_CHANNELS': {'whatsapp': 'WhatsApp', 'notes': 'Substack Notes'}}
+
+
+def fixed_layout(monday):
+    return monday >= LAYOUT_FROM
+
+
+def use_layout(monday):
+    """Point the module's step and cut tables at the layout of this week: the fixed one from layout_from, else the
+    one the week was published in. Every function below reads them, so one switch keeps a week in one layout."""
+    global STEPS, LABEL, STANDING, SECTION_STEP, CUTS, FIXED, FEATURE_ONLY, DROPPED_CHANNELS
+    FIXED = fixed_layout(monday)
+    if FIXED:
+        ps = LAYOUT['publish_steps']
+        STEPS = tuple((s['key'], s['label'], s.get('channel'), bool(s.get('counted'))) for s in ps['steps'])
+        FEATURE_ONLY = {s['key'] for s in ps['steps'] if s.get('feature_only')}
+        SECTION_STEP = dict(ps['sections'])
+        DROPPED_CHANNELS = dict(ps['dropped_channels'])
+        cuts = LAYOUT['cuts']
+        CUTS = (('long', 'record-long', cuts['long']['short_name'], cuts['long']['shape']),
+                ('short', 'record-short', cuts['short']['short_name'], cuts['short']['shape']),
+                ('feature', 'record-feature', cuts['feature']['short_name'], cuts['feature']['shape']))
+    else:
+        STEPS, SECTION_STEP, CUTS = LEGACY_LAYOUT['STEPS'], LEGACY_LAYOUT['SECTION_STEP'], LEGACY_LAYOUT['CUTS']
+        DROPPED_CHANNELS = dict(LEGACY_LAYOUT['DROPPED_CHANNELS'])
+        FEATURE_ONLY = set()
+    LABEL = {k: label for k, label, *_ in STEPS}
+    STANDING = sum(1 for *_, s in STEPS if s)
+
+
+def feature_piece(piece_id, path=None):
+    """True when Krish called a 15-minute feature for this piece (config/features.json). Krish, 2026-10-21: "From
+    time to time I might do a special 15 min feature"; it replaced the weekly deep cut ("Yes, replace it")."""
+    if not piece_id:
+        return False
+    try:
+        data = json.loads(Path(path or FEATURES_FILE).read_text(encoding='utf-8'))
+    except (OSError, ValueError):
+        return False
+    return isinstance((data.get('pieces') or {}).get(piece_id), dict)
+
 E = html.escape
 
 
@@ -281,7 +370,9 @@ TICK_TAIL = '<span class="t-when"></span><span class="t-err" aria-live="polite">
 
 
 def row_tick(day, key, deep=False):
-    label = DEEP_LABEL.get(key, LABEL[key]) if deep else LABEL[key]
+    # deep: the week's deep cut in a week before the fixed layout; in the fixed layout, a 15-minute feature piece,
+    # whose own steps carry their own labels.
+    label = DEEP_LABEL.get(key, LABEL[key]) if deep and not FIXED else LABEL[key]
     return (f'<label class="tick row-tick">{tick_box(f"{day}-{key}", label)}'
             f'<span class="t-label">{E(label)}</span>{TICK_TAIL}</label>')
 
@@ -292,8 +383,9 @@ def section_tick(day, key):
 
 
 def checklist(day, p, deep=False):
-    standing = ''.join(row_tick(day, k, deep) for k, _, _, s in STEPS if s)
-    optional = ''.join(row_tick(day, k, deep) for k, _, _, s in STEPS if not s)
+    shown = [(k, s) for k, _, _, s in STEPS if k not in FEATURE_ONLY or deep]
+    standing = ''.join(row_tick(day, k, deep) for k, s in shown if s)
+    optional = ''.join(row_tick(day, k, deep) for k, s in shown if not s)
     n = STANDING
     return (f'<div class="ticks" id="{p}ticks" role="region" aria-labelledby="{p}ticks-h">'
             f'<div class="ticks-head"><h2 id="{p}ticks-h">Publish checklist</h2>'
@@ -312,6 +404,19 @@ VIDEO_CUTS = (('long', 'Long video (wide, 16:9)', 'YouTube, Substack and Spotify
               ('short', '90-second video (tall, 9:16)', 'Shorts, Reels, TikTok and LinkedIn'))
 
 
+def video_cuts(feature=False):
+    """(cut, label, where it goes) for each finished video: the fixed layout's cuts from config/board-layout.json,
+    with the feature only on a feature piece; before it, the cuts the week was published with."""
+    if not FIXED:
+        return VIDEO_CUTS
+    c = LAYOUT['cuts']
+    rows = [('long', f'{c["long"]["name"]} (wide, 16:9)', c['long']['for']),
+            ('short', f'{c["short"]["name"]} (tall, 9:16)', c['short']['for'])]
+    if feature:
+        rows.append(('feature', f'{c["feature"]["name"]} (wide, 16:9)', c['feature']['for']))
+    return tuple(rows)
+
+
 def videos_card(day, p, videos, deep=False):
     """The finished videos at the top of a made day: each cut's Drive file,
     to open, to download straight to the computer, and its link to copy.
@@ -321,13 +426,13 @@ def videos_card(day, p, videos, deep=False):
     video_assets; a video's "url" is its Drive link once it is in Drive."""
     by_cut = {}
     for v in videos or []:
-        if isinstance(v, dict) and v.get('cut') in ('long', 'short'):
+        if isinstance(v, dict) and v.get('cut') in ('long', 'short', 'feature'):
             by_cut[v['cut']] = v
     if not by_cut:
         return ''
     rows = []
-    for cut, label, where in VIDEO_CUTS:
-        if deep and cut == 'long':
+    for cut, label, where in video_cuts(deep):
+        if deep and cut == 'long' and not FIXED:
             label = 'deep cut, 8 minutes or more (wide, 16:9)'
         v = by_cut.get(cut)
         if not v:
@@ -368,13 +473,15 @@ def videos_card(day, p, videos, deep=False):
             + ''.join(rows) + '<p class="rec-how">Download each to your computer, then upload it where its line says.</p></div>')
 
 
-def record_card(day, p, scripts):
+def record_card(day, p, scripts, feature=False):
     """The Record card: each cut's script in Teleprompter (its title, and
     whether it holds the current words), the folder, and the one way a take
     comes back. scripts is teleprompter_info's answer, or {}."""
     rows, any_script = [], False
     cuts = scripts.get('cuts') or {}
     for cut, key, name, shape in CUTS:
+        if cut == 'feature' and not feature:
+            continue
         got = cuts.get(cut) or {}
         if got.get('title'):
             any_script = True
@@ -392,13 +499,13 @@ def record_card(day, p, scripts):
     if any_script:
         folder = scripts.get('folder_name')
         how = ('Open teleprompter.com on your phone or laptop' + (f', folder "{folder}"' if folder else '')
-               + ', and read each cut from its own script. The 3-minute cut is a wide shot; for the 90-second cut sit in the centre, '
+               + f', and read each cut from its own script. The {CUTS[0][2]} is a wide shot; for the {CUTS[1][2]} sit in the centre, '
                'as it is cut tall. ' + back)
     else:
-        how = ('These scripts are not in Teleprompter yet. Copy one just below into your teleprompter and record. The 3-minute cut is '
-               'a wide shot; for the 90-second cut sit in the centre, as it is cut tall. ' + back)
+        how = (f'These scripts are not in Teleprompter yet. Copy one just below into your teleprompter and record. The {CUTS[0][2]} is '
+               f'a wide shot; for the {CUTS[1][2]} sit in the centre, as it is cut tall. ' + back)
     return (f'<div class="rec" id="{p}record" role="region" aria-labelledby="{p}record-h"><div class="rec-head">'
-            f'<h2 id="{p}record-h">Record</h2><span class="kick">Two cuts</span></div>'
+            f'<h2 id="{p}record-h">Record</h2><span class="kick">{"Three cuts" if feature and FIXED else "Two cuts"}</span></div>'
             + ''.join(rows) + f'<p class="rec-how">{E(how)}</p></div>')
 
 
@@ -539,9 +646,10 @@ def ideas_panel(monday, ideas, hidden, queue=None):
     is saved at once in the page's own store (picks/<day>) and posted as a
     comment ("PICK <day>"), which either of his accounts can read; a session
     writes it onto the pieces through /api/week/options."""
-    parts = [f'<div class="pm" id="panel-ideas" role="tabpanel" aria-labelledby="tab-ideas" data-day="ideas" data-state="ideas" '
+    head = f'<div class="kick">{E(week_span(monday))}</div><h1>Ideas</h1>'
+    parts = [f'<div class="pm{" fixed" if FIXED else ""}" id="panel-ideas" role="tabpanel" aria-labelledby="tab-ideas" data-day="ideas" data-state="ideas" '
              f'tabindex="-1"{" hidden" if hidden else ""}>'
-             f'<div class="kick">{E(week_span(monday))}</div><h1>Ideas</h1>'
+             + (f'<div class="day-head">{head}</div>' if FIXED else head) +
              '<p class="id-how">Pick one idea for each day. Your pick is saved as soon as you tick it, and Claude starts '
              'that day\'s piece from it. Every fact here was checked against the source linked beside it. '
              'There are no titles yet: you choose those after you record.</p>']
@@ -632,7 +740,9 @@ def with_review(panel, card, after_heading=False):
     return panel[:m.end()] + card + panel[m.end():] if m else card + panel
 
 
-def made_panel(page, day, name, p, links, hidden, warnings, videos=None, deep=False):
+def made_parts(page, day, name, p, links, warnings, videos=None, deep=False):
+    """The parts of a made day, from its publish page: its heading (kick, title, chips), the publish page from its
+    links card on, the scripts to record, and the cards the board adds."""
     body = page['body']
     # The Scripts section's cards, copied to the top beside the Record card.
     sec = re.search(r'<section id="scripts"><h2>[^<]*</h2>(?:<p class="why">[^<]*</p>)?(.*?)</section>', body, re.S)
@@ -668,12 +778,22 @@ def made_panel(page, day, name, p, links, hidden, warnings, videos=None, deep=Fa
     anchor = '<div class="card links">'
     if body.count(anchor) != 1:
         raise BoardError(f'{name}: its publish page needs one links card ({anchor}); is it from publish_manager.py?')
-    extra = videos_card(day, p, videos, deep) + record_card(day, p, links) + scripts + checklist(day, p, deep)
-    if links_line not in page['body']:
-        extra += '<p class="files"><span class="link-state" data-linkstate></span></p>'
-    body = body.replace(anchor, extra + anchor, 1)
-    body += ('<p class="save-note">Each tick saves here at once. Claude copies them onto the piece&#x27;s record in the engine, '
+    head, rest = body.split(anchor, 1)
+    return {'head': head, 'publish': anchor + rest, 'scripts': scripts,
+            'videos': videos_card(day, p, videos, deep), 'record': record_card(day, p, links, deep),
+            'checklist': checklist(day, p, deep),
+            'link_state': '' if links_line in page['body'] else '<p class="files"><span class="link-state" data-linkstate></span></p>'}
+
+
+SAVE_NOTE = ('<p class="save-note">Each tick saves here at once. Claude copies them onto the piece&#x27;s record in the engine, '
              'which updates the board and Control Center.</p>')
+
+
+def made_panel(page, day, name, p, links, hidden, warnings, videos=None, deep=False):
+    """A made day in a week before the fixed layout: its publish page with the cards added at the top."""
+    parts = made_parts(page, day, name, p, links, warnings, videos, deep)
+    body = (parts['head'] + parts['videos'] + parts['record'] + parts['scripts'] + parts['checklist'] + parts['link_state']
+            + parts['publish'] + SAVE_NOTE)
     return (f'<div class="pm" id="panel-{name}" role="tabpanel" aria-labelledby="tab-{name}" data-prefix="{p}" '
             f'data-day="{day}" data-state="made" data-post="{E(page["post"])}" tabindex="-1"{" hidden" if hidden else ""}>'
             + body + '</div>')
@@ -717,6 +837,155 @@ def not_made_panel(day, name, weekday, when, series_label, pick, hidden, draft=F
         }
     values.update({'DAYNAME': name, 'DAY': day, 'PREFIX': p, 'HIDDEN': ' hidden' if hidden else ''})
     return fill(template('not-made.html'), values, 'not-made.html')
+
+
+# ------------------------------------------------------------------ the fixed layout's parts
+# Every part below has one place in the day and one look; a session fills it from data and never adds markup.
+
+BRIEF_FIELDS = (('idea', 'The idea'), ('flow', 'The story, beat by beat'), ('ending', 'The ending'),
+                ('takeaway', 'The takeaway'), ('angle', 'The angle'), ('tone', 'The tone'), ('reader', 'Who it is for'))
+
+
+def read_brief(data, where='--brief'):
+    """A day's record-ready brief (Krish, 2026-10-21: "we've agreed on the idea in the previous step but now we've
+    also agreed on the narrative flow, the end of the story, the takeaway, and the rough angle and tone"):
+    {idea, flow: [3 to 6 beats], ending, takeaway, angle, tone, reader?, agreed?, agreed_at?}. No title: titles are
+    his, after he records (TITLES_AFTER_RECORDING)."""
+    if not isinstance(data, dict):
+        raise BoardError(f'{where}: give {{"idea", "flow": [beats], "ending", "takeaway", "angle", "tone"}}')
+    problems = [f'no {f}' for f in ('idea', 'ending', 'takeaway', 'angle', 'tone') if not str(data.get(f) or '').strip()]
+    flow = data.get('flow')
+    if not isinstance(flow, list) or not 3 <= len([b for b in flow if str(b).strip()]) <= 6:
+        problems.append('flow must be 3 to 6 beats')
+    if data.get('title'):
+        problems.append('a title; titles are signed off after he records (TITLES_AFTER_RECORDING)')
+    unknown = set(data) - {f for f, _ in BRIEF_FIELDS} - {'agreed', 'agreed_at', 'piece_id'}
+    if unknown:
+        problems.append(f'fields the board has no place for: {sorted(unknown)}')
+    if problems:
+        raise BoardError(f'{where}: ' + '; '.join(problems))
+    return {**{f: data.get(f) for f, _ in BRIEF_FIELDS}, 'flow': [str(b).strip() for b in flow if str(b).strip()],
+            'agreed': data.get('agreed') is True, 'agreed_at': data.get('agreed_at') if isinstance(data.get('agreed_at'), str) else None,
+            'piece_id': data.get('piece_id') if UUID.match(str(data.get('piece_id') or '')) else None}
+
+
+def brief_card(p, brief):
+    rows = []
+    for field, label in BRIEF_FIELDS:
+        value = brief.get(field)
+        if not value:
+            continue
+        shown = ('<ol class="br-flow">' + ''.join(f'<li>{E(b)}</li>' for b in value) + '</ol>') if field == 'flow' else E(str(value))
+        rows.append(f'<dt>{E(label)}</dt><dd>{shown}</dd>')
+    state = (f'Agreed{" " + E(short_when(brief["agreed_at"])) if brief.get("agreed_at") else ""}' if brief.get('agreed')
+             else 'Waiting for your yes: comment on anything to change')
+    return (f'<div class="card brief" id="{p}brief-card"><div class="row"><span class="lab">Record-ready brief</span>'
+            f'<span class="chip{" ok" if brief.get("agreed") else ""}">{state}</span></div><dl class="br">{"".join(rows)}</dl></div>')
+
+
+def short_when(at):
+    when = parse_time(at)
+    return f'{when.day} {when.strftime("%b")}' if when else ''
+
+
+def slot_empty(text):
+    return f'<div class="slot-empty"><p>{E(text)}</p></div>'
+
+
+def due(when, rule):
+    """When a step is due, from config/board-layout.json's rhythm: "Sun 25 Oct, night"."""
+    d = when - timedelta(days=int(rule['days_before']))
+    return f'{short_date(d)}, {rule["when"]}'
+
+
+def step_nav(p, weekday, opened, notes):
+    buttons = []
+    for n, step in enumerate(LAYOUT['day_steps'], 1):
+        k = step['key']
+        on = k == opened
+        buttons.append(
+            f'<button type="button" role="tab" class="st" id="{p}st-{k}" aria-controls="{p}sub-{k}" data-sub="{k}" '
+            f'aria-selected="{"true" if on else "false"}" tabindex="{"0" if on else "-1"}">'
+            f'<span class="st-n">{n}</span><span class="st-label">{E(step["label"])}</span>'
+            f'<span class="st-note">{E(notes.get(k) or "")}</span></button>')
+    return (f'<div class="steps" role="tablist" aria-label="{E(weekday)}: {", ".join(s["label"] for s in LAYOUT["day_steps"])}">'
+            + ''.join(buttons) + '</div>')
+
+
+def step_panel(p, k, opened, inner):
+    what = next(s['what'] for s in LAYOUT['day_steps'] if s['key'] == k)
+    return (f'<div class="subpanel" role="tabpanel" id="{p}sub-{k}" aria-labelledby="{p}st-{k}" data-sub="{k}" tabindex="-1"'
+            f'{"" if k == opened else " hidden"}><p class="st-what">{E(what)}</p>{inner}</div>')
+
+
+def fixed_day_panel(day, name, weekday, when, series_label, state, hidden, head, slots, notes, attrs=''):
+    """One day in the fixed layout: its heading, then its four steps, always Brief, Drafts, Record, Publish, each a
+    tab of its own. The step that is open first is where the day is: the brief until it is drafted, the drafts while
+    they are in review, and Publish once it is made."""
+    p = f'{day}-'
+    opened = {'not_picked': 'brief', 'picked': 'brief', 'draft': 'drafts', 'made': 'publish'}[state]
+    return (f'<div class="pm fixed" id="panel-{name}" role="tabpanel" aria-labelledby="tab-{name}" data-prefix="{p}" '
+            f'data-day="{day}" data-state="{state}"{attrs} tabindex="-1"{" hidden" if hidden else ""}>'
+            f'<div class="day-head">{head}</div>' + step_nav(p, weekday, opened, notes)
+            + ''.join(step_panel(p, k, opened, slots.get(k) or '') for k in DAY_STEPS) + '</div>')
+
+
+def fixed_head(kick, heading, calls=()):
+    waiting = ('<div class="notice" role="note"><h2>Waiting on you</h2><ol class="do">'
+               + ''.join(f'<li>{E(c)}</li>' for c in calls) + '</ol></div>') if calls else ''
+    return f'<div class="kick">{E(kick)}</div><h1>{E(heading)}</h1>{waiting}'
+
+
+def drop_scripts_section(publish, p):
+    """The publish page's Scripts section: in the fixed layout its cards are under Record, so they are said once."""
+    publish = re.sub(rf'<section id="{re.escape(p)}scripts">.*?</section>', '', publish, flags=re.S)
+    return re.sub(rf'<a href="#{re.escape(p)}scripts">[^<]*</a>', '', publish)
+
+
+def ideas_waiting_panel(monday, hidden):
+    sunday = monday - timedelta(days=1)
+    return (f'<div class="pm fixed" id="panel-ideas" role="tabpanel" aria-labelledby="tab-ideas" data-day="ideas" '
+            f'data-state="ideas-waiting" tabindex="-1"{" hidden" if hidden else ""}>'
+            f'<div class="day-head"><div class="kick">{E(week_span(monday))}</div><h1>Ideas</h1></div>'
+            + slot_empty(f'This week\'s ideas arrive by {short_date(sunday)}: fresh ones from the ideas you drop in Control Center, '
+                         'the Cold Ideas and Inspo folder and the engine\'s own research, with what you queued earlier first.')
+            + '</div>')
+
+
+def queue_panel(monday, queue, hidden):
+    """The Queue tab: every idea Krish saved for later, by series, with his verdict and his reason or angle, and
+    the ideas that could combine into one bigger piece (Krish, 2026-10-21: "I need to see that queue somewhere. You
+    also need to pick up on whether there are multiple things in the queue that could be consolidated")."""
+    queue = [q for q in queue or [] if isinstance(q, dict)]
+    groups = [(label, slug) for _, _, _, _, slug, label in DAYS] + [('Any day', '')]
+    norm = lambda q: (q.get('series') or '').replace('.', '_').replace('-', '_')
+    parts = [f'<div class="pm fixed" id="panel-queue" role="tabpanel" aria-labelledby="tab-queue" data-day="queue" '
+             f'data-state="queue" tabindex="-1"{" hidden" if hidden else ""}>'
+             f'<div class="day-head"><div class="kick">{E(week_span(monday))}</div><h1>Queue</h1></div>'
+             '<p class="st-what">Ideas you saved for later. Mark them on the Ideas tab or in Control Center; '
+             'each week\'s ideas start with the ones here that fit.</p>'
+             '<section class="q-combine" id="queue-combine"><h2>Could combine</h2>'
+             + slot_empty('When two or more queued ideas would thread into one bigger piece, they appear here with what joins them. '
+                          'Nothing is combined until you say so.') + '</section>']
+    known = {slug for _, slug in groups}
+    for label, slug in groups:
+        fit = [q for q in queue if norm(q) == slug or (slug == '' and norm(q) not in known)]
+        items = []
+        for q in fit:
+            t = q.get('triage') if isinstance(q.get('triage'), dict) else {}
+            verdict = str(t.get('verdict') or '')
+            why = t.get('angle') or t.get('reason')
+            items.append(
+                f'<li class="q-item" data-queued-id="{E(str(q.get("id") or ""))}"><p class="q-sowhat">{E(q.get("so_what") or q.get("idea") or "")}</p>'
+                + (f'<p class="q-meta"><span class="chip">{E(verdict.title())}</span>{" " + E(why) if why else ""}</p>' if verdict else
+                   '<p class="q-meta"><span class="chip">Not marked yet</span></p>')
+                + '</li>')
+        parts.append(f'<section class="q-day" id="queue-{slug or "any"}"><div class="sec-head"><h2>{E(label)}</h2>'
+                     f'<span class="rv-n">{len(fit)} saved</span></div>'
+                     + (f'<ul class="q-list">{"".join(items)}</ul>' if items else slot_empty('Nothing saved for this series.'))
+                     + '</section>')
+    parts.append('</div>')
+    return ''.join(parts)
 
 
 # ------------------------------------------------------------------ inputs
@@ -1003,8 +1272,115 @@ def parse_time(value):
     return when if when.tzinfo else when.replace(tzinfo=timezone.utc)
 
 
+def previous_briefs(text):
+    """{day: brief} the board being replaced carries: its manifest's briefs, or its page's CONF.briefs."""
+    data = None
+    stripped = text.lstrip()
+    if stripped.startswith('{'):
+        try:
+            data = json.loads(stripped).get('briefs')
+        except (ValueError, AttributeError):
+            data = None
+    else:
+        m = CONF_RE.search(text)
+        if m:
+            try:
+                data = json.loads(m.group(1)).get('briefs')
+            except ValueError:
+                data = None
+    out = {}
+    for k, b in (data or {}).items() if isinstance(data, dict) else []:
+        if k in DAY_KEYS.values():
+            try:
+                out[k] = read_brief(b, f'the previous board\'s {k} brief')
+            except BoardError:
+                continue
+    return out
+
+
+def fixed_day(key, name, weekday, when, series_label, page, piece, pick, title, pending, draft, calls, review, materials,
+              briefs, teleprompter, videos, ideas, hidden, panels, warnings, built_at, kept_at):
+    """A day in the fixed layout, appended to panels; its state. Each step is filled from data, in the same place every
+    week: Brief (the agreed brief), Drafts (the words to review), Record (Teleprompter, the scripts), Publish (the
+    files first, then each place to post, each with its tick)."""
+    p = f'{key}-'
+    feature = feature_piece(piece)
+    brief = briefs.get(key)
+    rv = (review or {}).get(key)
+    tp = teleprompter.get(key) or {}
+    delivery = None
+    if (materials or {}).get(key):
+        try:
+            delivery = board_materials.validate(materials[key], piece)
+        except ValueError as error:
+            raise BoardError(str(error)) from error
+    brief_due, drafts_due = due(when, LAYOUT['rhythm']['brief']), due(when, LAYOUT['rhythm']['drafts'])
+    files = board_materials.render(key, delivery) if delivery else ''
+    attrs = ' data-feature="true"' if feature else ''
+    if page:
+        if not piece:
+            raise BoardError(f'{weekday} is made but has no piece id: give --piece {key}=<uuid>, or --options or --live '
+                             'so the week\'s pick names it; every tick carries it')
+        state = 'made'
+        parts = made_parts(page, key, name, p, tp, warnings, (videos or {}).get(key), feature)
+        head = parts['head']
+        slots = {
+            'brief': brief_card(p, brief) if brief else slot_empty('This piece was made before its brief was kept on the board.'),
+            'drafts': (review_card(key, rv, built_at, kept_at) if rv else
+                       slot_empty('The words are signed off. The article is under Publish, in its first step; the scripts are under Record.')),
+            'record': parts['record'] + parts['scripts'],
+            'publish': files + parts['videos'] + parts['checklist'] + parts['link_state'] + drop_scripts_section(parts['publish'], p) + SAVE_NOTE,
+        }
+        notes = {'brief': 'agreed' if brief and brief['agreed'] else '', 'drafts': 'in review' if rv else 'signed off',
+                 'record': '', 'publish': f'{STANDING} steps'}
+        attrs += f' data-post="{E(page["post"])}"'
+    else:
+        state = 'draft' if key in draft else 'picked' if (piece or key in pending or pick) else 'not_picked'
+        if state == 'draft' and not piece:
+            raise BoardError(f'{weekday} is in draft but has no piece id: give --piece {key}=<uuid>')
+        if rv and state != 'draft':
+            raise BoardError(f'--review {key}: {weekday} is {state.replace("_", " ")}, so its words would not show; '
+                             f'give --draft {key} while they are in review')
+        if delivery and state != 'draft':
+            raise BoardError('Publishing materials need a made or draft day')
+        when_s = short_date(when)
+        plain = next((i['so_what'] for i in (ideas or {}).get(key, [])
+                      if (piece and i.get('id') == piece) or (title and i['story'].strip() == str(title).strip())), None)
+        said = plain or (pick or {}).get('plain') or title
+        record = (record_card(key, p, tp, feature) if tp.get('cuts') else
+                  slot_empty('The scripts go to Teleprompter once the drafts are signed off. How to record and send each take back is here then.'))
+        if state == 'not_picked':
+            head = fixed_head(f'{series_label} · {when_s} · not picked', weekday)
+            slots = {'brief': slot_empty(f'{weekday}\'s {series_label} piece is not picked yet. Pick one on the Ideas tab.'),
+                     'drafts': slot_empty(f'The draft article and scripts arrive by {drafts_due}, once a piece is picked and its brief agreed.'),
+                     'record': record, 'publish': slot_empty('The publish steps appear here once the piece is picked.')}
+            notes = {'brief': 'not picked'}
+        elif state == 'picked':
+            head = fixed_head(f'{series_label} · {when_s} · picked, not made yet', weekday)
+            slots = {'brief': ((f'<p class="day-idea">{E(said)}</p>' if said else '')
+                               + (brief_card(p, brief) if brief else
+                                  slot_empty(f'The record-ready brief is due by {brief_due}: the story beat by beat, the ending, '
+                                             'the takeaway, the angle and the tone.'))),
+                     'drafts': slot_empty(f'The draft article and scripts arrive by {drafts_due}.'),
+                     'record': record, 'publish': checklist(key, p, feature)}
+            notes = {'brief': 'agreed' if brief and brief['agreed'] else f'due {brief_due}', 'drafts': f'by {drafts_due}',
+                     'publish': f'{STANDING} steps'}
+        else:
+            head = fixed_head(f'{series_label} · {when_s} · in review, not ready to post', f'{weekday}\'s words, in review',
+                              calls.get(key) or ())
+            slots = {'brief': brief_card(p, brief) if brief else slot_empty('No brief is on the board for this piece.'),
+                     'drafts': review_card(key, rv or [], built_at, kept_at) or slot_empty('No words are on the board for review yet.'),
+                     'record': record, 'publish': files + checklist(key, p, feature)}
+            notes = {'brief': 'agreed' if brief and brief['agreed'] else '', 'drafts': 'in review', 'publish': f'{STANDING} steps'}
+    panel = fixed_day_panel(key, name, weekday, when, series_label, state, hidden, head, slots, notes, attrs)
+    if delivery:
+        panel = board_materials.update_copy(panel, key, delivery)
+    panels.append(panel)
+    return state
+
+
 def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pending=None, kept=None, videos=None, review=None,
-          draft=(), calls=None, posted=None, kept_at=None, ideas=None, queue=None, materials=None):
+          draft=(), calls=None, posted=None, kept_at=None, ideas=None, queue=None, materials=None, briefs=None):
     """(page, manifest, warnings). ideas: {day: [idea]} from read_ideas(),
     shown as a first tab, Ideas, opened while no day is made. pages: {day: publish page text};
     pieces: {day: uuid}; teleprompter: {day: teleprompter_info}; picks:
@@ -1013,16 +1389,36 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
     Krish]}; posted: {day: when Substack went out}; kept_at: {review id:
     build time} of review blocks whose words have not changed."""
     built_at = datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')
+    use_layout(monday)
+    briefs = briefs or {}
+    if briefs and not FIXED:
+        raise BoardError(f'--brief: the week of {monday.isoformat()} is in the layout it was published in, which has no Brief step; '
+                         f'briefs are on boards from {LAYOUT_FROM.isoformat()}')
     pages, pieces, teleprompter, picks, pending, kept = pages or {}, pieces or {}, teleprompter or {}, picks or {}, pending or {}, kept or {}
     calls, posted = calls or {}, posted or {}
-    deep_piece = deep_cut_piece(monday)
+    deep_piece = None if FIXED else deep_cut_piece(monday)
     warnings, days, panels, tabs, blocks = [], [], [], [], []
     parsed = {k: parse_day_page(v, f'the {k} publish page') for k, v in pages.items()}
     order = [k for k, *_ in DAYS]
     opened = next((k for k in order if k in parsed or k in kept), None) or next((k for k in order if k in pieces or k in picks or k in pending), None)
     if not opened:
-        opened = 'ideas' if ideas else 'mon'
-    if ideas:
+        opened = 'ideas' if ideas or FIXED else 'mon'
+    if FIXED:
+        # The fixed layout's first two tabs are always there: Ideas (waiting until Sunday's ideas come) and Queue.
+        panels.append(ideas_panel(monday, ideas, opened != 'ideas', queue) if ideas else ideas_waiting_panel(monday, opened != 'ideas'))
+        n = len([k for k in order if (ideas or {}).get(k)])
+        tabs.append(
+            f'<button type="button" role="tab" id="tab-ideas" aria-controls="panel-ideas" '
+            f'aria-selected="{"true" if opened == "ideas" else "false"}" tabindex="{"0" if opened == "ideas" else "-1"}" data-day="ideas">'
+            f'<span class="t-day">Ideas</span><span class="t-dot"> · </span>'
+            f'<span class="t-prog" data-tabprog="ideas">{f"pick {n}" if n else "not yet"}</span><span class="t-ch">Sunday</span></button>')
+        panels.append(queue_panel(monday, queue, True))
+        tabs.append(
+            '<button type="button" role="tab" id="tab-queue" aria-controls="panel-queue" aria-selected="false" tabindex="-1" data-day="queue">'
+            f'<span class="t-day">Queue</span><span class="t-dot"> · </span>'
+            f'<span class="t-prog" data-tabprog="queue">{len([q for q in queue or [] if isinstance(q, dict)])} saved</span>'
+            '<span class="t-ch">For later</span></button>')
+    elif ideas:
         panels.append(ideas_panel(monday, ideas, opened != 'ideas', queue))
         n = len([k for k in order if ideas.get(k)])
         tabs.append(
@@ -1045,6 +1441,9 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
             if not piece:
                 raise BoardError(f'{weekday} is kept from the previous board but has no piece id: give --piece {key}=<uuid>')
             state = 'made'
+            if FIXED and not kept[key].startswith('<div class="pm fixed"'):
+                raise BoardError(f'--keep {key}: that tab is in the old layout; rebuild {weekday} with --day {key}=<its publish page> '
+                                 'so it takes the fixed layout')
             panel = re.sub(r'^(<div class="pm"[^>]*?)( hidden)?>', lambda m: m.group(1) + (' hidden' if key != opened else '') + '>', kept[key], count=1)
             card = videos_card(key, f'{key}-', (videos or {}).get(key), bool(piece) and piece == deep_piece)
             if card:
@@ -1055,6 +1454,9 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
                 elif '<div class="rec"' in panel:
                     panel = panel.replace('<div class="rec"', card + '<div class="rec"', 1)
             panels.append(panel)
+        elif FIXED:
+            state = fixed_day(key, name, weekday, when, series_label, page, piece, pick, title, pending, draft, calls, review,
+                              materials, briefs, teleprompter, videos, ideas, key != opened, panels, warnings, built_at, kept_at)
         elif page:
             if not piece:
                 raise BoardError(f'{weekday} is made but has no piece id: give --piece {key}=<uuid>, or --options or --live '
@@ -1079,13 +1481,13 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
             panels[-1] = posted_kick(panels[-1], posted[key], weekday, warnings)
         if calls.get(key) and state != 'draft':
             raise BoardError(f'--waiting {key}: only a day in draft shows what waits on Krish; give --draft {key}')
-        if (review or {}).get(key):
+        if (review or {}).get(key) and not FIXED:
             if state not in ('made', 'draft'):
                 # Never dropped without a word: a build that showed none of his review boxes once passed --verify.
                 raise BoardError(f'--review {key}: {weekday} is {state.replace("_", " ")}, so its words would not show; '
                                  f'give --draft {key} while they are in review')
             panels[-1] = with_review(panels[-1], review_card(key, review[key], built_at, kept_at), after_heading=state == 'draft')
-        if (materials or {}).get(key):
+        if (materials or {}).get(key) and not FIXED:
             try:
                 delivery = board_materials.validate(materials[key], piece)
                 panels[-1] = board_materials.update_copy(panels[-1], key, delivery)
@@ -1137,12 +1539,18 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
         'steps': [{'key': k, 'label': label, 'channel': c, 'standing': s} for k, label, c, s in STEPS],
         'ideas': sorted(k for k, v in (ideas or {}).items() if v),
     }
-    css = '\n'.join(blocks or [publish_manager.CSS.strip()])
+    if FIXED:
+        # The briefs ride in the page, so a rebuild from the downloaded board (--previous) keeps them.
+        conf['layout'] = LAYOUT['version']
+        conf['briefs'] = briefs
+    # The fixed layout has one stylesheet: publish_manager's, never a day page's own copy of it.
+    css = publish_manager.CSS.strip() if FIXED else '\n'.join(blocks or [publish_manager.CSS.strip()])
     page = fill(template('page.html'), {
         'TITLE': html.escape(board_title(monday), quote=False),
         'BASE_CSS': css, 'WEEK_CSS': template('week.css').strip(), 'KICKER': E(week_span(monday)),
         'TABLIST_LABEL': E(f'Publishing days, week of {monday.day} {monday.strftime("%B")}'),
         'TABS': ''.join(tabs), 'ASIDE': aside, 'PANELS': ''.join(panels), 'SCRIPT': script(conf),
+        'WK_CLASS': ' fixed' if FIXED else '', 'MAIN_ATTRS': f' data-layout="{LAYOUT["version"]}"' if FIXED else '',
     }, 'page.html')
     problems = check_page(page)
     if problems:
@@ -1191,6 +1599,9 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
                                    + 'Monday, Wednesday and Friday, with a tick for every step.'},
         'warnings': warnings,
     }
+    if FIXED:
+        manifest['layout'] = LAYOUT['version']
+        manifest['briefs'] = briefs
     return page, manifest, warnings
 
 
@@ -1230,9 +1641,11 @@ def verify(page):
     why = engine_stamp.stamp_problem(page, 'week_board')
     if why:
         out.append(why)
-    starts = [m.start() for m in re.finditer(r'<div class="pm" id="panel-', page)] + [len(page)]
-    ideas_at = page.find('<div class="pm" id="panel-ideas"')
-    if ideas_at >= 0:
+    starts = [m.start() for m in re.finditer(r'<div class="pm(?: fixed)?" id="panel-', page)] + [len(page)]
+    if '<main id="week" data-layout="' in page:
+        out += fixed_problems(page)
+    ideas_at = max(page.find('<div class="pm" id="panel-ideas"'), page.find('<div class="pm fixed" id="panel-ideas"'))
+    if ideas_at >= 0 and 'data-state="ideas-waiting"' not in page[ideas_at:ideas_at + 400]:
         tab = page[ideas_at:next((s for s in starts if s > ideas_at), len(page))]
         for key, _, weekday, *_ in DAYS:
             day = re.search(rf'<section class="id-day" id="ideas-{key}".*?</section>', tab, re.S)
@@ -1244,7 +1657,7 @@ def verify(page):
                 out.append(f'ideas: {weekday} has {len(checked)} checked idea(s) with a pick box; it needs {MIN_IDEAS}, each with what a business person finds out, a pick box, the triage buttons and a Queue mark')
     for a, b in zip(starts, starts[1:]):
         panel = page[a:b]
-        head = re.match(r'<div class="pm" id="panel-(\w+)"[^>]*>', panel)
+        head = re.match(r'<div class="pm(?: fixed)?" id="panel-(\w+)"[^>]*>', panel)
         name, tag = head.group(1), head.group(0)
         if 'data-state="draft"' in tag and '<textarea class="rv-text"' not in panel:
             out.append(f'{name}: a day in review with no words to review')
@@ -1268,6 +1681,56 @@ def verify(page):
                 out.append(f'{name}: a finished video with no Drive link; record it (making.py PIECE drive-link CUT URL --thumb-url URL)')
             if 'its link joins this card once recorded' in card or card.count('Download thumbnail') < card.count('>Download</a>'):
                 out.append(f'{name}: a finished video with no thumbnail link; record it (making.py PIECE drive-link CUT URL --thumb-url URL)')
+    return out
+
+
+def fixed_problems(page):
+    """Why a board in the fixed layout is not in it: the five tabs in their order, each day exactly its heading, its
+    four steps and their four panels and nothing else, one stylesheet, and no banner laid over a tab by hand.
+    Krish, 2026-10-21: the engine must "feed it in the right way consistently", never change its layout."""
+    out = []
+    tabs = re.findall(r'<button type="button" role="tab" id="tab-([a-z]+)"', page)
+    if tuple(tabs) != TOP_TABS:
+        out.append(f'layout: the tabs are {tabs}, not {list(TOP_TABS)}')
+    panels = re.findall(r'<div class="(pm[^"]*)" id="panel-([a-z]+)"', page)
+    if tuple(n for _, n in panels) != TOP_TABS:
+        out.append(f'layout: the tab panels are {[n for _, n in panels]}, not {list(TOP_TABS)}')
+    if any(c != 'pm fixed' for c, _ in panels):
+        out.append('layout: a tab not drawn in the fixed layout (a kept or hand-made panel)')
+    if page.count('<style>') != 1:
+        out.append(f'layout: {page.count("<style>")} stylesheets; the fixed layout has one')
+    if re.search(r'<div class="stage[ "]', page):
+        out.append('layout: a banner laid over a tab by hand')
+    for _, name in panels:
+        start = page.find(f'id="panel-{name}"')
+        start = page.rfind('<div', 0, start)
+        panel = div_at(page, start)
+        inner = panel[panel.index('>') + 1:-len('</div>')]
+        children = []
+        at = 0
+        while True:
+            nxt = inner.find('<', at)
+            if nxt < 0 or inner[at:nxt].strip():
+                if nxt >= 0 or inner[at:].strip():
+                    children.append(('text', inner[at:(nxt if nxt >= 0 else len(inner))].strip()[:40]))
+                break
+            if not inner.startswith('<div', nxt):
+                children.append(('tag', inner[nxt:nxt + 40]))
+                break
+            block = div_at(inner, nxt)
+            children.append(('div', re.match(r'<div class="([^"]+)"', block).group(1) if re.match(r'<div class="([^"]+)"', block) else block[:40]))
+            at = nxt + len(block)
+        kinds = [c for _, c in children]
+        if name in ('ideas', 'queue'):
+            if not kinds or kinds[0] != 'day-head':
+                out.append(f'layout: {name} does not open with its heading')
+            continue
+        want = ['day-head', 'steps'] + ['subpanel'] * len(DAY_STEPS)
+        if kinds != want:
+            out.append(f'layout: {name} holds {kinds}, not its heading, its steps and their {len(DAY_STEPS)} panels')
+        subs = re.findall(r'<button type="button" role="tab" class="st" id="[^"]+" aria-controls="[^"]+" data-sub="([a-z]+)"', panel)
+        if tuple(subs) != DAY_STEPS:
+            out.append(f'layout: {name}\'s steps are {subs}, not {list(DAY_STEPS)}')
     return out
 
 
@@ -1456,8 +1919,13 @@ def build(args, get=None):
         materials[key] = read_json(path, '--materials')
     for key in unpick:
         materials.pop(key, None)
+    briefs = {k: read_brief(read_json(v, f'--brief {k}'), f'--brief {k}') for k, v in by_day(getattr(args, 'brief', None), '--brief').items()}
+    if args.previous and fixed_layout(monday):
+        # A brief already on the board stays on it until a new one is given.
+        for k, b in previous_briefs(Path(args.previous).read_text(encoding='utf-8-sig')).items():
+            briefs.setdefault(k, b)
     page, manifest, more = board(monday, pages, pieces, scripts, picks, pending, kept, videos, review, draft, calls, posted, kept_at,
-                                 ideas, queue, materials)
+                                 ideas, queue, materials, briefs)
     if previous is not None:
         keep_previous(previous, manifest['days'], unpick, monday, fresh)
     manifest['warnings'] = warnings + more
@@ -1793,6 +2261,7 @@ def _self_test():
           'download?id=1dK3QdzIkQi-SO1JsR9_SR2LdYoxGZnSQ' in tcard and 'Download thumbnail' in tcard and 'x - tall.jpg' in tcard)
     _draft_checks(check, page, fri)
     _ideas_checks(check)
+    _fixed_checks(check, mon)
     delivery = {'piece_id': MON_ID, 'status': 'review', 'note': 'Fact review is still open.', 'sections': [
         {'id': 'spotify', 'title': 'Spotify', 'files': [{'label': 'Video', 'url': 'https://example.com/video.mp4'}],
          'copy': [{'label': 'Description', 'text': 'Quoted "words" & <safe text>'}]}]}
@@ -1816,6 +2285,85 @@ def _self_test():
         return 1
     print(f'week board self-test passed: {len(checks)} checks')
     return 0
+
+
+def _fixed_checks(check, mon):
+    """The fixed layout (config/board-layout.json): the same tabs and steps every week, and verify() refusing any other."""
+    global FEATURES_FILE
+    week = LAYOUT_FROM
+    brief = {'idea': 'One idea', 'flow': ['A', 'B', 'C'], 'ending': 'E', 'takeaway': 'T', 'angle': 'A', 'tone': 'Warm', 'agreed': True}
+    review = {'wed': [('article', 'Article draft', 'Words in review.'), ('long', 'Five-minute script', 'Said words.')]}
+    page, manifest, _ = board(week, {'mon': mon}, {'mon': MON_ID, 'wed': WED_ID, 'fri': FRI_ID}, review=review, draft={'wed'},
+                              calls={'wed': ['Pick the closing line']}, queue=[{'id': FRI_ID, 'so_what': 'Saved', 'series': 'mind_the_gap',
+                                                                                'triage': {'verdict': 'angle', 'angle': 'who pays'}}],
+                              briefs={'wed': read_brief(brief), 'fri': read_brief(dict(brief, agreed=False))})
+    check('fixed layout: a fed week passes verify', verify(page) == [])
+    check('fixed layout: the five tabs, always in one order',
+          re.findall(r'role="tab" id="tab-([a-z]+)"', page) == list(TOP_TABS))
+    for name in ('monday', 'wednesday', 'friday'):
+        check(f'fixed layout: {name} has Brief, Drafts, Record and Publish, in that order',
+              re.findall(rf'id="{name[:3]}-sub-([a-z]+)"', page) == list(DAY_STEPS))
+    check('fixed layout: the step that opens first is where the day is (made: Publish, in review: Drafts, picked: Brief)',
+          'id="mon-sub-publish" aria-labelledby="mon-st-publish" data-sub="publish" tabindex="-1">' in page
+          and 'id="wed-sub-drafts" aria-labelledby="wed-st-drafts" data-sub="drafts" tabindex="-1">' in page
+          and 'id="fri-sub-brief" aria-labelledby="fri-st-brief" data-sub="brief" tabindex="-1">' in page)
+    check('fixed layout: the scripts are said once, under Record, not again under Publish',
+          'id="mon-scripts"' not in page and 'class="rec-scripts"' in page)
+    check('fixed layout: the long cut is the 5-minute video everywhere, never the 3-minute one, in the board\'s own words',
+          'Record the 5-minute cut (Teleprompter)' in page and 'YouTube: the 5-minute video' in page
+          and 'Record the 3-minute cut' not in page and 'YouTube: the 3-minute video' not in page)
+    check('fixed layout: the brief is shown with its beats, and agreed or waiting for his yes',
+          'class="card brief" id="wed-brief-card"' in page and '<ol class="br-flow"><li>A</li>' in page and 'Waiting for your yes' in page)
+    check('fixed layout: what waits on him sits in the day\'s heading, above the steps',
+          page.index('Pick the closing line') < page.index('id="wed-st-brief"'))
+    check('fixed layout: the Queue tab lists his saved idea with his verdict and angle',
+          'id="panel-queue"' in page and 'Saved' in page and '<span class="chip">Angle</span> who pays' in page)
+    check('fixed layout: a brief rides in the page, so a rebuild from it keeps the brief', previous_briefs(page).get('wed', {}).get('idea') == 'One idea')
+    check('fixed layout: the manifest says the layout and carries the briefs', manifest.get('layout') == LAYOUT['version'] and 'fri' in manifest['briefs'])
+    empty, _, _ = board(week)
+    check('fixed layout: an empty week still has every tab and step, each saying when it fills', verify(empty) == []
+          and 'data-state="ideas-waiting"' in empty and empty.count('class="slot-empty"') >= 12)
+    # Tampering: what a session might do to a built board, each refused by verify().
+    head_end = page.index('</div>', page.index('<div class="day-head">', page.index('id="panel-monday"'))) + len('</div>')
+    banner = page[:head_end] + '<div class="stage">Hand-made banner</div>' + page[head_end:]
+    check('fixed layout: a banner laid into a day is refused', any('banner' in x or 'holds' in x for x in verify(banner)))
+    swapped = page.replace('data-sub="brief"', 'data-sub="tmp"').replace('data-sub="record"', 'data-sub="brief"').replace('data-sub="tmp"', 'data-sub="record"')
+    check('fixed layout: steps in another order are refused', any('steps are' in x for x in verify(swapped)))
+    styled = page.replace('</style>', '</style><style>.x{}</style>', 1)
+    check('fixed layout: a second stylesheet is refused', any('stylesheets' in x for x in verify(styled)))
+    legacy = made_panel(parse_day_page(mon, 'mon'), 'mon', 'monday', 'mon-', {}, False, [])
+    try:
+        board(week, kept={'mon': legacy}, pieces={'mon': MON_ID})
+        refused = False
+    except BoardError as error:
+        refused = 'old layout' in str(error)
+    check('fixed layout: keeping a tab from the old layout is refused', refused)
+    for bad, label in [(dict(brief, flow=['only one']), 'a flow of one beat'), (dict(brief, title='A title'), 'a title'),
+                       ({k: v for k, v in brief.items() if k != 'takeaway'}, 'no takeaway'), (dict(brief, colour='red'), 'a field with no place')]:
+        try:
+            read_brief(bad)
+            refused = False
+        except BoardError:
+            refused = True
+        check(f'fixed layout: a brief with {label} is refused', refused)
+    try:
+        board(date(2026, 10, 19), briefs={'mon': read_brief(brief)})
+        refused = False
+    except BoardError:
+        refused = True
+    check('fixed layout: a brief for a week in the old layout is refused, not dropped', refused)
+    with tempfile.TemporaryDirectory() as tmp:
+        saved, FEATURES_FILE = FEATURES_FILE, Path(tmp) / 'features.json'
+        try:
+            FEATURES_FILE.write_text(json.dumps({'pieces': {MON_ID: {'called_on': '2026-10-25'}}}), encoding='utf-8')
+            feat, _, _ = board(week, {'mon': mon}, {'mon': MON_ID})
+        finally:
+            FEATURES_FILE = saved
+    check('fixed layout: a feature piece gets its 15-minute feature tick and a third cut; other pieces do not',
+          'data-tick="mon-record-feature"' in feat and 'Three cuts' in feat and 'data-tick="mon-record-feature"' not in page)
+    use_layout(date(2026, 10, 12))
+    check('the old layout comes back for an old week: its labels as they were published',
+          LABEL['record-long'] == 'Record the 3-minute cut (Teleprompter)' and 'record-feature' not in LABEL)
 
 
 def _ideas_checks(check):
@@ -2035,6 +2583,8 @@ def parser():
                     'a day it held is never lost')
     ap.add_argument('--keep', action='append', metavar='DAY', help='with --previous (its page): carry a made day over exactly as the board holds it, '
                     'when its publish page cannot be read any more')
+    ap.add_argument('--brief', action='append', metavar='DAY=JSON', help='the day\'s record-ready brief (boards from the fixed layout on): '
+                    '{idea, flow: [3 to 6 beats], ending, takeaway, angle, tone, reader?, agreed?, agreed_at?}; kept on rebuild')
     ap.add_argument('--materials', action='append', metavar='DAY=JSON', help='finished downloads and channel copy, with an explicit readiness note; never changes the day state; preserved on rebuild')
     ap.add_argument('--unpick', action='append', metavar='DAY', help='with --previous: a day Krish moved or dropped, which really has no piece now')
     ap.add_argument('--review', action='append', metavar='DAY=LABEL|PATH', help='words for Krish to edit or comment on in that day\'s tab '

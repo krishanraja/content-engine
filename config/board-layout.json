@@ -1,0 +1,54 @@
+{
+  "_about": "The publish board's one fixed layout (content.krishraja.com). Krish, 2026-10-21: \"how do you recommend we standardise and lock in this publish board so the content engine can just feed it? ... For each publish session things move around\", and \"the rest of the content engine needs to know how to feed it and not be permitted to change random parts of the UI and UX but feed it in the right way consistently. That applies to Claude and to Codex.\" scripts/post-pack/week_board.py draws every week from this file from layout_from onwards, and its verify() refuses a board whose tabs, steps or slots differ. Changing this file changes the board Krish works in: .claude/hooks/board-ui-guard.mjs puts every edit to it to him in person, and npm run check:board-layout fails on a board that does not match it. Docs: docs/PUBLISH_BOARDS.md, 'The fixed layout'.",
+  "version": 2,
+  "layout_from": "2026-10-26",
+  "tabs": [
+    {"key": "ideas", "label": "Ideas", "sub": "Sunday"},
+    {"key": "queue", "label": "Queue", "sub": "For later"},
+    {"key": "monday", "day": "mon"},
+    {"key": "wednesday", "day": "wed"},
+    {"key": "friday", "day": "fri"}
+  ],
+  "day_steps": [
+    {"key": "brief", "label": "Brief", "what": "The idea, the story's flow, the ending, the takeaway, the angle and the tone, agreed before the drafts are written."},
+    {"key": "drafts", "label": "Drafts", "what": "The article and the scripts. Edit any paragraph or comment on any passage; your saves and comments shape the next version."},
+    {"key": "record", "label": "Record", "what": "The scripts in Teleprompter and how each take comes back."},
+    {"key": "publish", "label": "Publish", "what": "Everything to download first, then each place to post, in order, each with its tick."}
+  ],
+  "rhythm": {
+    "_about": "Krish, 2026-10-21: \"we work on getting the Monday piece to record-ready by Sunday night. The Wednesday piece needs to be record-ready by Tuesday night and the Friday piece needs to be record-ready by Thursday night ... On Monday, Wednesday, and Friday mornings I need to be able to see the draft video scripts and the draft article.\" Days are counted from the publishing day.",
+    "brief": {"days_before": 1, "when": "night"},
+    "drafts": {"days_before": 0, "when": "morning"}
+  },
+  "cuts": {
+    "_about": "Krish, 2026-10-21: \"all videos are generally 90 sec and 5 min. From time to time I might do a special 15 min feature\"; asked whether that replaces the weekly deep cut: \"Yes, replace it\". short and long are on every piece; feature only on a piece listed in config/features.json.",
+    "long": {"name": "5-minute video", "short_name": "5-minute cut", "shape": "Wide shot, 16:9", "for": "YouTube, Substack and Spotify"},
+    "short": {"name": "90-second video", "short_name": "90-second cut", "shape": "Sit in the centre, cut tall 9:16", "for": "Shorts, Reels, TikTok and LinkedIn"},
+    "feature": {"name": "15-minute feature", "short_name": "15-minute feature", "shape": "Wide shot, 16:9", "for": "YouTube long-form and Spotify", "only_when_called": true}
+  },
+  "publish_steps": {
+    "_about": "The ticks, in the order he posts (docs/AMPLIFICATION.md). The keys are the saved ticks' ids (<day>-<key>): never change a key, or every tick saved under it is orphaned. A label may change. counted: toward the day's 100%. feature_only: shown only on a feature piece.",
+    "steps": [
+      {"key": "record-long", "label": "Record the 5-minute cut (Teleprompter)", "channel": null, "counted": true},
+      {"key": "record-short", "label": "Record the 90-second cut (Teleprompter)", "channel": null, "counted": true},
+      {"key": "substack", "label": "Substack: video post with the article", "channel": "substack", "counted": true},
+      {"key": "youtube", "label": "YouTube: the 5-minute video", "channel": "youtube", "counted": true},
+      {"key": "shorts", "label": "YouTube Shorts", "channel": "shorts", "counted": true},
+      {"key": "tiktok", "label": "TikTok", "channel": "tiktok", "counted": true},
+      {"key": "reels", "label": "Instagram Reels", "channel": "reels", "counted": true},
+      {"key": "linkedin", "label": "LinkedIn", "channel": "linkedin", "counted": false},
+      {"key": "spotify", "label": "Spotify: the video episode, its clip and chapters", "channel": "spotify", "counted": false},
+      {"key": "record-feature", "label": "Record the 15-minute feature (Teleprompter)", "channel": null, "counted": false, "feature_only": true}
+    ],
+    "sections": {
+      "Substack": "substack",
+      "YouTube (the 5-minute video)": "youtube",
+      "YouTube Shorts": "shorts",
+      "TikTok": "tiktok",
+      "Instagram Reels": "reels",
+      "LinkedIn": "linkedin",
+      "Spotify": "spotify"
+    },
+    "dropped_channels": {"whatsapp": "WhatsApp", "notes": "Substack Notes"}
+  }
+}

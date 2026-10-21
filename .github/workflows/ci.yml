@@ -86,6 +86,8 @@ jobs:
           python -m playwright install --with-deps chromium
       - name: Click every button on the board and a publish page
         run: python scripts/post-pack/buttons_in_browser.py
+      - name: The board keeps its fixed layout and fits a phone (390px, 44px targets)
+        run: python scripts/check_board_layout.py --browser
 
   board-web:
     runs-on: ubuntu-latest

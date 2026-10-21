@@ -97,11 +97,8 @@ def article_text(md, images):
     return '\n\n'.join(out)
 
 
-CSS = r'''
-:root{--bg:#F4EFE4;--ink:#0C1512;--card:#fffdf8;--line:#d9d2c3;--muted:#5b625e;--mint:#7EF0C0;--ok:#1f7a52;--bad:#b0412e}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0C1512;--ink:#F4EFE4;--card:#15201b;--line:#2b3832;--muted:#a9b4ae;--ok:#7EF0C0;--bad:#ff9b85;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#0C1512;--ink:#F4EFE4;--card:#15201b;--line:#2b3832;--muted:#a9b4ae;--ok:#7EF0C0;--bad:#ff9b85;color-scheme:dark}
-*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Archivo,system-ui,-apple-system,sans-serif}
+TOKENS = '\n'.join(l for l in (Path(__file__).resolve().parent / 'tokens.css').read_text(encoding='utf-8').splitlines() if l.startswith((':root', '@media')))
+CSS = '\n' + TOKENS + '\n' + r'''*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Archivo,system-ui,-apple-system,sans-serif}
 main{max-width:820px;margin:0 auto;padding:24px 16px 96px}
 .kick{font:12px "IBM Plex Mono",ui-monospace,monospace;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
 h1{font:400 clamp(30px,6vw,48px)/1 Anton,Impact,sans-serif;text-transform:uppercase;margin:6px 0 10px}

@@ -1,5 +1,32 @@
 # Workbench: where we are and what's next
 
+## 21 October: the publish board has one fixed layout (Claude, part 1 of 4)
+
+Krish asked to standardise and lock the board so the engine only feeds it. He
+decided: new layout from the week of 26 Oct (12 and 19 Oct stay as they are);
+an edit is carried to every draft and shown back with undo; his taste steers
+idea sourcing and ranking, judges stay blind; order is frame and phone, then
+Ideas and Queue, then Drafts editing and learning, then the publish list. Also:
+every piece is a 90-second and a 5-minute video, and a 15-minute feature only
+when he calls one ("Yes, replace it" the weekly deep cut).
+
+- **Built (branch `claude/content-publish-board-ux-4dl7ai`):**
+  `config/board-layout.json` (tabs Ideas, Queue, Mon, Wed, Fri; steps Brief,
+  Drafts, Record, Publish; brief due the night before, drafts that morning);
+  `week_board.py` draws weeks from 26 Oct only in it (`--brief DAY=json` new),
+  phone layout (viewport, bottom tab bar, 44px targets), comments as a sheet;
+  `verify()` and `npm run check:board-layout` (CI) refuse any other shape;
+  `.claude/hooks/board-ui-guard.mjs` puts layout edits to Krish. House rule
+  FEATURE replaced DEEP_CUT (`config/features.json`, `story_check --cut feature`).
+- **Next:** part 2, Sunday Ideas gathered from every source plus Queue
+  "could combine" (learning `queue-consolidation-and-fresh-sunday-ideas`),
+  ready for Sunday 25 Oct; part 3, Drafts editing that carries changes across
+  and teaches (`edits-propagate-and-teach`); part 4, the publish list. Plan:
+  `docs/plans/2026-10-21-publish-board/plan.md`; the rules in `docs/PUBLISH_BOARDS.md`, "The fixed layout".
+- **Not yet:** the feature as a third cut in `making.py` scripts,
+  `teleprompter_send.py`, `recording_match.py` and produce-video (board,
+  story check, house rule and skills know it already).
+
 ## 21 October: Wednesday scripts in Teleprompter (Codex)
 
 Krish approved transfer. Folder: Wed 21 Oct under.the.hood - Muse vs Grok Bot:

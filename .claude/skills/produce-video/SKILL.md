@@ -455,7 +455,7 @@ python scripts/quick-edit/make.py WORK/kit/short.json --out WORK/short --only 9x
   `.agents/skills/produce-video/references/music.md` before this step).
   Neither ever blocks a render.
 
-**A long episode** (the week's deep cut, house rule DEEP_CUT) is made to
+**A long episode** (a 15-minute feature Krish called, house rule FEATURE, or a deep cut already recorded under the retired DEEP_CUT) is made to
 `docs/production/one-shot-episode-corpus.md`, the standard Krish gave on 16
 October. Its config carries the episode settings (`scripts/quick-edit/
 episode.py`, and the README's table): `"voice": "repair"`, the one-take pause

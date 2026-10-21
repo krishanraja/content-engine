@@ -16,6 +16,14 @@ every Artifact publish and every ArtifactData write. Any Artifact, ArtifactData,
 ArtifactComments or dual-account step below is history: read an old artifact
 only to recover what it holds.
 
+**Feed the fixed layout, never shape it.** From the week of 26 October every
+board has five tabs and the same four steps in each day (Brief, Drafts,
+Record, Publish). Put the piece's agreed brief on its day with
+`--brief DAY=brief.json` (idea, 3 to 6 beats, ending, takeaway, angle, tone,
+reader, and `agreed: true` only with Krish's yes), its words in review with
+`--draft`/`--review`, and its finished files with `--materials`. Never patch
+the built page or add markup: `docs/PUBLISH_BOARDS.md`, "The fixed layout".
+
 ## Preserved artifact procedure
 
 Reference for the `make-piece` skill, read at the step that names it (`.agents/skills/make-piece/SKILL.md`). Moved out of the core unchanged on 18 October 2026 so a session starts lean (docs/COST_GUARDS.md).

@@ -842,6 +842,87 @@
      "how": "the handover no longer points sessions at the deleted schedule"
     }
    ]
+  },
+  {
+   "id": "board-is-fed-never-shaped",
+   "on": "2026-10-21",
+   "krish": "how do you recommend we standardise and lock in this publish board so the content engine can just feed it? It's pretty good but I notice that it's quite inconsistent. For each publish session things move around. ... the rest of the content engine needs to know how to feed it and not be permitted to change random parts of the UI and UX but feed it in the right way consistently. That applies to Claude and to Codex.",
+   "why": "Each session built and patched the board its own way (pages inlined with their own styles, panels carried byte for byte, built pages string-patched and re-stamped), so sections moved from one session to the next and he could not work through his week by habit; on a phone it was a shrunk desktop page.",
+   "means": "From the week of 26 Oct every board has one layout from config/board-layout.json: Ideas, Queue, Monday, Wednesday, Friday, and in each day Brief, Drafts, Record, Publish, with the brief due the night before and the drafts the morning of. Sessions feed it through week_board.py's inputs only; the layout changes only with his approval.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "def fixed_problems(page):",
+     "how": "verify() refuses a board whose tabs, steps or slots differ, a second stylesheet or a hand-laid banner"
+    },
+    {
+     "file": "scripts/check_board_layout.py",
+     "contains": "stamps a board outside the board",
+     "how": "npm run check:board-layout (CI, so Codex too) holds the build to the snapshot, fits every view at 390px and fails any script that patches and re-stamps a board"
+    },
+    {
+     "file": ".claude/hooks/board-ui-guard.mjs",
+     "contains": "a change to it runs only when he approves it in person",
+     "how": "every edit to the board's generator, templates, colours, layout or snapshot goes to Krish"
+    },
+    {
+     "file": "config/board-layout.json",
+     "contains": "\"days_before\": 1, \"when\": \"night\"",
+     "how": "the brief is due the night before, the drafts the morning of"
+    },
+    {
+     "file": "AGENTS.md",
+     "contains": "**The publish board is fed, never shaped.**",
+     "how": "the rule Claude and Codex both read"
+    }
+   ]
+  },
+  {
+   "id": "two-cuts-and-an-occasional-feature",
+   "on": "2026-10-21",
+   "krish": "Bear in mind that all videos are generally 90 sec and 5 min. From time to time I might do a special 15 min feature. (Asked whether that replaces the weekly deep cut: \"Yes, replace it\".)",
+   "why": "The weekly 8 to 12 minute deep cut was the engine's proposal; his own rhythm is two cuts a piece, and a long feature only when he decides a piece deserves one.",
+   "means": "Every piece is a 90-second and a 5-minute video. No session proposes a long cut; a 15-minute feature (2,025 to 2,475 words) is a third cut only on a piece he called one for, recorded in config/features.json. The weekly deep cut is retired.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "apps/control-plane/api/_houseRules.ts",
+     "contains": "id: 'FEATURE'",
+     "how": "house rule FEATURE replaced DEEP_CUT"
+    },
+    {
+     "file": "scripts/post-pack/story_check.py",
+     "contains": "'feature': (2025, 2475,",
+     "how": "the script check holds a feature to about 15 minutes"
+    },
+    {
+     "file": "config/board-layout.json",
+     "contains": "\"name\": \"15-minute feature\"",
+     "how": "the board shows the feature only on a feature piece"
+    },
+    {
+     "file": ".agents/skills/plan-week/SKILL.md",
+     "contains": "Never propose a feature.",
+     "how": "plan-week no longer proposes a weekly deep cut"
+    }
+   ]
+  },
+  {
+   "id": "edits-propagate-and-teach",
+   "on": "2026-10-21",
+   "krish": "I need to be able to comment on them to iterate or just edit in line myself and save changes to get picked up. The system needs to not just capture it but learn why I'm giving that feedback and figure out what patterns it's observing. If I make a statistical change or a narrative style change in one place, just make sure that those changes propagate and the next draft is consistent. Don't just think about that one surgical edit I made because I may have missed another place in another script for example.",
+   "why": "Board edits are applied by hand to the one box he changed and never reach the edit ledger, so the same fix has to be made again in the other cut, the article or the next piece.",
+   "means": "Each saved edit is classified (number or fact, claim, structure, tone, wording), applied to every draft of the piece and to later drafts, shown back as 'also changed in' with undo (Krish, 21 Oct: apply everywhere, show me), and written to the ledger so repeated patterns become proposed rules for his approval.",
+   "status": "open"
+  },
+  {
+   "id": "queue-consolidation-and-fresh-sunday-ideas",
+   "on": "2026-10-21",
+   "krish": "the ideas tab should, on a Sunday, contain a fresh batch of ideas that sources from all my different sources of ideas ... The ideas engine should have learnt from what I previously liked talking about ... there will be an overflow of ideas I queued for later and whatnot. I need to see that cue somewhere. You also need to pick up on whether there are multiple things in the queue that could be consolidated into one bigger piece that's more high-level and threads different things together.",
+   "why": "plan-week hand-writes the ideas, nothing gathers Control Center, the Cold Ideas and Inspo folder and the engine together, and queued ideas sat only inside each day's ideas with nothing joining them.",
+   "means": "Sunday's Ideas tab is gathered from every source and ranked by what he picked and marked before (the judges stay blind, Krish, 21 Oct); the Queue tab (built 21 Oct) also shows 'could combine' proposals, combined only on his word.",
+   "status": "open"
   }
  ]
 }

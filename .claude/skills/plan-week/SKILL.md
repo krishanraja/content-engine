@@ -139,16 +139,15 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    `week-<Monday>` exists; if the cron has not run yet, it will.
 6. Do not pick, schedule, draft or spend. Picking is Krish's press on the week
    page; his Monday pick starts the make-piece session on its own.
-6b. **Propose the week's deep cut** (house rule DEEP_CUT, Krish, 2026-10-14:
-   "I like your logic for the pick on the shareability score approach").
-   Once Krish has picked the week's pieces, score each one's breakout
-   potential with the ten-point test in the growth playbook (novel, useful,
-   identity-rich, specific, timely, credible, works across formats, tense
-   enough to discuss, ownable, leads to subscribing), 0 to 2 each. A concept
-   piece breaks a tie. Write the pick to `config/deep-cuts.json` under the
-   week's Monday, with the scores and the reason, and say it in one line on
-   the board. Krish can swap it. That piece records an 8 to 12 minute deep
-   cut instead of its 5-minute cut; every piece keeps its 90-second cut.
+6b. **No weekly deep cut: a 15-minute feature only when Krish calls one**
+   (house rule FEATURE, Krish, 2026-10-21: "all videos are generally 90 sec
+   and 5 min. From time to time I might do a special 15 min feature"; asked
+   whether that replaces the weekly deep cut: "Yes, replace it"). Every piece
+   is a 90-second and a 5-minute video. Never propose a feature. When he
+   calls one for a piece, in words, add it to `config/features.json` under
+   `pieces.<piece id>` with his words and the date; the board then shows the
+   feature as a third cut on that day. `config/deep-cuts.json` is retired
+   and gets no new week.
 7. **Make the week's publish board**, last, once the options are written.
    Krish, 2026-10-12: "just give me one ... Publish Manager for the ...
    whole week with 3 tabs on it for Mon / Weds / Fri, which we need to get
@@ -157,6 +156,12 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    That Publish Manager is what you create every Sunday and let me iterate
    inside until we're done, and then I check off the list what I have done
    as I do it."
+   - **Feed the fixed layout, never shape it** (from the week of 26
+     October: Ideas, Queue, then each day's Brief, Drafts, Record and
+     Publish; `docs/PUBLISH_BOARDS.md`, "The fixed layout"). Give
+     `--ideas` and `--queue` every Sunday; each pick's record-ready brief
+     goes on its day with `--brief DAY=brief.json` once it is drafted, due
+     the night before its day. Never patch the built page.
    - **Build it** with all three tabs, from the week's picks as they stand:
      `python3 scripts/post-pack/week_board.py --week <Monday> --live --ideas
      docs/plans/<Monday>-week/ideas.json --queue .cache/week-board/<Monday>/queue.json --out

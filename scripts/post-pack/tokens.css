@@ -1,0 +1,6 @@
+/* The publish board's and publish pages' one set of colours (light, dark, and the dark theme on request).
+   publish_manager.py reads these three lines into every publish page and the board takes them from there; change them
+   only with Krish (.claude/hooks/board-ui-guard.mjs). */
+:root{--bg:#F4EFE4;--ink:#0C1512;--card:#fffdf8;--line:#d9d2c3;--muted:#5b625e;--mint:#7EF0C0;--ok:#1f7a52;--bad:#b0412e}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0C1512;--ink:#F4EFE4;--card:#15201b;--line:#2b3832;--muted:#a9b4ae;--ok:#7EF0C0;--bad:#ff9b85;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0C1512;--ink:#F4EFE4;--card:#15201b;--line:#2b3832;--muted:#a9b4ae;--ok:#7EF0C0;--bad:#ff9b85;color-scheme:dark}

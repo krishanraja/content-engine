@@ -1,0 +1,4 @@
+{
+ "_about": "The pieces Krish called a special 15-minute feature for (house rule FEATURE). Krish, 2026-10-21: \"all videos are generally 90 sec and 5 min. From time to time I might do a special 15 min feature\"; asked whether that replaces the weekly deep cut: \"Yes, replace it\". Only his call adds a piece here, with his words; no session proposes one. week_board.py shows the feature as a third cut on that piece's day (config/board-layout.json cuts.feature), and story_check.py --cut feature holds its script to 2,025 to 2,475 words.",
+ "pieces": {}
+}
