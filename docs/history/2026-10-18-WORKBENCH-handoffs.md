@@ -4,6 +4,15 @@
 > no longer reads 181 KB of old handoffs before it starts (`docs/COST_GUARDS.md`, G11). Nothing here is current;
 > live state is in `WORKBENCH.md`. Newest first, exactly as written.
 
+- 2026-10-20, about 14:30 UTC: **`manual` means his words, for every row** (step 3
+  PR 8, the last step of the design entropy session). Migration
+  `20261101120000_manual_is_his_words_validated.sql` validates
+  `content_ideas_manual_is_his_words`; read back `convalidated = true`. 0 stored
+  rows broke it. The engine's request log could not be read from the session,
+  so the quiet week rests on the database: no idea came through Control
+  Center's door, and 75 from the engine's own sources landed. Control Center
+  deletes the session's handoff and skill in the same change.
+
 - 2026-10-17, about 07:15 UTC: **Friday's packaging is signed off; the session is finishing it without him.**
   - The sheet (`docs/plans/2026-10-09-friday/signoff-sheet.md`, SIGNED OFF): Krish, "Fine with everything except for
     \"soon you won't pick your AI.\" ... I would suggest something along the lines of \"ChatGPT and Claude are releasing

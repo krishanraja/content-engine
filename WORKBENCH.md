@@ -835,14 +835,21 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
-- 2026-10-20, about 14:30 UTC: **`manual` means his words, for every row** (step 3
-  PR 8, the last step of the design entropy session). Migration
-  `20261101120000_manual_is_his_words_validated.sql` validates
-  `content_ideas_manual_is_his_words`; read back `convalidated = true`. 0 stored
-  rows broke it. The engine's request log could not be read from the session,
-  so the quiet week rests on the database: no idea came through Control
-  Center's door, and 75 from the engine's own sources landed. Control Center
-  deletes the session's handoff and skill in the same change.
+- 2026-10-22, 16:17 UTC: **Wednesday's private board has the integrated recuts.** Build
+  `0395f1580cafb56851ef8c6075bab9b4a4700f87df9de2097e60a21c35d13e9a`:
+  seven downloads matched; other panels and both weeks' feedback were unchanged.
+  Fact gate clear; no public post.
+  - [PR #136](https://github.com/krishanraja/content-engine/pull/136) has the video code;
+    local verify and 85 checks passed. Merge after CI. See
+    `docs/plans/2026-10-21-wednesday/narrative-recut-review.md` for hashes, six-point
+    sync, motion, audio and ASR reports. The new short uses Krish's supplied stabilised
+    source. Forty newest library downloads plus the supplied source/receipt hash-matched.
+  - **Open:** full phone playback of both new cuts; the raw recognizer differences;
+    Krish's reaction to the restrained Elon/Zuckerberg headshot mock before seven
+    cover/thumbnail shapes, board/library readback and publish handoff. The rejected
+    boxing art must not be used. The mock/source portraits are in the post library's
+    `Working - headshot review` lane. The Inbox `Active Ventures` versus runner `Active`
+    path mismatch remains unrepaired; manual source retrieval succeeded.
 
 - Older handoffs (12 to 20 October): `docs/history/2026-10-18-WORKBENCH-handoffs.md`. This section holds only the
   newest one: when you write a new handoff, move the one it replaces to the top of that file (G11, `scripts/check_workbench.py`).
