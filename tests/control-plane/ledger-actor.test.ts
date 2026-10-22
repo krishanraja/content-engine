@@ -65,6 +65,48 @@ describe('operatorAttribution', () => {
     assert.deepEqual(operatorAttribution(BEARER.authorization, { decided_by: 'Krish' }), { surface: 'api', client: 'claude_code', actor: 'Krish', observation: false })
     assert.equal(operatorAttribution(BEARER.authorization, { decided_by: 'krish' })?.observation, true, 'no near-miss spelling counts')
   })
+
+  test('his saved board edit, relayed, keeps its surface; the session\'s own row never claims it', async () => {
+    const { operatorAttribution } = await import('../../apps/control-plane/api/_editEvents.js')
+    assert.deepEqual(operatorAttribution(BEARER.authorization, { decided_by: 'Krish', surface: 'publish_board' }),
+      { surface: 'publish_board', client: 'claude_code', actor: 'Krish', observation: false })
+    assert.equal(operatorAttribution(BEARER.authorization, { surface: 'publish_board' })?.surface, 'api')
+  })
+})
+
+describe('a board edit reaches the ledger as his, with its class', () => {
+  const edit = {
+    idempotency_key: '00000000-0000-4000-8000-000000000002',
+    subject_table: 'content_ideas', subject_id: '11111111-2222-4333-8444-555555555555', artifact_kind: 'draft',
+    action: 'manual_edit', surface: 'publish_board', client: 'claude_code', reason_code: 'number_fact',
+    before_hash: 'a'.repeat(64), after_hash: 'b'.repeat(64),
+  }
+
+  test('a classified board edit is admitted', async () => {
+    const { validateEditEvent } = await import('../../apps/control-plane/api/_editEvents.js')
+    const out = validateEditEvent(edit)
+    assert.equal(out.ok, true)
+  })
+
+  test('a board edit with no class, an unknown class, or another action is refused', async () => {
+    const { validateEditEvent } = await import('../../apps/control-plane/api/_editEvents.js')
+    for (const [body, error] of [
+      [{ ...edit, reason_code: undefined }, 'a_board_edit_needs_its_class'],
+      [{ ...edit, reason_code: 'vibes' }, 'a_board_edit_needs_its_class'],
+      [{ ...edit, action: 'approved' }, 'a_board_edit_is_a_manual_edit'],
+    ] as const) {
+      const out = validateEditEvent(body)
+      assert.equal(out.ok, false)
+      assert.equal((out as { error: string }).error, error)
+    }
+  })
+
+  test('the migration lets the table take the surface the code admits', () => {
+    const sql = readFileSync('supabase/migrations/20261102090000_edit_events_publish_board_surface.sql', 'utf8')
+    assert.match(sql, /content_edit_events_surface_check/)
+    assert.match(sql, /'publish_board'/)
+    for (const s of ['composer', 'brief_editor', 'mobile_deck', 'video_review', 'carousel_review', 'triage', 'api']) assert.match(sql, new RegExp(`'${s}'`), s)
+  })
 })
 
 describe('an operator session cannot take a decision', () => {

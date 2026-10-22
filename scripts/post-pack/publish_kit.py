@@ -43,6 +43,18 @@ cover on Shorts, TikTok and Reels, the square on the Instagram feed, the
 (substack-cover-1200x630.png), the 1.91:1 Substack's upload box asks for: it
 crops any other shape itself (Krish, 2026-10-12).
 
+A piece Krish called a 15-minute feature for (house rule FEATURE; Krish,
+2026-10-21: "From time to time I might do a special 15 min feature";
+its piece_id in config/features.json, on his call alone; a "feature" flag in
+publish.json counts for nothing) gets two steps
+more, beside the 5-minute ones: the feature on YouTube as its own long-form
+video, after the 5-minute YouTube step, and the feature as its own Spotify
+episode, after the 5-minute episode. Their words are "feature_youtube_title",
+"feature_youtube_description", "feature_spotify_title",
+"feature_spotify_description" and "feature_spotify_chapters", and their
+files "feature_video" and "feature_thumbnail" (its own wide thumbnail);
+"feature_waiting" says what is not made yet. No other piece gets them.
+
 Any text may hold {ARTICLE_URL} and {YOUTUBE_URL}. The page has a box for
 each: paste the link once and every Copy button carries it. Nothing here
 posts anything; Krish publishes every step by hand.
@@ -56,9 +68,84 @@ from pathlib import Path
 ARTICLE = '{ARTICLE_URL}'
 YOUTUBE = '{YOUTUBE_URL}'
 VERTICAL_MAX_SECONDS = 90  # the short cut, house rule TWO_CUTS; inside WhatsApp Status's limit too
+FEATURE_NAME = '15-minute feature'  # making.CUT_NAME['feature']; config/board-layout.json cuts.feature
+# Named so the board's YouTube tick (week_board.py, "YouTube (the ...)") stays the 5-minute video's alone.
+FEATURE_YOUTUBE = f'YouTube long-form (the {FEATURE_NAME})'
+FEATURE_SPOTIFY = f'Spotify (the {FEATURE_NAME})'
 
 
-def steps(p):
+def is_feature(p):
+    """True for a piece Krish called a 15-minute feature for: its piece_id in
+    config/features.json (making.feature_piece, on his call alone). A "feature"
+    flag in publish.json is never read: a session could set it without his word."""
+    if not p.get('piece_id'):
+        return False
+    here = str(Path(__file__).resolve().parent)
+    if here not in sys.path:
+        sys.path.insert(0, here)
+    import making  # noqa: E402  feature_piece: the one reader of config/features.json here
+    return making.feature_piece(str(p['piece_id']))
+
+
+def feature_steps(p, f, article_q, on_board=False):
+    """The feature's own two steps (house rule FEATURE): YouTube long-form and a Spotify episode. Its words sit above
+    the steps on the week's board and below them on publish.html, as in every other step."""
+    words_at = 'above' if on_board else 'below'
+    waiting = p.get('feature_waiting')
+    wait = [f'Not ready yet: {waiting}. Everything else in this step is ready.'] if waiting else []
+    names = file_names({'files': f})
+    video, thumb = names['feature_video'], names['feature_thumbnail']
+    youtube = {
+        'where': FEATURE_YOUTUBE, 'tag': 'Its own video, uploaded by you',
+        'why': f'The {FEATURE_NAME} is a video of its own on YouTube, beside the 5-minute one. Substack does not carry it, '
+               'so it is uploaded straight to YouTube.',
+        'files': [video, thumb],
+        'do': wait + [
+            f'In YouTube Studio, Create, then Upload videos: the {FEATURE_NAME} (wide, 16:9).',
+            f'Paste the title and description {words_at}. The article link sits at the end of the description, under the read line.',
+            f'Under Thumbnail, upload the feature\'s own wide thumbnail, {thumb}. Make it public, then pin the comment {words_at}.',
+        ],
+        'copy': [('Title', p.get('feature_youtube_title')), ('Description', p.get('feature_youtube_description')),
+                 ('Pinned comment', f'The full article, with every source, free: {ARTICLE}' + (f'\n\n{article_q}' if article_q else ''))],
+    }
+    spotify = {
+        'where': FEATURE_SPOTIFY, 'tag': 'Its own video episode, with its chapters',
+        'why': f'Spotify plays the {FEATURE_NAME} as an episode of its own, beside the 5-minute one. '
+               'Upload it in Spotify for Creators (not through Substack).',
+        'files': [video, thumb],
+        'do': wait + [f'In Spotify for Creators, New episode: upload the {FEATURE_NAME} (wide, 16:9).',
+                      f'Set the episode thumbnail to {thumb}. Leave episode art empty: the show art is used.',
+                      f'Paste the title and description {words_at}, then the chapters into the description. Publish.'],
+        'copy': [('Episode title', p.get('feature_spotify_title') or p.get('feature_youtube_title')),
+                 ('Description', p.get('feature_spotify_description') or p.get('feature_youtube_description')),
+                 ('Chapters', p.get('feature_spotify_chapters'))],
+    }
+    return youtube, spotify
+
+
+def file_names(p):
+    """{role: the file's name in the post's folder} for every file a step names: the words' own names, or the
+    standing ones. The board's run-sheet (week_board.py) matches each step's files to its Download first list by
+    these roles."""
+    f = p.get('files') or {}
+    wide_thumb = f.get('wide_thumbnail') or '3 Video/ the wide (16:9) thumbnail'
+    return {
+        'long_video': f.get('long_video') or '3 Video/ the 5-minute wide (16:9) video',
+        'short_video': f.get('short_video') or '3 Video/ the 90-second tall (9:16) video',
+        'wide_thumbnail': wide_thumb,
+        'spotify_thumbnail': f.get('spotify_thumbnail') or wide_thumb,
+        'cover': f.get('cover') or '2 Covers and images/substack-cover-1200x630.png',
+        'vertical_cover': f.get('vertical_cover') or '2 Covers and images/vertical-cover-1080x1920-shorts-tiktok-reels.png',
+        'share_card': f.get('share_card') or '2 Covers and images/share-card-1200x675.png',
+        'square': f.get('square') or '2 Covers and images/square-1080x1080.png',
+        'substack_copy': f.get('substack_copy') or '1 Article/substack-copy.html',
+        # The 15-minute feature's own files, named only on a feature piece's two steps (feature_steps).
+        'feature_video': f.get('feature_video') or f'3 Video/ the {FEATURE_NAME} wide (16:9) video',
+        'feature_thumbnail': f.get('feature_thumbnail') or f'3 Video/ the {FEATURE_NAME}\'s own wide (16:9) thumbnail',
+    }
+
+
+def steps(p, on_board=False):
     """The channels, in the order they are published (docs/AMPLIFICATION.md).
 
     Krish, 2026-10-11: "I always want a 3-minute video and a 90-second
@@ -67,25 +154,25 @@ def steps(p):
     make the 3-minute scripts into 5-minute scripts and videos"). Those five come first, every time. LinkedIn and Spotify follow.
     WhatsApp and Substack Notes were dropped on 2026-10-14 (Krish: "I don't think
     I need Substack notes or WhatsApp to be honest, right now")."""
-    f = p.get('files') or {}
+    names = file_names(p)
     # The long cut is the 5-minute video (3-minute until 2026-10-19), or the week's deep cut (house rule DEEP_CUT). Friday 16 Oct's publish
     # page said "the 3-minute video" for a 14-minute deep cut that was not made yet (Krish, 18 Oct: "not
     # downloading or linking the right assets"), so the piece's words name it, and say when it is not ready.
     long_name = p.get('long_name') or '5-minute video'
     waiting = p.get('long_waiting')
     wait = [f'Not ready yet: {waiting}. Everything else in this step is ready.'] if waiting else []
-    long_video = f.get('long_video') or '3 Video/ the 5-minute wide (16:9) video'
-    short_video = f.get('short_video') or '3 Video/ the 90-second tall (9:16) video'
-    cover = f.get('cover') or '2 Covers and images/substack-cover-1200x630.png'
-    wide_thumb = f.get('wide_thumbnail') or '3 Video/ the wide (16:9) thumbnail'
-    spotify_thumb = f.get('spotify_thumbnail') or wide_thumb
-    vertical = f.get('vertical_cover') or '2 Covers and images/vertical-cover-1080x1920-shorts-tiktok-reels.png'
-    share_card = f.get('share_card') or '2 Covers and images/share-card-1200x675.png'
-    square = f.get('square') or '2 Covers and images/square-1080x1080.png'
-    copy_page = f.get('substack_copy') or '1 Article/substack-copy.html'
+    long_video, short_video, cover = names['long_video'], names['short_video'], names['cover']
+    wide_thumb, spotify_thumb, vertical = names['wide_thumbnail'], names['spotify_thumbnail'], names['vertical_cover']
+    share_card, square, copy_page = names['share_card'], names['square'], names['substack_copy']
     q = p.get('comment_question') or ''
     short_caption = p.get('short_caption')
-    return [
+    # On the week's board each step is a card with its words above what to do and its link box below that
+    # (week_board.py run_sheet); on publish.html the words follow the steps and the link boxes are at the top.
+    words_at = 'above' if on_board else 'below'
+    link_box = 'below' if on_board else 'at the top of this page'
+    paste_post = ('Press Copy article above and paste it into the text under the video.' if on_board else
+                  f'Open {copy_page}, press Copy post, and paste it into the text under the video.')
+    out = [
         {
             'where': 'Substack', 'tag': 'The home: one post, one email',
             'why': f'One post holds the {long_name} at the top and the whole article under it, so subscribers get one email '
@@ -94,12 +181,12 @@ def steps(p):
             'do': wait + [
                 f'Create, then choose Video (not Article). Upload the {long_name} (wide, 16:9).',
                 f'Set the video\'s thumbnail to the wide thumbnail, {wide_thumb}.',
-                'Paste the title and subtitle below.',
-                f'Open {copy_page}, press Copy post, and paste it into the text under the video.',
+                f'Paste the title and subtitle {words_at}.',
+                paste_post,
                 f'In the post\'s settings, use the cover, {cover}, as the cover image.',
                 'Settings, before you publish: YouTube upload on, with the Substack watermark off. '
                 'Shorts clips off and LinkedIn clips off (you post your own 90-second cut in steps 3 to 5).',
-                'Publish and send to everyone. Then paste the post\'s link into the Article link box at the top of this page.',
+                f'Publish and send to everyone. Then paste the post\'s link into the Article link box {link_box}.',
             ],
             'copy': [('Title', p.get('title')), ('Subtitle', p.get('subtitle'))],
         },
@@ -109,9 +196,9 @@ def steps(p):
             'files': [wide_thumb],
             'do': wait + [
                 'In YouTube Studio, open the private video Substack just uploaded.',
-                'Replace the title and description with the ones below. The article link sits at the end of the description, under the read line.',
-                f'Under Thumbnail, upload the wide thumbnail, {wide_thumb}. Make it public, then pin the comment below.',
-                'Paste the video\'s link into the YouTube link box at the top of this page.',
+                f'Replace the title and description with the ones {words_at}. The article link sits at the end of the description, under the read line.',
+                f'Under Thumbnail, upload the wide thumbnail, {wide_thumb}. Make it public, then pin the comment {words_at}.',
+                f'Paste the video\'s link into the YouTube link box {link_box}.',
             ],
             'copy': [('Title', p.get('youtube_title')), ('Description', p.get('youtube_description')),
                      ('Pinned comment', f'The full article, with every source, free: {ARTICLE}' + (f'\n\n{q}' if q else ''))],
@@ -120,7 +207,7 @@ def steps(p):
             'where': 'YouTube Shorts', 'tag': f'The {VERTICAL_MAX_SECONDS}-second cut, linked to the full video',
             'why': 'Links in Shorts are not clickable, so the Short points to the full video instead.',
             'files': [short_video, vertical],
-            'do': ['Upload the tall video as a Short with the title below.',
+            'do': [f'Upload the tall video as a Short with the title {words_at}.',
                    f'Set its cover to the vertical cover, {vertical}, where YouTube lets you add a picture; '
                    'where it offers only a frame, pick the one where you look at the camera.',
                    'Under Related video, choose the full video from step 2.'],
@@ -131,7 +218,7 @@ def steps(p):
             'why': 'Links in TikTok captions are not clickable, and a clickable link in your profile needs 1,000 followers '
                    'or a business account. The video says makeyourmindup.ai out loud, so the caption only has to name it.',
             'files': [short_video, vertical],
-            'do': ['Upload the tall video and paste the caption below.',
+            'do': [f'Upload the tall video and paste the caption {words_at}.',
                    f'Edit cover, and set it to the vertical cover, {vertical}. Then post.',
                    'Put makeyourmindup.ai in your profile, as a link once TikTok offers the Website field, as text until then.'],
             'copy': [('Caption', p.get('tiktok_caption') or short_caption)],
@@ -140,7 +227,7 @@ def steps(p):
             'where': 'Instagram Reels', 'tag': f'The same {VERTICAL_MAX_SECONDS}-second cut',
             'why': 'Reel captions cannot hold a clickable link, so the caption sends people to the link in your bio.',
             'files': [short_video, vertical, square],
-            'do': ['New Reel, add the tall video and paste the caption below.',
+            'do': [f'New Reel, add the tall video and paste the caption {words_at}.',
                    f'Edit cover, add from your camera roll and choose the vertical cover, {vertical}. Then share.',
                    'Check the link in your bio is makeyourmindup.ai.',
                    f'For the feed, when you want it: post the square cover, {square}, with the same caption.'],
@@ -150,8 +237,8 @@ def steps(p):
             'where': 'LinkedIn', 'tag': 'Optional: the same cut, uploaded natively',
             'why': 'When you want it: a native video travels further on LinkedIn than a link card. The link goes in the first comment.',
             'files': [short_video, share_card],
-            'do': ['Start a post, add the tall video, paste the post text below and publish.',
-                   'Straight away, add the first comment below.',
+            'do': [f'Start a post, add the tall video, paste the post text {words_at} and publish.',
+                   f'Straight away, add the first comment {words_at}.',
                    f'Posting a picture with the link instead of the video? Attach the share card, {share_card}.'],
             'copy': [('Post text', p.get('linkedin_post')),
                      ('First comment', f'The full article, free, with every source: {ARTICLE}')],
@@ -166,13 +253,20 @@ def steps(p):
             'files': [long_video, spotify_thumb, short_video],
             'do': wait + [f'In Spotify for Creators, New episode: upload the {long_name} (wide, 16:9).',
                    f'Set the episode thumbnail to {spotify_thumb}. Leave episode art empty: the show art is used.',
-                   'Paste the title and description below, then the chapters into the description.',
+                   f'Paste the title and description {words_at}, then the chapters into the description.',
                    'Add the 90-second tall video as the episode\'s clip. Publish.'],
             'copy': [('Episode title', p.get('spotify_title') or p.get('youtube_title')),
                      ('Description', p.get('spotify_description') or p.get('youtube_description')),
                      ('Chapters', p.get('spotify_chapters'))],
         },
     ]
+    if is_feature(p):
+        # Beside the 5-minute steps: the feature's YouTube after the 5-minute YouTube, its episode after the 5-minute one.
+        youtube, spotify = feature_steps(p, p.get('files') or {}, q, on_board)
+        at = next(i for i, x in enumerate(out) if x['where'].startswith('YouTube (the '))
+        out.insert(at + 1, youtube)
+        out.insert(next(i for i, x in enumerate(out) if x['where'] == 'Spotify') + 1, spotify)
+    return out
 
 
 CSS = '''
@@ -318,7 +412,67 @@ def self_test():
         failures.append('Spotify must use its dedicated thumbnail in both files and instructions')
     if named['files']['wide_thumbnail'] not in by_where['Spotify']['files']:
         failures.append('Spotify must retain the existing wide-thumbnail fallback')
-    checks = 20
+    # On the week's board (week_board.py run_sheet) a step's words sit above what to do and its link box below it.
+    board = steps(sample, on_board=True)
+    if not (any('Copy article above' in d for d in board[0]['do']) and any('Article link box below' in d for d in board[0]['do'])
+            and any('the ones above' in d for d in board[1]['do']) and not any(' below.' in d for s in board for d in s['do'][:-1] if 'link box' not in d)):
+        failures.append('on the board, the words are above each step\'s list and its link box below it')
+    if steps(sample)[0]['do'] != [d.replace('Press Copy article above and paste', 'Open 1 Article/substack-copy.html, press Copy post, and paste')
+                                   .replace('box below', 'box at the top of this page').replace('subtitle above', 'subtitle below')
+                                   for d in board[0]['do']]:
+        failures.append('publish.html keeps its own words: the steps above, the link boxes at the top')
+    if file_names({})['spotify_thumbnail'] != file_names({})['wide_thumbnail'] or file_names({'files': {'cover': 'c.png'}})['cover'] != 'c.png':
+        failures.append('file_names: the standing names, the words\' own, and Spotify falling back to the wide thumbnail')
+    if (file_names({'files': {'feature_video': 'v.mp4'}})['feature_video'] != 'v.mp4'
+            or FEATURE_NAME not in file_names({})['feature_thumbnail']):
+        failures.append('file_names: the feature\'s video and thumbnail, its words\' own or the standing ones, so the board links them')
+    # The 15-minute feature (house rule FEATURE): two steps more, beside the 5-minute ones, only on a feature piece.
+    # A feature is only a piece in config/features.json: a "feature": true in publish.json is never read (review,
+    # 2026-10-21), so the checks below call one through a features file of their own.
+    import tempfile
+    here = str(Path(__file__).resolve().parent)
+    if here not in sys.path:
+        sys.path.insert(0, here)
+    import making
+    feature_id = '11111111-2222-4333-8444-555555555555'
+    flagged = dict(sample, feature=True, piece_id='22222222-2222-4333-8444-555555555555')
+    tmp = tempfile.TemporaryDirectory()
+    saved_features, making.FEATURES = making.FEATURES, Path(tmp.name) / 'features.json'
+    making.FEATURES.write_text(json.dumps({'pieces': {feature_id: {'called_on': '2026-10-25'}}}), encoding='utf-8')
+    if is_feature(dict(sample, feature=True)) or is_feature(flagged) or any(FEATURE_NAME in x['where'] for x in steps(flagged)):
+        failures.append('a "feature": true in publish.json makes no feature: only config/features.json does')
+    feature = dict(sample, piece_id=feature_id, feature_youtube_title='FT', feature_youtube_description='FD',
+                   files={'feature_video': '3 Video/F - feature.mp4', 'feature_thumbnail': '3 Video/F - feature - wide 16x9 - thumbnail.jpg'})
+    wheres = [x['where'] for x in steps(feature)]
+    if wheres != ['Substack', 'YouTube (the 5-minute video)', FEATURE_YOUTUBE, 'YouTube Shorts', 'TikTok', 'Instagram Reels', 'LinkedIn',
+                  'Spotify', FEATURE_SPOTIFY]:
+        failures.append(f'a feature piece gets its YouTube long-form step after the 5-minute YouTube and its episode after Spotify, not {wheres}')
+    if any(FEATURE_NAME in x['where'] for x in steps(sample)) or any(FEATURE_NAME in x['where'] for x in steps({'title': 'T', 'piece_id': 'not-a-feature'})):
+        failures.append('a piece Krish did not call a feature for never gets the feature\'s steps')
+    by_feature = {x['where']: x for x in steps(feature)}
+    for where in (FEATURE_YOUTUBE, FEATURE_SPOTIFY):
+        step = by_feature[where]
+        if '3 Video/F - feature.mp4' not in step['files'] or not any('3 Video/F - feature - wide 16x9 - thumbnail.jpg' in d for d in step['do']):
+            failures.append(f'{where} must upload the feature video with its own wide thumbnail')
+    if dict(by_feature[FEATURE_YOUTUBE]['copy'])['Title'] != 'FT' or dict(by_feature[FEATURE_SPOTIFY]['copy'])['Episode title'] != 'FT':
+        failures.append('the feature\'s YouTube words are its own, and its episode falls back to them')
+    if 'Not written yet' not in page(dict(feature, feature_youtube_title=None)) or '15-minute feature' not in page(feature):
+        failures.append('the feature\'s steps are on the page, and a missing title says so')
+    import re
+    if any(re.fullmatch(r'YouTube \(the .+\)', w) for w in (FEATURE_YOUTUBE, FEATURE_SPOTIFY)):
+        failures.append('the feature\'s steps never take the board\'s 5-minute YouTube tick')
+    waiting = {x['where']: x for x in steps(dict(feature, feature_waiting='being cut'))}
+    if not all(any('Not ready yet: being cut' in d for d in waiting[w]['do']) for w in (FEATURE_YOUTUBE, FEATURE_SPOTIFY)):
+        failures.append('a feature not made yet says so in its steps')
+    # On the board the feature's words are above its steps, as every other step's are; on publish.html below.
+    on_board = {x['where']: x for x in steps(feature, on_board=True)}
+    for where in (FEATURE_YOUTUBE, FEATURE_SPOTIFY):
+        said = ' '.join(on_board[where]['do'])
+        if ' below' in said or ' above' not in said or ' above' in ' '.join(by_feature[where]['do']):
+            failures.append(f'{where}: its words are above its steps on the board and below them on publish.html')
+    making.FEATURES = saved_features
+    tmp.cleanup()
+    checks = 34
     if failures:
         print('publish kit self-test FAILED:\n  ' + '\n  '.join(failures))
         return 1

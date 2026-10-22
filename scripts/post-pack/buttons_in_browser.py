@@ -41,7 +41,10 @@ def pages(tmp):
                            'thumbnail': {'path': f'x/{c}.jpg', 'url': DRIVE.format(f'1{c}ThumbAAAAAAAAAAAAAAAAAAAAAAAA')}}
                           for c in ('long', 'short')]}
         page, _, _ = wb.board(wb.monday_of('2026-10-12'), {'mon': pub}, {'mon': wb.MON_ID}, videos=videos)
-    return {'publish page': pub, 'week board': page}
+        # The fixed layout's Publish run-sheet (from the week of 26 October): Download first, its Download all, the
+        # article as a file, and every card's Copy.
+        fixed, _, _ = wb.board(wb.LAYOUT_FROM, {'mon': pub}, {'mon': wb.MON_ID}, videos=videos)
+    return {'publish page': pub, 'week board': page, 'fixed week board': fixed}
 
 
 def click_all(browser, html, tmp, label):
@@ -59,13 +62,35 @@ def click_all(browser, html, tmp, label):
     pg.add_init_script(VIEWER)
     pg.goto(path.as_uri())
     pg.wait_for_timeout(800)
-    n = {'download': 0, 'image': 0, 'text': 0}
-    # Every tab of the board in turn, so hidden days' buttons are clicked too.
-    tabs = pg.query_selector_all('[role=tab]') or [None]
-    for tab in tabs:
+    n = {'download': 0, 'image': 0, 'text': 0, 'download-all': 0}
+    # Every tab of the board in turn, and in the fixed layout every step of each day, so hidden buttons are clicked too.
+    views = []
+    for tab in pg.query_selector_all('.wk [role=tab]') or [None]:
+        views.append((tab, None))
+        if tab:
+            tab.click()
+            pg.wait_for_timeout(150)
+            views += [(tab, s) for s in pg.query_selector_all('.pm:not([hidden]) > .steps [role=tab]')]
+    for tab, step in views:
         if tab:
             tab.click()
             pg.wait_for_timeout(200)
+        if step:
+            step.click()
+            pg.wait_for_timeout(200)
+        for b in pg.query_selector_all('button[data-act=download-all]'):
+            if not b.is_visible():
+                continue
+            want = pg.evaluate('id => document.getElementById(id).querySelectorAll(\'button[data-act="download"]\').length', b.get_attribute('data-ref'))
+            before = pg.evaluate('window.__saves.length')
+            b.click()
+            pg.wait_for_timeout(250 * want + 400)
+            n['download-all'] += 1
+            saves = pg.evaluate('window.__saves')[before:]
+            if len(saves) != want or not all(s['size'] for s in saves):
+                fails.append(f'{label}: Download all handed over {len(saves)} of {want} files')
+            if not any(s['name'].endswith('.html') and 'html' in s['type'] for s in saves):
+                fails.append(f'{label}: Download all did not hand over the article as an HTML file')
         for act in ('download', 'image', 'text'):
             for b in pg.query_selector_all(f'button[data-act={act}]'):
                 if not b.is_visible():
@@ -84,6 +109,8 @@ def click_all(browser, html, tmp, label):
                     fails.append(f'{label}: {act} {ref} failed: {toast}')
     if not n['download']:
         fails.append(f'{label}: no Download button to click')
+    if label.startswith('fixed') and not n['download-all']:
+        fails.append(f'{label}: no Download all on the run-sheet to click')
     if errors:
         fails.append(f'{label}: page errors: ' + ' | '.join(errors[:3]))
     ctx.close()
@@ -100,7 +127,7 @@ def main(argv=None):
         browser = p.chromium.launch(executable_path=a.browser) if a.browser else p.chromium.launch()
         for label, html in pages(tmp).items():
             n, f = click_all(browser, html, tmp, label)
-            print(f'{label}: clicked {n["download"]} Download, {n["image"]} Copy picture, {n["text"]} Copy')
+            print(f"{label}: clicked {n['download']} Download, {n['image']} Copy picture, {n['text']} Copy, {n['download-all']} Download all")
             fails += f
         browser.close()
     if fails:

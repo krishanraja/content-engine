@@ -86,3 +86,59 @@ describe('the A/B pair', () => {
     expect(nextPair([row('a', '1')])).toBeNull()
   })
 })
+
+describe('could combine (Krish, 2026-10-21: nothing in the queue is combined without his word)', () => {
+  const vec = (deg: number) => [Math.cos((deg * Math.PI) / 180), Math.sin((deg * Math.PI) / 180)]
+  const q = (id: string, deg: number, extra: Record<string, any> = {}) => ({
+    id, idea: `Idea ${id}`, state: 'seeded', lane_slot: 'follow_the_money', queued_at: '2026-10-20T00:00:00Z',
+    embedding: JSON.stringify(vec(deg)), meta: { queue: { so_what: `So what ${id}.` } }, ...extra,
+  })
+  it('joins close queued ideas by single link, in groups of two to five, with their so_what', async () => {
+    const { combineCandidates, COMBINE_COSINE } = await import('../../apps/control-plane/api/_ideaQueue')
+    expect(COMBINE_COSINE).toBe(0.72)
+    // a-b and b-c are each within 40 degrees (cos 0.77), a-c is 80 apart: single link still joins all three.
+    const groups = combineCandidates([q('a', 0), q('b', 40), q('c', 80), q('far', 200)])
+    expect(groups).toHaveLength(1)
+    expect(groups[0].ids).toEqual(['a', 'b', 'c'])
+    expect(groups[0].series).toBe('follow_the_money')
+    expect(groups[0].members[0].so_what).toBe('So what a.')
+  })
+  it('leaves out dropped, unqueued and unembedded ideas, and a lone idea is no group', async () => {
+    const { combineCandidates } = await import('../../apps/control-plane/api/_ideaQueue')
+    expect(combineCandidates([q('a', 0), q('d', 1, { state: 'dropped' })])).toEqual([])
+    expect(combineCandidates([q('a', 0), q('m', 1, { meta: { queue: { triage: { verdict: 'drop' } } } })])).toEqual([])
+    expect(combineCandidates([q('a', 0), q('u', 1, { queued_at: null })])).toEqual([])
+    expect(combineCandidates([q('a', 0), q('n', 1, { embedding: null })])).toEqual([])
+  })
+  it('keeps at most five, the most central, and says when the series differ', async () => {
+    const { combineCandidates } = await import('../../apps/control-plane/api/_ideaQueue')
+    const many = [0, 2, 4, 6, 8, 10, 12].map((d, i) => q(`r${i}`, d, i === 6 ? { lane_slot: 'mind_the_gap' } : {}))
+    const [g] = combineCandidates(many)
+    expect(g.ids).toHaveLength(5)
+    expect(g.ids).toEqual(['r1', 'r2', 'r3', 'r4', 'r5'])
+    const [mixed] = combineCandidates([q('a', 0), q('b', 1, { lane_slot: 'mind_the_gap' })])
+    expect(mixed.series).toBeNull()
+    expect(mixed.mixed_series).toBe(true)
+  })
+  it('calls no model and writes nothing', () => {
+    const src = readFileSync('apps/control-plane/api/_ideaQueue.ts', 'utf8')
+    expect(src).not.toMatch(/callClaude|embedBatch|supabase/)
+    expect(readFileSync('apps/control-plane/api/idea-queue.ts', 'utf8')).toMatch(/out\.combine = combineCandidates\(/)
+  })
+  it('synthesize takes a queued source out of the queue, combined by Krish, and refuses a session without his word', async () => {
+    const { absorbedQueuePatch } = await import('../../apps/control-plane/api/_ideaQueue')
+    const patch = absorbedQueuePatch({ id: 'a', meta: { other: 1, queue: { so_what: 'x', triage: { verdict: 'story' } } } },
+      'parent-id', 'Krish', 'combine these two', '2026-10-25T10:00:00Z')
+    expect(patch.queued_at).toBeNull()
+    expect(patch.meta.other).toBe(1)
+    expect(patch.meta.queue).toMatchObject({ so_what: 'x', absorbed_into: 'parent-id', combined_by: 'Krish', combined_said: 'combine these two' })
+    // A bare tap carries no words of his: said stays null, never the board's own text.
+    expect(absorbedQueuePatch({ id: 'b', meta: {} }, 'parent-id', 'Krish', null, '2026-10-25T10:00:00Z').meta.queue.combined_said).toBeNull()
+    const src = readFileSync('apps/control-plane/api/content-ideas/synthesize.ts', 'utf8')
+    expect(src).toMatch(/operatorBearerAllowed\(req\) \? \(body\.decided_by === 'Krish' \? 'Krish' : null\) : 'Krish'/)
+    expect(src).toMatch(/queued_needs_his_word/)
+    expect(src).toMatch(/absorbedQueuePatch\(row, inserted\.id, 'Krish', combinedSaid/)
+    // The refusal comes before the model is called.
+    expect(src.indexOf('queued_needs_his_word')).toBeLessThan(src.indexOf('callClaude('))
+  })
+})

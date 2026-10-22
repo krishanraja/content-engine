@@ -4,6 +4,8 @@
 // pure half: the four verdicts, the shape of a mark, and what a queued row looks like to a reader. api/idea-queue.ts
 // is the guarded route. Nothing here decides for him: a verdict is recorded only as his own tap or words.
 
+import { cosine, parseVec } from './_vectors.js'
+
 /** His four ways of triaging an idea (his words, 19 Oct) plus Drop. */
 export const VERDICTS = ['story', 'angle', 'cute', 'curious', 'drop'] as const
 export type Verdict = (typeof VERDICTS)[number]
@@ -119,4 +121,77 @@ export function nextPair(rows: Array<ReturnType<typeof present>>): [typeof rows[
     if (!open[i].compared.includes(String(open[j].id))) return [open[i], open[j]]
   }
   return null
+}
+
+// Could combine (Krish, 2026-10-21: "You also need to pick up on whether there are multiple things in the queue that
+// could be consolidated", and nothing in the queue is combined without his word). Queued ideas whose stored
+// embeddings sit close are proposed as one group; no model is called and nothing is written. The session writes the
+// thesis and the beats that join them (combine.json), and only his Combine tap or words run synthesize.
+
+export const COMBINE_COSINE = 0.72
+export const COMBINE_MIN = 2
+export const COMBINE_MAX = 5
+
+export interface CombineGroup {
+  ids: string[]
+  series: string | null
+  mixed_series: boolean
+  members: Array<{ id: string; idea: string; so_what: string | null; series: string | null; verdict: string | null }>
+  closest: number
+}
+
+/** Groups of two to five queued, non-dropped ideas joined by single-link cosine of COMBINE_COSINE or more. A group
+ *  that grows past five keeps the five most central members. Rows with no stored embedding are left out. */
+export function combineCandidates(rows: Array<Record<string, any>>, threshold = COMBINE_COSINE): CombineGroup[] {
+  const live = rows.filter(r => r && r.queued_at && r.state !== 'dropped' && r.state !== 'absorbed' && r.meta?.queue?.triage?.verdict !== 'drop')
+  const vecs = new Map<string, number[]>()
+  for (const r of live) { const v = parseVec(r); if (v && v.length) vecs.set(String(r.id), v) }
+  const ids = [...vecs.keys()].sort()
+  const parent = new Map(ids.map(id => [id, id]))
+  const find = (x: string): string => { let c = x; while (parent.get(c) !== c) c = parent.get(c)!; return c }
+  const sim = new Map<string, number>()
+  for (let i = 0; i < ids.length; i++) for (let j = i + 1; j < ids.length; j++) {
+    const s = cosine(vecs.get(ids[i])!, vecs.get(ids[j])!)
+    sim.set(`${ids[i]}|${ids[j]}`, s)
+    if (s >= threshold) { const a = find(ids[i]), b = find(ids[j]); if (a !== b) parent.set(a, b) }
+  }
+  const pair = (a: string, b: string) => sim.get(a < b ? `${a}|${b}` : `${b}|${a}`) ?? 0
+  const groups = new Map<string, string[]>()
+  for (const id of ids) { const root = find(id); groups.set(root, [...(groups.get(root) || []), id]) }
+  const byId = new Map(live.map(r => [String(r.id), r]))
+  const out: CombineGroup[] = []
+  for (let members of groups.values()) {
+    if (members.length < COMBINE_MIN) continue
+    if (members.length > COMBINE_MAX) {
+      const centre = (id: string) => members.reduce((t, o) => (o === id ? t : t + pair(id, o)), 0)
+      members = [...members].sort((a, b) => centre(b) - centre(a) || a.localeCompare(b)).slice(0, COMBINE_MAX).sort()
+    }
+    const series = members.map(id => byId.get(id)?.lane_slot || null)
+    const named = [...new Set(series.filter(Boolean))] as string[]
+    let closest = 0
+    for (let i = 0; i < members.length; i++) for (let j = i + 1; j < members.length; j++) closest = Math.max(closest, pair(members[i], members[j]))
+    out.push({
+      ids: members,
+      series: named.length === 1 ? named[0] : null,
+      mixed_series: named.length > 1,
+      members: members.map(id => {
+        const r = byId.get(id)!
+        const q = r.meta?.queue || {}
+        return { id, idea: String(r.idea || ''), so_what: q.so_what || null, series: r.lane_slot || null, verdict: q.triage?.verdict || null }
+      }),
+      closest: Math.round(closest * 1000) / 1000,
+    })
+  }
+  return out.sort((a, b) => b.closest - a.closest || a.ids[0].localeCompare(b.ids[0]))
+}
+
+/** The patch that takes a queued source out of the queue once synthesize has absorbed it into a combined piece. It
+ *  says who combined it: Krish, by his Combine tap or his words (`said`), never a session on its own. */
+export function absorbedQueuePatch(row: Record<string, any>, parentId: string, by: 'Krish', said: string | null, at: string) {
+  const meta = row.meta && typeof row.meta === 'object' ? row.meta : {}
+  const queue = { ...(meta.queue || {}) }
+  return {
+    queued_at: null,
+    meta: { ...meta, queue: { ...queue, absorbed_into: parentId, combined_by: by, combined_at: at, combined_said: said, unqueued_at: at } },
+  }
 }

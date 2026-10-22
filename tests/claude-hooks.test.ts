@@ -76,32 +76,10 @@ describe('taste-guard', () => {
   })
 })
 
-describe('board-ui-guard', () => {
-  const bash = (command: string) => ({ hook_event_name: 'PreToolUse', tool_name: 'Bash', tool_input: { command } })
-  it('lets the engine feed the board and read its files', () => {
-    expect(hook('board-ui-guard.mjs', write('docs/plans/2026-10-26-week/brief-mon.json', '{}'))).toBeUndefined()
-    expect(hook('board-ui-guard.mjs', bash('python3 scripts/post-pack/week_board.py --week 2026-10-26 --brief mon=brief.json --out b.html'))).toBeUndefined()
-    expect(hook('board-ui-guard.mjs', bash('cat scripts/post-pack/week_board/week.css'))).toBeUndefined()
-    expect(hook('board-ui-guard.mjs', bash('python3 scripts/check_board_layout.py --browser'))).toBeUndefined()
-    // A log redirect while feeding or checking the board is not a change to it (CLAUDE.md: logs to .cache/logs/).
-    expect(hook('board-ui-guard.mjs', bash('python3 scripts/post-pack/week_board.py --self-test 2>&1 | tail -5'))).toBeUndefined()
-    expect(hook('board-ui-guard.mjs', bash('python3 scripts/post-pack/week_board.py --week 2026-10-26 --out b.html > .cache/logs/b.log'))).toBeUndefined()
-    expect(hook('board-ui-guard.mjs', bash('cp scripts/post-pack/week_board/week.css /tmp/x.css'))).toBeUndefined()
-  })
-  it('puts every change to how the board looks or is laid out to Krish', () => {
-    for (const path of ['scripts/post-pack/week_board.py', 'scripts/post-pack/week_board/week.css', 'scripts/post-pack/week_board/web.js',
-      'scripts/post-pack/tokens.css', 'config/board-layout.json', 'fixtures/week-board/fixed-layout.json', 'scripts/post-pack/board_materials.py'])
-      expect(hook('board-ui-guard.mjs', write(path, 'x'))?.permissionDecision).toBe('ask')
-    expect(hook('board-ui-guard.mjs', bash("sed -i 's/a/b/' scripts/post-pack/week_board/week.css"))?.permissionDecision).toBe('ask')
-    expect(hook('board-ui-guard.mjs', bash('python3 scripts/check_board_layout.py --update'))?.permissionDecision).toBe('ask')
-    expect(hook('board-ui-guard.mjs', bash('echo x > config/board-layout.json'))?.permissionDecision).toBe('ask')
-  })
-})
-
 describe('the hooks are wired', () => {
   it('registers every guard and the stop check in .claude/settings.json', () => {
     const settings = readFileSync(join(repoRoot, '.claude', 'settings.json'), 'utf8')
-    for (const name of ['secret-guard.mjs', 'publish-guard.mjs', 'taste-guard.mjs', 'board-ui-guard.mjs', 'stop-check.mjs', 'cost_gate.py']) expect(settings).toContain(name)
+    for (const name of ['secret-guard.mjs', 'publish-guard.mjs', 'taste-guard.mjs', 'stop-check.mjs', 'cost_gate.py']) expect(settings).toContain(name)
     expect(JSON.parse(settings).model).toBe('opus')
   })
   it('steps aside on a stop the hook itself caused', () => {

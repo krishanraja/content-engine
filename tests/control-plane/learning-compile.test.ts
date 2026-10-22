@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'vitest'
-import { presetProposals, judgeProposals, handRewriteProposals, toProposalRow, MAX_EVIDENCE } from '../../apps/control-plane/api/learning/_patterns.ts'
+import { presetProposals, judgeProposals, handRewriteProposals, repeatedEditClassProposals, toProposalRow, MAX_EVIDENCE } from '../../apps/control-plane/api/learning/_patterns.ts'
 
 // What the compiler is allowed to say, and what it must stay quiet about.
 //
@@ -127,6 +127,39 @@ test('a proposal the table would refuse is set aside by name, never sent', () =>
   if (!empty.ok) assert.match(empty.reason, /no evidence/)
   assert.equal(toProposalRow(base, 'Week 40').ok, false, 'the batch id must match the table pattern')
   assert.equal(toProposalRow({ ...base, regression_cases: [] }, '2026-10-04').ok, false)
+})
+
+// The repeated edit class (Krish, 2026-10-21: "learn why I'm giving that feedback and figure out what patterns it's
+// observing"): three board edits of one class in the lookback is a proposal, never a rule, and nothing else counts.
+const NOW = Date.UTC(2026, 9, 30)
+const daysAgo = (n: number) => new Date(NOW - n * 86_400_000).toISOString()
+const board = (i: number, cls: string, extra: Record<string, unknown> = {}) => ({
+  event_id: uuid(500 + i), action: 'manual_edit', mode: null, value: null, subject_id: `piece-${i % 2}`, occurred_at: daysAgo(i + 1),
+  surface: 'publish_board', reason_code: cls, ...extra,
+})
+
+test('three board edits of one class in 28 days become one proposal, with its evidence, waiting for his yes', () => {
+  const rows = [board(0, 'number_fact'), board(1, 'number_fact'), board(2, 'number_fact'), board(3, 'tone')]
+  const proposals = repeatedEditClassProposals(rows, NOW)
+  assert.equal(proposals.length, 1)
+  const [p] = proposals
+  assert.equal(p!.proposal_class, 'taste')
+  assert.deepEqual(p!.scope, { level: 'global', key: 'board_edit:number_fact' })
+  assert.equal(p!.evidence_count, 3)
+  assert.equal(p!.evidence_ids.length, 3)
+  assert.match(p!.assertion, /3 number or fact edits/)
+  assert.match(p!.assertion, /stays a proposal until he approves it/)
+  assert.doesNotMatch(p!.assertion, /[—–]/, 'no long dashes in what he reads')
+  assert.equal((p!.proposed_change as { edit_class: string }).edit_class, 'number_fact')
+  assert.ok(toProposalRow(p!, '2026-10-30').ok, 'the learning store would take it')
+})
+
+test('two of a class, old edits, other surfaces and the session\'s own rewrites are not a pattern', () => {
+  assert.deepEqual(repeatedEditClassProposals([board(0, 'tone'), board(1, 'tone')], NOW), [])
+  assert.deepEqual(repeatedEditClassProposals([board(0, 'tone'), board(1, 'tone'), board(40, 'tone')], NOW), [], 'outside 28 days')
+  assert.deepEqual(repeatedEditClassProposals([0, 1, 2].map(i => board(i, 'tone', { surface: 'composer' })), NOW), [])
+  assert.deepEqual(repeatedEditClassProposals([0, 1, 2].map(i => board(i, 'tone', { action: 'magic_accepted' })), NOW), [])
+  assert.deepEqual(repeatedEditClassProposals([0, 1, 2].map(i => board(i, 'mood')), NOW), [], 'an unknown class is not counted')
 })
 
 test('evidence is unique and capped at what the table holds', () => {

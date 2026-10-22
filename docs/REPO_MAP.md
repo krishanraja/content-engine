@@ -474,6 +474,7 @@ How a creator's post is identified, and how close to it Krish's version is
 
 What counts as an admissible row in the edit ledger.
 
+- `const BOARD_EDIT_CLASSES`
 - `function sha256(text: string): string`
 - `const AGENT_CLIENTS`
 - `const DECISION_ACTIONS`
@@ -508,7 +509,7 @@ OpenAI text-embedding-3-small. Used for two purposes:
 - `interface EmbedInput`
 - `async function embed(input: EmbedInput): Promise<number[] | null>`
 - `async function embedBatch(inputs: EmbedInput[]): Promise<(number[] | null)[]>`
-- `function cosine(a: number[], b: number[]): number`
+- `export { cosine } from './_vectors.js'`
 - `function vectorLiteral(v: number[]): string`
 
 ### `apps/control-plane/api/_enrich.ts`
@@ -881,6 +882,12 @@ The one idea queue (Krish, 2026-10-19: "mark ideas for a queue instead of select
 - `function queueMeta(mark: QueueMark | null, prior: Record<string, any> | undefined, at: string, by: string): Record<stri…`
 - `function present(row: Record<string, any>)`
 - `function nextPair(rows: Array<ReturnType<typeof present>>): [typeof rows[number], typeof rows[number]] | null`
+- `const COMBINE_COSINE`
+- `const COMBINE_MIN`
+- `const COMBINE_MAX`
+- `interface CombineGroup`
+- `function combineCandidates(rows: Array<Record<string, any>>, threshold = COMBINE_COSINE): CombineGroup[]`
+- `function absorbedQueuePatch(row: Record<string, any>, parentId: string, by: 'Krish', said: string | null, at: string)`
 
 ### `apps/control-plane/api/_investigation.ts`
 
@@ -1046,7 +1053,8 @@ The making record: where one piece is on its way from the workroom to
 - `type MakingChannel = (typeof MAKING_CHANNELS)[number]`
 - `const CORE_CHANNELS: readonly MakingChannel[]`
 - `const MAKING_CUTS`
-- `type MakingCut = (typeof MAKING_CUTS)[number]`
+- `const MAKING_ALL_CUTS`
+- `type MakingCut = (typeof MAKING_ALL_CUTS)[number]`
 - `interface MakingCheck`
 - `type MakingScriptCheck`
 - `interface MakingReadBack`
@@ -1074,6 +1082,7 @@ The making record: where one piece is on its way from the workroom to
 - `type TeleprompterState = 'in' | 'older' | 'failed' | 'missing'`
 - `function teleprompterStates(m: Partial<Making>): Partial<Record<MakingCut, TeleprompterState>>`
 - `function teleprompterNote(m: Partial<Making>): string`
+- `function makingCuts(m: Partial<Making>): MakingCut[]`
 - `const MAKING_OWNERS: Record<string, MakingOwner>`
 - `function makingSteps(row: { state?: string | null; body?: string | null; meta?: Record<string, any> | null }): MakingSt…`
 - `interface PieceState`
@@ -1601,6 +1610,13 @@ The news-vs-shift separator, ported from mm-ctrl `_shared/news-trends.ts` and
 - `function slugifyShift(title: string): string`
 - `function titleJaccard(a: string, b: string): number`
 
+### `apps/control-plane/api/_vectors.ts`
+
+Stored embeddings, read without a model call. Pure: no imports, so a unit test and a pure module
+
+- `function parseVec(r: { embedding?: unknown; _vec?: number[] | null } | null | undefined): number[] | null`
+- `function cosine(a: number[], b: number[]): number`
+
 ### `apps/control-plane/api/_video.ts`
 
 Video script formats, 15 seconds to 20 minutes. Every piece uses two of
@@ -1657,6 +1673,29 @@ The week's options, as the Sunday session writes them onto the pieces.
 - `function isMonday(ymd: string): boolean`
 - `function keepThroughWeek(expiresAt: string | null | undefined, weekStart: string): string | null`
 - `function parseOptions(body: unknown): { week_start: string; series: string; options: WeekOptionInput[]; problems: strin…`
+
+### `apps/control-plane/api/_weekSources.ts`
+
+Sunday's idea pool from every source, and the evidence of Krish's taste (GET /api/week/options?include=sources).
+
+- `const LIKED_COSINE`
+- `const POOL_DAYS`
+- `type SourceKind = 'his' | 'inspo' | 'engine'`
+- `type HisVia = 'said' | 'research'`
+- `type Row = Record<string, any>`
+- `interface Candidate`
+- `type TasteKind = 'story' | 'angle' | 'pick' | 'ab_win' | 'drop'`
+- `interface TasteItem`
+- `function windows(weekStart: string)`
+- `function sourceKind(row: Row): { kind: SourceKind; via: HisVia | null }`
+- `function excluded(row: Row): string | null`
+- `function tasteOf(rows: Row[]): TasteItem[]`
+- `function nearest(vec: number[] | null, taste: TasteItem[], selfId?: string)`
+- `function candidate(row: Row, taste: TasteItem[]): Candidate`
+- `function rank(a: Candidate, b: Candidate): number`
+- `function inWindow(row: Row, kind: SourceKind, win: ReturnType<typeof windows>): boolean`
+- `interface Relayed`
+- `function buildSources(input: { weekStart: string; series: string[]; rows: Row[]; tasteRows: Row[]; relayed?: Row[] })`
 
 ### `apps/control-plane/api/_weeks.ts`
 
@@ -1728,6 +1767,9 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `const revision = (n: unknown) =>`
 - `function actor(req: VercelRequest, operatorOnly = false): string | null`
 - `function validBody(collection: string, id: string, body: unknown): boolean`
+- `const COMMENT_ACTS`
+- `function combineWriterRefused(collection: string, body: unknown, who: string | null): boolean`
+- `function hisOnlyRefusal(collection: string, body: unknown, who: string | null): string | null`
 - `function validSourceBody(collection: string, id: unknown, body: unknown): boolean`
 - `type BoardFile`
 - `type Manifest`
@@ -2100,6 +2142,7 @@ What the compiler looks for, as pure functions.
 - `function presetProposals(rows: EditRow[]): Proposal[]`
 - `function judgeProposals(rows: CalibrationRow[]): Proposal[]`
 - `function handRewriteProposals(rows: EditRow[]): Proposal[]`
+- `function repeatedEditClassProposals(rows: EditRow[], now: number = Date.now()): Proposal[]`
 - `const MAX_EVIDENCE`
 - `function toProposalRow(p: Proposal, batch: string): { ok: true; row: Record<string, unknown> } | { ok: false; reason: s…`
 

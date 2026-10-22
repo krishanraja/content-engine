@@ -37,6 +37,49 @@ account can read and writes the union onto the record, and the next rebuild
 draws them on every link. Only the engine builds a board: the publish hook
 refuses any other.
 
+**From the week of 26 October (the fixed layout): the Drafts editor and the
+sweep.** Each draft in the Drafts step reads as it will read; he taps a
+paragraph to edit it, picks words for "Comment on this" (the comment carries
+`box`, `paragraph` and `quote`), and one Save bar per day writes
+`edits/<day>-<item>` (`text`, `day`, `item`, `base_sha256`, `at`), read with
+`board_web.py read WEEK edits` and `read WEEK comments`. Then, in this order:
+
+1. `python3 scripts/post-pack/edit_sweep.py <day> --week <Monday> --edits
+   <saved edits> --review "<day>=<label>|<file>" ...` with every box of the
+   day and of each later day in draft, `--piece <day>=<uuid>` and `--making
+   <day>=<saved making record>`. It checks each save against `base_sha256`
+   (a save on older words is listed, never guessed), classifies every change
+   by rule (number or fact, claim, structure, tone, wording), carries a number
+   or fact and a claim into every other draft of the piece and later drafts,
+   only suggests a tone or wording change, never touches a recorded cut, and
+   runs `story_check.py` and `voice_check.py` again on what changed.
+2. The same with `--apply --post-ledger`: the drafts are written and one
+   ledger row per save goes to POST /api/content-edits (surface
+   `publish_board`, action `manual_edit`, reason_code the class,
+   `decided_by: 'Krish'`, since they are his own saved words).
+3. Rebuild with `--sweep <day>=<the sweep file>` and `--lessons <saved GET
+   /api/video-studio/learning-proposals>`. "Also changed" (each with Undo)
+   and "What I learned from your edits" (Make it a rule, Not a rule) show
+   under the drafts. A sweep stays on rebuilds while that day's words are
+   unchanged.
+4. His taps are comments with `act` and `ref`: `undo` is `edit_sweep.py
+   --undo SWEEP ID --apply`, `apply` is `--accept SWEEP ID --apply`, and
+   `lesson_yes`/`lesson_no` are relayed to POST
+   /api/video-studio/learning-proposals as his decision. The weekly compiler
+   proposes a rule after three edits of one class in 28 days
+   (`repeatedEditClassProposals`); a yes becomes a standing rule only once it
+   lands in code or config with its `config/learnings.json` entry.
+5. Only documents Krish wrote are relayed. The board stamps each save with
+   its writer (`updated_by`); an edit or a comment with `act` whose writer is
+   not `Krish` is never swept, written to the ledger or relayed as his
+   decision. `edit_sweep.py` reads only his saves and names any other, and
+   the board refuses an edit or a tap written with the operator key
+   (`edit_is_his_save`, `tap_is_his`). A number is carried into another
+   draft only where it counts the same thing (the same noun next to it, or
+   two shared content words that are not claim or filler words); anything
+   weaker is only a suggestion. On a day with recordings a script whose cut
+   cannot be told is held, and a deep cut counts as the long one.
+
 **Krish's edits on the board.** A day's "Review the words" card (built with
 `week_board.py --review`) holds the article and each script in an editable
 box. His Save writes `edits/<day>-<item>` to that board's own store AND posts

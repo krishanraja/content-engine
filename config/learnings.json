@@ -952,9 +952,9 @@
      "how": "npm run check:board-layout (CI, so Codex too) holds the build to the snapshot, fits every view at 390px and fails any script that patches and re-stamps a board"
     },
     {
-     "file": ".claude/hooks/board-ui-guard.mjs",
-     "contains": "a change to it runs only when he approves it in person",
-     "how": "every edit to the board's generator, templates, colours, layout or snapshot goes to Krish"
+     "file": "scripts/check_board_layout.py",
+     "contains": "def lock_problems(want, weeks_seen, files):",
+     "how": "CI fails when the layout file, the colours or the board's structure differ from the snapshot, until --update --approved records the change with his words (Ruling, Krish, 2026-10-21: no approval prompts; the layout is held by CI)"
     },
     {
      "file": "config/board-layout.json",
@@ -965,6 +965,41 @@
      "file": "AGENTS.md",
      "contains": "**The publish board is fed, never shaped.**",
      "how": "the rule Claude and Codex both read"
+    }
+   ]
+  },
+  {
+   "id": "publish-run-sheet",
+   "on": "2026-10-21",
+   "krish": "After that workflow work is done, have a think about where I publish, how I publish, what I need to download, when, and in what order. Just make everything as beautiful and user-friendly as possible.",
+   "why": "Publishing a day meant scrolling the publish page's own sections: the files were named in each step but downloaded from different places (the videos card, the picture cards, the covers section), ticks sat on section headings and again in a checklist, and nothing put what to download first or in which order he would use it.",
+   "means": "A made day's Publish step is one ordered run-sheet built from data: the checklist meter, then Download first (every file in the order he uses it, each with one big Download, Download all, and the post's library folder named), then one card per place to post in config/board-layout.json's order, each with its files, its copy, what to do, its link box and its tick. Tick ids never change. Weeks before 26 October keep their markup.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "def run_sheet(day, p, page, data, videos, delivery, feature, folder, warnings):",
+     "how": "the Publish step of a made day in the fixed layout is drawn from the page's data and the record, never from its markup"
+    },
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "def run_sheet_problems(name, panel, tag):",
+     "how": "verify() refuses a Publish step with no Download first, a card out of order, a card without its own tick or a tick with no card"
+    },
+    {
+     "file": "scripts/post-pack/publish_manager.py",
+     "contains": "id=\"pm-data\"",
+     "how": "every publish page carries its words and its pictures' roles as data for the run-sheet"
+    },
+    {
+     "file": "scripts/post-pack/buttons_in_browser.py",
+     "contains": "Download all handed over",
+     "how": "CI clicks every Download, Copy and Download all on a fixed week's run-sheet in a real browser"
+    },
+    {
+     "file": "docs/PUBLISH_BOARDS.md",
+     "contains": "### The Publish run-sheet",
+     "how": "the run-sheet's order and how a session feeds it"
     }
    ]
   },
@@ -995,6 +1030,36 @@
      "file": ".agents/skills/plan-week/SKILL.md",
      "contains": "Never propose a feature.",
      "how": "plan-week no longer proposes a weekly deep cut"
+    },
+    {
+     "file": "scripts/post-pack/making.py",
+     "contains": "NOT_A_FEATURE = (",
+     "how": "making.py scripts takes a third, feature script only on a piece in config/features.json, checked with story_check --cut feature, and refuses three scripts for any other piece"
+    },
+    {
+     "file": "apps/control-plane/api/_making.ts",
+     "contains": "export function makingCuts(",
+     "how": "the engine keeps the feature's hash, read-back and takes, and holds Record and Video assets open until a feature piece's feature is recorded and produced"
+    },
+    {
+     "file": "scripts/post-pack/teleprompter_send.py",
+     "contains": "'feature_left': making.FEATURE in hashes",
+     "how": "teleprompter_send.py plans the feature as a third script in the piece's folder, titled \"15-minute feature\", only for a feature piece"
+    },
+    {
+     "file": "scripts/post-pack/recording_match.py",
+     "contains": "FEATURE_FROM = 600",
+     "how": "recording_match.py places a take on the feature cut, stamped with the feature script's hash"
+    },
+    {
+     "file": ".agents/skills/produce-video/SKILL.md",
+     "contains": "Its own spoken-length cap",
+     "how": "produce-video makes the feature through the one-shot episode path, with its own spoken-length cap"
+    },
+    {
+     "file": "scripts/post-pack/publish_kit.py",
+     "contains": "FEATURE_YOUTUBE = f'YouTube long-form (the {FEATURE_NAME})'",
+     "how": "the publish page adds a YouTube long-form step and a Spotify episode step for a feature piece"
     }
    ]
   },
@@ -1004,7 +1069,54 @@
    "krish": "I need to be able to comment on them to iterate or just edit in line myself and save changes to get picked up. The system needs to not just capture it but learn why I'm giving that feedback and figure out what patterns it's observing. If I make a statistical change or a narrative style change in one place, just make sure that those changes propagate and the next draft is consistent. Don't just think about that one surgical edit I made because I may have missed another place in another script for example.",
    "why": "Board edits are applied by hand to the one box he changed and never reach the edit ledger, so the same fix has to be made again in the other cut, the article or the next piece.",
    "means": "Each saved edit is classified (number or fact, claim, structure, tone, wording), applied to every draft of the piece and to later drafts, shown back as 'also changed in' with undo (Krish, 21 Oct: apply everywhere, show me), and written to the ledger so repeated patterns become proposed rules for his approval.",
-   "status": "open"
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "def editor_card(day, items, built_at=None, kept_at=None):",
+     "how": "the Drafts step in the fixed layout: each draft a read view (Markdown drawn, no # signs), a paragraph opened by a tap, one Save bar per day; the store edits/<day>-<item> and its built-at guard unchanged"
+    },
+    {
+     "file": "scripts/post-pack/week_board/week.js",
+     "contains": "async function saveDay(day)",
+     "how": "tap to edit, picked words get Comment on this pinned to {box, paragraph, quote}, N unsaved changes then Saved, the 409 path said; Undo, Change it too, Make it a rule and Not a rule saved as comments with act and ref"
+    },
+    {
+     "file": "apps/control-plane/api/board/_contracts.ts",
+     "contains": "export const COMMENT_ACTS",
+     "how": "a comment may carry box, paragraph, quote, and one of his taps (act, ref), each bounded"
+    },
+    {
+     "file": "scripts/post-pack/edit_sweep.py",
+     "contains": "def sweep(day, drafts, edits, pieces=None, recorded=None, week=None):",
+     "how": "each save diffed against base_sha256, each change classified by rule (number or fact, claim, structure, tone, wording), numbers, facts and claims carried into every draft of the piece and later drafts, tone and wording only suggested, recorded cuts left alone, the gates run again, Undo and Change it too by id"
+    },
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "def sweep_card(p, sweep):",
+     "how": "--sweep DAY=sweep.json shows Also changed under the drafts, each with Undo; --lessons shows What I learned from your edits, each waiting for his yes"
+    },
+    {
+     "file": "apps/control-plane/api/_editEvents.ts",
+     "contains": "a_board_edit_needs_its_class",
+     "how": "the ledger takes surface publish_board: his relayed board edit, a manual_edit with its class as reason_code (migration 20261102090000 widens the CHECK)"
+    },
+    {
+     "file": "apps/control-plane/api/learning/_patterns.ts",
+     "contains": "export function repeatedEditClassProposals(",
+     "how": "three board edits of one class in 28 days become a proposal, never a rule, until he approves it"
+    },
+    {
+     "file": ".agents/skills/make-piece/SKILL.md",
+     "contains": "His saved edits are carried, written to the ledger, and shown back.",
+     "how": "the session that picks up his edits runs edit_sweep.py, posts the ledger rows and rebuilds with --sweep and --lessons"
+    },
+    {
+     "file": "scripts/check_board_layout.py",
+     "contains": "def editor_in_browser(page, web):",
+     "how": "CI taps a paragraph, edits it, saves, sees Saved and the store's fields, pins a comment to picked words and sees a 409 said"
+    }
+   ]
   },
   {
    "id": "queue-consolidation-and-fresh-sunday-ideas",
@@ -1012,7 +1124,74 @@
    "krish": "the ideas tab should, on a Sunday, contain a fresh batch of ideas that sources from all my different sources of ideas ... The ideas engine should have learnt from what I previously liked talking about ... there will be an overflow of ideas I queued for later and whatnot. I need to see that cue somewhere. You also need to pick up on whether there are multiple things in the queue that could be consolidated into one bigger piece that's more high-level and threads different things together.",
    "why": "plan-week hand-writes the ideas, nothing gathers Control Center, the Cold Ideas and Inspo folder and the engine together, and queued ideas sat only inside each day's ideas with nothing joining them.",
    "means": "Sunday's Ideas tab is gathered from every source and ranked by what he picked and marked before (the judges stay blind, Krish, 21 Oct); the Queue tab (built 21 Oct) also shows 'could combine' proposals, combined only on his word.",
-   "status": "open"
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "apps/control-plane/api/_weekSources.ts",
+     "contains": "export function buildSources(",
+     "how": "GET /api/week/options?include=sources: his ideas, his inspo folder and the engine's, his first, then near something he liked (why_here), then the ladder score; evidence only, no model"
+    },
+    {
+     "file": "apps/control-plane/scripts/check-judges.ts",
+     "contains": "his taste steers sourcing, the judges stay blind",
+     "how": "the ladder and the arc scorer may not read the taste evidence"
+    },
+    {
+     "file": "apps/control-plane/api/_ideaQueue.ts",
+     "contains": "export function combineCandidates(",
+     "how": "GET /api/idea-queue?combine=1: queued ideas that could combine, from stored embeddings, no model"
+    },
+    {
+     "file": "apps/control-plane/api/content-ideas/synthesize.ts",
+     "contains": "queued_needs_his_word",
+     "how": "queued ideas combine only on his tap or words, and leave the queue with combined_by Krish"
+    },
+    {
+     "file": "scripts/post-pack/board_feed.py",
+     "contains": "def gather(week, call=None, out_dir=None):",
+     "how": "one read-only gather writes sources.json and names any empty source"
+    },
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "def read_combine(data, queue, where='--combine'):",
+     "how": "the Queue tab's Could combine cards with a Combine button; every idea card says where it came from, why it is here and its beats"
+    },
+    {
+     "file": ".agents/skills/plan-week/SKILL.md",
+     "contains": "python3 scripts/post-pack/board_feed.py gather <Monday>",
+     "how": "the Sunday session gathers first, writes ideas.json and combine.json from it, and copies his Combine taps into synthesize"
+    }
+   ]
+  },
+  {
+   "id": "plain-score-words",
+   "on": "2026-10-21",
+   "krish": "what does \"a split\" mean? I have no idea",
+   "why": "The five-round scoring used a shorthand label for a shared round, which he could not read on the teleprompter.",
+   "means": "Scores and tallies in scripts and articles use only win, lose or draw (and plain counts); a shared round is a draw, with the reason said in words.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": ".agents/skills/make-piece/SKILL.md",
+     "contains": "Score in plain words: win, lose or draw",
+     "how": "the Scripts step every making session follows"
+    }
+   ]
+  },
+  {
+   "id": "finish-to-completion-when-told",
+   "on": "2026-10-21",
+   "krish": "just get it all done now, to full completion",
+   "why": "The session kept stopping at the context nudge to hand the next part to a fresh session, when he wanted the whole job finished and merged.",
+   "means": "When he says to finish a job to completion, the context nudge does not split it: finish every part, merge when green, then write the handover.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "docs/COST_GUARDS.md",
+     "contains": "the job is finished first and the handover written after",
+     "how": "the G1 context nudge row every session reads"
+    }
+   ]
   }
  ]
 }

@@ -1,66 +1,75 @@
 # Workbench: where we are and what's next
 
-## 21 October: Wednesday recordings and review pack (Codex)
+## 22 October: Wednesday video corrections and review pack (Codex)
 
-Both review videos and captions, the article, scorecard, covers, thumbnails,
-chapters and editable channel copy are live on the private Wednesday board.
-Verified build: `15bbcc9b68fc0436b3747f683741faf499a3a096975e4caced1a1579593c5d95`.
-All 22 Wednesday downloads were independently hash-verified (46 assets total).
-Ideas, Monday and Friday were byte-identical; all 24 original assets remain.
-All six stores for both weeks were read; no feedback was lost or rewritten.
-PR #120 was confirmed merged before this work.
+Krish confirmed phone lip-sync, then rejected the double opening, unequal
+logos and low portrait framing. Both replacement videos are live on the
+private Wednesday board, build
+`a66a114b271e52972e183c570f63f9282db48f60f9cddb5248d00f257301cdce`.
+The opening is one continuous scene; marks have equal visible artwork
+heights; the portrait speaker band is centred with more headroom.
+Both keep identical decoded audio to the accepted mix, unchanged captions
+and timings. All six calibrated sync windows per replacement pass within
+40 ms; every-second and quarter-second bookend sheets were inspected.
+The portrait face audit fails the old version and passes all 89 new samples.
+A native guard rejects the former matchup-then-title opening pattern.
 
-Production inputs and exact recorded scripts:
-`docs/plans/2026-10-21-wednesday/README.md`. Media working folder:
+Production inputs, exact recorded scripts and reproduction:
+`docs/plans/2026-10-21-wednesday/README.md`. Runtime media:
 `C:\Users\krish\.scratch\wednesday-production-2026-10-21`.
-Library destination: `3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot`.
-All 34 newest library downloads were independently hash-verified; the receipt
-is `docs/plans/2026-10-21-wednesday/production-readback.json`.
-Unaccepted video exports stay in `3 Video/Working - review`; they are not
-released deliverables. Source takes remain unchanged in the recording lane.
-The final long folder is `render-long-music` (5:42); the short is
-`render-short` (1:39). Both have the licensed music; neither is sped up.
-Final SyncNet checks pass all six calibrated windows per export, within 40 ms.
-The long music finish copies the identical compressed picture stream.
+Current exports: `render-long-revised` (5:42), `render-short-revised` (1:39).
+Library: `3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot`;
+held exports and full working archive: `3 Video/Working - review`.
+Independent board/library download receipts are being refreshed in
+`docs/plans/2026-10-21-wednesday/production-readback.json`.
 
-Krish approved the post-recording packaging set. He approved one fact check
-with a $1 budget; it ran once at $0.50. It did not clear the gate. See
-`release-review.md` and `claim-review.md` in the production plan. No rerun,
-public post, invented prediction confidence or playback acceptance is authorised.
-The article's evidence prose is 435 personal-test words and 434 corpus words;
-its recorded authored wording and the latest “level, for different reasons”
-news call are retained. The local model scan passed (4.482 / 1.079).
+The original recordings and prior review versions remain preserved.
+Krish approved the post-recording titles and one $1 fact-check run; the run
+cost $0.50 and did not clear its gate. No rerun or public post is authorised.
+Raw heard-check differences, revised-picture playback acceptance, fact
+findings and the retrospective/prediction rule conflict remain visible in
+`release-review.md` and `claim-review.md`. The evidence prose is 435 personal
+test words and 434 corpus words; authored wording is retained.
 
-No one-second source offset was found. Exports use steady 24 fps; the exact
-receipts retain heard-check differences and the open full-playback check.
+## 21 October: the publish board, parts 2 to 4 and the 15-minute feature (Claude)
 
-## 21 October: the publish board has one fixed layout (Claude, part 1 of 4)
+- **Krish:** "just get it all done now, to full completion", then "merge it when green and keep going".
+- **Built (PR #128, branch `claude/content-publish-board-ux-4dl7ai`, merged to main when CI is green):**
+  - Part 2: `GET /api/week/options?include=sources` (`api/_weekSources.ts`) gathers his ideas, his inspo folder's and
+    the engine's, his first, then near something he liked (`why_here`); judges stay blind (`check-judges.ts`).
+    `GET /api/idea-queue?combine=1` and the Queue tab's Combine button (his tap only, `combine_is_his_tap`).
+    `scripts/post-pack/board_feed.py gather <Monday>` and `taps` feed plan-week.
+  - Part 3: the Drafts editor (tap to edit, select to comment, one Save bar); `edit_sweep.py` carries a number or
+    fact change only where its neighbouring words match, shows it under "Also changed" with Undo, and never touches a
+    recorded script. Only his saves count (`edit_is_his_save`, `tap_is_his`). The ledger takes the `publish_board`
+    surface (migration applied live on his yes and read back).
+  - Part 4: the Publish step is a run-sheet: Download first, then one card per place in posting order.
+  - The feature is a third cut (`making.py`, `teleprompter_send.py`, `recording_match.py`, `publish_kit.py`,
+    `build.py`, `_making.ts`), with YouTube long-form and Spotify cards on feature pieces only.
+- **Layout lock:** CI (`npm run check:board-layout`); every change in this PR is recorded with his words in
+  `fixtures/week-board/fixed-layout.json`. No approval prompts (Ruling, Krish, 2026-10-21).
+- **Live gather ran (21 Oct, after the deploy):** `docs/plans/2026-10-26-week/sources.json`: his 0 (none since
+  11 Oct; 1 relayed board item holds his words), inspo 36, engine 53, queue 4, no combine group. 77 of the 89 have no
+  series yet, and under.the.hood's pool is empty; plan-week now places the unassigned by mandate. No idea scored close
+  enough to one he liked for a `why_here` line (only 3 liked ideas so far).
+- **Next:** Control Center's mirror `src/lib/making.ts` does not know the feature cut yet: a change in
+  `krishanraja/control-center`, to confirm with Krish first.
 
-Krish asked to standardise and lock the board so the engine only feeds it. He
-decided: new layout from the week of 26 Oct (12 and 19 Oct stay as they are);
-an edit is carried to every draft and shown back with undo; his taste steers
-idea sourcing and ranking, judges stay blind; order is frame and phone, then
-Ideas and Queue, then Drafts editing and learning, then the publish list. Also:
-every piece is a 90-second and a 5-minute video, and a 15-minute feature only
-when he calls one ("Yes, replace it" the weekly deep cut).
+## 21 October, afternoon: Wednesday drafts from Krish's board edits (Claude)
 
-- **Built (branch `claude/content-publish-board-ux-4dl7ai`):**
-  `config/board-layout.json` (tabs Ideas, Queue, Mon, Wed, Fri; steps Brief,
-  Drafts, Record, Publish; brief due the night before, drafts that morning);
-  `week_board.py` draws weeks from 26 Oct only in it (`--brief DAY=json` new),
-  phone layout (viewport, bottom tab bar, 44px targets), comments as a sheet;
-  `verify()` and `npm run check:board-layout` (CI) refuse any other shape;
-  `.claude/hooks/board-ui-guard.mjs` puts layout edits to Krish. House rule
-  FEATURE replaced DEEP_CUT (`config/features.json`, `story_check --cut feature`).
-- **Part 2 handover:** `docs/handovers/2026-10-21-publish-board-part2.md` (start a fresh session from it).
-- **Next:** part 2, Sunday Ideas gathered from every source plus Queue
-  "could combine" (learning `queue-consolidation-and-fresh-sunday-ideas`),
-  ready for Sunday 25 Oct; part 3, Drafts editing that carries changes across
-  and teaches (`edits-propagate-and-teach`); part 4, the publish list. Plan:
-  `docs/plans/2026-10-21-publish-board/plan.md`; the rules in `docs/PUBLISH_BOARDS.md`, "The fixed layout".
-- **Not yet:** the feature as a third cut in `making.py` scripts,
-  `teleprompter_send.py`, `recording_match.py` and produce-video (board,
-  story check, house rule and skills know it already).
+Read his 13:21 board edit of the short script and his comment on the long
+("what does "a split" mean? I have no idea"). New drafts in
+`docs/plans/2026-10-21-draft-script.md` (804 words, "split" replaced by
+"draw") and `-90s.md` (195 words, his edits kept; two changes for the gates: his
+" - " pause is a full stop, and "lots of other people report that they're neck
+and neck" became "in another tester's trial, both caught every scam. Neck and
+neck." because the evidence is one tester). Learning `plain-score-words`.
+Two fresh readers per cut on the final words (short: nothing lost; long: only
+his retained "I did a piece last week" and one "X conversations" query), on
+the making record. **Teleprompter updated on his "push to teleprompter"**
+(plan: nothing to send). **Next:** Krish records; the board still shows the
+morning's scripts until he asks for a republish.
+
 ## 21 October: Wednesday cut back to the result (Claude)
 
 Krish: the scripts and article were "overexplaining" with caveats. Rewritten as
@@ -92,30 +101,6 @@ Head to Head on Running My Life. Both cuts read back exactly (765/195 words).
 IDs, hashes, approval and checks: `docs/plans/2026-10-19-week/wednesday-teleprompter.json`.
 Live making record holds both. Next: Krish records; visuals/article remain separate.
 Board and all feedback kept: https://content.krishraja.com/board/2026-10-19#wednesday.
-
-## 20 October: Wednesday rewritten with Krish (Claude, editorial session)
-
-Live: https://content.krishraja.com/board/2026-10-19#wednesday, build
-`63bbc0e6…9db7` (readback hash matches the built file; Monday, Friday and Ideas
-panels byte-identical; 24 assets kept; 28 comments, 0 edits, 0 ticks unchanged).
-Sources: `docs/plans/2026-10-19-week/` (`wednesday-narrative-ready.md` holds
-his decisions, `wednesday-article-draft.md` the piece, `wednesday-scorecard.md`
-the takeaway card).
-
-- **Krish decided:** the "order six products" emails were scams. Angle: "the
-  one that says no" mixed with three personalities (Grok the sceptic, Muse the
-  brilliant new hire, Gemini with a finger on send), scorecard as the
-  takeaway. Reader: leaders at mid-sized firms. Everything private anonymised,
-  no personal subscription specifics, Codex blurs screenshots.
-- **Also decided:** closing line "If your team is about to get one of these,
-  pick the one that says no at the right moment."; plain card cells, no marks.
-  Titles after recording.
-- **Lesson (Krish, 20 Oct):** bring strategic editorial choices (angle, reader,
-  structure) to him as decisions; never spend questions on his private test
-  data.
-- **Next:** his review of the article, then recording scripts (series line,
-  reading gate, read-back) and the Teleprompter send. No sends, posts or
-  spending; Monday's no-spend hold remains.
 
 ## 19 October: both publish boards live, web cutover verified
 

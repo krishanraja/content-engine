@@ -1,7 +1,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { guardCronRoute } from '../_auth.js'
 import { supabase } from '../_supabase.js'
-import { embedBatch, cosine, vectorLiteral } from '../_embeddings.js'
+import { embedBatch, vectorLiteral } from '../_embeddings.js'
+import { cosine, parseVec } from '../_vectors.js'
 import { callClaude } from '../_content.js'
 import { JUDGE_MODEL } from '../_models.js'
 import { withContentRun } from '../_runs.js'
@@ -29,13 +30,6 @@ const MIN_CLUSTER = 2
 const WINDOW_DAYS = 21
 
 interface Row { id: string; idea: string | null; thesis: string | null; source_snippet: string | null; embedding: unknown; meta: Record<string, unknown> | null; _vec?: number[] | null }
-
-function parseVec(r: Row): number[] | null {
-  if (Array.isArray(r._vec)) return r._vec
-  if (typeof r.embedding === 'string') { try { return JSON.parse(r.embedding) } catch { return null } }
-  if (Array.isArray(r.embedding)) return r.embedding as number[]
-  return null
-}
 
 async function summarize(members: Row[]): Promise<string | null> {
   if (!process.env.ANTHROPIC_API_KEY) return null
