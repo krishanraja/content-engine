@@ -14,13 +14,13 @@
     "rows": [
       {
         "name": "Grok Bot",
-        "logo": "logos/grok.svg",
+        "logo": "logos/grok-mark.svg",
         "tag": "Grok",
         "colour": "mint"
       },
       {
         "name": "Muse",
-        "logo": "logos/meta-cream.svg",
+        "logo": "logos/meta-mark.svg",
         "tag": "Meta",
         "colour": "lilac"
       }
@@ -35,13 +35,13 @@
     "rows": [
       {
         "name": "Grok Bot",
-        "logo": "logos/grok.svg",
+        "logo": "logos/grok-mark.svg",
         "tag": "Grok",
         "colour": "mint"
       },
       {
         "name": "Muse",
-        "logo": "logos/meta-cream.svg",
+        "logo": "logos/meta-mark.svg",
         "tag": "Meta",
         "colour": "lilac"
       }
@@ -51,7 +51,7 @@
     "left": {
       "label": "Grok Bot",
       "logos": [
-        "logos/grok.svg"
+        "logos/grok-mark.svg"
       ],
       "tag": "Five everyday jobs"
     },
@@ -59,7 +59,7 @@
       {
         "label": "Meta’s Muse",
         "logos": [
-          "logos/meta-cream.svg"
+          "logos/meta-mark.svg"
         ],
         "tag": "Tested head to head"
       }

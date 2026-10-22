@@ -80,7 +80,7 @@ def main():
     if a.videos:
         files=[]
         for cut,shape in [('long','16x9'),('short','9x16')]:
-            base=work/('render-long-music' if cut=='long' else 'render-short')/f'muse-vs-grok-{cut}-{shape}'
+            base=work/f'render-{cut}-revised'/f'muse-vs-grok-{cut}-{shape}'
             # A completed renderer receipt is required even for a review copy.
             receipt=base.with_suffix('.mp4.validation.json')
             data=json.loads(receipt.read_text(encoding='utf-8'))
@@ -91,9 +91,10 @@ def main():
         sections.append({'id':'videos','title':'Watch both videos','files':files,
                          'note':'Review exports. Technical measurements accompany the files; continuous playback acceptance is still open.'})
     sections.append({'id':'evidence','title':'Visuals and checks','files':[
-        file('wed-graphics-overview',work/'cards/sheet.png','All evidence graphics'),
+        file('wed-graphics-overview',work/'cards-revised/sheet.png','All evidence graphics'),
         file('wed-test-observations',ROOT/'docs/plans/2026-10-19-week/test-results/README.md','Redacted test observations'),
         file('wed-release-review',PLAN/'release-review.md','Release status and remaining decisions'),
+        file('wed-visual-revision',PLAN/'visual-revision.md','Opening, logos and framing correction'),
         file('wed-claim-review',PLAN/'claim-review.md','Detailed fact-check findings')]})
     historic=state['manifest']['assets'].get('wednesday-claude-evidence')
     if historic:

@@ -217,10 +217,11 @@ export function badgeMetrics(mode: BadgeMode, shape: Shape): BadgeMetrics {
     : { mode, pad: tall ? 24 : 28, logoH: tall ? 84 : 96, logoGap: 22, gapX: 32, nameMax: tall ? 52 : 58, nameMin: 32, gap1: 0, gap2: 14, tagSize: 24, tagH: 46, radius: 18 }
 }
 
-/** A logo's box in a row of marks: equal optical weight, so a wide wordmark
- *  is set lower than a square mark. */
+/** A logo's box in a row of marks, with matched visible artwork heights. */
 export function logoBox(aspect: number, logoH: number): [number, number] {
-  const h = Math.min(logoH, logoH * 0.86 * Math.pow(aspect, -0.25))
+  // Visible artwork is trimmed upstream. Equal artwork height avoids a
+  // wordmark becoming a tiny line beside a square mark in the same matchup.
+  const h = logoH * 0.86
   return [h * aspect, h]
 }
 

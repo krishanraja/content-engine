@@ -15,7 +15,7 @@ def save(p,d):p.write_text(json.dumps(d,indent=2,ensure_ascii=False,default=str)
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('work',type=Path);ap.add_argument('--heard',action='store_true');a=ap.parse_args();w=a.work.resolve()
     rows=[]
-    for cut,shape,folder,sync in [('long','16x9','render-long-music','sync-long-final-music'),('short','9x16','render-short','sync-short-final')]:
+    for cut,shape,folder,sync in [('long','16x9','render-long-revised','sync-long-final-revised'),('short','9x16','render-short-revised','sync-short-final-revised')]:
         base=w/folder/f'muse-vs-grok-{cut}-{shape}';video=base.with_suffix('.mp4');p=base.with_suffix('.mp4.validation.json')
         receipt=json.loads(p.read_text(encoding='utf-8'));assert receipt['video_sha256']==quality.digest(video)
         if a.heard and cut=='long':
@@ -36,12 +36,16 @@ def main():
                 'method':report['method'],'analysis_resolution_ms':report['analysis_resolution_ms'],
                 'maximum_absolute_offset_ms':max(abs(x['offset_ms']) for x in report['points'])}
         # All full contact sheets were inspected in this session. Long finishing
-        # copied the compressed picture stream, verified in its audio receipt.
+        # copied the accepted audio samples, verified in its revision receipt.
         receipt['checks']['visuals']={'status':'pass','method':'Human inspection of every one-second sample and every quarter-second bookend sample',
             'frames':342 if cut=='long' else 99,'bookend_frames':38,
             'scope':'Sampled-frame layout, captions, logo, privacy and clipping review; does not claim continuous playback',
-            'folder':str(w/('review-long-corrected' if cut=='long' else 'review-short'))}
-        receipt['checks']['full_review']={'status':'not_run','reason':'Continuous audiovisual playback acceptance remains open; this environment cannot listen to the export'}
+            'folder':str(w/f'review-{cut}-revised')}
+        receipt['checks']['full_review']={'status':'not_run','reason':'Prior phone sync accepted; continuous playback acceptance of the corrected picture remains open'}
+        if cut=='short':
+            framing=w/'review-short-revised/face-framing.json'
+            receipt['portrait_framing_audit']={'report':json.loads(framing.read_text(encoding='utf-8')),
+                'evidence_sha256':quality.digest(framing)}
         save(p,receipt)
         problems=quality.delivery_problems(video,p)
         rows.append({'cut':cut,'file':str(video),'sha256':receipt['video_sha256'],'bytes':video.stat().st_size,

@@ -995,6 +995,19 @@ def draw_cover(facts, base, out, refresh=False):
         pg = b.new_page(viewport={'width': COVER_W, 'height': COVER_H})
         pg.set_content(page)
         card.settle(pg)
+        # A wide wordmark must not push its tag outside the crop. Fit the
+        # widest row, then give every comparison mark that same height.
+        pg.evaluate("""() => {
+          const rows = [...document.querySelectorAll('#safe .row')];
+          const heights = rows.map(row => {
+            const img = row.querySelector('img'), tag = row.querySelector('.tag');
+            const css = getComputedStyle(row), box = img.getBoundingClientRect();
+            const available = row.clientWidth - parseFloat(css.paddingLeft) - parseFloat(css.paddingRight)
+              - parseFloat(css.columnGap) - tag.getBoundingClientRect().width;
+            return Math.min(box.height, available * box.height / box.width);
+          });
+          if (heights.length) rows.forEach(row => { row.querySelector('img').style.height = Math.floor(Math.min(...heights)) + 'px'; });
+        }""")
         size, lines = pg.evaluate(FIT_HEADLINE_JS, [list(COVER_HEAD_PX), COVER_HEAD_LINES])
         cut = card.outside(card.boxes(pg, '#safe'), COVER_SAFE)
         dropped = False

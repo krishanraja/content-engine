@@ -8,6 +8,8 @@ Both exact Teleprompter scripts are preserved beside this file, matching the has
 
 ## Video review
 
+Krish confirmed the prior exports' phone lip-sync was fine, then rejected their double opening, unequal logos and low vertical head position. The 22 October replacements have one continuous opening, equal visible logo heights and a centred portrait speaker band with more headroom. Their decoded audio is identical to the accepted mix. Fresh six-window sync checks pass within 40 ms on each exact replacement. Every one-second frame and quarter-second bookend sample was inspected; the portrait face audit passes 89 of 89 spoken-second samples. This records sampled visual review, not continuous playback acceptance of the new pictures. The correction and its native-renderer guard are described in the accompanying visual revision record.
+
 The original takes remain unchanged. Source sync measurements passed six calibrated windows per take, within 40 ms. Final exports use steady 24 fps and decoded audio sample clocks. Finished-export measurements and exact hashes are filed with the videos. Frame contact sheets show every second and quarter-second samples of the bookends.
 
 The recordings have not been certified by continuous human playback. Automated transcripts can disagree over brand spellings, contractions and brief words. Raw discrepancies remain visible in the validation receipts; they must not be marked passed just because they look minor. Review copies are explicitly held for playback acceptance.

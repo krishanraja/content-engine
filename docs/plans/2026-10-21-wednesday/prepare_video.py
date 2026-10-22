@@ -85,7 +85,7 @@ def prepare(work, cut):
     cfg={'name':f'muse-vs-grok-{cut}','source':str(source),
          'words':str(work/f'{cut}.words.json'),'model':'small.en',
          'script':str(PLAN/f'recorded-{cut}-script.md'),
-         'crop':[1080,1920,0,0], 'subject':'Muse vs Grok Bot',
+         'crop':[1080,1920,0,0], 'face':[560,920], 'subject':'Muse vs Grok Bot',
          'date':'2026-10-21','piece_id':PIECE,'tiktok':True,
          'intro':{s:str(work/'story'/f'intro-{s}.mp4') for s in ['16x9','9x16']},
          'intro_override':"Krish, 2026-10-12: when the videos come back bear in mind that I want a proper animated branded intro to this specific story visually, the audio treatment, and then a proper animated outro card. Across all formats, and this should be part of the system moving forward.",

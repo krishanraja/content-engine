@@ -45,9 +45,9 @@ def main():
     item(ROOT/'docs/plans/2026-10-19-week/wednesday-scorecard.md',category='article',
          purpose='Five plain-cell round results with links to the research. Personal and community evidence stay separate.')
     item(PLAN/'publishing-copy.md',category='social',purpose='Editable channel copy for review; no public posts have been made.')
-    for name in ['release-review.md','claim-review.md','packaging-approval.json','chapters.txt','chapters.json']:
+    for name in ['release-review.md','claim-review.md','visual-revision.md','packaging-approval.json','chapters.txt','chapters.json']:
         item(PLAN/name,category='publish',purpose='Review status, evidence and the exact recorded approval. Read before posting.')
-    folders=['cards','article-cards','story','kit-short','kit-long','review-short','review-long-corrected']
+    folders=['cards-revised','article-cards','story-revised','kit-short-revised','kit-long-revised','review-short-revised','review-long-revised']
     archive=w/'production-working.zip'
     with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED) as z:
         for folder in folders:
@@ -59,9 +59,11 @@ def main():
                      'primary-reddit-filings.json','field-source-filing.json','video-technical-review.json','board-readback.json']:
             p=w/name
             if p.is_file():z.write(p,p.name)
-        for folder in ['sync-short-source','sync-long-source','sync-short-final','sync-long-final-music']:
+        for folder in ['sync-short-source','sync-long-source','sync-short-final-revised','sync-long-final-revised']:
             p=w/folder/'sync-report.json'
             if p.is_file():z.write(p,p.relative_to(w).as_posix())
+        p=w/'review-short/face-framing.json'
+        if p.is_file():z.write(p,p.relative_to(w).as_posix())
         for folder,stem in [('render-short','muse-vs-grok-short-9x16'),('render-long-music','muse-vs-grok-long-16x9')]:
             p=w/folder/(stem+'.heard.json')
             if p.is_file():z.write(p,p.relative_to(w).as_posix())
@@ -70,7 +72,7 @@ def main():
     # explicit --as lane for held media instead of flattening a slash.
     held=[archive]
     if a.videos:
-        for cut,shape,folder in [('short','9x16','render-short'),('long','16x9','render-long-music')]:
+        for cut,shape,folder in [('short','9x16','render-short-revised'),('long','16x9','render-long-revised')]:
             base=w/folder/f'muse-vs-grok-{cut}-{shape}'
             for suffix in ['.mp4','.srt','.mp4.validation.json']:
                 p=base.with_suffix(suffix)

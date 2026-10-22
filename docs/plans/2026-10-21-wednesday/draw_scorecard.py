@@ -14,7 +14,7 @@ out.mkdir(parents=True,exist_ok=True)
 data=json.loads((PLAN/'scorecard.json').read_text(encoding='utf-8'))
 e=html.escape
 logos=''.join(f'<img src="{brand.data_uri(PLAN/"logos"/p,300)}" alt="{e(name)}">'
-              for p,name in [('grok.svg','Grok Bot'),('meta-cream.svg','Meta')])
+              for p,name in [('grok-mark.svg','Grok Bot'),('meta-mark.svg','Meta')])
 rows=''.join('<tr>'+''.join(f'<td>{e(v)}</td>' for v in row)+'</tr>' for row in data['rows'])
 t=brand.house()['tokens']
 css=f'''
@@ -22,7 +22,7 @@ css=f'''
 #card{{width:1600px;height:1500px;padding:72px;display:flex;flex-direction:column;gap:40px}}
 header{{display:flex;justify-content:space-between;align-items:center}}
 h1{{font:400 96px/1 Anton;margin:0;text-transform:uppercase}}
-.logos{{display:flex;gap:36px;align-items:center}} .logos img{{height:64px;max-width:200px}}
+.logos{{display:flex;gap:36px;align-items:center}} .logos img{{height:56px;width:auto;max-width:320px;object-fit:contain}}
 table{{border-collapse:collapse;width:100%;table-layout:fixed;font:500 64px/1.13 Archivo}}
 th,td{{text-align:left;padding:24px 20px;border-bottom:2px solid {t['cream']};vertical-align:middle}}
 th{{font-weight:800;color:#B7A6FF}} th:first-child{{width:26%}} th:nth-child(2){{width:33%}}
