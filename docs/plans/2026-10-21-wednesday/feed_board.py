@@ -35,6 +35,8 @@ def main():
     ap=argparse.ArgumentParser()
     ap.add_argument('work',type=Path)
     ap.add_argument('--videos',action='store_true')
+    ap.add_argument('--stable',action='store_true',help='Use completed stabilised exports')
+    ap.add_argument('--short-stable',action='store_true',help='Use the finished stable short while the long replacement processes')
     a=ap.parse_args()
     work=a.work.resolve();out=work/'board';out.mkdir(exist_ok=True)
     state=web.call('GET',f'/api/board/{WEEK}')
@@ -59,7 +61,12 @@ def main():
             raise FileNotFoundError(path)
         url=f'/api/board/{WEEK}/assets/{aid}?pending=1'
         mappings[:]=[m for m in mappings if m['id']!=aid]
-        mappings.append({'id':aid,'source_url':url,'path':str(path)})
+        existing=state['manifest']['assets'].get(aid)
+        digest=web.sha(path.read_bytes())
+        if existing and existing['sha256']==digest:
+            mappings.append({'id':aid,'source_url':url,'existing_sha256':digest})
+        else:
+            mappings.append({'id':aid,'source_url':url,'path':str(path)})
         return {'label':label,'url':url}
 
     sections=[]
@@ -69,7 +76,7 @@ def main():
         file('wed-article-md',ROOT/'docs/plans/2026-10-19-week/wednesday-article-draft.md','Article Markdown'),
         file('wed-scorecard-md',ROOT/'docs/plans/2026-10-19-week/wednesday-scorecard.md','Scorecard with sources'),
         file('wed-scorecard-png',work/'takeaway/scorecard.png','Download the scorecard')],
-        'note':'Article and scorecard remain in editorial review. Use the editable Article draft box below for changes.'})
+        'note':'The fact gate is clear after the source audit and Krish’s named-line adjudication. Use the editable Article draft box below for changes.'})
     covers=[('cover-1200x630.png','Substack cover'),('cover.png','Substack feed'),
             ('cover-1200x675.png','LinkedIn share card'),('cover-1080x1080.png','Square cover'),
             ('cover-1080x1920.png','Vertical cover')]
@@ -80,22 +87,27 @@ def main():
     if a.videos:
         files=[]
         for cut,shape in [('long','16x9'),('short','9x16')]:
-            base=work/f'render-{cut}-revised'/f'muse-vs-grok-{cut}-{shape}'
+            stable=a.stable or (cut=='short' and a.short_stable)
+            base=work/f'render-{cut}-{"stable" if stable else "revised"}'/f'muse-vs-grok-{cut}-{shape}'
             # A completed renderer receipt is required even for a review copy.
             receipt=base.with_suffix('.mp4.validation.json')
             data=json.loads(receipt.read_text(encoding='utf-8'))
             if data.get('video_sha256')!=web.sha(base.with_suffix('.mp4').read_bytes()):
                 raise ValueError(cut+' video differs from its renderer receipt')
-            files += [file('wed-video-'+cut,base.with_suffix('.mp4'),cut.capitalize()+' video — review copy'),
+            label=('Stabilised '+cut+' video — review copy') if stable else (cut.capitalize()+' video — previous version; stabilisation processing' if a.short_stable else cut.capitalize()+' video — review copy')
+            files += [file('wed-video-'+cut,base.with_suffix('.mp4'),label),
                       file('wed-captions-'+cut,base.with_suffix('.srt'),cut.capitalize()+' captions')]
-        sections.append({'id':'videos','title':'Watch both videos','files':files,
-                         'note':'Review exports. Technical measurements accompany the files; continuous playback acceptance is still open.'})
+        video_note=('Both camera tracks are stabilised. Motion, framing and sync evidence accompanies the exports; final continuous playback acceptance is still open.' if a.stable else 'Review exports. The stabilised replacements are being finished; continuous playback acceptance remains open.')
+        sections.append({'id':'videos','title':'Watch both videos','files':files,'note':video_note})
     sections.append({'id':'evidence','title':'Visuals and checks','files':[
-        file('wed-graphics-overview',work/'cards-revised/sheet.png','All evidence graphics'),
+        file('wed-graphics-overview',work/'cards-stable/sheet.png','All evidence graphics'),
         file('wed-test-observations',ROOT/'docs/plans/2026-10-19-week/test-results/README.md','Redacted test observations'),
         file('wed-release-review',PLAN/'release-review.md','Release status and remaining decisions'),
         file('wed-visual-revision',PLAN/'visual-revision.md','Opening, logos and framing correction'),
-        file('wed-claim-review',PLAN/'claim-review.md','Detailed fact-check findings')]})
+        file('wed-claim-review',PLAN/'claim-review.md','Original fact-check findings'),
+        file('wed-claim-resolution',PLAN/'claim-resolution-22-oct.md','Source audit and article corrections'),
+        file('wed-fact-adjudication',PLAN/'final-fact-adjudication.md','Final fact-check: 27 named lines and their evidence'),
+        file('wed-stabilisation-review',PLAN/'stabilisation-review.md','Stabilisation measurements and mandatory check')]})
     historic=state['manifest']['assets'].get('wednesday-claude-evidence')
     if historic:
         sections[-1]['files'].append({'label':'Original editorial evidence pack',
@@ -108,7 +120,7 @@ def main():
                 re.findall(r'^## ([^\n]+)\n(.*?)(?=^## |\Z)',copy,re.M|re.S)],
         'note':'The Publishing copy review box is editable and commentable.'})
     material={'piece_id':PIECE,'status':'review',
-              'note':'Production files prepared for review. Final playback acceptance and article fact-gate findings remain open. Nothing has been publicly posted.',
+              'note':'Article fact gate clear after source review and Krish’s adjudication. Final video playback acceptance remains open. Nothing has been publicly posted.',
               'sections':sections}
     save(out/'materials.json',material)
     week=ROOT/'docs/plans/2026-10-19-week'
@@ -125,7 +137,7 @@ def main():
              ('Release review',PLAN/'release-review.md')]
     args=['--week',WEEK,'--previous',str(previous),'--keep','mon','--target','web','--live',
           '--piece',f'wed={PIECE}','--draft','wed','--materials',f'wed={out/"materials.json"}',
-          '--waiting','wed=Review the article, scorecard and channel copy; final video playback and fact findings remain open.',
+          '--waiting','wed=Article fact gate clear. Review the finished video replacements for final playback acceptance; article and channel copy remain editable.',
           '--ideas',str(week/'ideas.json'),'--queue',str(out/'queue.json')]
     if 'id="wed-four-draft-only-tests"' in old:
         for collection in ('edits','comments'):

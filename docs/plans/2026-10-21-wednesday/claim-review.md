@@ -1,5 +1,9 @@
 # Wednesday claim review
 
+Historical result: the 22 October source audit and corrections are recorded in
+`claim-resolution-22-oct.md`. They await the independent gate; this original
+result remains unchanged below.
+
 Checked body: `6f70766472114a85608accc38e06870d70c42982eb71a25fb93d8f78d7056171`.
 
 One paid run, $0.50. The original automated result remains on the record. This document explains open findings; it does not clear them.

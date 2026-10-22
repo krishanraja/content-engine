@@ -24,6 +24,31 @@ only to recover what it holds.
 
 ## Never call a video good without watching it
 
+### Mandatory camera-motion assessment
+
+Krish, 2026-10-22: "stabilization should be a mandatory check to see if it is needed. it usually is".
+
+Assess every recording before final composition, alongside sync, audio and
+framing. Track static background features across continuous windows near the
+start, middle and end; distinguish camera shake from the speaker's gestures.
+An inconclusive measurement requires inspection or a better tracking region.
+It cannot be treated as evidence that stabilisation is unnecessary.
+
+When needed, stabilise the camera footage before adding cards, captions or
+logos. Preserve the accepted speech edit, audio samples and caption clock.
+Compare the untreated and treated footage, then inspect the finished cut for
+residual shake, warping, exposed borders and lost headroom. Recheck sync after
+the picture changes. When treatment is unnecessary, record the measured and
+visual evidence supporting that decision. Never apply treatment merely to
+satisfy the checklist if it makes the picture worse.
+
+The exact-byte validation receipt needs a `motion` check with the recording
+hash, assessment evidence hash, `stabilised` or `not_needed` decision, treatment
+and before/after measurements when applicable, and final picture review bound
+to the delivered video hash. `quality.delivery_problems` refuses missing,
+inconclusive or stale motion evidence. Working renders remain available for
+inspection; they do not count as finished delivery.
+
 Krish, 2026-10-13, after Wednesday's runner video went out with a title running
 off the page: "Did you actually watch these? ... I'm pissed off that you didn't
 pick them up." The runner's preview stills (one frame per beat) are not a

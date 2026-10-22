@@ -17,7 +17,7 @@ import build
 
 
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('work',type=Path);ap.add_argument('--videos',action='store_true')
+    ap=argparse.ArgumentParser();ap.add_argument('work',type=Path);ap.add_argument('--videos',action='store_true');ap.add_argument('--stable',action='store_true')
     a=ap.parse_args();w=a.work.resolve()
     files=[]
     def item(path,kind=None,category=None,name=None,purpose=None,**extra):
@@ -41,13 +41,14 @@ def main():
              scope='Anonymised reconstruction of observed output. No screenshot, exhaustive audit or reliability rate is claimed.')
     item(w/'takeaway/scorecard.png',kind='share-card',logos=['Grok Bot','Meta'],shows='evidence')
     item(ROOT/'docs/plans/2026-10-19-week/wednesday-article-draft.md',category='article',name='article-review.md',
-         purpose='Article draft in review. The fact gate remains open; this file is not labelled fact-checked.')
+         purpose='Source-audited article. Native fact gate cleared after the final check and Krish’s 27 named-line adjudications; raw model findings remain preserved.')
     item(ROOT/'docs/plans/2026-10-19-week/wednesday-scorecard.md',category='article',
          purpose='Five plain-cell round results with links to the research. Personal and community evidence stay separate.')
     item(PLAN/'publishing-copy.md',category='social',purpose='Editable channel copy for review; no public posts have been made.')
-    for name in ['release-review.md','claim-review.md','visual-revision.md','packaging-approval.json','chapters.txt','chapters.json']:
+    for name in ['release-review.md','claim-review.md','claim-resolution-22-oct.md','final-fact-adjudication.md','finish-approval-22-oct.json','stabilisation-review.md','visual-revision.md','packaging-approval.json','chapters.txt','chapters.json']:
         item(PLAN/name,category='publish',purpose='Review status, evidence and the exact recorded approval. Read before posting.')
-    folders=['cards-revised','article-cards','story-revised','kit-short-revised','kit-long-revised','review-short-revised','review-long-revised']
+    suffix='stable' if a.stable else 'revised'
+    folders=[f'cards-{suffix}','article-cards','story-revised',f'kit-short-{suffix}',f'kit-long-{suffix}',f'review-short-{suffix}',f'review-long-{suffix}']
     archive=w/'production-working.zip'
     with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED) as z:
         for folder in folders:
@@ -62,6 +63,13 @@ def main():
         for folder in ['sync-short-source','sync-long-source','sync-short-final-revised','sync-long-final-revised']:
             p=w/folder/'sync-report.json'
             if p.is_file():z.write(p,p.relative_to(w).as_posix())
+        if a.stable:
+            for cut in ['long','short']:
+                for name in ['stabilisation.json','camera-path.npz','motion-comparison.json','geometry-review.json']:
+                    p=w/f'stability-{cut}/full'/name;z.write(p,p.relative_to(w).as_posix())
+                p=w/f'sync-{cut}-final-stable/sync-report.json';z.write(p,p.relative_to(w).as_posix())
+            for name in ['fact-final-22oct-readback.json','fact-adjudication-prepared.json','fact-adjudication-recorded.json','fact-adjudication-final-readback.json','source-filings-22oct.json']:
+                p=w/name;z.write(p,p.name)
         p=w/'review-short/face-framing.json'
         if p.is_file():z.write(p,p.relative_to(w).as_posix())
         for folder,stem in [('render-short','muse-vs-grok-short-9x16'),('render-long-music','muse-vs-grok-long-16x9')]:
@@ -73,12 +81,13 @@ def main():
     held=[archive]
     if a.videos:
         for cut,shape,folder in [('short','9x16','render-short-revised'),('long','16x9','render-long-revised')]:
+            if a.stable:folder=f'render-{cut}-stable'
             base=w/folder/f'muse-vs-grok-{cut}-{shape}'
             for suffix in ['.mp4','.srt','.mp4.validation.json']:
                 p=base.with_suffix(suffix)
                 held.append(p)
     post=json.loads((PLAN/'post.json').read_text(encoding='utf-8'));post['files']=files
-    post['release_status']='review';post['readiness_note']='Open fact findings and playback acceptance. Nothing has been publicly posted.'
+    post['release_status']='review';post['readiness_note']='Fact gate clear after Krish’s adjudication. Final video playback acceptance remains open. Nothing has been publicly posted.'
     p=w/'review-post.json';p.write_text(json.dumps(post,indent=2,ensure_ascii=False),encoding='utf-8')
     result=build.build(p,out=w/'packs',replace=True)
     review=w/'review-media';review.mkdir(exist_ok=True)

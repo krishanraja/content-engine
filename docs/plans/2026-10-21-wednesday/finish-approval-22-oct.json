@@ -1,0 +1,15 @@
+{
+  "decided_by": "Krish",
+  "date": "2026-10-22",
+  "said": "Approve the final fact check with a $1 cap and the retrospective exception for this article. Keep going and get the stabilised videos and full Wednesday board ready to publish.",
+  "piece_id": "d7a20885-7001-4661-b444-9d7ca1043416",
+  "body_sha256": "1c88a1fa452feb791893e71d22f779daf42ee68ab190d43d8a0fcaa83e8ba208",
+  "fact_check": {"maximum_runs": 1, "budget_usd": 1},
+  "retrospective_exception": {"checks": ["CALL", "CALL_HORIZON", "CLEAR_STANCE"], "scope": "This piece and exact article body only; all other checks remain in force"},
+  "fact_adjudication": {
+    "said": "Approve all 27 named lines against the evidence",
+    "named_review_sha256": "c1aabc9237ad0ed7e9b7b180e8f76560aa1ee5df1f5c3061752c3aeae6522ee4",
+    "scope": "The 23 unverified lines and four disputed contradictions in that exact review document; raw checker verdicts remain preserved"
+  },
+  "authority": "Private board preparation and approved finishing checks; no public posting authority"
+}

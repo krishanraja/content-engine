@@ -1312,6 +1312,21 @@ def card_input(path, start, stop):
             '-itsoffset', f'{start:.3f}', '-i', str(path)]
 
 
+def bounded_decode_inputs(inputs, threads=2):
+    """FFmpeg's codec thread option applies to one input, not all inputs.
+
+    Dozens of looping picture cards otherwise each create an automatic pool
+    (808 decoder threads on Wednesday's long cut). Keep stream order intact.
+    """
+    if type(threads) is not int or not 1 <= threads <= 8:
+        raise ValueError('Input decoder threads must be between one and eight')
+    result=[]
+    for value in inputs:
+        if value=='-i':result.extend(['-threads',str(threads)])
+        result.append(value)
+    return result
+
+
 def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix):
     """The ffmpeg inputs and filter graph for one shape: the captioned main
     (graphics, the tall logo, the strap, the captions), joined after the sting
@@ -1435,7 +1450,7 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
         parts.insert(0, '[iv]')
     g.append(f'{"".join(parts)}concat=n={len(parts)}:v=1:a=0[V]')
     inputs += ['-i', str(mix)]
-    return inputs, g, f'{n}:a'
+    return bounded_decode_inputs(inputs), g, f'{n}:a'
 
 
 def default_levels():
@@ -2280,6 +2295,7 @@ def main():
                        'transcript_document':{'sha256':quality.digest(wpath),'derivation':(document or {}).get('derivation')},'checks': {
                 'heard':speech_check,
                 'sync':{'status':'not_run'},
+                'motion':{'status':'not_run','reason':'Mandatory camera-motion assessment and final framing review; stabilise when needed'},
                 'loudness':{'status':'fail' if loudness_warnings(loudness, levels) else 'pass', 'measurements':loudness},
                 'visuals':{'status':'inconclusive','coverage':visual_checks,'reason':'Full-size card and font review required'},
                 'full_review':{'status':'not_run'}},
