@@ -1308,7 +1308,9 @@ def card_input(path, start, stop):
     until 19 October, so a 13-minute deep cut with 51 cards turned about a million frames that were never
     shown, and took 3.5 hours: longer than a cloud container stays up (Krish: "are you saying we can never
     produce long videos?"). The pictures come out frame for frame the same."""
-    return ['-loop', '1', '-framerate', str(FPS), '-t', f'{max(0.1, stop - start + 0.5):.3f}',
+    moving = Path(path).suffix.lower() in {'.mp4', '.mov', '.mkv', '.webm'}
+    loop = ['-stream_loop', '-1'] if moving else ['-loop', '1', '-framerate', str(FPS)]
+    return [*loop, '-t', f'{max(0.1, stop - start + 0.5):.3f}',
             '-itsoffset', f'{start:.3f}', '-i', str(path)]
 
 
@@ -1429,6 +1431,10 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
         inputs += ['-loop', '1', '-framerate', str(FPS), '-t', f'{total:.3f}', '-i', str(P(st['png']))]
         g.append(f"[{last}][{n}:v]overlay=0:0:enable='between(t,{t0:.2f},{t0 + st.get('seconds', 3.5):.2f})'[s{k}]")
         last, n, k = f's{k}', n + 1, k + 1
+    if cfg.get('scoreboard'):
+        import scoreboard
+        g.extend(scoreboard.graph(last,'scored_main',asp,total,cfg['scoreboard']))
+        last='scored_main'
     # Overlay inputs include a fade tail. Bound the composed main picture to
     # its exact frame count before concat, so that tail cannot delay the outro.
     main_clock = f'fps={FPS},trim=end_frame={round(total*FPS)},setpts=N/({FPS}*TB),setsar=1,format=yuv420p'
@@ -1656,6 +1662,14 @@ def self_test():
         checks.append(('with no approved track the cut has voice only and says so', (got, 'voice only' in (why or '')), (None, True)))
     checks += caption_self_test()
     checks += gate_self_test()
+    import scoreboard
+    rows=scoreboard.states([{'at_s':1,'grok':1,'muse':0},{'at_s':2,'grok':1,'muse':1}],3)
+    checks.append(('one tally begins level and changes only at its point events',[(r['start'],r['end'],r['grok'],r['muse'])for r in rows],[(0.,1,0,0),(1,2,1,0),(2,3,1,1)]))
+    for event in [{'at_s':1,'grok':2,'muse':0},{'at_s':1,'grok':-1,'muse':0},{'at_s':float('nan'),'grok':1,'muse':0}]:
+        rejected=False
+        try:scoreboard.states([event],3)
+        except ValueError:rejected=True
+        checks.append(('invalid or invented point event is refused: '+str(event),rejected,True))
     bad = [f'{label}: got {got!r}, want {want!r}' for label, got, want in checks if got != want]
     print('\n'.join(bad) if bad else f'quick-edit self-test passed: {len(checks)} checks')
     return 1 if bad else 0
@@ -1777,6 +1791,21 @@ def gate_self_test():
     checks.append(('with only the short cut\'s kit made, it is not known (music.py then asks for its floor)', piece_seconds({'kit': {}}, work)[0], None))
     # A sting with a loud tone on it, a voice, an end card.
     ff = lambda *a: subprocess.run(['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error', *map(str, a)], check=True)
+    # Decode a moving panel past its source duration: the native input must
+    # loop the movie, rather than applying the still-image demuxer option.
+    moving=work/'moving.mp4'
+    ff('-f','lavfi','-i','testsrc2=s=128x72:r=5:d=0.4','-an','-c:v','libx264','-threads','1',moving)
+    hashes=subprocess.check_output(['ffmpeg','-v','error',*card_input(moving,0,.8),'-map','0:v','-frames:v','4','-f','framemd5','-'],text=True)
+    decoded=[line.split(',')[-1].strip()for line in hashes.splitlines()if line and not line.startswith('#')]
+    checks.append(('moving evidence loops as moving pictures',len(decoded)==4 and decoded[0]!=decoded[1]and decoded[0]==decoded[2],True))
+    # Regression: evaluating a future point at t=0 formerly overflowed the
+    # font size before drawtext's enable expression could hide it.
+    import scoreboard
+    (work/'fonts').mkdir(exist_ok=True)
+    shutil.copy2(Path(__file__).parent/'fonts/Anton.ttf',work/'fonts/Anton.ttf')
+    score_graph=scoreboard.graph('0:v','v','9x16',100,{'events':[{'at_s':70,'grok':1,'muse':0}]})
+    subprocess.run(['ffmpeg','-y','-v','error','-f','lavfi','-i','color=s=1080x1920:r=24:d=0.1','-filter_complex',';'.join(score_graph),'-map','[v]','-frames:v','1','-threads','1','score.png'],cwd=work,check=True)
+    checks.append(('a point seventy seconds ahead renders safely at the opening frame',(work/'score.png').is_file(),True))
     loud = work / 'loud-sting.mp4'
     ff('-f', 'lavfi', '-i', 'color=c=0xB7A6FF:s=108x192:r=30:d=1.5', '-f', 'lavfi', '-i', 'sine=f=1000:d=1.5:r=48000',
        '-filter_complex', '[1:a]volume=0.9,aformat=channel_layouts=stereo[a]', '-map', '0:v', '-map', '[a]',

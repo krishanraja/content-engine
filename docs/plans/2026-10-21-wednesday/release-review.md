@@ -1,5 +1,7 @@
 # Wednesday release review
 
+**Current video revision:** see `narrative-recut-review.md` for the integrated recuts with Krish's newly supplied stabilised vertical source, original redacted interactions, launch demonstrations, community captures and the single running tally. The earlier stabilised exports discussed below were superseded after Krish rejected the vertical motion and requested more actual evidence. The headshot cover revision is still under design review. The article's fact gate remains clear; these video review copies still require full phone playback acceptance.
+
 Title and headings: Krish approved the proposed set on 21 October, after both recordings.
 
 The article preserves the edited draft’s phrasing and round structure. The 22 October revision has 422 evidence words from personal tests and 423 from the supplied research. Opening, method, round calls, verdict and practical actions combine the two. This is an editorial balance, not a pooled statistical result. The news result is consistently “level, for different reasons”. The source-linked scorecard accompanies it.
