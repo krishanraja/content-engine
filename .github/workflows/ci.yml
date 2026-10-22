@@ -90,7 +90,9 @@ jobs:
         run: python scripts/check_board_layout.py --browser
 
   board-web:
-    runs-on: ubuntu-latest
+    # The isolated browser runtime below is pinned to Playwright 1.55.
+    # ubuntu-latest moved to 26.04, which that runtime does not support.
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

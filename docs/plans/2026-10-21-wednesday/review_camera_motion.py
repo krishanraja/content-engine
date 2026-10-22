@@ -6,7 +6,7 @@ from pathlib import Path
 
 import cv2
 import numpy as np
-from measure_camera_motion import measure
+from measure_camera_motion import measure_windows
 
 
 def digest(p):
@@ -22,8 +22,9 @@ def main():
     assert receipt['source_sha256']==digest(source) and receipt['output_sha256']==digest(target),'Stabilisation is incomplete or stale'
     starts=[0,39,79] if a.cut=='short' else [0,70,150,230,322]
     rows=[]
-    for start in starts:
-        pair={side:measure(path,start,10) for side,path in [('before',source),('after',target)]}
+    before=measure_windows(source,starts,10);after=measure_windows(target,starts,10)
+    for start,first,second in zip(starts,before,after):
+        pair={'before':first,'after':second}
         assert all(value['tracked_pairs']>=220 for value in pair.values()),'Insufficient wall tracking'
         rows.append(pair)
         print(json.dumps({'start':start,**{side:{k:v for k,v in data.items() if k not in ('points','file','method')} for side,data in pair.items()}}),flush=True)

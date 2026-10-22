@@ -7,12 +7,18 @@ import cv2
 import numpy as np
 
 
-def measure(path, start, seconds, fps=24):
-    cap=cv2.VideoCapture(str(path),cv2.CAP_FFMPEG,[cv2.CAP_PROP_N_THREADS,2]);cap.set(cv2.CAP_PROP_POS_FRAMES,round(start*fps))
-    rows=[];previous=None
-    for i in range(round(seconds*fps)):
-        ok,frame=cap.read()
+def measure_windows(path, starts, seconds, fps=24):
+    # Seeking by either time or CAP_PROP_POS_FRAMES can consult incorrect
+    # average-rate metadata. Count decoded frames once, as the compositor does.
+    cap=cv2.VideoCapture(str(path),cv2.CAP_FFMPEG,[cv2.CAP_PROP_N_THREADS,2])
+    ranges=[(round(start*fps),round((start+seconds)*fps))for start in starts]
+    rows=[[]for _ in starts];previous=None;active=None;i=0
+    while i<max(end for _,end in ranges) and cap.grab():
+        window=next((k for k,(begin,end)in enumerate(ranges)if begin<=i<end),None)
+        if window is None:previous=None;active=None;i+=1;continue
+        ok,frame=cap.retrieve()
         if not ok:break
+        if active!=window:previous=None;active=window
         grey=cv2.cvtColor(cv2.resize(frame,(540,960)),cv2.COLOR_BGR2GRAY)
         if previous is not None:
             # The upper wall is above the speaker, headphones and gestures.
@@ -24,10 +30,18 @@ def measure(path, start, seconds, fps=24):
                 if valid.sum()>=12:
                     matrix,inliers=cv2.estimateAffinePartial2D(points[valid],following[valid],method=cv2.RANSAC,ransacReprojThreshold=1.2)
                     if matrix is not None and inliers.sum()>=10:
-                        rows.append({'frame':i,'dx_px':float(matrix[0,2]*2),'dy_px':float(matrix[1,2]*2),
+                        rows[window].append({'frame':i-ranges[window][0],'dx_px':float(matrix[0,2]*2),'dy_px':float(matrix[1,2]*2),
                             'angle_deg':float(np.degrees(np.arctan2(matrix[1,0],matrix[0,0]))),'inliers':int(inliers.sum())})
-        previous=grey
+        previous=grey;i+=1
     cap.release()
+    return [summarise(path,start,seconds,points)for start,points in zip(starts,rows)]
+
+
+def measure(path,start,seconds,fps=24):
+    return measure_windows(path,[start],seconds,fps)[0]
+
+
+def summarise(path,start,seconds,rows):
     shifts=np.array([[r['dx_px'],r['dy_px']] for r in rows])
     speed=np.linalg.norm(shifts,axis=1) if len(shifts) else np.array([])
     return {'file':str(path),'start_s':start,'seconds':seconds,'tracked_pairs':len(rows),
@@ -35,7 +49,7 @@ def measure(path, start, seconds, fps=24):
         'p95_translation_px':float(np.percentile(speed,95)) if len(speed) else None,
         'rms_translation_px':float(np.sqrt(np.mean(speed**2))) if len(speed) else None,
         'median_rotation_deg':float(np.median([abs(r['angle_deg']) for r in rows])) if rows else None,
-        'method':'Frame-index matched optical flow and robust affine fit on static upper-wall features',
+        'method':'Sequential decoded-frame indices; optical flow and robust affine fit on static upper-wall features',
         'points':rows}
 
 
