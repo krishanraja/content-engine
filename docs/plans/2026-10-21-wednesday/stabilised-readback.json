@@ -197,20 +197,20 @@
     "verified_files": [
       {
         "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/1 Article/web-page.html",
-        "sha256": "68682587c4e1ee4b07d32e5305219760dd1a791cfe76ef458886214616c1cf0d",
-        "bytes": 1191543,
+        "sha256": "8a273cf607147e28debd6d330c2181857d73bd5a175d95506a1b798571cf02c4",
+        "bytes": 1191559,
         "status": "pass"
       },
       {
         "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/1 Article/substack-copy.html",
-        "sha256": "40a11d8a55bb32c054c9dfed628ac206b602100fe7592a4c4f7d37688e364fa8",
-        "bytes": 1174274,
+        "sha256": "0c95517c22fb48d4a45951781701e25de064e8875599d30b00b7356b961f761b",
+        "bytes": 1174290,
         "status": "pass"
       },
       {
         "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/1 Article/email-pictures-off.html",
-        "sha256": "404f81a42f2bcf8cf23d7e10cb46a40bde385be588d59da6a2eeff0276b004d9",
-        "bytes": 326511,
+        "sha256": "4eaa78a0c4053f38b3e57251b04b2caf113ffa2dca7a67ee82a7391bd053980e",
+        "bytes": 326527,
         "status": "pass"
       },
       {
@@ -432,5 +432,114 @@
     ],
     "scope": "Actual newest library downloads, not an assertion that the Drive runner has written them"
   },
-  "publicly_posted": false
+  "publicly_posted": false,
+  "article_metadata_refresh": {
+    "build_id": "1bfee8f7c5955aef2cfb3b6fe8c8b9645b80221c5b1cd4b113cc50a9c9620584",
+    "html_verified": true,
+    "retained_all_previous_assets": true,
+    "changed_downloads": [
+      {
+        "id": "wed-article-web",
+        "sha256": "8a273cf607147e28debd6d330c2181857d73bd5a175d95506a1b798571cf02c4",
+        "bytes": 1191559,
+        "verified": true
+      },
+      {
+        "id": "wed-article-copy",
+        "sha256": "0c95517c22fb48d4a45951781701e25de064e8875599d30b00b7356b961f761b",
+        "bytes": 1174290,
+        "verified": true
+      }
+    ],
+    "stores": {
+      "2026-10-19": {
+        "edits": {
+          "unchanged": true,
+          "count": 3
+        },
+        "comments": {
+          "unchanged": true,
+          "count": 37
+        },
+        "ticks": {
+          "unchanged": true,
+          "count": 7
+        },
+        "links": {
+          "unchanged": true,
+          "count": 0
+        },
+        "picks": {
+          "unchanged": true,
+          "count": 3
+        },
+        "queue": {
+          "unchanged": true,
+          "count": 11
+        }
+      },
+      "2026-10-12": {
+        "edits": {
+          "unchanged": true,
+          "count": 3
+        },
+        "comments": {
+          "unchanged": true,
+          "count": 24
+        },
+        "ticks": {
+          "unchanged": true,
+          "count": 18
+        },
+        "links": {
+          "unchanged": true,
+          "count": 0
+        },
+        "picks": {
+          "unchanged": true,
+          "count": 0
+        },
+        "queue": {
+          "unchanged": true,
+          "count": 0
+        }
+      }
+    }
+  },
+  "engine_release": {
+    "pull_request": 134,
+    "merge_commit": "6bfad15bbf75bf5ef31bd0820c2e011caac04e6b",
+    "checks_passed": 15
+  },
+  "live_article_publication_checks": {
+    "ready": true,
+    "gate": {
+      "ok": true,
+      "reason": null
+    },
+    "retrospective_checks": [
+      {
+        "id": "CALL",
+        "name": "Retrospective exception: A dated prediction with a confidence",
+        "blocking": true,
+        "ok": true,
+        "detail": "Exempt by Krish on 22 October 2026: this exact retrospective comparison has a recommendation and three actions; no future prediction or confidence is asserted."
+      },
+      {
+        "id": "CALL_HORIZON",
+        "name": "Retrospective exception: A prediction due within about three months",
+        "blocking": true,
+        "ok": true,
+        "detail": "Exempt by Krish on 22 October 2026: this exact retrospective comparison has a recommendation and three actions; no future prediction or confidence is asserted."
+      },
+      {
+        "id": "CLEAR_STANCE",
+        "name": "Retrospective exception: Take a clear stance",
+        "blocking": true,
+        "ok": true,
+        "detail": "Exempt by Krish on 22 October 2026: this exact retrospective comparison has a recommendation and three actions; no future prediction or confidence is asserted."
+      }
+    ],
+    "production_commit": "6bfad15bbf75bf5ef31bd0820c2e011caac04e6b"
+  }
 }
