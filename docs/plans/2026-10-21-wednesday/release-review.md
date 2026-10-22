@@ -6,16 +6,16 @@ The article preserves the edited draft’s phrasing and round structure. The 22 
 
 ## Finishing pass, 22 October
 
-Krish accepted the opening, logos and portrait framing, then requested stabilisation for both cuts. Camera footage is being corrected before the native compositor, preserving the accepted audio and exact speech/caption clock. The motion assessment is now mandatory for every production: treatment when needed, or an evidence-backed decision to leave it untreated, plus a final picture review. Earlier export checks below are historical and do not certify the stabilised replacements.
+Krish accepted the opening, logos and portrait framing, then requested stabilisation for both cuts. Both final stabilised exports are complete. Camera footage was corrected before the native compositor, preserving the accepted decoded audio and exact speech/caption clock. Measured background-motion RMS fell 67.7% for long and 51.5% for short. All camera transforms pass geometry checks, six calibrated sync windows per export pass within 40 ms, and all one-second and quarter-second bookend samples were inspected. Continuous phone playback acceptance remains open. The motion assessment is now mandatory for every production: treatment when needed, or an evidence-backed decision to leave it untreated, plus a final picture review. Earlier export checks below are historical and do not certify the stabilised replacements.
 
-The article has been checked against the retained private trial readouts and original corpus sources. See the accompanying source-audit record for every earlier blocking claim. Corrections include day-plan priority, three hotel nights, airline-direct versus nonstop, April article versus February forecast, the conditional email caveat and duplicate-draft permissions. Unsupported report details are removed. No failed model result has been changed by hand; the revised body awaits the independent gate and the retrospective-format decision.
+The article has been checked against the retained private trial readouts and original corpus sources. See the accompanying source-audit record for every earlier blocking claim. Corrections include day-plan priority, three hotel nights, airline-direct versus nonstop, April article versus February forecast, the conditional email caveat and duplicate-draft permissions. Unsupported report details are removed. No failed model result has been changed by hand; the independent result and subsequent human adjudication are recorded below.
 
 Krish approved one final $1-capped check and the exact article's retrospective
 exception on 22 October (`finish-approval-22-oct.json`). The run completed and
 cost $0.59. Its response download was interrupted; the persisted result and
 meter were then read back without retrying the paid action. It checked 57
 claims: 30 passed, 23 unverified, four labelled contradicted. The unchanged
-article remains held pending named human adjudication. The 27 exact lines,
+article was held pending the named human adjudication recorded below. The 27 exact lines,
 source passages and reasons are in `final-fact-adjudication.md`. The raw model
 verdicts are preserved, including the erroneous London–Tokyo fare comparison.
 No further paid run is authorised. The retrospective exception is being

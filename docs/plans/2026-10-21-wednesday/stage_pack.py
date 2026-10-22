@@ -45,7 +45,7 @@ def main():
     item(ROOT/'docs/plans/2026-10-19-week/wednesday-scorecard.md',category='article',
          purpose='Five plain-cell round results with links to the research. Personal and community evidence stay separate.')
     item(PLAN/'publishing-copy.md',category='social',purpose='Editable channel copy for review; no public posts have been made.')
-    for name in ['release-review.md','claim-review.md','claim-resolution-22-oct.md','final-fact-adjudication.md','finish-approval-22-oct.json','visual-revision.md','packaging-approval.json','chapters.txt','chapters.json']:
+    for name in ['release-review.md','claim-review.md','claim-resolution-22-oct.md','final-fact-adjudication.md','finish-approval-22-oct.json','stabilisation-review.md','visual-revision.md','packaging-approval.json','chapters.txt','chapters.json']:
         item(PLAN/name,category='publish',purpose='Review status, evidence and the exact recorded approval. Read before posting.')
     suffix='stable' if a.stable else 'revised'
     folders=[f'cards-{suffix}','article-cards','story-revised',f'kit-short-{suffix}',f'kit-long-{suffix}',f'review-short-{suffix}',f'review-long-{suffix}']

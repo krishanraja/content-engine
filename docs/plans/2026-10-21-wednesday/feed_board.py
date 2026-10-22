@@ -106,7 +106,8 @@ def main():
         file('wed-visual-revision',PLAN/'visual-revision.md','Opening, logos and framing correction'),
         file('wed-claim-review',PLAN/'claim-review.md','Original fact-check findings'),
         file('wed-claim-resolution',PLAN/'claim-resolution-22-oct.md','Source audit and article corrections'),
-        file('wed-fact-adjudication',PLAN/'final-fact-adjudication.md','Final fact-check: 27 named lines and their evidence')]})
+        file('wed-fact-adjudication',PLAN/'final-fact-adjudication.md','Final fact-check: 27 named lines and their evidence'),
+        file('wed-stabilisation-review',PLAN/'stabilisation-review.md','Stabilisation measurements and mandatory check')]})
     historic=state['manifest']['assets'].get('wednesday-claude-evidence')
     if historic:
         sections[-1]['files'].append({'label':'Original editorial evidence pack',

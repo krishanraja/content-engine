@@ -1,0 +1,436 @@
+{
+  "date": "2026-10-22",
+  "release_status": "technical checks complete; final human continuous playback acceptance open",
+  "board": {
+    "build_id": "a99799bcddd665f4ac9bc4696fa212c1da3aa2b788952c53d2d6dbfe3775b835",
+    "html_verified": true,
+    "retained_all_previous_assets": true,
+    "changed_downloads": [
+      {
+        "id": "wed-video-long",
+        "sha256": "ffd590d0c9e57a42727a7d3af4b9096bd8a51761d4ce638dc7a67630e902e872",
+        "bytes": 166298866,
+        "verified": true
+      },
+      {
+        "id": "wed-video-short",
+        "sha256": "a57869927c2c331bf74855db2f38e42b71d124d8c06327e0d01a6be92262d2ec",
+        "bytes": 65504974,
+        "verified": true
+      },
+      {
+        "id": "wed-release-review",
+        "sha256": "899826f791f31fa0bee8ec059c626daf23d998649ef292ac9631c978d430fe08",
+        "bytes": 7398,
+        "verified": true
+      },
+      {
+        "id": "wed-stabilisation-review",
+        "sha256": "d5e0e70ac16ba63801410229fa71ed2575d1fca62aaec988c16a5bc876b1a969",
+        "bytes": 1885,
+        "verified": true
+      }
+    ],
+    "stores": {
+      "2026-10-19": {
+        "edits": {
+          "unchanged": true,
+          "count": 3
+        },
+        "comments": {
+          "unchanged": true,
+          "count": 37
+        },
+        "ticks": {
+          "unchanged": true,
+          "count": 7
+        },
+        "links": {
+          "unchanged": true,
+          "count": 0
+        },
+        "picks": {
+          "unchanged": true,
+          "count": 3
+        },
+        "queue": {
+          "unchanged": true,
+          "count": 11
+        }
+      },
+      "2026-10-12": {
+        "edits": {
+          "unchanged": true,
+          "count": 3
+        },
+        "comments": {
+          "unchanged": true,
+          "count": 24
+        },
+        "ticks": {
+          "unchanged": true,
+          "count": 18
+        },
+        "links": {
+          "unchanged": true,
+          "count": 0
+        },
+        "picks": {
+          "unchanged": true,
+          "count": 0
+        },
+        "queue": {
+          "unchanged": true,
+          "count": 0
+        }
+      }
+    },
+    "same_other_panels": {
+      "ideas": true,
+      "monday": true,
+      "friday": true
+    }
+  },
+  "videos": [
+    {
+      "cut": "long",
+      "video_sha256": "ffd590d0c9e57a42727a7d3af4b9096bd8a51761d4ce638dc7a67630e902e872",
+      "decoded_audio_sha256": "SHA256=493520d6e07ffdfef001d9bb0d9d07f5d3808525dde78d147211212db2b9b423",
+      "audio_identical_to_accepted": true,
+      "motion_rms_reduction_fraction": 0.6769703858808451,
+      "geometry": {
+        "status": "pass",
+        "source_sha256": "f9c6564412354c63854fe7d1b3f40ede9e5d00ac31bd5c79df36d6e3a942037d",
+        "camera_sha256": "92737040d9361a4f1ef004a5eba462d6d08660c4bf5d16107b4a84a9118743c0",
+        "camera_path_sha256": "23e22708541a0b69992e4ff70b16688bd5133aff2d2a5bf3a71dd02536fabe12",
+        "frames_checked": 7969,
+        "constant_zoom": 1.0989580078125003,
+        "rigid_transform_only": true,
+        "all_output_corners_covered": true,
+        "scope": "All mathematical warp matrices; sampled final pictures are reviewed separately"
+      },
+      "sync": {
+        "status": "pass",
+        "offsets_ms": [
+          -40,
+          0,
+          0,
+          0,
+          0,
+          40
+        ],
+        "calibrated_points": 6
+      },
+      "sampled_review": {
+        "one_second_frames": 342,
+        "quarter_second_bookends": 38,
+        "inspected": true
+      },
+      "checks": {
+        "heard": "fail",
+        "sync": "pass",
+        "loudness": "pass",
+        "visuals": "pass",
+        "full_review": "not_run",
+        "motion": "pass"
+      }
+    },
+    {
+      "cut": "short",
+      "video_sha256": "a57869927c2c331bf74855db2f38e42b71d124d8c06327e0d01a6be92262d2ec",
+      "decoded_audio_sha256": "SHA256=de09e92e6cb93ac28802373e7ff3bfa8e673d49ae80377d67edc046261ee3fbb",
+      "audio_identical_to_accepted": true,
+      "motion_rms_reduction_fraction": 0.5154188239626913,
+      "geometry": {
+        "status": "pass",
+        "source_sha256": "8707a6fba1ca3af218c54f255d0aa31781473a7caf764111d15ecbca9250d515",
+        "camera_sha256": "f6831e124b1149c6d7a837ebbf410f0e517f715d000f4dbfa4fd638e5ff8f477",
+        "camera_path_sha256": "3e6135baa32e330663a266c76df5e9e25607ed862aca4c32f6c1d9a69dd9eb43",
+        "frames_checked": 2145,
+        "constant_zoom": 1.122,
+        "rigid_transform_only": true,
+        "all_output_corners_covered": true,
+        "scope": "All mathematical warp matrices; sampled final pictures are reviewed separately"
+      },
+      "sync": {
+        "status": "pass",
+        "offsets_ms": [
+          -40,
+          0,
+          -40,
+          -40,
+          -40,
+          -40
+        ],
+        "calibrated_points": 6
+      },
+      "sampled_review": {
+        "one_second_frames": 99,
+        "quarter_second_bookends": 38,
+        "inspected": true
+      },
+      "checks": {
+        "heard": "fail",
+        "sync": "pass",
+        "loudness": "pass",
+        "visuals": "pass",
+        "full_review": "not_run",
+        "motion": "pass"
+      }
+    }
+  ],
+  "fact_check": {
+    "run_id": "142fda01-577a-43fb-a063-59218f906b4c",
+    "cost_usd": 0.59,
+    "automated_claims": 57,
+    "automated_passed": 30,
+    "automated_unverified": 23,
+    "automated_contradicted": 4,
+    "human_manual_reviews": 4,
+    "human_named_signoffs": 23,
+    "native_gate_ok": true,
+    "original_verdicts_preserved": true
+  },
+  "library_destination": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot",
+  "library_readback": {
+    "release_status": "review",
+    "verified_files": [
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/1 Article/web-page.html",
+        "sha256": "68682587c4e1ee4b07d32e5305219760dd1a791cfe76ef458886214616c1cf0d",
+        "bytes": 1191543,
+        "status": "pass"
+      },
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/1 Article/substack-copy.html",
+        "sha256": "40a11d8a55bb32c054c9dfed628ac206b602100fe7592a4c4f7d37688e364fa8",
+        "bytes": 1174274,
+        "status": "pass"
+      },
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/1 Article/email-pictures-off.html",
+        "sha256": "404f81a42f2bcf8cf23d7e10cb46a40bde385be588d59da6a2eeff0276b004d9",
+        "bytes": 326511,
+        "status": "pass"
+      },
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/2 Covers and images/substack-cover-1200x630.png",
+        "sha256": "92cd9506e6beb2921ec51417bd136226f5a007d0fac9cd1fdadcfe9f5ade1e11",
+        "bytes": 123368,
+        "status": "pass"
+      },
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/2 Covers and images/share-card-1200x675.png",
+        "sha256": "478c069a172c9dbb4d1a01f6250cd828259c358f90c5b9b7ccadeed6f4ae53d5",
+        "bytes": 164047,
+        "status": "pass"
+      },
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/2 Covers and images/square-1080x1080.png",
+        "sha256": "2e3cc2aa52114e207bbdaf6ae4939751d7dfc8d0139e99a042ffb03e8a37a6cc",
+        "bytes": 125096,
+        "status": "pass"
+      },
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/2 Covers and images/vertical-cover-1080x1920-shorts-tiktok-reels.png",
+        "sha256": "3909a6bb679143b13dc2d0fb8fe51d8b43e77b80503f3d659f1d62cd27bff934",
+        "bytes": 173810,
+        "status": "pass"
+      },
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/2 Covers and images/substack-feed-1200x800.png",
+        "sha256": "74a64e24e7dc034ea97eab27fa5b08465542fc5ccf3ba041f70553015efadb93",
+        "bytes": 124262,
+        "status": "pass"
+      },
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/3 Video/recorded-long-script.md",
+        "sha256": "84f1d94167e5d439f8ae3ae78442482a04cb56fe41ea324555416be273dca8ec",
+        "bytes": 4371,
+        "status": "pass"
+      },
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/3 Video/Muse vs Grok Bot - wide 16x9 - thumbnail.jpg",
+        "sha256": "fee5af7adb30150049c5228675965f69dd14bad65ee47f68f04f589e2a6640bc",
+        "bytes": 115419,
+        "status": "pass"
+      },
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/3 Video/recorded-short-script.md",
+        "sha256": "e46ce6a0c2e1437161e8eb7398ebf345b161b6930614bc4d94e0321546a1fe1b",
+        "bytes": 1035,
+        "status": "pass"
+      },
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/3 Video/Muse vs Grok Bot - tall 9x16 - thumbnail.jpg",
+        "sha256": "dd2b8d6ce4466f6cc96c223655add9573b66831c0b1e2a1bb80d5abcaf5a8073",
+        "bytes": 151405,
+        "status": "pass"
+      },
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/2 Covers and images/scam-grok.png",
+        "sha256": "91ad7f148ddf8a41429b8f57106df507abb1173ab96206b2de78ddee705edfe3",
+        "bytes": 61224,
+        "status": "pass"
+      },
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/2 Covers and images/flight-layover.png",
+        "sha256": "a4ddb9a1576b8a0ca7d2cdb1881a16fc206298541ac77378bde556555c9d052b",
+        "bytes": 68286,
+        "status": "pass"
+      },
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/2 Covers and images/news-date.png",
+        "sha256": "785171262ebc4dc4e5378adbdc33dfd82b57b604a2127387bfe35163e6ed9732",
+        "bytes": 59911,
+        "status": "pass"
+      },
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/2 Covers and images/email-duplicate.png",
+        "sha256": "084ab4b499a0271c095fa32e7c4ce16e18c7b3de44b1bfcd025a34145425ec8e",
+        "bytes": 69976,
+        "status": "pass"
+      },
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/2 Covers and images/starting-point.png",
+        "sha256": "c224ac822e1b1f24deecc549ba6114a13cf16370ebdea8ea36009e04fc5f52b6",
+        "bytes": 58063,
+        "status": "pass"
+      },
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/2 Covers and images/scorecard.png",
+        "sha256": "2ec1bd5acdc52d97b0bd91f5639c5317d1fba722edec921c62e2197f5e1a8c61",
+        "bytes": 204780,
+        "status": "pass"
+      },
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/1 Article/article-review.md",
+        "sha256": "b31894e3289bd6335c883c59fc345b603a492fb9c2db55c80464c3902ea53867",
+        "bytes": 8598,
+        "status": "pass"
+      },
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/1 Article/wednesday-scorecard.md",
+        "sha256": "109eb6b888d06adb539d8bbd4adb386fb01ef6ded77d01f9c6e6a1b20eaa7470",
+        "bytes": 3847,
+        "status": "pass"
+      },
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/4 Social/publishing-copy.md",
+        "sha256": "90851bdde71224293780a05c0b80534848db7ee9675551daaa4abf1109ba3391",
+        "bytes": 3843,
+        "status": "pass"
+      },
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/0 Publish/release-review.md",
+        "sha256": "899826f791f31fa0bee8ec059c626daf23d998649ef292ac9631c978d430fe08",
+        "bytes": 7398,
+        "status": "pass"
+      },
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/0 Publish/claim-review.md",
+        "sha256": "58d769f40390dff874ab6e5baceaa82795534f05594727a3d5af339d9fbe9a9c",
+        "bytes": 21683,
+        "status": "pass"
+      },
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/0 Publish/claim-resolution-22-oct.md",
+        "sha256": "af50c0e7dd1dffe3acf6503c923b7a6e0ed8cf5270612a41ffb96ce25a042b52",
+        "bytes": 5641,
+        "status": "pass"
+      },
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/0 Publish/final-fact-adjudication.md",
+        "sha256": "c1aabc9237ad0ed7e9b7b180e8f76560aa1ee5df1f5c3061752c3aeae6522ee4",
+        "bytes": 22997,
+        "status": "pass"
+      },
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/0 Publish/finish-approval-22-oct.json",
+        "sha256": "30a995e6f84d4caaa266a149d9fe259bfd97fbafa0120fb88bff6e7b38d35240",
+        "bytes": 1035,
+        "status": "pass"
+      },
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/0 Publish/stabilisation-review.md",
+        "sha256": "d5e0e70ac16ba63801410229fa71ed2575d1fca62aaec988c16a5bc876b1a969",
+        "bytes": 1885,
+        "status": "pass"
+      },
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/0 Publish/visual-revision.md",
+        "sha256": "2c8b52aa394ff27d948484b2ad315ad55801e80117f9f1d6419e8d57afb434e0",
+        "bytes": 1320,
+        "status": "pass"
+      },
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/0 Publish/packaging-approval.json",
+        "sha256": "0a4247ad512ec372f08d212d38450bfab10d34d71c4dd9b09a0a7003b82a7457",
+        "bytes": 632,
+        "status": "pass"
+      },
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/0 Publish/chapters.txt",
+        "sha256": "503cfb63b5a1a32f63b784d98c952a78f601325eb00f17627ab90a2bc9f5dc02",
+        "bytes": 174,
+        "status": "pass"
+      },
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/0 Publish/chapters.json",
+        "sha256": "a98eb283e4716d724ec89063ad3291c00ab8484f38bc60e8103d8818f6ab7066",
+        "bytes": 623,
+        "status": "pass"
+      },
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/READ ME.txt",
+        "sha256": "f262a71ce38c73996494d29b619c2781f3a204751b08a38df85b7b0b6903bc7d",
+        "bytes": 5004,
+        "status": "pass"
+      },
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/3 Video/Working - review/production-working.zip",
+        "sha256": "8f006b7dcd6d3c43dacfb923aa99e7397bfaac896190a49c6d4e88c9be1257d9",
+        "bytes": 40160103,
+        "status": "pass"
+      },
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/3 Video/Working - review/muse-vs-grok-short-9x16.mp4",
+        "sha256": "a57869927c2c331bf74855db2f38e42b71d124d8c06327e0d01a6be92262d2ec",
+        "bytes": 65504974,
+        "status": "pass"
+      },
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/3 Video/Working - review/muse-vs-grok-short-9x16.srt",
+        "sha256": "0a41f015eed3243aa0788023c193925419c6c81e62b96eeaa3649f0bf4440e7c",
+        "bytes": 2693,
+        "status": "pass"
+      },
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/3 Video/Working - review/muse-vs-grok-short-9x16.mp4.validation.json",
+        "sha256": "33d6875fb332f0eb9d08149b31b7965e3eba8fbec2289e959be06ec5bd571c9e",
+        "bytes": 33319,
+        "status": "pass"
+      },
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/3 Video/Working - review/muse-vs-grok-long-16x9.mp4",
+        "sha256": "ffd590d0c9e57a42727a7d3af4b9096bd8a51761d4ce638dc7a67630e902e872",
+        "bytes": 166298866,
+        "status": "pass"
+      },
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/3 Video/Working - review/muse-vs-grok-long-16x9.srt",
+        "sha256": "301de907714f0f4e3f49f702d091dc2a59b1b5fed10eb0bda3a4df87397a2c06",
+        "bytes": 9248,
+        "status": "pass"
+      },
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/3 Video/Working - review/muse-vs-grok-long-16x9.mp4.validation.json",
+        "sha256": "b4ae08ccac04fb7245885385ec8cf4db748db8aa0015f746a1e4a1b6d766a8d6",
+        "bytes": 814373,
+        "status": "pass"
+      }
+    ],
+    "scope": "Actual newest library downloads, not an assertion that the Drive runner has written them"
+  },
+  "publicly_posted": false
+}

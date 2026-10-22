@@ -2,26 +2,28 @@
 
 ## 22 October: Wednesday finishing pass (Codex)
 
-Krish accepted sync, the single opening, matched logos and portrait framing,
-then requested stabilisation. Both camera tracks are being repaired before
-composition, preserving accepted sound and caption timing. Motion assessment
-is now mandatory in the production skills and native delivery gate.
+Both stabilised videos are live on the private Wednesday board, build
+`a99799bcddd665f4ac9bc4696fa212c1da3aa2b788952c53d2d6dbfe3775b835`, 50 assets.
+Actual new video downloads match the checked exports. Motion RMS fell 67.7%
+long and 51.5% short; sync passes six calibrated windows per export within
+40 ms, accepted decoded audio is identical, every one-second/bookend sample
+was inspected, and every camera transform passes geometry. Motion assessment
+is now mandatory in both skills and the native delivery guard.
 
-Corrected article/source audit live: board build
-`64bf218cab929ea267cc5158b8fca240de89753fa568cf7a62c57af1f56f188e`, 48 assets.
-All ten changed downloads match; Ideas/Mon/Fri and all feedback are unchanged.
-Evidence balance: tests 422 words, corpus 423. Four exact source records filed;
-free precheck has no missing numbers or truncated sources. Krish approved a
-final $1-capped run ($0.59 actual) and this exact body's retrospective
-exception. He then approved all 27 named disputed lines: four manual reviews
-and 23 sign-offs are recorded; the native fact gate reads clear. Original
-model verdicts remain preserved. The exception is staged for deployment.
+The $0.59 final fact check plus Krish's four manual adjudications and 23
+sign-offs clear the native fact gate while preserving all original verdicts.
+The approved exact-body retrospective exception is in PR #134. Article evidence
+balance: tests 422 words, corpus 423. No more paid run is authorised.
 
-Inputs and current holds: `docs/plans/2026-10-21-wednesday/README.md`,
-`release-review.md`, `claim-resolution-22-oct.md`. Earlier media/library proof
-in `production-readback.json` certifies the prior exports, not the new render.
-No public post or fabricated passing check. Originals remain preserved.
-
+Final continuous phone playback acceptance of both new exports is requested;
+raw recognizer discrepancies remain intact. The corrected article, covers,
+scorecard, captions, chapters and copy are on the editable/commentable board.
+Ideas/Mon/Fri, all prior assets and all feedback collections are preserved.
+All 39 refreshed library downloads match their hashes at
+`3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot`.
+Current proof and continuation: `docs/plans/2026-10-21-wednesday/stabilised-readback.json`,
+`README.md`, `release-review.md`. Earlier `production-readback.json` certifies
+prior exports only. No public post. Original recordings remain preserved.
 
 ## 21 October: the publish board, parts 2 to 4 and the 15-minute feature (Claude)
 
