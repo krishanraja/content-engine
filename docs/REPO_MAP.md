@@ -1558,6 +1558,14 @@ _standards — the Five Standards gate, as a pure function.
 
 - `const supabase`
 
+### `apps/control-plane/api/_taste.ts`
+
+What Krish has confirmed he likes, for the writers.
+
+- `type TasteLane = 'voice' | 'strategy' | 'production' | 'visibility'`
+- `function renderTasteBlock(rows: Array<{ statement?: unknown; means?: unknown; layer?: unknown }>): string`
+- `async function loadTasteBlock(lanes: TasteLane[]): Promise<string>`
+
 ### `apps/control-plane/api/_text.ts`
 
 - `function stripMarkdownLinks(s: string): string`

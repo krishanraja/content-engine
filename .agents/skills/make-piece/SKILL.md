@@ -87,7 +87,11 @@ chat that started it.
    --apply`), `lesson_yes` and `lesson_no` (relay to POST
    /api/video-studio/learning-proposals with his decision; a yes becomes a
    standing rule only once it lands in code or config with its learning
-   entry). Only documents Krish wrote are relayed: an edit or a tap whose
+   entry). A comment he leaves on a lesson is a reword: relay it as
+   `decision: 'corrected'` with his exact words as `krish`. Lessons whose
+   scope key starts `taste:` come from the taste ledger
+   (krishanraja/inspirationhouse): a yes or a reword there needs nothing in
+   code, because drafting reads them live from `taste_profile_form`. Only documents Krish wrote are relayed: an edit or a tap whose
    `updated_by` is not `Krish` (the board's access-cookie writer) is never
    carried, written to the ledger or relayed as his; `edit_sweep.py` leaves
    it out and names it, and the board refuses such a write from the

@@ -785,9 +785,11 @@ def sweep_card(p, sweep):
 
 
 def read_lessons(data, where='--lessons'):
-    """What the weekly compiler proposed from his board edits: GET /api/video-studio/learning-proposals's answer (only
-    proposals whose scope.key starts board_edit:), or a list of {id, assertion, evidence_count, kind?, status?}.
-    Each stays a proposal until he approves it (AGENTS.md: every durable taste rule needs his explicit approval)."""
+    """What the weekly compiler proposed from his board edits, and what the taste ledger (krishanraja/inspirationhouse)
+    proposed from what he saved and said: GET /api/video-studio/learning-proposals's answer (only proposals whose
+    scope.key starts board_edit: or taste:), or a list of {id, assertion, evidence_count, kind?, status?}.
+    Each stays a proposal until he approves it (AGENTS.md: every durable taste rule needs his explicit approval).
+    At most three taste lessons show, the cap the ledger keeps to."""
     rows = data.get('proposals', data.get('lessons')) if isinstance(data, dict) else data
     if not isinstance(rows, list):
         raise BoardError(f'{where}: give the saved answer of GET /api/video-studio/learning-proposals, or a list of lessons')
@@ -796,15 +798,18 @@ def read_lessons(data, where='--lessons'):
         if not isinstance(r, dict):
             raise BoardError(f'{where}: lesson {i} is not an object')
         key = str((r.get('scope') or {}).get('key') or '') if isinstance(r.get('scope'), dict) else ''
-        if 'scope' in r and not key.startswith('board_edit:'):
+        taste = key.startswith('taste:')
+        if 'scope' in r and not (key.startswith('board_edit:') or taste):
             continue  # another surface's proposal: it is ruled on where it came from
-        kind = r.get('kind') or (key.split(':', 1)[1] if key.startswith('board_edit:') else None)
+        if taste and sum(1 for o in out if o['kind'] == 'taste') >= 3:
+            continue
+        kind = 'taste' if taste else r.get('kind') or (key.split(':', 1)[1] if key.startswith('board_edit:') else None)
         lid, says = str(r.get('id') or ''), str(r.get('assertion') or '').strip()
         count = r.get('evidence_count', r.get('independent_session_count'))
         status = r.get('status') or 'proposed'
         if not LESSON_ID.match(lid) or not says or len(says) > 1600 or not isinstance(count, int) or count < 1:
             raise BoardError(f'{where}: lesson {i} needs an id, its assertion (at most 1600 characters) and how often it was seen')
-        if kind not in EDIT_KINDS or status not in ('proposed', 'approved', 'rejected'):
+        if (kind != 'taste' and kind not in EDIT_KINDS) or status not in ('proposed', 'approved', 'rejected', 'corrected'):
             raise BoardError(f'{where}: lesson {lid} has kind {kind!r} or status {status!r} the board does not know')
         out.append({'id': lid, 'assertion': says, 'evidence_count': count, 'kind': kind, 'status': status})
     if len(out) > 12:
@@ -815,13 +820,16 @@ def read_lessons(data, where='--lessons'):
 def lessons_card(p, lessons):
     items = []
     for i, ls in enumerate(lessons, 1):
-        chip = {'proposed': 'Proposed: yours to approve', 'approved': 'Approved: a standing rule', 'rejected': 'Not a rule'}[ls['status']]
+        chip = {'proposed': 'Proposed: yours to approve', 'approved': 'Approved: a standing rule', 'rejected': 'Not a rule',
+                'corrected': 'Reworded: a standing rule, in your words'}[ls['status']]
+        seen_line = (f'From what you saved and said, across {ls["evidence_count"]} days' if ls['kind'] == 'taste'
+                else f'{E(EDIT_KINDS[ls["kind"]])} edits, seen {ls["evidence_count"]} times in 28 days')
         buttons = (f'<div class="btns"><button type="button" class="btn-s" data-act="lesson-yes" data-for="{E(ls["id"])}">Make it a rule</button>'
                    f'<button type="button" class="btn-s ghost" data-act="lesson-no" data-for="{E(ls["id"])}">Not a rule</button>'
                    f'<span class="ls-state" data-lesson-state="{E(ls["id"])}" aria-live="polite"></span></div>') if ls['status'] == 'proposed' else ''
         items.append(f'<article class="ls-item" id="{p}lesson-{i}" data-lesson="{E(ls["id"])}"><p class="ls-says">{E(ls["assertion"])}</p>'
-                     f'<p class="ls-meta"><span class="chip{" ok" if ls["status"] == "approved" else ""}">{E(chip)}</span> '
-                     f'{E(EDIT_KINDS[ls["kind"]])} edits, seen {ls["evidence_count"]} times in 28 days</p>{buttons}</article>')
+                     f'<p class="ls-meta"><span class="chip{" ok" if ls["status"] in ("approved", "corrected") else ""}">{E(chip)}</span> '
+                     f'{seen_line}</p>{buttons}</article>')
     return (f'<div class="card lessons" id="{p}lessons"><div class="row"><span class="lab">What I learned from your edits</span></div>'
             '<p class="ls-how">Patterns in the changes you saved on this board. Each stays a proposal until you say yes; only then '
             'does it become a rule the drafts follow.</p>' + ''.join(items) + '</div>')
@@ -3427,6 +3435,14 @@ def _editor_checks(check, week):
          'independent_session_count': 3, 'status': 'proposed', 'scope': {'level': 'global', 'key': 'board_edit:number_fact'}},
         {'id': '55555555-5555-4666-8777-888888888888', 'assertion': 'A preset is never kept.', 'independent_session_count': 4,
          'status': 'proposed', 'scope': {'level': 'global', 'key': 'tone:punchier'}}]})
+    taste = read_lessons({'proposals': [
+        {'id': f'6666666{i}-5555-4666-8777-888888888888', 'assertion': f'Titles say what happens, case {i}.',
+         'independent_session_count': 4, 'status': 'proposed' if i else 'corrected',
+         'scope': {'level': 'global', 'key': 'taste:packaging', 'source': 'taste_ledger'}} for i in range(5)]})
+    check('lessons: the taste ledger\'s proposals show, at most three', [t['kind'] for t in taste] == ['taste'] * 3)
+    taste_card = lessons_card('wed-', taste)
+    check('lessons: a taste lesson says it came from what he saved and said, a reword is a standing rule in his words',
+          'From what you saved and said, across 4 days' in taste_card and 'Reworded: a standing rule, in your words' in taste_card)
     page, manifest, warnings = board(week, pieces={'wed': WED_ID}, review=review, draft={'wed'}, sweeps={'wed': sweep}, lessons=lessons)
     check('editor: a fed week with the editor, Also changed and What I learned passes verify', verify(page) == [])
     card = page[page.index('<div class="rec rv ed" id="wed-review">'):page.index(REVIEW_END)]

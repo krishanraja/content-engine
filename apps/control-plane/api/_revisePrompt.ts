@@ -32,6 +32,8 @@ export interface ReviseContext {
    *  routed to one. It is the test the piece must pass, so it governs the
    *  structure and the close over the house voice line. */
   mandate?: { label: string; text: string; slug?: string } | null
+  /** loadTasteBlock(...) from _taste.ts: form claims Krish approved, or ''. */
+  taste?: string
 }
 
 export interface ReviseRequest {
@@ -80,6 +82,7 @@ export function buildReviseSystem(ctx: ReviseContext, r: Pick<ReviseRequest, 'va
     mandateBlock,
     subchannelRulesBlock('write', ctx.mandate?.slug),
     ctx.voice ? `VOICE REFERENCE:\n${ctx.voice}` : '',
+    ctx.taste ? `HOW KRISH LIKES IT (approved by him, form only):\n${ctx.taste}` : '',
     corpusBlock,
     '',
     VOICE_GUARDRAILS,
