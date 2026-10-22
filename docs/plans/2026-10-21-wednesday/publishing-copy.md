@@ -33,6 +33,8 @@ Chapters:
 
 Research featured:
 
+- Grok Bot official launch: https://x.ai/news/introducing-grok-bot
+- Muse official launch: https://about.fb.com/news/2026/09/introducing-muse-personal-ai-agent/
 - AI for Mortals: https://www.aiformortals.co/blog/grok-bot-vs-meta-muse-vs-chatgpt-dots
 - Desktheory’s travel test: https://www.youtube.com/watch?v=i_n9ZyinZEs
 - Grok operator’s report: https://www.reddit.com/r/cursor/comments/1vxjipg/grok_bot_review/

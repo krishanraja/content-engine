@@ -37,6 +37,7 @@ def main():
     ap.add_argument('--videos',action='store_true')
     ap.add_argument('--stable',action='store_true',help='Use completed stabilised exports')
     ap.add_argument('--narrative',action='store_true',help='Use the integrated evidence recut and supplied stabilised short')
+    ap.add_argument('--headshot-review',action='store_true',help='Show the restrained headshot mock as a commentable draft')
     ap.add_argument('--ready-page',type=Path,help='Native publish-manager page; requires live article readiness and passed exact video receipts')
     ap.add_argument('--short-stable',action='store_true',help='Use the finished stable short while the long replacement processes')
     a=ap.parse_args()
@@ -127,6 +128,10 @@ def main():
         file('wed-claim-resolution',PLAN/'claim-resolution-22-oct.md','Source audit and article corrections'),
         file('wed-fact-adjudication',PLAN/'final-fact-adjudication.md','Final fact-check: 27 named lines and their evidence'),
         file('wed-stabilisation-review',PLAN/'stabilisation-review.md','Stabilisation measurements and mandatory check')]})
+    if a.headshot_review:
+        sections[-1]['files'] += [file('wed-headshot-cover-draft',work/'head-to-head/cover-1200x630.png','Headshot cover draft — review'),
+                                  file('wed-headshot-cover-phone',work/'head-to-head/cover-1200x630-phone.png','Headshot cover draft on a phone'),
+                                  file('wed-headshot-layout-proof',work/'head-to-head/layout-review.json','Headshot cover alignment check')]
     historic=state['manifest']['assets'].get('wednesday-claude-evidence')
     if historic:
         sections[-1]['files'].append({'label':'Original editorial evidence pack',
@@ -159,6 +164,8 @@ def main():
     if a.narrative:
         reviews += [('Edited long video transcript',work/'narrative/long/spoken-transcript.md'),
                     ('Edited short video transcript',work/'narrative/short/spoken-transcript.md')]
+    if a.headshot_review:
+        reviews += [('Headshot cover draft',PLAN/'headshot-cover-review.md')]
     args=['--week',WEEK,'--previous',str(previous),'--keep','mon','--target','web','--live',
           '--piece',f'wed={PIECE}','--materials',f'wed={out/"materials.json"}',
           '--ideas',str(week/'ideas.json'),'--queue',str(out/'queue.json')]
