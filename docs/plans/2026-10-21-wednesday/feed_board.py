@@ -36,6 +36,8 @@ def main():
     ap.add_argument('work',type=Path)
     ap.add_argument('--videos',action='store_true')
     ap.add_argument('--stable',action='store_true',help='Use completed stabilised exports')
+    ap.add_argument('--narrative',action='store_true',help='Use the integrated evidence recut and supplied stabilised short')
+    ap.add_argument('--headshot-review',action='store_true',help='Show the restrained headshot mock as a commentable draft')
     ap.add_argument('--ready-page',type=Path,help='Native publish-manager page; requires live article readiness and passed exact video receipts')
     ap.add_argument('--short-stable',action='store_true',help='Use the finished stable short while the long replacement processes')
     a=ap.parse_args()
@@ -93,15 +95,21 @@ def main():
     covers=[('cover-1200x630.png','Substack cover'),('cover.png','Substack feed'),
             ('cover-1200x675.png','LinkedIn share card'),('cover-1080x1080.png','Square cover'),
             ('cover-1080x1920.png','Vertical cover')]
-    sections.append({'id':'covers','title':'Covers and thumbnails','files':[
-        file('wed-'+Path(name).stem,work/'article'/name,label) for name,label in covers]+[
-        file('wed-thumb-wide',work/'thumbs/thumb-wide-1280x720.jpg','YouTube thumbnail'),
-        file('wed-thumb-tall',work/'thumbs/thumb-tall-1080x1920.jpg','Short video thumbnail')]})
+    if a.headshot_review:
+        sections.append({'id':'covers','title':'Covers and thumbnails','files':[
+            file('wed-headshot-cover-draft',work/'head-to-head/cover-1200x630.png','Headshot cover draft — review'),
+            file('wed-headshot-cover-phone',work/'head-to-head/cover-1200x630-phone.png','Headshot cover draft on a phone')],
+            'note':'The earlier covers and thumbnails were rejected and are withdrawn from publication. Other sizes follow approval of this draft.'})
+    else:
+        sections.append({'id':'covers','title':'Covers and thumbnails','files':[
+            file('wed-'+Path(name).stem,work/'article'/name,label) for name,label in covers]+[
+            file('wed-thumb-wide',work/'thumbs/thumb-wide-1280x720.jpg','YouTube thumbnail'),
+            file('wed-thumb-tall',work/'thumbs/thumb-tall-1080x1920.jpg','Short video thumbnail')]})
     if a.videos:
         files=[]
         for cut,shape in [('long','16x9'),('short','9x16')]:
             stable=a.stable or (cut=='short' and a.short_stable)
-            base=work/f'render-{cut}-{"stable" if stable else "revised"}'/f'muse-vs-grok-{cut}-{shape}'
+            base=work/f'render-{cut}-{"narrative" if a.narrative else "stable" if stable else "revised"}'/f'muse-vs-grok-{cut}-{shape}'
             # A completed renderer receipt is required even for a review copy.
             receipt=base.with_suffix('.mp4.validation.json')
             data=json.loads(receipt.read_text(encoding='utf-8'))
@@ -109,13 +117,16 @@ def main():
                 raise ValueError(cut+' video differs from its renderer receipt')
             label=('Stabilised '+cut+' video — review copy') if stable else (cut.capitalize()+' video — previous version; stabilisation processing' if a.short_stable else cut.capitalize()+' video — review copy')
             if a.ready_page:label='Stabilised '+cut+' video'
+            if a.narrative:label=cut.capitalize()+' video — one narrative, original evidence and running score'
             files += [file('wed-video-'+cut,base.with_suffix('.mp4'),label),
                       file('wed-captions-'+cut,base.with_suffix('.srt'),cut.capitalize()+' captions')]
         video_note=('Both camera tracks are stabilised. Motion, framing and sync evidence accompanies the exports; final continuous playback acceptance is still open.' if a.stable else 'Review exports. The stabilised replacements are being finished; continuous playback acceptance remains open.')
         if a.ready_page:video_note='Both stabilised exports pass the technical checks and Krish’s full playback review. Captions and thumbnails accompany them.'
+        if a.narrative:video_note='One evolving verdict combines the tests and community evidence. Original launch demonstrations and redacted interactions are included; the short uses Krish’s supplied stabilised recording. Fresh playback acceptance remains open.'
         sections.append({'id':'videos','title':'Watch both videos','files':files,'note':video_note})
     sections.append({'id':'evidence','title':'Visuals and checks','files':[
         file('wed-graphics-overview',work/'cards-stable/sheet.png','All evidence graphics'),
+        file('wed-narrative-recut-review',PLAN/'narrative-recut-review.md','Current integrated video and source review'),
         file('wed-test-observations',ROOT/'docs/plans/2026-10-19-week/test-results/README.md','Redacted test observations'),
         file('wed-release-review',PLAN/'release-review.md','Release status and remaining decisions'),
         file('wed-visual-revision',PLAN/'visual-revision.md','Opening, logos and framing correction'),
@@ -123,6 +134,12 @@ def main():
         file('wed-claim-resolution',PLAN/'claim-resolution-22-oct.md','Source audit and article corrections'),
         file('wed-fact-adjudication',PLAN/'final-fact-adjudication.md','Final fact-check: 27 named lines and their evidence'),
         file('wed-stabilisation-review',PLAN/'stabilisation-review.md','Stabilisation measurements and mandatory check')]})
+    if a.headshot_review:
+        sections[-1]['files'] += [file('wed-headshot-layout-proof',work/'head-to-head/layout-review.json','Headshot cover alignment check')]
+        sections[-1]['files'] += [file('wed-'+Path(name).stem,work/'article'/name,'Rejected cover archive: '+label)
+                                  for name,label in covers]
+        sections[-1]['files'] += [file('wed-thumb-wide',work/'thumbs/thumb-wide-1280x720.jpg','Rejected thumbnail archive: wide'),
+                                  file('wed-thumb-tall',work/'thumbs/thumb-tall-1080x1920.jpg','Rejected thumbnail archive: tall')]
     historic=state['manifest']['assets'].get('wednesday-claude-evidence')
     if historic:
         sections[-1]['files'].append({'label':'Original editorial evidence pack',
@@ -152,6 +169,11 @@ def main():
              ('Visual plan after copy approval',week/'wednesday-script-visual-plan.md'),
              ('Publishing copy',PLAN/'publishing-copy.md'),
              ('Release review',PLAN/'release-review.md')]
+    if a.narrative:
+        reviews += [('Edited long video transcript',work/'narrative/long/spoken-transcript.md'),
+                    ('Edited short video transcript',work/'narrative/short/spoken-transcript.md')]
+    if a.headshot_review:
+        reviews += [('Headshot cover draft',PLAN/'headshot-cover-review.md')]
     args=['--week',WEEK,'--previous',str(previous),'--keep','mon','--target','web','--live',
           '--piece',f'wed={PIECE}','--materials',f'wed={out/"materials.json"}',
           '--ideas',str(week/'ideas.json'),'--queue',str(out/'queue.json')]

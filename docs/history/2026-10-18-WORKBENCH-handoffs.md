@@ -4,6 +4,40 @@
 > no longer reads 181 KB of old handoffs before it starts (`docs/COST_GUARDS.md`, G11). Nothing here is current;
 > live state is in `WORKBENCH.md`. Newest first, exactly as written.
 
+## 22 October: Wednesday finishing pass (Codex)
+
+Both stabilised videos are live on the private Wednesday board, build
+`1bfee8f7c5955aef2cfb3b6fe8c8b9645b80221c5b1cd4b113cc50a9c9620584`, 50 assets.
+Actual new video downloads match the checked exports. Motion RMS fell 67.7%
+long and 51.5% short; sync passes six calibrated windows per export within
+40 ms, accepted decoded audio is identical, every one-second/bookend sample
+was inspected, and every camera transform passes geometry. Motion assessment
+is now mandatory in both skills and the native delivery guard.
+
+The $0.59 final fact check plus Krish's four manual adjudications and 23
+sign-offs clear the native fact gate while preserving all original verdicts.
+The approved exact-body retrospective exception merged in PR #134 after all 15 checks passed (main `6bfad15`). Article evidence
+balance: tests 422 words, corpus 423. No more paid run is authorised.
+
+Final continuous phone playback acceptance of both new exports is requested;
+raw recognizer discrepancies remain intact. The corrected article, covers,
+scorecard, captions, chapters and copy are on the editable/commentable board.
+Ideas/Mon/Fri, all prior assets and all feedback collections are preserved.
+All 39 refreshed library downloads match their hashes at
+`3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot`.
+Current proof and continuation: `docs/plans/2026-10-21-wednesday/stabilised-readback.json`,
+`README.md`, `release-review.md`. Earlier `production-readback.json` certifies
+prior exports only. No public post. Original recordings remain preserved.
+
+- 2026-10-20, about 14:30 UTC: **`manual` means his words, for every row** (step 3
+  PR 8, the last step of the design entropy session). Migration
+  `20261101120000_manual_is_his_words_validated.sql` validates
+  `content_ideas_manual_is_his_words`; read back `convalidated = true`. 0 stored
+  rows broke it. The engine's request log could not be read from the session,
+  so the quiet week rests on the database: no idea came through Control
+  Center's door, and 75 from the engine's own sources landed. Control Center
+  deletes the session's handoff and skill in the same change.
+
 - 2026-10-17, about 07:15 UTC: **Friday's packaging is signed off; the session is finishing it without him.**
   - The sheet (`docs/plans/2026-10-09-friday/signoff-sheet.md`, SIGNED OFF): Krish, "Fine with everything except for
     \"soon you won't pick your AI.\" ... I would suggest something along the lines of \"ChatGPT and Claude are releasing

@@ -17,7 +17,7 @@ import build
 
 
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('work',type=Path);ap.add_argument('--videos',action='store_true');ap.add_argument('--stable',action='store_true')
+    ap=argparse.ArgumentParser();ap.add_argument('work',type=Path);ap.add_argument('--videos',action='store_true');ap.add_argument('--stable',action='store_true');ap.add_argument('--narrative',action='store_true')
     a=ap.parse_args();w=a.work.resolve()
     files=[]
     def item(path,kind=None,category=None,name=None,purpose=None,**extra):
@@ -45,7 +45,7 @@ def main():
     item(ROOT/'docs/plans/2026-10-19-week/wednesday-scorecard.md',category='article',
          purpose='Five plain-cell round results with links to the research. Personal and community evidence stay separate.')
     item(PLAN/'publishing-copy.md',category='social',purpose='Editable channel copy for review; no public posts have been made.')
-    for name in ['release-review.md','claim-review.md','claim-resolution-22-oct.md','final-fact-adjudication.md','finish-approval-22-oct.json','stabilisation-review.md','visual-revision.md','packaging-approval.json','chapters.txt','chapters.json']:
+    for name in ['release-review.md','narrative-recut-review.md','claim-review.md','claim-resolution-22-oct.md','final-fact-adjudication.md','finish-approval-22-oct.json','stabilisation-review.md','visual-revision.md','packaging-approval.json','chapters.txt','chapters.json']:
         item(PLAN/name,category='publish',purpose='Review status, evidence and the exact recorded approval. Read before posting.')
     suffix='stable' if a.stable else 'revised'
     folders=[f'cards-{suffix}','article-cards','story-revised',f'kit-short-{suffix}',f'kit-long-{suffix}',f'review-short-{suffix}',f'review-long-{suffix}']
@@ -70,6 +70,23 @@ def main():
                 p=w/f'sync-{cut}-final-stable/sync-report.json';z.write(p,p.relative_to(w).as_posix())
             for name in ['fact-final-22oct-readback.json','fact-adjudication-prepared.json','fact-adjudication-recorded.json','fact-adjudication-final-readback.json','source-filings-22oct.json']:
                 p=w/name;z.write(p,p.name)
+        if a.narrative:
+            for folder in ['evidence-panels','narrative/long','narrative/short','render-long-narrative','render-short-narrative']:
+                for p in (w/folder).rglob('*'):
+                    if not p.is_file():continue
+                    if folder=='evidence-panels' and p.suffix.lower() not in {'.mp4','.json','.graph','.txt'}:continue
+                    if folder.startswith('narrative/') and p.suffix.lower() not in {'.json','.md'}:continue
+                    if folder.startswith('render-') and p.suffix.lower() not in {'.json','.ass','.srt','.graph','.txt'}:continue
+                    if 'picture-parts' in p.parts or p.name=='frame-corrected.mp4':continue
+                    z.write(p,p.relative_to(w).as_posix())
+            for folder in ['sync-long-final-narrative-corrected','sync-short-final-narrative-limited']:
+                p=w/folder/'sync-report.json'
+                if p.is_file():z.write(p,p.relative_to(w).as_posix())
+            for folder in ['review-long-narrative','review-short-narrative']:
+                for p in (w/folder).glob('*.json'):z.write(p,p.relative_to(w).as_posix())
+                for p in (w/folder).glob('contact-*.jpg'):z.write(p,p.relative_to(w).as_posix())
+            for p in [w/'supplied-short/motion-assessment.json',w/'supplied-short/source-replacement.json',*([] if a.stable else [w/'stability-long/full/motion-comparison.json'])]:
+                if p.is_file():z.write(p,p.relative_to(w).as_posix())
         p=w/'review-short/face-framing.json'
         if p.is_file():z.write(p,p.relative_to(w).as_posix())
         for folder,stem in [('render-short','muse-vs-grok-short-9x16'),('render-long-music','muse-vs-grok-long-16x9')]:
@@ -82,6 +99,7 @@ def main():
     if a.videos:
         for cut,shape,folder in [('short','9x16','render-short-revised'),('long','16x9','render-long-revised')]:
             if a.stable:folder=f'render-{cut}-stable'
+            if a.narrative:folder=f'render-{cut}-narrative'
             base=w/folder/f'muse-vs-grok-{cut}-{shape}'
             for suffix in ['.mp4','.srt','.mp4.validation.json']:
                 p=base.with_suffix(suffix)

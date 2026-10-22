@@ -23,16 +23,18 @@ Personal tests: 20 October 2026, one run per job on personal accounts. Fares are
 Chapters:
 
 00:00 Muse vs Grok Bot · Five everyday jobs
-00:32 The inbox
-01:13 The flight
-01:48 What to cancel
-02:06 My day
-02:40 The news
-03:11 The work email
-04:22 The verdict
+00:25 The inbox
+01:02 The flight
+01:34 What to cancel
+01:51 My day
+02:18 The news
+02:44 The work email
+03:56 The verdict
 
 Research featured:
 
+- Grok Bot official launch: https://x.ai/news/introducing-grok-bot
+- Muse official launch: https://about.fb.com/news/2026/09/introducing-muse-personal-ai-agent/
 - AI for Mortals: https://www.aiformortals.co/blog/grok-bot-vs-meta-muse-vs-chatgpt-dots
 - Desktheory’s travel test: https://www.youtube.com/watch?v=i_n9ZyinZEs
 - Grok operator’s report: https://www.reddit.com/r/cursor/comments/1vxjipg/grok_bot_review/
