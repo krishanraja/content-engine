@@ -2083,6 +2083,9 @@ What the Drive scan decides, with no Drive, no model and no database.
 - `function storyUrl(extractedUrl: unknown, hash: string | null): string`
 - `interface Seed`
 - `const BLACKLISTED_FRAMINGS`
+- `type SeedShape = 'seeds' | 'repaired' | 'empty' | 'no_text' | 'unparseable'`
+- `function parseSeedResponse(raw: string): { seeds: Seed[]; shape: SeedShape }`
+- `function extractionOutcome(stopReason: string | null, shape: SeedShape): { settle: boolean; error: string | null }`
 - `function parseSeedArray(raw: string): Seed[]`
 - `interface Survivors`
 - `function filterSeeds(seeds: Seed[], minBrandFit: number): Survivors`
