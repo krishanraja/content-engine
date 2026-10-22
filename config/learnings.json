@@ -1006,9 +1006,9 @@
   {
    "id": "two-cuts-and-an-occasional-feature",
    "on": "2026-10-21",
-   "krish": "Bear in mind that all videos are generally 90 sec and 5 min. From time to time I might do a special 15 min feature. (Asked whether that replaces the weekly deep cut: \"Yes, replace it\".)",
+   "krish": "Bear in mind that all videos are generally 90 sec and 5 min. From time to time I might do a special 15 min feature. (Asked whether that replaces the weekly deep cut: \"Yes, replace it\".) Then, 2026-10-22, on Control Center learning the feature: \"we do not produce 15 minutes every single time\".",
    "why": "The weekly 8 to 12 minute deep cut was the engine's proposal; his own rhythm is two cuts a piece, and a long feature only when he decides a piece deserves one.",
-   "means": "Every piece is a 90-second and a 5-minute video. No session proposes a long cut; a 15-minute feature (2,025 to 2,475 words) is a third cut only on a piece he called one for, recorded in config/features.json. The weekly deep cut is retired.",
+   "means": "Every piece is a 90-second and a 5-minute video. No session proposes a long cut; a 15-minute feature (2,025 to 2,475 words) is a third cut only on a piece he called one for, recorded in config/features.json. The weekly deep cut is retired. Every surface says it the same way: the feature is never called a standard or third video of every piece, and Control Center's mirror (control-center src/lib/making.ts makingCuts and channelsFor) asks for it, and shows its two posting ticks, only on a feature piece.",
    "status": "encoded",
    "encoded": [
     {

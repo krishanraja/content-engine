@@ -21,8 +21,9 @@
   11 Oct; 1 relayed board item holds his words), inspo 36, engine 53, queue 4, no combine group. 77 of the 89 have no
   series yet, and under.the.hood's pool is empty; plan-week now places the unassigned by mandate. No idea scored close
   enough to one he liked for a `why_here` line (only 3 liked ideas so far).
-- **Next:** Control Center's mirror `src/lib/making.ts` does not know the feature cut yet: a change in
-  `krishanraja/control-center`, to confirm with Krish first.
+- **Control Center (22 Oct, his yes, "but we do not produce 15 minutes every single time"):** its mirror
+  `src/lib/making.ts` knows the feature as an optional third cut: asked for, and its two posting ticks shown, only on
+  a piece whose scripts' check holds a feature hash (`makingCuts`, `channelsFor`); the long cut reads "5-minute".
 
 ## 21 October, afternoon: Wednesday drafts from Krish's board edits (Claude)
 
