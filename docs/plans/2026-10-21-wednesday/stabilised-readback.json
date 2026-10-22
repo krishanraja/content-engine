@@ -510,5 +510,36 @@
     "pull_request": 134,
     "merge_commit": "6bfad15bbf75bf5ef31bd0820c2e011caac04e6b",
     "checks_passed": 15
+  },
+  "live_article_publication_checks": {
+    "ready": true,
+    "gate": {
+      "ok": true,
+      "reason": null
+    },
+    "retrospective_checks": [
+      {
+        "id": "CALL",
+        "name": "Retrospective exception: A dated prediction with a confidence",
+        "blocking": true,
+        "ok": true,
+        "detail": "Exempt by Krish on 22 October 2026: this exact retrospective comparison has a recommendation and three actions; no future prediction or confidence is asserted."
+      },
+      {
+        "id": "CALL_HORIZON",
+        "name": "Retrospective exception: A prediction due within about three months",
+        "blocking": true,
+        "ok": true,
+        "detail": "Exempt by Krish on 22 October 2026: this exact retrospective comparison has a recommendation and three actions; no future prediction or confidence is asserted."
+      },
+      {
+        "id": "CLEAR_STANCE",
+        "name": "Retrospective exception: Take a clear stance",
+        "blocking": true,
+        "ok": true,
+        "detail": "Exempt by Krish on 22 October 2026: this exact retrospective comparison has a recommendation and three actions; no future prediction or confidence is asserted."
+      }
+    ],
+    "production_commit": "6bfad15bbf75bf5ef31bd0820c2e011caac04e6b"
   }
 }
