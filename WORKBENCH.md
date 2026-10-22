@@ -1,27 +1,29 @@
 # Workbench: where we are and what's next
 
-## 22 October: Wednesday video corrections (Codex)
+## 22 October: Wednesday finishing pass (Codex)
 
-Krish accepted phone sync, then rejected the double opening, unequal logos
-and low portrait framing. Replacements are live on the private Wednesday
-board: `a66a114b271e52972e183c570f63f9282db48f60f9cddb5248d00f257301cdce`.
-All 23 Wednesday downloads passed independent hash readback (47 assets);
-Ideas, Monday, Friday and all six stores for both weeks remain unchanged.
+Both stabilised videos are live on the private Wednesday board, build
+`a99799bcddd665f4ac9bc4696fa212c1da3aa2b788952c53d2d6dbfe3775b835`, 50 assets.
+Actual new video downloads match the checked exports. Motion RMS fell 67.7%
+long and 51.5% short; sync passes six calibrated windows per export within
+40 ms, accepted decoded audio is identical, every one-second/bookend sample
+was inspected, and every camera transform passes geometry. Motion assessment
+is now mandatory in both skills and the native delivery guard.
 
-One continuous opening, matched logo heights and centred portrait framing.
-Identical decoded audio and timings; six sync windows per cut pass within
-40 ms. All sampled frames were inspected; the face audit passes 89 samples.
-The native renderer now rejects the old double-opening pattern.
+The $0.59 final fact check plus Krish's four manual adjudications and 23
+sign-offs clear the native fact gate while preserving all original verdicts.
+The approved exact-body retrospective exception is in PR #134. Article evidence
+balance: tests 422 words, corpus 423. No more paid run is authorised.
 
-Inputs, exact scripts and reproduction: `docs/plans/2026-10-21-wednesday/README.md`.
-Library: `3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot`,
-held media/archive under `3 Video/Working - review`. Originals are preserved.
-All 35 newest library downloads match; see the plan's `production-readback.json`.
-
-The $0.50 fact check did not clear its gate. No rerun or public post is
-authorised. Transcript differences, new-picture acceptance and fact/prediction
-rule holds remain open: see `release-review.md` and `claim-review.md`.
-
+Final continuous phone playback acceptance of both new exports is requested;
+raw recognizer discrepancies remain intact. The corrected article, covers,
+scorecard, captions, chapters and copy are on the editable/commentable board.
+Ideas/Mon/Fri, all prior assets and all feedback collections are preserved.
+All 39 refreshed library downloads match their hashes at
+`3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot`.
+Current proof and continuation: `docs/plans/2026-10-21-wednesday/stabilised-readback.json`,
+`README.md`, `release-review.md`. Earlier `production-readback.json` certifies
+prior exports only. No public post. Original recordings remain preserved.
 
 ## 21 October: the publish board, parts 2 to 4 and the 15-minute feature (Claude)
 

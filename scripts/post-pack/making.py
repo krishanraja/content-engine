@@ -1437,7 +1437,13 @@ def self_test():
                 Path(str(fixture)+'.validation.json').write_text(json.dumps({
                     'video_sha256':quality.digest(fixture),'piece_id':argv[vi-1],
                     'library_path':'3 Posts/Test fixture/'+argv[vi+3],
-                    'checks':{k:{'status':'pass'} for k in ('heard','sync','loudness','visuals','full_review')}}))
+                    'source_provenance':{'source_sha256':quality.digest(fixture)},
+                    'checks':{**{k:{'status':'pass'} for k in ('heard','sync','loudness','visuals','full_review')},
+                        'motion':{'status':'pass','recording_sha256':quality.digest(fixture),'decision':'not_needed',
+                            'reason':'Synthetic stationary fixture for this isolated self-test only.',
+                            'assessment':{'source_sha256':quality.digest(fixture),'evidence_sha256':quality.digest(fixture),'method':'Synthetic test fixture'},
+                            'final_review':{'status':'pass','video_sha256':quality.digest(fixture),'evidence_sha256':quality.digest(fixture),
+                                **{k:'pass' for k in ('shake','warping','borders','framing')}}}}}))
                 argv=[*argv,'--video-file',str(fixture)]
             with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
                 code = main(argv, call=engine or fake)

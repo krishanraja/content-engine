@@ -15,6 +15,19 @@ import sync_check
 
 
 class QualityTests(unittest.TestCase):
+    def test_decoder_limits_preserve_stream_order_pixels_and_frame_clock(self):
+        args=['-i','camera.mkv','-loop','1','-itsoffset','2','-i','card.png','-i','sound.wav']
+        bounded=make.bounded_decode_inputs(args)
+        self.assertEqual([bounded[i+1]for i,value in enumerate(bounded)if value=='-i'],['camera.mkv','card.png','sound.wav'])
+        self.assertTrue(all(bounded[i-2:i]==['-threads','2']for i,value in enumerate(bounded)if value=='-i'))
+        with self.assertRaises(ValueError):make.bounded_decode_inputs(args,0)
+        with tempfile.TemporaryDirectory()as temp:
+            video=Path(temp)/'fixture.mkv'
+            subprocess.run(['ffmpeg','-nostdin','-v','error','-f','lavfi','-i','testsrc=size=64x64:rate=24',
+                '-frames:v','6','-c:v','libx264','-threads','1',str(video)],check=True)
+            def decoded(inputs):return subprocess.check_output(['ffmpeg','-nostdin','-v','error',*inputs,'-f','framemd5','-'])
+            self.assertEqual(decoded(['-i',str(video)]),decoded(make.bounded_decode_inputs(['-i',str(video)])))
+
     def test_caption_adlibs_are_bound_to_exact_edited_clock_and_original_words(self):
         words=[{'w':'Most','s':1.,'e':1.2},{'w':'of','s':1.2,'e':1.3},{'w':'us','s':1.3,'e':1.5}]
         identity={'source_sha256':'original','speed':1.1,'clock':'processing_source'}
@@ -154,7 +167,31 @@ class QualityTests(unittest.TestCase):
             report={'video_sha256':quality.digest(video),'library_path':'target','checks':{
                 key:{'status':'pass'} for key in ('heard','sync','loudness','visuals','full_review')}}
             receipt.write_text(json.dumps(report))
+            self.assertIn('motion assessment is not passed',quality.delivery_problems(video,receipt,'target'))
+            report['source_provenance']={'source_sha256':'a'*64}
+            report['checks']['motion']={
+                'status':'pass','recording_sha256':'a'*64,'decision':'not_needed',
+                'reason':'Static wall tracked throughout the take; no visible shake.',
+                'assessment':{'source_sha256':'b'*64,'evidence_sha256':'c'*64,'method':'Static background tracking'},
+                'final_review':{'status':'pass','video_sha256':report['video_sha256'],'evidence_sha256':'d'*64,
+                    **{k:'pass' for k in ('shake','warping','borders','framing')}}}
+            receipt.write_text(json.dumps(report))
             self.assertEqual(quality.delivery_problems(video,receipt,'target'),[])
+            motion=report['checks']['motion']
+            motion['recording_sha256']='e'*64
+            self.assertIn('different recording',quality.motion_problems(report)[0])
+            motion['recording_sha256']='a'*64
+            motion['decision']='stabilised'
+            motion['treatment']={'output_sha256':'e'*64,'evidence_sha256':'f'*64}
+            motion['comparison']={'before_rms_px':10,'after_rms_px':3,'before_p95_px':20,'after_p95_px':7}
+            self.assertEqual(quality.motion_problems(report),[])
+            motion['comparison']['after_p95_px']=21
+            self.assertIn('not reduced',quality.motion_problems(report)[0])
+            motion['comparison']['after_p95_px']=float('nan')
+            self.assertIn('invalid',quality.motion_problems(report)[0])
+            motion['comparison']['after_p95_px']=7
+            motion['final_review']['video_sha256']='e'*64
+            self.assertIn('stale',quality.motion_problems(report)[0])
             self.assertTrue(quality.delivery_problems(video,receipt,'other'))
             report['checks']['sync']['status']='inconclusive'; receipt.write_text(json.dumps(report))
             self.assertTrue(quality.delivery_problems(video,receipt))
