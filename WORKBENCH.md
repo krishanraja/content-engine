@@ -1,30 +1,5 @@
 # Workbench: where we are and what's next
 
-## 22 October: Wednesday finishing pass (Codex)
-
-Both stabilised videos are live on the private Wednesday board, build
-`1bfee8f7c5955aef2cfb3b6fe8c8b9645b80221c5b1cd4b113cc50a9c9620584`, 50 assets.
-Actual new video downloads match the checked exports. Motion RMS fell 67.7%
-long and 51.5% short; sync passes six calibrated windows per export within
-40 ms, accepted decoded audio is identical, every one-second/bookend sample
-was inspected, and every camera transform passes geometry. Motion assessment
-is now mandatory in both skills and the native delivery guard.
-
-The $0.59 final fact check plus Krish's four manual adjudications and 23
-sign-offs clear the native fact gate while preserving all original verdicts.
-The approved exact-body retrospective exception merged in PR #134 after all 15 checks passed (main `6bfad15`). Article evidence
-balance: tests 422 words, corpus 423. No more paid run is authorised.
-
-Final continuous phone playback acceptance of both new exports is requested;
-raw recognizer discrepancies remain intact. The corrected article, covers,
-scorecard, captions, chapters and copy are on the editable/commentable board.
-Ideas/Mon/Fri, all prior assets and all feedback collections are preserved.
-All 39 refreshed library downloads match their hashes at
-`3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot`.
-Current proof and continuation: `docs/plans/2026-10-21-wednesday/stabilised-readback.json`,
-`README.md`, `release-review.md`. Earlier `production-readback.json` certifies
-prior exports only. No public post. Original recordings remain preserved.
-
 ## 21 October: the publish board, parts 2 to 4 and the 15-minute feature (Claude)
 
 - **Krish:** "just get it all done now, to full completion", then "merge it when green and keep going".
@@ -835,9 +810,10 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
-- 2026-10-22, 16:38 UTC: **Wednesday's private board has the integrated recuts.** Build
-  `ea080ed0d447f0a82f5f6ec0c008a711c799b20f4969397b09ae3cdbfce3c468`:
-  3 downloads matched; other panels unchanged; Krish's Friday feedback retained.
+- 2026-10-22, 16:50 UTC: **Wednesday's private board has the integrated recuts and current headshot draft.** Build
+  `20c5c551728412279d8a274cfd3fa78337a7fa793a0db7a909b30c82abd3fe56`:
+  live HTML and the one changed asset download matched, all 54 assets retained,
+  other panels unchanged, and Krish's Friday feedback retained.
   Fact gate clear; no public post.
   - [PR #136](https://github.com/krishanraja/content-engine/pull/136) has the video code;
     local verify and 85 checks passed. Merge after CI. See
@@ -846,9 +822,11 @@ bring takes back, was retired on 12 October.
     source. Forty newest library downloads plus the supplied source/receipt hash-matched.
   - **Open:** full phone playback of both new cuts; the raw recognizer differences;
     Krish's reaction to the restrained Elon/Zuckerberg headshot mock before seven
-    cover/thumbnail shapes, board/library readback and publish handoff. The rejected
-    boxing art must not be used. The mock/source portraits are in the post library's
-    `Working - headshot review` lane. The Inbox `Active Ventures` versus runner `Active`
+    cover/thumbnail shapes. The rejected boxing art was withdrawn from the active
+    board covers section and from the publish-manager inputs, then preserved as
+    clearly labelled archive links. The revised manager's three changed files
+    matched actual library downloads. The mock/source portraits are in the post
+    library's `Working - headshot review` lane. The Inbox `Active Ventures` versus runner `Active`
     path mismatch remains unrepaired; manual source retrieval succeeded.
 
 - Older handoffs (12 to 20 October): `docs/history/2026-10-18-WORKBENCH-handoffs.md`. This section holds only the

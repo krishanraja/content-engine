@@ -1,6 +1,6 @@
 # Wednesday release review
 
-**Current video revision:** see `narrative-recut-review.md` for the integrated recuts with Krish's newly supplied stabilised vertical source, original redacted interactions, launch demonstrations, community captures and the single running tally. The earlier stabilised exports discussed below were superseded after Krish rejected the vertical motion and requested more actual evidence. The headshot cover revision is still under design review. The article's fact gate remains clear; these video review copies still require full phone playback acceptance.
+**Current video revision:** see `narrative-recut-review.md` for the integrated recuts with Krish's newly supplied stabilised vertical source, original redacted interactions, launch demonstrations, community captures and the single running tally. The earlier stabilised exports discussed below were superseded after Krish rejected the vertical motion and requested more actual evidence. The rejected covers and thumbnails are withdrawn from the active board and publish-manager inputs, and preserved as labelled archive assets. The aligned headshot cover is still under design review; other sizes follow approval. The article's fact gate remains clear; these video review copies still require full phone playback acceptance.
 
 Title and headings: Krish approved the proposed set on 21 October, after both recordings.
 

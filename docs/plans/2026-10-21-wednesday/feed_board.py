@@ -95,10 +95,16 @@ def main():
     covers=[('cover-1200x630.png','Substack cover'),('cover.png','Substack feed'),
             ('cover-1200x675.png','LinkedIn share card'),('cover-1080x1080.png','Square cover'),
             ('cover-1080x1920.png','Vertical cover')]
-    sections.append({'id':'covers','title':'Covers and thumbnails','files':[
-        file('wed-'+Path(name).stem,work/'article'/name,label) for name,label in covers]+[
-        file('wed-thumb-wide',work/'thumbs/thumb-wide-1280x720.jpg','YouTube thumbnail'),
-        file('wed-thumb-tall',work/'thumbs/thumb-tall-1080x1920.jpg','Short video thumbnail')]})
+    if a.headshot_review:
+        sections.append({'id':'covers','title':'Covers and thumbnails','files':[
+            file('wed-headshot-cover-draft',work/'head-to-head/cover-1200x630.png','Headshot cover draft — review'),
+            file('wed-headshot-cover-phone',work/'head-to-head/cover-1200x630-phone.png','Headshot cover draft on a phone')],
+            'note':'The earlier covers and thumbnails were rejected and are withdrawn from publication. Other sizes follow approval of this draft.'})
+    else:
+        sections.append({'id':'covers','title':'Covers and thumbnails','files':[
+            file('wed-'+Path(name).stem,work/'article'/name,label) for name,label in covers]+[
+            file('wed-thumb-wide',work/'thumbs/thumb-wide-1280x720.jpg','YouTube thumbnail'),
+            file('wed-thumb-tall',work/'thumbs/thumb-tall-1080x1920.jpg','Short video thumbnail')]})
     if a.videos:
         files=[]
         for cut,shape in [('long','16x9'),('short','9x16')]:
@@ -129,9 +135,11 @@ def main():
         file('wed-fact-adjudication',PLAN/'final-fact-adjudication.md','Final fact-check: 27 named lines and their evidence'),
         file('wed-stabilisation-review',PLAN/'stabilisation-review.md','Stabilisation measurements and mandatory check')]})
     if a.headshot_review:
-        sections[-1]['files'] += [file('wed-headshot-cover-draft',work/'head-to-head/cover-1200x630.png','Headshot cover draft — review'),
-                                  file('wed-headshot-cover-phone',work/'head-to-head/cover-1200x630-phone.png','Headshot cover draft on a phone'),
-                                  file('wed-headshot-layout-proof',work/'head-to-head/layout-review.json','Headshot cover alignment check')]
+        sections[-1]['files'] += [file('wed-headshot-layout-proof',work/'head-to-head/layout-review.json','Headshot cover alignment check')]
+        sections[-1]['files'] += [file('wed-'+Path(name).stem,work/'article'/name,'Rejected cover archive: '+label)
+                                  for name,label in covers]
+        sections[-1]['files'] += [file('wed-thumb-wide',work/'thumbs/thumb-wide-1280x720.jpg','Rejected thumbnail archive: wide'),
+                                  file('wed-thumb-tall',work/'thumbs/thumb-tall-1080x1920.jpg','Rejected thumbnail archive: tall')]
     historic=state['manifest']['assets'].get('wednesday-claude-evidence')
     if historic:
         sections[-1]['files'].append({'label':'Original editorial evidence pack',
