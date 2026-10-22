@@ -445,7 +445,7 @@ authoritative for reading; the repository is authoritative for what is correct.
 **This repository's own rules:** `AGENTS.md`, `CLAUDE.md`, `docs/CAROUSEL_ENGINE_STATE.md`
 <!-- krish-canon:end -->
 
-<!-- krish-repo-admin:start brain=f0c91f3b1502 sha=75a4f360a412 -->
+<!-- krish-repo-admin:start brain=2ad79d5cf4f3 sha=75a4f360a412 -->
 ## Administer this repository
 
 Use `docs/HARNESS_CONTEXT.md` for the owning workflow, source of truth and checks. Preserve the goal and accepted decisions when a revision changes one part; explain material trade-offs. Verify the downstream result. Record corrections and observed outcomes through the existing capture path. Experimental results retain their conditions; inferred requirements remain proposals.
