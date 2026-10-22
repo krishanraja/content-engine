@@ -47,7 +47,14 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    (his standing yes covers any session), or, without the Teleprompter
    connector, named in one line on the week's board item. A cut sent by hand
    gets its record line instead, and one held back after a failed send is
-   only named.
+   only named. Then relay his taps and comments on the ending week's "What I
+   learned" lessons, the taste ledger's `taste:` ones included, exactly as
+   `make-piece` says (yes, no, or a comment as his rewording), and only those
+   whose `updated_by` is Krish. One he left alone stays proposed. Next, read
+   the Inspiration cards he routed to a piece (`select name, why_like,
+   would_do from inspiration_items where route = 'make_piece' and answered_at
+   > now() - interval '8 days'`): each is an idea of his for step 2, in his
+   words.
 1. **Read the idea queue first**, before anything else and before any
    research (Krish, 2026-10-19: ideas he likes that are not time-sensitive
    are queued, and the queue "needs to survive everything and be the first
