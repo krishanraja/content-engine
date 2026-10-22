@@ -15,6 +15,19 @@ import sync_check
 
 
 class QualityTests(unittest.TestCase):
+    def test_decoder_limits_preserve_stream_order_pixels_and_frame_clock(self):
+        args=['-i','camera.mkv','-loop','1','-itsoffset','2','-i','card.png','-i','sound.wav']
+        bounded=make.bounded_decode_inputs(args)
+        self.assertEqual([bounded[i+1]for i,value in enumerate(bounded)if value=='-i'],['camera.mkv','card.png','sound.wav'])
+        self.assertTrue(all(bounded[i-2:i]==['-threads','2']for i,value in enumerate(bounded)if value=='-i'))
+        with self.assertRaises(ValueError):make.bounded_decode_inputs(args,0)
+        with tempfile.TemporaryDirectory()as temp:
+            video=Path(temp)/'fixture.mkv'
+            subprocess.run(['ffmpeg','-nostdin','-v','error','-f','lavfi','-i','testsrc=size=64x64:rate=24',
+                '-frames:v','6','-c:v','libx264','-threads','1',str(video)],check=True)
+            def decoded(inputs):return subprocess.check_output(['ffmpeg','-nostdin','-v','error',*inputs,'-f','framemd5','-'])
+            self.assertEqual(decoded(['-i',str(video)]),decoded(make.bounded_decode_inputs(['-i',str(video)])))
+
     def test_caption_adlibs_are_bound_to_exact_edited_clock_and_original_words(self):
         words=[{'w':'Most','s':1.,'e':1.2},{'w':'of','s':1.2,'e':1.3},{'w':'us','s':1.3,'e':1.5}]
         identity={'source_sha256':'original','speed':1.1,'clock':'processing_source'}
