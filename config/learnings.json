@@ -1192,6 +1192,15 @@
      "how": "the G1 context nudge row every session reads"
     }
    ]
+  },
+  {
+   "id": "script-is-the-bottleneck",
+   "on": "2026-10-22",
+   "krish": "There are currently two big bottlenecks: 1. Getting the script right: it being simple enough, sounding like me, and deliverable. 2. Post-production visuals, which we could deal with later.",
+   "why": "Wednesday's scripts needed round after round of his edits (overexplaining, a score word he did not understand, lines that did not sound like him) before he could read them on camera, and that is the time the engine is meant to save him.",
+   "means": "The script gets the effort first: the story is settled with him before a word of script is written, and each script is simple enough, sounds like him and is easy to say on camera before it reaches him; post-production visuals can come after he records.",
+   "status": "open",
+   "encoded": []
   }
  ]
 }

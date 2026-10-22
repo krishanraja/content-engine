@@ -1,7 +1,10 @@
 # Narrative: Friday 23 October, mind.the.gap
 
-Piece `7083d6ad-419e-4fdc-9aba-f3be7f3f3a23`. Status: **awaiting Krish's sign-off**. Nothing is made
-until he signs.
+Piece `7083d6ad-419e-4fdc-9aba-f3be7f3f3a23`. Status: **never signed; widened by his 22 October
+angle** ("This really needs to be a simple explainer into what the main countries leading the AI
+race are...", in full in `docs/plans/2026-10-23-friday/story.md`). Per the drift rule the new end
+message goes back to him; the next narrative is written from his answers to the 22 October
+questions. Nothing is made until he signs.
 
 ## His answer that fixes this narrative (19 Oct, his words)
 
