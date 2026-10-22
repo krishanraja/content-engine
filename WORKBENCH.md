@@ -1,5 +1,28 @@
 # Workbench: where we are and what's next
 
+## 22 October: Wednesday video corrections (Codex)
+
+Krish accepted phone sync, then rejected the double opening, unequal logos
+and low portrait framing. Replacements are live on the private Wednesday
+board: `a66a114b271e52972e183c570f63f9282db48f60f9cddb5248d00f257301cdce`.
+All 23 Wednesday downloads passed independent hash readback (47 assets);
+Ideas, Monday, Friday and all six stores for both weeks remain unchanged.
+
+One continuous opening, matched logo heights and centred portrait framing.
+Identical decoded audio and timings; six sync windows per cut pass within
+40 ms. All sampled frames were inspected; the face audit passes 89 samples.
+The native renderer now rejects the old double-opening pattern.
+
+Inputs, exact scripts and reproduction: `docs/plans/2026-10-21-wednesday/README.md`.
+Library: `3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot`,
+held media/archive under `3 Video/Working - review`. Originals are preserved.
+All 35 newest library downloads match; see the plan's `production-readback.json`.
+
+The $0.50 fact check did not clear its gate. No rerun or public post is
+authorised. Transcript differences, new-picture acceptance and fact/prediction
+rule holds remain open: see `release-review.md` and `claim-review.md`.
+
+
 ## 21 October: the publish board, parts 2 to 4 and the 15-minute feature (Claude)
 
 - **Krish:** "just get it all done now, to full completion", then "merge it when green and keep going".

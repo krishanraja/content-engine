@@ -16,7 +16,7 @@
     {"names": ["Microsoft"], "domain": "microsoft.com"},
     {"names": ["Amazon"], "domain": "amazon.com"},
     {"names": ["Shopify"], "domain": "shopify.com"},
-    {"names": ["Meta"], "domain": "meta.com"},
+    {"names": ["Meta", "Muse"], "domain": "meta.com"},
     {"names": ["Higgsfield"], "domain": "higgsfield.ai"},
     {"names": ["Substack"], "domain": "substack.com"},
     {"names": ["YouTube"], "domain": "youtube.com"},

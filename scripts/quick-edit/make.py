@@ -1394,7 +1394,7 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
             g.append(f"[{n}:v]format=rgba,{card_fit(card, 1920 - px if px else 1920, 1080)}{f}[pp{n}]")
             g.append(f"[{last}][pp{n}]overlay=x={px}:y={py}:enable='between(t,{c['s']},{stop})'[s{k}]")
             last, n, k = f's{k}', n + 1, k + 1
-    if asp == '9x16' and cfg.get('logo', True) is not False:
+    if asp == '9x16' and intro is None and cfg.get('logo', True) is not False:
         # The makeyourmindup logo in the opening seconds of every tall video
         # (Krish, 2026-10-07: "put the Make Your Mind Up logo in the first
         # few seconds of the video somewhere on vertical video"). The PNG is
@@ -1620,12 +1620,13 @@ def self_test():
     same = lambda p: Path(p)
     _, g, audio = video_graph(fake, '9x16', same, Path('.'), Path('edited.mkv'), 20.0, [], ws, [720, 1280, 0, 0],
                               {'file': 'sting.mp4', 'frames': 45}, {'file': 'end.mp4', 'frames': 120}, Path('mix.wav'))
-    pill = next(i for i, line in enumerate(g) if "overlay=0:0:enable='between(t,0,3.00)'" in line)
-    main = next(i for i, line in enumerate(g) if line.startswith('[') and 'ass=t-9x16.ass' in line)
-    checks.append(('the tall logo pill is unchanged and laid on the main, so it starts after the sting', pill < main, True))
+    checks.append(('a branded intro is not followed by a second logo entrance',
+                   any("overlay=0:0:enable='between(t,0,3.00)'" in line for line in g), False))
     checks.append(('the sting goes first in the join, with no sound of its own in the picture graph', g[-1], '[iv][vm][ev]concat=n=3:v=1:a=0[V]'))
-    checks.append(('the sound is the finished mix', audio, '4:a'))
+    checks.append(('the sound is the finished mix', audio, '3:a'))
     _, g, audio = video_graph(fake, '9x16', same, Path('.'), Path('edited.mkv'), 20.0, [], ws, [720, 1280, 0, 0], None, {'file': 'end.mp4', 'frames': 120}, Path('mix.wav'))
+    checks.append(('without an intro the opening logo is retained',
+                   any("overlay=0:0:enable='between(t,0,3.00)'" in line for line in g), True))
     checks.append(('without a sting it is the main and the end card', (g[-1], audio), ('[vm][ev]concat=n=2:v=1:a=0[V]', '3:a')))
     _, g, _ = video_graph(fake, '9x16', same, Path('.'), Path('edited.mkv'), 20.0, [], ws, [720, 1280, 0, 0], None,
                           {'file': 'end.mp4', 'frames': 510, 'held_s': 13.0}, Path('mix.wav'))

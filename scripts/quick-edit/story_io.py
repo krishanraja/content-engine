@@ -186,7 +186,7 @@ def video_title(facts, where='cover-facts.json'):
     if len(said) > TITLE_MAX_CHARS:
         raise StoryError(f'{where}: the video title "{said}" is {len(said)} characters; a title card holds at most '
                          f'{TITLE_MAX_CHARS}. Write a shorter "video_title".')
-    why = title_check.gate(said)
+    why = title_check.gate(said, piece_id=facts.get('piece_id'))
     if why:
         raise StoryError(f'{where}: the video title "{said}" is not ready (house rule TITLE_EARNS_THE_CLICK: the anti-dumb floor, then only a title Krish picked): ' + '; '.join(why))
     return said
@@ -383,6 +383,10 @@ def check_clip(entries, clip, frames, shape, rules):
     problems = []
     if missing:
         problems.append(f'{clip}: {len(missing)} of {frames} frames were never checked (first: {missing[:5]})')
+    if clip.startswith('intro-'):
+        ids={it['id'] for report in by_frame.values() for it in report.get('items') or []}
+        if 'left-card' in ids and any(x.startswith('title-') for x in ids):
+            problems.append(f'{clip}: two opening scenes: a stand-off followed by a separate title card')
     for frame in sorted(by_frame):
         items = by_frame[frame].get('items') or []
         for it in items:
@@ -653,6 +657,10 @@ def _self_test():
              'faces': ['MYMU Anton', 'MYMU Archivo', 'MYMU Plex Mono'], 'tolerance_px': 1, 'overlap_share': 0.04}
     good = {'id': 'title-0', 'group': 'title', 'kind': 'text', 'op': 1, 'r': [120, 400, 900, 560], 'family': '"MYMU Anton"', 'fontOk': True, 'text': 'I SCORED'}
     ok(check_clip([{'clip': 'c', 'frame': f, 'items': [good]} for f in range(3)], 'c', 3, '9x16', rules)[0] == [], 'a clean clip passes')
+    fight=dict(good,id='left-card',kind='box')
+    double=[{'clip':'intro-9x16','frame':0,'items':[fight]}, {'clip':'intro-9x16','frame':1,'items':[good]}]
+    ok(any('two opening scenes' in p for p in check_clip(double,'intro-9x16',2,'9x16',rules)[0]),
+       'a stand-off followed by another title sequence is refused')
     off = dict(good, id='title-3', r=[120, 1400, 1100, 1620], text='IT TIED')
     probs, marks = check_clip([{'clip': 'c', 'frame': f, 'items': [good, off]} for f in range(3)], 'c', 3, '9x16', rules)
     ok(len(probs) == 1 and ('past the right' in probs[0] or 'past the bottom' in probs[0]), f'text off the page is caught: {probs}')

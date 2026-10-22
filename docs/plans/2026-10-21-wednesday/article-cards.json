@@ -1,0 +1,142 @@
+{
+  "series": "under_the_hood",
+  "logos": "logos",
+  "source": [
+    "../2026-10-19-week/wednesday-article-draft.md",
+    "recorded-long-script.md",
+    "recorded-short-script.md"
+  ],
+  "cards": [
+    {
+      "file": "scam-grok.png",
+      "kind": "evidence",
+      "title": "The inbox",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Grok Bot",
+          "value": "Flags the likely scam",
+          "answer": true
+        },
+        {
+          "label": "Muse",
+          "value": "Drafts a polished reply",
+          "answer": false
+        }
+      ],
+      "qualification": "Nothing was sent",
+      "point": "The inbox",
+      "cue": "scam-grok",
+      "scene": "compare",
+      "for_article": true
+    },
+    {
+      "file": "flight-layover.png",
+      "kind": "evidence",
+      "title": "The flight",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Lisbon",
+          "value": "29-hour stopover",
+          "answer": false
+        },
+        {
+          "label": "New York",
+          "value": "Three nights",
+          "answer": true
+        }
+      ],
+      "qualification": "Both assistants advised against this fare",
+      "point": "The flight",
+      "cue": "flight-layover",
+      "scene": "journey",
+      "for_article": true
+    },
+    {
+      "file": "news-date.png",
+      "kind": "evidence",
+      "title": "The news",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Forecast dated",
+          "value": "April",
+          "answer": false
+        },
+        {
+          "label": "Grok says",
+          "value": "October news",
+          "answer": false
+        }
+      ],
+      "qualification": "Muse kept the date right",
+      "point": "The news",
+      "cue": "news-date",
+      "scene": "news",
+      "for_article": true
+    },
+    {
+      "file": "email-duplicate.png",
+      "kind": "evidence",
+      "title": "The work email",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Muse draft",
+          "value": "Recreated",
+          "answer": false
+        },
+        {
+          "label": "Gmail shows",
+          "value": "Two drafts remained",
+          "answer": false
+        }
+      ],
+      "qualification": "Nothing was sent. Private details removed.",
+      "point": "The work email",
+      "cue": "email-duplicate",
+      "scene": "drafts",
+      "for_article": true
+    },
+    {
+      "file": "starting-point.png",
+      "kind": "evidence",
+      "title": "The verdict",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Grok Bot",
+          "value": "Weekly admin",
+          "answer": false
+        },
+        {
+          "label": "Muse",
+          "value": "Personal errands",
+          "answer": false
+        }
+      ],
+      "qualification": "Start small. Neither gets free rein.",
+      "point": "The verdict",
+      "cue": "starting-point",
+      "scene": "compare",
+      "for_article": true
+    }
+  ],
+  "piece_id": "d7a20885-7001-4661-b444-9d7ca1043416"
+}

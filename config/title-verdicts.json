@@ -92,6 +92,200 @@
  ],
  "verdicts": [
   {
+   "title": "MUSE vs GROK BOT FIVE REAL-LIFE TESTS",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "Composed from the two lines explicitly approved together.",
+   "krish": "Krish, 2026-10-21: Use this set (Recommended)",
+   "on": "2026-10-21",
+   "piece": "d7a20885-7001-4661-b444-9d7ca1043416",
+   "editorial_override": {
+    "said": "Krish, 2026-10-21: Use this set (Recommended)",
+    "findings": [
+     "\"X vs Y\" is a matchup label, not a reason to read"
+    ],
+    "reason": "Explicit exact packaging pick for this piece."
+   }
+  },
+  {
+   "title": "Muse vs Grok Bot: Five everyday jobs",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "Composed from the two lines explicitly approved together.",
+   "krish": "Krish, 2026-10-21: Use this set (Recommended)",
+   "on": "2026-10-21",
+   "piece": "d7a20885-7001-4661-b444-9d7ca1043416",
+   "editorial_override": {
+    "said": "Krish, 2026-10-21: Use this set (Recommended)",
+    "findings": [
+     "\"X vs Y\" is a matchup label, not a reason to read"
+    ],
+    "reason": "Explicit exact packaging pick for this piece."
+   }
+  },
+  {
+   "title": "The verdict",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "Approved in the single post-recording packaging round.",
+   "krish": "Krish, 2026-10-21: Use this set (Recommended)",
+   "on": "2026-10-21",
+   "piece": "d7a20885-7001-4661-b444-9d7ca1043416",
+   "editorial_override": {
+    "said": "Krish, 2026-10-21: Use this set (Recommended)",
+    "findings": [
+     "a bare topic or the obvious: name who does what, or give the number that surprises (why would someone have to read it?)"
+    ],
+    "reason": "Explicit exact packaging pick for this piece."
+   }
+  },
+  {
+   "title": "The work email",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "Approved in the single post-recording packaging round.",
+   "krish": "Krish, 2026-10-21: Use this set (Recommended)",
+   "on": "2026-10-21",
+   "piece": "d7a20885-7001-4661-b444-9d7ca1043416",
+   "editorial_override": {
+    "said": "Krish, 2026-10-21: Use this set (Recommended)",
+    "findings": [
+     "a bare topic or the obvious: name who does what, or give the number that surprises (why would someone have to read it?)"
+    ],
+    "reason": "Explicit exact packaging pick for this piece."
+   }
+  },
+  {
+   "title": "The news",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "Approved in the single post-recording packaging round.",
+   "krish": "Krish, 2026-10-21: Use this set (Recommended)",
+   "on": "2026-10-21",
+   "piece": "d7a20885-7001-4661-b444-9d7ca1043416",
+   "editorial_override": {
+    "said": "Krish, 2026-10-21: Use this set (Recommended)",
+    "findings": [
+     "a bare topic or the obvious: name who does what, or give the number that surprises (why would someone have to read it?)"
+    ],
+    "reason": "Explicit exact packaging pick for this piece."
+   }
+  },
+  {
+   "title": "My day",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "Approved in the single post-recording packaging round.",
+   "krish": "Krish, 2026-10-21: Use this set (Recommended)",
+   "on": "2026-10-21",
+   "piece": "d7a20885-7001-4661-b444-9d7ca1043416",
+   "editorial_override": {
+    "said": "Krish, 2026-10-21: Use this set (Recommended)",
+    "findings": [
+     "a bare topic or the obvious: name who does what, or give the number that surprises (why would someone have to read it?)"
+    ],
+    "reason": "Explicit exact packaging pick for this piece."
+   }
+  },
+  {
+   "title": "What to cancel",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "Approved in the single post-recording packaging round.",
+   "krish": "Krish, 2026-10-21: Use this set (Recommended)",
+   "on": "2026-10-21",
+   "piece": "d7a20885-7001-4661-b444-9d7ca1043416",
+   "editorial_override": {
+    "said": "Krish, 2026-10-21: Use this set (Recommended)",
+    "findings": [
+     "a bare topic or the obvious: name who does what, or give the number that surprises (why would someone have to read it?)"
+    ],
+    "reason": "Explicit exact packaging pick for this piece."
+   }
+  },
+  {
+   "title": "The flight",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "Approved in the single post-recording packaging round.",
+   "krish": "Krish, 2026-10-21: Use this set (Recommended)",
+   "on": "2026-10-21",
+   "piece": "d7a20885-7001-4661-b444-9d7ca1043416",
+   "editorial_override": {
+    "said": "Krish, 2026-10-21: Use this set (Recommended)",
+    "findings": [
+     "a bare topic or the obvious: name who does what, or give the number that surprises (why would someone have to read it?)"
+    ],
+    "reason": "Explicit exact packaging pick for this piece."
+   }
+  },
+  {
+   "title": "The inbox",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "Approved in the single post-recording packaging round.",
+   "krish": "Krish, 2026-10-21: Use this set (Recommended)",
+   "on": "2026-10-21",
+   "piece": "d7a20885-7001-4661-b444-9d7ca1043416",
+   "editorial_override": {
+    "said": "Krish, 2026-10-21: Use this set (Recommended)",
+    "findings": [
+     "a bare topic or the obvious: name who does what, or give the number that surprises (why would someone have to read it?)"
+    ],
+    "reason": "Explicit exact packaging pick for this piece."
+   }
+  },
+  {
+   "title": "Five everyday jobs",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "Approved in the single post-recording packaging round.",
+   "krish": "Krish, 2026-10-21: Use this set (Recommended)",
+   "on": "2026-10-21",
+   "piece": "d7a20885-7001-4661-b444-9d7ca1043416",
+   "editorial_override": {
+    "said": "Krish, 2026-10-21: Use this set (Recommended)",
+    "findings": [
+     "a bare topic or the obvious: name who does what, or give the number that surprises (why would someone have to read it?)"
+    ],
+    "reason": "Explicit exact packaging pick for this piece."
+   }
+  },
+  {
+   "title": "Muse vs Grok Bot",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "Approved in the single post-recording packaging round.",
+   "krish": "Krish, 2026-10-21: Use this set (Recommended)",
+   "on": "2026-10-21",
+   "piece": "d7a20885-7001-4661-b444-9d7ca1043416",
+   "editorial_override": {
+    "said": "Krish, 2026-10-21: Use this set (Recommended)",
+    "findings": [
+     "\"X vs Y\" is a matchup label, not a reason to read"
+    ],
+    "reason": "Explicit exact packaging pick for this piece."
+   }
+  },
+  {
+   "title": "FIVE REAL-LIFE TESTS",
+   "surface": "thumbnail",
+   "verdict": "picked",
+   "why": "Approved in the single post-recording packaging round.",
+   "krish": "Krish, 2026-10-21: Use this set (Recommended)",
+   "on": "2026-10-21",
+   "piece": "d7a20885-7001-4661-b444-9d7ca1043416"
+  },
+  {
+   "title": "Can Meta’s Muse or Grok Bot run my life? I tested both",
+   "surface": "shorts",
+   "verdict": "picked",
+   "why": "Approved in the single post-recording packaging round.",
+   "krish": "Krish, 2026-10-21: Use this set (Recommended)",
+   "on": "2026-10-21",
+   "piece": "d7a20885-7001-4661-b444-9d7ca1043416"
+  },
+  {
    "title": "Questions for whoever owns your AI budget",
    "surface": "card",
    "verdict": "picked",

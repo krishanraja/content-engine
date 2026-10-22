@@ -1,0 +1,104 @@
+{
+  "subchannel": "under.the.hood",
+  "date": "2026-10-21",
+  "headline": "Can Meta’s Muse or Grok Bot run my life? I tested both",
+  "video_title": "Muse vs Grok Bot: Five everyday jobs",
+  "video_title_emphasis": "Five everyday jobs",
+  "comment_question": "Which job would you hand over?",
+  "cover": {
+    "headline": [
+      "MUSE vs GROK BOT",
+      "FIVE REAL-LIFE TESTS"
+    ],
+    "portrait": true,
+    "rows": [
+      {
+        "name": "Grok Bot",
+        "logo": "logos/grok-mark.svg",
+        "tag": "Grok",
+        "colour": "mint"
+      },
+      {
+        "name": "Muse",
+        "logo": "logos/meta-mark.svg",
+        "tag": "Meta",
+        "colour": "lilac"
+      }
+    ]
+  },
+  "thumbs": {
+    "headline": [
+      "MUSE vs GROK BOT",
+      "FIVE REAL-LIFE TESTS"
+    ],
+    "portrait": true,
+    "rows": [
+      {
+        "name": "Grok Bot",
+        "logo": "logos/grok-mark.svg",
+        "tag": "Grok",
+        "colour": "mint"
+      },
+      {
+        "name": "Muse",
+        "logo": "logos/meta-mark.svg",
+        "tag": "Meta",
+        "colour": "lilac"
+      }
+    ]
+  },
+  "standoff": {
+    "left": {
+      "label": "Grok Bot",
+      "logos": [
+        "logos/grok-mark.svg"
+      ],
+      "tag": "Five everyday jobs"
+    },
+    "right": [
+      {
+        "label": "Meta’s Muse",
+        "logos": [
+          "logos/meta-mark.svg"
+        ],
+        "tag": "Tested head to head"
+      }
+    ]
+  },
+  "piece_id": "d7a20885-7001-4661-b444-9d7ca1043416",
+  "deck": "Five everyday jobs, one scammer with excellent customer service, and a scorecard that includes what other testers found.",
+  "body": "../2026-10-19-week/wednesday-article-draft.md",
+  "endnote": "Field tests run on personal accounts on 20 October 2026. Community reports are attributed individually; company examples are claims. Nothing was sent, booked, bought or cancelled. Editorial review remains open.",
+  "figures": [
+    {
+      "after": "Muse made the wrong job look beautifully finished.",
+      "alt": "Grok flags a likely scam; Muse drafts a polished reply.",
+      "caption": "Anonymised reconstruction from my test. Nothing sent.",
+      "image": "article-cards/scam-grok.png"
+    },
+    {
+      "after": "That's quite a lot of Portugal for a trip to New York.",
+      "alt": "A 29-hour stopover in Lisbon precedes three nights in New York.",
+      "caption": "Historical fare search, 20 October 2026. Both advised against it.",
+      "image": "article-cards/flight-layover.png"
+    },
+    {
+      "after": "Breaking news, six months late.",
+      "alt": "The forecast was dated April; Grok presented it as October news.",
+      "caption": "Muse dated the forecast correctly.",
+      "image": "article-cards/news-date.png"
+    },
+    {
+      "after": "I can fix a mistake I know about.",
+      "alt": "Muse recreated its draft; Gmail still showed two drafts.",
+      "caption": "Anonymised reconstruction; private details removed.",
+      "image": "article-cards/email-duplicate.png"
+    },
+    {
+      "after": "Neither gets free rein.",
+      "alt": "Start with Grok Bot for weekly admin, or Muse for personal errands.",
+      "caption": "My conditional recommendation, considering both evidence sets.",
+      "image": "article-cards/starting-point.png"
+    }
+  ]
+}

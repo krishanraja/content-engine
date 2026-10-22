@@ -1,0 +1,20 @@
+{
+  "piece_id": "d7a20885-7001-4661-b444-9d7ca1043416",
+  "date": "2026-10-21",
+  "subchannel": "under_the_hood",
+  "subject": "Muse vs Grok Bot",
+  "video_title": "Muse vs Grok Bot: Five everyday jobs",
+  "files": [
+    {
+      "kind": "video-script",
+      "cut": "long",
+      "file": "recorded-long-script.md"
+    },
+    {
+      "kind": "video-script",
+      "cut": "short",
+      "file": "recorded-short-script.md"
+    }
+  ],
+  "headline": "Can Meta’s Muse or Grok Bot run my life? I tested both"
+}

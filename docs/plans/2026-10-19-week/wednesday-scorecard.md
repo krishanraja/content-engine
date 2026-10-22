@@ -8,7 +8,7 @@ Five rounds. Each gets two scores: what happened when I tried it, and what the w
 | A cheap flight | Both found about £335 with 29 hours in Lisbon, and both steered me away. Muse miscounted the New York nights. | A travel comparison preferred Grok for speed and value. [C] | Mine: Grok, on points. Community: Grok. |
 | Something to cancel | Both found a real charge and asked who used it or what would break. | No test of this job for both. | Mine: draw. Community: no result. |
 | Plan my day | Grok kept suggested times apart from real ones. Muse clearly marked the real invitation. | One Grok user reported forgotten instructions and duplicate messages. [B] | Mine: draw. Community: a caution on Grok. |
-| Catch me up | Grok's briefing was more useful but dated an April forecast as October news. Muse got the date right. | A first-week Grok user kept its news round-up in his routine. [D] | Mine: split. Community: Grok for a repeatable briefing. |
+| Catch me up | Grok's briefing was more useful but dated an April forecast as October news. Muse got the date right. | A first-week Grok user kept its news round-up in his routine. [D] | Mine: level, for different reasons. Community: Grok for a repeatable briefing. |
 
 **Bonus round, fixing a work email.** Grok invented a compliment, then flagged it; it also left the fee to me. Muse lost track of its draft, made a second, and told me.
 
@@ -25,7 +25,7 @@ Five rounds. Each gets two scores: what happened when I tried it, and what the w
 
 - **A:** [AI for Mortals](https://www.aiformortals.co/blog/grok-bot-vs-meta-muse-vs-chatgpt-dots), simulated coffee business.
 - **B:** [a brokerage operator's Grok review](https://www.reddit.com/r/cursor/comments/1vxjipg/grok_bot_review/).
-- **C:** two travel comparisons in last week's research collection.
+- **C:** [AI for Mortals, Montreal travel test](https://www.aiformortals.co/blog/grok-bot-vs-meta-muse-vs-chatgpt-dots) and [Desktheory, timed travel test](https://www.youtube.com/watch?v=i_n9ZyinZEs), preserved in last week's research collection.
 - **D:** [Chris Alarcon's first week with Grok](https://christopheralarcon.com/blog/what-is-grok-bot).
 - **E:** [Meta's Muse announcement](https://about.fb.com/news/2026/09/introducing-muse-personal-ai-agent/), a product claim.
 - **F:** [a user's wiper-shopping post](https://www.reddit.com/r/singularity/comments/1wqu5wa/wait_metas_muse_agent_is_actually_amazing/).
