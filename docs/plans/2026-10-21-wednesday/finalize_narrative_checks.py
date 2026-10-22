@@ -51,14 +51,28 @@ for cut,shape in [('long','16x9'),('short','9x16')]:
     if cut=='long':
         assert measure['output_sha256']==source and measure['rms_reduction_fraction']>.6
         summary={'rms_reduction_fraction':measure['rms_reduction_fraction']}
+        previous=read(W/f'render-long-stable/muse-vs-grok-long-16x9.mp4.validation.json')
+        receipt['source_provenance']=previous['source_provenance']
+        earlier=previous['checks']['motion']
+        assessment=earlier['assessment']
+        treatment=earlier['treatment']
+        comparison=measure['comparison']
     else:
         assert measure['supplied']['sha256']==source
         before=[p['p95_translation_px'] for p in measure['original']['windows']]
         after=[p['p95_translation_px'] for p in measure['supplied']['windows']]
         assert len(before)==len(after)==5 and all(a<b for a,b in zip(after,before))
         summary={'original_p95_px':before,'supplied_p95_px':after,'source':'Krish-supplied auto-stabilised recording'}
-    receipt['checks']['motion']={'status':'pass','decision':'Use measured stabilised camera source; perceptual acceptance remains in full_review',
-        'report_sha256':sha(motion),**summary}
+        raw=W/'sources/user-stabilized-short.mp4'
+        receipt['source_provenance']={'schema':1,'source_sha256':sha(raw),'source':'Krish-supplied auto-stabilised vertical recording'}
+        assessment={'source_sha256':measure['original']['sha256'],'evidence_sha256':sha(motion),
+            'method':'Sequential static-wall optical-flow and robust affine fits in five distributed windows'}
+        replacement=W/'supplied-short/source-replacement.json'
+        treatment={'output_sha256':measure['supplied']['sha256'],'evidence_sha256':sha(replacement)}
+        avg=lambda x:sum(x)/len(x)
+        comparison={'before_rms_px':avg([p['rms_translation_px'] for p in measure['original']['windows']]),
+            'after_rms_px':avg([p['rms_translation_px'] for p in measure['supplied']['windows']]),
+            'before_p95_px':avg(before),'after_p95_px':avg(after)}
 
     frames=W/f'review-{cut}-narrative/frame-samples.json'
     visual=read(frames)
@@ -66,6 +80,13 @@ for cut,shape in [('long','16x9'),('short','9x16')]:
     assert 'audio_only_remux_derivation' in visual and len(visual['sets']['seconds']['frame_indices'])>= (300 if cut=='long'else 85)
     receipt['checks']['visuals']={'status':'pass','scope':'Every-second video frame and quarter-second bookend samples; encoded pictures unchanged by audio-only corrections',
         'report_sha256':sha(frames),'full_continuous_playback':'open'}
+    receipt['checks']['motion']={'status':'pass','decision':'stabilised',
+        'recording_sha256':receipt['source_provenance']['source_sha256'],
+        'assessment':assessment,'treatment':treatment,'comparison':comparison,
+        'final_review':{'status':'not_run','video_sha256':sha(video),'evidence_sha256':sha(frames),
+            'shake':'not_run','warping':'not_run','borders':'not_run','framing':'pass',
+            'reason':'Continuous playback of this exact recut has not been accepted by Krish'},
+        'report_sha256':sha(motion),**summary}
 
     heard_path=out/'heard-diff.json';heard=read(heard_path)
     assert heard['status']=='fail' and len(heard['changes'])>0
