@@ -45,8 +45,9 @@ import { deterministicFindings, voiceMechanics } from '../api/_judges/determinis
 
 const read = (rel: string) => readFileSync(new URL(`../${rel}`, import.meta.url), 'utf8')
 /** The first read of Krish's taste evidence in a judge's source, or null: the queue marks (by path or destructured from
- *  meta), the week options he chose, and Sunday's sources block. The judges stay blind (Krish, 2026-10-21). */
-const TASTE_READ = /\bqueue\b[^\n]*=\s*[^\n]*\bmeta\b|meta\??\.queue|week_option|_weekSources|why_here/
+ *  meta), the week options he chose, Sunday's sources block, and the taste ledger (its tables, views and _taste.ts
+ *  reader). The judges stay blind (Krish, 2026-10-21); the ledger is for the writers only. */
+const TASTE_READ = /\bqueue\b[^\n]*=\s*[^\n]*\bmeta\b|meta\??\.queue|week_option|_weekSources|why_here|\btaste_(profile|claims|evidence|whys)|_taste\.js|loadTasteBlock/
 const tasteRead = (src: string): string | null => src.match(TASTE_READ)?.[0] ?? null
 
 // ── 1. One judge, one question ──────────────────────────────────────────────
@@ -617,7 +618,8 @@ assert.match(ROSTER_VERSION, /^[a-z0-9][a-z0-9._-]{0,39}$/)
   }
   // The check must be able to fail: a planted read of each kind is caught.
   for (const planted of ['const q = row.meta.queue', 'const { queue } = row.meta', 'const { queue: q } = r.meta ?? {}', 'r.meta?.queue?.triage',
-    "import { buildSources } from '../_weekSources.js'", 'c.why_here', 'meta.week_option']) {
+    "import { buildSources } from '../_weekSources.js'", 'c.why_here', 'meta.week_option',
+    "supabase.from('taste_profile_form')", "import { loadTasteBlock } from '../_taste.js'", 'from public.taste_claims']) {
     assert.ok(tasteRead(planted), `the blindness check misses a planted read: ${planted}`)
   }
   assert.equal(tasteRead('const queue = []\nconst m = row.meta'), null, 'the blindness check must not flag an unrelated queue variable')

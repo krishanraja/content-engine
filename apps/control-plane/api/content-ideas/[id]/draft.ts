@@ -6,6 +6,7 @@ import {
   robustJson, sanitizeVoice, VOICE_GUARDRAILS,
 } from '../../_content.js'
 import { curationBlock } from '../../_curation.js'
+import { loadTasteBlock } from '../../_taste.js'
 import { operatorAttribution, sha256 } from '../../_editEvents.js'
 import { UTILITY_MODEL } from '../../_models.js'
 import { loadSubchannel } from '../../_subchannels.js'
@@ -111,12 +112,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const sub = await loadSubchannel(row.lane_slot)
   if (!sub) return res.status(409).json({ ok: false, error: 'no_subchannel', detail: 'Route this idea to a subchannel before drafting it.' })
 
-  const [voice, corpus] = await Promise.all([loadVoiceBlock(), loadCorpus()])
+  const [voice, corpus, taste] = await Promise.all([loadVoiceBlock(), loadCorpus(), loadTasteBlock(['voice', 'strategy'])])
   const system = [
     `You are drafting one piece for Krish Raja's publication, in his voice, for the subchannel ${sub.label}.`,
     `=== THE MANDATE FOR ${sub.label.toUpperCase()} ===\n${sub.mandate}\n\nThe mandate is the test this piece must pass. It governs the question the piece asks, its structure and how it closes. Where the voice notes below disagree with the mandate about structure or the close, the mandate wins. Krish's house rules win over both: every piece still ends with a dated prediction.`,
     subchannelRulesBlock('write', sub.slug),
     voice ? `=== VOICE ===\n${voice}` : '',
+    taste ? `=== HOW KRISH LIKES IT (approved by him, form only) ===\n${taste}` : '',
     `=== HOUSE RULES ===\n${VOICE_GUARDRAILS}`,
     `=== THE CORPUS: house register and this subchannel's playbook ===\n${corpusForChannel(corpus, sub.slug)}`,
   ].filter(Boolean).join('\n\n')
