@@ -8,7 +8,7 @@ Krish approved the title and heading set after recording; see `packaging-approva
 
 ## Current review
 
-The private Wednesday board is https://content.krishraja.com/board/2026-10-19#wednesday. Both review videos, captions, article, scorecard, covers, thumbnails, chapters and channel copy have been activated and independently read back. Build `15bbcc9b68fc0436b3747f683741faf499a3a096975e4caced1a1579593c5d95` has 46 assets: all 24 originals and 22 Wednesday assets. The editable Article draft and Publishing copy boxes retain the board's normal save and comment controls. Ideas, Monday and Friday were byte-identical; all six stores for both weeks were unchanged.
+The private Wednesday board is https://content.krishraja.com/board/2026-10-19#wednesday. Both review videos, captions, article, scorecard, covers, thumbnails, chapters and channel copy have been activated and independently read back. Build `a66a114b271e52972e183c570f63f9282db48f60f9cddb5248d00f257301cdce` has 47 assets: all 24 originals and 23 Wednesday assets. The editable Article draft and Publishing copy boxes retain the board's normal save and comment controls. Ideas, Monday and Friday were byte-identical; all six stores for both weeks were unchanged.
 
 Read `release-review.md` for the open decisions. One authorised fact-check run cost $0.50 and did not clear the gate. It remains preserved, with the claim list in `claim-review.md`. No rerun or public post is authorised. No prediction confidence or playback acceptance has been invented.
 
@@ -24,7 +24,7 @@ Sources remain in the Video Engine recording store and original Inbox. The sourc
 
 The library destination is `3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot`. Review video exports belong under `3 Video/Working - review` until their exact-byte validation receipts and playback acceptance pass. Working graphics, bookends, transcripts, cue clocks and checks are retained together in `production-working.zip`; no signed provider download URLs are included.
 
-The 27 article/graphics/copy files and seven held working files were sent and independently downloaded back from the library. All 34 newest file hashes and sizes match. `production-readback.json` preserves that evidence alongside the live board and both final six-window sync measurements. This confirms the engine library, rather than claiming that a particular Drive runner has already written every file.
+The 28 article/graphics/copy files and seven held working files were sent and independently downloaded back from the library. All 35 newest file hashes and sizes match. `production-readback.json` preserves that evidence alongside the live board and both final six-window sync measurements. This confirms the engine library, rather than claiming that a particular Drive runner has already written every file.
 
 ## Reproduction
 

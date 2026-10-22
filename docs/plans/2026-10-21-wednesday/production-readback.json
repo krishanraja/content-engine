@@ -1,11 +1,11 @@
 {
-  "build_id": "15bbcc9b68fc0436b3747f683741faf499a3a096975e4caced1a1579593c5d95",
-  "html_sha256": "e4201f1541ad939433e927f0930494125ea34445832994a15ee41fe4beb9c91f",
+  "build_id": "a66a114b271e52972e183c570f63f9282db48f60f9cddb5248d00f257301cdce",
+  "html_sha256": "ba61cea61c2953f8df6a37171220ed016880365cd49c6b433dcdd6d5402f5267",
   "assets_verified": [
     {
       "id": "wed-cover",
-      "sha256": "c762c98446a2e023a991746a055b6868c8d5569e7dbf56011cc61c78b2331755",
-      "bytes": 122697,
+      "sha256": "74a64e24e7dc034ea97eab27fa5b08465542fc5ccf3ba041f70553015efadb93",
+      "bytes": 124262,
       "status": "pass"
     },
     {
@@ -22,38 +22,38 @@
     },
     {
       "id": "wed-thumb-tall",
-      "sha256": "1fdc063a39f1283ccd25e31f0caf9f6ed9a754998daeedf6b8e11f9307ce1222",
-      "bytes": 143077,
+      "sha256": "dd2b8d6ce4466f6cc96c223655add9573b66831c0b1e2a1bb80d5abcaf5a8073",
+      "bytes": 151405,
       "status": "pass"
     },
     {
       "id": "wed-thumb-wide",
-      "sha256": "2fbb8bd473d2fe69d48a4726c8a7c16c4f8d75868ad5b5e8af9e88b6817765e8",
-      "bytes": 110013,
+      "sha256": "fee5af7adb30150049c5228675965f69dd14bad65ee47f68f04f589e2a6640bc",
+      "bytes": 115419,
       "status": "pass"
     },
     {
       "id": "wed-video-long",
-      "sha256": "9c4c6d1f924454bbc3a6933c4a0351864ca1fe7601097b46e7ff6a877b126b22",
-      "bytes": 182758745,
+      "sha256": "21dd6545db706ad152db17b78e5a473a50a70d564b4bc8fcded2fa3fff65b573",
+      "bytes": 182716645,
       "status": "pass"
     },
     {
       "id": "wed-article-web",
-      "sha256": "df74c3644394b9ea8d050c4baf787ca51728e8cb0e500eb38c2de430baf81f74",
-      "bytes": 1191597,
+      "sha256": "8d61fb539faef7a36934595425b0369e2ed0162eef26da9f55abecbdc8458400",
+      "bytes": 1196137,
       "status": "pass"
     },
     {
       "id": "wed-video-short",
-      "sha256": "45f09f57540bf782cde45308fdafd65b487812fcc2fcdea1bee576935579bbf3",
-      "bytes": 76921324,
+      "sha256": "84908aec4c89d574d998fde17bc918fd097f7de002de72705235825703d49a57",
+      "bytes": 74255618,
       "status": "pass"
     },
     {
       "id": "wed-article-copy",
-      "sha256": "bbc113e7b6b23f2eac3bc95025323dd6f8fae16a0244ff473d3bc2b3808bf64b",
-      "bytes": 1174328,
+      "sha256": "5b2d7456209ba52876f0c84f2e84dca509c7a071adca0bbae3d2ac2534587cc8",
+      "bytes": 1178868,
       "status": "pass"
     },
     {
@@ -82,8 +82,8 @@
     },
     {
       "id": "wed-scorecard-png",
-      "sha256": "8e5084d45a28acd9ab9a0e7b180ecaf0bdd6c8219b9f3f7b576ba36c081d0a80",
-      "bytes": 190300,
+      "sha256": "54436201170ace9923966455cdfbfd0bc23186a26d29ef518746a5296cf554d8",
+      "bytes": 191679,
       "status": "pass"
     },
     {
@@ -94,38 +94,44 @@
     },
     {
       "id": "wed-cover-1200x630",
-      "sha256": "491316d3b9cc001898d0ec6453378de0cd6a21c7100dbfa7a2fa1458b3424349",
-      "bytes": 121480,
+      "sha256": "92cd9506e6beb2921ec51417bd136226f5a007d0fac9cd1fdadcfe9f5ade1e11",
+      "bytes": 123368,
       "status": "pass"
     },
     {
       "id": "wed-cover-1200x675",
-      "sha256": "4a5de131fa1d152538c7abac24d6baf709e8f3453a2bacf16ba53e19aff4a183",
-      "bytes": 162356,
+      "sha256": "478c069a172c9dbb4d1a01f6250cd828259c358f90c5b9b7ccadeed6f4ae53d5",
+      "bytes": 164047,
       "status": "pass"
     },
     {
       "id": "wed-release-review",
-      "sha256": "63cecf145d4acc79af0f109e2119664df7974122f8fc875e73fef9a357f5ee6e",
-      "bytes": 3913,
+      "sha256": "a436e4447d695d53431e08da33042cb453ae89fc38e08c41c99b9acb7b747dcc",
+      "bytes": 4654,
       "status": "pass"
     },
     {
       "id": "wed-cover-1080x1080",
-      "sha256": "59fa4e336ec5917d20d5e4b6dfc187d650b1a0a8c26bf62fb52f8166cf8e7bbd",
-      "bytes": 134669,
+      "sha256": "2e3cc2aa52114e207bbdaf6ae4939751d7dfc8d0139e99a042ffb03e8a37a6cc",
+      "bytes": 125096,
       "status": "pass"
     },
     {
       "id": "wed-cover-1080x1920",
-      "sha256": "1e9d1c7650dd8ae59050d8cde8f75b25631ff10a5cffd3da42df0e5a02908bb2",
-      "bytes": 171687,
+      "sha256": "3909a6bb679143b13dc2d0fb8fe51d8b43e77b80503f3d659f1d62cd27bff934",
+      "bytes": 173810,
+      "status": "pass"
+    },
+    {
+      "id": "wed-visual-revision",
+      "sha256": "2c8b52aa394ff27d948484b2ad315ad55801e80117f9f1d6419e8d57afb434e0",
+      "bytes": 1320,
       "status": "pass"
     },
     {
       "id": "wed-graphics-overview",
-      "sha256": "61107690fb0ab74e2afca348a171c2a4b0adfdd35b2e37e70ebc830e898ffcf3",
-      "bytes": 5436386,
+      "sha256": "b772fc861e6da3e06aa4d2870e58a923c16d4cb8ecb8de0fbdf92fb4fb0dd756",
+      "bytes": 5446450,
       "status": "pass"
     },
     {
@@ -200,7 +206,7 @@
   },
   "sync": {
     "long": {
-      "video_sha256": "9c4c6d1f924454bbc3a6933c4a0351864ca1fe7601097b46e7ff6a877b126b22",
+      "video_sha256": "21dd6545db706ad152db17b78e5a473a50a70d564b4bc8fcded2fa3fff65b573",
       "status": "pass",
       "analysis_resolution_ms": 40,
       "calibrated_this_run": true,
@@ -208,43 +214,43 @@
         {
           "at_s": 8.0,
           "offset_ms": -40,
-          "confidence": 7.3573,
+          "confidence": 7.3557,
           "status": "pass"
         },
         {
           "at_s": 72.0,
           "offset_ms": 0,
-          "confidence": 6.5839,
+          "confidence": 6.51,
           "status": "pass"
         },
         {
           "at_s": 136.0,
           "offset_ms": -40,
-          "confidence": 5.3589,
+          "confidence": 5.3895,
           "status": "pass"
         },
         {
           "at_s": 200.0,
           "offset_ms": 0,
-          "confidence": 6.9999,
+          "confidence": 6.9956,
           "status": "pass"
         },
         {
           "at_s": 264.0,
           "offset_ms": 0,
-          "confidence": 7.2228,
+          "confidence": 7.2016,
           "status": "pass"
         },
         {
           "at_s": 328.0,
           "offset_ms": 0,
-          "confidence": 5.1354,
+          "confidence": 5.3381,
           "status": "pass"
         }
       ]
     },
     "short": {
-      "video_sha256": "45f09f57540bf782cde45308fdafd65b487812fcc2fcdea1bee576935579bbf3",
+      "video_sha256": "84908aec4c89d574d998fde17bc918fd097f7de002de72705235825703d49a57",
       "status": "pass",
       "analysis_resolution_ms": 40,
       "calibrated_this_run": true,
@@ -252,40 +258,149 @@
         {
           "at_s": 7.0,
           "offset_ms": -40,
-          "confidence": 6.2283,
+          "confidence": 6.1097,
           "status": "pass"
         },
         {
           "at_s": 23.0,
           "offset_ms": 0,
-          "confidence": 6.0124,
+          "confidence": 6.2257,
           "status": "pass"
         },
         {
           "at_s": 39.0,
           "offset_ms": -40,
-          "confidence": 5.4882,
+          "confidence": 5.4271,
           "status": "pass"
         },
         {
           "at_s": 55.0,
           "offset_ms": -40,
-          "confidence": 7.6212,
+          "confidence": 7.5115,
           "status": "pass"
         },
         {
           "at_s": 71.0,
           "offset_ms": -40,
-          "confidence": 6.1038,
+          "confidence": 5.9609,
           "status": "pass"
         },
         {
           "at_s": 86.0,
           "offset_ms": -40,
-          "confidence": 6.108,
+          "confidence": 6.0431,
           "status": "pass"
         }
       ]
+    }
+  },
+  "visual_revision": {
+    "long": {
+      "source_video_sha256": "9c4c6d1f924454bbc3a6933c4a0351864ca1fe7601097b46e7ff6a877b126b22",
+      "decoded_audio_sha256": "SHA256=493520d6e07ffdfef001d9bb0d9d07f5d3808525dde78d147211212db2b9b423",
+      "audio_identical": true,
+      "speech_and_caption_clock_unchanged": true,
+      "single_opening_scene": true,
+      "logos": "Official foreground geometry with equal visible artwork height",
+      "portrait_source_band": [
+        0,
+        560,
+        1080,
+        920
+      ],
+      "krish_phone_sync_review": "lip sync is fine",
+      "sampled_visual_review": {
+        "status": "pass",
+        "method": "Human inspection of every one-second sample and every quarter-second bookend sample",
+        "frames": 342,
+        "bookend_frames": 38,
+        "scope": "Sampled-frame layout, captions, logo, privacy and clipping review; does not claim continuous playback",
+        "folder": "C:\\Users\\krish\\.scratch\\wednesday-production-2026-10-21\\review-long-revised"
+      }
+    },
+    "short": {
+      "source_video_sha256": "45f09f57540bf782cde45308fdafd65b487812fcc2fcdea1bee576935579bbf3",
+      "decoded_audio_sha256": "SHA256=de09e92e6cb93ac28802373e7ff3bfa8e673d49ae80377d67edc046261ee3fbb",
+      "audio_identical": true,
+      "speech_and_caption_clock_unchanged": true,
+      "single_opening_scene": true,
+      "logos": "Official foreground geometry with equal visible artwork height",
+      "portrait_source_band": [
+        0,
+        560,
+        1080,
+        920
+      ],
+      "krish_phone_sync_review": "lip sync is fine",
+      "sampled_visual_review": {
+        "status": "pass",
+        "method": "Human inspection of every one-second sample and every quarter-second bookend sample",
+        "frames": 99,
+        "bookend_frames": 38,
+        "scope": "Sampled-frame layout, captions, logo, privacy and clipping review; does not claim continuous playback",
+        "folder": "C:\\Users\\krish\\.scratch\\wednesday-production-2026-10-21\\review-short-revised"
+      }
+    }
+  },
+  "portrait_framing": {
+    "prior": {
+      "video_sha256": "45f09f57540bf782cde45308fdafd65b487812fcc2fcdea1bee576935579bbf3",
+      "status": "fail",
+      "sampled": 89,
+      "detected": 89,
+      "centre_bounds": {
+        "x": [
+          0.32,
+          0.68
+        ],
+        "y": [
+          0.3,
+          0.7
+        ]
+      },
+      "outliers": [
+        {
+          "at_s": 5.0,
+          "x_fraction": 0.5094,
+          "y_fraction": 0.7225,
+          "centred": false
+        },
+        {
+          "at_s": 21.0,
+          "x_fraction": 0.4042,
+          "y_fraction": 0.7286,
+          "centred": false
+        },
+        {
+          "at_s": 27.0,
+          "x_fraction": 0.5125,
+          "y_fraction": 0.7213,
+          "centred": false
+        },
+        {
+          "at_s": 28.0,
+          "x_fraction": 0.5083,
+          "y_fraction": 0.7115,
+          "centred": false
+        }
+      ]
+    },
+    "replacement": {
+      "video_sha256": "84908aec4c89d574d998fde17bc918fd097f7de002de72705235825703d49a57",
+      "status": "pass",
+      "sampled": 89,
+      "detected": 89,
+      "centre_bounds": {
+        "x": [
+          0.32,
+          0.68
+        ],
+        "y": [
+          0.3,
+          0.7
+        ]
+      },
+      "outliers": []
     }
   },
   "release_status": "review",
@@ -300,14 +415,14 @@
     "verified_files": [
       {
         "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/1 Article/web-page.html",
-        "sha256": "df74c3644394b9ea8d050c4baf787ca51728e8cb0e500eb38c2de430baf81f74",
-        "bytes": 1191597,
+        "sha256": "8d61fb539faef7a36934595425b0369e2ed0162eef26da9f55abecbdc8458400",
+        "bytes": 1196137,
         "status": "pass"
       },
       {
         "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/1 Article/substack-copy.html",
-        "sha256": "bbc113e7b6b23f2eac3bc95025323dd6f8fae16a0244ff473d3bc2b3808bf64b",
-        "bytes": 1174328,
+        "sha256": "5b2d7456209ba52876f0c84f2e84dca509c7a071adca0bbae3d2ac2534587cc8",
+        "bytes": 1178868,
         "status": "pass"
       },
       {
@@ -318,32 +433,32 @@
       },
       {
         "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/2 Covers and images/substack-cover-1200x630.png",
-        "sha256": "491316d3b9cc001898d0ec6453378de0cd6a21c7100dbfa7a2fa1458b3424349",
-        "bytes": 121480,
+        "sha256": "92cd9506e6beb2921ec51417bd136226f5a007d0fac9cd1fdadcfe9f5ade1e11",
+        "bytes": 123368,
         "status": "pass"
       },
       {
         "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/2 Covers and images/share-card-1200x675.png",
-        "sha256": "4a5de131fa1d152538c7abac24d6baf709e8f3453a2bacf16ba53e19aff4a183",
-        "bytes": 162356,
+        "sha256": "478c069a172c9dbb4d1a01f6250cd828259c358f90c5b9b7ccadeed6f4ae53d5",
+        "bytes": 164047,
         "status": "pass"
       },
       {
         "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/2 Covers and images/square-1080x1080.png",
-        "sha256": "59fa4e336ec5917d20d5e4b6dfc187d650b1a0a8c26bf62fb52f8166cf8e7bbd",
-        "bytes": 134669,
+        "sha256": "2e3cc2aa52114e207bbdaf6ae4939751d7dfc8d0139e99a042ffb03e8a37a6cc",
+        "bytes": 125096,
         "status": "pass"
       },
       {
         "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/2 Covers and images/vertical-cover-1080x1920-shorts-tiktok-reels.png",
-        "sha256": "1e9d1c7650dd8ae59050d8cde8f75b25631ff10a5cffd3da42df0e5a02908bb2",
-        "bytes": 171687,
+        "sha256": "3909a6bb679143b13dc2d0fb8fe51d8b43e77b80503f3d659f1d62cd27bff934",
+        "bytes": 173810,
         "status": "pass"
       },
       {
         "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/2 Covers and images/substack-feed-1200x800.png",
-        "sha256": "c762c98446a2e023a991746a055b6868c8d5569e7dbf56011cc61c78b2331755",
-        "bytes": 122697,
+        "sha256": "74a64e24e7dc034ea97eab27fa5b08465542fc5ccf3ba041f70553015efadb93",
+        "bytes": 124262,
         "status": "pass"
       },
       {
@@ -354,8 +469,8 @@
       },
       {
         "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/3 Video/Muse vs Grok Bot - wide 16x9 - thumbnail.jpg",
-        "sha256": "2fbb8bd473d2fe69d48a4726c8a7c16c4f8d75868ad5b5e8af9e88b6817765e8",
-        "bytes": 110013,
+        "sha256": "fee5af7adb30150049c5228675965f69dd14bad65ee47f68f04f589e2a6640bc",
+        "bytes": 115419,
         "status": "pass"
       },
       {
@@ -366,44 +481,44 @@
       },
       {
         "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/3 Video/Muse vs Grok Bot - tall 9x16 - thumbnail.jpg",
-        "sha256": "1fdc063a39f1283ccd25e31f0caf9f6ed9a754998daeedf6b8e11f9307ce1222",
-        "bytes": 143077,
+        "sha256": "dd2b8d6ce4466f6cc96c223655add9573b66831c0b1e2a1bb80d5abcaf5a8073",
+        "bytes": 151405,
         "status": "pass"
       },
       {
         "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/2 Covers and images/scam-grok.png",
-        "sha256": "6a8e1dbd1b9525e5554265f95c62ddc28b8dd7604ca49e10bd560dfd71354ebb",
-        "bytes": 61941,
+        "sha256": "91ad7f148ddf8a41429b8f57106df507abb1173ab96206b2de78ddee705edfe3",
+        "bytes": 61224,
         "status": "pass"
       },
       {
         "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/2 Covers and images/flight-layover.png",
-        "sha256": "5788585439c7ec8ba3599e62721d08622bf0221c9e01dcffdfb42696f09b8e77",
-        "bytes": 68981,
+        "sha256": "a4ddb9a1576b8a0ca7d2cdb1881a16fc206298541ac77378bde556555c9d052b",
+        "bytes": 68286,
         "status": "pass"
       },
       {
         "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/2 Covers and images/news-date.png",
-        "sha256": "a29a114d4a85c3a64a1cb2750422040d643aadceafebdb7bb98bed5c1ca84f59",
-        "bytes": 61074,
+        "sha256": "50b65c3ad41fb4f582933a6b741deeadba19d6e162f3de917638a30faf587b74",
+        "bytes": 60360,
         "status": "pass"
       },
       {
         "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/2 Covers and images/email-duplicate.png",
-        "sha256": "de10393c9f2288a90a473c36b4df88d819d7d0f264dc8231c74f216cd69a62b1",
-        "bytes": 70681,
+        "sha256": "084ab4b499a0271c095fa32e7c4ce16e18c7b3de44b1bfcd025a34145425ec8e",
+        "bytes": 69976,
         "status": "pass"
       },
       {
         "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/2 Covers and images/starting-point.png",
-        "sha256": "48f2a1101a8b1618d12e6fc8984fa27abdfbe8c7db815647b8aba6beee7c484d",
-        "bytes": 58784,
+        "sha256": "c224ac822e1b1f24deecc549ba6114a13cf16370ebdea8ea36009e04fc5f52b6",
+        "bytes": 58063,
         "status": "pass"
       },
       {
         "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/2 Covers and images/scorecard.png",
-        "sha256": "8e5084d45a28acd9ab9a0e7b180ecaf0bdd6c8219b9f3f7b576ba36c081d0a80",
-        "bytes": 190300,
+        "sha256": "54436201170ace9923966455cdfbfd0bc23186a26d29ef518746a5296cf554d8",
+        "bytes": 191679,
         "status": "pass"
       },
       {
@@ -426,14 +541,20 @@
       },
       {
         "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/0 Publish/release-review.md",
-        "sha256": "63cecf145d4acc79af0f109e2119664df7974122f8fc875e73fef9a357f5ee6e",
-        "bytes": 3913,
+        "sha256": "a436e4447d695d53431e08da33042cb453ae89fc38e08c41c99b9acb7b747dcc",
+        "bytes": 4654,
         "status": "pass"
       },
       {
         "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/0 Publish/claim-review.md",
         "sha256": "438687602a698556c0b8a6197412d6ee20c53976223a1ce08f052059d7b8cd83",
         "bytes": 21490,
+        "status": "pass"
+      },
+      {
+        "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/0 Publish/visual-revision.md",
+        "sha256": "2c8b52aa394ff27d948484b2ad315ad55801e80117f9f1d6419e8d57afb434e0",
+        "bytes": 1320,
         "status": "pass"
       },
       {
@@ -456,20 +577,20 @@
       },
       {
         "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/READ ME.txt",
-        "sha256": "fa2c95b6ade8bda230aa1f483fb84e2adbbd966f1dea0d366d9b6712f88595d9",
-        "bytes": 4412,
+        "sha256": "0dc9ccd89a7007891cd8201a32e7e1c639b6847eabf1a8008b934d0fc0bcee34",
+        "bytes": 4512,
         "status": "pass"
       },
       {
         "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/3 Video/Working - review/production-working.zip",
-        "sha256": "756f4dd8a85920c871cd68ffb4a3fcf2aed680366355bcebb440c2cb82c622c8",
-        "bytes": 39789510,
+        "sha256": "90e12e2ffce0b62899dcb6d336bdc45c3ec23b8b394e997c88010153e956d4db",
+        "bytes": 39219968,
         "status": "pass"
       },
       {
         "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/3 Video/Working - review/muse-vs-grok-short-9x16.mp4",
-        "sha256": "45f09f57540bf782cde45308fdafd65b487812fcc2fcdea1bee576935579bbf3",
-        "bytes": 76921324,
+        "sha256": "84908aec4c89d574d998fde17bc918fd097f7de002de72705235825703d49a57",
+        "bytes": 74255618,
         "status": "pass"
       },
       {
@@ -480,14 +601,14 @@
       },
       {
         "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/3 Video/Working - review/muse-vs-grok-short-9x16.mp4.validation.json",
-        "sha256": "80791976f86de330bcc85c425b114e3446cc716c2ce77ca4182826d5a3b3b5d1",
-        "bytes": 16998,
+        "sha256": "439198a0dd69b3413a4fc04d97e3bbacb9c2cd3d3b9602649db322d9e7806fcc",
+        "bytes": 31112,
         "status": "pass"
       },
       {
         "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/3 Video/Working - review/muse-vs-grok-long-16x9.mp4",
-        "sha256": "9c4c6d1f924454bbc3a6933c4a0351864ca1fe7601097b46e7ff6a877b126b22",
-        "bytes": 182758745,
+        "sha256": "21dd6545db706ad152db17b78e5a473a50a70d564b4bc8fcded2fa3fff65b573",
+        "bytes": 182716645,
         "status": "pass"
       },
       {
@@ -498,8 +619,8 @@
       },
       {
         "path": "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/3 Video/Working - review/muse-vs-grok-long-16x9.mp4.validation.json",
-        "sha256": "06dcf612d730a9eca9eb8f6116ff2dc87a4bd127a088fc8c9ff19c7d6f380b17",
-        "bytes": 810902,
+        "sha256": "751f1612d722ab2eda4b78147b058d2278a0511b9445e0fc4fab6a29b5d1ab11",
+        "bytes": 811761,
         "status": "pass"
       }
     ],
@@ -508,9 +629,9 @@
   "videos": [
     {
       "cut": "long",
-      "file": "C:\\Users\\krish\\.scratch\\wednesday-production-2026-10-21\\render-long-music\\muse-vs-grok-long-16x9.mp4",
-      "sha256": "9c4c6d1f924454bbc3a6933c4a0351864ca1fe7601097b46e7ff6a877b126b22",
-      "bytes": 182758745,
+      "file": "C:\\Users\\krish\\.scratch\\wednesday-production-2026-10-21\\render-long-revised\\muse-vs-grok-long-16x9.mp4",
+      "sha256": "21dd6545db706ad152db17b78e5a473a50a70d564b4bc8fcded2fa3fff65b573",
+      "bytes": 182716645,
       "checks": {
         "heard": "fail",
         "sync": "pass",
@@ -525,9 +646,9 @@
     },
     {
       "cut": "short",
-      "file": "C:\\Users\\krish\\.scratch\\wednesday-production-2026-10-21\\render-short\\muse-vs-grok-short-9x16.mp4",
-      "sha256": "45f09f57540bf782cde45308fdafd65b487812fcc2fcdea1bee576935579bbf3",
-      "bytes": 76921324,
+      "file": "C:\\Users\\krish\\.scratch\\wednesday-production-2026-10-21\\render-short-revised\\muse-vs-grok-short-9x16.mp4",
+      "sha256": "84908aec4c89d574d998fde17bc918fd097f7de002de72705235825703d49a57",
+      "bytes": 74255618,
       "checks": {
         "heard": "fail",
         "sync": "pass",

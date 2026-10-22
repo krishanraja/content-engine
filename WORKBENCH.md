@@ -1,35 +1,27 @@
 # Workbench: where we are and what's next
 
-## 22 October: Wednesday video corrections and review pack (Codex)
+## 22 October: Wednesday video corrections (Codex)
 
-Krish confirmed phone lip-sync, then rejected the double opening, unequal
-logos and low portrait framing. Both replacement videos are live on the
-private Wednesday board, build
-`a66a114b271e52972e183c570f63f9282db48f60f9cddb5248d00f257301cdce`.
-The opening is one continuous scene; marks have equal visible artwork
-heights; the portrait speaker band is centred with more headroom.
-Both keep identical decoded audio to the accepted mix, unchanged captions
-and timings. All six calibrated sync windows per replacement pass within
-40 ms; every-second and quarter-second bookend sheets were inspected.
-The portrait face audit fails the old version and passes all 89 new samples.
-A native guard rejects the former matchup-then-title opening pattern.
+Krish accepted phone sync, then rejected the double opening, unequal logos
+and low portrait framing. Replacements are live on the private Wednesday
+board: `a66a114b271e52972e183c570f63f9282db48f60f9cddb5248d00f257301cdce`.
+All 23 Wednesday downloads passed independent hash readback (47 assets);
+Ideas, Monday, Friday and all six stores for both weeks remain unchanged.
 
-Production inputs, exact recorded scripts and reproduction:
-`docs/plans/2026-10-21-wednesday/README.md`. Runtime media:
-`C:\Users\krish\.scratch\wednesday-production-2026-10-21`.
-Current exports: `render-long-revised` (5:42), `render-short-revised` (1:39).
-Library: `3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot`;
-held exports and full working archive: `3 Video/Working - review`.
-Independent board/library download receipts are being refreshed in
-`docs/plans/2026-10-21-wednesday/production-readback.json`.
+One continuous opening, matched logo heights and centred portrait framing.
+Identical decoded audio and timings; six sync windows per cut pass within
+40 ms. All sampled frames were inspected; the face audit passes 89 samples.
+The native renderer now rejects the old double-opening pattern.
 
-The original recordings and prior review versions remain preserved.
-Krish approved the post-recording titles and one $1 fact-check run; the run
-cost $0.50 and did not clear its gate. No rerun or public post is authorised.
-Raw heard-check differences, revised-picture playback acceptance, fact
-findings and the retrospective/prediction rule conflict remain visible in
-`release-review.md` and `claim-review.md`. The evidence prose is 435 personal
-test words and 434 corpus words; authored wording is retained.
+Inputs, exact scripts and reproduction: `docs/plans/2026-10-21-wednesday/README.md`.
+Library: `3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot`,
+held media/archive under `3 Video/Working - review`. Originals are preserved.
+All 35 newest library downloads match; see the plan's `production-readback.json`.
+
+The $0.50 fact check did not clear its gate. No rerun or public post is
+authorised. Transcript differences, new-picture acceptance and fact/prediction
+rule holds remain open: see `release-review.md` and `claim-review.md`.
+
 
 ## 21 October: the publish board, parts 2 to 4 and the 15-minute feature (Claude)
 
