@@ -72,7 +72,8 @@ jobs:
     # and publish page, clicked in Chromium with fetch() blocked the way
     # claude.ai's page rules block it (Krish, 2026-10-14: "the download
     # buttons for the images STILL do not work!!!!").
-    runs-on: ubuntu-latest
+    # Playwright 1.55 below supports this host; latest now resolves to 26.04.
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
