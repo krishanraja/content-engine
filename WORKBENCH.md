@@ -3,7 +3,7 @@
 ## 22 October: Wednesday finishing pass (Codex)
 
 Both stabilised videos are live on the private Wednesday board, build
-`a99799bcddd665f4ac9bc4696fa212c1da3aa2b788952c53d2d6dbfe3775b835`, 50 assets.
+`1bfee8f7c5955aef2cfb3b6fe8c8b9645b80221c5b1cd4b113cc50a9c9620584`, 50 assets.
 Actual new video downloads match the checked exports. Motion RMS fell 67.7%
 long and 51.5% short; sync passes six calibrated windows per export within
 40 ms, accepted decoded audio is identical, every one-second/bookend sample
@@ -12,7 +12,7 @@ is now mandatory in both skills and the native delivery guard.
 
 The $0.59 final fact check plus Krish's four manual adjudications and 23
 sign-offs clear the native fact gate while preserving all original verdicts.
-The approved exact-body retrospective exception is in PR #134. Article evidence
+The approved exact-body retrospective exception merged in PR #134 after all 15 checks passed (main `6bfad15`). Article evidence
 balance: tests 422 words, corpus 423. No more paid run is authorised.
 
 Final continuous phone playback acceptance of both new exports is requested;

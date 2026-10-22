@@ -36,9 +36,22 @@ def main():
     ap.add_argument('work',type=Path)
     ap.add_argument('--videos',action='store_true')
     ap.add_argument('--stable',action='store_true',help='Use completed stabilised exports')
+    ap.add_argument('--ready-page',type=Path,help='Native publish-manager page; requires live article readiness and passed exact video receipts')
     ap.add_argument('--short-stable',action='store_true',help='Use the finished stable short while the long replacement processes')
     a=ap.parse_args()
     work=a.work.resolve();out=work/'board';out.mkdir(exist_ok=True)
+    if a.ready_page:
+        if not (a.stable and a.videos and a.ready_page.is_file()):
+            raise ValueError('Ready publication needs both stabilised videos and a native publish-manager page')
+        facts=web.call('GET',f'/api/content-ideas/{PIECE}/fact-check')
+        if not facts.get('ready') or not facts.get('gate',{}).get('ok'):
+            raise ValueError('The live article readiness checks have not cleared')
+        sys.path.insert(0,str(ROOT/'scripts/quick-edit'))
+        import quality
+        for cut,shape in [('long','16x9'),('short','9x16')]:
+            video=work/f'render-{cut}-stable'/f'muse-vs-grok-{cut}-{shape}.mp4'
+            problems=quality.delivery_problems(video,Path(str(video)+'.validation.json'))
+            if problems:raise ValueError(cut+' delivery blocked: '+'; '.join(problems))
     state=web.call('GET',f'/api/board/{WEEK}')
     save(out/'before.json',state)
     token=web.os.environ.get('ENGINE_OPERATOR_TOKEN') or web.engine.windows_key()[0]
@@ -95,9 +108,11 @@ def main():
             if data.get('video_sha256')!=web.sha(base.with_suffix('.mp4').read_bytes()):
                 raise ValueError(cut+' video differs from its renderer receipt')
             label=('Stabilised '+cut+' video — review copy') if stable else (cut.capitalize()+' video — previous version; stabilisation processing' if a.short_stable else cut.capitalize()+' video — review copy')
+            if a.ready_page:label='Stabilised '+cut+' video'
             files += [file('wed-video-'+cut,base.with_suffix('.mp4'),label),
                       file('wed-captions-'+cut,base.with_suffix('.srt'),cut.capitalize()+' captions')]
         video_note=('Both camera tracks are stabilised. Motion, framing and sync evidence accompanies the exports; final continuous playback acceptance is still open.' if a.stable else 'Review exports. The stabilised replacements are being finished; continuous playback acceptance remains open.')
+        if a.ready_page:video_note='Both stabilised exports pass the technical checks and Krish’s full playback review. Captions and thumbnails accompany them.'
         sections.append({'id':'videos','title':'Watch both videos','files':files,'note':video_note})
     sections.append({'id':'evidence','title':'Visuals and checks','files':[
         file('wed-graphics-overview',work/'cards-stable/sheet.png','All evidence graphics'),
@@ -122,6 +137,8 @@ def main():
     material={'piece_id':PIECE,'status':'review',
               'note':'Article fact gate clear after source review and Krish’s adjudication. Final video playback acceptance remains open. Nothing has been publicly posted.',
               'sections':sections}
+    if a.ready_page:
+        material.update(status='ready',note='Article and final videos are cleared for publishing. Nothing has been publicly posted.')
     save(out/'materials.json',material)
     week=ROOT/'docs/plans/2026-10-19-week'
     reviews=[('Narrative and proposed visuals',week/'wednesday-narrative-ready.md'),
@@ -136,9 +153,10 @@ def main():
              ('Publishing copy',PLAN/'publishing-copy.md'),
              ('Release review',PLAN/'release-review.md')]
     args=['--week',WEEK,'--previous',str(previous),'--keep','mon','--target','web','--live',
-          '--piece',f'wed={PIECE}','--draft','wed','--materials',f'wed={out/"materials.json"}',
-          '--waiting','wed=Article fact gate clear. Review the finished video replacements for final playback acceptance; article and channel copy remain editable.',
+          '--piece',f'wed={PIECE}','--materials',f'wed={out/"materials.json"}',
           '--ideas',str(week/'ideas.json'),'--queue',str(out/'queue.json')]
+    if a.ready_page:args += ['--day',f'wed={a.ready_page.resolve()}']
+    else:args += ['--draft','wed','--waiting','wed=Article fact gate clear. Review the finished video replacements for final playback acceptance; article and channel copy remain editable.']
     if 'id="wed-four-draft-only-tests"' in old:
         for collection in ('edits','comments'):
             feedback=web.call('GET',f'/api/board/{WEEK}/{collection}')
