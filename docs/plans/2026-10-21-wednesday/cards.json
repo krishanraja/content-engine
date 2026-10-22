@@ -367,7 +367,7 @@
       ],
       "evidence": [
         {
-          "label": "Forecast dated",
+          "label": "Article dated",
           "value": "April",
           "answer": false
         },
@@ -1394,7 +1394,7 @@
       ],
       "evidence": [
         {
-          "label": "Forecast dated",
+          "label": "Article dated",
           "value": "April",
           "answer": false
         },
@@ -1420,7 +1420,7 @@
       ],
       "evidence": [
         {
-          "label": "Forecast dated",
+          "label": "Article dated",
           "value": "April",
           "answer": false
         },

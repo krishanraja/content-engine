@@ -19,7 +19,7 @@ rows=''.join('<tr>'+''.join(f'<td>{e(v)}</td>' for v in row)+'</tr>' for row in 
 t=brand.house()['tokens']
 css=f'''
 *{{box-sizing:border-box}} html,body{{margin:0;background:{t['ink']};color:{t['cream']}}}
-#card{{width:1600px;height:1500px;padding:72px;display:flex;flex-direction:column;gap:40px}}
+#card{{width:1600px;height:1780px;padding:72px;display:flex;flex-direction:column;gap:40px}}
 header{{display:flex;justify-content:space-between;align-items:center}}
 h1{{font:400 96px/1 Anton;margin:0;text-transform:uppercase}}
 .logos{{display:flex;gap:36px;align-items:center}} .logos img{{height:56px;width:auto;max-width:320px;object-fit:contain}}
@@ -29,6 +29,6 @@ th{{font-weight:800;color:#B7A6FF}} th:first-child{{width:26%}} th:nth-child(2){
 tr{{height:184px}} tr:first-child{{height:100px}}
 p{{font:500 64px/1.15 Archivo;margin:0;margin-top:auto}}
 '''
-doc=f'<!doctype html><html><head><meta charset="utf-8"><meta name="artwork-size" content="1600x1500"><style>{brand.font_css()}{css}</style></head><body><div id="card"><header><h1>{e(data["title"])}</h1><div class="logos">{logos}</div></header><table><tr>'+''.join(f'<th>{e(c)}</th>' for c in data['columns'])+f'</tr>{rows}</table><p>{e(data["qualification"])}</p></div></body></html>'
+doc=f'<!doctype html><html><head><meta charset="utf-8"><meta name="artwork-size" content="1600x1780"><style>{brand.font_css()}{css}</style></head><body><div id="card"><header><h1>{e(data["title"])}</h1><div class="logos">{logos}</div></header><table><tr>'+''.join(f'<th>{e(c)}</th>' for c in data['columns'])+f'</tr>{rows}</table><p>{e(data["qualification"])}</p></div></body></html>'
 (out/'scorecard.html').write_text(doc,encoding='utf-8')
 print(out/'scorecard.html')

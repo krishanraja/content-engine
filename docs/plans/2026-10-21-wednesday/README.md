@@ -8,6 +8,22 @@ Krish approved the title and heading set after recording; see `packaging-approva
 
 ## Current review
 
+22 October finishing pass: corrected article, scorecard and source audit are
+live at build `64bf218cab929ea267cc5158b8fca240de89753fa568cf7a62c57af1f56f188e`
+(48 assets). All ten changed downloads were independently verified; the other
+panels and every feedback collection remain unchanged. The revised article
+has 422 personal-test evidence words and 423 corpus evidence words. Four
+primary/owned source records are filed and the free source precheck is clear.
+The old paid result is preserved pending a separately authorised final check.
+
+Krish accepted the corrected opening, logos and portrait framing, then asked
+for stabilisation. The camera footage is being stabilised before graphics,
+with the accepted audio copied exactly. Every future cut now needs a motion
+assessment and an evidence-backed treatment or no-treatment decision in its
+delivery receipt. See `claim-resolution-22-oct.md` for the article audit.
+Media and library checks below describe the prior exports until replaced by
+fresh exact-byte evidence.
+
 The private Wednesday board is https://content.krishraja.com/board/2026-10-19#wednesday. Both review videos, captions, article, scorecard, covers, thumbnails, chapters and channel copy have been activated and independently read back. Build `a66a114b271e52972e183c570f63f9282db48f60f9cddb5248d00f257301cdce` has 47 assets: all 24 originals and 23 Wednesday assets. The editable Article draft and Publishing copy boxes retain the board's normal save and comment controls. Ideas, Monday and Friday were byte-identical; all six stores for both weeks were unchanged.
 
 Read `release-review.md` for the open decisions. One authorised fact-check run cost $0.50 and did not clear the gate. It remains preserved, with the claim list in `claim-review.md`. No rerun or public post is authorised. No prediction confidence or playback acceptance has been invented.

@@ -2280,6 +2280,7 @@ def main():
                        'transcript_document':{'sha256':quality.digest(wpath),'derivation':(document or {}).get('derivation')},'checks': {
                 'heard':speech_check,
                 'sync':{'status':'not_run'},
+                'motion':{'status':'not_run','reason':'Mandatory camera-motion assessment and final framing review; stabilise when needed'},
                 'loudness':{'status':'fail' if loudness_warnings(loudness, levels) else 'pass', 'measurements':loudness},
                 'visuals':{'status':'inconclusive','coverage':visual_checks,'reason':'Full-size card and font review required'},
                 'full_review':{'status':'not_run'}},

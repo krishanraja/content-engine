@@ -1,26 +1,26 @@
 # Workbench: where we are and what's next
 
-## 22 October: Wednesday video corrections (Codex)
+## 22 October: Wednesday finishing pass (Codex)
 
-Krish accepted phone sync, then rejected the double opening, unequal logos
-and low portrait framing. Replacements are live on the private Wednesday
-board: `a66a114b271e52972e183c570f63f9282db48f60f9cddb5248d00f257301cdce`.
-All 23 Wednesday downloads passed independent hash readback (47 assets);
-Ideas, Monday, Friday and all six stores for both weeks remain unchanged.
+Krish accepted sync, the single opening, matched logos and portrait framing,
+then requested stabilisation. Both camera tracks are being repaired before
+composition, preserving accepted sound and caption timing. Motion assessment
+is now mandatory in the production skills and native delivery gate.
 
-One continuous opening, matched logo heights and centred portrait framing.
-Identical decoded audio and timings; six sync windows per cut pass within
-40 ms. All sampled frames were inspected; the face audit passes 89 samples.
-The native renderer now rejects the old double-opening pattern.
+Corrected article/source audit live: board build
+`64bf218cab929ea267cc5158b8fca240de89753fa568cf7a62c57af1f56f188e`, 48 assets.
+All ten changed downloads match; Ideas/Mon/Fri and all feedback are unchanged.
+Evidence balance: tests 422 words, corpus 423. Four exact source records filed;
+free precheck has no missing numbers or truncated sources. Krish approved a
+final $1-capped run ($0.59 actual) and this exact body's retrospective
+exception. He then approved all 27 named disputed lines: four manual reviews
+and 23 sign-offs are recorded; the native fact gate reads clear. Original
+model verdicts remain preserved. The exception is staged for deployment.
 
-Inputs, exact scripts and reproduction: `docs/plans/2026-10-21-wednesday/README.md`.
-Library: `3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot`,
-held media/archive under `3 Video/Working - review`. Originals are preserved.
-All 35 newest library downloads match; see the plan's `production-readback.json`.
-
-The $0.50 fact check did not clear its gate. No rerun or public post is
-authorised. Transcript differences, new-picture acceptance and fact/prediction
-rule holds remain open: see `release-review.md` and `claim-review.md`.
+Inputs and current holds: `docs/plans/2026-10-21-wednesday/README.md`,
+`release-review.md`, `claim-resolution-22-oct.md`. Earlier media/library proof
+in `production-readback.json` certifies the prior exports, not the new render.
+No public post or fabricated passing check. Originals remain preserved.
 
 
 ## 21 October: the publish board, parts 2 to 4 and the 15-minute feature (Claude)

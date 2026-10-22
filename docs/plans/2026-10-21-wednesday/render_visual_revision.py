@@ -19,17 +19,17 @@ import quality
 
 def save(p,d):p.write_text(json.dumps(d,indent=2,ensure_ascii=False,default=str),encoding='utf-8')
 
-def prepare(w,cut):
-    prior=w/f'kit-{cut}';out=w/f'kit-{cut}-revised';out.mkdir(exist_ok=True)
+def prepare(w,cut,suffix='revised',card_folder='cards-revised'):
+    prior=w/f'kit-{cut}';out=w/f'kit-{cut}-{suffix}';out.mkdir(exist_ok=True)
     story=w/'story-revised'
     for shape in ['16x9','9x16']:shutil.copy2(w/'story'/f'outro-{shape}.mp4',story/f'outro-{shape}.mp4')
     post=json.loads((prior/'post.json').read_text(encoding='utf-8'))
     for entry in post['files']:
-        if entry.get('kind')=='image':entry['file']=str(w/'cards-revised'/Path(entry['file']).name)
+        if entry.get('kind')=='image':entry['file']=str(w/card_folder/Path(entry['file']).name)
     post_path=out/'post.json';save(post_path,post)
     cfg=json.loads((prior/f'{cut}.json').read_text(encoding='utf-8'))
     save(out/f'{cut}.json',cfg)  # Native kit recognises the retained hand cues.
-    result=kit.make_kit(post_path,cut,w/'sources'/f'{cut}-original.mp4',out,roots=[w/'cards-revised',story],force=False)
+    result=kit.make_kit(post_path,cut,w/'sources'/f'{cut}-original.mp4',out,roots=[w/card_folder,story],force=False)
     if kit.exit_code(result):raise RuntimeError('; '.join(result['problems']))
     fresh=json.loads(Path(result['config']).read_text(encoding='utf-8'))
     cfg['kit']=fresh['kit'];cfg['face']=[560,920];cfg['logo']=False
@@ -39,14 +39,15 @@ def prepare(w,cut):
     shutil.copy2(prior/'cue-clock.json',out/'cue-clock.json')
 
 def audio_hash(path):
-    return subprocess.check_output(['ffmpeg','-nostdin','-v','error','-i',str(path),'-map','0:a:0',
-        '-c:a','pcm_s32le','-f','hash','-hash','sha256','-'],text=True).strip()
+    return subprocess.check_output(['ffmpeg','-nostdin','-v','error','-threads','1','-i',str(path),'-map','0:a:0',
+        '-threads','1','-c:a','pcm_s32le','-f','hash','-hash','sha256','-'],text=True).strip()
 
-def render(w,cut,preview=False):
+def render(w,cut,preview=False,camera=None,output_folder=None,accepted_folder=None,profile_folder=None,existing=False):
     aspect='16x9' if cut=='long' else '9x16'
-    old=w/('render-long-music' if cut=='long' else 'render-short')
-    edited=w/('render-long-corrected' if cut=='long' else 'render-short')/f'muse-vs-grok-{cut}.edited.mkv'
-    profile=w/f'kit-{cut}-revised';out=w/f'render-{cut}-revised';out.mkdir(exist_ok=True)
+    old=w/(accepted_folder or ('render-long-music' if cut=='long' else 'render-short'))
+    original=w/('render-long-corrected' if cut=='long' else 'render-short')/f'muse-vs-grok-{cut}.edited.mkv'
+    edited=Path(camera) if camera else original
+    profile=w/(profile_folder or f'kit-{cut}-revised');out=w/(output_folder or f'render-{cut}-revised');out.mkdir(exist_ok=True)
     cfg=json.loads((profile/f'{cut}.json').read_text(encoding='utf-8'));make.FPS=24
     report=json.loads((old/f'muse-vs-grok-{cut}.report.json').read_text(encoding='utf-8'))
     shape=report['shapes'][aspect];total=shape['main_seconds']
@@ -62,20 +63,26 @@ def render(w,cut,preview=False):
     assert intro['frames']==84 and end['frames']==144
     stem=cfg['name']+'-'+aspect
     for suffix in ['.ass','.srt']:shutil.copy2(old/(stem+suffix),out/(stem+suffix))
-    shutil.copytree(edited.parent/'fonts',out/'fonts',dirs_exist_ok=True)
+    shutil.copytree(original.parent/'fonts',out/'fonts',dirs_exist_ok=True)
     accepted=old/(stem+'.mp4')
     inputs,graph,audio_map=make.video_graph(cfg,aspect,P,out,edited,total,wins,words,cfg['crop'],intro,end,accepted)
-    graphfile=out/f'stage2-{aspect}.graph';graphfile.write_text(';\n'.join(graph),encoding='utf-8')
+    graphfile=out/f'stage2-{aspect}.graph';graphtext=';\n'.join(graph)
+    if existing:assert graphfile.read_text(encoding='utf-8')==graphtext,'Completed render used a different composition graph'
+    else:graphfile.write_text(graphtext,encoding='utf-8')
     if preview:
         make.run(['ffmpeg','-nostdin','-y','-hide_banner','-loglevel','error','-threads','4','-filter_threads','1','-filter_complex_threads','1',
             *inputs,'-filter_complex_script',graphfile.name,'-map','[V]','-ss','6','-frames:v','1','-an',
             '-threads','2','preview.png'],cwd=out)
         return
     final=out/(stem+'.mp4')
-    make.run(['ffmpeg','-nostdin','-y','-hide_banner','-loglevel','error','-threads','6','-filter_threads','1','-filter_complex_threads','1',
-        *inputs,'-filter_complex_script',graphfile.name,'-map','[V]','-map',audio_map,
-        '-c:v','libx264','-preset','fast','-crf','19','-profile:v','high','-pix_fmt','yuv420p',
-        '-c:a','copy','-threads','6','-movflags','+faststart',final.name],cwd=out)
+    if not existing:
+        make.run(['ffmpeg','-nostdin','-y','-hide_banner','-loglevel','error','-threads','6','-filter_threads','1','-filter_complex_threads','1',
+            *inputs,'-filter_complex_script',graphfile.name,'-map','[V]','-map',audio_map,
+            '-c:v','libx264','-preset','fast','-crf','19','-profile:v','high','-pix_fmt','yuv420p',
+            '-c:a','copy','-threads','6','-movflags','+faststart',final.name],cwd=out)
+    probe=json.loads(subprocess.check_output(['ffprobe','-v','error','-count_packets','-select_streams','v:0',
+        '-show_entries','stream=nb_read_packets','-of','json',str(final)],text=True))
+    assert int(probe['streams'][0]['nb_read_packets'])==round(total*24)+228,'Finished composition frame count changed'
     before,after=audio_hash(accepted),audio_hash(final)
     assert before==after,'Decoded accepted sound changed during picture-only revision'
     receipt=json.loads((old/(stem+'.mp4.validation.json')).read_text(encoding='utf-8'))
@@ -84,7 +91,15 @@ def render(w,cut,preview=False):
         'audio_identical':True,'speech_and_caption_clock_unchanged':True,'single_opening_scene':True,
         'logos':'Official foreground geometry with equal visible artwork height','portrait_source_band':[0,560,1080,920],
         'krish_phone_sync_review':'lip sync is fine'}
+    if camera:
+        stability=json.loads((edited.parent/'stabilisation.json').read_text(encoding='utf-8'))
+        assert stability['output_sha256']==quality.digest(edited)
+        assert stability['frame_count']==round(total*24)
+        receipt['stabilisation']=stability
+        receipt['prior_picture_acceptance']={'by':'Krish','said':'Yes, those fixes look right but the videos both need stabilization.',
+            'scope':'Single opening, logo sizes and portrait framing; stabilisation requested afterwards'}
     receipt['checks']['sync']={'status':'not_run','reason':'Measure the new crop, despite identical accepted sound'}
+    receipt['checks']['motion']={'status':'not_run','reason':'Bind before/after camera measurements and final motion/framing review to this export'}
     receipt['checks']['visuals']={'status':'not_run','reason':'Inspect all revised samples before replacing the board'}
     receipt['checks']['full_review']={'status':'not_run','reason':'Prior phone sync accepted; revised visual playback remains open'}
     receipt['checks']['heard']['derivation']={'method':'Identical decoded audio, not a new ASR run',

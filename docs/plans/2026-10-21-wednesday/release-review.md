@@ -2,11 +2,34 @@
 
 Title and headings: Krish approved the proposed set on 21 October, after both recordings.
 
-The article preserves the edited draft’s phrasing and round structure. Its evidence prose is 435 words from personal tests and 434 from the supplied research. Opening, method, round calls, verdict and practical actions combine the two. This is an editorial balance, not a pooled statistical result. The news result is consistently “level, for different reasons”. The source-linked scorecard accompanies it.
+The article preserves the edited draft’s phrasing and round structure. The 22 October revision has 422 evidence words from personal tests and 423 from the supplied research. Opening, method, round calls, verdict and practical actions combine the two. This is an editorial balance, not a pooled statistical result. The news result is consistently “level, for different reasons”. The source-linked scorecard accompanies it.
+
+## Finishing pass, 22 October
+
+Krish accepted the opening, logos and portrait framing, then requested stabilisation for both cuts. Camera footage is being corrected before the native compositor, preserving the accepted audio and exact speech/caption clock. The motion assessment is now mandatory for every production: treatment when needed, or an evidence-backed decision to leave it untreated, plus a final picture review. Earlier export checks below are historical and do not certify the stabilised replacements.
+
+The article has been checked against the retained private trial readouts and original corpus sources. See the accompanying source-audit record for every earlier blocking claim. Corrections include day-plan priority, three hotel nights, airline-direct versus nonstop, April article versus February forecast, the conditional email caveat and duplicate-draft permissions. Unsupported report details are removed. No failed model result has been changed by hand; the revised body awaits the independent gate and the retrospective-format decision.
+
+Krish approved one final $1-capped check and the exact article's retrospective
+exception on 22 October (`finish-approval-22-oct.json`). The run completed and
+cost $0.59. Its response download was interrupted; the persisted result and
+meter were then read back without retrying the paid action. It checked 57
+claims: 30 passed, 23 unverified, four labelled contradicted. The unchanged
+article remains held pending named human adjudication. The 27 exact lines,
+source passages and reasons are in `final-fact-adjudication.md`. The raw model
+verdicts are preserved, including the erroneous London–Tokyo fare comparison.
+No further paid run is authorised. The retrospective exception is being
+implemented only for this piece and its approved body hash.
+
+Krish then said: "Approve all 27 named lines against the evidence". That
+decision was recorded through the native unpaid routes: four source-bound
+manual reviews and 23 named-line sign-offs. An independent GET confirms the
+fact gate is clear. The model's 27 original flags remain preserved; this is
+human adjudication, not an altered automated pass. The final run cost $0.59.
 
 Both exact Teleprompter scripts are preserved beside this file, matching the hashes on the recording records. Recorded ad-libs are retained unless repeated or unsupported by the evidence. The duplicate-draft and Messenger examples stay outside the five scored rounds. Gemini remains outside the scorecard and was consumer chat.
 
-## Video review
+## Earlier video review, before stabilisation
 
 Krish confirmed the prior exports' phone lip-sync was fine, then rejected their double opening, unequal logos and low vertical head position. The 22 October replacements have one continuous opening, equal visible logo heights and a centred portrait speaker band with more headroom. Their decoded audio is identical to the accepted mix. Fresh six-window sync checks pass within 40 ms on each exact replacement. Every one-second frame and quarter-second bookend sample was inspected; the portrait face audit passes 89 of 89 spoken-second samples. This records sampled visual review, not continuous playback acceptance of the new pictures. The correction and its native-renderer guard are described in the accompanying visual revision record.
 
@@ -14,15 +37,15 @@ The original takes remain unchanged. Source sync measurements passed six calibra
 
 The recordings have not been certified by continuous human playback. Automated transcripts can disagree over brand spellings, contractions and brief words. Raw discrepancies remain visible in the validation receipts; they must not be marked passed just because they look minor. Review copies are explicitly held for playback acceptance.
 
-## Article fact check
+## Historical first fact check, 21 October
 
-Krish approved one run with a $1 budget. It ran once and cost $0.50. The first free precheck refused numbered action-list markers; a note identifying them as editorial numbering resolved that without a provider call. The paid run found 59 claims: five verified and 54 blocking (53 unverified, one contradicted). No second paid run is authorised or scheduled.
+Krish approved one run with a $1 budget. It ran once and cost $0.50. The first free precheck refused numbered action-list markers; a note identifying them as editorial numbering resolved that without a provider call. The paid run found 59 claims: five verified and 54 blocking (53 unverified, one contradicted). That approval covered one use; the later authorisation and final result are recorded above.
 
-The checker did not establish the author’s private account observations from public web results. Its “contradicted” line is “Then it put that reply first on my to-do list.” The saved redacted test readback explicitly reports Muse doing that; the automated result is preserved while the disagreement is reviewed. Community passages also remain open where a summary was insufficient for its evidence rules. The detailed claim review accompanies the board materials.
+The checker did not establish the author’s private account observations from public web results. Its historical “contradicted” line was “Then it put that reply first on my to-do list.” The revised article says it was first on Muse's day plan, the surface supported by the observation record. Primary community passages and the transparent first-hand source audit address the missing evidence. The original automated result remains preserved pending a fresh, separately authorised check.
 
 These results do not establish that the article is false or that it passes the fact gate. The field evidence, corpus and checker results remain separate and inspectable. No approval, sign-off, check result or prediction confidence has been invented.
 
-The current publish checks also require a dated prediction. This piece is an empirical comparison with a conditional recommendation. It has no manufactured future event or probability. That remaining rule conflict is visible in the release status.
+The original publish checks required a dated prediction. This piece is an empirical comparison with a conditional recommendation. Krish subsequently approved the exact-body retrospective exception recorded above. It has no manufactured future event or probability.
 
 The voice scan flags authored phrases including “let’s dive in” and the question about Gemini, repeated score-call formatting, and the privacy-redacted level of specificity. Krish explicitly asked that his copy edits be retained. Those words remain; the failed scan is recorded honestly. The separate local model scan is filed when complete.
 

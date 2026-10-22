@@ -137,6 +137,15 @@ const FRIDAY_HORIZON_EXCEPTION = {
   detail: 'Krish approved an exception on 19 October 2026 for this unchanged prediction, due 2027-06-30 at 85% confidence.',
 } as const
 
+// Ruling (Krish, 2026-10-22): "Approve the final fact check with a $1 cap
+// and the retrospective exception for this article." Exact approved body;
+// this does not assert a prediction or waive the fact gate or other rules.
+const WEDNESDAY_RETROSPECTIVE_EXCEPTION = {
+  pieceId: 'd7a20885-7001-4661-b444-9d7ca1043416',
+  bodySha256: '1c88a1fa452feb791893e71d22f779daf42ee68ab190d43d8a0fcaa83e8ba208',
+  detail: 'Exempt by Krish on 22 October 2026: this exact retrospective comparison has a recommendation and three actions; no future prediction or confidence is asserted.',
+} as const
+
 function approvedHorizonException(body: string, pieceId?: string): boolean {
   if (pieceId !== FRIDAY_HORIZON_EXCEPTION.pieceId) return false
   const section = callSectionOf(body)
@@ -311,6 +320,16 @@ export function publishChecks(body: string, factGate: { ok: boolean; reason: str
   const three = threeThingsTomorrow(text)
   checks.push({ id: 'THREE_THINGS_TOMORROW', name: 'Ends with "3 things you can do tomorrow"', blocking: false, ok: three.ok, detail: three.detail })
   checks.push({ id: 'R6', name: 'Plain words', blocking: false, ok: jargon.length === 0, detail: jargon.length ? `Make sure each is explained where it first appears: ${jargon.join(', ')}.` : 'No listed jargon found.' })
+  if (pieceId === WEDNESDAY_RETROSPECTIVE_EXCEPTION.pieceId
+      && createHash('sha256').update(text).digest('hex') === WEDNESDAY_RETROSPECTIVE_EXCEPTION.bodySha256) {
+    for (const check of checks) {
+      if (['CALL', 'CALL_HORIZON', 'CLEAR_STANCE'].includes(check.id)) {
+        check.ok = true
+        check.name = `Retrospective exception: ${check.name}`
+        check.detail = WEDNESDAY_RETROSPECTIVE_EXCEPTION.detail
+      }
+    }
+  }
   return checks
 }
 

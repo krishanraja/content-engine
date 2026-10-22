@@ -183,7 +183,48 @@ def delivery_problems(video, receipt, target=None):
         if target is not None and report.get('library_path') != target:
             return ['video validation receipt names a different library destination']
         required = ('heard','sync','loudness','visuals','full_review')
-        return [f'{key} is not passed' for key in required
-                if report.get('checks',{}).get(key,{}).get('status')!='pass']
+        problems = [f'{key} is not passed' for key in required
+                    if report.get('checks',{}).get(key,{}).get('status')!='pass']
+        return problems + motion_problems(report)
     except (OSError, ValueError, TypeError, AttributeError):
         return ['video validation receipt cannot be read']
+
+
+def motion_problems(report):
+    """Every delivery needs an assessed decision, including untreated footage.
+
+    Camera-motion measurements must exclude the presenter's own movement.
+    Evidence stays in the working archive; its hashes travel with the receipt.
+    """
+    check = report.get('checks', {}).get('motion', {})
+    sha = lambda value: isinstance(value, str) and bool(re.fullmatch(r'[a-f0-9]{64}', value))
+    if check.get('status') != 'pass':
+        return ['motion assessment is not passed']
+    assessment = check.get('assessment', {})
+    review = check.get('final_review', {})
+    recording = report.get('source_provenance', {}).get('source_sha256')
+    if not sha(recording) or check.get('recording_sha256') != recording:
+        return ['motion assessment belongs to a different recording']
+    if not all(sha(assessment.get(k)) for k in ('source_sha256', 'evidence_sha256')) or not assessment.get('method'):
+        return ['motion assessment evidence is missing']
+    if (review.get('status') != 'pass' or review.get('video_sha256') != report.get('video_sha256')
+            or not sha(review.get('evidence_sha256'))
+            or any(review.get(k) != 'pass' for k in ('shake', 'warping', 'borders', 'framing'))):
+        return ['final motion and framing review is incomplete or stale']
+    if check.get('decision') == 'not_needed':
+        if len(check.get('reason', '').strip()) < 12:
+            return ['untreated footage needs an evidence-backed motion decision']
+    elif check.get('decision') == 'stabilised':
+        treatment = check.get('treatment', {})
+        if not sha(treatment.get('output_sha256')) or not sha(treatment.get('evidence_sha256')):
+            return ['stabilisation treatment evidence is missing']
+        metrics = check.get('comparison', {})
+        values = [metrics.get(k) for k in ('before_rms_px', 'after_rms_px', 'before_p95_px', 'after_p95_px')]
+        if not all(isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v) and v >= 0 for v in values):
+            return ['stabilisation comparison is missing or invalid']
+        before, after, before95, after95 = values
+        if after >= before or after95 > before95:
+            return ['stabilisation has not reduced measured camera shake']
+    else:
+        return ['motion decision must be stabilised or not_needed']
+    return []

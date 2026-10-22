@@ -154,7 +154,31 @@ class QualityTests(unittest.TestCase):
             report={'video_sha256':quality.digest(video),'library_path':'target','checks':{
                 key:{'status':'pass'} for key in ('heard','sync','loudness','visuals','full_review')}}
             receipt.write_text(json.dumps(report))
+            self.assertIn('motion assessment is not passed',quality.delivery_problems(video,receipt,'target'))
+            report['source_provenance']={'source_sha256':'a'*64}
+            report['checks']['motion']={
+                'status':'pass','recording_sha256':'a'*64,'decision':'not_needed',
+                'reason':'Static wall tracked throughout the take; no visible shake.',
+                'assessment':{'source_sha256':'b'*64,'evidence_sha256':'c'*64,'method':'Static background tracking'},
+                'final_review':{'status':'pass','video_sha256':report['video_sha256'],'evidence_sha256':'d'*64,
+                    **{k:'pass' for k in ('shake','warping','borders','framing')}}}
+            receipt.write_text(json.dumps(report))
             self.assertEqual(quality.delivery_problems(video,receipt,'target'),[])
+            motion=report['checks']['motion']
+            motion['recording_sha256']='e'*64
+            self.assertIn('different recording',quality.motion_problems(report)[0])
+            motion['recording_sha256']='a'*64
+            motion['decision']='stabilised'
+            motion['treatment']={'output_sha256':'e'*64,'evidence_sha256':'f'*64}
+            motion['comparison']={'before_rms_px':10,'after_rms_px':3,'before_p95_px':20,'after_p95_px':7}
+            self.assertEqual(quality.motion_problems(report),[])
+            motion['comparison']['after_p95_px']=21
+            self.assertIn('not reduced',quality.motion_problems(report)[0])
+            motion['comparison']['after_p95_px']=float('nan')
+            self.assertIn('invalid',quality.motion_problems(report)[0])
+            motion['comparison']['after_p95_px']=7
+            motion['final_review']['video_sha256']='e'*64
+            self.assertIn('stale',quality.motion_problems(report)[0])
             self.assertTrue(quality.delivery_problems(video,receipt,'other'))
             report['checks']['sync']['status']='inconclusive'; receipt.write_text(json.dumps(report))
             self.assertTrue(quality.delivery_problems(video,receipt))
