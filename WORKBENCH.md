@@ -836,8 +836,8 @@ bring takes back, was retired on 12 October.
 ## Latest handoff
 
 - 2026-10-22, 16:17 UTC: **Wednesday's private board has the integrated recuts.** Build
-  `0395f1580cafb56851ef8c6075bab9b4a4700f87df9de2097e60a21c35d13e9a`:
-  seven downloads matched; other panels and both weeks' feedback were unchanged.
+  `b6a573be9f1841ae1b8f1bbd52b7bb66b786264f4e214ba1cc854a298a39ff52`:
+  downloads matched; other panels and both weeks' feedback were unchanged.
   Fact gate clear; no public post.
   - [PR #136](https://github.com/krishanraja/content-engine/pull/136) has the video code;
     local verify and 85 checks passed. Merge after CI. See
