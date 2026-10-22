@@ -57,7 +57,7 @@ export const RETRY_AFTER_MINUTES = 180
 export const MAX_DOWNLOAD_ATTEMPTS = 4
 
 /** A failure worth trying again, as opposed to a file that will never read. */
-export const TRANSIENT_SKIPS = new Set(['download_failed', 'rate_limited'])
+export const TRANSIENT_SKIPS = new Set(['download_failed', 'rate_limited', 'extraction_failed'])
 
 export interface DriveFile {
   id: string
@@ -231,6 +231,46 @@ export const BLACKLISTED_FRAMINGS = [
   /the future of /i,
   /^why .* matters$/i,
 ]
+
+/** How the model's answer read. An honest "nothing qualifies" is `empty`;
+ *  `no_text` and `unparseable` are the scan failing, and until 2026-10-22 all
+ *  three came back as the same []: 36 files over six runs were settled as
+ *  read with zero seeds and every run was recorded ok, so nothing could tell a
+ *  strict bar from a broken read. */
+export type SeedShape = 'seeds' | 'repaired' | 'empty' | 'no_text' | 'unparseable'
+
+export function parseSeedResponse(raw: string): { seeds: Seed[]; shape: SeedShape } {
+  const text = String(raw || '').trim()
+  if (!text) return { seeds: [], shape: 'no_text' }
+  try {
+    const m = text.match(/\[[\s\S]*\]/)
+    if (m) {
+      const arr = JSON.parse(m[0])
+      if (Array.isArray(arr)) return { seeds: arr, shape: arr.length ? 'seeds' : 'empty' }
+    }
+  } catch { /* fall through to the truncation repair below */ }
+  const start = text.indexOf('[')
+  const lastObj = text.lastIndexOf('}')
+  if (start !== -1 && lastObj > start) {
+    try {
+      const arr = JSON.parse(`${text.slice(start, lastObj + 1)}]`)
+      if (Array.isArray(arr)) return { seeds: arr, shape: 'repaired' }
+    } catch { /* genuinely unparseable */ }
+  }
+  return { seeds: [], shape: 'unparseable' }
+}
+
+/** Whether a read may settle its files. Only an answer the model finished and
+ *  that parsed counts as a result; anything else leaves the files to retry on
+ *  the transient-skip budget and fails the run with the reason, so the next
+ *  run says which it was instead of quietly reading as "no seeds". */
+export function extractionOutcome(stopReason: string | null, shape: SeedShape): { settle: boolean; error: string | null } {
+  if (stopReason === 'refusal') return { settle: false, error: 'extraction_refused' }
+  if (stopReason === 'max_tokens') return { settle: false, error: 'extraction_truncated' }
+  if (shape === 'no_text') return { settle: false, error: 'extraction_no_text' }
+  if (shape === 'unparseable') return { settle: false, error: 'extraction_unparseable' }
+  return { settle: true, error: null }
+}
 
 export function parseSeedArray(raw: string): Seed[] {
   const text = String(raw || '')

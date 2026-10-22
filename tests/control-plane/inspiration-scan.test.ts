@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import {
-  toCandidates, selectWithinBudget, storyUrl, parseSeedArray, filterSeeds,
+  toCandidates, selectWithinBudget, storyUrl, parseSeedArray, parseSeedResponse, extractionOutcome, filterSeeds, TRANSIENT_SKIPS,
   normaliseHandle, handleKey, creatorMatches, fileHash, artifactKey,
   DEFAULT_MAX_IMAGE_BYTES, DEFAULT_MAX_IMAGES,
 } from '../../apps/control-plane/api/inspiration/_scan.js'
@@ -198,5 +198,49 @@ describe('joining a screenshot to a creator', () => {
     expect(handleKey('Aaron Levie')).toBe('aaronlevie')
     expect(handleKey('aaron-levie')).toBe('aaronlevie')
     expect(handleKey('@aaronlevie')).toBe('aaronlevie')
+  })
+})
+
+describe('telling a strict bar from a broken read', () => {
+  // 2026-10-22: six runs read 36 files, every one returned zero seeds and was
+  // recorded ok, and content_inspiration_artifacts stayed empty. An honest
+  // empty answer and a failed read both came back as []. They no longer do.
+  it('reads an honest empty answer as empty, and lets the files settle', () => {
+    const r = parseSeedResponse('[]')
+    expect(r.shape).toBe('empty')
+    expect(extractionOutcome('end_turn', r.shape)).toEqual({ settle: true, error: null })
+  })
+
+  it('never settles files on an answer with no text', () => {
+    const r = parseSeedResponse('')
+    expect(r.shape).toBe('no_text')
+    expect(extractionOutcome('end_turn', r.shape)).toEqual({ settle: false, error: 'extraction_no_text' })
+  })
+
+  it('never settles files on prose the parser cannot read', () => {
+    const r = parseSeedResponse('I could not find anything worth surfacing in these screenshots.')
+    expect(r.shape).toBe('unparseable')
+    expect(extractionOutcome('end_turn', r.shape).settle).toBe(false)
+  })
+
+  it('never settles files on an answer cut off at the token limit, even when whole seeds were recovered', () => {
+    const r = parseSeedResponse('[{"idea":"a","thesis":"b"},{"idea":"c"')
+    expect(r.shape).toBe('repaired')
+    expect(r.seeds).toHaveLength(1)
+    expect(extractionOutcome('max_tokens', r.shape)).toEqual({ settle: false, error: 'extraction_truncated' })
+  })
+
+  it('never settles files on a refusal', () => {
+    expect(extractionOutcome('refusal', 'empty')).toEqual({ settle: false, error: 'extraction_refused' })
+  })
+
+  it('settles a finished answer with seeds in it', () => {
+    const r = parseSeedResponse('[{"idea":"a"}]')
+    expect(r.shape).toBe('seeds')
+    expect(extractionOutcome('end_turn', r.shape).settle).toBe(true)
+  })
+
+  it('retries a failed extraction on the transient budget, not forever', () => {
+    expect(TRANSIENT_SKIPS.has('extraction_failed')).toBe(true)
   })
 })
