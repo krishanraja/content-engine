@@ -72,8 +72,7 @@ jobs:
     # and publish page, clicked in Chromium with fetch() blocked the way
     # claude.ai's page rules block it (Krish, 2026-10-14: "the download
     # buttons for the images STILL do not work!!!!").
-    # Pinned: ubuntu-latest moved to 26.04 on 2026-10-22 and Playwright 1.55 cannot install
-    # Chromium's dependencies there. Unpin when Playwright is bumped to a release that supports it.
+    # Playwright 1.55 below supports this host; latest now resolves to 26.04.
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -92,8 +91,8 @@ jobs:
         run: python scripts/check_board_layout.py --browser
 
   board-web:
-    # Pinned: ubuntu-latest moved to 26.04 on 2026-10-22 and Playwright 1.55 cannot install
-    # Chromium's dependencies there. Unpin when Playwright is bumped to a release that supports it.
+    # The isolated browser runtime below is pinned to Playwright 1.55.
+    # ubuntu-latest moved to 26.04, which that runtime does not support.
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4

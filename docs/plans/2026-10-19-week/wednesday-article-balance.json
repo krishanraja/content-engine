@@ -1,15 +1,15 @@
 {
-  "article_sha256": "2ab0dac3c8c7c27f8100f9b956d16fde450f20281f152eb1027b13cb20e5c0eb",
+  "article_sha256": "b31894e3289bd6335c883c59fc345b603a492fb9c2db55c80464c3902ea53867",
   "paragraphs": [
     {
-      "opens": "I put Elon Musk's Grok Bot and Meta's Muse head to head, two of the new done-for-you AI as",
+      "opens": "I put Grok Bot and Meta's Muse head to head, two of the new done-for-you AI assistants. Fl",
       "lane": "synthesis",
-      "words": 51
+      "words": 49
     },
     {
-      "opens": "And if you're a leader secretly trying one on your own life, I get the appeal. Your holida",
+      "opens": "If you're a leader trying one on your own life, I get it. Your holiday search sits beside ",
       "lane": "synthesis",
-      "words": 42
+      "words": 28
     },
     {
       "opens": "I ran five head-to-head tests. One assistant wrote a lovely reply to a scammer. So are the",
@@ -22,34 +22,34 @@
       "words": 18
     },
     {
-      "opens": "The two sets of evidence get equal weight in what I'd try next. Mine show one run on my ac",
+      "opens": "Both count equally in what I'd try next. Mine show one run on my accounts. The research ad",
       "lane": "synthesis",
-      "words": 39
+      "words": 30
     },
     {
-      "opens": "I asked each for the emails I should be replying to. Several messages asked much the same ",
+      "opens": "I asked each which emails needed a reply. Several asked to order six products and check pa",
       "lane": "tests",
-      "words": 34
+      "words": 22
     },
     {
       "opens": "Grok flagged them as likely scams and kept them out of my reply queue. Muse checked my ref",
       "lane": "tests",
-      "words": 43
+      "words": 44
     },
     {
-      "opens": "They were scams. Well crafted phishing emails. The reply was accurate. Making it my next j",
+      "opens": "They were scams. Well crafted emails. The reply matched the shop's published policy. Makin",
       "lane": "tests",
-      "words": 27
+      "words": 29
     },
     {
-      "opens": "The community result is kinder to Muse. [AI for Mortals ran a fake coffee business](https:",
+      "opens": "The research is kinder to Muse. [AI for Mortals ran a fake coffee business](https://www.ai",
       "lane": "corpus",
-      "words": 36
+      "words": 41
     },
     {
-      "opens": "That test used separate copies of the same business. A pass elsewhere earns Muse another l",
+      "opens": "Each got a separate copy of the business. That earns Muse another look. It doesn't make th",
       "lane": "corpus",
-      "words": 35
+      "words": 29
     },
     {
       "opens": "**My test: Grok. Community: level.**",
@@ -62,19 +62,19 @@
       "words": 11
     },
     {
-      "opens": "Both found a return for about £335. The catch was twenty-nine hours in Lisbon on the way o",
+      "opens": "Grok found a £335 return. Muse showed £328 through an agent, or £335 from the airline. The",
       "lane": "tests",
-      "words": 31
+      "words": 36
     },
     {
-      "opens": "To be fair, both steered me away from it. Grok offered a shorter stop. Muse suggested a di",
+      "opens": "Both steered me away. Grok offered a shorter stop. Muse suggested a direct flight and list",
       "lane": "tests",
-      "words": 53
+      "words": 45
     },
     {
-      "opens": "[The Montreal comparison in the research collection](https://www.aiformortals.co/blog/grok",
+      "opens": "[The Montreal comparison](https://www.aiformortals.co/blog/grok-bot-vs-meta-muse-vs-chatgp",
       "lane": "corpus",
-      "words": 76
+      "words": 62
     },
     {
       "opens": "**My test: Grok, on points. Community: Grok.**",
@@ -82,9 +82,9 @@
       "words": 7
     },
     {
-      "opens": "Both found a real recurring charge. Both paused and asked who still used it, or what would",
+      "opens": "Both found a real recurring charge. Both warned me to check use or dependencies before can",
       "lane": "tests",
-      "words": 29
+      "words": 27
     },
     {
       "opens": "I found no community test of this job for both tools.",
@@ -92,9 +92,9 @@
       "words": 11
     },
     {
-      "opens": "The collection includes reports of Muse helping with subscriptions. They don't supply the ",
+      "opens": "The collection includes Muse subscription reports, without a matching Grok comparison or p",
       "lane": "corpus",
-      "words": 33
+      "words": 27
     },
     {
       "opens": "**My test: draw. Community: no result.**",
@@ -102,9 +102,9 @@
       "words": 6
     },
     {
-      "opens": "Grok kept its suggested times apart from my real meetings. Muse clearly marked the real in",
+      "opens": "Grok said my calendar was empty and built its suggested times around open follow-ups. Muse",
       "lane": "tests",
-      "words": 19
+      "words": 26
     },
     {
       "opens": "The community adds a warning on Grok. [One operator running a small team of Grok bots](htt",
@@ -122,9 +122,9 @@
       "words": 8
     },
     {
-      "opens": "Grok's briefing was the more useful one. It also served up an April forecast as October ne",
+      "opens": "Grok's briefing was the more useful one. It also served up [an April article](https://www.",
       "lane": "tests",
-      "words": 27
+      "words": 28
     },
     {
       "opens": "[Chris Alarcon's first week with Grok](https://christopheralarcon.com/blog/what-is-grok-bo",
@@ -134,7 +134,7 @@
     {
       "opens": "A recurring briefing has a clear output to inspect. Finding customers leaves more room to ",
       "lane": "corpus",
-      "words": 42
+      "words": 61
     },
     {
       "opens": "**My test: level, for different reasons. Grok for being useful, Muse for being right. Comm",
@@ -147,9 +147,9 @@
       "words": 14
     },
     {
-      "opens": "Grok kept the right people copied in. It had also thanked the sender for a compliment they",
+      "opens": "Grok kept the right people copied in. It added a thank-you for \"kind words\", then flagged ",
       "lane": "tests",
-      "words": 68
+      "words": 67
     },
     {
       "opens": "On another email, Grok asked me what fee to quote. It left the price to me. I'd quite like",
@@ -172,19 +172,19 @@
       "words": 34
     },
     {
-      "opens": "The wiper example has a clear moment to stop. The author reports that pause explicitly. Ot",
+      "opens": "The wiper example has a clear moment to stop. The author reports that pause explicitly. Fi",
       "lane": "corpus",
-      "words": 53
+      "words": 44
     },
     {
-      "opens": "And Google's Gemini, which I tried alongside them in its chat app? It told me a cabin bag ",
+      "opens": "And Google's Gemini, in its chat app? It promised a cabin bag on that direct flight. The r",
       "lane": "tests",
-      "words": 30
+      "words": 24
     },
     {
-      "opens": "On my tests, Grok wins. It caught the scam Muse answered, and it was never clearly behind ",
+      "opens": "On my tests, Grok wins. It caught the scam Muse answered. That tips it for me.",
       "lane": "synthesis",
-      "words": 20
+      "words": 16
     },
     {
       "opens": "Add the community's results and it gets closer. Muse is more careful than my inbox made it",
@@ -207,24 +207,24 @@
       "words": 38
     },
     {
-      "opens": "1. **Hand one boring weekly job to one assistant.** Grok if the job touches work, Muse if ",
+      "opens": "- **Hand one boring weekly job to one assistant.** Grok if the job touches work, Muse if i",
       "lane": "synthesis",
-      "words": 100
+      "words": 97
     },
     {
-      "opens": "*One run per job on my own accounts, 20 October 2026. Fares are what they found that day. ",
+      "opens": "*One initial run per job on my own accounts, 20 October 2026, with follow-ups recorded. Fa",
       "lane": "synthesis",
-      "words": 25
+      "words": 30
     }
   ],
   "counts": {
-    "tests": 435,
-    "corpus": 434,
-    "synthesis": 531
+    "synthesis": 504,
+    "tests": 422,
+    "corpus": 423
   },
   "evidence_narrative_share": {
-    "tests": 0.5006,
-    "corpus": 0.4994
+    "tests": 0.4994,
+    "corpus": 0.5006
   },
   "method": "Whole paragraph classification. Opening, method, verdict, round calls and tomorrow actions are synthesis. Evidence prose is approximately half each; neither anecdotes nor scores are pooled into a success rate."
 }
