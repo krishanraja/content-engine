@@ -165,6 +165,14 @@
             "timeout": 300
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/harness-closeout.mjs\""
+          }
+        ]
       }
     ]
   }

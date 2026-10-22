@@ -1,4 +1,4 @@
-<!-- krish-repo-context:start brain=f0c91f3b1502 sha=faf3e27eebab -->
+<!-- krish-repo-context:start brain=2ad79d5cf4f3 sha=5060dd066b03 -->
 # content-engine: operating context
 
 Generated from the central ai-harness brain. This is a route inventory, not a certification of current architecture. Read the section for the work at hand; repository-owned sources establish current facts. The nightly publisher rechecks source paths and named commands. This file grants no product action or spending authority.
@@ -23,6 +23,7 @@ Generated from the central ai-harness brain. This is a route inventory, not a ce
 - boards (orientation): `config/boards.json`.
 - check failures (learning): `scripts/check_failures.py`.
 - Repository commands (verification): `package.json`.
+- Required bootstrap source (workflow): `docs/REPO_MAP.md`.
 
 ## Workflows
 
