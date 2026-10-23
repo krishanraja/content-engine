@@ -174,7 +174,11 @@ such as "a split" (Krish, 2026-10-21: "what does \"a split\" mean? I have no
 idea"; learning `plain-score-words`). Then give it dry wit: short, deadpan asides that tease what really
 happened, in the manner of Hannah Fry, never at a real person's expense and
 never inventing a fact for the joke (Krish, 2026-10-21: "Bit of dry wit and
-hannah fry sarcasm too"; learning `dry-wit`).
+hannah fry sarcasm too"; learning `dry-wit`). A joke he has to decode is cut, a little cheeky is fine, and the line that carries the
+point must hit hard (Krish, 2026-10-23, marking five asides: "Three and four are pretty funny. Number one could be
+even a tiny bit crude, if you want. I don't understand number two at all, and number five needs to hit harder";
+learning `wit-he-marked`). Before writing the beat where he gives his call, ask him for his view in his own words,
+one question, and build the beat from them (learning `his-call-in-his-words`).
 
 1. **Write each script opening straight on the hook and closing on the deep dive line.**
    Krish, 2026-10-21: "we need to cut that opening line from every content

@@ -10,6 +10,7 @@
   his line marks, and re-joined after "the choppy rhythm, sounds robotic" (learning `no-choppy-rhythm`, now a
   `story_check.py` warning). Both pass with stand-in test lines; the gaps wait for his Claude, ChatGPT and DeepSeek
   answers, run by Cowork from `docs/plans/2026-10-23-friday/cowork-test-prompt.md`. He records this afternoon.
+- **Handover:** `docs/handovers/2026-10-23-friday-sovereign-ai.md` (start the next session from it).
 - **Next, when answers.md arrives:** fill the gaps (name ChatGPT where two are named), `story_check`, three fresh
   readers per cut, `making.py scripts` (outline and spine judge first), then Teleprompter (standing yes).
 - **Board:** Friday is in draft on https://content.krishraja.com/board/2026-10-19#friday (build a053b673, the first

@@ -3,6 +3,24 @@
 Written 23 October by the session that took the piece from Krish's angle to two checked scripts (its context passed
 500k tokens, guard G1). Branch `ccr-b67ca85c-yxrn71`, everything pushed. Start a fresh session from this file.
 
+## Start the new session with
+
+> Pick up the Friday handover, docs/handovers/2026-10-23-friday-sovereign-ai.md. Here are the test results
+> (answers.md and the screenshots). Score them against the test design, fill the gaps in both scripts, run the
+> readers and get both into Teleprompter before I record this afternoon.
+
+Everything here is on main once the pull request for branch `ccr-b67ca85c-yxrn71` has merged (it merges itself
+when CI passes). If it has not merged yet, `git fetch origin ccr-b67ca85c-yxrn71 && git checkout ccr-b67ca85c-yxrn71`.
+
+## What this session settled with him (do not ask again)
+
+Story A (two passports) on his hook; three named examples (Airbnb, Cursor, Lindy); the countries part as it is
+("No, I agree with this"); his view as the call beat; the jokes he marked; "having a proper look at"; his line marks;
+no choppy rhythm; the matched-pair test with every setting matched and ChatGPT in it. Standing rules from it:
+learnings `script-is-the-bottleneck`, `one-question-at-a-time`, `no-choppy-rhythm`, `tests-are-experiments`,
+`wit-he-marked`, `his-call-in-his-words` (config/learnings.json). Ask him only what is still open below, one
+question at a time.
+
 ## Where it stands
 
 - Piece `7083d6ad-419e-4fdc-9aba-f3be7f3f3a23`. Narrative **signed** (`docs/plans/2026-10-19-week/narrative-fri.md`);

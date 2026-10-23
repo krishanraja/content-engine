@@ -1245,6 +1245,36 @@
      "how": "the Narrative step, where a piece's checkpoints and its test are set"
     }
    ]
+  },
+  {
+   "id": "wit-he-marked",
+   "on": "2026-10-23",
+   "krish": "Three and four are pretty funny. Number one could be even a tiny bit crude, if you want. I don't understand number two at all, and number five needs to hit harder.",
+   "why": "He kept the deadpan asides on true details (South Korea's \"Awkward.\", Grok checking Musk's posts \"one way to keep the boss happy\"), wanted the holiday line cheekier, could not decode an understated line (\"Its co-founder called that a miss\") and wanted the line carrying the point to land harder (it became \"You can take DeepSeek out of China. But you can't take China out of DeepSeek.\").",
+   "means": "Dry asides stay short and on true details; a little cheeky is fine; a line he has to decode is cut; the line that carries the point is written to hit hard, often as a turn on its own words.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": ".agents/skills/make-piece/SKILL.md",
+     "contains": "A joke he has to decode is cut",
+     "how": "the Scripts step, beside dry wit"
+    }
+   ]
+  },
+  {
+   "id": "his-call-in-his-words",
+   "on": "2026-10-23",
+   "krish": "It's more, yes, if you don't care about where your data ends up going ... It's kind of like the supply chain issue ... similar things will happen in AI. It just increases the need to not have overreliance on one supplier.",
+   "why": "Asked for his own view before the call beat was written, he gave a sharper take than the drafted one, and its supply-chain comparison became the piece's best line and its last action.",
+   "means": "The beat where he gives his call is built from his own words, asked for in one question before it is written; a drafted call is only a placeholder until he answers.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": ".agents/skills/make-piece/SKILL.md",
+     "contains": "ask him for his view in his own words",
+     "how": "the Scripts step, beside dry wit"
+    }
+   ]
   }
  ]
 }
