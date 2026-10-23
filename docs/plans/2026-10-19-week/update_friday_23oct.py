@@ -51,6 +51,7 @@ def build():
     wed_reviews=[] if board_day_made(old,'wed') else wed_reviews_from_board(old)
     fri_reviews=[('Narrative (signed)',PLAN/'narrative-fri.md'),
                  ('Evidence read at source',ROOT/'docs/plans/2026-10-23-friday/research-gaps.md'),
+                 ('Test results, scored',ROOT/'docs/plans/2026-10-23-friday/test-results/scores.md'),
                  ('Five-minute script',ROOT/'docs/plans/2026-10-23-draft-script.md'),
                  ('Short script',ROOT/'docs/plans/2026-10-23-draft-script-90s.md')]
     if wed_reviews:  # Wednesday still in draft: rebuild its boxes word for word
@@ -61,7 +62,7 @@ def build():
               '--piece',f'fri={FRI}','--draft','fri']
     for label,path in wed_reviews: args+=['--review',f'wed={label}|{path}']
     for label,path in fri_reviews: args+=['--review',f'fri={label}|{path}']
-    args+=['--waiting','fri=Send the Claude, ChatGPT and DeepSeek answers from the Cowork test (answers.md and the screenshots); the gaps in both scripts are filled from them, then both go to Teleprompter before you record this afternoon.',
+    args+=['--waiting','fri=Read both scripts and comment here. The test results are in them (DeepSeek deleted its Xinjiang answer all three times; Taiwan was a draw). Once you sign them off, both go to Teleprompter for this afternoon.',
            '--ideas',str(PLAN/'ideas.json'),'--queue',str(CACHE/'queue.json')]
     page,meta=board.build(board.parser().parse_args(args))
     mappings=[]
