@@ -2,9 +2,9 @@ You may already be using a Chinese AI. You just might not know it. So does it ma
 
 I've been digging into where the AIs we all use actually come from. And it matters more than you'd think for any business, so I wanted to break it down for you.
 
-Start with Airbnb. Last year its boss said the AI answering its customers relies a lot on Qwen. That's a Chinese AI, made by Alibaba. He called it fast and cheap. Which, to be fair, is what most of us want from a holiday rental.
+Start with Airbnb. Last year its boss said the AI answering its customers relies a lot on Qwen. That's a Chinese AI, made by Alibaba. He called it fast and cheap. Which, to be fair, is also what most of us want from a holiday fling.
 
-Then there's Cursor, a tool lots of software teams use to write code. It built its newest AI on top of a Chinese one called Kimi. And it didn't say so at first. Its co-founder called that a miss.
+Then there's Cursor, a tool lots of software teams use to write code. It built its newest AI on top of a Chinese one called Kimi. It didn't mention that at first. Then people spotted it, and Cursor admitted it.
 
 And Lindy, an American startup, moved all its AI work onto DeepSeek, another Chinese AI. Its biggest bill used to be Anthropic, the American company behind Claude. Its boss said DeepSeek was just ten times cheaper.
 
@@ -26,7 +26,7 @@ Now the second passport. Where it lives decides who sees your data. Use DeepSeek
 
 But you can bring an AI home. HSBC, the British bank, signed a deal to run France's Mistral on its own computers. So the bank's data doesn't have to leave the bank.
 
-So what about running a Chinese AI on your own computers? America's government tried that with DeepSeek. The Chinese government's talking points were still there, built in. How much of that comes with it depends on which AI you pick. But moving house doesn't change where you were born.
+So what about running a Chinese AI on your own computers? It depends which one. America's government tried it with DeepSeek. The Chinese government's talking points were still there, built in. You can take DeepSeek out of China. But you can't take China out of DeepSeek.
 
 So last night I tried it myself. Same three work questions, word for word, to Claude and to DeepSeek.
 
