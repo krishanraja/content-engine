@@ -14,6 +14,30 @@ for, so that a part is never optimised against the whole.
 
 Set by Krish on 18 October 2026, and not reached yet. Everything below serves it, every session in this repository works toward it, and only Krish changes it.
 
+## The number
+
+**Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges**: 30 by 30 November 2026, on a front-loaded weekly ladder. Checkpoints: 16 Nov 2026: 12; 30 Nov 2026: 30.
+
+```yaml north-star-metric
+metric: "Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges"
+unit: count
+direction: up
+target: 30
+deadline: 2026-11-30
+ladder_shape: front-loaded
+source: "Control Center content_ideas.published_at, last 7 days"
+status: active
+ladder:
+  - [2026-10-26, 1]
+  - [2026-11-02, 4]
+  - [2026-11-09, 8]
+  - [2026-11-16, 12]
+  - [2026-11-23, 20]
+  - [2026-11-30, 30]
+```
+
+Urgency (U1 to U5) is worked out every week from where the number stands against that week's target, by [the harness contract](https://github.com/krishanraja/ai-harness/blob/main/contract/north-star-metric.md). Set by Krish on 23 October 2026.
+
 ## The objective, in Krish's words
 
 Stated on 2026-09-24, at the start of the first live walk of the engine
