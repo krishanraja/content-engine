@@ -811,7 +811,7 @@ bring takes back, was retired on 12 October.
 ## Latest handoff
 
 - 2026-10-23: **Wednesday is ready on the private publish board.** Build
-  `b0505d9e4a819a97b62f63d1970476a0cf5f3ff635f978d80cab42b958dba966`:
+  `d10e51a47a3af7574ab229ff8dae0f402ebcdde9e8b5cd103b55317a00a2df99`:
   the native publish page and all seven approved cover/thumbnail formats accompany
   both corrected cuts. Live HTML and both changed asset downloads hash-match; the
   Ideas, Monday and Friday panels are byte-identical. Earlier assets remain available;
@@ -831,11 +831,15 @@ bring takes back, was retired on 12 October.
     and approval records are in `docs/plans/2026-10-21-wednesday/`; the media are in
     the post library. The native making record now marks fact check, visual gate,
     scripts, pack, recording and both video assets done; only posting remains.
-    The cloud library downloads are verified, but the separate Google Drive sync
-    has not yet exposed final video and thumbnail file IDs. The current live board
-    has working authenticated downloads; a future board rebuild's `Download first`
-    card still needs the observed Drive links under the existing rule.
-    Next: merge the production code after CI. Public posting waits
+    The library sync was failing because its mounted parent is `Active Ventures`,
+    while the runner config said `Active`. After correcting the runtime path, its
+    own hash-checking pass wrote 66 files with zero failures. The two final videos
+    and two thumbnails were identified by exact name, size and folder in Drive;
+    their real file IDs are recorded in the making record. The board's `Download
+    first` card now resolves them through the same immutable, verified board assets.
+    The live HTML, one changed review download, all prior assets and the other day
+    panels passed independent readback. PR #139 is merged, and the corrected
+    route is recorded in the runtime config and Drive guide. Public posting waits
     for Krish's explicit instruction.
 
 - Older handoffs (12 to 20 October): `docs/history/2026-10-18-WORKBENCH-handoffs.md`. This section holds only the

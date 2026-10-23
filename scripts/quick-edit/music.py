@@ -13,7 +13,7 @@ Where things live:
     1pmPWx8vTOZuUXkp-WjhLlCTvof8MrRxK). Krish, 2026-10-12: "thats where it
     will live and the video runners need to know this". On the runner
     machines that is
-    H:\\My Drive\\Ventures\\Active\\makeyourmindup\\00_Brand-Assets\\07_Music:
+    H:\\My Drive\\Ventures\\Active Ventures\\makeyourmindup\\00_Brand-Assets\\07_Music:
     env MINDMAKE_MUSIC_ROOT, else runtime.music_root in config/studio.json.
   - The ledger is config/music-library.json, committed. Audio is never
     committed (scripts/check-no-secrets.ts).

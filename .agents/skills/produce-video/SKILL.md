@@ -109,7 +109,7 @@ Commands are written `python`, as on Windows; it is `python3` in the cloud.
    back.
 3. Drops each take at the top of the Video Engine Inbox, Drive
    `makeyourmindup > Video Engine > Inbox`
-   (`H:\My Drive\Ventures\Active\makeyourmindup\Video Engine\Inbox`). Never
+   (`H:\My Drive\Ventures\Active Ventures\makeyourmindup\Video Engine\Inbox`). Never
    in a subfolder: the upload lane reads only the top level. Any name will
    do. A file over 500 MiB is skipped by the lane, so that one is produced
    on a home computer, straight from H:. This is the one way a take comes

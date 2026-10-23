@@ -6,16 +6,18 @@ stops the work: a clean-up session moved the Studio's Inbox and the runner's
 KeePass file on 2026-10-04 and broke both (walk log F63).
 
 Two parents, both in the `krish@mindmake.co` Drive under `My Drive > Ventures
-> Active`:
+> Active Ventures` (folder `1tu33N-waOHuxk_FK1sry0MHlw-iHf8NB`, verified 2026-10-23):
 
 - `makeyourmindup` (`1HHI0u24N3o3-yeprQzHdXVZtA7cNcKxh`), the publication as a
   venture of its own: the asset library and the Studio's `Video Engine`.
-- `Mindmaker > 04_Content` (`1ELCdOmMGXWmLpuheEoAKA-_4jvYbmbn3`): sales
+- `mind/make > 04_Content` (`1ELCdOmMGXWmLpuheEoAKA-_4jvYbmbn3`): sales
   material, one-off scripts, films.
 
-Krish moved `makeyourmindup` up from `04_Content` to `Ventures > Active`, with
+Krish moved `makeyourmindup` up from `04_Content` to the ventures parent, with
 `Video Engine` inside it, on 2026-10-07 ("the moves were made on purpose ...
-update everything now"). Every path in the repository followed the same day.
+update everything now"). Earlier notes called the parent `Active`; the current
+Drive name and the mounted H: path are `Active Ventures`. The old path made the
+library sync fail until the 2026-10-23 correction.
 The map is also kept in Drive as `READ ME FIRST - what goes where.txt` at the
 top of `04_Content`; change both together.
 
@@ -27,15 +29,15 @@ system knows about the folder structure and where stuff's supposed to go").
 ## Never move or rename
 
 These are bound by path. Renaming or moving them, or any folder above them
-(`Ventures`, `Active`, `makeyourmindup`, `00_Brand-Assets`), breaks a running
+(`Ventures`, `Active Ventures`, `makeyourmindup`, `00_Brand-Assets`), breaks a running
 system until every path below and the environment on both home computers are
 changed with it.
 
 | Folder | Who reads it | What goes in it |
 |---|---|---|
-| `makeyourmindup > Video Engine` (`H:\My Drive\Ventures\Active\makeyourmindup\Video Engine`) | the Studio runner on both home computers (`MINDMAKE_DRIVE_ROOT`, `config/studio.json`, `packages/core/src/paths.ts`, `docs/OPERATIONS.md`) | `Inbox`: new recordings, and only there: one file per cut, at the top (the upload lane never reads a subfolder), never music (the lane would send audio as a recording). `Archive`: finished videos and their thumbnails, one folder per piece named by date, subject and where to post it (the Studio and `scripts/quick-edit` file them). It must exist: `archive.py` and `make.py --archive` stop without it, and the Drive connector found no `Archive` there on 12 October (not yet checked on H:). If it is missing, Krish creates it; an agent never does. `Inspiration`: reference clips (`inspo/README.md`). Never add anything else to the root. |
-| `makeyourmindup > 00_Brand-Assets > 07_Music` (`H:\My Drive\Ventures\Active\makeyourmindup\00_Brand-Assets\07_Music`, Drive folder `1pmPWx8vTOZuUXkp-WjhLlCTvof8MrRxK`) | `scripts/quick-edit` on both home computers (`MINDMAKE_MUSIC_ROOT`, `runtime.music_root` in `config/studio.json`, `root_default_windows` in `config/music-library.json`). Krish, 2026-10-12: "thats where it will live and the video runners need to know this" | Licensed music tracks, each with its licence certificate beside it. A track is used only once it is in the ledger `config/music-library.json` and approved by Krish; nothing browses the folder for audio. Audio is never committed. |
-| `makeyourmindup` (`H:\My Drive\Ventures\Active\makeyourmindup`) | the library sync on the home computer that files each post's assets (`MINDMAKE_LIBRARY_ROOT`, `runtime.library_root`), and the recordings upload on both, which reads `Video Engine > Inbox` | `1 Brand kit (permanent)`, `2 Channel art (permanent)`, `3 Posts` with one folder per post; the sync writes only under these three. Also `Video Engine`, `Video Engine brief and architecture (reference only)` and `00_Brand-Assets`. Its own `READ ME FIRST.txt` describes the inside. |
+| `makeyourmindup > Video Engine` (`H:\My Drive\Ventures\Active Ventures\makeyourmindup\Video Engine`) | the Studio runner on both home computers (`MINDMAKE_DRIVE_ROOT`, `config/studio.json`, `packages/core/src/paths.ts`, `docs/OPERATIONS.md`) | `Inbox`: new recordings, and only there: one file per cut, at the top (the upload lane never reads a subfolder), never music (the lane would send audio as a recording). `Archive`: finished videos and their thumbnails, one folder per piece named by date, subject and where to post it (the Studio and `scripts/quick-edit` file them). It must exist: `archive.py` and `make.py --archive` stop without it, and the Drive connector found no `Archive` there on 12 October (not yet checked on H:). If it is missing, Krish creates it; an agent never does. `Inspiration`: reference clips (`inspo/README.md`). Never add anything else to the root. |
+| `makeyourmindup > 00_Brand-Assets > 07_Music` (`H:\My Drive\Ventures\Active Ventures\makeyourmindup\00_Brand-Assets\07_Music`, Drive folder `1pmPWx8vTOZuUXkp-WjhLlCTvof8MrRxK`) | `scripts/quick-edit` on both home computers (`MINDMAKE_MUSIC_ROOT`, `runtime.music_root` in `config/studio.json`, `root_default_windows` in `config/music-library.json`). Krish, 2026-10-12: "thats where it will live and the video runners need to know this" | Licensed music tracks, each with its licence certificate beside it. A track is used only once it is in the ledger `config/music-library.json` and approved by Krish; nothing browses the folder for audio. Audio is never committed. |
+| `makeyourmindup` (`H:\My Drive\Ventures\Active Ventures\makeyourmindup`) | the library sync on the home computer that files each post's assets (`MINDMAKE_LIBRARY_ROOT`, `runtime.library_root`), and the recordings upload on both, which reads `Video Engine > Inbox` | `1 Brand kit (permanent)`, `2 Channel art (permanent)`, `3 Posts` with one folder per post; the sync writes only under these three. Also `Video Engine`, `Video Engine brief and architecture (reference only)` and `00_Brand-Assets`. Its own `READ ME FIRST.txt` describes the inside. |
 
 The runner's KeePass file, elsewhere on the H: drive, is bound by path too.
 
