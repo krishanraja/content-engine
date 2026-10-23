@@ -31,6 +31,9 @@ def validate(data, piece):
             if not item.get('label') or not (parsed.scheme == 'https' and parsed.netloc or
                                             url.startswith('/api/board/')):
                 raise ValueError('Publishing materials require labelled HTTPS or board asset links')
+            preview = item.get('preview')
+            if preview and not (isinstance(preview, str) and preview.startswith('data:image/jpeg;base64,')):
+                raise ValueError('Publishing material previews must be embedded JPEG images')
         for item in section.get('copy', []):
             if not item.get('label') or not isinstance(item.get('text'), str) or not item['text'].strip():
                 raise ValueError('Publishing copy requires a label and nonempty text')
@@ -78,7 +81,9 @@ def render_group(day, data):
             parts += ['<ol class="dl-list">']
             for item in section['files']:
                 parts += [f'<li class="dl-item" data-dl="material"><a class="btnlink dl-btn" href="{e(item["url"], quote=True)}" '
-                          f'target="_blank" rel="noopener">{e(item["label"])}</a></li>']
+                          f'target="_blank" rel="noopener">{e(item["label"])}</a>'
+                          + (f'<img class="dl-pic" src="{e(item["preview"], quote=True)}" alt="{e(item["label"], quote=True)} preview" loading="lazy">'
+                             if item.get('preview') else '') + '</li>']
             parts += ['</ol>']
         for i, item in enumerate(section.get('copy', [])):
             cid = f'{sid}-copy-{i}'
@@ -101,10 +106,20 @@ def render(day, data):
         parts += [f'<section class="sec" id="{sid}"><div class="sec-head"><h3>{e(section["title"])}</h3></div>']
         if section.get('note'):
             parts += [f'<p>{e(section["note"])}</p>']
-        parts += ['<div class="btns">']
-        for item in section.get('files', []):
-            parts += [f'<a class="btnlink" href="{e(item["url"], quote=True)}" target="_blank" rel="noopener">{e(item["label"])}</a>']
-        parts += ['</div>']
+        files = section.get('files', [])
+        if any(item.get('preview') for item in files):
+            parts += ['<ol class="dl-list">']
+            for item in files:
+                parts += [f'<li class="dl-item"><a class="btnlink" href="{e(item["url"], quote=True)}" target="_blank" rel="noopener">{e(item["label"])}</a>']
+                if item.get('preview'):
+                    parts += [f'<img class="dl-pic" src="{e(item["preview"], quote=True)}" alt="{e(item["label"], quote=True)} preview" loading="lazy">']
+                parts += ['</li>']
+            parts += ['</ol>']
+        else:
+            parts += ['<div class="btns">']
+            for item in files:
+                parts += [f'<a class="btnlink" href="{e(item["url"], quote=True)}" target="_blank" rel="noopener">{e(item["label"])}</a>']
+            parts += ['</div>']
         for i, item in enumerate(section.get('copy', [])):
             cid = f'{sid}-copy-{i}'
             parts += [f'<div class="card"><div class="lab">{e(item["label"])}</div>',

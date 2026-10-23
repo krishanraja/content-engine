@@ -12,8 +12,9 @@ import publish_manager
 
 
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('work',type=Path);ap.add_argument('--narrative',action='store_true')
+    ap=argparse.ArgumentParser();ap.add_argument('work',type=Path);ap.add_argument('--narrative',action='store_true');ap.add_argument('--approved-headshot',action='store_true')
     args=ap.parse_args();w=args.work.resolve();out=w/'publish';out.mkdir(exist_ok=True)
+    if args.approved_headshot and not args.narrative:ap.error('--approved-headshot requires --narrative')
     piece='d7a20885-7001-4661-b444-9d7ca1043416'
     title=json.loads((PLAN/'post.json').read_text(encoding='utf-8'))['headline']
     copy=dict((label.strip(),text.strip())for label,text in re.findall(
@@ -24,7 +25,7 @@ def main():
         'vertical_cover':'2 Covers and images/vertical-cover-1080x1920-shorts-tiktok-reels.png',
         'square':'2 Covers and images/square-1080x1080.png','share_card':'2 Covers and images/share-card-1200x675.png',
         'cover':'2 Covers and images/substack-cover-1200x630.png','substack_copy':'1 Article/substack-copy.html'}
-    if args.narrative:
+    if args.narrative and not args.approved_headshot:
         files['long_video']='3 Video/Working - review/muse-vs-grok-long-16x9.mp4'
         files['short_video']='3 Video/Working - review/muse-vs-grok-short-9x16.mp4'
         for role in ('wide_thumbnail','vertical_cover','square','share_card','cover'):
@@ -32,6 +33,10 @@ def main():
     roles={'long_video':'wed-video-long','short_video':'wed-video-short','wide_thumbnail':'wed-thumb-wide',
         'vertical_cover':'wed-cover-1080x1920','square':'wed-cover-1080x1080','share_card':'wed-cover-1200x675',
         'cover':'wed-cover-1200x630','substack_copy':'wed-article-copy'}
+    if args.approved_headshot:
+        roles.update({'wide_thumbnail':'wed-approved-thumb-wide',
+            'vertical_cover':'wed-approved-cover-1080x1920','square':'wed-approved-cover-1080x1080',
+            'share_card':'wed-approved-cover-1200x675','cover':'wed-approved-cover-1200x630'})
     state=web.call('GET','/api/board/2026-10-19');facts=web.call('GET',f'/api/content-ideas/{piece}/fact-check')
     links={files[role]:f'https://content.krishraja.com/api/board/2026-10-19/assets/{aid}?sha={state["manifest"]["assets"][aid]["sha256"]}'for role,aid in roles.items() if role in files}
     words={'title':title,'subtitle':copy['Article subtitle'],'date':'2026-10-21','long_name':'5-minute video',
@@ -45,7 +50,12 @@ def main():
     (out/'body.md').write_text(article.partition('\n')[2].lstrip(),encoding='utf-8')
     images=[{'id':role,'role':role,'file':str(w/'article'/name),'alt':'Muse vs Grok Bot: five real-life tests'}for role,name in
         [('cover','cover-1200x630.png'),('vertical-cover','cover-1080x1920.png'),('square-cover','cover-1080x1080.png'),('share-card-cover','cover-1200x675.png')]]
-    if args.narrative:
+    if args.approved_headshot:
+        images=[{'id':role,'role':role,'file':str(w/'head-to-head-final'/name),
+                 'alt':'Grok Bot versus Muse: product-branded founder headshots'}for role,name in
+                [('cover','cover-1200x630.png'),('vertical-cover','cover-1080x1920.png'),
+                 ('square-cover','cover-1080x1080.png'),('share-card-cover','cover-1200x675.png')]]
+    elif args.narrative:
         images=[]
     figures=json.loads((PLAN/'page-facts.json').read_text(encoding='utf-8'))['figures']
     for f,heading in zip(figures,['The inbox','The flight','The news','The work email','The verdict']):
@@ -58,7 +68,9 @@ def main():
     status=['Article source adjudications complete; original checker verdicts retained.']
     status.append('Article publication checks clear.'if facts.get('ready')else'Article publication checks remain held.')
     status.append('Both integrated recuts accepted after full playback.'if all(passed)else'Final video playback acceptance remains open.')
-    if args.narrative:
+    if args.approved_headshot:
+        status.append('Krish approved the Grok Bot and Muse headshot treatment in all seven delivery formats.')
+    elif args.narrative:
         status.append('The rejected covers and thumbnails are withheld. The headshot draft is in design review; new sizes follow Krish’s approval.')
     manager={'title':title,'subtitle':copy['Article subtitle'],'date':'2026-10-21','kicker':'under.the.hood',
         'body':'body.md','words':'publish-words.json','images':images,'status':status,

@@ -20,7 +20,7 @@ import quality
 import segment_clock
 
 PROOFS={
- 'draft':('muse-draft-body.jpg',[436,378,572,180],[12,33,148,32],['A LOVELY REPLY.','TO A SCAMMER.'],'Original Muse interaction, 20 October'),
+ 'draft':('muse-draft-body.jpg',[436,378,572,180],[12,33,148,32],['WILL IT CATCH','A SCAMMER?'],'Original Muse interaction, 20 October'),
  'priority':('muse-day-plan.jpg',[436,282,572,152],[28,60,220,36],['FIRST ON','THE DAY\'S LIST.'],'Original Muse interaction, 20 October'),
  'flight':('muse-flight-final.jpg',[436,240,572,356],None,['£335.','29 HOURS IN LISBON.'],'Original Muse interaction, historical 20 October fare'),
  'nights':('muse-nights-claim.jpg',[436,270,572,112],None,['THREE NIGHTS.','MUSE SAID FOUR.'],'Original Muse interaction; count verified from arrival/departure'),
@@ -48,17 +48,21 @@ def panel(w,key,aspect,lines=None):
     elif key in DEMOS:
         file,crop,start,lines,source=DEMOS[key];raw=w/'evidence-raw'/file
     W,H=(1312,1080)if aspect=='16x9'else(1080,1000)
-    recipe={'key':key,'aspect':aspect,'lines':lines,'crop':crop,'mask':mask,'start':start,'source':source,'raw_sha256':sha(raw)if raw else None,'version':3}
+    recipe={'key':key,'aspect':aspect,'lines':lines,'crop':crop,'mask':mask,'start':start,'source':source,'raw_sha256':sha(raw)if raw else None,'version':4}
     stamp=path.with_suffix('.json')
     if path.exists()and stamp.exists()and json.loads(stamp.read_text())['recipe']==recipe:return path
     font=w/'render-short/fonts/Anton.ttf';fs=72 if aspect=='16x9'else 64
     # Text is supplied in files: punctuation, apostrophes and currency never
     # become filter syntax. No hidden account chrome is in the cropped stream.
     graph=[];filters=[]
+    # Give screenshot headings a clear gap above the rule. Pure title cards
+    # sit nearer the optical centre instead of leaving the lower half empty.
+    title_y=174 if raw else (360 if aspect=='16x9' else 330)
+    rule_y=370 if raw else (580 if aspect=='16x9' else 550)
     for i,line in enumerate(lines):
         textfile=out/f'{key}-{aspect}-{i}.txt';textfile.write_text(line,encoding='utf-8')
-        filters.append(f"drawtext=fontfile='{font.as_posix().replace(':',r'\:')}':textfile='{textfile.as_posix().replace(':',r'\:')}':fontcolor=0xF6F3EB:fontsize={fs}:x=(w-text_w)/2:y={174+i*(fs+18)}")
-    filters.append(f"drawbox=x=48:y={158+len(lines)*(fs+18)}:w={W-96}:h=5:color=0x79EDBE:t=fill")
+        filters.append(f"drawtext=fontfile='{font.as_posix().replace(':',r'\:')}':textfile='{textfile.as_posix().replace(':',r'\:')}':fontcolor=0xF6F3EB:fontsize={fs}:x=(w-text_w)/2:y={title_y+i*(fs+18)}")
+    filters.append(f"drawbox=x=48:y={rule_y}:w={W-96}:h=5:color=0x79EDBE:t=fill")
     inputs=['-f','lavfi','-i',f'color=c=0x0C1512:s={W}x{H}:r=24:d=6']
     if raw:
         inputs+=(['-loop','1','-framerate','24']if start is None else['-ss',str(start),'-threads','2'])+['-i',str(raw)]

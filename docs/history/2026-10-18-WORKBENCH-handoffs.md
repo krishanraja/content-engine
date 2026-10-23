@@ -4,6 +4,54 @@
 > no longer reads 181 KB of old handoffs before it starts (`docs/COST_GUARDS.md`, G11). Nothing here is current;
 > live state is in `WORKBENCH.md`. Newest first, exactly as written.
 
+## 23 October: Wednesday corrected cuts in private review (Codex)
+
+- 2026-10-23: **Wednesday's private publish board carries the corrected videos and approved Grok Bot/Muse headshot artwork.** Build
+  `b7be2fe28348ceadc78c0c732c41b8ee6b5b6f59189eed21ce67ac1850f367c4`:
+  live HTML and all 13 changed downloads hash-match the local inputs, all earlier assets
+  remain available, and Ideas/Monday/Friday panels are byte-identical. Edits, ticks,
+  links and picks were preserved. All 37 earlier comments and 11 queue entries
+  remained byte-identical, with one new entry in each collection. The board remains editable
+  and commentable. No public post.
+  - The long score/card alignment, short 3–4-second transition and additive scam card
+    are repaired. Both audio payloads exactly match the previously accepted cuts; fresh
+    six-window SyncNet reports pass within 40 ms. The short uses Krish's supplied
+    auto-stabilised source. Frame sampling and full-resolution checks are recorded in
+    `docs/plans/2026-10-21-wednesday/narrative-recut-review.md`; these do not replace
+    continuous phone playback. The native delivery guard still holds heard, full review
+    and final motion acceptance open, with the recognizer differences preserved.
+  - Krish approved the revised headshot treatment. Five cover sizes and two thumbnails,
+    with real Grok Bot and Muse marks, are staged in the post library pack and on the
+    board. The old boxing art is labelled archive. The article's fact gate remains
+    clear by the recorded exact-body adjudication; no further paid run occurred.
+  - Code, receipts and the library handoff are in this branch's 23 October release.
+    The pack and the seven held review-media files are sent through
+    `scripts/post-pack/send.py` into the post's library folder; the always-on machine's
+    final write/readback remains to verify. Next: Krish plays both exact new cuts on
+    his phone, then the native delivery gate can be closed on evidence. Public posting
+    requires its own authorisation.
+
+## 22 October, 16:50 UTC: Wednesday recut and headshot draft (Codex)
+
+- 2026-10-22, 16:50 UTC: **Wednesday's private board has the integrated recuts and current headshot draft.** Build
+  `20c5c551728412279d8a274cfd3fa78337a7fa793a0db7a909b30c82abd3fe56`:
+  live HTML and the one changed asset download matched, all 54 assets retained,
+  other panels unchanged, and Krish's Friday feedback retained.
+  Fact gate clear; no public post.
+  - [PR #136](https://github.com/krishanraja/content-engine/pull/136) has the video code;
+    local verify and 85 checks passed. Merge after CI. See
+    `docs/plans/2026-10-21-wednesday/narrative-recut-review.md` for hashes, six-point
+    sync, motion, audio and ASR reports. The new short uses Krish's supplied stabilised
+    source. Forty newest library downloads plus the supplied source/receipt hash-matched.
+  - **Open:** full phone playback of both new cuts; the raw recognizer differences;
+    Krish's reaction to the restrained Elon/Zuckerberg headshot mock before seven
+    cover/thumbnail shapes. The rejected boxing art was withdrawn from the active
+    board covers section and from the publish-manager inputs, then preserved as
+    clearly labelled archive links. The revised manager's three changed files
+    matched actual library downloads. The mock/source portraits are in the post
+    library's `Working - headshot review` lane. The Inbox `Active Ventures` versus runner `Active`
+    path mismatch remains unrepaired; manual source retrieval succeeded.
+
 ## 22 October: Wednesday finishing pass (Codex)
 
 Both stabilised videos are live on the private Wednesday board, build

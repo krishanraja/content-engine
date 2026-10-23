@@ -4,11 +4,14 @@ Does not shape or patch a board. Stops if another panel or an existing asset
 would be lost. Publishing is a separate compare-and-swap command.
 """
 import argparse
+import base64
+import io
 import json
 import re
 import sys
 import urllib.request
 from pathlib import Path
+from PIL import Image
 
 PLAN=Path(__file__).resolve().parent
 ROOT=PLAN.parents[2]
@@ -38,9 +41,12 @@ def main():
     ap.add_argument('--stable',action='store_true',help='Use completed stabilised exports')
     ap.add_argument('--narrative',action='store_true',help='Use the integrated evidence recut and supplied stabilised short')
     ap.add_argument('--headshot-review',action='store_true',help='Show the restrained headshot mock as a commentable draft')
+    ap.add_argument('--approved-headshot',action='store_true',help='Show approved headshot treatment in all seven delivery formats')
     ap.add_argument('--ready-page',type=Path,help='Native publish-manager page; requires live article readiness and passed exact video receipts')
     ap.add_argument('--short-stable',action='store_true',help='Use the finished stable short while the long replacement processes')
     a=ap.parse_args()
+    if a.headshot_review and a.approved_headshot:
+        ap.error('Choose one headshot state')
     work=a.work.resolve();out=work/'board';out.mkdir(exist_ok=True)
     if a.ready_page:
         if not (a.stable and a.videos and a.ready_page.is_file()):
@@ -51,7 +57,8 @@ def main():
         sys.path.insert(0,str(ROOT/'scripts/quick-edit'))
         import quality
         for cut,shape in [('long','16x9'),('short','9x16')]:
-            video=work/f'render-{cut}-stable'/f'muse-vs-grok-{cut}-{shape}.mp4'
+            folder=f'render-{cut}-{"narrative" if a.narrative else "stable"}'
+            video=work/folder/f'muse-vs-grok-{cut}-{shape}.mp4'
             problems=quality.delivery_problems(video,Path(str(video)+'.validation.json'))
             if problems:raise ValueError(cut+' delivery blocked: '+'; '.join(problems))
     state=web.call('GET',f'/api/board/{WEEK}')
@@ -69,20 +76,41 @@ def main():
         rel=f'/api/board/{WEEK}/assets/{aid}?sha={spec["sha256"]}'
         source=('https://content.krishraja.com'+rel) if ('https://content.krishraja.com'+rel) in old else rel
         mappings.append({'id':aid,'source_url':source,'existing_sha256':spec['sha256']})
+    # Drive folder 15ar-xjif1E3mknAsvfklk8nfsA5GWhHy: names, sizes and parent
+    # for these four IDs were read back after the repaired 23 October sync.
+    finished=({'wed-video-long':'1wT9LYZHHl9hWyZyQwknWJv-9erXR8rEQ',
+               'wed-approved-thumb-wide':'1B7OQMrzpZlfaWRbr2s8kSV9mzKsGXk-V',
+               'wed-video-short':'1lZWiskRgfm8SdRBEDV5S-iTMiAw7pSsT',
+               'wed-approved-thumb-tall':'1dQkms_ZC8JCQzqBsChbBxsqECtx6YG_V'} if a.ready_page else {})
 
     def file(aid,path,label):
         path=Path(path)
         if not path.is_file():
             raise FileNotFoundError(path)
+        preview=None
+        if aid.startswith('wed-approved-') and path.suffix.lower() in ('.png','.jpg','.jpeg'):
+            with Image.open(path) as picture:
+                picture=picture.convert('RGB')
+                picture.thumbnail((420,600))
+                data=io.BytesIO()
+                picture.save(data,format='JPEG',quality=78,optimize=True)
+            preview='data:image/jpeg;base64,'+base64.b64encode(data.getvalue()).decode('ascii')
         url=f'/api/board/{WEEK}/assets/{aid}?pending=1'
         mappings[:]=[m for m in mappings if m['id']!=aid]
         existing=state['manifest']['assets'].get(aid)
         digest=web.sha(path.read_bytes())
+        if aid in finished:
+            if not existing or existing['sha256']!=digest:
+                raise ValueError(aid+' needs the existing verified board asset before linking Drive')
+            source='https://drive.usercontent.google.com/download?id='+finished[aid]+'&amp;export=download'
+            mappings.append({'id':aid,'source_url':source,'existing_sha256':digest})
+            return {'label':label,'url':f'/api/board/{WEEK}/assets/{aid}?sha={digest}',
+                    'preview':preview} if preview else {'label':label,'url':f'/api/board/{WEEK}/assets/{aid}?sha={digest}'}
         if existing and existing['sha256']==digest:
             mappings.append({'id':aid,'source_url':url,'existing_sha256':digest})
         else:
             mappings.append({'id':aid,'source_url':url,'path':str(path)})
-        return {'label':label,'url':url}
+        return {'label':label,'url':url,'preview':preview} if preview else {'label':label,'url':url}
 
     sections=[]
     sections.append({'id':'article','title':'Article and takeaway','files':[
@@ -95,7 +123,19 @@ def main():
     covers=[('cover-1200x630.png','Substack cover'),('cover.png','Substack feed'),
             ('cover-1200x675.png','LinkedIn share card'),('cover-1080x1080.png','Square cover'),
             ('cover-1080x1920.png','Vertical cover')]
-    if a.headshot_review:
+    if a.approved_headshot:
+        final=work/'head-to-head-final'
+        covers=[('cover-1200x630.png','Substack cover'),('cover.png','Substack feed'),
+                ('cover-1200x675.png','LinkedIn share card'),('cover-1080x1080.png','Square cover'),
+                ('cover-1080x1920.png','Vertical cover')]
+        sections.append({'id':'covers','title':'Covers and thumbnails','files':[
+            file('wed-approved-'+Path(name).stem,final/name,label) for name,label in covers]+[
+            file('wed-approved-thumb-wide',final/'thumb-wide-1280x720.jpg','YouTube thumbnail'),
+            file('wed-approved-thumb-tall',final/'thumb-tall-1080x1920.jpg','Short video thumbnail'),
+            file('wed-headshot-cover-draft',work/'head-to-head/cover-1200x630.png','Approved treatment reference'),
+            file('wed-headshot-cover-phone',work/'head-to-head/cover-1200x630-phone.png','Approved treatment on a phone')],
+            'note':'Krish approved this product-branded headshot treatment. All seven delivery crops have been rendered and checked for alignment and phone legibility.'})
+    elif a.headshot_review:
         sections.append({'id':'covers','title':'Covers and thumbnails','files':[
             file('wed-headshot-cover-draft',work/'head-to-head/cover-1200x630.png','Headshot cover draft — review'),
             file('wed-headshot-cover-phone',work/'head-to-head/cover-1200x630-phone.png','Headshot cover draft on a phone')],
@@ -122,7 +162,7 @@ def main():
                       file('wed-captions-'+cut,base.with_suffix('.srt'),cut.capitalize()+' captions')]
         video_note=('Both camera tracks are stabilised. Motion, framing and sync evidence accompanies the exports; final continuous playback acceptance is still open.' if a.stable else 'Review exports. The stabilised replacements are being finished; continuous playback acceptance remains open.')
         if a.ready_page:video_note='Both stabilised exports pass the technical checks and Krish’s full playback review. Captions and thumbnails accompany them.'
-        if a.narrative:video_note='One evolving verdict combines the tests and community evidence. Original launch demonstrations and redacted interactions are included; the short uses Krish’s supplied stabilised recording. Fresh playback acceptance remains open.'
+        if a.narrative and not a.ready_page:video_note='One evolving verdict combines the tests and community evidence. Original launch demonstrations and redacted interactions are included; the short uses Krish’s supplied stabilised recording. Fresh playback acceptance remains open.'
         sections.append({'id':'videos','title':'Watch both videos','files':files,'note':video_note})
     sections.append({'id':'evidence','title':'Visuals and checks','files':[
         file('wed-graphics-overview',work/'cards-stable/sheet.png','All evidence graphics'),
@@ -134,8 +174,10 @@ def main():
         file('wed-claim-resolution',PLAN/'claim-resolution-22-oct.md','Source audit and article corrections'),
         file('wed-fact-adjudication',PLAN/'final-fact-adjudication.md','Final fact-check: 27 named lines and their evidence'),
         file('wed-stabilisation-review',PLAN/'stabilisation-review.md','Stabilisation measurements and mandatory check')]})
-    if a.headshot_review:
+    if a.headshot_review or a.approved_headshot:
         sections[-1]['files'] += [file('wed-headshot-layout-proof',work/'head-to-head/layout-review.json','Headshot cover alignment check')]
+        if a.approved_headshot:
+            sections[-1]['files'] += [file('wed-approved-format-proof',work/'head-to-head-final/format-proof.json','Approved seven-format alignment check')]
         sections[-1]['files'] += [file('wed-'+Path(name).stem,work/'article'/name,'Rejected cover archive: '+label)
                                   for name,label in covers]
         sections[-1]['files'] += [file('wed-thumb-wide',work/'thumbs/thumb-wide-1280x720.jpg','Rejected thumbnail archive: wide'),
@@ -172,11 +214,14 @@ def main():
     if a.narrative:
         reviews += [('Edited long video transcript',work/'narrative/long/spoken-transcript.md'),
                     ('Edited short video transcript',work/'narrative/short/spoken-transcript.md')]
-    if a.headshot_review:
+    if a.headshot_review or a.approved_headshot:
         reviews += [('Headshot cover draft',PLAN/'headshot-cover-review.md')]
     args=['--week',WEEK,'--previous',str(previous),'--keep','mon','--target','web','--live',
           '--piece',f'wed={PIECE}','--materials',f'wed={out/"materials.json"}',
           '--ideas',str(week/'ideas.json'),'--queue',str(out/'queue.json')]
+    friday=panel(old,'friday').split('>',1)[0]
+    if 'data-state="draft"' in friday:args += ['--keep-draft','fri']
+    elif 'data-state="made"' in friday:args += ['--keep','fri']
     if a.ready_page:args += ['--day',f'wed={a.ready_page.resolve()}']
     else:args += ['--draft','wed','--waiting','wed=Article fact gate clear. Review the finished video replacements for final playback acceptance; article and channel copy remain editable.']
     if 'id="wed-four-draft-only-tests"' in old:

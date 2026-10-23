@@ -10,7 +10,7 @@ videos and think I'd like to produce more like that."
 
 Drive > makeyourmindup > **Video Engine > Inspiration**
 (https://drive.google.com/drive/folders/1eqdc1hoMn6CwqkbKlG5mAmKCYNoR8otU;
-`H:\My Drive\Ventures\Active\makeyourmindup\Video Engine\Inspiration` on the
+`H:\My Drive\Ventures\Active Ventures\makeyourmindup\Video Engine\Inspiration` on the
 home computers).
 
 - **A video file** (mp4, mov, webm): drop it in. A saved Instagram, TikTok

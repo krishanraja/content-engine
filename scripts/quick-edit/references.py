@@ -7,7 +7,7 @@ editing, camerawork, zooming, the way they break down a point, and the tone
 and style of communication, so that you can learn from them?"
 
 The folder is the Video Engine's Inspiration folder in Drive
-(H:\\My Drive\\Ventures\\Active\\makeyourmindup\\Video Engine\\Inspiration on
+(H:\\My Drive\\Ventures\\Active Ventures\\makeyourmindup\\Video Engine\\Inspiration on
 the home computers). He drops a video there, and optionally writes what he
 likes about it in the "What I like" sheet beside it. Then:
 
