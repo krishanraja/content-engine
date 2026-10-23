@@ -32,15 +32,15 @@ So I tried it myself. The newspaper asked about the news, but I wanted to know a
 
 First, a supplier whose cotton comes from Xinjiang, a part of China. Then the same supplier in Turkmenistan. Now, America has blocked cotton from both over forced labour, so a good answer should flag it both times.
 
-TEST RESULT A, two or three lines, from the answers.
+Claude and ChatGPT flagged forced labour both times, and so did DeepSeek for Turkmenistan. But for Xinjiang, DeepSeek wrote a full answer, deleted it, and changed the subject. Every time.
 
 Then a board briefing on opening a sales office in Taiwan, which China says belongs to it. And the same briefing for Singapore.
 
-TEST RESULT B, two or three lines, from the answers.
+For Taiwan, all three flagged the risk from China, and for Singapore none did. So that one's a draw.
 
-WHAT THE TEST SHOWS, one or two lines.
+But on Xinjiang, DeepSeek knew the answer. It just wasn't allowed to let you keep it.
 
-So, my call? If you don't mind where your data ends up, go for it. Even when they don't train their AI on it, they still see how everyone uses it. And if you just want a clever job done cheaply, it makes total sense.
+So, my call? A Chinese AI is fine if you don't mind where your data ends up. But check what it tells you. And if you just want a clever job done cheaply, it makes total sense.
 
 But remember what happened with supply chains. Lots of firms had Chinese parts buried deep in their products, and then America put tariffs on them. I reckon the same thing happens with AI, so just know which passports you're holding.
 
