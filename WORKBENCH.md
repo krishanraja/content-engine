@@ -17,6 +17,7 @@
 - **Board:** published to https://content.krishraja.com/board/2026-10-19#friday (build `baa95ed9`, revision 48,
   served page hash read back equal; Ideas, Monday and Wednesday panels unchanged). The feeder now maps Wednesday's
   Drive downloads like Monday's and reads through `BOARD_BASE_URL` in a cloud session.
+- **Creative direction (23 Oct, evening):** `docs/plans/2026-10-23-friday/creative-direction.md` is the brief Codex produces both cuts from: the 90-second cut voice only, the 5-minute mixed, every line paired with the picture that proves it. Order: he records, takes lined up, **storyboard to Krish for sign-off**, then render. Krish: "Once I've recorded show me your creative storyboard before I sign that off."
 - **Next:** read his comments on the Friday tab (`board_web.py read`), change the words he asks for, re-run
   `story_check.py` and fresh readers, then `making.py <piece> scripts long.md short.md` (outline and spine judge
   first, `docs/plans/2026-10-23-outline.md`), `read-back` (his words if he signs off), and `teleprompter_send.py

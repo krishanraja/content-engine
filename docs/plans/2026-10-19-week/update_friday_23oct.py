@@ -52,8 +52,8 @@ def build():
     fri_reviews=[('Narrative (signed)',PLAN/'narrative-fri.md'),
                  ('Evidence read at source',ROOT/'docs/plans/2026-10-23-friday/research-gaps.md'),
                  ('Test results, scored',ROOT/'docs/plans/2026-10-23-friday/test-results/scores.md'),
-                 ('Five-minute script',ROOT/'docs/plans/2026-10-23-draft-script.md'),
-                 ('Short script',ROOT/'docs/plans/2026-10-23-draft-script-90s.md')]
+                 ('Five-minute script',ROOT/'docs/plans/2026-10-23-friday/script-long-both-takes.md'),
+                 ('Short script',ROOT/'docs/plans/2026-10-23-friday/script-short-both-takes.md')]
     if wed_reviews:  # Wednesday still in draft: rebuild its boxes word for word
         args=['--week',WEEK,'--previous',str(CACHE/'before.html'),'--keep','mon','--target','web','--live',
               '--piece',f'wed={WED}','--piece',f'fri={FRI}','--draft','wed','--draft','fri']
@@ -62,7 +62,7 @@ def build():
               '--piece',f'fri={FRI}','--draft','fri']
     for label,path in wed_reviews: args+=['--review',f'wed={label}|{path}']
     for label,path in fri_reviews: args+=['--review',f'fri={label}|{path}']
-    args+=['--waiting','fri=Read both scripts and comment here. The test results are in them (DeepSeek deleted its Xinjiang answer all three times; Taiwan was a draw). Once you sign them off, both go to Teleprompter for this afternoon.',
+    args+=['--waiting','fri=Record two takes of each length: on camera, then voiceover. Each script box holds both; read only the part you are recording. The creative direction for the videos is in the repository; the storyboard comes to you after you record.',
            '--ideas',str(PLAN/'ideas.json'),'--queue',str(CACHE/'queue.json')]
     page,meta=board.build(board.parser().parse_args(args))
     mappings=[]
