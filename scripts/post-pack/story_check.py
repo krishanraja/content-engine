@@ -624,6 +624,12 @@ LONG_WORD_SHARE = 0.06  # long words above this share are told, never refused
 # these, in every take, about twice the scripts' share.
 JOINERS = ('so', 'and', 'but', 'now', 'see')
 JOINER_SHARE = 0.25
+# Krish, 2026-10-23, of Wednesday's teleprompter script: "the choppy rhythm, sounds robotic".
+# His takes average 10 to 15 words a sentence with no run of short ones; the scripts he
+# found robotic averaged about 8, with two or three runs of three sentences of five words
+# or fewer. A lone short line stays for a punchline.
+CHOPPY_AVERAGE = 9.5
+CHOPPY_WORDS = 5
 BARE_PREDICTION = re.compile(r"^\s*(?:my prediction\s*[:.]|here'?s my bet\s*[:.]|my bet\s*[:.])\s*$", re.I)
 DAY_DEADLINE = re.compile(r"\b\d{1,2}(?:st|nd|rd|th)?\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)"
                           r"\s+20\d\d\b")
@@ -642,6 +648,19 @@ def spoken_habit_warnings(beats):
             found.append(f'only {share:.0%} of its sentences open with So, And, But, Now or See; he opens about one in three that way '
                          'in every take (So before a result or the prediction, "Now," before a new step or a question): say the link in '
                          'the opening word (house rule SCRIPT_AS_HE_TALKS; a warning, not a refusal)')
+    if len(sents) >= 12:
+        lengths = [len(words_of(x)) for x in sents]
+        average = sum(lengths) / len(lengths)
+        runs, run = 0, 0
+        for n in lengths:
+            run = run + 1 if n <= CHOPPY_WORDS else 0
+            runs += run == 3
+        if average < CHOPPY_AVERAGE or runs:
+            found.append(f'it reads choppy, which sounds robotic aloud: its sentences average {average:.1f} words'
+                         + (f', with {runs} run{"s" if runs > 1 else ""} of three or more sentences of {CHOPPY_WORDS} words or fewer' if runs else '')
+                         + '; he talks in sentences of 10 to 15 words joined with so, and or but (Krish, 2026-10-23: "the choppy rhythm, '
+                         'sounds robotic"): join the short ones into one flowing sentence and keep a lone short line for a punchline '
+                         '(house rule SCRIPT_AS_HE_TALKS; a warning, not a refusal)')
     for x in sents:
         if BARE_PREDICTION.match(x):
             found.append(f'"{x.strip()}" stands alone; he never says a prediction label on its own: run it into the claim, "So my '
@@ -816,6 +835,11 @@ def self_test():
     check('a bare "My prediction:" and a day-number deadline are warned',
           (any('stands alone' in w for w in spoken_habit_warnings(['My prediction:', 'By 31 December 2027, it ships.'])),
            any('day number' in w for w in spoken_habit_warnings(['By 31 December 2027, it ships.']))), (True, True))
+    flowing = ' '.join(['So the price went up last year, and most firms never noticed it on the bill.'] * 12)
+    robotic = ' '.join(['The price went up. Nobody noticed. It was on the bill. Then it doubled.'] * 4)
+    check('a choppy script is warned that it sounds robotic (Krish, 2026-10-23); one that flows the way he talks is not',
+          (any('sounds robotic' in w for w in spoken_habit_warnings([robotic])),
+           any('sounds robotic' in w for w in spoken_habit_warnings([flowing]))), (True, False))
     check('"nobody" is warned towards his "no one"', any('"no one"' in w for w in spoken_habit_warnings([talky])), True)
     check('a long script that says "my bet" passes the voice check',
           warns(GOOD.replace("So here's our call.", "So here's my bet.")), [])

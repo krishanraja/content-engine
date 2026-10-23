@@ -1,20 +1,20 @@
 # Workbench: where we are and what's next
 
-## 23 October: Friday narrative signed, both scripts drafted (Claude)
+## 23 October: Friday narrative signed, scripts in his words, waiting on his test (Claude)
 
-- **Signed** (`docs/plans/2026-10-19-week/narrative-fri.md`): "Signed, go ahead and draft the scripts". Story A
-  (two passports) opening on his hook "You may already be using a Chinese AI."
-- **Scripts:** `docs/plans/2026-10-23-draft-script.md` (5-minute) and `-90s.md`. Both pass `story_check.py`
-  with stand-in test lines; the real test lines are blank until Krish pastes his Claude and DeepSeek answers to
-  the three questions in the narrative. First read-back (A, B, C per cut) done; fixes in. **Next:** fill the test
-  lines from his answers, `story_check`, final read-back, `making.py scripts`/`read-back`, then Teleprompter.
-  Outline and spine judge still to do before `making.py scripts` accepts them.
-- **Board (Krish: "Keep all three, put them on the board"):** Friday is in draft on
-  https://content.krishraja.com/board/2026-10-19#friday (build a053b673, read back: HTML hash matches, 62 assets kept)
-  with four boxes: the signed narrative, the evidence, both scripts, and one call waiting on him (the test answers).
-  `docs/plans/2026-10-19-week/update_friday_23oct.py` carries Wednesday's boxes over word for word from the live
-  board (some of their sources live only in the Wednesday production folder) and refuses nothing silently: Ideas,
-  Monday and Wednesday came out byte-identical. Rerun it (snapshot, then `--build`) for each Friday republish.
+- **Signed** (`docs/plans/2026-10-19-week/narrative-fri.md`): story A (two passports) opening on his hook "You may
+  already be using a Chinese AI." His later words are on the narrative and in `docs/plans/2026-10-23-friday/story.md`:
+  his own view (the "my call" beat and "keep a second AI ready"), ChatGPT added to the test, settings matched.
+- **Scripts:** `docs/plans/2026-10-23-draft-script.md` (5-minute) and `-90s.md`, worked with him one question at a
+  time (learning `one-question-at-a-time`): his jokes kept or rewritten, his opening ("having a proper look at"),
+  his line marks, and re-joined after "the choppy rhythm, sounds robotic" (learning `no-choppy-rhythm`, now a
+  `story_check.py` warning). Both pass with stand-in test lines; the gaps wait for his Claude, ChatGPT and DeepSeek
+  answers, run by Cowork from `docs/plans/2026-10-23-friday/cowork-test-prompt.md`. He records this afternoon.
+- **Next, when answers.md arrives:** fill the gaps (name ChatGPT where two are named), `story_check`, three fresh
+  readers per cut, `making.py scripts` (outline and spine judge first), then Teleprompter (standing yes).
+- **Board:** Friday is in draft on https://content.krishraja.com/board/2026-10-19#friday (build a053b673, the first
+  drafts). Not refreshed since: Wednesday became made (another session, build b0505d9e) and `--keep wed` redraws its
+  videos from a record missing two Drive links (verify refuses), so `update_friday_23oct.py` waits for that record.
 
 ## 22 October: Friday 23 Oct (mind.the.gap, sovereign AI) back to the story (Claude)
 
@@ -59,53 +59,6 @@
 - **Control Center (22 Oct, his yes, "but we do not produce 15 minutes every single time"):** its mirror
   `src/lib/making.ts` knows the feature as an optional third cut: asked for, and its two posting ticks shown, only on
   a piece whose scripts' check holds a feature hash (`makingCuts`, `channelsFor`); the long cut reads "5-minute".
-
-## 21 October, afternoon: Wednesday drafts from Krish's board edits (Claude)
-
-Read his 13:21 board edit of the short script and his comment on the long
-("what does "a split" mean? I have no idea"). New drafts in
-`docs/plans/2026-10-21-draft-script.md` (804 words, "split" replaced by
-"draw") and `-90s.md` (195 words, his edits kept; two changes for the gates: his
-" - " pause is a full stop, and "lots of other people report that they're neck
-and neck" became "in another tester's trial, both caught every scam. Neck and
-neck." because the evidence is one tester). Learning `plain-score-words`.
-Two fresh readers per cut on the final words (short: nothing lost; long: only
-his retained "I did a piece last week" and one "X conversations" query), on
-the making record. **Teleprompter updated on his "push to teleprompter"**
-(plan: nothing to send). **Next:** Krish records; the board still shows the
-morning's scripts until he asks for a republish.
-
-## 21 October: Wednesday cut back to the result (Claude)
-
-Krish: the scripts and article were "overexplaining" with caveats. Rewritten as
-five scored rounds, each "my score" against "the community's", plus a bonus round
-and the verdict (Grok wins on his tests, closer with the community). Gemini is
-out of the scripts (one line in the article). Limits sit in the scorecard and a
-one-line footnote. Files: `docs/plans/2026-10-21-draft-script.md` (807 words, 5 min),
-`-90s.md` (194 words), `2026-10-19-week/wednesday-article-draft.md` and
-`wednesday-scorecard.md`. Two fresh readers heard the earlier version; their
-confusions were fixed, but the final words have not had a second read-back.
-Learning `say-the-result-not-the-method`.
-**Later the same day (Krish's rulings):** dry, observational, positive wit
-(house rule TONE_OBSERVANT_WITTY); no series line in any script (SERIES_OPENER
-reworded; `seriesOpener()` returns null); every script closes on "Here's what I'd
-do with this info if I were you" and ends "The full deep dive is at
-makeyourmindup.ai." (SCRIPT_CLOSE, refused by story_check); every article ends
-"3 things you can do tomorrow" (THREE_THINGS_TOMORROW, a non-blocking publish
-check for now so older articles keep their fact-check hashes). Both Wednesday
-cuts pass story_check (long 807 words, short 195). Done on his approval ("After this round of feedback is complete"): both
-Teleprompter scripts updated in place (long b50061ae, short 90398a98; read back
-by two fresh readers each, on the making record), and the web board republished
-(build 973df9eb, readback hash matches; `update_wednesday_21oct.py`).
-**Next:** Krish records both cuts; titles and thumbnail words after recording.
-
-## 21 October: Wednesday scripts in Teleprompter (Codex)
-
-Krish approved transfer. Folder: Wed 21 Oct under.the.hood - Muse vs Grok Bot:
-Head to Head on Running My Life. Both cuts read back exactly (765/195 words).
-IDs, hashes, approval and checks: `docs/plans/2026-10-19-week/wednesday-teleprompter.json`.
-Live making record holds both. Next: Krish records; visuals/article remain separate.
-Board and all feedback kept: https://content.krishraja.com/board/2026-10-19#wednesday.
 
 ## 19 October: both publish boards live, web cutover verified
 

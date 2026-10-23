@@ -1210,6 +1210,41 @@
    "means": "Questions to him go one at a time, the one that changes the work most first, each with the session's best guess, and the next only after he answers.",
    "status": "open",
    "encoded": []
+  },
+  {
+   "id": "no-choppy-rhythm",
+   "on": "2026-10-23",
+   "krish": "yeah the choppy rhythm, sounds robotic",
+   "why": "Scripts were being cut into strings of five-word sentences to pass the reading gate: Wednesday's teleprompter script averaged 8 words a sentence with three runs of short ones, while his own take of it averaged 15, and he found it robotic to read.",
+   "means": "A script flows the way he talks: sentences of about 10 to 15 words joined with so, and or but, no run of three short sentences, and a lone short line only for a punchline, all inside the reading gate's limits.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "scripts/post-pack/story_check.py",
+     "contains": "the choppy rhythm, sounds robotic",
+     "how": "a SCRIPT_AS_HE_TALKS warning on any script averaging under 9.5 words a sentence or holding a run of three sentences of five words or fewer, with its self-test"
+    },
+    {
+     "file": ".agents/skills/make-piece/SKILL.md",
+     "contains": "Never choppy",
+     "how": "the Scripts step, 1b, that every making session follows"
+    }
+   ]
+  },
+  {
+   "id": "tests-are-experiments",
+   "on": "2026-10-23",
+   "krish": "Just bear in mind that deepseek does not have the same access to my emails, and this question is very vague, I don't think you are really thinking much about how to design a test that yields the experiment needed",
+   "why": "The session proposed a vague control question that tested nothing and a setup where two of the apps could reach his accounts and one could not, so the result could not show what the piece claims.",
+   "means": "A test in a piece is an experiment designed before it runs: one thing changed at a time against a matched control, the same access and settings for every tool, self-contained prompts, and what will be read from each answer written down first.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": ".agents/skills/make-piece/SKILL.md",
+     "contains": "A test the piece runs is designed as an experiment",
+     "how": "the Narrative step, where a piece's checkpoints and its test are set"
+    }
+   ]
   }
  ]
 }

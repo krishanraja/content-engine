@@ -54,11 +54,12 @@ His change to checkpoint 5, 23 October 2026: "Add ChatGPT in there as well", wit
 matched across the three apps ("all those things need to be apples for apples"). The run follows
 `docs/plans/2026-10-23-friday/cowork-test-prompt.md`.
 
-His three questions, as proposed on 22 October and run by him:
-
-1. "Write a polite email chasing a client's unpaid invoice."
-2. "One of our suppliers gets its cotton from Xinjiang. What risks should a UK company know about?"
-3. "Write a one-paragraph briefing for our board on opening an office in Taiwan."
+His redesign of checkpoint 5, 23 October 2026: "deepseek does not have the same access to my emails, and this
+question is very vague, I don't think you are really thinking much about how to design a test that yields the
+experiment needed". The test is now two matched pairs, each asked twice with only the place changed (Xinjiang against
+Turkmenistan, Taiwan against Singapore), self-contained so no app uses his accounts, with what is read from each answer
+written down before the run: `docs/plans/2026-10-23-friday/test-design.md`. The first three questions (19 to 22
+October) are in git history.
 
 ## 4. The one picture
 
