@@ -514,12 +514,30 @@ def score_problems(paragraphs):
     return found
 
 
+# A script with two takes of one cut (Krish, 2026-10-23: "Just put the first-person and the voiceover version in
+# the one script box in the publish board for each video length. Once it goes to "Have a Prompt" I'll only read the
+# part of the script that I need"). Each take starts on its own line "=== TAKE <n>: <what it is> ===" and is checked
+# as a whole script of the cut on its own; words before the first marker are a note to him, never checked.
+TAKE_MARKER = re.compile(r'^=== TAKE (\d+): (.+?) ===[ \t]*$', re.M)
+
+
+def takes(text):
+    """[(label, words)] for each take of a two-take script, in order, or [] for an ordinary script."""
+    marks = list(TAKE_MARKER.finditer(text.replace('\r\n', '\n')))
+    body = text.replace('\r\n', '\n')
+    return [(f'take {m.group(1)} ({m.group(2).strip()})', body[m.end():marks[i + 1].start() if i + 1 < len(marks) else len(body)])
+            for i, m in enumerate(marks)]
+
+
 def problems(text, cut=None, series=None):
     """Plain-words reasons this script is not ready, or [] when it passes.
     `cut` ('long' or 'short') adds the length rule; `series` (the piece's
     lane_slot) is accepted and ignored: the series line is retired (house rule
     SERIES_OPENER, 2026-10-21). The close (SCRIPT_CLOSE) holds for a script of
     SHORT_WORDS or more, and the reading gate (house rule R7) for every script."""
+    parts = takes(text)
+    if parts:
+        return [f'{label}: {why}' for label, words in parts for why in problems(words, cut, series)]
     found = []
     if UNCHECKED in text:
         found.append(f'some lines are marked {UNCHECKED}: add those facts to the article and run the fact check, or cut them')
@@ -587,6 +605,9 @@ def warnings(text):
     landed is for him. And it can see a line saying the script was made with
     AI (house rule NO_AI_DISCLOSURE_LINE), which he ruled out of every script on
     2026-10-12: cut it."""
+    parts = takes(text)
+    if parts:
+        return [f'{label}: {why}' for label, words in parts for why in warnings(words)]
     beats = spoken_paragraphs(text)
     words = ' '.join(beats).split()
     found = []
@@ -948,6 +969,14 @@ def self_test():
           bool(score_problems(['Opus 5.5 at medium scored 57.6% for $2.94, against 52.3% for $15.83.'])), True)
     check('a percentage that compares is fine', score_problems(['It scored 40% higher in its top gear.']), [])
     check('a score refuses through problems(), for every script', any('PLAIN_SCORES' in p for p in problems(fine + ' ' + old_90s)), True)
+
+    # Two takes of one cut in one script box (Krish, 2026-10-23): each take is checked as a whole script.
+    two = 'A note to Krish.\n\n=== TAKE 1: ON CAMERA ===\n\n' + GOOD + '\n\n=== TAKE 2: VOICEOVER ===\n\n' + GOOD
+    check('an ordinary script has no takes', takes(GOOD), [])
+    check('two takes are found, in order', [label for label, _ in takes(two)], ['take 1 (ON CAMERA)', 'take 2 (VOICEOVER)'])
+    check('two good takes pass', problems(two), [])
+    broke = problems(two.replace('=== TAKE 2: VOICEOVER ===\n\n' + GOOD, '=== TAKE 2: VOICEOVER ===\n\n' + HIGGSFIELD_V1))
+    check('a take that fails is named', bool(broke) and all(p.startswith('take 2 (VOICEOVER): ') for p in broke), True)
 
     # The chapter list beside a deep cut follows the words as they are now.
     listed = '- One | starts: "Why does it"\n- Two | starts: "That is the whole"\n'

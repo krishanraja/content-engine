@@ -163,7 +163,12 @@ def word_count(text):
 
 
 def duration_seconds(text, cfg):
-    """Its spoken words at the config's pace (150 a minute), in whole seconds."""
+    """Its spoken words at the config's pace (150 a minute), in whole seconds. A script holding two takes
+    of the cut (story_check.takes) is read one take at a time: its longest take."""
+    import story_check
+    parts = story_check.takes(text)
+    if parts:
+        return max(duration_seconds(words, cfg) for _, words in parts)
     words = word_count(text)
     return max(1, int(round(words * 60 / cfg['words_per_minute']))) if words else 0
 
