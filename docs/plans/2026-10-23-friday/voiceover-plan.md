@@ -3,7 +3,7 @@
 Krish, 23 October 2026, on a RealLifeLore Short: "Might also be nice to not have my face in absolutely everything and
 mix up the narrative style a little bit, but still keep the irreverence, branding, fun, simple explanations, humor".
 Then: "it's more the intersection of the script and the visuals that I was trying to get across to you, rather than
-literally a map". Status: **proposal, not approved.**
+literally a map". Status: **superseded by `creative-direction.md`** (Krish asked for production-ready direction on 23 Oct; the storyboard comes to him after he records).
 
 ## The idea in one line
 

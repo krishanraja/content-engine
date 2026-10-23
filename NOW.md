@@ -161,7 +161,7 @@ Lifecycle: building. Readback on 2026-10-11 unless a commit is named; the 2026-1
 
 ## What is next and what is waiting on Krish
 
-- Next for Friday 23 October: Krish's yes or no on the voice-led plan (`docs/plans/2026-10-23-friday/voiceover-plan.md`); with a yes, he screen-records the DeepSeek question and the session builds the beat sheet and captures; either way his script sign-off comes before Teleprompter.
+- Next for Friday 23 October: Krish records (the 90-second cut as voice only, the 5-minute to camera, and a screen recording of the DeepSeek question); then a session builds the storyboard from `docs/plans/2026-10-23-friday/creative-direction.md` for his sign-off before anything renders.
 - Next for the crons: read back the next creator scout run (Tuesday 08:00 UTC) as `ok`. Call odds stays quiet until a Call has a market pinned, which is Krish's to pin.
 - Next for Wednesday 21 October: Krish can review the complete private publish board and make any last copy or visual notes before he publishes on his channels.
 - Waiting on Krish for Wednesday: only his decision to publish or make a final board edit. His video playback and seven-format headshot treatment approvals remain recorded; public posting belongs to him.
