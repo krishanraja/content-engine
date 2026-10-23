@@ -38,6 +38,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 Lifecycle: building. Readback on 2026-10-11 unless a commit is named; the 2026-10-12 work below is merged and tested, with no production readback beyond the commits' own reports.
 
+- **The engine's crons are healthy again on Control Center's alert (2026-10-23).** Build signals had failed every run since its `GITHUB_TOKEN` (set 2026-09-08) was refused; Control Center's working key was copied into this Vercel project and the 18:00 UTC run wrote `ok`. The creator scout's only failure (2026-10-20) was a model-invented pillar id breaking `content_ideas_pillar_id_fkey`; `knownPillar` now drops any id that is not an active pillar to null. Call odds skips because no Call has a market pinned; that is input starvation, now treated as normal on Control Center's side.
 - **Wednesday 21 October is on the private publish board (2026-10-23).** Build `d3a4d79980e7a7ff91eae4cde990955eb445afb1bdbfa17129c930c2d21c620b` holds the approved long and short videos, the corrected publication-branded seven-format cover set, five source-led article figures with visible board previews, the illustrated article and editable copy. The figures use product marks, cropped and redacted original interactions where available, clearly marked reconstructions, and separate field/research scores. The article fact gate and exact video delivery receipts pass. The live HTML and all changed asset downloads match their hashes; Ideas, Monday and Friday are byte-identical to the preceding board, and all six feedback stores for each of the two weeks are unchanged. The pack is in the private asset library, with its full newest-download readback recorded in the production folder. Krish directs agents to prepare the board only; nothing has been posted publicly (`WORKBENCH.md`, latest handoff).
 
 - **Friday 23 October (mind.the.gap, two passports) is on the board for Krish's review (2026-10-23).** The AI test is scored (`docs/plans/2026-10-23-friday/test-results/scores.md`: DeepSeek deleted its Xinjiang answer 3 of 3; Taiwan a draw), both scripts pass `story_check.py`, two rounds of readers retell the point; board build `baa95ed9` read back. Next: his board comments, then read-back, the making record and Teleprompter before he records. North Star check, 2026-10-23: holds.
@@ -160,6 +161,7 @@ Lifecycle: building. Readback on 2026-10-11 unless a commit is named; the 2026-1
 
 ## What is next and what is waiting on Krish
 
+- Next for the crons: read back the next creator scout run (Tuesday 08:00 UTC) as `ok`. Call odds stays quiet until a Call has a market pinned, which is Krish's to pin.
 - Next for Wednesday 21 October: Krish can review the complete private publish board and make any last copy or visual notes before he publishes on his channels.
 - Waiting on Krish for Wednesday: only his decision to publish or make a final board edit. His video playback and seven-format headshot treatment approvals remain recorded; public posting belongs to him.
 - The older list below is historical and must be checked against current live state before acting on any item.
