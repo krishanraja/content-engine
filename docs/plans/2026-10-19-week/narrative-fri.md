@@ -50,6 +50,10 @@ three work questions to the AI they rely on and to one born in another country.
 | 4 | Passport two: where it lives decides who sees your data | HSBC running France's Mistral on its own computers; running a model yourself keeps your data home but keeps what the maker trained in, and how much depends on the model | the line |
 | 5 | His test | The same three questions, word for word, put on one day to Claude and DeepSeek in their own apps, every answer kept in full; a plain list of what differed (the same, softened, refused, different facts), each item pointing to a kept answer | the list |
 
+His change to checkpoint 5, 23 October 2026: "Add ChatGPT in there as well", with every setting
+matched across the three apps ("all those things need to be apples for apples"). The run follows
+`docs/plans/2026-10-23-friday/cowork-test-prompt.md`.
+
 His three questions, as proposed on 22 October and run by him:
 
 1. "Write a polite email chasing a client's unpaid invoice."
