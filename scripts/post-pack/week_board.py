@@ -1913,6 +1913,19 @@ def kept_panel(text, key):
     return drop_channels(panel, key)
 
 
+def kept_draft_panel(text, key):
+    """Carry an unrelated draft tab from the verified previous board verbatim."""
+    name = next(n for k, n, *_ in DAYS if k == key)
+    start = text.find(f'id="panel-{name}"')
+    start = text.rfind('<div class="pm', 0, start) if start >= 0 else -1
+    if start < 0:
+        raise BoardError(f'--keep-draft {key}: the previous board has no {name} tab')
+    panel = div_at(text, start)
+    if 'data-state="draft"' not in panel.split('>', 1)[0]:
+        raise BoardError(f'--keep-draft {key}: the previous {name} tab is not in review')
+    return panel
+
+
 # Channels Krish dropped (2026-10-14: "I don't think I need Substack notes or WhatsApp to be honest, right now"):
 # a kept panel loses their ticks, their sections and their contents links, so no carried day still shows them.
 DROPPED_CHANNELS = {'whatsapp': 'WhatsApp', 'notes': 'Substack Notes'}
@@ -2167,7 +2180,7 @@ def fixed_day(key, name, weekday, when, series_label, page, piece, pick, title, 
 
 def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pending=None, kept=None, videos=None, review=None,
           draft=(), calls=None, posted=None, kept_at=None, ideas=None, queue=None, materials=None, briefs=None, combine=None,
-          sweeps=None, lessons=None, folders=None):
+          sweeps=None, lessons=None, folders=None, kept_draft=None):
     """(page, manifest, warnings). folders: {day: the post's library folder, from its making record's pack}. ideas: {day: [idea]} from read_ideas(),
     shown as a first tab, Ideas, opened while no day is made. pages: {day: publish page text};
     pieces: {day: uuid}; teleprompter: {day: teleprompter_info}; picks:
@@ -2186,6 +2199,7 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
         raise BoardError(f'--sweep and --lessons: the week of {monday.isoformat()} is in the layout it was published in; '
                          f'Also changed and What I learned are in the Drafts step of boards from {LAYOUT_FROM.isoformat()}')
     pages, pieces, teleprompter, picks, pending, kept = pages or {}, pieces or {}, teleprompter or {}, picks or {}, pending or {}, kept or {}
+    kept_draft = kept_draft or {}
     calls, posted = calls or {}, posted or {}
     deep_piece = None if FIXED else deep_cut_piece(monday)
     warnings, days, panels, tabs, blocks = [], [], [], [], []
@@ -2228,7 +2242,16 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
             if piece and other and other != piece:
                 warnings.append(f'{weekday}: {label} says {other}, the board uses {piece}')
         title = pending.get(key) or (page or {}).get('title') or pick.get('title') or ''
-        if key in kept and not page:
+        if key in kept_draft:
+            if page or key in draft or (review or {}).get(key) or (materials or {}).get(key):
+                raise BoardError(f'--keep-draft {key}: give the retained tab alone, or rebuild it from new inputs')
+            if not piece:
+                raise BoardError(f'--keep-draft {key}: the previous board has no piece id')
+            state = 'draft'
+            panels.append(re.sub(r'^(<div class="pm(?: fixed)?"[^>]*?)( hidden)?>',
+                                 lambda m: m.group(1) + (' hidden' if key != opened else '') + '>',
+                                 kept_draft[key], count=1))
+        elif key in kept and not page:
             if not piece:
                 raise BoardError(f'{weekday} is kept from the previous board but has no piece id: give --piece {key}=<uuid>')
             state = 'made'
@@ -2625,6 +2648,7 @@ def build(args, get=None):
                                  'give one piece\'s record or ids as --teleprompter mon=PATH')
             shared.append(data)
     kept = {}
+    retained_drafts = {}
     for key in set(by_day([f'{d}=x' for d in (getattr(args, 'keep', None) or [])], '--keep')):
         if not args.previous:
             raise BoardError('--keep needs --previous, the board page to keep the day from')
@@ -2635,6 +2659,21 @@ def build(args, get=None):
             held = (previous['days'].get(key) or {}).get('piece_id')
             if held:
                 pieces[key] = held
+    for key in set(by_day([f'{d}=x' for d in (getattr(args, 'keep_draft', None) or [])], '--keep-draft')):
+        if not args.previous or previous is None:
+            raise BoardError('--keep-draft needs --previous, the live board page to retain')
+        if key in pages or key in kept or key in draft:
+            raise BoardError(f'--keep-draft {key}: give only one state for this day')
+        held = (previous['days'].get(key) or {})
+        if held.get('state') != 'draft' or not held.get('piece_id'):
+            raise BoardError(f'--keep-draft {key}: the previous board has no drafted piece to retain')
+        if pieces.get(key) and pieces[key] != held['piece_id']:
+            raise BoardError(f'--keep-draft {key}: its piece id changed')
+        pieces[key] = held['piece_id']
+        retained_drafts[key] = kept_draft_panel(Path(args.previous).read_text(encoding='utf-8-sig'), key)
+        _, retained_calls = previous_draft(Path(args.previous).read_text(encoding='utf-8-sig'), key)
+        if retained_calls:
+            calls[key] = retained_calls
     for key in sorted(draft & (set(pages) | set(kept))):
         raise BoardError(f'--draft {key} with --day or --keep {key}: a day in review shows its review card, never an older publish page')
     scripts, unmade, videos, posted, fresh, folders = {}, [], {}, {}, set(), {}
@@ -2669,7 +2708,7 @@ def build(args, get=None):
                     sub = ((making_rec.get('channels') or {}).get('substack') or {})
                     if isinstance(sub, dict) and sub.get('posted_at'):
                         posted[key] = sub['posted_at']
-                if isinstance(url, str) and url.strip() and key not in pages and key not in kept and key not in draft:
+                if isinstance(url, str) and url.strip() and key not in pages and key not in kept and key not in draft and key not in retained_drafts:
                     unmade.append(f'{weekday}: the board being replaced holds its words in review; give --draft {key} with its '
                                   f'--review files (and --waiting for each call)' if key in held_draft else
                                   f'{weekday}: piece {piece} has its publish page ({url.strip()}); Artifact read it and give '
@@ -2736,7 +2775,7 @@ def build(args, get=None):
                 calls[key] = had_calls
                 warnings.append(f'{next(w for k, _, w, *_ in DAYS if k == key)}: the calls waiting on Krish are carried from '
                                 f'the board being replaced')
-    for key in sorted(set(calls) - draft):
+    for key in sorted(set(calls) - draft - set(retained_drafts)):
         raise BoardError(f'--waiting {key}: only a day in draft shows what waits on Krish; give --draft {key}')
     kept_at = previous_review_times(Path(args.previous).read_text(encoding='utf-8-sig'), review) if args.previous else {}
     ideas = read_ideas(read_json(args.ideas, '--ideas'), monday) if getattr(args, 'ideas', None) else None
@@ -2773,7 +2812,7 @@ def build(args, get=None):
                 sweeps[k] = s
     lessons = read_lessons(read_json(args.lessons, '--lessons')) if getattr(args, 'lessons', None) else None
     page, manifest, more = board(monday, pages, pieces, scripts, picks, pending, kept, videos, review, draft, calls, posted, kept_at,
-                                 ideas, queue, materials, briefs, combine, sweeps, lessons, folders)
+                                 ideas, queue, materials, briefs, combine, sweeps, lessons, folders, retained_drafts)
     if previous is not None:
         keep_previous(previous, manifest['days'], unpick, monday, fresh)
     manifest['warnings'] = warnings + more
@@ -3718,6 +3757,9 @@ def _draft_checks(check, page, fri):
         base2 = ['--week', '2026-10-12', '--previous', str(prev2), '--keep', 'mon', '--piece', f'wed={WED_ID}', '--piece', f'fri={FRI_ID}']
         lost = refused(base2)
         kept_draft = refused(base2 + ['--keep', 'fri'])
+        carried, carried_manifest = build(parser().parse_args(base2 + ['--live', '--keep-draft', 'fri']), get=live)
+        wrong_piece = refused(['--week', '2026-10-12', '--previous', str(prev2), '--keep-draft', 'fri',
+                               '--piece', f'fri={WED_ID}'])
         again, again_manifest = build(parser().parse_args(base2 + ['--draft', 'fri', *review]))
         box_dropped = refused(base2 + ['--draft', 'fri', '--review', f'fri=Article|{words}'])
         box_let_go, _ = build(parser().parse_args(base2 + ['--draft', 'fri', '--review', f'fri=Article|{words}', '--drop-review', 'fri=deep-cut']))
@@ -3749,6 +3791,10 @@ def _draft_checks(check, page, fri):
     check('a day in draft is draft in the manifest and the page, with its calls, and passes verify',
           [d['state'] for d in manifest['days']] == ['made', 'picked', 'draft'] and manifest['days'][2]['waiting'] == ['Approve the outline', 'Pick the title']
           and board_days(drafted)['days']['fri']['state'] == 'draft' and verify(drafted) == [])
+    check('--keep-draft carries an unrelated live draft byte-for-byte, including review boxes and calls',
+          friday(carried) == tab and carried_manifest['days'][2]['state'] == 'draft'
+          and carried_manifest['days'][2]['waiting'] == ['Approve the outline', 'Pick the title']
+          and verify(carried) == [] and 'piece id changed' in wrong_piece)
     check('--live: a piece in review whose publish page is older than its words is refused, naming --draft; a posted one keeps its page',
           'older than its words' in stale and '--draft fri' in stale and 'Monday' not in stale)
     check('a posted day says so in its status line, from the record: "nothing has been posted" never outlives the post',
@@ -3800,6 +3846,8 @@ def parser():
                     'a day it held is never lost')
     ap.add_argument('--keep', action='append', metavar='DAY', help='with --previous (its page): carry a made day over exactly as the board holds it, '
                     'when its publish page cannot be read any more')
+    ap.add_argument('--keep-draft', action='append', metavar='DAY', help='with --previous (its page): retain an unrelated draft day exactly as shown, '
+                    'including its editable review boxes, while another day advances')
     ap.add_argument('--brief', action='append', metavar='DAY=JSON', help='the day\'s record-ready brief (boards from the fixed layout on): '
                     '{idea, flow: [3 to 6 beats], ending, takeaway, angle, tone, reader?, agreed?, agreed_at?}; kept on rebuild')
     ap.add_argument('--materials', action='append', metavar='DAY=JSON', help='finished downloads and channel copy, with an explicit readiness note; never changes the day state; preserved on rebuild')

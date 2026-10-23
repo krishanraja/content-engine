@@ -54,7 +54,8 @@ def main():
         sys.path.insert(0,str(ROOT/'scripts/quick-edit'))
         import quality
         for cut,shape in [('long','16x9'),('short','9x16')]:
-            video=work/f'render-{cut}-stable'/f'muse-vs-grok-{cut}-{shape}.mp4'
+            folder=f'render-{cut}-{"narrative" if a.narrative else "stable"}'
+            video=work/folder/f'muse-vs-grok-{cut}-{shape}.mp4'
             problems=quality.delivery_problems(video,Path(str(video)+'.validation.json'))
             if problems:raise ValueError(cut+' delivery blocked: '+'; '.join(problems))
     state=web.call('GET',f'/api/board/{WEEK}')
@@ -137,7 +138,7 @@ def main():
                       file('wed-captions-'+cut,base.with_suffix('.srt'),cut.capitalize()+' captions')]
         video_note=('Both camera tracks are stabilised. Motion, framing and sync evidence accompanies the exports; final continuous playback acceptance is still open.' if a.stable else 'Review exports. The stabilised replacements are being finished; continuous playback acceptance remains open.')
         if a.ready_page:video_note='Both stabilised exports pass the technical checks and Krish’s full playback review. Captions and thumbnails accompany them.'
-        if a.narrative:video_note='One evolving verdict combines the tests and community evidence. Original launch demonstrations and redacted interactions are included; the short uses Krish’s supplied stabilised recording. Fresh playback acceptance remains open.'
+        if a.narrative and not a.ready_page:video_note='One evolving verdict combines the tests and community evidence. Original launch demonstrations and redacted interactions are included; the short uses Krish’s supplied stabilised recording. Fresh playback acceptance remains open.'
         sections.append({'id':'videos','title':'Watch both videos','files':files,'note':video_note})
     sections.append({'id':'evidence','title':'Visuals and checks','files':[
         file('wed-graphics-overview',work/'cards-stable/sheet.png','All evidence graphics'),
@@ -194,6 +195,9 @@ def main():
     args=['--week',WEEK,'--previous',str(previous),'--keep','mon','--target','web','--live',
           '--piece',f'wed={PIECE}','--materials',f'wed={out/"materials.json"}',
           '--ideas',str(week/'ideas.json'),'--queue',str(out/'queue.json')]
+    friday=panel(old,'friday').split('>',1)[0]
+    if 'data-state="draft"' in friday:args += ['--keep-draft','fri']
+    elif 'data-state="made"' in friday:args += ['--keep','fri']
     if a.ready_page:args += ['--day',f'wed={a.ready_page.resolve()}']
     else:args += ['--draft','wed','--waiting','wed=Article fact gate clear. Review the finished video replacements for final playback acceptance; article and channel copy remain editable.']
     if 'id="wed-four-draft-only-tests"' in old:

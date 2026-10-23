@@ -810,30 +810,33 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
-- 2026-10-23: **Wednesday's private publish board carries the corrected videos and approved Grok Bot/Muse headshot artwork.** Build
-  `b7be2fe28348ceadc78c0c732c41b8ee6b5b6f59189eed21ce67ac1850f367c4`:
-  live HTML and all 13 changed downloads hash-match the local inputs, all earlier assets
-  remain available, and Ideas/Monday/Friday panels are byte-identical. Edits, ticks,
-  links and picks were preserved. All 37 earlier comments and 11 queue entries
-  remained byte-identical, with one new entry in each collection. The board remains editable
-  and commentable. No public post.
-  - The long score/card alignment, short 3–4-second transition and additive scam card
-    are repaired. Both audio payloads exactly match the previously accepted cuts; fresh
-    six-window SyncNet reports pass within 40 ms. The short uses Krish's supplied
-    auto-stabilised source. Frame sampling and full-resolution checks are recorded in
-    `docs/plans/2026-10-21-wednesday/narrative-recut-review.md`; these do not replace
-    continuous phone playback. The native delivery guard still holds heard, full review
-    and final motion acceptance open, with the recognizer differences preserved.
-  - Krish approved the revised headshot treatment. Five cover sizes and two thumbnails,
-    with real Grok Bot and Muse marks, are staged in the post library pack and on the
-    board. The old boxing art is labelled archive. The article's fact gate remains
-    clear by the recorded exact-body adjudication; no further paid run occurred.
-  - Code, receipts and the library handoff are in this branch's 23 October release.
-    The pack and the seven held review-media files are sent through
-    `scripts/post-pack/send.py` into the post's library folder; the always-on machine's
-    final write/readback remains to verify. Next: Krish plays both exact new cuts on
-    his phone, then the native delivery gate can be closed on evidence. Public posting
-    requires its own authorisation.
+- 2026-10-23: **Wednesday is ready on the private publish board.** Build
+  `b0505d9e4a819a97b62f63d1970476a0cf5f3ff635f978d80cab42b958dba966`:
+  the native publish page and all seven approved cover/thumbnail formats accompany
+  both corrected cuts. Live HTML and both changed asset downloads hash-match; the
+  Ideas, Monday and Friday panels are byte-identical. Earlier assets remain available;
+  all 37 earlier comments and 11 queue entries were preserved byte-for-byte, with
+  one new entry each. The board stays editable and commentable. No public post.
+  - Krish played both exact exports through on his phone and replied “Both approved”
+    to the short join, long text, motion, sound and spoken words. The native delivery
+    guard passes both receipts; each keeps the raw independent recognizer failures
+    under its human-adjudicated heard check. Six-point sync, source stabilisation,
+    loudness and sampled visual evidence remain bound to the exact video hashes.
+  - The article's exact-body fact gate remains clear after the $0.59 check and
+    27 named source-bound sign-offs. No further paid run occurred. The private library
+    has 40 review-pack files plus seven final delivery files; actual downloads and
+    ready states matched every hash, including both final videos and publish-manager.
+  - The Friday draft was carried through the normal board builder unchanged as
+    Wednesday advanced. The old boxing art stays labelled archive. Source, rendering
+    and approval records are in `docs/plans/2026-10-21-wednesday/`; the media are in
+    the post library. The native making record now marks fact check, visual gate,
+    scripts, pack, recording and both video assets done; only posting remains.
+    The cloud library downloads are verified, but the separate Google Drive sync
+    has not yet exposed final video and thumbnail file IDs. The current live board
+    has working authenticated downloads; a future board rebuild's `Download first`
+    card still needs the observed Drive links under the existing rule.
+    Next: merge the production code after CI. Public posting waits
+    for Krish's explicit instruction.
 
 - Older handoffs (12 to 20 October): `docs/history/2026-10-18-WORKBENCH-handoffs.md`. This section holds only the
   newest one: when you write a new handoff, move the one it replaces to the top of that file (G11, `scripts/check_workbench.py`).
