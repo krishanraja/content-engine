@@ -18,6 +18,14 @@ titles, cover, channel copy) is judged against these words first (learning `stor
 > two big bottlenecks: 1. Getting the script right: it being simple enough, sounding like me, and
 > deliverable. 2. Post-production visuals, which we could deal with later."
 
+## His pick of the story, in the session, 22 October 2026
+
+> "A opening on B's hook (I like "You may already be using a Chinese AI." hook), I'll run the test
+> tonight"
+
+A: every AI has two passports (where it was built shapes what it says; where it runs decides who sees
+your data). B: you may already be using a Chinese AI.
+
 ## What came before (kept for the record)
 
 - His cold idea in the Inspo folder, 9 October: "unpacking models by country".
