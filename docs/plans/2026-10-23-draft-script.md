@@ -4,7 +4,7 @@ I've been having a proper look at where the AIs we all use actually come from. A
 
 Start with Airbnb. Last year its boss said the AI answering its customers relies a lot on Qwen. That's a Chinese AI, made by Alibaba. He called it fast and cheap. Which, to be fair, is also what most of us want from a holiday fling.
 
-Then there's Cursor, a tool lots of software teams use to write code. It built its newest AI on top of a Chinese one called Kimi. It didn't mention that at first. Then people spotted it, and Cursor admitted it.
+Then there's Cursor, a coding tool lots of software teams use. It built its newest AI on top of a Chinese one called Kimi. It didn't mention that at first. Then people spotted it, and Cursor admitted it.
 
 And Lindy, an American startup, moved all its AI work onto DeepSeek, another Chinese AI. Its biggest bill used to be Anthropic, the American company behind Claude. Its boss said DeepSeek was just ten times cheaper.
 
@@ -28,7 +28,7 @@ But you can bring an AI home. HSBC, the British bank, signed a deal to run Franc
 
 So what about running a Chinese AI on your own computers? It depends which one. America's government tried it with DeepSeek. The Chinese government's talking points were still there, built in. You can take DeepSeek out of China. But you can't take China out of DeepSeek.
 
-So last night I tried it myself. Same three work questions, word for word, to Claude and to DeepSeek.
+So I tried it myself. The newspaper asked about the news. I wanted to know if it matters for work. Same three questions, to Claude and to DeepSeek.
 
 Question one, a boring one. Write a polite email chasing an unpaid invoice.
 

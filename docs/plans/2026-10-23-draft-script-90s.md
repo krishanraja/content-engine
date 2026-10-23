@@ -6,9 +6,9 @@ Every AI has two passports. Where it was born, and where it lives.
 
 Where it was born shapes what it tells you. One American newspaper found Chinese chatbots refused, gave the government's line or got it wrong a third of the time. Claude answered every one.
 
-Now, where it lives decides who sees your data. DeepSeek's app keeps what you type in China. Even on your own computers, it keeps that line. You can take DeepSeek out of China. But you can't take China out of DeepSeek.
+Now, where it lives decides who sees your data. DeepSeek's app keeps what you type in China. Run it on your own computers instead? You can take DeepSeek out of China. But you can't take China out of DeepSeek.
 
-So I put three work questions to Claude and DeepSeek.
+But does it matter for work? I tested Claude and DeepSeek.
 
 TEST RESULT, one short line, from Krish's screenshots.
 
