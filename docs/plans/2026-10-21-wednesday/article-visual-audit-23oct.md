@@ -84,7 +84,8 @@ exact product marks sit beside their labels, and publication identity stays
 present in a small rail. Its PNG, HTML, JSON and article-width QA preview are
 in the same `article-visual-review/` folder. The PNG was sent to the private
 post library under `2 Covers and images/Working - review/`, explicitly labelled
-as held; the library writer's completed download has not yet been read back.
+as held; the actual private library download byte-matched the 130,054-byte
+local PNG (SHA-256 `1554b609caf50069d5571f0a6fb3a2f3ad57529598ea0660440b58dfc6a68bdb`).
 This revision has not been added to the board or approved for the other figures.
 
 After that, replace all five figures from checked sources; add the canonical

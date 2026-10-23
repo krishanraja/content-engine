@@ -797,8 +797,8 @@ bring takes back, was retired on 12 October.
   `docs/plans/2026-10-21-wednesday/article-visual-audit-23oct.md`. The second
   local sample is `C:\Users\krish\.scratch\wednesday-production-2026-10-21\article-visual-review\inbox-concept-v2.png`, with an article-width QA preview
   beside it. The same PNG was sent to the private post library under
-  `2 Covers and images/Working - review/`; the writer's completed download has
-  not yet been read back. It connects an explicitly reconstructed incoming inquiry to
+  `2 Covers and images/Working - review/`; the actual library download matched
+  all 130,054 source bytes. It connects an explicitly reconstructed incoming inquiry to
   Grok Bot's warning and an actual redacted Muse draft; product marks and
   publication identity are present, and no author name appears. This is one
   held material surface for review, not a live board replacement. Next:
