@@ -4,6 +4,67 @@
 > no longer reads 181 KB of old handoffs before it starts (`docs/COST_GUARDS.md`, G11). Nothing here is current;
 > live state is in `WORKBENCH.md`. Newest first, exactly as written.
 
+## 23 October: Wednesday article visual hold (Codex)
+
+- 2026-10-23: **Wednesday's board is held for article visuals and publication branding.** Build
+  `63f59c81affebfd815726202f118ab2b3d214081f33adcf7d9384422dcceac27`:
+  the native publish page and all seven approved headshot cover/thumbnail formats accompany
+  both corrected cuts. The seven delivery images have embedded previews in
+  Publishing files and copy, beside the exact full-resolution downloads. Browser
+  readback decoded all seven and the five illustrated-article graphics. The
+  board builder's own check and its 218 self-tests pass. Live HTML and changed
+  asset downloads hash-match; Ideas, Monday and Friday remain byte-identical.
+  Earlier assets remain available;
+  all 37 earlier comments and 11 queue entries were preserved byte-for-byte, with
+  one new entry each. The board stays editable and commentable. These mechanical
+  checks do not establish visual quality. No public post.
+  - Krish rejected the five in-article images as below the previous boards' bar,
+    and identified the missing makeyourmindup identity on the delivery graphics.
+    Comparison against the 12 and 19 October live boards confirmed that four
+    Wednesday figures are largely text comparisons and the fifth is a simple
+    itinerary line. None displays a source screenshot or interaction. Earlier
+    examples include a dated 12-source collage, a sourced model-launch timeline,
+    and a price figure with exact units. The Wednesday image plan declared the
+    reconstructions as evidence; the pack gate checked presence and declarations
+    without testing whether each figure explained the critical point. The
+    earlier privacy preference was not reconciled with Krish's later request for
+    blurred real bot interactions. The current board is not publish-ready.
+  - The canonical publication wordmark is now embedded in seven locally rendered
+    delivery formats at `C:\Users\krish\.scratch\wednesday-production-2026-10-21\head-to-head-final`;
+    their alignment and legibility checks pass, but the live board/library still
+    serve the earlier unbranded files. A held, source-led inbox figure is rendered
+    at `C:\Users\krish\.scratch\wednesday-production-2026-10-21\article-visual-review\inbox-concept.png`.
+    It uses the redacted Muse interaction, a separately attributed community
+    capture and the publication wordmark. It is for Krish's reaction, not a
+    replacement on the live board. Next: resolve that visual direction, replace
+    the five article figures, then send/read back the revised files on the board
+    and in the library. Do not publish directly.
+  - Krish played both exact exports through on his phone and replied “Both approved”
+    to the short join, long text, motion, sound and spoken words. The native delivery
+    guard passes both receipts; each keeps the raw independent recognizer failures
+    under its human-adjudicated heard check. Six-point sync, source stabilisation,
+    loudness and sampled visual evidence remain bound to the exact video hashes.
+  - The article's exact-body fact gate remains clear after the $0.59 check and
+    27 named source-bound sign-offs. No further paid run occurred. The private library
+    has 40 review-pack files plus seven final delivery files; actual downloads and
+    ready states matched every hash, including both final videos and publish-manager.
+  - The Friday draft was carried through the normal board builder unchanged as
+    Wednesday advanced. The old boxing art stays labelled archive. Source, rendering
+    and approval records are in `docs/plans/2026-10-21-wednesday/`; the media are in
+    the post library. The native making record now marks fact check, visual gate,
+    scripts, pack, recording and both video assets done; the article-visual
+    quality hold supersedes its earlier visual-gate completion signal.
+    The library sync was failing because its mounted parent is `Active Ventures`,
+    while the runner config said `Active`. After correcting the runtime path, its
+    own hash-checking pass wrote 66 files with zero failures. The two final videos
+    and two thumbnails were identified by exact name, size and folder in Drive;
+    their real file IDs are recorded in the making record. The board's `Download
+    first` card now resolves them through the same immutable, verified board assets.
+    The live HTML, one changed review download, all prior assets and the other day
+    panels passed independent readback. PR #139 is merged, and the corrected
+    route is recorded in the runtime config and Drive guide. Krish directed
+    agents to prepare the board only; he will publish from it. No direct posting.
+
 ## 23 October: Wednesday corrected cuts in private review (Codex)
 
 - 2026-10-23: **Wednesday's private publish board carries the corrected videos and approved Grok Bot/Muse headshot artwork.** Build
