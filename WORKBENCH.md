@@ -25,6 +25,7 @@
   gates were not bypassed. So the record holds no Teleprompter ids and the recordings lane will not stamp these takes:
   line each take up with `narration_diff.py` against its own take's words. The engine now checks two-take scripts
   (`story_check.takes`) for the next piece.
+- **Handover:** `docs/handovers/2026-10-23-friday-production.md` (start the next session from it).
 - **Next:** read his comments on the Friday tab (`board_web.py read`), change the words he asks for, re-run
   `story_check.py` and fresh readers, then `making.py <piece> scripts long.md short.md` (outline and spine judge
   first, `docs/plans/2026-10-23-outline.md`), `read-back` (his words if he signs off), and `teleprompter_send.py
