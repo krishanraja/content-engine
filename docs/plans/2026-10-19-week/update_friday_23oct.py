@@ -22,7 +22,7 @@ def save(p,d): p.write_text(json.dumps(d,indent=2)+'\n',encoding='utf8')
 def snapshot():
     state=web.call('GET',f'/api/board/{WEEK}'); save(CACHE/'before.json',state)
     key=web.os.environ.get('ENGINE_OPERATOR_TOKEN') or web.engine.windows_key()[0]
-    req=urllib.request.Request(f'https://content.krishraja.com/board/{WEEK}',headers={'Authorization':'Bearer '+key})
+    req=urllib.request.Request(web.os.environ.get('BOARD_BASE_URL','https://content.krishraja.com').rstrip('/')+f'/board/{WEEK}',headers={'Authorization':'Bearer '+key})
     with urllib.request.urlopen(req,timeout=120) as r: data=r.read()
     assert web.sha(data)==state['manifest']['html']['sha256']
     (CACHE/'before.html').write_bytes(data)
