@@ -6,7 +6,11 @@ The North Star contribution is a complete essay, short video and long video from
 
 Krish approved the title and heading set after recording; see `packaging-approval.json`. PR #120 was confirmed merged at `620cdb3c5fc804ad24f4ba8fcf0307cadc89ef04` before this branch was created from main.
 
-## Current review
+## Current board, 23 October
+
+Krish approved both exact video exports after watching them through on his phone. He approved the product-branded headshot treatment across seven sizes, then asked for publication branding and source-led article figures. The completed five-figure set is in the illustrated article and visible as previewable assets on the private Wednesday board. Live HTML and all 15 changed downloads passed hash readback; the other three panels and both weeks' feedback stores stayed unchanged. The board is ready for Krish's final use; no public channel was posted by the agent. The history below describes earlier held revisions, not current blockers.
+
+## Historical review
 
 22 October finishing pass: the revised article has 422 personal-test evidence words and 423 corpus evidence words. The final authorised check cost $0.59. Krish approved all 27 named flagged sentences against their evidence; four native manual reviews and 23 sign-offs clear the fact gate while retaining the raw model verdicts. The exact-body retrospective exception merged in PR #134 after all 15 checks passed (main `6bfad15`). No further paid run is authorised.
 

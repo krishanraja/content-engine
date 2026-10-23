@@ -78,24 +78,27 @@ def main():
         mappings.append({'id':aid,'source_url':source,'existing_sha256':spec['sha256']})
     # Drive folder 15ar-xjif1E3mknAsvfklk8nfsA5GWhHy: names, sizes and parent
     # for these four IDs were read back after the repaired 23 October sync.
+    thumbnail_drive=({'wed-approved-thumb-wide':'1B7OQMrzpZlfaWRbr2s8kSV9mzKsGXk-V',
+                      'wed-approved-thumb-tall':'1dQkms_ZC8JCQzqBsChbBxsqECtx6YG_V'}
+                     if a.ready_page and a.approved_headshot else {})
     finished=({'wed-video-long':'1wT9LYZHHl9hWyZyQwknWJv-9erXR8rEQ',
-               'wed-approved-thumb-wide':'1B7OQMrzpZlfaWRbr2s8kSV9mzKsGXk-V',
-               'wed-video-short':'1lZWiskRgfm8SdRBEDV5S-iTMiAw7pSsT',
-               'wed-approved-thumb-tall':'1dQkms_ZC8JCQzqBsChbBxsqECtx6YG_V'} if a.ready_page else {})
+               'wed-video-short':'1lZWiskRgfm8SdRBEDV5S-iTMiAw7pSsT'} if a.ready_page else {})
 
     def file(aid,path,label):
         path=Path(path)
         if not path.is_file():
             raise FileNotFoundError(path)
         preview=None
-        if aid.startswith('wed-approved-') and path.suffix.lower() in ('.png','.jpg','.jpeg'):
+        if aid.startswith(('wed-approved-','wed-figure-')) and path.suffix.lower() in ('.png','.jpg','.jpeg'):
             with Image.open(path) as picture:
                 picture=picture.convert('RGB')
                 picture.thumbnail((420,600))
                 data=io.BytesIO()
                 picture.save(data,format='JPEG',quality=78,optimize=True)
             preview='data:image/jpeg;base64,'+base64.b64encode(data.getvalue()).decode('ascii')
-        url=f'/api/board/{WEEK}/assets/{aid}?pending=1'
+        url=(f'https://drive.usercontent.google.com/download?id={thumbnail_drive[aid]}&export=download'
+             if aid in thumbnail_drive else f'/api/board/{WEEK}/assets/{aid}?pending=1')
+        source_url=url.replace('&','&amp;') if aid in thumbnail_drive else url
         mappings[:]=[m for m in mappings if m['id']!=aid]
         existing=state['manifest']['assets'].get(aid)
         digest=web.sha(path.read_bytes())
@@ -107,9 +110,9 @@ def main():
             return {'label':label,'url':f'/api/board/{WEEK}/assets/{aid}?sha={digest}',
                     'preview':preview} if preview else {'label':label,'url':f'/api/board/{WEEK}/assets/{aid}?sha={digest}'}
         if existing and existing['sha256']==digest:
-            mappings.append({'id':aid,'source_url':url,'existing_sha256':digest})
+            mappings.append({'id':aid,'source_url':source_url,'existing_sha256':digest})
         else:
-            mappings.append({'id':aid,'source_url':url,'path':str(path)})
+            mappings.append({'id':aid,'source_url':source_url,'path':str(path)})
         return {'label':label,'url':url,'preview':preview} if preview else {'label':label,'url':url}
 
     sections=[]
@@ -118,7 +121,14 @@ def main():
         file('wed-article-copy',work/'article/substack.html','Copy article for Substack'),
         file('wed-article-md',ROOT/'docs/plans/2026-10-19-week/wednesday-article-draft.md','Article Markdown'),
         file('wed-scorecard-md',ROOT/'docs/plans/2026-10-19-week/wednesday-scorecard.md','Scorecard with sources'),
-        file('wed-scorecard-png',work/'takeaway/scorecard.png','Download the scorecard')],
+        file('wed-scorecard-png',work/'takeaway/scorecard.png','Download the scorecard'),
+        *[file('wed-figure-'+name,work/'article-cards-v2'/f'{name}.png',label)
+          for name,label in [
+              ('scam-grok','Inbox: actual redacted draft and scam reconstruction'),
+              ('flight-layover','Flight: three-night timeline and original claim'),
+              ('news-date','News: source date, test result and separate public report'),
+              ('email-duplicate','Work email: anonymised draft sequence'),
+              ('starting-point','Verdict: field tests beside supplied research')]]],
         'note':'The fact gate is clear after the source audit and Krish’s named-line adjudication. Use the editable Article draft box below for changes.'})
     covers=[('cover-1200x630.png','Substack cover'),('cover.png','Substack feed'),
             ('cover-1200x675.png','LinkedIn share card'),('cover-1080x1080.png','Square cover'),

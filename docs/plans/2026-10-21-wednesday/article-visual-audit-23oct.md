@@ -68,6 +68,26 @@ results. The resulting PNG and HTML are in the local production folder's
 `article-visual-review/`; neither has replaced a live article asset. Krish's
 first reaction to this material visual direction is the next taste decision.
 
+Krish rated that first concept 5/10. His exact correction: "It's not very
+visual. We could have the GrokBot Muse icons next to where it says GrokBot
+Muse. You're not ever supposed to say my name, Krish. It doesn't really feel
+like an enterprise visual that adds to the article. It feels like a standalone
+article of its own." This is a design-system and copy failure: the poster
+headline and broad prose panels overwhelmed the evidence, while the product
+marks and article-specific visual job were absent. The author name must never
+appear in outward asset copy.
+
+`render_article_evidence_sample_v2.py` holds a revision of this *one* inbox
+surface. It traces a clearly labelled anonymised reconstruction of the vague
+incoming question to Grok Bot's warning and Muse's actual redacted draft. The
+exact product marks sit beside their labels, and publication identity stays
+present in a small rail. Its PNG, HTML, JSON and article-width QA preview are
+in the same `article-visual-review/` folder. The PNG was sent to the private
+post library under `2 Covers and images/Working - review/`, explicitly labelled
+as held; the actual private library download byte-matched the 130,054-byte
+local PNG (SHA-256 `1554b609caf50069d5571f0a6fb3a2f3ad57529598ea0660440b58dfc6a68bdb`).
+This revision has not been added to the board or approved for the other figures.
+
 After that, replace all five figures from checked sources; add the canonical
 publication mark; inspect final files at article and phone widths; verify
 privacy, wording and provenance; send the images and corrected seven-format

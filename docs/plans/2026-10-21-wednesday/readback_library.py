@@ -37,7 +37,7 @@ def main():
         print('Verified library',path,count,flush=True)
         return {'path':path,'sha256':digest,'bytes':size,'status':'pass'}
     with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:rows=list(pool.map(verify,items))
-    report={'release_status':'review','verified_files':rows,'scope':'Actual newest library downloads, not an assertion that the Drive runner has written them'}
+    report={'release_status':'ready','verified_files':rows,'scope':'Actual newest library downloads, not an assertion that the Drive runner has written them'}
     (w/'library-readback.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
     print('Library readback complete',len(rows),flush=True)
 

@@ -1,5 +1,6 @@
 """Prepare native publish-manager inputs; readiness is checked again at activation."""
 import argparse
+import hashlib
 import json
 import re
 import sys
@@ -38,7 +39,20 @@ def main():
             'vertical_cover':'wed-approved-cover-1080x1920','square':'wed-approved-cover-1080x1080',
             'share_card':'wed-approved-cover-1200x675','cover':'wed-approved-cover-1200x630'})
     state=web.call('GET','/api/board/2026-10-19');facts=web.call('GET',f'/api/content-ideas/{piece}/fact-check')
-    links={files[role]:f'https://content.krishraja.com/api/board/2026-10-19/assets/{aid}?sha={state["manifest"]["assets"][aid]["sha256"]}'for role,aid in roles.items() if role in files}
+    local={
+        'substack_copy':w/'article/substack.html',
+        'cover':w/'head-to-head-final/cover-1200x630.png',
+        'share_card':w/'head-to-head-final/cover-1200x675.png',
+        'square':w/'head-to-head-final/cover-1080x1080.png',
+        'vertical_cover':w/'head-to-head-final/cover-1080x1920.png',
+        'wide_thumbnail':w/'head-to-head-final/thumb-wide-1280x720.jpg',
+    } if args.approved_headshot else {'substack_copy':w/'article/substack.html'}
+    links={}
+    for role,aid in roles.items():
+        if role not in files:continue
+        digest=(hashlib.sha256(local[role].read_bytes()).hexdigest() if role in local
+                else state['manifest']['assets'][aid]['sha256'])
+        links[files[role]]=f'https://content.krishraja.com/api/board/2026-10-19/assets/{aid}?sha={digest}'
     words={'title':title,'subtitle':copy['Article subtitle'],'date':'2026-10-21','long_name':'5-minute video',
         'youtube_title':title,'youtube_description':copy['YouTube description'],'short_title':title,
         'short_caption':copy['Short video caption'],'tiktok_caption':copy['Instagram and TikTok'],

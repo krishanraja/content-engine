@@ -34,11 +34,15 @@ def main():
         item(PLAN/f'recorded-{cut}-script.md',kind='video-script',name=f'recorded-{cut}-script.md')
         thumb='thumb-wide-1280x720.jpg' if cut=='long' else 'thumb-tall-1080x1920.jpg'
         item(thumbs/thumb,kind='thumbnail',shape=shape,logos=['Grok Bot','Meta'])
-    for name in ['scam-grok','flight-layover','news-date','email-duplicate','starting-point']:
-        item(w/'article-cards'/f'{name}.png',kind='image',logos=['Grok Bot','Meta'],
-             shows='logos' if name=='starting-point' else 'reconstruction',
-             data_source='docs/plans/2026-10-19-week/test-results/README.md',
-             scope='Anonymised reconstruction of observed output. No screenshot, exhaustive audit or reliability rate is claimed.')
+    figure_scopes={
+        'scam-grok':'Scam prompt reconstructed from the test readout; Muse reply is an actual redacted draft crop. Nothing sent.',
+        'flight-layover':'Historical fare and three-night timeline from the test; Muse claim is an actual cropped interaction.',
+        'news-date':'Source date and test result with a separate public user report, each labeled on the figure.',
+        'email-duplicate':'Anonymised reconstruction of the draft sequence, checked against Gmail readback. Nothing sent.',
+        'starting-point':'Separate one-run field and supplied-research columns; no average or success rate.'}
+    for name,scope in figure_scopes.items():
+        item(w/'article-cards-v2'/f'{name}.png',kind='image',logos=['Grok Bot','Meta'],
+             data_source='docs/plans/2026-10-19-week/test-results/README.md',scope=scope)
     item(w/'takeaway/scorecard.png',kind='share-card',logos=['Grok Bot','Meta'],shows='evidence')
     item(ROOT/'docs/plans/2026-10-19-week/wednesday-article-draft.md',category='article',name='article-review.md',
          purpose='Source-audited article. Native fact gate cleared after the final check and Krish’s 27 named-line adjudications; raw model findings remain preserved.')
@@ -48,7 +52,7 @@ def main():
     for name in ['release-review.md','narrative-recut-review.md','claim-review.md','claim-resolution-22-oct.md','final-fact-adjudication.md','finish-approval-22-oct.json','stabilisation-review.md','visual-revision.md','packaging-approval.json','chapters.txt','chapters.json']:
         item(PLAN/name,category='publish',purpose='Review status, evidence and the exact recorded approval. Read before posting.')
     suffix='stable' if a.stable else 'revised'
-    folders=[f'cards-{suffix}','article-cards','story-revised',f'kit-short-{suffix}',f'kit-long-{suffix}',f'review-short-{suffix}',f'review-long-{suffix}']
+    folders=[f'cards-{suffix}','article-cards','article-cards-v2','story-revised',f'kit-short-{suffix}',f'kit-long-{suffix}',f'review-short-{suffix}',f'review-long-{suffix}']
     archive=w/'production-working.zip'
     with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED) as z:
         if a.approved_headshot:
@@ -58,6 +62,8 @@ def main():
         for folder in folders:
             for p in (w/folder).rglob('*'):
                 if p.is_file() and (not p.name.startswith('frame-') or p.suffix=='.json'):
+                    if folder=='article-cards-v2' and p.suffix.lower() not in {'.png','.json'}:
+                        continue
                     z.write(p,p.relative_to(w).as_posix())
         for name in ['short.words.json','long.words.json','long-removals.json','fact-result.json',
                      'fact-after.json','voice-check.json','ai-scan.log','primary-source-filings.json',
@@ -100,6 +106,8 @@ def main():
     # `name` field cannot create a Working directory. Use the native sender's
     # explicit --as lane for held media instead of flattening a slash.
     held=[archive]
+    acceptance=w/'review-media/playback-acceptance-23oct.json'
+    if acceptance.is_file():held.append(acceptance)
     if a.videos:
         for cut,shape,folder in [('short','9x16','render-short-revised'),('long','16x9','render-long-revised')]:
             if a.stable:folder=f'render-{cut}-stable'
@@ -116,16 +124,17 @@ def main():
             'Krish, 2026-10-22: "It should just be their headshots versus each other, so a bit more professional." '
             'Krish, 2026-10-23: "Better, but we probably dont need their names, and we need to associate the actual branding of Grok and Muse better." '
             'Approval of the seven-format treatment: "Yes, use this treatment".')
-    post['release_status']='review';post['readiness_note']='Fact gate clear after Krish’s adjudication. Final video playback acceptance remains open. Nothing has been publicly posted.'
+    post['release_status']='ready';post['readiness_note']='Article fact gate and exact video playback review cleared. Private board package only; nothing has been publicly posted.'
     p=w/'review-post.json';p.write_text(json.dumps(post,indent=2,ensure_ascii=False),encoding='utf-8')
     result=build.build(p,out=w/'packs',replace=True)
     review=w/'review-media';review.mkdir(exist_ok=True)
     expected={p.name for p in held}
     if any(p.name not in expected for p in review.iterdir()):
         raise ValueError('Unexpected file in review media folder; preserve and inspect it before sending')
-    for p in held:shutil.copy2(p,review/p.name)
+    for p in held:
+        if p.resolve()!=(review/p.name).resolve():shutil.copy2(p,review/p.name)
     library_plan={'folder':str(review),'prefix':f'3 Posts/{result["folder"]}/3 Video/Working - review',
-                  'purpose':'Review exports, captions and exact check receipts. Failed checks and continuous playback acceptance remain open.',
+                  'purpose':'Accepted exact video exports, captions, validation receipts and signed playback readback retained with the working archive.',
                   'files':[p.name for p in held]}
     (w/'review-library-plan.json').write_text(json.dumps(library_plan,indent=2),encoding='utf-8')
     (w/'pack-result.json').write_text(json.dumps(result,indent=2,default=str),encoding='utf-8')
