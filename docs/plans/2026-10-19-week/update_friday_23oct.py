@@ -7,7 +7,7 @@ Ideas, every asset and every saved edit or comment.
 Then publish with board_web.py publish-web (dry run first, --apply after Krish's yes:
 "Keep all three, put them on the board", 23 October).
 """
-import html, json, re, sys, urllib.request
+import html, json, re, subprocess, sys, urllib.request
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[3]
 sys.path.insert(0,str(ROOT/'scripts/post-pack'))
@@ -35,6 +35,11 @@ def wed_reviews_from_board(old):
         rid,label,text=m.group(1),html.unescape(m.group(2)),html.unescape(m.group(3))
         path=out/(rid+'.md'); path.write_text(text,encoding='utf-8'); items.append((label,path))
     return items
+def board_day_made(page,key):
+    """True when the board being replaced holds that day as made (its publish page), so --keep carries it."""
+    days=json.loads(subprocess.run([sys.executable,str(ROOT/'scripts/post-pack/week_board.py'),'--show',str(CACHE/'before.html'),'--json'],
+                                   capture_output=True,text=True,check=True).stdout)
+    return (days.get('days') or {}).get(key,{}).get('state')=='made'
 def panel(page,name):
     hit=re.search(r'<div\b[^>]*\bid="panel-'+name+r'"',page)
     if not hit: raise ValueError('Panel missing: '+name)
@@ -43,16 +48,20 @@ def build():
     state=json.loads((CACHE/'before.json').read_text(encoding='utf8'))
     old=(CACHE/'before.html').read_text(encoding='utf-8')
     get=board.live_reader(); save(CACHE/'queue.json',get('/api/idea-queue'))
-    wed_reviews=wed_reviews_from_board(old)
+    wed_reviews=[] if board_day_made(old,'wed') else wed_reviews_from_board(old)
     fri_reviews=[('Narrative (signed)',PLAN/'narrative-fri.md'),
                  ('Evidence read at source',ROOT/'docs/plans/2026-10-23-friday/research-gaps.md'),
                  ('Five-minute script',ROOT/'docs/plans/2026-10-23-draft-script.md'),
                  ('Short script',ROOT/'docs/plans/2026-10-23-draft-script-90s.md')]
-    args=['--week',WEEK,'--previous',str(CACHE/'before.html'),'--keep','mon','--target','web','--live',
-          '--piece',f'wed={WED}','--piece',f'fri={FRI}','--draft','wed','--draft','fri']
+    if wed_reviews:  # Wednesday still in draft: rebuild its boxes word for word
+        args=['--week',WEEK,'--previous',str(CACHE/'before.html'),'--keep','mon','--target','web','--live',
+              '--piece',f'wed={WED}','--piece',f'fri={FRI}','--draft','wed','--draft','fri']
+    else:  # Wednesday made (22 Oct on): carried over exactly as the board holds it
+        args=['--week',WEEK,'--previous',str(CACHE/'before.html'),'--keep','mon','--keep','wed','--target','web','--live',
+              '--piece',f'fri={FRI}','--draft','fri']
     for label,path in wed_reviews: args+=['--review',f'wed={label}|{path}']
     for label,path in fri_reviews: args+=['--review',f'fri={label}|{path}']
-    args+=['--waiting','fri=Run the three work questions on Claude and DeepSeek and send the answers; the gaps in both scripts are filled from them, then both go to Teleprompter.',
+    args+=['--waiting','fri=Send the Claude, ChatGPT and DeepSeek answers from the Cowork test (answers.md and the screenshots); the gaps in both scripts are filled from them, then both go to Teleprompter before you record this afternoon.',
            '--ideas',str(PLAN/'ideas.json'),'--queue',str(CACHE/'queue.json')]
     page,meta=board.build(board.parser().parse_args(args))
     mappings=[]
