@@ -1201,6 +1201,15 @@
    "means": "The script gets the effort first: the story is settled with him before a word of script is written, and each script is simple enough, sounds like him and is easy to say on camera before it reaches him; post-production visuals can come after he records.",
    "status": "open",
    "encoded": []
+  },
+  {
+   "id": "one-question-at-a-time",
+   "on": "2026-10-23",
+   "krish": "ask me everything one by one again",
+   "why": "The session put nine questions to him in one message; he answered the two that mattered most and the rest were assumed for him.",
+   "means": "Questions to him go one at a time, the one that changes the work most first, each with the session's best guess, and the next only after he answers.",
+   "status": "open",
+   "encoded": []
   }
  ]
 }
