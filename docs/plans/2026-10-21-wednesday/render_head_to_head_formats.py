@@ -21,6 +21,20 @@ import card
 def sha(data):return hashlib.sha256(data).hexdigest()
 
 
+def branded_wide(base, wordmark):
+    """Keep the approved face-off and restore the publication identity."""
+    html=base.replace('<div class="title">',
+        f'<img class="house-wordmark" src="{wordmark}" alt="makeyourmindup"><div class="title">',1)
+    assert html!=base and html.count('class="house-wordmark"')==1
+    return html+'''<style>
+#card .house-wordmark{position:absolute;z-index:3;left:390px;top:11px;width:420px;height:auto}
+#card .title{top:72px}
+#card .rule{top:155px}
+#card .duo{top:166px}
+#card .versus{top:327px}
+</style>'''
+
+
 def compact_html(width,height,source,kind):
     uris={name:brand.data_uri(source/name) for name in ('elon.png','mark.png','grok-brand-capture.png','muse-brand-capture.png')}
     square=kind=='square'
@@ -31,15 +45,17 @@ def compact_html(width,height,source,kind):
     x=64 if square else 72
     card_w=456 if square else 448
     gap=40
-    title_top=70 if square else 244
+    title_top=104 if square else 244
     title_size=76 if square else 104
     footer_top=936 if square else 1450
     footer_size=48 if square else 62
+    wordmark=brand.brand_uri('wordmark')
     css=f'''{brand.font_css()}
 *{{box-sizing:border-box}}
 html,body{{margin:0;background:#0C1512}}
 #card{{width:{width}px;height:{height}px;position:relative;overflow:hidden;background:#0C1512;color:#F6F3EB}}
 .title{{position:absolute;top:{title_top}px;left:64px;width:{width-128}px;text-align:center;font:{title_size}px/1 Anton,sans-serif;letter-spacing:.012em}}
+.house-wordmark{{position:absolute;z-index:3;left:50%;transform:translateX(-50%);top:{24 if square else 125}px;width:{420 if square else 540}px;height:auto}}
 .duo{{position:absolute;left:{x}px;top:{top}px;width:{card_w*2+gap}px;display:grid;grid-template-columns:{card_w}px {card_w}px;gap:{gap}px}}
 .fighter{{position:relative;height:{panel_h}px;overflow:hidden;border:2px solid #F6F3EB55;background:#14221C}}
 .fighter.left{{border-top:7px solid #79EDBE}}.fighter.right{{border-top:7px solid #B6A2FF}}
@@ -55,6 +71,7 @@ html,body{{margin:0;background:#0C1512}}
 .footer{{position:absolute;left:{x}px;top:{footer_top}px;width:{card_w*2+gap}px;border-top:5px solid #79EDBE;padding-top:26px;text-align:center;font:{footer_size}px/1.15 Anton,sans-serif}}
 '''
     return f'''<!doctype html><meta charset="utf-8"><style>{css}</style><div id="card">
+<img class="house-wordmark" src="{wordmark}" alt="makeyourmindup">
 <div class="title">GROK BOT vs MUSE</div>
 <div class="duo">
 <div class="fighter left"><div class="portrait"><img src="{uris['elon.png']}"></div><div class="id"><span class="badge grok"><img src="{uris['grok-brand-capture.png']}"></span><span class="product">GROK BOT</span></div></div>
@@ -66,6 +83,7 @@ def main():
     ap=argparse.ArgumentParser();ap.add_argument('work',type=Path);a=ap.parse_args()
     work=a.work.resolve();source=work/'head-to-head-v2';out=work/'head-to-head-final';out.mkdir(exist_ok=True)
     base=(source/'cover-1200x630.html').read_text(encoding='utf-8')
+    base=branded_wide(base,brand.brand_uri('wordmark'))
     targets=[('cover-1200x630.png',1200,630,'wide'),('cover.png',1200,800,'wide'),
         ('cover-1200x675.png',1200,675,'wide'),('cover-1080x1080.png',1080,1080,'square'),
         ('cover-1080x1920.png',1080,1920,'tall'),('thumb-wide-1280x720.jpg',1280,720,'wide'),
@@ -84,15 +102,19 @@ def main():
             assert card.report(name,width,height,runs) and not clipped,(name,clipped)
             badges=pg.locator('.badge').evaluate_all('(els)=>els.map(e=>{let b=e.getBoundingClientRect();return {x:b.x,y:b.y,w:b.width,h:b.height}})')
             fighters=pg.locator('.fighter').evaluate_all('(els)=>els.map(e=>{let b=e.getBoundingClientRect();return {x:b.x,y:b.y,w:b.width,h:b.height}})')
+            house=pg.locator('.house-wordmark').evaluate('(e)=>{let b=e.getBoundingClientRect();return {x:b.x,y:b.y,w:b.width,h:b.height,loaded:e.complete&&e.naturalWidth>0}}')
             assert (len(badges)==len(fighters)==2
                 and abs(badges[0]['w']-badges[1]['w'])<.02
-                and abs(fighters[0]['y']-fighters[1]['y'])<.02)
+                and abs(fighters[0]['y']-fighters[1]['y'])<.02
+                and house['loaded'] and house['x']>=0 and house['y']>=0
+                and house['x']+house['w']<=width and house['y']+house['h']<=height)
             png=pg.screenshot(clip={'x':0,'y':0,'width':width,'height':height})
             if name.endswith('.jpg'):
                 im=Image.open(BytesIO(png)).convert('RGB');im.save(out/name,quality=94,subsampling=0)
             else:(out/name).write_bytes(png)
             proof[name]={'sha256':sha((out/name).read_bytes()),'dimensions':[width,height],
                 'badge_boxes':badges,'fighter_boxes':fighters,'clipped':clipped,
+                'publication_wordmark':house,
                 'minimum_phone_text_px':round(min(card.on_phone(run['px'],width) for run in runs),2)}
             pg.close()
         browser.close()

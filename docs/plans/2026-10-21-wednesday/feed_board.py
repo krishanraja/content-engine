@@ -4,11 +4,14 @@ Does not shape or patch a board. Stops if another panel or an existing asset
 would be lost. Publishing is a separate compare-and-swap command.
 """
 import argparse
+import base64
+import io
 import json
 import re
 import sys
 import urllib.request
 from pathlib import Path
+from PIL import Image
 
 PLAN=Path(__file__).resolve().parent
 ROOT=PLAN.parents[2]
@@ -84,6 +87,14 @@ def main():
         path=Path(path)
         if not path.is_file():
             raise FileNotFoundError(path)
+        preview=None
+        if aid.startswith('wed-approved-') and path.suffix.lower() in ('.png','.jpg','.jpeg'):
+            with Image.open(path) as picture:
+                picture=picture.convert('RGB')
+                picture.thumbnail((420,600))
+                data=io.BytesIO()
+                picture.save(data,format='JPEG',quality=78,optimize=True)
+            preview='data:image/jpeg;base64,'+base64.b64encode(data.getvalue()).decode('ascii')
         url=f'/api/board/{WEEK}/assets/{aid}?pending=1'
         mappings[:]=[m for m in mappings if m['id']!=aid]
         existing=state['manifest']['assets'].get(aid)
@@ -93,12 +104,13 @@ def main():
                 raise ValueError(aid+' needs the existing verified board asset before linking Drive')
             source='https://drive.usercontent.google.com/download?id='+finished[aid]+'&amp;export=download'
             mappings.append({'id':aid,'source_url':source,'existing_sha256':digest})
-            return {'label':label,'url':f'/api/board/{WEEK}/assets/{aid}?sha={digest}'}
+            return {'label':label,'url':f'/api/board/{WEEK}/assets/{aid}?sha={digest}',
+                    'preview':preview} if preview else {'label':label,'url':f'/api/board/{WEEK}/assets/{aid}?sha={digest}'}
         if existing and existing['sha256']==digest:
             mappings.append({'id':aid,'source_url':url,'existing_sha256':digest})
         else:
             mappings.append({'id':aid,'source_url':url,'path':str(path)})
-        return {'label':label,'url':url}
+        return {'label':label,'url':url,'preview':preview} if preview else {'label':label,'url':url}
 
     sections=[]
     sections.append({'id':'article','title':'Article and takeaway','files':[

@@ -1,29 +1,8 @@
 # Workbench: where we are and what's next
 
-## 21 October: the publish board, parts 2 to 4 and the 15-minute feature (Claude)
-
-- **Krish:** "just get it all done now, to full completion", then "merge it when green and keep going".
-- **Built (PR #128, branch `claude/content-publish-board-ux-4dl7ai`, merged to main when CI is green):**
-  - Part 2: `GET /api/week/options?include=sources` (`api/_weekSources.ts`) gathers his ideas, his inspo folder's and
-    the engine's, his first, then near something he liked (`why_here`); judges stay blind (`check-judges.ts`).
-    `GET /api/idea-queue?combine=1` and the Queue tab's Combine button (his tap only, `combine_is_his_tap`).
-    `scripts/post-pack/board_feed.py gather <Monday>` and `taps` feed plan-week.
-  - Part 3: the Drafts editor (tap to edit, select to comment, one Save bar); `edit_sweep.py` carries a number or
-    fact change only where its neighbouring words match, shows it under "Also changed" with Undo, and never touches a
-    recorded script. Only his saves count (`edit_is_his_save`, `tap_is_his`). The ledger takes the `publish_board`
-    surface (migration applied live on his yes and read back).
-  - Part 4: the Publish step is a run-sheet: Download first, then one card per place in posting order.
-  - The feature is a third cut (`making.py`, `teleprompter_send.py`, `recording_match.py`, `publish_kit.py`,
-    `build.py`, `_making.ts`), with YouTube long-form and Spotify cards on feature pieces only.
-- **Layout lock:** CI (`npm run check:board-layout`); every change in this PR is recorded with his words in
-  `fixtures/week-board/fixed-layout.json`. No approval prompts (Ruling, Krish, 2026-10-21).
-- **Live gather ran (21 Oct, after the deploy):** `docs/plans/2026-10-26-week/sources.json`: his 0 (none since
-  11 Oct; 1 relayed board item holds his words), inspo 36, engine 53, queue 4, no combine group. 77 of the 89 have no
-  series yet, and under.the.hood's pool is empty; plan-week now places the unassigned by mandate. No idea scored close
-  enough to one he liked for a `why_here` line (only 3 liked ideas so far).
-- **Control Center (22 Oct, his yes, "but we do not produce 15 minutes every single time"):** its mirror
-  `src/lib/making.ts` knows the feature as an optional third cut: asked for, and its two posting ticks shown, only on
-  a piece whose scripts' check holds a feature hash (`makingCuts`, `channelsFor`); the long cut reads "5-minute".
+The 21 October board and optional-feature build handoff is archived in
+`docs/history/2026-10-21-board-feature-handoff.md`; current Wednesday state is
+under “Latest handoff” below.
 
 ## 21 October, afternoon: Wednesday drafts from Krish's board edits (Claude)
 
@@ -810,13 +789,39 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
-- 2026-10-23: **Wednesday is ready on the private publish board.** Build
-  `d10e51a47a3af7574ab229ff8dae0f402ebcdde9e8b5cd103b55317a00a2df99`:
-  the native publish page and all seven approved cover/thumbnail formats accompany
-  both corrected cuts. Live HTML and both changed asset downloads hash-match; the
-  Ideas, Monday and Friday panels are byte-identical. Earlier assets remain available;
+- 2026-10-23: **Wednesday's board is held for article visuals and publication branding.** Build
+  `63f59c81affebfd815726202f118ab2b3d214081f33adcf7d9384422dcceac27`:
+  the native publish page and all seven approved headshot cover/thumbnail formats accompany
+  both corrected cuts. The seven delivery images have embedded previews in
+  Publishing files and copy, beside the exact full-resolution downloads. Browser
+  readback decoded all seven and the five illustrated-article graphics. The
+  board builder's own check and its 218 self-tests pass. Live HTML and changed
+  asset downloads hash-match; Ideas, Monday and Friday remain byte-identical.
+  Earlier assets remain available;
   all 37 earlier comments and 11 queue entries were preserved byte-for-byte, with
-  one new entry each. The board stays editable and commentable. No public post.
+  one new entry each. The board stays editable and commentable. These mechanical
+  checks do not establish visual quality. No public post.
+  - Krish rejected the five in-article images as below the previous boards' bar,
+    and identified the missing makeyourmindup identity on the delivery graphics.
+    Comparison against the 12 and 19 October live boards confirmed that four
+    Wednesday figures are largely text comparisons and the fifth is a simple
+    itinerary line. None displays a source screenshot or interaction. Earlier
+    examples include a dated 12-source collage, a sourced model-launch timeline,
+    and a price figure with exact units. The Wednesday image plan declared the
+    reconstructions as evidence; the pack gate checked presence and declarations
+    without testing whether each figure explained the critical point. The
+    earlier privacy preference was not reconciled with Krish's later request for
+    blurred real bot interactions. The current board is not publish-ready.
+  - The canonical publication wordmark is now embedded in seven locally rendered
+    delivery formats at `C:\Users\krish\.scratch\wednesday-production-2026-10-21\head-to-head-final`;
+    their alignment and legibility checks pass, but the live board/library still
+    serve the earlier unbranded files. A held, source-led inbox figure is rendered
+    at `C:\Users\krish\.scratch\wednesday-production-2026-10-21\article-visual-review\inbox-concept.png`.
+    It uses the redacted Muse interaction, a separately attributed community
+    capture and the publication wordmark. It is for Krish's reaction, not a
+    replacement on the live board. Next: resolve that visual direction, replace
+    the five article figures, then send/read back the revised files on the board
+    and in the library. Do not publish directly.
   - Krish played both exact exports through on his phone and replied “Both approved”
     to the short join, long text, motion, sound and spoken words. The native delivery
     guard passes both receipts; each keeps the raw independent recognizer failures
@@ -830,7 +835,8 @@ bring takes back, was retired on 12 October.
     Wednesday advanced. The old boxing art stays labelled archive. Source, rendering
     and approval records are in `docs/plans/2026-10-21-wednesday/`; the media are in
     the post library. The native making record now marks fact check, visual gate,
-    scripts, pack, recording and both video assets done; only posting remains.
+    scripts, pack, recording and both video assets done; the article-visual
+    quality hold supersedes its earlier visual-gate completion signal.
     The library sync was failing because its mounted parent is `Active Ventures`,
     while the runner config said `Active`. After correcting the runtime path, its
     own hash-checking pass wrote 66 files with zero failures. The two final videos
@@ -839,8 +845,8 @@ bring takes back, was retired on 12 October.
     first` card now resolves them through the same immutable, verified board assets.
     The live HTML, one changed review download, all prior assets and the other day
     panels passed independent readback. PR #139 is merged, and the corrected
-    route is recorded in the runtime config and Drive guide. Public posting waits
-    for Krish's explicit instruction.
+    route is recorded in the runtime config and Drive guide. Krish directed
+    agents to prepare the board only; he will publish from it. No direct posting.
 
 - Older handoffs (12 to 20 October): `docs/history/2026-10-18-WORKBENCH-handoffs.md`. This section holds only the
   newest one: when you write a new handoff, move the one it replaces to the top of that file (G11, `scripts/check_workbench.py`).
