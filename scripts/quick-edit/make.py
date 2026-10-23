@@ -1401,7 +1401,11 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
                 g.append(f"[{n}:v]format=rgba,{f}[pp{n}]")
                 g.append(f"[{cur}][pp{n}]overlay=0:0:enable='between(t,{c['s']},{stop})'[c{r_i}_{j + 1}]")
                 cur, n = f'c{r_i}_{j + 1}', n + 1
-            g.append(f"[{cur}]fade=t=in:st={rs}:d={FADE_S}:alpha=1,fade=t=out:st={max(rs, re_ - FADE_S):.3f}:d={FADE_S}:alpha=1[run{r_i}]")
+            # With a sting in front, the first split-screen run must already
+            # be opaque at the cut. Fading it over the full-frame speaker
+            # creates a short double-image immediately after the intro.
+            fade_in='' if intro is not None and r_i==0 and rs<=1/FPS else f'fade=t=in:st={rs}:d={FADE_S}:alpha=1,'
+            g.append(f"[{cur}]{fade_in}fade=t=out:st={max(rs, re_ - FADE_S):.3f}:d={FADE_S}:alpha=1[run{r_i}]")
             g.append(f"[{last}][run{r_i}]overlay=0:0:enable='between(t,{rs},{re_})'[s{k}]")
             last, k = f's{k}', k + 1
     else:
@@ -1645,10 +1649,23 @@ def self_test():
                    any("overlay=0:0:enable='between(t,0,3.00)'" in line for line in g), False))
     checks.append(('the sting goes first in the join, with no sound of its own in the picture graph', g[-1], '[iv][vm][ev]concat=n=3:v=1:a=0[V]'))
     checks.append(('the sound is the finished mix', audio, '3:a'))
+    first_picture=[{'id':'first','panel':'card.png','s':0.0,'e':4.0}]
+    _, split_graph, _ = video_graph(fake, '9x16', same, Path('.'), Path('edited.mkv'), 20.0,
+        first_picture, ws, [720, 1280, 0, 0], {'file':'sting.mp4','frames':45},
+        {'file':'end.mp4','frames':120}, Path('mix.wav'))
+    first_run=next(line for line in split_graph if line.endswith('[run0]'))
+    checks.append(('the first split is fully visible after an intro, without a double presenter',
+        'fade=t=in:' not in first_run, True))
     _, g, audio = video_graph(fake, '9x16', same, Path('.'), Path('edited.mkv'), 20.0, [], ws, [720, 1280, 0, 0], None, {'file': 'end.mp4', 'frames': 120}, Path('mix.wav'))
     checks.append(('without an intro the opening logo is retained',
                    any("overlay=0:0:enable='between(t,0,3.00)'" in line for line in g), True))
     checks.append(('without a sting it is the main and the end card', (g[-1], audio), ('[vm][ev]concat=n=2:v=1:a=0[V]', '3:a')))
+    _, split_graph, _ = video_graph(fake, '9x16', same, Path('.'), Path('edited.mkv'), 20.0,
+        first_picture, ws, [720, 1280, 0, 0], None,
+        {'file':'end.mp4','frames':120}, Path('mix.wav'))
+    first_run=next(line for line in split_graph if line.endswith('[run0]'))
+    checks.append(('without an intro the first split still eases over the speaker',
+        'fade=t=in:' in first_run, True))
     _, g, _ = video_graph(fake, '9x16', same, Path('.'), Path('edited.mkv'), 20.0, [], ws, [720, 1280, 0, 0], None,
                           {'file': 'end.mp4', 'frames': 510, 'held_s': 13.0}, Path('mix.wav'))
     checks.append(('a long episode\'s end card holds its last frame for the end-screen tiles',

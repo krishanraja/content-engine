@@ -4,6 +4,27 @@
 > no longer reads 181 KB of old handoffs before it starts (`docs/COST_GUARDS.md`, G11). Nothing here is current;
 > live state is in `WORKBENCH.md`. Newest first, exactly as written.
 
+## 22 October, 16:50 UTC: Wednesday recut and headshot draft (Codex)
+
+- 2026-10-22, 16:50 UTC: **Wednesday's private board has the integrated recuts and current headshot draft.** Build
+  `20c5c551728412279d8a274cfd3fa78337a7fa793a0db7a909b30c82abd3fe56`:
+  live HTML and the one changed asset download matched, all 54 assets retained,
+  other panels unchanged, and Krish's Friday feedback retained.
+  Fact gate clear; no public post.
+  - [PR #136](https://github.com/krishanraja/content-engine/pull/136) has the video code;
+    local verify and 85 checks passed. Merge after CI. See
+    `docs/plans/2026-10-21-wednesday/narrative-recut-review.md` for hashes, six-point
+    sync, motion, audio and ASR reports. The new short uses Krish's supplied stabilised
+    source. Forty newest library downloads plus the supplied source/receipt hash-matched.
+  - **Open:** full phone playback of both new cuts; the raw recognizer differences;
+    Krish's reaction to the restrained Elon/Zuckerberg headshot mock before seven
+    cover/thumbnail shapes. The rejected boxing art was withdrawn from the active
+    board covers section and from the publish-manager inputs, then preserved as
+    clearly labelled archive links. The revised manager's three changed files
+    matched actual library downloads. The mock/source portraits are in the post
+    library's `Working - headshot review` lane. The Inbox `Active Ventures` versus runner `Active`
+    path mismatch remains unrepaired; manual source retrieval succeeded.
+
 ## 22 October: Wednesday finishing pass (Codex)
 
 Both stabilised videos are live on the private Wednesday board, build

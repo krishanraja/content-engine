@@ -18,7 +18,8 @@ def states(events,total,until=None):
 
 def graph(source,target,aspect,total,config):
     rows=states(config['events'],total,config.get('until_s'))
-    x,y,w,h,font=(960,24,900,112,72)if aspect=='16x9'else(48,24,984,112,70)
+    # Match the landscape card's content edges and optical centre.
+    x,y,w,h,font=(656,24,1216,112,72)if aspect=='16x9'else(48,24,984,112,70)
     filters=[]
     for row in rows:
         start,end=row['start'],row['end'];enabled=f"gte(t,{start:.6f})*lt(t,{end:.6f})"
