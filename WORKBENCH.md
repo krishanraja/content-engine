@@ -18,6 +18,14 @@
   served page hash read back equal; Ideas, Monday and Wednesday panels unchanged). The feeder now maps Wednesday's
   Drive downloads like Monday's and reads through `BOARD_BASE_URL` in a cloud session.
 - **Creative direction (23 Oct, evening):** `docs/plans/2026-10-23-friday/creative-direction.md` is the brief Codex produces both cuts from: the 90-second cut voice only, the 5-minute mixed, every line paired with the picture that proves it. Order: he records, takes lined up, **storyboard to Krish for sign-off**, then render. Krish: "Once I've recorded show me your creative storyboard before I sign that off."
+- **Teleprompter (23 Oct, 22:18 UTC, Krish: "Yes. Send it"):** both lengths are in his Teleprompter folder "Fri 23 Oct
+  mind.the.gap - Two passports", one script per length holding both takes (`script-long-both-takes.md`,
+  `script-short-both-takes.md`). Sent by hand on his word, **not through `teleprompter_send.py plan`**: the making record
+  has no scripts yet because the outline is not approved and the spine judge has not run (no article draft), and those
+  gates were not bypassed. So the record holds no Teleprompter ids and the recordings lane will not stamp these takes:
+  line each take up with `narration_diff.py` against its own take's words. The engine now checks two-take scripts
+  (`story_check.takes`) for the next piece.
+- **Handover:** `docs/handovers/2026-10-23-friday-production.md` (start the next session from it).
 - **Next:** read his comments on the Friday tab (`board_web.py read`), change the words he asks for, re-run
   `story_check.py` and fresh readers, then `making.py <piece> scripts long.md short.md` (outline and spine judge
   first, `docs/plans/2026-10-23-outline.md`), `read-back` (his words if he signs off), and `teleprompter_send.py

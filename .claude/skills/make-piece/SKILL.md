@@ -220,6 +220,11 @@ one question, and build the beat from them (learning `his-call-in-his-words`).
    royalties, model, copyright, fair use, valuation and the rest of
    `SCRIPT_READING.jargon` in `apps/control-plane/api/_houseRules.ts`) unless
    the same sentence says what it means in plain words.
+2b. **Two takes of one cut** (Krish, 2026-10-23: "Just put the first-person and the voiceover version in the one
+   script box in the publish board for each video length"): when he records an on-camera and a voiceover take, keep
+   one file per cut holding both, each starting on its own line `=== TAKE <n>: <what it is> ===`. `story_check.py`
+   checks each take as a whole script of the cut, and `teleprompter_send.py` times it by its longest take; he reads
+   only the take he is recording.
 3. **The mechanical check.** `python3 scripts/post-pack/story_check.py --cut
    long --series <the piece's lane_slot> long.md` and the same with `--cut
    short` for the short script. It refuses a script of a minute or more with
