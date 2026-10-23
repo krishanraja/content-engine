@@ -4,6 +4,24 @@
 > no longer reads 181 KB of old handoffs before it starts (`docs/COST_GUARDS.md`, G11). Nothing here is current;
 > live state is in `WORKBENCH.md`. Newest first, exactly as written.
 
+## 23 October: held inbox visual (Codex)
+
+- 2026-10-23: **The held inbox visual has a second review sample.** Krish rated
+  the first concept 5/10 and said it was insufficiently visual, lacked the Grok
+  Bot and Muse icons beside their labels, named him in outward copy, and felt
+  like a standalone article rather than a supporting enterprise figure. Exact
+  feedback and root-cause classification are in
+  `docs/plans/2026-10-21-wednesday/article-visual-audit-23oct.md`. The second
+  local sample is `C:\Users\krish\.scratch\wednesday-production-2026-10-21\article-visual-review\inbox-concept-v2.png`, with an article-width QA preview
+  beside it. The same PNG was sent to the private post library under
+  `2 Covers and images/Working - review/`; the actual library download matched
+  all 130,054 source bytes. It connects an explicitly reconstructed incoming inquiry to
+  Grok Bot's warning and an actual redacted Muse draft; product marks and
+  publication identity are present, and no author name appears. This is one
+  held material surface for review, not a live board replacement. Next:
+  receive his verdict on this sample before carrying the direction through
+  the five figures. No public post.
+
 ## 23 October: Wednesday article visual hold (Codex)
 
 - 2026-10-23: **Wednesday's board is held for article visuals and publication branding.** Build

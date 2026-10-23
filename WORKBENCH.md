@@ -789,24 +789,9 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
-- 2026-10-23: **The held inbox visual has a second review sample.** Krish rated
-  the first concept 5/10 and said it was insufficiently visual, lacked the Grok
-  Bot and Muse icons beside their labels, named him in outward copy, and felt
-  like a standalone article rather than a supporting enterprise figure. Exact
-  feedback and root-cause classification are in
-  `docs/plans/2026-10-21-wednesday/article-visual-audit-23oct.md`. The second
-  local sample is `C:\Users\krish\.scratch\wednesday-production-2026-10-21\article-visual-review\inbox-concept-v2.png`, with an article-width QA preview
-  beside it. The same PNG was sent to the private post library under
-  `2 Covers and images/Working - review/`; the actual library download matched
-  all 130,054 source bytes. It connects an explicitly reconstructed incoming inquiry to
-  Grok Bot's warning and an actual redacted Muse draft; product marks and
-  publication identity are present, and no author name appears. This is one
-  held material surface for review, not a live board replacement. Next:
-  receive his verdict on this sample before carrying the direction through
-  the five figures. No public post.
+- 2026-10-23: **Wednesday's private publish board is ready for Krish's final use.** He said the revised source-led inbox figure was “much better” and told Codex to continue. The live board at `https://content.krishraja.com/board/2026-10-19#wednesday` is build `d3a4d79980e7a7ff91eae4cde990955eb445afb1bdbfa17129c930c2d21c620b`. Five article figures now carry publication identity and adjacent Grok Bot/Muse marks, actual redacted interaction crops where available, explicitly labelled reconstructions, and separate field/research scores. The approved seven branded covers/thumbnails and both accepted videos remain available. The article and channel-copy boxes are editable/commentable. The illustrated article and Substack copy contain all five figures. Live HTML and all changed asset downloads hash-match; Ideas, Monday and Friday are byte-identical to the prior build, and all six stores for both 12 and 19 October are unchanged. The private asset pack was sent; `C:\Users\krish\.scratch\wednesday-production-2026-10-21\library-readback.json` is the full newest-download proof once complete. The board proof is `board/final-article-readback.json` in that production folder. The videos' exact hashes, quality receipts and Krish's “Both approved” playback response remain binding. Nothing was publicly posted. Next: Krish can make any final board notes, then publish himself.
 
-- Older handoffs (12 to 20 October): `docs/history/2026-10-18-WORKBENCH-handoffs.md`. This section holds only the
-  newest one: when you write a new handoff, move the one it replaces to the top of that file (G11, `scripts/check_workbench.py`).
+- Older handoffs (12 to 23 October): `docs/history/2026-10-18-WORKBENCH-handoffs.md`. This section holds only the newest one: when you write a new handoff, move the one it replaces to the top of that file (G11, `scripts/check_workbench.py`).
 
 ## What costs money
 
