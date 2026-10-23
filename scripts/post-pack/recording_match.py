@@ -606,7 +606,7 @@ def inbox_recordings(inbox, cache=CACHE, now=None):
     inbox = Path(inbox)
     if not inbox.is_dir():
         raise MatchError(f'the Inbox is not at {inbox}. On a runner machine it is MINDMAKE_MEDIA_INBOX '
-                         '(H:\\My Drive\\Ventures\\Active\\makeyourmindup\\Video Engine\\Inbox)')
+                         '(H:\\My Drive\\Ventures\\Active Ventures\\makeyourmindup\\Video Engine\\Inbox)')
     now = time.time() if now is None else now
     book_path = Path(cache) / 'inbox-sha256.json'
     try:

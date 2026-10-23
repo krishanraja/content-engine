@@ -421,7 +421,7 @@ until then.
 ## Recordings: from the Inbox to a cloud session
 
 **What.** Every recording Krish drops into the Video Engine Inbox
-(`H:\My Drive\Ventures\Active\makeyourmindup\Video Engine\Inbox`,
+(`H:\My Drive\Ventures\Active Ventures\makeyourmindup\Video Engine\Inbox`,
 `MINDMAKE_MEDIA_INBOX` on the runner machines) reaches the engine's private
 storage within about ten minutes, and any cloud session fetches it with one
 command.

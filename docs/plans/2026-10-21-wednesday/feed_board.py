@@ -73,6 +73,12 @@ def main():
         rel=f'/api/board/{WEEK}/assets/{aid}?sha={spec["sha256"]}'
         source=('https://content.krishraja.com'+rel) if ('https://content.krishraja.com'+rel) in old else rel
         mappings.append({'id':aid,'source_url':source,'existing_sha256':spec['sha256']})
+    # Drive folder 15ar-xjif1E3mknAsvfklk8nfsA5GWhHy: names, sizes and parent
+    # for these four IDs were read back after the repaired 23 October sync.
+    finished=({'wed-video-long':'1wT9LYZHHl9hWyZyQwknWJv-9erXR8rEQ',
+               'wed-approved-thumb-wide':'1B7OQMrzpZlfaWRbr2s8kSV9mzKsGXk-V',
+               'wed-video-short':'1lZWiskRgfm8SdRBEDV5S-iTMiAw7pSsT',
+               'wed-approved-thumb-tall':'1dQkms_ZC8JCQzqBsChbBxsqECtx6YG_V'} if a.ready_page else {})
 
     def file(aid,path,label):
         path=Path(path)
@@ -82,6 +88,12 @@ def main():
         mappings[:]=[m for m in mappings if m['id']!=aid]
         existing=state['manifest']['assets'].get(aid)
         digest=web.sha(path.read_bytes())
+        if aid in finished:
+            if not existing or existing['sha256']!=digest:
+                raise ValueError(aid+' needs the existing verified board asset before linking Drive')
+            source='https://drive.usercontent.google.com/download?id='+finished[aid]+'&amp;export=download'
+            mappings.append({'id':aid,'source_url':source,'existing_sha256':digest})
+            return {'label':label,'url':f'/api/board/{WEEK}/assets/{aid}?sha={digest}'}
         if existing and existing['sha256']==digest:
             mappings.append({'id':aid,'source_url':url,'existing_sha256':digest})
         else:
