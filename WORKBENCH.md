@@ -1,21 +1,26 @@
 # Workbench: where we are and what's next
 
-## 23 October: Friday narrative signed, scripts in his words, waiting on his test (Claude)
+## 23 October, afternoon: Friday test scored, both scripts filled, on the board for Krish's review (Claude)
 
-- **Signed** (`docs/plans/2026-10-19-week/narrative-fri.md`): story A (two passports) opening on his hook "You may
-  already be using a Chinese AI." His later words are on the narrative and in `docs/plans/2026-10-23-friday/story.md`:
-  his own view (the "my call" beat and "keep a second AI ready"), ChatGPT added to the test, settings matched.
-- **Scripts:** `docs/plans/2026-10-23-draft-script.md` (5-minute) and `-90s.md`, worked with him one question at a
-  time (learning `one-question-at-a-time`): his jokes kept or rewritten, his opening ("having a proper look at"),
-  his line marks, and re-joined after "the choppy rhythm, sounds robotic" (learning `no-choppy-rhythm`, now a
-  `story_check.py` warning). Both pass with stand-in test lines; the gaps wait for his Claude, ChatGPT and DeepSeek
-  answers, run by Cowork from `docs/plans/2026-10-23-friday/cowork-test-prompt.md`. He records this afternoon.
-- **Handover:** `docs/handovers/2026-10-23-friday-sovereign-ai.md` (start the next session from it).
-- **Next, when answers.md arrives:** fill the gaps (name ChatGPT where two are named), `story_check`, three fresh
-  readers per cut, `making.py scripts` (outline and spine judge first), then Teleprompter (standing yes).
-- **Board:** Friday is in draft on https://content.krishraja.com/board/2026-10-19#friday (build a053b673, the first
-  drafts). Not refreshed since: Wednesday became made (another session, build b0505d9e) and `--keep wed` redraws its
-  videos from a record missing two Drive links (verify refuses), so `update_friday_23oct.py` waits for that record.
+- **Test results:** `docs/plans/2026-10-23-friday/test-results/` (`answers.md`, `coding.md`, the pre-registered
+  `predictions-and-checklist.md`, and `scores.md`, scored against `test-design.md`). DeepSeek wrote a full Xinjiang
+  answer and deleted it, 3 of 3 runs, while answering Turkmenistan 3 of 3; Claude and ChatGPT answered both alike.
+  Taiwan vs Singapore: a draw for all three. The 47 screenshots went to the library with `send.py`
+  ("3 Posts/2026-10-23 Fri mind.the.gap - Two passports/2 Covers and images/AI test screenshots"), not git.
+- **Scripts:** the gaps are filled from the scores. Krish's calls in this session (one question at a time): the
+  call beat now reads "A Chinese AI is fine if you don't mind where your data ends up. But check what it tells you."
+  (both cuts), and the short cut drops the "take DeepSeek out of China" joke to explain the test (the joke stays in
+  the long cut). Both pass `story_check.py` (long 824 words, warns about 5:33 as he says it; short 195).
+- **Readers:** two rounds of A, B and C on each cut. Round two: every retelling matches the point; small items left
+  (Stanford's "three percent" on what, "two times in three" by ear, the call beat still read as mixed by five of
+  six). Not yet recorded as read back; Krish chose to review on the board instead of signing off here.
+- **Board:** published to https://content.krishraja.com/board/2026-10-19#friday (build `baa95ed9`, revision 48,
+  served page hash read back equal; Ideas, Monday and Wednesday panels unchanged). The feeder now maps Wednesday's
+  Drive downloads like Monday's and reads through `BOARD_BASE_URL` in a cloud session.
+- **Next:** read his comments on the Friday tab (`board_web.py read`), change the words he asks for, re-run
+  `story_check.py` and fresh readers, then `making.py <piece> scripts long.md short.md` (outline and spine judge
+  first, `docs/plans/2026-10-23-outline.md`), `read-back` (his words if he signs off), and `teleprompter_send.py
+  plan` plus the Teleprompter calls. Teleprompter does not hold the new words yet.
 
 ## 22 October: Friday 23 Oct (mind.the.gap, sovereign AI) back to the story (Claude)
 

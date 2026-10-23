@@ -70,22 +70,29 @@ def build():
         rel=f'/api/board/{WEEK}/assets/{aid}?sha={spec["sha256"]}'
         source=('https://content.krishraja.com'+rel) if ('https://content.krishraja.com'+rel) in old else rel
         mappings.append({'id':aid,'source_url':source,'existing_sha256':spec['sha256']})
-    # Monday's four downloads still render as Drive links: resolve them as the Wednesday feeder does.
+    # Monday's and Wednesday's downloads still render as Drive links: resolve them as the Wednesday feeder does.
     legacy={'monday-long-review':'1U0XZgpSXatqqgxEvZUSnnWFTdtJpnR9x','monday-short-review':'1jB2GX4NO37YmANe2rE2ox7AUp4a_94I3',
-            'monday-wide-thumbnail':'1G-hgoUF7bCCJmj4BIBZN76Pqxgmpx0nT','monday-tall-thumbnail':'1fEjy6WKrZbXkmOrziEeC1A6P21BSd7iq'}
+            'monday-wide-thumbnail':'1G-hgoUF7bCCJmj4BIBZN76Pqxgmpx0nT','monday-tall-thumbnail':'1fEjy6WKrZbXkmOrziEeC1A6P21BSd7iq',
+            # Wednesday's finished downloads, as docs/plans/2026-10-21-wednesday/feed_board.py links them
+            'wed-video-long':'1wT9LYZHHl9hWyZyQwknWJv-9erXR8rEQ','wed-approved-thumb-wide':'1B7OQMrzpZlfaWRbr2s8kSV9mzKsGXk-V',
+            'wed-video-short':'1lZWiskRgfm8SdRBEDV5S-iTMiAw7pSsT','wed-approved-thumb-tall':'1dQkms_ZC8JCQzqBsChbBxsqECtx6YG_V'}
     for item in mappings:
         if item['id'] in legacy and ('https://drive.usercontent.google.com/download?id='+legacy[item['id']]+'&amp;export=download') in page:
             item['source_url']='https://drive.usercontent.google.com/download?id='+legacy[item['id']]+'&amp;export=download'
     resolved=page
     for item in mappings:
         resolved=resolved.replace(item['source_url'],f'/api/board/{WEEK}/assets/{item["id"]}?sha={item["existing_sha256"]}')
-    same={name:panel(resolved,name)==panel(old,name) for name in ['ideas','monday','wednesday']}
+    host=lambda t: t.replace('https://content.krishraja.com/api/board/','/api/board/')  # same file, same site
+    same={name:host(panel(resolved,name))==host(panel(old,name)) for name in ['ideas','monday','wednesday']}
     if not all(same.values()):
         import difflib
         for name,unchanged in same.items():
             if not unchanged:
                 (CACHE/f'{name}-diff.txt').write_text('\n'.join(difflib.unified_diff(
                     panel(old,name).replace('><','>\n<').splitlines(),panel(resolved,name).replace('><','>\n<').splitlines())),encoding='utf-8')
+                changed=[l for l in difflib.unified_diff(panel(old,name).replace('><','>\n<').splitlines(),
+                         panel(resolved,name).replace('><','>\n<').splitlines(),n=0) if l[:1] in '+-' and l[:3] not in ('+++','---')]
+                print(name,'differs in',len(changed),'lines; first few:'); [print('  ',l[:180]) for l in changed[:8]]
     absent=[m['id'] for m in mappings if m['source_url'] not in page]
     problems=board.verify(page)
     board.write(page,meta,CACHE/'board.html'); save(CACHE/'assets.json',mappings)
