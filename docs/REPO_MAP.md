@@ -449,6 +449,7 @@ How a creator's post is identified, and how close to it Krish's version is
 - `interface CreatorYieldRow`
 - `interface CreatorMoveCtx`
 - `async function extractCreatorMoves( posts: CreatorPost[], ctx: CreatorMoveCtx, ): Promise<CreatorMove[]>`
+- `function knownPillar(id: string | null, pillars: { id: string }[]): string | null`
 
 ### `apps/control-plane/api/_creators.ts`
 

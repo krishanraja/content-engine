@@ -211,3 +211,11 @@ export async function extractCreatorMoves(
   })
   return out
 }
+
+/** The model picks a pillar by id, and an id it misspells or invents breaks the
+ *  insert's foreign key (`content_ideas_pillar_id_fkey`) and with it the whole
+ *  run: one invented id failed the creator scout on 2026-10-20. A pillar that is
+ *  not one of the active ones is no pillar. */
+export function knownPillar(id: string | null, pillars: { id: string }[]): string | null {
+  return id && pillars.some(p => p.id === id) ? id : null
+}
