@@ -26,6 +26,19 @@ titles, cover, channel copy) is judged against these words first (learning `stor
 A: every AI has two passports (where it was built shapes what it says; where it runs decides who sees
 your data). B: you may already be using a Chinese AI.
 
+## His own view, in the session, 23 October 2026 (the script's "my call" beat)
+
+> "It's more, yes, if you don't care about where your data ends up going, even if it's not being
+> directly used to train the AI model. Aggregate usage is known by the LLM, so if you don't care
+> about that, that's fine. Also, if you want a high-intelligence job done for pretty cheap and that
+> is your only objective, then it makes sense. It's kind of like the supply chain issue that people
+> have had, where lots of drop-shipping businesses were buying, or complex supply chain products
+> included Chinese products in them. At a certain point, they were tariffed by the U.S., and similar
+> things will happen in AI. It just increases the need to not have overreliance on one supplier."
+
+The tariff line is his judgment and is said as one ("I reckon"); the last action ("keep a second AI
+ready, so you're never stuck with one supplier") is his.
+
 ## What came before (kept for the record)
 
 - His cold idea in the Inspo folder, 9 October: "unpacking models by country".

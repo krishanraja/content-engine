@@ -14,6 +14,8 @@ Signed by Krish: "Signed, go ahead and draft the scripts", 2026-10-23
 - His pick of the story, in the session, 22 October 2026: "A opening on B's hook (I like "You may
   already be using a Chinese AI." hook), I'll run the test tonight". A was "every AI has two
   passports"; B was "you may already be using a Chinese AI".
+- His view, 23 October 2026, which adds an action ("It just increases the need to not have
+  overreliance on one supplier"): in full in `docs/plans/2026-10-23-friday/story.md`.
 - His action, 19 October 2026: "ask the AI you rely on, and one built in another country, the same
   three business questions, and see where they differ."
 
