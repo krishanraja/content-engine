@@ -10,6 +10,23 @@ intersection of the script and the visuals that I was trying to get across to yo
 where you have 10/10 creative direction set in the repository for Codex to go and produce the videos. Once I've
 recorded show me your creative storyboard before I sign that off."
 
+## Four videos, two takes per length (Krish, 23 Oct, evening)
+
+Krish: "I'll record a version as you've written in the script and then I'll record a voiceover version as well. You
+can then produce both videos." So each length has two takes and two videos:
+
+| Video | Words (the board's script box holds both takes) | Direction |
+|---|---|---|
+| 5-minute, on camera | `docs/plans/2026-10-23-draft-script.md` (take 1) | Face-led, with the evidence from the table below as cutaways on the same words |
+| 5-minute, voiceover | `docs/plans/2026-10-23-friday/script-long-voiceover.md` (take 2) | Pictures only, every row of the 5-minute table, including the rows marked "Krish on camera" (use the passport card, the test frames or the chat in their place) |
+| 90-second, on camera | `docs/plans/2026-10-23-draft-script-90s.md` (take 1) | Face-led, with the 90-second table's pictures as cutaways |
+| 90-second, voiceover | `docs/plans/2026-10-23-friday/script-short-voiceover.md` (take 2) | Pictures only, exactly the 90-second table |
+
+The voiceover takes differ from the on-camera words only where the picture does the talking ("Now watch DeepSeek. It
+writes an answer, then deletes it."; "Look at that passport again."). The combined boxes are
+`script-long-both-takes.md` and `script-short-both-takes.md` in this folder. Match each take to its own words with
+`narration_diff.py`; the storyboard covers all four.
+
 ## The order of work (nothing renders before step 4)
 
 1. **Krish records.** The 90-second cut is voice only: he reads it from Teleprompter, audio only, in a quiet room.
