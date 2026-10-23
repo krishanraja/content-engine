@@ -1,10 +1,14 @@
 # Wednesday release review
 
-**Current video revision:** see `narrative-recut-review.md` for the integrated recuts with Krish's newly supplied stabilised vertical source, original redacted interactions, launch demonstrations, community captures and the single running tally. The earlier stabilised exports discussed below were superseded after Krish rejected the vertical motion and requested more actual evidence. The rejected covers and thumbnails are withdrawn from the active board and publish-manager inputs, and preserved as labelled archive assets. The aligned headshot cover is still under design review; other sizes follow approval. The article's fact gate remains clear; these video review copies still require full phone playback acceptance.
+**Current video revision:** see `narrative-recut-review.md` for the integrated recuts with Krish's supplied stabilised vertical source, original redacted interactions, launch demonstrations, community captures and the single running tally. On 23 October the first short split-screen was made fully opaque at the intro cut, the long score and card text were realigned, and the draft card became the additive question “Will it catch a scammer?” The prior exports remain recoverable. The rejected boxing covers remain labelled as archive assets; Krish approved the product-branded headshot treatment, now rendered in seven sizes. The article's fact gate remains clear. Krish then played both exact exports through on his phone and answered “Both approved” to the join, alignment, motion, sound and spoken flow; the native delivery guard now passes both cuts with the raw recognizer differences preserved.
 
 Title and headings: Krish approved the proposed set on 21 October, after both recordings.
 
 The article preserves the edited draft’s phrasing and round structure. The 22 October revision has 422 evidence words from personal tests and 423 from the supplied research. Opening, method, round calls, verdict and practical actions combine the two. This is an editorial balance, not a pooled statistical result. The news result is consistently “level, for different reasons”. The source-linked scorecard accompanies it.
+
+## Latest picture pass, 23 October
+
+The 23 October picture revision retains the exact previously checked audio payload in each cut, including the voice alignment and dings. Frame 83 of the short is the end of its single intro; frame 84 is already the complete split screen, with no presenter ghosting in the following sampled frames. The two screenshot-identified long panels were inspected at full resolution after correction. All seven approved covers and thumbnails have equal-height product marks, aligned portrait panels and a phone-legibility check. Technical reports and exact file hashes are in `narrative-recut-review.md`; no further paid article check was run. After Krish's full phone acceptance, both exact video receipts passed `quality.delivery_problems`; both final video downloads, their receipts, captions and the publish page passed actual library readback. Public posting remains unrequested.
 
 ## Finishing pass, 22 October
 
@@ -55,4 +59,4 @@ The local model scan passed: log perplexity 4.482 and Binoculars 1.079, above it
 
 ## Authority
 
-All material is for the private review board and asset library. Nothing has been posted on a public channel. Existing comments, edits, ticks and other days’ materials are preserved. Public release remains held until the open editorial and playback decisions are settled.
+The article, videos, approved covers, thumbnails, captions and channel copy are ready on the private publish board and in the library. Nothing has been posted on a public channel. Existing comments, edits, ticks and other days’ materials are preserved. Public release now waits for Krish's explicit posting instruction.

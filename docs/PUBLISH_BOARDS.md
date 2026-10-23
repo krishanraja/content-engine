@@ -168,6 +168,11 @@ do not print the full board into a conversation. The operator CLI's `download`
 command saves this file. Read `week_board.py --show FILE` for its structure.
 Keep completed days, current drafts, review IDs, images and every unchanged
 asset. Use the existing `--live`, draft/review and completeness guards.
+When changing only one day while another day has live draft words, use
+`--keep-draft DAY` with the authenticated `--previous` page. It carries that
+unrelated draft panel, its review boxes and waiting calls verbatim; the builder
+refuses a changed piece id or any replacement inputs for the retained day.
+Rebuild that day with `--draft DAY --review DAY=...` when its own words change.
 
 Build with `week_board.py --target web` plus the usual week/day inputs. Run
 `--verify`, then `board_web.py publish-web PAGE.html` for the dry-run manifest.

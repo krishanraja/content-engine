@@ -17,8 +17,8 @@ import build
 
 
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('work',type=Path);ap.add_argument('--videos',action='store_true');ap.add_argument('--stable',action='store_true');ap.add_argument('--narrative',action='store_true')
-    a=ap.parse_args();w=a.work.resolve()
+    ap=argparse.ArgumentParser();ap.add_argument('work',type=Path);ap.add_argument('--videos',action='store_true');ap.add_argument('--stable',action='store_true');ap.add_argument('--narrative',action='store_true');ap.add_argument('--approved-headshot',action='store_true')
+    a=ap.parse_args();w=a.work.resolve();art=w/'head-to-head-final' if a.approved_headshot else w/'article';thumbs=w/'head-to-head-final' if a.approved_headshot else w/'thumbs'
     files=[]
     def item(path,kind=None,category=None,name=None,purpose=None,**extra):
         d={'file':str(Path(path).resolve()),**extra}
@@ -29,11 +29,11 @@ def main():
         files.append(d)
     for name,kind in [('page.html','web-page'),('substack.html','substack-copy'),
                       ('email-pictures-off.html','email-pictures-off'),('cover.png','cover')]:
-        item(w/'article'/name,kind=kind,logos=['Grok Bot','Meta'])
+        item((art if name=='cover.png' else w/'article')/name,kind=kind,logos=['Grok Bot','Meta'])
     for cut,shape in [('long','wide'),('short','tall')]:
         item(PLAN/f'recorded-{cut}-script.md',kind='video-script',name=f'recorded-{cut}-script.md')
         thumb='thumb-wide-1280x720.jpg' if cut=='long' else 'thumb-tall-1080x1920.jpg'
-        item(w/'thumbs'/thumb,kind='thumbnail',shape=shape,logos=['Grok Bot','Meta'])
+        item(thumbs/thumb,kind='thumbnail',shape=shape,logos=['Grok Bot','Meta'])
     for name in ['scam-grok','flight-layover','news-date','email-duplicate','starting-point']:
         item(w/'article-cards'/f'{name}.png',kind='image',logos=['Grok Bot','Meta'],
              shows='logos' if name=='starting-point' else 'reconstruction',
@@ -51,6 +51,10 @@ def main():
     folders=[f'cards-{suffix}','article-cards','story-revised',f'kit-short-{suffix}',f'kit-long-{suffix}',f'review-short-{suffix}',f'review-long-{suffix}']
     archive=w/'production-working.zip'
     with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED) as z:
+        if a.approved_headshot:
+            for p in (w/'head-to-head-final').iterdir():
+                if p.is_file() and p.suffix.lower() in {'.png','.jpg','.json'}:
+                    z.write(p,p.relative_to(w).as_posix())
         for folder in folders:
             for p in (w/folder).rglob('*'):
                 if p.is_file() and (not p.name.startswith('frame-') or p.suffix=='.json'):
@@ -105,6 +109,13 @@ def main():
                 p=base.with_suffix(suffix)
                 held.append(p)
     post=json.loads((PLAN/'post.json').read_text(encoding='utf-8'));post['files']=files
+    if a.approved_headshot:
+        # This exact piece's approved treatment uses product marks beside
+        # editorial founder headshots instead of the generic house drawer.
+        post['visual_gate_override']=(
+            'Krish, 2026-10-22: "It should just be their headshots versus each other, so a bit more professional." '
+            'Krish, 2026-10-23: "Better, but we probably dont need their names, and we need to associate the actual branding of Grok and Muse better." '
+            'Approval of the seven-format treatment: "Yes, use this treatment".')
     post['release_status']='review';post['readiness_note']='Fact gate clear after Krish’s adjudication. Final video playback acceptance remains open. Nothing has been publicly posted.'
     p=w/'review-post.json';p.write_text(json.dumps(post,indent=2,ensure_ascii=False),encoding='utf-8')
     result=build.build(p,out=w/'packs',replace=True)

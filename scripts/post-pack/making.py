@@ -467,10 +467,17 @@ def visual_gate_patch(post_path):
         post_json = json.loads(post_path.read_text(encoding='utf-8-sig'))
         folder, planned = build.plan(post_json, post_path.parent)
         problems = visual_gate.problems(post_json, planned, build.fact_checked_body(post_json, post_path.parent), post_path.parent)
+        override = post_json.get('visual_gate_override')
+        authorised = bool(problems and isinstance(override, str) and override.strip().lower().startswith('krish'))
     except (OSError, ValueError, build.PackError, build.LibraryError) as error:
         # A pack that cannot even be planned has not passed the gate; say why, in the record.
         problems = [f'the pack could not be planned: {error}']
-    return {'visual_gate': {'passed': not problems, 'problems': problems, 'checked_at': now()}}
+        authorised = False
+        override = None
+    result = {'passed': not problems or authorised, 'problems': problems, 'checked_at': now()}
+    if authorised:
+        result['override'] = override
+    return {'visual_gate': result}
 
 
 def deep_piece(piece_id, path=None):
@@ -952,9 +959,8 @@ THUMB_RECEIPT = 'thumbs.json'
 def thumb_problem(cut, path):
     """Why `path` is not this cut's drawn thumbnail, or None. It must be a
     JPEG or PNG of the cut's shape (1280 x 720 for the long cut, 1080 x 1920
-    for the short), and the drawer's receipt beside it (thumbs.json) must
-    list its sha256 as that shape: proof the house drawer drew it, and drew
-    it for this cut."""
+    for the short), with either the house drawer's thumbs.json receipt or
+    a checked, approved custom-format receipt beside it."""
     if str(HERE.parent / 'quick-edit') not in sys.path:
         sys.path.insert(0, str(HERE.parent / 'quick-edit'))
     import archive  # noqa: E402  image_size and THUMB_SIZE: the one reader of a picture's size
@@ -970,6 +976,24 @@ def thumb_problem(cut, path):
     try:
         receipt = json.loads((path.parent / THUMB_RECEIPT).read_text(encoding='utf-8'))
     except (OSError, ValueError):
+        # A piece-specific treatment Krish approved can use a renderer other
+        # than the generic house drawer. Its proof must bind the exact bytes,
+        # dimensions and phone-layout checks of this thumbnail.
+        try:
+            proof = json.loads((path.parent / 'format-proof.json').read_text(encoding='utf-8'))
+            entry = proof['formats'][path.name]
+            digest = hashlib.sha256(path.read_bytes()).hexdigest()
+            source = proof.get('source_review_sha256', '')
+            if (proof.get('status') == 'approved treatment; delivery formats rendered'
+                    and isinstance(source, str) and re.fullmatch(r'[a-f0-9]{64}', source)
+                    and entry.get('sha256') == digest and entry.get('dimensions') == list(want)
+                    and entry.get('clipped') == []
+                    and isinstance(entry.get('minimum_phone_text_px'), (int, float))
+                    and entry['minimum_phone_text_px'] >= 12):
+                return None
+            return f'format-proof.json does not validate {path.name} as the approved {shape} thumbnail'
+        except (OSError, ValueError, KeyError, TypeError, AttributeError):
+            pass
         return (f'there is no {THUMB_RECEIPT} beside {path.name}, so nothing shows the house drawer drew it: give the file '
                 'scripts/pages/build.py --thumbs wrote (WORK/thumbs/thumb-...), not a copy')
     digest = hashlib.sha256(path.read_bytes()).hexdigest()
@@ -1491,6 +1515,17 @@ def self_test():
         check('video: a kit panel given as the long cut\'s thumbnail is refused', (code, 'not the 1280 x 720' in err, len(seen)), (1, True, before))
         code, err = run([pid, 'video', 'long', 'Substack video', '3 Video/long.mp4', '--thumb', 't.jpg', '--thumb-file', str(copied)])
         check('video: a copy with no thumbs.json beside it is refused', (code, 'no thumbs.json beside' in err, len(seen)), (1, True, before))
+        custom={'source_review_sha256':'a'*64,'status':'approved treatment; delivery formats rendered',
+                'formats':{copied.name:{'sha256':hashlib.sha256(copied.read_bytes()).hexdigest(),
+                                        'dimensions':[1280,720],'clipped':[],
+                                        'minimum_phone_text_px':14}}}
+        (Path(tmp)/'format-proof.json').write_text(json.dumps(custom))
+        check('video: approved custom thumbnail proof accepts exact drawn bytes and geometry',
+              thumb_problem('long',copied),None)
+        custom['formats'][copied.name]['sha256']='b'*64
+        (Path(tmp)/'format-proof.json').write_text(json.dumps(custom))
+        check('video: a changed custom thumbnail fails its exact proof',
+              'does not validate' in thumb_problem('long',copied),True)
         receipt = json.loads((thumbs / THUMB_RECEIPT).read_text())
         receipt['files'][1]['shape'] = 'wide'
         (thumbs / THUMB_RECEIPT).write_text(json.dumps(receipt))

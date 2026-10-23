@@ -810,24 +810,33 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
-- 2026-10-22, 16:50 UTC: **Wednesday's private board has the integrated recuts and current headshot draft.** Build
-  `20c5c551728412279d8a274cfd3fa78337a7fa793a0db7a909b30c82abd3fe56`:
-  live HTML and the one changed asset download matched, all 54 assets retained,
-  other panels unchanged, and Krish's Friday feedback retained.
-  Fact gate clear; no public post.
-  - [PR #136](https://github.com/krishanraja/content-engine/pull/136) has the video code;
-    local verify and 85 checks passed. Merge after CI. See
-    `docs/plans/2026-10-21-wednesday/narrative-recut-review.md` for hashes, six-point
-    sync, motion, audio and ASR reports. The new short uses Krish's supplied stabilised
-    source. Forty newest library downloads plus the supplied source/receipt hash-matched.
-  - **Open:** full phone playback of both new cuts; the raw recognizer differences;
-    Krish's reaction to the restrained Elon/Zuckerberg headshot mock before seven
-    cover/thumbnail shapes. The rejected boxing art was withdrawn from the active
-    board covers section and from the publish-manager inputs, then preserved as
-    clearly labelled archive links. The revised manager's three changed files
-    matched actual library downloads. The mock/source portraits are in the post
-    library's `Working - headshot review` lane. The Inbox `Active Ventures` versus runner `Active`
-    path mismatch remains unrepaired; manual source retrieval succeeded.
+- 2026-10-23: **Wednesday is ready on the private publish board.** Build
+  `b0505d9e4a819a97b62f63d1970476a0cf5f3ff635f978d80cab42b958dba966`:
+  the native publish page and all seven approved cover/thumbnail formats accompany
+  both corrected cuts. Live HTML and both changed asset downloads hash-match; the
+  Ideas, Monday and Friday panels are byte-identical. Earlier assets remain available;
+  all 37 earlier comments and 11 queue entries were preserved byte-for-byte, with
+  one new entry each. The board stays editable and commentable. No public post.
+  - Krish played both exact exports through on his phone and replied “Both approved”
+    to the short join, long text, motion, sound and spoken words. The native delivery
+    guard passes both receipts; each keeps the raw independent recognizer failures
+    under its human-adjudicated heard check. Six-point sync, source stabilisation,
+    loudness and sampled visual evidence remain bound to the exact video hashes.
+  - The article's exact-body fact gate remains clear after the $0.59 check and
+    27 named source-bound sign-offs. No further paid run occurred. The private library
+    has 40 review-pack files plus seven final delivery files; actual downloads and
+    ready states matched every hash, including both final videos and publish-manager.
+  - The Friday draft was carried through the normal board builder unchanged as
+    Wednesday advanced. The old boxing art stays labelled archive. Source, rendering
+    and approval records are in `docs/plans/2026-10-21-wednesday/`; the media are in
+    the post library. The native making record now marks fact check, visual gate,
+    scripts, pack, recording and both video assets done; only posting remains.
+    The cloud library downloads are verified, but the separate Google Drive sync
+    has not yet exposed final video and thumbnail file IDs. The current live board
+    has working authenticated downloads; a future board rebuild's `Download first`
+    card still needs the observed Drive links under the existing rule.
+    Next: merge the production code after CI. Public posting waits
+    for Krish's explicit instruction.
 
 - Older handoffs (12 to 20 October): `docs/history/2026-10-18-WORKBENCH-handoffs.md`. This section holds only the
   newest one: when you write a new handoff, move the one it replaces to the top of that file (G11, `scripts/check_workbench.py`).
