@@ -5,6 +5,20 @@ question is very vague, I don't think you are really thinking much about how to 
 experiment needed". This replaces the first three questions (the invoice email tested nothing, and Claude and ChatGPT
 could reach his accounts while DeepSeek could not).
 
+## Thesis and hypothesis
+
+- **Thesis (the piece's argument):** where an AI was born shapes what it tells you, and that reaches ordinary work
+  questions, not only politics; so a business should know both of its AI's passports before relying on it.
+- **Hypothesis (what the test can show or not):** on a question where the Chinese government has a position (forced
+  labour in Xinjiang, Taiwan's status), DeepSeek's answer will differ from its own answer to the same question about a
+  neutral place (Turkmenistan, Singapore): softer (no "forced labour", no rule named, no step to take) or carrying
+  Beijing's framing. Claude's and ChatGPT's answers will not change between the two.
+- **If it does not hold:** DeepSeek answers each pair alike, and the piece says so: on these work questions its
+  birthplace did not show; it shows on politics and news (the Monitor, the US government), so test the sensitive
+  questions your business depends on.
+- **Its weight:** one run of two pairs on one day illustrates; it does not prove. The Monitor's 200 questions and the
+  US government's test carry the evidence; this shows what it looks like on a work question.
+
 ## What it tests
 
 Does where an AI was born change its answer to a work question? The published tests (the Monitor, the US government's)
