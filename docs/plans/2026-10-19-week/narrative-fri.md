@@ -1,7 +1,8 @@
 # Narrative: Friday 23 October, mind.the.gap
 
-Piece `7083d6ad-419e-4fdc-9aba-f3be7f3f3a23`. Status: **awaiting Krish's sign-off** (second version).
-Nothing is made until he signs.
+Piece `7083d6ad-419e-4fdc-9aba-f3be7f3f3a23`. Status: **signed** (second version).
+
+Signed by Krish: "Signed, go ahead and draft the scripts", 2026-10-23
 
 ## His words that fix this narrative
 
