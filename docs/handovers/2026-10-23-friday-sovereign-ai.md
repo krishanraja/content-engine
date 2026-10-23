@@ -9,8 +9,12 @@ Written 23 October by the session that took the piece from Krish's angle to two 
 > (answers.md and the screenshots). Score them against the test design, fill the gaps in both scripts, run the
 > readers and get both into Teleprompter before I record this afternoon.
 
-Everything here is on main once the pull request for branch `ccr-b67ca85c-yxrn71` has merged (it merges itself
-when CI passes). If it has not merged yet, `git fetch origin ccr-b67ca85c-yxrn71 && git checkout ccr-b67ca85c-yxrn71`.
+Everything here is on branch `ccr-b67ca85c-yxrn71`, in pull request #143
+(https://github.com/krishanraja/content-engine/pull/143). GitHub refused auto-merge ("Protected branch rules not
+configured for this branch"), so it does not merge by itself. Work on that branch
+(`git fetch origin ccr-b67ca85c-yxrn71 && git checkout ccr-b67ca85c-yxrn71`), push the Friday work to it, and once the
+scripts are in Teleprompter and CI is green on the latest commit, merge #143 (AGENTS.md: engine work merges to main,
+never a push to main).
 
 ## What this session settled with him (do not ask again)
 
