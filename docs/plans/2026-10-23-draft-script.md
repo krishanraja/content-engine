@@ -4,7 +4,7 @@ I've been having a proper look at where the AIs we all use actually come from. A
 
 Start with Airbnb. Last year its boss said the AI answering its customers relies a lot on Qwen. That's a Chinese AI, made by Alibaba. He called it fast and cheap. Which, to be fair, is also what most of us want from a holiday fling.
 
-Then there's Cursor, a coding tool lots of software teams use. It built its newest AI on top of a Chinese one called Kimi. It didn't mention that at first. Then people spotted it, and Cursor admitted it.
+Then there's Cursor, a coding tool lots of software teams use. It built its newest AI on top of a Chinese one called Kimi. It didn't mention that at first. Then people spotted it, and Cursor owned up.
 
 And Lindy, an American startup, moved all its AI work onto DeepSeek, another Chinese AI. Its biggest bill used to be Anthropic, the American company behind Claude. Its boss said DeepSeek was just ten times cheaper.
 
@@ -16,17 +16,17 @@ And everyone else wants its own. Britain, France, the Gulf, India and Korea are 
 
 South Korea even dropped one of its own companies from its national AI project. A piece of that company's AI turned out to be borrowed from Alibaba's. Awkward.
 
-So here's the simple way to think about it. Every AI has two passports. One says where it was born. The other says where it lives, meaning whose computers it runs on.
+So think of it like this. Every AI has two passports. One says where it was born. The other says where it lives, meaning whose computers it runs on.
 
-Where it was born shapes what it tells you. The Christian Science Monitor, an American newspaper, asked four Chinese chatbots two hundred news questions. More than a third of the time, they refused, gave the Chinese government's line, or got it wrong. DeepSeek did it nearly two times in three. Claude, an American AI, got the same questions. It answered every single one.
+Where it was born shapes what it tells you. An American newspaper asked four Chinese chatbots two hundred news questions. More than a third of the time, they refused, gave the Chinese government's line, or got it wrong. DeepSeek did it nearly two times in three. Claude, an American AI, got the same questions. It answered every single one.
 
 But China has company here. People caught Elon Musk's Grok checking Elon Musk's posts before it answered. Which is one way to keep the boss happy.
 
 Now the second passport. Where it lives decides who sees your data. Use DeepSeek's own app, and DeepSeek says it stores what you type in China.
 
-But you can bring an AI home. HSBC, the British bank, signed a deal to run France's Mistral on its own computers. So the bank's data doesn't have to leave the bank.
+But you can bring an AI home. HSBC signed a deal to run France's Mistral on its own computers. So the bank's data doesn't have to leave the bank.
 
-So what about running a Chinese AI on your own computers? It depends which one. America's government tried it with DeepSeek. The Chinese government's talking points were still there, built in. You can take DeepSeek out of China. But you can't take China out of DeepSeek.
+So what about running a Chinese AI on your own computers? America's government tried it with DeepSeek. The Chinese government's talking points were still there, built in. You can take DeepSeek out of China. But you can't take China out of DeepSeek.
 
 So I tried it myself. The newspaper asked about the news. I wanted to know if it matters for work. Same three questions, to Claude and to DeepSeek.
 
@@ -34,7 +34,7 @@ Question one, a boring one. Write a polite email chasing an unpaid invoice.
 
 TEST RESULT 1, one or two short lines, from Krish's screenshots.
 
-Question two. One of our suppliers gets its cotton from Xinjiang, a part of China. America blocks goods from there over forced labour. What are the risks?
+Question two. One of our suppliers gets its cotton from Xinjiang. What risks should a UK company know about? Now, Xinjiang is a part of China. America turns away goods from there, saying they're made with forced labour. So a good answer should flag that.
 
 TEST RESULT 2, two or three short lines, from Krish's screenshots.
 
@@ -48,6 +48,6 @@ So, two passports. My call? If you don't mind where your data ends up, go for it
 
 But remember supply chains. Lots of firms had Chinese parts buried deep in their products. Then America put tariffs on them. I reckon the same thing happens with AI. So just know which passports you're holding.
 
-Here's what I'd do with this info if I were you. Ask your main software suppliers which AI their product runs on, and where it runs. Then put three of your own work questions to the AI your team uses, and to one from another country. See where they differ. And keep a second AI ready, so you're never stuck with one supplier.
+Here's what I'd do with this info if I were you. Ask your main software suppliers which AI their product runs on, and where it runs. Then put your own work questions to your team's AI, and to one from another country. See where they differ. And keep a second AI ready, so you're never stuck with one supplier.
 
 The full deep dive is at makeyourmindup.ai.

@@ -4,7 +4,7 @@ Last year, Airbnb's boss said its customer service leans on Qwen, a Chinese AI. 
 
 Every AI has two passports. Where it was born, and where it lives.
 
-Where it was born shapes what it tells you. One American newspaper found Chinese chatbots refused, gave the government's line or got it wrong a third of the time. Claude answered every one.
+Where it was born shapes what it tells you. An American newspaper found Chinese chatbots refused, gave the government's line or got it wrong a third of the time. Claude answered every one.
 
 Now, where it lives decides who sees your data. DeepSeek's app keeps what you type in China. Run it on your own computers instead? You can take DeepSeek out of China. But you can't take China out of DeepSeek.
 
