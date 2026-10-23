@@ -1,5 +1,17 @@
 # Workbench: where we are and what's next
 
+## 23 October: Friday narrative signed, both scripts drafted (Claude)
+
+- **Signed** (`docs/plans/2026-10-19-week/narrative-fri.md`): "Signed, go ahead and draft the scripts". Story A
+  (two passports) opening on his hook "You may already be using a Chinese AI."
+- **Scripts:** `docs/plans/2026-10-23-draft-script.md` (5-minute) and `-90s.md`. Both pass `story_check.py`
+  with stand-in test lines; the real test lines are blank until Krish pastes his Claude and DeepSeek answers to
+  the three questions in the narrative. First read-back (A, B, C per cut) done; fixes in. **Next:** fill the test
+  lines from his answers, `story_check`, final read-back, `making.py scripts`/`read-back`, then Teleprompter.
+  Outline and spine judge still to do before `making.py scripts` accepts them.
+- **Board:** Friday is not on the board's tab yet. `docs/plans/2026-10-19-week/update_friday_23oct.py` was not
+  written (the snapshot command was declined in this session); Wednesday's update script is the pattern.
+
 ## 22 October: Friday 23 Oct (mind.the.gap, sovereign AI) back to the story (Claude)
 
 - **Krish, 16:26 on the board's Queue tab (fri-2):** a simple explainer: who leads the AI race, what

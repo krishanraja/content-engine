@@ -8,7 +8,7 @@ Then there's Cursor, a tool lots of software teams use to write code. It built i
 
 And Lindy, an American startup, moved all its AI work onto DeepSeek, another Chinese AI. Its biggest bill used to be Anthropic, the American company behind Claude. Its boss said DeepSeek was just ten times cheaper.
 
-Now, there's a big site developers use to reach lots of different AIs. It says over forty percent of the American startups on it use DeepSeek in their products.
+See, there's a big site developers use to reach lots of different AIs. It says over forty percent of the American startups on it use DeepSeek in their products.
 
 Now, who's actually in this race? Mostly two countries. Stanford counts the most important new AIs every year. Last year America made fifty-nine. China made thirty-five. And American investors put in over twenty times more money.
 
