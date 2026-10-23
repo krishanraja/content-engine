@@ -9,8 +9,12 @@
   the three questions in the narrative. First read-back (A, B, C per cut) done; fixes in. **Next:** fill the test
   lines from his answers, `story_check`, final read-back, `making.py scripts`/`read-back`, then Teleprompter.
   Outline and spine judge still to do before `making.py scripts` accepts them.
-- **Board:** Friday is not on the board's tab yet. `docs/plans/2026-10-19-week/update_friday_23oct.py` was not
-  written (the snapshot command was declined in this session); Wednesday's update script is the pattern.
+- **Board (Krish: "Keep all three, put them on the board"):** Friday is in draft on
+  https://content.krishraja.com/board/2026-10-19#friday (build a053b673, read back: HTML hash matches, 62 assets kept)
+  with four boxes: the signed narrative, the evidence, both scripts, and one call waiting on him (the test answers).
+  `docs/plans/2026-10-19-week/update_friday_23oct.py` carries Wednesday's boxes over word for word from the live
+  board (some of their sources live only in the Wednesday production folder) and refuses nothing silently: Ideas,
+  Monday and Wednesday came out byte-identical. Rerun it (snapshot, then `--build`) for each Friday republish.
 
 ## 22 October: Friday 23 Oct (mind.the.gap, sovereign AI) back to the story (Claude)
 
