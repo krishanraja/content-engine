@@ -1,6 +1,6 @@
 You may already be using a Chinese AI. You just might not know it. So does it matter where your AI was born?
 
-I've been digging into where the AIs we all use actually come from. And it matters more than you'd think for any business, so I wanted to break it down for you.
+I've been having a proper look at where the AIs we all use actually come from. And it matters more than you'd think for any business, so I wanted to break it down for you.
 
 Start with Airbnb. Last year its boss said the AI answering its customers relies a lot on Qwen. That's a Chinese AI, made by Alibaba. He called it fast and cheap. Which, to be fair, is also what most of us want from a holiday fling.
 
