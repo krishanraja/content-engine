@@ -259,13 +259,19 @@ after recording do I really feel like I've got a message".
   session's rows are `observation_only` unless it relays a decision Krish made
   in words, with `decided_by: 'Krish'`. Never relay a decision he did not
   make, and never write that he expressed a preference he did not state.
-  Silence is not feedback.
+  Silence is not feedback. What he typed is his: an exact quote of words he
+  typed, in any session or on any page, counts as his words, his view of what
+  should be done with that content (Krish, 2026-10-24: "exact typed quotes
+  count as my opinions on what I think you should do with that content"). A
+  paraphrase, a summary or an inference stays an observation.
 - **Every durable taste or performance rule needs explicit user approval.** A
   rule is proposed, may be trialled, and becomes active only when he approves
   it and it lands in code or configuration.
 - **Check before you ask.** Before putting a question to Krish, check whether
   an earlier answer already covers it, read for its reach rather than its
-  literal wording. On mobile, ask in a plain message.
+  literal wording. A question his feedback already answers is not asked
+  (Krish, 2026-10-24: "If you read what I am feeding back, it's pretty
+  obvious what it is"). On mobile, ask in a plain message.
 - **Public publishing is never automatic.** YouTube is private-only; LinkedIn,
   TikTok and Instagram Reels output stays a local draft package; the content
   engine never posts.
