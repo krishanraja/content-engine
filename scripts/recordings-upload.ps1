@@ -660,7 +660,7 @@ function Invoke-Pass {
     # 2026-10-12: "the audio is literally in the drive"). A file the library
     # holds already is left alone; a problem here never stops a pass.
     try { Publish-Music } catch { Write-Log "the music was not published this pass: $($_.Exception.Message)"; Add-Problem 'music_publish_failed' }
-    # The style references Krish drops in Video Engine > Inspiration go to
+    # The style references Krish drops in Ventures > Inspiration > Production Inspo go to
     # the library too, so any session can study them (docs/STYLE_REFERENCES.md;
     # Krish, 2026-10-14: "a folder where I can put videos that I really like
     # ... so that you can learn from them"). Never a reason to fail a pass.

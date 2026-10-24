@@ -1656,7 +1656,7 @@ def ideas_waiting_panel(monday, hidden):
             f'data-state="ideas-waiting" tabindex="-1"{" hidden" if hidden else ""}>'
             f'<div class="day-head"><div class="kick">{E(week_span(monday))}</div><h1>Ideas</h1></div>'
             + slot_empty(f'This week\'s ideas arrive by {short_date(sunday)}: fresh ones from the ideas you drop in Control Center, '
-                         'the Cold Ideas and Inspo folder and the engine\'s own research, with what you queued earlier first.')
+                         'Content Inspo (once Cold Ideas and Inspo) and the engine\'s own research, with what you queued earlier first.')
             + '</div>')
 
 

@@ -61,11 +61,16 @@ one folder, carried out by his own machine, and it covers that folder only.
 2026-10-24: "Yes to Drive filing". The second exception to rule 0a.5, and only
 this: krishanraja/content-watcher, running on his home computers through the
 synced Drive folders, adds the media of a link he pasted on the Inspiration
-board to `makeyourmindup > Video Engine > Inspiration` (a video) or `Cold Ideas
-& Inspo` (anything else), where his own drops go, so the taste ledger makes its
-card. It only adds files: never deletes, never overwrites, never renames, and a
-second fetch of the same post is a no-op. It writes nowhere else in his Drive.
-Its queue is `apps/control-plane/api/watch/` (content-watcher `docs/WATCH_API.md`).
+board to one of the two folders under `Ventures > Inspiration`, where his own
+drops go, so the taste ledger makes its card: **Production Inspo**
+(`1QxrzxISYFXq0er0DG0XSapm7qhvuRmh-`, production quality he likes) or
+**Content Inspo** (`1FNztJOU82M8zb6IIbUAbvuI6Kr0pF5Hu`, the content he likes;
+it was "Cold Ideas & Inspo"). Krish moved them there on 2026-10-24 ("Can you
+ensure absolutely everywhere recalibrates to this moving forward first?");
+`Video Engine > Inspiration` is gone. It only adds files: never deletes, never
+overwrites, never renames, and a second fetch of the same post is a no-op. It
+writes nowhere else in his Drive. Its queue is `apps/control-plane/api/watch/`
+(content-watcher `docs/WATCH_API.md`).
 
 **A recording in the Video Engine Inbox reaches a cloud session through
 `python scripts/post-pack/recording.py get NAME`.** The Drive connector caps

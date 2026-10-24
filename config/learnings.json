@@ -1381,6 +1381,36 @@
    "encoded": []
   },
   {
+   "id": "inspiration-two-folders",
+   "on": "2026-10-24",
+   "krish": "I've consolidated and restructured the inspiration folders inside this. ... one for the content I like ... and one for production quality I like. Can you ensure absolutely everywhere recalibrates to this moving forward first? ... make sure control center and every other place that needs these folders is corrected too",
+   "why": "He reorganised Drive and wants every reader and writer to follow without him chasing each one; a path or ID left behind silently reads an empty or missing folder.",
+   "means": "Inspiration lives in Ventures > Inspiration: Production Inspo (1QxrzxISYFXq0er0DG0XSapm7qhvuRmh-) for production quality he likes, Content Inspo (1FNztJOU82M8zb6IIbUAbvuI6Kr0pF5Hu, once Cold Ideas & Inspo) for content he likes. Video Engine > Inspiration is gone. Every reader finds them by ID where it can; anything on the H: mount reads the configured path and never a stale setting.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "config/style-references.json",
+     "contains": "1QxrzxISYFXq0er0DG0XSapm7qhvuRmh-",
+     "how": "the style references read Production Inspo by its ID and synced path"
+    },
+    {
+     "file": "scripts/quick-edit/references.py",
+     "contains": "a stale setting that no longer exists never wins over the configured folder",
+     "how": "references.py publish finds Production Inspo from config, never a dead MINDMAKE_INSPIRATION"
+    },
+    {
+     "file": "docs/DRIVE.md",
+     "contains": "Ventures > Inspiration",
+     "how": "the Drive map lists both folders with their IDs"
+    },
+    {
+     "file": "AGENTS.md",
+     "contains": "Production Inspo",
+     "how": "content-watcher's Drive exception names the two folders"
+    }
+   ]
+  },
+  {
    "id": "sovereign-not-one-country",
    "on": "2026-10-24",
    "krish": "\"IS YOUR AI CHINESE?\" Sounds incredibly racist. The whole point of this is to understand what sovereign AI means and why countries are fighting to build their own AI as opposed to use another countries. We must not make this feel like we're stirring geopolitical hatred against China, it's just an example",

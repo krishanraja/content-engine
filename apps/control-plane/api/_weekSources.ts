@@ -10,7 +10,7 @@
 //           said:<part>; the database refuses any other manual row), or a topic he asked the engine to research
 //           from Control Center ('requested_research' whose record says requested_by 'Krish'). Last 14 days,
 //           the same window as the engine's, so none of his is dropped while the engine's from that day stays.
-//   inspo   what the Drive scan of his Cold Ideas and Inspo folder wrote ('inspiration_sweep'), last 14 days.
+//   inspo   what the Drive scan of his Content Inspo folder (once Cold Ideas and Inspo) wrote ('inspiration_sweep'), last 14 days.
 //   engine  every other source, still seeded or researching, last 14 days, with its ladder score.
 // Never offered: buried, absorbed, dropped or library rows, anything scheduled or published, and queued ideas
 // (they are the Queue tab, and "From your queue" on each day).
@@ -196,7 +196,7 @@ export function buildSources(input: { weekStart: string; series: string[]; rows:
   if (!counts.his) empty.push({ source: 'his', why: relayed.length
     ? `no idea rows from Krish since ${win.his_since.slice(0, 10)}; ${relayed.length} relayed board item(s) hold his words (his_relayed)`
     : `nothing from Krish since ${win.his_since.slice(0, 10)}: no idea through Control Center's one door, no topic he asked to research, no relayed board item` })
-  if (!counts.inspo) empty.push({ source: 'inspo', why: `the Drive scan wrote nothing new since ${win.pool_since.slice(0, 10)}; read the Cold Ideas and Inspo folder through the Drive connector` })
+  if (!counts.inspo) empty.push({ source: 'inspo', why: `the Drive scan wrote nothing new since ${win.pool_since.slice(0, 10)}; read the Content Inspo folder (Ventures > Inspiration) through the Drive connector` })
   if (!counts.engine) empty.push({ source: 'engine', why: `no seeded or researching engine idea since ${win.pool_since.slice(0, 10)}` })
   const strip = (t: TasteItem) => ({ id: t.id, idea: t.idea, angle: t.angle, reason: t.reason, at: t.at })
   return {
