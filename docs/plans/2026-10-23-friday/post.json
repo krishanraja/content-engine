@@ -1,0 +1,89 @@
+{
+  "piece_id": "7083d6ad-419e-4fdc-9aba-f3be7f3f3a23",
+  "date": "2026-10-23",
+  "subchannel": "mind.the.gap",
+  "subject": "Why every country wants its own AI",
+  "headline": "Why every country wants its own AI, and what that means for your business",
+  "video_title": "Why every country wants its own AI",
+  "files": [
+    {
+      "kind": "fact-checked-text",
+      "file": "../2026-10-23-draft-body.md"
+    },
+    {
+      "kind": "cover",
+      "file": "../../../.cache/friday-visual/cover/cover.png",
+      "logos": [
+        "Anthropic",
+        "OpenAI",
+        "DeepSeek"
+      ]
+    },
+    {
+      "kind": "substack-cover",
+      "file": "../../../.cache/friday-visual/cover/cover-1200x630.png",
+      "logos": [
+        "Anthropic",
+        "OpenAI",
+        "DeepSeek"
+      ]
+    },
+    {
+      "kind": "share-card-cover",
+      "file": "../../../.cache/friday-visual/cover/cover-1200x675.png",
+      "logos": [
+        "Anthropic",
+        "OpenAI",
+        "DeepSeek"
+      ]
+    },
+    {
+      "kind": "square-cover",
+      "file": "../../../.cache/friday-visual/cover/cover-1080x1080.png",
+      "logos": [
+        "Anthropic",
+        "OpenAI",
+        "DeepSeek"
+      ]
+    },
+    {
+      "kind": "vertical-cover",
+      "file": "../../../.cache/friday-visual/cover/cover-1080x1920.png",
+      "logos": [
+        "Anthropic",
+        "OpenAI",
+        "DeepSeek"
+      ]
+    },
+    {
+      "kind": "thumbnail",
+      "shape": "wide",
+      "file": "../../../.cache/friday-visual/thumbs/thumb-wide-1280x720.jpg",
+      "logos": [
+        "Anthropic",
+        "OpenAI",
+        "DeepSeek"
+      ]
+    },
+    {
+      "kind": "thumbnail",
+      "shape": "tall",
+      "file": "../../../.cache/friday-visual/thumbs/thumb-tall-1080x1920.jpg",
+      "logos": [
+        "Anthropic",
+        "OpenAI",
+        "DeepSeek"
+      ]
+    },
+    {
+      "kind": "video-script",
+      "cut": "long",
+      "file": "../2026-10-23-draft-script.md"
+    },
+    {
+      "kind": "video-script",
+      "cut": "short",
+      "file": "../2026-10-23-draft-script-90s.md"
+    }
+  ]
+}

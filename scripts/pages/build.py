@@ -1010,9 +1010,23 @@ def draw_cover(facts, base, out, refresh=False):
         }""")
         size, lines = pg.evaluate(FIT_HEADLINE_JS, [list(COVER_HEAD_PX), COVER_HEAD_LINES])
         cut = card.outside(card.boxes(pg, '#safe'), COVER_SAFE)
+
+        def smaller(size, lines):
+            """A smaller size on the ladder can take a line fewer and make room for the rows
+            (Friday 23 Oct: three lines at 104 px, two at 100): try each before giving up."""
+            for px in [s for s in COVER_HEAD_PX if s < size]:
+                fewer = pg.evaluate(FIT_HEADLINE_JS, [[px], COVER_HEAD_LINES])
+                if not card.outside(card.boxes(pg, '#safe'), COVER_SAFE):
+                    return fewer, []
+            pg.evaluate(FIT_HEADLINE_JS, [[size], COVER_HEAD_LINES])
+            return (size, lines), card.outside(card.boxes(pg, '#safe'), COVER_SAFE)
+        if cut:
+            (size, lines), cut = smaller(size, lines)
         dropped = False
         if cut and pg.evaluate("() => { const f = document.querySelector('#safe .ft'); if (f) f.remove(); return !!f; }"):
             cut = card.outside(card.boxes(pg, '#safe'), COVER_SAFE)
+            if cut:
+                (size, lines), cut = smaller(size, lines)
             dropped = not cut
         words = card.texts(pg, (0, 0, COVER_W, COVER_H))
         small = card.too_small(words, COVER_W)

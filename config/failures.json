@@ -775,6 +775,25 @@
      "how": "read at the start of every Claude Code session, with the rules to send asked-for files first and leave handed-off work alone"
     }
    ]
+  },
+  {
+   "id": "handed-to-codex-unrecorded",
+   "on": "2026-10-24",
+   "krish": "This worries me, does not seem like you did your bit of the job",
+   "what": "Claude locked Friday's scripts, visual copy and storyboard and handed the piece to Codex, but never recorded the Visual gate, Scripts, read-backs or Pack on the making record. produce-video stopped Codex, and Codex asked Krish whether it could fill in Claude's record. The cover and thumbnails had never been drawn or gated.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": ".agents/skills/make-piece/SKILL.md",
+     "contains": "Before a piece goes to Codex, the record must say so",
+     "how": "make-piece's last step: every step up to Recorded reads done on making.py show before a hand-off to Codex."
+    },
+    {
+     "file": ".agents/skills/produce-video/SKILL.md",
+     "contains": "Scripts must read done",
+     "how": "produce-video stops on a piece whose Scripts step is not done."
+    }
+   ]
   }
  ]
 }

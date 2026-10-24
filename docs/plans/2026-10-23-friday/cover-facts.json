@@ -1,0 +1,63 @@
+{
+  "subchannel": "mind.the.gap",
+  "date": "2026-10-23",
+  "headline": "Why every country wants its own AI, and what that means for your business",
+  "video_title": "Why every country wants its own AI",
+  "video_title_emphasis": "its own AI",
+  "comment_question": "WHICH PASSPORTS DOES YOUR AI HOLD?",
+  "cover": {
+    "headline": [
+      "WHY EVERY COUNTRY",
+      "WANTS ITS OWN AI"
+    ],
+    "portrait": true,
+    "rows": [
+      {
+        "name": "Anthropic",
+        "logo": "logos/anthropic-symbol-cream.svg",
+        "tag": "Claude",
+        "colour": "lilac"
+      },
+      {
+        "name": "OpenAI",
+        "logo": "logos/openai-symbol-cream.svg",
+        "tag": "ChatGPT",
+        "colour": "mint"
+      },
+      {
+        "name": "DeepSeek",
+        "logo": "logos/deepseek-symbol.svg",
+        "tag": "DeepSeek",
+        "colour": "butter"
+      }
+    ]
+  },
+  "thumbs": {
+    "headline": [
+      "EVERY COUNTRY",
+      "WANTS ITS OWN AI"
+    ],
+    "portrait": true,
+    "rows": [
+      {
+        "name": "Anthropic",
+        "logo": "logos/anthropic-symbol-cream.svg",
+        "tag": "Claude",
+        "colour": "lilac"
+      },
+      {
+        "name": "OpenAI",
+        "logo": "logos/openai-symbol-cream.svg",
+        "tag": "ChatGPT",
+        "colour": "mint"
+      },
+      {
+        "name": "DeepSeek",
+        "logo": "logos/deepseek-symbol.svg",
+        "tag": "DeepSeek",
+        "colour": "butter"
+      }
+    ]
+  },
+  "piece_id": "7083d6ad-419e-4fdc-9aba-f3be7f3f3a23"
+}
