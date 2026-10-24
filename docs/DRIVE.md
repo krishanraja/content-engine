@@ -101,3 +101,9 @@ The first three are in `04_Content` (`1ELCdOmMGXWmLpuheEoAKA-_4jvYbmbn3`).
   create files and folders, rename and move them. It cannot see the H: mount;
   only the home computers can.
 - Public copy never carries a Drive path (`NOW.md`, `never_publish`).
+- Two writers outside the library sync are allowed, each by Krish's word. The
+  library sync (AGENTS.md). And content-watcher (Krish, 2026-10-24: "Yes to
+  Drive filing"): on his home computers, through the synced folders, it adds
+  the media of links he pasted to `Video Engine > Inspiration` (videos) and
+  `Cold Ideas & Inspo` (everything else). Add only: it never deletes,
+  overwrites or renames, and it writes nowhere else.
