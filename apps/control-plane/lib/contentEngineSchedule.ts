@@ -63,6 +63,10 @@ export const CONTENT_ENGINE_JOBS: ContentEngineJob[] = [
   // Hourly, keyless: marks a piece published when its post is live on
   // Substack, and closes the board items that waited on it.
   { job: 'publish_watch',    path: '/api/publish/watch',                 label: 'Publish watcher',       everyHours: DAY,  graceHours: 12 },
+  // Every ten minutes: the Video Engine Inbox, read from Google by its folder
+  // ID, copied into the recordings store; it also fails while a home
+  // computer's last pass reported a problem (api/library/_lanes.ts).
+  { job: 'recordings_drive_inbox', path: '/api/library/recordings/drive-inbox', label: 'Recordings Inbox', everyHours: 1, graceHours: 1 },
 ]
 
 export interface ContentEngineRunRow {
