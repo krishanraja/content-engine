@@ -159,6 +159,9 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/video-studio/runner/project`
 - `/api/video-studio/runner/watch`
 - `/api/video-studio/session`
+- `/api/watch/claim`
+- `/api/watch/read`
+- `/api/watch/report`
 - `/api/week/options`
 - `/api/workbench`
 
@@ -2596,6 +2599,48 @@ Which Windows runner may take work, and how each one looks from the cloud.
 - `export default withContentRun('runner_watch', handler)`
 
 ### `apps/control-plane/api/video-studio/session.ts`
+
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
+
+### `apps/control-plane/api/watch/_watch.ts`
+
+The content-watcher queue: what the home computers may claim, report and read, decided without a database.
+
+- `const STALE_CLAIM_MS`
+- `const MAX_ATTEMPTS`
+- `const MAX_CLAIM`
+- `const MAX_FILES`
+- `interface WatchRequestRow`
+- `interface MediaEntry`
+- `interface ReadRow`
+- `interface WatchStore`
+- `type Parsed<T> = { ok: true; value: T } | { ok: false; error: string }`
+- `function parseClaim(body: unknown): Parsed<{ machine: string; limit: number }>`
+- `function parseMedia(value: unknown): MediaEntry[] | null`
+- `function parseReads(value: unknown): ReadRow[] | null`
+- `interface ReportBody`
+- `function parseReport(body: unknown): Parsed<ReportBody>`
+- `function parseReadOnly(body: unknown): Parsed<{ machine: string; reads: ReadRow[] }>`
+- `function compareRev(a: string, b: string): number`
+- `function claimView(row: WatchRequestRow)`
+- `async function claim(store: WatchStore, machine: string, limit: number, now = new Date())`
+- `async function writeReads(store: WatchStore, rows: ReadRow[])`
+- `type ReportOutcome`
+- `async function report(store: WatchStore, body: ReportBody, now = new Date()): Promise<ReportOutcome>`
+
+### `apps/control-plane/api/watch/_watchStore.ts`
+
+- `const watchStore: WatchStore`
+
+### `apps/control-plane/api/watch/claim.ts`
+
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
+
+### `apps/control-plane/api/watch/read.ts`
+
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
+
+### `apps/control-plane/api/watch/report.ts`
 
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 
