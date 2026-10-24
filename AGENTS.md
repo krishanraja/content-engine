@@ -424,10 +424,10 @@ while a copy differs from its source. For the content engine, `npm run
 typecheck:control-plane` and `npm run check:control-plane`. Known failures on
 `main` are listed in `docs/STATE.md`; anything else failing is yours to fix.
 
-<!-- krish-canon:start release=v2026.10.22.1 sha=3f48007261dd rendered=2026-10-23 -->
+<!-- krish-canon:start release=v2026.10.24.1 sha=2f2be0d13d10 rendered=2026-10-24 -->
 ## Krish canon
 
-Rendered from `krishanraja/ai-harness` at release v2026.10.22.1. Nothing inside these
+Rendered from `krishanraja/ai-harness` at release v2026.10.24.1. Nothing inside these
 markers is hand-maintained: an edit here is detected and proposed back to the canon,
 never silently overwritten, and never lost. This sync preserves all other text.
 Separately approved repository administration owns only its declared regions and context file.
