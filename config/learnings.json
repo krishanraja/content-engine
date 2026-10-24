@@ -1327,6 +1327,51 @@
    ]
   },
   {
+   "id": "drive-folders-by-id",
+   "on": "2026-10-24",
+   "krish": "Isn't there a better way of doing this than the path name? Folders get renamed all the time and moved all the time. Surely, the whole point of having a Google Drive is that there's a specific ID for a specific folder. ... A. ... I recently moved more or less all of my Google Drive folders, can we do a check of anywhere the control-center or content-engine interacts with Google Drive and ensure it is bulletproof and correct everywhere?",
+   "why": "He renamed Ventures\\Active to Active Ventures; both home computers kept the old path in their settings and logged 'the Inbox cannot be reached' into a hidden log for two days, so six Friday takes sat in the Inbox for five hours and nothing told him.",
+   "means": "A Drive folder is found by its ID, never by its path, wherever the API allows it: the engine reads the Video Engine Inbox from Google by its folder ID. What must go through the H: mount keeps its folder's ID beside its path, and every place that reads Drive fails loudly where Krish sees it (a failed job in Control Center), never only in a local log. A stale setting on a machine is reported and passed over, never obeyed into silence.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "apps/control-plane/api/library/_inboxDrive.ts",
+     "contains": "export const INBOX_FOLDER_ID",
+     "how": "the engine lists the Inbox by its ID and copies each new take into the recordings store every ten minutes"
+    },
+    {
+     "file": "apps/control-plane/api/library/recordings/drive-inbox.ts",
+     "contains": "the Video Engine Inbox cannot be read by its ID",
+     "how": "an unshared, deleted or binned Inbox fails the recordings_drive_inbox job with its fix"
+    },
+    {
+     "file": "apps/control-plane/api/library/_lanes.ts",
+     "contains": "export const LANE_PROBLEMS",
+     "how": "a home computer's stale setting, unreachable Inbox or failed publish fails the job with the machine named"
+    },
+    {
+     "file": "scripts/recordings-upload.ps1",
+     "contains": "function Send-LaneReport",
+     "how": "every pass reports what it found to the engine and reads its settings fresh from the registry"
+    },
+    {
+     "file": "packages/core/src/paths.ts",
+     "contains": "export function resolveWindowsDrivePath",
+     "how": "a setting naming a missing folder is passed over for the default and reported by doctor"
+    },
+    {
+     "file": "config/studio.json",
+     "contains": "\"drive_ids\"",
+     "how": "each runtime folder's Drive ID beside its path"
+    },
+    {
+     "file": "docs/DRIVE.md",
+     "contains": "Folders are found by ID, never by path",
+     "how": "the rule every session reads before touching Drive"
+    }
+   ]
+  },
+  {
    "id": "visuals-add-not-repeat",
    "on": "2026-10-24",
    "krish": "The narrative and the visuals should match and be additive and not duplicative to one another. Just a reminder that we're going to need to up our game on visuals with the voiceover version - I want motion and world-class motion design in a specific visual aesthetic",

@@ -106,6 +106,10 @@
     {
       "path": "/api/publish/watch",
       "schedule": "17 * * * *"
+    },
+    {
+      "path": "/api/library/recordings/drive-inbox",
+      "schedule": "*/10 * * * *"
     }
   ],
   "functions": {
@@ -135,6 +139,9 @@
     },
     "api/board/index.ts": {
       "maxDuration": 300
+    },
+    "api/library/recordings/drive-inbox.ts": {
+      "maxDuration": 600
     }
   },
   "rewrites": [

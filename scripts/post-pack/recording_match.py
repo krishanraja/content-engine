@@ -427,6 +427,9 @@ def waiting_pieces(call, monday):
 
 # ------------------------------------------------------------- the scripts
 
+_LIBRARY_ROOTS_WARNED = []
+
+
 def library_roots():
     """Where a piece's pack can be: <root>/<folder>/3 Video/<name>."""
     roots = []
@@ -439,6 +442,15 @@ def library_roots():
         configured = None
     if configured and os.name == 'nt':
         roots.append(Path(configured) / POSTS)
+    if os.name == 'nt':
+        # A moved or renamed library is said once, never passed over in
+        # silence (Krish, 2026-10-24: "ensure it is bulletproof and correct
+        # everywhere"). The pack folder in this copy is still looked in.
+        missing = [str(root) for root in roots if not root.is_dir()]
+        if missing and not _LIBRARY_ROOTS_WARNED:
+            _LIBRARY_ROOTS_WARNED.append(True)
+            print(f'the asset library is not at {"; ".join(missing)} on this machine; '
+                  'set runtime.library_root in config/studio.json to its path (docs/DRIVE.md)', file=sys.stderr)
     roots.append(PACK_OUT)
     unique = []
     for root in roots:
