@@ -73,6 +73,21 @@ agents never write into his Drive; this is his explicit instruction for that
 one folder, carried out by his own machine, and it covers that folder only.
 `scripts/post-pack/README.md` has the layout and the commands.
 
+**content-watcher files fetched posts into his two inspiration folders.** Krish,
+2026-10-24: "Yes to Drive filing". The second exception to rule 0a.5, and only
+this: krishanraja/content-watcher, running on his home computers through the
+synced Drive folders, adds the media of a link he pasted on the Inspiration
+board to one of the two folders under `Ventures > Inspiration`, where his own
+drops go, so the taste ledger makes its card: **Production Inspo**
+(`1QxrzxISYFXq0er0DG0XSapm7qhvuRmh-`, production quality he likes) or
+**Content Inspo** (`1FNztJOU82M8zb6IIbUAbvuI6Kr0pF5Hu`, the content he likes;
+it was "Cold Ideas & Inspo"). Krish moved them there on 2026-10-24 ("Can you
+ensure absolutely everywhere recalibrates to this moving forward first?");
+`Video Engine > Inspiration` is gone. It only adds files: never deletes, never
+overwrites, never renames, and a second fetch of the same post is a no-op. It
+writes nowhere else in his Drive. Its queue is `apps/control-plane/api/watch/`
+(content-watcher `docs/WATCH_API.md`).
+
 **A recording in the Video Engine Inbox reaches a cloud session through
 `python scripts/post-pack/recording.py get NAME`.** The Drive connector caps
 downloads at 10 MB, so never tell Krish a recording cannot be reached; if the
@@ -275,13 +290,19 @@ after recording do I really feel like I've got a message".
   session's rows are `observation_only` unless it relays a decision Krish made
   in words, with `decided_by: 'Krish'`. Never relay a decision he did not
   make, and never write that he expressed a preference he did not state.
-  Silence is not feedback.
+  Silence is not feedback. What he typed is his: an exact quote of words he
+  typed, in any session or on any page, counts as his words, his view of what
+  should be done with that content (Krish, 2026-10-24: "exact typed quotes
+  count as my opinions on what I think you should do with that content"). A
+  paraphrase, a summary or an inference stays an observation.
 - **Every durable taste or performance rule needs explicit user approval.** A
   rule is proposed, may be trialled, and becomes active only when he approves
   it and it lands in code or configuration.
 - **Check before you ask.** Before putting a question to Krish, check whether
   an earlier answer already covers it, read for its reach rather than its
-  literal wording. On mobile, ask in a plain message.
+  literal wording. A question his feedback already answers is not asked
+  (Krish, 2026-10-24: "If you read what I am feeding back, it's pretty
+  obvious what it is"). On mobile, ask in a plain message.
 - **Public publishing is never automatic.** YouTube is private-only; LinkedIn,
   TikTok and Instagram Reels output stays a local draft package; the content
   engine never posts.
@@ -298,8 +319,10 @@ after recording do I really feel like I've got a message".
   `meter_daily`. Research through Perplexity, Exa and Brave is not metered, so
   count it yourself.
 - **Drive folders are load-bearing.** Read `docs/DRIVE.md` before you put
-  anything in Google Drive or move, rename or tidy a folder there. `Video
-  Engine` and `makeyourmindup` are read by path and never move.
+  anything in Google Drive or move, rename or tidy a folder there. Folders are found by ID,
+  never by path, wherever the API allows it (Ruling, Krish, 2026-10-24); the
+  home computers still reach `Video Engine` and `makeyourmindup` through `H:`,
+  so a move needs its new path in `config/studio.json` `runtime`.
 - **Leave the knowledge in the repository.** What you learn about the engine
   goes into `docs/STATE.md`, `docs/walks/` or the document it corrects, never
   only into a chat.
@@ -401,7 +424,7 @@ while a copy differs from its source. For the content engine, `npm run
 typecheck:control-plane` and `npm run check:control-plane`. Known failures on
 `main` are listed in `docs/STATE.md`; anything else failing is yours to fix.
 
-<!-- krish-canon:start release=v2026.10.22.1 sha=87df30a2c563 rendered=2026-10-22 -->
+<!-- krish-canon:start release=v2026.10.22.1 sha=3f48007261dd rendered=2026-10-23 -->
 ## Krish canon
 
 Rendered from `krishanraja/ai-harness` at release v2026.10.22.1. Nothing inside these
@@ -444,7 +467,7 @@ lives only in a chat window teaches nothing.
 **Route.** principles, then context, then `strategy-brief`, then the producer, then
 `verification-loop`, then the approval gate, then delivery. The narrowest applicable
 skill wins; a broad "always" or "mandatory" claim inside a skill never overrides the
-router. One primary writer; validators may stack after it, competing writers may not. **North Star:** before any work, read the North Star linked from the `north-star` block in `AGENTS.md` or `CLAUDE.md`, say which part of it the task moves, and say so first when it moves nothing; only Krish changes it, and a repository with none asks him for one. **Close out:** before a session that changed the repository ends, update `NOW.md` (status, the single next step, and one dated North Star check line: holds, or recalibration proposed for Krish). **One home per fact:** read a venture's state from its repository, doctrine from ai-harness; never keep a copy.
+router. One primary writer; validators may stack after it, competing writers may not. **North Star:** before any work, read the North Star linked from the `north-star` block in `AGENTS.md` or `CLAUDE.md`, say which part of it the task moves, and say so first when it moves nothing; only Krish changes it, and a repository with none asks him for one. Then read the number's urgency (U1 to U5) in `NOW.md` and push at the intensity `contract/north-star-metric.md` sets for it; urgency never widens authority. **Close out:** before a session that changed the repository ends, update `NOW.md` (status, the single next step, and one dated North Star check line: holds, or recalibration proposed for Krish). **One home per fact:** read a venture's state from its repository, doctrine from ai-harness; never keep a copy.
 
 **Who Krish is.** Purpose: "I see what is coming before it is obvious and make it
 legible to people while it still counts." Mindmake is his mission and his one company;

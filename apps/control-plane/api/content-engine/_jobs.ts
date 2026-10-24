@@ -51,6 +51,7 @@ export const JOBS: Readonly<Record<string, JobEntry>> = Object.freeze({
   judge_ladder: { path: '/api/judge/ladder', safety: 'manual_only', note: 'Spends on the nine-judge panel and can rewrite a thesis while repairing it. Re-run one idea by id, never the whole ladder blind.' },
   signals_news: { path: '/api/signals/news', safety: 'replayable', note: 'Keyless reads of GDELT and Hacker News; observations insert ON CONFLICT DO NOTHING, so a replay writes nothing twice. GDELT allows one call every five seconds, so a replay takes about a minute.' },
   publish_watch: { path: '/api/publish/watch', safety: 'replayable', note: 'Keyless read of the public Substack archive; marks a piece published only once and closes board items only once, so a replay changes nothing it already changed.' },
+  recordings_drive_inbox: { path: '/api/library/recordings/drive-inbox', safety: 'replayable', note: 'Keyed by sha256: a recording already in the store is skipped, so a replay copies only what the next tick would.' },
   signals_odds: { path: '/api/signals/odds', safety: 'replayable', note: 'Keyless reads of Polymarket and Kalshi; a replay appends one more reading to each pinned Call\'s history, which is harmless and dated.' },
 })
 

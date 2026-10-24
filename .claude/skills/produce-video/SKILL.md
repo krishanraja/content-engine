@@ -582,7 +582,12 @@ report these numbers back in plain words:
   `remove` where he stumbled or paused; never speed it up unless Krish has
   said so in words for that cut, and then only through the config's
   `"speed": {"factor": F, "krish": "Krish, DATE: his words"}` (make.py
-  refuses it without his words, and over 1.35). Still over: tell Krish both
+  refuses it without his words, and over 1.35). A sped cut is sped once, as
+  one continuous file, then transcribed fresh on the sped clock: its cut
+  points and its caption file come only from that new transcript, and the
+  finished file's own transcript must hold every word of the script in order
+  (Krish, 2026-10-24: "last time Codex glitched a bunch of words on the
+  speedup and also misaligned the captions"). Still over: tell Krish both
   numbers before it goes anywhere. When only `total_seconds` is
   over 90 (his speech is inside it), say both numbers in your report; it is
   not a stop, and it is his open question in `WORKBENCH.md`.

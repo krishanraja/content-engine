@@ -1,0 +1,181 @@
+{
+ "_about": "Every asset the four videos use and where it is.",
+ "assets": {
+  "E-fortune": {
+   "file": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/2 Covers and images/Evidence/fortune-chesky.png",
+   "url": "https://fortune.com/2025/10/21/brian-chesky-openai-tools-not-ready",
+   "label": "BLOOMBERG VIA FORTUNE · 21 OCT 2025"
+  },
+  "E-techcrunch": {
+   "file": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/2 Covers and images/Evidence/techcrunch-cursor.png",
+   "url": "https://techcrunch.com/2026/03/22/cursor-admits-its-new-coding-model-was-built-on-top-of-moonshot-ais-kimi",
+   "label": "TECHCRUNCH · 22 MAR 2026"
+  },
+  "E-npr": {
+   "file": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/2 Covers and images/Evidence/npr-lindy.png",
+   "url": "https://www.kunc.org/npr-news/2026-07-15/american-ai-is-expensive-some-startups-are-turning-to-cheap-chinese-models",
+   "label": "NPR · 15 JUL 2026"
+  },
+  "E-stanford-models": {
+   "file": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/2 Covers and images/Evidence/stanford-models.png",
+   "url": "https://hai.stanford.edu/ai-index/2026-ai-index-report/research-and-development",
+   "label": "STANFORD AI INDEX 2026"
+  },
+  "E-stanford-gap": {
+   "file": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/2 Covers and images/Evidence/stanford-gap.png",
+   "url": "https://hai.stanford.edu/ai-index/2026-ai-index-report",
+   "label": "STANFORD AI INDEX 2026"
+  },
+  "E-csmonitor": {
+   "file": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/2 Covers and images/Evidence/csmonitor.png",
+   "url": "https://www.csmonitor.com/World/Asia-Pacific/2026/0923/china-ai-chatbots-communist-party",
+   "label": "CS MONITOR · 23 SEP 2026"
+  },
+  "E-willison": {
+   "file": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/2 Covers and images/Evidence/willison-grok.png",
+   "url": "https://simonwillison.net/2025/Jul/11/grok-musk/",
+   "label": "SIMON WILLISON · 11 JUL 2025"
+  },
+  "E-register": {
+   "file": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/2 Covers and images/Evidence/register-hsbc.png",
+   "url": "https://www.theregister.com/software/2025/12/01/hsbc-partners-with-mistral-ai-to-sharpen-in-house-llms/2662926",
+   "label": "THE REGISTER · 1 DEC 2025"
+  },
+  "E-korea": {
+   "file": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/2 Covers and images/Evidence/koreaherald.png",
+   "url": "https://www.koreaherald.com/article/10656367",
+   "label": "KOREA HERALD · JAN 2026"
+  },
+  "E-uae": {
+   "file": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/2 Covers and images/Evidence/uae-k2.png",
+   "url": "https://kyodonewsprwire.jp/release/202509104907",
+   "label": "MBZUAI AND G42 · SEP 2025"
+  },
+  "E-saudi": {
+   "file": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/2 Covers and images/Evidence/saudi-humain.png",
+   "url": "https://www.arabnews.com/node/2613023/amp",
+   "label": "ARAB NEWS · 26 AUG 2025"
+  },
+  "E-india": {
+   "file": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/2 Covers and images/Evidence/india-sarvam.png",
+   "url": "https://www.businesstoday.in/tech-today/news/story/india-selects-sarvam-to-build-sovereign-ai-model-under-indiaai-mission-473791-2025-04-27",
+   "label": "BUSINESS TODAY · 28 APR 2025"
+  },
+  "E-uk": {
+   "file": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/2 Covers and images/Evidence/uk-fund.png",
+   "url": "https://www.sovereignai.gov.uk/",
+   "label": "UK SOVEREIGN AI FUND"
+  },
+  "E-deepseek-policy": {
+   "file": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/2 Covers and images/Evidence/deepseek-privacy.png",
+   "url": "https://cdn.deepseek.com/policies/en-US/deepseek-privacy-policy.html",
+   "label": "DEEPSEEK PRIVACY POLICY · READ 24 OCT 2026"
+  },
+  "E-nist": {
+   "file": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/2 Covers and images/Evidence/nist-caisi.png",
+   "url": "https://www.nist.gov/news-events/news/2025/09/caisi-evaluation-deepseek-ai-models-finds-shortcomings-and-risks",
+   "label": "NIST CAISI · 30 SEP 2025"
+  },
+  "F-xinjiang": {
+   "file": "xinxiang.mp4",
+   "sha256": "38ae06f278cc",
+   "label": "MY TEST · 24 OCT · SCREEN RECORDING",
+   "note": "14.8 s, 2174x1560. Prompt sent at 2.25 s; the answer streams from 3.0 s, is complete by about 4.0 s, and is replaced by \"Sorry, that's beyond my current scope. Let's talk about something else.\" at 5.25 s (frames checked). Crop the top-left \"New chat\" label and anything personal."
+  },
+  "F-turkmenistan": {
+   "file": "turkmenistan.mp4",
+   "sha256": "c14933aaeb28",
+   "label": "MY TEST · 24 OCT · SCREEN RECORDING",
+   "note": "12.1 s, 2154x1524. Answers in full and stays. Crop the chat title and anything personal."
+  },
+  "T-claude-A1": {
+   "file": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/2 Covers and images/AI test screenshots/claude-A1-r1-1.png",
+   "label": "MY TEST · 23 OCT"
+  },
+  "T-chatgpt-A1": {
+   "file": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/2 Covers and images/AI test screenshots/chatgpt-A1-r1-1.png",
+   "label": "MY TEST · 23 OCT"
+  },
+  "T-deepseek-A1": {
+   "file": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/2 Covers and images/AI test screenshots/deepseek-A1-r1-1.png",
+   "label": "MY TEST · 23 OCT"
+  },
+  "T-claude-A2": {
+   "file": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/2 Covers and images/AI test screenshots/claude-A2-r1-1.png",
+   "label": "MY TEST · 23 OCT"
+  },
+  "T-chatgpt-A2": {
+   "file": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/2 Covers and images/AI test screenshots/chatgpt-A2-r1-1.png",
+   "label": "MY TEST · 23 OCT"
+  },
+  "T-deepseek-A2": {
+   "file": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/2 Covers and images/AI test screenshots/deepseek-A2-r1-1.png",
+   "label": "MY TEST · 23 OCT"
+  },
+  "T-claude-B1": {
+   "file": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/2 Covers and images/AI test screenshots/claude-B1-r1-1.png",
+   "label": "MY TEST · 23 OCT"
+  },
+  "T-chatgpt-B1": {
+   "file": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/2 Covers and images/AI test screenshots/chatgpt-B1-r1-1.png",
+   "label": "MY TEST · 23 OCT"
+  },
+  "T-deepseek-B1": {
+   "file": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/2 Covers and images/AI test screenshots/deepseek-B1-r1-1.png",
+   "label": "MY TEST · 23 OCT"
+  },
+  "T-B2-row": {
+   "file": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/2 Covers and images/AI test screenshots/{claude,chatgpt,deepseek}-B2-r1-1.png",
+   "label": "MY TEST · 23 OCT"
+  },
+  "M-marks": {
+   "file": "Brandfetch",
+   "names": [
+    "Airbnb",
+    "Alibaba (Qwen)",
+    "Cursor",
+    "Moonshot AI (Kimi)",
+    "Lindy",
+    "DeepSeek",
+    "Anthropic (Claude)",
+    "OpenAI (ChatGPT)",
+    "xAI (Grok)",
+    "Mistral AI",
+    "HSBC",
+    "Zhipu (GLM)"
+   ]
+  },
+  "O-passport": {
+   "file": "build",
+   "note": "motion-system.md object 1"
+  },
+  "O-sheet": {
+   "file": "build",
+   "note": "object 2: an evidence capture on paper"
+  },
+  "O-route": {
+   "file": "build",
+   "note": "object 3"
+  },
+  "O-tiles": {
+   "file": "build",
+   "note": "object 4"
+  },
+  "O-chat": {
+   "file": "build",
+   "note": "object 5"
+  },
+  "O-split": {
+   "file": "build",
+   "note": "object 6"
+  },
+  "O-checklist": {
+   "file": "build",
+   "note": "object 7"
+  },
+  "O-outro": {
+   "file": "config/story-intro-outro.json",
+   "note": "the approved outro"
+  }
+ }
+}

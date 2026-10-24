@@ -14,65 +14,61 @@
   production (`sources.inspiration`). Three routed cards must be on the board or accounted for: the Duet page,
   "Reading is free. Sending needs a yes." and the models-by-country picture.
 - **Waiting on Krish:** required status checks on `main`.
+## 24 October: Friday locked and signed off; Codex makes the videos (Claude)
 
-## 23 October, afternoon: Friday test scored, both scripts filled, on the board for Krish's review (Claude)
+- **Signed off by Krish:** storyboard, no trim, titles, outline ("signed off, keep, all A"), prediction A2 ("a2"), and
+  the six first-person test lines in the fact gate ("yes, $0.30, and I sign off my test lines"). Spend: $1.09 of the
+  $1.30 he approved.
+- **Done:** the article (`docs/plans/2026-10-23-draft-body.md`, on the piece; fact gate `ok`, voice, AI scan and spine
+  checks pass) and every channel's copy (`docs/plans/2026-10-23-friday/locked/board-copy/`: `article.md`,
+  `publishing-copy.md`; voice score 4.5, bar 6). The board shows the signed storyboards (revision 50).
+- **Waiting on Krish:** start Codex by pasting `docs/plans/2026-10-23-friday/locked/CODEX_PROMPT.md` (the part below
+  the line) into a new Codex session on a home computer. Then his look at the four videos on the board, then his yes
+  to the final board publish.
+- **Changed after sign-off (his answers, 24 Oct):** the 90-second on-camera cut loses the recap and three small repeats
+  ("Cut the recap (Recommended)"), and both vertical cuts are sped to 1.12x ("Speed both to 1.12x (Recommended)") so the
+  whole file with intro and outro runs under 89 s. His warning, "last time Codex glitched a bunch of words on the
+  speedup and also misaligned the captions", is `config/learnings.json` `speedup-without-glitches` and the
+  "Speed without glitches" section of `CODEX.md`.
+- **Making record completed by Claude (24 Oct, after Codex stopped on it):** Visual gate (cover and thumbnails drawn
+  from his picked words, gate passed), Scripts with both read-backs (two fresh readers each, nothing lost) and Pack
+  (sent to the Two passports library folder) are recorded; every step up to Recorded reads done. `scripts/pages/build.py`
+  now tries the smaller headline sizes on its ladder before refusing a 3:2 cover.
+- **Codex** works from `locked/CODEX.md` and nothing else; it fills only the chapter times in `publishing-copy.md`.
+- **Where things are:** takes in the engine's recordings store (`recording.py list`); evidence captures under
+  `2 Covers and images/Evidence` and the storyboards under `2 Covers and images/Storyboard` in the post's library
+  folder. The Anthropic and GitHub reference clip (Video Engine > Inspiration) had still not reached the library;
+  Codex fetches it first (`motion-system.md`).
 
-- **Test results:** `docs/plans/2026-10-23-friday/test-results/` (`answers.md`, `coding.md`, the pre-registered
-  `predictions-and-checklist.md`, and `scores.md`, scored against `test-design.md`). DeepSeek wrote a full Xinjiang
-  answer and deleted it, 3 of 3 runs, while answering Turkmenistan 3 of 3; Claude and ChatGPT answered both alike.
-  Taiwan vs Singapore: a draw for all three. The 47 screenshots went to the library with `send.py`
-  ("3 Posts/2026-10-23 Fri mind.the.gap - Two passports/2 Covers and images/AI test screenshots"), not git.
-- **Scripts:** the gaps are filled from the scores. Krish's calls in this session (one question at a time): the
-  call beat now reads "A Chinese AI is fine if you don't mind where your data ends up. But check what it tells you."
-  (both cuts), and the short cut drops the "take DeepSeek out of China" joke to explain the test (the joke stays in
-  the long cut). Both pass `story_check.py` (long 824 words, warns about 5:33 as he says it; short 195).
-- **Readers:** two rounds of A, B and C on each cut. Round two: every retelling matches the point; small items left
-  (Stanford's "three percent" on what, "two times in three" by ear, the call beat still read as mixed by five of
-  six). Not yet recorded as read back; Krish chose to review on the board instead of signing off here.
-- **Board:** published to https://content.krishraja.com/board/2026-10-19#friday (build `baa95ed9`, revision 48,
-  served page hash read back equal; Ideas, Monday and Wednesday panels unchanged). The feeder now maps Wednesday's
-  Drive downloads like Monday's and reads through `BOARD_BASE_URL` in a cloud session.
-- **Creative direction (23 Oct, evening):** `docs/plans/2026-10-23-friday/creative-direction.md` is the brief Codex produces both cuts from: the 90-second cut voice only, the 5-minute mixed, every line paired with the picture that proves it. Order: he records, takes lined up, **storyboard to Krish for sign-off**, then render. Krish: "Once I've recorded show me your creative storyboard before I sign that off."
-- **Teleprompter (23 Oct, 22:18 UTC, Krish: "Yes. Send it"):** both lengths are in his Teleprompter folder "Fri 23 Oct
-  mind.the.gap - Two passports", one script per length holding both takes (`script-long-both-takes.md`,
-  `script-short-both-takes.md`). Sent by hand on his word, **not through `teleprompter_send.py plan`**: the making record
-  has no scripts yet because the outline is not approved and the spine judge has not run (no article draft), and those
-  gates were not bypassed. So the record holds no Teleprompter ids and the recordings lane will not stamp these takes:
-  line each take up with `narration_diff.py` against its own take's words. The engine now checks two-take scripts
-  (`story_check.takes`) for the next piece.
-- **Handover:** `docs/handovers/2026-10-23-friday-production.md` (start the next session from it).
-- **Next:** read his comments on the Friday tab (`board_web.py read`), change the words he asks for, re-run
-  `story_check.py` and fresh readers, then `making.py <piece> scripts long.md short.md` (outline and spine judge
-  first, `docs/plans/2026-10-23-outline.md`), `read-back` (his words if he signs off), and `teleprompter_send.py
-  plan` plus the Teleprompter calls. Teleprompter does not hold the new words yet.
+## 24 October: the Inbox read from Google by its ID; every Drive touchpoint fails loudly (Claude)
 
-The 22 October Friday story work (choosing the two-passports story with Krish) is archived in
-`docs/history/2026-10-23-workbench-friday-22oct.md`.
+Handover: `docs/handovers/2026-10-24-drive-by-id.md`. Branch `claude/drive-by-id`, a pull request here and one in
+control-center.
 
-## 19 October: both publish boards live, web cutover verified
-
-Use https://content.krishraja.com/board/2026-10-19 and
-https://content.krishraja.com/board/2026-10-12. The overarching week tabs keep
-both available. All new interactions use this site; the four Claude boards
-are preserved source archives and must not be synchronized or edited.
-
-All 87 available source records, including 10 replies, were imported and read
-back exactly. The final source comparison found no delta. Both production
-boards passed authenticated desktop/phone navigation, image, state and comment
-checks; all 12 downloadable assets matched their type, size and SHA-256.
-Follow `docs/PUBLISH_BOARDS.md` from every tool, reading all six collections.
-Release, source limitations and rollback evidence: `docs/handovers/board-web-release.md`.
-Friday's two replacement videos are now repaired and filed; see the delivery section below. Monday 19 October's
-signed-off scripts and pending recordings/fact check remain with its editorial
-handover; this migration changes neither scripts nor publishing approval.
-
-This is the one file every working session reads first and updates last,
-whatever tool it runs in: Claude Code (web, desktop or phone), Codex (cloud or
-desktop), or anything else that can open this repository. It is how work moves
-from one tool to another without anything getting lost. The rules for agents
-are in `AGENTS.md`; this file is the live state of the work.
-
-Last updated: 2026-10-19, by the idea-queue build session (Claude Code, cloud).
+- **Built:** the `recordings_drive_inbox` job (`apps/control-plane/api/library/recordings/drive-inbox.ts`, every ten
+  minutes) lists the Inbox by its Drive folder ID as the engine's existing Google service account (read-only, the
+  same account the inspiration scan already uses successfully) and streams each new take into the recordings store
+  under its sha256 with the manifest `confirm` writes; `recording.py`, `recording_match.py` and `produce-video` are
+  unchanged. Each home computer's pass now reports what it found (`POST /api/library/recordings/lane`): a stale
+  `MINDMAKE_*` setting (passed over for `config/studio.json`), an unreachable Inbox, a missing library, no pinned
+  Python, a failed send or publish. The job fails with the machine named while a fresh report holds a problem, so
+  Control Center shows it. Settings are read from the registry each pass (no restart needed), and the first pass
+  after boot waits a minute for Google Drive. `paths.ts` passes over a stale setting and `doctor` names it.
+- **Proved:** 10 new tests (`tests/control-plane/recordings-drive-inbox.test.ts`), the stale-setting test in
+  `tests/paths-drive.test.ts`, and a local run of the real streaming copy: 50 MB through a fixed Content-Length PUT,
+  sha256 equal on both ends. **Not proved:** a new take copied by the live job (the first runs found every take already stored), and the
+  PowerShell changes on Windows (no PowerShell here; Windows CI runs the source install only).
+- **Waiting on Krish (in this order):** (1) none for the Inbox: the job reads it through the "anyone with the link" sharing on
+  `makeyourmindup`; before that sharing is turned off, share the Inbox with the engine's service account as Viewer; (2) delete the `MINDMAKE_DRIVE_ROOT`, `MINDMAKE_MEDIA_INBOX`,
+  `MINDMAKE_ARCHIVE_ROOT`, `MINDMAKE_POSTS_ROOT`, `MINDMAKE_INSPIRATION` and `MINDMAKE_LIBRARY_ROOT` user settings on
+  both home computers; (3) where Claude sessions should write in Drive now (`drive_destinations` names `CURRENT` and
+  `inbox`, both gone); (4) whether to clear the dead `drive_folders` and `briefing_drive_folder_id` rows. Seen, not
+  changed: the Inbox and Content Inspo folders are shared "anyone with the link can edit".
+- **Left, with reasons:** `One Off Content Ideas` is not in Drive any more (`docs/DRIVE.md`); a home computer cannot
+  check an `H:` path against a Drive ID (Drive for desktop does not expose it), so it checks the path exists instead;
+  the KeePass file, ffmpeg reading takes, the library sync and archive filing stay on `H:` paths by necessity.
+- **Next:** once shared, read the next `recordings_drive_inbox` run as `ok`; drop a real take with both machines off
+  and see it in `python scripts/post-pack/recording.py list`.
 
 ## The idea queue: read it first
 
@@ -846,13 +842,3 @@ stricter version, which refused a contradicted line, was withdrawn before the me
 line; the cost gate has no context ceiling and never blocks a database tool. Waiting on Krish: (1) three sign-offs on
 piece `904658db` made before the G9 ruling are on contradicted lines, left as they are until he says; (2) the first real fact-check run after this
 (his approval for the spend) is the live proof: `fact-gate-on-file` cache writes about one source set a run.
-
-
-## Monday release-gate continuation, 19 October
-
-Wednesday is paused until Monday is publish-ready. Krish approved an auditable,
-free manual fact-review route and accepted both current final cuts after full
-playback with sound. Implementation and exact-file acceptance are in
-`docs/plans/2026-10-19-monday/release-gates.md` and `playback-acceptance.json`.
-The paid-run hold remains. Do not infer release completion from this note;
-require authenticated fact/making readback and final library/board delivery.

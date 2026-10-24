@@ -8,14 +8,17 @@ videos and think I'd like to produce more like that."
 
 ## Where Krish puts them
 
-Drive > makeyourmindup > **Video Engine > Inspiration**
-(https://drive.google.com/drive/folders/1eqdc1hoMn6CwqkbKlG5mAmKCYNoR8otU;
-`H:\My Drive\Ventures\Active Ventures\makeyourmindup\Video Engine\Inspiration` on the
-home computers).
+Drive > Ventures > Inspiration > **Production Inspo**
+(https://drive.google.com/drive/folders/1QxrzxISYFXq0er0DG0XSapm7qhvuRmh-;
+`H:\My Drive\Ventures\Inspiration\Production Inspo` on the home computers).
+Krish moved it there from Video Engine > Inspiration on 2026-10-24; its
+partner, **Content Inspo** (the old Cold Ideas & Inspo), holds the content he
+likes and the **What I like** sheet.
 
 - **A video file** (mp4, mov, webm): drop it in. A saved Instagram, TikTok
   or YouTube video is fine.
-- **Only a link**: add a row to the **What I like** sheet in the same folder
+- **Only a link**: paste it on Control Center's Inspiration board (content-watcher
+  fetches it), or add a row to the **What I like** sheet in Content Inspo
   (https://docs.google.com/spreadsheets/d/1_XBxxMUcU4CFHB5iJqWc1WtYKmJCftMOe5UlZYSM-_U),
   with the link in the first column.
 - **What you like about it** (optional, worth the most): one row per video
@@ -23,13 +26,13 @@ home computers).
   camerawork, zoom, breakdown (how it explains a point), tone, production.
   Anything you'd not copy goes in the last column.
 
-Nothing in Inspiration is ever published, posted or cut into his videos.
+Nothing in Production Inspo is ever published, posted or cut into his videos.
 
 ## How it reaches the engine
 
 Every pass of `scripts/recordings-upload.ps1` (both home computers, every
 5 minutes) runs `references.py publish`. That sends each video in
-Inspiration to the engine's library at
+Production Inspo to the engine's library at
 `1 Brand kit (permanent)/Style references/<file>`, once. Any machine then
 gets them with `python scripts/quick-edit/references.py fetch`.
 
@@ -76,6 +79,55 @@ When asked to study the style references, or when one is listed as
      row from the sheet into `krish_likes`, word for word.
 6. `python scripts/quick-edit/references.py --self-test` must still pass.
    It checks the bank.
+
+## Cards he sends from the Inspiration page
+
+Krish answers each thing he drops in either inspiration folder on Control
+Center's Inspiration page. A card he routes to **Study the style** comes
+here (the card says it goes to "the style bank, studied before the next
+recording"). The Sunday plan reads them (`plan-week`, step 0), and any
+session asked to study the style references reads them too:
+
+```sql
+select name, drive_file_id, why_like, why_like_source, picked_likes, why_here,
+       read_as, note_for_claude, facets, transcript, answered_at
+from inspiration_items
+where 'study_style' = any(routes) and answered_at is not null
+order by answered_at desc
+```
+
+1. A card whose `drive_file_id` matches a reference's `drive_id` in
+   `config/style-references.json` is that reference: study it first if it
+   is `waiting_for_study`, and leave a studied one as it is.
+2. A card with no matching reference (a video or image from Content Inspo, or
+   one the home computers have not sent yet) is added as a reference with
+   `status: waiting_for_study`, then studied as above. Fetch a video with
+   `python scripts/post-pack/recording.py get` only if it is in the Inbox;
+   otherwise read it through the Drive connector.
+3. How he said to read it comes first. `read_as` `watch` means study the
+   whole video with sound (fetch it and run `references.py study`), never
+   judge it from the card's preview frame; `listen` means the audio;
+   `read` the words; `look` a glance is enough. `note_for_claude` is his
+   instruction to you: follow it, and copy it into the reference's `notes`.
+   The file is `https://drive.google.com/file/d/<drive_file_id>/view`.
+4. `facets` says where it came from (platform, source, creator) and its
+   format; record them on the reference as `creator` and `notes`.
+   `transcript` holds its words when the taste ledger already watched it,
+   so the study can start from them.
+5. Which craft to study comes from his reason (Krish, 2026-10-24: "if I
+   post a video in here, it's because I like either the script, the
+   narrative, or the production style. When I post images in here, it's
+   because I like the clarity"). The card's `picked_likes` name it: The
+   script means the opening, breakdown and tone layers; The narrative the
+   structure, breakdown and close; The production style the editing,
+   camerawork, graphics and production layers; The clarity, on an image,
+   the graphics layer, for carousels and the pictures in a video. A card
+   with no reason picked is studied on every layer.
+6. His words: copy `why_like` into `krish_likes` word for word only when
+   `why_like_source` is `typed`. Each of `picked_likes` is a guess he
+   agreed with: record it in `notes` as "agreed with: ...", never as his
+   words.
+   His `why_here` goes in `notes` too.
 
 ## The bank, the base and the recipes
 

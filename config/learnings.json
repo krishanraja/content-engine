@@ -1277,6 +1277,205 @@
    ]
   },
   {
+   "id": "inspiration-kinds",
+   "on": "2026-10-24",
+   "krish": "Typically, if I post a video in here, it's because I like either the script, the narrative, or the production style. When I post images in here, it's because I like the clarity. When I post something that shows a clear opinion about AI, it's usually because the topic could be something I want to speak about ... sheets like Instagram inspo ... That's not a one-off drop ... a corpus which I will have had an idea and gone and pulled all the research from Perplexity on it. That would be for a specific article or a specific content piece ... It's important that you understand what the different types of stuff are in here, and ideally, you can auto-classify and know how to extract the right inspiration.",
+   "why": "The Inspiration board asked the same 'what do you like about it?' question of every card, so a research corpus was guessed as 'The layout is really clean ... Study the style' and the always-fresh Instagram sheet was asked about like a one-off drop. Those guesses were wrong, and his answers to them taught the engine nothing.",
+   "means": "Every card is classified by its kind (a video, an image, a feed that keeps itself fresh, a research corpus, an idea or script, or another document), with a clear opinion about AI kept as the topic it raises, and is asked only its kind's question: a video which of the script, the narrative or the production style; an image the clarity; an opinion the topic. A feed is never asked anything: its newest posts go to the Sunday plan. A corpus is the research for the piece it names and is read by that piece first. Nothing is deleted; the archive only grows.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "supabase/migrations/20261107090000_inspiration_kinds.sql",
+     "contains": "What kind of thing each Inspiration card is",
+     "how": "the kind, who set it and a corpus's piece on every card; the feed's counts as a view"
+    },
+    {
+     "file": ".agents/skills/plan-week/SKILL.md",
+     "contains": "Read three more kinds of",
+     "how": "step 0 reads the feed's posts from the last 8 days, the opinions about AI, and the corpora waiting for a piece"
+    },
+    {
+     "file": ".agents/skills/make-piece/SKILL.md",
+     "contains": "The research starts with the corpus he linked to this piece",
+     "how": "the Narrative row reads the piece's corpus first"
+    },
+    {
+     "file": "docs/STYLE_REFERENCES.md",
+     "contains": "Which craft to study comes from his reason",
+     "how": "the style study reads the script, the narrative, the production style or the clarity as the layers to study"
+    }
+   ]
+  },
+  {
+   "id": "typed-words-are-his",
+   "on": "2026-10-24",
+   "krish": "Yes, exact typed quotes count as my opinions on what I think you should do with that content - what a stupid question. If you read what I am feeding back, it's pretty obvious what it is",
+   "why": "The Inspiration session asked him whether an exact quote of words he typed in a session counts as his words. What he types is plainly his view; the question showed it had not read his feedback for its reach, and it cost him a turn.",
+   "means": "Words he typed, quoted exactly, count as his words wherever they are recorded (a session, a page, a pasted note), as his view of what should be done with that content; a paraphrase, a summary or an inference is an observation. And a question his feedback already answers is never put to him: read what he has said for its reach first.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "AGENTS.md",
+     "contains": "exact typed quotes",
+     "how": "the 'Your own actions are observations' rule says his typed words, quoted exactly, are his"
+    },
+    {
+     "file": "AGENTS.md",
+     "contains": "If you read what I am feeding back, it's pretty",
+     "how": "the 'Check before you ask' rule never asks what his feedback already answers"
+    }
+   ]
+  },
+  {
+   "id": "drive-folders-by-id",
+   "on": "2026-10-24",
+   "krish": "Isn't there a better way of doing this than the path name? Folders get renamed all the time and moved all the time. Surely, the whole point of having a Google Drive is that there's a specific ID for a specific folder. ... A. ... I recently moved more or less all of my Google Drive folders, can we do a check of anywhere the control-center or content-engine interacts with Google Drive and ensure it is bulletproof and correct everywhere?",
+   "why": "He renamed Ventures\\Active to Active Ventures; both home computers kept the old path in their settings and logged 'the Inbox cannot be reached' into a hidden log for two days, so six Friday takes sat in the Inbox for five hours and nothing told him.",
+   "means": "A Drive folder is found by its ID, never by its path, wherever the API allows it: the engine reads the Video Engine Inbox from Google by its folder ID. What must go through the H: mount keeps its folder's ID beside its path, and every place that reads Drive fails loudly where Krish sees it (a failed job in Control Center), never only in a local log. A stale setting on a machine is reported and passed over, never obeyed into silence.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "apps/control-plane/api/library/_inboxDrive.ts",
+     "contains": "export const INBOX_FOLDER_ID",
+     "how": "the engine lists the Inbox by its ID and copies each new take into the recordings store every ten minutes"
+    },
+    {
+     "file": "apps/control-plane/api/library/recordings/drive-inbox.ts",
+     "contains": "the Video Engine Inbox cannot be read by its ID",
+     "how": "an unshared, deleted or binned Inbox fails the recordings_drive_inbox job with its fix"
+    },
+    {
+     "file": "apps/control-plane/api/library/_lanes.ts",
+     "contains": "export const LANE_PROBLEMS",
+     "how": "a home computer's stale setting, unreachable Inbox or failed publish fails the job with the machine named"
+    },
+    {
+     "file": "scripts/recordings-upload.ps1",
+     "contains": "function Send-LaneReport",
+     "how": "every pass reports what it found to the engine and reads its settings fresh from the registry"
+    },
+    {
+     "file": "packages/core/src/paths.ts",
+     "contains": "export function resolveWindowsDrivePath",
+     "how": "a setting naming a missing folder is passed over for the default and reported by doctor"
+    },
+    {
+     "file": "config/studio.json",
+     "contains": "\"drive_ids\"",
+     "how": "each runtime folder's Drive ID beside its path"
+    },
+    {
+     "file": "docs/DRIVE.md",
+     "contains": "Folders are found by ID, never by path",
+     "how": "the rule every session reads before touching Drive"
+    }
+   ]
+  },
+  {
+   "id": "visuals-add-not-repeat",
+   "on": "2026-10-24",
+   "krish": "The narrative and the visuals should match and be additive and not duplicative to one another. Just a reminder that we're going to need to up our game on visuals with the voiceover version - I want motion and world-class motion design in a specific visual aesthetic",
+   "why": "Captions that repeat the spoken line waste the screen; he wants the picture to carry what the voice cannot, and voiceover cuts to look designed rather than assembled.",
+   "means": "On-screen words never repeat the sentence being said: they add a source, date, exact number, name or the changed word, and the picture shows the mechanism the voice names. A voiceover cut has one named motion system per piece, decided before the storyboard. Set for Friday 23 Oct in docs/plans/2026-10-23-friday/locked/motion-system.md; a house rule and a check that flags a caption matching its own beat's words are still to build.",
+   "status": "open",
+   "encoded": []
+  },
+  {
+   "id": "inspiration-two-folders",
+   "on": "2026-10-24",
+   "krish": "I've consolidated and restructured the inspiration folders inside this. ... one for the content I like ... and one for production quality I like. Can you ensure absolutely everywhere recalibrates to this moving forward first? ... make sure control center and every other place that needs these folders is corrected too",
+   "why": "He reorganised Drive and wants every reader and writer to follow without him chasing each one; a path or ID left behind silently reads an empty or missing folder.",
+   "means": "Inspiration lives in Ventures > Inspiration: Production Inspo (1QxrzxISYFXq0er0DG0XSapm7qhvuRmh-) for production quality he likes, Content Inspo (1FNztJOU82M8zb6IIbUAbvuI6Kr0pF5Hu, once Cold Ideas & Inspo) for content he likes. Video Engine > Inspiration is gone. Every reader finds them by ID where it can; anything on the H: mount reads the configured path and never a stale setting.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "config/style-references.json",
+     "contains": "1QxrzxISYFXq0er0DG0XSapm7qhvuRmh-",
+     "how": "the style references read Production Inspo by its ID and synced path"
+    },
+    {
+     "file": "scripts/quick-edit/references.py",
+     "contains": "a stale setting that no longer exists never wins over the configured folder",
+     "how": "references.py publish finds Production Inspo from config, never a dead MINDMAKE_INSPIRATION"
+    },
+    {
+     "file": "docs/DRIVE.md",
+     "contains": "Ventures > Inspiration",
+     "how": "the Drive map lists both folders with their IDs"
+    },
+    {
+     "file": "AGENTS.md",
+     "contains": "Production Inspo",
+     "how": "content-watcher's Drive exception names the two folders"
+    }
+   ]
+  },
+  {
+   "id": "sovereign-not-one-country",
+   "on": "2026-10-24",
+   "krish": "\"IS YOUR AI CHINESE?\" Sounds incredibly racist. The whole point of this is to understand what sovereign AI means and why countries are fighting to build their own AI as opposed to use another countries. We must not make this feel like we're stirring geopolitical hatred against China, it's just an example",
+   "why": "The packaging and the pictures had drifted into treating one country as the suspect: a thumbnail asking whether your AI is Chinese, headlines built on 'a Chinese AI', and the country's name coloured in the warning tone. That misstates the story and reads as prejudice.",
+   "means": "A piece about where AI comes from is about every country's reasons (sovereign AI); any one country is an example. Titles, thumbnail words, headlines and covers lead with the idea and name countries in the plural or not at all, never asking whether something is from one country. On screen a country's name is never in the warning colour or framed as the threat; colour marks what changed, never who.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "config/title-verdicts.json",
+     "contains": "Never single out one country",
+     "how": "title_check.py lessons prints the rejected line and its lesson before every packaging round"
+    },
+    {
+     "file": "docs/plans/2026-10-23-friday/locked/motion-system.md",
+     "contains": "never on a country",
+     "how": "the Friday motion system: amber marks what changed, never a country"
+    }
+   ]
+  },
+  {
+   "id": "drive-layout-2026-10-24",
+   "on": "2026-10-24",
+   "krish": "just reinstate that in the root folder then ... Ventures is where everything now lives (their subfolders. If I notice bugs or issues while on my phone, I put them in Bugs and Issues, i put things that inspire me in Inspiration, and Active Ventures contains all the main ventures we are working on, and that the entire OS/control center/AI harness is expected to use and keep up to date alongside the filearchives repository). Can you ensure that all happens? KeePass and FamilyContentLibrary are immovable.",
+   "why": "His folder moves left the Drive map pointing at CURRENT and CURRENT/00_INBOX, which no longer exist, so a Claude session that could not place a file was told to use a folder that was gone, and Hunter's map could not be rebuilt.",
+   "means": "The top of his Drive is Ventures (Active Ventures, Inspiration, Bugs & Issues, _Archive), --ARCHIVE, Family Admin, FamilyContentLibrary, KeePass and Inbox from My AI. Anything an AI cannot place goes in Inbox from My AI, never loose at the top. Content ideas go in Ventures > Inspiration > Content Inspo. FamilyContentLibrary and KeePass never move. The Drive map, the session guard, filearchives and this engine all name the same layout, by folder ID.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "docs/DRIVE.md",
+     "contains": "## The top of his Drive (Krish, 2026-10-24)",
+     "how": "the layout, each area's ID, the AI inbox and where content ideas go, read before any Drive work"
+    },
+    {
+     "file": "docs/DRIVE.md",
+     "contains": "Anything an AI session cannot place: `Inbox from My AI`",
+     "how": "where a new thing goes"
+    }
+   ]
+  },
+  {
+   "id": "speedup-without-glitches",
+   "on": "2026-10-24",
+   "krish": "Happy to speed it up, but last time Codex glitched a bunch of words on the speedup and also misaligned the captions.",
+   "why": "A sped cut built from words timed before the speed-up, or from many separately encoded parts, clips words and drifts captions and lips; the checks that passed did not listen.",
+   "means": "A cut is sped once, as one continuous file, through the config's speed; cut points and captions come only from a fresh transcript of the sped file; the finished file's transcript must hold every script word in order, every join heard, lip sync within 40 ms at three points, before Krish sees it.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": ".agents/skills/produce-video/SKILL.md",
+     "contains": "A sped cut is sped once",
+     "how": "The produce-video skill's speed step."
+    },
+    {
+     "file": "docs/plans/2026-10-23-friday/locked/CODEX.md",
+     "contains": "## Speed without glitches",
+     "how": "Friday's Codex brief, the seven steps for the two sped vertical cuts."
+    },
+    {
+     "file": "scripts/quick-edit/quality.py",
+     "contains": "def transcript_identity(source, speed, model)",
+     "how": "Refuses a words file with the wrong source, speed or transcriber."
+    }
+   ]
+  },
+  {
    "id": "styles-to-choose-and-push",
    "on": "2026-10-24",
    "krish": "It should also be able to suggest script and production styles that I can choose from or that it recommends for specific content. This engine should be pushing and pushing and pushing, becoming more and more creative and experimental. We don't know what works yet because the growth engine hasn't really reported back any useful results, so we still need to be producing better and more divergent work.",

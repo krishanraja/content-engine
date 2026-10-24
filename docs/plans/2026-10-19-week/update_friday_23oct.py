@@ -15,6 +15,25 @@ import board_web as web
 import week_board as board
 CACHE=ROOT/'.cache/friday-23oct'; CACHE.mkdir(parents=True,exist_ok=True)
 PLAN=Path(__file__).parent
+LOCKED=ROOT/'docs/plans/2026-10-23-friday/locked'
+SB=ROOT/'.cache/sb'
+STORYBOARDS=[('vo-5min','5-minute voiceover (16:9, pictures only)'),('cam-5min','5-minute on camera (16:9)'),
+             ('vo-90s','90-second voiceover (9:16, pictures only)'),('cam-90s','90-second on camera (9:16)')]
+def storyboard_materials():
+    """The four storyboards as a review card (24 Oct): a preview of each and the full sheet as a board asset."""
+    import base64
+    files=[]
+    for take,label in STORYBOARDS:
+        prev=CACHE/f'sb-preview-{take}.jpg'
+        subprocess.run(['ffmpeg','-v','error','-y','-i',str(SB/f'storyboard-{take}.png'),'-vf','crop=iw:min(ih\\,1500):0:0,scale=560:-1','-q:v','8',str(prev)],check=True)
+        files.append({'label':f'Storyboard: {label}','url':f'https://content.krishraja.com/pending-asset/fri-storyboard-{take}.png',
+                      'preview':'data:image/jpeg;base64,'+base64.b64encode(prev.read_bytes()).decode()})
+    data={'piece_id':FRI,'status':'ready','note':'Signed off by Krish, 24 October: "signed off, keep, all A". Codex produces the four videos from these storyboards and the locked files.',
+          'sections':[{'id':'storyboard','title':'Storyboards (four videos)','files':files}]}
+    path=CACHE/'materials-fri.json'; save(path,data)
+    new=[{'id':f'fri-storyboard-{t}','path':str(SB/f'storyboard-{t}.png'),'type':'image/png',
+          'source_url':f'https://content.krishraja.com/pending-asset/fri-storyboard-{t}.png'} for t,_ in STORYBOARDS]
+    return path,new
 WEEK='2026-10-19'
 WED='d7a20885-7001-4661-b444-9d7ca1043416'
 FRI='7083d6ad-419e-4fdc-9aba-f3be7f3f3a23'
@@ -53,7 +72,8 @@ def build():
                  ('Evidence read at source',ROOT/'docs/plans/2026-10-23-friday/research-gaps.md'),
                  ('Test results, scored',ROOT/'docs/plans/2026-10-23-friday/test-results/scores.md'),
                  ('Five-minute script',ROOT/'docs/plans/2026-10-23-friday/script-long-both-takes.md'),
-                 ('Short script',ROOT/'docs/plans/2026-10-23-friday/script-short-both-takes.md')]
+                 ('Short script',ROOT/'docs/plans/2026-10-23-friday/script-short-both-takes.md'),
+                 ('Storyboard sign-off',LOCKED/'storyboard-signoff.md')]
     if wed_reviews:  # Wednesday still in draft: rebuild its boxes word for word
         args=['--week',WEEK,'--previous',str(CACHE/'before.html'),'--keep','mon','--target','web','--live',
               '--piece',f'wed={WED}','--piece',f'fri={FRI}','--draft','wed','--draft','fri']
@@ -62,7 +82,9 @@ def build():
               '--piece',f'fri={FRI}','--draft','fri']
     for label,path in wed_reviews: args+=['--review',f'wed={label}|{path}']
     for label,path in fri_reviews: args+=['--review',f'fri={label}|{path}']
-    args+=['--waiting','fri=Record two takes of each length: on camera, then voiceover. Each script box holds both; read only the part you are recording. The creative direction for the videos is in the repository; the storyboard comes to you after you record.',
+    materials,new_assets=storyboard_materials()
+    args+=['--waiting','fri=Nothing needs you right now: the storyboard is signed off, Codex is making the four videos, and Claude is writing the article and the channel copy. Both come back to this tab for your look before anything is published.',
+           '--materials',f'fri={materials}',
            '--ideas',str(PLAN/'ideas.json'),'--queue',str(CACHE/'queue.json')]
     page,meta=board.build(board.parser().parse_args(args))
     mappings=[]
@@ -93,6 +115,7 @@ def build():
                 changed=[l for l in difflib.unified_diff(panel(old,name).replace('><','>\n<').splitlines(),
                          panel(resolved,name).replace('><','>\n<').splitlines(),n=0) if l[:1] in '+-' and l[:3] not in ('+++','---')]
                 print(name,'differs in',len(changed),'lines; first few:'); [print('  ',l[:180]) for l in changed[:8]]
+    mappings+=new_assets
     absent=[m['id'] for m in mappings if m['source_url'] not in page]
     problems=board.verify(page)
     board.write(page,meta,CACHE/'board.html'); save(CACHE/'assets.json',mappings)

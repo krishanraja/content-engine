@@ -75,6 +75,9 @@ export async function runDoctor(repoRoot?: string): Promise<{ ok: boolean; check
       checks.push({ name: 'treatment_registry', status: 'block', detail: error instanceof Error ? error.message : 'invalid treatment registry' })
     }
   }
+  for (const name of paths.staleSettings) {
+    checks.push({ name: 'stale_drive_setting', status: 'warn', detail: `${name} names a folder that is not there, so the default was used. Delete the setting: config/studio.json and the code defaults say where things are (docs/DRIVE.md).` })
+  }
   if (!paths.mediaInbox) checks.push({ name: 'media_inbox', status: 'warn', detail: 'MINDMAKE_MEDIA_INBOX is not configured.' })
   else {
     try { await access(paths.mediaInbox); checks.push({ name: 'media_inbox', status: 'pass', detail: paths.mediaInbox }) }

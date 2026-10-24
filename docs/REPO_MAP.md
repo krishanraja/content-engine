@@ -121,7 +121,9 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/library/file`
 - `/api/library/pending`
 - `/api/library/recordings/confirm`
+- `/api/library/recordings/drive-inbox`
 - `/api/library/recordings`
+- `/api/library/recordings/lane`
 - `/api/library/recordings/upload-url`
 - `/api/library/upload-url`
 - `/api/library/written`
@@ -159,6 +161,9 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/video-studio/runner/project`
 - `/api/video-studio/runner/watch`
 - `/api/video-studio/session`
+- `/api/watch/claim`
+- `/api/watch/read`
+- `/api/watch/report`
 - `/api/week/options`
 - `/api/workbench`
 
@@ -2173,6 +2178,35 @@ What the compiler looks for, as pure functions.
 
 - `export default withContentRun('learning_compile', handler)`
 
+### `apps/control-plane/api/library/_inboxDrive.ts`
+
+- `const INBOX_FOLDER_ID`
+- `const INBOX_SETTLE_MS`
+- `const INBOX_RUN_BUDGET_MS`
+- `const INBOX_COPY_RATE`
+- `interface InboxFile`
+- `type InboxSkip = 'not_recording' | 'too_large' | 'no_checksum' | 'settling'`
+- `type InboxStep`
+- `function planInbox(files: readonly InboxFile[], now: number): InboxStep[]`
+- `type InboxAction = 'already_listed' | 'add_name' | 'copy'`
+- `function decideRecording( request: RecordingRequest, manifest: RecordingManifest | null, stored: 'verified' | 'missing'…`
+- `function copyFits(bytes: number, elapsedMs: number): boolean`
+- `type InboxListing`
+- `async function listInbox(folderId: string): Promise<InboxListing>`
+- `async function copyDriveFile(fileId: string, uploadUrl: string, contentType: string, bytes: number, timeoutMs: number):…`
+
+### `apps/control-plane/api/library/_lanes.ts`
+
+- `const LANE_PREFIX`
+- `const LANE_PROBLEMS: Readonly<Record<string, string>>`
+- `const LANE_REPORT_FRESH_HOURS`
+- `interface LaneReport`
+- `function parseLaneReport(value: unknown, now: string): LaneReport | null`
+- `function laneKey(machine: string): string`
+- `function lanePlainProblems(reports: readonly LaneReport[], now: number): string[]`
+- `async function writeLaneReport(bucket: string, report: LaneReport): Promise<boolean>`
+- `async function readLaneReports(bucket: string): Promise<{ reports: LaneReport[]; error: boolean }>`
+
 ### `apps/control-plane/api/library/_library.ts`
 
 - `const LIBRARY_BUCKET`
@@ -2261,7 +2295,15 @@ What the compiler looks for, as pure functions.
 
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 
+### `apps/control-plane/api/library/recordings/drive-inbox.ts`
+
+- `export default withContentRun('recordings_drive_inbox', handler)`
+
 ### `apps/control-plane/api/library/recordings/index.ts`
+
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
+
+### `apps/control-plane/api/library/recordings/lane.ts`
 
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 
@@ -2607,6 +2649,48 @@ Which Windows runner may take work, and how each one looks from the cloud.
 - `export default withContentRun('runner_watch', handler)`
 
 ### `apps/control-plane/api/video-studio/session.ts`
+
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
+
+### `apps/control-plane/api/watch/_watch.ts`
+
+The content-watcher queue: what the home computers may claim, report and read, decided without a database.
+
+- `const STALE_CLAIM_MS`
+- `const MAX_ATTEMPTS`
+- `const MAX_CLAIM`
+- `const MAX_FILES`
+- `interface WatchRequestRow`
+- `interface MediaEntry`
+- `interface ReadRow`
+- `interface WatchStore`
+- `type Parsed<T> = { ok: true; value: T } | { ok: false; error: string }`
+- `function parseClaim(body: unknown): Parsed<{ machine: string; limit: number }>`
+- `function parseMedia(value: unknown): MediaEntry[] | null`
+- `function parseReads(value: unknown): ReadRow[] | null`
+- `interface ReportBody`
+- `function parseReport(body: unknown): Parsed<ReportBody>`
+- `function parseReadOnly(body: unknown): Parsed<{ machine: string; reads: ReadRow[] }>`
+- `function compareRev(a: string, b: string): number`
+- `function claimView(row: WatchRequestRow)`
+- `async function claim(store: WatchStore, machine: string, limit: number, now = new Date())`
+- `async function writeReads(store: WatchStore, rows: ReadRow[])`
+- `type ReportOutcome`
+- `async function report(store: WatchStore, body: ReportBody, now = new Date()): Promise<ReportOutcome>`
+
+### `apps/control-plane/api/watch/_watchStore.ts`
+
+- `const watchStore: WatchStore`
+
+### `apps/control-plane/api/watch/claim.ts`
+
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
+
+### `apps/control-plane/api/watch/read.ts`
+
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
+
+### `apps/control-plane/api/watch/report.ts`
 
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 
@@ -4096,6 +4180,7 @@ Where a finished video is filed: one folder per piece, whose name says the
 - `interface StudioPaths`
 - `const DEFAULT_WINDOWS_DRIVE_ROOT`
 - `function canonicalWindowsDrivePath(value: string | undefined, fallback: string): string`
+- `function resolveWindowsDrivePath( value: string | undefined, fallback: string, exists: (path: string) => boolean = exis…`
 - `function studioPaths(): StudioPaths`
 - `function jobPath(jobId: string): string`
 

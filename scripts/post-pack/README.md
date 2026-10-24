@@ -420,11 +420,26 @@ until then.
 
 ## Recordings: from the Inbox to a cloud session
 
-**What.** Every recording Krish drops into the Video Engine Inbox
-(`H:\My Drive\Ventures\Active Ventures\makeyourmindup\Video Engine\Inbox`,
-`MINDMAKE_MEDIA_INBOX` on the runner machines) reaches the engine's private
-storage within about ten minutes, and any cloud session fetches it with one
-command.
+**What.** Every recording Krish drops into the Video Engine Inbox (Drive
+folder `1H-PWmcwLkKCPHShBL6SYzsLzEbpa6795`, on H: at
+`H:\My Drive\Ventures\Active Ventures\makeyourmindup\Video Engine\Inbox`)
+reaches the engine's private storage within about ten minutes, and any cloud
+session fetches it with one command.
+
+**By its ID, from Google (since 2026-10-24).** Krish: "Surely, the whole point
+of having a Google Drive is that there's a specific ID for a specific folder",
+then "A." The engine's `recordings_drive_inbox` job
+(`apps/control-plane/api/library/recordings/drive-inbox.ts`, every ten minutes)
+lists the Inbox by its folder ID as the engine's Google service account,
+read-only, and streams each new recording into the same store under its
+sha256, with the manifest `confirm` writes. No home computer is needed, and a
+rename or move of the folder changes nothing. It reads the Inbox through the
+"anyone with the link" sharing on `makeyourmindup` (2026-10-24); if that is
+turned off, share the Inbox with the service account as Viewer first. A failure (folder unshared
+or gone, a copy that did not check, or a home computer reporting a problem)
+fails the job, and Control Center shows it. The home computers' upload below
+stays as the fallback until the job has carried a real take end to end; both
+key by sha256, so they never make two copies.
 
 **Why.** On 2026-10-06 a session told Krish it could not reach his file. His
 answer: "figure out how to never make that error again". The Google Drive
