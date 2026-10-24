@@ -1,0 +1,707 @@
+{
+ "_about": "Beat timings in seconds of each raw take, from beats.py. Regenerate, never hand-edit.",
+ "vo-5min": {
+  "file": "slice_FC18A811-B2D8-44A1-9CFF-CA579835B370_1.m4a",
+  "sha256": "30ed0af98c2c",
+  "shape": "16:9",
+  "duration": 323.4,
+  "beats": [
+   {
+    "beat": "L01-hook",
+    "start": 0.69,
+    "end": 8.99,
+    "said": "You may already be using a Chinese AI and you just might not know it, so does it matter where your AI was born?"
+   },
+   {
+    "beat": "L02-why",
+    "start": 8.99,
+    "end": 17.51,
+    "said": "I've been having a look at where the AIs we all use come from and it matters more than you think for any business So I want to break it down for you"
+   },
+   {
+    "beat": "L03-airbnb",
+    "start": 17.51,
+    "end": 28.09,
+    "said": "Start with Airbnb. Here's its boss last year He said its customer service AI relies a lot on Qwen, which is a Chinese AI from Alibaba"
+   },
+   {
+    "beat": "L04-fling",
+    "start": 28.09,
+    "end": 34.95,
+    "said": "He called it fast and he called it cheap, which to be fair is also what most of us want from a holiday"
+   },
+   {
+    "beat": "L05-cursor",
+    "start": 34.95,
+    "end": 47.29,
+    "said": "Then there's cursor, a coding tool that lots of software teams use It built its newest AI on top of a Chinese one called Kimi and didn't mention that at first then people spotted it and cursor owned up"
+   },
+   {
+    "beat": "L06-lindy",
+    "start": 47.29,
+    "end": 63.93,
+    "said": "and Lindy, an American startup, moved all its AI work onto DeepSeek, another Chinese AI Its biggest bill used to be anthropic, the American company behind Claude Its boss said DeepSeek was just 10 times cheaper"
+   },
+   {
+    "beat": "L07-race",
+    "start": 63.93,
+    "end": 68.93,
+    "said": "Now who's in this race? mostly two countries"
+   },
+   {
+    "beat": "L08-stanford",
+    "start": 68.93,
+    "end": 78.73,
+    "said": "Stanford counts the most important new AIs each year Last year, America made 59 and China made 35"
+   },
+   {
+    "beat": "L09-gap",
+    "start": 78.73,
+    "end": 87.57,
+    "said": "But by March, Stanford found the best Chinese AI scored only about 3% behind the best American one"
+   },
+   {
+    "beat": "L10-everyone",
+    "start": 87.57,
+    "end": 96.77,
+    "said": "And everyone else wants its own Britain, France, the Gulf, India and Korea are all building or paying for one"
+   },
+   {
+    "beat": "L11-sovereign",
+    "start": 96.77,
+    "end": 105.01,
+    "said": "That's what people mean by sovereign AI A country making sure it isn't stuck relying on someone else's"
+   },
+   {
+    "beat": "L12-korea",
+    "start": 105.01,
+    "end": 114.19,
+    "said": "South Korea even dropped one of its own companies from its national AI project A piece of that company's AI turned out to be borrowed from Alibaba"
+   },
+   {
+    "beat": "L13-awkward",
+    "start": 114.19,
+    "end": 116.29,
+    "said": "That's pretty awkward"
+   },
+   {
+    "beat": "L14-passports",
+    "start": 116.29,
+    "end": 126.99,
+    "said": "So here's the trick Every AI has two passports, one where it says it was born and the other where it says it lives meaning whose computers it runs on"
+   },
+   {
+    "beat": "L15-born",
+    "start": 126.99,
+    "end": 134.63,
+    "said": "Where it was born shapes what it tells you An American newspaper asked four Chinese chatbots 200 news questions"
+   },
+   {
+    "beat": "L16-third",
+    "start": 134.63,
+    "end": 140.53,
+    "said": "More than a third of the time they refused, gave the Chinese government's line or got it wrong"
+   },
+   {
+    "beat": "L17-deepseek63",
+    "start": 140.53,
+    "end": 143.83,
+    "said": "DeepSeek did it nearly two out of three times"
+   },
+   {
+    "beat": "L18-claude",
+    "start": 143.83,
+    "end": 149.85,
+    "said": "But Claude, an American AI, got the same questions and answered every single one"
+   },
+   {
+    "beat": "L19-grok",
+    "start": 149.85,
+    "end": 156.89,
+    "said": "And China has a company here People caught Elon Musk's rock checking Elon Musk's posts before it answered"
+   },
+   {
+    "beat": "L20-boss",
+    "start": 156.89,
+    "end": 160.19,
+    "said": "Which is one way to keep the boss happy"
+   },
+   {
+    "beat": "L21-lives",
+    "start": 160.19,
+    "end": 166.71,
+    "said": "Now, the second passport, where it lives, decides who sees your data"
+   },
+   {
+    "beat": "L22-app",
+    "start": 166.71,
+    "end": 172.11,
+    "said": "Use DeepSeek's own app and it says it stores what you type in China"
+   },
+   {
+    "beat": "L23-home",
+    "start": 172.11,
+    "end": 182.01,
+    "said": "But you can bring an AI home HSBC signed a deal to run France's Mistral on its own computers So the bank's data doesn't have to leave the bank"
+   },
+   {
+    "beat": "L24-selfhost",
+    "start": 182.01,
+    "end": 185.85,
+    "said": "And what about running a Chinese AI on your own computers?"
+   },
+   {
+    "beat": "L25-nist",
+    "start": 185.85,
+    "end": 191.79,
+    "said": "Well, America's government tried that with DeepSeek And the Chinese government's talking points were still there, built in"
+   },
+   {
+    "beat": "L26-takechina",
+    "start": 191.79,
+    "end": 196.69,
+    "said": "You can take DeepSeek out of China But you can't take China out of DeepSeek"
+   },
+   {
+    "beat": "L27-tried",
+    "start": 196.69,
+    "end": 209.85,
+    "said": "So I tried it myself The newspaper asked about the news But I wanted to know about work So I gave Claude, chat GPT and DeepSeek the same work questions And asked each one twice, changing only the country"
+   },
+   {
+    "beat": "L28-method",
+    "start": 209.85,
+    "end": 215.03,
+    "said": "If only the China answer changes, that's the first passport talking"
+   },
+   {
+    "beat": "L29-cotton",
+    "start": 215.03,
+    "end": 222.15,
+    "said": "First, a supplier whose cotton comes from Xinjiang, a part of China Then the same supplier in Turkmenistan"
+   },
+   {
+    "beat": "L30-blocked",
+    "start": 222.15,
+    "end": 228.89,
+    "said": "Now, America has blocked cotton from both over forced labour So a good answer should flag it both times"
+   },
+   {
+    "beat": "L31-flagged",
+    "start": 228.89,
+    "end": 234.65,
+    "said": "Claude and chat GPT flagged forced labour both times And so did DeepSeek for Turkmenistan"
+   },
+   {
+    "beat": "L32-deleted",
+    "start": 234.65,
+    "end": 242.81,
+    "said": "Now, watch DeepSeek on Xinjiang It writes a full answer, deletes it and changes the subject every single time"
+   },
+   {
+    "beat": "L33-taiwan",
+    "start": 242.81,
+    "end": 253.51,
+    "said": "Then, a board briefing on opening a sales office in Taiwan That was the second question, which China says belongs to it And the same briefing for Singapore"
+   },
+   {
+    "beat": "L34-draw",
+    "start": 253.51,
+    "end": 260.47,
+    "said": "For Taiwan, all three flagged the risk from China and for Singapore, none did So that's a draw But"
+   },
+   {
+    "beat": "L35-knew",
+    "start": 260.47,
+    "end": 266.13,
+    "said": "on Xinjiang, DeepSeek knew the answer It just wasn't allowed to let you keep it"
+   },
+   {
+    "beat": "L36-call",
+    "start": 266.13,
+    "end": 275.69,
+    "said": "So, my call, look at that passport again A Chinese AI is absolutely fine If you don't mind where your data ends up But just check what it tells you"
+   },
+   {
+    "beat": "L37-cheap",
+    "start": 275.69,
+    "end": 281.41,
+    "said": "And if you just want a clever job done cheaply, it makes total sense"
+   },
+   {
+    "beat": "L38-supply",
+    "start": 281.41,
+    "end": 289.45,
+    "said": "But remember what happened with supply chains Lots of firms had Chinese parts buried deep in their products And then America put tariffs on them"
+   },
+   {
+    "beat": "L39-reckon",
+    "start": 289.45,
+    "end": 296.75,
+    "said": "I reckon the same thing is going to happen with AI So, just know which passports you're holding"
+   },
+   {
+    "beat": "L40-do",
+    "start": 296.75,
+    "end": 319.47,
+    "said": "Here's what I'd do with this information if I were you Ask your main software suppliers which AI their product runs on and where it runs Then, put your own work questions to your team's AI And one to one from another country And have a look at where they differ And keep a second AI ready so you're never stuck with one supplier"
+   },
+   {
+    "beat": "L41-close",
+    "start": 319.47,
+    "end": 323.4,
+    "said": "The full deep dive is at makeyourmindup.ai"
+   }
+  ]
+ },
+ "cam-5min": {
+  "file": "Fri 23 Oct - 5-minute - Two passports~2.mp4",
+  "sha256": "87819f842b76",
+  "shape": "16:9 (take is portrait 1080x1920, rotation -90)",
+  "duration": 326.88,
+  "beats": [
+   {
+    "beat": "L01-hook",
+    "start": 0.69,
+    "end": 8.55,
+    "said": "You may already be using a Chinese AI and you might not know it. So does it matter where your AI was born?"
+   },
+   {
+    "beat": "L02-why",
+    "start": 8.55,
+    "end": 15.11,
+    "said": "I've been having a look at where the AIs we all use come from and it matters more than you think for your business. So I wanted to break it down for you."
+   },
+   {
+    "beat": "L03-airbnb",
+    "start": 15.11,
+    "end": 22.71,
+    "said": "Let's start with Airbnb. Last year, its boss said its customer service AI relies a lot on Qwen, which is a Chinese AI from Alibaba."
+   },
+   {
+    "beat": "L04-fling",
+    "start": 22.71,
+    "end": 28.81,
+    "said": "He called it fast and cheap, which to be fair is what most of us want from our Airbnbs."
+   },
+   {
+    "beat": "L05-cursor",
+    "start": 28.81,
+    "end": 39.75,
+    "said": "Then there's Cursor, a coding tool that lots of software teams use. It built its newest AI on top of a Chinese one called Kimi, and it didn't mention that at first. Then people spotted it and Cursor owned up."
+   },
+   {
+    "beat": "L06-lindy",
+    "start": 39.75,
+    "end": 51.73,
+    "said": "And Lindy, an American startup, moved all its AI work on to DeepSeek, which is another Chinese AI. Its biggest bill used to be Anthropic, the American company behind Claude. And his boss said DeepSeek was just 10 times cheaper."
+   },
+   {
+    "beat": "L07-race",
+    "start": 51.73,
+    "end": 56.29,
+    "said": "Now, who's actually in this race? Mostly it's two countries, and you can guess who."
+   },
+   {
+    "beat": "L08-stanford",
+    "start": 56.29,
+    "end": 63.47,
+    "said": "Stanford counts the most important new AIs each year, and last year, America made 59, and China made 35."
+   },
+   {
+    "beat": "L09-gap",
+    "start": 63.47,
+    "end": 71.47,
+    "said": "But by March, Stanford found the best Chinese AI, scored only about 3% behind the best American one."
+   },
+   {
+    "beat": "L10-everyone",
+    "start": 71.47,
+    "end": 81.33,
+    "said": "And now everyone else wants its own. Britain, France, the Gulf, India, and Korea are all building or paying for one."
+   },
+   {
+    "beat": "L11-sovereign",
+    "start": 81.33,
+    "end": 88.33,
+    "said": "And that's what people mean by sovereign AI. And that's where a country is making sure it isn't stuck relying on someone else's."
+   },
+   {
+    "beat": "L12-korea",
+    "start": 88.33,
+    "end": 97.65,
+    "said": "South Korea even dropped one of its own companies from a national AI project, a piece of company's AI that turned out to be borrowed from Alibaba's, which is Chinese."
+   },
+   {
+    "beat": "L13-awkward",
+    "start": 97.65,
+    "end": 99.51,
+    "said": "That was pretty awkward."
+   },
+   {
+    "beat": "L14-passports",
+    "start": 99.51,
+    "end": 108.55,
+    "said": "So think of it like this. Every AI has two passports. One says where it was born, and the other says where it lives, meaning whose computer it runs on."
+   },
+   {
+    "beat": "L15-born",
+    "start": 108.55,
+    "end": 115.73,
+    "said": "Where it was born shapes what it tells you. An American newspaper asked for Chinese chatbots 200 news questions,"
+   },
+   {
+    "beat": "L16-third",
+    "start": 115.73,
+    "end": 121.67,
+    "said": "and more than a third of the time they refused, gave the Chinese government's line, or got it wrong."
+   },
+   {
+    "beat": "L17-deepseek63",
+    "start": 121.67,
+    "end": 124.21,
+    "said": "DeepSeek did it nearly two times in three."
+   },
+   {
+    "beat": "L18-claude",
+    "start": 124.21,
+    "end": 130.27,
+    "said": "But Claude, as an American AI, got the same questions and answered every single one from an American perspective."
+   },
+   {
+    "beat": "L19-grok",
+    "start": 130.27,
+    "end": 138.81,
+    "said": "And China has a company here. People caught Elon Musk's grok checking Elon Musk's Twitter posts or X posts before it answered."
+   },
+   {
+    "beat": "L20-boss",
+    "start": 138.81,
+    "end": 142.91,
+    "said": "I suppose it's one way to keep the boss happy, right?"
+   },
+   {
+    "beat": "L21-lives",
+    "start": 142.91,
+    "end": 148.77,
+    "said": "Now, the second passport, where it lives, decides who sees your data."
+   },
+   {
+    "beat": "L22-app",
+    "start": 148.77,
+    "end": 158.51,
+    "said": "If you use DeepSeek's own app, and it says what it stores, what you type in China. So it stores your data in the country that you're using it."
+   },
+   {
+    "beat": "L23-home",
+    "start": 158.51,
+    "end": 169.23,
+    "said": "But you can bring an AI home. HSBC, for example, signed a deal to run France's Mistral on its own computers. So the bank's data doesn't have to leave the bank."
+   },
+   {
+    "beat": "L24-selfhost",
+    "start": 169.23,
+    "end": 172.83,
+    "said": "So what about running a Chinese AI on your own computers?"
+   },
+   {
+    "beat": "L25-nist",
+    "start": 172.83,
+    "end": 180.07,
+    "said": "Well, America's government actually tried that with DeepSeek, and the Chinese government talking points were still there built in."
+   },
+   {
+    "beat": "L26-takechina",
+    "start": 180.07,
+    "end": 185.45,
+    "said": "So you can take DeepSeek out of China, but you can't take China out of DeepSeek."
+   },
+   {
+    "beat": "L27-tried",
+    "start": 185.45,
+    "end": 197.97,
+    "said": "So I tried it myself. The newspaper asked about the news, but I wanted to know about work. So I gave Claude, Jack, GPT, and DeepSeek the same work questions and asked each one twice, and I changed only the country."
+   },
+   {
+    "beat": "L28-method",
+    "start": 197.97,
+    "end": 202.65,
+    "said": "If only the China answer changes, that's the first passport talking."
+   },
+   {
+    "beat": "L29-cotton",
+    "start": 202.65,
+    "end": 208.71,
+    "said": "First, I tried a supplier whose cotton comes from Xinjiang, which is a part of China, then the same supplier in Turkmenistan."
+   },
+   {
+    "beat": "L30-blocked",
+    "start": 208.71,
+    "end": 215.75,
+    "said": "Now, America has blocked cotton from both over forced labor, so a good answer should flag that both times."
+   },
+   {
+    "beat": "L31-flagged",
+    "start": 215.75,
+    "end": 221.83,
+    "said": "Claude and Jack GPT flagged the forced labor both times, and so did DeepSeek for Turkmenistan."
+   },
+   {
+    "beat": "L32-deleted",
+    "start": 221.83,
+    "end": 229.71,
+    "said": "But for Xinjiang, which is in China, DeepSeek wrote a full answer, deleted it, and then changed the subject every single time."
+   },
+   {
+    "beat": "L33-taiwan",
+    "start": 229.71,
+    "end": 240.67,
+    "said": "Then I did a board briefing about opening a sales office in Taiwan, which, of course, as everyone know, China says belongs to it. And I did the same briefing for Singapore."
+   },
+   {
+    "beat": "L34-draw",
+    "start": 240.67,
+    "end": 247.15,
+    "said": "For the Taiwan question, all three flagged the risk from China, and for Singapore, none did. So that one's a draw. But"
+   },
+   {
+    "beat": "L35-knew",
+    "start": 247.15,
+    "end": 252.55,
+    "said": "on Xinjiang, DeepSeek knew the answer, and it just wasn't allowed to let you keep it."
+   },
+   {
+    "beat": "L36-call",
+    "start": 252.55,
+    "end": 262.63,
+    "said": "So my call, which is a Chinese AI, is absolutely fine, but only if you don't mind where your data ends up, which is the second passport. But check what it tells you."
+   },
+   {
+    "beat": "L37-cheap",
+    "start": 262.63,
+    "end": 270.75,
+    "said": "At the end of the day, if you want a clever job just done cheaply and you don't care about all the rest, it does make total sense, for sure."
+   },
+   {
+    "beat": "L38-supply",
+    "start": 270.75,
+    "end": 283.71,
+    "said": "But just remember what happened with supply chains about a year or two ago. Lots of firms had Chinese parts buried deep into their products, and then America put tariffs on those products."
+   },
+   {
+    "beat": "L39-reckon",
+    "start": 283.71,
+    "end": 294.61,
+    "said": "And I reckon the same is going to happen with AI, where countries will put tariffs on other countries' AIs. So important to just know what passports you're holding here."
+   },
+   {
+    "beat": "L40-do",
+    "start": 294.61,
+    "end": 321.97,
+    "said": "And here's what I'd do with this information if I were you. Ask your main software suppliers which AI their product runs on and where it runs. Ask about both passports. Then put to work your own team's AI on your own work questions, and just run the tests on one from another country as well, and see where they differ. And most importantly, don't rely on just one AI. Keep a second AI ready so you're never stuck with one supplier."
+   },
+   {
+    "beat": "L41-close",
+    "start": 321.97,
+    "end": 326.88,
+    "said": "The full deep dive is at makeyourmindup.ai."
+   }
+  ]
+ },
+ "vo-90s": {
+  "file": "slice_7C38672A-B9E8-46D3-A454-284B913D6D74_1.m4a",
+  "sha256": "007db593baa4",
+  "shape": "9:16",
+  "duration": 84.4,
+  "beats": [
+   {
+    "beat": "S01-hook",
+    "start": 0.72,
+    "end": 6.74,
+    "said": "You may already be using a Chinese AI. Does that matter?"
+   },
+   {
+    "beat": "S02-airbnb",
+    "start": 6.74,
+    "end": 12.5,
+    "said": "Airbnb's boss said its own customer service leans on Qwen, which is a Chinese AI."
+   },
+   {
+    "beat": "S03-fling",
+    "start": 12.5,
+    "end": 18.38,
+    "said": "He called it fast and cheap, which is what most of us want from a holiday fling."
+   },
+   {
+    "beat": "S04-passports",
+    "start": 18.38,
+    "end": 23.82,
+    "said": "See, every AI has two passports, where it was born and where it lives."
+   },
+   {
+    "beat": "S05-newspaper",
+    "start": 23.82,
+    "end": 30.96,
+    "said": "Where it was born shapes its answers. An American newspaper recently asked Chinese chatbots some news questions,"
+   },
+   {
+    "beat": "S06-third",
+    "start": 30.96,
+    "end": 37.24,
+    "said": "and a third of the time they refused, gave China's line, or got it wrong."
+   },
+   {
+    "beat": "S07-claude",
+    "start": 37.24,
+    "end": 41.98,
+    "said": "Claude, an American AI, answered them all."
+   },
+   {
+    "beat": "S08-lives",
+    "start": 41.98,
+    "end": 50.56,
+    "said": "Where it lives decides who sees your data. Use DeepSeek, another Chinese AI, and it keeps yours in China."
+   },
+   {
+    "beat": "S09-work",
+    "start": 50.56,
+    "end": 58.88,
+    "said": "And at work, I asked Claude, ChatGPT, and DeepSeek about a supplier's cotton from Xinjiang in China."
+   },
+   {
+    "beat": "S10-flagged",
+    "start": 58.88,
+    "end": 61.24,
+    "said": "Two flagged four slaver."
+   },
+   {
+    "beat": "S11-deleted",
+    "start": 61.24,
+    "end": 67.32,
+    "said": "Now watch DeepSeek. It writes an answer, then deletes it. Every time."
+   },
+   {
+    "beat": "S12-call",
+    "start": 67.32,
+    "end": 73.62,
+    "said": "My call is it's fine, if you don't mind where your data goes. But check what it tells you."
+   },
+   {
+    "beat": "S13-do",
+    "start": 73.62,
+    "end": 81.24,
+    "said": "And here's what I do with this information if I were you. Ask software suppliers which AI they use and where it lives. And keep a second AI ready."
+   },
+   {
+    "beat": "S14-close",
+    "start": 81.24,
+    "end": 84.4,
+    "said": "The full deep dive is at MakeYourMindUp.ai."
+   }
+  ]
+ },
+ "cam-90s": {
+  "file": "Fri 23 Oct - 90-second - Two passports~2.mp4",
+  "sha256": "bb5209f5c752",
+  "shape": "9:16 (take is portrait 1080x1920, rotation -90)",
+  "duration": 103.33,
+  "beats": [
+   {
+    "beat": "S01-hook",
+    "start": 0.66,
+    "end": 5.54,
+    "said": "You might already be using a Chinese AI, but does that matter?"
+   },
+   {
+    "beat": "S02-airbnb",
+    "start": 5.54,
+    "end": 9.3,
+    "said": "Airbnb's boss said its customer service leans on Qwen, which is a Chinese AI."
+   },
+   {
+    "beat": "S03-fling",
+    "start": 9.3,
+    "end": 14.1,
+    "said": "He called it fast and cheap, which is what I want from my Airbnb."
+   },
+   {
+    "beat": "S04-passports",
+    "start": 14.1,
+    "end": 19.16,
+    "said": "See, every AI has two passports where it was born and where it lives."
+   },
+   {
+    "beat": "S05-newspaper",
+    "start": 19.16,
+    "end": 24.6,
+    "said": "Where it was born shapes its answers to you. An American newspaper asked Chinese chatbots news questions"
+   },
+   {
+    "beat": "S06-third",
+    "start": 24.6,
+    "end": 28.86,
+    "said": "and about a third of the time they refused, gave China's line or got it wrong."
+   },
+   {
+    "beat": "S07-claude",
+    "start": 28.86,
+    "end": 32.9,
+    "said": "Claude, an American AI, answered all the American questions, of course."
+   },
+   {
+    "beat": "S08-lives",
+    "start": 32.9,
+    "end": 42.98,
+    "said": "So where it lives decides who sees your data. That's the second passport. Use DeepSeek, another Chinese AI, and it keeps all your data in China."
+   },
+   {
+    "beat": "S09-work",
+    "start": 42.98,
+    "end": 49.46,
+    "said": "But does this matter at work? They asked Claude, ChatGPT, and DeepSeek about a supplier's cotton from Xinjiang, China,"
+   },
+   {
+    "beat": "S10-flagged",
+    "start": 49.46,
+    "end": 51.32,
+    "said": "two flagged forced labor."
+   },
+   {
+    "beat": "S11-deleted",
+    "start": 51.32,
+    "end": 53.78,
+    "said": "DeepSeek wrote an answer and then deleted it every time."
+   },
+   {
+    "beat": "S12-call",
+    "start": 53.78,
+    "end": 76.02,
+    "said": "My call is that it depends on if you care about where your data lives or if you care about getting an intelligent job done on the cheap. Sometimes the latter supersedes the former, so that's fine too. If you don't mind where your data goes, you are absolutely fine to use the Chinese AI for sure. But just check what it tells you. This is a really important thing."
+   },
+   {
+    "beat": "S13-do",
+    "start": 76.02,
+    "end": 83.64,
+    "said": "Now, here's what I'd do with this information if I were you. I would just ask your software suppliers which AI models they're using and where it lives."
+   },
+   {
+    "beat": "S13b-recap",
+    "start": 83.64,
+    "end": 92.9,
+    "said": "So that's the two passports. Passport number one, where is the AI originated from? And passport number two, where is the data being stored?"
+   },
+   {
+    "beat": "S13c-second",
+    "start": 92.9,
+    "end": 99.06,
+    "said": "And of course, keep a second AI model and a second option available to you at all times."
+   },
+   {
+    "beat": "S14-close",
+    "start": 99.06,
+    "end": 103.33,
+    "said": "The full deep dive is at makeyourmindup.ai."
+   }
+  ]
+ }
+}

@@ -1305,6 +1305,15 @@
      "how": "the style study reads the script, the narrative, the production style or the clarity as the layers to study"
     }
    ]
+  },
+  {
+   "id": "visuals-add-not-repeat",
+   "on": "2026-10-24",
+   "krish": "The narrative and the visuals should match and be additive and not duplicative to one another. Just a reminder that we're going to need to up our game on visuals with the voiceover version - I want motion and world-class motion design in a specific visual aesthetic",
+   "why": "Captions that repeat the spoken line waste the screen; he wants the picture to carry what the voice cannot, and voiceover cuts to look designed rather than assembled.",
+   "means": "On-screen words never repeat the sentence being said: they add a source, date, exact number, name or the changed word, and the picture shows the mechanism the voice names. A voiceover cut has one named motion system per piece, decided before the storyboard. Set for Friday 23 Oct in docs/plans/2026-10-23-friday/locked/motion-system.md; a house rule and a check that flags a caption matching its own beat's words are still to build.",
+   "status": "open",
+   "encoded": []
   }
  ]
 }
