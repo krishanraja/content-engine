@@ -111,7 +111,16 @@ order by answered_at desc
    format; record them on the reference as `creator` and `notes`.
    `transcript` holds its words when the taste ledger already watched it,
    so the study can start from them.
-5. His words: copy `why_like` into `krish_likes` word for word only when
+5. Which craft to study comes from his reason (Krish, 2026-10-24: "if I
+   post a video in here, it's because I like either the script, the
+   narrative, or the production style. When I post images in here, it's
+   because I like the clarity"). The card's `picked_likes` name it: The
+   script means the opening, breakdown and tone layers; The narrative the
+   structure, breakdown and close; The production style the editing,
+   camerawork, graphics and production layers; The clarity, on an image,
+   the graphics layer, for carousels and the pictures in a video. A card
+   with no reason picked is studied on every layer.
+6. His words: copy `why_like` into `krish_likes` word for word only when
    `why_like_source` is `typed`. Each of `picked_likes` is a guess he
    agreed with: record it in `notes` as "agreed with: ...", never as his
    words.
