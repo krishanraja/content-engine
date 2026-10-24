@@ -53,13 +53,13 @@ describe('the Inspiration House block', () => {
     expect(out.corpora[0].excerpt).toContain('autonomous business')
   })
 
-  it('taste claims are form only, approved first, and a rejected claim never reaches the drafter', () => {
+  it('taste claims are form only, proposed first, and a retired claim never reaches the drafter', () => {
     const out = buildInspiration({ weekStart: WEEK, items: [], claims: [
       { id: 'c1', kind: 'form', layer: 'opening', status: 'candidate', statement: 'Open on the hook', krish: 'launch straight in', support_n: 3 },
-      { id: 'c2', kind: 'form', layer: 'close', status: 'approved', statement: 'Close on what to do', krish: null, support_n: 4 },
-      { id: 'c3', kind: 'subject', layer: null, status: 'approved', statement: 'Likes cost stories', krish: null, support_n: 5 },
-      { id: 'c4', kind: 'form', layer: 'tone', status: 'rejected', statement: 'x', krish: null, support_n: 1 },
+      { id: 'c2', kind: 'form', layer: 'close', status: 'proposed', statement: 'Close on what to do', krish: null, support_n: 4 },
+      { id: 'c3', kind: 'subject', layer: null, status: 'proposed', statement: 'Likes cost stories', krish: null, support_n: 5 },
+      { id: 'c4', kind: 'form', layer: 'tone', status: 'retired', statement: 'x', krish: null, support_n: 1 },
     ] })
-    expect(out.claims.map(c => [c.id, c.status])).toEqual([['c2', 'approved'], ['c1', 'candidate']])
+    expect(out.claims.map(c => [c.id, c.status])).toEqual([['c2', 'proposed'], ['c1', 'candidate']])
   })
 })

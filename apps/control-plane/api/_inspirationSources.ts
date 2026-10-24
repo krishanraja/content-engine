@@ -14,8 +14,8 @@
 //   fresh        cards he has not answered yet, newest first: seeds the session may research into ideas.
 //   corpora      content-watcher readings with no card: research he dropped in (a corpus, a long post).
 //   creators     creator moves: why a peer's post worked and Krish's own angle on it.
-//   claims       taste claims (form only, anti-echo): candidate and proposed ones are labelled as such; only an
-//                approved claim is a rule.
+//   claims       taste claims (form only, anti-echo), candidate or proposed: evidence of his taste, never a rule. A
+//                claim becomes a rule only when he approves its proposal (taste_profile_form, read by _taste.ts).
 //
 // Nothing here ranks for the judges (they stay blind, scripts/check-judges.ts) and nothing writes.
 
@@ -146,12 +146,13 @@ export function buildInspiration(input: { weekStart: string; items: Row[]; reads
       why_it_works: clip(m.why_it_works, 400), krish_angle: clip(m.krish_angle, 400), idea_id: m.content_idea_id || null,
       created_at: m.created_at || null }))
 
-  // Form only (anti-echo: taste shapes form, never subject), and never a rejected or superseded claim.
+  // Form only (anti-echo: taste shapes form, never subject), and never a retired or superseded claim. Proposed (put
+  // to him) before candidate.
   const claims = (input.claims || [])
-    .filter(c => c.kind === 'form' && ['candidate', 'proposed', 'approved'].includes(String(c.status)))
+    .filter(c => c.kind === 'form' && ['candidate', 'proposed'].includes(String(c.status)))
     .map(c => ({ id: String(c.id), layer: c.layer || null, status: String(c.status), statement: String(c.statement || ''),
       his_words: clip(c.krish, 300), support: typeof c.support_n === 'number' ? c.support_n : null }))
-    .sort((a, b) => (a.status === 'approved' ? 0 : a.status === 'proposed' ? 1 : 2) - (b.status === 'approved' ? 0 : b.status === 'proposed' ? 1 : 2))
+    .sort((a, b) => (a.status === 'proposed' ? 0 : 1) - (b.status === 'proposed' ? 0 : 1))
 
   const must_cover = routed.map(c => ({ id: c.id, what: `Inspiration card "${c.name}" you routed to Make a piece`, his_words: c.why_like || c.would_do || null, endorsed: c.endorsed }))
   return {

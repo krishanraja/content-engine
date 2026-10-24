@@ -180,10 +180,16 @@ def gate(post_path, cut, script_text, publish_day=None):
         doc = json.loads(raw.decode('utf-8'))
     except ValueError as e:
         raise DirectionError(f'{path}: not JSON ({e})')
+    if cut not in (doc.get('cuts') or {}):
+        raise DirectionError(f'{path} has no {cut} cut: every cut is directed and signed before it renders')
     problems = [p for p in check(doc, {cut: script_text}, for_render=True) if p.startswith(f'{cut}') or not re.match(r'^(long|short|feature)\b', p)]
     if problems:
         raise DirectionError(f'{path} is not ready to render the {cut} cut:\n  ' + '\n  '.join(problems))
-    return {'path': str(path), 'sha256': hashlib.sha256(raw).hexdigest(), 'signed': doc['signed']}
+    try:
+        shown = path.relative_to(ROOT).as_posix()  # the same file on either runner machine
+    except ValueError:
+        shown = str(path)
+    return {'path': shown, 'sha256': hashlib.sha256(raw).hexdigest(), 'signed': doc['signed']}
 
 
 def template(plan, cut, script_text, take='on_camera'):
@@ -265,6 +271,11 @@ def _self_test():
         if gate(post, 'long', script2, date(2026, 10, 23)) is not None:
             probs.append('a piece before the new loop is not held to it')
         (Path(tmp) / FILE).write_text(json.dumps(good))
+        try:
+            gate(post, 'short', script2, date(2026, 10, 28))
+            probs.append('a cut the direction does not cover is refused')
+        except DirectionError:
+            pass
         try:
             rec = gate(post, 'long', script2, date(2026, 10, 28))
             if not rec or len(rec['sha256']) != 64:

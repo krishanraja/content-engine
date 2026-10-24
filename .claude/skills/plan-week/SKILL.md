@@ -99,8 +99,8 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    `liked`, cards he answered with a why; `fresh`, cards he has not seen
    yet; `study_style`, production references (they feed the style, never a
    topic); `corpora`, content-watcher readings he dropped in; `creators`,
-   creator moves with his angle; `claims`, taste claims (form only; only an
-   approved one is a rule). `must_cover` lists every routed card and every
+   creator moves with his angle; `claims`, taste claims (form only;
+   evidence, never a rule until he approves one). `must_cover` lists every routed card and every
    board item holding his words: each one goes in some idea's `covers`, or
    in ideas.json `accounted` with the reason it is not on the board. The
    gather stops when production has no `inspiration` block, and the board

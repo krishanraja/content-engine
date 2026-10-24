@@ -890,6 +890,17 @@ The one idea queue (Krish, 2026-10-19: "mark ideas for a queue instead of select
 - `function combineCandidates(rows: Array<Record<string, any>>, threshold = COMBINE_COSINE): CombineGroup[]`
 - `function absorbedQueuePatch(row: Record<string, any>, parentId: string, by: 'Krish', said: string | null, at: string)`
 
+### `apps/control-plane/api/_inspirationSources.ts`
+
+What Krish's Inspiration House holds, for Sunday's ideas (GET /api/week/options?include=sources, `inspiration`).
+
+- `const INSPO_FRESH_DAYS`
+- `const EXCERPT`
+- `interface InspoCard`
+- `function card(r: Row): InspoCard`
+- `interface InspirationBlock`
+- `function buildInspiration(input: { weekStart: string; items: Row[]; reads?: Row[]; moves?: Row[]; claims?: Row[] }): In…`
+
 ### `apps/control-plane/api/_investigation.ts`
 
 _investigation: the MYMU: Teardown weekly investigation: anchor selection, claim

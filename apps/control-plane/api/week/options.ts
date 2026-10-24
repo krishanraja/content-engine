@@ -163,15 +163,20 @@ const INSPO_COLS = 'id,name,folder,lane,kind,facets,route,routes,why_like,why_li
 /** Inspiration House and content-watcher (_inspirationSources.ts). A table that cannot be read fails the gather
  *  loudly: Sunday must never look complete while his routed cards are missing (Krish, 2026-10-24). */
 async function readInspiration(week: string) {
-  const [items, reads, moves, claims] = await Promise.all([
+  const [items, routed, reads, moves, claims] = await Promise.all([
     supabase.from('inspiration_items').select(INSPO_COLS).order('created_at', { ascending: false }).limit(500),
+    // Every card he routed to Make a piece, however old: the newest 500 above could leave one out of must_cover.
+    supabase.from('inspiration_items').select(INSPO_COLS).or('route.eq.make_piece,routes.cs.{make_piece}').is('piece_id', null).limit(1000),
     supabase.from('content_reads').select('id,sha256,source_url,platform,shape,read_md,created_at').order('created_at', { ascending: false }).limit(60),
     supabase.from('creator_moves').select('id,creator_slug,post_url,why_it_works,krish_angle,content_idea_id,created_at').order('created_at', { ascending: false }).limit(20),
-    supabase.from('taste_claims').select('id,layer,kind,status,statement,krish,support_n').limit(100),
+    supabase.from('taste_claims').select('id,layer,kind,status,statement,krish,support_n').in('status', ['candidate', 'proposed'])
+      .order('updated_at', { ascending: false }).limit(100),
   ])
-  const failed = items.error || reads.error || moves.error || claims.error
+  const failed = items.error || routed.error || reads.error || moves.error || claims.error
   if (failed) throw new Error(`inspiration: ${failed.message}`)
-  return buildInspiration({ weekStart: week, items: (items.data || []) as Array<Record<string, any>>,
+  const seen = new Set((items.data || []).map((r: Record<string, any>) => r.id))
+  const all = [...(items.data || []), ...(routed.data || []).filter((r: Record<string, any>) => !seen.has(r.id))]
+  return buildInspiration({ weekStart: week, items: all as Array<Record<string, any>>,
     reads: (reads.data || []) as Array<Record<string, any>>, moves: (moves.data || []) as Array<Record<string, any>>,
     claims: (claims.data || []) as Array<Record<string, any>> })
 }

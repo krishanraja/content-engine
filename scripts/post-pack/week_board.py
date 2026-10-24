@@ -938,6 +938,9 @@ def coverage_problems(data, sources):
                for c in (i.get('covers') or [])}
     accounted = (data or {}).get('accounted') or {}
     out = []
+    if not isinstance(accounted, dict):
+        out.append('accounted is an object, {"<must_cover id>": "why it is not on the board"}')
+        accounted = {}
     for m in owed:
         mid = str(m['id'])
         if mid in covered:
@@ -3706,6 +3709,8 @@ def _style_cover_checks(check):
           any('Inspiration card "x"' in p for p in coverage_problems({'days': {'mon': [{'covers': ['said-1']}]}}, sources)))
     check('cover: covered by an idea or accounted for with a reason passes',
           coverage_problems({'days': {'mon': [{'covers': ['said-1']}]}, 'accounted': {'card-1': 'merged into Monday idea 2, same Duet launch'}}, sources) == [])
+    check('cover: accounted given as a list is said, never a crash',
+          any('accounted is an object' in p for p in coverage_problems({'days': {}, 'accounted': ['card-1']}, sources)))
     check('cover: a one-word excuse is not an account', coverage_problems({'days': {}, 'accounted': {'card-1': 'no', 'said-1': 'skip'}}, sources) != [])
     line = style_line(st(0))
     check('styles: the card shows the suggested style and the bolder try',

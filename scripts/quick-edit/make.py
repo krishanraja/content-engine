@@ -2054,6 +2054,8 @@ def direction_problem(cfg):
         return ('no signed creative direction in this config: draw the kit with kit.py, which checks '
                 'creative-direction.json beside post.json (docs/CREATIVE_DIRECTION.md)')
     path = Path(rec['path'])
+    if not path.is_absolute():
+        path = Path(__file__).resolve().parents[2] / path
     if not path.exists() or hashlib.sha256(path.read_bytes()).hexdigest() != rec.get('sha256'):
         return f'{path} changed (or is gone) since kit.py checked it; check it again and redraw the kit'
     return None
