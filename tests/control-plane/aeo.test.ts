@@ -160,7 +160,9 @@ test('the lane map covers every Growth product and the ledger knows the external
   const job = CONTENT_ENGINE_JOBS.find(j => j.job === 'aeo_ingest')
   assert.ok(job && job.trigger === 'external')
   const now = new Date('2026-09-20T12:00:00.000Z')
-  const stale = contentEngineAttention([{ job: 'aeo_ingest', status: 'ok', reason: null, finished_at: '2026-09-06T04:30:00.000Z' }], now)
+  // Fortnightly since 2026-10-15: a run nine days old is on time, one sixteen days old is not.
+  assert.equal(contentEngineAttention([{ job: 'aeo_ingest', status: 'ok', reason: null, finished_at: '2026-09-11T04:30:00.000Z' }], now).attention.length, 0)
+  const stale = contentEngineAttention([{ job: 'aeo_ingest', status: 'ok', reason: null, finished_at: '2026-09-04T04:30:00.000Z' }], now)
   assert.equal(stale.attention.length, 1)
   assert.match(stale.attention[0].line, /AEO research has not succeeded/)
 })
