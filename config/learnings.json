@@ -1305,6 +1305,26 @@
      "how": "the style study reads the script, the narrative, the production style or the clarity as the layers to study"
     }
    ]
+  },
+  {
+   "id": "typed-words-are-his",
+   "on": "2026-10-24",
+   "krish": "Yes, exact typed quotes count as my opinions on what I think you should do with that content - what a stupid question. If you read what I am feeding back, it's pretty obvious what it is",
+   "why": "The Inspiration session asked him whether an exact quote of words he typed in a session counts as his words. What he types is plainly his view; the question showed it had not read his feedback for its reach, and it cost him a turn.",
+   "means": "Words he typed, quoted exactly, count as his words wherever they are recorded (a session, a page, a pasted note), as his view of what should be done with that content; a paraphrase, a summary or an inference is an observation. And a question his feedback already answers is never put to him: read what he has said for its reach first.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "AGENTS.md",
+     "contains": "exact typed quotes",
+     "how": "the 'Your own actions are observations' rule says his typed words, quoted exactly, are his"
+    },
+    {
+     "file": "AGENTS.md",
+     "contains": "If you read what I am feeding back, it's pretty",
+     "how": "the 'Check before you ask' rule never asks what his feedback already answers"
+    }
+   ]
   }
  ]
 }
