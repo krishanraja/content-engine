@@ -433,8 +433,9 @@ then "A." The engine's `recordings_drive_inbox` job
 lists the Inbox by its folder ID as the engine's Google service account,
 read-only, and streams each new recording into the same store under its
 sha256, with the manifest `confirm` writes. No home computer is needed, and a
-rename or move of the folder changes nothing. It needs the Inbox shared with
-the service account as Viewer, once (Krish's step). A failure (folder unshared
+rename or move of the folder changes nothing. It reads the Inbox through the
+"anyone with the link" sharing on `makeyourmindup` (2026-10-24); if that is
+turned off, share the Inbox with the service account as Viewer first. A failure (folder unshared
 or gone, a copy that did not check, or a home computer reporting a problem)
 fails the job, and Control Center shows it. The home computers' upload below
 stays as the fallback until the job has carried a real take end to end; both

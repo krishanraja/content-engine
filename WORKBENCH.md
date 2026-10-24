@@ -33,10 +33,10 @@ control-center.
   after boot waits a minute for Google Drive. `paths.ts` passes over a stale setting and `doctor` names it.
 - **Proved:** 10 new tests (`tests/control-plane/recordings-drive-inbox.test.ts`), the stale-setting test in
   `tests/paths-drive.test.ts`, and a local run of the real streaming copy: 50 MB through a fixed Content-Length PUT,
-  sha256 equal on both ends. **Not proved:** a real take through the live job (needs Krish's share first), and the
+  sha256 equal on both ends. **Not proved:** a new take copied by the live job (the first runs found every take already stored), and the
   PowerShell changes on Windows (no PowerShell here; Windows CI runs the source install only).
-- **Waiting on Krish (in this order):** (1) share the Video Engine Inbox with the engine's service account as Viewer
-  (the account already on Content Inspo); (2) delete the `MINDMAKE_DRIVE_ROOT`, `MINDMAKE_MEDIA_INBOX`,
+- **Waiting on Krish (in this order):** (1) none for the Inbox: the job reads it through the "anyone with the link" sharing on
+  `makeyourmindup`; before that sharing is turned off, share the Inbox with the engine's service account as Viewer; (2) delete the `MINDMAKE_DRIVE_ROOT`, `MINDMAKE_MEDIA_INBOX`,
   `MINDMAKE_ARCHIVE_ROOT`, `MINDMAKE_POSTS_ROOT`, `MINDMAKE_INSPIRATION` and `MINDMAKE_LIBRARY_ROOT` user settings on
   both home computers; (3) where Claude sessions should write in Drive now (`drive_destinations` names `CURRENT` and
   `inbox`, both gone); (4) whether to clear the dead `drive_folders` and `briefing_drive_folder_id` rows. Seen, not

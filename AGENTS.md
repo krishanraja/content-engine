@@ -298,8 +298,10 @@ after recording do I really feel like I've got a message".
   `meter_daily`. Research through Perplexity, Exa and Brave is not metered, so
   count it yourself.
 - **Drive folders are load-bearing.** Read `docs/DRIVE.md` before you put
-  anything in Google Drive or move, rename or tidy a folder there. `Video
-  Engine` and `makeyourmindup` are read by path and never move.
+  anything in Google Drive or move, rename or tidy a folder there. Folders are found by ID,
+  never by path, wherever the API allows it (Ruling, Krish, 2026-10-24); the
+  home computers still reach `Video Engine` and `makeyourmindup` through `H:`,
+  so a move needs its new path in `config/studio.json` `runtime`.
 - **Leave the knowledge in the repository.** What you learn about the engine
   goes into `docs/STATE.md`, `docs/walks/` or the document it corrects, never
   only into a chat.
