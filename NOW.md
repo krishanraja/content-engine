@@ -34,8 +34,9 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## Where it is right now (as of 2026-10-24)
 
-- **Inspiration cards routed to "Study the style" now reach the style bank** (2026-10-24, PR 153): `plan-week` step 0 reads them and studies each before the week's recordings, as `docs/STYLE_REFERENCES.md` ("Cards he sends from the Inspiration page") says; his typed words go to `krish_likes`, a tapped guess is kept apart. The taste ledger's first weekly run the same day wrote 12 claims and proposed 3 voice rules, so `taste_profile_form` stays empty for drafting until he approves one.
 <!-- north-star-state {"week_of": "2026-10-26", "week_target": 1, "current": 1, "current_as_of": "2026-10-23", "current_source": "Control Center content_ideas (1 published in the last 7 days)", "urgency": 1, "urgency_reason": "at 100% of this week's target"} --> **North Star number: U1, on pace.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 1, against 1 this week, on the way to 30 by 30 November 2026. Steady: one proposal a week that raises the ceiling.
+
+- **Inspiration cards routed to "Study the style" now reach the style bank** (2026-10-24, PR 153): `plan-week` step 0 reads them and studies each before the week's recordings, as `docs/STYLE_REFERENCES.md` ("Cards he sends from the Inspiration page") says; his typed words go to `krish_likes`, a tapped guess is kept apart. The taste ledger's first weekly run the same day wrote 12 claims and proposed 3 voice rules, so `taste_profile_form` stays empty for drafting until he approves one.
 
 Lifecycle: building. Readback on 2026-10-11 unless a commit is named; the 2026-10-12 work below is merged and tested, with no production readback beyond the commits' own reports.
 
