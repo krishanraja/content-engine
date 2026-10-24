@@ -1429,6 +1429,26 @@
      "how": "the Friday motion system: amber marks what changed, never a country"
     }
    ]
+  },
+  {
+   "id": "drive-layout-2026-10-24",
+   "on": "2026-10-24",
+   "krish": "just reinstate that in the root folder then ... Ventures is where everything now lives (their subfolders. If I notice bugs or issues while on my phone, I put them in Bugs and Issues, i put things that inspire me in Inspiration, and Active Ventures contains all the main ventures we are working on, and that the entire OS/control center/AI harness is expected to use and keep up to date alongside the filearchives repository). Can you ensure that all happens? KeePass and FamilyContentLibrary are immovable.",
+   "why": "His folder moves left the Drive map pointing at CURRENT and CURRENT/00_INBOX, which no longer exist, so a Claude session that could not place a file was told to use a folder that was gone, and Hunter's map could not be rebuilt.",
+   "means": "The top of his Drive is Ventures (Active Ventures, Inspiration, Bugs & Issues, _Archive), --ARCHIVE, Family Admin, FamilyContentLibrary, KeePass and Inbox from My AI. Anything an AI cannot place goes in Inbox from My AI, never loose at the top. Content ideas go in Ventures > Inspiration > Content Inspo. FamilyContentLibrary and KeePass never move. The Drive map, the session guard, filearchives and this engine all name the same layout, by folder ID.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "docs/DRIVE.md",
+     "contains": "## The top of his Drive (Krish, 2026-10-24)",
+     "how": "the layout, each area's ID, the AI inbox and where content ideas go, read before any Drive work"
+    },
+    {
+     "file": "docs/DRIVE.md",
+     "contains": "Anything an AI session cannot place: `Inbox from My AI`",
+     "how": "where a new thing goes"
+    }
+   ]
   }
  ]
 }
