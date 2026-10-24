@@ -18,7 +18,7 @@ It's harder than it looks. South Korea dropped Naver Cloud from that national pr
 
 Businesses are making the same choice countries are, mostly on price.
 
-Airbnb's boss, Brian Chesky, told Bloomberg in October 2025 that its customer service leans on Alibaba's Qwen: "We're relying a lot on Alibaba's Qwen model. It's very good. It's also fast and cheap." Which is also what most of us want from a holiday fling.
+Airbnb's boss, Brian Chesky, told Bloomberg last October that its customer service leans on Alibaba's Qwen: "We're relying a lot on Alibaba's Qwen model. It's very good. It's also fast and cheap." Which is also what most of us want from a holiday fling.
 
 Cursor, a coding tool lots of software teams use, built its newest model on top of Kimi, from China's Moonshot AI, and didn't say so at first. Once people spotted it, co-founder Aman Sanger said: "It was a miss to not mention the Kimi base in our blog from the start."
 
@@ -32,7 +32,7 @@ So here's the way I think about it. Every AI has two passports. One says where i
 
 The first passport shapes what it tells you. The Christian Science Monitor put 200 news questions to four Chinese chatbots (DeepSeek, Kimi, Qwen and GLM) and compared them with Claude. In 35% of cases the Chinese bots refused, used the Chinese government's preferred language, or got it wrong. For DeepSeek it was 63%. Claude, the paper found, "answered all of them."
 
-America has its own version. In July 2025, Simon Willison caught Elon Musk's Grok searching X for Elon Musk's posts before it answered a question about Israel and Palestine. xAI later told it to stop. Which is one way to keep the boss happy.
+America has its own version. Last summer, Simon Willison caught Elon Musk's Grok searching X for Elon Musk's posts before it answered a question about Israel and Palestine. xAI later told it to stop. Which is one way to keep the boss happy.
 
 The lesson applies everywhere. Every maker's choices travel with its AI, and a model's birthplace is one of those choices.
 
@@ -46,7 +46,7 @@ America's government tried the obvious fix with DeepSeek: download the model and
 
 You can take DeepSeek out of China. You can't take China out of DeepSeek.
 
-How much of the first passport travels depends on the model and the version. One small test found another Chinese model answered freely once it was hosted outside China. So the honest rule is: run it yourself and you keep your data home, but test what it says.
+How much of the first passport travels depends on the model and the version. So the honest rule is: run it yourself and you keep your data home, but test what it says.
 
 ## I TRIED IT ON WORK QUESTIONS
 
