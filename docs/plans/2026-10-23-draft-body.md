@@ -22,7 +22,7 @@ Airbnb's boss, Brian Chesky, told Bloomberg last October that its customer servi
 
 Cursor, a coding tool lots of software teams use, built its newest model on top of Kimi, from China's Moonshot AI, and didn't say so at first. Once people spotted it, co-founder Aman Sanger said: "It was a miss to not mention the Kimi base in our blog from the start."
 
-And Lindy, an American startup, moved most of its AI work onto DeepSeek. Its boss told NPR its biggest bill had been Anthropic, and DeepSeek "was just 10x cheaper."
+And Lindy, an American startup, told NPR it had moved all its traffic onto DeepSeek. Its boss told NPR its biggest bill had been Anthropic, and DeepSeek "was just 10x cheaper."
 
 It runs the other way too. HSBC, a British bank, signed a deal with France's Mistral. Nobody in this story is doing anything strange. They're shopping.
 
