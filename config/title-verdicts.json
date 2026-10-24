@@ -92,6 +92,51 @@
  ],
  "verdicts": [
   {
+   "title": "Why every country wants its own AI",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "Picked in the one post-recording sign-off round (24 Oct); option A, leads with sovereign AI",
+   "krish": "signed off, keep, all A",
+   "on": "2026-10-24",
+   "piece": "7083d6ad-419e-4fdc-9aba-f3be7f3f3a23"
+  },
+  {
+   "title": "EVERY COUNTRY WANTS ITS OWN AI",
+   "surface": "thumbnail",
+   "verdict": "picked",
+   "why": "Picked in the one post-recording sign-off round (24 Oct); option A, leads with sovereign AI",
+   "krish": "signed off, keep, all A",
+   "on": "2026-10-24",
+   "piece": "7083d6ad-419e-4fdc-9aba-f3be7f3f3a23"
+  },
+  {
+   "title": "Why every country wants its own AI, and what it means for the AI you use",
+   "surface": "youtube",
+   "verdict": "picked",
+   "why": "Picked in the one post-recording sign-off round (24 Oct); option A, leads with sovereign AI",
+   "krish": "signed off, keep, all A",
+   "on": "2026-10-24",
+   "piece": "7083d6ad-419e-4fdc-9aba-f3be7f3f3a23"
+  },
+  {
+   "title": "VIDEO: Why every country wants its own AI",
+   "surface": "substack",
+   "verdict": "picked",
+   "why": "Picked in the one post-recording sign-off round (24 Oct); option A, leads with sovereign AI",
+   "krish": "signed off, keep, all A",
+   "on": "2026-10-24",
+   "piece": "7083d6ad-419e-4fdc-9aba-f3be7f3f3a23"
+  },
+  {
+   "title": "Why every country wants its own AI, and what that means for your business",
+   "surface": "substack",
+   "verdict": "picked",
+   "why": "Picked in the one post-recording sign-off round (24 Oct); option A, leads with sovereign AI",
+   "krish": "signed off, keep, all A",
+   "on": "2026-10-24",
+   "piece": "7083d6ad-419e-4fdc-9aba-f3be7f3f3a23"
+  },
+  {
    "title": "You may already be using a Chinese AI. Here's what to check",
    "surface": "substack",
    "verdict": "rejected",

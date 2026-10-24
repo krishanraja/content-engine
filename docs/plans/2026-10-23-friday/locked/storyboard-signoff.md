@@ -1,5 +1,7 @@
 # Friday "two passports": storyboard sign-off
 
+**Signed off by Krish: "signed off, keep, all A", 2026-10-24.** Storyboard approved; the 90-second on-camera call is kept as recorded (no trim); option A for every title, the outline and prediction A.
+
 Four storyboards, one frame per beat, built from your four takes, the real evidence pages (captured 24 October, each
 proving sentence highlighted) and your DeepSeek screen recordings. Nothing renders until you sign this off in words.
 
