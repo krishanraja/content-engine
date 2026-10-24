@@ -9,7 +9,7 @@ Transcriber mishearings corrected here (the audio is untouched): "four slaver" i
 
 ## Audio edits (do these, then re-time from the edited audio)
 
-- None. Use the take as recorded.
+- **ALL · SPEED 1.12x.** Speed the whole take to 1.12x with pitch kept (the episode config's "speed": {"factor": 1.12, "krish": "Krish, 24 Oct, answering the length question: 'Cut the recap (Recommended)', then 'Speed both to 1.12x (Recommended)'"}). 83.7 s of speech becomes about 74.7 s; with the 3.5 s intro and 6 s outro the finished file is about 84.2 s, under the 89 s cap. Re-time from the sped audio.
 
 ## The words, beat by beat
 

@@ -8,9 +8,14 @@
 - **Done:** the article (`docs/plans/2026-10-23-draft-body.md`, on the piece; fact gate `ok`, voice, AI scan and spine
   checks pass) and every channel's copy (`docs/plans/2026-10-23-friday/locked/board-copy/`: `article.md`,
   `publishing-copy.md`; voice score 4.5, bar 6). The board shows the signed storyboards (revision 50).
-- **Waiting on Krish:** start Codex with "Pick up docs/plans/2026-10-23-friday/locked/CODEX.md. Krish signed off the
-  storyboard on 24 October ("signed off, keep, all A"). Make the four videos." Then his yes to the final board publish
-  Codex builds.
+- **Waiting on Krish:** start Codex by pasting `docs/plans/2026-10-23-friday/locked/CODEX_PROMPT.md` (the part below
+  the line) into a new Codex session on a home computer. Then his look at the four videos on the board, then his yes
+  to the final board publish.
+- **Changed after sign-off (his answers, 24 Oct):** the 90-second on-camera cut loses the recap and three small repeats
+  ("Cut the recap (Recommended)"), and both vertical cuts are sped to 1.12x ("Speed both to 1.12x (Recommended)") so the
+  whole file with intro and outro runs under 89 s. His warning, "last time Codex glitched a bunch of words on the
+  speedup and also misaligned the captions", is `config/learnings.json` `speedup-without-glitches` and the
+  "Speed without glitches" section of `CODEX.md`.
 - **Codex** works from `locked/CODEX.md` and nothing else; it fills only the chapter times in `publishing-copy.md`.
 - **Where things are:** takes in the engine's recordings store (`recording.py list`); evidence captures under
   `2 Covers and images/Evidence` and the storyboards under `2 Covers and images/Storyboard` in the post's library

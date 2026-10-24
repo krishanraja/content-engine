@@ -22,9 +22,15 @@ EDITS = {
  ],
  'cam-90s': [
   ('S07-claude', 'CUT', 'Cut "the American questions, of course." so the line ends "answered all.": the newspaper\'s questions were news questions, and "Claude answered all of them". Cover the join with the picture.'),
-  ('S12-call', 'NO TRIM (Krish, 24 Oct: "keep")', 'Keep the call as recorded, including "Sometimes the latter supersedes the former, so that\'s fine too." The cut runs about 103 s.'),
+  ('S08-lives', 'CUT', 'Cut "That\'s the second passport." (35.66-37.30 s, word edges from cam-90s.words.json), up to "Use DeepSeek". Cover the join with the picture. (Krish, 24 Oct: "Cut the recap (Recommended)", the recap plus three small repeats.)'),
+  ('S09-work', 'CUT', 'Cut "But does this matter at work?" (42.98-44.64 s), so "...in China." runs into "I asked Claude". Cover the join with the picture.'),
+  ('S12-call', 'CUT', 'Keep the call, including "Sometimes the latter supersedes the former, so that\'s fine too." Cut only "This is a really important thing." (74.18-76.02 s).'),
+  ('S13b-recap', 'CUT', 'Cut the recap "So that\'s the two passports. ... where is the data being stored?" (83.64-92.90 s): it repeats S04. "...where it lives." runs into "And of course, keep a second AI". Cover the join with the picture.'),
+  ('ALL', 'SPEED 1.12x', 'After the cuts, speed the whole edited take to 1.12x with pitch kept (the episode config\'s "speed": {"factor": 1.12, "krish": "Krish, 24 Oct, answering the length question: \'Cut the recap (Recommended)\', then \'Speed both to 1.12x (Recommended)\'"}). About 86.9 s of speech becomes 77.6 s; with the 3.5 s intro and 6 s outro the finished file is about 87.1 s, under the 89 s cap (produce_day.py SHORT_MAX_SECONDS, total_seconds). Re-time from the sped audio.'),
  ],
- 'vo-90s': [],
+ 'vo-90s': [
+  ('ALL', 'SPEED 1.12x', 'Speed the whole take to 1.12x with pitch kept (the episode config\'s "speed": {"factor": 1.12, "krish": "Krish, 24 Oct, answering the length question: \'Cut the recap (Recommended)\', then \'Speed both to 1.12x (Recommended)\'"}). 83.7 s of speech becomes about 74.7 s; with the 3.5 s intro and 6 s outro the finished file is about 84.2 s, under the 89 s cap. Re-time from the sped audio.'),
+ ],
 }
 NAMES = {'vo-5min':'5-minute voiceover (pictures only, 16:9)','cam-5min':'5-minute on camera (16:9 output; the take is a portrait selfie, 1080x1920)','vo-90s':'90-second voiceover (pictures only, 9:16)','cam-90s':'90-second on camera (9:16; the take is a portrait selfie, 1080x1920)'}
 for take, meta in T.items():

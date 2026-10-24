@@ -5,8 +5,11 @@ and picture. Krish, 24 October: "the copy of the article and what goes in the vi
 responsibility", and he wants these produced "in a world-class capacity that I'm not going to need to iterate for 30
 hours".
 
-**Gate: start only after Krish has signed off the storyboard in words** (`storyboard-signoff.md`; his words are
-recorded in that file's "Signed off" line and on the piece). Until then, only step 0 below.
+**Gate: met.** Krish signed off the storyboard, titles, outline and prediction on 24 October ("signed off, keep, all A";
+`storyboard-signoff.md`). On the same day he answered the length question for the two vertical cuts: "Cut the recap
+(Recommended)", then "Speed both to 1.12x (Recommended)", and warned: "last time Codex glitched a bunch of words on the
+speedup and also misaligned the captions". The cuts and the speed are in `script-cam-90s.md` and `script-vo-90s.md`;
+how to speed without glitches is the section of that name below. It is not optional.
 
 ## The rule
 
@@ -57,8 +60,8 @@ Also: `xinxiang.mp4` and `turkmenistan.mp4` (Krish's screen recordings, 24 Octob
 4. **Brand and sound:** the approved story intro and outro (`config/story-intro-outro.json`), the licensed bed from
    `config/music-library.json`, low under the voice. Through `.agents/skills/produce-video` for the sting, music,
    thumbnails, filing and the making record.
-5. **Thumbnails:** wait for the thumbnail words Krish picks (house rule TITLES_AFTER_RECORDING); Claude puts them in
-   this folder as `titles.json`. Do not write your own.
+5. **Thumbnails and titles:** Krish has picked them; they are in `titles.json` (thumbnail words "EVERY COUNTRY WANTS
+   ITS OWN AI", the title card "Why every country wants its own AI"). Use them exactly. Do not write your own.
 6. **Watch each video at full size with sound against its take**, every frame against `visual-copy.json` and the
    signed storyboard (`config/failures.json`, `cut-called-done-unheard`). Fix anything that does not prove its line
    before Krish sees it.
@@ -69,6 +72,52 @@ Also: `xinxiang.mp4` and `turkmenistan.mp4` (Krish's screen recordings, 24 Octob
    `docs/plans/2026-10-19-week/update_friday_23oct.py` (snapshot, then `--build`). Publish with
    `board_web.py publish-web` only when the build prints `same_panels` all true, `assets_absent` empty and `verify`
    empty, `npm run check:board-layout` passes, and Krish has said yes to that publish.
+
+## Speed without glitches (the two vertical cuts)
+
+Krish, 24 October: "last time Codex glitched a bunch of words on the speedup and also misaligned the captions". The
+recorded causes (`config/failures.json`, `cut-called-done-unheard` and `lip-sync-drift`): captions and cut points came
+from a words file made before the speed-up, on the wrong clock; and a cut built from 62 separately encoded parts lost
+668 ms, so sound and picture drifted. So:
+
+1. **One speed-up, of one continuous file, once.** Use the engine's own path: the episode config's `"speed"` with the
+   factor 1.12 and the `krish` words given in the script (`scripts/quick-edit/episode.py`, `speed_settings`). It speeds
+   picture and sound together with pitch kept. Never speed parts one by one, never speed twice, never re-encode the
+   sped file in parts.
+2. **A fresh transcript of the sped take, then cut on it.** Transcribe the sped file (`make.py`'s `transcribe`, the
+   same model as the take's) and find every cut in the script by its words in that new transcript, not by the raw
+   times in the script (those are the unsped clock; divided by 1.12 they are only a guide). `quality.py` refuses a
+   words file with the wrong source, speed, clock or transcriber: never get round it.
+3. **Clean joins.** Cut in the silence between words, never inside one; keep at least 40 ms of room on each side and a
+   10 ms crossfade at each join. Then render the whole cut as one file.
+4. **No captions in the picture.** The signed storyboard has no subtitles of what he says. Set `"captions": false`, so
+   the caption file goes to the platform instead. Make that file from a fresh transcript of the finished file, never
+   from any earlier words file.
+5. **Prove it before anyone sees it.** Transcribe the finished file and compare it word by word with the script's words
+   minus the cuts: every word present, in order, none clipped. Listen to every join at full volume. On the on-camera
+   cut, check lip sync at the start, the middle and the end (within 40 ms). Check the caption file against the
+   finished file's audio at five points, not against the script.
+6. **Sped cuts need more picture** (Krish, 19 October, `config/learnings.json` `sped-cut-visual-density`): at least 90% of
+   his speech covered by a picture, no uncovered stretch over 1.5 s, at least 20 meaningful changes a minute, and every
+   essential word at least 48 px high at 1080 wide (stricter than the 39 px in `motion-system.md`; for the vertical cuts
+   48 px wins). `quality.py` `coverage_problems` checks it.
+7. **Length.** The whole finished vertical file, with the 3.5 s intro and the 6 s outro, must run under 89 s
+   (`produce_day.py` `SHORT_MAX_SECONDS`): about 87 s for the on-camera cut and 84 s for the voiceover cut.
+
+## What went wrong last time (read before you start)
+
+- **Wednesday 21 October:** Krish published the long video and then heard random small cuts and chopped words in it;
+  he scrapped the short and the article (`docs/plans/2026-10-21-wednesday/FAILURE_REPORT_2026-10-24.md`). Technical
+  checks passed and were wrong. Listen like a viewer.
+- **Friday 16 October:** a 90-second cut called 10/10 from proxy checks; Krish: "about a 3/10", garbled captions and
+  chopped words. Never call a video done from a contact sheet or timings.
+- Shorts over 89 s were cut off on Instagram (`config/failures.json` `reels-cut-off`).
+
+## How to show Krish
+
+Once all four pass your own full playback, put them on the Friday board as materials marked `review` (step 8, a
+review round), with one line each on what you checked. His comments come back through `board_web.py read`. Only after
+he accepts them do you build the final board with the copy and ask for his yes to publish.
 
 ## Done means
 
