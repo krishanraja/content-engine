@@ -164,7 +164,7 @@ Lifecycle: building. Readback on 2026-10-11 unless a commit is named; the 2026-1
 ## What is next and what is waiting on Krish
 
 - AEO research is fortnightly since 2026-10-15 (odd ISO weeks, next run 2026-10-25); the schedule copy now says so, so Control Center stops calling a 12-day gap a failure.
-- Next for Friday 23 October: Krish records four takes from Teleprompter (on camera and voiceover, at each length; folder "Fri 23 Oct mind.the.gap - Two passports", sent on his word outside the making record, which still waits on the outline and spine gates); then a session builds the storyboard from `docs/plans/2026-10-23-friday/creative-direction.md` for his sign-off before anything renders.
+- Next for Friday 23 October: the takes are recorded (24 Oct); a fresh session locks the scripts, the visual copy, the article and the board copy (`docs/handovers/2026-10-24-friday-lock-for-codex.md`), gets Krish's storyboard sign-off, then hands video production and the final publish board to Codex.
 - Next for the crons: read back the next creator scout run (Tuesday 08:00 UTC) as `ok`. Call odds stays quiet until a Call has a market pinned, which is Krish's to pin.
 - Next for Wednesday 21 October: Claude receives the failure report, reconciles the making record and private board with Krish's published-long-with-reported-audio-defect / scrapped-short-and-article decision, and preserves all prior assets as history. A diagnosis of the published cut requires comparing its exact public upload with the accepted export; no new production or public posting follows from this report.
 - Waiting on Krish for Wednesday: no new production decision is requested. His latest withdrawal supersedes earlier approval of the vertical video and article.
