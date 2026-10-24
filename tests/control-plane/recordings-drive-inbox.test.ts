@@ -25,6 +25,7 @@ const db = vi.hoisted(() => ({
   copyResult: { status: 200, sha256: '' },
   folderStatus: 200,
   files: [] as any[],
+  morePages: false,
 }))
 
 vi.mock('../../apps/control-plane/api/_supabase.js', () => ({
@@ -127,6 +128,7 @@ beforeEach(() => {
   db.copyResult = { status: 200, sha256: SHA }
   db.folderStatus = 200
   db.files = [take()]
+  db.morePages = false
   vi.stubGlobal('fetch', async (input: string) => {
     const url = new URL(input)
     if (url.pathname === `/drive/v3/files/${INBOX_FOLDER_ID}`) {
@@ -134,7 +136,8 @@ beforeEach(() => {
     }
     if (url.pathname === '/drive/v3/files') {
       expect(url.searchParams.get('q')).toBe(`'${INBOX_FOLDER_ID}' in parents and trashed = false`)
-      return new Response(JSON.stringify({ files: db.files }), { status: 200 })
+      expect(url.searchParams.get('orderBy')).toBe('modifiedTime desc')
+      return new Response(JSON.stringify({ files: db.files, ...(db.morePages ? { nextPageToken: 'more' } : {}) }), { status: 200 })
     }
     throw new Error(`unexpected fetch ${input}`)
   })
@@ -206,6 +209,14 @@ describe('GET /api/library/recordings/drive-inbox', () => {
       expect(res.body.error).toMatch(/as Viewer/)
       expect(db.runs.at(-1)).toMatchObject({ job: 'recordings_drive_inbox', status: 'failed' })
     }
+  })
+
+  it('says so, newest first, when the Inbox holds more than one run lists', async () => {
+    db.morePages = true
+    const res = await call(driveInbox, asCron)
+    expect(res.body.ok).toBe(false)
+    expect(res.body.error).toMatch(/more files than one run lists/)
+    expect(res.body.copied).toBe(1)
   })
 
   it('fails, naming the machine, while a home computer reports a problem', async () => {

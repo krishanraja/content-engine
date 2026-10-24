@@ -5,7 +5,7 @@ import { googleConfigured } from '../../_google.js'
 import { withContentRun } from '../../_runs.js'
 import { supabase } from '../../_supabase.js'
 import { isSignedPreviewUrlAllowed } from '../../video-studio/_previewStorage.js'
-import { INBOX_FOLDER_ID, copyDriveFile, copyFits, decideRecording, listInbox, planInbox, type InboxSkip } from '../_inboxDrive.js'
+import { INBOX_FOLDER_ID, INBOX_RUN_BUDGET_MS, copyDriveFile, copyFits, decideRecording, listInbox, planInbox, type InboxSkip } from '../_inboxDrive.js'
 import { lanePlainProblems, readLaneReports } from '../_lanes.js'
 import { configuredLibraryStore, verifyStoredLibraryObject } from '../_library.js'
 import { readRecordingManifest, recordingObjectKey, withName, writeRecordingManifest } from '../_recordings.js'
@@ -84,13 +84,15 @@ async function handler(req: VercelRequest, res: VercelResponse) {
         if (signed.error || !signed.data?.signedUrl || !isSignedPreviewUrlAllowed(signed.data.signedUrl, store.config.supabaseOrigin)) {
           throw new Error('the store gave no upload address')
         }
-        const sent = await copyDriveFile(file.id, signed.data.signedUrl, request.recording.contentType, request.bytes)
+        const sent = await copyDriveFile(file.id, signed.data.signedUrl, request.recording.contentType, request.bytes, INBOX_RUN_BUDGET_MS - (Date.now() - started))
         // 400 or 409: the bytes arrived meanwhile, most likely from a home
         // computer; the check below proves them either way.
         if ((sent.status < 200 || sent.status >= 300) && sent.status !== 400 && sent.status !== 409) throw new Error(`the upload answered ${sent.status}`)
         if (sent.status >= 200 && sent.status < 300 && sent.sha256 !== request.sha256) {
-          await supabase.storage.from(bucket).remove([objectKey])
-          throw new Error('the bytes read from Drive did not match the sha256 Drive reported; removed, tried again next run')
+          const removed = await supabase.storage.from(bucket).remove([objectKey])
+          throw new Error(removed.error
+            ? `the bytes read from Drive did not match the sha256 Drive reported, and removing them failed: ${objectKey} needs removing by hand`
+            : 'the bytes read from Drive did not match the sha256 Drive reported; removed, tried again next run')
         }
         const stored = await verifyStoredLibraryObject(bucket, objectKey, request.bytes, request.recording.contentType, request.md5)
         if (stored !== 'verified') throw new Error(`the stored copy did not check (${stored})`)
@@ -119,6 +121,7 @@ async function handler(req: VercelRequest, res: VercelResponse) {
   }
   const problems = [
     ...(failures.length ? [`${failures.length} recording(s) could not be copied from the Inbox (${failures.slice(0, 3).join('; ')})`] : []),
+    ...(listing.truncated ? ['the Inbox holds more files than one run lists; the oldest were not looked at'] : []),
     ...(skipped.too_large ? [`${skipped.too_large} recording(s) in the Inbox are over the 2 GiB the engine takes`] : []),
     ...machineProblems,
     ...(lanes.error ? ['the home computers\' reports could not be read'] : []),

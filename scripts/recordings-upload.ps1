@@ -749,6 +749,7 @@ try {
       if ($ok) { exit 0 } else { exit 1 }
     } catch {
       Write-Log "recordings upload stopped: $($_.Exception.Message)"
+      if (-not $Check) { Add-Problem 'pass_stopped'; Send-LaneReport }
       exit 1
     }
   }
@@ -765,7 +766,13 @@ try {
       exit 0
     }
     try { [void](Invoke-Pass) }
-    catch { Write-Log "this pass stopped: $($_.Exception.Message). Trying again in $EveryMinutes minutes." }
+    catch {
+      # A pass that stops before its own report still reports, so the
+      # engine never reads a failing machine as well (Send-LaneReport).
+      Write-Log "this pass stopped: $($_.Exception.Message). Trying again in $EveryMinutes minutes."
+      Add-Problem 'pass_stopped'
+      Send-LaneReport
+    }
     Start-Sleep -Seconds ($EveryMinutes * 60)
   }
 } finally {

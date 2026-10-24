@@ -122,7 +122,7 @@ export function copyFits(bytes: number, elapsedMs: number): boolean {
 // ── Drive ───────────────────────────────────────────────────────────────────
 
 export type InboxListing =
-  | { ok: true; folderName: string; files: InboxFile[] }
+  | { ok: true; folderName: string; files: InboxFile[]; truncated: boolean }
   | { ok: false; reason: string; fix: string }
 
 const NOT_SHARED_FIX = 'Share the Video Engine Inbox folder with the engine\'s service account (the address in GOOGLE_SERVICE_ACCOUNT_EMAIL, the one already on the Content Inspo folder) as Viewer. Moving or renaming the folder needs nothing.'
@@ -156,6 +156,7 @@ export async function listInbox(folderId: string): Promise<InboxListing> {
     const params = new URLSearchParams({
       q: `'${folderId}' in parents and trashed = false`,
       fields: 'nextPageToken,files(id,name,mimeType,size,md5Checksum,sha256Checksum,modifiedTime)',
+      orderBy: 'modifiedTime desc',
       pageSize: '200',
       supportsAllDrives: 'true',
       includeItemsFromAllDrives: 'true',
@@ -168,17 +169,24 @@ export async function listInbox(folderId: string): Promise<InboxListing> {
     pageToken = typeof j?.nextPageToken === 'string' ? j.nextPageToken : ''
     if (!pageToken) break
   }
-  return { ok: true, folderName: String(meta?.name || ''), files }
+  // The newest come first, so a cut listing drops only the oldest; it is
+  // still said, never passed over.
+  return { ok: true, folderName: String(meta?.name || ''), files, truncated: pageToken !== '' }
 }
 
 /** Streams one Drive file to a signed Storage upload URL, hashing it on the
  *  way. Returns the PUT's status and the sha256 of the bytes that passed.
  *  Nothing is held in memory but the chunk in flight. */
-export async function copyDriveFile(fileId: string, uploadUrl: string, contentType: string, bytes: number): Promise<{ status: number; sha256: string }> {
+export async function copyDriveFile(fileId: string, uploadUrl: string, contentType: string, bytes: number, timeoutMs: number): Promise<{ status: number; sha256: string }> {
   const token = await googleAccessToken([DRIVE_READONLY_SCOPE], { impersonate: false })
   if (!token) throw new Error('the engine could not sign in to Google')
+  // A copy that would outlast the function is stopped and counted as a
+  // failure, so the run still records itself; killed by the platform it
+  // would leave no ledger row and start again first every ten minutes.
+  const signal = AbortSignal.timeout(Math.max(1, timeoutMs))
   const download = await fetch(`https://www.googleapis.com/drive/v3/files/${encodeURIComponent(fileId)}?alt=media&supportsAllDrives=true`, {
     headers: { Authorization: `Bearer ${token}` },
+    signal,
   })
   if (!download.ok || !download.body) throw new Error(`Drive answered ${download.status} for the download`)
   const hash = createHash('sha256')
@@ -196,6 +204,12 @@ export async function copyDriveFile(fileId: string, uploadUrl: string, contentTy
       response.on('end', () => resolve(response.statusCode || 0))
       response.on('error', reject)
     })
+    // A hard deadline, not an idle timeout: a slow but steady copy never
+    // goes idle, and a short body (the file replaced since it was listed)
+    // leaves storage waiting. Destroying the PUT ends the pipeline and the
+    // download, and the run records the failure.
+    const deadline = setTimeout(() => request.destroy(new Error('the copy ran out of time; it is tried again next run')), Math.max(1, timeoutMs))
+    request.on('close', () => clearTimeout(deadline))
     request.on('error', reject)
     pipeline(Readable.fromWeb(download.body as any), tap, request).catch(reject)
   })

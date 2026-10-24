@@ -25,6 +25,7 @@ export const LANE_PROBLEMS: Readonly<Record<string, string>> = Object.freeze({
   drive_root_env_stale: 'has a MINDMAKE_DRIVE_ROOT setting that points at a folder that is not there. Delete the setting',
   archive_env_stale: 'has a MINDMAKE_ARCHIVE_ROOT setting that points at a folder that is not there. Delete the setting',
   sending_failed: 'could not send one or more recordings to the engine',
+  pass_stopped: 'had its recordings pass stop part way (recordings-upload.log on that machine says why)',
   placing_failed: 'could not place takes on their piece',
   pinned_python_missing: 'has no pinned Python, so it cannot place takes or publish music, references or working files (npm run bootstrap:python)',
   music_publish_failed: 'could not publish the licensed music to the library',
