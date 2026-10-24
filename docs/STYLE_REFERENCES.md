@@ -86,10 +86,10 @@ recording"). The Sunday plan reads them (`plan-week`, step 0), and any
 session asked to study the style references reads them too:
 
 ```sql
-select name, drive_file_id, why_like, why_like_source, why_here, read_as,
-       note_for_claude, answered_at
+select name, drive_file_id, why_like, why_like_source, picked_likes, why_here,
+       read_as, note_for_claude, facets, transcript, answered_at
 from inspiration_items
-where route = 'study_style' and answered_at is not null
+where 'study_style' = any(routes) and answered_at is not null
 order by answered_at desc
 ```
 
@@ -107,9 +107,14 @@ order by answered_at desc
    `read` the words; `look` a glance is enough. `note_for_claude` is his
    instruction to you: follow it, and copy it into the reference's `notes`.
    The file is `https://drive.google.com/file/d/<drive_file_id>/view`.
-4. His words: copy `why_like` into `krish_likes` word for word only when
-   `why_like_source` is `typed`. A `picked` reason is a guess he agreed
-   with: record it in `notes` as "agreed with: ...", never as his words.
+4. `facets` says where it came from (platform, source, creator) and its
+   format; record them on the reference as `creator` and `notes`.
+   `transcript` holds its words when the taste ledger already watched it,
+   so the study can start from them.
+5. His words: copy `why_like` into `krish_likes` word for word only when
+   `why_like_source` is `typed`. Each of `picked_likes` is a guess he
+   agreed with: record it in `notes` as "agreed with: ...", never as his
+   words.
    His `why_here` goes in `notes` too.
 
 ## The bank, the base and the recipes
