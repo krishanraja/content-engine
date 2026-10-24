@@ -33,8 +33,12 @@ Nothing in Production Inspo is ever published, posted or cut into his videos.
 Every pass of `scripts/recordings-upload.ps1` (both home computers, every
 5 minutes) runs `references.py publish`. That sends each video in
 Production Inspo to the engine's library at
-`1 Brand kit (permanent)/Style references/<file>`, once. Any machine then
-gets them with `python scripts/quick-edit/references.py fetch`.
+`1 Brand kit (permanent)/Style references/<file>`, once. The library takes at
+most 100 characters a name, and downloaders name clips after the post's ID
+(a SaveClip.App_ name ran to 120 on 2026-10-24 and stopped every pass), so a
+longer name goes in cut short with the first 8 hex of its sha256 before the
+extension (`references.library_name`); `fetch` maps a long name the same way.
+Any machine then gets them with `python scripts/quick-edit/references.py fetch`.
 
 ## How a session studies one
 
