@@ -4,6 +4,10 @@
 > no longer reads 181 KB of old handoffs before it starts (`docs/COST_GUARDS.md`, G11). Nothing here is current;
 > live state is in `WORKBENCH.md`. Newest first, exactly as written.
 
+## 23 October: Wednesday private publish board ready (Codex)
+
+- 2026-10-23: **Wednesday's private publish board is ready for Krish's final use.** He said the revised source-led inbox figure was “much better” and told Codex to continue. The live board at `https://content.krishraja.com/board/2026-10-19#wednesday` is build `d3a4d79980e7a7ff91eae4cde990955eb445afb1bdbfa17129c930c2d21c620b`. Five article figures now carry publication identity and adjacent Grok Bot/Muse marks, actual redacted interaction crops where available, explicitly labelled reconstructions, and separate field/research scores. The approved seven branded covers/thumbnails and both accepted videos remain available. The article and channel-copy boxes are editable/commentable. The illustrated article and Substack copy contain all five figures. Live HTML and all changed asset downloads hash-match; Ideas, Monday and Friday are byte-identical to the prior build, and all six stores for both 12 and 19 October are unchanged. The private asset pack was sent; `C:\Users\krish\.scratch\wednesday-production-2026-10-21\library-readback.json` is the full newest-download proof once complete. The board proof is `board/final-article-readback.json` in that production folder. The videos' exact hashes, quality receipts and Krish's “Both approved” playback response remain binding. Nothing was publicly posted. Next: Krish can make any final board notes, then publish himself.
+
 ## 23 October: held inbox visual (Codex)
 
 - 2026-10-23: **The held inbox visual has a second review sample.** Krish rated
