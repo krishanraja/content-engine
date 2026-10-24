@@ -10,7 +10,7 @@ ROWS = [
     ('SCAM EMAIL', 'GROK', 'Caught the scam', 'DRAW', 'Both caught traps', 'GROK +1'),
     ('FLIGHT', 'GROK', 'Muse miscounted nights', 'GROK', 'Preferred on another trip', 'GROK +1'),
     ('CANCELLATION', 'DRAW', 'Both warned before cancelling', 'NO MATCH', 'No comparable test', 'DRAW'),
-    ('PLAN MY DAY', 'DRAW', 'Grok set times; Muse checked plans', 'NO MATCH', 'Grok forgot instructions', 'DRAW'),
+    ('PLAN MY DAY', 'DRAW', 'Grok suggested; Muse checked plans', 'NO MATCH', 'Grok forgot instructions', 'DRAW'),
     ('NEWS', 'DRAW', 'Grok useful; Muse got date right', 'NO MATCH', 'Grok briefing became a habit', 'DRAW'),
 ]
 
