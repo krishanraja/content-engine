@@ -396,6 +396,14 @@ close (`409 check_closed_it`), unless you relay Krish's own words in
 
 ## Before you stop
 
+**Before a piece goes to Codex, the record must say so.** Run `making.py
+PIECE show`: every step up to Recorded (Workroom, Fact-checked draft,
+Visual gate, Scripts with both read-backs, Pack in Drive, Recorded) reads
+done, recorded by the commands in the table above. Locked files and signed
+documents are not the record; `produce-video` stops on an incomplete one,
+and Codex must never be asked to fill it in (Krish, 2026-10-24: "This worries
+me, does not seem like you did your bit of the job").
+
 Copy the week's ticks once more (above). Update `WORKBENCH.md` and the board
 (`WORKBENCH.md`, "The board"), and end every reply with
 https://controlcenter.krishraja.com/#/home?waiting=1.

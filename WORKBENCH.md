@@ -20,6 +20,10 @@ Four takes hash-verified; render preflight now passes. Live Scripts is todo, Vis
   whole file with intro and outro runs under 89 s. His warning, "last time Codex glitched a bunch of words on the
   speedup and also misaligned the captions", is `config/learnings.json` `speedup-without-glitches` and the
   "Speed without glitches" section of `CODEX.md`.
+- **Making record completed by Claude (24 Oct, after Codex stopped on it):** Visual gate (cover and thumbnails drawn
+  from his picked words, gate passed), Scripts with both read-backs (two fresh readers each, nothing lost) and Pack
+  (sent to the Two passports library folder) are recorded; every step up to Recorded reads done. `scripts/pages/build.py`
+  now tries the smaller headline sizes on its ladder before refusing a 3:2 cover.
 - **Codex** works from `locked/CODEX.md` and nothing else; it fills only the chapter times in `publishing-copy.md`.
 - **Where things are:** takes in the engine's recordings store (`recording.py list`); evidence captures under
   `2 Covers and images/Evidence` and the storyboards under `2 Covers and images/Storyboard` in the post's library

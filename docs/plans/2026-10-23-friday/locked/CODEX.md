@@ -11,6 +11,16 @@ hours".
 speedup and also misaligned the captions". The cuts and the speed are in `script-cam-90s.md` and `script-vo-90s.md`;
 how to speed without glitches is the section of that name below. It is not optional.
 
+## The making record (complete for Codex, 24 October)
+
+`making.py 7083d6ad-419e-4fdc-9aba-f3be7f3f3a23 show` reads done for Workroom, Fact-checked draft, Visual gate,
+Scripts (both read back, nothing lost), Pack in Drive and Recorded: Claude recorded each with the commands in
+`make-piece`. Video assets is your step (`making.py --by Codex ... video ...`). Do not write any other step. The
+cover and both thumbnails are drawn from Krish's picked words (`../cover-facts.json`, `../post.json`) and sent to the
+library under `3 Posts/2026-10-23 Fri mind.the.gap - Two passports/` (`2 Covers and images`, `3 Video`); the pack
+record names the folder by its new title, the files are in the Two passports folder. Teleprompter shows "not sent":
+Krish has recorded, so that send no longer matters.
+
 ## The rule
 
 You make the four videos and the final Friday board **only** from the files in this folder. You invent no copy, no
