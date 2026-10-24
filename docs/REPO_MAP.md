@@ -4085,6 +4085,7 @@ Where a finished video is filed: one folder per piece, whose name says the
 - `interface StudioPaths`
 - `const DEFAULT_WINDOWS_DRIVE_ROOT`
 - `function canonicalWindowsDrivePath(value: string | undefined, fallback: string): string`
+- `function resolveWindowsDrivePath( value: string | undefined, fallback: string, exists: (path: string) => boolean = exis…`
 - `function studioPaths(): StudioPaths`
 - `function jobPath(jobId: string): string`
 

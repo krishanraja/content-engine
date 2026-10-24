@@ -1,5 +1,35 @@
 # Workbench: where we are and what's next
 
+## 24 October: the Inbox read from Google by its ID; every Drive touchpoint fails loudly (Claude)
+
+Handover: `docs/handovers/2026-10-24-drive-by-id.md`. Branch `claude/drive-by-id`, a pull request here and one in
+control-center.
+
+- **Built:** the `recordings_drive_inbox` job (`apps/control-plane/api/library/recordings/drive-inbox.ts`, every ten
+  minutes) lists the Inbox by its Drive folder ID as the engine's existing Google service account (read-only, the
+  same account the inspiration scan already uses successfully) and streams each new take into the recordings store
+  under its sha256 with the manifest `confirm` writes; `recording.py`, `recording_match.py` and `produce-video` are
+  unchanged. Each home computer's pass now reports what it found (`POST /api/library/recordings/lane`): a stale
+  `MINDMAKE_*` setting (passed over for `config/studio.json`), an unreachable Inbox, a missing library, no pinned
+  Python, a failed send or publish. The job fails with the machine named while a fresh report holds a problem, so
+  Control Center shows it. Settings are read from the registry each pass (no restart needed), and the first pass
+  after boot waits a minute for Google Drive. `paths.ts` passes over a stale setting and `doctor` names it.
+- **Proved:** 10 new tests (`tests/control-plane/recordings-drive-inbox.test.ts`), the stale-setting test in
+  `tests/paths-drive.test.ts`, and a local run of the real streaming copy: 50 MB through a fixed Content-Length PUT,
+  sha256 equal on both ends. **Not proved:** a real take through the live job (needs Krish's share first), and the
+  PowerShell changes on Windows (no PowerShell here; Windows CI runs the source install only).
+- **Waiting on Krish (in this order):** (1) share the Video Engine Inbox with the engine's service account as Viewer
+  (the account already on Content Inspo); (2) delete the `MINDMAKE_DRIVE_ROOT`, `MINDMAKE_MEDIA_INBOX`,
+  `MINDMAKE_ARCHIVE_ROOT`, `MINDMAKE_POSTS_ROOT`, `MINDMAKE_INSPIRATION` and `MINDMAKE_LIBRARY_ROOT` user settings on
+  both home computers; (3) where Claude sessions should write in Drive now (`drive_destinations` names `CURRENT` and
+  `inbox`, both gone); (4) whether to clear the dead `drive_folders` and `briefing_drive_folder_id` rows. Seen, not
+  changed: the Inbox and Content Inspo folders are shared "anyone with the link can edit".
+- **Left, with reasons:** `One Off Content Ideas` is not in Drive any more (`docs/DRIVE.md`); a home computer cannot
+  check an `H:` path against a Drive ID (Drive for desktop does not expose it), so it checks the path exists instead;
+  the KeePass file, ffmpeg reading takes, the library sync and archive filing stay on `H:` paths by necessity.
+- **Next:** once shared, read the next `recordings_drive_inbox` run as `ok`; drop a real take with both machines off
+  and see it in `python scripts/post-pack/recording.py list`.
+
 ## 23 October, afternoon: Friday test scored, both scripts filled, on the board for Krish's review (Claude)
 
 - **Test results:** `docs/plans/2026-10-23-friday/test-results/` (`answers.md`, `coding.md`, the pre-registered

@@ -28,8 +28,11 @@ describe('the library sync on Krish\'s machine', () => {
     for (const source of [sync, installer]) expect([...source].filter((ch) => ch.charCodeAt(0) > 127)).toEqual([])
   })
 
-  it('finds the library from MINDMAKE_LIBRARY_ROOT, else runtime.library_root in config/studio.json', () => {
-    expect(sync).toContain('$env:MINDMAKE_LIBRARY_ROOT')
+  it('finds the library from runtime.library_root in config/studio.json, unless MINDMAKE_LIBRARY_ROOT names a folder that is there', () => {
+    // Read from the registry each pass, so a setting changed or deleted after
+    // the task started counts without a restart (2026-10-24).
+    expect(sync).toContain("Get-Setting 'MINDMAKE_LIBRARY_ROOT'")
+    expect(sync).toContain("'library_env_stale'")
     expect(sync).toContain("Get-Field $runtime 'library_root'")
   })
 
