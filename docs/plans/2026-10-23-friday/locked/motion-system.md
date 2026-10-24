@@ -43,8 +43,19 @@ The piece's one idea is that every AI has two passports: where it was **born** (
   in-out) and the surface behind it changes with the turn.
 
 Colour meaning, and nothing else: **mint** `#7EF0C0` = the finding, the answer, the highlighted proof; **amber** (the
-house warning tone, `--bad` `#b0412e` on cream, `#ff9b85` on ink) = what changed or what was taken away (the swapped
-country, the deleted answer, "LIVES: CHINA"). Ink type on cream, cream type on ink, always.
+house warning tone, `--bad` `#b0412e` on cream, `#ff9b85` on ink) = what changed or what was taken away (the one
+swapped word in a prompt, the deleted answer, a failed tile). Amber goes on a change, never on a country: a passport
+field reads in plain ink whichever country it names, and no country, flag or people is ever shown as the threat.
+Ink type on cream, cream type on ink, always.
+
+## The framing: every country, one example at a time
+
+Krish, 24 October: "The whole point of this is to understand what sovereign AI means and why countries are fighting to
+build their own AI as opposed to use another countries. We must not make this feel like we're stirring geopolitical
+hatred against China, it's just an example." So the pictures are about sovereign AI: passports from many countries
+(America, China, France, the UAE, India, South Korea) treated the same way, the American example (Grok) given the same
+weight as the Chinese ones, and the test shown as what one model did on one question, never as a verdict on a
+country. Every label uses the source's own neutral words.
 
 ## Type
 
@@ -62,7 +73,7 @@ country, the deleted answer, "LIVES: CHINA"). Ink type on cream, cream type on i
 1. **The passport.** A passport data page in cream with a mint machine-readable strip. Photo box holds the company's
    official mark (Brandfetch, never drawn). Two fields only: `BORN` and `LIVES`, Plex Mono, filled by typing on at
    about 30 characters a second. A field not in the record reads `NOT STATED` in muted ink, never a guess. Stamps
-   slap on (scale 1.15 to 1.0 in 6 frames, 2-degree tilt, one 4 px shake): `STILL GAVE BEIJING'S LINE`,
+   slap on (scale 1.15 to 1.0 in 6 frames, 2-degree tilt, one 4 px shake): `TRAINING CAME WITH IT`,
    `A DRAW`. Each AI gets its own passport when first named; they stack like a deck when more than one is on screen.
 2. **The evidence sheet.** The real page capture (`assets.json`) on a paper sheet with a soft 24 px shadow. It slides
    onto the desk from below (16 frames), the camera pushes in to the proving sentence over the next 2 to 3 seconds
@@ -71,8 +82,8 @@ country, the deleted answer, "LIVES: CHINA"). Ink type on cream, cream type on i
 3. **The route.** On ink: a phone icon (simple, outline) and a server rack, a dotted mint line drawn between them as the
    voice says where it goes; three small square packets travel along it. A thin border line crosses the route with the
    country name in Plex Mono where the record says so. No maps, no globes, no satellite looks.
-4. **The tile field.** Numbers as countable things. 200 small squares in a 20 x 10 grid; the ones that failed flip from
-   cream to amber in a quick wave (the newspaper's 35%: 70 of 200). Models as stacked tiles (59 against 35). A gap as
+4. **The tile field.** Numbers as countable things. 100 small squares in a 20 x 5 grid; the ones that failed flip from
+   cream to amber in a quick wave (the newspaper's 35% as 35 of 100: it gives a percentage, not a count). Models as stacked tiles (59 against 35). A gap as
    two columns almost touching with a hairline labelled `2.7%`. A counter is Plex Mono (`1 OF 3`, `2 OF 3`, `3 OF 3`).
 5. **The chat window.** A clean redraw of a chat window, or Krish's real screen recording inside a plain device frame.
    For the deletion: the real footage at real speed, then a 4x slow replay of the half second the answer vanishes, each

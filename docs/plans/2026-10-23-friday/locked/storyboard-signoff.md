@@ -1,5 +1,7 @@
 # Friday "two passports": storyboard sign-off
 
+**Signed off by Krish: "signed off, keep, all A", 2026-10-24.** Storyboard approved; the 90-second on-camera call is kept as recorded (no trim); option A for every title, the outline and prediction A.
+
 Four storyboards, one frame per beat, built from your four takes, the real evidence pages (captured 24 October, each
 proving sentence highlighted) and your DeepSeek screen recordings. Nothing renders until you sign this off in words.
 
@@ -37,32 +39,43 @@ proving sentence highlighted) and your DeepSeek screen recordings. Nothing rende
 - 90-second on camera, your call (53.8-76.0 s, 22 seconds as recorded): trim "Sometimes the latter supersedes the
   former, so that's fine too." (about 6 seconds)? Same meaning. The cut runs 103 seconds as recorded, 97 with the trim.
 
-## The titles and words on the thumbnails (you've recorded, so they're yours now)
+## The titles and words on the thumbnails (redone 24 October after your note)
 
-Each line was shown alone to a fresh reader with no context (a senior leader scrolling past). Lines it could not
-explain in one second were dropped: "Every AI has two passports" and "TWO PASSPORTS" (it read them as travel),
-"BORN IN CHINA" and "IT DELETED ITS ANSWER" (no name). Pick one per line; the first is my pick.
+Your note: "IS YOUR AI CHINESE?" sounds racist; the piece is about what sovereign AI means and why countries want their
+own, and China is just an example. Every line now leads with that idea and names no single country. Each was shown
+alone to a fresh reader (a senior leader scrolling past), who was also asked whether it read as suspicion of any
+country or its people; two clunky lines failed and were dropped ("Sovereign AI, explained" was jargon first). The
+reader flagged "Where was your AI built?" as borderline on its own, so those lines are the B options. Pick one per
+line; A is my pick.
 
 | Where | A (my pick) | B |
 |---|---|---|
-| YouTube title (5-minute video) | DeepSeek wrote an answer, then deleted it. Does it matter where your AI is from? | You may already be using a Chinese AI. We tested DeepSeek, Claude and ChatGPT |
-| YouTube thumbnail words | IS YOUR AI CHINESE? | WHERE IS YOUR AI FROM? |
-| Shorts title (90-second videos) | DeepSeek wrote an answer, then deleted it. Every time. | Are you already using a Chinese AI? I tested three |
-| Substack article headline | You may already be using a Chinese AI. Here's what to check | Where your AI comes from changes what it tells you |
-| Substack video post (also the email subject) | VIDEO: I asked DeepSeek about Xinjiang cotton. It wrote an answer, then deleted it | VIDEO: You may already be using a Chinese AI. We tested three |
-| Substack cover words | WHERE IS YOUR AI FROM? | IS YOUR AI CHINESE? |
-| Video title card | Where is your AI from? | Is your AI Chinese? |
+| YouTube title (5-minute video) | Why every country wants its own AI, and what it means for the AI you use | Does it matter where your AI was built? I tested three to find out |
+| YouTube thumbnail words | EVERY COUNTRY WANTS ITS OWN AI | WHERE WAS YOUR AI BUILT? |
+| Shorts title (90-second videos) | Why every country wants its own AI | Does it matter where your AI was built? I tested three |
+| Substack article headline | Why every country wants its own AI, and what that means for your business | Where your AI was built changes what it tells you |
+| Substack video post (also the email subject) | VIDEO: Why every country wants its own AI | VIDEO: Does it matter where your AI was built? I tested three |
+| Substack cover words | WHY EVERY COUNTRY WANTS ITS OWN AI | WHERE WAS YOUR AI BUILT? |
+| Video title card | Why every country wants its own AI | Where was your AI built? |
 
-## The article outline (`docs/plans/2026-10-23-outline.md`)
+**Also changed in the pictures for the same reason:** the videos no longer open on DeepSeek deleting its answer; they
+open on six passports from six countries (USA, China, France, the UAE, India), treated the same, so "a Chinese AI"
+lands as one example. No country's name is ever in the warning colour (that colour now marks only the one changed word,
+the deleted text and failed tiles). The US government's stamp reads TRAINING CAME WITH IT, what its test found, in
+neutral words. The tariff beat shows parts from several countries.
 
-Spine: *Does it matter which country your AI comes from?* Answer: *Yes: where an AI was born shapes what it tells you
-and where it lives decides who sees your data, so check both before your business relies on one.* Six sections that
-follow your takes (who's already using one; the race and sovereign AI; where it was born; where it lives; my test; my
-call), then "3 things you can do tomorrow" with your three actions. 1,000 to 1,400 words.
+## The article outline (`docs/plans/2026-10-23-outline.md`, reframed the same way)
 
-Prediction, pick one: **A.** By 31 December 2027 the US government puts a tariff, fee or import restriction on a
-Chinese AI model or service sold to American businesses (beyond government-device bans). About 30%. **B.** By 30 June
-2027 DeepSeek's own app answers the Xinjiang cotton question in full without deleting it. About 15%.
+Spine: *Why does every country want its own AI, and what does that mean for the AI your business uses?* Answer:
+*Because where an AI was built shapes what it tells you and where it runs decides who sees your data, and the same two
+checks tell you what your business is relying on.* Six sections: every country wants its own AI (what sovereign AI
+means, who leads); the AI you use already crosses borders; where it was built shapes what it says (the newspaper's
+test and Grok, side by side); where it runs decides who sees your data; my test; my call. Then "3 things you can do
+tomorrow" with your three actions. 1,000 to 1,400 words.
+
+Prediction, pick one: **A.** By 30 June 2027 an AI model built outside America and China ranks in the top five of
+LMArena's overall leaderboard. About 20%. **B.** By 31 December 2027 the UK government announces a British-built AI
+model that it runs a public service on. About 25%.
 
 ## Still to come in, before Codex builds
 

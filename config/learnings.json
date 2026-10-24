@@ -1409,6 +1409,26 @@
      "how": "content-watcher's Drive exception names the two folders"
     }
    ]
+  },
+  {
+   "id": "sovereign-not-one-country",
+   "on": "2026-10-24",
+   "krish": "\"IS YOUR AI CHINESE?\" Sounds incredibly racist. The whole point of this is to understand what sovereign AI means and why countries are fighting to build their own AI as opposed to use another countries. We must not make this feel like we're stirring geopolitical hatred against China, it's just an example",
+   "why": "The packaging and the pictures had drifted into treating one country as the suspect: a thumbnail asking whether your AI is Chinese, headlines built on 'a Chinese AI', and the country's name coloured in the warning tone. That misstates the story and reads as prejudice.",
+   "means": "A piece about where AI comes from is about every country's reasons (sovereign AI); any one country is an example. Titles, thumbnail words, headlines and covers lead with the idea and name countries in the plural or not at all, never asking whether something is from one country. On screen a country's name is never in the warning colour or framed as the threat; colour marks what changed, never who.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "config/title-verdicts.json",
+     "contains": "Never single out one country",
+     "how": "title_check.py lessons prints the rejected line and its lesson before every packaging round"
+    },
+    {
+     "file": "docs/plans/2026-10-23-friday/locked/motion-system.md",
+     "contains": "never on a country",
+     "how": "the Friday motion system: amber marks what changed, never a country"
+    }
+   ]
   }
  ]
 }

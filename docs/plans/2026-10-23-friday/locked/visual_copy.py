@@ -64,8 +64,9 @@ R = 'research-gaps.md'
 # Each beat: surface (cream = what it says, ink = where it lives), the pictures in order, the words on screen (each
 # one adds), the source label, the sentence highlighted on the evidence, numbers with sources, and the on-camera use.
 B = {
- 'L01-hook': dict(surface='ink', pictures=['F-xinjiang at real speed from 2.25 s, freeze on the refusal'], on_screen=[], label='F-xinjiang',
-    cam='Cold open on the footage for the first sentence, cut to his face on "So does it matter".'),
+ 'L01-hook': dict(surface='cream', pictures=['O-passport x6 dealt across the desk, one per country, all treated alike: Claude and ChatGPT (USA), DeepSeek (China), Mistral (France), K2 Think (UAE), Sarvam (India); the camera settles on DeepSeek\'s as the voice says "a Chinese AI", the others still in frame'],
+    on_screen=['BORN: USA', 'BORN: CHINA', 'BORN: FRANCE', 'BORN: UAE', 'BORN: INDIA'],
+    cam='The passports for the first sentence, then his face on "So does it matter". (24 Oct: no longer a cold open on the deletion; China is one example among many, Krish.)'),
  'L02-why': dict(surface='cream', pictures=['O-passport x7, face down, fanned like a deck; each flips just enough to show its mark (M-marks: Claude, ChatGPT, DeepSeek, Qwen, Kimi, Mistral, Grok)'], on_screen=[], cam='Face.'),
  'L03-airbnb': dict(surface='cream', pictures=['E-fortune slides in; push to the quote', 'Airbnb mark beside Qwen\'s passport: BORN CHINA (ALIBABA) · LIVES NOT STATED'],
     on_screen=['BRIAN CHESKY · AIRBNB CEO', 'BORN: CHINA', 'LIVES: NOT STATED'], label='E-fortune', highlight="We're relying a lot on Alibaba's Qwen model.",
@@ -110,7 +111,7 @@ B = {
     highlight='from:elonmusk (Israel OR Palestine OR Hamas OR Gaza)', sources=[R + ' §1d'], cam='Cutaway.'),
  'L20-boss': dict(surface='cream', pictures=['Hold dead still on the highlighted search'], on_screen=[], label='E-willison', cam='Cutaway, hold.'),
  'L21-lives': dict(surface='ink', pictures=['The passport flips; the surface turns to ink with it; LIVES glows mint'], on_screen=['LIVES'], cam='Cutaway.'),
- 'L22-app': dict(surface='ink', pictures=['O-route: phone to server; a border line labelled PEOPLE\'S REPUBLIC OF CHINA; three packets cross it', 'E-deepseek-policy as a small lit sheet', "DeepSeek's passport: LIVES CHINA (amber)"],
+ 'L22-app': dict(surface='ink', pictures=['O-route: phone to server; a border line labelled PEOPLE\'S REPUBLIC OF CHINA; three packets cross it', 'E-deepseek-policy as a small lit sheet', "DeepSeek's passport: LIVES CHINA (plain ink, like every field)"],
     on_screen=["PEOPLE'S REPUBLIC OF CHINA", 'LIVES: CHINA'], label='E-deepseek-policy',
     highlight="we directly collect, process and store your Personal Data in People's Republic of China.",
     sources=['DeepSeek privacy policy, read 24 Oct 2026'], cam='Cutaway; on the camera take it covers the cut sentence and carries the garbled line.'),
@@ -118,11 +119,11 @@ B = {
     on_screen=['BORN: FRANCE', "LIVES: HSBC'S OWN COMPUTERS"], label='E-register', highlight="self-hosted AI models that operate on HSBC's internal technology systems", sources=['The Register, 1 Dec 2025, quoting HSBC (read 24 Oct 2026)'], cam='Cutaway.'),
  'L24-selfhost': dict(surface='ink', pictures=["DeepSeek's passport: the LIVES field rewrites from CHINA to US GOVERNMENT SERVERS; the route's server moves across the border"],
     on_screen=['LIVES: US GOVERNMENT SERVERS'], sources=[R + ' §1c (CAISI ran downloaded weights on its own servers)'], cam='Cutaway.'),
- 'L25-nist': dict(surface='cream', pictures=['E-nist slides in; the stamp slaps onto the passport: STILL GAVE BEIJING\'S LINE'],
-    on_screen=['4x', "STILL GAVE BEIJING'S LINE"], label='E-nist',
+ 'L25-nist': dict(surface='cream', pictures=['E-nist slides in; the stamp slaps onto the passport: TRAINING CAME WITH IT'],
+    on_screen=['4x', 'TRAINING CAME WITH IT'], label='E-nist',
     highlight='DeepSeek models echoed four times as many inaccurate and misleading CCP narratives as U.S. reference models did.',
     numbers=[{'value': '4x as many CCP narratives', 'source': R + ' §1b NIST CAISI'}], cam='Cutaway.'),
- 'L26-takechina': dict(surface='cream', pictures=['The passport alone: LIVES reads USA (mint) on the first sentence; BORN: CHINA pulses amber on the second; dead still'],
+ 'L26-takechina': dict(surface='cream', pictures=['The passport alone: LIVES rewrites to USA on the first sentence; BORN stays CHINA on the second, the field simply held in place (plain ink); dead still'],
     on_screen=['LIVES: USA', 'BORN: CHINA'], cam='Cutaway, hold.'),
  'L27-tried': dict(surface='cream', pictures=['Three passports dealt onto the desk: Claude, ChatGPT, DeepSeek'], on_screen=['MY TEST · 23 OCT · 3 RUNS EACH'], label='MY TEST',
     sources=['test-results/scores.md'], cam='Face; the three passports as a lower band for the last sentence.'),
@@ -146,8 +147,8 @@ B = {
  'L36-call': dict(surface='cream', pictures=["DeepSeek's passport returns: LIVES circled on \"where your data ends up\", BORN circled on \"check what it tells you\""],
     on_screen=['LIVES', 'BORN'], cam='Face; the circled passport as a side panel.'),
  'L37-cheap': dict(surface='cream', pictures=['The 10x cost bar from L06 returns, small'], on_screen=['10x'], cam='Face.'),
- 'L38-supply': dict(surface='ink', pictures=['A product outline opens into its parts; one part glows amber; a stamp: TARIFF'], on_screen=['TARIFF'], cam='Face, then the parts as a cutaway on "tariffs".'),
- 'L39-reckon': dict(surface='ink', pictures=['The parts become passports; one amber'], on_screen=['MY VIEW'], cam='Face.'),
+ 'L38-supply': dict(surface='ink', pictures=['A product outline opens into parts made in several countries, each labelled; a TARIFF tag drops onto one part'], on_screen=['TARIFF'], cam='Face, then the parts as a cutaway on "tariffs".'),
+ 'L39-reckon': dict(surface='ink', pictures=['The parts become AI passports from several countries; the TARIFF tag moves onto one of them'], on_screen=['MY VIEW'], cam='Face.'),
  'L40-do': dict(surface='cream', pictures=['O-checklist, three lines ticking on their words'], on_screen=['WHICH AI · WHERE IT RUNS', 'YOUR QUESTIONS · AN AI FROM ANOTHER COUNTRY', 'A SECOND AI, READY'],
     cam='Face with the checklist building beside him.'),
  'L41-close': dict(surface='cream', pictures=['O-outro'], on_screen=[], cam='Outro card.'),
@@ -158,14 +159,14 @@ S = {
  'S10-flagged': 'L31-flagged', 'S11-deleted': 'L32-deleted', 'S12-call': 'L36-call', 'S14-close': 'L41-close',
 }
 S_OWN = {
- 'S08-lives': dict(surface='ink', pictures=['The passport flips to ink (as L21), then the route to China (as L22)'], on_screen=["PEOPLE'S REPUBLIC OF CHINA", 'LIVES: CHINA'],
+ 'S08-lives': dict(surface='ink', pictures=['The passport flips to ink (as L21), then the route to the server the policy names (as L22)'], on_screen=["PEOPLE'S REPUBLIC OF CHINA", 'LIVES: CHINA'],
     label='E-deepseek-policy', highlight="we directly collect, process and store your Personal Data in People's Republic of China.", cam='Cutaway.'),
  'S13-do': dict(surface='cream', pictures=['O-checklist, two lines'], on_screen=['WHICH AI · WHERE IT LIVES', 'A SECOND AI, READY'], cam='Face with the checklist beside him.'),
  'S13b-recap': dict(surface='cream', pictures=['The hero passport: BORN lights on "passport number one", LIVES on "passport number two"'], on_screen=['BORN', 'LIVES'], cam='Cutaway (on-camera take only).'),
  'S13c-second': dict(surface='cream', pictures=['The checklist\'s second line ticks'], on_screen=['A SECOND AI, READY'], cam='Face (on-camera take only).'),
 }
 SHORT_NOTES = {
- 'S01-hook': 'The short\'s whole cold open: the deletion freezes on the refusal under "Does that matter?".',
+ 'S01-hook': 'The six passports, the camera settling on DeepSeek\'s on "a Chinese AI"; the others stay in frame under "Does that matter?".',
  'S09-work': 'Three passports (Claude, ChatGPT, DeepSeek) dealt first, then the Xinjiang prompt types on; no Turkmenistan prompt in the short.',
  'S10-flagged': 'Two cells only: Claude and ChatGPT on Xinjiang, ticks.',
  'S11-deleted': 'As L32, cut to fit; keep the 4x replay and the counter.',
