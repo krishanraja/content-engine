@@ -1,5 +1,22 @@
 # Workbench: where we are and what's next
 
+## 24 October: Friday locked for Codex, storyboard waiting on Krish (Claude)
+
+- **Waiting on Krish:** sign off the storyboard (`docs/plans/2026-10-23-friday/locked/storyboard-signoff.md`; the four
+  sheets are in the post's library folder under `2 Covers and images/Storyboard`), with one choice (trim 6 s from the
+  90-second on-camera call, or keep), and say yes to the Friday board update that shows it (built and dry-run:
+  `update_friday_23oct.py --build`, expected build `cc25274e`, dry run build `90220404`).
+- **Then Codex** works from `docs/plans/2026-10-23-friday/locked/CODEX.md` and nothing else.
+- **Still to do by Claude:** the article (outline to Krish first, then the gates), titles and thumbnail words in one
+  round with Krish (`locked/titles.json`), and the board copy (`locked/board-copy/`).
+- **Where things are:** takes in the engine's recordings store (`recording.py list`); evidence captures (24 Oct, sentence
+  highlighted, `captures.json` with URLs and times) under `2 Covers and images/Evidence`; the Anthropic and GitHub
+  reference clip in Video Engine > Inspiration had not reached the library (publishing it needs the machine with the
+  pinned Python, whose environment still needed the restart).
+- **Drive fault, handed off:** both home computers held `MINDMAKE_*` paths with the old `Ventures\Active` name, so the
+  recordings upload failed silently from 22 to 24 October. The fix by Drive ID is session
+  `session_01PB5tFfd5AhfU3pe8zUQ44G` (`docs/handovers/2026-10-24-drive-by-id.md`).
+
 ## 23 October, afternoon: Friday test scored, both scripts filled, on the board for Krish's review (Claude)
 
 - **Test results:** `docs/plans/2026-10-23-friday/test-results/` (`answers.md`, `coding.md`, the pre-registered
