@@ -77,6 +77,34 @@ When asked to study the style references, or when one is listed as
 6. `python scripts/quick-edit/references.py --self-test` must still pass.
    It checks the bank.
 
+## Cards he sends from the Inspiration page
+
+Krish answers each thing he drops in either inspiration folder on Control
+Center's Inspiration page. A card he routes to **Study the style** comes
+here (the card says it goes to "the style bank, studied before the next
+recording"). The Sunday plan reads them (`plan-week`, step 0), and any
+session asked to study the style references reads them too:
+
+```sql
+select name, drive_file_id, why_like, why_like_source, why_here, answered_at
+from inspiration_items
+where route = 'study_style' and answered_at is not null
+order by answered_at desc
+```
+
+1. A card whose `drive_file_id` matches a reference's `drive_id` in
+   `config/style-references.json` is that reference: study it first if it
+   is `waiting_for_study`, and leave a studied one as it is.
+2. A card with no matching reference (a video or image from Cold Ideas, or
+   one the home computers have not sent yet) is added as a reference with
+   `status: waiting_for_study`, then studied as above. Fetch a video with
+   `python scripts/post-pack/recording.py get` only if it is in the Inbox;
+   otherwise read it through the Drive connector.
+3. His words: copy `why_like` into `krish_likes` word for word only when
+   `why_like_source` is `typed`. A `picked` reason is a guess he agreed
+   with: record it in `notes` as "agreed with: ...", never as his words.
+   His `why_here` goes in `notes` too.
+
 ## The bank, the base and the recipes
 
 Krish, 2026-10-14: "I think we need to build a bank of different styles that
