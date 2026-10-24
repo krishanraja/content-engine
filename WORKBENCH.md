@@ -2,7 +2,7 @@
 
 ## 24 October: Codex
 
-[Friday production: incomplete](docs/plans/2026-10-23-friday/locked/production-preflight.md).
+[Friday production: clarity revised, incomplete](docs/plans/2026-10-23-friday/locked/production-preflight.md).
 
 ## 24 October: Friday locked and signed off; Codex makes the videos (Claude)
 

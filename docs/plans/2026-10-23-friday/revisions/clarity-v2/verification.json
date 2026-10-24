@@ -1,0 +1,33 @@
+{
+  "semantic_diff": "pass",
+  "baseline_unchanged": true,
+  "beat_count": 57,
+  "changed_beats": [
+    "L14-passports",
+    "S04-passports",
+    "L36-call",
+    "S12-call",
+    "S13b-recap",
+    "L21-lives",
+    "L02-why",
+    "L16-third",
+    "S06-third"
+  ],
+  "renderer_sha256": "eb6a20e3e8d247c6f6fd047c69d842de806e8508364a1b4840e0b2ca37c2ee5d",
+  "typecheck": "pass",
+  "board_layout": "pass",
+  "workbench": "pass",
+  "full_suite": "not_run_this_revision",
+  "study_visual_review": "Full-size held frames, vertical phone frames and both one-frame-per-second sequences inspected; corrected wide render checked after failure",
+  "full_audio_playback": "not_verified",
+  "final_videos": "incomplete",
+  "live_board_changed": false,
+  "wide_layout": "pass after correction: grid ends at 912px, single-line explanation begins at 950px; full-size frame and sequence inspected",
+  "failure_history": [
+    {
+      "revision": "v2-horizontal",
+      "failure": "Description overlapped grid rows",
+      "resolution": "v2.1 horizontal moves explanation below grid; vertical reused unchanged"
+    }
+  ]
+}
