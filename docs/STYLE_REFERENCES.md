@@ -86,7 +86,8 @@ recording"). The Sunday plan reads them (`plan-week`, step 0), and any
 session asked to study the style references reads them too:
 
 ```sql
-select name, drive_file_id, why_like, why_like_source, why_here, answered_at
+select name, drive_file_id, why_like, why_like_source, why_here, read_as,
+       note_for_claude, answered_at
 from inspiration_items
 where route = 'study_style' and answered_at is not null
 order by answered_at desc
@@ -100,7 +101,13 @@ order by answered_at desc
    `status: waiting_for_study`, then studied as above. Fetch a video with
    `python scripts/post-pack/recording.py get` only if it is in the Inbox;
    otherwise read it through the Drive connector.
-3. His words: copy `why_like` into `krish_likes` word for word only when
+3. How he said to read it comes first. `read_as` `watch` means study the
+   whole video with sound (fetch it and run `references.py study`), never
+   judge it from the card's preview frame; `listen` means the audio;
+   `read` the words; `look` a glance is enough. `note_for_claude` is his
+   instruction to you: follow it, and copy it into the reference's `notes`.
+   The file is `https://drive.google.com/file/d/<drive_file_id>/view`.
+4. His words: copy `why_like` into `krish_likes` word for word only when
    `why_like_source` is `typed`. A `picked` reason is a guess he agreed
    with: record it in `notes` as "agreed with: ...", never as his words.
    His `why_here` goes in `notes` too.
