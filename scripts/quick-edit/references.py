@@ -6,10 +6,11 @@ really like the production quality of, as well as the narrative style,
 editing, camerawork, zooming, the way they break down a point, and the tone
 and style of communication, so that you can learn from them?"
 
-The folder is the Video Engine's Inspiration folder in Drive
-(H:\\My Drive\\Ventures\\Active Ventures\\makeyourmindup\\Video Engine\\Inspiration on
-the home computers). He drops a video there, and optionally writes what he
-likes about it in the "What I like" sheet beside it. Then:
+The folder is Production Inspo in Drive (Ventures > Inspiration > Production
+Inspo, H:\\My Drive\\Ventures\\Inspiration\\Production Inspo on the home
+computers; config/style-references.json holds its ID). He drops a video there,
+and optionally writes what he likes about it in the "What I like" sheet, now
+in Content Inspo. Then:
 
     python references.py publish             (a home computer, every pass of
                                               recordings-upload.ps1: sends each
@@ -61,18 +62,27 @@ def sha256_of(path):
 
 
 def inspiration_folder():
-    """The Inspiration folder on this machine, or None."""
+    """Production Inspo on this machine, or None.
+
+    Krish moved his reference clips on 2026-10-24 from Video Engine > Inspiration to Ventures > Inspiration >
+    Production Inspo ("Can you ensure absolutely everywhere recalibrates to this moving forward first?"). The folder
+    is named in config/style-references.json (its Drive ID and its synced path); MINDMAKE_INSPIRATION may override it,
+    but a stale setting that no longer exists never wins over the configured folder."""
+    candidates = []
     env = os.environ.get('MINDMAKE_INSPIRATION')
     if env:
-        return Path(env)
-    drive = os.environ.get('MINDMAKE_DRIVE_ROOT')
-    if not drive:
-        try:
-            cfg = json.loads((REPO / 'config' / 'studio.json').read_text())
-            drive = (cfg.get('runtime') or {}).get('drive_root')
-        except (OSError, ValueError):
-            drive = None
-    return Path(drive) / 'Inspiration' if drive else None
+        candidates.append(Path(env))
+    try:
+        cfg = json.loads((REPO / 'config' / 'style-references.json').read_text())
+        configured = (cfg.get('folder') or {}).get('windows')
+        if configured:
+            candidates.append(Path(configured))
+    except (OSError, ValueError):
+        pass
+    for candidate in candidates:
+        if candidate.is_dir():
+            return candidate
+    return candidates[0] if candidates else None
 
 
 def _post_pack():
@@ -85,7 +95,7 @@ def _post_pack():
 def cmd_publish(out=print):
     folder = inspiration_folder()
     if not folder or not folder.is_dir():
-        raise ReferenceError('the Inspiration folder is not reachable here (MINDMAKE_INSPIRATION, MINDMAKE_DRIVE_ROOT, or runtime.drive_root in config/studio.json)')
+        raise ReferenceError('Production Inspo is not reachable here (config/style-references.json folder.windows, or MINDMAKE_INSPIRATION)')
     planned = [(f'{LIBRARY_REFERENCES}/{p.name}', p, 'a style reference Krish chose: studied, never published')
                for p in sorted(folder.iterdir())
                if p.is_file() and p.suffix.lower() in VIDEO_EXTENSIONS and not p.name.startswith('.')]

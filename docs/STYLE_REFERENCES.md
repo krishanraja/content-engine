@@ -8,14 +8,17 @@ videos and think I'd like to produce more like that."
 
 ## Where Krish puts them
 
-Drive > makeyourmindup > **Video Engine > Inspiration**
-(https://drive.google.com/drive/folders/1eqdc1hoMn6CwqkbKlG5mAmKCYNoR8otU;
-`H:\My Drive\Ventures\Active Ventures\makeyourmindup\Video Engine\Inspiration` on the
-home computers).
+Drive > Ventures > Inspiration > **Production Inspo**
+(https://drive.google.com/drive/folders/1QxrzxISYFXq0er0DG0XSapm7qhvuRmh-;
+`H:\My Drive\Ventures\Inspiration\Production Inspo` on the home computers).
+Krish moved it there from Video Engine > Inspiration on 2026-10-24; its
+partner, **Content Inspo** (the old Cold Ideas & Inspo), holds the content he
+likes and the **What I like** sheet.
 
 - **A video file** (mp4, mov, webm): drop it in. A saved Instagram, TikTok
   or YouTube video is fine.
-- **Only a link**: add a row to the **What I like** sheet in the same folder
+- **Only a link**: paste it on Control Center's Inspiration board (content-watcher
+  fetches it), or add a row to the **What I like** sheet in Content Inspo
   (https://docs.google.com/spreadsheets/d/1_XBxxMUcU4CFHB5iJqWc1WtYKmJCftMOe5UlZYSM-_U),
   with the link in the first column.
 - **What you like about it** (optional, worth the most): one row per video
@@ -23,13 +26,13 @@ home computers).
   camerawork, zoom, breakdown (how it explains a point), tone, production.
   Anything you'd not copy goes in the last column.
 
-Nothing in Inspiration is ever published, posted or cut into his videos.
+Nothing in Production Inspo is ever published, posted or cut into his videos.
 
 ## How it reaches the engine
 
 Every pass of `scripts/recordings-upload.ps1` (both home computers, every
 5 minutes) runs `references.py publish`. That sends each video in
-Inspiration to the engine's library at
+Production Inspo to the engine's library at
 `1 Brand kit (permanent)/Style references/<file>`, once. Any machine then
 gets them with `python scripts/quick-edit/references.py fetch`.
 
@@ -96,7 +99,7 @@ order by answered_at desc
 1. A card whose `drive_file_id` matches a reference's `drive_id` in
    `config/style-references.json` is that reference: study it first if it
    is `waiting_for_study`, and leave a studied one as it is.
-2. A card with no matching reference (a video or image from Cold Ideas, or
+2. A card with no matching reference (a video or image from Content Inspo, or
    one the home computers have not sent yet) is added as a reference with
    `status: waiting_for_study`, then studied as above. Fetch a video with
    `python scripts/post-pack/recording.py get` only if it is in the Inbox;
