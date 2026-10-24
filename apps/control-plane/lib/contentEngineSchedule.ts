@@ -25,6 +25,7 @@ export interface ContentEngineJob {
 
 const DAY = 24
 const WEEK = 24 * 7
+const FORTNIGHT = 24 * 14
 
 export const CONTENT_ENGINE_JOBS: ContentEngineJob[] = [
   { job: 'feed_ingest',      path: '/api/feed/ingest',                   label: 'Feed ingest',           everyHours: DAY,  graceHours: 12 },
@@ -48,7 +49,7 @@ export const CONTENT_ENGINE_JOBS: ContentEngineJob[] = [
   // something twelve times.
   { job: 'inspiration_scan', path: '/api/inspiration/drive-scan',         label: 'Drive inspiration scan', everyHours: DAY, graceHours: 12 },
   // Fortnightly since 2026-10-15 (odd ISO weeks, AEO-Engine 6041cb5): about $10 a probe run.
-  { job: 'aeo_ingest',       path: '/api/aeo/ingest',                    label: 'AEO research',          everyHours: 2 * WEEK, graceHours: DAY, trigger: 'external' },
+  { job: 'aeo_ingest',       path: '/api/aeo/ingest',                    label: 'AEO research',          everyHours: FORTNIGHT, graceHours: DAY, trigger: 'external' },
   // The trend record's own jobs. Entity tagging and the claim sweep are cheap
   // and daily; the weekly series is snapshotted on Saturday, after Friday's
   // detection and brief have already landed in what it counts.
