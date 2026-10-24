@@ -66,7 +66,23 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    week's recordings, as
    `docs/STYLE_REFERENCES.md`, "Cards he sends from the Inspiration page",
    says, and name in the reply which you studied and which are still
-   waiting.
+   waiting. Each card says what kind of thing it is (`kind`; Krish,
+   2026-10-24: "It's important that you understand what the different types
+   of stuff are in here"): a video saved for "the script, the narrative, or
+   the production style" (his picks say which), an image for "the clarity",
+   a research corpus, an idea or another document. Read three more kinds of
+   inspiration for step 2. The feed's posts from the last 8 days, the latest
+   fresh posts from the channels he follows (`select title, excerpt,
+   meta->>'account' as account, meta->>'url' as url, occurred_at from
+   taste_evidence where source = 'drive_cold' and source_ref like
+   'instagram:%' and occurred_at > now() - interval '8 days' order by
+   occurred_at desc`): other people's posts, so a topic signal and never his
+   view. The opinions about AI his cards carry (`facets->'opinion'`, a topic
+   and the author's stance), where he tapped the topic or routed the card to
+   a piece: a topic he may want to speak about, never his own stance. And
+   the research corpora he named no piece for yet (`kind = 'corpus' and
+   piece_id is null`): research waiting for a piece, read as the research
+   for whichever option it serves.
 1. **Read the idea queue first**, before anything else and before any
    research (Krish, 2026-10-19: ideas he likes that are not time-sensitive
    are queued, and the queue "needs to survive everything and be the first
