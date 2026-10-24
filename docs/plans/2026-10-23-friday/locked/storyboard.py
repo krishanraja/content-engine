@@ -34,7 +34,7 @@ def small(path, width):
 
 
 def passport(fields, mark=''):
-    rows = ''.join(f'<div class="pf"><span>{html.escape(k)}</span><b class="{"amb" if v in ("CHINA",) or "BEIJING" in v else ""}">{html.escape(v)}</b></div>' for k, v in fields)
+    rows = ''.join(f'<div class="pf"><span>{html.escape(k)}</span><b class="">{html.escape(v)}</b></div>' for k, v in fields)
     return f'<div class="pp"><div class="pph">PASSPORT · AI</div><div class="ppb"><div class="ppm">{html.escape(mark)}</div><div>{rows}</div></div><div class="mrz">P&lt;AI&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</div></div>'
 
 
@@ -67,7 +67,10 @@ def stage(bid, spec, take):
         cells = ''.join(f'<i class="{"m" if mint else ("a" if i < n else "")}"></i>' for i in range(100)) if (m or mint) else ''
         if cells:
             parts.append(f'<div class="tiles">{cells}</div>')
-    if fields or 'passport' in pics.lower():
+    borns = [f for f in fields if f[0] == 'BORN']
+    if len(borns) > 2:
+        parts.append('<div class="deck">' + ''.join(passport([f]) for f in borns) + '</div>')
+    elif fields or 'passport' in pics.lower():
         parts.append(passport(fields or [('BORN', ''), ('LIVES', '')]))
     if 'O-route' in pics or 'route' in pics:
         parts.append('<div class="route"><span>PHONE</span><em></em><span class="srv">SERVER</span></div>')
@@ -113,6 +116,7 @@ h1{font:28px Anton,Impact,sans-serif;text-transform:uppercase;margin:18px 20px 4
 .check{font:12px 'IBM Plex Mono',monospace}.check div{margin:3px 0}
 .prompts div{font:11px Archivo,sans-serif;background:#e9e2d3;border-radius:8px;padding:5px 8px;margin:3px}.prompts b{color:#b0412e}
 .grid3{font:10px 'IBM Plex Mono',monospace;border-collapse:collapse}.grid3 td,.grid3 th{border:1px solid #d9d2c3;padding:4px 8px;text-align:center}.grid3 td{color:#1f7a52;font-size:14px}
+.deck{display:flex;flex-wrap:wrap;gap:4px;justify-content:center}.deck .pp{width:96px}.deck .ppm{width:20px;height:26px}
 .outro{font:20px Anton,Impact,sans-serif}
 .lab{position:absolute;left:6px;top:6px;font:9px 'IBM Plex Mono',monospace;background:#0C1512;color:#7EF0C0;padding:2px 5px}
 .face{position:absolute;left:0;top:0;height:100%;border-right:2px solid #7EF0C0}.tall .face{height:auto;width:34%;top:auto;bottom:0;border:2px solid #7EF0C0}

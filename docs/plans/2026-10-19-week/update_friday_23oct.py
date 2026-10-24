@@ -28,7 +28,7 @@ def storyboard_materials():
         subprocess.run(['ffmpeg','-v','error','-y','-i',str(SB/f'storyboard-{take}.png'),'-vf','crop=iw:min(ih\\,1500):0:0,scale=560:-1','-q:v','8',str(prev)],check=True)
         files.append({'label':f'Storyboard: {label}','url':f'https://content.krishraja.com/pending-asset/fri-storyboard-{take}.png',
                       'preview':'data:image/jpeg;base64,'+base64.b64encode(prev.read_bytes()).decode()})
-    data={'piece_id':FRI,'status':'review','note':'Storyboards for your sign-off: one frame per beat, built from your takes, the evidence pages and your DeepSeek recording. Nothing renders until you sign off (the Storyboard sign-off box lists every decision).',
+    data={'piece_id':FRI,'status':'ready','note':'Signed off by Krish, 24 October: "signed off, keep, all A". Codex produces the four videos from these storyboards and the locked files.',
           'sections':[{'id':'storyboard','title':'Storyboards (four videos)','files':files}]}
     path=CACHE/'materials-fri.json'; save(path,data)
     new=[{'id':f'fri-storyboard-{t}','path':str(SB/f'storyboard-{t}.png'),'type':'image/png',
@@ -83,7 +83,7 @@ def build():
     for label,path in wed_reviews: args+=['--review',f'wed={label}|{path}']
     for label,path in fri_reviews: args+=['--review',f'fri={label}|{path}']
     materials,new_assets=storyboard_materials()
-    args+=['--waiting','fri=Sign off the storyboard for all four videos (the Storyboard sign-off box lists every decision, and one choice: trim 6 seconds from the 90-second on-camera call, or keep). Codex starts the videos on your words.',
+    args+=['--waiting','fri=Nothing needs you right now: the storyboard is signed off, Codex is making the four videos, and Claude is writing the article and the channel copy. Both come back to this tab for your look before anything is published.',
            '--materials',f'fri={materials}',
            '--ideas',str(PLAN/'ideas.json'),'--queue',str(CACHE/'queue.json')]
     page,meta=board.build(board.parser().parse_args(args))

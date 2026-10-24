@@ -22,7 +22,7 @@ EDITS = {
  ],
  'cam-90s': [
   ('S07-claude', 'CUT', 'Cut "the American questions, of course." so the line ends "answered all.": the newspaper\'s questions were news questions, and "Claude answered all of them". Cover the join with the picture.'),
-  ('S12-call', 'OPTIONAL TRIM (Krish decides)', 'Cut "Sometimes the latter supersedes the former, so that\'s fine too." (about 6 s). Same meaning; the 90-second cut runs 103 s as recorded.'),
+  ('S12-call', 'NO TRIM (Krish, 24 Oct: "keep")', 'Keep the call as recorded, including "Sometimes the latter supersedes the former, so that\'s fine too." The cut runs about 103 s.'),
  ],
  'vo-90s': [],
 }
