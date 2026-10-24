@@ -10,9 +10,9 @@ Start with who's in the race. Stanford counts the most important new AI models e
 
 Everyone else wants a seat. The UK has a government-backed Sovereign AI fund. France has Mistral. In the Gulf, the UAE's MBZUAI and G42 launched K2 Think, and Saudi Arabia's HUMAIN launched an Arabic chat app. India picked a company called Sarvam to build its national model. South Korea runs a national AI project of its own.
 
-That's what people mean by sovereign AI: a country making sure it isn't stuck relying on someone else's.
+That's what people mean by sovereign AI: a country making sure it can rely on an AI of its own.
 
-It's harder than it looks. South Korea dropped Naver Cloud from that national project because part of its model used pretrained parameters from Alibaba's Qwen, a Chinese model. A national AI with an imported part. Awkward, and a fair preview of the problem for everyone else.
+It's harder than it looks. South Korea dropped Naver Cloud from that national project because a piece of its model turned out to be borrowed from Alibaba's Qwen, a Chinese model. A national AI with an imported part. Awkward, and a fair preview of the problem for everyone else.
 
 ## THE AI YOU USE ALREADY CROSSES BORDERS
 
@@ -58,7 +58,7 @@ Claude and ChatGPT flagged forced labour both times. DeepSeek did too, for Turkm
 
 Then a board briefing on opening a sales office in Taiwan, against the same briefing for Singapore. All three flagged the risk from China for Taiwan, and none raised political risk for Singapore. A draw.
 
-One afternoon and a handful of questions shows what it looks like. The newspaper's 200 questions and the US government's test show how often it happens. But on Xinjiang, DeepSeek knew the answer. It just wasn't allowed to let you keep it.
+One afternoon and a handful of questions shows what it looks like. The newspaper's much bigger test and the US government's own show how often it happens. But on Xinjiang, DeepSeek knew the answer. It just wasn't allowed to let you keep it.
 
 ## MY CALL: KNOW WHICH PASSPORTS YOU HOLD
 
