@@ -51,13 +51,20 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    learned" lessons, the taste ledger's `taste:` ones included, exactly as
    `make-piece` says (yes, no, or a comment as his rewording), and only those
    whose `updated_by` is Krish. One he left alone stays proposed. Next, read
-   the Inspiration cards he routed to a piece (`select name, why_like,
-   why_like_source, picked_likes, would_do, drive_file_id, read_as,
-   note_for_claude, facets, transcript from inspiration_items where
-   'make_piece' = any(routes) and answered_at > now() - interval '8 days'`;
-   a card may carry several routes): each is an idea of his for step 2, in
-   his words only where `why_like_source` is `typed` (`picked_likes` are
-   guesses he agreed with). Take in each file the way `read_as` says
+   every Inspiration card he routed to a piece that no plan has taken yet
+   (`select id, name, kind, why_like, why_like_source, picked_likes,
+   why_here, would_do, drive_file_id, read_as, note_for_claude, facets,
+   transcript, piece_id from inspiration_items where 'make_piece' =
+   any(routes) and answered_at is not null and routed_at is null and
+   dismissed_at is null order by answered_at`; a card may carry several
+   routes, and no time window, so a missed Sunday loses nothing): each is
+   an idea of his for step 2. His own words are `why_here` and `would_do`
+   (he types them) and `why_like` where `why_like_source` is `typed`;
+   `picked_likes` are guesses he agreed with. Once the week's options are
+   written in step 2, mark the cards the plan took (`update
+   inspiration_items set routed_at = now() where id = any(<their ids>) and
+   routed_at is null`), so no card is offered twice; his Undo on the page
+   clears it. Take in each file the way `read_as` says
    (`watch` means the whole video with sound, never one frame; `transcript`
    holds its words when the ledger watched it) and follow
    `note_for_claude`; `facets` says its platform, format, source and who it
