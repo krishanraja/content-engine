@@ -22,6 +22,16 @@ STORYBOARDS=[('vo-5min','5-minute voiceover (16:9, pictures only)'),('cam-5min',
 def storyboard_materials():
     """The four storyboards as a review card (24 Oct): a preview of each and the full sheet as a board asset."""
     import base64
+    if not all((SB/f'storyboard-{take}.png').is_file() for take,_ in STORYBOARDS):
+        # The published, signed sheets are authoritative. Another machine need
+        # not redraw them or lose their existing asset bindings to feed copy.
+        import board_materials
+        previous=board_materials.previous((CACHE/'before.html').read_text(encoding='utf-8'))
+        data=previous.get('fri')
+        if not data or data.get('piece_id')!=FRI:
+            raise ValueError('Friday has no saved materials; retrieve the four signed storyboards first')
+        path=CACHE/'materials-fri.json'; save(path,data)
+        return path,[]
     files=[]
     for take,label in STORYBOARDS:
         prev=CACHE/f'sb-preview-{take}.jpg'
@@ -73,7 +83,9 @@ def build():
                  ('Test results, scored',ROOT/'docs/plans/2026-10-23-friday/test-results/scores.md'),
                  ('Five-minute script',ROOT/'docs/plans/2026-10-23-friday/script-long-both-takes.md'),
                  ('Short script',ROOT/'docs/plans/2026-10-23-friday/script-short-both-takes.md'),
-                 ('Storyboard sign-off',LOCKED/'storyboard-signoff.md')]
+                 ('Storyboard sign-off',LOCKED/'storyboard-signoff.md'),
+                 ('Article (locked)',LOCKED/'board-copy/article.md'),
+                 ('Publishing copy (locked; chapter times pending)',LOCKED/'board-copy/publishing-copy.md')]
     if wed_reviews:  # Wednesday still in draft: rebuild its boxes word for word
         args=['--week',WEEK,'--previous',str(CACHE/'before.html'),'--keep','mon','--target','web','--live',
               '--piece',f'wed={WED}','--piece',f'fri={FRI}','--draft','wed','--draft','fri']
@@ -83,7 +95,7 @@ def build():
     for label,path in wed_reviews: args+=['--review',f'wed={label}|{path}']
     for label,path in fri_reviews: args+=['--review',f'fri={label}|{path}']
     materials,new_assets=storyboard_materials()
-    args+=['--waiting','fri=Nothing needs you right now: the storyboard is signed off, Codex is making the four videos, and Claude is writing the article and the channel copy. Both come back to this tab for your look before anything is published.',
+    args+=['--waiting','fri=The article, channel copy and storyboards are signed off. The four videos are in production; final chapter times will come from the finished cuts. The videos return here for your review before the final board is published.',
            '--materials',f'fri={materials}',
            '--ideas',str(PLAN/'ideas.json'),'--queue',str(CACHE/'queue.json')]
     page,meta=board.build(board.parser().parse_args(args))

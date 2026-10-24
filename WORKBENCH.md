@@ -1,8 +1,8 @@
 # Workbench: where we are and what's next
 
-## 24 October: Codex preflight, waiting at the script gate
+## 24 October: Codex
 
-Four takes hash-verified; render preflight now passes. Live Scripts is todo, Visual gate now; the signed handoff has no corresponding checks on the piece. Permission for Codex to reconcile is pending. No videos rendered or final board built. Details and continuation paths: `docs/plans/2026-10-23-friday/locked/production-preflight.md`. Work item: `friday-23oct-production-reconcile`.
+[Friday production: incomplete](docs/plans/2026-10-23-friday/locked/production-preflight.md).
 
 ## 24 October: Friday locked and signed off; Codex makes the videos (Claude)
 
