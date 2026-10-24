@@ -18,11 +18,11 @@ It's harder than it looks. South Korea dropped Naver Cloud from that national pr
 
 Businesses are making the same choice countries are, mostly on price.
 
-Airbnb's boss, Brian Chesky, told Bloomberg in October 2025 that its customer service leans on Alibaba's Qwen: "We're relying a lot on Alibaba's Qwen model. It's very good. It's also fast and cheap." Which is also what most of us want from a holiday fling.
+Airbnb's boss, Brian Chesky, told Bloomberg last October that its customer service leans on Alibaba's Qwen: "We're relying a lot on Alibaba's Qwen model. It's very good. It's also fast and cheap." Which is also what most of us want from a holiday fling.
 
 Cursor, a coding tool lots of software teams use, built its newest model on top of Kimi, from China's Moonshot AI, and didn't say so at first. Once people spotted it, co-founder Aman Sanger said: "It was a miss to not mention the Kimi base in our blog from the start."
 
-And Lindy, an American startup, moved all its AI work onto DeepSeek. Its boss told NPR its biggest bill had been Anthropic, and DeepSeek "was just 10x cheaper."
+And Lindy, an American startup, told NPR it had moved all its traffic onto DeepSeek. Its boss told NPR its biggest bill had been Anthropic, and DeepSeek "was just 10x cheaper."
 
 It runs the other way too. HSBC, a British bank, signed a deal with France's Mistral. Nobody in this story is doing anything strange. They're shopping.
 
@@ -30,9 +30,9 @@ It runs the other way too. HSBC, a British bank, signed a deal with France's Mis
 
 So here's the way I think about it. Every AI has two passports. One says where it was born. The other says where it lives, meaning whose computers it runs on.
 
-The first passport shapes what it tells you. The Christian Science Monitor put 200 news questions to four Chinese chatbots (DeepSeek, Kimi, Qwen and GLM) and compared them with Claude. In 35% of cases the Chinese bots refused, used the Chinese government's preferred language, or got it wrong. For DeepSeek it was 63%. Claude answered all of them.
+The first passport shapes what it tells you. The Christian Science Monitor put 200 news questions to four Chinese chatbots (DeepSeek, Kimi, Qwen and GLM) and compared them with Claude. In 35% of cases the Chinese bots refused, used the Chinese government's preferred language, or got it wrong. For DeepSeek it was 63%. Claude, the paper found, "answered all of them."
 
-America has its own version. In July 2025, Simon Willison caught Elon Musk's Grok searching X for Elon Musk's posts before it answered a question about Israel and Palestine. xAI later told it to stop. Which is one way to keep the boss happy.
+America has its own version. Last summer, Simon Willison caught Elon Musk's Grok searching X for Elon Musk's posts before it answered a question about Israel and Palestine. xAI later told it to stop. Which is one way to keep the boss happy.
 
 The lesson applies everywhere. Every maker's choices travel with its AI, and a model's birthplace is one of those choices.
 
@@ -42,11 +42,11 @@ The second passport decides who sees what you type. DeepSeek's own privacy polic
 
 You can bring an AI home, though. HSBC's deal with Mistral is for "self-hosted AI models that operate on HSBC's internal technology systems." The bank's data doesn't have to leave the bank.
 
-America's government tried the obvious fix with DeepSeek: download the model and run it on your own computers. Its AI standards centre ran the downloaded model on its own servers and found it "echoed 4 times as many inaccurate and misleading CCP narratives as U.S. reference models did." Moving it changed the second passport. The first one came along.
+America's government tried the obvious fix with DeepSeek: download the model and run it on your own computers. Its AI standards centre ran the downloaded model on its own servers and found that its models "echoed four times as many inaccurate and misleading CCP narratives as U.S. reference models did." Moving it changed the second passport. The first one came along.
 
 You can take DeepSeek out of China. You can't take China out of DeepSeek.
 
-How much of the first passport travels depends on the model and the version. One small test found another Chinese model answered freely once it was hosted outside China. So the honest rule is: run it yourself and you keep your data home, but test what it says.
+How much of the first passport travels depends on the model and the version. So the honest rule is: run it yourself and you keep your data home, but test what it says.
 
 ## I TRIED IT ON WORK QUESTIONS
 
@@ -58,7 +58,7 @@ Claude and ChatGPT flagged forced labour both times. DeepSeek did too, for Turkm
 
 Then a board briefing on opening a sales office in Taiwan, against the same briefing for Singapore. All three flagged the risk from China for Taiwan, and none raised political risk for Singapore. A draw.
 
-One afternoon and a handful of questions shows what it looks like. The newspaper's much bigger test and the US government's own show how often it happens. But on Xinjiang, DeepSeek knew the answer. It just wasn't allowed to let you keep it.
+One afternoon and a handful of questions shows what it looks like. The newspaper's test and the US government's own show how often it happens. But on Xinjiang, DeepSeek knew the answer. It just wasn't allowed to let you keep it.
 
 ## MY CALL: KNOW WHICH PASSPORTS YOU HOLD
 
@@ -66,10 +66,10 @@ My call: an AI from any country can be the right tool. If you don't mind where y
 
 And remember supply chains. Lots of firms had Chinese parts buried deep in their products, and then America put tariffs on them. I reckon the same thing will happen with AI, between all sorts of countries, so know which passports you're holding before someone else changes the rules.
 
-My prediction: by 30 June 2027, an AI model built outside America and China will rank in the top five of LMArena's overall leaderboard. I'd put it at about 20%. If it happens, sovereign AI stops being a policy word and becomes a buying choice.
+**Our prediction.** By 31 December 2026, at least one more country's government will announce new public money for its own national AI model or a sovereign AI programme. Every country in this piece has already decided that depending on someone else's AI is a risk worth paying to avoid, and the next one is never far behind. How sure we are: 90%.
 
 ## 3 things you can do tomorrow
 
-1. Ask your main software suppliers which AI their product runs on, and where it runs. Both passports.
-2. Put your own work questions to your team's AI and to one built in another country, and see where the answers differ.
-3. Keep a second AI ready, so you're never stuck with one supplier.
+- Ask your main software suppliers which AI their product runs on, and where it runs. Both passports.
+- Put your own work questions to your team's AI and to one built in another country, and see where the answers differ.
+- Keep a second AI ready, so you're never stuck with one supplier.
