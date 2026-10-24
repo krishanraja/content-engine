@@ -1,5 +1,22 @@
 # Workbench: where we are and what's next
 
+## 24 October: Friday locked for Codex, storyboard waiting on Krish (Claude)
+
+- **Waiting on Krish:** sign off the storyboard (`docs/plans/2026-10-23-friday/locked/storyboard-signoff.md`; the four
+  sheets are in the post's library folder under `2 Covers and images/Storyboard`), with one choice (trim 6 s from the
+  90-second on-camera call, or keep), and say yes to the Friday board update that shows it (built and dry-run:
+  `update_friday_23oct.py --build`, expected build `cc25274e`, dry run build `90220404`).
+- **Then Codex** works from `docs/plans/2026-10-23-friday/locked/CODEX.md` and nothing else.
+- **Still to do by Claude:** the article (outline to Krish first, then the gates), titles and thumbnail words in one
+  round with Krish (`locked/titles.json`), and the board copy (`locked/board-copy/`).
+- **Where things are:** takes in the engine's recordings store (`recording.py list`); evidence captures (24 Oct, sentence
+  highlighted, `captures.json` with URLs and times) under `2 Covers and images/Evidence`; the Anthropic and GitHub
+  reference clip in Video Engine > Inspiration had not reached the library (publishing it needs the machine with the
+  pinned Python, whose environment still needed the restart).
+- **Drive fault, handed off:** both home computers held `MINDMAKE_*` paths with the old `Ventures\Active` name, so the
+  recordings upload failed silently from 22 to 24 October. The fix by Drive ID is session
+  `session_01PB5tFfd5AhfU3pe8zUQ44G` (`docs/handovers/2026-10-24-drive-by-id.md`).
+
 ## 24 October: the Inbox read from Google by its ID; every Drive touchpoint fails loudly (Claude)
 
 Handover: `docs/handovers/2026-10-24-drive-by-id.md`. Branch `claude/drive-by-id`, a pull request here and one in
@@ -64,31 +81,6 @@ control-center.
 
 The 22 October Friday story work (choosing the two-passports story with Krish) is archived in
 `docs/history/2026-10-23-workbench-friday-22oct.md`.
-
-## 19 October: both publish boards live, web cutover verified
-
-Use https://content.krishraja.com/board/2026-10-19 and
-https://content.krishraja.com/board/2026-10-12. The overarching week tabs keep
-both available. All new interactions use this site; the four Claude boards
-are preserved source archives and must not be synchronized or edited.
-
-All 87 available source records, including 10 replies, were imported and read
-back exactly. The final source comparison found no delta. Both production
-boards passed authenticated desktop/phone navigation, image, state and comment
-checks; all 12 downloadable assets matched their type, size and SHA-256.
-Follow `docs/PUBLISH_BOARDS.md` from every tool, reading all six collections.
-Release, source limitations and rollback evidence: `docs/handovers/board-web-release.md`.
-Friday's two replacement videos are now repaired and filed; see the delivery section below. Monday 19 October's
-signed-off scripts and pending recordings/fact check remain with its editorial
-handover; this migration changes neither scripts nor publishing approval.
-
-This is the one file every working session reads first and updates last,
-whatever tool it runs in: Claude Code (web, desktop or phone), Codex (cloud or
-desktop), or anything else that can open this repository. It is how work moves
-from one tool to another without anything getting lost. The rules for agents
-are in `AGENTS.md`; this file is the live state of the work.
-
-Last updated: 2026-10-19, by the idea-queue build session (Claude Code, cloud).
 
 ## The idea queue: read it first
 
@@ -862,13 +854,3 @@ stricter version, which refused a contradicted line, was withdrawn before the me
 line; the cost gate has no context ceiling and never blocks a database tool. Waiting on Krish: (1) three sign-offs on
 piece `904658db` made before the G9 ruling are on contradicted lines, left as they are until he says; (2) the first real fact-check run after this
 (his approval for the spend) is the live proof: `fact-gate-on-file` cache writes about one source set a run.
-
-
-## Monday release-gate continuation, 19 October
-
-Wednesday is paused until Monday is publish-ready. Krish approved an auditable,
-free manual fact-review route and accepted both current final cuts after full
-playback with sound. Implementation and exact-file acceptance are in
-`docs/plans/2026-10-19-monday/release-gates.md` and `playback-acceptance.json`.
-The paid-run hold remains. Do not infer release completion from this note;
-require authenticated fact/making readback and final library/board delivery.
