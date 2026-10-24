@@ -2033,6 +2033,32 @@ def doctor(as_json=False):
     return 1 if failed else 0
 
 
+def direction_problem(cfg):
+    """Why this config may not render, or None. Krish, 2026-10-24: production takes over from the scripts and visual
+    creative direction Claude locked; from 26 Oct a cut renders only from the signed direction kit.py checked, and only
+    while that file is byte for byte what was checked (docs/CREATIVE_DIRECTION.md)."""
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'post-pack'))
+    import creative_direction
+    from datetime import date as _date
+    piece = str(cfg.get('piece_id') or '')
+    if not cfg.get('date') and not re.match(r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$', piece, re.I):
+        return None  # a synthetic render (mix_test.py's media) is no piece; kit.py writes the date and piece id on every piece
+    try:
+        day = _date.fromisoformat(str(cfg.get('date') or '')[:10])
+    except ValueError:
+        day = creative_direction.FROM
+    if day < creative_direction.FROM:
+        return None
+    rec = cfg.get('creative_direction')
+    if not isinstance(rec, dict) or not rec.get('path'):
+        return ('no signed creative direction in this config: draw the kit with kit.py, which checks '
+                'creative-direction.json beside post.json (docs/CREATIVE_DIRECTION.md)')
+    path = Path(rec['path'])
+    if not path.exists() or hashlib.sha256(path.read_bytes()).hexdigest() != rec.get('sha256'):
+        return f'{path} changed (or is gone) since kit.py checked it; check it again and redraw the kit'
+    return None
+
+
 def main():
     global FPS
     if sys.argv[1:2] == ['--self-test']:
@@ -2055,6 +2081,9 @@ def main():
     cfg_path = Path(args.config).resolve()
     base = cfg_path.parent
     cfg = json.loads(cfg_path.read_text())
+    held = direction_problem(cfg)
+    if held and not args.plan:
+        sys.exit(f'make: {held}')
     cfg['quality_required'] = True
     archiving = archive_settings(args, cfg)
     P = lambda p: (base / p).resolve()

@@ -135,6 +135,21 @@ fetch it another way.
 
 ## Before anything
 
+**Render only from the signed creative direction** (Krish, 2026-10-24:
+"Once the videos are recorded, Claude gets the scripts and the visual
+creative direction locked so that codex can take over on the video
+production"). Read `docs/CREATIVE_DIRECTION.md` and the piece's
+`creative-direction.json` beside its `post.json` first. From 26 October
+`kit.py` refuses a cut without a direction Krish signed for its exact
+words, and `make.py` refuses one that changed after kit.py checked it.
+Make each beat as written: its picture, its source label, its on-screen
+words, its modules. Never invent a visual, a caption, a figure or a style;
+when a beat cannot be made as written, stop and name the beat. Never sign in
+to a publishing platform or ask Krish for a code: he publishes. A cut is
+ready only when a reviewer who did not make it has watched it at full size
+and listened across every join against the direction's `acceptance`, with
+fact, transport and editorial status reported separately.
+
 Read `AGENTS.md`, `WORKBENCH.md`, `docs/CADENCE.md` ("Who owns what, and
 where things live") and `scripts/quick-edit/README.md`. Read the board
 (`WORKBENCH.md`, "The board"). This skill does not use the

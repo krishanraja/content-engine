@@ -90,7 +90,23 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    pool with his ideas first, then ideas near something he liked, then the
    ladder score, each with `source_kind` and `why_here`; the queue and its
    combine groups; `his_relayed` board items; and which source is empty and
-   why. Say the counts and every empty source in your reply. His taste
+   why. Say the counts and every empty source in your reply.
+   **His Inspiration House is read in the same gather** (Krish, 2026-10-24:
+   "Double check my inspirationhouse gets read properly when ideas are
+   being built, alongside all the other sources of content suggestions").
+   `sources.json` holds `inspiration` (`_inspirationSources.ts`): `routed`,
+   the cards he routed to Make a piece, each owed a place on the board;
+   `liked`, cards he answered with a why; `fresh`, cards he has not seen
+   yet; `study_style`, production references (they feed the style, never a
+   topic); `corpora`, content-watcher readings he dropped in; `creators`,
+   creator moves with his angle; `claims`, taste claims (form only; only an
+   approved one is a rule). `must_cover` lists every routed card and every
+   board item holding his words: each one goes in some idea's `covers`, or
+   in ideas.json `accounted` with the reason it is not on the board. The
+   gather stops when production has no `inspiration` block, and the board
+   build refuses ideas that drop one (`board_feed.py cover <Monday>`). A
+   card's `why_like` is his typed words; `endorsed` is a suggestion he
+   tapped, never quoted as his. His taste
    steers this ranking only; never pass it to a judge. Most ideas arrive
    with no series yet (`unassigned`: 77 of 89 on 21 Oct, when
    under.the.hood's pool was empty), so read `unassigned` too and place
@@ -124,7 +140,31 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    `inspo` or `engine`; the board refuses one without it from 26 Oct),
    `why_here` copied from the gather when it has one (never invented), and
    `beats`, three to five lines of the narrative sketch
-   (`docs/prompts/sunday-ideas-tab.md`). Leave out a candidate with
+   (`docs/prompts/sunday-ideas-tab.md`), `covers` (the `must_cover` ids it
+   answers, when any) and `style`: `{"script": <format>, "production":
+   <format>, "experiment": {"format": <format>, "why": "the bolder try"}}`,
+   each a format id from `config/style-references.json` `formats` (Krish,
+   2026-10-24: "suggest script and production styles that I can choose
+   from or that it recommends for specific content ... pushing and pushing
+   and pushing, becoming more and more creative and experimental"). Pick
+   the recommendation for the content (the format's `fits`), and make the
+   experiment a format that has not been made yet. The board refuses a day
+   with one script format, a day with no untried experiment, a week where
+   one production format is over half the cards, and a format he marked
+   not for us (`week_board.style_problems`).
+   **The quality bar, before an idea reaches him** (Krish, 2026-10-24:
+   "most importantly focus on improving your own work quality"). Each day's
+   ideas are four different stories, never four angles on one headline.
+   Each one's `so_what` names what the face (a senior leader who will not
+   admit they are not ready) does differently on Monday morning; its hook is
+   a specific, surprising, checked fact, never a category. At least one idea
+   a day comes from his own words or his Inspiration House when either has
+   anything that fits, and one is a wildcard the engine would not usually
+   offer. Then hand the whole ideas.json to a separate reader (the
+   `reviewer` subagent, no access to your reasoning) to try to kill each
+   idea against this bar and the 19 Oct triage lessons below; replace every
+   idea it kills before the board is built, and say in your reply how many
+   it killed and why. Leave out a candidate with
    `near_drop` unless something new answers why he dropped its neighbour.
    Then write `docs/plans/<Monday>-week/combine.json` from the gather's
    combine groups: for each group that threads into one higher-level
@@ -183,6 +223,14 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    `week-<Monday>` exists; if the cron has not run yet, it will.
 6. Do not pick, schedule, draft or spend. Picking is Krish's press on the week
    page; his Monday pick starts the make-piece session on its own.
+   **Sunday is his recording day** (Krish, 2026-10-24: "Yes, Sunday is my
+   recording day"). Once he has picked all three days, the same Sunday runs
+   `make-piece` for Monday, then Wednesday, then Friday: the story with him
+   one question at a time, then the scripts, checked and in Teleprompter by
+   midday (`config/board-layout.json` `rhythm`), and the creative direction
+   for every cut (`docs/CREATIVE_DIRECTION.md`) before he records. After he
+   records, the storyboard goes to him for sign-off; production (Codex or
+   Claude) renders only from the signed direction.
 6b. **No weekly deep cut: a 15-minute feature only when Krish calls one**
    (house rule FEATURE, Krish, 2026-10-21: "all videos are generally 90 sec
    and 5 min. From time to time I might do a special 15 min feature"; asked

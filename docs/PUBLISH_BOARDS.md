@@ -17,14 +17,16 @@ layout, the same every week:
 - **Five tabs, in this order:** Ideas, Queue, Monday, Wednesday, Friday. On a
   phone they are a bar at the bottom.
 - **Four steps in every day, in this order:** Brief, Drafts, Record, Publish.
-  A step with nothing yet says when it fills (the brief by the night before,
-  the drafts by the morning of the day, from the layout's `rhythm`).
+  A step with nothing yet says when it fills, from the layout's `rhythm`: every
+  day's brief on the Sunday morning and its scripts by Sunday midday, because
+  Sunday is his recording day (Krish, 2026-10-24: "Yes, Sunday is my recording
+  day").
 
 A session feeds the slots and nothing else:
 
 | Step | What feeds it | Input |
 |---|---|---|
-| Ideas | the week's checked ideas, each with `source_kind` (`his`, `inspo` or `engine`, required from the fixed layout on, shown as its chip), `why_here` (the nearest idea he liked, from the gather) and `beats` (3 to 5 lines of the sketch) | `--ideas ideas.json` (plan-week, from `board_feed.py gather`) |
+| Ideas | the week's checked ideas, each with `source_kind` (`his`, `inspo` or `engine`, required from the fixed layout on, shown as its chip), `why_here` (the nearest idea he liked, from the gather), `beats` (3 to 5 lines of the sketch), `covers` (the gather's `must_cover` ids it answers) and `style` (a script format, a production format and one experiment from `config/style-references.json` `formats`, shown as "Suggested style" and "Or try something new"); `accounted` in the file gives the reason for any `must_cover` id no idea carries. The build refuses a fixed week without `sources.json` beside it, a routed card left off, or styles that do not diverge (`board_feed.py cover <Monday>`) | `--ideas ideas.json` (plan-week, from `board_feed.py gather`) |
 | Queue | the idea queue | `--queue queue.json` (GET /api/idea-queue) |
 | Queue: Could combine | two to five queued ideas that make one bigger piece: `[{"members": [queued ids], "series", "thesis", "joins": [3 to 5 beats]}]`, each a card with a Combine button that saves `queue/combine-<n>`; the next session runs synthesize on his tap (decided_by Krish) | `--combine combine.json` (with `--queue`; groups from GET /api/idea-queue?combine=1) |
 | Brief | the record-ready brief: idea, 3 to 6 beats, ending, takeaway, angle, tone, reader | `--brief DAY=brief.json` (kept on rebuild) |
@@ -60,7 +62,17 @@ and which source is empty and why. His ideas are `manual` rows (his words
 through Control Center's one door) and topics he asked the engine to research
 in Control Center (`requested_research` with `requested_by: Krish`); board items
 that relay his words (`krish-ideas-*`, `said-*`) come as `his_relayed`. His
-taste steers this sourcing and ranking only; the judges stay blind.
+Inspiration House comes as `inspiration` (`_inspirationSources.ts`): the cards
+he routed to Make a piece, the cards he answered, the ones he has not seen yet,
+the production references he routed to Study style, content-watcher readings,
+creator moves and taste claims; `must_cover` lists every routed card and
+relayed board item the Ideas tab owes him. The gather stops when the route has
+no `inspiration` block. His taste steers this sourcing and ranking only; the
+judges stay blind.
+
+One-off feeders are history: a script under `docs/` that drives `week_board.py`
+or `board_web.py` is refused by `npm run check:board-layout`; the fifteen that
+existed on 24 October are frozen (`FEEDERS`).
 
 Videos: every piece is a 90-second and a 5-minute video. A 15-minute feature
 appears as a third cut only on a piece Krish called one for

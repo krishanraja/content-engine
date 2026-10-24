@@ -1,5 +1,20 @@
 # Workbench: where we are and what's next
 
+## 24 October: the Sunday loop rebuilt for his recording day (Claude)
+
+- **Asked:** a week's audit (Codex's failure report), then "tomorrow's Ideas Board is SIGNIFICANTLY improved", his
+  Inspiration House read properly, styles he can choose from that push, Claude owning scripts, article and creative
+  direction, Codex producing from it. Sunday is his recording day.
+- **Done (branch `claude/bold-lovelace-o09phe`):** `_inspirationSources.ts` (the gather reads the Inspiration House
+  and content-watcher; `must_cover`), `board_feed.py cover`, `week_board.style_problems` and `coverage_problems`,
+  `formats` in `config/style-references.json`, `creative_direction.py` with the kit.py and make.py gate,
+  `docs/CREATIVE_DIRECTION.md`, the Sunday rhythm, the feeder freeze, the start route in AGENTS.md, failure and
+  learning entries.
+- **Next, Sunday 25 Oct:** `/plan-week` for the week of 26 Oct. The gather stops until this change is deployed to
+  production (`sources.inspiration`). Three routed cards must be on the board or accounted for: the Duet page,
+  "Reading is free. Sending needs a yes." and the models-by-country picture.
+- **Waiting on Krish:** required status checks on `main`.
+
 ## 23 October, afternoon: Friday test scored, both scripts filled, on the board for Krish's review (Claude)
 
 - **Test results:** `docs/plans/2026-10-23-friday/test-results/` (`answers.md`, `coding.md`, the pre-registered
