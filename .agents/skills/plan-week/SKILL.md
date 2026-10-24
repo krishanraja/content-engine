@@ -52,9 +52,15 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    `make-piece` says (yes, no, or a comment as his rewording), and only those
    whose `updated_by` is Krish. One he left alone stays proposed. Next, read
    the Inspiration cards he routed to a piece (`select name, why_like,
-   would_do from inspiration_items where route = 'make_piece' and answered_at
-   > now() - interval '8 days'`): each is an idea of his for step 2, in his
-   words.
+   why_like_source, would_do from inspiration_items where route =
+   'make_piece' and answered_at > now() - interval '8 days'`): each is an idea
+   of his for step 2, in his words only where `why_like_source` is `typed` (a
+   `picked` reason is a guess he agreed with). Then the cards he routed to
+   "Study the style" (`route = 'study_style'`, same columns plus
+   `drive_file_id`): study each before the week's recordings, as
+   `docs/STYLE_REFERENCES.md`, "Cards he sends from the Inspiration page",
+   says, and name in the reply which you studied and which are still
+   waiting.
 1. **Read the idea queue first**, before anything else and before any
    research (Krish, 2026-10-19: ideas he likes that are not time-sensitive
    are queued, and the queue "needs to survive everything and be the first
