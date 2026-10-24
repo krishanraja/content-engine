@@ -57,6 +57,16 @@ agents never write into his Drive; this is his explicit instruction for that
 one folder, carried out by his own machine, and it covers that folder only.
 `scripts/post-pack/README.md` has the layout and the commands.
 
+**content-watcher files fetched posts into his two inspiration folders.** Krish,
+2026-10-24: "Yes to Drive filing". The second exception to rule 0a.5, and only
+this: krishanraja/content-watcher, running on his home computers through the
+synced Drive folders, adds the media of a link he pasted on the Inspiration
+board to `makeyourmindup > Video Engine > Inspiration` (a video) or `Cold Ideas
+& Inspo` (anything else), where his own drops go, so the taste ledger makes its
+card. It only adds files: never deletes, never overwrites, never renames, and a
+second fetch of the same post is a no-op. It writes nowhere else in his Drive.
+Its queue is `apps/control-plane/api/watch/` (content-watcher `docs/WATCH_API.md`).
+
 **A recording in the Video Engine Inbox reaches a cloud session through
 `python scripts/post-pack/recording.py get NAME`.** The Drive connector caps
 downloads at 10 MB, so never tell Krish a recording cannot be reached; if the
