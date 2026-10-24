@@ -51,18 +51,45 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    learned" lessons, the taste ledger's `taste:` ones included, exactly as
    `make-piece` says (yes, no, or a comment as his rewording), and only those
    whose `updated_by` is Krish. One he left alone stays proposed. Next, read
-   the Inspiration cards he routed to a piece (`select name, why_like,
-   why_like_source, would_do, drive_file_id, read_as, note_for_claude from
-   inspiration_items where route = 'make_piece' and answered_at > now() -
-   interval '8 days'`): each is an idea of his for step 2, in his words only
-   where `why_like_source` is `typed` (a `picked` reason is a guess he agreed
-   with). Take in each file the way `read_as` says (`watch` means the whole
-   video with sound, never one frame) and follow `note_for_claude`. Then the
-   cards he routed to "Study the style" (`route = 'study_style'`, same
-   columns): study each before the week's recordings, as
+   every Inspiration card he routed to a piece that no plan has taken yet
+   (`select id, name, kind, why_like, why_like_source, picked_likes,
+   why_here, would_do, drive_file_id, read_as, note_for_claude, facets,
+   transcript, piece_id from inspiration_items where 'make_piece' =
+   any(routes) and answered_at is not null and routed_at is null and
+   dismissed_at is null order by answered_at`; a card may carry several
+   routes, and no time window, so a missed Sunday loses nothing): each is
+   an idea of his for step 2. His own words are `why_here` and `would_do`
+   (he types them) and `why_like` where `why_like_source` is `typed`;
+   `picked_likes` are guesses he agreed with. Once the week's options are
+   written in step 2, mark the cards the plan took (`update
+   inspiration_items set routed_at = now() where id = any(<their ids>) and
+   routed_at is null`), so no card is offered twice; his Undo on the page
+   clears it. Take in each file the way `read_as` says
+   (`watch` means the whole video with sound, never one frame; `transcript`
+   holds its words when the ledger watched it) and follow
+   `note_for_claude`; `facets` says its platform, format, source and who it
+   features. Then the cards he routed to "Study the style"
+   (`'study_style' = any(routes)`, same columns): study each before the
+   week's recordings, as
    `docs/STYLE_REFERENCES.md`, "Cards he sends from the Inspiration page",
    says, and name in the reply which you studied and which are still
-   waiting.
+   waiting. Each card says what kind of thing it is (`kind`; Krish,
+   2026-10-24: "It's important that you understand what the different types
+   of stuff are in here"): a video saved for "the script, the narrative, or
+   the production style" (his picks say which), an image for "the clarity",
+   a research corpus, an idea or another document. Read three more kinds of
+   inspiration for step 2. The feed's posts from the last 8 days, the latest
+   fresh posts from the channels he follows (`select title, excerpt,
+   meta->>'account' as account, meta->>'url' as url, occurred_at from
+   taste_evidence where source = 'drive_cold' and source_ref like
+   'instagram:%' and occurred_at > now() - interval '8 days' order by
+   occurred_at desc`): other people's posts, so a topic signal and never his
+   view. The opinions about AI his cards carry (`facets->'opinion'`, a topic
+   and the author's stance), where he tapped the topic or routed the card to
+   a piece: a topic he may want to speak about, never his own stance. And
+   the research corpora he named no piece for yet (`kind = 'corpus' and
+   piece_id is null`): research waiting for a piece, read as the research
+   for whichever option it serves.
 1. **Read the idea queue first**, before anything else and before any
    research (Krish, 2026-10-19: ideas he likes that are not time-sensitive
    are queued, and the queue "needs to survive everything and be the first

@@ -1275,6 +1275,36 @@
      "how": "the Scripts step, beside dry wit"
     }
    ]
+  },
+  {
+   "id": "inspiration-kinds",
+   "on": "2026-10-24",
+   "krish": "Typically, if I post a video in here, it's because I like either the script, the narrative, or the production style. When I post images in here, it's because I like the clarity. When I post something that shows a clear opinion about AI, it's usually because the topic could be something I want to speak about ... sheets like Instagram inspo ... That's not a one-off drop ... a corpus which I will have had an idea and gone and pulled all the research from Perplexity on it. That would be for a specific article or a specific content piece ... It's important that you understand what the different types of stuff are in here, and ideally, you can auto-classify and know how to extract the right inspiration.",
+   "why": "The Inspiration board asked the same 'what do you like about it?' question of every card, so a research corpus was guessed as 'The layout is really clean ... Study the style' and the always-fresh Instagram sheet was asked about like a one-off drop. Those guesses were wrong, and his answers to them taught the engine nothing.",
+   "means": "Every card is classified by its kind (a video, an image, a feed that keeps itself fresh, a research corpus, an idea or script, or another document), with a clear opinion about AI kept as the topic it raises, and is asked only its kind's question: a video which of the script, the narrative or the production style; an image the clarity; an opinion the topic. A feed is never asked anything: its newest posts go to the Sunday plan. A corpus is the research for the piece it names and is read by that piece first. Nothing is deleted; the archive only grows.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "supabase/migrations/20261107090000_inspiration_kinds.sql",
+     "contains": "What kind of thing each Inspiration card is",
+     "how": "the kind, who set it and a corpus's piece on every card; the feed's counts as a view"
+    },
+    {
+     "file": ".agents/skills/plan-week/SKILL.md",
+     "contains": "Read three more kinds of",
+     "how": "step 0 reads the feed's posts from the last 8 days, the opinions about AI, and the corpora waiting for a piece"
+    },
+    {
+     "file": ".agents/skills/make-piece/SKILL.md",
+     "contains": "The research starts with the corpus he linked to this piece",
+     "how": "the Narrative row reads the piece's corpus first"
+    },
+    {
+     "file": "docs/STYLE_REFERENCES.md",
+     "contains": "Which craft to study comes from his reason",
+     "how": "the style study reads the script, the narrative, the production style or the clarity as the layers to study"
+    }
+   ]
   }
  ]
 }
