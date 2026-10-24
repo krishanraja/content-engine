@@ -2,13 +2,18 @@
  "_about": "What goes on screen, beat by beat, for the four Friday videos. When comes from timings.json; how from motion-system.md. Built by visual_copy.py; edit that, never this file.",
  "beats": {
   "L01-hook": {
-   "surface": "ink",
+   "surface": "cream",
    "pictures": [
-    "F-xinjiang at real speed from 2.25 s, freeze on the refusal"
+    "O-passport x6 dealt across the desk, one per country, all treated alike: Claude and ChatGPT (USA), DeepSeek (China), Mistral (France), K2 Think (UAE), Sarvam (India); the camera settles on DeepSeek's as the voice says \"a Chinese AI\", the others still in frame"
    ],
-   "on_screen": [],
-   "label": "F-xinjiang",
-   "cam": "Cold open on the footage for the first sentence, cut to his face on \"So does it matter\"."
+   "on_screen": [
+    "BORN: USA",
+    "BORN: CHINA",
+    "BORN: FRANCE",
+    "BORN: UAE",
+    "BORN: INDIA"
+   ],
+   "cam": "The passports for the first sentence, then his face on \"So does it matter\". (24 Oct: no longer a cold open on the deletion; China is one example among many, Krish.)"
   },
   "L02-why": {
    "surface": "cream",
@@ -319,7 +324,7 @@
    "pictures": [
     "O-route: phone to server; a border line labelled PEOPLE'S REPUBLIC OF CHINA; three packets cross it",
     "E-deepseek-policy as a small lit sheet",
-    "DeepSeek's passport: LIVES CHINA (amber)"
+    "DeepSeek's passport: LIVES CHINA (plain ink, like every field)"
    ],
    "on_screen": [
     "PEOPLE'S REPUBLIC OF CHINA",
@@ -367,11 +372,11 @@
   "L25-nist": {
    "surface": "cream",
    "pictures": [
-    "E-nist slides in; the stamp slaps onto the passport: STILL GAVE BEIJING'S LINE"
+    "E-nist slides in; the stamp slaps onto the passport: TRAINING CAME WITH IT"
    ],
    "on_screen": [
     "4x",
-    "STILL GAVE BEIJING'S LINE"
+    "TRAINING CAME WITH IT"
    ],
    "label": "E-nist",
    "highlight": "DeepSeek models echoed four times as many inaccurate and misleading CCP narratives as U.S. reference models did.",
@@ -386,7 +391,7 @@
   "L26-takechina": {
    "surface": "cream",
    "pictures": [
-    "The passport alone: LIVES reads USA (mint) on the first sentence; BORN: CHINA pulses amber on the second; dead still"
+    "The passport alone: LIVES rewrites to USA on the first sentence; BORN stays CHINA on the second, the field simply held in place (plain ink); dead still"
    ],
    "on_screen": [
     "LIVES: USA",
@@ -549,7 +554,7 @@
   "L38-supply": {
    "surface": "ink",
    "pictures": [
-    "A product outline opens into its parts; one part glows amber; a stamp: TARIFF"
+    "A product outline opens into parts made in several countries, each labelled; a TARIFF tag drops onto one part"
    ],
    "on_screen": [
     "TARIFF"
@@ -559,7 +564,7 @@
   "L39-reckon": {
    "surface": "ink",
    "pictures": [
-    "The parts become passports; one amber"
+    "The parts become AI passports from several countries; the TARIFF tag moves onto one of them"
    ],
    "on_screen": [
     "MY VIEW"
@@ -587,15 +592,20 @@
    "cam": "Outro card."
   },
   "S01-hook": {
-   "surface": "ink",
+   "surface": "cream",
    "pictures": [
-    "F-xinjiang at real speed from 2.25 s, freeze on the refusal"
+    "O-passport x6 dealt across the desk, one per country, all treated alike: Claude and ChatGPT (USA), DeepSeek (China), Mistral (France), K2 Think (UAE), Sarvam (India); the camera settles on DeepSeek's as the voice says \"a Chinese AI\", the others still in frame"
    ],
-   "on_screen": [],
-   "label": "F-xinjiang",
-   "cam": "Cold open on the footage for the first sentence, cut to his face on \"So does it matter\".",
+   "on_screen": [
+    "BORN: USA",
+    "BORN: CHINA",
+    "BORN: FRANCE",
+    "BORN: UAE",
+    "BORN: INDIA"
+   ],
+   "cam": "The passports for the first sentence, then his face on \"So does it matter\". (24 Oct: no longer a cold open on the deletion; China is one example among many, Krish.)",
    "same_as": "L01-hook",
-   "short_note": "The short's whole cold open: the deletion freezes on the refusal under \"Does that matter?\"."
+   "short_note": "The six passports, the camera settling on DeepSeek's on \"a Chinese AI\"; the others stay in frame under \"Does that matter?\"."
   },
   "S02-airbnb": {
    "surface": "cream",
@@ -771,7 +781,7 @@
   "S08-lives": {
    "surface": "ink",
    "pictures": [
-    "The passport flips to ink (as L21), then the route to China (as L22)"
+    "The passport flips to ink (as L21), then the route to the server the policy names (as L22)"
    ],
    "on_screen": [
     "PEOPLE'S REPUBLIC OF CHINA",

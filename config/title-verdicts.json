@@ -92,6 +92,24 @@
  ],
  "verdicts": [
   {
+   "title": "You may already be using a Chinese AI. Here's what to check",
+   "surface": "substack",
+   "verdict": "rejected",
+   "why": "Same lesson: a headline built on one country reads as suspicion of that country; lead with sovereign AI and why countries want their own.",
+   "krish": "\"IS YOUR AI CHINESE?\" Sounds incredibly racist. The whole point of this is to understand what sovereign AI means and why countries are fighting to build their own AI as opposed to use another countries. We must not make this feel like we're stirring geopolitical hatred against China, it's just an example",
+   "on": "2026-10-24",
+   "piece": "7083d6ad-419e-4fdc-9aba-f3be7f3f3a23"
+  },
+  {
+   "title": "IS YOUR AI CHINESE?",
+   "surface": "thumbnail",
+   "verdict": "rejected",
+   "why": "Never single out one country or its people in packaging: the story is why every country wants its own AI (sovereign AI), and China is one example inside it. Lead with the idea and name countries plural; a line that reads as 'is it foreign, is it suspect' is refused.",
+   "krish": "\"IS YOUR AI CHINESE?\" Sounds incredibly racist. The whole point of this is to understand what sovereign AI means and why countries are fighting to build their own AI as opposed to use another countries. We must not make this feel like we're stirring geopolitical hatred against China, it's just an example",
+   "on": "2026-10-24",
+   "piece": "7083d6ad-419e-4fdc-9aba-f3be7f3f3a23"
+  },
+  {
    "title": "MUSE vs GROK BOT FIVE REAL-LIFE TESTS",
    "surface": "card",
    "verdict": "picked",
