@@ -958,8 +958,8 @@
     },
     {
      "file": "config/board-layout.json",
-     "contains": "\"days_before\": 1, \"when\": \"night\"",
-     "how": "the brief is due the night before, the drafts the morning of"
+     "contains": "\"on\": \"sunday_before\", \"when\": \"morning\"",
+     "how": "the brief is due Sunday morning and the scripts Sunday midday, his recording day (Krish, 2026-10-24, replacing the night-before rhythm)"
     },
     {
      "file": "AGENTS.md",
@@ -1472,6 +1472,91 @@
      "file": "scripts/quick-edit/quality.py",
      "contains": "def transcript_identity(source, speed, model)",
      "how": "Refuses a words file with the wrong source, speed or transcriber."
+    }
+   ]
+  },
+  {
+   "id": "styles-to-choose-and-push",
+   "on": "2026-10-24",
+   "krish": "It should also be able to suggest script and production styles that I can choose from or that it recommends for specific content. This engine should be pushing and pushing and pushing, becoming more and more creative and experimental. We don't know what works yet because the growth engine hasn't really reported back any useful results, so we still need to be producing better and more divergent work.",
+   "why": "Every week came out in the same face-led format, and with no growth numbers yet there is no evidence that one format wins, so sameness is a cost with nothing to show for it.",
+   "means": "Every idea on the Sunday board carries a recommended script format, a recommended production format and one untried experiment from the style bank's formats; a day with one script format, a day with no experiment or a week dominated by one production format is refused.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "config/style-references.json",
+     "contains": "\"formats\"",
+     "how": "the formats he chooses from, each with its evidence"
+    },
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "def style_problems",
+     "how": "the build refuses a week that does not diverge"
+    },
+    {
+     "file": ".agents/skills/plan-week/SKILL.md",
+     "contains": "each a format id from `config/style-references.json` `formats`",
+     "how": "the Ideas tab step"
+    }
+   ]
+  },
+  {
+   "id": "sunday-is-recording-day",
+   "on": "2026-10-24",
+   "krish": "Yes, Sunday is my recording day.",
+   "why": "He answered whether all three scripts are locked on the Sunday: he records the week in one session.",
+   "means": "Every day's brief is agreed Sunday morning and every day's scripts are in Teleprompter by Sunday midday, with the creative direction written before he records.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "config/board-layout.json",
+     "contains": "sunday_before",
+     "how": "the board's due dates"
+    },
+    {
+     "file": ".agents/skills/plan-week/SKILL.md",
+     "contains": "Sunday is his recording day",
+     "how": "plan-week runs make-piece for all three days the same Sunday"
+    }
+   ]
+  },
+  {
+   "id": "claude-owns-words-and-visuals",
+   "on": "2026-10-24",
+   "krish": "Once the videos are recorded, Claude gets the scripts and the visual creative direction locked so that codex can take over on the video production, and ensures that it does a great job of producing the final publish board. the copy of the article and what goes in the visuals etc is all Claude responsibility.",
+   "why": "Production sessions that decided the visuals themselves produced work he had to art-direct line by line.",
+   "means": "Claude writes the story, the scripts, the article copy, every article figure and the creative direction; production renders only from a direction he signed; Claude builds the final board.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "docs/CREATIVE_DIRECTION.md",
+     "contains": "Who does what",
+     "how": "the standard"
+    },
+    {
+     "file": "AGENTS.md",
+     "contains": "Claude owns the words and the visuals",
+     "how": "the start route every client reads"
+    },
+    {
+     "file": ".agents/skills/make-piece/SKILL.md",
+     "contains": "The creative direction, before he records",
+     "how": "make-piece step 7"
+    }
+   ]
+  },
+  {
+   "id": "improve-your-own-quality",
+   "on": "2026-10-24",
+   "krish": "The end objective is that tomorrow's Ideas Board is SIGNIFICANTLY improved ... it's your engine's job to use it all but most importantly focus on improving your own work quality",
+   "why": "The ideas reaching him were thin and similar, and the engine had sources it never read.",
+   "means": "Before the Ideas tab is built, a separate reader tries to kill each idea against the quality bar (four different stories a day, the face's Monday-morning action, a specific checked hook, one from his own words or Inspiration House, one wildcard) and every killed idea is replaced.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": ".agents/skills/plan-week/SKILL.md",
+     "contains": "The quality bar, before an idea reaches him",
+     "how": "plan-week step 3b"
     }
    ]
   }

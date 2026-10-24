@@ -350,6 +350,78 @@
    "from": "Jack Roberts Story ad, 17 Oct (Krish: \"The background of the person has also been treated when he's talking so it doesn't look too amateur\")",
    "fits": "every cut",
    "krish_verdict": "untested"
+  },
+  {
+   "id": "one-stat-per-frame",
+   "layer": "graphics",
+   "name": "One number per frame, drawn as a chart",
+   "how": "Each frame carries one checked number as a simple chart, dot grid or pictogram that a viewer reads in two seconds; the voice says the point, the picture proves it.",
+   "from": "Instagram research-chart post and the Anthropic and GitHub explainer, Inspiration House, 24 Oct (Krish tapped: \"The chart makes a boring research report instantly understandable\")",
+   "fits": "any piece whose proof is a report, a survey or a cost",
+   "krish_verdict": "untested"
+  },
+  {
+   "id": "icon-pictogram-system",
+   "layer": "graphics",
+   "name": "A small icon system that carries the explanation",
+   "how": "A handful of consistent icons (the firm, the product, the money, the user) move and connect on screen so the mechanism is seen, not only said; drawn in the brand's ink, never stock clip art.",
+   "from": "Anthropic and GitHub explainer, Inspiration House, 24 Oct (Krish: \"I like how the visuals support most of the absorption of information\")",
+   "fits": "how-it-works pieces, who-pays-whom pieces",
+   "krish_verdict": "untested"
+  },
+  {
+   "id": "random-headline-hook",
+   "layer": "opening",
+   "name": "The headline that makes no sense yet",
+   "how": "Open on a true, oddly specific line that sounds random until the piece explains it; the explanation is the payoff.",
+   "from": "Instagram news post, Inspiration House, 24 Oct (Krish tapped: \"The headline is so random it makes you need to know more\")",
+   "fits": "follow.the.money and mind.the.gap pieces with a strange true detail",
+   "krish_verdict": "untested"
+  },
+  {
+   "id": "relatable-debate",
+   "layer": "breakdown",
+   "name": "A real AI debate made everyday",
+   "how": "Take the argument people in AI are having and map it onto one everyday picture (a passport, a menu, a map) that anyone already understands; the picture is real, never a cartoon acting out an analogy (VISUAL_EXPLAINS).",
+   "from": "Models-by-country picture, Inspiration House, 24 Oct (Krish tapped: \"It takes a real AI debate and makes it instantly relatable\")",
+   "fits": "mind.the.gap",
+   "krish_verdict": "untested"
+  },
+  {
+   "id": "usable-test",
+   "layer": "close",
+   "name": "A test the viewer can use tomorrow",
+   "how": "Close on a short test of two or three questions the viewer can apply at work the next day; it doubles as the article's 3 things you can do tomorrow.",
+   "from": "\"Reading is free. Sending needs a yes.\", Inspiration House, 24 Oct (Krish tapped: \"the three-question test is simple enough to actually use\")",
+   "fits": "every series; strongest on agent and tool pieces",
+   "krish_verdict": "untested"
+  },
+  {
+   "id": "itemised-receipt",
+   "layer": "proof",
+   "name": "The itemised receipt",
+   "how": "Break one familiar bill (a subscription, a seat licence, one query) into its lines like a till receipt, each line sourced, so an abstract industry becomes a shopping list.",
+   "from": "Creator move, Alex Lieberman, 24 Oct (why it worked: \"it converts an abstract industry (AI infrastructure) into something as legible as a grocery receipt\")",
+   "fits": "follow.the.money",
+   "krish_verdict": "untested"
+  },
+  {
+   "id": "live-scoreboard",
+   "layer": "graphics",
+   "name": "The test's scoreboard, live",
+   "how": "When the piece is a test, a small scoreboard stays on screen and updates as each round is scored, so the viewer always knows who is winning.",
+   "from": "Wednesday and Friday tests, Oct 21 and 23; taste claim (Krish: \"The scripts just need to be catchy, direct: what was tested, what the result was, which one won\")",
+   "fits": "head-to-head tests",
+   "krish_verdict": "untested"
+  },
+  {
+   "id": "screen-proof",
+   "layer": "production",
+   "name": "The screen recording is the proof",
+   "how": "The moment that proves the point is shown as his own screen recording, full frame, slowed or zoomed on the exact line, with a source label; no recreation.",
+   "from": "Friday 23 Oct creative direction (the DeepSeek money shot)",
+   "fits": "tests and product pieces",
+   "krish_verdict": "untested"
   }
  ],
  "recipes": [
@@ -390,5 +462,311 @@
    "keeps_from_base": "his personal intro beat, reading age 12, the dated prediction, the close (SCRIPT_CLOSE; the series line was retired on 2026-10-21)",
    "status": "scripts written on outline v2 (docs/plans/2026-10-09-script-deep-v2.md, -90s-v2.md); waiting on Krish before Teleprompter"
   }
- ]
+ ],
+ "formats": {
+  "_about": "Whole-piece styles Krish can choose from on the Sunday Ideas tab, each a named mix of bank modules on top of the base. Krish, 2026-10-24: \"It should also be able to suggest script and production styles that I can choose from or that it recommends for specific content. This engine should be pushing and pushing and pushing, becoming more and more creative and experimental. We don't know what works yet because the growth engine hasn't really reported back any useful results, so we still need to be producing better and more divergent work.\" Every idea on the Ideas tab carries a recommended script format, a recommended production format and one experiment (ideas.json `style`, refused by week_board.style_problems otherwise). status: proven (shipped and he kept it), trial (tried once or proposed by him), experimental (never made yet). krish_verdict follows the bank's: liked, untested, not for us; a format he marks not for us is never offered again. The base (house rules, the voice and story checks) always wins over a format.",
+  "divergence": {
+   "_about": "So the week pushes instead of repeating (Krish, 2026-10-24, above). Checked on ideas.json before the board is built.",
+   "min_script_formats_per_day": 2,
+   "min_production_formats_per_week": 3,
+   "experiments_per_day": 1,
+   "max_share_of_one_production_format": 0.5
+  },
+  "script": [
+   {
+    "id": "head-to-head",
+    "name": "Head to head",
+    "pitch": "I test two or more AI tools on the same real job and say who won.",
+    "modules": [
+     "live-scoreboard",
+     "one-number-after"
+    ],
+    "fits": "under.the.hood; any piece where he can run the test himself",
+    "status": "proven",
+    "evidence": [
+     {
+      "said": "just launch straight in to \"I put GrokBot and Muse head to head\"",
+      "on": "2026-10-21"
+     },
+     {
+      "said": "The scripts just need to be catchy, direct: what was tested, what the result was, which one won",
+      "on": "taste claim, 2026-10-24"
+     }
+    ],
+    "krish_verdict": "liked"
+   },
+   {
+    "id": "fry-explainer",
+    "name": "The Hannah Fry explainer",
+    "pitch": "Concede the sensible view, then explain the real mechanism with one human story and a dry, honest line.",
+    "modules": [
+     "concession-open",
+     "one-person-story",
+     "mechanism-image",
+     "wry-close"
+    ],
+    "fits": "mind.the.gap; concept pieces",
+    "status": "trial",
+    "evidence": [
+     {
+      "said": "I really like the explanation style of Hannah Fry. She is a real intellectual but she comes across as really relatable, honest, and sincere. The way she says things and her script writing should be analysed.",
+      "on": "2026-10-24"
+     }
+    ],
+    "krish_verdict": "untested"
+   },
+   {
+    "id": "follow-the-receipt",
+    "name": "Follow the receipt",
+    "pitch": "Take one bill everyone pays and itemise where each pound goes, line by sourced line.",
+    "modules": [
+     "itemised-receipt",
+     "one-number-after"
+    ],
+    "fits": "follow.the.money",
+    "status": "experimental",
+    "evidence": [
+     {
+      "said": "engine proposal from a creator move (Alex Lieberman, 24 Oct); not yet his words",
+      "on": "2026-10-24"
+     }
+    ],
+    "krish_verdict": "untested"
+   },
+   {
+    "id": "random-headline",
+    "name": "The headline that makes no sense yet",
+    "pitch": "Open on one oddly specific true fact, then spend the piece making it obvious.",
+    "modules": [
+     "random-headline-hook",
+     "mechanism-image"
+    ],
+    "fits": "follow.the.money, mind.the.gap",
+    "status": "experimental",
+    "evidence": [
+     {
+      "said": "The headline is so random it makes you need to know more (tapped)",
+      "on": "2026-10-24"
+     }
+    ],
+    "krish_verdict": "untested"
+   },
+   {
+    "id": "everyday-debate",
+    "name": "The debate, made everyday",
+    "pitch": "The argument AI insiders are having, shown through one picture everyone already knows.",
+    "modules": [
+     "relatable-debate",
+     "usable-test"
+    ],
+    "fits": "mind.the.gap",
+    "status": "trial",
+    "evidence": [
+     {
+      "said": "It takes a real AI debate and makes it instantly relatable (tapped)",
+      "on": "2026-10-24"
+     },
+     {
+      "said": "Friday 23 Oct, two passports",
+      "on": "2026-10-23"
+     }
+    ],
+    "krish_verdict": "untested"
+   },
+   {
+    "id": "the-usable-rule",
+    "name": "The rule you can use tomorrow",
+    "pitch": "One named rule or three-question test, proved with one case, that a manager can apply at work tomorrow.",
+    "modules": [
+     "usable-test",
+     "better-way"
+    ],
+    "fits": "every series",
+    "status": "experimental",
+    "evidence": [
+     {
+      "said": "the three-question test is simple enough to actually use (tapped)",
+      "on": "2026-10-24"
+     }
+    ],
+    "krish_verdict": "untested"
+   },
+   {
+    "id": "dated-prediction",
+    "name": "The dated prediction",
+    "pitch": "What will happen by a named date, why, and what would prove me wrong.",
+    "modules": [
+     "one-number-after",
+     "wry-close"
+    ],
+    "fits": "follow.the.money",
+    "status": "trial",
+    "evidence": [
+     {
+      "said": "near-term predictions (19 Oct board)",
+      "on": "2026-10-19"
+     }
+    ],
+    "krish_verdict": "untested"
+   },
+   {
+    "id": "from-my-own-fleet",
+    "name": "From my own fleet",
+    "pitch": "What my own AI operation did this week, with its real numbers and what broke, as the evidence for a business point.",
+    "modules": [
+     "one-person-story",
+     "number-in-scene"
+    ],
+    "fits": "under.the.hood; operational exhaust",
+    "status": "experimental",
+    "evidence": [
+     {
+      "said": "engine proposal from his doctrine (operational exhaust is the content); not yet his words",
+      "on": "2026-10-24"
+     }
+    ],
+    "krish_verdict": "untested"
+   }
+  ],
+  "production": [
+   {
+    "id": "face-with-proof",
+    "name": "Face-led with proving cutaways",
+    "pitch": "Him to camera, cut away to the evidence on the exact words it proves.",
+    "modules": [
+     "treated-background",
+     "words-in-scene",
+     "screen-proof"
+    ],
+    "fits": "the 5-minute cut by default",
+    "status": "proven",
+    "evidence": [
+     {
+      "said": "every Monday to Friday piece so far",
+      "on": "2026-10-19"
+     }
+    ],
+    "krish_verdict": "liked"
+   },
+   {
+    "id": "voice-led-pictures",
+    "name": "Voice-led, every line has its picture",
+    "pitch": "His voice over pictures only: each line has the picture that proves it.",
+    "modules": [
+     "icon-pictogram-system",
+     "one-stat-per-frame",
+     "screen-proof"
+    ],
+    "fits": "the 90-second cut; topics where the visuals carry the information",
+    "status": "trial",
+    "evidence": [
+     {
+      "said": "Might also be nice to not have my face in absolutely everything and mix up the narrative style a little bit, but still keep the irreverence, branding, fun, simple explanations, humor",
+      "on": "2026-10-23"
+     },
+     {
+      "said": "I like how the visuals support most of the absorption of information and with a powerful voiceover this could be a really nice format for certain topics where appropriate.",
+      "on": "2026-10-24"
+     }
+    ],
+    "krish_verdict": "untested"
+   },
+   {
+    "id": "data-story",
+    "name": "One number per frame",
+    "pitch": "A chart-led cut: each beat is one sourced number drawn simply, his voice says why it matters.",
+    "modules": [
+     "one-stat-per-frame",
+     "number-in-scene",
+     "constant-motion"
+    ],
+    "fits": "pieces built on a report, a survey or a cost",
+    "status": "experimental",
+    "evidence": [
+     {
+      "said": "The chart makes a boring research report instantly understandable (tapped)",
+      "on": "2026-10-24"
+     }
+    ],
+    "krish_verdict": "untested"
+   },
+   {
+    "id": "fry-talking-head",
+    "name": "The lit talking head",
+    "pitch": "A carefully lit, close talking head with kinetic subtitles and drawn cutaways, Fry style.",
+    "modules": [
+     "treated-background",
+     "kinetic-serif-captions",
+     "flat-illustration",
+     "full-face-vertical"
+    ],
+    "fits": "concept pieces, the 90-second cut",
+    "status": "trial",
+    "evidence": [
+     {
+      "said": "The lighting and talking-head nature of her videos are really good and the subtitle effects are really nice as well.",
+      "on": "2026-10-24"
+     }
+    ],
+    "krish_verdict": "untested"
+   },
+   {
+    "id": "scoreboard-test",
+    "name": "The test on screen",
+    "pitch": "Screen recordings of the test, a live scoreboard and his verdict on each round.",
+    "modules": [
+     "screen-proof",
+     "live-scoreboard",
+     "fast-phrase-cuts"
+    ],
+    "fits": "head-to-head pieces",
+    "status": "trial",
+    "evidence": [
+     {
+      "said": "Wednesday 21 and Friday 23 Oct tests",
+      "on": "2026-10-23"
+     }
+    ],
+    "krish_verdict": "untested"
+   },
+   {
+    "id": "kinetic-movement",
+    "name": "Everything moves",
+    "pitch": "Fast phrase cuts, words that bounce in and constant motion, for a punchy short.",
+    "modules": [
+     "word-bounce-in",
+     "constant-motion",
+     "fast-phrase-cuts",
+     "treated-background"
+    ],
+    "fits": "the 90-second cut",
+    "status": "trial",
+    "evidence": [
+     {
+      "said": "These words all bounce in and there's a lot more movement on the screen.",
+      "on": "2026-10-17"
+     }
+    ],
+    "krish_verdict": "untested"
+   },
+   {
+    "id": "receipt-animation",
+    "name": "The receipt prints",
+    "pitch": "A till receipt prints line by line as he talks; each line is a sourced cost.",
+    "modules": [
+     "itemised-receipt",
+     "dark-object-card"
+    ],
+    "fits": "follow.the.money",
+    "status": "experimental",
+    "evidence": [
+     {
+      "said": "engine proposal; not yet his words",
+      "on": "2026-10-24"
+     }
+    ],
+    "krish_verdict": "untested"
+   }
+  ]
+ }
 }

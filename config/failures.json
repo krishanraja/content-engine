@@ -794,6 +794,103 @@
      "how": "produce-video stops on a piece whose Scripts step is not done."
     }
    ]
+  },
+  {
+   "id": "inspirationhouse-not-read-for-ideas",
+   "on": "2026-10-24",
+   "krish": "Double check my inspirationhouse gets read properly when ideas are being built, alongside all the other sources of content suggestions.",
+   "what": "Sunday's ideas gather read only the Drive scan's rows: cards he routed to Make a piece on the Inspiration page (three on 24 Oct), his answers, content-watcher readings and taste claims never reached the Ideas tab.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "apps/control-plane/api/week/options.ts",
+     "contains": "readInspiration",
+     "how": "include=sources reads inspiration_items, content_reads, creator_moves and taste_claims, and fails loudly when a table cannot be read",
+     "test": "npx vitest run tests/control-plane/inspiration-sources.test.ts"
+    },
+    {
+     "file": "scripts/post-pack/board_feed.py",
+     "contains": "a gather without the Inspiration House block must stop",
+     "how": "the gather stops without the inspiration block and lists every card to cover",
+     "test": "python3 scripts/post-pack/board_feed.py self-test"
+    },
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "def coverage_problems",
+     "how": "the build refuses ideas that leave a routed card or his relayed words off the board without a reason",
+     "test": "python3 scripts/post-pack/week_board.py --self-test"
+    }
+   ]
+  },
+  {
+   "id": "board-format-changes-every-look",
+   "on": "2026-10-24",
+   "krish": "The publish board changes format every single time I look at it",
+   "what": "The board builder changed in 17 commits in seven days and each day's tab was driven by its own one-off feeder script (fifteen of them), so every day looked different.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "scripts/check_board_layout.py",
+     "contains": "a one-off board feeder",
+     "how": "CI refuses any new script under docs/ that drives week_board or board_web; the old ones are frozen as history",
+     "test": "python3 scripts/check_board_layout.py"
+    },
+    {
+     "file": "config/board-layout.json",
+     "contains": "sunday_before",
+     "how": "the layout, held by its hash, changes only with his recorded words"
+    }
+   ]
+  },
+  {
+   "id": "production-improvised-visuals",
+   "on": "2026-10-24",
+   "krish": "Codex is going to need a much clearer directive on how to produce the visuals because it's not doing a very good job at the moment. Creative direction for post-production is going to have to be done by Claude during the pre-recording piece.",
+   "what": "Wednesday 21 Oct went to production with no creative direction; the production session improvised the visuals (38 one-off scripts) and Krish art-directed brand, framing and crowding by hand.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "scripts/quick-edit/kit.py",
+     "contains": "creative_direction.gate",
+     "how": "no kit is drawn from 26 Oct without his signed direction for the cut's exact words",
+     "test": "python3 scripts/quick-edit/kit.py --self-test"
+    },
+    {
+     "file": "scripts/quick-edit/make.py",
+     "contains": "def direction_problem",
+     "how": "no render from a config whose direction is missing or changed since it was checked"
+    },
+    {
+     "file": "scripts/post-pack/creative_direction.py",
+     "contains": "the beats do not cover the script word for word",
+     "how": "every spoken word has a decided picture with its point, source and at most 12 words on screen",
+     "test": "python3 scripts/post-pack/creative_direction.py self-test"
+    }
+   ]
+  },
+  {
+   "id": "production-asked-to-publish",
+   "on": "2026-10-24",
+   "krish": "Codex prepares the board and never publishes directly (failure report, 24 Oct)",
+   "what": "The production session asked Krish for a Substack sign-in code to publish. Only Claude Code's hook stops a publish; Codex runs no hooks.",
+   "status": "open",
+   "guards": []
+  },
+  {
+   "id": "chopped-words-published",
+   "on": "2026-10-24",
+   "krish": "random small cuts and chopped words in the published horizontal video (failure report, 24 Oct)",
+   "what": "The published Wednesday long video has audible chopped words. Receipts and six sync windows passed. No check yet decodes the audio around every edit boundary of the final file.",
+   "status": "open",
+   "guards": []
+  },
+  {
+   "id": "merged-before-ci-finished",
+   "on": "2026-10-24",
+   "krish": "Make checks an actual merge condition (failure report, 24 Oct)",
+   "what": "PR #151 merged at 06:50:00 on 24 Oct while both verify jobs were still running: main has no required status checks. Turning them on is a permission change for Krish.",
+   "status": "open",
+   "guards": []
   }
  ]
 }

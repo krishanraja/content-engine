@@ -3,6 +3,7 @@ import { supabase } from '../_supabase.js'
 import { guardEngine, operatorBearerAllowed } from '../_auth.js'
 import { isMonday, keepThroughWeek, parseOptions, type WeekOptionMeta } from '../_weekOptions.js'
 import { buildSources, windows } from '../_weekSources.js'
+import { buildInspiration } from '../_inspirationSources.js'
 
 // GET  /api/week/options?week_start=YYYY-MM-DD
 //        what the Sunday session needs to plan the week: each publishing
@@ -19,8 +20,11 @@ import { buildSources, windows } from '../_weekSources.js'
 //        adds `sources`: Sunday's idea pool from every source (his, his inspo
 //        folder, the engine's research), each idea ranked his first, then near
 //        something he liked, then its ladder score, with the evidence of his
-//        taste beside it (_weekSources.ts). Evidence only: no model, no write,
-//        and the judges never read it.
+//        taste beside it (_weekSources.ts), and `sources.inspiration`: what his
+//        Inspiration House holds (cards he routed, answered or has not seen,
+//        content-watcher readings, creator moves, taste claims) with the ids the
+//        Ideas tab must cover (_inspirationSources.ts). Evidence only: no model,
+//        no write, and the judges never read it.
 // POST /api/week/options  { week_start, series, options: [{ id, rank, pitch, why_now, recommended }] }
 //        writes meta.week_option on each option's row (and its series, when
 //        the row has none), keeps each option alive through its week (a seed's
@@ -150,5 +154,29 @@ async function readSources(week: string, slugs: string[]) {
   const failed = rows.error || marked.error || picked.error || chosen.error || relayed.error
   if (failed) throw new Error(failed.message)
   const tasteRows = [...(marked.data || []), ...(picked.data || []), ...(chosen.data || [])] as Array<Record<string, any>>
-  return buildSources({ weekStart: week, series: slugs, rows: (rows.data || []) as Array<Record<string, any>>, tasteRows, relayed: (relayed.data || []) as Array<Record<string, any>> })
+  const sources = buildSources({ weekStart: week, series: slugs, rows: (rows.data || []) as Array<Record<string, any>>, tasteRows, relayed: (relayed.data || []) as Array<Record<string, any>> })
+  return { ...sources, inspiration: await readInspiration(week) }
+}
+
+const INSPO_COLS = 'id,name,folder,lane,kind,facets,route,routes,why_like,why_like_source,would_do,note_for_claude,answered_at,answered_by,dismissed_at,created_at,piece_id,auto_tags,confirmed_tags,transcript'
+
+/** Inspiration House and content-watcher (_inspirationSources.ts). A table that cannot be read fails the gather
+ *  loudly: Sunday must never look complete while his routed cards are missing (Krish, 2026-10-24). */
+async function readInspiration(week: string) {
+  const [items, routed, reads, moves, claims] = await Promise.all([
+    supabase.from('inspiration_items').select(INSPO_COLS).order('created_at', { ascending: false }).limit(500),
+    // Every card he routed to Make a piece, however old: the newest 500 above could leave one out of must_cover.
+    supabase.from('inspiration_items').select(INSPO_COLS).or('route.eq.make_piece,routes.cs.{make_piece}').is('piece_id', null).limit(1000),
+    supabase.from('content_reads').select('id,sha256,source_url,platform,shape,read_md,created_at').order('created_at', { ascending: false }).limit(60),
+    supabase.from('creator_moves').select('id,creator_slug,post_url,why_it_works,krish_angle,content_idea_id,created_at').order('created_at', { ascending: false }).limit(20),
+    supabase.from('taste_claims').select('id,layer,kind,status,statement,krish,support_n').in('status', ['candidate', 'proposed'])
+      .order('updated_at', { ascending: false }).limit(100),
+  ])
+  const failed = items.error || routed.error || reads.error || moves.error || claims.error
+  if (failed) throw new Error(`inspiration: ${failed.message}`)
+  const seen = new Set((items.data || []).map((r: Record<string, any>) => r.id))
+  const all = [...(items.data || []), ...(routed.data || []).filter((r: Record<string, any>) => !seen.has(r.id))]
+  return buildInspiration({ weekStart: week, items: all as Array<Record<string, any>>,
+    reads: (reads.data || []) as Array<Record<string, any>>, moves: (moves.data || []) as Array<Record<string, any>>,
+    claims: (claims.data || []) as Array<Record<string, any>> })
 }

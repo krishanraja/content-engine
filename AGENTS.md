@@ -4,6 +4,22 @@
 
 
 <!-- north-star:start -->
+## Start route: every client, Claude Code and Codex alike
+
+Codex reads no hooks and no `CLAUDE.md`, so the route is here (`docs/plans/2026-10-21-wednesday/FAILURE_REPORT_2026-10-24.md`):
+
+1. `python3 scripts/check_failures.py`, then `WORKBENCH.md` and `NOW.md`.
+2. Pick the one skill for the job and read it whole before acting: `.agents/skills/plan-week/SKILL.md` (Sunday ideas
+   and the week's board), `.agents/skills/make-piece/SKILL.md` (a picked piece: story, scripts, creative direction,
+   article), `.agents/skills/produce-video/SKILL.md` (cutting recorded takes).
+3. Claude owns the words and the visuals: the story, the scripts, the article copy, every article figure and the
+   creative direction (`docs/CREATIVE_DIRECTION.md`). Production renders only from a direction Krish signed;
+   `kit.py` and `make.py` refuse anything else from 26 Oct 2026.
+4. Feed the board through `week_board.py`'s inputs only; never a per-day feeder script (`npm run check:board-layout`).
+5. Never publish, sign in to a publishing platform, or ask Krish for a login code. He publishes.
+6. Never call anything ready from receipts: a separate reviewer watches and listens to the finished asset, and fact,
+   transport and editorial status are reported separately.
+
 ## North Star: read it first, every session
 
 This repository's North Star is [`docs/NORTH_STAR.md`](docs/NORTH_STAR.md): an ambition Krish set that is not reached yet.

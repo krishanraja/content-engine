@@ -867,6 +867,91 @@ MIN_IDEAS = 4  # Krish, 2026-10-18: "at least three content ideas for each day",
 SOURCE_KINDS = {'his': 'Your idea', 'inspo': 'From your inspo folder', 'engine': 'Engine research'}
 
 
+STYLES_PATH = HERE.parents[1] / 'config' / 'style-references.json'
+
+
+def style_formats(path=None):
+    """{'script': {id: format}, 'production': {id: format}, 'divergence': {...}} from the style bank's formats
+    (config/style-references.json). Krish, 2026-10-24: "suggest script and production styles that I can choose from
+    or that it recommends for specific content"."""
+    data = json.loads(Path(path or STYLES_PATH).read_text(encoding='utf-8'))
+    f = data.get('formats') or {}
+    return {'script': {x['id']: x for x in f.get('script') or []}, 'production': {x['id']: x for x in f.get('production') or []},
+            'divergence': f.get('divergence') or {}}
+
+
+def style_problems(data, formats=None):
+    """What is wrong with the ideas' styles, [] when none. Every idea in a fixed week carries
+    style {script, production, experiment: {format, why}}, each a format id from the bank; none he marked not for us;
+    and the week diverges (Krish, 2026-10-24: "we still need to be producing better and more divergent work")."""
+    formats = formats or style_formats()
+    rules = formats['divergence']
+    out, week_production = [], []
+    for key, _, weekday, *_ in DAYS:
+        ideas = ((data or {}).get('days') or {}).get(key) or []
+        scripts, experiments = set(), 0
+        for n, idea in enumerate(ideas, 1):
+            st = idea.get('style') if isinstance(idea, dict) else None
+            if not isinstance(st, dict):
+                out.append(f'{weekday} idea {n}: no style; give style.script, style.production and style.experiment from config/style-references.json formats')
+                continue
+            for kind in ('script', 'production'):
+                fid = st.get(kind)
+                fmt = formats[kind].get(fid)
+                if not fmt:
+                    out.append(f'{weekday} idea {n}: style.{kind} {fid!r} is not a {kind} format in the bank')
+                elif fmt.get('krish_verdict') == 'not for us':
+                    out.append(f'{weekday} idea {n}: style.{kind} {fid!r} is marked not for us; never offer it again')
+            scripts.add(st.get('script'))
+            week_production.append(st.get('production'))
+            ex = st.get('experiment')
+            if not isinstance(ex, dict) or not str(ex.get('why') or '').strip():
+                out.append(f'{weekday} idea {n}: style.experiment needs a format and a why: the bolder version the engine would try')
+                continue
+            fmt = formats['script'].get(ex.get('format')) or formats['production'].get(ex.get('format'))
+            if not fmt:
+                out.append(f'{weekday} idea {n}: style.experiment {ex.get("format")!r} is not a format in the bank')
+            elif fmt.get('krish_verdict') == 'not for us':
+                out.append(f'{weekday} idea {n}: style.experiment {ex.get("format")!r} is marked not for us')
+            elif fmt.get('status') in ('experimental', 'trial') and ex.get('format') not in (st.get('script'), st.get('production')):
+                experiments += 1
+        if ideas and len(scripts - {None}) < rules.get('min_script_formats_per_day', 2):
+            out.append(f'{weekday}: {len(scripts - {None})} script format(s) across its ideas; give at least {rules.get("min_script_formats_per_day", 2)}')
+        if ideas and experiments < rules.get('experiments_per_day', 1):
+            out.append(f'{weekday}: no idea offers an untried format as its experiment; push at least {rules.get("experiments_per_day", 1)}')
+    used = [p for p in week_production if p]
+    if used:
+        if len(set(used)) < rules.get('min_production_formats_per_week', 3):
+            out.append(f'the week: {len(set(used))} production format(s); recommend at least {rules.get("min_production_formats_per_week", 3)}')
+        top = max(used.count(p) for p in set(used)) / len(used)
+        if top > rules.get('max_share_of_one_production_format', 0.5):
+            out.append(f'the week: one production format is {round(top * 100)}% of the recommendations; at most {round(rules.get("max_share_of_one_production_format", 0.5) * 100)}%')
+    return out
+
+
+def coverage_problems(data, sources):
+    """Every id the gather says the board owes him (sources.json must_cover: Inspiration cards he routed to Make a
+    piece, board items holding his words) is in some idea's `covers`, or in ideas.json `accounted` with a reason.
+    Krish, 2026-10-24: "Double check my inspirationhouse gets read properly when ideas are being built"."""
+    owed = [m for m in (sources or {}).get('must_cover') or [] if isinstance(m, dict) and m.get('id')]
+    covered = {str(c) for ideas in ((data or {}).get('days') or {}).values() for i in ideas or [] if isinstance(i, dict)
+               for c in (i.get('covers') or [])}
+    accounted = (data or {}).get('accounted') or {}
+    out = []
+    if not isinstance(accounted, dict):
+        out.append('accounted is an object, {"<must_cover id>": "why it is not on the board"}')
+        accounted = {}
+    for m in owed:
+        mid = str(m['id'])
+        if mid in covered:
+            continue
+        why = accounted.get(mid)
+        if isinstance(why, str) and len(why.strip()) >= 12:
+            continue
+        out.append(f'not on the board: {m.get("what") or mid} ({mid}); put it in an idea\'s covers, or say why in accounted')
+    return out
+
+
 def read_ideas(data, monday, where='--ideas'):
     """{day: [idea]} from an ideas file (docs/plans/<week>/ideas.json). Every
     idea is checked before it reaches him: what a business person finds out
@@ -910,6 +995,9 @@ def read_ideas(data, monday, where='--ideas'):
             if beats is not None and (not isinstance(beats, list) or not 3 <= len(beats) <= 5
                                       or not all(isinstance(b, str) and b.strip() for b in beats)):
                 problems.append(f'{weekday} idea {n}: beats are 3 to 5 lines of the narrative sketch')
+            covers = idea.get('covers')
+            if covers is not None and (not isinstance(covers, list) or not all(isinstance(c, str) and c.strip() for c in covers)):
+                problems.append(f'{weekday} idea {n}: covers is a list of the must_cover ids (sources.json) this idea answers')
             pick = f'{key}-{n}'
             if pick in seen:
                 problems.append(f'{weekday}: {pick} twice')
@@ -960,6 +1048,24 @@ def triage_row(pid):
             f'<p class="tri-state" data-tristate="{pid}" aria-live="polite"></p>')
 
 
+def style_line(style):
+    """The suggested styles on an idea card: the recommended script and production format, and the bolder try."""
+    if not isinstance(style, dict):
+        return ''
+    try:
+        formats = style_formats()
+    except (OSError, ValueError):
+        return ''
+    name = lambda kind, fid: (formats[kind].get(fid) or {}).get('name') or fid
+    ex = style.get('experiment') if isinstance(style.get('experiment'), dict) else {}
+    ex_name = (formats['script'].get(ex.get('format')) or formats['production'].get(ex.get('format')) or {}).get('name') or ex.get('format')
+    out = (f'<dt>Suggested style</dt><dd data-style-script="{E(style.get("script") or "")}" data-style-production="{E(style.get("production") or "")}">'
+           f'{E(name("script", style.get("script")))} · {E(name("production", style.get("production")))}</dd>')
+    if ex_name:
+        out += f'<dt>Or try something new</dt><dd data-style-experiment="{E(ex.get("format") or "")}">{E(ex_name)}: {E(ex.get("why") or "")}</dd>'
+    return out
+
+
 def ideas_panel(monday, ideas, hidden, queue=None):
     """The Ideas tab, first: each day's ideas with a pick box. Krish,
     2026-10-18: "refresh This Week's Publish Board by adding a 4th tab at the
@@ -1001,7 +1107,8 @@ def ideas_panel(monday, ideas, hidden, queue=None):
                 f'<dl class="id-facts"><dt>Why now</dt><dd>{E(idea["why_now"])}</dd>'
                 f'<dt>Strongest checked fact</dt><dd>{E(idea["fact"])}</dd>'
                 f'<dt>Source</dt><dd><a href="{E(src["url"])}" target="_blank" rel="noopener">{E(src.get("label") or src["url"])}</a></dd>'
-                + (f'<dt>Where it came from</dt><dd>{E(idea["from"])}</dd>' if idea.get('from') else '') +
+                + (f'<dt>Where it came from</dt><dd>{E(idea["from"])}</dd>' if idea.get('from') else '')
+                + style_line(idea.get('style')) +
                 '</dl>' + triage_row(pid) + '</article>')
         parts.append('</section>')
     parts.append('</div>')
@@ -1220,8 +1327,13 @@ def slot_empty(text):
 
 
 def due(when, rule):
-    """When a step is due, from config/board-layout.json's rhythm: "Sun 25 Oct, night"."""
-    d = when - timedelta(days=int(rule['days_before']))
+    """When a step is due, from config/board-layout.json's rhythm: "Sun 25 Oct, midday". A rule is either days_before
+    the publishing day, or on "sunday_before": the Sunday that starts the publishing week, his recording day
+    (Krish, 2026-10-24: "Yes, Sunday is my recording day")."""
+    if rule.get('on') == 'sunday_before':
+        d = when - timedelta(days=when.weekday() + 1)
+    else:
+        d = when - timedelta(days=int(rule['days_before']))
     return f'{short_date(d)}, {rule["when"]}'
 
 
@@ -2410,7 +2522,7 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
                   for q in (queue or [])],
         'ideas': {k: [{'pick': i['pick'], 'idea_id': i.get('id'), 'his': bool(i.get('his') or i.get('source_kind') == 'his'), 'so_what': i['so_what'], 'story': i['story'],
                        'why_now': i['why_now'], 'fact': i['fact'], 'source': i['source'], 'source_kind': i.get('source_kind'),
-                       'why_here': i.get('why_here'), 'beats': i.get('beats') or []} for i in v]
+                       'why_here': i.get('why_here'), 'beats': i.get('beats') or [], 'style': i.get('style'), 'covers': i.get('covers') or []} for i in v]
                   for k, v in (ideas or {}).items()},
         'review': {k: [{'item': slug, 'label': label, 'words': len(t.split()),
                         'sha256': hashlib.sha256(t.encode('utf-8')).hexdigest(),
@@ -2778,7 +2890,19 @@ def build(args, get=None):
     for key in sorted(set(calls) - draft - set(retained_drafts)):
         raise BoardError(f'--waiting {key}: only a day in draft shows what waits on Krish; give --draft {key}')
     kept_at = previous_review_times(Path(args.previous).read_text(encoding='utf-8-sig'), review) if args.previous else {}
-    ideas = read_ideas(read_json(args.ideas, '--ideas'), monday) if getattr(args, 'ideas', None) else None
+    ideas = None
+    if getattr(args, 'ideas', None):
+        raw = read_json(args.ideas, '--ideas')
+        ideas = read_ideas(raw, monday)
+        if fixed_layout(monday):
+            # Krish, 2026-10-24: his Inspiration House read properly, and styles he can choose from that push. The
+            # gather's sources.json sits beside ideas.json; a fixed week without it was never gathered.
+            src = Path(args.ideas).resolve().parent / 'sources.json'
+            if not src.exists():
+                raise BoardError(f'--ideas: no sources.json beside {args.ideas}; run board_feed.py gather {monday.isoformat()} first')
+            owed = coverage_problems(raw, read_json(str(src), 'sources.json')) + style_problems(raw)
+            if owed:
+                raise BoardError('--ideas is not ready to show (board_feed.py cover):\n  ' + '\n  '.join(owed))
     queue = None
     if getattr(args, 'queue', None):
         saved = read_json(args.queue, '--queue')
@@ -3150,6 +3274,7 @@ def _self_test():
     _ideas_checks(check)
     _fixed_checks(check, mon)
     _sources_checks(check)
+    _style_cover_checks(check)
     delivery = {'piece_id': MON_ID, 'status': 'review', 'note': 'Fact review is still open.', 'sections': [
         {'id': 'spotify', 'title': 'Spotify', 'files': [{'label': 'Video', 'url': 'https://example.com/video.mp4'}],
          'copy': [{'label': 'Description', 'text': 'Quoted "words" & <safe text>'}]}]}
@@ -3550,6 +3675,46 @@ def _editor_checks(check, week):
         refused = True
     check('a sweep for a week in the old layout is refused', refused)
     use_layout(week)
+
+
+def _style_cover_checks(check):
+    """Krish, 2026-10-24: styles he can choose from that push and diverge, and his Inspiration House read properly."""
+    formats = style_formats()
+    check('styles: the bank has script and production formats with evidence',
+          len(formats['script']) >= 6 and len(formats['production']) >= 5
+          and all(f.get('evidence') and f.get('pitch') for k in ('script', 'production') for f in formats[k].values()))
+    bank = {m['id'] for m in json.loads(STYLES_PATH.read_text(encoding='utf-8'))['bank']}
+    check('styles: every format is made of modules that are in the bank',
+          all(set(f.get('modules') or []) <= bank for k in ('script', 'production') for f in formats[k].values()))
+    sc, pr = list(formats['script']), list(formats['production'])
+    exp = next(i for i, f in formats['script'].items() if f.get('status') == 'experimental')
+    st = lambda n: {'script': sc[n % 2], 'production': pr[n % 3], 'experiment': {'format': exp, 'why': 'the bolder version'}}
+    good = {'days': {k: [{'style': st(n)} for n in range(4)] for k, *_ in DAYS}}
+    check('styles: a varied week with an experiment a day passes', style_problems(good, formats) == [])
+    same = {'days': {k: [{'style': {'script': sc[0], 'production': pr[0], 'experiment': {'format': exp, 'why': 'x'}}} for _ in range(4)] for k, *_ in DAYS}}
+    probs = style_problems(same, formats)
+    check('styles: one script format all day is refused', any('script format(s) across' in p for p in probs))
+    check('styles: one production format all week is refused', any('production format(s)' in p for p in probs) and any('% of the recommendations' in p for p in probs))
+    bare = {'days': {'mon': [{}]}}
+    check('styles: an idea with no style is refused', any('no style' in p for p in style_problems(bare, formats)))
+    made_up = {'days': {'mon': [{'style': dict(st(0), script='tiktok-dance')}]}}
+    check('styles: a format not in the bank is refused', any("'tiktok-dance' is not a script format" in p for p in style_problems(made_up, formats)))
+    tame = {'days': {k: [{'style': dict(st(n), experiment={'format': sc[0] if formats['script'][sc[0]].get('status') == 'proven' else 'head-to-head', 'why': 'x'})} for n in range(4)] for k, *_ in DAYS}}
+    check('styles: a day whose experiments are all proven formats is refused', any('untried format' in p for p in style_problems(tame, formats)))
+    nope = json.loads(json.dumps(formats))
+    nope['production'][pr[0]]['krish_verdict'] = 'not for us'
+    check('styles: a format he marked not for us is never offered', any('not for us' in p for p in style_problems(good, nope)))
+    sources = {'must_cover': [{'id': 'card-1', 'what': 'Inspiration card "x" you routed to Make a piece'}, {'id': 'said-1', 'what': 'Your words'}]}
+    check('cover: a routed card left off the board is refused, by name',
+          any('Inspiration card "x"' in p for p in coverage_problems({'days': {'mon': [{'covers': ['said-1']}]}}, sources)))
+    check('cover: covered by an idea or accounted for with a reason passes',
+          coverage_problems({'days': {'mon': [{'covers': ['said-1']}]}, 'accounted': {'card-1': 'merged into Monday idea 2, same Duet launch'}}, sources) == [])
+    check('cover: accounted given as a list is said, never a crash',
+          any('accounted is an object' in p for p in coverage_problems({'days': {}, 'accounted': ['card-1']}, sources)))
+    check('cover: a one-word excuse is not an account', coverage_problems({'days': {}, 'accounted': {'card-1': 'no', 'said-1': 'skip'}}, sources) != [])
+    line = style_line(st(0))
+    check('styles: the card shows the suggested style and the bolder try',
+          '<dt>Suggested style</dt>' in line and '<dt>Or try something new</dt>' in line and formats['script'][sc[0]]['name'] in line)
 
 
 def _sources_checks(check):

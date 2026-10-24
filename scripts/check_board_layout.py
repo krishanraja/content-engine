@@ -46,6 +46,27 @@ STAMPERS = {'scripts/post-pack/week_board.py', 'scripts/post-pack/board_web.py',
 # Written before the fixed layout, each patching a built board by hand; kept as history, never a pattern.
 FROZEN = {'docs/plans/2026-10-19-monday/build_release_board.py', 'docs/plans/2026-10-19-week/update_wednesday.py',
           'docs/plans/2026-10-19-board-delivery/build_boards.py', 'docs/plans/2026-10-19-week/update_wednesday_21oct.py'}
+# One-off feeders: a script per day that drives week_board.py with its own mix of inputs. Each one made its day's tab look
+# different from the last (Krish, 2026-10-24: "The publish board changes format every single time I look at it"), so
+# these are history and no new one may be written: a session feeds the board through week_board.py's own inputs
+# (docs/PUBLISH_BOARDS.md, "The fixed layout").
+FEEDERS = {
+    'docs/plans/2026-10-19-board-delivery/build_boards.py',
+    'docs/plans/2026-10-19-board-delivery/verify_live.py',
+    'docs/plans/2026-10-19-monday/build_release_board.py',
+    'docs/plans/2026-10-19-monday/verify_release.py',
+    'docs/plans/2026-10-19-week/update_friday_23oct.py',
+    'docs/plans/2026-10-19-week/update_wednesday.py',
+    'docs/plans/2026-10-19-week/update_wednesday_21oct.py',
+    'docs/plans/2026-10-21-wednesday/feed_board.py',
+    'docs/plans/2026-10-21-wednesday/prepare_fact_adjudication.py',
+    'docs/plans/2026-10-21-wednesday/prepare_publish.py',
+    'docs/plans/2026-10-21-wednesday/readback.py',
+    'docs/plans/2026-10-21-wednesday/readback_revision.py',
+    'docs/plans/2026-10-21-wednesday/record_fact_adjudication.py',
+    'docs/plans/2026-10-21-wednesday/record_playback_acceptance.py',
+    'docs/plans/2026-10-21-wednesday/submit_article_revision.py',
+}
 TITLE = 'Warner sued Suno. Now it takes a cut.'
 
 
@@ -353,6 +374,15 @@ def lock_problems(want, weeks_seen, files):
     return out
 
 
+def _feeder_case():
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        (root / 'docs' / 'plans' / '2026-10-28-wednesday').mkdir(parents=True)
+        (root / 'docs' / 'plans' / '2026-10-28-wednesday' / 'feed.py').write_text('import week_board\n')
+        (root / 'docs' / 'plans' / '2026-10-28-wednesday' / 'notes.py').write_text('print(1)\n')
+        return feeder_scripts(root) == ['docs/plans/2026-10-28-wednesday/feed.py']
+
+
 def self_test():
     """The lock itself: a changed layout file, colour file or structure fails, and only his recorded words pass it."""
     words = 'Krish, 2026-10-21: change the queue so I can combine ideas'
@@ -367,6 +397,7 @@ def self_test():
         'a snapshot with no approved words fails': any('records no words' in p for p in lock_problems(dict(good, approved=None), seen, files)),
         'an update without his words is refused': approved_problem(None) is not None and approved_problem('looks fine') is not None,
         'an update with a date and his words is accepted': approved_problem(words) is None,
+        'a new per-day feeder is refused, the frozen ones are history': _feeder_case(),
     }
     # Windows checks the layout file out with CRLF line ends; it is the same file and must hash the same.
     with tempfile.TemporaryDirectory() as tmp:
@@ -377,6 +408,22 @@ def self_test():
         checks['a CRLF copy of the layout file hashes the same as the LF copy'] = file_hash(crlf) == file_hash(ROOT / LOCKED[0])
         checks['a real change to the layout file still changes its hash'] = file_hash(changed) != file_hash(ROOT / LOCKED[0])
     return [f'self-test: {name}' for name, ok in checks.items() if not ok]
+
+
+def feeder_scripts(root=ROOT):
+    """Scripts outside the board's builders that import or run week_board, other than the frozen history."""
+    bad = []
+    for path in root.glob('docs/**/*.py'):
+        rel = path.relative_to(root).as_posix()
+        if rel in FEEDERS or rel in FROZEN:
+            continue
+        try:
+            text = path.read_text(encoding='utf-8')
+        except (OSError, UnicodeDecodeError):
+            continue
+        if re.search(r'\bweek_board\b|\bboard_web\b', text):
+            bad.append(rel)
+    return bad
 
 
 def main(argv=None):
@@ -407,6 +454,8 @@ def main(argv=None):
             problems += browser(pages, tmp)
     problems += [f'{rel}: stamps a board outside the board\'s builders (engine_stamp); feed week_board.py instead of patching its page'
                  for rel in stamp_callers()]
+    problems += [f'{rel}: a one-off board feeder; feed the board through week_board.py\'s own inputs (docs/PUBLISH_BOARDS.md), '
+                 'never a script per day' for rel in feeder_scripts()]
     if problems:
         print('check:board-layout FAILED:\n  ' + '\n  '.join(problems))
         return 1
