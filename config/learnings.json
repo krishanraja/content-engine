@@ -1449,6 +1449,31 @@
      "how": "where a new thing goes"
     }
    ]
+  },
+  {
+   "id": "speedup-without-glitches",
+   "on": "2026-10-24",
+   "krish": "Happy to speed it up, but last time Codex glitched a bunch of words on the speedup and also misaligned the captions.",
+   "why": "A sped cut built from words timed before the speed-up, or from many separately encoded parts, clips words and drifts captions and lips; the checks that passed did not listen.",
+   "means": "A cut is sped once, as one continuous file, through the config's speed; cut points and captions come only from a fresh transcript of the sped file; the finished file's transcript must hold every script word in order, every join heard, lip sync within 40 ms at three points, before Krish sees it.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": ".agents/skills/produce-video/SKILL.md",
+     "contains": "A sped cut is sped once",
+     "how": "The produce-video skill's speed step."
+    },
+    {
+     "file": "docs/plans/2026-10-23-friday/locked/CODEX.md",
+     "contains": "## Speed without glitches",
+     "how": "Friday's Codex brief, the seven steps for the two sped vertical cuts."
+    },
+    {
+     "file": "scripts/quick-edit/quality.py",
+     "contains": "def transcript_identity(source, speed, model)",
+     "how": "Refuses a words file with the wrong source, speed or transcriber."
+    }
+   ]
   }
  ]
 }

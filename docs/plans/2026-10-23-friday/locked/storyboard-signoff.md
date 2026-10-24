@@ -85,3 +85,12 @@ model that it runs a public service on. About 25%.
 Reply in one line, for example: "signed off, keep, all A" (storyboard, the 90-second trim, then titles, outline and
 prediction), or say what to change. Once you answer, I finish the article and the board copy without coming back to
 you, and Codex starts the videos.
+
+## Changed after sign-off: the two vertical cuts' length (24 October)
+
+The 90-second on-camera cut ran 103 s, and the whole vertical file (with the 3.5 s intro and 6 s outro) must run under
+89 s or Instagram cuts it off. Asked how, Krish answered "Cut the recap (Recommended)" (the recap and three small
+repeats; the call stays whole, including the line he kept), then "Speed both to 1.12x (Recommended)" for both vertical
+cuts, and warned: "last time Codex glitched a bunch of words on the speedup and also misaligned the captions". The cuts
+are in `script-cam-90s.md`; how to speed without glitches is in `CODEX.md`. The storyboard frames are unchanged; the
+recap's frames (S13b) are dropped.

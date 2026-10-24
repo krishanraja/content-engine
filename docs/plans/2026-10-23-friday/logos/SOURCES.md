@@ -1,0 +1,1 @@
+Official logo assets: anthropic-symbol-cream.svg and openai-symbol-cream.svg reused unmodified from the 19 October plan (see its SOURCES.md). deepseek-symbol.svg: the whale symbol path, unmodified, from DeepSeek official logo via Brandfetch (deepseek.com, theme dark, svg), fetched 24 October 2026; the wordmark text path is left out and the viewBox fitted to the symbol.
