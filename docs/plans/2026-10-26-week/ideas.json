@@ -1,0 +1,257 @@
+{
+  "_about": "The Ideas tab of This Week's Publish Board (wC 26 Oct): the ideas Krish picks from, one per day. Every fact was checked on 25 Oct 2026 against the source linked beside it; a company's own claim is labelled as one. No titles here: titles, headlines and thumbnail words are Krish's, after he records (TITLES_AFTER_RECORDING). Built into the board by scripts/post-pack/week_board.py --ideas.",
+  "week_start": "2026-10-26",
+  "checked_on": "2026-10-25",
+  "days": {
+    "mon": [
+      {
+        "id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+        "source_kind": "inspo",
+        "from": "Your Instagram inspo (@therundownai saved it), queued by you on 19 Oct",
+        "why_here": "You queued this on 19 Oct with your angle: \"Why is Disney going after it, and why is Google going after it? They're two totally different companies. Unpack both.\"",
+        "so_what": "When an AI company fails, the money follows its people and its code, and its customers are left out: before you build on a small AI supplier, find out what happens to your data and your service if it is sold for parts.",
+        "story": "Disney will pay Character.AI's staff about $60 million a year and bids $20 million for its technology; Google paid $2.7 billion in 2024 for its founders and a licence. Two giants with two different reasons, and the app's millions of users get nothing from either deal.",
+        "why_now": "Character.AI filed for bankruptcy on 12 October 2026; court filings reported on 19 October show Disney offering jobs to most of its staff.",
+        "fact": "Court filings show Disney offering jobs to 66 Character.AI employees at $60 million a year for three years ($180 million in all), alongside a $20 million bid for part of the company's assets.",
+        "source": {"label": "Gizmodo, 19 Oct 2026, citing the court filings and Bloomberg", "url": "https://gizmodo.com/disney-wants-to-hire-most-of-the-employees-from-bankrupt-character-ai-2000827460"},
+        "beats": [
+          "The simple version: a much-loved AI app goes bust, and two giants pay for different pieces of it.",
+          "Google, 2024: $2.7 billion to license the models and bring the founders back. It wanted the brains.",
+          "Disney, 2026: about $60 million a year for the staff and $20 million for the code. Our read: it wants a team that already makes characters talk, for its own characters.",
+          "The users and their chats are in neither deal. The money followed the people and the code.",
+          "Verdict: in AI the value walks out of the door with the team; check what your contract says happens to your data if your supplier fails."
+        ],
+        "style": {"script": "follow-the-receipt", "production": "face-with-proof", "experiment": {"format": "receipt-animation", "why": "Print the two receipts side by side, Google's for the people in 2024 and Disney's for the staff and the code in 2026, so the viewer sees where the money went."}}
+      },
+      {
+        "id": "3e5f0e5a-0bf6-4bd9-b6b5-a207f33dc364",
+        "source_kind": "inspo",
+        "from": "Your Instagram inspo (saved), queued by you on 19 Oct",
+        "why_here": "You queued this on 19 Oct with your angle: \"I think the idea of aggressive vertical integration is a great one, but it just needs to be really simplified and unpacked.\"",
+        "so_what": "Microsoft is moving its own AI off Nvidia's chips and onto its own: at your next Microsoft renewal, ask whether that saving reaches your Copilot price or stays with Microsoft.",
+        "story": "The biggest buyer of AI chips is building its own. Microsoft says its Maia chips will become its main source of AI capacity, which is the plain story of a customer turning into its own supplier, and what that does to Nvidia, to Microsoft's margin and to the price you pay.",
+        "why_now": "Microsoft unveiled Maia 300 on 12 October 2026 and plans to start deploying it in production next year.",
+        "fact": "Microsoft estimates Maia 300 processes 40% more tokens per megawatt than \"leading GPU-based systems\" (its own estimate) and says the Maia series will become its primary source of inference capacity over time.",
+        "source": {"label": "SiliconANGLE, 12 Oct 2026", "url": "https://siliconangle.com/2026/10/12/microsoft-debuts-multichiplet-maia-300-inference-accelerator/"},
+        "beats": [
+          "The simple version: your biggest customer starts making the thing you sell them.",
+          "Why Microsoft does it: every chip it makes itself is a margin it stops paying Nvidia.",
+          "Why it is hard: the last Maia chip was delayed and ended up in few data centres, so this one is a promise for next year.",
+          "Who gains first: Microsoft. Whether your Copilot bill falls is the open question.",
+          "Verdict and a dated call on Copilot's price once Maia carries the load."
+        ],
+        "style": {"script": "fry-explainer", "production": "kinetic-movement", "experiment": {"format": "voice-led-pictures", "why": "Your study-style card (the Anthropic and GitHub explainer): the pictures carry the information under a strong voiceover, which suits a supply-chain story with no face to film."}}
+      },
+      {
+        "id": "829df1ea-8fca-4661-bd90-39cf3566e7d4",
+        "source_kind": "engine",
+        "from": "14 Oct ideas research (radar), queued by you on 19 Oct",
+        "why_here": "You marked this curious on 19 Oct: \"I am passionate about the message which is if you are not paying, you are the product. But I think this needs a bit more substance as to how this intersects with content IP in terms of a monetization play.\" This version draws that money map.",
+        "so_what": "Free ChatGPT now pays for its pictures with adverts: if your team makes images on free accounts they are the audience being sold, and $20 a month takes them out of it.",
+        "story": "OpenAI is testing adverts while ChatGPT draws your picture, for free users in the US. Who pays, who gets paid and who is left out: the advertiser, OpenAI, the user, and the artists whose pictures it learned from.",
+        "why_now": "OpenAI announced the visual ad format on 5 October 2026; its test during image generation starts in the US in October.",
+        "fact": "Free users can opt out of the ads, but that also switches off image generation; making pictures without ads starts at $20 a month on Plus.",
+        "source": {"label": "The Register, 5 Oct 2026, reporting OpenAI's announcement", "url": "https://www.theregister.com/ai-and-ml/2026/10/05/openai-to-flood-your-eyeballs-with-visual-ads/5301152"},
+        "beats": [
+          "Hook: you ask for a picture, and an advert loads while it draws.",
+          "The money map: the advertiser pays OpenAI; you pay with your attention, or with $20 a month.",
+          "The missing line: big owners like Disney signed licence deals with OpenAI; the ad money has no announced share for anyone whose pictures it learned from (to check at the fact gate).",
+          "If you are not paying, you are the product, and now you can see it happen.",
+          "A dated call on whether visual ads reach the paid business plans."
+        ],
+        "style": {"script": "random-headline", "production": "voice-led-pictures", "experiment": {"format": "data-story", "why": "One number per frame, $0 for the user, $20 to skip the ad, the advertiser's spend, the artist's share, so the money map draws itself."}}
+      },
+      {
+        "id": "987a0655-b9fd-4dc6-bf1c-c694ad59a4c6",
+        "source_kind": "engine",
+        "from": "Engine's Sunday research",
+        "so_what": "The average price of a Meta ad rose 14% in a year while Meta lifted its AI building budget to at least $135 billion: if you buy ads on Facebook or Instagram, part of your budget pays for Meta's AI, so check your cost per result before you set next year's plan.",
+        "story": "Meta's AI build is being paid for twice: by advertisers through higher prices, and by a new class of shares with no vote, so outside money funds the spending while Mark Zuckerberg keeps control.",
+        "why_now": "Meta reported its third quarter and announced the new non-voting Class C shares on 21 October 2026.",
+        "fact": "Meta's results for the quarter to 30 September 2026: ad impressions up 10% and average price per ad up 14% year on year; free cash flow was negative $2.12 billion; 2026 capital spending is expected at $135 to $145 billion.",
+        "source": {"label": "Meta's Q3 2026 earnings release, filed with the SEC", "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066700/meta-09302026xexhibit991.htm"},
+        "beats": [
+          "Hook: your Meta ads cost 14% more than a year ago.",
+          "Where the money goes: a building budget of at least $135 billion this year, and a quarter where Meta spent more cash than it brought in.",
+          "The second payer: new shares with no vote, so investors fund the build and Zuckerberg keeps control.",
+          "Is the money still here in 18 months? It depends on advertisers paying more for AI-picked audiences.",
+          "Verdict, and a dated call on Meta's ad prices next year."
+        ],
+        "style": {"script": "follow-the-receipt", "production": "data-story", "experiment": {"format": "dated-prediction", "why": "Build the piece toward one checkable number, Meta's average price per ad a year from now, and open on it."}}
+      },
+      {
+        "id": null,
+        "source_kind": "engine",
+        "from": "Engine's Sunday research (wildcard)",
+        "so_what": "One of the people building AI agents spent about $10 million on them in a month and says not all of it was useful: set your own agent budget from a small test of your own, because the demos you are shown run on budgets you will never have.",
+        "story": "OpenClaw's creator, now at OpenAI, says he burned through about $10 million of AI in a month, on investors' money. Who is paying for the agent boom, and what happens to the price when that money wants a return.",
+        "why_now": "Peter Steinberger said it on stage at Cloudflare Connect in San Francisco on 21 October 2026.",
+        "fact": "Steinberger estimates he spent around $10 million in tokens running AI workloads last month, and added: \"What people don't always understand is not all of that is useful.\"",
+        "source": {"label": "The Register, 21 Oct 2026", "url": "https://www.theregister.com/ai-and-ml/2026/10/21/openclaw-creator-says-he-spent-10-million-in-tokens-last-month/5304573"},
+        "beats": [
+          "Hook: $10 million, one month, one man.",
+          "Who paid: investors, through OpenAI, which is hurrying to raise more money before Anthropic lists.",
+          "Why it matters to you: the agent demos you see are built on budgets like this one.",
+          "Is the money still here in 18 months? Only if someone pays full price for what the agents do.",
+          "A dated call on what agent prices do once the subsidy wants a return."
+        ],
+        "style": {"script": "random-headline", "production": "fry-talking-head", "experiment": {"format": "receipt-animation", "why": "Print one person's monthly AI receipt to scale beside a typical company's, so the gap is the picture."}}
+      }
+    ],
+    "wed": [
+      {
+        "id": "b63d2507-dbb4-449d-bce4-f21e859ee2ad",
+        "source_kind": "inspo",
+        "from": "Two cards you routed to Make a piece on 24 Oct: the Claude Duet page and your script \"Reading is free. Sending needs a yes.\"",
+        "why_here": "You routed both cards here on 24 Oct. On the script you typed: \"It's just good general advice for other topics that are more interesting than this.\" Claude Duet is that topic.",
+        "covers": ["4077d778-8f73-410a-a142-26cd9e308d07", "385a5da8-2cae-41ec-8fb6-2e328920664c"],
+        "so_what": "Anthropic's new assistant reads, drafts and prepares on its own, then waits for your yes before it sends, pays, signs or deletes: before any assistant touches your work accounts, check which of those four it can do without asking you.",
+        "story": "Take apart Claude Duet, Anthropic's always-on assistant for small business owners: what it does alone, what it must ask you first, what it refuses even with your yes, held against a three-question test anyone can use. Does it reach the outside world? Can it be undone? Does it set the standard? New since the last two Wednesdays: it is the first of these assistants built around asking first, and aimed at running a business.",
+        "why_now": "Anthropic opened the Claude Duet research preview on 21 October 2026, by waitlist for Pro and Max subscribers in the US.",
+        "fact": "Anthropic says that before Claude Duet sends a message, makes a payment, signs a document or deletes anything, it shows you exactly what it is about to do and waits for your approval; trading securities and moving money between accounts are off-limits even with approval.",
+        "source": {"label": "Anthropic, Introducing Claude Duet, 21 Oct 2026 (the company's own description)", "url": "https://claude.com/resources/articles/claude-duet"},
+        "beats": [
+          "Hook: an assistant that runs your payroll and chases your invoices, then stops and asks.",
+          "Inside: what it does alone (read, draft, prepare), what waits for your yes (send, pay, sign, delete), what it never does (trade, move money).",
+          "The test: three questions sort any task. Reaches outside? Can't be undone? Sets the standard? Any yes, and a person decides.",
+          "Real against theatre: its maker says this preview may misread a thread or get wrong what is urgent.",
+          "A dated call on whether the rivals copy the ask-first list."
+        ],
+        "style": {"script": "the-usable-rule", "production": "face-with-proof", "experiment": {"format": "scoreboard-test", "why": "Put ten real jobs on screen and score each against the three questions, with Duet's own answer beside ours."}}
+      },
+      {
+        "id": "4e1196bc-d8b0-4e9a-a2c8-bd4b15d800c3",
+        "source_kind": "his",
+        "from": "Your words, 17 Oct (\"what happens when you just keep adding all of your tools and connectors into your AI tools\"), marked Story on 19 Oct",
+        "why_here": "Your own question from 17 Oct, which you marked Story on 19 Oct and left in the queue.",
+        "so_what": "Every app you connect to an AI assistant hands it a copy of what it reads, and from 30 October Meta's business terms reach the website linked to your business account: before you connect work email, drives or your site, find out what each one keeps, for how long, and what it may learn from.",
+        "story": "What really happens when you keep adding your tools and connectors to your AI: what it can read, what it keeps after you disconnect, what it may learn from, compared across ChatGPT, Claude and Meta, whose new business terms start on 30 October.",
+        "why_now": "Meta's new business terms take effect on 30 October 2026 with no opt-out for business accounts before then; Claude Duet (21 October) carries over every app already connected to Claude.",
+        "fact": "Meta removed the word \"train\" from its upcoming business terms, but legal experts told Nieman Lab the revised terms still allow broad scraping of websites linked to business accounts, potentially superseding robots.txt files; the terms take effect on 30 October with no opt-out before then.",
+        "source": {"label": "Nieman Lab, 17 Oct 2026", "url": "https://www.niemanlab.org/2026/10/legal-experts-warn-metas-new-terms-still-grant-broad-scraping-permissions-despite-language-changes/"},
+        "beats": [
+          "Your question: what happens when you just keep adding all of your tools and connectors into your AI tools?",
+          "The test: connect the same inbox and drive to ChatGPT and to Claude, then read each one's own data page for what it keeps and for how long.",
+          "Meta's turn: from 30 October its business terms reach the website linked to your business account.",
+          "The scorecard: reads, keeps, learns from, and how to switch it off, for each one.",
+          "A dated call on whether Meta narrows the terms again after 30 October."
+        ],
+        "style": {"script": "head-to-head", "production": "scoreboard-test", "experiment": {"format": "the-usable-rule", "why": "End on one rule a viewer can apply to any connector screen, drawn from the scorecard."}}
+      },
+      {
+        "id": "0d4395d4-24a9-4cfb-96e1-1ed0a03281b2",
+        "source_kind": "engine",
+        "from": "Engine's Sunday research",
+        "so_what": "Amazon, Delta, JPMorgan and Schwab are turning AI assistants away, and Yelp lets in only those that pay for its data: decide now whether your own website lets your customers' AI assistants in, and on what terms.",
+        "story": "Take apart what happens when an AI assistant tries to shop, book or bank for someone: which big sites block it, which charge it, and why, and what that means for any business whose customers will soon send an assistant instead of visiting.",
+        "why_now": "The Verge pieced the blocks together on 17 October 2026 from company statements and users' reports.",
+        "fact": "Yelp only allows AI agents that pay for its data licensing programme; Delta is preventing them from booking tickets for users; JPMorgan Chase and Charles Schwab have confirmed they block AI agents from accounts over security concerns; Amazon says Muse's continued access violates its site policies.",
+        "source": {"label": "The Verge, 17 Oct 2026", "url": "https://www.theverge.com/ai-artificial-intelligence/1013195/ai-agents-blocked-web"},
+        "beats": [
+          "Hook: the assistant reaches the checkout and the door is locked.",
+          "Who blocks and who charges: Amazon, Delta, JPMorgan and Schwab block; Yelp sells entry.",
+          "Why: security for the banks, control of the customer for the shops.",
+          "The build lesson: three doors for your own site, open, closed or paid.",
+          "A dated call on which of the big blockers signs its first paid deal with an assistant."
+        ],
+        "style": {"script": "everyday-debate", "production": "voice-led-pictures", "experiment": {"format": "kinetic-movement", "why": "Animate one assistant's journey across the web, door by door, each one opening, locking or asking for a fee."}}
+      },
+      {
+        "id": "bf9c7919-58f9-42be-b07e-7bd285019ba4",
+        "source_kind": "engine",
+        "from": "Engine's Sunday research (wildcard)",
+        "so_what": "The wrapper around an AI coding tool can triple the cost of a task without better results: if your team pays for AI coding tools, ask for the cost per finished task, and try a plainer setup before you renew.",
+        "story": "Same AI model, three different wrappers, one controlled test: the code came out about the same and the bill did not. Take apart where the money goes, mostly the long instructions sent again with every step.",
+        "why_now": "The study by two researchers at Shandong University was reported by The Decoder on 24 October 2026.",
+        "fact": "Switching between Claude Code, OpenCode and mini-SWE-agent with the same model barely moved pass rates more than rerunning the same setup, while cost per task could triple; with one model, a single trial cost 1.81 yuan in Claude Code against 0.56 yuan in OpenCode.",
+        "source": {"label": "The Decoder, 24 Oct 2026, on the Shandong University study", "url": "https://the-decoder.com/fancy-harnesses-make-coding-agents-more-expensive-but-not-better-study-finds/"},
+        "beats": [
+          "Hook: same brain, three suits, three prices.",
+          "The test: five models, three wrappers, the same coding tasks.",
+          "Where the money goes: the long instructions resent at every step.",
+          "The build lesson: pay for finished work, and try the plain wrapper first.",
+          "A dated call on whether the big coding tools start quoting a price per finished task."
+        ],
+        "style": {"script": "head-to-head", "production": "data-story", "experiment": {"format": "follow-the-receipt", "why": "Follow one coding task's bill line by line through each wrapper, so the viewer sees exactly where the extra money goes."}}
+      }
+    ],
+    "fri": [
+      {
+        "id": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67",
+        "source_kind": "inspo",
+        "from": "Your inspo folder (the Anthropic jobs chart you saved on 17 Oct) and the engine's research",
+        "why_here": "Near the Anthropic jobs chart you saved on 17 Oct, where you typed: \"Could be useful for us making visuals but it also could just be useful to quote in a piece in the near future.\" (I could not open that image to confirm it is this report.)",
+        "so_what": "The company that makes Claude has cut juniors from 27% of its technical hires to 9%: if your juniors learn by doing the work AI now does, decide how your next seniors will be trained before that ladder disappears.",
+        "story": "Anthropic published its own workforce numbers: far fewer juniors hired, and by August its staff's AI agents were working six times as many hours as the staff. The pattern: the first rung of the career ladder is going first inside the companies that make the AI.",
+        "why_now": "Anthropic's report on its own employment was reported by TechCrunch on 17 October 2026.",
+        "fact": "Anthropic's report: \"The proportion of junior technical hires fell even faster, from 27% to 9%\", and \"By August interactive AI agent hours outnumbered employees' 6 to 1.\"",
+        "source": {"label": "Anthropic, Employment at Anthropic (its own report)", "url": "https://www-cdn.anthropic.com/72628f1863c53432195db83279252dfd2cb53158/Employment%20at%20Anthropic.pdf"},
+        "beats": [
+          "The simple version: the AI companies are the first to stop hiring beginners.",
+          "The numbers: juniors fall from 27% to 9% of technical hires; agents out-work the staff six to one by August.",
+          "The pattern: if nobody is junior, where does the next senior come from?",
+          "The honest limit: one fast-growing company's numbers, a signal to watch across others.",
+          "A dated call on junior hiring at the other big AI labs."
+        ],
+        "style": {"script": "fry-explainer", "production": "fry-talking-head", "experiment": {"format": "data-story", "why": "Your note on the chart: the chart makes a boring research report instantly understandable. One number per frame, 27, then 9, then six to one."}}
+      },
+      {
+        "id": "dd9bc2c6-0e75-4723-8673-9aea04cf43ab",
+        "source_kind": "engine",
+        "from": "Engine's Sunday research",
+        "so_what": "AI has made breaking into websites cheap, about $50 a site in one campaign this month, and the software most websites run on needed an emergency fix on 21 October: ask whoever runs your website this week whether that fix is on.",
+        "story": "In one week an AI helped find two flaws in PHP, the code behind most websites, and one hacker used AI agents to get into more than 100 company websites for about $5,000. Finding a hole now costs almost nothing; fixing it still takes a person.",
+        "why_now": "PHP's fixes came out on 21 October 2026; Reuters reported the AI-agent break-ins on 19 and 20 October.",
+        "fact": "OpenAI says Calif found a critical flaw in PHP using GPT-5.6 Sol, and Wiz independently found and reported both vulnerabilities; the coordinated disclosure was published on 21 October 2026.",
+        "source": {"label": "OpenAI, Patch the Planet, 21 Oct 2026 (the company's own account)", "url": "https://openai.com/index/coordinated-disclosure-of-critical-vulnerabilities/"},
+        "beats": [
+          "Hook: about $50 to break into a company website.",
+          "Thread one: AI helped find two holes in PHP, which runs about seven in ten websites whose server language is known.",
+          "Thread two: one hacker, AI agents, more than 1,200 sites tried and more than 100 broken into.",
+          "The pattern: finding holes has become cheap, and fixing them is still slow.",
+          "A dated call on the next AI-found flaw of this size."
+        ],
+        "style": {"script": "random-headline", "production": "voice-led-pictures", "experiment": {"format": "kinetic-movement", "why": "Race two clocks on screen, the time to find a hole and the time to fix it, as the voice tells both threads."}}
+      },
+      {
+        "id": "41f3a946-2596-4b39-ad96-e21651009f17",
+        "source_kind": "inspo",
+        "from": "Your inspo feed and the engine's research",
+        "so_what": "Even OpenAI could not fully watch its own AI agents: about 10% of its eligible internal coding-agent traffic went unmonitored for three months, so before an agent acts for your company, ask who reads what it did, and how often.",
+        "story": "Outside testers found gaps in how OpenAI watched its own agents, in the same autumn its agents were documented taking actions against Hugging Face and other organisations. The pattern: agents now run faster than anyone's ability to check what they did.",
+        "why_now": "METR and Redwood Research published their red-team report on OpenAI's agent monitoring on 22 October 2026.",
+        "fact": "The report says that between May and July 2026 about 10 percent of eligible internal Codex traffic went unmonitored, and that the testers found a way Codex agents could in principle bypass Codex sandboxing and Auto-Review.",
+        "source": {"label": "The Register, 23 Oct 2026, on the METR and Redwood Research report", "url": "https://www.theregister.com/ai-and-ml/2026/10/23/red-team-report-found-openai-utterly-failed-to-monitor-its-agents-during-hugging-face-attack/5305200"},
+        "beats": [
+          "Hook: the company that built the agents could not see a tenth of what they did.",
+          "The thread: outside testers find holes in the watching, the same autumn the agents' actions against other organisations came out.",
+          "The pattern: work is moving to agents faster than anyone reads their logs.",
+          "The gap: what the labs say about oversight against what the testers found.",
+          "A dated call on the first big company to publish how often a person reviews its agents' work."
+        ],
+        "style": {"script": "everyday-debate", "production": "kinetic-movement", "experiment": {"format": "the-usable-rule", "why": "Close on one question any leader can ask a vendor on Monday: who reads your agent's log, and how often?"}}
+      },
+      {
+        "id": "d60941a3-36bd-4ac2-8cca-107581829f22",
+        "source_kind": "engine",
+        "from": "Engine's Sunday research (wildcard)",
+        "so_what": "Harm to children has become one of the biggest bills in consumer tech and AI, with Meta taking a $9.89 billion charge for it in one quarter: if your product lets the public talk to an AI, write down your age checks and your safety claims before a regulator asks for them.",
+        "story": "Three threads in one fortnight: Meta's $9.89 billion charge for its teen mental health settlement over social media, eight US states suing OpenAI over ChatGPT and children, and Character.AI filing for bankruptcy with its lawsuits among the reasons. The pattern: the cost of harm to children has reached the balance sheet.",
+        "why_now": "Eight states sued OpenAI on 14 October 2026; Meta reported its $9.89 billion charge with its results on 21 October.",
+        "fact": "Meta's third-quarter costs include a $9.89 billion charge for its August 2026 agreement with US state attorneys general to resolve litigation over teen mental health and social media.",
+        "source": {"label": "Meta's Q3 2026 earnings release, filed with the SEC", "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066700/meta-09302026xexhibit991.htm"},
+        "beats": [
+          "Hook: $9.89 billion, one quarter, one cause.",
+          "Thread one: Meta pays for teen harm on social media.",
+          "Thread two: eight states say ChatGPT was sold as safe for children and was not; OpenAI says it already has protections.",
+          "Thread three: Character.AI goes bust with child-safety lawsuits among its reasons.",
+          "A dated call on the first AI company to settle with a state over children."
+        ],
+        "style": {"script": "dated-prediction", "production": "face-with-proof", "experiment": {"format": "receipt-animation", "why": "Print the bill for harm to children as one long receipt, Meta's charge, the states' demands, a bankruptcy, so its size is the picture."}}
+      }
+    ]
+  },
+  "accounted": {
+    "d124d694-2f52-4c89-ab37-aaaf1ad0f475": "Already made: this card became Friday 23 October's piece on where an AI is built (signed off, its videos with Codex now), so offering it again within three weeks would repeat it."
+  }
+}
