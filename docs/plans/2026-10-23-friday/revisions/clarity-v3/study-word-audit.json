@@ -1,0 +1,23 @@
+{
+  "status": "pass",
+  "problems": [],
+  "counts": [
+    {
+      "id": "passport",
+      "primary_words": 5,
+      "total_words": 5
+    },
+    {
+      "id": "test",
+      "primary_words": 7,
+      "total_words": 12
+    },
+    {
+      "id": "finding",
+      "primary_words": 7,
+      "total_words": 12
+    }
+  ],
+  "semantic_nonduplication": "requires_independent_review",
+  "three_second_comprehension": "not_proved_by_this_audit"
+}

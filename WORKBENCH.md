@@ -1,8 +1,8 @@
 # Workbench: where we are and what's next
 
-## 24 October: Codex
+## 25 October: Codex
 
-[Friday production: clarity revised, incomplete](docs/plans/2026-10-23-friday/locked/production-preflight.md).
+[Friday production: visual-first gate, incomplete](docs/plans/2026-10-23-friday/locked/production-preflight.md).
 
 ## 24 October: Friday locked and signed off; Codex makes the videos (Claude)
 

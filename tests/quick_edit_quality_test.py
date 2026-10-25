@@ -176,7 +176,7 @@ class QualityTests(unittest.TestCase):
                 'final_review':{'status':'pass','video_sha256':report['video_sha256'],'evidence_sha256':'d'*64,
                     **{k:'pass' for k in ('shake','warping','borders','framing')}}}
             receipt.write_text(json.dumps(report))
-            self.assertEqual(quality.delivery_problems(video,receipt,'target'),[])
+            self.assertEqual(quality.delivery_problems(video,receipt,'target'),['visual clarity gate is not passed'])
             motion=report['checks']['motion']
             motion['recording_sha256']='e'*64
             self.assertIn('different recording',quality.motion_problems(report)[0])

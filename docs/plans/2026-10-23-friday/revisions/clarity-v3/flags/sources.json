@@ -1,0 +1,12 @@
+[
+  {
+    "code": "ca",
+    "source": "https://raw.githubusercontent.com/lipis/flag-icons/main/flags/4x3/ca.svg",
+    "sha256": "345ec9dac057e203f1331b2d3f9f473789864edaee1182a26bc261356bcf72f1"
+  },
+  {
+    "code": "us",
+    "source": "https://raw.githubusercontent.com/lipis/flag-icons/main/flags/4x3/us.svg",
+    "sha256": "e7be4240cf57987926673708f09233be1ab6bdf35acc7b86bd32a263f197a2a7"
+  }
+]

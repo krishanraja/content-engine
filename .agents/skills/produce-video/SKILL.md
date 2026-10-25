@@ -24,6 +24,16 @@ only to recover what it holds.
 
 ## Never call a video good without watching it
 
+### Minimal words and visual comprehension
+
+Follow `docs/VISUAL_CLARITY.md` (Krish, 25 October 2026). Plan recognisable visual
+cues before writing labels; words must add information rather than repeat the
+script or captions. Count all legible image text, retain the rendered inventory,
+and run `scripts/quick-edit/visual_clarity.py`. The final delivery receipt needs
+the hash-bound `visual_clarity` check; `quality.delivery_problems` enforces it.
+Automated text checks and author inspection do not prove three-second layperson
+comprehension. Keep that evidence distinct and never invent a viewer response.
+
 ### Mandatory camera-motion assessment
 
 Krish, 2026-10-22: "stabilization should be a mandatory check to see if it is needed. it usually is".

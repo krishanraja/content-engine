@@ -1,6 +1,8 @@
-# Friday production state — 24 October 2026
+# Friday production state — 25 October 2026
 
 Status: in production; no finished-video or final-board claim.
+
+Latest: Krish’s 25 October feedback is implemented in `../revisions/clarity-v3/`: country flags, five-word generic passport, no explanatory paragraph, and official model marks in speech bubbles. The study passes automated text checks; independent semantic and three-second comprehension review remain pending. `docs/VISUAL_CLARITY.md` describes the new final-delivery gate.
 
 Claude completed Visual gate, Scripts with both read-backs, Pack and Recorded. PR #169 is merged; this production branch includes origin/main at 294deb5. Codex did not write Claude's making steps. The former reconciliation item is closed.
 
@@ -16,7 +18,7 @@ Claude completed Visual gate, Scripts with both read-backs, Pack and Recorded. P
 
 ## Remaining work
 
-1. Use `../revisions/clarity-v2/visual-copy.json` (Krish’s latest feedback), then complete the remaining seven-object motion system and every locked beat; integrate the continuous preparation and full-frame VO path into make.py without bypassing delivery checks.
+1. Use `../revisions/clarity-v3/visual-copy.json` (Krish’s latest feedback), then complete the remaining seven-object motion system and every locked beat; integrate the continuous preparation and full-frame VO path into make.py without bypassing delivery checks.
 2. Resolve each approved cut acoustically. The fresh timing audit finds a zero gap on at least one boundary of all eight phrase cuts examined. Word timestamps alone cannot establish the required 40 ms clearances. The VO-long missing-word splice and repeated-one repair also remain. No speech cut was accepted from these proxy timings.
 3. Stabilisation trial and comparison for both camera takes. Background-only optical flow was measured over start/middle/end windows: long coverage 81.8–95.5%, 95th-percentile displacement 30.3–36.79 px at 540 px width; short coverage 72.7–97.7%, 38.29–47.61 px. The short opening is inconclusive; these are motion measurements, not proof of an appropriate treatment. No motion pass recorded.
 4. Produce four complete working exports, final-file transcripts and SRTs; exact-file speech, audio-join, lip-sync, loudness, visual and full-playback review remain. This session has no verified audible-listening result and cannot honestly sign that gate from transcripts or images.
