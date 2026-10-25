@@ -1559,6 +1559,15 @@
      "how": "plan-week step 3b"
     }
    ]
+  },
+  {
+   "id": "finish-the-job-here",
+   "on": "2026-10-25",
+   "krish": "Just finish it all here. You've asked me to hand over three different sessions that I've tried to get you to build this fucking outcome. Just fucking build it here.",
+   "why": "The context guard (G1) tells every long session to stop and hand over mid-job, so his Sunday plan was passed between sessions three times and the outcome he asked for never arrived.",
+   "means": "A session finishes the job Krish asked for in that session. Cost discipline comes from lean steps (searching, short outputs), never from handing his job to a fresh session part-way. A handover is written when the job is done, for the next job. To encode: the G1 message in scripts/hooks/cost_gate.py, which needs Krish's yes because it changes a guardrail.",
+   "status": "open",
+   "encoded": []
   }
  ]
 }

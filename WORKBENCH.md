@@ -1,10 +1,10 @@
 # Workbench: where we are and what's next
 
-## 25 October: the week of 26 October half planned; a fresh session finishes it (Claude)
+## 25 October: the week of 26 October planned and its board published (Claude)
 
-- **Asked:** "for the week of 26 October. Sunday is my recording day: build the Ideas tab, then once I've picked all three days, interview me one question at a time on each piece until its narrative arc is locked, then the scripts."
-- **Done:** last week closed out, the gather, the three routed Inspiration cards covered or accounted for (marked routed), two kill passes; `docs/plans/2026-10-26-week/ideas.json` holds Monday 4, Wednesday 3, Friday 2 checked ideas. Nothing published yet.
-- **Next:** start a fresh session from `docs/handovers/2026-10-25-plan-week-26-oct.md` (the session stopped at the cost guard): one more Wednesday idea and two more Friday ideas, a kill pass, build and publish the board, his picks, then the story interview and scripts per day.
+- **Asked:** "for the week of 26 October. Sunday is my recording day: build the Ideas tab, then once I've picked all three days, interview me one question at a time on each piece until its narrative arc is locked, then the scripts." Then: "Just finish it all here." (learning `finish-the-job-here`, open: the cost guard's G1 message still says hand over, and changing it needs his yes.)
+- **Done:** board https://content.krishraja.com/board/2026-10-26 published and read back (build 20de89a5...). Ideas tab: four checked ideas a day (`docs/plans/2026-10-26-week/ideas.json`), three kill passes by a separate reader (`killed-second-pass.json`), options written to the week page, board item `week-publish-board-2026-10-26`.
+- **Next:** his three picks (`board_web.py read 2026-10-26 picks`), then `make-piece` per day: the story one question at a time, then scripts into Teleprompter.
 - **Friday 23 Oct in Teleprompter:** both cuts are already there as "Two passports" (sent by hand); the record does not hold them and they were left alone.
 
 ## 24 October: the Sunday loop rebuilt for his recording day (Claude)
@@ -287,7 +287,11 @@ run puts the new week's line here and moves this one under "Last week's
 publish board", which every session's tick copy still reads until every
 day on it is at 100% (Friday's reposts go out at the weekend).
 
-- Week of 19 to 23 October: https://content.krishraja.com/board/2026-10-19.
+- Week of 26 to 30 October: https://content.krishraja.com/board/2026-10-26. Ideas tab first; nothing picked yet (25 Oct).
+
+Last week's publish board (19 to 23 October):
+
+- https://content.krishraja.com/board/2026-10-19.
   The newer source's Ideas and draft day tabs are preserved. Its three picks,
   eleven queue decisions and 28 comments are available to every authenticated
   workflow. Monday is in review. Its editorial/video handover owns the next

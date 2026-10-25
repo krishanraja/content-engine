@@ -91,7 +91,7 @@
         }
       },
       {
-        "id": null,
+        "id": "2ca79772-b782-4101-a219-0baaa174fb3e",
         "source_kind": "engine",
         "from": "Engine's Sunday research (wildcard)",
         "so_what": "One of the people building AI agents spent about $10 million on them in a month and says not all of it was useful: set your own agent budget from a small test of your own, because the demos you are shown run on budgets you will never have.",
@@ -158,20 +158,20 @@
         "source_kind": "his",
         "from": "Your words, 17 Oct (\"what happens when you just keep adding all of your tools and connectors into your AI tools\"), marked Story on 19 Oct",
         "why_here": "Your own question from 17 Oct, which you marked Story on 19 Oct and left in the queue.",
-        "so_what": "Every app you connect to an AI assistant gives it a copy of what it reads: before you connect work email or drives, read what each assistant keeps, for how long, and what it may learn from, on its own published data pages.",
-        "story": "Your question, answered from the companies' own published pages: what an AI assistant can read once you connect Gmail, Drive or Slack, what it keeps after you disconnect, and what it may learn from, for ChatGPT, Claude and Gemini. Anthropic's new assistant launched with more than 6,000 connectors this week, which is why it matters now.",
-        "why_now": "Anthropic launched Claude Duet on 21 October 2026 with more than 6,000 connectors and plugins, carrying over every app already connected to Claude.",
-        "fact": "Anthropic says Claude Duet carries over your memory, skills and connected apps from your Claude account, and can use the over 6,000 connectors and plugins in the Claude Marketplace.",
+        "so_what": "Every app and site you connect to an AI company gives it a copy of what it reads, and from 30 October Meta's business terms reach the website linked to your business account: before you connect work email, drives or your site, read what each one may keep and use.",
+        "story": "Your question, answered from the companies' own published terms: what an AI company can read once you connect your Gmail, your Drive or your business website, what it keeps after you disconnect, and what it may use it for. Meta's new business terms, which start on 30 October, are the sharpest example.",
+        "why_now": "Meta's new business terms take effect on 30 October 2026, with no opt-out for business accounts before then.",
+        "fact": "Meta removed the word \"train\" from its upcoming business terms, but legal experts told Nieman Lab the revised terms still allow broad scraping of websites, potentially superseding robots.txt files; the terms take effect on 30 October with no opt-out for business accounts before then.",
         "source": {
-          "label": "Anthropic, Introducing Claude Duet, 21 Oct 2026 (the company's own description)",
-          "url": "https://claude.com/resources/articles/claude-duet"
+          "label": "Nieman Lab, 17 Oct 2026",
+          "url": "https://www.niemanlab.org/2026/10/legal-experts-warn-metas-new-terms-still-grant-broad-scraping-permissions-despite-language-changes/"
         },
         "beats": [
           "Your question: what happens when you just keep adding all of your tools and connectors into your AI tools?",
-          "Read the small print: each company's own data page, archived on the day, for what it reads, what it keeps and for how long.",
-          "The surprise line in each: what stays after you disconnect, and whether it can train on it.",
-          "The scorecard: reads, keeps, learns from, and how to switch it off, for each.",
-          "A dated call on which of the three changes its connector terms first."
+          "Meta's turn: from 30 October its business terms reach the website linked to your business account, and \"train\" became \"develop\".",
+          "Read the small print: what ChatGPT, Claude and Gemini each say they keep from a connected inbox or drive, and for how long, from their own pages.",
+          "The scorecard: reads, keeps, may use, and how to switch it off, for each.",
+          "A dated call on whether Meta narrows the terms again after 30 October."
         ],
         "style": {
           "script": "head-to-head",
@@ -183,12 +183,12 @@
         }
       },
       {
-        "id": null,
+        "id": "36a5de8a-6be1-4db4-a554-71629c243a1f",
         "source_kind": "engine",
         "from": "Engine's Sunday research, with the Higgsfield research in your inspo folder as background",
         "why_here": "The Higgsfield research in your inspo folder found that the $5.4 billion AI video app mostly resells other companies' models, Kling among them; this takes apart the newest of those models.",
         "so_what": "An AI video tool now makes a 30-second scene in one go from your own pictures and references: before you sign off your next video shoot, price one scene of it on an AI tool and see what is good enough.",
-        "story": "Take apart Kling 4.0, the new AI video model from China's Kuaishou: what a 30-second scene from up to 15 of your own reference pictures really looks like, what is still a demo, and which parts of a real video budget it can replace today.",
+        "story": "Take apart Kling 4.0, the new AI video model from China's Kuaishou: what a 30-second scene built from up to 15 of your own reference pictures really is, what the maker claims against what a normal account gets on day one, and which parts of a real video budget it can replace today.",
         "why_now": "Kuaishou announced on 19 October 2026 that Kling 4.0 launched on 15 October.",
         "fact": "Kuaishou says Kling 4.0 offers native generation of up to 30 seconds in a single pass, and Omni Reference, which supports up to 15 reference assets and up to 10 keyframe inputs.",
         "source": {
@@ -197,17 +197,45 @@
         },
         "beats": [
           "Hook: one prompt, 30 seconds of film, no crew.",
-          "Inside: what one pass makes, what 15 reference pictures buy you, what still breaks (faces and hands across shots).",
-          "Real against theatre: the maker's reel against one real brief run the same day.",
+          "Inside: what one pass makes, and what up to 15 reference pictures and 10 keyframes let you control.",
+          "Real against theatre: the maker's launch claims against what its own pages say a normal account gets.",
           "Who resells it: apps like Higgsfield wrap models like this one and sell them on.",
-          "A dated call on when a big brand airs an ad made this way."
+          "A dated call on Kling's price for a 30-second scene a year from now."
         ],
         "style": {
           "script": "head-to-head",
           "production": "voice-led-pictures",
           "experiment": {
             "format": "kinetic-movement",
-            "why": "Cut the maker's showreel against our own one-prompt test, shot for shot, so the viewer judges real against theatre."
+            "why": "Cut the maker's own showreel scene by scene against the claim each scene is meant to prove."
+          }
+        }
+      },
+      {
+        "id": "dd9bc2c6-0e75-4723-8673-9aea04cf43ab",
+        "source_kind": "engine",
+        "from": "Engine's Sunday research (wildcard)",
+        "so_what": "An AI helped find two holes in PHP, the code most websites run on, and site owners were told to take unpatched sites offline: ask whoever runs your website this week whether the 21 October fix is on.",
+        "story": "Take apart PHP2Shell: how an AI model helped find two ten-year-old holes in the code behind most of the web, how the fix was tested by attacking it with AI before release, and what a website owner actually has to do.",
+        "why_now": "PHP published its fixes on 21 October 2026, with OpenAI's account of how the flaws were found.",
+        "fact": "PHP 8.5.12, 8.4.27, 8.3.36 and 8.2.35 fix two flaws that can allow unauthenticated remote code execution, and all PHP installations serving web requests are potentially affected, the developers said.",
+        "source": {
+          "label": "The Register, 21 Oct 2026",
+          "url": "https://www.theregister.com/security/2026/10/21/php-devs-publish-critical-bug-fix-as-site-owners-warned-pull-em-offline-if-youre-unpatched/5304519"
+        },
+        "beats": [
+          "Hook: an AI found a hole in the code behind most websites, and owners were told to pull their sites offline.",
+          "Inside: what the flaw lets a stranger do, and which versions fix it.",
+          "How it was found: a researcher using GPT-5.6 Sol, and Wiz independently, by OpenAI's own account.",
+          "What is real against theatre: the fix exists, exploits were already published, and the patch is only as good as whoever applies it.",
+          "A dated call on the next AI-found flaw of this size."
+        ],
+        "style": {
+          "script": "random-headline",
+          "production": "face-with-proof",
+          "experiment": {
+            "format": "data-story",
+            "why": "One fact per frame: the versions, the date, the advice to pull sites offline, so a non-technical owner can act on it."
           }
         }
       }
@@ -243,6 +271,34 @@
         }
       },
       {
+        "id": "388c764e-318d-4225-a931-d117a47f13ad",
+        "source_kind": "inspo",
+        "from": "The inspiration sweep (sources you follow), 21 Oct",
+        "so_what": "In the same month and the same IMF meetings, an AI lab's co-founder said the singularity has begun and the IMF warned an AI bust could hit the global economy: plan for both at once, the tools getting better fast while the money behind them gets shakier.",
+        "story": "Two messages to the same room. Anthropic's co-founder Jack Clark told the IMF meeting in Bangkok on 17 October that the singularity is here; four days earlier the IMF's own financial stability report warned that markets are exposed to an AI-driven correction if the profits do not come. The gap between those two is where every leader is now planning.",
+        "why_now": "Jack Clark gave the speech at the IMF meeting in Bangkok on 17 October 2026 and published it on 19 October.",
+        "fact": "Jack Clark: \"Here's a speech I gave on Saturday the 17th of October at the IMF meeting in Bangkok\", ending \"The singularity is here.\"",
+        "source": {
+          "label": "Import AI 477, Jack Clark, 19 Oct 2026",
+          "url": "https://importai.substack.com/p/import-ai-477-in-which-i-tell-the"
+        },
+        "beats": [
+          "Hook: the same room heard \"the singularity is here\" and \"this could crash the economy\" in one week.",
+          "Thread one: the builder's view, Jack Clark of Anthropic at the IMF meeting.",
+          "Thread two: the banker's view, the IMF's own warning of an AI-driven correction.",
+          "The pattern: both can be true at once, the technology racing ahead while the money behind it wobbles.",
+          "A dated call on which shows up first in the numbers."
+        ],
+        "style": {
+          "script": "everyday-debate",
+          "production": "fry-talking-head",
+          "experiment": {
+            "format": "data-story",
+            "why": "Put the two quotes side by side, one per frame, then the one number that would settle the argument."
+          }
+        }
+      },
+      {
         "id": "41f3a946-2596-4b39-ad96-e21651009f17",
         "source_kind": "inspo",
         "from": "The inspiration sweep (sources you follow), 24 Oct",
@@ -267,6 +323,34 @@
           "experiment": {
             "format": "the-usable-rule",
             "why": "Close on one question any leader can ask a vendor on Monday: who reads your agent's log, and how often?"
+          }
+        }
+      },
+      {
+        "id": "5b726fc3-ac63-4607-9293-3257b4ecc75c",
+        "source_kind": "engine",
+        "from": "Engine's Sunday research (wildcard)",
+        "so_what": "The people running software now say clear writing is the skill that matters most, because the written instruction is what the AI builds from: next time you hire or train, test how clearly someone writes a one-page brief.",
+        "story": "Turn the usual fear around: AI was meant to make writing worthless, and the engineers are saying the opposite. Kaseya's technology chief says the new code is the spec, and the skills that matter are critical thinking and writing; Linus Torvalds says Linux should stop asking who used AI and judge whether the work is good.",
+        "why_now": "The Kaseya interview was published on 21 October 2026 and Torvalds' remarks on 23 October.",
+        "fact": "Kaseya's CTO: \"The skills that will be extremely important are critical thinking and writing\" and \"I would say the new code is the spec.\"",
+        "source": {
+          "label": "The Register, 21 Oct 2026",
+          "url": "https://www.theregister.com/software/2026/10/21/the-spec-is-the-new-code-so-brush-up-on-your-prose-says-kaseya-cto/5304002"
+        },
+        "beats": [
+          "Hook: the people who build software now say the most valuable skill is writing.",
+          "Thread one: a software chief, \"the new code is the spec\".",
+          "Thread two: Torvalds, stop asking who used AI and judge whether the work is good.",
+          "The pattern: the instruction is the product now, so whoever writes the clearest one wins.",
+          "A dated call on job adverts asking for writing over coding."
+        ],
+        "style": {
+          "script": "fry-explainer",
+          "production": "kinetic-movement",
+          "experiment": {
+            "format": "the-usable-rule",
+            "why": "Close on one test any manager can run on Monday: ask for a one-page brief and see if a stranger could act on it."
           }
         }
       }
