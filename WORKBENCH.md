@@ -13,7 +13,7 @@
 - **Next, Sunday 25 Oct:** `/plan-week` for the week of 26 Oct. The gather stops until this change is deployed to
   production (`sources.inspiration`). Three routed cards must be on the board or accounted for: the Duet page,
   "Reading is free. Sending needs a yes." and the models-by-country picture.
-- **Waiting on Krish:** required status checks on `main`.
+- **Decided by Krish (2026-10-25):** the Sunday rhythm's approval stands ("Yes that is the approval I want on record"); no required merge checks ("No merge checks."), so a session merges only after CI is green.
 ## 24 October: Friday locked and signed off; Codex makes the videos (Claude)
 
 - **Signed off by Krish:** storyboard, no trim, titles, outline ("signed off, keep, all A"), prediction A2 ("a2"), and

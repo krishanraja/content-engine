@@ -28,6 +28,11 @@ def check(register):
         if f['status'] == 'open':
             open_.append(f)
             continue
+        if f['status'] == 'declined':
+            # Krish chose not to guard it; his words are on the entry, and it is never reported as fixed.
+            if (f.get('decided') or {}).get('by') != 'Krish' or not (f.get('decided') or {}).get('said'):
+                broken.append(f'{f["id"]}: declined without Krish\'s words in decided')
+            continue
         if not f.get('guards'):
             broken.append(f'{f["id"]}: marked guarded with no guard')
         for g in f.get('guards') or []:
@@ -62,7 +67,7 @@ def behaviour(register, run=False):
     """(proved by a test, marker only, failed tests). With run, each distinct test command is run once."""
     proved, marker_only, failed, ran = [], [], [], {}
     for f in register['failures']:
-        if f['status'] == 'open':
+        if f['status'] in ('open', 'declined'):
             continue
         tests = [g['test'] for g in f.get('guards') or [] if g.get('test')]
         if not tests:
@@ -83,11 +88,12 @@ def main():
     run = '--run' in sys.argv[1:]
     register = json.loads((ROOT / 'config' / 'failures.json').read_text(encoding='utf-8'))
     broken, open_ = check(register)
-    guarded = len(register['failures']) - len(open_)
+    declined = [f for f in register['failures'] if f['status'] == 'declined']
+    guarded = len(register['failures']) - len(open_) - len(declined)
     proved, marker_only, failed = behaviour(register, run)
     broken += failed
     print(f'failure register: {guarded} guarded ({len(proved)} with a behavioural test{", run" if run else ""}; '
-          f'{len(marker_only)} marker only, configuration coverage, not proof), {len(open_)} open')
+          f'{len(marker_only)} marker only, configuration coverage, not proof), {len(open_)} open, {len(declined)} declined by Krish')
     for f in open_:
         print(f'  OPEN {f["id"]}: {f["what"]}')
     learnings = json.loads((ROOT / 'config' / 'learnings.json').read_text(encoding='utf-8'))
