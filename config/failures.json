@@ -888,9 +888,14 @@
    "id": "merged-before-ci-finished",
    "on": "2026-10-24",
    "krish": "Make checks an actual merge condition (failure report, 24 Oct)",
-   "what": "PR #151 merged at 06:50:00 on 24 Oct while both verify jobs were still running: main has no required status checks. Turning them on is a permission change for Krish.",
-   "status": "open",
-   "guards": []
+   "what": "PR #151 merged at 06:50:00 on 24 Oct while both verify jobs were still running: main has no required status checks. Turning them on is a permission change for Krish. Krish declined required checks on 2026-10-25; CI stays advisory and a red main is fixed on a branch.",
+   "status": "declined",
+   "guards": [],
+   "decided": {
+    "by": "Krish",
+    "on": "2026-10-25",
+    "said": "No merge checks."
+   }
   }
  ]
 }
