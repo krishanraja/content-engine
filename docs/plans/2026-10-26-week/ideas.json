@@ -210,34 +210,6 @@
             "why": "Cut the maker's showreel against our own one-prompt test, shot for shot, so the viewer judges real against theatre."
           }
         }
-      },
-      {
-        "id": null,
-        "source_kind": "engine",
-        "from": "Engine's Sunday research (wildcard)",
-        "so_what": "An AI has designed a medicine that was given to a person, and its maker has not said whether it worked: when anyone shows you what their AI designed, ask what was proven outside the computer, and what is being kept back.",
-        "story": "Take apart the first AI-designed virus given to a patient: what the AI model designed, what the lab proved against the patient's own superbug, what the company has kept back, and where AI design stops and real-world proof starts.",
-        "why_now": "Radical Numerics announced the treatment and its Omnii-1 model in the week of 19 October 2026; The Register reported it on 22 October.",
-        "fact": "Radical Numerics says a cocktail containing phages designed by its Omnii-1 model eliminated the patient's antibiotic-resistant isolate in the lab and was then given to the patient under compassionate use; it has published no result from the patient.",
-        "source": {
-          "label": "The Register, 22 Oct 2026",
-          "url": "https://www.theregister.com/science/2026/10/22/human-receives-ai-designed-virus-for-the-first-time/5304874"
-        },
-        "beats": [
-          "Hook: an AI designed a virus, and a doctor gave it to a patient.",
-          "Inside: the model designs bug-killing viruses, the lab tests them on the patient's own superbug, then a doctor decides.",
-          "What is kept back: the patient's result, for privacy; one patient proves little, says the maker.",
-          "The build lesson: AI makes the options, the real world proves them.",
-          "A dated call on the first published trial of an AI-designed treatment."
-        ],
-        "style": {
-          "script": "fry-explainer",
-          "production": "face-with-proof",
-          "experiment": {
-            "format": "data-story",
-            "why": "Lay out the chain one step per frame, designed, tested in the lab, given, result withheld, so the missing step is the picture."
-          }
-        }
       }
     ],
     "fri": [
@@ -271,34 +243,6 @@
         }
       },
       {
-        "id": "0899e21d-6a33-40e0-9b35-1c8e80b52c6f",
-        "source_kind": "inspo",
-        "from": "The inspiration sweep (sources you follow), 24 Oct",
-        "so_what": "Eight in ten CIOs are spending more on AI, and only about one in eight says it has paid off in a big way: before you approve next year's AI budget, ask which one team will use it deeply enough to change how it works.",
-        "story": "Gartner's surveys this week: 81% of CIOs are raising AI spend while 13% say they have seen significant value. Andrej Karpathy describes the same gap from the other end: a few thousand people use AI at full depth while most only ask a chatbot quick questions. The pattern: the value is going to depth of use, and money alone does not buy it.",
-        "why_now": "Gartner published the survey data at its IT Symposium/Xpo, reported on 21 October 2026.",
-        "fact": "Gartner: 81% of CIOs are increasing AI spend; 13% of CIOs say their organizations have realized significant or transformational value from AI; 11% of CFOs see clear returns.",
-        "source": {
-          "label": "The Deep View, 21 Oct 2026, on Gartner's surveys",
-          "url": "https://www.thedeepview.com/articles/gartner-exposes-ai-s-growing-value-gap"
-        },
-        "beats": [
-          "Hook: 81% spending more, 13% seeing much for it.",
-          "Thread one: the CIOs and CFOs, in Gartner's own numbers.",
-          "Thread two: Karpathy's sharp funnel, the few who use AI at full depth and the billions who barely do.",
-          "The pattern: the gap is depth of use, which money alone does not buy.",
-          "A dated call on next year's Gartner figure."
-        ],
-        "style": {
-          "script": "everyday-debate",
-          "production": "data-story",
-          "experiment": {
-            "format": "fry-talking-head",
-            "why": "Your Hannah Fry card: a warm, lit talking head explaining one surprising number, close to camera."
-          }
-        }
-      },
-      {
         "id": "41f3a946-2596-4b39-ad96-e21651009f17",
         "source_kind": "inspo",
         "from": "The inspiration sweep (sources you follow), 24 Oct",
@@ -323,34 +267,6 @@
           "experiment": {
             "format": "the-usable-rule",
             "why": "Close on one question any leader can ask a vendor on Monday: who reads your agent's log, and how often?"
-          }
-        }
-      },
-      {
-        "id": null,
-        "source_kind": "engine",
-        "from": "Engine's Sunday research (wildcard)",
-        "so_what": "The soap opera is the first screen format AI is taking over, and the people who own characters are buying the teams who make them: if you own stories or characters, decide this quarter whether you make AI series yourself or license them to someone who will.",
-        "story": "Character.AI was making short AI dramas you could talk back to, and Disney is now hiring most of its team. China's short-drama film sets emptied this year as studios switched to AI, and an AI-made series app reports paying subscribers at almost the same rate as its filmed one. The pattern: short drama is where AI-made shows earn first.",
-        "why_now": "Court filings reported on 19 October 2026 show Disney offering jobs to 66 Character.AI staff after its bankruptcy.",
-        "fact": "Character.AI had begun a push into original microdramas this summer; court filings show Disney looking to hire 66 Character.AI employees at $60 million a year for three years.",
-        "source": {
-          "label": "Gizmodo, 19 Oct 2026, citing the court filings and Bloomberg",
-          "url": "https://gizmodo.com/disney-wants-to-hire-most-of-the-employees-from-bankrupt-character-ai-2000827460"
-        },
-        "beats": [
-          "Hook: the soap opera on your phone may not have a single actor in it.",
-          "Thread one: one Chinese producer went from about 200 shoots a month to about 30 as studios switched to AI (Sixth Tone, August).",
-          "Thread two: an AI-made series app turns viewers into payers at almost the same rate as its filmed one (industry report, July; check at the fact gate).",
-          "Thread three: Character.AI's talk-back dramas, and Disney hiring the team that made them.",
-          "A dated call on the first big Western studio to release an AI-made series."
-        ],
-        "style": {
-          "script": "fry-explainer",
-          "production": "voice-led-pictures",
-          "experiment": {
-            "format": "kinetic-movement",
-            "why": "Build the piece like a vertical drama itself: cliffhanger cuts between the three threads."
           }
         }
       }

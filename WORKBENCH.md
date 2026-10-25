@@ -1,5 +1,12 @@
 # Workbench: where we are and what's next
 
+## 25 October: the week of 26 October half planned; a fresh session finishes it (Claude)
+
+- **Asked:** "for the week of 26 October. Sunday is my recording day: build the Ideas tab, then once I've picked all three days, interview me one question at a time on each piece until its narrative arc is locked, then the scripts."
+- **Done:** last week closed out, the gather, the three routed Inspiration cards covered or accounted for (marked routed), two kill passes; `docs/plans/2026-10-26-week/ideas.json` holds Monday 4, Wednesday 3, Friday 2 checked ideas. Nothing published yet.
+- **Next:** start a fresh session from `docs/handovers/2026-10-25-plan-week-26-oct.md` (the session stopped at the cost guard): one more Wednesday idea and two more Friday ideas, a kill pass, build and publish the board, his picks, then the story interview and scripts per day.
+- **Friday 23 Oct in Teleprompter:** both cuts are already there as "Two passports" (sent by hand); the record does not hold them and they were left alone.
+
 ## 24 October: the Sunday loop rebuilt for his recording day (Claude)
 
 - **Asked:** a week's audit (Codex's failure report), then "tomorrow's Ideas Board is SIGNIFICANTLY improved", his
