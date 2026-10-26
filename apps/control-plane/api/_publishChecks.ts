@@ -146,6 +146,25 @@ const WEDNESDAY_RETROSPECTIVE_EXCEPTION = {
   detail: 'Exempt by Krish on 22 October 2026: this exact retrospective comparison has a recommendation and three actions; no future prediction or confidence is asserted.',
 } as const
 
+// Ruling (Krish, 2026-10-26), of Friday's piece: "I think this one doesnt need
+// a prediction, I am kind of bored of making predictions. I think we need to
+// find a more professional and likeable and helpful way of closing this out";
+// then, of Wednesday's: "lets give weds the same treatment as friday". Each
+// closes on his own story, a question and a word to one reader instead. The
+// exception holds only while the body makes no prediction at all: a body with
+// a prediction section or a stated confidence is checked as any other, and no
+// other check is waived.
+const NO_PREDICTION_PIECES: Readonly<Record<string, string>> = {
+  '9a0c97af-f0d6-4d12-a7ce-773c622d4b67': 'Exempt by Krish on 26 October 2026 ("I think this one doesnt need a prediction"): this piece closes on his own story, a question and a word to juniors, and makes no prediction.',
+  'b63d2507-dbb4-449d-bce4-f21e859ee2ad': 'Exempt by Krish on 26 October 2026 ("lets give weds the same treatment as friday"): this piece closes on his own first job, a question and a word to IT, and makes no prediction.',
+}
+
+function noPredictionException(body: string, pieceId?: string): string | null {
+  if (!pieceId || !Object.hasOwn(NO_PREDICTION_PIECES, pieceId)) return null
+  if (callSectionOf(body) !== null || labelledConfidences(body).length > 0) return null
+  return NO_PREDICTION_PIECES[pieceId]
+}
+
 function approvedHorizonException(body: string, pieceId?: string): boolean {
   if (pieceId !== FRIDAY_HORIZON_EXCEPTION.pieceId) return false
   const section = callSectionOf(body)
@@ -327,6 +346,16 @@ export function publishChecks(body: string, factGate: { ok: boolean; reason: str
         check.ok = true
         check.name = `Retrospective exception: ${check.name}`
         check.detail = WEDNESDAY_RETROSPECTIVE_EXCEPTION.detail
+      }
+    }
+  }
+  const noCall = noPredictionException(text, pieceId)
+  if (noCall) {
+    for (const check of checks) {
+      if (['CALL', 'CALL_HORIZON', 'CLEAR_STANCE'].includes(check.id)) {
+        check.ok = true
+        check.name = `No prediction, by Krish's word: ${check.name}`
+        check.detail = noCall
       }
     }
   }

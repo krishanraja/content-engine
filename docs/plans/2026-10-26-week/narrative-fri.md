@@ -52,12 +52,12 @@ Five checkpoints, in order. Each passes only when a manager hearing it once coul
 5. **What to do on Monday.** Before you sign off the next role AI could fill, name who on each team will be a senior in
    2030, and what real work they'll learn on now that AI does the first draft. Pass: the reader names one person.
 
-Then the call (below), then the close: "Here's what I'd do with this info if I were you", the actions, "The full deep
+Then the close (no prediction, below): his first rung, the question, the word to juniors, then "Here's what I'd do with this info if I were you", the actions, "The full deep
 dive is at makeyourmindup.ai."
 
-## The call (OUR PREDICTION)
+## The close (no prediction)
 
-Asked of Krish in his own words before the beat is written (learning `his-call-in-his-words`).
+Krish, 2026-10-26: "I think this one doesnt need a prediction, I am kind of bored of making predictions. I think we need to find a more professional and likeable and helpful way of closing this out"; then "2 then 1, and then 4, lets give weds the same treatment as friday". So Friday ends on his own first rung (2), the question for the next hiring meeting (1), and a word to the juniors watching (4), then the usual close. His story, in his words: "I was at Microsoft in 2008, and I was asked to manually change the format of a 500,000-row spreadsheet. I was just doing the same actions over and over again. I had a hunch that this wasn't supposed to be done manually and looked online for how to loop things. I found Excel macros, which could record a simple action that I can add variables to. Obviously, this turned three weeks' worth of work into a few hours, but it took me a few days to build it. I really threw the dice on that first few days, which I could have completely wasted. I think the lesson there was identifying a repeatable task and then having the perseverance to fix the initial flaws in the system I built. Most people give up at the first system failure and call it the technologies fault." Then: "I dont want this example to feel unrelatable or arrogant though, it can easily." Told humbly: Microsoft as a joke on himself ("Yes, the people who make Excel"), the risk as the point, the lesson credited to the dull job, and no line judging others.
 
 ## The one picture
 
