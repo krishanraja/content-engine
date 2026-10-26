@@ -244,7 +244,10 @@ def record_verdict(title, verdict, why, krish, surface=None, piece=None, on=None
              'krish': krish.strip(), 'on': on or date.today().isoformat()}
     if piece:
         entry['piece'] = piece
-    data['verdicts'] = [entry] + [v for v in data.get('verdicts', []) if norm(v.get('title')) != norm(title)]
+    # One verdict per line and surface: the same words picked for a second place (his thumbnail words reused on the
+    # covers, 26 Oct) must keep the first pick, which an earlier version erased.
+    data['verdicts'] = [entry] + [v for v in data.get('verdicts', [])
+                                  if not (norm(v.get('title')) == norm(title) and (v.get('surface') or 'any') == entry['surface'])]
     verdicts_path().write_text(json.dumps(data, indent=1, ensure_ascii=False) + '\n', encoding='utf-8')
     return entry
 
@@ -448,6 +451,10 @@ def self_test():
             record_verdict('Amazon locked Muse out. Walmart let it in.', 'rejected', 'flat', 'no, boring', 'card')
             check('gate: a later rejection wins, with his words', any('no, boring' in p for p in gate('Amazon locked Muse out. Walmart let it in.')), True)
             check('lessons list his picked and rejected titles', 'Amazon locked Muse out' in lessons_text(), True)
+            record_verdict('GOOGLE PAID $2.7B FIRST', 'picked', 'a test fixture', 'yes', 'thumbnail')
+            record_verdict('GOOGLE PAID $2.7B FIRST', 'picked', 'a test fixture', 'all recommended', 'cover')
+            check('a line picked for a second surface keeps the first pick',
+                  sorted(v['surface'] for v in load_verdicts()['verdicts'] if v['title'] == 'GOOGLE PAID $2.7B FIRST'), ['cover', 'thumbnail'])
             piece = ('Anthropic makes Claude. It launched Opus 5.5 in September. OpenAI runs ChatGPT. Picture a woman called Sally. '
                      'It starts on Low, in a low gear. The old one beat the new one.')
             for bad in ("YOU'RE ON LOW.", 'OLD BEAT NEW.', 'WHO PICKED LOW?', 'Sally signs'):

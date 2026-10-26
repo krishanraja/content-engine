@@ -31,12 +31,33 @@ and keeps working after you close the laptop, then stops for your yes before any
 deleted. Today that is for a personal Pro or Max account in the US only; Team and Enterprise accounts do not have it
 yet, so a business that wants it has to decide whether staff may connect work apps to a personal account.
 
-Facts behind it: `research-wed.md`, both sections. The open question for him is whether that last line (the
-personal-account question) is the piece's sharpest point for a business reader.
+Facts behind it: `research-wed.md`, both sections.
+
+**His answer, 2026-10-26:** "sharpest point for Wednesday is more around unpacking the things the Claude site and the
+can-do reviews dont tell you such as how it actually is likely to change your behaviour and what it makes easier for
+you, where you would integrate it first with practical examples if you are an existing claude power user".
+
+Draft 3, built on his answer (our read, labelled as inference where the sources stop): Anthropic's page and the first
+reviews tell you what Claude Duet can do. If you already work in Claude, the bigger change is to your habits: you stop
+opening Claude to ask it things, and start your day with what it brought you, saying yes or no. That habit only forms
+if you give it one job that comes round every week and lives in the apps it can reach, because your local files, some
+of your skills and your custom connectors do not come with it, and its background checks spend the same plan limits as
+the rest of your Claude work. So hand it first the weekly job you now do in Claude by copying and pasting from those
+apps: prep for a client meeting, a pipeline review, or the follow-ups sitting in your inbox.
+
+Evidence for each part: the habit and the queue (Every: "keeps a running list of what it's working on and what it
+needs from me"; Anthropic: the morning brief and the approval step); the habit not forming without a pull (Claire Vo:
+nothing "would pull me back in"); what does not come with it (Vo: local skills; Every: custom connectors in scheduled
+runs; Copes and the Help Center: local files, all projects); limits (Help Center, Copes); the first job (Vo's sales
+pipeline from Slack, email and the CRM "without paste"). Business accounts: Team and Enterprise do not have it yet, so
+for them the same first job is what to line up for when it arrives.
 
 ## Who it is for, and what they do on Wednesday
 
-(Question 2, asked 26 Oct.)
+Krish, 2026-10-26: "people using it for work-related items, whether that be their personal Claude account or a Claude
+business account", "if you are an existing claude power user". Draft: someone who already runs part of their working
+week through Claude. On Wednesday they pick the one weekly job they would hand Duet first (or line up for it, on a
+business account), and check where its inputs live.
 
 ## The arc
 

@@ -122,9 +122,7 @@
      "tone": "answer"
     }
    ]
-  }
- ],
- "pending_his_pick": [
+  },
   {
    "file": "ch6.png",
    "kind": "statement",
@@ -135,10 +133,10 @@
    ],
    "lines": [
     {
-     "text": "Four questions about"
+     "text": "Ask your AI supplier the four"
     },
     {
-     "text": "your AI supplier",
+     "text": "questions Character.AI failed",
      "tone": "answer"
     }
    ]
