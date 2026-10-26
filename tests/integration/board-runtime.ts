@@ -14,6 +14,12 @@ import { MediaFixture } from '../helpers/media-quality.js'
 import rolloutConfig from '../../config/media-quality-rollout.json' with { type: 'json' }
 import { parseMediaQualityRollout } from '../../packages/core/src/media-rollout.js'
 
+// readMediaRef dynamically loads the library path helpers, whose module also
+// constructs a Supabase client. Satisfy that import with synthetic credentials;
+// every operation below still uses our injected private in-memory fixture.
+process.env.SUPABASE_URL='https://storage-fixture.invalid'
+process.env.SUPABASE_SERVICE_ROLE_KEY='fixture-only'
+
 // Activate only this disposable process's imported module fixture. No file is
 // written and production exposes no request/environment activation override.
 const originalRollout = { ...rolloutConfig }
@@ -59,6 +65,12 @@ class Query {
   then(resolve: (v: unknown)=>unknown,reject: (e: unknown)=>unknown) {return this.run().then(resolve,reject)}
 }
 let origin=''
+const originalFetch=globalThis.fetch
+globalThis.fetch=(input,init)=>{
+  const url=input instanceof Request?input.url:String(input)
+  assert.equal(new URL(url).origin,origin,'standalone fixture forbids non-local HTTP requests')
+  return originalFetch(input,init)
+}
 const objects=new Map<string,{data:Buffer,type:string}>()
 // Fresh per-process keys and labelled synthetic evidence; never real review authority.
 const media=new MediaFixture()
@@ -241,4 +253,4 @@ try{
     const checkBrowser=process.argv[6]==='visual'?checkVisual:interact
     await checkBrowser({modulePath:process.argv[3],origin,cookie,api:(collection:string)=>get(week+'/'+collection),write:(collection:string,id:string,body:unknown,revision:number)=>put(`${week}/${collection}/${id}`,{body,revision},200,collection==='edits'?{'Content-Type':'application/json',Cookie:cookie,Origin:origin}:headers),screenshotDir:process.argv[5],sourceData:!!process.argv[7]})
   }
-}finally{Object.assign(rolloutConfig, originalRollout);await new Promise<void>(resolve=>server.close(()=>resolve()));await pg.close()}
+}finally{globalThis.fetch=originalFetch;Object.assign(rolloutConfig, originalRollout);await new Promise<void>(resolve=>server.close(()=>resolve()));await pg.close()}
