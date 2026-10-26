@@ -1,5 +1,17 @@
 # Workbench: where we are and what's next
 
+## 26 October: production and social growth have separate owners
+
+Krish's ruling is recorded in docs/GROWTH-HANDOFF.md and AGENTS.md.
+Content-engine alone owns production and its standards; Growth-MakeYourMindUp
+owns social/posting strategy, amplification briefs, account management,
+authorised automatic distribution and channel learning. The transferred
+carousel rules live here in docs/CAROUSEL-STANDARD.md. Full revision 02 of
+the Grok Bot vs Muse pilot still needs his creative verdict. Next: receive
+Growth's distribution brief and return a checked creative package through
+the existing editorial/Studio path. This change updates repository guidance
+only; it does not mutate a tracked Studio session, learning record or board.
+
 ## 19 October: both publish boards live, web cutover verified
 
 Use https://content.krishraja.com/board/2026-10-19 and

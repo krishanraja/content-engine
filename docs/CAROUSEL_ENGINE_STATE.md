@@ -1,5 +1,12 @@
 # Carousel Engine current state
 
+26 October 2026 ownership update: this is a production system inside
+content-engine. Read GROWTH-HANDOFF.md for receiving Growth's distribution
+brief and returning finished assets. CAROUSEL-STANDARD.md holds the current
+publication pilot's production requirements. Growth owns social strategy
+and authorised posting; older manual-delivery wording below does not make
+this Studio a publishing owner or settle Growth's current delivery policy.
+
 > Scope: the carousel half of the Studio. For the whole system start at `README.md`. Its known stale passages are listed in `docs/STUDIO.md`, "The detailed Studio documents".
 
 This is the single current-state artifact for the Mindmake Carousel Engine. GitHub `main` remains authoritative. This document does not approve a visual direction or authorise publication.

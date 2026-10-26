@@ -1,7 +1,7 @@
 ---
 repo: krishanraja/content-engine
 product: Mindmake content engine
-as_of: 2026-10-18
+as_of: 2026-10-26
 head: c5578b1
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
@@ -13,6 +13,25 @@ steward: https://github.com/krishanraja/ai-harness/blob/main/docs/steward/RUNBOO
 never_publish: [the Epidemic Sound licence ids and the Teleprompter and Descript account details, Drive folder ids, the Claude routine and trigger ids, the Supabase project id, any credential or secret name including the operator token, the cron secret, Drive paths, Windows runner host names and local paths, runner bearer and signing key target names, any Remotion licence status detail, any client or guest name in config, the text of any subchannel mandate or of the voice block]
 ---
 # Mindmake content engine: where it is right now
+
+## Ownership correction verified 26 October 2026
+
+Krish clarified that production standards belong solely here, while
+growth-makeyourmindup owns social/posting strategy, amplification planning,
+account management and authorised automatic distribution. AGENTS.md now
+routes to docs/GROWTH-HANDOFF.md. docs/CAROUSEL-STANDARD.md receives the
+approved visual floor, clean-artwork and newcomer-comprehension requirements
+from the Growth pilot; its full revision 02 still awaits creative acceptance.
+Existing editorial and tracked Studio workflows remain the production path.
+No Studio job, runtime learning record, media, publish board or public post
+was changed by this documentation correction. The operational observations
+below retain their original dates and have not been reverified by this work.
+The required local verify run passed both typecheck stages, then reported
+failures in quick-edit-mix, recording-match and caption-analysis media tests.
+The long run was stopped after these failures. No production code changed;
+the failures are unresolved and no full-suite pass or release is claimed.
+The pilot's final-card revision is a local production review candidate with
+a distinct takeaway hierarchy; the first seven cards retain their hashes.
 
 ## What it is
 
@@ -161,6 +180,13 @@ Lifecycle: building. Readback on 2026-10-11 unless a commit is named; the 2026-1
 Everything older is in `docs/history/2026-09-25-NOW.md` and `docs/history/LOG.md`.
 
 ## What is next and what is waiting on Krish
+
+- Next for this handoff: process Growth's next distribution brief through
+  the existing production workflow and return an accepted asset package.
+  Do not build channel strategy or a public social scheduler here.
+- Waiting on Krish: the full Grok Bot vs Muse revision 02 creative verdict;
+  cover acceptance does not approve its full narrative format or scale.
+- North Star check (2026-10-26): holds.
 
 - Next: the shift to fascinating subjects in the judges, the three channel briefs and the idea sources, each shown to Krish as exact wording before anything live changes; the Cold Ideas scan reading whole documents and Word files; checking the launch set's words against the passed body before packing (walk log F73). The Studio script station's story check is done (`2651635`). Friday's piece 2 (mind.the.gap) has passed the fact check and a visual gate, and waits on Krish. Then the Sunday plan-the-week routine's next run on 18 October (`docs/CADENCE.md`). Then piece 1's production brief once Krish clears its five gates, then the first Studio render on the primary (the house-style proof, and the first real job leased under the runner fence); the receipt proof panel for the Studio's visual plan; next week's two picks; then the idea sources' own rule copies and retired names (walk log F23).
 - Waiting on Krish (as of 2026-10-18, `WORKBENCH.md`, "Latest handoff"; the 16 October items below may since have moved, WORKBENCH wins): his word on the three sign-offs on contradicted lines, Friday's deep cut rendering in the cloud, and, from 16 October: his go to deploy the filed-source guard, then refiling the eight dropped sources, the free pre-check, and his call on the paid fact check of Friday v4; sign-off on the v4 outline (2,760 words), scripts, title, his own two lines, the Manifold market and edit treatments. Earlier, as of 2026-10-15 (`WORKBENCH.md`, "Latest handoff"): his go on Friday v3's outline, article and scripts on the board, a paid fact check of the article, the prediction's confidence, the title, the Manifold market, and his recording. Earlier, as of 2026-10-14 (`docs/plans/2026-10-14-handoff.md`): his look at Friday's approved short and outline v2, the title rounds, then recording Friday; the Spotify show, its art and the music licence; whether to take down Wednesday's rejected Reel card. Earlier, as of 2026-10-13 (`WORKBENCH.md`, "Latest handoff"): applying and reading back the migrations `20261021080000`, `20261021100000` and `20261023100000`, sign-off on Wednesday's and Friday's drafts (inline notes on the amber board cards), Friday's recording, and the three feedback loops still to build in the order he chooses. Earlier, as of 2026-10-12: posting Monday's finished videos, Wednesday's two calls and Friday's call and recording, the AI-detection answer, applying the four board migrations after the engine deploys, and the items below that he has not yet cleared. Older items: choosing Wednesday's piece from its three options, generating the Make a piece routine's token and adding the Brandfetch, Firecrawl and Google Drive connectors to both routines (`WORKBENCH.md`, "Latest handoff"); and, from before: approving Friday's piece 2, recording its two cuts, testing Copy inside claude.ai, creating the routine token and its connectors for Control Center's Make it in Claude Code button, creating its Manifold market (no Manifold key here), recording its long and 90-second cuts, rotating every key pasted in chat including the Vercel master token, and confirming that Copy post keeps pictures inside a Substack Video post (`WORKBENCH.md`, "Latest handoff"); approving, recording and publishing Wednesday's Higgsfield piece (`WORKBENCH.md`, "Latest handoff"); sending the Maven email; swapping Monday and Wednesday in the free welcome email; swapping in the 3:2 covers for article 1 and the launch post; a yes to change the publication's address in the `mindmake` canon and `ai-harness`; the five production gates for piece 1's Studio brief; watching Saturday's build-signals run to prove the GitHub key works; applying migration `20261006180000` (recordings, `.mkv` only); rendering and approving the Studio proof on his machine, which switches the house style on; where CTRL's lead-magnet door goes now that makeyourmindup.ai is the publication's cover page; and the operator token's fate.

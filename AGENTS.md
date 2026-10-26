@@ -1,5 +1,17 @@
 # AGENTS.md
 
+## Production and growth ownership (Ruling, Krish, 2026-10-26)
+
+Content-engine owns content production and all production standards,
+including carousel narrative, copy, design, rendering and creative QA.
+Growth-MakeYourMindUp owns posting strategy, amplification planning,
+social account management, authorised automatic distribution and channel
+performance. Read docs/GROWTH-HANDOFF.md for the brief/package boundary
+and docs/CAROUSEL-STANDARD.md for the transferred production requirements.
+Use existing editorial/Studio routes; do not build a social scheduler here
+or duplicate production standards in Growth. Public posting authority stays
+with Growth's approved publishing route, not this repository.
+
 **Publish boards:** follow `docs/PUBLISH_BOARDS.md` and `config/boards.json.web_cutover`. After verified active cutover, both weeks live at content.krishraja.com and all new board interactions use the authenticated web API. Older Claude board instructions in this document are preserved compatibility/history, not directions to synchronize artifacts.
 
 
