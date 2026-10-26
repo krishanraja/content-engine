@@ -44,7 +44,7 @@ And if your company pays for Claude Team or Enterprise, you don't get it yet. An
 
 So start with one weekly job whose inputs already live in the apps Duet can reach, and that you now do by copying and pasting into Claude. Three good places to start:
 
-- Prep for a client meeting: the calendar invite, the last email thread and the latest proposal, pulled into one brief with what you need to settle before the call.
+- Prep for a client meeting: the calendar invite, the last email thread and the proposal in Google Docs, pulled into one brief with what you need to settle before the call.
 - A weekly pipeline review: your CRM, inbox and Slack, turned into a short note on which deals moved and which went quiet.
 - Your follow-ups: the threads waiting on you, drafted and lined up for your yes.
 
