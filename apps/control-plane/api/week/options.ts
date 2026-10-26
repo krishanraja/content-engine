@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from '../_supabase.js'
 import { guardEngine, operatorBearerAllowed } from '../_auth.js'
-import { isMonday, keepThroughWeek, parseOptions, type WeekOptionMeta } from '../_weekOptions.js'
+import { isMonday, keepThroughWeek, mergeCovers, parseOptions, type WeekOptionMeta } from '../_weekOptions.js'
 import { buildSources, windows } from '../_weekSources.js'
 import { buildInspiration } from '../_inspirationSources.js'
 import { CUE_COLS, cuesFrom } from '../_feedbackCues.js'
@@ -30,11 +30,15 @@ import { CUE_COLS, cuesFrom } from '../_feedbackCues.js'
 //        from his words (_feedbackCues.ts); a missing table is said in `empty`,
 //        never a failure. Evidence only: no model, no write, and the judges
 //        never read it.
-// POST /api/week/options  { week_start, series, options: [{ id, rank, pitch, why_now, recommended }] }
+// POST /api/week/options  { week_start, series, options: [{ id, rank, pitch, why_now, recommended, covers? }] }
 //        writes meta.week_option on each option's row (and its series, when
 //        the row has none), keeps each option alive through its week (a seed's
 //        own expiry can fall before the purge that would delete it), and
-//        clears week_option from rows this day no longer offers.
+//        clears week_option from rows this day no longer offers. An option's
+//        covers (the must_cover ids its board idea answers) are added to the
+//        row's meta.covers under its week_start and never cleared, so the
+//        Inspiration card a piece picked that week became is known for good
+//        (inspiration_card_pieces).
 //
 // Krish, 2026-10-11: planning is one Sunday decision for the week. The week
 // page in Control Center reads these options live from the rows. Nothing here
@@ -120,7 +124,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const row = found.get(o.id)!
     const meta = row.meta && typeof row.meta === 'object' ? row.meta : {}
     const option: WeekOptionMeta = { week_start, series, rank: o.rank, pitch: o.pitch, why_now: o.why_now, recommended: Boolean(o.recommended), by, at }
-    const patch: Record<string, unknown> = { meta: { ...meta, week_option: option }, updated_at: at }
+    const covers = mergeCovers(meta.covers, week_start, o.covers)
+    const patch: Record<string, unknown> = { meta: { ...meta, week_option: option, ...(covers ? { covers } : {}) }, updated_at: at }
     // A row with no series takes the day's (the judges' ladder fills an empty slot the same way); a stored series is never overwritten.
     if (!row.lane_slot) patch.lane_slot = series
     const keep = keepThroughWeek(row.expires_at, week_start)
