@@ -34,6 +34,12 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## Where it is right now (as of 2026-10-26)
 
+Carousel provenance rule clarified on 26 October: no public illustration-generation
+boilerplate in artwork, captions or descriptions. Retain private provenance and
+supported native metadata; Growth owns posting. The approved Grok/Muse Story set
+is preserved locally with a native first-frame header/wordmark overlap held for
+a surgical layout correction. Friday production remains with its existing owner.
+
 <!-- north-star-state {"week_of": "2026-10-26", "week_target": 1, "current": 1, "current_as_of": "2026-10-23", "current_source": "Control Center content_ideas (1 published in the last 7 days)", "urgency": 1, "urgency_reason": "at 100% of this week's target"} --> **North Star number: U1, on pace.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 1, against 1 this week, on the way to 30 by 30 November 2026. Steady: one proposal a week that raises the ceiling.
 
 - **Monday 26 October (follow.the.money, Character.AI) is signed and ready for Codex (2026-10-26).** Krish signed the storyboard, direction and title ("Yes to all four, recommended title") and is "100% happy with Monday's Publish Board". Both takes are placed on the record; the article passed two paid fact checks ($1.02 of the $1.20 he approved) and the spine judge. Left with him: the last chapter heading and the wide cover words (recommended: "Ask your AI supplier the four questions Character.AI failed" and "GOOGLE PAID $2.7B FIRST"); his sign-off of the fact check's 11 lines and one last small check of the 14 sentences the prediction bridge changed (this session's permission system refused both, so Control Center or his explicit words); and his paste of `docs/plans/2026-10-26-monday/CODEX_PROMPT.md` into Codex. North Star check (2026-10-26): holds.
