@@ -1,0 +1,58 @@
+{
+ "subchannel": "follow.the.money",
+ "date": "2026-10-26",
+ "headline": "Why is Disney eating the scraps of bankrupt Character.AI?",
+ "deck": "Google paid $2.7 billion for the tech and the founders in 2024. Now Disney is hiring the rest of the team through the bankruptcy court, and leaving the legal fights behind.",
+ "video_title": "Why is Disney eating the scraps of bankrupt Character.AI?",
+ "video_title_emphasis": "bankrupt Character.AI",
+ "comment_question": "WHO MAKES THE AI YOUR BUSINESS RUNS ON?",
+ "cover": {
+  "headline": [
+   "DISNEY IS EATING THE SCRAPS",
+   "OF BANKRUPT CHARACTER.AI"
+  ],
+  "portrait": true,
+  "rows": [
+   {
+    "name": "Google",
+    "logo": "logos/google-g.svg",
+    "tag": "2024: $2.7B",
+    "colour": "butter"
+   },
+   {
+    "name": "Disney",
+    "logo": "logos/disney-script-cream.svg",
+    "tag": "$20M",
+    "colour": "mint"
+   }
+  ]
+ },
+ "thumbs": {
+  "headline": [
+   "GOOGLE PAID",
+   "$2.7B FIRST"
+  ],
+  "portrait": true,
+  "rows": [
+   {
+    "name": "Google",
+    "logo": "logos/google-g.svg",
+    "tag": "2024: $2.7B",
+    "colour": "butter"
+   },
+   {
+    "name": "Disney",
+    "logo": "logos/disney-script-cream.svg",
+    "tag": "$20M",
+    "colour": "mint"
+   },
+   {
+    "name": "Character.AI",
+    "logo": "logos/characterai-cream.svg",
+    "tag": "BUST",
+    "colour": "coral"
+   }
+  ]
+ },
+ "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430"
+}

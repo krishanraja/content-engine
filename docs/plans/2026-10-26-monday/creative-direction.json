@@ -1,0 +1,895 @@
+{
+ "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+ "publish_day": "2026-10-26",
+ "style": {
+  "script": "follow-the-receipt",
+  "production": "face-with-proof",
+  "experiment": "receipt-animation: two receipts print side by side, Google's for the people in 2024 and Disney's for the staff and the code in 2026, beside the empty box"
+ },
+ "brand": {
+  "series": "follow.the.money",
+  "reference": "docs/plans/2026-10-23-friday/locked/storyboard-signoff.md (signed 24 Oct) and scripts/post-pack/tokens.css",
+  "captions": "no captions burned into the picture; the caption file comes from the finished file's own transcript (Friday 23 Oct rule)",
+  "intro_sting": "none: config/intro-sting.json is still a candidate, so every cut goes without a sting and its report says so"
+ },
+ "max_face_share": 0.6,
+ "cuts": {
+  "long": {
+   "take": "on_camera",
+   "frame": "16:9: his portrait selfie in a full-height panel left, the pictures right, full frame for cutaways (as Friday)",
+   "beats": [
+    {
+     "words": "Disney asked a dying AI firm to go bust first. That way it could hire the team and leave the lawsuits behind.",
+     "point": "The hook: a buyer told a company to go bankrupt first, and why that is strange",
+     "picture": {
+      "kind": "face",
+      "what": "Krish to camera, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "CHARACTER.AI · CHAPTER 11",
+     "modules": [
+      "random-headline-hook",
+      "treated-background"
+     ],
+     "motion": "still; the label types in on \"go bust\"",
+     "timing": "0:00.21-0:10.89 in the take (10.7 s)"
+    },
+    {
+     "words": "So why are Disney and Google both paying for pieces of the same company? And what does it mean for you?",
+     "point": "Two very different giants paid for the same company, so there must be two reasons",
+     "picture": {
+      "kind": "logo",
+      "what": "Google and Disney wordmarks either side of the Character.AI logo, equal size, on the ink desk",
+      "source": "docs/plans/2026-10-26-monday/logos/",
+      "source_label": ""
+     },
+     "on_screen_text": "TWO BUYERS · ONE COMPANY",
+     "modules": [
+      "words-in-scene"
+     ],
+     "motion": "the two logos slide in on their names",
+     "timing": "0:10.89-0:17.37 in the take (6.5 s)"
+    },
+    {
+     "words": "I've been reading the court papers on Character.AI, the app where millions of people chat with made-up characters.",
+     "point": "This comes from the bankruptcy paperwork, not gossip",
+     "picture": {
+      "kind": "document",
+      "what": "Character.AI's Chapter 11 announcement, the line about the voluntary Chapter 11 filing highlighted",
+      "source": "https://www.businesswire.com/news/home/20261012656385/en/Character.ai-Initiates-Voluntary-Chapter-11-Proceeding-to-Facilitate-Value-Maximizing-Sale-Process",
+      "source_label": "BUSINESS WIRE · 12 OCT 2026"
+     },
+     "on_screen_text": "",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "slow push into the highlighted line",
+     "timing": "0:17.37-0:24.35 in the take (7.0 s)"
+    },
+    {
+     "words": "Two giants have now paid for pieces of it, for very different reasons. So I wanted to break it down for you.",
+     "point": "He is going to unpack two different reasons, one at a time",
+     "picture": {
+      "kind": "face",
+      "what": "Krish to camera, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [
+      "treated-background"
+     ],
+     "motion": "",
+     "timing": "0:24.35-0:29.43 in the take (5.1 s)"
+    },
+    {
+     "words": "Let's start with Google. Google wanted the brains behind the app.",
+     "point": "Google is first, and it wanted the people",
+     "picture": {
+      "kind": "face",
+      "what": "Krish to camera, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "GOOGLE · 2024",
+     "modules": [
+      "treated-background"
+     ],
+     "motion": "",
+     "timing": "0:29.43-0:32.47 in the take (3.0 s)"
+    },
+    {
+     "words": "So in 2024, it reportedly paid two point seven billion dollars to use Character.AI's tech. And it hired the founders and their research team away.",
+     "point": "What Google got for its money: the tech and the founders, printed as the first receipt",
+     "picture": {
+      "kind": "card",
+      "what": "Receipt 1 prints line by line on cream paper: GOOGLE · AUG 2024 / Use of the tech ... $2.7B (reported) / Hires: the founders + research team",
+      "source": "docs/plans/2026-10-26-monday/receipts.md",
+      "source_label": "WIRED · 19 OCT 2026"
+     },
+     "on_screen_text": "$2.7B · AUG 2024",
+     "modules": [
+      "itemised-receipt",
+      "dark-object-card"
+     ],
+     "motion": "each line prints on the word that names it",
+     "timing": "0:32.47-0:42.23 in the take (9.8 s)"
+    },
+    {
+     "words": "Google was racing to build the smartest AI, and these people were very good at it.",
+     "point": "Why Google wanted them: the race to build the smartest AI",
+     "picture": {
+      "kind": "face",
+      "what": "Krish to camera, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [
+      "treated-background"
+     ],
+     "motion": "",
+     "timing": "0:42.23-0:46.05 in the take (3.8 s)"
+    },
+    {
+     "words": "But the rest of the staff stayed behind, and the app carried on, until its cash started running low.",
+     "point": "Most of the company stayed behind after Google took the founders",
+     "picture": {
+      "kind": "screen",
+      "what": "Wired's report, the words \"vast majority\" of staff stayed highlighted",
+      "source": "https://www.wired.com/story/disney-asked-characterai-to-go-bankrupt-for-a-get-out-of-lawsuits-card/",
+      "source_label": "WIRED · 19 OCT 2026"
+     },
+     "on_screen_text": "MOST STAFF STAYED",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "push in to the highlighted words",
+     "timing": "0:46.05-0:51.19 in the take (5.1 s)"
+    },
+    {
+     "words": "Now, Disney wanted something else, and to see why, go back to last December.",
+     "point": "Disney had a different reason, and it starts a year earlier",
+     "picture": {
+      "kind": "face",
+      "what": "Krish to camera, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "DISNEY · DEC 2025",
+     "modules": [
+      "treated-background"
+     ],
+     "motion": "",
+     "timing": "0:51.19-0:55.81 in the take (4.6 s)"
+    },
+    {
+     "words": "Disney agreed to put a billion dollars into OpenAI. As part of that deal, over two hundred Disney characters would star in Sora, OpenAI's video app.",
+     "point": "Disney first tried to put its characters inside someone else's AI app",
+     "picture": {
+      "kind": "document",
+      "what": "The December 2025 Disney and OpenAI announcement: $1 billion and 200+ characters for Sora, highlighted",
+      "source": "https://thewaltdisneycompany.com/news/disney-openai-sora-agreement/",
+      "source_label": "DISNEY · DEC 2025"
+     },
+     "on_screen_text": "$1B · 200+ CHARACTERS",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "highlight sweeps the $1 billion line, then the 200 characters line",
+     "timing": "0:55.81-1:05.29 in the take (9.5 s)"
+    },
+    {
+     "words": "But Sora belonged to OpenAI. So Disney was really renting space for Mickey, Marvel and Star Wars on someone else's app.",
+     "point": "Owning the characters is different from owning the app they live in: Disney was renting",
+     "picture": {
+      "kind": "card",
+      "what": "Marvel, Star Wars and Disney wordmarks sit inside an outlined box labelled SORA, with OpenAI's logo on the box's door",
+      "source": "docs/plans/2026-10-26-monday/logos/",
+      "source_label": ""
+     },
+     "on_screen_text": "RENTED SPACE",
+     "modules": [
+      "dark-object-card"
+     ],
+     "motion": "the box outline draws round them on \"someone else's app\"",
+     "timing": "1:05.29-1:13.37 in the take (8.1 s)"
+    },
+    {
+     "words": "Then in March, OpenAI shut Sora down.",
+     "point": "The landlord closed the building",
+     "picture": {
+      "kind": "screen",
+      "what": "OpenAI's 24 March 2026 announcement that Sora is shutting down, dated",
+      "source": "https://deadline.com/2026/03/sora-shut-down-disney-investment-1236764689/",
+      "source_label": "OPENAI · 24 MAR 2026"
+     },
+     "on_screen_text": "SORA SHUT",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "cut on \"shut\"",
+     "timing": "1:13.37-1:16.23 in the take (2.9 s)"
+    },
+    {
+     "words": "The deal died, and no money changed hands.",
+     "point": "The deal ended with nothing paid",
+     "picture": {
+      "kind": "card",
+      "what": "A receipt for the Disney and OpenAI deal stamped VOID; total line reads $0 changed hands",
+      "source": "docs/plans/2026-10-26-monday/receipts.md",
+      "source_label": "REPORTS · MAR 2026"
+     },
+     "on_screen_text": "$0 CHANGED HANDS",
+     "modules": [
+      "itemised-receipt",
+      "dark-object-card"
+     ],
+     "motion": "the VOID stamp lands on \"died\"",
+     "timing": "1:16.23-1:18.43 in the take (2.2 s)"
+    },
+    {
+     "words": "Disney said it respected the decision, which is a very polite way to say, well, that's awkward.",
+     "point": "The joke lands on his face: Disney being polite about it",
+     "picture": {
+      "kind": "face",
+      "what": "Krish to camera, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [
+      "treated-background",
+      "wry-close"
+     ],
+     "motion": "hold still on \"that's awkward\"",
+     "timing": "1:18.43-1:24.13 in the take (5.7 s)"
+    },
+    {
+     "words": "So Disney changed its plan. In September, it hired Character.AI's chief executive, who ran the firm after the founders left. He got a brand new job, Disney's first ever technology chief.",
+     "point": "Disney's new plan starts with hiring the person who ran Character.AI",
+     "picture": {
+      "kind": "screen",
+      "what": "The report that Disney hired Character.AI's chief executive as its first chief technology officer, highlighted",
+      "source": "https://thewaltdisneycompany.com/press-releases/the-walt-disney-company-names-karandeep-anand-to-newly-created-role-of-chief-technology-officer/",
+      "source_label": "SEPT 2026"
+     },
+     "on_screen_text": "DISNEY'S FIRST CTO",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "push in on \"first chief technology officer\"",
+     "timing": "1:24.13-1:36.53 in the take (12.4 s)"
+    },
+    {
+     "words": "And this month, the court papers show the rest of the plan. Disney has offered jobs to sixty-six of Character.AI's staff. All together, their pay comes to about sixty million dollars a year, for three years.",
+     "point": "What Disney is paying for the people, printed as the second receipt",
+     "picture": {
+      "kind": "card",
+      "what": "Receipt 2 starts printing: DISNEY · OCT 2026 / 66 staff ... about $60M a year x 3 years",
+      "source": "docs/plans/2026-10-26-monday/receipts.md",
+      "source_label": "COURT FILINGS VIA GIZMODO"
+     },
+     "on_screen_text": "66 STAFF · $60M A YEAR",
+     "modules": [
+      "itemised-receipt",
+      "dark-object-card"
+     ],
+     "motion": "the line prints on \"sixty-six\"",
+     "timing": "1:36.53-1:51.39 in the take (14.9 s)"
+    },
+    {
+     "words": "On top of that, Disney has bid twenty million dollars for the code. That includes its tools for keeping children safe.",
+     "point": "And what Disney is paying for the code, including its child-safety tools",
+     "picture": {
+      "kind": "card",
+      "what": "Receipt 2 adds: The code (opening bid) ... $20M, with sub-lines trust and safety tools, age prediction",
+      "source": "docs/plans/2026-10-26-monday/receipts.md",
+      "source_label": "WIRED · COURT FILINGS"
+     },
+     "on_screen_text": "$20M · THE CODE",
+     "modules": [
+      "itemised-receipt",
+      "dark-object-card"
+     ],
+     "motion": "the line prints on \"twenty million\"",
+     "timing": "1:51.39-1:57.87 in the take (6.5 s)"
+    },
+    {
+     "words": "Here's the clever bit.",
+     "point": "He flags the trick before he explains it",
+     "picture": {
+      "kind": "face",
+      "what": "Krish to camera, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [
+      "treated-background"
+     ],
+     "motion": "",
+     "timing": "1:57.87-1:59.65 in the take (1.8 s)"
+    },
+    {
+     "words": "Character.AI filed for bankruptcy on the twelfth of October.",
+     "point": "The bankruptcy is real and dated",
+     "picture": {
+      "kind": "document",
+      "what": "The Chapter 11 announcement again, the date line highlighted",
+      "source": "https://www.businesswire.com/news/home/20261012656385/en/Character.ai-Initiates-Voluntary-Chapter-11-Proceeding-to-Facilitate-Value-Maximizing-Sale-Process",
+      "source_label": "BUSINESS WIRE · 12 OCT 2026"
+     },
+     "on_screen_text": "CHAPTER 11 · 12 OCT",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "cut on \"bankruptcy\"",
+     "timing": "1:59.65-2:02.67 in the take (3.0 s)"
+    },
+    {
+     "words": "And Disney made that a condition of its offer, and the papers even say why. Character.AI was running low on cash. And it faced lawsuits from families and US states, who say its chatbots harmed children.",
+     "point": "The filing itself says why Disney wanted the court: cash running out and lawsuits",
+     "picture": {
+      "kind": "document",
+      "what": "The court filing itself: \"diminishing cash reserve and significant litigation and regulatory risks\", highlighted",
+      "source": "https://cases.stretto.com/public/x936/14939/PLEADINGS/1493910132680000000114.pdf",
+      "source_label": "COURT FILING · CASE 26-11603 · OCT 2026"
+     },
+     "on_screen_text": "CASH · LAWSUITS",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "highlight sweeps the quoted words as he says \"cash\", then \"lawsuits\"",
+     "timing": "2:02.67-2:15.17 in the take (12.5 s)"
+    },
+    {
+     "words": "Going through the court means Disney takes the people and the code, clean, while the lawsuits stay behind with Character.AI.",
+     "point": "The money map: the people and the code go to Disney, the lawsuits stay in the old company",
+     "picture": {
+      "kind": "chart",
+      "what": "The money map: an arrow carries THE PEOPLE and THE CODE from the Character.AI box to Disney; THE LAWSUITS stays inside the box",
+      "source": "docs/plans/2026-10-26-monday/receipts.md",
+      "source_label": "COURT FILINGS"
+     },
+     "on_screen_text": "PEOPLE + CODE → DISNEY",
+     "modules": [
+      "mechanism-image"
+     ],
+     "motion": "the two labels slide out on \"takes\"; the lawsuits label stays put",
+     "timing": "2:15.17-2:22.93 in the take (7.8 s)"
+    },
+    {
+     "words": "So who is left holding the empty box?",
+     "point": "The question the rest of the story answers: who gets nothing",
+     "picture": {
+      "kind": "face",
+      "what": "Krish to camera, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [
+      "treated-background"
+     ],
+     "motion": "",
+     "timing": "2:22.93-2:25.91 in the take (3.0 s)"
+    },
+    {
+     "words": "The people who used the app, for a start. Disney didn't bid for the app itself, or for anyone's chats. So what happens to the app is now up to the court.",
+     "point": "The users are left out: Disney did not bid for the app or anyone's chats",
+     "picture": {
+      "kind": "card",
+      "what": "The empty box, ink outline: THE APP and USERS' CHATS drop in; a label NOT IN DISNEY'S BID (the filing excludes consumer-facing apps and end user data)",
+      "source": "https://cases.stretto.com/public/x936/14939/PLEADINGS/1493910132680000000114.pdf",
+      "source_label": "COURT FILING · OCT 2026"
+     },
+     "on_screen_text": "NOT IN DISNEY'S BID",
+     "modules": [
+      "dark-object-card"
+     ],
+     "motion": "each label drops in on its words",
+     "timing": "2:25.91-2:32.89 in the take (7.0 s)"
+    },
+    {
+     "words": "And then there are the people suing Character.AI, whose claims stay with a firm that is being sold for parts.",
+     "point": "The people suing are left with a company being sold for parts",
+     "picture": {
+      "kind": "card",
+      "what": "The empty box gains THE LAWSUITS: families and US states",
+      "source": "https://www.cbsnews.com/news/character-ai-files-bankruptcy-disney-license/",
+      "source_label": "CBS NEWS · OCT 2026"
+     },
+     "on_screen_text": "THE LAWSUITS STAY",
+     "modules": [
+      "dark-object-card"
+     ],
+     "motion": "the label drops in on \"suing\"",
+     "timing": "2:32.89-2:40.15 in the take (7.3 s)"
+    },
+    {
+     "words": "See, the money followed the people. Google paid billions for the tech and the founders, and Disney is paying millions for the rest of the team. Everyone else is left with the empty box.",
+     "point": "The whole story in one picture: two receipts and an empty box",
+     "picture": {
+      "kind": "chart",
+      "what": "The one picture: Receipt 1 (Google, 2024, $2.7B, the founders) and Receipt 2 (Disney, 2026, $20M code + $60M a year team) side by side, the empty box beside them with nothing going in",
+      "source": "docs/plans/2026-10-26-monday/receipts.md",
+      "source_label": "WIRED · GIZMODO · COURT FILINGS"
+     },
+     "on_screen_text": "$2.7B · $20M + $60M/YR · $0",
+     "modules": [
+      "itemised-receipt",
+      "one-number-after"
+     ],
+     "motion": "the camera pulls back to show all three; hold",
+     "timing": "2:40.15-2:53.43 in the take (13.3 s)"
+    },
+    {
+     "words": "And it isn't just Disney. Netflix bought an AI film start-up this year, and the record label Warner Music bought an AI firm too.",
+     "point": "Disney is part of a pattern: other media giants have bought AI firms this year",
+     "picture": {
+      "kind": "logo",
+      "what": "Netflix logo with InterPositive ($587M, reported) and Warner Music Group logo with Sureel AI (June), each with its source line",
+      "source": "docs/plans/2026-10-26-monday/logos/",
+      "source_label": ""
+     },
+     "on_screen_text": "NETFLIX · WARNER MUSIC",
+     "modules": [
+      "words-in-scene"
+     ],
+     "motion": "each pair arrives on its name",
+     "timing": "2:53.43-3:01.59 in the take (8.2 s)"
+    },
+    {
+     "words": "The big media firms have stopped renting AI, and started owning it.",
+     "point": "The shift in one line: renting AI to owning it",
+     "picture": {
+      "kind": "face",
+      "what": "Krish to camera, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "RENTING → OWNING",
+     "modules": [
+      "treated-background"
+     ],
+     "motion": "",
+     "timing": "3:01.59-3:05.97 in the take (4.4 s)"
+    },
+    {
+     "words": "So my prediction is that three more giants follow them. First, Skydance, the new owner of Paramount Pictures. Then the record label Universal Music. And then Comcast, the American TV giant that owns NBC.",
+     "point": "The prediction names three companies that have not bought yet",
+     "picture": {
+      "kind": "logo",
+      "what": "Three empty receipt slots, each with a logo: Skydance (Paramount), Universal Music Group, Comcast (NBCUniversal)",
+      "source": "docs/plans/2026-10-26-monday/logos/",
+      "source_label": ""
+     },
+     "on_screen_text": "SKYDANCE · UNIVERSAL MUSIC · COMCAST",
+     "modules": [
+      "words-in-scene"
+     ],
+     "motion": "each logo lands on its name",
+     "timing": "3:05.97-3:18.89 in the take (12.9 s)"
+    },
+    {
+     "words": "By the first of March, 2027, I reckon each of them will announce buying an AI firm or its team. And I'm seventy-five percent sure all three will do it.",
+     "point": "The call is checkable: a date and a confidence",
+     "picture": {
+      "kind": "card",
+      "what": "Prediction card: BY 1 MARCH 2027, the three logos, 75%",
+      "source": "docs/plans/2026-10-26-week/narrative-mon.md",
+      "source_label": "OUR PREDICTION"
+     },
+     "on_screen_text": "BY 1 MAR 2027 · 75%",
+     "modules": [
+      "dark-object-card"
+     ],
+     "motion": "the 75% counts up on \"seventy-five\"",
+     "timing": "3:18.89-3:30.15 in the take (11.3 s)"
+    },
+    {
+     "words": "Now, why should you care if you're not Disney? Because most businesses now run on someone else's AI.",
+     "point": "Why it matters to a business that is not Disney",
+     "picture": {
+      "kind": "face",
+      "what": "Krish to camera, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [
+      "treated-background"
+     ],
+     "motion": "",
+     "timing": "3:30.15-3:36.11 in the take (6.0 s)"
+    },
+    {
+     "words": "It might be your writing tool, your chatbot, or maybe your whole customer service desk. If that supplier goes the way of Sora, the tool can switch off. And your work in it can go too.",
+     "point": "It already happened once in this story: an AI app switched off and took the deal with it",
+     "picture": {
+      "kind": "screen",
+      "what": "The Sora shutdown page again, dated",
+      "source": "https://deadline.com/2026/03/sora-shut-down-disney-investment-1236764689/",
+      "source_label": "OPENAI · 24 MAR 2026"
+     },
+     "on_screen_text": "IT HAPPENED TO DISNEY",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "cut on \"switch off\"",
+     "timing": "3:36.11-3:46.61 in the take (10.5 s)"
+    },
+    {
+     "words": "And this story shows the warning signs, years before the end. Here's what I'd do with this info if I were you. Pick the AI tool your business leans on most, and ask four things about the firm that makes it.",
+     "point": "He moves to what he would do, and the warning signs come first",
+     "picture": {
+      "kind": "face",
+      "what": "Krish to camera, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [
+      "treated-background",
+      "usable-test"
+     ],
+     "motion": "",
+     "timing": "3:46.61-3:58.69 in the take (12.1 s)"
+    },
+    {
+     "words": "First, are its founders still there? Google took Character.AI's founders two years before the end.",
+     "point": "Warning sign one, with this story's proof: the founders left two years early",
+     "picture": {
+      "kind": "card",
+      "what": "Checklist card 1 of 4: FOUNDERS STILL THERE? with the dates AUG 2024 and OCT 2026",
+      "source": "docs/plans/2026-10-26-monday/receipts.md",
+      "source_label": "WIRED"
+     },
+     "on_screen_text": "1 · FOUNDERS STILL THERE?",
+     "modules": [
+      "usable-test",
+      "dark-object-card"
+     ],
+     "motion": "the card ticks in",
+     "timing": "3:58.69-4:06.61 in the take (7.9 s)"
+    },
+    {
+     "words": "Second, is your tool the main thing that firm sells, or a side bet? Sora was a side bet, and it vanished.",
+     "point": "Warning sign two: Sora was a side bet and vanished",
+     "picture": {
+      "kind": "card",
+      "what": "Checklist card 2 of 4: MAIN PRODUCT OR SIDE BET? with Sora, shut 24 Mar 2026",
+      "source": "docs/plans/2026-10-26-monday/receipts.md",
+      "source_label": "OPENAI"
+     },
+     "on_screen_text": "2 · MAIN PRODUCT OR SIDE BET?",
+     "modules": [
+      "usable-test",
+      "dark-object-card"
+     ],
+     "motion": "",
+     "timing": "4:06.61-4:13.85 in the take (7.2 s)"
+    },
+    {
+     "words": "Third, is the firm running short of cash? The court papers warned about exactly that.",
+     "point": "Warning sign three: the filing warned about cash",
+     "picture": {
+      "kind": "card",
+      "what": "Checklist card 3 of 4: SHORT OF CASH? with \"diminishing cash reserve\" quoted",
+      "source": "docs/plans/2026-10-26-monday/receipts.md",
+      "source_label": "COURT FILING"
+     },
+     "on_screen_text": "3 · SHORT OF CASH?",
+     "modules": [
+      "usable-test",
+      "dark-object-card"
+     ],
+     "motion": "",
+     "timing": "4:13.85-4:17.93 in the take (4.1 s)"
+    },
+    {
+     "words": "And fourth, is it collecting lawsuits? That's why Disney went through the court.",
+     "point": "Warning sign four: the lawsuits are why Disney used the court",
+     "picture": {
+      "kind": "card",
+      "what": "Checklist card 4 of 4: COLLECTING LAWSUITS?",
+      "source": "docs/plans/2026-10-26-monday/receipts.md",
+      "source_label": "COURT FILING"
+     },
+     "on_screen_text": "4 · COLLECTING LAWSUITS?",
+     "modules": [
+      "usable-test",
+      "dark-object-card"
+     ],
+     "motion": "",
+     "timing": "4:17.93-4:24.05 in the take (6.1 s)"
+    },
+    {
+     "words": "If two of those answers worry you, line up a plan B now. That means a second tool you've tried on real work, and a copy of your own data.",
+     "point": "The action: two worrying answers means a tested second tool and a copy of your data",
+     "picture": {
+      "kind": "face",
+      "what": "Krish to camera, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "PLAN B · YOUR DATA",
+     "modules": [
+      "treated-background"
+     ],
+     "motion": "",
+     "timing": "4:24.05-4:33.63 in the take (9.6 s)"
+    },
+    {
+     "words": "The full deep dive is at makeyourmindup.ai.",
+     "point": "Where to read the whole piece",
+     "picture": {
+      "kind": "card",
+      "what": "End card: makeyourmindup.ai on the brand ink, follow.the.money series mark",
+      "source": "docs/plans/2026-10-26-monday/receipts.md",
+      "source_label": ""
+     },
+     "on_screen_text": "MAKEYOURMINDUP.AI",
+     "modules": [
+      "dark-object-card"
+     ],
+     "motion": "hold",
+     "timing": "4:33.63-4:36.45 in the take (2.8 s)"
+    }
+   ]
+  },
+  "short": {
+   "take": "on_camera",
+   "frame": "9:16: his face full frame, full-frame cutaways",
+   "beats": [
+    {
+     "words": "I've been reading court papers on Character.AI, a chat app with millions of users. It ran low on cash, faced lawsuits over harm to children, and went bust.",
+     "point": "The hook and the facts that make it strange: a broke app that two giants paid for",
+     "picture": {
+      "kind": "face",
+      "what": "Krish to camera, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "CHARACTER.AI · CHAPTER 11",
+     "modules": [
+      "random-headline-hook",
+      "full-face-vertical"
+     ],
+     "motion": "",
+     "timing": "0:00.00-0:09.96 in the take (10.0 s)"
+    },
+    {
+     "words": "So why did Google, and now Disney, both pay for it?",
+     "point": "Two buyers, one company",
+     "picture": {
+      "kind": "logo",
+      "what": "Google and Disney wordmarks either side of the Character.AI logo, equal size",
+      "source": "docs/plans/2026-10-26-monday/logos/",
+      "source_label": ""
+     },
+     "on_screen_text": "TWO BUYERS",
+     "modules": [
+      "words-in-scene"
+     ],
+     "motion": "logos slide in on their names",
+     "timing": "0:09.96-0:12.74 in the take (2.8 s)"
+    },
+    {
+     "words": "Google got the brains first. In 2024 it reportedly paid two point seven billion dollars to use the tech, and hired the founders away.",
+     "point": "Google paid for the tech and the founders first",
+     "picture": {
+      "kind": "card",
+      "what": "Receipt 1: GOOGLE · 2024 / Use of the tech ... $2.7B (reported) / Hires: the founders",
+      "source": "docs/plans/2026-10-26-monday/receipts.md",
+      "source_label": "WIRED"
+     },
+     "on_screen_text": "$2.7B · 2024",
+     "modules": [
+      "itemised-receipt",
+      "dark-object-card"
+     ],
+     "motion": "lines print on their words",
+     "timing": "0:12.74-0:20.38 in the take (7.6 s)"
+    },
+    {
+     "words": "Disney wanted its characters in AI videos, so it agreed a billion-dollar deal with OpenAI's video app, Sora. Then OpenAI shut Sora down.",
+     "point": "Disney rented space in Sora, and Sora shut",
+     "picture": {
+      "kind": "screen",
+      "what": "OpenAI's Sora shutdown announcement, dated",
+      "source": "https://deadline.com/2026/03/sora-shut-down-disney-investment-1236764689/",
+      "source_label": "OPENAI · 24 MAR 2026"
+     },
+     "on_screen_text": "SORA SHUT",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "cut on \"shut\"",
+     "timing": "0:20.38-0:27.44 in the take (7.1 s)"
+    },
+    {
+     "words": "So Disney is building its own team, hiring sixty-six staff on sixty million dollars a year in total.",
+     "point": "Disney is now paying for the team itself",
+     "picture": {
+      "kind": "card",
+      "what": "Receipt 2: DISNEY · 2026 / 66 staff ... about $60M a year",
+      "source": "docs/plans/2026-10-26-monday/receipts.md",
+      "source_label": "COURT FILINGS VIA GIZMODO"
+     },
+     "on_screen_text": "66 STAFF · $60M A YEAR",
+     "modules": [
+      "itemised-receipt",
+      "dark-object-card"
+     ],
+     "motion": "line prints on \"sixty-six\"",
+     "timing": "0:27.44-0:36.32 in the take (8.9 s)"
+    },
+    {
+     "words": "And by buying through the bankruptcy court, Disney leaves the lawsuits behind.",
+     "point": "The court sale leaves the lawsuits behind in the old company",
+     "picture": {
+      "kind": "chart",
+      "what": "The money map: the people go to Disney, THE LAWSUITS stay in the Character.AI box",
+      "source": "docs/plans/2026-10-26-monday/receipts.md",
+      "source_label": "COURT FILINGS"
+     },
+     "on_screen_text": "LAWSUITS STAY BEHIND",
+     "modules": [
+      "mechanism-image"
+     ],
+     "motion": "the lawsuits label stays put",
+     "timing": "0:36.32-0:47.62 in the take (11.3 s)"
+    },
+    {
+     "words": "So my prediction? I reckon that by March 2027, Skydance, Universal Music and Comcast each buy an AI team too. I'm seventy-five percent sure all three will.",
+     "point": "The prediction, with a date and a confidence",
+     "picture": {
+      "kind": "card",
+      "what": "Prediction card: Skydance, Universal Music Group and Comcast logos, BY MARCH 2027, 75%",
+      "source": "docs/plans/2026-10-26-monday/logos/",
+      "source_label": "OUR PREDICTION"
+     },
+     "on_screen_text": "BY MAR 2027 · 75%",
+     "modules": [
+      "dark-object-card"
+     ],
+     "motion": "logos land on their names; 75% counts up",
+     "timing": "0:47.62-1:02.16 in the take (14.5 s)"
+    },
+    {
+     "words": "Here's what I'd do with this info if I were you. Ask four things about the firm behind your AI.",
+     "point": "What he would do: four questions about the firm behind your AI",
+     "picture": {
+      "kind": "face",
+      "what": "Krish to camera, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [
+      "full-face-vertical",
+      "usable-test"
+     ],
+     "motion": "",
+     "timing": "1:02.16-1:07.44 in the take (5.3 s)"
+    },
+    {
+     "words": "Are its founders still there? Is your tool its main product? Is it short of cash? And is it piling up lawsuits?",
+     "point": "The four warning signs, one per question",
+     "picture": {
+      "kind": "card",
+      "what": "The four checklist cards in turn: FOUNDERS? · MAIN PRODUCT? · CASH? · LAWSUITS?",
+      "source": "docs/plans/2026-10-26-monday/receipts.md",
+      "source_label": "THIS STORY"
+     },
+     "on_screen_text": "FOUNDERS · PRODUCT · CASH · LAWSUITS",
+     "modules": [
+      "usable-test",
+      "dark-object-card"
+     ],
+     "motion": "one card per question, on the question",
+     "timing": "1:07.44-1:15.38 in the take (7.9 s)"
+    },
+    {
+     "words": "The full deep dive is at makeyourmindup.ai.",
+     "point": "Where to read the whole piece",
+     "picture": {
+      "kind": "card",
+      "what": "End card: makeyourmindup.ai",
+      "source": "docs/plans/2026-10-26-monday/receipts.md",
+      "source_label": ""
+     },
+     "on_screen_text": "MAKEYOURMINDUP.AI",
+     "modules": [
+      "dark-object-card"
+     ],
+     "motion": "hold",
+     "timing": "1:15.38-1:17.86 in the take (2.5 s)"
+    }
+   ]
+  }
+ },
+ "article": {
+  "visuals": []
+ },
+ "do_not": [
+  "No Disney character artwork: wordmarks and logos only",
+  "No subtitles of what he says; on-screen words add a source, date, number or name",
+  "No figure or icon acting out an analogy; every picture is a checked number, a document or a logo",
+  "Never invent a word, number, label or picture; a gap goes back to Claude"
+ ],
+ "acceptance": [
+  "Watched end to end at full size, at the speed the audience sees it, by a reviewer who did not make the cut",
+  "Every spoken word heard continuously: no chopped syllable at any join (audio compared around each edit boundary)",
+  "Every picture lands on the words it proves, framing centred, logos at equal size, no shake left in",
+  "Brand matches the reference frame: wordmark, captions, palette and the intro sting",
+  "Fact, transport and editorial status reported separately; ready only when all three pass"
+ ],
+ "signed": {
+  "by": "Krish",
+  "said": "Yes to all four, recommended title, make sure everything is able to be proof read/viewed in todays publish board at content.krishraja.com and I'll let you know",
+  "on": "2026-10-26",
+  "script_sha256": {
+   "long": "6db388ed0c6e6a7bb1f889d6d8795bf208e3e24c85695d6c0a32a796ce964ee5",
+   "short": "ce3eea45ecd65b8d9530e5284d239a72d5e80ae89c672898fcbf5934941c58fd"
+  },
+  "what": "item 1 of storyboard-signoff.md: the storyboard (the Receipts look), with his ruling on the takes (take_edits) and the recommended title"
+ },
+ "motion_system": {
+  "name": "Receipts",
+  "file": "docs/plans/2026-10-26-monday/receipts.md"
+ },
+ "take_edits": {
+  "ruling": "Krish, 2026-10-26: \"Happy to cut those four slips as long as it doesn't make the output sound weird or glitchy.  That's just how I talk. Unless you think there are serious flaws in it, they're not really slips as much as they are just me talking naturally. I'm pretty sure I said \\\"I reckon,\\\" and you're mishearing it.\"",
+  "rule": "Keep everything he said as he said it. Cut only a serious flaw, only where the cut is inaudible (in the silence between words, under a picture), judged by ear at full volume. If it cannot be cut cleanly, keep it.",
+  "long": [
+   {
+    "at": "2:13",
+    "words": "which is fair enough",
+    "action": "cut if clean",
+    "why": "straight after the child-harm claims it can sound like taking a side on claims a court has not decided (a legal risk)"
+   },
+   {
+    "at": "2:42",
+    "words": "and the tech followed the tech",
+    "action": "keep",
+    "why": "his natural speech, no serious flaw"
+   },
+   {
+    "at": "0:01",
+    "words": "Disney is basically asked",
+    "action": "keep; check by ear",
+    "why": "probably the transcriber; his natural speech either way"
+   }
+  ],
+  "short": [
+   {
+    "at": "0:43",
+    "words": "So Disney are going direct to build their own tech and Google already own Character.AI's founders.",
+    "action": "keep",
+    "why": "his natural speech, no serious flaw"
+   },
+   {
+    "at": "0:49",
+    "words": "I recommend that (the transcript)",
+    "action": "keep",
+    "why": "Krish: he said \"I reckon\"; the transcriber misheard"
+   },
+   {
+    "at": "0:08",
+    "words": "haunted children (the transcript)",
+    "action": "keep; check by ear",
+    "why": "almost certainly \"harmed children\" misheard"
+   },
+   {
+    "at": "1:04",
+    "words": "if I asked (the transcript)",
+    "action": "keep; check by ear",
+    "why": "almost certainly \"if I were you, ask\" misheard"
+   }
+  ]
+ }
+}

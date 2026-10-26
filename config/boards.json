@@ -12,7 +12,8 @@
  },
  "web": {
   "2026-10-12": "https://content.krishraja.com/board/2026-10-12",
-  "2026-10-19": "https://content.krishraja.com/board/2026-10-19"
+  "2026-10-19": "https://content.krishraja.com/board/2026-10-19",
+  "2026-10-26": "https://content.krishraja.com/board/2026-10-26"
  },
  "web_cutover": {
   "state": "active",
