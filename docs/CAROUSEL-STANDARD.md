@@ -27,8 +27,11 @@ backgrounds or one layout for every story. Each story needs its own idea.
 
 No footnotes, asterisks, source strips, dates, disclaimers or tiny website
 addresses along the bottom of the artwork. Do not shrink caveats into
-illegible small print. Put source links, test conditions and illustration
-disclosures in the caption and private evidence record. If a limitation
+illegible small print. Put source links and necessary test conditions in the
+caption or private evidence record. Never add illustration-generation
+boilerplate to public artwork, captions or descriptions (Ruling, Krish,
+26 October 2026). Retain illustration provenance privately and use supported
+native platform metadata through Growth's publishing route. If a limitation
 changes the meaning of a claim, simplify or qualify the main claim in
 normal readable language. Preserve any required platform disclosure through
 the appropriate publishing flow. A useful, legible swipe instruction or
