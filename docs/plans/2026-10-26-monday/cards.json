@@ -1,0 +1,22 @@
+{
+ "series": "follow_the_money",
+ "logos": "logos",
+ "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+ "source": ["../2026-10-26-draft-body.md", "../2026-10-26-draft-script.md", "../2026-10-26-draft-script-90s.md"],
+ "cards": [
+  {"file": "title.png", "kind": "statement", "kicker": "FOLLOW.THE.MONEY", "chapter": "title", "logos": ["disney-script-cream.svg", "characterai-cream.svg"],
+   "lines": [{"text": "Why is Disney eating the scraps"}, {"text": "of bankrupt Character.AI?", "tone": "answer"}]},
+  {"file": "ch1.png", "kind": "statement", "kicker": "CHAPTER 1 OF 6 · WIRED · THE 2024 DEAL", "chapter": "1", "logos": ["google-g.svg", "characterai-cream.svg"],
+   "lines": [{"text": "Google paid $2.7 billion for"}, {"text": "Character.AI's tech and founders", "tone": "answer"}]},
+  {"file": "ch2.png", "kind": "statement", "kicker": "CHAPTER 2 OF 6 · DISNEY + OPENAI · DEC 2025", "chapter": "2", "logos": ["disney-script-cream.svg", "openai-symbol-cream.svg"],
+   "lines": [{"text": "Disney rented space in"}, {"text": "OpenAI's Sora app", "tone": "answer"}]},
+  {"file": "ch3.png", "kind": "statement", "kicker": "CHAPTER 3 OF 6 · COURT FILINGS · OCT 2026", "chapter": "3", "logos": ["disney-script-cream.svg", "characterai-cream.svg"],
+   "lines": [{"text": "Disney is hiring"}, {"text": "Character.AI's team", "tone": "answer"}]},
+  {"file": "ch4.png", "kind": "statement", "kicker": "CHAPTER 4 OF 6 · WIRED · 19 OCT 2026", "chapter": "4", "logos": ["disney-script-cream.svg", "characterai-cream.svg"],
+   "lines": [{"text": "Disney leaves Character.AI's"}, {"text": "users and lawsuits behind", "tone": "answer"}]},
+  {"file": "ch5.png", "kind": "statement", "kicker": "CHAPTER 5 OF 6 · OUR PREDICTION · BY 1 MAR 2027", "chapter": "5", "logos": ["skydance-cream.svg", "universal-music-group-cream.svg", "comcast-cream.svg"],
+   "lines": [{"text": "Skydance, Universal and Comcast:"}, {"text": "who buys AI next", "tone": "answer"}]},
+  {"file": "ch6.png", "kind": "statement", "kicker": "CHAPTER 6 OF 6 · WHAT I'D DO", "chapter": "6", "logos": ["characterai-cream.svg"],
+   "lines": [{"text": "Four questions about"}, {"text": "your AI supplier", "tone": "answer"}]}
+ ]
+}

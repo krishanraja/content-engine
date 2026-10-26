@@ -1,5 +1,7 @@
 # Monday "Disney, Google and Character.AI": storyboard and sign-off
 
+**Signed off by Krish: "Yes to all four, recommended title", 2026-10-26.** The storyboard is signed (bound to both scripts' hashes in `creative-direction.json`); his ruling on the takes keeps everything he said and cuts only "which is fair enough", if it cuts cleanly; the picked title is "Why is Disney eating the scraps of bankrupt Character.AI?" with thumbnail words "GOOGLE PAID $2.7B FIRST".
+
 Piece `b358e788-209f-427b-a84d-1f79a8ebb430` (follow.the.money). One round, everything that is yours for this piece
 (house rule SIGN_OFF_FIRST), so that once you answer, the videos go to Codex and the rest finishes without you, except
 the paid checks, which need your yes below. Built from your two takes (5-minute: 4 min 39 s; 90-second: 1 min 19 s),

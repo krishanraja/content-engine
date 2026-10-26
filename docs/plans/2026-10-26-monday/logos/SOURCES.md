@@ -12,3 +12,5 @@ Official logo assets, all fetched on 26 October 2026. openai-symbol-cream.svg is
 - sureel.svg: https://www.sureel.ai/images/sureel-ai-logo.svg, the company's own site, svg (#131418). Unmodified (Brandfetch's copy differs only by a trailing newline). sureel-cream.svg: its 6 `fill="#131418"` set to #F4EFE4.
 
 Not written: sora.svg, because no official SVG exists to fetch (Brandfetch holds a 180 px PNG only, OpenAI's brand page offers only the OpenAI wordmark and the Blossom, and sora.chatgpt.com refuses automated requests). interpositive.svg, because the only Brandfetch hits for the name are two unrelated companies (a Budapest studio and a film-marketing site), and the Netflix-owned InterPositive has no website of its own to take an SVG from.
+
+disney-script.svg: the Disney script wordmark, unmodified, from Wikimedia Commons (File:Disney wordmark.svg, upload.wikimedia.org/wikipedia/commons/a/a4/Disney_wordmark.svg), fetched 26 October 2026; disney-script-cream.svg is the same paths with the root fill set to #F4EFE4 for the ink card. Used in place of disney-wordmark (The Walt Disney Company lockup), which reads too small in a thumbnail row.

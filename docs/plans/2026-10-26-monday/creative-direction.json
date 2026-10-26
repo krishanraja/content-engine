@@ -829,10 +829,14 @@
   "Fact, transport and editorial status reported separately; ready only when all three pass"
  ],
  "signed": {
-  "by": "",
-  "said": "",
-  "on": "",
-  "script_sha256": {}
+  "by": "Krish",
+  "said": "Yes to all four, recommended title, make sure everything is able to be proof read/viewed in todays publish board at content.krishraja.com and I'll let you know",
+  "on": "2026-10-26",
+  "script_sha256": {
+   "long": "6db388ed0c6e6a7bb1f889d6d8795bf208e3e24c85695d6c0a32a796ce964ee5",
+   "short": "ce3eea45ecd65b8d9530e5284d239a72d5e80ae89c672898fcbf5934941c58fd"
+  },
+  "what": "item 1 of storyboard-signoff.md: the storyboard (the Receipts look), with his ruling on the takes (take_edits) and the recommended title"
  },
  "motion_system": {
   "name": "Receipts",
