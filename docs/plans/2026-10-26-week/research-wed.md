@@ -31,3 +31,23 @@ Source: Anthropic, "Introducing Claude Duet", https://claude.com/resources/artic
   usage limits; "Its background checks count toward those limits".
 - Testers quoted by name: Jess Provencher (Pro Homes), Amin Ebrahimi (Shahs of Kabob, about 110 employees), Mya Dalton.
 - A companion page: "Claude Duet Safety, Privacy, and Security" (claude.com, 23 October 2026).
+
+## What it adds for someone who already lives in Claude (read 26 Oct 2026)
+
+Source: Anthropic Help Center, "Get started with Claude Duet",
+https://support.claude.com/en/articles/17631495-get-started-with-claude-duet. Exact lines:
+
+- "Claude Duet carries over your memory, skills, and connected apps from your Claude account, so setting it up requires
+  minimal work."
+- "Claude Duet can search your past chats to pick up context from earlier work, so you don't have to repeat yourself."
+  It is switched off with "Search and reference chats" in Settings.
+- "It isn't available on Team or Enterprise plans yet, and we plan to bring it to those plans later." And: "Claude Duet
+  isn't available on Team or Enterprise plans yet".
+- "Microsoft 365 isn't available yet".
+- "Work it does in the background, like the morning brief and check-ins, also counts, so you may reach your limits
+  sooner than with chat alone."
+
+Context, Anthropic, "Unified Claude Enterprise" (https://claude.com/resources/articles/unified-claude-enterprise):
+chat and Cowork became one Claude, with cloud agentic work that continues after the laptop closes. So the question for
+a power user is what Duet adds beyond what their Claude already does; check each claim against both pages before it
+goes in a script.

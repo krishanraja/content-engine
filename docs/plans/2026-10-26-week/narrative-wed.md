@@ -20,6 +20,20 @@ line should sit for any assistant: does it reach outside, can it be undone, does
 To check before he signs: the other entrants in the race (named, dated, from their own pages), and the costs of
 handing work over, each from evidence, never invented. Public copy keeps rule R2: no "Not X, Y" construction.
 
+**Superseded the same day.** Krish, 2026-10-26: "I think for Wednesday's Claude piece we've already done that message
+takeaway with the Muse versus Grok piece. I would suggest we focus in on what Duet actually adds to the Claude
+ecosystem for Claude power users. Yes it should be people using it for work-related items, whether that be their
+personal Claude account or a Claude business account."
+
+Draft 2, for his yes: if you already run your work through Claude, Duet is the part that starts without you. It
+takes the memory, skills and connected apps you already have, checks them every few hours, briefs you each morning
+and keeps working after you close the laptop, then stops for your yes before anything is sent, paid, signed or
+deleted. Today that is for a personal Pro or Max account in the US only; Team and Enterprise accounts do not have it
+yet, so a business that wants it has to decide whether staff may connect work apps to a personal account.
+
+Facts behind it: `research-wed.md`, both sections. The open question for him is whether that last line (the
+personal-account question) is the piece's sharpest point for a business reader.
+
 ## Who it is for, and what they do on Wednesday
 
 (Question 2, asked 26 Oct.)
