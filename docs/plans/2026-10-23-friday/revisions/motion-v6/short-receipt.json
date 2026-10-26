@@ -1,0 +1,12 @@
+{
+  "file": "Friday-short-voiceover-v6-WORKING.mp4",
+  "sha256": "f3ddee64f9f3d19f6b04aec9292d6f896f4ce035cfd18c5ec8183b2e4c4dd557",
+  "frames": 2547,
+  "duration": 84.9,
+  "audio_preservation": "byte-identical AAC elementary stream",
+  "aac_sha256": "e68bfd976b229a34966d48e2793e331da572af89f1f2958a677a562c14652393",
+  "styleframe_approval": "approval.json",
+  "status": "candidate_requires_full_visual_review",
+  "board_write": false,
+  "making_write": false
+}

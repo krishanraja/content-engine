@@ -1,0 +1,22 @@
+{
+  "status": "art_direction_review_required",
+  "type": "illustrative_styleframe_not_video",
+  "file": "Friday-motion-v6-STYLEFRAME.png",
+  "sha256": "5eded512abfcca0ba8140b56a01e147bdab8063236f9fdc19a2c78074eef1f5d",
+  "dimensions": [
+    941,
+    1672
+  ],
+  "method": "built-in image_gen",
+  "not_evidence_of_actual_facility": true,
+  "audio_changed": false,
+  "visual_words": [
+    "DeepSeek",
+    "HOSTED SERVICE",
+    "CHINA",
+    "ILLUSTRATION"
+  ],
+  "word_count": 5,
+  "motion_tested": false,
+  "user_approved": false
+}

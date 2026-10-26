@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "authority": "Krish, 2026-10-25: minimal words, no duplication of script/captions, recognisable visual representation, comprehension in three seconds or less.",
+  "max_primary_words": 8,
+  "max_total_words": 16,
+  "repeated_phrase_words": 3,
+  "exposure_seconds": 3,
+  "note": "Word limits are conservative implementation defaults, not a claim that Krish specified these numbers. Passing them cannot certify semantic non-duplication or human comprehension. Count all legible text, including text inside captures."
+}

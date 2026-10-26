@@ -1,0 +1,14 @@
+{
+  "declared_changes_verified": 10,
+  "baseline_unchanged": true,
+  "typecheck": "pass",
+  "python_quality_tests": 16,
+  "clarity_gate_tests": 5,
+  "phone_and_full_size_frames": "inspected",
+  "both_shape_sequences": "inspected",
+  "audio": "unchanged AAC stream hashes",
+  "semantic_independent_review": "pending",
+  "three_second_human_test": "not_run",
+  "four_final_videos": "incomplete",
+  "live_board_changed": false
+}

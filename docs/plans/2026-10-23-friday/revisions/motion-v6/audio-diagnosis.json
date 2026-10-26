@@ -1,0 +1,36 @@
+{
+  "status": "rejected_join_diagnosis_confirmed",
+  "model": "large-v3-turbo",
+  "prompt": null,
+  "findings": [
+    {
+      "join": 1,
+      "cut": 27.65,
+      "source_the": [
+        27.6,
+        27.7
+      ],
+      "problem": "cut retains part of the removed word the; independent ASR hears answered all that"
+    },
+    {
+      "join": 2,
+      "resume": 33.23,
+      "source_use_small_en": [
+        32.62,
+        33.4
+      ],
+      "problem": "candidate resumes inside source word use"
+    },
+    {
+      "join": 3,
+      "resume": 39.8,
+      "source_I_large_v3_turbo": [
+        39.7,
+        39.9
+      ],
+      "problem": "candidate resumes inside source word I"
+    }
+  ],
+  "review_reel_defect": "Two-second context windows introduce additional abrupt speech edges; comparisons need phrase-complete handles.",
+  "accepted_replacements": 0
+}

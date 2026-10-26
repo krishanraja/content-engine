@@ -1,0 +1,28 @@
+{
+  "status": "pass",
+  "problems": [],
+  "counts": [
+    {
+      "id": "0",
+      "primary_words": 8,
+      "total_words": 8
+    },
+    {
+      "id": "1",
+      "primary_words": 7,
+      "total_words": 12
+    },
+    {
+      "id": "2",
+      "primary_words": 4,
+      "total_words": 4
+    },
+    {
+      "id": "3",
+      "primary_words": 3,
+      "total_words": 3
+    }
+  ],
+  "semantic_nonduplication": "requires_independent_review",
+  "three_second_comprehension": "not_proved_by_this_audit"
+}

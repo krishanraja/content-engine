@@ -1,0 +1,64 @@
+{
+  "status": "engine_library_confirmed",
+  "result": {
+    "sent": 10,
+    "already": 0,
+    "confirmed_only": 0
+  },
+  "prefix": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/Working studies/clarity-v2",
+  "files": [
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/Working studies/clarity-v2/Friday-clarity-v2-phone-review.png",
+      "sha256": "79ecd614804df16872f6ec19c35d755340d7e96e8e2ef78f8320dc9c43e2a64b",
+      "bytes": 158887
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/Working studies/clarity-v2/Friday-motion-study-v2-horizontal.mp4",
+      "sha256": "9e8ea2233797ace6e0db0f54883d44792dfa1cc9114b5a2c4b6becf9da2a6df0",
+      "bytes": 3735834
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/Working studies/clarity-v2/Friday-motion-study-v2-receipt.json",
+      "sha256": "9382ec782890466e58c390c357d7b338b0d30ead9460dcd0b3dbb948b0e701ef",
+      "bytes": 1879
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/Working studies/clarity-v2/Friday-motion-study-v2-vertical.mp4",
+      "sha256": "c9116a063b9a971339f7524e067e67fc572a1f93c698a083a17791c81702253d",
+      "bytes": 4245676
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/Working studies/clarity-v2/Friday-passport-v2.png",
+      "sha256": "40e57291638043e1299a3d57041794d2cf2089fbe7c90f4313b38f61d2079e76",
+      "bytes": 129981
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/Working studies/clarity-v2/README.md",
+      "sha256": "8065bbab02beb4034e983452a7c7c440ee510c3234c25f4c2d8e92125efdfcbb",
+      "bytes": 3336
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/Working studies/clarity-v2/proof-props.json",
+      "sha256": "d4e8a4351ceb6dd2572f4511598ab38a4db016b3bd8a6320383de1b9a71550c1",
+      "bytes": 247591
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/Working studies/clarity-v2/revision.json",
+      "sha256": "5c817638c36946c521fc9dfac6494311fa490e9059dab58c5d0c110ebea485a7",
+      "bytes": 10208
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/Working studies/clarity-v2/scene-audit.json",
+      "sha256": "7ef75693293d30ef2fbb1b8c3a83515d60099344fd7474f8e115b30e01fa9b04",
+      "bytes": 27389
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/Working studies/clarity-v2/visual-copy.json",
+      "sha256": "b76eb76a280607e254f4ff56f8314ba4eb8efa782cbee299e4102e6f1f593bc9",
+      "bytes": 28069
+    }
+  ],
+  "drive_sync": "not_yet_verified",
+  "making_records_changed": false,
+  "initial_delivery_path_refused": "Missing final video validation; correctly filed through the existing working-assets route instead."
+}

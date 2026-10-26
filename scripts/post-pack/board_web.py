@@ -15,6 +15,8 @@ import urllib.parse
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent))
 import engine
+sys.path.insert(0, str(HERE.parent/'quick-edit'))
+import media_standard
 
 def canonical(value):
     return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':'))
@@ -153,6 +155,12 @@ def publish(args):
     if not args.apply:
         print(canonical({'dry_run': True, 'week': week, 'build_id': sha(canonical(manifest).encode()), 'html_bytes': len(data), 'assets': len(assets)}))
         return
+    if media_standard.enforced():
+        review_path = path.with_suffix('.delivery-review.json')
+        if not review_path.is_file():
+            raise ValueError('Independent board delivery review missing for this exact build')
+        delivery_review = json.loads(review_path.read_text(encoding='utf-8'))
+        manifest['delivery_review'] = delivery_review
     for file, content in payloads + [(html, data)]:
         upload(week, file, content)
     result = call('PUT', f'/api/board/{week}', {'manifest': manifest, 'revision': state['revision']})

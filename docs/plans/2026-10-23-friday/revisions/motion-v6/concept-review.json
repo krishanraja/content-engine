@@ -1,0 +1,74 @@
+{
+  "status": "concept_selected_render_not_yet_judged",
+  "first_round": "Rejected internal convergence on moving a retained copy. A replaced with documentary source discovery.",
+  "concepts": {
+    "19": "Documentary policy discovery with photographic phone and real source clause.",
+    "52": "Photographic geographic journey with retained screen impression.",
+    "84": "Photographic interface layer removal reveals retained storage layer."
+  },
+  "judge_one": {
+    "order": [
+      "52",
+      "19",
+      "84"
+    ],
+    "ranking": [
+      "52",
+      "84",
+      "19"
+    ],
+    "scores": {
+      "52": 80,
+      "84": 73,
+      "19": 66
+    },
+    "diversity": "partial; transfer and removal share persistence mechanism"
+  },
+  "judge_two": {
+    "order": [
+      "84",
+      "52",
+      "19"
+    ],
+    "ranking": [
+      "84",
+      "19",
+      "52"
+    ],
+    "scores": {
+      "84": 80,
+      "19": 73,
+      "52": 67
+    },
+    "diversity": "distinct substrate and motion axes if realized"
+  },
+  "tie_breaker": {
+    "order": [
+      "19",
+      "84",
+      "52"
+    ],
+    "ranking": [
+      "84",
+      "19",
+      "52"
+    ],
+    "scores": {
+      "84": 88,
+      "19": 82,
+      "52": 77
+    },
+    "diversity": "narrow pass: source inspection versus removal reveal versus transfer; evidence hierarchy versus nested storage versus geography"
+  },
+  "selected": "84",
+  "minority": "First judge preferred geographic photographic journey and warned that anonymous server stock/collage cutouts would fail. Preserved; no rendered approval inferred.",
+  "mandatory": [
+    "Large photographic forms with coherent lighting, perspective and depth",
+    "Mint integral to composition, not tiny accents",
+    "Hand-drawn gesture directs attention and explains relation",
+    "Service-specific scope and illustrative status visible",
+    "No fake actual infrastructure or test evidence",
+    "No repeated caption words or another icon diagram"
+  ],
+  "authority": "One material rendered proof for Krish; concept scores cannot approve aesthetic or production."
+}

@@ -1,0 +1,11 @@
+{
+  "date": "2026-10-26",
+  "reviewer": "Krish",
+  "words": "The audio is fine. The quality of the motion video is awful.",
+  "scope": "Audio of the complete84.9-second v4 working export approved. Visual treatment rejected. No approval of other three recordings or joins.",
+  "reviewed_video_sha256": "c6c18c205f49774b09a2ed2792eb2065752ad514572c999573c0882f314d753c",
+  "audio_file": "Friday-short-approved.m4a",
+  "audio_sha256": "d9fa3c4b90a22b3a421994eea30a435595c33f7501cd071a455ee49579c84a8b",
+  "extraction": "AAC stream copied, no filter or re-encoding",
+  "reference_drive_id": "18qgh6rQ6d5uDKolkP_R7ZK7gsfVUdzTf"
+}

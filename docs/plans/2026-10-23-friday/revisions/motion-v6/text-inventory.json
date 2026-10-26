@@ -1,0 +1,369 @@
+{
+  "schema": 1,
+  "frames": 2547,
+  "video_sha256": "f3ddee64f9f3d19f6b04aec9292d6f896f4ce035cfd18c5ec8183b2e4c4dd557",
+  "narration_sha256": "097e16380485ef7a99b036ddf30c2fc9c9ca1afe96c4953caa04ea7c97975fed",
+  "states": [
+    {
+      "id": "intro",
+      "start_frame": 0,
+      "end_frame": 105,
+      "text": [
+        {
+          "value": "Why every country wants its own AI",
+          "role": "identity",
+          "adds": "Names, quantities and relationships attach to visible objects; no narrated sentence is restated."
+        }
+      ],
+      "visual_cues": [
+        "Equal sized flags"
+      ],
+      "takeaway": "Sovereign AI has multiple national examples."
+    },
+    {
+      "id": "S01-hook",
+      "start_frame": 105,
+      "end_frame": 287,
+      "text": [
+        {
+          "value": "AI Claude ChatGPT DeepSeek Qwen ?",
+          "role": "identity",
+          "adds": "Names, quantities and relationships attach to visible objects; no narrated sentence is restated."
+        },
+        {
+          "value": "ILLUSTRATION",
+          "role": "source",
+          "adds": "Explicit illustration or real recording, replay and test scope; not a paraphrase of narration."
+        }
+      ],
+      "visual_cues": [
+        "Photographic phone with changing official model identities"
+      ],
+      "takeaway": "Familiar AI apps come from different companies."
+    },
+    {
+      "id": "S02-airbnb",
+      "start_frame": 287,
+      "end_frame": 436,
+      "text": [
+        {
+          "value": "BRIAN CHESKY AIRBNB Qwen",
+          "role": "identity",
+          "adds": "Names, quantities and relationships attach to visible objects; no narrated sentence is restated."
+        }
+      ],
+      "visual_cues": [
+        "Real portrait and model linked by a drawn arrow"
+      ],
+      "takeaway": "Chesky links Airbnb customer service to Qwen."
+    },
+    {
+      "id": "S03-fling",
+      "start_frame": 436,
+      "end_frame": 594,
+      "text": [
+        {
+          "value": "BRIAN CHESKY AIRBNB Qwen",
+          "role": "identity",
+          "adds": "Names, quantities and relationships attach to visible objects; no narrated sentence is restated."
+        }
+      ],
+      "visual_cues": [
+        "Portrait and Qwen held through joke"
+      ],
+      "takeaway": "The joke concerns the preceding named model choice."
+    },
+    {
+      "id": "S04-passports",
+      "start_frame": 594,
+      "end_frame": 741,
+      "text": [
+        {
+          "value": "BORN CANADA AI LIVES USA AI",
+          "role": "identity",
+          "adds": "Names, quantities and relationships attach to visible objects; no narrated sentence is restated."
+        },
+        {
+          "value": "AI EXAMPLE",
+          "role": "source",
+          "adds": "Explicit illustration or real recording, replay and test scope; not a paraphrase of narration."
+        }
+      ],
+      "visual_cues": [
+        "Photographic passport props and national flags"
+      ],
+      "takeaway": "Origin and hosting can be different countries."
+    },
+    {
+      "id": "S05-newspaper",
+      "start_frame": 741,
+      "end_frame": 917,
+      "text": [
+        {
+          "value": "DeepSeek Kimi Qwen GLM 200 QUERIES",
+          "role": "identity",
+          "adds": "Names, quantities and relationships attach to visible objects; no narrated sentence is restated."
+        }
+      ],
+      "visual_cues": [
+        "Four model marks grouped over the count"
+      ],
+      "takeaway": "The test involved four identified models and 200 queries."
+    },
+    {
+      "id": "S06-third",
+      "start_frame": 917,
+      "end_frame": 1100,
+      "text": [
+        {
+          "value": "DeepSeek Kimi Qwen GLM 35% PROBLEM RESPONSES",
+          "role": "identity",
+          "adds": "Names, quantities and relationships attach to visible objects; no narrated sentence is restated."
+        }
+      ],
+      "visual_cues": [
+        "Exactly 35% arc in a 100% ring"
+      ],
+      "takeaway": "A pooled 35% of responses were problematic."
+    },
+    {
+      "id": "S07-claude",
+      "start_frame": 1100,
+      "end_frame": 1226,
+      "text": [
+        {
+          "value": "AI Claude BORN USA",
+          "role": "identity",
+          "adds": "Names, quantities and relationships attach to visible objects; no narrated sentence is restated."
+        },
+        {
+          "value": "ILLUSTRATION",
+          "role": "source",
+          "adds": "Explicit illustration or real recording, replay and test scope; not a paraphrase of narration."
+        }
+      ],
+      "visual_cues": [
+        "Phone response revealed, US flag identifies origin"
+      ],
+      "takeaway": "Claude provides an answer; accuracy is not represented."
+    },
+    {
+      "id": "S08-lives",
+      "start_frame": 1226,
+      "end_frame": 1466,
+      "text": [
+        {
+          "value": "DeepSeek HOSTED SERVICE CHINA",
+          "role": "identity",
+          "adds": "Names, quantities and relationships attach to visible objects; no narrated sentence is restated."
+        },
+        {
+          "value": "ILLUSTRATION",
+          "role": "source",
+          "adds": "Explicit illustration or real recording, replay and test scope; not a paraphrase of narration."
+        }
+      ],
+      "visual_cues": [
+        "Photographic message copy travels into hardware; original persists"
+      ],
+      "takeaway": "The own-app conversation is stored by a hosted service in China."
+    },
+    {
+      "id": "S09-work",
+      "start_frame": 1466,
+      "end_frame": 1675,
+      "text": [
+        {
+          "value": "MY TEST AI Claude ChatGPT DeepSeek XINJIANG",
+          "role": "identity",
+          "adds": "Names, quantities and relationships attach to visible objects; no narrated sentence is restated."
+        },
+        {
+          "value": "ILLUSTRATION",
+          "role": "source",
+          "adds": "Explicit illustration or real recording, replay and test scope; not a paraphrase of narration."
+        }
+      ],
+      "visual_cues": [
+        "Cotton linked physically to fabric, three model identities"
+      ],
+      "takeaway": "Three models were asked about this cotton supply."
+    },
+    {
+      "id": "S10-flagged",
+      "start_frame": 1675,
+      "end_frame": 1737,
+      "text": [
+        {
+          "value": "MY TEST AI Claude ChatGPT",
+          "role": "identity",
+          "adds": "Names, quantities and relationships attach to visible objects; no narrated sentence is restated."
+        },
+        {
+          "value": "ILLUSTRATION",
+          "role": "source",
+          "adds": "Explicit illustration or real recording, replay and test scope; not a paraphrase of narration."
+        }
+      ],
+      "visual_cues": [
+        "Two models point to hand-drawn warning on cotton clothing"
+      ],
+      "takeaway": "Both identified models raised a supply risk; no country is marked as a threat."
+    },
+    {
+      "id": "S11-written",
+      "start_frame": 1737,
+      "end_frame": 1822,
+      "text": [
+        {
+          "value": "24 OCT RECORDING 23 OCT 3/3 RUNS Key risks UK Modern Slavery Act",
+          "role": "source",
+          "adds": "Explicit illustration or real recording, replay and test scope; not a paraphrase of narration."
+        }
+      ],
+      "visual_cues": [
+        "Actual recorded excerpt and DeepSeek logo"
+      ],
+      "takeaway": "The response initially identifies risks."
+    },
+    {
+      "id": "S11-erased",
+      "start_frame": 1822,
+      "end_frame": 1833,
+      "text": [
+        {
+          "value": "24 OCT RECORDING 23 OCT 3/3 RUNS Sorry that's beyond my current scope",
+          "role": "source",
+          "adds": "Explicit illustration or real recording, replay and test scope; not a paraphrase of narration."
+        }
+      ],
+      "visual_cues": [
+        "Same actual recording replaces response"
+      ],
+      "takeaway": "The existing answer was replaced by refusal."
+    },
+    {
+      "id": "S11-replay-written",
+      "start_frame": 1833,
+      "end_frame": 1855,
+      "text": [
+        {
+          "value": "24 OCT RECORDING 23 OCT 3/3 RUNS 4\u00d7 REPLAY Key risks UK Modern Slavery Act",
+          "role": "source",
+          "adds": "Explicit illustration or real recording, replay and test scope; not a paraphrase of narration."
+        }
+      ],
+      "visual_cues": [
+        "Quarter-speed replay of the same event"
+      ],
+      "takeaway": "This is replay, not another run."
+    },
+    {
+      "id": "S11-replay-erased",
+      "start_frame": 1855,
+      "end_frame": 1907,
+      "text": [
+        {
+          "value": "24 OCT RECORDING 23 OCT 3/3 RUNS 4\u00d7 REPLAY Sorry that's beyond my current scope",
+          "role": "source",
+          "adds": "Explicit illustration or real recording, replay and test scope; not a paraphrase of narration."
+        }
+      ],
+      "visual_cues": [
+        "Replay of actual replacement"
+      ],
+      "takeaway": "The actual answer disappears."
+    },
+    {
+      "id": "S12-call",
+      "start_frame": 1907,
+      "end_frame": 2077,
+      "text": [
+        {
+          "value": "BORN CANADA AI LIVES USA AI",
+          "role": "identity",
+          "adds": "Names, quantities and relationships attach to visible objects; no narrated sentence is restated."
+        },
+        {
+          "value": "AI EXAMPLE",
+          "role": "source",
+          "adds": "Explicit illustration or real recording, replay and test scope; not a paraphrase of narration."
+        }
+      ],
+      "visual_cues": [
+        "Hosting field circled first then origin"
+      ],
+      "takeaway": "Consider data location and separately check answers."
+    },
+    {
+      "id": "S13-do",
+      "start_frame": 2077,
+      "end_frame": 2276,
+      "text": [
+        {
+          "value": "AI Claude ChatGPT ?",
+          "role": "identity",
+          "adds": "Names, quantities and relationships attach to visible objects; no narrated sentence is restated."
+        },
+        {
+          "value": "ILLUSTRATION",
+          "role": "source",
+          "adds": "Explicit illustration or real recording, replay and test scope; not a paraphrase of narration."
+        }
+      ],
+      "visual_cues": [
+        "Second photographic phone arrives and a drawn arrow links its screen"
+      ],
+      "takeaway": "Have an alternative AI available."
+    },
+    {
+      "id": "S14-close",
+      "start_frame": 2276,
+      "end_frame": 2367,
+      "text": [
+        {
+          "value": "MAKE YOUR MIND UP makeyourmindup.ai",
+          "role": "identity",
+          "adds": "Names, quantities and relationships attach to visible objects; no narrated sentence is restated."
+        }
+      ],
+      "visual_cues": [
+        "Official publication wordmark"
+      ],
+      "takeaway": "The publication destination."
+    },
+    {
+      "id": "outro-question",
+      "start_frame": 2367,
+      "end_frame": 2457,
+      "text": [
+        {
+          "value": "WHICH PASSPORTS DOES YOUR AI HOLD",
+          "role": "identity",
+          "adds": "Names, quantities and relationships attach to visible objects; no narrated sentence is restated."
+        }
+      ],
+      "visual_cues": [
+        "Equal sized national flags"
+      ],
+      "takeaway": "Consider the AI origin and hosting."
+    },
+    {
+      "id": "outro-brand",
+      "start_frame": 2457,
+      "end_frame": 2547,
+      "text": [
+        {
+          "value": "MAKE YOUR MIND UP makeyourmindup.ai",
+          "role": "identity",
+          "adds": "Names, quantities and relationships attach to visible objects; no narrated sentence is restated."
+        }
+      ],
+      "visual_cues": [
+        "Official wordmark"
+      ],
+      "takeaway": "Publication destination."
+    }
+  ],
+  "inventory_status": "author inventory; independent completeness review required"
+}

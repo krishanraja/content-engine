@@ -3,6 +3,10 @@ import { supabase } from '../../_supabase.js'
 import { guardEngine, operatorBearerAllowed } from '../../_auth.js'
 import { type Making, makingSteps, mergeMaking, parseMakingPatch } from '../../_making.js'
 import { askChecksForPiece } from '../../_controlCenter.js'
+import { MediaQualityError, qualifyMedia, readMediaRef } from '../../_mediaQuality.js'
+
+import { verifiedMaking } from '../../_verifiedMaking.js'
+import { mediaQualityEnforced, mediaQualityRollout } from '../../../../../packages/core/src/media-rollout.js'
 
 // GET  /api/content-ideas/:id/making           where this piece is: the record and its steps
 // POST /api/content-ideas/:id/making  body: a patch (apps/control-plane/api/_making.ts):
@@ -60,7 +64,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const prev = (meta.making || null) as Making | null
 
   if (req.method === 'GET') {
-    return res.status(200).json({ ok: true, idea_id: ideaId, state: (row as any).state, lane_slot: (row as any).lane_slot ?? null, making: prev, steps: makingSteps(row as any) })
+    const current = await verifiedMaking(supabase, ideaId, prev)
+    return res.status(200).json({ ok: true, idea_id: ideaId, state: (row as any).state, lane_slot: (row as any).lane_slot ?? null, media_quality_rollout: mediaQualityRollout().status, making: current, steps: makingSteps({ ...row, meta: { ...meta, making: current } } as any) })
   }
 
   const now = new Date().toISOString()
@@ -68,6 +73,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const { patch, problems } = parseMakingPatch(body, now)
   if (problems.length) return res.status(400).json({ ok: false, error: 'bad_patch', problems })
   if (!Object.keys(patch).length) return res.status(400).json({ ok: false, error: 'empty_patch', problems: ['nothing to record'] })
+
+  try {
+    const cache = new Map()
+    for (const asset of mediaQualityEnforced() ? patch.video_assets || [] : []) {
+      if (!asset.sha256 || !asset.quality_receipt) throw new MediaQualityError('video needs exact bytes and an independent quality receipt')
+      await qualifyMedia(supabase, { piece_id: ideaId, role: 'video', cut: asset.cut, artifact: { path: asset.path, sha256: asset.sha256 }, receipt: asset.quality_receipt }, cache)
+      asset.quality_review = JSON.parse((await readMediaRef(supabase, asset.quality_receipt, cache, true)).text!)
+      // Delivery links are immutable. A later working upload at the same path cannot replace them.
+      asset.url = `https://content.krishraja.com/api/library/file?path=${encodeURIComponent(asset.path)}&sha256=${asset.sha256}&download=1`
+    }
+  } catch (e) { return res.status(e instanceof MediaQualityError ? 409 : 503).json({ ok: false, error: 'media_unqualified', problems: [e instanceof MediaQualityError ? e.message : 'review verification unavailable'] }) }
 
   const who = typeof body.by === 'string' && body.by.trim() ? body.by.trim().slice(0, 60) : operatorBearerAllowed(req) ? 'Claude Code' : 'Krish'
   const next = mergeMaking(prev, patch, who, now)
@@ -79,9 +95,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     .select('id')
   if (upErr) return res.status(500).json({ ok: false, error: upErr.message })
   if (!written?.length) return res.status(409).json({ ok: false, error: 'stale_row', problems: ['the piece changed while this was being written; nothing was written, so send it again'] })
-  const after = { ...(row as any), meta: { ...meta, making: next } }
+  const current = await verifiedMaking(supabase, ideaId, next)
+  const after = { ...(row as any), meta: { ...meta, making: current } }
   // The sweep looks at the items waiting on this piece now. The write waits up
   // to 3 s for the ask (_controlCenter.ts, ASK_MS); a failed ask changes nothing.
   const look = await askChecksForPiece(ideaId)
-  return res.status(200).json({ ok: true, idea_id: ideaId, making: next, steps: makingSteps(after), closed: [], looked: look.keys })
+  return res.status(200).json({ ok: true, idea_id: ideaId, media_quality_rollout: mediaQualityRollout().status, making: current, steps: makingSteps(after), closed: [], looked: look.keys })
 }

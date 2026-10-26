@@ -20,6 +20,8 @@
 // change the other (docs/CONTENT_ENGINE.md, "The split").
 
 import { activeManualReviews, bodyHash, effectiveBlocking } from './_factGate.js'
+import { MediaRefSchema, mediaReviewProblems, type MediaRef } from '../../../packages/core/src/media-quality.js'
+import { mediaQualityEnforced } from '../../../packages/core/src/media-rollout.js'
 
 /** Every channel a piece can go to, in the order Krish posts them
  *  (docs/AMPLIFICATION.md). Krish, 2026-10-11: "I always want to repost to
@@ -76,7 +78,7 @@ export interface MakingRecording { cut: MakingCut; path: string; at: string; sec
  *  every time"). */
 export interface MakingThumbnail { path: string; url?: string }
 /** `music` is the licensed track's id in config/music-library.json. */
-export interface MakingVideoAsset { cut: MakingCut; name: string; path: string; at: string; url?: string; seconds?: number; thumbnail?: MakingThumbnail; music?: string }
+export interface MakingVideoAsset { cut: MakingCut; name: string; path: string; at: string; url?: string; seconds?: number; thumbnail?: MakingThumbnail; music?: string; sha256?: string; quality_receipt?: MediaRef; quality_review?: unknown }
 export interface MakingChannelPost { url?: string; posted_at: string }
 export interface MakingSession { url: string; started_at: string; by: string }
 /** Where one cut's script is in Krish's teleprompter.com account. Krish,
@@ -271,6 +273,16 @@ export function parseMakingPatch(body: unknown, now: string): { patch: MakingPat
         const path = isObj(a) ? str(a.path, 400) : null
         if (!cut || !name || !path) { problems.push('each video asset needs cut, name and path'); continue }
         const asset: MakingVideoAsset = { cut, name, path, at: when(a.at, now) }
+        if (a.sha256 !== undefined) {
+          if (typeof a.sha256 !== 'string' || !SCRIPT_SHA256.test(a.sha256)) { problems.push('video sha256 must bind the delivered bytes'); continue }
+          asset.sha256 = a.sha256
+        }
+        if (a.quality_receipt !== undefined) {
+          const ref = MediaRefSchema.safeParse(a.quality_receipt)
+          if (!ref.success) { problems.push('video quality_receipt must name exact library evidence'); continue }
+          asset.quality_receipt = ref.data
+        }
+        // quality_review is server-derived. A producer cannot patch it directly.
         const url = https(a.url)
         if (url) asset.url = url
         if (Number.isFinite(Number(a.seconds)) && Number(a.seconds) > 0) asset.seconds = Math.round(Number(a.seconds))
@@ -484,7 +496,7 @@ export const MAKING_OWNERS: Record<string, MakingOwner> = {
 /** The row of steps a reader sees, from the piece's row. `meta.fact_check`
  *  is the fact gate written by content-ideas/[id]/fact-check.ts. Mirrored in
  *  control-center/src/lib/making.ts. */
-export function makingSteps(row: { state?: string | null; body?: string | null; meta?: Record<string, any> | null }): MakingStep[] {
+export function makingSteps(row: { id?: string; state?: string | null; body?: string | null; meta?: Record<string, any> | null }): MakingStep[] {
   const meta = isObj(row.meta) ? row.meta : {}
   const m = (isObj(meta.making) ? meta.making : {}) as Partial<Making>
   const factGate = isObj(meta.fact_check) ? meta.fact_check : null
@@ -531,9 +543,12 @@ export function makingSteps(row: { state?: string | null; body?: string | null; 
   // A thumbnail for every size, every time (Krish, 2026-10-12): a cut is
   // made only when its video and its thumbnail are both on the record.
   const assets = m.video_assets || []
-  const produced = new Set(assets.map(a => a.cut))
+  const readinessAssets = !mediaQualityEnforced() ? assets : assets.filter(a => a.sha256 && a.quality_receipt && !mediaReviewProblems(a.quality_review, {
+    piece_id: String(row.id), role: 'video', cut: a.cut, stage: 'final', artifacts: [{ path: a.path, sha256: a.sha256 }],
+  }).length)
+  const produced = new Set(readinessAssets.map(a => a.cut))
   const missingAssets = needed.filter(c => !produced.has(c))
-  const thumbed = new Set(assets.filter(a => a.thumbnail?.path).map(a => a.cut))
+  const thumbed = new Set(readinessAssets.filter(a => a.thumbnail?.path).map(a => a.cut))
   const missingThumbs = needed.filter(c => produced.has(c) && !thumbed.has(c))
   const videoTodo = [
     missingAssets.length ? `${missingAssets.join(' and ')} cut still to produce` : '',

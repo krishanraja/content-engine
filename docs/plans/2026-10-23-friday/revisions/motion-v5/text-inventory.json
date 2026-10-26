@@ -1,0 +1,145 @@
+{
+  "frames": 875,
+  "inventory_method": "Author inspected all 175 frames sampled at 6fps; conservative maximum visible labels per exclusive scene. Not independent semantic approval.",
+  "states": [
+    {
+      "id": "0",
+      "start_frame": 0,
+      "end_frame": 223,
+      "text": [
+        {
+          "value": "AI PASSPORTS",
+          "role": "identity",
+          "adds": "Identifies model ownership and explicit fictional country attributes"
+        },
+        {
+          "value": "EXAMPLE",
+          "role": "identity",
+          "adds": "Identifies model ownership and explicit fictional country attributes"
+        },
+        {
+          "value": "AI",
+          "role": "identity",
+          "adds": "Identifies model ownership and explicit fictional country attributes"
+        },
+        {
+          "value": "BORN",
+          "role": "identity",
+          "adds": "Identifies model ownership and explicit fictional country attributes"
+        },
+        {
+          "value": "CANADA",
+          "role": "identity",
+          "adds": "Identifies model ownership and explicit fictional country attributes"
+        },
+        {
+          "value": "LIVES",
+          "role": "identity",
+          "adds": "Identifies model ownership and explicit fictional country attributes"
+        },
+        {
+          "value": "USA",
+          "role": "identity",
+          "adds": "Identifies model ownership and explicit fictional country attributes"
+        }
+      ],
+      "visual_cues": [
+        "Two hinged passports and flags attached to model and host"
+      ],
+      "takeaway": "AI origin and hosting location differ"
+    },
+    {
+      "id": "1",
+      "start_frame": 223,
+      "end_frame": 511,
+      "text": [
+        {
+          "value": "DeepSeek",
+          "role": "identity",
+          "adds": "Identifies the four models in the pooled study"
+        },
+        {
+          "value": "Kimi",
+          "role": "identity",
+          "adds": "Identifies the four models in the pooled study"
+        },
+        {
+          "value": "Qwen",
+          "role": "identity",
+          "adds": "Identifies the four models in the pooled study"
+        },
+        {
+          "value": "GLM",
+          "role": "identity",
+          "adds": "Identifies the four models in the pooled study"
+        },
+        {
+          "value": "35%",
+          "role": "quantity",
+          "adds": "Exact proportion rather than spoken approximate third"
+        },
+        {
+          "value": "PROBLEM RESPONSES",
+          "role": "relationship",
+          "adds": "Defines the red subset"
+        },
+        {
+          "value": "CS MONITOR 23 SEP 2026",
+          "role": "source",
+          "adds": "Study provenance absent from spoken wording"
+        }
+      ],
+      "visual_cues": [
+        "Four model marks above one pooled field of 100 normalized bubbles, 35 red"
+      ],
+      "takeaway": "35 percent of pooled news-study responses were problematic"
+    },
+    {
+      "id": "2",
+      "start_frame": 511,
+      "end_frame": 642,
+      "text": [
+        {
+          "value": "Anthropic Claude",
+          "role": "identity",
+          "adds": "Named provider and model"
+        },
+        {
+          "value": "BORN USA",
+          "role": "relationship",
+          "adds": "Origin attached to the model"
+        }
+      ],
+      "visual_cues": [
+        "US flag and six illustrative question-to-reply pairs"
+      ],
+      "takeaway": "Claude answered every tested question, without claiming correctness"
+    },
+    {
+      "id": "3",
+      "start_frame": 642,
+      "end_frame": 875,
+      "text": [
+        {
+          "value": "LIVES",
+          "role": "relationship",
+          "adds": "Hosting distinction"
+        },
+        {
+          "value": "DeepSeek",
+          "role": "identity",
+          "adds": "Names the specific service and app"
+        },
+        {
+          "value": "CHINA",
+          "role": "identity",
+          "adds": "Data storage jurisdiction"
+        }
+      ],
+      "visual_cues": [
+        "DeepSeek app phone, moving retained input, opened server, China flag"
+      ],
+      "takeaway": "The named DeepSeek app stores input in China"
+    }
+  ]
+}

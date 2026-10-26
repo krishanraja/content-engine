@@ -2086,11 +2086,19 @@ def main():
     held = direction_problem(cfg)
     if held and not args.plan:
         sys.exit(f'make: {held}')
+    import media_standard
+    media_standard.preflight(cfg, base, full_production=not args.plan and not args.prepare_only)
     cfg['quality_required'] = True
     archiving = archive_settings(args, cfg)
     P = lambda p: (base / p).resolve()
     out = Path(args.out).resolve()
     out.mkdir(parents=True, exist_ok=True)
+    if cfg.get('motion_composition'):
+        if args.only != '9x16' or args.archive is not None or args.prepare_only:
+            ap.error('Continuous motion composition currently supports --only 9x16 and working renders only')
+        import motion_compose
+        motion_compose.compose(cfg,base,out,sys.modules[__name__],plan_only=args.plan)
+        return
     src = P(cfg['source'])
     # A take sped up before anything else, only on Krish's own words (episode.py, "speed").
     try:
@@ -2362,8 +2370,11 @@ def main():
         if cfg.get('quality_required'):
             final_identity = quality.transcript_identity(final, 1, transcript_model)
             heard = transcribe(final, out/f'{final.stem}.heard.json', transcript_model, provenance=final_identity)
+            narration_path = out/f'{final.stem}.narration.txt'
+            narration_path.write_text(' '.join(w['w'].strip() for w in heard), encoding='utf-8')
             speech_check = quality.word_diff(toks, heard)
             receipt = {'video_sha256':quality.digest(final), 'piece_id':cfg.get('piece_id'),
+                       'final_narration_sha256':quality.digest(narration_path),
                        'caption_repairs':None if caption_repairs is None else {
                            'document_sha256':cfg['caption_repairs_sha256'],
                            'provenance':caption_repairs['provenance'],
@@ -2375,6 +2386,7 @@ def main():
                 'motion':{'status':'not_run','reason':'Mandatory camera-motion assessment and final framing review; stabilise when needed'},
                 'loudness':{'status':'fail' if loudness_warnings(loudness, levels) else 'pass', 'measurements':loudness},
                 'visuals':{'status':'inconclusive','coverage':visual_checks,'reason':'Full-size card and font review required'},
+                'visual_clarity':{'status':'not_run','reason':'Minimal rendered words, no script repetition, recognisable cues and independent three-second comprehension evidence required'},
                 'full_review':{'status':'not_run'}},
                 'script_diff':quality.word_diff(script_words(cfg,P), heard)}
             Path(str(final)+'.validation.json').write_text(json.dumps(receipt,indent=2),encoding='utf-8')

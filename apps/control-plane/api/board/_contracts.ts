@@ -87,7 +87,7 @@ export function validSourceBody(collection: string, id: unknown, body: unknown):
     && (!('at' in body) || typeof body.at === 'string' && Number.isFinite(Date.parse(body.at)))
 }
 export type BoardFile = { sha256: string; bytes: number; type: string; name: string; key: string }
-export type Manifest = { version: 1; week: string; html: BoardFile; assets: Record<string, BoardFile> }
+export type Manifest = { version: 1; week: string; html: BoardFile; assets: Record<string, BoardFile>; delivery_review?: unknown }
 export function fileSpec(week: string, v: unknown, html = false): v is BoardFile {
   if (!object(v) || !/^[a-f0-9]{64}$/.test(String(v.sha256)) || !Number.isSafeInteger(v.bytes) || Number(v.bytes) <= 0) return false
   if (Number(v.bytes) > (html ? MAX_HTML : 2 * 1024 ** 3)) return false

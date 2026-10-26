@@ -1,3 +1,4 @@
+import { mediaQualityEnforced } from './media-rollout.js'
 import { copyFile, mkdir, readFile, writeFile } from 'node:fs/promises'
 import { basename, dirname, extname, join, resolve } from 'node:path'
 import { bundle } from '@remotion/bundler'
@@ -20,6 +21,8 @@ import {
 import { runtimeTypography, stageOfficialSeriesWordmarks, stagePublicationMarks, type StagedPublicationMarks, type StagedWordmarkAsset } from './brand-assets.js'
 import { BUILT_WITH_AI_EDITORIAL_RULE_ID, MONEY_OF_AI_EDITORIAL_RULE_ID } from './editorial.js'
 import { hashFile, hashValue } from './hash.js'
+import { assertQualifiedFile, assertProductionBrief } from './media-delivery.js'
+import { briefProblems, MEDIA_STANDARD_HASH } from './media-quality.js'
 
 const COMPOSITION_ID = 'MindmakeCarouselSlide'
 
@@ -169,11 +172,21 @@ async function stageStoryAssets(story: CarouselStoryV1, directory: string) {
 
 export async function renderCarousel(repoRoot: string, configPath: string, storyInput: unknown, outputDirectory: string, reviewMode = false): Promise<CarouselRenderResult> {
   const story = parseCarouselStoryInput(storyInput)
+  const theme = await loadPinnedTheme(configPath, story)
+  if (mediaQualityEnforced()) {
+    const briefPath = resolve(outputDirectory, `${story.story_id}.media-brief.json`)
+    let mediaBrief: unknown
+    try { mediaBrief = JSON.parse(await readFile(briefPath, 'utf8')) }
+    catch { throw new Error(`Create ${briefPath} against docs/MEDIA_STANDARD.md before rendering`) }
+    const mediaProblems = briefProblems(mediaBrief)
+    if (mediaProblems.length) throw new Error(mediaProblems.join('; '))
+    if ((mediaBrief as { piece_id: string; surface: string }).piece_id !== story.story_id || (mediaBrief as { surface: string }).surface !== 'carousel') throw new Error('carousel media brief belongs to another piece or surface')
+    await assertProductionBrief(briefPath, !reviewMode, story.story_id)
+  }
   if (!reviewMode) {
     const issues = carouselProductionIssues(story)
     if (issues.length) throw new Error(`carousel production gate failed: ${issues.join('; ')}`)
   }
-  const theme = await loadPinnedTheme(configPath, story)
   if (!theme.wordmarks && !theme.publication) throw new Error('carousel brand theme has no official wordmarks')
   const storyHash = carouselStoryContentHash(story)
   const target = resolve(outputDirectory, `${story.story_id}-${storyHash.slice(0, 16)}${reviewMode ? '-review' : ''}`)
@@ -292,6 +305,28 @@ export async function packageCarousel(repoRoot: string, configPath: string, stor
   const story = parseCarouselStoryInput(storyInput)
   const storyHash = carouselStoryContentHash(story)
   if (!story.approvals.some((approval) => carouselApprovalBinds(approval, 'final', storyHash))) throw new Error('final approval for the exact carousel story is missing')
+  const candidatePath = resolve(outputDirectory, `${story.story_id}-${storyHash.slice(0, 16)}`, 'candidate-package.json')
+  if (mediaQualityEnforced()) {
+    let candidate: CarouselDraftPackageV1 | null = null
+    try { candidate = CarouselDraftPackageV1Schema.parse(JSON.parse(await readFile(candidatePath, 'utf8'))) }
+    catch (e) { if ((e as NodeJS.ErrnoException).code !== 'ENOENT') throw e }
+    if (candidate) {
+      if (candidate.story_hash !== storyHash || candidate.story_id !== story.story_id) throw new Error('carousel candidate belongs to a different story')
+      // The ordered manifest and the exact PNG/PDF bytes are reviewed together.
+      // Packaging cannot render new bytes after review.
+      await assertQualifiedFile(candidatePath, story.story_id, story.story_id, 'manifest')
+      for (const slide of candidate.slide_pngs) {
+        if (await hashFile(slide.path) !== slide.sha256) throw new Error('carousel slide changed after review')
+        await assertQualifiedFile(slide.path, story.story_id, story.story_id, 'slide')
+      }
+      if (candidate.linkedin_pdf) {
+        if (await hashFile(candidate.linkedin_pdf.path) !== candidate.linkedin_pdf.sha256) throw new Error('carousel PDF changed after review')
+        await assertQualifiedFile(candidate.linkedin_pdf.path, story.story_id, story.story_id, 'document')
+      }
+      await writeFile(join(dirname(candidatePath), 'package.json'), `${JSON.stringify(candidate, null, 2)}\n`, 'utf8')
+      return candidate
+    }
+  }
   const rendered = await renderCarousel(repoRoot, configPath, story, outputDirectory, false)
   const target = dirname(dirname(rendered.slides[0]!.path))
   const pdfPath = join(target, `${story.story_id}-linkedin.pdf`)
@@ -311,6 +346,11 @@ export async function packageCarousel(repoRoot: string, configPath: string, stor
     platforms: story.platforms,
     public_posting_authorised: false,
   })
-  await writeFile(join(target, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`, 'utf8')
-  return manifest
+  if (!mediaQualityEnforced()) {
+    await writeFile(join(target, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`, 'utf8')
+    return manifest
+  }
+  await writeFile(join(target, 'candidate-package.json'), `${JSON.stringify(manifest, null, 2)}\n`, 'utf8')
+  await writeFile(join(target, 'quality-status.json'), `${JSON.stringify({ status: 'working_unqualified', standard_sha256: MEDIA_STANDARD_HASH, next: 'Review this exact ordered manifest and all PNG/PDF files, then rerun package without rerendering' }, null, 2)}\n`, 'utf8')
+  throw new Error(`Working carousel candidate saved at ${candidatePath}; independent rendered-media qualification required`)
 }

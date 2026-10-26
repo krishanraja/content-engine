@@ -440,7 +440,7 @@ def contact_sheet(video, frames, shape, safe, marks, out_png):
     picks = sheet_frames(frames)
     with tempfile.TemporaryDirectory() as tmp:
         expr = '+'.join(f'eq(n\\,{f})' for f in picks)
-        subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(video), '-vf', f"select='{expr}'", '-vsync', '0',
+        subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(video), '-vf', f"select='{expr}'", '-fps_mode', 'passthrough',
                         os.path.join(tmp, 'f%04d.png')], check=True)
         stills = sorted(Path(tmp).glob('f*.png'))
         try:

@@ -1,0 +1,20 @@
+{
+  "kind": "independent_still_interpretation_not_timed_human_test",
+  "reviewer": "editorial_render_reader",
+  "first_interpretation": "Person uses DeepSeek on a phone; service connects to servers in China. Image implies hosting location without establishing an actual request/facility location.",
+  "material": "Photographic editorial illustration, not clipart; physical texture in hand/phone/rack.",
+  "colour_read": "Charcoal, warm cream, grey, mint, skin, minor hardware orange; flag red/yellow.",
+  "relationship": "Arrow connects phone to rack.",
+  "risks": [
+    "Landing at one bracketed drive bay could imply that particular hardware represents the service",
+    "Broad torn mint diagonal competes with the directional arrow",
+    "Hosted service label relatively small; Illustration tiny at phone size"
+  ],
+  "unverified": [
+    "motion",
+    "timing",
+    "actual three-second comprehension",
+    "Krish aesthetic approval"
+  ],
+  "status": "art_direction_candidate_only"
+}

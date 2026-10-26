@@ -1,0 +1,60 @@
+{
+  "result": {
+    "sent": 12,
+    "already": 0,
+    "confirmed_only": 0
+  },
+  "files": [
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/Working studies/clarity-v3/Friday-motion-study-v3-horizontal.mp4",
+      "sha256": "d9f6468c9f1fdd008f5c721bc8725448bd7d8c1c7a8a4afdb2f47cae93829961"
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/Working studies/clarity-v3/Friday-motion-study-v3-receipt.json",
+      "sha256": "1f60e01e6baa8434cdc9a1c05bc75570f5c6e3d57d09455bd6202ea2fbfa8723"
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/Working studies/clarity-v3/Friday-motion-study-v3-vertical.mp4",
+      "sha256": "2816b0a0dc0b361faf5631dcd3ef3c72b26f7588e025b11fe27b4f0763231aa8"
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/Working studies/clarity-v3/Friday-passport-flags-v3.png",
+      "sha256": "89f8cd8002f1a32999bd5a7990009e6c212f57ecdc73c396c6a583824d19e9a8"
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/Working studies/clarity-v3/Friday-visual-first-v3.png",
+      "sha256": "1af270ecc4f32351678cf6a353a072664eab235b1cac4569d728092669f7f006"
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/Working studies/clarity-v3/README.md",
+      "sha256": "7bb6c571bad8ac7705416695e0cfa30c309c86716f7368d9316aa4027c5648ce"
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/Working studies/clarity-v3/inventory.json",
+      "sha256": "930fb31d7af4df942f9a3cdcc404577a19f4ecdb5ce1e6cafaaea15416d4f725"
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/Working studies/clarity-v3/narration.txt",
+      "sha256": "664cecfa0045ed8f019c702c1ab5260f8023857bf7f6c2b30da29360756e139f"
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/Working studies/clarity-v3/proof-props.json",
+      "sha256": "e5edb8293ed05c0e0cc422808b526d7bfb6de31dd2b0e2329e11d0d773821967"
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/Working studies/clarity-v3/revision.json",
+      "sha256": "e1846b86a6eb533ec4637dc8b0f9623cc5f953147a6ff90b929f042aa69840aa"
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/Working studies/clarity-v3/study-word-audit.json",
+      "sha256": "c6037a19ed6b84525b58465178fa1921591ac3408f90d584ba496c02caa4f611"
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/Working studies/clarity-v3/visual-copy.json",
+      "sha256": "26517f0a0b840ffb9d32f5d3f14dca16a2a3f5a4f36c0572c8f8ef45d7bb6f03"
+    }
+  ],
+  "status": "engine_library_confirmed",
+  "drive_sync": "not_yet_verified",
+  "making_records_changed": false
+}

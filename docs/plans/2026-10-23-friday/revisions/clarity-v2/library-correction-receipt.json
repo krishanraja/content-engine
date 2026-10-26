@@ -1,0 +1,32 @@
+{
+  "status": "engine_library_confirmed",
+  "result": {
+    "sent": 4,
+    "already": 0,
+    "confirmed_only": 1
+  },
+  "files": [
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/Working studies/clarity-v2.1/Friday-motion-study-v2.1-horizontal.mp4",
+      "sha256": "a5d159b082d8699a390da2149f184ae030ba2237ded6958ec25e62fecdf789c6"
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/Working studies/clarity-v2.1/Friday-motion-study-v2.1-receipt.json",
+      "sha256": "122aa070fa64c232f90475ab1517090ffb0a3af9da0ffa2ebb8de5985056d313"
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/Working studies/clarity-v2.1/README.md",
+      "sha256": "66ad573f4cf122a8eaa6b3f5cf2a603c9c8a0795e5f2f98752ffa7b51545f2d9"
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/Working studies/clarity-v2.1/verification.json",
+      "sha256": "b8209a9a509bfe98c6865e9b20237adccfbce14b951b85ec52f483e7455b110f"
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/Working studies/clarity-v2/README.md",
+      "sha256": "66ad573f4cf122a8eaa6b3f5cf2a603c9c8a0795e5f2f98752ffa7b51545f2d9"
+    }
+  ],
+  "drive_sync": "not_yet_verified",
+  "making_records_changed": false
+}
