@@ -896,6 +896,26 @@
     "on": "2026-10-25",
     "said": "No merge checks."
    }
+  },
+  {
+   "id": "one-clip-name-stopped-the-recordings-lane",
+   "on": "2026-10-26",
+   "krish": "Yeah fix it all.",
+   "what": "From 2026-10-24 the recordings_drive_inbox job failed every 10 minutes (267 runs) because both home computers' passes reported references_publish_failed: a 120-character SaveClip.App_ clip name in Production Inspo was over the library's 100 a name, and the publish stopped at that clip, so no clip after it reached the library either. The fix (PR #172) was written and run by hand on 2026-10-24 but never merged, so the home computers kept running the old code.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "scripts/quick-edit/references.py",
+     "contains": "a 120-character name fits the library",
+     "how": "a name over 100 goes into the library shortened with an 8-character hash of itself, the same on every pass and machine",
+     "test": "python3 scripts/quick-edit/references.py --self-test"
+    },
+    {
+     "file": "scripts/quick-edit/references.py",
+     "contains": "one refused name never stops the rest",
+     "how": "a name the library refuses for any reason no longer stops the other clips; the pass still fails naming it"
+    }
+   ]
   }
  ]
 }

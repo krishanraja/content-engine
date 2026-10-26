@@ -122,12 +122,27 @@ def cmd_publish(out=print):
                if p.is_file() and p.suffix.lower() in VIDEO_EXTENSIONS and not p.name.startswith('.')]
     if not planned:
         return {'sent': 0}
-    _post_pack()
+    sendable, refused = split_refused(planned)
     import send  # scripts/post-pack/send.py
     try:
-        return send.send(planned, send.Engine('references-publish'), out=out)
+        done = send.send(sendable, send.Engine('references-publish'), out=out) if sendable else {'sent': 0}
     except send.SendError as error:
         raise ReferenceError(str(error))
+    if refused:
+        raise ReferenceError('the library refuses ' + '; '.join(f'{target} ({why})' for target, why in refused)
+                             + f'. The other {len(sendable)} went in or were there already.')
+    return done
+
+
+def split_refused(planned):
+    """(the planned files the library takes, [(target, reason)] for each it refuses). One name the library refuses
+    stopped every clip sorted after it on every pass from 2026-10-22 to 2026-10-26; now every other clip goes in and
+    the pass still fails, naming the refused one."""
+    _post_pack()
+    import library  # scripts/post-pack/library.py
+    reasons = [library.refusal(target) for target, _, _ in planned]
+    return ([entry for entry, why in zip(planned, reasons) if not why],
+            [(entry[0], why) for entry, why in zip(planned, reasons) if why])
 
 
 def cmd_fetch(out_dir=None, names=None, out=print):
@@ -429,6 +444,9 @@ def self_test():
     t('the library takes the shortened path', library.refusal(f'{LIBRARY_REFERENCES}/{short}') is None)
     t('the same name shortens the same way every pass', library_name(clip) == short)
     t('two long names that start alike stay apart', library_name(clip[:-5] + 'x.mp4') != short)
+    good = (f'{LIBRARY_REFERENCES}/{short}', Path(clip), 'why')
+    bad = (f'{LIBRARY_REFERENCES}/clip?.mp4', Path('clip?.mp4'), 'why')
+    t('one refused name never stops the rest', split_refused([bad, good]) == ([good], [(bad[0], library.refusal(bad[0]))]))
     if shutil.which('ffmpeg'):
         with tempfile.TemporaryDirectory() as tmp:
             clip = Path(tmp) / 'two-shots.mp4'
