@@ -21,6 +21,8 @@ For: a leader whose business leans on AI tools made by someone else. The action 
 
 ## The arc (checked facts, 26 Oct)
 
+Krish, 2026-10-26, on question 3 (the order below, opening on "Disney asked a bankrupt AI company to go bust so it could buy its team without the lawsuits"): "Yes, that order works"
+
 1. Google, August 2024: a reported $2.7 billion to license Character.AI's technology and hire its founders and pre-training research team; most staff stayed (Wired, 19 Oct 2026, Google's spokesperson).
 2. Disney, December 2025: a $1 billion equity deal with OpenAI and a licence for 200+ characters in Sora (renting AI).
 3. March 2026: OpenAI shuts Sora; the Disney deal ends with no money changed hands.
