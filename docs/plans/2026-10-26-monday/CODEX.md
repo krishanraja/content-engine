@@ -7,10 +7,11 @@ Piece `b358e788-209f-427b-a84d-1f79a8ebb430`. Written by Claude, 26 October 2026
 `python3 scripts/post-pack/creative_direction.py check docs/plans/2026-10-26-monday/creative-direction.json --for-render --script long=docs/plans/2026-10-26-draft-script.md --script short=docs/plans/2026-10-26-draft-script-90s.md`
 prints "direction ready to render". `kit.py` and `make.py` check the same thing and refuse anything else.
 
-**Still with Krish (do not wait on these for the cut; leave their slots):** the six chapter headings (the cards are drawn by
-Claude with `scripts/pages/video_card.py docs/plans/2026-10-26-monday/cards.json` once he picks them, into
-`.cache/pages/mon/cards/`, then sent to the post's library folder), the cover words for the landscape covers, and the
-fact check's last lines. The title card is his picked title and may be drawn now.
+**Still with Krish (do not wait on this for the cut; leave its slot):** the fact check's last lines. The six chapter
+headings and the cover words are picked and drawn: the cards (`title.png`, `ch1.png` to `ch6.png`, drawn by Claude with
+`scripts/pages/video_card.py docs/plans/2026-10-26-monday/cards.json`) are in `.cache/pages/mon/cards/` and in the post's
+library folder `3 Posts/2026-10-26 Mon follow.the.money - Disney, Google and Character.AI/2 Covers and images/`
+(`card-title.png`, `card-chapter-1.png` to `card-chapter-6.png`), beside the five covers and both thumbnails.
 
 ## The rule
 
@@ -28,8 +29,8 @@ number, a label or a picture, and never drop a beat silently.
 | `takes/long.words.json`, `takes/short.words.json` | Word timings of both takes (faster-whisper medium.en, 26 Oct); `takes/*.diff.md`, what he said against the script. |
 | `logos/` and `logos/SOURCES.md` | Official logos as SVG, with a cream twin for the ink desk. Use `disney-script*` for Disney (the corporate wordmark reads too small). `characterai*` may be the 2023 wordmark: use it unless the company's current SVG is available. |
 | `sources.json` | The pages each document or screen beat shows (all filed on the piece as verbatim sources). Capture each page live, highlight the proving words exactly as the beat says, label it with the beat's `source_label`. |
-| `cover-facts.json` | Thumbnails, already drawn and on the board: `GOOGLE PAID $2.7B FIRST`. Use the drawn files; never redraw them. |
-| `cards.json` | The title card and the six chapter cards (headings pending his pick). |
+| `cover-facts.json`, `cover-facts-wide.json` | The words on the covers and thumbnails, already drawn and on the board. `cover-facts.json`: the thumbnails (`GOOGLE PAID $2.7B FIRST`) and the square and vertical covers (`DISNEY IS EATING THE SCRAPS / OF BANKRUPT CHARACTER.AI`). `cover-facts-wide.json`: the wide covers (1200 x 630, 1200 x 675 and the 3:2), `GOOGLE PAID $2.7B FIRST`. Use the drawn files; never redraw them. |
+| `cards.json` | The title card and the six chapter cards (headings picked, cards drawn). |
 
 ## The two videos
 
