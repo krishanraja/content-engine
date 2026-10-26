@@ -141,7 +141,21 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    gather stops when production has no `inspiration` block, and the board
    build refuses ideas that drop one (`board_feed.py cover <Monday>`). A
    card's `why_like` is his typed words; `endorsed` is a suggestion he
-   tapped, never quoted as his. His taste
+   tapped, never quoted as his.
+   **Then read his feedback cues** (Krish, 2026-10-26: "all the feedback
+   I've given you goes into a really clear set of cues that you can draw
+   from in the future"). `sources.json` holds `cues` (`_feedbackCues.ts`;
+   the Inspiration House files them daily from his queue verdicts and his
+   typed card answers): `future_pieces`, ideas he wants made later, offered
+   where they fit a day; `wider_pieces`, context kept for a bigger piece,
+   grouped by `theme` (when a theme has gathered enough, propose the bigger
+   piece and cite each cue); `tracked`, topics to check for news this week;
+   `briefs`, his angle on how a piece should be told, carried into that
+   idea's pitch; `not_for_us`, subjects never offered again. `said` is his
+   words verbatim; `use_origin` says whether his words, a rule or a model
+   guess named the use, and a `model_guess` is never quoted as his reading.
+   Say the cue counts in your reply. When `empty` says the cues table is
+   not there yet, say so and carry on. His taste
    steers this ranking only; never pass it to a judge. Most ideas arrive
    with no series yet (`unassigned`: 77 of 89 on 21 Oct, when
    under.the.hood's pool was empty), so read `unassigned` too and place

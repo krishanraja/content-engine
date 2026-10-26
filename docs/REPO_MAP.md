@@ -593,6 +593,18 @@ The fact gate.
 - `const ENTAIL_SYSTEM`
 - `const INDEPENDENT_SYSTEM`
 
+### `apps/control-plane/api/_feedbackCues.ts`
+
+Krish's feedback cues, for Sunday's gather (GET /api/week/options?include=sources, `cues`).
+
+- `const CUE_USES`
+- `const CUE_COLS`
+- `interface CueItem`
+- `interface CuesBlock`
+- `function buildCues(rows: Row[]): CuesBlock`
+- `function tableMissing(error: { message?: string; code?: string } | null): boolean`
+- `function cuesFrom(res: { data: Row[] | null; error: { message?: string; code?: string } | null }): { cues: CuesBlock; e…`
+
 ### `apps/control-plane/api/_finalPass.ts`
 
 _finalPass — the per-venture Final Pass rubric, prompt, and parse helpers.
