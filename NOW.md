@@ -77,6 +77,22 @@ Lifecycle: building. Readback on 2026-10-11 unless a commit is named; the 2026-1
 - **From the week of 26 October every board has one fixed layout** (`config/board-layout.json`): five tabs and four steps per day, fed through `week_board.py` inputs only and held by `npm run check:board-layout` in CI, which changes only with Krish's recorded words (`docs/PUBLISH_BOARDS.md`). The Drafts step edits in place and carries his number and fact changes across the piece; the Publish step is one ordered run-sheet. No board in the fixed layout has been published yet.
 - **Known risks.** The thirteen content routes that accepted writes with no auth now refuse without a credential: the code is merged (`c0b9d1f`), `docs/STATE.md` still says production readback remains, and `WORKBENCH.md` says the access fix is live and verified, so treat it as live only after a readback. Four crons' last runs failed, and three more that failed every run (`learning_compile`, `shifts_detect`, `build_signals`) were fixed in code on 2026-10-03 with no production run read back yet (`docs/STATE.md`, "Broken or risky"). `npm run verify` passes its guards again.
 
+## Ownership correction verified 26 October 2026
+
+Content-engine alone owns production and all production standards. Growth
+originates amplification ideas and owns account management, channel best
+practices, authorised distribution and channel learning. AGENTS.md,
+docs/GROWTH-HANDOFF.md and docs/CAROUSEL-STANDARD.md define the boundary.
+The complete Grok Bot vs Muse revision 03 is the approved eight-card pilot,
+bound to its private ordered hashes; it is not a universal scorecard template.
+No tracked Studio job, learning row, board or public post was changed by this
+documentation work. PR #178 carries the production guidance. Reconciliation
+preserves main's newer Sunday-loop, creative-direction and Friday-production
+work. Local typechecks passed; the full local media suite reported a quick-edit
+mix failure, so no local full-suite pass or media release is claimed.
+Krish's priority is to merge the verified engine changes, then continue Friday
+production with its existing owner. The exact production handoff still applies.
+
 ## What changed recently
 
 - 2026-10-24 **The Sunday loop is rebuilt for 25 October: his Inspiration House is read, every idea carries styles to choose from, and nothing renders without a signed creative direction.** Krish: "Double check my inspirationhouse gets read properly when ideas are being built", "suggest script and production styles that I can choose from", "Claude gets the scripts and the visual creative direction locked so that codex can take over", "Yes, Sunday is my recording day". The gather (`include=sources`) now reads `inspiration_items`, `content_reads`, `creator_moves` and `taste_claims`; on live data on 24 Oct it found 3 cards he routed to Make a piece that had no idea row, 39 cards he has not answered, 1 production reference and 10 taste claims. The board refuses ideas that drop a routed card, a day without two script formats and one untried experiment, and a new per-day feeder script; brief and scripts are due Sunday morning and midday (layout lock updated with his words). `kit.py` and `make.py` refuse a piece from 26 Oct without `creative-direction.json` signed by him for the exact script words (`docs/CREATIVE_DIRECTION.md`). AGENTS.md opens with the start route Codex reads. Still open: production asking to publish (Codex runs no hooks), a cut-boundary audio check for chopped words, and required status checks on main (his permission).
