@@ -30,10 +30,17 @@ Krish, 2026-10-26, on question 3 (the order below, opening on "Disney asked a ba
 5. Disney, October 2026: requires the deal to go through bankruptcy because of the startup's "diminishing cash reserve and significant litigation and regulatory risks"; seeks a perpetual, worldwide, non-exclusive licence to the code, trust and safety stack, training infrastructure and age-prediction technology, "free and clear", with liabilities left with Character.AI; users' data and the website are not in it (Wired, court filings). Offers jobs to 66 staff at $60 million a year for three years (Gizmodo, filings).
 6. The users and the people suing: no money from either deal; the claims stay with the shell.
 
+## The call (OUR PREDICTION)
+
+Krish, 2026-10-26, on question 4: "On question 4, I think we need to predict specifically three big media or entertainment companies which will buy an AI company." Then, on the draft: "Those three, 30 June 2027, 75%".
+
+By 30 June 2027, Skydance (Paramount and Warner Bros. Discovery), Universal Music Group and Comcast's NBCUniversal will each buy an AI company or its team. How sure we are: 75%.
+
+Context checked 26 Oct: Netflix bought InterPositive (reported $587M, 2026), Warner Music bought Sureel AI (June 2026), WildBrain bought Personality AI (up to $70M, August 2026); Skydance's merger closed 6 Oct 2026 and Elon Musk invested about $1 billion on 22 Oct; UMG has partnered (Nvidia, Udio, ElevenLabs) without buying; NBCUniversal has made no AI purchase found.
+
 ## Still to lock with Krish, one question at a time
 
 - Who it is for and the one thing they do on Monday.
 - The checkpoints and what he signs at each.
 - The one picture and the point it carries.
 - What is out of scope.
-- His call (the dated prediction) in his own words.
