@@ -1,8 +1,8 @@
 # Workbench: where we are and what's next
 
-## 25 October: Codex
+## 26 October: Friday motion v5
 
-[Friday production: visual-first gate, incomplete](docs/plans/2026-10-23-friday/locked/production-preflight.md).
+[Review and library location](docs/plans/2026-10-23-friday/revisions/motion-v5/STATUS.md).
 
 ## 24 October: Friday locked and signed off; Codex makes the videos (Claude)
 

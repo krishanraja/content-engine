@@ -2,7 +2,12 @@
 
 Status: in production; no finished-video or final-board claim.
 
-Latest: Krish’s 25 October feedback is implemented in `../revisions/clarity-v3/`: country flags, five-word generic passport, no explanatory paragraph, and official model marks in speech bubbles. The study passes automated text checks; independent semantic and three-second comprehension review remain pending. `docs/VISUAL_CLARITY.md` describes the new final-delivery gate.
+Latest (26 October): Krish accepted the complete 84.9-second short VO audio and rejected its motion quality. The Anthropic/GitHub reference he supplied is the same file previously studied only as sampled stills. A temporal study and fresh conceptual review now precede a representative rebuild. See `../revisions/motion-v5/STATUS.md`. The v4 treatment is rejected, not a production lock. No making step or board was written.
+
+Readback (26 October): all six collections read for weeks19and26 October using authenticated Windows curl after Python urllib repeatedly failed SSL EOF. The19 October board remains revision 50 / build 95c921bd526229d1d4a9bf63de9adfead6c24e3ce2590b70fa0a7e4001a129cb; all six stores match the24 October snapshot. The26 October board is revision 2 / build d722223e605882f66c865fad8fbaf85f2d11c9a9f7962f212466df9797cbf6ad and all six stores are empty. No live write.
+
+Camera trial: a background-masked vidstab sample barely improved the short (translation p95 42.01 to 41.75 px; rotation 1.87 to 1.75 degrees) and did not improve the long (33.25 to 34.48 px; long tracking inconclusive). Rejected as a treatment. Audio PCM hashes were unchanged. Ten local speech-join candidates remain unaccepted; their fresh ASR has anomalies and is not listening evidence.
+
 
 Claude completed Visual gate, Scripts with both read-backs, Pack and Recorded. PR #169 is merged; this production branch includes origin/main at 294deb5. Codex did not write Claude's making steps. The former reconciliation item is closed.
 

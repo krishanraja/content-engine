@@ -1,0 +1,12 @@
+{
+  "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct motion v5/Friday-motion-v5-REVIEW.mp4",
+  "sha256": "b272d895df2f8a2272e309030c8e6921e5f65edac80e15eabb20d5e5482d40d8",
+  "send": {
+    "sent": 0,
+    "already": 2,
+    "confirmed_only": 0
+  },
+  "readback": "authenticated download matches exact uploaded bytes",
+  "board_write": false,
+  "making_write": false
+}

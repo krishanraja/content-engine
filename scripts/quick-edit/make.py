@@ -2060,6 +2060,12 @@ def main():
     P = lambda p: (base / p).resolve()
     out = Path(args.out).resolve()
     out.mkdir(parents=True, exist_ok=True)
+    if cfg.get('motion_composition'):
+        if args.only != '9x16' or args.archive is not None or args.prepare_only:
+            ap.error('Continuous motion composition currently supports --only 9x16 and working renders only')
+        import motion_compose
+        motion_compose.compose(cfg,base,out,sys.modules[__name__],plan_only=args.plan)
+        return
     src = P(cfg['source'])
     # A take sped up before anything else, only on Krish's own words (episode.py, "speed").
     try:

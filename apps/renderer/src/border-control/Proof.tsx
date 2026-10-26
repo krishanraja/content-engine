@@ -7,7 +7,7 @@ import '../house/fonts.css'
 export type ProofProps = {
   shape: 'wide' | 'tall'
   frames: number
-  cues: {born: number; lives: number; newspaper: number; third: number}
+  cues: {born: number; lives: number; newspaper: number; third: number; bornAgain?: number}
   labels: {born: string; lives: string; evidence: string; finding: string; source: string}
   capture: string
   marks: {name: string; src: string}[]
@@ -67,7 +67,7 @@ export function BorderControlProof(p:ProofProps) {
     <AbsoluteFill style={{opacity:.06,backgroundImage:'radial-gradient(#0C1512 1px, transparent 1px)',backgroundSize:'9px 9px'}}/>
     <div style={{position:'absolute',left:passportX,top:passportY+(1-enter)*140,
       transform:`rotate(${-sheet*7}deg) scale(${.95+.05*enter-sheet*.12})`,opacity:p.visualFirst?(f>=p.cues.newspaper-24?0:1):1-field}}>
-      <Passport frame={f} born={p.cues.born} lives={p.cues.lives} width={w} tall={tall} labels={p.labels} example={p.example}/>
+      <Passport frame={f} born={p.cues.born} lives={p.cues.bornAgain!==undefined && f>=p.cues.bornAgain?Number.MAX_SAFE_INTEGER:p.cues.lives} width={w} tall={tall} labels={p.labels} example={p.example}/>
     </div>
     <div style={{position:'absolute',left:sheetX,top:sheetY,width:sheetW,height:sheetH,
       background:C.paper,boxShadow:'0 24px 48px #0c151224',border:'1px solid #c4c3b6',transform:`rotate(${(1-sheet)*3}deg)`,opacity:p.visualFirst && f>=p.cues.third-24?0:1}}>

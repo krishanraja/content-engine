@@ -1,0 +1,14 @@
+{
+  "status": "visual_decision_required",
+  "video": "C:\\Users\\krish\\Documents\\Codex\\2026-10-24\\get-friday-s-videos-produced-and\\outputs\\Friday-motion-v5-REVIEW.mp4",
+  "video_sha256": "b272d895df2f8a2272e309030c8e6921e5f65edac80e15eabb20d5e5482d40d8",
+  "frames": 875,
+  "duration": 29.166666666666668,
+  "audio_source": "approved-audio/Friday-short-approved.m4a",
+  "audio_source_sha256": "d9fa3c4b90a22b3a421994eea30a435595c33f7501cd071a455ee49579c84a8b",
+  "excerpt_start": 19.8,
+  "excerpt_end": 48.96666666666667,
+  "processing": "Video stream copy; precise approved-audio excerpt, AAC encoded without speech edit/speed/gain; full approved AAC master unchanged",
+  "reference_sha256": "9c9fbcc14de4197a246c5fc7784bd5df4839ca118f9ad5428eefbb6361299a67",
+  "full_final_video": false
+}

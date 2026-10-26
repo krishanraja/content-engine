@@ -1,0 +1,38 @@
+{
+  "status": "corrected_proof_for_krish_not_release_approved",
+  "evidence_level": "prediction_not_human_test",
+  "reviewer": "motion_blind_viewer",
+  "author_review": false,
+  "sound": false,
+  "captions": false,
+  "first_interpretations": {
+    "135": "AI receives or combines a person birthplace and current residence. AI ownership unclear.",
+    "200": "AI gives response based on personal information.",
+    "400": "35% of responses from listed models problematic; pooled/per-model scope could be unclear.",
+    "590": "Claude is American and produces answers associated with America; completion not clear.",
+    "866": "DeepSeek phone conversations sent to a system in China; own-app scope not clear."
+  },
+  "corrections": [
+    "AI passport ownership explicitly identified; passports now hang below model and host as attached attributes, not incoming data",
+    "Question-to-response pairs depict reply completion without accuracy ticks",
+    "DeepSeek official app mark also appears inside the phone",
+    "Generic/evidence/Claude/hosting text must not overlap across transitions"
+  ],
+  "second_review": {
+    "reviewer": "motion_blind_viewer_v2",
+    "evidence_level": "prediction_not_human_test",
+    "first_interpretations": {
+      "135": "AI origin and current home differ; hosting meaning still ambiguous",
+      "200": "AI origin versus location; moving chip could imply relocation",
+      "400": "Pooled problematic response proportion broadly understood; possible overgeneralization",
+      "590": "One pale answer looks unanswered",
+      "866": "Named DeepSeek phone service runs in China; scope could be overgeneralized"
+    },
+    "corrections": [
+      "Keep generic chip inside host; only emitted answer moves",
+      "Complete all six Claude replies by frame 580; equal solid styling thereafter",
+      "Traveling input and retained input hand off at frame 834 without duplicate overlap"
+    ],
+    "remaining": "No complete independent temporal comprehension or semantic nonduplication pass; this remains a visual decision proof."
+  }
+}
