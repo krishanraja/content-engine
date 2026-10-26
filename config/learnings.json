@@ -1657,6 +1657,21 @@
           "how": "Monday's take edits"
         }
       ]
+    },
+    {
+      "id": "no-repeat-takeaway",
+      "on": "2026-10-26",
+      "krish": "I think for Wednesday's Claude piece we've already done that message takeaway with the Muse versus Grok piece. I would suggest we focus in on what Duet actually adds to the Claude ecosystem for Claude power users.",
+      "why": "The Duet end message I drafted landed on where to draw the line on what an assistant may do without asking, the takeaway the Muse versus Grok piece had already given readers.",
+      "means": "Before an end message goes to him, read the series' recent pieces: a takeaway one of them already landed is never the end message again. Find what is new in this story for this reader instead.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": ".agents/skills/make-piece/SKILL.md",
+          "contains": "a takeaway a recent piece already landed is never the end message again",
+          "how": "the Narrative step"
+        }
+      ]
     }
   ]
 }
