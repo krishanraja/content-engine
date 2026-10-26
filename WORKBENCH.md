@@ -1,5 +1,7 @@
 # Workbench: where we are and what's next
 
+[Story correction and Growth handoff, 26 Oct](docs/history/2026-10-26-story-closeout.md).
+
 ## 26 October: Monday to its one sign-off; Wednesday and Friday next (Claude)
 
 - **Asked (Krish, 26 Oct):** "yes, both good, and yes to the fix - already recorded both videos, and they're in the inbox. Get everything from here ready ... this week's publish board should be up to date. Monday's content should be moved and taken all the way to Codex ... then you should interview me on Wednesday and Friday's narrative arcs, and then get everything ready in Wednesday and Friday's board ready to send to teleprompter".
