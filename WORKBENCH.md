@@ -3,6 +3,20 @@
 ## 26 October: Friday motion v6
 
 [Production handoff](docs/plans/2026-10-23-friday/revisions/motion-v6/BRIEF.md). [Quality gate and failed $3 calibration](docs/plans/2026-10-26-quality-evidence/README.md): eight calls, no qualification. Gates remain draft; four videos and final board incomplete.
+## 26 October: production and social growth have separate owners
+
+Krish's ruling is recorded in docs/GROWTH-HANDOFF.md and AGENTS.md.
+Content-engine alone owns production and its standards; Growth-MakeYourMindUp
+owns social/posting strategy, amplification briefs, account management,
+authorised automatic distribution and channel learning. The transferred
+carousel rules live here in docs/CAROUSEL-STANDARD.md. Krish approved all
+eight cards of Grok Bot vs Muse revision 03 on 26 October. Growth originates
+amplification ideas, channel best practices and missed-placement opportunities;
+content-engine supplies production execution and quality standards for all
+formats. Krish now prioritises merging the engine changes, then continuing
+Friday production with its existing production owner. Growth briefs receive
+a checked creative package through the existing editorial/Studio path. This change updates repository guidance
+only; it does not mutate a tracked Studio session, learning record or board.
 
 
 ## 24 October: the Sunday loop rebuilt for his recording day (Claude)
