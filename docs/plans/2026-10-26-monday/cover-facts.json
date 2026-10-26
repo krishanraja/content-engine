@@ -8,11 +8,17 @@
  "comment_question": "WHO MAKES THE AI YOUR BUSINESS RUNS ON?",
  "cover": {
   "headline": [
-   "WHY IS DISNEY EATING THE SCRAPS",
-   "OF BANKRUPT CHARACTER.AI?"
+   "DISNEY IS EATING THE SCRAPS",
+   "OF BANKRUPT CHARACTER.AI"
   ],
   "portrait": true,
   "rows": [
+   {
+    "name": "Google",
+    "logo": "logos/google-g.svg",
+    "tag": "2024: $2.7B",
+    "colour": "butter"
+   },
    {
     "name": "Disney",
     "logo": "logos/disney-script-cream.svg",

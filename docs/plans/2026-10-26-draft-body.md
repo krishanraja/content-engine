@@ -54,6 +54,8 @@ If your business runs on someone else's AI, this is the part worth sitting with.
 
 ## OUR PREDICTION
 
+So what does it mean beyond Disney? My read: the companies with the most to lose are deciding that renting their AI is too risky.
+
 Disney isn't alone. This year Netflix bought InterPositive, an AI filmmaking start-up, in a deal reported at $587 million. Warner Music bought Sureel AI in June. WildBrain, the company behind the Teletubbies, bought Personality AI in August. (Yes, the Teletubbies now have an AI company.)
 
 Put those together and a pattern shows. The big media companies are moving from renting AI to owning it.
@@ -65,6 +67,8 @@ Each of them now has a rival that has bought, and Disney has just shown everyone
 **Our prediction.** By 1 March 2027, Skydance, Universal Music Group and Comcast's NBCUniversal will each have announced buying an AI company or its team. How sure we are: 75%.
 
 Why not higher? All three have to move inside about four months, and any one of them could decide that renting is fine for now.
+
+If the giants with the deepest pockets won't leave their AI in someone else's hands, it's worth knowing whose hands yours is in.
 
 ## 3 things you can do tomorrow
 

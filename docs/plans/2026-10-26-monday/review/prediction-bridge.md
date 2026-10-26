@@ -1,5 +1,7 @@
 # Monday: one fix the one-question check asks for
 
+**Done (26 Oct, on your "100% happy with Monday's Publish Board"):** the two sentences are in the article, and the one-question check now passes every section. The fact check of the 14 changed sentences is still to run (see the fact-check box).
+
 The check reads every section against the piece's question ("Why did Google and Disney both pay for Character.AI, and
 what does it mean for any business that runs on someone else's AI?"). Every section passes except **Our prediction**,
 which it reads as answering a different question (which media company buys AI next). The publish page cannot be built
