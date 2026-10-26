@@ -1,9 +1,9 @@
-# Monday 26 October, follow.the.money: Character.AI, Disney and Google (narrative, in progress)
+# Monday 26 October, follow.the.money: Character.AI, Disney and Google (narrative, signed)
 
 Piece: b358e788-209f-427b-a84d-1f79a8ebb430. Picked by Krish, 2026-10-26: "Go with number 1."
 His brief, queued 19 Oct: "Why is Disney going after it, and why is Google going after it? They're two totally different companies. Unpack both."
 
-## End message (being locked with Krish)
+## End message
 
 Krish, 2026-10-26, on question 1: "I think, on question one, both narratives are part of one overall narrative to be honest."
 
@@ -40,9 +40,16 @@ By 1 March 2027, Skydance (Paramount and Warner Bros. Discovery), Universal Musi
 
 Context checked 26 Oct: Netflix bought InterPositive (reported $587M, 2026), Warner Music bought Sureel AI (June 2026), WildBrain bought Personality AI (up to $70M, August 2026); Skydance's merger closed 6 Oct 2026 and Elon Musk invested about $1 billion on 22 Oct; UMG has partnered (Nvidia, Udio, ElevenLabs) without buying; NBCUniversal has made no AI purchase found.
 
-## Still to lock with Krish, one question at a time
+## The one picture
 
-- Who it is for and the one thing they do on Monday.
-- The checkpoints and what he signs at each.
-- The one picture and the point it carries.
-- What is out of scope.
+A money map: two receipts and an empty shell. Google, 2024: $2.7 billion, for the founders. Disney, 2026: $20 million for the code and $60 million a year for the team. Beside them an empty box, "the app, its users, the lawsuits", with nothing going in. The point: the money followed the people, and everyone else was left with the box.
+
+## Out of scope
+
+The details of the child-safety lawsuits (we say only that they stay with the shell), how Character.AI's technology works, and Sora's own story beyond the Disney deal.
+
+## Drift rule
+
+Any change to the end message, the reader's action, the arc or the call goes back to Krish before work continues.
+
+Signed by Krish: "yes, go to the scripts", 2026-10-26 (on the picture and the scope, after locking the end message, the action, the arc and the call above).
