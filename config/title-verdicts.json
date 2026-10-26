@@ -92,6 +92,33 @@
  ],
  "verdicts": [
   {
+   "title": "GOOGLE PAID $2.7B FIRST",
+   "surface": "thumbnail",
+   "verdict": "picked",
+   "why": "Brings Google back in beside the title: a named company, the real number, and the order of events",
+   "krish": "Krish, 2026-10-26: Yes to all four, recommended title",
+   "on": "2026-10-26",
+   "piece": "b358e788-209f-427b-a84d-1f79a8ebb430"
+  },
+  {
+   "title": "Why is Disney eating the scraps of bankrupt Character.AI?",
+   "surface": "article",
+   "verdict": "picked",
+   "why": "The same line as the YouTube title, picked in the same round",
+   "krish": "Krish, 2026-10-26: Yes to all four, recommended title",
+   "on": "2026-10-26",
+   "piece": "b358e788-209f-427b-a84d-1f79a8ebb430"
+  },
+  {
+   "title": "Why are Google and Disney eating the scraps of a bankrupt AI business?",
+   "surface": "youtube",
+   "verdict": "rejected",
+   "why": "His first line; a fresh reader took it to mean Google bought leftovers from the bankrupt company, but Google's deal was in 2024 while Character.AI was healthy; truth beats the stronger image, so the image was kept and Google moved to the thumbnail",
+   "krish": "Krish, 2026-10-26: Yes to all four, recommended title",
+   "on": "2026-10-26",
+   "piece": "b358e788-209f-427b-a84d-1f79a8ebb430"
+  },
+  {
    "title": "Why every country wants its own AI",
    "surface": "card",
    "verdict": "picked",
