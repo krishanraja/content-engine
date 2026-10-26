@@ -37,8 +37,13 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 Carousel provenance rule clarified on 26 October: no public illustration-generation
 boilerplate in artwork, captions or descriptions. Retain private provenance and
 supported native metadata; Growth owns posting. The approved Grok/Muse Story set
-is preserved locally with a native first-frame header/wordmark overlap held for
-a surgical layout correction. Friday production remains with its existing owner.
+is preserved locally. Its first-frame wordmark correction passed independent
+visual review and Growth verified it live on both Meta channels on 26 October;
+the other two frames retained their original hashes. Facebook's final-frame
+native AI label touches the small wordmark, a safe-area lesson for the next
+edition. A next-native-edition brief is prepared locally, not a queued Studio
+job or new creative approval. WORKBENCH.md holds the handoff pointers.
+Friday production remains with its existing owner.
 
 <!-- north-star-state {"week_of": "2026-10-26", "week_target": 1, "current": 1, "current_as_of": "2026-10-23", "current_source": "Control Center content_ideas (1 published in the last 7 days)", "urgency": 1, "urgency_reason": "at 100% of this week's target"} --> **North Star number: U1, on pace.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 1, against 1 this week, on the way to 30 by 30 November 2026. Steady: one proposal a week that raises the ceiling.
 
