@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { MediaFixture } from '../helpers/media-quality.js'
 import { makingStamp, makingSteps, mergeMaking, parseMakingPatch, takeCounts, teleprompterNote, teleprompterStates } from '../../apps/control-plane/api/_making.js'
 
 // The making record on content_ideas.meta.making: where a piece is between
@@ -11,7 +12,7 @@ import { makingStamp, makingSteps, mergeMaking, parseMakingPatch, takeCounts, te
 type Row = Record<string, any>
 // beforeUpdate runs once, just before the next update is applied: a stand-in
 // for another write landing between the route's read and its write.
-const db = vi.hoisted(() => ({ tables: {} as Record<string, Row[]>, writes: [] as Array<[string, string, Row]>, beforeUpdate: null as null | (() => void) }))
+const db = vi.hoisted(() => ({ tables: {} as Record<string, Row[]>, writes: [] as Array<[string, string, Row]>, beforeUpdate: null as null | (() => void), media: null as any }))
 
 vi.mock('../../apps/control-plane/api/_supabase.js', () => {
   function query(table: string) {
@@ -27,6 +28,7 @@ vi.mock('../../apps/control-plane/api/_supabase.js', () => {
     }
     const chain: Record<string, any> = {
       select() { return chain },
+      limit() { return chain },
       update(patch: Row) { op = 'update'; payload = patch; return chain },
       eq(k: string, v: unknown) { filters.push(r => r[k] === v); return chain },
       async maybeSingle() { const r = run(); return { data: r.data[0] ?? null, error: null } },
@@ -34,7 +36,7 @@ vi.mock('../../apps/control-plane/api/_supabase.js', () => {
     }
     return chain
   }
-  return { supabase: { from: (t: string) => query(t) } }
+  return { supabase: { from: (t: string) => query(t), storage: { from: () => db.media.storage.from() } } }
 })
 
 const TOKEN = 'eot_' + 'w'.repeat(40)
@@ -42,7 +44,14 @@ const CODE = 'making-test-access-code'
 const COOKIE = `cc_access=${createHash('sha256').update(CODE).digest('hex')}`
 const ID = '904658db-4df2-4537-a0ed-ebe93e081db7'
 
-async function call(method: 'GET' | 'POST', body: Row = {}, who: 'agent' | 'krish' | 'nobody' = 'agent', id = ID) {
+async function call(method: 'GET' | 'POST', body: Row = {}, who: 'agent' | 'krish' | 'nobody' = 'agent', id = ID, qualifyFixtures = true) {
+  // Existing making-state tests now use independently signed, byte-verified
+  // synthetic media. Dedicated refusal cases pass qualifyFixtures=false.
+  if (qualifyFixtures && Array.isArray(body.video_assets)) body = { ...body, video_assets: body.video_assets.map((a: Row) => {
+    if (!a || !['short', 'long', 'feature'].includes(a.cut) || typeof a.path !== 'string') return a
+    const v = db.media.video(id, a.cut, a.path.split('/').pop())
+    return { ...a, path: v.request.artifact.path, sha256: v.request.artifact.sha256, quality_receipt: v.request.receipt }
+  }) }
   const { default: handler } = await import('../../apps/control-plane/api/content-ideas/[id]/making.js')
   const headers: Record<string, string> = who === 'agent' ? { authorization: `Bearer ${TOKEN}` } : who === 'krish' ? { cookie: COOKIE } : {}
   const out = { status: 0, body: undefined as any }
@@ -62,11 +71,28 @@ beforeEach(() => {
   db.tables = { content_ideas: [{ id: ID, idea: 'Why are there suddenly so many AIs?', state: 'review', meta: { fact_check: { passed: true, ran_at: '2026-10-10T01:00:00Z' } }, updated_at: '2026-10-10T00:00:00Z' }] }
   db.writes = []
   db.beforeUpdate = null
+  db.media = new MediaFixture()
+  db.tables.content_library_files = db.media.rows
+  process.env.MEDIA_REVIEW_PUBLIC_KEYS = JSON.stringify(db.media.keys)
+  vi.stubGlobal('fetch', db.media.fetch)
 })
+afterEach(() => { vi.unstubAllGlobals(); delete process.env.MEDIA_REVIEW_PUBLIC_KEYS })
 
 const SHA = (c: string) => c.repeat(64)
 
 describe('the making record', () => {
+  it('refuses unqualified video writes and does not let the producer inject a pass', async () => {
+    const out = await call('POST', { video_assets: [{ cut: 'short', name: 'test', path: '3 Video/x.mp4', quality_review: { status: 'pass' } }] }, 'agent', ID, false)
+    expect(out.status).toBe(409)
+    expect(out.body.error).toBe('media_unqualified')
+    expect(db.writes).toHaveLength(0)
+  })
+  it('rechecks the proof key on GET rather than trusting a cached final verdict', async () => {
+    await call('POST', { video_assets: [{ cut: 'long', name: 'long', path: 'long.mp4', thumbnail: { path: 'wide.png' } }, { cut: 'short', name: 'short', path: 'short.mp4', thumbnail: { path: 'tall.png' } }] })
+    expect((await call('GET')).body.steps.find((s: Row) => s.key === 'video').state).toBe('done')
+    process.env.MEDIA_REVIEW_PUBLIC_KEYS = JSON.stringify({ final: db.media.keys.final })
+    expect((await call('GET')).body.steps.find((s: Row) => s.key === 'video').state).toBe('now')
+  })
   it('refuses anyone without the cookie or the engine key', async () => {
     expect((await call('GET', {}, 'nobody')).status).toBe(401)
   })
@@ -387,14 +413,14 @@ describe('the pure helpers', () => {
     expect(steps.find(s => s.key === 'record')).toMatchObject({ label: 'Recorded', state: 'now', note: 'long and short cut recorded from an older script', at: '2026-10-12T08:10:00Z' })
   })
 
-  it('makingSteps: a thumbnail on any asset of a cut counts for that cut', () => {
+  it('makingSteps: legacy thumbnails do not qualify unreviewed video assets', () => {
     const base = { recordings: [{ cut: 'long', path: 'a', at: 'x' }, { cut: 'short', path: 'b', at: 'x' }], updated_at: 'x', by: 'Codex' }
     const twoLong = makingSteps({ state: 'review', meta: { making: { ...base, video_assets: [
       { cut: 'long', name: 'first render', path: 'long-1.mp4', at: '2026-10-12T09:00:00Z' },
       { cut: 'long', name: 'second render', path: 'long-2.mp4', at: '2026-10-12T10:00:00Z', thumbnail: { path: 'wide.jpg' } },
       { cut: 'short', name: 'Shorts video', path: 'short.mp4', at: '2026-10-12T10:00:00Z', thumbnail: { path: 'tall.jpg' } },
     ] } } })
-    expect(twoLong.find(s => s.key === 'video')).toMatchObject({ state: 'done', note: '3 files', at: '2026-10-12T10:00:00Z' })
+    expect(twoLong.find(s => s.key === 'video')).toMatchObject({ state: 'now', note: 'long and short cut still to produce', at: '2026-10-12T10:00:00Z' })
   })
 
   it('a published piece with every channel is done', () => {

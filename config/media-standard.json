@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "id": "makeyourmindup-media-standard",
+  "version": "2026-10-26.1",
+  "authority": {"by": "Krish", "date": "2026-10-26", "decision": "yes", "proposal": "docs/plans/2026-10-26-visual-standard-enforcement.md"},
+  "production_guide": "docs/MEDIA_STANDARD.md",
+  "identity_source": "config/studio.json",
+  "video_text_policy": "config/visual-clarity.json",
+  "carousel_direction": "config/carousel-visual-direction.json",
+  "transfer": "Carry forward the quality criteria, official identity and verification process. Create imagery, compositions, brand applications and explanatory motion for the current story. Previous-piece assets are not production inputs.",
+  "criteria": ["story_specific_assets", "recognisable_entities", "editorial_craft", "brand_application", "minimal_additive_words", "immediate_comprehension", "truth_and_provenance", "phone_readability", "complete_render_review"],
+  "video_criteria": ["narrative_motion", "audio_integrity", "caption_sync"],
+  "carousel_criteria": ["reading_hierarchy", "slide_sequence"],
+  "proof_roles": ["opening", "dense_explanation", "transition_or_conclusion"],
+  "review_rules": {
+    "every_minimum_must_pass": true,
+    "producer_may_qualify_own_work": false,
+    "model_comprehension_is_prediction": true,
+    "video_requires_continuous_playback": true,
+    "carousel_requires_every_slide": true,
+    "unavailable_review_is_pass": false
+  },
+  "exemplars": [
+    {"id": "photographic-direction", "sha256": "5eded512abfcca0ba8140b56a01e147bdab8063236f9fdc19a2c78074eef1f5d", "decision": "accepted", "scope": "photographic editorial direction only; not full motion or carousel approval", "provenance": "docs/plans/2026-10-23-friday/revisions/motion-v6/approval.json", "production_input": false}
+  ],
+  "known_failure_classes": ["generic_clipart", "word_only_visuals", "narration_duplication", "missing_brand", "unclear_visual_relationship", "decorative_motion", "tiny_labels", "unrelated_previous_piece_assets", "generated_illustration_as_evidence", "clipped_speech"],
+  "baseline_limits": ["No approved complete carousel baseline yet", "Accepted styleframe is not approval of a complete motion video", "A model review is not a timed human comprehension experiment"]
+}

@@ -23,6 +23,7 @@ import { remotionLicenceEligible } from './doctor.js'
 import { hashFile, hashPath, hashValue } from './hash.js'
 import { loadJobV2, pinnedConfigPathV2, readStageArtifactV2 } from './job-store-v2.js'
 import { jobPath, studioPaths } from './paths.js'
+import { assertProductionBrief } from './media-delivery.js'
 import { run } from './process.js'
 import { boundRenderCallIssuesV2 } from './render-call.js'
 
@@ -1234,6 +1235,7 @@ export async function renderStoryV2(repoRoot: string, manifestInput: RenderManif
   if (readinessIssues.length) throw new Error(`V2 render readiness failed: ${readinessIssues.join('; ')}`)
   const callIssues = await boundRenderCallIssuesV2(manifest, pinnedRegistry)
   if (callIssues.length) throw new Error(`hard block: the call gate failed: ${callIssues.join('; ')}`)
+  await assertProductionBrief(join(jobPath(manifest.job_id), 'media-brief.json'), settings.profile === 'master', manifest.job_id)
   const brandGeometry = await loadExactBrandGeometryContextV2(manifest)
   if (!await remotionLicenceEligible(repoRoot)) throw new Error('Remotion licence eligibility is not confirmed. Run studio doctor.')
   const rendererHash = await rendererImplementationHashV2(repoRoot)

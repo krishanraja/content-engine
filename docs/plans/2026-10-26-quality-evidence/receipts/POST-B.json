@@ -1,0 +1,35 @@
+{
+  "ok": true,
+  "receipt_persisted": true,
+  "retry_allowed": false,
+  "receipt": {
+    "schema_version": 1,
+    "kind": "media_review_calibration_only",
+    "case_id": "B",
+    "manifest_sha256": "b78ef731493dbfeee9346f3d4a8cbb95f42161db95f22ed2d00922c6d7aea930",
+    "standard_sha256": "d386311cf07d45fd0248f54e04f3f5f9b7fe696c665d4c25e9d35261656758b3",
+    "request_sha256": "85245ecff974a3211dd426b610e6ff7cd7231f965ce487b279d6de89f0941c3b",
+    "model": "gemini-4-argon",
+    "started_at": "2026-10-26T13:34:19.233Z",
+    "completed_at": "2026-10-26T13:34:45.307Z",
+    "status": "completed",
+    "error_code": null,
+    "phase": "inference",
+    "provider_status": null,
+    "reserved_usd": 0.28192,
+    "accounting_charge_usd": 0.28192,
+    "counted_input_tokens": 1524,
+    "usage": {
+      "promptTokenCount": 1825,
+      "candidatesTokenCount": 1458,
+      "totalTokenCount": 3283
+    },
+    "estimated_usage_usd": null,
+    "raw_model_text": "### Verbatim Transcription\n\n> Claude, an American AI, answered all [cut] So where it lives, decides who sees y- [silence/cut] -ves, decides who sees your data. Use DeepSeek, another Chinese AI, an- [silence/cut] -d it keeps all your data in China. [cut] I asked Chat- [cut] Claude, ChatGPT, and DeepSeek. [silence] Sure, [cut] -ut just check what it tells you. [cut] Now here's what I'd do with this information if I were you. I would just [silence/cut] -[t]ools they're using, and where it lives. And, of course, keep a second [silence/cut] got the same questions and answered every single one. [cut] And China has had company here. [silence/cut] stores what you type in China. [cut] But you can bring an AI home. [silence/cut] opening a sales office in Taiwan, which China says belongs to it. [silence/cut] -[er?] questions to your team's AI, to one from another country, and have a l- [silence/cut] is also what most of us want from a holiday- [cut] -day fling. Then there's Cursor, [cut]\n\n*(Note: This audio file consists of a collection of short, disconnected excerpts/clips separated by hard cuts and digital silences.)*\n\n---\n\n### Timestamped Defect List\n\n#### Observed Defects (Mid-speech splices, clipped words, and repetitions)\n\n* **00:01.8 \u2013 00:02.0 (Mid-speech splice / Abrupt truncation):** The phrase \"answered all\" cuts off abruptly mid-syntax and immediately jumps to \"So where it lives...\".\n* **00:03.9 \u2013 00:05.3 (Mid-word truncation, gap, and duplicate repetition):** The phrase \"decides who sees y-\" is cut off mid-word at 00:03.9, followed by a dead-air gap until 00:05.0, where the audio resumes mid-word on \"-ves [lives], decides who sees your data\", repeating the preceding phrase.\n* **00:08.8 \u2013 00:09.9 (Mid-word gap / Unnatural join):** The conjunction \"an-\" is cut off at 00:08.8, followed by silence, and resumes at 00:09.9 with the final consonant \"-d it keeps all your data in China.\"\n* **00:11.6 \u2013 00:12.4 (Abrupt splice / Truncated word):** Immediately after \"in China\", an abrupt splice starts with \"I asked Chat-\", which is cut off mid-word and spliced directly into \"Claude, ChatGPT, and DeepSeek.\"\n* **00:15.1 \u2013 00:15.5 (Clipped word onset):** Following \"Sure,\", there is an abrupt edit where the initial consonant of \"but\" is clipped, sounding like \"-ut just check what it tells you.\"\n* **00:16.7 (Abrupt splice):** The end of \"tells you\" is immediately joined without a natural pause to \"Now here's what I'd do...\".\n* **00:18.8 \u2013 00:20.0 (Abrupt truncation and clipped onset):** The phrase \"I would just\" cuts off into dead air at 00:18.8. At 00:20.0, speech resumes mid-word on \"-[t]ools they're using\".\n* **00:23.8 \u2013 00:24.8 (Abrupt truncation and mid-sentence onset):** The phrase \"keep a second\" cuts off abruptly at 00:23.8 into silence, resuming mid-sentence at 00:24.8 with \"got the same questions...\".\n* **00:26.7 (Abrupt splice):** The end of \"every single one\" is spliced directly into \"And China has had company here.\"\n* **00:28.4 \u2013 00:29.9 (Unnatural gap / Mid-sentence onset):** Silence separates \"company here\" from a mid-sentence fragment starting at 00:29.9: \"stores what you type in China.\"\n* **00:31.8 (Abrupt splice):** \"in China\" is immediately spliced into \"But you can bring an AI home.\"\n* **00:33.9 \u2013 00:34.9 (Abrupt cut and mid-sentence onset):** Silence follows \"AI home\", resuming mid-phrase at 00:34.9 with \"opening a sales office in Taiwan...\".\n* **00:38.5 \u2013 00:39.8 (Abrupt cut and clipped onset):** After \"belongs to it\", silence is followed at 00:39.8 by a clipped mid-phrase onset (\"-[er?] questions to your team's AI...\").\n* **00:43.4 \u2013 00:44.9 (Mid-word truncation and mid-sentence onset):** The phrase \"and have a l-\" is cut off on the \"/l/\" phoneme at 00:43.4, followed by silence, and resumes mid-sentence at 00:44.9 with \"is also what most of us want...\".\n* **00:46.7 \u2013 00:47.1 (Stutter splice / Internal repetition):** Within the phrase \"from a holiday fling\", there is an audible edit/stutter on the word \"holiday\", producing \"holi-day-day fling\".\n* **00:49.5 (Abrupt end):** The audio file terminates right after \"Then there's Cursor,\" while the clause is still incomplete.\n\n#### Uncertain Possibilities\n\n* **Reel/Excerpt Structure vs. Editing Errors:** Because the entire 50-second file is an assembly of disconnected, out-of-order sentence fragments (possibly an edit reel or a test compilation of splices), it is impossible to distinguish whether the transitions at **00:06.8** (\"...your data. Use DeepSeek...\"), **00:13.8 \u2013 00:14.8** (gap before \"Sure\"), and **00:47.5** (pause before \"Then there's Cursor\") are intentional reel boundaries between separate clips or defective edits.\n\n#### Sections That Cannot Be Assessed\n\n* None; all 50 seconds of the audio are clearly audible and directly inspectable.",
+    "text_truncated": false,
+    "finish_reason": "STOP",
+    "observation_only": true,
+    "qualified": false,
+    "signed": false
+  }
+}

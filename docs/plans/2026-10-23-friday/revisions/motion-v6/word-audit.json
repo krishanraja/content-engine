@@ -1,0 +1,108 @@
+{
+  "status": "pass",
+  "problems": [],
+  "counts": [
+    {
+      "id": "intro",
+      "primary_words": 7,
+      "total_words": 7
+    },
+    {
+      "id": "S01-hook",
+      "primary_words": 5,
+      "total_words": 6
+    },
+    {
+      "id": "S02-airbnb",
+      "primary_words": 4,
+      "total_words": 4
+    },
+    {
+      "id": "S03-fling",
+      "primary_words": 4,
+      "total_words": 4
+    },
+    {
+      "id": "S04-passports",
+      "primary_words": 6,
+      "total_words": 8
+    },
+    {
+      "id": "S05-newspaper",
+      "primary_words": 6,
+      "total_words": 6
+    },
+    {
+      "id": "S06-third",
+      "primary_words": 7,
+      "total_words": 7
+    },
+    {
+      "id": "S07-claude",
+      "primary_words": 4,
+      "total_words": 5
+    },
+    {
+      "id": "S08-lives",
+      "primary_words": 4,
+      "total_words": 5
+    },
+    {
+      "id": "S09-work",
+      "primary_words": 7,
+      "total_words": 8
+    },
+    {
+      "id": "S10-flagged",
+      "primary_words": 5,
+      "total_words": 6
+    },
+    {
+      "id": "S11-written",
+      "primary_words": 0,
+      "total_words": 14
+    },
+    {
+      "id": "S11-erased",
+      "primary_words": 0,
+      "total_words": 14
+    },
+    {
+      "id": "S11-replay-written",
+      "primary_words": 0,
+      "total_words": 16
+    },
+    {
+      "id": "S11-replay-erased",
+      "primary_words": 0,
+      "total_words": 16
+    },
+    {
+      "id": "S12-call",
+      "primary_words": 6,
+      "total_words": 8
+    },
+    {
+      "id": "S13-do",
+      "primary_words": 3,
+      "total_words": 4
+    },
+    {
+      "id": "S14-close",
+      "primary_words": 6,
+      "total_words": 6
+    },
+    {
+      "id": "outro-question",
+      "primary_words": 6,
+      "total_words": 6
+    },
+    {
+      "id": "outro-brand",
+      "primary_words": 6,
+      "total_words": 6
+    }
+  ],
+  "semantic_nonduplication": "requires_independent_review",
+  "three_second_comprehension": "not_proved_by_this_audit"
+}

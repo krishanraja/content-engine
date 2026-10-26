@@ -1,0 +1,87 @@
+{
+  "files": [
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct motion v6/production/Friday-motion-v6-ANIMATED.mp4",
+      "sha256": "f25d1b58f64174b96d52850579872d2f1e74bba7a8e1705e8af00c6ce80611f9",
+      "bytes": 4421833
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct motion v6/production/motion-receipt.json",
+      "sha256": "944538d29668fa94a2d29d6cd9ccb4d06226ddd492ce81f38c003a9ea418609d",
+      "bytes": 339
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct motion v6/production/approval.json",
+      "sha256": "fb897b1ce18d9d2a90b0f20f69e52a4d78f2a1bf33d0f996102dbe984d0e89af",
+      "bytes": 890
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct motion v6/production/asset-manifest.json",
+      "sha256": "be1f16f670257411188d774aa61fc9715c3ee9e7c53efb51b58d5c634c653650",
+      "bytes": 1227
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct motion v6/production/layer-prompts.md",
+      "sha256": "6d8ef9025d48efe6c10caad8842f02dfb4768fc8201d38093982f6aa118d3a16",
+      "bytes": 5346
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct motion v6/production/cotton.png",
+      "sha256": "de144fbcd5193a6ed2981e13a3bbb00ec62963813130bec363ba4fcce9075fba",
+      "bytes": 2493723
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct motion v6/production/genericPhone.png",
+      "sha256": "07fbbf606bf83e711e1ce4e2cd1c86d63f70c31eaedc1d6fc351a82b1ead88b2",
+      "bytes": 718125
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct motion v6/production/hardware.png",
+      "sha256": "335054e77f02db0df9192966463e03cf2e2a07dd756b88d6d8b724fda21ec96e",
+      "bytes": 1881016
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct motion v6/production/passports.png",
+      "sha256": "ce08a4d7d5a23ba6e4702f4d1e90a261be4a1e87c9f910fe8456f38422655dfd",
+      "bytes": 2631623
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct motion v6/production/passportsWide.png",
+      "sha256": "653ec61f5f356cfd020354b8ac0dcaf36946d408ed72db6ac92a976bb7be84a1",
+      "bytes": 2828471
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct motion v6/production/phone.png",
+      "sha256": "10918e6169e305e9483ad463e42da7b0393c70c6ac0358d629fb92f85737521b",
+      "bytes": 747587
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct motion v6/production/Friday-short-voiceover-v6-WORKING.mp4",
+      "sha256": "f3ddee64f9f3d19f6b04aec9292d6f896f4ce035cfd18c5ec8183b2e4c4dd557",
+      "bytes": 12117154
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct motion v6/production/short-receipt.json",
+      "sha256": "6ffa672b7f24a8535b3e8b98b97f8c3b6af9443d72484d9a5d56df5d5863d307",
+      "bytes": 474
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct motion v6/production/word-audit.json",
+      "sha256": "ff4e0bacf3fb0834f475430e36c2c20a41106b7ef8fecd747e51a5201318d16d",
+      "bytes": 2058
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct motion v6/production/short-final.srt",
+      "sha256": "4f3405d15686ba72104a1c541d236ce7780090cdf71b3e045a0ada4175cdb734",
+      "bytes": 2650
+    }
+  ],
+  "upload": {
+    "sent": 6,
+    "already": 9,
+    "confirmed_only": 0
+  },
+  "readback": "every listed file independently downloaded and SHA-256 matched",
+  "board_write": false,
+  "making_write": false
+}

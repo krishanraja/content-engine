@@ -45,6 +45,7 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `tests/`
 - `tests/control-plane/`
 - `tests/fixtures/`
+- `tests/helpers/`
 - `tests/integration/`
 
 ## Content engine routes
@@ -127,6 +128,8 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/library/recordings/upload-url`
 - `/api/library/upload-url`
 - `/api/library/written`
+- `/api/media-quality`
+- `/api/media-review-pilot`
 - `/api/publish/watch`
 - `/api/purge/restore`
 - `/api/purge/run`
@@ -1090,9 +1093,20 @@ The making record: where one piece is on its way from the workroom to
 - `function teleprompterNote(m: Partial<Making>): string`
 - `function makingCuts(m: Partial<Making>): MakingCut[]`
 - `const MAKING_OWNERS: Record<string, MakingOwner>`
-- `function makingSteps(row: { state?: string | null; body?: string | null; meta?: Record<string, any> | null }): MakingSt…`
+- `function makingSteps(row: { id?: string; state?: string | null; body?: string | null; meta?: Record<string, any> | null…`
 - `interface PieceState`
 - `function pieceVerdict(piece: PieceState, closesOn: string, steps: MakingStep[] = makingSteps(piece)): 'done' | 'moot' |…`
+
+### `apps/control-plane/api/_mediaQuality.ts`
+
+- `export { MEDIA_STANDARD, MEDIA_STANDARD_HASH }`
+- `const QualificationRequest`
+- `type QualificationInput = z.infer<typeof QualificationRequest>`
+- `class MediaQualityError`
+- `type MediaReadCache = Map<string, Promise<Verified>>`
+- `async function readMediaRef(db: SupabaseClient, ref: MediaRef, cache: MediaReadCache, json = false): Promise<Verified>`
+- `async function qualifyMedia(db: SupabaseClient, input: QualificationInput, cache: MediaReadCache = new Map())`
+- `async function qualifyBoard(db: SupabaseClient, manifest: unknown, signedReview: unknown)`
 
 ### `apps/control-plane/api/_meter.ts`
 
@@ -1630,6 +1644,10 @@ Stored embeddings, read without a model call. Pure: no imports, so a unit test a
 
 - `function parseVec(r: { embedding?: unknown; _vec?: number[] | null } | null | undefined): number[] | null`
 - `function cosine(a: number[], b: number[]): number`
+
+### `apps/control-plane/api/_verifiedMaking.ts`
+
+- `async function verifiedMaking(db: any, pieceId: string, making: Making | null): Promise<Making | null>`
 
 ### `apps/control-plane/api/_video.ts`
 
@@ -2307,6 +2325,17 @@ What the compiler looks for, as pure functions.
 ### `apps/control-plane/api/library/written.ts`
 
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
+
+### `apps/control-plane/api/media-quality/index.ts`
+
+- `function createMediaQualityHandler(getDb: () => Promise<SupabaseClient>)`
+- `export default createMediaQualityHandler(async () => (await import('../_sup`
+
+### `apps/control-plane/api/media-review-pilot.ts`
+
+- `function createMediaReviewPilotHandler(frozen: unknown, db: SupabaseClient, fetcher: typeof fetch = (...args) => fetch(…`
+- `export default createMediaReviewPilotHandler(pilotManifest, supabase)`
+- `const config`
 
 ### `apps/control-plane/api/publish/watch.ts`
 
@@ -2988,6 +3017,37 @@ Run a Vercel serverless handler locally against the real environment.
 ### `apps/renderer/src/Short.tsx`
 
 - `function MindmakeShort(props: ShortProps)`
+
+### `apps/renderer/src/border-control/Editorial.tsx`
+
+- `function EditorialShort(p:ShortProps)`
+
+### `apps/renderer/src/border-control/Narrative.tsx`
+
+- `type NarrativeProps = {assets:Record<string,string>;frames:number}`
+- `function Narrative(p:NarrativeProps)`
+
+### `apps/renderer/src/border-control/Packaging.tsx`
+
+- `type PackagingProps`
+- `function Packaging(p:PackagingProps)`
+
+### `apps/renderer/src/border-control/Photographic.tsx`
+
+- `type PhotographicProps = {frames:number; assets:Record<string,string>}`
+- `function Pen({d,progress,width=13,opacity=1}:{d:string;progress:number;width?:number;opacity?:number})`
+- `function Photographic(p:PhotographicProps)`
+
+### `apps/renderer/src/border-control/Proof.tsx`
+
+- `type ProofProps`
+- `function Passport({frame, born, lives, width, tall, labels, example}:{frame:number;born:number;lives:number;width:numbe…`
+- `function BorderControlProof(p:ProofProps)`
+
+### `apps/renderer/src/border-control/Short.tsx`
+
+- `type ShortProps`
+- `function BorderControlShort(p:ShortProps)`
 
 ### `apps/renderer/src/carousel/HouseCarouselCard.tsx`
 
@@ -4123,6 +4183,35 @@ Where a finished video is filed: one folder per piece, whose name says the
 - `async function readTreatmentArtifactByHash(jobId: string, artifactHash: string): Promise<TreatmentArtifact>`
 - `interface ReturnedMagicEdit`
 - `async function returnMagicEditToParent( jobId: string, expectedCurrentRevisionHash: string, expectedCurrentArtifactHash…`
+
+### `packages/core/src/media-delivery.ts`
+
+- `async function assertQualifiedFile(path: string, expectedPiece?: string, expectedJob?: string, expectedRole?: z.infer<t…`
+- `async function assertProductionBrief(path: string, fullProduction: boolean, expectedJob?: string)`
+
+### `packages/core/src/media-quality.ts`
+
+The producer supplies work. An independently provisioned reviewer signs evidence.
+
+- `const canonicalMediaJson = (v: unknown): string =>`
+- `const mediaDigest = (v: string | Uint8Array) =>`
+- `const MEDIA_STANDARD`
+- `const MEDIA_STANDARD_HASH`
+- `const MediaRefSchema`
+- `type MediaRef = z.infer<typeof MediaRefSchema>`
+- `const MediaBriefSchema`
+- `type MediaBrief = z.infer<typeof MediaBriefSchema>`
+- `const MediaReviewSchema`
+- `type MediaReview = z.infer<typeof MediaReviewSchema>`
+- `const SignedMediaEnvelopeSchema`
+- `type SignedMediaEnvelope = z.infer<typeof SignedMediaEnvelopeSchema>`
+- `type ReviewerKeys = Record<string, { public_key: string; reviewer_id: string }>`
+- `function reviewerKeys(): ReviewerKeys`
+- `function briefProblems(input: unknown): string[]`
+- `function mediaReviewProblems(input: unknown, expected: { piece_id?: string; production_id?: string; role?: 'video' | 's…`
+- `const BoardDeliverySchema`
+- `function boardDeliveryProblems(input: unknown, manifest: unknown, keys = reviewerKeys(), now = Date.now()): string[]`
+- `function localReviewProblems(receiptPath: string, artifactPath: string, expected: { piece_id?: string; surface?: MediaB…`
 
 ### `packages/core/src/media.ts`
 

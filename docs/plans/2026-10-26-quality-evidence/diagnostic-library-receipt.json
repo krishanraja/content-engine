@@ -1,0 +1,9 @@
+{
+  "case": "H",
+  "path": "3 Posts/2026-10-26 Mon under.the.hood - Insulation canary/3 Video/working/diagnostic-H.wav",
+  "sha256": "636a56f23ec00f9e6923e29d2ada9f2e39e7696da33e6a03bfaa47b8ccb00f33",
+  "bytes": 768044,
+  "readback": "SHA-256 verified",
+  "construction": "8 seconds, mono 48000 Hz signed PCM16, all samples zero",
+  "qualified": false
+}

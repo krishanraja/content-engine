@@ -2,7 +2,7 @@
 
 ## 26 October: Friday motion v6
 
-[Review and library location](docs/plans/2026-10-23-friday/revisions/motion-v6/BRIEF.md).
+[Production handoff](docs/plans/2026-10-23-friday/revisions/motion-v6/BRIEF.md). [Quality gate and failed $3 calibration](docs/plans/2026-10-26-quality-evidence/README.md): eight calls, no qualification. Gates remain draft; four videos and final board incomplete.
 
 ## 24 October: Friday locked and signed off; Codex makes the videos (Claude)
 
@@ -808,7 +808,7 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
-- 2026-10-24: **Wednesday's production outcome failed.** Krish reports that he published only the horizontal long video, later noticed random small cuts and chopped words in it, and scrapped the vertical video and article. The defect is reported, not independently located or attributed. His latest decision supersedes the earlier “Both approved” playback and the 23 October “board ready” handoff. `docs/plans/2026-10-21-wednesday/FAILURE_REPORT_2026-10-24.md` documents the observed failures, limits of the old checks, Claude/Codex execution differences and exact corrective owners. The report is a handoff for Claude, not a restart order. No live public-platform or private-board readback was done in this report session. **Next:** reconcile the making record and private board to published-long-with-reported-defect / withdrawn-short-and-article; preserve history; compare the exact public upload with the accepted export before attributing the defect; do not alter the public cut or publish anything else without Krish's instruction.
+- Wednesday production failure: [preserved 24 October handoff](docs/history/2026-10-26-workbench-wednesday-outcome.md). Public-long defect reported; short/article withdrawn. Reconcile records before further publication.
 
 - Older handoffs (12 to 23 October): `docs/history/2026-10-18-WORKBENCH-handoffs.md`. This section holds only the newest one: when you write a new handoff, move the one it replaces to the top of that file (G11, `scripts/check_workbench.py`).
 

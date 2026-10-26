@@ -2055,6 +2055,8 @@ def main():
     cfg_path = Path(args.config).resolve()
     base = cfg_path.parent
     cfg = json.loads(cfg_path.read_text())
+    import media_standard
+    media_standard.preflight(cfg, base, full_production=not args.plan and not args.prepare_only)
     cfg['quality_required'] = True
     archiving = archive_settings(args, cfg)
     P = lambda p: (base / p).resolve()

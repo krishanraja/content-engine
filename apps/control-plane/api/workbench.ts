@@ -3,6 +3,7 @@ import { guardEngine } from './_auth.js'
 import { AGENT_CLIENTS, operatorAttribution } from './_editEvents.js'
 import { pieceVerdict, type PieceState } from './_making.js'
 import { supabase } from './_supabase.js'
+import { verifiedMaking } from './_verifiedMaking.js'
 
 // The work board: what is waiting on Krish, what is in progress, what is done.
 //
@@ -427,6 +428,9 @@ async function alreadyDone(rows: Array<Json & { id: string }>, existing: Map<str
   const pieces = new Map(((read.data || []) as PieceState[]).map(p => [p.id, p]))
   for (const a of asked) {
     const piece = pieces.get(a.piece)
+    if (piece?.meta?.making?.video_assets?.length) {
+      piece.meta = { ...piece.meta, making: await verifiedMaking(supabase, piece.id, piece.meta.making) }
+    }
     if (piece && pieceVerdict(piece, a.kind) === 'done') return a.id
   }
   return null

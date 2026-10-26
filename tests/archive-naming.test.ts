@@ -2,7 +2,13 @@ import { mkdir, mkdtemp, readdir, readFile, rm, stat, writeFile } from 'node:fs/
 import { readFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
+import { attachQualifiedClientFixture } from './helpers/media-delivery.js'
+// Never let Windows' missing-folder fallback route synthetic fixtures to Drive.
+vi.mock('../packages/core/src/paths.js', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../packages/core/src/paths.js')>()
+  return { ...actual, studioPaths: () => ({ ...actual.studioPaths(), archiveRoot: process.env.MINDMAKE_ARCHIVE_ROOT || null }) }
+})
 import {
   ARCHIVE_COPY_MAX,
   ARCHIVE_FOLDER_MAX,
@@ -98,6 +104,8 @@ describe('archiveJob', () => {
   const prior = { runtime: process.env.MINDMAKE_RUNTIME_ROOT, archive: process.env.MINDMAKE_ARCHIVE_ROOT, drive: process.env.MINDMAKE_DRIVE_ROOT }
 
   afterEach(async () => {
+    vi.unstubAllGlobals()
+    vi.unstubAllEnvs()
     for (const [key, value] of [['MINDMAKE_RUNTIME_ROOT', prior.runtime], ['MINDMAKE_ARCHIVE_ROOT', prior.archive], ['MINDMAKE_DRIVE_ROOT', prior.drive]] as const) {
       if (value === undefined) delete process.env[key]
       else process.env[key] = value
@@ -122,6 +130,7 @@ describe('archiveJob', () => {
       await mkdir(dir, { recursive: true })
       const master = join(dir, 'master.mp4')
       await writeFile(master, body, 'utf8')
+      await attachQualifiedClientFixture(master, jobId)
       await writeFile(join(dir, 'cover.jpg'), 'cover', 'utf8')
       await writeFile(join(dir, 'captions.srt'), 'captions', 'utf8')
       packages.push({
@@ -203,6 +212,7 @@ describe('archiveJob', () => {
     // An archive folder that cannot be made says so plainly. A regular file
     // in the path makes mkdir fail on every platform.
     const blocker = join(await mkdtemp(join(tmpdir(), 'archive-blocked-')), 'not-a-folder')
+    roots.push(join(blocker, '..'))
     await writeFile(blocker, 'x')
     process.env.MINDMAKE_ARCHIVE_ROOT = join(blocker, 'Archive')
     await expect(archiveJob(jobId, { subject: 'Who gets paid', subject_from: 'package_title', packages })).rejects.toThrow('is not reachable')

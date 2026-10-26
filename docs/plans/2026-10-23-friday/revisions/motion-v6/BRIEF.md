@@ -1,6 +1,6 @@
 # Friday photographic motion rebuild, v6
 
-Status: photographic style frame rendered and filed; awaiting Krish. Not approved. V5 is rejected and must not be scaled.
+Status: photographic direction approved by Krish ("much better yes"). The 84.9-second short has been rebuilt as a working candidate with byte-identical approved AAC. Full-short review remains incomplete; the other three cuts and final board remain open. V5 is rejected.
 
 Krish, 26 October 2026: "Not really. Needs to be about 100 times more visually engaging. These look like PowerPoint cliparts. There's no creative blend between real-world imagery, design, and aesthetic and there are no brand colours of mine. These just look like cheap tacky emoji PDF infographics. I would expect much higher quality and then the effect of someone drawing arrows by hand in my brand colours or something like that. The examples of the visuals that offend me the most are attached."
 
@@ -25,4 +25,15 @@ Library: `3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26
 
 The still is generated editorial illustration, not a real DeepSeek interface screenshot or facility photograph. Only five visible words. Independent first-read evidence and remaining defects are in `render-review.json`; this does not pass motion or human comprehension. The oversized mint edge competes with the arrow, and the scope/provenance labels need larger final-video treatment. Do not claim a 10/10 score.
 
-Next: Krish judges whether this photographic art direction is in the right territory. If accepted, reconstruct it in separately controlled photographic layers, simplify the competing mint edge, make the scope readable, and demonstrate the interface-removal/storage-retention reveal with a genuinely drawn-on arrow over the approved audio. Do not animate the entire flattened still as a substitute for this motion. Then continue the four-video and Publish Board objective.
+## Current production result, 26 October
+
+- Approval and scope: `approval.json`. Five original photographic layers and a new wide passport illustration were generated for Friday. These are topic-specific assets, not the default kit for future pieces.
+- Eight-second hosting motion proof is rendered and shared. Independent sampled review confirmed message copy travel, original retention and legible hosted-service/illustration scope. This is not full playback or human comprehension proof.
+- Full short: 84.9 s / 2,547 frames, SHA in `short-receipt.json`. Approved AAC elementary stream is byte-identical; fresh ASR contains 205 words. Mechanical text gate passes with at most 7 primary and 16 total words. `correction-review.json` verifies several repairs but leaves the lower passport circle/label overlap, repeated ending and minor phone feather band open. No final pass.
+- The ten-join reel for the other takes was rejected by Krish: clipped speech after "answered all the" and "another Chinese AI", plus other glitches. `rejected-join-reel.json` preserves candidates and rejection. None was applied to final source media. Repair now takes priority: stronger unprompted ASR, independent acoustic alignment and an audio-capable review route validated against these known failures. The local PyTorch/Transformers/audio stack is installed; package dependency check passes. Installation is not proof of listening capability.
+- A second unmasked stabilization trial exists for start/middle/end windows of both camera takes. Its quality is not accepted; comparison and final framing/sync review remain.
+- Shared media readback is in `production-library-receipt.json`. No making or board write. Only Video assets belongs to Codex, and it remains incomplete.
+
+## Next
+
+Diagnose and rebuild speech joins from original recordings, validate the review method on known rejected audio, then finish the four cuts and their exact-file review. Repair the short's remaining visual findings before final delivery. The proposed durable quality gate is `../../../2026-10-26-visual-standard-enforcement.md`: future pieces create their own assets and motion to the same standard. Implementation is approved and locally built, but activation is held after the reviewer failed calibration; see `../../../2026-10-26-quality-evidence/README.md`. Krish has not been asked to repeat the same audio QA.

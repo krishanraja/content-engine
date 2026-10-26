@@ -4,6 +4,7 @@ import { createHash } from 'node:crypto'
 import { Readable } from 'node:stream'
 import { pipeline } from 'node:stream/promises'
 import { actor, canonical, collections, digest, hisOnlyRefusal, fileSpec, monday, revision, validBody, validSourceBody, validId, validManifest, type BoardFile, type Manifest } from './_contracts.js'
+import { MediaQualityError, qualifyBoard } from '../_mediaQuality.js'
 
 const BUCKET = 'content-library'
 const TTL = 300
@@ -152,6 +153,9 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>) {
       if (!op && method === 'PUT') {
         const manifest = req.body?.manifest
         if (!validManifest(week, manifest) || !revision(req.body?.revision)) throw new BoardError(400, 'invalid_manifest')
+        const { delivery_review, ...reviewedManifest } = manifest
+        try { await qualifyBoard(db, reviewedManifest, delivery_review) }
+        catch (e) { throw new BoardError(e instanceof MediaQualityError ? 409 : 503, e instanceof MediaQualityError ? e.message : 'media_quality_unavailable') }
         const buildId = digest(canonical(manifest))
         // Even a replay verifies retrievability; metadata alone is not proof.
         for (const file of [manifest.html, ...Object.values(manifest.assets)]) await verifyFile(db, file)
@@ -161,7 +165,17 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>) {
       }
       if (method !== 'GET') throw new BoardError(405, 'method_not_allowed')
       const state = await current(db, week, build)
-      if (!op) return res.status(200).json({ ok: true, ...state })
+      let quality: 'qualified' | 'unqualified' | 'historical' = 'historical'
+      if (!build && state.manifest?.delivery_review) {
+        const { delivery_review, ...reviewedManifest } = state.manifest
+        try { await qualifyBoard(db, reviewedManifest, delivery_review); quality = 'qualified' }
+        catch { quality = 'unqualified' }
+      }
+      // Metadata remains readable for repair. Explicit build reads are historical;
+      // a revoked current build cannot continue presenting itself as ready.
+      res.setHeader('X-Media-Qualification', quality)
+      if (!op) return res.status(200).json({ ok: true, ...state, media_qualification: quality })
+      if (quality === 'unqualified') throw new BoardError(409, 'board_media_review_no_longer_valid')
       if (!state.manifest) throw new BoardError(404, 'board_not_published')
       if (op === 'assets') {
         if (!validId(id)) throw new BoardError(404, 'asset_not_found')

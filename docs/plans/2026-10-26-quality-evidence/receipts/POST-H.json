@@ -1,0 +1,35 @@
+{
+  "ok": true,
+  "receipt_persisted": true,
+  "retry_allowed": false,
+  "receipt": {
+    "schema_version": 1,
+    "kind": "media_review_calibration_only",
+    "case_id": "H",
+    "manifest_sha256": "13f720c157b70dc44c1dd182940691d3ba46bbda408b0a9d33f523ad6c76a48f",
+    "standard_sha256": "d386311cf07d45fd0248f54e04f3f5f9b7fe696c665d4c25e9d35261656758b3",
+    "request_sha256": "5a91d0e594430c1c7d73097ae7b5066b10b45937c48521a435956b432e8b8197",
+    "model": "gemini-4-argon",
+    "started_at": "2026-10-26T13:52:00.622Z",
+    "completed_at": "2026-10-26T13:52:39.799Z",
+    "status": "completed",
+    "error_code": null,
+    "phase": "inference",
+    "provider_status": null,
+    "reserved_usd": 0.28192,
+    "accounting_charge_usd": 0.28192,
+    "counted_input_tokens": 451,
+    "usage": {
+      "promptTokenCount": 497,
+      "candidatesTokenCount": 585,
+      "totalTokenCount": 1082
+    },
+    "estimated_usage_usd": null,
+    "raw_model_text": "### Transcription\n\nThe audio contains two separate excerpts separated by a brief pause (excerpt boundary):\n\n* **00:00.28 \u2013 00:04.22:** \"...with reference to the same date as a standard.\"\n* **00:04.60 \u2013 00:06.85:** \"There would still remain a...\"\n\n*(Note: Both excerpts begin and end mid-sentence as extracted clips, rather than complete standalone statements.)*\n\n---\n\n### Timestamped Defect List\n\n#### Observed Defects\n* **00:01.00 \u2013 00:01.25 (Unnatural join / mid-speech splice and clipped speech):** Immediately following the word \"with\" (around 00:00.28\u201300:00.50), there is a gap of silence/low room tone until ~00:01.08. At 00:01.08\u201300:01.22, the onset of the word \"reference\" is abruptly clipped and disturbed by a brief transient pop/glitch, sounding like a rough cut mid-phoneme (\"...[r]eference\").\n* **00:00.28 \u2013 00:01.25 (Cadence disruption):** The ~0.5-second gap between \"with\" and \"reference\" breaks natural speech rhythm and flow, consistent with a splice or deletion between the two words.\n\n#### Uncertain Possibilities\n* **00:00.00 \u2013 00:00.35 (Initial onset):** The word \"with\" starts out of silence as part of an already-in-progress clause. While the attack of the \"/w/\" phoneme is intact, it is an excerpt boundary starting mid-thought rather than a mid-word clip.\n* **00:04.22 \u2013 00:04.60 (Excerpt boundary):** There is a transition between two distinct sentence fragments (\"...as a standard.\" / \"There would still remain a...\"). The room tone and cadence shift slightly, which is consistent with a reel/excerpt boundary rather than a mid-word edit defect.\n* **00:06.65 \u2013 00:06.85 (Trailing termination):** The audio ends after the word \"a\" (\"...remain a\"), cutting off before the rest of the phrase occurs. The vowel of \"a\" finishes without a hard digital click, indicating an excerpt boundary cut mid-clause.\n\n#### Sections Unable to Assess\n* None; the full 00:00.00 \u2013 00:07.18 duration is clearly audible and assessable for acoustic continuity.",
+    "text_truncated": false,
+    "finish_reason": "STOP",
+    "observation_only": true,
+    "qualified": false,
+    "signed": false
+  }
+}

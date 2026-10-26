@@ -2320,7 +2320,7 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
       if (draft.delivery.mode !== 'private_upload' || draft.delivery.privacy !== 'private' || draft.delivery.public_publish_allowed) throw new Error('package violates the private-only upload boundary')
       if (!hasApprovalV2(manifest, 'final', draft.master_hash, 'krish')) throw new Error('exact final master approval from Krish is required')
       const accessToken = await readWindowsCredential(context.repoRoot, 'MindmakeVideoStudio/youtube-access-token')
-      const result = await uploadPrivateYoutubeVideo({ accessToken, videoPath: draft.master_path, title: draft.titles[0]!, description: draft.description })
+      const result = await uploadPrivateYoutubeVideo({ jobId: options.job, accessToken, videoPath: draft.master_path, title: draft.titles[0]!, description: draft.description })
       context.out({ job_id: options.job, platform: 'youtube_shorts', privacy: 'private', result })
     })
 

@@ -1,0 +1,198 @@
+{
+  "schema_version": 1,
+  "reviewer": "independent editorial_render_reader",
+  "reviewed_at": "2026-10-26",
+  "status": "held-frame-review-complete-corrections-required",
+  "scope": {
+    "request": "Review 14 photographic full-short held frames and Editorial.tsx without edits; report visible defects, illustration/evidence boundaries, phone readability and narration duplication.",
+    "method": "Viewed all 14 supplied PNGs at full resolution. Read Editorial.tsx and Photographic.tsx. Parsed only beats from short-props.json; never printed assets. Extracted two additional individual frames at 20.4s and 72.0s from short-motion-silent.mp4.",
+    "continuous_playback": false,
+    "audio_listening": false,
+    "human_three_second_test": false,
+    "taste_approval": false,
+    "style_direction": "User approved photographic direction; not reopened."
+  },
+  "target": {
+    "repo": "C:/Users/krish/dev/mindmake/content-engine-friday-23oct",
+    "head": "d2c29e8e13c0b55db72b817593987a9a17713268",
+    "source": "apps/renderer/src/border-control/Editorial.tsx",
+    "source_status": "Untracked and being edited concurrently by parent. Initial read had LIVES y1000 and source/date captions; later read had y1080 and captions removed. Findings below apply to supplied render, not proof that newer source repairs passed.",
+    "later_source_sha256": "C20C0121757AFF92A1720963FC82493093B6A3709CF577D5E4C57A5F2D2905DA",
+    "render_dir": "C:/Users/krish/Documents/Codex/2026-10-24/get-friday-s-videos-produced-and/work/motion-v6/short-render",
+    "viewport": "1080x1920 source frames; no physical phone or platform overlay test",
+    "source_render_identity": "Not immutable-matched; parent changed source during review.",
+    "write_authority": "This review JSON only. No implementation, publication, commit or shared state changes."
+  },
+  "verdict": {
+    "severe_visible_blockers": [
+      "F01"
+    ],
+    "other_material_fixes": [
+      "F02",
+      "F03",
+      "F04"
+    ],
+    "no_p0_found": true,
+    "release_ready": false,
+    "reason": "Central origin-versus-hosting label is obscured in rendered passport scene. Full motion/audio, factual-source verification and physical phone review remain outside this review."
+  },
+  "findings": [
+    {
+      "id": "F01",
+      "severity": "P1",
+      "status": "verified-in-render",
+      "title": "LIVES loses contrast over the dark gap between passports",
+      "scenes": [
+        "S04-passports",
+        "S12-call"
+      ],
+      "evidence": [
+        "S12-call.png",
+        "C:/Users/krish/.scratch/friday-v6-independent-review/passports-late.png @20.4s"
+      ],
+      "observed": "The black LIVES label straddles the black/dark ribbon gap above the lower cream passport. Several letter tops disappear. This is present after the label reveal, not an early-frame omission.",
+      "expected": "BORN and LIVES remain fully readable simultaneously on their respective passport pages.",
+      "consequence": "The visual's central distinction is impaired even at full resolution and predicted to be worse when reduced to phone size.",
+      "recommendation": "Move LIVES and underline fully into the lower cream page; check both S04 late and S12 late.",
+      "repair_status": "Later source read moved the label from y1000 to y1080. No revised render inspected; do not mark fixed.",
+      "source_reference": "Shared S04/S12 label group, originally translate(660 1000) rotate(-14).",
+      "confidence": "High for visible defect; physical-phone consequence predicted."
+    },
+    {
+      "id": "F02",
+      "severity": "P2",
+      "status": "verified-visual-plus-inferred-semantic-impact",
+      "title": "S12 annotation crosses BORN and emphasizes origin during the hosting judgment",
+      "scenes": [
+        "S12-call"
+      ],
+      "evidence": [
+        "S12-call.png"
+      ],
+      "observed": "The mint circling stroke cuts across BORN and circles the Canada/origin passport. The supplied beat says it is fine if you do not mind where data goes, then says to check answers.",
+      "consequence": "The first-read prediction is that Canada/origin is the issue being emphasized, while the data-location half of the spoken judgment refers to LIVES.",
+      "recommendation": "Remove the extra circle or sequence attention to LIVES for data location and BORN for answer checking; keep strokes clear of letterforms.",
+      "confidence": "High for crossing/placement; semantic mismatch is a reviewer inference from beat text, not heard timing."
+    },
+    {
+      "id": "F03",
+      "severity": "P2",
+      "status": "verified-in-render",
+      "title": "Late second-phone entrance has a hard cut through the hand and an arrow landing on the sleeve",
+      "scenes": [
+        "S13-do"
+      ],
+      "evidence": [
+        "C:/Users/krish/.scratch/friday-v6-independent-review/second-ai-late.png @72.0s"
+      ],
+      "observed": "The second GenericPhone image begins at a conspicuous vertical edge around x380 through the hand/sleeve. The mint arrowhead points to the cuff below the phone rather than the phone or its screen.",
+      "consequence": "The compositing seam is visible at full resolution and the intended second-AI connection is weaker than the phone pair itself.",
+      "recommendation": "Mask/composite the second phone and hand cleanly or position the photo edge outside frame. Aim the arrow at the second screen or remove it if the arriving phone already explains the action.",
+      "source_reference": "S13 GenericPhone translate/scale group and final Pen path.",
+      "confidence": "High for geometry; no claim about entrance smoothness."
+    },
+    {
+      "id": "F04",
+      "severity": "P2",
+      "status": "verified-visual-plus-inferred-semantic-impact",
+      "title": "Forced-labor warning beat points to a blank clothing tag",
+      "scenes": [
+        "S10-flagged"
+      ],
+      "evidence": [
+        "S10-flagged.png"
+      ],
+      "observed": "Claude and ChatGPT marks lead via mint arrow to an unmarked green fabric tag, circled in salmon. Neither a warning result nor source answer is visible.",
+      "consequence": "First-read prediction is material/brand identification; the picture cannot establish that two systems warned about forced labor. Narration carries that entire claim.",
+      "recommendation": "Show a tightly cropped real warning excerpt or a clear warning state beside each system, retaining cotton as context. Do not fabricate a response or imply that this illustration is the tested supplier's actual item.",
+      "confidence": "High that tag is blank; first-read semantic prediction only."
+    },
+    {
+      "id": "F05",
+      "severity": "P2",
+      "status": "verified-in-supplied-frames-policy-from-parent",
+      "title": "Source/date credits are production metadata rather than explanatory on-screen content",
+      "scenes": [
+        "S02-airbnb",
+        "S05-newspaper",
+        "S06-third"
+      ],
+      "evidence": [
+        "S02-airbnb.png",
+        "S05-newspaper.png",
+        "S06-third.png"
+      ],
+      "observed": "Held render contains FORTUNE / date and CS MONITOR / date labels. Parent reports produce-video prohibits source-credit metadata footers.",
+      "recommendation": "Keep sources in evidence records and remove these credits from render. Preserve meaningful ILLUSTRATION, AI EXAMPLE, HOSTED SERVICE, recording date and replay qualification according to approved scope.",
+      "repair_status": "Later source read already removed Fortune and CS Monitor captions; revised render not inspected.",
+      "confidence": "High for visible text; rule interpretation supplied by parent."
+    }
+  ],
+  "word_use_review": {
+    "full_sentence_narration_duplication": false,
+    "additive": [
+      "BRIAN CHESKY supplies a name missing from the beat's 'Airbnb boss'.",
+      "200 QUERIES supplies a numerical denominator absent from narration.",
+      "35% supplies precision beyond 'a third'.",
+      "3/3 RUNS and dated RECORDING distinguish observation counts and recorded evidence.",
+      "HOSTED SERVICE limits the DeepSeek hosting illustration.",
+      "ILLUSTRATION and AI EXAMPLE distinguish visual explanation from documentary proof.",
+      "The closing URL is a necessary usable destination even though it is spoken."
+    ],
+    "functional_repetition": [
+      "Product labels identify the pictured systems.",
+      "BORN/LIVES name the two sides of the core distinction.",
+      "USA/XINJIANG/CHINA reinforce the pictured location; assess timing in playback."
+    ],
+    "source_metadata": "Parent removing Fortune/CS Monitor dates; evidence remains off-screen.",
+    "transcript_caution": "S02 beat text says 'Glenn' while pictured brand is Qwen. This may be ASR metadata; no pronunciation or audio mismatch finding was made without listening."
+  },
+  "source_illustration_review": {
+    "observed_qualifiers": [
+      "Phone/rack and cotton shots carry ILLUSTRATION.",
+      "Passport shots carry AI EXAMPLE.",
+      "Deletion shot carries RECORDING date; source adds 4x REPLAY for replay segment.",
+      "Deletion held frame has DeepSeek mark and cropped result; previous redundant DeepSeek text header is absent.",
+      "Closing held frame visibly uses supplied MAKE YOUR MIND/UP wordmark."
+    ],
+    "not_established": [
+      "Photographic racks are not proof of an actual DeepSeek facility.",
+      "Cotton image is not proof of the tested supplier, region or labor conditions.",
+      "Claude placeholder chat bubbles are not proof that every question was answered.",
+      "The 35% aggregation, 200-query denominator, portrait provenance and test 3/3 count were not independently fact-checked here.",
+      "A held refusal frame does not prove an answer was deleted; that requires watching the recorded change."
+    ],
+    "existing_s08_proof": "Earlier 6fps dedicated v6 sequence review saw original phone tile retained while a copy moved to the rack. Latest full-short S08 held frame is mid-draw and cannot alone re-prove the whole state change."
+  },
+  "frame_coverage": [
+    "S01-hook",
+    "S02-airbnb",
+    "S03-fling",
+    "S04-passports",
+    "S05-newspaper",
+    "S06-third",
+    "S07-claude",
+    "S08-lives",
+    "S09-work",
+    "S10-flagged",
+    "S11-deleted",
+    "S12-call",
+    "S13-do",
+    "S14-close"
+  ],
+  "non_findings": [
+    "No severe frame-edge clipping of primary labels was seen in the supplied held frames.",
+    "Large 200, 35%, 3/3 and closing URL are visually clear at source resolution.",
+    "The refusal message is enlarged rather than left as a small entire browser screenshot.",
+    "The sampled S04 frame lacks LIVES because it is early; the actual issue was verified separately at 20.4s after reveal.",
+    "The sampled S13 frame lacks the second phone because it is early; late frame at 72.0s shows the pair."
+  ],
+  "limitations": [
+    "No continuous playback, audio listening, sync verification, transition smoothness, full deletion replay review or actual three-second human comprehension test.",
+    "No physical phone viewing, social-platform overlay collision test or minimum-reading-time certification.",
+    "No new taste judgment; accepted photographic direction remains accepted.",
+    "Source was modified during review, so source fixes require fresh rendered checks."
+  ],
+  "recommended_next_action": "Fix central LIVES placement, remove crossing/misdirected emphasis, correct second-phone composite and improve the flagged-result visual. Re-render affected scenes and inspect exact late states, then conduct continuous audio/video and phone review.",
+  "closeout_handoff": "Parent owns NOW.md/WORKBENCH closeout and candidate integration. This subagent changed only this report."
+}

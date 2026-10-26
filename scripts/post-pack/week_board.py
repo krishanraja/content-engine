@@ -103,7 +103,7 @@ import sys
 import tempfile
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import urlparse, parse_qs
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
@@ -1367,6 +1367,23 @@ def drive_actions(url, what='Download'):
             f'<a class="btnlink ghost" href="{E(view)}" target="_blank" rel="noopener">Open in Drive</a>')
 
 
+def immutable_video_download(video):
+    """Accept only the exact library version named by the making record.
+
+    This formats a link; board activation independently verifies qualification.
+    """
+    url = video.get('url') or ''
+    parsed = urlparse(url)
+    query = parse_qs(parsed.query)
+    digest = video.get('sha256') or ''
+    if (parsed.scheme == 'https' and parsed.netloc == 'content.krishraja.com'
+            and parsed.path == '/api/library/file' and not parsed.fragment
+            and re.fullmatch(r'[a-f0-9]{64}', digest)
+            and query == {'path': [video.get('path')], 'sha256': [digest], 'download': ['1']}):
+        return f'<a class="btnlink dl-btn" href="{E(url)}" target="_blank" rel="noopener">Download</a>'
+    return None
+
+
 def dl_videos(p, videos, feature):
     """The first files in Download first: each finished video, then each one's thumbnail, from the making record.
     Krish, 2026-10-14: "You should always link the Google Drive videos because I need to actually download them onto
@@ -1385,7 +1402,10 @@ def dl_videos(p, videos, feature):
             continue
         secs = v.get('seconds')
         length = f'. {int(secs) // 60} min {int(secs) % 60:02d} s' if isinstance(secs, (int, float)) and secs else ''
-        if drive_links(v.get('url')):
+        immutable = immutable_video_download(v)
+        if immutable:
+            rows.append(dl_item(p, f'video-{cut}', label, f'For {where}{length}', immutable, 'ready'))
+        elif drive_links(v.get('url')):
             rows.append(dl_item(p, f'video-{cut}', label, f'For {where}{length}', drive_actions(v['url']), 'ready'))
         else:
             rows.append(dl_item(p, f'video-{cut}', label, f'For {where}{length}',
@@ -2867,6 +2887,12 @@ def _self_test():
         checks.append(name)
         if not ok:
             fails.append(name)
+
+    pinned_video = {'path': '3 Posts/example/3 Video/short.mp4', 'sha256': 'a' * 64,
+                    'url': 'https://content.krishraja.com/api/library/file?path=3%20Posts%2Fexample%2F3%20Video%2Fshort.mp4&sha256=' + 'a' * 64 + '&download=1'}
+    check('exact immutable video has download action', bool(immutable_video_download(pinned_video)))
+    check('changed video digest has no immutable action', immutable_video_download({**pinned_video, 'sha256': 'b' * 64}) is None)
+    check('foreign host has no immutable action', immutable_video_download({**pinned_video, 'url': pinned_video['url'].replace('content.krishraja.com', 'example.org')}) is None)
 
     monday = monday_of('2026-10-12')
     with tempfile.TemporaryDirectory() as tmp:

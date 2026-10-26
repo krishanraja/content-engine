@@ -1,0 +1,19 @@
+{
+  "ruling": "much better yes",
+  "date": "2026-10-26",
+  "scope": "Photographic editorial art direction approved; proceed to controlled layer animation and extension. Not final video or publication approval.",
+  "styleframe_sha256": "5eded512abfcca0ba8140b56a01e147bdab8063236f9fdc19a2c78074eef1f5d",
+  "audio_master_sha256": "d9fa3c4b90a22b3a421994eea30a435595c33f7501cd071a455ee49579c84a8b",
+  "allowed_changes": [
+    "Separate phone and infrastructure photographic layers",
+    "Animate reveal and hand-drawn mint annotation",
+    "Improve source/scope label legibility and reduce competing diagonal edge",
+    "Extend this approved visual system across unchanged scripts"
+  ],
+  "invariants": [
+    "Approved audio unchanged",
+    "Country-specific visuals only for relevant examples",
+    "No fake test/policy/facility evidence",
+    "Minimal additive words"
+  ]
+}

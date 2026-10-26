@@ -1,0 +1,143 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-10-26",
+  "reviewer": "independent editorial_render_reader",
+  "prior_report": "full-short-independent-review.json",
+  "verdict": "partially-verified-residual-annotation-defect",
+  "scope": {
+    "method": "Viewed all five named full-resolution corrected frames and all four full-contact PNG sheets (one-second samples from 0 through 84s). Read relevant current Editorial.tsx correction logic. Did not edit source.",
+    "frames_directory": "C:/Users/krish/Documents/Codex/2026-10-24/get-friday-s-videos-produced-and/work/motion-v6/full-review",
+    "contact_sheets": [
+      "full-contact-1.png",
+      "full-contact-2.png",
+      "full-contact-3.png",
+      "full-contact-4.png"
+    ],
+    "continuous_playback": false,
+    "audio_listening": false,
+    "physical_phone_test": false,
+    "human_three_second_test": false
+  },
+  "candidate": {
+    "parent_reported_sha256": "f3ddee64f9f3d19f6b04aec9292d6f896f4ce035cfd18c5ec8183b2e4c4dd557",
+    "hash_status": "Verified independently with Get-FileHash SHA256 against exact final MP4 path provided by parent; matches reported hash.",
+    "source_of_approval": "Parent states user approved photographic styleframe direction and unchanged short audio. Neither approval is full-short visual approval.",
+    "other_takes_audio": "Parent states user rejected other takes' join reel; audio repair is the parent task's primary work. This report does not reopen or approve that audio.",
+    "final_video_path": "C:/Users/krish/Documents/Codex/2026-10-24/get-friday-s-videos-produced-and/outputs/Friday-short-voiceover-v6-WORKING.mp4"
+  },
+  "corrections": [
+    {
+      "finding": "F01",
+      "status": "pass-rendered-stills",
+      "evidence": [
+        "full-review/passport.png",
+        "full-review/born-circle.png",
+        "full-contact-1.png @23-24s",
+        "full-contact-3.png @67-68s"
+      ],
+      "observed": "LIVES has moved fully onto the lower cream passport and is readable at full opacity. BORN remains clear. Original black-on-dark-gap defect is corrected.",
+      "remaining": "Separate circle overlay issue remains under F02; physical phone reading untested."
+    },
+    {
+      "finding": "F02",
+      "status": "partial-pass-residual-fail",
+      "evidence": [
+        "full-review/lives-circle.png",
+        "full-review/born-circle.png",
+        "full-contact-3.png @65-68s"
+      ],
+      "observed": "Lower passport is highlighted first, then upper passport; current source sequences the two paths. Upper circle no longer crosses BORN. However the top edge of the lower circle passes through the LIVES letter area in lives-circle.png. LIVES is also partially transparent in that sampled moment, amplifying the collision.",
+      "residual_severity": "P2",
+      "recommendation": "Redraw the lower circle below LIVES to encircle USA/flag only, or expand it above the full LIVES label with clear padding. Keep the label and its underline clear at every reveal stage.",
+      "not_verified": "Sequence order is sampled visually and supported by source; semantic alignment to heard words is not independently verified."
+    },
+    {
+      "finding": "F03",
+      "status": "pass-core-correction-with-minor-residual",
+      "evidence": [
+        "full-review/second-phone.png",
+        "full-contact-4.png @75s"
+      ],
+      "observed": "Arrow now ends on the ChatGPT message on screen. The prior abrupt vertical crop through hand/sleeve is softened. Both AI names are visible.",
+      "residual": "A vertical soft fade remains visible along the left side of the second phone/hand, including a shaded band on the lower-left screen. This is a compositing polish issue, not a recurrence of the former hard-edge primary defect.",
+      "residual_severity": "P3",
+      "recommendation": "If further polishing this shot, restrict feathering to the cutout/background edge so it does not shade the phone screen. No extra rerender is required solely to claim the arrow fix."
+    },
+    {
+      "finding": "F04",
+      "status": "pass-warning-semantics-with-evidence-scope-limit",
+      "evidence": [
+        "full-review/warning.png",
+        "full-contact-3.png @56-57s"
+      ],
+      "observed": "Rust warning triangle with an exclamation mark replaces the empty highlighted tag as the destination cue. Claude and ChatGPT remain the two visible source marks. First-read prediction now includes warning/risk rather than simple fabric identification.",
+      "scope_limit": "A generic warning icon does not communicate the exact forced-labor wording or prove the test result. Specific claim remains narration plus the external test evidence. The cotton image remains an illustration, not the tested supplier's real garment.",
+      "recommendation": "Retain ILLUSTRATION and the off-screen evidence record; never label the icon itself documentary proof. Exact forced-labor wording comprehension still requires actual playback/human review."
+    },
+    {
+      "finding": "F05",
+      "status": "pass-sampled-removal",
+      "evidence": [
+        "full-contact-1.png @10-19s",
+        "full-contact-2.png @25-36s"
+      ],
+      "observed": "Fortune and CS Monitor source/date credits from previous held frames are absent. Meaning-bearing recording, replay, illustration and example qualifiers remain."
+    }
+  ],
+  "adjacent_sampled_findings": [
+    {
+      "id": "R01",
+      "severity": "P2",
+      "status": "observed-sequence-predicted-friction",
+      "title": "Full cut closes twice around an intervening question card",
+      "evidence": [
+        "full-contact-4.png @76-84s"
+      ],
+      "observed": "A MAKE YOUR MIND/UP wordmark and URL appear at 76-78s, a cream question card appears at 79-81s, then another wordmark and URL at 82-84s.",
+      "impact": "First-read prediction is a repeated ending: the video appears to finish, restart a question, then finish again. This is distinct from the approved photographic styleframe.",
+      "recommendation": "Use one deliberate close sequence or explicitly retain this sequence as a creative choice. Any change must preserve approved short audio; this review grants no audio edit authority."
+    },
+    {
+      "id": "R02",
+      "severity": "P3",
+      "status": "sample-observation-not-failure",
+      "title": "Several drawn arrowheads appear before the shaft joins them",
+      "evidence": [
+        "full-contact-1.png @5s",
+        "full-contact-3.png @56s"
+      ],
+      "observed": "The sampled frames show disconnected arrowhead and unfinished shaft during drawing.",
+      "impact": "Could be a short-lived reveal artifact; one-second sampling cannot judge whether the sequence is distracting in motion.",
+      "recommendation": "Check these moments in continuous playback before final delivery; no definite motion failure claimed from these samples."
+    }
+  ],
+  "full_cut_sampled_checks": {
+    "layout": "No newly observed severe frame-edge clipping of essential words in the sampled full cut. LIVES overlay collision and second-phone fade are specifically reported.",
+    "text": "No sentence-length narration transcription added. Numeric evidence labels, product names, conceptual BORN/LIVES labels, usable closing URL and disclosure qualifiers remain functional. Source-credit captions removed.",
+    "source_scope": "Photographic phone/rack/cotton scenes are marked ILLUSTRATION; passport scenes are marked AI EXAMPLE. Recording/replay text visibly distinguishes the deletion clip. Neither a rack image nor an icon establishes a real facility, supplier or test result.",
+    "retained_copy": "Samples 46-48s show a second message tile at the rack while the original remains on the phone, consistent with retained original plus remote copy.",
+    "deletion_scope": "Samples show answer text and later refusal text with recording/replay qualifiers. This supports a visible state difference but is not a continuous deletion-playback review.",
+    "branding": "Supplied wordmark is visible at close, and deletion scene does not have the former duplicate DeepSeek name header.",
+    "phone_clarity": "Main labels and numbers remain visible in full-size selected frames; contact sheets are not a physical-phone clarity test.",
+    "intro_outro": "Title and question cards are visible in the complete sequence; this review does not infer that their full-cut use was approved."
+  },
+  "proposed_regression_criteria_for_parent": [
+    "Every meaning-bearing label must remain readable against its actual background throughout reveal, hold and exit; annotations must not cross the label or its clear space.",
+    "Drawn paths must have intentional source and destination, and their staged appearance must be checked in continuous playback rather than certified from a final still.",
+    "Every photographic composite must be checked at late/full arrival states as well as early hero frames; no hard cut through a hand, object or screen.",
+    "A warning, comparison or data-transfer beat must visibly express its intended relationship. Generic illustration must not be presented as source proof.",
+    "On-screen words must identify objects, add checked evidence, label a necessary distinction or provide a usable action; metadata credits stay in evidence records where the house rule requires.",
+    "Inspect the assembled full-cut intro, body and ending together to catch duplicate endings or wrapper-induced pacing; a scene-level render cannot certify final sequencing.",
+    "Bind review to the actual candidate hash and separate sampled visual checks, continuous listening/playback, phone clarity and human taste approval.",
+    "Styleframe approval and approval of unchanged audio do not approve the assembled full visual cut."
+  ],
+  "authority_note": "These are review-derived regression criteria proposed for parent integration, not a new self-approved taste standard. No source, harness, shared status or historical decision record was edited.",
+  "not_verified": [
+    "Continuous playback, audio quality, cut joins, speech completeness and sync",
+    "Actual phone/platform-overlay clarity",
+    "Human three-second comprehension",
+    "Factual source claims behind 200/35%/3-of-3 and geopolitical hosting statement",
+    "User approval of the complete short"
+  ],
+  "next_action": "Correct the lower circle/label collision and inspect its reveal plus hold. Review the repeated closing sequence as an assembled-cut issue while preserving approved short audio. Parent continues the higher-priority repair of other takes' audio joins."
+}

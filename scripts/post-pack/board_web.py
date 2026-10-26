@@ -153,6 +153,11 @@ def publish(args):
     if not args.apply:
         print(canonical({'dry_run': True, 'week': week, 'build_id': sha(canonical(manifest).encode()), 'html_bytes': len(data), 'assets': len(assets)}))
         return
+    review_path = path.with_suffix('.delivery-review.json')
+    if not review_path.is_file():
+        raise ValueError('Independent board delivery review missing for this exact build')
+    delivery_review = json.loads(review_path.read_text(encoding='utf-8'))
+    manifest['delivery_review'] = delivery_review
     for file, content in payloads + [(html, data)]:
         upload(week, file, content)
     result = call('PUT', f'/api/board/{week}', {'manifest': manifest, 'revision': state['revision']})

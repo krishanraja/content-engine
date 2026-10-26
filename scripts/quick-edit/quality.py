@@ -186,7 +186,8 @@ def delivery_problems(video, receipt, target=None):
         problems = [f'{key} is not passed' for key in required
                     if report.get('checks',{}).get(key,{}).get('status')!='pass']
         import visual_clarity
-        return problems + motion_problems(report) + visual_clarity.delivery_problems(report, Path(receipt).parent, video)
+        import media_standard
+        return problems + motion_problems(report) + visual_clarity.delivery_problems(report, Path(receipt).parent, video) + media_standard.check('delivery', video, report.get('piece_id'))
     except (OSError, ValueError, TypeError, AttributeError):
         return ['video validation receipt cannot be read']
 

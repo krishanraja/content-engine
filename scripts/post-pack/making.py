@@ -2010,6 +2010,10 @@ def main(argv=None, call=None):
                     problems.append('receipt names a different video path')
             if problems:
                 raise MakingError('Video recording blocked: '+'; '.join(problems))
+            binding=json.loads(Path(a.video_file+'.media-quality.json').read_text(encoding='utf8'))
+            patch['video_assets'][0]['path']=binding['artifact']['path']
+            patch['video_assets'][0]['sha256']=binding['artifact']['sha256']
+            patch['video_assets'][0]['quality_receipt']=binding['receipt']
         elif a.what == 'posted':
             channel = a.args[0]
             if channel not in CHANNELS:

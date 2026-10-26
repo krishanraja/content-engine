@@ -7,6 +7,13 @@ description: Operate Mindmaker's deterministic video and carousel studio from an
 
 Use the repository CLI as the system of record. Do not improvise job state in chat or edit generated artifacts without recording the change.
 
+Every video and carousel production request loads `docs/MEDIA_STANDARD.md` and
+`node --import tsx scripts/media-standard.ts show` before choosing imagery.
+Develop this piece's own assets, brand applications and narrative motion.
+The quality floor is mandatory, including when the request is only "Produce this
+video". Representative proof and independently qualified exact exports are hard
+gates. The soft-block language below cannot override a minimum media criterion.
+
 ## Route the request
 
 - For evidence-feed diagnostics or offline import, read [references/radar.md](references/radar.md). Idea discovery and weekly editorial planning belong to Control Center.
