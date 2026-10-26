@@ -1,5 +1,12 @@
 # Carousel visual direction
 
+Read `docs/MEDIA_STANDARD.md` and resolve its current policy hash first. Apply the
+same craft and clarity floor with new imagery, compositions and brand applications
+for this subject. Existing approved content and creative direction do not require
+another interview: routine compliance is compared and repaired internally.
+The collaboration stages below remain available for genuinely new creative
+decisions; they do not require Krish to repeat an already established standard.
+
 ## Boundary
 
 The carousel route begins with a completed content idea whose argument, claims, sequence, audience payoff and ending are already set. It produces the visual expression of that material. It does not decide what Krish should discuss, record or believe.

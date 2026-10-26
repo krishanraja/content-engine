@@ -1,0 +1,351 @@
+{
+  "authority": "Krish, 2026-10-25: flags beside countries; recognisable entities; minimal words; no script/caption duplication; three-second comprehension.",
+  "baseline_sha256": "b76eb76a280607e254f4ff56f8314ba4eb8efa782cbee299e4102e6f1f593bc9",
+  "candidate_sha256": "26517f0a0b840ffb9d32f5d3f14dca16a2a3f5a4f36c0572c8f8ef45d7bb6f03",
+  "changes": [
+    {
+      "beat": "L14-passports",
+      "before": {
+        "surface": "cream",
+        "pictures": [
+          "An unbranded illustrative passport shows BORN: CANADA / WHERE IT WAS MADE and LIVES: USA / WHERE IT RUNS together from its arrival. A mint selection moves from the BORN label to the LIVES label on the respective spoken words. No national flag, company mark or invented company claim."
+        ],
+        "on_screen": [
+          "ILLUSTRATIVE AI",
+          "BORN: CANADA",
+          "WHERE IT WAS MADE",
+          "LIVES: USA",
+          "WHERE IT RUNS"
+        ],
+        "cam": "Cutaway for the whole beat (it is the piece's idea)."
+      },
+      "after": {
+        "surface": "cream",
+        "pictures": [
+          "Unbranded example passport, with the Canadian flag beside CANADA and US flag beside USA. BORN and LIVES identify the two fields; the selected field follows the spoken cue. No explanatory sentences. Flags use identical size and neutral treatment. Clear this example before specific evidence."
+        ],
+        "on_screen": [
+          "EXAMPLE",
+          "BORN",
+          "CANADA",
+          "LIVES",
+          "USA"
+        ],
+        "cam": "Cutaway for the whole beat (it is the piece's idea)."
+      }
+    },
+    {
+      "beat": "S04-passports",
+      "before": {
+        "surface": "cream",
+        "pictures": [
+          "An unbranded illustrative passport shows BORN: CANADA / WHERE IT WAS MADE and LIVES: USA / WHERE IT RUNS together from its arrival. A mint selection moves from the BORN label to the LIVES label on the respective spoken words. No national flag, company mark or invented company claim."
+        ],
+        "on_screen": [
+          "ILLUSTRATIVE AI",
+          "BORN: CANADA",
+          "WHERE IT WAS MADE",
+          "LIVES: USA",
+          "WHERE IT RUNS"
+        ],
+        "cam": "Cutaway for the whole beat (it is the piece's idea).",
+        "same_as": "L14-passports"
+      },
+      "after": {
+        "surface": "cream",
+        "pictures": [
+          "Unbranded example passport, with the Canadian flag beside CANADA and US flag beside USA. BORN and LIVES identify the two fields; the selected field follows the spoken cue. No explanatory sentences. Flags use identical size and neutral treatment. Clear this example before specific evidence."
+        ],
+        "on_screen": [
+          "EXAMPLE",
+          "BORN",
+          "CANADA",
+          "LIVES",
+          "USA"
+        ],
+        "cam": "Cutaway for the whole beat (it is the piece's idea).",
+        "same_as": "L14-passports"
+      }
+    },
+    {
+      "beat": "L21-lives",
+      "before": {
+        "surface": "ink",
+        "pictures": [
+          "Reset to the unbranded illustrative Canada/USA passport for the general hosting explanation. Flip to ink and select LIVES. Only introduce the DeepSeek mark and its sourced China value when the narration names DeepSeek in L22."
+        ],
+        "on_screen": [
+          "ILLUSTRATIVE AI",
+          "BORN: CANADA",
+          "WHERE IT WAS MADE",
+          "LIVES: USA",
+          "WHERE IT RUNS"
+        ],
+        "cam": "Cutaway."
+      },
+      "after": {
+        "surface": "ink",
+        "pictures": [
+          "Unbranded example passport, with the Canadian flag beside CANADA and US flag beside USA. BORN and LIVES identify the two fields; the selected field follows the spoken cue. No explanatory sentences. Flags use identical size and neutral treatment. Clear this example before specific evidence."
+        ],
+        "on_screen": [
+          "EXAMPLE",
+          "BORN",
+          "CANADA",
+          "LIVES",
+          "USA"
+        ],
+        "cam": "Cutaway."
+      }
+    },
+    {
+      "beat": "L36-call",
+      "before": {
+        "surface": "cream",
+        "pictures": [
+          "The unbranded illustrative Canada/USA passport returns. LIVES is selected on where your data ends up; BORN on check what it tells you. The advice applies to any AI. Do not carry a DeepSeek mark or a China field into this general advice."
+        ],
+        "on_screen": [
+          "ILLUSTRATIVE AI",
+          "BORN: CANADA",
+          "WHERE IT WAS MADE",
+          "LIVES: USA",
+          "WHERE IT RUNS"
+        ],
+        "cam": "Face; the circled passport as a side panel."
+      },
+      "after": {
+        "surface": "cream",
+        "pictures": [
+          "Unbranded example passport, with the Canadian flag beside CANADA and US flag beside USA. BORN and LIVES identify the two fields; the selected field follows the spoken cue. No explanatory sentences. Flags use identical size and neutral treatment. Clear this example before specific evidence."
+        ],
+        "on_screen": [
+          "EXAMPLE",
+          "BORN",
+          "CANADA",
+          "LIVES",
+          "USA"
+        ],
+        "cam": "Face; the circled passport as a side panel."
+      }
+    },
+    {
+      "beat": "S12-call",
+      "before": {
+        "surface": "cream",
+        "pictures": [
+          "The unbranded illustrative Canada/USA passport returns. LIVES is selected on where your data ends up; BORN on check what it tells you. The advice applies to any AI. Do not carry a DeepSeek mark or a China field into this general advice."
+        ],
+        "on_screen": [
+          "ILLUSTRATIVE AI",
+          "BORN: CANADA",
+          "WHERE IT WAS MADE",
+          "LIVES: USA",
+          "WHERE IT RUNS"
+        ],
+        "cam": "Face; the circled passport as a side panel.",
+        "same_as": "L36-call"
+      },
+      "after": {
+        "surface": "cream",
+        "pictures": [
+          "Unbranded example passport, with the Canadian flag beside CANADA and US flag beside USA. BORN and LIVES identify the two fields; the selected field follows the spoken cue. No explanatory sentences. Flags use identical size and neutral treatment. Clear this example before specific evidence."
+        ],
+        "on_screen": [
+          "EXAMPLE",
+          "BORN",
+          "CANADA",
+          "LIVES",
+          "USA"
+        ],
+        "cam": "Face; the circled passport as a side panel.",
+        "same_as": "L36-call"
+      }
+    },
+    {
+      "beat": "S13b-recap",
+      "before": {
+        "surface": "cream",
+        "pictures": [
+          "The same unbranded illustrative Canada/USA passport; BORN is selected on passport number one, LIVES on passport number two."
+        ],
+        "on_screen": [
+          "ILLUSTRATIVE AI",
+          "BORN: CANADA",
+          "WHERE IT WAS MADE",
+          "LIVES: USA",
+          "WHERE IT RUNS"
+        ],
+        "cam": "Cutaway (on-camera take only)."
+      },
+      "after": {
+        "surface": "cream",
+        "pictures": [
+          "Unbranded example passport, with the Canadian flag beside CANADA and US flag beside USA. BORN and LIVES identify the two fields; the selected field follows the spoken cue. No explanatory sentences. Flags use identical size and neutral treatment. Clear this example before specific evidence."
+        ],
+        "on_screen": [
+          "EXAMPLE",
+          "BORN",
+          "CANADA",
+          "LIVES",
+          "USA"
+        ],
+        "cam": "Cutaway (on-camera take only)."
+      }
+    },
+    {
+      "beat": "L15-born",
+      "before": {
+        "surface": "cream",
+        "pictures": [
+          "The passport tilts back; E-csmonitor slides over it"
+        ],
+        "on_screen": [
+          "200 QUESTIONS · 4 CHINESE CHATBOTS"
+        ],
+        "label": "E-csmonitor",
+        "sources": [
+          "research-gaps.md §1a"
+        ],
+        "cam": "Cutaway."
+      },
+      "after": {
+        "surface": "cream",
+        "pictures": [
+          "Source-labelled paper sheet with four speech bubbles containing the official DeepSeek, Kimi, Qwen and GLM marks, plus the sourced 200-question count. The article capture remains in provenance, not as a paragraph for the viewer to read. Clear the passport before this sheet arrives."
+        ],
+        "on_screen": [
+          "200 QUESTIONS · 4 CHINESE CHATBOTS"
+        ],
+        "label": "E-csmonitor",
+        "sources": [
+          "research-gaps.md §1a"
+        ],
+        "cam": "Cutaway."
+      }
+    },
+    {
+      "beat": "S05-newspaper",
+      "before": {
+        "surface": "cream",
+        "pictures": [
+          "The passport tilts back; E-csmonitor slides over it"
+        ],
+        "on_screen": [
+          "200 QUESTIONS · 4 CHINESE CHATBOTS"
+        ],
+        "label": "E-csmonitor",
+        "sources": [
+          "research-gaps.md §1a"
+        ],
+        "cam": "Cutaway.",
+        "same_as": "L15-born"
+      },
+      "after": {
+        "surface": "cream",
+        "pictures": [
+          "Source-labelled paper sheet with four speech bubbles containing the official DeepSeek, Kimi, Qwen and GLM marks, plus the sourced 200-question count. The article capture remains in provenance, not as a paragraph for the viewer to read. Clear the passport before this sheet arrives."
+        ],
+        "on_screen": [
+          "200 QUESTIONS · 4 CHINESE CHATBOTS"
+        ],
+        "label": "E-csmonitor",
+        "sources": [
+          "research-gaps.md §1a"
+        ],
+        "cam": "Cutaway.",
+        "same_as": "L15-born"
+      }
+    },
+    {
+      "beat": "L16-third",
+      "before": {
+        "surface": "cream",
+        "pictures": [
+          "O-tiles: 100 tiles under the four marks (DeepSeek, Kimi, Qwen, GLM); 35 flip amber in a wave"
+        ],
+        "on_screen": [
+          "35%",
+          "IN THIS TEST: REFUSED, GAVE THE GOVERNMENT LINE, OR GOT IT WRONG"
+        ],
+        "label": "E-csmonitor",
+        "highlight": "In more than one-third of cases (35%)",
+        "numbers": [
+          {
+            "value": "35%",
+            "source": "research-gaps.md §1a",
+            "note": "show as 35 of 100, never as 70 of 200: the Monitor gives a percentage, not a count"
+          }
+        ],
+        "cam": "Cutaway."
+      },
+      "after": {
+        "surface": "cream",
+        "pictures": [
+          "100 response tiles: exactly 35 turn amber under the four official marks. No invented category breakdown. The short label identifies what the number measures. Do not repeat brand names already readable in their wordmarks."
+        ],
+        "on_screen": [
+          "35%",
+          "PROBLEM RESPONSES"
+        ],
+        "label": "E-csmonitor",
+        "highlight": "In more than one-third of cases (35%)",
+        "numbers": [
+          {
+            "value": "35%",
+            "source": "research-gaps.md §1a",
+            "note": "show as 35 of 100, never as 70 of 200: the Monitor gives a percentage, not a count"
+          }
+        ],
+        "cam": "Cutaway."
+      }
+    },
+    {
+      "beat": "S06-third",
+      "before": {
+        "surface": "cream",
+        "pictures": [
+          "O-tiles: 100 tiles under the four marks (DeepSeek, Kimi, Qwen, GLM); 35 flip amber in a wave"
+        ],
+        "on_screen": [
+          "35%",
+          "IN THIS TEST: REFUSED, GAVE THE GOVERNMENT LINE, OR GOT IT WRONG"
+        ],
+        "label": "E-csmonitor",
+        "highlight": "In more than one-third of cases (35%)",
+        "numbers": [
+          {
+            "value": "35%",
+            "source": "research-gaps.md §1a",
+            "note": "show as 35 of 100, never as 70 of 200: the Monitor gives a percentage, not a count"
+          }
+        ],
+        "cam": "Cutaway.",
+        "same_as": "L16-third"
+      },
+      "after": {
+        "surface": "cream",
+        "pictures": [
+          "100 response tiles: exactly 35 turn amber under the four official marks. No invented category breakdown. The short label identifies what the number measures. Do not repeat brand names already readable in their wordmarks."
+        ],
+        "on_screen": [
+          "35%",
+          "PROBLEM RESPONSES"
+        ],
+        "label": "E-csmonitor",
+        "highlight": "In more than one-third of cases (35%)",
+        "numbers": [
+          {
+            "value": "35%",
+            "source": "research-gaps.md §1a",
+            "note": "show as 35 of 100, never as 70 of 200: the Monitor gives a percentage, not a count"
+          }
+        ],
+        "cam": "Cutaway.",
+        "same_as": "L16-third"
+      }
+    }
+  ],
+  "semantic_diff_pass": true,
+  "narration_changed": false
+}

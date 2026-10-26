@@ -1,0 +1,186 @@
+{
+  "status": "rejected_by_Krish_2026-10-26",
+  "crossfade_ms": 10,
+  "method": "Actual source PCM, 48 kHz; sample-accurate clip joins. Threshold silence is candidate-location evidence only, not phonetic proof. No changes to original media.",
+  "clips": [
+    {
+      "id": 1,
+      "take": "cam-short",
+      "source_sha256": "4954e3c9dc4e3a4df5548c5469100e48c7a34cc0e0a209eb189951d55449fb0b",
+      "removed_seconds": [
+        27.65,
+        29.25
+      ],
+      "expected_join": "answered all / so where it lives",
+      "candidate": "01-cam-short.wav",
+      "candidate_sha256": "19bbeb2ef915a6271df96a762b0592beac7e1f9045335cdf8fd54e49c5473443",
+      "reel_start": 0,
+      "reel_end": 3.99,
+      "status": "candidate_only_requires_actual_listening",
+      "guard_status": "not_certified_by_threshold_detection",
+      "machine_transcript": "Claude, an American AI, answered all that. So where it lives, decides who sees your"
+    },
+    {
+      "id": 2,
+      "take": "cam-short",
+      "source_sha256": "4954e3c9dc4e3a4df5548c5469100e48c7a34cc0e0a209eb189951d55449fb0b",
+      "removed_seconds": [
+        31.76,
+        33.23
+      ],
+      "expected_join": "your data / use DeepSeek",
+      "candidate": "02-cam-short.wav",
+      "candidate_sha256": "528cc31a58dc72d5b9bacb7d5b0c743f23f5f42a83716717d5796d765077e768",
+      "reel_start": 4.99,
+      "reel_end": 8.98,
+      "status": "candidate_only_requires_actual_listening",
+      "guard_status": "not_certified_by_threshold_detection",
+      "machine_transcript": "data. Use DeepSeek, another Chinese AI,"
+    },
+    {
+      "id": 3,
+      "take": "cam-short",
+      "source_sha256": "4954e3c9dc4e3a4df5548c5469100e48c7a34cc0e0a209eb189951d55449fb0b",
+      "removed_seconds": [
+        37.4,
+        39.8
+      ],
+      "expected_join": "China / I asked Claude",
+      "candidate": "03-cam-short.wav",
+      "candidate_sha256": "71f3fe93e54d89b69b85b2a559cf84a1c425ed0754119d7d591d2d625feeb3c7",
+      "reel_start": 9.98,
+      "reel_end": 13.97,
+      "status": "candidate_only_requires_actual_listening",
+      "guard_status": "not_certified_by_threshold_detection",
+      "machine_transcript": "all your data in China. I asked Claude Chachibiti in DeepSeek."
+    },
+    {
+      "id": 4,
+      "take": "cam-short",
+      "source_sha256": "4954e3c9dc4e3a4df5548c5469100e48c7a34cc0e0a209eb189951d55449fb0b",
+      "removed_seconds": [
+        66.219,
+        67.77
+      ],
+      "expected_join": "tells you / And now",
+      "candidate": "04-cam-short.wav",
+      "candidate_sha256": "d376475581949ea85694330d8e003e968ae6bd23d6749442fff6fc6b5bad7e11",
+      "reel_start": 14.97,
+      "reel_end": 18.96,
+      "status": "candidate_only_requires_actual_listening",
+      "guard_status": "not_certified_by_threshold_detection",
+      "machine_transcript": "but just check what it tells you. Now here's what I do with this information if I were you. I would just"
+    },
+    {
+      "id": 5,
+      "take": "cam-short",
+      "source_sha256": "4954e3c9dc4e3a4df5548c5469100e48c7a34cc0e0a209eb189951d55449fb0b",
+      "removed_seconds": [
+        74.4,
+        82.98
+      ],
+      "expected_join": "where it lives / and of course",
+      "candidate": "05-cam-short.wav",
+      "candidate_sha256": "17ba0d27269a810d839f735ba9fa82de968889b33ba9c1c6c0b843482384338a",
+      "reel_start": 19.96,
+      "reel_end": 23.950000000000003,
+      "status": "candidate_only_requires_actual_listening",
+      "guard_status": "not_certified_by_threshold_detection",
+      "machine_transcript": "they're using, and where it lives, and of course, keep a second,"
+    },
+    {
+      "id": 6,
+      "take": "cam-long",
+      "source_sha256": "87819f842b762fa6d572db639a53830f72f210090369d344cf8f9d6a86f58090",
+      "removed_seconds": [
+        128.36,
+        130.32
+      ],
+      "expected_join": "every single one / and China has company",
+      "candidate": "06-cam-long.wav",
+      "candidate_sha256": "ea97f97eff7101a13f17a1982a86a9df3e80ae201140f3f68d723759b14c13fe",
+      "reel_start": 24.950000000000003,
+      "reel_end": 28.940000000000005,
+      "status": "candidate_only_requires_actual_listening",
+      "guard_status": "not_certified_by_threshold_detection",
+      "machine_transcript": "the same questions and answered every single one. And China has a company here. It stores"
+    },
+    {
+      "id": 7,
+      "take": "cam-long",
+      "source_sha256": "87819f842b762fa6d572db639a53830f72f210090369d344cf8f9d6a86f58090",
+      "removed_seconds": [
+        154.55,
+        158.53
+      ],
+      "expected_join": "in China / but you can bring",
+      "candidate": "07-cam-long.wav",
+      "candidate_sha256": "d2501cb2d203d3b67433c05e8ec179966596b88446434661cbf4cc295f89d38d",
+      "reel_start": 29.940000000000005,
+      "reel_end": 33.93000000000001,
+      "status": "candidate_only_requires_actual_listening",
+      "guard_status": "not_certified_by_threshold_detection",
+      "machine_transcript": "what you type in China, but you can bring an AI home."
+    },
+    {
+      "id": 8,
+      "take": "vo-long",
+      "source_sha256": "30ed0af98c2cd1190ff74c927fdfa123429967c8a700855106b5720fcf46b50d",
+      "removed_seconds": [
+        247.9,
+        249.26
+      ],
+      "expected_join": "Taiwan / which China says",
+      "candidate": "08-vo-long.wav",
+      "candidate_sha256": "c4c1c05aac96d0c11a54e091f83e647ff57765a5c091ce2103b4e369375b1ed9",
+      "reel_start": 34.93000000000001,
+      "reel_end": 38.92000000000001,
+      "status": "candidate_only_requires_actual_listening",
+      "guard_status": "not_certified_by_threshold_detection",
+      "machine_transcript": "Opening a sales office in Taiwan, which China says belongs to it."
+    },
+    {
+      "id": 9,
+      "take": "vo-long",
+      "source_sha256": "30ed0af98c2cd1190ff74c927fdfa123429967c8a700855106b5720fcf46b50d",
+      "removed_seconds": [
+        309.1,
+        310.95
+      ],
+      "expected_join": "And / to one from another country",
+      "candidate": "09-vo-long.wav",
+      "candidate_sha256": "f714e23a0a7b569a5b99ff7f8864219d8a6421340ab37c034fef53bd9e293283",
+      "reel_start": 39.92000000000001,
+      "reel_end": 43.91000000000001,
+      "status": "candidate_only_requires_actual_listening",
+      "guard_status": "not_certified_by_threshold_detection",
+      "machine_transcript": "questions to your team's AI, to one from another country. And have a look."
+    },
+    {
+      "id": 10,
+      "take": "vo-long",
+      "insert_at": 34.12,
+      "donor_seconds": [
+        16.68,
+        17.08
+      ],
+      "expected_join": "holiday fling / Then there is Cursor",
+      "candidate": "10-vo-long-fling.wav",
+      "candidate_sha256": "917cbaa7d2485749f8453ee2d800f78a26f22df31a765490a62abd5f9dbcbeef",
+      "reel_start": 44.91000000000001,
+      "reel_end": 49.29000000000001,
+      "status": "candidate_only_requires_actual_listening",
+      "guard_status": "donor_has_no_confirmed_leading_silence",
+      "gain_db": 0,
+      "source_sha256": "30ed0af98c2cd1190ff74c927fdfa123429967c8a700855106b5720fcf46b50d",
+      "donor_sha256": "007db593baa467b5f25b1a928521e30a6f4256d84e1c0c726d7504100f08b6c5",
+      "machine_transcript": "It's also what most of us want from a holiday, a fling. Then there's cursor."
+    }
+  ],
+  "user_findings": [
+    "clipping after answered all the",
+    "clipping after another Chinese AI",
+    "many more glitches and cuts"
+  ],
+  "next_action": "Rebuild from original recordings using verified acoustic boundaries and validate audio review against the known rejected examples. Do not apply these joins."
+}

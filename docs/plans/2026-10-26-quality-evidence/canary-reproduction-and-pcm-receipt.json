@@ -1,0 +1,180 @@
+{
+  "schema_version": 1,
+  "purpose": "Preserve PCM correction and exact v3 reproduction inputs for fresh sessions",
+  "status": "stored-working-only",
+  "authenticated_preflight": "Exact existing canary metadata resolved before mutation",
+  "existing_video_sha256": "98f081ce66de5f5f2b86c3b3944d98dbcc164468a780fd1282a70e3699520ccf",
+  "files": [
+    {
+      "path": "3 Posts/2026-10-26 Mon under.the.hood - Insulation canary/3 Video/working/reproduction-v3/insulation-v3-sources.zip",
+      "sha256": "1627c27b12fdf4a1ec095248a9d99a065cb4ae51bbdf4a0cbec56c2deb27a074",
+      "bytes": 4976751,
+      "independent_download_matches": true,
+      "entries": [
+        {
+          "name": "build_canary_v3.py",
+          "sha256": "3df1eeaabe5bd5e94eef973ed95d7c090d5c6af03392f98b9daf41309bd61a2a",
+          "matches_staged_entry": true
+        },
+        {
+          "name": "render-command-v3.json",
+          "sha256": "b94a2d53d247a946f8161b22b73c9dfea1ed1ec9af2aa8fa3cadc22256079177",
+          "matches_staged_entry": true
+        },
+        {
+          "name": "render-filter-v3.txt",
+          "sha256": "f7794af6264532eb1c3164f83e687b0adca9ba2a4a5a43239849b577f5900796",
+          "matches_staged_entry": true
+        },
+        {
+          "name": "wall-bare.png",
+          "sha256": "5a50bc2eac9359fccdfef6c9e424c7b7ad9ab18fa79370d0068ea063723c1c44",
+          "matches_staged_entry": true
+        },
+        {
+          "name": "wall-insulated.png",
+          "sha256": "53bb1048a1b8d09949db84b14a877fcf24e72becd112150e4f0032d48628ebd1",
+          "matches_staged_entry": true
+        },
+        {
+          "name": "official-logo.png",
+          "sha256": "463303741ec114cabc2a531afad537a7f04eb3f008efb2b384ecee52158aa7ee",
+          "matches_staged_entry": true
+        },
+        {
+          "name": "official-mark.png",
+          "sha256": "4a45152311ff552a1fd08307a78e8e49c0c699663d73c35687c52887f782fb4a",
+          "matches_staged_entry": true
+        },
+        {
+          "name": "media-brief-v2.json",
+          "sha256": "98243902e7379e87f9a5211a799b517dfe34e9851621e1f5d095cbb422749bd7",
+          "matches_staged_entry": true
+        },
+        {
+          "name": "media-brief-v3.json",
+          "sha256": "24018241fbf44571401f5dbbbce84fe7891e2378a16da9fe7ff32a359f1a8a29",
+          "matches_staged_entry": true
+        },
+        {
+          "name": "manifest-v3.json",
+          "sha256": "aaff04688c118e406dcbf5d99d69ee3581ffba04f40f4fd46ec7569c61cb6043",
+          "matches_staged_entry": true
+        },
+        {
+          "name": "conserved-marker-plan-v3.json",
+          "sha256": "39508254e606515acac8d7ead72a75500fe6572ac6543fe409db179c499ab0be",
+          "matches_staged_entry": true
+        },
+        {
+          "name": "visual-inventory-v3.json",
+          "sha256": "d772e78f7d7d03dcc1f751a2078689c485ec0b385b018d07a6f0dffb67ab807f",
+          "matches_staged_entry": true
+        },
+        {
+          "name": "narration-proposed.txt",
+          "sha256": "fbeab381592c168dddedf7af9963c1aa9070d87d5236db99b08a6851ebb6ad1f",
+          "matches_staged_entry": true
+        },
+        {
+          "name": "REPORT-v3.md",
+          "sha256": "940e650d56d76cef4904dbca3317426ff7a10ab82eb2367ef0ff8f00afc96382",
+          "matches_staged_entry": true
+        },
+        {
+          "name": "checks-v3.json",
+          "sha256": "3ab44b0f9fc4bd7c1872b8a2def82ae6925136e96eb700d603e6d37fc3f861a8",
+          "matches_staged_entry": true
+        },
+        {
+          "name": "decoded-marker-check-v3.json",
+          "sha256": "ca799b2ff0f099cfd64d4ff00bba3edd1bd0ab1db8498098ad351ad4a5c395e0",
+          "matches_staged_entry": true
+        },
+        {
+          "name": "check_decoded_markers_v3.py",
+          "sha256": "bda2d51f17d0f446abbad478480747799dd61214d0a3870cc9b2adaaca37cf1e",
+          "matches_staged_entry": true
+        },
+        {
+          "name": "Anton.ttf",
+          "sha256": "a31de1345beb8c04b3102799a448b247e82a9371bb846dd59ef1be46e4cd41ab",
+          "matches_staged_entry": true
+        },
+        {
+          "name": "Anton-OFL.txt",
+          "sha256": "b535a2ae592bcd2056c36a377973644ad05a0ef2b148af0b166dc3d1b5e9dca0",
+          "matches_staged_entry": true
+        },
+        {
+          "name": "READ-ME.txt",
+          "sha256": "9fdd69463a8b9c14158f01e666f522d16c7f27a1599dedcd674a43ccee108b60",
+          "matches_staged_entry": true
+        },
+        {
+          "name": "source-manifest.json",
+          "sha256": "4d0ca39c5f06e86f46b983d559a323b050a7849f6a5d8b83fd97cacf70c182e0",
+          "matches_staged_entry": true
+        }
+      ]
+    },
+    {
+      "path": "3 Posts/2026-10-26 Mon under.the.hood - Insulation canary/3 Video/working/audio-diagnosis/friday-pcm-evidence.zip",
+      "sha256": "38bb8733bea851223f3be1330bb0a50e2b454b57242ac9e778396631f141cd15",
+      "bytes": 479987,
+      "independent_download_matches": true,
+      "entries": [
+        {
+          "name": "repair-proposal.json",
+          "sha256": "4808bddbc89758e049c5af5260d289149b12e2bbe7f7c3edb7b22d16aefc9d87",
+          "matches_staged_entry": true
+        },
+        {
+          "name": "pcm-low-energy-evidence.json",
+          "sha256": "9616489a7dd8e474e676c9f47b88e1bc5aa86b4222e917601940e4764dbbfa66",
+          "matches_staged_entry": true
+        },
+        {
+          "name": "boundary-energy-2ms.npz",
+          "sha256": "c3d25b3cb16d418abe5b6963ac42e4d13622ffb446ab5a06e29d2d034144a08a",
+          "matches_staged_entry": true
+        },
+        {
+          "name": "original-first-join.alignment.json",
+          "sha256": "aca7f256746b1457f027638cbfbb331949931b4d808cfe51c0a943e5b959727f",
+          "matches_staged_entry": true
+        },
+        {
+          "name": "original-third-join.alignment.json",
+          "sha256": "dba2d6644e83d06e3dbfcbb3f691ce652040a568963553b1e9b9faa582c89a30",
+          "matches_staged_entry": true
+        },
+        {
+          "name": "analyze_repair_boundaries.py",
+          "sha256": "e3560bdd1b5eb11f75ecdbe958d6eb9ea7c0c4fe5df869e399507e37f8e10e8c",
+          "matches_staged_entry": true
+        },
+        {
+          "name": "READ-ME.txt",
+          "sha256": "63d3566353ecbc70ebf29791f9d2d1dd58d17bfdef798f099fb30e4c6fa80b76",
+          "matches_staged_entry": true
+        }
+      ]
+    },
+    {
+      "path": "3 Posts/2026-10-26 Mon under.the.hood - Insulation canary/3 Video/working/audio-diagnosis/repair-boundary-acoustics.png",
+      "sha256": "66d2758e4e8ff7347617477c7474c05d82ade02ae0523621cbb264a37b524add",
+      "bytes": 1776170,
+      "independent_download_matches": true
+    }
+  ],
+  "readback": "All uploaded bytes independently downloaded; SHA-256 matched. Archive entry bytes also compared.",
+  "qualified": false,
+  "inference_runs": 0,
+  "renders": 0,
+  "applied_audio_cuts": 0,
+  "board_write": false,
+  "making_write": false,
+  "original_media_changed": false,
+  "note": "Engine-library readback verified; eventual Drive sync not independently observed."
+}

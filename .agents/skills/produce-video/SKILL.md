@@ -6,6 +6,19 @@ model: sonnet
 
 # Produce the video
 
+## Mandatory quality floor
+
+For every production request, including just "Produce this video", load
+`docs/MEDIA_STANDARD.md` and run `node --import tsx scripts/media-standard.ts show`.
+Create this piece's own media brief, assets and explanatory motion against that
+standard. Previous-piece assets are evaluation history, never the new asset kit.
+Representative proof precedes full production. Read `scripts/media-standard.ts rollout`
+as well: signed proof/final qualification becomes mandatory only after reviewed
+activation. While pending calibration, retain every existing approval, audio,
+clarity and delivery check; never claim the new automatic gate is active or that
+missing reviewer capability is a pass. Follow the rollout section in the guide.
+Repair routine failures internally and preserve existing user approvals.
+
 ## Publish-board routing
 
 Follow `docs/PUBLISH_BOARDS.md` before touching a weekly publish board. It owns
@@ -23,6 +36,16 @@ ArtifactComments or dual-account step below is history: read an old artifact
 only to recover what it holds.
 
 ## Never call a video good without watching it
+
+### Minimal words and visual comprehension
+
+Follow `docs/VISUAL_CLARITY.md` (Krish, 25 October 2026). Plan recognisable visual
+cues before writing labels; words must add information rather than repeat the
+script or captions. Count all legible image text, retain the rendered inventory,
+and run `scripts/quick-edit/visual_clarity.py`. The final delivery receipt needs
+the hash-bound `visual_clarity` check; `quality.delivery_problems` enforces it.
+Automated text checks and author inspection do not prove three-second layperson
+comprehension. Keep that evidence distinct and never invent a viewer response.
 
 ### Mandatory camera-motion assessment
 

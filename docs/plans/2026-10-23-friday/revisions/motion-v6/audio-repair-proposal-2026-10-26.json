@@ -1,0 +1,294 @@
+{
+  "status": "read_only_repair_proposal_no_cuts_applied",
+  "piece_id": "7083d6ad-419e-4fdc-9aba-f3be7f3f3a23",
+  "scope": "First three authorized camera-short removals only; no creative copy changes, paid calls, original changes or replacement render",
+  "source": {
+    "source_path": "C:\\Users\\krish\\Documents\\Codex\\2026-10-24\\get-friday-s-videos-produced-and\\work\\sped\\Fri 23 Oct - 90-second - Two passports~2.speed-1.120-30fps.mkv",
+    "source_sha256": "4954e3c9dc4e3a4df5548c5469100e48c7a34cc0e0a209eb189951d55449fb0b",
+    "raw_original_path": "C:\\Users\\krish\\Documents\\Codex\\2026-10-24\\get-friday-s-videos-produced-and\\work\\recordings\\Fri 23 Oct - 90-second - Two passports~2.mp4",
+    "raw_original_sha256": "bb5209f5c7520e6aaea21eec8c800f516599c2cee22684b17b74d951b45d31fd",
+    "sample_rate": 48000
+  },
+  "clock": {
+    "working_clock": "processing_source: continuous 1.12x pitch-preserved, untrimmed source",
+    "factor_exact": "28/25",
+    "formula_raw_to_processing": "t_processing = t_raw * 25/28",
+    "formula_processing_to_raw": "t_raw = t_processing * 28/25",
+    "warning": "Raw-to-processing division is a nominal timebase mapping, not phonetic cut evidence: phase/vocoder output and actual speech boundaries must be measured on the current processing-source PCM. Do not speed this source again. All proposed boundaries below are measured in this already-sped source clock.",
+    "edited_timeline": "No edited timeline exists. With overlapping 10ms crossfades and no initial trim: retained source time s maps to s - sum(previous removed processing-source durations) - 0.010 * completed prior joins; add intro duration only during final composition. Re-transcribe actual finished bytes; do not reuse source timings as final captions."
+  },
+  "authority": {
+    "source": "repo docs/plans/2026-10-23-friday/locked/script-cam-90s.md and CODEX.md",
+    "approved_speed": 1.12,
+    "required_clearance_ms": 40,
+    "required_crossfade_ms": 10,
+    "interpretation": "Keep the complete retained words. For a conservative 10ms fade, require its entire fade window to stay in room tone while preserving at least40ms retained speech clearance; energy thresholds alone never establish phonetic silence."
+  },
+  "method": {
+    "pcm": "FFmpeg-decoded full processing source to memory: mono48kHz float32; 96-sample/2ms RMS and sample peaks",
+    "other_evidence": [
+      "Existing independent wav2vec2 CTC character alignment,20ms frames",
+      "Existing small.en full-source transcript",
+      "Existing large-v3-turbo excerpts",
+      "Waveform and spectrogram inspection of five regions"
+    ],
+    "limitation": "No actual listening performed in this analysis. CTC emissions are evidence of phonetic location, not exact acoustic onsets/offsets; lowconfidence and excerpt truncation are retained explicitly. No silence certification from a threshold."
+  },
+  "joins": [
+    {
+      "join": 1,
+      "authorized_remove": "the American questions, of course.",
+      "required_retained_join": "Claude, an American AI, answered all. / So where it lives decides who sees your data.",
+      "rejected_seconds": [
+        27.65,
+        29.25
+      ],
+      "finding": "The ALL/THE transition is coarticulated/tight. Existing CTC ALL27.5501-27.6303, THE27.6503-27.7105. No >=20ms RMS interval below-45dBFS between27.4 and27.85; only30ms below-40 at27.622-27.652. The rejected27.65 edge reaches the onset region of THE. A 40ms speech-clearance cut preserving complete ALL while excluding complete THE is not demonstrated and cannot be declared satisfied.",
+      "proposed_action": "DO NOT APPLY. Preserve whole source until a phonetic reviewer resolves the ALL tail/THE onset or an exact-word phrase pickup is separately authorized. No compliant boundary exists in current evidence.",
+      "inspection_only_noncompliant_pair": {
+        "processing_source_seconds": [
+          27.636,
+          29.2
+        ],
+        "processing_source_samples_48000": [
+          1326528,
+          1401600
+        ],
+        "raw_original_nominal_seconds": [
+          30.95232,
+          32.704
+        ],
+        "not_applied": true
+      },
+      "inspection_pair_warning": "27.636 is only a low-energy trough for investigation; it fails the40ms rule and may still cut a coarticulated ALL tail. Not a render instruction.",
+      "resume_evidence": {
+        "candidate_seconds": 29.2,
+        "below_minus50_interval": [
+          29.126,
+          29.32
+        ],
+        "CTC_SO": [
+          29.314,
+          29.3742
+        ],
+        "fade_window": {
+          "window_seconds": [
+            29.2,
+            29.25
+          ],
+          "max_2ms_rms_dbfs": -53.69,
+          "max_sample_peak_dbfs": -50.755
+        }
+      },
+      "cut_clearance": {
+        "status": "not_available",
+        "CTC_nominal_gap_ms": 20.0445,
+        "below_minus40_gap_ms": 30,
+        "cut_last50ms": {
+          "window_seconds": [
+            27.586,
+            27.636
+          ],
+          "max_2ms_rms_dbfs": -29.522,
+          "max_sample_peak_dbfs": -25.208
+        }
+      },
+      "whole_phrase_alternative_within_approved_trim_scope": null,
+      "reason_no_alternative": "The full authorized removal already is THE AMERICAN QUESTIONS OF COURSE. Moving earlier to the pause before ANSWERED (or before CLAUDE) removes words explicitly required to remain. Moving later leaves the disallowed fragment. Neither is silently authorized. An exact-word recorded pickup of the retained clause is an escalation, not this trim approval."
+    },
+    {
+      "join": 2,
+      "authorized_remove": "That's the second passport.",
+      "required_retained_join": "your data. / Use DeepSeek, another Chinese AI, and it keeps all your data in China.",
+      "rejected_seconds": [
+        31.76,
+        33.23
+      ],
+      "proposed_boundary_for_phrase_complete_audition": {
+        "processing_source_seconds": [
+          31.77,
+          33.1
+        ],
+        "processing_source_samples_48000": [
+          1524960,
+          1588800
+        ],
+        "raw_original_nominal_seconds": [
+          35.5824,
+          37.072
+        ],
+        "not_applied": true
+      },
+      "proposed_action": "Candidate only, not cleared for application. Preserve entire DATA and USE; independently listen to a phrase-complete source/candidate comparison before any approval. Start edge remains tight and requires phonetic clearance review.",
+      "evidence": {
+        "CTC_DATA": [
+          31.4187,
+          31.6793
+        ],
+        "CTC_THATS": [
+          31.7795,
+          31.9198
+        ],
+        "cut_neighborhood_below_minus40": [
+          31.716,
+          31.782
+        ],
+        "cut_neighborhood_below_minus45": [
+          31.728,
+          31.782
+        ],
+        "cut_neighborhood_below_minus50": [
+          31.74,
+          31.778
+        ],
+        "resume_pause_below_minus45": [
+          32.632,
+          33.272
+        ],
+        "resume_pause_below_minus50": [
+          32.962,
+          33.27
+        ],
+        "cut_last50ms": {
+          "window_seconds": [
+            31.72,
+            31.77
+          ],
+          "max_2ms_rms_dbfs": -43.135,
+          "max_sample_peak_dbfs": -40.738
+        },
+        "resume_first50ms": {
+          "window_seconds": [
+            33.1,
+            33.15
+          ],
+          "max_2ms_rms_dbfs": -74.539,
+          "max_sample_peak_dbfs": -66.787
+        }
+      },
+      "clearance": {
+        "departure": "Uncertain: fade31.760-31.770 begins44ms after the-40dBFS run starts, but only32ms after-45dBFS. CTC DATA ends80.7ms before fade, yet residual vocal-tail vs roomtone has not been heard. Do not claim strict40ms acoustic certification.",
+        "arrival": "Strong candidate: resume33.10 is170ms before the next above-50dBFS event33.270; retains far more onset context than rejected33.23. Lowenergy is not listening approval."
+      },
+      "diagnosis_correction": "The claim that33.23 is proven inside USE does not follow from ASR32.62-33.4: that interval includes preceding pause. Actual PCM32.962-33.270 is below-50dBFS; CTC USE33.3406-33.4408 is itself excerpt-edge/lowconfidence and not a fullword onset. Retain rejection, but classify the old midword diagnosis as unconfirmed.",
+      "whole_phrase_alternative_within_approved_trim_scope": "Remove the complete approved sentence with earlier resume33.10, never begin at the middle of its next sentence. If departure clearance cannot be certified, no larger deletion is authorized; preserve DATA/USE and return the tight boundary for phonetic repair."
+    },
+    {
+      "join": 3,
+      "authorized_remove": "But does this matter at work?",
+      "required_retained_join": "in China. / I asked Claude, ChatGPT and DeepSeek",
+      "rejected_seconds": [
+        37.4,
+        39.8
+      ],
+      "proposed_boundary_for_phrase_complete_audition": {
+        "processing_source_seconds": [
+          37.4,
+          39.7
+        ],
+        "processing_source_samples_48000": [
+          1795200,
+          1905600
+        ],
+        "raw_original_nominal_seconds": [
+          41.888,
+          44.464
+        ],
+        "not_applied": true
+      },
+      "proposed_action": "Strong acoustic candidate for complete approved question removal, still unapproved/unapplied and awaiting actual join listening.",
+      "evidence": {
+        "CTC_CHINA": [
+          36.9071,
+          37.1676
+        ],
+        "cut_neighborhood_below_minus45": [
+          37.188,
+          38.484
+        ],
+        "CTC_WORK": [
+          39.1913,
+          39.3716
+        ],
+        "resume_pause_below_minus50": [
+          39.476,
+          39.84
+        ],
+        "large_v3_I_interval": [
+          39.7,
+          39.9
+        ],
+        "CTC_I_emission": [
+          39.8925,
+          39.9126
+        ],
+        "CTC_I_score": 0.357,
+        "cut_last50ms": {
+          "window_seconds": [
+            37.35,
+            37.4
+          ],
+          "max_2ms_rms_dbfs": -75.099,
+          "max_sample_peak_dbfs": -68.03
+        },
+        "resume_first50ms": {
+          "window_seconds": [
+            39.7,
+            39.75
+          ],
+          "max_2ms_rms_dbfs": -78.986,
+          "max_sample_peak_dbfs": -76.33
+        }
+      },
+      "clearance": {
+        "departure": "10ms fade37.390-37.400 begins202ms after the measured-45dBFS run starts; CTC CHINA has already ended. Strong roomtone candidate, not a listening pass.",
+        "arrival": "Resume39.70 leaves140ms before the next above-50dBFS event39.840 and avoids reliance on an uncertain ASR/CTC I onset."
+      },
+      "diagnosis_correction": "Old39.8 lies in measured lowenergy up to39.840; ASR39.7-39.9 does not prove phonetic clipping. It leaves only40ms to the detected energy onset, or30ms after a10ms fade. Earlier39.70 restores robust onset handle without changing the authorized removal.",
+      "whole_phrase_alternative_within_approved_trim_scope": "Remove the complete question; do not enlarge removal into I asked or the model names."
+    }
+  ],
+  "reviewer_calibration": {
+    "source_receipts": [
+      "C:/Users/krish/.scratch/media-review-calibration-20261026/POST-A.json",
+      "C:/Users/krish/.scratch/media-review-calibration-20261026/POST-B.json"
+    ],
+    "read_only": true,
+    "new_provider_calls": 0,
+    "interpretation": "Hosted reviewer distinguished accepted audio from rejected reel. It also explicitly identifies excerpt-boundary cuts/repetitions; its reel findings do not independently certify each proposed source timestamp. Both receipts remain observation_only, qualifiedfalse, signedfalse."
+  },
+  "required_next_verification": [
+    "Resolve join1 unavailable40ms clearance before production; do not certify an exception implicitly.",
+    "For listening, use the complete recording and focus the reviewer on the actual joins. If audition excerpts are needed, retain the full grammatical clauses on each side and verify their own outer boundaries acoustically/listening first. Do not reuse arbitrary two-second mid-word reel handles; no new excerpt boundary is approved by this proposal.",
+    "Compare the raw original at normal playback and the already-sped processing source/candidate at normal playback; never apply1.12x again. Inspect PCM transitions and verify all complete retained words by independent actual listening and freshASR.",
+    "Render accepted edits as one continuous clock; verify source/edited duration, sync and final exact-byte audio. No candidate here has been accepted."
+  ],
+  "applied_edits": 0,
+  "accepted_replacements": 0,
+  "evidence_files": {
+    "diagnosis.json": {
+      "path": "C:\\Users\\krish\\Documents\\Codex\\2026-10-24\\get-friday-s-videos-produced-and\\work\\audio-qa\\diagnosis.json",
+      "sha256": "57218a575a50a2268ec1f3ca58319b5344933200c037b2d236c50d28e7c9ddbb"
+    },
+    "original-first-join.alignment.json": {
+      "path": "C:\\Users\\krish\\Documents\\Codex\\2026-10-24\\get-friday-s-videos-produced-and\\work\\audio-qa\\original-first-join.alignment.json",
+      "sha256": "aca7f256746b1457f027638cbfbb331949931b4d808cfe51c0a943e5b959727f"
+    },
+    "original-third-join.alignment.json": {
+      "path": "C:\\Users\\krish\\Documents\\Codex\\2026-10-24\\get-friday-s-videos-produced-and\\work\\audio-qa\\original-third-join.alignment.json",
+      "sha256": "dba2d6644e83d06e3dbfcbb3f691ce652040a568963553b1e9b9faa582c89a30"
+    },
+    "pcm-low-energy-evidence.json": {
+      "path": "C:\\Users\\krish\\Documents\\Codex\\2026-10-24\\get-friday-s-videos-produced-and\\work\\audio-qa\\pcm-low-energy-evidence.json",
+      "sha256": "9616489a7dd8e474e676c9f47b88e1bc5aa86b4222e917601940e4764dbbfa66"
+    },
+    "boundary-energy-2ms.npz": {
+      "path": "C:\\Users\\krish\\Documents\\Codex\\2026-10-24\\get-friday-s-videos-produced-and\\work\\audio-qa\\boundary-energy-2ms.npz",
+      "sha256": "c3d25b3cb16d418abe5b6963ac42e4d13622ffb446ab5a06e29d2d034144a08a"
+    },
+    "repair-boundary-acoustics.png": {
+      "path": "C:\\Users\\krish\\Documents\\Codex\\2026-10-24\\get-friday-s-videos-produced-and\\work\\audio-qa\\repair-boundary-acoustics.png",
+      "sha256": "66d2758e4e8ff7347617477c7474c05d82ade02ae0523621cbb264a37b524add"
+    }
+  }
+}

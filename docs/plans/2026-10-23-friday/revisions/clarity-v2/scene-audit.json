@@ -1,0 +1,462 @@
+{
+  "revision": "clarity-v2",
+  "coverage": 57,
+  "records": [
+    {
+      "beat": "L01-hook",
+      "framing": "international-context",
+      "picture_must_explain": "O-passport x6 dealt across the desk, one per country, all treated alike: Claude and ChatGPT (USA), DeepSeek (China), Mistral (France), K2 Think (UAE), Sarvam (India); the camera settles on DeepSeek's as the voice says \"a Chinese AI\", the others still in frame",
+      "short_override": null,
+      "nationality_rule": "Equal treatment across countries, no warning colours on national labels; only focus a named system when the voice names it.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L02-why",
+      "framing": "international-context",
+      "picture_must_explain": "An equal-weight international deck: Claude (USA), Mistral (France), K2 Think (UAE), Sarvam (India), DeepSeek (China). No country is centred, enlarged, coloured as a warning or repeated to imply the general concept belongs to it.",
+      "short_override": null,
+      "nationality_rule": "Equal treatment across countries, no warning colours on national labels; only focus a named system when the voice names it.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L03-airbnb",
+      "framing": "specific-evidence",
+      "picture_must_explain": "E-fortune slides in; push to the quote / Airbnb mark beside Qwen's passport: BORN CHINA (ALIBABA) · LIVES NOT STATED",
+      "short_override": null,
+      "nationality_rule": "Limit marks and country values to the system and finding named in this beat; retain source/date and qualifications.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L04-fling",
+      "framing": "specific-evidence",
+      "picture_must_explain": "E-fortune, highlighter moves on to \"It's also fast and cheap\"; then dead still through the punchline",
+      "short_override": null,
+      "nationality_rule": "Limit marks and country values to the system and finding named in this beat; retain source/date and qualifications.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L05-cursor",
+      "framing": "specific-evidence",
+      "picture_must_explain": "E-techcrunch / Kimi's passport: BORN CHINA (MOONSHOT AI) / Cursor mark",
+      "short_override": null,
+      "nationality_rule": "Limit marks and country values to the system and finding named in this beat; retain source/date and qualifications.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L06-lindy",
+      "framing": "specific-evidence",
+      "picture_must_explain": "E-npr / O-tiles: a cost bar of 10 tiles (ANTHROPIC, BEFORE) shrinks to 1 tile (DEEPSEEK-V4) on \"ten times\"",
+      "short_override": null,
+      "nationality_rule": "Limit marks and country values to the system and finding named in this beat; retain source/date and qualifications.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L07-race",
+      "framing": "named-comparison",
+      "picture_must_explain": "O-tiles: an empty board with two columns, USA and CHINA, waiting",
+      "short_override": null,
+      "nationality_rule": "Use identical visual criteria for every system or country; include the control and null result where narrated.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L08-stanford",
+      "framing": "named-comparison",
+      "picture_must_explain": "O-tiles: one tile per model drops into each column on the numbers, 59 and 35 / E-stanford-models as a small sheet in the corner",
+      "short_override": null,
+      "nationality_rule": "Use identical visual criteria for every system or country; include the control and null result where narrated.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L09-gap",
+      "framing": "named-comparison",
+      "picture_must_explain": "O-tiles: two quality bars rise almost level; a hairline marks the gap / E-stanford-gap",
+      "short_override": null,
+      "nationality_rule": "Use identical visual criteria for every system or country; include the control and null result where narrated.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L10-everyone",
+      "framing": "international-context",
+      "picture_must_explain": "The one whip pan: five sheets in a row, each landing on its country's name: E-uk, E-register (Mistral), E-uae and E-saudi together on \"the Gulf\", E-india, E-korea",
+      "short_override": null,
+      "nationality_rule": "Equal treatment across countries, no warning colours on national labels; only focus a named system when the voice names it.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L11-sovereign",
+      "framing": "international-context",
+      "picture_must_explain": "O-passport x5 in a row, each BORN field filling with its own country: UK, FRANCE, UAE, INDIA, SOUTH KOREA",
+      "short_override": null,
+      "nationality_rule": "Equal treatment across countries, no warning colours on national labels; only focus a named system when the voice names it.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L12-korea",
+      "framing": "specific-evidence",
+      "picture_must_explain": "E-korea",
+      "short_override": null,
+      "nationality_rule": "Limit marks and country values to the system and finding named in this beat; retain source/date and qualifications.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L13-awkward",
+      "framing": "specific-evidence",
+      "picture_must_explain": "Naver's passport BORN SOUTH KOREA; a small insert slides out of it: QWEN 2.5-VL · BORN CHINA. Dead still for \"awkward\".",
+      "short_override": null,
+      "nationality_rule": "Limit marks and country values to the system and finding named in this beat; retain source/date and qualifications.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L14-passports",
+      "framing": "general-neutral",
+      "picture_must_explain": "An unbranded illustrative passport shows BORN: CANADA / WHERE IT WAS MADE and LIVES: USA / WHERE IT RUNS together from its arrival. A mint selection moves from the BORN label to the LIVES label on the respective spoken words. No national flag, company mark or invented company claim.",
+      "short_override": null,
+      "nationality_rule": "No company or nationality attribution except explicitly illustrative Canada/USA values. Clear earlier country marks before this beat.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L15-born",
+      "framing": "specific-evidence",
+      "picture_must_explain": "The passport tilts back; E-csmonitor slides over it",
+      "short_override": null,
+      "nationality_rule": "Limit marks and country values to the system and finding named in this beat; retain source/date and qualifications.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L16-third",
+      "framing": "specific-evidence",
+      "picture_must_explain": "O-tiles: 100 tiles under the four marks (DeepSeek, Kimi, Qwen, GLM); 35 flip amber in a wave",
+      "short_override": null,
+      "nationality_rule": "Limit marks and country values to the system and finding named in this beat; retain source/date and qualifications.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L17-deepseek63",
+      "framing": "specific-evidence",
+      "picture_must_explain": "O-tiles: a DeepSeek row of 100; 63 flip amber",
+      "short_override": null,
+      "nationality_rule": "Limit marks and country values to the system and finding named in this beat; retain source/date and qualifications.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L18-claude",
+      "framing": "specific-evidence",
+      "picture_must_explain": "A Claude row of 100 tiles, all mint; Claude's passport: BORN USA",
+      "short_override": null,
+      "nationality_rule": "Limit marks and country values to the system and finding named in this beat; retain source/date and qualifications.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L19-grok",
+      "framing": "specific-evidence",
+      "picture_must_explain": "E-willison, push to the search box / Grok's passport: BORN USA (xAI)",
+      "short_override": null,
+      "nationality_rule": "Limit marks and country values to the system and finding named in this beat; retain source/date and qualifications.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L20-boss",
+      "framing": "specific-evidence",
+      "picture_must_explain": "Hold dead still on the highlighted search",
+      "short_override": null,
+      "nationality_rule": "Limit marks and country values to the system and finding named in this beat; retain source/date and qualifications.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L21-lives",
+      "framing": "general-neutral",
+      "picture_must_explain": "Reset to the unbranded illustrative Canada/USA passport for the general hosting explanation. Flip to ink and select LIVES. Only introduce the DeepSeek mark and its sourced China value when the narration names DeepSeek in L22.",
+      "short_override": null,
+      "nationality_rule": "No company or nationality attribution except explicitly illustrative Canada/USA values. Clear earlier country marks before this beat.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L22-app",
+      "framing": "specific-evidence",
+      "picture_must_explain": "O-route: phone to server; a border line labelled PEOPLE'S REPUBLIC OF CHINA; three packets cross it / E-deepseek-policy as a small lit sheet / DeepSeek's passport: LIVES CHINA (plain ink, like every field)",
+      "short_override": null,
+      "nationality_rule": "Limit marks and country values to the system and finding named in this beat; retain source/date and qualifications.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L23-home",
+      "framing": "specific-evidence",
+      "picture_must_explain": "O-route redraws: the server moves inside a bank building outline / E-register headline / Mistral's passport: BORN FRANCE · LIVES HSBC'S OWN COMPUTERS / HSBC and Mistral marks",
+      "short_override": null,
+      "nationality_rule": "Limit marks and country values to the system and finding named in this beat; retain source/date and qualifications.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L24-selfhost",
+      "framing": "specific-evidence",
+      "picture_must_explain": "DeepSeek's passport: the LIVES field rewrites from CHINA to US GOVERNMENT SERVERS; the route's server moves across the border",
+      "short_override": null,
+      "nationality_rule": "Limit marks and country values to the system and finding named in this beat; retain source/date and qualifications.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L25-nist",
+      "framing": "specific-evidence",
+      "picture_must_explain": "E-nist slides in; the stamp slaps onto the passport: TRAINING CAME WITH IT",
+      "short_override": null,
+      "nationality_rule": "Limit marks and country values to the system and finding named in this beat; retain source/date and qualifications.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L26-takechina",
+      "framing": "specific-evidence",
+      "picture_must_explain": "The passport alone: LIVES rewrites to USA on the first sentence; BORN stays CHINA on the second, the field simply held in place (plain ink); dead still",
+      "short_override": null,
+      "nationality_rule": "Limit marks and country values to the system and finding named in this beat; retain source/date and qualifications.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L27-tried",
+      "framing": "named-comparison",
+      "picture_must_explain": "Three passports dealt onto the desk: Claude, ChatGPT, DeepSeek",
+      "short_override": null,
+      "nationality_rule": "Use identical visual criteria for every system or country; include the control and null result where narrated.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L28-method",
+      "framing": "named-comparison",
+      "picture_must_explain": "O-split: one prompt with the country as an amber slot that swaps",
+      "short_override": null,
+      "nationality_rule": "Use identical visual criteria for every system or country; include the control and null result where narrated.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L29-cotton",
+      "framing": "named-comparison",
+      "picture_must_explain": "O-split: prompt A1 and A2 stacked, XINJIANG and TURKMENISTAN lit amber",
+      "short_override": null,
+      "nationality_rule": "Use identical visual criteria for every system or country; include the control and null result where narrated.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L30-blocked",
+      "framing": "named-comparison",
+      "picture_must_explain": "A dated tag drops on each prompt",
+      "short_override": null,
+      "nationality_rule": "Use identical visual criteria for every system or country; include the control and null result where narrated.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L31-flagged",
+      "framing": "named-comparison",
+      "picture_must_explain": "A 3 x 2 grid (Claude, ChatGPT, DeepSeek x Xinjiang, Turkmenistan) of answer thumbnails (T-claude-A1, T-claude-A2, T-chatgpt-A1, T-chatgpt-A2, T-deepseek-A2); \"forced labour\" highlighted in each; a mint tick lands in five cells; the DeepSeek x Xinjiang cell stays empty",
+      "short_override": null,
+      "nationality_rule": "Use identical visual criteria for every system or country; include the control and null result where narrated.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L32-deleted",
+      "framing": "specific-evidence",
+      "picture_must_explain": "The empty cell opens into F-xinjiang at real speed beside F-turkmenistan; then a 4x slow replay of 3.0-5.25 s (lines break into amber scanlines); a counter on \"every single time\"",
+      "short_override": null,
+      "nationality_rule": "Limit marks and country values to the system and finding named in this beat; retain source/date and qualifications.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L33-taiwan",
+      "framing": "named-comparison",
+      "picture_must_explain": "O-split: prompts B1 and B2, TAIWAN and SINGAPORE lit amber",
+      "short_override": null,
+      "nationality_rule": "Use identical visual criteria for every system or country; include the control and null result where narrated.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L34-draw",
+      "framing": "named-comparison",
+      "picture_must_explain": "T-claude-B1, T-chatgpt-B1, T-deepseek-B1 side by side, \"cross-strait\" highlighted in each; T-B2-row below, dimmed; stamp A DRAW",
+      "short_override": null,
+      "nationality_rule": "Use identical visual criteria for every system or country; include the control and null result where narrated.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L35-knew",
+      "framing": "specific-evidence",
+      "picture_must_explain": "O-chat: the deleted Xinjiang answer, readable for a beat (text as captured), then it wipes again; hold on the refusal",
+      "short_override": null,
+      "nationality_rule": "Limit marks and country values to the system and finding named in this beat; retain source/date and qualifications.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L36-call",
+      "framing": "general-neutral",
+      "picture_must_explain": "The unbranded illustrative Canada/USA passport returns. LIVES is selected on where your data ends up; BORN on check what it tells you. The advice applies to any AI. Do not carry a DeepSeek mark or a China field into this general advice.",
+      "short_override": null,
+      "nationality_rule": "No company or nationality attribution except explicitly illustrative Canada/USA values. Clear earlier country marks before this beat.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L37-cheap",
+      "framing": "specific-evidence",
+      "picture_must_explain": "The 10x cost bar from L06 returns, small",
+      "short_override": null,
+      "nationality_rule": "Limit marks and country values to the system and finding named in this beat; retain source/date and qualifications.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L38-supply",
+      "framing": "international-context",
+      "picture_must_explain": "A product outline opens into parts made in several countries, each labelled; a TARIFF tag drops onto one part",
+      "short_override": null,
+      "nationality_rule": "Equal treatment across countries, no warning colours on national labels; only focus a named system when the voice names it.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L39-reckon",
+      "framing": "international-context",
+      "picture_must_explain": "The parts become AI passports from several countries; the TARIFF tag moves onto one of them",
+      "short_override": null,
+      "nationality_rule": "Equal treatment across countries, no warning colours on national labels; only focus a named system when the voice names it.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L40-do",
+      "framing": "general-neutral",
+      "picture_must_explain": "O-checklist, three lines ticking on their words",
+      "short_override": null,
+      "nationality_rule": "No company or nationality attribution except explicitly illustrative Canada/USA values. Clear earlier country marks before this beat.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "L41-close",
+      "framing": "general-neutral",
+      "picture_must_explain": "O-outro",
+      "short_override": null,
+      "nationality_rule": "No company or nationality attribution except explicitly illustrative Canada/USA values. Clear earlier country marks before this beat.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "S01-hook",
+      "framing": "international-context",
+      "picture_must_explain": "O-passport x6 dealt across the desk, one per country, all treated alike: Claude and ChatGPT (USA), DeepSeek (China), Mistral (France), K2 Think (UAE), Sarvam (India); the camera settles on DeepSeek's as the voice says \"a Chinese AI\", the others still in frame",
+      "short_override": "The six passports, the camera settling on DeepSeek's on \"a Chinese AI\"; the others stay in frame under \"Does that matter?\".",
+      "nationality_rule": "Equal treatment across countries, no warning colours on national labels; only focus a named system when the voice names it.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "S02-airbnb",
+      "framing": "specific-evidence",
+      "picture_must_explain": "E-fortune slides in; push to the quote / Airbnb mark beside Qwen's passport: BORN CHINA (ALIBABA) · LIVES NOT STATED",
+      "short_override": null,
+      "nationality_rule": "Limit marks and country values to the system and finding named in this beat; retain source/date and qualifications.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "S03-fling",
+      "framing": "specific-evidence",
+      "picture_must_explain": "E-fortune, highlighter moves on to \"It's also fast and cheap\"; then dead still through the punchline",
+      "short_override": null,
+      "nationality_rule": "Limit marks and country values to the system and finding named in this beat; retain source/date and qualifications.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "S04-passports",
+      "framing": "general-neutral",
+      "picture_must_explain": "An unbranded illustrative passport shows BORN: CANADA / WHERE IT WAS MADE and LIVES: USA / WHERE IT RUNS together from its arrival. A mint selection moves from the BORN label to the LIVES label on the respective spoken words. No national flag, company mark or invented company claim.",
+      "short_override": null,
+      "nationality_rule": "No company or nationality attribution except explicitly illustrative Canada/USA values. Clear earlier country marks before this beat.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "S05-newspaper",
+      "framing": "specific-evidence",
+      "picture_must_explain": "The passport tilts back; E-csmonitor slides over it",
+      "short_override": null,
+      "nationality_rule": "Limit marks and country values to the system and finding named in this beat; retain source/date and qualifications.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "S06-third",
+      "framing": "specific-evidence",
+      "picture_must_explain": "O-tiles: 100 tiles under the four marks (DeepSeek, Kimi, Qwen, GLM); 35 flip amber in a wave",
+      "short_override": null,
+      "nationality_rule": "Limit marks and country values to the system and finding named in this beat; retain source/date and qualifications.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "S07-claude",
+      "framing": "specific-evidence",
+      "picture_must_explain": "A Claude row of 100 tiles, all mint; Claude's passport: BORN USA",
+      "short_override": null,
+      "nationality_rule": "Limit marks and country values to the system and finding named in this beat; retain source/date and qualifications.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "S09-work",
+      "framing": "named-comparison",
+      "picture_must_explain": "O-split: prompt A1 and A2 stacked, XINJIANG and TURKMENISTAN lit amber",
+      "short_override": "Three passports (Claude, ChatGPT, DeepSeek) dealt first, then the Xinjiang prompt types on; no Turkmenistan prompt in the short.",
+      "nationality_rule": "Use identical visual criteria for every system or country; include the control and null result where narrated.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "S10-flagged",
+      "framing": "named-comparison",
+      "picture_must_explain": "A 3 x 2 grid (Claude, ChatGPT, DeepSeek x Xinjiang, Turkmenistan) of answer thumbnails (T-claude-A1, T-claude-A2, T-chatgpt-A1, T-chatgpt-A2, T-deepseek-A2); \"forced labour\" highlighted in each; a mint tick lands in five cells; the DeepSeek x Xinjiang cell stays empty",
+      "short_override": "Two cells only: Claude and ChatGPT on Xinjiang, ticks.",
+      "nationality_rule": "Use identical visual criteria for every system or country; include the control and null result where narrated.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "S11-deleted",
+      "framing": "specific-evidence",
+      "picture_must_explain": "The empty cell opens into F-xinjiang at real speed beside F-turkmenistan; then a 4x slow replay of 3.0-5.25 s (lines break into amber scanlines); a counter on \"every single time\"",
+      "short_override": "As L32, cut to fit; keep the 4x replay and the counter.",
+      "nationality_rule": "Limit marks and country values to the system and finding named in this beat; retain source/date and qualifications.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "S12-call",
+      "framing": "general-neutral",
+      "picture_must_explain": "The unbranded illustrative Canada/USA passport returns. LIVES is selected on where your data ends up; BORN on check what it tells you. The advice applies to any AI. Do not carry a DeepSeek mark or a China field into this general advice.",
+      "short_override": null,
+      "nationality_rule": "No company or nationality attribution except explicitly illustrative Canada/USA values. Clear earlier country marks before this beat.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "S14-close",
+      "framing": "general-neutral",
+      "picture_must_explain": "O-outro",
+      "short_override": null,
+      "nationality_rule": "No company or nationality attribution except explicitly illustrative Canada/USA values. Clear earlier country marks before this beat.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "S08-lives",
+      "framing": "specific-evidence",
+      "picture_must_explain": "The passport flips to ink (as L21), then the route to the server the policy names (as L22)",
+      "short_override": null,
+      "nationality_rule": "Limit marks and country values to the system and finding named in this beat; retain source/date and qualifications.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "S13-do",
+      "framing": "general-neutral",
+      "picture_must_explain": "O-checklist, two lines",
+      "short_override": null,
+      "nationality_rule": "No company or nationality attribution except explicitly illustrative Canada/USA values. Clear earlier country marks before this beat.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "S13b-recap",
+      "framing": "general-neutral",
+      "picture_must_explain": "The same unbranded illustrative Canada/USA passport; BORN is selected on passport number one, LIVES on passport number two.",
+      "short_override": null,
+      "nationality_rule": "No company or nationality attribution except explicitly illustrative Canada/USA values. Clear earlier country marks before this beat.",
+      "render_review": "pending beyond three-beat study"
+    },
+    {
+      "beat": "S13c-second",
+      "framing": "general-neutral",
+      "picture_must_explain": "The checklist's second line ticks",
+      "short_override": null,
+      "nationality_rule": "No company or nationality attribution except explicitly illustrative Canada/USA values. Clear earlier country marks before this beat.",
+      "render_review": "pending beyond three-beat study"
+    }
+  ]
+}

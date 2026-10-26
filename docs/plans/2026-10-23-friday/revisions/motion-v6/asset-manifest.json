@@ -1,0 +1,38 @@
+{
+  "kind": "illustrative_production_layers",
+  "generator": "built-in imagegen",
+  "approved_direction_sha256": "5eded512abfcca0ba8140b56a01e147bdab8063236f9fdc19a2c78074eef1f5d",
+  "assets": [
+    {
+      "file": "cotton.png",
+      "sha256": "de144fbcd5193a6ed2981e13a3bbb00ec62963813130bec363ba4fcce9075fba",
+      "bytes": 2493723
+    },
+    {
+      "file": "genericPhone.png",
+      "sha256": "07fbbf606bf83e711e1ce4e2cd1c86d63f70c31eaedc1d6fc351a82b1ead88b2",
+      "bytes": 718125
+    },
+    {
+      "file": "hardware.png",
+      "sha256": "335054e77f02db0df9192966463e03cf2e2a07dd756b88d6d8b724fda21ec96e",
+      "bytes": 1881016
+    },
+    {
+      "file": "passports.png",
+      "sha256": "ce08a4d7d5a23ba6e4702f4d1e90a261be4a1e87c9f910fe8456f38422655dfd",
+      "bytes": 2631623
+    },
+    {
+      "file": "phone.png",
+      "sha256": "10918e6169e305e9483ad463e42da7b0393c70c6ac0358d629fb92f85737521b",
+      "bytes": 747587
+    },
+    {
+      "file": "passportsWide.png",
+      "sha256": "653ec61f5f356cfd020354b8ac0dcaf36946d408ed72db6ac92a976bb7be84a1",
+      "bytes": 2828471,
+      "scope": "Friday long-cut illustrative asset; not a reusable future-piece asset"
+    }
+  ]
+}

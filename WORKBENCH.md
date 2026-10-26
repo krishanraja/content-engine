@@ -8,6 +8,9 @@
 - **Next:** on his line: `creative_direction.py` signed block with his words and the scripts' hashes; fact gate then `spine_check.py judge` (within $1.00); cover-facts.json, cover and thumbnails (visual gate), video cards, `build.py` and `send.py`; `locked/CODEX_PROMPT.md` for Codex. Then the Wednesday and Friday interviews (research in `docs/plans/2026-10-26-week/research-wed.md`, `research-fri.md`; Friday still needs "the past" researched).
 - **Tools in a cloud session:** the full `requirements.lock.txt` does not install on Python 3.13 here (mediapipe 0.10.21 has no build); the transcriber works with its four pinned versions alone (`faster-whisper==1.2.0 av==18.1.0 ctranslate2==4.8.1 onnxruntime==1.29.0`). Filing sources needs `NODE_USE_ENV_PROXY=1 ENGINE_OPERATOR_TOKEN=injected-by-the-session-proxy`.
 
+## 26 October: Friday motion v6
+
+[Production handoff](docs/plans/2026-10-23-friday/revisions/motion-v6/BRIEF.md). [Quality gate and failed $3 calibration](docs/plans/2026-10-26-quality-evidence/README.md): eight calls, no qualification. Gates remain draft; four videos and final board incomplete.
 ## 26 October: production and social growth have separate owners
 
 Krish's ruling is recorded in docs/GROWTH-HANDOFF.md and AGENTS.md.

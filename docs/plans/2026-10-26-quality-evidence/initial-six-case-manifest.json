@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "pilot_id": "2026-10-26-approved",
+  "authority": {
+    "by": "Krish",
+    "approved_at": "2026-10-26T13:27:18Z",
+    "expires_at": "2026-10-27T00:00:00Z",
+    "budget_usd": 3
+  },
+  "model": "gemini-4-argon",
+  "cases": [
+    {
+      "id": "A",
+      "prompt_kind": "audio",
+      "media": [
+        {
+          "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/quality evidence/Friday-short-approved.m4a",
+          "sha256": "d9fa3c4b90a22b3a421994eea30a435595c33f7501cd071a455ee49579c84a8b",
+          "bytes": 2890829,
+          "mime_type": "audio/mp4"
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "prompt_kind": "audio",
+      "media": [
+        {
+          "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/quality evidence/Friday-join-candidates.wav",
+          "sha256": "4158b0c155dc7d8cec27eb2a11ee3de3b52de95a5360572022f03e13bef59419",
+          "bytes": 4731884,
+          "mime_type": "audio/wav"
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "prompt_kind": "visual",
+      "media": [
+        {
+          "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/quality evidence/Friday-motion-v6-STYLEFRAME.png",
+          "sha256": "5eded512abfcca0ba8140b56a01e147bdab8063236f9fdc19a2c78074eef1f5d",
+          "bytes": 2138350,
+          "mime_type": "image/png"
+        }
+      ]
+    },
+    {
+      "id": "D",
+      "prompt_kind": "visual",
+      "media": [
+        {
+          "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/quality evidence/135.png",
+          "sha256": "98b9901f4fe4c6a925b12a66c2bfab7242886b1010b2a0902c56775aa0f4d34c",
+          "bytes": 29041,
+          "mime_type": "image/png"
+        }
+      ]
+    },
+    {
+      "id": "E",
+      "prompt_kind": "video",
+      "media": [
+        {
+          "path": "3 Posts/2026-10-26 Mon under.the.hood - Insulation canary/3 Video/working/insulation-proof-v3.mp4",
+          "sha256": "98f081ce66de5f5f2b86c3b3944d98dbcc164468a780fd1282a70e3699520ccf",
+          "bytes": 2262458,
+          "mime_type": "video/mp4"
+        }
+      ]
+    },
+    {
+      "id": "F",
+      "prompt_kind": "carousel",
+      "media": [
+        {
+          "path": "3 Posts/2026-10-26 Mon follow.the.money - Supply chain canary/4 Social/working/slide-1.png",
+          "sha256": "134f8745aea415ec197f5130ca6678358cc1f74ff5f0b0f05f0a0cb611d5185f",
+          "bytes": 1197102,
+          "mime_type": "image/png"
+        },
+        {
+          "path": "3 Posts/2026-10-26 Mon follow.the.money - Supply chain canary/4 Social/working/slide-2.png",
+          "sha256": "a67dece3a321736f3b1e06352ba48c1889f1ffe9b2390777f6affe6804538913",
+          "bytes": 1229106,
+          "mime_type": "image/png"
+        },
+        {
+          "path": "3 Posts/2026-10-26 Mon follow.the.money - Supply chain canary/4 Social/working/slide-3.png",
+          "sha256": "c6895fc034792f218b85d1226ed46e30d53ad06c11445a94fd258e247dbf2957",
+          "bytes": 1158181,
+          "mime_type": "image/png"
+        },
+        {
+          "path": "3 Posts/2026-10-26 Mon follow.the.money - Supply chain canary/4 Social/working/proof.pdf",
+          "sha256": "392052a0f0dd5653bcb52d039bac1e9f13362dbba770b459cce3ca8cef15400b",
+          "bytes": 8847511,
+          "mime_type": "application/pdf"
+        }
+      ]
+    }
+  ]
+}

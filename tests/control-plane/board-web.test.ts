@@ -1,8 +1,10 @@
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { createHash } from 'node:crypto'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { actor, canonical, combineWriterRefused, digest, hisOnlyRefusal, monday, validBody, validManifest } from '../../apps/control-plane/api/board/_contracts.js'
 import { createBoardHandler } from '../../apps/control-plane/api/board/_handler.js'
+// These guard regressions exercise the explicitly activated candidate in isolation.
+vi.mock('../../packages/core/src/media-rollout.js', () => ({ mediaQualityEnforced: () => true, mediaQualityRollout: () => ({ status: 'active' }) }))
 
 const previous = { ...process.env }
 afterEach(() => { for (const key of ['ACCESS_CODE','ENGINE_OPERATOR_TOKEN','APP_ORIGIN']) { if (previous[key] === undefined) delete process.env[key]; else process.env[key] = previous[key] } })
@@ -129,5 +131,16 @@ describe('board access and contracts', () => {
     const res = { setHeader() {}, status(code: number) { status = code; return this }, json(value: unknown) { body = value } } as unknown as VercelResponse
     await handler(req('GET'), res)
     expect(status).toBe(401); expect(body).toEqual({ ok: false, error: 'unauthorized' })
+  })
+  it('refuses a direct board activation with empty assets and no independent HTML review', async () => {
+    process.env.ENGINE_OPERATOR_TOKEN = 'synthetic-operator'
+    let writes = 0
+    const handler = createBoardHandler(async () => ({ rpc() { writes++; throw new Error('activation must not run') } }) as never)
+    const sha = 'a'.repeat(64), week = '2026-10-26'
+    const manifest = { version: 1, week, html: { sha256: sha, bytes: 40, type: 'text/html', name: 'board.html', key: `boards/${week}/${sha}` }, assets: {} }
+    let status = 0; let body: any
+    const res = { setHeader() {}, status(code: number) { status = code; return this }, json(value: unknown) { body = value } } as unknown as VercelResponse
+    await handler({ method: 'PUT', headers: { authorization: 'Bearer synthetic-operator' }, query: { week }, body: { manifest, revision: 0 } } as unknown as VercelRequest, res)
+    expect(status).toBe(409); expect(body.error).toContain('signed board delivery review required'); expect(writes).toBe(0)
   })
 })

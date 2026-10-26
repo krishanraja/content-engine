@@ -1,0 +1,35 @@
+{
+  "ok": true,
+  "receipt_persisted": true,
+  "retry_allowed": false,
+  "receipt": {
+    "schema_version": 1,
+    "kind": "media_review_calibration_only",
+    "case_id": "A",
+    "manifest_sha256": "b78ef731493dbfeee9346f3d4a8cbb95f42161db95f22ed2d00922c6d7aea930",
+    "standard_sha256": "d386311cf07d45fd0248f54e04f3f5f9b7fe696c665d4c25e9d35261656758b3",
+    "request_sha256": "edec97670e0d61fc3fc2787f96298d5dcfe9dbd94f951a5e71eaa3d97d3d28fc",
+    "model": "gemini-4-argon",
+    "started_at": "2026-10-26T13:34:21.437Z",
+    "completed_at": "2026-10-26T13:35:50.521Z",
+    "status": "completed",
+    "error_code": null,
+    "phase": "inference",
+    "provider_status": null,
+    "reserved_usd": 0.28192,
+    "accounting_charge_usd": 0.28192,
+    "counted_input_tokens": 2449,
+    "usage": {
+      "promptTokenCount": 2960,
+      "candidatesTokenCount": 771,
+      "totalTokenCount": 3731
+    },
+    "estimated_usage_usd": null,
+    "raw_model_text": "### Verbatim Transcription\n\n**00:00 - 00:04** [Instrumental music intro]\n\n**00:04 - 00:08** You may already be using a Chinese AI. Does that matter?\n\n**00:09 - 00:18** Airbnb's boss said its own customer service leans on Qwen, which is a Chinese AI. He called it fast and cheap, which is what most of us want from a holiday fling.\n\n**00:19 - 00:26** See, every AI has two passports: where it was born and where it lives. Where it was born shapes its answers.\n\n**00:27 - 00:39** An American newspaper recently asked Chinese chatbots news questions, and a third of the time they refused, gave China's line, or got it wrong. Claude, an American AI, answered them all.\n\n**00:41 - 00:48** Where it lives decides who sees your data. Use DeepSeek, another Chinese AI, and it keeps yours in China.\n\n**00:49 - 00:57** And at work? I asked Claude, ChatGPT, and DeepSeek about a supplier's cotton from Xinjiang in China. Two flagged forced labour.\n\n**00:58 - 01:03** Now watch DeepSeek. It writes an answer, then deletes it. Every time.\n\n**01:03 - 01:08** My call is it's fine if you don't mind where your data goes, but check what it tells you.\n\n**01:09 - 01:15** And here's what I'd do with this information if I were you: ask software suppliers which AI they use and where it lives, and keep a second AI ready.\n\n**01:15 - 01:19** The full deep dive is at makeyourmindup.ai.\n\n**01:19 - 01:25** [Instrumental music outro]\n\n---\n\n### Timestamped Defect & Observation List\n\n#### 1. Observed Defects\n* **None detected.** There are no audible mid-word splices, clipped syllables, false starts, incomplete fragments, or jarring unnatural joins in the speech track.\n\n#### 2. Uncertain Possibilities / Minor Cadence Observations\n* **00:29 - 00:30 (\"...chatbots [m] news questions...\"):** There is a very slight bilabial hum or pause filler right before the word \"news\". This sounds like natural speaker delivery rather than an edit defect.\n* **01:03 - 01:04 (\"My call is it's fine...\"):** Rapid, conversational elision of \"is it's\" (/\u026az \u026ats/). This is natural British English cadence and not a splicing error.\n* **01:09 - 01:10 (\"And here's what I'd do...\"):** The speaker noticeably speeds up the delivery rate at the start of this phrase compared to the preceding sentence, which is normal conversational pacing for a concluding takeaway.\n\n#### 3. Sections Unable to Assess\n* **00:00 - 00:04 & 01:19 - 01:25:** Contains only the backing music track; no speech present to evaluate. (The background music plays continuously throughout the entire clip without audible skips or rhythm breaks, further indicating an uncorrupted timeline).",
+    "text_truncated": false,
+    "finish_reason": "STOP",
+    "observation_only": true,
+    "qualified": false,
+    "signed": false
+  }
+}

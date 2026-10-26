@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "pilot_id": "2026-10-26-approved",
+  "authority": "Krish: Approve the $3 calibration ceiling",
+  "inference_requests": 8,
+  "automatic_retries": 0,
+  "maximum_reserved_usd": 2.25536,
+  "approved_ceiling_usd": 3,
+  "reported_token_estimate_usd": 0.171354,
+  "billing_limit": "This is a token-derived estimate, not an invoice. Provider omitted thoughtsTokenCount; totalTokenCount equals prompt plus candidate in every response. Endpoint conservatively retains the full reservation.",
+  "verdict": "reviewer_route_failed_calibration",
+  "production_qualification": false,
+  "silent_audio_control": {
+    "sha256": "636a56f23ec00f9e6923e29d2ada9f2e39e7696da33e6a03bfaa47b8ccb00f33",
+    "channels": 1,
+    "sample_width_bytes": 2,
+    "sample_rate": 48000,
+    "frames": 384000,
+    "duration_seconds": 8.0,
+    "nonzero_pcm_bytes": 0
+  },
+  "cases": [
+    {
+      "case": "A",
+      "receipt_file": "receipts/POST-A.json",
+      "receipt_file_sha256": "01f0fa818563628dee1c2419846fba02208c8eb7fd42edc7471a1f8714b998a4",
+      "manifest_sha256": "b78ef731493dbfeee9346f3d4a8cbb95f42161db95f22ed2d00922c6d7aea930",
+      "request_sha256": "edec97670e0d61fc3fc2787f96298d5dcfe9dbd94f951a5e71eaa3d97d3d28fc",
+      "usage": {
+        "promptTokenCount": 2960,
+        "candidatesTokenCount": 771,
+        "totalTokenCount": 3731
+      },
+      "reported_token_estimate_usd": 0.01363,
+      "reserved_usd": 0.28192,
+      "persisted_readback": true,
+      "qualified": false
+    },
+    {
+      "case": "B",
+      "receipt_file": "receipts/POST-B.json",
+      "receipt_file_sha256": "2573ed2f2d7504f864589154dd034d6cf8359464b2cbd5b7bc8e116a7ea02d72",
+      "manifest_sha256": "b78ef731493dbfeee9346f3d4a8cbb95f42161db95f22ed2d00922c6d7aea930",
+      "request_sha256": "85245ecff974a3211dd426b610e6ff7cd7231f965ce487b279d6de89f0941c3b",
+      "usage": {
+        "promptTokenCount": 1825,
+        "candidatesTokenCount": 1458,
+        "totalTokenCount": 3283
+      },
+      "reported_token_estimate_usd": 0.01823,
+      "reserved_usd": 0.28192,
+      "persisted_readback": true,
+      "qualified": false
+    },
+    {
+      "case": "C",
+      "receipt_file": "receipts/POST-C.json",
+      "receipt_file_sha256": "e3e6d7feec2763ae8678b700e7044f3df4f3b8a4ec8d8c9408ee1b89b5edd12e",
+      "manifest_sha256": "b78ef731493dbfeee9346f3d4a8cbb95f42161db95f22ed2d00922c6d7aea930",
+      "request_sha256": "1c394142eee08bf129f862ffa37d702ab34e53b7c405f0f4fa5968a12acc6524",
+      "usage": {
+        "promptTokenCount": 1735,
+        "candidatesTokenCount": 1774,
+        "totalTokenCount": 3509
+      },
+      "reported_token_estimate_usd": 0.02121,
+      "reserved_usd": 0.28192,
+      "persisted_readback": true,
+      "qualified": false
+    },
+    {
+      "case": "D",
+      "receipt_file": "receipts/POST-D.json",
+      "receipt_file_sha256": "c287d6b92f24e907ae97a39198b936d7b135be442f5bdf78cd49eb401e4b2908",
+      "manifest_sha256": "b78ef731493dbfeee9346f3d4a8cbb95f42161db95f22ed2d00922c6d7aea930",
+      "request_sha256": "4b339b70dbecb807d1f0b9f06aa8e486ae396e7fc8573cfcae62ef684518c944",
+      "usage": {
+        "promptTokenCount": 1735,
+        "candidatesTokenCount": 1765,
+        "totalTokenCount": 3500
+      },
+      "reported_token_estimate_usd": 0.02112,
+      "reserved_usd": 0.28192,
+      "persisted_readback": true,
+      "qualified": false
+    },
+    {
+      "case": "E",
+      "receipt_file": "receipts/POST-E.json",
+      "receipt_file_sha256": "334948772d4c66f71238b296cc54e4e328ce17f073987654b57fde741cac8367",
+      "manifest_sha256": "b78ef731493dbfeee9346f3d4a8cbb95f42161db95f22ed2d00922c6d7aea930",
+      "request_sha256": "31a4e23010e20a97c4b0fb8e36431f50cee757848c2c6e35f5b4e708925ea4fc",
+      "usage": {
+        "promptTokenCount": 4391,
+        "candidatesTokenCount": 1839,
+        "totalTokenCount": 6230
+      },
+      "reported_token_estimate_usd": 0.027172,
+      "reserved_usd": 0.28192,
+      "persisted_readback": true,
+      "qualified": false
+    },
+    {
+      "case": "F",
+      "receipt_file": "receipts/POST-F.json",
+      "receipt_file_sha256": "225919ff0b6106b88d4e34dfface8d501537d3c6b6cfc3dfc2b358415ba6cc0a",
+      "manifest_sha256": "b78ef731493dbfeee9346f3d4a8cbb95f42161db95f22ed2d00922c6d7aea930",
+      "request_sha256": "e865e41a306390772e4e94951417c084f80d4cc7dbf23ef69324a4dbdf654703",
+      "usage": {
+        "promptTokenCount": 5686,
+        "candidatesTokenCount": 2312,
+        "totalTokenCount": 7998
+      },
+      "reported_token_estimate_usd": 0.034492,
+      "reserved_usd": 0.28192,
+      "persisted_readback": true,
+      "qualified": false
+    },
+    {
+      "case": "G",
+      "receipt_file": "receipts/POST-G.json",
+      "receipt_file_sha256": "92c3a5fda71918de26f734c388cd3e12f65eaa17620576358092ab0a87a0fefa",
+      "manifest_sha256": "13f720c157b70dc44c1dd182940691d3ba46bbda408b0a9d33f523ad6c76a48f",
+      "request_sha256": "e1cf82fcb026191fd7ddc3204f20365bf20c40a51f021e4a0434451c0297195f",
+      "usage": {
+        "promptTokenCount": 4443,
+        "candidatesTokenCount": 1977,
+        "totalTokenCount": 6420
+      },
+      "reported_token_estimate_usd": 0.028656,
+      "reserved_usd": 0.28192,
+      "persisted_readback": true,
+      "qualified": false
+    },
+    {
+      "case": "H",
+      "receipt_file": "receipts/POST-H.json",
+      "receipt_file_sha256": "27011177bd211c8a9e2fd63a2acbd250559bbff3a6d2c6bf9953f4047fe2143c",
+      "manifest_sha256": "13f720c157b70dc44c1dd182940691d3ba46bbda408b0a9d33f523ad6c76a48f",
+      "request_sha256": "5a91d0e594430c1c7d73097ae7b5066b10b45937c48521a435956b432e8b8197",
+      "usage": {
+        "promptTokenCount": 497,
+        "candidatesTokenCount": 585,
+        "totalTokenCount": 1082
+      },
+      "reported_token_estimate_usd": 0.006844,
+      "reserved_usd": 0.28192,
+      "persisted_readback": true,
+      "qualified": false
+    }
+  ]
+}

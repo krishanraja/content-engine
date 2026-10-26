@@ -580,7 +580,7 @@ publish.command('youtube')
     const renderManifest = RenderManifestV1Schema.parse(await readJson(render.payload.manifest_path))
     const draft = await createDraftPackage(options.job, 'youtube', render.payload.master_path, candidate, renderManifest, qa.payload)
     const accessToken = await readWindowsCredential(repoRoot, 'MindmakeVideoStudio/youtube-access-token')
-    const result = await uploadPrivateYoutubeVideo({ accessToken, videoPath: draft.master_path, title: draft.titles[0] || candidate.hook, description: draft.description })
+    const result = await uploadPrivateYoutubeVideo({ jobId: options.job, accessToken, videoPath: draft.master_path, title: draft.titles[0] || candidate.hook, description: draft.description })
     out({ job_id: options.job, privacy: 'private', result })
   })
 

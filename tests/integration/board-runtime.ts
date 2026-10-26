@@ -3,12 +3,31 @@
 import { readFile } from 'node:fs/promises'
 import { pathToFileURL } from 'node:url'
 import { createServer } from 'node:http'
-import { createHash } from 'node:crypto'
+import { createHash, sign } from 'node:crypto'
 import assert from 'node:assert/strict'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { createBoardHandler } from '../../apps/control-plane/api/board/_handler.js'
 import { canonical, digest } from '../../apps/control-plane/api/board/_contracts.js'
+import { BoardDeliverySchema, MEDIA_STANDARD_HASH, canonicalMediaJson, mediaDigest } from '../../packages/core/src/media-quality.js'
+import { MediaFixture } from '../helpers/media-quality.js'
+import rolloutConfig from '../../config/media-quality-rollout.json' with { type: 'json' }
+import { parseMediaQualityRollout } from '../../packages/core/src/media-rollout.js'
+
+// readMediaRef dynamically loads the library path helpers, whose module also
+// constructs a Supabase client. Satisfy that import with synthetic credentials;
+// every operation below still uses our injected private in-memory fixture.
+process.env.SUPABASE_URL='https://storage-fixture.invalid'
+process.env.SUPABASE_SERVICE_ROLE_KEY='fixture-only'
+
+// Activate only this disposable process's imported module fixture. No file is
+// written and production exposes no request/environment activation override.
+const originalRollout = { ...rolloutConfig }
+const syntheticEvidence = { path: 'docs/plans/synthetic-runtime-fixture.json', sha256: 'a'.repeat(64) }
+const syntheticPassed = { verdict: 'passed', standard_sha256: MEDIA_STANDARD_HASH, evidence: [syntheticEvidence] }
+Object.assign(rolloutConfig, parseMediaQualityRollout({ schema_version: 1, status: 'active', standard_sha256: MEDIA_STANDARD_HASH,
+  activation: { approved_by: 'Krish', approved_at: '2026-10-26T00:00:00Z', repository_review: syntheticEvidence,
+    reviewer_key_ids: ['final'], calibration: syntheticPassed, regression: syntheticPassed, readiness: syntheticPassed } }))
 
 const { PGlite } = await import(pathToFileURL(process.argv[2]).href)
 const pg = new PGlite()
@@ -46,10 +65,28 @@ class Query {
   then(resolve: (v: unknown)=>unknown,reject: (e: unknown)=>unknown) {return this.run().then(resolve,reject)}
 }
 let origin=''
+const originalFetch=globalThis.fetch
+globalThis.fetch=(input,init)=>{
+  const url=input instanceof Request?input.url:String(input)
+  assert.equal(new URL(url).origin,origin,'standalone fixture forbids non-local HTTP requests')
+  return originalFetch(input,init)
+}
 const objects=new Map<string,{data:Buffer,type:string}>()
+// Fresh per-process keys and labelled synthetic evidence; never real review authority.
+const media=new MediaFixture()
+process.env.MEDIA_REVIEW_PUBLIC_KEYS=JSON.stringify(media.keys)
+const reviewedManifest=(manifest: {version:number;week:string;html:unknown;assets:Record<string,unknown>})=>{
+  const evidence=media.put(`board-${mediaDigest(canonicalMediaJson(manifest))}.json`,JSON.stringify({synthetic_test_evidence:true,note:'Isolated HTTP/SQL/browser fixture; no real media approval'}))
+  for(const [key,data] of media.objects)objects.set(key,{data,type:'application/json'})
+  const payload={schema_version:1,kind:'board_delivery',standard_sha256:MEDIA_STANDARD_HASH,
+    manifest_sha256:mediaDigest(canonicalMediaJson(manifest)),reviewer_run_id:'synthetic-board-runtime',
+    reviewed_at:'2026-10-26T00:00:00.000Z',evidence:[evidence],all_media_bound:true,no_unqualified_ready_claims:true,qualifications:[]}
+  const delivery_review=BoardDeliverySchema.parse({key_id:'final',payload,signature:sign(null,Buffer.from(canonicalMediaJson(payload)),media.key.privateKey).toString('base64')})
+  return {...manifest,delivery_review}
+}
 let badSignature=false
 const db={
-  from:(table:string)=>new Query(table),
+  from:(table:string)=>table==='content_library_files'?media.db.from():new Query(table),
   rpc:async(name:string,args:Row)=>{
     assert.ok(['board_save','board_activate'].includes(name))
     const result=await pg.query(`select ${name}(${Object.keys(args).map((_,i)=>`$${i+1}`).join(',')}) as result`,Object.values(args))
@@ -58,7 +95,7 @@ const db={
   storage:{getBucket:async()=>({data:{public:false},error:null}),from:()=>({
     info:async(key:string)=>({error:objects.has(key)?null:new Error('missing')}),
     createSignedUploadUrl:async(key:string)=>({data:{signedUrl:`${origin}/storage/${key}`},error:null}),
-    createSignedUrl:async(key:string)=>({data:{signedUrl:`${origin}/storage/${key}?expires=${badSignature?0:Date.now()+300000}`},error:null})
+    createSignedUrl:async(key:string)=>({data:{signedUrl:`${origin}/storage/${key}?expires=${badSignature&&key.startsWith('boards/')?0:Date.now()+300000}`},error:null})
   })}
 } as unknown as SupabaseClient
 process.env.ACCESS_CODE='synthetic-runtime-code'
@@ -105,7 +142,7 @@ const get=async(path:string)=>{
   }while(next)
   return result
 }
-const put=async(path:string,body:unknown,expected=200,h=headers)=>{const r=await fetch(origin+path,{method:'PUT',headers:h,body:JSON.stringify(body)});assert.equal(r.status,expected,await r.clone().text());return r.json()}
+const put=async(path:string,body:unknown,expected=200,h:Record<string,string>=headers)=>{const r=await fetch(origin+path,{method:'PUT',headers:h,body:JSON.stringify(body)});assert.equal(r.status,expected,await r.clone().text());return r.json()}
 const week='/api/board/2026-10-19'
 try{
   assert.equal((await fetch(origin+week)).status,401)
@@ -137,7 +174,10 @@ try{
   const spec=(data:Buffer,type:string,name:string)=>({sha256:digest(data),bytes:data.length,type,name,key:`boards/2026-10-19/${digest(data)}`})
   const htmlFile=spec(html,'text/html','board.html'),assetFile=spec(asset,'text/plain','asset.txt')
   objects.set(htmlFile.key,{data:html,type:htmlFile.type});objects.set(assetFile.key,{data:asset,type:assetFile.type})
-  const manifest={version:1,week:'2026-10-19',html:htmlFile,assets:{file:assetFile}}
+  const unsignedManifest={version:1,week:'2026-10-19',html:htmlFile,assets:{file:assetFile}}
+  await put(week,{manifest:unsignedManifest,revision:0},409)
+  assert.equal((await get(week)).build_id,null,'missing independent review never activates a build')
+  const manifest=reviewedManifest(unsignedManifest)
   const published=await put(week,{manifest,revision:0})
   assert.equal(published.build_id,digest(canonical(manifest)))
   assert.equal((await put(week,{manifest,revision:0})).revision,1)
@@ -145,7 +185,7 @@ try{
   assert.deepEqual((await get('/api/board/weeks')).weeks,['2026-10-19'])
   const priorHtml={...htmlFile,key:htmlFile.key.replace('2026-10-19','2026-10-12')}
   objects.set(priorHtml.key,{data:html,type:htmlFile.type})
-  await put('/api/board/2026-10-12',{manifest:{version:1,week:'2026-10-12',html:priorHtml,assets:{}},revision:0})
+  await put('/api/board/2026-10-12',{manifest:reviewedManifest({version:1,week:'2026-10-12',html:priorHtml,assets:{}}),revision:0})
   assert.deepEqual((await get('/api/board/weeks')).weeks,['2026-10-19','2026-10-12'])
   await put(week,{manifest,revision:1},401,{'Content-Type':'application/json',Cookie:cookie,Origin:origin})
   const page=await fetch(origin+'/board/2026-10-19',{headers:{Cookie:cookie}})
@@ -208,9 +248,9 @@ try{
     }
     const fixture=await readFile(process.argv[4]);const file=spec(fixture,'text/html','fixture.html')
     objects.set(file.key,{data:fixture,type:file.type})
-    await put(week,{manifest:{version:1,week:'2026-10-19',html:file,assets:{}},revision:1})
+    await put(week,{manifest:reviewedManifest({version:1,week:'2026-10-19',html:file,assets:{}}),revision:1})
     const {checkBrowser:interact,checkVisual}=await import('../board-browser.mjs')
     const checkBrowser=process.argv[6]==='visual'?checkVisual:interact
     await checkBrowser({modulePath:process.argv[3],origin,cookie,api:(collection:string)=>get(week+'/'+collection),write:(collection:string,id:string,body:unknown,revision:number)=>put(`${week}/${collection}/${id}`,{body,revision},200,collection==='edits'?{'Content-Type':'application/json',Cookie:cookie,Origin:origin}:headers),screenshotDir:process.argv[5],sourceData:!!process.argv[7]})
   }
-}finally{await new Promise<void>(resolve=>server.close(()=>resolve()));await pg.close()}
+}finally{globalThis.fetch=originalFetch;Object.assign(rolloutConfig, originalRollout);await new Promise<void>(resolve=>server.close(()=>resolve()));await pg.close()}

@@ -1,0 +1,51 @@
+{
+  "kind": "independent_concept_review_not_render_verification",
+  "first_round": "Three concepts converged on hidden-copy paper-processing; rejected internally.",
+  "second_round": {
+    "judge_one": {
+      "order": [
+        "41",
+        "23",
+        "72"
+      ],
+      "ranking": [
+        "41",
+        "23",
+        "72"
+      ],
+      "scores": [
+        78,
+        72,
+        67
+      ]
+    },
+    "judge_two": {
+      "order": [
+        "72",
+        "41",
+        "23"
+      ],
+      "ranking": [
+        "41",
+        "23",
+        "72"
+      ],
+      "scores": [
+        82,
+        77,
+        72
+      ]
+    },
+    "selected": "41: cutaway hosting",
+    "diversity": "Both judges narrowly pass information-structure and state-model differences",
+    "conditions": [
+      "Make origin-to-answer action concrete without deterministic nationality claim",
+      "Clear the generic example before evidence",
+      "Keep four-model field pooled;100 units normalize35%, not actual sample size",
+      "No Claude correctness ticks, mint success or accuracy inference",
+      "Input remains visible in hosting; no locks or guaranteed security",
+      "Remove unnecessary three-category illustrations",
+      "Align to actual narration and inspect at phone size"
+    ]
+  }
+}

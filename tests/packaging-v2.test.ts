@@ -1,7 +1,8 @@
 import { mkdir, mkdtemp, readFile, rename, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
+import { attachQualifiedClientFixture } from './helpers/media-delivery.js'
 import { CandidateV1Schema, DraftPackageV2Schema, RenderManifestV2Schema } from '@mindmake/contracts'
 import { VIDEO_PACKAGE_PLATFORMS, createDraftPackageV2, draftPackageFileIssuesV2, hashFile, platformCopyV2 } from '@mindmake/core'
 
@@ -41,6 +42,9 @@ describe('four-platform V2 packages', () => {
   let previousRuntimeRoot: string | undefined
 
   afterEach(async () => {
+    vi.restoreAllMocks()
+    vi.unstubAllGlobals()
+    vi.unstubAllEnvs()
     if (previousRuntimeRoot === undefined) delete process.env.MINDMAKE_RUNTIME_ROOT
     else process.env.MINDMAKE_RUNTIME_ROOT = previousRuntimeRoot
     await Promise.all(temporaryRoots.splice(0).map((root) => rm(root, { recursive: true, force: true })))
@@ -155,6 +159,7 @@ describe('four-platform V2 packages', () => {
       fixed_seed: 'package-cover-seed',
     })
     const bindings = { render_manifest_hash: 'f'.repeat(64), master_path: masterPath, master_hash: masterHash }
+    await attachQualifiedClientFixture(masterPath, 'job-house-cover')
     const draft = await createDraftPackageV2('job-house-cover', 'linkedin', masterPath, candidate, manifest, { passed: true }, bindings, { path: thumbnailPath, sha256: thumbnailHash })
     expect(draft.cover_hash).toBe(thumbnailHash)
     expect(await readFile(draft.cover_path, 'utf8')).toBe('rendered thumbnail jpeg\n')

@@ -1,0 +1,294 @@
+{
+  "revision": "clarity-v2",
+  "authority": "Krish, 24 October 2026: concrete sample countries; maximum clarity; nationality-specific imagery only for specific claims.",
+  "baseline_sha256": "38e3086cb4f1b51b8d7cc04f5d5cd786ec5c398976d059d85c86191deb0a592d",
+  "candidate_sha256": "b76eb76a280607e254f4ff56f8314ba4eb8efa782cbee299e4102e6f1f593bc9",
+  "changes": [
+    {
+      "beat": "L14-passports",
+      "before": {
+        "surface": "cream",
+        "pictures": [
+          "The hero passport builds: page, mark box empty, BORN types on \"born\", LIVES types on \"lives\"; on \"whose computers it runs on\" a small server icon appears in the LIVES field"
+        ],
+        "on_screen": [
+          "BORN",
+          "LIVES"
+        ],
+        "cam": "Cutaway for the whole beat (it is the piece's idea)."
+      },
+      "after": {
+        "surface": "cream",
+        "pictures": [
+          "An unbranded illustrative passport shows BORN: CANADA / WHERE IT WAS MADE and LIVES: USA / WHERE IT RUNS together from its arrival. A mint selection moves from the BORN label to the LIVES label on the respective spoken words. No national flag, company mark or invented company claim."
+        ],
+        "on_screen": [
+          "ILLUSTRATIVE AI",
+          "BORN: CANADA",
+          "WHERE IT WAS MADE",
+          "LIVES: USA",
+          "WHERE IT RUNS"
+        ],
+        "cam": "Cutaway for the whole beat (it is the piece's idea)."
+      }
+    },
+    {
+      "beat": "S04-passports",
+      "before": {
+        "surface": "cream",
+        "pictures": [
+          "The hero passport builds: page, mark box empty, BORN types on \"born\", LIVES types on \"lives\"; on \"whose computers it runs on\" a small server icon appears in the LIVES field"
+        ],
+        "on_screen": [
+          "BORN",
+          "LIVES"
+        ],
+        "cam": "Cutaway for the whole beat (it is the piece's idea).",
+        "same_as": "L14-passports"
+      },
+      "after": {
+        "surface": "cream",
+        "pictures": [
+          "An unbranded illustrative passport shows BORN: CANADA / WHERE IT WAS MADE and LIVES: USA / WHERE IT RUNS together from its arrival. A mint selection moves from the BORN label to the LIVES label on the respective spoken words. No national flag, company mark or invented company claim."
+        ],
+        "on_screen": [
+          "ILLUSTRATIVE AI",
+          "BORN: CANADA",
+          "WHERE IT WAS MADE",
+          "LIVES: USA",
+          "WHERE IT RUNS"
+        ],
+        "cam": "Cutaway for the whole beat (it is the piece's idea).",
+        "same_as": "L14-passports"
+      }
+    },
+    {
+      "beat": "L36-call",
+      "before": {
+        "surface": "cream",
+        "pictures": [
+          "DeepSeek's passport returns: LIVES circled on \"where your data ends up\", BORN circled on \"check what it tells you\""
+        ],
+        "on_screen": [
+          "LIVES",
+          "BORN"
+        ],
+        "cam": "Face; the circled passport as a side panel."
+      },
+      "after": {
+        "surface": "cream",
+        "pictures": [
+          "The unbranded illustrative Canada/USA passport returns. LIVES is selected on where your data ends up; BORN on check what it tells you. The advice applies to any AI. Do not carry a DeepSeek mark or a China field into this general advice."
+        ],
+        "on_screen": [
+          "ILLUSTRATIVE AI",
+          "BORN: CANADA",
+          "WHERE IT WAS MADE",
+          "LIVES: USA",
+          "WHERE IT RUNS"
+        ],
+        "cam": "Face; the circled passport as a side panel."
+      }
+    },
+    {
+      "beat": "S12-call",
+      "before": {
+        "surface": "cream",
+        "pictures": [
+          "DeepSeek's passport returns: LIVES circled on \"where your data ends up\", BORN circled on \"check what it tells you\""
+        ],
+        "on_screen": [
+          "LIVES",
+          "BORN"
+        ],
+        "cam": "Face; the circled passport as a side panel.",
+        "same_as": "L36-call"
+      },
+      "after": {
+        "surface": "cream",
+        "pictures": [
+          "The unbranded illustrative Canada/USA passport returns. LIVES is selected on where your data ends up; BORN on check what it tells you. The advice applies to any AI. Do not carry a DeepSeek mark or a China field into this general advice."
+        ],
+        "on_screen": [
+          "ILLUSTRATIVE AI",
+          "BORN: CANADA",
+          "WHERE IT WAS MADE",
+          "LIVES: USA",
+          "WHERE IT RUNS"
+        ],
+        "cam": "Face; the circled passport as a side panel.",
+        "same_as": "L36-call"
+      }
+    },
+    {
+      "beat": "S13b-recap",
+      "before": {
+        "surface": "cream",
+        "pictures": [
+          "The hero passport: BORN lights on \"passport number one\", LIVES on \"passport number two\""
+        ],
+        "on_screen": [
+          "BORN",
+          "LIVES"
+        ],
+        "cam": "Cutaway (on-camera take only)."
+      },
+      "after": {
+        "surface": "cream",
+        "pictures": [
+          "The same unbranded illustrative Canada/USA passport; BORN is selected on passport number one, LIVES on passport number two."
+        ],
+        "on_screen": [
+          "ILLUSTRATIVE AI",
+          "BORN: CANADA",
+          "WHERE IT WAS MADE",
+          "LIVES: USA",
+          "WHERE IT RUNS"
+        ],
+        "cam": "Cutaway (on-camera take only)."
+      }
+    },
+    {
+      "beat": "L21-lives",
+      "before": {
+        "surface": "ink",
+        "pictures": [
+          "The passport flips; the surface turns to ink with it; LIVES glows mint"
+        ],
+        "on_screen": [
+          "LIVES"
+        ],
+        "cam": "Cutaway."
+      },
+      "after": {
+        "surface": "ink",
+        "pictures": [
+          "Reset to the unbranded illustrative Canada/USA passport for the general hosting explanation. Flip to ink and select LIVES. Only introduce the DeepSeek mark and its sourced China value when the narration names DeepSeek in L22."
+        ],
+        "on_screen": [
+          "ILLUSTRATIVE AI",
+          "BORN: CANADA",
+          "WHERE IT WAS MADE",
+          "LIVES: USA",
+          "WHERE IT RUNS"
+        ],
+        "cam": "Cutaway."
+      }
+    },
+    {
+      "beat": "L02-why",
+      "before": {
+        "surface": "cream",
+        "pictures": [
+          "O-passport x7, face down, fanned like a deck; each flips just enough to show its mark (M-marks: Claude, ChatGPT, DeepSeek, Qwen, Kimi, Mistral, Grok)"
+        ],
+        "on_screen": [],
+        "cam": "Face."
+      },
+      "after": {
+        "surface": "cream",
+        "pictures": [
+          "An equal-weight international deck: Claude (USA), Mistral (France), K2 Think (UAE), Sarvam (India), DeepSeek (China). No country is centred, enlarged, coloured as a warning or repeated to imply the general concept belongs to it."
+        ],
+        "on_screen": [],
+        "cam": "Face."
+      }
+    },
+    {
+      "beat": "L16-third",
+      "before": {
+        "surface": "cream",
+        "pictures": [
+          "O-tiles: 100 tiles under the four marks (DeepSeek, Kimi, Qwen, GLM); 35 flip amber in a wave"
+        ],
+        "on_screen": [
+          "35%"
+        ],
+        "label": "E-csmonitor",
+        "highlight": "In more than one-third of cases (35%)",
+        "numbers": [
+          {
+            "value": "35%",
+            "source": "research-gaps.md §1a",
+            "note": "show as 35 of 100, never as 70 of 200: the Monitor gives a percentage, not a count"
+          }
+        ],
+        "cam": "Cutaway."
+      },
+      "after": {
+        "surface": "cream",
+        "pictures": [
+          "O-tiles: 100 tiles under the four marks (DeepSeek, Kimi, Qwen, GLM); 35 flip amber in a wave"
+        ],
+        "on_screen": [
+          "35%",
+          "IN THIS TEST: REFUSED, GAVE THE GOVERNMENT LINE, OR GOT IT WRONG"
+        ],
+        "label": "E-csmonitor",
+        "highlight": "In more than one-third of cases (35%)",
+        "numbers": [
+          {
+            "value": "35%",
+            "source": "research-gaps.md §1a",
+            "note": "show as 35 of 100, never as 70 of 200: the Monitor gives a percentage, not a count"
+          }
+        ],
+        "cam": "Cutaway."
+      }
+    },
+    {
+      "beat": "S06-third",
+      "before": {
+        "surface": "cream",
+        "pictures": [
+          "O-tiles: 100 tiles under the four marks (DeepSeek, Kimi, Qwen, GLM); 35 flip amber in a wave"
+        ],
+        "on_screen": [
+          "35%"
+        ],
+        "label": "E-csmonitor",
+        "highlight": "In more than one-third of cases (35%)",
+        "numbers": [
+          {
+            "value": "35%",
+            "source": "research-gaps.md §1a",
+            "note": "show as 35 of 100, never as 70 of 200: the Monitor gives a percentage, not a count"
+          }
+        ],
+        "cam": "Cutaway.",
+        "same_as": "L16-third"
+      },
+      "after": {
+        "surface": "cream",
+        "pictures": [
+          "O-tiles: 100 tiles under the four marks (DeepSeek, Kimi, Qwen, GLM); 35 flip amber in a wave"
+        ],
+        "on_screen": [
+          "35%",
+          "IN THIS TEST: REFUSED, GAVE THE GOVERNMENT LINE, OR GOT IT WRONG"
+        ],
+        "label": "E-csmonitor",
+        "highlight": "In more than one-third of cases (35%)",
+        "numbers": [
+          {
+            "value": "35%",
+            "source": "research-gaps.md §1a",
+            "note": "show as 35 of 100, never as 70 of 200: the Monitor gives a percentage, not a count"
+          }
+        ],
+        "cam": "Cutaway.",
+        "same_as": "L16-third"
+      }
+    }
+  ],
+  "invariants": [
+    "Narration and source recordings unchanged",
+    "All timing boundaries unchanged",
+    "Official marks and factual nationalities unchanged in specific examples",
+    "All baseline files preserved",
+    "No making records changed"
+  ],
+  "semantic_diff_pass": true,
+  "changed_beats": 9,
+  "total_beats": 57
+}
