@@ -837,5 +837,55 @@
  "motion_system": {
   "name": "Receipts",
   "file": "docs/plans/2026-10-26-monday/receipts.md"
+ },
+ "take_edits": {
+  "ruling": "Krish, 2026-10-26: \"Happy to cut those four slips as long as it doesn't make the output sound weird or glitchy.  That's just how I talk. Unless you think there are serious flaws in it, they're not really slips as much as they are just me talking naturally. I'm pretty sure I said \\\"I reckon,\\\" and you're mishearing it.\"",
+  "rule": "Keep everything he said as he said it. Cut only a serious flaw, only where the cut is inaudible (in the silence between words, under a picture), judged by ear at full volume. If it cannot be cut cleanly, keep it.",
+  "long": [
+   {
+    "at": "2:13",
+    "words": "which is fair enough",
+    "action": "cut if clean",
+    "why": "straight after the child-harm claims it can sound like taking a side on claims a court has not decided (a legal risk)"
+   },
+   {
+    "at": "2:42",
+    "words": "and the tech followed the tech",
+    "action": "keep",
+    "why": "his natural speech, no serious flaw"
+   },
+   {
+    "at": "0:01",
+    "words": "Disney is basically asked",
+    "action": "keep; check by ear",
+    "why": "probably the transcriber; his natural speech either way"
+   }
+  ],
+  "short": [
+   {
+    "at": "0:43",
+    "words": "So Disney are going direct to build their own tech and Google already own Character.AI's founders.",
+    "action": "keep",
+    "why": "his natural speech, no serious flaw"
+   },
+   {
+    "at": "0:49",
+    "words": "I recommend that (the transcript)",
+    "action": "keep",
+    "why": "Krish: he said \"I reckon\"; the transcriber misheard"
+   },
+   {
+    "at": "0:08",
+    "words": "haunted children (the transcript)",
+    "action": "keep; check by ear",
+    "why": "almost certainly \"harmed children\" misheard"
+   },
+   {
+    "at": "1:04",
+    "words": "if I asked (the transcript)",
+    "action": "keep; check by ear",
+    "why": "almost certainly \"if I were you, ask\" misheard"
+   }
+  ]
  }
 }

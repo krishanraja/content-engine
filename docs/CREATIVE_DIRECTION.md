@@ -16,7 +16,7 @@ before he recorded (`docs/plans/2026-10-23-friday/creative-direction.md`). This 
 | Sunday morning | Claude, with Krish | The story for each day, one question at a time. The style for each piece, from the formats on its idea card (`config/style-references.json`, `formats`). |
 | Sunday, before he records | Claude | The scripts, checked (`story_check.py`, two fresh readers), sent to Teleprompter. The creative direction for every cut, every beat. The article copy and every article visual. |
 | Sunday, recording | Krish | Both takes per piece, as the direction says (on camera or voiceover). |
-| After he records | Claude | Line the takes up (`narration_diff.py`), re-time the beats to what he said, build the storyboard from real captures, put it on the day's Brief step. |
+| After he records | Claude | Line the takes up (`narration_diff.py`), re-time the beats to what he said, build the storyboard from real captures, put it on the day's Brief step. What he says off-script is his natural speech, not slips (Krish, 2026-10-26: "That's just how I talk"): propose a cut only for a serious flaw, only where it cuts cleanly, and only after hearing it. |
 | His sign-off | Krish | He signs the storyboard in his own words. The words go into `signed` with the hash of each script (`creative_direction.py hash`). |
 | Production | Codex (or any session) | Renders exactly the signed direction through `produce-video`. It never invents a visual, a caption, a figure or a style. A gap goes back to Claude. |
 | Review | A reviewer who did not make the cut | Watches every cut at full size and listens across every join, against `acceptance`. Reports fact, transport and editorial status separately. |

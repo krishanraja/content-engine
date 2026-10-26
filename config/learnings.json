@@ -1632,6 +1632,31 @@
           "how": "house rule ONE_SPINE"
         }
       ]
+    },
+    {
+      "id": "natural-speech-stays",
+      "on": "2026-10-26",
+      "krish": "Happy to cut those four slips as long as it doesn't make the output sound weird or glitchy.  That's just how I talk. Unless you think there are serious flaws in it, they're not really slips as much as they are just me talking naturally. I'm pretty sure I said \"I reckon,\" and you're mishearing it.",
+      "why": "The storyboard sheet called four places where he left the script 'slips' and proposed cutting them, one of them from a transcriber's mishearing ('I recommend' for 'I reckon'). Cuts risk the clipped, glitchy joins he has rejected before, and his own phrasing is how he talks.",
+      "means": "What he says off-script is his voice, not a slip. Propose a cut only for a serious flaw (a wrong fact or a legal risk), only where it can be cut without sounding clipped, and only after hearing it, because the transcriber mishears. Everything else stays as he said it.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "scripts/post-pack/narration_diff.py",
+          "contains": "never as slips",
+          "how": "every line-up report says it at the top, with a self-test check"
+        },
+        {
+          "file": "docs/CREATIVE_DIRECTION.md",
+          "contains": "his natural speech, not slips",
+          "how": "the After he records step"
+        },
+        {
+          "file": "docs/plans/2026-10-26-monday/creative-direction.json",
+          "contains": "Keep everything he said as he said it",
+          "how": "Monday's take edits"
+        }
+      ]
     }
   ]
 }
