@@ -1,1607 +1,1616 @@
 {
- "_about": "Say nothing twice. Krish, 2026-10-17: \"Asa, everything I say to you, whether it's feedback or ideas, you should always be thinking about why I'm saying it and what that means for the future. I want a \\\"say nothing twice\\\" policy in this engine, where you understand me, how we work, and how we iterate.\" Every piece of feedback or idea he gives becomes one entry: his exact words (an excerpt, never a transcript), why he said it, what it means from now on, and where it is now enforced, each place with a marker that must stay there. scripts/check_failures.py (run first in every session) fails when a marker is gone, and lists the learnings still open. A failure he raised goes in config/failures.json; everything else he says goes here.",
- "learnings": [
-  {
-   "id": "titles-after-recording",
-   "on": "2026-10-17",
-   "krish": "the fact that I need to approve/sign off on titles and headers and thumbnail headings and whatnot after recording is an important distinction because only after recording do I really feel like I've got a message. Usually I change or understand a fair bit more after reading a script out loud than I do creating a script.",
-   "why": "Reading the script aloud is where he finds his message, and he ad-libs a third of it (narration ledger). Packaging written before the take is written for a message he has not landed yet, so it gets redone.",
-   "means": "No title, headline, thumbnail word, card heading or chapter divider is put to him or drawn before a take is on the record; after it, the options come from what he said on camera and his playbook, all at once.",
-   "status": "encoded",
-   "encoded": [
+  "_about": "Say nothing twice. Krish, 2026-10-17: \"Asa, everything I say to you, whether it's feedback or ideas, you should always be thinking about why I'm saying it and what that means for the future. I want a \\\"say nothing twice\\\" policy in this engine, where you understand me, how we work, and how we iterate.\" Every piece of feedback or idea he gives becomes one entry: his exact words (an excerpt, never a transcript), why he said it, what it means from now on, and where it is now enforced, each place with a marker that must stay there. scripts/check_failures.py (run first in every session) fails when a marker is gone, and lists the learnings still open. A failure he raised goes in config/failures.json; everything else he says goes here.",
+  "learnings": [
     {
-     "file": "apps/control-plane/api/_houseRules.ts",
-     "contains": "TITLES_AFTER_RECORDING",
-     "how": "the house rule, with his words"
+      "id": "titles-after-recording",
+      "on": "2026-10-17",
+      "krish": "the fact that I need to approve/sign off on titles and headers and thumbnail headings and whatnot after recording is an important distinction because only after recording do I really feel like I've got a message. Usually I change or understand a fair bit more after reading a script out loud than I do creating a script.",
+      "why": "Reading the script aloud is where he finds his message, and he ad-libs a third of it (narration ledger). Packaging written before the take is written for a message he has not landed yet, so it gets redone.",
+      "means": "No title, headline, thumbnail word, card heading or chapter divider is put to him or drawn before a take is on the record; after it, the options come from what he said on camera and his playbook, all at once.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "apps/control-plane/api/_houseRules.ts",
+          "contains": "TITLES_AFTER_RECORDING",
+          "how": "the house rule, with his words"
+        },
+        {
+          "file": "scripts/post-pack/title_check.py",
+          "contains": "def pick_problem",
+          "how": "a packaging pick is refused while the piece has no take on the record"
+        },
+        {
+          "file": ".claude/skills/make-piece/SKILL.md",
+          "contains": "TITLES_AFTER_RECORDING",
+          "how": "the titles step comes after Record"
+        },
+        {
+          "file": ".claude/skills/produce-video/SKILL.md",
+          "contains": "TITLES_AFTER_RECORDING",
+          "how": "after the takes land, the packaging round"
+        }
+      ]
     },
     {
-     "file": "scripts/post-pack/title_check.py",
-     "contains": "def pick_problem",
-     "how": "a packaging pick is refused while the piece has no take on the record"
+      "id": "legible-to-a-stranger",
+      "on": "2026-10-17",
+      "krish": "This isn't a well-known concept and it's not a well-known media business. ... Why can't you understand why I absolutely hate, detest, loathe these? They're offensive to me. They hurt my soul.",
+      "why": "His purpose is to make what is coming legible to people; a line only legible to someone who has already watched the video is the opposite of it, and a cheap, cryptic one costs the credibility a new brand for senior people depends on. It also proved lessons already on file were ignored: the surface formula (\"under 4 words\", \"a curiosity gap\") was followed over his principle.",
+      "means": "Every line a stranger sees first names a real thing in plain words and says something true about it; his principles outrank any formula; nothing reaches him before a cold reader with no context can explain it; fewer, better options, never a pile.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "scripts/post-pack/title_check.py",
+          "contains": "def names_nothing",
+          "how": "refuses a first-seen line that names nothing real"
+        },
+        {
+          "file": ".claude/skills/make-piece/SKILL.md",
+          "contains": "Then the cold read, before anything reaches him",
+          "how": "the cold read"
+        },
+        {
+          "file": "config/title-verdicts.json",
+          "contains": "a stranger must understand the line in one second",
+          "how": "the first lesson"
+        }
+      ]
     },
     {
-     "file": ".claude/skills/make-piece/SKILL.md",
-     "contains": "TITLES_AFTER_RECORDING",
-     "how": "the titles step comes after Record"
+      "id": "headings-from-his-words",
+      "on": "2026-10-17",
+      "krish": "These headings are so stupid it's insane. I can't believe you're putting these to me. Then: \"I do worry that using my own words for headings and chapter names will lose some of what makes this feel like a real media channel\"",
+      "why": "First they were written to pass the title checker (names stuffed in, label strings, bare numbers), not to be read in a second. The fix overcorrected into pasting his transcript, which loses the edited layer that makes a channel feel professional.",
+      "means": "Headings and chapter dividers are an editorial layer in one channel style: one device across the episode, each line a short claim or promise naming the real thing, a kicker with the source and date, built on what he says at that moment and his best phrases, never pasted from the transcript and never written to pass the checker.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "config/title-verdicts.json",
+          "contains": "that reads like a transcript, not a channel",
+          "how": "the lesson every title round prints"
+        },
+        {
+          "file": ".claude/skills/make-piece/SKILL.md",
+          "contains": "CHANNEL_HEADINGS",
+          "how": "how headings and dividers are written"
+        },
+        {
+          "file": ".claude/skills/produce-video/SKILL.md",
+          "contains": "CHANNEL_HEADINGS",
+          "how": "the packaging round after the takes"
+        }
+      ]
     },
     {
-     "file": ".claude/skills/produce-video/SKILL.md",
-     "contains": "TITLES_AFTER_RECORDING",
-     "how": "after the takes land, the packaging round"
+      "id": "playbooks-into-the-engine",
+      "on": "2026-10-17",
+      "krish": "I hope you're saving these playbooks to the engine so that you can build and create better formulas for things and present them to me at the right moment before production (so that there's less iteration after you create things).",
+      "why": "Each corpus he sends (post-production, hooks, styles) is meant to make the first draft right, so he iterates less after things are made.",
+      "means": "Every playbook or corpus he sends is kept in the repository and its formulas lead every round for that surface; options reach him at the right moment, before anything is made.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "config/hook-playbook.json",
+          "contains": "krish_playbook",
+          "how": "his hook, title and thumbnail playbook, per surface"
+        },
+        {
+          "file": "scripts/post-pack/title_check.py",
+          "contains": "def krish_playbook_text",
+          "how": "title lessons print his formulas first"
+        },
+        {
+          "file": "docs/production/one-shot-episode-corpus.md",
+          "contains": "Post-Production Corpus",
+          "how": "the long-episode standard"
+        },
+        {
+          "file": "config/style-references.json",
+          "contains": "kinetic-serif-captions",
+          "how": "the style bank"
+        }
+      ]
+    },
+    {
+      "id": "engine-retrieves-its-banks",
+      "on": "2026-10-17",
+      "krish": "make sure the content engine can retrieve learnings and banks of its own formulas on doing stuff.",
+      "why": "The playbooks and lessons live in the repository, where sessions read them; the engine's own writers in Control Center do not yet draw on them.",
+      "means": "The engine can read the learnings, the hook playbook, the style bank and the title lessons when it drafts, not only the house rules.",
+      "status": "open",
+      "encoded": []
+    },
+    {
+      "id": "where-each-line-goes",
+      "on": "2026-10-17",
+      "krish": "I'm also unclear on what would be a Substack headline versus the Substack cover image versus a YouTube thumbnail, etc.",
+      "why": "Options were offered by surface code (Y1, S1, T1) without saying what each surface is or where it shows.",
+      "means": "Every packaging option names its surface and what that surface is and where it shows.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "config/hook-playbook.json",
+          "contains": "surface_map",
+          "how": "what each surface is"
+        },
+        {
+          "file": "scripts/post-pack/title_check.py",
+          "contains": "What {surface} is",
+          "how": "title lessons start with the surface's job"
+        }
+      ]
+    },
+    {
+      "id": "scripts-as-he-talks",
+      "on": "2026-10-17",
+      "krish": "list everything about my narration that deviated from the script, down to the fact that I talk in, let's say, about 30% of that. Thats how script should be written in the future.",
+      "why": "He rewrites the script as he reads it (9% of what he said was his own on 12 Oct, 38% by 16 Oct), so a script that is not how he talks is half rewritten on camera and runs long.",
+      "means": "Scripts are written the way he says them, and their length is budgeted for what he adds; every take is measured against its script.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "scripts/post-pack/narration_diff.py",
+          "contains": "def ledger_add",
+          "how": "every take lined up with its script, kept in the ledger"
+        },
+        {
+          "file": "scripts/post-pack/story_check.py",
+          "contains": "def spoken_length_warning",
+          "how": "a script that will run long as he says it is warned"
+        },
+        {
+          "file": "config/narration-ledger.json",
+          "contains": "said_more_pct",
+          "how": "the week's takes"
+        },
+        {
+          "file": "apps/control-plane/api/_houseRules.ts",
+          "contains": "SCRIPT_AS_HE_TALKS",
+          "how": "the house rule every writer and judge reads"
+        },
+        {
+          "file": "scripts/post-pack/story_check.py",
+          "contains": "def spoken_habit_warnings",
+          "how": "soft checks for his spoken habits"
+        },
+        {
+          "file": "config/golden-examples.json",
+          "contains": "\"kind\": \"spoken-line\"",
+          "how": "his own lines from the takes"
+        },
+        {
+          "file": ".claude/skills/make-piece/SKILL.md",
+          "contains": "Write it the way he says it",
+          "how": "the scripts step"
+        }
+      ]
+    },
+    {
+      "id": "upgrade-the-edit-style",
+      "on": "2026-10-17",
+      "krish": "I think we need to upgrade everything. And like before, have a bank of styles that we can draw from. Then: These words all bounce in and there's a lot more movement on the screen. The background of the person has also been treated when he's talking so it doesn't look too amateur.",
+      "why": "The split-screen edit and house typography read as amateur next to the creators he watches.",
+      "means": "The edit's styles come from a bank of modules he rates; new looks are tried on his own footage before they are used.",
+      "status": "open",
+      "encoded": [
+        {
+          "file": "config/style-references.json",
+          "contains": "treated-background",
+          "how": "the modules from his references"
+        }
+      ]
+    },
+    {
+      "id": "say-nothing-twice",
+      "on": "2026-10-17",
+      "krish": "everything I say to you, whether it's feedback or ideas, you should always be thinking about why I'm saying it and what that means for the future. I want a \"say nothing twice\" policy in this engine",
+      "why": "He wants to be understood once and not repeat himself.",
+      "means": "Every message from him is read for why and for what it changes; each becomes an entry here, enforced where it applies, checked at the start of every session.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "AGENTS.md",
+          "contains": "Say nothing twice",
+          "how": "every agent reads it first"
+        },
+        {
+          "file": "CLAUDE.md",
+          "contains": "config/learnings.json",
+          "how": "the session start"
+        },
+        {
+          "file": "scripts/check_failures.py",
+          "contains": "learnings.json",
+          "how": "the check run first in every session"
+        }
+      ]
+    },
+    {
+      "id": "sign-off-first",
+      "on": "2026-10-17",
+      "krish": "do you not want to get sign off on headings and titles first so you can punch through to 100% without me?",
+      "why": "His decisions are the only part of production that needs him. Asked mid-run, or queued behind slow machine work (screen captures, renders), they keep him on call for hours and the piece waits on him at the end instead of the start. He wants to answer once and then not be needed.",
+      "means": "Once a take is on the record, the first thing a session does is put ONE sign-off sheet to him with every decision that is his for the piece (titles, cover and thumbnail words, title card, headings and chapter dividers, the intro stand-off, any script or speed choice), before any machine step that waits on it; then it finishes to publish-ready without coming back, except for a send, publish, spend or delete.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": ".claude/skills/make-piece/SKILL.md",
+          "contains": "SIGN_OFF_FIRST",
+          "how": "the titles step: one sign-off sheet, first, then finish without him"
+        },
+        {
+          "file": ".claude/skills/produce-video/SKILL.md",
+          "contains": "SIGN_OFF_FIRST",
+          "how": "after the takes: his sign-off first, never queued behind a machine step"
+        }
+      ]
+    },
+    {
+      "id": "story-first",
+      "on": "2026-10-17",
+      "krish": "These are still awful. I'm getting exhausted. The story is about there being so many recent AI model releases and figuring out if that's actually important, why it's speeding up, and what choices a user is going to have to make (or what gears are going to be hidden from them in the future). It's a \"mind the gap\" piece remember. Why do I have to remind you about what this story is about?",
+      "why": "He judges a line first by whether it tells the piece's story; each round I fixed the last complaint and lost the story, so he had to restate it and is exhausted by it.",
+      "means": "When he states what a piece is about, his words go in the plan's story.md and every later line (titles, cover, thumbnail, title card, chapters, headings, channel copy) is judged against them first; without a statement, the outline's spine and the series' question.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "scripts/post-pack/title_check.py",
+          "contains": "def story_text",
+          "how": "the round prints the story first"
+        },
+        {
+          "file": ".claude/skills/make-piece/SKILL.md",
+          "contains": "STORY_FIRST",
+          "how": "the titles step"
+        },
+        {
+          "file": ".claude/skills/produce-video/SKILL.md",
+          "contains": "STORY_FIRST",
+          "how": "the packaging round after the takes"
+        }
+      ]
+    },
+    {
+      "id": "sniffs-dampened",
+      "on": "2026-10-17",
+      "krish": "i was sniffing a bit so dampen that out surgically.",
+      "why": "A sniff between lines sounds amateur, and cutting it would move the picture against his voice; he wants it gone without the edit showing.",
+      "means": "Every cut finds sniffs in the gaps between his words and turns only those spans down, with soft fades, never cutting; each one is listed in the render report and checked before a cut ships.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "scripts/quick-edit/make.py",
+          "contains": "desniff",
+          "how": "on by default in every render"
+        },
+        {
+          "file": "scripts/quick-edit/episode.py",
+          "contains": "def sniffs",
+          "how": "the detector and the duck, self-tested"
+        }
+      ]
+    },
+    {
+      "id": "nothing-only-in-one-session",
+      "on": "2026-10-18",
+      "krish": "in general ensure nothing is ever not accessible by another session, ever",
+      "why": "A handover lost work because captures, renders and transcripts lived only in one cloud container; the next session, often on his other account, would have had to remake them.",
+      "means": "Before a session stops, everything it made or used that another session may need is either committed (code, configs, specs, transcripts, small data) or sent to the post's library folder with send.py (screenshots, renders, panels, exhibits), and the handover names where each is. Nothing lives only in .cache or a workflow journal.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "AGENTS.md",
+          "contains": "Nothing a session makes lives only in its own container",
+          "how": "a rule every agent reads at session start"
+        },
+        {
+          "file": "docs/plans/2026-10-09-friday/HANDOVER.md",
+          "contains": "working 17 Oct",
+          "how": "this piece's files named in the handover"
+        }
+      ]
+    },
+    {
+      "id": "cost-six-standing-rules",
+      "on": "2026-10-18",
+      "krish": "They should all become standing rules.",
+      "why": "One six-day session used about half of a 20x Max plan in a week: every step re-read a context that sat at a median of 459k tokens; and four paid fact-check reruns cost about four times the estimate.",
+      "means": "One fresh session per job, handover between topics, few big steps, no big outputs in the chat, Sonnet for production work, agents only where a separate reader is needed, and paid runs estimated from the meter.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "AGENTS.md",
+          "contains": "Cost: six standing rules",
+          "how": "a rule every agent reads at session start"
+        },
+        {
+          "file": "docs/COST_GUARDS.md",
+          "contains": "G1 | Context nudge",
+          "how": "the guards to build, in order"
+        },
+        {
+          "file": "docs/prompts/sunday-ideas-tab.md",
+          "contains": "keep to the cost rules",
+          "how": "the next job's prompt carries the rules"
+        }
+      ]
+    },
+    {
+      "id": "files-as-files",
+      "on": "2026-10-18",
+      "krish": "I don't need these as artefacts. I need them as Markdown. This is a good example of why you waste tokens. The only artefacts I need are the two published boards being fully up to date.",
+      "why": "A request for three Markdown files was also built onto both boards, costing a board read, a rebuild and two publishes he did not ask for.",
+      "means": "Files he asks for are handed over as files. Artifacts are only the week's publish boards, kept up to date.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "AGENTS.md",
+          "contains": "hand him the files themselves",
+          "how": "a rule every agent reads at session start"
+        }
+      ]
+    },
+    {
+      "id": "cost-never-costs-quality",
+      "on": "2026-10-15",
+      "krish": "yes, if you are 110% sure this does not degrade the quality of the output - this cannot happen.",
+      "why": "He wants the engine cheaper to run (half a 20x Max plan in one week, $45.51 of API in seven days), but a saving that makes the work worse is not a saving to him.",
+      "means": "Every cost change is one of three kinds: the same input read fewer times (caching, carry-forward, fresh sessions, a shorter start), mechanical work on a cheaper model held by deterministic checks, or a refusal before a paid run or a giant read. Fewer judges, smaller source sets, lower effort on writing or anything else that changes what the model reads for a decision is out. A cost change is measured first: one that the meter shows saves nothing is not made.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "docs/COST_GUARDS.md",
+          "contains": "The quality test every guard passes",
+          "how": "the test every cost guard is built against"
+        },
+        {
+          "file": "tests/control-plane/fact-gate.test.ts",
+          "contains": "is carried exactly as a full run carries it",
+          "how": "a test that fails if skipping the second look changes any verdict"
+        }
+      ]
+    },
+    {
+      "id": "music-licence-checked-once",
+      "on": "2026-10-18",
+      "krish": "the music license issue has been sorted 4 times before, you do not need to keep checking that - only if I use a new music track.",
+      "why": "A cloud session stopped on a missing licence file for a track he approved on 12 October, and raised it again, the fifth time the same licence had come up.",
+      "means": "A track's licence is checked once, when the track is new. A track Krish approved (approved_on in config/music-library.json) is never held up or asked about for its licence again.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "scripts/quick-edit/music.py",
+          "contains": "the music license issue has been sorted 4 times before",
+          "how": "the ledger check skips the licence file for a track with approved_on, so make.py and its doctor never stop on it"
+        }
+      ]
+    },
+    {
+      "id": "ideas-from-every-source",
+      "on": "2026-10-18",
+      "krish": "I trust you are good at coming up with ideas - if not, give me more than 3 from all my suggested sources and the ones I threw at other sessions last week",
+      "why": "The week's options had been researched from web search alone (Drive skipped), left out two ideas he gave other sessions that week, and kept stale filler to reach three; he wants a real choice, drawn from what he already pointed us at.",
+      "means": "The Sunday Ideas tab holds more than three checked ideas a day, drawn from his own words first (every idea he gave any session since the last Sunday, said- items and krish-ideas items), then his inspiration folders and saved posts, the people he follows and the radar; stale or unchecked filler never pads a day.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "scripts/post-pack/week_board.py",
+          "contains": "MIN_IDEAS = 4",
+          "how": "the board refuses an Ideas tab with fewer than four checked ideas a day (read_ideas, --verify)"
+        },
+        {
+          "file": ".agents/skills/plan-week/SKILL.md",
+          "contains": "every idea he gave any session since the last Sunday",
+          "how": "the plan-week step that builds the Ideas tab"
+        }
+      ]
+    },
+    {
+      "id": "one-idea-queue",
+      "on": "2026-10-19",
+      "krish": "Can you let me mark ideas for a queue instead of selecting them for this week because I like multiple ideas and some of them aren't time-sensitive? ... every ideas tab can start to build a queue of stuff that should be published at some point. That becomes a pretty powerful canon but it needs to survive everything and be the first thing in chat. That queue needs to be A/B triage in Control Centre ... there just being one cue.",
+      "why": "A pick-one-per-day tab throws away the ideas he likes but cannot use this week, and evergreen ideas have no home; he wants the good ones kept, ranked and reused, not regenerated every Sunday.",
+      "means": "There is one idea queue, stored in the engine (never only in a board's store or a session), that every Ideas tab adds to with a Queue mark beside each idea's pick box; Control Center triages it A/B; every planning session reads it first and offers from it before new research; nothing purges a queued idea.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "apps/control-plane/api/idea-queue.ts",
+          "contains": "queued_at: now, protected_at: now",
+          "how": "the one guarded route queues a row and protects it from every sweep"
+        },
+        {
+          "file": "apps/control-plane/api/purge/run.ts",
+          "contains": "his queue survives every purge",
+          "how": "the Monday purge never deletes a queued row"
+        },
+        {
+          "file": "tests/control-plane/idea-queue.test.ts",
+          "contains": "the queue survives every sweep",
+          "how": "a test names every sweep's guard"
+        },
+        {
+          "file": "scripts/post-pack/week_board/week.js",
+          "contains": "qdb.doc(\"queue/\" + pid).set(body)",
+          "how": "the Ideas tab saves a Queue mark and a verdict, and posts a comment"
+        },
+        {
+          "file": ".agents/skills/plan-week/SKILL.md",
+          "contains": "Read the idea queue first",
+          "how": "plan-week step 1 reads the queue before any research"
+        },
+        {
+          "file": "docs/ENGINE_SESSION.md",
+          "contains": "read the idea queue, first in the chat",
+          "how": "every session start reads the queue"
+        }
+      ]
+    },
+    {
+      "id": "story-a-business-person-gets",
+      "on": "2026-10-19",
+      "krish": "Would I consider this story or angle? If not would I consider it cute or am I curious but not convinced for some specific reason because it's safer? For the \"Google's newest model is on a teaser rate\" article, I actually like the sound of it but I can't understand what the story is. In plain English what would be so interesting to a business person?",
+      "why": "The idea line named the mechanism (a price that doubles) without the consequence for the reader, so he could not tell what the piece would say; and he wants to triage each idea by how it lands with him, not just yes or no.",
+      "means": "Every idea shown to him says, in one plain sentence, what a business person would find out and why it matters to them, before any mechanism; and his triage of an idea records which of four it is: a story he would run, an angle he would run, cute, or curious but not convinced (with the reason).",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "scripts/post-pack/week_board.py",
+          "contains": "('so_what', 'story', 'why_now', 'fact')",
+          "how": "read_ideas refuses an idea with no so_what"
+        },
+        {
+          "file": ".agents/skills/plan-week/SKILL.md",
+          "contains": "with `so_what` first",
+          "how": "plan-week step 3b writes so_what first"
+        },
+        {
+          "file": "apps/control-plane/api/_ideaQueue.ts",
+          "contains": "export const VERDICTS",
+          "how": "the four verdicts plus drop, recorded only with decided_by Krish (parseTriage)"
+        }
+      ]
+    },
+    {
+      "id": "no-stale-skill-copies",
+      "on": "2026-10-19",
+      "krish": "I think we need to not have skills inside repos, surely? that seems dangerous if they are already out of date",
+      "why": "The repository kept its own older copies of krish-voice and content-corpus (content-corpus still named the retired subchannels) beside his newer account-wide skills, so a session could load the stale one.",
+      "means": "A skill that exists account-wide is never also kept in a repository; the repository holds only the engine's own workflows (make-piece, plan-week, produce-video, mindmake-video, video-engine), each either copied for Claude Code or named with its reason, and the Studio pins only those into new jobs.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "tests/repository-contracts.test.ts",
+          "contains": "expect(skillNames).not.toContain('krish-voice')",
+          "how": "a test fails if either retired copy comes back"
+        },
+        {
+          "file": "packages/core/src/runner.ts",
+          "contains": "return ['mindmake-video', 'video-engine']",
+          "how": "new Studio jobs pin only the engine's own skills"
+        },
+        {
+          "file": "scripts/validate-skills.py",
+          "contains": "shares its name with an installed account-wide skill",
+          "how": "skills:validate names any repo skill that doubles an account-wide one"
+        },
+        {
+          "file": "scripts/validate-skills.py",
+          "contains": "NOT_FOR_CLAUDE = {",
+          "how": "every repo skill is copied for Claude Code or named with its reason, or verify fails"
+        }
+      ]
+    },
+    {
+      "id": "ideas-pass-the-business-leader-test",
+      "on": "2026-10-19",
+      "krish": "I just can't figure out how general business leaders would be helped immediately by knowing this. ... I'm not sure what this means for a layperson running a business.",
+      "why": "Three Friday ideas (face and voice ownership, proving a video call is human, AI on $55 TV boxes) described a trend or a mechanism but gave a business leader nothing to do or decide, so he marked each curious but not convinced and queued none.",
+      "means": "Every idea carries, in one plain sentence, what a general business leader can do or decide differently right away. An idea that cannot say it is not offered. The so_what says what they find out; this test says what they do.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": ".agents/skills/plan-week/SKILL.md",
+          "contains": "The business-leader test.",
+          "how": "the plan-week step that screens each idea before it reaches the Ideas tab"
+        }
+      ]
+    },
+    {
+      "id": "simplify-and-unpack-the-concept",
+      "on": "2026-10-19",
+      "krish": "the idea of aggressive vertical integration is a great one, but it just needs to be really simplified and unpacked. / I want this to be super simple: a bake-off that anyone can understand. / Why is Disney going after it, and why is Google going after it? They're two totally different companies. Unpack both.",
+      "why": "He likes the concept in three ideas but the line named the mechanism in insider terms; what he wants first is the plain version, then each party's own motive taken apart.",
+      "means": "A concept idea opens with its plain version and then unpacks each party's motive separately. His own angle on a picked idea is its brief for the piece.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": ".agents/skills/plan-week/SKILL.md",
+          "contains": "Simple first, then unpacked.",
+          "how": "the plan-week step that words each idea"
+        }
+      ]
+    },
+    {
+      "id": "follow-the-money-traces-the-money",
+      "on": "2026-10-19",
+      "krish": "I am passionate about the message which is if you are not paying, you are the product. But I think this needs a bit more substance as to how this intersects with content IP in terms of a monetization play. I think we need to really clearly visualize and unpick where the money goes",
+      "why": "The free-image-ads idea had a message he loves but no money trail, and follow.the.money is the series about exactly that.",
+      "means": "A follow.the.money idea names every party, where the money moves and how it meets content IP or monetisation, so the flow can be drawn. An idea with a message but no money trail waits in the queue until it has one.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": ".agents/skills/plan-week/SKILL.md",
+          "contains": "follow.the.money shows the money.",
+          "how": "the plan-week step for the money series"
+        }
+      ]
+    },
+    {
+      "id": "no-repeat-topic-within-weeks",
+      "on": "2026-10-19",
+      "krish": "I think we need to figure out down the line what the new story is. We did an intro to this topic last week, and I think it's too soon to do it again.",
+      "why": "The AI-shopper rulebook idea was a sequel to last Wednesday's Muse piece with no new story, offered a week later.",
+      "means": "Before an idea is offered, check the last three weeks of published and in-flight pieces for the same topic. A sequel says what is new, or it waits.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": ".agents/skills/plan-week/SKILL.md",
+          "contains": "No topic again within three weeks.",
+          "how": "the plan-week step that checks recent pieces"
+        }
+      ]
+    },
+    {
+      "id": "reading-his-board-marks",
+      "on": "2026-10-19",
+      "krish": "(his taps on the Ideas tab, 19 Oct: Queue marks, Story, Angle, Cute, Curious with a reason, Drop)",
+      "why": "He taps through verdicts to see them (one idea went none, story, cute, story, angle, 'curious') and the board posts a comment for every tap, so reading the history as opinion would invent feedback he never gave.",
+      "means": "Only the final state of a card counts. Queued plus a verdict is develop-later with his words as the brief; curious and not queued is pass-for-now with his reason; drop is never offered again and is recorded as a dropped row; a pick with his angle makes the angle its brief.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": ".agents/skills/plan-week/SKILL.md",
+          "contains": "Reading his marks.",
+          "how": "the plan-week step that reads the board and relays it into the queue"
+        }
+      ]
+    },
+    {
+      "id": "narrative-before-making",
+      "on": "2026-10-19",
+      "krish": "I want to be crystal clear on the overarching end message and checkpoints of the piece so that we can't randomly go off track and take ages to iterate / [made standing, 19 Oct] \"Narrative-before-making rule: make it standing as a step in `make-piece`.\"",
+      "why": "Pieces drift while being made and each correction costs a long iteration; he wants the end message and the checkpoints fixed before anything is made.",
+      "means": "A piece starts from a one-page editorial narrative (the end message in one sentence, who it is for and what they do differently on Monday, four or five checkpoints each with a pass test and what he signs, the one picture, what is out of scope, the drift rule), signed by him in words before anything is made; any change to the end message or a checkpoint goes back to him first. Made standing by Krish on 19 Oct.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": ".agents/skills/make-piece/SKILL.md",
+          "contains": "| Narrative (before anything is made) |",
+          "how": "the first step of make-piece: no workroom, draft, script or visual until the narrative is signed"
+        },
+        {
+          "file": ".claude/skills/make-piece/SKILL.md",
+          "contains": "**Drift rule:** any change to the end message",
+          "how": "the Claude Code copy of the same step"
+        }
+      ]
+    },
+    {
+      "id": "workroom-on-brand",
+      "on": "2026-10-19",
+      "krish": "Are you just using this workroom as the iteration tool before we get this in to https://claude.ai/artifact/CDgS3JDULpzvRnxkHwLkVk? If so it needs to be on brand.",
+      "why": "The first workroom for Monday's piece used a palette and fonts of its own; what he iterates on should look like what ships, so his judgement of it carries onto the board.",
+      "means": "Every workroom (and any page he iterates a piece on before the week's publish board) uses the publish page's own tokens and fonts from its first version: cream, ink and mint, Anton uppercase headings, Archivo body, IBM Plex Mono labels.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": ".agents/skills/make-piece/SKILL.md",
+          "contains": "so it is on brand from its first version",
+          "how": "the make-piece Workroom step"
+        },
+        {
+          "file": ".claude/skills/make-piece/SKILL.md",
+          "contains": "so it is on brand from its first version",
+          "how": "the Claude Code copy"
+        }
+      ]
+    },
+    {
+      "id": "readers-are-mid-sized-firms",
+      "on": "2026-10-19",
+      "krish": "We need to stop referring to businesses as shops and talking about a mum and dad shop. My customers are medium sized enterprises. This script is 20% too \"Dumbed down\" / [19 Oct, to the proposal] \"agree on all 4\"",
+      "why": "Four rounds of 12-year-old read-backs pushed the 90-second script to a corner-shop example and over-explained words; his audience runs medium-sized companies and felt talked down to.",
+      "means": "Examples and framing are pitched at the leader of a medium-sized company (a finance team, a customer-service team, a contract with a supplier), never a shop or a family business. The two read-back readers are a smart, non-technical manager at a 200-person company, hearing it once, who also lists anything that talks down to them. Plain words and the reading gate stay.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": ".agents/skills/make-piece/SKILL.md",
+          "contains": "You are a smart, busy manager at a 200-person company",
+          "how": "read-back reader A"
+        },
+        {
+          "file": ".claude/skills/make-piece/SKILL.md",
+          "contains": "Pretend you run the finance or operations team at a 200-person company",
+          "how": "read-back reader B, the Claude Code copy"
+        },
+        {
+          "file": "apps/control-plane/api/_houseRules.ts",
+          "contains": "a smart, non-technical manager at a 200-person company hearing it once",
+          "how": "house rule R7"
+        }
+      ]
+    },
+    {
+      "id": "five-minute-long-cut",
+      "on": "2026-10-19",
+      "krish": "from here moving forward, let's make the 3-minute scripts into 5-minute scripts and videos. Scrap the 3-minute format in favor of the 5-minute format.",
+      "why": "The 3-minute cut could not carry the explanation and the business consequence together; he wants room for the substance.",
+      "means": "The long cut is a 5-minute video, 675 to 825 spoken words (house rule TWO_CUTS), for every piece from 19 Oct; the 90-second cut and the weekly deep cut are unchanged.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "scripts/post-pack/story_check.py",
+          "contains": "(675, 825, 'a 5-minute video')",
+          "how": "the script check refuses a long cut outside 675 to 825 words"
+        },
+        {
+          "file": "apps/control-plane/api/_houseRules.ts",
+          "contains": "A five-minute video and a ninety-second one",
+          "how": "house rule TWO_CUTS"
+        }
+      ]
+    },
+    {
+      "id": "big-ai-firms-short-term-offers",
+      "on": "2026-10-19",
+      "krish": "I think the point of this article is to get the message across that the Big AI firms (call it that) are always trying to tweak their short term offers given how cut throat their competitors are, and give business owners an idea of what actually is durable thinking amidst all this.",
+      "why": "A single-vendor price story leaves the reader with one fact that dates; what he wants them to keep is how to think about AI prices that keep moving.",
+      "means": "A follow.the.money piece about one firm's price puts it beside the other big AI firms' moves from their own pages, and ends on the durable rule a business owner can apply whatever the next offer is.",
+      "status": "open",
+      "encoded": []
+    },
+    {
+      "id": "near-term-backed-predictions",
+      "on": "2026-10-19",
+      "krish": "I changed the prediction to 95% by the end of this year, 2026 ... I'm done with sitting on the fence and putting predictions a year away: 55%. There's no point in that. Given how this article reads it's pretty obvious someone's going to shift their price again in the next month.",
+      "why": "House rule SHARP_PREDICTION told writers to avoid the obvious outcome and give a bolder call a lower number, so calls drifted to long shots a year out at 15 to 55%, which read as fence-sitting and help no reader decide anything.",
+      "means": "Every prediction is what we believe happens next, due within about three months (92 days) and backed at 80% or more. Both are blocking publish checks.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "apps/control-plane/api/_publishChecks.ts",
+          "contains": "export const CALL_HORIZON_DAYS = 92",
+          "how": "CALL_HORIZON blocks a call due more than 92 days out or already past"
+        },
+        {
+          "file": "apps/control-plane/api/_publishChecks.ts",
+          "contains": "export const CLEAR_STANCE_AT = 80",
+          "how": "CLEAR_STANCE now blocks below 80%"
+        },
+        {
+          "file": "apps/control-plane/api/_houseRules.ts",
+          "contains": "A near-term prediction we back, that a reader can check",
+          "how": "house rule SHARP_PREDICTION, read by the writers"
+        }
+      ]
+    },
+    {
+      "id": "boards-live-on-content-site",
+      "on": "2026-10-19",
+      "krish": "we are now retiring the Claude artefact permanently and we are working in content.krishraja.com for all published board updates ... Make sure the entire engine never ever Produces another artefact in the future and always pushes to that URL and merges to main automatically.",
+      "why": "Two Claude accounts, two artifact links that drift apart, comments that cannot be sent to Claude, and builds a session must republish by hand; one site he owns removes all of that.",
+      "means": "No session or tool publishes a Claude artifact again. Every board update (the week's board, a day's tab in draft, publish pages) goes to content.krishraja.com, and engine work merges to main automatically once its checks pass.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "scripts/hooks/artifact_gate.py",
+          "contains": "Claude artifacts are retired",
+          "how": "the PreToolUse hook refuses every Artifact publish and every ArtifactData write; reads pass"
+        },
+        {
+          "file": ".claude/settings.json",
+          "contains": "\"matcher\": \"Artifact|ArtifactData\"",
+          "how": "the hook is wired on both tools"
+        },
+        {
+          "file": "scripts/post-pack/week_board.py",
+          "contains": "default='web'",
+          "how": "the board builds for content.krishraja.com unless told otherwise"
+        },
+        {
+          "file": ".agents/skills/make-piece/SKILL.md",
+          "contains": "Claude artifacts are retired for good",
+          "how": "make-piece, plan-week, produce-video and the week-board reference say no step makes one"
+        },
+        {
+          "file": "AGENTS.md",
+          "contains": "turn on auto-merge, so GitHub merges it to main once CI passes",
+          "how": "the standing rule every agent reads: verify, push, PR, auto-merge"
+        }
+      ]
+    },
+    {
+      "id": "deep-cut-music-always-under",
+      "on": "2026-10-19",
+      "krish": "on the deeper cut, the audio needs to be able to be heard the entire time, but just really low unless its intro, outro or or chapter card",
+      "why": "Long stretches of bare voice felt empty; music should hold the whole piece together without competing with him.",
+      "means": "Deep cuts can use music_mode episode_bed: continuous low music under speech, lifts at actual chapter-card windows, 0.5-second rise, 0.8-second fall and two-second track crossfades. Krish approved the audition at -31 LUFS under speech and -22 LUFS lifts. Measured music continuity and loudness are delivery gates.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "scripts/quick-edit/music.py",
+          "contains": "def continuous_episode_bed",
+          "how": "Builds continuous speech bed with chapter lifts and track crossfades."
+        },
+        {
+          "file": "scripts/quick-edit/make.py",
+          "contains": "if loud.get('music_mode')=='episode_bed':",
+          "how": "Measures and checks the speech bed before receipt approval."
+        }
+      ]
+    },
+    {
+      "id": "sped-cut-visual-density",
+      "on": "2026-10-19",
+      "krish": "the 90 second video needs to have visuals nearly the entire way through as when things are sped up, we need to 3-5X the visual clarity",
+      "why": "A sped-up short gives the viewer less time per idea, so pictures must carry more, and be clearer, than in a normal cut.",
+      "means": "Short cuts require at least 90% speech visual coverage, no uncovered stretch above 1.5 seconds and at least 20 meaningful changes per minute. Each displayed step carries one idea and at most seven headline words; essential text is measured at final 1080 width and must be at least 48 pixels high.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "scripts/quick-edit/quality.py",
+          "contains": "def coverage_problems",
+          "how": "Rejects low coverage, long gaps and sparse visual changes."
+        },
+        {
+          "file": "scripts/quick-edit/make.py",
+          "contains": "quality.coverage_problems(visual_checks)",
+          "how": "Renderer applies the coverage gate."
+        },
+        {
+          "file": "tests/quick_edit_quality_test.py",
+          "contains": "a visual gap exceeds 1.5 seconds",
+          "how": "Regression test exercises missing visuals."
+        }
+      ]
+    },
+    {
+      "id": "show-the-analogy",
+      "on": "2026-10-19",
+      "krish": "There are also nowhere near enough visuals in the deep cut either of the car analogy",
+      "why": "The analogy is how the viewer understands the piece; when it is only spoken and never shown, the main idea does not land.",
+      "means": "When a script uses a car analogy, cover each spoken passage with relevant real badges, photos or controls. Keep Mercedes = Claude and C-Class = Opus 5.5 distinct. Friday replacement cues are reviewed, but a general automated analogy-to-cue coverage check is still open; the older drawn-car proposal is superseded by Krish.",
+      "status": "open",
+      "encoded": []
+    },
+    {
+      "id": "board-any-tool",
+      "on": "2026-10-19",
+      "krish": "yes lets move the board to content.krishraja.com",
+      "why": "The board only works inside Claude; he wants Codex and any tool to build it and read his ticks.",
+      "means": "Both weeks are live at content.krishraja.com behind the existing login. All new ticks, links, wording edits, picks, queue decisions and comments use the authenticated web API from every tool. All four sources are preserved and all 87 available records verified; no ongoing Claude artifact synchronization. Production acceptance and rollback evidence are in docs/handovers/board-web-release.md.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "scripts/post-pack/board_web.py",
+          "contains": "def web_page",
+          "how": "Web runtime and explicit operator publisher preserve artifact mode."
+        },
+        {
+          "file": "apps/control-plane/api/board/_handler.ts",
+          "contains": "createBoardHandler",
+          "how": "Private API persists all board collections and immutable builds."
+        },
+        {
+          "file": "config/boards.json",
+          "contains": "\"interaction_source\": \"web\"",
+          "how": "Verified active cutover routes every workflow to the web; original artifact addresses remain provenance."
+        }
+      ]
+    },
+    {
+      "id": "send-files-not-links",
+      "on": "2026-10-19",
+      "krish": "I requested three Markdown files for download, which you've not given me",
+      "why": "He asked for the files themselves and got paths in a chat reply.",
+      "means": "Files he asks for are sent with SendUserFile in the same turn, before any other work.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "CLAUDE.md",
+          "contains": "files he asks for are sent to him as files",
+          "how": "rule read at the start of every Claude Code session"
+        }
+      ]
+    },
+    {
+      "id": "no-scheduled-board-updates",
+      "on": "2026-10-19",
+      "krish": "I am deleting the publish board Claude schedules from both accounts FYI, scrub them from everywhere. We are not ready for this yet",
+      "why": "The scheduled board-videos task ran on its own on both accounts while the board moved to content.krishraja.com; he wants board updates to come only from sessions he starts.",
+      "means": "No session creates or relies on a scheduled task that builds, updates or publishes a publish board, and no current document names one, until he says he is ready.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "AGENTS.md",
+          "contains": "No session creates a scheduled task (a routine, a trigger, a cron) that builds, updates or publishes a publish board",
+          "how": "the standing rule every agent reads"
+        },
+        {
+          "file": "WORKBENCH.md",
+          "contains": "No schedule puts the videos on the board",
+          "how": "the handover no longer points sessions at the deleted schedule"
+        }
+      ]
+    },
+    {
+      "id": "say-the-result-not-the-method",
+      "on": "2026-10-21",
+      "krish": "the two video scripts just overlay bare pointless caveats and ifs and buts and asterisks about what I tested ... The scripts just need to be catchy, direct: what was tested, what the result was, which one won, and what that means. The article is similar ... it's overexplaining.",
+      "why": "Wednesday's brief listed every evidence boundary (equal weighting, test dates, chat-only Gemini, single reports) and the rewrite spoke each one aloud, so the scripts and article narrated the method instead of the result.",
+      "means": "Scripts and articles say what was tested, what happened, who won and what it means. Truth gates still hold, but limits, weighting and source detail live in the scorecard and a one-line footnote, never as spoken caveats. Comparisons are scored round by round: his test against the community's results, without naming every source in the script.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": ".agents/skills/make-piece/SKILL.md",
+          "contains": "Say the result, never the method.",
+          "how": "the Scripts step every making session follows"
+        }
+      ]
+    },
+    {
+      "id": "dry-wit",
+      "on": "2026-10-21",
+      "krish": "Bit of dry wit and hannah fry sarcasm too",
+      "why": "Even once the caveats were cut, the Wednesday scripts read as a flat report of results; he wants them to entertain while they inform.",
+      "means": "Scripts carry short, deadpan asides that tease what actually happened (Hannah Fry style), built only on true details, never mean to real people, and never at the cost of the length or reading gates.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": ".agents/skills/make-piece/SKILL.md",
+          "contains": "Then give it dry wit",
+          "how": "the Scripts step every making session follows"
+        },
+        {
+          "file": "apps/control-plane/api/_houseRules.ts",
+          "contains": "id: 'TONE_OBSERVANT_WITTY'",
+          "how": "a house rule every writer and draft judge reads: his answer, 2026-10-21, that observational, witty and positive applies to every series"
+        }
+      ]
+    },
+    {
+      "id": "script-opens-on-hook-closes-on-actions",
+      "on": "2026-10-21",
+      "krish": "we need to cut that opening line from every content piece moving forward and just launch straight in to \"I put GrokBot and Muse head to head\" etc. Also trim the closing to \"the full deep dive is at makeyourmindup.ai.\" right after a \"Here's what I'd do with this info if I were you\" closing line. That needs to be the format moving forward for all scripts.",
+      "why": "The series line and the sign-off with his name delayed the hook and the ending asked for too much; he wants the script to start on what he did and end on what the listener can do, with one line to the full piece.",
+      "means": "No script carries a series line or \"I'm Krish\". After the call it closes on a beat that starts \"Here's what I'd do with this info if I were you\" and says the actions, and its last sentence is exactly \"The full deep dive is at makeyourmindup.ai.\" with nothing after it. This replaces the 2026-10-12 series line for every series and both cuts.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "apps/control-plane/api/_houseRules.ts",
+          "contains": "id: 'SCRIPT_CLOSE'",
+          "how": "a house rule the writers, draft judges and final pass read"
+        },
+        {
+          "file": "scripts/post-pack/story_check.py",
+          "contains": "def close_problems",
+          "how": "refuses a script of a minute or more with no such beat or any other last sentence; build.py and making.py scripts run it"
+        },
+        {
+          "file": "apps/control-plane/api/_video.ts",
+          "contains": "export const SCRIPT_OPENING",
+          "how": "the script writer opens straight on the hook"
+        },
+        {
+          "file": ".agents/skills/make-piece/SKILL.md",
+          "contains": "Write each script opening straight on the hook",
+          "how": "the Scripts step every making session follows"
+        }
+      ]
+    },
+    {
+      "id": "three-things-tomorrow",
+      "on": "2026-10-21",
+      "krish": "The articles all need to have a really clear \"3 things you can do tomorrow\" at the end of every piece too.",
+      "why": "A piece should leave the reader with something to do, not only something to know.",
+      "means": "Every article ends with a last section headed \"3 things you can do tomorrow\" holding exactly three concrete actions that follow from its checked evidence. It is not an outline section.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "apps/control-plane/api/_houseRules.ts",
+          "contains": "id: 'THREE_THINGS_TOMORROW'",
+          "how": "a house rule the writers, draft judges, final pass and publish check read"
+        },
+        {
+          "file": "apps/control-plane/api/_publishChecks.ts",
+          "contains": "export function threeThingsTomorrow",
+          "how": "the publish check THREE_THINGS_TOMORROW reads the heading and the three items (not blocking yet)"
+        },
+        {
+          "file": "scripts/post-pack/spine_check.py",
+          "contains": "THREE_THINGS = re.compile",
+          "how": "the section is no section added on top of the approved outline"
+        }
+      ]
+    },
+    {
+      "id": "board-is-fed-never-shaped",
+      "on": "2026-10-21",
+      "krish": "how do you recommend we standardise and lock in this publish board so the content engine can just feed it? It's pretty good but I notice that it's quite inconsistent. For each publish session things move around. ... the rest of the content engine needs to know how to feed it and not be permitted to change random parts of the UI and UX but feed it in the right way consistently. That applies to Claude and to Codex.",
+      "why": "Each session built and patched the board its own way (pages inlined with their own styles, panels carried byte for byte, built pages string-patched and re-stamped), so sections moved from one session to the next and he could not work through his week by habit; on a phone it was a shrunk desktop page.",
+      "means": "From the week of 26 Oct every board has one layout from config/board-layout.json: Ideas, Queue, Monday, Wednesday, Friday, and in each day Brief, Drafts, Record, Publish, with the brief due the night before and the drafts the morning of. Sessions feed it through week_board.py's inputs only; the layout changes only with his approval.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "scripts/post-pack/week_board.py",
+          "contains": "def fixed_problems(page):",
+          "how": "verify() refuses a board whose tabs, steps or slots differ, a second stylesheet or a hand-laid banner"
+        },
+        {
+          "file": "scripts/check_board_layout.py",
+          "contains": "stamps a board outside the board",
+          "how": "npm run check:board-layout (CI, so Codex too) holds the build to the snapshot, fits every view at 390px and fails any script that patches and re-stamps a board"
+        },
+        {
+          "file": "scripts/check_board_layout.py",
+          "contains": "def lock_problems(want, weeks_seen, files):",
+          "how": "CI fails when the layout file, the colours or the board's structure differ from the snapshot, until --update --approved records the change with his words (Ruling, Krish, 2026-10-21: no approval prompts; the layout is held by CI)"
+        },
+        {
+          "file": "config/board-layout.json",
+          "contains": "\"on\": \"sunday_before\", \"when\": \"morning\"",
+          "how": "the brief is due Sunday morning and the scripts Sunday midday, his recording day (Krish, 2026-10-24, replacing the night-before rhythm)"
+        },
+        {
+          "file": "AGENTS.md",
+          "contains": "**The publish board is fed, never shaped.**",
+          "how": "the rule Claude and Codex both read"
+        }
+      ]
+    },
+    {
+      "id": "publish-run-sheet",
+      "on": "2026-10-21",
+      "krish": "After that workflow work is done, have a think about where I publish, how I publish, what I need to download, when, and in what order. Just make everything as beautiful and user-friendly as possible.",
+      "why": "Publishing a day meant scrolling the publish page's own sections: the files were named in each step but downloaded from different places (the videos card, the picture cards, the covers section), ticks sat on section headings and again in a checklist, and nothing put what to download first or in which order he would use it.",
+      "means": "A made day's Publish step is one ordered run-sheet built from data: the checklist meter, then Download first (every file in the order he uses it, each with one big Download, Download all, and the post's library folder named), then one card per place to post in config/board-layout.json's order, each with its files, its copy, what to do, its link box and its tick. Tick ids never change. Weeks before 26 October keep their markup.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "scripts/post-pack/week_board.py",
+          "contains": "def run_sheet(day, p, page, data, videos, delivery, feature, folder, warnings):",
+          "how": "the Publish step of a made day in the fixed layout is drawn from the page's data and the record, never from its markup"
+        },
+        {
+          "file": "scripts/post-pack/week_board.py",
+          "contains": "def run_sheet_problems(name, panel, tag):",
+          "how": "verify() refuses a Publish step with no Download first, a card out of order, a card without its own tick or a tick with no card"
+        },
+        {
+          "file": "scripts/post-pack/publish_manager.py",
+          "contains": "id=\"pm-data\"",
+          "how": "every publish page carries its words and its pictures' roles as data for the run-sheet"
+        },
+        {
+          "file": "scripts/post-pack/buttons_in_browser.py",
+          "contains": "Download all handed over",
+          "how": "CI clicks every Download, Copy and Download all on a fixed week's run-sheet in a real browser"
+        },
+        {
+          "file": "docs/PUBLISH_BOARDS.md",
+          "contains": "### The Publish run-sheet",
+          "how": "the run-sheet's order and how a session feeds it"
+        }
+      ]
+    },
+    {
+      "id": "two-cuts-and-an-occasional-feature",
+      "on": "2026-10-21",
+      "krish": "Bear in mind that all videos are generally 90 sec and 5 min. From time to time I might do a special 15 min feature. (Asked whether that replaces the weekly deep cut: \"Yes, replace it\".) Then, 2026-10-22, on Control Center learning the feature: \"we do not produce 15 minutes every single time\".",
+      "why": "The weekly 8 to 12 minute deep cut was the engine's proposal; his own rhythm is two cuts a piece, and a long feature only when he decides a piece deserves one.",
+      "means": "Every piece is a 90-second and a 5-minute video. No session proposes a long cut; a 15-minute feature (2,025 to 2,475 words) is a third cut only on a piece he called one for, recorded in config/features.json. The weekly deep cut is retired. Every surface says it the same way: the feature is never called a standard or third video of every piece, and Control Center's mirror (control-center src/lib/making.ts makingCuts and channelsFor) asks for it, and shows its two posting ticks, only on a feature piece.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "apps/control-plane/api/_houseRules.ts",
+          "contains": "id: 'FEATURE'",
+          "how": "house rule FEATURE replaced DEEP_CUT"
+        },
+        {
+          "file": "scripts/post-pack/story_check.py",
+          "contains": "'feature': (2025, 2475,",
+          "how": "the script check holds a feature to about 15 minutes"
+        },
+        {
+          "file": "config/board-layout.json",
+          "contains": "\"name\": \"15-minute feature\"",
+          "how": "the board shows the feature only on a feature piece"
+        },
+        {
+          "file": ".agents/skills/plan-week/SKILL.md",
+          "contains": "Never propose a feature.",
+          "how": "plan-week no longer proposes a weekly deep cut"
+        },
+        {
+          "file": "scripts/post-pack/making.py",
+          "contains": "NOT_A_FEATURE = (",
+          "how": "making.py scripts takes a third, feature script only on a piece in config/features.json, checked with story_check --cut feature, and refuses three scripts for any other piece"
+        },
+        {
+          "file": "apps/control-plane/api/_making.ts",
+          "contains": "export function makingCuts(",
+          "how": "the engine keeps the feature's hash, read-back and takes, and holds Record and Video assets open until a feature piece's feature is recorded and produced"
+        },
+        {
+          "file": "scripts/post-pack/teleprompter_send.py",
+          "contains": "'feature_left': making.FEATURE in hashes",
+          "how": "teleprompter_send.py plans the feature as a third script in the piece's folder, titled \"15-minute feature\", only for a feature piece"
+        },
+        {
+          "file": "scripts/post-pack/recording_match.py",
+          "contains": "FEATURE_FROM = 600",
+          "how": "recording_match.py places a take on the feature cut, stamped with the feature script's hash"
+        },
+        {
+          "file": ".agents/skills/produce-video/SKILL.md",
+          "contains": "Its own spoken-length cap",
+          "how": "produce-video makes the feature through the one-shot episode path, with its own spoken-length cap"
+        },
+        {
+          "file": "scripts/post-pack/publish_kit.py",
+          "contains": "FEATURE_YOUTUBE = f'YouTube long-form (the {FEATURE_NAME})'",
+          "how": "the publish page adds a YouTube long-form step and a Spotify episode step for a feature piece"
+        }
+      ]
+    },
+    {
+      "id": "edits-propagate-and-teach",
+      "on": "2026-10-21",
+      "krish": "I need to be able to comment on them to iterate or just edit in line myself and save changes to get picked up. The system needs to not just capture it but learn why I'm giving that feedback and figure out what patterns it's observing. If I make a statistical change or a narrative style change in one place, just make sure that those changes propagate and the next draft is consistent. Don't just think about that one surgical edit I made because I may have missed another place in another script for example.",
+      "why": "Board edits are applied by hand to the one box he changed and never reach the edit ledger, so the same fix has to be made again in the other cut, the article or the next piece.",
+      "means": "Each saved edit is classified (number or fact, claim, structure, tone, wording), applied to every draft of the piece and to later drafts, shown back as 'also changed in' with undo (Krish, 21 Oct: apply everywhere, show me), and written to the ledger so repeated patterns become proposed rules for his approval.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "scripts/post-pack/week_board.py",
+          "contains": "def editor_card(day, items, built_at=None, kept_at=None):",
+          "how": "the Drafts step in the fixed layout: each draft a read view (Markdown drawn, no # signs), a paragraph opened by a tap, one Save bar per day; the store edits/<day>-<item> and its built-at guard unchanged"
+        },
+        {
+          "file": "scripts/post-pack/week_board/week.js",
+          "contains": "async function saveDay(day)",
+          "how": "tap to edit, picked words get Comment on this pinned to {box, paragraph, quote}, N unsaved changes then Saved, the 409 path said; Undo, Change it too, Make it a rule and Not a rule saved as comments with act and ref"
+        },
+        {
+          "file": "apps/control-plane/api/board/_contracts.ts",
+          "contains": "export const COMMENT_ACTS",
+          "how": "a comment may carry box, paragraph, quote, and one of his taps (act, ref), each bounded"
+        },
+        {
+          "file": "scripts/post-pack/edit_sweep.py",
+          "contains": "def sweep(day, drafts, edits, pieces=None, recorded=None, week=None):",
+          "how": "each save diffed against base_sha256, each change classified by rule (number or fact, claim, structure, tone, wording), numbers, facts and claims carried into every draft of the piece and later drafts, tone and wording only suggested, recorded cuts left alone, the gates run again, Undo and Change it too by id"
+        },
+        {
+          "file": "scripts/post-pack/week_board.py",
+          "contains": "def sweep_card(p, sweep):",
+          "how": "--sweep DAY=sweep.json shows Also changed under the drafts, each with Undo; --lessons shows What I learned from your edits, each waiting for his yes"
+        },
+        {
+          "file": "apps/control-plane/api/_editEvents.ts",
+          "contains": "a_board_edit_needs_its_class",
+          "how": "the ledger takes surface publish_board: his relayed board edit, a manual_edit with its class as reason_code (migration 20261102090000 widens the CHECK)"
+        },
+        {
+          "file": "apps/control-plane/api/learning/_patterns.ts",
+          "contains": "export function repeatedEditClassProposals(",
+          "how": "three board edits of one class in 28 days become a proposal, never a rule, until he approves it"
+        },
+        {
+          "file": ".agents/skills/make-piece/SKILL.md",
+          "contains": "His saved edits are carried, written to the ledger, and shown back.",
+          "how": "the session that picks up his edits runs edit_sweep.py, posts the ledger rows and rebuilds with --sweep and --lessons"
+        },
+        {
+          "file": "scripts/check_board_layout.py",
+          "contains": "def editor_in_browser(page, web):",
+          "how": "CI taps a paragraph, edits it, saves, sees Saved and the store's fields, pins a comment to picked words and sees a 409 said"
+        }
+      ]
+    },
+    {
+      "id": "queue-consolidation-and-fresh-sunday-ideas",
+      "on": "2026-10-21",
+      "krish": "the ideas tab should, on a Sunday, contain a fresh batch of ideas that sources from all my different sources of ideas ... The ideas engine should have learnt from what I previously liked talking about ... there will be an overflow of ideas I queued for later and whatnot. I need to see that cue somewhere. You also need to pick up on whether there are multiple things in the queue that could be consolidated into one bigger piece that's more high-level and threads different things together.",
+      "why": "plan-week hand-writes the ideas, nothing gathers Control Center, the Cold Ideas and Inspo folder and the engine together, and queued ideas sat only inside each day's ideas with nothing joining them.",
+      "means": "Sunday's Ideas tab is gathered from every source and ranked by what he picked and marked before (the judges stay blind, Krish, 21 Oct); the Queue tab (built 21 Oct) also shows 'could combine' proposals, combined only on his word.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "apps/control-plane/api/_weekSources.ts",
+          "contains": "export function buildSources(",
+          "how": "GET /api/week/options?include=sources: his ideas, his inspo folder and the engine's, his first, then near something he liked (why_here), then the ladder score; evidence only, no model"
+        },
+        {
+          "file": "apps/control-plane/scripts/check-judges.ts",
+          "contains": "his taste steers sourcing, the judges stay blind",
+          "how": "the ladder and the arc scorer may not read the taste evidence"
+        },
+        {
+          "file": "apps/control-plane/api/_ideaQueue.ts",
+          "contains": "export function combineCandidates(",
+          "how": "GET /api/idea-queue?combine=1: queued ideas that could combine, from stored embeddings, no model"
+        },
+        {
+          "file": "apps/control-plane/api/content-ideas/synthesize.ts",
+          "contains": "queued_needs_his_word",
+          "how": "queued ideas combine only on his tap or words, and leave the queue with combined_by Krish"
+        },
+        {
+          "file": "scripts/post-pack/board_feed.py",
+          "contains": "def gather(week, call=None, out_dir=None):",
+          "how": "one read-only gather writes sources.json and names any empty source"
+        },
+        {
+          "file": "scripts/post-pack/week_board.py",
+          "contains": "def read_combine(data, queue, where='--combine'):",
+          "how": "the Queue tab's Could combine cards with a Combine button; every idea card says where it came from, why it is here and its beats"
+        },
+        {
+          "file": ".agents/skills/plan-week/SKILL.md",
+          "contains": "python3 scripts/post-pack/board_feed.py gather <Monday>",
+          "how": "the Sunday session gathers first, writes ideas.json and combine.json from it, and copies his Combine taps into synthesize"
+        }
+      ]
+    },
+    {
+      "id": "plain-score-words",
+      "on": "2026-10-21",
+      "krish": "what does \"a split\" mean? I have no idea",
+      "why": "The five-round scoring used a shorthand label for a shared round, which he could not read on the teleprompter.",
+      "means": "Scores and tallies in scripts and articles use only win, lose or draw (and plain counts); a shared round is a draw, with the reason said in words.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": ".agents/skills/make-piece/SKILL.md",
+          "contains": "Score in plain words: win, lose or draw",
+          "how": "the Scripts step every making session follows"
+        }
+      ]
+    },
+    {
+      "id": "finish-to-completion-when-told",
+      "on": "2026-10-21",
+      "krish": "just get it all done now, to full completion",
+      "why": "The session kept stopping at the context nudge to hand the next part to a fresh session, when he wanted the whole job finished and merged.",
+      "means": "When he says to finish a job to completion, the context nudge does not split it: finish every part, merge when green, then write the handover.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "docs/COST_GUARDS.md",
+          "contains": "the job is finished first and the handover written after",
+          "how": "the G1 context nudge row every session reads"
+        }
+      ]
+    },
+    {
+      "id": "script-is-the-bottleneck",
+      "on": "2026-10-22",
+      "krish": "There are currently two big bottlenecks: 1. Getting the script right: it being simple enough, sounding like me, and deliverable. 2. Post-production visuals, which we could deal with later.",
+      "why": "Wednesday's scripts needed round after round of his edits (overexplaining, a score word he did not understand, lines that did not sound like him) before he could read them on camera, and that is the time the engine is meant to save him.",
+      "means": "The script gets the effort first: the story is settled with him before a word of script is written, and each script is simple enough, sounds like him and is easy to say on camera before it reaches him; post-production visuals can come after he records.",
+      "status": "open",
+      "encoded": []
+    },
+    {
+      "id": "one-question-at-a-time",
+      "on": "2026-10-23",
+      "krish": "ask me everything one by one again",
+      "why": "The session put nine questions to him in one message; he answered the two that mattered most and the rest were assumed for him.",
+      "means": "Questions to him go one at a time, the one that changes the work most first, each with the session's best guess, and the next only after he answers.",
+      "status": "open",
+      "encoded": []
+    },
+    {
+      "id": "no-choppy-rhythm",
+      "on": "2026-10-23",
+      "krish": "yeah the choppy rhythm, sounds robotic",
+      "why": "Scripts were being cut into strings of five-word sentences to pass the reading gate: Wednesday's teleprompter script averaged 8 words a sentence with three runs of short ones, while his own take of it averaged 15, and he found it robotic to read.",
+      "means": "A script flows the way he talks: sentences of about 10 to 15 words joined with so, and or but, no run of three short sentences, and a lone short line only for a punchline, all inside the reading gate's limits.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "scripts/post-pack/story_check.py",
+          "contains": "the choppy rhythm, sounds robotic",
+          "how": "a SCRIPT_AS_HE_TALKS warning on any script averaging under 9.5 words a sentence or holding a run of three sentences of five words or fewer, with its self-test"
+        },
+        {
+          "file": ".agents/skills/make-piece/SKILL.md",
+          "contains": "Never choppy",
+          "how": "the Scripts step, 1b, that every making session follows"
+        }
+      ]
+    },
+    {
+      "id": "tests-are-experiments",
+      "on": "2026-10-23",
+      "krish": "Just bear in mind that deepseek does not have the same access to my emails, and this question is very vague, I don't think you are really thinking much about how to design a test that yields the experiment needed",
+      "why": "The session proposed a vague control question that tested nothing and a setup where two of the apps could reach his accounts and one could not, so the result could not show what the piece claims.",
+      "means": "A test in a piece is an experiment designed before it runs: one thing changed at a time against a matched control, the same access and settings for every tool, self-contained prompts, and what will be read from each answer written down first.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": ".agents/skills/make-piece/SKILL.md",
+          "contains": "A test the piece runs is designed as an experiment",
+          "how": "the Narrative step, where a piece's checkpoints and its test are set"
+        }
+      ]
+    },
+    {
+      "id": "wit-he-marked",
+      "on": "2026-10-23",
+      "krish": "Three and four are pretty funny. Number one could be even a tiny bit crude, if you want. I don't understand number two at all, and number five needs to hit harder.",
+      "why": "He kept the deadpan asides on true details (South Korea's \"Awkward.\", Grok checking Musk's posts \"one way to keep the boss happy\"), wanted the holiday line cheekier, could not decode an understated line (\"Its co-founder called that a miss\") and wanted the line carrying the point to land harder (it became \"You can take DeepSeek out of China. But you can't take China out of DeepSeek.\").",
+      "means": "Dry asides stay short and on true details; a little cheeky is fine; a line he has to decode is cut; the line that carries the point is written to hit hard, often as a turn on its own words.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": ".agents/skills/make-piece/SKILL.md",
+          "contains": "A joke he has to decode is cut",
+          "how": "the Scripts step, beside dry wit"
+        }
+      ]
+    },
+    {
+      "id": "his-call-in-his-words",
+      "on": "2026-10-23",
+      "krish": "It's more, yes, if you don't care about where your data ends up going ... It's kind of like the supply chain issue ... similar things will happen in AI. It just increases the need to not have overreliance on one supplier.",
+      "why": "Asked for his own view before the call beat was written, he gave a sharper take than the drafted one, and its supply-chain comparison became the piece's best line and its last action.",
+      "means": "The beat where he gives his call is built from his own words, asked for in one question before it is written; a drafted call is only a placeholder until he answers.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": ".agents/skills/make-piece/SKILL.md",
+          "contains": "ask him for his view in his own words",
+          "how": "the Scripts step, beside dry wit"
+        }
+      ]
+    },
+    {
+      "id": "inspiration-kinds",
+      "on": "2026-10-24",
+      "krish": "Typically, if I post a video in here, it's because I like either the script, the narrative, or the production style. When I post images in here, it's because I like the clarity. When I post something that shows a clear opinion about AI, it's usually because the topic could be something I want to speak about ... sheets like Instagram inspo ... That's not a one-off drop ... a corpus which I will have had an idea and gone and pulled all the research from Perplexity on it. That would be for a specific article or a specific content piece ... It's important that you understand what the different types of stuff are in here, and ideally, you can auto-classify and know how to extract the right inspiration.",
+      "why": "The Inspiration board asked the same 'what do you like about it?' question of every card, so a research corpus was guessed as 'The layout is really clean ... Study the style' and the always-fresh Instagram sheet was asked about like a one-off drop. Those guesses were wrong, and his answers to them taught the engine nothing.",
+      "means": "Every card is classified by its kind (a video, an image, a feed that keeps itself fresh, a research corpus, an idea or script, or another document), with a clear opinion about AI kept as the topic it raises, and is asked only its kind's question: a video which of the script, the narrative or the production style; an image the clarity; an opinion the topic. A feed is never asked anything: its newest posts go to the Sunday plan. A corpus is the research for the piece it names and is read by that piece first. Nothing is deleted; the archive only grows.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "supabase/migrations/20261107090000_inspiration_kinds.sql",
+          "contains": "What kind of thing each Inspiration card is",
+          "how": "the kind, who set it and a corpus's piece on every card; the feed's counts as a view"
+        },
+        {
+          "file": ".agents/skills/plan-week/SKILL.md",
+          "contains": "Read three more kinds of",
+          "how": "step 0 reads the feed's posts from the last 8 days, the opinions about AI, and the corpora waiting for a piece"
+        },
+        {
+          "file": ".agents/skills/make-piece/SKILL.md",
+          "contains": "The research starts with the corpus he linked to this piece",
+          "how": "the Narrative row reads the piece's corpus first"
+        },
+        {
+          "file": "docs/STYLE_REFERENCES.md",
+          "contains": "Which craft to study comes from his reason",
+          "how": "the style study reads the script, the narrative, the production style or the clarity as the layers to study"
+        }
+      ]
+    },
+    {
+      "id": "typed-words-are-his",
+      "on": "2026-10-24",
+      "krish": "Yes, exact typed quotes count as my opinions on what I think you should do with that content - what a stupid question. If you read what I am feeding back, it's pretty obvious what it is",
+      "why": "The Inspiration session asked him whether an exact quote of words he typed in a session counts as his words. What he types is plainly his view; the question showed it had not read his feedback for its reach, and it cost him a turn.",
+      "means": "Words he typed, quoted exactly, count as his words wherever they are recorded (a session, a page, a pasted note), as his view of what should be done with that content; a paraphrase, a summary or an inference is an observation. And a question his feedback already answers is never put to him: read what he has said for its reach first.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "AGENTS.md",
+          "contains": "exact typed quotes",
+          "how": "the 'Your own actions are observations' rule says his typed words, quoted exactly, are his"
+        },
+        {
+          "file": "AGENTS.md",
+          "contains": "If you read what I am feeding back, it's pretty",
+          "how": "the 'Check before you ask' rule never asks what his feedback already answers"
+        }
+      ]
+    },
+    {
+      "id": "drive-folders-by-id",
+      "on": "2026-10-24",
+      "krish": "Isn't there a better way of doing this than the path name? Folders get renamed all the time and moved all the time. Surely, the whole point of having a Google Drive is that there's a specific ID for a specific folder. ... A. ... I recently moved more or less all of my Google Drive folders, can we do a check of anywhere the control-center or content-engine interacts with Google Drive and ensure it is bulletproof and correct everywhere?",
+      "why": "He renamed Ventures\\Active to Active Ventures; both home computers kept the old path in their settings and logged 'the Inbox cannot be reached' into a hidden log for two days, so six Friday takes sat in the Inbox for five hours and nothing told him.",
+      "means": "A Drive folder is found by its ID, never by its path, wherever the API allows it: the engine reads the Video Engine Inbox from Google by its folder ID. What must go through the H: mount keeps its folder's ID beside its path, and every place that reads Drive fails loudly where Krish sees it (a failed job in Control Center), never only in a local log. A stale setting on a machine is reported and passed over, never obeyed into silence.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "apps/control-plane/api/library/_inboxDrive.ts",
+          "contains": "export const INBOX_FOLDER_ID",
+          "how": "the engine lists the Inbox by its ID and copies each new take into the recordings store every ten minutes"
+        },
+        {
+          "file": "apps/control-plane/api/library/recordings/drive-inbox.ts",
+          "contains": "the Video Engine Inbox cannot be read by its ID",
+          "how": "an unshared, deleted or binned Inbox fails the recordings_drive_inbox job with its fix"
+        },
+        {
+          "file": "apps/control-plane/api/library/_lanes.ts",
+          "contains": "export const LANE_PROBLEMS",
+          "how": "a home computer's stale setting, unreachable Inbox or failed publish fails the job with the machine named"
+        },
+        {
+          "file": "scripts/recordings-upload.ps1",
+          "contains": "function Send-LaneReport",
+          "how": "every pass reports what it found to the engine and reads its settings fresh from the registry"
+        },
+        {
+          "file": "packages/core/src/paths.ts",
+          "contains": "export function resolveWindowsDrivePath",
+          "how": "a setting naming a missing folder is passed over for the default and reported by doctor"
+        },
+        {
+          "file": "config/studio.json",
+          "contains": "\"drive_ids\"",
+          "how": "each runtime folder's Drive ID beside its path"
+        },
+        {
+          "file": "docs/DRIVE.md",
+          "contains": "Folders are found by ID, never by path",
+          "how": "the rule every session reads before touching Drive"
+        }
+      ]
+    },
+    {
+      "id": "visuals-add-not-repeat",
+      "on": "2026-10-24",
+      "krish": "The narrative and the visuals should match and be additive and not duplicative to one another. Just a reminder that we're going to need to up our game on visuals with the voiceover version - I want motion and world-class motion design in a specific visual aesthetic",
+      "why": "Captions that repeat the spoken line waste the screen; he wants the picture to carry what the voice cannot, and voiceover cuts to look designed rather than assembled.",
+      "means": "On-screen words never repeat the sentence being said: they add a source, date, exact number, name or the changed word, and the picture shows the mechanism the voice names. A voiceover cut has one named motion system per piece, decided before the storyboard. Set for Friday 23 Oct in docs/plans/2026-10-23-friday/locked/motion-system.md; a house rule and a check that flags a caption matching its own beat's words are still to build.",
+      "status": "open",
+      "encoded": []
+    },
+    {
+      "id": "inspiration-two-folders",
+      "on": "2026-10-24",
+      "krish": "I've consolidated and restructured the inspiration folders inside this. ... one for the content I like ... and one for production quality I like. Can you ensure absolutely everywhere recalibrates to this moving forward first? ... make sure control center and every other place that needs these folders is corrected too",
+      "why": "He reorganised Drive and wants every reader and writer to follow without him chasing each one; a path or ID left behind silently reads an empty or missing folder.",
+      "means": "Inspiration lives in Ventures > Inspiration: Production Inspo (1QxrzxISYFXq0er0DG0XSapm7qhvuRmh-) for production quality he likes, Content Inspo (1FNztJOU82M8zb6IIbUAbvuI6Kr0pF5Hu, once Cold Ideas & Inspo) for content he likes. Video Engine > Inspiration is gone. Every reader finds them by ID where it can; anything on the H: mount reads the configured path and never a stale setting.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "config/style-references.json",
+          "contains": "1QxrzxISYFXq0er0DG0XSapm7qhvuRmh-",
+          "how": "the style references read Production Inspo by its ID and synced path"
+        },
+        {
+          "file": "scripts/quick-edit/references.py",
+          "contains": "a stale setting that no longer exists never wins over the configured folder",
+          "how": "references.py publish finds Production Inspo from config, never a dead MINDMAKE_INSPIRATION"
+        },
+        {
+          "file": "docs/DRIVE.md",
+          "contains": "Ventures > Inspiration",
+          "how": "the Drive map lists both folders with their IDs"
+        },
+        {
+          "file": "AGENTS.md",
+          "contains": "Production Inspo",
+          "how": "content-watcher's Drive exception names the two folders"
+        }
+      ]
+    },
+    {
+      "id": "sovereign-not-one-country",
+      "on": "2026-10-24",
+      "krish": "\"IS YOUR AI CHINESE?\" Sounds incredibly racist. The whole point of this is to understand what sovereign AI means and why countries are fighting to build their own AI as opposed to use another countries. We must not make this feel like we're stirring geopolitical hatred against China, it's just an example",
+      "why": "The packaging and the pictures had drifted into treating one country as the suspect: a thumbnail asking whether your AI is Chinese, headlines built on 'a Chinese AI', and the country's name coloured in the warning tone. That misstates the story and reads as prejudice.",
+      "means": "A piece about where AI comes from is about every country's reasons (sovereign AI); any one country is an example. Titles, thumbnail words, headlines and covers lead with the idea and name countries in the plural or not at all, never asking whether something is from one country. On screen a country's name is never in the warning colour or framed as the threat; colour marks what changed, never who.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "config/title-verdicts.json",
+          "contains": "Never single out one country",
+          "how": "title_check.py lessons prints the rejected line and its lesson before every packaging round"
+        },
+        {
+          "file": "docs/plans/2026-10-23-friday/locked/motion-system.md",
+          "contains": "never on a country",
+          "how": "the Friday motion system: amber marks what changed, never a country"
+        }
+      ]
+    },
+    {
+      "id": "drive-layout-2026-10-24",
+      "on": "2026-10-24",
+      "krish": "just reinstate that in the root folder then ... Ventures is where everything now lives (their subfolders. If I notice bugs or issues while on my phone, I put them in Bugs and Issues, i put things that inspire me in Inspiration, and Active Ventures contains all the main ventures we are working on, and that the entire OS/control center/AI harness is expected to use and keep up to date alongside the filearchives repository). Can you ensure that all happens? KeePass and FamilyContentLibrary are immovable.",
+      "why": "His folder moves left the Drive map pointing at CURRENT and CURRENT/00_INBOX, which no longer exist, so a Claude session that could not place a file was told to use a folder that was gone, and Hunter's map could not be rebuilt.",
+      "means": "The top of his Drive is Ventures (Active Ventures, Inspiration, Bugs & Issues, _Archive), --ARCHIVE, Family Admin, FamilyContentLibrary, KeePass and Inbox from My AI. Anything an AI cannot place goes in Inbox from My AI, never loose at the top. Content ideas go in Ventures > Inspiration > Content Inspo. FamilyContentLibrary and KeePass never move. The Drive map, the session guard, filearchives and this engine all name the same layout, by folder ID.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "docs/DRIVE.md",
+          "contains": "## The top of his Drive (Krish, 2026-10-24)",
+          "how": "the layout, each area's ID, the AI inbox and where content ideas go, read before any Drive work"
+        },
+        {
+          "file": "docs/DRIVE.md",
+          "contains": "Anything an AI session cannot place: `Inbox from My AI`",
+          "how": "where a new thing goes"
+        }
+      ]
+    },
+    {
+      "id": "speedup-without-glitches",
+      "on": "2026-10-24",
+      "krish": "Happy to speed it up, but last time Codex glitched a bunch of words on the speedup and also misaligned the captions.",
+      "why": "A sped cut built from words timed before the speed-up, or from many separately encoded parts, clips words and drifts captions and lips; the checks that passed did not listen.",
+      "means": "A cut is sped once, as one continuous file, through the config's speed; cut points and captions come only from a fresh transcript of the sped file; the finished file's transcript must hold every script word in order, every join heard, lip sync within 40 ms at three points, before Krish sees it.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": ".agents/skills/produce-video/SKILL.md",
+          "contains": "A sped cut is sped once",
+          "how": "The produce-video skill's speed step."
+        },
+        {
+          "file": "docs/plans/2026-10-23-friday/locked/CODEX.md",
+          "contains": "## Speed without glitches",
+          "how": "Friday's Codex brief, the seven steps for the two sped vertical cuts."
+        },
+        {
+          "file": "scripts/quick-edit/quality.py",
+          "contains": "def transcript_identity(source, speed, model)",
+          "how": "Refuses a words file with the wrong source, speed or transcriber."
+        }
+      ]
+    },
+    {
+      "id": "styles-to-choose-and-push",
+      "on": "2026-10-24",
+      "krish": "It should also be able to suggest script and production styles that I can choose from or that it recommends for specific content. This engine should be pushing and pushing and pushing, becoming more and more creative and experimental. We don't know what works yet because the growth engine hasn't really reported back any useful results, so we still need to be producing better and more divergent work.",
+      "why": "Every week came out in the same face-led format, and with no growth numbers yet there is no evidence that one format wins, so sameness is a cost with nothing to show for it.",
+      "means": "Every idea on the Sunday board carries a recommended script format, a recommended production format and one untried experiment from the style bank's formats; a day with one script format, a day with no experiment or a week dominated by one production format is refused.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "config/style-references.json",
+          "contains": "\"formats\"",
+          "how": "the formats he chooses from, each with its evidence"
+        },
+        {
+          "file": "scripts/post-pack/week_board.py",
+          "contains": "def style_problems",
+          "how": "the build refuses a week that does not diverge"
+        },
+        {
+          "file": ".agents/skills/plan-week/SKILL.md",
+          "contains": "each a format id from `config/style-references.json` `formats`",
+          "how": "the Ideas tab step"
+        }
+      ]
+    },
+    {
+      "id": "sunday-is-recording-day",
+      "on": "2026-10-24",
+      "krish": "Yes, Sunday is my recording day.",
+      "why": "He answered whether all three scripts are locked on the Sunday: he records the week in one session.",
+      "means": "Every day's brief is agreed Sunday morning and every day's scripts are in Teleprompter by Sunday midday, with the creative direction written before he records.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "config/board-layout.json",
+          "contains": "sunday_before",
+          "how": "the board's due dates"
+        },
+        {
+          "file": ".agents/skills/plan-week/SKILL.md",
+          "contains": "Sunday is his recording day",
+          "how": "plan-week runs make-piece for all three days the same Sunday"
+        }
+      ]
+    },
+    {
+      "id": "claude-owns-words-and-visuals",
+      "on": "2026-10-24",
+      "krish": "Once the videos are recorded, Claude gets the scripts and the visual creative direction locked so that codex can take over on the video production, and ensures that it does a great job of producing the final publish board. the copy of the article and what goes in the visuals etc is all Claude responsibility.",
+      "why": "Production sessions that decided the visuals themselves produced work he had to art-direct line by line.",
+      "means": "Claude writes the story, the scripts, the article copy, every article figure and the creative direction; production renders only from a direction he signed; Claude builds the final board.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "docs/CREATIVE_DIRECTION.md",
+          "contains": "Who does what",
+          "how": "the standard"
+        },
+        {
+          "file": "AGENTS.md",
+          "contains": "Claude owns the words and the visuals",
+          "how": "the start route every client reads"
+        },
+        {
+          "file": ".agents/skills/make-piece/SKILL.md",
+          "contains": "The creative direction, before he records",
+          "how": "make-piece step 7"
+        }
+      ]
+    },
+    {
+      "id": "improve-your-own-quality",
+      "on": "2026-10-24",
+      "krish": "The end objective is that tomorrow's Ideas Board is SIGNIFICANTLY improved ... it's your engine's job to use it all but most importantly focus on improving your own work quality",
+      "why": "The ideas reaching him were thin and similar, and the engine had sources it never read.",
+      "means": "Before the Ideas tab is built, a separate reader tries to kill each idea against the quality bar (four different stories a day, the face's Monday-morning action, a specific checked hook, one from his own words or Inspiration House, one wildcard) and every killed idea is replaced.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": ".agents/skills/plan-week/SKILL.md",
+          "contains": "The quality bar, before an idea reaches him",
+          "how": "plan-week step 3b"
+        }
+      ]
+    },
+    {
+      "id": "finish-the-job-here",
+      "on": "2026-10-25",
+      "krish": "Just finish it all here. You've asked me to hand over three different sessions that I've tried to get you to build this fucking outcome. Just fucking build it here.",
+      "why": "The context guard (G1) tells every long session to stop and hand over mid-job, so his Sunday plan was passed between sessions three times and the outcome he asked for never arrived.",
+      "means": "A session finishes the job Krish asked for in that session. Cost discipline comes from lean steps (searching, short outputs), never from handing his job to a fresh session part-way. A handover is written when the job is done, for the next job. To encode: the G1 message in scripts/hooks/cost_gate.py, which needs Krish's yes because it changes a guardrail.",
+      "status": "open",
+      "encoded": []
+    },
+    {
+      "id": "no-repeat-contract-takeaway",
+      "on": "2026-10-26",
+      "krish": "I don't want every single takeaway to be \"go and look at your contract\" because we've done that a few times.",
+      "why": "Several recent pieces ended on the same advice, so the actions stopped feeling specific to each story.",
+      "means": "A piece's Monday action and its 3 things you can do tomorrow come from that piece's own evidence and name something new to watch or do; check the last few published pieces' actions before writing one, and never make \"check your contract\" the main action again unless he asks for it.",
+      "status": "open",
+      "encoded": []
+    },
+    {
+      "id": "feedback-becomes-cues",
+      "on": "2026-10-26",
+      "krish": "create some form of feedback loop with the [inspiration] house repository where all the feedback I've given you goes into a really clear set of cues that you can draw from in the future ... just make sure the content engine knows about this permanently moving forward",
+      "why": "Valuable feedback kept being given in chat and lost: ideas worth making later, material worth keeping for a bigger piece, and topics to watch over time had nowhere to live.",
+      "means": "Every decision he gives on an idea is relayed to the idea queue with his words, becomes a feedback cue (future piece, wider-piece context by theme, track over time, brief, not for us), and the Sunday gather draws on the open cues; a piece built from one marks it used.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "AGENTS.md",
+          "contains": "His feedback on ideas is kept as cues, permanently",
+          "how": "the standing rule every session reads"
+        },
+        {
+          "file": ".agents/skills/plan-week/SKILL.md",
+          "contains": "Then read his feedback cues",
+          "how": "plan-week step 1"
+        },
+        {
+          "file": "apps/control-plane/api/_feedbackCues.ts",
+          "contains": "feedback_cues",
+          "how": "the Sunday gather reads the cues"
+        }
+      ]
+    },
+    {
+      "id": "no-paid-call-before-a-free-step",
+      "on": "2026-10-26",
+      "krish": "But why are you using Anthropic API here when you have access to Teleprompter via MCP? This seems like one of the ways in which we just burn API credits when we don't really need to be doing that.",
+      "why": "Sending scripts to Teleprompter costs nothing, but making.py's scripts step (which teleprompter_send.py needs) first asks the engine's spine judge, a paid Anthropic call on the article body. The body was still to be rewritten in his voice, so that call would have been thrown away and paid for again.",
+      "means": "A free step never waits behind a paid model call, and a paid judge runs once, on the final words it judges, never on a draft that is about to change. The scripts and the Teleprompter send are held by the free checks (story_check, the outline and its sections, the read-back); the engine's spine judge runs once on the finished article at the fact gate. To encode: spine_gate in scripts/post-pack/making.py, which needs Krish's yes because it moves a gate he set (ONE_SPINE).",
+      "status": "open",
+      "encoded": []
     }
-   ]
-  },
-  {
-   "id": "legible-to-a-stranger",
-   "on": "2026-10-17",
-   "krish": "This isn't a well-known concept and it's not a well-known media business. ... Why can't you understand why I absolutely hate, detest, loathe these? They're offensive to me. They hurt my soul.",
-   "why": "His purpose is to make what is coming legible to people; a line only legible to someone who has already watched the video is the opposite of it, and a cheap, cryptic one costs the credibility a new brand for senior people depends on. It also proved lessons already on file were ignored: the surface formula (\"under 4 words\", \"a curiosity gap\") was followed over his principle.",
-   "means": "Every line a stranger sees first names a real thing in plain words and says something true about it; his principles outrank any formula; nothing reaches him before a cold reader with no context can explain it; fewer, better options, never a pile.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "scripts/post-pack/title_check.py",
-     "contains": "def names_nothing",
-     "how": "refuses a first-seen line that names nothing real"
-    },
-    {
-     "file": ".claude/skills/make-piece/SKILL.md",
-     "contains": "Then the cold read, before anything reaches him",
-     "how": "the cold read"
-    },
-    {
-     "file": "config/title-verdicts.json",
-     "contains": "a stranger must understand the line in one second",
-     "how": "the first lesson"
-    }
-   ]
-  },
-  {
-   "id": "headings-from-his-words",
-   "on": "2026-10-17",
-   "krish": "These headings are so stupid it's insane. I can't believe you're putting these to me. Then: \"I do worry that using my own words for headings and chapter names will lose some of what makes this feel like a real media channel\"",
-   "why": "First they were written to pass the title checker (names stuffed in, label strings, bare numbers), not to be read in a second. The fix overcorrected into pasting his transcript, which loses the edited layer that makes a channel feel professional.",
-   "means": "Headings and chapter dividers are an editorial layer in one channel style: one device across the episode, each line a short claim or promise naming the real thing, a kicker with the source and date, built on what he says at that moment and his best phrases, never pasted from the transcript and never written to pass the checker.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "config/title-verdicts.json",
-     "contains": "that reads like a transcript, not a channel",
-     "how": "the lesson every title round prints"
-    },
-    {
-     "file": ".claude/skills/make-piece/SKILL.md",
-     "contains": "CHANNEL_HEADINGS",
-     "how": "how headings and dividers are written"
-    },
-    {
-     "file": ".claude/skills/produce-video/SKILL.md",
-     "contains": "CHANNEL_HEADINGS",
-     "how": "the packaging round after the takes"
-    }
-   ]
-  },
-  {
-   "id": "playbooks-into-the-engine",
-   "on": "2026-10-17",
-   "krish": "I hope you're saving these playbooks to the engine so that you can build and create better formulas for things and present them to me at the right moment before production (so that there's less iteration after you create things).",
-   "why": "Each corpus he sends (post-production, hooks, styles) is meant to make the first draft right, so he iterates less after things are made.",
-   "means": "Every playbook or corpus he sends is kept in the repository and its formulas lead every round for that surface; options reach him at the right moment, before anything is made.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "config/hook-playbook.json",
-     "contains": "krish_playbook",
-     "how": "his hook, title and thumbnail playbook, per surface"
-    },
-    {
-     "file": "scripts/post-pack/title_check.py",
-     "contains": "def krish_playbook_text",
-     "how": "title lessons print his formulas first"
-    },
-    {
-     "file": "docs/production/one-shot-episode-corpus.md",
-     "contains": "Post-Production Corpus",
-     "how": "the long-episode standard"
-    },
-    {
-     "file": "config/style-references.json",
-     "contains": "kinetic-serif-captions",
-     "how": "the style bank"
-    }
-   ]
-  },
-  {
-   "id": "engine-retrieves-its-banks",
-   "on": "2026-10-17",
-   "krish": "make sure the content engine can retrieve learnings and banks of its own formulas on doing stuff.",
-   "why": "The playbooks and lessons live in the repository, where sessions read them; the engine's own writers in Control Center do not yet draw on them.",
-   "means": "The engine can read the learnings, the hook playbook, the style bank and the title lessons when it drafts, not only the house rules.",
-   "status": "open",
-   "encoded": []
-  },
-  {
-   "id": "where-each-line-goes",
-   "on": "2026-10-17",
-   "krish": "I'm also unclear on what would be a Substack headline versus the Substack cover image versus a YouTube thumbnail, etc.",
-   "why": "Options were offered by surface code (Y1, S1, T1) without saying what each surface is or where it shows.",
-   "means": "Every packaging option names its surface and what that surface is and where it shows.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "config/hook-playbook.json",
-     "contains": "surface_map",
-     "how": "what each surface is"
-    },
-    {
-     "file": "scripts/post-pack/title_check.py",
-     "contains": "What {surface} is",
-     "how": "title lessons start with the surface's job"
-    }
-   ]
-  },
-  {
-   "id": "scripts-as-he-talks",
-   "on": "2026-10-17",
-   "krish": "list everything about my narration that deviated from the script, down to the fact that I talk in, let's say, about 30% of that. Thats how script should be written in the future.",
-   "why": "He rewrites the script as he reads it (9% of what he said was his own on 12 Oct, 38% by 16 Oct), so a script that is not how he talks is half rewritten on camera and runs long.",
-   "means": "Scripts are written the way he says them, and their length is budgeted for what he adds; every take is measured against its script.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "scripts/post-pack/narration_diff.py",
-     "contains": "def ledger_add",
-     "how": "every take lined up with its script, kept in the ledger"
-    },
-    {
-     "file": "scripts/post-pack/story_check.py",
-     "contains": "def spoken_length_warning",
-     "how": "a script that will run long as he says it is warned"
-    },
-    {
-     "file": "config/narration-ledger.json",
-     "contains": "said_more_pct",
-     "how": "the week's takes"
-    },
-    {
-     "file": "apps/control-plane/api/_houseRules.ts",
-     "contains": "SCRIPT_AS_HE_TALKS",
-     "how": "the house rule every writer and judge reads"
-    },
-    {
-     "file": "scripts/post-pack/story_check.py",
-     "contains": "def spoken_habit_warnings",
-     "how": "soft checks for his spoken habits"
-    },
-    {
-     "file": "config/golden-examples.json",
-     "contains": "\"kind\": \"spoken-line\"",
-     "how": "his own lines from the takes"
-    },
-    {
-     "file": ".claude/skills/make-piece/SKILL.md",
-     "contains": "Write it the way he says it",
-     "how": "the scripts step"
-    }
-   ]
-  },
-  {
-   "id": "upgrade-the-edit-style",
-   "on": "2026-10-17",
-   "krish": "I think we need to upgrade everything. And like before, have a bank of styles that we can draw from. Then: These words all bounce in and there's a lot more movement on the screen. The background of the person has also been treated when he's talking so it doesn't look too amateur.",
-   "why": "The split-screen edit and house typography read as amateur next to the creators he watches.",
-   "means": "The edit's styles come from a bank of modules he rates; new looks are tried on his own footage before they are used.",
-   "status": "open",
-   "encoded": [
-    {
-     "file": "config/style-references.json",
-     "contains": "treated-background",
-     "how": "the modules from his references"
-    }
-   ]
-  },
-  {
-   "id": "say-nothing-twice",
-   "on": "2026-10-17",
-   "krish": "everything I say to you, whether it's feedback or ideas, you should always be thinking about why I'm saying it and what that means for the future. I want a \"say nothing twice\" policy in this engine",
-   "why": "He wants to be understood once and not repeat himself.",
-   "means": "Every message from him is read for why and for what it changes; each becomes an entry here, enforced where it applies, checked at the start of every session.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "AGENTS.md",
-     "contains": "Say nothing twice",
-     "how": "every agent reads it first"
-    },
-    {
-     "file": "CLAUDE.md",
-     "contains": "config/learnings.json",
-     "how": "the session start"
-    },
-    {
-     "file": "scripts/check_failures.py",
-     "contains": "learnings.json",
-     "how": "the check run first in every session"
-    }
-   ]
-  },
-  {
-   "id": "sign-off-first",
-   "on": "2026-10-17",
-   "krish": "do you not want to get sign off on headings and titles first so you can punch through to 100% without me?",
-   "why": "His decisions are the only part of production that needs him. Asked mid-run, or queued behind slow machine work (screen captures, renders), they keep him on call for hours and the piece waits on him at the end instead of the start. He wants to answer once and then not be needed.",
-   "means": "Once a take is on the record, the first thing a session does is put ONE sign-off sheet to him with every decision that is his for the piece (titles, cover and thumbnail words, title card, headings and chapter dividers, the intro stand-off, any script or speed choice), before any machine step that waits on it; then it finishes to publish-ready without coming back, except for a send, publish, spend or delete.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": ".claude/skills/make-piece/SKILL.md",
-     "contains": "SIGN_OFF_FIRST",
-     "how": "the titles step: one sign-off sheet, first, then finish without him"
-    },
-    {
-     "file": ".claude/skills/produce-video/SKILL.md",
-     "contains": "SIGN_OFF_FIRST",
-     "how": "after the takes: his sign-off first, never queued behind a machine step"
-    }
-   ]
-  },
-  {
-   "id": "story-first",
-   "on": "2026-10-17",
-   "krish": "These are still awful. I'm getting exhausted. The story is about there being so many recent AI model releases and figuring out if that's actually important, why it's speeding up, and what choices a user is going to have to make (or what gears are going to be hidden from them in the future). It's a \"mind the gap\" piece remember. Why do I have to remind you about what this story is about?",
-   "why": "He judges a line first by whether it tells the piece's story; each round I fixed the last complaint and lost the story, so he had to restate it and is exhausted by it.",
-   "means": "When he states what a piece is about, his words go in the plan's story.md and every later line (titles, cover, thumbnail, title card, chapters, headings, channel copy) is judged against them first; without a statement, the outline's spine and the series' question.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "scripts/post-pack/title_check.py",
-     "contains": "def story_text",
-     "how": "the round prints the story first"
-    },
-    {
-     "file": ".claude/skills/make-piece/SKILL.md",
-     "contains": "STORY_FIRST",
-     "how": "the titles step"
-    },
-    {
-     "file": ".claude/skills/produce-video/SKILL.md",
-     "contains": "STORY_FIRST",
-     "how": "the packaging round after the takes"
-    }
-   ]
-  },
-  {
-   "id": "sniffs-dampened",
-   "on": "2026-10-17",
-   "krish": "i was sniffing a bit so dampen that out surgically.",
-   "why": "A sniff between lines sounds amateur, and cutting it would move the picture against his voice; he wants it gone without the edit showing.",
-   "means": "Every cut finds sniffs in the gaps between his words and turns only those spans down, with soft fades, never cutting; each one is listed in the render report and checked before a cut ships.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "scripts/quick-edit/make.py",
-     "contains": "desniff",
-     "how": "on by default in every render"
-    },
-    {
-     "file": "scripts/quick-edit/episode.py",
-     "contains": "def sniffs",
-     "how": "the detector and the duck, self-tested"
-    }
-   ]
-  },
-  {
-   "id": "nothing-only-in-one-session",
-   "on": "2026-10-18",
-   "krish": "in general ensure nothing is ever not accessible by another session, ever",
-   "why": "A handover lost work because captures, renders and transcripts lived only in one cloud container; the next session, often on his other account, would have had to remake them.",
-   "means": "Before a session stops, everything it made or used that another session may need is either committed (code, configs, specs, transcripts, small data) or sent to the post's library folder with send.py (screenshots, renders, panels, exhibits), and the handover names where each is. Nothing lives only in .cache or a workflow journal.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "AGENTS.md",
-     "contains": "Nothing a session makes lives only in its own container",
-     "how": "a rule every agent reads at session start"
-    },
-    {
-     "file": "docs/plans/2026-10-09-friday/HANDOVER.md",
-     "contains": "working 17 Oct",
-     "how": "this piece's files named in the handover"
-    }
-   ]
-  },
-  {
-   "id": "cost-six-standing-rules",
-   "on": "2026-10-18",
-   "krish": "They should all become standing rules.",
-   "why": "One six-day session used about half of a 20x Max plan in a week: every step re-read a context that sat at a median of 459k tokens; and four paid fact-check reruns cost about four times the estimate.",
-   "means": "One fresh session per job, handover between topics, few big steps, no big outputs in the chat, Sonnet for production work, agents only where a separate reader is needed, and paid runs estimated from the meter.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "AGENTS.md",
-     "contains": "Cost: six standing rules",
-     "how": "a rule every agent reads at session start"
-    },
-    {
-     "file": "docs/COST_GUARDS.md",
-     "contains": "G1 | Context nudge",
-     "how": "the guards to build, in order"
-    },
-    {
-     "file": "docs/prompts/sunday-ideas-tab.md",
-     "contains": "keep to the cost rules",
-     "how": "the next job's prompt carries the rules"
-    }
-   ]
-  },
-  {
-   "id": "files-as-files",
-   "on": "2026-10-18",
-   "krish": "I don't need these as artefacts. I need them as Markdown. This is a good example of why you waste tokens. The only artefacts I need are the two published boards being fully up to date.",
-   "why": "A request for three Markdown files was also built onto both boards, costing a board read, a rebuild and two publishes he did not ask for.",
-   "means": "Files he asks for are handed over as files. Artifacts are only the week's publish boards, kept up to date.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "AGENTS.md",
-     "contains": "hand him the files themselves",
-     "how": "a rule every agent reads at session start"
-    }
-   ]
-  },
-  {
-   "id": "cost-never-costs-quality",
-   "on": "2026-10-15",
-   "krish": "yes, if you are 110% sure this does not degrade the quality of the output - this cannot happen.",
-   "why": "He wants the engine cheaper to run (half a 20x Max plan in one week, $45.51 of API in seven days), but a saving that makes the work worse is not a saving to him.",
-   "means": "Every cost change is one of three kinds: the same input read fewer times (caching, carry-forward, fresh sessions, a shorter start), mechanical work on a cheaper model held by deterministic checks, or a refusal before a paid run or a giant read. Fewer judges, smaller source sets, lower effort on writing or anything else that changes what the model reads for a decision is out. A cost change is measured first: one that the meter shows saves nothing is not made.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "docs/COST_GUARDS.md",
-     "contains": "The quality test every guard passes",
-     "how": "the test every cost guard is built against"
-    },
-    {
-     "file": "tests/control-plane/fact-gate.test.ts",
-     "contains": "is carried exactly as a full run carries it",
-     "how": "a test that fails if skipping the second look changes any verdict"
-    }
-   ]
-  },
-  {
-   "id": "music-licence-checked-once",
-   "on": "2026-10-18",
-   "krish": "the music license issue has been sorted 4 times before, you do not need to keep checking that - only if I use a new music track.",
-   "why": "A cloud session stopped on a missing licence file for a track he approved on 12 October, and raised it again, the fifth time the same licence had come up.",
-   "means": "A track's licence is checked once, when the track is new. A track Krish approved (approved_on in config/music-library.json) is never held up or asked about for its licence again.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "scripts/quick-edit/music.py",
-     "contains": "the music license issue has been sorted 4 times before",
-     "how": "the ledger check skips the licence file for a track with approved_on, so make.py and its doctor never stop on it"
-    }
-   ]
-  },
-  {
-   "id": "ideas-from-every-source",
-   "on": "2026-10-18",
-   "krish": "I trust you are good at coming up with ideas - if not, give me more than 3 from all my suggested sources and the ones I threw at other sessions last week",
-   "why": "The week's options had been researched from web search alone (Drive skipped), left out two ideas he gave other sessions that week, and kept stale filler to reach three; he wants a real choice, drawn from what he already pointed us at.",
-   "means": "The Sunday Ideas tab holds more than three checked ideas a day, drawn from his own words first (every idea he gave any session since the last Sunday, said- items and krish-ideas items), then his inspiration folders and saved posts, the people he follows and the radar; stale or unchecked filler never pads a day.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "scripts/post-pack/week_board.py",
-     "contains": "MIN_IDEAS = 4",
-     "how": "the board refuses an Ideas tab with fewer than four checked ideas a day (read_ideas, --verify)"
-    },
-    {
-     "file": ".agents/skills/plan-week/SKILL.md",
-     "contains": "every idea he gave any session since the last Sunday",
-     "how": "the plan-week step that builds the Ideas tab"
-    }
-   ]
-  },
-  {
-   "id": "one-idea-queue",
-   "on": "2026-10-19",
-   "krish": "Can you let me mark ideas for a queue instead of selecting them for this week because I like multiple ideas and some of them aren't time-sensitive? ... every ideas tab can start to build a queue of stuff that should be published at some point. That becomes a pretty powerful canon but it needs to survive everything and be the first thing in chat. That queue needs to be A/B triage in Control Centre ... there just being one cue.",
-   "why": "A pick-one-per-day tab throws away the ideas he likes but cannot use this week, and evergreen ideas have no home; he wants the good ones kept, ranked and reused, not regenerated every Sunday.",
-   "means": "There is one idea queue, stored in the engine (never only in a board's store or a session), that every Ideas tab adds to with a Queue mark beside each idea's pick box; Control Center triages it A/B; every planning session reads it first and offers from it before new research; nothing purges a queued idea.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "apps/control-plane/api/idea-queue.ts",
-     "contains": "queued_at: now, protected_at: now",
-     "how": "the one guarded route queues a row and protects it from every sweep"
-    },
-    {
-     "file": "apps/control-plane/api/purge/run.ts",
-     "contains": "his queue survives every purge",
-     "how": "the Monday purge never deletes a queued row"
-    },
-    {
-     "file": "tests/control-plane/idea-queue.test.ts",
-     "contains": "the queue survives every sweep",
-     "how": "a test names every sweep's guard"
-    },
-    {
-     "file": "scripts/post-pack/week_board/week.js",
-     "contains": "qdb.doc(\"queue/\" + pid).set(body)",
-     "how": "the Ideas tab saves a Queue mark and a verdict, and posts a comment"
-    },
-    {
-     "file": ".agents/skills/plan-week/SKILL.md",
-     "contains": "Read the idea queue first",
-     "how": "plan-week step 1 reads the queue before any research"
-    },
-    {
-     "file": "docs/ENGINE_SESSION.md",
-     "contains": "read the idea queue, first in the chat",
-     "how": "every session start reads the queue"
-    }
-   ]
-  },
-  {
-   "id": "story-a-business-person-gets",
-   "on": "2026-10-19",
-   "krish": "Would I consider this story or angle? If not would I consider it cute or am I curious but not convinced for some specific reason because it's safer? For the \"Google's newest model is on a teaser rate\" article, I actually like the sound of it but I can't understand what the story is. In plain English what would be so interesting to a business person?",
-   "why": "The idea line named the mechanism (a price that doubles) without the consequence for the reader, so he could not tell what the piece would say; and he wants to triage each idea by how it lands with him, not just yes or no.",
-   "means": "Every idea shown to him says, in one plain sentence, what a business person would find out and why it matters to them, before any mechanism; and his triage of an idea records which of four it is: a story he would run, an angle he would run, cute, or curious but not convinced (with the reason).",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "scripts/post-pack/week_board.py",
-     "contains": "('so_what', 'story', 'why_now', 'fact')",
-     "how": "read_ideas refuses an idea with no so_what"
-    },
-    {
-     "file": ".agents/skills/plan-week/SKILL.md",
-     "contains": "with `so_what` first",
-     "how": "plan-week step 3b writes so_what first"
-    },
-    {
-     "file": "apps/control-plane/api/_ideaQueue.ts",
-     "contains": "export const VERDICTS",
-     "how": "the four verdicts plus drop, recorded only with decided_by Krish (parseTriage)"
-    }
-   ]
-  },
-  {
-   "id": "no-stale-skill-copies",
-   "on": "2026-10-19",
-   "krish": "I think we need to not have skills inside repos, surely? that seems dangerous if they are already out of date",
-   "why": "The repository kept its own older copies of krish-voice and content-corpus (content-corpus still named the retired subchannels) beside his newer account-wide skills, so a session could load the stale one.",
-   "means": "A skill that exists account-wide is never also kept in a repository; the repository holds only the engine's own workflows (make-piece, plan-week, produce-video, mindmake-video, video-engine), each either copied for Claude Code or named with its reason, and the Studio pins only those into new jobs.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "tests/repository-contracts.test.ts",
-     "contains": "expect(skillNames).not.toContain('krish-voice')",
-     "how": "a test fails if either retired copy comes back"
-    },
-    {
-     "file": "packages/core/src/runner.ts",
-     "contains": "return ['mindmake-video', 'video-engine']",
-     "how": "new Studio jobs pin only the engine's own skills"
-    },
-    {
-     "file": "scripts/validate-skills.py",
-     "contains": "shares its name with an installed account-wide skill",
-     "how": "skills:validate names any repo skill that doubles an account-wide one"
-    },
-    {
-     "file": "scripts/validate-skills.py",
-     "contains": "NOT_FOR_CLAUDE = {",
-     "how": "every repo skill is copied for Claude Code or named with its reason, or verify fails"
-    }
-   ]
-  },
-  {
-   "id": "ideas-pass-the-business-leader-test",
-   "on": "2026-10-19",
-   "krish": "I just can't figure out how general business leaders would be helped immediately by knowing this. ... I'm not sure what this means for a layperson running a business.",
-   "why": "Three Friday ideas (face and voice ownership, proving a video call is human, AI on $55 TV boxes) described a trend or a mechanism but gave a business leader nothing to do or decide, so he marked each curious but not convinced and queued none.",
-   "means": "Every idea carries, in one plain sentence, what a general business leader can do or decide differently right away. An idea that cannot say it is not offered. The so_what says what they find out; this test says what they do.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": ".agents/skills/plan-week/SKILL.md",
-     "contains": "The business-leader test.",
-     "how": "the plan-week step that screens each idea before it reaches the Ideas tab"
-    }
-   ]
-  },
-  {
-   "id": "simplify-and-unpack-the-concept",
-   "on": "2026-10-19",
-   "krish": "the idea of aggressive vertical integration is a great one, but it just needs to be really simplified and unpacked. / I want this to be super simple: a bake-off that anyone can understand. / Why is Disney going after it, and why is Google going after it? They're two totally different companies. Unpack both.",
-   "why": "He likes the concept in three ideas but the line named the mechanism in insider terms; what he wants first is the plain version, then each party's own motive taken apart.",
-   "means": "A concept idea opens with its plain version and then unpacks each party's motive separately. His own angle on a picked idea is its brief for the piece.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": ".agents/skills/plan-week/SKILL.md",
-     "contains": "Simple first, then unpacked.",
-     "how": "the plan-week step that words each idea"
-    }
-   ]
-  },
-  {
-   "id": "follow-the-money-traces-the-money",
-   "on": "2026-10-19",
-   "krish": "I am passionate about the message which is if you are not paying, you are the product. But I think this needs a bit more substance as to how this intersects with content IP in terms of a monetization play. I think we need to really clearly visualize and unpick where the money goes",
-   "why": "The free-image-ads idea had a message he loves but no money trail, and follow.the.money is the series about exactly that.",
-   "means": "A follow.the.money idea names every party, where the money moves and how it meets content IP or monetisation, so the flow can be drawn. An idea with a message but no money trail waits in the queue until it has one.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": ".agents/skills/plan-week/SKILL.md",
-     "contains": "follow.the.money shows the money.",
-     "how": "the plan-week step for the money series"
-    }
-   ]
-  },
-  {
-   "id": "no-repeat-topic-within-weeks",
-   "on": "2026-10-19",
-   "krish": "I think we need to figure out down the line what the new story is. We did an intro to this topic last week, and I think it's too soon to do it again.",
-   "why": "The AI-shopper rulebook idea was a sequel to last Wednesday's Muse piece with no new story, offered a week later.",
-   "means": "Before an idea is offered, check the last three weeks of published and in-flight pieces for the same topic. A sequel says what is new, or it waits.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": ".agents/skills/plan-week/SKILL.md",
-     "contains": "No topic again within three weeks.",
-     "how": "the plan-week step that checks recent pieces"
-    }
-   ]
-  },
-  {
-   "id": "reading-his-board-marks",
-   "on": "2026-10-19",
-   "krish": "(his taps on the Ideas tab, 19 Oct: Queue marks, Story, Angle, Cute, Curious with a reason, Drop)",
-   "why": "He taps through verdicts to see them (one idea went none, story, cute, story, angle, 'curious') and the board posts a comment for every tap, so reading the history as opinion would invent feedback he never gave.",
-   "means": "Only the final state of a card counts. Queued plus a verdict is develop-later with his words as the brief; curious and not queued is pass-for-now with his reason; drop is never offered again and is recorded as a dropped row; a pick with his angle makes the angle its brief.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": ".agents/skills/plan-week/SKILL.md",
-     "contains": "Reading his marks.",
-     "how": "the plan-week step that reads the board and relays it into the queue"
-    }
-   ]
-  },
-  {
-   "id": "narrative-before-making",
-   "on": "2026-10-19",
-   "krish": "I want to be crystal clear on the overarching end message and checkpoints of the piece so that we can't randomly go off track and take ages to iterate / [made standing, 19 Oct] \"Narrative-before-making rule: make it standing as a step in `make-piece`.\"",
-   "why": "Pieces drift while being made and each correction costs a long iteration; he wants the end message and the checkpoints fixed before anything is made.",
-   "means": "A piece starts from a one-page editorial narrative (the end message in one sentence, who it is for and what they do differently on Monday, four or five checkpoints each with a pass test and what he signs, the one picture, what is out of scope, the drift rule), signed by him in words before anything is made; any change to the end message or a checkpoint goes back to him first. Made standing by Krish on 19 Oct.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": ".agents/skills/make-piece/SKILL.md",
-     "contains": "| Narrative (before anything is made) |",
-     "how": "the first step of make-piece: no workroom, draft, script or visual until the narrative is signed"
-    },
-    {
-     "file": ".claude/skills/make-piece/SKILL.md",
-     "contains": "**Drift rule:** any change to the end message",
-     "how": "the Claude Code copy of the same step"
-    }
-   ]
-  },
-  {
-   "id": "workroom-on-brand",
-   "on": "2026-10-19",
-   "krish": "Are you just using this workroom as the iteration tool before we get this in to https://claude.ai/artifact/CDgS3JDULpzvRnxkHwLkVk? If so it needs to be on brand.",
-   "why": "The first workroom for Monday's piece used a palette and fonts of its own; what he iterates on should look like what ships, so his judgement of it carries onto the board.",
-   "means": "Every workroom (and any page he iterates a piece on before the week's publish board) uses the publish page's own tokens and fonts from its first version: cream, ink and mint, Anton uppercase headings, Archivo body, IBM Plex Mono labels.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": ".agents/skills/make-piece/SKILL.md",
-     "contains": "so it is on brand from its first version",
-     "how": "the make-piece Workroom step"
-    },
-    {
-     "file": ".claude/skills/make-piece/SKILL.md",
-     "contains": "so it is on brand from its first version",
-     "how": "the Claude Code copy"
-    }
-   ]
-  },
-  {
-   "id": "readers-are-mid-sized-firms",
-   "on": "2026-10-19",
-   "krish": "We need to stop referring to businesses as shops and talking about a mum and dad shop. My customers are medium sized enterprises. This script is 20% too \"Dumbed down\" / [19 Oct, to the proposal] \"agree on all 4\"",
-   "why": "Four rounds of 12-year-old read-backs pushed the 90-second script to a corner-shop example and over-explained words; his audience runs medium-sized companies and felt talked down to.",
-   "means": "Examples and framing are pitched at the leader of a medium-sized company (a finance team, a customer-service team, a contract with a supplier), never a shop or a family business. The two read-back readers are a smart, non-technical manager at a 200-person company, hearing it once, who also lists anything that talks down to them. Plain words and the reading gate stay.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": ".agents/skills/make-piece/SKILL.md",
-     "contains": "You are a smart, busy manager at a 200-person company",
-     "how": "read-back reader A"
-    },
-    {
-     "file": ".claude/skills/make-piece/SKILL.md",
-     "contains": "Pretend you run the finance or operations team at a 200-person company",
-     "how": "read-back reader B, the Claude Code copy"
-    },
-    {
-     "file": "apps/control-plane/api/_houseRules.ts",
-     "contains": "a smart, non-technical manager at a 200-person company hearing it once",
-     "how": "house rule R7"
-    }
-   ]
-  },
-  {
-   "id": "five-minute-long-cut",
-   "on": "2026-10-19",
-   "krish": "from here moving forward, let's make the 3-minute scripts into 5-minute scripts and videos. Scrap the 3-minute format in favor of the 5-minute format.",
-   "why": "The 3-minute cut could not carry the explanation and the business consequence together; he wants room for the substance.",
-   "means": "The long cut is a 5-minute video, 675 to 825 spoken words (house rule TWO_CUTS), for every piece from 19 Oct; the 90-second cut and the weekly deep cut are unchanged.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "scripts/post-pack/story_check.py",
-     "contains": "(675, 825, 'a 5-minute video')",
-     "how": "the script check refuses a long cut outside 675 to 825 words"
-    },
-    {
-     "file": "apps/control-plane/api/_houseRules.ts",
-     "contains": "A five-minute video and a ninety-second one",
-     "how": "house rule TWO_CUTS"
-    }
-   ]
-  },
-  {
-   "id": "big-ai-firms-short-term-offers",
-   "on": "2026-10-19",
-   "krish": "I think the point of this article is to get the message across that the Big AI firms (call it that) are always trying to tweak their short term offers given how cut throat their competitors are, and give business owners an idea of what actually is durable thinking amidst all this.",
-   "why": "A single-vendor price story leaves the reader with one fact that dates; what he wants them to keep is how to think about AI prices that keep moving.",
-   "means": "A follow.the.money piece about one firm's price puts it beside the other big AI firms' moves from their own pages, and ends on the durable rule a business owner can apply whatever the next offer is.",
-   "status": "open",
-   "encoded": []
-  },
-  {
-   "id": "near-term-backed-predictions",
-   "on": "2026-10-19",
-   "krish": "I changed the prediction to 95% by the end of this year, 2026 ... I'm done with sitting on the fence and putting predictions a year away: 55%. There's no point in that. Given how this article reads it's pretty obvious someone's going to shift their price again in the next month.",
-   "why": "House rule SHARP_PREDICTION told writers to avoid the obvious outcome and give a bolder call a lower number, so calls drifted to long shots a year out at 15 to 55%, which read as fence-sitting and help no reader decide anything.",
-   "means": "Every prediction is what we believe happens next, due within about three months (92 days) and backed at 80% or more. Both are blocking publish checks.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "apps/control-plane/api/_publishChecks.ts",
-     "contains": "export const CALL_HORIZON_DAYS = 92",
-     "how": "CALL_HORIZON blocks a call due more than 92 days out or already past"
-    },
-    {
-     "file": "apps/control-plane/api/_publishChecks.ts",
-     "contains": "export const CLEAR_STANCE_AT = 80",
-     "how": "CLEAR_STANCE now blocks below 80%"
-    },
-    {
-     "file": "apps/control-plane/api/_houseRules.ts",
-     "contains": "A near-term prediction we back, that a reader can check",
-     "how": "house rule SHARP_PREDICTION, read by the writers"
-    }
-   ]
-  },
-  {
-   "id": "boards-live-on-content-site",
-   "on": "2026-10-19",
-   "krish": "we are now retiring the Claude artefact permanently and we are working in content.krishraja.com for all published board updates ... Make sure the entire engine never ever Produces another artefact in the future and always pushes to that URL and merges to main automatically.",
-   "why": "Two Claude accounts, two artifact links that drift apart, comments that cannot be sent to Claude, and builds a session must republish by hand; one site he owns removes all of that.",
-   "means": "No session or tool publishes a Claude artifact again. Every board update (the week's board, a day's tab in draft, publish pages) goes to content.krishraja.com, and engine work merges to main automatically once its checks pass.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "scripts/hooks/artifact_gate.py",
-     "contains": "Claude artifacts are retired",
-     "how": "the PreToolUse hook refuses every Artifact publish and every ArtifactData write; reads pass"
-    },
-    {
-     "file": ".claude/settings.json",
-     "contains": "\"matcher\": \"Artifact|ArtifactData\"",
-     "how": "the hook is wired on both tools"
-    },
-    {
-     "file": "scripts/post-pack/week_board.py",
-     "contains": "default='web'",
-     "how": "the board builds for content.krishraja.com unless told otherwise"
-    },
-    {
-     "file": ".agents/skills/make-piece/SKILL.md",
-     "contains": "Claude artifacts are retired for good",
-     "how": "make-piece, plan-week, produce-video and the week-board reference say no step makes one"
-    },
-    {
-     "file": "AGENTS.md",
-     "contains": "turn on auto-merge, so GitHub merges it to main once CI passes",
-     "how": "the standing rule every agent reads: verify, push, PR, auto-merge"
-    }
-   ]
-  },
-  {
-   "id": "deep-cut-music-always-under",
-   "on": "2026-10-19",
-   "krish": "on the deeper cut, the audio needs to be able to be heard the entire time, but just really low unless its intro, outro or or chapter card",
-   "why": "Long stretches of bare voice felt empty; music should hold the whole piece together without competing with him.",
-   "means": "Deep cuts can use music_mode episode_bed: continuous low music under speech, lifts at actual chapter-card windows, 0.5-second rise, 0.8-second fall and two-second track crossfades. Krish approved the audition at -31 LUFS under speech and -22 LUFS lifts. Measured music continuity and loudness are delivery gates.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "scripts/quick-edit/music.py",
-     "contains": "def continuous_episode_bed",
-     "how": "Builds continuous speech bed with chapter lifts and track crossfades."
-    },
-    {
-     "file": "scripts/quick-edit/make.py",
-     "contains": "if loud.get('music_mode')=='episode_bed':",
-     "how": "Measures and checks the speech bed before receipt approval."
-    }
-   ]
-  },
-  {
-   "id": "sped-cut-visual-density",
-   "on": "2026-10-19",
-   "krish": "the 90 second video needs to have visuals nearly the entire way through as when things are sped up, we need to 3-5X the visual clarity",
-   "why": "A sped-up short gives the viewer less time per idea, so pictures must carry more, and be clearer, than in a normal cut.",
-   "means": "Short cuts require at least 90% speech visual coverage, no uncovered stretch above 1.5 seconds and at least 20 meaningful changes per minute. Each displayed step carries one idea and at most seven headline words; essential text is measured at final 1080 width and must be at least 48 pixels high.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "scripts/quick-edit/quality.py",
-     "contains": "def coverage_problems",
-     "how": "Rejects low coverage, long gaps and sparse visual changes."
-    },
-    {
-     "file": "scripts/quick-edit/make.py",
-     "contains": "quality.coverage_problems(visual_checks)",
-     "how": "Renderer applies the coverage gate."
-    },
-    {
-     "file": "tests/quick_edit_quality_test.py",
-     "contains": "a visual gap exceeds 1.5 seconds",
-     "how": "Regression test exercises missing visuals."
-    }
-   ]
-  },
-  {
-   "id": "show-the-analogy",
-   "on": "2026-10-19",
-   "krish": "There are also nowhere near enough visuals in the deep cut either of the car analogy",
-   "why": "The analogy is how the viewer understands the piece; when it is only spoken and never shown, the main idea does not land.",
-   "means": "When a script uses a car analogy, cover each spoken passage with relevant real badges, photos or controls. Keep Mercedes = Claude and C-Class = Opus 5.5 distinct. Friday replacement cues are reviewed, but a general automated analogy-to-cue coverage check is still open; the older drawn-car proposal is superseded by Krish.",
-   "status": "open",
-   "encoded": []
-  },
-  {
-   "id": "board-any-tool",
-   "on": "2026-10-19",
-   "krish": "yes lets move the board to content.krishraja.com",
-   "why": "The board only works inside Claude; he wants Codex and any tool to build it and read his ticks.",
-   "means": "Both weeks are live at content.krishraja.com behind the existing login. All new ticks, links, wording edits, picks, queue decisions and comments use the authenticated web API from every tool. All four sources are preserved and all 87 available records verified; no ongoing Claude artifact synchronization. Production acceptance and rollback evidence are in docs/handovers/board-web-release.md.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "scripts/post-pack/board_web.py",
-     "contains": "def web_page",
-     "how": "Web runtime and explicit operator publisher preserve artifact mode."
-    },
-    {
-     "file": "apps/control-plane/api/board/_handler.ts",
-     "contains": "createBoardHandler",
-     "how": "Private API persists all board collections and immutable builds."
-    },
-    {
-     "file": "config/boards.json",
-     "contains": "\"interaction_source\": \"web\"",
-     "how": "Verified active cutover routes every workflow to the web; original artifact addresses remain provenance."
-    }
-   ]
-  },
-  {
-   "id": "send-files-not-links",
-   "on": "2026-10-19",
-   "krish": "I requested three Markdown files for download, which you've not given me",
-   "why": "He asked for the files themselves and got paths in a chat reply.",
-   "means": "Files he asks for are sent with SendUserFile in the same turn, before any other work.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "CLAUDE.md",
-     "contains": "files he asks for are sent to him as files",
-     "how": "rule read at the start of every Claude Code session"
-    }
-   ]
-  },
-  {
-   "id": "no-scheduled-board-updates",
-   "on": "2026-10-19",
-   "krish": "I am deleting the publish board Claude schedules from both accounts FYI, scrub them from everywhere. We are not ready for this yet",
-   "why": "The scheduled board-videos task ran on its own on both accounts while the board moved to content.krishraja.com; he wants board updates to come only from sessions he starts.",
-   "means": "No session creates or relies on a scheduled task that builds, updates or publishes a publish board, and no current document names one, until he says he is ready.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "AGENTS.md",
-     "contains": "No session creates a scheduled task (a routine, a trigger, a cron) that builds, updates or publishes a publish board",
-     "how": "the standing rule every agent reads"
-    },
-    {
-     "file": "WORKBENCH.md",
-     "contains": "No schedule puts the videos on the board",
-     "how": "the handover no longer points sessions at the deleted schedule"
-    }
-   ]
-  },
-  {
-   "id": "say-the-result-not-the-method",
-   "on": "2026-10-21",
-   "krish": "the two video scripts just overlay bare pointless caveats and ifs and buts and asterisks about what I tested ... The scripts just need to be catchy, direct: what was tested, what the result was, which one won, and what that means. The article is similar ... it's overexplaining.",
-   "why": "Wednesday's brief listed every evidence boundary (equal weighting, test dates, chat-only Gemini, single reports) and the rewrite spoke each one aloud, so the scripts and article narrated the method instead of the result.",
-   "means": "Scripts and articles say what was tested, what happened, who won and what it means. Truth gates still hold, but limits, weighting and source detail live in the scorecard and a one-line footnote, never as spoken caveats. Comparisons are scored round by round: his test against the community's results, without naming every source in the script.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": ".agents/skills/make-piece/SKILL.md",
-     "contains": "Say the result, never the method.",
-     "how": "the Scripts step every making session follows"
-    }
-   ]
-  },
-  {
-   "id": "dry-wit",
-   "on": "2026-10-21",
-   "krish": "Bit of dry wit and hannah fry sarcasm too",
-   "why": "Even once the caveats were cut, the Wednesday scripts read as a flat report of results; he wants them to entertain while they inform.",
-   "means": "Scripts carry short, deadpan asides that tease what actually happened (Hannah Fry style), built only on true details, never mean to real people, and never at the cost of the length or reading gates.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": ".agents/skills/make-piece/SKILL.md",
-     "contains": "Then give it dry wit",
-     "how": "the Scripts step every making session follows"
-    },
-    {
-     "file": "apps/control-plane/api/_houseRules.ts",
-     "contains": "id: 'TONE_OBSERVANT_WITTY'",
-     "how": "a house rule every writer and draft judge reads: his answer, 2026-10-21, that observational, witty and positive applies to every series"
-    }
-   ]
-  },
-  {
-   "id": "script-opens-on-hook-closes-on-actions",
-   "on": "2026-10-21",
-   "krish": "we need to cut that opening line from every content piece moving forward and just launch straight in to \"I put GrokBot and Muse head to head\" etc. Also trim the closing to \"the full deep dive is at makeyourmindup.ai.\" right after a \"Here's what I'd do with this info if I were you\" closing line. That needs to be the format moving forward for all scripts.",
-   "why": "The series line and the sign-off with his name delayed the hook and the ending asked for too much; he wants the script to start on what he did and end on what the listener can do, with one line to the full piece.",
-   "means": "No script carries a series line or \"I'm Krish\". After the call it closes on a beat that starts \"Here's what I'd do with this info if I were you\" and says the actions, and its last sentence is exactly \"The full deep dive is at makeyourmindup.ai.\" with nothing after it. This replaces the 2026-10-12 series line for every series and both cuts.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "apps/control-plane/api/_houseRules.ts",
-     "contains": "id: 'SCRIPT_CLOSE'",
-     "how": "a house rule the writers, draft judges and final pass read"
-    },
-    {
-     "file": "scripts/post-pack/story_check.py",
-     "contains": "def close_problems",
-     "how": "refuses a script of a minute or more with no such beat or any other last sentence; build.py and making.py scripts run it"
-    },
-    {
-     "file": "apps/control-plane/api/_video.ts",
-     "contains": "export const SCRIPT_OPENING",
-     "how": "the script writer opens straight on the hook"
-    },
-    {
-     "file": ".agents/skills/make-piece/SKILL.md",
-     "contains": "Write each script opening straight on the hook",
-     "how": "the Scripts step every making session follows"
-    }
-   ]
-  },
-  {
-   "id": "three-things-tomorrow",
-   "on": "2026-10-21",
-   "krish": "The articles all need to have a really clear \"3 things you can do tomorrow\" at the end of every piece too.",
-   "why": "A piece should leave the reader with something to do, not only something to know.",
-   "means": "Every article ends with a last section headed \"3 things you can do tomorrow\" holding exactly three concrete actions that follow from its checked evidence. It is not an outline section.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "apps/control-plane/api/_houseRules.ts",
-     "contains": "id: 'THREE_THINGS_TOMORROW'",
-     "how": "a house rule the writers, draft judges, final pass and publish check read"
-    },
-    {
-     "file": "apps/control-plane/api/_publishChecks.ts",
-     "contains": "export function threeThingsTomorrow",
-     "how": "the publish check THREE_THINGS_TOMORROW reads the heading and the three items (not blocking yet)"
-    },
-    {
-     "file": "scripts/post-pack/spine_check.py",
-     "contains": "THREE_THINGS = re.compile",
-     "how": "the section is no section added on top of the approved outline"
-    }
-   ]
-  },
-  {
-   "id": "board-is-fed-never-shaped",
-   "on": "2026-10-21",
-   "krish": "how do you recommend we standardise and lock in this publish board so the content engine can just feed it? It's pretty good but I notice that it's quite inconsistent. For each publish session things move around. ... the rest of the content engine needs to know how to feed it and not be permitted to change random parts of the UI and UX but feed it in the right way consistently. That applies to Claude and to Codex.",
-   "why": "Each session built and patched the board its own way (pages inlined with their own styles, panels carried byte for byte, built pages string-patched and re-stamped), so sections moved from one session to the next and he could not work through his week by habit; on a phone it was a shrunk desktop page.",
-   "means": "From the week of 26 Oct every board has one layout from config/board-layout.json: Ideas, Queue, Monday, Wednesday, Friday, and in each day Brief, Drafts, Record, Publish, with the brief due the night before and the drafts the morning of. Sessions feed it through week_board.py's inputs only; the layout changes only with his approval.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "scripts/post-pack/week_board.py",
-     "contains": "def fixed_problems(page):",
-     "how": "verify() refuses a board whose tabs, steps or slots differ, a second stylesheet or a hand-laid banner"
-    },
-    {
-     "file": "scripts/check_board_layout.py",
-     "contains": "stamps a board outside the board",
-     "how": "npm run check:board-layout (CI, so Codex too) holds the build to the snapshot, fits every view at 390px and fails any script that patches and re-stamps a board"
-    },
-    {
-     "file": "scripts/check_board_layout.py",
-     "contains": "def lock_problems(want, weeks_seen, files):",
-     "how": "CI fails when the layout file, the colours or the board's structure differ from the snapshot, until --update --approved records the change with his words (Ruling, Krish, 2026-10-21: no approval prompts; the layout is held by CI)"
-    },
-    {
-     "file": "config/board-layout.json",
-     "contains": "\"on\": \"sunday_before\", \"when\": \"morning\"",
-     "how": "the brief is due Sunday morning and the scripts Sunday midday, his recording day (Krish, 2026-10-24, replacing the night-before rhythm)"
-    },
-    {
-     "file": "AGENTS.md",
-     "contains": "**The publish board is fed, never shaped.**",
-     "how": "the rule Claude and Codex both read"
-    }
-   ]
-  },
-  {
-   "id": "publish-run-sheet",
-   "on": "2026-10-21",
-   "krish": "After that workflow work is done, have a think about where I publish, how I publish, what I need to download, when, and in what order. Just make everything as beautiful and user-friendly as possible.",
-   "why": "Publishing a day meant scrolling the publish page's own sections: the files were named in each step but downloaded from different places (the videos card, the picture cards, the covers section), ticks sat on section headings and again in a checklist, and nothing put what to download first or in which order he would use it.",
-   "means": "A made day's Publish step is one ordered run-sheet built from data: the checklist meter, then Download first (every file in the order he uses it, each with one big Download, Download all, and the post's library folder named), then one card per place to post in config/board-layout.json's order, each with its files, its copy, what to do, its link box and its tick. Tick ids never change. Weeks before 26 October keep their markup.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "scripts/post-pack/week_board.py",
-     "contains": "def run_sheet(day, p, page, data, videos, delivery, feature, folder, warnings):",
-     "how": "the Publish step of a made day in the fixed layout is drawn from the page's data and the record, never from its markup"
-    },
-    {
-     "file": "scripts/post-pack/week_board.py",
-     "contains": "def run_sheet_problems(name, panel, tag):",
-     "how": "verify() refuses a Publish step with no Download first, a card out of order, a card without its own tick or a tick with no card"
-    },
-    {
-     "file": "scripts/post-pack/publish_manager.py",
-     "contains": "id=\"pm-data\"",
-     "how": "every publish page carries its words and its pictures' roles as data for the run-sheet"
-    },
-    {
-     "file": "scripts/post-pack/buttons_in_browser.py",
-     "contains": "Download all handed over",
-     "how": "CI clicks every Download, Copy and Download all on a fixed week's run-sheet in a real browser"
-    },
-    {
-     "file": "docs/PUBLISH_BOARDS.md",
-     "contains": "### The Publish run-sheet",
-     "how": "the run-sheet's order and how a session feeds it"
-    }
-   ]
-  },
-  {
-   "id": "two-cuts-and-an-occasional-feature",
-   "on": "2026-10-21",
-   "krish": "Bear in mind that all videos are generally 90 sec and 5 min. From time to time I might do a special 15 min feature. (Asked whether that replaces the weekly deep cut: \"Yes, replace it\".) Then, 2026-10-22, on Control Center learning the feature: \"we do not produce 15 minutes every single time\".",
-   "why": "The weekly 8 to 12 minute deep cut was the engine's proposal; his own rhythm is two cuts a piece, and a long feature only when he decides a piece deserves one.",
-   "means": "Every piece is a 90-second and a 5-minute video. No session proposes a long cut; a 15-minute feature (2,025 to 2,475 words) is a third cut only on a piece he called one for, recorded in config/features.json. The weekly deep cut is retired. Every surface says it the same way: the feature is never called a standard or third video of every piece, and Control Center's mirror (control-center src/lib/making.ts makingCuts and channelsFor) asks for it, and shows its two posting ticks, only on a feature piece.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "apps/control-plane/api/_houseRules.ts",
-     "contains": "id: 'FEATURE'",
-     "how": "house rule FEATURE replaced DEEP_CUT"
-    },
-    {
-     "file": "scripts/post-pack/story_check.py",
-     "contains": "'feature': (2025, 2475,",
-     "how": "the script check holds a feature to about 15 minutes"
-    },
-    {
-     "file": "config/board-layout.json",
-     "contains": "\"name\": \"15-minute feature\"",
-     "how": "the board shows the feature only on a feature piece"
-    },
-    {
-     "file": ".agents/skills/plan-week/SKILL.md",
-     "contains": "Never propose a feature.",
-     "how": "plan-week no longer proposes a weekly deep cut"
-    },
-    {
-     "file": "scripts/post-pack/making.py",
-     "contains": "NOT_A_FEATURE = (",
-     "how": "making.py scripts takes a third, feature script only on a piece in config/features.json, checked with story_check --cut feature, and refuses three scripts for any other piece"
-    },
-    {
-     "file": "apps/control-plane/api/_making.ts",
-     "contains": "export function makingCuts(",
-     "how": "the engine keeps the feature's hash, read-back and takes, and holds Record and Video assets open until a feature piece's feature is recorded and produced"
-    },
-    {
-     "file": "scripts/post-pack/teleprompter_send.py",
-     "contains": "'feature_left': making.FEATURE in hashes",
-     "how": "teleprompter_send.py plans the feature as a third script in the piece's folder, titled \"15-minute feature\", only for a feature piece"
-    },
-    {
-     "file": "scripts/post-pack/recording_match.py",
-     "contains": "FEATURE_FROM = 600",
-     "how": "recording_match.py places a take on the feature cut, stamped with the feature script's hash"
-    },
-    {
-     "file": ".agents/skills/produce-video/SKILL.md",
-     "contains": "Its own spoken-length cap",
-     "how": "produce-video makes the feature through the one-shot episode path, with its own spoken-length cap"
-    },
-    {
-     "file": "scripts/post-pack/publish_kit.py",
-     "contains": "FEATURE_YOUTUBE = f'YouTube long-form (the {FEATURE_NAME})'",
-     "how": "the publish page adds a YouTube long-form step and a Spotify episode step for a feature piece"
-    }
-   ]
-  },
-  {
-   "id": "edits-propagate-and-teach",
-   "on": "2026-10-21",
-   "krish": "I need to be able to comment on them to iterate or just edit in line myself and save changes to get picked up. The system needs to not just capture it but learn why I'm giving that feedback and figure out what patterns it's observing. If I make a statistical change or a narrative style change in one place, just make sure that those changes propagate and the next draft is consistent. Don't just think about that one surgical edit I made because I may have missed another place in another script for example.",
-   "why": "Board edits are applied by hand to the one box he changed and never reach the edit ledger, so the same fix has to be made again in the other cut, the article or the next piece.",
-   "means": "Each saved edit is classified (number or fact, claim, structure, tone, wording), applied to every draft of the piece and to later drafts, shown back as 'also changed in' with undo (Krish, 21 Oct: apply everywhere, show me), and written to the ledger so repeated patterns become proposed rules for his approval.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "scripts/post-pack/week_board.py",
-     "contains": "def editor_card(day, items, built_at=None, kept_at=None):",
-     "how": "the Drafts step in the fixed layout: each draft a read view (Markdown drawn, no # signs), a paragraph opened by a tap, one Save bar per day; the store edits/<day>-<item> and its built-at guard unchanged"
-    },
-    {
-     "file": "scripts/post-pack/week_board/week.js",
-     "contains": "async function saveDay(day)",
-     "how": "tap to edit, picked words get Comment on this pinned to {box, paragraph, quote}, N unsaved changes then Saved, the 409 path said; Undo, Change it too, Make it a rule and Not a rule saved as comments with act and ref"
-    },
-    {
-     "file": "apps/control-plane/api/board/_contracts.ts",
-     "contains": "export const COMMENT_ACTS",
-     "how": "a comment may carry box, paragraph, quote, and one of his taps (act, ref), each bounded"
-    },
-    {
-     "file": "scripts/post-pack/edit_sweep.py",
-     "contains": "def sweep(day, drafts, edits, pieces=None, recorded=None, week=None):",
-     "how": "each save diffed against base_sha256, each change classified by rule (number or fact, claim, structure, tone, wording), numbers, facts and claims carried into every draft of the piece and later drafts, tone and wording only suggested, recorded cuts left alone, the gates run again, Undo and Change it too by id"
-    },
-    {
-     "file": "scripts/post-pack/week_board.py",
-     "contains": "def sweep_card(p, sweep):",
-     "how": "--sweep DAY=sweep.json shows Also changed under the drafts, each with Undo; --lessons shows What I learned from your edits, each waiting for his yes"
-    },
-    {
-     "file": "apps/control-plane/api/_editEvents.ts",
-     "contains": "a_board_edit_needs_its_class",
-     "how": "the ledger takes surface publish_board: his relayed board edit, a manual_edit with its class as reason_code (migration 20261102090000 widens the CHECK)"
-    },
-    {
-     "file": "apps/control-plane/api/learning/_patterns.ts",
-     "contains": "export function repeatedEditClassProposals(",
-     "how": "three board edits of one class in 28 days become a proposal, never a rule, until he approves it"
-    },
-    {
-     "file": ".agents/skills/make-piece/SKILL.md",
-     "contains": "His saved edits are carried, written to the ledger, and shown back.",
-     "how": "the session that picks up his edits runs edit_sweep.py, posts the ledger rows and rebuilds with --sweep and --lessons"
-    },
-    {
-     "file": "scripts/check_board_layout.py",
-     "contains": "def editor_in_browser(page, web):",
-     "how": "CI taps a paragraph, edits it, saves, sees Saved and the store's fields, pins a comment to picked words and sees a 409 said"
-    }
-   ]
-  },
-  {
-   "id": "queue-consolidation-and-fresh-sunday-ideas",
-   "on": "2026-10-21",
-   "krish": "the ideas tab should, on a Sunday, contain a fresh batch of ideas that sources from all my different sources of ideas ... The ideas engine should have learnt from what I previously liked talking about ... there will be an overflow of ideas I queued for later and whatnot. I need to see that cue somewhere. You also need to pick up on whether there are multiple things in the queue that could be consolidated into one bigger piece that's more high-level and threads different things together.",
-   "why": "plan-week hand-writes the ideas, nothing gathers Control Center, the Cold Ideas and Inspo folder and the engine together, and queued ideas sat only inside each day's ideas with nothing joining them.",
-   "means": "Sunday's Ideas tab is gathered from every source and ranked by what he picked and marked before (the judges stay blind, Krish, 21 Oct); the Queue tab (built 21 Oct) also shows 'could combine' proposals, combined only on his word.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "apps/control-plane/api/_weekSources.ts",
-     "contains": "export function buildSources(",
-     "how": "GET /api/week/options?include=sources: his ideas, his inspo folder and the engine's, his first, then near something he liked (why_here), then the ladder score; evidence only, no model"
-    },
-    {
-     "file": "apps/control-plane/scripts/check-judges.ts",
-     "contains": "his taste steers sourcing, the judges stay blind",
-     "how": "the ladder and the arc scorer may not read the taste evidence"
-    },
-    {
-     "file": "apps/control-plane/api/_ideaQueue.ts",
-     "contains": "export function combineCandidates(",
-     "how": "GET /api/idea-queue?combine=1: queued ideas that could combine, from stored embeddings, no model"
-    },
-    {
-     "file": "apps/control-plane/api/content-ideas/synthesize.ts",
-     "contains": "queued_needs_his_word",
-     "how": "queued ideas combine only on his tap or words, and leave the queue with combined_by Krish"
-    },
-    {
-     "file": "scripts/post-pack/board_feed.py",
-     "contains": "def gather(week, call=None, out_dir=None):",
-     "how": "one read-only gather writes sources.json and names any empty source"
-    },
-    {
-     "file": "scripts/post-pack/week_board.py",
-     "contains": "def read_combine(data, queue, where='--combine'):",
-     "how": "the Queue tab's Could combine cards with a Combine button; every idea card says where it came from, why it is here and its beats"
-    },
-    {
-     "file": ".agents/skills/plan-week/SKILL.md",
-     "contains": "python3 scripts/post-pack/board_feed.py gather <Monday>",
-     "how": "the Sunday session gathers first, writes ideas.json and combine.json from it, and copies his Combine taps into synthesize"
-    }
-   ]
-  },
-  {
-   "id": "plain-score-words",
-   "on": "2026-10-21",
-   "krish": "what does \"a split\" mean? I have no idea",
-   "why": "The five-round scoring used a shorthand label for a shared round, which he could not read on the teleprompter.",
-   "means": "Scores and tallies in scripts and articles use only win, lose or draw (and plain counts); a shared round is a draw, with the reason said in words.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": ".agents/skills/make-piece/SKILL.md",
-     "contains": "Score in plain words: win, lose or draw",
-     "how": "the Scripts step every making session follows"
-    }
-   ]
-  },
-  {
-   "id": "finish-to-completion-when-told",
-   "on": "2026-10-21",
-   "krish": "just get it all done now, to full completion",
-   "why": "The session kept stopping at the context nudge to hand the next part to a fresh session, when he wanted the whole job finished and merged.",
-   "means": "When he says to finish a job to completion, the context nudge does not split it: finish every part, merge when green, then write the handover.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "docs/COST_GUARDS.md",
-     "contains": "the job is finished first and the handover written after",
-     "how": "the G1 context nudge row every session reads"
-    }
-   ]
-  },
-  {
-   "id": "script-is-the-bottleneck",
-   "on": "2026-10-22",
-   "krish": "There are currently two big bottlenecks: 1. Getting the script right: it being simple enough, sounding like me, and deliverable. 2. Post-production visuals, which we could deal with later.",
-   "why": "Wednesday's scripts needed round after round of his edits (overexplaining, a score word he did not understand, lines that did not sound like him) before he could read them on camera, and that is the time the engine is meant to save him.",
-   "means": "The script gets the effort first: the story is settled with him before a word of script is written, and each script is simple enough, sounds like him and is easy to say on camera before it reaches him; post-production visuals can come after he records.",
-   "status": "open",
-   "encoded": []
-  },
-  {
-   "id": "one-question-at-a-time",
-   "on": "2026-10-23",
-   "krish": "ask me everything one by one again",
-   "why": "The session put nine questions to him in one message; he answered the two that mattered most and the rest were assumed for him.",
-   "means": "Questions to him go one at a time, the one that changes the work most first, each with the session's best guess, and the next only after he answers.",
-   "status": "open",
-   "encoded": []
-  },
-  {
-   "id": "no-choppy-rhythm",
-   "on": "2026-10-23",
-   "krish": "yeah the choppy rhythm, sounds robotic",
-   "why": "Scripts were being cut into strings of five-word sentences to pass the reading gate: Wednesday's teleprompter script averaged 8 words a sentence with three runs of short ones, while his own take of it averaged 15, and he found it robotic to read.",
-   "means": "A script flows the way he talks: sentences of about 10 to 15 words joined with so, and or but, no run of three short sentences, and a lone short line only for a punchline, all inside the reading gate's limits.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "scripts/post-pack/story_check.py",
-     "contains": "the choppy rhythm, sounds robotic",
-     "how": "a SCRIPT_AS_HE_TALKS warning on any script averaging under 9.5 words a sentence or holding a run of three sentences of five words or fewer, with its self-test"
-    },
-    {
-     "file": ".agents/skills/make-piece/SKILL.md",
-     "contains": "Never choppy",
-     "how": "the Scripts step, 1b, that every making session follows"
-    }
-   ]
-  },
-  {
-   "id": "tests-are-experiments",
-   "on": "2026-10-23",
-   "krish": "Just bear in mind that deepseek does not have the same access to my emails, and this question is very vague, I don't think you are really thinking much about how to design a test that yields the experiment needed",
-   "why": "The session proposed a vague control question that tested nothing and a setup where two of the apps could reach his accounts and one could not, so the result could not show what the piece claims.",
-   "means": "A test in a piece is an experiment designed before it runs: one thing changed at a time against a matched control, the same access and settings for every tool, self-contained prompts, and what will be read from each answer written down first.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": ".agents/skills/make-piece/SKILL.md",
-     "contains": "A test the piece runs is designed as an experiment",
-     "how": "the Narrative step, where a piece's checkpoints and its test are set"
-    }
-   ]
-  },
-  {
-   "id": "wit-he-marked",
-   "on": "2026-10-23",
-   "krish": "Three and four are pretty funny. Number one could be even a tiny bit crude, if you want. I don't understand number two at all, and number five needs to hit harder.",
-   "why": "He kept the deadpan asides on true details (South Korea's \"Awkward.\", Grok checking Musk's posts \"one way to keep the boss happy\"), wanted the holiday line cheekier, could not decode an understated line (\"Its co-founder called that a miss\") and wanted the line carrying the point to land harder (it became \"You can take DeepSeek out of China. But you can't take China out of DeepSeek.\").",
-   "means": "Dry asides stay short and on true details; a little cheeky is fine; a line he has to decode is cut; the line that carries the point is written to hit hard, often as a turn on its own words.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": ".agents/skills/make-piece/SKILL.md",
-     "contains": "A joke he has to decode is cut",
-     "how": "the Scripts step, beside dry wit"
-    }
-   ]
-  },
-  {
-   "id": "his-call-in-his-words",
-   "on": "2026-10-23",
-   "krish": "It's more, yes, if you don't care about where your data ends up going ... It's kind of like the supply chain issue ... similar things will happen in AI. It just increases the need to not have overreliance on one supplier.",
-   "why": "Asked for his own view before the call beat was written, he gave a sharper take than the drafted one, and its supply-chain comparison became the piece's best line and its last action.",
-   "means": "The beat where he gives his call is built from his own words, asked for in one question before it is written; a drafted call is only a placeholder until he answers.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": ".agents/skills/make-piece/SKILL.md",
-     "contains": "ask him for his view in his own words",
-     "how": "the Scripts step, beside dry wit"
-    }
-   ]
-  },
-  {
-   "id": "inspiration-kinds",
-   "on": "2026-10-24",
-   "krish": "Typically, if I post a video in here, it's because I like either the script, the narrative, or the production style. When I post images in here, it's because I like the clarity. When I post something that shows a clear opinion about AI, it's usually because the topic could be something I want to speak about ... sheets like Instagram inspo ... That's not a one-off drop ... a corpus which I will have had an idea and gone and pulled all the research from Perplexity on it. That would be for a specific article or a specific content piece ... It's important that you understand what the different types of stuff are in here, and ideally, you can auto-classify and know how to extract the right inspiration.",
-   "why": "The Inspiration board asked the same 'what do you like about it?' question of every card, so a research corpus was guessed as 'The layout is really clean ... Study the style' and the always-fresh Instagram sheet was asked about like a one-off drop. Those guesses were wrong, and his answers to them taught the engine nothing.",
-   "means": "Every card is classified by its kind (a video, an image, a feed that keeps itself fresh, a research corpus, an idea or script, or another document), with a clear opinion about AI kept as the topic it raises, and is asked only its kind's question: a video which of the script, the narrative or the production style; an image the clarity; an opinion the topic. A feed is never asked anything: its newest posts go to the Sunday plan. A corpus is the research for the piece it names and is read by that piece first. Nothing is deleted; the archive only grows.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "supabase/migrations/20261107090000_inspiration_kinds.sql",
-     "contains": "What kind of thing each Inspiration card is",
-     "how": "the kind, who set it and a corpus's piece on every card; the feed's counts as a view"
-    },
-    {
-     "file": ".agents/skills/plan-week/SKILL.md",
-     "contains": "Read three more kinds of",
-     "how": "step 0 reads the feed's posts from the last 8 days, the opinions about AI, and the corpora waiting for a piece"
-    },
-    {
-     "file": ".agents/skills/make-piece/SKILL.md",
-     "contains": "The research starts with the corpus he linked to this piece",
-     "how": "the Narrative row reads the piece's corpus first"
-    },
-    {
-     "file": "docs/STYLE_REFERENCES.md",
-     "contains": "Which craft to study comes from his reason",
-     "how": "the style study reads the script, the narrative, the production style or the clarity as the layers to study"
-    }
-   ]
-  },
-  {
-   "id": "typed-words-are-his",
-   "on": "2026-10-24",
-   "krish": "Yes, exact typed quotes count as my opinions on what I think you should do with that content - what a stupid question. If you read what I am feeding back, it's pretty obvious what it is",
-   "why": "The Inspiration session asked him whether an exact quote of words he typed in a session counts as his words. What he types is plainly his view; the question showed it had not read his feedback for its reach, and it cost him a turn.",
-   "means": "Words he typed, quoted exactly, count as his words wherever they are recorded (a session, a page, a pasted note), as his view of what should be done with that content; a paraphrase, a summary or an inference is an observation. And a question his feedback already answers is never put to him: read what he has said for its reach first.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "AGENTS.md",
-     "contains": "exact typed quotes",
-     "how": "the 'Your own actions are observations' rule says his typed words, quoted exactly, are his"
-    },
-    {
-     "file": "AGENTS.md",
-     "contains": "If you read what I am feeding back, it's pretty",
-     "how": "the 'Check before you ask' rule never asks what his feedback already answers"
-    }
-   ]
-  },
-  {
-   "id": "drive-folders-by-id",
-   "on": "2026-10-24",
-   "krish": "Isn't there a better way of doing this than the path name? Folders get renamed all the time and moved all the time. Surely, the whole point of having a Google Drive is that there's a specific ID for a specific folder. ... A. ... I recently moved more or less all of my Google Drive folders, can we do a check of anywhere the control-center or content-engine interacts with Google Drive and ensure it is bulletproof and correct everywhere?",
-   "why": "He renamed Ventures\\Active to Active Ventures; both home computers kept the old path in their settings and logged 'the Inbox cannot be reached' into a hidden log for two days, so six Friday takes sat in the Inbox for five hours and nothing told him.",
-   "means": "A Drive folder is found by its ID, never by its path, wherever the API allows it: the engine reads the Video Engine Inbox from Google by its folder ID. What must go through the H: mount keeps its folder's ID beside its path, and every place that reads Drive fails loudly where Krish sees it (a failed job in Control Center), never only in a local log. A stale setting on a machine is reported and passed over, never obeyed into silence.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "apps/control-plane/api/library/_inboxDrive.ts",
-     "contains": "export const INBOX_FOLDER_ID",
-     "how": "the engine lists the Inbox by its ID and copies each new take into the recordings store every ten minutes"
-    },
-    {
-     "file": "apps/control-plane/api/library/recordings/drive-inbox.ts",
-     "contains": "the Video Engine Inbox cannot be read by its ID",
-     "how": "an unshared, deleted or binned Inbox fails the recordings_drive_inbox job with its fix"
-    },
-    {
-     "file": "apps/control-plane/api/library/_lanes.ts",
-     "contains": "export const LANE_PROBLEMS",
-     "how": "a home computer's stale setting, unreachable Inbox or failed publish fails the job with the machine named"
-    },
-    {
-     "file": "scripts/recordings-upload.ps1",
-     "contains": "function Send-LaneReport",
-     "how": "every pass reports what it found to the engine and reads its settings fresh from the registry"
-    },
-    {
-     "file": "packages/core/src/paths.ts",
-     "contains": "export function resolveWindowsDrivePath",
-     "how": "a setting naming a missing folder is passed over for the default and reported by doctor"
-    },
-    {
-     "file": "config/studio.json",
-     "contains": "\"drive_ids\"",
-     "how": "each runtime folder's Drive ID beside its path"
-    },
-    {
-     "file": "docs/DRIVE.md",
-     "contains": "Folders are found by ID, never by path",
-     "how": "the rule every session reads before touching Drive"
-    }
-   ]
-  },
-  {
-   "id": "visuals-add-not-repeat",
-   "on": "2026-10-24",
-   "krish": "The narrative and the visuals should match and be additive and not duplicative to one another. Just a reminder that we're going to need to up our game on visuals with the voiceover version - I want motion and world-class motion design in a specific visual aesthetic",
-   "why": "Captions that repeat the spoken line waste the screen; he wants the picture to carry what the voice cannot, and voiceover cuts to look designed rather than assembled.",
-   "means": "On-screen words never repeat the sentence being said: they add a source, date, exact number, name or the changed word, and the picture shows the mechanism the voice names. A voiceover cut has one named motion system per piece, decided before the storyboard. Set for Friday 23 Oct in docs/plans/2026-10-23-friday/locked/motion-system.md; a house rule and a check that flags a caption matching its own beat's words are still to build.",
-   "status": "open",
-   "encoded": []
-  },
-  {
-   "id": "inspiration-two-folders",
-   "on": "2026-10-24",
-   "krish": "I've consolidated and restructured the inspiration folders inside this. ... one for the content I like ... and one for production quality I like. Can you ensure absolutely everywhere recalibrates to this moving forward first? ... make sure control center and every other place that needs these folders is corrected too",
-   "why": "He reorganised Drive and wants every reader and writer to follow without him chasing each one; a path or ID left behind silently reads an empty or missing folder.",
-   "means": "Inspiration lives in Ventures > Inspiration: Production Inspo (1QxrzxISYFXq0er0DG0XSapm7qhvuRmh-) for production quality he likes, Content Inspo (1FNztJOU82M8zb6IIbUAbvuI6Kr0pF5Hu, once Cold Ideas & Inspo) for content he likes. Video Engine > Inspiration is gone. Every reader finds them by ID where it can; anything on the H: mount reads the configured path and never a stale setting.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "config/style-references.json",
-     "contains": "1QxrzxISYFXq0er0DG0XSapm7qhvuRmh-",
-     "how": "the style references read Production Inspo by its ID and synced path"
-    },
-    {
-     "file": "scripts/quick-edit/references.py",
-     "contains": "a stale setting that no longer exists never wins over the configured folder",
-     "how": "references.py publish finds Production Inspo from config, never a dead MINDMAKE_INSPIRATION"
-    },
-    {
-     "file": "docs/DRIVE.md",
-     "contains": "Ventures > Inspiration",
-     "how": "the Drive map lists both folders with their IDs"
-    },
-    {
-     "file": "AGENTS.md",
-     "contains": "Production Inspo",
-     "how": "content-watcher's Drive exception names the two folders"
-    }
-   ]
-  },
-  {
-   "id": "sovereign-not-one-country",
-   "on": "2026-10-24",
-   "krish": "\"IS YOUR AI CHINESE?\" Sounds incredibly racist. The whole point of this is to understand what sovereign AI means and why countries are fighting to build their own AI as opposed to use another countries. We must not make this feel like we're stirring geopolitical hatred against China, it's just an example",
-   "why": "The packaging and the pictures had drifted into treating one country as the suspect: a thumbnail asking whether your AI is Chinese, headlines built on 'a Chinese AI', and the country's name coloured in the warning tone. That misstates the story and reads as prejudice.",
-   "means": "A piece about where AI comes from is about every country's reasons (sovereign AI); any one country is an example. Titles, thumbnail words, headlines and covers lead with the idea and name countries in the plural or not at all, never asking whether something is from one country. On screen a country's name is never in the warning colour or framed as the threat; colour marks what changed, never who.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "config/title-verdicts.json",
-     "contains": "Never single out one country",
-     "how": "title_check.py lessons prints the rejected line and its lesson before every packaging round"
-    },
-    {
-     "file": "docs/plans/2026-10-23-friday/locked/motion-system.md",
-     "contains": "never on a country",
-     "how": "the Friday motion system: amber marks what changed, never a country"
-    }
-   ]
-  },
-  {
-   "id": "drive-layout-2026-10-24",
-   "on": "2026-10-24",
-   "krish": "just reinstate that in the root folder then ... Ventures is where everything now lives (their subfolders. If I notice bugs or issues while on my phone, I put them in Bugs and Issues, i put things that inspire me in Inspiration, and Active Ventures contains all the main ventures we are working on, and that the entire OS/control center/AI harness is expected to use and keep up to date alongside the filearchives repository). Can you ensure that all happens? KeePass and FamilyContentLibrary are immovable.",
-   "why": "His folder moves left the Drive map pointing at CURRENT and CURRENT/00_INBOX, which no longer exist, so a Claude session that could not place a file was told to use a folder that was gone, and Hunter's map could not be rebuilt.",
-   "means": "The top of his Drive is Ventures (Active Ventures, Inspiration, Bugs & Issues, _Archive), --ARCHIVE, Family Admin, FamilyContentLibrary, KeePass and Inbox from My AI. Anything an AI cannot place goes in Inbox from My AI, never loose at the top. Content ideas go in Ventures > Inspiration > Content Inspo. FamilyContentLibrary and KeePass never move. The Drive map, the session guard, filearchives and this engine all name the same layout, by folder ID.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "docs/DRIVE.md",
-     "contains": "## The top of his Drive (Krish, 2026-10-24)",
-     "how": "the layout, each area's ID, the AI inbox and where content ideas go, read before any Drive work"
-    },
-    {
-     "file": "docs/DRIVE.md",
-     "contains": "Anything an AI session cannot place: `Inbox from My AI`",
-     "how": "where a new thing goes"
-    }
-   ]
-  },
-  {
-   "id": "speedup-without-glitches",
-   "on": "2026-10-24",
-   "krish": "Happy to speed it up, but last time Codex glitched a bunch of words on the speedup and also misaligned the captions.",
-   "why": "A sped cut built from words timed before the speed-up, or from many separately encoded parts, clips words and drifts captions and lips; the checks that passed did not listen.",
-   "means": "A cut is sped once, as one continuous file, through the config's speed; cut points and captions come only from a fresh transcript of the sped file; the finished file's transcript must hold every script word in order, every join heard, lip sync within 40 ms at three points, before Krish sees it.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": ".agents/skills/produce-video/SKILL.md",
-     "contains": "A sped cut is sped once",
-     "how": "The produce-video skill's speed step."
-    },
-    {
-     "file": "docs/plans/2026-10-23-friday/locked/CODEX.md",
-     "contains": "## Speed without glitches",
-     "how": "Friday's Codex brief, the seven steps for the two sped vertical cuts."
-    },
-    {
-     "file": "scripts/quick-edit/quality.py",
-     "contains": "def transcript_identity(source, speed, model)",
-     "how": "Refuses a words file with the wrong source, speed or transcriber."
-    }
-   ]
-  },
-  {
-   "id": "styles-to-choose-and-push",
-   "on": "2026-10-24",
-   "krish": "It should also be able to suggest script and production styles that I can choose from or that it recommends for specific content. This engine should be pushing and pushing and pushing, becoming more and more creative and experimental. We don't know what works yet because the growth engine hasn't really reported back any useful results, so we still need to be producing better and more divergent work.",
-   "why": "Every week came out in the same face-led format, and with no growth numbers yet there is no evidence that one format wins, so sameness is a cost with nothing to show for it.",
-   "means": "Every idea on the Sunday board carries a recommended script format, a recommended production format and one untried experiment from the style bank's formats; a day with one script format, a day with no experiment or a week dominated by one production format is refused.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "config/style-references.json",
-     "contains": "\"formats\"",
-     "how": "the formats he chooses from, each with its evidence"
-    },
-    {
-     "file": "scripts/post-pack/week_board.py",
-     "contains": "def style_problems",
-     "how": "the build refuses a week that does not diverge"
-    },
-    {
-     "file": ".agents/skills/plan-week/SKILL.md",
-     "contains": "each a format id from `config/style-references.json` `formats`",
-     "how": "the Ideas tab step"
-    }
-   ]
-  },
-  {
-   "id": "sunday-is-recording-day",
-   "on": "2026-10-24",
-   "krish": "Yes, Sunday is my recording day.",
-   "why": "He answered whether all three scripts are locked on the Sunday: he records the week in one session.",
-   "means": "Every day's brief is agreed Sunday morning and every day's scripts are in Teleprompter by Sunday midday, with the creative direction written before he records.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "config/board-layout.json",
-     "contains": "sunday_before",
-     "how": "the board's due dates"
-    },
-    {
-     "file": ".agents/skills/plan-week/SKILL.md",
-     "contains": "Sunday is his recording day",
-     "how": "plan-week runs make-piece for all three days the same Sunday"
-    }
-   ]
-  },
-  {
-   "id": "claude-owns-words-and-visuals",
-   "on": "2026-10-24",
-   "krish": "Once the videos are recorded, Claude gets the scripts and the visual creative direction locked so that codex can take over on the video production, and ensures that it does a great job of producing the final publish board. the copy of the article and what goes in the visuals etc is all Claude responsibility.",
-   "why": "Production sessions that decided the visuals themselves produced work he had to art-direct line by line.",
-   "means": "Claude writes the story, the scripts, the article copy, every article figure and the creative direction; production renders only from a direction he signed; Claude builds the final board.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "docs/CREATIVE_DIRECTION.md",
-     "contains": "Who does what",
-     "how": "the standard"
-    },
-    {
-     "file": "AGENTS.md",
-     "contains": "Claude owns the words and the visuals",
-     "how": "the start route every client reads"
-    },
-    {
-     "file": ".agents/skills/make-piece/SKILL.md",
-     "contains": "The creative direction, before he records",
-     "how": "make-piece step 7"
-    }
-   ]
-  },
-  {
-   "id": "improve-your-own-quality",
-   "on": "2026-10-24",
-   "krish": "The end objective is that tomorrow's Ideas Board is SIGNIFICANTLY improved ... it's your engine's job to use it all but most importantly focus on improving your own work quality",
-   "why": "The ideas reaching him were thin and similar, and the engine had sources it never read.",
-   "means": "Before the Ideas tab is built, a separate reader tries to kill each idea against the quality bar (four different stories a day, the face's Monday-morning action, a specific checked hook, one from his own words or Inspiration House, one wildcard) and every killed idea is replaced.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": ".agents/skills/plan-week/SKILL.md",
-     "contains": "The quality bar, before an idea reaches him",
-     "how": "plan-week step 3b"
-    }
-   ]
-  },
-  {
-   "id": "finish-the-job-here",
-   "on": "2026-10-25",
-   "krish": "Just finish it all here. You've asked me to hand over three different sessions that I've tried to get you to build this fucking outcome. Just fucking build it here.",
-   "why": "The context guard (G1) tells every long session to stop and hand over mid-job, so his Sunday plan was passed between sessions three times and the outcome he asked for never arrived.",
-   "means": "A session finishes the job Krish asked for in that session. Cost discipline comes from lean steps (searching, short outputs), never from handing his job to a fresh session part-way. A handover is written when the job is done, for the next job. To encode: the G1 message in scripts/hooks/cost_gate.py, which needs Krish's yes because it changes a guardrail.",
-   "status": "open",
-   "encoded": []
-  },
-  {
-   "id": "no-repeat-contract-takeaway",
-   "on": "2026-10-26",
-   "krish": "I don't want every single takeaway to be \"go and look at your contract\" because we've done that a few times.",
-   "why": "Several recent pieces ended on the same advice, so the actions stopped feeling specific to each story.",
-   "means": "A piece's Monday action and its 3 things you can do tomorrow come from that piece's own evidence and name something new to watch or do; check the last few published pieces' actions before writing one, and never make \"check your contract\" the main action again unless he asks for it.",
-   "status": "open",
-   "encoded": []
-  },
-  {
-   "id": "feedback-becomes-cues",
-   "on": "2026-10-26",
-   "krish": "create some form of feedback loop with the [inspiration] house repository where all the feedback I've given you goes into a really clear set of cues that you can draw from in the future ... just make sure the content engine knows about this permanently moving forward",
-   "why": "Valuable feedback kept being given in chat and lost: ideas worth making later, material worth keeping for a bigger piece, and topics to watch over time had nowhere to live.",
-   "means": "Every decision he gives on an idea is relayed to the idea queue with his words, becomes a feedback cue (future piece, wider-piece context by theme, track over time, brief, not for us), and the Sunday gather draws on the open cues; a piece built from one marks it used.",
-   "status": "encoded",
-   "encoded": [
-    {
-     "file": "AGENTS.md",
-     "contains": "His feedback on ideas is kept as cues, permanently",
-     "how": "the standing rule every session reads"
-    },
-    {
-     "file": ".agents/skills/plan-week/SKILL.md",
-     "contains": "Then read his feedback cues",
-     "how": "plan-week step 1"
-    },
-    {
-     "file": "apps/control-plane/api/_feedbackCues.ts",
-     "contains": "feedback_cues",
-     "how": "the Sunday gather reads the cues"
-    }
-   ]
-  }
- ]
+  ]
 }
