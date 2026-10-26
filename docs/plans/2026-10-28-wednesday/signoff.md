@@ -1,37 +1,28 @@
-# Wednesday: Claude Duet, for your yes
+# Wednesday: Claude Duet, ready to record
 
-Piece `b63d2507-dbb4-449d-bce4-f21e859ee2ad` (under.the.hood). Everything that is yours for Wednesday before you
-record, in one round. "Yes, send them" takes every default below and puts both scripts in Teleprompter.
+Piece `b63d2507-dbb4-449d-bce4-f21e859ee2ad` (under.the.hood). Krish, 2026-10-26: "Your guess is fine, give a real
+world example that will occur, send them to Teleprompter and then lets get to Friday".
 
-## 1. Where it lands (built on your answer)
+## In Teleprompter now
 
-If you already work in Claude, Duet changes who starts the work: you stop asking and start your day with what it
-brought you, saying yes or no. That habit only forms around one weekly job whose inputs live in the apps it can reach,
-because files on your computer, some skills and custom connectors don't come with it, and its checks spend the same
-plan limits as the rest of your Claude work. So hand it first the weekly job you now do by copying and pasting.
+Folder "Wed 28 Oct under.the.hood - Claude Duet": "Wed 28 Oct - 5-minute - Claude Duet" (about 5:20) and
+"Wed 28 Oct - 90-second - Claude Duet" (about 1:17). Both pass the reading and length checks. The 5-minute cut was heard
+by two fresh managers with nothing lost; the 90-second cut went on your word after four rounds of readers, whose fixes
+are all in.
 
-The order: what Duet does on its own; what people think of Duet (the mood only on video, names in the article);
-from asking to approving; what comes with you and what stays behind; where to hook it in first; your call; what I'd
-do. Full narrative: `docs/plans/2026-10-26-week/narrative-wed.md`. Outline: `docs/plans/2026-10-28-outline.md`.
+## Where it lands
 
-## 2. Your call, in your words (the one thing I need)
+If you already work in Claude, Duet changes who starts the work: you stop asking and start checking what it brings you,
+saying yes, no or not today. That habit only sticks around one weekly job whose inputs live in the apps it can reach.
+It is US only, on paid personal plans, so most viewers are getting ready (and checking with IT before connecting work
+email to a personal plan).
 
-My guess, in the scripts until you change it: "So my prediction is that Duet will soon start and steer your other
-Claude work, not just watch it. I reckon that happens by the first of March 2027." Today it can see your Claude
-sessions but can't direct them, and early users are asking for exactly that.
+Your call, with your example: by 1 March 2027 Duet opens the files on your laptop, so on the train home it asks to
+start Thursday's board report, and it is waiting when you sit down.
 
-## 3. The scripts
+## Still to do (none of it waits on you except the paid check)
 
-The 5-minute and the 90-second cuts pass the reading and length checks (`story_check.py`: ready). Six fresh readers
-(two managers and a presenter per cut) heard the first draft. They all lost the same things, now fixed: Duet is said
-in plain words up front; who can get it comes early (US, paid personal plans, waitlist; company plans not yet), so the
-advice reads as getting ready for UK and company-plan viewers; "usage limit" and "let it draft while you still press
-send" replace the jargon; a reason now comes before the prediction; the insider stretch (projects, custom connectors,
-coding sessions) is gone; and one line says it only sees the apps you connect and you can cut any off. The readers hear
-the final words again once your call is in. No reviewer is named in either script.
-
-## 4. The article
-
-Drafted at about 1,270 words in your voice (voice check passes), ending on "3 things you can do tomorrow". It names
-its sources, Reddit included. Still to run before it is final: the AI-pattern scan, filing its sources, the fact check
-(paid, about $0.50, needs your yes) and the spine check.
+- Titles, thumbnail and cover words: after you record (house rule TITLES_AFTER_RECORDING).
+- The article (in Drafts, about 1,300 words, names its sources, Reddit included): file its sources, then the fact
+  check (paid, about $0.50, needs your yes) and the spine check.
+- The creative direction and storyboard, built on your takes.

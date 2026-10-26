@@ -18,6 +18,8 @@ read of the two past cases; "who trains the seniors" is the open question the An
 protections for incumbents will not benefit those not hired to begin with"). Checked against recent pieces: no recent
 piece's takeaway was about the entry-level rung (learning `no-repeat-takeaway`).
 
+Signed by Krish: "i like this suggestion as to where it lands a lot", 2026-10-26.
+
 ## Who it is for, and what they do on Monday
 
 (To come.)
