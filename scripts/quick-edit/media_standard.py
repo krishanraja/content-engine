@@ -6,6 +6,24 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 
 
+def enforced():
+    """Read the repository-controlled rollout; malformed/unavailable is an error.
+
+    Pending retains existing gates. It never returns a qualification result.
+    There is no environment, request, or command-line opt-out.
+    """
+    run = subprocess.run(['node', '--import', 'tsx', str(ROOT/'scripts/media-standard.ts'), 'rollout'],
+                         cwd=ROOT, capture_output=True, text=True, encoding='utf-8')
+    if run.returncode:
+        raise ValueError('Media quality rollout unavailable: '+run.stderr[-1000:])
+    data=json.loads(run.stdout)
+    if data.get('ok') is not True or not isinstance(data.get('enforced'), bool):
+        raise ValueError('Media quality rollout did not confirm a valid state')
+    if data.get('rollout',{}).get('status') not in ('active','candidate_pending_calibration'):
+        raise ValueError('Unknown media quality rollout state')
+    return data['enforced']
+
+
 def check(command, path, piece=None):
     args = ['node', '--import', 'tsx', str(ROOT / 'scripts/media-standard.ts'), command, str(path)]
     if piece:
@@ -22,6 +40,8 @@ def check(command, path, piece=None):
 
 
 def preflight(config, base, full_production=False):
+    if not enforced():
+        return
     path = config.get('media_brief')
     if not path:
         raise ValueError('Create this piece\'s media brief against docs/MEDIA_STANDARD.md before rendering; previous-piece assets are not a starting kit')

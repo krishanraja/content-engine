@@ -4,7 +4,9 @@ import { writeFile } from 'node:fs/promises'
 import { vi } from 'vitest'
 import { hashFile } from '../../packages/core/src/hash.js'
 import { MEDIA_STANDARD_HASH } from '../../packages/core/src/media-quality.js'
+import * as rollout from '../../packages/core/src/media-rollout.js'
 export async function attachQualifiedClientFixture(path: string, job: string) {
+  vi.spyOn(rollout, 'mediaQualityEnforced').mockReturnValue(true)
   vi.stubEnv('ENGINE_OPERATOR_TOKEN', 'synthetic-client-fixture')
   const artifact = { path: `3 Posts/2026-10-26 Mon follow.the.money - Fixture/3 Video/${job}.mp4`, sha256: await hashFile(path) }
   const binding = { piece_id: 'fixture-piece', production_id: job, role: 'video', cut: 'short', artifact, receipt: { path: 'fixture-review.json', sha256: 'f'.repeat(64) } }

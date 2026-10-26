@@ -16,6 +16,11 @@ import sync_check
 
 
 class QualityTests(unittest.TestCase):
+    def setUp(self):
+        active=patch('media_standard.enforced', return_value=True)
+        active.start()
+        self.addCleanup(active.stop)
+
     def test_decoder_limits_preserve_stream_order_pixels_and_frame_clock(self):
         args=['-i','camera.mkv','-loop','1','-itsoffset','2','-i','card.png','-i','sound.wav']
         bounded=make.bounded_decode_inputs(args)
@@ -182,6 +187,9 @@ class QualityTests(unittest.TestCase):
             # Each gate remains independently necessary; these scoped mocks do not
             # create a signed receipt or change production verification behavior.
             with patch('media_standard.check', return_value=[]):
+                self.assertEqual(quality.delivery_problems(video,receipt,'target'),['visual clarity gate is not passed'])
+            with patch('media_standard.enforced', return_value=False):
+                # Pending rollout retains the pre-existing clarity gate.
                 self.assertEqual(quality.delivery_problems(video,receipt,'target'),['visual clarity gate is not passed'])
             with patch('visual_clarity.delivery_problems', return_value=[]):
                 self.assertEqual(quality.delivery_problems(video,receipt,'target'),[binding_missing])

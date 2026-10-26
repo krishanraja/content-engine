@@ -42,6 +42,7 @@ describe('four-platform V2 packages', () => {
   let previousRuntimeRoot: string | undefined
 
   afterEach(async () => {
+    vi.restoreAllMocks()
     vi.unstubAllGlobals()
     vi.unstubAllEnvs()
     if (previousRuntimeRoot === undefined) delete process.env.MINDMAKE_RUNTIME_ROOT

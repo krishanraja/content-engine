@@ -1,3 +1,4 @@
+import { mediaQualityEnforced } from './media-rollout.js'
 import { access, copyFile, cp, mkdir, readFile, unlink } from 'node:fs/promises'
 import { availableParallelism } from 'node:os'
 import { basename, dirname, extname, join, resolve } from 'node:path'
@@ -1235,7 +1236,7 @@ export async function renderStoryV2(repoRoot: string, manifestInput: RenderManif
   if (readinessIssues.length) throw new Error(`V2 render readiness failed: ${readinessIssues.join('; ')}`)
   const callIssues = await boundRenderCallIssuesV2(manifest, pinnedRegistry)
   if (callIssues.length) throw new Error(`hard block: the call gate failed: ${callIssues.join('; ')}`)
-  await assertProductionBrief(join(jobPath(manifest.job_id), 'media-brief.json'), settings.profile === 'master', manifest.job_id)
+  if (mediaQualityEnforced()) await assertProductionBrief(join(jobPath(manifest.job_id), 'media-brief.json'), settings.profile === 'master', manifest.job_id)
   const brandGeometry = await loadExactBrandGeometryContextV2(manifest)
   if (!await remotionLicenceEligible(repoRoot)) throw new Error('Remotion licence eligibility is not confirmed. Run studio doctor.')
   const rendererHash = await rendererImplementationHashV2(repoRoot)

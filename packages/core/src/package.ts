@@ -1,3 +1,4 @@
+import { mediaQualityEnforced } from './media-rollout.js'
 import { cp, lstat, mkdir, readdir, readFile, realpath, writeFile } from 'node:fs/promises'
 import { basename, dirname, isAbsolute, join, relative, resolve } from 'node:path'
 import {
@@ -276,7 +277,7 @@ export async function createDraftPackageV2(
   // frame at half a second, as it always was.
   cover?: { path: string; sha256: string },
 ): Promise<DraftPackageV2> {
-  await assertQualifiedFile(masterPath, undefined, jobId, 'video')
+  if (mediaQualityEnforced()) await assertQualifiedFile(masterPath, undefined, jobId, 'video')
   if (manifest.schema_version === 2 && manifest.target_platform !== platform) {
     throw new Error(`render manifest targets ${manifest.target_platform}, not ${platform}`)
   }
@@ -340,7 +341,7 @@ export async function createDraftPackageV2(
   if (failedCopy.length) throw new Error(`public copy failed QA: ${failedCopy.map((check) => check.detail).join('; ')}`)
 
   await cp(masterPath, masterTarget, { force: true })
-  await cp(`${masterPath}.media-quality.json`, `${masterTarget}.media-quality.json`, { force: true })
+  if (mediaQualityEnforced()) await cp(`${masterPath}.media-quality.json`, `${masterTarget}.media-quality.json`, { force: true })
   await writeFile(captionsPath, captionsAsSrt(manifest), 'utf8')
   if (cover) await cp(cover.path, coverPath, { force: true })
   else await run('ffmpeg', ['-hide_banner', '-loglevel', 'error', '-y', '-ss', '0.500', '-i', masterTarget, '-frames:v', '1', '-q:v', '2', coverPath], { timeoutMs: 120_000 })
@@ -444,7 +445,7 @@ export async function createDraftPackage(
   manifest: RenderManifestV1,
   qa: unknown,
 ): Promise<DraftPackageV1> {
-  await assertQualifiedFile(masterPath, undefined, jobId, 'video')
+  if (mediaQualityEnforced()) await assertQualifiedFile(masterPath, undefined, jobId, 'video')
   const root = join(jobPath(jobId), 'packages', platform)
   await mkdir(root, { recursive: true })
   const masterTarget = join(root, `master-${jobId}.mp4`)
@@ -459,7 +460,7 @@ export async function createDraftPackage(
   if (failedCopy.length) throw new Error(`public copy failed QA: ${failedCopy.map((check) => check.detail).join('; ')}`)
   await cp(masterPath, masterTarget, { force: true })
   await writeFile(captionsPath, captionsAsSrt(manifest), 'utf8')
-  await cp(`${masterPath}.media-quality.json`, `${masterTarget}.media-quality.json`, { force: true })
+  if (mediaQualityEnforced()) await cp(`${masterPath}.media-quality.json`, `${masterTarget}.media-quality.json`, { force: true })
   await run('ffmpeg', ['-hide_banner', '-loglevel', 'error', '-y', '-ss', '0.500', '-i', masterTarget, '-frames:v', '1', '-q:v', '2', coverPath], { timeoutMs: 120_000 })
   await writeFile(claimsPath, `${JSON.stringify(candidate.claims, null, 2)}\n`, 'utf8')
   await writeFile(assetsPath, `${JSON.stringify(manifest.assets, null, 2)}\n`, 'utf8')
@@ -618,7 +619,7 @@ export async function archiveJob(jobId: string, input: ArchiveJobInput): Promise
   if (!input.packages.length) throw new Error('there is no approved package to archive')
   for (const pack of input.packages) {
     if (pack.master_hash && await hashFile(pack.master_path) !== pack.master_hash) throw new Error('archive video does not match the approved master')
-    await assertQualifiedFile(pack.master_path, undefined, jobId, 'video')
+    if (mediaQualityEnforced()) await assertQualifiedFile(pack.master_path, undefined, jobId, 'video')
   }
   const now = input.now ?? new Date()
   const date = input.publish_date ? assertArchiveDate(input.publish_date) : archiveLocalDate(now)

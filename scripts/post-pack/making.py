@@ -1473,6 +1473,7 @@ def self_test():
                 # Payload/thumbnail fixtures are not qualifying media. Isolate external
                 # reviewers only inside this self-test; production still uses both gates.
                 test_mocks.enter_context(mock_patch('visual_clarity.delivery_problems', return_value=[]))
+                test_mocks.enter_context(mock_patch('media_standard.enforced', return_value=True))
                 if synthetic_media_review:
                     Path(str(fixture)+'.media-quality.json').write_text(json.dumps({
                         'piece_id':argv[vi-1], 'production_id':'synthetic-self-test', 'role':'video',
@@ -2027,10 +2028,12 @@ def main(argv=None, call=None):
                     problems.append('receipt names a different video path')
             if problems:
                 raise MakingError('Video recording blocked: '+'; '.join(problems))
-            binding=json.loads(Path(a.video_file+'.media-quality.json').read_text(encoding='utf8'))
-            patch['video_assets'][0]['path']=binding['artifact']['path']
-            patch['video_assets'][0]['sha256']=binding['artifact']['sha256']
-            patch['video_assets'][0]['quality_receipt']=binding['receipt']
+            import media_standard
+            if media_standard.enforced():
+                binding=json.loads(Path(a.video_file+'.media-quality.json').read_text(encoding='utf8'))
+                patch['video_assets'][0]['path']=binding['artifact']['path']
+                patch['video_assets'][0]['sha256']=binding['artifact']['sha256']
+                patch['video_assets'][0]['quality_receipt']=binding['receipt']
         elif a.what == 'posted':
             channel = a.args[0]
             if channel not in CHANNELS:

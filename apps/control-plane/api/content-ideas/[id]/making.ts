@@ -6,6 +6,7 @@ import { askChecksForPiece } from '../../_controlCenter.js'
 import { MediaQualityError, qualifyMedia, readMediaRef } from '../../_mediaQuality.js'
 
 import { verifiedMaking } from '../../_verifiedMaking.js'
+import { mediaQualityEnforced, mediaQualityRollout } from '../../../../../packages/core/src/media-rollout.js'
 
 // GET  /api/content-ideas/:id/making           where this piece is: the record and its steps
 // POST /api/content-ideas/:id/making  body: a patch (apps/control-plane/api/_making.ts):
@@ -64,7 +65,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   if (req.method === 'GET') {
     const current = await verifiedMaking(supabase, ideaId, prev)
-    return res.status(200).json({ ok: true, idea_id: ideaId, state: (row as any).state, lane_slot: (row as any).lane_slot ?? null, making: current, steps: makingSteps({ ...row, meta: { ...meta, making: current } } as any) })
+    return res.status(200).json({ ok: true, idea_id: ideaId, state: (row as any).state, lane_slot: (row as any).lane_slot ?? null, media_quality_rollout: mediaQualityRollout().status, making: current, steps: makingSteps({ ...row, meta: { ...meta, making: current } } as any) })
   }
 
   const now = new Date().toISOString()
@@ -75,7 +76,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const cache = new Map()
-    for (const asset of patch.video_assets || []) {
+    for (const asset of mediaQualityEnforced() ? patch.video_assets || [] : []) {
       if (!asset.sha256 || !asset.quality_receipt) throw new MediaQualityError('video needs exact bytes and an independent quality receipt')
       await qualifyMedia(supabase, { piece_id: ideaId, role: 'video', cut: asset.cut, artifact: { path: asset.path, sha256: asset.sha256 }, receipt: asset.quality_receipt }, cache)
       asset.quality_review = JSON.parse((await readMediaRef(supabase, asset.quality_receipt, cache, true)).text!)
@@ -99,5 +100,5 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // The sweep looks at the items waiting on this piece now. The write waits up
   // to 3 s for the ask (_controlCenter.ts, ASK_MS); a failed ask changes nothing.
   const look = await askChecksForPiece(ideaId)
-  return res.status(200).json({ ok: true, idea_id: ideaId, making: current, steps: makingSteps(after), closed: [], looked: look.keys })
+  return res.status(200).json({ ok: true, idea_id: ideaId, media_quality_rollout: mediaQualityRollout().status, making: current, steps: makingSteps(after), closed: [], looked: look.keys })
 }

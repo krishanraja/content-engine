@@ -1,8 +1,10 @@
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { createHash } from 'node:crypto'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { actor, canonical, combineWriterRefused, digest, hisOnlyRefusal, monday, validBody, validManifest } from '../../apps/control-plane/api/board/_contracts.js'
 import { createBoardHandler } from '../../apps/control-plane/api/board/_handler.js'
+// These guard regressions exercise the explicitly activated candidate in isolation.
+vi.mock('../../packages/core/src/media-rollout.js', () => ({ mediaQualityEnforced: () => true, mediaQualityRollout: () => ({ status: 'active' }) }))
 
 const previous = { ...process.env }
 afterEach(() => { for (const key of ['ACCESS_CODE','ENGINE_OPERATOR_TOKEN','APP_ORIGIN']) { if (previous[key] === undefined) delete process.env[key]; else process.env[key] = previous[key] } })

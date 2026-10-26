@@ -33,14 +33,29 @@ class BoardWebTests(unittest.TestCase):
             path.write_text(page,encoding='utf-8');path.with_suffix('.json').write_text(json.dumps(meta))
             args = SimpleNamespace(page=str(path),assets=str(mapping),apply=True)
             mapping.write_text(json.dumps([dict(id='drive-example',source_url=source,existing_sha256='b'*64)]))
-            with patch.object(board_web,'call',api), patch.object(board_web,'upload',lambda *a: uploads.append(a)):
+            with patch.object(board_web,'call',api), patch.object(board_web,'upload',lambda *a: uploads.append(a)), patch.object(board_web.media_standard,'enforced',return_value=True):
                 with self.assertRaisesRegex(ValueError,'changed or is missing'): board_web.publish(args)
                 self.assertEqual(uploads,[])
                 mapping.write_text(json.dumps([dict(id='drive-example',source_url=source,existing_sha256='a'*64)]))
+                with self.assertRaisesRegex(ValueError,'Independent board delivery review missing'):
+                    board_web.publish(args)
+                self.assertEqual(uploads,[])
+                self.assertEqual(sent,[])
+                # This test's API is a recording stub, not a qualifying server.
+                # Real signature verification is exercised by board-runtime.ts.
+                synthetic_review={'synthetic_fixture_only':True,'reviewer_run_id':'board-web-forwarding-test'}
+                path.with_suffix('.delivery-review.json').write_text(json.dumps(synthetic_review),encoding='utf-8')
                 board_web.publish(args)
             self.assertEqual(sent[0]['revision'],9)
             self.assertEqual(sent[0]['manifest']['assets']['drive-example'],asset)
+            self.assertEqual(sent[0]['manifest']['delivery_review'],synthetic_review)
             self.assertEqual(len(uploads),1)  # Only new HTML; preserved media is not retransmitted.
+            # Pending rollout preserves existing board operation without pretending
+            # that an unsigned build has qualified under the candidate standard.
+            sent.clear();uploads.clear();path.with_suffix('.delivery-review.json').unlink()
+            with patch.object(board_web,'call',api), patch.object(board_web,'upload',lambda *a: uploads.append(a)), patch.object(board_web.media_standard,'enforced',return_value=False):
+                board_web.publish(args)
+            self.assertNotIn('delivery_review',sent[0]['manifest'])
 
     def test_kept_friday_video_stays_a_deep_cut(self):
         monday=week_board.monday_of('2026-10-12');piece=week_board.deep_cut_piece(monday)

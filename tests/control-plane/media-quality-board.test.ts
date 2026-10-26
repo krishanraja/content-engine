@@ -4,6 +4,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { MediaFixture } from '../helpers/media-quality.js'
 import { BoardDeliverySchema, MEDIA_STANDARD_HASH, canonicalMediaJson, mediaDigest } from '../../packages/core/src/media-quality.js'
 import { createBoardHandler } from '../../apps/control-plane/api/board/_handler.js'
+const rollout = vi.hoisted(() => ({ active: true }))
+vi.mock('../../packages/core/src/media-rollout.js', () => ({ mediaQualityEnforced: () => rollout.active, mediaQualityRollout: () => ({ status: rollout.active ? 'active' : 'candidate_pending_calibration' }) }))
 
 // Qualification receives our in-memory database. Never construct a real provider client.
 vi.mock('../../apps/control-plane/api/_supabase.js', () => ({ supabase: {} }))
@@ -19,6 +21,7 @@ afterEach(() => {
 })
 
 function setup() {
+  rollout.active = true // Test-only activation, not a production environment toggle.
   const media = new MediaFixture(), video = media.video()
   const week = '2026-10-26', token = 'synthetic-board-quality-test'
   process.env.ENGINE_OPERATOR_TOKEN = token
@@ -94,6 +97,23 @@ function setup() {
 }
 
 describe('signed board activation and current-read revocation', () => {
+  it('preserves draft board writes/reads while pending and never labels them qualified', async () => {
+    const f = setup()
+    rollout.active = false
+    delete process.env.MEDIA_REVIEW_PUBLIC_KEYS
+    const { delivery_review: _unused, ...manifest } = f.signedManifest
+    const activated = await f.call('PUT', {}, { manifest, revision: 0 })
+    expect(activated.status).toBe(200)
+    expect(activated.out.media_quality_rollout).toBe('candidate_pending_calibration')
+    const metadata = await f.call('GET')
+    expect(metadata.out).toMatchObject({ media_quality_rollout: 'candidate_pending_calibration', media_qualification: 'candidate_pending_calibration', manifest })
+    expect(metadata.headers['X-Media-Qualification']).toBe('candidate_pending_calibration')
+    const asset = await f.call('GET', { op: 'assets', id: 'video' })
+    expect(asset.status).toBe(303)
+    expect(asset.headers['X-Media-Qualification']).toBe('candidate_pending_calibration')
+    expect(f.rpc).toHaveBeenCalledOnce()
+  })
+
   it('persists the exact signed envelope and returns the qualified build on independent readback', async () => {
     const f = setup()
     const result = await f.call('PUT', {}, { manifest: f.signedManifest, revision: 0 })

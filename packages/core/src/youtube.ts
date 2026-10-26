@@ -1,3 +1,4 @@
+import { mediaQualityEnforced } from './media-rollout.js'
 import { createReadStream } from 'node:fs'
 import { stat } from 'node:fs/promises'
 import { assertQualifiedFile } from './media-delivery.js'
@@ -12,7 +13,7 @@ export interface YoutubeUploadInput {
 }
 
 export async function uploadPrivateYoutubeVideo(input: YoutubeUploadInput): Promise<unknown> {
-  await assertQualifiedFile(input.videoPath, undefined, input.jobId, 'video')
+  if (mediaQualityEnforced()) await assertQualifiedFile(input.videoPath, undefined, input.jobId, 'video')
   const metadataResponse = await fetch('https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status', {
     method: 'POST',
     headers: {

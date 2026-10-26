@@ -12,8 +12,11 @@ For every production request, including just "Produce this video", load
 `docs/MEDIA_STANDARD.md` and run `node --import tsx scripts/media-standard.ts show`.
 Create this piece's own media brief, assets and explanatory motion against that
 standard. Previous-piece assets are evaluation history, never the new asset kit.
-Representative proof precedes full production. Exact final exports require
-independent qualification; missing reviewer capability never becomes a pass.
+Representative proof precedes full production. Read `scripts/media-standard.ts rollout`
+as well: signed proof/final qualification becomes mandatory only after reviewed
+activation. While pending calibration, retain every existing approval, audio,
+clarity and delivery check; never claim the new automatic gate is active or that
+missing reviewer capability is a pass. Follow the rollout section in the guide.
 Repair routine failures internally and preserve existing user approvals.
 
 ## Publish-board routing

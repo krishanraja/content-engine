@@ -21,6 +21,7 @@
 
 import { activeManualReviews, bodyHash, effectiveBlocking } from './_factGate.js'
 import { MediaRefSchema, mediaReviewProblems, type MediaRef } from '../../../packages/core/src/media-quality.js'
+import { mediaQualityEnforced } from '../../../packages/core/src/media-rollout.js'
 
 /** Every channel a piece can go to, in the order Krish posts them
  *  (docs/AMPLIFICATION.md). Krish, 2026-10-11: "I always want to repost to
@@ -542,12 +543,12 @@ export function makingSteps(row: { id?: string; state?: string | null; body?: st
   // A thumbnail for every size, every time (Krish, 2026-10-12): a cut is
   // made only when its video and its thumbnail are both on the record.
   const assets = m.video_assets || []
-  const qualified = assets.filter(a => a.sha256 && a.quality_receipt && !mediaReviewProblems(a.quality_review, {
+  const readinessAssets = !mediaQualityEnforced() ? assets : assets.filter(a => a.sha256 && a.quality_receipt && !mediaReviewProblems(a.quality_review, {
     piece_id: String(row.id), role: 'video', cut: a.cut, stage: 'final', artifacts: [{ path: a.path, sha256: a.sha256 }],
   }).length)
-  const produced = new Set(qualified.map(a => a.cut))
+  const produced = new Set(readinessAssets.map(a => a.cut))
   const missingAssets = needed.filter(c => !produced.has(c))
-  const thumbed = new Set(qualified.filter(a => a.thumbnail?.path).map(a => a.cut))
+  const thumbed = new Set(readinessAssets.filter(a => a.thumbnail?.path).map(a => a.cut))
   const missingThumbs = needed.filter(c => produced.has(c) && !thumbed.has(c))
   const videoTodo = [
     missingAssets.length ? `${missingAssets.join(' and ')} cut still to produce` : '',

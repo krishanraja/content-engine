@@ -104,6 +104,7 @@ describe('archiveJob', () => {
   const prior = { runtime: process.env.MINDMAKE_RUNTIME_ROOT, archive: process.env.MINDMAKE_ARCHIVE_ROOT, drive: process.env.MINDMAKE_DRIVE_ROOT }
 
   afterEach(async () => {
+    vi.restoreAllMocks()
     vi.unstubAllGlobals()
     vi.unstubAllEnvs()
     for (const [key, value] of [['MINDMAKE_RUNTIME_ROOT', prior.runtime], ['MINDMAKE_ARCHIVE_ROOT', prior.archive], ['MINDMAKE_DRIVE_ROOT', prior.drive]] as const) {

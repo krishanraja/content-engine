@@ -2,6 +2,8 @@ import { createHash } from 'node:crypto'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { MediaFixture } from '../helpers/media-quality.js'
 import { makingStamp, makingSteps, mergeMaking, parseMakingPatch, takeCounts, teleprompterNote, teleprompterStates } from '../../apps/control-plane/api/_making.js'
+const rollout = vi.hoisted(() => ({ active: true }))
+vi.mock('../../packages/core/src/media-rollout.js', () => ({ mediaQualityEnforced: () => rollout.active, mediaQualityRollout: () => ({ status: rollout.active ? 'active' : 'candidate_pending_calibration' }) }))
 
 // The making record on content_ideas.meta.making: where a piece is between
 // the workroom and every channel, written by Claude Code sessions and by
@@ -66,6 +68,7 @@ async function call(method: 'GET' | 'POST', body: Row = {}, who: 'agent' | 'kris
 }
 
 beforeEach(() => {
+  rollout.active = true // Explicit synthetic activation; shipped configuration remains pending.
   process.env.ENGINE_OPERATOR_TOKEN = TOKEN
   process.env.ACCESS_CODE = CODE
   db.tables = { content_ideas: [{ id: ID, idea: 'Why are there suddenly so many AIs?', state: 'review', meta: { fact_check: { passed: true, ran_at: '2026-10-10T01:00:00Z' } }, updated_at: '2026-10-10T00:00:00Z' }] }
@@ -81,6 +84,24 @@ afterEach(() => { vi.unstubAllGlobals(); delete process.env.MEDIA_REVIEW_PUBLIC_
 const SHA = (c: string) => c.repeat(64)
 
 describe('the making record', () => {
+  it('preserves existing video/thumbnail readiness while candidate rollout is pending, without qualification claims', async () => {
+    rollout.active = false
+    delete process.env.MEDIA_REVIEW_PUBLIC_KEYS
+    const out = await call('POST', { video_assets: ['short', 'long'].map(cut => ({ cut, name: `Legacy ${cut}`, path: `3 Video/${cut}.mp4`, url: `https://example.com/${cut}`, thumbnail: { path: `3 Video/${cut}.jpg` } })) }, 'agent', ID, false)
+    expect(out.status).toBe(200)
+    expect(out.body.media_quality_rollout).toBe('candidate_pending_calibration')
+    expect(out.body.steps.find((step: Row) => step.key === 'video').state).toBe('done')
+    for (const asset of out.body.making.video_assets) {
+      expect(asset).not.toHaveProperty('quality_review')
+      expect(asset).not.toHaveProperty('quality_receipt')
+      expect(asset.url).toBe(`https://example.com/${asset.cut}`)
+    }
+    const read = await call('GET')
+    expect(read.body.media_quality_rollout).toBe('candidate_pending_calibration')
+    expect(read.body.steps.find((step: Row) => step.key === 'video').state).toBe('done')
+    expect(db.tables.content_library_files).toHaveLength(0)
+  })
+
   it('refuses unqualified video writes and does not let the producer inject a pass', async () => {
     const out = await call('POST', { video_assets: [{ cut: 'short', name: 'test', path: '3 Video/x.mp4', quality_review: { status: 'pass' } }] }, 'agent', ID, false)
     expect(out.status).toBe(409)

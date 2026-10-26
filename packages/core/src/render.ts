@@ -1,3 +1,4 @@
+import { mediaQualityEnforced } from './media-rollout.js'
 import { access, cp, mkdir, unlink } from 'node:fs/promises'
 import { availableParallelism } from 'node:os'
 import { basename, dirname, join } from 'node:path'
@@ -98,7 +99,7 @@ async function sharedBrowserExecutable(): Promise<string> {
 }
 
 export async function renderShort(repoRoot: string, manifest: RenderManifestV1, preview = false, previewDurationMs = 6_000, previewScale = 0.25): Promise<string> {
-  await assertProductionBrief(join(jobPath(manifest.job_id), 'media-brief.json'), !preview, manifest.job_id)
+  if (mediaQualityEnforced()) await assertProductionBrief(join(jobPath(manifest.job_id), 'media-brief.json'), !preview, manifest.job_id)
   if (!await remotionLicenceEligible(repoRoot)) throw new Error('Remotion licence eligibility is not confirmed. Run studio doctor.')
   if (preview && ![0.25, 1].includes(previewScale)) throw new Error('preview scale must be 0.25 or 1')
   const effectiveDurationMs = preview ? Math.min(manifest.duration_ms, Math.max(1_000, previewDurationMs)) : manifest.duration_ms
