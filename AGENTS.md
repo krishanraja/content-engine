@@ -277,7 +277,24 @@ step, a lesson a tool prints). A failure he raised goes in
 `config/failures.json` instead. `python3 scripts/check_failures.py`, run first
 in every session, fails when a marker is gone and lists what is still open.
 Before writing or proposing anything, read the learnings that bear on it, so
-he never has to say it again. His own example, the first entry: titles,
+he never has to say it again.
+
+**His feedback on ideas is kept as cues, permanently** (Krish, 2026-10-26: "all
+the feedback I've given you goes into a really clear set of cues that you can draw
+from in the future", then "just make sure the content engine knows about this
+permanently moving forward"). Every decision he gives on an idea, on the queue,
+the board or an Inspiration card, becomes a `feedback_cues` row with his exact
+words and its use: `future_piece`, `wider_piece_context` (by `theme`, such as
+"superintelligence"), `track_over_time`, `brief` or `not_for_us`. The Inspiration
+House daily run writes them (krishanraja/inspirationhouse,
+`src/collect/feedbackCues.ts`), so relay every decision he gives in chat to the
+idea queue with `decided_by: 'Krish'` and his words in `said`, or the loop never
+sees it. The Sunday gather reads them as `cues` (`_feedbackCues.ts`,
+`plan-week` step 1): a future piece is offered again, a wider piece's context is
+handed to whichever idea opens that theme, a tracked topic is checked each week,
+and a brief is applied when its idea is made. A piece built from a cue marks it
+`used` with the piece's id. Cues steer sourcing and the brief only; never pass
+them to a judge (`check-judges.ts`). His own example, the first entry: titles,
 headlines and thumbnail words are signed off after he records, because "only
 after recording do I really feel like I've got a message".
 

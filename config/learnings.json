@@ -1577,6 +1577,31 @@
    "means": "A piece's Monday action and its 3 things you can do tomorrow come from that piece's own evidence and name something new to watch or do; check the last few published pieces' actions before writing one, and never make \"check your contract\" the main action again unless he asks for it.",
    "status": "open",
    "encoded": []
+  },
+  {
+   "id": "feedback-becomes-cues",
+   "on": "2026-10-26",
+   "krish": "create some form of feedback loop with the [inspiration] house repository where all the feedback I've given you goes into a really clear set of cues that you can draw from in the future ... just make sure the content engine knows about this permanently moving forward",
+   "why": "Valuable feedback kept being given in chat and lost: ideas worth making later, material worth keeping for a bigger piece, and topics to watch over time had nowhere to live.",
+   "means": "Every decision he gives on an idea is relayed to the idea queue with his words, becomes a feedback cue (future piece, wider-piece context by theme, track over time, brief, not for us), and the Sunday gather draws on the open cues; a piece built from one marks it used.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "AGENTS.md",
+     "contains": "His feedback on ideas is kept as cues, permanently",
+     "how": "the standing rule every session reads"
+    },
+    {
+     "file": ".agents/skills/plan-week/SKILL.md",
+     "contains": "Then read his feedback cues",
+     "how": "plan-week step 1"
+    },
+    {
+     "file": "apps/control-plane/api/_feedbackCues.ts",
+     "contains": "feedback_cues",
+     "how": "the Sunday gather reads the cues"
+    }
+   ]
   }
  ]
 }

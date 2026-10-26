@@ -76,7 +76,7 @@ def gather(week, call=None, out_dir=None):
     out = {
         'week_start': wk,
         'how': 'Read-only gather (board_feed.py). Write ideas.json from series[].pool and inspiration (routed, liked, fresh, corpora, '
-               'creators), his ideas first, each with source_kind, why_here, beats and style (config/styles.json); every must_cover id '
+               'creators) and his feedback cues (cues), his ideas first, each with source_kind, why_here, beats and style (config/styles.json); every must_cover id '
                'is in some idea\'s covers or in ideas.json accounted with a reason (board_feed.py cover); write combine.json; '
                'build with --ideas --queue --combine.',
         'counts': sources.get('counts') or {},
@@ -88,6 +88,9 @@ def gather(week, call=None, out_dir=None):
         'inspiration': inspo,
         'must_cover': must_cover,
         'taste': sources.get('taste') or {},
+        # Krish, 2026-10-26: his feedback as cues to draw on (_feedbackCues.ts). Help, never a gate: a route without the
+        # block writes an empty one and says so.
+        'cues': sources.get('cues') if isinstance(sources.get('cues'), dict) else {},
         'queue': queue.get('queue') or [],
         'combine': queue.get('combine') or [],
         'scheduled': {s.get('slug'): s.get('scheduled') or [] for s in options.get('series') or []},
@@ -101,6 +104,9 @@ def gather(week, call=None, out_dir=None):
              f'queue {len(out["queue"])}, could combine {len(out["combine"])} group(s); his relayed words {len(out["his_relayed"])}']
     ic = inspo.get('counts') or {}
     lines.append('  inspiration house: ' + ', '.join(f'{k} {ic.get(k, 0)}' for k in ('routed', 'study_style', 'liked', 'fresh', 'corpora', 'creators', 'claims')))
+    cc = out['cues'].get('counts') if out['cues'] else None
+    lines.append('  feedback cues: ' + (', '.join(f'{k.replace("_", " ")} {cc.get(k, 0)}' for k in ('future_pieces', 'wider_pieces', 'wider_themes', 'tracked', 'briefs', 'not_for_us'))
+                                         if isinstance(cc, dict) else 'not in the engine\'s answer (the route on production predates them)'))
     lines += [f'  must cover: {m.get("what")}' for m in must_cover]
     lines += [f'  {s.get("slug")}: {len(s.get("pool") or [])} in the pool' for s in out['series']]
     lines += [f'  empty: {e.get("source")}: {e.get("why")}' for e in out['empty']]
@@ -159,7 +165,9 @@ def self_test():
         '/api/week/options?week_start=2026-10-26&include=sources': {'ok': True, 'series': [{'slug': 'follow_the_money', 'mandate': 'M', 'scheduled': []}],
             'sources': {'counts': {'his': 1, 'inspo': 0, 'engine': 1}, 'empty': [{'source': 'inspo', 'why': 'no scan'}],
                         'series': [{'slug': 'follow_the_money', 'pool': pool}], 'taste': {}, 'his_relayed': [{'id': 'said-1', 'title': 'Do agents'}],
-                        'inspiration': {'counts': {'routed': 1}, 'must_cover': [{'id': 'card-1', 'what': 'Inspiration card "x" you routed to Make a piece', 'his_words': 'yes'}]}}},
+                        'inspiration': {'counts': {'routed': 1}, 'must_cover': [{'id': 'card-1', 'what': 'Inspiration card "x" you routed to Make a piece', 'his_words': 'yes'}]},
+                        'cues': {'future_pieces': [{'id': 'c1', 'subject_ref': 'q1', 'said': 'later'}], 'wider_pieces': [], 'tracked': [], 'briefs': [], 'not_for_us': [],
+                                 'counts': {'future_pieces': 1, 'wider_pieces': 0, 'wider_themes': 0, 'tracked': 0, 'briefs': 0, 'not_for_us': 0}}}},
         '/api/idea-queue?combine=1': {'ok': True, 'queue': [{'id': 'q1'}, {'id': 'q2'}], 'combine': [{'ids': ['q1', 'q2']}]},
     }
     calls = []
@@ -181,6 +189,14 @@ def self_test():
             problems.append('the queue and its combine groups are written')
         if not any('empty: inspo: no scan' in x for x in lines) or 'his 1, inspo 0, engine 1' not in lines[0]:
             problems.append('the counts and the empty source are said')
+        if data['cues'].get('future_pieces', [{}])[0].get('id') != 'c1' or not any('feedback cues: future pieces 1' in x for x in lines):
+            problems.append('his feedback cues are written and counted')
+    no_cues = json.loads(json.dumps(answers))
+    no_cues['/api/week/options?week_start=2026-10-26&include=sources']['sources'].pop('cues')
+    with tempfile.TemporaryDirectory() as tmp:
+        path, lines = gather('2026-10-26', lambda m, p, b: (200, json.dumps(no_cues[p])), tmp)
+        if json.loads(Path(path).read_text(encoding='utf-8'))['cues'] != {} or not any('feedback cues: not in' in x for x in lines):
+            problems.append('a route without the cues block still gathers, and says the cues are missing')
     for bad in ('2026-10-27', 'soon'):
         try:
             monday(bad)
