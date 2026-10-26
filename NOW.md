@@ -1,7 +1,7 @@
 ---
 repo: krishanraja/content-engine
 product: Mindmake content engine
-as_of: 2026-10-24
+as_of: 2026-10-26
 head: 02669ea
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
@@ -32,12 +32,13 @@ Stories a writer can carry without asking Krish:
 
 Objection it answers: "AI content is slop." Here is an engine that grades its judges against the editor and never counts its own actions as taste.
 
-## Where it is right now (as of 2026-10-24)
+## Where it is right now (as of 2026-10-26)
 
 <!-- north-star-state {"week_of": "2026-10-26", "week_target": 1, "current": 1, "current_as_of": "2026-10-23", "current_source": "Control Center content_ideas (1 published in the last 7 days)", "urgency": 1, "urgency_reason": "at 100% of this week's target"} --> **North Star number: U1, on pace.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 1, against 1 this week, on the way to 30 by 30 November 2026. Steady: one proposal a week that raises the ceiling.
 
 - **His approved taste rules hold (2026-10-26).** Migration `20261111090000_taste_quote_holds.sql`: a claim's quote of his words is kept while the answer it quotes is withdrawn and shown only while that answer stands, so it comes back with the answer; and a claim put to Krish is never rewritten (its words, evidence and quote are fixed while he decides and after), refused by the database. Before it, the weekly distil could change an approved rule's quote, support and confidence with no word from him (reproduced on a scratch database; no live claim was approved yet). Sunday's gather now hands on a quote only while its answer stands. Order: this merges, then inspirationhouse's distil fix (it rewrites only a candidate) merges, then the migration is applied live by the session, before the weekly run on Saturday 31 October.
 - **Style references publish again (fixed by hand 2026-10-24, on main 2026-10-26).** Every recordings pass had stopped at a clip in Production Inspo whose name was 120 characters (the library takes 100), so that clip and three more never reached the library. A name over 100 now goes in shortened with an 8-character hash; by hand on SURFACE it sent the 4 and exited 0 (PR #172), but the fix never merged, so the passes kept failing until it reached main. The folder settings were never the cause.
+- **Feedback cues (2026-10-26).** Krish: "create some form of feedback loop with the [inspiration] house repository where all the feedback I've given you goes into a really clear set of cues". His words on ideas now become `feedback_cues` rows (future piece, context for a wider piece by theme, track over time, brief, not for us), written by the Inspiration House daily run (inspirationhouse #11, merged) and read by the Sunday gather as `cues`. The table was applied to the live database on 2026-10-26 on his "Yes create the feedback loop" and read back empty with row-level security on; the first daily run fills it.
 - **The inspiration folders moved (2026-10-24).** Krish: "Can you ensure absolutely everywhere recalibrates to this moving forward first?" They now sit in `Ventures > Inspiration`: Production Inspo (`1QxrzxISYFXq0er0DG0XSapm7qhvuRmh-`, the style references) and Content Inspo (`1FNztJOU82M8zb6IIbUAbvuI6Kr0pF5Hu`, once Cold Ideas & Inspo, the Drive scan's folder by ID). `config/style-references.json`, `references.py`, `docs/DRIVE.md`, `docs/STYLE_REFERENCES.md` and the content-watcher exception follow. On the home computers a `MINDMAKE_INSPIRATION` setting with the old path is now ignored in favour of the configured folder.
 - **Friday 23 October ("two passports") is locked and signed off; Codex makes the four videos** (2026-10-24). Krish signed off the storyboard, titles, outline and prediction ("signed off, keep, all A"; prediction "a2"). The article passes the fact gate (his six test lines signed off in his words), the voice, AI-scan and spine checks, and is on the piece. `docs/plans/2026-10-23-friday/locked/` holds the scripts as recorded, timings, visual copy, assets, the motion system, the signed storyboard, `CODEX.md` and `board-copy/` (the article and every channel's copy). The two vertical cuts are trimmed and sped to 1.12x on his answers, with a no-glitch speed-up procedure in `CODEX.md`. Next: Krish pastes `locked/CODEX_PROMPT.md` into Codex; the final board publish waits on his yes. North Star check (2026-10-24): holds.
 
