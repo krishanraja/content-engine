@@ -1568,6 +1568,15 @@
    "means": "A session finishes the job Krish asked for in that session. Cost discipline comes from lean steps (searching, short outputs), never from handing his job to a fresh session part-way. A handover is written when the job is done, for the next job. To encode: the G1 message in scripts/hooks/cost_gate.py, which needs Krish's yes because it changes a guardrail.",
    "status": "open",
    "encoded": []
+  },
+  {
+   "id": "no-repeat-contract-takeaway",
+   "on": "2026-10-26",
+   "krish": "I don't want every single takeaway to be \"go and look at your contract\" because we've done that a few times.",
+   "why": "Several recent pieces ended on the same advice, so the actions stopped feeling specific to each story.",
+   "means": "A piece's Monday action and its 3 things you can do tomorrow come from that piece's own evidence and name something new to watch or do; check the last few published pieces' actions before writing one, and never make \"check your contract\" the main action again unless he asks for it.",
+   "status": "open",
+   "encoded": []
   }
  ]
 }

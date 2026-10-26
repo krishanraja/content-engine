@@ -9,6 +9,16 @@ Krish, 2026-10-26, on question 1: "I think, on question one, both narratives are
 
 Draft, joining both: when a big company wants AI it cannot lose, it now buys the team and the code and leaves the lawsuits, and the people who used the app, behind with the empty shell. Disney learned it the hard way: it tried renting its AI from OpenAI, and Sora vanished. So if your business runs on someone else's AI, plan for both: the supplier walking away, and the shell you could be left holding.
 
+## Who it is for, and what they do on Monday
+
+Krish, 2026-10-26, on question 2: "I think, on question two, it highlights the importance of staying across certain details about the suppliers of your AI technology. I'll ask you to pad that out and get more specific but I don't want every single takeaway to be \"go and look at your contract\" because we've done that a few times."
+
+For: a leader whose business leans on AI tools made by someone else. The action (draft): pick the AI tool you lean on most and answer four questions about the company behind it, each a warning sign in this story:
+1. Are its founders and key builders still there? (Google hired Character.AI's founders in 2024, two years before the bankruptcy.)
+2. Is your tool its maker's main business, or a side bet? (Sora was a side bet for OpenAI; it closed, and Disney's deal died with it.)
+3. Is it running short of cash? (Character.AI's own filing cites a "diminishing cash reserve".)
+4. Is it collecting lawsuits or regulators? (The reason Disney insisted on buying through bankruptcy.)
+
 ## The arc (checked facts, 26 Oct)
 
 1. Google, August 2024: a reported $2.7 billion to license Character.AI's technology and hire its founders and pre-training research team; most staff stayed (Wired, 19 Oct 2026, Google's spokesperson).
