@@ -92,6 +92,8 @@ deep dive is at makeyourmindup.ai."
 
 ## The call (OUR PREDICTION)
 
+Signed by Krish: "Your guess is fine, give a real world example that will occur, send them to Teleprompter and then lets get to Friday", 2026-10-26. The call stands as below, with his real-world example added to the beat: on the train home you ask Duet for Thursday's board report, it sets Claude working on your laptop, and the report is waiting when you sit down.
+
 Asked of Krish in his own words before the beat is written (learning `his-call-in-his-words`). Our best guess, for
 him to change: by 1 March 2027 Duet can start and steer your Claude Code and Cowork work as well as see it, which
 makes it the place a power user starts the working day. Evidence it is not already done: Every, 21 Oct ("it can see the

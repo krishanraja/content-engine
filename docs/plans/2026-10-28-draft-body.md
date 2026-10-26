@@ -52,7 +52,7 @@ Keep it read-only for the first week. Let it prepare and report, and do the send
 
 ## OUR PREDICTION
 
-So my prediction is that by 1 March 2027, Duet will be able to start and steer your Claude Code and Cowork work, as well as see it. Today it can see your Claude sessions but can't direct them, and early users are already asking for exactly that. When it can, Duet becomes the place a Claude power user starts the working day. I'd put it at 55%.
+So my prediction is that by 1 March 2027, Duet will be able to start and steer your Claude Code and Cowork work, as well as see it. Today it can see your Claude sessions but can't direct them, and early users are already asking for exactly that. Picture the first time it happens: on the train home you ask Duet for Thursday's board report, it sets Claude working on your laptop, and the report is waiting when you sit down. When it can do that, Duet becomes the place a Claude power user starts the working day. I'd put it at 55%.
 
 ## 3 things you can do tomorrow
 

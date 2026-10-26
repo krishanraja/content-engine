@@ -1,0 +1,17 @@
+{
+ "idea": "What does Claude Duet actually change for someone who already works in Claude?",
+ "flow": [
+  "What Duet does on its own: checks your connected apps every few hours, briefs you each morning, drafts the work, and stops for your yes before it sends, pays, signs or deletes.",
+  "What people think of Duet: curious and mostly warm, liked for how it looks and for asking first; slow, US-only off a waitlist, and it uses your Claude plan's usage cap.",
+  "From asking to approving: it adds few new powers for a power user; it changes who starts the work, and that habit only sticks around a job that comes round every week.",
+  "What comes with you and what stays behind: what Claude knows about you and your connected apps come along; files on your laptop don't, and company plans don't have it yet.",
+  "Where to hook it in first: one weekly copy-and-paste job whose inputs live in connected apps (client meeting prep, the weekly sales check, chasing unpaid invoices), drafted while you still press send."
+ ],
+ "ending": "Our prediction: by 1 March 2027 Duet can open the files on your laptop, so on the train home it asks to finish Thursday's board report and it is waiting when you sit down.",
+ "takeaway": "Pick the one weekly Claude job you do by copy and paste; that is your first Duet job.",
+ "angle": "What the launch page and the can-do reviews don't tell an existing Claude power user: how it changes your behaviour and where to hook it in first.",
+ "tone": "Observational, witty and positive; reviews named in the article only, the general mood in the videos.",
+ "reader": "Someone who already runs part of their working week through Claude, on a personal or business account.",
+ "agreed": "Krish, 2026-10-26: \"Your guess is fine, give a real world example that will occur, send them to Teleprompter and then lets get to Friday\"",
+ "agreed_at": "2026-10-26"
+}
