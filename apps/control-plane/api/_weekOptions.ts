@@ -9,7 +9,7 @@
 // first, until he picks. Nothing here picks or schedules: a pick is his press.
 
 /** covers: the Sunday gather's must_cover ids this option answers (Inspiration cards he routed, his words), as on the
- *  board idea it came from. Kept on the piece as meta.covers, so the card a picked piece answers is known for good
+ *  board idea it came from. Kept on the piece as meta.covers (by week_start), so the card a picked piece answers is known for good
  *  (inspiration_card_pieces, migration 20261114090000; krishanraja/inspirationhouse docs/TWO_WAY.md, step 3). */
 export interface WeekOptionInput { id: string; rank: number; pitch: string; why_now: string; recommended?: boolean; covers?: string[] }
 export interface WeekOptionMeta { week_start: string; series: string; rank: number; pitch: string; why_now: string; recommended: boolean; by: string; at: string }
@@ -77,10 +77,17 @@ export function parseOptions(body: unknown): { week_start: string; series: strin
   return { week_start, series, options, problems }
 }
 
-/** The ids a piece answers after this write: what it held, and this option's, once each, in order. Never shrinks: an
- *  option offered again without covers keeps what the piece already answers. */
-export function mergeCovers(held: unknown, more: string[] | undefined): string[] | null {
-  const before = Array.isArray(held) ? held.filter((c): c is string => typeof c === 'string') : []
-  if (!more?.length) return before.length ? before : null
-  return [...new Set([...before, ...more])]
+/** The ids a piece answers after this write, by the week whose option said so: what it held for each week, and this
+ *  option's for its week, once each, in order. Never shrinks: an option offered again without covers keeps what the
+ *  piece already answers. Keyed by week, so a card counts as becoming this piece only in the week it was covered and
+ *  the piece was scheduled (inspiration_card_pieces). */
+export function mergeCovers(held: unknown, weekStart: string, more: string[] | undefined): Record<string, string[]> | null {
+  const before: Record<string, string[]> = {}
+  if (held && typeof held === 'object' && !Array.isArray(held)) {
+    for (const [week, ids] of Object.entries(held as Record<string, unknown>)) {
+      if (isMonday(week) && Array.isArray(ids)) before[week] = ids.filter((c): c is string => typeof c === 'string')
+    }
+  }
+  if (more?.length) before[weekStart] = [...new Set([...(before[weekStart] ?? []), ...more])]
+  return Object.keys(before).length ? before : null
 }

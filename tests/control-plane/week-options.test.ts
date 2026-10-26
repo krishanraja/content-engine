@@ -123,14 +123,16 @@ describe('the week options', () => {
     ] })
     expect(out.status).toBe(200)
     const rowA = () => db.tables.content_ideas.find(r => r.id === A)!
-    expect(rowA().meta.covers).toEqual([CARD, 'said-1'])
+    expect(rowA().meta.covers).toEqual({ '2026-10-12': [CARD, 'said-1'] })
     // Offered again without covers, or cleared from a later day, the piece still says which card it answers.
     await call('POST', { week_start: '2026-10-12', series: 'follow_the_money', options: [{ id: A, rank: 1, pitch: 'p', why_now: 'w' }] })
-    expect(rowA().meta.covers).toEqual([CARD, 'said-1'])
+    expect(rowA().meta.covers).toEqual({ '2026-10-12': [CARD, 'said-1'] })
     await call('POST', { week_start: '2026-10-12', series: 'follow_the_money', options: [{ id: C, rank: 1, pitch: 'p', why_now: 'w' }] })
     expect(rowA().meta.week_option).toBeUndefined()
-    expect(rowA().meta.covers).toEqual([CARD, 'said-1'])
-    expect(mergeCovers(undefined, undefined)).toBeNull()
+    expect(rowA().meta.covers).toEqual({ '2026-10-12': [CARD, 'said-1'] })
+    expect(mergeCovers(undefined, '2026-10-12', undefined)).toBeNull()
+    // Another week's covers sit beside, never mixed in; a malformed key is dropped.
+    expect(mergeCovers({ '2026-10-12': [CARD], 'nope': ['x'] }, '2026-10-19', ['said-2'])).toEqual({ '2026-10-12': [CARD], '2026-10-19': ['said-2'] })
   })
 
   it('keeps an option alive through its week, and never shortens a later expiry', () => {

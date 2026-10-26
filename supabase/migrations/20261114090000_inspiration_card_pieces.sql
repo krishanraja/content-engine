@@ -8,8 +8,10 @@
 -- Two ways a card becomes a piece, both already recorded, now read in one place:
 --   krish  he named the piece on the card himself (inspiration_items.piece_id, a corpus's piece, set only by his press)
 --   plan   a Sunday plan offered the piece as answering the card (the board idea's `covers`, kept on the piece as
---          content_ideas.meta.covers by POST /api/week/options and never cleared), and he picked it: the piece is in a
---          picked state (drafting, review, approved or published; api/week/options.ts PICKED_STATES)
+--          content_ideas.meta.covers by week_start, {"<Monday>": [ids]}, by POST /api/week/options, never cleared), and
+--          he picked it for that week: the piece is in a picked state (drafting, review, approved or published;
+--          api/week/options.ts PICKED_STATES) and scheduled inside that week (Monday to Sunday). An option offered in a
+--          week he picked another piece for never makes the card this piece's, whatever becomes of it later.
 -- A buried piece became nothing. `published` is the piece's own published_at (the publish watcher sets it once the
 -- Substack post is live).
 --
@@ -26,10 +28,16 @@ with made as (
   union
   select i.id, c.id, 'plan'
   from public.content_ideas c
+  cross join lateral jsonb_each(
+    case when jsonb_typeof(c.meta -> 'covers') = 'object' then c.meta -> 'covers' else '{}'::jsonb end) as wk(week_start, ids)
   cross join lateral jsonb_array_elements_text(
-    case when jsonb_typeof(c.meta -> 'covers') = 'array' then c.meta -> 'covers' else '[]'::jsonb end) as cov(id)
+    case when jsonb_typeof(wk.ids) = 'array' then wk.ids else '[]'::jsonb end) as cov(id)
   join public.inspiration_items i on i.id::text = cov.id
   where c.state in ('drafting', 'review', 'approved', 'published')
+    -- A malformed key never casts (the CASE guards the cast; a WHERE gives no order).
+    and case when wk.week_start ~ '^\d{4}-\d{2}-\d{2}$'
+             then c.scheduled_for between wk.week_start::date and wk.week_start::date + 6
+             else false end
 )
 select m.card_id,
        m.piece_id,

@@ -36,8 +36,9 @@ import { CUE_COLS, cuesFrom } from '../_feedbackCues.js'
 //        own expiry can fall before the purge that would delete it), and
 //        clears week_option from rows this day no longer offers. An option's
 //        covers (the must_cover ids its board idea answers) are added to the
-//        row's meta.covers and never cleared, so the Inspiration card a
-//        picked piece became is known for good (inspiration_card_pieces).
+//        row's meta.covers under its week_start and never cleared, so the
+//        Inspiration card a piece picked that week became is known for good
+//        (inspiration_card_pieces).
 //
 // Krish, 2026-10-11: planning is one Sunday decision for the week. The week
 // page in Control Center reads these options live from the rows. Nothing here
@@ -123,7 +124,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const row = found.get(o.id)!
     const meta = row.meta && typeof row.meta === 'object' ? row.meta : {}
     const option: WeekOptionMeta = { week_start, series, rank: o.rank, pitch: o.pitch, why_now: o.why_now, recommended: Boolean(o.recommended), by, at }
-    const covers = mergeCovers(meta.covers, o.covers)
+    const covers = mergeCovers(meta.covers, week_start, o.covers)
     const patch: Record<string, unknown> = { meta: { ...meta, week_option: option, ...(covers ? { covers } : {}) }, updated_at: at }
     // A row with no series takes the day's (the judges' ladder fills an empty slot the same way); a stored series is never overwritten.
     if (!row.lane_slot) patch.lane_slot = series
