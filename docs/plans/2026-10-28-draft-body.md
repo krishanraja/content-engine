@@ -28,7 +28,7 @@ Today you open Claude, paste in the email thread, the calendar invite and the no
 
 A small-business owner on Reddit, u/freakyslug, put it best: "I'm not doing anything that I don't think a normal version of Claude could do. I just hadn't thought to use it this way." They also say they had been falling behind, and caught up in a day and a half.
 
-So what's the catch? A habit only forms around something that keeps coming back. Vo's test is the warning: after the first few tasks, nothing "would pull me back in". My read: Duet earns its place only when you give it a job that comes round every week. One job. Every week.
+So what's the catch? Habits. A habit only forms around something that keeps coming back. Vo's test is the warning: after the first few tasks, nothing "would pull me back in". My read: Duet earns its place only when you give it a job that comes round every week. One job. Every week.
 
 ## WHAT COMES WITH YOU AND WHAT STAYS BEHIND
 
@@ -50,9 +50,13 @@ So start with one weekly job whose inputs already live in the apps Duet can reac
 
 For the first week, let it draft and check every draft before you say yes. Run it beside the way you do it now, and compare what it caught with what it missed. Then look at your usage at the end of the week, because the same allowance pays for everything else you do in Claude. On a Team or Enterprise account, this is the job to have ready for when it arrives.
 
-## OUR PREDICTION
+## THE JOB I'D HAND IT FIRST
 
-So my prediction is that by 1 March 2027, Duet will be able to work with what's on your laptop: open your files, and start and steer the Claude Code and Cowork work running there, as well as see it. Today it can see your Claude sessions but can't direct them, and early users are already asking for exactly that. Picture the first time it happens: on the train home, Duet asks if it should start Thursday's board report from the files on your laptop. You say yes, and the report is waiting when you sit down. When it can do that, Duet becomes the first place a Claude power user goes each morning. I'd put it at a bit better than evens.
+If you're wondering what I'd hand it first, it's the dullest job I have: keeping my documents, my Google Drive and the notes that explain how my systems work up to date. My other AI tools read those notes before they help me, so when they go stale, every tool works from an old picture of what's going on. And I only fix that when I remember to. So every week I'd ask Duet to update them from my email and calendar, and show me the changes before it saves them. Every's review says it can edit docs and "keep them current". Your version might be the tracker or handover doc your team works from, which is only as good as its last update.
+
+So here's my question for you this week: of your weekly jobs, which one only gets done when you remember it, while everything else depends on it? Sit with that one for a minute, because it's the one to hand over first.
+
+And a quick word to whoever runs IT. People will want to connect work email to a personal plan before your company plan gets Duet. That would put company email in an account the company doesn't control, so decide your answer now, before they ask.
 
 ## 3 things you can do tomorrow
 

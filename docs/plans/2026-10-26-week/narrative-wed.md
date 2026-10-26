@@ -90,15 +90,9 @@ Five checkpoints, in order. Each passes only when a smart, non-technical manager
 Then the call (below), then the close: "Here's what I'd do with this info if I were you", the three actions, "The full
 deep dive is at makeyourmindup.ai."
 
-## The call (OUR PREDICTION)
+## The close (no prediction)
 
-Signed by Krish: "Your guess is fine, give a real world example that will occur, send them to Teleprompter and then lets get to Friday", 2026-10-26. The call stands as below, with his real-world example added to the beat: on the train home you ask Duet for Thursday's board report, it sets Claude working on your laptop, and the report is waiting when you sit down.
-
-Asked of Krish in his own words before the beat is written (learning `his-call-in-his-words`). Our best guess, for
-him to change: by 1 March 2027 Duet can start and steer your Claude Code and Cowork work as well as see it, which
-makes it the place a power user starts the working day. Evidence it is not already done: Every, 21 Oct ("it can see the
-Claude sessions on my computers, but it can't direct them"); Help Center (it "can't modify your Claude work", via
-Copes).
+Krish, 2026-10-26, on Friday: "I think this one doesnt need a prediction, I am kind of bored of making predictions. I think we need to find a more professional and likeable and helpful way of closing this out"; then "2 then 1, and then 4, lets give weds the same treatment as friday". So Wednesday ends on his own first job, a question for the viewer, and a word to whoever runs IT, then the usual close. His first job, in his words: "keep my documents and files, google drive hygeine and my github repository documentation up to date, so that the rest of the system knows whats going on in other parts of my systems and life even without me remembering to remind it". The earlier call (by 1 March 2027 Duet opens the files on your laptop) and its example are dropped; Teleprompter is updated in place.
 
 ## The one picture
 
