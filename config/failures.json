@@ -901,7 +901,7 @@
    "id": "one-clip-name-stopped-the-recordings-lane",
    "on": "2026-10-26",
    "krish": "Yeah fix it all.",
-   "what": "From 2026-10-24 the recordings_drive_inbox job failed every 10 minutes (267 runs) because both home computers' passes reported references_publish_failed: a 120-character SaveClip.App_ clip name in Production Inspo was over the library's 100 a name, and the publish stopped at that clip, so no clip after it reached the library either. The fix (PR #172) was written and run by hand on 2026-10-24 but never merged, so the home computers kept running the old code.",
+   "what": "From 2026-10-24 13:00 UTC to 2026-10-26 09:20 UTC the recordings_drive_inbox job failed every 10 minutes (267 runs) because both home computers' passes reported references_publish_failed: a 120-character SaveClip.App_ clip name in Production Inspo was over the library's 100 a name, and the publish stopped at that clip, so no clip after it reached the library either. The fix (PR #172) was written and run by hand on 2026-10-24 but never merged, so the home computers kept running the old code.",
    "status": "guarded",
    "guards": [
     {

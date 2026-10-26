@@ -38,6 +38,10 @@ most 100 characters a name, and downloaders name clips after the post's ID
 (a SaveClip.App_ name ran to 120 on 2026-10-24 and stopped every pass), so a
 longer name goes in cut short with the first 8 hex of its sha256 before the
 extension (`references.library_name`); `fetch` maps a long name the same way.
+A name is also put in composed Unicode (NFC), which the library requires. A
+name the library still refuses for any other reason no longer stops the rest:
+every other clip goes in, and the pass fails naming the refused one and its
+reason (`references.split_refused`), so the lane report still shows it.
 Any machine then gets them with `python scripts/quick-edit/references.py fetch`.
 
 ## How a session studies one

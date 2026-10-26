@@ -9,7 +9,9 @@
 --
 -- Now nothing is dropped. The trigger keeps the quote, and still refuses one that is not a verbatim excerpt of a cited
 -- krish_words row (a withdrawal never changes an excerpt). Every reader shows it only while the very row it quotes
--- stands: taste_profile_current below, and ELIGIBLE_SQL in inspirationhouse src/publish/propose.ts, which already did.
+-- stands: taste_profile_current below; ELIGIBLE_SQL in inspirationhouse src/publish/propose.ts, which already did; and
+-- Sunday's gather (apps/control-plane/api/week/options.ts, buildInspiration's quotesStanding), from this change. A
+-- new reader of taste_claims.krish must gate the same way.
 -- So his words come back with his answer, and never from a guess. Nothing to backfill: read live 2026-10-26, no
 -- evidence row had ever been restored, and no claim without a quote cited a withdrawn row of his words.
 --
@@ -67,7 +69,8 @@ begin
   -- update only.
   if tg_op = 'UPDATE' then
     if old.proposal_id is not null and (
-         new.statement is distinct from old.statement or new.why is distinct from old.why
+         new.proposal_id is distinct from old.proposal_id
+      or new.statement is distinct from old.statement or new.why is distinct from old.why
       or new.means is distinct from old.means or new.flip_rule is distinct from old.flip_rule
       or new.lane is distinct from old.lane or new.layer is distinct from old.layer
       or new.kind is distinct from old.kind

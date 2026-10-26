@@ -39,6 +39,7 @@ import statistics
 import subprocess
 import sys
 import tempfile
+import unicodedata
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
@@ -101,10 +102,14 @@ def library_name(name):
     start alike stay apart. A name that fits is kept as it is."""
     _post_pack()
     import library  # scripts/post-pack/library.py
+    # The library takes NFC only; a name from a Mac or a phone can arrive decomposed.
+    name = unicodedata.normalize('NFC', name)
     if library.utf16_length(name) <= library.PART_MAX:
         return name
     stem, dot, extension = name.rpartition('.')
-    if not dot or not stem:
+    # An extension is a few letters or digits. Anything longer after the last dot is part of the name, so the stem is
+    # never asked to shrink below nothing (a 91-character tail after a dot used to loop forever).
+    if not dot or not stem or not (0 < len(extension) <= 10 and extension.isalnum()):
         stem, extension = name, ''
     tag = '-' + hashlib.sha256(name.encode('utf-8')).hexdigest()[:8] + (f'.{extension}' if extension else '')
     room = library.PART_MAX - library.utf16_length(tag)
@@ -135,9 +140,9 @@ def cmd_publish(out=print):
 
 
 def split_refused(planned):
-    """(the planned files the library takes, [(target, reason)] for each it refuses). One name the library refuses
-    stopped every clip sorted after it on every pass from 2026-10-22 to 2026-10-26; now every other clip goes in and
-    the pass still fails, naming the refused one."""
+    """(the planned files the library takes, [(target, reason)] for each it refuses). One name the library refused
+    stopped every clip sorted after it on every pass until 2026-10-26; now every other clip goes in and the pass still
+    fails, naming the refused one."""
     _post_pack()
     import library  # scripts/post-pack/library.py
     reasons = [library.refusal(target) for target, _, _ in planned]
@@ -446,6 +451,9 @@ def self_test():
     t('two long names that start alike stay apart', library_name(clip[:-5] + 'x.mp4') != short)
     good = (f'{LIBRARY_REFERENCES}/{short}', Path(clip), 'why')
     bad = (f'{LIBRARY_REFERENCES}/clip?.mp4', Path('clip?.mp4'), 'why')
+    long_tail = 'clip.' + 'x' * 96
+    t('a long tail after the last dot is part of the name, and still fits', library.utf16_length(library_name(long_tail)) <= library.PART_MAX)
+    t('a decomposed name goes in composed', library_name('cafe\u0301.mp4') == 'caf\u00e9.mp4')
     t('one refused name never stops the rest', split_refused([bad, good]) == ([good], [(bad[0], library.refusal(bad[0]))]))
     if shutil.which('ffmpeg'):
         with tempfile.TemporaryDirectory() as tmp:
