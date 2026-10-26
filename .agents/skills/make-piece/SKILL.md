@@ -169,6 +169,10 @@ source came from belong in the article's footnote and the scorecard, never
 as spoken caveats (Krish, 2026-10-21: "The scripts just need to be catchy,
 direct: what was tested, what the result was, which one won, and what that
 means."; learning `say-the-result-not-the-method`).
+What people think, in one breath: community and press reviews are cited by name in the article only; in the
+scripts and carousels they are the general mood, never named posts or a run of reviewers (Krish, 2026-10-26: "happy
+to cite Reddit etc in the article, but there is no need to verbal diahorrea in the carousels and videos, just use this
+as seed for what people in general think of it without being too specific"; learning `mood-not-citations`).
 Score in plain words: win, lose or draw, never a sports or betting label
 such as "a split" (Krish, 2026-10-21: "what does \"a split\" mean? I have no
 idea"; learning `plain-score-words`). Then give it dry wit: short, deadpan asides that tease what really

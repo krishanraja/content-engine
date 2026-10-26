@@ -51,3 +51,49 @@ Context, Anthropic, "Unified Claude Enterprise" (https://claude.com/resources/ar
 chat and Cowork became one Claude, with cloud agentic work that continues after the laptop closes. So the question for
 a power user is what Duet adds beyond what their Claude already does; check each claim against both pages before it
 goes in a script.
+
+## What the hands-on reviews say (read 26 Oct 2026)
+
+**Claire Vo, How I AI** ("Claude Duet Review: Great Design, Slow Follow-Through", ChatPRD, 26 Oct 2026,
+https://www.chatprd.ai/how-i-ai/claude-duet-review; the episode is on Lenny's Newsletter, 21 Oct, "Claude Duet is
+beautiful. I still forgot to use it"). Exact lines:
+
+- "My first request was basic: go through my email and Slack and figure out what was happening. Duet produced a few
+  things, but the priorities and context did not seem right."
+- "after setting it up and trying the first few tasks, I did not experience the kind of useful prompting that would
+  pull me back in."
+- "When I asked it to look at my sales pipeline, it already had access to Slack, email, and our CRM. It could pull in
+  that data pretty quickly. That was a concrete advantage: I did not need to assemble and paste all the inputs myself."
+- "I also had it create a deck in Google Docs from my phone. The deck was not bad."
+- "Duet did not ingest all my local skills." "Access to the same account did not mean access to every ingredient that
+  made the original workflow work."
+- "With Duet, the delay reduced my willingness to work synchronously." "At the time of my test, Duet did not show up in
+  the desktop app."
+- "Duet, in this test, was clearly a single-player agent."
+- Verdict: "Duet is worth trying for Claude users who want a polished, phone-first assistant for individual business
+  tasks." "It did not earn a place as my primary agent in this test."
+
+**Dan Shipper, Every** ("Vibe Check: Duet—Anthropic's Always-on Agent", 21 Oct 2026, updated 26 Oct,
+https://every.to/vibe-check/vibe-check-duet-anthropic-s-always-on-agent). Exact lines:
+
+- "It splits recurring topics into their own channels, keeps a running list of what it's working on and what it needs
+  from me, and can edit docs, slides, designs, and dashboards and keep them current without leaving the app. It sends
+  suggestions I actually want."
+- "For now, it can see the Claude sessions on my computers, but it can't direct them; its email drafts are worse than
+  Dot's; and its scheduled runs can't reach my custom connectors."
+- Subtitle: "Anthropic's personal agent is the first one we'd call a pro tool, even with the plumbing still unfinished".
+
+**Flavio Copes** ("A deep dive into Claude Duet", 22 Oct 2026, https://flaviocopes.com/claude-duet/). Exact lines:
+
+- "Duet can't access local files or all your Claude projects. It can't modify your Claude work, make phone calls, or
+  send texts."
+- "Disconnecting an app stops future access, but Duet retains memory of previously learned information."
+- "Duet is included during the preview, but its background checks consume your allowance. I'd measure what is left for
+  my other Claude work after a normal week."
+- "I haven't run either workflow in Duet yet." (His examples, a client-meeting brief and a site check, are proposals.)
+
+Access: a Reddit thread (r/ClaudeAI, about 24 Oct) says "I applied for Claude Duet on Oct 22 and have heard literally
+nothing since." One person's report; it shows invites are not instant, nothing more.
+
+What none of them answers for a power user (our gap, an inference until checked): which of the jobs you already do in
+Claude to hand it first, what that changes in your day, and what it costs you in limits and lost context.
