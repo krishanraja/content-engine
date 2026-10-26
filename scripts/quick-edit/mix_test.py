@@ -142,13 +142,16 @@ def make_media():
 
 
 def render(config, out, shape, env):
-    # Synthetic tones contain no speech. Stub only ASR inside this test process;
-    # an empty recognition must leave the delivery receipt failed.
+    # This isolated test measures the mixer, not editorial qualification. Its
+    # synthetic tones cannot earn a proof receipt. Stub that prerequisite only
+    # inside this child process; the final speech/delivery receipt must fail.
     runner = (f'import sys; sys.path.insert(0, {str(HERE)!r}); import make\n'
-              'from unittest.mock import patch\n'
+              'from unittest.mock import patch\nimport media_standard\n'
               'make.transcribe = lambda *args, **kwargs: []\n'
-              "with patch.object(make.quality.importlib.metadata, 'version', return_value='synthetic-asr-test'):\n"
-              '    make.main()\n')
+              "with patch.object(make.quality.importlib.metadata, 'version', return_value='synthetic-asr-test'), patch.object(media_standard, 'preflight') as proof:\n"
+              '    make.main()\n'
+              '    proof.assert_called_once()\n'
+              "    assert proof.call_args.kwargs['full_production'] is True\n")
     p = subprocess.run([sys.executable, '-c', runner, str(WORK / config), '--out', str(WORK / out), '--only', shape],
                        capture_output=True, text=True, env=env)
     if p.returncode:

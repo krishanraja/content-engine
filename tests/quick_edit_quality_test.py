@@ -3,6 +3,7 @@ import sys
 import tempfile
 import subprocess
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'scripts/quick-edit'))
@@ -176,7 +177,14 @@ class QualityTests(unittest.TestCase):
                 'final_review':{'status':'pass','video_sha256':report['video_sha256'],'evidence_sha256':'d'*64,
                     **{k:'pass' for k in ('shake','warping','borders','framing')}}}
             receipt.write_text(json.dumps(report))
-            self.assertEqual(quality.delivery_problems(video,receipt,'target'),['visual clarity gate is not passed'])
+            binding_missing='independent media quality binding missing; create a working candidate and submit it for review'
+            self.assertEqual(quality.delivery_problems(video,receipt,'target'),['visual clarity gate is not passed',binding_missing])
+            # Each gate remains independently necessary; these scoped mocks do not
+            # create a signed receipt or change production verification behavior.
+            with patch('media_standard.check', return_value=[]):
+                self.assertEqual(quality.delivery_problems(video,receipt,'target'),['visual clarity gate is not passed'])
+            with patch('visual_clarity.delivery_problems', return_value=[]):
+                self.assertEqual(quality.delivery_problems(video,receipt,'target'),[binding_missing])
             motion=report['checks']['motion']
             motion['recording_sha256']='e'*64
             self.assertIn('different recording',quality.motion_problems(report)[0])

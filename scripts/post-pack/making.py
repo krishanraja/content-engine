@@ -1450,9 +1450,10 @@ def self_test():
     except MakingError as e:
         check('409 twice: an error, never a third try', ('run it again' in str(e), len(answers)), (True, 1))
 
-    def run(argv, engine=None):
+    def run(argv, engine=None, synthetic_media_review=True):
+        from unittest.mock import patch as mock_patch
         out, err = io.StringIO(), io.StringIO()
-        with tempfile.TemporaryDirectory() as validation_tmp:
+        with tempfile.TemporaryDirectory() as validation_tmp, contextlib.ExitStack() as test_mocks:
             if 'video' in argv:
                 vi=argv.index('video')
                 sys.path.insert(0,str(HERE.parent/'quick-edit'))
@@ -1469,9 +1470,23 @@ def self_test():
                             'final_review':{'status':'pass','video_sha256':quality.digest(fixture),'evidence_sha256':quality.digest(fixture),
                                 **{k:'pass' for k in ('shake','warping','borders','framing')}}}}}))
                 argv=[*argv,'--video-file',str(fixture)]
+                # Payload/thumbnail fixtures are not qualifying media. Isolate external
+                # reviewers only inside this self-test; production still uses both gates.
+                test_mocks.enter_context(mock_patch('visual_clarity.delivery_problems', return_value=[]))
+                if synthetic_media_review:
+                    Path(str(fixture)+'.media-quality.json').write_text(json.dumps({
+                        'piece_id':argv[vi-1], 'production_id':'synthetic-self-test', 'role':'video',
+                        'artifact':{'path':'3 Posts/Test fixture/'+argv[vi+3], 'sha256':quality.digest(fixture)},
+                        'receipt':{'path':'3 Posts/Test fixture/synthetic-review.json', 'sha256':'f'*64}}))
+                    test_mocks.enter_context(mock_patch('media_standard.check', return_value=[]))
             with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
                 code = main(argv, call=engine or fake)
         return code, err.getvalue()
+
+    before = len(seen)
+    code, err = run([pid, 'video', 'short', 'Synthetic unreviewed video', '3 Video/short.mp4'], synthetic_media_review=False)
+    check('video: missing independent binding is rejected by the real verifier before posting',
+          (code, 'independent media quality binding missing' in err, len(seen)), (1, True, before))
 
     with tempfile.TemporaryDirectory() as tmp:
         sys.path.insert(0, str(HERE.parent / 'quick-edit'))
@@ -1496,8 +1511,10 @@ def self_test():
         body = seen[-1][2]
         check('video: written by Codex', (code, body.get('by')), (0, 'Codex'))
         check('video: the asset carries its thumbnail, music and length', body['video_assets'][0],
-              {'cut': 'long', 'name': 'Substack video', 'path': '3 Video/long.mp4', 'url': 'https://drive.google.com/v', 'seconds': 184,
-               'thumbnail': {'path': '3 Video/thumb-wide-1280x720.jpg', 'url': 'https://drive.google.com/t'}, 'music': 'track-one'})
+              {'cut': 'long', 'name': 'Substack video', 'path': '3 Posts/Test fixture/3 Video/long.mp4', 'url': 'https://drive.google.com/v', 'seconds': 184,
+               'thumbnail': {'path': '3 Video/thumb-wide-1280x720.jpg', 'url': 'https://drive.google.com/t'}, 'music': 'track-one',
+               'sha256':hashlib.sha256(b'synthetic test media').hexdigest(),
+               'quality_receipt':{'path':'3 Posts/Test fixture/synthetic-review.json', 'sha256':'f'*64}})
         code, _ = run([pid, 'video', 'short', 'Shorts video', '3 Video/short.mp4', '--thumb', '3 Video/thumb-tall-1080x1920.jpg',
                        '--thumb-file', str(drawn), '--seconds', '91.6'])
         check('video: a drawn thumbnail on this machine is proof; its path is what is recorded', (code, seen[-1][2]['video_assets'][0]['thumbnail']),
