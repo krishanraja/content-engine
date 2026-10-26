@@ -32,6 +32,12 @@ The long run was stopped after these failures. No production code changed;
 the failures are unresolved and no full-suite pass or release is claimed.
 The pilot's final-card revision is a local production review candidate with
 a distinct takeaway hierarchy; the first seven cards retain their hashes.
+The repository correction is committed as 41e4b0f and pushed to PR #178.
+That PR is open: board-web, browser-buttons and dependency-audit reported
+failures while both verify jobs were still running at readback. Auto-merge
+could not be enabled under the repository's current branch configuration.
+No merge or deployed integration is claimed. The final-card preview remains
+a local candidate, distinct from tracked Studio job or learning capture.
 
 ## What it is
 
