@@ -192,7 +192,8 @@ export function buildSources(input: { weekStart: string; series: string[]; rows:
   const relayed: Relayed[] = (input.relayed || []).map(r => ({
     id: String(r.id), title: String(r.title || ''), detail: r.detail ? String(r.detail) : null, created_at: r.created_at || null,
   }))
-  const empty: Array<{ source: SourceKind; why: string }> = []
+  // 'cues' is added by the route when his feedback cues are missing (_feedbackCues.ts).
+  const empty: Array<{ source: SourceKind | 'cues'; why: string }> = []
   if (!counts.his) empty.push({ source: 'his', why: relayed.length
     ? `no idea rows from Krish since ${win.his_since.slice(0, 10)}; ${relayed.length} relayed board item(s) hold his words (his_relayed)`
     : `nothing from Krish since ${win.his_since.slice(0, 10)}: no idea through Control Center's one door, no topic he asked to research, no relayed board item` })
