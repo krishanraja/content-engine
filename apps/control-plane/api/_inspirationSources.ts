@@ -111,7 +111,7 @@ function readingExcerpt(md: string): string | null {
 
 /**
  * quotesStanding: the ids of taste_evidence rows that still stand, among those the claims quote (krish_source_id). A
- * claim keeps its quote while the answer it quotes is withdrawn (migration 20261111090000_taste_quote_holds.sql), so a
+ * claim keeps its quote while the answer it quotes is withdrawn (migration 20261112090000_taste_quote_holds.sql), so a
  * quote counts as his words only while that row stands; with no list, no quote is shown.
  */
 export function buildInspiration(input: { weekStart: string; items: Row[]; reads?: Row[]; moves?: Row[]; claims?: Row[];
