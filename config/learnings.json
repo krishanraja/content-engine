@@ -1672,6 +1672,21 @@
           "how": "the Narrative step"
         }
       ]
+    },
+    {
+      "id": "mood-not-citations",
+      "on": "2026-10-26",
+      "krish": "Here are all the current reviews, happy to cite Reddit etc in the article, but there is no need to verbal diahorrea in the carousels and videos, just use this as seed for what people in general think of it without being too specific, it should generally read as \"What people think of Duet\".",
+      "why": "He handed over a large file of community reviews for Wednesday and wanted it used as a seed for the general mood, not recited source by source in the short formats.",
+      "means": "Reviews and forum posts are cited by name in the article. Videos and carousels say what people in general think in a line or two, with no named posts, handles or lists of reviewers.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": ".agents/skills/make-piece/SKILL.md",
+          "contains": "never named posts or a run of reviewers",
+          "how": "the Scripts step"
+        }
+      ]
     }
   ]
 }

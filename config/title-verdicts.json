@@ -92,6 +92,24 @@
  ],
  "verdicts": [
   {
+   "title": "GOOGLE PAID $2.7B FIRST",
+   "surface": "cover",
+   "verdict": "picked",
+   "why": "The wide covers (1200x630, 1200x675, 3:2), reusing his picked thumbnail words; the eating-the-scraps lines needed too many lines there and cold-read as cheap; the square and tall covers keep their drawn words",
+   "krish": "Krish, 2026-10-26: All recommended",
+   "on": "2026-10-26",
+   "piece": "b358e788-209f-427b-a84d-1f79a8ebb430"
+  },
+  {
+   "title": "Ask your AI supplier the four questions Character.AI failed",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "Chapter 6 of the 5-minute cut, recommended over 'The four questions that spot the next Character.AI', which a cold reader found confusing; replaces the bare-topic 'Four questions about your AI supplier'",
+   "krish": "Krish, 2026-10-26: All recommended",
+   "on": "2026-10-26",
+   "piece": "b358e788-209f-427b-a84d-1f79a8ebb430"
+  },
+  {
    "title": "Why is Disney eating the scraps of bankrupt Character.AI?",
    "surface": "card",
    "verdict": "picked",

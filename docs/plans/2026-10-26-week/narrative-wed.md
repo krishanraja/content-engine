@@ -31,29 +31,91 @@ and keeps working after you close the laptop, then stops for your yes before any
 deleted. Today that is for a personal Pro or Max account in the US only; Team and Enterprise accounts do not have it
 yet, so a business that wants it has to decide whether staff may connect work apps to a personal account.
 
-Facts behind it: `research-wed.md`, both sections. The open question for him is whether that last line (the
-personal-account question) is the piece's sharpest point for a business reader.
+Facts behind it: `research-wed.md`, both sections.
+
+**His answer, 2026-10-26:** "sharpest point for Wednesday is more around unpacking the things the Claude site and the
+can-do reviews dont tell you such as how it actually is likely to change your behaviour and what it makes easier for
+you, where you would integrate it first with practical examples if you are an existing claude power user".
+
+Draft 3, built on his answer (our read, labelled as inference where the sources stop): Anthropic's page and the first
+reviews tell you what Claude Duet can do. If you already work in Claude, the bigger change is to your habits: you stop
+opening Claude to ask it things, and start your day with what it brought you, saying yes or no. That habit only forms
+if you give it one job that comes round every week and lives in the apps it can reach, because your local files, some
+of your skills and your custom connectors do not come with it, and its background checks spend the same plan limits as
+the rest of your Claude work. So hand it first the weekly job you now do in Claude by copying and pasting from those
+apps: prep for a client meeting, a pipeline review, or the follow-ups sitting in your inbox.
+
+Evidence for each part: the habit and the queue (Every: "keeps a running list of what it's working on and what it
+needs from me"; Anthropic: the morning brief and the approval step); the habit not forming without a pull (Claire Vo:
+nothing "would pull me back in"); what does not come with it (Vo: local skills; Every: custom connectors in scheduled
+runs; Copes and the Help Center: local files, all projects); limits (Help Center, Copes); the first job (Vo's sales
+pipeline from Slack, email and the CRM "without paste"). Business accounts: Team and Enterprise do not have it yet, so
+for them the same first job is what to line up for when it arrives.
+
+**His go, 2026-10-26**, handing over the community reviews (`docs/plans/2026-10-26-week/research-wed-community.md`): "Here are
+all the current reviews, happy to cite Reddit etc in the article, but there is no need to verbal diahorrea in the
+carousels and videos, just use this as seed for what people in general think of it without being too specific, it
+should generally read as "What people think of Duet". Merge and get on with the rest." Draft 3 stands as the end
+message, with a "What people think of Duet" checkpoint added (learning `mood-not-citations`).
 
 ## Who it is for, and what they do on Wednesday
 
-(Question 2, asked 26 Oct.)
+Krish, 2026-10-26: "people using it for work-related items, whether that be their personal Claude account or a Claude
+business account", "if you are an existing claude power user". Draft: someone who already runs part of their working
+week through Claude. On Wednesday they pick the one weekly job they would hand Duet first (or line up for it, on a
+business account), and check where its inputs live.
 
 ## The arc
 
-(To come.)
+Five checkpoints, in order. Each passes only when a smart, non-technical manager hearing it once could say it back.
+
+1. **What it is, in one breath.** Claude Duet is Anthropic's always-on assistant: it lives in the cloud, checks your
+   connected apps every few hours, briefs you each morning, and stops for your yes before it sends, pays, signs or
+   deletes. Pass: the reader can say what it does in one sentence. (Anthropic's page and Help Center.)
+2. **What people think of Duet.** The general mood from the first weeks of reviews, said in two or three sentences in
+   the videos and carousels with no names; cited by name in the article only. Pass: no reviewer, handle or thread is
+   named outside the article. (`research-wed-community.md`.)
+3. **What it changes in your day.** If you already work in Claude, you stop opening it to ask and start your day with
+   what it brought you, saying yes or no; that habit only forms if you give it a job that comes round every week.
+   Labelled as our read. Pass: the reader can name the habit that changes.
+4. **What travels with you and what does not.** Easier: the copy-and-paste work across the apps it can reach (email,
+   calendar, CRM, Slack). Left behind: files on your computer, some skills, custom connectors in its scheduled runs;
+   and its checks spend the same plan limits as the rest of your Claude work. Pass: the reader knows whether their own
+   weekly Claude job would travel.
+5. **Where to hook it in first.** One weekly job whose inputs live in connected apps: prep for a client meeting, a
+   pipeline review, or the follow-ups in your inbox. Start it read-only, run it for a week beside the way you do it
+   now, and watch your limits. On a Team or Enterprise account it has not arrived yet, so this is the job to line up.
+   Pass: the reader picks one job.
+
+Then the call (below), then the close: "Here's what I'd do with this info if I were you", the three actions, "The full
+deep dive is at makeyourmindup.ai."
 
 ## The call (OUR PREDICTION)
 
-(To come.)
+Signed by Krish: "Your guess is fine, give a real world example that will occur, send them to Teleprompter and then lets get to Friday", 2026-10-26. The call stands as below, with his real-world example added to the beat: on the train home you ask Duet for Thursday's board report, it sets Claude working on your laptop, and the report is waiting when you sit down.
+
+Asked of Krish in his own words before the beat is written (learning `his-call-in-his-words`). Our best guess, for
+him to change: by 1 March 2027 Duet can start and steer your Claude Code and Cowork work as well as see it, which
+makes it the place a power user starts the working day. Evidence it is not already done: Every, 21 Oct ("it can see the
+Claude sessions on my computers, but it can't direct them"); Help Center (it "can't modify your Claude work", via
+Copes).
 
 ## The one picture
 
-(To come.)
+The point it carries: your job moves from asking to approving. The reader's question it answers: "what actually
+changes in my day?" One working week drawn twice from the checked facts only. Before: you open Claude, copy from your
+email, calendar and CRM, paste, ask. After: at the morning brief Duet has the meeting prep, the pipeline note and the
+draft follow-ups waiting, each with a yes or no, and the send waits for your yes. Real app logos for the apps named
+(Gmail, Google Calendar, Slack, HubSpot), no characters or icons acting it out. If someone who only sees the picture
+cannot say "it brings me the work and I approve it", it is not used (VISUAL_EXPLAINS).
 
 ## Out of scope
 
-(To come.)
+- Where to draw the line on what an assistant may do without asking (the Muse versus Grok piece did that).
+- A scored head-to-head against Grok Bot, Muse or ChatGPT dots.
+- Privacy and security in depth (one line: it asks first; some actions are off-limits even with your yes).
+- Personal errands (tickets, shopping) and pricing beyond "included in Pro and Max, and it uses your limits".
 
 ## Drift rule
 
-Any change to the end message, the reader's action, the arc or the call goes back to Krish before work continues.
+Any change to the end message, the action or a checkpoint goes back to Krish before work continues.
