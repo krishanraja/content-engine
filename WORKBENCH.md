@@ -1,5 +1,15 @@
 # Workbench: where we are and what's next
 
+## 26 October: Monday to its one sign-off; Wednesday and Friday next (Claude)
+
+- **Asked (Krish, 26 Oct):** "yes, both good, and yes to the fix - already recorded both videos, and they're in the inbox. Get everything from here ready ... this week's publish board should be up to date. Monday's content should be moved and taken all the way to Codex ... then you should interview me on Wednesday and Friday's narrative arcs, and then get everything ready in Wednesday and Friday's board ready to send to teleprompter".
+- **Done:** sign-off recorded on both Monday cuts; the scripts step no longer waits on the paid spine judge (PR #181, learning `no-paid-call-before-a-free-step`, encoded). Monday's article rewritten in his voice and stored; 22 verbatim sources filed (free pre-check clean); takes fetched, transcribed and lined up (`docs/plans/2026-10-26-monday/takes/`); creative direction for both cuts (`creative-direction.json`, `receipts.md`) timed against the takes; logos (`logos/`, SOURCES.md; the Character.AI wordmark may be the 2023 one); titles cold-read twice; `storyboard-signoff.md` on the board's Monday Drafts step. Board republished (build 851da30a): Monday in review, Wednesday and Friday picked.
+- **Signed (26 Oct, "Yes to all four, recommended title"):** the storyboard (direction signed, `--for-render` passes), the title "Why is Disney eating the scraps of bankrupt Character.AI?" and thumbnail "GOOGLE PAID $2.7B FIRST" (verdicts recorded), the paid checks up to $1.20 ($1.02 spent: fact check 27 then 13 blockers; spine judge flags OUR PREDICTION). His three picks relayed to the engine (state drafting, scheduled 26, 28, 30 Oct) and both Monday takes placed on the record by hand (Recorded done). Board build a02a9aed: Monday's Drafts hold titles to pick, fact lines to sign off, the prediction bridge; Publish holds both thumbnails and the vertical cover.
+- **Waiting on Krish (Monday, options sent 26 Oct):** the last chapter heading (recommended "Ask your AI supplier the four questions Character.AI failed"; "The four questions that spot the next Character.AI" cold-read as confusing); the wide cover words (recommended "GOOGLE PAID $2.7B FIRST"; the "eating the scraps" lines ran long and cold-read as cheap); sign-off of the fact check's 11 lines plus one last small paid check of the 14 bridge-changed sentences (third run today; both refused by this session's permission system, so Control Center or his explicit words); his paste of `docs/plans/2026-10-26-monday/CODEX_PROMPT.md` into Codex (sent to him as a file).
+- **Wednesday (26 Oct):** Krish: "I think for Wednesday's Claude piece we've already done that message takeaway with the Muse versus Grok piece. I would suggest we focus in on what Duet actually adds to the Claude ecosystem for Claude power users." Draft 2 of the end message and the question put to him (is staff connecting work apps to a personal account the sharpest point?) are in `docs/plans/2026-10-26-week/narrative-wed.md`; Help Center facts in `research-wed.md`. Learning `no-repeat-takeaway` encoded in make-piece (PR #182).
+- **Next:** on his line: `creative_direction.py` signed block with his words and the scripts' hashes; fact gate then `spine_check.py judge` (within $1.00); cover-facts.json, cover and thumbnails (visual gate), video cards, `build.py` and `send.py`; `locked/CODEX_PROMPT.md` for Codex. Then the Wednesday and Friday interviews (research in `docs/plans/2026-10-26-week/research-wed.md`, `research-fri.md`; Friday still needs "the past" researched).
+- **Tools in a cloud session:** the full `requirements.lock.txt` does not install on Python 3.13 here (mediapipe 0.10.21 has no build); the transcriber works with its four pinned versions alone (`faster-whisper==1.2.0 av==18.1.0 ctranslate2==4.8.1 onnxruntime==1.29.0`). Filing sources needs `NODE_USE_ENV_PROXY=1 ENGINE_OPERATOR_TOKEN=injected-by-the-session-proxy`.
+
 ## 26 October: Friday motion v6
 
 [Production handoff](docs/plans/2026-10-23-friday/revisions/motion-v6/BRIEF.md). [Quality gate and failed $3 calibration](docs/plans/2026-10-26-quality-evidence/README.md): eight calls, no qualification. Gates remain draft; four videos and final board incomplete.
@@ -18,21 +28,6 @@ Friday production with its existing production owner. Growth briefs receive
 a checked creative package through the existing editorial/Studio path. This change updates repository guidance
 only; it does not mutate a tracked Studio session, learning record or board.
 
-
-## 24 October: the Sunday loop rebuilt for his recording day (Claude)
-
-- **Asked:** a week's audit (Codex's failure report), then "tomorrow's Ideas Board is SIGNIFICANTLY improved", his
-  Inspiration House read properly, styles he can choose from that push, Claude owning scripts, article and creative
-  direction, Codex producing from it. Sunday is his recording day.
-- **Done (branch `claude/bold-lovelace-o09phe`):** `_inspirationSources.ts` (the gather reads the Inspiration House
-  and content-watcher; `must_cover`), `board_feed.py cover`, `week_board.style_problems` and `coverage_problems`,
-  `formats` in `config/style-references.json`, `creative_direction.py` with the kit.py and make.py gate,
-  `docs/CREATIVE_DIRECTION.md`, the Sunday rhythm, the feeder freeze, the start route in AGENTS.md, failure and
-  learning entries.
-- **Next, Sunday 25 Oct:** `/plan-week` for the week of 26 Oct. The gather stops until this change is deployed to
-  production (`sources.inspiration`). Three routed cards must be on the board or accounted for: the Duet page,
-  "Reading is free. Sending needs a yes." and the models-by-country picture.
-- **Decided by Krish (2026-10-25):** the Sunday rhythm's approval stands ("Yes that is the approval I want on record"); no required merge checks ("No merge checks."), so a session merges only after CI is green.
 ## 24 October: Friday locked and signed off; Codex makes the videos (Claude)
 
 - **Signed off by Krish:** storyboard, no trim, titles, outline ("signed off, keep, all A"), prediction A2 ("a2"), and
@@ -58,37 +53,6 @@ only; it does not mutate a tracked Studio session, learning record or board.
   `2 Covers and images/Evidence` and the storyboards under `2 Covers and images/Storyboard` in the post's library
   folder. The Anthropic and GitHub reference clip (Video Engine > Inspiration) had still not reached the library;
   Codex fetches it first (`motion-system.md`).
-
-## 24 October: the Inbox read from Google by its ID; every Drive touchpoint fails loudly (Claude)
-
-Handover: `docs/handovers/2026-10-24-drive-by-id.md`. Branch `claude/drive-by-id`, a pull request here and one in
-control-center.
-
-- **Built:** the `recordings_drive_inbox` job (`apps/control-plane/api/library/recordings/drive-inbox.ts`, every ten
-  minutes) lists the Inbox by its Drive folder ID as the engine's existing Google service account (read-only, the
-  same account the inspiration scan already uses successfully) and streams each new take into the recordings store
-  under its sha256 with the manifest `confirm` writes; `recording.py`, `recording_match.py` and `produce-video` are
-  unchanged. Each home computer's pass now reports what it found (`POST /api/library/recordings/lane`): a stale
-  `MINDMAKE_*` setting (passed over for `config/studio.json`), an unreachable Inbox, a missing library, no pinned
-  Python, a failed send or publish. The job fails with the machine named while a fresh report holds a problem, so
-  Control Center shows it. Settings are read from the registry each pass (no restart needed), and the first pass
-  after boot waits a minute for Google Drive. `paths.ts` passes over a stale setting and `doctor` names it.
-- **Proved:** 10 new tests (`tests/control-plane/recordings-drive-inbox.test.ts`), the stale-setting test in
-  `tests/paths-drive.test.ts`, and a local run of the real streaming copy: 50 MB through a fixed Content-Length PUT,
-  sha256 equal on both ends. **Not proved:** a new take copied by the live job (the first runs found every take already stored), and the
-  PowerShell changes on Windows (no PowerShell here; Windows CI runs the source install only).
-- **Waiting on Krish (in this order):** (1) none for the Inbox: the job reads it through the "anyone with the link" sharing on
-  `makeyourmindup`; before that sharing is turned off, share the Inbox with the engine's service account as Viewer; (2) delete the `MINDMAKE_DRIVE_ROOT`, `MINDMAKE_MEDIA_INBOX`,
-  `MINDMAKE_ARCHIVE_ROOT`, `MINDMAKE_POSTS_ROOT`, `MINDMAKE_INSPIRATION` and `MINDMAKE_LIBRARY_ROOT` user settings on
-  both home computers; (3) where Claude sessions should write in Drive now (`drive_destinations` names `CURRENT` and
-  `inbox`, both gone); (4) whether to clear the dead `drive_folders` and `briefing_drive_folder_id` rows. Seen, not
-  changed: the Inbox and Content Inspo folders are shared "anyone with the link can edit".
-- **Left, with reasons:** `One Off Content Ideas` is not in Drive any more (`docs/DRIVE.md`); a home computer cannot
-  check an `H:` path against a Drive ID (Drive for desktop does not expose it), so it checks the path exists instead;
-  the KeePass file, ffmpeg reading takes, the library sync and archive filing stay on `H:` paths by necessity.
-- **Next:** the job runs `ok` again since 2026-10-26 11:10 UTC (a 120-character style-reference name had failed every
-  pass until PR #176); drop a real take with both machines off
-  and see it in `python scripts/post-pack/recording.py list`.
 
 ## The idea queue: read it first
 
@@ -300,7 +264,11 @@ run puts the new week's line here and moves this one under "Last week's
 publish board", which every session's tick copy still reads until every
 day on it is at 100% (Friday's reposts go out at the weekend).
 
-- Week of 19 to 23 October: https://content.krishraja.com/board/2026-10-19.
+- Week of 26 to 30 October: https://content.krishraja.com/board/2026-10-26. Ideas tab first; nothing picked yet (25 Oct).
+
+Last week's publish board (19 to 23 October):
+
+- https://content.krishraja.com/board/2026-10-19.
   The newer source's Ideas and draft day tabs are preserved. Its three picks,
   eleven queue decisions and 28 comments are available to every authenticated
   workflow. Monday is in review. Its editorial/video handover owns the next

@@ -352,6 +352,12 @@ def clock(t):
     return f'{int(t) // 60}:{t % 60:05.2f}'
 
 
+# Krish, 2026-10-26: "they're not really slips as much as they are just me talking naturally", and "I'm pretty
+# sure I said "I reckon," and you're mishearing it" (config/learnings.json, natural-speech-stays).
+LESSON = ('- Read these differences as how he talks, never as slips: propose a cut only for a serious flaw (a wrong fact or a '
+          'legal risk), only where it cuts without sounding clipped, and only after hearing it, because the transcriber mishears.')
+
+
 def markdown(label, r, devs):
     lines = [f'# {label}: what he said against the script', '',
              f'- The script has {r["script_words"]} words; he said {r["said_words"]} ({r["said_more_pct"]:+}%), over {r["minutes"]} minutes '
@@ -364,6 +370,7 @@ def markdown(label, r, devs):
              '- By kind: ' + ', '.join(f'{k} {v}' for k, v in r['tags'].items()) + '.',
              '- The words he adds most: ' + ', '.join(f'"{w}" {n}' for w, n in r['top_words_added'][:15]) + '.',
              '- The script words he drops or changes most: ' + ', '.join(f'"{w}" {n}' for w, n in r['top_words_dropped'][:10]) + '.',
+             LESSON,
              '', '## Every difference, in order', '', '| At | What | The script | He said |', '|---|---|---|---|']
     esc = lambda s: (s or '').replace('|', '\\|') or '·'
     for d in devs:
@@ -529,7 +536,8 @@ def self_test():
         check('no take of that cut, no estimate', spoken_estimate(225, 'long', led), None)
     md = markdown('test', r, devs)
     check('the report lists every difference', md.count('\n| ') - 1, len(devs))
-    print('\n'.join(fails) if fails else f'narration_diff self-test passed: {16} checks')
+    check('the report reads his differences as how he talks, never as slips', 'never as slips' in md, True)
+    print('\n'.join(fails) if fails else f'narration_diff self-test passed: {17} checks')
     return 1 if fails else 0
 
 
