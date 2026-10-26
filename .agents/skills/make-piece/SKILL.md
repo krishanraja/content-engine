@@ -304,6 +304,24 @@ one question, and build the beat from them (learning `his-call-in-his-words`).
    ever made), and put one board item on Krish saying so in plain words
    (`idea_id`). Then `making.py <uuid> show` says, per cut, "Teleprompter,
    5-minute cut: holds the current words".
+7. **The creative direction, before he records** (Krish, 2026-10-24: "Once
+   the videos are recorded, Claude gets the scripts and the visual creative
+   direction locked so that codex can take over on the video production
+   ... the copy of the article and what goes in the visuals etc is all
+   Claude responsibility"). For every cut sent, write the piece's
+   `creative-direction.json` beside its `post.json` (`docs/CREATIVE_DIRECTION.md`):
+   `creative_direction.py template` gives one beat per sentence, then
+   decide every beat's point, picture, source and on-screen words, in the
+   style he picked on the Ideas tab (`config/style-references.json`
+   `formats`), with the brand reference and the article's visuals. `check
+   --script long=... --script short=...` must pass before he records, and
+   the day's Record step says what to capture (each `capture:` source).
+   After he records: line the takes up, re-time the beats, build the
+   storyboard from the real captures onto the day's Brief step, and when he
+   signs it in words put them in `signed` with `creative_direction.py hash`
+   of each script. Production renders only from that signed file (kit.py
+   and make.py refuse anything else); a change to a script after he signs
+   means a new storyboard.
 
 ## The week's publish board
 

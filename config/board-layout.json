@@ -16,9 +16,9 @@
     {"key": "publish", "label": "Publish", "what": "Everything to download first, then each place to post, in order, each with its tick."}
   ],
   "rhythm": {
-    "_about": "Krish, 2026-10-21: \"we work on getting the Monday piece to record-ready by Sunday night. The Wednesday piece needs to be record-ready by Tuesday night and the Friday piece needs to be record-ready by Thursday night ... On Monday, Wednesday, and Friday mornings I need to be able to see the draft video scripts and the draft article.\" Days are counted from the publishing day.",
-    "brief": {"days_before": 1, "when": "night"},
-    "drafts": {"days_before": 0, "when": "morning"}
+    "_about": "Krish, 2026-10-24: \"on a Sunday, Claude will create the publish board and seed the ideas ... On Sunday, we will flesh out the narrative arc ... By Sunday midday, we will have locked the scripts and sent them to teleprompter, and then I'll begin recording\", then \"Yes, Sunday is my recording day.\" So every day's brief is agreed on the Sunday morning and every day's scripts are locked by Sunday midday. It replaces the 2026-10-21 rhythm (Monday by Sunday night, Wednesday by Tuesday night, Friday by Thursday night). on: sunday_before is the Sunday that starts the publishing week.",
+    "brief": {"on": "sunday_before", "when": "morning"},
+    "drafts": {"on": "sunday_before", "when": "midday"}
   },
   "cuts": {
     "_about": "Krish, 2026-10-21: \"all videos are generally 90 sec and 5 min. From time to time I might do a special 15 min feature\"; asked whether that replaces the weekly deep cut: \"Yes, replace it\". short and long are on every piece; feature only on a piece listed in config/features.json.",

@@ -596,6 +596,18 @@ The fact gate.
 - `const ENTAIL_SYSTEM`
 - `const INDEPENDENT_SYSTEM`
 
+### `apps/control-plane/api/_feedbackCues.ts`
+
+Krish's feedback cues, for Sunday's gather (GET /api/week/options?include=sources, `cues`).
+
+- `const CUE_USES`
+- `const CUE_COLS`
+- `interface CueItem`
+- `interface CuesBlock`
+- `function buildCues(rows: Row[]): CuesBlock`
+- `function tableMissing(error: { message?: string; code?: string } | null): boolean`
+- `function cuesFrom(res: { data: Row[] | null; error: { message?: string; code?: string } | null }): { cues: CuesBlock; e…`
+
 ### `apps/control-plane/api/_finalPass.ts`
 
 _finalPass — the per-venture Final Pass rubric, prompt, and parse helpers.
@@ -897,6 +909,17 @@ The one idea queue (Krish, 2026-10-19: "mark ideas for a queue instead of select
 - `interface CombineGroup`
 - `function combineCandidates(rows: Array<Record<string, any>>, threshold = COMBINE_COSINE): CombineGroup[]`
 - `function absorbedQueuePatch(row: Record<string, any>, parentId: string, by: 'Krish', said: string | null, at: string)`
+
+### `apps/control-plane/api/_inspirationSources.ts`
+
+What Krish's Inspiration House holds, for Sunday's ideas (GET /api/week/options?include=sources, `inspiration`).
+
+- `const INSPO_FRESH_DAYS`
+- `const EXCERPT`
+- `interface InspoCard`
+- `function card(r: Row): InspoCard`
+- `interface InspirationBlock`
+- `function buildInspiration(input: { weekStart: string; items: Row[]; reads?: Row[]; moves?: Row[]; claims?: Row[]; quote…`
 
 ### `apps/control-plane/api/_investigation.ts`
 
@@ -1702,9 +1725,11 @@ The week's options, as the Sunday session writes them onto the pieces.
 - `interface WeekOptionInput`
 - `interface WeekOptionMeta`
 - `const MAX_OPTIONS`
+- `const MAX_COVERS`
 - `function isMonday(ymd: string): boolean`
 - `function keepThroughWeek(expiresAt: string | null | undefined, weekStart: string): string | null`
 - `function parseOptions(body: unknown): { week_start: string; series: string; options: WeekOptionInput[]; problems: strin…`
+- `function mergeCovers(held: unknown, weekStart: string, more: string[] | undefined): Record<string, string[]> | null`
 
 ### `apps/control-plane/api/_weekSources.ts`
 
@@ -4212,6 +4237,12 @@ The producer supplies work. An independently provisioned reviewer signs evidence
 - `const BoardDeliverySchema`
 - `function boardDeliveryProblems(input: unknown, manifest: unknown, keys = reviewerKeys(), now = Date.now()): string[]`
 - `function localReviewProblems(receiptPath: string, artifactPath: string, expected: { piece_id?: string; surface?: MediaB…`
+
+### `packages/core/src/media-rollout.ts`
+
+- `function parseMediaQualityRollout(value: unknown)`
+- `function mediaQualityRollout()`
+- `function mediaQualityEnforced(): boolean`
 
 ### `packages/core/src/media.ts`
 

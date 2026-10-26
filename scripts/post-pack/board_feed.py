@@ -64,17 +64,33 @@ def gather(week, call=None, out_dir=None):
     sources = options.get('sources')
     if not isinstance(sources, dict):
         raise FeedError('the engine answered without a sources block; is the include=sources route deployed?')
+    inspo = sources.get('inspiration')
+    # Krish, 2026-10-24: "Double check my inspirationhouse gets read properly when ideas are being built". A gather
+    # without the Inspiration House block is incomplete, never a quiet Sunday: say so and stop.
+    if not isinstance(inspo, dict):
+        raise FeedError('the engine answered without sources.inspiration (Inspiration House, content-watcher, creator moves); '
+                        'the route on production predates it: merge and deploy, then gather again')
+    relayed = sources.get('his_relayed') or []
+    must_cover = list(inspo.get('must_cover') or []) + [
+        {'id': r.get('id'), 'what': f'Your words on board item "{r.get("title")}"', 'his_words': r.get('detail')} for r in relayed if r.get('id')]
     out = {
         'week_start': wk,
-        'how': 'Read-only gather (board_feed.py). Write ideas.json from series[].pool, his ideas first, each with source_kind, '
-               'why_here and beats; write combine.json from the combine groups worth combining; build with --ideas --queue --combine.',
+        'how': 'Read-only gather (board_feed.py). Write ideas.json from series[].pool and inspiration (routed, liked, fresh, corpora, '
+               'creators) and his feedback cues (cues), his ideas first, each with source_kind, why_here, beats and style (config/styles.json); every must_cover id '
+               'is in some idea\'s covers or in ideas.json accounted with a reason (board_feed.py cover); write combine.json; '
+               'build with --ideas --queue --combine.',
         'counts': sources.get('counts') or {},
         'empty': sources.get('empty') or [],
         'series': [dict(s, mandate=next((x.get('mandate') for x in options.get('series') or [] if x.get('slug') == s.get('slug')), None))
                    for s in sources.get('series') or []],
         'unassigned': sources.get('unassigned') or [],
-        'his_relayed': sources.get('his_relayed') or [],
+        'his_relayed': relayed,
+        'inspiration': inspo,
+        'must_cover': must_cover,
         'taste': sources.get('taste') or {},
+        # Krish, 2026-10-26: his feedback as cues to draw on (_feedbackCues.ts). Help, never a gate: a route without the
+        # block writes an empty one and says so.
+        'cues': sources.get('cues') if isinstance(sources.get('cues'), dict) else {},
         'queue': queue.get('queue') or [],
         'combine': queue.get('combine') or [],
         'scheduled': {s.get('slug'): s.get('scheduled') or [] for s in options.get('series') or []},
@@ -86,9 +102,26 @@ def gather(week, call=None, out_dir=None):
     counts = out['counts']
     lines = [f'sources for the week of {wk}: his {counts.get("his", 0)}, inspo {counts.get("inspo", 0)}, engine {counts.get("engine", 0)}; '
              f'queue {len(out["queue"])}, could combine {len(out["combine"])} group(s); his relayed words {len(out["his_relayed"])}']
+    ic = inspo.get('counts') or {}
+    lines.append('  inspiration house: ' + ', '.join(f'{k} {ic.get(k, 0)}' for k in ('routed', 'study_style', 'liked', 'fresh', 'corpora', 'creators', 'claims')))
+    cc = out['cues'].get('counts') if out['cues'] else None
+    lines.append('  feedback cues: ' + (', '.join(f'{k.replace("_", " ")} {cc.get(k, 0)}' for k in ('future_pieces', 'wider_pieces', 'wider_themes', 'tracked', 'briefs', 'not_for_us'))
+                                         if isinstance(cc, dict) else 'not in the engine\'s answer (the route on production predates them)'))
+    lines += [f'  must cover: {m.get("what")}' for m in must_cover]
     lines += [f'  {s.get("slug")}: {len(s.get("pool") or [])} in the pool' for s in out['series']]
     lines += [f'  empty: {e.get("source")}: {e.get("why")}' for e in out['empty']]
     return path, lines
+
+
+def cover(week, ideas_path=None):
+    """Problems with the week's ideas.json against its sources.json: every must_cover id carried by an idea's
+    `covers` or accounted for with a reason, and the style rules (week_board.style_problems). [] when ready."""
+    import week_board
+    wk = monday(week).isoformat()
+    folder = ROOT / 'docs' / 'plans' / f'{wk}-week'
+    sources = json.loads((folder / 'sources.json').read_text(encoding='utf-8'))
+    ideas = json.loads(Path(ideas_path or folder / 'ideas.json').read_text(encoding='utf-8'))
+    return week_board.coverage_problems(ideas, sources) + week_board.style_problems(ideas)
 
 
 COMBINE_DOC = re.compile(r'^combine-\d{1,3}$')
@@ -131,7 +164,10 @@ def self_test():
     answers = {
         '/api/week/options?week_start=2026-10-26&include=sources': {'ok': True, 'series': [{'slug': 'follow_the_money', 'mandate': 'M', 'scheduled': []}],
             'sources': {'counts': {'his': 1, 'inspo': 0, 'engine': 1}, 'empty': [{'source': 'inspo', 'why': 'no scan'}],
-                        'series': [{'slug': 'follow_the_money', 'pool': pool}], 'taste': {}, 'his_relayed': []}},
+                        'series': [{'slug': 'follow_the_money', 'pool': pool}], 'taste': {}, 'his_relayed': [{'id': 'said-1', 'title': 'Do agents'}],
+                        'inspiration': {'counts': {'routed': 1}, 'must_cover': [{'id': 'card-1', 'what': 'Inspiration card "x" you routed to Make a piece', 'his_words': 'yes'}]},
+                        'cues': {'future_pieces': [{'id': 'c1', 'subject_ref': 'q1', 'said': 'later'}], 'wider_pieces': [], 'tracked': [], 'briefs': [], 'not_for_us': [],
+                                 'counts': {'future_pieces': 1, 'wider_pieces': 0, 'wider_themes': 0, 'tracked': 0, 'briefs': 0, 'not_for_us': 0}}}},
         '/api/idea-queue?combine=1': {'ok': True, 'queue': [{'id': 'q1'}, {'id': 'q2'}], 'combine': [{'ids': ['q1', 'q2']}]},
     }
     calls = []
@@ -147,16 +183,34 @@ def self_test():
             problems.append('gather must only read')
         if data['series'][0]['pool'][0]['source_kind'] != 'his' or data['series'][0]['mandate'] != 'M':
             problems.append('the pool keeps its order, his first, with the mandate beside it')
+        if [m['id'] for m in data['must_cover']] != ['card-1', 'said-1'] or not any('routed 1' in x for x in lines):
+            problems.append('every routed Inspiration card and relayed word is listed to cover, and the counts are said')
         if len(data['combine']) != 1 or len(data['queue']) != 2:
             problems.append('the queue and its combine groups are written')
         if not any('empty: inspo: no scan' in x for x in lines) or 'his 1, inspo 0, engine 1' not in lines[0]:
             problems.append('the counts and the empty source are said')
+        if data['cues'].get('future_pieces', [{}])[0].get('id') != 'c1' or not any('feedback cues: future pieces 1' in x for x in lines):
+            problems.append('his feedback cues are written and counted')
+    no_cues = json.loads(json.dumps(answers))
+    no_cues['/api/week/options?week_start=2026-10-26&include=sources']['sources'].pop('cues')
+    with tempfile.TemporaryDirectory() as tmp:
+        path, lines = gather('2026-10-26', lambda m, p, b: (200, json.dumps(no_cues[p])), tmp)
+        if json.loads(Path(path).read_text(encoding='utf-8'))['cues'] != {} or not any('feedback cues: not in' in x for x in lines):
+            problems.append('a route without the cues block still gathers, and says the cues are missing')
     for bad in ('2026-10-27', 'soon'):
         try:
             monday(bad)
             problems.append(f'{bad} must be refused')
         except FeedError:
             pass
+    old = json.loads(json.dumps(answers))
+    old['/api/week/options?week_start=2026-10-26&include=sources']['sources'].pop('inspiration')
+    try:
+        with tempfile.TemporaryDirectory() as tmp:
+            gather('2026-10-26', lambda m, p, b: (200, json.dumps(old[p])), tmp)
+        problems.append('a gather without the Inspiration House block must stop, never look complete')
+    except FeedError:
+        pass
     try:
         gather('2026-10-26', lambda m, p, b: (500, 'down'))
         problems.append('an engine error must be said, never written as an empty pool')
@@ -184,6 +238,9 @@ def main(argv=None):
     g.add_argument('--out-dir', help='write sources.json here instead (a test)')
     t = sub.add_parser('taps', help='his Combine taps on a week\'s board, as synthesize bodies (only those Krish wrote)')
     t.add_argument('week', help='the Monday of the board the taps are on, YYYY-MM-DD')
+    c = sub.add_parser('cover', help='check ideas.json carries every must_cover id and the style rules before the board is built')
+    c.add_argument('week', help='the Monday the week starts on, YYYY-MM-DD')
+    c.add_argument('--ideas', help='an ideas file other than docs/plans/<Monday>-week/ideas.json')
     sub.add_parser('self-test')
     args = ap.parse_args(argv)
     if args.cmd == 'taps':
@@ -199,6 +256,14 @@ def main(argv=None):
     if args.cmd == 'self-test':
         problems = self_test()
         print('board_feed self-test ' + ('FAILED:\n  ' + '\n  '.join(problems) if problems else 'passed'))
+        return 1 if problems else 0
+    if args.cmd == 'cover':
+        try:
+            problems = cover(args.week, args.ideas)
+        except (FeedError, OSError, ValueError) as error:
+            print(f'board_feed cover: {error}', file=sys.stderr)
+            return 1
+        print('cover: ' + ('NOT READY:\n  ' + '\n  '.join(problems) if problems else 'every routed card and relayed word is on the board or accounted for; styles pass'))
         return 1 if problems else 0
     if args.cmd != 'gather':
         ap.print_help()

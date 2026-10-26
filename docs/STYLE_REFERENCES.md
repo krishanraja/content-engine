@@ -33,8 +33,16 @@ Nothing in Production Inspo is ever published, posted or cut into his videos.
 Every pass of `scripts/recordings-upload.ps1` (both home computers, every
 5 minutes) runs `references.py publish`. That sends each video in
 Production Inspo to the engine's library at
-`1 Brand kit (permanent)/Style references/<file>`, once. Any machine then
-gets them with `python scripts/quick-edit/references.py fetch`.
+`1 Brand kit (permanent)/Style references/<file>`, once. The library takes at
+most 100 characters a name, and downloaders name clips after the post's ID
+(a SaveClip.App_ name ran to 120 on 2026-10-24 and stopped every pass), so a
+longer name goes in cut short with the first 8 hex of its sha256 before the
+extension (`references.library_name`); `fetch` maps a long name the same way.
+A name is also put in composed Unicode (NFC), which the library requires. A
+name the library still refuses for any other reason no longer stops the rest:
+every other clip goes in, and the pass fails naming the refused one and its
+reason (`references.split_refused`), so the lane report still shows it.
+Any machine then gets them with `python scripts/quick-edit/references.py fetch`.
 
 ## How a session studies one
 
@@ -154,6 +162,25 @@ alchemist."
 - **After the piece**, he gives each module he saw a verdict: `liked`
   (draw on it more), `untested`, or `not for us`. The bank learns. The base
   changes only when he changes a house rule.
+
+## Formats: whole-piece styles he chooses from
+
+Krish, 2026-10-24: "It should also be able to suggest script and production
+styles that I can choose from or that it recommends for specific content.
+This engine should be pushing and pushing and pushing, becoming more and more
+creative and experimental."
+
+`formats` in `config/style-references.json` names whole-piece styles, each a
+mix of bank modules: `script` formats (the story's shape, such as Head to head
+or The Hannah Fry explainer) and `production` formats (the visual treatment,
+such as Voice-led, every line has its picture). Each has its pitch, what it
+fits, its evidence (his words, or "engine proposal" when it is not yet his),
+its `status` (proven, trial, experimental) and his verdict. Every Sunday idea
+carries one recommended script format, one production format and one untried
+experiment; `divergence` says how varied the week must be, and the board
+refuses a week that is not. The format he picks goes into the piece's
+creative direction (`docs/CREATIVE_DIRECTION.md`), and his verdict after the
+piece is recorded on the format, as on a module.
 
 ## How it changes the videos
 
