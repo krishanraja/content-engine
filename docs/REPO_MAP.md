@@ -1707,9 +1707,11 @@ The week's options, as the Sunday session writes them onto the pieces.
 - `interface WeekOptionInput`
 - `interface WeekOptionMeta`
 - `const MAX_OPTIONS`
+- `const MAX_COVERS`
 - `function isMonday(ymd: string): boolean`
 - `function keepThroughWeek(expiresAt: string | null | undefined, weekStart: string): string | null`
 - `function parseOptions(body: unknown): { week_start: string; series: string; options: WeekOptionInput[]; problems: strin…`
+- `function mergeCovers(held: unknown, weekStart: string, more: string[] | undefined): Record<string, string[]> | null`
 
 ### `apps/control-plane/api/_weekSources.ts`
 
