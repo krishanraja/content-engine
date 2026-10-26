@@ -21,7 +21,8 @@ growth-makeyourmindup owns social/posting strategy, amplification planning,
 account management and authorised automatic distribution. AGENTS.md now
 routes to docs/GROWTH-HANDOFF.md. docs/CAROUSEL-STANDARD.md receives the
 approved visual floor, clean-artwork and newcomer-comprehension requirements
-from the Growth pilot; its full revision 02 still awaits creative acceptance.
+from the Growth pilot. Krish has now approved the complete revision 03 as
+the eight-card production pilot, tied to its ordered private asset hashes.
 Existing editorial and tracked Studio workflows remain the production path.
 No Studio job, runtime learning record, media, publish board or public post
 was changed by this documentation correction. The operational observations
@@ -30,14 +31,19 @@ The required local verify run passed both typecheck stages, then reported
 failures in quick-edit-mix, recording-match and caption-analysis media tests.
 The long run was stopped after these failures. No production code changed;
 the failures are unresolved and no full-suite pass or release is claimed.
-The pilot's final-card revision is a local production review candidate with
-a distinct takeaway hierarchy; the first seven cards retain their hashes.
+Krish accepted revision 03's final takeaway card with "looks good" on
+26 October. The acceptance is tied to the exact asset hash in its private
+review evidence; the first seven cards retain their hashes. He then answered
+"yes" to full-pilot approval and preparation of Growth's channel posting
+package. The earned production principles are now an accepted reference.
+A universal template, measured volume system and publication are not inferred.
 The repository correction is committed as 41e4b0f and pushed to PR #178.
 That PR is open: board-web, browser-buttons and dependency-audit reported
 failures while both verify jobs were still running at readback. Auto-merge
 could not be enabled under the repository's current branch configuration.
-No merge or deployed integration is claimed. The final-card preview remains
-a local candidate, distinct from tracked Studio job or learning capture.
+No merge or deployed integration is claimed. The approved full pilot is
+retained as exact local review evidence, distinct from tracked Studio job
+or runtime learning capture.
 
 ## What it is
 
@@ -190,8 +196,9 @@ Everything older is in `docs/history/2026-09-25-NOW.md` and `docs/history/LOG.md
 - Next for this handoff: process Growth's next distribution brief through
   the existing production workflow and return an accepted asset package.
   Do not build channel strategy or a public social scheduler here.
-- Waiting on Krish: the full Grok Bot vs Muse revision 02 creative verdict;
-  cover acceptance does not approve its full narrative format or scale.
+- Waiting on Krish: no further creative verdict for the approved revision 03
+  pilot. Any new adaptation or changed creative follows its applicable review;
+  exact posting approval remains a separate Growth delivery step.
 - North Star check (2026-10-26): holds.
 
 - Next: the shift to fascinating subjects in the judges, the three channel briefs and the idea sources, each shown to Krish as exact wording before anything live changes; the Cold Ideas scan reading whole documents and Word files; checking the launch set's words against the passed body before packing (walk log F73). The Studio script station's story check is done (`2651635`). Friday's piece 2 (mind.the.gap) has passed the fact check and a visual gate, and waits on Krish. Then the Sunday plan-the-week routine's next run on 18 October (`docs/CADENCE.md`). Then piece 1's production brief once Krish clears its five gates, then the first Studio render on the primary (the house-style proof, and the first real job leased under the runner fence); the receipt proof panel for the Studio's visual plan; next week's two picks; then the idea sources' own rule copies and retired names (walk log F23).

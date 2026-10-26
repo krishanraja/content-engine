@@ -6,8 +6,11 @@ Krish's ruling is recorded in docs/GROWTH-HANDOFF.md and AGENTS.md.
 Content-engine alone owns production and its standards; Growth-MakeYourMindUp
 owns social/posting strategy, amplification briefs, account management,
 authorised automatic distribution and channel learning. The transferred
-carousel rules live here in docs/CAROUSEL-STANDARD.md. Full revision 02 of
-the Grok Bot vs Muse pilot still needs his creative verdict. Next: receive
+carousel rules live here in docs/CAROUSEL-STANDARD.md. Krish approved all
+eight cards of Grok Bot vs Muse revision 03 on 26 October. Growth originates
+amplification ideas, channel best practices and missed-placement opportunities;
+content-engine supplies production execution and quality standards for all
+formats. Next: receive
 Growth's distribution brief and return a checked creative package through
 the existing editorial/Studio path. This change updates repository guidance
 only; it does not mutate a tracked Studio session, learning record or board.

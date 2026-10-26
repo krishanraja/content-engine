@@ -2,10 +2,12 @@
 
 Owner: content-engine. Taste authority: Krish Raja. Updated 26 October 2026.
 
-Status: the visual floor and clean-artwork rule are approved. The complete
-carousel's narrative system is a candidate awaiting Krish's review. Do not
-describe a cover approval as approval of the whole format or a production
-system. Do not scale a template before the complete pilot earns approval.
+Status: approved production reference. On 26 October 2026 Krish approved the
+complete eight-card Grok Bot vs Muse revision 03 as the production pilot,
+answering "yes" to the explicit full-pilot approval question. Its exact
+ordered image hashes and review evidence are retained privately. This locks
+the earned production principles, not a universal scorecard, eight-card
+length or fixed visual template. Publishing approval remains separate.
 
 ## Approved floor
 
@@ -66,9 +68,9 @@ a concrete instruction is the better payoff.
 For the current Grok Bot vs Muse pilot, Krish's next correction is that the
 final card must visibly read as the main practical takeaway. It must change
 reading mode and hierarchy from the test cards while keeping the exact
-instruction. A cream-ground instruction board is a revision candidate,
-not approval to use that treatment for every future ending. Design the
-ending for its job; preserve variety and seek review of the actual render.
+instruction. Its cream-ground instruction board was accepted, then the full
+sequence approved. That is not a requirement to reuse the treatment for
+every ending. Design the ending for its job and preserve visual variety.
 
 Before rendering, read the complete copy without pictures, caption, source
 article or prior conversation. Fail it if a newcomer cannot tell what is
@@ -78,8 +80,10 @@ the words must make the pictures intelligible. These are production gates,
 not proof that an actual novice audience has been tested.
 
 The previous full pilot failed the copy/context gate despite its approved
-visual direction. Keep that distinction in the review history. The complete
-revised format still needs Krish's review before full-format canon or scale.
+visual direction. Keep that distinction in the review history. Revision 03
+earned full-pilot acceptance after explicit tasks, cumulative scores and a
+distinct practical ending corrected those failures. Acceptance proves this
+reference met Krish's bar; it does not prove audience or growth performance.
 
 ## Narrative production and review
 
@@ -108,11 +112,25 @@ the caption and the actual facts before asking Krish to review it. Record
 any failure, fix it and recheck the whole arc. His approval covers the
 exact reviewed version; publishing remains separately gated.
 
-After Krish approves the complete pilot, capture what earned approval and
-what failed, then propose the repeatable production and review method.
-Until then this file is a working quality contract, not a validated recipe
-for volume. Private approved assets, hashes, feedback and source records
-remain in the existing private pilot evidence until imported through the
-tracked Studio route. Growth retains historical audit evidence only; it
-must not maintain a second production or taste-learning system.
+## Repeatable production route
+
+1. Receive Growth's amplification concept, audience, channel, experiment,
+   source piece and desired reader action. Growth owns that initiative.
+2. Establish the exact claim/evidence and the newcomer's starting context.
+   Write each card's question, answer and role before rendering.
+3. Select a story-specific visual idea and arc using the approved principles.
+   Keep the metaphor subordinate to explicit meaning and checked facts.
+4. Render and inspect the entire sequence at phone size. Verify copy,
+   identity marks, claims, score/state progression where relevant, rhythm,
+   distinct final payoff and the absence of small-print artwork strips.
+5. Secure the required exact-asset creative review, preserve hashes/order,
+   and return a checked production package to Growth for platform delivery.
+6. Receive specific creative feedback and dated channel evidence. Improve
+   production craft here through the existing governed learning route.
+
+Use existing editorial and Studio contracts; do not create a second pipeline
+or learning store. The route is documented and the pilot approved; automated
+volume throughput, runtime feedback import and audience results are not
+proved by this document. Private accepted assets and evidence remain in the
+existing review package until imported through the tracked Studio route.
 
