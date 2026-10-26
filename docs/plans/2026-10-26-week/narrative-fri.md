@@ -22,7 +22,12 @@ Signed by Krish: "i like this suggestion as to where it lands a lot", 2026-10-26
 
 ## Who it is for, and what they do on Monday
 
-(To come.)
+Question 2, asked 26 Oct. Draft: leaders of medium-sized companies who sign off hiring (founders, heads of finance or
+operations, team leads). On Monday, before they sign off the next role AI could fill, they name who on each team will
+be a senior in 2030, and what real work that person will learn on now that AI does the first draft. Evidence: the
+Anthropic report ("In some roles, they are increasingly removed from the object-level work that originally built their
+skills"; "Hiring managers increasingly emphasize applicants' autonomy and judgment relative to specific technical
+expertise").
 
 ## The arc
 
