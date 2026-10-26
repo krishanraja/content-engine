@@ -564,8 +564,11 @@ def outline_gate(paths):
 def spine_gate(paths, piece_id, call):
     """One spine per piece (house rule ONE_SPINE; Krish, 2026-10-14: "the engine cannot do this again"). For
     dated drafts from spine_check.SPINE_FROM: the outline states the spine, its answer and what each section
-    proves; the draft's sections are exactly the approved ones; and the engine's judge has passed every section
-    against the spine on the body it holds now. Returns the spine, or None for an older piece."""
+    proves, and the draft's sections are exactly the approved ones. Returns the spine, or None for an older piece.
+    The engine's judge is a paid model call on the article, so it is not asked here: the scripts and their
+    Teleprompter send never wait on it, and it runs once, on the finished article, before the publish page,
+    which refuses until it passes (Krish, 2026-10-26: "This seems like one of the ways in which we just burn
+    API credits when we don't really need to be doing that", then "yes to the fix")."""
     import re
     import spine_check
     long = Path(paths[0]) if paths else None
@@ -578,8 +581,6 @@ def spine_gate(paths, piece_id, call):
     body = long.parent / f'{m.group(1)}-draft-body.md'
     if not why and body.exists():
         why = spine_check.draft_problems(body.read_text(encoding='utf-8'), text)
-    if not why:
-        why = spine_problem(piece_id, call)
     if why:
         sys.exit('making: the piece drifts from its one spine (house rule ONE_SPINE):\n  ' + '\n  '.join([why] if isinstance(why, str) else why))
     return spine_check.parse_outline(text)['spine']
@@ -1890,6 +1891,20 @@ def self_test():
 
     run(['--by', 'Codex', pid, 'session', 'https://chatgpt.com/codex/tasks/x'])
     check('session: the session says who runs it', seen[-1][2]['session'], {'url': 'https://chatgpt.com/codex/tasks/x', 'by': 'Codex'})
+    # The scripts never wait on the paid spine judge (Krish, 2026-10-26: "yes to the fix"): the free checks hold them.
+    with tempfile.TemporaryDirectory() as tmp:
+        plan = Path(tmp)
+        (plan / '2026-10-26-outline.md').write_text('Spine: Why did it happen?\nAnswer: Because of the money.\n\n'
+                                                  '1. THE MONEY | proves: the money explains it\n\n'
+                                                  'Approved by Krish: "yes", 2026-10-26.\n', encoding='utf-8')
+        (plan / '2026-10-26-draft-body.md').write_text('Opening.\n\n## THE MONEY\n\nWhy.\n\n## 3 things you can do tomorrow\n\n1. One.\n',
+                                                       encoding='utf-8')
+        (plan / '2026-10-26-draft-script.md').write_text('Words.\n', encoding='utf-8')
+        asked = []
+        spine = spine_gate([str(plan / '2026-10-26-draft-script.md')], pid, lambda m, p, b: asked.append(p) or (200, '{}'))
+        check('the scripts pass on the free spine checks', spine, 'Why did it happen?')
+        check('the scripts never ask the paid spine judge', asked, [])
+
     if fails:
         print('making self-test FAILED:\n  ' + '\n  '.join(fails))
         return 1

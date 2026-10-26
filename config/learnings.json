@@ -1606,11 +1606,32 @@
     {
       "id": "no-paid-call-before-a-free-step",
       "on": "2026-10-26",
-      "krish": "But why are you using Anthropic API here when you have access to Teleprompter via MCP? This seems like one of the ways in which we just burn API credits when we don't really need to be doing that.",
+      "krish": "But why are you using Anthropic API here when you have access to Teleprompter via MCP? This seems like one of the ways in which we just burn API credits when we don't really need to be doing that. Then: \"yes to the fix\".",
       "why": "Sending scripts to Teleprompter costs nothing, but making.py's scripts step (which teleprompter_send.py needs) first asks the engine's spine judge, a paid Anthropic call on the article body. The body was still to be rewritten in his voice, so that call would have been thrown away and paid for again.",
-      "means": "A free step never waits behind a paid model call, and a paid judge runs once, on the final words it judges, never on a draft that is about to change. The scripts and the Teleprompter send are held by the free checks (story_check, the outline and its sections, the read-back); the engine's spine judge runs once on the finished article at the fact gate. To encode: spine_gate in scripts/post-pack/making.py, which needs Krish's yes because it moves a gate he set (ONE_SPINE).",
-      "status": "open",
-      "encoded": []
+      "means": "A free step never waits behind a paid model call, and a paid judge runs once, on the final words it judges, never on a draft that is about to change. The scripts and the Teleprompter send are held by the free checks (story_check, the outline and its sections, the read-back); the engine's spine judge runs once on the finished article at the fact gate.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "scripts/post-pack/making.py",
+          "contains": "The engine's judge is a paid model call on the article, so it is not asked here",
+          "how": "spine_gate holds the scripts on the free outline and section checks only"
+        },
+        {
+          "file": "scripts/post-pack/making.py",
+          "contains": "the scripts never ask the paid spine judge",
+          "how": "a self-test check that fails if the scripts gate calls the engine's judge"
+        },
+        {
+          "file": ".agents/skills/make-piece/SKILL.md",
+          "contains": "the scripts and their Teleprompter send never wait on a paid model call",
+          "how": "make-piece, the Outline step"
+        },
+        {
+          "file": "apps/control-plane/api/_houseRules.ts",
+          "contains": "the judge is a paid call, so it runs once, on the finished article",
+          "how": "house rule ONE_SPINE"
+        }
+      ]
     }
   ]
 }
