@@ -916,7 +916,7 @@ What Krish's Inspiration House holds, for Sunday's ideas (GET /api/week/options?
 - `interface InspoCard`
 - `function card(r: Row): InspoCard`
 - `interface InspirationBlock`
-- `function buildInspiration(input: { weekStart: string; items: Row[]; reads?: Row[]; moves?: Row[]; claims?: Row[] }): In…`
+- `function buildInspiration(input: { weekStart: string; items: Row[]; reads?: Row[]; moves?: Row[]; claims?: Row[]; quote…`
 
 ### `apps/control-plane/api/_investigation.ts`
 
@@ -1707,9 +1707,11 @@ The week's options, as the Sunday session writes them onto the pieces.
 - `interface WeekOptionInput`
 - `interface WeekOptionMeta`
 - `const MAX_OPTIONS`
+- `const MAX_COVERS`
 - `function isMonday(ymd: string): boolean`
 - `function keepThroughWeek(expiresAt: string | null | undefined, weekStart: string): string | null`
 - `function parseOptions(body: unknown): { week_start: string; series: string; options: WeekOptionInput[]; problems: strin…`
+- `function mergeCovers(held: unknown, weekStart: string, more: string[] | undefined): Record<string, string[]> | null`
 
 ### `apps/control-plane/api/_weekSources.ts`
 

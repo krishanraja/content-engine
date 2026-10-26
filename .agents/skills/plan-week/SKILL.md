@@ -258,7 +258,10 @@ The week runs Monday to Friday. On Sunday it is the coming week.
      idea is its brief.
 4. Write each day's options, best first, one recommended:
    `python3 scripts/engine.py POST /api/week/options @options.json` with
-   `{"week_start": "<Monday>", "series": "<slug>", "options": [{"id": "<uuid>", "rank": 1, "pitch": "two or three plain sentences", "why_now": "the dated event, with its date", "recommended": true}]}`.
+   `{"week_start": "<Monday>", "series": "<slug>", "options": [{"id": "<uuid>", "rank": 1, "pitch": "two or three plain sentences", "why_now": "the dated event, with its date", "recommended": true, "covers": ["<must_cover id>"]}]}`.
+   `covers` is the board idea's own `covers` list, unchanged: the engine keeps it on the piece (`meta.covers`, never
+   cleared), so once he picks it the Inspiration card the piece became is known for good
+   (`inspiration_card_pieces`; krishanraja/inspirationhouse `docs/TWO_WAY.md`, step 3).
    A piece already scheduled for its day (a pick carried over) needs no options.
    A new idea that is not yet a row is created first with
    `POST /api/content-ideas {"raw_text": "...", "source_type": "week_research"}`.

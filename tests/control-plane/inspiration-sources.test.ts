@@ -62,4 +62,14 @@ describe('the Inspiration House block', () => {
     ] })
     expect(out.claims.map(c => [c.id, c.status])).toEqual([['c2', 'proposed'], ['c1', 'candidate']])
   })
+
+  it('a claim\'s quote is his words only while the answer it quotes stands', () => {
+    const claim = (id: string, source: string) =>
+      ({ id, kind: 'form', layer: 'opening', status: 'candidate', statement: 'Open on the hook', krish: 'an invented line', krish_source_id: source, support_n: 3 })
+    const out = buildInspiration({ weekStart: WEEK, items: [], claims: [claim('kept', 'e-standing'), claim('taken-back', 'e-withdrawn')],
+      quotesStanding: ['e-standing'] })
+    expect(out.claims.map(c => [c.id, c.his_words])).toEqual([['kept', 'an invented line'], ['taken-back', null]])
+    // With no list of standing rows, no quote is handed on.
+    expect(buildInspiration({ weekStart: WEEK, items: [], claims: [claim('kept', 'e-standing')] }).claims[0]!.his_words).toBeNull()
+  })
 })

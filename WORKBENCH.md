@@ -1,5 +1,20 @@
 # Workbench: where we are and what's next
 
+## 26 October: production and social growth have separate owners
+
+Krish's ruling is recorded in docs/GROWTH-HANDOFF.md and AGENTS.md.
+Content-engine alone owns production and its standards; Growth-MakeYourMindUp
+owns social/posting strategy, amplification briefs, account management,
+authorised automatic distribution and channel learning. The transferred
+carousel rules live here in docs/CAROUSEL-STANDARD.md. Krish approved all
+eight cards of Grok Bot vs Muse revision 03 on 26 October. Growth originates
+amplification ideas, channel best practices and missed-placement opportunities;
+content-engine supplies production execution and quality standards for all
+formats. Krish now prioritises merging the engine changes, then continuing
+Friday production with its existing production owner. Growth briefs receive
+a checked creative package through the existing editorial/Studio path. This change updates repository guidance
+only; it does not mutate a tracked Studio session, learning record or board.
+
 ## 25 October: the week of 26 October planned and its board published (Claude)
 
 - **Asked:** "for the week of 26 October. Sunday is my recording day: build the Ideas tab, then once I've picked all three days, interview me one question at a time on each piece until its narrative arc is locked, then the scripts." Then: "Just finish it all here." (learning `finish-the-job-here`, open: the cost guard's G1 message still says hand over, and changing it needs his yes.)
@@ -74,7 +89,8 @@ control-center.
 - **Left, with reasons:** `One Off Content Ideas` is not in Drive any more (`docs/DRIVE.md`); a home computer cannot
   check an `H:` path against a Drive ID (Drive for desktop does not expose it), so it checks the path exists instead;
   the KeePass file, ffmpeg reading takes, the library sync and archive filing stay on `H:` paths by necessity.
-- **Next:** once shared, read the next `recordings_drive_inbox` run as `ok`; drop a real take with both machines off
+- **Next:** the job runs `ok` again since 2026-10-26 11:10 UTC (a 120-character style-reference name had failed every
+  pass until PR #176); drop a real take with both machines off
   and see it in `python scripts/post-pack/recording.py list`.
 
 ## The idea queue: read it first

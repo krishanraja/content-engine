@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from '../_supabase.js'
 import { guardEngine, operatorBearerAllowed } from '../_auth.js'
-import { isMonday, keepThroughWeek, parseOptions, type WeekOptionMeta } from '../_weekOptions.js'
+import { isMonday, keepThroughWeek, mergeCovers, parseOptions, type WeekOptionMeta } from '../_weekOptions.js'
 import { buildSources, windows } from '../_weekSources.js'
 import { buildInspiration } from '../_inspirationSources.js'
 import { CUE_COLS, cuesFrom } from '../_feedbackCues.js'
@@ -30,11 +30,15 @@ import { CUE_COLS, cuesFrom } from '../_feedbackCues.js'
 //        from his words (_feedbackCues.ts); a missing table is said in `empty`,
 //        never a failure. Evidence only: no model, no write, and the judges
 //        never read it.
-// POST /api/week/options  { week_start, series, options: [{ id, rank, pitch, why_now, recommended }] }
+// POST /api/week/options  { week_start, series, options: [{ id, rank, pitch, why_now, recommended, covers? }] }
 //        writes meta.week_option on each option's row (and its series, when
 //        the row has none), keeps each option alive through its week (a seed's
 //        own expiry can fall before the purge that would delete it), and
-//        clears week_option from rows this day no longer offers.
+//        clears week_option from rows this day no longer offers. An option's
+//        covers (the must_cover ids its board idea answers) are added to the
+//        row's meta.covers under its week_start and never cleared, so the
+//        Inspiration card a piece picked that week became is known for good
+//        (inspiration_card_pieces).
 //
 // Krish, 2026-10-11: planning is one Sunday decision for the week. The week
 // page in Control Center reads these options live from the rows. Nothing here
@@ -120,7 +124,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const row = found.get(o.id)!
     const meta = row.meta && typeof row.meta === 'object' ? row.meta : {}
     const option: WeekOptionMeta = { week_start, series, rank: o.rank, pitch: o.pitch, why_now: o.why_now, recommended: Boolean(o.recommended), by, at }
-    const patch: Record<string, unknown> = { meta: { ...meta, week_option: option }, updated_at: at }
+    const covers = mergeCovers(meta.covers, week_start, o.covers)
+    const patch: Record<string, unknown> = { meta: { ...meta, week_option: option, ...(covers ? { covers } : {}) }, updated_at: at }
     // A row with no series takes the day's (the judges' ladder fills an empty slot the same way); a stored series is never overwritten.
     if (!row.lane_slot) patch.lane_slot = series
     const keep = keepThroughWeek(row.expires_at, week_start)
@@ -186,14 +191,21 @@ async function readInspiration(week: string) {
     supabase.from('inspiration_items').select(INSPO_COLS).or('route.eq.make_piece,routes.cs.{make_piece}').is('piece_id', null).limit(1000),
     supabase.from('content_reads').select('id,sha256,source_url,platform,shape,read_md,created_at').order('created_at', { ascending: false }).limit(60),
     supabase.from('creator_moves').select('id,creator_slug,post_url,why_it_works,krish_angle,content_idea_id,created_at').order('created_at', { ascending: false }).limit(20),
-    supabase.from('taste_claims').select('id,layer,kind,status,statement,krish,support_n').in('status', ['candidate', 'proposed'])
+    supabase.from('taste_claims').select('id,layer,kind,status,statement,krish,krish_source_id,support_n').in('status', ['candidate', 'proposed'])
       .order('updated_at', { ascending: false }).limit(100),
   ])
   const failed = items.error || routed.error || reads.error || moves.error || claims.error
   if (failed) throw new Error(`inspiration: ${failed.message}`)
+  // A claim keeps its quote while the answer it quotes is withdrawn; it is his words only while that answer stands.
+  const quoted = [...new Set((claims.data || []).map((c: Record<string, any>) => c.krish_source_id).filter(Boolean))] as string[]
+  const standing = quoted.length
+    ? await supabase.from('taste_evidence').select('id').in('id', quoted).is('withdrawn_at', null)
+    : { data: [], error: null }
+  if (standing.error) throw new Error(`inspiration: ${standing.error.message}`)
   const seen = new Set((items.data || []).map((r: Record<string, any>) => r.id))
   const all = [...(items.data || []), ...(routed.data || []).filter((r: Record<string, any>) => !seen.has(r.id))]
   return buildInspiration({ weekStart: week, items: all as Array<Record<string, any>>,
     reads: (reads.data || []) as Array<Record<string, any>>, moves: (moves.data || []) as Array<Record<string, any>>,
-    claims: (claims.data || []) as Array<Record<string, any>> })
+    claims: (claims.data || []) as Array<Record<string, any>>,
+    quotesStanding: (standing.data || []).map((r: Record<string, any>) => String(r.id)) })
 }

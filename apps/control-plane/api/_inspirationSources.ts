@@ -109,7 +109,13 @@ function readingExcerpt(md: string): string | null {
   return clip(body)
 }
 
-export function buildInspiration(input: { weekStart: string; items: Row[]; reads?: Row[]; moves?: Row[]; claims?: Row[] }): InspirationBlock {
+/**
+ * quotesStanding: the ids of taste_evidence rows that still stand, among those the claims quote (krish_source_id). A
+ * claim keeps its quote while the answer it quotes is withdrawn (migration 20261112090000_taste_quote_holds.sql), so a
+ * quote counts as his words only while that row stands; with no list, no quote is shown.
+ */
+export function buildInspiration(input: { weekStart: string; items: Row[]; reads?: Row[]; moves?: Row[]; claims?: Row[];
+  quotesStanding?: string[] }): InspirationBlock {
   const freshSince = new Date(Date.parse(`${input.weekStart}T00:00:00Z`) - INSPO_FRESH_DAYS * 86_400_000).toISOString()
   const live = input.items.filter(r => !r.dismissed_at && !r.facets?.part_of)
   const cards = live.map(card)
@@ -148,10 +154,13 @@ export function buildInspiration(input: { weekStart: string; items: Row[]; reads
 
   // Form only (anti-echo: taste shapes form, never subject), and never a retired or superseded claim. Proposed (put
   // to him) before candidate.
+  const standing = new Set(input.quotesStanding || [])
   const claims = (input.claims || [])
     .filter(c => c.kind === 'form' && ['candidate', 'proposed'].includes(String(c.status)))
     .map(c => ({ id: String(c.id), layer: c.layer || null, status: String(c.status), statement: String(c.statement || ''),
-      his_words: clip(c.krish, 300), support: typeof c.support_n === 'number' ? c.support_n : null }))
+      // Words he took back (the answer it quotes withdrawn) are never handed on as his.
+      his_words: c.krish_source_id && standing.has(String(c.krish_source_id)) ? clip(c.krish, 300) : null,
+      support: typeof c.support_n === 'number' ? c.support_n : null }))
     .sort((a, b) => (a.status === 'proposed' ? 0 : 1) - (b.status === 'proposed' ? 0 : 1))
 
   const must_cover = routed.map(c => ({ id: c.id, what: `Inspiration card "${c.name}" you routed to Make a piece`, his_words: c.why_like || c.would_do || null, endorsed: c.endorsed }))

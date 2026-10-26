@@ -1,5 +1,12 @@
 # Amplification: one home, one link, every channel
 
+Ownership update, Krish, 26 October 2026: Growth-MakeYourMindUp now owns
+social/posting strategy, amplification planning, account management and
+authorised distribution. This document retains production package and
+upload dependencies plus dated strategy history. Read GROWTH-HANDOFF.md
+before reusing channel tactics or profile instructions below. Content-engine
+owns production and production standards; it is not the social scheduler.
+
 Krish, 2026-10-09: "I currently post the video to Substack separately to the
 article, with a link to the article, but I have a feeling this is a clumsy
 approach, can you recommend me a neater way? for the consumer? ... Build a
