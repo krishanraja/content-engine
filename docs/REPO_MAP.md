@@ -916,7 +916,7 @@ What Krish's Inspiration House holds, for Sunday's ideas (GET /api/week/options?
 - `interface InspoCard`
 - `function card(r: Row): InspoCard`
 - `interface InspirationBlock`
-- `function buildInspiration(input: { weekStart: string; items: Row[]; reads?: Row[]; moves?: Row[]; claims?: Row[] }): In…`
+- `function buildInspiration(input: { weekStart: string; items: Row[]; reads?: Row[]; moves?: Row[]; claims?: Row[]; quote…`
 
 ### `apps/control-plane/api/_investigation.ts`
 
