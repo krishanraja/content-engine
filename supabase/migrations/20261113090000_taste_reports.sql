@@ -53,23 +53,29 @@ create table public.taste_reports (
   constraint taste_reports_observation_is_not_words check (
     kind <> 'observation' or (said_where is null and said_at is null)),
   constraint taste_reports_said_before_reported check (said_at is null or said_at <= reported_at + interval '5 minutes'),
+  -- Nothing he typed predates the engine; an absurd date is a session's mistake, never his.
+  constraint taste_reports_said_since_2020 check (said_at is null or said_at >= timestamptz '2020-01-01 00:00:00+00'),
   constraint taste_reports_subject_named check ((subject_ref is null) = (subject is null)),
   constraint taste_reports_retry_once unique (emitter_id, client_report_id)
 );
 
 create index taste_reports_uncollected on public.taste_reports (reported_at) where collected_at is null;
 
--- What a session reported stays as it reported it: only collected_at and meta (what it became) may change.
+-- What a session reported stays as it reported it: only collected_at (once, never back to null) and meta (what it
+-- became) may change.
 create or replace function public.taste_reports_hold()
 returns trigger
 language plpgsql
 set search_path = public
 as $$
 begin
-  if (new.kind, new.body, new.said_where, new.said_at, new.lane, new.polarity, new.subject_ref, new.subject,
+  if (old.collected_at is not null and new.collected_at is null) then
+    raise exception 'taste_reports: a filed report stays filed';
+  end if;
+  if (new.id, new.kind, new.body, new.said_where, new.said_at, new.lane, new.polarity, new.subject_ref, new.subject,
       new.session_ref, new.repository, new.surface, new.emitter_id, new.client_report_id, new.reported_at)
      is distinct from
-     (old.kind, old.body, old.said_where, old.said_at, old.lane, old.polarity, old.subject_ref, old.subject,
+     (old.id, old.kind, old.body, old.said_where, old.said_at, old.lane, old.polarity, old.subject_ref, old.subject,
       old.session_ref, old.repository, old.surface, old.emitter_id, old.client_report_id, old.reported_at) then
     raise exception 'taste_reports: a report is kept as it was reported';
   end if;
