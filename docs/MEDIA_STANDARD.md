@@ -42,9 +42,9 @@ Board activation, including replay and rollback, requires a separate signed `Boa
 
 ## Activation evidence
 
-**Release prerequisite:** the independent reviewer is not yet provisioned or calibrated. Do not deploy this gate alone: it would block every new board activation, including drafts and rollback. Existing provider credentials do not establish a working reviewer. Cross-repository Control Center projections must also consume the revalidated making state before claiming current readiness. This implementation is not active.
+**Activation prerequisite:** the independent reviewer is not yet provisioned or calibrated. The implementation may deploy with its validated pending rollout; do not activate enforcement alone, since it would block every new board activation, including drafts and rollback. Existing provider credentials do not establish a working reviewer. Cross-repository Control Center projections must also consume the revalidated making state before claiming current readiness. Automatic enforcement is not active.
 
-Current signed boards are revalidated on default reads. Metadata stays available for repair, but an invalid current review blocks HTML/assets. Explicit build reads and unsigned pre-standard boards are historical and carry `X-Media-Qualification: historical`; they confer no new qualification.
+Once active, current signed boards are revalidated on default reads. Metadata stays available for repair, but an invalid current review blocks HTML/assets. Explicit build reads and unsigned pre-standard boards are historical and carry `X-Media-Qualification: historical`; they confer no new qualification. During pending rollout the header instead reports `candidate_pending_calibration` and ordinary board operations retain their existing checks.
 
 Implementation and activation are separate. Before declaring the floor live, retain:
 
