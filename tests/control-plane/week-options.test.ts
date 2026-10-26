@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { isMonday, keepThroughWeek, parseOptions } from '../../apps/control-plane/api/_weekOptions.js'
+import { isMonday, keepThroughWeek, mergeCovers, parseOptions } from '../../apps/control-plane/api/_weekOptions.js'
 
 // The week's options (Krish, 2026-10-11): the Sunday session writes the
 // researched options for each publishing day onto the pieces; Control
@@ -112,6 +112,25 @@ describe('the week options', () => {
     // The Monday purge would have deleted A at 14:00 on the day it was offered for.
     expect(rows[A].expires_at).toBe('2026-10-19T14:00:00.000Z')
     expect(rows[C].expires_at).toBeNull()
+  })
+
+  it('keeps on the piece the cards and words its option answers, for good, and refuses a bad covers list', async () => {
+    const CARD = '00000000-0000-4000-8000-0000000000c1'
+    expect(parseOptions({ week_start: '2026-10-12', series: 's', options: [{ id: A, rank: 1, pitch: 'p', why_now: 'w', covers: ['bad id!'] }] }).problems)
+      .toEqual([`option ${A} covers must be a list of up to 20 must_cover ids`])
+    const out = await call('POST', { week_start: '2026-10-12', series: 'follow_the_money', options: [
+      { id: A, rank: 1, pitch: 'p', why_now: 'w', covers: [CARD, 'said-1', CARD] },
+    ] })
+    expect(out.status).toBe(200)
+    const rowA = () => db.tables.content_ideas.find(r => r.id === A)!
+    expect(rowA().meta.covers).toEqual([CARD, 'said-1'])
+    // Offered again without covers, or cleared from a later day, the piece still says which card it answers.
+    await call('POST', { week_start: '2026-10-12', series: 'follow_the_money', options: [{ id: A, rank: 1, pitch: 'p', why_now: 'w' }] })
+    expect(rowA().meta.covers).toEqual([CARD, 'said-1'])
+    await call('POST', { week_start: '2026-10-12', series: 'follow_the_money', options: [{ id: C, rank: 1, pitch: 'p', why_now: 'w' }] })
+    expect(rowA().meta.week_option).toBeUndefined()
+    expect(rowA().meta.covers).toEqual([CARD, 'said-1'])
+    expect(mergeCovers(undefined, undefined)).toBeNull()
   })
 
   it('keeps an option alive through its week, and never shortens a later expiry', () => {

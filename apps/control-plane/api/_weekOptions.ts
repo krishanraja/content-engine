@@ -8,12 +8,17 @@
 // (control-center src/lib/weekPlan.ts, reading the live rows) shows them, best
 // first, until he picks. Nothing here picks or schedules: a pick is his press.
 
-export interface WeekOptionInput { id: string; rank: number; pitch: string; why_now: string; recommended?: boolean }
+/** covers: the Sunday gather's must_cover ids this option answers (Inspiration cards he routed, his words), as on the
+ *  board idea it came from. Kept on the piece as meta.covers, so the card a picked piece answers is known for good
+ *  (inspiration_card_pieces, migration 20261114090000; krishanraja/inspirationhouse docs/TWO_WAY.md, step 3). */
+export interface WeekOptionInput { id: string; rank: number; pitch: string; why_now: string; recommended?: boolean; covers?: string[] }
 export interface WeekOptionMeta { week_start: string; series: string; rank: number; pitch: string; why_now: string; recommended: boolean; by: string; at: string }
 
 const YMD = /^\d{4}-\d{2}-\d{2}$/
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 export const MAX_OPTIONS = 4
+const COVER_ID = /^[A-Za-z0-9_-]{1,80}$/
+export const MAX_COVERS = 20
 
 /** True when the date is a Monday (a week starts on Monday). */
 export function isMonday(ymd: string): boolean {
@@ -57,10 +62,25 @@ export function parseOptions(body: unknown): { week_start: string; series: strin
     if (!pitch || pitch.length > 700) { problems.push(`option ${id} needs a pitch of up to 700 characters`); continue }
     if (!why || why.length > 400) { problems.push(`option ${id} needs a why_now of up to 400 characters, with the date`); continue }
     if (!Number.isInteger(rank) || rank < 1 || rank > 9) { problems.push(`option ${id} needs a rank from 1`); continue }
+    let covers: string[] | undefined
+    if (r.covers !== undefined) {
+      if (!Array.isArray(r.covers) || r.covers.length > MAX_COVERS || !r.covers.every(c => typeof c === 'string' && COVER_ID.test(c))) {
+        problems.push(`option ${id} covers must be a list of up to ${MAX_COVERS} must_cover ids`); continue
+      }
+      covers = [...new Set(r.covers as string[])]
+    }
     seen.add(id)
-    options.push({ id, rank, pitch, why_now: why, recommended: r.recommended === true })
+    options.push({ id, rank, pitch, why_now: why, recommended: r.recommended === true, ...(covers ? { covers } : {}) })
   }
   if (options.length > MAX_OPTIONS) problems.push(`at most ${MAX_OPTIONS} options a day`)
   if (options.filter(o => o.recommended).length > 1) problems.push('recommend one option at most')
   return { week_start, series, options, problems }
+}
+
+/** The ids a piece answers after this write: what it held, and this option's, once each, in order. Never shrinks: an
+ *  option offered again without covers keeps what the piece already answers. */
+export function mergeCovers(held: unknown, more: string[] | undefined): string[] | null {
+  const before = Array.isArray(held) ? held.filter((c): c is string => typeof c === 'string') : []
+  if (!more?.length) return before.length ? before : null
+  return [...new Set([...before, ...more])]
 }
