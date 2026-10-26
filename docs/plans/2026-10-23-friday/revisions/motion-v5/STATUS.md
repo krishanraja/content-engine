@@ -1,5 +1,7 @@
 # Friday motion rebuild, 26 October 2026
 
+**Superseded: Krish rejected v5 as PowerPoint clipart with inadequate photographic art direction and brand colour. See ../motion-v6/BRIEF.md. V5 is not authority to scale.**
+
 Krish's latest ruling: "The audio is fine. The quality of the motion video is awful. What I had in mind was like this" followed by the Drive reference 18qgh6rQ6d5uDKolkP_R7ZK7gsfVUdzTf, "for quality and motion and how it adds to the narrative".
 
 The complete 84.9-second v4 short audio is approved. The visual treatment is rejected. This supersedes the earlier v3 study direction as authority for scaling that execution. Do not publish or extend v4 as accepted. The v4.1 route-alignment render completed before the correction was received and is also not a reviewed design.
