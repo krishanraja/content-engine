@@ -1,0 +1,127 @@
+{
+  "status": "review_candidate_not_release",
+  "file": "Friday-short-camera-v10-REVIEW.mp4",
+  "sha256": "f63ac309bafee0fa489e287c2fefb856dd9bab80e8047a6a7704904deb5151a4",
+  "frames": 2592,
+  "seconds": 86.4,
+  "audio_edit": {
+    "status": "candidate_not_release",
+    "source_sha256": {
+      "cam-short": "4954e3c9dc4e3a4df5548c5469100e48c7a34cc0e0a209eb189951d55449fb0b"
+    },
+    "spans": [
+      {
+        "source": "cam-short",
+        "a": 0,
+        "b": 27.638,
+        "off": 0.0,
+        "samples": 1326624
+      },
+      {
+        "source": "cam-short",
+        "a": 29.2,
+        "b": 31.72,
+        "off": 27.636,
+        "samples": 120960
+      },
+      {
+        "source": "cam-short",
+        "a": 33.1,
+        "b": 37.4,
+        "off": 30.154,
+        "samples": 206400
+      },
+      {
+        "source": "cam-short",
+        "a": 39.72,
+        "b": 66.188,
+        "off": 34.452,
+        "samples": 1270464
+      },
+      {
+        "source": "cam-short",
+        "a": 67.72,
+        "b": 74.4,
+        "off": 60.918,
+        "samples": 320640
+      },
+      {
+        "source": "cam-short",
+        "a": 82.95,
+        "b": 92.25070833333334,
+        "off": 67.596,
+        "samples": 446434
+      }
+    ],
+    "crossfade_seconds": 0.002,
+    "seconds": 76.89670833333334,
+    "audio_sha256": "a1f07c92ab7c8d7636a13d1d6d833bb8967ccd11abbc894637673cb110988650",
+    "evidence": "audio-qa/*alignment.json actual source CTC, not listening approval",
+    "unresolved": [
+      "Native listening discrimination failed; no audio release approval",
+      "ALL/THE and YOU/THIS coarticulation do not meet 40ms clearance; 2ms diagnostic crossfade only"
+    ]
+  },
+  "native_listening": "failed_controls_no_approval",
+  "full_visual_playback": false,
+  "board_write": false,
+  "making_write": false,
+  "music": {
+    "track_id": "no-curves-instrumental",
+    "title": "NO CURVES (Instrumental Version)",
+    "artist": "Superintendent McCupcakes",
+    "sha256": "291f2fa0d9b1c363bdc1f01935d30de57ca365314115ef5e0c51e39e9a1091e2",
+    "file": "ES_NO CURVES (Instrumental Version) - Superintendent McCupcakes.mp3",
+    "ledger": "C:\\Users\\krish\\dev\\mindmake\\content-engine-friday-23oct\\config\\music-library.json",
+    "levels": {
+      "status": "approved",
+      "intro_lufs": -16,
+      "bed_lufs": -31,
+      "outro_lufs": -18,
+      "ramp_down_s": 0.5,
+      "ramp_up_s": 0.8,
+      "final_integrated_lufs": -14,
+      "tolerance_lu": 1,
+      "max_true_peak_dbtp": -1.0,
+      "approved_by": "Krish",
+      "approved_on": "2026-10-12",
+      "approval_words": "Feel free to tighten it if I stumbled. For now you just take control of this entire thing, get the videos produced, and have the publish board ready for me to publish absolutely everything, including the videos."
+    },
+    "gains_db": {
+      "intro": 3.4,
+      "bed": -19.5,
+      "outro": -6.1
+    },
+    "placed_lufs": {
+      "intro": -19.4,
+      "voice": -11.5,
+      "outro": -11.9
+    },
+    "windows": {
+      "intro": [
+        0.0,
+        3.56
+      ],
+      "voice": [
+        4.06,
+        78.486
+      ],
+      "outro": [
+        79.286,
+        85.4
+      ]
+    },
+    "placement": "straight",
+    "start_s": 0.0,
+    "chosen_for": {
+      "seconds": 86.4,
+      "platforms": [
+        "shorts",
+        "reels",
+        "tiktok",
+        "linkedin"
+      ]
+    },
+    "chosen_for_from": "the track the config names, for this cut alone"
+  }
+}

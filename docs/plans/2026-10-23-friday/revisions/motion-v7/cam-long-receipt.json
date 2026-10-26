@@ -1,0 +1,125 @@
+{
+  "status": "review_candidate_not_release",
+  "file": "Friday-long-camera-v11-REVIEW.mp4",
+  "sha256": "3816322d85198026ebbde74236013413ac13855344c6b16ac6d03f76e4e4202f",
+  "frames": 9914,
+  "seconds": 330.466667,
+  "audio_edit": {
+    "status": "candidate_not_release",
+    "source_sha256": {
+      "cam-long": "87819f842b762fa6d572db639a53830f72f210090369d344cf8f9d6a86f58090"
+    },
+    "spans": [
+      {
+        "source": "cam-long",
+        "a": 0,
+        "b": 128.355,
+        "off": 0.0,
+        "samples": 6161040
+      },
+      {
+        "source": "cam-long",
+        "a": 130.25,
+        "b": 154.45,
+        "off": 128.345,
+        "samples": 1161600
+      },
+      {
+        "source": "cam-long",
+        "a": 158.45,
+        "b": 326.8786666666667,
+        "off": 152.535,
+        "samples": 8084576
+      }
+    ],
+    "crossfade_seconds": 0.01,
+    "seconds": 320.96366666666665,
+    "audio_sha256": "cd823209445edcd5fcef550f4c4f2d72318eea86b530524de44e572ce57d36cd",
+    "evidence": "audio-qa/*alignment.json actual source CTC, not listening approval",
+    "unresolved": [
+      "Native listening discrimination failed; no audio release approval"
+    ]
+  },
+  "native_listening": "failed_controls_no_approval",
+  "full_visual_playback": false,
+  "board_write": false,
+  "making_write": false,
+  "music": {
+    "track_id": "no-curves-instrumental",
+    "title": "NO CURVES (Instrumental Version)",
+    "artist": "Superintendent McCupcakes",
+    "sha256": "291f2fa0d9b1c363bdc1f01935d30de57ca365314115ef5e0c51e39e9a1091e2",
+    "file": "ES_NO CURVES (Instrumental Version) - Superintendent McCupcakes.mp3",
+    "ledger": "C:\\Users\\krish\\dev\\mindmake\\content-engine-friday-23oct\\config\\music-library.json",
+    "levels": {
+      "status": "approved",
+      "intro_lufs": -16,
+      "bed_lufs": -31,
+      "outro_lufs": -18,
+      "ramp_down_s": 0.5,
+      "ramp_up_s": 0.8,
+      "final_integrated_lufs": -14,
+      "tolerance_lu": 1,
+      "max_true_peak_dbtp": -1.0,
+      "approved_by": "Krish",
+      "approved_on": "2026-10-12",
+      "approval_words": "Feel free to tighten it if I stumbled. For now you just take control of this entire thing, get the videos produced, and have the publish board ready for me to publish absolutely everything, including the videos."
+    },
+    "gains_db": {
+      "intro": -5.0,
+      "bed": -20.0,
+      "outro": -7.0
+    },
+    "windows": {
+      "intro": [
+        0.0,
+        3.69
+      ],
+      "voice": [
+        4.19,
+        31.19
+      ],
+      "outro": [
+        322.975,
+        329.4667
+      ]
+    },
+    "mode": "episode",
+    "pieces": [
+      {
+        "kind": "open",
+        "at": [
+          0.0,
+          34.19
+        ],
+        "from_track_s": 0.0,
+        "core": [
+          4.19,
+          31.19
+        ],
+        "gain_db": -18.0
+      },
+      {
+        "kind": "close",
+        "at": [
+          314.175,
+          330.467
+        ],
+        "from_track_s": 34.19,
+        "core": [
+          315.175,
+          322.175
+        ],
+        "gain_db": -20.2
+      }
+    ],
+    "chosen_for": {
+      "seconds": 92.0,
+      "platforms": [
+        "youtube",
+        "substack"
+      ]
+    },
+    "chosen_for_from": "the track the config names, for this cut alone"
+  }
+}

@@ -1,0 +1,90 @@
+[
+  {
+    "file": "Friday-long-camera-v11-REVIEW.mp4",
+    "sha256": "3816322d85198026ebbde74236013413ac13855344c6b16ac6d03f76e4e4202f",
+    "audio_decode_exit": 0,
+    "streams": [
+      {
+        "codec_type": "video",
+        "width": 1920,
+        "height": 1080,
+        "duration": "330.466667",
+        "nb_frames": "9914",
+        "side_data_list": [
+          {}
+        ]
+      },
+      {
+        "codec_type": "audio",
+        "duration": "330.466667",
+        "nb_frames": "15492"
+      }
+    ]
+  },
+  {
+    "file": "Friday-long-voiceover-v10-REVIEW.mp4",
+    "sha256": "77da2533785b78c70308406a809cd97e3616eb13465bcfba0fff6a012f3e0e26",
+    "audio_decode_exit": 0,
+    "streams": [
+      {
+        "codec_type": "video",
+        "width": 1920,
+        "height": 1080,
+        "duration": "330.933333",
+        "nb_frames": "9928",
+        "side_data_list": [
+          {}
+        ]
+      },
+      {
+        "codec_type": "audio",
+        "duration": "330.933292",
+        "nb_frames": "15514"
+      }
+    ]
+  },
+  {
+    "file": "Friday-short-camera-v10-REVIEW.mp4",
+    "sha256": "f63ac309bafee0fa489e287c2fefb856dd9bab80e8047a6a7704904deb5151a4",
+    "audio_decode_exit": 0,
+    "streams": [
+      {
+        "codec_type": "video",
+        "width": 1080,
+        "height": 1920,
+        "duration": "86.400000",
+        "nb_frames": "2592",
+        "side_data_list": [
+          {}
+        ]
+      },
+      {
+        "codec_type": "audio",
+        "duration": "86.400000",
+        "nb_frames": "4051"
+      }
+    ]
+  },
+  {
+    "file": "Friday-short-voiceover-v7-REVIEW.mp4",
+    "sha256": "3c4bb49834b5eb015aa35b8dc60d278edcb71fc243497ced1fab9f0417dfcf36",
+    "audio_decode_exit": 0,
+    "streams": [
+      {
+        "codec_type": "video",
+        "width": 1080,
+        "height": 1920,
+        "duration": "84.900000",
+        "nb_frames": "2547",
+        "side_data_list": [
+          {}
+        ]
+      },
+      {
+        "codec_type": "audio",
+        "duration": "84.900000",
+        "nb_frames": "3981"
+      }
+    ]
+  }
+]

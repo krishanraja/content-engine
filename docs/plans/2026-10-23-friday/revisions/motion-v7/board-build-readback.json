@@ -1,0 +1,16 @@
+{
+  "expected_build": "95c921bd526229d1d4a9bf63de9adfead6c24e3ce2590b70fa0a7e4001a129cb",
+  "source_html_sha256": "29b4f7a0d6b62a1c43a5e7ce2501a000ed2eaa8b9f1acc81136c76528912122c",
+  "draft_sha256": "a36ec94d4c4350b42260d4e9d0cf28dc8baf7207f0cc07559ed29f38ceb4caac",
+  "verify": [],
+  "same_panels": {
+    "ideas": true,
+    "monday": true,
+    "wednesday": true
+  },
+  "old_review_words_unchanged": true,
+  "added_locked_article_and_channel_copy": true,
+  "existing_assets_absent": [],
+  "publication": false,
+  "status": "draft_with_review_hold"
+}

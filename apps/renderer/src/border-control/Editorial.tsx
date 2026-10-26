@@ -16,7 +16,7 @@ function Mark({a,name,x,y,w=150}:{a:Record<string,string>;name:string;x:number;y
 function Atmosphere({a}:{a:Record<string,string>}){return <><Photo src={a.hardware!} opacity={.33}/><rect width={1080} height={1920} fill={I} opacity={.45}/></>}
 function GenericPhone({a,name,f=100}:{a:Record<string,string>;name:string;f?:number}){return <><Photo src={a.genericPhone!}/><g transform="translate(278 180) rotate(13)"><rect x={-25} y={-20} width={330} height={130} rx={4} fill={['Claude','ChatGPT'].includes(name)?I:P}/><Mark a={a} name={name} x={0} y={0} w={85}/><Text x={106} y={61} size={48} font={sans} fill={['Claude','ChatGPT'].includes(name)?P:I}>{name}</Text></g><g opacity={1-go(f,30,68)}><path d="M222 424L507 498L474 591L185 514Z" fill="#e8e5d9"/></g></>}
 
-function Scene({id,p}:{id:string;p:ShortProps}){
+export function Scene({id,p}:{id:string;p:ShortProps}){
  const f=useCurrentFrame(),a=p.assets
  if(id==='S08-lives')return <Photographic frames={245} assets={a}/>
  if(id==='S11-deleted')return <AbsoluteFill style={{background:I,color:P}}>

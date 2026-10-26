@@ -1,0 +1,140 @@
+{
+  "status": "review_candidate_not_release",
+  "file": "Friday-long-voiceover-v10-REVIEW.mp4",
+  "sha256": "77da2533785b78c70308406a809cd97e3616eb13465bcfba0fff6a012f3e0e26",
+  "frames": 9928,
+  "seconds": 330.933333,
+  "audio_edit": {
+    "status": "candidate_not_release",
+    "source_sha256": {
+      "vo-long": "30ed0af98c2cd1190ff74c927fdfa123429967c8a700855106b5720fcf46b50d",
+      "donor": "007db593baa467b5f25b1a928521e30a6f4256d84e1c0c726d7504100f08b6c5"
+    },
+    "spans": [
+      {
+        "source": "vo-long",
+        "a": 0,
+        "b": 34.15,
+        "off": 0.0,
+        "samples": 1639200
+      },
+      {
+        "source": "donor",
+        "a": 16.756,
+        "b": 17.18,
+        "off": 34.14,
+        "samples": 20352
+      },
+      {
+        "source": "vo-long",
+        "a": 34.15,
+        "b": 247.87,
+        "off": 34.554,
+        "samples": 10258560
+      },
+      {
+        "source": "vo-long",
+        "a": 249.205,
+        "b": 309.84,
+        "off": 248.264,
+        "samples": 2910480
+      },
+      {
+        "source": "vo-long",
+        "a": 310.86,
+        "b": 323.4012916666667,
+        "off": 308.889,
+        "samples": 601982
+      }
+    ],
+    "crossfade_seconds": 0.01,
+    "seconds": 321.4302916666667,
+    "audio_sha256": "de4388fd1ac5deb57ea86f0746fb559c862513adac13637d3d305284b74cfdcd",
+    "evidence": "audio-qa/*alignment.json actual source CTC, not listening approval",
+    "unresolved": [
+      "Native listening discrimination failed; no audio release approval"
+    ]
+  },
+  "native_listening": "failed_controls_no_approval",
+  "full_visual_playback": false,
+  "board_write": false,
+  "making_write": false,
+  "music": {
+    "track_id": "no-curves-instrumental",
+    "title": "NO CURVES (Instrumental Version)",
+    "artist": "Superintendent McCupcakes",
+    "sha256": "291f2fa0d9b1c363bdc1f01935d30de57ca365314115ef5e0c51e39e9a1091e2",
+    "file": "ES_NO CURVES (Instrumental Version) - Superintendent McCupcakes.mp3",
+    "ledger": "C:\\Users\\krish\\dev\\mindmake\\content-engine-friday-23oct\\config\\music-library.json",
+    "levels": {
+      "status": "approved",
+      "intro_lufs": -16,
+      "bed_lufs": -31,
+      "outro_lufs": -18,
+      "ramp_down_s": 0.5,
+      "ramp_up_s": 0.8,
+      "final_integrated_lufs": -14,
+      "tolerance_lu": 1,
+      "max_true_peak_dbtp": -1.0,
+      "approved_by": "Krish",
+      "approved_on": "2026-10-12",
+      "approval_words": "Feel free to tighten it if I stumbled. For now you just take control of this entire thing, get the videos produced, and have the publish board ready for me to publish absolutely everything, including the videos."
+    },
+    "gains_db": {
+      "intro": -5.0,
+      "bed": -20.0,
+      "outro": -7.0
+    },
+    "windows": {
+      "intro": [
+        0.0,
+        3.69
+      ],
+      "voice": [
+        4.19,
+        31.19
+      ],
+      "outro": [
+        324.639,
+        329.9333
+      ]
+    },
+    "mode": "episode",
+    "pieces": [
+      {
+        "kind": "open",
+        "at": [
+          0.0,
+          34.19
+        ],
+        "from_track_s": 0.0,
+        "core": [
+          4.19,
+          31.19
+        ],
+        "gain_db": -18.0
+      },
+      {
+        "kind": "close",
+        "at": [
+          315.839,
+          330.933
+        ],
+        "from_track_s": 34.19,
+        "core": [
+          316.839,
+          323.839
+        ],
+        "gain_db": -20.2
+      }
+    ],
+    "chosen_for": {
+      "seconds": 92.0,
+      "platforms": [
+        "youtube",
+        "substack"
+      ]
+    },
+    "chosen_for_from": "the track the config names, for this cut alone"
+  }
+}

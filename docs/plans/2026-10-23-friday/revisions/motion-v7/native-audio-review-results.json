@@ -1,0 +1,373 @@
+{
+  "authority": "Krish: Yes, approve the additional $3. Just get the four videos finished and the Publish Board ready. Focus on shipping now.",
+  "ceiling_usd": 3,
+  "reserved_usd": 0.56,
+  "estimated_returned_usage_usd": 0.08644349999999999,
+  "count_including_failures": 8,
+  "verdict": "failed_control_discrimination_no_release_listening_approval",
+  "route_changes": "Two authentication failures used encrypted list values. Individual scoped env retrieval fixed access and read-only model check returned 200. Text-only realtime failed known-bad reel; bounded gpt-audio-1.5 and native audio-output diagnostic controls also failed. No more paid calls launched. No reviewer qualified or enforcement activated.",
+  "results": [
+    {
+      "id": "A3",
+      "source_sha256": "d474d8c871f70642150a2089158eefe6266e19a1dddcc91b13acb4b631cfdb3b",
+      "estimated_usd": 0.005612,
+      "response": {
+        "object": "realtime.response",
+        "id": "resp_EdNPnxCOiVY8e1I2licc6",
+        "status": "completed",
+        "status_details": null,
+        "output": [
+          {
+            "id": "item_EdNPnO3NlE54pHdn9YNtA",
+            "type": "message",
+            "status": "completed",
+            "role": "assistant",
+            "content": [
+              {
+                "type": "output_text",
+                "text": "```json\n{\n  \"transcript\": \"\",\n  \"audible_defects\": [],\n  \"uncertainty\": \"No audible speech was present in the provided clip (silence/noise only).\"\n}\n```"
+              }
+            ],
+            "phase": "final_answer"
+          }
+        ],
+        "conversation_id": "conv_EdNPmPTBkdfYezFGxZO0T",
+        "output_modalities": [
+          "text"
+        ],
+        "max_output_tokens": 1024,
+        "audio": {
+          "output": {
+            "format": {
+              "type": "audio/pcm",
+              "rate": 24000
+            },
+            "voice": "marin"
+          }
+        },
+        "usage": {
+          "total_tokens": 293,
+          "input_tokens": 197,
+          "output_tokens": 96,
+          "input_token_details": {
+            "text_tokens": 107,
+            "audio_tokens": 90,
+            "image_tokens": 0,
+            "cached_tokens": 0,
+            "cached_tokens_details": {
+              "text_tokens": 0,
+              "audio_tokens": 0,
+              "image_tokens": 0
+            }
+          },
+          "output_token_details": {
+            "text_tokens": 96,
+            "audio_tokens": 0,
+            "reasoning_tokens": 48
+          }
+        },
+        "metadata": null
+      },
+      "qualified": false
+    },
+    {
+      "id": "B",
+      "source_sha256": "d52c400fdea3dd55c942798e008344dc98b1b19cecf5fd4ec99e2139e0bc9cca",
+      "estimated_usd": 0.00854,
+      "response": {
+        "object": "realtime.response",
+        "id": "resp_EdNQBFNftAZDIqE4tBozl",
+        "status": "completed",
+        "status_details": null,
+        "output": [
+          {
+            "id": "item_EdNQBvq4hw8fowQalPlV2",
+            "type": "message",
+            "status": "completed",
+            "role": "assistant",
+            "content": [
+              {
+                "type": "output_text",
+                "text": "```json\n{\n  \"transcript\": \"They refused, gave China\u2019s line, or got it wrong. Claude, an American AI, answered all the American questions, of course. So where it lives decides who sees your data.\",\n  \"audible_defects\": [],\n  \"uncertainty\": \"No obvious uncertainty from what is audible. No clear clipped syllables, repeated words, abrupt internal edits, or unnatural joins were detectable without the actual audio.\"\n}\n```"
+              }
+            ],
+            "phase": "final_answer"
+          }
+        ],
+        "conversation_id": "conv_EdNQ9qKcFFtSyJcNZqa8h",
+        "output_modalities": [
+          "text"
+        ],
+        "max_output_tokens": 1024,
+        "audio": {
+          "output": {
+            "format": {
+              "type": "audio/pcm",
+              "rate": 24000
+            },
+            "voice": "marin"
+          }
+        },
+        "usage": {
+          "total_tokens": 415,
+          "input_tokens": 197,
+          "output_tokens": 218,
+          "input_token_details": {
+            "text_tokens": 107,
+            "audio_tokens": 90,
+            "image_tokens": 0,
+            "cached_tokens": 0,
+            "cached_tokens_details": {
+              "text_tokens": 0,
+              "audio_tokens": 0,
+              "image_tokens": 0
+            }
+          },
+          "output_token_details": {
+            "text_tokens": 218,
+            "audio_tokens": 0,
+            "reasoning_tokens": 118
+          }
+        },
+        "metadata": null
+      },
+      "qualified": false
+    },
+    {
+      "id": "C",
+      "source_sha256": "3bb089c2681d7bf920c1130db4d96c38611497a31a450ae7ce22629d665cc0cf",
+      "estimated_usd": 0.011668,
+      "response": {
+        "object": "realtime.response",
+        "id": "resp_EdNQej6muQYtvDnnvyc1k",
+        "status": "completed",
+        "status_details": null,
+        "output": [
+          {
+            "id": "item_EdNQetQCWX2Zs2RqwadZi",
+            "type": "message",
+            "status": "completed",
+            "role": "assistant",
+            "content": [
+              {
+                "type": "output_text",
+                "text": "```json\n{\n  \"transcript\": \"they refused. gave China\u2019s line or got it wrong. Claude and an AI answered all the American questions, of course. So where it lives decides who sees your data.\",\n  \"audible_defects\": [\n    {\n      \"time\": \"0:00-0:01\",\n      \"issue\": \"Possible abrupt start/clipped context at beginning\",\n      \"words_around\": \"they refused.\"\n    },\n    {\n      \"time\": \"0:05-0:07\",\n      \"issue\": \"Unnatural join/internal edit suspected\",\n      \"words_around\": \"Claude and an AI\"\n    }\n  ],\n  \"uncertainty\": \"No explicit silence is audible within the provided clip. The phrase \\\"Claude and an AI\\\" sounds like it may contain a splice or re-recorded segment, but the words themselves are audible.\"\n}\n```"
+              }
+            ],
+            "phase": "final_answer"
+          }
+        ],
+        "conversation_id": "conv_EdNQcOO2OP6e5DrYpr1xW",
+        "output_modalities": [
+          "text"
+        ],
+        "max_output_tokens": 1024,
+        "audio": {
+          "output": {
+            "format": {
+              "type": "audio/pcm",
+              "rate": 24000
+            },
+            "voice": "marin"
+          }
+        },
+        "usage": {
+          "total_tokens": 546,
+          "input_tokens": 195,
+          "output_tokens": 351,
+          "input_token_details": {
+            "text_tokens": 107,
+            "audio_tokens": 88,
+            "image_tokens": 0,
+            "cached_tokens": 0,
+            "cached_tokens_details": {
+              "text_tokens": 0,
+              "audio_tokens": 0,
+              "image_tokens": 0
+            }
+          },
+          "output_token_details": {
+            "text_tokens": 351,
+            "audio_tokens": 0,
+            "reasoning_tokens": 163
+          }
+        },
+        "metadata": null
+      },
+      "qualified": false
+    },
+    {
+      "id": "D",
+      "source_sha256": "4158b0c155dc7d8cec27eb2a11ee3de3b52de95a5360572022f03e13bef59419",
+      "estimated_usd": 0.026396,
+      "response": {
+        "object": "realtime.response",
+        "id": "resp_EdNRFybkzEzV22II1Kmk0",
+        "status": "completed",
+        "status_details": null,
+        "output": [
+          {
+            "id": "item_EdNRFCyHAtbEzqq3npdew",
+            "type": "message",
+            "status": "completed",
+            "role": "assistant",
+            "content": [
+              {
+                "type": "output_text",
+                "text": "```json\n{\n  \"transcript\": \"Claude, an American AI, answered all. So where it lives decides who sees your data. Use DeepSeek, another Chinese AI, and it keeps, or your data, in China. I asked Claude, ChatGPT and DeepSeek. Sure, but just check what it tells you. Now, here's what I'd do with this information if I were you. I would just, they're using, and where it lives. And of course, keep a second, got the same questions and answered every single one. And China has a company here. Stores what you type in China. But you can bring an AI home. Opening a sales office in Taiwan, which China says belongs to it. Questions to your team's AI, to one from another country. And have a, is also what most of us want from a holiday, a fling. Then there's Curse.\",\n  \"audible_defects\": [],\n  \"uncertainty\": \"No audio was provided to verify what is actually audible, detect speech/silence, or identify edits, clips, or joins. This transcript is based on the supplied text and may not match a real recording. Any timing information for defects cannot be determined.\"\n}\n```"
+              }
+            ],
+            "phase": "final_answer"
+          }
+        ],
+        "conversation_id": "conv_EdNRCTrTqLjAztgrgnda0",
+        "output_modalities": [
+          "text"
+        ],
+        "max_output_tokens": 1024,
+        "audio": {
+          "output": {
+            "format": {
+              "type": "audio/pcm",
+              "rate": 24000
+            },
+            "voice": "marin"
+          }
+        },
+        "usage": {
+          "total_tokens": 1025,
+          "input_tokens": 599,
+          "output_tokens": 426,
+          "input_token_details": {
+            "text_tokens": 107,
+            "audio_tokens": 492,
+            "image_tokens": 0,
+            "cached_tokens": 0,
+            "cached_tokens_details": {
+              "text_tokens": 0,
+              "audio_tokens": 0,
+              "image_tokens": 0
+            }
+          },
+          "output_token_details": {
+            "text_tokens": 426,
+            "audio_tokens": 0,
+            "reasoning_tokens": 172
+          }
+        },
+        "metadata": null
+      },
+      "qualified": false
+    },
+    {
+      "id": "E",
+      "source_sha256": "3bb089c2681d7bf920c1130db4d96c38611497a31a450ae7ce22629d665cc0cf",
+      "estimated_usd": 0.0042835,
+      "response": {
+        "id": "chatcmpl-EdNSYFzuVjydXZiGBzCZ9Gc75vN4P",
+        "object": "chat.completion",
+        "created": 1793053678,
+        "model": "gpt-audio-1.5",
+        "choices": [
+          {
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "{\"transcript\": \"They refused. Gave China's li- or got it wrong. Claude, an AI, answered all the American questions of course. So where it lives decides who sees your data.\", \"audible_defects\": [{\"time\": 1.2, \"issue\": \"word clipped internally\", \"context\": \"China's li-\"}, {\"time\": 1.2, \"issue\": \"speech abruptly cut, possible edit\", \"context\": \"li- or got\"}], \"uncertainty\": \"The phrase after 'China's li-' is incomplete and unclear.\"}",
+              "refusal": null,
+              "annotations": []
+            },
+            "finish_reason": "stop"
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 191,
+          "completion_tokens": 121,
+          "total_tokens": 312,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "audio_tokens": 88,
+            "text_tokens": 103,
+            "image_tokens": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "audio_tokens": 0,
+            "accepted_prediction_tokens": 0,
+            "rejected_prediction_tokens": 0,
+            "text_tokens": 121
+          }
+        },
+        "service_tier": "default",
+        "system_fingerprint": "fp_bd509b8ec4"
+      },
+      "qualified": false
+    },
+    {
+      "id": "F",
+      "source_sha256": "3bb089c2681d7bf920c1130db4d96c38611497a31a450ae7ce22629d665cc0cf",
+      "estimated_usd": 0.029944,
+      "response": {
+        "object": "realtime.response",
+        "id": "resp_EdNTyCdNTDzECtY8wHhAD",
+        "status": "incomplete",
+        "status_details": {
+          "type": "incomplete",
+          "reason": "max_output_tokens"
+        },
+        "output": [
+          {
+            "id": "item_EdNTyP69MEko1NfyCFHPy",
+            "type": "message",
+            "status": "incomplete",
+            "role": "assistant",
+            "content": [
+              {
+                "type": "output_audio",
+                "transcript": "{\"transcript\":\"they refused, gave China\u2019s line, or got it wrong. Claude and an MNAI answered all the American questions, of course. So where it lives decides who sees your data.\",\"audible_defects\":\"Possible minor uncertainty around the phrase \u201can MNAI\u201d due to similar-sounding wording; otherwise no"
+              }
+            ],
+            "phase": "final_answer"
+          }
+        ],
+        "conversation_id": "conv_EdNTxwAYmngOD4Pqlrgs7",
+        "output_modalities": [
+          "audio"
+        ],
+        "max_output_tokens": 512,
+        "audio": {
+          "output": {
+            "format": {
+              "type": "audio/pcm",
+              "rate": 24000
+            },
+            "voice": "marin"
+          }
+        },
+        "usage": {
+          "total_tokens": 720,
+          "input_tokens": 208,
+          "output_tokens": 512,
+          "input_token_details": {
+            "text_tokens": 120,
+            "audio_tokens": 88,
+            "image_tokens": 0,
+            "cached_tokens": 0,
+            "cached_tokens_details": {
+              "text_tokens": 0,
+              "audio_tokens": 0,
+              "image_tokens": 0
+            }
+          },
+          "output_token_details": {
+            "text_tokens": 153,
+            "audio_tokens": 359,
+            "reasoning_tokens": 59
+          }
+        },
+        "metadata": null
+      },
+      "qualified": false
+    }
+  ]
+}

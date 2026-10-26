@@ -1,0 +1,17 @@
+{
+  "files": [
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct four cuts/Friday-four-cuts-production-source.zip",
+      "sha256": "fdec809141abe607e0c5bb76f2fe6edd2b6a6ed84d9451b0f979e6afdf58ee6e",
+      "bytes": 13843517
+    }
+  ],
+  "upload": {
+    "sent": 1,
+    "already": 0,
+    "confirmed_only": 0
+  },
+  "readback": "every listed file independently downloaded and SHA-256 matched",
+  "board_write": false,
+  "making_write": false
+}

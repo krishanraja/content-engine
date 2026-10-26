@@ -1,0 +1,44 @@
+[
+  {
+    "file": "Friday-short-camera-v10-REVIEW.srt",
+    "from": "Quen",
+    "to": "Qwen",
+    "occurrences": 1,
+    "basis": "named entities and enumerated AI models in locked script; ASR raw response retained"
+  },
+  {
+    "file": "Friday-short-camera-v10-REVIEW.srt",
+    "from": "Chachabitty in DeepSeek",
+    "to": "ChatGPT and DeepSeek",
+    "occurrences": 1,
+    "basis": "named entities and enumerated AI models in locked script; ASR raw response retained"
+  },
+  {
+    "file": "Friday-long-camera-v11-REVIEW.srt",
+    "from": "Quen",
+    "to": "Qwen",
+    "occurrences": 1,
+    "basis": "named entities and enumerated AI models in locked script; ASR raw response retained"
+  },
+  {
+    "file": "Friday-long-camera-v11-REVIEW.srt",
+    "from": "Kimmy",
+    "to": "Kimi",
+    "occurrences": 1,
+    "basis": "named entities and enumerated AI models in locked script; ASR raw response retained"
+  },
+  {
+    "file": "Friday-long-voiceover-v10-REVIEW.srt",
+    "from": "Quen",
+    "to": "Qwen",
+    "occurrences": 1,
+    "basis": "named entities and enumerated AI models in locked script; ASR raw response retained"
+  },
+  {
+    "file": "Friday-long-voiceover-v10-REVIEW.srt",
+    "from": "Kimmy",
+    "to": "Kimi",
+    "occurrences": 1,
+    "basis": "named entities and enumerated AI models in locked script; ASR raw response retained"
+  }
+]

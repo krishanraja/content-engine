@@ -1,0 +1,26 @@
+[
+  {
+    "name": "bank-interior.png",
+    "sha256": "17194d003ccb7ac2e13bfd364ddb21848bf6356c77693fe150791827a76239e5",
+    "origin": "Built-in image generation, Friday-specific illustrative photograph",
+    "eligible_as_future_piece_asset": false
+  },
+  {
+    "name": "blank-passports.png",
+    "sha256": "0da50df2a2ab9068221eb2ccdbc70fda6df512892155a4d2c343d17e397ea9e0",
+    "origin": "Built-in image generation, Friday-specific illustrative photograph",
+    "eligible_as_future_piece_asset": false
+  },
+  {
+    "name": "components.png",
+    "sha256": "50c056ee02f7db45a68a4ced1eb60a7527c2df5bfb744e5054620fb3ba9bd9b3",
+    "origin": "Built-in image generation, Friday-specific illustrative photograph",
+    "eligible_as_future_piece_asset": false
+  },
+  {
+    "name": "musk.jpg",
+    "sha256": "8aab8262f1da5ae98dec83f7ed677c1aed5164130ddf73d51d80ad922ee40b45",
+    "origin": "Verified licensed photograph",
+    "eligible_as_future_piece_asset": false
+  }
+]

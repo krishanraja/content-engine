@@ -1,0 +1,27 @@
+{
+  "files": [
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct motion v7/Friday-short-voiceover-v7-REVIEW.mp4",
+      "sha256": "3c4bb49834b5eb015aa35b8dc60d278edcb71fc243497ced1fab9f0417dfcf36",
+      "bytes": 11702239
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct motion v7/final-receipt.json",
+      "sha256": "0efe1af3edd15b443b8ec128a1d3ed40338a3130f70c6df216da3ddd63043ca3",
+      "bytes": 621
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct motion v7/short-final.srt",
+      "sha256": "4f3405d15686ba72104a1c541d236ce7780090cdf71b3e045a0ada4175cdb734",
+      "bytes": 2650
+    }
+  ],
+  "upload": {
+    "sent": 2,
+    "already": 0,
+    "confirmed_only": 1
+  },
+  "readback": "every listed file independently downloaded and SHA-256 matched",
+  "board_write": false,
+  "making_write": false
+}

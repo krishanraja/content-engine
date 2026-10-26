@@ -1,0 +1,92 @@
+{
+  "files": [
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct four cuts/cam-long-chapters.txt",
+      "sha256": "82d1d2ea0d7339485359307695e4ed6f80ec55694cbae64334de4cdf01f44520",
+      "bytes": 227
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct four cuts/cam-long-publishing-copy.md",
+      "sha256": "6d327021cc917ed0adea899c770d930f3b10242de063f1b86bad9c844a3a074b",
+      "bytes": 6881
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct four cuts/CREDITS.txt",
+      "sha256": "11f07fa341f9622c626d814beeaa2a30a349701d130d2520b0ef6852685e8b7c",
+      "bytes": 303
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct four cuts/Friday-long-camera-v11-REVIEW.mp4",
+      "sha256": "3816322d85198026ebbde74236013413ac13855344c6b16ac6d03f76e4e4202f",
+      "bytes": 88822697
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct four cuts/Friday-long-camera-v11-REVIEW.srt",
+      "sha256": "fc82dee21ac799c378d43102905db0cf9a7a237ae9041b32eff221fc6b5c84f9",
+      "bytes": 11209
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct four cuts/Friday-long-voiceover-v10-REVIEW.mp4",
+      "sha256": "77da2533785b78c70308406a809cd97e3616eb13465bcfba0fff6a012f3e0e26",
+      "bytes": 29964101
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct four cuts/Friday-long-voiceover-v10-REVIEW.srt",
+      "sha256": "5b52c6e471b874ea09a9aa304bed190b49f4b68332c1a273a2eaf9e5974a15b9",
+      "bytes": 9807
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct four cuts/Friday-short-camera-v10-REVIEW.mp4",
+      "sha256": "f63ac309bafee0fa489e287c2fefb856dd9bab80e8047a6a7704904deb5151a4",
+      "bytes": 48311944
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct four cuts/Friday-short-camera-v10-REVIEW.srt",
+      "sha256": "fb37ea5cde2fa6a6cf03a540ba7b240fe4695f9346922a40b6f92cd3c317d72c",
+      "bytes": 3037
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct four cuts/Friday-short-voiceover-v7-REVIEW.mp4",
+      "sha256": "3c4bb49834b5eb015aa35b8dc60d278edcb71fc243497ced1fab9f0417dfcf36",
+      "bytes": 11702239
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct four cuts/Friday-short-voiceover-v7-REVIEW.srt",
+      "sha256": "4f3405d15686ba72104a1c541d236ce7780090cdf71b3e045a0ada4175cdb734",
+      "bytes": 2650
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct four cuts/REVIEW-STATUS.txt",
+      "sha256": "57b4824c2b850ed2968c709b13729aeaf2f8bf6653414fb1bc73abebcf1463cd",
+      "bytes": 414
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct four cuts/thumb-tall-1080x1920.jpg",
+      "sha256": "fc9605d4bf6246826c03fc62bf95bb8240bacedf7976c567423471d0d1b9fa31",
+      "bytes": 152561
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct four cuts/thumb-wide-1280x720.jpg",
+      "sha256": "f7657c4c786d982127de0a53b7e010f1a16da86b1d15d980668ace85f7f535d9",
+      "bytes": 117625
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct four cuts/vo-long-chapters.txt",
+      "sha256": "eec1f3d1977d7ca60f943dc1e05d6f55c9f72ed4cda7f540f10e21c11f610225",
+      "bytes": 227
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct four cuts/vo-long-publishing-copy.md",
+      "sha256": "154205f99c2d75cd2f58026c24a9267594d91a162325d0df067aad7d6acf24bf",
+      "bytes": 6881
+    }
+  ],
+  "upload": {
+    "sent": 14,
+    "already": 0,
+    "confirmed_only": 2
+  },
+  "readback": "every listed file independently downloaded and SHA-256 matched",
+  "board_write": false,
+  "making_write": false
+}

@@ -1,0 +1,22 @@
+{
+  "status": "review_candidate",
+  "file": "Friday-short-voiceover-v7-REVIEW.mp4",
+  "sha256": "3c4bb49834b5eb015aa35b8dc60d278edcb71fc243497ced1fab9f0417dfcf36",
+  "duration": 84.9,
+  "frames": 2547,
+  "approved_audio_byte_identical": true,
+  "aac_sha256": "e68bfd976b229a34966d48e2793e331da572af89f1f2958a677a562c14652393",
+  "edits": {
+    "status": "candidate",
+    "start": 1907,
+    "end": 2077,
+    "close": 2276,
+    "total": 2547,
+    "outroFrames": 271,
+    "brandFrame": 181,
+    "audioChange": false
+  },
+  "full_playback_review": false,
+  "board_write": false,
+  "making_write": false
+}
