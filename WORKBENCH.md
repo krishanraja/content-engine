@@ -1,5 +1,13 @@
 # Workbench: where we are and what's next
 
+## 26 October: Monday to its one sign-off; Wednesday and Friday next (Claude)
+
+- **Asked (Krish, 26 Oct):** "yes, both good, and yes to the fix - already recorded both videos, and they're in the inbox. Get everything from here ready ... this week's publish board should be up to date. Monday's content should be moved and taken all the way to Codex ... then you should interview me on Wednesday and Friday's narrative arcs, and then get everything ready in Wednesday and Friday's board ready to send to teleprompter".
+- **Done:** sign-off recorded on both Monday cuts; the scripts step no longer waits on the paid spine judge (PR #181, learning `no-paid-call-before-a-free-step`, encoded). Monday's article rewritten in his voice and stored; 22 verbatim sources filed (free pre-check clean); takes fetched, transcribed and lined up (`docs/plans/2026-10-26-monday/takes/`); creative direction for both cuts (`creative-direction.json`, `receipts.md`) timed against the takes; logos (`logos/`, SOURCES.md; the Character.AI wordmark may be the 2023 one); titles cold-read twice; `storyboard-signoff.md` on the board's Monday Drafts step. Board republished (build 851da30a): Monday in review, Wednesday and Friday picked.
+- **Waiting on Krish:** one line on `docs/plans/2026-10-26-monday/storyboard-signoff.md` ("Signed off, all recommended" takes every default), including up to $1.00 for the paid fact and spine checks.
+- **Next:** on his line: `creative_direction.py` signed block with his words and the scripts' hashes; fact gate then `spine_check.py judge` (within $1.00); cover-facts.json, cover and thumbnails (visual gate), video cards, `build.py` and `send.py`; `locked/CODEX_PROMPT.md` for Codex. Then the Wednesday and Friday interviews (research in `docs/plans/2026-10-26-week/research-wed.md`, `research-fri.md`; Friday still needs "the past" researched).
+- **Tools in a cloud session:** the full `requirements.lock.txt` does not install on Python 3.13 here (mediapipe 0.10.21 has no build); the transcriber works with its four pinned versions alone (`faster-whisper==1.2.0 av==18.1.0 ctranslate2==4.8.1 onnxruntime==1.29.0`). Filing sources needs `NODE_USE_ENV_PROXY=1 ENGINE_OPERATOR_TOKEN=injected-by-the-session-proxy`.
+
 ## 26 October: production and social growth have separate owners
 
 Krish's ruling is recorded in docs/GROWTH-HANDOFF.md and AGENTS.md.
