@@ -23,27 +23,6 @@ Friday production with its existing production owner. Growth briefs receive
 a checked creative package through the existing editorial/Studio path. This change updates repository guidance
 only; it does not mutate a tracked Studio session, learning record or board.
 
-## 25 October: the week of 26 October planned and its board published (Claude)
-
-- **Asked:** "for the week of 26 October. Sunday is my recording day: build the Ideas tab, then once I've picked all three days, interview me one question at a time on each piece until its narrative arc is locked, then the scripts." Then: "Just finish it all here." (learning `finish-the-job-here`, open: the cost guard's G1 message still says hand over, and changing it needs his yes.)
-- **Done:** board https://content.krishraja.com/board/2026-10-26 published and read back (build 20de89a5...). Ideas tab: four checked ideas a day (`docs/plans/2026-10-26-week/ideas.json`), three kill passes by a separate reader (`killed-second-pass.json`), options written to the week page, board item `week-publish-board-2026-10-26`.
-- **Next:** his three picks (`board_web.py read 2026-10-26 picks`), then `make-piece` per day: the story one question at a time, then scripts into Teleprompter.
-- **Friday 23 Oct in Teleprompter:** both cuts are already there as "Two passports" (sent by hand); the record does not hold them and they were left alone.
-
-## 24 October: the Sunday loop rebuilt for his recording day (Claude)
-
-- **Asked:** a week's audit (Codex's failure report), then "tomorrow's Ideas Board is SIGNIFICANTLY improved", his
-  Inspiration House read properly, styles he can choose from that push, Claude owning scripts, article and creative
-  direction, Codex producing from it. Sunday is his recording day.
-- **Done (branch `claude/bold-lovelace-o09phe`):** `_inspirationSources.ts` (the gather reads the Inspiration House
-  and content-watcher; `must_cover`), `board_feed.py cover`, `week_board.style_problems` and `coverage_problems`,
-  `formats` in `config/style-references.json`, `creative_direction.py` with the kit.py and make.py gate,
-  `docs/CREATIVE_DIRECTION.md`, the Sunday rhythm, the feeder freeze, the start route in AGENTS.md, failure and
-  learning entries.
-- **Next, Sunday 25 Oct:** `/plan-week` for the week of 26 Oct. The gather stops until this change is deployed to
-  production (`sources.inspiration`). Three routed cards must be on the board or accounted for: the Duet page,
-  "Reading is free. Sending needs a yes." and the models-by-country picture.
-- **Decided by Krish (2026-10-25):** the Sunday rhythm's approval stands ("Yes that is the approval I want on record"); no required merge checks ("No merge checks."), so a session merges only after CI is green.
 ## 24 October: Friday locked and signed off; Codex makes the videos (Claude)
 
 - **Signed off by Krish:** storyboard, no trim, titles, outline ("signed off, keep, all A"), prediction A2 ("a2"), and
@@ -69,37 +48,6 @@ only; it does not mutate a tracked Studio session, learning record or board.
   `2 Covers and images/Evidence` and the storyboards under `2 Covers and images/Storyboard` in the post's library
   folder. The Anthropic and GitHub reference clip (Video Engine > Inspiration) had still not reached the library;
   Codex fetches it first (`motion-system.md`).
-
-## 24 October: the Inbox read from Google by its ID; every Drive touchpoint fails loudly (Claude)
-
-Handover: `docs/handovers/2026-10-24-drive-by-id.md`. Branch `claude/drive-by-id`, a pull request here and one in
-control-center.
-
-- **Built:** the `recordings_drive_inbox` job (`apps/control-plane/api/library/recordings/drive-inbox.ts`, every ten
-  minutes) lists the Inbox by its Drive folder ID as the engine's existing Google service account (read-only, the
-  same account the inspiration scan already uses successfully) and streams each new take into the recordings store
-  under its sha256 with the manifest `confirm` writes; `recording.py`, `recording_match.py` and `produce-video` are
-  unchanged. Each home computer's pass now reports what it found (`POST /api/library/recordings/lane`): a stale
-  `MINDMAKE_*` setting (passed over for `config/studio.json`), an unreachable Inbox, a missing library, no pinned
-  Python, a failed send or publish. The job fails with the machine named while a fresh report holds a problem, so
-  Control Center shows it. Settings are read from the registry each pass (no restart needed), and the first pass
-  after boot waits a minute for Google Drive. `paths.ts` passes over a stale setting and `doctor` names it.
-- **Proved:** 10 new tests (`tests/control-plane/recordings-drive-inbox.test.ts`), the stale-setting test in
-  `tests/paths-drive.test.ts`, and a local run of the real streaming copy: 50 MB through a fixed Content-Length PUT,
-  sha256 equal on both ends. **Not proved:** a new take copied by the live job (the first runs found every take already stored), and the
-  PowerShell changes on Windows (no PowerShell here; Windows CI runs the source install only).
-- **Waiting on Krish (in this order):** (1) none for the Inbox: the job reads it through the "anyone with the link" sharing on
-  `makeyourmindup`; before that sharing is turned off, share the Inbox with the engine's service account as Viewer; (2) delete the `MINDMAKE_DRIVE_ROOT`, `MINDMAKE_MEDIA_INBOX`,
-  `MINDMAKE_ARCHIVE_ROOT`, `MINDMAKE_POSTS_ROOT`, `MINDMAKE_INSPIRATION` and `MINDMAKE_LIBRARY_ROOT` user settings on
-  both home computers; (3) where Claude sessions should write in Drive now (`drive_destinations` names `CURRENT` and
-  `inbox`, both gone); (4) whether to clear the dead `drive_folders` and `briefing_drive_folder_id` rows. Seen, not
-  changed: the Inbox and Content Inspo folders are shared "anyone with the link can edit".
-- **Left, with reasons:** `One Off Content Ideas` is not in Drive any more (`docs/DRIVE.md`); a home computer cannot
-  check an `H:` path against a Drive ID (Drive for desktop does not expose it), so it checks the path exists instead;
-  the KeePass file, ffmpeg reading takes, the library sync and archive filing stay on `H:` paths by necessity.
-- **Next:** the job runs `ok` again since 2026-10-26 11:10 UTC (a 120-character style-reference name had failed every
-  pass until PR #176); drop a real take with both machines off
-  and see it in `python scripts/post-pack/recording.py list`.
 
 ## The idea queue: read it first
 
