@@ -108,7 +108,7 @@ PAD = 96
 TERRITORY = {'follow_the_money': ('money',), 'under_the_hood': ('hood', 'under the hood'),
              'mind_the_gap': ('gap',)}
 TONES = {'plain': 'var(--cream)', 'dim': 'var(--muted)', 'answer': 'var(--mint)', 'moved': 'var(--accent)'}
-KINDS = ('bars', 'table', 'statement', 'columns', 'shot', 'panels', 'timeline', 'dots')
+KINDS = ('bars', 'table', 'statement', 'columns', 'shot', 'panels', 'timeline', 'dots', 'evidence')
 
 # A shot's ring and shade (17 Oct 2026 review: the mint ring on the cream page was about 1.3:1 and 3 to 5px
 # wide once scaled down, so the line he is talking about barely showed on a phone).
@@ -416,13 +416,24 @@ def check_spec(spec):
                  '"we\'ve not made any use of business logos as we\'re supposed to")')
         if card.get('kind') not in KINDS:
             fail(f'{name}: kind must be one of {", ".join(KINDS)}')
+        if card['kind'] == 'evidence':
+            rows = card.get('evidence')
+            if not isinstance(rows, list) or not 1 <= len(rows) <= 3 or not all(
+                    isinstance(row, dict) and isinstance(row.get('label'), str) and row['label'].strip()
+                    and isinstance(row.get('value'), str) and row['value'].strip() for row in rows):
+                fail(f'{name}: evidence needs one to three labelled, nonempty text rows')
+            scene = card.get('scene') or ''
+            if scene not in ('', 'compare', 'mail', 'calendar', 'drafts', 'news', 'journey'):
+                fail(f'{name}: unknown evidence scene')
+            if scene in ('compare', 'calendar', 'drafts', 'news', 'journey') and len(rows) != 2:
+                fail(f'{name}: this evidence scene needs exactly two objects')
         if card['kind'] == 'shot':
             parts = [p for s in shot_stacks(card) for p in s]
             if not parts or not all(p.get('image') for p in parts) or not str(card.get('source') or '').strip():
                 fail(f'{name}: a shot shows a real captured page ("image", or "parts" each with an "image") and says where '
                      'and when it is from ("source")')
         heading = card.get('title') or ' '.join(l.get('text', '') for l in card.get('lines', []))
-        why = title_check.gate(heading, spec.get('_source'))
+        why = title_check.gate(heading, spec.get('_source'), piece_id=spec.get('piece_id'))
         if why:
             fail(f'{name}: its heading "{heading}" is not ready (house rule TITLE_EARNS_THE_CLICK: the anti-dumb floor, then only a title Krish picked): ' + '; '.join(why))
 
@@ -793,6 +804,37 @@ def body_of(card, base):
         return ''.join(out)
     title = card.get('title') or (card.get('lines') or [{}])[0].get('text')
     out = [header(card, base, title)]
+    if kind == 'evidence':
+        # Evidence recreations use the same house drawer and fonts. They never
+        # contain a raw screenshot, private account chrome or an invented score.
+        rows = card.get('evidence', [])
+        scene = card.get('scene')
+        out.append(f'<div class="evidence {e(scene or "rows")}">')
+        if scene in ('compare', 'drafts', 'calendar', 'news'):
+            for i, row in enumerate(rows):
+                active = ' active' if card.get('focus') == i else ''
+                out.append(f'<div class="e-object{active}"><div class="e-object-label">{e(row["label"])}</div>'
+                           f'<div class="e-object-value">{e(row["value"])}</div></div>')
+        elif scene == 'journey':
+            out.append('<div class="e-route-line"></div>')
+            for i, row in enumerate(rows):
+                out.append(f'<div class="e-stop"><div class="e-dot">{i+1}</div><div class="e-object-label">{e(row["label"])}</div>'
+                           f'<div class="e-object-value">{e(row["value"])}</div></div>')
+        elif scene == 'mail':
+            out.append('<div class="e-letter"><div class="e-envelope">✉</div>')
+            for row in rows:
+                out.append(f'<div class="e-mail-line"><strong>{e(row["label"])}</strong> {e(row["value"])}</div>')
+            out.append('</div>')
+        for i, row in enumerate(rows if not scene else []):
+            tone = ' answer' if row.get('answer') else ''
+            if card.get('focus') == i:
+                tone += ' active'
+            out.append(f'<div class="e-row{tone}"><div class="e-label">{e(row["label"])}</div>'
+                       f'<div class="e-value">{e(row["value"])}</div></div>')
+        out.append('</div>')
+        if card.get('qualification'):
+            out.append(f'<div class="e-qualification">{e(card["qualification"])}</div>')
+        return ''.join(out)
     if kind == 'shot':
         out.append(shot_body(card))
         if card.get('note'):
@@ -847,6 +889,45 @@ def page(card, base, accent):
     t = brand.house()['tokens']
     css = (CSS.replace('INKSOFT', t['ink_soft']).replace('INK', t['ink']).replace('CREAM', t['cream'])
            .replace('MINT', t['mint']).replace('ACCENT', accent))
+    if card.get('kind') == 'evidence':
+        css += '''
+        .k-evidence .hd h1 { min-height: 0; }
+        .k-evidence .kl { justify-content: flex-end; height: 60px; }
+        .k-evidence .kl .logos img { height: 60px; }
+        .k-evidence .evidence { display:flex; flex-direction:column; gap:18px; margin-top:20px; }
+        .k-evidence .e-row { display:flex; gap:36px; align-items:center; padding:24px 30px;
+          background:var(--ink-soft); border-left:8px solid var(--accent); }
+        .k-evidence .e-label { flex:0 0 340px; font:700 60px/1.08 'Archivo'; text-wrap:balance; }
+        .k-evidence .e-value { font:600 64px/1.1 'Archivo'; text-wrap:balance; }
+        .k-evidence .answer { border-color:var(--mint); }
+        .k-evidence .answer .e-value { color:var(--mint); }
+        .k-evidence .e-qualification { font:500 60px/1.15 'Archivo'; color:var(--cream); margin-top:auto; }
+        .k-evidence .e-row.active { outline:3px solid var(--cream); outline-offset:3px; }
+        .k-evidence .evidence.compare, .k-evidence .evidence.drafts,
+        .k-evidence .evidence.calendar, .k-evidence .evidence.news { display:grid; grid-template-columns:1fr 1fr; gap:28px; }
+        .k-evidence .e-object { padding:40px; min-height:360px; background:var(--ink-soft); border-top:9px solid var(--accent);
+          display:flex; flex-direction:column; gap:36px; }
+        .k-evidence .e-object.active { border-color:var(--mint); }
+        .k-evidence .e-object-label { font:700 60px/1.08 'Archivo'; }
+        .k-evidence .e-object-value { font:400 82px/1.05 'Anton'; text-wrap:balance; }
+        .k-evidence .drafts .e-object { border:3px solid var(--cream); border-top:32px solid var(--accent); }
+        .k-evidence .calendar .e-object { border:3px solid var(--cream); border-top:32px solid var(--accent); }
+        .k-evidence .news .e-object-value { font-size:92px; }
+        .k-evidence .journey { display:grid; grid-template-columns:1fr 1fr; position:relative; text-align:center; padding-top:28px; }
+        .k-evidence .e-route-line { position:absolute; height:8px; background:var(--accent); left:24%; right:24%; top:75px; }
+        .k-evidence .e-stop { z-index:1; display:flex; flex-direction:column; align-items:center; gap:24px; }
+        .k-evidence .e-dot { width:100px; height:100px; display:grid; place-items:center; background:var(--ink); border:8px solid var(--accent);
+          border-radius:50%; font:400 60px 'Anton'; }
+        .k-evidence .e-stop .e-object-value { font-size:94px; max-width:620px; }
+        .k-evidence .e-letter { background:var(--cream); color:var(--ink); padding:32px 44px; border-radius:12px; }
+        .k-evidence .e-envelope { font:400 84px/1 'Archivo'; border-bottom:3px solid var(--ink); padding-bottom:16px; margin-bottom:18px; }
+        .k-evidence .e-mail-line { font:500 68px/1.15 'Archivo'; padding:16px 0; }
+        .k-evidence .e-mail-line strong { font-weight:800; }
+        '''
+        if card.get('for_article'):
+            # 64 px at a 1600 px canvas becomes 14.32 px in a 358 px phone column.
+            css += '''.k-evidence .e-label, .k-evidence .e-object-label,
+                      .k-evidence .e-qualification, .k-evidence .e-dot { font-size:64px; }'''
     cls = 'chapter' if card.get('kind') == 'statement' and card.get('chapter') else f'k-{card.get("kind", "")}'
     return (f'<!doctype html><html><head><meta charset="utf-8"><style>{brand.font_css()}{css}</style>'
             f'<script>{LAYOUT_JS}{TIMELINE_JS}</script></head>'
@@ -991,6 +1072,22 @@ def self_test():
 
         cols = {'file': 'c.png', 'kind': 'columns', 'kicker': 'K', 'title': 'T', 'logos': ['aa.svg'],
                 'columns': [{'label': 'L', 'logos': ['co.svg'], 'names': 'N'}]}
+        evidence = {'file': 'e.png', 'kind': 'evidence', 'title': 'Meta’s Muse left two drafts in Gmail', 'logos': ['aa.svg'],
+                    'evidence': [{'label': '<Grok>', 'value': 'Two & three'}],
+                    'qualification': 'One run only.'}
+        with title_check.picked_for_tests(['Meta’s Muse left two drafts in Gmail'], tmp):
+            check_spec({'series': 'under_the_hood', 'cards': [evidence]})
+            for rows in ([], [{'label': '', 'value': 'x'}], [{'label': 'x', 'value': ''}],
+                         [{'label': 'x', 'value': 'y'}] * 4):
+                try:
+                    check_spec({'series': 'under_the_hood', 'cards': [{**evidence, 'evidence': rows}]})
+                    check('invalid evidence rows are refused', False)
+                except SystemExit:
+                    pass
+        for scene in ('', 'compare', 'mail', 'calendar', 'drafts', 'news', 'journey'):
+            doc = page({**evidence, 'scene': scene}, tmp, accent)
+            check(f'{scene or "rows"}: evidence text is escaped and qualification is readable',
+                  '&lt;Grok&gt;' in doc and 'Two &amp; three' in doc and 'One run only.' in doc)
         doc = page(cols, tmp, accent)
         head = doc.split('<div class="hd">', 1)[1].split('</div></div>', 1)[0]
         check('a columns card draws its own "logos" on the kicker line (17 Oct 2026: the Artificial Analysis logo was never drawn)',

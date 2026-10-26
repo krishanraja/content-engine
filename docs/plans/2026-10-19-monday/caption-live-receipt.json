@@ -1,0 +1,26 @@
+{
+  "build_id": "b7ffc6e47f2bdd71619507308afb7f9fbfda21a4e54b9f3db82ff6ff3f01e62b",
+  "new_assets": [
+    {
+      "id": "monday-approved-captions",
+      "sha256": "933d38361ca97745d45cc63ce921514b6e9bb389e9bf5fe1cef575361bd100c9",
+      "bytes": 9431,
+      "type": "text/plain"
+    },
+    {
+      "id": "monday-approved-transcript",
+      "sha256": "f8d47b365059c5381e795ff236e259fd282cb726d33f941ca4f481ec9ae7fd6d",
+      "bytes": 5271,
+      "type": "text/plain"
+    }
+  ],
+  "unchanged_collections": {
+    "ticks": 0,
+    "links": 0,
+    "edits": 0,
+    "picks": 3,
+    "queue": 11,
+    "comments": 28
+  },
+  "publication_hold": "Existing article fact-check entry only; caption questions resolved."
+}

@@ -1308,8 +1308,25 @@ def card_input(path, start, stop):
     until 19 October, so a 13-minute deep cut with 51 cards turned about a million frames that were never
     shown, and took 3.5 hours: longer than a cloud container stays up (Krish: "are you saying we can never
     produce long videos?"). The pictures come out frame for frame the same."""
-    return ['-loop', '1', '-framerate', str(FPS), '-t', f'{max(0.1, stop - start + 0.5):.3f}',
+    moving = Path(path).suffix.lower() in {'.mp4', '.mov', '.mkv', '.webm'}
+    loop = ['-stream_loop', '-1'] if moving else ['-loop', '1', '-framerate', str(FPS)]
+    return [*loop, '-t', f'{max(0.1, stop - start + 0.5):.3f}',
             '-itsoffset', f'{start:.3f}', '-i', str(path)]
+
+
+def bounded_decode_inputs(inputs, threads=2):
+    """FFmpeg's codec thread option applies to one input, not all inputs.
+
+    Dozens of looping picture cards otherwise each create an automatic pool
+    (808 decoder threads on Wednesday's long cut). Keep stream order intact.
+    """
+    if type(threads) is not int or not 1 <= threads <= 8:
+        raise ValueError('Input decoder threads must be between one and eight')
+    result=[]
+    for value in inputs:
+        if value=='-i':result.extend(['-threads',str(threads)])
+        result.append(value)
+    return result
 
 
 def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix):
@@ -1384,7 +1401,11 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
                 g.append(f"[{n}:v]format=rgba,{f}[pp{n}]")
                 g.append(f"[{cur}][pp{n}]overlay=0:0:enable='between(t,{c['s']},{stop})'[c{r_i}_{j + 1}]")
                 cur, n = f'c{r_i}_{j + 1}', n + 1
-            g.append(f"[{cur}]fade=t=in:st={rs}:d={FADE_S}:alpha=1,fade=t=out:st={max(rs, re_ - FADE_S):.3f}:d={FADE_S}:alpha=1[run{r_i}]")
+            # With a sting in front, the first split-screen run must already
+            # be opaque at the cut. Fading it over the full-frame speaker
+            # creates a short double-image immediately after the intro.
+            fade_in='' if intro is not None and r_i==0 and rs<=1/FPS else f'fade=t=in:st={rs}:d={FADE_S}:alpha=1,'
+            g.append(f"[{cur}]{fade_in}fade=t=out:st={max(rs, re_ - FADE_S):.3f}:d={FADE_S}:alpha=1[run{r_i}]")
             g.append(f"[{last}][run{r_i}]overlay=0:0:enable='between(t,{rs},{re_})'[s{k}]")
             last, k = f's{k}', k + 1
     else:
@@ -1394,7 +1415,7 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
             g.append(f"[{n}:v]format=rgba,{card_fit(card, 1920 - px if px else 1920, 1080)}{f}[pp{n}]")
             g.append(f"[{last}][pp{n}]overlay=x={px}:y={py}:enable='between(t,{c['s']},{stop})'[s{k}]")
             last, n, k = f's{k}', n + 1, k + 1
-    if asp == '9x16' and cfg.get('logo', True) is not False:
+    if asp == '9x16' and intro is None and cfg.get('logo', True) is not False:
         # The makeyourmindup logo in the opening seconds of every tall video
         # (Krish, 2026-10-07: "put the Make Your Mind Up logo in the first
         # few seconds of the video somewhere on vertical video"). The PNG is
@@ -1414,6 +1435,10 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
         inputs += ['-loop', '1', '-framerate', str(FPS), '-t', f'{total:.3f}', '-i', str(P(st['png']))]
         g.append(f"[{last}][{n}:v]overlay=0:0:enable='between(t,{t0:.2f},{t0 + st.get('seconds', 3.5):.2f})'[s{k}]")
         last, n, k = f's{k}', n + 1, k + 1
+    if cfg.get('scoreboard'):
+        import scoreboard
+        g.extend(scoreboard.graph(last,'scored_main',asp,total,cfg['scoreboard']))
+        last='scored_main'
     # Overlay inputs include a fade tail. Bound the composed main picture to
     # its exact frame count before concat, so that tail cannot delay the outro.
     main_clock = f'fps={FPS},trim=end_frame={round(total*FPS)},setpts=N/({FPS}*TB),setsar=1,format=yuv420p'
@@ -1435,7 +1460,7 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
         parts.insert(0, '[iv]')
     g.append(f'{"".join(parts)}concat=n={len(parts)}:v=1:a=0[V]')
     inputs += ['-i', str(mix)]
-    return inputs, g, f'{n}:a'
+    return bounded_decode_inputs(inputs), g, f'{n}:a'
 
 
 def default_levels():
@@ -1620,13 +1645,27 @@ def self_test():
     same = lambda p: Path(p)
     _, g, audio = video_graph(fake, '9x16', same, Path('.'), Path('edited.mkv'), 20.0, [], ws, [720, 1280, 0, 0],
                               {'file': 'sting.mp4', 'frames': 45}, {'file': 'end.mp4', 'frames': 120}, Path('mix.wav'))
-    pill = next(i for i, line in enumerate(g) if "overlay=0:0:enable='between(t,0,3.00)'" in line)
-    main = next(i for i, line in enumerate(g) if line.startswith('[') and 'ass=t-9x16.ass' in line)
-    checks.append(('the tall logo pill is unchanged and laid on the main, so it starts after the sting', pill < main, True))
+    checks.append(('a branded intro is not followed by a second logo entrance',
+                   any("overlay=0:0:enable='between(t,0,3.00)'" in line for line in g), False))
     checks.append(('the sting goes first in the join, with no sound of its own in the picture graph', g[-1], '[iv][vm][ev]concat=n=3:v=1:a=0[V]'))
-    checks.append(('the sound is the finished mix', audio, '4:a'))
+    checks.append(('the sound is the finished mix', audio, '3:a'))
+    first_picture=[{'id':'first','panel':'card.png','s':0.0,'e':4.0}]
+    _, split_graph, _ = video_graph(fake, '9x16', same, Path('.'), Path('edited.mkv'), 20.0,
+        first_picture, ws, [720, 1280, 0, 0], {'file':'sting.mp4','frames':45},
+        {'file':'end.mp4','frames':120}, Path('mix.wav'))
+    first_run=next(line for line in split_graph if line.endswith('[run0]'))
+    checks.append(('the first split is fully visible after an intro, without a double presenter',
+        'fade=t=in:' not in first_run, True))
     _, g, audio = video_graph(fake, '9x16', same, Path('.'), Path('edited.mkv'), 20.0, [], ws, [720, 1280, 0, 0], None, {'file': 'end.mp4', 'frames': 120}, Path('mix.wav'))
+    checks.append(('without an intro the opening logo is retained',
+                   any("overlay=0:0:enable='between(t,0,3.00)'" in line for line in g), True))
     checks.append(('without a sting it is the main and the end card', (g[-1], audio), ('[vm][ev]concat=n=2:v=1:a=0[V]', '3:a')))
+    _, split_graph, _ = video_graph(fake, '9x16', same, Path('.'), Path('edited.mkv'), 20.0,
+        first_picture, ws, [720, 1280, 0, 0], None,
+        {'file':'end.mp4','frames':120}, Path('mix.wav'))
+    first_run=next(line for line in split_graph if line.endswith('[run0]'))
+    checks.append(('without an intro the first split still eases over the speaker',
+        'fade=t=in:' in first_run, True))
     _, g, _ = video_graph(fake, '9x16', same, Path('.'), Path('edited.mkv'), 20.0, [], ws, [720, 1280, 0, 0], None,
                           {'file': 'end.mp4', 'frames': 510, 'held_s': 13.0}, Path('mix.wav'))
     checks.append(('a long episode\'s end card holds its last frame for the end-screen tiles',
@@ -1640,6 +1679,14 @@ def self_test():
         checks.append(('with no approved track the cut has voice only and says so', (got, 'voice only' in (why or '')), (None, True)))
     checks += caption_self_test()
     checks += gate_self_test()
+    import scoreboard
+    rows=scoreboard.states([{'at_s':1,'grok':1,'muse':0},{'at_s':2,'grok':1,'muse':1}],3)
+    checks.append(('one tally begins level and changes only at its point events',[(r['start'],r['end'],r['grok'],r['muse'])for r in rows],[(0.,1,0,0),(1,2,1,0),(2,3,1,1)]))
+    for event in [{'at_s':1,'grok':2,'muse':0},{'at_s':1,'grok':-1,'muse':0},{'at_s':float('nan'),'grok':1,'muse':0}]:
+        rejected=False
+        try:scoreboard.states([event],3)
+        except ValueError:rejected=True
+        checks.append(('invalid or invented point event is refused: '+str(event),rejected,True))
     bad = [f'{label}: got {got!r}, want {want!r}' for label, got, want in checks if got != want]
     print('\n'.join(bad) if bad else f'quick-edit self-test passed: {len(checks)} checks')
     return 1 if bad else 0
@@ -1761,6 +1808,21 @@ def gate_self_test():
     checks.append(('with only the short cut\'s kit made, it is not known (music.py then asks for its floor)', piece_seconds({'kit': {}}, work)[0], None))
     # A sting with a loud tone on it, a voice, an end card.
     ff = lambda *a: subprocess.run(['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error', *map(str, a)], check=True)
+    # Decode a moving panel past its source duration: the native input must
+    # loop the movie, rather than applying the still-image demuxer option.
+    moving=work/'moving.mp4'
+    ff('-f','lavfi','-i','testsrc2=s=128x72:r=5:d=0.4','-an','-c:v','libx264','-threads','1',moving)
+    hashes=subprocess.check_output(['ffmpeg','-v','error',*card_input(moving,0,.8),'-map','0:v','-frames:v','4','-f','framemd5','-'],text=True)
+    decoded=[line.split(',')[-1].strip()for line in hashes.splitlines()if line and not line.startswith('#')]
+    checks.append(('moving evidence loops as moving pictures',len(decoded)==4 and decoded[0]!=decoded[1]and decoded[0]==decoded[2],True))
+    # Regression: evaluating a future point at t=0 formerly overflowed the
+    # font size before drawtext's enable expression could hide it.
+    import scoreboard
+    (work/'fonts').mkdir(exist_ok=True)
+    shutil.copy2(Path(__file__).parent/'fonts/Anton.ttf',work/'fonts/Anton.ttf')
+    score_graph=scoreboard.graph('0:v','v','9x16',100,{'events':[{'at_s':70,'grok':1,'muse':0}]})
+    subprocess.run(['ffmpeg','-y','-v','error','-f','lavfi','-i','color=s=1080x1920:r=24:d=0.1','-filter_complex',';'.join(score_graph),'-map','[v]','-frames:v','1','-threads','1','score.png'],cwd=work,check=True)
+    checks.append(('a point seventy seconds ahead renders safely at the opening frame',(work/'score.png').is_file(),True))
     loud = work / 'loud-sting.mp4'
     ff('-f', 'lavfi', '-i', 'color=c=0xB7A6FF:s=108x192:r=30:d=1.5', '-f', 'lavfi', '-i', 'sine=f=1000:d=1.5:r=48000',
        '-filter_complex', '[1:a]volume=0.9,aformat=channel_layouts=stereo[a]', '-map', '0:v', '-map', '[a]',
@@ -1971,6 +2033,34 @@ def doctor(as_json=False):
     return 1 if failed else 0
 
 
+def direction_problem(cfg):
+    """Why this config may not render, or None. Krish, 2026-10-24: production takes over from the scripts and visual
+    creative direction Claude locked; from 26 Oct a cut renders only from the signed direction kit.py checked, and only
+    while that file is byte for byte what was checked (docs/CREATIVE_DIRECTION.md)."""
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'post-pack'))
+    import creative_direction
+    from datetime import date as _date
+    piece = str(cfg.get('piece_id') or '')
+    if not cfg.get('date') and not re.match(r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$', piece, re.I):
+        return None  # a synthetic render (mix_test.py's media) is no piece; kit.py writes the date and piece id on every piece
+    try:
+        day = _date.fromisoformat(str(cfg.get('date') or '')[:10])
+    except ValueError:
+        day = creative_direction.FROM
+    if day < creative_direction.FROM:
+        return None
+    rec = cfg.get('creative_direction')
+    if not isinstance(rec, dict) or not rec.get('path'):
+        return ('no signed creative direction in this config: draw the kit with kit.py, which checks '
+                'creative-direction.json beside post.json (docs/CREATIVE_DIRECTION.md)')
+    path = Path(rec['path'])
+    if not path.is_absolute():
+        path = Path(__file__).resolve().parents[2] / path
+    if not path.exists() or hashlib.sha256(path.read_bytes()).hexdigest() != rec.get('sha256'):
+        return f'{path} changed (or is gone) since kit.py checked it; check it again and redraw the kit'
+    return None
+
+
 def main():
     global FPS
     if sys.argv[1:2] == ['--self-test']:
@@ -1993,6 +2083,9 @@ def main():
     cfg_path = Path(args.config).resolve()
     base = cfg_path.parent
     cfg = json.loads(cfg_path.read_text())
+    held = direction_problem(cfg)
+    if held and not args.plan:
+        sys.exit(f'make: {held}')
     cfg['quality_required'] = True
     archiving = archive_settings(args, cfg)
     P = lambda p: (base / p).resolve()
@@ -2279,6 +2372,7 @@ def main():
                        'transcript_document':{'sha256':quality.digest(wpath),'derivation':(document or {}).get('derivation')},'checks': {
                 'heard':speech_check,
                 'sync':{'status':'not_run'},
+                'motion':{'status':'not_run','reason':'Mandatory camera-motion assessment and final framing review; stabilise when needed'},
                 'loudness':{'status':'fail' if loudness_warnings(loudness, levels) else 'pass', 'measurements':loudness},
                 'visuals':{'status':'inconclusive','coverage':visual_checks,'reason':'Full-size card and font review required'},
                 'full_review':{'status':'not_run'}},

@@ -12,7 +12,8 @@ import {
 import { canonicalUrl, titleNorm, contentHash } from '../_text.js'
 import { embed, vectorLiteral } from '../_embeddings.js'
 import { UTILITY_MODEL } from '../_models.js'
-import { guardEngine } from '../_auth.js'
+import { guardEngine, operatorBearerAllowed } from '../_auth.js'
+import { absorbedQueuePatch } from '../_ideaQueue.js'
 
 // POST /api/content-ideas/synthesize
 //
@@ -44,7 +45,12 @@ import { guardEngine } from '../_auth.js'
 //      carrying the cluster summary + per-source citation strip.
 //   6. Flip each source card to state='absorbed' (NOT 'dropped') with
 //      meta.absorbed_into pointing to the new parent — so the source cards
-//      vanish from the active triage deck but stay traceable.
+//      vanish from the active triage deck but stay traceable. A source
+//      that was queued also leaves the queue (queued_at cleared) with
+//      meta.queue.absorbed_into and combined_by 'Krish'. Queued ideas are
+//      combined only on his word (Krish, 2026-10-21): from his own browser,
+//      or a session relaying his Combine tap or words with decided_by
+//      'Krish' and `said`; anything else is refused before any model call.
 //
 // The output goes to 'drafting', NEVER auto-'review'. Krish must open the
 // ContentComposer, eyeball the citations, and accept. The Five Standards
@@ -85,6 +91,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     target_lane?: string
     lane_slot?: string | null
     angle_hint?: string | null
+    decided_by?: string | null
+    said?: string | null
   }
 
   const sourceIds = Array.isArray(body.source_idea_ids)
@@ -110,10 +118,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     .select('id, idea, thesis, source_url, source_snippet, source_type, pillar_id, meta')
     .in('id', sourceIds)
   if (sErr) return res.status(500).json({ ok: false, error: `failed to load source cards: ${sErr.message}` })
+  const queuedRows = await supabase.from('content_ideas').select('id').in('id', sourceIds).not('queued_at', 'is', null)
+  if (queuedRows.error) return res.status(500).json({ ok: false, error: `failed to read the queue: ${queuedRows.error.message}` })
   if (!sources || sources.length < MIN_SOURCES) {
     return res.status(400).json({ ok: false, error: 'too few source cards found in DB' })
   }
   const sourceCards = sources as SourceCard[]
+
+  // A queued idea is combined only on Krish's word: his own browser, or a session relaying his tap or words.
+  const queuedIds = new Set(((queuedRows.data || []) as Array<{ id: string }>).map(r => r.id))
+  const combinedBy = operatorBearerAllowed(req) ? (body.decided_by === 'Krish' ? 'Krish' : null) : 'Krish'
+  const combinedSaid = typeof body.said === 'string' && body.said.trim() ? body.said.trim().slice(0, 600) : null
+  if (queuedIds.size && !combinedBy) {
+    return res.status(400).json({ ok: false, error: 'queued_needs_his_word', problems: [
+      `${[...queuedIds].join(', ')} ${queuedIds.size === 1 ? 'is' : 'are'} in his queue; combine only on his Combine tap or words, with decided_by 'Krish' and said`] })
+  }
 
   // Load lane voice config + Krish voice block in parallel.
   const cfgKey = laneSlot ? `content_lane_${targetLane}_${laneSlot}` : `content_lane_${targetLane}`
@@ -321,9 +340,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
   }
 
+  // The queue: an absorbed source that was queued leaves it, saying what it became and on whose word.
+  const unqueued: string[] = []
+  const absorbedQueued = allCitedIds.filter(id => queuedIds.has(id))
+  if (absorbedQueued.length && combinedBy) {
+    const { data: fresh } = await supabase.from('content_ideas').select('id, meta, updated_at').in('id', absorbedQueued)
+    for (const row of (fresh || []) as Array<Record<string, any>>) {
+      const patch = absorbedQueuePatch(row, inserted.id, 'Krish', combinedSaid, new Date().toISOString())
+      const up = await supabase.from('content_ideas').update(patch).eq('id', row.id).eq('updated_at', row.updated_at).select('id')
+      if (!up.error && up.data?.length) unqueued.push(row.id)
+    }
+  }
+
   return res.json({
     ok: true,
     id: inserted.id,
+    unqueued,
     cohesion_confidence: cohesion,
     sources_used: usedSourceIds.length,
     sources_discarded: discardedSourceIds.length,

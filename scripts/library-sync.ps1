@@ -131,11 +131,35 @@ function Get-StudioConfig {
   return $config
 }
 
+function Get-Setting([string]$Name) {
+  # The setting as the registry holds it now, so a setting changed or deleted
+  # after this long-running task started counts on the next pass.
+  foreach ($scope in @('User', 'Machine')) {
+    $value = [Environment]::GetEnvironmentVariable($Name, $scope)
+    if ($value) { return $value }
+  }
+  return [Environment]::GetEnvironmentVariable($Name, 'Process')
+}
+
 function Resolve-LibraryRoot($Config) {
-  $root = $LibraryRoot
-  if (-not $root) { $root = $env:MINDMAKE_LIBRARY_ROOT }
+  # -LibraryRoot, else runtime.library_root in config\studio.json, unless
+  # MINDMAKE_LIBRARY_ROOT names a folder that is there. A setting naming a
+  # missing folder while studio.json's is there is stale: it is reported to
+  # the engine (Krish, 2026-10-24) and studio.json's is used.
   $runtime = Get-Field $Config 'runtime'
-  if (-not $root) { $root = [string](Get-Field $runtime 'library_root') }
+  $configured = [string](Get-Field $runtime 'library_root')
+  $root = $LibraryRoot
+  if (-not $root) {
+    $setting = Get-Setting 'MINDMAKE_LIBRARY_ROOT'
+    $root = $configured
+    if ($setting) {
+      if ((Test-Path -LiteralPath $setting -PathType Container) -or -not $configured -or -not (Test-Path -LiteralPath $configured -PathType Container)) { $root = $setting }
+      else {
+        Write-Log "MINDMAKE_LIBRARY_ROOT on this machine names $setting, which is not there; using config\studio.json's $configured. Delete the setting."
+        $script:Problems.Add('library_env_stale')
+      }
+    }
+  }
   if (-not $root) { throw 'No library folder: set MINDMAKE_LIBRARY_ROOT, or runtime.library_root in config\studio.json.' }
   if (-not [System.IO.Path]::IsPathRooted($root)) { throw "The library folder must be a full path: $root" }
   $root = [System.IO.Path]::GetFullPath($root).TrimEnd('\')
@@ -153,7 +177,8 @@ function Resolve-LibraryRoot($Config) {
     }
   }
   if (-not (Test-Path -LiteralPath $root -PathType Container)) {
-    throw "The library folder $root cannot be reached. Check that Google Drive is running and signed in."
+    $script:Problems.Add('library_root_missing')
+    throw "The library folder $root cannot be reached. Check that Google Drive is running and signed in, and that config\studio.json runtime.library_root is its path."
   }
   return $root
 }
@@ -448,6 +473,19 @@ function Sync-BrandKit($Client, [string]$Root, [string]$WorkDir) {
   Write-Log "unpacked the published brand kit into $BrandKitFolder : $written file(s) new or changed, $same already the same"
 }
 
+function Send-LaneReport([bool]$Ok) {
+  # What this pass found, to the engine, so a failing sync reaches Control
+  # Center instead of only this log (api/library/_lanes.ts). Never stops a pass.
+  if (-not $Ok -and -not $script:Problems.Contains('library_root_missing')) { $script:Problems.Add('library_sync_failed') }
+  $client = New-HttpClient
+  try {
+    $machine = (($env:COMPUTERNAME -replace '[^A-Za-z0-9_-]', '-') + '-library')
+    [void](Invoke-Engine $client (Resolve-EngineUrl) (Get-RunnerToken) 'POST' '/api/library/recordings/lane' ([ordered]@{ machine = $machine; problems = @($script:Problems | Select-Object -Unique) }))
+  } catch {
+    Write-Log "this pass's report did not reach the engine: $($_.Exception.Message)"
+  } finally { $client.Dispose() }
+}
+
 function Invoke-Pass {
   $workDir = Join-Path ([System.IO.Path]::GetTempPath()) ('mindmake-library-sync-' + [guid]::NewGuid().ToString())
   [void][System.IO.Directory]::CreateDirectory($workDir)
@@ -474,6 +512,8 @@ function Invoke-Pass {
 
 # ---- one pass, or a pass every few minutes -----------------------------------
 
+$script:Problems = New-Object System.Collections.Generic.List[string]
+
 $mutex = [System.Threading.Mutex]::new($false, 'Local\MindmakeLibrarySync')
 $owned = $false
 try { $owned = $mutex.WaitOne(0) } catch [System.Threading.AbandonedMutexException] { $owned = $true }
@@ -497,8 +537,11 @@ try {
   $scriptSha = Get-Sha256 $scriptPath
   Write-Log "library sync started: a pass every $EveryMinutes minutes"
   while ($true) {
-    try { [void](Invoke-Pass) }
+    $script:Problems.Clear()
+    $ok = $false
+    try { $ok = [bool](Invoke-Pass) }
     catch { Write-Log "this pass stopped: $($_.Exception.Message). Trying again in $EveryMinutes minutes." }
+    Send-LaneReport $ok
     Start-Sleep -Seconds ($EveryMinutes * 60)
     if ((Get-Sha256 $scriptPath) -ne $scriptSha) {
       Write-Log 'library-sync.ps1 has changed; ending so the scheduled task starts the new version'

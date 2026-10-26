@@ -1,0 +1,230 @@
+{
+  "article_sha256": "b31894e3289bd6335c883c59fc345b603a492fb9c2db55c80464c3902ea53867",
+  "paragraphs": [
+    {
+      "opens": "I put Grok Bot and Meta's Muse head to head, two of the new done-for-you AI assistants. Fl",
+      "lane": "synthesis",
+      "words": 49
+    },
+    {
+      "opens": "If you're a leader trying one on your own life, I get it. Your holiday search sits beside ",
+      "lane": "synthesis",
+      "words": 28
+    },
+    {
+      "opens": "I ran five head-to-head tests. One assistant wrote a lovely reply to a scammer. So are the",
+      "lane": "synthesis",
+      "words": 25
+    },
+    {
+      "opens": "Every round gets two scores: mine, and the community's, meaning other people who have test",
+      "lane": "synthesis",
+      "words": 18
+    },
+    {
+      "opens": "Both count equally in what I'd try next. Mine show one run on my accounts. The research ad",
+      "lane": "synthesis",
+      "words": 30
+    },
+    {
+      "opens": "I asked each which emails needed a reply. Several asked to order six products and check pa",
+      "lane": "tests",
+      "words": 22
+    },
+    {
+      "opens": "Grok flagged them as likely scams and kept them out of my reply queue. Muse checked my ref",
+      "lane": "tests",
+      "words": 44
+    },
+    {
+      "opens": "They were scams. Well crafted emails. The reply matched the shop's published policy. Makin",
+      "lane": "tests",
+      "words": 29
+    },
+    {
+      "opens": "The research is kinder to Muse. [AI for Mortals ran a fake coffee business](https://www.ai",
+      "lane": "corpus",
+      "words": 41
+    },
+    {
+      "opens": "Each got a separate copy of the business. That earns Muse another look. It doesn't make th",
+      "lane": "corpus",
+      "words": 29
+    },
+    {
+      "opens": "**My test: Grok. Community: level.**",
+      "lane": "synthesis",
+      "words": 5
+    },
+    {
+      "opens": "London to New York, five nights in November, cabin bag only.",
+      "lane": "tests",
+      "words": 11
+    },
+    {
+      "opens": "Grok found a £335 return. Muse showed £328 through an agent, or £335 from the airline. The",
+      "lane": "tests",
+      "words": 36
+    },
+    {
+      "opens": "Both steered me away. Grok offered a shorter stop. Muse suggested a direct flight and list",
+      "lane": "tests",
+      "words": 45
+    },
+    {
+      "opens": "[The Montreal comparison](https://www.aiformortals.co/blog/grok-bot-vs-meta-muse-vs-chatgp",
+      "lane": "corpus",
+      "words": 62
+    },
+    {
+      "opens": "**My test: Grok, on points. Community: Grok.**",
+      "lane": "synthesis",
+      "words": 7
+    },
+    {
+      "opens": "Both found a real recurring charge. Both warned me to check use or dependencies before can",
+      "lane": "tests",
+      "words": 27
+    },
+    {
+      "opens": "I found no community test of this job for both tools.",
+      "lane": "corpus",
+      "words": 11
+    },
+    {
+      "opens": "The collection includes Muse subscription reports, without a matching Grok comparison or p",
+      "lane": "corpus",
+      "words": 27
+    },
+    {
+      "opens": "**My test: draw. Community: no result.**",
+      "lane": "synthesis",
+      "words": 6
+    },
+    {
+      "opens": "Grok said my calendar was empty and built its suggested times around open follow-ups. Muse",
+      "lane": "tests",
+      "words": 26
+    },
+    {
+      "opens": "The community adds a warning on Grok. [One operator running a small team of Grok bots](htt",
+      "lane": "corpus",
+      "words": 38
+    },
+    {
+      "opens": "They reported expired approval cards and a shared work board losing progress. I haven't in",
+      "lane": "corpus",
+      "words": 48
+    },
+    {
+      "opens": "**My test: draw. Community: a caution on Grok.**",
+      "lane": "synthesis",
+      "words": 8
+    },
+    {
+      "opens": "Grok's briefing was the more useful one. It also served up [an April article](https://www.",
+      "lane": "tests",
+      "words": 28
+    },
+    {
+      "opens": "[Chris Alarcon's first week with Grok](https://christopheralarcon.com/blog/what-is-grok-bo",
+      "lane": "corpus",
+      "words": 28
+    },
+    {
+      "opens": "A recurring briefing has a clear output to inspect. Finding customers leaves more room to ",
+      "lane": "corpus",
+      "words": 61
+    },
+    {
+      "opens": "**My test: level, for different reasons. Grok for being useful, Muse for being right. Comm",
+      "lane": "synthesis",
+      "words": 20
+    },
+    {
+      "opens": "I gave both the same correction. Make it less formal. Don't promise a date.",
+      "lane": "tests",
+      "words": 14
+    },
+    {
+      "opens": "Grok kept the right people copied in. It added a thank-you for \"kind words\", then flagged ",
+      "lane": "tests",
+      "words": 67
+    },
+    {
+      "opens": "On another email, Grok asked me what fee to quote. It left the price to me. I'd quite like",
+      "lane": "tests",
+      "words": 26
+    },
+    {
+      "opens": "Muse found Messenger chats I'd left hanging and helped draft a reply. Grok found conversat",
+      "lane": "tests",
+      "words": 23
+    },
+    {
+      "opens": "If you are obsessed with X/Twitter, you might love Grok Bot. Likewise if your entire socia",
+      "lane": "synthesis",
+      "words": 29
+    },
+    {
+      "opens": "The community backs that up. [One user had Muse research windscreen wipers](https://www.re",
+      "lane": "corpus",
+      "words": 34
+    },
+    {
+      "opens": "The wiper example has a clear moment to stop. The author reports that pause explicitly. Fi",
+      "lane": "corpus",
+      "words": 44
+    },
+    {
+      "opens": "And Google's Gemini, in its chat app? It promised a cabin bag on that direct flight. The r",
+      "lane": "tests",
+      "words": 24
+    },
+    {
+      "opens": "On my tests, Grok wins. It caught the scam Muse answered. That tips it for me.",
+      "lane": "synthesis",
+      "words": 16
+    },
+    {
+      "opens": "Add the community's results and it gets closer. Muse is more careful than my inbox made it",
+      "lane": "synthesis",
+      "words": 28
+    },
+    {
+      "opens": "So my call. For repeatable admin that creeps into work, start with Grok Bot. For personal ",
+      "lane": "synthesis",
+      "words": 33
+    },
+    {
+      "opens": "I did a piece last week on this, and what price you pay for these conveniences: access to ",
+      "lane": "synthesis",
+      "words": 37
+    },
+    {
+      "opens": "If you're a leader thinking these new shiny hypey tools are too good to be true, they're n",
+      "lane": "synthesis",
+      "words": 38
+    },
+    {
+      "opens": "- **Hand one boring weekly job to one assistant.** Grok if the job touches work, Muse if i",
+      "lane": "synthesis",
+      "words": 97
+    },
+    {
+      "opens": "*One initial run per job on my own accounts, 20 October 2026, with follow-ups recorded. Fa",
+      "lane": "synthesis",
+      "words": 30
+    }
+  ],
+  "counts": {
+    "synthesis": 504,
+    "tests": 422,
+    "corpus": 423
+  },
+  "evidence_narrative_share": {
+    "tests": 0.4994,
+    "corpus": 0.5006
+  },
+  "method": "Whole paragraph classification. Opening, method, verdict, round calls and tomorrow actions are synthesis. Evidence prose is approximately half each; neither anecdotes nor scores are pooled into a success rate."
+}

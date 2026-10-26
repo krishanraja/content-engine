@@ -289,7 +289,11 @@ checked; a file name that says `long`, `5min`, `short` or `90` does the same.
 An entry that says neither is packed with a warning that its length was
 checked against neither cut. `making.py <piece id> scripts long.md short.md`
 checks both and records them on the piece, the long cut first; one script
-alone never passes. It records each script's hash and when each cut's words
+alone never passes. A piece Krish called a 15-minute feature for
+(`config/features.json`, house rule FEATURE) takes the feature third,
+`scripts long.md short.md feature.md`, checked with `story_check.py --cut
+feature` (its entry's `"cut": "feature"`); three scripts for any other piece
+are refused. It records each script's hash and when each cut's words
 last changed, and when a cut's words change while a take of it is on the
 piece, it asks Krish on the board whether to use that take (one item,
 `take-<sha12>`, never reopened once answered). The story check also warns
@@ -416,11 +420,26 @@ until then.
 
 ## Recordings: from the Inbox to a cloud session
 
-**What.** Every recording Krish drops into the Video Engine Inbox
-(`H:\My Drive\Ventures\Active\makeyourmindup\Video Engine\Inbox`,
-`MINDMAKE_MEDIA_INBOX` on the runner machines) reaches the engine's private
-storage within about ten minutes, and any cloud session fetches it with one
-command.
+**What.** Every recording Krish drops into the Video Engine Inbox (Drive
+folder `1H-PWmcwLkKCPHShBL6SYzsLzEbpa6795`, on H: at
+`H:\My Drive\Ventures\Active Ventures\makeyourmindup\Video Engine\Inbox`)
+reaches the engine's private storage within about ten minutes, and any cloud
+session fetches it with one command.
+
+**By its ID, from Google (since 2026-10-24).** Krish: "Surely, the whole point
+of having a Google Drive is that there's a specific ID for a specific folder",
+then "A." The engine's `recordings_drive_inbox` job
+(`apps/control-plane/api/library/recordings/drive-inbox.ts`, every ten minutes)
+lists the Inbox by its folder ID as the engine's Google service account,
+read-only, and streams each new recording into the same store under its
+sha256, with the manifest `confirm` writes. No home computer is needed, and a
+rename or move of the folder changes nothing. It reads the Inbox through the
+"anyone with the link" sharing on `makeyourmindup` (2026-10-24); if that is
+turned off, share the Inbox with the service account as Viewer first. A failure (folder unshared
+or gone, a copy that did not check, or a home computer reporting a problem)
+fails the job, and Control Center shows it. The home computers' upload below
+stays as the fallback until the job has carried a real take end to end; both
+key by sha256, so they never make two copies.
 
 **Why.** On 2026-10-06 a session told Krish it could not reach his file. His
 answer: "figure out how to never make that error again". The Google Drive
@@ -602,24 +621,32 @@ places them (`-RequirePlacing` makes it a stop).
 It never writes to the Inbox, never sends anything outside the engine, and
 never produces a video: that is `.agents/skills/produce-video`.
 
-## The scripts: the series line, reading age 12 and the read-back
+## The scripts: the close, reading age 12 and the read-back
 
 `story_check.py --cut long|short --series <lane_slot> SCRIPT` refuses a
-script that does not open with its series line, word for word, or says
-"I'm Krish" again after it (house rule SERIES_OPENER; Krish, 2026-10-12: "We
-need something catchy at the start of a video script like "Here's what you
-need to know about how money is changing because of AI. I'm Krish." at the
-start of follow.the.money videos. And then similar for the weds and fri
-scripts", and "Drop it at the end"), and one a 12-year-old could not follow
+script of a minute or more that does not close the way Krish ruled on
+2026-10-21 (house rule SCRIPT_CLOSE): "trim the closing to "the full deep
+dive is at makeyourmindup.ai." right after a "Here's what I'd do with this
+info if I were you" closing line. That needs to be the format moving forward
+for all scripts." So a beat in its last three beats has the sentence "Here's
+what I'd do with this info if I were you" (a trailing colon, full stop or
+comma and curly apostrophes are fine), and the last sentence is exactly "The
+full deep dive is at makeyourmindup.ai." with nothing after it. The series
+line is retired the same day (house rule SERIES_OPENER; "we need to cut that
+opening line from every content piece moving forward and just launch
+straight in to "I put GrokBot and Muse head to head" etc."): nothing asks
+for it or for "I'm Krish", and `--series` is still accepted and ignored so
+older callers work. It also refuses one a 12-year-old could not follow
 heard once (house rule R7; Krish, 2026-10-12: "Every single script should
 be understandable by a 12-year-old. I can't even understand what I'm
 reading off the teleprompter. I thought we had hard gates for this?"): a
 spoken sentence over 20 words, more than 12 words a sentence on average, a
 reading grade over 6, a quotation over four words, or a word on its list
 (licensing, settlement, revenue, model and the rest) its sentence does not
-explain. The lines and the gate's numbers are read from
-`apps/control-plane/api/_houseRules.ts` (`SERIES_OPENERS`, `SCRIPT_READING`),
-the one place they live. `making.py scripts` runs it with the piece's
+explain. The gate's numbers are read from
+`apps/control-plane/api/_houseRules.ts` (`SCRIPT_READING`), the one place
+they live; the old series lines stay beside them (`SERIES_OPENERS`) for the
+records made under them. `making.py scripts` runs it with the piece's
 series, and `build.py` with the post's subchannel. Then two fresh readers,
 each an ordinary 12-year-old hearing the script once, must find nothing that
 loses them (their prompts are in `.agents/skills/make-piece/SKILL.md`, "The
@@ -665,6 +692,7 @@ six hours ago is held back until its words change or `--retry`.
 
     python scripts/post-pack/teleprompter_send.py pending [--week YYYY-MM-DD] [--retry]
     python scripts/post-pack/teleprompter_send.py plan PIECE long.md short.md [--post post.json]
+    python scripts/post-pack/teleprompter_send.py plan PIECE long.md short.md feature.md   # a 15-minute feature piece: a third script, same folder
     python scripts/post-pack/teleprompter_send.py record PIECE CUT --folder ID --script ID --sha SHA256 [--title T] | --error "what Teleprompter said"
     python scripts/post-pack/teleprompter_send.py --self-test
 

@@ -47,8 +47,19 @@ cannot place takes yet (no pinned Python, a transcriber that cannot decode,
 no ffmpeg, no engine key), naming which. install-recordings-upload.ps1
 installs on 3 and says so, since the other machine places takes meanwhile.
 
-The Inbox is MINDMAKE_MEDIA_INBOX, else runtime.media_inbox in
-config/studio.json, else the Drive root's Inbox folder. The engine's address is
+The Inbox is runtime.media_inbox in config/studio.json, unless
+MINDMAKE_MEDIA_INBOX is set and names a folder that is there; a setting that
+names a missing folder is reported and studio.json's is used. Settings are
+read fresh from the registry every pass, so a changed one takes effect
+without a restart. The engine also reads the Inbox from Google by its folder
+ID (api/library/recordings/drive-inbox.ts); this upload is the fallback.
+
+Every pass ends by telling the engine what it found (POST
+/api/library/recordings/lane): an unreachable Inbox, a stale setting, no
+pinned Python, a recording or a publish that
+failed. The engine's Inbox job fails with this machine named while its last
+report holds a problem, so Control Center shows it (Krish, 2026-10-24, after
+two days of "cannot be reached" in this log alone). The engine's address is
 ENGINE_BASE_URL, else the one scripts/engine.py uses. It authenticates with the
 runner's own bearer, read from Windows Credential Manager through
 scripts/get-credential.ps1 exactly as the runner reads it, and never shows it.
@@ -101,6 +112,8 @@ $PlacingStatePath = Join-Path $StateRoot 'placing.json'
 $script:LastPlacingNote = ''
 $script:PlacingNotReady = ''
 $script:PassSent = $true
+$script:Problems = New-Object System.Collections.Generic.List[string]
+$script:FirstPass = $true
 
 [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
 Add-Type -AssemblyName System.Net.Http
@@ -152,16 +165,72 @@ function Get-StudioConfig {
   return $config
 }
 
+function Add-Problem([string]$Code) {
+  # One of the codes the engine takes (api/library/_lanes.ts LANE_PROBLEMS).
+  if (-not $script:Problems.Contains($Code)) { $script:Problems.Add($Code) }
+}
+
+function Get-Setting([string]$Name) {
+  # A user or machine environment setting as the registry holds it now, so a
+  # setting changed or deleted after this long-running task started counts on
+  # the next pass. On 2026-10-24 a corrected MINDMAKE_MEDIA_INBOX was ignored
+  # until the machine restarted, because the task kept the old environment.
+  foreach ($scope in @('User', 'Machine')) {
+    $value = [Environment]::GetEnvironmentVariable($Name, $scope)
+    if ($value) { return $value }
+  }
+  return [Environment]::GetEnvironmentVariable($Name, 'Process')
+}
+
+$MindmakeSettings = @('MINDMAKE_DRIVE_ROOT', 'MINDMAKE_MEDIA_INBOX', 'MINDMAKE_ARCHIVE_ROOT', 'MINDMAKE_POSTS_ROOT', 'MINDMAKE_INSPIRATION', 'MINDMAKE_MUSIC_ROOT')
+
+function Sync-Settings {
+  # This process's copy of each MINDMAKE_* setting, made equal to the
+  # registry's, so the Python this pass starts (the matcher, music, working
+  # files) sees a setting changed or deleted since the task started.
+  foreach ($name in $MindmakeSettings) {
+    $value = $null
+    foreach ($scope in @('User', 'Machine')) {
+      $found = [Environment]::GetEnvironmentVariable($name, $scope)
+      if ($found) { $value = $found; break }
+    }
+    [Environment]::SetEnvironmentVariable($name, $value, 'Process')
+  }
+}
+
+function Test-StaleSetting([string]$Name, [string]$Code) {
+  # A setting that names a folder that is not there. Only judged while H: is
+  # up (the caller checks), so Google Drive starting late is not a stale path.
+  $value = Get-Setting $Name
+  if ($value -and [System.IO.Path]::IsPathRooted($value) -and -not (Test-Path -LiteralPath $value -PathType Container)) {
+    Write-Log "the $Name setting on this machine names $value, which is not there. Delete the setting; config\studio.json says where things are."
+    Add-Problem $Code
+    return $true
+  }
+  return $false
+}
+
 function Resolve-MediaInbox($Config) {
-  # MINDMAKE_MEDIA_INBOX, else runtime.media_inbox in config\studio.json, else
-  # the Drive root's Inbox folder. Null when none is set.
+  # runtime.media_inbox in config\studio.json (else the Drive root's Inbox),
+  # unless MINDMAKE_MEDIA_INBOX names a folder that is there. A setting that
+  # names a missing folder while studio.json's Inbox is there is stale: it is
+  # reported and studio.json's is used. Null when nothing is set.
   $runtime = Get-Field $Config 'runtime'
-  $inbox = $env:MINDMAKE_MEDIA_INBOX
-  if (-not $inbox) { $inbox = [string](Get-Field $runtime 'media_inbox') }
-  if (-not $inbox) {
-    $drive = $env:MINDMAKE_DRIVE_ROOT
+  $configured = [string](Get-Field $runtime 'media_inbox')
+  if (-not $configured) {
+    $drive = Get-Setting 'MINDMAKE_DRIVE_ROOT'
     if (-not $drive) { $drive = [string](Get-Field $runtime 'drive_root') }
-    if ($drive) { $inbox = Join-Path $drive 'Inbox' }
+    if ($drive) { $configured = Join-Path $drive 'Inbox' }
+  }
+  $inbox = $configured
+  $setting = Get-Setting 'MINDMAKE_MEDIA_INBOX'
+  if ($setting) {
+    if ((Test-Path -LiteralPath $setting -PathType Container) -or -not $configured -or -not (Test-Path -LiteralPath $configured -PathType Container)) {
+      $inbox = $setting
+    } else {
+      Write-Log "MINDMAKE_MEDIA_INBOX on this machine names $setting, which is not there; using config\studio.json's Inbox $configured. Delete the setting."
+      Add-Problem 'inbox_env_stale'
+    }
   }
   if (-not $inbox -or -not [System.IO.Path]::IsPathRooted($inbox)) { return $null }
   return [System.IO.Path]::GetFullPath($inbox).TrimEnd('\')
@@ -526,15 +595,30 @@ function Invoke-Pass {
   # piece holds yet placed on its piece and cut. A problem with one never
   # stops the other. Returns $true when both went through.
   $sent = $true
+  $script:Problems.Clear()
+  if ($Loop) { Sync-Settings }
   $config = Get-StudioConfig
   $inbox = Resolve-MediaInbox $config
+  if ($inbox -and $script:FirstPass -and -not (Test-Path -LiteralPath $inbox -PathType Container)) {
+    # Right after a restart the first pass can run before Google Drive has
+    # mounted H:. One wait, then the pass goes on either way.
+    Write-Log "the Inbox $inbox is not there yet; waiting a minute for Google Drive to start"
+    Start-Sleep -Seconds 60
+    $script:Problems.Clear()
+    $inbox = Resolve-MediaInbox $config
+  }
+  $script:FirstPass = $false
   if (-not $inbox) {
     Write-Log 'no Inbox is set (MINDMAKE_MEDIA_INBOX, or runtime.media_inbox or drive_root in config\studio.json); nothing to send'
     $sent = (-not $Check)
   } elseif (-not (Test-Path -LiteralPath $inbox -PathType Container)) {
-    Write-Log "the Inbox $inbox cannot be reached. Check that Google Drive is running and signed in."
+    Write-Log "the Inbox $inbox cannot be reached. Check that Google Drive is running and signed in, and that config\studio.json runtime.media_inbox is the Inbox's path."
+    Add-Problem 'inbox_unreachable'
     $sent = $false
   } else {
+    # H: is up, so a setting or a folder that is not there is a real fault.
+    [void](Test-StaleSetting 'MINDMAKE_DRIVE_ROOT' 'drive_root_env_stale')
+    [void](Test-StaleSetting 'MINDMAKE_ARCHIVE_ROOT' 'archive_env_stale')
     $base = Resolve-EngineUrl
     $token = Get-RunnerToken
     if ($Check) {
@@ -544,6 +628,7 @@ function Invoke-Pass {
     }
     $result = Sync-Recordings $inbox $base $token
     if ($result.sent -gt 0 -or $result.failed -gt 0) { Write-Log "sent or listed $($result.sent) recording(s); $($result.failed) could not be sent and will be tried again" }
+    if ($result.failed -gt 0) { Add-Problem 'sending_failed' }
     $sent = ($result.failed -eq 0)
   }
   $script:PassSent = $sent
@@ -567,18 +652,21 @@ function Invoke-Pass {
       $placed = $false
     }
   }
+  if (-not (Test-Path -LiteralPath $StudioPython -PathType Leaf)) { Add-Problem 'pinned_python_missing' }
+  elseif (-not $placed) { Add-Problem 'placing_failed' }
   if (-not $Check) {
     # The licensed music goes to the engine's library too, so any machine
     # that renders (GitHub's, a cloud session) has it without H: (Krish,
     # 2026-10-12: "the audio is literally in the drive"). A file the library
     # holds already is left alone; a problem here never stops a pass.
-    try { Publish-Music } catch { Write-Log "the music was not published this pass: $($_.Exception.Message)" }
-    # The style references Krish drops in Video Engine > Inspiration go to
+    try { Publish-Music } catch { Write-Log "the music was not published this pass: $($_.Exception.Message)"; Add-Problem 'music_publish_failed' }
+    # The style references Krish drops in Ventures > Inspiration > Production Inspo go to
     # the library too, so any session can study them (docs/STYLE_REFERENCES.md;
     # Krish, 2026-10-14: "a folder where I can put videos that I really like
     # ... so that you can learn from them"). Never a reason to fail a pass.
-    try { Publish-References } catch { Write-Log "the style references were not published this pass: $($_.Exception.Message)" }
-    try { Publish-Working } catch { Write-Log "the working files were not published this pass: $($_.Exception.Message)" }
+    try { Publish-References } catch { Write-Log "the style references were not published this pass: $($_.Exception.Message)"; Add-Problem 'references_publish_failed' }
+    try { Publish-Working } catch { Write-Log "the working files were not published this pass: $($_.Exception.Message)"; Add-Problem 'working_publish_failed' }
+    Send-LaneReport
   }
   return ($sent -and $placed)
 }
@@ -587,7 +675,7 @@ function Publish-Music {
   if (-not (Test-Path -LiteralPath $StudioPython -PathType Leaf)) { return }
   $music = Join-Path $RepoRoot 'scripts\quick-edit\music.py'
   $run = Invoke-StudioPython @($music, 'publish')
-  if ($run.code -ne 0) { Write-Log "music publish: $($run.err) $($run.out)"; return }
+  if ($run.code -ne 0) { Write-Log "music publish: $($run.err) $($run.out)"; Add-Problem 'music_publish_failed'; return }
   if ($run.out -match 'sent\s+1 Brand kit' -or $run.out -match '[1-9]\d* sent') { Write-Log "music published: $($run.out -replace "`n", ' | ')" }
 }
 
@@ -595,7 +683,7 @@ function Publish-References {
   if (-not (Test-Path -LiteralPath $StudioPython -PathType Leaf)) { return }
   $references = Join-Path $RepoRoot 'scripts\quick-edit\references.py'
   $run = Invoke-StudioPython @($references, 'publish')
-  if ($run.code -ne 0) { Write-Log "style references publish: $($run.err) $($run.out)"; return }
+  if ($run.code -ne 0) { Write-Log "style references publish: $($run.err) $($run.out)"; Add-Problem 'references_publish_failed'; return }
   if ($run.out -match '"sent":\s*[1-9]') { Write-Log "style references published: $($run.out -replace "`n", ' | ')" }
 }
 
@@ -605,8 +693,25 @@ function Publish-Working {
   if (-not (Test-Path -LiteralPath $StudioPython -PathType Leaf)) { return }
   $working = Join-Path $RepoRoot 'scripts\post-pack\working.py'
   $run = Invoke-StudioPython @($working, 'publish')
-  if ($run.code -ne 0) { Write-Log "working files publish: $($run.err) $($run.out)"; return }
+  if ($run.code -ne 0) { Write-Log "working files publish: $($run.err) $($run.out)"; Add-Problem 'working_publish_failed'; return }
   if ($run.out -match '"sent":\s*[1-9]') { Write-Log "working files published: $($run.out -replace "`n", ' | ')" }
+}
+
+function Send-LaneReport {
+  # What this pass found, to the engine, so a problem here reaches Control
+  # Center (api/library/_lanes.ts). An empty list says this machine is well.
+  # A report that cannot be sent is logged and never stops the pass.
+  try {
+    $base = Resolve-EngineUrl
+    $token = Get-RunnerToken
+    $machine = ($env:COMPUTERNAME -replace '[^A-Za-z0-9_-]', '-')
+    $client = New-HttpClient ([TimeSpan]::FromMinutes(2))
+    try {
+      [void](Invoke-Engine $client $base $token '/api/library/recordings/lane' ([ordered]@{ machine = $machine; problems = @($script:Problems) }))
+    } finally { $client.Dispose() }
+  } catch {
+    Write-Log "this pass's report did not reach the engine: $($_.Exception.Message)"
+  }
 }
 
 function Update-Source {
@@ -644,6 +749,7 @@ try {
       if ($ok) { exit 0 } else { exit 1 }
     } catch {
       Write-Log "recordings upload stopped: $($_.Exception.Message)"
+      if (-not $Check) { Add-Problem 'pass_stopped'; Send-LaneReport }
       exit 1
     }
   }
@@ -660,7 +766,13 @@ try {
       exit 0
     }
     try { [void](Invoke-Pass) }
-    catch { Write-Log "this pass stopped: $($_.Exception.Message). Trying again in $EveryMinutes minutes." }
+    catch {
+      # A pass that stops before its own report still reports, so the
+      # engine never reads a failing machine as well (Send-LaneReport).
+      Write-Log "this pass stopped: $($_.Exception.Message). Trying again in $EveryMinutes minutes."
+      Add-Problem 'pass_stopped'
+      Send-LaneReport
+    }
     Start-Sleep -Seconds ($EveryMinutes * 60)
   }
 } finally {

@@ -1,0 +1,2011 @@
+{
+  "series": "under_the_hood",
+  "logos": "logos",
+  "source": [
+    "../2026-10-19-week/wednesday-article-draft.md",
+    "recorded-long-script.md",
+    "recorded-short-script.md"
+  ],
+  "cards": [
+    {
+      "file": "five-jobs.png",
+      "kind": "evidence",
+      "title": "Muse vs Grok Bot",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Five jobs",
+          "value": "Inbox · flight · cancel",
+          "answer": false
+        },
+        {
+          "label": "Plus",
+          "value": "My day · the news",
+          "answer": false
+        }
+      ],
+      "qualification": "Personal runs + other testers’ results",
+      "point": "Muse vs Grok Bot",
+      "cue": "five-jobs",
+      "scene": null
+    },
+    {
+      "file": "scam-request.png",
+      "kind": "evidence",
+      "title": "The inbox",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Request",
+          "value": "Buy six of your products",
+          "answer": false
+        },
+        {
+          "label": "Missing",
+          "value": "Which product?",
+          "answer": true
+        }
+      ],
+      "qualification": "Anonymised recreation from my test",
+      "point": "The inbox",
+      "cue": "scam-request",
+      "scene": "mail"
+    },
+    {
+      "file": "scam-grok.png",
+      "kind": "evidence",
+      "title": "The inbox",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Grok Bot",
+          "value": "Flags the likely scam",
+          "answer": true
+        },
+        {
+          "label": "Muse",
+          "value": "Drafts a polished reply",
+          "answer": false
+        }
+      ],
+      "qualification": "Nothing was sent",
+      "point": "The inbox",
+      "cue": "scam-grok",
+      "scene": "compare"
+    },
+    {
+      "file": "scam-priority.png",
+      "kind": "evidence",
+      "title": "The inbox",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Muse’s list",
+          "value": "Reply to the scammer first",
+          "answer": false
+        },
+        {
+          "label": "My result",
+          "value": "Grok wins this round",
+          "answer": true
+        }
+      ],
+      "qualification": "My test, one run on personal accounts",
+      "point": "The inbox",
+      "cue": "scam-priority",
+      "scene": null
+    },
+    {
+      "file": "scam-community.png",
+      "kind": "evidence",
+      "title": "The inbox",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Other trial",
+          "value": "Fake business, scam traps",
+          "answer": false
+        },
+        {
+          "label": "Both",
+          "value": "Resisted those scams",
+          "answer": true
+        }
+      ],
+      "qualification": "Different test conditions. Community: draw.",
+      "point": "The inbox",
+      "cue": "scam-community",
+      "scene": null
+    },
+    {
+      "file": "flight-fare.png",
+      "kind": "evidence",
+      "title": "The flight",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Return fare",
+          "value": "About £335",
+          "answer": false
+        },
+        {
+          "label": "The catch",
+          "value": "29 hours in Lisbon",
+          "answer": false
+        }
+      ],
+      "qualification": "Historical fare found 20 October 2026",
+      "point": "The flight",
+      "cue": "flight-fare",
+      "scene": null
+    },
+    {
+      "file": "flight-layover.png",
+      "kind": "evidence",
+      "title": "The flight",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Lisbon",
+          "value": "29-hour stopover",
+          "answer": false
+        },
+        {
+          "label": "New York",
+          "value": "Three nights",
+          "answer": true
+        }
+      ],
+      "qualification": "Both assistants advised against this fare",
+      "point": "The flight",
+      "cue": "flight-layover",
+      "scene": "journey"
+    },
+    {
+      "file": "flight-nights.png",
+      "kind": "evidence",
+      "title": "The flight",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Muse said",
+          "value": "Four nights",
+          "answer": false
+        },
+        {
+          "label": "Actual stay",
+          "value": "Three nights",
+          "answer": true
+        }
+      ],
+      "qualification": "A just-after-midnight flight cuts the stay short",
+      "point": "The flight",
+      "cue": "flight-nights",
+      "scene": "calendar"
+    },
+    {
+      "file": "flight-verdict.png",
+      "kind": "evidence",
+      "title": "The flight",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "My test",
+          "value": "Grok, just",
+          "answer": true
+        },
+        {
+          "label": "Their test",
+          "value": "Grok for speed and value",
+          "answer": false
+        }
+      ],
+      "qualification": "A different trip and session",
+      "point": "The flight",
+      "cue": "flight-verdict",
+      "scene": null
+    },
+    {
+      "file": "cancel-check.png",
+      "kind": "evidence",
+      "title": "What to cancel",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Check first",
+          "value": "Who still uses it?",
+          "answer": false
+        },
+        {
+          "label": "Then",
+          "value": "What would break?",
+          "answer": true
+        }
+      ],
+      "qualification": "A generic service. Private charges removed.",
+      "point": "What to cancel",
+      "cue": "cancel-check",
+      "scene": null
+    },
+    {
+      "file": "cancel-result.png",
+      "kind": "evidence",
+      "title": "What to cancel",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "My test",
+          "value": "Draw",
+          "answer": false
+        },
+        {
+          "label": "Community",
+          "value": "No comparable result",
+          "answer": false
+        }
+      ],
+      "qualification": "No service was cancelled",
+      "point": "What to cancel",
+      "cue": "cancel-result",
+      "scene": null
+    },
+    {
+      "file": "day-plan.png",
+      "kind": "evidence",
+      "title": "My day",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Booked",
+          "value": "Actual meetings",
+          "answer": false
+        },
+        {
+          "label": "Suggested",
+          "value": "Draft time blocks",
+          "answer": false
+        }
+      ],
+      "qualification": "Both kept suggestions separate from bookings",
+      "point": "My day",
+      "cue": "day-plan",
+      "scene": "calendar"
+    },
+    {
+      "file": "day-community.png",
+      "kind": "evidence",
+      "title": "My day",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "One Grok user",
+          "value": "Forgotten jobs",
+          "answer": false
+        },
+        {
+          "label": "Also reported",
+          "value": "Duplicate messages",
+          "answer": false
+        }
+      ],
+      "qualification": "An individual report, not a failure rate",
+      "point": "My day",
+      "cue": "day-community",
+      "scene": null
+    },
+    {
+      "file": "day-result.png",
+      "kind": "evidence",
+      "title": "My day",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "My test",
+          "value": "Draw",
+          "answer": false
+        },
+        {
+          "label": "Community",
+          "value": "A caution on Grok",
+          "answer": false
+        }
+      ],
+      "qualification": "Inspect the plan before changing your calendar",
+      "point": "My day",
+      "cue": "day-result",
+      "scene": null
+    },
+    {
+      "file": "news-date.png",
+      "kind": "evidence",
+      "title": "The news",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Article dated",
+          "value": "April",
+          "answer": false
+        },
+        {
+          "label": "Grok says",
+          "value": "October news",
+          "answer": false
+        }
+      ],
+      "qualification": "Muse kept the date right",
+      "point": "The news",
+      "cue": "news-date",
+      "scene": "news"
+    },
+    {
+      "file": "news-result.png",
+      "kind": "evidence",
+      "title": "The news",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "My test",
+          "value": "Useful vs accurate",
+          "answer": false
+        },
+        {
+          "label": "Their test",
+          "value": "Kept Grok’s daily briefing",
+          "answer": false
+        }
+      ],
+      "qualification": "Grok for usefulness. Muse for the correct date.",
+      "point": "The news",
+      "cue": "news-result",
+      "scene": null
+    },
+    {
+      "file": "email-correction.png",
+      "kind": "evidence",
+      "title": "The work email",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "My correction",
+          "value": "Less formal. No date.",
+          "answer": false
+        },
+        {
+          "label": "Grok",
+          "value": "Kept the recipients",
+          "answer": false
+        }
+      ],
+      "qualification": "Anonymised recreation from my test",
+      "point": "The work email",
+      "cue": "email-correction",
+      "scene": null
+    },
+    {
+      "file": "email-honesty.png",
+      "kind": "evidence",
+      "title": "The work email",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Grok invented",
+          "value": "A compliment",
+          "answer": false
+        },
+        {
+          "label": "Then",
+          "value": "Flagged its own mistake",
+          "answer": true
+        }
+      ],
+      "qualification": "Disclosure helps me correct the draft",
+      "point": "The work email",
+      "cue": "email-honesty",
+      "scene": null
+    },
+    {
+      "file": "email-duplicate.png",
+      "kind": "evidence",
+      "title": "The work email",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Muse draft",
+          "value": "Recreated",
+          "answer": false
+        },
+        {
+          "label": "Gmail shows",
+          "value": "Two drafts remained",
+          "answer": false
+        }
+      ],
+      "qualification": "Nothing was sent. Private details removed.",
+      "point": "The work email",
+      "cue": "email-duplicate",
+      "scene": "drafts"
+    },
+    {
+      "file": "fee-handoff.png",
+      "kind": "evidence",
+      "title": "The work email",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Grok asks",
+          "value": "What fee should I quote?",
+          "answer": false
+        },
+        {
+          "label": "The price",
+          "value": "Still my decision",
+          "answer": true
+        }
+      ],
+      "qualification": "No fee or private commercial detail shown",
+      "point": "The work email",
+      "cue": "fee-handoff",
+      "scene": null
+    },
+    {
+      "file": "social-fit.png",
+      "kind": "evidence",
+      "title": "The verdict",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Grok Bot",
+          "value": "Conversations on X",
+          "answer": false
+        },
+        {
+          "label": "Muse",
+          "value": "Messenger catch-up",
+          "answer": false
+        }
+      ],
+      "qualification": "Session examples, not exclusive features",
+      "point": "The verdict",
+      "cue": "social-fit",
+      "scene": null
+    },
+    {
+      "file": "wiper-task.png",
+      "kind": "evidence",
+      "title": "The verdict",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "One Muse user",
+          "value": "Find the right wipers",
+          "answer": false
+        },
+        {
+          "label": "Before buy",
+          "value": "Waited for approval",
+          "answer": true
+        }
+      ],
+      "qualification": "A user report. No purchase in my tests.",
+      "point": "The verdict",
+      "cue": "wiper-task",
+      "scene": null
+    },
+    {
+      "file": "my-score.png",
+      "kind": "evidence",
+      "title": "The verdict",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Grok wins",
+          "value": "Two of my rounds",
+          "answer": true
+        },
+        {
+          "label": "Other three",
+          "value": "Level, for different reasons"
+        }
+      ],
+      "qualification": "My five runs. Not a success rate.",
+      "point": "The verdict",
+      "cue": "my-score",
+      "scene": null
+    },
+    {
+      "file": "community-score.png",
+      "kind": "evidence",
+      "title": "The verdict",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Muse",
+          "value": "Other testers caught scams",
+          "answer": false
+        },
+        {
+          "label": "Grok",
+          "value": "Useful routines, missed jobs",
+          "answer": false
+        }
+      ],
+      "qualification": "The community makes the comparison closer",
+      "point": "The verdict",
+      "cue": "community-score",
+      "scene": null
+    },
+    {
+      "file": "starting-point.png",
+      "kind": "evidence",
+      "title": "The verdict",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Grok Bot",
+          "value": "Weekly admin",
+          "answer": false
+        },
+        {
+          "label": "Muse",
+          "value": "Personal errands",
+          "answer": false
+        }
+      ],
+      "qualification": "Start small. Neither gets free rein.",
+      "point": "The verdict",
+      "cue": "starting-point",
+      "scene": "compare"
+    },
+    {
+      "file": "permission-test.png",
+      "kind": "evidence",
+      "title": "The verdict",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Let it prepare",
+          "value": "Look up, sort and draft",
+          "answer": false
+        },
+        {
+          "label": "Keep approval",
+          "value": "Spending and sending",
+          "answer": true
+        }
+      ],
+      "qualification": "See where it stops to ask you",
+      "point": "The verdict",
+      "cue": "permission-test",
+      "scene": null
+    },
+    {
+      "file": "five-jobs-focus0.png",
+      "kind": "evidence",
+      "title": "Muse vs Grok Bot",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Five jobs",
+          "value": "Inbox · flight · cancel",
+          "answer": false
+        },
+        {
+          "label": "Plus",
+          "value": "My day · the news",
+          "answer": false
+        }
+      ],
+      "qualification": "Personal runs + other testers’ results",
+      "point": "Muse vs Grok Bot",
+      "cue": "five-jobs",
+      "scene": null,
+      "focus": 0
+    },
+    {
+      "file": "five-jobs-focus1.png",
+      "kind": "evidence",
+      "title": "Muse vs Grok Bot",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Five jobs",
+          "value": "Inbox · flight · cancel",
+          "answer": false
+        },
+        {
+          "label": "Plus",
+          "value": "My day · the news",
+          "answer": false
+        }
+      ],
+      "qualification": "Personal runs + other testers’ results",
+      "point": "Muse vs Grok Bot",
+      "cue": "five-jobs",
+      "scene": null,
+      "focus": 1
+    },
+    {
+      "file": "scam-request-focus0.png",
+      "kind": "evidence",
+      "title": "The inbox",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Request",
+          "value": "Buy six of your products",
+          "answer": false
+        },
+        {
+          "label": "Missing",
+          "value": "Which product?",
+          "answer": true
+        }
+      ],
+      "qualification": "Anonymised recreation from my test",
+      "point": "The inbox",
+      "cue": "scam-request",
+      "scene": "mail",
+      "focus": 0
+    },
+    {
+      "file": "scam-request-focus1.png",
+      "kind": "evidence",
+      "title": "The inbox",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Request",
+          "value": "Buy six of your products",
+          "answer": false
+        },
+        {
+          "label": "Missing",
+          "value": "Which product?",
+          "answer": true
+        }
+      ],
+      "qualification": "Anonymised recreation from my test",
+      "point": "The inbox",
+      "cue": "scam-request",
+      "scene": "mail",
+      "focus": 1
+    },
+    {
+      "file": "scam-grok-focus0.png",
+      "kind": "evidence",
+      "title": "The inbox",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Grok Bot",
+          "value": "Flags the likely scam",
+          "answer": true
+        },
+        {
+          "label": "Muse",
+          "value": "Drafts a polished reply",
+          "answer": false
+        }
+      ],
+      "qualification": "Nothing was sent",
+      "point": "The inbox",
+      "cue": "scam-grok",
+      "scene": "compare",
+      "focus": 0
+    },
+    {
+      "file": "scam-grok-focus1.png",
+      "kind": "evidence",
+      "title": "The inbox",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Grok Bot",
+          "value": "Flags the likely scam",
+          "answer": true
+        },
+        {
+          "label": "Muse",
+          "value": "Drafts a polished reply",
+          "answer": false
+        }
+      ],
+      "qualification": "Nothing was sent",
+      "point": "The inbox",
+      "cue": "scam-grok",
+      "scene": "compare",
+      "focus": 1
+    },
+    {
+      "file": "scam-priority-focus0.png",
+      "kind": "evidence",
+      "title": "The inbox",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Muse’s list",
+          "value": "Reply to the scammer first",
+          "answer": false
+        },
+        {
+          "label": "My result",
+          "value": "Grok wins this round",
+          "answer": true
+        }
+      ],
+      "qualification": "My test, one run on personal accounts",
+      "point": "The inbox",
+      "cue": "scam-priority",
+      "scene": null,
+      "focus": 0
+    },
+    {
+      "file": "scam-priority-focus1.png",
+      "kind": "evidence",
+      "title": "The inbox",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Muse’s list",
+          "value": "Reply to the scammer first",
+          "answer": false
+        },
+        {
+          "label": "My result",
+          "value": "Grok wins this round",
+          "answer": true
+        }
+      ],
+      "qualification": "My test, one run on personal accounts",
+      "point": "The inbox",
+      "cue": "scam-priority",
+      "scene": null,
+      "focus": 1
+    },
+    {
+      "file": "scam-community-focus0.png",
+      "kind": "evidence",
+      "title": "The inbox",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Other trial",
+          "value": "Fake business, scam traps",
+          "answer": false
+        },
+        {
+          "label": "Both",
+          "value": "Resisted those scams",
+          "answer": true
+        }
+      ],
+      "qualification": "Different test conditions. Community: draw.",
+      "point": "The inbox",
+      "cue": "scam-community",
+      "scene": null,
+      "focus": 0
+    },
+    {
+      "file": "scam-community-focus1.png",
+      "kind": "evidence",
+      "title": "The inbox",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Other trial",
+          "value": "Fake business, scam traps",
+          "answer": false
+        },
+        {
+          "label": "Both",
+          "value": "Resisted those scams",
+          "answer": true
+        }
+      ],
+      "qualification": "Different test conditions. Community: draw.",
+      "point": "The inbox",
+      "cue": "scam-community",
+      "scene": null,
+      "focus": 1
+    },
+    {
+      "file": "flight-fare-focus0.png",
+      "kind": "evidence",
+      "title": "The flight",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Return fare",
+          "value": "About £335",
+          "answer": false
+        },
+        {
+          "label": "The catch",
+          "value": "29 hours in Lisbon",
+          "answer": false
+        }
+      ],
+      "qualification": "Historical fare found 20 October 2026",
+      "point": "The flight",
+      "cue": "flight-fare",
+      "scene": null,
+      "focus": 0
+    },
+    {
+      "file": "flight-fare-focus1.png",
+      "kind": "evidence",
+      "title": "The flight",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Return fare",
+          "value": "About £335",
+          "answer": false
+        },
+        {
+          "label": "The catch",
+          "value": "29 hours in Lisbon",
+          "answer": false
+        }
+      ],
+      "qualification": "Historical fare found 20 October 2026",
+      "point": "The flight",
+      "cue": "flight-fare",
+      "scene": null,
+      "focus": 1
+    },
+    {
+      "file": "flight-layover-focus0.png",
+      "kind": "evidence",
+      "title": "The flight",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Lisbon",
+          "value": "29-hour stopover",
+          "answer": false
+        },
+        {
+          "label": "New York",
+          "value": "Three nights",
+          "answer": true
+        }
+      ],
+      "qualification": "Both assistants advised against this fare",
+      "point": "The flight",
+      "cue": "flight-layover",
+      "scene": "journey",
+      "focus": 0
+    },
+    {
+      "file": "flight-layover-focus1.png",
+      "kind": "evidence",
+      "title": "The flight",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Lisbon",
+          "value": "29-hour stopover",
+          "answer": false
+        },
+        {
+          "label": "New York",
+          "value": "Three nights",
+          "answer": true
+        }
+      ],
+      "qualification": "Both assistants advised against this fare",
+      "point": "The flight",
+      "cue": "flight-layover",
+      "scene": "journey",
+      "focus": 1
+    },
+    {
+      "file": "flight-nights-focus0.png",
+      "kind": "evidence",
+      "title": "The flight",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Muse said",
+          "value": "Four nights",
+          "answer": false
+        },
+        {
+          "label": "Actual stay",
+          "value": "Three nights",
+          "answer": true
+        }
+      ],
+      "qualification": "A just-after-midnight flight cuts the stay short",
+      "point": "The flight",
+      "cue": "flight-nights",
+      "scene": "calendar",
+      "focus": 0
+    },
+    {
+      "file": "flight-nights-focus1.png",
+      "kind": "evidence",
+      "title": "The flight",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Muse said",
+          "value": "Four nights",
+          "answer": false
+        },
+        {
+          "label": "Actual stay",
+          "value": "Three nights",
+          "answer": true
+        }
+      ],
+      "qualification": "A just-after-midnight flight cuts the stay short",
+      "point": "The flight",
+      "cue": "flight-nights",
+      "scene": "calendar",
+      "focus": 1
+    },
+    {
+      "file": "flight-verdict-focus0.png",
+      "kind": "evidence",
+      "title": "The flight",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "My test",
+          "value": "Grok, just",
+          "answer": true
+        },
+        {
+          "label": "Their test",
+          "value": "Grok for speed and value",
+          "answer": false
+        }
+      ],
+      "qualification": "A different trip and session",
+      "point": "The flight",
+      "cue": "flight-verdict",
+      "scene": null,
+      "focus": 0
+    },
+    {
+      "file": "flight-verdict-focus1.png",
+      "kind": "evidence",
+      "title": "The flight",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "My test",
+          "value": "Grok, just",
+          "answer": true
+        },
+        {
+          "label": "Their test",
+          "value": "Grok for speed and value",
+          "answer": false
+        }
+      ],
+      "qualification": "A different trip and session",
+      "point": "The flight",
+      "cue": "flight-verdict",
+      "scene": null,
+      "focus": 1
+    },
+    {
+      "file": "cancel-check-focus0.png",
+      "kind": "evidence",
+      "title": "What to cancel",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Check first",
+          "value": "Who still uses it?",
+          "answer": false
+        },
+        {
+          "label": "Then",
+          "value": "What would break?",
+          "answer": true
+        }
+      ],
+      "qualification": "A generic service. Private charges removed.",
+      "point": "What to cancel",
+      "cue": "cancel-check",
+      "scene": null,
+      "focus": 0
+    },
+    {
+      "file": "cancel-check-focus1.png",
+      "kind": "evidence",
+      "title": "What to cancel",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Check first",
+          "value": "Who still uses it?",
+          "answer": false
+        },
+        {
+          "label": "Then",
+          "value": "What would break?",
+          "answer": true
+        }
+      ],
+      "qualification": "A generic service. Private charges removed.",
+      "point": "What to cancel",
+      "cue": "cancel-check",
+      "scene": null,
+      "focus": 1
+    },
+    {
+      "file": "cancel-result-focus0.png",
+      "kind": "evidence",
+      "title": "What to cancel",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "My test",
+          "value": "Draw",
+          "answer": false
+        },
+        {
+          "label": "Community",
+          "value": "No comparable result",
+          "answer": false
+        }
+      ],
+      "qualification": "No service was cancelled",
+      "point": "What to cancel",
+      "cue": "cancel-result",
+      "scene": null,
+      "focus": 0
+    },
+    {
+      "file": "cancel-result-focus1.png",
+      "kind": "evidence",
+      "title": "What to cancel",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "My test",
+          "value": "Draw",
+          "answer": false
+        },
+        {
+          "label": "Community",
+          "value": "No comparable result",
+          "answer": false
+        }
+      ],
+      "qualification": "No service was cancelled",
+      "point": "What to cancel",
+      "cue": "cancel-result",
+      "scene": null,
+      "focus": 1
+    },
+    {
+      "file": "day-plan-focus0.png",
+      "kind": "evidence",
+      "title": "My day",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Booked",
+          "value": "Actual meetings",
+          "answer": false
+        },
+        {
+          "label": "Suggested",
+          "value": "Draft time blocks",
+          "answer": false
+        }
+      ],
+      "qualification": "Both kept suggestions separate from bookings",
+      "point": "My day",
+      "cue": "day-plan",
+      "scene": "calendar",
+      "focus": 0
+    },
+    {
+      "file": "day-plan-focus1.png",
+      "kind": "evidence",
+      "title": "My day",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Booked",
+          "value": "Actual meetings",
+          "answer": false
+        },
+        {
+          "label": "Suggested",
+          "value": "Draft time blocks",
+          "answer": false
+        }
+      ],
+      "qualification": "Both kept suggestions separate from bookings",
+      "point": "My day",
+      "cue": "day-plan",
+      "scene": "calendar",
+      "focus": 1
+    },
+    {
+      "file": "day-community-focus0.png",
+      "kind": "evidence",
+      "title": "My day",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "One Grok user",
+          "value": "Forgotten jobs",
+          "answer": false
+        },
+        {
+          "label": "Also reported",
+          "value": "Duplicate messages",
+          "answer": false
+        }
+      ],
+      "qualification": "An individual report, not a failure rate",
+      "point": "My day",
+      "cue": "day-community",
+      "scene": null,
+      "focus": 0
+    },
+    {
+      "file": "day-community-focus1.png",
+      "kind": "evidence",
+      "title": "My day",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "One Grok user",
+          "value": "Forgotten jobs",
+          "answer": false
+        },
+        {
+          "label": "Also reported",
+          "value": "Duplicate messages",
+          "answer": false
+        }
+      ],
+      "qualification": "An individual report, not a failure rate",
+      "point": "My day",
+      "cue": "day-community",
+      "scene": null,
+      "focus": 1
+    },
+    {
+      "file": "day-result-focus0.png",
+      "kind": "evidence",
+      "title": "My day",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "My test",
+          "value": "Draw",
+          "answer": false
+        },
+        {
+          "label": "Community",
+          "value": "A caution on Grok",
+          "answer": false
+        }
+      ],
+      "qualification": "Inspect the plan before changing your calendar",
+      "point": "My day",
+      "cue": "day-result",
+      "scene": null,
+      "focus": 0
+    },
+    {
+      "file": "day-result-focus1.png",
+      "kind": "evidence",
+      "title": "My day",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "My test",
+          "value": "Draw",
+          "answer": false
+        },
+        {
+          "label": "Community",
+          "value": "A caution on Grok",
+          "answer": false
+        }
+      ],
+      "qualification": "Inspect the plan before changing your calendar",
+      "point": "My day",
+      "cue": "day-result",
+      "scene": null,
+      "focus": 1
+    },
+    {
+      "file": "news-date-focus0.png",
+      "kind": "evidence",
+      "title": "The news",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Article dated",
+          "value": "April",
+          "answer": false
+        },
+        {
+          "label": "Grok says",
+          "value": "October news",
+          "answer": false
+        }
+      ],
+      "qualification": "Muse kept the date right",
+      "point": "The news",
+      "cue": "news-date",
+      "scene": "news",
+      "focus": 0
+    },
+    {
+      "file": "news-date-focus1.png",
+      "kind": "evidence",
+      "title": "The news",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Article dated",
+          "value": "April",
+          "answer": false
+        },
+        {
+          "label": "Grok says",
+          "value": "October news",
+          "answer": false
+        }
+      ],
+      "qualification": "Muse kept the date right",
+      "point": "The news",
+      "cue": "news-date",
+      "scene": "news",
+      "focus": 1
+    },
+    {
+      "file": "news-result-focus0.png",
+      "kind": "evidence",
+      "title": "The news",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "My test",
+          "value": "Useful vs accurate",
+          "answer": false
+        },
+        {
+          "label": "Their test",
+          "value": "Kept Grok’s daily briefing",
+          "answer": false
+        }
+      ],
+      "qualification": "Grok for usefulness. Muse for the correct date.",
+      "point": "The news",
+      "cue": "news-result",
+      "scene": null,
+      "focus": 0
+    },
+    {
+      "file": "news-result-focus1.png",
+      "kind": "evidence",
+      "title": "The news",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "My test",
+          "value": "Useful vs accurate",
+          "answer": false
+        },
+        {
+          "label": "Their test",
+          "value": "Kept Grok’s daily briefing",
+          "answer": false
+        }
+      ],
+      "qualification": "Grok for usefulness. Muse for the correct date.",
+      "point": "The news",
+      "cue": "news-result",
+      "scene": null,
+      "focus": 1
+    },
+    {
+      "file": "email-correction-focus0.png",
+      "kind": "evidence",
+      "title": "The work email",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "My correction",
+          "value": "Less formal. No date.",
+          "answer": false
+        },
+        {
+          "label": "Grok",
+          "value": "Kept the recipients",
+          "answer": false
+        }
+      ],
+      "qualification": "Anonymised recreation from my test",
+      "point": "The work email",
+      "cue": "email-correction",
+      "scene": null,
+      "focus": 0
+    },
+    {
+      "file": "email-correction-focus1.png",
+      "kind": "evidence",
+      "title": "The work email",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "My correction",
+          "value": "Less formal. No date.",
+          "answer": false
+        },
+        {
+          "label": "Grok",
+          "value": "Kept the recipients",
+          "answer": false
+        }
+      ],
+      "qualification": "Anonymised recreation from my test",
+      "point": "The work email",
+      "cue": "email-correction",
+      "scene": null,
+      "focus": 1
+    },
+    {
+      "file": "email-honesty-focus0.png",
+      "kind": "evidence",
+      "title": "The work email",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Grok invented",
+          "value": "A compliment",
+          "answer": false
+        },
+        {
+          "label": "Then",
+          "value": "Flagged its own mistake",
+          "answer": true
+        }
+      ],
+      "qualification": "Disclosure helps me correct the draft",
+      "point": "The work email",
+      "cue": "email-honesty",
+      "scene": null,
+      "focus": 0
+    },
+    {
+      "file": "email-honesty-focus1.png",
+      "kind": "evidence",
+      "title": "The work email",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Grok invented",
+          "value": "A compliment",
+          "answer": false
+        },
+        {
+          "label": "Then",
+          "value": "Flagged its own mistake",
+          "answer": true
+        }
+      ],
+      "qualification": "Disclosure helps me correct the draft",
+      "point": "The work email",
+      "cue": "email-honesty",
+      "scene": null,
+      "focus": 1
+    },
+    {
+      "file": "email-duplicate-focus0.png",
+      "kind": "evidence",
+      "title": "The work email",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Muse draft",
+          "value": "Recreated",
+          "answer": false
+        },
+        {
+          "label": "Gmail shows",
+          "value": "Two drafts remained",
+          "answer": false
+        }
+      ],
+      "qualification": "Nothing was sent. Private details removed.",
+      "point": "The work email",
+      "cue": "email-duplicate",
+      "scene": "drafts",
+      "focus": 0
+    },
+    {
+      "file": "email-duplicate-focus1.png",
+      "kind": "evidence",
+      "title": "The work email",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Muse draft",
+          "value": "Recreated",
+          "answer": false
+        },
+        {
+          "label": "Gmail shows",
+          "value": "Two drafts remained",
+          "answer": false
+        }
+      ],
+      "qualification": "Nothing was sent. Private details removed.",
+      "point": "The work email",
+      "cue": "email-duplicate",
+      "scene": "drafts",
+      "focus": 1
+    },
+    {
+      "file": "fee-handoff-focus0.png",
+      "kind": "evidence",
+      "title": "The work email",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Grok asks",
+          "value": "What fee should I quote?",
+          "answer": false
+        },
+        {
+          "label": "The price",
+          "value": "Still my decision",
+          "answer": true
+        }
+      ],
+      "qualification": "No fee or private commercial detail shown",
+      "point": "The work email",
+      "cue": "fee-handoff",
+      "scene": null,
+      "focus": 0
+    },
+    {
+      "file": "fee-handoff-focus1.png",
+      "kind": "evidence",
+      "title": "The work email",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Grok asks",
+          "value": "What fee should I quote?",
+          "answer": false
+        },
+        {
+          "label": "The price",
+          "value": "Still my decision",
+          "answer": true
+        }
+      ],
+      "qualification": "No fee or private commercial detail shown",
+      "point": "The work email",
+      "cue": "fee-handoff",
+      "scene": null,
+      "focus": 1
+    },
+    {
+      "file": "social-fit-focus0.png",
+      "kind": "evidence",
+      "title": "The verdict",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Grok Bot",
+          "value": "Conversations on X",
+          "answer": false
+        },
+        {
+          "label": "Muse",
+          "value": "Messenger catch-up",
+          "answer": false
+        }
+      ],
+      "qualification": "Session examples, not exclusive features",
+      "point": "The verdict",
+      "cue": "social-fit",
+      "scene": null,
+      "focus": 0
+    },
+    {
+      "file": "social-fit-focus1.png",
+      "kind": "evidence",
+      "title": "The verdict",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Grok Bot",
+          "value": "Conversations on X",
+          "answer": false
+        },
+        {
+          "label": "Muse",
+          "value": "Messenger catch-up",
+          "answer": false
+        }
+      ],
+      "qualification": "Session examples, not exclusive features",
+      "point": "The verdict",
+      "cue": "social-fit",
+      "scene": null,
+      "focus": 1
+    },
+    {
+      "file": "wiper-task-focus0.png",
+      "kind": "evidence",
+      "title": "The verdict",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "One Muse user",
+          "value": "Find the right wipers",
+          "answer": false
+        },
+        {
+          "label": "Before buy",
+          "value": "Waited for approval",
+          "answer": true
+        }
+      ],
+      "qualification": "A user report. No purchase in my tests.",
+      "point": "The verdict",
+      "cue": "wiper-task",
+      "scene": null,
+      "focus": 0
+    },
+    {
+      "file": "wiper-task-focus1.png",
+      "kind": "evidence",
+      "title": "The verdict",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "One Muse user",
+          "value": "Find the right wipers",
+          "answer": false
+        },
+        {
+          "label": "Before buy",
+          "value": "Waited for approval",
+          "answer": true
+        }
+      ],
+      "qualification": "A user report. No purchase in my tests.",
+      "point": "The verdict",
+      "cue": "wiper-task",
+      "scene": null,
+      "focus": 1
+    },
+    {
+      "file": "my-score-focus0.png",
+      "kind": "evidence",
+      "title": "The verdict",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Grok wins",
+          "value": "Two of my rounds",
+          "answer": true
+        },
+        {
+          "label": "Other three",
+          "value": "Level, for different reasons"
+        }
+      ],
+      "qualification": "My five runs. Not a success rate.",
+      "point": "The verdict",
+      "cue": "my-score",
+      "scene": null,
+      "focus": 0
+    },
+    {
+      "file": "my-score-focus1.png",
+      "kind": "evidence",
+      "title": "The verdict",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Grok wins",
+          "value": "Two of my rounds",
+          "answer": true
+        },
+        {
+          "label": "Other three",
+          "value": "Level, for different reasons"
+        }
+      ],
+      "qualification": "My five runs. Not a success rate.",
+      "point": "The verdict",
+      "cue": "my-score",
+      "scene": null,
+      "focus": 1
+    },
+    {
+      "file": "community-score-focus0.png",
+      "kind": "evidence",
+      "title": "The verdict",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Muse",
+          "value": "Other testers caught scams",
+          "answer": false
+        },
+        {
+          "label": "Grok",
+          "value": "Useful routines, missed jobs",
+          "answer": false
+        }
+      ],
+      "qualification": "The community makes the comparison closer",
+      "point": "The verdict",
+      "cue": "community-score",
+      "scene": null,
+      "focus": 0
+    },
+    {
+      "file": "community-score-focus1.png",
+      "kind": "evidence",
+      "title": "The verdict",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Muse",
+          "value": "Other testers caught scams",
+          "answer": false
+        },
+        {
+          "label": "Grok",
+          "value": "Useful routines, missed jobs",
+          "answer": false
+        }
+      ],
+      "qualification": "The community makes the comparison closer",
+      "point": "The verdict",
+      "cue": "community-score",
+      "scene": null,
+      "focus": 1
+    },
+    {
+      "file": "starting-point-focus0.png",
+      "kind": "evidence",
+      "title": "The verdict",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Grok Bot",
+          "value": "Weekly admin",
+          "answer": false
+        },
+        {
+          "label": "Muse",
+          "value": "Personal errands",
+          "answer": false
+        }
+      ],
+      "qualification": "Start small. Neither gets free rein.",
+      "point": "The verdict",
+      "cue": "starting-point",
+      "scene": "compare",
+      "focus": 0
+    },
+    {
+      "file": "starting-point-focus1.png",
+      "kind": "evidence",
+      "title": "The verdict",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Grok Bot",
+          "value": "Weekly admin",
+          "answer": false
+        },
+        {
+          "label": "Muse",
+          "value": "Personal errands",
+          "answer": false
+        }
+      ],
+      "qualification": "Start small. Neither gets free rein.",
+      "point": "The verdict",
+      "cue": "starting-point",
+      "scene": "compare",
+      "focus": 1
+    },
+    {
+      "file": "permission-test-focus0.png",
+      "kind": "evidence",
+      "title": "The verdict",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Let it prepare",
+          "value": "Look up, sort and draft",
+          "answer": false
+        },
+        {
+          "label": "Keep approval",
+          "value": "Spending and sending",
+          "answer": true
+        }
+      ],
+      "qualification": "See where it stops to ask you",
+      "point": "The verdict",
+      "cue": "permission-test",
+      "scene": null,
+      "focus": 0
+    },
+    {
+      "file": "permission-test-focus1.png",
+      "kind": "evidence",
+      "title": "The verdict",
+      "logos": [
+        "grok-mark.svg",
+        "meta-mark.svg"
+      ],
+      "evidence": [
+        {
+          "label": "Let it prepare",
+          "value": "Look up, sort and draft",
+          "answer": false
+        },
+        {
+          "label": "Keep approval",
+          "value": "Spending and sending",
+          "answer": true
+        }
+      ],
+      "qualification": "See where it stops to ask you",
+      "point": "The verdict",
+      "cue": "permission-test",
+      "scene": null,
+      "focus": 1
+    }
+  ],
+  "piece_id": "d7a20885-7001-4661-b444-9d7ca1043416"
+}

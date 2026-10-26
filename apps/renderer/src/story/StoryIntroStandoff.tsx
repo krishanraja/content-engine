@@ -1,16 +1,15 @@
 import React from 'react'
 import { AbsoluteFill, useCurrentFrame, useVideoConfig } from 'remotion'
-import { fitError, fitLine, fitText } from './fit'
+import { fitError, fitText } from './fit'
 import { normalisePlayer, storyTitle, type StoryPlayer, type StoryStandoffProps } from './props'
 import {
-  abs, Badge, badgeLayout, Logo, logoRowWidth, badgeMetrics, badgeNaturalWidth, C, clamp, cubicIO, Field, Header, headerH, measureWith, quadIO, SAFE, SafeProbe, settle, shade,
+  abs, Badge, badgeLayout, logoRowWidth, badgeMetrics, badgeNaturalWidth, C, clamp, cubicIO, Field, Header, headerH, measureWith, quadIO, SAFE, SafeProbe, settle, shade,
   Txt, useStoryFonts, type BadgeLayout, type BadgeMetrics, type Shape,
 } from './standoff-kit'
 
 /** The story intro: the stand-off (docs/plans/2026-10-12-story-io). The
  *  players square up in two flat corners, each on the same badge (its logos,
- *  its name, its tag); one may change sides or tag; then the series colour
- *  takes the screen and the title builds line by line.
+ *  its name, its tag); one may change sides or tag; the approved heading stays inside the same scene. There is no second title phase.
  *
  *  Revised 2026-10-13 on Krish's review of Wednesday: every element builds in
  *  place, in order, inside the safe area (nothing slides in from off the
@@ -43,8 +42,6 @@ interface Timeline {
   right: (i: number) => number
   hop: [number, number] | null
   flip: number | null
-  wipe: [number, number]
-  line: (i: number) => number
 }
 
 function timeline(n: number, twist: boolean, hop: boolean): Timeline {
@@ -52,8 +49,7 @@ function timeline(n: number, twist: boolean, hop: boolean): Timeline {
   const built = right(n - 1) + 10
   const hopW: [number, number] | null = hop ? [built + 6, built + 16] : null
   const flip = twist ? (hopW ? hopW[1] : built + 6) : null
-  const fightEnd = flip !== null ? flip + 16 : built + 22
-  return { left: 3, vs: 12, right, hop: hopW, flip, wipe: [fightEnd, fightEnd + 8], line: (i) => fightEnd + 10 + 3 * i }
+  return { left: 3, vs: 12, right, hop: hopW, flip }
 }
 
 function plan(props: StoryStandoffProps): Plan {
@@ -67,15 +63,23 @@ function plan(props: StoryStandoffProps): Plan {
   const twist = right.some((p) => p.tagAfter)
   const leftCount = 1 + hoppers.length
   const mode = Math.max(leftCount, right.length) === 1 ? 'stack' : 'row'
-  const m = badgeMetrics(mode, shape)
+  const m = { ...badgeMetrics(mode, shape), ...(!wide && mode === 'stack'
+    ? { pad: 32, logoH: 120, gap1: 22, gap2: 16, nameMax: 76, tagH: 52, tagSize: 28 }
+    : {}) }
   const all = [left, ...right]
   const hasTag = all.some((p) => p.tag || p.tagAfter)
   const gap = mode === 'stack' ? 0 : wide ? 26 : 18
-  const top = S.y0 + headerH(shape) + 36
+  const top = S.y0 + headerH(shape) + (wide ? 180 : 150)
   const vsD = wide ? 150 : mode === 'stack' ? 132 : 112
 
   // Every badge the same width: the widest one's, within its region.
   const regionW = wide ? (S.x1 - S.x0 - vsD - 2 * 40) / 2 : S.x1 - S.x0
+  // One artwork height for the whole matchup, constrained by its widest
+  // wordmark. Shrink both marks together rather than just the wider one.
+  const logoSpace = regionW * (mode === 'stack' ? 1 : 0.42) - 2 * m.pad
+  m.logoH = Math.min(m.logoH, ...all.map((p) =>
+    Math.max(16, (logoSpace - Math.max(0,p.logos.length-1)*m.logoGap) /
+      (0.86*p.logos.reduce((sum,l)=>sum+l.aspect,0)))))
   const logoCol = mode === 'row' ? Math.max(...all.map((p) => logoRowWidth(p, m))) : 0
   const w = Math.max(...all.map((p) => badgeNaturalWidth(p, m, regionW, shape, logoCol)), regionW * (mode === 'stack' ? (wide ? 0.78 : 0.94) : 0.86))
   const layouts = new Map(all.map((p) => [p, badgeLayout(p, m, Math.min(w, regionW), hasTag, shape, logoCol)] as const))
@@ -124,17 +128,19 @@ export function StoryIntroStandoff(props: StoryStandoffProps) {
   const { width: W, height: H } = useVideoConfig()
   if (!ready) return <AbsoluteFill style={{ background: C.ink }} />
   const P = plan(props)
-  const title = titleBlock(props, P.shape)
-  const [w0, w1] = P.t.wipe
-  const wipe = cubicIO((f - w0) / (w1 - w0))
+  // One opening scene. The former fight -> wipe -> title sequence read as
+  // two intros (Krish, 21 Oct). The approved title now belongs to the fight.
+  const S = SAFE[P.shape]
+  const heading = storyTitle(props).text.split(/:\s*|\s+·\s+/).at(-1)!.toUpperCase()
+  const headingFit = fitText(heading, measureWith('display'), {maxWidth:S.x1-S.x0,maxHeight:120,
+    maxSize:P.wide?96:82,minSize:48,maxLines:2,lineHeight:1})
+  if (headingFit === null) throw fitError('opening heading', heading, P.shape, { maxWidth: S.x1-S.x0 },48,'Shorten the opening heading.')
   return (
     <AbsoluteFill style={{ background: C.ink, overflow: 'hidden' }}>
-      {f < w1 && <Fight P={P} f={f} W={W} H={H} seriesColour={props.seriesColour} />}
-      {/* The series corner takes the screen: a flat field, no type moving. */}
-      {f >= w0 && (P.wide
-        ? <Field left={P.seam - wipe * (P.seam + 80)} top={-80} width={W + 160} height={H + 160} bg={props.seriesColour} z={20} />
-        : <Field left={-80} top={P.seam - wipe * (P.seam + 80)} width={W + 160} height={H + 160} bg={props.seriesColour} z={20} />)}
-      {f >= w1 && <TitleCard f={f} P={P} title={title} seriesColour={props.seriesColour} />}
+      <Fight P={P} f={f} W={W} H={H} seriesColour={props.seriesColour} />
+      <Txt id="opening-heading" group="opening-heading" face="display" size={headingFit.size} color={C.ink}
+        style={{ left:S.x0,top:S.y0+headerH(P.shape)+32,width:S.x1-S.x0,textAlign:'center',
+          opacity:settle(f,3,1,1,5)?.opacity ?? 0,zIndex:35 }}>{headingFit.lines.join('\n')}</Txt>
       <div style={abs({ left: 0, top: 0, width: W, height: H, zIndex: 40 })}>
         <Header shape={P.shape} seriesName={props.seriesName} seriesColour={props.seriesColour} wordmark={props.brand.wordmark}
           opacity={settle(f, 0, 1, 1, 4)?.opacity ?? 0} />
@@ -198,120 +204,6 @@ function Fight({ P, f, W, H, seriesColour }: { P: Plan; f: number; W: number; H:
             border: `7px solid ${C.cream}`, boxSizing: 'border-box', zIndex: 4, opacity: vsOp, transform: `scale(${vsIn?.scale ?? 1})` })}>
           <Txt id="vs-text" group="vs" face="display" size={P.vs.d * 0.42} color={C.cream}
             style={{ left: 0, top: 0, width: P.vs.d - 14, height: P.vs.d - 14, lineHeight: `${P.vs.d - 14}px`, textAlign: 'center' }}>VS</Txt>
-        </div>
-      )}
-    </AbsoluteFill>
-  )
-}
-
-interface Tile { name: string; src: string; aspect: number; x: number; y: number; s: number; label: number }
-interface TitleBlock { lines: string[]; size: number; emphasis: string | null; x: number; y: number; lineH: number; q: { x: number; y: number; d: number } | null; tiles: Tile[] }
-
-const TITLE = {
-  '16x9': { maxSize: 196, minSize: 96, maxLines: 3, lineHeight: 0.98, q: 210 },
-  '9x16': { maxSize: 168, minSize: 84, maxLines: 5, lineHeight: 0.98, q: 200 },
-} as const
-
-/** The title, set as large as fits (Anton, upper case), shrinking to a floor;
- *  below the floor the render stops (STORY_FIT), so nothing ever runs off. */
-function titleBlock(props: StoryStandoffProps, shape: Shape): TitleBlock {
-  const S = SAFE[shape]
-  const spec = TITLE[shape]
-  const { text, emphasis } = storyTitle(props)
-  if (!text) throw new Error('STORY_FIT: the stand-off has no title (cover-facts.json video_title)')
-  const upper = text.toUpperCase()
-  const em = emphasis ? emphasis.toUpperCase() : null
-  const isQ = /\?\s*$/.test(text)
-  const d = isQ ? spec.q : 0
-  const top = S.y0 + headerH(shape) + 50
-  // The line-up: one ink tile per name, its real logo, its name beneath.
-  const cast = (props.cast ?? []).slice(0, 6)
-  const gap = shape === '16x9' ? 34 : 30
-  const s = Math.min(shape === '16x9' ? 156 : 200, Math.floor((S.x1 - S.x0 - (cast.length - 1) * gap) / Math.max(1, cast.length)))
-  const labelGap = 14, label = shape === '16x9' ? 28 : 34
-  const rowH = cast.length ? s + labelGap + label * 1.2 : 0
-  const rowY = S.y1 - rowH - 8
-  const tiles: Tile[] = cast.map((c, i) => {
-    const ref = typeof c.logo === 'string' ? { src: c.logo, aspect: 1 } : c.logo
-    const size = fitLine(c.name, measureWith('mono'), s + gap - 6, label, 16)
-    if (size === null) throw fitError('line-up name', c.name, shape, { maxWidth: s + gap - 6 }, 16, 'Shorten the name in thumbs.strip.')
-    return { name: c.name, src: ref.src, aspect: ref.aspect, x: S.x0 + i * (s + gap), y: rowY, s, label: size }
-  })
-  if (cast.length && cast.length * s + (cast.length - 1) * gap > S.x1 - S.x0 - (isQ && shape === '16x9' ? d + 40 : 0)) {
-    throw fitError('line-up', cast.map((c) => c.name).join(', '), shape, { maxWidth: S.x1 - S.x0 }, s, 'Use fewer names in the line-up.')
-  }
-  const tallQ = isQ && shape === '9x16'
-  const bottom = (cast.length ? rowY - 60 : S.y1) - (tallQ || (isQ && !cast.length) ? d + 40 : 0)
-  // A title with an ink slab gets more room between lines, so the slab never
-  // touches the line above or below.
-  const pitch = em ? spec.lineHeight + 0.14 : spec.lineHeight
-  const box = { maxWidth: S.x1 - S.x0, maxHeight: bottom - top, lineHeight: pitch, maxSize: spec.maxSize, minSize: spec.minSize, maxLines: spec.maxLines, keepPadEm: 0.3 }
-  const fit = fitText(upper, measureWith('display'), box, em)
-  if (!fit) throw fitError('video title', text, shape, box, spec.minSize, 'Shorten video_title in the plan\'s cover-facts.json.')
-  const lineH = fit.size * pitch
-  const blockH = fit.lines.length * lineH
-  const y = top + (bottom - top - blockH) / 2
-  // The "?" disc (only for a question) sits in the bottom right of the safe area.
-  const k = (Math.cos((4 * Math.PI) / 180) + Math.sin((4 * Math.PI) / 180)) * 1.03
-  const mq = (d * (k - 1)) / 2 + 2
-  const qy = cast.length ? (tallQ ? rowY - 40 - d - mq : S.y1 - d - mq) : S.y1 - d - mq
-  return { lines: fit.lines, size: fit.size, emphasis: em, x: S.x0, y, lineH, q: isQ ? { x: S.x1 - d - mq, y: qy, d } : null, tiles }
-}
-
-const labelGapPx = 14
-
-function TitleCard({ f, P, title, seriesColour }: { f: number; P: Plan; title: TitleBlock; seriesColour: string }) {
-  const { lines, size, emphasis: em, x, y, lineH, q, tiles } = title
-  const tileAt = (i: number) => P.t.line(lines.length - 1) + 5 + 3 * i
-  const qAt = tiles.length ? tileAt(tiles.length - 1) + 4 : P.t.line(lines.length - 1) + 6
-  const qs = q ? settle(f, qAt, 0.85, 6) : null
-  const wob = qs === null ? 0 : 4 * Math.sin(((f - qAt) * 2 * Math.PI) / 16)
-  const pulse = qs === null ? 1 : 1 + 0.02 * Math.sin(((f - qAt) * 2 * Math.PI) / 8 + 1)
-  return (
-    <AbsoluteFill style={{ zIndex: 30 }}>
-      <Field left={-80} top={-80} width={4000} height={4000} bg={seriesColour} />
-      {lines.map((line, i) => {
-        const s = settle(f, P.t.line(i), 0.95, 6, 4)
-        if (s === null) return null
-        const has = em && line.includes(em)
-        const parts = has ? line.split(em!) : [line]
-        return (
-          <Txt key={i} id={`title-${i}`} group={`title-${i}`} face="display" size={size} color={C.ink} lineHeight={1}
-            style={{ left: x, top: y + i * lineH, opacity: s.opacity, transform: `scale(${s.scale})`, transformOrigin: '0 60%' }}>
-            {has ? (
-              <>
-                {parts[0]}
-                <span style={{ display: 'inline-block', lineHeight: 0.86, background: C.ink, color: seriesColour, padding: '0.06em 0.15em 0.02em', borderRadius: '0.06em' }}>{em}</span>
-                {parts.slice(1).join(em!)}
-              </>
-            ) : line}
-          </Txt>
-        )
-      })}
-      {tiles.map((tl, i) => {
-        const k = settle(f, tileAt(i), 0.9, 6, 4)
-        if (!k) return null
-        // A wide wordmark (Google, Meta) gets most of the tile's width; a square mark sits a little smaller.
-        const lw = tl.s * (tl.aspect >= 2 ? 0.84 : 0.62)
-        const [bw, bh] = tl.aspect >= 1 ? [lw, lw / tl.aspect] : [lw * tl.aspect, lw]
-        return (
-          <div key={i} style={abs({ left: tl.x, top: tl.y, width: tl.s, height: tl.s + 60, opacity: k.opacity, transform: `scale(${k.scale})`, transformOrigin: '50% 40%' })}>
-            <div data-safe="box" data-id={`cast-${i}`} data-group={`cast-${i}`}
-              style={abs({ left: 0, top: 0, width: tl.s, height: tl.s, background: C.ink, borderRadius: 18, boxShadow: `8px 8px 0 ${shade(seriesColour)}` })}>
-              <Logo id={`cast-${i}-logo`} group={`cast-${i}`} src={tl.src} alt={`${tl.name} logo`}
-                style={{ left: (tl.s - bw) / 2, top: (tl.s - bh) / 2, width: bw, height: bh }} />
-            </div>
-            <Txt id={`cast-${i}-name`} group={`cast-${i}`} face="mono" size={tl.label} color={C.ink}
-              style={{ left: 0, top: tl.s + labelGapPx, width: tl.s, textAlign: 'center' }}>{tl.name}</Txt>
-          </div>
-        )
-      })}
-      {q && qs !== null && (
-        <div data-safe="box" data-id="title-q" data-group="title-q"
-          style={abs({ left: q.x, top: q.y, width: q.d, height: q.d, borderRadius: '50%', background: C.mint, border: `10px solid ${C.ink}`, boxSizing: 'border-box',
-            color: C.ink, opacity: qs.opacity, transform: `rotate(${wob}deg) scale(${qs.scale * pulse})` })}>
-          <Txt id="title-q-mark" group="title-q" face="display" size={q.d * 0.62} color={C.ink}
-            style={{ left: 0, top: 0, width: q.d - 20, height: q.d - 20, lineHeight: `${q.d - 20}px`, textAlign: 'center' }}>?</Txt>
         </div>
       )}
     </AbsoluteFill>

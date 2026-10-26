@@ -1,0 +1,28 @@
+{
+  "friday": {
+    "piece_id": "904658db-4df2-4537-a0ed-ebe93e081db7",
+    "fact_gate": {
+      "ok": true,
+      "reason": null
+    },
+    "ready": true,
+    "blocking": []
+  },
+  "monday": {
+    "piece_id": "5b5bfadc-a60c-4d0a-be8e-b2e9bf43d092",
+    "fact_gate": {
+      "ok": false,
+      "reason": "1 claim failed the fact check. Fix or cut them, then run it again, or Krish signs them off in his own words."
+    },
+    "ready": false,
+    "blocking": [
+      {
+        "id": "FACTS",
+        "name": "Every fact checked twice",
+        "blocking": true,
+        "ok": false,
+        "detail": "1 claim failed the fact check. Fix or cut them, then run it again, or Krish signs them off in his own words."
+      }
+    ]
+  }
+}

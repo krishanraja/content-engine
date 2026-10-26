@@ -1,0 +1,77 @@
+[
+  {
+    "id": "friday-long-repaired",
+    "bytes": 334051179,
+    "sha256": "4b908e3a93083be29fa538a13e790e9304151b237170f44f90102a4d3fdf63b9"
+  },
+  {
+    "id": "friday-short-repaired",
+    "bytes": 45094465,
+    "sha256": "93a10b5bcb6af642878c3bd1d100bfec659f93ccd790b8850cd5c49ffbdd6eec"
+  },
+  {
+    "id": "friday-spotify-thumbnail",
+    "bytes": 198009,
+    "sha256": "62831243940e439c548d736e6675c8ecb13739bbea37e6cc2773294cbee1c72b"
+  },
+  {
+    "id": "friday-spotify-chapters",
+    "bytes": 315,
+    "sha256": "681288f158082474f0107685ee9fcc5e3e7362b8fae9590f16d287e89ee7b0b1"
+  },
+  {
+    "id": "monday-long-review",
+    "bytes": 211951035,
+    "sha256": "90392c47fcec934f3507cf2d7dd5e26a7ddd3fd26c5c70a9988e9cb11c4f0c19"
+  },
+  {
+    "id": "monday-short-review",
+    "bytes": 55520212,
+    "sha256": "ddd7c60efc5d3062179b17716d423da12f2be7f81ffa01015cbfba9f7a78e087"
+  },
+  {
+    "id": "monday-wide-thumbnail",
+    "bytes": 119734,
+    "sha256": "60ae467142bdd46454698759ede576a15c8cbdbab48ec94bc205ba162c4fe927"
+  },
+  {
+    "id": "monday-tall-thumbnail",
+    "bytes": 185705,
+    "sha256": "9566ee431745280d136cee4c693e1268e3ccfb010806019b757bd925bb044f01"
+  },
+  {
+    "id": "monday-spotify-thumbnail",
+    "bytes": 203725,
+    "sha256": "83262c87cd5e638fcebd0771ee2547437d1699c9be38ce93c0b037622df97e4b"
+  },
+  {
+    "id": "monday-spotify-chapters",
+    "bytes": 236,
+    "sha256": "5b00700b2716f2e587613cc2bfe2c103eb3a730c1400122c5236abd051d1f99b"
+  },
+  {
+    "id": "monday-approved-captions",
+    "bytes": 9431,
+    "sha256": "933d38361ca97745d45cc63ce921514b6e9bb389e9bf5fe1cef575361bd100c9"
+  },
+  {
+    "id": "monday-approved-transcript",
+    "bytes": 5271,
+    "sha256": "f8d47b365059c5381e795ff236e259fd282cb726d33f941ca4f481ec9ae7fd6d"
+  },
+  {
+    "id": "monday-caption-82",
+    "bytes": 384078,
+    "sha256": "6791db84783962308ea103071b91ef3daa5dd8dc71e3c3eb6cdba9de3e3826eb"
+  },
+  {
+    "id": "monday-caption-157",
+    "bytes": 320078,
+    "sha256": "8702ca20e862ff4118e00cb641063208609d7cbe0390715034731c335f147648"
+  },
+  {
+    "id": "monday-caption-331",
+    "bytes": 288078,
+    "sha256": "e38eb964bc28730ed9fbff8f993aa43fa803841c779d14a94497945ad992d1b4"
+  }
+]

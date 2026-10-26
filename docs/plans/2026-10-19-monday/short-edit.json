@@ -46,6 +46,10 @@
     [
       "canceled",
       "cancelled"
+    ],
+    [
+      "argon",
+      "Argon"
     ]
   ],
   "endcard": {
@@ -83,7 +87,7 @@
     "note": "The cue words are the script's. Run --plan on the recording; where a cue is not found, put the words Krish said there. \"remove\" and \"replacements\" are for the stumbles and misheard names the plan shows."
   },
   "face": [
-    210,
+    400,
     920
   ],
   "voice": "repair",

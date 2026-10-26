@@ -1,0 +1,1508 @@
+{
+  "request": {
+    "action": "manual_review",
+    "decided_by": "Krish",
+    "said": "Approve the auditable manual-review route",
+    "reason": "Krish said \"Sign off the listed entries on that basis\" for the listed OpenAI entry documented in fact-review.md, then separately approved this auditable route. The filed August 21 changelog gives the promotional $4 input / $20 output prices, valid at least through November 21. The checker cited the older launch prices. Preserve its contradicted verdict and record this source-backed human decision separately.",
+    "sentence": "OpenAI, 21 August: \"GPT-5.6 Sol now costs $4 per million input tokens and $20 per million output tokens.\"",
+    "material_id": "c5ac2492-10cc-4448-88df-af86bd102bdb",
+    "quote": "GPT-5.6 Sol now costs $4 per million input tokens and $20 per million output tokens",
+    "expected_body_hash": "071aab633ca18332a5485244a0ef74f7faf413db054182332f9ce141c570dadb",
+    "expected_run_at": "2026-10-19T17:49:56.602Z",
+    "expected_sources_hash": "faa5826eb200d93900348509378ef4f2eebe201fe6847bb7da75a5af2ce5d641"
+  },
+  "first": {
+    "ok": true,
+    "review": {
+      "sentence": "OpenAI, 21 August: \"GPT-5.6 Sol now costs $4 per million input tokens and $20 per million output tokens.\"",
+      "decided_by": "Krish",
+      "said": "Approve the auditable manual-review route",
+      "reason": "Krish said \"Sign off the listed entries on that basis\" for the listed OpenAI entry documented in fact-review.md, then separately approved this auditable route. The filed August 21 changelog gives the promotional $4 input / $20 output prices, valid at least through November 21. The checker cited the older launch prices. Preserve its contradicted verdict and record this source-backed human decision separately.",
+      "body_hash": "071aab633ca18332a5485244a0ef74f7faf413db054182332f9ce141c570dadb",
+      "run_at": "2026-10-19T17:49:56.602Z",
+      "sources_hash": "faa5826eb200d93900348509378ef4f2eebe201fe6847bb7da75a5af2ce5d641",
+      "original_claim": {
+        "kind": "quote",
+        "claim": "OpenAI stated on 21 August that GPT-5.6 Sol costs $4 per million input tokens and $20 per million output tokens.",
+        "on_file": {
+          "note": "a contradiction the passage does not bear out; model said: The changelog only gives a month-level heading 'August, 2026', not a specific date of 21 August; no specific day is stated for this entry.",
+          "quote": "### August, 2026 | GPT-5.6 Sol now costs $4 per million input tokens and $20 per million output tokens, representing 20% lower input pricing and 33% lower output pricing. GPT-5.6 Sol\u2019s promotional pricing is available at least through November 21, 2026. See pricing details.",
+          "verdict": "not_found"
+        },
+        "verdict": "contradicted",
+        "sentence": "OpenAI, 21 August: \"GPT-5.6 Sol now costs $4 per million input tokens and $20 per million output tokens.\"",
+        "independent": {
+          "url": "https://openai.com/index/gpt-5-6/",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "contradicted",
+          "evidence": "GPT\u20115.6 Sol by over 20% for the next 3 months. GPT\u20115.6 is priced per 1M tokens across three model sizes: Sol is $5 input / $30 output",
+          "correct_value": "$5 per million input tokens and $30 per million output tokens; OpenAI announced a temporary price reduction of over 20% on August 21, 2026"
+        }
+      },
+      "evidence": {
+        "material_id": "c5ac2492-10cc-4448-88df-af86bd102bdb",
+        "url": "https://developers.openai.com/api/docs/changelog",
+        "quote": "GPT-5.6 Sol now costs $4 per million input tokens and $20 per million output tokens",
+        "content_hash": "8862407c46aaa03d76e98857890f45bdcb7c94e3e3623a3ece3d39d3a72dcbb0"
+      },
+      "at": "2026-10-19T21:37:22.401Z",
+      "id": "51b9199a777caa31224e056e5b788d645db164e6639b77860fbbcc6ca9185e4e"
+    },
+    "gate": {
+      "ok": true,
+      "reason": null
+    }
+  },
+  "repeated": {
+    "ok": true,
+    "review": {
+      "at": "2026-10-19T21:37:22.401Z",
+      "id": "51b9199a777caa31224e056e5b788d645db164e6639b77860fbbcc6ca9185e4e",
+      "said": "Approve the auditable manual-review route",
+      "reason": "Krish said \"Sign off the listed entries on that basis\" for the listed OpenAI entry documented in fact-review.md, then separately approved this auditable route. The filed August 21 changelog gives the promotional $4 input / $20 output prices, valid at least through November 21. The checker cited the older launch prices. Preserve its contradicted verdict and record this source-backed human decision separately.",
+      "run_at": "2026-10-19T17:49:56.602Z",
+      "evidence": {
+        "url": "https://developers.openai.com/api/docs/changelog",
+        "quote": "GPT-5.6 Sol now costs $4 per million input tokens and $20 per million output tokens",
+        "material_id": "c5ac2492-10cc-4448-88df-af86bd102bdb",
+        "content_hash": "8862407c46aaa03d76e98857890f45bdcb7c94e3e3623a3ece3d39d3a72dcbb0"
+      },
+      "sentence": "OpenAI, 21 August: \"GPT-5.6 Sol now costs $4 per million input tokens and $20 per million output tokens.\"",
+      "body_hash": "071aab633ca18332a5485244a0ef74f7faf413db054182332f9ce141c570dadb",
+      "decided_by": "Krish",
+      "sources_hash": "faa5826eb200d93900348509378ef4f2eebe201fe6847bb7da75a5af2ce5d641",
+      "original_claim": {
+        "kind": "quote",
+        "claim": "OpenAI stated on 21 August that GPT-5.6 Sol costs $4 per million input tokens and $20 per million output tokens.",
+        "on_file": {
+          "note": "a contradiction the passage does not bear out; model said: The changelog only gives a month-level heading 'August, 2026', not a specific date of 21 August; no specific day is stated for this entry.",
+          "quote": "### August, 2026 | GPT-5.6 Sol now costs $4 per million input tokens and $20 per million output tokens, representing 20% lower input pricing and 33% lower output pricing. GPT-5.6 Sol\u2019s promotional pricing is available at least through November 21, 2026. See pricing details.",
+          "verdict": "not_found"
+        },
+        "verdict": "contradicted",
+        "sentence": "OpenAI, 21 August: \"GPT-5.6 Sol now costs $4 per million input tokens and $20 per million output tokens.\"",
+        "independent": {
+          "url": "https://openai.com/index/gpt-5-6/",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "contradicted",
+          "evidence": "GPT\u20115.6 Sol by over 20% for the next 3 months. GPT\u20115.6 is priced per 1M tokens across three model sizes: Sol is $5 input / $30 output",
+          "correct_value": "$5 per million input tokens and $30 per million output tokens; OpenAI announced a temporary price reduction of over 20% on August 21, 2026"
+        }
+      }
+    },
+    "already": true,
+    "gate": {
+      "ok": true,
+      "reason": null
+    }
+  },
+  "after": {
+    "ok": true,
+    "fact_check": {
+      "claims": [
+        {
+          "kind": "event",
+          "claim": "Google launched Gemini 4 Argon on 13 October and called the price 'introductory'.",
+          "on_file": {
+            "note": "Blog post dated 13 October 2026 titled 'Built to solve your hardest problems' describes launch pricing as 'introductory'.",
+            "quote": "Gemini 4 Argon: Built to solve your hardest problems (Google, 13 October 2026) | The model launches today at an introductory price1 of $2 per million input tokens and $10 per million output tokens (with cached input tokens at 95% off).",
+            "primary": true,
+            "verdict": "supported"
+          },
+          "verdict": "verified_on_file",
+          "sentence": "When Google launched its newest AI, Gemini 4 Argon, on 13 October, it called the price \"introductory\".",
+          "independent": {
+            "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-argon/",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "unclear",
+            "evidence": "The model launches today at an introductory price [supported not borne out by the quoted evidence]",
+            "correct_value": null
+          },
+          "carried_from": "2026-10-19T09:40:46.120Z"
+        },
+        {
+          "kind": "number",
+          "claim": "Google's price list shows tokens in at $2.00 now and $4.00 from 1 December.",
+          "on_file": {
+            "note": "Matches the input (tokens in) price row for Gemini 4 Argon.",
+            "quote": "| Input price | Not available | $2.00 through November 30, 2026. $4.00 starting December 1, 2026. |",
+            "primary": true,
+            "verdict": "supported"
+          },
+          "verdict": "verified",
+          "sentence": "Tokens in: $2.00 now, $4.00 from 1 December.",
+          "independent": {
+            "url": "https://ai.google.dev/gemini-api/docs/pricing.md.txt",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "supported",
+            "evidence": "$2.00 through November 30, 2026. $4.00 starting December 1, 2026.",
+            "correct_value": null
+          },
+          "carried_from": "2026-10-19T09:43:10.600Z"
+        },
+        {
+          "kind": "number",
+          "claim": "Google's price list shows cached/already-read input tokens at $0.10 now and $0.20 from 1 December.",
+          "on_file": {
+            "note": "This row matches Gemini 4 Argon's context caching price in the pricing table.",
+            "quote": "| Context caching price | Not available | $0.10 through November 30, 2026. $0.20 starting December 1, 2026. Implicit caching only (explicit caching is not supported). |",
+            "primary": true,
+            "verdict": "supported"
+          },
+          "verdict": "verified_on_file",
+          "sentence": "Tokens in that it has already read: $0.10 now, $0.20 from 1 December.",
+          "independent": {
+            "url": "https://ai.google.dev/gemini-api/docs/pricing",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "unclear",
+            "evidence": "Context caching price ... $0.10 through November 30, 2026. $0.20 starting December 1, 2026. [supported not borne out by the quoted evidence]",
+            "correct_value": null
+          },
+          "carried_from": "2026-10-19T09:43:10.600Z"
+        },
+        {
+          "kind": "number",
+          "claim": "Google's price list shows output tokens (including thinking) at $10.00 now and $20.00 from 1 December.",
+          "on_file": {
+            "note": "Matches the Gemini 4 Argon output pricing row in the Enterprise pricing table.",
+            "quote": "| Output price (including thinking tokens) | Not available | $10.00 through November 30, 2026. $20.00 starting December 1, 2026. |",
+            "primary": true,
+            "verdict": "supported"
+          },
+          "verdict": "verified_on_file",
+          "sentence": "Tokens out, thinking included: $10.00 now, $20.00 from 1 December.",
+          "independent": {
+            "url": "https://ai.google.dev/gemini-api/docs/pricing.md.txt",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "unclear",
+            "evidence": "Output price (including thinking tokens) | Not available | $10.00 through November 30, 2026. $20.00 starting December 1, 2026. [supported not borne out by the quoted evidence]",
+            "correct_value": null
+          },
+          "carried_from": "2026-10-19T09:43:10.600Z"
+        },
+        {
+          "kind": "other",
+          "claim": "Google calls this feature context caching.",
+          "on_file": {
+            "note": "The documentation page title and heading explicitly name the feature 'Context caching'.",
+            "quote": "Title: Context caching | # Context caching",
+            "primary": true,
+            "verdict": "supported"
+          },
+          "verdict": "verified_on_file",
+          "sentence": "Google calls this context caching.",
+          "independent": {
+            "url": "https://ai.google.dev/gemini-api/docs/caching",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "unclear",
+            "evidence": "# Context caching [supported not borne out by the quoted evidence]",
+            "correct_value": null
+          },
+          "carried_from": "2026-10-19T09:43:10.600Z"
+        },
+        {
+          "kind": "other",
+          "claim": "Google has published a price list for Argon, per million tokens",
+          "on_file": {
+            "note": "Google's Cloud blog publishes the per-million-token pricing for Argon.",
+            "quote": "Argon launches at an introductory rate of $2 per million input tokens and $10 per million output tokens through November 30, 2026, with cached input tokens priced at 95% off. After November 30, standard pricing of $4 per million input tokens and $20 per million output tokens will apply.",
+            "primary": true,
+            "verdict": "supported"
+          },
+          "verdict": "verified_on_file",
+          "sentence": "Here's Google's own price list for Argon, per million tokens:",
+          "independent": {
+            "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-argon/",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "unclear",
+            "evidence": "The model launches today at an introductory price of $2 per million input tokens and $10 per million output tokens [supported not borne out by the quoted evidence]",
+            "correct_value": null
+          },
+          "carried_from": "2026-10-19T09:40:46.120Z"
+        },
+        {
+          "kind": "other",
+          "claim": "Every line in Google's Argon price list doubles",
+          "on_file": {
+            "note": "Every input, output, and context caching price row in the Gemini Developer API pricing table shows the December 1, 2026 price as exactly double the price through November 30, 2026.",
+            "quote": "Input price | Not available | $2.00 through November 30, 2026. $4.00 starting December 1, 2026. | Output price (including thinking tokens) | Not available | $10.00 through November 30, 2026. $20.00 starting December 1, 2026. | Context caching price | Not available | $0.10 through November 30, 2026. $0.20 starting December 1, 2026. Implicit caching only (explicit caching is not supported).",
+            "primary": true,
+            "verdict": "supported"
+          },
+          "verdict": "verified_on_file",
+          "sentence": "Every line doubles.",
+          "independent": {
+            "url": "https://computingforgeeks.com/gemini-4-argon-released-features-benchmarks/",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "unclear",
+            "evidence": "From December 1 the price doubles to $4 and $20. | Mode (per 1M tokens) | Input | Output | Cached input | From Dec 1, 2026 | Standard | $2.00 | $10.00 | $0.10 | $4 / $20 / $0.20 | Batch | $1.00 | $5.00 | $0.05 | $2 / $10 / $0.10 | Flex | $1.00 | $5.00 | $0.05 | $2 / $10 / $0.10 | Priority | $3.60 | $18.00 | $0.18 | $7.20 / $36 / $0.36 [contradicted not borne out by the quoted evidence]",
+            "correct_value": "Only the standard Argon rates double from $2/$10/$0.10 to $4/$20/$0.20; batch and flex rates double from $1/$5/$0.05 to $2/$10/$0.10, while priority rates double from $3.60/$18/$0.18 to $7.20/$36/$0.36."
+          },
+          "carried_from": "2026-10-19T09:40:46.120Z"
+        },
+        {
+          "kind": "quote",
+          "claim": "Google's footnote states that after the introductory period expires on November 30, 2026, the price of $4 per 1M input tokens and $20 per 1M output tokens will apply.",
+          "on_file": {
+            "note": null,
+            "quote": "After the introductory period expires on November 30, 2026, the price of $4 per 1M input tokens and $20 per 1M output tokens will apply. Applies to the Argon model intended for public access only.",
+            "primary": true,
+            "verdict": "supported"
+          },
+          "verdict": "verified",
+          "sentence": "Then the footnote: \"After the introductory period expires on November 30, 2026, the price of $4 per 1M input tokens and $20 per 1M output tokens will apply.\"",
+          "independent": {
+            "url": "https://blog.google/intl/en-in/products/introducing-gemini-4-argon/",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "supported",
+            "evidence": "After the introductory period expires on November 30, 2026, the price of $4 per 1M input tokens and $20 per 1M output tokens will apply.",
+            "correct_value": null
+          }
+        },
+        {
+          "kind": "other",
+          "claim": "Google says a token is about four characters.",
+          "on_file": {
+            "note": "Google's own token documentation states this equivalence.",
+            "quote": "**For Gemini models, a token is equivalent to about 4 characters. 100 tokens is equal to about 60-80 English words.**",
+            "primary": true,
+            "verdict": "supported"
+          },
+          "verdict": "verified",
+          "sentence": "Google charges by the token, which it says is about four characters.",
+          "independent": {
+            "url": "https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "supported",
+            "evidence": "4 characters result in approximately 1 text token including white space.",
+            "correct_value": null
+          }
+        },
+        {
+          "kind": "other",
+          "claim": "Google counts the AI's 'thinking' as output tokens.",
+          "on_file": {
+            "note": "Gemini pricing table shows output price explicitly includes thinking tokens.",
+            "quote": "Output price (including thinking tokens) | Not available | $10.00 through November 30, 2026. $20.00 starting December 1, 2026.",
+            "primary": true,
+            "verdict": "supported"
+          },
+          "verdict": "verified",
+          "sentence": "You pay for the tokens you send in and the tokens the AI sends back, and Google counts the AI's \"thinking\" as tokens sent back.",
+          "independent": {
+            "url": "https://ai.google.dev/gemini-api/docs/thinking",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "supported",
+            "evidence": "When thinking is turned on, response pricing is the sum of output tokens and thinking tokens.",
+            "correct_value": null
+          }
+        },
+        {
+          "kind": "quote",
+          "claim": "Google's launch post states the pricing applies to the Argon model intended for public access only.",
+          "on_file": {
+            "note": "Exact phrase found in the Google launch blog post.",
+            "quote": "After the introductory period expires on November 30, 2026, the price of $4 per 1M input tokens and $20 per 1M output tokens will apply. Applies to the Argon model intended for public access only.",
+            "primary": true,
+            "verdict": "supported"
+          },
+          "verdict": "verified",
+          "sentence": "Google's launch post says this \"applies to the Argon model intended for public access only\".",
+          "independent": {
+            "url": "https://blog.google/intl/en-mena/product-updates/explore-get-answers/gemini-4-argon-built-to-solve-your-hardest-problems/",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "supported",
+            "evidence": "Applies to the Argon model intended for public access only.",
+            "correct_value": null
+          }
+        },
+        {
+          "kind": "quote",
+          "claim": "OpenAI stated on 21 August that GPT-5.6 Sol costs $4 per million input tokens and $20 per million output tokens.",
+          "on_file": {
+            "note": "a contradiction the passage does not bear out; model said: The changelog only gives a month-level heading 'August, 2026', not a specific date of 21 August; no specific day is stated for this entry.",
+            "quote": "### August, 2026 | GPT-5.6 Sol now costs $4 per million input tokens and $20 per million output tokens, representing 20% lower input pricing and 33% lower output pricing. GPT-5.6 Sol\u2019s promotional pricing is available at least through November 21, 2026. See pricing details.",
+            "verdict": "not_found"
+          },
+          "verdict": "contradicted",
+          "sentence": "OpenAI, 21 August: \"GPT-5.6 Sol now costs $4 per million input tokens and $20 per million output tokens.\"",
+          "independent": {
+            "url": "https://openai.com/index/gpt-5-6/",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "contradicted",
+            "evidence": "GPT\u20115.6 Sol by over 20% for the next 3 months. GPT\u20115.6 is priced per 1M tokens across three model sizes: Sol is $5 input / $30 output",
+            "correct_value": "$5 per million input tokens and $30 per million output tokens; OpenAI announced a temporary price reduction of over 20% on August 21, 2026"
+          }
+        },
+        {
+          "kind": "quote",
+          "claim": "OpenAI's changelog states GPT-5.6 Sol's promotional pricing is available at least through November 21, 2026.",
+          "on_file": {
+            "note": "Exact match found in the OpenAI changelog source.",
+            "quote": "GPT-5.6 Sol\u2019s promotional pricing is available at least through November 21, 2026. See pricing details.",
+            "primary": true,
+            "verdict": "supported"
+          },
+          "verdict": "verified",
+          "sentence": "Same changelog, same day: \"GPT-5.6 Sol's promotional pricing is available at least through November 21, 2026.\"",
+          "independent": {
+            "url": "https://developers.openai.com/api/docs/changelog",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "supported",
+            "evidence": "GPT-5.6 Sol\u2019s promotional pricing is available at least through November 21, 2026.",
+            "correct_value": null
+          }
+        },
+        {
+          "kind": "quote",
+          "claim": "Anthropic stated on 10 August that the introductory pricing for Claude Sonnet 5 ($2/$10 per MTok) is now standard and the planned increase to $3/$15 per MTok on September 1, 2026 will not occur.",
+          "on_file": {
+            "note": "Date heading and statement together confirm the claim exactly.",
+            "quote": "### August 10, 2026 | The introductory pricing for **Claude Sonnet 5** ($2 / $10 per MTok) is now the standard price: the previously scheduled increase to $3 / $15 per MTok on September 1, 2026 will not occur. See Pricing.",
+            "primary": true,
+            "verdict": "supported"
+          },
+          "verdict": "verified",
+          "sentence": "Anthropic, 10 August: \"The introductory pricing for Claude Sonnet 5 ($2 / $10 per MTok) is now the standard price: the previously scheduled increase to $3 / $15 per MTok on September 1, 2026 will not occur.\"",
+          "independent": {
+            "url": "https://docs.anthropic.com/en/release-notes/api",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "supported",
+            "evidence": "The introductory pricing for Claude Sonnet 5 ($2 / $10 per MTok) is now the standard price: the previously scheduled increase to $3 / $15 per MTok on September 1, 2026 will not occur.",
+            "correct_value": null
+          }
+        },
+        {
+          "kind": "quote",
+          "claim": "Anthropic launched Claude Opus 5.5 on 22 September at $4/$20 per MTok, while Claude Opus 5 is priced at $5/$25.",
+          "on_file": {
+            "note": "Date, model, and both prices match exactly.",
+            "quote": "### September 22, 2026 | We've launched **Claude Opus 5.5** (`claude-opus-5-5`), a model for long-running agentic coding and knowledge work. It has a 1M token context window by default, 128k max output tokens, and always-on adaptive thinking, at $4 / $20 USD per MTok (Claude Opus 5 is $5 / $25).",
+            "primary": true,
+            "verdict": "supported"
+          },
+          "verdict": "verified",
+          "sentence": "Anthropic again, 22 September: Claude Opus 5.5 launched \"at $4 / $20 USD per MTok (Claude Opus 5 is $5 / $25)\".",
+          "independent": {
+            "url": "https://docs.anthropic.com/en/release-notes/api",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "supported",
+            "evidence": "We've launched Claude Opus 5.5 (`claude-opus-5-5`), a model for long-running agentic coding and knowledge work. It has a 1M token context window by default, 128k max output tokens, and always-on adaptive thinking, at $4 / $20 USD per MTok (Claude Opus 5 is $5 / $25).",
+            "correct_value": null
+          }
+        },
+        {
+          "kind": "number",
+          "claim": "Anthropic cut the price of reused tokens on Claude Sonnet 5.5 from $0.20 to $0.10 per million on 7 October.",
+          "on_file": {
+            "note": "Cache reads are the 'reused tokens'; date and prices match exactly.",
+            "quote": "### October 7, 2026 | We've lowered the price of prompt cache reads on Claude Sonnet 5.5 from $0.20 USD to $0.10 USD per million tokens: 0.05x the base input price instead of 0.1x. Cache writes and all other prices are unchanged. See Prompt caching pricing.",
+            "primary": true,
+            "verdict": "supported"
+          },
+          "verdict": "verified_on_file",
+          "sentence": "And on 7 October it cut the price of reused tokens on Claude Sonnet 5.5 from $0.20 to $0.10 per million.",
+          "independent": {
+            "url": "https://docs.anthropic.com/en/release-notes/api",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "unclear",
+            "evidence": "We've lowered the price of prompt cache reads on Claude Sonnet 5.5 from $0.20 USD to $0.10 USD per million tokens [supported not borne out by the quoted evidence]",
+            "correct_value": null
+          }
+        },
+        {
+          "kind": "quote",
+          "claim": "Google's launch post says reused (cached) tokens are 95% off.",
+          "on_file": {
+            "note": "Google's launch post explicitly states cached input tokens are 95% off.",
+            "quote": "The model launches today at an introductory price1 of $2 per million input tokens and $10 per million output tokens (with cached input tokens at 95% off).",
+            "primary": true,
+            "verdict": "supported"
+          },
+          "verdict": "verified",
+          "sentence": "Google's AI notices when a request starts the same way as one it saw a moment ago, and its launch post says those tokens are \"95% off\".",
+          "independent": {
+            "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-argon/",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "supported",
+            "evidence": "The model launches today at an introductory price of $2 per million input tokens and $10 per million output tokens (with cached input tokens at 95% off).",
+            "correct_value": null
+          }
+        },
+        {
+          "kind": "number",
+          "claim": "Anthropic has changed its reuse (cached token) prices twice since the start of September.",
+          "on_file": {
+            "note": "Only one cache-price change (Oct 7) is documented since September; no second change is found in the sources.",
+            "quote": "We've lowered the price of prompt cache reads on Claude Sonnet 5.5 from $0.20 USD to $0.10 USD per million tokens: 0.05x the base input price instead of 0.1x. Cache writes and all other prices are unchanged. See Prompt caching pricing.",
+            "verdict": "not_found"
+          },
+          "verdict": "unverified",
+          "sentence": "And Anthropic has changed its reuse prices twice since the start of September, so the discount itself moves.",
+          "independent": {
+            "url": "https://mixed-news.com/en/anthropic-sonnet-5-5-cache-reads-halved-claude-code-2-1-296-cost/",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "unclear",
+            "evidence": "Anthropic halved the price of prompt cache reads on Claude Sonnet 5.5 on October 7, and ... Anthropic launched [Fable 5.1] ... cuts cache read pricing by 75% to $0.25 per million tokens. [supported not borne out by the quoted evidence]",
+            "correct_value": null
+          }
+        },
+        {
+          "kind": "quote",
+          "claim": "Sanchit Vir Gogia, chief analyst at Greyhound Research, was quoted in Computerworld saying 'Cheap per token and cheap per task are different claims, and only the second one reaches the budget.'",
+          "on_file": {
+            "note": "Quote matches exactly and is attributed to Gogia in Computerworld.",
+            "quote": "Gogia said Google bills reasoning tokens at the output rate, which makes the per-token price a poor guide to agent costs. \u201cCheap per token and cheap per task are different claims, and only the second one reaches the budget,\u201d he said.",
+            "primary": true,
+            "verdict": "supported"
+          },
+          "verdict": "verified_on_file",
+          "sentence": "Sanchit Vir Gogia, chief analyst at Greyhound Research, put the catch well in Computerworld: \"Cheap per token and cheap per task are different claims, and only the second one reaches the budget.\"",
+          "independent": {
+            "url": "https://www.computerworld.com/article/4235123/google-positions-gemini-4-argon-for-long-horizon-agentic-work-2.html",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "unclear",
+            "evidence": "\u201cCheap per token and cheap per task are different claims, and only the second one reaches the budget,\u201d he said. [supported not borne out by the quoted evidence]",
+            "correct_value": null
+          }
+        },
+        {
+          "kind": "quote",
+          "claim": "Gogia told Computerworld that CIOs should budget at the higher rate from day one and said 'a business case built on the launch rate is a business case built to be rewritten in seven weeks'.",
+          "on_file": {
+            "note": "Matches exactly as stated in the Computerworld article.",
+            "quote": "Sanchit Vir Gogia, chief analyst at Greyhound Research, said CIOs should budget at the higher rate from day one, because no enterprise evaluation, security review, and procurement cycle finishes within the discount window. \u201cA business case built on the launch rate is a business case built to be rewritten in seven weeks,\u201d he said.",
+            "primary": true,
+            "verdict": "supported"
+          },
+          "verdict": "verified",
+          "sentence": "Gogia told Computerworld that CIOs should budget at the higher rate from day one, and that \"a business case built on the launch rate is a business case built to be rewritten in seven weeks\".",
+          "independent": {
+            "url": "https://www.computerworld.com/article/4235123/google-positions-gemini-4-argon-for-long-horizon-agentic-work-2.html",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "supported",
+            "evidence": "Sanchit Vir Gogia, chief analyst at Greyhound Research, said CIOs should budget at the higher rate from day one... \u201cA business case built on the launch rate is a business case built to be rewritten in seven weeks,\u201d he said.",
+            "correct_value": null
+          }
+        },
+        {
+          "kind": "attribution",
+          "claim": "Gogia pointed out that Google Cloud's standard terms allow fee changes unless a price is expressly agreed.",
+          "on_file": {
+            "note": "Matches source wording closely; 'also' is a trivial addition not affecting meaning.",
+            "quote": "Gogia pointed out that Google Cloud\u2019s standard terms allow fee changes unless a price is expressly agreed.",
+            "primary": true,
+            "verdict": "supported"
+          },
+          "verdict": "verified",
+          "sentence": "Gogia also pointed out that Google Cloud's standard terms allow fee changes unless a price is expressly agreed.",
+          "independent": {
+            "url": "https://www.infoworld.com/article/4235118/google-positions-gemini-4-argon-for-long-horizon-agentic-work.html",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "supported",
+            "evidence": "Gogia pointed out that Google Cloud\u2019s standard terms allow fee changes unless a price is expressly agreed.",
+            "correct_value": null
+          }
+        },
+        {
+          "kind": "event",
+          "claim": "Google made an announcement/disclosure in a footnote",
+          "on_file": {
+            "note": "Article states the price increase was disclosed via a footnote in Google's post.",
+            "quote": "According to the post, Argon costs $2 per million input tokens and $10 per million output tokens during the introductory period, with cached input discounted by 95%. A footnote in the post states the prices rise to $4 and $20, respectively, after November 30.",
+            "primary": true,
+            "verdict": "supported"
+          },
+          "verdict": "verified_on_file",
+          "sentence": "Google told everyone, in a footnote.",
+          "independent": {
+            "url": "https://ppc.land/google-prices-gemini-4-argon-at-2-per-million-tokens-paid-users-only/",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "unclear",
+            "evidence": "The post attaches a footnote to the word \u201cintroductory,\u201d but the footnote text does not appear in the version of the post provided.",
+            "correct_value": null
+          }
+        },
+        {
+          "kind": "unclassified",
+          "claim": "But I've spent the last week reading the price pages and release notes of the three big AI firms, and it's part of a pattern.",
+          "on_file": {
+            "note": "This is a first-person authorial statement not found in any source; the sources contain no such claim.",
+            "quote": null,
+            "verdict": "not_found"
+          },
+          "verdict": "unverified",
+          "sentence": "But I've spent the last week reading the price pages and release notes of the three big AI firms, and it's part of a pattern.",
+          "independent": {
+            "url": "https://fourweekmba.com/ai-minimax-prices-m3-1-flash-at-deepseeks-off-peak-rate-24-7/",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "unclear",
+            "evidence": "This piece is based on MiniMax\u2019s posts on X of 19 October 2026 ... and the official pricing pages of DeepSeek, Z.ai, Anthropic, OpenAI and Google, all read on 19 October 2026.",
+            "correct_value": null
+          }
+        },
+        {
+          "kind": "number",
+          "claim": "There were at least six moves (by the companies/entities referenced) in about ten weeks, counting Google's",
+          "on_file": {
+            "note": "The sources do not contain any statement counting or summarizing a total number of pricing moves/events across companies, nor any claim framing them as 'at least six moves in about ten weeks'; this is an inference not stated in the sources.",
+            "quote": null,
+            "verdict": "not_found"
+          },
+          "verdict": "unverified",
+          "sentence": "Count them with Google's and that's at least six moves in about ten weeks.",
+          "independent": {
+            "url": "https://sigb.ai/entity/google/",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "unclear",
+            "evidence": "No reliable published source found stating: \u201cCount them with Google's and that's at least six moves in about ten weeks.\u201d",
+            "correct_value": null
+          }
+        },
+        {
+          "kind": "other",
+          "claim": "From 1 December, Argon's pricing is $4 in and $20 out.",
+          "on_file": {
+            "note": "Pricing table confirms $4 input / $20 output starting December 1, 2026 for Argon.",
+            "quote": "Input price | Not available | $2.00 through November 30, 2026. $4.00 starting December 1, 2026. | Output price (including thinking tokens) | Not available | $10.00 through November 30, 2026. $20.00 starting December 1, 2026.",
+            "primary": true,
+            "verdict": "supported"
+          },
+          "verdict": "verified_on_file",
+          "sentence": "From 1 December, Argon is $4 in and $20 out.",
+          "independent": {
+            "url": "https://iosnack.com/blog/gemini-4-argon-price-benchmarks-business",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "unclear",
+            "evidence": "From 1 December the price is $4 in and $20 out [supported not borne out by the quoted evidence]",
+            "correct_value": null
+          }
+        },
+        {
+          "kind": "number",
+          "claim": "GPT-5.6 Sol is priced at $4 and $20",
+          "on_file": {
+            "note": "Source confirms $4/$20 pricing is promotional/introductory.",
+            "quote": "GPT-5.6 Sol now costs $4 per million input tokens and $20 per million output tokens, representing 20% lower input pricing and 33% lower output pricing. GPT-5.6 Sol\u2019s promotional pricing is available at least through November 21, 2026.",
+            "primary": true,
+            "verdict": "supported"
+          },
+          "verdict": "verified",
+          "sentence": "GPT-5.6 Sol is $4 and $20, on a promotion.",
+          "independent": {
+            "url": "https://developers.openai.com/api/docs/models/gpt-5.6-sol",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "supported",
+            "evidence": "GPT-5.6 Sol costs $4 per million input tokens and $20 per million output tokens... GPT-5.6 Sol\u2019s promotional pricing is available at least through November 21, 2026.",
+            "correct_value": null
+          }
+        },
+        {
+          "kind": "other",
+          "claim": "The $4 and $20 pricing for GPT-5.6 Sol is part of a promotion",
+          "on_file": {
+            "note": "Source confirms $4/$20 pricing is described as promotional pricing.",
+            "quote": "GPT-5.6 Sol now costs $4 per million input tokens and $20 per million output tokens, representing 20% lower input pricing and 33% lower output pricing. GPT-5.6 Sol\u2019s promotional pricing is available at least through November 21, 2026.",
+            "primary": true,
+            "verdict": "supported"
+          },
+          "verdict": "verified_on_file",
+          "sentence": "GPT-5.6 Sol is $4 and $20, on a promotion.",
+          "independent": {
+            "url": "https://developers.openai.com/api/docs/models/gpt-5.6-sol",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "unclear",
+            "evidence": "GPT-5.6 Sol\u2019s promotional pricing is available at least through November 21, 2026. [supported not borne out by the quoted evidence]",
+            "correct_value": null
+          }
+        },
+        {
+          "kind": "number",
+          "claim": "Claude Opus 5.5 costs $4 and $20 (pricing tiers/rates)",
+          "on_file": {
+            "note": "Matches input/output pricing of $4/$20 per MTok for Claude Opus 5.5.",
+            "quote": "Claude Opus 5.5 (`claude-opus-5-5`), a model for long-running agentic coding and knowledge work. It has a 1M token context window by default, 128k max output tokens, and always-on adaptive thinking, at $4 / $20 USD per MTok (Claude Opus 5 is $5 / $25).",
+            "primary": true,
+            "verdict": "supported"
+          },
+          "verdict": "verified",
+          "sentence": "Claude Opus 5.5 is $4 and $20.",
+          "independent": {
+            "url": "https://platform.claude.com/docs/en/models/opus-5-5/whats-new-opus-5-5",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "supported",
+            "evidence": "Claude Opus 5.5 costs $4 USD per million input tokens and $20 USD per million output tokens",
+            "correct_value": null
+          }
+        },
+        {
+          "kind": "number",
+          "claim": "There are three rivals being referenced",
+          "on_file": {
+            "note": "The sources discuss Google, OpenAI, and Anthropic pricing changes, but no passage states or frames them as 'three rivals' in this manner\u2014this framing/claim is not present in the source text.",
+            "quote": null,
+            "verdict": "not_found"
+          },
+          "verdict": "unverified",
+          "sentence": "Three rivals, one price, and every one of those numbers has moved this year.",
+          "independent": {
+            "url": "https://forkast.news/four-rival-agents-four-money-models-and-the-price-tag-nobody-has-printed/",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "unclear",
+            "evidence": "No reliable published source found stating the quoted phrase or identifying three specific rivals.",
+            "correct_value": null
+          }
+        },
+        {
+          "kind": "event",
+          "claim": "Each of the rivals' prices has changed this year",
+          "on_file": {
+            "note": "The claim implies three distinct rival prices (OpenAI, Anthropic, and presumably Google itself is the subject not a rival) all changed this year; sources show OpenAI's GPT-5.6 Sol price changed and Anthropic's Claude Sonnet 5 scheduled increase did NOT occur (it stayed the same), so not every price ",
+            "quote": "GPT-5.6 Sol now costs $4 per million input tokens and $20 per million output tokens, representing 20% lower input pricing and 33% lower output pricing. GPT-5.6 Sol\u2019s promotional pricing is available at least through November 21, 2026. See pricing details. | The introductory pricing for **Claude Sonnet 5** ($2 / $10 per MTok) is now the standard price: the previously scheduled increase to $3 / $15 per MTok on September 1, 2026 will not occur. See Pricing.",
+            "verdict": "not_found"
+          },
+          "verdict": "unverified",
+          "sentence": "Three rivals, one price, and every one of those numbers has moved this year.",
+          "independent": {
+            "url": "https://competitortracker.io/features/competitor-price-monitoring/",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "unclear",
+            "evidence": "No reliable source found stating that three specific rivals' prices all changed this year.",
+            "correct_value": null
+          }
+        },
+        {
+          "kind": "unclassified",
+          "claim": "Say it sends 100,000 requests.",
+          "on_file": {
+            "note": "Sources contain no statement about sending 100,000 requests.",
+            "quote": null,
+            "verdict": "not_found"
+          },
+          "verdict": "unverified",
+          "sentence": "Say it sends 100,000 requests.",
+          "independent": {
+            "url": "https://developers.cloudflare.com/durable-objects/platform/pricing/",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "unclear",
+            "evidence": "No reliable source was found stating that it sends 100,000 requests.",
+            "correct_value": null
+          }
+        },
+        {
+          "kind": "unclassified",
+          "claim": "Each one carries 10,000 tokens in, 8,000 of them the same reused policy, and gets 500 tokens back.",
+          "on_file": {
+            "note": "No source describes a scenario with 10,000 input tokens, 8,000 reused/cached tokens, and 500 output tokens.",
+            "quote": null,
+            "verdict": "not_found"
+          },
+          "verdict": "unverified",
+          "sentence": "Each one carries 10,000 tokens in, 8,000 of them the same reused policy, and gets 500 tokens back.",
+          "independent": {
+            "url": "https://hotkv.com/blog/token-savings-benchmark",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "unclear",
+            "evidence": "Read the token figure with care: 90% to 93% of the counted tokens are cache reads of the same 2,200-token policy prompt.",
+            "correct_value": null
+          }
+        },
+        {
+          "kind": "unclassified",
+          "claim": "- Without reuse: $2,500 a month now.",
+          "on_file": {
+            "note": "Sources contain no monthly cost figure of $2,500 or any 'without reuse' cost scenario.",
+            "quote": null,
+            "verdict": "not_found"
+          },
+          "verdict": "unverified",
+          "sentence": "- Without reuse: $2,500 a month now.",
+          "independent": {
+            "url": "https://frenchydigital.com/blog/ai-agent-cost-2026",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "unclear",
+            "evidence": "After launch there's a baseline of $2,500 a month for support.",
+            "correct_value": null
+          }
+        },
+        {
+          "kind": "unclassified",
+          "claim": "$5,000 from December. - With reuse: $980 a month now.",
+          "on_file": {
+            "note": "No figures of $5,000 or $980 appear anywhere in the sources.",
+            "quote": null,
+            "verdict": "not_found"
+          },
+          "verdict": "unverified",
+          "sentence": "$5,000 from December. - With reuse: $980 a month now.",
+          "independent": {
+            "url": "https://www.newsbreak.com/nostalgiawriter-343364658/4940252744573-trump-renews-5-000-payment-promise-but-americans-face-one-big-uncertainty",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "unclear",
+            "evidence": "There is no confirmed date for when eligible Americans would receive money.",
+            "correct_value": null
+          }
+        },
+        {
+          "kind": "unclassified",
+          "claim": "$1,960 from December.",
+          "on_file": {
+            "note": "No source states a figure of $1,960; no such amount appears anywhere in the provided text.",
+            "quote": null,
+            "verdict": "not_found"
+          },
+          "verdict": "unverified",
+          "sentence": "$1,960 from December.",
+          "independent": {
+            "url": "https://www.schwab.com/learn/story/stock-market-update-open?msockid=3358e64cef5562f93e03f1bdee1763e9",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "unclear",
+            "evidence": "No reliable published source found stating \"$1,960 from December.\"",
+            "correct_value": null
+          }
+        },
+        {
+          "kind": "unclassified",
+          "claim": "Reuse saves about 60%.",
+          "on_file": {
+            "note": "No source states that reuse/caching saves about 60%; cache discounts cited are 95% off (Gemini) or 90-95% off base input price (Claude).",
+            "quote": null,
+            "verdict": "not_found"
+          },
+          "verdict": "unverified",
+          "sentence": "Reuse saves about 60%.",
+          "independent": {
+            "url": "https://britishbeautycouncil.com/wp-content/uploads/2026/06/reuse-toolkit-2.pdf",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "unclear",
+            "evidence": "Reusable systems can reduce greenhouse gas emissions, water use, and material consumption by up to 60%.",
+            "correct_value": null
+          }
+        },
+        {
+          "kind": "unclassified",
+          "claim": "1.",
+          "on_file": {
+            "note": "The claim text provided ('1.') contains no verifiable factual assertion to check against the sources.",
+            "quote": null,
+            "verdict": "not_found"
+          },
+          "verdict": "unverified",
+          "sentence": "1.",
+          "independent": {
+            "url": "https://www.insurancejournal.com/magazines/mag-features/2026/10/19/889102.htm",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "unclear",
+            "evidence": "No reliable published source was found stating the claim exactly as written: \"1.\"",
+            "correct_value": null
+          }
+        },
+        {
+          "kind": "unclassified",
+          "claim": "3.",
+          "on_file": {
+            "note": "Claim text is not a verifiable factual statement; no content to check against sources.",
+            "quote": null,
+            "verdict": "not_found"
+          },
+          "verdict": "unverified",
+          "sentence": "3.",
+          "independent": {
+            "url": "https://dailyai.report/",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "unclear",
+            "evidence": "3. Anthropic delivered a draft safety bill to US lawmakers and reduced junior technical hiring from 27 to 9 percent as agents scale.",
+            "correct_value": null
+          }
+        },
+        {
+          "kind": "date",
+          "claim": "A public price list changes on 1 December",
+          "on_file": {
+            "note": "Gemini Developer API pricing page shows the public price list changes on December 1, 2026.",
+            "quote": "| Input price | Not available | $2.00 through November 30, 2026. $4.00 starting December 1, 2026. |",
+            "primary": true,
+            "verdict": "supported"
+          },
+          "verdict": "verified_on_file",
+          "sentence": "Then I'd ask whether your contract fixes the price or follows the public price list from 1 December, and whether next year's budget was built at the full price or the launch price.",
+          "independent": {
+            "url": "https://help.shopify.com/en/manual/online-sales-channels/shopify-collective/suppliers/price-lists",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "unclear",
+            "evidence": "No reliable source in the available results states that a public price list changes on 1 December.",
+            "correct_value": null
+          }
+        }
+      ],
+      "passed": false,
+      "ran_at": "2026-10-19T17:49:56.602Z",
+      "carried": 9,
+      "version": 1,
+      "blocking": 14,
+      "body_hash": "071aab633ca18332a5485244a0ef74f7faf413db054182332f9ce141c570dadb",
+      "set_aside": [
+        {
+          "reason": "second look: opinion/characterization, not a checkable fact",
+          "sentence": "On its own, that's a pricing story about one company."
+        },
+        {
+          "reason": "second look: general description/opinion, no checkable specific fact",
+          "sentence": "They keep changing their short-term offers, because each one is trying to pull customers off the other two."
+        },
+        {
+          "reason": "second look: rhetorical question, no checkable claim",
+          "sentence": "So what's durable thinking for a business owner, when every price has a shelf life?"
+        },
+        {
+          "reason": "second look: Hypothetical/conditional statement, not a checkable claim",
+          "sentence": "If your company pays the public rate, this is your price."
+        },
+        {
+          "reason": "second look: general statement, not a checkable fact",
+          "sentence": "If you signed your own deal, your contract decides."
+        },
+        {
+          "reason": "second look: No checkable fact; introduces following info without specific claims",
+          "sentence": "Here's what the other two have done in roughly ten weeks, from their own pages."
+        },
+        {
+          "reason": "second look: opinion/commentary, no checkable fact",
+          "sentence": "So that's a cut with an end date on it."
+        },
+        {
+          "reason": "second look: vague fragment, no checkable specifics given",
+          "sentence": "A planned rise, cancelled."
+        },
+        {
+          "reason": "second look: vague statement, no checkable fact",
+          "sentence": "And none of this covers what big customers pay."
+        },
+        {
+          "reason": "second look: opinion/generalization, not a checkable factual claim",
+          "sentence": "Enterprise deals are negotiated in private, so the public price lists are the only fair comparison."
+        },
+        {
+          "reason": "second look: Opinion statement about the writer's perspective",
+          "sentence": "And honestly, I find the pattern more telling than any single price."
+        },
+        {
+          "reason": "second look: Opinion/interpretation, not a checkable claim",
+          "sentence": "My read, and it is my read: these firms are in a fight for the same customers, and price is the fastest weapon they have."
+        },
+        {
+          "reason": "second look: general opinion/strategic statement, not a checkable fact",
+          "sentence": "A low launch price gets your team building on one AI."
+        },
+        {
+          "reason": "second look: general statement/opinion, not a checkable claim",
+          "sentence": "Once your instructions, your tools and your staff habits are set up around it, moving costs time and money."
+        },
+        {
+          "reason": "second look: Vague statement, no checkable fact",
+          "sentence": "That's when the full price arrives."
+        },
+        {
+          "reason": "second look: vague prompt, no checkable claim",
+          "sentence": "Look where the top models have landed."
+        },
+        {
+          "reason": "second look: opinion/general statement, not a checkable fact",
+          "sentence": "The obvious answer to moving prices is to chase the savings."
+        },
+        {
+          "reason": "second look: general assertion, not checkable fact",
+          "sentence": "The catch is that the same firms set the savings, so they move too."
+        },
+        {
+          "reason": "second look: transition statement, no checkable fact",
+          "sentence": "Here are the two big ones, and why neither is something to plan on."
+        },
+        {
+          "reason": "second look: label/opinion framing, not checkable",
+          "sentence": "The first is reuse."
+        },
+        {
+          "reason": "second look: hypothetical/made-up example",
+          "sentence": "Your customer-service assistant sends the same long policy document with every question, and the question is the only part that changes."
+        },
+        {
+          "reason": "second look: explicitly made-up example",
+          "sentence": "Here's a made-up month for a customer-service team."
+        },
+        {
+          "reason": "second look: hypothetical scenario / prediction",
+          "sentence": "The reused price doubles as well, so the bill still doubles."
+        },
+        {
+          "reason": "second look: hypothetical/generic description",
+          "sentence": "The second is a cheaper model."
+        },
+        {
+          "reason": "second look: hypothetical example",
+          "sentence": "A cheaper AI that needs three tries, or gets it wrong and needs a person to fix it, can cost you more for the same job."
+        },
+        {
+          "reason": "second look: advice/hypothetical instruction",
+          "sentence": "So test it on ten real jobs your team does every week, and count the cost of each finished job, fixes included."
+        },
+        {
+          "reason": "second look: opinion",
+          "sentence": "Both savings are worth taking."
+        },
+        {
+          "reason": "second look: opinion/generalization",
+          "sentence": "Neither is something to build next year's plan on, because the firm that sets the discount can change it."
+        },
+        {
+          "reason": "second look: opinion",
+          "sentence": "That's why the rules below matter more than any one saving."
+        },
+        {
+          "reason": "second look: opinion",
+          "sentence": "Here's what I'd hold on to, whatever the next price change is."
+        },
+        {
+          "reason": "second look: advice/opinion",
+          "sentence": "Budget at the full price."
+        },
+        {
+          "reason": "second look: advice/opinion",
+          "sentence": "Put the price in the contract."
+        },
+        {
+          "reason": "second look: advice/opinion",
+          "sentence": "Keep the freedom to switch."
+        },
+        {
+          "reason": "second look: general advice/opinion",
+          "sentence": "When the next promotion lands, you want to be able to take it, and when one ends, you want to be able to leave."
+        },
+        {
+          "reason": "second look: general claim/analogy about market dynamics, not checkable fact",
+          "sentence": "Three rivals sitting on one price is exactly when one of them moves to win the switch."
+        },
+        {
+          "reason": "second look: instruction/advice",
+          "sentence": "On Monday, find whoever runs AI where you work, inside the company or at a supplier."
+        },
+        {
+          "reason": "second look: writer's own suggested action, opinion",
+          "sentence": "I'd start by asking how much of what you send is reused."
+        },
+        {
+          "reason": "second look: hypothetical/prediction about reader's own company",
+          "sentence": "If you run a company of a few hundred people, the price you pay for AI next year will move several times before you've finished budgeting for it."
+        },
+        {
+          "reason": "second look: opinion/advice",
+          "sentence": "So the durable lesson is simple: treat every AI price as temporary, and plan as if it will change."
+        },
+        {
+          "reason": "second look: writer's own terminology choice, not a factual claim",
+          "sentence": "I'll call it reuse."
+        },
+        {
+          "reason": "second look: hypothetical/advice",
+          "sentence": "If the launch price lasts, enjoy it."
+        },
+        {
+          "reason": "second look: opinion/advice",
+          "sentence": "If you want a price to hold, it has to be written down, with the date it holds until."
+        },
+        {
+          "reason": "second look: advice",
+          "sentence": "Keep your instructions and your test jobs in a form you could run on another AI next month."
+        },
+        {
+          "reason": "second look: the piece's own prediction/bet with future date",
+          "sentence": "By 31 December 2026, Google, OpenAI or Anthropic will list its top model below $4 in and $20 out."
+        },
+        {
+          "reason": "second look: Opinion/advice, not a checkable claim",
+          "sentence": "Get the three answers first, and you'll know where you stand before the next offer changes it."
+        },
+        {
+          "reason": "second look: Hypothetical advice, not a checkable claim",
+          "sentence": "If someone you work with signs off an AI budget, send them this before December does."
+        },
+        {
+          "reason": "kept from 2026-10-19T09:40:46.120Z: second look: vague reference, no checkable content without context",
+          "sentence": "That's double."
+        },
+        {
+          "reason": "kept from 2026-10-19T09:40:46.120Z: second look: opinion/generalization",
+          "sentence": "Most business AI repeats itself."
+        },
+        {
+          "reason": "kept from 2026-10-19T09:40:46.120Z: second look: opinion statement, not a checkable claim",
+          "sentence": "Sometimes that's smart."
+        },
+        {
+          "reason": "kept from 2026-10-19T09:40:46.120Z: second look: advice/opinion",
+          "sentence": "Don't renegotiate yet."
+        }
+      ],
+      "signed_off": [
+        {
+          "at": "2026-10-19T09:43:26.408Z",
+          "said": "yes, run it, the example is our own maths",
+          "verdict": "unverified",
+          "sentence": "- Without reuse: $2,500 a month now.",
+          "decided_by": "Krish"
+        },
+        {
+          "at": "2026-10-19T09:43:26.408Z",
+          "said": "yes, run it, the example is our own maths",
+          "verdict": "unverified",
+          "sentence": "$5,000 from December. - With reuse: $980 a month now.",
+          "decided_by": "Krish"
+        },
+        {
+          "at": "2026-10-19T09:43:26.408Z",
+          "said": "yes, run it, the example is our own maths",
+          "verdict": "unverified",
+          "sentence": "$1,960 from December.",
+          "decided_by": "Krish"
+        },
+        {
+          "at": "2026-10-19T18:38:25.542Z",
+          "said": "Sign off the listed entries on that basis",
+          "verdict": "unverified",
+          "sentence": "And Anthropic has changed its reuse prices twice since the start of September, so the discount itself moves.",
+          "decided_by": "Krish"
+        },
+        {
+          "at": "2026-10-19T18:38:25.542Z",
+          "said": "Sign off the listed entries on that basis",
+          "verdict": "unverified",
+          "sentence": "But I've spent the last week reading the price pages and release notes of the three big AI firms, and it's part of a pattern.",
+          "decided_by": "Krish"
+        },
+        {
+          "at": "2026-10-19T18:38:25.542Z",
+          "said": "Sign off the listed entries on that basis",
+          "verdict": "unverified",
+          "sentence": "Count them with Google's and that's at least six moves in about ten weeks.",
+          "decided_by": "Krish"
+        },
+        {
+          "at": "2026-10-19T18:38:25.542Z",
+          "said": "Sign off the listed entries on that basis",
+          "verdict": "unverified",
+          "sentence": "Three rivals, one price, and every one of those numbers has moved this year.",
+          "decided_by": "Krish"
+        },
+        {
+          "at": "2026-10-19T18:38:25.542Z",
+          "said": "Sign off the listed entries on that basis",
+          "verdict": "unverified",
+          "sentence": "Say it sends 100,000 requests.",
+          "decided_by": "Krish"
+        },
+        {
+          "at": "2026-10-19T18:38:25.542Z",
+          "said": "Sign off the listed entries on that basis",
+          "verdict": "unverified",
+          "sentence": "Each one carries 10,000 tokens in, 8,000 of them the same reused policy, and gets 500 tokens back.",
+          "decided_by": "Krish"
+        },
+        {
+          "at": "2026-10-19T18:38:25.542Z",
+          "said": "Sign off the listed entries on that basis",
+          "verdict": "unverified",
+          "sentence": "Reuse saves about 60%.",
+          "decided_by": "Krish"
+        },
+        {
+          "at": "2026-10-19T18:38:25.542Z",
+          "said": "Sign off the listed entries on that basis",
+          "verdict": "unverified",
+          "sentence": "1.",
+          "decided_by": "Krish"
+        },
+        {
+          "at": "2026-10-19T18:38:25.542Z",
+          "said": "Sign off the listed entries on that basis",
+          "verdict": "unverified",
+          "sentence": "3.",
+          "decided_by": "Krish"
+        }
+      ],
+      "second_look": {
+        "carried": 6,
+        "sentences": 62,
+        "unanswered": 1
+      },
+      "single_source": 12,
+      "independent_checker": "perplexity:sonar-pro"
+    },
+    "manual_reviews": [
+      {
+        "at": "2026-10-19T21:37:22.401Z",
+        "id": "51b9199a777caa31224e056e5b788d645db164e6639b77860fbbcc6ca9185e4e",
+        "said": "Approve the auditable manual-review route",
+        "reason": "Krish said \"Sign off the listed entries on that basis\" for the listed OpenAI entry documented in fact-review.md, then separately approved this auditable route. The filed August 21 changelog gives the promotional $4 input / $20 output prices, valid at least through November 21. The checker cited the older launch prices. Preserve its contradicted verdict and record this source-backed human decision separately.",
+        "run_at": "2026-10-19T17:49:56.602Z",
+        "evidence": {
+          "url": "https://developers.openai.com/api/docs/changelog",
+          "quote": "GPT-5.6 Sol now costs $4 per million input tokens and $20 per million output tokens",
+          "material_id": "c5ac2492-10cc-4448-88df-af86bd102bdb",
+          "content_hash": "8862407c46aaa03d76e98857890f45bdcb7c94e3e3623a3ece3d39d3a72dcbb0"
+        },
+        "sentence": "OpenAI, 21 August: \"GPT-5.6 Sol now costs $4 per million input tokens and $20 per million output tokens.\"",
+        "body_hash": "071aab633ca18332a5485244a0ef74f7faf413db054182332f9ce141c570dadb",
+        "decided_by": "Krish",
+        "sources_hash": "faa5826eb200d93900348509378ef4f2eebe201fe6847bb7da75a5af2ce5d641",
+        "original_claim": {
+          "kind": "quote",
+          "claim": "OpenAI stated on 21 August that GPT-5.6 Sol costs $4 per million input tokens and $20 per million output tokens.",
+          "on_file": {
+            "note": "a contradiction the passage does not bear out; model said: The changelog only gives a month-level heading 'August, 2026', not a specific date of 21 August; no specific day is stated for this entry.",
+            "quote": "### August, 2026 | GPT-5.6 Sol now costs $4 per million input tokens and $20 per million output tokens, representing 20% lower input pricing and 33% lower output pricing. GPT-5.6 Sol\u2019s promotional pricing is available at least through November 21, 2026. See pricing details.",
+            "verdict": "not_found"
+          },
+          "verdict": "contradicted",
+          "sentence": "OpenAI, 21 August: \"GPT-5.6 Sol now costs $4 per million input tokens and $20 per million output tokens.\"",
+          "independent": {
+            "url": "https://openai.com/index/gpt-5-6/",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "contradicted",
+            "evidence": "GPT\u20115.6 Sol by over 20% for the next 3 months. GPT\u20115.6 is priced per 1M tokens across three model sizes: Sol is $5 input / $30 output",
+            "correct_value": "$5 per million input tokens and $30 per million output tokens; OpenAI announced a temporary price reduction of over 20% on August 21, 2026"
+          }
+        }
+      }
+    ],
+    "active_manual_reviews": [
+      {
+        "at": "2026-10-19T21:37:22.401Z",
+        "id": "51b9199a777caa31224e056e5b788d645db164e6639b77860fbbcc6ca9185e4e",
+        "said": "Approve the auditable manual-review route",
+        "reason": "Krish said \"Sign off the listed entries on that basis\" for the listed OpenAI entry documented in fact-review.md, then separately approved this auditable route. The filed August 21 changelog gives the promotional $4 input / $20 output prices, valid at least through November 21. The checker cited the older launch prices. Preserve its contradicted verdict and record this source-backed human decision separately.",
+        "run_at": "2026-10-19T17:49:56.602Z",
+        "evidence": {
+          "url": "https://developers.openai.com/api/docs/changelog",
+          "quote": "GPT-5.6 Sol now costs $4 per million input tokens and $20 per million output tokens",
+          "material_id": "c5ac2492-10cc-4448-88df-af86bd102bdb",
+          "content_hash": "8862407c46aaa03d76e98857890f45bdcb7c94e3e3623a3ece3d39d3a72dcbb0"
+        },
+        "sentence": "OpenAI, 21 August: \"GPT-5.6 Sol now costs $4 per million input tokens and $20 per million output tokens.\"",
+        "body_hash": "071aab633ca18332a5485244a0ef74f7faf413db054182332f9ce141c570dadb",
+        "decided_by": "Krish",
+        "sources_hash": "faa5826eb200d93900348509378ef4f2eebe201fe6847bb7da75a5af2ce5d641",
+        "original_claim": {
+          "kind": "quote",
+          "claim": "OpenAI stated on 21 August that GPT-5.6 Sol costs $4 per million input tokens and $20 per million output tokens.",
+          "on_file": {
+            "note": "a contradiction the passage does not bear out; model said: The changelog only gives a month-level heading 'August, 2026', not a specific date of 21 August; no specific day is stated for this entry.",
+            "quote": "### August, 2026 | GPT-5.6 Sol now costs $4 per million input tokens and $20 per million output tokens, representing 20% lower input pricing and 33% lower output pricing. GPT-5.6 Sol\u2019s promotional pricing is available at least through November 21, 2026. See pricing details.",
+            "verdict": "not_found"
+          },
+          "verdict": "contradicted",
+          "sentence": "OpenAI, 21 August: \"GPT-5.6 Sol now costs $4 per million input tokens and $20 per million output tokens.\"",
+          "independent": {
+            "url": "https://openai.com/index/gpt-5-6/",
+            "checker": "perplexity:sonar-pro",
+            "verdict": "contradicted",
+            "evidence": "GPT\u20115.6 Sol by over 20% for the next 3 months. GPT\u20115.6 is priced per 1M tokens across three model sizes: Sol is $5 input / $30 output",
+            "correct_value": "$5 per million input tokens and $30 per million output tokens; OpenAI announced a temporary price reduction of over 20% on August 21, 2026"
+          }
+        }
+      }
+    ],
+    "sources_hash": "faa5826eb200d93900348509378ef4f2eebe201fe6847bb7da75a5af2ce5d641",
+    "gate": {
+      "ok": true,
+      "reason": null
+    },
+    "checks": [
+      {
+        "id": "FACTS",
+        "name": "Every fact checked twice",
+        "blocking": true,
+        "ok": true,
+        "detail": "This exact version passed the fact check."
+      },
+      {
+        "id": "R2",
+        "name": "No \"Not X, Y\"",
+        "blocking": true,
+        "ok": true,
+        "detail": "None found."
+      },
+      {
+        "id": "NO_EM_DASH",
+        "name": "No em dashes",
+        "blocking": true,
+        "ok": true,
+        "detail": "None found."
+      },
+      {
+        "id": "NO_EXCLAMATION",
+        "name": "No exclamation marks",
+        "blocking": true,
+        "ok": true,
+        "detail": "None found."
+      },
+      {
+        "id": "BRITISH_SPELLING",
+        "name": "British spelling",
+        "blocking": true,
+        "ok": true,
+        "detail": "None found."
+      },
+      {
+        "id": "PLAIN_SCORES",
+        "name": "No bare scores",
+        "blocking": true,
+        "ok": true,
+        "detail": "None found."
+      },
+      {
+        "id": "R7",
+        "name": "Reading age 12",
+        "blocking": false,
+        "ok": true,
+        "detail": "Reads at about age 10.5."
+      },
+      {
+        "id": "CALL",
+        "name": "A dated prediction with a confidence",
+        "blocking": true,
+        "ok": true,
+        "detail": "Has a date to check by and a confidence."
+      },
+      {
+        "id": "CALL_HORIZON",
+        "name": "A prediction due within about three months",
+        "blocking": true,
+        "ok": true,
+        "detail": "Due 2026-12-31, 73 days away."
+      },
+      {
+        "id": "CLEAR_STANCE",
+        "name": "Take a clear stance",
+        "blocking": true,
+        "ok": true,
+        "detail": "95% is a clear stance."
+      },
+      {
+        "id": "R6",
+        "name": "Plain words",
+        "blocking": false,
+        "ok": false,
+        "detail": "Make sure each is explained where it first appears: token."
+      }
+    ],
+    "ready": true,
+    "receipts": [],
+    "next_run": {
+      "ledger_usable": true,
+      "total_sentences": 86,
+      "reusable_sentences": 72,
+      "fresh_sentences": 14
+    },
+    "precheck": {
+      "numbers_not_on_file": [
+        {
+          "sentence": "Say it sends 100,000 requests.",
+          "numbers": [
+            "100000"
+          ]
+        },
+        {
+          "sentence": "Each one carries 10,000 tokens in, 8,000 of them the same reused policy, and gets 500 tokens back.",
+          "numbers": [
+            "10000",
+            "8000",
+            "500"
+          ]
+        },
+        {
+          "sentence": "- Without reuse: $2,500 a month now.",
+          "numbers": [
+            "2500"
+          ]
+        },
+        {
+          "sentence": "$5,000 from December. - With reuse: $980 a month now.",
+          "numbers": [
+            "5000",
+            "980"
+          ]
+        },
+        {
+          "sentence": "$1,960 from December.",
+          "numbers": [
+            "1960"
+          ]
+        }
+      ],
+      "filed_sources_cut": []
+    },
+    "last_run_cost": {
+      "day": "2026-10-19",
+      "runs": 1,
+      "usd_per_run": 0.35,
+      "basis": "run",
+      "run_id": "f05e0409-04cd-40b1-8cf7-7456fe1b8883",
+      "piece_id": "5b5bfadc-a60c-4d0a-be8e-b2e9bf43d092"
+    }
+  },
+  "making": {
+    "ok": true,
+    "idea_id": "5b5bfadc-a60c-4d0a-be8e-b2e9bf43d092",
+    "state": "drafting",
+    "lane_slot": "follow_the_money",
+    "making": {
+      "by": "Claude Code",
+      "session": {
+        "by": "Claude Code",
+        "url": "https://claude.ai/code/session_01HroYaRUbqkz94sB4rzbcMC",
+        "started_at": "2026-10-19T09:18:24.471Z"
+      },
+      "workroom": {
+        "at": "2026-10-19T16:23:34.418Z",
+        "url": "https://content.krishraja.com/board/2026-10-19"
+      },
+      "recordings": [
+        {
+          "at": "2026-10-19T15:30:57.483Z",
+          "cut": "short",
+          "path": "recordings/3028aedb2beb03491b07c96f26e7060f920a68138d6fbae02df5aaf632d8bbc3.mp4",
+          "seconds": 80,
+          "script_sha256": "f328905d9989d2f5aff2ccccd5bcb9734d835d8876ff03d73a409388ffa2e28e"
+        },
+        {
+          "at": "2026-10-19T15:38:55.885Z",
+          "cut": "long",
+          "path": "recordings/8b7ef954b137f505586e2220e534635eac0ab267450622b52c7fc5ec50f13e6a.mp4",
+          "seconds": 355,
+          "script_sha256": "b64a64d089afda57b1962b351f3f5d616a616da7b99c1641b95babb30b8bad55"
+        }
+      ],
+      "started_at": "2026-10-19T09:18:24.471Z",
+      "updated_at": "2026-10-19T16:23:34.418Z",
+      "script_check": {
+        "cuts": [
+          "long",
+          "short"
+        ],
+        "spine": "Why do the big AI firms keep changing their prices, and what is durable thinking for a business owner amid all that?",
+        "hashes": {
+          "long": "b64a64d089afda57b1962b351f3f5d616a616da7b99c1641b95babb30b8bad55",
+          "short": "f328905d9989d2f5aff2ccccd5bcb9734d835d8876ff03d73a409388ffa2e28e"
+        },
+        "passed": true,
+        "problems": [],
+        "read_back": {
+          "long": {
+            "at": "2026-10-19T12:14:35.439245Z",
+            "by": "Claude Code",
+            "found": "approved by Krish",
+            "readers": [
+              "reader A, a fresh Claude Code subagent (200-person-company manager)",
+              "reader B, a fresh Claude Code subagent (200-person-company manager)"
+            ],
+            "krish_words": "Krish, 2026-10-19: confirming that you read my two board comments though? if so, signed off",
+            "script_sha256": "b64a64d089afda57b1962b351f3f5d616a616da7b99c1641b95babb30b8bad55"
+          },
+          "short": {
+            "at": "2026-10-19T12:14:36.714563Z",
+            "by": "Claude Code",
+            "found": "approved by Krish",
+            "readers": [
+              "reader A, a fresh Claude Code subagent (200-person-company manager)",
+              "reader B, a fresh Claude Code subagent (200-person-company manager)"
+            ],
+            "krish_words": "Krish, 2026-10-19: confirming that you read my two board comments though? if so, signed off",
+            "script_sha256": "f328905d9989d2f5aff2ccccd5bcb9734d835d8876ff03d73a409388ffa2e28e"
+          }
+        },
+        "changed_at": {
+          "long": "2026-10-19T12:14:34.076952Z",
+          "short": "2026-10-19T12:14:34.076952Z"
+        },
+        "checked_at": "2026-10-19T12:14:34.076952Z"
+      },
+      "teleprompter": {
+        "cuts": {
+          "long": {
+            "by": "Claude Code",
+            "title": "Mon 19 Oct - 5-minute - Why AI prices keep changing",
+            "sent_at": "2026-10-19T12:15:51.690097Z",
+            "script_id": "9C782809-4444-42BB-9F67-97231FC92B40",
+            "script_sha256": "b64a64d089afda57b1962b351f3f5d616a616da7b99c1641b95babb30b8bad55"
+          },
+          "short": {
+            "by": "Claude Code",
+            "title": "Mon 19 Oct - 90-second - Why AI prices keep changing",
+            "sent_at": "2026-10-19T12:15:53.194590Z",
+            "script_id": "D21D872F-9F6A-4103-A877-531F6990DBDA",
+            "script_sha256": "f328905d9989d2f5aff2ccccd5bcb9734d835d8876ff03d73a409388ffa2e28e"
+          }
+        },
+        "folder_id": "CF03BB37-EE7B-4105-9285-18B119C4042D",
+        "folder_name": "Mon 19 Oct follow.the.money - Why AI prices keep changing"
+      }
+    },
+    "steps": [
+      {
+        "key": "workroom",
+        "label": "Workroom",
+        "state": "done",
+        "at": "2026-10-19T16:23:34.418Z",
+        "link": "https://content.krishraja.com/board/2026-10-19",
+        "owner": "Claude"
+      },
+      {
+        "key": "draft",
+        "label": "Fact-checked draft",
+        "state": "done",
+        "at": "2026-10-19T17:49:56.602Z",
+        "owner": "Claude"
+      },
+      {
+        "key": "visual_gate",
+        "label": "Visual gate",
+        "state": "now",
+        "owner": "Claude"
+      },
+      {
+        "key": "scripts",
+        "label": "Scripts",
+        "state": "done",
+        "at": "2026-10-19T12:14:34.076952Z",
+        "note": "long and short; in Teleprompter",
+        "owner": "Claude"
+      },
+      {
+        "key": "pack",
+        "label": "Pack",
+        "state": "todo",
+        "owner": "Claude"
+      },
+      {
+        "key": "record",
+        "label": "Recorded",
+        "state": "done",
+        "at": "2026-10-19T15:38:55.885Z",
+        "owner": "Krish"
+      },
+      {
+        "key": "video",
+        "label": "Video assets",
+        "state": "todo",
+        "owner": "Codex"
+      },
+      {
+        "key": "publish",
+        "label": "Publish",
+        "state": "todo",
+        "owner": "Krish"
+      }
+    ]
+  },
+  "paid_call": false
+}

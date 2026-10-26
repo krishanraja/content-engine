@@ -48,3 +48,22 @@ The approved track is about 3 minutes 10 seconds, shorter than the long take. It
 
 Wording approval does not certify the pricing claims. The article's fact gate remains open. Current read-only precheck reports 77 fresh sentences and a $0.10 last-run cost, not a guaranteed quote. No paid run has been started. Editorial fact/visual gate and pack must be completed before these videos can be filed as publish-ready.
 
+
+## Caption wording confirmed, 19 October
+
+Krish supplied the three requested corrections: "$4 a batch to read tokens,
+and $20 a batch to write tokens", "two ways to bring the bill down", and
+"where you work". `caption-final-receipt.json` records the exact authorised
+text and hashes; `captions/long-approved.srt.txt` and `long-approved.txt` are the
+versioned deliverables. The long cut has external captions, so video and audio
+are unchanged. The original ASR and recorded scripts remain provenance.
+This resolves the caption questions only; the existing article fact hold remains.
+
+## Final caption delivery readback
+
+The live board, Drive post-folder and archive SRT/transcript bytes match the
+hashes in `caption-final-receipt.json`. The live browser shows the corrected
+wording and both download controls. `caption-live-receipt.json` identifies the
+active build and unchanged interaction counts. Full publication readiness is
+not certified: the fact verdict and completed video-delivery review receipt
+remain separate requirements.

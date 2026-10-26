@@ -218,7 +218,7 @@ def main():
             I = r['intro_seconds']
             checks += [
                 ('9x16: no logo pill over the sting', near(pixel(final, I - 0.3, (540, 140)), MINT), False),
-                ('9x16: the logo pill shows as his face comes in', near(pixel(final, I + 1.0, (540, 140)), MINT), True),
+                ('9x16: no second logo entrance follows the branded intro', near(pixel(final, I + 1.0, (540, 140)), MINT), False),
                 ('9x16: and is gone by 3 s into the main, as before', near(pixel(final, I + 3.3, (540, 140)), MINT), False),
             ]
     tall_intro, wide_intro = (L['intro_short_term'] for _, _, L in table[:2])

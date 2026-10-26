@@ -872,7 +872,7 @@ export async function callClaudeBlocks(
   system: string,
   content: Array<Record<string, unknown>>,
   opts: { model?: string; maxTokens?: number; temperature?: number; agent?: string } = {},
-): Promise<{ text: string; inputTokens: number; outputTokens: number; model: string }> {
+): Promise<{ text: string; inputTokens: number; outputTokens: number; model: string; stopReason: string | null }> {
   const apiKey = process.env.ANTHROPIC_API_KEY
   if (!apiKey) throw new Error('ANTHROPIC_API_KEY not configured')
   const model = opts.model || SYNTHESIS_MODEL
@@ -896,5 +896,5 @@ export async function callClaudeBlocks(
   const inputTokens = Number(j?.usage?.input_tokens) || 0
   const outputTokens = Number(j?.usage?.output_tokens) || 0
   await meter.anthropicCall({ agent: opts.agent, model, usage: j?.usage, inputTokens, outputTokens })
-  return { text: firstText(j), inputTokens, outputTokens, model }
+  return { text: firstText(j), inputTokens, outputTokens, model, stopReason: typeof j?.stop_reason === 'string' ? j.stop_reason : null }
 }

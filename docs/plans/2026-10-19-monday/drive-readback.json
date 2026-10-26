@@ -1,0 +1,87 @@
+{
+  "folder": "https://drive.google.com/drive/folders/1wXlFsY7iFyng_TNzO9fvJZUEoC2FwaHD",
+  "checked_at": "2026-10-19T18:32:26.009892+00:00",
+  "verification": "Four cloud files exist in the archive folder and sizes match locally hash-verified copies. Connector did not return checksum fields; cloud byte hashes not independently verified.",
+  "files": [
+    {
+      "id": "1X3QFM-wXfQz-tWhFJvjmNwCMz7m2ovEE",
+      "title": "Why AI prices keep changing - wide 16x9 - YouTube, Substack.mp4",
+      "mime_type": "video/mp4",
+      "size": "211951035",
+      "url": "https://drive.google.com/file/d/1X3QFM-wXfQz-tWhFJvjmNwCMz7m2ovEE/view?usp=drivesdk",
+      "display_url": "https://drive.google.com/file/d/1X3QFM-wXfQz-tWhFJvjmNwCMz7m2ovEE/view?usp=drivesdk",
+      "file_or_folder": "file",
+      "created_time": null,
+      "modified_time": null,
+      "parent_ids": [
+        "1wXlFsY7iFyng_TNzO9fvJZUEoC2FwaHD"
+      ],
+      "drive_id": null,
+      "current_user_can_share": null,
+      "has_augmented_permissions": null,
+      "shared": null,
+      "permissions": null,
+      "source_visibility_status": "access_not_verified"
+    },
+    {
+      "id": "14rWAAojZyG06aNCVguHStpNE2hh1T44X",
+      "title": "Why AI prices keep changing - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4",
+      "mime_type": "video/mp4",
+      "size": "55520212",
+      "url": "https://drive.google.com/file/d/14rWAAojZyG06aNCVguHStpNE2hh1T44X/view?usp=drivesdk",
+      "display_url": "https://drive.google.com/file/d/14rWAAojZyG06aNCVguHStpNE2hh1T44X/view?usp=drivesdk",
+      "file_or_folder": "file",
+      "created_time": null,
+      "modified_time": null,
+      "parent_ids": [
+        "1wXlFsY7iFyng_TNzO9fvJZUEoC2FwaHD"
+      ],
+      "drive_id": null,
+      "current_user_can_share": null,
+      "has_augmented_permissions": null,
+      "shared": null,
+      "permissions": null,
+      "source_visibility_status": "access_not_verified"
+    },
+    {
+      "id": "1nS-YFRg_aE7aJ34VBQZrSDcSZVONdcFo",
+      "title": "Why AI prices keep changing - wide 16x9 - thumbnail.jpg",
+      "mime_type": "image/jpeg",
+      "size": "119734",
+      "url": "https://drive.google.com/file/d/1nS-YFRg_aE7aJ34VBQZrSDcSZVONdcFo/view?usp=drivesdk",
+      "display_url": "https://drive.google.com/file/d/1nS-YFRg_aE7aJ34VBQZrSDcSZVONdcFo/view?usp=drivesdk",
+      "file_or_folder": "file",
+      "created_time": null,
+      "modified_time": null,
+      "parent_ids": [
+        "1wXlFsY7iFyng_TNzO9fvJZUEoC2FwaHD"
+      ],
+      "drive_id": null,
+      "current_user_can_share": null,
+      "has_augmented_permissions": null,
+      "shared": null,
+      "permissions": null,
+      "source_visibility_status": "access_not_verified"
+    },
+    {
+      "id": "120DeuWqphBDkra9TlfT103O_U5RYisOp",
+      "title": "Why AI prices keep changing - tall 9x16 - thumbnail.jpg",
+      "mime_type": "image/jpeg",
+      "size": "185705",
+      "url": "https://drive.google.com/file/d/120DeuWqphBDkra9TlfT103O_U5RYisOp/view?usp=drivesdk",
+      "display_url": "https://drive.google.com/file/d/120DeuWqphBDkra9TlfT103O_U5RYisOp/view?usp=drivesdk",
+      "file_or_folder": "file",
+      "created_time": null,
+      "modified_time": null,
+      "parent_ids": [
+        "1wXlFsY7iFyng_TNzO9fvJZUEoC2FwaHD"
+      ],
+      "drive_id": null,
+      "current_user_can_share": null,
+      "has_augmented_permissions": null,
+      "shared": null,
+      "permissions": null,
+      "source_visibility_status": "access_not_verified"
+    }
+  ]
+}

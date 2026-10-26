@@ -5,7 +5,7 @@ import { runActor } from './_apify.js'
 import { isOnDirection } from './_judgmentLens.js'
 import { loadScrapeableCreators, markScraped } from './_creators.js'
 import { postHash, verbatimCheck } from './_creatorFingerprint.js'
-import { extractCreatorMoves, type CreatorYieldRow, type CreatorPost, type CreatorMove } from './_creatorMoves.js'
+import { extractCreatorMoves, knownPillar, type CreatorYieldRow, type CreatorPost, type CreatorMove } from './_creatorMoves.js'
 import { checkDuplicate } from './_dedup.js'
 import { canonicalUrl } from './_text.js'
 import { onTeardownBeat } from './_beat.js'
@@ -223,6 +223,7 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       const post = fresh.find(p => p.url === m.post_url)
       if (!post) { bump(dropped, 'unanchored'); continue }
       if (!m.is_move) { bump(dropped, m.rejection_reason || 'not_move'); continue }
+      m.pillar_id = knownPillar(m.pillar_id, (pillarRows || []) as { id: string }[])
       if (!m.idea || !m.thesis || !m.krish_angle) { bump(dropped, 'incomplete'); continue }
       if ((m.brand_fit_score ?? 0) < minBrandFit) { bump(dropped, 'low_fit'); continue }
       if (m.confidence != null && m.confidence < 0.5) { bump(dropped, 'low_confidence'); continue } // the capture contract: confidence >= 0.5 to insert

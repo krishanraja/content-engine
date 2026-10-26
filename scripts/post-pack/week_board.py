@@ -16,6 +16,15 @@ we're done, and then I check off the list what I have done as I do it."
     python week_board.py --show BOARD [--json]
     python week_board.py --self-test
 
+From the week of 26 October 2026 (config/board-layout.json, layout_from) every week is drawn in one fixed
+layout: five tabs, Ideas, Queue, Monday, Wednesday and Friday, and in each day the same four steps, Brief, Drafts,
+Record and Publish, each filled from data (--brief, --review, --teleprompter, the publish page, --materials) in the
+same place every week. verify() refuses a board in any other shape, and npm run check:board-layout holds it to
+fixtures/week-board/fixed-layout.json (Krish, 2026-10-21: "the rest of the content engine needs to know how to feed
+it and not be permitted to change random parts of the UI and UX"). docs/PUBLISH_BOARDS.md, "The fixed layout".
+In it a made day's Publish step is one run-sheet drawn from data (run_sheet): Download first, then a card per place to
+post in the layout's order. Weeks before keep the layout below, the one they were published in.
+
 --week is the Monday. Each tab is one of:
 
   - made: a piece's whole publish page (publish_manager.py's page, given
@@ -101,6 +110,7 @@ sys.path.insert(0, str(HERE))
 import engine_stamp  # noqa: E402  the engine's stamp on a page it built
 import publish_kit  # noqa: E402
 import publish_manager  # noqa: E402
+import board_materials  # noqa: E402
 
 TEMPLATES = HERE / 'week_board'
 TITLE = "This Week's Publish Board"
@@ -161,6 +171,87 @@ CUTS = (
 )
 # What the day page's buttons do; the board's script handles these and only these.
 KNOWN_ACTS = {'text', 'article', 'image', 'download', 'done'}
+
+# ------------------------------------------------------------------ the fixed layout
+# Krish, 2026-10-21: "how do you recommend we standardise and lock in this publish board so the content engine can
+# just feed it? ... For each publish session things move around." From layout_from on, every week is drawn from
+# config/board-layout.json: five tabs (Ideas, Queue, Monday, Wednesday, Friday), and in each day the same four steps
+# (Brief, Drafts, Record, Publish), each with its own slots. A session feeds the slots; it never adds a section, moves
+# one or brings its own styles, and verify() refuses a board that does. Weeks before layout_from keep the layout they
+# were published in, so a rebuild of one changes nothing he has seen.
+LAYOUT_FILE = Path(__file__).resolve().parents[2] / 'config' / 'board-layout.json'
+FEATURES_FILE = Path(__file__).resolve().parents[2] / 'config' / 'features.json'
+TOP_TABS = ('ideas', 'queue', 'monday', 'wednesday', 'friday')
+DAY_STEPS = ('brief', 'drafts', 'record', 'publish')
+
+
+def load_layout(path=LAYOUT_FILE):
+    """config/board-layout.json, checked: the tabs and the day's steps in their one order, the cuts, and every
+    publish step with a key the saved ticks already use."""
+    try:
+        data = json.loads(Path(path).read_text(encoding='utf-8'))
+    except (OSError, ValueError) as error:
+        raise BoardError(f'{path}: the board layout cannot be read ({error})')
+    tabs = tuple(t.get('key') for t in data.get('tabs') or [])
+    steps = tuple(s.get('key') for s in data.get('day_steps') or [])
+    if tabs != TOP_TABS or steps != DAY_STEPS:
+        raise BoardError(f'{path}: the tabs must be {TOP_TABS} and the day steps {DAY_STEPS}, in that order')
+    keys = [s.get('key') for s in (data.get('publish_steps') or {}).get('steps') or []]
+    for need in ('record-long', 'record-short', 'substack', 'youtube', 'shorts', 'tiktok', 'reels'):
+        if need not in keys:
+            raise BoardError(f'{path}: the publish step {need} is missing; its saved ticks would be orphaned')
+    for cut in ('long', 'short', 'feature'):
+        if not isinstance((data.get('cuts') or {}).get(cut), dict):
+            raise BoardError(f'{path}: no {cut} cut')
+    date.fromisoformat(data['layout_from'])
+    return data
+
+
+LAYOUT = load_layout()
+LAYOUT_FROM = date.fromisoformat(LAYOUT['layout_from'])
+FIXED = False  # whether the board being built is in the fixed layout; set by use_layout()
+FEATURE_ONLY = set()
+LEGACY_LAYOUT = {'STEPS': STEPS, 'SECTION_STEP': SECTION_STEP, 'CUTS': CUTS,
+                 'DROPPED_CHANNELS': {'whatsapp': 'WhatsApp', 'notes': 'Substack Notes'}}
+
+
+def fixed_layout(monday):
+    return monday >= LAYOUT_FROM
+
+
+def use_layout(monday):
+    """Point the module's step and cut tables at the layout of this week: the fixed one from layout_from, else the
+    one the week was published in. Every function below reads them, so one switch keeps a week in one layout."""
+    global STEPS, LABEL, STANDING, SECTION_STEP, CUTS, FIXED, FEATURE_ONLY, DROPPED_CHANNELS
+    FIXED = fixed_layout(monday)
+    if FIXED:
+        ps = LAYOUT['publish_steps']
+        STEPS = tuple((s['key'], s['label'], s.get('channel'), bool(s.get('counted'))) for s in ps['steps'])
+        FEATURE_ONLY = {s['key'] for s in ps['steps'] if s.get('feature_only')}
+        SECTION_STEP = dict(ps['sections'])
+        DROPPED_CHANNELS = dict(ps['dropped_channels'])
+        cuts = LAYOUT['cuts']
+        CUTS = (('long', 'record-long', cuts['long']['short_name'], cuts['long']['shape']),
+                ('short', 'record-short', cuts['short']['short_name'], cuts['short']['shape']),
+                ('feature', 'record-feature', cuts['feature']['short_name'], cuts['feature']['shape']))
+    else:
+        STEPS, SECTION_STEP, CUTS = LEGACY_LAYOUT['STEPS'], LEGACY_LAYOUT['SECTION_STEP'], LEGACY_LAYOUT['CUTS']
+        DROPPED_CHANNELS = dict(LEGACY_LAYOUT['DROPPED_CHANNELS'])
+        FEATURE_ONLY = set()
+    LABEL = {k: label for k, label, *_ in STEPS}
+    STANDING = sum(1 for *_, s in STEPS if s)
+
+
+def feature_piece(piece_id, path=None):
+    """True when Krish called a 15-minute feature for this piece (config/features.json). Krish, 2026-10-21: "From
+    time to time I might do a special 15 min feature"; it replaced the weekly deep cut ("Yes, replace it")."""
+    if not piece_id:
+        return False
+    try:
+        data = json.loads(Path(path or FEATURES_FILE).read_text(encoding='utf-8'))
+    except (OSError, ValueError):
+        return False
+    return isinstance((data.get('pieces') or {}).get(piece_id), dict)
 
 E = html.escape
 
@@ -266,9 +357,20 @@ def parse_day_page(text, where):
                          'teach week_board/week.js first')
     h1 = re.search(r'<h1>(.*?)</h1>', body, re.S)
     piece = attr(m.group(1), 'data-piece')
+    # The page's words and its pictures' roles, as data (publish_manager.page_data): the run-sheet is built from them.
+    words, images = None, []
+    block = PM_DATA.search(text)
+    if block:
+        try:
+            data = json.loads(block.group(1))
+        except ValueError as error:
+            raise BoardError(f'{where}: its words (pm-data) cannot be read ({error})')
+        if isinstance(data, dict) and isinstance(data.get('words'), dict):
+            words = data['words']
+            images = [i for i in data.get('images') or [] if isinstance(i, dict) and i.get('id')]
     return {'css': css.group(1).strip(), 'post': attr(m.group(1), 'data-post') or '', 'body': body,
             'title': html.unescape(re.sub(r'<[^>]+>', '', h1.group(1))).strip() if h1 else '',
-            'piece': piece if piece and UUID.match(piece) else None}
+            'piece': piece if piece and UUID.match(piece) else None, 'words': words, 'images': images}
 
 
 def tick_box(tid, label):
@@ -280,7 +382,9 @@ TICK_TAIL = '<span class="t-when"></span><span class="t-err" aria-live="polite">
 
 
 def row_tick(day, key, deep=False):
-    label = DEEP_LABEL.get(key, LABEL[key]) if deep else LABEL[key]
+    # deep: the week's deep cut in a week before the fixed layout; in the fixed layout, a 15-minute feature piece,
+    # whose own steps carry their own labels.
+    label = DEEP_LABEL.get(key, LABEL[key]) if deep and not FIXED else LABEL[key]
     return (f'<label class="tick row-tick">{tick_box(f"{day}-{key}", label)}'
             f'<span class="t-label">{E(label)}</span>{TICK_TAIL}</label>')
 
@@ -291,8 +395,9 @@ def section_tick(day, key):
 
 
 def checklist(day, p, deep=False):
-    standing = ''.join(row_tick(day, k, deep) for k, _, _, s in STEPS if s)
-    optional = ''.join(row_tick(day, k, deep) for k, _, _, s in STEPS if not s)
+    shown = [(k, s) for k, _, _, s in STEPS if k not in FEATURE_ONLY or deep]
+    standing = ''.join(row_tick(day, k, deep) for k, s in shown if s)
+    optional = ''.join(row_tick(day, k, deep) for k, s in shown if not s)
     n = STANDING
     return (f'<div class="ticks" id="{p}ticks" role="region" aria-labelledby="{p}ticks-h">'
             f'<div class="ticks-head"><h2 id="{p}ticks-h">Publish checklist</h2>'
@@ -307,8 +412,21 @@ def checklist(day, p, deep=False):
 INBOX = 'makeyourmindup > Video Engine > Inbox'
 
 DRIVE_ID = re.compile(r'drive\.google\.com/(?:file/d/|open\?id=|uc\?(?:export=download&)?id=)([A-Za-z0-9_-]{20,})')
-VIDEO_CUTS = (('long', '3-minute video (wide, 16:9)', 'YouTube and the Substack video post'),
+VIDEO_CUTS = (('long', 'Long video (wide, 16:9)', 'YouTube, Substack and Spotify'),
               ('short', '90-second video (tall, 9:16)', 'Shorts, Reels, TikTok and LinkedIn'))
+
+
+def video_cuts(feature=False):
+    """(cut, label, where it goes) for each finished video: the fixed layout's cuts from config/board-layout.json,
+    with the feature only on a feature piece; before it, the cuts the week was published with."""
+    if not FIXED:
+        return VIDEO_CUTS
+    c = LAYOUT['cuts']
+    rows = [('long', f'{c["long"]["name"]} (wide, 16:9)', c['long']['for']),
+            ('short', f'{c["short"]["name"]} (tall, 9:16)', c['short']['for'])]
+    if feature:
+        rows.append(('feature', f'{c["feature"]["name"]} (wide, 16:9)', c['feature']['for']))
+    return tuple(rows)
 
 
 def videos_card(day, p, videos, deep=False):
@@ -320,13 +438,13 @@ def videos_card(day, p, videos, deep=False):
     video_assets; a video's "url" is its Drive link once it is in Drive."""
     by_cut = {}
     for v in videos or []:
-        if isinstance(v, dict) and v.get('cut') in ('long', 'short'):
+        if isinstance(v, dict) and v.get('cut') in ('long', 'short', 'feature'):
             by_cut[v['cut']] = v
     if not by_cut:
         return ''
     rows = []
-    for cut, label, where in VIDEO_CUTS:
-        if deep and cut == 'long':
+    for cut, label, where in video_cuts(deep):
+        if deep and cut == 'long' and not FIXED:
             label = 'deep cut, 8 minutes or more (wide, 16:9)'
         v = by_cut.get(cut)
         if not v:
@@ -367,13 +485,15 @@ def videos_card(day, p, videos, deep=False):
             + ''.join(rows) + '<p class="rec-how">Download each to your computer, then upload it where its line says.</p></div>')
 
 
-def record_card(day, p, scripts):
+def record_card(day, p, scripts, feature=False):
     """The Record card: each cut's script in Teleprompter (its title, and
     whether it holds the current words), the folder, and the one way a take
     comes back. scripts is teleprompter_info's answer, or {}."""
     rows, any_script = [], False
     cuts = scripts.get('cuts') or {}
     for cut, key, name, shape in CUTS:
+        if cut == 'feature' and not feature:
+            continue
         got = cuts.get(cut) or {}
         if got.get('title'):
             any_script = True
@@ -391,13 +511,13 @@ def record_card(day, p, scripts):
     if any_script:
         folder = scripts.get('folder_name')
         how = ('Open teleprompter.com on your phone or laptop' + (f', folder "{folder}"' if folder else '')
-               + ', and read each cut from its own script. The 3-minute cut is a wide shot; for the 90-second cut sit in the centre, '
+               + f', and read each cut from its own script. The {CUTS[0][2]} is a wide shot; for the {CUTS[1][2]} sit in the centre, '
                'as it is cut tall. ' + back)
     else:
-        how = ('These scripts are not in Teleprompter yet. Copy one just below into your teleprompter and record. The 3-minute cut is '
-               'a wide shot; for the 90-second cut sit in the centre, as it is cut tall. ' + back)
+        how = (f'These scripts are not in Teleprompter yet. Copy one just below into your teleprompter and record. The {CUTS[0][2]} is '
+               f'a wide shot; for the {CUTS[1][2]} sit in the centre, as it is cut tall. ' + back)
     return (f'<div class="rec" id="{p}record" role="region" aria-labelledby="{p}record-h"><div class="rec-head">'
-            f'<h2 id="{p}record-h">Record</h2><span class="kick">Two cuts</span></div>'
+            f'<h2 id="{p}record-h">Record</h2><span class="kick">{"Three cuts" if feature and FIXED else "Two cuts"}</span></div>'
             + ''.join(rows) + f'<p class="rec-how">{E(how)}</p></div>')
 
 
@@ -425,6 +545,8 @@ def review_card(day, items, built_at=None, kept_at=None):
     Krish made after the last build behind "is in this version"."""
     if not items:
         return ''
+    if FIXED:
+        return editor_card(day, items, built_at, kept_at)
     kept_at = kept_at or {}
     parts = [f'{REVIEW_START}<div class="rec rv" id="{day}-review">'
              '<div class="rec-head"><h2>Review the words</h2></div>'
@@ -447,8 +569,387 @@ def review_card(day, items, built_at=None, kept_at=None):
     return ''.join(parts)
 
 
+# ------------------------------------------------------------------ the Drafts step's editor (the fixed layout)
+# Krish, 2026-10-21: "On Monday, Wednesday, and Friday mornings I need to be able to see the draft video scripts and the
+# draft article. I need to be able to comment on them to iterate or just edit in line myself and save changes to get
+# picked up", and "The Comment and Save Changes UIs are not that nice right now ... On mobile it's just a desktop site
+# on mobile." So each draft is a clean read view (its Markdown drawn, no # signs); tapping a paragraph edits it,
+# selecting words offers "Comment on this", and one bar at the bottom says how many changes are unsaved and saves them.
+# The raw words stay in the same textarea (hidden), so the store (edits/<day>-<item>), its fields, the built-at guard
+# and a rebuild's REVIEW_BOX read are unchanged. week.js splits and draws paragraphs exactly as below.
+
+PARA_SPLIT = re.compile(r'(\n(?:[ \t]*\n)+)')
+
+
+def paragraphs(text):
+    """A draft's paragraphs, numbered as the editor numbers them (week.js splits on the same blank lines)."""
+    return PARA_SPLIT.split(text)[0::2]
+
+
+_INLINE = (
+    (re.compile(r'`([^`\n]+)`'), r'<code>\1</code>'),
+    (re.compile(r'\*\*([^*\n]+)\*\*'), r'<strong>\1</strong>'),
+    (re.compile(r'(^|[^\w*])\*([^*\n]+)\*(?![\w*])'), r'\1<em>\2</em>'),
+    (re.compile(r'(^|[^\w_])_([^_\n]+)_(?![\w_])'), r'\1<em>\2</em>'),
+    (re.compile(r'\[([^\]\n]+)\]\((https?://[^\s)]+)\)'), r'<a href="\2" rel="noopener" target="_blank">\1</a>'),
+)
+
+
+def md_inline(line):
+    out = E(line)
+    for pattern, repl in _INLINE:
+        out = pattern.sub(repl, out)
+    return out
+
+
+def md_block(text):
+    """One paragraph of a draft drawn as it reads: headings without their # signs, lists, quotes, a rule, and
+    plain lines kept as he wrote them. The same rules as mdBlock() in week.js."""
+    out, run, kind = [], [], None
+
+    def flush():
+        if not run:
+            return
+        if kind in ('ul', 'ol'):
+            out.append(f'<{kind}>' + ''.join(f'<li>{md_inline(x)}</li>' for x in run) + f'</{kind}>')
+        elif kind == 'q':
+            out.append('<blockquote><p>' + '<br>'.join(md_inline(x) for x in run) + '</p></blockquote>')
+        else:
+            out.append('<p>' + '<br>'.join(md_inline(x) for x in run) + '</p>')
+        run.clear()
+    for line in text.split('\n'):
+        heading = re.match(r'^\s{0,3}(#{1,6})\s+(.*?)\s*#*\s*$', line)
+        rule = re.match(r'^\s*([-*_])\s*(?:\1\s*){2,}$', line)
+        item = re.match(r'^\s*(?:[-*+]|(\d+)[.)])\s+(.*)$', line)
+        quote = re.match(r'^\s*>\s?(.*)$', line)
+        if heading or rule:
+            flush()
+            kind = None
+            out.append(f'<h4 class="rv-h">{md_inline(heading.group(2))}</h4>' if heading else '<hr>')
+            continue
+        k = ('ol' if item.group(1) else 'ul') if item else 'q' if quote else 'p'
+        if k != kind:
+            flush()
+            kind = k
+        run.append(item.group(2) if item else quote.group(1) if quote else line)
+    flush()
+    return ''.join(out)
+
+
+def editor_card(day, items, built_at=None, kept_at=None):
+    """The Drafts step's words: each draft as a read view whose paragraphs he taps to edit, the raw words in the
+    hidden textarea the store and a rebuild read (its id, data-built-at and words as review_card writes them), and
+    one Save bar for the day."""
+    kept_at = kept_at or {}
+    parts = [f'{REVIEW_START}<div class="rec rv ed" id="{day}-review">'
+             '<div class="rec-head"><h2>Your drafts</h2><span class="kick">Tap a paragraph to edit it</span></div>'
+             '<p class="rv-how">Tap any paragraph to change it, or select some words and press Comment on this. Save keeps '
+             'your changes; Claude carries a changed number or fact into every other draft, and lists each place under '
+             'Also changed, where you can undo it.</p>']
+    for slug, label, text in items:
+        rid = f'{day}-{slug}'
+        at = kept_at.get(rid) or built_at
+        paras = ''.join(f'<div class="rv-p" id="rvp-{E(rid)}-{n}" data-para="{n}" tabindex="0">{md_block(para)}</div>'
+                        for n, para in enumerate(paragraphs(text)))
+        parts.append(
+            f'<section class="rv-item rv-ed" id="rvs-{E(rid)}" data-review="{E(rid)}"><div class="sec-head"><h3>{E(label)}</h3>'
+            f'<span class="rv-n">{len(text.split()):,} word{"" if len(text.split()) == 1 else "s"}</span></div>'
+            f'<div class="rv-read" data-read-for="{E(rid)}">{paras}</div>'
+            f'<textarea class="rv-text" id="rv-{E(rid)}" data-review-id="{E(rid)}" data-day="{day}" data-item="{E(slug)}" '
+            + (f'data-built-at="{E(at)}" ' if at else '') +
+            f'data-base-sha256="{hashlib.sha256(text.encode("utf-8")).hexdigest()}" rows="14" spellcheck="true" '
+            f'aria-label="{E(label)}" hidden>{E(text)}</textarea>'
+            f'<div class="rv-bar"><button type="button" class="btn-s ghost" data-act="comment-review" data-for="{E(rid)}">'
+            f'Comment on the whole draft</button><span class="rv-state" data-state-for="{E(rid)}" aria-live="polite"></span></div></section>')
+    parts.append(f'<div class="rv-save" data-save-day="{day}"><span class="rv-count" data-unsaved-count="{day}" aria-live="polite">'
+                 f'No unsaved changes</span><button type="button" class="btn-s" data-act="save-all" data-day="{day}" disabled>Save</button></div>'
+                 f'</div>{REVIEW_END}')
+    return ''.join(parts)
+
+
+# What edit_sweep.py writes (scripts/post-pack/edit_sweep.py): Krish, 2026-10-21, "If I make a statistical change or a
+# narrative style change in one place, just make sure that those changes propagate and the next draft is consistent";
+# asked how, he chose to apply the change everywhere in the piece and in later drafts and to be shown "also changed
+# in" with an undo. The kinds are the classes the sweep and the ledger use (reason_code on content_edit_events).
+EDIT_KINDS = {'number_fact': 'Number or fact', 'claim': 'Claim', 'structure': 'Structure', 'tone': 'Tone', 'wording': 'Wording'}
+SWEEP_ID = re.compile(r'^[a-z0-9][a-z0-9-]{0,39}$')
+SWEEP_GATES = {'story_check': 'the story check', 'voice_check': 'the voice check'}
+LESSON_ID = re.compile(r'^[A-Za-z0-9][A-Za-z0-9_.:-]{0,159}$')
+
+
+def read_sweep(data, where='--sweep'):
+    """One day's sweep: {day?, piece_id?, swept_at?, also_changed: [change], suggestions: [change], held: [{where, why,
+    from?, to?}], gates: [{where, check, ok, problems}]}. A change is {id, where, kind, from, to, context?, applied?}.
+    Fed, never shaped: a field the board has no place for is refused."""
+    if not isinstance(data, dict):
+        raise BoardError(f'{where}: give the JSON edit_sweep.py wrote ({{"also_changed": [...], ...}})')
+    unknown = set(data) - {'day', 'piece_id', 'swept_at', 'also_changed', 'suggestions', 'held', 'gates', 'ledger', 'edits'}
+    if unknown:
+        raise BoardError(f'{where}: fields the board has no place for: {sorted(unknown)}')
+    text = lambda v, n: isinstance(v, str) and len(v) <= n
+    seen = set()
+
+    def change(c, applied, i):
+        if not isinstance(c, dict):
+            raise BoardError(f'{where}: change {i} is not an object')
+        cid = str(c.get('id') or '')
+        if not SWEEP_ID.match(cid) or cid in seen:
+            raise BoardError(f'{where}: change {i} needs its own id (a-z, 0-9 and -), not {cid!r}')
+        seen.add(cid)
+        if c.get('kind') not in EDIT_KINDS:
+            raise BoardError(f'{where}: change {cid} has kind {c.get("kind")!r}, not one of {sorted(EDIT_KINDS)}')
+        if not (text(c.get('where'), 200) and c['where'].strip()):
+            raise BoardError(f'{where}: change {cid} does not say where it is')
+        a, b = c.get('from', ''), c.get('to', '')
+        if not (text(a, 600) and text(b, 600)) or a == b:
+            raise BoardError(f'{where}: change {cid} needs from and to (at most 600 characters each, not the same)')
+        if c.get('context') is not None and not text(c['context'], 600):
+            raise BoardError(f'{where}: change {cid} has a context over 600 characters')
+        return {'id': cid, 'where': c['where'].strip(), 'kind': c['kind'], 'from': a, 'to': b,
+                'context': (c.get('context') or '').strip(), 'applied': applied}
+    lists = {}
+    for key, applied in (('also_changed', True), ('suggestions', False)):
+        value = data.get(key) or []
+        if not isinstance(value, list) or len(value) > 60:
+            raise BoardError(f'{where}: {key} must be a list of at most 60 changes')
+        lists[key] = [change(c, applied, i) for i, c in enumerate(value)]
+    held = []
+    for i, h in enumerate(data.get('held') or []):
+        if not (isinstance(h, dict) and text(h.get('where'), 200) and text(h.get('why'), 300) and h['where'].strip() and h['why'].strip()):
+            raise BoardError(f'{where}: held {i} needs where and why')
+        held.append({'where': h['where'].strip(), 'why': h['why'].strip(), 'from': str(h.get('from') or '')[:600], 'to': str(h.get('to') or '')[:600]})
+    gates = []
+    for i, g in enumerate(data.get('gates') or []):
+        if not (isinstance(g, dict) and text(g.get('where'), 200) and g.get('check') in SWEEP_GATES and isinstance(g.get('ok'), bool)):
+            raise BoardError(f'{where}: gate {i} needs where, check ({", ".join(SWEEP_GATES)}) and ok')
+        gates.append({'where': g['where'].strip(), 'check': g['check'], 'ok': g['ok'],
+                      'problems': [str(x)[:300] for x in (g.get('problems') or [])[:10]]})
+    return {'day': data.get('day') if data.get('day') in DAY_KEYS.values() else None,
+            'piece_id': data.get('piece_id') if UUID.match(str(data.get('piece_id') or '')) else None,
+            'swept_at': data.get('swept_at') if isinstance(data.get('swept_at'), str) else None,
+            'also_changed': lists['also_changed'], 'suggestions': lists['suggestions'], 'held': held, 'gates': gates}
+
+
+def _diff(c):
+    a, b = E(c['from']), E(c['to'])
+    if not c['from']:
+        return f'<p class="ac-diff"><span class="ac-w">added</span> <ins>{b}</ins></p>'
+    if not c['to']:
+        return f'<p class="ac-diff"><span class="ac-w">taken out</span> <del>{a}</del></p>'
+    return f'<p class="ac-diff"><del>{a}</del> <span class="ac-w">is now</span> <ins>{b}</ins></p>'
+
+
+def sweep_card(p, sweep):
+    """Also changed: where his saved change was carried, each with Undo; what is worth changing too, each with Change
+    it too; what was left alone because he has recorded it; and what the checks said after."""
+    rows = []
+    for i, c in enumerate(sweep['also_changed'], 1):
+        rows.append(
+            f'<li class="ac-row" id="{p}also-{i}" data-also="{E(c["id"])}"><div class="ac-where"><strong>{E(c["where"])}</strong> '
+            f'<span class="chip">{E(EDIT_KINDS[c["kind"]])}</span></div>{_diff(c)}'
+            + (f'<p class="ac-ctx">{E(c["context"])}</p>' if c['context'] else '') +
+            f'<div class="btns"><button type="button" class="btn-s ghost" data-act="undo-also" data-for="{E(c["id"])}">Undo</button>'
+            f'<span class="ac-state" data-also-state="{E(c["id"])}" aria-live="polite"></span></div></li>')
+    tips = []
+    for i, c in enumerate(sweep['suggestions'], 1):
+        tips.append(
+            f'<li class="ac-row" id="{p}tip-{i}" data-also="{E(c["id"])}"><div class="ac-where"><strong>{E(c["where"])}</strong> '
+            f'<span class="chip">{E(EDIT_KINDS[c["kind"]])}</span></div>{_diff(c)}'
+            + (f'<p class="ac-ctx">{E(c["context"])}</p>' if c['context'] else '') +
+            f'<div class="btns"><button type="button" class="btn-s ghost" data-act="apply-also" data-for="{E(c["id"])}">Change it too</button>'
+            f'<span class="ac-state" data-also-state="{E(c["id"])}" aria-live="polite"></span></div></li>')
+    n = len(rows)
+    out = [f'<div class="card also" id="{p}also"><div class="row"><span class="lab">Also changed</span>'
+           f'<span class="chip">{n} place{"" if n == 1 else "s"}</span></div>'
+           '<p class="ac-how">Your saved changes, carried into the other drafts of this piece and into later drafts. '
+           'Undo puts one back in the next version.</p>']
+    out.append(f'<ol class="ac-list">{"".join(rows)}</ol>' if rows else
+               '<p class="ac-none">Nothing else needed changing: your edit was the only place it appeared.</p>')
+    if tips:
+        out.append('<h3 class="ac-h">Worth changing too? Not changed yet</h3>'
+                   '<p class="ac-how">A change of tone or wording is only suggested elsewhere, never made for you.</p>'
+                   f'<ol class="ac-list">{"".join(tips)}</ol>')
+    if sweep['held']:
+        out.append('<h3 class="ac-h">Left alone: already recorded</h3><ul class="ac-held">'
+                   + ''.join(f'<li><strong>{E(h["where"])}</strong>: {E(h["why"])}</li>' for h in sweep['held']) + '</ul>')
+    if sweep['gates']:
+        said = []
+        for g in sweep['gates']:
+            said.append(f'<li class="{"ok" if g["ok"] else "bad"}">{E(g["where"])}: '
+                        + (f'passes {SWEEP_GATES[g["check"]]}' if g['ok'] else
+                           f'fails {SWEEP_GATES[g["check"]]}: ' + E('; '.join(g['problems']) or 'see the session'))
+                        + '</li>')
+        out.append(f'<h3 class="ac-h">The checks, run again after the change</h3><ul class="ac-gates">{"".join(said)}</ul>')
+    out.append('</div>')
+    return ''.join(out)
+
+
+def read_lessons(data, where='--lessons'):
+    """What the weekly compiler proposed from his board edits, and what the taste ledger (krishanraja/inspirationhouse)
+    proposed from what he saved and said: GET /api/video-studio/learning-proposals's answer (only proposals whose
+    scope.key starts board_edit: or taste:), or a list of {id, assertion, evidence_count, kind?, status?}.
+    Each stays a proposal until he approves it (AGENTS.md: every durable taste rule needs his explicit approval).
+    At most three taste lessons show, the cap the ledger keeps to."""
+    rows = data.get('proposals', data.get('lessons')) if isinstance(data, dict) else data
+    if not isinstance(rows, list):
+        raise BoardError(f'{where}: give the saved answer of GET /api/video-studio/learning-proposals, or a list of lessons')
+    out = []
+    for i, r in enumerate(rows):
+        if not isinstance(r, dict):
+            raise BoardError(f'{where}: lesson {i} is not an object')
+        key = str((r.get('scope') or {}).get('key') or '') if isinstance(r.get('scope'), dict) else ''
+        taste = key.startswith('taste:')
+        if 'scope' in r and not (key.startswith('board_edit:') or taste):
+            continue  # another surface's proposal: it is ruled on where it came from
+        if taste and sum(1 for o in out if o['kind'] == 'taste') >= 3:
+            continue
+        kind = 'taste' if taste else r.get('kind') or (key.split(':', 1)[1] if key.startswith('board_edit:') else None)
+        lid, says = str(r.get('id') or ''), str(r.get('assertion') or '').strip()
+        count = r.get('evidence_count', r.get('independent_session_count'))
+        status = r.get('status') or 'proposed'
+        if not LESSON_ID.match(lid) or not says or len(says) > 1600 or not isinstance(count, int) or count < 1:
+            raise BoardError(f'{where}: lesson {i} needs an id, its assertion (at most 1600 characters) and how often it was seen')
+        if (kind != 'taste' and kind not in EDIT_KINDS) or status not in ('proposed', 'approved', 'rejected', 'corrected'):
+            raise BoardError(f'{where}: lesson {lid} has kind {kind!r} or status {status!r} the board does not know')
+        out.append({'id': lid, 'assertion': says, 'evidence_count': count, 'kind': kind, 'status': status})
+    if len(out) > 12:
+        raise BoardError(f'{where}: {len(out)} lessons; give the 12 newest at most')
+    return out
+
+
+def lessons_card(p, lessons):
+    items = []
+    for i, ls in enumerate(lessons, 1):
+        chip = {'proposed': 'Proposed: yours to approve', 'approved': 'Approved: a standing rule', 'rejected': 'Not a rule',
+                'corrected': 'Reworded: a standing rule, in your words'}[ls['status']]
+        seen_line = (f'From what you saved and said, across {ls["evidence_count"]} days' if ls['kind'] == 'taste'
+                else f'{E(EDIT_KINDS[ls["kind"]])} edits, seen {ls["evidence_count"]} times in 28 days')
+        buttons = (f'<div class="btns"><button type="button" class="btn-s" data-act="lesson-yes" data-for="{E(ls["id"])}">Make it a rule</button>'
+                   f'<button type="button" class="btn-s ghost" data-act="lesson-no" data-for="{E(ls["id"])}">Not a rule</button>'
+                   f'<span class="ls-state" data-lesson-state="{E(ls["id"])}" aria-live="polite"></span></div>') if ls['status'] == 'proposed' else ''
+        items.append(f'<article class="ls-item" id="{p}lesson-{i}" data-lesson="{E(ls["id"])}"><p class="ls-says">{E(ls["assertion"])}</p>'
+                     f'<p class="ls-meta"><span class="chip{" ok" if ls["status"] in ("approved", "corrected") else ""}">{E(chip)}</span> '
+                     f'{seen_line}</p>{buttons}</article>')
+    return (f'<div class="card lessons" id="{p}lessons"><div class="row"><span class="lab">What I learned from your edits</span></div>'
+            '<p class="ls-how">Patterns in the changes you saved on this board. Each stays a proposal until you say yes; only then '
+            'does it become a rule the drafts follow.</p>' + ''.join(items) + '</div>')
+
+
+def previous_sweeps(text):
+    """{day: sweep} the board being replaced carries in its CONF (or manifest)."""
+    data = None
+    stripped = text.lstrip()
+    if stripped.startswith('{'):
+        try:
+            data = json.loads(stripped).get('sweeps')
+        except (ValueError, AttributeError):
+            data = None
+    else:
+        m = CONF_RE.search(text)
+        if m:
+            try:
+                data = json.loads(m.group(1)).get('sweeps')
+            except ValueError:
+                data = None
+    out = {}
+    for k, s in (data or {}).items() if isinstance(data, dict) else []:
+        if k in DAY_KEYS.values():
+            try:
+                out[k] = read_sweep(s, f'the previous board\'s {k} sweep')
+            except BoardError:
+                continue
+    return out
+
+
 MIN_IDEAS = 4  # Krish, 2026-10-18: "at least three content ideas for each day", then "give me more than 3 from all my
 # suggested sources and the ones I threw at other sessions last week"
+# Where an idea came from, as its chip says it (GET /api/week/options?include=sources, _weekSources.ts).
+SOURCE_KINDS = {'his': 'Your idea', 'inspo': 'From your inspo folder', 'engine': 'Engine research'}
+
+
+STYLES_PATH = HERE.parents[1] / 'config' / 'style-references.json'
+
+
+def style_formats(path=None):
+    """{'script': {id: format}, 'production': {id: format}, 'divergence': {...}} from the style bank's formats
+    (config/style-references.json). Krish, 2026-10-24: "suggest script and production styles that I can choose from
+    or that it recommends for specific content"."""
+    data = json.loads(Path(path or STYLES_PATH).read_text(encoding='utf-8'))
+    f = data.get('formats') or {}
+    return {'script': {x['id']: x for x in f.get('script') or []}, 'production': {x['id']: x for x in f.get('production') or []},
+            'divergence': f.get('divergence') or {}}
+
+
+def style_problems(data, formats=None):
+    """What is wrong with the ideas' styles, [] when none. Every idea in a fixed week carries
+    style {script, production, experiment: {format, why}}, each a format id from the bank; none he marked not for us;
+    and the week diverges (Krish, 2026-10-24: "we still need to be producing better and more divergent work")."""
+    formats = formats or style_formats()
+    rules = formats['divergence']
+    out, week_production = [], []
+    for key, _, weekday, *_ in DAYS:
+        ideas = ((data or {}).get('days') or {}).get(key) or []
+        scripts, experiments = set(), 0
+        for n, idea in enumerate(ideas, 1):
+            st = idea.get('style') if isinstance(idea, dict) else None
+            if not isinstance(st, dict):
+                out.append(f'{weekday} idea {n}: no style; give style.script, style.production and style.experiment from config/style-references.json formats')
+                continue
+            for kind in ('script', 'production'):
+                fid = st.get(kind)
+                fmt = formats[kind].get(fid)
+                if not fmt:
+                    out.append(f'{weekday} idea {n}: style.{kind} {fid!r} is not a {kind} format in the bank')
+                elif fmt.get('krish_verdict') == 'not for us':
+                    out.append(f'{weekday} idea {n}: style.{kind} {fid!r} is marked not for us; never offer it again')
+            scripts.add(st.get('script'))
+            week_production.append(st.get('production'))
+            ex = st.get('experiment')
+            if not isinstance(ex, dict) or not str(ex.get('why') or '').strip():
+                out.append(f'{weekday} idea {n}: style.experiment needs a format and a why: the bolder version the engine would try')
+                continue
+            fmt = formats['script'].get(ex.get('format')) or formats['production'].get(ex.get('format'))
+            if not fmt:
+                out.append(f'{weekday} idea {n}: style.experiment {ex.get("format")!r} is not a format in the bank')
+            elif fmt.get('krish_verdict') == 'not for us':
+                out.append(f'{weekday} idea {n}: style.experiment {ex.get("format")!r} is marked not for us')
+            elif fmt.get('status') in ('experimental', 'trial') and ex.get('format') not in (st.get('script'), st.get('production')):
+                experiments += 1
+        if ideas and len(scripts - {None}) < rules.get('min_script_formats_per_day', 2):
+            out.append(f'{weekday}: {len(scripts - {None})} script format(s) across its ideas; give at least {rules.get("min_script_formats_per_day", 2)}')
+        if ideas and experiments < rules.get('experiments_per_day', 1):
+            out.append(f'{weekday}: no idea offers an untried format as its experiment; push at least {rules.get("experiments_per_day", 1)}')
+    used = [p for p in week_production if p]
+    if used:
+        if len(set(used)) < rules.get('min_production_formats_per_week', 3):
+            out.append(f'the week: {len(set(used))} production format(s); recommend at least {rules.get("min_production_formats_per_week", 3)}')
+        top = max(used.count(p) for p in set(used)) / len(used)
+        if top > rules.get('max_share_of_one_production_format', 0.5):
+            out.append(f'the week: one production format is {round(top * 100)}% of the recommendations; at most {round(rules.get("max_share_of_one_production_format", 0.5) * 100)}%')
+    return out
+
+
+def coverage_problems(data, sources):
+    """Every id the gather says the board owes him (sources.json must_cover: Inspiration cards he routed to Make a
+    piece, board items holding his words) is in some idea's `covers`, or in ideas.json `accounted` with a reason.
+    Krish, 2026-10-24: "Double check my inspirationhouse gets read properly when ideas are being built"."""
+    owed = [m for m in (sources or {}).get('must_cover') or [] if isinstance(m, dict) and m.get('id')]
+    covered = {str(c) for ideas in ((data or {}).get('days') or {}).values() for i in ideas or [] if isinstance(i, dict)
+               for c in (i.get('covers') or [])}
+    accounted = (data or {}).get('accounted') or {}
+    out = []
+    if not isinstance(accounted, dict):
+        out.append('accounted is an object, {"<must_cover id>": "why it is not on the board"}')
+        accounted = {}
+    for m in owed:
+        mid = str(m['id'])
+        if mid in covered:
+            continue
+        why = accounted.get(mid)
+        if isinstance(why, str) and len(why.strip()) >= 12:
+            continue
+        out.append(f'not on the board: {m.get("what") or mid} ({mid}); put it in an idea\'s covers, or say why in accounted')
+    return out
 
 
 def read_ideas(data, monday, where='--ideas'):
@@ -481,6 +982,22 @@ def read_ideas(data, monday, where='--ideas'):
                 problems.append(f'{weekday} idea {n}: id {idea["id"]!r} is not a piece id')
             if idea.get('title'):
                 problems.append(f'{weekday} idea {n}: a title; titles are signed off after he records (TITLES_AFTER_RECORDING)')
+            # Where it came from, why it is here and its sketch (Krish, 2026-10-21; board_feed.py gather): in the fixed
+            # layout every idea names its source, his own, his inspo folder or the engine's research.
+            kind = idea.get('source_kind')
+            if kind is not None and kind not in SOURCE_KINDS:
+                problems.append(f'{weekday} idea {n}: source_kind {kind!r} is not one of {", ".join(SOURCE_KINDS)}')
+            elif kind is None and fixed_layout(monday):
+                problems.append(f'{weekday} idea {n}: no source_kind (his, inspo or engine); every idea says where it came from')
+            if idea.get('why_here') is not None and not str(idea['why_here']).strip():
+                problems.append(f'{weekday} idea {n}: why_here is empty; leave it out or say which of his marks it is close to')
+            beats = idea.get('beats')
+            if beats is not None and (not isinstance(beats, list) or not 3 <= len(beats) <= 5
+                                      or not all(isinstance(b, str) and b.strip() for b in beats)):
+                problems.append(f'{weekday} idea {n}: beats are 3 to 5 lines of the narrative sketch')
+            covers = idea.get('covers')
+            if covers is not None and (not isinstance(covers, list) or not all(isinstance(c, str) and c.strip() for c in covers)):
+                problems.append(f'{weekday} idea {n}: covers is a list of the must_cover ids (sources.json) this idea answers')
             pick = f'{key}-{n}'
             if pick in seen:
                 problems.append(f'{weekday}: {pick} twice')
@@ -531,6 +1048,24 @@ def triage_row(pid):
             f'<p class="tri-state" data-tristate="{pid}" aria-live="polite"></p>')
 
 
+def style_line(style):
+    """The suggested styles on an idea card: the recommended script and production format, and the bolder try."""
+    if not isinstance(style, dict):
+        return ''
+    try:
+        formats = style_formats()
+    except (OSError, ValueError):
+        return ''
+    name = lambda kind, fid: (formats[kind].get(fid) or {}).get('name') or fid
+    ex = style.get('experiment') if isinstance(style.get('experiment'), dict) else {}
+    ex_name = (formats['script'].get(ex.get('format')) or formats['production'].get(ex.get('format')) or {}).get('name') or ex.get('format')
+    out = (f'<dt>Suggested style</dt><dd data-style-script="{E(style.get("script") or "")}" data-style-production="{E(style.get("production") or "")}">'
+           f'{E(name("script", style.get("script")))} · {E(name("production", style.get("production")))}</dd>')
+    if ex_name:
+        out += f'<dt>Or try something new</dt><dd data-style-experiment="{E(ex.get("format") or "")}">{E(ex_name)}: {E(ex.get("why") or "")}</dd>'
+    return out
+
+
 def ideas_panel(monday, ideas, hidden, queue=None):
     """The Ideas tab, first: each day's ideas with a pick box. Krish,
     2026-10-18: "refresh This Week's Publish Board by adding a 4th tab at the
@@ -538,9 +1073,10 @@ def ideas_panel(monday, ideas, hidden, queue=None):
     is saved at once in the page's own store (picks/<day>) and posted as a
     comment ("PICK <day>"), which either of his accounts can read; a session
     writes it onto the pieces through /api/week/options."""
-    parts = [f'<div class="pm" id="panel-ideas" role="tabpanel" aria-labelledby="tab-ideas" data-day="ideas" data-state="ideas" '
+    head = f'<div class="kick">{E(week_span(monday))}</div><h1>Ideas</h1>'
+    parts = [f'<div class="pm{" fixed" if FIXED else ""}" id="panel-ideas" role="tabpanel" aria-labelledby="tab-ideas" data-day="ideas" data-state="ideas" '
              f'tabindex="-1"{" hidden" if hidden else ""}>'
-             f'<div class="kick">{E(week_span(monday))}</div><h1>Ideas</h1>'
+             + (f'<div class="day-head">{head}</div>' if FIXED else head) +
              '<p class="id-how">Pick one idea for each day. Your pick is saved as soon as you tick it, and Claude starts '
              'that day\'s piece from it. Every fact here was checked against the source linked beside it. '
              'There are no titles yet: you choose those after you record.</p>']
@@ -552,8 +1088,11 @@ def ideas_panel(monday, ideas, hidden, queue=None):
                      f'<p class="id-state" data-pickstate="{key}" aria-live="polite"></p>' + queue_block(queue, key, slug))
         for idea in ideas.get(key, []):
             pid, src = idea['pick'], idea['source']
-            flags = ''.join(f'<span class="id-flag{c}">{t}</span>' for c, t, on in (
-                (' his', 'Your idea', idea.get('his')), ('', 'Recommended', idea.get('recommended'))) if on)
+            kind = idea.get('source_kind')
+            flags = (f'<span class="id-flag id-src {E(kind)}" data-source-kind="{E(kind)}">{E(SOURCE_KINDS[kind])}</span>' if kind else '') + ''.join(
+                f'<span class="id-flag{c}">{t}</span>' for c, t, on in (
+                    (' his', 'Your idea', idea.get('his') and not kind), ('', 'Recommended', idea.get('recommended'))) if on)
+            beats = ''.join(f'<li>{E(b.strip())}</li>' for b in idea.get('beats') or [])
             parts.append(
                 f'<article class="id-card" id="idea-{pid}" data-pick-card="{pid}" data-series="{slug}" data-week="{monday.isoformat()}">'
                 f'<label class="pick"><input type="radio" name="pick-{key}" data-pick="{key}" value="{pid}" '
@@ -563,10 +1102,13 @@ def ideas_panel(monday, ideas, hidden, queue=None):
                 + (f'<div class="id-flags">{flags}</div>' if flags else '') +
                 f'<p class="id-sowhat">{E(idea["so_what"])}</p>'
                 f'<p class="id-story">{E(idea["story"])}</p>'
+                + (f'<ol class="id-beats" aria-label="The story, beat by beat">{beats}</ol>' if beats else '')
+                + (f'<p class="id-why"><span class="id-why-k">Why it is here</span> {E(str(idea["why_here"]).strip())}</p>' if idea.get('why_here') else '') +
                 f'<dl class="id-facts"><dt>Why now</dt><dd>{E(idea["why_now"])}</dd>'
                 f'<dt>Strongest checked fact</dt><dd>{E(idea["fact"])}</dd>'
                 f'<dt>Source</dt><dd><a href="{E(src["url"])}" target="_blank" rel="noopener">{E(src.get("label") or src["url"])}</a></dd>'
-                + (f'<dt>Where it came from</dt><dd>{E(idea["from"])}</dd>' if idea.get('from') else '') +
+                + (f'<dt>Where it came from</dt><dd>{E(idea["from"])}</dd>' if idea.get('from') else '')
+                + style_line(idea.get('style')) +
                 '</dl>' + triage_row(pid) + '</article>')
         parts.append('</section>')
     parts.append('</div>')
@@ -608,7 +1150,8 @@ def previous_draft(page, key):
             return [], []
         return ([f'{key}-{it.get("item")}' for it in (manifest.get('review') or {}).get(key) or []], list(day.get('waiting') or []))
     name = next(n for k, n, *_ in DAYS if k == key)
-    start = page.find(f'<div class="pm" id="panel-{name}"')
+    start = page.find(f'id="panel-{name}"')
+    start = page.rfind('<div class="pm', 0, start) if start >= 0 else -1
     if start < 0 or 'data-state="draft"' not in page[start:start + 400]:
         return [], []
     panel = div_at(page, start)
@@ -631,7 +1174,9 @@ def with_review(panel, card, after_heading=False):
     return panel[:m.end()] + card + panel[m.end():] if m else card + panel
 
 
-def made_panel(page, day, name, p, links, hidden, warnings, videos=None, deep=False):
+def made_parts(page, day, name, p, links, warnings, videos=None, deep=False):
+    """The parts of a made day, from its publish page: its heading (kick, title, chips), the publish page from its
+    links card on, the scripts to record, and the cards the board adds."""
     body = page['body']
     # The Scripts section's cards, copied to the top beside the Record card.
     sec = re.search(r'<section id="scripts"><h2>[^<]*</h2>(?:<p class="why">[^<]*</p>)?(.*?)</section>', body, re.S)
@@ -667,12 +1212,22 @@ def made_panel(page, day, name, p, links, hidden, warnings, videos=None, deep=Fa
     anchor = '<div class="card links">'
     if body.count(anchor) != 1:
         raise BoardError(f'{name}: its publish page needs one links card ({anchor}); is it from publish_manager.py?')
-    extra = videos_card(day, p, videos, deep) + record_card(day, p, links) + scripts + checklist(day, p, deep)
-    if links_line not in page['body']:
-        extra += '<p class="files"><span class="link-state" data-linkstate></span></p>'
-    body = body.replace(anchor, extra + anchor, 1)
-    body += ('<p class="save-note">Each tick saves here at once. Claude copies them onto the piece&#x27;s record in the engine, '
+    head, rest = body.split(anchor, 1)
+    return {'head': head, 'publish': anchor + rest, 'scripts': scripts,
+            'videos': videos_card(day, p, videos, deep), 'record': record_card(day, p, links, deep),
+            'checklist': checklist(day, p, deep),
+            'link_state': '' if links_line in page['body'] else '<p class="files"><span class="link-state" data-linkstate></span></p>'}
+
+
+SAVE_NOTE = ('<p class="save-note">Each tick saves here at once. Claude copies them onto the piece&#x27;s record in the engine, '
              'which updates the board and Control Center.</p>')
+
+
+def made_panel(page, day, name, p, links, hidden, warnings, videos=None, deep=False):
+    """A made day in a week before the fixed layout: its publish page with the cards added at the top."""
+    parts = made_parts(page, day, name, p, links, warnings, videos, deep)
+    body = (parts['head'] + parts['videos'] + parts['record'] + parts['scripts'] + parts['checklist'] + parts['link_state']
+            + parts['publish'] + SAVE_NOTE)
     return (f'<div class="pm" id="panel-{name}" role="tabpanel" aria-labelledby="tab-{name}" data-prefix="{p}" '
             f'data-day="{day}" data-state="made" data-post="{E(page["post"])}" tabindex="-1"{" hidden" if hidden else ""}>'
             + body + '</div>')
@@ -716,6 +1271,600 @@ def not_made_panel(day, name, weekday, when, series_label, pick, hidden, draft=F
         }
     values.update({'DAYNAME': name, 'DAY': day, 'PREFIX': p, 'HIDDEN': ' hidden' if hidden else ''})
     return fill(template('not-made.html'), values, 'not-made.html')
+
+
+# ------------------------------------------------------------------ the fixed layout's parts
+# Every part below has one place in the day and one look; a session fills it from data and never adds markup.
+
+BRIEF_FIELDS = (('idea', 'The idea'), ('flow', 'The story, beat by beat'), ('ending', 'The ending'),
+                ('takeaway', 'The takeaway'), ('angle', 'The angle'), ('tone', 'The tone'), ('reader', 'Who it is for'))
+
+
+def read_brief(data, where='--brief'):
+    """A day's record-ready brief (Krish, 2026-10-21: "we've agreed on the idea in the previous step but now we've
+    also agreed on the narrative flow, the end of the story, the takeaway, and the rough angle and tone"):
+    {idea, flow: [3 to 6 beats], ending, takeaway, angle, tone, reader?, agreed?, agreed_at?}. No title: titles are
+    his, after he records (TITLES_AFTER_RECORDING)."""
+    if not isinstance(data, dict):
+        raise BoardError(f'{where}: give {{"idea", "flow": [beats], "ending", "takeaway", "angle", "tone"}}')
+    problems = [f'no {f}' for f in ('idea', 'ending', 'takeaway', 'angle', 'tone') if not str(data.get(f) or '').strip()]
+    flow = data.get('flow')
+    if not isinstance(flow, list) or not 3 <= len([b for b in flow if str(b).strip()]) <= 6:
+        problems.append('flow must be 3 to 6 beats')
+    if data.get('title'):
+        problems.append('a title; titles are signed off after he records (TITLES_AFTER_RECORDING)')
+    unknown = set(data) - {f for f, _ in BRIEF_FIELDS} - {'agreed', 'agreed_at', 'piece_id'}
+    if unknown:
+        problems.append(f'fields the board has no place for: {sorted(unknown)}')
+    if problems:
+        raise BoardError(f'{where}: ' + '; '.join(problems))
+    return {**{f: data.get(f) for f, _ in BRIEF_FIELDS}, 'flow': [str(b).strip() for b in flow if str(b).strip()],
+            'agreed': data.get('agreed') is True, 'agreed_at': data.get('agreed_at') if isinstance(data.get('agreed_at'), str) else None,
+            'piece_id': data.get('piece_id') if UUID.match(str(data.get('piece_id') or '')) else None}
+
+
+def brief_card(p, brief):
+    rows = []
+    for field, label in BRIEF_FIELDS:
+        value = brief.get(field)
+        if not value:
+            continue
+        shown = ('<ol class="br-flow">' + ''.join(f'<li>{E(b)}</li>' for b in value) + '</ol>') if field == 'flow' else E(str(value))
+        rows.append(f'<dt>{E(label)}</dt><dd>{shown}</dd>')
+    state = (f'Agreed{" " + E(short_when(brief["agreed_at"])) if brief.get("agreed_at") else ""}' if brief.get('agreed')
+             else 'Waiting for your yes: comment on anything to change')
+    return (f'<div class="card brief" id="{p}brief-card"><div class="row"><span class="lab">Record-ready brief</span>'
+            f'<span class="chip{" ok" if brief.get("agreed") else ""}">{state}</span></div><dl class="br">{"".join(rows)}</dl></div>')
+
+
+def short_when(at):
+    when = parse_time(at)
+    return f'{when.day} {when.strftime("%b")}' if when else ''
+
+
+def slot_empty(text):
+    return f'<div class="slot-empty"><p>{E(text)}</p></div>'
+
+
+def due(when, rule):
+    """When a step is due, from config/board-layout.json's rhythm: "Sun 25 Oct, midday". A rule is either days_before
+    the publishing day, or on "sunday_before": the Sunday that starts the publishing week, his recording day
+    (Krish, 2026-10-24: "Yes, Sunday is my recording day")."""
+    if rule.get('on') == 'sunday_before':
+        d = when - timedelta(days=when.weekday() + 1)
+    else:
+        d = when - timedelta(days=int(rule['days_before']))
+    return f'{short_date(d)}, {rule["when"]}'
+
+
+def step_nav(p, weekday, opened, notes):
+    buttons = []
+    for n, step in enumerate(LAYOUT['day_steps'], 1):
+        k = step['key']
+        on = k == opened
+        buttons.append(
+            f'<button type="button" role="tab" class="st" id="{p}st-{k}" aria-controls="{p}sub-{k}" data-sub="{k}" '
+            f'aria-selected="{"true" if on else "false"}" tabindex="{"0" if on else "-1"}">'
+            f'<span class="st-n">{n}</span><span class="st-label">{E(step["label"])}</span>'
+            f'<span class="st-note">{E(notes.get(k) or "")}</span></button>')
+    return (f'<div class="steps" role="tablist" aria-label="{E(weekday)}: {", ".join(s["label"] for s in LAYOUT["day_steps"])}">'
+            + ''.join(buttons) + '</div>')
+
+
+def step_panel(p, k, opened, inner):
+    what = next(s['what'] for s in LAYOUT['day_steps'] if s['key'] == k)
+    return (f'<div class="subpanel" role="tabpanel" id="{p}sub-{k}" aria-labelledby="{p}st-{k}" data-sub="{k}" tabindex="-1"'
+            f'{"" if k == opened else " hidden"}><p class="st-what">{E(what)}</p>{inner}</div>')
+
+
+def fixed_day_panel(day, name, weekday, when, series_label, state, hidden, head, slots, notes, attrs=''):
+    """One day in the fixed layout: its heading, then its four steps, always Brief, Drafts, Record, Publish, each a
+    tab of its own. The step that is open first is where the day is: the brief until it is drafted, the drafts while
+    they are in review, and Publish once it is made."""
+    p = f'{day}-'
+    opened = {'not_picked': 'brief', 'picked': 'brief', 'draft': 'drafts', 'made': 'publish'}[state]
+    return (f'<div class="pm fixed" id="panel-{name}" role="tabpanel" aria-labelledby="tab-{name}" data-prefix="{p}" '
+            f'data-day="{day}" data-state="{state}"{attrs} tabindex="-1"{" hidden" if hidden else ""}>'
+            f'<div class="day-head">{head}</div>' + step_nav(p, weekday, opened, notes)
+            + ''.join(step_panel(p, k, opened, slots.get(k) or '') for k in DAY_STEPS) + '</div>')
+
+
+def fixed_head(kick, heading, calls=()):
+    waiting = ('<div class="notice" role="note"><h2>Waiting on you</h2><ol class="do">'
+               + ''.join(f'<li>{E(c)}</li>' for c in calls) + '</ol></div>') if calls else ''
+    return f'<div class="kick">{E(kick)}</div><h1>{E(heading)}</h1>{waiting}'
+
+
+# ------------------------------------------------------------------ the Publish step's run-sheet (the fixed layout)
+# Krish, 2026-10-21: "have a think about where I publish, how I publish, what I need to download, when, and in what
+# order. Just make everything as beautiful and user-friendly as possible." So a made day's Publish step is one ordered
+# run-sheet, drawn here from data: the day's progress at the top, then Download first (every file for the day, in the
+# order he uses them, each with one big Download), then one card per place to post, in config/board-layout.json's
+# order, each with the same parts in the same order: the files it needs (links back to Download first), its words to
+# copy, what to do, its link box where it has one, and its tick. The words, the files and what to do come from
+# publish_kit.steps() on the page's own words (its pm-data block); the pictures and the copy are the publish page's,
+# under the ids they always had, so a saved comment or a copy_updates refresh still finds its box. Nothing in it comes
+# from a session's markup.
+
+PM_DATA = re.compile(r'<script type="application/json" id="pm-data">(.*?)</script>', re.S)
+PM_SECTION = re.compile(r'<section id="([^"]+)"><h2>(.*?)</h2><p class="why">(.*?)</p>(.*?)'
+                        r'<div class="btns"><button class="ghost" data-act="done" data-ref="\1">Mark done</button></div></section>', re.S)
+PM_COPY = re.compile(r'<div class="card"><div class="row"><span class="lab">(?P<label>[^<]*)</span><div class="btns">'
+                     r'<button data-act="text" data-ref="(?P<cid>c\d+)">Copy</button></div></div>'
+                     r'<pre class="txt" id="(?P=cid)" data-raw="(?P<raw>[^"]*)">'
+                     r'|<div class="card"><span class="lab">(?P<missing>[^<]*)</span><span class="missing">')
+PM_PIC = re.compile(r'<div class="card pic"><div class="row"><span class="lab">([^<]*)</span><div class="btns">.*?'
+                    r'data-name="([^"]*)">Download</button></div></div><img id="img-([^"]+)" src="([^"]+)" alt="([^"]*)">'
+                    r'(?:<div class="files">([^<]*)</div>)?', re.S)
+PM_ARTICLE = re.compile(r'<div class="article" id="art">(.*?)</div>\n<pre id="art-text" hidden>(.*?)</pre>', re.S)
+# A picture's role on the publish page (publish_manager.COVER_ROLES, and "cover"), and the file name each stands for.
+COVER_ORDER = ('cover', 'vertical-cover', 'square-cover', 'share-card-cover')
+ROLE_FILE = {'cover': 'cover', 'vertical-cover': 'vertical_cover', 'square-cover': 'square', 'share-card-cover': 'share_card'}
+ROLE_LABEL = {'cover': ('Substack cover (1200 x 630)', "Substack: the post's cover image and the email thumbnail"),
+              'vertical-cover': ('Vertical cover (1080 x 1920)', 'Shorts, TikTok and Reels: the cover of the 90-second video'),
+              'square-cover': ('Square cover (1080 x 1080)', 'The Instagram feed, when you want it'),
+              'share-card-cover': ('Share card (1200 x 675)', 'LinkedIn, when you post a picture with the link')}
+LINK_BOX = {'substack': ('article', 'Article link, once the post is live', 'https://...'),
+            'youtube': ('youtube', 'YouTube link, once the video is public', 'https://youtu.be/...')}
+
+
+def publish_data(page, name, warnings):
+    """A made day's publish page as data: its words (for publish_kit.steps), the copy of each of its sections by the
+    ids the page gave them, its pictures with their roles and bytes, and the article as Substack takes it."""
+    body = page['body']
+    words = page.get('words')
+    if words is None:
+        warnings.append(f'{name}: its publish page was made before it carried its words as data, so the run-sheet names '
+                        'the standing files; make the page again with publish_manager.py to name its own')
+        words = {'title': page.get('title') or ''}
+    sections, headings = {}, []
+    for m in PM_SECTION.finditer(body):
+        if m.group(1) == 'substack' or re.fullmatch(r's\d+', m.group(1)):
+            headings.append((m.group(1), re.sub(r'^\d+\.\s*', '', html.unescape(re.sub(r'<[^>]+>', '', m.group(2)))).strip()))
+        copy = []
+        for c in PM_COPY.finditer(m.group(4)):
+            if c.group('cid'):
+                copy.append({'label': html.unescape(c.group('label')), 'cid': c.group('cid'), 'text': html.unescape(c.group('raw'))})
+            else:
+                copy.append({'label': html.unescape(c.group('missing')), 'cid': None, 'text': None})
+        sections[m.group(1)] = copy
+    meta = {i['id']: i for i in page.get('images') or []}
+    guess = {v: k for k, v in publish_manager.COVER_ROLES.items()}
+    pictures, seen = [], set()
+    for label, fname, iid, src, alt, caption in PM_PIC.findall(body):
+        if iid in seen:
+            continue
+        seen.add(iid)
+        label = html.unescape(label)
+        role = (meta.get(iid) or {}).get('role') or guess.get(label) or ('cover' if label.startswith('Cover and email thumbnail') else None)
+        if role and role not in ROLE_FILE:
+            role = None
+        shown = re.sub(r'^Picture \d+: ', '', label)
+        pictures.append({'id': iid, 'role': role, 'label': shown, 'name': html.unescape(fname), 'src': src,
+                         'alt': html.unescape(alt), 'caption': html.unescape(caption) if caption else ''})
+    art = PM_ARTICLE.search(body)
+    return {'words': words, 'sections': sections, 'headings': headings, 'pictures': pictures,
+            'article': {'html': art.group(1), 'text': art.group(2)} if art else None}
+
+
+def post_folder(folder, videos):
+    """The post's folder in his library, '3 Posts/<post folder>': the record's pack, else a video's library path."""
+    if isinstance(folder, str) and folder.strip():
+        return folder.strip().removeprefix('3 Posts/').strip('/')
+    for v in videos or []:
+        m = re.match(r'3 Posts/([^/]+)/', str((v or {}).get('path') or '') if isinstance(v, dict) else '')
+        if m:
+            return m.group(1)
+    return None
+
+
+def drive_links(url):
+    """(download, view) for a Drive file link, or None."""
+    m = DRIVE_ID.search(str(url or ''))
+    if not m:
+        return None
+    fid = m.group(1)
+    return f'https://drive.usercontent.google.com/download?id={fid}&export=download', f'https://drive.google.com/file/d/{fid}/view'
+
+
+def dl_item(p, iid, name, used_for, actions, state, extra=''):
+    return (f'<li class="dl-item" id="{p}dl-{iid}" data-dl="{iid}" data-state="{state}"><div class="dl-what">'
+            f'<span class="dl-name">{E(name)}</span><span class="dl-for">{E(used_for)}</span></div>'
+            f'<div class="dl-act">{actions}</div>{extra}</li>')
+
+
+def drive_actions(url, what='Download'):
+    down, view = drive_links(url)
+    return (f'<a class="btnlink dl-btn" href="{E(down)}" target="_blank" rel="noopener">{E(what)}</a>'
+            f'<a class="btnlink ghost" href="{E(view)}" target="_blank" rel="noopener">Open in Drive</a>')
+
+
+def dl_videos(p, videos, feature):
+    """The first files in Download first: each finished video, then each one's thumbnail, from the making record.
+    Krish, 2026-10-14: "You should always link the Google Drive videos because I need to actually download them onto
+    my computer"; 2026-10-12: "I always want a video thumbnail for all video sizes produced as an asset every time".
+    Its own group, so a kept day's videos are drawn again from the record (board(), --keep)."""
+    by_cut = {v['cut']: v for v in videos or [] if isinstance(v, dict) and v.get('cut') in ('long', 'short', 'feature')}
+    cuts = LAYOUT['cuts']
+    rows, thumbs = [], []
+    for cut, label, where in video_cuts(feature):
+        v = by_cut.get(cut)
+        name = cuts[cut]['name']
+        if not v:
+            rows.append(dl_item(p, f'video-{cut}', label, f'For {where}', '<span class="rec-none">Not made yet</span>', 'waiting'))
+            thumbs.append(dl_item(p, f'thumb-{cut}', f'Thumbnail for the {name}', f'For {where}',
+                                  '<span class="rec-none">Not made yet</span>', 'waiting'))
+            continue
+        secs = v.get('seconds')
+        length = f'. {int(secs) // 60} min {int(secs) % 60:02d} s' if isinstance(secs, (int, float)) and secs else ''
+        if drive_links(v.get('url')):
+            rows.append(dl_item(p, f'video-{cut}', label, f'For {where}{length}', drive_actions(v['url']), 'ready'))
+        else:
+            rows.append(dl_item(p, f'video-{cut}', label, f'For {where}{length}',
+                                f'<span class="rec-none">Not in Drive yet: it is in the post\'s folder as {E(v.get("name") or "")}, '
+                                'and its link joins this list once Library Sync has written it</span>', 'pending'))
+        thumb = v.get('thumbnail') if isinstance(v.get('thumbnail'), dict) else {}
+        if drive_links(thumb.get('url')):
+            thumbs.append(dl_item(p, f'thumb-{cut}', f'Thumbnail for the {name}', f'For {where}', drive_actions(thumb['url']), 'ready'))
+        elif thumb.get('path'):
+            thumbs.append(dl_item(p, f'thumb-{cut}', f'Thumbnail for the {name}', f'For {where}',
+                                  f'<span class="rec-none">In the same folder as {E(Path(thumb["path"]).name)}; its link joins this '
+                                  'list once recorded</span>', 'pending'))
+        else:
+            thumbs.append(dl_item(p, f'thumb-{cut}', f'Thumbnail for the {name}', f'For {where}',
+                                  '<span class="rec-none">No thumbnail on the record yet; its link joins this list once recorded</span>', 'pending'))
+    return '<div class="dl-group" data-dl-group="videos"><ol class="dl-list">' + ''.join(rows + thumbs) + '</ol></div>'
+
+
+def run_sheet(day, p, page, data, videos, delivery, feature, folder, warnings):
+    """A made day's Publish step in the fixed layout: its progress, Download first, and a card per place to post."""
+    words, sections, pictures = data['words'], data['sections'], data['pictures']
+    names = publish_kit.file_names(words)
+    slug = re.sub(r'[^a-z0-9]+', '-', (page.get('title') or 'post').lower()).strip('-')[:40] or 'post'
+    item_of = {names['long_video']: 'video-long', names['short_video']: 'video-short', names['wide_thumbnail']: 'thumb-long'}
+    label_of = {'video-long': LAYOUT['cuts']['long']['name'], 'video-short': LAYOUT['cuts']['short']['name'],
+                'thumb-long': f'Thumbnail for the {LAYOUT["cuts"]["long"]["name"]}', 'video-feature': LAYOUT['cuts']['feature']['name'],
+                'article': 'The article (HTML)'}
+    if feature:
+        # The feature's two cards name its video and its own wide thumbnail; both are in Download first on a feature piece.
+        item_of.setdefault(names['feature_video'], 'video-feature')
+        item_of.setdefault(names['feature_thumbnail'], 'thumb-feature')
+        label_of['thumb-feature'] = f'Thumbnail for the {LAYOUT["cuts"]["feature"]["name"]}'
+    # The files after the videos, in the order he uses them: the Substack cover, the vertical cover, the covers for
+    # the other places, then the article and the pictures in it. Each picture once, wherever the page showed it.
+    files = []
+    covers = sorted((x for x in pictures if x['role']), key=lambda x: COVER_ORDER.index(x['role']))
+    for x in covers:
+        name, used_for = ROLE_LABEL[x['role']]
+        iid = f'img-{x["id"]}'
+        item_of.setdefault(names[ROLE_FILE[x['role']]], iid)
+        label_of[iid] = name
+        files.append(dl_item(p, iid, name, f'For {used_for}', pic_actions(p, x), 'ready', pic_extra(p, x)))
+    if names['spotify_thumbnail'] != names['wide_thumbnail']:
+        link = ((words.get('links') or {}).get(names['spotify_thumbnail']) or '')
+        item_of[names['spotify_thumbnail']] = 'thumb-spotify'
+        label_of['thumb-spotify'] = 'Spotify thumbnail (1920 x 1080)'
+        files.append(dl_item(p, 'thumb-spotify', 'Spotify thumbnail (1920 x 1080)', 'For Spotify: the episode thumbnail',
+                             drive_actions(link) if drive_links(link) else
+                             f'<span class="rec-none">In the post\'s folder as {E(names["spotify_thumbnail"])}</span>',
+                             'ready' if drive_links(link) else 'pending'))
+    article = data['article']
+    if article:
+        item_of[names['substack_copy']] = 'article'
+        files.append(dl_item(p, 'article', 'The article (HTML)', 'For Substack, if pasting it from the Substack card does not work, and to keep',
+                             f'<button type="button" class="dl-btn" data-act="download" data-ref="{p}art" data-name="{E(slug)}-article.html" '
+                             f'data-title="{E(page.get("title") or "")}">Download</button>', 'ready', '<div class="status" aria-live="polite"></div>'))
+    else:
+        warnings.append(f'{day}: its publish page has no article to copy; the Substack card says so')
+    for n, x in enumerate((x for x in pictures if not x['role']), 1):
+        iid = f'img-{x["id"]}'
+        label_of[iid] = f'Picture {n} in the article'
+        files.append(dl_item(p, iid, f'Picture {n} in the article: {x["label"]}', 'For Substack, if a picture does not come through with the article',
+                             pic_actions(p, x), 'ready', pic_extra(p, x)))
+    groups = dl_videos(p, videos, feature) + ('<div class="dl-group" data-dl-group="files"><ol class="dl-list">' + ''.join(files) + '</ol></div>'
+                                             if files else '')
+    if delivery:
+        groups += board_materials.render_group(day, delivery)
+    on_page = len(re.findall(r'data-act="download"', groups))
+    where = (f'In Drive: makeyourmindup, 3 Posts, {folder}.' if folder else
+             'In Drive: makeyourmindup, 3 Posts, in the post\'s own folder.')
+    every = (f'<div class="dl-all">' + (f'<button type="button" class="dl-btn" data-act="download-all" data-ref="{p}download">'
+                                         f'Download all {on_page} files on this page</button><div class="status" aria-live="polite"></div>'
+                                         if on_page >= 2 else '')
+             + f'<p class="dl-note">The videos and thumbnails download from Drive, one tap each. Everything for this post is also '
+               f'in its library folder. {E(where)} Download that folder to get every file at once.</p></div>')
+    download_first = (f'<div class="rec dl" id="{p}download" role="region" aria-labelledby="{p}download-h"><div class="rec-head">'
+                      f'<h2 id="{p}download-h">Download first</h2><span class="kick">In the order you use them</span></div>'
+                      '<p class="rec-how">Everything you need today, before you open Substack. The videos come first, then the pictures, '
+                      'then the article.</p>' + groups + every + '</div>')
+    # The places to post, in config/board-layout.json's order; the optional ones under their own heading.
+    kit_steps = publish_kit.steps(words, on_board=True)
+    if feature and not any(x['where'] == publish_kit.FEATURE_YOUTUBE for x in kit_steps):
+        # The board knows the piece is a feature (config/features.json) even when its page's words do not name the
+        # piece: the feature's two cards still take their files, words and do-steps from the kit.
+        kit_steps += publish_kit.feature_steps(words, words.get('files') or {}, words.get('comment_question') or '', on_board=True)
+    kit = section_kit(day, kit_steps, data.get('headings') or [])
+    standing, optional, jump, n = [], [], [], 0
+    group = standing
+    for key, label, channel, counted in STEPS:
+        if not counted and key in FEATURE_ONLY and not feature:
+            continue
+        if not channel and key not in FEATURE_ONLY:
+            # A recording: its tick is under Record, and the list at the top points there.
+            jump.append(f'<li><a href="#{p}record" data-tickstate="{day}-{key}">{E(label.split(" (")[0])}</a></li>')
+            continue
+        n += 1
+        card = run_card(day, p, n, key, label, kit.get(key), sections, article, item_of, label_of, feature, warnings)
+        # A feature's posting card is never counted and sits right after the card it follows (its YouTube long-form
+        # after the 5-minute YouTube, its episode after Spotify), so he posts in one order; every other card by counted.
+        group = group if key in FEATURE_ONLY and channel else (standing if counted else optional)
+        group.append(card)
+        if counted:
+            jump.append(f'<li><a href="#{p}{kit[key][2] if key in kit else "run-" + key}" data-tickstate="{day}-{key}">'
+                        f'{E(label.split(":")[0])}</a></li>')
+    top = (f'<div class="ticks rs-top" id="{p}ticks" role="region" aria-labelledby="{p}ticks-h">'
+           f'<div class="ticks-head"><h2 id="{p}ticks-h">Publish checklist</h2>'
+           f'<span class="ticks-count" data-count="{day}">{STANDING} steps</span></div>'
+           f'<div class="meter" aria-hidden="true"><span data-meter="{day}"></span></div>'
+           f'<p class="tick-note" data-note="{day}">Loading saved ticks.</p>'
+           f'<ol class="rs-jump" aria-label="The steps that make 100%">{"".join(jump)}</ol></div>')
+    return (top + download_first
+            + '<h2 class="run-h">Then post, in this order</h2>' + ''.join(standing)
+            + ('<h2 class="run-h">When you want them</h2><p class="run-how">Not counted toward 100%.</p>' + ''.join(optional) if optional else '')
+            + SAVE_NOTE)
+
+
+def step_where(a, b):
+    """Whether a page section's heading and a publish step's where name one place: the same words, or both the long
+    cut's YouTube ("YouTube (the 5-minute video)", or the deep cut's on an older page)."""
+    yt = r'YouTube \(the .+\)'
+    return a == b or bool(re.fullmatch(yt, a) and re.fullmatch(yt, b))
+
+
+def section_kit(day, steps, headings):
+    """{step key: (n, step, the page section id holding its copy)}. Each section of the publish page is matched to its
+    step by its heading (the step's where), never by its place: a page made before the feature's two steps were added
+    keeps every caption on its own card. A section no step names, or two sections for one step, is refused."""
+    dropped = set(DROPPED_CHANNELS.values())
+    sid_of = {}
+    for sid, where in headings:
+        if where in dropped:
+            continue
+        match = next((s['where'] for s in steps if step_where(where, s['where'])), None)
+        if match is None:
+            raise BoardError(f'{day}: its publish page has a section "{where}" that no publish step names; make the page '
+                             'again with publish_manager.py, so no card takes another place\'s words')
+        if match in sid_of:
+            raise BoardError(f'{day}: its publish page has two sections for "{match}"; make the page again with publish_manager.py')
+        sid_of[match] = sid
+    kit = {}
+    for k, s in enumerate(steps, 1):
+        key = SECTION_STEP.get(s['where']) or ('youtube' if re.fullmatch(r'YouTube \(the .+\)', s['where']) else None)
+        if key:
+            kit[key] = (k, s, sid_of.get(s['where'], f'run-{key}'))
+    return kit
+
+
+def pic_actions(p, x):
+    return (f'<button type="button" class="dl-btn" data-act="download" data-ref="{p}img-{x["id"]}" data-name="{E(x["name"])}">Download</button>'
+            f'<button type="button" class="ghost" data-act="image" data-ref="{p}img-{x["id"]}">Copy picture</button>')
+
+
+def pic_extra(p, x):
+    return (f'<img class="dl-pic" id="{p}img-{x["id"]}" src="{x["src"]}" alt="{E(x["alt"])}">'
+            + (f'<p class="dl-note">{E(x["caption"])}</p>' if x['caption'] else '') + '<div class="status" aria-live="polite"></div>')
+
+
+def run_card(day, p, n, key, label, kit, sections, article, item_of, label_of, feature, warnings):
+    """One place to post: the files it needs, its words to copy, what to do, its link box where it has one, its tick."""
+    recording = key in FEATURE_ONLY and not next(ch for k2, _, ch, _ in STEPS if k2 == key)
+    if recording:
+        c = LAYOUT['cuts']['feature']
+        sid, where, tag = 'run-feature', c['name'][0].upper() + c['name'][1:], c['shape']
+        why = 'Only on a piece you called a feature. Record it from its script under Record, then post it where it goes.'
+        copy = []
+        do = ['Record it from Teleprompter: its script is under Record.',
+              f'Then post it from its own cards above: YouTube long-form and Spotify.']
+        files = [('video-feature', label_of['video-feature'])]
+    else:
+        if not kit:
+            raise BoardError(f'{day}: publish_kit.steps() has no step for {key}; the run-sheet cannot draw its card')
+        k, s, sid = kit
+        where, tag, why, do = s['where'], s['tag'], s['why'], s['do']
+        files = []
+        for f in s['files']:
+            iid = item_of.get(f)
+            if (iid, label_of.get(iid)) not in files:
+                files.append((iid, label_of.get(iid) if iid else f))
+        copy = sections.get(sid)
+        if copy is None:
+            warnings.append(f'{day}: its publish page has no {where} section, so its copy comes from its words')
+            copy = [{'label': lab, 'cid': None, 'text': t if isinstance(t, str) and t.strip() else None} for lab, t in s['copy']]
+    links = ''.join((f'<li><a class="run-file" href="#{p}dl-{iid}">{E(name)}</a></li>' if iid else
+                     f'<li><span class="run-nofile">{E(name)}, in the post\'s folder</span></li>') for iid, name in files)
+    cards = []
+    for i, c in enumerate(copy):
+        cid = f'{p}{c["cid"]}' if c['cid'] else f'{p}run-{key}-{i}'
+        if c['text'] and str(c['text']).strip():
+            text = str(c['text']).strip()
+            cards.append(f'<div class="card"><div class="row"><span class="lab">{E(c["label"])}</span><div class="btns">'
+                         f'<button data-act="text" data-ref="{cid}">Copy</button></div></div>'
+                         f'<pre class="txt" id="{cid}" data-raw="{E(text)}">{E(text)}</pre><div class="status" aria-live="polite"></div></div>')
+        else:
+            cards.append(f'<div class="card"><span class="lab">{E(c["label"])}</span><span class="missing">Not written yet: ask the '
+                         'engine for it before publishing.</span></div>')
+    if key == 'substack':
+        if article:
+            cards.append(f'<div class="card"><div class="row"><span class="lab">The article, with its pictures in place</span><div class="btns">'
+                         f'<button data-act="article" data-ref="{p}art">Copy article</button></div></div>'
+                         f'<div class="article" id="{p}art">{article["html"]}</div><pre id="{p}art-text" hidden>{article["text"]}</pre>'
+                         '<div class="status" aria-live="polite"></div><p class="files">Pastes as formatted text with headings and every '
+                         'picture in place. If a picture does not come through, download it from Download first.</p></div>')
+        else:
+            cards.append('<div class="card"><span class="lab">The article</span><span class="missing">Not on its publish page: '
+                         'make the page again before publishing.</span></div>')
+    box = ''
+    if key in LINK_BOX:
+        field, said, hint = LINK_BOX[key]
+        box = (f'<div class="run-part run-link"><label for="{p}link-{field}">{E(said)}'
+               f'<input id="{p}link-{field}" type="url" inputmode="url" autocomplete="off" placeholder="{E(hint)}"></label>'
+               '<p class="files">Paste it once: every Copy button on this day carries it. <span class="link-state" data-linkstate></span></p></div>')
+    opt = '' if next(c for k2, _, _, c in STEPS if k2 == key) else ' opt'
+    return (f'<section class="run{opt}" id="{p}{sid}" data-run="{key}" aria-labelledby="{p}{sid}-h">'
+            f'<div class="run-head"><span class="run-n" aria-hidden="true">{n}</span><div class="run-t">'
+            f'<h3 id="{p}{sid}-h">{E(where)}</h3><p class="run-tag">{E(tag)}</p></div></div><p class="why">{E(why)}</p>'
+            + (f'<div class="run-part"><span class="lab">Files</span><ul class="run-files">{links}</ul></div>' if links else '')
+            + (f'<div class="run-part"><span class="lab">Copy</span>{"".join(cards)}</div>' if cards else '')
+            + f'<div class="run-part"><span class="lab">Do</span><ol class="do">{"".join(f"<li>{E(d)}</li>" for d in do)}</ol></div>'
+            + box
+            + f'<label class="tick run-tick">{tick_box(f"{day}-{key}", label)}<span class="t-label">'
+              f'{"Recorded: tick it" if recording else "Done: tick it once it is live"}</span>{TICK_TAIL}</label></section>')
+
+
+def run_sheet_problems(name, panel, tag):
+    """Why a made day's Publish step in the fixed layout is not its run-sheet: Download first, before every card; one
+    card per place to post in config/board-layout.json's order; each card's one tick its own; no tick outside a card;
+    and each finished video and its thumbnail with their Drive links."""
+    out = []
+    p = (re.search(r'data-prefix="([^"]*)"', tag) or [None, ''])[1]
+    day = p.rstrip('-')
+    at = panel.find(f'<div class="subpanel" role="tabpanel" id="{p}sub-publish"')
+    if at < 0:
+        return [f'{name}: no Publish step']
+    publish = div_at(panel, at)
+    dl = publish.find(f'<div class="rec dl" id="{p}download"')
+    runs = list(re.finditer(r'<section class="run(?: opt)?" id="[^"]+" data-run="([^"]+)"[^>]*>(.*?)</section>', publish, re.S))
+    if dl < 0:
+        out.append(f'{name}: its Publish step has no Download first')
+    elif runs and dl > runs[0].start():
+        out.append(f'{name}: Download first is not above the places to post')
+    feature = 'data-feature="true"' in tag
+    want = [s['key'] for s in LAYOUT['publish_steps']['steps'] if (feature if s.get('feature_only') else s.get('channel'))]
+    got = [m.group(1) for m in runs]
+    if got != want:
+        out.append(f'{name}: the places to post are {got}, not {want}, the order of config/board-layout.json')
+    for m in runs:
+        ticks = re.findall(r'data-tick="([^"]+)"', m.group(2))
+        if ticks != [f'{day}-{m.group(1)}']:
+            out.append(f'{name}: the {m.group(1)} card holds the ticks {ticks}, not its own one')
+    rest = re.sub(r'<section class="run(?: opt)?" id="[^"]+" data-run="[^"]+"[^>]*>.*?</section>', '', publish, flags=re.S)
+    loose = re.findall(r'data-tick="([^"]+)"', rest)
+    if loose:
+        out.append(f'{name}: {len(loose)} tick(s) in its Publish step with no card: {loose[:4]}')
+    if dl >= 0:
+        box = div_at(publish, dl)
+        if 'Not in Drive yet' in box:
+            out.append(f'{name}: a finished video with no Drive link; record it (making.py PIECE drive-link CUT URL --thumb-url URL)')
+        for cut in re.findall(r'data-dl="video-(long|short|feature)" data-state="ready"', box):
+            if f'data-dl="thumb-{cut}" data-state="ready"' not in box:
+                out.append(f'{name}: a finished video with no thumbnail link; record it (making.py PIECE drive-link CUT URL --thumb-url URL)')
+                break
+    return out
+
+
+def ideas_waiting_panel(monday, hidden):
+    sunday = monday - timedelta(days=1)
+    return (f'<div class="pm fixed" id="panel-ideas" role="tabpanel" aria-labelledby="tab-ideas" data-day="ideas" '
+            f'data-state="ideas-waiting" tabindex="-1"{" hidden" if hidden else ""}>'
+            f'<div class="day-head"><div class="kick">{E(week_span(monday))}</div><h1>Ideas</h1></div>'
+            + slot_empty(f'This week\'s ideas arrive by {short_date(sunday)}: fresh ones from the ideas you drop in Control Center, '
+                         'Content Inspo (once Cold Ideas and Inspo) and the engine\'s own research, with what you queued earlier first.')
+            + '</div>')
+
+
+COMBINE_MIN, COMBINE_MAX = 2, 5
+
+
+def read_combine(data, queue, where='--combine'):
+    """The groups the session judged worth combining (docs/plans/<week>/combine.json): each two to five queued ideas,
+    the higher-level argument that threads them (thesis) and the 3 to 5 beats that join them. Proposed from
+    GET /api/idea-queue?combine=1; nothing is combined until Krish taps Combine or says so (Krish, 2026-10-21)."""
+    groups = data.get('combine') if isinstance(data, dict) else data
+    if not isinstance(groups, list):
+        raise BoardError(f'{where}: give a list of {{"members": [queued ids], "series": ..., "thesis": ..., "joins": [3 to 5 beats]}}')
+    if queue is None:
+        raise BoardError(f'{where}: give --queue too; a group is made of queued ideas and the board shows each one')
+    queued = {str(q.get('id')): q for q in queue if isinstance(q, dict) and q.get('id')}
+    series = {slug for *_, slug, _ in DAYS}
+    out, problems = [], []
+    for n, g in enumerate(groups, 1):
+        g = g if isinstance(g, dict) else {}
+        members = g.get('members') if isinstance(g.get('members'), list) else []
+        ids = [str(m.get('id') if isinstance(m, dict) else m) for m in members]
+        if not COMBINE_MIN <= len(ids) <= COMBINE_MAX or len(set(ids)) != len(ids):
+            problems.append(f'group {n}: {len(ids)} member(s); a group is {COMBINE_MIN} to {COMBINE_MAX} different queued ideas')
+        bad = [i for i in ids if not UUID.match(i) or i not in queued]
+        if bad:
+            problems.append(f'group {n}: {", ".join(bad)} {"is" if len(bad) == 1 else "are"} not in the queue')
+        if g.get('series') not in (None, '', *series):
+            problems.append(f'group {n}: series {g.get("series")!r} is not one of {", ".join(sorted(series))}')
+        if not str(g.get('thesis') or '').strip():
+            problems.append(f'group {n}: no thesis, the one bigger argument the ideas make together')
+        joins = g.get('joins')
+        if not isinstance(joins, list) or not 3 <= len(joins) <= 5 or not all(isinstance(j, str) and j.strip() for j in joins):
+            problems.append(f'group {n}: joins are 3 to 5 beats that thread the ideas into one piece')
+        out.append({'id': f'combine-{n}', 'members': ids, 'series': g.get('series') or None,
+                    'thesis': str(g.get('thesis') or '').strip(), 'joins': [str(j).strip() for j in joins or [] if isinstance(j, str)]})
+    if problems:
+        raise BoardError(f'{where} is not ready to show:\n  ' + '\n  '.join(problems))
+    return out
+
+
+def combine_card(group, queued):
+    """One "Could combine" card: the members, the thesis, the beats that join them, and his Combine button. The tap
+    saves queue/combine-<n> ({combine: true, members, pick}); the next session runs synthesize on his word."""
+    label = {slug: lab for *_, slug, lab in DAYS}
+    cid = group['id']
+    members = ''.join(f'<li class="q-member" data-queued-id="{E(m)}">{E((queued.get(m) or {}).get("so_what") or (queued.get(m) or {}).get("idea") or m)}</li>'
+                      for m in group['members'])
+    joins = ''.join(f'<li>{E(j)}</li>' for j in group['joins'])
+    return (f'<article class="q-combo" id="{cid}" data-combine="{cid}" data-members="{E(",".join(group["members"]))}">'
+            + (f'<p class="q-meta"><span class="chip">{E(label.get(group["series"], group["series"]))}</span></p>' if group.get('series') else '')
+            + f'<p class="q-sowhat">{E(group["thesis"])}</p>'
+            f'<h3 class="q-h">The ideas</h3><ul class="q-members">{members}</ul>'
+            f'<h3 class="q-h">What joins them</h3><ol class="q-joins">{joins}</ol>'
+            f'<button type="button" class="btn-s" data-act="combine" data-for="{cid}" disabled>Combine these</button>'
+            f'<p class="q-state" data-combinestate="{cid}" aria-live="polite"></p></article>')
+
+
+def queue_panel(monday, queue, hidden, combine=None):
+    """The Queue tab: every idea Krish saved for later, by series, with his verdict and his reason or angle, and
+    the ideas that could combine into one bigger piece (Krish, 2026-10-21: "I need to see that queue somewhere. You
+    also need to pick up on whether there are multiple things in the queue that could be consolidated")."""
+    queue = [q for q in queue or [] if isinstance(q, dict)]
+    groups = [(label, slug) for _, _, _, _, slug, label in DAYS] + [('Any day', '')]
+    norm = lambda q: (q.get('series') or '').replace('.', '_').replace('-', '_')
+    queued = {str(q.get('id')): q for q in queue if q.get('id')}
+    combos = ''.join(combine_card(g, queued) for g in combine or [])
+    parts = [f'<div class="pm fixed" id="panel-queue" role="tabpanel" aria-labelledby="tab-queue" data-day="queue" '
+             f'data-state="queue" tabindex="-1"{" hidden" if hidden else ""}>'
+             f'<div class="day-head"><div class="kick">{E(week_span(monday))}</div><h1>Queue</h1></div>'
+             '<p class="st-what">Ideas you saved for later. Mark them on the Ideas tab or in Control Center; '
+             'each week\'s ideas start with the ones here that fit.</p>'
+             '<section class="q-combine" id="queue-combine"><h2>Could combine</h2>'
+             + (f'<p class="q-how">Each card is queued ideas that would make one bigger piece together. Tap Combine and Claude '
+                f'writes them up as one; nothing is combined until you do.</p>{combos}' if combos else
+                slot_empty('When two or more queued ideas would thread into one bigger piece, they appear here with what joins them. '
+                           'Nothing is combined until you say so.')) + '</section>']
+    known = {slug for _, slug in groups}
+    for label, slug in groups:
+        fit = [q for q in queue if norm(q) == slug or (slug == '' and norm(q) not in known)]
+        items = []
+        for q in fit:
+            t = q.get('triage') if isinstance(q.get('triage'), dict) else {}
+            verdict = str(t.get('verdict') or '')
+            why = t.get('angle') or t.get('reason')
+            items.append(
+                f'<li class="q-item" data-queued-id="{E(str(q.get("id") or ""))}"><p class="q-sowhat">{E(q.get("so_what") or q.get("idea") or "")}</p>'
+                + (f'<p class="q-meta"><span class="chip">{E(verdict.title())}</span>{" " + E(why) if why else ""}</p>' if verdict else
+                   '<p class="q-meta"><span class="chip">Not marked yet</span></p>')
+                + '</li>')
+        parts.append(f'<section class="q-day" id="queue-{slug or "any"}"><div class="sec-head"><h2>{E(label)}</h2>'
+                     f'<span class="rv-n">{len(fit)} saved</span></div>'
+                     + (f'<ul class="q-list">{"".join(items)}</ul>' if items else slot_empty('Nothing saved for this series.'))
+                     + '</section>')
+    parts.append('</div>')
+    return ''.join(parts)
 
 
 # ------------------------------------------------------------------ inputs
@@ -842,7 +1991,8 @@ def board_days(text, where='the board'):
         raise BoardError(f'{where}: its CONF names no days')
     for key in days:
         # A made tab is a whole publish page: its panel carries the day's id prefix.
-        if re.search(rf'<div class="pm" id="panel-[a-z]+"[^>]*\sdata-prefix="{key}-"', text):
+        tag = re.search(rf'<div class="pm" id="panel-[a-z]+"[^>]*\sdata-prefix="{key}-"[^>]*>', text)
+        if tag and ('data-state=' not in tag[0] or 'data-state="made"' in tag[0]):
             days[key]['state'] = 'made'
     return {'week': conf.get('week'), 'days': days}
 
@@ -862,7 +2012,8 @@ def kept_panel(text, key):
     A banner any session laid over it by hand (class "stage") is dropped:
     the board draws its own."""
     name = next(n for k, n, *_ in DAYS if k == key)
-    start = text.find(f'<div class="pm" id="panel-{name}"')
+    start = text.find(f'id="panel-{name}"')
+    start = text.rfind('<div class="pm', 0, start) if start >= 0 else -1
     if start < 0 or f'data-prefix="{key}-"' not in text[start:start + 400]:
         raise BoardError(f'--keep {key}: the previous board has no made {name} tab to keep')
     panel = div_at(text, start)
@@ -872,6 +2023,19 @@ def kept_panel(text, key):
             break
         panel = panel.replace(div_at(panel, m.start()), '', 1)
     return drop_channels(panel, key)
+
+
+def kept_draft_panel(text, key):
+    """Carry an unrelated draft tab from the verified previous board verbatim."""
+    name = next(n for k, n, *_ in DAYS if k == key)
+    start = text.find(f'id="panel-{name}"')
+    start = text.rfind('<div class="pm', 0, start) if start >= 0 else -1
+    if start < 0:
+        raise BoardError(f'--keep-draft {key}: the previous board has no {name} tab')
+    panel = div_at(text, start)
+    if 'data-state="draft"' not in panel.split('>', 1)[0]:
+        raise BoardError(f'--keep-draft {key}: the previous {name} tab is not in review')
+    return panel
 
 
 # Channels Krish dropped (2026-10-14: "I don't think I need Substack notes or WhatsApp to be honest, right now"):
@@ -1001,9 +2165,135 @@ def parse_time(value):
     return when if when.tzinfo else when.replace(tzinfo=timezone.utc)
 
 
+def previous_briefs(text):
+    """{day: brief} the board being replaced carries: its manifest's briefs, or its page's CONF.briefs."""
+    data = None
+    stripped = text.lstrip()
+    if stripped.startswith('{'):
+        try:
+            data = json.loads(stripped).get('briefs')
+        except (ValueError, AttributeError):
+            data = None
+    else:
+        m = CONF_RE.search(text)
+        if m:
+            try:
+                data = json.loads(m.group(1)).get('briefs')
+            except ValueError:
+                data = None
+    out = {}
+    for k, b in (data or {}).items() if isinstance(data, dict) else []:
+        if k in DAY_KEYS.values():
+            try:
+                out[k] = read_brief(b, f'the previous board\'s {k} brief')
+            except BoardError:
+                continue
+    return out
+
+
+def fixed_day(key, name, weekday, when, series_label, page, piece, pick, title, pending, draft, calls, review, materials,
+              briefs, teleprompter, videos, ideas, hidden, panels, warnings, built_at, kept_at, sweeps=None, lessons=None,
+              folders=None):
+    """A day in the fixed layout, appended to panels; its state. Each step is filled from data, in the same place every
+    week: Brief (the agreed brief), Drafts (the words to review), Record (Teleprompter, the scripts), Publish (the
+    files first, then each place to post, each with its tick)."""
+    p = f'{key}-'
+    feature = feature_piece(piece)
+    brief = briefs.get(key)
+    if brief and brief.get('piece_id') and piece and brief['piece_id'] != piece:
+        # A brief carried from the board being replaced was for another piece: never shown under a new pick.
+        warnings.append(f'{weekday}: the brief on the board was for piece {brief["piece_id"]}, not {piece}; it is dropped')
+        briefs.pop(key)
+        brief = None
+    if brief and piece and not brief.get('piece_id'):
+        brief['piece_id'] = piece
+    rv = (review or {}).get(key)
+    tp = teleprompter.get(key) or {}
+    delivery = None
+    if (materials or {}).get(key):
+        try:
+            delivery = board_materials.validate(materials[key], piece)
+        except ValueError as error:
+            raise BoardError(str(error)) from error
+    brief_due, drafts_due = due(when, LAYOUT['rhythm']['brief']), due(when, LAYOUT['rhythm']['drafts'])
+    files = board_materials.render(key, delivery) if delivery else ''
+    attrs = ' data-feature="true"' if feature else ''
+    sweep = (sweeps or {}).get(key)
+    if sweep and not (rv and (page or key in draft)):
+        raise BoardError(f'--sweep {key}: {weekday} has no drafts in review, so where the change was carried would not show; '
+                         f'give it with --draft {key} and --review')
+    if sweep and sweep.get('piece_id') and piece and sweep['piece_id'] != piece:
+        raise BoardError(f'--sweep {key}: the sweep is for piece {sweep["piece_id"]}, and {weekday} holds {piece}')
+    # Below the drafts, in this order: where his change was carried, then what was learned from his edits.
+    after = (sweep_card(p, sweep) if sweep else '') + (lessons_card(p, lessons) if lessons and rv else '')
+    if page:
+        if not piece:
+            raise BoardError(f'{weekday} is made but has no piece id: give --piece {key}=<uuid>, or --options or --live '
+                             'so the week\'s pick names it; every tick carries it')
+        state = 'made'
+        parts = made_parts(page, key, name, p, tp, warnings, (videos or {}).get(key), feature)
+        head = parts['head']
+        slots = {
+            'brief': brief_card(p, brief) if brief else slot_empty('This piece was made before its brief was kept on the board.'),
+            'drafts': (review_card(key, rv, built_at, kept_at) + after if rv else
+                       slot_empty('The words are signed off. The article is under Publish, in its first step; the scripts are under Record.')),
+            'record': parts['record'] + parts['scripts'],
+            # One ordered run-sheet, drawn from the page's data: never the page's own sections, ticks or contents.
+            'publish': run_sheet(key, p, page, publish_data(page, weekday, warnings), (videos or {}).get(key), delivery, feature,
+                                 post_folder((folders or {}).get(key), (videos or {}).get(key)), warnings),
+        }
+        notes = {'brief': 'agreed' if brief and brief['agreed'] else '', 'drafts': 'in review' if rv else 'signed off',
+                 'record': '', 'publish': f'{STANDING} steps'}
+        attrs += f' data-post="{E(page["post"])}"'
+    else:
+        state = 'draft' if key in draft else 'picked' if (piece or key in pending or pick) else 'not_picked'
+        if state == 'draft' and not piece:
+            raise BoardError(f'{weekday} is in draft but has no piece id: give --piece {key}=<uuid>')
+        if rv and state != 'draft':
+            raise BoardError(f'--review {key}: {weekday} is {state.replace("_", " ")}, so its words would not show; '
+                             f'give --draft {key} while they are in review')
+        if delivery and state != 'draft':
+            raise BoardError('Publishing materials need a made or draft day')
+        when_s = short_date(when)
+        plain = next((i['so_what'] for i in (ideas or {}).get(key, [])
+                      if (piece and i.get('id') == piece) or (title and i['story'].strip() == str(title).strip())), None)
+        said = plain or (pick or {}).get('plain') or title
+        record = (record_card(key, p, tp, feature) if tp.get('cuts') else
+                  slot_empty('The scripts go to Teleprompter once the drafts are signed off. How to record and send each take back is here then.'))
+        if state == 'not_picked':
+            head = fixed_head(f'{series_label} · {when_s} · not picked', weekday)
+            slots = {'brief': slot_empty(f'{weekday}\'s {series_label} piece is not picked yet. Pick one on the Ideas tab.'),
+                     'drafts': slot_empty(f'The draft article and scripts arrive by {drafts_due}, once a piece is picked and its brief agreed.'),
+                     'record': record, 'publish': slot_empty('The publish steps appear here once the piece is picked.')}
+            notes = {'brief': 'not picked'}
+        elif state == 'picked':
+            head = fixed_head(f'{series_label} · {when_s} · picked, not made yet', weekday)
+            slots = {'brief': ((f'<p class="day-idea">{E(said)}</p>' if said else '')
+                               + (brief_card(p, brief) if brief else
+                                  slot_empty(f'The record-ready brief is due by {brief_due}: the story beat by beat, the ending, '
+                                             'the takeaway, the angle and the tone.'))),
+                     'drafts': slot_empty(f'The draft article and scripts arrive by {drafts_due}.'),
+                     'record': record, 'publish': checklist(key, p, feature)}
+            notes = {'brief': 'agreed' if brief and brief['agreed'] else f'due {brief_due}', 'drafts': f'by {drafts_due}',
+                     'publish': f'{STANDING} steps'}
+        else:
+            head = fixed_head(f'{series_label} · {when_s} · in review, not ready to post', f'{weekday}\'s words, in review',
+                              calls.get(key) or ())
+            slots = {'brief': brief_card(p, brief) if brief else slot_empty('No brief is on the board for this piece.'),
+                     'drafts': (review_card(key, rv or [], built_at, kept_at) or slot_empty('No words are on the board for review yet.')) + after,
+                     'record': record, 'publish': files + checklist(key, p, feature)}
+            notes = {'brief': 'agreed' if brief and brief['agreed'] else '', 'drafts': 'in review', 'publish': f'{STANDING} steps'}
+    panel = fixed_day_panel(key, name, weekday, when, series_label, state, hidden, head, slots, notes, attrs)
+    if delivery:
+        panel = board_materials.update_copy(panel, key, delivery)
+    panels.append(panel)
+    return state
+
+
 def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pending=None, kept=None, videos=None, review=None,
-          draft=(), calls=None, posted=None, kept_at=None, ideas=None, queue=None):
-    """(page, manifest, warnings). ideas: {day: [idea]} from read_ideas(),
+          draft=(), calls=None, posted=None, kept_at=None, ideas=None, queue=None, materials=None, briefs=None, combine=None,
+          sweeps=None, lessons=None, folders=None, kept_draft=None):
+    """(page, manifest, warnings). folders: {day: the post's library folder, from its making record's pack}. ideas: {day: [idea]} from read_ideas(),
     shown as a first tab, Ideas, opened while no day is made. pages: {day: publish page text};
     pieces: {day: uuid}; teleprompter: {day: teleprompter_info}; picks:
     {day: {'id', 'title'}} from the week options; pending: {day: title};
@@ -1011,16 +2301,41 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
     Krish]}; posted: {day: when Substack went out}; kept_at: {review id:
     build time} of review blocks whose words have not changed."""
     built_at = datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')
+    use_layout(monday)
+    briefs = briefs or {}
+    if briefs and not FIXED:
+        raise BoardError(f'--brief: the week of {monday.isoformat()} is in the layout it was published in, which has no Brief step; '
+                         f'briefs are on boards from {LAYOUT_FROM.isoformat()}')
+    sweeps = sweeps or {}
+    if (sweeps or lessons) and not FIXED:
+        raise BoardError(f'--sweep and --lessons: the week of {monday.isoformat()} is in the layout it was published in; '
+                         f'Also changed and What I learned are in the Drafts step of boards from {LAYOUT_FROM.isoformat()}')
     pages, pieces, teleprompter, picks, pending, kept = pages or {}, pieces or {}, teleprompter or {}, picks or {}, pending or {}, kept or {}
+    kept_draft = kept_draft or {}
     calls, posted = calls or {}, posted or {}
-    deep_piece = deep_cut_piece(monday)
+    deep_piece = None if FIXED else deep_cut_piece(monday)
     warnings, days, panels, tabs, blocks = [], [], [], [], []
     parsed = {k: parse_day_page(v, f'the {k} publish page') for k, v in pages.items()}
     order = [k for k, *_ in DAYS]
     opened = next((k for k in order if k in parsed or k in kept), None) or next((k for k in order if k in pieces or k in picks or k in pending), None)
     if not opened:
-        opened = 'ideas' if ideas else 'mon'
-    if ideas:
+        opened = 'ideas' if ideas or FIXED else 'mon'
+    if FIXED:
+        # The fixed layout's first two tabs are always there: Ideas (waiting until Sunday's ideas come) and Queue.
+        panels.append(ideas_panel(monday, ideas, opened != 'ideas', queue) if ideas else ideas_waiting_panel(monday, opened != 'ideas'))
+        n = len([k for k in order if (ideas or {}).get(k)])
+        tabs.append(
+            f'<button type="button" role="tab" id="tab-ideas" aria-controls="panel-ideas" '
+            f'aria-selected="{"true" if opened == "ideas" else "false"}" tabindex="{"0" if opened == "ideas" else "-1"}" data-day="ideas">'
+            f'<span class="t-day">Ideas</span><span class="t-dot"> · </span>'
+            f'<span class="t-prog" data-tabprog="ideas">{f"pick {n}" if n else "not yet"}</span><span class="t-ch">Sunday</span></button>')
+        panels.append(queue_panel(monday, queue, True, combine))
+        tabs.append(
+            '<button type="button" role="tab" id="tab-queue" aria-controls="panel-queue" aria-selected="false" tabindex="-1" data-day="queue">'
+            f'<span class="t-day">Queue</span><span class="t-dot"> · </span>'
+            f'<span class="t-prog" data-tabprog="queue">{len([q for q in queue or [] if isinstance(q, dict)])} saved</span>'
+            '<span class="t-ch">For later</span></button>')
+    elif ideas:
         panels.append(ideas_panel(monday, ideas, opened != 'ideas', queue))
         n = len([k for k in order if ideas.get(k)])
         tabs.append(
@@ -1039,12 +2354,29 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
             if piece and other and other != piece:
                 warnings.append(f'{weekday}: {label} says {other}, the board uses {piece}')
         title = pending.get(key) or (page or {}).get('title') or pick.get('title') or ''
-        if key in kept and not page:
+        if key in kept_draft:
+            if page or key in draft or (review or {}).get(key) or (materials or {}).get(key):
+                raise BoardError(f'--keep-draft {key}: give the retained tab alone, or rebuild it from new inputs')
+            if not piece:
+                raise BoardError(f'--keep-draft {key}: the previous board has no piece id')
+            state = 'draft'
+            panels.append(re.sub(r'^(<div class="pm(?: fixed)?"[^>]*?)( hidden)?>',
+                                 lambda m: m.group(1) + (' hidden' if key != opened else '') + '>',
+                                 kept_draft[key], count=1))
+        elif key in kept and not page:
             if not piece:
                 raise BoardError(f'{weekday} is kept from the previous board but has no piece id: give --piece {key}=<uuid>')
             state = 'made'
-            panel = re.sub(r'^(<div class="pm"[^>]*?)( hidden)?>', lambda m: m.group(1) + (' hidden' if key != opened else '') + '>', kept[key], count=1)
-            card = videos_card(key, f'{key}-', (videos or {}).get(key), bool(piece) and piece == deep_piece)
+            if FIXED and not kept[key].startswith('<div class="pm fixed"'):
+                raise BoardError(f'--keep {key}: that tab is in the old layout; rebuild {weekday} with --day {key}=<its publish page> '
+                                 'so it takes the fixed layout')
+            panel = re.sub(r'^(<div class="pm(?: fixed)?"[^>]*?)( hidden)?>', lambda m: m.group(1) + (' hidden' if key != opened else '') + '>', kept[key], count=1)
+            card = None if FIXED else videos_card(key, f'{key}-', (videos or {}).get(key), bool(piece) and piece == deep_piece)
+            group = panel.find('<div class="dl-group" data-dl-group="videos">') if FIXED else -1
+            if group >= 0 and (videos or {}).get(key):
+                # The kept day's finished videos and thumbnails come from the record, as every other day's do.
+                feature = 'data-feature="true"' in panel.split('>', 1)[0]
+                panel = panel.replace(div_at(panel, group), dl_videos(f'{key}-', videos[key], feature), 1)
             if card:
                 # The kept day's finished videos come from the record, as every other day's do.
                 at = panel.find(f'<div class="rec" id="{key}-videos"')
@@ -1053,6 +2385,10 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
                 elif '<div class="rec"' in panel:
                     panel = panel.replace('<div class="rec"', card + '<div class="rec"', 1)
             panels.append(panel)
+        elif FIXED:
+            state = fixed_day(key, name, weekday, when, series_label, page, piece, pick, title, pending, draft, calls, review,
+                              materials, briefs, teleprompter, videos, ideas, key != opened, panels, warnings, built_at, kept_at,
+                              sweeps, lessons, folders)
         elif page:
             if not piece:
                 raise BoardError(f'{weekday} is made but has no piece id: give --piece {key}=<uuid>, or --options or --live '
@@ -1077,12 +2413,38 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
             panels[-1] = posted_kick(panels[-1], posted[key], weekday, warnings)
         if calls.get(key) and state != 'draft':
             raise BoardError(f'--waiting {key}: only a day in draft shows what waits on Krish; give --draft {key}')
-        if (review or {}).get(key):
+        if (review or {}).get(key) and not FIXED:
             if state not in ('made', 'draft'):
                 # Never dropped without a word: a build that showed none of his review boxes once passed --verify.
                 raise BoardError(f'--review {key}: {weekday} is {state.replace("_", " ")}, so its words would not show; '
                                  f'give --draft {key} while they are in review')
             panels[-1] = with_review(panels[-1], review_card(key, review[key], built_at, kept_at), after_heading=state == 'draft')
+        if (materials or {}).get(key) and not FIXED:
+            try:
+                delivery = board_materials.validate(materials[key], piece)
+                panels[-1] = board_materials.update_copy(panels[-1], key, delivery)
+            except ValueError as error:
+                raise BoardError(str(error)) from error
+            if state not in ('made', 'draft'):
+                raise BoardError('Publishing materials need a made or draft day')
+            if 'data-prefix=' not in panels[-1].split('>', 1)[0]:
+                panels[-1] = panels[-1].replace('>', f' data-prefix="{key}-">', 1)
+            if state == 'draft':
+                panels[-1] = re.sub(r'<p class="empty-line">.*?</p>',
+                    '<p class="empty-line">This piece remains in review. Use the finished files and channel copy above; clear the stated holds before publishing.</p>',
+                    panels[-1], count=1, flags=re.S)
+                panels[-1] = panels[-1].replace('<h2>Waiting on you</h2>', '<h2>Before publishing</h2>')
+                for step, wording in [('record-long', 'Record the long cut (Teleprompter)'), ('youtube', 'YouTube: the long video')]:
+                    panels[-1] = panels[-1].replace(E(LABEL[step]), E(wording))
+            card = board_materials.render(key, delivery)
+            at = panels[-1].find(f'<div class="rec" id="{key}-materials"')
+            if at >= 0:
+                panels[-1] = panels[-1].replace(div_at(panels[-1], at), card, 1)
+            else:
+                at = panels[-1].find('<div class="rec')
+                if at < 0:
+                    raise BoardError('Cannot place publishing materials in this day')
+                panels[-1] = panels[-1][:at] + card + panels[-1][at:]
         picked = state != 'not_picked'
         tabs.append(
             f'<button type="button" role="tab" id="tab-{name}" aria-controls="panel-{name}" '
@@ -1109,12 +2471,21 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
         'steps': [{'key': k, 'label': label, 'channel': c, 'standing': s} for k, label, c, s in STEPS],
         'ideas': sorted(k for k, v in (ideas or {}).items() if v),
     }
-    css = '\n'.join(blocks or [publish_manager.CSS.strip()])
+    if FIXED:
+        # The briefs ride in the page, so a rebuild from the downloaded board (--previous) keeps them.
+        conf['layout'] = LAYOUT['version']
+        conf['briefs'] = briefs
+        conf['sweeps'] = sweeps  # carried on a rebuild while the words they changed stand (build(), previous_sweeps)
+        if lessons and not any((review or {}).get(k) for k in order):
+            warnings.append('--lessons: no day has drafts on the board, so What I learned from your edits shows nowhere')
+    # The fixed layout has one stylesheet: publish_manager's, never a day page's own copy of it.
+    css = publish_manager.CSS.strip() if FIXED else '\n'.join(blocks or [publish_manager.CSS.strip()])
     page = fill(template('page.html'), {
         'TITLE': html.escape(board_title(monday), quote=False),
         'BASE_CSS': css, 'WEEK_CSS': template('week.css').strip(), 'KICKER': E(week_span(monday)),
         'TABLIST_LABEL': E(f'Publishing days, week of {monday.day} {monday.strftime("%B")}'),
         'TABS': ''.join(tabs), 'ASIDE': aside, 'PANELS': ''.join(panels), 'SCRIPT': script(conf),
+        'WK_CLASS': ' fixed' if FIXED else '', 'MAIN_ATTRS': f' data-layout="{LAYOUT["version"]}"' if FIXED else '',
     }, 'page.html')
     problems = check_page(page)
     if problems:
@@ -1142,12 +2513,16 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
             'links': {'doc_id': '<day>', 'fields': ['article', 'youtube', 'at']},
             'edits': {'doc_id': '<day>-<item>', 'fields': ['text', 'day', 'item', 'base_sha256', 'at']},
             'picks': {'doc_id': '<day>', 'fields': ['pick', 'idea_id', 'series', 'story', 'day', 'at']},
-            'queue': {'doc_id': '<pick>', 'fields': ['pick', 'queued', 'verdict', 'reason', 'angle', 'so_what', 'story', 'idea_id', 'series', 'week', 'at']},
+            'queue': {'doc_id': '<pick>', 'fields': ['pick', 'queued', 'verdict', 'reason', 'angle', 'so_what', 'story', 'idea_id', 'series', 'week', 'at'],
+                      'combine': {'doc_id': 'combine-<n>', 'fields': ['combine', 'members', 'pick', 'at'],
+                                  'then': 'POST /api/content-ideas/synthesize with the members, decided_by Krish'}},
         },
+        'combine': [{'id': g['id'], 'members': g['members'], 'series': g['series'], 'thesis': g['thesis']} for g in combine or []],
         'queue': [{'id': q.get('id'), 'so_what': q.get('so_what'), 'series': q.get('series'), 'triage': (q.get('triage') or {}).get('verdict')}
                   for q in (queue or [])],
-        'ideas': {k: [{'pick': i['pick'], 'idea_id': i.get('id'), 'his': bool(i.get('his')), 'so_what': i['so_what'], 'story': i['story'],
-                       'why_now': i['why_now'], 'fact': i['fact'], 'source': i['source']} for i in v]
+        'ideas': {k: [{'pick': i['pick'], 'idea_id': i.get('id'), 'his': bool(i.get('his') or i.get('source_kind') == 'his'), 'so_what': i['so_what'], 'story': i['story'],
+                       'why_now': i['why_now'], 'fact': i['fact'], 'source': i['source'], 'source_kind': i.get('source_kind'),
+                       'why_here': i.get('why_here'), 'beats': i.get('beats') or [], 'style': i.get('style'), 'covers': i.get('covers') or []} for i in v]
                   for k, v in (ideas or {}).items()},
         'review': {k: [{'item': slug, 'label': label, 'words': len(t.split()),
                         'sha256': hashlib.sha256(t.encode('utf-8')).hexdigest(),
@@ -1163,6 +2538,16 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
                                    + 'Monday, Wednesday and Friday, with a tick for every step.'},
         'warnings': warnings,
     }
+    if FIXED:
+        manifest['layout'] = LAYOUT['version']
+        manifest['briefs'] = briefs
+        manifest['sweeps'] = sweeps
+        manifest['lessons'] = [{'id': ls['id'], 'kind': ls['kind'], 'status': ls['status']} for ls in lessons or []]
+        manifest['db']['comments'] = {
+            'doc_id': '<uuid>', 'fields': ['thread_id', 'anchor', 'text', 'at', 'box', 'paragraph', 'quote', 'act', 'ref'],
+            'acts': {'undo': 'put the also-changed ref back (edit_sweep.py --undo)', 'apply': 'make the suggested ref too',
+                     'lesson_yes': 'his yes to the proposal ref: relay it, decided_by Krish',
+                     'lesson_no': 'his no to the proposal ref: relay it, decided_by Krish'}}
     return page, manifest, warnings
 
 
@@ -1181,10 +2566,15 @@ def check_page(page):
     if dangling:
         problems.append(f'references to no id: {dangling[:8]}')
     keys = {k for k, *_ in STEPS}
+    # The days whose piece Krish called a 15-minute feature: only their tabs may hold the feature's ticks.
+    featured = {re.search(r'data-prefix="(\w+)-"', t).group(1) for t in re.findall(r'<div class="pm(?: fixed)?" id="panel-\w+"[^>]*>', page)
+                if 'data-feature="true"' in t and 'data-prefix="' in t}
     for tid in set(re.findall(r'data-tick="([^"]+)"', page)):
         day, _, step = tid.partition('-')
         if day not in {k for k, *_ in DAYS} or step not in keys:
             problems.append(f'a tick for no step: {tid}')
+        elif step in FEATURE_ONLY and day not in featured:
+            problems.append(f'a 15-minute feature tick on a day that is not a feature: {tid}')
     if page.count('<label class="tick') != page.count('data-tick="'):
         problems.append('a tick label without its box')
     if 'Mark done' in page:
@@ -1202,21 +2592,25 @@ def verify(page):
     why = engine_stamp.stamp_problem(page, 'week_board')
     if why:
         out.append(why)
-    starts = [m.start() for m in re.finditer(r'<div class="pm" id="panel-', page)] + [len(page)]
-    ideas_at = page.find('<div class="pm" id="panel-ideas"')
-    if ideas_at >= 0:
+    starts = [m.start() for m in re.finditer(r'<div class="pm(?: fixed)?" id="panel-', page)] + [len(page)]
+    if '<main id="week" data-layout="' in page:
+        out += fixed_problems(page)
+    ideas_at = max(page.find('<div class="pm" id="panel-ideas"'), page.find('<div class="pm fixed" id="panel-ideas"'))
+    fixed = '<main id="week" data-layout="' in page
+    if ideas_at >= 0 and 'data-state="ideas-waiting"' not in page[ideas_at:ideas_at + 400]:
         tab = page[ideas_at:next((s for s in starts if s > ideas_at), len(page))]
         for key, _, weekday, *_ in DAYS:
             day = re.search(rf'<section class="id-day" id="ideas-{key}".*?</section>', tab, re.S)
             cards = re.findall(r'<article class="id-card".*?</article>', day.group(0), re.S) if day else []
             checked = [c for c in cards if 'data-pick="' in c and re.search(r'<dt>Source</dt><dd><a href="https://', c)
                        and '<dt>Strongest checked fact</dt><dd>' in c and 'class="id-sowhat"' in c and 'data-triage="story"' in c
-                       and 'data-queue-mark="' in c]
+                       and 'data-queue-mark="' in c and (not fixed or 'data-source-kind="' in c)]
             if len(checked) < MIN_IDEAS:
-                out.append(f'ideas: {weekday} has {len(checked)} checked idea(s) with a pick box; it needs {MIN_IDEAS}, each with what a business person finds out, a pick box, the triage buttons and a Queue mark')
+                out.append(f'ideas: {weekday} has {len(checked)} checked idea(s) with a pick box; it needs {MIN_IDEAS}, each with what a business person finds out, a pick box, the triage buttons and a Queue mark'
+                           + (', and where it came from' if fixed else ''))
     for a, b in zip(starts, starts[1:]):
         panel = page[a:b]
-        head = re.match(r'<div class="pm" id="panel-(\w+)"[^>]*>', panel)
+        head = re.match(r'<div class="pm(?: fixed)?" id="panel-(\w+)"[^>]*>', panel)
         name, tag = head.group(1), head.group(0)
         if 'data-state="draft"' in tag and '<textarea class="rv-text"' not in panel:
             out.append(f'{name}: a day in review with no words to review')
@@ -1233,6 +2627,8 @@ def verify(page):
                  if '${' not in t and not re.search(r'\ssrc="(?:data:image/|https://)', t)]
         if empty:
             out.append(f'{name}: {len(empty)} picture(s) with nothing to show, download or copy')
+        if fixed and 'class="pm fixed"' in tag:
+            out += run_sheet_problems(name, panel, tag)
         vid = re.search(r'<div class="rec" id="' + re.escape(p) + r'videos".*?<p class="rec-how">', panel, re.S)
         if vid:
             card = vid.group(0)
@@ -1240,6 +2636,64 @@ def verify(page):
                 out.append(f'{name}: a finished video with no Drive link; record it (making.py PIECE drive-link CUT URL --thumb-url URL)')
             if 'its link joins this card once recorded' in card or card.count('Download thumbnail') < card.count('>Download</a>'):
                 out.append(f'{name}: a finished video with no thumbnail link; record it (making.py PIECE drive-link CUT URL --thumb-url URL)')
+    return out
+
+
+def fixed_problems(page):
+    """Why a board in the fixed layout is not in it: the five tabs in their order, each day exactly its heading, its
+    four steps and their four panels and nothing else, one stylesheet, and no banner laid over a tab by hand.
+    Krish, 2026-10-21: the engine must "feed it in the right way consistently", never change its layout."""
+    out = []
+    tabs = re.findall(r'<button type="button" role="tab" id="tab-([a-z]+)"', page)
+    if tuple(tabs) != TOP_TABS:
+        out.append(f'layout: the tabs are {tabs}, not {list(TOP_TABS)}')
+    panels = re.findall(r'<div class="(pm[^"]*)" id="panel-([a-z]+)"', page)
+    if tuple(n for _, n in panels) != TOP_TABS:
+        out.append(f'layout: the tab panels are {[n for _, n in panels]}, not {list(TOP_TABS)}')
+    if any(c != 'pm fixed' for c, _ in panels):
+        out.append('layout: a tab not drawn in the fixed layout (a kept or hand-made panel)')
+    if page.count('<style>') != 1:
+        out.append(f'layout: {page.count("<style>")} stylesheets; the fixed layout has one')
+    if re.search(r'<div class="stage[ "]', page):
+        out.append('layout: a banner laid over a tab by hand')
+    for _, name in panels:
+        start = page.find(f'id="panel-{name}"')
+        start = page.rfind('<div', 0, start)
+        panel = div_at(page, start)
+        inner = panel[panel.index('>') + 1:-len('</div>')]
+        children = []
+        at = 0
+        while True:
+            nxt = inner.find('<', at)
+            if nxt < 0 or inner[at:nxt].strip():
+                if nxt >= 0 or inner[at:].strip():
+                    children.append(('text', inner[at:(nxt if nxt >= 0 else len(inner))].strip()[:40]))
+                break
+            if not inner.startswith('<div', nxt):
+                children.append(('tag', inner[nxt:nxt + 40]))
+                break
+            block = div_at(inner, nxt)
+            children.append(('div', re.match(r'<div class="([^"]+)"', block).group(1) if re.match(r'<div class="([^"]+)"', block) else block[:40]))
+            at = nxt + len(block)
+        kinds = [c for _, c in children]
+        if name in ('ideas', 'queue'):
+            if not kinds or kinds[0] != 'day-head':
+                out.append(f'layout: {name} does not open with its heading')
+            if name == 'queue':
+                # A "Could combine" card is queued ideas and his Combine button, never a card drawn by hand.
+                for card in re.findall(r'<article class="q-combo".*?</article>', panel, re.S):
+                    cid = re.search(r'data-combine="([^"]*)"', card)
+                    ids = (re.search(r'data-members="([^"]*)"', card) or [None, ''])[1].split(',')
+                    if (not cid or not re.fullmatch(r'combine-\d{1,3}', cid.group(1)) or not COMBINE_MIN <= len(ids) <= COMBINE_MAX
+                            or not all(UUID.match(i) for i in ids) or f'data-act="combine" data-for="{cid.group(1)}"' not in card):
+                        out.append('layout: a Could combine card without its queued members or its Combine button')
+            continue
+        want = ['day-head', 'steps'] + ['subpanel'] * len(DAY_STEPS)
+        if kinds != want:
+            out.append(f'layout: {name} holds {kinds}, not its heading, its steps and their {len(DAY_STEPS)} panels')
+        subs = re.findall(r'<button type="button" role="tab" class="st" id="[^"]+" aria-controls="[^"]+" data-sub="([a-z]+)"', panel)
+        if tuple(subs) != DAY_STEPS:
+            out.append(f'layout: {name}\'s steps are {subs}, not {list(DAY_STEPS)}')
     return out
 
 
@@ -1259,6 +2713,7 @@ def write(page, manifest, out):
 def build(args, get=None):
     """(page, manifest). get: the engine reader (live_reader()); --live makes one."""
     monday = monday_of(args.week)
+    use_layout(monday)  # the inputs below (Teleprompter cuts, steps) are read in this week's layout
     warnings = []
     pages = {}
     for k, v in by_day(args.day, '--day').items():
@@ -1305,6 +2760,7 @@ def build(args, get=None):
                                  'give one piece\'s record or ids as --teleprompter mon=PATH')
             shared.append(data)
     kept = {}
+    retained_drafts = {}
     for key in set(by_day([f'{d}=x' for d in (getattr(args, 'keep', None) or [])], '--keep')):
         if not args.previous:
             raise BoardError('--keep needs --previous, the board page to keep the day from')
@@ -1315,9 +2771,24 @@ def build(args, get=None):
             held = (previous['days'].get(key) or {}).get('piece_id')
             if held:
                 pieces[key] = held
+    for key in set(by_day([f'{d}=x' for d in (getattr(args, 'keep_draft', None) or [])], '--keep-draft')):
+        if not args.previous or previous is None:
+            raise BoardError('--keep-draft needs --previous, the live board page to retain')
+        if key in pages or key in kept or key in draft:
+            raise BoardError(f'--keep-draft {key}: give only one state for this day')
+        held = (previous['days'].get(key) or {})
+        if held.get('state') != 'draft' or not held.get('piece_id'):
+            raise BoardError(f'--keep-draft {key}: the previous board has no drafted piece to retain')
+        if pieces.get(key) and pieces[key] != held['piece_id']:
+            raise BoardError(f'--keep-draft {key}: its piece id changed')
+        pieces[key] = held['piece_id']
+        retained_drafts[key] = kept_draft_panel(Path(args.previous).read_text(encoding='utf-8-sig'), key)
+        _, retained_calls = previous_draft(Path(args.previous).read_text(encoding='utf-8-sig'), key)
+        if retained_calls:
+            calls[key] = retained_calls
     for key in sorted(draft & (set(pages) | set(kept))):
         raise BoardError(f'--draft {key} with --day or --keep {key}: a day in review shows its review card, never an older publish page')
-    scripts, unmade, videos, posted, fresh = {}, [], {}, {}, set()
+    scripts, unmade, videos, posted, fresh, folders = {}, [], {}, {}, set(), {}
     held_draft = {k for k, d in ((previous or {}).get('days') or {}).items() if d.get('state') == 'draft'}
     for key, _, weekday, *_ in DAYS:
         # The same order as board(): --piece, then the publish page's own, then the week's pick.
@@ -1339,6 +2810,9 @@ def build(args, get=None):
                 making_rec = ((answer.get('making') or {}) if isinstance(answer, dict) else {})
                 if isinstance(making_rec.get('video_assets'), list):
                     videos[key] = making_rec['video_assets']
+                pack = making_rec.get('pack')
+                if isinstance(pack, dict) and isinstance(pack.get('folder'), str) and pack['folder'].strip():
+                    folders[key] = pack['folder'].strip()  # the post's library folder, named in Download first
                 made_at = (making_rec.get('publish_manager') or {})
                 url = made_at.get('url') if isinstance(made_at, dict) else None
                 is_posted = isinstance(answer, dict) and answer.get('state') == 'published'
@@ -1346,7 +2820,7 @@ def build(args, get=None):
                     sub = ((making_rec.get('channels') or {}).get('substack') or {})
                     if isinstance(sub, dict) and sub.get('posted_at'):
                         posted[key] = sub['posted_at']
-                if isinstance(url, str) and url.strip() and key not in pages and key not in kept and key not in draft:
+                if isinstance(url, str) and url.strip() and key not in pages and key not in kept and key not in draft and key not in retained_drafts:
                     unmade.append(f'{weekday}: the board being replaced holds its words in review; give --draft {key} with its '
                                   f'--review files (and --waiting for each call)' if key in held_draft else
                                   f'{weekday}: piece {piece} has its publish page ({url.strip()}); Artifact read it and give '
@@ -1413,18 +2887,56 @@ def build(args, get=None):
                 calls[key] = had_calls
                 warnings.append(f'{next(w for k, _, w, *_ in DAYS if k == key)}: the calls waiting on Krish are carried from '
                                 f'the board being replaced')
-    for key in sorted(set(calls) - draft):
+    for key in sorted(set(calls) - draft - set(retained_drafts)):
         raise BoardError(f'--waiting {key}: only a day in draft shows what waits on Krish; give --draft {key}')
     kept_at = previous_review_times(Path(args.previous).read_text(encoding='utf-8-sig'), review) if args.previous else {}
-    ideas = read_ideas(read_json(args.ideas, '--ideas'), monday) if getattr(args, 'ideas', None) else None
+    ideas = None
+    if getattr(args, 'ideas', None):
+        raw = read_json(args.ideas, '--ideas')
+        ideas = read_ideas(raw, monday)
+        if fixed_layout(monday):
+            # Krish, 2026-10-24: his Inspiration House read properly, and styles he can choose from that push. The
+            # gather's sources.json sits beside ideas.json; a fixed week without it was never gathered.
+            src = Path(args.ideas).resolve().parent / 'sources.json'
+            if not src.exists():
+                raise BoardError(f'--ideas: no sources.json beside {args.ideas}; run board_feed.py gather {monday.isoformat()} first')
+            owed = coverage_problems(raw, read_json(str(src), 'sources.json')) + style_problems(raw)
+            if owed:
+                raise BoardError('--ideas is not ready to show (board_feed.py cover):\n  ' + '\n  '.join(owed))
     queue = None
     if getattr(args, 'queue', None):
         saved = read_json(args.queue, '--queue')
         queue = saved.get('queue') if isinstance(saved, dict) else saved
         if not isinstance(queue, list):
             raise BoardError('--queue: give the saved answer of GET /api/idea-queue ({"queue": [...]})')
+    combine = None
+    if getattr(args, 'combine', None):
+        if not fixed_layout(monday):
+            raise BoardError(f'--combine: the week of {monday.isoformat()} has no Queue tab; Could combine is on boards from {LAYOUT_FROM.isoformat()}')
+        combine = read_combine(read_json(args.combine, '--combine'), queue)
+    materials = board_materials.previous(Path(args.previous).read_text(encoding='utf-8-sig')) if args.previous else {}
+    for key, path in by_day(getattr(args, 'materials', None), '--materials').items():
+        materials[key] = read_json(path, '--materials')
+    for key in unpick:
+        materials.pop(key, None)
+    briefs = {k: read_brief(read_json(v, f'--brief {k}'), f'--brief {k}') for k, v in by_day(getattr(args, 'brief', None), '--brief').items()}
+    if args.previous and fixed_layout(monday):
+        # A brief already on the board stays on it until a new one is given.
+        for k, b in previous_briefs(Path(args.previous).read_text(encoding='utf-8-sig')).items():
+            briefs.setdefault(k, b)
+    for key in unpick:
+        briefs.pop(key, None)
+    sweeps = {k: dict(read_sweep(read_json(v, f'--sweep {k}'), f'--sweep {k}'), day=k)
+              for k, v in by_day(getattr(args, 'sweep', None), '--sweep').items()}
+    if args.previous and fixed_layout(monday):
+        # Also changed stays on the board while the words it describes stand: every box of that day unchanged.
+        for k, s in previous_sweeps(Path(args.previous).read_text(encoding='utf-8-sig')).items():
+            rids = [f'{k}-{slug}' for slug, _, _ in review.get(k, [])]
+            if k not in sweeps and rids and all(r in kept_at for r in rids):
+                sweeps[k] = s
+    lessons = read_lessons(read_json(args.lessons, '--lessons')) if getattr(args, 'lessons', None) else None
     page, manifest, more = board(monday, pages, pieces, scripts, picks, pending, kept, videos, review, draft, calls, posted, kept_at,
-                                 ideas, queue)
+                                 ideas, queue, materials, briefs, combine, sweeps, lessons, folders, retained_drafts)
     if previous is not None:
         keep_previous(previous, manifest['days'], unpick, monday, fresh)
     manifest['warnings'] = warnings + more
@@ -1444,7 +2956,7 @@ TP_FOLDER, TP_LONG, TP_SHORT = '86B6F74B-2F8A-4477-AE44-8DA1119D1CD9', '45F414D8
 TP_FOLDER_FRI, TP_LONG_FRI, TP_SHORT_FRI = 'DD28154B-B6D1-47DB-803A-79410D83196D', '185F739E-733F-43B9-B5B2-66846CB5EC44', '1165370C-68A6-444E-88D5-A326A131E58C'
 
 
-def stand_in(tmp, name, title, kicker):
+def stand_in(tmp, name, title, kicker, words=None):
     """A small publish page, made by publish_manager.py itself."""
     import base64
     d = Path(tmp) / name
@@ -1452,7 +2964,7 @@ def stand_in(tmp, name, title, kicker):
     (d / 'a.png').write_bytes(base64.b64decode(PNG))
     (d / 'body.md').write_text(f'{title}\n\n## THE PART\n\nA **bold** fact.\n', encoding='utf-8')
     (d / 'words.json').write_text(json.dumps({'title': title, 'youtube_title': title, 'short_caption': 'C',
-                                              'linkedin_post': 'L {ARTICLE_URL}'}), encoding='utf-8')
+                                              'linkedin_post': 'L {ARTICLE_URL}', **(words or {})}), encoding='utf-8')
     (d / 'long.md').write_text('The long script, said out loud.\n', encoding='utf-8')
     (d / 'short.md').write_text('The short script.\n', encoding='utf-8')
     (d / 'm.json').write_text(json.dumps({
@@ -1760,11 +3272,519 @@ def _self_test():
           'download?id=1dK3QdzIkQi-SO1JsR9_SR2LdYoxGZnSQ' in tcard and 'Download thumbnail' in tcard and 'x - tall.jpg' in tcard)
     _draft_checks(check, page, fri)
     _ideas_checks(check)
+    _fixed_checks(check, mon)
+    _sources_checks(check)
+    _style_cover_checks(check)
+    delivery = {'piece_id': MON_ID, 'status': 'review', 'note': 'Fact review is still open.', 'sections': [
+        {'id': 'spotify', 'title': 'Spotify', 'files': [{'label': 'Video', 'url': 'https://example.com/video.mp4'}],
+         'copy': [{'label': 'Description', 'text': 'Quoted "words" & <safe text>'}]}]}
+    held, held_manifest, _ = board(date(2026, 10, 19), pieces={'mon': MON_ID}, draft={'mon'},
+        review={'mon': [('article', 'Article', 'Words in review')]}, materials={'mon': delivery})
+    check('finished materials never mark a draft piece made or remove its review hold',
+          held_manifest['days'][0]['state'] == 'draft' and board_days(held)['days']['mon']['state'] == 'draft' and 'Fact review is still open.' in held and
+          'id="rvs-mon-article"' in held and 'data-prefix="mon-"' in held and verify(held) == [])
+    check('material metadata round trips escaped wording and stable anchors',
+          board_materials.previous(held) == {'mon': delivery} and 'id="mon-materials-spotify-copy-0"' in held)
+    for bad, label in [(dict(delivery, piece_id=FRI_ID), 'another piece'),
+                       (dict(delivery, sections=[{'id':'x','title':'X','files':[{'label':'bad','url':'javascript:alert(1)'}]}]), 'unsafe URL')]:
+        try:
+            board_materials.validate(bad, MON_ID)
+            rejected = False
+        except ValueError:
+            rejected = True
+        check('publishing materials refuse ' + label, rejected)
     if fails:
         print('week board self-test FAILED:\n  ' + '\n  '.join(fails))
         return 1
     print(f'week board self-test passed: {len(checks)} checks')
     return 0
+
+
+def _fixed_checks(check, mon):
+    """The fixed layout (config/board-layout.json): the same tabs and steps every week, and verify() refusing any other."""
+    global FEATURES_FILE
+    week = LAYOUT_FROM
+    brief = {'idea': 'One idea', 'flow': ['A', 'B', 'C'], 'ending': 'E', 'takeaway': 'T', 'angle': 'A', 'tone': 'Warm', 'agreed': True}
+    review = {'wed': [('article', 'Article draft', 'Words in review.'), ('long', 'Five-minute script', 'Said words.')]}
+    page, manifest, _ = board(week, {'mon': mon}, {'mon': MON_ID, 'wed': WED_ID, 'fri': FRI_ID}, review=review, draft={'wed'},
+                              calls={'wed': ['Pick the closing line']}, queue=[{'id': FRI_ID, 'so_what': 'Saved', 'series': 'mind_the_gap',
+                                                                                'triage': {'verdict': 'angle', 'angle': 'who pays'}}],
+                              briefs={'wed': read_brief(brief), 'fri': read_brief(dict(brief, agreed=False))})
+    check('fixed layout: a fed week passes verify', verify(page) == [])
+    check('fixed layout: the five tabs, always in one order',
+          re.findall(r'role="tab" id="tab-([a-z]+)"', page) == list(TOP_TABS))
+    for name in ('monday', 'wednesday', 'friday'):
+        check(f'fixed layout: {name} has Brief, Drafts, Record and Publish, in that order',
+              re.findall(rf'id="{name[:3]}-sub-([a-z]+)"', page) == list(DAY_STEPS))
+    check('fixed layout: the step that opens first is where the day is (made: Publish, in review: Drafts, picked: Brief)',
+          'id="mon-sub-publish" aria-labelledby="mon-st-publish" data-sub="publish" tabindex="-1">' in page
+          and 'id="wed-sub-drafts" aria-labelledby="wed-st-drafts" data-sub="drafts" tabindex="-1">' in page
+          and 'id="fri-sub-brief" aria-labelledby="fri-st-brief" data-sub="brief" tabindex="-1">' in page)
+    check('fixed layout: the scripts are said once, under Record, not again under Publish',
+          'id="mon-scripts"' not in page and 'class="rec-scripts"' in page)
+    check('fixed layout: the long cut is the 5-minute video everywhere, never the 3-minute one, in the board\'s own words',
+          'Record the 5-minute cut (Teleprompter)' in page and 'YouTube: the 5-minute video' in page
+          and 'Record the 3-minute cut' not in page and 'YouTube: the 3-minute video' not in page)
+    check('fixed layout: the brief is shown with its beats, and agreed or waiting for his yes',
+          'class="card brief" id="wed-brief-card"' in page and '<ol class="br-flow"><li>A</li>' in page and 'Waiting for your yes' in page)
+    check('fixed layout: what waits on him sits in the day\'s heading, above the steps',
+          page.index('Pick the closing line') < page.index('id="wed-st-brief"'))
+    check('fixed layout: the Queue tab lists his saved idea with his verdict and angle',
+          'id="panel-queue"' in page and 'Saved' in page and '<span class="chip">Angle</span> who pays' in page)
+    check('fixed layout: a brief rides in the page, so a rebuild from it keeps the brief', previous_briefs(page).get('wed', {}).get('idea') == 'One idea')
+    check('fixed layout: the manifest says the layout and carries the briefs', manifest.get('layout') == LAYOUT['version'] and 'fri' in manifest['briefs'])
+    empty, _, _ = board(week)
+    check('fixed layout: an empty week still has every tab and step, each saying when it fills', verify(empty) == []
+          and 'data-state="ideas-waiting"' in empty and empty.count('class="slot-empty"') >= 12)
+    # Tampering: what a session might do to a built board, each refused by verify().
+    head_end = page.index('</div>', page.index('<div class="day-head">', page.index('id="panel-monday"'))) + len('</div>')
+    banner = page[:head_end] + '<div class="stage">Hand-made banner</div>' + page[head_end:]
+    check('fixed layout: a banner laid into a day is refused', any('banner' in x or 'holds' in x for x in verify(banner)))
+    swapped = page.replace('data-sub="brief"', 'data-sub="tmp"').replace('data-sub="record"', 'data-sub="brief"').replace('data-sub="tmp"', 'data-sub="record"')
+    check('fixed layout: steps in another order are refused', any('steps are' in x for x in verify(swapped)))
+    styled = page.replace('</style>', '</style><style>.x{}</style>', 1)
+    check('fixed layout: a second stylesheet is refused', any('stylesheets' in x for x in verify(styled)))
+    legacy = made_panel(parse_day_page(mon, 'mon'), 'mon', 'monday', 'mon-', {}, False, [])
+    try:
+        board(week, kept={'mon': legacy}, pieces={'mon': MON_ID})
+        refused = False
+    except BoardError as error:
+        refused = 'old layout' in str(error)
+    check('fixed layout: keeping a tab from the old layout is refused', refused)
+    for bad, label in [(dict(brief, flow=['only one']), 'a flow of one beat'), (dict(brief, title='A title'), 'a title'),
+                       ({k: v for k, v in brief.items() if k != 'takeaway'}, 'no takeaway'), (dict(brief, colour='red'), 'a field with no place')]:
+        try:
+            read_brief(bad)
+            refused = False
+        except BoardError:
+            refused = True
+        check(f'fixed layout: a brief with {label} is refused', refused)
+    try:
+        board(date(2026, 10, 19), briefs={'mon': read_brief(brief)})
+        refused = False
+    except BoardError:
+        refused = True
+    check('fixed layout: a brief for a week in the old layout is refused, not dropped', refused)
+    with tempfile.TemporaryDirectory() as tmp:
+        saved, FEATURES_FILE = FEATURES_FILE, Path(tmp) / 'features.json'
+        try:
+            FEATURES_FILE.write_text(json.dumps({'pieces': {MON_ID: {'called_on': '2026-10-25'}}}), encoding='utf-8')
+            feat, _, _ = board(week, {'mon': mon}, {'mon': MON_ID})
+        finally:
+            FEATURES_FILE = saved
+    check('fixed layout: a feature piece gets its 15-minute feature tick and a third cut; other pieces do not',
+          'data-tick="mon-record-feature"' in feat and 'Three cuts' in feat and 'data-tick="mon-record-feature"' not in page)
+    check('fixed layout: a rebuild from the page finds the day in review, its boxes and what waits on him',
+          previous_draft(page, 'wed') == (['wed-article', 'wed-long'], ['Pick the closing line']))
+    kept_mon = kept_panel(page, 'mon')
+    again, _, _ = board(week, kept={'mon': kept_mon}, pieces={'mon': MON_ID})
+    check('fixed layout: a made day can be kept from the page, as it stands, and still passes verify',
+          kept_mon.startswith('<div class="pm fixed" id="panel-monday"') and verify(again) == [])
+    stale = {'wed': dict(read_brief(brief), piece_id=FRI_ID)}
+    moved, _, moved_warnings = board(week, pieces={'wed': WED_ID}, briefs=stale)
+    check('fixed layout: a brief carried from the old board for another piece never shows under the new pick',
+          'id="wed-brief-card"' not in moved and any('dropped' in w for w in moved_warnings))
+    _editor_checks(check, week)
+    _runsheet_checks(check, week, mon)
+    use_layout(date(2026, 10, 12))
+    check('the old layout comes back for an old week: its labels as they were published',
+          LABEL['record-long'] == 'Record the 3-minute cut (Teleprompter)' and 'record-feature' not in LABEL)
+
+
+def _runsheet_checks(check, week, mon):
+    """The Publish step's run-sheet (Krish, 2026-10-21: "where I publish, how I publish, what I need to download, when,
+    and in what order"): Download first, then a card per place to post in the layout's order, each with its own tick."""
+    global FEATURES_FILE
+    drive = lambda c: f'https://drive.google.com/file/d/{c * 25}/view'
+    videos = {'mon': [{'cut': 'long', 'url': drive('a'), 'seconds': 305, 'path': '3 Posts/2026-10-26 Mon follow.the.money - Suno/3 Video/l.mp4',
+                       'thumbnail': {'url': drive('b')}},
+                      {'cut': 'short', 'url': drive('c'), 'seconds': 86, 'thumbnail': {'url': drive('d')}}]}
+    mats = {'mon': {'piece_id': MON_ID, 'status': 'review', 'note': 'Held for one fact.',
+                    'sections': [{'id': 'captions', 'title': 'Captions', 'files': [{'label': 'Download the captions', 'url': 'https://example.com/c.srt'}],
+                                  'copy': [{'label': 'Chapters', 'text': '0:00 Start'}]}],
+                    'copy_updates': {'mon-c3': 'A refreshed YouTube title'}}}
+    page, _, _ = board(week, {'mon': mon}, {'mon': MON_ID}, videos=videos, materials=mats)
+    use_layout(week)
+    sub = div_at(page, page.find('<div class="subpanel" role="tabpanel" id="mon-sub-publish"'))
+    check('run-sheet: a made day with its videos passes verify', verify(page) == [])
+    order = re.findall(r'<li class="dl-item" id="mon-dl-([^"]+)"', sub)
+    check('run-sheet: Download first holds every file in the order he uses them (videos, thumbnails, the Substack cover, '
+          'the article, its pictures, then the prepared files)',
+          order[:7] == ['video-long', 'video-short', 'thumb-long', 'thumb-short', 'img-cover', 'article', 'img-pic']
+          and 'data-dl="material"' in sub[sub.index('id="mon-dl-img-pic"'):])
+    runs = re.findall(r'<section class="run(?: opt)?" id="mon-([a-z0-9-]+)" data-run="([a-z-]+)"', sub)
+    check('run-sheet: one card per place to post, in config/board-layout.json\'s order, under the ids the page gave them',
+          [k for _, k in runs] == [s['key'] for s in LAYOUT['publish_steps']['steps'] if s.get('channel') and not s.get('feature_only')]
+          and [i for i, _ in runs][:3] == ['substack', 's2', 's3'])
+    check('run-sheet: the progress at the top, then Download first, then the cards, then the optional ones under their heading',
+          sub.index('data-meter="mon"') < sub.index('id="mon-download"') < sub.index('data-run="substack"')
+          < sub.index('When you want them') < sub.index('data-run="linkedin"'))
+    check('run-sheet: each card has its own one tick, and no tick sits outside a card',
+          all(re.findall(r'data-tick="([^"]+)"', c.group(2)) == [f'mon-{c.group(1)}'] for c in
+              re.finditer(r'<section class="run(?: opt)?" id="[^"]+" data-run="([^"]+)"[^>]*>(.*?)</section>', sub, re.S))
+          and 'data-tick="' not in re.sub(r'<section class="run.*?</section>', '', sub, flags=re.S))
+    sub_card = re.search(r'<section class="run" id="mon-substack".*?</section>', sub, re.S).group(0)
+    check('run-sheet: a card\'s parts in one order (files, copy, do, link box, tick), its files linking to Download first',
+          sub_card.index('href="#mon-dl-video-long"') < sub_card.index('data-ref="mon-c1"') < sub_card.index('<ol class="do">')
+          < sub_card.index('id="mon-link-article"') < sub_card.index('data-tick="mon-substack"')
+          and 'Press Copy article above' in sub_card and 'data-act="article" data-ref="mon-art"' in sub_card)
+    check('run-sheet: the old section ticks, the contents bar and the Finished videos card are gone from a fixed week',
+          'sec-tick' not in sub and 'nav class="toc"' not in sub and 'id="mon-videos"' not in sub and 'Mark done' not in page)
+    check('run-sheet: a copy box keeps its id, so copy_updates still refreshes it and a comment on it still finds it',
+          'id="mon-c3" data-raw="A refreshed YouTube title"' in sub)
+    check('run-sheet: the prepared files ride in Download first and a rebuild reads them back',
+          board_materials.previous(page).get('mon', {}).get('note') == 'Held for one fact.' and 'id="mon-materials-captions-copy-0"' in sub)
+    check('run-sheet: Download all for the files the page holds, and the post\'s library folder said plainly',
+          'data-act="download-all" data-ref="mon-download">Download all 3 files on this page' in sub
+          and '3 Posts, 2026-10-26 Mon follow.the.money - Suno.' in sub)
+    check('run-sheet: the list at the top says each step, the recordings pointing to Record',
+          '<a href="#mon-record" data-tickstate="mon-record-long">' in sub and '<a href="#mon-s2" data-tickstate="mon-youtube">' in sub)
+    # Refusals: what a hand edit might do to a run-sheet.
+    no_dl = page.replace(div_at(page, page.find('<div class="rec dl" id="mon-download"')), '', 1)
+    check('run-sheet: a Publish step with no Download first is refused', any('no Download first' in x for x in verify(no_dl)))
+    a = re.search(r'<section class="run" id="mon-s3".*?</section>', page, re.S).group(0)
+    b = re.search(r'<section class="run" id="mon-s4".*?</section>', page, re.S).group(0)
+    swapped = page.replace(a, '\0').replace(b, a).replace('\0', b)
+    check('run-sheet: cards out of order are refused', any('places to post are' in x for x in verify(swapped)))
+    loose = page.replace('<h2 class="run-h">Then post', row_tick('mon', 'tiktok') + '<h2 class="run-h">Then post', 1)
+    check('run-sheet: a tick with no card is refused', any('with no card' in x for x in verify(loose)))
+    untick = page.replace(re.search(r'<label class="tick run-tick"><input type="checkbox" data-tick="mon-reels".*?</label>', page, re.S).group(0), '', 1)
+    check('run-sheet: a card without its tick is refused', any('the reels card holds' in x for x in verify(untick)))
+    held = {'mon': [dict(videos['mon'][0], url=None, name='l.mp4'), dict(videos['mon'][1], thumbnail={'path': 'x/t.jpg'})]}
+    gaps, _, _ = board(week, {'mon': mon}, {'mon': MON_ID}, videos=held)
+    problems = verify(gaps)
+    check('run-sheet: a video with no Drive link and a video with no thumbnail link are refused, as before',
+          any('no Drive link' in x for x in problems) and any('no thumbnail link' in x for x in problems))
+    kept, _, _ = board(week, kept={'mon': kept_panel(gaps, 'mon')}, pieces={'mon': MON_ID}, videos=videos)
+    check('run-sheet: a kept day draws its videos again from the record', verify(kept) == [] and 'data-dl="video-long" data-state="ready"' in kept)
+    with tempfile.TemporaryDirectory() as tmp:
+        saved, FEATURES_FILE = FEATURES_FILE, Path(tmp) / 'features.json'
+        try:
+            FEATURES_FILE.write_text(json.dumps({'pieces': {MON_ID: {'called_on': '2026-10-25'}}}), encoding='utf-8')
+            feat, _, _ = board(week, {'mon': mon}, {'mon': MON_ID}, videos=videos)
+        finally:
+            FEATURES_FILE = saved
+    fsub = div_at(feat, feat.find('<div class="subpanel" role="tabpanel" id="mon-sub-publish"'))
+    check('run-sheet: a feature piece has its feature card last, under When you want them, and its video in Download first',
+          verify(feat) == [] and fsub.index('When you want them') < fsub.index('data-run="record-feature"')
+          and 'id="mon-dl-video-feature"' in fsub and 'href="#mon-dl-video-feature"' in fsub)
+    # Each card finds its copy by its section's heading, never by its place (review, 2026-10-21: a page made before the
+    # feature's two steps were added put the Shorts caption on the TikTok card once the piece became a feature).
+    with tempfile.TemporaryDirectory() as tmp:
+        plain = stand_in(tmp, 'mon', 'Warner sued Suno. Now it takes a cut.', 'follow.the.money',
+                         {'piece_id': MON_ID, 'youtube_description': 'YT words', 'shorts_caption': 'Shorts words',
+                          'tiktok_caption': 'TikTok words', 'reels_caption': 'Reels words', 'spotify_title': 'Spotify words'})
+    def copies(built):
+        sub = div_at(built, built.find('<div class="subpanel" role="tabpanel" id="mon-sub-publish"'))
+        return {m.group(1): re.findall(r'data-raw="([^"]*)"', m.group(2)) for m in
+                re.finditer(r'<section class="run(?: opt)?" id="[^"]+" data-run="([^"]+)"[^>]*>(.*?)</section>', sub, re.S)}
+    before, _, _ = board(week, {'mon': plain}, {'mon': MON_ID})
+    use_layout(week)
+    import making  # publish_kit.is_feature reads config/features.json through it
+    with tempfile.TemporaryDirectory() as tmp:
+        saved, saved_making, FEATURES_FILE = FEATURES_FILE, making.FEATURES, Path(tmp) / 'features.json'
+        making.FEATURES = FEATURES_FILE
+        try:
+            FEATURES_FILE.write_text(json.dumps({'pieces': {MON_ID: {'called_on': '2026-10-25'}}}), encoding='utf-8')
+            after, _, _ = board(week, {'mon': plain}, {'mon': MON_ID})
+            use_layout(week)
+        finally:
+            FEATURES_FILE, making.FEATURES = saved, saved_making
+    was, now = copies(before), copies(after)
+    check('run-sheet: a page made before the piece was a feature keeps every caption on its own card on a feature board',
+          verify(after) == [] and 'record-feature' in now and all(now[k] == v for k, v in was.items())
+          and 'TikTok words' in ' '.join(now['tiktok'])
+          and 'Shorts words' not in ' '.join(now['tiktok']))
+    _feature_card_checks(check, week, videos, sub)
+    for bad, said in [(plain.replace('<h2>4. TikTok</h2>', '<h2>4. Threads</h2>'), 'that no publish step names'),
+                      (plain.replace('<h2>4. TikTok</h2>', '<h2>4. Instagram Reels</h2>'), 'two sections for')]:
+        try:
+            board(week, {'mon': bad}, {'mon': MON_ID})
+            refused = ''
+        except BoardError as error:
+            refused = str(error)
+        use_layout(week)
+        check(f'run-sheet: a publish page section {"no step names" if "names" in said else "doubling another"} is refused',
+              said in refused)
+    old = re.sub(r'<script type="application/json" id="pm-data">.*?</script>', '', mon, flags=re.S)
+    _, _, warned = board(week, {'mon': old}, {'mon': MON_ID})
+    check('run-sheet: a publish page with no words as data still draws, and says it names the standing files',
+          any('standing files' in w for w in warned))
+    with tempfile.TemporaryDirectory() as tmp:
+        legacy = stand_in(tmp, 'mon', 'Warner sued Suno. Now it takes a cut.', 'follow.the.money')
+    use_layout(date(2026, 10, 12))
+    vids = [{'cut': c, 'seconds': 90, 'url': f'https://drive.google.com/file/d/1{c}VideoAAAAAAAAAAAAAAAAAAAAAAAA/view',
+             'thumbnail': {'url': f'https://drive.google.com/file/d/1{c}ThumbAAAAAAAAAAAAAAAAAAAAAAAA/view'}} for c in ('long', 'short')]
+    made = made_panel(parse_day_page(legacy, 'mon'), 'mon', 'monday', 'mon-', {}, False, [], vids)
+    check('run-sheet: an older week\'s made day is byte for byte what it was before the run-sheet',
+          hashlib.sha256(made.encode('utf-8')).hexdigest() == '55798f3f552d6772471d9a5f51e2c67516cd09ed5e935e6af1fa351c5e8400ec')
+    use_layout(week)
+
+
+def _feature_card_checks(check, week, videos, plain_sub):
+    """The 15-minute feature's two posting cards (Krish, 2026-10-21: "Yes, add the cards"): on a feature piece only,
+    YouTube long-form right after the 5-minute YouTube card and its Spotify episode right after the Spotify card, each
+    with its files, its words to copy, its do-steps and its own tick. Every other piece's run-sheet is as it was."""
+    global FEATURES_FILE
+    import making  # publish_kit.is_feature reads config/features.json through it
+    check('feature cards: a piece that is not a feature has a run-sheet byte for byte what it was, with neither card',
+          hashlib.sha256(plain_sub.encode('utf-8')).hexdigest() == '11ff14804ab8494f7dd7e193b496b72a88fdb292c92e5eb7f4f948c2e5d2ac36'
+          and 'feature-youtube' not in plain_sub and 'feature-spotify' not in plain_sub)
+    words = {'piece_id': MON_ID, 'feature_youtube_title': 'The feature title', 'feature_youtube_description': 'The feature description',
+             'feature_spotify_chapters': '0:00 Start\n7:30 The deal',
+             'files': {'feature_video': '3 Video/F - feature.mp4', 'feature_thumbnail': '3 Video/F - feature - thumb.jpg'}}
+    vids = {'mon': videos['mon'] + [{'cut': 'feature', 'url': f'https://drive.google.com/file/d/{"e" * 25}/view', 'seconds': 905,
+                                     'thumbnail': {'url': f'https://drive.google.com/file/d/{"f" * 25}/view'}}]}
+    with tempfile.TemporaryDirectory() as tmp:
+        saved, saved_making, FEATURES_FILE = FEATURES_FILE, making.FEATURES, Path(tmp) / 'features.json'
+        making.FEATURES = FEATURES_FILE
+        try:
+            FEATURES_FILE.write_text(json.dumps({'pieces': {MON_ID: {'called_on': '2026-10-25'}}}), encoding='utf-8')
+            page_words = stand_in(tmp, 'mon', 'Warner sued Suno. Now it takes a cut.', 'follow.the.money', words)
+            feat, _, _ = board(week, {'mon': page_words}, {'mon': MON_ID}, videos=vids)
+            use_layout(week)
+            feat_problems, feat_page = verify(feat), check_page(feat)
+        finally:
+            FEATURES_FILE, making.FEATURES = saved, saved_making
+    with tempfile.TemporaryDirectory() as tmp:
+        page_plain = stand_in(tmp, 'mon', 'Warner sued Suno. Now it takes a cut.', 'follow.the.money', words)
+    plain, _, _ = board(week, {'mon': page_plain}, {'mon': MON_ID}, videos=videos)
+    use_layout(week)
+    fsub = div_at(feat, feat.find('<div class="subpanel" role="tabpanel" id="mon-sub-publish"'))
+    runs = [m.group(1) for m in re.finditer(r'<section class="run(?: opt)?" id="[^"]+" data-run="([^"]+)"', fsub)]
+    check('feature cards: a feature piece posts in one order, YouTube long-form after the 5-minute YouTube, its episode after Spotify',
+          runs == ['substack', 'youtube', 'feature-youtube', 'shorts', 'tiktok', 'reels', 'linkedin', 'spotify', 'feature-spotify', 'record-feature'])
+    card = {k: re.search(rf'<section class="run(?: opt)?" id="[^"]+" data-run="{k}"[^>]*>.*?</section>', fsub, re.S).group(0)
+            for k in ('feature-youtube', 'feature-spotify')}
+    yt, sp = card['feature-youtube'], card['feature-spotify']
+    check('feature cards: each is headed by its place and holds its own one tick, not counted toward 100%',
+          '>YouTube long-form (the 15-minute feature)</h3>' in yt and '>Spotify (the 15-minute feature)</h3>' in sp
+          and re.findall(r'data-tick="([^"]+)"', yt) == ['mon-feature-youtube'] and re.findall(r'data-tick="([^"]+)"', sp) == ['mon-feature-spotify']
+          and yt.startswith('<section class="run opt"') and sp.startswith('<section class="run opt"')
+          and 'Done: tick it once it is live' in yt and 'data-tickstate="mon-feature-' not in fsub)
+    check('feature cards: their files are the feature video and its wide thumbnail, linked to Download first',
+          all('href="#mon-dl-video-feature"' in c and 'href="#mon-dl-thumb-feature"' in c for c in (yt, sp))
+          and 'id="mon-dl-video-feature"' in fsub and 'id="mon-dl-thumb-feature"' in fsub)
+    check('feature cards: their words to copy, each with one-tap Copy (title, description, chapters)',
+          all(re.search(rf'<pre class="txt" id="[^"]+" data-raw="{re.escape(t)}"', c) and 'data-act="text"' in c
+              for c, t in ((yt, 'The feature title'), (yt, 'The feature description'), (sp, 'The feature title'),
+                           (sp, 'The feature description'), (sp, '0:00 Start\n7:30 The deal'))))
+    check('feature cards: their do-steps, uploading the feature to YouTube Studio and to Spotify for Creators',
+          '<ol class="do">' in yt and 'YouTube Studio' in yt and 'Spotify for Creators' in sp and '3 Video/F - feature - thumb.jpg' in sp)
+    check('feature cards: a feature board with both cards passes verify and the page check',
+          feat_problems == [] and feat_page == [])
+    psub = div_at(plain, plain.find('<div class="subpanel" role="tabpanel" id="mon-sub-publish"'))
+    check('feature cards: the same words on a piece that is not a feature show neither card and pass verify',
+          verify(plain) == [] and check_page(plain) == [] and 'data-run="feature-' not in psub and 'data-tick="mon-feature-' not in plain)
+    loose = plain.replace('<h2 class="run-h">When you want them</h2>', yt + '<h2 class="run-h">When you want them</h2>', 1)
+    check('feature cards: a feature card on a piece that is not a feature is refused by verify and the page check',
+          any('places to post are' in x for x in verify(loose)) and any('not a feature: mon-feature-youtube' in x for x in check_page(loose)))
+    dropped = feat.replace(sp, '', 1)
+    check('feature cards: a feature piece without its Spotify card is refused', any('places to post are' in x for x in verify(dropped)))
+
+
+def _editor_checks(check, week):
+    """The Drafts step (learning edits-propagate-and-teach): the editor's read view, Also changed, What I learned."""
+    article = '# Who pays\n\nAbout **40%** of firms pay.\nA second line.\n\n- one\n- two\n\n> A quote\n\n---'
+    review = {'wed': [('article', 'Article draft', article), ('long', 'Five-minute script', 'Said words.')]}
+    sweep = read_sweep({'day': 'wed', 'piece_id': WED_ID, 'also_changed': [
+        {'id': 's1', 'where': 'Wednesday, Five-minute script', 'kind': 'number_fact', 'from': '40 percent', 'to': '38 percent',
+         'context': 'About 38 percent of firms pay.', 'undo': {'path': 'x'}}],
+        'suggestions': [{'id': 't1', 'where': 'Friday, Article', 'kind': 'tone', 'from': 'really cheap', 'to': 'cheap'}],
+        'held': [{'where': 'Wednesday, 90-second script', 'why': 'you have recorded it'}],
+        'gates': [{'where': 'Wednesday, Five-minute script', 'check': 'story_check', 'ok': True, 'problems': []}],
+        'ledger': [], 'edits': []})
+    lessons = read_lessons({'ok': True, 'proposals': [
+        {'id': '44444444-5555-4666-8777-888888888888', 'assertion': 'On the publish board Krish made 3 number or fact edits.',
+         'independent_session_count': 3, 'status': 'proposed', 'scope': {'level': 'global', 'key': 'board_edit:number_fact'}},
+        {'id': '55555555-5555-4666-8777-888888888888', 'assertion': 'A preset is never kept.', 'independent_session_count': 4,
+         'status': 'proposed', 'scope': {'level': 'global', 'key': 'tone:punchier'}}]})
+    taste = read_lessons({'proposals': [
+        {'id': f'6666666{i}-5555-4666-8777-888888888888', 'assertion': f'Titles say what happens, case {i}.',
+         'independent_session_count': 4, 'status': 'proposed' if i else 'corrected',
+         'scope': {'level': 'global', 'key': 'taste:packaging', 'source': 'taste_ledger'}} for i in range(5)]})
+    check('lessons: the taste ledger\'s proposals show, at most three', [t['kind'] for t in taste] == ['taste'] * 3)
+    taste_card = lessons_card('wed-', taste)
+    check('lessons: a taste lesson says it came from what he saved and said, a reword is a standing rule in his words',
+          'From what you saved and said, across 4 days' in taste_card and 'Reworded: a standing rule, in your words' in taste_card)
+    page, manifest, warnings = board(week, pieces={'wed': WED_ID}, review=review, draft={'wed'}, sweeps={'wed': sweep}, lessons=lessons)
+    check('editor: a fed week with the editor, Also changed and What I learned passes verify', verify(page) == [])
+    card = page[page.index('<div class="rec rv ed" id="wed-review">'):page.index(REVIEW_END)]
+    check('editor: each draft is a read view, its heading drawn without its # signs',
+          '<h4 class="rv-h">Who pays</h4>' in card and '# Who pays' not in card.split('<textarea')[0])
+    check('editor: bold, line breaks, lists, quotes and a rule are drawn',
+          '<strong>40%</strong>' in card and 'firms pay.<br>A second line.' in card and '<ul><li>one</li><li>two</li></ul>' in card
+          and '<blockquote><p>A quote</p></blockquote>' in card and '<hr>' in card)
+    check('editor: one tappable block per paragraph, numbered as week.js numbers them',
+          [int(n) for n in re.findall(r'id="rvp-wed-article-(\d+)"', card)] == list(range(len(paragraphs(article)))) == list(range(5)))
+    check('editor: the raw words stay in the hidden box with the hash of what was built',
+          f'data-base-sha256="{hashlib.sha256(article.encode()).hexdigest()}"' in card and 'aria-label="Article draft" hidden>' in card)
+    check('editor: one Save bar for the day, saying nothing is unsaved yet',
+          card.count('data-act="save-all" data-day="wed"') == 1 and 'No unsaved changes' in card)
+    check('editor: a rebuild still finds the words he can edit, and their build time', previous_review_times(page, review) != {}
+          and previous_draft(page, 'wed')[0] == ['wed-article', 'wed-long'])
+    drafts = page[page.index('id="wed-sub-drafts"'):page.index('id="wed-sub-record"')]
+    check('Also changed sits under the drafts, each carried change with its Undo', drafts.index('id="wed-review"') < drafts.index('id="wed-also"')
+          and 'data-act="undo-also" data-for="s1"' in drafts and '<del>40 percent</del>' in drafts and '<ins>38 percent</ins>' in drafts)
+    check('a tone suggestion is offered, never made; the recorded script is listed; the checks are said',
+          'data-act="apply-also" data-for="t1"' in drafts and 'Left alone: already recorded' in drafts and 'passes the story check' in drafts)
+    check('What I learned shows only the proposals from his board edits, each waiting for his yes',
+          'What I learned from your edits' in drafts and drafts.index('id="wed-also"') < drafts.index('id="wed-lessons"')
+          and 'data-act="lesson-yes" data-for="44444444-5555-4666-8777-888888888888"' in drafts and 'A preset is never kept' not in page)
+    check('the sweep rides in the page, so a rebuild with the same words keeps it',
+          previous_sweeps(page).get('wed', {}).get('also_changed', [{}])[0].get('id') == 's1' and manifest['sweeps']['wed']['day'] == 'wed')
+    check('the manifest says what a comment may carry and what each of his taps means',
+          'quote' in manifest['db']['comments']['fields'] and set(manifest['db']['comments']['acts']) == {'undo', 'apply', 'lesson_yes', 'lesson_no'})
+    approved = [dict(lessons[0], status='approved')]
+    shown, _, _ = board(week, pieces={'wed': WED_ID}, review=review, draft={'wed'}, lessons=approved)
+    shown = shown[:shown.index('<script>')]  # the page's script names every button it handles
+    check('an approved lesson says so and asks nothing', 'Approved: a standing rule' in shown and 'data-act="lesson-yes"' not in shown)
+    for bad, label in [({'also_changed': [{'id': 'S 1', 'where': 'x', 'kind': 'tone', 'from': 'a', 'to': 'b'}]}, 'an id with a space'),
+                       ({'also_changed': [{'id': 's1', 'where': 'x', 'kind': 'vibes', 'from': 'a', 'to': 'b'}]}, 'an unknown kind'),
+                       ({'also_changed': [{'id': 's1', 'where': 'x', 'kind': 'tone', 'from': 'a', 'to': 'a'}]}, 'no change'),
+                       ({'banner': 'Hello'}, 'a field with no place')]:
+        try:
+            read_sweep(bad)
+            refused = False
+        except BoardError:
+            refused = True
+        check(f'a sweep with {label} is refused', refused)
+    try:
+        board(week, pieces={'wed': WED_ID}, sweeps={'wed': sweep})
+        refused = False
+    except BoardError as error:
+        refused = 'no drafts in review' in str(error)
+    check('a sweep for a day with no drafts on the board is refused, never dropped', refused)
+    try:
+        board(week, pieces={'wed': FRI_ID}, review=review, draft={'wed'}, sweeps={'wed': sweep})
+        refused = False
+    except BoardError as error:
+        refused = 'is for piece' in str(error)
+    check('a sweep for another piece is refused', refused)
+    _, _, lonely = board(week, lessons=lessons)
+    check('lessons with no day in draft are said, not silently lost', any('--lessons' in w for w in lonely))
+    use_layout(date(2026, 10, 19))
+    legacy = review_card('fri', [('article', 'Article', '# Head\n\nHello *world*.'), ('long', 'Five-minute script', 'Said.')],
+                         '2026-10-19T00:00:00Z', {'fri-long': '2026-10-18T00:00:00Z'})
+    check('an older week\'s review card is byte for byte what it was before the editor',
+          hashlib.sha256(legacy.encode('utf-8')).hexdigest() == '134b7fc49be5d170c1136ef9888aa645ddc039bed50270ac7bc7e9af31f67f23')
+    try:
+        board(date(2026, 10, 19), pieces={'fri': FRI_ID}, review={'fri': review['wed']}, draft={'fri'}, sweeps={'fri': sweep})
+        refused = False
+    except BoardError:
+        refused = True
+    check('a sweep for a week in the old layout is refused', refused)
+    use_layout(week)
+
+
+def _style_cover_checks(check):
+    """Krish, 2026-10-24: styles he can choose from that push and diverge, and his Inspiration House read properly."""
+    formats = style_formats()
+    check('styles: the bank has script and production formats with evidence',
+          len(formats['script']) >= 6 and len(formats['production']) >= 5
+          and all(f.get('evidence') and f.get('pitch') for k in ('script', 'production') for f in formats[k].values()))
+    bank = {m['id'] for m in json.loads(STYLES_PATH.read_text(encoding='utf-8'))['bank']}
+    check('styles: every format is made of modules that are in the bank',
+          all(set(f.get('modules') or []) <= bank for k in ('script', 'production') for f in formats[k].values()))
+    sc, pr = list(formats['script']), list(formats['production'])
+    exp = next(i for i, f in formats['script'].items() if f.get('status') == 'experimental')
+    st = lambda n: {'script': sc[n % 2], 'production': pr[n % 3], 'experiment': {'format': exp, 'why': 'the bolder version'}}
+    good = {'days': {k: [{'style': st(n)} for n in range(4)] for k, *_ in DAYS}}
+    check('styles: a varied week with an experiment a day passes', style_problems(good, formats) == [])
+    same = {'days': {k: [{'style': {'script': sc[0], 'production': pr[0], 'experiment': {'format': exp, 'why': 'x'}}} for _ in range(4)] for k, *_ in DAYS}}
+    probs = style_problems(same, formats)
+    check('styles: one script format all day is refused', any('script format(s) across' in p for p in probs))
+    check('styles: one production format all week is refused', any('production format(s)' in p for p in probs) and any('% of the recommendations' in p for p in probs))
+    bare = {'days': {'mon': [{}]}}
+    check('styles: an idea with no style is refused', any('no style' in p for p in style_problems(bare, formats)))
+    made_up = {'days': {'mon': [{'style': dict(st(0), script='tiktok-dance')}]}}
+    check('styles: a format not in the bank is refused', any("'tiktok-dance' is not a script format" in p for p in style_problems(made_up, formats)))
+    tame = {'days': {k: [{'style': dict(st(n), experiment={'format': sc[0] if formats['script'][sc[0]].get('status') == 'proven' else 'head-to-head', 'why': 'x'})} for n in range(4)] for k, *_ in DAYS}}
+    check('styles: a day whose experiments are all proven formats is refused', any('untried format' in p for p in style_problems(tame, formats)))
+    nope = json.loads(json.dumps(formats))
+    nope['production'][pr[0]]['krish_verdict'] = 'not for us'
+    check('styles: a format he marked not for us is never offered', any('not for us' in p for p in style_problems(good, nope)))
+    sources = {'must_cover': [{'id': 'card-1', 'what': 'Inspiration card "x" you routed to Make a piece'}, {'id': 'said-1', 'what': 'Your words'}]}
+    check('cover: a routed card left off the board is refused, by name',
+          any('Inspiration card "x"' in p for p in coverage_problems({'days': {'mon': [{'covers': ['said-1']}]}}, sources)))
+    check('cover: covered by an idea or accounted for with a reason passes',
+          coverage_problems({'days': {'mon': [{'covers': ['said-1']}]}, 'accounted': {'card-1': 'merged into Monday idea 2, same Duet launch'}}, sources) == [])
+    check('cover: accounted given as a list is said, never a crash',
+          any('accounted is an object' in p for p in coverage_problems({'days': {}, 'accounted': ['card-1']}, sources)))
+    check('cover: a one-word excuse is not an account', coverage_problems({'days': {}, 'accounted': {'card-1': 'no', 'said-1': 'skip'}}, sources) != [])
+    line = style_line(st(0))
+    check('styles: the card shows the suggested style and the bolder try',
+          '<dt>Suggested style</dt>' in line and '<dt>Or try something new</dt>' in line and formats['script'][sc[0]]['name'] in line)
+
+
+def _sources_checks(check):
+    """Sunday's ideas from every source and the Queue's Could combine (Krish, 2026-10-21; learning
+    queue-consolidation-and-fresh-sunday-ideas): each idea says where it came from and why it is here, and queued
+    ideas that would make one piece are shown together with a Combine button, combined only on his word."""
+    week = LAYOUT_FROM
+    kinds = ('his', 'inspo', 'engine', 'engine')
+    one = lambda k, n, **kw: dict({'so_what': f'A leader finds out {k}{n}.', 'story': f'Story {k}{n}.', 'why_now': 'This week.',
+                                   'fact': 'A fact.', 'source': {'label': 'Src', 'url': 'https://example.com/s'},
+                                   'source_kind': kinds[n - 1], 'beats': ['What happened', 'Why it matters', 'What to do']}, **kw)
+    data = lambda **kw: {'week_start': week.isoformat(), 'days': {k: [one(k, n, **kw) for n in (1, 2, 3, 4)] for k, *_ in DAYS}}
+    ideas = read_ideas(data(why_here='close to your Story mark on "Who pays"'), week)
+    queue = [{'id': MON_ID, 'so_what': 'Who pays for a free AI picture.', 'series': 'follow_the_money', 'triage': {'verdict': 'story'}},
+             {'id': WED_ID, 'so_what': 'What your AI can read in your Gmail.', 'series': 'follow_the_money', 'triage': None},
+             {'id': FRI_ID, 'so_what': 'A third saved idea.', 'series': None, 'triage': None}]
+    combine = read_combine([{'members': [MON_ID, WED_ID], 'series': 'follow_the_money', 'thesis': 'Free AI is paid for with your data.',
+                             'joins': ['The free picture', 'The plugged-in inbox', 'The same bill']}], queue)
+    page, manifest, _ = board(week, ideas=ideas, queue=queue, combine=combine)
+    check('sources: a fed Sunday with combine groups passes verify', verify(page) == [])
+    check('sources: every idea carries its source chip, his own marked as his',
+          page.count('data-source-kind="') == 12 and page.count('data-source-kind="his"') == 3
+          and 'From your inspo folder' in page and 'Engine research' in page and 'class="id-flag his"' not in page)
+    check('sources: every idea shows why it is here and its beats',
+          page.count('class="id-why"') == 12 and page.count('<ol class="id-beats"') == 12 and '<li>Why it matters</li>' in page)
+    check('sources: the manifest carries where each idea came from and its beats',
+          manifest['ideas']['mon'][0]['source_kind'] == 'his' and manifest['ideas']['mon'][0]['his'] is True
+          and len(manifest['ideas']['wed'][1]['beats']) == 3)
+
+    def refused(fn):
+        try:
+            fn()
+            return False
+        except BoardError:
+            return True
+    plain = data()
+    for d in plain['days'].values():
+        for i in d:
+            i.pop('source_kind')
+    check('sources: an idea with no source_kind is refused in a fixed week', refused(lambda: read_ideas(plain, week)))
+    check('sources: an idea with no source_kind is still fine in a week in the old layout',
+          not refused(lambda: read_ideas(dict(plain, week_start='2026-10-19'), date(2026, 10, 19))))
+    check('sources: an unknown source_kind is refused', refused(lambda: read_ideas(data(source_kind='friend'), week)))
+    check('sources: two beats are refused (3 to 5)', refused(lambda: read_ideas(data(beats=['One', 'Two']), week)))
+    chipless = page.replace('data-source-kind="', 'data-was-kind="', 1)
+    check('sources: verify refuses a fixed board whose idea lost its source chip', any('where it came from' in x for x in verify(chipless)))
+    check('combine: the Could combine card shows the members, what joins them and a Combine button',
+          'data-combine="combine-1"' in page and f'data-members="{MON_ID},{WED_ID}"' in page
+          and 'data-act="combine" data-for="combine-1"' in page and 'The plugged-in inbox' in page
+          and 'Who pays for a free AI picture.' in page[page.index('id="queue-combine"'):page.index('id="queue-follow_the_money"')])
+    check('combine: the manifest says where a Combine tap is saved and what runs then',
+          manifest['combine'][0]['members'] == [MON_ID, WED_ID] and manifest['db']['queue']['combine']['doc_id'] == 'combine-<n>')
+    check('combine: no groups, the slot says it fills when there are some',
+          'class="slot-empty"' in board(week, ideas=ideas, queue=queue)[0].split('id="queue-combine"')[1][:400])
+    tampered = page.replace(f'data-members="{MON_ID},{WED_ID}"', f'data-members="{MON_ID}"')
+    check('combine: verify refuses a Could combine card without its queued members', any('Could combine' in x for x in verify(tampered)))
+    group = {'members': [MON_ID, WED_ID], 'series': None, 'thesis': 'One argument.', 'joins': ['A', 'B', 'C']}
+    for bad, label in [(dict(group, members=[MON_ID]), 'one member'), (dict(group, members=[MON_ID, '44444444-5555-4666-8777-888888888888']), 'a member not in the queue'),
+                       (dict(group, thesis=''), 'no thesis'), (dict(group, joins=['A', 'B']), 'two joins'), (dict(group, series='retired'), 'a series that is not one')]:
+        check(f'combine: a group with {label} is refused', refused(lambda: read_combine([bad], queue)))
+    check('combine: a group with no --queue is refused', refused(lambda: read_combine([group], None)))
+    contracts = (Path(__file__).resolve().parents[2] / 'apps/control-plane/api/board/_contracts.ts').read_text(encoding='utf-8')
+    check('combine: the board API accepts the Combine tap (queue/combine-<n> with its members)',
+          'body.combine === true && body.pick === id' in contracts and 'combine-' in contracts)
+    js = template('week.js')
+    check('combine: the tap saves queue/combine-<n> with combine true and its members, and posts a comment',
+          'qdb.doc("queue/" + cid).set(body)' in js and 'combine: true, members' in js and 'COMBINE ${cid}' in js)
+    check('combine: a saved tap shows only on the card for those same ideas, and its comment carries no board words as his',
+          'same(saved[cid].members, members(c))' in js and '`COMBINE ${cid} ${body.members.join(" ")}\\n${body.at}`' in js
+          and 'q-sowhat")?.textContent' not in js)
 
 
 def _ideas_checks(check):
@@ -1902,6 +3922,9 @@ def _draft_checks(check, page, fri):
         base2 = ['--week', '2026-10-12', '--previous', str(prev2), '--keep', 'mon', '--piece', f'wed={WED_ID}', '--piece', f'fri={FRI_ID}']
         lost = refused(base2)
         kept_draft = refused(base2 + ['--keep', 'fri'])
+        carried, carried_manifest = build(parser().parse_args(base2 + ['--live', '--keep-draft', 'fri']), get=live)
+        wrong_piece = refused(['--week', '2026-10-12', '--previous', str(prev2), '--keep-draft', 'fri',
+                               '--piece', f'fri={WED_ID}'])
         again, again_manifest = build(parser().parse_args(base2 + ['--draft', 'fri', *review]))
         box_dropped = refused(base2 + ['--draft', 'fri', '--review', f'fri=Article|{words}'])
         box_let_go, _ = build(parser().parse_args(base2 + ['--draft', 'fri', '--review', f'fri=Article|{words}', '--drop-review', 'fri=deep-cut']))
@@ -1933,6 +3956,10 @@ def _draft_checks(check, page, fri):
     check('a day in draft is draft in the manifest and the page, with its calls, and passes verify',
           [d['state'] for d in manifest['days']] == ['made', 'picked', 'draft'] and manifest['days'][2]['waiting'] == ['Approve the outline', 'Pick the title']
           and board_days(drafted)['days']['fri']['state'] == 'draft' and verify(drafted) == [])
+    check('--keep-draft carries an unrelated live draft byte-for-byte, including review boxes and calls',
+          friday(carried) == tab and carried_manifest['days'][2]['state'] == 'draft'
+          and carried_manifest['days'][2]['waiting'] == ['Approve the outline', 'Pick the title']
+          and verify(carried) == [] and 'piece id changed' in wrong_piece)
     check('--live: a piece in review whose publish page is older than its words is refused, naming --draft; a posted one keeps its page',
           'older than its words' in stale and '--draft fri' in stale and 'Monday' not in stale)
     check('a posted day says so in its status line, from the record: "nothing has been posted" never outlives the post',
@@ -1984,6 +4011,11 @@ def parser():
                     'a day it held is never lost')
     ap.add_argument('--keep', action='append', metavar='DAY', help='with --previous (its page): carry a made day over exactly as the board holds it, '
                     'when its publish page cannot be read any more')
+    ap.add_argument('--keep-draft', action='append', metavar='DAY', help='with --previous (its page): retain an unrelated draft day exactly as shown, '
+                    'including its editable review boxes, while another day advances')
+    ap.add_argument('--brief', action='append', metavar='DAY=JSON', help='the day\'s record-ready brief (boards from the fixed layout on): '
+                    '{idea, flow: [3 to 6 beats], ending, takeaway, angle, tone, reader?, agreed?, agreed_at?}; kept on rebuild')
+    ap.add_argument('--materials', action='append', metavar='DAY=JSON', help='finished downloads and channel copy, with an explicit readiness note; never changes the day state; preserved on rebuild')
     ap.add_argument('--unpick', action='append', metavar='DAY', help='with --previous: a day Krish moved or dropped, which really has no piece now')
     ap.add_argument('--review', action='append', metavar='DAY=LABEL|PATH', help='words for Krish to edit or comment on in that day\'s tab '
                     '(the article, each script); his saves land in the board\'s store as edits/<day>-<item>')
@@ -1997,6 +4029,15 @@ def parser():
                     'with at least three per day and a pick box for each')
     ap.add_argument('--queue', metavar='PATH', help='the saved answer of GET /api/idea-queue: the Ideas tab shows "From your queue" '
                     'first on each day the queued ideas fit; read it fresh at the start of the build, never from memory')
+    ap.add_argument('--combine', metavar='PATH', help='the queued ideas worth combining (docs/plans/<week>/combine.json, from '
+                    'GET /api/idea-queue?combine=1): [{"members": [queued ids], "series", "thesis", "joins": [3 to 5 beats]}]; '
+                    'the Queue tab shows each with a Combine button (needs --queue)')
+    ap.add_argument('--sweep', action='append', metavar='DAY=JSON', help='what edit_sweep.py carried from his saved edits '
+                    '(boards from the fixed layout on): shown under the day\'s drafts as Also changed, each with Undo; kept on '
+                    'a rebuild while the day\'s words are unchanged')
+    ap.add_argument('--lessons', metavar='JSON', help='the saved answer of GET /api/video-studio/learning-proposals: the '
+                    'proposals learned from his board edits (scope board_edit:*), shown under each day\'s drafts as What I '
+                    'learned from your edits; each stays a proposal until he approves it')
     ap.add_argument('--verify', metavar='PAGE', help='say why this built board may not be published (the publish hook runs it); exit 1 if it may not')
     ap.add_argument('--show', metavar='BOARD', help='print the days a board holds: its week-board.json, or its page as Artifact read saved it')
     ap.add_argument('--json', action='store_true', help='with --show: as JSON')

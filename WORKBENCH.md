@@ -10,92 +10,90 @@ carousel rules live here in docs/CAROUSEL-STANDARD.md. Krish approved all
 eight cards of Grok Bot vs Muse revision 03 on 26 October. Growth originates
 amplification ideas, channel best practices and missed-placement opportunities;
 content-engine supplies production execution and quality standards for all
-formats. Next: receive
-Growth's distribution brief and return a checked creative package through
-the existing editorial/Studio path. This change updates repository guidance
+formats. Krish now prioritises merging the engine changes, then continuing
+Friday production with its existing production owner. Growth briefs receive
+a checked creative package through the existing editorial/Studio path. This change updates repository guidance
 only; it does not mutate a tracked Studio session, learning record or board.
 
-## 19 October: both publish boards live, web cutover verified
 
-Use https://content.krishraja.com/board/2026-10-19 and
-https://content.krishraja.com/board/2026-10-12. The overarching week tabs keep
-both available. All new interactions use this site; the four Claude boards
-are preserved source archives and must not be synchronized or edited.
+## 24 October: the Sunday loop rebuilt for his recording day (Claude)
 
-All 87 available source records, including 10 replies, were imported and read
-back exactly. The final source comparison found no delta. Both production
-boards passed authenticated desktop/phone navigation, image, state and comment
-checks; all 12 downloadable assets matched their type, size and SHA-256.
-Follow `docs/PUBLISH_BOARDS.md` from every tool, reading all six collections.
-Release, source limitations and rollback evidence: `docs/handovers/board-web-release.md`.
-Friday's two replacement videos are now repaired and filed; see the delivery section below. Monday 19 October's
-signed-off scripts and pending recordings/fact check remain with its editorial
-handover; this migration changes neither scripts nor publishing approval.
+- **Asked:** a week's audit (Codex's failure report), then "tomorrow's Ideas Board is SIGNIFICANTLY improved", his
+  Inspiration House read properly, styles he can choose from that push, Claude owning scripts, article and creative
+  direction, Codex producing from it. Sunday is his recording day.
+- **Done (branch `claude/bold-lovelace-o09phe`):** `_inspirationSources.ts` (the gather reads the Inspiration House
+  and content-watcher; `must_cover`), `board_feed.py cover`, `week_board.style_problems` and `coverage_problems`,
+  `formats` in `config/style-references.json`, `creative_direction.py` with the kit.py and make.py gate,
+  `docs/CREATIVE_DIRECTION.md`, the Sunday rhythm, the feeder freeze, the start route in AGENTS.md, failure and
+  learning entries.
+- **Next, Sunday 25 Oct:** `/plan-week` for the week of 26 Oct. The gather stops until this change is deployed to
+  production (`sources.inspiration`). Three routed cards must be on the board or accounted for: the Duet page,
+  "Reading is free. Sending needs a yes." and the models-by-country picture.
+- **Decided by Krish (2026-10-25):** the Sunday rhythm's approval stands ("Yes that is the approval I want on record"); no required merge checks ("No merge checks."), so a session merges only after CI is green.
+## 24 October: Friday locked and signed off; Codex makes the videos (Claude)
 
-This is the one file every working session reads first and updates last,
-whatever tool it runs in: Claude Code (web, desktop or phone), Codex (cloud or
-desktop), or anything else that can open this repository. It is how work moves
-from one tool to another without anything getting lost. The rules for agents
-are in `AGENTS.md`; this file is the live state of the work.
+- **Signed off by Krish:** storyboard, no trim, titles, outline ("signed off, keep, all A"), prediction A2 ("a2"), and
+  the six first-person test lines in the fact gate ("yes, $0.30, and I sign off my test lines"). Spend: $1.09 of the
+  $1.30 he approved.
+- **Done:** the article (`docs/plans/2026-10-23-draft-body.md`, on the piece; fact gate `ok`, voice, AI scan and spine
+  checks pass) and every channel's copy (`docs/plans/2026-10-23-friday/locked/board-copy/`: `article.md`,
+  `publishing-copy.md`; voice score 4.5, bar 6). The board shows the signed storyboards (revision 50).
+- **Waiting on Krish:** start Codex by pasting `docs/plans/2026-10-23-friday/locked/CODEX_PROMPT.md` (the part below
+  the line) into a new Codex session on a home computer. Then his look at the four videos on the board, then his yes
+  to the final board publish.
+- **Changed after sign-off (his answers, 24 Oct):** the 90-second on-camera cut loses the recap and three small repeats
+  ("Cut the recap (Recommended)"), and both vertical cuts are sped to 1.12x ("Speed both to 1.12x (Recommended)") so the
+  whole file with intro and outro runs under 89 s. His warning, "last time Codex glitched a bunch of words on the
+  speedup and also misaligned the captions", is `config/learnings.json` `speedup-without-glitches` and the
+  "Speed without glitches" section of `CODEX.md`.
+- **Making record completed by Claude (24 Oct, after Codex stopped on it):** Visual gate (cover and thumbnails drawn
+  from his picked words, gate passed), Scripts with both read-backs (two fresh readers each, nothing lost) and Pack
+  (sent to the Two passports library folder) are recorded; every step up to Recorded reads done. `scripts/pages/build.py`
+  now tries the smaller headline sizes on its ladder before refusing a 3:2 cover.
+- **Codex** works from `locked/CODEX.md` and nothing else; it fills only the chapter times in `publishing-copy.md`.
+- **Where things are:** takes in the engine's recordings store (`recording.py list`); evidence captures under
+  `2 Covers and images/Evidence` and the storyboards under `2 Covers and images/Storyboard` in the post's library
+  folder. The Anthropic and GitHub reference clip (Video Engine > Inspiration) had still not reached the library;
+  Codex fetches it first (`motion-system.md`).
 
-Last updated: 2026-10-19, by the idea-queue build session (Claude Code, cloud).
+## 24 October: the Inbox read from Google by its ID; every Drive touchpoint fails loudly (Claude)
 
-## Friday repairs delivered — Codex, 19 October
+Handover: `docs/handovers/2026-10-24-drive-by-id.md`. Branch `claude/drive-by-id`, a pull request here and one in
+control-center.
 
-Both complete files were accepted by Krish with sound, then passed their exact-file
-checks and were copied into the existing Friday post's `3 Video` folder. The actual
-Drive library copies match the accepted SHA-256 hashes. Current downloads:
-
-- [Deep cut, 16:9, 13:36.5](https://drive.google.com/file/d/1cfQ5LO8NsOoRNlmwv_Ac_hsxs0yElB52/view)
-- [Short cut, 9:16, 87.75 seconds](https://drive.google.com/file/d/18R8c4y2HfmFHpccaAlG7PAJS02IbtDzo/view)
-
-Rejected originals retain their file IDs and bytes in `3 Video/working repair 19 Oct/rejected originals`.
-Both replacements are the latest entries for their cuts in the making record;
-older entries remain history. Existing thumbnails are retained. The week of
-12 October now points at the replacements, with its other days and interactions
-preserved. Board migration was already completed on main; it was not repeated.
-
-Both cuts measure within 40 ms at six calibrated checkpoints. Voice is about
--14 LUFS, final true peaks are -1.8/-1.3 dBTP, and the speech bed has no silence
-longer than 0.5 seconds. Short visual coverage is 99.962%, with 24.54 changes per
-minute. Native-size text, all one-second frames and quarter-second intro/outro
-samples were checked. Full playback acceptance is Krish's; Codex does not claim
-full audio/video playback. Raw ASR differences and human acceptance are preserved,
-including independent evidence disproving the deep cut's apparent 14-word omission.
-
-The report, captions, exact-file receipts and image credits accompany the videos.
-`working repair 19 Oct` contains `repair-inputs-v8.zip` (all production images and
-configs), `final-review-samples-19oct.zip` (sampled frames and sync captures), and
-`final-qa-evidence-19oct.zip` (transcripts, measurements and reviews). Code and small
-evidence live on `codex/friday-video-repairs`, [merged PR #108](https://github.com/krishanraja/content-engine/pull/108).
-Full local `npm run verify` passed. The minimal-CI fixture correction passed 40
-mix checks without ASR installed; the nine-scenario Windows authentication test
-passes with the same 15-second budget as its adjacent disk-heavy test. Current
-full CI results are on PR #108, merged with Krish's approval at `e2a7b6b`.
-
-Correction, 19 October: the effective article fact gate **passes** with Krish's
-11 recorded sign-offs. The earlier failed label read only the raw automated
-verdict. The only blocking check was the new 92-day prediction horizon; Krish
-approved retaining this piece's existing forecast as an exception, bound to its
-identity and exact prediction text. Implementation
-and evidence: `docs/plans/2026-10-09-friday/article-fact-reconciliation-19oct/README.md`.
-Publication remains separate; the archived video receipts are unchanged.
-Detailed handover: `docs/handovers/2026-10-19-friday-repair-complete.md`.
+- **Built:** the `recordings_drive_inbox` job (`apps/control-plane/api/library/recordings/drive-inbox.ts`, every ten
+  minutes) lists the Inbox by its Drive folder ID as the engine's existing Google service account (read-only, the
+  same account the inspiration scan already uses successfully) and streams each new take into the recordings store
+  under its sha256 with the manifest `confirm` writes; `recording.py`, `recording_match.py` and `produce-video` are
+  unchanged. Each home computer's pass now reports what it found (`POST /api/library/recordings/lane`): a stale
+  `MINDMAKE_*` setting (passed over for `config/studio.json`), an unreachable Inbox, a missing library, no pinned
+  Python, a failed send or publish. The job fails with the machine named while a fresh report holds a problem, so
+  Control Center shows it. Settings are read from the registry each pass (no restart needed), and the first pass
+  after boot waits a minute for Google Drive. `paths.ts` passes over a stale setting and `doctor` names it.
+- **Proved:** 10 new tests (`tests/control-plane/recordings-drive-inbox.test.ts`), the stale-setting test in
+  `tests/paths-drive.test.ts`, and a local run of the real streaming copy: 50 MB through a fixed Content-Length PUT,
+  sha256 equal on both ends. **Not proved:** a new take copied by the live job (the first runs found every take already stored), and the
+  PowerShell changes on Windows (no PowerShell here; Windows CI runs the source install only).
+- **Waiting on Krish (in this order):** (1) none for the Inbox: the job reads it through the "anyone with the link" sharing on
+  `makeyourmindup`; before that sharing is turned off, share the Inbox with the engine's service account as Viewer; (2) delete the `MINDMAKE_DRIVE_ROOT`, `MINDMAKE_MEDIA_INBOX`,
+  `MINDMAKE_ARCHIVE_ROOT`, `MINDMAKE_POSTS_ROOT`, `MINDMAKE_INSPIRATION` and `MINDMAKE_LIBRARY_ROOT` user settings on
+  both home computers; (3) where Claude sessions should write in Drive now (`drive_destinations` names `CURRENT` and
+  `inbox`, both gone); (4) whether to clear the dead `drive_folders` and `briefing_drive_folder_id` rows. Seen, not
+  changed: the Inbox and Content Inspo folders are shared "anyone with the link can edit".
+- **Left, with reasons:** `One Off Content Ideas` is not in Drive any more (`docs/DRIVE.md`); a home computer cannot
+  check an `H:` path against a Drive ID (Drive for desktop does not expose it), so it checks the path exists instead;
+  the KeePass file, ffmpeg reading takes, the library sync and archive filing stay on `H:` paths by necessity.
+- **Next:** the job runs `ok` again since 2026-10-26 11:10 UTC (a 120-character style-reference name had failed every
+  pass until PR #176); drop a real take with both machines off
+  and see it in `python scripts/post-pack/recording.py list`.
 
 ## The idea queue: read it first
 
-### Monday 19 October: Codex video preparation
+### Monday 19 October: earlier review hold resolved
 
-Both Monday takes are recorded against the current signed-off scripts and downloaded with verified hashes. Production is isolated from Friday's repair checkout. See `docs/production/2026-10-19-monday-video.md` for source measurements, stabilisation judgment and the explicit visual quality requirements. The current publish board is https://content.krishraja.com/board/2026-10-19; the completed web cutover on main supersedes historical artifact routing elsewhere on this editorial branch.
-
-Krish approved set A and its listed treatment, then the fourth paid v2 fact-check run. Both takes are transcribed; the long confirms 95% by the end of 2026. The live article's prediction was corrected and read back. The paid gate completed despite a dropped client connection, cost $0.35 against a $0.10 last-run estimate, and left 11 unresolved entries (10 distinct sentences). Source review and exact entries are in `docs/plans/2026-10-19-monday/fact-review.md`; his manual-sign-off question is pending. Do not launch another paid run on the fourth-run approval.
-
-Both thumbnails, all 26 explanatory panels, and four story intro/outro clips are drawn. Their automated layout checks pass; contact sheets have been reviewed. Full video renders are running in the Monday worktree. `docs/plans/2026-10-19-monday/render_video.py` bounds FFmpeg threads and uses an ultrafast CRF-10 intermediate; final encoding and guards are unchanged. Original scripts are unchanged. The short is planned at 85.5 seconds including intro/outro without speed-up. No blanket stabilisation is planned after sample comparisons; individual jolts remain an edit review item. No final archive/library delivery or video-complete record is claimed yet.
-
-Every planning or making session starts with `python3 scripts/engine.py GET /api/idea-queue`: the ideas Krish
-queued from any Ideas tab, with his triage (story, angle, cute, curious but not convinced, with his reason). One
-queue, in the engine (`content_ideas.queued_at`); Control Center's Queue page triages it A/B; nothing purges it.
-Offer from it before new research. Handover: `docs/handovers/2026-10-19-idea-queue.md`.
+The source-backed review and Krish's full-playback acceptance supersede the
+older hold; see the current release entry above and its immutable receipts.
+No further spend or public posting is authorised.
 
 ### 19 Oct, Monday in review on the board
 
@@ -128,15 +126,6 @@ weeks, reading his marks) plus `narrative-before-making`, open until he says whe
 Waiting on him: the seven questions at the end of that handover, and the merge of two small PRs (engine
 `question` field; Control Center shows it). The other account's board is now
 migrated. The Argon "a tenth" figure remains with the editorial work (the row's numbers give a twentieth).
-
-## Friday 16 Oct: handed over, 17 Oct
-
-Krish ran out of usage on this account and asked for a handover. Everything the next session
-needs is in `docs/plans/2026-10-09-friday/HANDOVER.md` (its first section is the prompt to
-start with). Signed off: all titles, headings, cuts. Done: the sniff finder (18 dB, on by
-default), the 90-second take's caption fixes and cues (`short-cut/short.json`), the tall
-panels' spec, 51 long-cut cards (open faults listed), five Substack exhibits (checks not run).
-Not done: both renders and their frame checks, the Substack page, pack, library, board video tabs.
 
 ## How Krish wants to be worked with
 
@@ -811,34 +800,9 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
-- 2026-10-17, about 07:15 UTC: **Friday's packaging is signed off; the session is finishing it without him.**
-  - The sheet (`docs/plans/2026-10-09-friday/signoff-sheet.md`, SIGNED OFF): Krish, "Fine with everything except for
-    \"soon you won't pick your AI.\" ... I would suggest something along the lines of \"ChatGPT and Claude are releasing
-    new models faster than ever. But does it even make a difference?\"". Every pick and the rejection are in
-    `config/title-verdicts.json`. His line (cut to "ChatGPT and Claude: faster than ever. Does it matter?" where space is
-    short; a colon because a comma dropped into the next line on the tall covers) is on the cover, the Shorts title, the
-    tall thumbnail and the title card; the wide thumbnail is "ANOTHER CLAUDE?". Four headings and four chapters gained a
-    product name so the filter passes them (title_check now reads number words beside a name).
-  - Learned today, all encoded and guarded: SIGN_OFF_FIRST (one sheet, then finish without him), CHANNEL_HEADINGS
-    (headings in one channel style, never pasted from the transcript), STORY_FIRST (every line judged against the
-    piece's story: his `story.md`, the outline's spine, the series' question; `title_check.py lessons --plan`), and the
-    hidden-pointer refusal ("one setting", "the setting behind it").
-  - 90 seconds: the shorter v7 (a cut of his v6, his words only, about 1:22) is on the record with his words and in
-    Teleprompter (updated in place 06:57 UTC). He records it in the morning.
-  - Done: cover (every shape) and both thumbnails drawn and looked at; channel copy v2 with his titles
-    (`publish-copy-v2.json`); the 10 missing evidence captures (`shots-v6-sources.json`; WIRED's two lines are paywalled,
-    the reporter's own post stands in).
-  - Running: the cards (workflow friday-long-cut-cards: logos, approved headings, divider cues, draw, two skeptics);
-    the Substack exhibits Krish asked for ("heavyweight beautiful stunning visual intel as to what difference models
-    versus thinking levels make to intelligence and how that correlates to the cost of it ... enterprise-grade and
-    available inside the substack"; workflow friday-visual-intel, live Artificial Analysis data, three skeptics); the
-    story intro and outro render; the long-cut draft render (stage 2).
-  - Next: final long render with cards, intro and outro; frame-by-frame review; page.json for the v5 article with the
-    exhibits as figures; pack; library; publish board on both links (approved: "Fine with everything"). Posting is his.
-  - Style trial A rendered (`.cache/style-trial/trial-a.mp4`): captions still far too small; fix before showing him.
+- 2026-10-24: **Wednesday's production outcome failed.** Krish reports that he published only the horizontal long video, later noticed random small cuts and chopped words in it, and scrapped the vertical video and article. The defect is reported, not independently located or attributed. His latest decision supersedes the earlier “Both approved” playback and the 23 October “board ready” handoff. `docs/plans/2026-10-21-wednesday/FAILURE_REPORT_2026-10-24.md` documents the observed failures, limits of the old checks, Claude/Codex execution differences and exact corrective owners. The report is a handoff for Claude, not a restart order. No live public-platform or private-board readback was done in this report session. **Next:** reconcile the making record and private board to published-long-with-reported-defect / withdrawn-short-and-article; preserve history; compare the exact public upload with the accepted export before attributing the defect; do not alter the public cut or publish anything else without Krish's instruction.
 
-- Older handoffs (12 to 17 October): `docs/history/2026-10-18-WORKBENCH-handoffs.md`. This section holds only the
-  newest one: when you write a new handoff, move the one it replaces to the top of that file (G11, `scripts/check_workbench.py`).
+- Older handoffs (12 to 23 October): `docs/history/2026-10-18-WORKBENCH-handoffs.md`. This section holds only the newest one: when you write a new handoff, move the one it replaces to the top of that file (G11, `scripts/check_workbench.py`).
 
 ## What costs money
 
@@ -895,4 +859,3 @@ stricter version, which refused a contradicted line, was withdrawn before the me
 line; the cost gate has no context ceiling and never blocks a database tool. Waiting on Krish: (1) three sign-offs on
 piece `904658db` made before the G9 ruling are on contradicted lines, left as they are until he says; (2) the first real fact-check run after this
 (his approval for the spend) is the live proof: `fact-gate-on-file` cache writes about one source set a run.
-

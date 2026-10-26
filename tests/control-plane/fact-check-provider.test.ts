@@ -21,7 +21,8 @@ vi.hoisted(() => {
 })
 
 const db = vi.hoisted(() => ({
-  row: null as null | { id: string; body: string; meta: Record<string, any> },
+  row: null as null | { id: string; body: string; meta: Record<string, any>; updated_at?: string },
+  conflict: false,
   updates: [] as Array<{ table: string; values: any }>,
   upserts: [] as Array<{ table: string; values: any }>,
 }))
@@ -33,7 +34,7 @@ vi.mock('../../apps/control-plane/api/_supabase.js', () => ({
       const chain: Record<string, any> = {}
       for (const m of ['select', 'eq', 'in', 'order', 'limit']) chain[m] = () => chain
       chain.single = async () => ({ data: table === 'content_ideas' ? db.row : null, error: null })
-      chain.maybeSingle = chain.single
+      chain.maybeSingle = async () => db.conflict ? { data: null, error: null } : chain.single()
       chain.update = (values: unknown) => { db.updates.push({ table, values }); return chain }
       chain.insert = async () => ({ error: null })
       chain.upsert = async (values: unknown) => { db.upserts.push({ table, values }); return { error: null } }
@@ -153,6 +154,7 @@ const written = () => db.updates.filter(u => u.table === 'content_ideas')
 const recorded = () => db.upserts.filter(u => u.table === 'system_config' && u.values?.key === provider.FAILURE_KEY).map(u => JSON.parse(u.values.value))
 
 beforeEach(() => {
+  db.conflict = false
   db.row = { id: ID, body: BODY, meta: { materials: MATERIALS, fact_check: LAST } }
   db.updates.length = 0
   db.upserts.length = 0
@@ -314,5 +316,49 @@ describe('a sentence an earlier run settled keeps its result (walk log F52)', ()
     const again = await factCheck({})
     expect(again.body).toMatchObject({ ok: true, passed: true, carried: 0 })
     expect(calls.perplexity).toHaveLength(3)
+  })
+})
+
+describe('operator-only manual fact adjudication without provider calls', () => {
+  async function prepareReview() {
+    const { bodyHash, sourcesHash } = await import('../../apps/control-plane/api/_factGate.js')
+    const fc = { ...LAST, body_hash: bodyHash(BODY), blocking: 1, claims: [{ sentence: S1, claim: CLAIMS[0]!.claim, kind: 'number', verdict: 'contradicted', on_file: {verdict: 'not_found', quote: null, note: null}, independent: {verdict: 'contradicted', evidence: 'An older source', url: 'https://example.test/old', checker: 'test', correct_value: null} }] }
+    db.row!.meta.fact_check = fc
+    db.row!.updated_at = '2026-10-19T12:00:00Z'
+    return {action: 'manual_review', decided_by: 'Krish', said: 'Approve the auditable manual-review route', reason: 'The dated filed source directly supports the claim; the checker used an older source.', sentence: S1, material_id: 'm1', quote: CLAIMS[0]!.quote, expected_body_hash: fc.body_hash, expected_run_at: fc.ran_at, expected_sources_hash: sourcesHash(db.row!.meta)}
+  }
+  it('writes a separate review while retaining the original verdict, without paid calls', async () => {
+    const request = await prepareReview(); const original = structuredClone(db.row!.meta.fact_check)
+    const r = await factCheck({}, request)
+    expect(r.status).toBe(200)
+    expect(r.body.gate.ok).toBe(true)
+    expect(written()).toHaveLength(1)
+    expect(written()[0]!.values.meta.fact_check).toEqual(original)
+    expect(written()[0]!.values.meta.fact_manual_reviews).toHaveLength(1)
+    expect(calls.anthropic).toHaveLength(0); expect(calls.perplexity).toHaveLength(0)
+    db.row!.meta = written()[0]!.values.meta
+    const again = await factCheck({}, request)
+    expect(again.body.already).toBe(true)
+    expect(written()).toHaveLength(1)
+  })
+  it('rejects stale evidence without calling a provider or writing', async () => {
+    const request = await prepareReview(); request.expected_sources_hash = 'stale'
+    const r = await factCheck({}, request)
+    expect(r.status).toBe(409); expect(written()).toHaveLength(0)
+    expect(calls.anthropic).toHaveLength(0); expect(calls.perplexity).toHaveLength(0)
+  })
+  it('reports a lost row-revision race instead of claiming the review saved', async () => {
+    const request = await prepareReview(); db.conflict = true
+    const r = await factCheck({}, request)
+    expect(r.status).toBe(409)
+    expect(r.body.error).toMatch(/changed during review/)
+    expect(calls.anthropic).toHaveLength(0); expect(calls.perplexity).toHaveLength(0)
+  })
+  it('rejects a request without the operator credential', async () => {
+    const request = await prepareReview()
+    process.env.ENGINE_OPERATOR_TOKEN = 'different'
+    const r = await factCheck({}, request)
+    expect(r.status).toBe(401); expect(written()).toHaveLength(0)
+    expect(calls.anthropic).toHaveLength(0); expect(calls.perplexity).toHaveLength(0)
   })
 })

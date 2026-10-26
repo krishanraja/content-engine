@@ -47,7 +47,49 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    (his standing yes covers any session), or, without the Teleprompter
    connector, named in one line on the week's board item. A cut sent by hand
    gets its record line instead, and one held back after a failed send is
-   only named.
+   only named. Then relay his taps and comments on the ending week's "What I
+   learned" lessons, the taste ledger's `taste:` ones included, exactly as
+   `make-piece` says (yes, no, or a comment as his rewording), and only those
+   whose `updated_by` is Krish. One he left alone stays proposed. Next, read
+   every Inspiration card he routed to a piece that no plan has taken yet
+   (`select id, name, kind, why_like, why_like_source, picked_likes,
+   why_here, would_do, drive_file_id, read_as, note_for_claude, facets,
+   transcript, piece_id from inspiration_items where 'make_piece' =
+   any(routes) and answered_at is not null and routed_at is null and
+   dismissed_at is null order by answered_at`; a card may carry several
+   routes, and no time window, so a missed Sunday loses nothing): each is
+   an idea of his for step 2. His own words are `why_here` and `would_do`
+   (he types them) and `why_like` where `why_like_source` is `typed`;
+   `picked_likes` are guesses he agreed with. Once the week's options are
+   written in step 2, mark the cards the plan took (`update
+   inspiration_items set routed_at = now() where id = any(<their ids>) and
+   routed_at is null`), so no card is offered twice; his Undo on the page
+   clears it. Take in each file the way `read_as` says
+   (`watch` means the whole video with sound, never one frame; `transcript`
+   holds its words when the ledger watched it) and follow
+   `note_for_claude`; `facets` says its platform, format, source and who it
+   features. Then the cards he routed to "Study the style"
+   (`'study_style' = any(routes)`, same columns): study each before the
+   week's recordings, as
+   `docs/STYLE_REFERENCES.md`, "Cards he sends from the Inspiration page",
+   says, and name in the reply which you studied and which are still
+   waiting. Each card says what kind of thing it is (`kind`; Krish,
+   2026-10-24: "It's important that you understand what the different types
+   of stuff are in here"): a video saved for "the script, the narrative, or
+   the production style" (his picks say which), an image for "the clarity",
+   a research corpus, an idea or another document. Read three more kinds of
+   inspiration for step 2. The feed's posts from the last 8 days, the latest
+   fresh posts from the channels he follows (`select title, excerpt,
+   meta->>'account' as account, meta->>'url' as url, occurred_at from
+   taste_evidence where source = 'drive_cold' and source_ref like
+   'instagram:%' and occurred_at > now() - interval '8 days' order by
+   occurred_at desc`): other people's posts, so a topic signal and never his
+   view. The opinions about AI his cards carry (`facets->'opinion'`, a topic
+   and the author's stance), where he tapped the topic or routed the card to
+   a piece: a topic he may want to speak about, never his own stance. And
+   the research corpora he named no piece for yet (`kind = 'corpus' and
+   piece_id is null`): research waiting for a piece, read as the research
+   for whichever option it serves.
 1. **Read the idea queue first**, before anything else and before any
    research (Krish, 2026-10-19: ideas he likes that are not time-sensitive
    are queued, and the queue "needs to survive everything and be the first
@@ -63,6 +105,62 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    `angle`, `decided_by: "Krish"`, the idea's `so_what`, `story` as `idea`,
    `source_url`, `series`, `from_week`, `from_pick`). A mark with no verdict
    is only queued. Never write a verdict he did not give.
+   Copy his Combine taps the same way: `python3 scripts/post-pack/board_feed.py taps <last Monday>`
+   prints a synthesize body for every `queue/combine-<n>` doc Krish wrote
+   himself (`updated_by: "Krish"`; it skips any other writer and says so,
+   and the board API refuses a session's tap). Send each to
+   `POST /api/content-ideas/synthesize` with its series as `lane_slot`,
+   `decided_by: "Krish"` and `said: null`. The `COMBINE combine-<n>`
+   comment the tap posts carries the board's own words, which a session
+   wrote, so it is never his `said`; set `said` only to words he typed
+   himself in a comment of his own about that group. synthesize takes the
+   members out of the queue, recording `absorbed_into` and
+   `combined_by: "Krish"`. Never combine queued ideas without his tap or
+   words: the route refuses (`queued_needs_his_word`).
+   **Then gather every source in one read** (Krish, 2026-10-21: "a fresh
+   batch of ideas that sources from all my different sources of ideas ...
+   learnt from what I previously liked"): `python3 scripts/post-pack/board_feed.py gather <Monday>`.
+   It reads `GET /api/week/options?include=sources` and `GET /api/idea-queue?combine=1`
+   (no spend) into `docs/plans/<Monday>-week/sources.json`: each series'
+   pool with his ideas first, then ideas near something he liked, then the
+   ladder score, each with `source_kind` and `why_here`; the queue and its
+   combine groups; `his_relayed` board items; and which source is empty and
+   why. Say the counts and every empty source in your reply.
+   **His Inspiration House is read in the same gather** (Krish, 2026-10-24:
+   "Double check my inspirationhouse gets read properly when ideas are
+   being built, alongside all the other sources of content suggestions").
+   `sources.json` holds `inspiration` (`_inspirationSources.ts`): `routed`,
+   the cards he routed to Make a piece, each owed a place on the board;
+   `liked`, cards he answered with a why; `fresh`, cards he has not seen
+   yet; `study_style`, production references (they feed the style, never a
+   topic); `corpora`, content-watcher readings he dropped in; `creators`,
+   creator moves with his angle; `claims`, taste claims (form only;
+   evidence, never a rule until he approves one). `must_cover` lists every routed card and every
+   board item holding his words: each one goes in some idea's `covers`, or
+   in ideas.json `accounted` with the reason it is not on the board. The
+   gather stops when production has no `inspiration` block, and the board
+   build refuses ideas that drop one (`board_feed.py cover <Monday>`). A
+   card's `why_like` is his typed words; `endorsed` is a suggestion he
+   tapped, never quoted as his.
+   **Then read his feedback cues** (Krish, 2026-10-26: "all the feedback
+   I've given you goes into a really clear set of cues that you can draw
+   from in the future"). `sources.json` holds `cues` (`_feedbackCues.ts`;
+   the Inspiration House files them daily from his queue verdicts and his
+   typed card answers): `future_pieces`, ideas he wants made later, offered
+   where they fit a day; `wider_pieces`, context kept for a bigger piece,
+   grouped by `theme` (when a theme has gathered enough, propose the bigger
+   piece and cite each cue); `tracked`, topics to check for news this week;
+   `briefs`, his angle on how a piece should be told, carried into that
+   idea's pitch; `not_for_us`, subjects never offered again. `said` is his
+   words verbatim; `use_origin` says whether his words, a rule or a model
+   guess named the use, and a `model_guess` is never quoted as his reading.
+   Say the cue counts in your reply. When `empty` says the cues table is
+   not there yet, say so and carry on. His taste
+   steers this ranking only; never pass it to a judge. Most ideas arrive
+   with no series yet (`unassigned`: 77 of 89 on 21 Oct, when
+   under.the.hood's pool was empty), so read `unassigned` too and place
+   each idea in the series whose mandate it fits, or leave it out; the
+   placing is your judgment, said in your reply, never recorded as his.
    Then read `docs/CADENCE.md` and each series' mandate and the material on hand:
    `python3 scripts/engine.py GET "/api/week/options?week_start=<Monday>" --full`
    (mandates, options already written, what is in flight or scheduled, the
@@ -86,6 +184,41 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    and `said-` items on `GET /api/workbench`, `dropped_by_krish`, his cold
    ideas in the Inspo folder), then the sources `docs/prompts/sunday-ideas-tab.md`
    lists (his saved inspiration posts, the people he follows, the radar).
+   Start from `sources.json`: his ideas, then his inspo folder's, then the
+   engine's, in its order. Every idea carries `source_kind` (`his`,
+   `inspo` or `engine`; the board refuses one without it from 26 Oct),
+   `why_here` copied from the gather when it has one (never invented), and
+   `beats`, three to five lines of the narrative sketch
+   (`docs/prompts/sunday-ideas-tab.md`), `covers` (the `must_cover` ids it
+   answers, when any) and `style`: `{"script": <format>, "production":
+   <format>, "experiment": {"format": <format>, "why": "the bolder try"}}`,
+   each a format id from `config/style-references.json` `formats` (Krish,
+   2026-10-24: "suggest script and production styles that I can choose
+   from or that it recommends for specific content ... pushing and pushing
+   and pushing, becoming more and more creative and experimental"). Pick
+   the recommendation for the content (the format's `fits`), and make the
+   experiment a format that has not been made yet. The board refuses a day
+   with one script format, a day with no untried experiment, a week where
+   one production format is over half the cards, and a format he marked
+   not for us (`week_board.style_problems`).
+   **The quality bar, before an idea reaches him** (Krish, 2026-10-24:
+   "most importantly focus on improving your own work quality"). Each day's
+   ideas are four different stories, never four angles on one headline.
+   Each one's `so_what` names what the face (a senior leader who will not
+   admit they are not ready) does differently on Monday morning; its hook is
+   a specific, surprising, checked fact, never a category. At least one idea
+   a day comes from his own words or his Inspiration House when either has
+   anything that fits, and one is a wildcard the engine would not usually
+   offer. Then hand the whole ideas.json to a separate reader (the
+   `reviewer` subagent, no access to your reasoning) to try to kill each
+   idea against this bar and the 19 Oct triage lessons below; replace every
+   idea it kills before the board is built, and say in your reply how many
+   it killed and why. Leave out a candidate with
+   `near_drop` unless something new answers why he dropped its neighbour.
+   Then write `docs/plans/<Monday>-week/combine.json` from the gather's
+   combine groups: for each group that threads into one higher-level
+   argument, `{"members": [its ids], "series", "thesis", "joins": [3 to 5 beats]}`;
+   drop a group that does not, and say why in your reply.
    Write at least four a day to `docs/plans/<Monday>-week/ideas.json`, each
    with `so_what` first (what a business person finds out, in one plain
    sentence, the consequence before any mechanism; Krish, 2026-10-19: "In
@@ -125,7 +258,10 @@ The week runs Monday to Friday. On Sunday it is the coming week.
      idea is its brief.
 4. Write each day's options, best first, one recommended:
    `python3 scripts/engine.py POST /api/week/options @options.json` with
-   `{"week_start": "<Monday>", "series": "<slug>", "options": [{"id": "<uuid>", "rank": 1, "pitch": "two or three plain sentences", "why_now": "the dated event, with its date", "recommended": true}]}`.
+   `{"week_start": "<Monday>", "series": "<slug>", "options": [{"id": "<uuid>", "rank": 1, "pitch": "two or three plain sentences", "why_now": "the dated event, with its date", "recommended": true, "covers": ["<must_cover id>"]}]}`.
+   `covers` is the board idea's own `covers` list, unchanged: the engine keeps it on the piece (`meta.covers`, never
+   cleared), so once he picks it the Inspiration card the piece became is known for good
+   (`inspiration_card_pieces`; krishanraja/inspirationhouse `docs/TWO_WAY.md`, step 3).
    A piece already scheduled for its day (a pick carried over) needs no options.
    A new idea that is not yet a row is created first with
    `POST /api/content-ideas {"raw_text": "...", "source_type": "week_research"}`.
@@ -139,16 +275,23 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    `week-<Monday>` exists; if the cron has not run yet, it will.
 6. Do not pick, schedule, draft or spend. Picking is Krish's press on the week
    page; his Monday pick starts the make-piece session on its own.
-6b. **Propose the week's deep cut** (house rule DEEP_CUT, Krish, 2026-10-14:
-   "I like your logic for the pick on the shareability score approach").
-   Once Krish has picked the week's pieces, score each one's breakout
-   potential with the ten-point test in the growth playbook (novel, useful,
-   identity-rich, specific, timely, credible, works across formats, tense
-   enough to discuss, ownable, leads to subscribing), 0 to 2 each. A concept
-   piece breaks a tie. Write the pick to `config/deep-cuts.json` under the
-   week's Monday, with the scores and the reason, and say it in one line on
-   the board. Krish can swap it. That piece records an 8 to 12 minute deep
-   cut instead of its 5-minute cut; every piece keeps its 90-second cut.
+   **Sunday is his recording day** (Krish, 2026-10-24: "Yes, Sunday is my
+   recording day"). Once he has picked all three days, the same Sunday runs
+   `make-piece` for Monday, then Wednesday, then Friday: the story with him
+   one question at a time, then the scripts, checked and in Teleprompter by
+   midday (`config/board-layout.json` `rhythm`), and the creative direction
+   for every cut (`docs/CREATIVE_DIRECTION.md`) before he records. After he
+   records, the storyboard goes to him for sign-off; production (Codex or
+   Claude) renders only from the signed direction.
+6b. **No weekly deep cut: a 15-minute feature only when Krish calls one**
+   (house rule FEATURE, Krish, 2026-10-21: "all videos are generally 90 sec
+   and 5 min. From time to time I might do a special 15 min feature"; asked
+   whether that replaces the weekly deep cut: "Yes, replace it"). Every piece
+   is a 90-second and a 5-minute video. Never propose a feature. When he
+   calls one for a piece, in words, add it to `config/features.json` under
+   `pieces.<piece id>` with his words and the date; the board then shows the
+   feature as a third cut on that day. `config/deep-cuts.json` is retired
+   and gets no new week.
 7. **Make the week's publish board**, last, once the options are written.
    Krish, 2026-10-12: "just give me one ... Publish Manager for the ...
    whole week with 3 tabs on it for Mon / Weds / Fri, which we need to get
@@ -157,9 +300,16 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    That Publish Manager is what you create every Sunday and let me iterate
    inside until we're done, and then I check off the list what I have done
    as I do it."
+   - **Feed the fixed layout, never shape it** (from the week of 26
+     October: Ideas, Queue, then each day's Brief, Drafts, Record and
+     Publish; `docs/PUBLISH_BOARDS.md`, "The fixed layout"). Give
+     `--ideas`, `--queue` and `--combine` every Sunday; each pick's record-ready brief
+     goes on its day with `--brief DAY=brief.json` once it is drafted, due
+     the night before its day. Never patch the built page.
    - **Build it** with all three tabs, from the week's picks as they stand:
      `python3 scripts/post-pack/week_board.py --week <Monday> --live --ideas
-     docs/plans/<Monday>-week/ideas.json --queue .cache/week-board/<Monday>/queue.json --out
+     docs/plans/<Monday>-week/ideas.json --queue .cache/week-board/<Monday>/queue.json
+     --combine docs/plans/<Monday>-week/combine.json --out
      .cache/week-board/<Monday>/week-board.html`. Its title names the week,
      "This Week's Publish Board (wC 19 Oct)". A day whose piece already
      has a publish page (a pick carried over) is a made tab: `Artifact`

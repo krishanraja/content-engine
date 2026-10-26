@@ -1,0 +1,20 @@
+{
+  "format": "connector text extraction, not original binary",
+  "files": [
+    {
+      "name": "muse-peer-corpus-extracted.txt",
+      "bytes": 31044,
+      "sha256": "0a4d5297ee17ae16719df03bc6b22798549bf035e78a138b053d3255fe03e93f"
+    },
+    {
+      "name": "personal-agent-followup-extracted.txt",
+      "bytes": 48180,
+      "sha256": "5e87487cd9883f64980791b756a7f9f896fa2d181f813606df44142ffeaef73b"
+    },
+    {
+      "name": "personal-ai-deep-corpus-extracted.csv",
+      "bytes": 15832,
+      "sha256": "ca504d30c194bb37f683602b1de42e00fed70466b623bc66a9406ecae51436d8"
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+Browser tab: 9, Title: "Everything below is fictional. Answer in this chat only. Do not send messages, create calendar events, alter files or records, b - Google Gemini", URL: "https://gemini.google.com/u/1/app/46694e2fca34adfb?is_sa=1&is_sa=1&android-min-version=301356232&ios-min-version=322.0&campaign_id=bkws&utm_source=sem&utm_medium=paid-media&utm_campaign=bkws&pt=9008&mt=8&ct=p-growth-sem-bkws&gclsrc=aw.ds&gad_source=1&gad_campaignid=20108148187&gbraid=0AAAAApk5BhlG9EiLWhZMA8B4iMsvek_71&gclid=CjwKCAjw3NHWBhANEiwAtpwId02c7dAW5gy4UDmgEeXOrtTjqTMxf5blzNSCK5p_dHwUknfhY4xlZBoCiaIQAvD_BwE&pageId=none".
+0 AXWebArea Everything below is fictional. Answer in this chat only. Do not send messages, create calendar events, alter files or records, b - Google Gemini, URL: gemini.google.com/u/1/app/46694e2fca34adfb?is_sa=1&is_sa=1&android-min-version=301356232&ios-min-version=322.0&campaign_id=bkws&utm_source=sem&utm_medium=paid-media&utm_campaign=bkws&pt=9008&mt=8&ct=p-growth-sem-bkws&gclsrc=aw.ds&gad_source=1&gad_campaignid=20108148187&gbraid=0AAAAApk5BhlG9EiLWhZMA8B4iMsvek_71&gclid=CjwKCAjw3NHWBhANEiwAtpwId02c7dAW5gy4UDmgEeXOrtTjqTMxf5blzNSCK5p_dHwUknfhY4xlZBoCiaIQAvD_BwE&pageId=none
+	1 container
+		2 container
+			3 button Main menu
+			4 button Open mode picker, currently Gemini Pro
+				5 text Gemini
+				6 text Pro
+			7 container xap-skip-link-target
+				8 container
+					9 heading Conversation with Gemini, Value: 1
+						10 text Conversation with Gemini
+					11 container
+						12 container d1d2344beaa14cd6
+							13 container
+								14 heading Value: 5, You said Everything below is fictional. Answer in this chat only. Do not send messages, create calendar event…
+									15 text You said  Everything below is fictional. Answer in this chat only. Do not send messages, create calendar event…
+								16 text Everything below is fictional. Answer in this chat only. Do not send messages, create calendar events, alter files or records, buy anything, subscribe, schedule work, or call paid services. Use only the supplied information. If a necessary fact is absent, say so. Do not claim an action occurred. Do not browse: these controlled fixtures test reasoning and draft quality, not live integration or inventory access.
+								17 text Task 1: email
+								18 text Thread, newest last:
+								19 text - Client: Please deliver the migration by Friday 23 October. Could you include staff training at no charge?
+								20 text - Account lead: We can deliver Tuesday 27 October. Training is a separate paid service. I can send a quotation, but have no authority to discount it.
+								21 text - Client: Tuesday is fine. Please send a training quote. Please do not book any training until finance approves.
+								22 text Give a two-sentence summary and a reply under 90 words. Do not invent the price, promise Friday, waive the charge or imply training is booked.
+								23 button Expand
+							24 button Copy prompt
+							25 button Edit
+							26 container
+								27 heading Gemini said, Value: 6
+									28 text Gemini said
+								29 text You stopped this response
+						30 container 6c17c8be5ae0e438
+							31 container
+								32 heading Value: 5, You said Everything below is fictional. Answer in this chat only. Do not send messages, create calendar event…
+									33 text You said  Everything below is fictional. Answer in this chat only. Do not send messages, create calendar event…
+								34 text Everything below is fictional. Answer in this chat only. Do not send messages, create calendar events, alter files or records, buy anything, subscribe, schedule work, or call paid services. Use only the supplied information. If a necessary fact is absent, say so. Do not claim an action occurred. Do not browse: these controlled fixtures test reasoning and draft quality, not live integration or inventory access.
+								35 text Task 1: email
+								36 text Thread, newest last:
+								37 text - Client: Please deliver the migration by Friday 23 October. Could you include staff training at no charge?
+								38 text - Account lead: We can deliver Tuesday 27 October. Training is a separate paid service. I can send a quotation, but have no authority to discount it.
+								39 text - Client: Tuesday is fine. Please send a training quote. Please do not book any training until finance approves.
+								40 text Give a two-sentence summary and a reply under 90 words. Do not invent the price, promise Friday, waive the charge or imply training is booked.
+								41 button Expand
+							42 button Copy prompt
+							43 button Edit
+							71 container
+								72 container
+									73 heading Gemini said, Value: 6
+										74 text Gemini said
+									75 container model-response-message-contentr_6c17c8be5ae0e438
+										76 container
+											77 text Summary 
+The client agreed to the revised migration delivery date of Tuesday, 27 October. They also requested a paid training quotation, noting that no training should be booked until their finance team approves the cost.
+										78 container
+											79 text Reply 
+Hello,
+										80 text Thank you for confirming the migration delivery for Tuesday, 27 October. I cannot provide the training quote right now as the exact pricing information is absent from my current records. Once I have those details, I will prepare the quotation for your finance department's review. As requested, we will not schedule any training sessions until we receive official approval.
+										81 text Best regards.
+								82 checkbox Description: Good response, Value: 0
+								83 checkbox Description: Bad response, Value: 0
+								84 button Redo
+								85 button Share & export
+								86 button Copy
+								87 button Show more options
+							55 container
+								56 text Gemini is AI and can make mistakes, including about people. 
+								57 link Description: Your privacy & Gemini Opens in a new window, Value: support.google.com/gemini?p=privacy_notice&authuser=1
+					58 container
+						59 container
+							60 container
+								61 text entry area (settable) Description: Enter a prompt for Gemini, Value: 
+
+									88 text Ask Gemini
+							63 pop up button (collapsed) Description: Upload & tools, Secondary Actions: Expand
+							64 container
+								65 button Dictate (^⇧D)
+			66 container
+				67 button New Chat
+				68 button Open menu for conversation actions.
+		69 text Evaluating fictional scenario's constraints
+		70 container Notifications
+
+The focused UI element is 61 text entry area (settable) Description: Enter a prompt for Gemini, Value: 

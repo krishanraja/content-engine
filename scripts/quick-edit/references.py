@@ -6,10 +6,11 @@ really like the production quality of, as well as the narrative style,
 editing, camerawork, zooming, the way they break down a point, and the tone
 and style of communication, so that you can learn from them?"
 
-The folder is the Video Engine's Inspiration folder in Drive
-(H:\\My Drive\\Ventures\\Active\\makeyourmindup\\Video Engine\\Inspiration on
-the home computers). He drops a video there, and optionally writes what he
-likes about it in the "What I like" sheet beside it. Then:
+The folder is Production Inspo in Drive (Ventures > Inspiration > Production
+Inspo, H:\\My Drive\\Ventures\\Inspiration\\Production Inspo on the home
+computers; config/style-references.json holds its ID). He drops a video there,
+and optionally writes what he likes about it in the "What I like" sheet, now
+in Content Inspo. Then:
 
     python references.py publish             (a home computer, every pass of
                                               recordings-upload.ps1: sends each
@@ -38,6 +39,7 @@ import statistics
 import subprocess
 import sys
 import tempfile
+import unicodedata
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
@@ -61,18 +63,27 @@ def sha256_of(path):
 
 
 def inspiration_folder():
-    """The Inspiration folder on this machine, or None."""
+    """Production Inspo on this machine, or None.
+
+    Krish moved his reference clips on 2026-10-24 from Video Engine > Inspiration to Ventures > Inspiration >
+    Production Inspo ("Can you ensure absolutely everywhere recalibrates to this moving forward first?"). The folder
+    is named in config/style-references.json (its Drive ID and its synced path); MINDMAKE_INSPIRATION may override it,
+    but a stale setting that no longer exists never wins over the configured folder."""
+    candidates = []
     env = os.environ.get('MINDMAKE_INSPIRATION')
     if env:
-        return Path(env)
-    drive = os.environ.get('MINDMAKE_DRIVE_ROOT')
-    if not drive:
-        try:
-            cfg = json.loads((REPO / 'config' / 'studio.json').read_text())
-            drive = (cfg.get('runtime') or {}).get('drive_root')
-        except (OSError, ValueError):
-            drive = None
-    return Path(drive) / 'Inspiration' if drive else None
+        candidates.append(Path(env))
+    try:
+        cfg = json.loads((REPO / 'config' / 'style-references.json').read_text())
+        configured = (cfg.get('folder') or {}).get('windows')
+        if configured:
+            candidates.append(Path(configured))
+    except (OSError, ValueError):
+        pass
+    for candidate in candidates:
+        if candidate.is_dir():
+            return candidate
+    return candidates[0] if candidates else None
 
 
 def _post_pack():
@@ -82,21 +93,61 @@ def _post_pack():
             sys.path.insert(0, str(sub))
 
 
+def library_name(name):
+    """The name a reference has in the library. Downloaders name clips after
+    the post's ID (SaveClip.App_ ran to 120 characters on 2026-10-24), and the
+    library takes at most library.PART_MAX characters a name, so a longer one
+    is cut and given the first 8 hex of its own sha256: the same file gets the
+    same name on every pass and both home computers, and two long names that
+    start alike stay apart. A name that fits is kept as it is."""
+    _post_pack()
+    import library  # scripts/post-pack/library.py
+    # The library takes NFC only; a name from a Mac or a phone can arrive decomposed.
+    name = unicodedata.normalize('NFC', name)
+    if library.utf16_length(name) <= library.PART_MAX:
+        return name
+    stem, dot, extension = name.rpartition('.')
+    # An extension is a few letters or digits. Anything longer after the last dot is part of the name, so the stem is
+    # never asked to shrink below nothing (a 91-character tail after a dot used to loop forever).
+    if not dot or not stem or not (0 < len(extension) <= 10 and extension.isalnum()):
+        stem, extension = name, ''
+    tag = '-' + hashlib.sha256(name.encode('utf-8')).hexdigest()[:8] + (f'.{extension}' if extension else '')
+    room = library.PART_MAX - library.utf16_length(tag)
+    while library.utf16_length(stem) > room:
+        stem = stem[:-1]
+    return stem.rstrip(' .') + tag
+
+
 def cmd_publish(out=print):
     folder = inspiration_folder()
     if not folder or not folder.is_dir():
-        raise ReferenceError('the Inspiration folder is not reachable here (MINDMAKE_INSPIRATION, MINDMAKE_DRIVE_ROOT, or runtime.drive_root in config/studio.json)')
-    planned = [(f'{LIBRARY_REFERENCES}/{p.name}', p, 'a style reference Krish chose: studied, never published')
+        raise ReferenceError('Production Inspo is not reachable here (config/style-references.json folder.windows, or MINDMAKE_INSPIRATION)')
+    planned = [(f'{LIBRARY_REFERENCES}/{library_name(p.name)}', p, 'a style reference Krish chose: studied, never published')
                for p in sorted(folder.iterdir())
                if p.is_file() and p.suffix.lower() in VIDEO_EXTENSIONS and not p.name.startswith('.')]
     if not planned:
         return {'sent': 0}
-    _post_pack()
+    sendable, refused = split_refused(planned)
     import send  # scripts/post-pack/send.py
     try:
-        return send.send(planned, send.Engine('references-publish'), out=out)
+        done = send.send(sendable, send.Engine('references-publish'), out=out) if sendable else {'sent': 0}
     except send.SendError as error:
         raise ReferenceError(str(error))
+    if refused:
+        raise ReferenceError('the library refuses ' + '; '.join(f'{target} ({why})' for target, why in refused)
+                             + f'. The other {len(sendable)} went in or were there already.')
+    return done
+
+
+def split_refused(planned):
+    """(the planned files the library takes, [(target, reason)] for each it refuses). One name the library refused
+    stopped every clip sorted after it on every pass until 2026-10-26; now every other clip goes in and the pass still
+    fails, naming the refused one."""
+    _post_pack()
+    import library  # scripts/post-pack/library.py
+    reasons = [library.refusal(target) for target, _, _ in planned]
+    return ([entry for entry, why in zip(planned, reasons) if not why],
+            [(entry[0], why) for entry, why in zip(planned, reasons) if why])
 
 
 def cmd_fetch(out_dir=None, names=None, out=print):
@@ -116,7 +167,7 @@ def cmd_fetch(out_dir=None, names=None, out=print):
             out(f'have           {name}')
             got.append(target)
             continue
-        status, text = engine.call('GET', '/api/library/file?path=' + urllib.parse.quote(f'{LIBRARY_REFERENCES}/{name}'), None, token, timeout=60)
+        status, text = engine.call('GET', '/api/library/file?path=' + urllib.parse.quote(f'{LIBRARY_REFERENCES}/{library_name(name)}'), None, token, timeout=60)
         answer = json.loads(text) if text and text.strip().startswith('{') else {}
         if status == 404:
             out(f'not yet        {name} (a home computer sends it on its next pass of recordings-upload.ps1)')
@@ -389,6 +440,21 @@ def self_test():
     t('a module needs a known layer', any('layer' in e for e in ledger_problems({**bank, 'bank': bank['bank'] + [{'id': 'c', 'layer': 'vibes', 'how': 'h', 'from': 'f', 'krish_verdict': 'untested'}]})))
     t('the base cannot be dropped', any('base' in e for e in ledger_problems({**bank, 'base': {}})))
     t('the committed ledger is valid', ledger_problems(json.loads(LEDGER.read_text())) == [])
+    _post_pack()
+    import library  # scripts/post-pack/library.py
+    t('a name that fits is kept', library_name('igexport-DCHp2RLIxMt.mp4') == 'igexport-DCHp2RLIxMt.mp4')
+    clip = 'SaveClip.App_AQP6P-DCy7NO_pjNElKDguG_v7k6eDrPLbpSrLvvT_GvZqgKE7uRcpc5VXFzMOQWFweCOjXoGXxg1nPYaOc3FiiPLJDNalps77vPHVo.mp4'
+    short = library_name(clip)
+    t('a 120-character name fits the library', library.utf16_length(short) <= library.PART_MAX and short.endswith('.mp4'))
+    t('the library takes the shortened path', library.refusal(f'{LIBRARY_REFERENCES}/{short}') is None)
+    t('the same name shortens the same way every pass', library_name(clip) == short)
+    t('two long names that start alike stay apart', library_name(clip[:-5] + 'x.mp4') != short)
+    good = (f'{LIBRARY_REFERENCES}/{short}', Path(clip), 'why')
+    bad = (f'{LIBRARY_REFERENCES}/clip?.mp4', Path('clip?.mp4'), 'why')
+    long_tail = 'clip.' + 'x' * 96
+    t('a long tail after the last dot is part of the name, and still fits', library.utf16_length(library_name(long_tail)) <= library.PART_MAX)
+    t('a decomposed name goes in composed', library_name('cafe\u0301.mp4') == 'caf\u00e9.mp4')
+    t('one refused name never stops the rest', split_refused([bad, good]) == ([good], [(bad[0], library.refusal(bad[0]))]))
     if shutil.which('ffmpeg'):
         with tempfile.TemporaryDirectory() as tmp:
             clip = Path(tmp) / 'two-shots.mp4'

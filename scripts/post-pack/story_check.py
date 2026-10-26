@@ -12,8 +12,10 @@ A model cannot be trusted to grade its own story, so this file checks the
 parts a rule can see, and refuses to pack a script that fails one:
 
   - it opens on a question (in the first 90 spoken words);
-  - a script of a minute or more ends with a spoken outro after the call,
-    so it never stops dead on the number;
+  - a script of a minute or more closes the way Krish ruled on 2026-10-21
+    (house rule SCRIPT_CLOSE): a beat that says "Here's what I'd do with
+    this info if I were you" and the actions, then, as its last sentence
+    and nothing after it, "The full deep dive is at makeyourmindup.ai.";
   - it never speaks the article's headings or stamps aloud
     ("The billion: REAL, with small print", "One: the billion.");
   - nothing in it is still marked NOT YET FACT-CHECKED;
@@ -22,16 +24,16 @@ parts a rule can see, and refuses to pack a script that fails one:
     TWO_CUTS), then, 2026-10-19: "let's make the 3-minute scripts into
     5-minute scripts and videos". At an unhurried 150 spoken words a minute,
     the long cut is 675 to 825 words (about 4:30 to 5:30) and the short cut 160 to 225
-    words (about 1:05 to 1:30). The series line counts toward it;
-  - when its series is known (--series, the piece's lane_slot), it opens
-    with that series' line, word for word, as its first two sentences, and
-    never says "I'm Krish" again after it. Krish, 2026-10-12: "We need
-    something catchy at the start of a video script like "Here's what you
-    need to know about how money is changing because of AI. I'm Krish." at
-    the start of follow.the.money videos. And then similar for the weds and
-    fri scripts", and of the close, "Drop it at the end" (house rule
-    SERIES_OPENER). The three lines are SERIES_OPENERS in
-    apps/control-plane/api/_houseRules.ts, read from there;
+    words (about 1:05 to 1:30);
+  - it no longer opens with a series line. Krish, 2026-10-21: "we need to
+    cut that opening line from every content piece moving forward and just
+    launch straight in to "I put GrokBot and Muse head to head" etc."
+    (house rule SERIES_OPENER, retired as a requirement). Nothing here asks
+    for the line or for "I'm Krish" any more, and --series is still taken
+    (the piece's lane_slot) so older callers work. A script recorded on the
+    old lines keeps them: SERIES_OPENERS stays in
+    apps/control-plane/api/_houseRules.ts and the hook's room still starts
+    after a series line that is there;
   - a 12-year-old can follow it, heard once (house rule R7, the hard gate on
     every script). Krish, 2026-10-12: "Every single script should be
     understandable by a 12-year-old. I can't even understand what I'm
@@ -67,7 +69,7 @@ from pathlib import Path
 
 UNCHECKED = 'NOT YET FACT-CHECKED'
 OPENING_WORDS = 90
-SHORT_WORDS = 160  # under about a minute: no room for an outro
+SHORT_WORDS = 160  # under about a minute: no room for the close
 WORDS_PER_MINUTE = 150
 CUTS = {
     # cut: (fewest words, most words, what Krish asked for)
@@ -84,8 +86,22 @@ CUTS = {
     # score, records 8 to 12 minutes in place of its 5-minute cut, for YouTube long-form and Spotify. Krish,
     # 2026-10-14: "perhaps the third video length also becomes the Spotify audio track".
     'deep': (1200, 1700, 'the week\'s deep video of about 8 to 12 minutes'),
+    # A special feature (house rule FEATURE; config/features.json), only when Krish calls one: about 15 minutes, a
+    # third cut beside the 5-minute and the 90-second. Krish, 2026-10-21: "all videos are generally 90 sec and 5 min.
+    # From time to time I might do a special 15 min feature"; it replaced the weekly deep cut. The long cut's pace
+    # (675 to 825 words for 5 minutes), times three.
+    'feature': (2025, 2475, 'a special feature of about 15 minutes'),
 }
+# The close, as scripts/quick-edit/kit.py finds the paragraph a picture may not cover: it names makeyourmindup
+# and, in a script recorded on the old lines, the full article (house rule HOOK_AND_CTA).
 OUTRO = re.compile(r'makeyourmindup', re.I)
+ARTICLE = re.compile(r'\b(article|full piece|full story|full teardown|full deep dive|read it|the rest)\b', re.I)
+# House rule SCRIPT_CLOSE (Krish, 2026-10-21): "trim the closing to "the full deep
+# dive is at makeyourmindup.ai." right after a "Here's what I'd do with this info if
+# I were you" closing line. That needs to be the format moving forward for all scripts."
+CLOSE_LEAD = re.compile(r"\bhere's what i'd do with this info if i were you\b[:.,]?", re.I)
+CLOSE_LAST = "the full deep dive is at makeyourmindup.ai."
+CLOSE_BEATS = 3  # the lead-in sits in the last three beats of the script
 META_START = re.compile(r'^\s*(changes from|before you record|the story in one line|#{1,3}\s)', re.I)
 SAY_LINE = re.compile(r'^\s*(?:\*\*say:\*\*|say:)\s*(.*)$', re.I)
 STAGE = re.compile(r'\\?\[[^\]]*\\?\]')
@@ -104,15 +120,11 @@ NOT_SPOKEN = [
     (re.compile(r'^\s*(?:[-*\u2022]|\d+\.)\s', re.M), 'a list'),
     (re.compile(r'^\s*beat\s+\d+', re.I | re.M), 'a beat number'),
 ]
-# House rule HOOK_AND_CTA: the outro says there is a full article and where.
-ARTICLE = re.compile(r'\b(article|full piece|full story|full teardown|read it|the rest)\b', re.I)
 
 # Krish's house rules, where the series lines and the reading gate live once
 # for every tool (SERIES_OPENERS and SCRIPT_READING, each a JSON object
 # between its two marker lines).
 HOUSE_RULES = Path(__file__).resolve().parents[2] / 'apps' / 'control-plane' / 'api' / '_houseRules.ts'
-# His name, said again after the series line (house rule SERIES_OPENER).
-KRISH_NAME = re.compile(r"\b(?:I['\u2019]m|I am)\s+Krish\b", re.I)
 
 
 def house_block(name, path=HOUSE_RULES):
@@ -161,24 +173,33 @@ def opener_of(text):
 
 
 def series_problems(beats, series):
-    """Why the script breaks house rule SERIES_OPENER, or []. series is the
-    piece's lane_slot, or None: then only a script that opens with a series
-    line is held to saying "I'm Krish" once."""
-    said = _plain(' '.join(beats))
+    """Always [] since 2026-10-21: the series line is retired from scripts
+    (house rule SERIES_OPENER). Krish, 2026-10-21: "we need to cut that
+    opening line from every content piece moving forward and just launch
+    straight in". No series line is required, "I'm Krish" is not counted, and
+    a series this file has never heard of is not a refusal. The function and
+    the --series argument stay so older callers (making.py) keep working."""
+    return []
+
+
+def close_problems(beats):
+    """Why the script's close breaks house rule SCRIPT_CLOSE, or [].
+
+    Krish, 2026-10-21: "trim the closing to "the full deep dive is at
+    makeyourmindup.ai." right after a "Here's what I'd do with this info if
+    I were you" closing line. That needs to be the format moving forward for
+    all scripts." So a script of SHORT_WORDS or more has the lead-in sentence
+    in its last three beats, and its last sentence is exactly the line:
+    nothing after it, no sign-off, no question for the comments."""
     found = []
-    opened = opener_of(said)
-    if series:
-        line = series_openers().get(series)
-        if line is None:
-            return [f'"{series}" is not a series with a line ({", ".join(series_openers())}); nothing was checked for it']
-        if opened != line:
-            first = ' '.join(re.split(r'(?<=[.!?])\s+', said)[:2])
-            found.append(f'it does not open with its series line, word for word, said first and before the hook: "{line}" (house rule '
-                         f'SERIES_OPENER, Krish, 2026-10-12). It opens: "{first[:120]}"')
-    rest = said[len(_plain(opened)):] if opened else (said if series else '')
-    if KRISH_NAME.search(rest):
-        found.append('it says "I\'m Krish" again after the series line: his name is said once, in that line, and the close ends '
-                     'without it (house rule SERIES_OPENER; Krish, 2026-10-12: "Drop it at the end")')
+    tail = _plain(' '.join(beats[-CLOSE_BEATS:]))
+    if not CLOSE_LEAD.search(tail):
+        found.append('it does not close the way Krish ruled: in its last beats, after the call, say "Here\'s what I\'d do with this '
+                     'info if I were you" and then the actions (house rule SCRIPT_CLOSE, Krish, 2026-10-21)')
+    last = (sentences(beats) or [''])[-1]
+    if _plain(last).rstrip('"\' ').lower() != CLOSE_LAST:
+        found.append('its last sentence must be exactly "The full deep dive is at makeyourmindup.ai." with nothing after it: no sign-off, '
+                     f'no "I\'m Krish", no question for the comments (house rule SCRIPT_CLOSE, Krish, 2026-10-21). It ends: "{_plain(last)[-90:]}"')
     return found
 
 
@@ -357,6 +378,10 @@ def spoken_paragraphs(text):
 def cut_of(name):
     """The cut a file name says it is, or None."""
     n = str(name or '').lower()
+    # A word of its own, so a slug ("the-feature-store") or a date ("2026-11-15-minimum") is never taken for one.
+    if re.search(r'(?:^|[^a-z0-9])(?:feature|fifteen)(?:[^a-z0-9]|$)|(?:^|[^0-9])15[ _-]?min(?:ute)?s?(?:[^a-z0-9]|$)', n) \
+            and not re.search(r'(?:^|[^a-z0-9])(?:90|short|vertical|tall)(?:[^a-z0-9]|$)', n):
+        return 'feature'
     if re.search(r'deep', n):
         return 'deep'
     if re.search(r'audio|spotify|podcast', n):
@@ -366,6 +391,11 @@ def cut_of(name):
     if re.search(r'long|[35].?min|wide|three|five', n):
         return 'long'
     return None
+
+
+# The rule each longer cut answers to. DEEP_CUT was retired on 2026-10-21 for FEATURE; a deep cut already recorded is
+# still checked at its own length, under its old name.
+RULE_OF = {'deep': 'DEEP_CUT, retired 2026-10-21', 'feature': 'FEATURE'}
 
 
 def length_problem(words, cut):
@@ -378,16 +408,16 @@ def length_problem(words, cut):
     when = f'{secs // 60}:{secs % 60:02d}'
     if n > high:
         return (f'the {cut} cut runs {n} spoken words, about {when} at an unhurried pace, and Krish asked for {asked}: '
-                f'cut it to {low} to {high} words (house rule {"DEEP_CUT" if cut == "deep" else "TWO_CUTS"})')
+                f'cut it to {low} to {high} words (house rule {RULE_OF.get(cut, "TWO_CUTS")})')
     if n < low:
         return (f'the {cut} cut is {n} spoken words, about {when}, short of {asked}: '
-                f'it should run {low} to {high} words (house rule {"DEEP_CUT" if cut == "deep" else "TWO_CUTS"})')
+                f'it should run {low} to {high} words (house rule {RULE_OF.get(cut, "TWO_CUTS")})')
     return None
 
 
 # How long each cut may run as he says it (seconds): the 90-second cut under 89 s (TWO_CUTS, the platforms' line),
 # the 5-minute cut by about 5:30, the deep cut 8 to 12 minutes (DEEP_CUT).
-SPOKEN_CAP_S = {'short': 89, 'long': 330, 'deep': 720}
+SPOKEN_CAP_S = {'short': 89, 'long': 330, 'deep': 720, 'feature': 990}
 
 
 def spoken_length_warning(words, cut, ledger=None):
@@ -484,11 +514,30 @@ def score_problems(paragraphs):
     return found
 
 
+# A script with two takes of one cut (Krish, 2026-10-23: "Just put the first-person and the voiceover version in
+# the one script box in the publish board for each video length. Once it goes to "Have a Prompt" I'll only read the
+# part of the script that I need"). Each take starts on its own line "=== TAKE <n>: <what it is> ===" and is checked
+# as a whole script of the cut on its own; words before the first marker are a note to him, never checked.
+TAKE_MARKER = re.compile(r'^=== TAKE (\d+): (.+?) ===[ \t]*$', re.M)
+
+
+def takes(text):
+    """[(label, words)] for each take of a two-take script, in order, or [] for an ordinary script."""
+    marks = list(TAKE_MARKER.finditer(text.replace('\r\n', '\n')))
+    body = text.replace('\r\n', '\n')
+    return [(f'take {m.group(1)} ({m.group(2).strip()})', body[m.end():marks[i + 1].start() if i + 1 < len(marks) else len(body)])
+            for i, m in enumerate(marks)]
+
+
 def problems(text, cut=None, series=None):
     """Plain-words reasons this script is not ready, or [] when it passes.
     `cut` ('long' or 'short') adds the length rule; `series` (the piece's
-    lane_slot) adds its series line. The reading gate (house rule R7) holds
-    for every script."""
+    lane_slot) is accepted and ignored: the series line is retired (house rule
+    SERIES_OPENER, 2026-10-21). The close (SCRIPT_CLOSE) holds for a script of
+    SHORT_WORDS or more, and the reading gate (house rule R7) for every script."""
+    parts = takes(text)
+    if parts:
+        return [f'{label}: {why}' for label, words in parts for why in problems(words, cut, series)]
     found = []
     if UNCHECKED in text:
         found.append(f'some lines are marked {UNCHECKED}: add those facts to the article and run the fact check, or cut them')
@@ -499,7 +548,7 @@ def problems(text, cut=None, series=None):
     found += series_problems(beats, series)
     found += rejected_problems(' '.join(beats))
     found += score_problems(beats)
-    # The hook's room starts after the series line, so the line never uses it up.
+    # A script recorded on the old lines still has its series line: the hook's room starts after it.
     opened = opener_of(' '.join(beats))
     hook = words[len(opened.split()):] if opened else words
     if '?' not in ' '.join(hook[:OPENING_WORDS]):
@@ -508,12 +557,8 @@ def problems(text, cut=None, series=None):
     if extra:
         found.append(f'it carries more than the words Krish says ({", ".join(extra)}): a script is only the spoken '
                      'words as plain paragraphs; shots go in the shot list and joke options beside it (house rule SCRIPT_ONLY)')
-    if len(words) >= SHORT_WORDS and not OUTRO.search(beats[-1]):
-        found.append('it stops without a spoken outro: after the call, say what this was, where the full piece is '
-                     '(makeyourmindup.ai) and sign off, so it never ends on the number')
-    elif len(words) >= SHORT_WORDS and not ARTICLE.search(beats[-1]):
-        found.append('the outro never sends anyone to the article: say there is a full article, what it adds, that it is '
-                     'free and where (makeyourmindup.ai) (house rule HOOK_AND_CTA)')
+    if len(words) >= SHORT_WORDS:
+        found += close_problems(beats)
     too = length_problem(words, cut)
     if too:
         found.append(too)
@@ -544,6 +589,10 @@ AI_LINE = re.compile(
 
 
 PERSONAL_INTRO = re.compile(r"\bI've been\b|\bI have been\b|\bbreak (?:it|this) down\b", re.I)
+# Since 2026-10-21 the opening beat is the first thing said, with no series line before it: what he did
+# with the thing ("I put GrokBot and Muse head to head"). The editor (scripts/quick-edit/kit.py) keeps
+# reading PERSONAL_INTRO alone, so this wider net is for the warning only.
+OPENING_DID = re.compile(r"\bI (?:put|tried|tested|compared|spent|used|asked|ran|read|looked|took|played)\b", re.I)
 
 
 def warnings(text):
@@ -556,6 +605,9 @@ def warnings(text):
     landed is for him. And it can see a line saying the script was made with
     AI (house rule NO_AI_DISCLOSURE_LINE), which he ruled out of every script on
     2026-10-12: cut it."""
+    parts = takes(text)
+    if parts:
+        return [f'{label}: {why}' for label, words in parts for why in warnings(words)]
     beats = spoken_paragraphs(text)
     words = ' '.join(beats).split()
     found = []
@@ -568,12 +620,13 @@ def warnings(text):
             found.append(f'it says it was made with AI ("{hit.group(0)[:80]}"): cut the line; Krish, 2026-10-12: "Eliminate the '
                          '"I made this with AI" entirely" (house rule NO_AI_DISCLOSURE_LINE; a warning, not a refusal)')
             break
-    # PERSONAL_INTRO (Krish, 2026-10-13): after the series line, open on what he's
-    # been doing with the thing and why it matters, then the break-down promise.
-    if len(beats) > 1 and not PERSONAL_INTRO.search(beats[1]):
-        found.append('the beat after the series line does not open the way Krish would: say what you have been doing with '
-                     'the thing, why it matters, and that you wanted to break it down (house rule PERSONAL_INTRO; his line is in '
-                     'config/golden-examples.json; a warning, not a refusal)')
+    # PERSONAL_INTRO (Krish, 2026-10-13): the script opens on what he's been doing with
+    # the thing and why it matters. Since 2026-10-21 there is no series line before it,
+    # so the opening beat is the first one; a script recorded on the old lines has it second.
+    if len(words) >= SHORT_WORDS and not (PERSONAL_INTRO.search(' '.join(beats[:2])) or OPENING_DID.search(beats[0])):
+        found.append('the opening beat does not open the way Krish would: straight on what you did with the thing '
+                     '("I put GrokBot and Muse head to head"), why it matters, and that you wanted to break it down '
+                     '(house rule PERSONAL_INTRO; his line is in config/golden-examples.json; a warning, not a refusal)')
     # How he says it, measured from his takes (SCRIPT_AS_HE_TALKS).
     found += spoken_habit_warnings(beats)
     # The share of long words: a rough figure (names left out), told, never refused.
@@ -592,6 +645,12 @@ LONG_WORD_SHARE = 0.06  # long words above this share are told, never refused
 # these, in every take, about twice the scripts' share.
 JOINERS = ('so', 'and', 'but', 'now', 'see')
 JOINER_SHARE = 0.25
+# Krish, 2026-10-23, of Wednesday's teleprompter script: "the choppy rhythm, sounds robotic".
+# His takes average 10 to 15 words a sentence with no run of short ones; the scripts he
+# found robotic averaged about 8, with two or three runs of three sentences of five words
+# or fewer. A lone short line stays for a punchline.
+CHOPPY_AVERAGE = 9.5
+CHOPPY_WORDS = 5
 BARE_PREDICTION = re.compile(r"^\s*(?:my prediction\s*[:.]|here'?s my bet\s*[:.]|my bet\s*[:.])\s*$", re.I)
 DAY_DEADLINE = re.compile(r"\b\d{1,2}(?:st|nd|rd|th)?\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)"
                           r"\s+20\d\d\b")
@@ -610,6 +669,19 @@ def spoken_habit_warnings(beats):
             found.append(f'only {share:.0%} of its sentences open with So, And, But, Now or See; he opens about one in three that way '
                          'in every take (So before a result or the prediction, "Now," before a new step or a question): say the link in '
                          'the opening word (house rule SCRIPT_AS_HE_TALKS; a warning, not a refusal)')
+    if len(sents) >= 12:
+        lengths = [len(words_of(x)) for x in sents]
+        average = sum(lengths) / len(lengths)
+        runs, run = 0, 0
+        for n in lengths:
+            run = run + 1 if n <= CHOPPY_WORDS else 0
+            runs += run == 3
+        if average < CHOPPY_AVERAGE or runs:
+            found.append(f'it reads choppy, which sounds robotic aloud: its sentences average {average:.1f} words'
+                         + (f', with {runs} run{"s" if runs > 1 else ""} of three or more sentences of {CHOPPY_WORDS} words or fewer' if runs else '')
+                         + '; he talks in sentences of 10 to 15 words joined with so, and or but (Krish, 2026-10-23: "the choppy rhythm, '
+                         'sounds robotic"): join the short ones into one flowing sentence and keep a lone short line for a punchline '
+                         '(house rule SCRIPT_AS_HE_TALKS; a warning, not a refusal)')
     for x in sents:
         if BARE_PREDICTION.match(x):
             found.append(f'"{x.strip()}" stands alone; he never says a prediction label on its own: run it into the claim, "So my '
@@ -687,7 +759,7 @@ Changes from version 1, and why
 - No spoken sign-off.
 '''
 
-GOOD = '''I've been looking at what's really inside the AI everyone's selling us. I'm Krish.
+GOOD = '''Higgsfield says it crossed a billion dollars a year.
 
 So how do you lose your biggest supplier and keep growing? Let's take it apart.
 
@@ -695,7 +767,9 @@ One claim doesn't stand up. On a podcast, the founder was asked if Higgsfield pa
 
 So here's our call. We're eighty-five per cent sure, and we'll mark it right or wrong on the day.
 
-That's under.the.hood for this week. The full teardown is free at makeyourmindup.ai. Make your mind up.
+Here's what I'd do with this info if I were you. Ask any AI firm how it counts its sales. Then check who pays for its ads.
+
+The full deep dive is at makeyourmindup.ai.
 '''
 
 ONE_OFF = '''# 01 A one-off
@@ -737,7 +811,7 @@ def self_test():
     check('version 1 has no opening question', any('open on a question' in p for p in v1), True)
     check('version 1 speaks a heading', any('heading or stamp' in p for p in v1), True)
     v2 = problems(HIGGSFIELD_V2_END)
-    check('version 2 ends on the number', any('spoken outro' in p for p in v2), True)
+    check('version 2 ends on the number', any('SCRIPT_CLOSE' in p for p in v2), True)
     check('version 2 opens on a question', any('open on a question' in p for p in v2), False)
     check('a quoted "We don\'t do paid" is no heading', any('heading or stamp' in p for p in v2), False)
     check('version 3 shape passes', problems(GOOD), [])
@@ -745,8 +819,20 @@ def self_test():
     one_off = problems(ONE_OFF)
     check('a script with Say: lines, timings and notes is more than words', any('SCRIPT_ONLY' in p for p in one_off), True)
     check('stage directions are more than words', any('SCRIPT_ONLY' in p for p in problems(HIGGSFIELD_V1)), True)
-    check('an outro with no article is refused',
-          any('HOOK_AND_CTA' in p for p in problems(GOOD.replace('The full teardown is free at', 'Find us at'))), True)
+    # House rule SCRIPT_CLOSE (Krish, 2026-10-21): the lead-in, then exactly one last sentence.
+    check('the old close (series sign-off and a question) is refused on its last sentence',
+          len([p for p in problems(GOOD.replace('The full deep dive is at makeyourmindup.ai.', "That's under.the.hood for this week. The full teardown is free at makeyourmindup.ai. What do you think? Make your mind up.")) if 'SCRIPT_CLOSE' in p]), 1)
+    check('a close that skips "Here\'s what I\'d do with this info if I were you" is refused',
+          [p for p in problems(GOOD.replace("Here's what I'd do with this info if I were you. ", '')) if 'SCRIPT_CLOSE' in p][0].startswith('it does not close the way Krish ruled'), True)
+    check('a last sentence that is not the line is refused, with the sign-off named',
+          any('last sentence must be exactly' in p for p in problems(GOOD.replace('The full deep dive is at makeyourmindup.ai.', 'Find us at makeyourmindup.ai.'))), True)
+    check('anything after the line is refused', any('last sentence must be exactly' in p for p in problems(GOOD + "\nMake your mind up.\n")), True)
+    check('the lead-in may end in a colon or a comma, in any case, with curly apostrophes',
+          (problems(GOOD.replace("Here's what I'd do with this info if I were you.", "HERE\u2019S WHAT I\u2019D DO WITH THIS INFO IF I WERE YOU:")),
+           problems(GOOD.replace("if I were you.", "if I were you,")),
+           problems(GOOD.replace('The full deep dive is at makeyourmindup.ai.', 'the full deep dive is at makeyourmindup.ai.'))), ([], [], []))
+    check('the lead-in belongs in the last beats, not the opening',
+          any('does not close' in p for p in problems(GOOD.replace("Here's what I'd do with this info if I were you. ", '').replace('Higgsfield says it crossed a billion dollars a year.', "Here's what I'd do with this info if I were you."))), True)
     check('notes after the script are never spoken', any('heading or stamp' in p for p in problems(ONE_OFF)), False)
     short = 'Why does it matter? Because the price doubled. That is the whole story.\n'
     check('a short hook needs no outro', problems(short), [])
@@ -756,8 +842,10 @@ def self_test():
         # The voice check alone: the intro and the spoken-habit warnings have their own tests.
         return [w for w in warnings(t) if 'PERSONAL_INTRO' not in w and 'SCRIPT_AS_HE_TALKS' not in w]
     check('a long script with no opinion gets a warning, never a refusal', len(warns(GOOD)), 1)
-    check('a script whose second beat skips the personal intro gets a PERSONAL_INTRO warning',
+    check('a script whose opening beat skips the personal intro gets a PERSONAL_INTRO warning',
           any('PERSONAL_INTRO' in w for w in warnings(GOOD)), True)
+    check('"I put GrokBot and Muse head to head" is the opening he asked for (2026-10-21): no warning',
+          any('PERSONAL_INTRO' in w for w in warnings(GOOD.replace('Higgsfield says it crossed a billion dollars a year.', 'I put GrokBot and Muse head to head.'))), False)
     check("his intro, \"I've been having a little play around with...\", clears it",
           any('PERSONAL_INTRO' in w for w in warnings(open(Path(__file__).resolve().parents[2] / 'docs/plans/2026-10-14-draft-script.md', encoding='utf-8').read())), False)
     talky = ' '.join(['So it costs more. And nobody checks. Now, is that fair? The app starts low.'] * 4)
@@ -768,6 +856,11 @@ def self_test():
     check('a bare "My prediction:" and a day-number deadline are warned',
           (any('stands alone' in w for w in spoken_habit_warnings(['My prediction:', 'By 31 December 2027, it ships.'])),
            any('day number' in w for w in spoken_habit_warnings(['By 31 December 2027, it ships.']))), (True, True))
+    flowing = ' '.join(['So the price went up last year, and most firms never noticed it on the bill.'] * 12)
+    robotic = ' '.join(['The price went up. Nobody noticed. It was on the bill. Then it doubled.'] * 4)
+    check('a choppy script is warned that it sounds robotic (Krish, 2026-10-23); one that flows the way he talks is not',
+          (any('sounds robotic' in w for w in spoken_habit_warnings([robotic])),
+           any('sounds robotic' in w for w in spoken_habit_warnings([flowing]))), (True, False))
     check('"nobody" is warned towards his "no one"', any('"no one"' in w for w in spoken_habit_warnings([talky])), True)
     check('a long script that says "my bet" passes the voice check',
           warns(GOOD.replace("So here's our call.", "So here's my bet.")), [])
@@ -801,33 +894,30 @@ def self_test():
     check('a file named audio is the Spotify audio edition', cut_of('2026-10-12-warner-suno-audio.md'), 'audio')
     check('a file named deep is the week\'s deep cut', cut_of('2026-10-09-draft-script-deep.md'), 'deep')
     check('a 1,500-word deep cut passes the length rule', length_problem(filler(1500).split(), 'deep'), None)
+    check('a file named feature or 15-minute is the special feature', (cut_of('2026-11-02-script-feature.md'), cut_of('15-min.md')), ('feature', 'feature'))
+    check('a date on the 15th, a word holding "feature" or a 90-second file named after a feature is never the feature',
+          (cut_of('2026-11-15-minimum-wage-short.md'), cut_of('2026-10-15-mind-the-gap-90.md'), cut_of('the-features-long.md'),
+           cut_of('the-feature-store-short.md')), ('short', 'short', 'long', 'short'))
+    check('a 2,200-word feature passes its length, and a 900-word one is refused naming FEATURE',
+          (length_problem(filler(2200).split(), 'feature'), 'FEATURE' in (length_problem(filler(900).split(), 'feature') or '')), (None, True))
     check('a 450-word deep cut is refused, naming DEEP_CUT', 'DEEP_CUT' in (length_problem(filler(450).split(), 'deep') or ''), True)
     check('a 1,400-word audio edition passes the length rule', length_problem(filler(1400).split(), 'audio'), None)
     check('a plain name says nothing', cut_of('script.md'), None)
     check('problems() carries the length rule when the cut is known', any('TWO_CUTS' in p for p in problems(GOOD, 'long')), len(' '.join(spoken_paragraphs(GOOD)).split()) not in range(675, 826))
 
-    # The series line (house rule SERIES_OPENER), read from the house rules.
+    # The series line is retired (house rule SERIES_OPENER; Krish, 2026-10-21): nothing asks for it,
+    # nothing counts "I'm Krish", and an unknown series is not a refusal. The lines stay readable.
     lines = series_openers()
-    check('the three series lines, as Krish picked them, from the house rules', lines, {
+    check('the three retired series lines are still readable from the house rules', lines, {
         'follow_the_money': "I've been following how money is changing because of AI. I'm Krish.",
         'under_the_hood': "I've been looking at what's really inside the AI everyone's selling us. I'm Krish.",
         'mind_the_gap': "I've been keeping a beady eye on what's coming with AI, before everyone notices. I'm Krish."})
-    check('a script that opens with its series line passes', problems(GOOD, None, 'under_the_hood'), [])
-    check('another series\' line is refused, naming the right one',
-          any('SERIES_OPENER' in p and "inside the AI everyone's selling us" in p for p in problems(GOOD, None, 'under_the_hood')
-              + problems(GOOD.replace(lines['under_the_hood'], lines['mind_the_gap']), None, 'under_the_hood')), True)
-    no_line = GOOD.split('\n\n', 1)[1]
-    check('a script with no series line is refused once its series is known, and passes when it is not',
-          (any('does not open with its series line' in p for p in problems(no_line, None, 'under_the_hood')), problems(no_line)), (True, []))
-    check('the line must come first: the hook before it is refused',
-          any('does not open with its series line' in p for p in problems(no_line.replace('Let\'s take it apart.', 'Let\'s take it apart. '
-                                                                                           + lines['under_the_hood'], 1), None, 'under_the_hood')), True)
-    check('curly apostrophes are the same words', problems(GOOD.replace("'", '\u2019'), None, 'under_the_hood'), [])
-    again = GOOD.replace('Make your mind up.', "I'm Krish. Make your mind up.")
-    check('"I\'m Krish" again after the line is refused, with the series known or not',
-          (any('again after the series line' in p for p in problems(again, None, 'under_the_hood')), any('again after the series line' in p for p in problems(again))),
-          (True, True))
-    check('a series with no line is said, never guessed', series_problems(['x'], 'money_of_ai')[0].startswith('"money_of_ai" is not a series'), True)
+    check('a script with no series line passes, whatever series it is given',
+          [problems(GOOD, None, s_) for s_ in (None, 'under_the_hood', 'money_of_ai', 'nothing_at_all')], [[], [], [], []])
+    check('a script recorded on the old line still passes, and its hook room starts after the line',
+          problems(lines['under_the_hood'] + '\n\n' + GOOD, None, 'under_the_hood'), [])
+    again = GOOD.replace('Then check who pays for its ads.', "I'm Krish. Then check who pays for its ads.")
+    check('"I\'m Krish" is no longer counted', [series_problems([again], 'under_the_hood'), problems(again)], [[], []])
     late = lines['follow_the_money'] + ' ' + ' '.join(['Word'] * 80) + ' and so who gets paid?'
     check('the hook\'s room starts after the series line: a question 81 words in passes', any('open on a question' in p for p in problems(late)), False)
 
@@ -880,6 +970,14 @@ def self_test():
     check('a percentage that compares is fine', score_problems(['It scored 40% higher in its top gear.']), [])
     check('a score refuses through problems(), for every script', any('PLAIN_SCORES' in p for p in problems(fine + ' ' + old_90s)), True)
 
+    # Two takes of one cut in one script box (Krish, 2026-10-23): each take is checked as a whole script.
+    two = 'A note to Krish.\n\n=== TAKE 1: ON CAMERA ===\n\n' + GOOD + '\n\n=== TAKE 2: VOICEOVER ===\n\n' + GOOD
+    check('an ordinary script has no takes', takes(GOOD), [])
+    check('two takes are found, in order', [label for label, _ in takes(two)], ['take 1 (ON CAMERA)', 'take 2 (VOICEOVER)'])
+    check('two good takes pass', problems(two), [])
+    broke = problems(two.replace('=== TAKE 2: VOICEOVER ===\n\n' + GOOD, '=== TAKE 2: VOICEOVER ===\n\n' + HIGGSFIELD_V1))
+    check('a take that fails is named', bool(broke) and all(p.startswith('take 2 (VOICEOVER): ') for p in broke), True)
+
     # The chapter list beside a deep cut follows the words as they are now.
     listed = '- One | starts: "Why does it"\n- Two | starts: "That is the whole"\n'
     check('chapter starts said in order pass', chapter_problems(fine, listed), [])
@@ -888,19 +986,6 @@ def self_test():
     check('chapter starts out of order are refused',
           any('before the chapter above it' in p for p in chapter_problems(fine, '- Two | starts: "That is the whole"\n- One | starts: "Why does it"\n')), True)
 
-    # This week's unrecorded scripts, as their pieces' records hold them. Monday's
-    # were recorded on the 12 October lines and keep those words; a script
-    # already read on camera is never changed to suit a later line. Friday's v5
-    # is the last the gate passed; his own v6 went through on his words
-    # (making.py scripts --krish-words), so it is not held to the gate here.
-    plans = Path(__file__).resolve().parents[2] / 'docs' / 'plans'
-    for name, series in (('2026-10-14-draft-script.md', 'under_the_hood'), ('2026-10-14-draft-script-90s.md', 'under_the_hood'),
-                         ('2026-10-09-script-deep-v5.md', 'mind_the_gap'), ('2026-10-09-script-90s-v5.md', 'mind_the_gap')):
-        path = plans / name
-        if path.is_file():
-            text = path.read_text(encoding='utf-8')
-            check(f'{name} opens with its series line and says "I\'m Krish" once',
-                  series_problems(spoken_paragraphs(text), series), [])
     if failures:
         print('story check self-test FAILED:\n  ' + '\n  '.join(failures))
         return 1
@@ -921,10 +1006,7 @@ def main(argv):
                 print(f'--cut must be one of {", ".join(CUTS)}')
                 return 2
         else:
-            if value not in series_openers():
-                print(f'--series must be one of {", ".join(series_openers())} (the piece\'s lane_slot)')
-                return 2
-            series = value
+            series = value  # accepted and ignored: the series line is retired (house rule SERIES_OPENER, 2026-10-21)
     if not args:
         print(__doc__.strip())
         return 2

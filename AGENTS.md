@@ -16,6 +16,22 @@ with Growth's approved publishing route, not this repository.
 
 
 <!-- north-star:start -->
+## Start route: every client, Claude Code and Codex alike
+
+Codex reads no hooks and no `CLAUDE.md`, so the route is here (`docs/plans/2026-10-21-wednesday/FAILURE_REPORT_2026-10-24.md`):
+
+1. `python3 scripts/check_failures.py`, then `WORKBENCH.md` and `NOW.md`.
+2. Pick the one skill for the job and read it whole before acting: `.agents/skills/plan-week/SKILL.md` (Sunday ideas
+   and the week's board), `.agents/skills/make-piece/SKILL.md` (a picked piece: story, scripts, creative direction,
+   article), `.agents/skills/produce-video/SKILL.md` (cutting recorded takes).
+3. Claude owns the words and the visuals: the story, the scripts, the article copy, every article figure and the
+   creative direction (`docs/CREATIVE_DIRECTION.md`). Production renders only from a direction Krish signed;
+   `kit.py` and `make.py` refuse anything else from 26 Oct 2026.
+4. Feed the board through `week_board.py`'s inputs only; never a per-day feeder script (`npm run check:board-layout`).
+5. Never publish, sign in to a publishing platform, or ask Krish for a login code. He publishes.
+6. Never call anything ready from receipts: a separate reviewer watches and listens to the finished asset, and fact,
+   transport and editorial status are reported separately.
+
 ## North Star: read it first, every session
 
 This repository's North Star is [`docs/NORTH_STAR.md`](docs/NORTH_STAR.md): an ambition Krish set that is not reached yet.
@@ -23,6 +39,7 @@ This repository's North Star is [`docs/NORTH_STAR.md`](docs/NORTH_STAR.md): an a
 - Read it before any work, every session.
 - Before you start, say which part of it the task moves. If it moves nothing, say so first and let Krish decide.
 - Prefer the work that moves it furthest, and close by noting what moved.
+- Check the North Star number and its urgency (U1 to U5) on the first line under "Where it is right now" in `NOW.md`, and push at the intensity [the harness contract](https://github.com/krishanraja/ai-harness/blob/main/contract/north-star-metric.md) sets for that level. Update it whenever you can measure it; a number nobody measures is U4.
 - Only Krish changes it.
 <!-- north-star:end -->
 
@@ -32,6 +49,8 @@ whole system is for, and every rule below serves it. `README.md` says where
 everything is.
 
 **Nothing a session makes lives only in its own container.** Krish, 2026-10-18: "in general ensure nothing is ever not accessible by another session, ever". Before you stop, commit what belongs in git (code, configs, specs, transcripts, small data) and send media and captures to the post's library folder (`scripts/post-pack/send.py FOLDER --as "3 Posts/<post folder>"`, files under `2 Covers and images` or `3 Video`), and say in `WORKBENCH.md` where each is. Nothing stays only in `.cache`, a scratchpad or a workflow journal.
+
+**The publish board is fed, never shaped.** Krish, 2026-10-21: "the rest of the content engine needs to know how to feed it and not be permitted to change random parts of the UI and UX but feed it in the right way consistently. That applies to Claude and to Codex." From the week of 26 October every board has one layout (`config/board-layout.json`): five tabs (Ideas, Queue, Monday, Wednesday, Friday) and four steps in every day (Brief, Drafts, Record, Publish). Feed it through `week_board.py`'s inputs only (`docs/PUBLISH_BOARDS.md`, "The fixed layout"); never add a section, banner or style, never patch a built board. `week_board.verify()` and `npm run check:board-layout` (CI) refuse anything else, and a change to the layout itself is Krish's: there are no approval prompts for board edits; the layout is held by CI and changes only with his recorded words (Ruling, Krish, 2026-10-21). `scripts/check_board_layout.py` holds the hash of `config/board-layout.json` and `scripts/post-pack/tokens.css` and the board's structure in its snapshot, and fails until `--update --approved "Krish, YYYY-MM-DD: <his exact words>"` records the change with them.
 
 **No Claude artifact, ever; engine work merges to main by itself.** Krish, 2026-10-19: "we are now retiring the Claude artefact permanently and we are working in content.krishraja.com for all published board updates ... Make sure the entire engine never ever Produces another artefact in the future and always pushes to that URL and merges to main automatically." Every board update (the week's board, a day's tab in draft, the workroom, a publish page) is built with `week_board.py --target web` (the default) and published with `board_web.py publish-web --apply` (`docs/PUBLISH_BOARDS.md`); `scripts/hooks/artifact_gate.py` refuses every Artifact publish and every ArtifactData write. Engine work never waits on a hand merge: run `npm run verify`, push the session branch, open a pull request and turn on auto-merge, so GitHub merges it to main once CI passes. Never push to main directly; a red CI is fixed on the branch. No session creates a scheduled task (a routine, a trigger, a cron) that builds, updates or publishes a publish board: Krish deleted those from both accounts on 2026-10-19 ("We are not ready for this yet"), and board updates happen only in a session he started, until he says otherwise.
 
@@ -66,6 +85,21 @@ agents never write into his Drive; this is his explicit instruction for that
 one folder, carried out by his own machine, and it covers that folder only.
 `scripts/post-pack/README.md` has the layout and the commands.
 
+**content-watcher files fetched posts into his two inspiration folders.** Krish,
+2026-10-24: "Yes to Drive filing". The second exception to rule 0a.5, and only
+this: krishanraja/content-watcher, running on his home computers through the
+synced Drive folders, adds the media of a link he pasted on the Inspiration
+board to one of the two folders under `Ventures > Inspiration`, where his own
+drops go, so the taste ledger makes its card: **Production Inspo**
+(`1QxrzxISYFXq0er0DG0XSapm7qhvuRmh-`, production quality he likes) or
+**Content Inspo** (`1FNztJOU82M8zb6IIbUAbvuI6Kr0pF5Hu`, the content he likes;
+it was "Cold Ideas & Inspo"). Krish moved them there on 2026-10-24 ("Can you
+ensure absolutely everywhere recalibrates to this moving forward first?");
+`Video Engine > Inspiration` is gone. It only adds files: never deletes, never
+overwrites, never renames, and a second fetch of the same post is a no-op. It
+writes nowhere else in his Drive. Its queue is `apps/control-plane/api/watch/`
+(content-watcher `docs/WATCH_API.md`).
+
 **A recording in the Video Engine Inbox reaches a cloud session through
 `python scripts/post-pack/recording.py get NAME`.** The Drive connector caps
 downloads at 10 MB, so never tell Krish a recording cannot be reached; if the
@@ -87,25 +121,38 @@ piece is fetched by the path its record holds: `recording.py get "recordings/<sh
 one way a take comes back: Krish drops it at the top of the Video Engine
 Inbox.
 
-**Every video script opens with its series line, and a 12-year-old can
-follow it.** Krish, 2026-10-12: "We need something catchy at the start of a
-video script like "Here's what you need to know about how money is changing
-because of AI. I'm Krish." at the start of follow.the.money videos. And then
-similar for the weds and fri scripts." He picked the Wednesday and Friday
-lines, and "Drop it at the end" for the closing "I'm Krish", so his name is
-said once. The three lines live once, as `SERIES_OPENERS` in
-`apps/control-plane/api/_houseRules.ts` (house rule `SERIES_OPENER`). The
-same day: "I also feel like these scripts are too complicated for a layman
+**Every video script opens straight on its hook, closes on what he would do,
+and a 12-year-old can follow it; every article ends with "3 things you can do
+tomorrow".** Krish, 2026-10-21: "we need to cut that opening line from every
+content piece moving forward and just launch straight in to "I put GrokBot
+and Muse head to head" etc. Also trim the closing to "the full deep dive is
+at makeyourmindup.ai." right after a "Here's what I'd do with this info if I
+were you" closing line. That needs to be the format moving forward for all
+scripts. The articles all need to have a really clear "3 things you can do
+tomorrow" at the end of every piece too." So a script has no series line and
+no "I'm Krish" (house rule `SERIES_OPENER`, which retires the lines he
+picked on 2026-10-12; they stay in `SERIES_OPENERS` in
+`apps/control-plane/api/_houseRules.ts` only for records made under them).
+After the call it closes on a beat that starts "Here's what I'd do with this
+info if I were you" and says the actions, and its final sentence is exactly
+"The full deep dive is at makeyourmindup.ai." (house rule `SCRIPT_CLOSE`,
+refused by `scripts/post-pack/story_check.py`). An article ends with a
+section headed "3 things you can do tomorrow" holding exactly three concrete
+actions (house rule `THREE_THINGS_TOMORROW`, read by the publish check of the
+same name). The tone in every series is observational, witty and positive,
+with a dry Hannah Fry edge on true details only (house rule
+`TONE_OBSERVANT_WITTY`; his words: "Generally yes - observational and witty
+and positive are my general go tos"). The reading gate stays, from
+2026-10-12: "I also feel like these scripts are too complicated for a layman
 to understand. Every single script should be understandable by a
 12-year-old. I can't even understand what I'm reading off the teleprompter.
 I thought we had hard gates for this?" House rule `R7` is that hard gate on
 every script: `scripts/post-pack/story_check.py` refuses a script that
-breaks the series line or the reading gate (`SCRIPT_READING`, beside the
-lines), and two fresh readers, each a smart, non-technical manager at a
-200-person company hearing it once (Krish, 2026-10-19: "My customers are
-medium sized enterprises"),
-must find nothing that loses them before it is sent (`make-piece`, "The
-Scripts step"; `making.py <piece> read-back`).
+breaks the close or the reading gate (`SCRIPT_READING`), and two fresh
+readers, each a smart, non-technical manager at a 200-person company
+hearing it once (Krish, 2026-10-19: "My customers are medium sized
+enterprises"), must find nothing that loses them before it is sent
+(`make-piece`, "The Scripts step"; `making.py <piece> read-back`).
 
 **Each checked script goes to Krish's teleprompter.com account, and nothing
 there is ever deleted.** Krish, 2026-10-12: "Also note that Descript is
@@ -192,8 +239,8 @@ in `WORKBENCH.md`, "The board".
 `source_type` `manual` is one he said, filed by Control Center's one door
 with `source_ref` `said:<said_parts id>`. Name your own source instead.
 The engine refuses a `manual` idea without that ref (400
-`manual_needs_his_words`), and so does the database once
-`20261021100000_manual_is_his_words.sql` is applied. No code under `apps/`
+`manual_needs_his_words`), and so does the database: the CHECK
+`content_ideas_manual_is_his_words` holds every row (validated 2026-10-20). No code under `apps/`
 calls a transcription API: his spoken ideas come in through Control
 Center's one door. Board
 items whose id starts `said-` are filed by Control Center from his words,
@@ -255,13 +302,19 @@ after recording do I really feel like I've got a message".
   session's rows are `observation_only` unless it relays a decision Krish made
   in words, with `decided_by: 'Krish'`. Never relay a decision he did not
   make, and never write that he expressed a preference he did not state.
-  Silence is not feedback.
+  Silence is not feedback. What he typed is his: an exact quote of words he
+  typed, in any session or on any page, counts as his words, his view of what
+  should be done with that content (Krish, 2026-10-24: "exact typed quotes
+  count as my opinions on what I think you should do with that content"). A
+  paraphrase, a summary or an inference stays an observation.
 - **Every durable taste or performance rule needs explicit user approval.** A
   rule is proposed, may be trialled, and becomes active only when he approves
   it and it lands in code or configuration.
 - **Check before you ask.** Before putting a question to Krish, check whether
   an earlier answer already covers it, read for its reach rather than its
-  literal wording. On mobile, ask in a plain message.
+  literal wording. A question his feedback already answers is not asked
+  (Krish, 2026-10-24: "If you read what I am feeding back, it's pretty
+  obvious what it is"). On mobile, ask in a plain message.
 - **Public publishing is never automatic.** YouTube is private-only; LinkedIn,
   TikTok and Instagram Reels output stays a local draft package; the content
   engine never posts.
@@ -278,8 +331,10 @@ after recording do I really feel like I've got a message".
   `meter_daily`. Research through Perplexity, Exa and Brave is not metered, so
   count it yourself.
 - **Drive folders are load-bearing.** Read `docs/DRIVE.md` before you put
-  anything in Google Drive or move, rename or tidy a folder there. `Video
-  Engine` and `makeyourmindup` are read by path and never move.
+  anything in Google Drive or move, rename or tidy a folder there. Folders are found by ID,
+  never by path, wherever the API allows it (Ruling, Krish, 2026-10-24); the
+  home computers still reach `Video Engine` and `makeyourmindup` through `H:`,
+  so a move needs its new path in `config/studio.json` `runtime`.
 - **Leave the knowledge in the repository.** What you learn about the engine
   goes into `docs/STATE.md`, `docs/walks/` or the document it corrects, never
   only into a chat.
@@ -381,10 +436,10 @@ while a copy differs from its source. For the content engine, `npm run
 typecheck:control-plane` and `npm run check:control-plane`. Known failures on
 `main` are listed in `docs/STATE.md`; anything else failing is yours to fix.
 
-<!-- krish-canon:start release=v2026.10.17.1 sha=21ead8cd121f rendered=2026-10-18 -->
+<!-- krish-canon:start release=v2026.10.22.1 sha=3f48007261dd rendered=2026-10-23 -->
 ## Krish canon
 
-Rendered from `krishanraja/ai-harness` at release v2026.10.17.1. Nothing inside these
+Rendered from `krishanraja/ai-harness` at release v2026.10.22.1. Nothing inside these
 markers is hand-maintained: an edit here is detected and proposed back to the canon,
 never silently overwritten, and never lost. This sync preserves all other text.
 Separately approved repository administration owns only its declared regions and context file.
@@ -424,7 +479,7 @@ lives only in a chat window teaches nothing.
 **Route.** principles, then context, then `strategy-brief`, then the producer, then
 `verification-loop`, then the approval gate, then delivery. The narrowest applicable
 skill wins; a broad "always" or "mandatory" claim inside a skill never overrides the
-router. One primary writer; validators may stack after it, competing writers may not. **North Star:** before any work, read the North Star linked from the `north-star` block in `AGENTS.md` or `CLAUDE.md`, say which part of it the task moves, and say so first when it moves nothing; only Krish changes it, and a repository with none asks him for one.
+router. One primary writer; validators may stack after it, competing writers may not. **North Star:** before any work, read the North Star linked from the `north-star` block in `AGENTS.md` or `CLAUDE.md`, say which part of it the task moves, and say so first when it moves nothing; only Krish changes it, and a repository with none asks him for one. Then read the number's urgency (U1 to U5) in `NOW.md` and push at the intensity `contract/north-star-metric.md` sets for it; urgency never widens authority. **Close out:** before a session that changed the repository ends, update `NOW.md` (status, the single next step, and one dated North Star check line: holds, or recalibration proposed for Krish). **One home per fact:** read a venture's state from its repository, doctrine from ai-harness; never keep a copy.
 
 **Who Krish is.** Purpose: "I see what is coming before it is obvious and make it
 legible to people while it still counts." Mindmake is his mission and his one company;
@@ -442,7 +497,7 @@ authoritative for reading; the repository is authoritative for what is correct.
 **This repository's own rules:** `AGENTS.md`, `CLAUDE.md`, `docs/CAROUSEL_ENGINE_STATE.md`
 <!-- krish-canon:end -->
 
-<!-- krish-repo-admin:start brain=f0c91f3b1502 sha=75a4f360a412 -->
+<!-- krish-repo-admin:start brain=2ad79d5cf4f3 sha=75a4f360a412 -->
 ## Administer this repository
 
 Use `docs/HARNESS_CONTEXT.md` for the owning workflow, source of truth and checks. Preserve the goal and accepted decisions when a revision changes one part; explain material trade-offs. Verify the downstream result. Record corrections and observed outcomes through the existing capture path. Experimental results retain their conditions; inferred requirements remain proposals.

@@ -105,6 +105,7 @@ import string
 import subprocess
 import sys
 import tempfile
+from datetime import date
 from itertools import combinations, pairwise
 from pathlib import Path
 
@@ -123,6 +124,7 @@ import brand  # noqa: E402  the house style, fonts, logos and browser
 import plan_files  # noqa: E402  where a piece's scripts and pictures are, on whichever machine runs this
 import spelling  # noqa: E402  make.py's spelling fold, so cue words match across British and US spellings
 import story_check  # noqa: E402  how a script file becomes the words he says
+import creative_direction  # noqa: E402  the signed brief every cut renders from (docs/CREATIVE_DIRECTION.md)
 
 KIT_VERSION = 1
 CUT_SHAPE = {'long': '16x9', 'short': '9x16'}  # house rule TWO_CUTS
@@ -174,11 +176,11 @@ seventeen eighteen nineteen twenty thirty forty fifty sixty seventy eighty ninet
 first second third fourth fifth half quarter percent per cent""".split())
 
 
-def frame_title_problems(title):
+def frame_title_problems(title, piece_id=None):
     """Why the title beside his face may not be drawn: title_check's gate (his pick, and the floor)."""
     sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'post-pack'))
     import title_check
-    return title_check.gate(title)
+    return title_check.gate(title, piece_id=piece_id)
 
 
 class KitError(Exception):
@@ -1104,6 +1106,16 @@ def make_kit(post_path, cut, recording, out, roots=(), force=False, drawer=None,
     made = receipt.get('made', {})
     warnings, problems, files = [], [], {}
     paragraphs, script_from = script_for(post, cut, post_path, files_given, staged, library_at)
+    # Krish, 2026-10-24: Claude locks the scripts and the visual creative direction; production takes over from it.
+    # From 26 Oct no kit is drawn without his signed direction for these exact words (creative_direction.gate).
+    try:
+        publish_day = date.fromisoformat(str(post.get('date'))[:10])
+    except ValueError:
+        publish_day = None
+    try:
+        direction = creative_direction.gate(post_path, cut, '\n\n'.join(paragraphs), publish_day or creative_direction.FROM)
+    except creative_direction.DirectionError as e:
+        raise KitError(str(e)) from None
     pics = pictures(post, post_path, files_given, staged, library_at)
     gone, allowed, let_through = missing_pictures(pics, allow_missing)
     problems += gone
@@ -1145,7 +1157,7 @@ def make_kit(post_path, cut, recording, out, roots=(), force=False, drawer=None,
         # A title Krish has not picked is never drawn (house rule TITLE_EARNS_THE_CLICK): on 17 October the plate
         # still read the subject "Why so many AIs", a line he had rejected, the second time a plate showed a stale title.
         on_frame = post.get('video_title') or post['subject']
-        why_not = frame_title_problems(on_frame)
+        why_not = frame_title_problems(on_frame, post.get('piece_id'))
         if why_not:
             raise KitError(f'the title beside his face, {on_frame!r}, cannot be drawn: ' + '; '.join(why_not) +
                            '. Put the title card he picked in post.json as "video_title".')
@@ -1251,6 +1263,8 @@ def make_kit(post_path, cut, recording, out, roots=(), force=False, drawer=None,
         if pages:
             c['pages'] = pages
     cfg = starter_config(post, cut, rec, out, cues, strap_after(units, cues), post_path, his_words)
+    if direction:
+        cfg['creative_direction'] = direction
     cfg_path, cfg_sha, kept = write_config(out / f'{cut}.json', cfg, cut_receipt.get('config_sha256'), force)
     if kept:
         warnings.append(f'{cut}.json was edited by hand since kit.py wrote it, so it is kept; the new one is {cfg_path.name} '
@@ -1266,7 +1280,7 @@ def make_kit(post_path, cut, recording, out, roots=(), force=False, drawer=None,
         'shape': shape, 'config': (out / f'{cut}.json').name, 'config_sha256': cfg_sha if not kept else cut_receipt.get('config_sha256'),
         'written': cfg_path.name, 'script': script_path.name, 'script_from': script_from, 'recording': str(rec),
         'recording_seconds': recording_seconds(rec), 'cues': cues, 'cued_by_hand': [cid for cid in cued if cid not in {c['id'] for c in cues}],
-        'not_cued': not_shown, 'warnings': warnings, 'problems': problems, **his_words}
+        'not_cued': not_shown, 'warnings': warnings, 'problems': problems, 'creative_direction': direction, **his_words}
     receipt = {
         'schema_version': 1, 'made_by': 'scripts/quick-edit/kit.py', 'post': str(post_path), 'piece_id': post.get('piece_id'),
         'subchannel': st['channel']['name'], 'subject': post['subject'], 'date': post['date'],
@@ -1541,6 +1555,16 @@ def self_test_runs(check, words):
                 return make_kit(post_path, cut, tmp / 'take.mov', tmp / out, drawer=_PaperDrawer(), logos=logos, log=quiet,
                                 staged=staged, library_at=kw.pop('library_at', []), **kw)
 
+            # From 26 Oct (Krish, 2026-10-24) a kit is drawn only from his signed creative direction for these words.
+            post_path.write_text(json.dumps(dict(post, date='2026-10-28')), encoding='utf-8')
+            (plans / '2026-10-28-draft-script.md').write_text(script, encoding='utf-8')
+            try:
+                run('long', 'kit-held', roots=[work])
+                check('a piece from 26 Oct with no creative direction is refused before anything is drawn', False, True)
+            except KitError as e:
+                check('a piece from 26 Oct with no creative direction is refused before anything is drawn',
+                      'creative-direction.json' in str(e) and not (tmp / 'kit-held').exists(), True)
+            post_path.write_text(json.dumps(post), encoding='utf-8')
             first = run('long', 'kit', roots=[work])
             check('the long script comes from the dated draft beside the plan, with no --files for it',
                   first['script_from'], f'{plan_files.shown(plans / "2026-10-12-draft-script.md")} ({plan_files.DRAFT})')

@@ -6,6 +6,137 @@ board becomes the sole place for new interactions after verified migration.
 The four Claude artifacts and the default artifact generator remain preserved;
 there is no ongoing synchronization with them after cutover.
 
+## The fixed layout: feed it, never shape it
+
+Krish, 2026-10-21: "the rest of the content engine needs to know how to feed it
+and not be permitted to change random parts of the UI and UX but feed it in the
+right way consistently. That applies to Claude and to Codex." From the week of
+26 October 2026 (`config/board-layout.json`, `layout_from`) every board has one
+layout, the same every week:
+
+- **Five tabs, in this order:** Ideas, Queue, Monday, Wednesday, Friday. On a
+  phone they are a bar at the bottom.
+- **Four steps in every day, in this order:** Brief, Drafts, Record, Publish.
+  A step with nothing yet says when it fills, from the layout's `rhythm`: every
+  day's brief on the Sunday morning and its scripts by Sunday midday, because
+  Sunday is his recording day (Krish, 2026-10-24: "Yes, Sunday is my recording
+  day").
+
+A session feeds the slots and nothing else:
+
+| Step | What feeds it | Input |
+|---|---|---|
+| Ideas | the week's checked ideas, each with `source_kind` (`his`, `inspo` or `engine`, required from the fixed layout on, shown as its chip), `why_here` (the nearest idea he liked, from the gather), `beats` (3 to 5 lines of the sketch), `covers` (the gather's `must_cover` ids it answers) and `style` (a script format, a production format and one experiment from `config/style-references.json` `formats`, shown as "Suggested style" and "Or try something new"); `accounted` in the file gives the reason for any `must_cover` id no idea carries. The build refuses a fixed week without `sources.json` beside it, a routed card left off, or styles that do not diverge (`board_feed.py cover <Monday>`) | `--ideas ideas.json` (plan-week, from `board_feed.py gather`) |
+| Queue | the idea queue | `--queue queue.json` (GET /api/idea-queue) |
+| Queue: Could combine | two to five queued ideas that make one bigger piece: `[{"members": [queued ids], "series", "thesis", "joins": [3 to 5 beats]}]`, each a card with a Combine button that saves `queue/combine-<n>`; the next session runs synthesize on his tap (decided_by Krish) | `--combine combine.json` (with `--queue`; groups from GET /api/idea-queue?combine=1) |
+| Brief | the record-ready brief: idea, 3 to 6 beats, ending, takeaway, angle, tone, reader | `--brief DAY=brief.json` (kept on rebuild) |
+| Drafts | the article and scripts in review: a read view (Markdown drawn, no `#` signs) where a tap edits a paragraph, picked words take "Comment on this" (the comment carries `box`, `paragraph` and `quote`), and one Save bar per day saves `edits/<day>-<item>` (`text`, `day`, `item`, `base_sha256`, `at`) | `--draft DAY --review DAY=...` |
+| Drafts: Also changed | where his saved edit was carried (`scripts/post-pack/edit_sweep.py`): each change with Undo, suggestions with Change it too, recorded scripts left alone, and the gates run again; kept on a rebuild while that day's words are unchanged | `--sweep DAY=sweep.json` (the file edit_sweep.py writes) |
+| Drafts: What I learned from your edits | the compiler's proposals from his board edits (scope `board_edit:<class>`), and up to three a week from the taste ledger (scope `taste:<layer or lane>`, from what he saved and said), each with Make it a rule and Not a rule; a comment on one is his rewording; it stays a proposal until he says yes | `--lessons lessons.json` (GET /api/video-studio/learning-proposals) |
+| Record | the Teleprompter scripts and the scripts to read | `--teleprompter`, the publish page's scripts |
+| Publish | a made day's run-sheet (below): the day's progress, Download first, then one card per place to post, each with its tick | the publish page (`--day`, read as data), the videos and the pack folder on the record, `--materials DAY=...` |
+| Heading | what waits on Krish | `--waiting DAY=...` |
+
+Never add a section, a banner, a style or a script to a built board, and never
+patch its HTML: `week_board.verify()` refuses any other shape (one stylesheet,
+each day exactly its heading, its steps and their panels), and
+`npm run check:board-layout` (in `npm run verify` and CI, so Codex too) holds
+the build to `fixtures/week-board/fixed-layout.json`, checks every view at
+390px for sideways scroll and 44px targets (`--browser`), and fails any file
+outside the board's builders that stamps a board. A change to the layout
+itself is Krish's, and there are no approval prompts for board edits: the
+layout is held by CI and changes only with his recorded words (Ruling, Krish,
+2026-10-21). The snapshot records the sha256 of `config/board-layout.json` and
+`scripts/post-pack/tokens.css`, the structure of three fed weeks, and
+`approved`, the words he approved the last change in. The check fails when
+either file or the structure differs, until
+`python3 scripts/check_board_layout.py --update --approved "Krish, YYYY-MM-DD: <his exact words>"`
+writes the change with his words.
+
+Sunday's sources: `python3 scripts/post-pack/board_feed.py gather <Monday>`
+reads `GET /api/week/options?include=sources` and `GET /api/idea-queue?combine=1`
+(read-only, no spend) into `docs/plans/<Monday>-week/sources.json`: each
+series' pool, his ideas first, then near something he liked, then the ladder
+score, each with `source_kind` and `why_here`, the queue and its combine groups,
+and which source is empty and why. His ideas are `manual` rows (his words
+through Control Center's one door) and topics he asked the engine to research
+in Control Center (`requested_research` with `requested_by: Krish`); board items
+that relay his words (`krish-ideas-*`, `said-*`) come as `his_relayed`. His
+Inspiration House comes as `inspiration` (`_inspirationSources.ts`): the cards
+he routed to Make a piece, the cards he answered, the ones he has not seen yet,
+the production references he routed to Study style, content-watcher readings,
+creator moves and taste claims; `must_cover` lists every routed card and
+relayed board item the Ideas tab owes him. The gather stops when the route has
+no `inspiration` block. His taste steers this sourcing and ranking only; the
+judges stay blind.
+
+One-off feeders are history: a script under `docs/` that drives `week_board.py`
+or `board_web.py` is refused by `npm run check:board-layout`; the fifteen that
+existed on 24 October are frozen (`FEEDERS`).
+
+Videos: every piece is a 90-second and a 5-minute video. A 15-minute feature
+appears as a third cut only on a piece Krish called one for
+(`config/features.json`, house rule FEATURE).
+
+### The Publish run-sheet
+
+Krish, 2026-10-21: "have a think about where I publish, how I publish, what I
+need to download, when, and in what order. Just make everything as beautiful
+and user-friendly as possible." So in the fixed layout a made day's Publish step
+is one ordered run-sheet (`week_board.py` `run_sheet`), drawn from data and the
+same every week:
+
+1. **The checklist** at the top: the day's meter and count, and each step that
+   counts toward 100% as a link that shows its tick (the two recordings point to
+   Record, where their ticks are).
+2. **Download first**: every file for the day, numbered in the order he uses
+   them, each with one big Download: the 5-minute and 90-second videos, then
+   their thumbnails (Drive links from the making record's `video_assets`), the
+   Substack cover, the vertical cover, the covers for the other places, the
+   Spotify thumbnail when it is its own file, the article as an HTML file, the
+   pictures in the article, then the `--materials` files and copy. Download all
+   saves every file the page holds; the videos come from Drive one tap each, and
+   the line under it names the post's library folder
+   (`3 Posts/<post folder>`, from the record's `pack.folder` or a video's path)
+   to download everything at once.
+3. **One card per place to post**, in `config/board-layout.json`
+   `publish_steps` order (Substack, YouTube, Shorts, TikTok, Reels), then LinkedIn,
+   Spotify and, on a feature piece, the feature under "When you want them". Every
+   card has the same parts in the same order: the files it needs (links back to
+   Download first), each piece of copy with one-tap Copy, what to do, the link box
+   where the step has one (the article on Substack, the video on YouTube), and its
+   tick. The tick ids are unchanged (`<day>-<step>`), so no saved tick is orphaned.
+   On a feature piece only (Krish, 2026-10-21: "Yes, add the cards"), two cards more, not counted: "YouTube long-form (the 15-minute feature)" right after the YouTube card and "Spotify (the 15-minute feature)" right after Spotify, ticks `<day>-feature-youtube` and `<day>-feature-spotify` (recorded as `making.py <piece> posted feature_youtube|feature_spotify`); `verify()` and `check_page` refuse them on any other piece.
+
+The words, the files and what to do come from `publish_kit.steps(words,
+on_board=True)` on the publish page's own words, which `publish_manager.py`
+writes into every page as data (`<script type="application/json" id="pm-data">`:
+the words and each picture's role). The pictures and the copy are the page's,
+under the ids they always had (`mon-c3`, `mon-img-cover`, `mon-art`), so a saved
+comment and a `copy_updates` refresh still find their box. A page made before it
+carried its words still draws, with a warning, and names the standing files.
+The old section ticks, the contents bar and the separate Finished videos card are
+gone from fixed weeks; weeks before 26 October keep their markup byte for byte.
+`verify()` refuses a made day whose Publish step has no Download first, has it
+below a card, has a card out of order or without its own one tick, or has a tick
+outside a card, and still refuses a picture with no bytes or link and a finished
+video without its Drive link or its thumbnail's.
+
+## Finished files while editorial review remains open
+
+Use `week_board.py --materials DAY=materials.json` for finished downloads and
+channel copy. The JSON names the exact piece, an explicit `review` or `ready`
+status, its readiness note, and sections containing labelled files and copy.
+This does not mark a draft day made, complete a making step, or clear a fact
+gate. A normal rebuild carries these materials from `--previous`; do not lose
+them when refreshing the article. Existing copy boxes can be refreshed by
+stable ID with `copy_updates`, retaining their comment anchors.
+
+Resolve every download into the immutable web manifest. Activate with
+`board_web.py publish-web PAGE --assets MAP --expected-build BUILD_ID --apply`
+so a concurrent board publication causes a refusal instead of overwriting it.
+Material availability is distinct from permission to publish on a channel.
+
 ## Read before every session that touches a week
 
 Check `config/boards.json` → `web_cutover.state`. `pending` means the historical
@@ -49,6 +180,11 @@ do not print the full board into a conversation. The operator CLI's `download`
 command saves this file. Read `week_board.py --show FILE` for its structure.
 Keep completed days, current drafts, review IDs, images and every unchanged
 asset. Use the existing `--live`, draft/review and completeness guards.
+When changing only one day while another day has live draft words, use
+`--keep-draft DAY` with the authenticated `--previous` page. It carries that
+unrelated draft panel, its review boxes and waiting calls verbatim; the builder
+refuses a changed piece id or any replacement inputs for the retained day.
+Rebuild that day with `--draft DAY --review DAY=...` when its own words change.
 
 Build with `week_board.py --target web` plus the usual week/day inputs. Run
 `--verify`, then `board_web.py publish-web PAGE.html` for the dry-run manifest.

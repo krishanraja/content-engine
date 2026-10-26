@@ -24,6 +24,31 @@ only to recover what it holds.
 
 ## Never call a video good without watching it
 
+### Mandatory camera-motion assessment
+
+Krish, 2026-10-22: "stabilization should be a mandatory check to see if it is needed. it usually is".
+
+Assess every recording before final composition, alongside sync, audio and
+framing. Track static background features across continuous windows near the
+start, middle and end; distinguish camera shake from the speaker's gestures.
+An inconclusive measurement requires inspection or a better tracking region.
+It cannot be treated as evidence that stabilisation is unnecessary.
+
+When needed, stabilise the camera footage before adding cards, captions or
+logos. Preserve the accepted speech edit, audio samples and caption clock.
+Compare the untreated and treated footage, then inspect the finished cut for
+residual shake, warping, exposed borders and lost headroom. Recheck sync after
+the picture changes. When treatment is unnecessary, record the measured and
+visual evidence supporting that decision. Never apply treatment merely to
+satisfy the checklist if it makes the picture worse.
+
+The exact-byte validation receipt needs a `motion` check with the recording
+hash, assessment evidence hash, `stabilised` or `not_needed` decision, treatment
+and before/after measurements when applicable, and final picture review bound
+to the delivered video hash. `quality.delivery_problems` refuses missing,
+inconclusive or stale motion evidence. Working renders remain available for
+inspection; they do not count as finished delivery.
+
 Krish, 2026-10-13, after Wednesday's runner video went out with a title running
 off the page: "Did you actually watch these? ... I'm pissed off that you didn't
 pick them up." The runner's preview stills (one frame per beat) are not a
@@ -84,7 +109,7 @@ Commands are written `python`, as on Windows; it is `python3` in the cloud.
    back.
 3. Drops each take at the top of the Video Engine Inbox, Drive
    `makeyourmindup > Video Engine > Inbox`
-   (`H:\My Drive\Ventures\Active\makeyourmindup\Video Engine\Inbox`). Never
+   (`H:\My Drive\Ventures\Active Ventures\makeyourmindup\Video Engine\Inbox`). Never
    in a subfolder: the upload lane reads only the top level. Any name will
    do. A file over 500 MiB is skipped by the lane, so that one is produced
    on a home computer, straight from H:. This is the one way a take comes
@@ -109,6 +134,21 @@ the file in the Inbox like any other: ask him to, in one line, and never
 fetch it another way.
 
 ## Before anything
+
+**Render only from the signed creative direction** (Krish, 2026-10-24:
+"Once the videos are recorded, Claude gets the scripts and the visual
+creative direction locked so that codex can take over on the video
+production"). Read `docs/CREATIVE_DIRECTION.md` and the piece's
+`creative-direction.json` beside its `post.json` first. From 26 October
+`kit.py` refuses a cut without a direction Krish signed for its exact
+words, and `make.py` refuses one that changed after kit.py checked it.
+Make each beat as written: its picture, its source label, its on-screen
+words, its modules. Never invent a visual, a caption, a figure or a style;
+when a beat cannot be made as written, stop and name the beat. Never sign in
+to a publishing platform or ask Krish for a code: he publishes. A cut is
+ready only when a reviewer who did not make it has watched it at full size
+and listened across every join against the direction's `acceptance`, with
+fact, transport and editorial status reported separately.
 
 Read `AGENTS.md`, `WORKBENCH.md`, `docs/CADENCE.md` ("Who owns what, and
 where things live") and `scripts/quick-edit/README.md`. Read the board
@@ -296,7 +336,7 @@ after reading a script out loud than I do creating a script."
   (SCRIPT: the cut's current words; WORDS.json: make.py's words file once
   `--plan` has heard the take; `--fixes LONG.json` folds in the config's
   verified caption fixes), then
-  `python scripts/post-pack/narration_diff.py ledger WORK/narration.json --cut short|long|deep --date YYYY-MM-DD --piece PIECE_ID`.
+  `python scripts/post-pack/narration_diff.py ledger WORK/narration.json --cut short|long|feature --date YYYY-MM-DD --piece PIECE_ID`.
   story_check reads the ledger to warn when the next script will run long.
 - **The packaging round comes now, never earlier**: the Substack headline and
   cover words, the YouTube title and thumbnail words, the Shorts title, the
@@ -455,7 +495,7 @@ python scripts/quick-edit/make.py WORK/kit/short.json --out WORK/short --only 9x
   `.agents/skills/produce-video/references/music.md` before this step).
   Neither ever blocks a render.
 
-**A long episode** (the week's deep cut, house rule DEEP_CUT) is made to
+**A long episode** (a 15-minute feature Krish called, house rule FEATURE, or a deep cut already recorded under the retired DEEP_CUT) is made to
 `docs/production/one-shot-episode-corpus.md`, the standard Krish gave on 16
 October. Its config carries the episode settings (`scripts/quick-edit/
 episode.py`, and the README's table): `"voice": "repair"`, the one-take pause
@@ -466,6 +506,28 @@ as cues and `"chapters"` for the description's chapter list,
 YouTube, `"end_screen_s": 20`, and `"music_mode": "episode"` with
 `"music_seconds"` so a three-minute track covers the open, the chapter lifts
 and the close. The short cut keeps the house look.
+
+A 15-minute feature goes through that same one-shot episode path; it is a
+third cut beside the 5-minute and the 90-second, which are made as usual.
+Only a piece in `config/features.json` has one (Krish's call alone; never
+make a feature for any other piece). What changes for it:
+
+- **Its own cut, `feature`.** Its take is placed on the `feature` cut by
+  the feature script's hash (`recording_match.py`: its words, its
+  Teleprompter title, a name saying "feature", or a raw length of 10:00 and
+  over), and fetched like any take (`recording.py get`).
+- **Its own spoken-length cap**, `SPOKEN_CAP_S['feature']` in
+  `scripts/post-pack/story_check.py` (990 seconds, 16:30), not the 5-minute
+  cut's 330 or the retired deep cut's 720. Measure the take against the
+  feature's script and keep it in the ledger with `--cut feature`, so the
+  next feature's script is warned against his own pace on features.
+- **Its own wide thumbnail and record.** Draw a 1280 x 720 thumbnail for it
+  and record it as `making.py PIECE video feature NAME PATH --thumb ...
+  --thumb-file ...`, then `drive-link feature`. The record's Record and
+  Video assets steps wait for the feature on such a piece.
+- **Its own publish steps.** The publish page adds a YouTube long-form step
+  and a Spotify episode step for it, beside the 5-minute ones
+  (`publish_kit.py`).
 
 ## 5. A thumbnail for every size
 
@@ -520,7 +582,12 @@ report these numbers back in plain words:
   `remove` where he stumbled or paused; never speed it up unless Krish has
   said so in words for that cut, and then only through the config's
   `"speed": {"factor": F, "krish": "Krish, DATE: his words"}` (make.py
-  refuses it without his words, and over 1.35). Still over: tell Krish both
+  refuses it without his words, and over 1.35). A sped cut is sped once, as
+  one continuous file, then transcribed fresh on the sped clock: its cut
+  points and its caption file come only from that new transcript, and the
+  finished file's own transcript must hold every word of the script in order
+  (Krish, 2026-10-24: "last time Codex glitched a bunch of words on the
+  speedup and also misaligned the captions"). Still over: tell Krish both
   numbers before it goes anywhere. When only `total_seconds` is
   over 90 (his speech is inside it), say both numbers in your report; it is
   not a stop, and it is his open question in `WORKBENCH.md`.

@@ -97,11 +97,8 @@ def article_text(md, images):
     return '\n\n'.join(out)
 
 
-CSS = r'''
-:root{--bg:#F4EFE4;--ink:#0C1512;--card:#fffdf8;--line:#d9d2c3;--muted:#5b625e;--mint:#7EF0C0;--ok:#1f7a52;--bad:#b0412e}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0C1512;--ink:#F4EFE4;--card:#15201b;--line:#2b3832;--muted:#a9b4ae;--ok:#7EF0C0;--bad:#ff9b85;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#0C1512;--ink:#F4EFE4;--card:#15201b;--line:#2b3832;--muted:#a9b4ae;--ok:#7EF0C0;--bad:#ff9b85;color-scheme:dark}
-*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Archivo,system-ui,-apple-system,sans-serif}
+TOKENS = '\n'.join(l for l in (Path(__file__).resolve().parent / 'tokens.css').read_text(encoding='utf-8').splitlines() if l.startswith((':root', '@media')))
+CSS = '\n' + TOKENS + '\n' + r'''*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Archivo,system-ui,-apple-system,sans-serif}
 main{max-width:820px;margin:0 auto;padding:24px 16px 96px}
 .kick{font:12px "IBM Plex Mono",ui-monospace,monospace;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
 h1{font:400 clamp(30px,6vw,48px)/1 Anton,Impact,sans-serif;text-transform:uppercase;margin:6px 0 10px}
@@ -272,6 +269,15 @@ def pic_card(img, slug):
             '<div class="status" aria-live="polite"></div></div>')
 
 
+def page_data(words, images):
+    """The page's words and its pictures' roles as data, for the week's board: its Publish run-sheet is built from
+    these (week_board.py run_sheet), never from this page's markup. Inert JSON, with "<" escaped so nothing in it
+    can close the script element."""
+    meta = [{k: i[k] for k in ('id', 'role', 'alt', 'after_heading', 'caption', 'label') if i.get(k)} for i in images]
+    data = json.dumps({'version': 1, 'words': words, 'images': meta}, ensure_ascii=False, sort_keys=True).replace('<', '\\u003c')
+    return '<script type="application/json" id="pm-data">' + data + '</script>'
+
+
 def page(m, base):
     images = []
     for i in m.get('images', []):
@@ -321,8 +327,9 @@ def page(m, base):
     others = [i for i in images if i.get('role') in COVER_ROLES]
     covers = ''.join(pic_card({**i, 'label': COVER_ROLES[i['role']]}, slug) for i in others)
 
-    # 2 onwards: every other channel, from the same plan as publish_kit.py
-    for k, s in enumerate(publish_kit.steps(words)[1:], 2):
+    # 2 onwards: every other channel, from the same plan as publish_kit.py. Each section is headed with its step's where,
+    # which is how the week's board finds its copy (week_board.section_kit), never by its number or its id.
+    for k, s in enumerate((s for s in publish_kit.steps(words) if s['where'] != 'Substack'), 2):
         cards = ''.join(text_card(cid(), label, text) for label, text in s['copy'])
         files = ''.join(file_item(f, links) for f in s['files'])
         do = ''.join(f'<li>{E(d)}</li>' for d in s['do'])
@@ -353,6 +360,7 @@ def page(m, base):
 <label for="link-youtube">YouTube link (after step 2)<input id="link-youtube" type="url" placeholder="https://youtu.be/..."></label>
 <div class="files">Paste each link once; every Copy button below carries it.</div></div>
 <nav class="toc" aria-label="Steps">{toc}</nav>{body}</main><div id="toast" role="status"></div><script>{JS}</script>
+{page_data(words, images)}
 '''
 
 
@@ -400,6 +408,9 @@ def self_test():
         ('a missing text says so', 'Not written yet' in h),
         ('nothing is fetched from outside', 'src="http' not in h and "src='http" not in h),
         ('the vertical cover has its own card, saying where it goes', 'data-ref="img-vertical"' in h and 'Shorts, TikTok and Reels' in h),
+        ('the page carries its words and its pictures\' roles as data, for the board\'s run-sheet',
+         (lambda d: d['words'].get('linkedin_post') == 'L {ARTICLE_URL}' and {'id': 'vertical', 'role': 'vertical-cover', 'alt': 'V'} in d['images'])(
+             json.loads(re.search(r'<script type="application/json" id="pm-data">(.*?)</script>', h, re.S).group(1)))),
     ]
     for name, ok in checks:
         if not ok:

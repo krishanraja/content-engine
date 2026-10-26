@@ -57,6 +57,10 @@ export interface SeriesOpener { day: string; series: string; line: string }
 // tool: scripts/post-pack/story_check.py reads the object between the two
 // marker lines below as JSON, so it stays JSON (double quotes, no trailing
 // commas) and keeps its markers. Krish, 2026-10-12, picked each line.
+// RETIRED from scripts as of 2026-10-21 (Krish: "we need to cut that opening
+// line from every content piece moving forward and just launch straight in"):
+// no writer opens on these and no check asks for them. They stay, unchanged,
+// because records and history made under them refer to them.
 // SERIES_OPENERS:BEGIN
 export const SERIES_OPENERS: Readonly<Record<string, SeriesOpener>> = Object.freeze({
   "follow_the_money": { "day": "Monday", "series": "follow.the.money", "line": "I've been following how money is changing because of AI. I'm Krish." },
@@ -65,14 +69,19 @@ export const SERIES_OPENERS: Readonly<Record<string, SeriesOpener>> = Object.fre
 })
 // SERIES_OPENERS:END
 
-/** The line a video script of this series opens with, or null when the
- *  series has none (a piece with no series, or a retired one). */
-export function seriesOpener(series?: string | null): string | null {
+/** The line a video script of this series opens with. Always null since
+ *  2026-10-21: the series line is retired from scripts (house rule
+ *  SERIES_OPENER), so no writer opens on one. */
+export function seriesOpener(_series?: string | null): string | null {
+  return null
+}
+
+/** The line a script recorded before 2026-10-21 opened with, for history and
+ *  tools that read old records. Nothing writes or requires it. */
+export function retiredSeriesOpener(series?: string | null): string | null {
   const hit = series ? SERIES_OPENERS[series] : undefined
   return hit ? hit.line : null
 }
-
-const OPENER_LIST = Object.values(SERIES_OPENERS).map(o => `${o.series} (${o.day}): "${o.line}"`).join('; ')
 
 /** The mechanical half of the reading-age gate on a video script (house
  *  rule R7). */
@@ -300,7 +309,7 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
   },
   {
     id: 'STORY_ARC', name: 'One story, start to finish',
-    text: 'Every piece and every script tells one story. Open on one clear question, in plain words. Every section or beat either sets that question up or answers it, and each one follows from the last. Set up every claim before judging it: say what was claimed and why it matters before stamping it real or theatre. Every takeaway follows from something already told. The ending answers the opening question, then makes the call. A spoken script of a minute or more then closes with a short spoken outro after the call (what this was, where the full piece is, and Krish signing off without saying his name again, SERIES_OPENER); it never ends on the number.',
+    text: 'Every piece and every script tells one story. Open on one clear question, in plain words. Every section or beat either sets that question up or answers it, and each one follows from the last. Set up every claim before judging it: say what was claimed and why it matters before stamping it real or theatre. Every takeaway follows from something already told. The ending answers the opening question, then makes the call. A spoken script of a minute or more then closes as SCRIPT_CLOSE says, after the call: what Krish would do with this info, then where the full deep dive is; it never ends on the number.',
     said: 'what does that mean? We\'ve never introduced that concept yet, and I dont get why it matters to whats been said thus far. It also barely connects to the next bits, the takeaways. ... now it just ends randomly on 85%, with nothing after that, no outro. Then, of the five-point story check: yes, i agree with it being there. happy with that idea.',
     on: '2026-10-06', source: 'walk log F75', status: 'live',
     stages: ['judge_draft', 'write', 'final_pass'],
@@ -342,16 +351,23 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
   },
   {
     id: 'HOOK_AND_CTA', name: 'Open on a provocation, close on the article',
-    text: 'A video opens with its series line (SERIES_OPENER), then the hook: the most provocative true thing in the piece, said in the first two sentences after the series line: a surprising number, a comparison or a claim that makes the viewer feel they are missing something, then the one question the video answers. It never opens on throat-clearing or a definition. It closes on a call to action: say there is a full article, what it has that the video does not, that it is free and where it is (makeyourmindup.ai, said out loud, so the line works on every channel without "link below"), ask one question for the comments, and Krish signs off without repeating "I\'m Krish": his name is said once, in the series line. The vertical cut keeps both, inside 90 seconds.',
-    said: 'make the intro more provocative and hooking, and the outro more CTA based, acknowledging there is a full article',
-    on: '2026-10-09', source: 'chat, Friday piece 2 script review; checked by scripts/post-pack/story_check.py', status: 'live',
+    text: 'A video opens straight on the hook (SERIES_OPENER): the most provocative true thing in the piece, said in the first two sentences, such as what Krish did ("I put GrokBot and Muse head to head"), a surprising number, a comparison or a claim that makes the viewer feel they are missing something, then the one question the video answers. It never opens on a series line, a greeting, throat-clearing or a definition. It closes as SCRIPT_CLOSE says: "Here\'s what I\'d do with this info if I were you", the actions, and then the last sentence, "The full deep dive is at makeyourmindup.ai.", said out loud so the line works on every channel without "link below". No question for the comments and no sign-off. The vertical cut keeps both, inside 90 seconds.',
+    said: 'make the intro more provocative and hooking, and the outro more CTA based, acknowledging there is a full article. Then, 2026-10-21: "we need to cut that opening line from every content piece moving forward and just launch straight in to "I put GrokBot and Muse head to head" etc. Also trim the closing to "the full deep dive is at makeyourmindup.ai." right after a "Here\'s what I\'d do with this info if I were you" closing line. That needs to be the format moving forward for all scripts."',
+    on: '2026-10-09', source: 'chat, Friday piece 2 script review, then the 2026-10-21 ruling; checked by scripts/post-pack/story_check.py', status: 'live',
     stages: ['judge_draft', 'write', 'final_pass'],
   },
   {
-    id: 'SERIES_OPENER', name: 'Every video opens with its series line, and Krish says his name once',
-    text: `Every video script opens with its series line, word for word, said first, before the hook: ${OPENER_LIST}. Both cuts carry it, the 3-minute and the 90-second, and its words count toward the cut's length (405 to 495 spoken words long, 160 to 225 short). Krish says his name once, in that line: the close never repeats "I'm Krish". A script whose series has no line yet opens on the hook. The article and the posts do not carry it.`,
-    said: 'We need something catchy at the start of a video script like "Here\'s what you need to know about how money is changing because of AI. I\'m Krish." at the start of follow.the.money videos. And then similar for the weds and fri scripts. Then, of the lines shown to him, he picked the Wednesday and Friday lines above; and to "The opener now says "I\'m Krish". Drop it from the sign-off at the end?" he picked "Drop it at the end". Then, 2026-10-13: "I also want to reduce the "breaking news, I\'m Krish" tone, and have it be a more reflective, pensive, "here\'s what I\'m seeing" but still humorous dry wit tone. Johnny Harris style", and of the lines offered he picked "Reflective version": each series line now says what he has been doing ("I\'ve been looking at..."), his name still once. Then, 2026-10-16, editing Friday\'s two scripts on the publish board, he rewrote the mind.the.gap line in both as "I\'ve been keeping a beady eye on what\'s coming with AI" (the deep cut kept ", before everyone notices. I\'m Krish."; the 90-second cut ended ", to try and map out what you\'re likely to be up against next.") and asked: "If I\'ve missed any small things that I\'ve added in somewhere else, then please bring everything to consistency." The deep cut\'s version, which keeps his name, is now the line.',
-    on: '2026-10-12', source: 'chat, Monday\'s and Friday\'s scripts (commit ee68a61, which opened all four on their lines); the lines are SERIES_OPENERS in this file, which scripts/post-pack/story_check.py reads; checked by story_check.py --series, which making.py scripts runs with the piece\'s series; the script writer opens on it (api/_video.ts)', status: 'live',
+    id: 'SERIES_OPENER', name: 'Scripts open straight on the hook: no series line and no "I\'m Krish"',
+    text: 'A video script opens straight on the hook, with what Krish did or found ("I put GrokBot and Muse head to head"). It has no series line before the hook, no greeting, and no "I\'m Krish" anywhere, opening or close. This holds for every series, the 5-minute, the 90-second and the deep cut. The three old series lines (SERIES_OPENERS in this file) are retired and kept only because records made under them refer to them: no writer opens on one and no check asks for one. The article and the posts never carried it.',
+    said: 'we need to cut that opening line from every content piece moving forward and just launch straight in to "I put GrokBot and Muse head to head" etc. (2026-10-21; it retires the series line he asked for on 2026-10-12: "We need something catchy at the start of a video script like "Here\'s what you need to know about how money is changing because of AI. I\'m Krish." at the start of follow.the.money videos." Then he picked the Wednesday and Friday lines, and "Drop it at the end" for the sign-off (2026-10-12); the "Reflective version" (2026-10-13); and rewrote the mind.the.gap line as "I\'ve been keeping a beady eye on what\'s coming with AI" (2026-10-16).)',
+    on: '2026-10-21', source: 'chat, the 2026-10-21 ruling on every script; the writer opens on the hook (api/_video.ts SCRIPT_OPENING); scripts/post-pack/story_check.py no longer asks for a series line (series_problems) and still accepts --series; the old lines stay in SERIES_OPENERS for history', status: 'live',
+    stages: ['write', 'judge_draft', 'final_pass'],
+  },
+  {
+    id: 'SCRIPT_CLOSE', name: 'Every script closes on what he would do, then the deep dive line',
+    text: 'Every video script of a minute or more closes in two parts. After the call comes a beat that starts exactly "Here\'s what I\'d do with this info if I were you" and then says, in plain words, the concrete things the listener can do. The script\'s final sentence is exactly "The full deep dive is at makeyourmindup.ai." with nothing after it: no sign-off, no "I\'m Krish", no question for the comments, no ask to like or subscribe. Both cuts carry it, and the deep cut too. scripts/post-pack/story_check.py refuses a script that has no such beat in its last three beats, or that ends on any other sentence.',
+    said: 'Also trim the closing to "the full deep dive is at makeyourmindup.ai." right after a "Here\'s what I\'d do with this info if I were you" closing line. That needs to be the format moving forward for all scripts.',
+    on: '2026-10-21', source: 'chat, the 2026-10-21 ruling on every script; checked by scripts/post-pack/story_check.py (close_problems), which build.py and making.py scripts run before a script is packed or recorded; the writer closes on it (api/_video.ts SCRIPT_CLOSE)', status: 'live',
     stages: ['write', 'judge_draft', 'final_pass'],
   },
   {
@@ -362,10 +378,10 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
     stages: ['write', 'final_pass'],
   },
   {
-    id: 'DEEP_CUT', name: 'One deep video a week, for YouTube long-form and Spotify',
-    text: 'Once a week, the piece with the highest breakout score (the shareability score in its pack; a concept piece breaks a tie) gets a deep cut of 8 to 12 minutes, 1,200 to 1,700 spoken words, wide, in place of its 3-minute cut. It is recorded in the same sitting, goes to YouTube as long-form and to Spotify as the week\'s video episode, and is written from the full article for the ear, with the same series line, reading age 12 and outro to the article. Every piece keeps its 90-second cut. plan-week records the pick in config/deep-cuts.json; Krish can swap it.',
-    said: 'I like your logic for the pick on the shareability score approach.',
-    on: '2026-10-14', source: 'chat, after "perhaps the third video length also becomes the Spotify audio track"; checked by scripts/post-pack/story_check.py (--cut deep) and making.py (deep_piece)', status: 'live',
+    id: 'FEATURE', name: 'A 15-minute feature, only when Krish calls one',
+    text: 'Every piece is a 90-second and a 5-minute video (TWO_CUTS). From time to time Krish calls a special feature for one piece: about 15 minutes, 2,025 to 2,475 spoken words, wide, recorded as a third cut beside the other two, for YouTube long-form and Spotify, and written from the full article for the ear, opening straight on the hook (SERIES_OPENER), at reading age 12, and closing as SCRIPT_CLOSE says. Only he calls one; no session proposes one each week. His call is recorded in config/features.json. It replaced the weekly 8 to 12 minute deep cut (DEEP_CUT, 2026-10-14 to 2026-10-21); deep cuts already recorded in config/deep-cuts.json stay as they were.',
+    said: 'Bear in mind that all videos are generally 90 sec and 5 min. From time to time I might do a special 15 min feature. Asked whether that replaces the weekly deep cut: "Yes, replace it".',
+    on: '2026-10-21', source: 'chat, standardising the publish board; checked by scripts/post-pack/story_check.py (--cut feature) and shown by week_board.py (config/board-layout.json cuts)', status: 'live',
     stages: ['write', 'final_pass', 'production'],
   },
   {
@@ -419,7 +435,7 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
   },
   {
     id: 'ONE_SPINE', name: 'One spine: every section answers the one question',
-    text: 'Every piece answers ONE question, its spine, approved by Krish at the outline with its one-line answer. The outline states "Spine: <question>?", "Answer: <one line>" and at most six sections, each as "<HEADING> | proves: <the part of the answer it proves>"; the draft\'s sections are exactly those, in that order. Every section must help the reader reach the spine\'s answer: a section that is true, interesting or related but answers a different question is cut. A new angle is a new spine and a new outline from scratch, approved again, never sections added on top of an approved outline. scripts/post-pack/spine_check.py checks the outline and the draft\'s sections; the engine\'s judge (POST /api/content-ideas/:id/spine-check) reads every section against the spine; making.py refuses scripts and the publish page until both pass on the current words.',
+    text: 'Every piece answers ONE question, its spine, approved by Krish at the outline with its one-line answer. The outline states "Spine: <question>?", "Answer: <one line>" and at most six sections, each as "<HEADING> | proves: <the part of the answer it proves>"; the draft\'s sections are exactly those, in that order, plus the closing "3 things you can do tomorrow" section (THREE_THINGS_TOMORROW), which is not an outline section and is not counted in the six. Every section must help the reader reach the spine\'s answer: a section that is true, interesting or related but answers a different question is cut. A new angle is a new spine and a new outline from scratch, approved again, never sections added on top of an approved outline. scripts/post-pack/spine_check.py checks the outline and the draft\'s sections; the engine\'s judge (POST /api/content-ideas/:id/spine-check) reads every section against the spine; making.py refuses scripts and the publish page until both pass on the current words.',
     said: 'I also think we ended up with an absolute ton of drift here. We were supposed to be scoring Muse and Siri, then we started talking about Apple and Walmart, then we started talking about ads, but then we have content about the three different types of AI. All of this could have been turned into something coherent, but it\'s ended up sprawling quite a lot. I\'m not sure why that is, but the engine cannot do this again.',
     on: '2026-10-14', source: 'chat, on Wednesday\'s Muse piece, re-angled five times with each angle added as sections; then "Build out number 3 to sort out the drift"', status: 'live',
     stages: ['write', 'judge_draft', 'final_pass'],
@@ -433,7 +449,7 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
   },
   {
     id: 'PERSONAL_INTRO', name: 'The script opens the way Krish would',
-    text: 'Straight after the series line, a script opens the way Krish talks: what he has been doing with the thing, why it matters in plain words, and that he wants to break it down for you. His own example (config/golden-examples.json): "I\'ve been having a little play around with Muse, Meta\'s new personal assistant. It\'s an important evolution in how AI is going to come into our personal lives, and so I wanted to break it down for you." Then, before anything else, say why this thing is different from what the viewer already uses (for Muse: why not just ChatGPT or Claude). Krish, 2026-10-13: "it doesn\'t introduce why Muse is different to just using Claude". Name every actor and every thing on every line: never "the company" or a bare "it" that the ear has to work out ("Who is \"the company\"? What is \"It\"?"; both are in config/rejected-lines.json). Never open on a fact out of context, a news-reader line or an anecdote with no set-up; the example comes after the intro. Only say he has used something when he has said so.',
+    text: 'A script opens the way Krish talks, straight on the hook with no series line before it (SERIES_OPENER): what he has been doing with the thing, why it matters in plain words, and that he wants to break it down for you. On 2026-10-21 he gave the shape of the very first words: "I put GrokBot and Muse head to head". His own example (config/golden-examples.json): "I\'ve been having a little play around with Muse, Meta\'s new personal assistant. It\'s an important evolution in how AI is going to come into our personal lives, and so I wanted to break it down for you." Then, before anything else, say why this thing is different from what the viewer already uses (for Muse: why not just ChatGPT or Claude). Krish, 2026-10-13: "it doesn\'t introduce why Muse is different to just using Claude". Name every actor and every thing on every line: never "the company" or a bare "it" that the ear has to work out ("Who is \"the company\"? What is \"It\"?"; both are in config/rejected-lines.json). Never open on a fact out of context, a news-reader line or an anecdote with no set-up; the example comes after the intro. Only say he has used something when he has said so.',
     said: 'I think these scripts need to be a little sharper on the intro as well. The first line should be more like something like: "I\'ve been having a little play around with Muse Meta\'s new personal assistant. It\'s an important evolution in how AI is going to come into our personal lives, and so I wanted to break it down for you." Thats something I would actually say, how can you redo todays scripts and then log that for the future?',
     on: '2026-10-13', source: 'chat, on Wednesday\'s Muse scripts; his line is the first entry in config/golden-examples.json; checked softly by scripts/post-pack/story_check.py', status: 'live',
     stages: ['write', 'judge_draft', 'final_pass'],
@@ -478,6 +494,20 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
     text: `Krish rewrites a script as he reads it (9% of what he said on camera was his own words on 12 October, 38% by 16 October: docs/narration/week-of-12-oct), so write it the way he says it, as measured from his own takes. About one sentence in three opens with So, And, But, Now or See (he does it in every take, about twice as often as the scripts did): So before a result, a verdict or the prediction; "Now," before a new step or a question; And to carry a point on. Keep the full stop (reading age 12) and say the link in that opening word, never leave it for the listener to work out. Write the prediction as one spoken lead-in run straight into the claim ("So my prediction is that...", "So I reckon..."), never a bare label ("My prediction:", "Here's my bet."), and say its deadline as a period ("by the end of December 2027"), keeping the exact day in the article and the prediction record. Write his words: "no one", not "nobody"; "I reckon", not "I bet". Give a question with no verb its verb ("Is that half the cake, or is it just the crumbs?"). In a contrast, say the shared word again ("before the singers get paid", not "before the singers do"). Put every fact, figure, name and source in one short fixed line that carries the whole fact, with a score's scale and comparison (PLAIN_SCORES): short lines are the ones he keeps word for word, so keep facts out of the set-up and the turns, where he riffs. Soften one or two of his own verdicts the way he does ("kind of", "probably", "I reckon"), never a fact; put "actually" on the turn of the piece; after his view, give its reason in plain words. Budget the length for what he adds: about 200 script words for the 90-second cut and about 400 for the 3-minute cut (he speaks 170 to 180 words a minute and adds 15 to 38% more).`,
     said: `I also need you to list everything about my narration that deviated from the script, down to the fact that I talk in, let's say, about 30% of that. Thats how script should be written in the future.`,
     on: '2026-10-17', source: 'chat, after his 14-minute Friday take; measured by scripts/post-pack/narration_diff.py over the week\'s seven takes (config/narration-ledger.json; the rules each checked against every take, docs/narration/week-of-12-oct/habits-and-rules.json); checked softly by scripts/post-pack/story_check.py', status: 'live',
+    stages: ['write', 'judge_draft', 'final_pass'],
+  },
+  {
+    id: 'THREE_THINGS_TOMORROW', name: 'Every article ends with "3 things you can do tomorrow"',
+    text: 'Every article ends with a clearly headed section, "3 things you can do tomorrow" (the heading says exactly that), holding exactly three concrete actions a reader can take the next day. Each is one short plain sentence that starts with a verb, names the thing to do, and follows from the piece\'s own checked evidence: no new claim, number or source goes in it. It is the last section, after the prediction. It is not an outline section (ONE_SPINE), and it is the one list of three the house wants (SOUNDS_LIKE_KRISH asks for no others on repeat). The video script does the same job in his own words in its closing beat (SCRIPT_CLOSE). The publish check THREE_THINGS_TOMORROW reads the heading and the three items.',
+    said: 'The articles all need to have a really clear "3 things you can do tomorrow" at the end of every piece too.',
+    on: '2026-10-21', source: 'chat, the 2026-10-21 ruling on every piece; checked by publishChecks THREE_THINGS_TOMORROW (api/_publishChecks.ts), which reads the heading and the three items', status: 'live',
+    stages: ['write', 'judge_draft', 'final_pass', 'publish_check'],
+  },
+  {
+    id: 'TONE_OBSERVANT_WITTY', name: 'Observational, witty and positive, with a dry Hannah Fry edge',
+    text: 'In every series, in the article and the script, Krish\'s tone is observational (he notices a true, specific detail and says what it shows), witty and positive. The wit is dry and deadpan, in the manner of Hannah Fry: a quiet aside that grows out of a true detail already in the piece, never an invented one. It is aimed at the hype, the situation or himself, never at a real person, a named person\'s looks, job or character, or the reader. Positive means the reader leaves better equipped and curious, not cynical or scared: a hard finding is said straight and followed by what can be done about it. A joke never sits inside a sentence the fact gate holds, and a piece with no true detail worth a smile has no joke. Scripts carry more of it than articles (ANALOGY_IN_SCRIPTS_ONLY, VOICE_ON_CAMERA).',
+    said: 'Generally yes - observational and witty and positive are my general go tos. (Of the question whether "Bit of dry wit and hannah fry sarcasm too" applies to every series.)',
+    on: '2026-10-21', source: 'chat, his answer on tone for every series; read by every writer and draft judge through this registry', status: 'live',
     stages: ['write', 'judge_draft', 'final_pass'],
   },
 ])

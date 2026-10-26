@@ -1,0 +1,36 @@
+{
+  "approved_by": "Krish",
+  "date": "2026-10-19",
+  "said": "1) say \"$4 a batch to read tokens, and $20 a batch to write tokens. 2) say \"two ways to bring the bill down\" 3) \"where you work\".",
+  "decisions": [
+    {
+      "before": "around four batch to read words and 20 batch to write a batch to write words.",
+      "after": "$4 a batch to read tokens, and $20 a batch to write tokens."
+    },
+    {
+      "before": "Now, there are two ways to bring this down and the build down, sorry.",
+      "after": "Two ways to bring the bill down."
+    },
+    {
+      "before": "Find whoever runs AI way work.",
+      "after": "Find whoever runs AI where you work."
+    }
+  ],
+  "original_srt_sha256": "7ff994ed5a0a718d529106e3988672ed33aa430621bed3f282a760ee568c938d",
+  "files": [
+    {
+      "name": "Why AI prices keep changing - long - approved captions.srt",
+      "sha256": "933d38361ca97745d45cc63ce921514b6e9bb389e9bf5fe1cef575361bd100c9",
+      "bytes": 9431
+    },
+    {
+      "name": "Why AI prices keep changing - long - approved transcript.txt",
+      "sha256": "f8d47b365059c5381e795ff236e259fd282cb726d33f941ca4f481ec9ae7fd6d",
+      "bytes": 5271
+    }
+  ],
+  "video_sha256_unchanged": "90392c47fcec934f3507cf2d7dd5e26a7ddd3fd26c5c70a9988e9cb11c4f0c19",
+  "caption_questions_remaining": [],
+  "semantic_diff": "Only the three approved passages; cue 30/31 merged over their original interval; other timings unchanged.",
+  "publication_hold": "One contradicted-category article fact entry remains. No paid run or gate override authorised."
+}

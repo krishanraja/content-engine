@@ -120,19 +120,8 @@ export async function embedBatch(inputs: EmbedInput[]): Promise<(number[] | null
   return out
 }
 
-/** Cosine similarity between two equal-dimension vectors. Returns 0 if either
- *  vector is degenerate. */
-export function cosine(a: number[], b: number[]): number {
-  if (a.length !== b.length || a.length === 0) return 0
-  let dot = 0, na = 0, nb = 0
-  for (let i = 0; i < a.length; i++) {
-    dot += a[i] * b[i]
-    na += a[i] * a[i]
-    nb += b[i] * b[i]
-  }
-  const denom = Math.sqrt(na) * Math.sqrt(nb)
-  return denom === 0 ? 0 : dot / denom
-}
+/** Cosine similarity lives in the pure _vectors.ts, so pure modules can use it without the meter. */
+export { cosine } from './_vectors.js'
 
 /** Serialize a number array into the pgvector text literal pgvector expects
  *  when written through PostgREST. */

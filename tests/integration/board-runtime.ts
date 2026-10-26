@@ -122,7 +122,11 @@ try{
     ['queue','mon-1',{pick:'mon-1',queued:true}],
     ['comments','root',{thread_id:'root',anchor:'mon-article',text:'Note'}],
     ['comments','reply',{thread_id:'root',anchor:'mon-article',text:'Reply'}],
-  ] as const){await put(`${week}/${collection}/${id}`,{body:value,revision:0});assert.ok((await get(`${week}/${collection}`)).documents.some((d:Row)=>d.id===id))}
+  ] as const){
+    // An edit is only ever Krish's own save (his access cookie); the engine's key is refused (edit_is_his_save).
+    const krish={'Content-Type':'application/json',Cookie:cookie,Origin:origin}
+    if(collection==='edits')await put(`${week}/${collection}/${id}`,{body:value,revision:0},403)
+    await put(`${week}/${collection}/${id}`,{body:value,revision:0},200,collection==='edits'?krish:headers);assert.ok((await get(`${week}/${collection}`)).documents.some((d:Row)=>d.id===id))}
   await put(week+'/comments/orphan',{body:{thread_id:'absent',anchor:'mon-article',text:'Wrong'},revision:0},400)
   for(let n=0;n<23;n++)await put(week+'/comments/page-'+String(n).padStart(2,'0'),{body:{thread_id:'page-'+String(n).padStart(2,'0'),anchor:'board-root',text:'Pagination '+n},revision:0})
   const firstPage=await (await fetch(origin+week+'/comments',{headers})).json()
@@ -207,6 +211,6 @@ try{
     await put(week,{manifest:{version:1,week:'2026-10-19',html:file,assets:{}},revision:1})
     const {checkBrowser:interact,checkVisual}=await import('../board-browser.mjs')
     const checkBrowser=process.argv[6]==='visual'?checkVisual:interact
-    await checkBrowser({modulePath:process.argv[3],origin,cookie,api:(collection:string)=>get(week+'/'+collection),write:(collection:string,id:string,body:unknown,revision:number)=>put(`${week}/${collection}/${id}`,{body,revision}),screenshotDir:process.argv[5],sourceData:!!process.argv[7]})
+    await checkBrowser({modulePath:process.argv[3],origin,cookie,api:(collection:string)=>get(week+'/'+collection),write:(collection:string,id:string,body:unknown,revision:number)=>put(`${week}/${collection}/${id}`,{body,revision},200,collection==='edits'?{'Content-Type':'application/json',Cookie:cookie,Origin:origin}:headers),screenshotDir:process.argv[5],sourceData:!!process.argv[7]})
   }
 }finally{await new Promise<void>(resolve=>server.close(()=>resolve()));await pg.close()}

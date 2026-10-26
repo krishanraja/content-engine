@@ -8,7 +8,7 @@ reference remains discoverable without weakening the no-media invariant.
 
 | File | Purpose | Canonical Drive location | SHA-256 |
 | --- | --- | --- | --- |
-| `igexport-DCHp2RLIxMt.mp4` | Visual inspiration for videos produced by the Content Engine | `H:\My Drive\Ventures\Active\makeyourmindup\Video Engine\Inspiration\igexport-DCHp2RLIxMt.mp4` | `acd429d8fd6edc62e2bd18b9b506008149622799fcc6035d4393b2451f17402f` |
+| `igexport-DCHp2RLIxMt.mp4` | Visual inspiration for videos produced by the Content Engine | `H:\My Drive\Ventures\Inspiration\Production Inspo\igexport-DCHp2RLIxMt.mp4` (moved from Video Engine > Inspiration on 2026-10-24) | `acd429d8fd6edc62e2bd18b9b506008149622799fcc6035d4393b2451f17402f` |
 
 `Inbox` remains reserved for recordings awaiting governed intake. `Archive`
 remains reserved for approved deliverables. Inspiration is never published

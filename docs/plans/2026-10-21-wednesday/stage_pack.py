@@ -1,0 +1,145 @@
+"""Stage an explicitly held review pack, without marking the piece made.
+
+Unaccepted video exports go in Working - review, never the delivery lane.
+The exact validation receipts travel with them, including unresolved checks.
+"""
+import argparse
+import json
+import shutil
+import sys
+import zipfile
+from pathlib import Path
+
+PLAN=Path(__file__).resolve().parent
+ROOT=PLAN.parents[2]
+sys.path.insert(0,str(ROOT/'scripts/post-pack'))
+import build
+
+
+def main():
+    ap=argparse.ArgumentParser();ap.add_argument('work',type=Path);ap.add_argument('--videos',action='store_true');ap.add_argument('--stable',action='store_true');ap.add_argument('--narrative',action='store_true');ap.add_argument('--approved-headshot',action='store_true')
+    a=ap.parse_args();w=a.work.resolve();art=w/'head-to-head-final' if a.approved_headshot else w/'article';thumbs=w/'head-to-head-final' if a.approved_headshot else w/'thumbs'
+    files=[]
+    def item(path,kind=None,category=None,name=None,purpose=None,**extra):
+        d={'file':str(Path(path).resolve()),**extra}
+        if kind:d['kind']=kind
+        if category:d['category']=category
+        if name:d['name']=name
+        if purpose:d['purpose']=purpose
+        files.append(d)
+    for name,kind in [('page.html','web-page'),('substack.html','substack-copy'),
+                      ('email-pictures-off.html','email-pictures-off'),('cover.png','cover')]:
+        item((art if name=='cover.png' else w/'article')/name,kind=kind,logos=['Grok Bot','Meta'])
+    for cut,shape in [('long','wide'),('short','tall')]:
+        item(PLAN/f'recorded-{cut}-script.md',kind='video-script',name=f'recorded-{cut}-script.md')
+        thumb='thumb-wide-1280x720.jpg' if cut=='long' else 'thumb-tall-1080x1920.jpg'
+        item(thumbs/thumb,kind='thumbnail',shape=shape,logos=['Grok Bot','Meta'])
+    figure_scopes={
+        'scam-grok':'Scam prompt reconstructed from the test readout; Muse reply is an actual redacted draft crop. Nothing sent.',
+        'flight-layover':'Historical fare and three-night timeline from the test; Muse claim is an actual cropped interaction.',
+        'news-date':'Source date and test result with a separate public user report, each labeled on the figure.',
+        'email-duplicate':'Anonymised reconstruction of the draft sequence, checked against Gmail readback. Nothing sent.',
+        'starting-point':'Separate one-run field and supplied-research columns; no average or success rate.'}
+    for name,scope in figure_scopes.items():
+        item(w/'article-cards-v2'/f'{name}.png',kind='image',logos=['Grok Bot','Meta'],
+             data_source='docs/plans/2026-10-19-week/test-results/README.md',scope=scope)
+    item(w/'takeaway/scorecard.png',kind='share-card',logos=['Grok Bot','Meta'],shows='evidence')
+    item(ROOT/'docs/plans/2026-10-19-week/wednesday-article-draft.md',category='article',name='article-review.md',
+         purpose='Source-audited article. Native fact gate cleared after the final check and Krish’s 27 named-line adjudications; raw model findings remain preserved.')
+    item(ROOT/'docs/plans/2026-10-19-week/wednesday-scorecard.md',category='article',
+         purpose='Five plain-cell round results with links to the research. Personal and community evidence stay separate.')
+    item(PLAN/'publishing-copy.md',category='social',purpose='Editable channel copy for review; no public posts have been made.')
+    for name in ['release-review.md','narrative-recut-review.md','claim-review.md','claim-resolution-22-oct.md','final-fact-adjudication.md','finish-approval-22-oct.json','stabilisation-review.md','visual-revision.md','packaging-approval.json','chapters.txt','chapters.json']:
+        item(PLAN/name,category='publish',purpose='Review status, evidence and the exact recorded approval. Read before posting.')
+    suffix='stable' if a.stable else 'revised'
+    folders=[f'cards-{suffix}','article-cards','article-cards-v2','story-revised',f'kit-short-{suffix}',f'kit-long-{suffix}',f'review-short-{suffix}',f'review-long-{suffix}']
+    archive=w/'production-working.zip'
+    with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED) as z:
+        if a.approved_headshot:
+            for p in (w/'head-to-head-final').iterdir():
+                if p.is_file() and p.suffix.lower() in {'.png','.jpg','.json'}:
+                    z.write(p,p.relative_to(w).as_posix())
+        for folder in folders:
+            for p in (w/folder).rglob('*'):
+                if p.is_file() and (not p.name.startswith('frame-') or p.suffix=='.json'):
+                    if folder=='article-cards-v2' and p.suffix.lower() not in {'.png','.json'}:
+                        continue
+                    z.write(p,p.relative_to(w).as_posix())
+        for name in ['short.words.json','long.words.json','long-removals.json','fact-result.json',
+                     'fact-after.json','voice-check.json','ai-scan.log','primary-source-filings.json',
+                     'primary-reddit-filings.json','field-source-filing.json','video-technical-review.json','board-readback.json']:
+            p=w/name
+            if p.is_file():z.write(p,p.name)
+        for folder in ['sync-short-source','sync-long-source','sync-short-final-revised','sync-long-final-revised']:
+            p=w/folder/'sync-report.json'
+            if p.is_file():z.write(p,p.relative_to(w).as_posix())
+        if a.stable:
+            for cut in ['long','short']:
+                for name in ['stabilisation.json','camera-path.npz','motion-comparison.json','geometry-review.json']:
+                    p=w/f'stability-{cut}/full'/name;z.write(p,p.relative_to(w).as_posix())
+                p=w/f'sync-{cut}-final-stable/sync-report.json';z.write(p,p.relative_to(w).as_posix())
+            for name in ['fact-final-22oct-readback.json','fact-adjudication-prepared.json','fact-adjudication-recorded.json','fact-adjudication-final-readback.json','source-filings-22oct.json']:
+                p=w/name;z.write(p,p.name)
+        if a.narrative:
+            for folder in ['evidence-panels','narrative/long','narrative/short','render-long-narrative','render-short-narrative']:
+                for p in (w/folder).rglob('*'):
+                    if not p.is_file():continue
+                    if folder=='evidence-panels' and p.suffix.lower() not in {'.mp4','.json','.graph','.txt'}:continue
+                    if folder.startswith('narrative/') and p.suffix.lower() not in {'.json','.md'}:continue
+                    if folder.startswith('render-') and p.suffix.lower() not in {'.json','.ass','.srt','.graph','.txt'}:continue
+                    if 'picture-parts' in p.parts or p.name=='frame-corrected.mp4':continue
+                    z.write(p,p.relative_to(w).as_posix())
+            for folder in ['sync-long-final-narrative-corrected','sync-short-final-narrative-limited']:
+                p=w/folder/'sync-report.json'
+                if p.is_file():z.write(p,p.relative_to(w).as_posix())
+            for folder in ['review-long-narrative','review-short-narrative']:
+                for p in (w/folder).glob('*.json'):z.write(p,p.relative_to(w).as_posix())
+                for p in (w/folder).glob('contact-*.jpg'):z.write(p,p.relative_to(w).as_posix())
+            for p in [w/'supplied-short/motion-assessment.json',w/'supplied-short/source-replacement.json',*([] if a.stable else [w/'stability-long/full/motion-comparison.json'])]:
+                if p.is_file():z.write(p,p.relative_to(w).as_posix())
+        p=w/'review-short/face-framing.json'
+        if p.is_file():z.write(p,p.relative_to(w).as_posix())
+        for folder,stem in [('render-short','muse-vs-grok-short-9x16'),('render-long-music','muse-vs-grok-long-16x9')]:
+            p=w/folder/(stem+'.heard.json')
+            if p.is_file():z.write(p,p.relative_to(w).as_posix())
+    # The standard pack builder intentionally makes flat filenames. Its
+    # `name` field cannot create a Working directory. Use the native sender's
+    # explicit --as lane for held media instead of flattening a slash.
+    held=[archive]
+    acceptance=w/'review-media/playback-acceptance-23oct.json'
+    if acceptance.is_file():held.append(acceptance)
+    if a.videos:
+        for cut,shape,folder in [('short','9x16','render-short-revised'),('long','16x9','render-long-revised')]:
+            if a.stable:folder=f'render-{cut}-stable'
+            if a.narrative:folder=f'render-{cut}-narrative'
+            base=w/folder/f'muse-vs-grok-{cut}-{shape}'
+            for suffix in ['.mp4','.srt','.mp4.validation.json']:
+                p=base.with_suffix(suffix)
+                held.append(p)
+    post=json.loads((PLAN/'post.json').read_text(encoding='utf-8'));post['files']=files
+    if a.approved_headshot:
+        # This exact piece's approved treatment uses product marks beside
+        # editorial founder headshots instead of the generic house drawer.
+        post['visual_gate_override']=(
+            'Krish, 2026-10-22: "It should just be their headshots versus each other, so a bit more professional." '
+            'Krish, 2026-10-23: "Better, but we probably dont need their names, and we need to associate the actual branding of Grok and Muse better." '
+            'Approval of the seven-format treatment: "Yes, use this treatment".')
+    post['release_status']='ready';post['readiness_note']='Article fact gate and exact video playback review cleared. Private board package only; nothing has been publicly posted.'
+    p=w/'review-post.json';p.write_text(json.dumps(post,indent=2,ensure_ascii=False),encoding='utf-8')
+    result=build.build(p,out=w/'packs',replace=True)
+    review=w/'review-media';review.mkdir(exist_ok=True)
+    expected={p.name for p in held}
+    if any(p.name not in expected for p in review.iterdir()):
+        raise ValueError('Unexpected file in review media folder; preserve and inspect it before sending')
+    for p in held:
+        if p.resolve()!=(review/p.name).resolve():shutil.copy2(p,review/p.name)
+    library_plan={'folder':str(review),'prefix':f'3 Posts/{result["folder"]}/3 Video/Working - review',
+                  'purpose':'Accepted exact video exports, captions, validation receipts and signed playback readback retained with the working archive.',
+                  'files':[p.name for p in held]}
+    (w/'review-library-plan.json').write_text(json.dumps(library_plan,indent=2),encoding='utf-8')
+    (w/'pack-result.json').write_text(json.dumps(result,indent=2,default=str),encoding='utf-8')
+    print(json.dumps({'folder':result['folder'],'path':str(result['path']),'files':len(result['files']),
+                      'held_media':library_plan}))
+
+
+if __name__=='__main__':main()

@@ -4,6 +4,197 @@
 > no longer reads 181 KB of old handoffs before it starts (`docs/COST_GUARDS.md`, G11). Nothing here is current;
 > live state is in `WORKBENCH.md`. Newest first, exactly as written.
 
+## 23 October: Wednesday private board ready (historical)
+
+- 2026-10-23: **Wednesday's private publish board is ready for Krish's final use.** He said the revised source-led inbox figure was “much better” and told Codex to continue. The live board at `https://content.krishraja.com/board/2026-10-19#wednesday` is build `d3a4d79980e7a7ff91eae4cde990955eb445afb1bdbfa17129c930c2d21c620b`. Five article figures now carry publication identity and adjacent Grok Bot/Muse marks, actual redacted interaction crops where available, explicitly labelled reconstructions, and separate field/research scores. The approved seven branded covers/thumbnails and both accepted videos remain available. The article and channel-copy boxes are editable/commentable. The illustrated article and Substack copy contain all five figures. Live HTML and all changed asset downloads hash-match; Ideas, Monday and Friday are byte-identical to the prior build, and all six stores for both 12 and 19 October are unchanged. The private asset pack was sent; `C:\Users\krish\.scratch\wednesday-production-2026-10-21\library-readback.json` is the full newest-download proof once complete. The board proof is `board/final-article-readback.json` in that production folder. The videos' exact hashes, quality receipts and Krish's “Both approved” playback response remain binding. Nothing was publicly posted. Next: Krish can make any final board notes, then publish himself.
+
+## 23 October: held inbox visual (Codex)
+
+- 2026-10-23: **The held inbox visual has a second review sample.** Krish rated
+  the first concept 5/10 and said it was insufficiently visual, lacked the Grok
+  Bot and Muse icons beside their labels, named him in outward copy, and felt
+  like a standalone article rather than a supporting enterprise figure. Exact
+  feedback and root-cause classification are in
+  `docs/plans/2026-10-21-wednesday/article-visual-audit-23oct.md`. The second
+  local sample is `C:\Users\krish\.scratch\wednesday-production-2026-10-21\article-visual-review\inbox-concept-v2.png`, with an article-width QA preview
+  beside it. The same PNG was sent to the private post library under
+  `2 Covers and images/Working - review/`; the actual library download matched
+  all 130,054 source bytes. It connects an explicitly reconstructed incoming inquiry to
+  Grok Bot's warning and an actual redacted Muse draft; product marks and
+  publication identity are present, and no author name appears. This is one
+  held material surface for review, not a live board replacement. Next:
+  receive his verdict on this sample before carrying the direction through
+  the five figures. No public post.
+
+## 23 October: Wednesday article visual hold (Codex)
+
+- 2026-10-23: **Wednesday's board is held for article visuals and publication branding.** Build
+  `63f59c81affebfd815726202f118ab2b3d214081f33adcf7d9384422dcceac27`:
+  the native publish page and all seven approved headshot cover/thumbnail formats accompany
+  both corrected cuts. The seven delivery images have embedded previews in
+  Publishing files and copy, beside the exact full-resolution downloads. Browser
+  readback decoded all seven and the five illustrated-article graphics. The
+  board builder's own check and its 218 self-tests pass. Live HTML and changed
+  asset downloads hash-match; Ideas, Monday and Friday remain byte-identical.
+  Earlier assets remain available;
+  all 37 earlier comments and 11 queue entries were preserved byte-for-byte, with
+  one new entry each. The board stays editable and commentable. These mechanical
+  checks do not establish visual quality. No public post.
+  - Krish rejected the five in-article images as below the previous boards' bar,
+    and identified the missing makeyourmindup identity on the delivery graphics.
+    Comparison against the 12 and 19 October live boards confirmed that four
+    Wednesday figures are largely text comparisons and the fifth is a simple
+    itinerary line. None displays a source screenshot or interaction. Earlier
+    examples include a dated 12-source collage, a sourced model-launch timeline,
+    and a price figure with exact units. The Wednesday image plan declared the
+    reconstructions as evidence; the pack gate checked presence and declarations
+    without testing whether each figure explained the critical point. The
+    earlier privacy preference was not reconciled with Krish's later request for
+    blurred real bot interactions. The current board is not publish-ready.
+  - The canonical publication wordmark is now embedded in seven locally rendered
+    delivery formats at `C:\Users\krish\.scratch\wednesday-production-2026-10-21\head-to-head-final`;
+    their alignment and legibility checks pass, but the live board/library still
+    serve the earlier unbranded files. A held, source-led inbox figure is rendered
+    at `C:\Users\krish\.scratch\wednesday-production-2026-10-21\article-visual-review\inbox-concept.png`.
+    It uses the redacted Muse interaction, a separately attributed community
+    capture and the publication wordmark. It is for Krish's reaction, not a
+    replacement on the live board. Next: resolve that visual direction, replace
+    the five article figures, then send/read back the revised files on the board
+    and in the library. Do not publish directly.
+  - Krish played both exact exports through on his phone and replied “Both approved”
+    to the short join, long text, motion, sound and spoken words. The native delivery
+    guard passes both receipts; each keeps the raw independent recognizer failures
+    under its human-adjudicated heard check. Six-point sync, source stabilisation,
+    loudness and sampled visual evidence remain bound to the exact video hashes.
+  - The article's exact-body fact gate remains clear after the $0.59 check and
+    27 named source-bound sign-offs. No further paid run occurred. The private library
+    has 40 review-pack files plus seven final delivery files; actual downloads and
+    ready states matched every hash, including both final videos and publish-manager.
+  - The Friday draft was carried through the normal board builder unchanged as
+    Wednesday advanced. The old boxing art stays labelled archive. Source, rendering
+    and approval records are in `docs/plans/2026-10-21-wednesday/`; the media are in
+    the post library. The native making record now marks fact check, visual gate,
+    scripts, pack, recording and both video assets done; the article-visual
+    quality hold supersedes its earlier visual-gate completion signal.
+    The library sync was failing because its mounted parent is `Active Ventures`,
+    while the runner config said `Active`. After correcting the runtime path, its
+    own hash-checking pass wrote 66 files with zero failures. The two final videos
+    and two thumbnails were identified by exact name, size and folder in Drive;
+    their real file IDs are recorded in the making record. The board's `Download
+    first` card now resolves them through the same immutable, verified board assets.
+    The live HTML, one changed review download, all prior assets and the other day
+    panels passed independent readback. PR #139 is merged, and the corrected
+    route is recorded in the runtime config and Drive guide. Krish directed
+    agents to prepare the board only; he will publish from it. No direct posting.
+
+## 23 October: Wednesday corrected cuts in private review (Codex)
+
+- 2026-10-23: **Wednesday's private publish board carries the corrected videos and approved Grok Bot/Muse headshot artwork.** Build
+  `b7be2fe28348ceadc78c0c732c41b8ee6b5b6f59189eed21ce67ac1850f367c4`:
+  live HTML and all 13 changed downloads hash-match the local inputs, all earlier assets
+  remain available, and Ideas/Monday/Friday panels are byte-identical. Edits, ticks,
+  links and picks were preserved. All 37 earlier comments and 11 queue entries
+  remained byte-identical, with one new entry in each collection. The board remains editable
+  and commentable. No public post.
+  - The long score/card alignment, short 3–4-second transition and additive scam card
+    are repaired. Both audio payloads exactly match the previously accepted cuts; fresh
+    six-window SyncNet reports pass within 40 ms. The short uses Krish's supplied
+    auto-stabilised source. Frame sampling and full-resolution checks are recorded in
+    `docs/plans/2026-10-21-wednesday/narrative-recut-review.md`; these do not replace
+    continuous phone playback. The native delivery guard still holds heard, full review
+    and final motion acceptance open, with the recognizer differences preserved.
+  - Krish approved the revised headshot treatment. Five cover sizes and two thumbnails,
+    with real Grok Bot and Muse marks, are staged in the post library pack and on the
+    board. The old boxing art is labelled archive. The article's fact gate remains
+    clear by the recorded exact-body adjudication; no further paid run occurred.
+  - Code, receipts and the library handoff are in this branch's 23 October release.
+    The pack and the seven held review-media files are sent through
+    `scripts/post-pack/send.py` into the post's library folder; the always-on machine's
+    final write/readback remains to verify. Next: Krish plays both exact new cuts on
+    his phone, then the native delivery gate can be closed on evidence. Public posting
+    requires its own authorisation.
+
+## 22 October, 16:50 UTC: Wednesday recut and headshot draft (Codex)
+
+- 2026-10-22, 16:50 UTC: **Wednesday's private board has the integrated recuts and current headshot draft.** Build
+  `20c5c551728412279d8a274cfd3fa78337a7fa793a0db7a909b30c82abd3fe56`:
+  live HTML and the one changed asset download matched, all 54 assets retained,
+  other panels unchanged, and Krish's Friday feedback retained.
+  Fact gate clear; no public post.
+  - [PR #136](https://github.com/krishanraja/content-engine/pull/136) has the video code;
+    local verify and 85 checks passed. Merge after CI. See
+    `docs/plans/2026-10-21-wednesday/narrative-recut-review.md` for hashes, six-point
+    sync, motion, audio and ASR reports. The new short uses Krish's supplied stabilised
+    source. Forty newest library downloads plus the supplied source/receipt hash-matched.
+  - **Open:** full phone playback of both new cuts; the raw recognizer differences;
+    Krish's reaction to the restrained Elon/Zuckerberg headshot mock before seven
+    cover/thumbnail shapes. The rejected boxing art was withdrawn from the active
+    board covers section and from the publish-manager inputs, then preserved as
+    clearly labelled archive links. The revised manager's three changed files
+    matched actual library downloads. The mock/source portraits are in the post
+    library's `Working - headshot review` lane. The Inbox `Active Ventures` versus runner `Active`
+    path mismatch remains unrepaired; manual source retrieval succeeded.
+
+## 22 October: Wednesday finishing pass (Codex)
+
+Both stabilised videos are live on the private Wednesday board, build
+`1bfee8f7c5955aef2cfb3b6fe8c8b9645b80221c5b1cd4b113cc50a9c9620584`, 50 assets.
+Actual new video downloads match the checked exports. Motion RMS fell 67.7%
+long and 51.5% short; sync passes six calibrated windows per export within
+40 ms, accepted decoded audio is identical, every one-second/bookend sample
+was inspected, and every camera transform passes geometry. Motion assessment
+is now mandatory in both skills and the native delivery guard.
+
+The $0.59 final fact check plus Krish's four manual adjudications and 23
+sign-offs clear the native fact gate while preserving all original verdicts.
+The approved exact-body retrospective exception merged in PR #134 after all 15 checks passed (main `6bfad15`). Article evidence
+balance: tests 422 words, corpus 423. No more paid run is authorised.
+
+Final continuous phone playback acceptance of both new exports is requested;
+raw recognizer discrepancies remain intact. The corrected article, covers,
+scorecard, captions, chapters and copy are on the editable/commentable board.
+Ideas/Mon/Fri, all prior assets and all feedback collections are preserved.
+All 39 refreshed library downloads match their hashes at
+`3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot`.
+Current proof and continuation: `docs/plans/2026-10-21-wednesday/stabilised-readback.json`,
+`README.md`, `release-review.md`. Earlier `production-readback.json` certifies
+prior exports only. No public post. Original recordings remain preserved.
+
+- 2026-10-20, about 14:30 UTC: **`manual` means his words, for every row** (step 3
+  PR 8, the last step of the design entropy session). Migration
+  `20261101120000_manual_is_his_words_validated.sql` validates
+  `content_ideas_manual_is_his_words`; read back `convalidated = true`. 0 stored
+  rows broke it. The engine's request log could not be read from the session,
+  so the quiet week rests on the database: no idea came through Control
+  Center's door, and 75 from the engine's own sources landed. Control Center
+  deletes the session's handoff and skill in the same change.
+
+- 2026-10-17, about 07:15 UTC: **Friday's packaging is signed off; the session is finishing it without him.**
+  - The sheet (`docs/plans/2026-10-09-friday/signoff-sheet.md`, SIGNED OFF): Krish, "Fine with everything except for
+    \"soon you won't pick your AI.\" ... I would suggest something along the lines of \"ChatGPT and Claude are releasing
+    new models faster than ever. But does it even make a difference?\"". Every pick and the rejection are in
+    `config/title-verdicts.json`. His line (cut to "ChatGPT and Claude: faster than ever. Does it matter?" where space is
+    short; a colon because a comma dropped into the next line on the tall covers) is on the cover, the Shorts title, the
+    tall thumbnail and the title card; the wide thumbnail is "ANOTHER CLAUDE?". Four headings and four chapters gained a
+    product name so the filter passes them (title_check now reads number words beside a name).
+  - Learned today, all encoded and guarded: SIGN_OFF_FIRST (one sheet, then finish without him), CHANNEL_HEADINGS
+    (headings in one channel style, never pasted from the transcript), STORY_FIRST (every line judged against the
+    piece's story: his `story.md`, the outline's spine, the series' question; `title_check.py lessons --plan`), and the
+    hidden-pointer refusal ("one setting", "the setting behind it").
+  - 90 seconds: the shorter v7 (a cut of his v6, his words only, about 1:22) is on the record with his words and in
+    Teleprompter (updated in place 06:57 UTC). He records it in the morning.
+  - Done: cover (every shape) and both thumbnails drawn and looked at; channel copy v2 with his titles
+    (`publish-copy-v2.json`); the 10 missing evidence captures (`shots-v6-sources.json`; WIRED's two lines are paywalled,
+    the reporter's own post stands in).
+  - Running: the cards (workflow friday-long-cut-cards: logos, approved headings, divider cues, draw, two skeptics);
+    the Substack exhibits Krish asked for ("heavyweight beautiful stunning visual intel as to what difference models
+    versus thinking levels make to intelligence and how that correlates to the cost of it ... enterprise-grade and
+    available inside the substack"; workflow friday-visual-intel, live Artificial Analysis data, three skeptics); the
+    story intro and outro render; the long-cut draft render (stage 2).
+  - Next: final long render with cards, intro and outro; frame-by-frame review; page.json for the v5 article with the
+    exhibits as figures; pack; library; publish board on both links (approved: "Fine with everything"). Posting is his.
+  - Style trial A rendered (`.cache/style-trial/trial-a.mp4`): captions still far too small; fix before showing him.
+
 - 2026-10-17, about 05:45 UTC: **Krish's 17 October calls, and his narration measured against his scripts.**
   - Headings: "These headings are so stupid it's insane. I can't believe you're putting these to me." All 30 Friday
     card and divider headings recorded as rejected, with the lesson (never write one to pass the floor; start from

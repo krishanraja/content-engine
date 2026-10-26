@@ -85,11 +85,19 @@
     "promise_match_min_terms": 1
   },
   "runtime": {
-    "drive_root": "H:\\My Drive\\Ventures\\Active\\makeyourmindup\\Video Engine",
-    "media_inbox": "H:\\My Drive\\Ventures\\Active\\makeyourmindup\\Video Engine\\Inbox",
-    "archive_root": "H:\\My Drive\\Ventures\\Active\\makeyourmindup\\Video Engine\\Archive",
-    "library_root": "H:\\My Drive\\Ventures\\Active\\makeyourmindup",
-    "music_root": "H:\\My Drive\\Ventures\\Active\\makeyourmindup\\00_Brand-Assets\\07_Music"
+    "drive_root": "H:\\My Drive\\Ventures\\Active Ventures\\makeyourmindup\\Video Engine",
+    "media_inbox": "H:\\My Drive\\Ventures\\Active Ventures\\makeyourmindup\\Video Engine\\Inbox",
+    "archive_root": "H:\\My Drive\\Ventures\\Active Ventures\\makeyourmindup\\Video Engine\\Archive",
+    "library_root": "H:\\My Drive\\Ventures\\Active Ventures\\makeyourmindup",
+    "music_root": "H:\\My Drive\\Ventures\\Active Ventures\\makeyourmindup\\00_Brand-Assets\\07_Music"
+  },
+  "drive_ids": {
+    "_note": "Each runtime folder's Google Drive ID, verified against live Drive on 2026-10-24. Krish, 2026-10-24: folders are found by ID, never by path, wherever the API allows it. The engine reads the Inbox by media_inbox (api/library/_inboxDrive.ts holds the same ID); a moved folder's new path is found from its ID; the home computers report a missing path to the engine every pass (scripts/recordings-upload.ps1). docs/DRIVE.md lists them all.",
+    "drive_root": "1pr9C_HYefYy2YTudoD8jHsPz7wftVFMW",
+    "media_inbox": "1H-PWmcwLkKCPHShBL6SYzsLzEbpa6795",
+    "archive_root": "1h8Ia7iUCEXK8u2iqep4YhLPWC0-WNnjJ",
+    "library_root": "1HHI0u24N3o3-yeprQzHdXVZtA7cNcKxh",
+    "music_root": "1pmPWx8vTOZuUXkp-WjhLlCTvof8MrRxK"
   },
   "radar_providers": {
     "mm_ctrl_url": "https://bkyuxvschuwngtcdhsyg.supabase.co/functions/v1/video-radar-export",

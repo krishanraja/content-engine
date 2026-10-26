@@ -14,6 +14,8 @@ that everything is fresh and synchronised in real time".
     python making.py PIECE_ID scripts long.md short.md       # story_check on each, by position, with the
                                                              # piece's series, and each script's sha256; records
     python making.py PIECE_ID scripts long.md short.md --krish-words "Krish, DATE: ..."   # his own scripts, findings waived and kept
+    python making.py PIECE_ID scripts long.md short.md feature.md   # a piece Krish called a 15-minute feature for
+                                                             # (config/features.json): the third is checked as the feature
     python making.py PIECE_ID pack PACK_FOLDER [--sent]      # build.py and send.py call this themselves
     python making.py PIECE_ID recorded long "recordings/<sha256>.mp4" [--seconds N] [--krish-words "Krish, DATE: ..."]
     python making.py PIECE_ID video long NAME PATH [--url https://...] [--seconds N]
@@ -34,10 +36,24 @@ variable, else "Codex" inside Codex (any CODEX* environment variable, the way
 send.py tells), else "Claude Code". So build.py and send.py, which record
 through report(), credit Codex when Codex runs them, with nothing to set.
 
+The 15-minute feature (house rule FEATURE; Krish, 2026-10-21: "From time
+to time I might do a special 15 min feature"). On a piece Krish called one
+for, and only on his call (config/features.json `pieces.<piece id>`),
+`scripts` takes a third script after the long and the short, checks it with
+story_check --cut feature (2,025 to 2,475 words) and records its hash and
+changed_at beside theirs. Three scripts for any other piece are refused:
+the piece goes into features.json only on Krish's call, never a session's.
+The long and the short stay the two every piece gets; a feature piece given
+only those two passes on them and is told its feature script is still to
+come. A week's deep cut already in config/deep-cuts.json keeps its 8 to 12
+minute long script (deep_piece).
+
 The scripts' words. `scripts` runs story_check.py on each script with the
 piece's series (--series, its lane_slot from the engine, or --series given
-here), so a script that does not open with its series line, or says "I'm
-Krish" again after it, fails (house rule SERIES_OPENER). It records the
+here; the series line is retired since 2026-10-21, so it is passed on and
+no longer checked, house rule SERIES_OPENER). A script of a minute or more
+must close on "Here's what I'd do with this info if I were you" and end on
+"The full deep dive is at makeyourmindup.ai." (house rule SCRIPT_CLOSE). It records the
 sha256 of each script's words
 (script_hash: NFC, LF line endings, trailing spaces stripped, blank lines
 trimmed at both ends) and when each cut's words last changed (changed_at),
@@ -121,8 +137,13 @@ sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE.parent))
 import engine  # noqa: E402
 
-CHANNELS = ('substack', 'youtube', 'shorts', 'tiktok', 'reels', 'linkedin', 'whatsapp', 'notes', 'spotify')
-CUTS = ('long', 'short')
+CHANNELS = ('substack', 'youtube', 'shorts', 'tiktok', 'reels', 'linkedin', 'whatsapp', 'notes', 'spotify',
+            'feature_youtube', 'feature_spotify')  # the 15-minute feature's own two posts (config/board-layout.json)
+CUTS = ('long', 'short')  # the two cuts every piece gets (house rule TWO_CUTS)
+FEATURE = 'feature'
+# Every cut a record can hold: the feature only on a piece Krish called a 15-minute feature for (house rule FEATURE).
+ALL_CUTS = CUTS + (FEATURE,)
+FEATURES = HERE.parents[1] / 'config' / 'features.json'
 UUID = re.compile(r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$', re.I)
 SHA256 = re.compile(r'^[a-f0-9]{64}$')  # the engine's rule for script_check.hashes and script_sha256
 BY_ENV = 'MAKING_BY'
@@ -266,7 +287,7 @@ def current_hashes(record):
     hashes = check.get('hashes') if isinstance(check, dict) else None
     if not isinstance(hashes, dict):
         return {}
-    return {cut: h for cut, h in hashes.items() if cut in CUTS and isinstance(h, str) and SHA256.match(h)}
+    return {cut: h for cut, h in hashes.items() if cut in ALL_CUTS and isinstance(h, str) and SHA256.match(h)}
 
 
 def older_takes(record):
@@ -304,7 +325,7 @@ def show(piece_id, call=None):
 # Teleprompter: what teleprompter_send.py put in Krish's teleprompter.com account for each cut.
 TELEPROMPTER_ID = re.compile(r'^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$')  # the engine's rule
 MAX_NAME = 200  # Teleprompter's limit on a folder name and a script title
-CUT_NAME = {'long': '5-minute', 'short': '90-second'}
+CUT_NAME = {'long': '5-minute', 'short': '90-second', 'feature': '15-minute feature'}
 
 
 def _tp_id(value, what):
@@ -356,7 +377,7 @@ def teleprompter_lines(record):
     """What `show` says about Teleprompter, one line a cut; nothing for a
     piece whose scripts have not passed with hashes and was never sent."""
     lines = []
-    for cut in CUTS:
+    for cut in ALL_CUTS:
         state, entry = teleprompter_state(record, cut)
         if state is None and not entry:
             continue
@@ -446,10 +467,17 @@ def visual_gate_patch(post_path):
         post_json = json.loads(post_path.read_text(encoding='utf-8-sig'))
         folder, planned = build.plan(post_json, post_path.parent)
         problems = visual_gate.problems(post_json, planned, build.fact_checked_body(post_json, post_path.parent), post_path.parent)
+        override = post_json.get('visual_gate_override')
+        authorised = bool(problems and isinstance(override, str) and override.strip().lower().startswith('krish'))
     except (OSError, ValueError, build.PackError, build.LibraryError) as error:
         # A pack that cannot even be planned has not passed the gate; say why, in the record.
         problems = [f'the pack could not be planned: {error}']
-    return {'visual_gate': {'passed': not problems, 'problems': problems, 'checked_at': now()}}
+        authorised = False
+        override = None
+    result = {'passed': not problems or authorised, 'problems': problems, 'checked_at': now()}
+    if authorised:
+        result['override'] = override
+    return {'visual_gate': result}
 
 
 def deep_piece(piece_id, path=None):
@@ -461,6 +489,32 @@ def deep_piece(piece_id, path=None):
     except (OSError, ValueError):
         return False
     return any(isinstance(w, dict) and w.get('piece') == piece_id for w in (data.get('weeks') or {}).values())
+
+
+def feature_piece(piece_id, path=None):
+    """True when Krish called a 15-minute feature for this piece
+    (config/features.json `pieces.<piece id>`, house rule FEATURE): its
+    scripts then take a third, the feature, checked at about 15 minutes.
+    Only his call adds a piece there. week_board.py reads the same file."""
+    if not piece_id:
+        return False
+    try:
+        data = json.loads(Path(path or FEATURES).read_text(encoding='utf-8'))
+    except (OSError, ValueError):
+        return False
+    pieces = data.get('pieces') if isinstance(data, dict) else None
+    return isinstance(pieces, dict) and isinstance(pieces.get(str(piece_id).lower()) or pieces.get(piece_id), dict)
+
+
+NOT_A_FEATURE = ('three scripts are for a piece Krish called a 15-minute feature for, and this piece is not one: it goes into '
+                 'config/features.json only on Krish\'s call, in his words, never a session\'s (house rule FEATURE). Give the two '
+                 'scripts, the long cut first: scripts long.md short.md')
+FEATURE_NOT_RECHECKED = ('making: this piece is a 15-minute feature and only the long and the short scripts were given: they are '
+                         'checked now, and the feature\'s recorded check (its hash, when its words changed, its read-back) is carried '
+                         'as it was. The feature script was NOT checked again: give it third (scripts long.md short.md feature.md) '
+                         'if its words have changed')
+FEATURE_TO_COME = ('making: this piece is a 15-minute feature (config/features.json), and no feature script was given: the long and '
+                   'the short are checked now; give the feature third once it is written (scripts long.md short.md feature.md)')
 
 
 def _story_check(cut, path, series=None):
@@ -547,10 +601,15 @@ def spine_problem(piece_id, call):
 WAIVED_BY_KRISH = 'Waived on Krish\'s own words'  # the first problem line of a check passed on his say-so
 
 
-def scripts_patch(paths, run=None, warn=None, previous=None, series=None, deep=False, krish=None):
+def scripts_patch(paths, run=None, warn=None, previous=None, series=None, deep=False, krish=None, feature=False):
     """Checks the two scripts by position: the first is the long cut, the
     second the short (house rule TWO_CUTS, Krish, 2026-10-11: every piece
-    gets both). A missing script, or one that fails its check, records
+    gets both). With feature (a piece Krish called a 15-minute feature for,
+    feature_piece; house rule FEATURE), a third script is the feature,
+    checked with story_check --cut feature and recorded beside the other
+    two; three scripts for any other piece are refused (NOT_A_FEATURE), and
+    a feature piece given only two passes on them, told its feature script
+    is still to come. A missing script, or one that fails its check, records
     passed false. A file name that says the other cut only warns: the
     position decides, so a 450-word script cannot pass as the short cut, or
     one script mark Scripts done, by what it is called.
@@ -565,9 +624,9 @@ def scripts_patch(paths, run=None, warn=None, previous=None, series=None, deep=F
     proves nothing about the words, so it counts as changed: checked_at and
     changed_at are now.
 
-    series is the piece's lane_slot: each script must then open with its
-    series line and never say "I'm Krish" again (story_check --series,
-    house rule SERIES_OPENER).
+    series is the piece's lane_slot, passed on to story_check --series. The
+    series line is retired (house rule SERIES_OPENER, 2026-10-21): it is
+    accepted and nothing is checked for it.
 
     krish is Krish's own words ("Krish, DATE: ...") putting scripts he wrote
     himself through although their story check fails (Krish, 2026-10-16, of
@@ -583,15 +642,22 @@ def scripts_patch(paths, run=None, warn=None, previous=None, series=None, deep=F
     run = run or (lambda cut, path: _story_check('deep' if (deep and cut == 'long') else cut, path, series))
     warn = warn or (lambda line: print(line, file=sys.stderr))
     paths = list(paths or [])
-    if not paths or len(paths) > len(CUTS):
-        raise MakingError('give the two scripts, the long cut first: scripts long.md short.md')
+    order = ALL_CUTS if feature else CUTS
+    if len(paths) == len(ALL_CUTS) and not feature:
+        raise MakingError(NOT_A_FEATURE)
+    if not paths or len(paths) > len(order):
+        raise MakingError('give the two scripts, the long cut first: scripts long.md short.md' +
+                          (', and the 15-minute feature third: scripts long.md short.md feature.md' if feature else ''))
+    prev_feature = current_hashes({'script_check': previous}).get('feature') if isinstance(previous, dict) else None
+    if feature and len(paths) == len(CUTS):
+        warn(FEATURE_NOT_RECHECKED if prev_feature else FEATURE_TO_COME)
     problems, cuts, hashes, found = [], [], {}, []
-    for cut, p in zip(CUTS, paths):
+    for cut, p in zip(order, paths):
         name = Path(p).name
         said = story_check.cut_of(name)
         if said and said != cut and not (deep and cut == 'long' and said == 'deep'):
             warn(f'making: {name} says it is the {said} cut but is in the {cut} cut\'s place; '
-                 f'it is checked as the {cut} cut (the long cut comes first, then the short)')
+                 f'it is checked as the {cut} cut (the long cut comes first, then the short' + (', then the feature)' if feature else ')'))
         if not Path(p).is_file():
             problems.append(f'{cut} cut: {name} is not there')
             continue
@@ -622,6 +688,12 @@ def scripts_patch(paths, run=None, warn=None, previous=None, series=None, deep=F
         same_words = passed_before and before.get(cut) == h
         kept_at = were.get(cut) if isinstance(were.get(cut), str) else prev.get('checked_at')
         changed_at[cut] = kept_at if same_words else stamp
+    if feature and 'feature' not in hashes and prev_feature:
+        # A re-run with the two scripts on a feature piece: the feature's entry is carried as it was recorded (its hash,
+        # when its words last changed, its read-back below), never dropped; it was not checked again this time.
+        hashes['feature'] = prev_feature
+        if isinstance(were.get('feature'), str):
+            changed_at['feature'] = were['feature']
     same = bool(hashes) and all(before.get(cut) == h for cut, h in hashes.items())
     kept = prev['checked_at'] if passed_before and same else None
     check = {'passed': not problems, 'problems': problems or waived, 'cuts': cuts, 'hashes': hashes,
@@ -685,7 +757,7 @@ def read_back_lines(record):
     """What `show` says about the read-back, one line a cut, once the check
     has passed with hashes."""
     lines = []
-    for cut in CUTS:
+    for cut in ALL_CUTS:
         if not current_hashes(record).get(cut) or not (record.get('script_check') or {}).get('passed'):
             continue
         entry = read_back_of(record, cut)
@@ -703,7 +775,7 @@ def read_back_lines(record):
 def changed_cuts(previous, hashes):
     """The cuts whose words differ from the hashes the record held."""
     before = current_hashes({'script_check': previous if isinstance(previous, dict) else {}})
-    return [cut for cut in CUTS if before.get(cut) and hashes.get(cut) and before[cut] != hashes[cut]]
+    return [cut for cut in ALL_CUTS if before.get(cut) and hashes.get(cut) and before[cut] != hashes[cut]]
 
 
 def pack_patch(pack_dir, sent=False):
@@ -721,8 +793,8 @@ def pack_patch(pack_dir, sent=False):
 
 
 def _cut(cut):
-    if cut not in CUTS:
-        raise MakingError(f'the cut is long or short, not "{cut}"')
+    if cut not in ALL_CUTS:
+        raise MakingError(f'the cut is long, short or feature (a 15-minute feature, only on a piece Krish called one for), not "{cut}"')
     return cut
 
 
@@ -880,16 +952,15 @@ def drawn_image(path):
 
 
 # The thumbnail each cut carries, as scripts/pages/build.py --thumbs draws it.
-THUMB_FOR = {'long': 'wide', 'short': 'tall'}
+THUMB_FOR = {'long': 'wide', 'short': 'tall', 'feature': 'wide'}  # the feature is wide, 16:9, like the long cut
 THUMB_RECEIPT = 'thumbs.json'
 
 
 def thumb_problem(cut, path):
     """Why `path` is not this cut's drawn thumbnail, or None. It must be a
     JPEG or PNG of the cut's shape (1280 x 720 for the long cut, 1080 x 1920
-    for the short), and the drawer's receipt beside it (thumbs.json) must
-    list its sha256 as that shape: proof the house drawer drew it, and drew
-    it for this cut."""
+    for the short), with either the house drawer's thumbs.json receipt or
+    a checked, approved custom-format receipt beside it."""
     if str(HERE.parent / 'quick-edit') not in sys.path:
         sys.path.insert(0, str(HERE.parent / 'quick-edit'))
     import archive  # noqa: E402  image_size and THUMB_SIZE: the one reader of a picture's size
@@ -905,6 +976,24 @@ def thumb_problem(cut, path):
     try:
         receipt = json.loads((path.parent / THUMB_RECEIPT).read_text(encoding='utf-8'))
     except (OSError, ValueError):
+        # A piece-specific treatment Krish approved can use a renderer other
+        # than the generic house drawer. Its proof must bind the exact bytes,
+        # dimensions and phone-layout checks of this thumbnail.
+        try:
+            proof = json.loads((path.parent / 'format-proof.json').read_text(encoding='utf-8'))
+            entry = proof['formats'][path.name]
+            digest = hashlib.sha256(path.read_bytes()).hexdigest()
+            source = proof.get('source_review_sha256', '')
+            if (proof.get('status') == 'approved treatment; delivery formats rendered'
+                    and isinstance(source, str) and re.fullmatch(r'[a-f0-9]{64}', source)
+                    and entry.get('sha256') == digest and entry.get('dimensions') == list(want)
+                    and entry.get('clipped') == []
+                    and isinstance(entry.get('minimum_phone_text_px'), (int, float))
+                    and entry['minimum_phone_text_px'] >= 12):
+                return None
+            return f'format-proof.json does not validate {path.name} as the approved {shape} thumbnail'
+        except (OSError, ValueError, KeyError, TypeError, AttributeError):
+            pass
         return (f'there is no {THUMB_RECEIPT} beside {path.name}, so nothing shows the house drawer drew it: give the file '
                 'scripts/pages/build.py --thumbs wrote (WORK/thumbs/thumb-...), not a copy')
     digest = hashlib.sha256(path.read_bytes()).hexdigest()
@@ -1242,6 +1331,75 @@ def self_test():
         finally:
             globals()['_story_check'] = real_sc
         check('the deep piece\'s long script is checked at the deep length', asked, ['deep', 'short'])
+
+        # The 15-minute feature (house rule FEATURE): a third script, only on a piece Krish called one for.
+        features = t / 'features.json'
+        features.write_text(json.dumps({'pieces': {'p-feature': {'said': 'Krish, 2026-10-21: make this one a feature'}}}))
+        check('a feature piece is known from config/features.json, any other is not, and an unreadable file names none',
+              (feature_piece('p-feature', features), feature_piece('p-other', features), feature_piece('p-feature', t / 'none.json'), feature_piece(None, features)),
+              (True, False, False, False))
+        check('the real config/features.json reads', isinstance(json.loads(FEATURES.read_text(encoding='utf-8')).get('pieces'), dict), True)
+        (t / 'feature.md').write_text('the feature script\n', encoding='utf-8')
+        feature_sha = script_hash('the feature script\n')
+        short_sha = script_file_hash(t / 'short.md')  # its words changed above
+        asked, told = [], []
+        globals()['_story_check'], real_sc = (lambda cut, path, series=None: (asked.append(cut), (0, ''))[1]), globals()['_story_check']
+        try:
+            three = scripts_patch([t / 'long.md', t / 'short.md', t / 'feature.md'], warn=told.append, feature=True)['script_check']
+        finally:
+            globals()['_story_check'] = real_sc
+        check('a feature piece\'s third script is checked as the feature, and its hash and changed_at recorded beside the other two',
+              (asked, three['passed'], three['cuts'], three['hashes'], sorted(three['changed_at'])),
+              (['long', 'short', 'feature'], True, ['long', 'short', 'feature'], {'long': long_sha, 'short': short_sha, 'feature': feature_sha},
+               ['feature', 'long', 'short']))
+        check('and nothing is said about a missing feature script', [w for w in told if 'feature' in w], [])
+        same = scripts_patch([t / 'long.md', t / 'short.md', t / 'feature.md'], ok, warned.append, previous=three, feature=True)['script_check']
+        check('the same three checked again keep checked_at and each cut\'s changed_at', (same['checked_at'], same['changed_at']),
+              (three['checked_at'], three['changed_at']))
+        (t / 'feature.md').write_text('the feature script, changed\n', encoding='utf-8')
+        moved_feature = scripts_patch([t / 'long.md', t / 'short.md', t / 'feature.md'], ok, warned.append,
+                                      previous={**three, 'checked_at': earlier, 'changed_at': {c: earlier for c in ALL_CUTS}}, feature=True)['script_check']
+        check('changed feature words move only the feature\'s changed_at, and the feature is named as changed',
+              (moved_feature['changed_at']['long'], moved_feature['changed_at']['feature'] != earlier, changed_cuts(three, moved_feature['hashes'])),
+              (earlier, True, ['feature']))
+        failing = lambda cut, path: (1, 'NOT READY\n  - the feature runs 900 spoken words; FEATURE asks 2,025 to 2,475') if cut == 'feature' else (0, '')
+        short_feature = scripts_patch([t / 'long.md', t / 'short.md', t / 'feature.md'], failing, warned.append, feature=True)['script_check']
+        check('a feature that fails its check fails the scripts, naming the feature file',
+              (short_feature['passed'], any(p.startswith('feature.md:') and 'FEATURE' in p for p in short_feature['problems'])), (False, True))
+        try:
+            scripts_patch([t / 'long.md', t / 'short.md', t / 'feature.md'], ok, warned.append)
+            check('three scripts for a piece that is not a feature are refused', 'no error', 'error')
+        except MakingError as e:
+            check('three scripts for a piece that is not a feature are refused, saying it is added only on Krish\'s call',
+                  ('features.json' in str(e), 'only on Krish' in str(e)), (True, True))
+        try:
+            scripts_patch([t / 'long.md', t / 'short.md', t / 'feature.md', t / 'long.md'], ok, warned.append, feature=True)
+            check('four scripts are refused, even on a feature piece', 'no error', 'error')
+        except MakingError as e:
+            check('four scripts are refused, even on a feature piece', 'feature third' in str(e), True)
+        told = []
+        two = scripts_patch([t / 'long.md', t / 'short.md'], ok, told.append, feature=True)['script_check']
+        check('a feature piece given only its two scripts passes on them, told the feature is still to come',
+              (two['passed'], sorted(two['hashes']), told), (True, ['long', 'short'], [FEATURE_TO_COME]))
+        read_three = read_back_patch({'script_check': three}, 'feature', ['reader A: nothing lost', 'reader B: nothing lost'],
+                                     '2026-10-21T12:00:00Z', 'Claude Code')['script_check']
+        told = []
+        rerun = scripts_patch([t / 'long.md', t / 'short.md'], ok, told.append, previous=read_three, feature=True)['script_check']
+        check('a two-script re-run on a feature piece carries the feature\'s hash, changed_at and read-back unchanged, and says '
+              'the feature was not checked again',
+              (rerun['hashes'].get('feature'), rerun['changed_at'].get('feature'), rerun.get('read_back', {}).get('feature'), told),
+              (read_three['hashes']['feature'], read_three['changed_at']['feature'], read_three['read_back']['feature'], [FEATURE_NOT_RECHECKED]))
+        check('a feature\'s cut is a cut a record can hold, named "15-minute feature", with a wide thumbnail',
+              (_cut('feature'), CUT_NAME['feature'], THUMB_FOR['feature'], current_hashes({'script_check': three})), ('feature', '15-minute feature', 'wide', three['hashes']))
+        check('a read-back of the feature\'s words is recorded once its check passed with its hash',
+              read_back_patch({'script_check': three}, 'feature', ['reader A: nothing lost', 'reader B: nothing lost'], '2026-10-21T12:00:00Z', 'Claude Code')
+              ['script_check']['read_back']['feature']['script_sha256'], feature_sha)
+        check('show names the feature\'s read-back and Teleprompter once it passed',
+              ('Read back, 15-minute feature cut: not yet' in '\n'.join(read_back_lines({'script_check': three})),
+               'Teleprompter, 15-minute feature cut: not sent yet' in '\n'.join(teleprompter_lines({'script_check': three}))), (True, True))
+        check('a feature take is stamped with the feature script\'s hash',
+              recorded_patch('feature', 'recordings/' + 'a' * 64 + '.mp4', 905, feature_sha)['recordings'][0],
+              {'cut': 'feature', 'path': 'recordings/' + 'a' * 64 + '.mp4', 'seconds': 905, 'script_sha256': feature_sha})
         failed_before = scripts_patch([t / 'long.md', t / 'short.md'], ok, warned.append, previous={**prev, 'passed': False})['script_check']
         check('scripts: a check that failed before keeps nothing', failed_before['checked_at'] != earlier, True)
         check('scripts: no record before, nothing changed', changed_cuts(None, moved['hashes']), [])
@@ -1303,7 +1461,13 @@ def self_test():
                 Path(str(fixture)+'.validation.json').write_text(json.dumps({
                     'video_sha256':quality.digest(fixture),'piece_id':argv[vi-1],
                     'library_path':'3 Posts/Test fixture/'+argv[vi+3],
-                    'checks':{k:{'status':'pass'} for k in ('heard','sync','loudness','visuals','full_review')}}))
+                    'source_provenance':{'source_sha256':quality.digest(fixture)},
+                    'checks':{**{k:{'status':'pass'} for k in ('heard','sync','loudness','visuals','full_review')},
+                        'motion':{'status':'pass','recording_sha256':quality.digest(fixture),'decision':'not_needed',
+                            'reason':'Synthetic stationary fixture for this isolated self-test only.',
+                            'assessment':{'source_sha256':quality.digest(fixture),'evidence_sha256':quality.digest(fixture),'method':'Synthetic test fixture'},
+                            'final_review':{'status':'pass','video_sha256':quality.digest(fixture),'evidence_sha256':quality.digest(fixture),
+                                **{k:'pass' for k in ('shake','warping','borders','framing')}}}}}))
                 argv=[*argv,'--video-file',str(fixture)]
             with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
                 code = main(argv, call=engine or fake)
@@ -1351,6 +1515,17 @@ def self_test():
         check('video: a kit panel given as the long cut\'s thumbnail is refused', (code, 'not the 1280 x 720' in err, len(seen)), (1, True, before))
         code, err = run([pid, 'video', 'long', 'Substack video', '3 Video/long.mp4', '--thumb', 't.jpg', '--thumb-file', str(copied)])
         check('video: a copy with no thumbs.json beside it is refused', (code, 'no thumbs.json beside' in err, len(seen)), (1, True, before))
+        custom={'source_review_sha256':'a'*64,'status':'approved treatment; delivery formats rendered',
+                'formats':{copied.name:{'sha256':hashlib.sha256(copied.read_bytes()).hexdigest(),
+                                        'dimensions':[1280,720],'clipped':[],
+                                        'minimum_phone_text_px':14}}}
+        (Path(tmp)/'format-proof.json').write_text(json.dumps(custom))
+        check('video: approved custom thumbnail proof accepts exact drawn bytes and geometry',
+              thumb_problem('long',copied),None)
+        custom['formats'][copied.name]['sha256']='b'*64
+        (Path(tmp)/'format-proof.json').write_text(json.dumps(custom))
+        check('video: a changed custom thumbnail fails its exact proof',
+              'does not validate' in thumb_problem('long',copied),True)
         receipt = json.loads((thumbs / THUMB_RECEIPT).read_text())
         receipt['files'][1]['shape'] = 'wide'
         (thumbs / THUMB_RECEIPT).write_text(json.dumps(receipt))
@@ -1367,7 +1542,7 @@ def self_test():
         code, err = run([pid, 'video', 'short', 'Shorts video', '3 Video/short.mp4', '--thumb', 't.jpg', '--thumb-url', 'http://plain'])
         check('video: a thumbnail link must be https', (code, 'https' in err, len(seen)), (1, True, before))
         code, err = run([pid, 'video', 'wide', 'Shorts video', '3 Video/short.mp4'])
-        check('video: a cut that is neither long nor short is refused', (code, 'long or short' in err, len(seen)), (1, True, before))
+        check('video: a cut that is neither long, short nor feature is refused', (code, 'long, short or feature' in err, len(seen)), (1, True, before))
         code, _ = run([pid, 'video', 'short', 'Shorts video', '3 Video/short.mp4'])
         check('video: a cut with no thumbnail yet is still recorded, without one', (code, 'thumbnail' in seen[-1][2]['video_assets'][0]), (0, False))
 
@@ -1513,7 +1688,7 @@ def self_test():
         check('scripts: the question is held for a session to ask Krish in its reply, never on his list',
               (item.get('only_you'), 'link' in item, 'prompt' in item, 'asks Krish in its reply' in item.get('detail', '')), (None, False, False, True))
 
-    # The series line: `scripts` checks each script with the piece's series (house rule SERIES_OPENER).
+    # The series is still passed to the story check (the line itself is retired, house rule SERIES_OPENER).
     with tempfile.TemporaryDirectory() as tmp:
         (Path(tmp) / 'long.md').write_text('the long script\n', encoding='utf-8')
         (Path(tmp) / 'short.md').write_text('the short script\n', encoding='utf-8')
@@ -1544,8 +1719,9 @@ def self_test():
         finally:
             globals()['_story_check'] = real_check
     import story_check
-    check('the real story check refuses a script with no series line once the series is known',
-          'SERIES_OPENER' in _story_check('long', Path(__file__).resolve().parents[2] / 'scripts' / 'post-pack' / 'README.md', 'follow_the_money')[1], True)
+    check('the real story check takes the series and asks a long script for its close, not for a series line',
+          ('SCRIPT_CLOSE' in _story_check('long', Path(__file__).resolve().parents[2] / 'scripts' / 'post-pack' / 'README.md', 'follow_the_money')[1],
+           'does not open with its series line' in _story_check('long', Path(__file__).resolve().parents[2] / 'scripts' / 'post-pack' / 'README.md', 'follow_the_money')[1]), (True, False))
 
     # The read-back: two fresh readers, "nothing lost", tied to the words they heard.
     passed = {'script_check': {'passed': True, 'checked_at': '2026-10-12T15:50:00Z', 'problems': [], 'cuts': ['long', 'short'],
@@ -1699,6 +1875,19 @@ def self_test():
         retired = stop.code != 0
     check('descript: retired on 2026-10-12, so the command line no longer takes it', retired, True)
 
+    # The 15-minute feature's two posting cards on the board (config/board-layout.json) record as their own channels.
+    for channel in ('feature_youtube', 'feature_spotify'):
+        code, _ = run([pid, 'posted', channel, 'https://youtu.be/feature'])
+        check(f'posted: the feature\'s {channel} card records as its own channel', (code, seen[-1][2].get('channels')),
+              (0, {channel: {'url': 'https://youtu.be/feature'}}))
+    try:
+        with contextlib.redirect_stderr(io.StringIO()):
+            main([pid, 'posted', 'feature'], call=fake)
+        refused = False
+    except SystemExit as stop:
+        refused = stop.code != 0
+    check('posted: a channel no card names is refused', refused, True)
+
     run(['--by', 'Codex', pid, 'session', 'https://chatgpt.com/codex/tasks/x'])
     check('session: the session says who runs it', seen[-1][2]['session'], {'url': 'https://chatgpt.com/codex/tasks/x', 'by': 'Codex'})
     if fails:
@@ -1767,16 +1956,10 @@ def main(argv=None, call=None):
             # The record first: checked_at stays put while the words do.
             answer = read(a.piece_id, call)
             previous = (answer.get('making') or {}).get('script_check') if isinstance(answer.get('making'), dict) else None
-            # The piece's series: each script opens with its line (house rule SERIES_OPENER).
-            import story_check
+            # The piece's series is still passed on; the series line is retired (house rule SERIES_OPENER, 2026-10-21).
             series = a.series or series_of(a.piece_id, answer, call)
-            if series and series not in story_check.series_openers():
-                print(f'making: the piece\'s series "{series}" has no series line, so the scripts are checked without one', file=sys.stderr)
-                series = None
-            elif not series:
-                print('making: the engine names no series for the piece, so the series line was not checked; give --series '
-                      'follow_the_money, under_the_hood or mind_the_gap', file=sys.stderr)
-            patch = scripts_patch(a.args, previous=previous, series=series, deep=deep_piece(a.piece_id), krish=a.krish_words)
+            patch = scripts_patch(a.args, previous=previous, series=series, deep=deep_piece(a.piece_id), krish=a.krish_words,
+                                  feature=feature_piece(a.piece_id))
             if a.krish_words is not None and patch['script_check']['problems'][:1] and \
                     patch['script_check']['problems'][0].startswith(WAIVED_BY_KRISH):
                 print(f'making: the story check\'s {len(patch["script_check"]["problems"]) - 1} findings are waived on Krish\'s words '

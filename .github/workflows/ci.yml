@@ -72,7 +72,8 @@ jobs:
     # and publish page, clicked in Chromium with fetch() blocked the way
     # claude.ai's page rules block it (Krish, 2026-10-14: "the download
     # buttons for the images STILL do not work!!!!").
-    runs-on: ubuntu-latest
+    # Playwright 1.55 below supports this host; latest now resolves to 26.04.
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -86,9 +87,13 @@ jobs:
           python -m playwright install --with-deps chromium
       - name: Click every button on the board and a publish page
         run: python scripts/post-pack/buttons_in_browser.py
+      - name: The board keeps its fixed layout and fits a phone (390px, 44px targets)
+        run: python scripts/check_board_layout.py --browser
 
   board-web:
-    runs-on: ubuntu-latest
+    # The isolated browser runtime below is pinned to Playwright 1.55.
+    # ubuntu-latest moved to 26.04, which that runtime does not support.
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -251,6 +256,10 @@ jobs:
           psql_in supabase/migrations/20261021100000_manual_is_his_words.sql
           psql_in supabase/migrations/20261021100000_manual_is_his_words.sql
           psql_in tests/fixtures/control-plane/manual-is-his-words.sql
+          # Step 3, PR 8: the CHECK validates over every row the fixture kept,
+          # and runs twice.
+          psql_in supabase/migrations/20261101120000_manual_is_his_words_validated.sql
+          psql_in supabase/migrations/20261101120000_manual_is_his_words_validated.sql
           # Last, because it commits a seed that fences every later claim: an
           # open claim holds the active role row, so a switch must wait for it
           # and then refuse.

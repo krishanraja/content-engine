@@ -6,7 +6,7 @@ import {
 import { webResearch } from '../_enrich.js'
 import { canonicalUrl, titleNorm, contentHash } from '../_text.js'
 import { UTILITY_MODEL } from '../_models.js'
-import { guardEngine } from '../_auth.js'
+import { guardEngine, operatorBearerAllowed } from '../_auth.js'
 
 // POST /api/content-ideas/research-topic
 //   body: { topic, format?: 'paid'|'built', angle?: string, web?: boolean,
@@ -239,6 +239,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       research: citations,
       sources: citations,
       requested_topic: topic,
+      // Who asked: Krish through Control Center's "Start from research" (his cookie), or a session holding the
+      // operator key. Only a topic he asked for is his idea on Sunday's board (_weekSources.ts).
+      requested_by: operatorBearerAllowed(req) ? 'Claude Code' : 'Krish',
       angle_hint: b.angle || null,
       why_non_obvious: s.why_non_obvious || null,
       falsifiable_test: s.falsifiable_test || null,

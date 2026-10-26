@@ -9,7 +9,7 @@ whilst I am talking, higher during the outro)." (house rule MUSIC_BED)
 
 - **Where it lives.** Drive, `makeyourmindup > 00_Brand-Assets > 07_Music`:
   on the home computers
-  `H:\My Drive\Ventures\Active\makeyourmindup\00_Brand-Assets\07_Music`,
+  `H:\My Drive\Ventures\Active Ventures\makeyourmindup\00_Brand-Assets\07_Music`,
   read from `MINDMAKE_MUSIC_ROOT`, else `runtime.music_root` in
   `config/studio.json`. Each licence certificate sits beside its track, in
   the same folder. Audio is never committed, and never goes in the Inbox

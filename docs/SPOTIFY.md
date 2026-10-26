@@ -21,12 +21,14 @@ through it can't earn.
    90-second tall cut as its Spotify clip. The four long cuts already made
    (5, 7, 12 and 14 October) go up first, so the show opens with four
    episodes, past Spotify's three-episode bar.
-2. **From 16 October: the week's deep cut** (house rule DEEP_CUT,
-   `config/deep-cuts.json`). One piece a week, picked by its breakout score,
-   records 8 to 12 minutes in place of its 5-minute cut. That deep cut is
-   the week's Spotify video episode and the YouTube long-form video. The
-   first is Friday 16 October. The other pieces' long cuts can still go up
-   as shorter episodes. The audio edition below is the same script.
+2. **16 to 21 October: the week's deep cut** (house rule DEEP_CUT, retired
+   on 21 October, `config/deep-cuts.json`): one piece a week recorded 8 to
+   12 minutes in place of its 5-minute cut; the first was Friday 16 October.
+   **From 21 October: a 15-minute feature only when Krish calls one**
+   (house rule FEATURE, `config/features.json`; Krish: "From time to time I
+   might do a special 15 min feature", "Yes, replace it"). A feature is the
+   Spotify video episode and the YouTube long-form video for its week;
+   otherwise the 5-minute cut is the episode.
 3. **The audio edition** (as planned before the deep cut). Krish reads the
    article, rewritten for the ear (1,200 to 1,700 words, about 8 to 12
    minutes), on the teleprompter in the same sitting as the two cuts. It goes

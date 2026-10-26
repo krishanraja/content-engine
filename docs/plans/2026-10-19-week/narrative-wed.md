@@ -1,7 +1,10 @@
 # Narrative: Wednesday 21 October, under.the.hood
 
-Piece `d7a20885-7001-4661-b444-9d7ca1043416`. Status: **awaiting Krish's sign-off**. Nothing is made
-until he signs.
+Piece `d7a20885-7001-4661-b444-9d7ca1043416`. Status: **brief and draft-only testing approved, 19 October**.
+
+Signed by Krish: "Yes, proceed with both. Use the existing research, keep the tests to drafts with no sends or spending, and get Wednesday moving fast. Bring me the results and the narrative, not more process."
+
+His editorial clarification: "Here's a scorecard, so you don't have to go and use them all." Keep the message simple, clear and shareable, without an opinion-piece or investigation treatment. `wednesday-scorecard.md` now owns the working narrative and evidence-qualified findings; `wednesday-test-packet.md` contains the identical approved-scope draft tasks. The older buy-an-item wording below is narrowed to purchase preparation: no payment or ordering. Results from our tests remain pending access, not inferred from other people's tests.
 
 ## His answers that fix this narrative (his words)
 

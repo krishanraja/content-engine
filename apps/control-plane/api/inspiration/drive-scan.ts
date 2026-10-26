@@ -7,7 +7,7 @@ import { driveListFolder, driveProbeFolder, driveDownloadFile, googleConfigured 
 import { postHash, verbatimCheck } from '../_creatorFingerprint.js'
 import { buildSystemPrompt, buildUserContent, type Pillar, type CreatorRow, type YieldRow, type ReadableDoc, type ReadableBinary } from './_prompt.js'
 import {
-  toCandidates, selectWithinBudget, parseSeedArray, filterSeeds,
+  toCandidates, selectWithinBudget, parseSeedResponse, extractionOutcome, filterSeeds,
   fileHash, artifactKey, storyUrl, handleKey, creatorMatches, artifactInputKind,
   TEXT_MIMES, IMAGE_MIMES, PDF_MIME, TRANSIENT_SKIPS,
   RETRY_AFTER_MINUTES, MAX_DOWNLOAD_ATTEMPTS,
@@ -39,8 +39,9 @@ import {
 // Failure posture: nothing here throws away work. A file that fails to download
 // is scheduled for retry rather than marked processed; a file cut by the request
 // budget is named in the response rather than silently dropped; a model call
-// that returns unparseable JSON leaves the files unregistered so the next scan
-// tries again.
+// that is refused, cut off, empty or unparseable fails the run and puts its
+// files back on the retry budget, so the next scan tries again and a lasting
+// failure shows as given up instead of as "read, nothing in it".
 
 const BUCKET = 'inspiration-artifacts'
 const MAX_DOC_CHARS = 8000
@@ -91,9 +92,20 @@ interface ReadFile { hash: string; candidate: Candidate; mime: string; bytes: nu
  *  hash means the same screenshot saved twice is one artifact rather than a
  *  second copy of the bytes. analysis carries a bounded extraction: the poster,
  *  the url the model claims it read, and one line each of idea and reason.
- *  Never the whole response, and never an unbounded transcription. */
-async function writeArtifact(file: ReadFile, seed: Seed, storyRef: string, model: string, ideaId: string | null) {
-  await supabase.from('content_inspiration_artifacts').upsert({
+ *  Never the whole response, and never an unbounded transcription.
+ *
+ *  Every file the model read gets a row, seed or not: `outcome` says which.
+ *  Until 2026-10-22 only a file whose seed survived the floors got one, so 40
+ *  files were ledgered as read while this table stayed empty. Returns the
+ *  write's error instead of dropping it. */
+async function writeArtifact(
+  file: ReadFile,
+  seed: Seed | null,
+  storyRef: string,
+  model: string,
+  ideaId: string | null,
+): Promise<string | null> {
+  const { error } = await supabase.from('content_inspiration_artifacts').upsert({
     canonical_key: `drive:${file.hash}`,
     // These three are CHECK-constrained on the table. The first draft of this
     // route used 'screenshot', 'analyzed' and 'content', none of which are
@@ -104,8 +116,10 @@ async function writeArtifact(file: ReadFile, seed: Seed, storyRef: string, model
     scope: 'everything',
     source_url: storyRef,
     source_label: file.candidate.name,
-    storage_bucket: BUCKET,
-    storage_path: artifactKey(file.hash, file.mime),
+    // Only images and PDFs are uploaded; a text document's row points at its
+    // Drive link instead of at bytes that were never stored.
+    storage_bucket: TEXT_MIMES.has(file.mime) ? null : BUCKET,
+    storage_path: TEXT_MIMES.has(file.mime) ? null : artifactKey(file.hash, file.mime),
     content_hash: file.hash,
     source_meta: {
       drive_file_id: file.candidate.id,
@@ -114,17 +128,21 @@ async function writeArtifact(file: ReadFile, seed: Seed, storyRef: string, model
       bytes: file.bytes,
       modified_at: file.candidate.modified || null,
     },
-    analysis: {
-      model,
-      poster_name: seed.poster_name ?? null,
-      poster_handle: seed.poster_handle ?? null,
-      source_url_if_visible: typeof seed.source_url === 'string' ? seed.source_url : null,
-      the_idea: String(seed.idea || '').slice(0, 300),
-      why_saved: String(seed.thesis || '').slice(0, 300),
-    },
+    analysis: seed
+      ? {
+          model,
+          outcome: 'seed',
+          poster_name: seed.poster_name ?? null,
+          poster_handle: seed.poster_handle ?? null,
+          source_url_if_visible: typeof seed.source_url === 'string' ? seed.source_url : null,
+          the_idea: String(seed.idea || '').slice(0, 300),
+          why_saved: String(seed.thesis || '').slice(0, 300),
+        }
+      : { model, outcome: 'no_surviving_seed' },
     analyzed_at: new Date().toISOString(),
     content_idea_id: ideaId,
   }, { onConflict: 'canonical_key' })
+  return error ? String(error.message || 'unknown').slice(0, 200) : null
 }
 
 async function handler(req: VercelRequest, res: VercelResponse) {
@@ -228,6 +246,7 @@ async function handler(req: VercelRequest, res: VercelResponse) {
   const readOk: Candidate[] = []
   const fileByName = new Map<string, ReadFile>()
   let downloadFailed = 0
+  let storeFailed = 0
 
   for (const c of selection.selected) {
     const bytes = await driveDownloadFile(c.id, c.mime_type)
@@ -262,10 +281,13 @@ async function handler(req: VercelRequest, res: VercelResponse) {
 
     // The bytes are kept before the model is asked anything, so a run that
     // fails at the model still leaves the artifact behind.
-    await supabase.storage.from(BUCKET).upload(artifactKey(hash, c.mime_type), Buffer.from(bytes), {
+    const { error: storeError } = await supabase.storage.from(BUCKET).upload(artifactKey(hash, c.mime_type), Buffer.from(bytes), {
       contentType: c.mime_type,
       upsert: false,
     })
+    // The same screenshot read twice is already stored; anything else is a
+    // write that failed and is counted.
+    if (storeError && !/already exists|duplicate/i.test(String(storeError.message || ''))) storeFailed++
   }
 
   if (!docs.length && !images.length && !pdfs.length) {
@@ -300,17 +322,38 @@ async function handler(req: VercelRequest, res: VercelResponse) {
 
   let raw = ''
   let model = ''
+  let stopReason: string | null = null
   try {
     const answer = await callClaudeBlocks(system, buildUserContent(docs, images, pdfs), { agent: 'inspiration_scan', maxTokens: 8000 })
     raw = answer.text
     model = answer.model
+    stopReason = answer.stopReason
   } catch (e) {
     // The files stay unregistered on purpose: an API failure is not evidence
     // that this screenshot holds nothing.
     return res.status(200).json({ ok: false, error: 'extraction_failed', reason: (e as Error)?.message?.slice(0, 200) })
   }
 
-  const parsed = parseSeedArray(raw)
+  const { seeds: parsed, shape } = parseSeedResponse(raw)
+  const outcome = extractionOutcome(stopReason, shape)
+  if (!outcome.settle) {
+    // A read that did not finish is not a read. Each file goes back on the
+    // transient budget (MAX_DOWNLOAD_ATTEMPTS, RETRY_AFTER_MINUTES), so a
+    // persistent failure stops costing vision calls and shows as given up.
+    for (const c of readOk) {
+      const prior = priorRows.find(r => r.file_key === c.file_key)
+      await markLedger(c, 'extraction_failed', (prior?.attempts || 0) + 1, runRef)
+    }
+    return res.status(200).json({
+      ok: false,
+      error: outcome.error,
+      stop_reason: stopReason,
+      answer_chars: raw.length,
+      parse_shape: shape,
+      read: readOk.length,
+      store_failed: storeFailed,
+    })
+  }
   const { survivors, rejected, reasons, raw_count } = filterSeeds(parsed, minBrandFit)
 
   // ── Keep ──────────────────────────────────────────────────────────────────
@@ -320,6 +363,9 @@ async function handler(req: VercelRequest, res: VercelResponse) {
   // Counted rather than hidden: a lane that keeps producing near-copies is
   // something Krish should see, not something the engine quietly filters.
   let verbatimRejects = 0
+  // Files with an artifact row written this run, seed or not.
+  const withArtifact = new Set<string>()
+  const artifactErrors: string[] = []
 
   for (const seed of survivors as Seed[]) {
     const file = typeof seed.image_source === 'string' ? fileByName.get(seed.image_source) : undefined
@@ -354,7 +400,11 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     if (action === 'inserted') inserted++
     else if (action === 'recurrence') recurrence++
 
-    if (file) await writeArtifact(file, seed, url, model, ideaId)
+    if (file) {
+      const err = await writeArtifact(file, seed, url, model, ideaId)
+      if (err) artifactErrors.push(err)
+      else withArtifact.add(file.candidate.file_key)
+    }
 
     // The creator join. A screenshot of a curated creator's post is the same
     // event the Tuesday scout would have found, so it counts on the same
@@ -389,12 +439,30 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     }
   }
 
-  // Everything that read is now settled. A file that produced no seed is still
-  // read: re-sending it tomorrow buys nothing and costs a vision call.
+  // A file that produced no surviving seed is still read, and says so in its
+  // own artifact row, so "read with nothing in it" is a recorded outcome rather
+  // than an empty table that looks the same as a broken one.
+  for (const f of fileByName.values()) {
+    if (withArtifact.has(f.candidate.file_key)) continue
+    const err = await writeArtifact(f, null, `https://drive.google.com/file/d/${f.candidate.id}/view`, model, null)
+    if (err) artifactErrors.push(err)
+    else withArtifact.add(f.candidate.file_key)
+  }
+
+  // Everything that read is now settled: re-sending it tomorrow buys nothing
+  // and costs a vision call.
   for (const c of readOk) await markLedger(c, null, 0, runRef)
 
+  const writesFailed = artifactErrors.length + storeFailed
   return res.status(200).json({
-    ok: true,
+    // A run whose writes failed is a failed run, whatever else it did.
+    ok: writesFailed === 0,
+    ...(writesFailed ? { error: 'artifact_write_failed', reason: artifactErrors[0] || 'storage upload failed' } : {}),
+    stop_reason: stopReason,
+    parse_shape: shape,
+    artifacts_written: withArtifact.size,
+    artifact_write_failed: artifactErrors.length,
+    store_failed: storeFailed,
     listed,
     unreadable,
     seen_before: selection.seen_before,

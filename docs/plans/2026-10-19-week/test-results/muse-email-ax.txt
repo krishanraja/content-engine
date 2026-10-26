@@ -1,0 +1,54 @@
+Browser tab: 8, Title: "Muse", URL: "https://muse.ai/thread/39fb4094-c3f0-4eee-97af-460173a672fe".
+0 AXWebArea Muse, URL: muse.ai/thread/39fb4094-c3f0-4eee-97af-460173a672fe
+	1 container
+		2 container
+			135 container
+				136 container
+					137 button Back to main chat
+						138 image
+					168 pop up button (collapsed) Draft migration email reply Unread chats Open chat and side chats, Secondary Actions: Expand
+						169 text Draft migration email reply
+						170 text Unread chats
+						171 text Open chat and side chats
+				174 container Chat messages
+					175 text 11:46 PM
+					176 container
+						177 container
+							178 text You: Everything below is fictional. Answer in this chat only. Do not send messages, create calendar events, alter files or records, buy anything, subscribe, schedule work, or call paid services. Use only the supplied information. If a necessary fact is absent, say so. Do not claim an action occurred. Do not browse: these controlled fixtures test reasoning and draft quality, not live integration or inventory access.
+
+Task 1: email
+
+Thread, newest last:
+- Client: Please deliver the migration by Friday 23 October. Could you include staff training at no charge?
+- Account lead: We can deliver Tuesday 27 October. Training is a separate paid service. I can send a quotation, but have no authority to discount it.
+- Client: Tuesday is fine. Please send a training quote. Please do not book any training until finance approves.
+
+Give a two-sentence summary and a reply under 90 words. Do not invent the price, promise Friday, waive the charge or imply training is booked.
+						179 pop up button (collapsed) Description: More options, Secondary Actions: Expand
+							180 image
+					181 container
+						182 container
+							183 text Summary:  The client asked for migration by Friday 23 October with complimentary staff training. The account lead offered delivery on Tuesday 27 October with training as a separate paid service, which the client accepted while requesting a quote and asking that no training be booked until finance approves.
+						184 text Reply draft:
+						185 text Subject: Re: Migration delivery and training quote
+						186 text Thank you for confirming Tuesday 27 October for the migration.
+						187 text I will send a training quotation separately. Training remains a paid service, and I will not book anything until you confirm finance approval.
+						188 pop up button (collapsed) Description: More options, Secondary Actions: Expand
+							189 image
+			133 container Main navigation
+				141 link Description: Chat, Value: muse.ai/
+				142 link Description: Feed, Value: muse.ai/feed
+				143 link Description: Ideas, Value: muse.ai/ideas
+				144 link Description: Goals, Value: muse.ai/goals
+				145 link Description: Library, Value: muse.ai/library/artifacts
+				146 button More
+			147 container
+				148 button Message Attach file Dictate a message
+					149 text entry area (settable) Message
+					150 button Attach file
+						151 image
+					190 button Dictate a message
+						191 image
+		134 container Notifications alt+T
+
+The focused UI element is 149 text entry area (settable) Message

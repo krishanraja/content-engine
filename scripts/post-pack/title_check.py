@@ -213,10 +213,19 @@ def surface_problems(title, surface, source=None):
 PACKAGING_FIRST_SEEN = {'article', 'cover', 'youtube', 'thumbnail', 'shorts', 'tall_cover', 'title_card'}
 
 
-def gate(title, source=None, data=None):
+def gate(title, source=None, data=None, *, piece_id=None):
     """problems() and Krish's verdict: [] only for a title he picked that also clears the floor."""
     out = problems(title, source)
     v = verdict_of(title, data)
+    # A specific human pick can override a taste heuristic for this piece.
+    # Preserve its raw findings, require the same approval words, and never
+    # suppress a name/number absent from the source or affect another piece.
+    override = v.get('editorial_override') if isinstance(v, dict) else None
+    if (v and v.get('verdict') == 'picked' and piece_id and v.get('piece') == piece_id
+            and isinstance(v.get('krish'), str) and v['krish'].strip()
+            and isinstance(override, dict) and override.get('said') == v.get('krish')):
+        allowed = set(override.get('findings') or []) & set(problems(title))
+        out = [finding for finding in out if finding not in allowed]
     if v is None:
         out.append('Krish has not picked this title: offer him a few options written against `title_check.py lessons`, '
                    'and record his pick with `title_check.py verdict`')
@@ -484,6 +493,24 @@ def self_test():
                 check('a verdict without his words is refused', True, True)
         finally:
             os.environ.pop('MYMU_TITLE_VERDICTS', None)
+    picked = {'title': 'Muse vs Grok Bot', 'verdict': 'picked', 'piece': 'test-piece',
+              'krish': 'Use this exact title', 'editorial_override': {
+                  'said': 'Use this exact title', 'findings': problems('Muse vs Grok Bot')}}
+    scoped = {'lessons': [], 'verdicts': [picked]}
+    check('an explicit pick can override the taste floor for its own piece',
+          gate('Muse vs Grok Bot', data=scoped, piece_id='test-piece'), [])
+    check('the override never crosses pieces or applies without a piece',
+          (bool(gate('Muse vs Grok Bot', data=scoped, piece_id='other')),
+           bool(gate('Muse vs Grok Bot', data=scoped))), (True, True))
+    check('a taste override cannot remove source-grounding problems',
+          bool(gate('Muse vs Grok Bot', 'Only apples.', scoped, piece_id='test-piece')), True)
+    changed = {'lessons': [], 'verdicts': [{**picked, 'krish': 'Different approval words'}]}
+    check('approval words must match the exact override record',
+          bool(gate('Muse vs Grok Bot', data=changed, piece_id='test-piece')), True)
+    empty = {'lessons': [], 'verdicts': [{**picked, 'krish': None, 'editorial_override': {
+        'said': None, 'findings': problems('Muse vs Grok Bot')}}]}
+    check('two absent approval values cannot authorise a taste override',
+          bool(gate('Muse vs Grok Bot', data=empty, piece_id='test-piece')), True)
     if fails:
         print('title_check self-test FAILED:\n  ' + '\n  '.join(fails))
         return 1

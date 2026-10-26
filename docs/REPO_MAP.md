@@ -11,6 +11,7 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `.claude/`
 - `.codex/`
 - `.github/`
+- `_corpus/`
 - `apps/control-plane/`
 - `apps/renderer/`
 - `apps/runner/`
@@ -120,7 +121,9 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/library/file`
 - `/api/library/pending`
 - `/api/library/recordings/confirm`
+- `/api/library/recordings/drive-inbox`
 - `/api/library/recordings`
+- `/api/library/recordings/lane`
 - `/api/library/recordings/upload-url`
 - `/api/library/upload-url`
 - `/api/library/written`
@@ -158,6 +161,9 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/video-studio/runner/project`
 - `/api/video-studio/runner/watch`
 - `/api/video-studio/session`
+- `/api/watch/claim`
+- `/api/watch/read`
+- `/api/watch/report`
 - `/api/week/options`
 - `/api/workbench`
 
@@ -448,6 +454,7 @@ How a creator's post is identified, and how close to it Krish's version is
 - `interface CreatorYieldRow`
 - `interface CreatorMoveCtx`
 - `async function extractCreatorMoves( posts: CreatorPost[], ctx: CreatorMoveCtx, ): Promise<CreatorMove[]>`
+- `function knownPillar(id: string | null, pillars: { id: string }[]): string | null`
 
 ### `apps/control-plane/api/_creators.ts`
 
@@ -473,6 +480,7 @@ How a creator's post is identified, and how close to it Krish's version is
 
 What counts as an admissible row in the edit ledger.
 
+- `const BOARD_EDIT_CLASSES`
 - `function sha256(text: string): string`
 - `const AGENT_CLIENTS`
 - `const DECISION_ACTIONS`
@@ -507,7 +515,7 @@ OpenAI text-embedding-3-small. Used for two purposes:
 - `interface EmbedInput`
 - `async function embed(input: EmbedInput): Promise<number[] | null>`
 - `async function embedBatch(inputs: EmbedInput[]): Promise<(number[] | null)[]>`
-- `function cosine(a: number[], b: number[]): number`
+- `export { cosine } from './_vectors.js'`
 - `function vectorLiteral(v: number[]): string`
 
 ### `apps/control-plane/api/_enrich.ts`
@@ -533,6 +541,10 @@ The fact gate.
 - `function signOff( fc: FactCheck, lines: Array<{ sentence: string; said: string }>, at = new Date().toISOString(), ): { …`
 - `function carrySignOffs(prior: FactCheck | undefined, next: FactCheck): FactCheck`
 - `const FACT_GATE_VERSION`
+- `interface ManualFactReview`
+- `function reviewContradiction(meta: Record<string, any>, body: string, input: Record<string, unknown>, at = new Date().t…`
+- `function activeManualReviews(meta: Record<string, any>): ManualFactReview[]`
+- `function effectiveBlocking(meta: Record<string, any>): CheckedClaim[]`
 - `const PASSING: ReadonlySet<ClaimVerdict>`
 - `const UNSET`
 - `function withoutConfidence(text: string): string`
@@ -580,6 +592,18 @@ The fact gate.
 - `const SECOND_LOOK_SYSTEM`
 - `const ENTAIL_SYSTEM`
 - `const INDEPENDENT_SYSTEM`
+
+### `apps/control-plane/api/_feedbackCues.ts`
+
+Krish's feedback cues, for Sunday's gather (GET /api/week/options?include=sources, `cues`).
+
+- `const CUE_USES`
+- `const CUE_COLS`
+- `interface CueItem`
+- `interface CuesBlock`
+- `function buildCues(rows: Row[]): CuesBlock`
+- `function tableMissing(error: { message?: string; code?: string } | null): boolean`
+- `function cuesFrom(res: { data: Row[] | null; error: { message?: string; code?: string } | null }): { cues: CuesBlock; e…`
 
 ### `apps/control-plane/api/_finalPass.ts`
 
@@ -840,7 +864,8 @@ Krish's house rules, in one place.
 - `interface HouseRule`
 - `interface SeriesOpener`
 - `const SERIES_OPENERS: Readonly<Record<string, SeriesOpener>>`
-- `function seriesOpener(series?: string | null): string | null`
+- `function seriesOpener(_series?: string | null): string | null`
+- `function retiredSeriesOpener(series?: string | null): string | null`
 - `interface ScriptReading`
 - `const SCRIPT_READING: Readonly<ScriptReading>`
 - `const HOUSE_RULES: readonly HouseRule[]`
@@ -875,6 +900,23 @@ The one idea queue (Krish, 2026-10-19: "mark ideas for a queue instead of select
 - `function queueMeta(mark: QueueMark | null, prior: Record<string, any> | undefined, at: string, by: string): Record<stri…`
 - `function present(row: Record<string, any>)`
 - `function nextPair(rows: Array<ReturnType<typeof present>>): [typeof rows[number], typeof rows[number]] | null`
+- `const COMBINE_COSINE`
+- `const COMBINE_MIN`
+- `const COMBINE_MAX`
+- `interface CombineGroup`
+- `function combineCandidates(rows: Array<Record<string, any>>, threshold = COMBINE_COSINE): CombineGroup[]`
+- `function absorbedQueuePatch(row: Record<string, any>, parentId: string, by: 'Krish', said: string | null, at: string)`
+
+### `apps/control-plane/api/_inspirationSources.ts`
+
+What Krish's Inspiration House holds, for Sunday's ideas (GET /api/week/options?include=sources, `inspiration`).
+
+- `const INSPO_FRESH_DAYS`
+- `const EXCERPT`
+- `interface InspoCard`
+- `function card(r: Row): InspoCard`
+- `interface InspirationBlock`
+- `function buildInspiration(input: { weekStart: string; items: Row[]; reads?: Row[]; moves?: Row[]; claims?: Row[]; quote…`
 
 ### `apps/control-plane/api/_investigation.ts`
 
@@ -1040,7 +1082,8 @@ The making record: where one piece is on its way from the workroom to
 - `type MakingChannel = (typeof MAKING_CHANNELS)[number]`
 - `const CORE_CHANNELS: readonly MakingChannel[]`
 - `const MAKING_CUTS`
-- `type MakingCut = (typeof MAKING_CUTS)[number]`
+- `const MAKING_ALL_CUTS`
+- `type MakingCut = (typeof MAKING_ALL_CUTS)[number]`
 - `interface MakingCheck`
 - `type MakingScriptCheck`
 - `interface MakingReadBack`
@@ -1068,8 +1111,9 @@ The making record: where one piece is on its way from the workroom to
 - `type TeleprompterState = 'in' | 'older' | 'failed' | 'missing'`
 - `function teleprompterStates(m: Partial<Making>): Partial<Record<MakingCut, TeleprompterState>>`
 - `function teleprompterNote(m: Partial<Making>): string`
+- `function makingCuts(m: Partial<Making>): MakingCut[]`
 - `const MAKING_OWNERS: Record<string, MakingOwner>`
-- `function makingSteps(row: { state?: string | null; meta?: Record<string, any> | null }): MakingStep[]`
+- `function makingSteps(row: { state?: string | null; body?: string | null; meta?: Record<string, any> | null }): MakingSt…`
 - `interface PieceState`
 - `function pieceVerdict(piece: PieceState, closesOn: string, steps: MakingStep[] = makingSteps(piece)): 'done' | 'moot' |…`
 
@@ -1292,6 +1336,7 @@ The mechanical checks a piece must pass before it can be approved or
 - `function confidenceOf(body: string): number | null`
 - `function predictionCheck(body: string): { ok: boolean; detail: string }`
 - `function bareScores(body: string): Array<{ number: string; sentence: string }>`
+- `function threeThingsTomorrow(body: string): { ok: boolean; detail: string }`
 - `function publishChecks(body: string, factGate: { ok: boolean; reason: string | null }, now: Date = new Date(), pieceId?…`
 - `function publishStatus(checks: Check[]): { ok: boolean; reason: string | null; failing: Check[] }`
 
@@ -1542,6 +1587,14 @@ _standards — the Five Standards gate, as a pure function.
 
 - `const supabase`
 
+### `apps/control-plane/api/_taste.ts`
+
+What Krish has confirmed he likes, for the writers.
+
+- `type TasteLane = 'voice' | 'strategy' | 'production' | 'visibility'`
+- `function renderTasteBlock(rows: Array<{ statement?: unknown; means?: unknown; layer?: unknown }>): string`
+- `async function loadTasteBlock(lanes: TasteLane[]): Promise<string>`
+
 ### `apps/control-plane/api/_text.ts`
 
 - `function stripMarkdownLinks(s: string): string`
@@ -1594,6 +1647,13 @@ The news-vs-shift separator, ported from mm-ctrl `_shared/news-trends.ts` and
 - `function slugifyShift(title: string): string`
 - `function titleJaccard(a: string, b: string): number`
 
+### `apps/control-plane/api/_vectors.ts`
+
+Stored embeddings, read without a model call. Pure: no imports, so a unit test and a pure module
+
+- `function parseVec(r: { embedding?: unknown; _vec?: number[] | null } | null | undefined): number[] | null`
+- `function cosine(a: number[], b: number[]): number`
+
 ### `apps/control-plane/api/_video.ts`
 
 Video script formats, 15 seconds to 20 minutes. Every piece uses two of
@@ -1603,6 +1663,7 @@ Video script formats, 15 seconds to 20 minutes. Every piece uses two of
 - `const VIDEO_FORMATS: VideoFormat[]`
 - `function videoFormat(id?: string | null): VideoFormat | null`
 - `const STORY_OUTRO`
+- `const SCRIPT_OPENING`
 - `const SCRIPT_STORY`
 - `const SPOKEN_RULES`
 - `interface VideoBeat`
@@ -1646,9 +1707,34 @@ The week's options, as the Sunday session writes them onto the pieces.
 - `interface WeekOptionInput`
 - `interface WeekOptionMeta`
 - `const MAX_OPTIONS`
+- `const MAX_COVERS`
 - `function isMonday(ymd: string): boolean`
 - `function keepThroughWeek(expiresAt: string | null | undefined, weekStart: string): string | null`
 - `function parseOptions(body: unknown): { week_start: string; series: string; options: WeekOptionInput[]; problems: strin…`
+- `function mergeCovers(held: unknown, weekStart: string, more: string[] | undefined): Record<string, string[]> | null`
+
+### `apps/control-plane/api/_weekSources.ts`
+
+Sunday's idea pool from every source, and the evidence of Krish's taste (GET /api/week/options?include=sources).
+
+- `const LIKED_COSINE`
+- `const POOL_DAYS`
+- `type SourceKind = 'his' | 'inspo' | 'engine'`
+- `type HisVia = 'said' | 'research'`
+- `type Row = Record<string, any>`
+- `interface Candidate`
+- `type TasteKind = 'story' | 'angle' | 'pick' | 'ab_win' | 'drop'`
+- `interface TasteItem`
+- `function windows(weekStart: string)`
+- `function sourceKind(row: Row): { kind: SourceKind; via: HisVia | null }`
+- `function excluded(row: Row): string | null`
+- `function tasteOf(rows: Row[]): TasteItem[]`
+- `function nearest(vec: number[] | null, taste: TasteItem[], selfId?: string)`
+- `function candidate(row: Row, taste: TasteItem[]): Candidate`
+- `function rank(a: Candidate, b: Candidate): number`
+- `function inWindow(row: Row, kind: SourceKind, win: ReturnType<typeof windows>): boolean`
+- `interface Relayed`
+- `function buildSources(input: { weekStart: string; series: string[]; rows: Row[]; tasteRows: Row[]; relayed?: Row[] })`
 
 ### `apps/control-plane/api/_weeks.ts`
 
@@ -1720,6 +1806,9 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `const revision = (n: unknown) =>`
 - `function actor(req: VercelRequest, operatorOnly = false): string | null`
 - `function validBody(collection: string, id: string, body: unknown): boolean`
+- `const COMMENT_ACTS`
+- `function combineWriterRefused(collection: string, body: unknown, who: string | null): boolean`
+- `function hisOnlyRefusal(collection: string, body: unknown, who: string | null): string | null`
 - `function validSourceBody(collection: string, id: unknown, body: unknown): boolean`
 - `type BoardFile`
 - `type Manifest`
@@ -2025,6 +2114,9 @@ What the Drive scan decides, with no Drive, no model and no database.
 - `function storyUrl(extractedUrl: unknown, hash: string | null): string`
 - `interface Seed`
 - `const BLACKLISTED_FRAMINGS`
+- `type SeedShape = 'seeds' | 'repaired' | 'empty' | 'no_text' | 'unparseable'`
+- `function parseSeedResponse(raw: string): { seeds: Seed[]; shape: SeedShape }`
+- `function extractionOutcome(stopReason: string | null, shape: SeedShape): { settle: boolean; error: string | null }`
 - `function parseSeedArray(raw: string): Seed[]`
 - `interface Survivors`
 - `function filterSeeds(seeds: Seed[], minBrandFit: number): Survivors`
@@ -2092,12 +2184,42 @@ What the compiler looks for, as pure functions.
 - `function presetProposals(rows: EditRow[]): Proposal[]`
 - `function judgeProposals(rows: CalibrationRow[]): Proposal[]`
 - `function handRewriteProposals(rows: EditRow[]): Proposal[]`
+- `function repeatedEditClassProposals(rows: EditRow[], now: number = Date.now()): Proposal[]`
 - `const MAX_EVIDENCE`
 - `function toProposalRow(p: Proposal, batch: string): { ok: true; row: Record<string, unknown> } | { ok: false; reason: s…`
 
 ### `apps/control-plane/api/learning/compile.ts`
 
 - `export default withContentRun('learning_compile', handler)`
+
+### `apps/control-plane/api/library/_inboxDrive.ts`
+
+- `const INBOX_FOLDER_ID`
+- `const INBOX_SETTLE_MS`
+- `const INBOX_RUN_BUDGET_MS`
+- `const INBOX_COPY_RATE`
+- `interface InboxFile`
+- `type InboxSkip = 'not_recording' | 'too_large' | 'no_checksum' | 'settling'`
+- `type InboxStep`
+- `function planInbox(files: readonly InboxFile[], now: number): InboxStep[]`
+- `type InboxAction = 'already_listed' | 'add_name' | 'copy'`
+- `function decideRecording( request: RecordingRequest, manifest: RecordingManifest | null, stored: 'verified' | 'missing'…`
+- `function copyFits(bytes: number, elapsedMs: number): boolean`
+- `type InboxListing`
+- `async function listInbox(folderId: string): Promise<InboxListing>`
+- `async function copyDriveFile(fileId: string, uploadUrl: string, contentType: string, bytes: number, timeoutMs: number):…`
+
+### `apps/control-plane/api/library/_lanes.ts`
+
+- `const LANE_PREFIX`
+- `const LANE_PROBLEMS: Readonly<Record<string, string>>`
+- `const LANE_REPORT_FRESH_HOURS`
+- `interface LaneReport`
+- `function parseLaneReport(value: unknown, now: string): LaneReport | null`
+- `function laneKey(machine: string): string`
+- `function lanePlainProblems(reports: readonly LaneReport[], now: number): string[]`
+- `async function writeLaneReport(bucket: string, report: LaneReport): Promise<boolean>`
+- `async function readLaneReports(bucket: string): Promise<{ reports: LaneReport[]; error: boolean }>`
 
 ### `apps/control-plane/api/library/_library.ts`
 
@@ -2187,7 +2309,15 @@ What the compiler looks for, as pure functions.
 
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 
+### `apps/control-plane/api/library/recordings/drive-inbox.ts`
+
+- `export default withContentRun('recordings_drive_inbox', handler)`
+
 ### `apps/control-plane/api/library/recordings/index.ts`
+
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
+
+### `apps/control-plane/api/library/recordings/lane.ts`
 
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 
@@ -2533,6 +2663,48 @@ Which Windows runner may take work, and how each one looks from the cloud.
 - `export default withContentRun('runner_watch', handler)`
 
 ### `apps/control-plane/api/video-studio/session.ts`
+
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
+
+### `apps/control-plane/api/watch/_watch.ts`
+
+The content-watcher queue: what the home computers may claim, report and read, decided without a database.
+
+- `const STALE_CLAIM_MS`
+- `const MAX_ATTEMPTS`
+- `const MAX_CLAIM`
+- `const MAX_FILES`
+- `interface WatchRequestRow`
+- `interface MediaEntry`
+- `interface ReadRow`
+- `interface WatchStore`
+- `type Parsed<T> = { ok: true; value: T } | { ok: false; error: string }`
+- `function parseClaim(body: unknown): Parsed<{ machine: string; limit: number }>`
+- `function parseMedia(value: unknown): MediaEntry[] | null`
+- `function parseReads(value: unknown): ReadRow[] | null`
+- `interface ReportBody`
+- `function parseReport(body: unknown): Parsed<ReportBody>`
+- `function parseReadOnly(body: unknown): Parsed<{ machine: string; reads: ReadRow[] }>`
+- `function compareRev(a: string, b: string): number`
+- `function claimView(row: WatchRequestRow)`
+- `async function claim(store: WatchStore, machine: string, limit: number, now = new Date())`
+- `async function writeReads(store: WatchStore, rows: ReadRow[])`
+- `type ReportOutcome`
+- `async function report(store: WatchStore, body: ReportBody, now = new Date()): Promise<ReportOutcome>`
+
+### `apps/control-plane/api/watch/_watchStore.ts`
+
+- `const watchStore: WatchStore`
+
+### `apps/control-plane/api/watch/claim.ts`
+
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
+
+### `apps/control-plane/api/watch/read.ts`
+
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
+
+### `apps/control-plane/api/watch/report.ts`
 
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 
@@ -4022,6 +4194,7 @@ Where a finished video is filed: one folder per piece, whose name says the
 - `interface StudioPaths`
 - `const DEFAULT_WINDOWS_DRIVE_ROOT`
 - `function canonicalWindowsDrivePath(value: string | undefined, fallback: string): string`
+- `function resolveWindowsDrivePath( value: string | undefined, fallback: string, exists: (path: string) => boolean = exis…`
 - `function studioPaths(): StudioPaths`
 - `function jobPath(jobId: string): string`
 

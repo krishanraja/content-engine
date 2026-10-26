@@ -53,18 +53,25 @@ def sha256_of(path):
 
 
 def posts_root():
-    """<makeyourmindup>/3 Posts on this machine, or None."""
+    """<makeyourmindup>/3 Posts on this machine, or None.
+
+    runtime.library_root in config/studio.json names makeyourmindup itself,
+    so this no longer assumes where Video Engine sits (Krish moves folders:
+    2026-10-24, "Folders get renamed all the time and moved all the time").
+    MINDMAKE_POSTS_ROOT, when set, wins only while it names a folder that is
+    there; a stale one is said on stderr and studio.json is used."""
+    try:
+        runtime = json.loads((REPO / 'config' / 'studio.json').read_text(encoding='utf-8')).get('runtime') or {}
+    except (OSError, ValueError):
+        runtime = {}
+    library = runtime.get('library_root')
+    configured = Path(library) / '3 Posts' if library else None
     env = os.environ.get('MINDMAKE_POSTS_ROOT')
     if env:
-        return Path(env)
-    drive = os.environ.get('MINDMAKE_DRIVE_ROOT')
-    if not drive:
-        try:
-            drive = (json.loads((REPO / 'config' / 'studio.json').read_text()).get('runtime') or {}).get('drive_root')
-        except (OSError, ValueError):
-            drive = None
-    # drive_root is the Video Engine folder, inside makeyourmindup.
-    return Path(drive).parent / '3 Posts' if drive else None
+        if Path(env).is_dir() or configured is None or not configured.is_dir():
+            return Path(env)
+        print(f'MINDMAKE_POSTS_ROOT names {env}, which is not there; using {configured}. Delete the setting.', file=sys.stderr)
+    return configured
 
 
 def working_folders(root):
@@ -104,7 +111,7 @@ def plan_folder(prefix, folder):
 def cmd_publish(out=print):
     root = posts_root()
     if not root or not root.is_dir():
-        raise WorkingError('the posts folder is not reachable here (MINDMAKE_POSTS_ROOT, MINDMAKE_DRIVE_ROOT, or runtime.drive_root in config/studio.json)')
+        raise WorkingError('the posts folder is not reachable here (runtime.library_root in config/studio.json, or MINDMAKE_POSTS_ROOT)')
     import send
     total = {'sent': 0, 'already': 0, 'confirmed_only': 0, 'folders': 0}
     api = None

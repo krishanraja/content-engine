@@ -22,8 +22,9 @@ import { askChecksForPiece } from '../../_controlCenter.js'
 // hold is kept as it is and read by nothing.
 //
 // The GET answer also carries the piece's lane_slot, its series, so
-// making.py scripts can check each script opens with its series line
-// (house rule SERIES_OPENER).
+// making.py scripts can pass it to the story check. The series line is
+// retired since 2026-10-21 (house rule SERIES_OPENER): nothing is checked
+// for it, and the series is only passed on.
 //
 // Every write lands on content_ideas.meta.making, so Control Center's realtime
 // subscription on content_ideas shows it within a second. A Claude Code
@@ -52,7 +53,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const ideaId = Array.isArray(raw) ? raw[0] : raw
   if (!ideaId) return res.status(400).json({ ok: false, error: 'id required' })
 
-  const { data: row, error } = await supabase.from('content_ideas').select('id, idea, state, lane_slot, meta, buried_at, updated_at').eq('id', ideaId).maybeSingle()
+  const { data: row, error } = await supabase.from('content_ideas').select('id, idea, body, state, lane_slot, meta, buried_at, updated_at').eq('id', ideaId).maybeSingle()
   if (error) return res.status(500).json({ ok: false, error: error.message })
   if (!row) return res.status(404).json({ ok: false, error: 'idea not found' })
   const meta = ((row as any).meta && typeof (row as any).meta === 'object' ? (row as any).meta : {}) as Record<string, unknown>

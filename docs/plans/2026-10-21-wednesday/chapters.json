@@ -1,0 +1,37 @@
+{
+  "clock": "Edited finished video, including its single 3.5-second intro",
+  "chapters": [
+    {
+      "at_s": 0,
+      "title": "Muse vs Grok Bot · Five everyday jobs"
+    },
+    {
+      "at_s": 25,
+      "title": "The inbox"
+    },
+    {
+      "at_s": 62,
+      "title": "The flight"
+    },
+    {
+      "at_s": 94,
+      "title": "What to cancel"
+    },
+    {
+      "at_s": 111,
+      "title": "My day"
+    },
+    {
+      "at_s": 138,
+      "title": "The news"
+    },
+    {
+      "at_s": 164,
+      "title": "The work email"
+    },
+    {
+      "at_s": 236,
+      "title": "The verdict"
+    }
+  ]
+}

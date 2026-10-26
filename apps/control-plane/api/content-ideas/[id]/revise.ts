@@ -11,6 +11,7 @@ import { guardEngine } from '../../_auth.js'
 import { loadSubchannel } from '../../_subchannels.js'
 import { guardConfidence, selfCheck } from '../../_selfCheck.js'
 import { passageReplacement, spliceSelection } from '../../_selection.js'
+import { loadTasteBlock } from '../../_taste.js'
 
 // POST /api/content-ideas/:id/revise
 //   body: {
@@ -67,7 +68,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const { data: idea } = await supabase
     .from('content_ideas').select('idea,thesis,meta,lane,lane_slot').eq('id', id).single()
 
-  const [voice, corpus] = await Promise.all([loadVoiceBlock(), loadCorpus()])
+  const [voice, corpus, taste] = await Promise.all([loadVoiceBlock(), loadCorpus(), loadTasteBlock(['voice', 'strategy'])])
   // Adapt-to-lane (value 'adapt-<channel>') rewrites the draft FOR a different
   // channel, so the corpus must follow the target, not the piece's current lane.
   const adaptMatch = /^adapt-(.+)$/.exec(b.value || '')
@@ -88,6 +89,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       materialsBlock,
       idea: idea ? { idea: idea.idea, thesis: idea.thesis, contrarian: (idea as any)?.meta?.contrarian ?? null } : null,
       mandate: sub ? { label: sub.label, text: sub.mandate, slug: sub.slug } : null,
+      taste,
     },
     {
       mode, value: b.value, hint: b.hint, instruction: b.instruction,

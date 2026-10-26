@@ -1,0 +1,28 @@
+{
+  "piece_id": "5b5bfadc-a60c-4d0a-be8e-b2e9bf43d092",
+  "source_url": "https://developers.openai.com/api/docs/changelog",
+  "source_title": "OpenAI Aug 21 2026 promotional pricing with visible date (verbatim)",
+  "material_id": "c5ac2492-10cc-4448-88df-af86bd102bdb",
+  "source_content": "August, 2026\n\nAug 21\n\nUpdate\n\ngpt-5.6-sol\n\nGPT-5.6 Sol now costs $4 per million input tokens and $20 per million output tokens, representing 20% lower input pricing and 33% lower output pricing. GPT-5.6 Sol’s promotional pricing is available at least through November 21, 2026. See pricing details.",
+  "sha256": "8862407c46aaa03d76e98857890f45bdcb7c94e3e3623a3ece3d39d3a72dcbb0",
+  "prior_materials_preserved": true,
+  "next_run": {
+    "ledger_usable": true,
+    "total_sentences": 86,
+    "reusable_sentences": 72,
+    "fresh_sentences": 14
+  },
+  "last_run_cost": {
+    "day": "2026-10-19",
+    "runs": 1,
+    "usd_per_run": 0.35,
+    "basis": "run",
+    "run_id": "f05e0409-04cd-40b1-8cf7-7456fe1b8883",
+    "piece_id": "5b5bfadc-a60c-4d0a-be8e-b2e9bf43d092"
+  },
+  "gate": {
+    "ok": false,
+    "reason": "1 claim failed the fact check. Fix or cut them, then run it again, or Krish signs them off in his own words."
+  },
+  "paid_run_started": false
+}

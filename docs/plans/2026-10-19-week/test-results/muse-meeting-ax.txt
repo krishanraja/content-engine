@@ -1,0 +1,61 @@
+Browser tab: 8, Title: "Muse", URL: "https://muse.ai/thread/83e10bcc-106b-4bd8-84c4-0f15eca4650f".
+1 AXWebArea Muse, URL: muse.ai/thread/83e10bcc-106b-4bd8-84c4-0f15eca4650f
+	9 container
+		10 container
+			11 container
+				12 button Back to main chat
+					13 image
+				14 pop up button (collapsed) Plan migration sign-off meeting Unread chats Open chat and side chats, Secondary Actions: Expand
+					15 text Plan migration sign-off meeting
+					16 text Unread chats
+					17 text Open chat and side chats
+			20 container Chat messages
+				21 text 11:46 PM
+				22 container
+					23 container
+						24 text You: Everything below is fictional. Answer in this chat only. Do not send messages, create calendar events, alter files or records, buy anything, subscribe, schedule work, or call paid services. Use only the supplied information. If a necessary fact is absent, say so. Do not claim an action occurred. Do not browse: these controlled fixtures test reasoning and draft quality, not live integration or inventory access.
+
+Task 2: meeting
+
+Prepare a 30-minute meeting invitation for Wednesday 21 October 2026. Supplied conversion for this task: London is UTC+1, New York UTC-4. Ana in London is free 14:00–15:00 and 16:00–16:30. Ben in New York is free 09:30–10:00 and 11:30–12:00. Both must attend. Their fictional addresses are ana@example.com and ben@example.com. Topic: migration sign-off. Provide the common time in both cities, UTC time, attendees and a two-point agenda. Do not create or send an event.
+					25 pop up button (collapsed) Description: More options, Secondary Actions: Expand
+						26 image
+				40 container
+					41 text Here's the draft invitation — not created or sent, just prepared:
+					42 container
+						43 text Meeting: Migration sign-off
+						44 text Date: Wednesday 21 October 2026
+						45 text Time: 14:30–15:00 London (BST) / 09:30–10:00 New York (EDT) — 13:30–14:00 UTC
+						46 text Duration: 30 minutes
+						47 text Attendees: 
+						48 link Description: ana@example.com, Value: mailto:ana@example.com
+						49 text , 
+						50 link Description: ben@example.com, Value: mailto:ben@example.com
+					51 text Agenda:
+					52 content list
+						53 container
+							54 AXListMarker 1. 
+							55 text Review migration checklist and confirm all sign-off criteria are met
+						56 container
+							57 AXListMarker 2. 
+							58 text Agree go/no-go decision and next steps with owners
+					59 text This is the only 30-minute slot where both are free: it sits inside Ana's 14:00–15:00 London window and Ben's 09:30–10:00 New York window.
+					60 pop up button (collapsed) Description: More options, Secondary Actions: Expand
+						61 image
+		28 container Main navigation
+			29 link Description: Chat, Value: muse.ai/
+			30 link Description: Feed, Value: muse.ai/feed
+			31 link Description: Ideas, Value: muse.ai/ideas
+			32 link Description: Goals, Value: muse.ai/goals
+			33 link Description: Library, Value: muse.ai/library/artifacts
+			34 button More
+		35 container
+			36 button Message Attach file Dictate a message
+				37 text entry area (settable) Message
+				38 button Attach file
+					39 image
+				62 button Dictate a message
+					63 image
+	8 container Notifications alt+T
+
+The focused UI element is 37 text entry area (settable) Message

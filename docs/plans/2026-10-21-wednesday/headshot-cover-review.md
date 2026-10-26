@@ -1,0 +1,3 @@
+# Wednesday headshot cover
+
+Krish approved the product-branded headshot treatment on 23 October: the Grok Bot and Muse marks appear at equal size beside their labels, and the founders' names are removed. The headshots are AI-generated editorial illustrations, not documentary photographs or endorsements. The approved treatment has been rendered in all five cover sizes and both thumbnail sizes; each has a measured layout and phone-legibility check. The earlier boxing-inspired covers and thumbnails remain labelled as a rejected archive. Add edits or comments here if any crop needs correction before posting.

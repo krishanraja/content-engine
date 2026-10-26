@@ -19,18 +19,28 @@
 // The same shape is mirrored in control-center/src/lib/making.ts. Change one,
 // change the other (docs/CONTENT_ENGINE.md, "The split").
 
-import { stillBlocking } from './_factGate.js'
+import { activeManualReviews, bodyHash, effectiveBlocking } from './_factGate.js'
 
 /** Every channel a piece can go to, in the order Krish posts them
  *  (docs/AMPLIFICATION.md). Krish, 2026-10-11: "I always want to repost to
  *  YouTube and then Shorts, TikTok, and Instagram." The first five are the
  *  standing set; LinkedIn, WhatsApp and Substack Notes stay available when
  *  he wants them and never hold a piece back. */
-export const MAKING_CHANNELS = ['substack', 'youtube', 'shorts', 'tiktok', 'reels', 'linkedin', 'whatsapp', 'notes', 'spotify'] as const
+// feature_youtube and feature_spotify: the 15-minute feature's own two posts, on a feature piece only (config/board-layout.json).
+export const MAKING_CHANNELS = ['substack', 'youtube', 'shorts', 'tiktok', 'reels', 'linkedin', 'whatsapp', 'notes', 'spotify', 'feature_youtube', 'feature_spotify'] as const
 export type MakingChannel = (typeof MAKING_CHANNELS)[number]
 export const CORE_CHANNELS: readonly MakingChannel[] = ['substack', 'youtube', 'shorts', 'tiktok', 'reels']
+/** The two cuts every piece gets (house rule TWO_CUTS). */
 export const MAKING_CUTS = ['long', 'short'] as const
-export type MakingCut = (typeof MAKING_CUTS)[number]
+/** Every cut a record can hold: the two, and the 15-minute feature on a
+ *  piece Krish called one for (house rule FEATURE; Krish, 2026-10-21: "From
+ *  time to time I might do a special 15 min feature"; config/features.json,
+ *  read by scripts/post-pack/making.py, which records the feature's hash
+ *  only on such a piece). A record holding a feature hash needs the feature
+ *  recorded and produced too (makingCuts). */
+export const MAKING_ALL_CUTS = ['long', 'short', 'feature'] as const
+export type MakingCut = (typeof MAKING_ALL_CUTS)[number]
+function isCut(c: unknown): c is MakingCut { return (MAKING_ALL_CUTS as readonly string[]).includes(String(c)) }
 
 export interface MakingCheck { passed: boolean; checked_at: string; problems: string[] }
 /** The scripts' check. `hashes` is the sha256 of each cut's words
@@ -138,7 +148,7 @@ const MAX_TELEPROMPTER_NAME = 200
 /** One cut of a teleprompter patch, or the reason it is refused. */
 function parseTeleprompterCut(cut: string, v: unknown, by: string, now: string): { entry?: MakingTeleprompterCut; problem?: string } {
   const at = `teleprompter.cuts.${cut}`
-  if (!(MAKING_CUTS as readonly string[]).includes(cut)) return { problem: `unknown cut "${cut}" in teleprompter.cuts (long, short)` }
+  if (!isCut(cut)) return { problem: `unknown cut "${cut}" in teleprompter.cuts (long, short, feature)` }
   if (!isObj(v)) return { problem: `${at} must be an object` }
   const entry: MakingTeleprompterCut = { sent_at: when(v.sent_at, now), by: str(v.by, 60) || by }
   if (v.error !== undefined) {
@@ -180,19 +190,19 @@ export function parseMakingPatch(body: unknown, now: string): { patch: MakingPat
     const list = Array.isArray(v.problems) ? v.problems.filter(p => typeof p === 'string').map(p => String(p).slice(0, MAX_TEXT)).slice(0, MAX_PROBLEMS) : []
     const check: MakingScriptCheck = { passed: v.passed, checked_at: when(v.checked_at, now), problems: list }
     if (key === 'script_check' && typeof v.spine === 'string' && v.spine.trim()) (check as MakingScriptCheck).spine = String(v.spine).trim().slice(0, 300)
-    if (key === 'script_check' && Array.isArray(v.cuts)) check.cuts = v.cuts.filter((c): c is MakingCut => (MAKING_CUTS as readonly string[]).includes(String(c)))
+    if (key === 'script_check' && Array.isArray(v.cuts)) check.cuts = v.cuts.filter(isCut)
     if (key === 'script_check' && v.hashes !== undefined) {
       const entries = isObj(v.hashes) ? Object.entries(v.hashes) : null
-      if (!entries || !entries.every(([c, h]) => (MAKING_CUTS as readonly string[]).includes(c) && typeof h === 'string' && SCRIPT_SHA256.test(h))) {
-        problems.push('script_check.hashes is the sha256 of each cut\'s script: {long, short}, each 64 lowercase hex characters')
+      if (!entries || !entries.every(([c, h]) => isCut(c) && typeof h === 'string' && SCRIPT_SHA256.test(h))) {
+        problems.push('script_check.hashes is the sha256 of each cut\'s script: {long, short, feature}, each 64 lowercase hex characters')
         continue
       }
       check.hashes = Object.fromEntries(entries) as Partial<Record<MakingCut, string>>
     }
     if (key === 'script_check' && v.changed_at !== undefined) {
       const entries = isObj(v.changed_at) ? Object.entries(v.changed_at) : null
-      if (!entries || !entries.every(([c, t]) => (MAKING_CUTS as readonly string[]).includes(c) && typeof t === 'string' && t.length <= 40 && !Number.isNaN(Date.parse(t)))) {
-        problems.push('script_check.changed_at is when each cut\'s words last changed: {long, short}, each a time')
+      if (!entries || !entries.every(([c, t]) => isCut(c) && typeof t === 'string' && t.length <= 40 && !Number.isNaN(Date.parse(t)))) {
+        problems.push('script_check.changed_at is when each cut\'s words last changed: {long, short, feature}, each a time')
         continue
       }
       check.changed_at = Object.fromEntries(entries) as Partial<Record<MakingCut, string>>
@@ -201,11 +211,11 @@ export function parseMakingPatch(body: unknown, now: string): { patch: MakingPat
       const entries = isObj(v.read_back) ? Object.entries(v.read_back) : null
       const krish = (r: Record<string, unknown>) => r.found === 'approved by Krish' && typeof r.krish_words === 'string'
         && str(r.krish_words, 600) === r.krish_words && /^krish/i.test(r.krish_words)
-      const ok = (c: string, r: unknown) => (MAKING_CUTS as readonly string[]).includes(c) && isObj(r) && typeof r.script_sha256 === 'string' && SCRIPT_SHA256.test(r.script_sha256)
+      const ok = (c: string, r: unknown) => isCut(c) && isObj(r) && typeof r.script_sha256 === 'string' && SCRIPT_SHA256.test(r.script_sha256)
         && (r.found === 'nothing lost' || krish(r)) && Array.isArray(r.readers) && r.readers.length >= (r.found === 'nothing lost' ? 2 : 0) && r.readers.length <= 6
         && r.readers.every(n => typeof n === 'string' && str(n, 200) === n && !/[\r\n\t]/.test(n))
       if (!entries || !entries.every(([c, r]) => ok(c, r))) {
-        problems.push('script_check.read_back is each cut\'s read-back: {long, short}, each {script_sha256, at, by, readers: two to six names, found: "nothing lost"}, or Krish\'s sign-off {script_sha256, at, by, readers: up to six, found: "approved by Krish", krish_words: his words, starting "Krish"}')
+        problems.push('script_check.read_back is each cut\'s read-back: {long, short, feature}, each {script_sha256, at, by, readers: two to six names, found: "nothing lost"}, or Krish\'s sign-off {script_sha256, at, by, readers: up to six, found: "approved by Krish", krish_words: his words, starting "Krish"}')
         continue
       }
       check.read_back = Object.fromEntries(entries.map(([c, r]: [string, any]) => [c, {
@@ -233,9 +243,9 @@ export function parseMakingPatch(body: unknown, now: string): { patch: MakingPat
     else {
       patch.recordings = []
       for (const r of body.recordings.slice(0, MAX_LIST)) {
-        const cut = isObj(r) && (MAKING_CUTS as readonly string[]).includes(String(r.cut)) ? (r.cut as MakingCut) : null
+        const cut = isObj(r) && isCut(r.cut) ? r.cut : null
         const path = isObj(r) ? str(r.path, 400) : null
-        if (!cut || !path) { problems.push('each recording needs cut (long or short) and path'); continue }
+        if (!cut || !path) { problems.push('each recording needs cut (long, short or feature) and path'); continue }
         const rec: MakingRecording = { cut, path, at: when(r.at, now) }
         if (Number.isFinite(Number(r.seconds)) && Number(r.seconds) > 0) rec.seconds = Math.round(Number(r.seconds))
         if (r.script_sha256 !== undefined) {
@@ -256,7 +266,7 @@ export function parseMakingPatch(body: unknown, now: string): { patch: MakingPat
     else {
       patch.video_assets = []
       for (const a of body.video_assets.slice(0, MAX_LIST)) {
-        const cut = isObj(a) && (MAKING_CUTS as readonly string[]).includes(String(a.cut)) ? (a.cut as MakingCut) : null
+        const cut = isObj(a) && isCut(a.cut) ? a.cut : null
         const name = isObj(a) ? str(a.name, 200) : null
         const path = isObj(a) ? str(a.path, 400) : null
         if (!cut || !name || !path) { problems.push('each video asset needs cut, name and path'); continue }
@@ -427,7 +437,7 @@ export function teleprompterStates(m: Partial<Making>): Partial<Record<MakingCut
   const out: Partial<Record<MakingCut, TeleprompterState>> = {}
   const check = m.script_check
   if (!check?.passed || !isObj(check.hashes)) return out
-  for (const cut of MAKING_CUTS) {
+  for (const cut of MAKING_ALL_CUTS) {
     const hash = check.hashes[cut]
     if (!hash) continue
     const sent = isObj(m.teleprompter) && isObj(m.teleprompter.cuts) ? m.teleprompter.cuts[cut] : undefined
@@ -442,7 +452,7 @@ export function teleprompterStates(m: Partial<Making>): Partial<Record<MakingCut
  *  step back. */
 export function teleprompterNote(m: Partial<Making>): string {
   const states = teleprompterStates(m)
-  const cuts = MAKING_CUTS.filter(c => states[c])
+  const cuts = MAKING_ALL_CUTS.filter(c => states[c])
   if (!cuts.length) return ''
   const of = (s: TeleprompterState) => cuts.filter(c => states[c] === s)
   if (of('in').length === cuts.length) return 'in Teleprompter'
@@ -452,6 +462,14 @@ export function teleprompterNote(m: Partial<Making>): string {
     of('failed').length ? `the Teleprompter send failed${which(of('failed'))}` : '',
     of('missing').length ? `not in Teleprompter yet${which(of('missing'))}` : '',
   ].filter(Boolean).join('; ')
+}
+
+/** The cuts a piece is recorded and produced in: the two every piece gets,
+ *  and the 15-minute feature when its script check holds a feature hash
+ *  (making.py records one only on a piece Krish called a feature for). */
+export function makingCuts(m: Partial<Making>): MakingCut[] {
+  const feature = isObj(m.script_check?.hashes) && typeof m.script_check?.hashes?.feature === 'string'
+  return feature ? [...MAKING_CUTS, 'feature'] : [...MAKING_CUTS]
 }
 
 /** Who does each step (Krish, 2026-10-11): Claude Code owns ideation, the
@@ -466,7 +484,7 @@ export const MAKING_OWNERS: Record<string, MakingOwner> = {
 /** The row of steps a reader sees, from the piece's row. `meta.fact_check`
  *  is the fact gate written by content-ideas/[id]/fact-check.ts. Mirrored in
  *  control-center/src/lib/making.ts. */
-export function makingSteps(row: { state?: string | null; meta?: Record<string, any> | null }): MakingStep[] {
+export function makingSteps(row: { state?: string | null; body?: string | null; meta?: Record<string, any> | null }): MakingStep[] {
   const meta = isObj(row.meta) ? row.meta : {}
   const m = (isObj(meta.making) ? meta.making : {}) as Partial<Making>
   const factGate = isObj(meta.fact_check) ? meta.fact_check : null
@@ -474,8 +492,10 @@ export function makingSteps(row: { state?: string | null; meta?: Record<string, 
   steps.push(m.workroom ? { key: 'workroom', label: 'Workroom', state: 'done', at: m.workroom.at, link: m.workroom.url } : { key: 'workroom', label: 'Workroom', state: 'todo' })
   // A run that left blocking lines passes once Krish has signed every one off
   // in his own words, as the gate itself counts it (gateStatus).
-  const signedThrough = !!factGate && Array.isArray(factGate.signed_off) && factGate.signed_off.length > 0 && Array.isArray(factGate.claims)
-    && stillBlocking(factGate as any).length + (Number(factGate.unchecked) || 0) === 0
+  const hasManualReview = activeManualReviews(meta).length > 0
+  const manualBodyCurrent = !hasManualReview || typeof row.body === 'string' && bodyHash(row.body) === factGate?.body_hash
+  const signedThrough = !!factGate && manualBodyCurrent && (Array.isArray(factGate.signed_off) && factGate.signed_off.length > 0 || hasManualReview) && Array.isArray(factGate.claims)
+    && effectiveBlocking(meta).length + (Number(factGate.unchecked) || 0) === 0
   const factPassed = factGate ? factGate.passed === true || factGate.status === 'passed' || factGate.ok === true || signedThrough : false
   steps.push(factGate
     ? { key: 'draft', label: 'Fact-checked draft', state: factPassed ? 'done' : 'failed', at: str(factGate.ran_at) || undefined, note: factPassed ? undefined : 'the fact gate did not pass' }
@@ -495,10 +515,12 @@ export function makingSteps(row: { state?: string | null; meta?: Record<string, 
   // A take counts only for the script it was taken from: one whose
   // script_sha256 is not the current hash for its cut was recorded from words
   // that have changed since (a take with no hash predates the hashes).
+  // A feature piece's feature counts the same way (makingCuts).
+  const needed = makingCuts(m)
   const takes = m.recordings || []
   const recorded = new Set(takes.filter(r => takeCounts(r, m.script_check)).map(r => r.cut))
-  const olderScript = MAKING_CUTS.filter(c => !recorded.has(c) && takes.some(r => r.cut === c))
-  const missingCuts = MAKING_CUTS.filter(c => !recorded.has(c) && !olderScript.includes(c))
+  const olderScript = needed.filter(c => !recorded.has(c) && takes.some(r => r.cut === c))
+  const missingCuts = needed.filter(c => !recorded.has(c) && !olderScript.includes(c))
   const recordTodo = [
     olderScript.length ? `${olderScript.join(' and ')} cut recorded from an older script` : '',
     missingCuts.length ? `${missingCuts.join(' and ')} cut still to record` : '',
@@ -510,9 +532,9 @@ export function makingSteps(row: { state?: string | null; meta?: Record<string, 
   // made only when its video and its thumbnail are both on the record.
   const assets = m.video_assets || []
   const produced = new Set(assets.map(a => a.cut))
-  const missingAssets = MAKING_CUTS.filter(c => !produced.has(c))
+  const missingAssets = needed.filter(c => !produced.has(c))
   const thumbed = new Set(assets.filter(a => a.thumbnail?.path).map(a => a.cut))
-  const missingThumbs = MAKING_CUTS.filter(c => produced.has(c) && !thumbed.has(c))
+  const missingThumbs = needed.filter(c => produced.has(c) && !thumbed.has(c))
   const videoTodo = [
     missingAssets.length ? `${missingAssets.join(' and ')} cut still to produce` : '',
     missingThumbs.length ? `${missingThumbs.join(' and ')} cut thumbnail${missingThumbs.length === 1 ? '' : 's'} still to make` : '',
