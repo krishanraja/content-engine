@@ -67,7 +67,8 @@ control-center.
 - **Left, with reasons:** `One Off Content Ideas` is not in Drive any more (`docs/DRIVE.md`); a home computer cannot
   check an `H:` path against a Drive ID (Drive for desktop does not expose it), so it checks the path exists instead;
   the KeePass file, ffmpeg reading takes, the library sync and archive filing stay on `H:` paths by necessity.
-- **Next:** once shared, read the next `recordings_drive_inbox` run as `ok`; drop a real take with both machines off
+- **Next:** the job runs `ok` again since 2026-10-26 11:10 UTC (a 120-character style-reference name had failed every
+  pass until PR #176); drop a real take with both machines off
   and see it in `python scripts/post-pack/recording.py list`.
 
 ## The idea queue: read it first
