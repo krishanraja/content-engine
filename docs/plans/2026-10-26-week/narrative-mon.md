@@ -34,7 +34,9 @@ Krish, 2026-10-26, on question 3 (the order below, opening on "Disney asked a ba
 
 Krish, 2026-10-26, on question 4: "On question 4, I think we need to predict specifically three big media or entertainment companies which will buy an AI company." Then, on the draft: "Those three, 30 June 2027, 75%".
 
-By 30 June 2027, Skydance (Paramount and Warner Bros. Discovery), Universal Music Group and Comcast's NBCUniversal will each buy an AI company or its team. How sure we are: 75%.
+Then: "announced March 1 2027 actually".
+
+By 1 March 2027, Skydance (Paramount and Warner Bros. Discovery), Universal Music Group and Comcast's NBCUniversal will each have announced buying an AI company or its team. How sure we are: 75%.
 
 Context checked 26 Oct: Netflix bought InterPositive (reported $587M, 2026), Warner Music bought Sureel AI (June 2026), WildBrain bought Personality AI (up to $70M, August 2026); Skydance's merger closed 6 Oct 2026 and Elon Musk invested about $1 billion on 22 Oct; UMG has partnered (Nvidia, Udio, ElevenLabs) without buying; NBCUniversal has made no AI purchase found.
 
