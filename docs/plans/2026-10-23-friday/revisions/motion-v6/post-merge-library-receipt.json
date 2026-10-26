@@ -1,0 +1,27 @@
+{
+  "files": [
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct motion v6/post-merge-annotation/S12-call.png",
+      "sha256": "78d2b70fe6cc0039df2a8378070283c43a05f5fb0185cfca1ebbcecf9dbeb5ce",
+      "bytes": 3293439
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct motion v6/post-merge-annotation/post-merge-annotation.json",
+      "sha256": "96031d6967d7fa130cc926d0c150190c07b8926093b6304dffcbbcd6a58219ec",
+      "bytes": 3929
+    },
+    {
+      "path": "3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct motion v6/post-merge-annotation/production-readback.json",
+      "sha256": "e63e96b709bd0ce96e30b2b5cf6df8b7b6b6025ba334f4f4879d7456c5f193f9",
+      "bytes": 903
+    }
+  ],
+  "upload": {
+    "sent": 3,
+    "already": 0,
+    "confirmed_only": 0
+  },
+  "readback": "every listed file independently downloaded and SHA-256 matched",
+  "board_write": false,
+  "making_write": false
+}

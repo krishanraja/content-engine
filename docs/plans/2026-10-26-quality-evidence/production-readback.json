@@ -1,0 +1,27 @@
+{
+  "phase": "after",
+  "build_id": "95c921bd526229d1d4a9bf63de9adfead6c24e3ce2590b70fa0a7e4001a129cb",
+  "html_sha256": "29b4f7a0d6b62a1c43a5e7ce2501a000ed2eaa8b9f1acc81136c76528912122c",
+  "html_bytes": 6636551,
+  "media_quality_rollout": "candidate_pending_calibration",
+  "media_qualification": "candidate_pending_calibration",
+  "stored_html_readback": true,
+  "writes": 0,
+  "same_build_as_before": true,
+  "unavailable_reviewer_refused": {
+    "http": 409,
+    "body": {
+      "ok": false,
+      "error": "media_unqualified",
+      "problems": [
+        "trusted independent reviewer unavailable"
+      ]
+    }
+  },
+  "merged_pr": 170,
+  "merged_commit": "49b1fcbc7e13f6bc308c67759900f753e620bd6e",
+  "checked_at": "2026-10-26",
+  "production_deployment_id": 7335369449,
+  "deployment_state": "success",
+  "tested_pr_head": "9c78d3b661774f948a1ffc5e86e998c302ee6a9b"
+}

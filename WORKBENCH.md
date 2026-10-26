@@ -2,7 +2,7 @@
 
 ## 26 October: Friday motion v6
 
-[Production handoff](docs/plans/2026-10-23-friday/revisions/motion-v6/BRIEF.md). [Quality gate and failed $3 calibration](docs/plans/2026-10-26-quality-evidence/README.md): eight calls, no qualification. Gates remain draft; four videos and final board incomplete.
+[Production handoff](docs/plans/2026-10-23-friday/revisions/motion-v6/BRIEF.md). [Quality gate and failed $3 calibration](docs/plans/2026-10-26-quality-evidence/README.md): eight calls, no qualification. Engine PR #170 is merged and production readback verified; automatic enforcement remains pending calibration. Friday production has resumed; four videos and final board remain incomplete.
 ## 26 October: production and social growth have separate owners
 
 Krish's ruling is recorded in docs/GROWTH-HANDOFF.md and AGENTS.md.

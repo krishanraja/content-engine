@@ -51,7 +51,7 @@ function Scene({id,p}:{id:string;p:ShortProps}){
   <rect y={1750} width={1080} height={170} fill="url(#ink-fade)"/>
   <Text x={540} y={1850} anchor="middle" size={44}>AI · EXAMPLE</Text>
   {id==='S12-call'&&<>
-   <Pen d="M586 1138Q572 1052 769 1022Q980 996 1000 1100Q1018 1190 820 1256Q630 1300 586 1138" progress={go(f,40,80)} width={10} opacity={1-.8*go(f,106,120)}/>
+   <Pen d="M614 1175Q604 1273 736 1292Q940 1275 1002 1152" progress={go(f,40,80)} width={10} opacity={1-.8*go(f,106,120)}/>
    <Pen d="M252 350Q261 264 461 301L655 359Q793 408 768 492Q740 557 543 507L354 449Q230 420 252 350" progress={go(f,109,145)} width={10}/>
   </>}
  </>}

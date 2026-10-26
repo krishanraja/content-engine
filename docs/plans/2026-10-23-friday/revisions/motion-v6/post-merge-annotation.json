@@ -1,0 +1,96 @@
+{
+  "status": "sampled-frame-correction-only",
+  "source_change": "Lower passport open underline avoids LIVES text and its clear space. No words, images, timings or audio changed.",
+  "frames": [
+    {
+      "frame": "S01-hook.png",
+      "sha256": "48994a7687cd468e82b24e58df756abd7c73af32bb044fd3bdf05e99f4c71314",
+      "prior_sha256": "48994a7687cd468e82b24e58df756abd7c73af32bb044fd3bdf05e99f4c71314",
+      "unchanged": true
+    },
+    {
+      "frame": "S02-airbnb.png",
+      "sha256": "78a0105f70f5601431524fff4eec8a61c941e2795b9bc0e0d6b7e940e154d282",
+      "prior_sha256": "78a0105f70f5601431524fff4eec8a61c941e2795b9bc0e0d6b7e940e154d282",
+      "unchanged": true
+    },
+    {
+      "frame": "S03-fling.png",
+      "sha256": "fe4b0ece91a2e4ca39d9d0037c73cbd97cefb8ad73617e693289bba2e425c774",
+      "prior_sha256": "fe4b0ece91a2e4ca39d9d0037c73cbd97cefb8ad73617e693289bba2e425c774",
+      "unchanged": true
+    },
+    {
+      "frame": "S04-passports.png",
+      "sha256": "a22423370eddf39eb910f9ce63c702757c902f4b2d2442d7e6abea62116513f2",
+      "prior_sha256": "a22423370eddf39eb910f9ce63c702757c902f4b2d2442d7e6abea62116513f2",
+      "unchanged": true
+    },
+    {
+      "frame": "S05-newspaper.png",
+      "sha256": "c957327139a748d3e80060f06d237f0662ffafa6fbdcee4de1f19d1c2c71fd5a",
+      "prior_sha256": "c957327139a748d3e80060f06d237f0662ffafa6fbdcee4de1f19d1c2c71fd5a",
+      "unchanged": true
+    },
+    {
+      "frame": "S06-third.png",
+      "sha256": "310d6baa5e355d4ce535fdc9034b8fda89880a8888ce728de2e6925bbf0024df",
+      "prior_sha256": "310d6baa5e355d4ce535fdc9034b8fda89880a8888ce728de2e6925bbf0024df",
+      "unchanged": true
+    },
+    {
+      "frame": "S07-claude.png",
+      "sha256": "3a4033838309ce15025d708e675b73f428ba6ebd7d01831b029d6561f4a29958",
+      "prior_sha256": "3a4033838309ce15025d708e675b73f428ba6ebd7d01831b029d6561f4a29958",
+      "unchanged": true
+    },
+    {
+      "frame": "S08-lives.png",
+      "sha256": "5b08a83d5d3807449d4bffc255906f385d5e2bba16476c596ef47207cc663faf",
+      "prior_sha256": "5b08a83d5d3807449d4bffc255906f385d5e2bba16476c596ef47207cc663faf",
+      "unchanged": true
+    },
+    {
+      "frame": "S09-work.png",
+      "sha256": "123e4547010d6930966c84cb541fe187b654a0096452f0b70665e582053ef9a0",
+      "prior_sha256": "123e4547010d6930966c84cb541fe187b654a0096452f0b70665e582053ef9a0",
+      "unchanged": true
+    },
+    {
+      "frame": "S10-flagged.png",
+      "sha256": "e3eb4ff37d3b3242d7249ff70c496822a09b14c32509de51ccd56059963d9a88",
+      "prior_sha256": "e3eb4ff37d3b3242d7249ff70c496822a09b14c32509de51ccd56059963d9a88",
+      "unchanged": true
+    },
+    {
+      "frame": "S11-deleted.png",
+      "sha256": "4a57fab6bf51b311ad5addb6790bb2d480b0ff37374b5e95b883d6db56b2c870",
+      "prior_sha256": "4a57fab6bf51b311ad5addb6790bb2d480b0ff37374b5e95b883d6db56b2c870",
+      "unchanged": true
+    },
+    {
+      "frame": "S12-call.png",
+      "sha256": "78d2b70fe6cc0039df2a8378070283c43a05f5fb0185cfca1ebbcecf9dbeb5ce",
+      "prior_sha256": "17c0cfb4348792942be836bea0fc0619c16f6a097ba002a00d053205b709996b",
+      "unchanged": false
+    },
+    {
+      "frame": "S13-do.png",
+      "sha256": "7530512a72d6a1a35274641ff9d059c3a6b29c387cf82de5e5e4eeaf8a5d8e08",
+      "prior_sha256": "7530512a72d6a1a35274641ff9d059c3a6b29c387cf82de5e5e4eeaf8a5d8e08",
+      "unchanged": true
+    },
+    {
+      "frame": "S14-close.png",
+      "sha256": "a6863bde697587cf111351d0e5db59f83543ec03f8028cfd991262408d4275c7",
+      "prior_sha256": "a6863bde697587cf111351d0e5db59f83543ec03f8028cfd991262408d4275c7",
+      "unchanged": true
+    }
+  ],
+  "review": "Viewed S12-call at full resolution; annotation clears both LIVES and USA.",
+  "continuous_playback": false,
+  "new_final_mp4": false,
+  "typecheck": "passed",
+  "board_write": false,
+  "making_write": false
+}
