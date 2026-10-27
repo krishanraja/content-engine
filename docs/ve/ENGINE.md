@@ -39,11 +39,65 @@ ve answers with:
 | S2 | `ve card` + `ve dispatch` for a new hero device, run while Krish records | Codex |
 | S3 | `ve ingest`: word clock from two aligners | script |
 | S4 | `ve lint`, then `ve compile` | Director, fresh session |
-| S5 | `ve render --proof`, only if anything is `trial` (Gate 2) | script, Krish |
-| S6 | `ve render --all` | script |
+| S5 | `ve render <props.json> <out.mp4> --spec <spec.json> --assets-dir <assets>`, only if anything is `trial` (Gate 2) | script, Krish |
+| S6 | `ve render <props.json> <out.mp4> --spec <spec.json> --assets-dir <assets>` for each accepted cut | script |
 | S7 | `ve qc`, then spec fixes (at most 2 loops), then the Critic (`ve-critic`), then the final packet | Claude |
 | **Gate 3** | Krish watches each cut once and hears the joins reel | Krish |
 | S8 | `ve file` (archive and library; never publish) | script |
+
+## CLI
+
+Run commands as `python scripts/ve.py <command>`:
+
+```text
+doctor
+start <piece>
+lint <spec>
+qc <cut> --format <format> [--out <path>]
+study <ref> [--out <path>]
+card <fields>
+dispatch <card> [--wait] [--spend-approved]
+verify-card <card> --cwd <worktree>
+status <piece>
+coverage
+compile <spec> --cut <cut> --words <words.json> --assets-dir <assets>
+render <props> <out> --spec <spec> --assets-dir <assets> [--scale <number>]
+ingest [rest ...]
+stills [rest ...]
+ledger [rest ...]
+file [rest ...]
+```
+
+`ingest`, `stills`, `ledger` and `file` are placeholders and return exit 2.
+All commands accept `-h` / `--help`. Render scale defaults to 1 and must be
+finite and positive. Render requires the source spec and the same staged assets
+folder used to compile it, so lint and asset hashes are checked before rendering.
+
+Compile and render lint first: each finding is printed, exit is 1 and no output
+is written. Word timings must include a finite numeric `end_s` at least as late
+as `onset_s` on every row. The onset-only 19-second fixture needs ingest-supplied
+ends before production compilation; test-only synthetic ends are not alignment.
+Compile includes only objects named in the selected cut's beat `uses`. Phase 1
+refuses asset plates and used objects that reference generated assets, whose
+illustration labels are not wired. Media sources must be relative paths that
+resolve inside the assets folder; remote URLs and absolute paths are refused.
+
+Captions use the renderer's exact Archivo-heavy advance widths, aspect-specific
+caption geometry and swipe padding. Pages contain 2-5 words and at most two
+lines, prefer punctuation, and allow a single word only when it fills a line.
+A word wider than the available line is refused by name. Dialogue duration is
+`round(last end_s * 30) + 12`. Whole cuts with a call add a 105-frame ending at
+that point; the last caption ends when the ending begins. Excerpts have no ending.
+
+Sound effects resolve through `config/ve/sfx-kits/<audio.sfx_kit>.json`, mapping
+names to `{ "path": "sfx/name.wav", "gain_db": -6 }`. Paths resolve under assets.
+An absent kit produces an empty SFX track and reports the affected event ids;
+an unknown name in a present kit is also reported. Compile writes
+`props.<cut>.json` and `compile.<cut>.json` together in the piece's `ve` folder.
+The latter contains `lint: "clean"`, `sfx_missing` event ids and `props_sha256`.
+`status` blocks with `sfx kit missing` while that list is non-empty.
+Before rendering, every staged spec asset with a declared SHA-256 must match;
+a mismatch names the asset and refuses the render.
 
 ## Rules that are code, not advice
 
