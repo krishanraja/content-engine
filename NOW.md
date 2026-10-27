@@ -198,7 +198,7 @@ production with its existing owner. The exact production handoff still applies.
 
 - North Star check (2026-10-27): holds.
 
-- **Next for this production session (2026-10-27):** audit delivered; proposed rebuild uses one editable performance/motion/caption timeline, retaining accepted stills and original recordings. No production restart under the current no-render/no-spend instruction. Resolve operation and continuous audiovisual review remain unproven capabilities; no autonomous finishing claim.
+- **Next for this production session (2026-10-27):** audit delivered; proposed rebuild uses one editable performance/motion/caption timeline, retaining accepted stills and original recordings. Report 3 now specifies the proposed motion-design skill and engine changes (`docs/plans/2026-10-23-friday/audit-2026-10-27/ENGINE-MOTION-DESIGN-RECOMMENDATIONS.md`). No production restart under the current no-render/no-spend instruction. Resolve operation and continuous audiovisual review remain unproven capabilities; no autonomous finishing claim.
 
 - Next (Sunday 25 October, his recording day): `plan-week` gathers (`board_feed.py gather 2026-10-26`, which needs this change deployed), builds the Ideas tab with styles and every routed Inspiration card covered, a separate reader kills weak ideas first; he picks; then `make-piece` for Monday, Wednesday and Friday: story, scripts in Teleprompter by midday, creative direction before he records.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): CI stays advisory, so a session waits for green before it merges.
