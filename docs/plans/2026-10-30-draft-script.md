@@ -1,10 +1,10 @@
 Junior hiring at Anthropic, the AI company behind Claude, has fallen off a cliff. So who trains the seniors you'll need in 2030?
 
-I've been reading Anthropic's new study of its own staff. It matters to anyone who hires, so let me break it down.
+I've been reading Anthropic's study of its own staff. It matters if you hire, so let me break it down.
 
-One number stopped me. Since early 2025, its new technical hires have gone from one in four juniors to fewer than one in ten. That's 27% down to 9%.
+One number stopped me. In early 2025, about one in four of its new technical hires were juniors. Now it's fewer than one in ten, 27% down to 9%.
 
-Why? By August, its AI was putting in six times as many hours of work as its people. So when AI writes the first draft, there's less first-draft work to give a junior.
+Why? By August, its AI agents, which work on tasks by themselves, were putting in far more hours than its people. And many of its managers say AI is why they're hiring less. So when AI writes the first draft, there's less first-draft work to give a junior.
 
 And Anthropic isn't alone. A study of US firms found the same thing. Where companies brought in AI, junior jobs dropped while senior jobs kept growing. It happened through slower hiring. Fewer juniors got taken on in the first place.
 
@@ -16,7 +16,7 @@ Then came spreadsheets. Since 1980, about 400,000 bookkeeping clerk jobs have go
 
 So each time, a tool took the dull bottom of a job, and the job that was left got bigger.
 
-Here's what worries me this time. Back then, a new bottom rung appeared. Tellers moved to the customer side, and there were more accountant jobs to grow into. This time, AI takes the first draft itself, the very work juniors learned on. Anthropic's own report says staff in some roles are moving away from the hands-on work that built their skills. And I reckon juniors feel that most.
+Here's what worries me this time. Back then, there was still a first step on the career ladder. Tellers moved to the customer side, and there were more accountant jobs to start in. This time, AI takes the first draft itself, the very work juniors learned on. Anthropic's own report says staff in some roles are moving away from the hands-on work that built their skills. And I reckon juniors feel that most.
 
 And the cut is quiet, because no one gets a redundancy letter. It hits the people who never get hired, so they never show up in anyone's numbers.
 
@@ -32,7 +32,7 @@ And the real lesson was bigger than the macro. I learned to spot the boring job 
 
 So here are two questions for your next hiring meeting, before you cut a junior role. Who on this team will be a senior in 2030? And what are they learning on today?
 
-Good juniors will ask you about this, so have an answer. And if you're early in your career, ask in your next interview what real work you'll learn on. When you find a boring job that repeats, learn how it works before you hand it to AI. Then build the fix.
+Good juniors will ask you what they'll learn on, so have an answer. And if you're early in your career, ask in your next interview what real work you'll learn on. And when you find a boring job that repeats, learn how it works before you hand it to AI. Then build the fix, like my macro.
 
 Here's what I'd do with this info if I were you. For each team, write down who you expect to be senior in four years. And write down the real work they're learning on now. Look at your last three hiring decisions. If AI was the reason a junior role went unfilled, ask where that learning happens now. And give one junior a dull weekly job to own. They do it by hand first, then build the fix with AI.
 
