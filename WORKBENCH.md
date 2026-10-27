@@ -2,6 +2,14 @@
 
 [Story correction and Growth handoff, 26 Oct](docs/history/2026-10-26-story-closeout.md).
 
+## 27 October: pasted links tagged Production or Content; the first live run is one reel (Claude)
+
+- **Asked (Krish, 27 Oct):** "Why can't I add links into my inspiration board pre-tagged for production or content? I'm supposed to be able to add this quickly and easily on mobile", with the reel `https://www.instagram.com/reel/DewxbWfjDHB/` to run end to end (learning `paste-a-link-tagged`).
+- **Found:** `content_watch_requests` had never held a row: no pasted link had ever been saved, so the chain (Control Center, content-watcher on a home computer, the taste ledger's quick card run) has never run live. The engine and content-watcher already honour a lane; Control Center never sent one.
+- **Done:** control-center PR #573 (branch `ccr-1b7d26a8-1tri9s`): two required chips (Production, Content) in the link box, the route refuses a link without one (`bad_lane`) and writes `lane`, a re-tag moves only a queued or failed request, and a phone gets Save a link at the top of the Inspiration page. Here: a test that a claim hands content-watcher the lane unchanged.
+- **Cloud trial of the reel (no writes):** content-watcher's free Instagram embed route fetched it without signing in (48.2 s, 9:16, with sound) and the reading got the caption, all 13 spoken sentences, the hook, pace (153 words a minute), loudness (-14.1 LUFS) and the on-screen text every 3 s. It also said **1 shot, 0 cuts**: the reel is about 12 animated scenes on one constant background, no face, so ffmpeg's scene score (0 changes even at 0.12) sees no cut. A production read of motion graphics needs a beat measure (on-screen layout changes), not only hard cuts; that is content-watcher's to add (`content_watcher/read/visual.py`).
+- **Next, the live run:** after #573 is merged and deployed, Krish shares the reel to Control Centre, taps a tag and Save. Then read `content_watch_requests` by `url_key` `https://instagram.com/reel/DewxbWfjDHB`: queued with his lane; claimed within about 2 minutes (a home computer is on); filed with `media[].folder` matching the lane; read with a `content_reads` row; a card within about 10 minutes (`item_id`, the card's lane, `facets.read_from`). A request still queued after 5 minutes means neither home computer is polling. content-watcher's own `NOW.md` ("Next: the live test") is updated from that run.
+
 ## 27 October: Wednesday and Friday in Teleprompter; Monday's three questions (Claude)
 
 - **Asked (Krish, 27 Oct):** "yes to all three, send weds and keep going", then "yes to all three, send fri and keep going. Give me any genuine questions you have here as opposed to just saying "Monday is still with you." I have no idea what that means." (learning `ask-the-real-question`, encoded in make-piece "Before you stop").
@@ -69,37 +77,7 @@ The source-backed review and Krish's full-playback acceptance supersede the
 older hold; see the current release entry above and its immutable receipts.
 No further spend or public posting is authorised.
 
-### 19 Oct, Monday in review on the board
-
-Monday is on its tab of https://claude.ai/artifact/CDgS3JDULpzvRnxkHwLkVk in draft (version 5): outline, article and both scripts in review boxes, and one call waiting on him (sign off both scripts). Fact gate open (three runs, $0.43 then less, his sign-offs on the example month and three framing lines); spine judge passed; scripts pass story_check and four read-back rounds, waiting on his words, then Teleprompter. The other board link (4SZR…) is his other account: a session there republishes the same file. Workroom: https://claude.ai/artifact/DdBDf3JPCAdjkmDj7ss6na. Still to do: cover and thumbnails, publish page, pack.
-
-### 19 Oct, later: three narratives written, waiting on his sign-off
-
-He answered the seven questions (his words are in each narrative file). The three narratives are in
-`docs/plans/2026-10-19-week/narrative-mon.md`, `-wed.md` and `-fri.md`; nothing is made until he signs each.
-Monday's end message changed: Google's pricing page (read 19 Oct, updated 16 Oct) shows the reused-input rate
-doubles too ($0.10 to $0.20), so reuse makes the bill smaller but does not stop it doubling; the figure is
-"about 95% cheaper", never "a tenth". The research he pasted is in `research-mon-argon.md` (unchecked leads
-except the Standard rows read at Google's page). Wednesday's line-up is his: Muse, Grok Bot, dots, Gemini
-Spark and Poke scored, OpenClaw as the origin only, Viktor out. "Narrative before making" is now standing:
-the first step of `make-piece` (learning `narrative-before-making`, encoded). Parked ideas: `parked.md`
-(the AI-shopper rulebook parked, three let go; none was in the queue, so nothing was written). Other board
-link (`4SZR…`): per his 14 Oct ruling, a session on his other account rebuilds and republishes it; that link
-returns 404 from this account. Monday's narrative is signed and its outline approved (`docs/plans/2026-10-19-outline.md`, with his downgrade section). Monday's workroom and draft are done (handover, "Done in the first session"); the fact gate waits on his yes to the paid run. **Next:** `docs/handovers/2026-10-19-monday-argon-make.md`; Wednesday and Friday still wait on his sign-off.
-
-### 19 Oct: queue live, picks saved, next is the editorial narrative
-
-Live: the idea queue (migration applied, PRs content-engine #94 and control-center #481 merged). His picks (Mon
-`5b5bfadc`, Wed `d7a20885`, Fri `7083d6ad`) are `drafting`, scheduled for their days and on the day tabs of
-https://claude.ai/artifact/CDgS3JDULpzvRnxkHwLkVk (version 4). No making session was started. The queue holds
-his four marked ideas, all triaged; his two Drops are recorded as dropped. His feedback is five entries in
-`config/learnings.json` (business-leader test, simple then unpacked, show the money, no repeat within three
-weeks, reading his marks) plus `narrative-before-making`, open until he says whether it is standing.
-**Next:** a fresh session runs `docs/handovers/2026-10-19-editorial-narrative.md`: one signed-off narrative
-(end message, checkpoints, drift rule) per day before anything is made.
-Waiting on him: the seven questions at the end of that handover, and the merge of two small PRs (engine
-`question` field; Control Center shows it). The other account's board is now
-migrated. The Argon "a tenth" figure remains with the editorial work (the row's numbers give a twentieth).
+The week of 19 October's queue notes are in `docs/history/2026-10-27-workbench-19oct-queue.md`.
 
 ## How Krish wants to be worked with
 

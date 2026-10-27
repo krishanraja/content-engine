@@ -1702,6 +1702,26 @@
           "how": "Before you stop"
         }
       ]
+    },
+    {
+      "id": "paste-a-link-tagged",
+      "on": "2026-10-27",
+      "krish": "Why can't I add links into my inspiration board pre-tagged for production or content? I'm supposed to be able to add this quickly and easily on mobile.",
+      "why": "The Inspiration link box had no way to say whether he liked a post for how it is made or for what it says, and on a phone it sat behind the mic and a second menu. Not one pasted link had ever been saved, so the fetch, filing, reading and card behind it had never run for him.",
+      "means": "Every link he pastes carries his tag, Production or Content, from the moment he pastes it, and a phone reaches the box in one press or one share. The tag is the request's lane: the engine hands it to content-watcher unchanged, content-watcher files by it (Production Inspo or Content Inspo), and the card it becomes is in that lane. A session never guesses the tag for him and never moves a post already filed.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "tests/control-plane/watch-queue.test.ts",
+          "contains": "hands the home computer the tag he picked when he pasted the link, unchanged",
+          "how": "A test that a claim gives content-watcher his tag unchanged"
+        },
+        {
+          "file": "apps/control-plane/api/watch/_watch.ts",
+          "contains": "lane: row.lane, note: row.note",
+          "how": "The claim view carries the lane"
+        }
+      ]
     }
   ]
 }

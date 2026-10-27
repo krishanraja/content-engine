@@ -97,6 +97,14 @@ describe('claim', () => {
     expect(out.expired).toBe(1)
     expect(store.rows.get(uuid(1))).toMatchObject({ status: 'failed', status_class: 'timeout', claimed_by: null, claimed_at: null })
   })
+
+  // Krish, 2026-10-27: "Why can't I add links into my inspiration board pre-tagged for production or content?" Control
+  // Center writes his tag as lane; content-watcher files by it (production: Production Inspo, strategy: Content Inspo).
+  it('hands the home computer the tag he picked when he pasted the link, unchanged', async () => {
+    const store = new MemoryStore([request(1, { lane: 'production' }), request(2, { lane: 'strategy' })])
+    const out = await claim(store, 'HOME-1', 2, NOW)
+    expect(out.requests.map(r => [r.id, r.lane])).toEqual([[uuid(1), 'production'], [uuid(2), 'strategy']])
+  })
 })
 
 describe('report', () => {
