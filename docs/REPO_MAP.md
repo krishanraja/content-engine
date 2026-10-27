@@ -3103,6 +3103,7 @@ Run a Vercel serverless handler locally against the real environment.
 - `const EXIT`
 - `const HERO`
 - `const MOTION`
+- `function useEngineFrame(): number`
 - `interface DeviceState`
 - `function stateAt(events: readonly EngineEvent[], obj: string, frame: number): DeviceState`
 - `function progress(sinceFrames: number, durationFrames: number, easing: (t: number) => number = ENTER): number`
