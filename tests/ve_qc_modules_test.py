@@ -1,0 +1,184 @@
+"""QC module acceptance on lavfi media, with clean controls and report wiring."""
+import json
+import shutil
+import subprocess
+import sys
+import tempfile
+import unittest
+import uuid
+from pathlib import Path
+from unittest.mock import patch
+
+sys.dont_write_bytecode = True
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / 'scripts'))
+from velib import qc, qc_sync, qc_joins, qc_captions, qc_brand, qc_cues  # noqa: E402
+
+
+def ffmpeg(*args):
+    result = subprocess.run(['ffmpeg', '-nostdin', '-v', 'error', '-y', *map(str, args)], capture_output=True)
+    if result.returncode:
+        raise RuntimeError(result.stderr.decode('utf-8', errors='replace'))
+
+
+class QCModules(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        # Python 3.14's Windows mkdir(0700), used by TemporaryDirectory, makes
+        # fixtures inaccessible to child decoders in the restricted runner.
+        # Use an ordinary inherited-permission, uniquely named temp directory.
+        cls.root = Path(tempfile.gettempdir()) / ('ve-qc-' + uuid.uuid4().hex)
+        cls.root.mkdir()
+        cls.addClassCleanup(shutil.rmtree, cls.root)
+        cls.master = cls.root / 'master.wav'
+        signal = ('aevalsrc=(0.22+0.09*sin(2*PI*0.73*t)+0.07*sin(2*PI*1.31*t)'
+                  '+0.04*sin(2*PI*2.17*t))*sin(2*PI*440*t):s=48000:d=4')
+        ffmpeg('-f', 'lavfi', '-i', signal, '-c:a', 'pcm_s16le', cls.master)
+        cls.clean, cls.delayed = cls.root / 'clean.mkv', cls.root / 'delayed.mkv'
+        for path, delay in ((cls.clean, 0), (cls.delayed, 500)):
+            ffmpeg('-f', 'lavfi', '-i', 'color=black:s=160x90:r=30:d=4', '-i', cls.master,
+                   '-af', f'adelay={delay}:all=1', '-t', '4', '-c:v', 'ffv1', '-c:a', 'pcm_s16le', path)
+        cls.edl = {'fps': 30, 'segments': [
+            {'id': 'one', 'fromFrame': 0, 'durationFrames': 60, 'trimBeforeFrames': 0},
+            {'id': 'two', 'fromFrame': 60, 'durationFrames': 60, 'trimBeforeFrames': 60}]}
+        cls.joins = {}
+        for name, signal in {
+            'clean': '0.08*sin(2*PI*440*t)',
+            'click': '0.08*sin(2*PI*440*t)+0.8*between(t,1,1.002)',
+            'step': 'if(lt(t,1),0.02,0.2)*sin(2*PI*440*t)',
+            'flux': '0.08*sin(2*PI*if(lt(t,1),440,2500)*t)',
+            'silence': '0',
+        }.items():
+            cls.joins[name] = cls.root / f'join-{name}.wav'
+            ffmpeg('-f', 'lavfi', '-i', f"aevalsrc='{signal}':s=48000:d=2", '-c:a', 'pcm_s16le', cls.joins[name])
+        cls.cues = {}
+        for name, at in (('clean', 30), ('late', 35), ('edge', 1)):
+            cls.cues[name] = cls.root / f'cue-{name}.mkv'
+            ffmpeg('-f', 'lavfi', '-i', 'color=black:s=160x90:r=30:d=3',
+                   '-vf', f"drawbox=x=20:y=20:w=40:h=30:c=white:t=fill:enable='gte(n,{at})'",
+                   '-c:v', 'ffv1', cls.cues[name])
+        cls.mark = cls.root / 'mark.png'
+        ffmpeg('-f', 'lavfi', '-i', 'testsrc2=s=32x24:r=30', '-frames:v', '1', cls.mark)
+        cls.brand = {}
+        for name, enable in (('clean', '1'), ('absent', 'lt(t,1)')):
+            cls.brand[name] = cls.root / f'brand-{name}.mkv'
+            ffmpeg('-f', 'lavfi', '-i', 'color=black:s=160x90:r=30:d=2', '-loop', '1', '-i', cls.mark,
+                   '-filter_complex', f"[0:v][1:v]overlay=10:10:enable='{enable}'",
+                   '-t', '2', '-c:v', 'ffv1', cls.brand[name])
+
+    def test_sync_detects_half_second_offset_in_every_segment(self):
+        clean = qc_sync.av_xcorr(self.clean, self.master, self.edl)
+        bad = qc_sync.av_xcorr(self.delayed, self.master, self.edl)
+        self.assertTrue(clean['pass'], clean)
+        self.assertFalse(bad['pass'], bad)
+        self.assertEqual(len(bad['value']), 2)
+        for row in bad['value']:
+            self.assertAlmostEqual(row['lag_ms'], 500, delta=10)
+            self.assertFalse(row['pass'])
+
+    def test_source_master_span_is_used(self):
+        trimmed = self.root / 'trimmed.wav'
+        ffmpeg('-i', self.master, '-ss', '2', '-t', '2', '-c:a', 'pcm_s16le', trimmed)
+        report = qc_sync.av_xcorr(trimmed, self.master,
+                                 [{'fromFrame': 0, 'durationFrames': 60, 'trimBeforeFrames': 60}])
+        self.assertTrue(report['pass'], report)
+
+    def test_sync_flat_or_truncated_signal_cannot_pass(self):
+        silence = self.joins['silence']
+        report = qc_sync.av_xcorr(silence, silence, [{'fromFrame': 0, 'toFrame': 60}])
+        self.assertFalse(report['pass'])
+        report = qc_sync.av_xcorr(self.clean, self.master, [{'fromFrame': 0, 'toFrame': 150}])
+        self.assertFalse(report['pass'])
+
+    def test_two_ms_hard_join_click_and_reel_times(self):
+        report = qc_joins.decoder(self.joins['click'], [1.0])
+        self.assertFalse(report['pass'], report)
+        self.assertGreater(report['value'][0]['click_ratio'], 6)
+        self.assertEqual(report['join_times_s'], [1.0])
+        self.assertEqual(report['failed_join_times_s'], [1.0])
+
+    def test_rms_and_flux_have_separate_measurements(self):
+        for name, metric, threshold in (('step', 'rms_step_db', 6), ('flux', 'spectral_flux', 0.5)):
+            report = qc_joins.decoder(self.joins[name], [{'atFrame': 30}])
+            self.assertFalse(report['pass'], report)
+            self.assertGreater(report['value'][0][metric], threshold)
+
+    def test_clean_joins_silence_and_no_joins_pass(self):
+        for name in ('clean', 'silence'):
+            report = qc_joins.decoder(self.joins[name], [1.0])
+            self.assertTrue(report['pass'], report)
+        self.assertTrue(qc_joins.decoder(self.joins['clean'], [])['pass'])
+        self.assertFalse(qc_joins.decoder(self.joins['clean'], [0])['pass'])
+
+    def test_mark_absence_on_one_beat(self):
+        beats = [{'id': 'first', 'fromFrame': 0, 'toFrame': 30},
+                 {'id': 'second', 'fromFrame': 30, 'toFrame': 60}]
+        aspect = {'mark_box': [8, 8, 38, 30], 'mark_width': 32}
+        clean = qc_brand.mark_tile(self.brand['clean'], self.mark, beats, aspect)
+        bad = qc_brand.mark_tile(self.brand['absent'], self.mark, beats, aspect)
+        self.assertTrue(clean['pass'], clean)
+        self.assertFalse(bad['pass'], bad)
+        self.assertTrue(bad['value'][0]['pass'])
+        self.assertFalse(bad['value'][1]['pass'])
+
+    def test_cue_five_frames_late_and_clean_control(self):
+        events, slots = [{'id': 'fill', 'obj': 'grid', 'atFrame': 30}], {'grid': [20, 20, 40, 30]}
+        clean = qc_cues.cue_sync(self.cues['clean'], events, slots)
+        bad = qc_cues.cue_sync(self.cues['late'], events, slots)
+        self.assertTrue(clean['pass'], clean)
+        self.assertFalse(bad['pass'], bad)
+        self.assertEqual(bad['value'][0]['lag_frames'], 5)
+        self.assertTrue(qc_cues.cue_sync(self.cues['edge'], [{'obj': 'grid', 'atFrame': 1}], slots)['pass'])
+        self.assertFalse(qc_cues.cue_sync(self.clean, events, slots)['pass'])
+
+    def test_ocr_missing_is_explicitly_not_run(self):
+        with patch.object(qc_captions.shutil, 'which', return_value=None):
+            report = qc_captions.ocr(self.clean, [], [0, 0, 160, 90])
+        self.assertEqual(report['status'], 'not_run')
+        self.assertIsNone(report['pass'])
+        self.assertIn('tesseract', report['reason'])
+
+    def test_ocr_page_sampling_and_token_scoring(self):
+        pages = [{'fromFrame': 0, 'toFrame': 30, 'words': [{'text': 'Hello'}, {'text': 'world'}]},
+                 {'fromFrame': 30, 'toFrame': 60, 'words': [{'text': 'Hello'}, {'text': 'world'}]}]
+        real_run = subprocess.run
+        real_which = shutil.which
+        seen_images = []
+
+        def fake_ocr(cmd, **kwargs):
+            if cmd[0] == 'test-tesseract':
+                seen_images.append(kwargs['input'])
+                return subprocess.CompletedProcess(cmd, 0, stdout=b'HELLO, world!', stderr=b'')
+            return real_run(cmd, **kwargs)
+
+        with patch.object(qc_captions.shutil, 'which', side_effect=lambda name: 'test-tesseract' if name == 'tesseract' else real_which(name)), \
+                patch.object(qc_captions.subprocess, 'run', side_effect=fake_ocr):
+            report = qc_captions.ocr(self.brand['clean'], pages, [0, 0, 80, 60])
+        self.assertTrue(report['pass'], report)
+        self.assertEqual([r['frame'] for r in report['value']], [14, 44])
+        self.assertEqual(len(seen_images), 2)
+        self.assertTrue(all(image.startswith(b'P5\n80 60\n') for image in seen_images))
+        for actual in (['hello'], ['hello', 'world', 'extra'], ['world', 'hello']):
+            self.assertLess(qc_captions._agreement(['hello', 'world'], actual), 0.98)
+
+    def test_run_qc_optional_inputs_and_decode_errors(self):
+        absent = qc.run_qc(str(self.clean), 'scoreboard-test')
+        self.assertEqual(absent['checks']['sync.av_xcorr']['status'], 'not_run')
+        self.assertFalse(absent['complete'])
+        report = qc.run_qc(str(self.delayed), 'scoreboard-test', dialogue_master=str(self.master),
+                           edl=self.edl, joins=[1.0], events=[{'obj': 'grid', 'atFrame': 30}],
+                           slots={'grid': [20, 20, 40, 30]}, mark_png=str(self.mark),
+                           beats=[{'fromFrame': 0, 'toFrame': 30}],
+                           aspect={'mark_box': [8, 8, 38, 30], 'mark_width': 32})
+        for key in ('sync.av_xcorr', 'joins.decoder', 'brand.mark_tile', 'motion.cue_sync'):
+            self.assertEqual(report['checks'][key]['status'], 'measured', report)
+        self.assertFalse(report['checks']['sync.av_xcorr']['pass'])
+        self.assertFalse(report['measured_pass'])
+        json.dumps(report, allow_nan=False)
+        broken = qc.run_qc(str(self.clean), 'scoreboard-test', dialogue_master='missing-master.wav', edl=self.edl)
+        self.assertEqual(broken['checks']['sync.av_xcorr']['status'], 'error')
+        self.assertFalse(broken['checks']['sync.av_xcorr']['pass'])
+
+
+if __name__ == '__main__':
+    unittest.main()

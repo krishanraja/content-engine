@@ -1,5 +1,5 @@
 """ve qc: measure a rendered cut and write qc.json bound to the file's sha256. Nothing here is a judgment;
-each check is a number against a threshold from the format card. Checks not built yet report not_run,
+each check is a number against a threshold. Checks without their optional inputs report not_run,
 and `ve status` treats not_run as not ready. Promoted from the 27 Oct independent review's scripts."""
 from __future__ import annotations
 
@@ -87,7 +87,63 @@ def loop_period(diffs: np.ndarray, min_s: float = 2.0, max_s: float = 10.0, stre
     return round(lag / SAMPLE_FPS, 2) if corr[lag] >= strength else None
 
 
-def run_qc(path: str, format_id: str, targets: dict | None = None) -> dict:
+def audio_samples(path: str, rate: int = 48000) -> np.ndarray:
+    """Decode mono PCM; decoder errors are failures, never empty successful measurements."""
+    result = subprocess.run([ffmpeg(), '-nostdin', '-v', 'error', '-i', str(path), '-vn',
+                             '-ac', '1', '-ar', str(rate), '-f', 'f32le', '-'], capture_output=True, check=True)
+    samples = np.frombuffer(result.stdout, '<f4').astype(np.float64)
+    if not len(samples) or not np.isfinite(samples).all():
+        raise ValueError('No finite audio samples decoded')
+    return samples
+
+
+def pixel_box(region) -> tuple[int, int, int, int]:
+    """A box is [x, y, width, height] or a mapping with those pixel coordinates."""
+    if isinstance(region, dict):
+        region = [region[k] for k in ('x', 'y', 'width', 'height')]
+    x, y, w, h = map(int, region)
+    if x < 0 or y < 0 or w <= 0 or h <= 0:
+        raise ValueError('Invalid pixel box')
+    return x, y, w, h
+
+
+def gray_frames(path: str, first: int, last: int, region) -> np.ndarray:
+    """Decode inclusive original frame indexes, without resampling the media clock."""
+    x, y, w, h = pixel_box(region)
+    if first < 0 or last < first:
+        raise ValueError('Invalid frame range')
+    filt = f'select=between(n\\,{first}\\,{last}),crop={w}:{h}:{x}:{y}:exact=1,format=gray'
+    result = subprocess.run([ffmpeg(), '-nostdin', '-v', 'error', '-i', str(path), '-an',
+                             '-vf', filt, '-fps_mode', 'passthrough', '-frames:v', str(last - first + 1),
+                             '-f', 'rawvideo', '-'],
+                            capture_output=True, check=True)
+    frames = np.frombuffer(result.stdout, np.uint8).reshape(-1, h, w).astype(np.float32)
+    if len(frames) != last - first + 1:
+        raise ValueError('Missing requested video frames')
+    return frames
+
+
+def frame_span(item: dict, fps: float = 30) -> tuple[int, int]:
+    """Engine intervals are half-open fromFrame/toFrame (or durationFrames)."""
+    if 'fromFrame' in item:
+        first = int(item['fromFrame'])
+        last = int(item['toFrame']) if 'toFrame' in item else first + int(item['durationFrames'])
+    else:
+        first = round(float(item['start_s']) * fps)
+        last = round(float(item['end_s']) * fps)
+    if first < 0 or last <= first:
+        raise ValueError('Invalid time span')
+    return first, last
+
+
+def measurement(rows: list, target: str) -> dict:
+    return {'value': rows, 'target': target, 'pass': bool(rows) and all(r['pass'] for r in rows),
+            'status': 'measured'}
+
+
+def run_qc(path: str, format_id: str, targets: dict | None = None, *,
+           dialogue_master: str | None = None, edl=None, joins=None, pages=None, region=None,
+           mark_png: str | None = None, beats=None, aspect=None, events=None, slots=None) -> dict:
     fmt = load_json(CONFIG / 'formats' / f'{format_id}.json')['qc']
     targets = targets or {'lufs': -14, 'tp': -1}
     loud = loudness(path)
@@ -107,6 +163,23 @@ def run_qc(path: str, format_id: str, targets: dict | None = None) -> dict:
     }
     for name in ('sync.av_xcorr', 'joins.decoder', 'captions.ocr', 'brand.mark_tile', 'motion.cue_sync'):
         checks[name] = {'value': None, 'target': 'see config/ve/crew', 'pass': None, 'status': 'not_run'}
+    from . import qc_sync, qc_joins, qc_captions, qc_brand, qc_cues
+    optional = [
+        ('sync.av_xcorr', dialogue_master is not None and edl is not None,
+         lambda: qc_sync.av_xcorr(path, dialogue_master, edl)),
+        ('joins.decoder', joins is not None, lambda: qc_joins.decoder(path, joins)),
+        ('captions.ocr', pages is not None and region is not None, lambda: qc_captions.ocr(path, pages, region)),
+        ('brand.mark_tile', mark_png is not None and beats is not None and aspect is not None,
+         lambda: qc_brand.mark_tile(path, mark_png, beats, aspect)),
+        ('motion.cue_sync', events is not None and slots is not None, lambda: qc_cues.cue_sync(path, events, slots)),
+    ]
+    for name, supplied, measure in optional:
+        if supplied:
+            try:
+                checks[name] = measure()
+            except (ValueError, KeyError, TypeError, OSError, subprocess.CalledProcessError) as exc:
+                checks[name] = {'value': None, 'target': 'valid decodable measurement inputs',
+                                'pass': False, 'status': 'error', 'reason': str(exc)}
     built = [c['pass'] for c in checks.values() if c['pass'] is not None]
     return {'file': path, 'sha256': sha256_file(path), 'duration_s': round(duration_s(path), 3), 'format': format_id,
             'checks': checks, 'measured_pass': all(built), 'complete': all(c['pass'] is not None for c in checks.values())}

@@ -1,0 +1,8 @@
+{
+  "objects": [{ "obj": "query", "device": "query_chip", "meaning": "The query being checked", "params": { "text": "Who supplied the evidence?" }, "fromFrame": 0, "toFrame": 180 }],
+  "events": [
+    { "id": "enter", "obj": "query", "verb": "enter", "toState": "visible", "atFrame": 10 },
+    { "id": "highlight", "obj": "query", "verb": "highlight", "toState": "emphasis", "atFrame": 30 },
+    { "id": "exit", "obj": "query", "verb": "exit", "toState": "hidden", "atFrame": 50 }
+  ]
+}

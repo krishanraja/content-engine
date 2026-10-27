@@ -87,6 +87,65 @@
    "persist": {
     "from_beat": "b1-ban",
     "to_beat": "b5-every"
+   },
+   "params": {
+    "rows": [
+     {
+      "id": "claude",
+      "label": "Claude"
+     },
+     {
+      "id": "chatgpt",
+      "label": "ChatGPT"
+     },
+     {
+      "id": "deepseek",
+      "label": "DeepSeek"
+     }
+    ],
+    "cols": [
+     {
+      "id": "xinjiang",
+      "label": "XINJIANG"
+     },
+     {
+      "id": "turkmenistan",
+      "label": "TURKMENISTAN"
+     }
+    ],
+    "cells": [
+     {
+      "row": "claude",
+      "col": "xinjiang",
+      "datasetLabel": "Claude · Xinjiang"
+     },
+     {
+      "row": "claude",
+      "col": "turkmenistan",
+      "datasetLabel": "Claude · Turkmenistan"
+     },
+     {
+      "row": "chatgpt",
+      "col": "xinjiang",
+      "datasetLabel": "ChatGPT · Xinjiang"
+     },
+     {
+      "row": "chatgpt",
+      "col": "turkmenistan",
+      "datasetLabel": "ChatGPT · Turkmenistan"
+     },
+     {
+      "row": "deepseek",
+      "col": "xinjiang",
+      "datasetLabel": "DeepSeek · Xinjiang"
+     },
+     {
+      "row": "deepseek",
+      "col": "turkmenistan",
+      "datasetLabel": "DeepSeek · Turkmenistan"
+     }
+    ],
+    "answerKey": true
    }
   },
   {
@@ -96,6 +155,9 @@
    "persist": {
     "from_beat": "b1-ban",
     "to_beat": "b2-key"
+   },
+   "params": {
+    "text": "SAME WORK PROMPT · ONLY THE COUNTRY CHANGES"
    }
   },
   {
@@ -105,6 +167,13 @@
    "persist": {
     "from_beat": "b4-watch",
     "to_beat": "b5-every"
+   },
+   "params": {
+    "kind": "recording",
+    "src": "xinxiang.mp4",
+    "outlet": "SCREEN RECORDING · DEEPSEEK",
+    "date": "23 OCT 2026",
+    "trimBefore": 102
    }
   },
   {
@@ -118,7 +187,16 @@
    }
   }
  ],
- "assets": [],
+ "assets": [
+  {
+   "id": "deepseek-xinjiang-recording",
+   "kind": "recording",
+   "origin": "capture",
+   "path": "xinxiang.mp4",
+   "sha256": "38ae06f278ccbfcd6b6233c0312e21652bb09213da013c313d3a3f46139796a8",
+   "licence": "Krish's own screen capture, 23 Oct 2026"
+  }
+ ],
  "audio": {
   "master": "vo",
   "bed": {
@@ -183,7 +261,7 @@
        "at_w": 8,
        "obj": "grid",
        "verb": "highlight",
-       "to_state": "both column heads lift",
+       "to_state": "*:*",
        "silent": true
       }
      ]
@@ -217,7 +295,7 @@
        "at_w": 17,
        "obj": "grid",
        "verb": "highlight",
-       "to_state": "both columns pulse once",
+       "to_state": "*:*",
        "silent": true
       }
      ]
@@ -243,21 +321,21 @@
        "at_w": 19,
        "obj": "grid",
        "verb": "stamp",
-       "to_state": "Claude row: two solid mint ticks, verbatim excerpt \"forced labour\"",
+       "to_state": "claude:*",
        "sfx": "slap"
       },
       {
        "at_w": 21,
        "obj": "grid",
        "verb": "stamp",
-       "to_state": "ChatGPT row: two solid mint ticks",
+       "to_state": "chatgpt:*",
        "sfx": "slap"
       },
       {
        "at_w": 30,
        "obj": "grid",
        "verb": "stamp",
-       "to_state": "DeepSeek x Turkmenistan: solid tick; five ticks, one ghost left",
+       "to_state": "deepseek:turkmenistan",
        "sfx": "slap"
       }
      ]
@@ -270,7 +348,7 @@
       "to_w": 45
      },
      "viewer_task": "inspect_artifact",
-     "layout": "P3",
+     "layout": "F1",
      "point": "DeepSeek writes a full answer on Xinjiang, then deletes it in front of you",
      "plate": {
       "source": "take"
@@ -284,7 +362,7 @@
        "at_w": 34,
        "obj": "grid",
        "verb": "highlight",
-       "to_state": "other cells dim to 35%; the empty DeepSeek x Xinjiang cell grows",
+       "to_state": "deepseek:xinjiang",
        "silent": true
       },
       {
@@ -318,7 +396,7 @@
       "to_w": 51
      },
      "viewer_task": "land_payoff",
-     "layout": "P3",
+     "layout": "F1",
      "point": "It changes the subject every single time: 3 of 3 runs deleted",
      "plate": {
       "source": "take"
@@ -333,15 +411,22 @@
        "at_w": 46,
        "obj": "deletion",
        "verb": "mark",
-       "to_state": "\"Sorry, that's beyond my current scope.\" types in",
+       "to_state": "Sorry, that's beyond my current scope. Let's talk about something else.",
        "silent": true
       },
       {
        "at_w": 49,
        "obj": "runs",
-       "verb": "count_to",
-       "to_state": "RUNS 3/3, one pip per word on every / single / time",
+       "verb": "enter",
+       "to_state": "RUNS chip drops in",
        "sfx": "pop"
+      },
+      {
+       "at_w": 49,
+       "obj": "runs",
+       "verb": "count_to",
+       "to_state": "deleted",
+       "silent": true
       },
       {
        "at_w": 51,
@@ -408,7 +493,7 @@
        "at_w": 8,
        "obj": "grid",
        "verb": "highlight",
-       "to_state": "both column heads lift",
+       "to_state": "*:*",
        "silent": true
       }
      ]
@@ -442,7 +527,7 @@
        "at_w": 17,
        "obj": "grid",
        "verb": "highlight",
-       "to_state": "both columns pulse once",
+       "to_state": "*:*",
        "silent": true
       }
      ]
@@ -468,21 +553,21 @@
        "at_w": 19,
        "obj": "grid",
        "verb": "stamp",
-       "to_state": "Claude row: two solid mint ticks, verbatim excerpt \"forced labour\"",
+       "to_state": "claude:*",
        "sfx": "slap"
       },
       {
        "at_w": 21,
        "obj": "grid",
        "verb": "stamp",
-       "to_state": "ChatGPT row: two solid mint ticks",
+       "to_state": "chatgpt:*",
        "sfx": "slap"
       },
       {
        "at_w": 30,
        "obj": "grid",
        "verb": "stamp",
-       "to_state": "DeepSeek x Turkmenistan: solid tick; five ticks, one ghost left",
+       "to_state": "deepseek:turkmenistan",
        "sfx": "slap"
       }
      ]
@@ -495,7 +580,7 @@
       "to_w": 45
      },
      "viewer_task": "inspect_artifact",
-     "layout": "P3",
+     "layout": "F1",
      "point": "DeepSeek writes a full answer on Xinjiang, then deletes it in front of you",
      "plate": {
       "source": "take"
@@ -509,7 +594,7 @@
        "at_w": 34,
        "obj": "grid",
        "verb": "highlight",
-       "to_state": "other cells dim to 35%; the empty DeepSeek x Xinjiang cell grows",
+       "to_state": "deepseek:xinjiang",
        "silent": true
       },
       {
@@ -543,7 +628,7 @@
       "to_w": 51
      },
      "viewer_task": "land_payoff",
-     "layout": "P3",
+     "layout": "F1",
      "point": "It changes the subject every single time: 3 of 3 runs deleted",
      "plate": {
       "source": "take"
@@ -558,15 +643,22 @@
        "at_w": 46,
        "obj": "deletion",
        "verb": "mark",
-       "to_state": "\"Sorry, that's beyond my current scope.\" types in",
+       "to_state": "Sorry, that's beyond my current scope. Let's talk about something else.",
        "silent": true
       },
       {
        "at_w": 49,
        "obj": "runs",
-       "verb": "count_to",
-       "to_state": "RUNS 3/3, one pip per word on every / single / time",
+       "verb": "enter",
+       "to_state": "RUNS chip drops in",
        "sfx": "pop"
+      },
+      {
+       "at_w": 49,
+       "obj": "runs",
+       "verb": "count_to",
+       "to_state": "deleted",
+       "silent": true
       },
       {
        "at_w": 51,

@@ -12,7 +12,7 @@
   python scripts/ve.py status <piece>                readiness, computed; nobody writes a pass
   python scripts/ve.py coverage                      failure register: behavioural guards vs markers
 
-ingest, compile, render, stills, ledger and file arrive with the Phase 1 cards; until then they say so.
+ingest, stills, ledger and file arrive with the Phase 1 cards; until then they say so.
 ve has no publish, send or schedule verb."""
 from __future__ import annotations
 
@@ -241,6 +241,32 @@ def not_yet(name: str):
     return handler
 
 
+def cmd_compile(args) -> int:
+    from velib.compile import compile_cut
+    from velib.common import sha256_file
+    spec = load_json(args.spec)
+    words = load_json(args.words)
+    if isinstance(words, dict):
+        words = words['words']
+    props = compile_cut(spec, args.cut, words, args.assets_dir)
+    # The piece id is a directory name, never an arbitrary output path.
+    piece = spec['piece_id']
+    if not re.fullmatch(r'[a-zA-Z0-9][a-zA-Z0-9_-]*', piece):
+        raise ValueError('piece_id must be a safe plan folder name')
+    if not re.fullmatch(r'[a-z0-9][a-z0-9_-]{0,63}', args.cut):
+        raise ValueError('cut id must be a slug')
+    out = ROOT / 'docs' / 'plans' / piece / 've' / f'props.{args.cut}.json'
+    write_json(out, props)
+    print(f'{sha256_file(out)}  {out}')
+    return 0
+
+
+def cmd_render(args) -> int:
+    from velib.render import render
+    render(args.props, args.out, args.scale)
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(prog='ve', description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = parser.add_subparsers(dest='cmd', required=True)
@@ -256,7 +282,13 @@ def main() -> int:
     p = sub.add_parser('verify-card'); p.add_argument('card'); p.add_argument('--cwd', required=True); p.set_defaults(fn=cmd_verify_card)
     p = sub.add_parser('status'); p.add_argument('piece'); p.set_defaults(fn=cmd_status)
     sub.add_parser('coverage').set_defaults(fn=cmd_coverage)
-    for name in ('ingest', 'compile', 'render', 'stills', 'ledger', 'file'):
+    p = sub.add_parser('compile', help='compile a linted spec and cut-ready word timings')
+    p.add_argument('spec'); p.add_argument('--cut', required=True); p.add_argument('--words', required=True)
+    p.add_argument('--assets-dir', required=True); p.set_defaults(fn=cmd_compile)
+    p = sub.add_parser('render', help='render compiled props through FormatMaster')
+    p.add_argument('props'); p.add_argument('out'); p.add_argument('--scale', type=float, default=1.0)
+    p.set_defaults(fn=cmd_render)
+    for name in ('ingest', 'stills', 'ledger', 'file'):
         p = sub.add_parser(name); p.add_argument('rest', nargs='*'); p.set_defaults(fn=not_yet(name))
     args = parser.parse_args()
     return args.fn(args)

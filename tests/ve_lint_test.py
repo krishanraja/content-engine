@@ -99,6 +99,12 @@ class FridayFailuresAreRefused(unittest.TestCase):
             first['events'] = [e for e in first['events'] if e['at_w'] > 4]
         self.assertRefused(mutate(late), 'story.hook_event')
 
+    def test_an_object_that_never_enters(self):
+        def no_enter(s):
+            beat = s['cuts']['proof-tall']['beats'][4]
+            beat['events'] = [e for e in beat['events'] if not (e['obj'] == 'runs' and e['verb'] == 'enter')]
+        self.assertRefused(mutate(no_enter), 'motion.enters')
+
     def test_event_on_an_object_the_beat_does_not_use(self):
         self.assertRefused(mutate(lambda s: s['cuts']['proof-tall']['beats'][0]['uses'].remove('chip')), 'motion.carry')
 

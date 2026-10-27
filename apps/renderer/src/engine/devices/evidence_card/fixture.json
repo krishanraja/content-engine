@@ -1,0 +1,9 @@
+{
+  "objects": [{ "obj": "proof", "device": "evidence_card", "meaning": "Evidence keeps its attribution", "params": { "kind": "quote", "quote": "Checked source", "outlet": "Fixture source", "date": "2026-10-27" }, "fromFrame": 0, "toFrame": 180 }],
+  "events": [
+    { "id": "enter", "obj": "proof", "verb": "enter", "toState": "visible", "atFrame": 10 },
+    { "id": "fill", "obj": "proof", "verb": "fill", "toState": "original", "atFrame": 25 },
+    { "id": "stamp", "obj": "proof", "verb": "stamp", "toState": "struck", "atFrame": 50 },
+    { "id": "mark", "obj": "proof", "verb": "mark", "toState": "New line", "atFrame": 65 }
+  ]
+}

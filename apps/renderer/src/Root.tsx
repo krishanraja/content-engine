@@ -12,6 +12,9 @@ import { StoryIntroStandoff, STORY_INTRO_FRAMES } from './story/StoryIntroStando
 import { StoryOutroStandoff, STORY_OUTRO_FRAMES } from './story/StoryOutroStandoff'
 import { StoryStandoffPropsSchema } from './story/props'
 import { mondayStandoffProps } from './story/monday'
+import { FormatMaster } from './engine'
+import { EngineRenderPropsSchema } from './engine/props'
+import veDefaultProps from '../../../fixtures/ve/engine-core/props.json'
 
 const defaultProps: ShortProps = {
   sourceFile: 'placeholder.mp4',
@@ -97,6 +100,34 @@ const thumbnailDefaultProps: ThumbnailProps = {
 export function RemotionRoot() {
   return (
     <>
+      <Composition
+        id="VeFormatMasterTall"
+        component={FormatMaster}
+        width={1080}
+        height={1920}
+        fps={30}
+        durationInFrames={120}
+        schema={EngineRenderPropsSchema}
+        defaultProps={EngineRenderPropsSchema.parse({ ...veDefaultProps, aspect: '9:16' })}
+        calculateMetadata={({ props }) => {
+          const parsed = EngineRenderPropsSchema.parse(props)
+          return { props: parsed, durationInFrames: parsed.durationFrames }
+        }}
+      />
+      <Composition
+        id="VeFormatMasterWide"
+        component={FormatMaster}
+        width={1920}
+        height={1080}
+        fps={30}
+        durationInFrames={120}
+        schema={EngineRenderPropsSchema}
+        defaultProps={EngineRenderPropsSchema.parse({ ...veDefaultProps, aspect: '16:9' })}
+        calculateMetadata={({ props }) => {
+          const parsed = EngineRenderPropsSchema.parse(props)
+          return { props: parsed, durationInFrames: parsed.durationFrames }
+        }}
+      />
       <Composition
         id="MindmakeShort"
         component={MindmakeShort}
