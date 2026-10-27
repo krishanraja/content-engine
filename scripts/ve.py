@@ -127,8 +127,9 @@ def cmd_start(args) -> int:
 
 
 def cmd_qc(args) -> int:
-    from velib.qc import run_qc
-    report = run_qc(args.cut, args.format)
+    from velib.qc import inputs_from_props, run_qc
+    inputs = inputs_from_props(load_json(args.props)) if getattr(args, 'props', None) else {}
+    report = run_qc(args.cut, args.format, **inputs)
     out = Path(args.out) if args.out else Path(args.cut).with_suffix('.qc.json')
     write_json(out, report)
     for name, check in report['checks'].items():
@@ -293,7 +294,7 @@ def main() -> int:
     sub.add_parser('doctor').set_defaults(fn=cmd_doctor)
     p = sub.add_parser('start'); p.add_argument('piece'); p.set_defaults(fn=cmd_start)
     p = sub.add_parser('lint'); p.add_argument('spec'); p.set_defaults(fn=cmd_lint)
-    p = sub.add_parser('qc'); p.add_argument('cut'); p.add_argument('--format', required=True); p.add_argument('--out'); p.set_defaults(fn=cmd_qc)
+    p = sub.add_parser('qc'); p.add_argument('cut'); p.add_argument('--format', required=True); p.add_argument('--out'); p.add_argument('--props'); p.set_defaults(fn=cmd_qc)
     p = sub.add_parser('study'); p.add_argument('ref'); p.add_argument('--out'); p.set_defaults(fn=cmd_study)
     p = sub.add_parser('card'); p.add_argument('fields'); p.set_defaults(fn=cmd_card)
     p = sub.add_parser('dispatch'); p.add_argument('card'); p.add_argument('--wait', action='store_true')

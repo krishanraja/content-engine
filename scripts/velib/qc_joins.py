@@ -32,8 +32,17 @@ def decoder(render, joins) -> dict:
         before, after = samples[center - radius:center], samples[center:center + radius]
         rms = [max(float(np.sqrt(np.mean(a * a))), 1e-10) for a in (before, after)]
         step = abs(20 * np.log10(rms[1] / rms[0]))
-        diffs = np.abs(np.diff(samples[center - radius:center + radius]))
-        ratio = float(diffs.max() / max(float(np.median(diffs)), 1e-5))
+        # Compare only the +/-10 ms join against local reference on each side:
+        # 300 ms per side, excluding the +/-40 ms neighbourhood of the join.
+        reference_radius, exclusion, click_radius = 14400, 1920, 480
+        if center < reference_radius or center + reference_radius > len(samples):
+            row['reason'] = 'Join lacks the full +/-300 ms reference window'
+            rows.append(row)
+            continue
+        reference = np.concatenate((np.abs(np.diff(samples[center - reference_radius:center - exclusion])),
+                                    np.abs(np.diff(samples[center + exclusion:center + reference_radius]))))
+        diffs = np.abs(np.diff(samples[center - click_radius:center + click_radius + 1]))
+        ratio = float(diffs.max() / max(float(np.median(reference)), 1e-5))
         spectra = [np.abs(np.fft.rfft(a * np.hanning(radius))) for a in (before, after)]
         spectra = [a / max(float(np.linalg.norm(a)), 1e-12) for a in spectra]
         flux = float(np.linalg.norm(np.maximum(spectra[1] - spectra[0], 0)))

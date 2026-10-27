@@ -26,14 +26,26 @@ def _agreement(expected: list[str], actual: list[str]) -> float:
 def ocr(render, pages, region) -> dict:
     """Pages use EngineCaptionPage's fromFrame/toFrame and words[].text; box in pixels."""
     executable = shutil.which('tesseract')
-    if not executable:
+    if not executable and not pages:
         return {'value': None, 'target': 'token agreement >= 0.98 on every page', 'pass': None,
                 'status': 'not_run', 'reason': 'tesseract is not on PATH'}
     _, _, w, h = pixel_box(region)
     rows = []
     for index, page in enumerate(pages):
         first, last = frame_span(page)
-        frame = (first + last - 1) // 2
+        words = page['words']
+        # Renderer words are revealed on their own global atFrame clock.
+        revealed = max(first, max((int(word['atFrame']) for word in words), default=last) + 3)
+        end = last - 2
+        if revealed > end:
+            rows.append({'page': index, 'frame': None, 'pass': None, 'status': 'not_sampled',
+                         'reason': 'No fully revealed caption window'})
+            continue
+        frame = (revealed + end) // 2
+        if not executable:
+            rows.append({'page': index, 'frame': frame, 'pass': None, 'status': 'not_run',
+                         'reason': 'tesseract is not on PATH'})
+            continue
         pixels = gray_frames(render, frame, frame, region)[0].astype('uint8')
         pgm = f'P5\n{w} {h}\n255\n'.encode('ascii') + pixels.tobytes()
         result = subprocess.run([executable, 'stdin', 'stdout', '--psm', '6'], input=pgm,
@@ -44,4 +56,9 @@ def ocr(render, pages, region) -> dict:
         agreement = _agreement(expected, _tokens(seen))
         rows.append({'page': index, 'frame': frame, 'text': seen, 'agreement': agreement,
                      'pass': bool(expected) and agreement >= 0.98})
-    return measurement(rows, 'token agreement >= 0.98 on every page')
+    report = measurement(rows, 'token agreement >= 0.98 on every page')
+    if any(row.get('status') == 'not_sampled' for row in rows):
+        report.update(status='incomplete', **{'pass': False if any(r['pass'] is False for r in rows) else None})
+    elif not executable:
+        report.update(status='not_run', reason='tesseract is not on PATH', **{'pass': None})
+    return report
