@@ -1,0 +1,387 @@
+{
+  "file": ".ve-work/my-test-19s/proof-tall.mp4",
+  "sha256": "c7b58f14eb7d64adac7725e34178e958edbe190d80c3d394c74687af89fd07e4",
+  "duration_s": 21.12,
+  "format": "scoreboard-test",
+  "checks": {
+    "loudness.integrated": {
+      "value": -13.9,
+      "target": "-14 ±1",
+      "pass": true
+    },
+    "loudness.true_peak": {
+      "value": -1.6,
+      "target": "<= -1",
+      "pass": true
+    },
+    "loudness.long_silence": {
+      "value": [],
+      "target": "none over 0.7 s below -50 dB",
+      "pass": true
+    },
+    "motion.change_density": {
+      "value": 0.85,
+      "target": ">= 0.7",
+      "pass": true
+    },
+    "motion.longest_still": {
+      "value": 1,
+      "target": "<= 3 s",
+      "pass": true,
+      "runs": [
+        [
+          2,
+          1
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          6,
+          1
+        ]
+      ]
+    },
+    "motion.periodicity": {
+      "value": null,
+      "target": "no repeating loop 2-10 s",
+      "pass": true
+    },
+    "sync.av_xcorr": {
+      "value": [
+        {
+          "segment": 0,
+          "lag_ms": 40,
+          "pass": false,
+          "correlation": 0.972933
+        },
+        {
+          "segment": 1,
+          "lag_ms": 40,
+          "pass": false,
+          "correlation": 0.97751
+        },
+        {
+          "segment": 2,
+          "lag_ms": 40,
+          "pass": false,
+          "correlation": 0.983206
+        },
+        {
+          "segment": 3,
+          "lag_ms": 40,
+          "pass": false,
+          "correlation": 0.982099
+        },
+        {
+          "segment": 4,
+          "lag_ms": 40,
+          "pass": false,
+          "correlation": 0.961438
+        }
+      ],
+      "target": "every segment |lag| <= 33 ms; correlation >= 0.5",
+      "pass": false,
+      "status": "measured"
+    },
+    "joins.decoder": {
+      "value": [],
+      "target": "RMS step <= 6 dB, click <= 6x median, spectral flux <= 0.5",
+      "pass": true,
+      "status": "measured",
+      "join_times_s": [],
+      "failed_join_times_s": []
+    },
+    "captions.ocr": {
+      "value": [
+        {
+          "page": 0,
+          "frame": 54,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 1,
+          "frame": 113,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 2,
+          "frame": 160,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 3,
+          "frame": 201,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 4,
+          "frame": 275,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 5,
+          "frame": 304,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 6,
+          "frame": null,
+          "pass": null,
+          "status": "not_sampled",
+          "reason": "No fully revealed caption window"
+        },
+        {
+          "page": 7,
+          "frame": 433,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 8,
+          "frame": null,
+          "pass": null,
+          "status": "not_sampled",
+          "reason": "No fully revealed caption window"
+        },
+        {
+          "page": 9,
+          "frame": 546,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 10,
+          "frame": 617,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        }
+      ],
+      "target": "token agreement >= 0.98 on every page",
+      "pass": null,
+      "status": "incomplete"
+    },
+    "brand.mark_tile": {
+      "value": [
+        {
+          "beat": "b1-ban",
+          "frame": 60,
+          "score": 0.9781488692137564,
+          "pass": true
+        },
+        {
+          "beat": "b2-key",
+          "frame": 170,
+          "score": 0.9781488692137564,
+          "pass": true
+        },
+        {
+          "beat": "b3-pass",
+          "frame": 302,
+          "score": 0.9781882626693499,
+          "pass": true
+        },
+        {
+          "beat": "b4-watch",
+          "frame": 463,
+          "score": 0.9781882626693499,
+          "pass": true
+        },
+        {
+          "beat": "b5-every",
+          "frame": 586,
+          "score": 0.9780708757493872,
+          "pass": true
+        }
+      ],
+      "target": "mark NCC >= 0.8 at every beat midpoint",
+      "pass": true,
+      "status": "measured"
+    },
+    "motion.cue_sync": {
+      "value": [
+        {
+          "event": "b1-ban-0",
+          "atFrame": 9,
+          "peak_frame": 9,
+          "lag_frames": 0,
+          "peak_difference": 64.95536804199219,
+          "event_difference": 64.95536804199219,
+          "threshold": 1e-06,
+          "pass": true
+        },
+        {
+          "event": "b1-ban-1",
+          "atFrame": 47,
+          "peak_frame": 48,
+          "lag_frames": 1,
+          "peak_difference": 96.29105377197266,
+          "event_difference": 96.29105377197266,
+          "threshold": 1e-06,
+          "pass": true
+        },
+        {
+          "event": "b1-ban-2",
+          "atFrame": 94,
+          "peak_frame": 94,
+          "lag_frames": 0,
+          "peak_difference": 2.5430753231048584,
+          "event_difference": 2.5430753231048584,
+          "threshold": 0.0008081896521616727,
+          "pass": true
+        },
+        {
+          "event": "b2-key-0",
+          "atFrame": 163,
+          "peak_frame": 164,
+          "lag_frames": 1,
+          "peak_difference": 0.02638963796198368,
+          "event_difference": 0.02638963796198368,
+          "threshold": 0.0006061422609491274,
+          "pass": true
+        },
+        {
+          "event": "b2-key-1",
+          "atFrame": 176,
+          "peak_frame": 170,
+          "lag_frames": -6,
+          "peak_difference": 0.026078147813677788,
+          "event_difference": 0.02526995725929737,
+          "threshold": 0.01900929445400834,
+          "pass": true
+        },
+        {
+          "event": "b3-pass-0",
+          "atFrame": 220,
+          "peak_frame": 221,
+          "lag_frames": 1,
+          "peak_difference": 0.6426875591278076,
+          "event_difference": 0.6426875591278076,
+          "threshold": 0.0010102370870299637,
+          "pass": true
+        },
+        {
+          "event": "b3-pass-1",
+          "atFrame": 241,
+          "peak_frame": 242,
+          "lag_frames": 1,
+          "peak_difference": 0.6503625512123108,
+          "event_difference": 0.6503625512123108,
+          "threshold": 0.0009092133259400725,
+          "pass": true
+        },
+        {
+          "event": "b3-pass-2",
+          "atFrame": 339,
+          "peak_frame": 340,
+          "lag_frames": 1,
+          "peak_difference": 0.3204500079154968,
+          "event_difference": 0.3204500079154968,
+          "threshold": 1e-06,
+          "pass": true
+        },
+        {
+          "event": "b4-watch-0",
+          "atFrame": 386,
+          "peak_frame": 386,
+          "lag_frames": 0,
+          "peak_difference": 53.9259147644043,
+          "event_difference": 53.9259147644043,
+          "threshold": 1e-06,
+          "pass": true
+        },
+        {
+          "event": "b4-watch-1",
+          "atFrame": 400,
+          "peak_frame": 401,
+          "lag_frames": 1,
+          "peak_difference": 41.753395080566406,
+          "event_difference": 41.753395080566406,
+          "threshold": 1e-06,
+          "pass": true
+        },
+        {
+          "event": "b4-watch-2",
+          "atFrame": 461,
+          "peak_frame": 461,
+          "lag_frames": 0,
+          "peak_difference": 135.68374633789062,
+          "event_difference": 135.68374633789062,
+          "threshold": 0.0007183907873695716,
+          "pass": true
+        },
+        {
+          "event": "b4-watch-3",
+          "atFrame": 500,
+          "peak_frame": 506,
+          "lag_frames": 6,
+          "peak_difference": 127.78321075439453,
+          "event_difference": 22.618497848510742,
+          "threshold": 0.0004849137912970036,
+          "pass": true
+        },
+        {
+          "event": "b5-every-0",
+          "atFrame": 541,
+          "peak_frame": 541,
+          "lag_frames": 0,
+          "peak_difference": 125.02729797363281,
+          "event_difference": 125.02729797363281,
+          "threshold": 0.00023347701790044084,
+          "pass": true
+        },
+        {
+          "event": "b5-every-1",
+          "atFrame": 570,
+          "peak_frame": 570,
+          "lag_frames": 0,
+          "peak_difference": 7.7282538414001465,
+          "event_difference": 7.7282538414001465,
+          "threshold": 1e-06,
+          "pass": true
+        },
+        {
+          "event": "b5-every-2",
+          "atFrame": 570,
+          "peak_frame": 570,
+          "lag_frames": 0,
+          "peak_difference": 7.7282538414001465,
+          "event_difference": 7.7282538414001465,
+          "threshold": 1e-06,
+          "pass": true
+        },
+        {
+          "event": "b5-every-3",
+          "atFrame": 601,
+          "peak_frame": 604,
+          "lag_frames": 3,
+          "peak_difference": 0.23965173959732056,
+          "event_difference": 0.2109186351299286,
+          "threshold": 0.42091257870197296,
+          "pass": false
+        }
+      ],
+      "target": "change within +/-2 frames > max(FLOOR, 3x median of previous 15 frames)",
+      "pass": false,
+      "status": "measured"
+    }
+  },
+  "measured_pass": false,
+  "complete": false
+}

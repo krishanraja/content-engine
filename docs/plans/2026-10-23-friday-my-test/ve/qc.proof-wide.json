@@ -1,0 +1,399 @@
+{
+  "file": ".ve-work/my-test-19s/proof-wide.mp4",
+  "sha256": "2dcf16dc36e4953c899a01c2e9e96164d881cd46b4daacea68ce7edb8d62f0e8",
+  "duration_s": 21.12,
+  "format": "scoreboard-test",
+  "checks": {
+    "loudness.integrated": {
+      "value": -13.9,
+      "target": "-14 ±1",
+      "pass": true
+    },
+    "loudness.true_peak": {
+      "value": -1.6,
+      "target": "<= -1",
+      "pass": true
+    },
+    "loudness.long_silence": {
+      "value": [],
+      "target": "none over 0.7 s below -50 dB",
+      "pass": true
+    },
+    "motion.change_density": {
+      "value": 0.7,
+      "target": ">= 0.7",
+      "pass": true
+    },
+    "motion.longest_still": {
+      "value": 1,
+      "target": "<= 3 s",
+      "pass": true,
+      "runs": [
+        [
+          2,
+          1
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          6,
+          1
+        ],
+        [
+          8,
+          1
+        ],
+        [
+          11,
+          1
+        ],
+        [
+          19,
+          1
+        ]
+      ]
+    },
+    "motion.periodicity": {
+      "value": null,
+      "target": "no repeating loop 2-10 s",
+      "pass": true
+    },
+    "sync.av_xcorr": {
+      "value": [
+        {
+          "segment": 0,
+          "lag_ms": 40,
+          "pass": false,
+          "correlation": 0.972933
+        },
+        {
+          "segment": 1,
+          "lag_ms": 40,
+          "pass": false,
+          "correlation": 0.97751
+        },
+        {
+          "segment": 2,
+          "lag_ms": 40,
+          "pass": false,
+          "correlation": 0.983206
+        },
+        {
+          "segment": 3,
+          "lag_ms": 40,
+          "pass": false,
+          "correlation": 0.982099
+        },
+        {
+          "segment": 4,
+          "lag_ms": 40,
+          "pass": false,
+          "correlation": 0.961438
+        }
+      ],
+      "target": "every segment |lag| <= 33 ms; correlation >= 0.5",
+      "pass": false,
+      "status": "measured"
+    },
+    "joins.decoder": {
+      "value": [],
+      "target": "RMS step <= 6 dB, click <= 6x median, spectral flux <= 0.5",
+      "pass": true,
+      "status": "measured",
+      "join_times_s": [],
+      "failed_join_times_s": []
+    },
+    "captions.ocr": {
+      "value": [
+        {
+          "page": 0,
+          "frame": 54,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 1,
+          "frame": 113,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 2,
+          "frame": 160,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 3,
+          "frame": 201,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 4,
+          "frame": 275,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 5,
+          "frame": 304,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 6,
+          "frame": null,
+          "pass": null,
+          "status": "not_sampled",
+          "reason": "No fully revealed caption window"
+        },
+        {
+          "page": 7,
+          "frame": 433,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 8,
+          "frame": null,
+          "pass": null,
+          "status": "not_sampled",
+          "reason": "No fully revealed caption window"
+        },
+        {
+          "page": 9,
+          "frame": 546,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 10,
+          "frame": 617,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        }
+      ],
+      "target": "token agreement >= 0.98 on every page",
+      "pass": null,
+      "status": "incomplete"
+    },
+    "brand.mark_tile": {
+      "value": [
+        {
+          "beat": "b1-ban",
+          "frame": 60,
+          "score": 0.9791099378079697,
+          "pass": true
+        },
+        {
+          "beat": "b2-key",
+          "frame": 170,
+          "score": 0.9791099381857756,
+          "pass": true
+        },
+        {
+          "beat": "b3-pass",
+          "frame": 302,
+          "score": 0.9792931519385161,
+          "pass": true
+        },
+        {
+          "beat": "b4-watch",
+          "frame": 463,
+          "score": 0.9792113897338166,
+          "pass": true
+        },
+        {
+          "beat": "b5-every",
+          "frame": 586,
+          "score": 0.9792113897338166,
+          "pass": true
+        }
+      ],
+      "target": "mark NCC >= 0.8 at every beat midpoint",
+      "pass": true,
+      "status": "measured"
+    },
+    "motion.cue_sync": {
+      "value": [
+        {
+          "event": "b1-ban-0",
+          "atFrame": 9,
+          "peak_frame": 9,
+          "lag_frames": 0,
+          "peak_difference": 40.951072692871094,
+          "event_difference": 40.951072692871094,
+          "threshold": 1e-06,
+          "pass": true
+        },
+        {
+          "event": "b1-ban-1",
+          "atFrame": 47,
+          "peak_frame": 48,
+          "lag_frames": 1,
+          "peak_difference": 33.70754623413086,
+          "event_difference": 33.70754623413086,
+          "threshold": 8.680555401952006e-05,
+          "pass": true
+        },
+        {
+          "event": "b1-ban-2",
+          "atFrame": 94,
+          "peak_frame": 94,
+          "lag_frames": 0,
+          "peak_difference": 1.684038758277893,
+          "event_difference": 1.684038758277893,
+          "threshold": 0.00024250441492768005,
+          "pass": true
+        },
+        {
+          "event": "b2-key-0",
+          "atFrame": 163,
+          "peak_frame": 167,
+          "lag_frames": 4,
+          "peak_difference": 0.011566725559532642,
+          "event_difference": 0.011255327612161636,
+          "threshold": 1e-06,
+          "pass": true
+        },
+        {
+          "event": "b2-key-1",
+          "atFrame": 176,
+          "peak_frame": 173,
+          "lag_frames": -3,
+          "peak_difference": 0.011733906343579292,
+          "event_difference": 0.01104956679046154,
+          "threshold": 0.00555279990658164,
+          "pass": true
+        },
+        {
+          "event": "b3-pass-0",
+          "atFrame": 220,
+          "peak_frame": 221,
+          "lag_frames": 1,
+          "peak_difference": 0.2814190089702606,
+          "event_difference": 0.2814190089702606,
+          "threshold": 0.00033619929308770224,
+          "pass": true
+        },
+        {
+          "event": "b3-pass-1",
+          "atFrame": 241,
+          "peak_frame": 242,
+          "lag_frames": 1,
+          "peak_difference": 0.28080448508262634,
+          "event_difference": 0.28080448508262634,
+          "threshold": 1.1022927765225177e-05,
+          "pass": true
+        },
+        {
+          "event": "b3-pass-2",
+          "atFrame": 339,
+          "peak_frame": 340,
+          "lag_frames": 1,
+          "peak_difference": 0.14047619700431824,
+          "event_difference": 0.14047619700431824,
+          "threshold": 1e-06,
+          "pass": true
+        },
+        {
+          "event": "b4-watch-0",
+          "atFrame": 386,
+          "peak_frame": 386,
+          "lag_frames": 0,
+          "peak_difference": 41.334861755371094,
+          "event_difference": 41.334861755371094,
+          "threshold": 1.913070082082413e-05,
+          "pass": true
+        },
+        {
+          "event": "b4-watch-1",
+          "atFrame": 400,
+          "peak_frame": 401,
+          "lag_frames": 1,
+          "peak_difference": 37.79412841796875,
+          "event_difference": 37.79412841796875,
+          "threshold": 1e-06,
+          "pass": true
+        },
+        {
+          "event": "b4-watch-2",
+          "atFrame": 461,
+          "peak_frame": 461,
+          "lag_frames": 0,
+          "peak_difference": 71.17032623291016,
+          "event_difference": 71.17032623291016,
+          "threshold": 0.0006347656308207661,
+          "pass": true
+        },
+        {
+          "event": "b4-watch-3",
+          "atFrame": 500,
+          "peak_frame": 506,
+          "lag_frames": 6,
+          "peak_difference": 65.7725601196289,
+          "event_difference": 12.8603515625,
+          "threshold": 0.0007690429338254035,
+          "pass": true
+        },
+        {
+          "event": "b5-every-0",
+          "atFrame": 541,
+          "peak_frame": 541,
+          "lag_frames": 0,
+          "peak_difference": 54.870662689208984,
+          "event_difference": 54.870662689208984,
+          "threshold": 1e-06,
+          "pass": true
+        },
+        {
+          "event": "b5-every-1",
+          "atFrame": 570,
+          "peak_frame": 570,
+          "lag_frames": 0,
+          "peak_difference": 12.663891792297363,
+          "event_difference": 12.663891792297363,
+          "threshold": 9.765625509317033e-05,
+          "pass": true
+        },
+        {
+          "event": "b5-every-2",
+          "atFrame": 570,
+          "peak_frame": 570,
+          "lag_frames": 0,
+          "peak_difference": 12.663891792297363,
+          "event_difference": 12.663891792297363,
+          "threshold": 9.765625509317033e-05,
+          "pass": true
+        },
+        {
+          "event": "b5-every-3",
+          "atFrame": 601,
+          "peak_frame": 604,
+          "lag_frames": 3,
+          "peak_difference": 1.6901767253875732,
+          "event_difference": 0.05362255871295929,
+          "threshold": 0.1058095134794712,
+          "pass": false
+        }
+      ],
+      "target": "change within +/-2 frames > max(FLOOR, 3x median of previous 15 frames)",
+      "pass": false,
+      "status": "measured"
+    }
+  },
+  "measured_pass": false,
+  "complete": false
+}

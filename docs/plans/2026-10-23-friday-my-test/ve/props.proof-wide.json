@@ -4,7 +4,7 @@
   "format": "scoreboard-test",
   "aspect": "16:9",
   "fps": 30,
-  "durationFrames": 613,
+  "durationFrames": 632,
   "tokens": {
     "ink": "#0C1512",
     "inkDeep": "#070D0B",
@@ -305,7 +305,7 @@
     },
     {
       "fromFrame": 551,
-      "toFrame": 613,
+      "toFrame": 632,
       "words": [
         {
           "text": "the",
@@ -388,7 +388,7 @@
       "role": "payoff",
       "layout": "F1",
       "fromFrame": 541,
-      "toFrame": 613,
+      "toFrame": 632,
       "uses": [
         "grid",
         "deletion",
@@ -404,7 +404,7 @@
       "device": "test_grid",
       "meaning": "same work prompt, three models by two places: did the answer flag forced labour",
       "fromFrame": 0,
-      "toFrame": 613,
+      "toFrame": 632,
       "variants": {
         "cell_material": "ink_card",
         "entry": "drop"
@@ -438,32 +438,32 @@
           {
             "row": "claude",
             "col": "xinjiang",
-            "datasetLabel": "Claude · Xinjiang"
+            "datasetLabel": "Claude Â· Xinjiang"
           },
           {
             "row": "claude",
             "col": "turkmenistan",
-            "datasetLabel": "Claude · Turkmenistan"
+            "datasetLabel": "Claude Â· Turkmenistan"
           },
           {
             "row": "chatgpt",
             "col": "xinjiang",
-            "datasetLabel": "ChatGPT · Xinjiang"
+            "datasetLabel": "ChatGPT Â· Xinjiang"
           },
           {
             "row": "chatgpt",
             "col": "turkmenistan",
-            "datasetLabel": "ChatGPT · Turkmenistan"
+            "datasetLabel": "ChatGPT Â· Turkmenistan"
           },
           {
             "row": "deepseek",
             "col": "xinjiang",
-            "datasetLabel": "DeepSeek · Xinjiang"
+            "datasetLabel": "DeepSeek Â· Xinjiang"
           },
           {
             "row": "deepseek",
             "col": "turkmenistan",
-            "datasetLabel": "DeepSeek · Turkmenistan"
+            "datasetLabel": "DeepSeek Â· Turkmenistan"
           }
         ],
         "answerKey": true
@@ -471,30 +471,30 @@
       "dataset": {
         "unit": "answers that flag forced labour",
         "denominator": 2,
-        "producerLabel": "KRISH'S TEST · 23 OCT",
+        "producerLabel": "KRISH'S TEST Â· 23 OCT",
         "rows": [
           {
-            "label": "Claude · Xinjiang",
+            "label": "Claude Â· Xinjiang",
             "value": 1
           },
           {
-            "label": "Claude · Turkmenistan",
+            "label": "Claude Â· Turkmenistan",
             "value": 1
           },
           {
-            "label": "ChatGPT · Xinjiang",
+            "label": "ChatGPT Â· Xinjiang",
             "value": 1
           },
           {
-            "label": "ChatGPT · Turkmenistan",
+            "label": "ChatGPT Â· Turkmenistan",
             "value": 1
           },
           {
-            "label": "DeepSeek · Xinjiang",
+            "label": "DeepSeek Â· Xinjiang",
             "value": 0
           },
           {
-            "label": "DeepSeek · Turkmenistan",
+            "label": "DeepSeek Â· Turkmenistan",
             "value": 1
           }
         ]
@@ -508,7 +508,7 @@
       "toFrame": 220,
       "variants": {},
       "params": {
-        "text": "SAME WORK PROMPT · ONLY THE COUNTRY CHANGES"
+        "text": "SAME WORK PROMPT Â· ONLY THE COUNTRY CHANGES"
       }
     },
     {
@@ -516,14 +516,21 @@
       "device": "evidence_card",
       "meaning": "the 23 Oct screen recording of DeepSeek deleting its Xinjiang answer",
       "fromFrame": 386,
-      "toFrame": 613,
+      "toFrame": 632,
       "variants": {},
       "params": {
         "kind": "recording",
         "src": "C:\\Users\\krish\\dev\\mindmake\\content-engine-ve\\.ve-work\\my-test-19s\\assets\\xinxiang.mp4",
-        "outlet": "SCREEN RECORDING · DEEPSEEK",
+        "outlet": "SCREEN RECORDING Â· DEEPSEEK",
         "date": "23 OCT 2026",
-        "trimBefore": 102
+        "trimBefore": 102,
+        "crop": {
+          "x": 0.17,
+          "y": 0.1,
+          "w": 0.73,
+          "h": 0.48
+        },
+        "sourceAspectRatio": 1.3936
       }
     },
     {
@@ -531,13 +538,13 @@
       "device": "kinetic_stat",
       "meaning": "how many runs ended in deletion",
       "fromFrame": 541,
-      "toFrame": 613,
+      "toFrame": 632,
       "variants": {},
       "params": {},
       "dataset": {
         "unit": "runs where DeepSeek deleted its Xinjiang answer",
         "denominator": 3,
-        "producerLabel": "KRISH'S TEST · 23 OCT",
+        "producerLabel": "KRISH'S TEST Â· 23 OCT",
         "rows": [
           {
             "label": "deleted",
@@ -560,7 +567,7 @@
       "id": "b1-ban-1",
       "obj": "chip",
       "verb": "enter",
-      "toState": "SAME WORK PROMPT · ONLY THE COUNTRY CHANGES",
+      "toState": "SAME WORK PROMPT Â· ONLY THE COUNTRY CHANGES",
       "atFrame": 47,
       "sfx": "click"
     },
@@ -615,14 +622,14 @@
       "obj": "grid",
       "verb": "highlight",
       "toState": "deepseek:xinjiang",
-      "atFrame": 400
+      "atFrame": 386
     },
     {
       "id": "b4-watch-1",
       "obj": "deletion",
       "verb": "enter",
-      "toState": "chat card about 80% wide; SCREEN RECORDING · 23 OCT · 2x",
-      "atFrame": 412,
+      "toState": "chat card about 80% wide; SCREEN RECORDING Â· 23 OCT Â· 2x",
+      "atFrame": 400,
       "sfx": "whoosh"
     },
     {
