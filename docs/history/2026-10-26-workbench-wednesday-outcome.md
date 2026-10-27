@@ -1,3 +1,7 @@
+> **Historical.** Moved here on 2026-10-26 by its session (#170); banner added 2026-10-27 by the docs steward. Not current guidance.
+> Replaced by: `WORKBENCH.md` and `NOW.md` ("Where it is right now").
+> Reason: kept the active Workbench within its size limit.
+
 # Preserved Workbench entry
 
 Moved intact on 26 October to keep the active Workbench within its size limit.

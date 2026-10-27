@@ -1,3 +1,7 @@
+> **Historical.** Moved here on 2026-10-26 by its session (#186); banner added 2026-10-27 by the docs steward. Not current guidance.
+> Replaced by: `WORKBENCH.md` and `NOW.md` ("Where it is right now").
+> Reason: kept the Story closeout detail outside the bounded Workbench.
+
 # 26 October: Growth Story correction returned
 
 The approved Grok/Muse Story set's frame-1 wordmark moved below the scene in
