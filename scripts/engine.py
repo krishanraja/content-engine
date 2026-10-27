@@ -248,7 +248,9 @@ def main() -> int:
         body = json.loads(raw)
         if isinstance(body, dict) and body.get('idempotency_key') == 'NEW':
             body['idempotency_key'] = str(uuid.uuid4())
-    if method == 'POST' and path.split('?')[0].rstrip('/').endswith('/fact-check'):
+    # A sign-off records Krish's words on named lines and calls no model, so the paid-run guards do not apply.
+    signing_off = isinstance(body, dict) and body.get('action') == 'sign_off'
+    if method == 'POST' and path.split('?')[0].rstrip('/').endswith('/fact-check') and not signing_off:
         try:
             gs, gt = call('GET', path.split('?')[0], None, token, timeout=60)
         except Unreachable as unreachable:

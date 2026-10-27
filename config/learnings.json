@@ -1687,6 +1687,21 @@
           "how": "the Scripts step"
         }
       ]
+    },
+    {
+      "id": "ask-the-real-question",
+      "on": "2026-10-27",
+      "krish": "Give me any genuine questions you have here as opposed to just saying \"Monday is still with you.\" I have no idea what that means.",
+      "why": "Replies kept closing with shorthand pointers to things waiting on him (\"Monday is still with you\", \"the 11 lines\") that meant nothing without the session's context, so he could not act on them.",
+      "means": "Anything waiting on Krish is written as the question itself: the decision, the exact words or facts he is deciding on, and what each answer does, answerable from the message alone. No pointers, no counts of lines he has not seen, no project shorthand.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": ".agents/skills/make-piece/SKILL.md",
+          "contains": "put to him as the question itself, never a pointer to it",
+          "how": "Before you stop"
+        }
+      ]
     }
   ]
 }
