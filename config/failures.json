@@ -916,6 +916,480 @@
      "how": "a name the library refuses for any reason no longer stops the other clips; the pass still fails naming it"
     }
    ]
+  },
+  {
+   "id": "F01-weak-initial-visuals",
+   "on": "2026-10-27",
+   "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F01)",
+   "what": "Friday 'Two passports' (23 Oct): the first visuals were schematic boxes, labels and connectors that did not explain the idea, and the method was never stopped.",
+   "symptom": "Passport, phone, server and speech-bubble scenes built from outline icons, labels and connectors; v5 rejected as clipart; Canada/USA examples and flags added only after Krish asked.",
+   "cause": "Having the necessary objects on screen was taken to mean the concept was clear. No scene was judged without its narration and labels, and the locked motion-system.md itself prescribed outline phone and server icons.",
+   "status": "open",
+   "guards": [],
+   "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F01)",
+   "registry": [
+    "R07",
+    "R12"
+   ],
+   "related": [
+    "production-improvised-visuals"
+   ],
+   "planned_mechanism": {
+    "kind": [
+     "library_only",
+     "lint",
+     "critic",
+     "krish_gate"
+    ],
+    "qc_row": "Clipart look, illegible visuals (R07, R12, F01)",
+    "ref": "Library devices only; Creative director decision engine; Motion designer reading-time lint; Critic lens 'Clipart or PowerPoint?'; Krish picks stills at Gate 1",
+    "test": "tests/ve/fixtures/friday-*.json fails ve lint; the Critic counts only once it fails Friday v7-v11 and passes Monday 19",
+    "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
+   }
+  },
+  {
+   "id": "F02-feedback-not-generalised",
+   "on": "2026-10-27",
+   "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F02)",
+   "what": "Krish's country and flag correction was handled as asset edits, not as a principle, so he restated it three times.",
+   "symptom": "The country, flag and nationality-framing principle was restated on 24 Oct 17:34 and 17:37 and on 25 Oct 09:15.",
+   "cause": "Feedback was fixed one instance at a time. The principle (show concrete entities, avoid national framing the example does not warrant) never became a rule the work was checked against.",
+   "status": "open",
+   "guards": [],
+   "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F02)",
+   "registry": [
+    "R37",
+    "R14"
+   ],
+   "related": [],
+   "planned_mechanism": {
+    "kind": [
+     "taste_event",
+     "lint"
+    ],
+    "qc_row": "Feedback not generalised (R37, F02)",
+    "ref": "Taste events; a ruling Krish repeats becomes a lint with a fixture",
+    "test": "the repeated ruling's fixture fails ve lint before the fix and passes after it",
+    "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
+   }
+  },
+  {
+   "id": "F03-reference-studied-as-stills",
+   "on": "2026-10-27",
+   "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F03)",
+   "what": "The motion reference was studied as stills sampled every 5 s, not as timing, continuity and sound.",
+   "symptom": "reference-notes.md sampled a contact sheet every 5 s and left 'Hear the clip and examine the actual transitions' undone; the temporal study happened only on 26 Oct.",
+   "cause": "Stills show surface style but not timing or transformation, and production went ahead without learning what the reference was supplied to show.",
+   "status": "open",
+   "guards": [],
+   "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F03)",
+   "registry": [
+    "R10"
+   ],
+   "related": [],
+   "planned_mechanism": {
+    "kind": [
+     "lint"
+    ],
+    "qc_row": "Reference studied as stills (R10, F03)",
+    "ref": "ve lint requires a grammar card (timing, transformations, sound) from the full clip before a reference-led treatment; the study uses Higgsfield video_analysis_create plus local scdet",
+    "test": "a fixture spec that cites a reference with no grammar card fails ve lint",
+    "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
+   }
+  },
+  {
+   "id": "F04-stills-stood-in-for-motion-proof",
+   "on": "2026-10-27",
+   "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F04)",
+   "what": "Accepted still frames were treated as enough confidence to scale, with no representative moving sequence proven.",
+   "symptom": "The v6 styleframe was approved (approval.json scope: 'Not final video'); three cuts were then exported on 26 Oct 22:49-23:13 UTC with no moving proof of narration, captions, brand, transitions and camera sync together.",
+   "cause": "Still-image confidence was carried over to motion. The rule that a representative proof precedes full production was written but not enforced.",
+   "status": "open",
+   "guards": [],
+   "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F04)",
+   "registry": [
+    "R11"
+   ],
+   "related": [],
+   "planned_mechanism": {
+    "kind": [
+     "by_construction"
+    ],
+    "qc_row": "Scaled before proof (R11, F04, F13)",
+    "ref": "ve render --all refuses without approvals.proof while anything in the spec is trial; the Phase 1 proof is one 19.5 s sequence",
+    "test": "render --all on a spec with a trial element and no approvals.proof exits non-zero",
+    "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
+   }
+  },
+  {
+   "id": "F05-motion-decorated",
+   "on": "2026-10-27",
+   "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F05)",
+   "what": "Motion decorated rather than explained: entrances then long holds, restarting arrows, and an f % 180 loop that redraws every 6 s on no cue.",
+   "symptom": "Held frames are 52.7% of the long VO and 54.4% of the long camera graphic stage; the Airbnb arrow restarts; S12 in EditorialCameraShort.tsx redraws at 52.2, 58.2 and 64.2 s.",
+   "cause": "Scenes were authored as entrance-and-hold, and annotation was driven by frame arithmetic, not by the spoken cue.",
+   "status": "open",
+   "guards": [],
+   "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F05)",
+   "registry": [
+    "R09"
+   ],
+   "related": [],
+   "planned_mechanism": {
+    "kind": [
+     "by_construction",
+     "lint",
+     "measured"
+    ],
+    "qc_row": "Entrance-then-hold, f%180 loops (R09, F05)",
+    "ref": "Devices are pure functions of the clock (ESLint no-frame-modulo); Motion designer lint: an event at least every 3 s of a device's life; QC held ratio and periodicity",
+    "test": "ESLint fails on a frame modulo in apps/renderer/src/engine; qc_synthetic_test flags frozen runs; the Friday fixtures fail ve lint",
+    "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
+   }
+  },
+  {
+   "id": "F06-numbers-lost-meaning",
+   "on": "2026-10-27",
+   "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F06)",
+   "what": "Numbers lost their meaning across transitions: a 200-tile test became a separate 100-dot grid, and a reused chart showed a different measure.",
+   "symptom": "The 200-question test turned into a 100-dot percentage grid; the long VO's '2.7% GAP' chart reused the 59/35 model bars; Claude appeared under 'a Chinese AI'.",
+   "cause": "Each scene was checked for completeness, not for the viewer's continuity of understanding, and the locked motion-system.md contradicted itself (200 tiles with 70 failed, against 100 squares).",
+   "status": "open",
+   "guards": [],
+   "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F06)",
+   "registry": [
+    "R15"
+   ],
+   "related": [],
+   "planned_mechanism": {
+    "kind": [
+     "by_construction",
+     "lint"
+    ],
+    "qc_row": "Denominator 200→100, unlabelled reused chart (R15, F06)",
+    "ref": "Devices bind datasets; lint: immutable meaning, carry, a reused chart needs its own title and producer, every digit device carries producer_label",
+    "test": "a fixture that rebinds a device to a new denominator, or reuses a chart without its own title and producer, fails ve lint",
+    "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
+   }
+  },
+  {
+   "id": "F07-brand-tokens-not-brand",
+   "on": "2026-10-27",
+   "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F07)",
+   "what": "Brand colours and fonts were present but the brand system was not applied: no mark tile, no mind.the.gap coral or pill, flattened type, rotated logos.",
+   "symptom": "The custom compositions had no publisher anchor per beat, no channel treatment or coral, a flattened type hierarchy, rotated logos and type, and the cream/ink meaning lost under dark photographs.",
+   "cause": "The bespoke border-control compositions imported only the house fonts and bypassed MarkTile, SectionPill and the Studio brand components.",
+   "status": "open",
+   "guards": [],
+   "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F07)",
+   "registry": [
+    "R08"
+   ],
+   "related": [],
+   "planned_mechanism": {
+    "kind": [
+     "by_construction",
+     "lint",
+     "measured"
+    ],
+    "qc_row": "No mark tile or coral, rotated logos (R08, F07)",
+    "ref": "BrandFrame wraps every beat (mark tile, pill, grain); Logo has no rotation prop; lint colour roles (coral only on mind.the.gap), no raw hex, fonts from tokens; QC mark-tile template match and ΔE",
+    "test": "QC template-matches the mark tile at every beat of a render; ESLint no-raw-hex fails on a hex in a device",
+    "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
+   }
+  },
+  {
+   "id": "F08-captions-mishandled",
+   "on": "2026-10-27",
+   "krish": "(Ruling, 27 Oct: captions burned into every cut; failure report F08)",
+   "what": "None of the four cuts had visible captions, only SRT sidecars, because a 'no captions' line in the locked brief was followed.",
+   "symptom": "No burned-in captions in any of the four exports; SRT sidecars only, unpunctuated and with a wording error.",
+   "cause": "Friday's locked CODEX.md said not to burn captions in, and the signed storyboard said 'No subtitles'; that conflicted with STUDIO's caption spec, and the conflict was never resolved before four videos were composed.",
+   "status": "open",
+   "guards": [],
+   "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F08)",
+   "registry": [
+    "R03"
+   ],
+   "related": [],
+   "planned_mechanism": {
+    "kind": [
+     "by_construction",
+     "measured"
+    ],
+    "qc_row": "Captions absent or banned (R03, F08)",
+    "ref": "Schema: brand.captions is the literal 'house'; BrandFrame always draws CaptionTrack; QC caption-box OCR against cues of 0.98 or more",
+    "test": "a spec with captions off fails schema validation; caption OCR on a render scores 0.98 or more",
+    "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
+   }
+  },
+  {
+   "id": "F09-speech-edits-outran-evidence",
+   "on": "2026-10-27",
+   "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F09)",
+   "what": "Speech joins were cut on ASR timings with 2 ms fades and short clearance; Krish rejected the ten-join reel and no listening verdict cleared the rest.",
+   "symptom": "The ten-join reel was rejected; short-camera joins sit about 10 ms and 20 ms from word ends against a 40 ms rule, with 2 ms crossfades; the long VO 'fling' donor splice was never verified.",
+   "cause": "ASR word timing and waveform work were given more confidence than they can carry, and assembly went on while the acoustic doubt was material.",
+   "status": "open",
+   "guards": [],
+   "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F09)",
+   "registry": [
+    "R01",
+    "R19"
+   ],
+   "related": [
+    "chopped-words-published"
+   ],
+   "planned_mechanism": {
+    "kind": [
+     "lint",
+     "measured",
+     "krish_gate"
+    ],
+    "qc_row": "Chopped words, 2 ms fades (R01, R19, F09)",
+    "ref": "Dialogue editor lint: cuts only in gaps of 80 ms or more that both aligners agree on, 30 ms clearance each side, 20-40 ms crossfades; QC two-ASR round trip and a join decoder calibrated on Friday's rejected join reel; Krish hears the joins reel at Gate 3",
+    "test": "qc_synthetic_test flags lavfi clicks and 2 ms joins; the decoder flags the joins Krish rejected in Friday's reel",
+    "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
+   }
+  },
+  {
+   "id": "F10-sync-route-fragile",
+   "on": "2026-10-27",
+   "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F10)",
+   "what": "Silent picture and separately mixed audio crossed several intermediates; the short camera's first on-camera moment plays about 1.05 s out of sync.",
+   "symptom": "v8 had a 3.5 s error; the long-camera concat hit a timebase defect; in the v10 short camera at 0:06.53-0:08.33 the picture is about 1.05 s later than the sound.",
+   "cause": "The v10 short camera reused v8's picture unchanged (-c:v copy) on a mix whose audio edit was re-cut in five places (15.34 s removed), so the picture was never rendered from the edit it plays against. How v8's picture came to sit 1.05 s late there is not reconstructed (INDEPENDENT-REVIEW.md, correction note).",
+   "status": "open",
+   "guards": [],
+   "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F10)",
+   "registry": [
+    "R04"
+   ],
+   "related": [
+    "lip-sync-drift",
+    "cause-claimed-unproven"
+   ],
+   "planned_mechanism": {
+    "kind": [
+     "by_construction",
+     "measured"
+    ],
+    "qc_row": "Lip-sync, picture muxed onto re-cut audio (R04, F10)",
+    "ref": "One EDL drives picture, dialogue, bed, SFX and captions in one render, and ve has no mux path; QC A/V cross-correlation within 1 frame per segment",
+    "test": "qc_synthetic_test flags a 0.5 s A/V offset; ve has no command that muxes a picture onto separate audio",
+    "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
+   }
+  },
+  {
+   "id": "F11-no-qualified-reviewer",
+   "on": "2026-10-27",
+   "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F11)",
+   "what": "No qualified review route existed before the batch was made; two paid reviewer calibrations failed and Krish stayed the only listener.",
+   "symptom": "Krish was repeatedly asked to listen; a paid reviewer invented speech in silent media, including an all-zero PCM control, and the second route produced no qualified listener either.",
+   "cause": "A review route was looked for after the cuts existed, not established before a batch whose acceptance depended on it.",
+   "status": "open",
+   "guards": [],
+   "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F11)",
+   "registry": [
+    "R06"
+   ],
+   "related": [
+    "cut-called-done-unheard"
+   ],
+   "planned_mechanism": {
+    "kind": [
+     "critic",
+     "measured",
+     "krish_gate"
+    ],
+    "qc_row": "none in the QC table: the Critic and the measured QC modules",
+    "ref": "Critic (never a producer, a fresh Opus subagent), advisory until calibrated; measured QC runs on every frame and sample; listening stays Krish's at Gate 3 through the joins reel",
+    "test": "the Critic fails Friday v7-v11 and passes Monday 19 before it counts",
+    "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
+   }
+  },
+  {
+   "id": "F12-engineering-evidence-over-product",
+   "on": "2026-10-27",
+   "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F12)",
+   "what": "Hashes, receipts and tests piled up while the cuts stayed unverified; the final assembly ran in one-off scripts that called none of the engine's gates.",
+   "symptom": "There were 68 one-off Python scripts in the task folder; the final compose and mix scripts never call quality, coverage, visual_clarity, sync_check or delivery_problems; local verify had two failing test files.",
+   "cause": "Technical traceability was taken as evidence of quality, and assembling outside the engine bypassed every gate.",
+   "status": "open",
+   "guards": [],
+   "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F12)",
+   "registry": [
+    "R43",
+    "R45",
+    "R05"
+   ],
+   "related": [
+    "cut-called-done-unheard"
+   ],
+   "planned_mechanism": {
+    "kind": [
+     "by_construction"
+    ],
+    "qc_row": "Bespoke code, gate bypass (R43, R45, F12)",
+    "ref": "CI route check refuses per-piece compositions and render scripts; ve file refuses an mp4 without build.json and a passing qc.json; quality.py loses its working* bypass and self-attested passes",
+    "test": "ve file exits non-zero on an mp4 with no build.json; the CI route check fails on a new registerRoot or render_*.mjs",
+    "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
+   }
+  },
+  {
+   "id": "F13-scaled-unproven-approach",
+   "on": "2026-10-27",
+   "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F13)",
+   "what": "The approach was carried across four cuts before the hardest combined sequence was proven; renderer, cache and audio repairs ate the time.",
+   "symptom": "Three of the four cuts were first exported 22:49-23:13 UTC on 26 Oct and delivered at 23:23, every receipt saying full_visual_playback false.",
+   "cause": "The chosen pipeline was optimised instead of reassessed; the first integrated prototype never decided whether to scale.",
+   "status": "open",
+   "guards": [],
+   "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F13)",
+   "registry": [
+    "R11"
+   ],
+   "related": [],
+   "planned_mechanism": {
+    "kind": [
+     "by_construction"
+    ],
+    "qc_row": "Scaled before proof (R11, F04, F13)",
+    "ref": "ve render --all refuses without approvals.proof while anything in the spec is trial; the Phase 1 proof is one 19.5 s sequence",
+    "test": "render --all on a spec with a trial element and no approvals.proof exits non-zero",
+    "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
+   }
+  },
+  {
+   "id": "F14-standards-overestimated",
+   "on": "2026-10-27",
+   "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F14)",
+   "what": "Standards and review machinery were expected to fix an unproven production method.",
+   "symptom": "PR #170 merged its standards with enforcement pending calibration; a test fallback also wrote three synthetic folders into the real archive.",
+   "cause": "A rule that motion must explain does not create an explanatory sequence, and a review endpoint with no reliable reviewer cannot set a quality floor.",
+   "status": "open",
+   "guards": [],
+   "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F14)",
+   "registry": [
+    "R40"
+   ],
+   "related": [],
+   "planned_mechanism": {
+    "kind": [
+     "process",
+     "measured"
+    ],
+    "qc_row": "none in the QC table: plan rule 2 and ve coverage",
+    "ref": "Every expert ships a lint and a measured QC module, not only text; ve coverage scores each register entry by its mechanism test, and a marker-only guard scores 0",
+    "test": "ve coverage reports F01-F18 and R01-R46 each with a passing mechanism test, or 0",
+    "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
+   }
+  },
+  {
+   "id": "F15-progress-overstated",
+   "on": "2026-10-27",
+   "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F15)",
+   "what": "The delivery message led with exports, filing and the board, which made four unusable cuts sound close to sign-off.",
+   "symptom": "The 26 Oct 23:23 delivery led with exports, library filing and board readiness while no complete listening review, speech boundary, motion or brand delivery had been proven.",
+   "cause": "Status was written from what had been produced, not from what had been verified.",
+   "status": "open",
+   "guards": [],
+   "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F15)",
+   "registry": [
+    "R05"
+   ],
+   "related": [
+    "cut-called-done-unheard"
+   ],
+   "planned_mechanism": {
+    "kind": [
+     "by_construction"
+    ],
+    "qc_row": "Readiness overclaimed, self-written receipts (R05, F15)",
+    "ref": "ve status computes readiness from qc.json bound to the mp4's sha, the Critic verdict and approvals.final; nothing is marked ready by hand",
+    "test": "ve status reports not ready for an mp4 whose sha has no passing qc.json or no approvals.final",
+    "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
+   }
+  },
+  {
+   "id": "F16-krish-carried-qa",
+   "on": "2026-10-27",
+   "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F16)",
+   "what": "Krish caught ten or more fundamental defects himself: examples, flags, wording, framing, brand, motion, glitches, captions and sync.",
+   "symptom": "Krish identified the country examples, flags, excess words, nationality framing, weak aesthetics, missing brand, inadequate motion, audible glitches, missing captions and sync failure.",
+   "cause": "The method did not take in his standard, so each correction recreated the work the engine was meant to remove.",
+   "status": "open",
+   "guards": [],
+   "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F16)",
+   "registry": [
+    "R06",
+    "R37"
+   ],
+   "related": [
+    "production-improvised-visuals"
+   ],
+   "planned_mechanism": {
+    "kind": [
+     "process",
+     "by_construction"
+    ],
+    "qc_row": "none in the QC table: the session protocol",
+    "ref": "Lint, measured QC and the Critic run before any Krish gate; Krish sees only the Gate 1, 2 and 3 packets; Phase 2 acceptance allows at most 2 touchpoints after recording",
+    "test": "the Phase 2 ledger shows 2 or fewer Krish touchpoints after recording per piece",
+    "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
+   }
+  },
+  {
+   "id": "F17-independence-mishandled",
+   "on": "2026-10-27",
+   "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F17)",
+   "what": "Asked whether it could judge its own work, the session recommended an outside editor and handed the task back to Krish.",
+   "symptom": "On 27 Oct 05:39-05:42 the session recommended an outside editor instead of gathering evidence, comparing sequences and documenting defects.",
+   "cause": "A limit on its taste authority was treated as release from the duty to gather inspectable evidence.",
+   "status": "open",
+   "guards": [],
+   "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F17)",
+   "registry": [
+    "R36",
+    "R06"
+   ],
+   "related": [],
+   "planned_mechanism": {
+    "kind": [
+     "critic",
+     "process"
+    ],
+    "qc_row": "none in the QC table: the Critic",
+    "ref": "The Critic is never a producer: a fresh Opus subagent writes verdict.json only; the producer's duty is the evidence packet (contact sheets, lip and cue strips, joins reel)",
+    "test": "verdict.json is written by a session that wrote none of the piece's files",
+    "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
+   }
+  },
+  {
+   "id": "F18-reporting-not-executed",
+   "on": "2026-10-27",
+   "krish": "Stop telling me what you're going to do and actually do the audit.",
+   "what": "Asked for the audit and then the full-session report, the session described what it would do, then sent prompts instead of the report.",
+   "symptom": "After the audit was authorised, several replies described the plan; after the audit, a numbered request was answered with two prompts and the report was handed to someone else.",
+   "cause": "An execution and interpretation failure: the requested deliverable was replaced by a description of it.",
+   "status": "open",
+   "guards": [],
+   "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F18)",
+   "registry": [
+    "R36"
+   ],
+   "related": [
+    "cause-claimed-unproven"
+   ],
+   "planned_mechanism": {
+    "kind": [
+     "process"
+    ],
+    "qc_row": "none in the QC table: no by-construction mechanism",
+    "ref": "Plan rule 4: one fresh session per job; questions queue into gate packets and the session ends at its gate with the packet delivered. Process only",
+    "test": "none planned; process only, never to be reported as guarded",
+    "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
+   }
   }
  ]
 }
