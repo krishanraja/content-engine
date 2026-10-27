@@ -264,13 +264,36 @@ No recovery production, new render, generation, paid review or publication is au
 ## 12. Evidence index
 
 - Primary session: `C:\Users\krish\.codex\sessions\2026\10\24\rollout-2026-10-24T17-23-29-01a16eb9-71ee-7bc1-9927-09a4d36322d7.jsonl`. User and final-assistant records support chronology and approval scopes.
-- [Locked production preflight](../locked/production-preflight.md), [handoff](../locked/CODEX.md), [reference notes](../locked/reference-notes.md), [motion system](../locked/motion-system.md).
-- [Timestamped reference, brand and artifact audit](AUDIT.md) and [source/export sync measurements](sync-source-match.json). These provide finer timestamps and measurement limitations.
-- [Engine recommendations, report 3](ENGINE-MOTION-DESIGN-RECOMMENDATIONS.md). Proposed implementation, not a claim it has been built or tested.
-- [First calibration evidence](../../2026-10-26-quality-evidence/README.md), including failed silent controls, accounting, archive-test isolation incident and deployment status.
-- [Final production status](../revisions/motion-v7/SHIPPING.md), [final technical checks](../revisions/motion-v7/final-technical-checks.json), [additional budget readback](../revisions/motion-v7/additional-budget-readback.json), [native audio results](../revisions/motion-v7/native-audio-review-results.json).
-- [Library receipt](../revisions/motion-v7/four-cuts-library-receipt.json), [caption receipt](../revisions/motion-v7/caption-library-receipt.json), [source-bundle receipt](../revisions/motion-v7/reproduction-library-receipt.json), [board dry run](../revisions/motion-v7/board-publish-dry-run.json).
+- [Locked production preflight](https://github.com/krishanraja/content-engine/blob/58c11d6/docs/plans/2026-10-23-friday/locked/production-preflight.md), [handoff](https://github.com/krishanraja/content-engine/blob/58c11d6/docs/plans/2026-10-23-friday/locked/CODEX.md), [reference notes](https://github.com/krishanraja/content-engine/blob/58c11d6/docs/plans/2026-10-23-friday/locked/reference-notes.md), [motion system](https://github.com/krishanraja/content-engine/blob/58c11d6/docs/plans/2026-10-23-friday/locked/motion-system.md).
+- [Timestamped reference, brand and artifact audit](https://github.com/krishanraja/content-engine/blob/58c11d6/docs/plans/2026-10-23-friday/audit-2026-10-27/AUDIT.md) and [source/export sync measurements](https://github.com/krishanraja/content-engine/blob/58c11d6/docs/plans/2026-10-23-friday/audit-2026-10-27/sync-source-match.json). These provide finer timestamps and measurement limitations.
+- [Engine recommendations, report 3](https://github.com/krishanraja/content-engine/blob/58c11d6/docs/plans/2026-10-23-friday/audit-2026-10-27/ENGINE-MOTION-DESIGN-RECOMMENDATIONS.md). Proposed implementation, not a claim it has been built or tested.
+- [First calibration evidence](https://github.com/krishanraja/content-engine/blob/58c11d6/docs/plans/2026-10-26-quality-evidence/README.md), including failed silent controls, accounting, archive-test isolation incident and deployment status.
+- [Final production status](https://github.com/krishanraja/content-engine/blob/58c11d6/docs/plans/2026-10-23-friday/revisions/motion-v7/SHIPPING.md), [final technical checks](https://github.com/krishanraja/content-engine/blob/58c11d6/docs/plans/2026-10-23-friday/revisions/motion-v7/final-technical-checks.json), [additional budget readback](https://github.com/krishanraja/content-engine/blob/58c11d6/docs/plans/2026-10-23-friday/revisions/motion-v7/additional-budget-readback.json), [native audio results](https://github.com/krishanraja/content-engine/blob/58c11d6/docs/plans/2026-10-23-friday/revisions/motion-v7/native-audio-review-results.json).
+- [Library receipt](https://github.com/krishanraja/content-engine/blob/58c11d6/docs/plans/2026-10-23-friday/revisions/motion-v7/four-cuts-library-receipt.json), [caption receipt](https://github.com/krishanraja/content-engine/blob/58c11d6/docs/plans/2026-10-23-friday/revisions/motion-v7/caption-library-receipt.json), [source-bundle receipt](https://github.com/krishanraja/content-engine/blob/58c11d6/docs/plans/2026-10-23-friday/revisions/motion-v7/reproduction-library-receipt.json), [board dry run](https://github.com/krishanraja/content-engine/blob/58c11d6/docs/plans/2026-10-23-friday/revisions/motion-v7/board-publish-dry-run.json).
 - Repository brand specification: `docs/STUDIO.md` and `config/studio.json`. Authored motion: `apps/renderer/src/border-control/EditorialCameraShort.tsx`, `EditorialLong.tsx`, `Editorial.tsx`, `Photographic.tsx`, `Packaging.tsx`.
 - Local broad verification result: `C:\Users\krish\.scratch\friday-production-verify.log`. Earlier merged-engine CI and this later local test run are different evidence.
 
 The report's final status is **production failed; report completed; accepted stills retained; four videos rejected; board inactive; no new render or spend**. Unresolved audio/sync causes are explicitly unresolved, not cleared by documentation.
+
+
+## Direct evidence links and access instructions
+
+These links identify the exact reference and latest rejected exports. The Markdown documents do not contain the video bytes. GitHub links may require repository access; the Drive reference may require sharing permission. Local video links work on Krish's computer, not on an unrelated computer or an AI service. For an external reviewer, attach the four exact MP4 files below and supply accessible copies of the brand documents. No public media-sharing links were verified, and none are invented here.
+
+- [User-supplied motion reference](https://drive.google.com/file/d/18qgh6rQ6d5uDKolkP_R7ZK7gsfVUdzTf/view?usp=drive_link)
+- [Friday-short-voiceover-v7-REVIEW.mp4](C:/Users/krish/Documents/Codex/2026-10-24/get-friday-s-videos-produced-and/outputs/Friday-short-voiceover-v7-REVIEW.mp4)
+- [Friday-short-camera-v10-REVIEW.mp4](C:/Users/krish/Documents/Codex/2026-10-24/get-friday-s-videos-produced-and/outputs/Friday-short-camera-v10-REVIEW.mp4)
+- [Friday-long-voiceover-v10-REVIEW.mp4](C:/Users/krish/Documents/Codex/2026-10-24/get-friday-s-videos-produced-and/outputs/Friday-long-voiceover-v10-REVIEW.mp4)
+- [Friday-long-camera-v11-REVIEW.mp4](C:/Users/krish/Documents/Codex/2026-10-24/get-friday-s-videos-produced-and/outputs/Friday-long-camera-v11-REVIEW.mp4)
+
+The exact MP4 SHA-256 values and archived library paths are recorded in the linked final technical checks and library receipt. The library location is `3 Posts/2026-10-23 Fri mind.the.gap - Two passports/3 Video/working 26 Oct four cuts`. Request these exact versions, not an earlier similarly named export.
+
+- [Brand application and caption specification](https://github.com/krishanraja/content-engine/blob/58c11d6/docs/STUDIO.md)
+- [Publication theme, colours and channel configuration](https://github.com/krishanraja/content-engine/blob/58c11d6/config/studio.json)
+- [Locked production brief](https://github.com/krishanraja/content-engine/blob/58c11d6/docs/plans/2026-10-23-friday/locked/CODEX.md)
+- [Locked motion direction](https://github.com/krishanraja/content-engine/blob/58c11d6/docs/plans/2026-10-23-friday/locked/motion-system.md)
+- [Final export identities and technical checks](https://github.com/krishanraja/content-engine/blob/58c11d6/docs/plans/2026-10-23-friday/revisions/motion-v7/final-technical-checks.json)
+- [Exact MP4 hashes and library locations](https://github.com/krishanraja/content-engine/blob/58c11d6/docs/plans/2026-10-23-friday/revisions/motion-v7/four-cuts-library-receipt.json)
+- [Corrected subtitle receipt](https://github.com/krishanraja/content-engine/blob/58c11d6/docs/plans/2026-10-23-friday/revisions/motion-v7/caption-library-receipt.json)
+
+The repository brand specification is available here; the underlying brandbook PDF has not been newly verified or included. Record that limitation rather than assuming these files are an exhaustive current brandbook.
