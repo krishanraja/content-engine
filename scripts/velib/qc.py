@@ -141,6 +141,54 @@ def measurement(rows: list, target: str) -> dict:
             'status': 'measured'}
 
 
+def inputs_from_props(props: dict) -> dict:
+    """Resolve QC inputs on the renderer's global 30 fps clock."""
+    # Mirrors apps/renderer/src/engine/layouts/index.ts, slotsFor():
+    # boxes are x, y, width, height in beat.uses order, authored per aspect.
+    layouts = {
+        '9:16': {
+            'P1': [(120, 288, 768, 552), (144, 312, 720, 160)],
+            'P3': [(120, 288, 768, 324), (120, 624, 768, 216), (120, 852, 660, 290)],
+            'P6': [(120, 288, 768, 552), (424, 576, 464, 264)],
+            'F1': [(120, 288, 768, 552), (144, 312, 720, 232), (144, 568, 720, 248)],
+            'F3': [(120, 376, 768, 464), (120, 288, 768, 72)],
+        },
+        '16:9': {
+            'P1': [(96, 54, 1728, 726), (132, 90, 640, 200)],
+            'P3': [(96, 54, 1026, 560), (1140, 54, 684, 726), (96, 630, 1026, 150)],
+            'P6': [(96, 54, 1728, 726), (998, 400, 826, 380)],
+            'F1': [(96, 54, 1728, 726), (132, 90, 768, 320), (1020, 440, 768, 320)],
+            'F3': [(96, 150, 1728, 630), (96, 54, 1728, 80)],
+        },
+    }
+    aspect, beats, events = props['aspect'], props['beats'], props['events']
+    slots = {}
+    for event in events:
+        at = event['atFrame']
+        active = [b for b in beats if b['fromFrame'] <= at < b['toFrame'] and event['obj'] in b['uses']]
+        # An exit on a beat's exclusive end measures the departing object's box.
+        if not active and event.get('verb') == 'exit':
+            active = [b for b in beats if b['toFrame'] == at and event['obj'] in b['uses']]
+        if len(active) != 1:
+            raise ValueError(f"Cue {event.get('id', event['obj'])} has no unique beat slot")
+        beat = active[0]
+        box = layouts[aspect][beat['layout']][beat['uses'].index(event['obj'])]
+        slots[event.get('id', event['obj'])] = box
+        slots.setdefault(event['obj'], box)
+    # boxFor('caption') in apps/renderer/src/engine/geometry.ts, using
+    # HOUSE.caption in apps/renderer/src/house/geometry.ts; round outwards.
+    region = (72, 1180, 900, 217) if aspect == '9:16' else (260, 773, 1400, 187)
+    stem = props['audio']['stem']
+    # The stem is already assembled. Source-take trims in props.segments must
+    # never be applied to it; compare each beat at its position in this master.
+    edl = [{'fromFrame': b['fromFrame'], 'toFrame': b['toFrame'],
+            'trimBeforeFrames': b['fromFrame'] + stem.get('trimBeforeFrames', 0)} for b in beats]
+    joins = sorted({s['fromFrame'] / props.get('fps', 30) for s in props.get('segments', []) if s['fromFrame'] > 0})
+    return dict(pages=props['captions'], beats=beats, aspect=aspect, events=events, slots=slots,
+                region=region, mark_png=props['brand']['mark']['src'], dialogue_master=stem['src'],
+                edl=edl, joins=joins)
+
+
 def run_qc(path: str, format_id: str, targets: dict | None = None, *,
            dialogue_master: str | None = None, edl=None, joins=None, pages=None, region=None,
            mark_png: str | None = None, beats=None, aspect=None, events=None, slots=None) -> dict:
@@ -182,4 +230,5 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
                                 'pass': False, 'status': 'error', 'reason': str(exc)}
     built = [c['pass'] for c in checks.values() if c['pass'] is not None]
     return {'file': path, 'sha256': sha256_file(path), 'duration_s': round(duration_s(path), 3), 'format': format_id,
-            'checks': checks, 'measured_pass': all(built), 'complete': all(c['pass'] is not None for c in checks.values())}
+            'checks': checks, 'measured_pass': all(built),
+            'complete': all(c['pass'] is not None and c.get('status') != 'incomplete' for c in checks.values())}

@@ -1,9 +1,11 @@
 """ve qc must catch, on real encoded media, the measured Friday defects: a long still (entrance-then-hold),
 a repeating redraw loop (the f % 180 annotation), a dead-air gap, and a master that is not at -14 LUFS / -1 dBTP."""
 import subprocess
+import shutil
 import sys
 import tempfile
 import unittest
+import uuid
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -18,8 +20,9 @@ def ffmpeg(*args):
 class MeasuredDefects(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.temp = tempfile.TemporaryDirectory()
-        root = Path(cls.temp.name)
+        root = Path(tempfile.gettempdir()) / ('ve-qc-base-' + uuid.uuid4().hex)
+        root.mkdir()
+        cls.addClassCleanup(shutil.rmtree, root)
         # 4 s of motion, then a 6 s hold on one frame, with a 1.5 s silence in the middle of the audio.
         cls.hold = str(root / 'hold.mp4')
         ffmpeg('-f', 'lavfi', '-i', 'testsrc2=size=160x90:rate=30:duration=4', '-f', 'lavfi', '-i', 'color=c=gray:size=160x90:rate=30:duration=6',
@@ -33,10 +36,6 @@ class MeasuredDefects(unittest.TestCase):
                '-filter_complex', '[0:v][1:v]concat=n=2:v=1:a=0[v]', '-map', '[v]', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', unit)
         cls.loop = str(root / 'loop.mp4')
         ffmpeg('-stream_loop', '4', '-i', unit, '-c', 'copy', cls.loop)
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.temp.cleanup()
 
     def test_a_long_hold_fails_the_still_and_density_gates(self):
         report = qc.run_qc(self.hold, 'scoreboard-test')

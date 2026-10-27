@@ -9,6 +9,13 @@ import numpy as np
 from .common import ffmpeg
 from .qc import frame_span, gray_frames, measurement, pixel_box
 
+# Mirrors apps/renderer/src/engine/geometry.ts boxFor('mark', aspect),
+# including HOUSE.mark from apps/renderer/src/house/geometry.ts.
+MARK_GEOMETRY = {
+    '16:9': {'box': (64, 56, 112, 112), 'image': 80, 'canvas': (1920, 1080)},
+    '9:16': {'box': (72, 150, 136, 136), 'image': 96, 'canvas': (1080, 1920)},
+}
+
 
 def _ncc(image: np.ndarray, template: np.ndarray) -> float:
     """Search a box without materialising every 2D window into a huge array."""
@@ -51,10 +58,10 @@ def mark_tile(render, mark_png, beats, aspect) -> dict:
         if not dimensions:
             raise ValueError('Cannot read render dimensions')
         video_w, video_h = map(int, dimensions.groups())
-        scale = min(video_w / (1080 if aspect == '9:16' else 1920),
-                    video_h / (1920 if aspect == '9:16' else 1080))
-        box = tuple(round(v * scale) for v in (72, 150 if aspect == '9:16' else 54, 136, 136))
-        width = max(1, round(96 * scale))
+        geometry = MARK_GEOMETRY[aspect]
+        scale = min(video_w / geometry['canvas'][0], video_h / geometry['canvas'][1])
+        box = tuple(round(v * scale) for v in geometry['box'])
+        width = max(1, round(geometry['image'] * scale))
     _, _, box_w, box_h = box
     if width <= 0 or width > box_w:
         raise ValueError('Invalid mark image width')
