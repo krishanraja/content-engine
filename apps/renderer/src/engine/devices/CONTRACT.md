@@ -16,7 +16,7 @@ A device is a persistent, state-driven object. It is never a scene.
 export function Device({ object, events, box, tokens, aspect, frame }: DeviceProps): JSX.Element
 ```
 
-- **`frame` is passed in.** Do not call `useCurrentFrame()` in a device. `FormatMaster` calls it once and passes it down.
+- **`frame` is passed in.** Do not call `useCurrentFrame()` in a device. `FormatMaster` calls `useEngineFrame()` from `../clock` once and passes it down.
 - **State comes only from `stateAt(events, object.obj, frame)`.** Animation comes only from `progress()` and `drift()` in `../clock`.
 
 ## Rules

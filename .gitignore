@@ -53,3 +53,6 @@ __pycache__/
 apps/renderer/public/runtime/
 .steward/
 supabase/.temp/
+
+# ve working media and card logs (never committed; docs/ve/ENGINE.md)
+.ve-work/

@@ -1,4 +1,4 @@
-import { Easing, interpolate } from 'remotion'
+import { Easing, interpolate, useCurrentFrame } from 'remotion'
 import type { EngineEvent } from './props'
 
 /** The only time source for engine devices (ESLint no-useCurrentFrame-outside-clock). A device asks
@@ -10,6 +10,12 @@ export const ENTER = Easing.bezier(0.05, 0.7, 0.1, 1.0)   // 400 ms decelerate (
 export const EXIT = Easing.bezier(0.3, 0.0, 0.8, 0.15)     // 200 ms accelerate
 export const HERO = Easing.bezier(0.16, 1, 0.3, 1)
 export const MOTION = { enterFrames: 12, exitFrames: 6, staggerFrames: 3, slapFrames: 5, dropFrames: 8, slideFrames: 12, driftPct: 1.5 } as const
+
+/** The single frame read in the engine: FormatMaster calls this once and passes `frame` down. Nothing else
+ *  in apps/renderer/src/engine calls useCurrentFrame. */
+export function useEngineFrame(): number {
+  return useCurrentFrame()
+}
 
 export interface DeviceState {
   /** The latest event at or before this frame for this object, or null before its first event. */
