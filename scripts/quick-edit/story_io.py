@@ -450,7 +450,7 @@ def contact_sheet(video, frames, shape, safe, marks, out_png):
             rows = -(-len(stills) // cols)
             scale = '480:-1' if shape == '16x9' else '216:-1'
             subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(video), '-vf', f"select='{expr}',scale={scale},tile={cols}x{rows}",
-                            '-vsync', '0', '-frames:v', '1', str(out_png)], check=True)
+                            '-fps_mode', 'passthrough', '-frames:v', '1', str(out_png)], check=True)
             return out_png
         tw = 480 if shape == '16x9' else 240
         cols = 4 if shape == '16x9' else 7

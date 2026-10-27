@@ -1,0 +1,6 @@
+interface:
+  display_name: "ve video engine"
+  short_description: "Run a piece through ve: one signed spec, lints, measured QC, computed readiness"
+  default_prompt: "Use $ve: run the doctor, then start the piece and lint its spec."
+policy:
+  allow_implicit_invocation: true
