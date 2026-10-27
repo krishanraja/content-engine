@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { EngineEventSchema, EngineObjectSchema } from '../../props'
 import fixture from './fixture.json'
+import { Device, queryLayout } from './index'
 import { queryState } from './state'
 
 const object = EngineObjectSchema.parse(fixture.objects[0])
@@ -36,5 +37,23 @@ describe('query_chip frame state', () => {
     at(60)
     expect(at(20).text).toBe(object.params.text)
     expect(at(20).scale).toBe(1)
+  })
+})
+
+describe('query chip fitting', () => {
+  it.each([
+    ['16:9', { left: 900, top: 70, width: 924, height: 96 }],
+    ['9:16', { left: 120, top: 288, width: 768, height: 72 }],
+  ] as const)('keeps a long Plex Mono prompt on one line in %s', (aspect, box) => {
+    const text = 'SAME WORK PROMPT · ONLY THE COUNTRY CHANGES'
+    const l = queryLayout(box, text, aspect)
+    expect(l.rect.left).toBeGreaterThanOrEqual(box.left)
+    expect(l.rect.top).toBe(box.top)
+    expect(l.rect.left + l.rect.width).toBeLessThanOrEqual(box.left + box.width)
+    expect(l.rect.top + l.rect.height).toBeLessThanOrEqual(box.top + box.height)
+    expect((text.length * 0.6 * l.fontSize + 2 * l.paddingX + 4) * l.scale).toBeCloseTo(l.rect.width)
+    const tree = Device({ object: { ...object, params: { text } }, events, frame: 34, aspect, box,
+      tokens: { ink: 'black', inkDeep: 'black', inkSoft: 'gray', cream: 'ivory', mint: 'green', channel: 'coral' } })!
+    expect(tree.props.style.whiteSpace).toBe('nowrap')
   })
 })

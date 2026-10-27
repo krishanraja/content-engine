@@ -7,6 +7,10 @@ import { BrandFrame } from './BrandFrame'
 import { EngineAudio } from './audio'
 import { useEngineFrame } from './clock'
 import { DEVICES } from './devices/registry'
+import { chromeZone } from './geometry'
+import { CallCard } from './chrome/CallCard'
+import { EndingBand } from './chrome/EndingBand'
+import { CaptionTrack } from './chrome/CaptionTrack'
 import { slotsFor } from './layouts'
 import { EngineRenderPropsSchema, type EngineBeat, type EngineRenderProps } from './props'
 
@@ -34,6 +38,9 @@ describe('ve layouts', () => {
         for (const box of slots) {
           expect(box.width).toBeGreaterThan(0)
           expect(box.height).toBeGreaterThan(0)
+          const zone = chromeZone(aspect)
+          expect(box.left >= zone.left + zone.width || box.left + box.width <= zone.left
+            || box.top >= zone.top + zone.height || box.top + box.height <= zone.top).toBe(true)
           const right = box.left + box.width
           const bottom = box.top + box.height
           if (aspect === '9:16') {
@@ -107,7 +114,7 @@ describe('ve composition', () => {
     // global clock (a beat-offset Sequence once pushed the evidence recording past the end of the cut).
     const brands = nodes.filter((node) => node.type === BrandFrame)
     expect(brands).toHaveLength(1)
-    expect(brands[0]!.props.beat.id).toBe(props.beats[1]!.id)
+    expect((brands[0]!.props.beat as EngineBeat).id).toBe(props.beats[1]!.id)
     expect(brands[0]!.props.frame).toBe(75)
     expect(nodes.indexOf(brands[0]!)).toBeGreaterThan(nodes.indexOf(devices[1]!))
     expect(nodes.at(-1)?.type).toBe(EngineAudio)
@@ -135,5 +142,27 @@ describe('ve composition', () => {
     expect(nodes.find((node) => node.type === Sequence)?.props.from).toBe(48)
     expect(tracks[1]!.props.src).toBe('hit.wav')
     expect(tracks[1]!.props.volume).toBeCloseTo(10 ** (-6 / 20))
+  })
+})
+
+describe('BrandFrame call and ending routing', () => {
+  it.each(['9:16', '16:9'] as const)('routes cards and suppresses captions in %s', (aspect) => {
+    const props = EngineRenderPropsSchema.parse(fixture)
+    props.aspect = aspect
+    const beat = { ...props.beats[0]!, role: 'call' as const, fromFrame: 0, toFrame: 120 }
+    props.beats = [beat]
+    props.call = { statement: 'A checked call.', due: '2026-12-31', confidencePercent: 90 }
+    props.ending = { fromFrame: 90, url: 'makeyourmindup.ai' }
+    for (const [frame, card] of [[30, CallCard], [90, EndingBand], [100, EndingBand]] as const) {
+      const nodes = elements(BrandFrame({ props, beat, frame }))
+      expect(nodes.filter((node) => node.type === card)).toHaveLength(1)
+      expect(nodes.filter((node) => node.type === CaptionTrack)).toHaveLength(0)
+      expect(CaptionTrack({ props, frame })).toBeNull()
+    }
+    const normal = { ...beat, role: 'anchor' as const }
+    expect(elements(BrandFrame({ props, beat: normal, frame: 89 })).some((node) => node.type === CaptionTrack)).toBe(true)
+    expect(elements(BrandFrame({ props, beat: normal, frame: 90 })).some((node) => node.type === EndingBand)).toBe(true)
+    delete props.call
+    expect(() => BrandFrame({ props, beat, frame: 30 })).toThrow('ve: call beat without props.call')
   })
 })

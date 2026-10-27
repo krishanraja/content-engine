@@ -2,7 +2,7 @@ import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 import { HOUSE } from '../../house/geometry'
-import { boxFor, TALL, WIDE } from '../geometry'
+import { boxFor, chromeZone, TALL, WIDE } from '../geometry'
 import type { EngineRenderProps } from '../props'
 import { CaptionTrack, captionLines, captionPageAt, type CaptionPage } from './CaptionTrack'
 
@@ -28,7 +28,7 @@ describe('chrome geometry', () => {
     const box = boxFor('caption', '9:16')
     expect(box.top).toBe(1180)
     expect(box.top + box.height + HOUSE.caption.shadow).toBeLessThanOrEqual(1500)
-    expect(boxFor('mark', '9:16')).toEqual({ left: 72, top: 150, width: 136, height: 136 })
+    expect(boxFor('mark', '9:16')).toEqual({ left: 72, top: 140, width: 136, height: 136 })
   })
 
   it('centres the wide caption inside 10% title-safe, including its shadow', () => {
@@ -85,5 +85,20 @@ describe('caption timing', () => {
     }
     expect(() => captionLines({ ...page, words: Array.from({ length: 30 }, () => ({ text: 'Answer', atFrame: 0 })) }, '9:16')).toThrow('two house lines')
     expect(() => captionLines({ ...first, words: [{ text: 'W'.repeat(50), atFrame: 10 }] }, '9:16')).toThrow('caption width')
+  })
+})
+
+describe('chrome zone', () => {
+  it.each(['9:16', '16:9'] as const)('contains the mark including its shadow and the pill in %s', (aspect) => {
+    const zone = chromeZone(aspect)
+    for (const kind of ['mark', 'pill'] as const) {
+      const box = boxFor(kind, aspect)
+      expect(box.left).toBeGreaterThanOrEqual(zone.left)
+      expect(box.top).toBeGreaterThanOrEqual(zone.top)
+      expect(box.left + box.width + (kind === 'mark' ? 10 : 0)).toBeLessThanOrEqual(zone.left + zone.width)
+      expect(box.top + box.height + (kind === 'mark' ? 10 : 0)).toBeLessThanOrEqual(zone.top + zone.height)
+    }
+    if (aspect === '9:16') expect(zone.top + zone.height).toBeLessThan(288)
+    else expect(zone).toEqual({ left: 48, top: 40, width: 812, height: 152 })
   })
 })

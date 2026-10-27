@@ -3,7 +3,8 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 import { EngineEventSchema, EngineObjectSchema, EngineTokensSchema } from '../../props'
 import type { EngineEvent } from '../../props'
-import { TestGrid } from './index'
+import { slotsFor } from '../../layouts'
+import { gridLayout, TestGrid } from './index'
 import { TestGridParamsSchema } from './schema'
 import { testGridStateAt } from './state'
 import fixture from './fixture.json'
@@ -119,4 +120,22 @@ describe('test_grid persistent scoreboard', () => {
       }
     })
   }
+})
+
+describe('grid fitted geometry', () => {
+  it.each(['9:16', '16:9'] as const)('fits every grid element inside F1 context in %s', (aspect) => {
+    const box = slotsFor('F1', aspect)[0]!
+    const l = gridLayout(box, 3, 2, aspect)
+    expect(l.cells).toHaveLength(6)
+    const rects = [...l.header, ...l.rowLabels, ...l.cells, l.outOf, l.producerFooter]
+    for (const rect of rects) {
+      expect(rect.left).toBeGreaterThanOrEqual(box.left)
+      expect(rect.top).toBeGreaterThanOrEqual(box.top)
+      expect(rect.left + rect.width).toBeLessThanOrEqual(box.left + box.width + 1e-8)
+      expect(rect.top + rect.height).toBeLessThanOrEqual(box.top + box.height + 1e-8)
+    }
+    const before = at(156).cells.map(({ id, stamped, value }) => ({ id, stamped, value }))
+    gridLayout(slotsFor('F3', aspect)[0]!, 3, 2, aspect)
+    expect(at(216).cells.map(({ id, stamped, value }) => ({ id, stamped, value }))).toEqual(before)
+  })
 })
