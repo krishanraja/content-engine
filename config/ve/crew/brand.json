@@ -1,0 +1,29 @@
+{
+  "id": "brand",
+  "title": "Brand guardian",
+  "owns": [
+    "theme",
+    "BrandFrame",
+    "colour roles",
+    "logos",
+    "type"
+  ],
+  "lints": [
+    "brand.no_hex",
+    "brand.digit_producer"
+  ],
+  "qc": [
+    "qc_brand.mark_tile"
+  ],
+  "corpus": [
+    "6",
+    "7"
+  ],
+  "failures": [
+    "R08",
+    "R20",
+    "F07"
+  ],
+  "card": "config/ve/crew/brand.card.md",
+  "lens": "config/ve/crew/brand.lens.md"
+}

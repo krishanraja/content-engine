@@ -1,0 +1,50 @@
+{
+  "id": "scoreboard-test",
+  "status": "trial",
+  "first_proof": "Friday 23 Oct 'my test', long VO 225.80-245.30 s",
+  "purpose": "a persistent grid that fills on the words that name each result; one unit, one denominator, from first frame to last",
+  "layers": [
+    "ink/cream halftone",
+    "persistent test_grid",
+    "query_chip",
+    "record_card ledger",
+    "evidence_card pop-outs",
+    "optional camera P6",
+    "BrandFrame"
+  ],
+  "layouts": [
+    "F3",
+    "P3",
+    "P6"
+  ],
+  "devices": [
+    "test_grid",
+    "record_card",
+    "query_chip",
+    "bar_compare",
+    "kinetic_stat",
+    "evidence_card"
+  ],
+  "crew": [
+    "story",
+    "creative",
+    "brand",
+    "motion",
+    "captions",
+    "sound",
+    "provenance"
+  ],
+  "qc": {
+    "cue_sync_frames": 2,
+    "grid_relayout": false,
+    "change_density_min": 0.7,
+    "longest_still_s": 3,
+    "caption_ocr_min": 0.98
+  },
+  "fps": 30,
+  "aspects": [
+    "9:16",
+    "16:9"
+  ],
+  "intro_outro": "story stand-off (approved) unless Gate 0 changes the sting"
+}

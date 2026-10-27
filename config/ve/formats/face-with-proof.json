@@ -1,0 +1,52 @@
+{
+  "id": "face-with-proof",
+  "status": "proven",
+  "baseline": "Monday 19 Oct quick-edit camera cuts (accepted)",
+  "purpose": "Krish on camera carries the argument; evidence arrives beside or over him on the words that name it",
+  "layers": [
+    "finish",
+    "camera plate (stable semantic crop, punch-ins on events)",
+    "P3/P6 evidence",
+    "kinetic labels",
+    "BrandFrame",
+    "grain 7%"
+  ],
+  "layouts": [
+    "P1",
+    "P3",
+    "P6",
+    "F3"
+  ],
+  "devices": [
+    "evidence_card",
+    "document_zoom",
+    "logo_row",
+    "kinetic_stat",
+    "quote_pull",
+    "call_card"
+  ],
+  "crew": [
+    "story",
+    "creative",
+    "brand",
+    "motion",
+    "dialogue",
+    "captions",
+    "sound",
+    "provenance"
+  ],
+  "qc": {
+    "face_share_max": 0.6,
+    "change_density_min": 0.5,
+    "longest_still_s": 4,
+    "layout_types_per_min_tall": 3,
+    "av_offset_frames_max": 1,
+    "caption_ocr_min": 0.98
+  },
+  "fps": 30,
+  "aspects": [
+    "9:16",
+    "16:9"
+  ],
+  "intro_outro": "story stand-off (approved) unless Gate 0 changes the sting"
+}

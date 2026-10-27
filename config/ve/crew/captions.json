@@ -1,0 +1,25 @@
+{
+  "id": "captions",
+  "title": "Captions and type",
+  "owns": [
+    "captions",
+    "on-screen labels"
+  ],
+  "lints": [
+    "captions.label_not_narration"
+  ],
+  "qc": [
+    "qc_captions.ocr"
+  ],
+  "corpus": [
+    "4",
+    "6"
+  ],
+  "failures": [
+    "R02",
+    "R03",
+    "F08"
+  ],
+  "card": "config/ve/crew/captions.card.md",
+  "lens": "config/ve/crew/captions.lens.md"
+}

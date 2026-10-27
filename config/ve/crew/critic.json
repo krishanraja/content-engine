@@ -1,0 +1,21 @@
+{
+  "id": "critic",
+  "title": "Critic (never a producer)",
+  "owns": [
+    "verdict.json"
+  ],
+  "lints": [],
+  "qc": [],
+  "corpus": [
+    "15",
+    "10b slop tells"
+  ],
+  "failures": [
+    "R05",
+    "R06",
+    "F11",
+    "F15"
+  ],
+  "card": "config/ve/crew/critic.card.md",
+  "lens": "config/ve/crew/critic.lens.md"
+}
