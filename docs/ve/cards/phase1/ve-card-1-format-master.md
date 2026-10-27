@@ -17,7 +17,7 @@ never: NOW.md, WORKBENCH.md, docs/plans/**, git commands, network, MCP tools, pu
 Build FormatMaster, the single Remotion composition that renders any EngineRenderProps (props.ts) in 9:16 or 16:9 on one clock, plus the five layouts and the audio track. No per-piece code, ever.
 
 ## Contract
-1. `FormatMaster.tsx` exports `FormatMaster(props: EngineRenderProps)`. Call `useCurrentFrame()` exactly once here and pass `frame` down. Render, in order:
+1. `FormatMaster.tsx` exports `FormatMaster(props: EngineRenderProps)`. Call `useEngineFrame()` from `./clock` exactly once here (the only frame read in the engine) and pass `frame` down. Render, in order:
    (a) a full-bleed `tokens.ink` background;
    (b) every `segments[]` entry as `<Sequence from={fromFrame} durationInFrames={durationFrames}><OffthreadVideo src trimBefore={trimBeforeFrames} muted/></Sequence>`, cropped by `crop` when given;
    (c) for each beat, a `<Sequence>` over its frames that lays out `beat.uses` objects in the layout's slots, in order, via `DEVICES[object.device]` from `./devices/registry`. Throw `Error('ve: no device <id>')` if one is missing.
