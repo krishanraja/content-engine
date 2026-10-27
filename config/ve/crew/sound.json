@@ -1,0 +1,26 @@
+{
+  "id": "sound",
+  "title": "Sound designer",
+  "owns": [
+    "audio"
+  ],
+  "lints": [
+    "sound.event_sfx",
+    "sound.silence_beat"
+  ],
+  "qc": [
+    "qc_loudness.integrated",
+    "qc_loudness.true_peak",
+    "qc_loudness.long_silence"
+  ],
+  "corpus": [
+    "11"
+  ],
+  "failures": [
+    "R17",
+    "IR-102",
+    "IR-106"
+  ],
+  "card": "config/ve/crew/sound.card.md",
+  "lens": "config/ve/crew/sound.lens.md"
+}

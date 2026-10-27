@@ -1,0 +1,268 @@
+{
+ "source": "Friday 23 Oct long VO (v10 export timeline), 225.80-245.52 s; the proof re-aligns against the approved long-VO master at ingest",
+ "note": "ASR wrote \"ChatGBT\"; the name dictionary corrects it to ChatGPT",
+ "script_sha256": "7c7c9ce04c1e4735c894c297d801c57abe9c23ef5f4b3b6172f22cc8957b747c",
+ "text": "Now, America has blocked cotton from both over forced labour. So, a good answer should flag it both times. Claude and ChatGPT flagged forced labour both times, and so did DeepSeek for Turkmenistan. Now watch DeepSeek on Xinjiang. It writes a full answer, deletes it and changes the subject every single time.",
+ "words": [
+  {
+   "w": 0,
+   "word": "Now,",
+   "source_onset_s": 225.8
+  },
+  {
+   "w": 1,
+   "word": "America",
+   "source_onset_s": 226.38
+  },
+  {
+   "w": 2,
+   "word": "has",
+   "source_onset_s": 226.64
+  },
+  {
+   "w": 3,
+   "word": "blocked",
+   "source_onset_s": 226.82
+  },
+  {
+   "w": 4,
+   "word": "cotton",
+   "source_onset_s": 227.08
+  },
+  {
+   "w": 5,
+   "word": "from",
+   "source_onset_s": 227.52
+  },
+  {
+   "w": 6,
+   "word": "both",
+   "source_onset_s": 227.7
+  },
+  {
+   "w": 7,
+   "word": "over",
+   "source_onset_s": 228.2
+  },
+  {
+   "w": 8,
+   "word": "forced",
+   "source_onset_s": 228.62
+  },
+  {
+   "w": 9,
+   "word": "labour.",
+   "source_onset_s": 228.92
+  },
+  {
+   "w": 10,
+   "word": "So,",
+   "source_onset_s": 229.56
+  },
+  {
+   "w": 11,
+   "word": "a",
+   "source_onset_s": 230.22
+  },
+  {
+   "w": 12,
+   "word": "good",
+   "source_onset_s": 230.3
+  },
+  {
+   "w": 13,
+   "word": "answer",
+   "source_onset_s": 230.42
+  },
+  {
+   "w": 14,
+   "word": "should",
+   "source_onset_s": 230.7
+  },
+  {
+   "w": 15,
+   "word": "flag",
+   "source_onset_s": 230.92
+  },
+  {
+   "w": 16,
+   "word": "it",
+   "source_onset_s": 231.22
+  },
+  {
+   "w": 17,
+   "word": "both",
+   "source_onset_s": 231.36
+  },
+  {
+   "w": 18,
+   "word": "times.",
+   "source_onset_s": 231.56
+  },
+  {
+   "w": 19,
+   "word": "Claude",
+   "source_onset_s": 232.82
+  },
+  {
+   "w": 20,
+   "word": "and",
+   "source_onset_s": 233.4
+  },
+  {
+   "w": 21,
+   "word": "ChatGPT",
+   "source_onset_s": 233.54
+  },
+  {
+   "w": 22,
+   "word": "flagged",
+   "source_onset_s": 234.02
+  },
+  {
+   "w": 23,
+   "word": "forced",
+   "source_onset_s": 234.52
+  },
+  {
+   "w": 24,
+   "word": "labour",
+   "source_onset_s": 234.8
+  },
+  {
+   "w": 25,
+   "word": "both",
+   "source_onset_s": 235.04
+  },
+  {
+   "w": 26,
+   "word": "times,",
+   "source_onset_s": 235.38
+  },
+  {
+   "w": 27,
+   "word": "and",
+   "source_onset_s": 235.86
+  },
+  {
+   "w": 28,
+   "word": "so",
+   "source_onset_s": 236.5
+  },
+  {
+   "w": 29,
+   "word": "did",
+   "source_onset_s": 236.68
+  },
+  {
+   "w": 30,
+   "word": "DeepSeek",
+   "source_onset_s": 236.8
+  },
+  {
+   "w": 31,
+   "word": "for",
+   "source_onset_s": 237.24
+  },
+  {
+   "w": 32,
+   "word": "Turkmenistan.",
+   "source_onset_s": 237.38
+  },
+  {
+   "w": 33,
+   "word": "Now",
+   "source_onset_s": 238.38
+  },
+  {
+   "w": 34,
+   "word": "watch",
+   "source_onset_s": 238.82
+  },
+  {
+   "w": 35,
+   "word": "DeepSeek",
+   "source_onset_s": 239.22
+  },
+  {
+   "w": 36,
+   "word": "on",
+   "source_onset_s": 239.84
+  },
+  {
+   "w": 37,
+   "word": "Xinjiang.",
+   "source_onset_s": 240.02
+  },
+  {
+   "w": 38,
+   "word": "It",
+   "source_onset_s": 240.7
+  },
+  {
+   "w": 39,
+   "word": "writes",
+   "source_onset_s": 240.86
+  },
+  {
+   "w": 40,
+   "word": "a",
+   "source_onset_s": 241.18
+  },
+  {
+   "w": 41,
+   "word": "full",
+   "source_onset_s": 241.32
+  },
+  {
+   "w": 42,
+   "word": "answer,",
+   "source_onset_s": 241.46
+  },
+  {
+   "w": 43,
+   "word": "deletes",
+   "source_onset_s": 242.18
+  },
+  {
+   "w": 44,
+   "word": "it",
+   "source_onset_s": 242.52
+  },
+  {
+   "w": 45,
+   "word": "and",
+   "source_onset_s": 242.76
+  },
+  {
+   "w": 46,
+   "word": "changes",
+   "source_onset_s": 243.54
+  },
+  {
+   "w": 47,
+   "word": "the",
+   "source_onset_s": 243.86
+  },
+  {
+   "w": 48,
+   "word": "subject",
+   "source_onset_s": 244.08
+  },
+  {
+   "w": 49,
+   "word": "every",
+   "source_onset_s": 244.5
+  },
+  {
+   "w": 50,
+   "word": "single",
+   "source_onset_s": 245.28
+  },
+  {
+   "w": 51,
+   "word": "time.",
+   "source_onset_s": 245.52
+  }
+ ]
+}
