@@ -1,0 +1,36 @@
+{
+  "id": "motion",
+  "title": "Motion designer",
+  "owns": [
+    "objects",
+    "events",
+    "layout",
+    "transition_out"
+  ],
+  "lints": [
+    "motion.event_cadence",
+    "motion.carry",
+    "motion.reading_time",
+    "motion.layout_variety"
+  ],
+  "qc": [
+    "qc_motion.change_density",
+    "qc_motion.longest_still",
+    "qc_motion.periodicity"
+  ],
+  "corpus": [
+    "1b",
+    "5",
+    "14.1",
+    "14.2"
+  ],
+  "failures": [
+    "R09",
+    "R12",
+    "R15",
+    "F05",
+    "F06"
+  ],
+  "card": "config/ve/crew/motion.card.md",
+  "lens": "config/ve/crew/motion.lens.md"
+}

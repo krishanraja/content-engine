@@ -1,0 +1,27 @@
+{
+  "id": "provenance",
+  "title": "Provenance and generative director",
+  "owns": [
+    "datasets",
+    "assets",
+    "generated",
+    "budget"
+  ],
+  "lints": [
+    "provenance.credits_budget"
+  ],
+  "qc": [],
+  "corpus": [
+    "9",
+    "10",
+    "13"
+  ],
+  "failures": [
+    "R26",
+    "R27",
+    "R46",
+    "IR-49"
+  ],
+  "card": "config/ve/crew/provenance.card.md",
+  "lens": "config/ve/crew/provenance.lens.md"
+}

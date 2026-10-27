@@ -1,0 +1,62 @@
+{
+  "note": "No spec can override these. An exception needs approvals[gate=exception] in Krish's words.",
+  "invariants": [
+    {
+      "id": "INV-CAPTIONS",
+      "rule": "Every cut carries burned-in house captions",
+      "enforced_by": "schema brand.captions literal 'house'; BrandFrame always draws CaptionTrack",
+      "ruling": "Krish 2026-10-27"
+    },
+    {
+      "id": "INV-BRANDFRAME",
+      "rule": "Mark tile on every beat; channel pill on the section beat; grain behind",
+      "enforced_by": "FormatMaster wraps every beat in BrandFrame; qc_brand template match"
+    },
+    {
+      "id": "INV-NO-HEX",
+      "rule": "Specs and devices name colour roles, never hex",
+      "enforced_by": "lint brand.no_hex; ESLint no-raw-hex in apps/renderer/src/engine"
+    },
+    {
+      "id": "INV-ONE-CLOCK",
+      "rule": "Picture is never retimed apart from its audio; one EDL drives picture, dialogue, bed, SFX and captions in one render",
+      "enforced_by": "FormatMaster + clock.ts; no mux path in ve"
+    },
+    {
+      "id": "INV-NO-PIECE-CODE",
+      "rule": "No per-piece compositions or render scripts",
+      "enforced_by": "scripts/ve/check_route.py in CI"
+    },
+    {
+      "id": "INV-EVIDENCE-REAL",
+      "rule": "Evidence is never generated; generated pictures carry a visible label",
+      "enforced_by": "schema VeAssetSchema; lint provenance.*"
+    },
+    {
+      "id": "INV-DATED-CALL",
+      "rule": "mind.the.gap ends in a dated call",
+      "enforced_by": "schema superRefine on brand.series"
+    },
+    {
+      "id": "INV-NUMBERS-NAMED",
+      "rule": "Every number on screen names whoever produced it",
+      "enforced_by": "schema dataset.producer_label; lint brand.digit_producer"
+    },
+    {
+      "id": "INV-SYNTHETIC-OFF",
+      "rule": "No synthetic Krish (HeyGen avatar, voice clone) until Krish approves a realism test",
+      "enforced_by": "tools.json requires_ruling realism_test; ve-assets refuses",
+      "ruling": "Krish 2026-10-27: on backup until trained and convincing"
+    },
+    {
+      "id": "INV-NO-PUBLISH",
+      "rule": "ve has no publish verb; agents never publish, send or schedule",
+      "enforced_by": "ve CLI; cards forbid it"
+    },
+    {
+      "id": "INV-READY-COMPUTED",
+      "rule": "Readiness is computed from qc.json bound to the mp4 sha, the Critic verdict and Krish's approvals; no agent writes a pass",
+      "enforced_by": "ve status"
+    }
+  ]
+}

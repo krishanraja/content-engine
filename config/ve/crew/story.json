@@ -1,0 +1,32 @@
+{
+  "id": "story",
+  "title": "Story editor",
+  "owns": [
+    "role",
+    "span",
+    "viewer_task",
+    "point",
+    "call"
+  ],
+  "lints": [
+    "story.hook_event",
+    "story.anchor_by_5s",
+    "story.alternation",
+    "story.one_payoff"
+  ],
+  "qc": [
+    "qc_motion.hook"
+  ],
+  "corpus": [
+    "1b",
+    "12"
+  ],
+  "failures": [
+    "R13",
+    "R14",
+    "R21",
+    "F01"
+  ],
+  "card": "config/ve/crew/story.card.md",
+  "lens": "config/ve/crew/story.lens.md"
+}

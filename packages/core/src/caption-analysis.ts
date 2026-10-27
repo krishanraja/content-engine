@@ -203,7 +203,7 @@ async function writeFallbackAnalysis(
   ].join(',')
   const { stdout } = await runtime.runBufferProcess('ffmpeg', [
     '-hide_banner', '-loglevel', 'error', '-i', resolve(inputPath), '-vf', filter,
-    '-an', '-vsync', '0', '-frames:v', String(maximumFrames), '-f', 'rawvideo', 'pipe:1',
+    '-an', '-fps_mode', 'passthrough', '-frames:v', String(maximumFrames), '-f', 'rawvideo', 'pipe:1',
   ], { timeoutMs: 600_000 })
   const frameSize = FALLBACK_WIDTH * FALLBACK_HEIGHT
   const frameCount = Math.min(maximumFrames, Math.floor(stdout.length / frameSize))
