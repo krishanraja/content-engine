@@ -34,6 +34,8 @@ Turn a linted spec plus word timings into EngineRenderProps (frames on one clock
   - the output validates through `npx tsx packages/contracts/scripts/check-spec.ts` (the spec) and a zod parse of the props (`node -e` with tsx).
 
 ## Acceptance (every command must exit 0 inside your sandbox)
+Sandbox note: your sandbox may not reach node_modules, so `npx tsc` or `vitest` may not start. If so, do not install anything, do not change config and do not retry: write the code carefully to the contract, check it by reading, and say so in open_questions. Claude runs every acceptance command outside the sandbox.
+
 python tests/ve_compile_test.py
 npx tsc --noEmit
 

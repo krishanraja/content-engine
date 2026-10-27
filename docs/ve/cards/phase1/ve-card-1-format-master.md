@@ -36,6 +36,8 @@ Build FormatMaster, the single Remotion composition that renders any EngineRende
    - `FormatMaster` throws on an unknown device.
 
 ## Acceptance (every command must exit 0 inside your sandbox)
+Sandbox note: your sandbox may not reach node_modules, so `npx tsc` or `vitest` may not start. If so, do not install anything, do not change config and do not retry: write the code carefully to the contract, check it by reading, and say so in open_questions. Claude runs every acceptance command outside the sandbox.
+
 npx tsc --noEmit
 npx vitest run apps/renderer/src/engine/engine.test.ts
 

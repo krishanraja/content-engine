@@ -123,6 +123,40 @@ def ensure_worktree(cwd: Path, card_id: str) -> None:
             os.symlink(modules.resolve(), cwd / 'node_modules')
 
 
+def _is_link(path: Path) -> bool:
+    return path.is_symlink() or (hasattr(path, 'is_junction') and path.is_junction())
+
+
+def unlink_links(folder: Path) -> list[Path]:
+    """Remove every symlink or junction inside a card worktree WITHOUT following it, and return what was removed.
+    27 Oct 2026: `rm -rf` on a card folder followed its node_modules junction and emptied the main checkout's
+    node_modules. A link is removed as a link (os.unlink for a symlink, os.rmdir for a junction), never recursed."""
+    removed: list[Path] = []
+    for root, dirs, files in os.walk(folder, topdown=True, followlinks=False):
+        for name in list(dirs) + files:
+            path = Path(root) / name
+            if _is_link(path):
+                if path.is_symlink() and not (hasattr(path, 'is_junction') and path.is_junction()):
+                    path.unlink()
+                else:
+                    os.rmdir(path)  # removes the junction itself; the target is untouched
+                removed.append(path)
+                if name in dirs:
+                    dirs.remove(name)
+    return removed
+
+
+def remove_worktree(cwd: Path) -> None:
+    """The only way ve removes a card worktree: links first (never followed), then git, and refuse if a link survives."""
+    if not cwd.exists():
+        return
+    unlink_links(cwd)
+    survivors = [p for p in cwd.rglob('*') if _is_link(p)] if cwd.exists() else []
+    if survivors:
+        sys.exit(f've: refusing to remove {cwd}: links remain ({survivors[:3]})')
+    subprocess.run(['git', 'worktree', 'remove', '--force', str(cwd)], cwd=ROOT, check=True)
+
+
 def dispatch(card_path: Path, background: bool = True, spend_approved: bool = False) -> subprocess.CompletedProcess:
     meta = parse_card(card_path)
     used = weekly_used_percent()
