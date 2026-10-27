@@ -109,12 +109,28 @@ def weekly_used_percent() -> float | None:
     return info['used_percent'] if info else None
 
 
-def dispatch(card_path: Path, background: bool = True) -> subprocess.CompletedProcess:
+def ensure_worktree(cwd: Path, card_id: str) -> None:
+    """A card runs in its own worktree cut from origin/main, with node_modules junctioned from the main checkout."""
+    if cwd.exists():
+        return
+    subprocess.run(['git', 'fetch', '-q', 'origin', 'main'], cwd=ROOT, check=True)
+    subprocess.run(['git', 'worktree', 'add', '-q', '-b', f've-card/{card_id}', str(cwd), 'origin/main'], cwd=ROOT, check=True)
+    modules = ROOT / 'node_modules'
+    if modules.exists() and not (cwd / 'node_modules').exists():
+        if sys.platform == 'win32':
+            subprocess.run(['cmd', '/c', 'mklink', '/J', str(cwd / 'node_modules'), str(modules.resolve())], check=True, capture_output=True)
+        else:
+            os.symlink(modules.resolve(), cwd / 'node_modules')
+
+
+def dispatch(card_path: Path, background: bool = True, spend_approved: bool = False) -> subprocess.CompletedProcess:
     meta = parse_card(card_path)
     used = weekly_used_percent()
-    if used is not None and used > ALLOWANCE_CEILING:
-        sys.exit(f've dispatch: the weekly Codex allowance is at {used:.0f}% (ceiling {ALLOWANCE_CEILING}%); hold the card or ask Krish')
+    if used is not None and used > ALLOWANCE_CEILING and not spend_approved:
+        sys.exit(f've dispatch: the weekly Codex allowance is at {used:.0f}% (ceiling {ALLOWANCE_CEILING}%), so Codex would draw paid credits. '
+                 "Pass --spend-approved only after Krish has said yes in his own words.")
     cwd = meta.get('cwd') or str(ROOT)
+    ensure_worktree(Path(cwd), meta.get('card', 'card'))
     cmd = ['node', companion(), 'task', '--fresh', '--write', '--model', meta.get('model', MODEL), '--effort', meta.get('effort', EFFORT),
            '--cwd', cwd, '--prompt-file', str(card_path.resolve())]
     if background:
