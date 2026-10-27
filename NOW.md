@@ -1,7 +1,7 @@
 ---
 repo: krishanraja/content-engine
 product: Mindmake content engine
-as_of: 2026-10-26
+as_of: 2026-10-27
 head: 02669ea
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
@@ -32,7 +32,7 @@ Stories a writer can carry without asking Krish:
 
 Objection it answers: "AI content is slop." Here is an engine that grades its judges against the editor and never counts its own actions as taste.
 
-## Where it is right now (as of 2026-10-26)
+## Where it is right now (as of 2026-10-27)
 
 Carousel provenance rule clarified on 26 October: no public illustration-generation
 boilerplate in artwork, captions or descriptions. Retain private provenance and
@@ -212,7 +212,7 @@ production with its existing owner. The exact production handoff still applies.
 
 - Next (2026-10-27), single next action: Krish's three answers on Monday's article (`docs/plans/2026-10-26-monday/review/fact-signoff.md`): keep the recorded prediction or not, the re-check of four corrected lines (about $0.13), and seven lines to sign; then his paste of Monday's `CODEX_PROMPT.md` into Codex, his yes on Friday's one Bessen line, and his recordings of Wednesday and Friday (all four scripts are in Teleprompter; board build 300316fd).
 - Earlier (Sunday 25 October, his recording day): publish the 26 Oct board (`week_board.py --target web`, then `board_web.py publish-web --apply`) and take his three picks; then `make-piece` per day, the story one question at a time, then scripts into Teleprompter. Earlier plan: `plan-week` gathers (`board_feed.py gather 2026-10-26`, which needs this change deployed), builds the Ideas tab with styles and every routed Inspiration card covered, a separate reader kills weak ideas first; he picks; then `make-piece` for Monday, Wednesday and Friday: story, scripts in Teleprompter by midday, creative direction before he records.
-- North Star check (2026-10-26): holds.
+- North Star check (2026-10-27): holds.
 
 - **Next for this production session (2026-10-26):** verify and merge the engine changes first, then focus on Friday production (Krish, 26 October). The new automatic gate ships pending calibration; existing checks remain intact. Evidence, eight results and release blockers: `docs/plans/2026-10-26-quality-evidence/README.md`. Continue reversible Friday visual repairs with approved short audio unchanged; no rejected joins, Video assets completion or final board publication before exact-file review.
 
