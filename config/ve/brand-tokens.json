@@ -1,0 +1,91 @@
+{
+  "theme_id": "makeyourmindup-video-v1",
+  "source": "config/studio.json brand_themes[makeyourmindup-video-v1]; never copy hex into a spec or a device",
+  "roles": {
+    "background": "ink",
+    "background_deep": "ink_deep",
+    "surface": "ink_soft",
+    "text": "cream",
+    "paper": "cream",
+    "answer": "mint",
+    "brand": "mint",
+    "action": "mint",
+    "channel": "channel_color"
+  },
+  "role_rules": {
+    "channel": "the series colour (mind.the.gap coral, follow.the.money butter, under.the.hood lilac) marks channel identity only: pill, mark shadow, caption shadow. Never a country, a warning or a failure.",
+    "answer": "mint marks the answer, the brand and the next action only",
+    "type_on_colour": "type on a colour block is always ink"
+  },
+  "type_roles": {
+    "display": "Anton (headlines, single big numbers)",
+    "structure": "Archivo (structure, quoted answers, captions at 900 w112)",
+    "dek": "Fraunces italic (the human line)",
+    "data": "IBM Plex Mono (labels, dates, provenance)"
+  },
+  "finish": {
+    "grain_opacity": 0.07,
+    "grain_rule": "grain behind everything, never over marks or logos"
+  },
+  "motion": {
+    "fps": 30,
+    "enter_ms": 400,
+    "enter_bezier": [
+      0.05,
+      0.7,
+      0.1,
+      1.0
+    ],
+    "exit_ms": 200,
+    "exit_bezier": [
+      0.3,
+      0.0,
+      0.8,
+      0.15
+    ],
+    "utility_ms": 300,
+    "utility_bezier": [
+      0.2,
+      0,
+      0,
+      1
+    ],
+    "hero_bezier": [
+      0.16,
+      1,
+      0.3,
+      1
+    ],
+    "stagger_frames": 3,
+    "slap_frames": 5,
+    "drop_frames": 8,
+    "slide_frames": 12,
+    "ambient_drift_pct": 1.5,
+    "grammar": "slide, drop, slap; nothing moves for its own sake; nothing fully stops (ambient drift) except a declared silence beat",
+    "corpus": "_corpus/motion-design-video-corpus.md sections 5.1-5.3, 14.2"
+  },
+  "geometry": {
+    "tall": "apps/renderer/src/house/geometry.ts HOUSE (caption top 1180, mark 136 at 72/150)",
+    "tall_safe_key_text": {
+      "x": [
+        120,
+        888
+      ],
+      "y": [
+        288,
+        840
+      ],
+      "below_840_x": [
+        120,
+        780
+      ]
+    },
+    "caption_block_bottom_max_y": 1500,
+    "wide_title_safe": [
+      96,
+      54,
+      1824,
+      1026
+    ]
+  }
+}

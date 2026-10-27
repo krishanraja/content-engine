@@ -1,0 +1,77 @@
+{
+  "note": "Claude runs MCP recipes; Codex runs imagegen cards; scripts run the rest. Rulings dated where Krish made them.",
+  "tools": {
+    "chatgpt_images": {
+      "slot": "stills",
+      "route": "codex imagegen card",
+      "rule": "all publication stills (Krish 2026-10-27); labelled illustration"
+    },
+    "runway": {
+      "slot": "short animations of approved stills; reframe; background removal",
+      "route": "Claude MCP (Codex MCP fallback)",
+      "rule": "short motion only, never cinematic, never type/numbers/logos/mouth; credits logged per piece; Heartside and Full Time keep the bulk (Krish 2026-10-27)"
+    },
+    "higgsfield": {
+      "slot": "short animations of approved stills; reference study (video_analysis_create); reframe",
+      "route": "Claude MCP",
+      "rule": "as runway; virality_predictor advisory only"
+    },
+    "epidemic_sound": {
+      "slot": "music bed (EditRecording to exact or loopable length), SFX house kit",
+      "route": "Claude MCP (Codex MCP fallback)",
+      "rule": "a track enters the ledger only with Krish's approval; record the recording id"
+    },
+    "elevenlabs": {
+      "slot": "Scribe word timings (second aligner), voice isolator, one-off SFX",
+      "route": "Claude MCP",
+      "requires_ruling": {
+        "voice_clone": "realism_test"
+      }
+    },
+    "heygen": {
+      "slot": "AI clipping proposals (long to short), filler-removal proposals",
+      "route": "Claude MCP (Codex MCP fallback)",
+      "requires_ruling": {
+        "avatar": "realism_test",
+        "lipsync": "realism_test"
+      },
+      "rule": "Krish 2026-10-27: avatar on backup until trained and convincing"
+    },
+    "riverside": {
+      "slot": "capture with separate tracks and aligned transcript (Phase 4)",
+      "route": "Claude MCP",
+      "rule": "never edits finals"
+    },
+    "teleprompter": {
+      "slot": "script delivery",
+      "route": "scripts/post-pack/teleprompter_send.py",
+      "rule": "standing approval; never move_script or update_folder"
+    },
+    "canva": {
+      "slot": "separate-image-layers for parallax plates; remove-background",
+      "route": "Claude MCP"
+    },
+    "brandfetch": {
+      "slot": "official logos",
+      "route": "config/logo-registry.json (SHA-pinned)"
+    },
+    "buffer": {
+      "slot": "distribution",
+      "route": "none",
+      "rule": "never called by an agent; Krish's yes only"
+    },
+    "remotion": {
+      "slot": "every render (FormatMaster)",
+      "route": "scripts/ve.py render"
+    },
+    "ffmpeg": {
+      "slot": "QC measurement, audio premix",
+      "route": "scripts/ve/*",
+      "rule": "flags valid on 8.1.2 and 9.x (-fps_mode, -/filter_complex)"
+    },
+    "faster_whisper": {
+      "slot": "word clock (first aligner)",
+      "route": "scripts/ve ingest"
+    }
+  }
+}
