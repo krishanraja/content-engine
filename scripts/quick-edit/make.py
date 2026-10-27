@@ -789,18 +789,37 @@ def ass_time(t):
     return f'{int(t // 3600)}:{int(t % 3600 // 60):02d}:{t % 60:05.2f}'
 
 
-def write_ass(path, groups, wins, aspect):
+def ass_colour(hexrgb):
+    """'#FFD84D' as libass writes it, &H00BBGGRR."""
+    h = hexrgb.lstrip('#')
+    return f'&H00{h[4:6]}{h[2:4]}{h[0:2]}'.upper()
+
+
+def series_accent(cfg, base='.'):
+    """The piece's series colour from config/studio.json, for the house captions' shadow."""
+    series, _ = series_of(cfg, base)
+    studio = json.loads((Path(__file__).resolve().parents[2] / 'config' / 'studio.json').read_text(encoding='utf-8'))
+    return studio['series'][series]['accent']
+
+
+def write_ass(path, groups, wins, aspect, house=None):
+    """The burned captions. `house` (the config's "caption_style": "house", with the series colour) draws
+    the house captions of docs/STUDIO.md: the ink block with a hard shadow in the channel's colour and at
+    most one loud word, the line's first figure, on the mint swipe; libass draws the block flat, so it has
+    no grain. Without it, the quick-edit captions: cream on the ink block, every figure in mint."""
     if aspect == '9x16':
-        W, H, fs, box = 1080, 1920, 70, 16
+        W, H, fs, box, shadow = 1080, 1920, 70, 16, 12
         norm_pos, norm_m, cut_pos, cut_m = r'\an8\pos(540,250)', (60, 60), r'\an8\pos(540,1014)', (60, 60)
     else:
-        W, H, fs, box = 1920, 1080, 48, 12
+        W, H, fs, box, shadow = 1920, 1080, 48, 12, 8
         norm_pos, norm_m, cut_pos, cut_m = r'\an2\pos(960,1040)', (360, 360), r'\an2\pos(303,1040)', (24, 1920 - 582)
+    back, shad = (ass_colour(house), shadow) if house else (INK, 0)
     lines = ['[Script Info]', 'ScriptType: v4.00+', f'PlayResX: {W}', f'PlayResY: {H}', 'WrapStyle: 0', 'ScaledBorderAndShadow: yes', '',
              '[V4+ Styles]',
              'Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding',
-             f'Style: Cap,Archivo Black,{fs},{CREAM},{CREAM},{INK},{INK},0,0,0,0,100,100,0,0,3,{box},0,8,60,60,0,1', '',
+             f'Style: Cap,Archivo Black,{fs},{CREAM},{CREAM},{INK},{back},0,0,0,0,100,100,0,0,3,{box},{shad},8,60,60,0,1', '',
              '[Events]', 'Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text']
+    figure = re.compile(r'[0-9%$]')
     for k, g in enumerate(groups):
         s = g[0]['s']
         e = groups[k + 1][0]['s'] if k + 1 < len(groups) else g[-1]['e'] + 0.4
@@ -808,11 +827,19 @@ def write_ass(path, groups, wins, aspect):
         mid = (s + g[-1]['e']) / 2
         cut = any(c['s'] <= mid <= c['e'] for c in wins)
         pos, (ml, mr) = (cut_pos, cut_m) if cut else (norm_pos, norm_m)
-        words = []
-        for t in g:
-            w = re.sub(r'[{}\\]', '', t['w'])
-            words.append(rf'{{\c{MINT}}}{w}{{\c{CREAM}}}' if re.search(r'[0-9%$]', w) else w)
+        words = [re.sub(r'[{}\\]', '', t['w']) for t in g]
+        if not house:
+            shown = [rf'{{\c{MINT}}}{w}{{\c{CREAM}}}' if figure.search(w) else w for w in words]
+            lines.append(f'Dialogue: 0,{ass_time(s)},{ass_time(e)},Cap,,{ml},{mr},0,,{{{pos}}}{" ".join(shown)}')
+            continue
         lines.append(f'Dialogue: 0,{ass_time(s)},{ass_time(e)},Cap,,{ml},{mr},0,,{{{pos}}}{" ".join(words)}')
+        loud = next((i for i, w in enumerate(words) if figure.search(w)), None)
+        if loud is not None:
+            # The swipe is the same line again on the layer above, every word clear but the loud one, so its
+            # mint block sits over the ink one and the next word's block cannot cover it; the layout is the same.
+            swipe = [rf'{{\alpha&H00&\3c{MINT}\c{INK}\bord{box // 2 - 2}\shad0}}{w}{{\alpha&HFF&}}' if i == loud else w
+                     for i, w in enumerate(words)]
+            lines.append(f'Dialogue: 1,{ass_time(s)},{ass_time(e)},Cap,,{ml},{mr},0,,{{{pos}\\alpha&HFF&}}{" ".join(swipe)}')
     Path(path).write_text('\n'.join(lines) + '\n', encoding='utf-8')
 
 
@@ -1745,6 +1772,23 @@ def caption_self_test():
     loose = spelling_warnings(tokens(heard(' the', ' color', ' of', ' money'), DEFAULT_FIXES))
     checks.append(('a US spelling no script word covers is one warning naming it', (len(loose), '"color"' in ' '.join(loose)), (1, True)))
     checks.append(('a replacement in the config clears it', spelling_warnings(tokens(heard(' the', ' color'), DEFAULT_FIXES + [['color', 'colour']])), []))
+    # The house captions (docs/STUDIO.md): the channel's shadow, one loud word on the mint swipe.
+    import tempfile
+    with tempfile.TemporaryDirectory() as tmp:
+        groups = chunks(tokens(heard(' Google', ' paid', ' $2', '.7', ' billion', ' and', ' 66', ' staff'), DEFAULT_FIXES), [])
+        write_ass(Path(tmp) / 'h.ass', groups, [], '9x16', '#FFD84D')
+        house = (Path(tmp) / 'h.ass').read_text(encoding='utf-8')
+        write_ass(Path(tmp) / 'q.ass', groups, [], '9x16')
+        quick = (Path(tmp) / 'q.ass').read_text(encoding='utf-8')
+    swipes = [l for l in house.splitlines() if l.startswith('Dialogue: 1,')]
+    checks.append(('house captions: the shadow is the channel\'s colour, 12 px in the tall shape',
+                   ',&H004DD8FF,' in house and ',3,16,12,8,' in house, True))
+    with_figure = sum(any(re.search(r'[0-9%$]', t['w']) for t in g) for g in groups)
+    checks.append(('house captions: one loud word per line with a figure, its first figure, on the mint swipe',
+                   (len(swipes) == with_figure > 0, [l.count(r'\3c&H00C0F07E') for l in swipes] == [1] * with_figure,
+                    r'\3c&H00C0F07E\c&H0012150C\bord6\shad0}$2.7' in house), (True, True, True)))
+    checks.append(('without "caption_style" the quick-edit captions are unchanged: no shadow, every figure in mint',
+                   (',3,16,0,8,' in quick, 'Dialogue: 1,' in quick, quick.count(r'{\c&H00C0F07E}')), (True, False, 2)))
     return checks
 
 
@@ -2316,7 +2360,7 @@ def main():
         voice_gain = 0.0 if voice_in <= -69.9 else max(-30.0, min(30.0, target - voice_in))
         cut_audio = build_audio(out / f'audio-{asp}', voice_src, voice_gain, intro, end, tl, bed)
         ass = out / f"{cfg['name']}-{asp}.ass"
-        write_ass(ass, groups, wins, asp)
+        write_ass(ass, groups, wins, asp, series_accent(cfg, base) if cfg.get('caption_style') == 'house' else None)
         said, warns, files = episode_extras(cfg, P, ws, wins, toks, tl)
         warnings += warns
         (out / f"{cfg['name']}-{asp}.srt").write_text(files['srt'], encoding='utf-8')

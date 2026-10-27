@@ -9,8 +9,9 @@ or a font. Every beat that names this file in `creative-direction.json` is drawn
 
 ## The one rule: the picture adds, the voice tells
 
-- No caption repeats the sentence being said. On-screen words add only what the ear does not get: the source and its
-  date, the exact number, the name of the thing, or the one changed word (learning `visuals-add-not-repeat`).
+- No on-screen label repeats the sentence being said (the burned captions carry his words). Labels add only what
+  the ear does not get: the source and its date, the exact number, the name of the thing, or the one changed word
+  (learning `visuals-add-not-repeat`).
 - The picture shows the mechanism the voice names. The voice says "the money followed the people"; the picture shows
   two receipts with the people on them, and an empty box with nothing going in.
 - Every move lands on the word that names it (word start from the take's transcript, minus 3 frames so the eye leads
@@ -53,10 +54,14 @@ both receipts and the arrow on the money map. Nothing else is mint.
 
 ## Framing
 
-- **5-minute (16:9):** his portrait selfie in a full-height panel on the left, the desk on the right; cutaways go
-  full frame. His room is treated (darkened and softened) so the bed and lamps behind him do not compete.
-- **90-second (9:16):** his face full frame; cutaways full frame.
-- No captions burned into the picture. The caption file comes from the finished file's own transcript.
+- **5-minute (16:9):** his portrait selfie in a full-height panel on the left, the desk on the right (on the 19 Oct
+  quick-edit route there are no full-frame cutaways: `brand.route`). His room is treated (darkened and softened) so
+  the bed and lamps behind him do not compete.
+- **90-second (9:16):** his face full frame; a picture fills the top of the frame with his face in the band below.
+- Captions burned into every cut (Krish, 2026-10-27: captions burned into every cut), in the house look of
+  `docs/STUDIO.md`: cream Archivo Black on an ink block, a hard shadow in follow.the.money's colour, at most one loud
+  word per line (its first figure) on the mint swipe. That swipe is the captions' own; on the desk, mint is still only
+  the money that moved. The caption file comes from the finished file's own transcript.
 - No intro sting: `config/intro-sting.json` is still a candidate.
 
 ## Truth

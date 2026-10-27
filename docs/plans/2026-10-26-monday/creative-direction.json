@@ -9,14 +9,15 @@
  "brand": {
   "series": "follow.the.money",
   "reference": "docs/plans/2026-10-23-friday/locked/storyboard-signoff.md (signed 24 Oct) and scripts/post-pack/tokens.css",
-  "captions": "no captions burned into the picture; the caption file comes from the finished file's own transcript (Friday 23 Oct rule)",
-  "intro_sting": "none: config/intro-sting.json is still a candidate, so every cut goes without a sting and its report says so"
+  "captions": "burned into every cut (Krish, 2026-10-27: captions burned into every cut). The house captions (docs/STUDIO.md): cream Archivo Black (Archivo 900) on an ink block, a hard shadow in follow.the.money's colour (#FFD84D; 12 px in the 9:16 cut, 8 px in the 16:9 cut), sentence case, at most one loud word per line, its first figure, on the mint swipe. libass draws the block flat (no grain). The caption file (.srt) still comes from the finished file's own transcript",
+  "intro_sting": "none: config/intro-sting.json is still a candidate, so every cut goes without a sting and its report says so",
+  "route": "the 19 Oct quick-edit route (kit.py, make.py, quality.py), as Monday 19 Oct's accepted cuts: every move is a change of picture on the word that names it, with the house crossfade; receipt lines, the VOID stamp, the money-map labels and the logos appear on their words; documents and screens push in slowly. Pictures sit beside his face (16:9) or above it (9:16): this route has no full-frame cutaways"
  },
  "max_face_share": 0.6,
  "cuts": {
   "long": {
    "take": "on_camera",
-   "frame": "16:9: his portrait selfie in a full-height panel left, the pictures right, full frame for cutaways (as Friday)",
+   "frame": "16:9: his portrait selfie in a full-height column, centred on the brand frame when he speaks alone; when a picture shows he slides to the left edge and the picture fills the right (the 19 Oct route: no full-frame cutaways)",
    "beats": [
     {
      "words": "Disney asked a dying AI firm to go bust first. That way it could hire the team and leave the lawsuits behind.",
@@ -642,7 +643,7 @@
   },
   "short": {
    "take": "on_camera",
-   "frame": "9:16: his face full frame, full-frame cutaways",
+   "frame": "9:16: his face full frame; when a picture shows it fills the top of the frame and his face sits in the band below (the 19 Oct route: no full-frame cutaways)",
    "beats": [
     {
      "words": "I've been reading court papers on Character.AI, a chat app with millions of users. It ran low on cash, faced lawsuits over harm to children, and went bust.",
@@ -817,7 +818,7 @@
  },
  "do_not": [
   "No Disney character artwork: wordmarks and logos only",
-  "No subtitles of what he says; on-screen words add a source, date, number or name",
+  "No on-screen label repeats what he says (the burned captions carry his words); a label adds a source, date, number or name",
   "No figure or icon acting out an analogy; every picture is a checked number, a document or a logo",
   "Never invent a word, number, label or picture; a gap goes back to Claude"
  ],
@@ -830,13 +831,25 @@
  ],
  "signed": {
   "by": "Krish",
-  "said": "Yes to all four, recommended title, make sure everything is able to be proof read/viewed in todays publish board at content.krishraja.com and I'll let you know",
-  "on": "2026-10-26",
+  "said": "Signed, go (Recommended)",
+  "on": "2026-10-27",
   "script_sha256": {
    "long": "6db388ed0c6e6a7bb1f889d6d8795bf208e3e24c85695d6c0a32a796ce964ee5",
    "short": "ce3eea45ecd65b8d9530e5284d239a72d5e80ae89c672898fcbf5934941c58fd"
   },
-  "what": "item 1 of storyboard-signoff.md: the storyboard (the Receipts look), with his ruling on the takes (take_edits) and the recommended title"
+  "what": "re-signed after his ruling of 27 Oct (captions burned into every cut): brand.captions (the house captions, sample shown), brand.route and both cuts' frame (the 19 Oct quick-edit route: pictures beside or above his face, no full-frame cutaways); everything else as signed on 26 Oct",
+  "previous": [
+   {
+    "by": "Krish",
+    "said": "Yes to all four, recommended title, make sure everything is able to be proof read/viewed in todays publish board at content.krishraja.com and I'll let you know",
+    "on": "2026-10-26",
+    "script_sha256": {
+     "long": "6db388ed0c6e6a7bb1f889d6d8795bf208e3e24c85695d6c0a32a796ce964ee5",
+     "short": "ce3eea45ecd65b8d9530e5284d239a72d5e80ae89c672898fcbf5934941c58fd"
+    },
+    "what": "item 1 of storyboard-signoff.md: the storyboard (the Receipts look), with his ruling on the takes (take_edits) and the recommended title"
+   }
+  ]
  },
  "motion_system": {
   "name": "Receipts",
