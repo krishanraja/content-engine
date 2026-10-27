@@ -194,6 +194,9 @@ def cmd_status(args) -> int:
     for cut in spec['cuts']:
         qc_file, verdict_file = ve_dir / f'qc.{cut}.json', ve_dir / f'verdict.{cut}.json'
         reasons = []
+        compile_file = ve_dir / f'compile.{cut}.json'
+        if compile_file.exists() and load_json(compile_file).get('sfx_missing'):
+            reasons.append('sfx kit missing')
         if not qc_file.exists():
             reasons.append('no qc')
         else:
@@ -242,13 +245,19 @@ def not_yet(name: str):
 
 
 def cmd_compile(args) -> int:
+    from velib.lint import lint
+    spec, problems = lint(Path(args.spec))
+    if problems or spec is None:
+        for problem in problems:
+            print(problem)
+        return 1
     from velib.compile import compile_cut
     from velib.common import sha256_file
-    spec = load_json(args.spec)
     words = load_json(args.words)
     if isinstance(words, dict):
         words = words['words']
-    props = compile_cut(spec, args.cut, words, args.assets_dir)
+    report = {}
+    props = compile_cut(spec, args.cut, words, args.assets_dir, report=report)
     # The piece id is a directory name, never an arbitrary output path.
     piece = spec['piece_id']
     if not re.fullmatch(r'[a-zA-Z0-9][a-zA-Z0-9_-]*', piece):
@@ -257,12 +266,23 @@ def cmd_compile(args) -> int:
         raise ValueError('cut id must be a slug')
     out = ROOT / 'docs' / 'plans' / piece / 've' / f'props.{args.cut}.json'
     write_json(out, props)
-    print(f'{sha256_file(out)}  {out}')
+    report['props_sha256'] = sha256_file(out)
+    write_json(out.with_name(f'compile.{args.cut}.json'), report)
+    for event_id in report['sfx_missing']:
+        print(f'sfx missing: {event_id}')
+    print(f'{report["props_sha256"]}  {out}')
     return 0
 
 
 def cmd_render(args) -> int:
-    from velib.render import render
+    from velib.lint import lint
+    spec, problems = lint(Path(args.spec))
+    if problems or spec is None:
+        for problem in problems:
+            print(problem)
+        return 1
+    from velib.render import check_asset_hashes, render
+    check_asset_hashes(spec, args.assets_dir)
     render(args.props, args.out, args.scale)
     return 0
 
@@ -287,6 +307,7 @@ def main() -> int:
     p.add_argument('--assets-dir', required=True); p.set_defaults(fn=cmd_compile)
     p = sub.add_parser('render', help='render compiled props through FormatMaster')
     p.add_argument('props'); p.add_argument('out'); p.add_argument('--scale', type=float, default=1.0)
+    p.add_argument('--spec', required=True); p.add_argument('--assets-dir', required=True)
     p.set_defaults(fn=cmd_render)
     for name in ('ingest', 'stills', 'ledger', 'file'):
         p = sub.add_parser(name); p.add_argument('rest', nargs='*'); p.set_defaults(fn=not_yet(name))
