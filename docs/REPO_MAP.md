@@ -3094,7 +3094,54 @@ Run a Vercel serverless handler locally against the real environment.
 ### `apps/renderer/src/engine/BrandFrame.tsx`
 
 - `interface BrandFrameProps`
-- `function BrandFrame(_input: BrandFrameProps): React.ReactElement | null`
+- `function BrandFrame({ props, beat, frame }: BrandFrameProps): React.ReactElement`
+
+### `apps/renderer/src/engine/FormatMaster.tsx`
+
+- `function FormatMaster(props: EngineRenderProps)`
+
+### `apps/renderer/src/engine/audio.tsx`
+
+- `function EngineAudio({ audio }: { audio: EngineRenderProps['audio'] })`
+
+### `apps/renderer/src/engine/chrome/CallCard.tsx`
+
+- `interface CallCardProps`
+- `const ENDING_SAFE`
+- `function callCardLayout(aspect: EngineRenderProps['aspect'], statement: string)`
+- `function callCardModel(props: EngineRenderProps, frame: number)`
+- `function CallCard({ props, frame }: CallCardProps): React.ReactElement | null`
+
+### `apps/renderer/src/engine/chrome/CaptionTrack.tsx`
+
+- `type CaptionPage = EngineRenderProps['captions'][number]`
+- `function captionPageAt(pages: readonly CaptionPage[], frame: number): CaptionPage | null`
+- `function captionLines(page: CaptionPage, aspect: Aspect): number[][]`
+- `function CaptionTrack({ props, frame }: { props: EngineRenderProps; frame: number })`
+
+### `apps/renderer/src/engine/chrome/ChannelPill.tsx`
+
+- `function ChannelPill({ props, beat }: { props: EngineRenderProps; beat: EngineBeat })`
+
+### `apps/renderer/src/engine/chrome/EndingBand.tsx`
+
+- `const BAND_ARRIVAL_FRAMES`
+- `interface EndingBandProps`
+- `function endingBandLayout(props: Pick<EngineRenderProps, 'aspect' | 'brand' | 'series' | 'ending'>)`
+- `function endingBandModel(props: EngineRenderProps, frame: number)`
+- `function EndingBand({ props, frame }: EndingBandProps): React.ReactElement | null`
+
+### `apps/renderer/src/engine/chrome/IllustrationLabel.tsx`
+
+- `function IllustrationLabel({ props, frame }: { props: EngineRenderProps; frame: number })`
+
+### `apps/renderer/src/engine/chrome/MarkTile.tsx`
+
+- `function MarkTile({ props }: { props: EngineRenderProps })`
+
+### `apps/renderer/src/engine/chrome/tokens.ts`
+
+- `function houseTokens(tokens: EngineTokens): HouseTokens`
 
 ### `apps/renderer/src/engine/clock.ts`
 
@@ -3109,9 +3156,78 @@ Run a Vercel serverless handler locally against the real environment.
 - `function progress(sinceFrames: number, durationFrames: number, easing: (t: number) => number = ENTER): number`
 - `function drift(frame: number, fromFrame: number, toFrame: number, pct: number = MOTION.driftPct): number`
 
+### `apps/renderer/src/engine/devices/evidence_card/index.tsx`
+
+- `function evidenceMediaStyle(crop: Params['crop']): React.CSSProperties`
+- `function evidenceLayout(box: Box, params: Params, text: string, media: boolean, aspect: DeviceProps['aspect'])`
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/evidence_card/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/evidence_card/state.ts`
+
+- `function evidenceState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
+### `apps/renderer/src/engine/devices/kinetic_stat/index.tsx`
+
+- `function kineticLayout(box: Box, text: string, unit: string, producerLabel: string, aspect: DeviceProps['aspect'])`
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/kinetic_stat/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/kinetic_stat/state.ts`
+
+- `function kineticState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
+### `apps/renderer/src/engine/devices/query_chip/index.tsx`
+
+- `function queryLayout(box: Box, text: string, aspect: DeviceProps['aspect'])`
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/query_chip/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/query_chip/state.ts`
+
+- `function queryState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
+### `apps/renderer/src/engine/devices/record_card/index.tsx`
+
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/record_card/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/record_card/state.ts`
+
+- `function recordState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
 ### `apps/renderer/src/engine/devices/registry.ts`
 
 - `const DEVICES: DeviceRegistry`
+
+### `apps/renderer/src/engine/devices/test_grid/index.tsx`
+
+- `export { testGridStateAt } from './state'`
+- `export { TestGridParamsSchema } from './schema'`
+- `function gridLayout(box: Box, rowCount: number, colCount: number, aspect: DeviceProps['aspect'])`
+- `function TestGrid({ object, events, box, tokens, aspect, frame }: DeviceProps): React.ReactElement`
+
+### `apps/renderer/src/engine/devices/test_grid/schema.ts`
+
+- `const TestGridParamsSchema`
+- `type TestGridParams = z.infer<typeof TestGridParamsSchema>`
+- `function resolveTestGrid(object: EngineObject)`
+
+### `apps/renderer/src/engine/devices/test_grid/state.ts`
+
+- `function testGridStateAt(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
 ### `apps/renderer/src/engine/devices/types.ts`
 
@@ -3119,6 +3235,30 @@ Run a Vercel serverless handler locally against the real environment.
 - `interface DeviceProps`
 - `type DeviceComponent = (props: DeviceProps) => React.ReactElement | null`
 - `type DeviceRegistry = Readonly<Record<string, DeviceComponent>>`
+
+### `apps/renderer/src/engine/fit.ts`
+
+- `function fitScale(natural: { width: number; height: number }, box: Box): number`
+- `function fitBox(natural: { width: number; height: number }, box: Box): Box`
+
+### `apps/renderer/src/engine/geometry.ts`
+
+- `export { HOUSE as TALL } from '../house/geometry'`
+- `const WIDE`
+- `type ChromeElement = 'mark' | 'caption' | 'pill' | 'illustrationLabel'`
+- `type Aspect = EngineRenderProps['aspect']`
+- `function boxFor(element: ChromeElement, aspect: Aspect): Box`
+- `function chromeZone(aspect: Aspect): Box`
+
+### `apps/renderer/src/engine/index.ts`
+
+- `export { FormatMaster } from './FormatMaster'`
+- `export { slotsFor } from './layouts'`
+- `export { EngineAudio } from './audio'`
+
+### `apps/renderer/src/engine/layouts/index.ts`
+
+- `function slotsFor(layout: Layout, aspect: Aspect): Box[]`
 
 ### `apps/renderer/src/engine/props.ts`
 
