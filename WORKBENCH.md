@@ -2,6 +2,27 @@
 
 [Story correction and Growth handoff, 26 Oct](docs/history/2026-10-26-story-closeout.md).
 
+## 27 October: Monday 26's two cuts on the quick-edit route, captions burned in (Claude Code)
+
+- **Ruling (Krish, 27 Oct): captions burned into every cut.** The "no captions" line copied from Friday's locked brief
+  is gone from Monday's direction, `CODEX.md` and `receipts.md`; make.py's `"caption_style": "house"` draws the house
+  captions (ink block, channel-colour shadow, one figure on the mint swipe). Direction re-signed: "Signed, go
+  (Recommended)" (also the 19 Oct route's framing: pictures beside or above his face, no full-frame cutaways).
+- **Made** (branch `claude/monday26-captions`, worktree `content-engine-monday26`, files under
+  `.cache/produce/2026-10-26-b358e788/`): 5-minute 16:9 (4:45.5) and 90-second 9:16 (1:27.7), stabilised takes,
+  room treated, story intro and outro, licensed bed, 41 panels from live captures, review packet
+  `docs/plans/2026-10-26-monday/video/REVIEW.md`. Scripts: `docs/plans/2026-10-26-monday/video/`.
+- **Engine fixes found by measuring:** lip sync (a window starting between frames put the picture a frame early;
+  the voice-repair denoiser delayed the voice 25 ms; `make.py` now aligns both); the 9:16 quality gate forced two
+  beat changes in the short (direction `production_notes`).
+- **Waiting on Krish:** full-playback acceptance of both cuts; a ruling on the visual-clarity word budget (Claude's
+  25 Oct defaults fail his approved story intro and outro, the signed receipts and logo rows), which blocks library
+  filing. Nothing published, sent or scheduled.
+- **Baseline for the `ve` engine (old route, one session):** wall clock 09:16 to about 15:45 on 27 Oct (about 6.5 h,
+  of which about 3 h was waiting on renders, transcription and SyncNet on this CPU); Claude Code (Opus 5.5) about
+  0.82 M tokens of context in one session, about 7 points of the account's weekly all-model limit (86% to 93%);
+  Codex none. Renders: 5-minute about 30 min a pass (three passes), 90-second about 12 min (four passes).
+
 ## 27 October: Wednesday and Friday in Teleprompter; Monday's three questions (Claude)
 
 - **Asked (Krish, 27 Oct):** "yes to all three, send weds and keep going", then "yes to all three, send fri and keep going. Give me any genuine questions you have here as opposed to just saying "Monday is still with you." I have no idea what that means." (learning `ask-the-real-question`, encoded in make-piece "Before you stop").
