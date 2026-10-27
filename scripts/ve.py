@@ -165,7 +165,7 @@ def cmd_card(args) -> int:
 
 def cmd_dispatch(args) -> int:
     from velib.cards import dispatch
-    result = dispatch(Path(args.card), background=not args.wait)
+    result = dispatch(Path(args.card), background=not args.wait, spend_approved=args.spend_approved)
     print((result.stdout or result.stderr).strip()[-2000:])
     return result.returncode
 
@@ -250,7 +250,9 @@ def main() -> int:
     p = sub.add_parser('qc'); p.add_argument('cut'); p.add_argument('--format', required=True); p.add_argument('--out'); p.set_defaults(fn=cmd_qc)
     p = sub.add_parser('study'); p.add_argument('ref'); p.add_argument('--out'); p.set_defaults(fn=cmd_study)
     p = sub.add_parser('card'); p.add_argument('fields'); p.set_defaults(fn=cmd_card)
-    p = sub.add_parser('dispatch'); p.add_argument('card'); p.add_argument('--wait', action='store_true'); p.set_defaults(fn=cmd_dispatch)
+    p = sub.add_parser('dispatch'); p.add_argument('card'); p.add_argument('--wait', action='store_true')
+    p.add_argument('--spend-approved', action='store_true', help="only after Krish's yes, in his words, to Codex drawing paid credits")
+    p.set_defaults(fn=cmd_dispatch)
     p = sub.add_parser('verify-card'); p.add_argument('card'); p.add_argument('--cwd', required=True); p.set_defaults(fn=cmd_verify_card)
     p = sub.add_parser('status'); p.add_argument('piece'); p.set_defaults(fn=cmd_status)
     sub.add_parser('coverage').set_defaults(fn=cmd_coverage)
