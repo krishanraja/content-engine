@@ -58,15 +58,22 @@ def cmd_doctor(_args) -> int:
     except ImportError:
         check('faster-whisper', False, 'needed by ve ingest', hard=False)
     codex = shutil.which('codex')
-    status = subprocess.run([codex, 'login', 'status'], capture_output=True, text=True).stdout.strip() if codex else ''
+    login = subprocess.run([codex, 'login', 'status'], capture_output=True, text=True) if codex else None
+    status = (login.stdout + login.stderr).strip() if login else ''
     check('codex login', 'ChatGPT' in status, status or 'codex CLI missing: Codex cards cannot run', hard=False)
-    from velib.cards import companion, weekly_used_percent
+    from velib.cards import allowance, companion
+    import time
     try:
         check('codex plugin companion', True, companion())
     except SystemExit as error:
         check('codex plugin companion', False, str(error), hard=False)
-    used = weekly_used_percent()
-    check('codex weekly allowance', used is None or used <= 80, f'{used:.0f}% used' if used is not None else 'unknown', hard=False)
+    info = allowance()
+    if info:
+        days = (info['resets_at'] - time.time()) / 86400 if info['resets_at'] else None
+        detail = f"{info['used_percent']:.0f}% of the week used" + (f", resets in {days:.1f} days" if days and days > 0 else '') +                  (f"; above 80% Codex draws paid credits (balance {info['credits']:,.0f}), so cards need Krish's spend approval" if info['used_percent'] > 80 else '')
+        check('codex weekly allowance', info['used_percent'] <= 80, detail, hard=False)
+    else:
+        check('codex weekly allowance', True, 'unknown (no Codex session log yet)', hard=False)
     tools = load_json(CONFIG / 'tools.json')['tools']
     mcp = sorted(k for k, v in tools.items() if 'MCP' in v.get('route', ''))
     rows.append(('INFO', 'connectors', 'Claude: probe these with ToolSearch for this account and record gaps: ' + ', '.join(mcp)))

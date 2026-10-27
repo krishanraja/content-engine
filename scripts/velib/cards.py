@@ -80,8 +80,9 @@ def companion() -> str:
     return found[-1]
 
 
-def weekly_used_percent() -> float | None:
-    """The latest rate_limits.used_percent from the newest Codex session log, or None if unknown."""
+def allowance() -> dict | None:
+    """The latest Codex rate_limits record: weekly used_percent (0 once its window has reset), resets_at, credits."""
+    import time
     logs = sorted(glob.glob(str(Path.home() / '.codex' / 'sessions' / '*' / '*' / '*' / '*.jsonl')), key=os.path.getmtime)
     for log in reversed(logs[-5:]):
         lines = Path(log).read_text(encoding='utf-8', errors='replace').splitlines()
@@ -90,12 +91,22 @@ def weekly_used_percent() -> float | None:
                 continue
             try:
                 payload = json.loads(line).get('payload', {})
-                primary = (payload.get('rate_limits') or {}).get('primary') or {}
-                if 'used_percent' in primary:
-                    return float(primary['used_percent'])
-            except (ValueError, AttributeError):
+                limits = payload.get('rate_limits') or {}
+                primary = limits.get('primary') or {}
+                if 'used_percent' not in primary:
+                    continue
+                resets = primary.get('resets_at')
+                used = 0.0 if resets and time.time() > resets else float(primary['used_percent'])
+                credits = (limits.get('credits') or {}).get('balance')
+                return {'used_percent': used, 'resets_at': resets, 'credits': float(credits) if credits else None}
+            except (ValueError, AttributeError, TypeError):
                 continue
     return None
+
+
+def weekly_used_percent() -> float | None:
+    info = allowance()
+    return info['used_percent'] if info else None
 
 
 def dispatch(card_path: Path, background: bool = True) -> subprocess.CompletedProcess:
