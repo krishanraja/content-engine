@@ -1,3 +1,7 @@
+> **Historical.** Archived 2026-10-26; banner added 2026-10-27 by the docs steward. Not current guidance.
+> Replaced by: `NOW.md` and `WORKBENCH.md`
+> Reason: a closed record moved here on 26 October without its banner.
+
 # 26 October: Growth Story correction returned
 
 The approved Grok/Muse Story set's frame-1 wordmark moved below the scene in

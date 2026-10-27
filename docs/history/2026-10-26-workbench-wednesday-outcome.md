@@ -1,3 +1,7 @@
+> **Historical.** Archived 2026-10-26; banner added 2026-10-27 by the docs steward. Not current guidance.
+> Replaced by: `WORKBENCH.md`
+> Reason: a closed Workbench entry moved here on 26 October without its banner.
+
 # Preserved Workbench entry
 
 Moved intact on 26 October to keep the active Workbench within its size limit.
