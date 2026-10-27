@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { EngineEventSchema, EngineObjectSchema } from '../../props'
 import fixture from './fixture.json'
+import { kineticLayout } from './index'
+import { slotsFor } from '../../layouts'
 import { kineticState } from './state'
 
 const object = EngineObjectSchema.parse(fixture.objects[0])
@@ -46,5 +48,20 @@ describe('kinetic_stat frame state', () => {
     expect(kineticState(object, [...events, repeat], 98).value).toBe(72)
     const exit = { ...events[0]!, id: 'exit', verb: 'exit' as const, atFrame: 100 }
     expect(kineticState(object, [...events, repeat, exit], 120).visible).toBe(false)
+  })
+})
+
+describe('kinetic stat stacked geometry', () => {
+  it.each(['9:16', '16:9'] as const)('stacks number, unit and producer without overlap in %s', (aspect) => {
+    const box = slotsFor('F1', aspect)[2]!
+    const l = kineticLayout(box, '3/3', 'runs where DeepSeek deleted its Xinjiang answer', "KRISH'S TEST · 23 OCT", aspect)
+    const rects = [l.number, l.unit, l.producer]
+    for (const [i, rect] of rects.entries()) {
+      expect(rect.left).toBeGreaterThanOrEqual(box.left)
+      expect(rect.top).toBeGreaterThanOrEqual(box.top)
+      expect(rect.left + rect.width).toBeLessThanOrEqual(box.left + box.width + 1e-8)
+      expect(rect.top + rect.height).toBeLessThanOrEqual(box.top + box.height + 1e-8)
+      if (i) expect(rect.top).toBeGreaterThanOrEqual(rects[i - 1]!.top + rects[i - 1]!.height)
+    }
   })
 })

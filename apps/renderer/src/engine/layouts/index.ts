@@ -21,9 +21,9 @@ const TALL: Record<Layout, readonly Box[]> = {
     { left: 424, top: 576, width: 464, height: 264 },
   ],
   F1: [
-    { left: 120, top: 288, width: 768, height: 552 },
-    { left: 144, top: 312, width: 720, height: 232 },
-    { left: 144, top: 568, width: 720, height: 248 },
+    { left: 120, top: 852, width: 660, height: 290 },
+    { left: 120, top: 288, width: 768, height: 400 },
+    { left: 120, top: 700, width: 768, height: 140 },
   ],
   F3: [
     { left: 120, top: 376, width: 768, height: 464 },
@@ -32,32 +32,33 @@ const TALL: Record<Layout, readonly Box[]> = {
 }
 
 const WIDE: Record<Layout, readonly Box[]> = {
-  // Every wide slot ends by Y 780: the caption block sits above Y 960 and reaches up to about Y 800.
   P1: [
-    { left: 96, top: 54, width: 1728, height: 726 },
-    { left: 132, top: 90, width: 640, height: 200 },
+    { left: 96, top: 208, width: 1728, height: 572 },
+    { left: 132, top: 232, width: 640, height: 200 },
   ],
   P3: [
-    { left: 96, top: 54, width: 1026, height: 560 },
+    { left: 96, top: 208, width: 1026, height: 420 },
     { left: 1140, top: 54, width: 684, height: 726 },
-    { left: 96, top: 630, width: 1026, height: 150 },
+    { left: 96, top: 640, width: 1026, height: 140 },
   ],
   P6: [
-    { left: 96, top: 54, width: 1728, height: 726 },
+    { left: 96, top: 208, width: 1728, height: 572 },
     { left: 998, top: 400, width: 826, height: 380 },
   ],
   F1: [
-    { left: 96, top: 54, width: 1728, height: 726 },
-    { left: 132, top: 90, width: 768, height: 320 },
-    { left: 1020, top: 440, width: 768, height: 320 },
+    { left: 1176, top: 54, width: 648, height: 490 },
+    { left: 96, top: 208, width: 1056, height: 572 },
+    { left: 1176, top: 560, width: 648, height: 220 },
   ],
   F3: [
-    { left: 96, top: 150, width: 1728, height: 630 },
-    { left: 96, top: 54, width: 1728, height: 80 },
+    { left: 96, top: 208, width: 1728, height: 572 },
+    { left: 900, top: 70, width: 924, height: 96 },
   ],
 }
 
-/** Slots follow beat.uses order: plate then overlays, except P3's graphic then plate. */
+/** Slots follow beat.uses order: plate then overlays, except P3's graphic then plate.
+ * F1: slot 0 is the persistent context object (the grid), slot 1 the dominant focus object,
+ * and slot 2 a stat strip. */
 export function slotsFor(layout: Layout, aspect: Aspect): Box[] {
   return (aspect === '9:16' ? TALL : WIDE)[layout].map((box) => ({ ...box }))
 }

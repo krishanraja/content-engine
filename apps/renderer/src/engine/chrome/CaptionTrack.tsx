@@ -41,6 +41,8 @@ export function captionLines(page: CaptionPage, aspect: Aspect): number[][] {
 }
 
 export function CaptionTrack({ props, frame }: { props: EngineRenderProps; frame: number }) {
+  if ((props.ending && frame >= props.ending.fromFrame)
+    || props.beats.some((beat) => beat.role === 'call' && frame >= beat.fromFrame && frame < beat.toFrame)) return null
   const page = captionPageAt(props.captions, frame)
   if (!page) return null
   const lines = captionLines(page, props.aspect)
