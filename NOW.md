@@ -34,7 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## Where it is right now (as of 2026-10-27)
 
-- **Friday exports rejected by Krish, 27 October.** All four edits are unpublishable; only the generated stills were accepted. Reported failures include lip sync, missing visible captions, inadequate motion and off-brand execution. Production is stopped: no new renders or spend. The completed evidence-led audit is `docs/plans/2026-10-23-friday/audit-2026-10-27/AUDIT.md`. The board is not activated and Video assets is not complete.
+- **Friday exports rejected by Krish, 27 October.** All four edits are unpublishable; only the generated stills were accepted. Reported failures include lip sync, missing visible captions, inadequate motion and off-brand execution. Production is stopped: no new renders or spend. The completed evidence-led audit is `docs/plans/2026-10-23-friday/audit-2026-10-27/AUDIT.md`. The producer's complete session postmortem is `docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md`, covering 18 failures including the delayed audit and mistaken prompt delivery. The board is not activated and Video assets is not complete.
 
 <!-- north-star-state {"week_of": "2026-10-26", "week_target": 1, "current": 1, "current_as_of": "2026-10-23", "current_source": "Control Center content_ideas (1 published in the last 7 days)", "urgency": 1, "urgency_reason": "at 100% of this week's target"} --> **North Star number: U1, on pace.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 1, against 1 this week, on the way to 30 by 30 November 2026. Steady: one proposal a week that raises the ceiling.
 

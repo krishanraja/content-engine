@@ -2,6 +2,8 @@
 
 ## 27 October: Friday rejected; audit completed
 
+[Full-session failure report](docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md) now records the complete engagement, 18 failures, approval scopes, artifact lineage, budget limitations and the subsequent audit/report handling failures. Written by the responsible producer, not delegated as a prompt. Four videos remain rejected; no new renders, spend, board activation or production restart.
+
 [Report 3: proposed motion-design skill and engine implementation](docs/plans/2026-10-23-friday/audit-2026-10-27/ENGINE-MOTION-DESIGN-RECOMMENDATIONS.md) now covers tool roles, a shared performance clock, camera/VO compositions, brand components, visible captions, directed generation and implementation order. Specification only: no skill/code changes, renders or spend.
 
 Krish rejected all four edits as unpublishable; only generated stills remain accepted. No new renders or spend. [Timestamped reference/brand audit and concrete production workflow](docs/plans/2026-10-23-friday/audit-2026-10-27/AUDIT.md) records confirmed motion/brand/caption failures and the unresolved sync root cause. Existing candidates remain failure evidence, not items awaiting routine sign-off. Board inactive; Video assets incomplete. Source/export correlation is explicitly not listening approval. No production restart occurred.
