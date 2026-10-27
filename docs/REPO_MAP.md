@@ -16,6 +16,7 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `apps/renderer/`
 - `apps/runner/`
 - `config/`
+- `config/ve/`
 - `docs/`
 - `docs/brandbooknew/`
 - `docs/handovers/`
@@ -26,6 +27,7 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `docs/production/`
 - `docs/prompts/`
 - `docs/research/`
+- `docs/ve/`
 - `docs/walks/`
 - `editions/`
 - `examples/`
@@ -41,6 +43,7 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `scripts/post-pack/`
 - `scripts/quick-edit/`
 - `scripts/signals/`
+- `scripts/velib/`
 - `supabase/migrations/`
 - `tests/`
 - `tests/control-plane/`
@@ -3088,6 +3091,51 @@ Run a Vercel serverless handler locally against the real environment.
 - `const CarouselRenderPropsSchema`
 - `type CarouselRenderProps = z.infer<typeof CarouselRenderPropsSchema>`
 
+### `apps/renderer/src/engine/BrandFrame.tsx`
+
+- `interface BrandFrameProps`
+- `function BrandFrame(_input: BrandFrameProps): React.ReactElement | null`
+
+### `apps/renderer/src/engine/clock.ts`
+
+- `const FPS`
+- `const ENTER`
+- `const EXIT`
+- `const HERO`
+- `const MOTION`
+- `interface DeviceState`
+- `function stateAt(events: readonly EngineEvent[], obj: string, frame: number): DeviceState`
+- `function progress(sinceFrames: number, durationFrames: number, easing: (t: number) => number = ENTER): number`
+- `function drift(frame: number, fromFrame: number, toFrame: number, pct: number = MOTION.driftPct): number`
+
+### `apps/renderer/src/engine/devices/registry.ts`
+
+- `const DEVICES: DeviceRegistry`
+
+### `apps/renderer/src/engine/devices/types.ts`
+
+- `interface Box`
+- `interface DeviceProps`
+- `type DeviceComponent = (props: DeviceProps) => React.ReactElement | null`
+- `type DeviceRegistry = Readonly<Record<string, DeviceComponent>>`
+
+### `apps/renderer/src/engine/props.ts`
+
+- `const EngineTokensSchema`
+- `const EngineImageSchema`
+- `const EngineEventSchema`
+- `const EngineObjectSchema`
+- `const EngineBeatSchema`
+- `const EngineCaptionPageSchema`
+- `const EngineSegmentSchema`
+- `const EngineAudioSchema`
+- `const EngineRenderPropsSchema`
+- `type EngineRenderProps = z.infer<typeof EngineRenderPropsSchema>`
+- `type EngineObject = z.infer<typeof EngineObjectSchema>`
+- `type EngineEvent = z.infer<typeof EngineEventSchema>`
+- `type EngineBeat = z.infer<typeof EngineBeatSchema>`
+- `type EngineTokens = z.infer<typeof EngineTokensSchema>`
+
 ### `apps/renderer/src/evidence-label.ts`
 
 - `type EvidenceLabelInput`
@@ -3630,6 +3678,33 @@ Artifact-bound user confirmation references.
 - `type AnyRenderManifest = z.infer<typeof AnyRenderManifestSchema>`
 - `const AnyDraftPackageSchema`
 - `type AnyDraftPackage = z.infer<typeof AnyDraftPackageSchema>`
+
+### `packages/contracts/src/production-spec.ts`
+
+- `const VE_FORMATS`
+- `const VeFormatSchema`
+- `const VeSeriesSchema`
+- `const VeAspectSchema`
+- `const VeLayoutSchema`
+- `const VeRoleSchema`
+- `const VeVerbSchema`
+- `const VeTransitionSchema`
+- `const VeFinishSchema`
+- `const VeSpanSchema`
+- `const VeEventSchema`
+- `const VeBeatSchema`
+- `const VeCutSchema`
+- `const VeDatasetSchema`
+- `const VeObjectSchema`
+- `const VeSignatureSchema`
+- `const VeAssetSchema`
+- `const VeAudioSchema`
+- `const VeApprovalSchema`
+- `const VeCallSchema`
+- `const ProductionSpecV2Schema`
+- `type ProductionSpecV2 = z.infer<typeof ProductionSpecV2Schema>`
+- `type VeBeat = z.infer<typeof VeBeatSchema>`
+- `type VeEvent = z.infer<typeof VeEventSchema>`
 
 ### `packages/contracts/src/series.ts`
 
