@@ -764,15 +764,15 @@
      "words": "Here's what I'd do with this info if I were you. Ask four things about the firm behind your AI.",
      "point": "What he would do: four questions about the firm behind your AI",
      "picture": {
-      "kind": "face",
-      "what": "Krish to camera, room treated (darkened and softened behind him)",
-      "source": "",
+      "kind": "card",
+      "what": "The four question cards arrive blank, numbered 1 to 4, before he asks them; they fill in on beat 9",
+      "source": "docs/plans/2026-10-26-monday/receipts.md",
       "source_label": ""
      },
-     "on_screen_text": "",
+     "on_screen_text": "4 QUESTIONS",
      "modules": [
-      "full-face-vertical",
-      "usable-test"
+      "usable-test",
+      "dark-object-card"
      ],
      "motion": "",
      "timing": "1:02.16-1:07.44 in the take (5.3 s)"
@@ -904,5 +904,8 @@
     "why": "almost certainly \"if I were you, ask\" misheard"
    }
   ]
- }
+ },
+ "production_notes": [
+  "2026-10-27, Claude Code on the 19 Oct quick-edit route: make.py's 9:16 quality gate (always on since 19 Oct) needs a picture over 90% of his words, no gap over 1.5 s and at least 20 picture changes a minute. So in the 90-second cut beat 1's label (CHARACTER.AI · CHAPTER 11) is a panel above his face rather than a caption over it, beat 8 shows the four question cards arriving blank (4 QUESTIONS), the 66-staff line prints its price on 'sixty million', and the end card's address lands on its word. Put to Krish with the cuts."
+ ]
 }

@@ -150,7 +150,7 @@ main::before{content:"";position:absolute;left:0;top:0;width:100%;height:10px;ba
 .line b.total{background:#7EF0C0;padding:2px 10px;border-radius:3px}
 .sub{font:400 38px/1.3 "IBM Plex Mono";padding-left:34px;color:rgba(12,21,18,.75)}
 .rf{font:500 34px/1.2 "IBM Plex Mono";text-align:center;letter-spacing:1px;color:rgba(12,21,18,.75)}
-.receipt.s .rh{font-size:36px}.receipt.s .line{font-size:32px}.receipt.s .rf{font-size:26px}
+.receipt.s .rh{font-size:40px}.receipt.s .line{font-size:40px}.receipt.s .rf{font-size:26px}
 .receipt.xs .rh{font-size:38px}.receipt.xs .line{font-size:38px;margin:14px 0}.receipt.xs .rf{font-size:24px}.receipt.xs .rule{margin:16px 0}
 .box{border:5px solid rgba(244,239,228,.6);border-top:none;border-radius:0 0 14px 14px;padding:24px 26px 30px;position:relative;min-width:440px;min-height:420px;display:flex;flex-direction:column;align-items:center}
 .box::before{content:"";position:absolute;top:-30px;left:-24px;right:-24px;height:30px;border:5px solid rgba(244,239,228,.6);border-bottom:none;transform:skewX(-14deg)}
@@ -304,10 +304,12 @@ def build(records):
     add('l24', W, [(emptybox(['THE APP', 'USERS’ CHATS', 'THE LAWSUITS'], 'THE LAWSUITS STAY', 'CBS NEWS · OCT 2026'),
                     txt(('THE LAWSUITS STAY', 'relationship', 'what stays behind'), ('THE APP USERS’ CHATS THE LAWSUITS', 'identity', 'the box'), ('CBS NEWS · OCT 2026', 'source', 'report')))])
     def one_picture():
-        r1 = receipt('GOOGLE · 2024', [('THE FOUNDERS', '$2.7B', True, [])], '', 1, 'xs')
-        r2 = receipt('DISNEY · 2026', [('THE TEAM', '$60M/YR', True, []), ('THE CODE', '$20M', True, [])], '', 2, 'xs')
-        bx = f'<div class="col">{box([], size="s")}<span class="money" style="background:#F4EFE4">$0</span></div>'
-        return f'<div class="row" style="gap:40px;align-items:flex-start">{r1}{r2}{bx}</div>'
+        # The frame the cover echoes, filling the panel: the two receipts side by side, the empty box beneath with its $0.
+        r1 = receipt('GOOGLE · 2024', [('THE FOUNDERS', '$2.7B', True, [])], '', 1, 's')
+        r2 = receipt('DISNEY · 2026', [('THE TEAM', '$60M/YR', True, []), ('THE CODE', '$20M', True, [])], '', 2, 's')
+        bx = (f'<div class="row" style="gap:34px;align-items:center">{box([], size="s")}'
+              f'<span class="money" style="background:#F4EFE4;font-size:72px;padding:12px 26px">$0</span></div>')
+        return f'<div class="col" style="gap:44px"><div class="row" style="gap:40px;align-items:flex-start">{r1}{r2}</div>{bx}</div>'
     add('l25', W, [(page(W, one_picture(), None, 'WIRED · GIZMODO · COURT FILINGS'),
                     txt(('GOOGLE · 2024 THE FOUNDERS $2.7B', 'quantity', 'receipt one'), ('DISNEY · 2026 THE TEAM $60M/YR THE CODE $20M', 'quantity', 'receipt two'), ('$0', 'quantity', 'the box got nothing'), ('WIRED · GIZMODO · COURT FILINGS', 'source', 'sources')))])
     def pairs(n):
@@ -362,10 +364,20 @@ def build(records):
                     txt(('shuttering its stand-alone', 'source', 'the report'), ('OPENAI · 24 MAR 2026', 'source', 'when'))),
                    (capture_page(T, 'sora-shut', [0], 'SORA SHUT', 'OPENAI · 24 MAR 2026', records),
                     txt(('SORA SHUT', 'relationship', 'outcome'), ('shuttering its stand-alone', 'source', 'the report'), ('OPENAI · 24 MAR 2026', 'source', 'when')))])
+    # The line prints as a till prints it: the item on "sixty-six", its price on "sixty million".
+    r2s_item = [('66 STAFF', '', False, [])]
     r2s = [('66 STAFF', '~$60M A YEAR', True, [])]
-    add('s05', T, [(page(T, receipt('DISNEY · 2026', r2s, 'COURT FILINGS VIA GIZMODO', k), None),
-                    txt(*([('DISNEY · 2026', 'identity', 'who')] + ([('66 STAFF ~$60M A YEAR', 'quantity', 'the team and its pay')] if k else []) + [('COURT FILINGS VIA GIZMODO', 'source', 'filings')])))
-                   for k in (0, 1)])
+    add('s05', T, [(page(T, receipt('DISNEY · 2026', r2s, 'COURT FILINGS VIA GIZMODO', 0), None),
+                    txt(('DISNEY · 2026', 'identity', 'who'), ('COURT FILINGS VIA GIZMODO', 'source', 'filings'))),
+                   (page(T, receipt('DISNEY · 2026', r2s_item, 'COURT FILINGS VIA GIZMODO', 1), None),
+                    txt(('DISNEY · 2026', 'identity', 'who'), ('66 STAFF', 'quantity', 'the team'), ('COURT FILINGS VIA GIZMODO', 'source', 'filings'))),
+                   (page(T, receipt('DISNEY · 2026', r2s, 'COURT FILINGS VIA GIZMODO', 1), None),
+                    txt(('DISNEY · 2026', 'identity', 'who'), ('66 STAFF ~$60M A YEAR', 'quantity', 'the team and its pay'), ('COURT FILINGS VIA GIZMODO', 'source', 'filings')))])
+    # Beat 1's label as a picture above his face (make.py's 9:16 gate counts pictures, not straps).
+    add('s01', T, [(page(T, logo('characterai-cream.svg', 120, w=560), None, layout='typeset'),
+                    txt(('character.ai', 'identity', 'the firm'))),
+                   (page(T, logo('characterai-cream.svg', 120, w=560), 'CHARACTER.AI · CHAPTER 11', layout='typeset'),
+                    txt(('character.ai', 'identity', 'the firm'), ('CHARACTER.AI · CHAPTER 11', 'identity', 'its bankruptcy chapter')))])
     def money_map_t(moved, label=None):
         left = box(['THE PEOPLE', 'THE LAWSUITS'] if not moved else ['THE LAWSUITS'], size='s')
         right = f'<div class="col">{logo("disney-script-cream.svg", 90)}<span class="pill{"" if moved else " dim"}" style="border-color:#7EF0C0">THE PEOPLE</span></div>'
@@ -375,24 +387,32 @@ def build(records):
                    (money_map_t(True, 'LAWSUITS STAY BEHIND'), txt(('LAWSUITS STAY BEHIND', 'relationship', 'what stays'), ('THE LAWSUITS THE PEOPLE', 'identity', 'the split'), ('COURT FILINGS', 'source', 'filings')))])
     def pred_t(n, pct):
         ls = ['skydance-cream.svg', 'universal-music-group-cream.svg', 'comcast-cream.svg']
-        cells = ''.join(f'<div style="{"" if i < n else "visibility:hidden"}">{logo(f, 140, w=300)}</div>' for i, f in enumerate(ls))
+        # Three empty slots on the desk, each filled by its logo on its name (as the long cut's receipt slots).
+        cells = ''.join(f'<div style="width:316px;height:156px;display:flex;align-items:center;justify-content:center;border-radius:10px;'
+                        f'{"" if i < n else "border:4px dashed rgba(244,239,228,.45)"}">{logo(f, 140, w=300) if i < n else ""}</div>'
+                        for i, f in enumerate(ls))
         p = f'<div class="huge" style="font-size:240px;{"" if pct else "visibility:hidden"}">75%</div>'
         return page(T, f'<div class="col" style="gap:34px"><div class="big" style="font-size:104px">BY MAR 2027</div><div class="row" style="gap:30px">{cells}</div>{p}</div>', None, 'OUR PREDICTION')
     names = ['SKYDANCE', 'UNIVERSAL MUSIC GROUP', 'COMCAST']
     add('s07', T, [(pred_t(n, pct), txt(*([('BY MAR 2027', 'identity', 'deadline')] + [(x, 'identity', 'a predicted buyer') for x in names[:n]] + ([('75%', 'quantity', 'how sure')] if pct else []) + [('OUR PREDICTION', 'source', 'whose call')])))
                    for n, pct in ((0, False), (1, False), (2, False), (3, False), (3, True))])
     qs = ['FOUNDERS?', 'MAIN PRODUCT?', 'CASH?', 'LAWSUITS?']
-    def mini(k):
-        cards = ''.join(f'<div class="minicard{"" if i < k else " hide"}"><div class="n">{i + 1}</div><b>{q}</b></div>' for i, q in enumerate(qs))
-        return page(T, f'<div class="mini">{cards}</div>', None, 'THIS STORY')
+    def mini(k, label=None):
+        # Four numbered cards, blank until he asks each one (beat 8 shows them all blank).
+        cards = ''.join(f'<div class="minicard"><div class="n">{i + 1}</div><b{"" if i < k else " style=visibility:hidden"}>{q}</b></div>'
+                        for i, q in enumerate(qs))
+        return page(T, f'<div class="mini">{cards}</div>', label, 'THIS STORY' if k else None)
+    add('s08', T, [(mini(0, '4 QUESTIONS'), txt(('4 QUESTIONS', 'quantity', 'how many checks are coming'), ('1 2 3 4', 'identity', 'the numbered cards')))])
     add('s09', T, [(mini(k), txt(*([(f'{i + 1} {q}', 'relationship', 'a question to ask') for i, q in enumerate(qs[:k])] + [('THIS STORY', 'source', 'the proof is in this story')]))) for k in (1, 2, 3, 4)])
-    endt = (f'<div class="col" style="gap:40px"><img style="width:720px" src="{brand.brand_uri("wordmark", full=True)}">'
-            f'<div class="mono" style="color:#FFD84D;font-size:46px">follow.the.money</div><div class="big" style="font-size:96px">MAKEYOURMINDUP.AI</div></div>')
-    add('s10', T, [(page(T, endt, None), txt(('makeyourmindup', 'identity', 'the brand'), ('follow.the.money', 'identity', 'the series'), ('MAKEYOURMINDUP.AI', 'identity', 'where the deep dive is')))])
+    mark = f'<img style="width:720px" src="{brand.brand_uri("wordmark", full=True)}">'
+    endt = lambda url: (f'<div class="col" style="gap:40px">{mark}<div class="mono" style="color:#FFD84D;font-size:46px">follow.the.money</div>'
+                        f'<div class="big" style="font-size:96px;{"" if url else "visibility:hidden"}">MAKEYOURMINDUP.AI</div></div>')
+    add('s10', T, [(page(T, endt(False), None), txt(('makeyourmindup', 'identity', 'the brand'), ('follow.the.money', 'identity', 'the series'))),
+                   (page(T, endt(True), None), txt(('makeyourmindup', 'identity', 'the brand'), ('follow.the.money', 'identity', 'the series'), ('MAKEYOURMINDUP.AI', 'identity', 'where the deep dive is')))])
     return P
 
 
-EXTRA = '''main.typeset{gap:46px}main.typeset .label{font-size:96px}main.\\39x16.typeset .label{font-size:100px}'''
+EXTRA = '''main.typeset{gap:46px}main.typeset .label{font-size:96px}main.\\39x16.typeset .label{font-size:76px}'''
 
 CHECK = '''() => { const bad = []; const W = innerWidth, H = innerHeight;
   for (const e of document.querySelectorAll('.label,.stage,.stage *,.source')) {
@@ -427,19 +447,6 @@ def main():
                                   "const r = e.getBoundingClientRect(); return [r.x, r.y, r.width, r.height]; })()")
                 files.append({'file': name, 'text': texts, **({'capture_box': cap} if cap else {})})
             manifest[pid] = {'shape': spec['shape'], 'pages': files}
-        # The 90-second cut's opening label sits over his full-frame face (make.py's tall "strap"), clear of
-        # the captions at the top: the whole 1080 x 1920 frame, transparent but for the label.
-        strap = browser.new_page(viewport={'width': 1080, 'height': 1920}, device_scale_factor=1)
-        strap.set_content(f'<!doctype html><meta charset="utf-8"><style>{fonts}\n{CSS}\nbody{{background:transparent}}'
-                          '.lower{position:absolute;left:50%;top:1290px;transform:translateX(-50%);background:#0C1512;'
-                          'padding:34px 46px 38px;border-radius:8px;box-shadow:12px 12px 0 #FFD84D;display:flex;flex-direction:column;'
-                          f'align-items:center;gap:20px}}</style><body><div class="lower">{logo("characterai-cream.svg", 84, w=420)}'
-                          '<div class="label" style="font-size:80px">CHARACTER.AI · CHAPTER 11</div></div></body>')
-        strap.evaluate('document.fonts.ready')
-        strap.wait_for_timeout(120)
-        strap.screenshot(path=str(OUT / 's01-strap-9x16.png'), omit_background=True)
-        manifest['s01'] = {'shape': '9x16', 'pages': [{'file': 's01-strap-9x16.png', 'strap': True, 'text': [
-            {'value': 'CHARACTER.AI · CHAPTER 11', 'role': 'identity', 'adds': 'names the firm and its bankruptcy chapter'}]}]}
         browser.close()
     for pid, seconds in PUSH.items():
         push(manifest[pid], seconds)

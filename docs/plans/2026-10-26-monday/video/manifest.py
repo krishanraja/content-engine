@@ -95,12 +95,13 @@ def main(cut):
         cursor = outro_at
     states.append({'id': 'outro', 'start_frame': cursor, 'end_frame': frames, 'text': [{'value': v, 'role': r, 'adds': a} for v, r, a in OUTRO_TEXT],
                    'visual_cues': ['makeyourmindup brand', 'the comment question'], 'takeaway': 'Answer in the comments; the full story is free'})
-    narration = WORK / 'review' / f"{cfg['name']}-final-narration.txt"
+    # make.py's own transcript of the finished file, the one the delivery receipt binds (final_narration_sha256).
+    narration = out / f'{video.stem}.narration.txt'
     manifest = {'schema': 1, 'video': video.name, 'video_sha256': digest(video), 'frames': frames, 'fps': fps,
-                'narration': str(narration.relative_to(WORK / 'review')), 'narration_sha256': digest(narration),
+                'narration': narration.name, 'narration_sha256': digest(narration),
                 'captions': 'burned in; they are the narration track itself and are compared, not counted as labels',
                 'states': states}
-    dest = WORK / 'review' / f'{cut}-visual-manifest.json'
+    dest = out / f'{cut}-visual-manifest.json'   # beside the video and its narration, as the receipt reads them
     dest.write_text(json.dumps(manifest, indent=1, ensure_ascii=False) + '\n', encoding='utf-8')
     import visual_clarity
     result = visual_clarity.audit(manifest, narration.read_text(encoding='utf-8'))

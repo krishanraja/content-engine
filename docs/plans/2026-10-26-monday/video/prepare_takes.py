@@ -112,17 +112,20 @@ def mask(src, dst):
 
 # The room: blurred at quarter size, 55% of its colour, about a third of its light, a vignette, a little ink.
 ROOM = ('scale=270:480:flags=area,gblur=sigma=3,scale=1080:1920:flags=bicubic,eq=saturation=0.55,'
-        "lutrgb=r='val*0.344+2':g='val*0.344+4':b='val*0.344+3',vignette=angle=PI/3.2,format=gbrp")
-# The mask, full size and feathered; below 15% is room, above 75% is him.
-MASK = "scale=1080:1920:flags=bilinear,gblur=sigma=9,lut=y='clip((val-38)*255/153,0,255)',format=gbrp"
+        "lutrgb=r='val*0.344+2':g='val*0.344+4':b='val*0.344+3',vignette=angle=PI/3.2,format=rgb24")
+# The mask, full size and feathered; below 35% is room, above 86% is him (a looser edge left a pale rim of the
+# bright wall round his head). Laid as his alpha over the room: maskedmerge in planar RGB left a teal fringe.
+MASK = "scale=1080:1920:flags=bilinear,gblur=sigma=6,lut=y='clip((val-90)*255/130,0,255)',format=gray"
 
 
 def treat(cut):
     src = TAKES / f'{cut}-stable.mp4'
     person = TAKES / f'{cut}-mask.mkv'
     final = TAKES / f'{cut}-treated.mp4'
-    mask(src, person)
-    graph = f'[0:v]split[a][b];[a]{ROOM}[room];[b]format=gbrp[him];[1:v]{MASK}[m];[room][him][m]maskedmerge,format=yuv420p[v]'
+    if not person.exists() or person.stat().st_mtime < src.stat().st_mtime:
+        mask(src, person)
+    graph = (f'[0:v]split[a][b];[a]{ROOM}[room];[b]format=rgba[h0];[1:v]{MASK}[m];[h0][m]alphamerge[him];'
+             f'[room][him]overlay=format=rgb,format=yuv420p[v]')
     subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(src), '-i', str(person), '-filter_complex', graph, '-map', '[v]',
                     '-map', '0:a:0', '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '12', '-c:a', 'copy', str(final)], check=True)
     assert frames_of(final) == frames_of(src), 'treated take lost or gained frames'
@@ -130,7 +133,7 @@ def treat(cut):
               'output': final.name, 'output_sha256': digest(final), 'frames': frames_of(final),
               'audio': 'copied byte for byte from the take (no processing)',
               'method': 'mediapipe selfie segmentation (general model) at 288x512, 0.6/0.4 temporal blend, feathered (sigma 9 at '
-                        'full size); room = ' + ROOM + '; maskedmerge keeps the frame as shot wherever he is'}
+                        'full size, edge 0.35-0.86); room = ' + ROOM + '; he is laid over the room as shot, the mask his alpha'}
     (TAKES / f'{cut}-treated.json').write_text(json.dumps(record, indent=1) + '\n', encoding='utf-8')
     print(json.dumps(record))
 

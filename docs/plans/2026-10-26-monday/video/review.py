@@ -117,17 +117,24 @@ def sync(video, points, total, intro, outro, cut):
     # Windows may not overlap (sync_check.py), so they are laid in order: each join sits at least a second
     # inside a window, centred where it can be; a join already a second inside the last window shares it.
     lo, hi = intro + 0.2, total - outro - 6.2
-    starts, covers = [], []
+    # A window centred on every join first; then the rest of his speech tiled with whole windows between them,
+    # so the whole cut is measured and every join sits in the middle of its own window.
+    fixed = []
     for p in points:
-        t = p['finished_s']
-        if starts and starts[-1] + 1 <= t <= starts[-1] + 5:
-            covers[-1].append(t)
-            continue
-        s = round(min(max(lo, t - 3, (starts[-1] + 6.01) if starts else lo), hi), 2)
-        if starts and s < starts[-1] + 6:
-            continue   # the cut's last seconds: no room for another whole window
-        starts.append(s)
-        covers.append([t])
+        s = round(min(max(lo, p['finished_s'] - 3), hi), 2)
+        if not fixed or s >= fixed[-1][0] + 6.01:
+            fixed.append((s, [p['finished_s']]))
+        else:
+            fixed[-1][1].append(p['finished_s'])
+    windows, cursor = [], lo
+    for s, joined in fixed + [(hi + 6.02, None)]:
+        while cursor + 6.01 <= s and cursor <= hi:
+            windows.append((round(cursor, 2), []))
+            cursor += 6.05
+        if joined is not None:
+            windows.append((s, joined))
+            cursor = s + 6.05
+    starts, covers = [w[0] for w in windows], [w[1] for w in windows]
     (out / 'windows.json').write_text(json.dumps([{'start': s, 'joins': c} for s, c in zip(starts, covers)], indent=1))
     run = subprocess.run([str(SYNC_PY), str(ROOT / 'scripts/quick-edit/sync_check.py'), str(video), '--syncnet-root', str(SYNCNET),
                           '--model', str(SYNCNET / 'data/syncnet_v2.model'), '--out', str(out), '--at', *map(str, starts),

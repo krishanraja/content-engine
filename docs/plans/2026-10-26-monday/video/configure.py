@@ -51,7 +51,7 @@ LONG = [
     cue('l19', 'filed for bankruptcy', '12th of October', W, ['l19-p1', 'l19-p2'], ['filed for bankruptcy', '12th of October']),
     cue('l20', 'and Disney made that', 'harmed children', W, ['l20-p1', 'l20-p2', 'l20-p3'],
         ['and Disney made that', 'low on cash', 'faced lawsuits']),
-    cue('l21', 'going through the court', 'lawsuits stay behind', W, ['l21-p1', 'l21-p2'], ['going through the court', 'takes the people']),
+    cue('l21', 'going through to court', 'lawsuits stay behind', W, ['l21-p1', 'l21-p2'], ['going through to court', 'takes the people']),
     cue('l23', 'The people who use the app', 'up to the court', W, ['l23-p1', 'l23-p2', 'l23-p3'],
         ['The people who use', 'the app itself', "anyone's chat"]),
     cue('l24', 'And then there are the people suing', 'sold for parts', W),
@@ -70,17 +70,22 @@ LONG = [
 ]
 
 SHORT = [
+    # Beat 1's label above his face, and beat 8's four blank cards: make.py's 9:16 gate needs a picture over
+    # 90% of his words, no gap over 1.5 s and 20 changes a minute (creative-direction.json production_notes).
+    cue('s01', "I've been having a look", 'went bust', T, ['s01-p1', 's01-p2'], ["I've been having a look", 'court papers']),
     cue('s02', 'So why did Google', 'pay for it', T, ['s02-p1', 's02-p2', 's02-p3'], ['So why did', 'Google and now', 'now Disney pay']),
     cue('s03', 'Google went for the brains', 'founders away', T, ['s03-p1', 's03-p2', 's03-p3'],
         ['Google went for', 'reportedly paid', 'hired the founders']),
     cue('s04', 'Well Disney wanted', 'shut Sora down', T, ['s04-p1', 's04-p2'], ['Well Disney wanted', 'shut Sora down']),
-    cue('s05', 'So Disney is building', 'in total salary', T, ['s05-p1', 's05-p2'], ['So Disney is building', 'hiring 66']),
+    cue('s05', 'So Disney is building', 'in total salary', T, ['s05-p1', 's05-p2', 's05-p3'],
+        ['So Disney is building', 'hiring 66', '$60 million']),
     cue('s06', 'and by buying through', 'Google already own', T, ['s06-p1', 's06-p2'], ['and by buying', 'leaves those lawsuits']),
     cue('s07', 'So my prediction', 'all three of these will', T, ['s07-p1', 's07-p2', 's07-p3', 's07-p4', 's07-p5'],
         ['So my prediction', 'Skydance Universal', 'Universal Music and', 'Comcast will', 'around 75']),
+    cue('s08', "So here's what I would do", 'your AI tool', T),
     cue('s09', 'Are its founders', 'piling up lawsuits', T, ['s09-p1', 's09-p2', 's09-p3', 's09-p4'],
         ['Are its founders', 'Is your tool', 'Is it short', 'And is it piling']),
-    cue('s10', 'The full deep dive', 'MakeYourMindUp ai', T),
+    cue('s10', 'The full deep dive', 'MakeYourMindUp ai', T, ['s10-p1', 's10-p2'], ['The full deep dive', 'MakeYourMindUp']),
 ]
 
 # Krish's ruling on the takes (creative-direction.json take_edits): keep everything he said; the
@@ -90,10 +95,20 @@ LONG_REMOVE = [{'say': 'which is fair enough', 'after': 'harmed children'}]
 # Caption words where the transcriber and he differ, each only with its evidence (second-listen.json,
 # a second model, or his own words in take_edits); the sound is never touched.
 LONG_REPLACE = [['Disney is basically asked', 'Disney has basically asked']]   # large-v3-turbo hears "has"
-SHORT_REPLACE = [['I recommend that', 'I reckon that'],   # Krish, 2026-10-26: "I'm pretty sure I said "I reckon,""; large-v3-turbo agrees
-                 ['if I asked four things', "if I were you, I'd ask four things"],   # large-v3-turbo; the script's words
-                 # Both transcribers hear "haunted"; the script says harm and the line means it. Put to Krish by ear.
-                 ['haunted children', 'harmed children']]
+LONG_REPLACE += [["Character .ai's", "Character.AI's"], ['Character .ai', 'Character.AI'], ['MakeYourMindUp .ai', 'makeyourmindup.ai'],
+                 ['first -ever', 'first-ever'], ['now -retired', 'now-retired'], ['made -up', 'made-up'],
+                 # medium.en and the script hear "and"; large-v3-turbo "in": the script's words, put to Krish by ear.
+                 ['families in U .S. states', 'families and US states'],
+                 # Where the take's transcript and a fresh hearing of the finished file differ, the hearing that
+                 # agrees with the script (make.py's heard check on the first render).
+                 ['Altogether', 'All together'], ["here's a clever bit", "here's the clever bit"],
+                 ['made that condition', 'made that a condition'], ['line up with Plan B', 'line up a Plan B']]
+# large-v3-turbo hears "I reckon" (Krish, 2026-10-26: "I'm pretty sure I said "I reckon,"") and "if I were you. I'd ask
+# four things" as he said them, so those need no fix. Both transcribers hear "haunted"; the script says harm and the
+# line means it: captioned "harmed" and put to Krish by ear.
+SHORT_REPLACE = [['haunted children', 'harm to children'],   # the finished file is heard as "harm to children", the script's words
+                 ["Character .ai's", "Character.AI's"], ['Character .ai', 'Character.AI'], ['makeyourmindup .ai', 'makeyourmindup.ai'],
+                 ['billion -dollar', 'billion-dollar']]
 
 CHAPTERS = [
     {'title': 'Why is Disney eating the scraps of bankrupt Character.AI?', 'starts': 'Disney is basically asked'},
@@ -125,5 +140,5 @@ def configure(cut, shape, cues, extra):
 configure('long', W, LONG, {'remove': LONG_REMOVE, 'replacements': LONG_REPLACE, 'strap': False, 'face': [690, 920],
                             'music_mode': 'episode', 'music_seconds': 100, 'chapters': CHAPTERS})
 configure('short', T, SHORT, {'remove': [], 'replacements': SHORT_REPLACE, 'face': [690, 920], 'music_seconds': 90,
-                              'strap': {'png': '../panels/s01-strap-9x16.png', 'after': 'court papers on', 'seconds': 8.5}})
+                              'strap': False})
 print(f'configured: long {len(LONG)} cues, short {len(SHORT)} cues')
