@@ -1,0 +1,93 @@
+[
+  {
+    "cut": "cam-short",
+    "export_t": 10,
+    "expected_source_t": 6.5,
+    "audio_matched_source_t": 6.5,
+    "audio_correlation": 0.912964540482851,
+    "picture_matched_source_t_approx": 5.633333333333333,
+    "picture_match_mean_abs_pixel_error": 71.70419534578826,
+    "picture_minus_audio_source_ms_approx": -867,
+    "resolution_note": "15fps search, roughly 67ms sampling; compares transport with source, not original capture lip sync",
+    "picture_match_usable_for_bounded_comparison": false,
+    "not_lip_sync_certification": true
+  },
+  {
+    "cut": "cam-short",
+    "export_t": 62,
+    "expected_source_t": 63.768,
+    "audio_matched_source_t": 63.768,
+    "audio_correlation": 0.9367497199360759,
+    "picture_matched_source_t_approx": 63.768,
+    "picture_match_mean_abs_pixel_error": 5.62487708947886,
+    "picture_minus_audio_source_ms_approx": 0,
+    "resolution_note": "15fps search, roughly 67ms sampling; compares transport with source, not original capture lip sync",
+    "picture_match_usable_for_bounded_comparison": true,
+    "not_lip_sync_certification": true
+  },
+  {
+    "cut": "cam-short",
+    "export_t": 68,
+    "expected_source_t": 71.30199999999999,
+    "audio_matched_source_t": 71.30199999999999,
+    "audio_correlation": 0.9270761570120405,
+    "picture_matched_source_t_approx": 71.30199999999999,
+    "picture_match_mean_abs_pixel_error": 9.949852507374631,
+    "picture_minus_audio_source_ms_approx": 0,
+    "resolution_note": "15fps search, roughly 67ms sampling; compares transport with source, not original capture lip sync",
+    "picture_match_usable_for_bounded_comparison": true,
+    "not_lip_sync_certification": true
+  },
+  {
+    "cut": "cam-short",
+    "export_t": 74,
+    "expected_source_t": 85.85399999999998,
+    "audio_matched_source_t": 85.85412499999998,
+    "audio_correlation": 0.8656793812801101,
+    "picture_matched_source_t_approx": 85.85399999999998,
+    "picture_match_mean_abs_pixel_error": 2.8749590298262864,
+    "picture_minus_audio_source_ms_approx": 0,
+    "resolution_note": "15fps search, roughly 67ms sampling; compares transport with source, not original capture lip sync",
+    "picture_match_usable_for_bounded_comparison": true,
+    "not_lip_sync_certification": true
+  },
+  {
+    "cut": "cam-long",
+    "export_t": 10,
+    "expected_source_t": 6.5,
+    "audio_matched_source_t": 6.5,
+    "audio_correlation": 0.9457331817053256,
+    "picture_matched_source_t_approx": 6.5,
+    "picture_match_mean_abs_pixel_error": 5.024845679012346,
+    "picture_minus_audio_source_ms_approx": 0,
+    "resolution_note": "15fps search, roughly 67ms sampling; compares transport with source, not original capture lip sync",
+    "picture_match_usable_for_bounded_comparison": true,
+    "not_lip_sync_certification": true
+  },
+  {
+    "cut": "cam-long",
+    "export_t": 260,
+    "expected_source_t": 262.41499999999996,
+    "audio_matched_source_t": 262.41499999999996,
+    "audio_correlation": 0.9480766737571685,
+    "picture_matched_source_t_approx": 262.3483333333333,
+    "picture_match_mean_abs_pixel_error": 2.473611111111111,
+    "picture_minus_audio_source_ms_approx": -67,
+    "resolution_note": "15fps search, roughly 67ms sampling; compares transport with source, not original capture lip sync",
+    "picture_match_usable_for_bounded_comparison": true,
+    "not_lip_sync_certification": true
+  },
+  {
+    "cut": "cam-long",
+    "export_t": 300,
+    "expected_source_t": 302.41499999999996,
+    "audio_matched_source_t": 302.41499999999996,
+    "audio_correlation": 0.9578681962144779,
+    "picture_matched_source_t_approx": 302.41499999999996,
+    "picture_match_mean_abs_pixel_error": 27.318672839506174,
+    "picture_minus_audio_source_ms_approx": 0,
+    "resolution_note": "15fps search, roughly 67ms sampling; compares transport with source, not original capture lip sync",
+    "picture_match_usable_for_bounded_comparison": false,
+    "not_lip_sync_certification": true
+  }
+]
