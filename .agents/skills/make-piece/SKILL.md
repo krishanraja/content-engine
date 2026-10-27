@@ -426,6 +426,11 @@ documents are not the record; `produce-video` stops on an incomplete one,
 and Codex must never be asked to fill it in (Krish, 2026-10-24: "This worries
 me, does not seem like you did your bit of the job").
 
+**Anything waiting on Krish is put to him as the question itself, never a pointer to it.** Name the decision, give
+the words or facts he is deciding on and what each answer does, so he can answer from the message alone; never "X is
+still with you" or "the 11 lines" (Krish, 2026-10-27: "Give me any genuine questions you have here as opposed to just
+saying "Monday is still with you." I have no idea what that means.").
+
 Copy the week's ticks once more (above). Update `WORKBENCH.md` and the board
 (`WORKBENCH.md`, "The board"), and end every reply with
 https://controlcenter.krishraja.com/#/home?waiting=1.

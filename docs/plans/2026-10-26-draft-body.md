@@ -20,7 +20,7 @@ Disney's reason starts somewhere else entirely.
 
 In December 2025, Disney agreed to put $1 billion into OpenAI and to let more than 200 of its characters appear in Sora, OpenAI's video app. Marvel, Pixar and Star Wars would all be in there. A big bet, with one catch: every one of those characters would live on someone else's app.
 
-Then in March 2026, OpenAI said it would shut Sora down. The Disney deal went with it, and reports say no money had changed hands. Disney said it respected the decision, which is the corporate way of saying it had just been left standing in the rain.
+Then in March 2026, OpenAI said it would shut its Sora app. The Disney deal went with it, and reports say no money had changed hands. Disney said it respected the decision, which is the corporate way of saying it had just been left standing in the rain.
 
 My read is that the rest of the story turns on this moment. Disney had licensed its characters to someone else's app, and that app closed.
 
@@ -46,7 +46,7 @@ Two groups stay behind.
 
 First, the people who used the app. According to Wired, the list of what Disney is bidding for leaves out users' data and Character.AI's website, and the court filing leaves out its consumer-facing apps. What happens to the app now is up to the court. (If I'd spent two years chatting to a made-up character on there, I'd want to know where those chats end up.)
 
-Second, everyone with a claim against it. Families sued Character.AI, saying its chatbots harmed children; those cases were settled, and a referee approved each settlement on 11 October, the day before the bankruptcy. When it filed, 46 states and territories were investigating it, and several states have sued. Wired reports the deal is built so that whatever is left of Character.AI keeps responsibility for those legal battles, some of them still going.
+Second, everyone with a claim against it. Families sued Character.AI, saying its chatbots harmed children; those families agreed to settle, and a referee approved each settlement on 11 October, the day before the bankruptcy. When it filed, 46 states and territories were investigating it, and several states have sued. Wired reports the deal is built so that whatever is left of Character.AI keeps responsibility for those legal battles, some of them still going.
 
 So the money followed the people. Google paid billions to use the tech and hire the founders. Disney is paying millions for the rest of the team. Everyone else gets the empty box.
 
@@ -56,7 +56,7 @@ If your business runs on someone else's AI, this is the part worth sitting with.
 
 So what does it mean beyond Disney? My read: the companies with the most to lose are deciding that renting their AI is too risky.
 
-Disney isn't alone. This year Netflix bought InterPositive, an AI filmmaking start-up, in a deal reported at $587 million. Warner Music bought Sureel AI in June. WildBrain, the company behind the Teletubbies, bought Personality AI in August. (Yes, the Teletubbies now have an AI company.)
+Disney isn't alone. This year Netflix bought InterPositive, an AI filmmaking start-up, in a deal reported at $587 million. Warner Music bought Sureel AI in June. WildBrain, the company behind the Teletubbies, bought Personality AI in August. (Yes, the Teletubbies' owner now has an AI company.)
 
 Put those together and a pattern shows. The big media companies are moving from renting AI to owning it.
 
@@ -73,5 +73,5 @@ If the giants with the deepest pockets won't leave their AI in someone else's ha
 ## 3 things you can do tomorrow
 
 1. **Write down the AI tools your business would struggle without, and who makes each one.** Most leaders know the tools. Fewer know whether the maker is a giant, a start-up or a giant's side project.
-2. **For the one you lean on most, answer four questions about its maker.** Are its founders still there? Is your tool its main product or a side bet? Is it short of cash? Is it collecting lawsuits? Google hired Character.AI's founders in August 2024, two years before the bankruptcy; OpenAI shut Sora, its video app; and the court filing warned about cash and litigation.
+2. **For the one you lean on most, answer four questions about its maker.** Are its founders still there? Is your tool its main product or a side bet? Is it short of cash? Is it collecting lawsuits? Google hired Character.AI's founders in August 2024, two years before the bankruptcy; OpenAI shut its Sora video app; and the court filing warned about cash and litigation.
 3. **If two of those answers worry you, pick your plan B now.** Choose the tool you would move to, and try it on one real task this month, while you still have time to switch calmly.
