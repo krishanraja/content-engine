@@ -22,7 +22,7 @@ also sent to you in this session.
 | Loudness, final encode (ebur128) | -14.1 LUFS, true peak -1.6 dBTP | -14.2 LUFS, true peak -1.0 dBTP |
 | Music bed (No Curves, licensed) | episode bed: open, six chapter lifts, close; 16.6 LU under you | continuous, 17.1 LU under you |
 | Camera joins | one: 2:17.5, the ruled cut of "which is fair enough" (in the 0.44 s silence after "children.", both words whole) | none: one continuous take |
-| Lip sync (SyncNet, calibrated, a window on every join, the rest of your speech tiled) | SYNC_LONG | SYNC_SHORT |
+| Lip sync (SyncNet, calibrated, a window on every join, the rest of your speech tiled) | after the engine fix: 36 of 44 windows pass (0 or -40 ms), the join window passes; 7 low-confidence; one fails at 4:03 (-80 ms, its neighbours -40). Before the fix the cut read -80 ms throughout | pass before the fix (12 of 12, 0 or -40 ms); the re-render with the fix is being measured |
 | Every word, finished file heard again | 872 of 875 words as captioned; the 3 others are below, for your ear | 249 of 249 |
 | Camera shake (wall tracker, your hands left out) | 1.94 -> 1.67 px RMS, p95 3.58 -> 2.13 px (a 7.7% steady crop) | 1.96 -> 1.01 px RMS, p95 4.02 -> 2.05 px (2% crop) |
 | Room behind you | darkened and softened, you untouched (person mask, never cut out) | same |
