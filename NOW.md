@@ -1,7 +1,7 @@
 ---
 repo: krishanraja/content-engine
 product: Mindmake content engine
-as_of: 2026-10-26
+as_of: 2026-10-27
 head: 02669ea
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
@@ -32,9 +32,9 @@ Stories a writer can carry without asking Krish:
 
 Objection it answers: "AI content is slop." Here is an engine that grades its judges against the editor and never counts its own actions as taste.
 
-## Where it is right now (as of 2026-10-26)
+## Where it is right now (as of 2026-10-27)
 
-- **Friday four exports now exist, with release checks still open (26 October).** Both camera cuts and both voiceover cuts have matched audio/video durations and verified frame counts. The board dry run resolves 75 assets and preserves Ideas, Monday and Wednesday. Native listening controls failed; two short-camera coarticulation joins remain below the locked clearance requirement. No completed Video assets record or live board replacement. Evidence: `docs/plans/2026-10-23-friday/revisions/motion-v7/SHIPPING.md`.
+- **Friday exports rejected by Krish, 27 October.** All four edits are unpublishable; only the generated stills were accepted. Reported failures include lip sync, missing visible captions, inadequate motion and off-brand execution. Production is stopped: no new renders or spend. The completed evidence-led audit is `docs/plans/2026-10-23-friday/audit-2026-10-27/AUDIT.md`. The board is not activated and Video assets is not complete.
 
 <!-- north-star-state {"week_of": "2026-10-26", "week_target": 1, "current": 1, "current_as_of": "2026-10-23", "current_source": "Control Center content_ideas (1 published in the last 7 days)", "urgency": 1, "urgency_reason": "at 100% of this week's target"} --> **North Star number: U1, on pace.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 1, against 1 this week, on the way to 30 by 30 November 2026. Steady: one proposal a week that raises the ceiling.
 
@@ -196,9 +196,9 @@ production with its existing owner. The exact production handoff still applies.
 
 ## What is next and what is waiting on Krish
 
-- North Star check (2026-10-26): holds.
+- North Star check (2026-10-27): holds.
 
-- **Next for this production session (2026-10-26):** resolve the two short-camera edit boundaries and complete exact-export continuous listening/visual review, then record Video assets and request final approval for the prepared board build. Engine PR170 is already merged and deployed. Four exports and the 75-asset board dry run are prepared; release is not certified.
+- **Next for this production session (2026-10-27):** audit delivered; proposed rebuild uses one editable performance/motion/caption timeline, retaining accepted stills and original recordings. No production restart under the current no-render/no-spend instruction. Resolve operation and continuous audiovisual review remain unproven capabilities; no autonomous finishing claim.
 
 - Next (Sunday 25 October, his recording day): `plan-week` gathers (`board_feed.py gather 2026-10-26`, which needs this change deployed), builds the Ideas tab with styles and every routed Inspiration card covered, a separate reader kills weak ideas first; he picks; then `make-piece` for Monday, Wednesday and Friday: story, scripts in Teleprompter by midday, creative direction before he records.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): CI stays advisory, so a session waits for green before it merges.

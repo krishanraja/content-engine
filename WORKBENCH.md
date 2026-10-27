@@ -1,5 +1,10 @@
 # Workbench: where we are and what's next
 
+## 27 October: Friday rejected; audit completed
+
+Krish rejected all four edits as unpublishable; only generated stills remain accepted. No new renders or spend. [Timestamped reference/brand audit and concrete production workflow](docs/plans/2026-10-23-friday/audit-2026-10-27/AUDIT.md) records confirmed motion/brand/caption failures and the unresolved sync root cause. Existing candidates remain failure evidence, not items awaiting routine sign-off. Board inactive; Video assets incomplete. Source/export correlation is explicitly not listening approval. No production restart occurred.
+
+
 ## 26 October: Friday motion v6
 
 [Production handoff](docs/plans/2026-10-23-friday/revisions/motion-v6/BRIEF.md). [Quality gate and failed $3 calibration](docs/plans/2026-10-26-quality-evidence/README.md): eight calls, no qualification. Engine PR #170 is merged and production readback verified; automatic enforcement remains pending calibration. All four review exports now exist; frame counts, dimensions and audio/video durations match. The board dry run resolves 75 assets while preserving Ideas, Monday and Wednesday. Release remains held on failed listener calibration, two short-camera coarticulation boundaries and continuous final playback. [Exact status](docs/plans/2026-10-23-friday/revisions/motion-v7/SHIPPING.md). All 16 review files plus the production-source ZIP are in the post library under `3 Video/working 26 Oct four cuts`, independently downloaded and hash matched.
