@@ -189,10 +189,18 @@ describe('repository operating contracts', () => {
   // subchannel is under.the.hood, "every single instance front and back end,
   // with zero exceptions". The old names may appear only where an agent needs
   // the mapping to read an append-only row that still carries them: the
-  // glossary's retired names and the dated log entry for the rename.
+  // glossary's retired names and the dated log entry for the rename. And
+  // makeyourmindup's vendored kill list, whose rules and self-test name them
+  // only to refuse them; tests/vendor-kill-list.test.ts holds those two files
+  // to the upstream hashes SOURCE.md records, so a new use cannot slip in.
   it('keeps the two subchannel names retired on 2026-09-25 out of every tracked file', () => {
     const renamed = /split\\?[._-]the\\?[._-]bill|lift\\?[._-]the\\?[._-]lid/i
-    const allowed = new Set(['docs/GLOSSARY.md', 'docs/history/LOG.md'])
+    const allowed = new Set([
+      'docs/GLOSSARY.md',
+      'docs/history/LOG.md',
+      'vendor/makeyourmindup/kill-list/kill-list.v1.json',
+      'vendor/makeyourmindup/kill-list/kill-list-self-test.mjs',
+    ])
     const files = execFileSync('git', ['ls-files'], { cwd: repoRoot, encoding: 'utf8' }).split(/\r?\n/).filter(Boolean)
     const hits: string[] = []
     for (const file of files) {
