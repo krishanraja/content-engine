@@ -1,30 +1,16 @@
 # Monday: three questions before the article can go
 
-## Update, 28 October: two of the three answered; one left
+## Update, 28 October: the fact gate passes
 
-- **1. Prediction: kept as recorded** (Krish, 28 Oct: "Keep as recorded"). 1 March 2027, 75%.
-- **2. Re-check: done on his "yes to the spend".** It read the 15 changed sentences and cost **$0.26, not the $0.13 I
-  estimated**: Monday's fact checks now total about $1.28 against the $1.20 he approved, $0.08 over. The article's one
-  sentence naming Udio and ElevenLabs is cut ("Universal Music has struck agreements with AI companies, including Nvidia,
-  but we could find none it has bought"); that line now checks out on file. The corrected article is saved on the engine.
-- **3. Still yours: sign off these eight sentences** (the gate counts ten claims; two sentences appear twice). Each is true
-  as written; the checker wants a source that says it in those words:
-  1. "Then in March 2026, OpenAI said it would shut its Sora app." (New on this list: our capture of OpenAI's 24 March
-     report says it is "shuttering its stand-alone" Sora app.)
-  2. "NBCUniversal has made no AI purchase that we could find." (Our search; no source can prove an absence.)
-  3. "Google and Disney have now paid for pieces of it, two years apart, for two very different reasons." (Google, August
-     2024: $2.7 billion to license the models and hire the founders. Disney, September 2026: a $20 million bid.)
-  4. "So it paid for both, and left the company standing." (Google paid for the licence and the founders; the company
-     carried on until the bankruptcy.)
-  5. "Disney had licensed its characters to someone else's app, and that app closed." (Its December 2025 deal put its
-     characters in OpenAI's Sora app; OpenAI closed the app in 2026.)
-  6. "Disney owns Marvel, Pixar and Star Wars, and Character.AI's app lets millions of people chat with made-up characters."
-  7. "Google paid billions to use the tech and hire the founders." (The checker marks it contradicted: the sources say
-     $2.7 billion, one billion-scale payment. Say if you want "billions" changed to "$2.7 billion".)
-  8. "For the one you lean on most, answer four questions about its maker. Are its founders still there?" (Advice, not a fact.)
-
-  Reply in words, for example "sign the eight", and I record it as your sign-off. Then the pack is built and the cuts go
-  into the post's `3 Video` folder.
+- **Prediction: kept as recorded** (Krish, 28 Oct: "Keep as recorded"). 1 March 2027, 75%.
+- **Signed off in his words** ("Sign the eight."): the Sora line, the Marvel/Pixar/Star Wars line, NBCUniversal, "paid for
+  pieces of it", "paid for both", "Disney had licensed its characters", the four-questions line, and the Google line,
+  which the sources contradicted ("billions"), so it now reads "Google paid $2.7 billion to use the tech and hire the
+  founders." (his "Yes, change and check"). The Universal Music sentence no longer names Udio and ElevenLabs.
+- **Spend:** two paid re-checks, $0.26 and $0.20 (about $0.14 was estimated for the second). Monday's fact checks total
+  about $1.48 against the $1.20 he approved, $0.28 over. The engine re-reads every line that failed a check on each run,
+  which is why a one-sentence change cost eight sentences.
+- `making.py` reads: Fact-checked draft done. Next is the Visual gate (below).
 
 ---
 
