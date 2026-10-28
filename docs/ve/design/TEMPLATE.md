@@ -44,7 +44,7 @@ At least six distinct moves per beat (camera, parallax, kinetic type, counter, w
 1. **Stills** come from ChatGPT Images through a Codex imagegen card, 9:16, at least 1882x3344 (2x the stage), 4 candidates per plate. Prompts must say: no text, numbers, flags, emblems, logos, faces, UI, arrows or highlights; blank flat screens; calm dark at least 35% of the frame for type; one hand, one phone; palette ink-green blacks, cream and mint, never coral. Say it again as the last sentence.
 2. **Reject by machine first**: OCR finds any letter or digit; a flat-colour test for the blank screen; the Critic checks for flags, emblems, logos, faces. A hit means regenerate, never retouch.
 3. **Animation** (Runway, Higgsfield) only animates an approved still for up to 5 s, one-shot, never evidence. Each generation is logged with its credit cost (`ve ledger <piece> add`), and Krish approves every spend.
-4. **No tag, provenance sticker or marquee on video** (Krish, 28 Oct 2026: "I hate all these stupid little abbreviations and marks"). That a plate is a generated illustration is said in the post copy, not on the picture. The real recording is never generated and never redrawn, and its own source label stays.
+4. **Every element on screen serves the message of the video.** No tag, provenance sticker, marquee, disclaimer or process label (Krish, 28 Oct 2026: "I hate all these stupid little abbreviations and marks"; "No one cares that things are AI-generated"). The real recording is never generated and never redrawn, and its own source label stays.
 5. Each plate has a sidecar: prompt, model, date, candidates, chosen, credits.
 
 ## Quality bar (the gates, in order)
