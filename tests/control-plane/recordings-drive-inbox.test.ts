@@ -289,10 +289,10 @@ describe('the content watcher in the lane report', () => {
     const left = parseLaneReport({
       machine: 'SURFACE', problems: [],
       windows: { launcher: 'ok', hidden: 4, wrapped: 0, left: 3, left_by: { elevated: 2, other: 1, 'C:\\x': 1 },
-        left_ours: ['Mindmake Library Sync', 'Some Vendor Updater', 'Mindmake ../x'] },
+        left_names: ['Mindmake Library Sync', 'Some Vendor Updater (user)', 'C:\\Users\\k\\x.ps1'] },
     }, new Date(0).toISOString())!
     expect(left.windows).toEqual({ launcher: 'ok', hidden: 4, wrapped: 0, left: 3, left_by: { elevated: 2, other: 1 },
-      left_ours: ['Mindmake Library Sync'] })
+      left_names: ['Mindmake Library Sync', 'Some Vendor Updater (user)'] })
     expect(parseLaneReport({ machine: 'A', problems: [], windows: { launcher: 'maybe' } }, new Date(0).toISOString())).not.toHaveProperty('windows')
     expect(parseLaneReport({ machine: 'A', problems: [], windows: { launcher: 'failed', hidden: -1 } }, new Date(0).toISOString())!.windows)
       .toEqual({ launcher: 'failed', hidden: 0, wrapped: 0, left: 0 })
