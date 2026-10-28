@@ -61,12 +61,22 @@ export function TestGrid({ object, events, box, tokens, aspect, frame }: DeviceP
         const col = state.params.cols.findIndex((item) => item.id === cell.col)
         const rect = layout.cells[i * state.params.cols.length + col]!
         const size = Math.min(l.tickSize * layout.scale, rect.height * 0.75, rect.width * 0.4)
-        return <div role="cell" key={cell.id} data-cell={cell.id} aria-label={`${row.label}, ${state.params.cols[col]!.label}: ${cell.stamped ? `${cell.value} ${state.unit}` : 'pending'}`} style={{
+        const carryText = 'ANSWER DELETED'
+        return <div role="cell" key={cell.id} data-cell={cell.id} data-carry={cell.carried ? 'true' : undefined} aria-label={`${row.label}, ${state.params.cols[col]!.label}: ${cell.carried ? carryText : cell.stamped ? `${cell.value} ${state.unit}` : 'pending'}`} style={{
           position: 'absolute', ...rect, display: 'flex', alignItems: 'center', justifyContent: 'center',
           boxSizing: 'border-box', background: tokens.cream, color: tokens.ink, border: `${2 * layout.scale}px solid ${tokens.ink}`,
           boxShadow: `${l.shadow * layout.scale}px ${l.shadow * layout.scale}px 0 ${tokens.ink}`,
-          opacity: cell.opacity, transform: `scale(${cell.scale > 1 ? 1 : 0.98})`, transformOrigin: 'center',
+          opacity: cell.opacity, transform: `scale(${cell.carried || cell.scale > 1 ? 1 : 0.98})`, transformOrigin: 'center',
         }}>
+          {cell.carried ? <>
+            <div aria-hidden style={{ position: 'absolute', inset: 0, boxSizing: 'border-box',
+              border: `2px dashed ${tokens.ink}`, opacity: cell.carryProgress,
+              transform: `scale(${2.4 - 1.4 * cell.carryProgress})`, transformOrigin: 'center' }} />
+            <span style={{ fontFamily: HOUSE_FONTS.data,
+              fontSize: Math.min(30 * layout.scale, rect.height * 0.3, rect.width / (carryText.length * 0.62)),
+              whiteSpace: 'nowrap', color: 'transparent', WebkitTextStroke: `${2 * layout.scale}px ${tokens.ink}`,
+              opacity: cell.carryProgress }}>{carryText}</span>
+          </> : null}
           {cell.ghost ? <span style={{ opacity: cell.ghostProgress * 0.5 }}><Tick ghost color={tokens.ink} outline={tokens.ink} size={size} /></span> : null}
           {cell.stamped ? <div style={{ display: 'flex', alignItems: 'center', opacity: cell.stampProgress, transform: `scale(${0.8 + 0.2 * cell.stampProgress})` }}>
             {cell.tick ? <Tick ghost={false} color={tokens.mint} outline={tokens.ink} size={size} /> : null}
