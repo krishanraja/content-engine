@@ -12,7 +12,10 @@
   python scripts/ve.py status <piece>                readiness, computed; nobody writes a pass
   python scripts/ve.py coverage                      failure register: behavioural guards vs markers
 
-ingest, stills, ledger and file arrive with the Phase 1 cards; until then they say so.
+  python scripts/ve.py ledger <piece>               usage against the piece's caps
+  python scripts/ve.py time <piece> start <phase>    time an engine phase (stop/status available)
+
+ingest, stills and file arrive with the Phase 1 cards; until then they say so.
 ve has no publish, send or schedule verb."""
 from __future__ import annotations
 
@@ -165,6 +168,9 @@ def cmd_card(args) -> int:
 
 
 def cmd_dispatch(args) -> int:
+    if getattr(args, 'piece', None):
+        from velib.ledger import require_within
+        require_within(args.piece)
     from velib.cards import dispatch
     result = dispatch(Path(args.card), background=not args.wait, spend_approved=args.spend_approved)
     print((result.stdout or result.stderr).strip()[-2000:])
@@ -245,6 +251,59 @@ def not_yet(name: str):
     return handler
 
 
+def _usage_number(value):
+    return f'{value / 1000000:.1f}M' if abs(value) >= 1000000 else f'{value:g}'
+
+
+def _ledger_report(piece) -> int:
+    from velib import ledger
+    usage, limits = ledger.totals(piece), ledger.budget()
+    values = ledger.measures(usage)
+    for key, label, cap_key in ledger.MEASURES:
+        amount, cap = values[key], limits[cap_key]
+        print(f'{label} {_usage_number(amount)} / {_usage_number(cap)} ({amount / cap:.0%})')
+    print(f'credits {usage["credits"]:g}')
+    print(f'Krish-wait minutes {usage["krish_wait_seconds"] / 60:g}')
+    ok, lines = ledger._check(usage, limits)
+    for line in lines:
+        print(line)
+    return 0 if ok else 1
+
+
+def cmd_ledger(args) -> int:
+    from velib import ledger
+    try:
+        if getattr(args, 'action', None) == 'add':
+            ledger.add(args.piece, args.kind, args.amount, args.note)
+        return _ledger_report(args.piece)
+    except (ValueError, OSError) as error:
+        print(f've ledger: {error}', file=sys.stderr)
+        return 1
+
+
+def cmd_time(args) -> int:
+    from velib import ledger
+    try:
+        if args.action == 'start':
+            ledger.start_clock(args.piece, args.phase)
+            print(f've time: started phase {args.phase!r}')
+        elif args.action == 'stop':
+            seconds = ledger.stop_clock(args.piece)
+            print(f've time: recorded {seconds} engine seconds')
+            return _ledger_report(args.piece)
+        running = ledger.clock_status(args.piece)
+        seconds = ledger.totals(args.piece)['engine_seconds']
+        if running:
+            seconds += ledger.elapsed_seconds(running)
+        cap = ledger.budget()['engine_minutes_cap']
+        print(f'phase {running["phase"]!r}' if running else 'no running phase')
+        print(f'engine minutes {seconds / 60:g} / {cap:g} ({seconds / 60 / cap:.0%})')
+        return 1 if seconds / 60 > cap else 0
+    except (ValueError, OSError) as error:
+        print(f've time: {error}', file=sys.stderr)
+        return 1
+
+
 def cmd_compile(args) -> int:
     from velib.lint import lint
     spec, problems = lint(Path(args.spec))
@@ -298,6 +357,7 @@ def main() -> int:
     p = sub.add_parser('study'); p.add_argument('ref'); p.add_argument('--out'); p.set_defaults(fn=cmd_study)
     p = sub.add_parser('card'); p.add_argument('fields'); p.set_defaults(fn=cmd_card)
     p = sub.add_parser('dispatch'); p.add_argument('card'); p.add_argument('--wait', action='store_true')
+    p.add_argument('--piece', help='refuse dispatch when this piece is over any budget cap')
     p.add_argument('--spend-approved', action='store_true', help="only after Krish's yes, in his words, to Codex drawing paid credits")
     p.set_defaults(fn=cmd_dispatch)
     p = sub.add_parser('verify-card'); p.add_argument('card'); p.add_argument('--cwd', required=True); p.set_defaults(fn=cmd_verify_card)
@@ -310,7 +370,27 @@ def main() -> int:
     p.add_argument('props'); p.add_argument('out'); p.add_argument('--scale', type=float, default=1.0)
     p.add_argument('--spec', required=True); p.add_argument('--assets-dir', required=True)
     p.set_defaults(fn=cmd_render)
-    for name in ('ingest', 'stills', 'ledger', 'file'):
+    p = sub.add_parser('ledger', help='report or append piece usage against budget caps',
+                       description='Show piece usage and OK/WARN/OVER budget checks. Exit 1 when over a cap.')
+    p.add_argument('piece', help='piece folder name or existing directory')
+    actions = p.add_subparsers(dest='action')
+    a = actions.add_parser('add', help='append a usage entry and report the resulting totals',
+                           description='Append usage without changing existing ledger lines.')
+    a.add_argument('kind', choices=('claude_tokens', 'codex_tokens', 'allowance_points', 'credits',
+                                   'engine_seconds', 'krish_wait_seconds'))
+    a.add_argument('amount', type=float, help='finite non-negative amount')
+    a.add_argument('--note', default='', help='description of this usage')
+    p.set_defaults(fn=cmd_ledger)
+    p = sub.add_parser('time', help='start, stop or inspect the piece engine clock',
+                       description='Track engine phases separately from the append-only usage ledger.')
+    p.add_argument('piece', help='piece folder name or existing directory')
+    actions = p.add_subparsers(dest='action', required=True)
+    a = actions.add_parser('start', help='start a phase unless engine minutes are over the cap')
+    a.add_argument('phase', help='phase name recorded with elapsed engine seconds')
+    actions.add_parser('stop', help='append elapsed engine seconds and remove the running clock')
+    actions.add_parser('status', help='show the running phase and used minutes including elapsed time')
+    p.set_defaults(fn=cmd_time)
+    for name in ('ingest', 'stills', 'file'):
         p = sub.add_parser(name); p.add_argument('rest', nargs='*'); p.set_defaults(fn=not_yet(name))
     args = parser.parse_args()
     return args.fn(args)

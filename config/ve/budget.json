@@ -1,0 +1,8 @@
+{
+  "engine_minutes_cap": 60,
+  "claude_tokens_cap": 3300000,
+  "codex_tokens_cap": 2100000,
+  "total_tokens_cap": 12600000,
+  "allowance_points_cap": 1.2,
+  "warn_fraction": 0.8
+}
