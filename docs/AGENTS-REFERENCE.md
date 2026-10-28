@@ -446,10 +446,10 @@ refuses. Every other retired name is in `docs/GLOSSARY.md`.
   commit. When Krish overrules a decision, record it in the commit body as
   `Ruling (Krish, YYYY-MM-DD): ...`.
 
-<!-- krish-canon:start release=v2026.10.26.1 sha=d557c12a5984 rendered=2026-10-26 -->
+<!-- krish-canon:start release=v2026.10.27.2 sha=1197c92088a1 rendered=2026-10-27 -->
 ## Krish canon
 
-Rendered from `krishanraja/ai-harness` at release v2026.10.26.1. Nothing inside these
+Rendered from `krishanraja/ai-harness` at release v2026.10.27.2. Nothing inside these
 markers is hand-maintained: an edit here is detected and proposed back to the canon,
 never silently overwritten, and never lost. This sync preserves all other text.
 Separately approved repository administration owns only its declared regions and context file.
