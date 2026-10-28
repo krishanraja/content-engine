@@ -56,10 +56,17 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
     if spec['format'] in lock['formats'] and not designlock.frozen(lock, spec['format'])[0]:
         out.append(f'format {spec["format"]} has no frozen design lock')
     fmt = load_json(CONFIG / 'formats' / f"{spec['format']}.json")
+    objects = {o['obj']: o for o in spec['objects']}
+    if spec['format'] in lock['formats']:
+        allowed = lock.get('thresholds', {}).get('scribbles_per_beat', 1)
+        for cut_id, cut in spec['cuts'].items():
+            for index, beat in enumerate(cut['beats']):
+                scribbles = sum(objects.get(name, {}).get('device') == 'scribble' for name in set(beat['uses']))
+                if scribbles > allowed:
+                    out.append(f'scribbles_per_beat cuts.{cut_id}.beats.{index}: beat {beat["id"]} uses {scribbles} scribbles, the design lock allows {allowed}')
     pending_error = pending_devices_error(spec['format'], fmt)
     if pending_error:
-        return [pending_error]
-    objects = {o['obj']: o for o in spec['objects']}
+        return out + [pending_error]
 
     # brand
     for path, text in _strings(spec):
@@ -143,7 +150,7 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
             for event in beat['events']:
                 first_verb.setdefault(event['obj'], (event['at_w'], event['verb']))
         for obj_id, (word, verb) in first_verb.items():
-            if verb != 'enter':
+            if verb != 'enter' and not (verb == 'draw' and objects.get(obj_id, {}).get('device') == 'scribble'):
                 out.append(f'motion.enters {where}: {obj_id} first acts with "{verb}" at word {word}; an object enters before anything else happens to it, or it never appears')
         if cut['aspect'] == '9:16' and whole:
             minutes = max(1.0, (beats[-1]['span']['to_w'] - beats[0]['span']['from_w']) / (WORDS_PER_SECOND * 60))

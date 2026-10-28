@@ -5,6 +5,9 @@
     "query_chip": { "verbs": ["enter", "highlight", "exit"] },
     "evidence_card": { "verbs": ["enter", "fill", "mark", "stamp", "exit"] },
     "kinetic_stat": { "verbs": ["enter", "count_to", "exit"] },
+    "scribble": { "verbs": ["draw", "exit"] },
+    "passport_page": { "verbs": ["enter", "stamp", "mark", "exit"] },
+    "hand_phone_stage": { "verbs": ["enter", "move", "fill", "exit"] },
     "thread_card": { "verbs": ["enter", "mark", "stamp", "exit"] }
   }
 }

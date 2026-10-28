@@ -1,0 +1,43 @@
+{
+  "format": "two-passports",
+  "date": "2026-10-28",
+  "model": "none; offline deterministic scripts",
+  "prompt": "No image generation. Reproduce supplied reference vectors; procedural neutral paper texture.",
+  "candidates": 1,
+  "chosen": "deterministic reference reproduction",
+  "credits": 0,
+  "credits_logged": 0,
+  "plate_px": [
+    900,
+    1700
+  ],
+  "note": "Flags are simplified illustrations. Production must use a licensed open set. Every composition using these plates requires ILLUSTRATION.",
+  "paper_substitution": "Historical blank-paper source photographs are absent. Seed 7 procedural crinkle replaces source sampling; this is not photographic reproduction or evidence.",
+  "source": "docs/ve/design/formats/ref/P/tools/make_vectors.py and make_paper.py",
+  "files": {
+    "paper.jpg": {
+      "sha256": "cbd656bce34a89c99320b9df81bba271096114049984ef3ad659d4cf42b4fe8a",
+      "role": "paper"
+    },
+    "guilloche.svg": {
+      "sha256": "46d99cda10548cbf1ef22581e27ab044e5a89a8c1a9e3cb37577dd99fa3234ca",
+      "role": "guilloche"
+    },
+    "rosette.svg": {
+      "sha256": "f33a5cf6e03787e2af313d7be6bc2ec68b61d660906427e702d58be3075ea19c",
+      "role": "rosette"
+    },
+    "flag-usa.svg": {
+      "sha256": "e9eba77f2aec8a7604cedebb862daaaafaad226e2f54ea803de456e625e696e0",
+      "role": "usa"
+    },
+    "flag-china.svg": {
+      "sha256": "a46385813b373e959d1b34c58f6fe09279c0ee051cfc6288f0defb8cf0b26b39",
+      "role": "china"
+    }
+  },
+  "reference_sha256": {
+    "make_vectors.py": "9a3acb1b667d873e2c93ebccc7b3233d56a59ba6b13935f3b69eed68832af548",
+    "make_paper.py": "13083478c7e471f6c85d7ed75dd9e74c243968734bf144e2e440c8a0e65da8a7"
+  }
+}
