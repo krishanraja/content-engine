@@ -6,7 +6,7 @@ effort: medium
 max_minutes: 45
 max_calls: 45
 cwd: C:/Users/krish/dev/mindmake/ce-cards/ve-dl-2-composition
-write_allow: [scripts/velib/qc_composition.py, scripts/velib/qc.py, scripts/ve.py, tests/ve_composition_test.py]
+write_allow: [scripts/velib/qc_composition.py, scripts/velib/qc_captions.py, scripts/velib/qc.py, scripts/ve.py, tests/ve_composition_test.py]
 read: scripts/velib/qc.py, scripts/velib/qc_captions.py, scripts/velib/designlock.py, scripts/ve.py, config/ve/design-lock.json, config/ve/brand-tokens.json, config/studio.json, docs/ve/design/TEMPLATE.md, fixtures/ve/design-lock/**, assets/fonts/makeyourmindup/*.ttf
 never: NOW.md, WORKBENCH.md, docs/plans/**, git commands, network, MCP tools, publishing, new dependencies (numpy, PIL and the repo's tesseract CLI are allowed), editing config/ve/design-lock.json or any fixture, any change to apps/renderer
 ---
