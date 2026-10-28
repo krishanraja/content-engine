@@ -68,8 +68,27 @@ def quote(words, limit=None):
     return f'"{text}"'
 
 
+def weight(s):
+    """A pattern is a complaint he made about two or more productions, more critical to follow than a one-off about one
+    (Krish, 2026-10-28). A floor rendered before the engine weighed standards says nothing, and is read as unweighed."""
+    n = s.get('productions')
+    if s.get('weight') == 'pattern':
+        return f'PATTERN, raised about {n} productions'
+    if s.get('weight') == 'one_off':
+        return 'one-off, about one production'
+    return None
+
+
+def by_weight(refs, doc):
+    """Patterns first, by how many productions; the file's order otherwise."""
+    return sorted(refs, key=lambda ref: -(doc['standards'][ref].get('productions') or 0)
+                  if doc['standards'][ref].get('weight') == 'pattern' else 0)
+
+
 def standard_lines(ref, s):
     tag = {'approved': 'approved', 'reworded': 'his wording'}.get(s['standing'], 'draft, not yet approved')
+    if weight(s):
+        tag = f'{weight(s)}; {tag}'
     when = f' {s["decided_on"]}' if s.get('decided_on') else ''
     # The engine wrote every check; the file says whether he approved it with the statement or it is still a draft.
     by = s.get('check_by') or 'the engine, a draft'
@@ -111,15 +130,17 @@ def show_format(doc, fmt, approved_only, limit):
         return 1
     print(f'The rejection floor for {fmt}: {entry["maker"]}')
     print(f'Floor version {doc["version"][:12]}, as of {doc["as_of"]}. Never ship beneath it.\n')
-    approved = [r for r in entry.get('approved', [])]
-    drafts = [] if approved_only else entry.get('draft', [])
+    approved = by_weight(entry.get('approved', []), doc)
+    drafts = [] if approved_only else by_weight(entry.get('draft', []), doc)
     print(f'Approved standards ({len(approved)}): these bind every check.')
     for ref in approved:
         print('\n'.join(standard_lines(ref, doc['standards'][ref])))
     if not approved:
         print('- None approved yet. Until then, checks bind to his words below.')
     if not approved_only:
-        print(f'\nDraft standards ({len(drafts)}): the engine\'s reading of his rejections. Follow them; only he approves them.')
+        patterns = sum(1 for ref in drafts if doc['standards'][ref].get('weight') == 'pattern')
+        print(f'\nDraft standards ({len(drafts)}, {patterns} of them patterns): the engine\'s reading of his rejections. '
+              'Follow them; only he approves them. A PATTERN he raised about two or more productions comes first and matters most.')
         for ref in drafts:
             print('\n'.join(standard_lines(ref, doc['standards'][ref])))
         recs = sorted(entry.get('rejected', []), key=lambda ref: doc['records'][ref]['on'], reverse=True)
@@ -135,7 +156,7 @@ def show_format(doc, fmt, approved_only, limit):
 def summary(doc):
     c = doc.get('counts', {})
     print(f'The rejection floor, version {doc["version"][:12]}, as of {doc["as_of"]}: {c.get("records", 0)} rejections, '
-          f'{c.get("standards", 0)} standards ({c.get("approved", 0)} approved).')
+          f'{c.get("standards", 0)} standards ({c.get("approved", 0)} approved, {c.get("patterns", 0)} patterns he raised about two or more productions).')
     print('Read the one you are making: python3 scripts/floor.py --format <maker>\n')
     for fmt, entry in sorted(doc['formats'].items()):
         print(f'- {fmt}: {len(entry.get("approved", []))} approved, {len(entry.get("draft", []))} draft, '
@@ -154,15 +175,19 @@ def self_test():
     import contextlib
     import io
     doc = {
-        'version': 'a' * 32, 'as_of': '2026-10-28', 'counts': {'records': 1, 'standards': 2, 'approved': 1},
-        'formats': {'short_video': {'maker': 'The 9:16 short cut', 'approved': ['s1'], 'draft': ['s2'], 'rejected': ['r1']}},
+        'version': 'a' * 32, 'as_of': '2026-10-28', 'counts': {'records': 1, 'standards': 3, 'approved': 1, 'patterns': 1},
+        'formats': {'short_video': {'maker': 'The 9:16 short cut', 'approved': ['s1'], 'draft': ['s2', 's3'], 'rejected': ['r1']}},
         'standards': {
             's1': {'standing': 'approved', 'decided_on': '2026-10-29', 'never_beneath': 'Never cut a word at a join.',
                    'check_before_delivery': 'Play every join with sound.', 'check_by': 'the engine, approved by him with the statement',
                    'formats': ['short_video'], 'support': 1,
                    'in_his_words': 'synthetic: my words chop out', 'records': ['r1'], 'boundary': [], 'his_words': []},
             's2': {'standing': 'draft', 'never_beneath': 'Never hold a still for long.', 'check_before_delivery': 'Scrub it.',
-                   'formats': ['short_video'], 'support': 1, 'records': ['r1'], 'boundary': [], 'his_words': []},
+                   'formats': ['short_video'], 'support': 1, 'records': ['r1'], 'boundary': [], 'his_words': [],
+                   'weight': 'one_off', 'productions': 1},
+            's3': {'standing': 'draft', 'never_beneath': 'Never chop a word at a join.', 'check_before_delivery': 'Listen to every join.',
+                   'formats': ['short_video'], 'support': 3, 'records': ['r1'], 'boundary': [], 'his_words': [],
+                   'weight': 'pattern', 'productions': 3},
         },
         'records': {'r1': {'on': '2026-10-27', 'kind': 'rejected', 'kept_as': 'moment', 'piece': 'synthetic piece',
                            'his_words': [{'said': 'synthetic: my words chop out', 'on': '2026-10-27', 'is': 'his words'}],
@@ -182,6 +207,11 @@ def self_test():
     # Who wrote each check is printed with it: an approved one he saw, a draft one he has not.
     assert '(the engine, approved by him with the statement): Play every join with sound.' in text, text
     assert '(the engine, a draft): Scrub it.' in text, text
+    # A pattern comes before a one-off and says how many productions he raised it about.
+    assert text.index('Never chop a word at a join.') < text.index('Never hold a still for long.'), text
+    assert '[PATTERN, raised about 3 productions; draft, not yet approved]' in text, text
+    assert '[one-off, about one production; draft, not yet approved]' in text, text
+    assert '(2, 1 of them patterns)' in text, text
     out = io.StringIO()
     with contextlib.redirect_stdout(out):
         assert show_format(doc, 'short_video', True, 40) == 0
