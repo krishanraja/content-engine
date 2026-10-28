@@ -20,9 +20,13 @@ never what a piece is about (Ruling, Krish, 2026-10-28). Makers follow the draft
 
 The bar comes first for a video maker. Krish, 2026-10-28: "the video production quality standards for the latest
 Friday (AI Passports) and Monday (character.ai) pieces are the floor for what I expect". config/reference-cuts.json
-names those cuts and the quality names of docs/production/THE_BAR.md; --format prints a short version of it before
-the rejection standards for every maker it applies to, and --check holds the two files together. It carries no
-hashes or file ids (they stay in the file) and no measured value: those describe the references, never targets.
+names those cuts and the quality names of docs/production/THE_BAR.md. The qualities are the engine's reading of
+the cuts, a draft until he approves their wording, and the printed bar says so. --format prints a short version of
+it before the rejection standards for the makers in full_bar_for_makers, and a one-line pointer for the other video
+makers and for --format all. --check holds the two files together: the quality names, the reference moments and
+each quality's comparison points, word for word. The printed bar carries no hashes or file ids (they stay in the
+file) and no measured value: those describe the references, never targets. Only --check and a --format read it, so a
+broken file never stops another maker's floor or the summary.
 
 Standard library only, offline: it runs in Codex's sandbox, which has no internet.
 """
@@ -135,37 +139,106 @@ KEPT = {'still': 'still', 'moment': 'moment, clip kept', 'whole_cut': 'whole cut
 
 # The bar: the finished cuts Krish named as the production quality floor (config/reference-cuts.json).
 FAMILIES = {'voiceover': 'voiceover', 'split_screen': 'split screen'}
+STANDINGS = ('draft', 'approved')
+IDENTITIES = ('confirmed', 'unconfirmed')
 STAMP = re.compile(r'^\d\d:\d\d(\.\d+)?$')
 SHA256 = re.compile(r'^[0-9a-f]{64}$')
+# A bullet under the page's '## Reference moments': "- 00:22.0 to 00:22.3: what it shows".
+PAGE_MOMENT = re.compile(r'^- (\d\d:\d\d(?:\.\d+)?)(?: to (\d\d:\d\d(?:\.\d+)?))?: (.+)$')
+# One point on a quality's "**Compare beside.**" line: "Friday tall 00:22 to 00:36".
+PAGE_POINT = re.compile(r'^(.+?) (\d\d:\d\d(?:\.\d+)?)(?: to (\d\d:\d\d(?:\.\d+)?))?$')
+COMPARE = '**Compare beside.**'
 # A measured reading of a reference (its length, shape, cuts, timings, levels, tempo or colours) is context, never a
 # target (Krish, 2026-10-28: "you are only to look for production quality standards"). None may be written into the
-# references, where a brief or a check could read one as a standard.
+# references as a field, where a brief or a check could read one as a standard. A figure inside a sentence is not seen
+# here; the page and the file keep none.
 MEASURED = {'duration', 'duration_s', 'length', 'length_s', 'seconds', 'runtime', 'aspect', 'aspect_ratio',
             'resolution', 'width', 'height', 'fps', 'frame_rate', 'bitrate', 'cut_count', 'cuts_per_minute',
             'scene_changes', 'events_per_second', 'caption_changes', 'bpm', 'tempo', 'lufs', 'loudness',
             'true_peak', 'loudness_range', 'palette', 'sampled_palette', 'hex'}
+BAR_HINT = ('Making a video? The bar comes first: python3 scripts/floor.py --format short_video (or long_video) prints '
+            'the production quality floor from the cuts Krish named; config/reference-cuts.json names its page.')
+
+
+def read_bar(path=BAR):
+    """The references, or None when the file is not there, and an error sentence when it cannot be read. Only the
+    makers it applies to and --check read it, so a broken file never stops another maker's floor."""
+    if not path.exists():
+        return None, None
+    try:
+        with path.open(encoding='utf-8') as f:
+            bar = json.load(f)
+    except (OSError, ValueError) as error:
+        return None, f'{path.name} cannot be read: {error}'
+    if not isinstance(bar, dict):
+        return None, f'{path.name} is not a JSON object'
+    return bar, None
 
 
 def load_bar(path=BAR):
-    if not path.exists():
-        return None
-    with path.open(encoding='utf-8') as f:
-        return json.load(f)
+    return read_bar(path)[0]
 
 
 def applies(bar, fmt):
     return bool(bar) and fmt in bar.get('applies_to_makers', [])
 
 
-def bar_headings(text):
-    """The quality headings of the bar's page, in order, without their numbers."""
-    names, inside = [], False
+def full_bar(bar, fmt):
+    return applies(bar, fmt) and fmt in bar.get('full_bar_for_makers', [])
+
+
+def section(text, title):
+    """The lines under one '## ' heading of the page."""
+    lines, inside = [], False
     for line in text.splitlines():
         if line.startswith('## '):
-            inside = line.strip() == '## The qualities'
-        elif inside and line.startswith('### '):
-            names.append(re.sub(r'^\d+\.\s+', '', line[4:].strip()))
-    return names
+            inside = line.strip() == title
+        elif inside:
+            lines.append(line)
+    return lines
+
+
+def bar_headings(text):
+    """The quality headings of the bar's page, in order, without their numbers."""
+    return [re.sub(r'^\d+\.\s+', '', line[4:].strip())
+            for line in section(text, '## The qualities') if line.startswith('### ')]
+
+
+def page_moments(text, labels):
+    """(ref, at, to, what) for each bullet under '## Reference moments', its reference named by the '### <label> (...)'
+    heading above it, and the lines that could not be read."""
+    found, problems, ref = [], [], None
+    for line in section(text, '## Reference moments'):
+        if line.startswith('### '):
+            label = line[4:].split(' (')[0].strip()
+            ref = labels.get(label)
+            if ref is None:
+                problems.append(f'reference moments: the heading {label!r} names no reference label')
+        elif line.startswith('- '):
+            m = PAGE_MOMENT.match(line.strip())
+            if not m or ref is None:
+                problems.append(f'reference moments: cannot read {line.strip()[:70]!r}')
+            else:
+                found.append((ref, m[1], m[2], m[3]))
+    return found, problems
+
+
+def page_points(text, labels):
+    """quality name -> [(ref, at, to)] from each quality's Compare beside line, and the points that could not be read."""
+    found, problems, name = {}, [], None
+    for line in section(text, '## The qualities'):
+        if line.startswith('### '):
+            name = re.sub(r'^\d+\.\s+', '', line[4:].strip())
+        elif line.startswith(COMPARE) and name:
+            points = []
+            for part in line[len(COMPARE):].strip().rstrip('.').split(';'):
+                m = PAGE_POINT.match(part.strip())
+                if not m or m[1] not in labels:
+                    problems.append(f'quality {name!r}: cannot read the comparison point {part.strip()!r}')
+                    continue
+                points.append((labels[m[1]], m[2], m[3]))
+            found[name] = points
+    return found, problems
 
 
 def measured_keys(node, at=''):
@@ -185,22 +258,32 @@ def bar_problems(bar, page):
     """Problems with the references and their page, as plain sentences. Empty when they are whole and agree.
     `page` is the text of the bar's page, or None when it is missing."""
     problems = []
-    for key in ('doc', 'ruling', 'principle', 'measured_values', 'applies_to_makers', 'qualities', 'references',
-                'reference_moments'):
+    for key in ('doc', 'ruling', 'standing', 'principle', 'measured_values', 'applies_to_makers', 'qualities',
+                'references', 'reference_moments'):
         if not bar.get(key):
             problems.append(f'missing {key}')
     if problems:
         return problems
     if not bar['ruling'].get('words') or not bar['ruling'].get('on'):
         problems.append('the ruling has no words or no date')
+    # His words named the cuts; the qualities are the engine's reading of them until he approves their wording.
+    if bar['standing'] not in STANDINGS:
+        problems.append(f'standing must be one of {", ".join(STANDINGS)}')
+    if bar['standing'] == 'draft' and not bar.get('standing_note'):
+        problems.append('a draft bar needs its standing_note, the line that says he has not approved its wording')
     if 'never' not in bar['measured_values'] or 'target' not in bar['measured_values']:
         problems.append('measured_values must say measured values are never targets')
+    if not set(bar.get('full_bar_for_makers', [])) <= set(bar['applies_to_makers']):
+        problems.append('full_bar_for_makers must be makers in applies_to_makers')
     qualities = [q.get('id') for q in bar['qualities']]
     if len(set(qualities)) != len(qualities) or not all(qualities):
         problems.append('every quality needs its own id')
     refs = [r.get('id') for r in bar['references']]
     if len(set(refs)) != len(refs) or not all(refs):
         problems.append('every reference needs its own id')
+    labels = {r.get('label'): r.get('id') for r in bar['references']}
+    if len(labels) != len(refs) or not all(labels):
+        problems.append('every reference needs its own label, the name the page uses for it')
     for r in bar['references']:
         if r.get('format_family') not in FAMILIES:
             problems.append(f'reference {r.get("id")}: format_family must be one of {", ".join(FAMILIES)}')
@@ -212,6 +295,10 @@ def bar_problems(bar, page):
         for key in ('piece', 'which_file', 'series', 'published_on'):
             if not r.get(key):
                 problems.append(f'reference {r.get("id")}: missing {key}')
+        # Whether the file is the latest cut he meant is evidence, never assumed.
+        if r.get('identity') not in IDENTITIES or not r.get('identity_evidence'):
+            problems.append(f'reference {r.get("id")}: identity must be {" or ".join(IDENTITIES)}, with its '
+                            'identity_evidence')
 
     def moment(m, where):
         out = []
@@ -233,21 +320,43 @@ def bar_problems(bar, page):
                 problems.append(f'reference moment {i + 1}: shows {q}, which is not a quality')
         if not m.get('shows'):
             problems.append(f'reference moment {i + 1}: shows no quality')
+        # A sound moment says whether anyone has heard it (F03: a reference studied without its sound).
+        if 'sound' in m.get('shows', []) and not isinstance(m.get('heard'), bool):
+            problems.append(f'reference moment {i + 1}: a sound moment must say whether it was heard')
     for q in bar['qualities']:
         for j, m in enumerate(q.get('compare_beside', [])):
             problems += moment(m, f'quality {q.get("id")} comparison {j + 1}')
+        if q.get('id') == 'sound' and not isinstance(q.get('heard'), bool):
+            problems.append('quality sound: its comparison points must say whether they were heard')
     for key in measured_keys(bar):
         problems.append(f'{key}: a measured value is context, never a target; keep it out of the references')
     if page is None:
         problems.append(f'{bar["doc"]} is missing')
-    else:
-        names = [q.get('name') for q in bar['qualities']]
-        headings = bar_headings(page)
-        if names != headings:
-            problems.append(f'the quality names and the headings of {bar["doc"]} disagree: '
-                            f'{[n for n in names if n not in headings] or "same names"} in the references only, '
-                            f'{[h for h in headings if h not in names] or "same names"} on the page only'
-                            + (' (the order differs)' if sorted(names) == sorted(headings) else ''))
+        return problems
+    names = [q.get('name') for q in bar['qualities']]
+    headings = bar_headings(page)
+    if names != headings:
+        problems.append(f'the quality names and the headings of {bar["doc"]} disagree: '
+                        f'{[n for n in names if n not in headings] or "same names"} in the references only, '
+                        f'{[h for h in headings if h not in names] or "same names"} on the page only'
+                        + (' (the order differs)' if sorted(names) == sorted(headings) else ''))
+    if bar['standing'] == 'draft' and bar.get('standing_note') and bar['standing_note'] not in page:
+        problems.append(f'{bar["doc"]} does not carry the draft standing_note under his words')
+    # One home per fact: the page's moments and comparison points say what the file says, word for word.
+    on_page, unread = page_moments(page, labels)
+    problems += unread
+    in_file = [(m.get('ref'), m.get('at'), m.get('to'), m.get('what')) for m in bar['reference_moments']]
+    for side, extra in (('the references', set(in_file) - set(on_page)), ('the page', set(on_page) - set(in_file))):
+        for ref, at, to, _ in sorted(extra, key=lambda x: (str(x[0]), str(x[1]))):
+            problems.append(f'reference moment {ref} {at}{" to " + to if to else ""} is in {side} only, '
+                            'or its words differ')
+    points, unread = page_points(page, labels)
+    problems += unread
+    for q in bar['qualities']:
+        want = [(c.get('ref'), c.get('at'), c.get('to')) for c in q.get('compare_beside', [])]
+        if points.get(q.get('name')) != want:
+            problems.append(f'quality {q.get("id")}: the Compare beside points on the page and in the references '
+                            'disagree')
     return problems
 
 
@@ -262,28 +371,33 @@ def bar_check(bar, root=ROOT):
 
 def para(text, indent='  ', then=None):
     return textwrap.fill(' '.join(str(text).split()), width=118, initial_indent=indent,
-                         subsequent_indent=indent if then is None else then)
+                         subsequent_indent=indent if then is None else then, break_on_hyphens=False)
 
 
 def bar_lines(bar):
-    """The short form of the bar a video maker reads first. Words, names and where to watch only: no hashes, no file
-    ids and no measured values."""
+    """The short form of the bar a video maker reads first. His words, then the engine's reading marked as such, the
+    quality names and where to watch: no hashes, no file ids and no measured values."""
     r = bar['ruling']
-    lines = [f'The bar ({r["by"]}, {r["on"]}): the production quality floor for every video, whatever its story, '
-             'format or length.',
-             para(f'In his words: {quote(r["words"])}')]
+    draft = bar['standing'] == 'draft'
+    lines = ['The bar: the production quality floor for every video, whatever its story, format or length.',
+             para(f'{r["by"]} named the pieces on {r["on"]}. In his words: {quote(r["words"])}')]
     if r.get('correction'):
         lines.append(para(f'And: {quote(r["correction"])}'))
-    lines.append(para(bar['principle']))
-    lines.append(f'The qualities ({bar["doc"]} has each one: the bar, the reference moments, what falls below it '
-                 'and how it is checked):')
+    lines.append(para(f'Standing: {bar["standing"]}. {bar.get("standing_note", "")}'))
+    lines.append(para(("The engine's reading of those cuts, a draft: " if draft else '') + bar['principle']))
+    lines.append(f'The qualities ({bar["doc"]} has each one: the bar, the reference moments, what falls below it, '
+                 'the points to compare beside and how it is checked):')
     lines += [f'  {i}. {q["name"]}' for i, q in enumerate(bar['qualities'], 1)]
     lines.append('The references: watch each whole, in motion, at full size, with sound (config/reference-cuts.json '
                  'names the files and the moments):')
     for ref in bar['references']:
         served = ref['served_from']
-        lines.append(f'  - {ref["published_on"]} {ref["series"]}, {ref["piece"]}: {ref["which_file"]} '
-                     f'({FAMILIES[ref["format_family"]]}); board week {served["board_week"]}, asset {served["asset"]}')
+        line = (f'- {ref["published_on"]} {ref["series"]}, {ref["piece"]}: {ref["which_file"]} '
+                f'({FAMILIES[ref["format_family"]]}); board week {served["board_week"]}, asset {served["asset"]}')
+        if ref.get('identity') != 'confirmed':
+            line += ('. Identity unconfirmed: whether this is the latest cut is not established; '
+                     'config/reference-cuts.json says what is')
+        lines.append(para(line, then='    '))
     for later in bar.get('not_yet_references', []):
         family = f' ({FAMILIES[later["format_family"]]})' if later.get('format_family') in FAMILIES else ''
         lines.append(para(f'- Not a reference yet: {later["which_file"]}{family} of {later["piece"]}. {later["status"]}',
@@ -292,9 +406,21 @@ def bar_lines(bar):
     return lines
 
 
+def bar_pointer(bar, fmt):
+    """One line for a video maker the full bar is not printed for (and for --format all): where it is, and that it
+    applies."""
+    full = ' or '.join(f'--format {m}' for m in bar.get('full_bar_for_makers', [])) or 'the page'
+    who = 'this maker too' if applies(bar, fmt) else 'every video maker'
+    return para(f'The bar: {bar["doc"]} is the production quality floor for {who}, from the cuts '
+                f'{bar["ruling"]["by"]} named on {bar["ruling"]["on"]} (standing: {bar["standing"]}). Read it before '
+                f'the brief; python3 scripts/floor.py {full} prints it whole.', indent='', then='  ')
+
+
 def show_bar(bar, fmt):
-    if applies(bar, fmt):
+    if full_bar(bar, fmt):
         print('\n'.join(bar_lines(bar)) + '\n')
+    elif bar and (applies(bar, fmt) or fmt == 'all'):
+        print(bar_pointer(bar, fmt) + '\n')
 
 
 def show_format(doc, fmt, approved_only, limit, bar=None):
@@ -332,7 +458,8 @@ def summary(doc):
     c = doc.get('counts', {})
     print(f'The rejection floor, version {doc["version"][:12]}, as of {doc["as_of"]}: {c.get("records", 0)} rejections, '
           f'{c.get("standards", 0)} standards ({c.get("approved", 0)} approved, {c.get("patterns", 0)} patterns he raised about two or more productions).')
-    print('Read the one you are making: python3 scripts/floor.py --format <maker>\n')
+    print('Read the one you are making: python3 scripts/floor.py --format <maker>')
+    print(BAR_HINT + '\n')
     for fmt, entry in sorted(doc['formats'].items()):
         print(f'- {fmt}: {len(entry.get("approved", []))} approved, {len(entry.get("draft", []))} draft, '
               f'{len(entry.get("rejected", []))} rejected. {entry["maker"]}')
@@ -399,20 +526,29 @@ def self_test():
         'doc': 'docs/production/SYNTHETIC_BAR.md',
         'ruling': {'by': 'Krish', 'on': '2026-10-28', 'words': 'synthetic: these two are the floor',
                    'correction': 'synthetic: only production quality'},
+        'standing': 'draft', 'standing_note': 'Synthetic: the engine reads the cuts; he has not approved it.',
         'principle': 'Synthetic: every frame looks owned.',
         'measured_values': 'Context about the references, never targets.',
-        'applies_to_makers': ['short_video'],
+        'applies_to_makers': ['short_video', 'motion'], 'full_bar_for_makers': ['short_video'],
         'qualities': [{'id': 'finish', 'name': 'Finish: every frame owned',
                        'compare_beside': [{'ref': 'ref-a', 'at': '00:02'}]},
-                      {'id': 'sound', 'name': 'Sound finish'}],
-        'references': [{'id': 'ref-a', 'piece': 'Synthetic piece', 'published_on': '2026-10-23', 'series': 'synthetic',
-                        'format_family': 'voiceover', 'which_file': 'the synthetic cut', 'sha256': 'c' * 64,
-                        'drive_file_id': 'synthetic-drive-id',
-                        'served_from': {'board_week': '2026-10-19', 'asset': 'syn-video'}}],
+                      {'id': 'sound', 'name': 'Sound finish', 'heard': False,
+                       'compare_beside': [{'ref': 'ref-a', 'at': '00:00', 'to': '00:03'}]}],
+        'references': [{'id': 'ref-a', 'label': 'Synthetic tall', 'piece': 'Synthetic piece',
+                        'published_on': '2026-10-23', 'series': 'synthetic', 'format_family': 'voiceover',
+                        'which_file': 'the synthetic cut', 'sha256': 'c' * 64, 'drive_file_id': 'synthetic-drive-id',
+                        'served_from': {'board_week': '2026-10-19', 'asset': 'syn-video'},
+                        'identity': 'unconfirmed', 'identity_evidence': 'Synthetic: not established.'}],
         'not_yet_references': [{'piece': 'Synthetic piece', 'which_file': 'the long cut', 'status': 'In post.'}],
-        'reference_moments': [{'ref': 'ref-a', 'at': '00:01.5', 'to': '00:04', 'shows': ['finish'], 'what': 'A build.'}],
+        'reference_moments': [{'ref': 'ref-a', 'at': '00:01.5', 'to': '00:04', 'shows': ['finish'], 'what': 'A build.'},
+                              {'ref': 'ref-a', 'at': '00:00', 'shows': ['sound'], 'heard': False,
+                               'what': 'Measured, not yet heard: a sting.'}],
     }
-    page = '# Bar\n\n## The qualities\n\n### 1. Finish: every frame owned\n\n### 2. Sound finish\n\n## What is not the bar\n\n### x\n'
+    page = ('# Bar\n\nSynthetic: the engine reads the cuts; he has not approved it.\n\n## The qualities\n\n'
+            '### 1. Finish: every frame owned\n\n**Compare beside.** Synthetic tall 00:02.\n\n'
+            '### 2. Sound finish\n\n**Compare beside.** Synthetic tall 00:00 to 00:03.\n\n'
+            '## Reference moments\n\n### Synthetic tall (23 October)\n\n- 00:01.5 to 00:04: A build.\n'
+            '- 00:00: Measured, not yet heard: a sting.\n\n## What is not the bar\n\n### x\n')
     assert bar_problems(bar, page) == [], bar_problems(bar, page)
     assert any('headings' in p for p in bar_problems(bar, page.replace('### 2. Sound finish', '### 2. Sound'))), \
         'a quality renamed on one side only must be caught'
@@ -424,24 +560,49 @@ def self_test():
     measured['references'][0]['duration_s'] = 78.6
     assert any('never a target' in p for p in bar_problems(measured, page)), 'a measured value must be refused'
     stray = json.loads(json.dumps(bar))
-    stray['reference_moments'][0]['ref'] = 'ref-z'
     stray['reference_moments'][0]['shows'] = ['grace']
-    assert len(bar_problems(stray, page)) == 2, bar_problems(stray, page)
+    assert bar_problems(stray, page) == ['reference moment 1: shows grace, which is not a quality'], \
+        bar_problems(stray, page)
+    # One home per fact: a moment or a comparison point changed on one side only is caught.
+    drifted = page.replace('- 00:01.5 to 00:04: A build.', '- 00:01.5 to 00:05: A build.')
+    assert sum('in the page only' in p or 'in the references only' in p for p in bar_problems(bar, drifted)) == 2
+    assert any('Compare beside' in p for p in bar_problems(bar, page.replace('Synthetic tall 00:02.', 'Synthetic tall 00:03.')))
+    # His words named the cuts; the reading stays a draft, the identity and the hearing are said, never assumed.
+    for key, broken in (('standing', 'settled'), ('standing_note', '')):
+        b = json.loads(json.dumps(bar))
+        b[key] = broken
+        assert bar_problems(b, page), key
+    assert any('standing_note' in p for p in bar_problems(bar, page.replace('Synthetic: the engine reads', 'X')))
+    b = json.loads(json.dumps(bar))
+    del b['references'][0]['identity']
+    assert any('identity' in p for p in bar_problems(b, page))
+    b = json.loads(json.dumps(bar))
+    del b['reference_moments'][1]['heard']
+    assert any('heard' in p for p in bar_problems(b, page))
     out = io.StringIO()
     with contextlib.redirect_stdout(out):
         assert show_format(doc, 'short_video', False, 40, bar=bar) == 0
     text = out.getvalue()
-    assert text.index('The bar (Krish, 2026-10-28)') < text.index('The rejection floor for short_video') \
+    assert text.index('The bar: the production quality floor') < text.index('The rejection floor for short_video') \
         < text.index('Approved standards'), text
-    assert '"synthetic: these two are the floor"' in text and '  2. Sound finish' in text, text
+    assert text.index('"synthetic: these two are the floor"') < text.index('Standing: draft.') \
+        < text.index("The engine's reading of those cuts, a draft:"), text
+    assert '  2. Sound finish' in text and 'Identity unconfirmed' in text, text
     assert 'board week 2026-10-19, asset syn-video' in text and 'Not a reference yet: the long cut' in text, text
     assert 'c' * 64 not in text and 'synthetic-drive-id' not in text, 'no hashes or file ids in the printed bar'
     bare = io.StringIO()
     with contextlib.redirect_stdout(bare):
         show_format(doc, 'short_video', False, 40)
     assert text.endswith(bare.getvalue()), 'the bar is added before the floor, which is otherwise unchanged'
+    # Another video maker gets one line pointing at the bar; a maker it does not apply to gets nothing.
+    pointer = io.StringIO()
+    with contextlib.redirect_stdout(pointer):
+        show_bar(bar, 'motion')
+    assert pointer.getvalue().startswith('The bar: docs/production/SYNTHETIC_BAR.md') and \
+        '--format short_video' in pointer.getvalue() and 'Finish: every frame owned' not in pointer.getvalue()
     other = json.loads(json.dumps(bar))
     other['applies_to_makers'] = ['long_video']
+    other['full_bar_for_makers'] = ['long_video']
     out = io.StringIO()
     with contextlib.redirect_stdout(out):
         show_format(doc, 'short_video', False, 40, bar=other)
@@ -464,15 +625,21 @@ def main(argv=None):
     if a.self_test:
         return self_test()
     doc = load(a.file)
-    bar = load_bar(a.bar_file)
     if a.check:
         problems = [f'rejection floor: {problem}' for problem in (check(doc) if doc is not None else [])]
-        problems += bar_check(bar)
+        bar, error = read_bar(a.bar_file)
+        problems += [f'the bar: {error}'] if error else bar_check(bar)
         if doc is None:
             print(NO_FLOOR)
         for problem in problems:
             print(problem)
         return 1 if problems else 0
+    bar = None
+    if a.format:
+        # Read only for a maker; a broken file is reported and never stops that maker's floor.
+        bar, error = read_bar(a.bar_file)
+        if error:
+            print(f'The bar could not be read ({error}); run python3 scripts/floor.py --check.', file=sys.stderr)
     if doc is None:
         if a.format:
             show_bar(bar, a.format)

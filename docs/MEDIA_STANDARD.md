@@ -56,3 +56,5 @@ Implementation and activation are separate. Before declaring the floor live, ret
 4. Deployed route and immutable-download readback, plus independent review of the implementation. Tests alone do not establish live enforcement or taste calibration.
 
 Current baseline limits are declared in the policy. No complete carousel baseline or full-motion acceptance is invented. New accepted examples extend the evidence only with Krish's actual ruling. Unknown reviewer capability remains unknown.
+
+Beside this contract, `docs/production/THE_BAR.md` (read through `python3 scripts/floor.py --format short_video` or `long_video`) holds the finished cuts Krish named on 28 October 2026 as the floor for video finish, with the engine's draft reading of them. They are not exemplars here and `scripts/media-standard.ts` does not review against them; whether they become exemplars, which changes this standard's hash, is Krish's decision. Nothing in that page loosens the official-marks rule above.
