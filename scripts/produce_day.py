@@ -1,6 +1,16 @@
 #!/usr/bin/env python3
-"""The midday production run: one day's two videos, made from start to finish
-on whatever machine runs this, with nobody starting anything.
+"""The day's production run: one day's two videos, made from start to finish
+on whatever machine runs this, started by hand (Run workflow, or this script).
+
+Ruling (Krish, 2026-10-28): "record the entire week on a Sunday, but it does
+not go live until the Monday after (8 days later)". That retires the same-day
+noon run: produce-day.yml has no schedule any more (it had skipped every
+scheduled run since 14 Oct as "Not noon in New York"), and the overnight
+runner replaces it in Wave 2. Until then a run is started by hand, and it fails
+loudly: a cut the words gate holds, or one whose receipt does not pass the
+delivery gates, stops the run with the reason and sends nothing.
+
+The history it was built for:
 
 Krish, 2026-10-12: "every Monday, Wednesday and Friday at midday there is a
 scheduled task that checks the inbox for that days videos and produces the
@@ -32,7 +42,14 @@ making.py video for both cuts. On a stop it writes one board item saying
 exactly what stopped, and exits non-zero; it never asks Krish to do what a
 machine can.
 
-    python scripts/produce_day.py [--date YYYY-MM-DD] [--piece UUID] [--wait-minutes 120] [--dry-run]
+    python scripts/produce_day.py [--date YYYY-MM-DD] [--piece UUID] [--wait-minutes 120] [--dry-run] [--file-only]
+
+Filing carries each cut's hash-bound .validation.json beside it, names the
+library destination in it, checks the delivery gates (quality.delivery_problems,
+the same check send.py and making.py make) before anything is sent, and gives
+making.py video the exact file (--video-file). A fresh cut is held until its
+review evidence (sync, motion, visual clarity, full review) is in its receipt;
+--file-only then files the cuts already made in this machine's work folder.
 """
 import argparse
 import json
@@ -50,6 +67,7 @@ from zoneinfo import ZoneInfo
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / 'scripts'))
 sys.path.insert(0, str(REPO / 'scripts' / 'post-pack'))
+sys.path.append(str(REPO / 'scripts' / 'quick-edit'))
 import engine  # noqa: E402
 import library  # noqa: E402
 import plan_files  # noqa: E402
@@ -289,7 +307,8 @@ def take_edits(post_path):
             if not (isinstance(e, dict) and str(e.get('krish', '')).strip().lower().startswith('krish')
                     and ('restart_near' in e or 'say' in e)):
                 raise Stop(f'{path.name}: each removal is {{"restart_near": "M:SS"}} or {{"say": ...}}, with Krish\'s words in "krish"')
-        out[cut] = [{k: v for k, v in e.items() if k != 'krish'} for e in entries]
+        # His words stay on each removal: make.py writes them into the cut's EDL, which the words gate reads.
+        out[cut] = [dict(e) for e in entries]
     return out
 
 
@@ -433,32 +452,86 @@ def review_sheet(src, out):
     return out
 
 
+def delivery_names(folder, subject):
+    """The two cuts' names in the library, short enough that every file filed beside
+    them (the cut, its thumbnail, its receipt) fits the path Windows opens."""
+    names = {'long': f'{subject} - wide 16x9 - YouTube, Substack', 'short': f'{subject} - tall 9x16 - Shorts, Reels, TikTok, LinkedIn'}
+    # A long subject pushes the library path past what Windows opens (library.PATH_MAX);
+    # the folder already carries the subject, so the files can drop it (2026-10-13).
+    if any(len(f'3 Posts/{folder}/3 Video/{n}.mp4.validation.json') > library.PATH_MAX for n in names.values()):
+        names = {cut: n[len(subject) + 3:] for cut, n in names.items()}
+    return names
+
+
+def stage_cut(src, staged, target):
+    """The cut and its receipt, side by side, as send.py and making.py read them: the
+    receipt is make.py's own (bound to these bytes), with the library destination
+    named in it; a media-quality binding travels too when there is one."""
+    receipt = Path(str(src) + '.validation.json')
+    if not receipt.is_file():
+        raise Stop(f'{Path(src).name} has no validation receipt beside it, so it cannot be filed: make it with make.py')
+    staged.write_bytes(Path(src).read_bytes())
+    report = json.loads(receipt.read_text(encoding='utf-8'))
+    report['library_path'] = target
+    Path(str(staged) + '.validation.json').write_text(json.dumps(report, indent=2), encoding='utf-8')
+    binding = Path(str(src) + '.media-quality.json')
+    if binding.is_file():
+        Path(str(staged) + '.media-quality.json').write_bytes(binding.read_bytes())
+
+
+def held_for_delivery(staged_cuts):
+    """{cut: [problems]} for every staged cut the delivery gates refuse (quality.delivery_problems)."""
+    import quality
+    held = {}
+    for cut, (path, target) in staged_cuts.items():
+        problems = quality.delivery_problems(path, str(path) + '.validation.json', target)
+        if problems:
+            held[cut] = problems
+    return held
+
+
 def file_and_record(post_path, piece, rendered, thumb, work):
     post = plan_files.load_post(post_path)
     folder = plan_files.pack_folder(post)
     subject = post.get('subject') or folder
-    names = {'long': f'{subject} - wide 16x9 - YouTube, Substack', 'short': f'{subject} - tall 9x16 - Shorts, Reels, TikTok, LinkedIn'}
-    # A long subject pushes the library path past what Windows opens (library.PATH_MAX);
-    # the folder already carries the subject, so the files can drop it (2026-10-13).
-    if any(len(f'3 Posts/{folder}/3 Video/{n}.mp4') > library.PATH_MAX for n in names.values()):
-        names = {cut: n[len(subject) + 3:] for cut, n in names.items()}
+    names = delivery_names(folder, subject)
     staged = work / 'send'
     staged.mkdir(parents=True, exist_ok=True)
+    cuts = {}
     for cut, src in rendered.items():
-        (staged / f'{names[cut]}.mp4').write_bytes(Path(src).read_bytes())
+        target = f'3 Posts/{folder}/3 Video/{names[cut]}.mp4'
+        stage_cut(src, staged / f'{names[cut]}.mp4', target)
+        cuts[cut] = (staged / f'{names[cut]}.mp4', target)
         (staged / f'{names[cut]}.jpg').write_bytes(Path(thumb[cut]).read_bytes())
         review_sheet(src, work / f'review-{cut}.png')
         (staged / f'review - {cut} cut.png').write_bytes((work / f'review-{cut}.png').read_bytes())
+    # The same gates send.py and making.py apply, checked before anything goes, so a held cut names every reason.
+    held = held_for_delivery(cuts)
+    if held:
+        raise Stop('held before the library, nothing sent: ' + ' | '.join(f'the {cut} cut: ' + '; '.join(p) for cut, p in held.items())
+                   + f'. The cuts and their receipts are in {work}; add the review evidence to each receipt, '
+                   'then run this again with --file-only')
     run([PY, 'scripts/post-pack/send.py', staged, '--as', f'3 Posts/{folder}/3 Video', '--purpose',
-         'the finished video and its thumbnail, made by the midday run'], what='sending the videos to the library')
+         'the finished video, its thumbnail and its validation receipt, made by the production run'], what='sending the videos to the library')
     for cut, src in rendered.items():
         seconds = subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', str(src)],
                                  text=True, capture_output=True).stdout.strip() or '0'
-        run([PY, 'scripts/post-pack/making.py', '--by', 'Midday run', piece, 'video', cut, f'{names[cut]}.mp4',
-             f'3 Posts/{folder}/3 Video/{names[cut]}.mp4', '--seconds', str(round(float(seconds))),
+        run([PY, 'scripts/post-pack/making.py', '--by', 'Production run', piece, 'video', cut, f'{names[cut]}.mp4',
+             cuts[cut][1], '--seconds', str(round(float(seconds))),
              '--thumb', f'3 Posts/{folder}/3 Video/{names[cut]}.jpg', '--thumb-file', thumb[cut],
-             '--music', 'no-curves-instrumental'], what=f'recording the {cut} cut')
+             '--music', 'no-curves-instrumental', '--video-file', cuts[cut][0]], what=f'recording the {cut} cut')
     return folder
+
+
+def made_cuts(work):
+    """The cuts an earlier run made in this work folder, for --file-only."""
+    found = {}
+    for cut, shape in SHAPE.items():
+        files = sorted((work / cut).glob(f'*-{shape}.mp4'))
+        if not files:
+            raise Stop(f'no {cut} cut was made in {work / cut}: run without --file-only first')
+        found[cut] = files[0]
+    return found
 
 
 def main():
@@ -468,7 +541,11 @@ def main():
     ap.add_argument('--wait-minutes', type=int, default=120, help='how long to wait for both takes')
     ap.add_argument('--redo', action='store_true', help='make the videos again even if both cuts are on the record (after an engine fix)')
     ap.add_argument('--dry-run', action='store_true', help='everything up to the plans; nothing rendered, sent or recorded')
+    ap.add_argument('--file-only', action='store_true',
+                    help='file and record the cuts an earlier run made here, once their receipts pass the delivery gates')
     a = ap.parse_args()
+    if a.file_only and a.dry_run:
+        ap.error('--file-only files what is made; --dry-run makes nothing')
     when = date.fromisoformat(a.date) if a.date else datetime.now(TZ).date()
     piece = a.piece
     try:
@@ -484,12 +561,15 @@ def main():
             # Wednesday): the scheduled run never makes a day's videos twice.
             log('both cuts are already on the record; nothing to do')
             return 0
-        takes_at = fetch_takes(takes(piece, a.wait_minutes), work)
-        music_root = fetch_music()
-        fetch_pictures(post_path)
-        check_cards(post_path)
-        clips, words = story_clips(post_path, work)
-        rendered = make_cuts(post_path, piece, takes_at, music_root, clips, words, work, a.dry_run)
+        if a.file_only:
+            rendered = made_cuts(work)
+        else:
+            takes_at = fetch_takes(takes(piece, a.wait_minutes), work)
+            music_root = fetch_music()
+            fetch_pictures(post_path)
+            check_cards(post_path)
+            clips, words = story_clips(post_path, work)
+            rendered = make_cuts(post_path, piece, takes_at, music_root, clips, words, work, a.dry_run)
         if a.dry_run:
             log('dry run: both cuts planned with music, the story intro and outro; nothing rendered, sent or recorded')
             return 0
@@ -498,7 +578,7 @@ def main():
         # Nothing is written on the board: the video step is on the record now, so
         # Control Center's done-check sweep closes an earlier stop's item by itself
         # (closes_on video), and a new item about a step already done is refused.
-        log(f'both cuts are in 3 Posts/{folder}/3 Video; the publish board picks them up at 1:30 pm')
+        log(f'both cuts are in 3 Posts/{folder}/3 Video and on the record')
         # Made is not reviewed: this item stays until someone has looked at both
         # review sheets frame by frame and closed it (produce-video, "Never call a
         # video good without watching it").
