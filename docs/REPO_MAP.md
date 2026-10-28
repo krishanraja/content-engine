@@ -52,6 +52,7 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `tests/fixtures/`
 - `tests/helpers/`
 - `tests/integration/`
+- `vendor/`
 
 ## Content engine routes
 
