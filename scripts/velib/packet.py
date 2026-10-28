@@ -94,6 +94,8 @@ def assemble(spec, directory, out, legacy_ok=()):
         errors.extend(f'{cut}: {reason}' for reason in mechanical_reasons + design_reasons)
         prepared.append((cut, qc, video, digest))
     if errors:
+        if legacy_ok and spec['format'] not in designlock.load()['formats']:
+            errors.insert(0, 'LEGACY: no design lock')
         raise ValueError('\n'.join(errors))
     out = Path(out)
     if out.exists():

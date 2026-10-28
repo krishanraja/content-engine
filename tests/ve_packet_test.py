@@ -79,6 +79,7 @@ class PacketTest(unittest.TestCase):
         return self.capture(ve.cmd_status, Namespace(piece='test-piece'))
 
     def packet(self, legacy=()):
+        write_json(self.spec_file, self.spec)
         return self.capture(ve.cmd_packet, Namespace(piece='test-piece', out=str(self.root/'out'), legacy_ok=legacy))
 
     def test_verdict_write_refusals(self):
@@ -165,7 +166,7 @@ class PacketTest(unittest.TestCase):
         self.qc['checks']['composition'] = {'pass':False,'findings':['Screen mostly empty.']}
         self.qc['sha256'] = '0'*64
         self.save_qc()
-        self.spec['format'] = 'voice-led-pictures'
+        self.lock['formats']['hand-held-screen']['keyframes'] = {}
         code,text = self.packet()
         self.assertEqual(code,1)
         for reason in ('composition fails: Screen mostly empty.','no Critic verdict for this file',
