@@ -26,6 +26,10 @@ A flag solves country recognition; it does not explain how an AI works. An icon 
 
 `quality.delivery_problems` invokes the gate for delivery. `make.py` starts its receipt as not run. Final approval requires the exact video hash, actual frame count, hashed narration, complete rendered-text inventory and independent review evidence. A bare `status: pass`, a changed export, or a missing evidence file cannot pass. Working previews remain available for critique and are never called final.
 
+## His ruling
+
+The numbers above are defaults, not Krish's. A receipt's `visual_clarity.ruling` records his own words (`by` "Krish", `said`, `date`) and sets that one video's limits: `max_primary_words` and `max_total_words` (never lower than the defaults), `accepted_repeats` (the state ids whose repeated phrase he accepts) and `accepted_states` (state ids the independent review judged unclear that he accepted after watching the cut). The audit still counts every word, the review keeps its finding on each state, and any state not named still has to pass; a ruling without his words fails (`visual clarity ruling is not in his words`). Monday 26 October's two cuts were accepted this way (28 October: "Happy with the words on screen.", then "yes, watched, I approve").
+
 ## Three-second check
 
 Show the visual at phone size for no more than three seconds, with sound and captions off, to a layperson who has not seen the script or the intended explanation. Then hide it and ask neutrally: “What did you see? What point did it make?” Record the actual answer before showing the intended takeaway. Passing requires the correct subject and point, with no misleading inference. Record confusion rather than coaching the answer.

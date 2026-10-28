@@ -1,4 +1,4 @@
-# Monday 26 October: both cuts, for your review
+# Monday 26 October: both cuts, approved by Krish on 28 October after full playback
 
 Piece `b358e788-209f-427b-a84d-1f79a8ebb430`, "Why is Disney eating the scraps of bankrupt Character.AI?"
 (follow.the.money). Made by Claude Code on the 19 Oct quick-edit route (kit.py, make.py, quality.py), from the
@@ -11,7 +11,7 @@ only listener: nothing below replaces your full playback.
 | Cut | File to watch (share copy, under 29 MiB) | Master | Length |
 |---|---|---|---|
 | 5-minute, 16:9 | `.cache/produce/2026-10-26-b358e788/long/share/disney-google-and-character-ai-long-16x9.mp4` | `long/disney-google-and-character-ai-long-16x9.mp4` (sha256 `14ccfef0f31e42814db4b4743d35cd75d047d95e0520171f755b9cd31b1a3294`) | 4:43.5 (intro 3.5 s, you 4:36.0, outro 4.0 s) |
-| 90-second, 9:16 | `.cache/produce/2026-10-26-b358e788/short/share/disney-google-and-character-ai-short-9x16.mp4` | `short/disney-google-and-character-ai-short-9x16.mp4` (sha256 `a465974cffa1755eacdb5c2f86a36964c2e7daeb2187adf4b9359ee460d26481`) | 1:25.7 (intro 3.5 s, you 1:18.2, outro 4.0 s) |
+| 90-second, 9:16 | `.cache/produce/2026-10-26-b358e788/short/share/disney-google-and-character-ai-short-9x16.mp4` | `short/disney-google-and-character-ai-short-9x16.mp4` (sha256 `39f1039c810681d1a6776b5a0c9f5f32696931cc47ea21ea4ec3f19b90888ecd`) | 1:25.7 (intro 3.5 s, you 1:18.2, outro 4.0 s) |
 
 Paths are under the worktree `C:\Users\krish\dev\mindmake\content-engine-monday26`. The same files, masters and share
 copies, are in the Drive archive (`Video Engine/Archive/2026-10-26 Disney, Google and Character.AI (post to ...)`) and
@@ -57,23 +57,26 @@ on Monday's tab of the week's board (The two cuts, for your review).
 
 ## What is left, and what is yours
 
-1. **Watch both cuts with sound** and accept them, or say what to change.
+1. **Watched and approved.** "yes, watched, I approve" (Krish, 28 Oct), for both cuts as they stand. His full-playback
+   words are each cut's `full_review` and the acceptance behind its `heard`, `sync`, `loudness` and `visuals` checks.
 2. **Words on screen: settled.** "Happy with the words on screen." (Krish, 28 Oct). The visual-clarity gate's word budget
-   (8 main words, 16 in all) was Claude's default from 25 October; it is not applied to these cuts.
+   (8 main words, 16 in all) was Claude's default from 25 October; his words set these two cuts' limits in each
+   receipt's `ruling` (`docs/VISUAL_CLARITY.md`, "His ruling"), which also names the repeated phrases and the pictures
+   he accepted.
 3. **Logos: done on the video side.** The article's one sentence naming Udio and ElevenLabs is cut ("Universal Music has
    struck agreements with AI companies, including Nvidia, but we could find none it has bought"). The gate still wants
    every named company's real logo on the cuts and thumbnails, so OpenAI's symbol is on the 90-second cut's Sora page,
    Warner Music Group's on its prediction page, and the three thumbnails' logo strip carries OpenAI, Warner Music Group
    and Universal Music Group. The long cut already carries them all.
-4. **The post's `3 Video` folder waits on your playback, not on the article or the covers.** The fact gate passes
-   (prediction kept as recorded; eight sentences signed in your words; $0.26 and $0.20 for the re-checks, about $1.48 in
-   all against the $1.20 you approved). The visual gate passes: the covers now carry a small logo strip with OpenAI,
-   Warner Music Group and Universal Music Group under the Google and Disney rows (words unchanged). The pack is in the
-   library: the article, the covers, both scripts and the READ ME. The cuts themselves go in only when each one's
-   delivery receipt reads pass on heard, sync, loudness, visuals, your full review in words, motion and visual clarity.
-   Today the 5-minute cut's sync has one window at 4:03 that fails (-80 ms) and 11 inconclusive, its word check lists 8
-   small differences, and nothing has your full-playback words yet.
+4. **Filed.** Both cuts, their thumbnails and receipts are in the post's `3 Video`, the full pack is in the library, and
+   Monday is a made day on the board (full-quality masters, Drive links). The fact gate passes (prediction kept as
+   recorded; eight sentences signed in his words; $0.26 and $0.20 for the re-checks, about $1.48 in all against the $1.20
+   he approved). What the receipts hold that is not a machine pass: the independent model review (a blind Haiku viewer
+   and a Sonnet judge; a prediction, not a human test) judged six pictures in the 5-minute cut (l19-p1, l25, l27, l33,
+   l36, l37) and one in the 90-second cut (s07-p5) not clear in three seconds, and he accepted them after watching,
+   named one by one in `ruling.accepted_states`. The 5-minute cut's automated sync screen fails one window at 4:03
+   (-80 ms) and has 11 inconclusive (the 90-second cut has 1 inconclusive); both are recorded in the receipt beside his
+   acceptance.
 
-Nothing has been published, sent or scheduled. Fact status: the article's fact gate is still open (`making.py show`:
-"the fact gate did not pass"); the video's figures are the ones the signed direction and the filed sources carry.
+Nothing has been published, sent or scheduled. Fact status: the article's fact gate passes on this exact text; the video's figures are the ones the signed direction and the filed sources carry.
 Transport: both files decode end to end; sizes and hashes above.

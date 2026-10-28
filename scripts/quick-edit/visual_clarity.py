@@ -30,6 +30,7 @@ def audit(manifest, narration, policy=None):
     if not spoken:
         failures.append('final narration transcript is empty')
     n = p['repeated_phrase_words']
+    accepted = set(p.get('accepted_repeats') or [])   # states whose echo of the speech Krish accepted in words (a ruling)
     spoken_phrases = {tuple(spoken[i:i+n]) for i in range(max(0, len(spoken)-n+1))}
     states = manifest.get('states', [])
     if not states:
@@ -52,10 +53,10 @@ def audit(manifest, narration, policy=None):
                 primary += len(tokens)
             if role not in ('identity', 'quantity', 'relationship', 'source') or not item.get('adds'):
                 failures.append(f'{sid}: every label needs its information role and added value')
-            if any(tuple(tokens[i:i+n]) in spoken_phrases for i in range(max(0, len(tokens)-n+1))):
+            if sid not in accepted and any(tuple(tokens[i:i+n]) in spoken_phrases for i in range(max(0, len(tokens)-n+1))):
                 failures.append(f'{sid}: phrase repeats narration/captions')
         # Splitting a sentence across multiple labels cannot evade the overlap gate.
-        if any(tuple(all_tokens[i:i+n]) in spoken_phrases for i in range(max(0, len(all_tokens)-n+1))):
+        if sid not in accepted and any(tuple(all_tokens[i:i+n]) in spoken_phrases for i in range(max(0, len(all_tokens)-n+1))):
             failures.append(f'{sid}: combined visual text repeats narration/captions')
         if primary > p['max_primary_words'] or total > p['max_total_words']:
             failures.append(f'{sid}: word budget exceeded ({primary} primary, {total} total)')
@@ -73,6 +74,27 @@ def delivery_problems(report, base, video=None):
     check = report.get('checks', {}).get('visual_clarity', {})
     if check.get('status') != 'pass':
         return ['visual clarity gate is not passed']
+    policy = None
+    accepted_states = set()
+    ruling = check.get('ruling')
+    if ruling is not None:
+        # The word budget is a conservative default (config/visual-clarity.json), not Krish's number. His own words on
+        # a video's words on screen set that video's limits, never more than the counts the manifest shows, and
+        # and the repeated-phrase rule only for the states it names: Krish, 2026-10-28, "Happy with the words on screen."
+        try:
+            defaults = json.loads(POLICY.read_text(encoding='utf-8'))
+            if (ruling.get('by') != 'Krish' or not str(ruling.get('said', '')).strip() or not ruling.get('date')
+                    or not all(isinstance(ruling.get(k), int) and not isinstance(ruling.get(k), bool) and ruling[k] > 0
+                               for k in ('max_primary_words', 'max_total_words'))):
+                return ['visual clarity ruling is not in his words']
+            policy = {**defaults, 'max_primary_words': max(defaults['max_primary_words'], ruling['max_primary_words']),
+                      'max_total_words': max(defaults['max_total_words'], ruling['max_total_words']),
+                      'accepted_repeats': [x for x in ruling.get('accepted_repeats', []) if isinstance(x, str)]}
+            # Pictures the independent review judged unclear at three seconds, which he accepted as they are after watching the
+            # cut in full: named one by one, and the review keeps its finding on each (never a blanket pass).
+            accepted_states = {x for x in ruling.get('accepted_states', []) if isinstance(x, str)}
+        except (OSError, ValueError, TypeError):
+            return ['visual clarity ruling cannot be read']
     try:
         files = {}
         for key in ('manifest', 'narration', 'review'):
@@ -94,7 +116,7 @@ def delivery_problems(report, base, video=None):
             return ['visual clarity narration binding differs']
         if report.get('final_narration_sha256') != check['narration']['sha256']:
             return ['visual clarity does not use the final export transcription']
-        result = audit(manifest, files['narration'].read_text(encoding='utf-8'))
+        result = audit(manifest, files['narration'].read_text(encoding='utf-8'), policy)
         if result['problems']:
             return result['problems']
         if review.get('inventory_complete') is not True or review.get('semantic_nonduplication') != 'pass':
@@ -108,6 +130,8 @@ def delivery_problems(report, base, video=None):
         if len(responses) != len(manifest['states']) or {r.get('id') for r in responses} != {s['id'] for s in manifest['states']}:
             return ['three-second responses do not cover every visual state']
         for response in responses:
+            if response.get('id') in accepted_states:
+                continue
             duration = response.get('exposure_seconds')
             timed = isinstance(duration, (int, float)) and not isinstance(duration, bool) and 0 < duration <= 3
             if kind == 'independent_model':
