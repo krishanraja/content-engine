@@ -60,7 +60,7 @@ Disney isn't alone. This year Netflix bought InterPositive, an AI filmmaking sta
 
 Put those together and a pattern shows. The big media companies are moving from renting AI to owning it.
 
-Three of the biggest haven't made that move yet. Skydance, which now owns Paramount and Warner Bros after its merger closed on 6 October, calls the combined company "tech-forward". Universal Music has struck agreements with Nvidia, Udio and ElevenLabs, but we could find no AI company it has bought, while its rival Warner Music has. NBCUniversal has made no AI purchase that we could find.
+Three of the biggest haven't made that move yet. Skydance, which now owns Paramount and Warner Bros after its merger closed on 6 October, calls the combined company "tech-forward". Universal Music has struck agreements with AI companies, including Nvidia, but we could find none it has bought, while its rival Warner Music has. NBCUniversal has made no AI purchase that we could find.
 
 Each of them now has a rival that has bought, and Disney has just shown everyone what renting can cost. That's why I think they move next.
 
