@@ -25,7 +25,53 @@ INTRO_TEXT = [('MAKE YOUR MIND/UP', 'identity', 'the publication'), ('follow.the
               ('Disney $20M', 'quantity', 'the second buyer and its bid')]
 OUTRO_TEXT = [('MAKE YOUR MIND/UP follow.the.money', 'identity', 'the publication and series'), ('TELL ME IN THE COMMENTS', 'relationship', 'the ask'),
               ('WHO MAKES THE AI YOUR BUSINESS RUNS ON?', 'relationship', 'the comment question'),
-              ('The full story is free makeyourmindup.ai', 'source', 'where the story is'), ('NEXT ROUND WEDNESDAY under.the.hood', 'identity', 'the next piece')]
+              ('The full story is free makeyourmindup.ai', 'source', 'where the story is')]   # one close (Krish, 28 Oct)
+
+# The opener and the bust are one clip each (motion.py) with words that arrive on their own times: states by time.
+FIRM = ('character.ai', 'identity', 'the firm')
+WALL = ('MILLIONS MADE FRIENDS HERE.', 'relationship', 'what the app was to its users: friends')
+BUST = [("NOW IT'S BANKRUPT.", 'relationship', 'what became of it'), ('CHAPTER 11', 'identity', 'its bankruptcy chapter'),
+        ('FILED 12 OCT 2026 · COURT FILING', 'source', 'when and where it filed')]
+
+
+def timed_marks(c, shape, takeaway, offsets):
+    """(start, end, state) for the opener and the bust clips, split where their words arrive."""
+    stem = Path(c['panel']).stem
+    s0, e0 = c['s'], c['e']
+    wall = ['the wall of chat tiles', 'character.ai logo']
+    if stem == 'open-16x9':
+        b = offsets['16x9']
+        parts = [(s0, s0 + b, [WALL, FIRM], wall + ['the headline'], 'Millions of people made friends on this app'),
+                 (s0 + b, e0, [*BUST, FIRM], ['hazard tape reading CHAPTER 11', 'the headline BANKRUPT', 'the wall falling away'], takeaway)]
+    elif stem == 'open-9x16':
+        parts = [(s0, e0, [WALL, FIRM], wall + ['the headline'], 'Millions of people made friends on this app')]
+    elif stem == 'bust-9x16':
+        cash, law, b = offsets['cash'], offsets['law'], offsets['9x16']
+        parts = [(s0, s0 + max(0.0, cash - 0.5), [FIRM], wall, 'The app was alive with people'),
+                 (s0 + max(0.0, cash - 0.5), s0 + law, [('OUT OF CASH.', 'relationship', 'why it failed'), FIRM], wall + ['the headline'], 'It ran out of cash'),
+                 (s0 + law, s0 + b, [('LAWSUITS.', 'relationship', 'what else hit it'), FIRM], wall + ['the headline'], 'Lawsuits followed'),
+                 (s0 + b, e0, [*BUST, FIRM], ['hazard tape reading CHAPTER 11', 'the headline BANKRUPT'], takeaway)]
+    elif stem.startswith('whatitis'):
+        parts = [(s0, e0, [('CHARACTER.AI HOME PAGE · SCREEN RECORDING · 28 OCT 2026', 'source', 'what the picture is and when it was recorded'),
+                           ('Psychologist', 'identity', 'a character on the app'), ('Creative Helper', 'identity', 'a character on the app'),
+                           ('Are-you-feeling-okay', 'identity', 'a character on the app'), ('Ella - dating coach', 'identity', 'a character on the app'),
+                           ('79.1m', 'quantity', 'chats with the Psychologist character')],
+                  ['his own screen recording of the app', 'hand-drawn rings on the characters'], 'What Character.AI is: an app full of characters to chat with')]
+    else:
+        return None
+    return [(a, z, {'id': f"{c['id']}-{k}", 'text': [{'value': v, 'role': r, 'adds': ad} for v, r, ad in items], 'visual_cues': cues, 'takeaway': tk})
+            for k, (a, z, items, cues, tk) in enumerate(parts) if z > a]
+
+
+# The long cut's base layout when no picture is up: his face between the series card and its day badge.
+FACE_CARD_TEXT = [('FOLLOW.THE.MONEY', 'identity', 'the series'),
+                  ('WHY IS DISNEY EATING THE SCRAPS OF BANKRUPT CHARACTER.AI?', 'relationship', "the story's question, its picked title"),
+                  ('BRING A CALCULATOR', 'relationship', 'a prompt that the story is about numbers'),
+                  ('MAKE YOUR MIND/UP MONDAYS makeyourmindup.ai', 'identity', 'the publication, the day and the address')]
+
+
+def face_text(shape):
+    return [{'value': v, 'role': r, 'adds': ad} for v, r, ad in FACE_CARD_TEXT] if shape == '16x9' else []
 
 
 def digest(path):
@@ -56,15 +102,22 @@ def main(cut):
     point = lambda cid: direction[int(cid[1:3]) - 1]['point']
 
     def page_spec(c):
-        name = Path(c['panel']).name.replace('-push', '')
+        stem = Path(c['panel']).stem.replace('-push', '')
         for pid, spec in panels.items():
             for p in spec['pages']:
-                if p['file'] == name:
+                if Path(p['file']).stem == stem:
                     return pid, p
-        raise SystemExit(f'no drawn page for {name}')
+        raise SystemExit(f'no drawn page for {stem}')
 
     marks = []   # (start_s on the finished clock, end_s, state)
+    import motion   # the opener's and the bust's own word times
+    offsets = motion.bust_offsets()
     for c in pages:
+        timed = timed_marks(c, shape, direction[0]['point'], offsets)
+        if timed:
+            for a, z, st in timed:
+                marks.append((intro + a, intro + z, st))
+            continue
         pid, p = page_spec(c)
         marks.append((intro + c['s'], intro + c['e'], {'id': f"{c['id']}", 'text': p['text'],
                       'visual_cues': [Path(c['panel']).name], 'takeaway': point(pid)}))
@@ -82,15 +135,15 @@ def main(cut):
     cursor = f(intro)
     for a, b, st in marks:
         if f(a) > cursor:
-            states.append({'id': f'face-{len(states)}', 'start_frame': cursor, 'end_frame': f(a), 'text': [],
-                           'visual_cues': ['Krish to camera, the room behind him darkened and softened'], 'takeaway': 'Krish tells the story'})
+            states.append({'id': f'face-{len(states)}', 'start_frame': cursor, 'end_frame': f(a), 'text': face_text(shape),
+                           'visual_cues': ['Krish to camera in his own room, the series card beside him'], 'takeaway': 'Krish tells the story'})
             cursor = f(a)
         end = max(cursor + 1, f(b))
         states.append({**st, 'start_frame': cursor, 'end_frame': end})
         cursor = end
     outro_at = f(total - s['outro_seconds'])
     if outro_at > cursor:
-        states.append({'id': f'face-{len(states)}', 'start_frame': cursor, 'end_frame': outro_at, 'text': [],
+        states.append({'id': f'face-{len(states)}', 'start_frame': cursor, 'end_frame': outro_at, 'text': face_text(shape),
                        'visual_cues': ['Krish to camera'], 'takeaway': 'Krish closes'})
         cursor = outro_at
     states.append({'id': 'outro', 'start_frame': cursor, 'end_frame': frames, 'text': [{'value': v, 'role': r, 'adds': a} for v, r, a in OUTRO_TEXT],

@@ -302,17 +302,17 @@ def build(records):
         arrow = '<div class="arrow"></div>' if moved else '<div style="width:200px"></div>'
         return f'<div class="row" style="gap:36px">{left}{arrow}{right}</div>'
     add('l21', W, [(page(W, money_map(False), None, 'COURT FILINGS'),
-                    txt(('THE PEOPLE THE CODE THE LAWSUITS', 'identity', 'what sits in the firm'), ('COURT FILINGS', 'source', 'filings'))),
+                    txt(('IN CHAPTER 11', 'identity', 'its bankruptcy chapter'), ('THE PEOPLE THE CODE THE LAWSUITS', 'identity', 'what sits in the firm'), ('COURT FILINGS', 'source', 'filings'))),
                    (page(W, money_map(True), 'PEOPLE + CODE → DISNEY', 'COURT FILINGS'),
-                    txt(('PEOPLE + CODE → DISNEY', 'relationship', 'what moves'), ('THE LAWSUITS', 'identity', 'what stays'), ('THE PEOPLE THE CODE', 'identity', 'moved'), ('COURT FILINGS', 'source', 'filings')))])
+                    txt(('IN CHAPTER 11', 'identity', 'its bankruptcy chapter'), ('PEOPLE + CODE → DISNEY', 'relationship', 'what moves'), ('THE LAWSUITS', 'identity', 'what stays'), ('THE PEOPLE THE CODE', 'identity', 'moved'), ('COURT FILINGS', 'source', 'filings')))])
     def emptybox(labels, label=None, source=None):
         return page(W, box(['THE APP', 'USERS’ CHATS', 'THE LAWSUITS'], dim=[l for l in ['THE APP', 'USERS’ CHATS', 'THE LAWSUITS'] if l not in labels]), label, source)
-    add('l23', W, [(emptybox([], None, 'COURT FILING · OCT 2026'), txt(('COURT FILING · OCT 2026', 'source', 'filing'))),
-                   (emptybox(['THE APP'], None, 'COURT FILING · OCT 2026'), txt(('THE APP', 'identity', 'left in the box'), ('COURT FILING · OCT 2026', 'source', 'filing'))),
+    add('l23', W, [(emptybox([], None, 'COURT FILING · OCT 2026'), txt(('IN CHAPTER 11', 'identity', 'its bankruptcy chapter'), ('COURT FILING · OCT 2026', 'source', 'filing'))),
+                   (emptybox(['THE APP'], None, 'COURT FILING · OCT 2026'), txt(('IN CHAPTER 11', 'identity', 'its bankruptcy chapter'), ('THE APP', 'identity', 'left in the box'), ('COURT FILING · OCT 2026', 'source', 'filing'))),
                    (emptybox(['THE APP', 'USERS’ CHATS'], 'NOT IN DISNEY’S BID', 'COURT FILING · OCT 2026'),
-                    txt(('NOT IN DISNEY’S BID', 'relationship', 'why they are left'), ('THE APP USERS’ CHATS', 'identity', 'left in the box'), ('COURT FILING · OCT 2026', 'source', 'filing')))])
+                    txt(('IN CHAPTER 11', 'identity', 'its bankruptcy chapter'), ('NOT IN DISNEY’S BID', 'relationship', 'why they are left'), ('THE APP USERS’ CHATS', 'identity', 'left in the box'), ('COURT FILING · OCT 2026', 'source', 'filing')))])
     add('l24', W, [(emptybox(['THE APP', 'USERS’ CHATS', 'THE LAWSUITS'], 'THE LAWSUITS STAY', 'CBS NEWS · OCT 2026'),
-                    txt(('THE LAWSUITS STAY', 'relationship', 'what stays behind'), ('THE APP USERS’ CHATS THE LAWSUITS', 'identity', 'the box'), ('CBS NEWS · OCT 2026', 'source', 'report')))])
+                    txt(('IN CHAPTER 11', 'identity', 'its bankruptcy chapter'), ('THE LAWSUITS STAY', 'relationship', 'what stays behind'), ('THE APP USERS’ CHATS THE LAWSUITS', 'identity', 'the box'), ('CBS NEWS · OCT 2026', 'source', 'report')))])
     def one_picture():
         # The frame the cover echoes, filling the panel: the two receipts side by side, the empty box beneath with its $0.
         r1 = receipt('GOOGLE · 2024', [('THE FOUNDERS', '$2.7B', True, [])], '', 1, 's')
@@ -321,7 +321,7 @@ def build(records):
               f'<span class="money" style="background:#F4EFE4;font-size:72px;padding:12px 26px">$0</span></div>')
         return f'<div class="col" style="gap:44px"><div class="row" style="gap:40px;align-items:flex-start">{r1}{r2}</div>{bx}</div>'
     add('l25', W, [(page(W, one_picture(), None, 'WIRED · GIZMODO · COURT FILINGS'),
-                    txt(('GOOGLE · 2024 THE FOUNDERS $2.7B', 'quantity', 'receipt one'), ('DISNEY · 2026 THE TEAM $60M/YR THE CODE $20M', 'quantity', 'receipt two'), ('$0', 'quantity', 'the box got nothing'), ('WIRED · GIZMODO · COURT FILINGS', 'source', 'sources')))])
+                    txt(('IN CHAPTER 11', 'identity', 'its bankruptcy chapter'), ('GOOGLE · 2024 THE FOUNDERS $2.7B', 'quantity', 'receipt one'), ('DISNEY · 2026 THE TEAM $60M/YR THE CODE $20M', 'quantity', 'receipt two'), ('$0', 'quantity', 'the box got nothing'), ('WIRED · GIZMODO · COURT FILINGS', 'source', 'sources')))])
     def pairs(n):
         a = (f'<div class="pair">{logo("netflix.svg", 120)}<div><div class="t">INTERPOSITIVE · $587M</div><div class="s">(REPORTED) · THE HOLLYWOOD REPORTER</div></div></div>')
         b = (f'<div class="pair{"" if n > 1 else " hide"}">{logo("warner-music-group-cream.svg", 110)}<div><div class="t">SUREEL AI · JUNE 2026</div><div class="s">PR NEWSWIRE</div></div></div>')
@@ -400,8 +400,8 @@ def build(records):
         right = f'<div class="col">{logo("disney-script-cream.svg", 90)}<span class="chip mv{"" if moved else " dim"}">THE PEOPLE</span></div>'
         arrow = '<div class="arrow" style="width:110px"></div>' if moved else '<div style="width:110px"></div>'
         return page(T, f'<div class="row" style="gap:30px">{left}{arrow}{right}</div>', label, 'COURT FILINGS')
-    add('s06', T, [(money_map_t(False), txt(('THE PEOPLE THE LAWSUITS', 'identity', 'what sits in the firm'), ('COURT FILINGS', 'source', 'filings'))),
-                   (money_map_t(True, 'LAWSUITS STAY BEHIND'), txt(('LAWSUITS STAY BEHIND', 'relationship', 'what stays'), ('THE LAWSUITS THE PEOPLE', 'identity', 'the split'), ('COURT FILINGS', 'source', 'filings')))])
+    add('s06', T, [(money_map_t(False), txt(('IN CHAPTER 11', 'identity', 'its bankruptcy chapter'), ('THE PEOPLE THE LAWSUITS', 'identity', 'what sits in the firm'), ('COURT FILINGS', 'source', 'filings'))),
+                   (money_map_t(True, 'LAWSUITS STAY BEHIND'), txt(('IN CHAPTER 11', 'identity', 'its bankruptcy chapter'), ('LAWSUITS STAY BEHIND', 'relationship', 'what stays'), ('THE LAWSUITS THE PEOPLE', 'identity', 'the split'), ('COURT FILINGS', 'source', 'filings')))])
     def pred_t(n, pct):
         ls = ['skydance-cream.svg', 'universal-music-group-cream.svg', 'comcast-cream.svg']
         # Three empty slots on the desk, each filled by its logo on its name (as the long cut's receipt slots).

@@ -23,14 +23,13 @@
 - **Made:** `docs/plans/2026-10-26-monday/video/motion.py` (a timeline-driven Chromium renderer: the opener, the bust and
   every drawn page as an mp4), a company card in `draw_panels.py`, his screen recording in `whatitis.py`, the house end
   card trimmed to its question screen. 5-minute 4:43.5, 90-second 1:25.7; measurements in `video/REVIEW.md`.
-- **Filed:** masters, share copies and thumbnails in the Drive archive; Monday's board tab carries both cuts as a
-  "review" section, built with `week_board.py`'s own inputs after a control rebuild matched the live board exactly.
-  The Drive library holds one Monday folder (covers only); the duplicate and two `working` canary folders went to
-  `_Archive/PREVIOUS VERSIONS - archive, not current, do not use/2026-10-28 moved out of 3 Posts` (nothing deleted).
-- **Held:** the post's `3 Video`: it waits on the article's fact gate and pack (his three answers in
-  `review/fact-signoff.md`), not on the cuts. Settled 28 Oct: "Happy with the words on screen." The article's Udio and
-  ElevenLabs sentence is cut and the cuts and thumbnails carry every named company's logo (OpenAI, Warner Music Group,
-  Universal Music Group added). Waiting on Krish: full playback of both cuts.
+- **Filed:** both cuts, thumbnails and delivery receipts are in the post's `3 Video`, with the whole pack (article
+  copy, web page, email preview, covers, scripts, publish kit and manager); Monday is a made day on the board
+  (build 0c24f7ed, full-quality masters). Masters and share copies are also in the Drive archive. The duplicate and two
+  `working` canary folders went to `_Archive/PREVIOUS VERSIONS - archive, not current, do not use/2026-10-28 moved out of 3 Posts`.
+- **Accepted:** "yes, watched, I approve" and "Happy with the words on screen." (Krish, 28 Oct). His `ruling` in each
+  receipt sets the words limits and names the pictures the blind model review judged unclear (long: l19-p1, l25, l27, l33,
+  l36, l37; short: s07-p5); sync at 4:03 (-80 ms) is recorded, not hidden. Nothing is posted: he presses publish.
 
 ## 27 October: Wednesday and Friday in Teleprompter; Monday's three questions (Claude)
 
