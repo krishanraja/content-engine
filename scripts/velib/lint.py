@@ -37,6 +37,10 @@ def _strings(node, path=''):
 
 def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
     out: list[str] = []
+    from . import designlock
+    lock = designlock.load()
+    if spec['format'] in lock['formats'] and not designlock.frozen(lock, spec['format'])[0]:
+        out.append(f'format {spec["format"]} has no frozen design lock')
     fmt = load_json(CONFIG / 'formats' / f"{spec['format']}.json")
     objects = {o['obj']: o for o in spec['objects']}
 
