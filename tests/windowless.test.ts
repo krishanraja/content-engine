@@ -91,8 +91,10 @@ public static class Probe {
   }
 }
 "@
-function Watch-Windows([System.Diagnostics.Process]$Process, [int]$Seconds) {
+function Watch-Windows([scriptblock]$Begin, [int]$Seconds) {
+  # The snapshot comes before the start: a window drawn in the first milliseconds must count, not hide in it.
   $before = @([Probe]::Consoles())
+  $Process = & $Begin
   $seen = New-Object System.Collections.Generic.HashSet[long]
   $until = [DateTime]::UtcNow.AddSeconds($Seconds)
   while ([DateTime]::UtcNow -lt $until -and -not $Process.HasExited) {
@@ -100,19 +102,17 @@ function Watch-Windows([System.Diagnostics.Process]$Process, [int]$Seconds) {
     Start-Sleep -Milliseconds 250
   }
   $Process.WaitForExit(20000) | Out-Null
-  return $seen.Count
+  return [ordered]@{ seen = $seen.Count; exit = $Process.ExitCode }
 }
 # The control: a console program started the way that opens a window. The probe has to see it.
-$control = Start-Process -FilePath (Join-Path $env:SystemRoot 'System32\\cmd.exe') -ArgumentList '/c ping -n 5 127.0.0.1 >nul' -PassThru
-$controlSeen = Watch-Windows $control 8
+$control = Watch-Windows { Start-Process -FilePath (Join-Path $env:SystemRoot 'System32\\cmd.exe') -ArgumentList '/c ping -n 5 127.0.0.1 >nul' -WindowStyle Normal -PassThru } 8
 # The real thing: PowerShell through the launcher, starting a console program of its own.
 $start = New-Object System.Diagnostics.ProcessStartInfo
 $start.FileName = $launcher
 $start.Arguments = Format-WindowlessCommand (Join-Path $env:SystemRoot 'System32\\WindowsPowerShell\\v1.0\\powershell.exe') '-NoProfile -NonInteractive -Command "cmd.exe /c ping -n 5 127.0.0.1"'
 $start.UseShellExecute = $false
-$subject = [System.Diagnostics.Process]::Start($start)
-$subjectSeen = Watch-Windows $subject 10
-[ordered]@{ code = $code; launcher = (Split-Path -Leaf $launcher); control = $controlSeen; subject = $subjectSeen; exit = $subject.ExitCode } | ConvertTo-Json -Compress
+$subject = Watch-Windows { [System.Diagnostics.Process]::Start($start) } 10
+[ordered]@{ code = $code; launcher = (Split-Path -Leaf $launcher); control = $control.seen; subject = $subject.seen; exit = $subject.exit } | ConvertTo-Json -Compress
 `
     const result = powershell(home, command)
     expect(result.launcher).toMatch(/^run-hidden-[0-9a-f]{12}\.exe$/)
