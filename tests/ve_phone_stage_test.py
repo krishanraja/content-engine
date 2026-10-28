@@ -19,7 +19,7 @@ class PhoneStageTests(unittest.TestCase):
         self.assertIn('hand_phone_stage', fmt['devices'])
         self.assertNotIn('hand_phone_stage', fmt['pending_devices'])
         self.assertNotIn('phone_stage', fmt['pending_devices'])
-        self.assertEqual(fmt['pending_devices'], ['plate_stage', 'scribble'])
+        self.assertEqual(fmt['pending_devices'], [])
         devices = load_json(ROOT / 'config/ve/devices.json')['devices']
         self.assertEqual(devices['hand_phone_stage']['verbs'], ['enter', 'move', 'fill', 'exit'])
 
@@ -79,8 +79,8 @@ assert.equal(markup(9),'');
 const state=phoneState(fixture.object,fixture.events,36), html=markup(36);
 assert.ok(html.includes(new Screen(state.cam).css()));
 assert.ok(!/overflow:\s*visible|#[\da-fA-F]{3,8}\b/.test(html));
-assert.ok(html.indexOf('data-glass-plane')<html.indexOf('<img src="plates/hand-held-screen/phone-bezel.png"'));
-assert.ok(html.indexOf('<img src="plates/hand-held-screen/phone-bezel.png"')<html.indexOf('<img src="plates/hand-held-screen/phone-glass.png"'));
+assert.ok(html.indexOf('data-glass-plane')<html.search(/src="[^"]*phone-bezel\.png/));
+assert.ok(html.search(/src="[^"]*phone-bezel\.png/)<html.search(/src="[^"]*phone-glass\.png/));
 assert.ok(markup(72).includes('test glass'));
 const footage=[...fixture.events,{id:'footage',obj:'phone',verb:'fill',toState:'footage',atFrame:90}];
 assert.ok(!markup(102,{events:footage}).includes('phone-glass.png'));

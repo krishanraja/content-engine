@@ -16,7 +16,7 @@ export function Device({ object, events, tokens, frame }: DeviceProps) {
     textWidth('mono', (object.dataset?.producerLabel ?? '').toUpperCase(), 30, 0.14))
   if (numberWidth * s.scale + labelWidth + 72 > at.w) throw new Error('Stat strip copy does not fit at minimum type sizes')
   return <div style={{ ...canvasRect(at.x, at.y, at.w, ZONES.lower_line.h), background: tokens.mint,
-    color: tokens.ink, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px',
+    color: tokens.ink, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 48px 0 24px',
     opacity: s.opacity, transform: `translateY(${56 * (1 - s.enter)}px)` }}>
     <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
       <MonoLabel sizePx={30} style={{ letterSpacing: '0.14em', whiteSpace: 'pre-line' }}>{s.label.toUpperCase()}</MonoLabel>

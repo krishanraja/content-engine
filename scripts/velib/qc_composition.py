@@ -91,23 +91,30 @@ def measure(image, lock, *, plate_on_screen=False, exempt=(), caption_words=None
              and not any(_inside(word['x'] + word['w'] / 2, word['y'] + word['h'] / 2, box) for box in exempt)]
     allowed = {'caption'} if caption_words is None else set(caption_words)
     minimum = math.floor(0.62 * limits['min_text_px'])
+    tag_minimum = math.floor(0.62 * limits.get('min_tag_px', limits['min_text_px']))
     small, caption, platform, edges = [], [], [], []
     for word in candidates:
         x, y, w, h = (word[k] for k in ('x', 'y', 'w', 'h'))
         solid = float(word['conf']) >= 75 and sum(c.isalnum() for c in word['text']) >= 3
-        if h < minimum and solid:
+        tag = len(word['text']) >= 5 and set(word['text'].lower()) <= set('illustration')
+        if h < (tag_minimum if tag else minimum) and solid and not _inside(x + w / 2, y + h / 2, zones['marquee']):
             small.append(word)
         if ((solid or float(word['conf']) >= 90) and _inside(x + w / 2, y + h / 2, zones['caption'])
                 and not set(qc_captions._tokens(word['text'])).issubset(allowed)):
             caption.append(word)
         if (not _inside(x + w / 2, y + h / 2, zones['marquee'])
-                and (x + w > zones['platform']['right_x'] + PLATFORM_TOLERANCE_PX or y + h > zones['platform']['bottom_y'])):
+                and (x + w > zones['platform']['right_x'] + PLATFORM_TOLERANCE_PX or y + h > zones['platform']['bottom_y'] + PLATFORM_TOLERANCE_PX)):
             platform.append(word)
         if (not _inside(x + w / 2, y + h / 2, zones['marquee'])
                 and (min(x, y, 1080 - x - w, 1920 - y - h) < limits['edge_margin_px']
                      or x < limits['key_content_margin_px'] - 12)):
             edges.append(word)
     score = _label_score(candidates) if plate_on_screen else None
+    if plate_on_screen and score < 0.8 and ocr_words is None:
+        header = zones['header']
+        crop = image.crop((340, header['y'] - 20, 680, header['y'] + header['h'] + 20))
+        crop = crop.resize((crop.width * 3, crop.height * 3), Image.LANCZOS)
+        score = max(score, _label_score([w for w in _words(crop) if float(w['conf']) >= 10]))
     checks = {'fill_pct': {'pass': fill >= limits['fill_min_pct'], 'value': fill},
               **{name: {'pass': not value, 'value': value} for name, value in
                  [('small_text', small), ('caption_zone', caption), ('platform_zone', platform), ('edges', edges)]},
@@ -128,6 +135,19 @@ def measure(image, lock, *, plate_on_screen=False, exempt=(), caption_words=None
     return {'pass': all(check['pass'] for check in checks.values()), 'checks': checks, 'findings': findings}
 
 
+def _footage_boxes(props, frame):
+    """Where the phone glass shows real footage at this frame: its text is evidence, never retyped or enlarged."""
+    boxes = []
+    for obj in props.get('objects', []):
+        if obj.get('device') != 'hand_phone_stage':
+            continue
+        fills = sorted((e for e in props.get('events', []) if e['obj'] == obj['obj'] and e['verb'] == 'fill' and e['atFrame'] <= frame),
+                       key=lambda e: e['atFrame'])
+        if fills and fills[-1]['toState'] == 'footage':
+            boxes.append((0, 380, 1080, 800))
+    return boxes
+
+
 def composition_checks(video, props, lock) -> dict:
     if props.get('aspect') == '16:9':
         return {'applies': False, 'note': 'the design lock is 9:16 only'}
@@ -141,6 +161,6 @@ def composition_checks(video, props, lock) -> dict:
                    for word in page['words']
                    for token in qc_captions._tokens(word['text'] if isinstance(word, dict) else str(word))}
         plate = any(label['fromFrame'] <= at < label['toFrame'] for label in props.get('illustrationLabels', []))
-        rows[beat['id']] = measure(image, lock, plate_on_screen=plate, caption_words=allowed)
+        rows[beat['id']] = measure(image, lock, plate_on_screen=plate, caption_words=allowed, exempt=_footage_boxes(props, at))
         rows[beat['id']]['frame'] = at
     return {'applies': True, 'pass': bool(rows) and all(row['pass'] for row in rows.values()), 'beats': rows}

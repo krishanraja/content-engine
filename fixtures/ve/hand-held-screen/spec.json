@@ -1241,7 +1241,7 @@
       "open": 0.8,
       "result_a": 0.8,
       "result_b": 0.8,
-      "evidence": 0.8,
+      "evidence": 0.4,
       "verdict": 0.8
     },
     "timing_note": "Cue words reuse my-test-19s onsets. words.test.json has synthetic ends for compile tests only; use aligned ends for rendering."

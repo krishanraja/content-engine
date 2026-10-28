@@ -51,8 +51,8 @@ describe('continuous phone stage',()=>{
     expect(html).toContain(new Screen(at(36).cam).css())
     expect(html).toContain('matrix3d(')
     expect(html).not.toMatch(/overflow:\s*visible|#[\da-fA-F]{3,8}\b/)
-    expect(html.indexOf('data-glass-plane')).toBeLessThan(html.indexOf('<img src="plates/hand-held-screen/phone-bezel.png"'))
-    expect(html.indexOf('<img src="plates/hand-held-screen/phone-bezel.png"')).toBeLessThan(html.indexOf('<img src="plates/hand-held-screen/phone-glass.png"'))
+    expect(html.indexOf('data-glass-plane')).toBeLessThan(html.search(/src="[^"]*phone-bezel\.png/))
+    expect(html.search(/src="[^"]*phone-bezel\.png/)).toBeLessThan(html.search(/src="[^"]*phone-glass\.png/))
   })
   it('crossfades fill, omits sheen over footage and rejects unknown kinds',()=>{
     expect(at(60).glass.map(g=>g.kind)).toEqual(['blank'])

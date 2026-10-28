@@ -220,6 +220,16 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
          lambda: qc_brand.mark_tile(path, mark_png, beats, aspect)),
         ('motion.cue_sync', events is not None and slots is not None, lambda: qc_cues.cue_sync(path, events, slots)),
     ]
+    # STAGE beats compose the whole screen under a moving camera. The square mark tile is replaced by the logo in
+    # the stage header, and an object's slot is the full canvas, so "change near the event inside its slot" cannot
+    # separate an event from the camera. Both checks apply to the other layouts only; events on STAGE devices are
+    # proved by their device tests and the key-frame match.
+    stage_beats = [b for b in (beats or []) if b.get('layout') == 'STAGE']
+    if stage_beats and len(stage_beats) == len(beats or []):
+        for name in ('brand.mark_tile', 'motion.cue_sync'):
+            checks[name] = {'value': None, 'target': 'not defined for STAGE layouts', 'pass': None,
+                            'status': 'not applicable'}
+        optional = [row for row in optional if row[0] not in ('brand.mark_tile', 'motion.cue_sync')]
     for name, supplied, measure in optional:
         if supplied:
             try:

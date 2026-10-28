@@ -35,8 +35,11 @@ def sha256_file(path: Path | str) -> str:
 def run(cmd: list[str], **kwargs) -> subprocess.CompletedProcess:
     """Run a command; on Windows resolve npx/npm/node shims through the shell."""
     shell = sys.platform == 'win32' and cmd and cmd[0] in ('npx', 'npm')
+    text = kwargs.pop('text', True)
+    if text:  # Windows would decode child output as cp1252 and turn a quote's ellipsis into mojibake
+        kwargs = {'encoding': 'utf-8', 'errors': 'replace', **kwargs}
     return subprocess.run(cmd if not shell else subprocess.list2cmdline(cmd), shell=shell, cwd=kwargs.pop('cwd', ROOT),
-                          capture_output=True, text=kwargs.pop('text', True), **kwargs)
+                          capture_output=True, text=text, **kwargs)
 
 
 def ffmpeg() -> str:

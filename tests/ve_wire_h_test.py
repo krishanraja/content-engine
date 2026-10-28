@@ -54,7 +54,8 @@ class WireHTests(unittest.TestCase):
         self.assertEqual([b['id'] for b in self.props['beats']], names)
         self.assertEqual(set(b['layout'] for b in self.props['beats']), {'STAGE'})
         for beat in self.props['beats']:
-            self.assertEqual(beat['keyFrame'], beat['fromFrame'] + round(.8 * (beat['toFrame'] - beat['fromFrame'])))
+            fraction = self.spec['style']['keyFrames'][beat['id']]  # evidence is earlier: the real answer is replaced late in the beat
+            self.assertEqual(beat['keyFrame'], beat['fromFrame'] + round(fraction * (beat['toFrame'] - beat['fromFrame'])))
             self.assertTrue(any(label['fromFrame'] <= beat['fromFrame'] and label['toFrame'] >= beat['toFrame']
                                 and label['text'] == 'ILLUSTRATION' for label in self.props['illustrationLabels']))
             objects = {o['obj']: o for o in self.props['objects']}

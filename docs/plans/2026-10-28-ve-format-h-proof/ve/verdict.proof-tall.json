@@ -1,0 +1,188 @@
+{
+  "schema": "ve-verdict/1",
+  "piece": "2026-10-23-friday-my-test",
+  "cut": "proof-tall",
+  "sha256": "da2a1029fb481e1c30553c360b99127c64c3ad3628ecf6a533f46b02a51481a5",
+  "reviewer": "critic-fresh-1",
+  "reviewed_at": "2026-10-28T10:58:14.145129+00:00",
+  "lens_sha256": "2d62c9e235d86f192747eaeea0115befc2ef3ae7b6448684248271100582f7c1",
+  "frames_viewed": [
+    {
+      "at_s": 0.4
+    },
+    {
+      "at_s": 1.5
+    },
+    {
+      "at_s": 3.1
+    },
+    {
+      "at_s": 3.3
+    },
+    {
+      "at_s": 5.0
+    },
+    {
+      "at_s": 6.9
+    },
+    {
+      "at_s": 7.4
+    },
+    {
+      "at_s": 7.6
+    },
+    {
+      "at_s": 8.6
+    },
+    {
+      "at_s": 9.7
+    },
+    {
+      "at_s": 10.6
+    },
+    {
+      "at_s": 11.4
+    },
+    {
+      "at_s": 12.5
+    },
+    {
+      "at_s": 13.3
+    },
+    {
+      "at_s": 14.5
+    },
+    {
+      "at_s": 14.7
+    },
+    {
+      "at_s": 15.2
+    },
+    {
+      "at_s": 16.0
+    },
+    {
+      "at_s": 17.8
+    },
+    {
+      "at_s": 18.4
+    },
+    {
+      "at_s": 19.5
+    },
+    {
+      "at_s": 20.9
+    }
+  ],
+  "findings": [
+    {
+      "severity": "block",
+      "area": "composition",
+      "frame_s": 19.5,
+      "text": "Verdict beat has colliding elements: the coral KRISH'S TEST sticker lands on top of the plain '23 OCT' label and the thread's end knot (text reads 'T[knot]ST 23 OCT 23 OCT'), and the mint scribble loop strikes straight through the '3/3' hero numerals. Both persist to 20.9."
+    },
+    {
+      "severity": "block",
+      "area": "composition",
+      "frame_s": 19.5,
+      "text": "Verdict beat hero '3/3' (coral block) is half-hidden behind the phone and the scribble, the phone-card label 'DEEPSEEK' is clipped to 'EK' by the block, the ANSWER DELETED stamp touches the block's top edge and its leader line runs through the words 'THE XINJIANG ANSWER'. Cramped and misaligned, the exact complaint Krish made."
+    },
+    {
+      "severity": "block",
+      "area": "evidence",
+      "frame_s": 14.7,
+      "text": "The DeepSeek recording flips from the full answer (14.5) to the deleted 'Sorry, that's beyond my current scope' by 14.6 s, but the voice says 'It writes a full answer' at 15.2 to 16.0 s and 'deletes' only at 16.67 s. The audience sees the deletion roughly 2 s before the narration says it, so the key proof beat is out of sync with the words."
+    },
+    {
+      "severity": "block",
+      "area": "evidence",
+      "frame_s": 16.0,
+      "text": "The evidence scribble (drawn 15.83 s, held to 18.0 s) is a short mint underline floating in blank white space about 100 px below and right of the 'Sorry, that's beyond my current scope' line. It points at nothing, so the beat's single annotation misses the key thing."
+    },
+    {
+      "severity": "block",
+      "area": "copy",
+      "frame_s": 0.4,
+      "text": "The phone prompt pill reads 'SAME WORK PROMPT Â· ONLY THE COUNTRY CHANGES': a mojibake character where the middle dot belongs, visible on every hook frame (0.4 to 7.2 s). The approved reference shows a clean dot."
+    },
+    {
+      "severity": "fix",
+      "area": "composition",
+      "frame_s": 19.5,
+      "text": "Verdict beat has no Anton headline. The top 40% is a rows-and-columns thread chart (XINJIANG / TURKMENISTAN header, three ruled rows, flags, scores) laid over cotton, which reads as a small table competing with the hero and is the closest thing in the piece to the rejected spreadsheet look."
+    },
+    {
+      "severity": "fix",
+      "area": "evidence",
+      "frame_s": 19.5,
+      "text": "Verdict beat retypes DeepSeek's reply in Archivo on a faux phone card over a generated hand. It looks like a screen capture but is a redraw, and its provenance label is clipped to 'EK'. Use the real footage frame or label it as a quote."
+    },
+    {
+      "severity": "fix",
+      "area": "copy",
+      "frame_s": 19.5,
+      "text": "Units are unclear: the hero '3/3' has no label beside it (the explanation is only in the mint strip below), and the chart shows DeepSeek '1/2' on the same screen with a different denominator. Coral is also used for the '3/3' failure count, and brand rule says coral is never a failure."
+    },
+    {
+      "severity": "fix",
+      "area": "composition",
+      "frame_s": 6.9,
+      "text": "At the Xinjiang to Turkmenistan roll the phone screen shows 'TURKMENISTAN' twice (mint line above a grey line) at 6.9 s, about 0.5 s after the roll should have finished, and the scribble ring is clipped by the caption panel. It reads as a bug."
+    },
+    {
+      "severity": "fix",
+      "area": "composition",
+      "frame_s": 0.4,
+      "text": "The phone prompt pill's tail ('ONLY') runs onto bright cotton fibre with low contrast and runs against the pill's right edge; the same happens on every hook frame. Unreadable at that point."
+    },
+    {
+      "severity": "fix",
+      "area": "motion",
+      "frame_s": 7.5,
+      "text": "Beat changes are cross-dissolves with 0.2 to 0.3 s of double exposure (7.4 to 7.6 s: 'FLAGGED IT?' printed over 'SAME WORK PROMPT', ghost TURKMENISTAN, the headline washed grey). At 7.6 and 11.4 the phone screen is see-through, showing cotton fibre and a server rack through it, so the phone reads as glass rather than a screen, with a dead empty area."
+    },
+    {
+      "severity": "fix",
+      "area": "composition",
+      "frame_s": 14.5,
+      "text": "The 'SCREEN RECORDING DEEPSEEK 23 OCT 2026' sticker is a lumpy cream blob whose text overflows its curved edges: '23' sticks out at the lower left and '2026' at the right. Looks unfinished."
+    },
+    {
+      "severity": "fix",
+      "area": "brand",
+      "frame_s": 8.6,
+      "text": "Halftone dots are printed over the ink type of the coral KRISH'S TEST sticker, making the letters noisy and hard to read at about 30 px (8.6 to 12.5 s and 19.5 s). Halftone belongs on the coral ground, not over the type."
+    },
+    {
+      "severity": "fix",
+      "area": "composition",
+      "frame_s": 14.5,
+      "text": "Evidence beat: a pink hand-shaped wedge with a hard diagonal cut sits under the caption panel at y 1410 to 1500, a visible clip artefact. The footage band also leaves about 230 px of blank white under the deleted reply (16.0 to 17.8 s), a dead area, and the headline swipe butts against the thumbs."
+    },
+    {
+      "severity": "fix",
+      "area": "evidence",
+      "frame_s": 14.5,
+      "text": "The pull quote that backs up the recording's small text ('Xinjiang cotton carries a strong forced-labour...') is set in the Fraunces dek style with straight quotes and a truncation, with no 'DeepSeek said' attribution, so it reads as our voice, not as the verbatim evidence it is supposed to be."
+    },
+    {
+      "severity": "fix",
+      "area": "copy",
+      "frame_s": 8.6,
+      "text": "The dek lines on beats 2 and 3 ('Claude flagged both countries. So did ChatGPT.' / 'DeepSeek flagged Turkmenistan...') repeat what the burned captions say a few words later, so the same sentence appears twice on screen; the first one also sits over busy knit and hand highlights without a scrim."
+    },
+    {
+      "severity": "note",
+      "area": "motion",
+      "frame_s": 3.3,
+      "text": "The hook scribble draws on in 3 to 6 frames (empty at 3.1, complete by 3.4), not the specified 10, and loops both countries rather than one thing. Still genuinely drawn on, not a static ring."
+    },
+    {
+      "severity": "note",
+      "area": "other",
+      "frame_s": 16.0,
+      "text": "The ILLUSTRATION tag stays on while the real DeepSeek recording is the main object; correct because a generated plate is behind it, but make sure the recording is not read as illustrated."
+    }
+  ],
+  "blocking": true
+}

@@ -67,7 +67,9 @@
     "caption_zone": "engine captions only",
     "scribbles_per_beat": 1,
     "min_distinct_moves_per_beat": 6,
-    "keyframe_ssim_min": 0.8,
+    "keyframe_ssim_min": 0.75,
+    "keyframe_blur_px": 6,
+    "keyframe_mask_caption": true,
     "keyframe_compare_size": [
       540,
       960

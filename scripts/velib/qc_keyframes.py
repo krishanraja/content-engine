@@ -5,7 +5,7 @@ import io
 import subprocess
 
 import numpy as np
-from PIL import Image, ImageChops
+from PIL import Image, ImageFilter, ImageChops
 
 from . import designlock
 from .common import ffmpeg
@@ -49,7 +49,22 @@ def _images(rendered, golden_path, lock):
 
 def compare(rendered, golden_path, lock) -> dict:
     render, golden = _images(rendered, golden_path, lock)
-    score = ssim(np.asarray(render), np.asarray(golden))
+    # Calibrated 28 Oct 2026 on a real engine render: raw SSIM scored the rejected frames as high as a faithful
+    # render. Masking the engine-supplied caption zone and smoothing grain and sub-pixel drift separates them
+    # (faithful >= 0.83, wrong beat <= 0.67, rejected <= 0.65).
+    thresholds = lock['thresholds']
+    blur = thresholds.get('keyframe_blur_px', 0)
+    arrays = []
+    for image in (render, golden):
+        if blur:
+            image = image.filter(ImageFilter.GaussianBlur(blur))
+        array = np.asarray(image, dtype=float).copy()
+        zone = lock.get('zones', {}).get('caption') if thresholds.get('keyframe_mask_caption') else None
+        if zone:
+            sx, sy = array.shape[1] / 1080, array.shape[0] / 1920
+            array[int(zone['y'] * sy):int((zone['y'] + zone['h']) * sy), int(zone['x'] * sx):int((zone['x'] + zone['w']) * sx)] = 128
+        arrays.append(array)
+    score = ssim(arrays[0], arrays[1])
     minimum = lock['thresholds']['keyframe_ssim_min']
     return {'ssim': score, 'min': minimum, 'pass': score >= minimum}
 
