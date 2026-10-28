@@ -76,7 +76,12 @@ ensure absolutely everywhere recalibrates to this moving forward first?");
 `Video Engine > Inspiration` is gone. It only adds files: never deletes, never
 overwrites, never renames, and a second fetch of the same post is a no-op. It
 writes nowhere else in his Drive. Its queue is `apps/control-plane/api/watch/`
-(content-watcher `docs/WATCH_API.md`).
+(content-watcher `docs/WATCH_API.md`). The cloud backup (Krish, 2026-10-28:
+"yes build the cloud backup"; `.github/workflows/watch-cloud.yml`) is the same
+content-watcher on GitHub's machine, taking only a link neither home computer
+took within 15 minutes; it files into the same two folders, by the same rules,
+through `POST /api/watch/upload`, which opens one Drive upload session as Krish
+in the folder the tag names and checks the name and sha256 first.
 
 <a id="rule-09"></a>
 
