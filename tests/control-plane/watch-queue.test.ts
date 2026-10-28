@@ -142,6 +142,19 @@ describe('report', () => {
     expect(last.rows.get(uuid(1))).toMatchObject({ status: 'failed', status_class: 'not_found' })
   })
 
+  it('spaces the tries: a failed try waits 20 minutes per try before anyone takes it again', async () => {
+    // 28 October: an Instagram post spent all three tries in five minutes across both home computers.
+    const store = new MemoryStore([claimed({ attempts: 1 })])
+    await report(store, body({ status: 'failed', status_class: 'blocked' }), NOW)
+    const later = (m: number) => new Date(NOW.getTime() + m * 60_000)
+    expect((await claim(store, 'HOME-2', 3, later(1))).requests).toHaveLength(0)
+    expect((await claim(store, 'HOME-2', 3, later(19))).requests).toHaveLength(0)
+    expect((await claim(store, 'HOME-2', 3, later(21))).requests.map(r => r.attempts)).toEqual([2])
+    await report(store, { ...body({ status: 'failed', status_class: 'blocked' }), machine: 'HOME-2' } as any, later(22))
+    expect((await claim(store, 'HOME-1', 3, later(50))).requests).toHaveLength(0)
+    expect((await claim(store, 'HOME-1', 3, later(63))).requests.map(r => r.attempts)).toEqual([3])
+  })
+
   it('refuses a machine that does not hold the claim, and an unknown request', async () => {
     const store = new MemoryStore([claimed()])
     const other = parseReport({ id: uuid(1), machine: 'HOME-2', status: 'failed', status_class: 'other' })

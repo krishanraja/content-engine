@@ -2724,6 +2724,8 @@ The content-watcher queue: what the home computers may claim, report and read, d
 - `const CLOUD_GRACE_MS`
 - `const isCloudMachine = (machine: string) =>`
 - `const MAX_ATTEMPTS`
+- `const RETRY_AFTER_MS`
+- `function claimableNow(row: WatchRequestRow, machine: string, now: Date): boolean`
 - `const MAX_CLAIM`
 - `const MAX_FILES`
 - `interface WatchRequestRow`
