@@ -7,6 +7,9 @@ type Aspect = EngineRenderProps['aspect']
 // These are key-content regions. The segment plate itself remains full bleed.
 // Each aspect is authored in its own frame coordinates, never scaled.
 const TALL: Record<Layout, readonly Box[]> = {
+  STAGE: [
+    { left: 0, top: 0, width: 1080, height: 1920 },
+  ],
   P1: [
     { left: 120, top: 288, width: 768, height: 552 },
     { left: 144, top: 312, width: 720, height: 160 },
@@ -32,6 +35,9 @@ const TALL: Record<Layout, readonly Box[]> = {
 }
 
 const WIDE: Record<Layout, readonly Box[]> = {
+  STAGE: [
+    { left: 0, top: 0, width: 1920, height: 1080 },
+  ],
   P1: [
     { left: 96, top: 208, width: 1728, height: 572 },
     { left: 132, top: 232, width: 640, height: 200 },
@@ -59,6 +65,8 @@ const WIDE: Record<Layout, readonly Box[]> = {
 /** Slots follow beat.uses order: plate then overlays, except P3's graphic then plate.
  * F1: slot 0 is the persistent context object (the grid), slot 1 the dominant focus object,
  * and slot 2 a stat strip. */
-export function slotsFor(layout: Layout, aspect: Aspect): Box[] {
-  return (aspect === '9:16' ? TALL : WIDE)[layout].map((box) => ({ ...box }))
+export function slotsFor(layout: Layout, aspect: Aspect, count = 1): Box[] {
+  const boxes = (aspect === '9:16' ? TALL : WIDE)[layout]
+  if (layout === 'STAGE') return Array.from({ length: count }, () => ({ ...boxes[0]! }))
+  return boxes.map((box) => ({ ...box }))
 }

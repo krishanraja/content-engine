@@ -24,7 +24,7 @@ function elements(node: ReactNode): ReactElement<Record<string, unknown>>[] {
   return [node, ...elements(node.props.children as ReactNode)]
 }
 
-const layouts: EngineBeat['layout'][] = ['P1', 'P3', 'P6', 'F1', 'F3']
+const layouts: Exclude<EngineBeat['layout'], 'STAGE'>[] = ['P1', 'P3', 'P6', 'F1', 'F3']
 const aspects: EngineRenderProps['aspect'][] = ['9:16', '16:9']
 
 describe('ve layouts', () => {
@@ -164,5 +164,36 @@ describe('BrandFrame call and ending routing', () => {
     expect(elements(BrandFrame({ props, beat: normal, frame: 90 })).some((node) => node.type === EndingBand)).toBe(true)
     delete props.call
     expect(() => BrandFrame({ props, beat, frame: 30 })).toThrow('ve: call beat without props.call')
+  })
+})
+
+
+describe('STAGE render props', () => {
+  it('accepts STAGE, both approved formats and optional keyFrame', () => {
+    for (const format of ['two-passports', 'hand-held-screen']) {
+      const props = structuredClone(fixture)
+      props.format = format
+      props.beats[0]!.layout = 'STAGE'
+      expect(EngineRenderPropsSchema.safeParse(props).success).toBe(true)
+      expect(EngineRenderPropsSchema.safeParse({ ...props, beats: [{ ...props.beats[0], keyFrame: 24 }] }).success).toBe(true)
+      for (const keyFrame of [-1, 1.5]) {
+        expect(EngineRenderPropsSchema.safeParse({ ...props, beats: [{ ...props.beats[0], keyFrame }] }).success).toBe(false)
+      }
+      expect(EngineRenderPropsSchema.safeParse({ ...props, beats: [{ ...props.beats[0], unknown: true }] }).success).toBe(false)
+    }
+    expect(EngineRenderPropsSchema.safeParse({ ...fixture, format: 'unknown' }).success).toBe(false)
+  })
+
+  it('gives three devices full-canvas boxes and clips', () => {
+    const props = EngineRenderPropsSchema.parse(fixture)
+    props.objects = ['a', 'b', 'c'].map((obj) => ({ obj, device: 'fixture-device', meaning: obj, variants: {}, params: {}, fromFrame: 0, toFrame: 120 }))
+    props.beats[1]!.layout = 'STAGE'
+    props.beats[1]!.uses = ['a', 'b', 'c']
+    const nodes = elements(FormatMaster(props))
+    const devices = nodes.filter((node) => node.type === DEVICES['fixture-device'])
+    expect(devices.map((node) => node.props.box)).toEqual(slotsFor('STAGE', props.aspect, 3))
+    const clips = nodes.filter((node) => (node.props.style as { clipPath?: string } | undefined)?.clipPath)
+    expect(clips).toHaveLength(3)
+    for (const clip of clips) expect(clip.props.style).toEqual({ clipPath: 'inset(0px 0px 0px 0px)' })
   })
 })

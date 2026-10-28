@@ -169,7 +169,8 @@ def inputs_from_props(props: dict) -> dict:
         if len(active) != 1:
             raise ValueError(f"Cue {event.get('id', event['obj'])} has no unique beat slot")
         beat = active[0]
-        box = layouts[aspect][beat['layout']][beat['uses'].index(event['obj'])]
+        slot_index = 0 if beat['layout'] == 'STAGE' else beat['uses'].index(event['obj'])
+        box = layouts[aspect][beat['layout']][slot_index]
         slots[event.get('id', event['obj'])] = box
         slots.setdefault(event['obj'], box)
     # boxFor('caption') in apps/renderer/src/engine/geometry.ts, using

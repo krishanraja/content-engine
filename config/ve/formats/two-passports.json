@@ -1,0 +1,70 @@
+{
+  "id": "two-passports",
+  "status": "trial",
+  "purpose": "Two passport pages explain where an AI was born and where it lives",
+  "layers": [
+    "passport_page",
+    "scribble",
+    "thread_card",
+    "BrandFrame"
+  ],
+  "layouts": [
+    "STAGE"
+  ],
+  "devices": [
+    "passport_page",
+    "scribble",
+    "thread_card"
+  ],
+  "generation": "stills from ChatGPT Images (Codex card); short animations of approved stills from Runway or Higgsfield; never type, numbers, logos or Krish's mouth",
+  "crew": [
+    "story",
+    "creative",
+    "brand",
+    "motion",
+    "captions",
+    "sound",
+    "provenance"
+  ],
+  "qc": {
+    "change_density_min": 0.75,
+    "longest_still_s": 3,
+    "layout_types_per_min_tall": 1,
+    "plates_labelled": 1.0,
+    "caption_ocr_min": 0.98
+  },
+  "fps": 30,
+  "aspects": [
+    "9:16",
+    "16:9"
+  ],
+  "intro_outro": "story stand-off (approved) unless Gate 0 changes the sting",
+  "pending_devices": [
+    "passport_page",
+    "scribble",
+    "thread_card"
+  ],
+  "design_lock": "two-passports",
+  "beats": [
+    {
+      "id": "title",
+      "layout": "STAGE"
+    },
+    {
+      "id": "born",
+      "layout": "STAGE"
+    },
+    {
+      "id": "lives",
+      "layout": "STAGE"
+    },
+    {
+      "id": "gap",
+      "layout": "STAGE"
+    },
+    {
+      "id": "verdict",
+      "layout": "STAGE"
+    }
+  ]
+}
