@@ -3277,6 +3277,14 @@ Run a Vercel serverless handler locally against the real environment.
 - `type EngineBeat = z.infer<typeof EngineBeatSchema>`
 - `type EngineTokens = z.infer<typeof EngineTokensSchema>`
 
+### `apps/renderer/src/engine/transport.ts`
+
+JSON-value transport: escape values only; keys retain their original spelling.
+
+- `function toAsciiProps<T>(value: T): T`
+- `function fromAsciiProps<T>(value: T): T`
+- `function lagSamples(rendered: Float32Array, stem: Float32Array, maxLag: number): number`
+
 ### `apps/renderer/src/evidence-label.ts`
 
 - `type EvidenceLabelInput`
