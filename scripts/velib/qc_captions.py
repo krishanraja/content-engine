@@ -108,7 +108,8 @@ def _read_candidates(executable, pixels, expected):
                            ('raw_2x', pixels.repeat(2, axis=0).repeat(2, axis=1)),
                            ('normalised_2x', normalised.repeat(2, axis=0).repeat(2, axis=1))):
         seen = _recognise(executable, image)
-        actual = _tokens(seen)
+        # A lone stray glyph from the picture behind the caption is not a caption word; real one-letter words are in `expected`.
+        actual = [token for token in _tokens(seen) if len(token) > 1 or token in expected]
         agreement = _agreement(expected, actual)
         # Tesseract fuses tightly set words ("writes a" -> "writesa"). Word spacing is gated by the caption
         # geometry lint, so identical letters in identical order count as a full match.

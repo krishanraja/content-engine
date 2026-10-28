@@ -57,7 +57,7 @@ export function Device({object,events,box,tokens,frame}:DeviceProps) {
         <div data-scrim="bottom" style={{...full,background:`linear-gradient(0deg, ${tokens.ink}, transparent 32%)`,opacity:0.88}} />
       </div>
       <div style={{position:'absolute',left:0,top:0,width:PW,height:PH,clipPath:uiClipPath()}}>
-        <div data-glass-plane="" style={{position:'absolute',left:0,top:0,width:screen.W,height:screen.H,transformOrigin:'0 0',transform:screen.css(),overflow:'hidden'}}>
+        <div data-glass-plane="" style={{position:'absolute',left:0,top:0,width:screen.W,height:screen.H,transformOrigin:'0 0',transform:screen.css(),overflow:'hidden',background:tokens.inkSoft}}>
           {s.glass.map((layer,i)=>{
             const Glass=glassKind(layer.kind)
             return <div key={layer.atFrame+':'+i} data-glass-kind={layer.kind} style={{position:'absolute',inset:0,opacity:layer.opacity}}>

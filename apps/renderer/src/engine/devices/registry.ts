@@ -13,6 +13,7 @@ import { Device as Sticker } from './sticker'
 import { Device as Stamp } from './stamp'
 import { Device as StatStrip } from './stat_strip'
 import { Device as Marquee } from './marquee'
+import { Device as QuoteCard } from './quote_card'
 
 /** Device id (the spec's object.device, config/techniques.json render_adapter) -> component.
  *  Each device card adds exactly one line here. FormatMaster refuses an object whose device is missing. */
@@ -22,6 +23,7 @@ export const DEVICES: DeviceRegistry = {
   stamp: Stamp,
   stat_strip: StatStrip,
   marquee: Marquee,
+  quote_card: QuoteCard,
   hand_phone_stage: HandPhoneStage,
   test_grid: TestGrid,
   record_card: RecordCard,

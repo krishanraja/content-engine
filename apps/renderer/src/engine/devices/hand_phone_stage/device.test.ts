@@ -54,9 +54,10 @@ describe('continuous phone stage',()=>{
     expect(html.indexOf('data-glass-plane')).toBeLessThan(html.search(/src="[^"]*phone-bezel\.png/))
     expect(html.search(/src="[^"]*phone-bezel\.png/)).toBeLessThan(html.search(/src="[^"]*phone-glass\.png/))
   })
-  it('crossfades fill, omits sheen over footage and rejects unknown kinds',()=>{
-    expect(at(60).glass.map(g=>g.kind)).toEqual(['blank'])
-    expect(at(66).glass).toHaveLength(2)
+  it('cuts fill hard (no ghosting), omits sheen over footage and rejects unknown kinds',()=>{
+    expect(at(59).glass.map(g=>g.kind)).toEqual(['blank'])
+    expect(at(66).glass.map(g=>g.kind)).toEqual(['test'])
+    expect(at(66).glass[0]!.opacity).toBe(1)
     expect(at(72).glass.map(g=>g.kind)).toEqual(['test'])
     expect(markup(72)).toContain('test glass')
     const ev=[...events,{...events[2]!,id:'footage',toState:'footage',atFrame:90}]
