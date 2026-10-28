@@ -548,9 +548,12 @@ after his presses, by 10:00.
    lock is signed and pushed; one session per piece, and never a piece made
    in the room.
    - First `python3 scripts/post-pack/making.py <uuid> show`: a session
-     that started on the piece under six hours ago is still live (Control
-     Center's rule, `LIVE_SESSION_MS` in control-center `api/_make.ts`).
-     Give him its link and start no second one.
+     that started on the piece under six hours ago may still be at work
+     (Control Center's rule, `LIVE_SESSION_MS` in control-center
+     `api/_make.ts`). Look at it with `get_session` (its id is in its
+     link). Still working: give him its link and start no second one.
+     Stopped (a make started before the lock was signed stops at the lock
+     and makes nothing): start a fresh one as below.
    - Control Center's "Make it in Claude Code" (`POST /api/content/make`)
      answers only his signed-in browser, and the routine it fires
      (`CLAUDE_MAKE_ROUTINE_ID`, with the one-line payload `piece_id:
