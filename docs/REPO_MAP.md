@@ -3309,7 +3309,7 @@ Run a Vercel serverless handler locally against the real environment.
 
 ### `apps/renderer/src/engine/devices/headline/index.tsx`
 
-- `function headlineLayout(lines: string[], width: number, swipedLine = -1)`
+- `function headlineLayout(lines: string[], width: number, swipedLine = -1, room: number = ZONES.headline.h)`
 - `function Device({ object, events, tokens, frame }: DeviceProps)`
 
 ### `apps/renderer/src/engine/devices/headline/schema.ts`
