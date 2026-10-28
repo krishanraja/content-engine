@@ -6,7 +6,8 @@
 # -WindowStyle Hidden: Windows draws the window before PowerShell can hide it. So every such task runs through
 # run-hidden.exe instead (windowless\RunHidden.cs): a program with no window of its own that starts the same command
 # line with no window and hands back its exit code. It is built on the machine the first time it is needed, by the C#
-# compiler Windows carries, and proved to run a command before any task is pointed at it.
+# compiler Windows carries, copied to one fixed path (run-hidden.exe) and proved to run a command before any task is
+# pointed at it.
 #
 # Dot-source this file; it only defines functions. Invoke-WindowKeeper is what the recordings pass runs each pass
 # (scripts\recordings-upload.ps1): every task of his that would open a console window is changed to run through
@@ -91,10 +92,21 @@ function Get-WindowlessLauncher {
       if (Test-Path -LiteralPath $building) { Remove-Item -LiteralPath $building -Force -ErrorAction SilentlyContinue }
     }
   }
-  $code = Invoke-Windowless $target (Join-Path $env:SystemRoot 'System32\cmd.exe') '/c exit 7'
+  # Tasks point at one fixed path, run-hidden.exe, refreshed here from this source's build. A task an admin installed
+  # is pointed at it once with admin rights, and every later build reaches it with none (28 October: three such tasks
+  # on Surface). A copy in use is renamed aside, which Windows allows for a running program, and swept once free.
+  $stable = Join-Path $Root 'run-hidden.exe'
+  if (-not (Test-Path -LiteralPath $stable -PathType Leaf) -or (Get-FileHash -LiteralPath $stable).Hash -ne (Get-FileHash -LiteralPath $target).Hash) {
+    if (Test-Path -LiteralPath $stable) { Move-Item -LiteralPath $stable -Destination (Join-Path $Root ('run-hidden.' + [guid]::NewGuid().ToString('N') + '.old')) }
+    Copy-Item -LiteralPath $target -Destination $stable
+  }
+  foreach ($old in @(Get-ChildItem -LiteralPath $Root -Filter 'run-hidden.*.old' -File -ErrorAction SilentlyContinue)) {
+    Remove-Item -LiteralPath $old.FullName -Force -ErrorAction SilentlyContinue
+  }
+  $code = Invoke-Windowless $stable (Join-Path $env:SystemRoot 'System32\cmd.exe') '/c exit 7'
   if ($code -ne 7) { throw "run-hidden.exe did not run a command (exit $code)" }
-  $script:WindowlessLauncher = $target
-  return $target
+  $script:WindowlessLauncher = $stable
+  return $stable
 }
 
 function New-WindowlessTaskAction([string]$Execute, [string]$Argument, [string]$WorkingDirectory) {

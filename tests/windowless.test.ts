@@ -68,6 +68,18 @@ Set-StrictMode -Version Latest
 $env:LOCALAPPDATA = '${home.replace(/'/g, "''")}'
 . '${ps('scripts/windowless.ps1')}'
 $launcher = Get-WindowlessLauncher
+# A later build replaces the fixed copy even while it runs: here it is held open the way a running program is.
+$root = Split-Path -Parent $launcher
+$build = @(Get-ChildItem -LiteralPath $root -Filter 'run-hidden-*.exe')[0].FullName
+Copy-Item -LiteralPath (Join-Path $env:SystemRoot 'System32\\cmd.exe') -Destination $launcher -Force
+$hold = [System.IO.File]::Open($launcher, 'Open', 'Read', 'Read, Delete')
+$script:WindowlessLauncher = $null
+$again = Get-WindowlessLauncher
+$replaced = ((Get-FileHash -LiteralPath $again).Hash -eq (Get-FileHash -LiteralPath $build).Hash) -and $again -eq $launcher
+$hold.Dispose()
+$script:WindowlessLauncher = $null
+[void](Get-WindowlessLauncher)
+$swept = @(Get-ChildItem -LiteralPath $root -Filter 'run-hidden.*.old').Count
 $code = Invoke-Windowless $launcher '${process.execPath.replace(/'/g, "''")}' '"${argsJs}" "${out}" "a b" c'
 Add-Type @"
 using System; using System.Collections.Generic; using System.Runtime.InteropServices; using System.Text;
@@ -112,10 +124,12 @@ $start.FileName = $launcher
 $start.Arguments = Format-WindowlessCommand (Join-Path $env:SystemRoot 'System32\\WindowsPowerShell\\v1.0\\powershell.exe') '-NoProfile -NonInteractive -Command "cmd.exe /c ping -n 5 127.0.0.1"'
 $start.UseShellExecute = $false
 $subject = Watch-Windows { [System.Diagnostics.Process]::Start($start) } 10
-[ordered]@{ code = $code; launcher = (Split-Path -Leaf $launcher); control = $control.seen; subject = $subject.seen; exit = $subject.exit } | ConvertTo-Json -Compress
+[ordered]@{ code = $code; launcher = (Split-Path -Leaf $launcher); replaced = $replaced; swept = $swept; control = $control.seen; subject = $subject.seen; exit = $subject.exit } | ConvertTo-Json -Compress
 `
     const result = powershell(home, command)
-    expect(result.launcher).toMatch(/^run-hidden-[0-9a-f]{12}\.exe$/)
+    expect(result.launcher).toBe('run-hidden.exe')
+    expect(result.replaced).toBe(true)
+    expect(result.swept).toBe(0)
     expect(result.code).toBe(0)
     expect(JSON.parse(readFileSync(out, 'utf8'))).toEqual(['a b', 'c'])
     expect(result.control, 'the probe saw no window from the control, so it proves nothing').toBeGreaterThan(0)
@@ -162,10 +176,10 @@ try {
     // console and older are changed; gui has no console and is left alone.
     expect(result.first).toMatchObject({ launcher: 'ok', wrapped: 2, hidden: 0, left: 0 })
     expect(result.second).toMatchObject({ launcher: 'ok', wrapped: 0, hidden: 2, left: 0 })
-    expect(result.older).toBe(result.execute)  // an older build of the launcher is replaced by this one
+    expect(result.older).toBe(result.execute)  // a task on an older build moves to the fixed path
     expect(result.older_arguments).toBe('"%windir%\\System32\\cmd.exe" /c exit 0')
     expect(result.ran).toBe(5)  // %windir% in the program's path is expanded
-    expect(result.execute).toMatch(/^run-hidden-[0-9a-f]{12}\.exe$/)
+    expect(result.execute).toBe('run-hidden.exe')
     expect(result.arguments).toBe('"cmd.exe" /c exit 0')
     expect(result.directory).toBeTruthy()
     expect(result.enabled).toBe(false)
