@@ -341,13 +341,11 @@
       "uses": [
         "phone",
         "open_headline",
-        "open_provenance",
         "contestant_claude",
         "contestant_chatgpt",
         "contestant_deepseek",
         "open_strip",
-        "open_scribble",
-        "marquee"
+        "open_scribble"
       ],
       "transitionOut": "cut",
       "sectionBeat": true,
@@ -362,9 +360,7 @@
       "uses": [
         "phone",
         "result_a_headline",
-        "result_a_provenance",
-        "result_a_scribble",
-        "marquee"
+        "result_a_scribble"
       ],
       "transitionOut": "cut",
       "sectionBeat": false,
@@ -379,9 +375,7 @@
       "uses": [
         "phone",
         "result_b_headline",
-        "result_b_provenance",
-        "result_b_scribble",
-        "marquee"
+        "result_b_scribble"
       ],
       "transitionOut": "cut",
       "sectionBeat": false,
@@ -398,8 +392,7 @@
         "evidence_headline",
         "recording_label",
         "evidence_quote",
-        "evidence_scribble",
-        "marquee"
+        "evidence_scribble"
       ],
       "transitionOut": "cut",
       "sectionBeat": false,
@@ -413,12 +406,10 @@
       "toFrame": 632,
       "uses": [
         "phone",
-        "verdict_provenance",
         "verdict_strip",
         "deletion_stamp",
         "result_threads",
-        "verdict_scribble",
-        "marquee"
+        "verdict_scribble"
       ],
       "transitionOut": "cut",
       "sectionBeat": false,
@@ -573,26 +564,6 @@
       }
     },
     {
-      "obj": "marquee",
-      "device": "marquee",
-      "meaning": "marquee in the approved hand-held screen story",
-      "fromFrame": 0,
-      "toFrame": 632,
-      "variants": {},
-      "params": {
-        "items": [
-          "mind.the.gap · Fridays",
-          "What's coming, before it's obvious",
-          "No added sermons",
-          "Contains British spelling"
-        ],
-        "at": {
-          "y": 1736,
-          "h": 62
-        }
-      }
-    },
-    {
       "obj": "open_headline",
       "device": "headline",
       "meaning": "open headline in the approved hand-held screen story",
@@ -638,23 +609,6 @@
           115.69521381721391
         ],
         "sq": 3
-      }
-    },
-    {
-      "obj": "open_provenance",
-      "device": "sticker",
-      "meaning": "open provenance in the approved hand-held screen story",
-      "fromFrame": 0,
-      "toFrame": 220,
-      "variants": {},
-      "params": {
-        "text": "KRISH'S TEST\n23 OCT",
-        "tiltDeg": 4,
-        "at": {
-          "x": 684,
-          "y": 176
-        },
-        "tone": "channel"
       }
     },
     {
@@ -706,23 +660,6 @@
       }
     },
     {
-      "obj": "result_a_provenance",
-      "device": "sticker",
-      "meaning": "result a provenance in the approved hand-held screen story",
-      "fromFrame": 220,
-      "toFrame": 335,
-      "variants": {},
-      "params": {
-        "text": "KRISH'S TEST\n23 OCT",
-        "tiltDeg": 4,
-        "at": {
-          "x": 684,
-          "y": 336
-        },
-        "tone": "channel"
-      }
-    },
-    {
       "obj": "result_b_headline",
       "device": "headline",
       "meaning": "result b headline in the approved hand-held screen story",
@@ -767,23 +704,6 @@
         ],
         "bend": -46,
         "head": 50
-      }
-    },
-    {
-      "obj": "result_b_provenance",
-      "device": "sticker",
-      "meaning": "result b provenance in the approved hand-held screen story",
-      "fromFrame": 335,
-      "toFrame": 386,
-      "variants": {},
-      "params": {
-        "text": "KRISH'S TEST\n23 OCT",
-        "tiltDeg": -4,
-        "at": {
-          "x": 684,
-          "y": 372
-        },
-        "tone": "channel"
       }
     },
     {
@@ -849,23 +769,6 @@
           155.01544262718247
         ],
         "sq": 3.4
-      }
-    },
-    {
-      "obj": "verdict_provenance",
-      "device": "sticker",
-      "meaning": "verdict provenance in the approved hand-held screen story",
-      "fromFrame": 541,
-      "toFrame": 632,
-      "variants": {},
-      "params": {
-        "text": "KRISH'S TEST\n23 OCT",
-        "tiltDeg": 4,
-        "at": {
-          "x": 684,
-          "y": 586
-        },
-        "tone": "channel"
       }
     },
     {
@@ -1068,10 +971,6 @@
           "x": 892,
           "y": 436
         },
-        "end": {
-          "x": 892,
-          "y": 574
-        },
         "tone": "cream"
       }
     },
@@ -1117,55 +1016,41 @@
     },
     {
       "id": "open-3",
-      "obj": "marquee",
-      "verb": "enter",
-      "toState": "visible",
-      "atFrame": 9
-    },
-    {
-      "id": "open-4",
       "obj": "open_headline",
       "verb": "enter",
       "toState": "visible",
       "atFrame": 9
     },
     {
-      "id": "open-5",
+      "id": "open-4",
       "obj": "contestant_claude",
       "verb": "enter",
       "toState": "visible",
       "atFrame": 40
     },
     {
-      "id": "open-6",
-      "obj": "open_provenance",
-      "verb": "enter",
-      "toState": "visible",
-      "atFrame": 47
-    },
-    {
-      "id": "open-7",
+      "id": "open-5",
       "obj": "contestant_chatgpt",
       "verb": "enter",
       "toState": "visible",
       "atFrame": 47
     },
     {
-      "id": "open-8",
+      "id": "open-6",
       "obj": "contestant_deepseek",
       "verb": "enter",
       "toState": "visible",
       "atFrame": 66
     },
     {
-      "id": "open-9",
+      "id": "open-7",
       "obj": "open_scribble",
       "verb": "draw",
       "toState": "visible",
       "atFrame": 94
     },
     {
-      "id": "open-10",
+      "id": "open-8",
       "obj": "open_strip",
       "verb": "enter",
       "toState": "visible",
@@ -1194,13 +1079,6 @@
     },
     {
       "id": "result_a-3",
-      "obj": "result_a_provenance",
-      "verb": "enter",
-      "toState": "visible",
-      "atFrame": 256
-    },
-    {
-      "id": "result_a-4",
       "obj": "result_a_scribble",
       "verb": "draw",
       "toState": "visible",
@@ -1229,13 +1107,6 @@
     },
     {
       "id": "result_b-3",
-      "obj": "result_b_provenance",
-      "verb": "enter",
-      "toState": "visible",
-      "atFrame": 339
-    },
-    {
-      "id": "result_b-4",
       "obj": "result_b_scribble",
       "verb": "draw",
       "toState": "visible",
@@ -1348,41 +1219,34 @@
     },
     {
       "id": "verdict-8",
-      "obj": "verdict_provenance",
-      "verb": "enter",
-      "toState": "visible",
-      "atFrame": 557
-    },
-    {
-      "id": "verdict-9",
       "obj": "result_threads",
       "verb": "mark",
       "toState": "deepseek:xinjiang",
       "atFrame": 557
     },
     {
-      "id": "verdict-10",
+      "id": "verdict-9",
       "obj": "result_threads",
       "verb": "mark",
       "toState": "deepseek:turkmenistan",
       "atFrame": 557
     },
     {
-      "id": "verdict-11",
+      "id": "verdict-10",
       "obj": "verdict_scribble",
       "verb": "draw",
       "toState": "visible",
       "atFrame": 570
     },
     {
-      "id": "verdict-12",
+      "id": "verdict-11",
       "obj": "verdict_strip",
       "verb": "enter",
       "toState": "visible",
       "atFrame": 570
     },
     {
-      "id": "verdict-13",
+      "id": "verdict-12",
       "obj": "verdict_strip",
       "verb": "count_to",
       "toState": "3/3",

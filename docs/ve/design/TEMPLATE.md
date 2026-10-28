@@ -9,13 +9,12 @@ One real hand holds one real phone on a real-world plate. The camera never cuts:
 | Zone | x | y | w | h | Rule |
 |---|---|---|---|---|---|
 | Grid | 72 | | 936 | | 12 columns, 24 gutter, 72 margins |
-| Header | 72 | 79 | 888 | 56 | logo, ILLUSTRATION tag, section pill |
+| Header | 72 | 79 | 888 | 56 | logo, section pill |
 | Headline | 72 | 150 | 888 | 270 | Anton, 1 or 2 lines, one swiped word |
 | Hero stage | 0 | 0 | 1080 | 1920 | full bleed, the focal object fills it |
 | Key band | | | | to y 1170 | every focal item and its scribble live here |
 | Caption | 72 | 1180 | 900 | 320 | reserved for the engine's captions; nothing else |
 | Lower line | 72 | 1516 | 936 | 104 | one stat strip, one dek or one sticker |
-| Marquee | 0 | 1736 | 1080 | 62 | decoration only |
 | Platform | x>960, y>1640 | | | | decoration only, no key content |
 
 ## Type scale
@@ -27,7 +26,6 @@ One real hand holds one real phone on a real-world plate. The camera never cuts:
 | Evidence quote | Archivo 500-600 | 44 min | as spoken |
 | Names in cards | Archivo 900, width 112 | 34-46 | UPPER |
 | Label, sticker, stamp, MRZ | IBM Plex Mono 500-700 | 30 min | UPPER, +0.14em on labels |
-| ILLUSTRATION tag | IBM Plex Mono 500 | 28 | UPPER, +0.14em |
 Nothing under 30 px, except the 28 px tag and **real footage**, which is evidence and is never retyped or enlarged: if its text is under 30 px in frame, add a verbatim labelled pull quote at 44 px beside it.
 
 ## Colour (roles from `config/ve/brand-tokens.json`, never raw hex in a device)
@@ -46,7 +44,7 @@ At least six distinct moves per beat (camera, parallax, kinetic type, counter, w
 1. **Stills** come from ChatGPT Images through a Codex imagegen card, 9:16, at least 1882x3344 (2x the stage), 4 candidates per plate. Prompts must say: no text, numbers, flags, emblems, logos, faces, UI, arrows or highlights; blank flat screens; calm dark at least 35% of the frame for type; one hand, one phone; palette ink-green blacks, cream and mint, never coral. Say it again as the last sentence.
 2. **Reject by machine first**: OCR finds any letter or digit; a flat-colour test for the blank screen; the Critic checks for flags, emblems, logos, faces. A hit means regenerate, never retouch.
 3. **Animation** (Runway, Higgsfield) only animates an approved still for up to 5 s, one-shot, never evidence. Each generation is logged with its credit cost (`ve ledger <piece> add`), and Krish approves every spend.
-4. Every frame that shows a generated plate carries the `ILLUSTRATION` tag (28 px min) for as long as the plate is on screen. The real recording is never generated and never redrawn.
+4. **Every element on screen serves the message of the video.** No tag, provenance sticker, marquee, disclaimer or process label (Krish, 28 Oct 2026: "I hate all these stupid little abbreviations and marks"; "No one cares that things are AI-generated"). The real recording is never generated and never redrawn, and its own source label stays.
 5. Each plate has a sidecar: prompt, model, date, candidates, chosen, credits.
 
 ## Quality bar (the gates, in order)
