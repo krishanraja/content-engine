@@ -66,6 +66,8 @@ public static class RunHidden
         string program, arguments;
         Split(AfterFirst(Environment.CommandLine), out program, out arguments);
         if (program.Length == 0) return 2;
+        // Task Scheduler expands %windir% and the like in a program's path; CreateProcess does not.
+        program = Environment.ExpandEnvironmentVariables(program);
 
         IntPtr job = CreateJobObject(IntPtr.Zero, null);
         if (job != IntPtr.Zero)
