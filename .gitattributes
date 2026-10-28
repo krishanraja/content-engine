@@ -37,3 +37,8 @@ apps/renderer/**/*.pdf binary
 apps/renderer/**/*.lottie binary
 apps/renderer/**/*.riv binary
 apps/renderer/**/*.avif binary
+
+# Plates and golden frames are hashed byte for byte: never convert line endings.
+assets/plates/** -text
+fixtures/ve/design-lock/** -text
+docs/ve/design/formats/ref/** -text

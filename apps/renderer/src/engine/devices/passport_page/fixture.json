@@ -1,0 +1,20 @@
+{
+  "objects": [{
+    "obj": "passport", "device": "passport_page", "meaning": "Illustrative passport, no physical residence claim",
+    "params": {
+      "spine": "left", "at": {"x": 72, "y": 432}, "label": "ILLUSTRATIVE RECORD",
+      "fields": [
+        {"id": "a", "label": "Example A", "at": {"x": 92, "y": 92}, "state": "stamped", "top": "EXAMPLE A", "main": "USA", "flag": "usa", "tiltDeg": -5},
+        {"id": "b", "label": "Example B", "at": {"x": 296, "y": 426}, "state": "sample", "top": "EXAMPLE B", "flag": "unknown", "tiltDeg": 3}
+      ],
+      "sampleText": "SAMPLE · NOT A CLAIM", "mrz": ["p<illustration", "sample<not<a<claim"]
+    },
+    "fromFrame": 0, "toFrame": 180
+  }],
+  "events": [
+    {"id": "enter", "obj": "passport", "verb": "enter", "toState": "visible", "atFrame": 10},
+    {"id": "stamp", "obj": "passport", "verb": "stamp", "toState": "a", "atFrame": 30},
+    {"id": "mark", "obj": "passport", "verb": "mark", "toState": "b", "atFrame": 50},
+    {"id": "exit", "obj": "passport", "verb": "exit", "toState": "hidden", "atFrame": 150}
+  ]
+}

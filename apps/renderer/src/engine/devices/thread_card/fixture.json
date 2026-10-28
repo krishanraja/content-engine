@@ -1,0 +1,25 @@
+{
+  "objects": [{
+    "obj": "threads", "device": "thread_card", "meaning": "Three assistant threads carry the test result",
+    "fromFrame": 0, "toFrame": 180,
+    "params": {
+      "stations": [{"id": "first", "label": "STATION A", "x": 400}, {"id": "second", "label": "STATION B", "x": 690}],
+      "axis": {"y": 240, "x0": 72, "x1": 946},
+      "threads": [
+        {"id": "claude", "name": "CLAUDE", "tally": "2/2", "y": 336, "style": "solid", "marks": [{"station": "first", "state": "planted"}, {"station": "second", "state": "planted"}]},
+        {"id": "chatgpt", "name": "CHATGPT", "tally": "1/2", "y": 436, "style": "dashed", "marks": [{"station": "first", "state": "bare"}, {"station": "second", "state": "planted"}]},
+        {"id": "deepseek", "name": "DEEPSEEK", "tally": "0/2", "y": 536, "style": "solid", "marks": [{"station": "first", "state": "bare"}, {"station": "second", "state": "parted"}]}
+      ],
+      "knot": {"x": 902, "y": 436}, "end": {"x": 902, "y": 850, "label": "REVIEW 30 NOV 2026"}, "tone": "cream"
+    }
+  }],
+  "events": [
+    {"id": "enter", "obj": "threads", "verb": "enter", "toState": "visible", "atFrame": 10},
+    {"id": "first", "obj": "threads", "verb": "mark", "toState": "claude:first", "atFrame": 30},
+    {"id": "second", "obj": "threads", "verb": "mark", "toState": "claude:second", "atFrame": 40},
+    {"id": "chatgpt", "obj": "threads", "verb": "mark", "toState": "chatgpt:second", "atFrame": 45},
+    {"id": "parted", "obj": "threads", "verb": "mark", "toState": "deepseek:second", "atFrame": 50},
+    {"id": "stamp", "obj": "threads", "verb": "stamp", "toState": "deepseek:ANSWER DELETED", "atFrame": 70},
+    {"id": "exit", "obj": "threads", "verb": "exit", "toState": "hidden", "atFrame": 150}
+  ]
+}

@@ -302,43 +302,71 @@ def cmd_verify_card(args) -> int:
     return 1 if problems else 0
 
 
+def cmd_verdict(args) -> int:
+    from velib import verdict
+    try:
+        spec_file = spec_path_for(args.piece)
+        spec = load_json(spec_file)
+        findings = load_json(args.findings)
+        if not isinstance(findings, list):
+            raise ValueError('findings file must hold a list')
+        viewed = [float(s) for s in args.viewed.split(',') if s.strip()]
+        path = verdict.write(spec, args.cut, verdict.ve_dir(spec_file), args.reviewer, findings, viewed)
+        print(f've verdict: {path}')
+        return 0
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        print(f've verdict: {error}')
+        return 1
+
+
+def cmd_packet(args) -> int:
+    from velib import packet, verdict
+    try:
+        spec_file = spec_path_for(args.piece)
+        spec = load_json(spec_file)
+        directory = verdict.ve_dir(spec_file)
+        for cut in args.legacy_ok:
+            if spec['format'] not in packet.designlock.load()['formats']:
+                print(f'{cut}: LEGACY: no design lock')
+        out = packet.assemble(spec, directory, args.out or directory / 'packet', args.legacy_ok)
+        print(f've packet: {out}')
+        return 0
+    except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
+        print(f've packet: {error}')
+        return 1
+
+
 def cmd_status(args) -> int:
-    from velib.common import sha256_file
+    from velib import packet, verdict
     from velib.lint import lint
     spec_file = spec_path_for(args.piece)
     spec, problems = lint(spec_file)
     if spec is None:
         print('NOT READY: the spec does not pass its schema')
         return 1
-    ve_dir = spec_file.parent if spec_file.parent.name == 've' else spec_file.parent / 've'
-    finals = {a['artifact_hash']: a for a in spec['approvals'] if a['gate'] == 'final'}
+    directory = verdict.ve_dir(spec_file)
     ready = not problems
     print(f"lint: {'clean' if not problems else f'{len(problems)} finding(s)'}")
     for cut in spec['cuts']:
-        qc_file, verdict_file = ve_dir / f'qc.{cut}.json', ve_dir / f'verdict.{cut}.json'
-        reasons = []
-        compile_file = ve_dir / f'compile.{cut}.json'
-        if compile_file.exists() and load_json(compile_file).get('sfx_missing'):
-            reasons.append('sfx kit missing')
-        if not qc_file.exists():
-            reasons.append('no qc')
-        else:
-            qc = load_json(qc_file)
-            if not Path(qc['file']).exists() or sha256_file(qc['file']) != qc['sha256']:
-                reasons.append('qc is for a different file')
-            if not qc['measured_pass']:
-                reasons.append('measured checks fail')
-            if not qc['complete']:
-                reasons.append('qc incomplete')
-            if qc['sha256'] not in finals:
-                reasons.append("no final approval from Krish for this file")
-        if not verdict_file.exists():
-            reasons.append('no Critic verdict')
-        elif load_json(verdict_file).get('blocking'):
-            reasons.append('Critic blocks')
+        try:
+            mechanical, qc, video, digest = packet.mechanical(spec, cut, directory)
+            compile_file = directory / f'compile.{cut}.json'
+            if compile_file.exists() and load_json(compile_file).get('sfx_missing') and 'sfx kit missing' not in mechanical:
+                mechanical.append('sfx kit missing')
+            design = packet.design(spec, cut, directory, digest)
+            final = [] if digest and any(a.get('gate') == 'final' and a.get('by') == 'Krish'
+                                         and a.get('artifact_hash') == digest for a in spec.get('approvals', [])) else [
+                                             'no final approval from Krish for this file']
+        except (OSError, ValueError, KeyError, TypeError) as error:
+            mechanical, design, final = [str(error)], ['design could not be checked'], []
+        print(f'{cut}:')
+        print('  mechanical: ' + ('INVALID (' + '; '.join(mechanical) + ')' if mechanical else 'VALID'))
+        print('  design: ' + ('NOT APPROVED (' + '; '.join(design) + ')' if design else 'APPROVED'))
+        reasons = mechanical + design + final
         print(f"{cut}: {'READY' if not reasons else 'NOT READY (' + '; '.join(reasons) + ')'}")
         ready = ready and not reasons
     return 0 if ready else 1
+
 
 
 def cmd_coverage(_args) -> int:
@@ -498,6 +526,17 @@ def main() -> int:
     p.set_defaults(fn=cmd_dispatch)
     p = sub.add_parser('verify-card'); p.add_argument('card'); p.add_argument('--cwd', required=True); p.set_defaults(fn=cmd_verify_card)
     p = sub.add_parser('status'); p.add_argument('piece'); p.set_defaults(fn=cmd_status)
+    p = sub.add_parser('verdict', help='record a hash-bound independent Critic review')
+    actions = p.add_subparsers(dest='action', required=True)
+    a = actions.add_parser('write'); a.add_argument('piece'); a.add_argument('cut')
+    a.add_argument('--reviewer', required=True); a.add_argument('--findings', required=True)
+    a.add_argument('--viewed', default='', help='comma-separated viewed frame times in seconds')
+    a.set_defaults(fn=cmd_verdict)
+    p = sub.add_parser('packet', help='assemble measured and judged cuts for approval')
+    p.add_argument('piece'); p.add_argument('--out')
+    p.add_argument('--legacy-ok', action='append', default=[], metavar='CUT',
+                   help='explicitly identify a legacy cut; QC and Critic remain mandatory')
+    p.set_defaults(fn=cmd_packet)
     sub.add_parser('coverage').set_defaults(fn=cmd_coverage)
     p = sub.add_parser('compile', help='compile a linted spec and cut-ready word timings')
     p.add_argument('spec'); p.add_argument('--cut', required=True); p.add_argument('--words', required=True)

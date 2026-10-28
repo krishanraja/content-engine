@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 214 113" fill="none" stroke="currentColor">
+  <!-- Simplified illustration. Production must use a licensed open flag set. -->
+  <rect x="2" y="2" width="210" height="109" stroke-width="3" stroke-dasharray="10 8"/>
+  <path d="M20 4 L4 44 M40 4 L4 94 M60 4 L18 109 M80 4 L38 109 M100 4 L58 109 M120 4 L78 109 M140 4 L98 109 M160 4 L118 109 M180 4 L138 109 M200 4 L158 109 M210 34 L178 109" opacity=".15"/>
+  <text x="107" y="80" text-anchor="middle" stroke="none" fill="currentColor" font-family="MYMU Plex Mono,monospace" font-size="64" font-weight="700">?</text>
+</svg>
