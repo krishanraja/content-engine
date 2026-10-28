@@ -28,6 +28,9 @@ describe('passport_page', () => {
   })
   it('keeps a stamped field absent until its stamp and rests at full size five frames later', () => {
     expect(html(29)).not.toContain('data-field="a"')
+    // A stamped field's flag is part of its entry: it never shows before the stamp that names the country.
+    expect(html(29)).not.toContain('data-flag="usa"')
+    expect(html(30)).toContain('data-flag="usa"')
     expect(at(30).fields[0]).toMatchObject({ visible: true, scale: 1.55, opacity: 0 })
     expect(at(31).fields[0]).toMatchObject({ scale: 1.3, opacity: 0.7 })
     expect(at(32).fields[0]!.scale).toBe(1)

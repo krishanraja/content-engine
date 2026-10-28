@@ -1,0 +1,2639 @@
+{
+  "schema_version": 2,
+  "piece_id": "2026-10-23-friday-two-passports-ve",
+  "publish_day": "2026-10-23",
+  "format": "hand-held-screen",
+  "theme": "makeyourmindup-video-v1",
+  "brand": {
+    "series": "mind.the.gap",
+    "captions": "house"
+  },
+  "call": {
+    "statement": "At least one more country's government will announce new public money for its own national AI model or a sovereign AI programme.",
+    "due": "2026-12-31",
+    "confidence_percent": 90
+  },
+  "signature": {
+    "hero": {
+      "device": "hand_phone_stage",
+      "status": "trial"
+    },
+    "opening_break": "One phone carries the Airbnb quote, then two passports, then the same question to three AIs",
+    "finish_pack": "house_grain",
+    "sound_palette": "house-v1",
+    "variants": {}
+  },
+  "datasets": [],
+  "objects": [
+    {
+      "obj": "phone_hook",
+      "device": "hand_phone_stage",
+      "meaning": "hand and phone carry the Airbnb quote through the hook",
+      "persist": {
+        "from_beat": "hook",
+        "to_beat": "fling"
+      },
+      "params": {
+        "cameras": {
+          "hook": {
+            "k": 1.8,
+            "rot": -3,
+            "tx": -78.65644928971597,
+            "ty": 535.8923197737188,
+            "backdrop": "cotton_flip",
+            "bg": {
+              "k": 1.75,
+              "x": -60,
+              "y": -210
+            }
+          },
+          "matter": {
+            "k": 1.9,
+            "rot": -10.0,
+            "tx": -267.859411132586,
+            "ty": 435.78673434414554,
+            "backdrop": "cotton",
+            "bg": {
+              "k": 1.5,
+              "x": -90,
+              "y": -330
+            }
+          },
+          "airbnb": {
+            "k": 2.1,
+            "rot": -1.0,
+            "tx": -235.02146620145396,
+            "ty": 385.1362339261145,
+            "backdrop": "hardware",
+            "bg": {
+              "k": 1.6,
+              "x": -330,
+              "y": -120
+            }
+          },
+          "fling": {
+            "k": 1.55,
+            "rot": -8.0,
+            "tx": -176.82774955021893,
+            "ty": 695.7458944361322,
+            "backdrop": "cotton_flip",
+            "bg": {
+              "k": 1.4,
+              "x": -180,
+              "y": -120
+            }
+          }
+        },
+        "start": "hook",
+        "glass": {
+          "bubble": {
+            "hook": {
+              "label": "At stake",
+              "quote": "Who sees your data.\nWhat it tells you."
+            },
+            "airbnb": {
+              "label": "Chesky to Bloomberg",
+              "quote": "We're relying a lot on Alibaba's Qwen model."
+            },
+            "fling": {
+              "label": "Chesky to Bloomberg",
+              "quote": "It's very good. It's also fast and cheap."
+            }
+          }
+        }
+      }
+    },
+    {
+      "obj": "hook_head",
+      "device": "headline",
+      "meaning": "hook head",
+      "persist": {
+        "from_beat": "hook",
+        "to_beat": "hook"
+      },
+      "params": {
+        "lines": [
+          "USING A",
+          "CHINESE AI?"
+        ],
+        "swipe": {
+          "line": 1,
+          "word": 0
+        },
+        "dek": "You may already be.",
+        "dekAt": {
+          "x": 72,
+          "y": 432,
+          "w": 880
+        }
+      }
+    },
+    {
+      "obj": "hook_scribble",
+      "device": "scribble",
+      "meaning": "hook scribble",
+      "persist": {
+        "from_beat": "hook",
+        "to_beat": "hook"
+      },
+      "params": {
+        "shape": "underline",
+        "colour": "cream",
+        "seed": "4",
+        "from": [
+          215,
+          896
+        ],
+        "to": [
+          700,
+          916
+        ],
+        "amp": 2.4,
+        "double": true
+      }
+    },
+    {
+      "obj": "matter_head",
+      "device": "headline",
+      "meaning": "matter head",
+      "persist": {
+        "from_beat": "matter",
+        "to_beat": "matter"
+      },
+      "params": {
+        "lines": [
+          "DOES THAT",
+          "MATTER?"
+        ],
+        "swipe": {
+          "line": 1,
+          "word": 0
+        }
+      }
+    },
+    {
+      "obj": "airbnb_head",
+      "device": "headline",
+      "meaning": "airbnb head",
+      "persist": {
+        "from_beat": "airbnb",
+        "to_beat": "airbnb"
+      },
+      "params": {
+        "lines": [
+          "ALIBABA'S",
+          "QWEN."
+        ],
+        "swipe": {
+          "line": 1,
+          "word": 0
+        },
+        "dek": "Airbnb's customer service leans on it.",
+        "dekAt": {
+          "x": 72,
+          "y": 430,
+          "w": 880
+        }
+      }
+    },
+    {
+      "obj": "airbnb_scribble",
+      "device": "scribble",
+      "meaning": "airbnb scribble",
+      "persist": {
+        "from_beat": "airbnb",
+        "to_beat": "airbnb"
+      },
+      "params": {
+        "shape": "underline",
+        "colour": "cream",
+        "seed": "6",
+        "from": [
+          330,
+          818
+        ],
+        "to": [
+          640,
+          846
+        ],
+        "amp": 2.4,
+        "double": false
+      }
+    },
+    {
+      "obj": "fling_head",
+      "device": "headline",
+      "meaning": "fling head",
+      "persist": {
+        "from_beat": "fling",
+        "to_beat": "fling"
+      },
+      "params": {
+        "lines": [
+          "FAST AND",
+          "CHEAP."
+        ],
+        "swipe": {
+          "line": 1,
+          "word": 0
+        },
+        "dek": "Which is what most of us want from a holiday fling.",
+        "dekAt": {
+          "x": 72,
+          "y": 432,
+          "w": 880
+        }
+      }
+    },
+    {
+      "obj": "fling_scribble",
+      "device": "scribble",
+      "meaning": "fling scribble",
+      "persist": {
+        "from_beat": "fling",
+        "to_beat": "fling"
+      },
+      "params": {
+        "shape": "underline",
+        "colour": "cream",
+        "seed": "2",
+        "from": [
+          205,
+          968
+        ],
+        "to": [
+          610,
+          1002
+        ],
+        "amp": 2.4,
+        "double": false
+      }
+    },
+    {
+      "obj": "title_head",
+      "device": "headline",
+      "meaning": "title head",
+      "persist": {
+        "from_beat": "title",
+        "to_beat": "title"
+      },
+      "params": {
+        "lines": [
+          "TWO",
+          "PASSPORTS"
+        ],
+        "swipe": {
+          "line": 0,
+          "word": 0
+        },
+        "dek": "Where it was born, and where it lives.",
+        "dekAt": {
+          "x": 482,
+          "y": 168,
+          "w": 490
+        },
+        "at": {
+          "x": 72,
+          "y": 144,
+          "w": 878,
+          "h": 373
+        }
+      }
+    },
+    {
+      "obj": "title_born",
+      "device": "passport_page",
+      "meaning": "title born",
+      "persist": {
+        "from_beat": "title",
+        "to_beat": "title"
+      },
+      "params": {
+        "spine": "left",
+        "at": {
+          "x": 72,
+          "y": 612
+        },
+        "label": "HOME COUNTRY",
+        "fields": [],
+        "ghostAI": true,
+        "mrz": [
+          "P<BORN",
+          "1<OF<2"
+        ]
+      }
+    },
+    {
+      "obj": "title_lives",
+      "device": "passport_page",
+      "meaning": "title lives",
+      "persist": {
+        "from_beat": "title",
+        "to_beat": "title"
+      },
+      "params": {
+        "spine": "right",
+        "at": {
+          "x": 532,
+          "y": 672
+        },
+        "label": "RESIDENCE",
+        "fields": [],
+        "ghostAI": true,
+        "mrz": [
+          "P<LIVES",
+          "2<OF<2"
+        ]
+      }
+    },
+    {
+      "obj": "title_sticker_born",
+      "device": "sticker",
+      "meaning": "title sticker born",
+      "persist": {
+        "from_beat": "title",
+        "to_beat": "title"
+      },
+      "params": {
+        "text": "BORN",
+        "tiltDeg": -6,
+        "at": {
+          "x": 350,
+          "y": 640
+        },
+        "tone": "channel"
+      }
+    },
+    {
+      "obj": "title_sticker_lives",
+      "device": "sticker",
+      "meaning": "title sticker lives",
+      "persist": {
+        "from_beat": "title",
+        "to_beat": "title"
+      },
+      "params": {
+        "text": "LIVES",
+        "tiltDeg": 4,
+        "at": {
+          "x": 800,
+          "y": 704
+        },
+        "tone": "channel"
+      }
+    },
+    {
+      "obj": "title_scribble",
+      "device": "scribble",
+      "meaning": "title scribble",
+      "persist": {
+        "from_beat": "title",
+        "to_beat": "title"
+      },
+      "params": {
+        "shape": "underline",
+        "colour": "mint",
+        "seed": "5",
+        "from": [
+          96,
+          560
+        ],
+        "to": [
+          948,
+          556
+        ],
+        "amp": 7,
+        "double": false
+      }
+    },
+    {
+      "obj": "born_page",
+      "device": "passport_page",
+      "meaning": "born page",
+      "persist": {
+        "from_beat": "born",
+        "to_beat": "born_claude"
+      },
+      "params": {
+        "spine": "left",
+        "at": {
+          "x": 72,
+          "y": 432
+        },
+        "label": "HOME COUNTRY",
+        "fields": [
+          {
+            "id": "china",
+            "label": "Chinese chatbots",
+            "top": "Chinese chatbots",
+            "main": "CHINA",
+            "at": {
+              "x": 300,
+              "y": 440
+            },
+            "state": "stamped",
+            "flag": "china",
+            "tiltDeg": 3
+          },
+          {
+            "id": "usa",
+            "label": "Claude",
+            "top": "Claude",
+            "main": "USA",
+            "at": {
+              "x": 92,
+              "y": 92
+            },
+            "state": "stamped",
+            "flag": "usa",
+            "tiltDeg": -5
+          }
+        ],
+        "ghostAI": false,
+        "mrz": [
+          "P<BORN<<USA<CHN",
+          "1<OF<2"
+        ]
+      }
+    },
+    {
+      "obj": "born_head",
+      "device": "headline",
+      "meaning": "born head",
+      "persist": {
+        "from_beat": "born",
+        "to_beat": "born"
+      },
+      "params": {
+        "lines": [
+          "BORN"
+        ],
+        "dek": "Where the company was founded.",
+        "dekAt": {
+          "x": 578,
+          "y": 206,
+          "w": 394
+        }
+      }
+    },
+    {
+      "obj": "born_sticker",
+      "device": "sticker",
+      "meaning": "born sticker",
+      "persist": {
+        "from_beat": "born",
+        "to_beat": "born"
+      },
+      "params": {
+        "text": "PASSPORT 1 OF 2",
+        "tiltDeg": 4,
+        "at": {
+          "x": 626,
+          "y": 392
+        },
+        "tone": "cream"
+      }
+    },
+    {
+      "obj": "born_scribble",
+      "device": "scribble",
+      "meaning": "born scribble",
+      "persist": {
+        "from_beat": "born",
+        "to_beat": "born"
+      },
+      "params": {
+        "shape": "loop",
+        "colour": "mint",
+        "seed": "8",
+        "target": {
+          "x": 392,
+          "y": 958,
+          "w": 490,
+          "h": 130
+        }
+      }
+    },
+    {
+      "obj": "third_head",
+      "device": "headline",
+      "meaning": "third head",
+      "persist": {
+        "from_beat": "born_third",
+        "to_beat": "born_third"
+      },
+      "params": {
+        "lines": [
+          "A THIRD OF",
+          "THE TIME."
+        ],
+        "swipe": {
+          "line": 1,
+          "word": 0
+        }
+      }
+    },
+    {
+      "obj": "third_refused",
+      "device": "sticker",
+      "meaning": "third refused",
+      "persist": {
+        "from_beat": "born_third",
+        "to_beat": "born_third"
+      },
+      "params": {
+        "text": "REFUSED",
+        "tiltDeg": -6,
+        "at": {
+          "x": 560,
+          "y": 520
+        },
+        "tone": "cream"
+      }
+    },
+    {
+      "obj": "third_line",
+      "device": "sticker",
+      "meaning": "third line",
+      "persist": {
+        "from_beat": "born_third",
+        "to_beat": "born_third"
+      },
+      "params": {
+        "text": "CHINA'S LINE",
+        "tiltDeg": 3,
+        "at": {
+          "x": 470,
+          "y": 620
+        },
+        "tone": "cream"
+      }
+    },
+    {
+      "obj": "third_wrong",
+      "device": "sticker",
+      "meaning": "third wrong",
+      "persist": {
+        "from_beat": "born_third",
+        "to_beat": "born_third"
+      },
+      "params": {
+        "text": "WRONG",
+        "tiltDeg": -4,
+        "at": {
+          "x": 640,
+          "y": 720
+        },
+        "tone": "cream"
+      }
+    },
+    {
+      "obj": "third_strip",
+      "device": "stat_strip",
+      "meaning": "the Monitor figure",
+      "persist": {
+        "from_beat": "born_third",
+        "to_beat": "born_third"
+      },
+      "params": {
+        "label": "Of 200 questions asked\nChristian Science Monitor",
+        "numeral": "?"
+      }
+    },
+    {
+      "obj": "claude_head",
+      "device": "headline",
+      "meaning": "claude head",
+      "persist": {
+        "from_beat": "born_claude",
+        "to_beat": "born_claude"
+      },
+      "params": {
+        "lines": [
+          "ANSWERED",
+          "THEM ALL."
+        ],
+        "swipe": {
+          "line": 1,
+          "word": 0
+        }
+      }
+    },
+    {
+      "obj": "claude_scribble",
+      "device": "scribble",
+      "meaning": "claude scribble",
+      "persist": {
+        "from_beat": "born_claude",
+        "to_beat": "born_claude"
+      },
+      "params": {
+        "shape": "loop",
+        "colour": "mint",
+        "seed": "3",
+        "target": {
+          "x": 190,
+          "y": 612,
+          "w": 450,
+          "h": 148
+        }
+      }
+    },
+    {
+      "obj": "lives_page",
+      "device": "passport_page",
+      "meaning": "lives page",
+      "persist": {
+        "from_beat": "lives",
+        "to_beat": "lives"
+      },
+      "params": {
+        "spine": "right",
+        "at": {
+          "x": 72,
+          "y": 432
+        },
+        "label": "COUNTRY OF RESIDENCE",
+        "fields": [
+          {
+            "id": "deepseek",
+            "label": "DeepSeek",
+            "top": "DeepSeek",
+            "main": "CHINA",
+            "at": {
+              "x": 296,
+              "y": 420
+            },
+            "state": "stamped",
+            "flag": "china",
+            "tiltDeg": 4
+          }
+        ],
+        "ghostAI": true,
+        "mrz": [
+          "P<LIVES<<CHN",
+          "2<OF<2"
+        ]
+      }
+    },
+    {
+      "obj": "lives_head",
+      "device": "headline",
+      "meaning": "lives head",
+      "persist": {
+        "from_beat": "lives",
+        "to_beat": "lives"
+      },
+      "params": {
+        "lines": [
+          "LIVES"
+        ],
+        "dek": "Where your data ends up.",
+        "dekAt": {
+          "x": 586,
+          "y": 206,
+          "w": 386
+        }
+      }
+    },
+    {
+      "obj": "lives_sticker",
+      "device": "sticker",
+      "meaning": "lives sticker",
+      "persist": {
+        "from_beat": "lives",
+        "to_beat": "lives"
+      },
+      "params": {
+        "text": "PASSPORT 2 OF 2",
+        "tiltDeg": -5,
+        "at": {
+          "x": 120,
+          "y": 384
+        },
+        "tone": "cream"
+      }
+    },
+    {
+      "obj": "lives_scribble",
+      "device": "scribble",
+      "meaning": "lives scribble",
+      "persist": {
+        "from_beat": "lives",
+        "to_beat": "lives"
+      },
+      "params": {
+        "shape": "loop",
+        "colour": "mint",
+        "seed": "9",
+        "target": {
+          "x": 390,
+          "y": 948,
+          "w": 490,
+          "h": 140
+        }
+      }
+    },
+    {
+      "obj": "phone",
+      "device": "hand_phone_stage",
+      "meaning": "phone in the approved hand-held screen story",
+      "persist": {
+        "from_beat": "open",
+        "to_beat": "verdict"
+      },
+      "params": {
+        "cameras": {
+          "open": {
+            "k": 1.8,
+            "rot": -3,
+            "tx": -78.65644928971597,
+            "ty": 535.8923197737188,
+            "backdrop": "cotton_flip",
+            "bg": {
+              "k": 1.75,
+              "x": -60,
+              "y": -210
+            }
+          },
+          "result_a": {
+            "k": 1.9,
+            "rot": -10.0,
+            "tx": -267.859411132586,
+            "ty": 435.78673434414554,
+            "backdrop": "cotton",
+            "bg": {
+              "k": 1.5,
+              "x": -90,
+              "y": -330
+            }
+          },
+          "result_b": {
+            "k": 2.1,
+            "rot": -1.0,
+            "tx": -235.02146620145396,
+            "ty": 385.1362339261145,
+            "backdrop": "hardware",
+            "bg": {
+              "k": 1.6,
+              "x": -330,
+              "y": -120
+            }
+          },
+          "evidence": {
+            "k": 1.95,
+            "rot": -104.5,
+            "tx": -197.16446995191598,
+            "ty": 1648.2556674889338,
+            "backdrop": "hardware",
+            "bg": {
+              "k": 2.45,
+              "x": 2234.340706848784,
+              "y": -668.8363130591613,
+              "rot": 75.5
+            }
+          },
+          "verdict": {
+            "k": 1.55,
+            "rot": -8.0,
+            "tx": -176.82774955021893,
+            "ty": 695.7458944361322,
+            "backdrop": "cotton_flip",
+            "bg": {
+              "k": 1.4,
+              "x": -180,
+              "y": -120
+            }
+          }
+        },
+        "start": "open",
+        "glass": {
+          "prompt": {
+            "lead": "UK clothing company. Our supplier gets its cotton from",
+            "active": "Xinjiang",
+            "chip": false
+          },
+          "cards": {
+            "result_a": {
+              "cards": [
+                {
+                  "name": "Claude",
+                  "flags": [
+                    {
+                      "station": "Xinjiang",
+                      "planted": true
+                    }
+                  ]
+                },
+                {
+                  "name": "ChatGPT",
+                  "flags": [
+                    {
+                      "station": "Xinjiang",
+                      "planted": true
+                    }
+                  ]
+                }
+              ]
+            },
+            "result_b": {
+              "layout": "countries",
+              "cards": [
+                {
+                  "name": "DeepSeek",
+                  "score": "0",
+                  "flags": [
+                    {
+                      "station": "Xinjiang",
+                      "planted": false
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "footage": {
+            "src": "xinxiang.mp4",
+            "kind": "recording",
+            "pixelWidth": 1087,
+            "pixelHeight": 780,
+            "trimBefore": 102
+          },
+          "bubble": {
+            "label": "DeepSeek",
+            "quote": "Sorry, that's beyond my current scope. Let's talk about something else."
+          }
+        }
+      }
+    },
+    {
+      "obj": "open_headline",
+      "device": "headline",
+      "meaning": "open headline in the approved hand-held screen story",
+      "persist": {
+        "from_beat": "open",
+        "to_beat": "open"
+      },
+      "params": {
+        "lines": [
+          "WILL THEY",
+          "FLAG IT?"
+        ],
+        "swipe": {
+          "line": 1,
+          "word": 0
+        },
+        "dek": "One question, three AIs.",
+        "dekAt": {
+          "x": 72,
+          "y": 456,
+          "w": 600
+        }
+      }
+    },
+    {
+      "obj": "open_scribble",
+      "device": "scribble",
+      "meaning": "open scribble in the approved hand-held screen story",
+      "persist": {
+        "from_beat": "open",
+        "to_beat": "open"
+      },
+      "params": {
+        "shape": "loop",
+        "colour": "cream",
+        "seed": "4",
+        "cx": 480,
+        "cy": 884,
+        "u": [
+          190,
+          -35
+        ],
+        "v": [
+          28,
+          68
+        ],
+        "sq": 3
+      }
+    },
+    {
+      "obj": "contestant_claude",
+      "device": "sticker",
+      "meaning": "contestant claude in the approved hand-held screen story",
+      "persist": {
+        "from_beat": "open",
+        "to_beat": "open"
+      },
+      "params": {
+        "text": "CLAUDE",
+        "tiltDeg": -5,
+        "at": {
+          "x": 720,
+          "y": 322
+        },
+        "tone": "cream"
+      }
+    },
+    {
+      "obj": "contestant_chatgpt",
+      "device": "sticker",
+      "meaning": "contestant chatgpt in the approved hand-held screen story",
+      "persist": {
+        "from_beat": "open",
+        "to_beat": "open"
+      },
+      "params": {
+        "text": "CHATGPT",
+        "tiltDeg": 2.5,
+        "at": {
+          "x": 712,
+          "y": 396
+        },
+        "tone": "cream"
+      }
+    },
+    {
+      "obj": "contestant_deepseek",
+      "device": "sticker",
+      "meaning": "contestant deepseek in the approved hand-held screen story",
+      "persist": {
+        "from_beat": "open",
+        "to_beat": "open"
+      },
+      "params": {
+        "text": "DEEPSEEK",
+        "tiltDeg": -3,
+        "at": {
+          "x": 728,
+          "y": 470
+        },
+        "tone": "cream"
+      }
+    },
+    {
+      "obj": "open_strip",
+      "device": "stat_strip",
+      "meaning": "open strip in the approved hand-held screen story",
+      "persist": {
+        "from_beat": "open",
+        "to_beat": "result_a"
+      },
+      "params": {
+        "label": "AIs that flag\nforced labour",
+        "numeral": "?",
+        "unit": "out of 3"
+      }
+    },
+    {
+      "obj": "result_a_headline",
+      "device": "headline",
+      "meaning": "result a headline in the approved hand-held screen story",
+      "persist": {
+        "from_beat": "result_a",
+        "to_beat": "result_a"
+      },
+      "params": {
+        "lines": [
+          "TWO OF",
+          "THREE."
+        ],
+        "swipe": {
+          "line": 1,
+          "word": 0
+        },
+        "dek": "Claude flagged it. So did ChatGPT.",
+        "dekAt": {
+          "x": 72,
+          "y": 1524,
+          "w": 880
+        }
+      }
+    },
+    {
+      "obj": "result_a_scribble",
+      "device": "scribble",
+      "meaning": "result a scribble in the approved hand-held screen story",
+      "persist": {
+        "from_beat": "result_a",
+        "to_beat": "result_a"
+      },
+      "params": {
+        "shape": "loop",
+        "colour": "cream",
+        "seed": "7",
+        "cx": 330,
+        "cy": 690,
+        "u": [
+          226,
+          -40
+        ],
+        "v": [
+          40,
+          190
+        ],
+        "sq": 3
+      }
+    },
+    {
+      "obj": "result_b_headline",
+      "device": "headline",
+      "meaning": "result b headline in the approved hand-held screen story",
+      "persist": {
+        "from_beat": "result_b",
+        "to_beat": "result_b"
+      },
+      "params": {
+        "lines": [
+          "NOW WATCH",
+          "DEEPSEEK."
+        ],
+        "swipe": {
+          "line": 1,
+          "word": 0
+        },
+        "dek": "Same question. A different ending.",
+        "dekAt": {
+          "x": 72,
+          "y": 1524,
+          "w": 880
+        }
+      }
+    },
+    {
+      "obj": "result_b_scribble",
+      "device": "scribble",
+      "meaning": "result b scribble in the approved hand-held screen story",
+      "persist": {
+        "from_beat": "result_b",
+        "to_beat": "result_b"
+      },
+      "params": {
+        "shape": "arrow",
+        "colour": "cream",
+        "seed": "3",
+        "from": [
+          64,
+          600
+        ],
+        "to": [
+          394.1776756668451,
+          749.1995750456881
+        ],
+        "bend": -46,
+        "head": 50
+      }
+    },
+    {
+      "obj": "evidence_headline",
+      "device": "headline",
+      "meaning": "evidence headline in the approved hand-held screen story",
+      "persist": {
+        "from_beat": "evidence",
+        "to_beat": "evidence"
+      },
+      "params": {
+        "lines": [
+          "WRITES.",
+          "DELETES."
+        ],
+        "swipe": {
+          "line": 1,
+          "word": 0
+        }
+      }
+    },
+    {
+      "obj": "recording_label",
+      "device": "sticker",
+      "meaning": "recording label in the approved hand-held screen story",
+      "persist": {
+        "from_beat": "evidence",
+        "to_beat": "evidence"
+      },
+      "params": {
+        "text": "SCREEN\nRECORDING\nDEEPSEEK\n24 OCT 2026",
+        "tiltDeg": -3,
+        "at": {
+          "x": 620,
+          "y": 148
+        },
+        "tone": "cream"
+      }
+    },
+    {
+      "persist": {
+        "from_beat": "evidence",
+        "to_beat": "evidence"
+      },
+      "obj": "evidence_quote",
+      "device": "quote_card",
+      "meaning": "Verbatim pull quote from the real recording, attributed",
+      "params": {
+        "quote": "\"Xinjiang cotton\" carries a strong forced-labour…",
+        "label": "DeepSeek wrote",
+        "at": {
+          "x": 72,
+          "y": 1508,
+          "w": 888
+        }
+      }
+    },
+    {
+      "obj": "evidence_scribble",
+      "device": "scribble",
+      "meaning": "evidence scribble in the approved hand-held screen story",
+      "persist": {
+        "from_beat": "evidence",
+        "to_beat": "evidence"
+      },
+      "params": {
+        "shape": "underline",
+        "colour": "mint",
+        "seed": "5",
+        "from": [
+          512.9107119540313,
+          918.0136862615007
+        ],
+        "to": [
+          945.3614035484153,
+          952.9890512680731
+        ],
+        "amp": 2.2,
+        "double": false
+      }
+    },
+    {
+      "obj": "result_threads",
+      "device": "thread_card",
+      "meaning": "result threads in the approved hand-held screen story",
+      "persist": {
+        "from_beat": "verdict",
+        "to_beat": "verdict"
+      },
+      "params": {
+        "stations": [
+          {
+            "id": "xinjiang",
+            "label": "Xinjiang",
+            "x": 410
+          }
+        ],
+        "axis": {
+          "y": 240,
+          "x0": 72,
+          "x1": 946
+        },
+        "threads": [
+          {
+            "id": "claude",
+            "name": "Claude",
+            "y": 336,
+            "style": "solid",
+            "marks": [
+              {
+                "station": "xinjiang",
+                "state": "planted"
+              }
+            ]
+          },
+          {
+            "id": "chatgpt",
+            "name": "ChatGPT",
+            "y": 436,
+            "style": "solid",
+            "marks": [
+              {
+                "station": "xinjiang",
+                "state": "planted"
+              }
+            ]
+          },
+          {
+            "id": "deepseek",
+            "name": "DeepSeek",
+            "y": 536,
+            "style": "solid",
+            "marks": [
+              {
+                "station": "xinjiang",
+                "state": "parted"
+              }
+            ]
+          }
+        ],
+        "knot": {
+          "x": 892,
+          "y": 436
+        },
+        "tone": "cream"
+      }
+    },
+    {
+      "obj": "verdict_scribble",
+      "device": "scribble",
+      "meaning": "verdict scribble in the approved hand-held screen story",
+      "persist": {
+        "from_beat": "verdict",
+        "to_beat": "verdict"
+      },
+      "params": {
+        "shape": "loop",
+        "colour": "mint",
+        "seed": "9",
+        "cx": 416.9950522136717,
+        "cy": 944.1448571929218,
+        "u": [
+          245.1750465670088,
+          16.93510271154951
+        ],
+        "v": [
+          -30.328345766670804,
+          155.01544262718247
+        ],
+        "sq": 3.4
+      }
+    },
+    {
+      "obj": "verdict_strip",
+      "device": "stat_strip",
+      "meaning": "verdict strip in the approved hand-held screen story",
+      "persist": {
+        "from_beat": "verdict",
+        "to_beat": "verdict"
+      },
+      "params": {
+        "label": "Runs where DeepSeek\ndeleted its Xinjiang answer",
+        "numeral": "?"
+      }
+    },
+    {
+      "obj": "deletion_stamp",
+      "device": "stamp",
+      "meaning": "deletion stamp in the approved hand-held screen story",
+      "persist": {
+        "from_beat": "verdict",
+        "to_beat": "verdict"
+      },
+      "params": {
+        "kind": "outline",
+        "main": "ANSWER DELETED",
+        "tiltDeg": -4,
+        "at": {
+          "x": 76,
+          "y": 610,
+          "w": 374,
+          "h": 62
+        },
+        "leader": {
+          "to": {
+            "x": 410,
+            "y": 536
+          }
+        }
+      }
+    },
+    {
+      "obj": "call_page",
+      "device": "passport_page",
+      "meaning": "call page",
+      "persist": {
+        "from_beat": "my_call",
+        "to_beat": "call"
+      },
+      "params": {
+        "spine": "left",
+        "at": {
+          "x": 72,
+          "y": 150
+        },
+        "label": "DEEPSEEK",
+        "fields": [
+          {
+            "id": "born",
+            "label": "DeepSeek born",
+            "top": "DeepSeek · born",
+            "main": "CHINA",
+            "at": {
+              "x": 92,
+              "y": 92
+            },
+            "state": "stamped",
+            "flag": "china",
+            "tiltDeg": -4
+          },
+          {
+            "id": "lives",
+            "label": "DeepSeek lives",
+            "top": "DeepSeek · lives",
+            "main": "CHINA",
+            "at": {
+              "x": 300,
+              "y": 410
+            },
+            "state": "stamped",
+            "flag": "china",
+            "tiltDeg": 3
+          }
+        ],
+        "ghostAI": false
+      }
+    },
+    {
+      "obj": "act_a_head",
+      "device": "headline",
+      "meaning": "act a head",
+      "persist": {
+        "from_beat": "act_a",
+        "to_beat": "act_a"
+      },
+      "params": {
+        "lines": [
+          "ASK YOUR",
+          "SUPPLIERS."
+        ],
+        "swipe": {
+          "line": 1,
+          "word": 0
+        },
+        "dek": "Which AI they use, and where it lives.",
+        "dekAt": {
+          "x": 72,
+          "y": 452,
+          "w": 880
+        }
+      }
+    },
+    {
+      "obj": "act_born",
+      "device": "passport_page",
+      "meaning": "act born",
+      "persist": {
+        "from_beat": "act_a",
+        "to_beat": "act_a"
+      },
+      "params": {
+        "spine": "left",
+        "at": {
+          "x": 72,
+          "y": 612
+        },
+        "label": "HOME COUNTRY",
+        "fields": [],
+        "ghostAI": true,
+        "mrz": [
+          "P<BORN",
+          "1<OF<2"
+        ]
+      }
+    },
+    {
+      "obj": "act_lives",
+      "device": "passport_page",
+      "meaning": "act lives",
+      "persist": {
+        "from_beat": "act_a",
+        "to_beat": "act_a"
+      },
+      "params": {
+        "spine": "right",
+        "at": {
+          "x": 532,
+          "y": 672
+        },
+        "label": "RESIDENCE",
+        "fields": [],
+        "ghostAI": true,
+        "mrz": [
+          "P<LIVES",
+          "2<OF<2"
+        ]
+      }
+    },
+    {
+      "obj": "act_which",
+      "device": "sticker",
+      "meaning": "act which",
+      "persist": {
+        "from_beat": "act_a",
+        "to_beat": "act_a"
+      },
+      "params": {
+        "text": "WHICH AI",
+        "tiltDeg": -6,
+        "at": {
+          "x": 150,
+          "y": 540
+        },
+        "tone": "cream"
+      }
+    },
+    {
+      "obj": "act_where",
+      "device": "sticker",
+      "meaning": "act where",
+      "persist": {
+        "from_beat": "act_a",
+        "to_beat": "act_a"
+      },
+      "params": {
+        "text": "WHERE IT LIVES",
+        "tiltDeg": 4,
+        "at": {
+          "x": 600,
+          "y": 590
+        },
+        "tone": "cream"
+      }
+    },
+    {
+      "obj": "act_tick",
+      "device": "scribble",
+      "meaning": "act tick",
+      "persist": {
+        "from_beat": "act_a",
+        "to_beat": "act_a"
+      },
+      "params": {
+        "shape": "tick",
+        "colour": "mint",
+        "seed": "2",
+        "cx": 760,
+        "cy": 900,
+        "size": 160
+      }
+    },
+    {
+      "obj": "act_b_head",
+      "device": "headline",
+      "meaning": "act b head",
+      "persist": {
+        "from_beat": "act_b",
+        "to_beat": "act_b"
+      },
+      "params": {
+        "lines": [
+          "KEEP A",
+          "SECOND AI."
+        ],
+        "swipe": {
+          "line": 1,
+          "word": 0
+        }
+      }
+    },
+    {
+      "obj": "second_page",
+      "device": "passport_page",
+      "meaning": "second page",
+      "persist": {
+        "from_beat": "act_b",
+        "to_beat": "close"
+      },
+      "params": {
+        "spine": "left",
+        "at": {
+          "x": 72,
+          "y": 612
+        },
+        "label": "SECOND AI",
+        "fields": [],
+        "ghostAI": true,
+        "mrz": [
+          "P<SECOND<<AI",
+          "1<OF<1"
+        ]
+      }
+    },
+    {
+      "obj": "act_b_tick",
+      "device": "scribble",
+      "meaning": "act b tick",
+      "persist": {
+        "from_beat": "act_b",
+        "to_beat": "act_b"
+      },
+      "params": {
+        "shape": "tick",
+        "colour": "mint",
+        "seed": "6",
+        "cx": 700,
+        "cy": 820,
+        "size": 160
+      }
+    },
+    {
+      "obj": "close_head",
+      "device": "headline",
+      "meaning": "close head",
+      "persist": {
+        "from_beat": "close",
+        "to_beat": "close"
+      },
+      "params": {
+        "lines": [
+          "THE FULL",
+          "DEEP DIVE."
+        ],
+        "swipe": {
+          "line": 1,
+          "word": 0
+        }
+      }
+    }
+  ],
+  "assets": [
+    {
+      "id": "deepseek-xinjiang-recording",
+      "kind": "recording",
+      "origin": "capture",
+      "path": "xinxiang.mp4",
+      "sha256": "38ae06f278ccbfcd6b6233c0312e21652bb09213da013c313d3a3f46139796a8",
+      "licence": "Krish's own screen capture, 24 Oct 2026"
+    }
+  ],
+  "audio": {
+    "master": "vo",
+    "bed": {
+      "ledger_id": "no-curves-instrumental",
+      "mode": "continuous",
+      "under_vo_lu": -20
+    },
+    "sfx_kit": "house-v1"
+  },
+  "cuts": {
+    "friday-tall": {
+      "aspect": "9:16",
+      "take": "long-vo-master",
+      "max_s": 82,
+      "edit": {
+        "remove": [],
+        "speed": 1
+      },
+      "captions": {
+        "region": "default",
+        "emphasis": [
+          6,
+          20,
+          31,
+          48,
+          60,
+          76,
+          88,
+          93,
+          105,
+          114,
+          129,
+          134,
+          138,
+          152,
+          162,
+          181,
+          193
+        ]
+      },
+      "beats": [
+        {
+          "id": "hook",
+          "role": "hook",
+          "span": {
+            "from_w": 0,
+            "to_w": 7
+          },
+          "viewer_task": "feel_stakes",
+          "layout": "STAGE",
+          "point": "You may already be using a Chinese AI",
+          "plate": {
+            "source": "take"
+          },
+          "uses": [
+            "phone_hook",
+            "hook_head",
+            "hook_scribble"
+          ],
+          "events": [
+            {
+              "at_w": 0,
+              "obj": "phone_hook",
+              "verb": "enter",
+              "to_state": "hook",
+              "silent": true
+            },
+            {
+              "at_w": 0,
+              "obj": "phone_hook",
+              "verb": "move",
+              "to_state": "hook"
+            },
+            {
+              "at_w": 0,
+              "obj": "phone_hook",
+              "verb": "fill",
+              "to_state": "bubble"
+            },
+            {
+              "at_w": 0,
+              "obj": "hook_head",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            },
+            {
+              "at_w": 5,
+              "obj": "hook_scribble",
+              "verb": "draw",
+              "to_state": "visible"
+            }
+          ]
+        },
+        {
+          "id": "matter",
+          "role": "bridge",
+          "span": {
+            "from_w": 8,
+            "to_w": 10
+          },
+          "viewer_task": "feel_stakes",
+          "layout": "STAGE",
+          "point": "The question the whole piece answers",
+          "plate": {
+            "source": "take"
+          },
+          "uses": [
+            "phone_hook",
+            "matter_head"
+          ],
+          "events": [
+            {
+              "at_w": 8,
+              "obj": "phone_hook",
+              "verb": "move",
+              "to_state": "matter"
+            },
+            {
+              "at_w": 8,
+              "obj": "matter_head",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            }
+          ]
+        },
+        {
+          "id": "airbnb",
+          "role": "anchor",
+          "span": {
+            "from_w": 11,
+            "to_w": 25
+          },
+          "viewer_task": "verify_evidence",
+          "layout": "STAGE",
+          "point": "Airbnb's boss said its customer service leans on Qwen",
+          "plate": {
+            "source": "take"
+          },
+          "uses": [
+            "phone_hook",
+            "airbnb_head",
+            "airbnb_scribble"
+          ],
+          "events": [
+            {
+              "at_w": 11,
+              "obj": "phone_hook",
+              "verb": "move",
+              "to_state": "airbnb"
+            },
+            {
+              "at_w": 11,
+              "obj": "phone_hook",
+              "verb": "fill",
+              "to_state": "bubble"
+            },
+            {
+              "at_w": 11,
+              "obj": "airbnb_head",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            },
+            {
+              "at_w": 19,
+              "obj": "airbnb_scribble",
+              "verb": "draw",
+              "to_state": "visible"
+            }
+          ]
+        },
+        {
+          "id": "fling",
+          "role": "pivot",
+          "span": {
+            "from_w": 26,
+            "to_w": 42
+          },
+          "viewer_task": "verify_evidence",
+          "layout": "STAGE",
+          "point": "He called it fast and cheap",
+          "plate": {
+            "source": "take"
+          },
+          "uses": [
+            "phone_hook",
+            "fling_head",
+            "fling_scribble"
+          ],
+          "events": [
+            {
+              "at_w": 26,
+              "obj": "phone_hook",
+              "verb": "move",
+              "to_state": "fling"
+            },
+            {
+              "at_w": 26,
+              "obj": "phone_hook",
+              "verb": "fill",
+              "to_state": "bubble"
+            },
+            {
+              "at_w": 26,
+              "obj": "fling_head",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            },
+            {
+              "at_w": 29,
+              "obj": "fling_scribble",
+              "verb": "draw",
+              "to_state": "visible"
+            }
+          ]
+        },
+        {
+          "id": "title",
+          "role": "anchor",
+          "span": {
+            "from_w": 43,
+            "to_w": 56
+          },
+          "viewer_task": "understand_mechanism",
+          "layout": "STAGE",
+          "point": "Every AI has two passports, where it was born and where it lives",
+          "plate": {
+            "source": "take"
+          },
+          "uses": [
+            "title_born",
+            "title_lives",
+            "title_head",
+            "title_sticker_born",
+            "title_sticker_lives",
+            "title_scribble"
+          ],
+          "events": [
+            {
+              "at_w": 43,
+              "obj": "title_head",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            },
+            {
+              "at_w": 44,
+              "obj": "title_born",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            },
+            {
+              "at_w": 47,
+              "obj": "title_lives",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            },
+            {
+              "at_w": 52,
+              "obj": "title_sticker_born",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            },
+            {
+              "at_w": 55,
+              "obj": "title_sticker_lives",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            },
+            {
+              "at_w": 53,
+              "obj": "title_scribble",
+              "verb": "draw",
+              "to_state": "visible"
+            }
+          ]
+        },
+        {
+          "id": "born",
+          "role": "bridge",
+          "span": {
+            "from_w": 57,
+            "to_w": 73
+          },
+          "viewer_task": "verify_evidence",
+          "layout": "STAGE",
+          "point": "Where it was born shapes its answers; Chinese chatbots were born in China",
+          "plate": {
+            "source": "take"
+          },
+          "uses": [
+            "born_page",
+            "born_head",
+            "born_sticker",
+            "born_scribble"
+          ],
+          "events": [
+            {
+              "at_w": 57,
+              "obj": "born_page",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            },
+            {
+              "at_w": 57,
+              "obj": "born_head",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            },
+            {
+              "at_w": 60,
+              "obj": "born_sticker",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            },
+            {
+              "at_w": 61,
+              "obj": "born_page",
+              "verb": "stamp",
+              "to_state": "china",
+              "silent": true
+            },
+            {
+              "at_w": 70,
+              "obj": "born_scribble",
+              "verb": "draw",
+              "to_state": "visible"
+            }
+          ]
+        },
+        {
+          "id": "born_third",
+          "role": "pivot",
+          "span": {
+            "from_w": 74,
+            "to_w": 88
+          },
+          "viewer_task": "verify_evidence",
+          "layout": "STAGE",
+          "point": "A third of the time Chinese chatbots refused, gave Chinas line or got it wrong",
+          "plate": {
+            "source": "take"
+          },
+          "uses": [
+            "born_page",
+            "third_head",
+            "third_refused",
+            "third_line",
+            "third_wrong",
+            "third_strip"
+          ],
+          "events": [
+            {
+              "at_w": 74,
+              "obj": "third_head",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            },
+            {
+              "at_w": 74,
+              "obj": "third_strip",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            },
+            {
+              "at_w": 76,
+              "obj": "third_strip",
+              "verb": "count_to",
+              "to_state": "35%"
+            },
+            {
+              "at_w": 81,
+              "obj": "third_refused",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            },
+            {
+              "at_w": 83,
+              "obj": "third_line",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            },
+            {
+              "at_w": 88,
+              "obj": "third_wrong",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            }
+          ]
+        },
+        {
+          "id": "born_claude",
+          "role": "anchor",
+          "span": {
+            "from_w": 89,
+            "to_w": 95
+          },
+          "viewer_task": "verify_evidence",
+          "layout": "STAGE",
+          "point": "Claude an American AI answered them all",
+          "plate": {
+            "source": "take"
+          },
+          "uses": [
+            "born_page",
+            "claude_head",
+            "claude_scribble"
+          ],
+          "events": [
+            {
+              "at_w": 89,
+              "obj": "claude_head",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            },
+            {
+              "at_w": 89,
+              "obj": "born_page",
+              "verb": "stamp",
+              "to_state": "usa",
+              "silent": true
+            },
+            {
+              "at_w": 93,
+              "obj": "claude_scribble",
+              "verb": "draw",
+              "to_state": "visible"
+            }
+          ]
+        },
+        {
+          "id": "lives",
+          "role": "pivot",
+          "span": {
+            "from_w": 96,
+            "to_w": 114
+          },
+          "viewer_task": "verify_evidence",
+          "layout": "STAGE",
+          "point": "Where it lives decides who sees your data; DeepSeek keeps yours in China",
+          "plate": {
+            "source": "take"
+          },
+          "uses": [
+            "lives_page",
+            "lives_head",
+            "lives_sticker",
+            "lives_scribble"
+          ],
+          "events": [
+            {
+              "at_w": 96,
+              "obj": "lives_page",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            },
+            {
+              "at_w": 96,
+              "obj": "lives_head",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            },
+            {
+              "at_w": 99,
+              "obj": "lives_sticker",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            },
+            {
+              "at_w": 105,
+              "obj": "lives_page",
+              "verb": "stamp",
+              "to_state": "deepseek",
+              "silent": true
+            },
+            {
+              "at_w": 113,
+              "obj": "lives_scribble",
+              "verb": "draw",
+              "to_state": "visible"
+            }
+          ]
+        },
+        {
+          "id": "open",
+          "role": "anchor",
+          "span": {
+            "from_w": 115,
+            "to_w": 131
+          },
+          "viewer_task": "locate_story",
+          "layout": "STAGE",
+          "point": "Claude, ChatGPT and DeepSeek get the same supplier question about Xinjiang cotton",
+          "plate": {
+            "source": "take"
+          },
+          "uses": [
+            "phone",
+            "open_headline",
+            "contestant_claude",
+            "contestant_chatgpt",
+            "contestant_deepseek",
+            "open_strip",
+            "open_scribble"
+          ],
+          "events": [
+            {
+              "at_w": 115,
+              "obj": "phone",
+              "verb": "enter",
+              "to_state": "open",
+              "silent": true
+            },
+            {
+              "at_w": 115,
+              "obj": "phone",
+              "verb": "move",
+              "to_state": "open"
+            },
+            {
+              "at_w": 115,
+              "obj": "phone",
+              "verb": "fill",
+              "to_state": "prompt"
+            },
+            {
+              "at_w": 115,
+              "obj": "open_headline",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            },
+            {
+              "at_w": 120,
+              "obj": "contestant_claude",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            },
+            {
+              "at_w": 121,
+              "obj": "contestant_chatgpt",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            },
+            {
+              "at_w": 123,
+              "obj": "contestant_deepseek",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            },
+            {
+              "at_w": 127,
+              "obj": "open_scribble",
+              "verb": "draw",
+              "to_state": "visible"
+            },
+            {
+              "at_w": 126,
+              "obj": "open_strip",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            }
+          ]
+        },
+        {
+          "id": "result_a",
+          "role": "bridge",
+          "span": {
+            "from_w": 132,
+            "to_w": 135
+          },
+          "viewer_task": "verify_evidence",
+          "layout": "STAGE",
+          "point": "Claude and ChatGPT flag forced labour",
+          "plate": {
+            "source": "take"
+          },
+          "uses": [
+            "phone",
+            "result_a_headline",
+            "open_strip",
+            "result_a_scribble"
+          ],
+          "events": [
+            {
+              "at_w": 132,
+              "obj": "phone",
+              "verb": "move",
+              "to_state": "result_a"
+            },
+            {
+              "at_w": 132,
+              "obj": "phone",
+              "verb": "fill",
+              "to_state": "cards"
+            },
+            {
+              "at_w": 132,
+              "obj": "result_a_headline",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            },
+            {
+              "at_w": 132,
+              "obj": "open_strip",
+              "verb": "count_to",
+              "to_state": "2"
+            },
+            {
+              "at_w": 134,
+              "obj": "result_a_scribble",
+              "verb": "draw",
+              "to_state": "visible"
+            }
+          ]
+        },
+        {
+          "id": "result_b",
+          "role": "pivot",
+          "span": {
+            "from_w": 136,
+            "to_w": 138
+          },
+          "viewer_task": "understand_mechanism",
+          "layout": "STAGE",
+          "point": "Now watch DeepSeek",
+          "plate": {
+            "source": "take"
+          },
+          "uses": [
+            "phone",
+            "result_b_headline",
+            "result_b_scribble"
+          ],
+          "events": [
+            {
+              "at_w": 136,
+              "obj": "phone",
+              "verb": "move",
+              "to_state": "result_b"
+            },
+            {
+              "at_w": 136,
+              "obj": "phone",
+              "verb": "fill",
+              "to_state": "cards"
+            },
+            {
+              "at_w": 136,
+              "obj": "result_b_headline",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            },
+            {
+              "at_w": 138,
+              "obj": "result_b_scribble",
+              "verb": "draw",
+              "to_state": "visible"
+            }
+          ]
+        },
+        {
+          "id": "evidence",
+          "role": "anchor",
+          "span": {
+            "from_w": 139,
+            "to_w": 145
+          },
+          "viewer_task": "inspect_artifact",
+          "layout": "STAGE",
+          "point": "The real answer types and then deletes in the screen recording",
+          "plate": {
+            "source": "take"
+          },
+          "uses": [
+            "phone",
+            "evidence_headline",
+            "recording_label",
+            "evidence_quote",
+            "evidence_scribble"
+          ],
+          "events": [
+            {
+              "at_w": 139,
+              "obj": "phone",
+              "verb": "move",
+              "to_state": "evidence"
+            },
+            {
+              "at_w": 139,
+              "obj": "phone",
+              "verb": "fill",
+              "to_state": "footage"
+            },
+            {
+              "at_w": 139,
+              "obj": "evidence_headline",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            },
+            {
+              "at_w": 140,
+              "obj": "recording_label",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            },
+            {
+              "at_w": 140,
+              "obj": "evidence_quote",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            },
+            {
+              "at_w": 141,
+              "obj": "evidence_scribble",
+              "verb": "draw",
+              "to_state": "visible"
+            },
+            {
+              "at_w": 143,
+              "obj": "evidence_scribble",
+              "verb": "exit",
+              "to_state": "gone"
+            }
+          ]
+        },
+        {
+          "id": "verdict",
+          "role": "payoff",
+          "span": {
+            "from_w": 146,
+            "to_w": 147
+          },
+          "viewer_task": "land_payoff",
+          "layout": "STAGE",
+          "point": "The refusal bubble is the evidence of the deletion verdict",
+          "plate": {
+            "source": "take"
+          },
+          "uses": [
+            "phone",
+            "verdict_strip",
+            "deletion_stamp",
+            "result_threads",
+            "verdict_scribble"
+          ],
+          "events": [
+            {
+              "at_w": 146,
+              "obj": "phone",
+              "verb": "move",
+              "to_state": "verdict"
+            },
+            {
+              "at_w": 146,
+              "obj": "phone",
+              "verb": "fill",
+              "to_state": "bubble"
+            },
+            {
+              "at_w": 146,
+              "obj": "result_threads",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            },
+            {
+              "at_w": 146,
+              "obj": "deletion_stamp",
+              "verb": "stamp",
+              "to_state": "visible",
+              "silent": true
+            },
+            {
+              "at_w": 146,
+              "obj": "result_threads",
+              "verb": "mark",
+              "to_state": "claude:xinjiang",
+              "silent": true
+            },
+            {
+              "at_w": 146,
+              "obj": "result_threads",
+              "verb": "mark",
+              "to_state": "chatgpt:xinjiang",
+              "silent": true
+            },
+            {
+              "at_w": 146,
+              "obj": "result_threads",
+              "verb": "mark",
+              "to_state": "deepseek:xinjiang",
+              "silent": true
+            },
+            {
+              "at_w": 147,
+              "obj": "verdict_scribble",
+              "verb": "draw",
+              "to_state": "visible"
+            },
+            {
+              "at_w": 147,
+              "obj": "verdict_strip",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            },
+            {
+              "at_w": 147,
+              "obj": "verdict_strip",
+              "verb": "count_to",
+              "to_state": "3/3"
+            }
+          ]
+        },
+        {
+          "id": "my_call",
+          "role": "bridge",
+          "span": {
+            "from_w": 148,
+            "to_w": 156
+          },
+          "viewer_task": "land_payoff",
+          "layout": "STAGE",
+          "point": "It is fine if you do not mind",
+          "plate": {
+            "source": "take"
+          },
+          "uses": [
+            "call_page"
+          ],
+          "events": [
+            {
+              "at_w": 148,
+              "obj": "call_page",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            },
+            {
+              "at_w": 148,
+              "obj": "call_page",
+              "verb": "stamp",
+              "to_state": "born",
+              "silent": true
+            },
+            {
+              "at_w": 154,
+              "obj": "call_page",
+              "verb": "stamp",
+              "to_state": "lives",
+              "silent": true
+            }
+          ]
+        },
+        {
+          "id": "call",
+          "role": "call",
+          "span": {
+            "from_w": 157,
+            "to_w": 166
+          },
+          "viewer_task": "land_payoff",
+          "layout": "STAGE",
+          "point": "Where your data goes, and check what it tells you",
+          "plate": {
+            "source": "take"
+          },
+          "uses": [
+            "call_page"
+          ],
+          "events": [
+            {
+              "at_w": 157,
+              "obj": "call_page",
+              "verb": "mark",
+              "to_state": "lives",
+              "silent": true
+            },
+            {
+              "at_w": 162,
+              "obj": "call_page",
+              "verb": "mark",
+              "to_state": "born",
+              "silent": true
+            }
+          ]
+        },
+        {
+          "id": "act_a",
+          "role": "anchor",
+          "span": {
+            "from_w": 167,
+            "to_w": 189
+          },
+          "viewer_task": "land_payoff",
+          "layout": "STAGE",
+          "point": "Ask software suppliers which AI they use and where it lives",
+          "plate": {
+            "source": "take"
+          },
+          "uses": [
+            "act_born",
+            "act_lives",
+            "act_a_head",
+            "act_which",
+            "act_where",
+            "act_tick"
+          ],
+          "events": [
+            {
+              "at_w": 167,
+              "obj": "act_a_head",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            },
+            {
+              "at_w": 168,
+              "obj": "act_born",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            },
+            {
+              "at_w": 170,
+              "obj": "act_lives",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            },
+            {
+              "at_w": 182,
+              "obj": "act_which",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            },
+            {
+              "at_w": 187,
+              "obj": "act_where",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            },
+            {
+              "at_w": 187,
+              "obj": "act_tick",
+              "verb": "draw",
+              "to_state": "visible"
+            }
+          ]
+        },
+        {
+          "id": "act_b",
+          "role": "bridge",
+          "span": {
+            "from_w": 190,
+            "to_w": 195
+          },
+          "viewer_task": "land_payoff",
+          "layout": "STAGE",
+          "point": "Keep a second AI ready",
+          "plate": {
+            "source": "take"
+          },
+          "uses": [
+            "second_page",
+            "act_b_head",
+            "act_b_tick"
+          ],
+          "events": [
+            {
+              "at_w": 190,
+              "obj": "act_b_head",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            },
+            {
+              "at_w": 190,
+              "obj": "second_page",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            },
+            {
+              "at_w": 193,
+              "obj": "act_b_tick",
+              "verb": "draw",
+              "to_state": "visible"
+            }
+          ]
+        },
+        {
+          "id": "close",
+          "role": "pivot",
+          "span": {
+            "from_w": 196,
+            "to_w": 202
+          },
+          "viewer_task": "locate_story",
+          "layout": "STAGE",
+          "point": "The full deep dive is at makeyourmindup.ai",
+          "plate": {
+            "source": "take"
+          },
+          "uses": [
+            "second_page",
+            "close_head"
+          ],
+          "events": [
+            {
+              "at_w": 196,
+              "obj": "close_head",
+              "verb": "enter",
+              "to_state": "visible",
+              "silent": true
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "approvals": [],
+  "budget": {
+    "tokens_cap": 1500000,
+    "credits": {
+      "higgsfield": 0,
+      "runway": 0
+    }
+  },
+  "style": {
+    "keyFrames": {
+      "hook": 0.8,
+      "matter": 0.8,
+      "airbnb": 0.8,
+      "fling": 0.8,
+      "title": 0.95,
+      "born": 0.95,
+      "born_third": 0.8,
+      "born_claude": 0.8,
+      "lives": 0.95,
+      "open": 0.8,
+      "result_a": 0.8,
+      "result_b": 0.8,
+      "evidence": 0.4,
+      "verdict": 0.8,
+      "my_call": 0.8,
+      "call": 0.8,
+      "act_a": 0.95,
+      "act_b": 0.95,
+      "close": 0.8
+    },
+    "timing_note": "Word times: raw whisper small.en of the approved 1.12x voiceover divided by 1.12; Gwen is Qwen.",
+    "ending_ticker": false
+  }
+}

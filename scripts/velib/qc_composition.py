@@ -100,7 +100,7 @@ def measure(image, lock, *, plate_on_screen=False, exempt=(), caption_words=None
         if h < (tag_minimum if tag else minimum) and solid and not _inside(x + w / 2, y + h / 2, zones['marquee']):
             small.append(word)
         if ((solid or float(word['conf']) >= 90) and _inside(x + w / 2, y + h / 2, zones['caption'])
-                and not set(qc_captions._tokens(word['text'])).issubset(allowed)):
+                and not {qc_captions.fold(t) for t in qc_captions._tokens(word['text'])}.issubset({qc_captions.fold(a) for a in allowed})):
             caption.append(word)
         strong = solid or float(word['conf']) >= 90  # one stray glyph on a photo is OCR noise, not a layout fault
         if (strong and not _inside(x + w / 2, y + h / 2, zones['marquee'])
@@ -149,6 +149,15 @@ def _footage_boxes(props, frame):
     return boxes
 
 
+def call_card_tokens(props, beat) -> set:
+    """The dated call card is engine chrome that takes the caption zone for the whole call beat, as captions do."""
+    call = props.get('call')
+    if not call or beat.get('role') != 'call':
+        return set()
+    text = f"The call Our call. {call['statement']} {call['due']} {call['confidencePercent']}% sure due"
+    return set(qc_captions._tokens(text))
+
+
 def composition_checks(video, props, lock) -> dict:
     if props.get('aspect') == '16:9':
         return {'applies': False, 'note': 'the design lock is 9:16 only'}
@@ -161,6 +170,7 @@ def composition_checks(video, props, lock) -> dict:
                    if page['fromFrame'] <= at < page['toFrame']
                    for word in page['words']
                    for token in qc_captions._tokens(word['text'] if isinstance(word, dict) else str(word))}
+        allowed |= call_card_tokens(props, beat)
         plate = any(label['fromFrame'] <= at < label['toFrame'] for label in props.get('illustrationLabels', []))
         rows[beat['id']] = measure(image, lock, plate_on_screen=plate, caption_words=allowed, exempt=_footage_boxes(props, at))
         rows[beat['id']]['frame'] = at

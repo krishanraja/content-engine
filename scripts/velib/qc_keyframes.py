@@ -91,49 +91,64 @@ def _frame(video, beat):
         return image.convert('RGB'), at
 
 
+def golden_owner(lock, fmt, beat_id):
+    """The format whose approved still this beat is held to: the cut's own format first, then a module format.
+    None means the beat is an extra the lock does not name, which is composition-checked only."""
+    if beat_id in lock['formats'][fmt]['beats']:
+        return fmt
+    for name, settings in lock['formats'].items():
+        if name != fmt and settings.get('role') == 'module' and beat_id in settings['beats']:
+            return name if designlock.frozen(lock, name)[0] else None
+    return None
+
+
 def keyframe_checks(video, props, lock, fmt) -> dict:
     inactive = _applicability(lock, fmt)
     if inactive:
         return inactive
-    expected, actual = lock['formats'][fmt]['beats'], props.get('beats', [])
+    own, actual = lock['formats'][fmt]['beats'], props.get('beats', [])
     rows, findings = {}, []
     minimum = lock['thresholds']['keyframe_ssim_min']
-    for index in range(max(len(expected), len(actual))):
-        name = expected[index] if index < len(expected) else f'extra[{index}]'
-        beat = actual[index] if index < len(actual) else None
-        row = {'ssim': None, 'min': minimum, 'pass': False}
-        if beat is None or index >= len(expected) or beat.get('id') != name:
-            row['reason'] = f'beat id at index {index}: expected {name}, got {beat.get("id") if beat else "missing"}'
-        if beat is not None and index < len(expected):
-            try:
-                image, at = _frame(video, beat)
-                measured = compare(image, designlock.golden_path(lock, fmt, name), lock)
-                row.update(measured, frame=at)
-                if 'reason' in row:
-                    row['pass'] = False
-            except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
-                row['reason'] = str(error)
-                row['pass'] = False
+    present = [beat.get('id') for beat in actual]
+    for name in own:
+        if name not in present:
+            rows[name] = {'ssim': None, 'min': minimum, 'pass': False, 'reason': f'locked beat {name} is missing'}
+            findings.append(f'{name}: locked beat missing')
+    for index, beat in enumerate(actual):
+        name = beat.get('id')
+        owner = golden_owner(lock, fmt, name)
+        if owner is None:
+            rows[name] = {'ssim': None, 'min': minimum, 'pass': True, 'golden': None,
+                          'note': 'extra beat: no golden, composition-checked'}
+            continue
+        row = {'ssim': None, 'min': minimum, 'pass': False, 'golden': owner}
+        try:
+            image, at = _frame(video, beat)
+            row.update(compare(image, designlock.golden_path(lock, owner, name), lock), frame=at)
+        except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
+            row['reason'] = str(error)
+            row['pass'] = False
         rows[name] = row
         if not row['pass']:
             findings.append(f'{name}: ssim {row["ssim"]} min {minimum}' +
                             (f'; {row["reason"]}' if 'reason' in row else ''))
-    return {'applies': True, 'pass': bool(rows) and not findings, 'beats': rows, 'findings': findings}
+    golden_rows = [row for row in rows.values() if row.get('golden')]
+    return {'applies': True, 'pass': bool(golden_rows) and not findings, 'beats': rows, 'findings': findings}
 
 
 def sheet(video, props, lock, fmt, out_path):
     inactive = _applicability(lock, fmt)
     if inactive:
         raise ValueError(inactive['note'])
-    names = lock['formats'][fmt]['beats']
-    beats = props.get('beats', [])
-    if len(beats) != len(names):
+    beats = [(beat['id'], golden_owner(lock, fmt, beat['id']), beat) for beat in props.get('beats', [])]
+    beats = [(name, owner, beat) for name, owner, beat in beats if owner]
+    if not beats:
         raise ValueError('Contact sheet needs one rendered beat per golden')
     width, height = lock['thresholds']['keyframe_compare_size']
-    canvas = Image.new('RGB', (width * 3, height * len(names)))
-    for index, (name, beat) in enumerate(zip(names, beats)):
+    canvas = Image.new('RGB', (width * 3, height * len(beats)))
+    for index, (name, owner, beat) in enumerate(beats):
         image, _ = _frame(video, beat)
-        render, golden = _images(image, designlock.golden_path(lock, fmt, name), lock)
+        render, golden = _images(image, designlock.golden_path(lock, owner, name), lock)
         difference = ImageChops.difference(golden, render).point(lambda value: min(255, value * 4))
         for column, tile in enumerate((golden, render, difference)):
             canvas.paste(tile, (column * width, index * height))

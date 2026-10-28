@@ -1,0 +1,4 @@
+{"ts": "2026-10-28T19:56:38.739864+00:00", "kind": "engine_seconds", "amount": 911, "note": "S0-S1"}
+{"ts": "2026-10-28T20:38:56.651923+00:00", "kind": "engine_seconds", "amount": 2537, "note": "S6-S7"}
+{"ts": "2026-10-28T20:38:56.996543+00:00", "kind": "claude_tokens", "amount": 1500000.0, "note": "approx session usage"}
+{"ts": "2026-10-28T21:07:02.539943+00:00", "kind": "engine_seconds", "amount": 1176, "note": "S6-S7"}

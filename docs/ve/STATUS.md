@@ -23,6 +23,13 @@ Read `docs/ve/RUNBOOK.md` to produce and `docs/ve/design/TEMPLATE.md` for what a
 - Format `two-passports` has its devices and approved frames but no rendered proof yet; the wide aspect has no design lock.
 - One composition test skips on this machine (pinned ffmpeg path); the checks run in every real QC.
 
+## Whole cuts (28 Oct 2026, first whole mind.the.gap short: "Two passports")
+- **Beats:** a cut is the format's locked beats (complete, in lock order) plus any extra beats and a module format's beats in module order. Extra beats have no golden and are composition-checked only; module beats are held to the module's frozen stills. `ve lint` and key-frame match enforce this.
+- **Ending:** the last beat runs through the ending band so BrandFrame draws it. `style.ending_ticker: false` in the spec draws the band without the scrolling promise strip (Krish: no marquee).
+- **QC notes:** the OCR reads the caption box only, folds the heavy sans I and l, accepts an I-like glyph run of two or fewer as the word "I" only where "I" is expected, and does not expect caption pages sampled inside the dated call card (the card replaces captions by design). The call card's text is allowed in the caption zone of the call beat. `brand.mark_tile` and `motion.cue_sync` stay not applicable on STAGE layouts, for the reasons given above.
+- **Budget:** the engine-time cap is 120 minutes for this first whole production run (it included engine work), Krish, 28 Oct 2026.
+- **Word times** for the Friday short come from whisper small.en on the approved 1.12x voiceover, divided by 1.12, because ingest does not exist.
+
 ## Local caveats
 - `. scripts/ve-env.sh` pins ffmpeg and tesseract and clears `MINDMAKE_*` Drive variables.
 - In a git worktree, `tests/archive-naming.test.ts` can write to the real Drive (junctioned `node_modules`). CI is unaffected; run it from the main checkout.

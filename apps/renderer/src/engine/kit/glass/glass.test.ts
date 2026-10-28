@@ -49,6 +49,25 @@ describe('H glass kinds', () => {
       expect(sizes).toContain(Math.max(30, 84 * k / 1.8))
     }
   })
+  it('names one place only when the prompt has no next', () => {
+    const one = { lead: 'Our supplier gets cotton from', active: 'Xinjiang' }
+    for (const frame of [0, 15, 60, 400]) {
+      const html = render('prompt', frame, one)
+      expect(html).toContain('data-slot="active"')
+      expect(html).toContain('XINJIANG')
+      expect(html).not.toContain('data-slot="next"')
+      expect(html).not.toContain('data-next')
+    }
+    expect(() => render('prompt', 0, { lead: 'x', next: 'y' })).toThrow()
+  })
+  it('draws the prompt card with no chip when chip is false', () => {
+    const base = { lead: 'Our supplier gets cotton from', active: 'Xinjiang' }
+    expect(render('prompt', 30, base)).toContain('SAME WORK PROMPT')
+    const quiet = render('prompt', 30, { ...base, chip: false })
+    expect(quiet).not.toContain('SAME WORK PROMPT')
+    expect(quiet).toContain('XINJIANG')
+    expect(quiet).toContain('border-radius:0;top:0;width')
+  })
   it('plants flags on their own cues, preserves ghosts and slaps the supplied score', () => {
     expect(render('cards', 21)).not.toContain('data-flag="planted"')
     expect(render('cards', 22)).toContain('data-flag="planted"')
