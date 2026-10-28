@@ -9,7 +9,7 @@
 // want to send the link to the MP4 or the video file, which is stored in my Google Drive."
 //
 // So: Control Center (api/feedback-videos.ts) checks his Drive link and writes the row with the venture (migration
-// 20261116090000_ux_feedback_recordings.sql). content-watcher on a home computer claims it here, reads the video from
+// 20261116100000_ux_feedback_recordings.sql). content-watcher on a home computer claims it here, reads the video from
 // his synced Drive (no copy, no download link, no Drive key on the machine), makes the timeline, and asks for upload
 // sessions in Ventures > Bugs & Issues > <venture> > <day> <name> (filearchives D-033: "If I notice bugs or issues
 // while on my phone, I put them in Bugs and Issues"). The report writes the Claude Code prompt into that folder and
