@@ -1,49 +1,44 @@
 # ve: the video engine
 
-This is the only document a producing session must read. Everything else it needs comes in the session pack that `python scripts/ve.py start <piece>` writes. Do not read NOW.md, WORKBENCH.md, learnings or failures while producing: what they enforce is code here, and they cost tokens on every call.
+Read this and [RUNBOOK.md](RUNBOOK.md), then the signed spec and <=36 KB pack (`ve start`). Do not load NOW.md, WORKBENCH.md, learnings or failures while producing. Never read big files, individual images or raw logs into context: use QC JSON and one contact sheet.
 
 ## Why ve exists
 
-Friday 23 Oct took a 62-hour Codex thread and about 253M tokens, and all four cuts were rejected. Three causes:
-- **Bespoke per-piece code** bypassed every gate.
-- **Receipts were self-written.**
-- **Rules lived in prose**, so they were never enforced.
-
-ve answers with:
-- one signed spec;
-- one tested composition fed by data;
-- specialists as code;
-- readiness computed from measurements.
+Friday 23 Oct took a 62-hour thread, about 253M tokens, and four rejected cuts. Bespoke code bypassed gates, receipts were self-written, and prose rules lacked enforcement. ve uses one signed spec, one data-fed composition, specialists as code and measured readiness.
 
 ## The pieces
 
 | Piece | Where |
 |---|---|
-| The spec (`creative-direction.json`, `schema_version: 2`) | `packages/contracts/src/production-spec.ts`; checked by `packages/contracts/scripts/check-spec.ts` |
+| Spec: creative-direction.json, schema_version 2 | `packages/contracts/src/production-spec.ts`; `packages/contracts/scripts/check-spec.ts` |
 | Formats (data, not code) | `config/ve/formats/*.json` |
-| Crew: each expert owns spec sections and ships lints, QC and a card | `config/ve/crew/<id>.{json,card.md,lens.md}` |
-| Invariants no spec can override | `config/ve/invariants.json` |
-| Brand and motion tokens (roles, never hex) | `config/ve/brand-tokens.json` |
-| Tool routing and Krish's rulings | `config/ve/tools.json` |
-| CLI | `scripts/ve.py` and `scripts/ve/*` |
+| Crew: sections, lints, QC, cards | `config/ve/crew/<id>.{json,card.md,lens.md}` |
+| Invariants | `config/ve/invariants.json` |
+| Brand/motion roles | `config/ve/brand-tokens.json` |
+| Tools/rulings | `config/ve/tools.json` |
+| CLI and libraries | `scripts/ve.py`, `scripts/velib/*.py` |
+| Usage and clock | `config/ve/budget.json`; piece `ve/ledger.jsonl`, separate `ve/clock.json` |
+| Device capabilities | `config/ve/devices.json`; renderer `devices/registry.ts` and `devices/CONTRACT.md` |
 | Renderer | `apps/renderer/src/engine/` (one `FormatMaster`, BrandFrame, devices) |
 | Best practice | `_corpus/motion-design-video-corpus.md`, cited by section in each card |
 
-## The protocol (gates batched; sessions end at gates; no mid-turn questions)
+## Protocol
 
-| Step | Command | Who |
+Commands, outputs and 55-minute envelope: RUNBOOK.md. Batch questions; end sessions at gates. Krish-wait is separate.
+
+| Step | Action | Who |
 |---|---|---|
-| S0 | `ve start <piece>`, `ve doctor` | Claude |
-| S1 | Two treatments, then `ve lint`, then `ve stills` | Director (Claude) |
-| **Gate 1** | Krish picks a treatment, stills, bed and credits, merged into his storyboard sign-off | Krish |
-| S2 | `ve card` + `ve dispatch` for a new hero device, run while Krish records | Codex |
-| S3 | `ve ingest`: word clock from two aligners | script |
-| S4 | `ve lint`, then `ve compile` | Director, fresh session |
-| S5 | `ve render <props.json> <out.mp4> --spec <spec.json> --assets-dir <assets>`, only if anything is `trial` (Gate 2) | script, Krish |
-| S6 | `ve render <props.json> <out.mp4> --spec <spec.json> --assets-dir <assets>` for each accepted cut | script |
-| S7 | `ve qc`, then spec fixes (at most 2 loops), then the Critic (`ve-critic`), then the final packet | Claude |
-| **Gate 3** | Krish watches each cut once and hears the joins reel | Krish |
-| S8 | `ve file` (archive and library; never publish) | script |
+| S0 | doctor, start pack, ledger, start clock | Claude/scripts |
+| S1 | Two treatments, lint, stills; Gate 1: treatment, stills, bed, credits merged into storyboard sign-off | Director/Claude, Krish |
+| S2 | New hero only: card, dispatch --piece while Krish records, verify acceptance/golden stills | Claude dispatches/verifies; Codex builds |
+| S3 | ingest: intended two-aligner word clock; currently exit 2 | script |
+| S4 | Fresh Director session: lint, compile cut-ready timings/assets | Claude/scripts |
+| S5 | Trial format/device: render excerpt proof; Gate 2 acceptance | script, Krish |
+| S6 | Render each accepted cut | script |
+| S7 | QC --props, <=2 fix loops, fresh Critic, final packet; Gate 3: watch cuts/hear joins reel | scripts, Claude, Krish |
+| S8 | file: intended archive/library, currently exit 2; stop clock | script/Claude |
+
+face-with-proof is proven; scoreboard-test and voice-led-pictures are trial. Registered devices: test_grid, record_card, query_chip, evidence_card, kinetic_stat; format lists also name future devices. Compile refuses device verbs absent from devices.json. test_grid draws carry with a dashed box and ANSWER DELETED outline text.
 
 ## CLI
 
@@ -53,10 +48,10 @@ Run commands as `python scripts/ve.py <command>`:
 doctor
 start <piece>
 lint <spec>
-qc <cut> --format <format> [--out <path>]
+qc <cut> --format <format> [--out <path>] [--props <props>]
 study <ref> [--out <path>]
 card <fields>
-dispatch <card> [--wait] [--spend-approved]
+dispatch <card> [--wait] [--piece <piece>] [--spend-approved]
 verify-card <card> --cwd <worktree>
 status <piece>
 coverage
@@ -64,67 +59,53 @@ compile <spec> --cut <cut> --words <words.json> --assets-dir <assets>
 render <props> <out> --spec <spec> --assets-dir <assets> [--scale <number>]
 ingest [rest ...]
 stills [rest ...]
-ledger [rest ...]
+ledger <piece>
+ledger <piece> add <kind> <amount> [--note <text>]
+time <piece> start <phase>
+time <piece> stop
+time <piece> status
 file [rest ...]
 ```
 
-`ingest`, `stills`, `ledger` and `file` are placeholders and return exit 2.
+`ingest`, `stills` and `file` are placeholders (exit 2). Stop unless approved inputs already exist through another route; quick-edit is fallback. Never claim complete ve production/filing from unavailable stages.
 All commands accept `-h` / `--help`. Render scale defaults to 1 and must be
 finite and positive. Render requires the source spec and the same staged assets
 folder used to compile it, so lint and asset hashes are checked before rendering.
 
-Compile and render lint first: each finding is printed, exit is 1 and no output
-is written. Word timings must include a finite numeric `end_s` at least as late
-as `onset_s` on every row. The onset-only 19-second fixture needs ingest-supplied
-ends before production compilation; test-only synthetic ends are not alignment.
-Compile includes only objects named in the selected cut's beat `uses`. Phase 1
-refuses asset plates and used objects that reference generated assets, whose
-illustration labels are not wired. Media sources must be relative paths that
-resolve inside the assets folder; remote URLs and absolute paths are refused.
+Compile/render lint first: findings print, exit 1, no new output. Words need unique indexes, text, ordered onset_s and finite numeric end_s >= onset_s. The onset-only 19-second fixture needs real aligned ends; synthetic test ends are not alignment. Compile refuses unapplied source edits and includes only objects in the cut's beat `uses`. Phase 1 refuses asset plates/used generated-asset references: illustration labels are not wired. Media paths must be relative and contained under assets, never URLs/absolute paths.
 
-Captions use the renderer's exact Archivo-heavy advance widths, aspect-specific
-caption geometry and swipe padding. Pages contain 2-5 words and at most two
-lines, prefer punctuation, and allow a single word only when it fills a line.
-A word wider than the available line is refused by name. Dialogue duration is
-`round(last end_s * 30) + 12`. Whole cuts with a call add a 105-frame ending at
-that point; the last caption ends when the ending begins. Excerpts have no ending.
+Captions use exact Archivo-heavy widths, aspect geometry/swipe padding. Pages: 2-5 words, <=2 lines, prefer punctuation; a single word only if it fills a line. Oversize words are refused by name. Dialogue: `round(last end_s * 30) + 12` frames. Whole cuts with a call add a 105-frame ending; captions stop at its start. Excerpts have no ending.
 
-Sound effects resolve through `config/ve/sfx-kits/<audio.sfx_kit>.json`, mapping
-names to `{ "path": "sfx/name.wav", "gain_db": -6 }`. Paths resolve under assets.
-An absent kit produces an empty SFX track and reports the affected event ids;
-an unknown name in a present kit is also reported. Compile writes
-`props.<cut>.json` and `compile.<cut>.json` together in the piece's `ve` folder.
-The latter contains `lint: "clean"`, `sfx_missing` event ids and `props_sha256`.
-`status` blocks with `sfx kit missing` while that list is non-empty.
-Before rendering, every staged spec asset with a declared SHA-256 must match;
-a mismatch names the asset and refuses the render.
+SFX kits: `config/ve/sfx-kits/<audio.sfx_kit>.json`, names mapped to `{ "path": "sfx/name.wav", "gain_db": -6 }` under assets. Kits are absent today; referenced sounds are omitted/reported, as are unknown names in present kits. Compile writes `props.<cut>.json` and `compile.<cut>.json` in the piece's ve folder; report: lint clean, sfx_missing event ids, props_sha256. Non-empty sfx_missing blocks status. Never mark intended sounds silent to hide gaps. Staged spec assets with declared SHA-256 must match; mismatches name the asset/refuse render.
 
-## Rules that are code, not advice
+Render transports string values as ASCII escapes, decoded for drawing. It measures AAC lag against the stem, corrects offsets >1 ms without re-encoding video, prints lag/residual, and fails if residual >1 ms. This does not replace QC. In Bash `. scripts/ve-env.sh` pins ffmpeg n8.1.2 and puts tesseract on PATH. QC --props supplies sync, joins, OCR, brand and cue inputs. Missing OCR is not_run. Exit 0 means measured checks pass, possibly incomplete; require measured_pass and complete, then status exit 0.
 
-- **Captions are always on.** The schema has no other value.
-- **Specs and devices name colour roles, never hex.**
-- **Positions are word indexes into the signed script, never seconds.** Frames come from `ve compile`.
-- **One clock.** One EDL drives picture, dialogue, bed, SFX and captions in one render. There is no mux step.
-- **No per-piece compositions or render scripts.** A new mechanism becomes a library device through a Codex card.
-- **No pass is written by hand.** `ve status` computes readiness from `qc.json` bound to the mp4's sha, the Critic's verdict, and Krish's approvals.
-- **ve has no publish, send or schedule verb.**
+## Rules
+
+- Captions always on (schema); colour roles only, never hex.
+- Positions are signed-script word indexes; compile derives frames.
+- One EDL drives picture, dialogue, bed, SFX/captions. No manual mux or separate retiming; AAC correction preserves video.
+- No per-piece compositions/render scripts. New hero mechanisms become library devices via cards.
+- Never hand-write a pass/receipt/ready. status checks lint, QC bound to the existing MP4 SHA, completeness, Critic verdict and Krish's exact-file approval.
+- Evidence is real; generated illustrations need labels. Numbers name producers; mind.the.gap ends in a dated call. No synthetic Krish without realism-test approval. Follow tools.json recipes/rulings.
+- No publish/send/schedule verb.
 
 ## Codex
 
-Codex builds library devices from exact cards (`ve card`), in worktrees, between pieces:
-- `ve dispatch` calls the Codex plugin companion directly with a pinned `--model` and `--effort`.
-- `ve verify-card` re-runs acceptance outside the sandbox and renders golden stills for Claude to inspect.
-
-Codex's own report is never evidence. Codex never renders, files or edits a piece in flight.
+Claude writes exact cards from fields JSON. Codex builds library devices in worktrees between pieces. dispatch uses the plugin companion with pinned model/effort. verify-card reruns acceptance outside the sandbox/checks write_allow; Claude then renders golden stills/reviews one contact sheet. Codex's report is never proof; Codex never renders/files/edits a production piece in flight.
 
 ## Budget
 
-Ceilings:
+Caps come from `config/ve/budget.json`:
 
-| Measure | Ceiling |
+| Measure per piece | Ceiling / target |
 |---|---|
-| Total tokens per 4-cut piece | 12.6M |
-| Engine time | 3.1 h |
-| Codex allowance | 1.2 points |
+| Engine time after recording | 1 h target; 60 min cap |
+| Claude tokens | 3.3M |
+| Codex tokens | 2.1M |
+| Total tokens (Claude + Codex) | 12.6M |
+| Codex allowance points | 1.2 |
 
-`ve ledger` reports Claude tokens, Codex tokens, allowance points, credits, engine hours and Krish-wait hours separately. Dispatch is refused above 80% of the weekly allowance.
+`ledger <piece> add <kind> <amount>` appends actual usage; kinds: claude_tokens, codex_tokens, allowance_points, credits, engine_seconds, krish_wait_seconds. Amounts are finite/non-negative. Ledger reports OK/WARN/OVER, credits and wait minutes; exit 1 above any cap. Add still records over-cap usage. Credits/wait have no configured caps.
+
+At >=80% stop and ask at a gate; refuse work past caps. These are session stop rules: ledger only warns at 80%; dispatch enforces all recorded caps only with --piece; time start enforces engine time only and refuses duplicate clocks. time stop appends elapsed seconds/removes clock; time status includes live elapsed time. Ledger/dispatch totals include stopped/logged time only. Separately, weekly Codex usage >80% refuses dispatch unless --spend-approved carries Krish's paid-credit yes. No flag waives piece caps.
