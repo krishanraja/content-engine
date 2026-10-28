@@ -48,12 +48,28 @@ Stop after two failed attempts at the same acceptance command and report the fai
 """
 
 
+def _require_design_lock(meta: dict) -> None:
+    fmt = meta.get('format')
+    if fmt and meta.get('kind') in ('device', 'format_config'):
+        from . import designlock
+        try:
+            lock = designlock.load()
+            ok = not designlock.validate(lock) and designlock.frozen(lock, fmt)[0]
+        except (OSError, ValueError, KeyError, TypeError):
+            ok = False
+        if not ok:
+            sys.exit(f'no frozen design lock for {fmt}: run ve lock freeze')
+
+
 def write_card(path: Path, **fields) -> Path:
+    _require_design_lock(fields)
     fields.setdefault('model', MODEL)
     fields.setdefault('effort', EFFORT)
     fields.setdefault('max_minutes', 40)
     fields.setdefault('max_calls', 40)
     text = CARD_TEMPLATE.format(**fields)
+    if fields.get('format'):
+        text = text.replace('\nkind:', f'\nformat: {fields["format"]}\nkind:', 1)
     if len(text.encode('utf-8')) > 6144:
         sys.exit(f've card: {path.name} is {len(text.encode())} bytes; a card is 6 KB or less')
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -159,6 +175,7 @@ def remove_worktree(cwd: Path) -> None:
 
 def dispatch(card_path: Path, background: bool = True, spend_approved: bool = False) -> subprocess.CompletedProcess:
     meta = parse_card(card_path)
+    _require_design_lock(meta)
     used = weekly_used_percent()
     if used is not None and used > ALLOWANCE_CEILING and not spend_approved:
         sys.exit(f've dispatch: the weekly Codex allowance is at {used:.0f}% (ceiling {ALLOWANCE_CEILING}%), so Codex would draw paid credits. '

@@ -39,6 +39,13 @@ def cmd_doctor(_args) -> int:
     def check(name, ok, detail, hard=True):
         rows.append(('PASS' if ok else ('FAIL' if hard else 'WARN'), name, detail))
 
+    from velib import designlock
+    try:
+        findings = designlock.validate(designlock.load())
+        check('design lock', not findings, '; '.join(findings) or 'valid')
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        check('design lock', False, str(error))
+
     exe = shutil.which('ffmpeg')
     version = subprocess.run([exe, '-version'], capture_output=True, text=True).stdout.split('\n')[0] if exe else ''
     check('ffmpeg', bool(exe), version or 'not on PATH')
@@ -93,6 +100,39 @@ def cmd_doctor(_args) -> int:
     return 1 if any(r[0] == 'FAIL' for r in rows) else 0
 
 
+def cmd_lock(args) -> int:
+    from velib import designlock
+    try:
+        lock = designlock.load()
+        if args.action == 'show':
+            print(json.dumps(lock['formats'][args.format] if args.format else lock, indent=2))
+        elif args.action == 'check':
+            findings = designlock.validate(lock)
+            if findings:
+                print('\n'.join(findings))
+                return 1
+            print('design lock: valid')
+            for fmt in lock['formats']:
+                ok, reasons = designlock.frozen(lock, fmt)
+                print(f'{fmt}: ' + ('frozen' if ok else 'not frozen: ' + '; '.join(reasons)))
+        else:
+            if args.mapping is None:
+                mapping = {beat: f'f{i}.png' for i, beat in enumerate(lock['formats'][args.format]['beats'], 1)}
+            else:
+                mapping = {}
+                for item in args.mapping:
+                    beat, sep, filename = item.partition('=')
+                    if not sep or not filename or beat in mapping:
+                        raise ValueError(f'invalid or duplicate --map entry: {item}')
+                    mapping[beat] = filename
+            designlock.freeze(args.format, args.src_dir, mapping, force=args.force)
+            print(f'design lock: frozen {args.format}')
+        return 0
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        print(f've lock: {error}', file=sys.stderr)
+        return 1
+
+
 def cmd_fonts(args) -> int:
     from velib import fonts
     try:
@@ -125,6 +165,10 @@ def spec_path_for(piece: str) -> Path:
 def cmd_lint(args) -> int:
     from velib.lint import lint
     spec, problems = lint(Path(args.spec))
+    if spec is not None:
+        from velib import designlock
+        if spec['format'] not in designlock.load()['formats']:
+            print(f'note: format {spec["format"]} is legacy: composition and design approval are enforced at packet time')
     for line in problems[:20]:
         print(line)
     if len(problems) > 20:
@@ -380,6 +424,13 @@ def main() -> int:
     parser = argparse.ArgumentParser(prog='ve', description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = parser.add_subparsers(dest='cmd', required=True)
     sub.add_parser('doctor').set_defaults(fn=cmd_doctor)
+    p = sub.add_parser('lock', help='check, show or freeze approved format designs')
+    actions = p.add_subparsers(dest='action', required=True)
+    actions.add_parser('check')
+    a = actions.add_parser('show'); a.add_argument('format', nargs='?')
+    a = actions.add_parser('freeze'); a.add_argument('format'); a.add_argument('--from', dest='src_dir', required=True)
+    a.add_argument('--map', dest='mapping', nargs='+', action='extend'); a.add_argument('--force', action='store_true')
+    p.set_defaults(fn=cmd_lock)
     p = sub.add_parser('fonts', help='check, declare or sync the offline brand font kit')
     actions = p.add_subparsers(dest='action', required=True)
     actions.add_parser('check')
