@@ -1780,6 +1780,16 @@
           "file": "tests/windowless.test.ts",
           "contains": "the probe saw no window from the control, so it proves nothing",
           "how": "On Windows CI: no window from the launcher, against a control the probe sees"
+        },
+        {
+          "file": "scripts/overnight/preflight.ps1",
+          "contains": "$start.CreateNoWindow = $true",
+          "how": "The Saturday overnight preflight starts every program it checks with no window, its input closed"
+        },
+        {
+          "file": "tests/overnight-preflight.test.ts",
+          "contains": "the probe saw no window from the control, so it proves nothing",
+          "how": "On Windows CI: the preflight, started as the hidden recordings pass starts it, opens no window"
         }
       ]
     }
