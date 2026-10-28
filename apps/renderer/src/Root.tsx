@@ -13,7 +13,8 @@ import { StoryOutroStandoff, STORY_OUTRO_FRAMES } from './story/StoryOutroStando
 import { StoryStandoffPropsSchema } from './story/props'
 import { mondayStandoffProps } from './story/monday'
 import { FormatMaster } from './engine'
-import { EngineRenderPropsSchema } from './engine/props'
+import { EngineRenderPropsSchema, type EngineRenderProps } from './engine/props'
+import { fromAsciiProps } from './engine/transport'
 import veDefaultProps from '../../../fixtures/ve/engine-core/props.json'
 
 const defaultProps: ShortProps = {
@@ -97,12 +98,16 @@ const thumbnailDefaultProps: ThumbnailProps = {
   tokens: { ink: '#0C1512', inkDeep: '#070D0B', inkSoft: '#16221D', cream: '#F4EFE4', mint: '#7EF0C0', section: '#FF6A4D' },
 }
 
+function TransportFormatMaster(props: EngineRenderProps) {
+  return <FormatMaster {...EngineRenderPropsSchema.parse(fromAsciiProps(props))} />
+}
+
 export function RemotionRoot() {
   return (
     <>
       <Composition
         id="VeFormatMasterTall"
-        component={FormatMaster}
+        component={TransportFormatMaster}
         width={1080}
         height={1920}
         fps={30}
@@ -110,13 +115,14 @@ export function RemotionRoot() {
         schema={EngineRenderPropsSchema}
         defaultProps={EngineRenderPropsSchema.parse({ ...veDefaultProps, aspect: '9:16' })}
         calculateMetadata={({ props }) => {
-          const parsed = EngineRenderPropsSchema.parse(props)
-          return { props: parsed, durationInFrames: parsed.durationFrames }
+          const parsed = EngineRenderPropsSchema.parse(fromAsciiProps(props))
+          // Keep transport props intact: the component decodes its own copy once.
+          return { durationInFrames: parsed.durationFrames }
         }}
       />
       <Composition
         id="VeFormatMasterWide"
-        component={FormatMaster}
+        component={TransportFormatMaster}
         width={1920}
         height={1080}
         fps={30}
@@ -124,8 +130,8 @@ export function RemotionRoot() {
         schema={EngineRenderPropsSchema}
         defaultProps={EngineRenderPropsSchema.parse({ ...veDefaultProps, aspect: '16:9' })}
         calculateMetadata={({ props }) => {
-          const parsed = EngineRenderPropsSchema.parse(props)
-          return { props: parsed, durationInFrames: parsed.durationFrames }
+          const parsed = EngineRenderPropsSchema.parse(fromAsciiProps(props))
+          return { durationInFrames: parsed.durationFrames }
         }}
       />
       <Composition
