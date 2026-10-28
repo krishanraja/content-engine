@@ -1,5 +1,5 @@
 import React from 'react'
-import { Img } from 'remotion'
+import { Img, staticFile } from 'remotion'
 import { glassKind } from '../../kit/glassRegistry'
 import { PH, PW, Screen, uiClipPath } from '../../kit/phoneGlass'
 import { footageLayout } from '../../kit/glass/footage'
@@ -9,7 +9,7 @@ const plateRoot='plates/hand-held-screen/'
 const backdrops={cotton:'bg-cotton.jpg',cotton_flip:'bg-cotton-flip.jpg',hardware:'bg-hardware.jpg'} as const
 /** Same resolved-src Img route as BrandFrame's house MarkTile. No silent image fallback. */
 export function Plate({name,style}:{name:string;style?:React.CSSProperties}) {
-  return <Img src={plateRoot+name} onError={()=>{throw new Error(`ve: missing phone plate ${plateRoot+name}`)}}
+  return <Img src={staticFile(plateRoot+name)} onError={()=>{throw new Error(`ve: missing phone plate ${plateRoot+name}`)}}
     style={{position:'absolute',left:0,top:0,width:PW,height:PH,maxWidth:'none',...style}} />
 }
 export function Device({object,events,box,tokens,frame}:DeviceProps) {
@@ -61,7 +61,7 @@ export function Device({object,events,box,tokens,frame}:DeviceProps) {
           {s.glass.map((layer,i)=>{
             const Glass=glassKind(layer.kind)
             return <div key={layer.atFrame+':'+i} data-glass-kind={layer.kind} style={{position:'absolute',inset:0,opacity:layer.opacity}}>
-              <Glass frame={frame} sinceFrames={frame-layer.atFrame} tokens={tokens} params={s.params.glass[layer.kind] ?? {}} k={s.cam.k} />
+              <Glass frame={frame} sinceFrames={frame-layer.atFrame} tokens={tokens} params={(s.params.glass[layer.kind]?.[layer.camera] as Record<string, unknown> | undefined) ?? s.params.glass[layer.kind] ?? {}} k={s.cam.k} />
             </div>
           })}
         </div>

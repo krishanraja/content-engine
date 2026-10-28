@@ -1,0 +1,369 @@
+{
+  "note": "SYNTHETIC TEST ENDS: original onsets plus 0.2 s, matching ve_compile_test.py. Not alignment or render-ready timing.",
+  "words": [
+    {
+      "w": 0,
+      "word": "Now,",
+      "onset_s": 0.0,
+      "frame": 0,
+      "end_s": 0.2
+    },
+    {
+      "w": 1,
+      "word": "America",
+      "onset_s": 0.58,
+      "frame": 17,
+      "end_s": 0.78
+    },
+    {
+      "w": 2,
+      "word": "has",
+      "onset_s": 0.84,
+      "frame": 25,
+      "end_s": 1.04
+    },
+    {
+      "w": 3,
+      "word": "blocked",
+      "onset_s": 1.02,
+      "frame": 31,
+      "end_s": 1.22
+    },
+    {
+      "w": 4,
+      "word": "cotton",
+      "onset_s": 1.28,
+      "frame": 38,
+      "end_s": 1.48
+    },
+    {
+      "w": 5,
+      "word": "from",
+      "onset_s": 1.72,
+      "frame": 52,
+      "end_s": 1.92
+    },
+    {
+      "w": 6,
+      "word": "both",
+      "onset_s": 1.9,
+      "frame": 57,
+      "end_s": 2.1
+    },
+    {
+      "w": 7,
+      "word": "over",
+      "onset_s": 2.4,
+      "frame": 72,
+      "end_s": 2.6
+    },
+    {
+      "w": 8,
+      "word": "forced",
+      "onset_s": 2.82,
+      "frame": 85,
+      "end_s": 3.02
+    },
+    {
+      "w": 9,
+      "word": "labour.",
+      "onset_s": 3.12,
+      "frame": 94,
+      "end_s": 3.32
+    },
+    {
+      "w": 10,
+      "word": "So,",
+      "onset_s": 3.76,
+      "frame": 113,
+      "end_s": 3.96
+    },
+    {
+      "w": 11,
+      "word": "a",
+      "onset_s": 4.42,
+      "frame": 133,
+      "end_s": 4.62
+    },
+    {
+      "w": 12,
+      "word": "good",
+      "onset_s": 4.5,
+      "frame": 135,
+      "end_s": 4.7
+    },
+    {
+      "w": 13,
+      "word": "answer",
+      "onset_s": 4.62,
+      "frame": 139,
+      "end_s": 4.82
+    },
+    {
+      "w": 14,
+      "word": "should",
+      "onset_s": 4.9,
+      "frame": 147,
+      "end_s": 5.1
+    },
+    {
+      "w": 15,
+      "word": "flag",
+      "onset_s": 5.12,
+      "frame": 154,
+      "end_s": 5.32
+    },
+    {
+      "w": 16,
+      "word": "it",
+      "onset_s": 5.42,
+      "frame": 163,
+      "end_s": 5.62
+    },
+    {
+      "w": 17,
+      "word": "both",
+      "onset_s": 5.56,
+      "frame": 167,
+      "end_s": 5.76
+    },
+    {
+      "w": 18,
+      "word": "times.",
+      "onset_s": 5.76,
+      "frame": 173,
+      "end_s": 5.96
+    },
+    {
+      "w": 19,
+      "word": "Claude",
+      "onset_s": 7.02,
+      "frame": 211,
+      "end_s": 7.22
+    },
+    {
+      "w": 20,
+      "word": "and",
+      "onset_s": 7.6,
+      "frame": 228,
+      "end_s": 7.8
+    },
+    {
+      "w": 21,
+      "word": "ChatGPT",
+      "onset_s": 7.74,
+      "frame": 232,
+      "end_s": 7.94
+    },
+    {
+      "w": 22,
+      "word": "flagged",
+      "onset_s": 8.22,
+      "frame": 247,
+      "end_s": 8.42
+    },
+    {
+      "w": 23,
+      "word": "forced",
+      "onset_s": 8.72,
+      "frame": 262,
+      "end_s": 8.92
+    },
+    {
+      "w": 24,
+      "word": "labour",
+      "onset_s": 9.0,
+      "frame": 270,
+      "end_s": 9.2
+    },
+    {
+      "w": 25,
+      "word": "both",
+      "onset_s": 9.24,
+      "frame": 277,
+      "end_s": 9.44
+    },
+    {
+      "w": 26,
+      "word": "times,",
+      "onset_s": 9.58,
+      "frame": 287,
+      "end_s": 9.78
+    },
+    {
+      "w": 27,
+      "word": "and",
+      "onset_s": 10.06,
+      "frame": 302,
+      "end_s": 10.26
+    },
+    {
+      "w": 28,
+      "word": "so",
+      "onset_s": 10.7,
+      "frame": 321,
+      "end_s": 10.9
+    },
+    {
+      "w": 29,
+      "word": "did",
+      "onset_s": 10.88,
+      "frame": 326,
+      "end_s": 11.08
+    },
+    {
+      "w": 30,
+      "word": "DeepSeek",
+      "onset_s": 11.0,
+      "frame": 330,
+      "end_s": 11.2
+    },
+    {
+      "w": 31,
+      "word": "for",
+      "onset_s": 11.44,
+      "frame": 343,
+      "end_s": 11.64
+    },
+    {
+      "w": 32,
+      "word": "Turkmenistan.",
+      "onset_s": 11.58,
+      "frame": 347,
+      "end_s": 11.78
+    },
+    {
+      "w": 33,
+      "word": "Now",
+      "onset_s": 12.58,
+      "frame": 377,
+      "end_s": 12.78
+    },
+    {
+      "w": 34,
+      "word": "watch",
+      "onset_s": 13.02,
+      "frame": 391,
+      "end_s": 13.22
+    },
+    {
+      "w": 35,
+      "word": "DeepSeek",
+      "onset_s": 13.42,
+      "frame": 403,
+      "end_s": 13.62
+    },
+    {
+      "w": 36,
+      "word": "on",
+      "onset_s": 14.04,
+      "frame": 421,
+      "end_s": 14.24
+    },
+    {
+      "w": 37,
+      "word": "Xinjiang.",
+      "onset_s": 14.22,
+      "frame": 427,
+      "end_s": 14.42
+    },
+    {
+      "w": 38,
+      "word": "It",
+      "onset_s": 14.9,
+      "frame": 447,
+      "end_s": 15.1
+    },
+    {
+      "w": 39,
+      "word": "writes",
+      "onset_s": 15.06,
+      "frame": 452,
+      "end_s": 15.26
+    },
+    {
+      "w": 40,
+      "word": "a",
+      "onset_s": 15.38,
+      "frame": 461,
+      "end_s": 15.58
+    },
+    {
+      "w": 41,
+      "word": "full",
+      "onset_s": 15.52,
+      "frame": 466,
+      "end_s": 15.72
+    },
+    {
+      "w": 42,
+      "word": "answer,",
+      "onset_s": 15.66,
+      "frame": 470,
+      "end_s": 15.86
+    },
+    {
+      "w": 43,
+      "word": "deletes",
+      "onset_s": 16.38,
+      "frame": 491,
+      "end_s": 16.58
+    },
+    {
+      "w": 44,
+      "word": "it",
+      "onset_s": 16.72,
+      "frame": 502,
+      "end_s": 16.92
+    },
+    {
+      "w": 45,
+      "word": "and",
+      "onset_s": 16.96,
+      "frame": 509,
+      "end_s": 17.16
+    },
+    {
+      "w": 46,
+      "word": "changes",
+      "onset_s": 17.74,
+      "frame": 532,
+      "end_s": 17.94
+    },
+    {
+      "w": 47,
+      "word": "the",
+      "onset_s": 18.06,
+      "frame": 542,
+      "end_s": 18.26
+    },
+    {
+      "w": 48,
+      "word": "subject",
+      "onset_s": 18.28,
+      "frame": 548,
+      "end_s": 18.48
+    },
+    {
+      "w": 49,
+      "word": "every",
+      "onset_s": 18.7,
+      "frame": 561,
+      "end_s": 18.9
+    },
+    {
+      "w": 50,
+      "word": "single",
+      "onset_s": 19.48,
+      "frame": 584,
+      "end_s": 19.68
+    },
+    {
+      "w": 51,
+      "word": "time.",
+      "onset_s": 19.72,
+      "frame": 592,
+      "end_s": 19.92
+    }
+  ]
+}

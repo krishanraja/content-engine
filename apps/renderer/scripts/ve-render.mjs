@@ -46,6 +46,49 @@ async function correctAudio(raw, output, stem, trimSeconds, temporary, lagSample
   await copyFile(corrected, output)
 }
 
+/** Stage only declared media and the format's plate manifest; safe to test without Chromium. */
+export async function stageRenderAssets(inputProps, propsPath, publicDir, repositoryRoot = root) {
+  const staged = new Map()
+  async function stage(src) {
+    if (/^https?:\/\//.test(src)) return src
+    const local = path.resolve(path.dirname(path.resolve(propsPath)), src)
+    if (!staged.has(local)) {
+      const name = `asset-${staged.size}${path.extname(local)}`
+      await copyFile(local, path.join(publicDir, name))
+      staged.set(local, `/public/${name}`)
+    }
+    return staged.get(local)
+  }
+  for (const image of Object.values(inputProps.brand)) image.src = await stage(image.src)
+  inputProps.audio.stem.src = await stage(inputProps.audio.stem.src)
+  for (const sfx of inputProps.audio.sfx) sfx.src = await stage(sfx.src)
+  for (const segment of inputProps.segments) segment.src = await stage(segment.src)
+  async function stageParams(value) {
+    if (Array.isArray(value)) { for (const item of value) await stageParams(item); return }
+    if (!value || typeof value !== 'object') return
+    for (const [key, item] of Object.entries(value)) {
+      if ((key === 'src' || key === 'logoSrc') && typeof item === 'string') value[key] = await stage(item)
+      else await stageParams(item)
+    }
+  }
+  for (const object of inputProps.objects) await stageParams(object.params)
+  if (inputProps.objects.some(object => object.device === 'hand_phone_stage')) {
+    // The device uses staticFile('plates/<format>/<name>'); keep that tree.
+    const plateDir = path.join(repositoryRoot, 'assets', 'plates', inputProps.format)
+    const manifest = JSON.parse(await readFile(path.join(plateDir, 'plates.json'), 'utf8'))
+    const targetDir = path.join(publicDir, 'plates', inputProps.format)
+    await mkdir(targetDir, { recursive: true })
+    for (const name of ['plates.json', ...Object.keys(manifest.files)]) {
+      const local = path.resolve(plateDir, name)
+      if (!local.startsWith(plateDir + path.sep)) throw new Error(`plate escapes format directory: ${name}`)
+      const target = path.resolve(targetDir, name)
+      await mkdir(path.dirname(target), { recursive: true })
+      // copyFile throws before bundling or Chromium if any declared plate is missing.
+      await copyFile(local, target)
+    }
+  }
+}
+
 async function main() {
   const [propsPath, output, ...flags] = process.argv.slice(2)
   if (!propsPath || !output || (flags.length && (flags.length !== 2 || flags[0] !== '--scale'))) {
@@ -64,27 +107,7 @@ async function main() {
     // Serve only explicitly referenced media, never the working directory.
     const publicDir = path.join(temporary, 'public')
     await mkdir(publicDir)
-    const staged = new Map()
-    async function stage(src) {
-      if (/^https?:\/\//.test(src)) return src
-      const local = path.resolve(path.dirname(path.resolve(propsPath)), src)
-      if (!staged.has(local)) {
-        const name = `asset-${staged.size}${path.extname(local)}`
-        await copyFile(local, path.join(publicDir, name))
-        staged.set(local, `/public/${name}`)
-      }
-      return staged.get(local)
-    }
-    for (const image of Object.values(inputProps.brand)) image.src = await stage(image.src)
-    inputProps.audio.stem.src = await stage(inputProps.audio.stem.src)
-    for (const sfx of inputProps.audio.sfx) sfx.src = await stage(sfx.src)
-    for (const segment of inputProps.segments) segment.src = await stage(segment.src)
-    for (const object of inputProps.objects) {
-      if (typeof object.params?.src === 'string') object.params.src = await stage(object.params.src)
-      for (const row of Array.isArray(object.params?.rows) ? object.params.rows : []) {
-        if (typeof row?.logoSrc === 'string') row.logoSrc = await stage(row.logoSrc)
-      }
-    }
+    await stageRenderAssets(inputProps, propsPath, publicDir)
     const serveUrl = await bundle({ entryPoint: path.join(root, 'apps/renderer/src/index.ts'),
       publicDir, outDir: path.join(temporary, 'bundle') })
     const transportProps = toAsciiProps(inputProps)
@@ -106,4 +129,6 @@ async function main() {
   }
 }
 
-main().catch((error) => { console.error(`ve render: ${error.message}`); process.exitCode = 1 })
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  main().catch((error) => { console.error(`ve render: ${error.message}`); process.exitCode = 1 })
+}

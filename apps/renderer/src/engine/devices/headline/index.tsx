@@ -25,7 +25,7 @@ export function Device({ object, events, tokens, frame }: DeviceProps) {
   const singleWord = s.lines.length === 1 && s.lines[0]!.split(/\s+/).length === 1
   const wordWidth = textWidth('anton', s.lines[0]!.toUpperCase(), l.size) + (s.swipe ? l.size * 0.24 : 0)
   const beside = singleWord && at.w - wordWidth - 32 >= 260
-  const dekWidth = beside ? at.w - wordWidth - 32 : at.w
+  const dekWidth = s.dekAt?.w ?? (beside ? at.w - wordWidth - 32 : at.w)
   if (s.dek && (wrapWords('fraunces', s.dek, 44, dekWidth).length * 44 * 1.16 > 110 ||
     s.dek.split(/\s+/).some(word => textWidth('fraunces', word, 44) > dekWidth)))
     throw new Error('Dek copy does not fit at 44px')
@@ -46,8 +46,8 @@ export function Device({ object, events, tokens, frame }: DeviceProps) {
         </div>
       })}
     </div>
-    {s.dek && <div style={{ ...canvasRect(beside ? at.x + wordWidth + 32 : at.x,
-      beside ? at.y : at.y + l.height + 24, dekWidth, 110),
+    {s.dek && <div style={{ ...canvasRect(s.dekAt?.x ?? (beside ? at.x + wordWidth + 32 : at.x),
+      s.dekAt?.y ?? (beside ? at.y : at.y + l.height + 24), dekWidth, 110),
       color: tokens.cream, fontFamily: HOUSE_FONTS.dek, fontSize: 44, fontStyle: 'italic', lineHeight: 1.16,
       opacity: s.opacity }}>{s.dek}</div>}
   </>

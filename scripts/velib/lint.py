@@ -17,7 +17,25 @@ WORDS_PER_SECOND = 2.6  # Krish's measured read rate, used only before ingest gi
 
 
 def schema(spec_path: Path) -> tuple[dict | None, list[str]]:
-    result = run(['npx', 'tsx', 'packages/contracts/scripts/check-spec.ts', str(spec_path), '--normalized'])
+    # Installed TypeScript in-process, matching ve_compile_test.py. Avoid
+    # tsx/esbuild's child process (EPERM in the Windows card sandbox).
+    code = r"""
+const fs = require('node:fs'), ts = require('typescript'), Module = require('node:module');
+const resolve = Module._resolveFilename;
+Module._resolveFilename = function(id, parent, ...rest) {
+  try { return resolve.call(this, id, parent, ...rest); }
+  catch (error) {
+    if (id.startsWith('.') && id.endsWith('.js')) return resolve.call(this, id.slice(0, -3) + '.ts', parent, ...rest);
+    throw error;
+  }
+};
+require.extensions['.ts'] = (module, filename) => module._compile(ts.transpileModule(fs.readFileSync(filename, 'utf8'), {
+  compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, esModuleInterop: true }
+}).outputText, filename);
+process.argv = [process.argv[0], 'check-spec.ts', process.argv[1], '--normalized'];
+require('./packages/contracts/scripts/check-spec.ts');
+"""
+    result = run(['node', '-e', code, str(spec_path)])
     if result.returncode == 0:
         return json.loads(result.stdout), []
     lines = [line for line in (result.stdout + result.stderr).splitlines() if line.strip()]
@@ -150,7 +168,7 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
             for event in beat['events']:
                 first_verb.setdefault(event['obj'], (event['at_w'], event['verb']))
         for obj_id, (word, verb) in first_verb.items():
-            if verb != 'enter' and not (verb == 'draw' and objects.get(obj_id, {}).get('device') == 'scribble'):
+            if verb != 'enter' and not ((verb, objects.get(obj_id, {}).get('device')) in {('draw', 'scribble'), ('stamp', 'stamp')}):
                 out.append(f'motion.enters {where}: {obj_id} first acts with "{verb}" at word {word}; an object enters before anything else happens to it, or it never appears')
         if cut['aspect'] == '9:16' and whole:
             minutes = max(1.0, (beats[-1]['span']['to_w'] - beats[0]['span']['from_w']) / (WORDS_PER_SECOND * 60))
