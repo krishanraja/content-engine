@@ -50,6 +50,14 @@ def cmd_doctor(_args) -> int:
     check('node', bool(node), subprocess.run([node, '--version'], capture_output=True, text=True).stdout.strip() if node else 'missing')
     check('remotion', (ROOT / 'node_modules' / 'remotion' / 'package.json').exists(), 'node_modules/remotion')
     check('house fonts', (ROOT / 'node_modules' / '@fontsource' / 'anton').exists(), '@fontsource/anton and friends')
+    from velib import fonts
+    fonts_ok, font_lines = fonts.check()
+    check('brand fonts', fonts_ok, '; '.join(font_lines))
+    try:
+        kit = load_json(fonts.MANIFEST).get('source')
+        check('Drive font kit', bool(kit) and Path(kit).is_dir(), kit or 'source is absent from font manifest', hard=False)
+    except (OSError, ValueError, TypeError) as error:
+        check('Drive font kit', False, str(error), hard=False)
     try:
         import numpy  # noqa: F401
         check('numpy', True, numpy.__version__)
@@ -83,6 +91,27 @@ def cmd_doctor(_args) -> int:
     for row in rows:
         print(f'{row[0]:5} {row[1]:24} {row[2]}')
     return 1 if any(r[0] == 'FAIL' for r in rows) else 0
+
+
+def cmd_fonts(args) -> int:
+    from velib import fonts
+    try:
+        if args.action == 'check':
+            ok, lines = fonts.check()
+            print('\n'.join(lines))
+            return 0 if ok else 1
+        if args.action == 'css':
+            print(fonts.css(args.rel), end='')
+            return 0
+        source = args.kit_dir or load_json(fonts.MANIFEST).get('source')
+        if not source:
+            print('ve fonts sync: source is absent from font manifest; supply --from', file=sys.stderr)
+            return 1
+        print('\n'.join(fonts.sync(source, update_manifest=args.update_manifest)))
+        return 0
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        print(f've fonts: {error}', file=sys.stderr)
+        return 1
 
 
 def spec_path_for(piece: str) -> Path:
@@ -351,6 +380,13 @@ def main() -> int:
     parser = argparse.ArgumentParser(prog='ve', description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = parser.add_subparsers(dest='cmd', required=True)
     sub.add_parser('doctor').set_defaults(fn=cmd_doctor)
+    p = sub.add_parser('fonts', help='check, declare or sync the offline brand font kit')
+    actions = p.add_subparsers(dest='action', required=True)
+    actions.add_parser('check')
+    a = actions.add_parser('css'); a.add_argument('--rel', default='assets/fonts/makeyourmindup')
+    a = actions.add_parser('sync'); a.add_argument('--from', dest='kit_dir')
+    a.add_argument('--update-manifest', action='store_true')
+    p.set_defaults(fn=cmd_fonts)
     p = sub.add_parser('start'); p.add_argument('piece'); p.set_defaults(fn=cmd_start)
     p = sub.add_parser('lint'); p.add_argument('spec'); p.set_defaults(fn=cmd_lint)
     p = sub.add_parser('qc'); p.add_argument('cut'); p.add_argument('--format', required=True); p.add_argument('--out'); p.add_argument('--props'); p.set_defaults(fn=cmd_qc)

@@ -1,0 +1,76 @@
+{
+  "source": "H:\\My Drive\\Ventures\\Active Ventures\\makeyourmindup\\1 Brand kit (permanent)\\fonts",
+  "dir": "assets/fonts/makeyourmindup",
+  "families": [
+    {
+      "role": "display",
+      "family": "Anton",
+      "files": [
+        {
+          "file": "Anton-Regular.ttf",
+          "weight": "400",
+          "style": "normal",
+          "sha256": "a4ba3a92350ebb031da0cb47630ac49eb265082ca1bc0450442f4a83ab947cab"
+        }
+      ],
+      "license": "OFL-Anton.txt"
+    },
+    {
+      "role": "structure",
+      "family": "Archivo",
+      "files": [
+        {
+          "file": "Archivo-Variable.ttf",
+          "weight": "100 900",
+          "style": "normal",
+          "sha256": "0e094a7d3c7c4c25cf1310c4b30014f1dae9332220b1c2c88f4fa996f0b05053"
+        }
+      ],
+      "license": "OFL-Archivo.txt"
+    },
+    {
+      "role": "dek",
+      "family": "Fraunces",
+      "files": [
+        {
+          "file": "Fraunces-Italic-Variable.ttf",
+          "weight": "100 900",
+          "style": "italic",
+          "sha256": "b24448c43702fac4ee856781d461a0dfba8d8e594b6e8e190234b75fed2c0e01"
+        }
+      ],
+      "license": "OFL-Fraunces.txt"
+    },
+    {
+      "role": "data",
+      "family": "IBM Plex Mono",
+      "files": [
+        {
+          "file": "IBMPlexMono-Regular.ttf",
+          "weight": "400",
+          "style": "normal",
+          "sha256": "6a3412f058c7d8dfd9170c41e85ade48e5156ecb89356110ca57a0a27734af46"
+        },
+        {
+          "file": "IBMPlexMono-Medium.ttf",
+          "weight": "500",
+          "style": "normal",
+          "sha256": "a9b4c49bb299e05b5f6c481e7fb5e78943d2793249a0c8874ab574a2d1ea6755"
+        },
+        {
+          "file": "IBMPlexMono-SemiBold.ttf",
+          "weight": "600",
+          "style": "normal",
+          "sha256": "d3c38e55c78f5b0f28009fddba4834ec503278936a5986032424c9bd2d23aa46"
+        },
+        {
+          "file": "IBMPlexMono-Bold.ttf",
+          "weight": "700",
+          "style": "normal",
+          "sha256": "ac27abd6450a64dd94467580a02fe6235156d5b92f2926ebbc8e7489df64e0be"
+        }
+      ],
+      "license": "OFL-IBM-Plex-Mono.txt"
+    }
+  ]
+}
