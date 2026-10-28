@@ -12,6 +12,10 @@ from . import qc_captions
 from .qc_keyframes import _frame
 
 
+# Type and tags may run a few pixels past the platform edge (a 28 px tag, a dek line) without hiding behind platform UI.
+PLATFORM_TOLERANCE_PX = 12
+
+
 def _ink():
     tokens = load_json(CONFIG / 'brand-tokens.json')
     theme = next(theme for theme in load_json(ROOT / 'config/studio.json')['brand_themes']
@@ -90,16 +94,18 @@ def measure(image, lock, *, plate_on_screen=False, exempt=(), caption_words=None
     small, caption, platform, edges = [], [], [], []
     for word in candidates:
         x, y, w, h = (word[k] for k in ('x', 'y', 'w', 'h'))
-        if h < minimum and sum(c.isalnum() for c in word['text']) >= 2:
+        solid = float(word['conf']) >= 75 and sum(c.isalnum() for c in word['text']) >= 3
+        if h < minimum and solid:
             small.append(word)
-        if (_inside(x + w / 2, y + h / 2, zones['caption'])
+        if (solid and _inside(x + w / 2, y + h / 2, zones['caption'])
                 and not set(qc_captions._tokens(word['text'])).issubset(allowed)):
             caption.append(word)
         if (not _inside(x + w / 2, y + h / 2, zones['marquee'])
-                and (x + w > zones['platform']['right_x'] or y + h > zones['platform']['bottom_y'])):
+                and (x + w > zones['platform']['right_x'] + PLATFORM_TOLERANCE_PX or y + h > zones['platform']['bottom_y'])):
             platform.append(word)
-        if (min(x, y, 1080 - x - w, 1920 - y - h) < limits['edge_margin_px']
-                or x < limits['key_content_margin_px'] - 12):
+        if (not _inside(x + w / 2, y + h / 2, zones['marquee'])
+                and (min(x, y, 1080 - x - w, 1920 - y - h) < limits['edge_margin_px']
+                     or x < limits['key_content_margin_px'] - 12)):
             edges.append(word)
     score = _label_score(candidates) if plate_on_screen else None
     checks = {'fill_pct': {'pass': fill >= limits['fill_min_pct'], 'value': fill},

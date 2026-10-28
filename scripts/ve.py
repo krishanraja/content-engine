@@ -224,7 +224,8 @@ def cmd_comp(args) -> int:
     reports = {}
     for filename in args.images:
         try:
-            reports[filename] = qc_composition.measure(filename, lock, plate_on_screen=args.plate)
+            boxes = [tuple(int(v) for v in box.split(',')) for box in (args.exempt or [])]
+            reports[filename] = qc_composition.measure(filename, lock, plate_on_screen=args.plate, exempt=boxes)
         except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
             reports[filename] = {'pass': False, 'checks': {}, 'findings': [str(error)]}
     if args.json:
@@ -497,6 +498,7 @@ def main() -> int:
     sub.add_parser('doctor').set_defaults(fn=cmd_doctor)
     p = sub.add_parser('comp', help='measure still composition against the tall design lock')
     p.add_argument('images', nargs='+'); p.add_argument('--plate', action='store_true')
+    p.add_argument('--exempt', action='append', metavar='X,Y,W,H', help='real footage box whose text is evidence, never retyped')
     p.add_argument('--json', action='store_true'); p.set_defaults(fn=cmd_comp)
     p = sub.add_parser('lock', help='check, show or freeze approved format designs')
     actions = p.add_subparsers(dest='action', required=True)

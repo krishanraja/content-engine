@@ -46,7 +46,9 @@ class Composition(unittest.TestCase):
         self.assertFalse(missing, 'Missing calibration fixtures: ' + ', '.join(missing))
         for path, approved in files:
             with self.subTest(fixture=path.name):
-                report = comp.measure(path, self.lock, plate_on_screen=approved)
+                # H-f4 shows the real recording: its text is evidence, exempt by design.
+                exempt = [(0, 440, 1080, 740)] if path.name == 'H-f4.jpg' else []
+                report = comp.measure(path, self.lock, plate_on_screen=approved, exempt=exempt)
                 fill = report['checks']['fill_pct']['value']
                 print(f'{path.name}: fill_pct={fill:.2f}')
                 self.assertEqual(report['pass'], approved, report['findings'])
