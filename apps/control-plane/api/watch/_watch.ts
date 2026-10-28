@@ -181,6 +181,15 @@ export function claimView(row: WatchRequestRow) {
   }
 }
 
+/** How many requests this machine could claim now, without claiming any: the cloud backup's cheap first look. */
+export async function waiting(store: WatchStore, machine: string, now = new Date()): Promise<number> {
+  const staleBefore = new Date(now.getTime() - STALE_CLAIM_MS).toISOString()
+  const waitedBefore = now.getTime() - CLOUD_GRACE_MS
+  return (await store.claimable(staleBefore, MAX_CLAIM * 3))
+    .filter(row => !isCloudMachine(machine) || Date.parse(row.requested_at) <= waitedBefore)
+    .length
+}
+
 /** Claim up to `limit` requests for one machine. A row another machine changed first is skipped, never taken twice. */
 export async function claim(store: WatchStore, machine: string, limit: number, now = new Date()) {
   const staleBefore = new Date(now.getTime() - STALE_CLAIM_MS).toISOString()
