@@ -27,9 +27,10 @@
   "review" section, built with `week_board.py`'s own inputs after a control rebuild matched the live board exactly.
   The Drive library holds one Monday folder (covers only); the duplicate and two `working` canary folders went to
   `_Archive/PREVIOUS VERSIONS - archive, not current, do not use/2026-10-28 moved out of 3 Posts` (nothing deleted).
-- **Held:** the post's `3 Video`: the library's visual gate wants the real logos of Udio and ElevenLabs (named once in
-  the article) on both cuts and more on the thumbnails, and the article's fact gate is open. Waiting on Krish: full
-  playback, the word-budget ruling, and the logo-or-article call.
+- **Held:** the post's `3 Video`: it waits on the article's fact gate and pack (his three answers in
+  `review/fact-signoff.md`), not on the cuts. Settled 28 Oct: "Happy with the words on screen." The article's Udio and
+  ElevenLabs sentence is cut and the cuts and thumbnails carry every named company's logo (OpenAI, Warner Music Group,
+  Universal Music Group added). Waiting on Krish: full playback of both cuts.
 
 ## 27 October: Wednesday and Friday in Teleprompter; Monday's three questions (Claude)
 

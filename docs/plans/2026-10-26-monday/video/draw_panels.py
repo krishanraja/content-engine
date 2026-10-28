@@ -370,9 +370,16 @@ def build(records):
     add('s03', T, [(page(T, receipt('GOOGLE · 2024', r1s, 'WIRED', k), None),
                     txt(*([('GOOGLE · 2024', 'identity', 'who and when')] + [('USE OF THE TECH $2.7B (REPORTED)', 'quantity', 'price'), ('HIRES: THE FOUNDERS', 'relationship', 'people')][:k] + [('WIRED', 'source', 'report')])))
                    for k in (0, 1, 2)])
+    def sora_with_logo():
+        # OpenAI's real symbol over the report of its shutting Sora (the article names OpenAI, so the cut carries its logo).
+        w, h = SIZE[T]
+        stage_w, stage_h = w - 120, h - 230 - 90 - 126
+        data, _ = spotlight('sora-shut', [0], 640, stage_w / stage_h, records['sora-shut'], 0.62)
+        return page(T, f'<div class="col" style="gap:26px">{logo("openai-symbol-cream.svg", 100)}'
+                       f'<img class="cap" style="width:{stage_w}px;height:{stage_h}px" src="{data}"></div>', 'SORA SHUT', 'OPENAI · 24 MAR 2026')
     add('s04', T, [(capture_page(T, 'sora-shut', [0], None, 'OPENAI · 24 MAR 2026', records),
                     txt(('shuttering its stand-alone', 'source', 'the report'), ('OPENAI · 24 MAR 2026', 'source', 'when'))),
-                   (capture_page(T, 'sora-shut', [0], 'SORA SHUT', 'OPENAI · 24 MAR 2026', records),
+                   (sora_with_logo(),
                     txt(('SORA SHUT', 'relationship', 'outcome'), ('shuttering its stand-alone', 'source', 'the report'), ('OPENAI · 24 MAR 2026', 'source', 'when')))])
     # The line prints as a till prints it: the item on "sixty-six", its price on "sixty million".
     r2s_item = [('66 STAFF', '', False, [])]
@@ -402,9 +409,11 @@ def build(records):
                         f'{"" if i < n else "border:4px dashed rgba(244,239,228,.45)"}">{logo(f, 140, w=300) if i < n else ""}</div>'
                         for i, f in enumerate(ls))
         p = f'<div class="huge" style="font-size:240px;{"" if pct else "visibility:hidden"}">75%</div>'
-        return page(T, f'<div class="col" style="gap:34px"><div class="big" style="font-size:104px">BY MAR 2027</div><div class="row" style="gap:30px">{cells}</div>{p}</div>', None, 'OUR PREDICTION')
+        done = (f'<div class="row" style="gap:24px">{logo("warner-music-group-cream.svg", 64, w=260)}'
+                f'<div class="mono" style="font-size:30px">ALREADY BOUGHT SUREEL AI · JUNE 2026</div></div>')
+        return page(T, f'<div class="col" style="gap:30px"><div class="big" style="font-size:104px">BY MAR 2027</div><div class="row" style="gap:30px">{cells}</div>{p}{done}</div>', None, 'OUR PREDICTION')
     names = ['SKYDANCE', 'UNIVERSAL MUSIC GROUP', 'COMCAST']
-    add('s07', T, [(pred_t(n, pct), txt(*([('BY MAR 2027', 'identity', 'deadline')] + [(x, 'identity', 'a predicted buyer') for x in names[:n]] + ([('75%', 'quantity', 'how sure')] if pct else []) + [('OUR PREDICTION', 'source', 'whose call')])))
+    add('s07', T, [(pred_t(n, pct), txt(*([('BY MAR 2027', 'identity', 'deadline')] + [(x, 'identity', 'a predicted buyer') for x in names[:n]] + ([('75%', 'quantity', 'how sure')] if pct else []) + [('WARNER MUSIC GROUP ALREADY BOUGHT SUREEL AI · JUNE 2026', 'relationship', 'who already did')] + [('OUR PREDICTION', 'source', 'whose call')])))
                    for n, pct in ((0, False), (1, False), (2, False), (3, False), (3, True))])
     qs = ['FOUNDERS?', 'MAIN PRODUCT?', 'CASH?', 'LAWSUITS?']
     def mini(k, label=None):

@@ -55,18 +55,21 @@ on Monday's tab of the week's board (The two cuts, for your review).
   "haunted"; the finished file is heard as "harm to", the script's words.
 - **5-minute, 2:17:** the one cut, "which is fair enough". Clip: `review/packet/long-join-2m17-which-is-fair-enough-cut.mp4`.
 
-## Three decisions that are yours
+## What is left, and what is yours
 
-1. **Accept both cuts on full playback**, or tell me what to change.
-2. **How many words may show on screen at once?** The visual-clarity gate's numbers (8 main words, 16 in all, no three
-   words of yours repeated) are Claude's defaults from 25 October, not yours. They fail your approved story intro and
-   outro (24 to 33 words), the signed receipts (9 to 13 words), the logo rows that spell the names you say, and the
-   four-question card. Recommended: the approved story intro and outro, and real logos, count as pictures, not words;
-   everything else keeps the budget. Or keep the gate as it is, and I cut the receipts and cards down to fit.
-3. **The article names Udio and ElevenLabs** (once, with Universal Music), so the library's visual gate wants their
-   real logos on both cuts and both thumbnails, plus OpenAI, Warner Music Group and Universal Music Group on the
-   thumbnails. Until then the cuts stay in the archive and on the board, and nothing goes to the post's `3 Video`
-   folder. Add the logos, or take the two names out of the article (which then needs its fact check again).
+1. **Watch both cuts with sound** and accept them, or say what to change.
+2. **Words on screen: settled.** "Happy with the words on screen." (Krish, 28 Oct). The visual-clarity gate's word budget
+   (8 main words, 16 in all) was Claude's default from 25 October; it is not applied to these cuts.
+3. **Logos: done on the video side.** The article's one sentence naming Udio and ElevenLabs is cut ("Universal Music has
+   struck agreements with AI companies, including Nvidia, but we could find none it has bought"). The gate still wants
+   every named company's real logo on the cuts and thumbnails, so OpenAI's symbol is on the 90-second cut's Sora page,
+   Warner Music Group's on its prediction page, and the three thumbnails' logo strip carries OpenAI, Warner Music Group
+   and Universal Music Group. The long cut already carries them all.
+4. **The post's `3 Video` folder waits on the article, not the cuts.** The library will not take the cuts until the
+   piece's Visual gate and Pack are on the record, and they wait on the article's fact gate. That needs three answers
+   from you (`review/fact-signoff.md`): keep the recorded prediction (1 March 2027, 75%), about $0.13 to re-check the
+   corrected lines (the cut Universal Music sentence is one more), and your sign-off of seven lines no source confirms
+   word for word. Then the pack is built, the thumbnails with the new strip go out with it, and the cuts are sent.
 
 Nothing has been published, sent or scheduled. Fact status: the article's fact gate is still open (`making.py show`:
 "the fact gate did not pass"); the video's figures are the ones the signed direction and the filed sources carry.
