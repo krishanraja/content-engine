@@ -1,0 +1,123 @@
+{
+  "schema": "design-lock/1",
+  "status": "direction_approved",
+  "approved": {
+    "by": "Krish",
+    "on": "2026-10-28",
+    "words": "Approve direction",
+    "scope": "format hand-held-screen (base) and module two-passports",
+    "template": "docs/ve/design/TEMPLATE.md"
+  },
+  "aspect": "9:16",
+  "canvas": { "w": 1080, "h": 1920, "fps": 30 },
+  "grid": { "columns": 12, "margin": 72, "gutter": 24 },
+  "zones": {
+    "header": { "x": 72, "y": 79, "w": 888, "h": 56 },
+    "headline": { "x": 72, "y": 150, "w": 888, "h": 270 },
+    "caption": { "x": 72, "y": 1180, "w": 900, "h": 320 },
+    "key_band_bottom_y": 1170,
+    "lower_line": { "x": 72, "y": 1516, "w": 936, "h": 104 },
+    "marquee": { "x": 0, "y": 1736, "w": 1080, "h": 62 },
+    "platform": { "right_x": 960, "bottom_y": 1640 }
+  },
+  "thresholds": {
+    "min_text_px": 30,
+    "min_tag_px": 28,
+    "min_evidence_quote_px": 44,
+    "fill_min_pct": 80,
+    "fill_measured_outside": "caption",
+    "edge_margin_px": 24,
+    "key_content_margin_px": 72,
+    "caption_zone": "engine captions only",
+    "scribbles_per_beat": 1,
+    "min_distinct_moves_per_beat": 6,
+    "keyframe_ssim_min": 0.8,
+    "keyframe_compare_size": [540, 960],
+    "grain_opacity": 0.07,
+    "halftone_grid_px": 14,
+    "calibration": "the approved key frames must pass composition QC and the rejected Gate 2 frames must fail it; tests assert both"
+  },
+  "type_roles": {
+    "headline": { "family": "display", "size_px": [150, 240], "line_height": 0.88, "case": "upper" },
+    "numeral": { "family": "display", "size_px": [100, 150], "case": "upper" },
+    "dek": { "family": "dek", "size_px": [42, 46], "line_height": 1.16, "style": "italic" },
+    "evidence_quote": { "family": "structure", "size_px_min": 44, "weight": [500, 600] },
+    "card_name": { "family": "structure", "size_px": [34, 46], "weight": 900, "stretch": 112, "case": "upper" },
+    "label": { "family": "data", "size_px_min": 30, "tracking_em": 0.14, "case": "upper" },
+    "sticker": { "family": "data", "size_px_min": 30, "weight": 600, "tilt_deg": [-8, 5] },
+    "stamp": { "family": "data", "size_px_min": 30, "weight": 700, "tracking_em": 0.18, "border_px": 3 },
+    "illustration_tag": { "family": "data", "size_px_min": 28, "tracking_em": 0.14, "case": "upper" }
+  },
+  "colour_rules": {
+    "ground": "ink",
+    "reading": "cream",
+    "answer": "mint",
+    "channel": "identity only: pill, stickers, swipe, marquee, verdict stamps",
+    "type_on_colour_block": "ink",
+    "mint_type": "never; never on cream without its ink keyline",
+    "channel_as_status": "never a country, a warning or a failure",
+    "failure_shown_as": "an absence (bare pole, parted thread) plus a cream outline stamp"
+  },
+  "kit": ["brutal_card", "sticker", "section_pill", "swipe", "stamp", "leader", "receipt", "marquee", "scribble"],
+  "scribble": {
+    "shapes": ["loop", "underline", "arrow", "bracket", "tick", "cross"],
+    "stroke_px": 8,
+    "keyline_px": 16,
+    "colours": ["cream", "mint"],
+    "draw_on_frames": 10,
+    "path_length": 1,
+    "per_beat": 1
+  },
+  "motion": {
+    "enter_ms": 400,
+    "exit_ms": 200,
+    "stagger_frames": 3,
+    "slap_frames": 5,
+    "hero_bezier": [0.16, 1, 0.3, 1],
+    "ambient_drift_pct": 1.5,
+    "tokens_source": "config/ve/brand-tokens.json"
+  },
+  "plates": {
+    "source": "ChatGPT Images via a Codex imagegen card",
+    "aspect": "9:16",
+    "min_px": [1882, 3344],
+    "candidates_per_plate": 4,
+    "must_say": [
+      "no text, numbers, flags, emblems, logos, faces or UI",
+      "blank flat screen",
+      "calm dark at least 35% of the frame for type",
+      "one hand, one phone",
+      "ink-green blacks, cream and mint, never coral",
+      "repeat the prohibitions as the final sentence"
+    ],
+    "never_in_plate": ["text", "numbers", "flags", "emblems", "maps", "logos", "faces", "readable screens", "arrows", "circles", "highlights", "coral"],
+    "reject_by": ["ocr_any_glyph", "blank_screen_flat", "critic_visual"],
+    "animation": { "tools": ["runway", "higgsfield"], "max_seconds": 5, "input": "approved still only", "evidence": false, "spend_needs": "Krish's yes per generation", "log": "ve ledger <piece> add" },
+    "illustration_tag": "required on every frame that shows a generated plate",
+    "sidecar": ["prompt", "model", "date", "candidates", "chosen", "credits"]
+  },
+  "evidence": {
+    "real_footage": "never redrawn, retyped, enlarged or generated",
+    "text_under_min": "add a verbatim labelled pull quote at 44 px beside it"
+  },
+  "gates": ["design_lock", "composition_qc", "keyframe_match", "mechanical_qc", "critic_verdict", "packet", "krish_final_hash"],
+  "formats": {
+    "hand-held-screen": {
+      "role": "base",
+      "beats": ["open", "result_a", "result_b", "evidence", "verdict"],
+      "frames_dir": "fixtures/ve/design-lock/hand-held-screen",
+      "anatomy": "docs/ve/design/formats/H-anatomy.md",
+      "motion": "docs/ve/design/formats/H-motion.md",
+      "keyframes": {}
+    },
+    "two-passports": {
+      "role": "module",
+      "use_when": "a piece talks about where an AI lives (born versus lives)",
+      "beats": ["title", "born", "lives", "gap", "verdict"],
+      "frames_dir": "fixtures/ve/design-lock/two-passports",
+      "anatomy": "docs/ve/design/formats/P-anatomy.md",
+      "motion": "docs/ve/design/formats/P-motion.md",
+      "keyframes": {}
+    }
+  }
+}
