@@ -21,6 +21,16 @@ GLASS_KINDS.test=()=>React.createElement('div',null,'test glass')
 GLASS_KINDS.footage=()=>React.createElement('div',null,'real footage')
 const markup=(frame:number,obj=object,ev=events)=>renderToStaticMarkup(React.createElement(Device,{object:obj,events:ev,frame,tokens,aspect:'9:16',box:{left:0,top:0,width:1080,height:1920}}))
 describe('continuous phone stage',()=>{
+  it('passes camera k and the original fill clock through interrupted moves',()=>{
+    const seen: {k:number;sinceFrames:number;frame:number}[]=[]
+    GLASS_KINDS.clock_probe=props=>{seen.push(props);return React.createElement('div',null,'clock probe')}
+    const obj={...object,params:{...object.params,glass:{...fixture.object.params.glass,clock_probe:{}}}}
+    const ev=[...events,{...events[2]!,id:'probe',toState:'clock_probe',atFrame:31}]
+    markup(36,obj,ev)
+    expect(seen.at(-1)?.k).toBe(at(36).cam.k)
+    expect(seen.at(-1)?.sinceFrames).toBe(5)
+    expect(seen.at(-1)?.frame).toBe(36)
+  })
   it('does not render before enter, outside lifetime or after exit',()=>{
     expect(markup(9)).toBe(''); expect(markup(206)).toBe(''); expect(markup(240)).toBe('')
   })
