@@ -47,6 +47,12 @@ describe('the windowless launcher and keeper', () => {
     expect([...block.matchAll(/^\s{4}([a-z_]+) = /gm)].map(m => m[1])).toEqual(['launcher', 'hidden', 'wrapped', 'left', 'left_by', 'left_names'])
   })
 
+  it('ends the loop when the keeper it loaded changes, so a fix never waits in memory', () => {
+    // 28 October: #216 changed only windowless.ps1, and both machines kept the old keeper until something else moved.
+    expect(upload).toContain('if (Test-Path -LiteralPath $WindowlessScript -PathType Leaf) { $stamp += Get-Sha256 $WindowlessScript }')
+    expect(upload).toContain('if ((Get-SourceStamp) -ne $scriptSha) {')
+  })
+
   it('installs both loop tasks through the launcher, and falls back to a hidden PowerShell only when it cannot be built', () => {
     for (const installer of ['scripts/install-recordings-upload.ps1', 'scripts/install-library-sync.ps1']) {
       const source = read(installer)

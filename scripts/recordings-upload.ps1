@@ -1060,13 +1060,20 @@ try {
   # The scheduled task: a pass every few minutes in one hidden process. Before
   # each pass it pulls its own copy; when that changes this script, it ends,
   # and the task's next trigger starts the new one.
+  # This script and the window keeper it loads at start (scripts\windowless.ps1): a change to either ends the loop, so
+  # the next start runs both as they are now (28 October: a keeper change waited in memory behind an unchanged loop).
   $scriptPath = $PSCommandPath
-  $scriptSha = Get-Sha256 $scriptPath
+  function Get-SourceStamp {
+    $stamp = Get-Sha256 $scriptPath
+    if (Test-Path -LiteralPath $WindowlessScript -PathType Leaf) { $stamp += Get-Sha256 $WindowlessScript }
+    return $stamp
+  }
+  $scriptSha = Get-SourceStamp
   Write-Log "recordings upload started: a pass every $EveryMinutes minutes"
   while ($true) {
     try { Update-Source } catch { Write-Log "the update check failed: $($_.Exception.Message)" }
-    if ((Get-Sha256 $scriptPath) -ne $scriptSha) {
-      Write-Log 'recordings-upload.ps1 has changed; ending so the scheduled task starts the new version'
+    if ((Get-SourceStamp) -ne $scriptSha) {
+      Write-Log 'recordings-upload.ps1 or windowless.ps1 has changed; ending so the scheduled task starts the new version'
       exit 0
     }
     try { [void](Invoke-Pass) }
