@@ -170,6 +170,7 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/watch/claim`
 - `/api/watch/read`
 - `/api/watch/report`
+- `/api/watch/upload`
 - `/api/week/options`
 - `/api/workbench`
 
@@ -2700,6 +2701,21 @@ Which Windows runner may take work, and how each one looks from the cloud.
 
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 
+### `apps/control-plane/api/watch/_upload.ts`
+
+The cloud backup's way into Krish's two Inspiration folders.
+
+- `const WATCH_FOLDER_IDS: Record<string, string>`
+- `const MAX_UPLOAD_BYTES`
+- `interface UploadBody`
+- `interface DriveFile`
+- `interface DriveWriter`
+- `type UploadOutcome`
+- `function parseUpload(body: unknown): Parsed<UploadBody>`
+- `function candidateNames(name: string): string[]`
+- `async function planUpload(store: WatchStore, drive: DriveWriter, body: UploadBody): Promise<UploadOutcome>`
+- `function driveLiteral(value: string): string`
+
 ### `apps/control-plane/api/watch/_watch.ts`
 
 The content-watcher queue: what the home computers may claim, report and read, decided without a database.
@@ -2723,6 +2739,7 @@ The content-watcher queue: what the home computers may claim, report and read, d
 - `function parseReadOnly(body: unknown): Parsed<{ machine: string; reads: ReadRow[] }>`
 - `function compareRev(a: string, b: string): number`
 - `function claimView(row: WatchRequestRow)`
+- `async function waiting(store: WatchStore, machine: string, now = new Date()): Promise<number>`
 - `async function claim(store: WatchStore, machine: string, limit: number, now = new Date())`
 - `async function writeReads(store: WatchStore, rows: ReadRow[])`
 - `type ReportOutcome`
@@ -2741,6 +2758,10 @@ The content-watcher queue: what the home computers may claim, report and read, d
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 
 ### `apps/control-plane/api/watch/report.ts`
+
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
+
+### `apps/control-plane/api/watch/upload.ts`
 
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 

@@ -93,7 +93,7 @@ MCP connector in a session, no engine secret).
 | claude.ai artifacts | Artifact tools where explicitly needed | none | Preserved legacy boards and default artifact generation only. No new weekly-board interactions or ongoing synchronization after verified web cutover. |
 | ElevenLabs | the `mcp__ElevenLabs__*` connector (restricted: speech and transcription) | none for the connector; `ELEVENLABS_API_KEY` for the engine | **connector, live**; engine key to place for a cron voiceover |
 | YouTube (reads, uploads) | the cloud account's own connector / OAuth on `krish@mindmake.co` | none | **connector, via the account** |
-| Apify (scrapers) | the `mcp__Apify__*` connector, or `APIFY_TOKEN` at runtime | `APIFY_TOKEN` | **connector, live**; runtime key already in use. The cloud backup for pasted links (`.github/workflows/watch-cloud.yml`) reads it as the GitHub Actions secret `APIFY_TOKEN`, under its own $2 monthly cap; without it that job uses the free routes only |
+| Apify (scrapers) | the `mcp__Apify__*` connector, or `APIFY_TOKEN` at runtime | `APIFY_TOKEN` | **connector, live**; runtime key already in use. The cloud backup for pasted links (`.github/workflows/watch-cloud.yml`) reads it as the GitHub Actions secret `APIFY_TOKEN`, under its own $2 monthly cap; without it that job takes nothing, because from GitHub's machine Instagram and YouTube refuse the free routes and each claim spends one of a link's three tries |
 | Supabase (runtime) | platform-injected service role | `SUPABASE_SERVICE_ROLE_KEY` | **injected, live** (do not store the master) |
 | Vercel | deploy only, no content-route use | `VERCEL_TOKEN` (not needed by the engine) | **not an engine secret** |
 
