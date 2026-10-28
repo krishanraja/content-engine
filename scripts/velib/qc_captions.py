@@ -2,8 +2,11 @@
 from __future__ import annotations
 
 import re
+import csv
+import io
 import shutil
 import subprocess
+from difflib import SequenceMatcher
 
 import numpy as np
 
@@ -12,6 +15,30 @@ from .qc import frame_span, gray_frames, measurement, pixel_box
 
 def _tokens(text: str) -> list[str]:
     return re.findall(r'\w+', text.casefold(), flags=re.UNICODE)
+
+
+def spaceless_match(expected: str, actual: str) -> float:
+    """Share tracked/fused word matching with composition's illustration tag."""
+    return SequenceMatcher(None, ''.join(_tokens(expected)), ''.join(_tokens(actual))).ratio()
+
+
+def _recognise(executable, pixels, *, psm=6, boxes=False):
+    h, w = pixels.shape
+    pgm = f'P5\n{w} {h}\n255\n'.encode('ascii') + pixels.astype('uint8').tobytes()
+    result = subprocess.run([executable, 'stdin', 'stdout', '--psm', str(psm),
+                             *(['tsv'] if boxes else [])], input=pgm,
+                            capture_output=True, check=True)
+    return result.stdout.decode('utf-8', errors='replace').strip()
+
+
+def read_words(executable, pixels):
+    """Full-frame sparse OCR, with original pixel geometry and confidence."""
+    text = _recognise(executable, pixels, psm=11, boxes=True)
+    return [{'text': row['text'], 'conf': float(row['conf']),
+             **{key: int(row[field]) for key, field in
+                [('x', 'left'), ('y', 'top'), ('w', 'width'), ('h', 'height')]}}
+            for row in csv.DictReader(io.StringIO(text), delimiter='\t')
+            if row['level'] == '5' and row.get('text', '').strip()]
 
 
 def _agreement(expected: list[str], actual: list[str]) -> float:
@@ -80,16 +107,12 @@ def _read_candidates(executable, pixels, expected):
     for variant, image in (('raw', pixels), ('normalised', normalised),
                            ('raw_2x', pixels.repeat(2, axis=0).repeat(2, axis=1)),
                            ('normalised_2x', normalised.repeat(2, axis=0).repeat(2, axis=1))):
-        h, w = image.shape
-        pgm = f'P5\n{w} {h}\n255\n'.encode('ascii') + image.tobytes()
-        result = subprocess.run([executable, 'stdin', 'stdout', '--psm', '6'], input=pgm,
-                                capture_output=True, check=True)
-        seen = result.stdout.decode('utf-8', errors='replace').strip()
+        seen = _recognise(executable, image)
         actual = _tokens(seen)
         agreement = _agreement(expected, actual)
         # Tesseract fuses tightly set words ("writes a" -> "writesa"). Word spacing is gated by the caption
         # geometry lint, so identical letters in identical order count as a full match.
-        if ''.join(expected) == ''.join(actual):
+        if spaceless_match(' '.join(expected), ' '.join(actual)) == 1:
             agreement = 1.0
         if best is None or agreement > best['agreement']:
             best = {'text': seen, 'agreement': agreement, 'variant': variant}

@@ -1,0 +1,33 @@
+{
+  "objects": [
+    {
+      "obj": "marquee",
+      "device": "marquee",
+      "meaning": "Approved overlay fixture",
+      "params": {
+        "items": [
+          "MAKE YOUR MIND UP",
+          "FOLLOW THE EVIDENCE"
+        ]
+      },
+      "fromFrame": 0,
+      "toFrame": 180
+    }
+  ],
+  "events": [
+    {
+      "id": "show",
+      "obj": "marquee",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 10
+    },
+    {
+      "id": "hide",
+      "obj": "marquee",
+      "verb": "exit",
+      "toState": "hidden",
+      "atFrame": 100
+    }
+  ]
+}

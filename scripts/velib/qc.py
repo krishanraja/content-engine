@@ -189,7 +189,8 @@ def inputs_from_props(props: dict) -> dict:
 
 def run_qc(path: str, format_id: str, targets: dict | None = None, *,
            dialogue_master: str | None = None, edl=None, joins=None, pages=None, region=None,
-           mark_png: str | None = None, beats=None, aspect=None, events=None, slots=None) -> dict:
+           mark_png: str | None = None, beats=None, aspect=None, events=None, slots=None,
+           composition_props=None) -> dict:
     fmt = load_json(CONFIG / 'formats' / f'{format_id}.json')['qc']
     targets = targets or {'lufs': -14, 'tp': -1}
     loud = loudness(path)
@@ -236,8 +237,23 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
         'pass': keyframes.get('pass'),
         'status': 'measured' if keyframes['applies'] else 'not applicable',
     }
+    from . import qc_composition
+    props = composition_props or {'aspect': aspect, 'beats': beats or [], 'captions': pages or []}
+    try:
+        if props.get('aspect') is None:
+            composition = {'applies': True, 'pass': None, 'beats': {}, 'status': 'not_run',
+                           'note': 'composition needs props with an explicit aspect and beats'}
+        else:
+            composition = qc_composition.composition_checks(path, props, designlock.load())
+    except (ValueError, KeyError, TypeError, OSError, subprocess.CalledProcessError) as exc:
+        composition = {'applies': True, 'pass': False, 'beats': {}, 'findings': [str(exc)]}
+    checks['composition'] = {
+        'value': composition.get('beats'), 'target': 'design lock composition thresholds',
+        'pass': composition.get('pass'),
+        'status': composition.get('status', 'measured') if composition['applies'] else 'not applicable',
+    }
     applicable = [c for c in checks.values() if c.get('status') != 'not applicable']
     built = [c['pass'] for c in applicable if c['pass'] is not None]
     return {'file': path, 'sha256': sha256_file(path), 'duration_s': round(duration_s(path), 3), 'format': format_id,
-            'checks': checks, 'keyframes': keyframes, 'measured_pass': all(built),
+            'checks': checks, 'keyframes': keyframes, 'composition': composition, 'measured_pass': all(built),
             'complete': all(c['pass'] is not None and c.get('status') != 'incomplete' for c in applicable)}

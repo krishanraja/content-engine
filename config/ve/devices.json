@@ -1,5 +1,10 @@
 {
   "devices": {
+    "headline": { "verbs": ["enter", "exit"] },
+    "sticker": { "verbs": ["enter", "exit"] },
+    "stamp": { "verbs": ["stamp", "exit"] },
+    "stat_strip": { "verbs": ["enter", "count_to", "exit"] },
+    "marquee": { "verbs": ["enter", "exit"] },
     "test_grid": { "verbs": ["enter", "mark", "stamp", "highlight", "carry", "exit"] },
     "record_card": { "verbs": ["enter", "stamp", "exit"] },
     "query_chip": { "verbs": ["enter", "highlight", "exit"] },
@@ -7,6 +12,7 @@
     "kinetic_stat": { "verbs": ["enter", "count_to", "exit"] },
     "scribble": { "verbs": ["draw", "exit"] },
     "passport_page": { "verbs": ["enter", "stamp", "mark", "exit"] },
-    "hand_phone_stage": { "verbs": ["enter", "move", "fill", "exit"] }
+    "hand_phone_stage": { "verbs": ["enter", "move", "fill", "exit"] },
+    "thread_card": { "verbs": ["enter", "mark", "stamp", "exit"] }
   }
 }
