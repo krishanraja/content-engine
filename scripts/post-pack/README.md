@@ -539,8 +539,8 @@ Watcher`: it pulls the watcher's clone (installed editable, so new code runs at 
 dependencies again when `pyproject.toml` changed; turns the task back on and caps a run at 30 minutes;
 starts a run when the watcher has logged nothing for 6 minutes and no run is under way (its
 `watch.heartbeat` names the stage); stops a run that has not moved for 25 minutes; and sends the
-watcher's last log line (counts and class names only), stage, task state and last result with the
-pass's own report. When the task cannot start (its folder is gone, or Windows answers 0x8007010B,
+watcher's last log line (counts and class names only), every run of the last 6 hours summed by the
+same keys (`recent`), stage, task state and last result with the pass's own report. When the task cannot start (its folder is gone, or Windows answers 0x8007010B,
 "The directory name is invalid"), it finds the watcher's clone where it is now (beside where the task
 pointed, beside this clone, or in `%USERPROFILE%\dev` and each folder in it, as `content-watcher` or
 `video-compression`), clones the public repository there if there is none, and runs the watcher's own

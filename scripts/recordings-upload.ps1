@@ -751,6 +751,31 @@ function Read-WatchLogLine {
   return @{ at = $line.Substring(0, $space); time = (ConvertTo-UtcTime $line.Substring(0, $space)); counts = $counts }
 }
 
+function Read-WatchRecent([int]$Hours = 6) {
+  # Every log line of the last few hours, summed by key (class names only). The last line alone hides a failure:
+  # on 28 October an Instagram post spent its three tries in five minutes and the next minute's run said claimed 0.
+  $path = Join-Path $env:LOCALAPPDATA 'content-watcher\watch.log'
+  $sum = [ordered]@{}
+  if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { return $sum }
+  $since = [DateTime]::UtcNow.AddHours(-$Hours)
+  foreach ($line in @(Get-Content -LiteralPath $path -Tail (60 * $Hours + 30) -Encoding UTF8 -ErrorAction SilentlyContinue)) {
+    $text = [string]$line
+    $space = $text.IndexOf(' ')
+    if ($space -lt 10) { continue }
+    $time = ConvertTo-UtcTime $text.Substring(0, $space)
+    if ($null -eq $time -or $time -lt $since) { continue }
+    try { $parsed = $text.Substring($space + 1) | ConvertFrom-Json } catch { continue }
+    foreach ($property in $parsed.PSObject.Properties) {
+      if ($property.Name -eq 'seconds') { continue }
+      if ($property.Value -is [int] -or $property.Value -is [long]) {
+        if ($sum.Contains($property.Name)) { $sum[$property.Name] = [int]$sum[$property.Name] + [int]$property.Value }
+        else { $sum[$property.Name] = [int]$property.Value }
+      }
+    }
+  }
+  return $sum
+}
+
 function Update-Watcher([string]$Repo, [string]$Python) {
   # Brings the watcher's own clone up to date (it is installed editable, so new
   # code runs at once) and installs its dependencies again when they changed.
@@ -922,6 +947,7 @@ function Invoke-WatchKeeper {
   $info = Get-ScheduledTaskInfo -TaskName $WatchTaskName -ErrorAction SilentlyContinue
   $script:Watch.last_run_at = if ($log) { $log.at } else { $null }
   $script:Watch.counts = if ($log) { $log.counts } else { @{} }
+  $script:Watch.recent = Read-WatchRecent
   $script:Watch.stage = [string](Get-Field $beat 'stage')
   $script:Watch.stage_at = [string](Get-Field $beat 'at')
   $script:Watch.task_state = [string]$task.State
@@ -931,7 +957,7 @@ function Invoke-WatchKeeper {
 function Get-WatchBlock {
   if ($null -eq $script:Watch) { return $null }
   $block = [ordered]@{}
-  foreach ($name in @('last_run_at', 'counts', 'stage', 'stage_at', 'task_state', 'task_result', 'head')) {
+  foreach ($name in @('last_run_at', 'counts', 'recent', 'stage', 'stage_at', 'task_state', 'task_result', 'head')) {
     if ($script:Watch.ContainsKey($name) -and $null -ne $script:Watch[$name] -and $script:Watch[$name] -ne '') { $block[$name] = $script:Watch[$name] }
   }
   $block['repaired'] = @($script:Watch.repaired)
