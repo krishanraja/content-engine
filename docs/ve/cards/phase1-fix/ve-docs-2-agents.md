@@ -22,6 +22,12 @@ AGENTS.md is 38 KB and loads into every Codex and Claude session, so it is a rec
 3. CLAUDE.md: the same facts, within 0.5 KB of its present size; point to AGENTS.md instead of duplicating it.
 4. NOW.md: add one dated line (28 Oct 2026) to the existing ve entry (or the status area if none): Phase 1 engine merged with cards 1-7, status in `docs/ve/STATUS.md`. Do not reformat or trim NOW.md.
 
+## Second attempt: how to reach 12 KB (the first try stopped at 14.3 KB)
+- AGENTS.md is mostly untitled bold-lead paragraphs under a few headings, so split by **paragraph**, not by heading. The "North Star" heading alone holds 18 KB of rules prose.
+- Keep in AGENTS.md only: the North Star block up to `<!-- north-star:end -->`, the ownership ruling, the start route, one-line forms (bold lead sentence only) of each rule that every session needs, the video route, verify and commit rules. Move **every other paragraph whole** (domain detail: posts, Drive, music, workbench, Codex-on-Windows, canon, Studio) to `docs/AGENTS-REFERENCE.md`, replacing it in AGENTS.md by its bold lead sentence plus ` (detail: docs/AGENTS-REFERENCE.md#<anchor>)`. Target 10-11 KB.
+- Before moving anything, `grep -rn "AGENTS.md" tests scripts .github packages --include=*.ts --include=*.py --include=*.yml` and keep in AGENTS.md every string a check asserts. Run `npm run`-free checks only; Claude runs the repo checks.
+- Write the files even if you are unsure; Claude measures and fixes the last bytes. Do not stop without writing.
+
 ## Acceptance
 python -c "import pathlib;assert pathlib.Path('AGENTS.md').stat().st_size<=12288"
 python scripts/validate-skills.py

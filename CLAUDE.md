@@ -1,6 +1,6 @@
 @AGENTS.md
 
-Studio entry: follow the shared `docs/ENGINE_SESSION.md` protocol and `studio.session.open` capability gate.
+Studio entry: `docs/ENGINE_SESSION.md`, `studio.session.open`. Video: `python scripts/ve.py`; read `docs/ve/ENGINE.md`, follow `docs/ve/RUNBOOK.md`. One signed spec; no per-piece compositions or render scripts. ve has no publish verb. Codex builds devices from cards. Quick-edit stays the fallback until ve passes Phase 3. Local runs: `. scripts/ve-env.sh` (Bash). AGENTS.md owns these rules and records current code/procedure gaps; read its Video production section.
 
 Before any work run `python3 scripts/check_failures.py`, then read the entries in `config/failures.json` and `config/learnings.json` ("say nothing twice", AGENTS.md) that bear on your work.
 
