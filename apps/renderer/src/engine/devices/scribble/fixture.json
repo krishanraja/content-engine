@@ -1,0 +1,9 @@
+{
+  "objects": [{ "obj": "annotation", "device": "scribble", "meaning": "The single point to notice",
+    "params": { "shape": "loop", "target": { "x": 320, "y": 600, "w": 380, "h": 180 }, "colour": "mint", "seed": "approved-loop" },
+    "fromFrame": 0, "toFrame": 120 }],
+  "events": [
+    { "id": "draw", "obj": "annotation", "verb": "draw", "toState": "drawn", "atFrame": 10 },
+    { "id": "exit", "obj": "annotation", "verb": "exit", "toState": "gone", "atFrame": 60 }
+  ]
+}
