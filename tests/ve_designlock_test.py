@@ -33,6 +33,11 @@ class DesignLockTest(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
         self.lock = designlock.load()
+        # The real lock is frozen once approved; these tests need an unfrozen copy to freeze themselves.
+        self.lock['status'] = 'direction_approved'
+        for settings in self.lock['formats'].values():
+            settings['keyframes'] = {}
+            settings.pop('frozen_on', None)
         self.path = self.root / 'config/ve/design-lock.json'
         self.path.parent.mkdir(parents=True)
         self.path.write_text(json.dumps(self.lock), encoding='utf-8')
@@ -139,6 +144,9 @@ class DesignLockTest(unittest.TestCase):
     def test_card_and_dispatch_refuse_before_side_effects(self):
         path = self.root / 'card.md'
         phrase = f'no frozen design lock for {FMT}: run ve lock freeze'
+        patcher = patch.object(designlock, 'load', return_value=self.lock)
+        patcher.start()
+        self.addCleanup(patcher.stop)
         with self.assertRaises(SystemExit) as caught:
             cards.write_card(path, format=FMT, **self.fields())
         self.assertEqual(str(caught.exception), phrase)
@@ -151,7 +159,8 @@ class DesignLockTest(unittest.TestCase):
                 cards.dispatch(path)
             self.assertEqual(str(caught.exception), phrase)
             worktree.assert_not_called()
-        fields = self.fields() | {'format': FMT, 'path': str(path)}
+        phrase = 'no frozen design lock for no-such-format: run ve lock freeze'
+        fields = self.fields() | {'format': 'no-such-format', 'path': str(path)}
         source = self.root / 'fields.json'
         source.write_text(json.dumps(fields))
         result = self.cli('card', str(source))
@@ -187,7 +196,7 @@ class DesignLockTest(unittest.TestCase):
         self.assertIn('design lock: valid', result.stdout)
         result = self.cli('lock', 'show', FMT)
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertEqual(json.loads(result.stdout), self.lock['formats'][FMT])
+        self.assertEqual(json.loads(result.stdout), designlock.load()['formats'][FMT])
 
     def test_cli_freeze_default_and_explicit_mapping(self):
         for i in range(1, 6):
