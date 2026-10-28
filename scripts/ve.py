@@ -204,7 +204,10 @@ def cmd_start(args) -> int:
 
 def cmd_qc(args) -> int:
     from velib.qc import inputs_from_props, run_qc
-    inputs = inputs_from_props(load_json(args.props)) if getattr(args, 'props', None) else {}
+    props = load_json(args.props) if getattr(args, 'props', None) else None
+    inputs = inputs_from_props(props) if props is not None else {}
+    if props is not None and props.get('aspect') == '9:16':
+        inputs['composition_props'] = props
     report = run_qc(args.cut, args.format, **inputs)
     out = Path(args.out) if args.out else Path(args.cut).with_suffix('.qc.json')
     write_json(out, report)
@@ -213,6 +216,25 @@ def cmd_qc(args) -> int:
         print(f"{state:8} {name:24} {json.dumps(check['value'])[:80]}  target {check['target']}")
     print(f"ve qc: {'measured checks pass' if report['measured_pass'] else 'FAILS'}; {'complete' if report['complete'] else 'incomplete (not_run checks)'} -> {out}")
     return 0 if report['measured_pass'] else 1
+
+
+def cmd_comp(args) -> int:
+    from velib import designlock, qc_composition
+    lock = designlock.load()
+    reports = {}
+    for filename in args.images:
+        try:
+            reports[filename] = qc_composition.measure(filename, lock, plate_on_screen=args.plate)
+        except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
+            reports[filename] = {'pass': False, 'checks': {}, 'findings': [str(error)]}
+    if args.json:
+        print(json.dumps(reports, indent=2))
+    else:
+        for filename, report in reports.items():
+            print(f"{'PASS' if report['pass'] else 'FAIL'} {filename}")
+            for finding in report['findings']:
+                print(f'  {finding}')
+    return 0 if all(report['pass'] for report in reports.values()) else 1
 
 
 def cmd_keyframes(args) -> int:
@@ -445,6 +467,9 @@ def main() -> int:
     parser = argparse.ArgumentParser(prog='ve', description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = parser.add_subparsers(dest='cmd', required=True)
     sub.add_parser('doctor').set_defaults(fn=cmd_doctor)
+    p = sub.add_parser('comp', help='measure still composition against the tall design lock')
+    p.add_argument('images', nargs='+'); p.add_argument('--plate', action='store_true')
+    p.add_argument('--json', action='store_true'); p.set_defaults(fn=cmd_comp)
     p = sub.add_parser('lock', help='check, show or freeze approved format designs')
     actions = p.add_subparsers(dest='action', required=True)
     actions.add_parser('check')
