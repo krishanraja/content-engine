@@ -58,7 +58,7 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
     fmt = load_json(CONFIG / 'formats' / f"{spec['format']}.json")
     objects = {o['obj']: o for o in spec['objects']}
     if spec['format'] in lock['formats']:
-        allowed = lock['thresholds']['scribbles_per_beat']
+        allowed = lock.get('thresholds', {}).get('scribbles_per_beat', 1)
         for cut_id, cut in spec['cuts'].items():
             for index, beat in enumerate(cut['beats']):
                 scribbles = sum(objects.get(name, {}).get('device') == 'scribble' for name in set(beat['uses']))

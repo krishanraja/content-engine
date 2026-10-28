@@ -20,11 +20,11 @@
       "role": "paper"
     },
     "guilloche.svg": {
-      "sha256": "1cf4611d0606ebe730358661044922c9661247a2d21a868bda74263dc6ce4711",
+      "sha256": "46d99cda10548cbf1ef22581e27ab044e5a89a8c1a9e3cb37577dd99fa3234ca",
       "role": "guilloche"
     },
     "rosette.svg": {
-      "sha256": "c69a0982fc5d13d6c45573196893b4852c4b1be8ee051bd1981b6ebf895d0af9",
+      "sha256": "f33a5cf6e03787e2af313d7be6bc2ec68b61d660906427e702d58be3075ea19c",
       "role": "rosette"
     },
     "flag-usa.svg": {
@@ -37,7 +37,7 @@
     }
   },
   "reference_sha256": {
-    "make_vectors.py": "be912c7fb8baa603f8d29cb94efdcdc89dbcea5218f9763f3a8f0cefcafb7438",
-    "make_paper.py": "00fd5fd4cca341169519d5ab25a26f29dbb015e518ff350218987f6a05a2ef55"
+    "make_vectors.py": "9a3acb1b667d873e2c93ebccc7b3233d56a59ba6b13935f3b69eed68832af548",
+    "make_paper.py": "13083478c7e471f6c85d7ed75dd9e74c243968734bf144e2e440c8a0e65da8a7"
   }
 }
