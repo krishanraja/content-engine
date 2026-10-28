@@ -69,12 +69,11 @@ export function TestGrid({ object, events, box, tokens, aspect, frame }: DeviceP
           opacity: cell.opacity, transform: `scale(${cell.carried || cell.scale > 1 ? 1 : 0.98})`, transformOrigin: 'center',
         }}>
           {cell.carried ? <>
-            <div aria-hidden style={{ position: 'absolute', inset: 0, boxSizing: 'border-box',
-              border: `2px dashed ${tokens.ink}`, opacity: cell.carryProgress,
-              transform: `scale(${2.4 - 1.4 * cell.carryProgress})`, transformOrigin: 'center' }} />
-            <span style={{ fontFamily: HOUSE_FONTS.data,
+            <div aria-hidden style={{ position: 'absolute', inset: 0,
+              background: tokens.ink, opacity: cell.carryFill }} />
+            <span style={{ position: 'relative', fontFamily: HOUSE_FONTS.data,
               fontSize: Math.min(30 * layout.scale, rect.height * 0.3, rect.width / (carryText.length * 0.62)),
-              whiteSpace: 'nowrap', color: 'transparent', WebkitTextStroke: `${2 * layout.scale}px ${tokens.ink}`,
+              whiteSpace: 'nowrap', color: 'transparent', WebkitTextStroke: `${2 * layout.scale}px ${tokens.cream}`,
               opacity: cell.carryProgress }}>{carryText}</span>
           </> : null}
           {cell.ghost ? <span style={{ opacity: cell.ghostProgress * 0.5 }}><Tick ghost color={tokens.ink} outline={tokens.ink} size={size} /></span> : null}
@@ -85,6 +84,14 @@ export function TestGrid({ object, events, box, tokens, aspect, frame }: DeviceP
         </div>
       })}
     </div>)}
+    <div aria-hidden style={{ position: 'absolute', ...box, overflow: 'hidden', pointerEvents: 'none' }}>
+      {state.cells.map((cell, index) => cell.carried ? <div key={cell.id} style={{
+        position: 'absolute', ...layout.cells[index]!,
+        left: layout.cells[index]!.left - box.left, top: layout.cells[index]!.top - box.top,
+        boxSizing: 'border-box', border: `${3 * layout.scale}px dashed ${tokens.cream}`,
+        opacity: cell.carryProgress, transform: `scale(${6 - 5 * cell.carryProgress})`, transformOrigin: 'center',
+      }} /> : null)}
+    </div>
     <div style={textStyle(layout.outOf, `${state.unit}${state.denominator === null ? '' : ` · OUT OF ${state.denominator}`}`, 26)}>{state.unit}{state.denominator === null ? '' : ` · OUT OF ${state.denominator}`}</div>
     <div style={textStyle(layout.producerFooter, state.producerLabel, 26)}>{state.producerLabel}</div>
   </div>

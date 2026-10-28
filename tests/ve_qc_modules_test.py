@@ -1,5 +1,7 @@
 """QC module acceptance on lavfi media, with clean controls and report wiring."""
 import json
+import gzip
+import re
 import shutil
 import subprocess
 import sys
@@ -175,8 +177,8 @@ class QCModules(unittest.TestCase):
         self.assertTrue(report['pass'], report)
         self.assertEqual([r['frame'] for r in report['value']], [25, 55])
         for page, row in zip(pages, report['value']):
-            self.assertGreaterEqual(row['frame'], page['words'][-1]['atFrame'] + 3)
-            self.assertLessEqual(row['frame'], page['toFrame'] - 2)
+            self.assertGreaterEqual(row['frame'], page['words'][-1]['atFrame'] + 2)
+            self.assertLessEqual(row['frame'], page['toFrame'] - 1)
         self.assertEqual(len(seen_images), 2)
         self.assertTrue(all(image.startswith(b'P5\n80 60\n') for image in seen_images))
         for actual in (['hello'], ['hello', 'world', 'extra'], ['world', 'hello']):
@@ -202,8 +204,41 @@ class QCModules(unittest.TestCase):
 
 
 class QCContracts(unittest.TestCase):
+    @unittest.skipIf(shutil.which('tesseract') is None, 'tesseract is not on PATH')
+    def test_real_highlighted_caption_crops(self):
+        folder = ROOT / 'fixtures/ve/my-test-19s/ocr'
+        for case in json.loads((folder / 'cases.json').read_text()):
+            with self.subTest(case=case['file']):
+                data = gzip.decompress((folder / case['file']).read_bytes())
+                header = re.match(rb'P5\s+(\d+)\s+(\d+)\s+255\s', data)
+                self.assertIsNotNone(header)
+                width, height = int(header[1]), int(header[2])
+                pixels = np.frombuffer(data[header.end():], dtype=np.uint8).reshape(height, width)
+                page = {'fromFrame': case['frame'] - 2, 'toFrame': case['frame'] + 1,
+                        'words': [{'text': word, 'atFrame': case['frame'] - 2}
+                                  for word in case['expected'].split()]}
+                with patch.object(qc_captions, 'gray_frames', return_value=pixels[None]), \
+                        patch.object(qc_captions.subprocess, 'run', wraps=subprocess.run) as run:
+                    report = qc_captions.ocr('fixture', [page], [0, 0, width, height])
+                row = report['value'][0]
+                self.assertGreaterEqual(row['agreement'], 0.98, row)
+                self.assertTrue(report['pass'], report)
+                self.assertIn(row['variant'], ('raw', 'normalised', 'raw_2x', 'normalised_2x'))
+                self.assertLessEqual(run.call_count, 4)
+
+    def test_short_fully_revealed_windows_are_sampled(self):
+        pages = [{'fromFrame': first, 'toFrame': last,
+                  'words': [{'text': 'hello', 'atFrame': word}]}
+                 for first, last, word in [(311, 356, 352), (436, 479, 475), (0, 30, 27)]]
+        with patch.object(qc_captions.shutil, 'which', return_value='tesseract'), \
+                patch.object(qc_captions, 'gray_frames', return_value=np.zeros((1, 10, 10))), \
+                patch.object(qc_captions.subprocess, 'run', return_value=subprocess.CompletedProcess([], 0, stdout=b'hello')):
+            report = qc_captions.ocr('unused', pages, [0, 0, 10, 10])
+        self.assertTrue(report['pass'], report)
+        self.assertEqual([row['frame'] for row in report['value']], [354, 477, 29])
+
     def test_page_without_fully_revealed_window_is_not_sampled(self):
-        page = {'fromFrame': 0, 'toFrame': 30, 'words': [{'text': 'late', 'atFrame': 27}]}
+        page = {'fromFrame': 0, 'toFrame': 30, 'words': [{'text': 'late', 'atFrame': 29}]}
         with patch.object(qc_captions.shutil, 'which', return_value='tesseract'), \
                 patch.object(qc_captions, 'gray_frames') as decode:
             report = qc_captions.ocr('unused', [page], [0, 0, 10, 10])
@@ -234,7 +269,7 @@ class QCContracts(unittest.TestCase):
             self.assertTrue(report['pass'], report)
 
     def test_unsampled_page_and_failed_page_remain_incomplete(self):
-        pages = [{'fromFrame': 0, 'toFrame': 30, 'words': [{'text': 'late', 'atFrame': 27}]},
+        pages = [{'fromFrame': 0, 'toFrame': 30, 'words': [{'text': 'late', 'atFrame': 29}]},
                  {'fromFrame': 30, 'toFrame': 60, 'words': [{'text': 'hello', 'atFrame': 30}]}]
         with patch.object(qc_captions.shutil, 'which', return_value='tesseract'), \
                 patch.object(qc_captions, 'gray_frames', return_value=np.zeros((1, 10, 10))), \

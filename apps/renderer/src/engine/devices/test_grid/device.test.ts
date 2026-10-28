@@ -69,11 +69,15 @@ describe('test_grid persistent scoreboard', () => {
   it('carries exactly the highlighted unstamped cell with seekable drop progress', () => {
     const carryFrame = events.find((event) => event.verb === 'carry')!.atFrame
     for (let frame = 0; frame < carryFrame; frame++) {
-      expect(at(frame).cells.every((cell) => !cell.carried && cell.carryProgress === 0)).toBe(true)
+      expect(at(frame).cells.every((cell) => !cell.carried && cell.carryProgress === 0 && cell.carryFill === 0)).toBe(true)
     }
     expect(at(carryFrame).cells.filter((cell) => cell.carried).map((cell) => cell.id)).toEqual(['deepseek:xinjiang'])
     const values = Array.from({ length: MOTION.dropFrames + 1 }, (_, offset) =>
       at(carryFrame + offset).cells.find((cell) => cell.id === 'deepseek:xinjiang')!.carryProgress)
+    for (let offset = 0; offset <= MOTION.dropFrames; offset++) {
+      const cells = at(carryFrame + offset).cells
+      for (const cell of cells) expect(cell.carryFill).toBe(cell.carryProgress)
+    }
     expect(values[0]).toBe(0)
     expect(values.at(-1)).toBe(1)
     for (let i = 1; i < values.length; i++) {
@@ -100,7 +104,7 @@ describe('test_grid persistent scoreboard', () => {
     const cues = events.filter((event) => event.verb !== 'highlight')
     cues.push({ id: 'late-focus', obj: object.obj, verb: 'highlight', toState: 'deepseek:xinjiang', atFrame: 190 },
       { id: 'late-carry', obj: object.obj, verb: 'carry', toState: 'hold', atFrame: 195 })
-    for (const frame of [180, 188, 200]) expect(at(frame, cues).cells.every((cell) => !cell.carried && cell.carryProgress === 0)).toBe(true)
+    for (const frame of [180, 188, 200]) expect(at(frame, cues).cells.every((cell) => !cell.carried && cell.carryProgress === 0 && cell.carryFill === 0)).toBe(true)
   })
 
   it('drops for eight frames, fades for six, and hides outside the object lifespan', () => {
@@ -150,6 +154,8 @@ describe('test_grid persistent scoreboard', () => {
       for (const offset of [0, 4, MOTION.dropFrames]) {
         const frame = carryFrame + offset
         const state = at(frame).cells.find((cell) => cell.carried)!
+        const box = aspect === '9:16' ? fixture.boxes.tall : fixture.boxes.wide
+        const layout = gridLayout(box, 3, 2, aspect)
         const html = renderToStaticMarkup(createElement(TestGrid, {
           object, events, frame, aspect, tokens: EngineTokensSchema.parse(fixture.tokens),
           box: aspect === '9:16' ? fixture.boxes.tall : fixture.boxes.wide,
@@ -158,8 +164,11 @@ describe('test_grid persistent scoreboard', () => {
         expect(html).toContain('aria-label="DeepSeek, XINJIANG: ANSWER DELETED"')
         expect(html).toContain('color:transparent')
         expect(html).toContain('-webkit-text-stroke:')
-        expect(html).toContain('border:2px dashed black')
-        expect(html).toContain(`scale(${2.4 - 1.4 * state.carryProgress})`)
+        expect(html).toContain(`border:${3 * layout.scale}px dashed ivory`)
+        expect(html).toContain('overflow:hidden;pointer-events:none')
+        expect(html).toContain(`background:black;opacity:${state.carryFill}`)
+        expect(html).toContain(`-webkit-text-stroke:${2 * layout.scale}px ivory`)
+        expect(html).toContain(`scale(${6 - 5 * state.carryProgress})`)
         expect(html).toContain(`opacity:${state.carryProgress}`)
       }
     })
