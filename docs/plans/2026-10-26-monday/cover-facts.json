@@ -52,6 +52,20 @@
     "tag": "BUST",
     "colour": "coral"
    }
+  ],
+  "strip": [
+   {
+    "logo": "logos/openai-symbol-cream.svg",
+    "name": "OpenAI"
+   },
+   {
+    "logo": "logos/warner-music-group-cream.svg",
+    "name": "Warner Music Group"
+   },
+   {
+    "logo": "logos/universal-music-group-cream.svg",
+    "name": "Universal Music Group"
+   }
   ]
  },
  "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430"

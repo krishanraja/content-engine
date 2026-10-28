@@ -85,6 +85,13 @@ param(
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 
+# Every scheduled task of his that would open a console window runs through run-hidden.exe, checked each pass
+# (scripts\windowless.ps1, Invoke-WindowKeeper). Krish, 2026-10-28: "HIDE ALL CONSOLE POP UPS FOREVER FROM EVERY REPO
+# AND LOCAL TASK". A copy from before that file has no keeper, and the pass goes on without it.
+$WindowlessScript = Join-Path $PSScriptRoot 'windowless.ps1'
+if (Test-Path -LiteralPath $WindowlessScript -PathType Leaf) { . $WindowlessScript }
+$script:Windows = $null
+
 $RepoRoot = [System.IO.Path]::GetFullPath((Split-Path -Parent $PSScriptRoot))
 $SourceFolderName = 'recordings-source'
 $RunnerCredential = 'MindmakeVideoStudio/control-center-runner-token-v3'
@@ -671,6 +678,7 @@ function Invoke-Pass {
     try { Publish-References } catch { Write-Log "the style references were not published this pass: $($_.Exception.Message)"; Add-Problem 'references_publish_failed' }
     try { Publish-Working } catch { Write-Log "the working files were not published this pass: $($_.Exception.Message)"; Add-Problem 'working_publish_failed' }
     try { Invoke-WatchKeeper } catch { Write-Log "the content watcher was not checked this pass: $($_.Exception.Message)" }
+    try { Invoke-Windows } catch { Write-Log "the scheduled tasks' windows were not checked this pass: $($_.Exception.Message)" }
     Send-LaneReport
   }
   return ($sent -and $placed)
@@ -964,6 +972,30 @@ function Get-WatchBlock {
   return $block
 }
 
+function Invoke-Windows {
+  # Each pass: no task of his opens a window. Counts reach the engine in the report's windows block; what changed is
+  # in changed.log beside run-hidden.exe on this machine.
+  $script:Windows = $null
+  if (-not (Get-Command Invoke-WindowKeeper -ErrorAction SilentlyContinue)) { return }
+  $result = Invoke-WindowKeeper
+  $script:Windows = $result
+  if ($result.launcher -ne 'ok') { Write-Log "run-hidden.exe is not ready on this machine: $($result['error'])"; return }
+  if ($result.wrapped) { Write-Log "$($result.wrapped) scheduled task(s) now run with no window" }
+  if ($result.left) { Write-Log "$($result.left) scheduled task(s) still open a window and could not be changed: $($result['error'])" }
+}
+
+function Get-WindowsBlock {
+  if ($null -eq $script:Windows) { return $null }
+  return [ordered]@{
+    launcher = [string]$script:Windows.launcher
+    hidden = [int]$script:Windows.hidden
+    wrapped = [int]$script:Windows.wrapped
+    left = [int]$script:Windows.left
+    left_by = $script:Windows['left_by']
+    left_names = @($script:Windows['left_names'])
+  }
+}
+
 function Send-LaneReport {
   # What this pass found, to the engine, so a problem here reaches Control
   # Center (api/library/_lanes.ts). An empty list says this machine is well.
@@ -977,6 +1009,8 @@ function Send-LaneReport {
       $report = [ordered]@{ machine = $machine; problems = @($script:Problems) }
       $watch = Get-WatchBlock
       if ($null -ne $watch) { $report['watch'] = $watch }
+      $windows = Get-WindowsBlock
+      if ($null -ne $windows) { $report['windows'] = $windows }
       [void](Invoke-Engine $client $base $token '/api/library/recordings/lane' $report)
     } finally { $client.Dispose() }
   } catch {
@@ -1026,13 +1060,20 @@ try {
   # The scheduled task: a pass every few minutes in one hidden process. Before
   # each pass it pulls its own copy; when that changes this script, it ends,
   # and the task's next trigger starts the new one.
+  # This script and the window keeper it loads at start (scripts\windowless.ps1): a change to either ends the loop, so
+  # the next start runs both as they are now (28 October: a keeper change waited in memory behind an unchanged loop).
   $scriptPath = $PSCommandPath
-  $scriptSha = Get-Sha256 $scriptPath
+  function Get-SourceStamp {
+    $stamp = Get-Sha256 $scriptPath
+    if (Test-Path -LiteralPath $WindowlessScript -PathType Leaf) { $stamp += Get-Sha256 $WindowlessScript }
+    return $stamp
+  }
+  $scriptSha = Get-SourceStamp
   Write-Log "recordings upload started: a pass every $EveryMinutes minutes"
   while ($true) {
     try { Update-Source } catch { Write-Log "the update check failed: $($_.Exception.Message)" }
-    if ((Get-Sha256 $scriptPath) -ne $scriptSha) {
-      Write-Log 'recordings-upload.ps1 has changed; ending so the scheduled task starts the new version'
+    if ((Get-SourceStamp) -ne $scriptSha) {
+      Write-Log 'recordings-upload.ps1 or windowless.ps1 has changed; ending so the scheduled task starts the new version'
       exit 0
     }
     try { [void](Invoke-Pass) }

@@ -3,17 +3,24 @@ name: Cloud backup for pasted links
 # Krish, 2026-10-28: "yes build the cloud backup". A link he pastes on the Inspiration board goes to the home
 # computers first; they cost nothing and read best. When neither has taken it within 15 minutes
 # (apps/control-plane/api/watch/_watch.ts, CLOUD_GRACE_MS), this job takes it as the machine cloud-gh:
-# content-watcher fetches it (the free routes, then Apify under this machine's own monthly cap), files it into the
-# Inspiration folder its tag names through the engine (api/watch/upload.ts: add only, as Krish), reads it and reports.
+# content-watcher fetches it (the free routes, then Apify through the engine, api/watch/apify.ts, so the Apify key
+# never reaches GitHub), files it into the Inspiration folder its tag names through the engine (api/watch/upload.ts:
+# add only, as Krish), reads it and reports.
 #
 # Most runs only look: one request to the engine, and nothing is set up unless a link is waiting and the engine can
-# file into Drive. This repository is public, so nothing here prints a link, a caption or a file name: the log
-# carries counts and class names only, as the home computers' does.
+# file into Drive. A run started by hand can install first and then wait for a link (wait_minutes), so a test takes the
+# link the moment it can be claimed. This repository is public, so nothing here prints a link, a caption or a file
+# name: the log carries counts and class names only, as the home computers' does.
 
 on:
   schedule:
     - cron: '4,19,34,49 * * * *'
   workflow_dispatch:
+    inputs:
+      wait_minutes:
+        description: 'Install first, then wait up to this many minutes for a link (0: look once, as the schedule does)'
+        required: false
+        default: '0'
 
 concurrency:
   group: watch-cloud
@@ -25,27 +32,21 @@ permissions:
 jobs:
   watch:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     env:
       ENGINE: https://content-engine-flame-nu.vercel.app
       MACHINE: cloud-gh
       CONTENT_WATCH_HOME: /home/runner/cw
+      WAIT_MINUTES: ${{ github.event_name == 'workflow_dispatch' && inputs.wait_minutes || '0' }}
     steps:
       - name: Is a link waiting, and can the engine file into Drive?
         id: look
         env:
           KEY: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
-          HAS_APIFY: ${{ secrets.APIFY_TOKEN != '' }}
         run: |
           waiting=$(curl -fsS -H "Authorization: Bearer $KEY" "$ENGINE/api/watch/claim?machine=$MACHINE" | jq -r '.waiting // 0')
           echo "Links waiting for the cloud backup: $waiting"
-          if [ "$waiting" = "0" ]; then echo "go=false" >> "$GITHUB_OUTPUT"; exit 0; fi
-          # Each claim spends one of a link's three tries. From GitHub's machine Instagram and YouTube refuse the free
-          # routes, so without Apify a claim would only spend his tries: leave the link to the home computers.
-          if [ "$HAS_APIFY" != "true" ]; then
-            echo "::warning::$waiting link(s) waiting, but this repository has no APIFY_TOKEN secret, so the cloud backup leaves them to the home computers."
-            echo "go=false" >> "$GITHUB_OUTPUT"; exit 0
-          fi
+          if [ "$waiting" = "0" ] && [ "$WAIT_MINUTES" = "0" ]; then echo "go=false" >> "$GITHUB_OUTPUT"; exit 0; fi
           writable=$(curl -fsS -H "Authorization: Bearer $KEY" "$ENGINE/api/watch/upload" | jq -r '.writable')
           if [ "$writable" != "true" ]; then
             echo "::warning::$waiting link(s) waiting, but the engine cannot file into Drive yet: GET /api/watch/upload says why."
@@ -84,11 +85,25 @@ jobs:
           path: ~/.cache/huggingface
           key: faster-whisper-small-1
 
-      - name: Take, fetch, file, read and report
+      - name: Wait for a link (runs started by hand)
+        id: wait
         if: steps.look.outputs.go == 'true'
         env:
+          KEY: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
+        run: |
+          deadline=$(( $(date +%s) + WAIT_MINUTES * 60 ))
+          while :; do
+            waiting=$(curl -fsS -H "Authorization: Bearer $KEY" "$ENGINE/api/watch/claim?machine=$MACHINE" | jq -r '.waiting // 0')
+            if [ "$waiting" != "0" ]; then echo "found=true" >> "$GITHUB_OUTPUT"; echo "A link is waiting."; exit 0; fi
+            if [ "$(date +%s)" -ge "$deadline" ]; then echo "found=false" >> "$GITHUB_OUTPUT"; echo "No link came."; exit 0; fi
+            sleep 2
+          done
+
+      - name: Take, fetch, file, read and report
+        if: steps.look.outputs.go == 'true' && steps.wait.outputs.found == 'true'
+        env:
           MINDMAKE_ENGINE_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
-          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+          CONTENT_WATCH_APIFY_VIA_ENGINE: '1'
         run: |
           mkdir -p "$CONTENT_WATCH_HOME"
           content-watch config --filing engine --machine "$MACHINE" --engine-url "$ENGINE" --whisper-model small --apify-cap 2 > /dev/null

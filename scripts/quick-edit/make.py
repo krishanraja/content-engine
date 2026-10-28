@@ -361,13 +361,18 @@ def segments(words, remove, max_gap, pad_before, pad_after, src_dur, protect_rem
         left = words[g['first']-1]['e'] if protect_removals and g['first']-1 in gone else 0.0
         right = words[g['last']+1]['s'] if protect_removals and g['last']+1 in gone else None
         a = max(a, left)
+        # A window starts on a frame: its part is cut by seeking to `a`, and the picture can only begin at the next
+        # whole frame while the sound begins at `a` itself, so a start between frames put his lips up to a frame
+        # ahead of his voice (Monday 26 Oct's 5-minute cut began at 0.01 s and read -80 ms on SyncNet). Later,
+        # never earlier, so a removed word stays out and the pad before his first word only shortens.
+        a = min(math.ceil(a * FPS - 1e-6) / FPS, words[g['first']]['s'])
         if right is not None:
             b = min(b, right)
         if out and a <= out[-1]['b'] and not (protect_removals and g['first']-1 in gone):
             out[-1]['b'] = b
             out[-1]['idx'] += g['idx']
         else:
-            out.append({'a': round(a, 3), 'b': round(b, 3), 'idx': g['idx'],
+            out.append({'a': round(a, 6), 'b': round(b, 3), 'idx': g['idx'],
                         **({'left_limit':left,'right_limit':right} if protect_removals else {})})
     # Each window is a whole number of frames at the cut's rate, so its picture
     # and sound are the same length and the joined cut never drifts out of sync.
@@ -380,7 +385,11 @@ def segments(words, remove, max_gap, pad_before, pad_after, src_dur, protect_rem
             # Keep complete words while keeping removed speech outside the cut.
             # Recover the fractional frame from available leading silence first.
             start = g['b'] - frames / FPS
-            if start >= g.get('left_limit',0):
+            # On a frame too (lip sync, above), when the window's last frame still holds its last kept word whole.
+            framed = math.floor(start * FPS + 1e-6) / FPS
+            if framed >= g.get('left_limit', 0) and framed + frames / FPS >= words[g['idx'][-1]]['e']:
+                g['a'], g['b'] = framed, framed + frames / FPS
+            elif start >= g.get('left_limit',0):
                 g['a'] = start
             else:
                 # A short retained phrase between removals may not have a whole
@@ -789,18 +798,37 @@ def ass_time(t):
     return f'{int(t // 3600)}:{int(t % 3600 // 60):02d}:{t % 60:05.2f}'
 
 
-def write_ass(path, groups, wins, aspect):
+def ass_colour(hexrgb):
+    """'#FFD84D' as libass writes it, &H00BBGGRR."""
+    h = hexrgb.lstrip('#')
+    return f'&H00{h[4:6]}{h[2:4]}{h[0:2]}'.upper()
+
+
+def series_accent(cfg, base='.'):
+    """The piece's series colour from config/studio.json, for the house captions' shadow."""
+    series, _ = series_of(cfg, base)
+    studio = json.loads((Path(__file__).resolve().parents[2] / 'config' / 'studio.json').read_text(encoding='utf-8'))
+    return studio['series'][series]['accent']
+
+
+def write_ass(path, groups, wins, aspect, house=None):
+    """The burned captions. `house` (the config's "caption_style": "house", with the series colour) draws
+    the house captions of docs/STUDIO.md: the ink block with a hard shadow in the channel's colour and at
+    most one loud word, the line's first figure, on the mint swipe; libass draws the block flat, so it has
+    no grain. Without it, the quick-edit captions: cream on the ink block, every figure in mint."""
     if aspect == '9x16':
-        W, H, fs, box = 1080, 1920, 70, 16
+        W, H, fs, box, shadow = 1080, 1920, 70, 16, 12
         norm_pos, norm_m, cut_pos, cut_m = r'\an8\pos(540,250)', (60, 60), r'\an8\pos(540,1014)', (60, 60)
     else:
-        W, H, fs, box = 1920, 1080, 48, 12
+        W, H, fs, box, shadow = 1920, 1080, 48, 12, 8
         norm_pos, norm_m, cut_pos, cut_m = r'\an2\pos(960,1040)', (360, 360), r'\an2\pos(303,1040)', (24, 1920 - 582)
+    back, shad = (ass_colour(house), shadow) if house else (INK, 0)
     lines = ['[Script Info]', 'ScriptType: v4.00+', f'PlayResX: {W}', f'PlayResY: {H}', 'WrapStyle: 0', 'ScaledBorderAndShadow: yes', '',
              '[V4+ Styles]',
              'Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding',
-             f'Style: Cap,Archivo Black,{fs},{CREAM},{CREAM},{INK},{INK},0,0,0,0,100,100,0,0,3,{box},0,8,60,60,0,1', '',
+             f'Style: Cap,Archivo Black,{fs},{CREAM},{CREAM},{INK},{back},0,0,0,0,100,100,0,0,3,{box},{shad},8,60,60,0,1', '',
              '[Events]', 'Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text']
+    figure = re.compile(r'[0-9%$]')
     for k, g in enumerate(groups):
         s = g[0]['s']
         e = groups[k + 1][0]['s'] if k + 1 < len(groups) else g[-1]['e'] + 0.4
@@ -808,11 +836,19 @@ def write_ass(path, groups, wins, aspect):
         mid = (s + g[-1]['e']) / 2
         cut = any(c['s'] <= mid <= c['e'] for c in wins)
         pos, (ml, mr) = (cut_pos, cut_m) if cut else (norm_pos, norm_m)
-        words = []
-        for t in g:
-            w = re.sub(r'[{}\\]', '', t['w'])
-            words.append(rf'{{\c{MINT}}}{w}{{\c{CREAM}}}' if re.search(r'[0-9%$]', w) else w)
+        words = [re.sub(r'[{}\\]', '', t['w']) for t in g]
+        if not house:
+            shown = [rf'{{\c{MINT}}}{w}{{\c{CREAM}}}' if figure.search(w) else w for w in words]
+            lines.append(f'Dialogue: 0,{ass_time(s)},{ass_time(e)},Cap,,{ml},{mr},0,,{{{pos}}}{" ".join(shown)}')
+            continue
         lines.append(f'Dialogue: 0,{ass_time(s)},{ass_time(e)},Cap,,{ml},{mr},0,,{{{pos}}}{" ".join(words)}')
+        loud = next((i for i, w in enumerate(words) if figure.search(w)), None)
+        if loud is not None:
+            # The swipe is the same line again on the layer above, every word clear but the loud one, so its
+            # mint block sits over the ink one and the next word's block cannot cover it; the layout is the same.
+            swipe = [rf'{{\alpha&H00&\3c{MINT}\c{INK}\bord{box // 2 - 2}\shad0}}{w}{{\alpha&HFF&}}' if i == loud else w
+                     for i, w in enumerate(words)]
+            lines.append(f'Dialogue: 1,{ass_time(s)},{ass_time(e)},Cap,,{ml},{mr},0,,{{{pos}\\alpha&HFF&}}{" ".join(swipe)}')
     Path(path).write_text('\n'.join(lines) + '\n', encoding='utf-8')
 
 
@@ -823,6 +859,28 @@ def between(wins):
 def loudnorm_json(stderr):
     m = re.search(r'\{[^{}]*"input_i"[^{}]*\}', stderr)
     return json.loads(m.group(0))
+
+
+def chain_latency(ref, processed, seconds=60.0, rate=16000, most=0.25):
+    """How much later the processed voice runs than the voice it was made from, in seconds (cross-correlation
+    over the first minute, at most a quarter second either way)."""
+    import numpy as np
+
+    def pcm(path):
+        raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', str(path), '-t', f'{seconds}', '-vn', '-ac', '1', '-ar', str(rate),
+                              '-f', 'f32le', '-'], capture_output=True, check=True).stdout
+        x = np.frombuffer(raw, np.float32).astype(np.float64)
+        return x - x.mean()
+    a, b = pcm(ref), pcm(processed)
+    n = min(len(a), len(b))
+    if n < rate:
+        return 0.0
+    a, b = a[:n], b[:n]
+    size = 1 << (2 * n - 1).bit_length()
+    c = np.fft.irfft(np.fft.rfft(b, size) * np.conj(np.fft.rfft(a, size)), size)
+    m = int(most * rate)
+    lags = np.concatenate([np.arange(m + 1), np.arange(-m, 0)])
+    return float(lags[np.argmax(np.concatenate([c[:m + 1], c[-m:]]))] / rate)
 
 
 def measure_loudness(src):
@@ -1678,6 +1736,14 @@ def self_test():
         got, why = resolve_music({'name': 't'}, '9x16', 30)
         checks.append(('with no approved track the cut has voice only and says so', (got, 'voice only' in (why or '')), (None, True)))
     checks += caption_self_test()
+    # The voice chain's delay is found, so it can be taken off (chain_latency).
+    import tempfile
+    with tempfile.TemporaryDirectory() as tmp:
+        dry, wet = Path(tmp) / 'dry.wav', Path(tmp) / 'wet.wav'
+        subprocess.run(['ffmpeg', '-v', 'error', '-y', '-f', 'lavfi', '-i', 'anoisesrc=d=3:c=pink:r=48000:seed=7', str(dry)], check=True)
+        subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(dry), '-af', 'adelay=25|25', str(wet)], check=True)
+        found = chain_latency(dry, wet)
+    checks.append(('a voice chain 25 ms late is measured as 25 ms late', abs(found - 0.025) < 0.0005, True))
     checks += gate_self_test()
     import scoreboard
     rows=scoreboard.states([{'at_s':1,'grok':1,'muse':0},{'at_s':2,'grok':1,'muse':1}],3)
@@ -1745,6 +1811,23 @@ def caption_self_test():
     loose = spelling_warnings(tokens(heard(' the', ' color', ' of', ' money'), DEFAULT_FIXES))
     checks.append(('a US spelling no script word covers is one warning naming it', (len(loose), '"color"' in ' '.join(loose)), (1, True)))
     checks.append(('a replacement in the config clears it', spelling_warnings(tokens(heard(' the', ' color'), DEFAULT_FIXES + [['color', 'colour']])), []))
+    # The house captions (docs/STUDIO.md): the channel's shadow, one loud word on the mint swipe.
+    import tempfile
+    with tempfile.TemporaryDirectory() as tmp:
+        groups = chunks(tokens(heard(' Google', ' paid', ' $2', '.7', ' billion', ' and', ' 66', ' staff'), DEFAULT_FIXES), [])
+        write_ass(Path(tmp) / 'h.ass', groups, [], '9x16', '#FFD84D')
+        house = (Path(tmp) / 'h.ass').read_text(encoding='utf-8')
+        write_ass(Path(tmp) / 'q.ass', groups, [], '9x16')
+        quick = (Path(tmp) / 'q.ass').read_text(encoding='utf-8')
+    swipes = [l for l in house.splitlines() if l.startswith('Dialogue: 1,')]
+    checks.append(('house captions: the shadow is the channel\'s colour, 12 px in the tall shape',
+                   ',&H004DD8FF,' in house and ',3,16,12,8,' in house, True))
+    with_figure = sum(any(re.search(r'[0-9%$]', t['w']) for t in g) for g in groups)
+    checks.append(('house captions: one loud word per line with a figure, its first figure, on the mint swipe',
+                   (len(swipes) == with_figure > 0, [l.count(r'\3c&H00C0F07E') for l in swipes] == [1] * with_figure,
+                    r'\3c&H00C0F07E\c&H0012150C\bord6\shad0}$2.7' in house), (True, True, True)))
+    checks.append(('without "caption_style" the quick-edit captions are unchanged: no shadow, every figure in mint',
+                   (',3,16,0,8,' in quick, 'Dialogue: 1,' in quick, quick.count(r'{\c&H00C0F07E}')), (True, False, 2)))
     return checks
 
 
@@ -1854,6 +1937,12 @@ def gate_self_test():
     checks.append(('a cut row the pause rule\'s pads put back is a warning', len(thin_cuts(pads, [(1, 1)], kept)), 1))
     kept2, _ = segments(pads, [(1, 2)], 0.9, 0.0, 0.0, 2.0)
     checks.append(('a cut that takes out sound is not', thin_cuts(pads, [(1, 2)], kept2), []))
+    # Every window starts on a frame, never before a removed word's end or after its own first word (lip sync).
+    late = [{'w': w, 's': s, 'e': e} for w, s, e in (('Disney', 0.21, 0.87), ('has', 0.9, 1.0), ('gone', 1.31, 1.6), ('now', 2.73, 3.0))]
+    framed, _ = segments(late, [(2, 2)], 0.9, 0.2, 0.3, 4.0, protect_removals=True)
+    checks.append(('a window that would start between frames starts on the next frame, after any removed word, before its first word',
+                   [(abs(g['a'] * FPS - round(g['a'] * FPS)) < 1e-3, g['a'] >= (late[g['idx'][0] - 1]['e'] if g['idx'][0] == 3 else 0),
+                     g['a'] <= late[g['idx'][0]]['s']) for g in framed], [(True, True, True), (True, True, True)]))
     checks.append(('a join made by a cut row is told from a pause cut',
                    removal_joins([{'off': 0.0, 'idx': [0, 1]}, {'off': 1.0, 'idx': [3, 4]}, {'off': 2.0, 'idx': [5]}], [(2, 2)]), [1.0]))
     checks.append(('a join with no framing change and no picture over it is listed',
@@ -2266,12 +2355,26 @@ def main():
     voice_src, repaired = edited, None
     if cfg.get('voice') == 'repair':
         voice_src = out / f"{cfg['name']}.voice.wav"
-        stamp, want = out / 'voice.plan', f'{edited.stat().st_size} {edited.stat().st_mtime_ns} {episode.VOICE_REPAIR}'
-        if not (voice_src.exists() and stamp.exists() and stamp.read_text() == want):
+        stamp, want = out / 'voice.plan', f'{edited.stat().st_size} {edited.stat().st_mtime_ns} {episode.VOICE_REPAIR} latency-v1'
+        held = out / 'voice.latency.json'
+        if not (voice_src.exists() and stamp.exists() and stamp.read_text() == want and held.exists()):
+            raw = out / f"{cfg['name']}.voice.raw.wav"
             run(['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error', '-i', str(edited), '-vn', '-af', f'{NORM},{episode.VOICE_REPAIR}',
-                 '-c:a', 'pcm_f32le', str(voice_src)])
+                 '-c:a', 'pcm_f32le', str(raw)])
+            # The chain's FFT denoiser (afftdn) delays the voice by about a frame (25 ms on Monday 26 Oct's takes), and
+            # nothing downstream knows: measure it against the untreated voice and take it off, so lips and voice stay together.
+            lag = chain_latency(edited, raw)
+            shift = round(lag * RATE)
+            if shift > 0:
+                run(['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error', '-i', str(raw), '-af',
+                     f'atrim=start_sample={shift},asetpts=PTS-STARTPTS,apad=pad_len={shift}', '-c:a', 'pcm_f32le', str(voice_src)])
+                raw.unlink()
+            else:
+                raw.replace(voice_src)
+            held.write_text(json.dumps({'measured_ms': round(lag * 1000, 2), 'removed_samples': max(0, shift)}))
             stamp.write_text(want)
-        repaired = {'chain': episode.VOICE_REPAIR, 'before_lufs': loud['input_i'], 'before_lra': loud.get('input_lra')}
+        repaired = {'chain': episode.VOICE_REPAIR, 'before_lufs': loud['input_i'], 'before_lra': loud.get('input_lra'),
+                    'latency': json.loads(held.read_text())}
         loud = measure_loudness(voice_src)
         repaired.update(after_lufs=loud['input_i'], after_lra=loud.get('input_lra'))
     # Sniffs (episode.sniffs; Krish, 2026-10-17: "dampen that out surgically"): found only in the gaps between his
@@ -2316,7 +2419,7 @@ def main():
         voice_gain = 0.0 if voice_in <= -69.9 else max(-30.0, min(30.0, target - voice_in))
         cut_audio = build_audio(out / f'audio-{asp}', voice_src, voice_gain, intro, end, tl, bed)
         ass = out / f"{cfg['name']}-{asp}.ass"
-        write_ass(ass, groups, wins, asp)
+        write_ass(ass, groups, wins, asp, series_accent(cfg, base) if cfg.get('caption_style') == 'house' else None)
         said, warns, files = episode_extras(cfg, P, ws, wins, toks, tl)
         warnings += warns
         (out / f"{cfg['name']}-{asp}.srt").write_text(files['srt'], encoding='utf-8')

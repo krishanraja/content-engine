@@ -45,6 +45,7 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `scripts/quick-edit/`
 - `scripts/signals/`
 - `scripts/velib/`
+- `scripts/windowless/`
 - `supabase/migrations/`
 - `tests/`
 - `tests/control-plane/`
@@ -168,6 +169,7 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/video-studio/runner/project`
 - `/api/video-studio/runner/watch`
 - `/api/video-studio/session`
+- `/api/watch/apify`
 - `/api/watch/claim`
 - `/api/watch/read`
 - `/api/watch/report`
@@ -2238,8 +2240,10 @@ What the compiler looks for, as pure functions.
 - `const LANE_PROBLEMS: Readonly<Record<string, string>>`
 - `const LANE_REPORT_FRESH_HOURS`
 - `interface WatchHealth`
+- `interface WindowsHealth`
 - `interface LaneReport`
 - `function parseWatchHealth(value: unknown): WatchHealth | undefined`
+- `function parseWindowsHealth(value: unknown): WindowsHealth | undefined`
 - `function parseLaneReport(value: unknown, now: string): LaneReport | null`
 - `function laneKey(machine: string): string`
 - `function lanePlainProblems(reports: readonly LaneReport[], now: number): string[]`
@@ -2702,6 +2706,18 @@ Which Windows runner may take work, and how each one looks from the cloud.
 
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 
+### `apps/control-plane/api/watch/_paid.ts`
+
+Apify runs for the cloud backup, made by the engine so its key never leaves it.
+
+- `const WATCH_ACTORS: Record<string, { maxUsd: number; timeoutSec: number }>`
+- `const MAX_INPUT_CHARS`
+- `const MAX_ITEMS`
+- `interface PaidRunBody`
+- `function parsePaidRun(body: unknown): Parsed<PaidRunBody>`
+- `function postToken(url: string): string | null`
+- `async function checkPaidRun(store: WatchStore, body: PaidRunBody): Promise<{ ok: true } | { ok: false; status: number; …`
+
 ### `apps/control-plane/api/watch/_upload.ts`
 
 The cloud backup's way into Krish's two Inspiration folders.
@@ -2740,6 +2756,8 @@ The content-watcher queue: what the home computers may claim, report and read, d
 - `interface ReportBody`
 - `function parseReport(body: unknown): Parsed<ReportBody>`
 - `function parseReadOnly(body: unknown): Parsed<{ machine: string; reads: ReadRow[] }>`
+- `function parseCheck(body: unknown): Parsed<{ machine: string; shas: string[]; engine_rev: string }>`
+- `async function heldReads(store: WatchStore, shas: string[], engineRev: string): Promise<Record<string, string>>`
 - `function compareRev(a: string, b: string): number`
 - `function claimView(row: WatchRequestRow)`
 - `async function waiting(store: WatchStore, machine: string, now = new Date()): Promise<number>`
@@ -2751,6 +2769,11 @@ The content-watcher queue: what the home computers may claim, report and read, d
 ### `apps/control-plane/api/watch/_watchStore.ts`
 
 - `const watchStore: WatchStore`
+
+### `apps/control-plane/api/watch/apify.ts`
+
+- `const config`
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
 
 ### `apps/control-plane/api/watch/claim.ts`
 

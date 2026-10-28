@@ -115,7 +115,8 @@ describe('the recordings upload on Krish\'s runner machines', () => {
     expect(update).toContain('pull --ff-only --quiet')
     const loop = upload.slice(upload.indexOf('while ($true) {'))
     expect(loop.indexOf('Update-Source')).toBeLessThan(loop.indexOf('Invoke-Pass'))
-    expect(loop.indexOf("(Get-Sha256 $scriptPath) -ne $scriptSha")).toBeLessThan(loop.indexOf('Invoke-Pass'))
+    expect(loop.indexOf('(Get-SourceStamp) -ne $scriptSha')).toBeGreaterThan(-1)
+    expect(loop.indexOf('(Get-SourceStamp) -ne $scriptSha')).toBeLessThan(loop.indexOf('Invoke-Pass'))
   })
 
   it('runs one at a time on a machine', () => {

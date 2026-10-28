@@ -1752,6 +1752,36 @@
           "how": "How Krish wants to be worked with"
         }
       ]
+    },
+    {
+      "id": "no-console-window-ever",
+      "on": "2026-10-28",
+      "krish": "HIDE ALL CONSOLE POP UPS FOREVER FROM EVERY REPO AND LOCAL TASK",
+      "why": "The content watcher's scheduled task runs under pythonw.exe, and every program a run started (ffmpeg, ffprobe, tesseract, yt-dlp's Python, Playwright's node) opened a console window of its own; each machine was also re-reading what the other had filed from links. Krish: \"it flashes up black powershell-looking screens repeatedly for about 2 minutes, disabling me from doing anything on my machine\". The PowerShell tasks used -WindowStyle Hidden, which still draws the window before PowerShell hides it.",
+      "means": "Nothing that runs on a home computer by itself ever shows a window. A scheduled task that would start a console program (powershell.exe, node.exe, python.exe, cmd.exe, a .bat) runs through run-hidden.exe, which the recordings pass applies to every task of his each pass; the content watcher starts every child with CREATE_NO_WINDOW. A new task or a new child process follows the same rule, never -WindowStyle Hidden alone, and its Windows test proves no window with a probe that is shown to see one.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "scripts/windowless/RunHidden.cs",
+          "contains": "start.CreateNoWindow = true;",
+          "how": "The launcher starts the task's command with no window"
+        },
+        {
+          "file": "scripts/windowless.ps1",
+          "contains": "function Invoke-WindowKeeper",
+          "how": "Every console task of his runs through the launcher"
+        },
+        {
+          "file": "scripts/recordings-upload.ps1",
+          "contains": "try { Invoke-Windows } catch {",
+          "how": "The recordings pass applies it each pass and reports the counts"
+        },
+        {
+          "file": "tests/windowless.test.ts",
+          "contains": "the probe saw no window from the control, so it proves nothing",
+          "how": "On Windows CI: no window from the launcher, against a control the probe sees"
+        }
+      ]
     }
   ]
 }

@@ -260,6 +260,28 @@ def browser(pages, tmp):
     return problems
 
 
+def text_once(page, selector, prefix, timeout_ms=5000):
+    """The element's text once it starts with prefix, or as it stands when the wait runs out, read once. A fixed 400 ms
+    pause raced the save on a slow CI runner (28 October 2026, PR 208): the bar was read before it said Saved, and the
+    failure message, which read it again, showed 'Saved'."""
+    try:
+        page.wait_for_function(
+            '([s, p]) => { const e = document.querySelector(s); return !!e && e.innerText.trim().startsWith(p) }',
+            arg=[selector, prefix], timeout=timeout_ms)
+    except Exception:  # noqa: BLE001 - a wait that runs out is reported by the check that reads the text
+        pass
+    return page.locator(selector).inner_text().strip()
+
+
+def until(page, ready, timeout_ms=5000):
+    """Wait until ready() holds, up to timeout_ms, letting the page answer its requests meanwhile; a fixed pause raced
+    a slow runner (text_once)."""
+    waited = 0
+    while not ready() and waited < timeout_ms:
+        page.wait_for_timeout(100)
+        waited += 100
+
+
 def editor_in_browser(page, web):
     """The Drafts editor by touch, through the board API (Krish, 2026-10-21: "edit in line myself and save changes to
     get picked up"): tap a paragraph, change it, Done, the bar counts it, Save, Saved, and the save is edits/wed-article
@@ -296,14 +318,14 @@ def editor_in_browser(page, web):
         if count.inner_text().strip() != '1 unsaved change':
             problems.append(f'midweek: an edited paragraph is not counted on the Save bar ({count.inner_text()!r})')
         page.click('[data-act="save-all"][data-day="wed"]')
-        page.wait_for_timeout(400)
+        bar = text_once(page, '.rv-save[data-save-day="wed"] .rv-count', 'Saved')
         hit = [b for p, b in saved if p == f'/api/board/{week}/edits/wed-article']
         want = base.replace('Words.', 'Fewer words.')
         if not hit or hit[-1].get('text') != want or hit[-1].get('day') != 'wed' or hit[-1].get('item') != 'article' \
                 or hit[-1].get('base_sha256') != _h.sha256(base.encode()).hexdigest() or not hit[-1].get('at'):
             problems.append(f'midweek: Save did not keep the paragraph in edits/wed-article with its fields ({hit})')
-        if not count.inner_text().startswith('Saved'):
-            problems.append(f'midweek: after Save the bar does not say Saved ({count.inner_text()!r})')
+        if not bar.startswith('Saved'):
+            problems.append(f'midweek: after Save the bar does not say Saved ({bar!r})')
         if page.locator('#rvp-wed-article-1').inner_text().strip() != 'Fewer words.':
             problems.append('midweek: the saved paragraph does not read as he wrote it')
         # Picked words, then Comment on this: the comment carries its draft, paragraph and the words.
@@ -316,7 +338,7 @@ def editor_in_browser(page, web):
             page.click('.rv-cbtn')
             page.fill('dialog.wb-sheet textarea', 'Say who.')
             page.click('dialog.wb-sheet .wb-save')
-            page.wait_for_timeout(400)
+            until(page, lambda: any(p.startswith(f'/api/board/{week}/comments/') for p, _ in saved))
             note = [b for p, b in saved if p.startswith(f'/api/board/{week}/comments/')]
             if not note or note[-1].get('quote') != 'More words here.' or note[-1].get('paragraph') != 2 \
                     or note[-1].get('box') != 'wed-article' or note[-1].get('anchor') != 'rvp-wed-article-2':
@@ -328,9 +350,9 @@ def editor_in_browser(page, web):
         page.fill('.rv-pedit .rv-ptext', 'Other words.')
         page.click('.rv-pedit button:text("Done")')
         page.click('[data-act="save-all"][data-day="wed"]')
-        page.wait_for_timeout(600)
-        if not count.inner_text().startswith('Not saved'):
-            problems.append(f'midweek: a save that met another session\'s is not said ({count.inner_text()!r})')
+        bar = text_once(page, '.rv-save[data-save-day="wed"] .rv-count', 'Not saved')
+        if not bar.startswith('Not saved'):
+            problems.append(f'midweek: a save that met another session\'s is not said ({bar!r})')
     finally:
         page.unroute(re.compile(r'^https://board\.test/'))
     return problems

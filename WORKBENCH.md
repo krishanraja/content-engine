@@ -4,6 +4,7 @@
 
 ## 27 October: pasted links tagged Production or Content; the first live run is one reel (Claude)
 
+- **No windows (28 Oct):** Krish: "HIDE ALL CONSOLE POP UPS FOREVER FROM EVERY REPO AND LOCAL TASK". Each pass runs his console tasks through `run-hidden.exe` (`scripts/windowless.ps1`); content-watcher #16 hides every child and skips media the engine holds. Read `windows` per machine on the lane.
 - **Asked (Krish, 27 Oct):** "Why can't I add links into my inspiration board pre-tagged for production or content? I'm supposed to be able to add this quickly and easily on mobile", with the reel `https://www.instagram.com/reel/DewxbWfjDHB/` to run end to end (learning `paste-a-link-tagged`).
 - **Found:** `content_watch_requests` had never held a row: no pasted link had ever been saved, so the chain (Control Center, content-watcher on a home computer, the taste ledger's quick card run) has never run live. The engine and content-watcher already honour a lane; Control Center never sent one.
 - **Done:** control-center PR #573 (branch `ccr-1b7d26a8-1tri9s`): two required chips (Production, Content) in the link box, the route refuses a link without one (`bad_lane`) and writes `lane`, a re-tag moves only a queued or failed request, and a phone gets Save a link at the top of the Inspiration page. Here: a test that a claim hands content-watcher the lane unchanged.
@@ -11,8 +12,25 @@
 - **Live (27 Oct 13:57 UTC):** control-center #573 merged and deployed (Vercel production READY on `0d4193e`); content-engine #189 merged.
 - **The live run stalled at the home computers (28 Oct):** his two links (a YouTube Short `fad59d76` and an Instagram post `3d3c3999`, both tagged Content) sat `queued` with 0 attempts; the watchers had been silent since 25 and 26 October. The first reading, from logs he pasted (never again), is in `docs/history/2026-10-28-workbench-watcher-stall.md`. PR 201 (merged) made the recordings pass keep the watcher and send its health; content-watcher PR 9 (merged) makes a run end after 20 minutes and name its errors.
 - **Repaired and proven, 28 Oct 03:39 UTC (PR 202 live):** the keeper found no clone on either computer, cloned content-watcher and ran its installer (`cloned_watcher`, `reinstalled_task`); Lorimer claimed both links within the minute, so the cause is proven. The Short (`fad59d76`) is `read` with its card (Content Inspo, `heard: words`). The Instagram post (`3d3c3999`) is `failed`, class `other`, three tries spent in five minutes. Next: read `recent` on the lane route for its step classes, fix, and queue it again.
-- **Cloud backup, live 28 Oct (PR 203, content-watcher PR 10):** `.github/workflows/watch-cloud.yml` looks every 15 minutes (a hand-started run at 04:12 UTC read `waiting: 0` with the real key and took nothing). `GET /api/watch/upload` answers `writable: true` for both folders through the delegated `drive` scope (`drive.file` is not delegated). It takes links only once the `APIFY_TOKEN` Actions secret exists: copying the engine's Apify key there needs Krish's yes immediately before it. Instagram post `3d3c3999`: every route refused it and Apify named `login_wall` (only a signed-in account sees it); content-watcher PR 11 now reports that class. Not requeued: it would fail the same way. Retries are spaced 20 minutes per try (PR 205).
+- **Cloud backup, proven live 28 Oct 06:58 UTC:** `cloud-gh` took Krish's carousel through `.github/workflows/watch-cloud.yml` (started by hand with `wait_minutes`, the link made claimable at a set second past both home computers' minute ticks), fetched it through `POST /api/watch/apify` (the engine's key; no GitHub secret, which the session proxy cannot write), reused the filed slides (`media` in the claim) and stored the full reading. Still unproven against Google: the keyless PUT of a new file; `GET /api/watch/upload?session=1` asks a session's status with no key (expect 308) without making a file. Every pasted link so far is a card: `fad59d76`, `3d3c3999`, `36e7f24a`, `80f72ec5`.
 - **Cloud fetch of both links (no writes, free routes only): both refused**, which is expected of a cloud machine and does not predict the home result. The Short: YouTube's bot check (`blocked:bot_check`), the home computers have the token helper and cobalt for this. The post: Instagram's embed answered `not_found:ig_removed` and gave no cover, so a logged-out reader cannot see it; at home it goes on to Instaloader and Apify (under the $5 cap), and if every route misses it fails as a class Krish can read on its card ("Paste it again to retry").
+
+## 28 October: Monday 26's cuts rebuilt on his review, on the board and in the archive (Claude Code)
+
+- **Ruling (Krish, 28 Oct):** the first picture after the sting is a provocative motion statement, not a logo; every
+  infographic must really move; the open-top box is "tacky"; one closing screen, "Ever". Memory notes:
+  `video-pictures-must-move-and-open-hard`, `one-closing-screen-only`.
+- **Made:** `docs/plans/2026-10-26-monday/video/motion.py` (a timeline-driven Chromium renderer: the opener, the bust and
+  every drawn page as an mp4), a company card in `draw_panels.py`, his screen recording in `whatitis.py`, the house end
+  card trimmed to its question screen. 5-minute 4:43.5, 90-second 1:25.7; measurements in `video/REVIEW.md`.
+- **Filed:** masters, share copies and thumbnails in the Drive archive; Monday's board tab carries both cuts as a
+  "review" section, built with `week_board.py`'s own inputs after a control rebuild matched the live board exactly.
+  The Drive library holds one Monday folder (covers only); the duplicate and two `working` canary folders went to
+  `_Archive/PREVIOUS VERSIONS - archive, not current, do not use/2026-10-28 moved out of 3 Posts` (nothing deleted).
+- **Held:** the post's `3 Video`: it waits on the article's fact gate and pack (his three answers in
+  `review/fact-signoff.md`), not on the cuts. Settled 28 Oct: "Happy with the words on screen." The article's Udio and
+  ElevenLabs sentence is cut and the cuts and thumbnails carry every named company's logo (OpenAI, Warner Music Group,
+  Universal Music Group added). Waiting on Krish: full playback of both cuts.
 
 ## 27 October: Wednesday and Friday in Teleprompter; Monday's three questions (Claude)
 
@@ -47,31 +65,7 @@ Friday production with its existing production owner. Growth briefs receive
 a checked creative package through the existing editorial/Studio path. This change updates repository guidance
 only; it does not mutate a tracked Studio session, learning record or board.
 
-## 24 October: Friday locked and signed off; Codex makes the videos (Claude)
-
-- **Signed off by Krish:** storyboard, no trim, titles, outline ("signed off, keep, all A"), prediction A2 ("a2"), and
-  the six first-person test lines in the fact gate ("yes, $0.30, and I sign off my test lines"). Spend: $1.09 of the
-  $1.30 he approved.
-- **Done:** the article (`docs/plans/2026-10-23-draft-body.md`, on the piece; fact gate `ok`, voice, AI scan and spine
-  checks pass) and every channel's copy (`docs/plans/2026-10-23-friday/locked/board-copy/`: `article.md`,
-  `publishing-copy.md`; voice score 4.5, bar 6). The board shows the signed storyboards (revision 50).
-- **Waiting on Krish:** start Codex by pasting `docs/plans/2026-10-23-friday/locked/CODEX_PROMPT.md` (the part below
-  the line) into a new Codex session on a home computer. Then his look at the four videos on the board, then his yes
-  to the final board publish.
-- **Changed after sign-off (his answers, 24 Oct):** the 90-second on-camera cut loses the recap and three small repeats
-  ("Cut the recap (Recommended)"), and both vertical cuts are sped to 1.12x ("Speed both to 1.12x (Recommended)") so the
-  whole file with intro and outro runs under 89 s. His warning, "last time Codex glitched a bunch of words on the
-  speedup and also misaligned the captions", is `config/learnings.json` `speedup-without-glitches` and the
-  "Speed without glitches" section of `CODEX.md`.
-- **Making record completed by Claude (24 Oct, after Codex stopped on it):** Visual gate (cover and thumbnails drawn
-  from his picked words, gate passed), Scripts with both read-backs (two fresh readers each, nothing lost) and Pack
-  (sent to the Two passports library folder) are recorded; every step up to Recorded reads done. `scripts/pages/build.py`
-  now tries the smaller headline sizes on its ladder before refusing a 3:2 cover.
-- **Codex** works from `locked/CODEX.md` and nothing else; it fills only the chapter times in `publishing-copy.md`.
-- **Where things are:** takes in the engine's recordings store (`recording.py list`); evidence captures under
-  `2 Covers and images/Evidence` and the storyboards under `2 Covers and images/Storyboard` in the post's library
-  folder. The Anthropic and GitHub reference clip (Video Engine > Inspiration) had still not reached the library;
-  Codex fetches it first (`motion-system.md`).
+The 24 October Friday-locked notes are in `docs/history/2026-10-28-workbench-24oct-friday-locked.md`.
 
 ## The idea queue: read it first
 

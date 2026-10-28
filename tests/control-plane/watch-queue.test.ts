@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import {
-  claim, compareRev, parseClaim, parseReadOnly, parseReport, report, writeReads,
+  claim, compareRev, heldReads, parseCheck, parseClaim, parseReadOnly, parseReport, report, writeReads,
   type ReadRow, type WatchRequestRow, type WatchStore,
 } from '../../apps/control-plane/api/watch/_watch.js'
 
@@ -41,8 +41,8 @@ class MemoryStore implements WatchStore {
   }
   async get(id: string) { const r = this.rows.get(id); return r ? { ...r } : null }
   async readRevs(shas: string[]) {
-    const out = new Map<string, { id: string; engine_rev: string }>()
-    for (const s of shas) { const r = this.reads.get(s); if (r) out.set(s, { id: r.id, engine_rev: r.engine_rev }) }
+    const out = new Map<string, { id: string; engine_rev: string; linked: boolean }>()
+    for (const s of shas) { const r = this.reads.get(s); if (r) out.set(s, { id: r.id, engine_rev: r.engine_rev, linked: r.source_url !== null }) }
     return out
   }
   async upsertReads(rows: ReadRow[]) {
@@ -67,7 +67,7 @@ describe('claim', () => {
     const store = new MemoryStore([request(1), request(2), request(3)])
     const out = await claim(store, 'HOME-1', 2, NOW)
     expect(out.requests.map(r => r.id)).toEqual([uuid(1), uuid(2)])
-    expect(out.requests[0]).toEqual({ id: uuid(1), url: 'https://www.instagram.com/reel/R1/', url_key: 'https://www.instagram.com/reel/R1/', platform: 'instagram', lane: null, note: null, attempts: 1 })
+    expect(out.requests[0]).toEqual({ id: uuid(1), url: 'https://www.instagram.com/reel/R1/', url_key: 'https://www.instagram.com/reel/R1/', platform: 'instagram', lane: null, note: null, attempts: 1, media: null })
     expect(store.rows.get(uuid(1))).toMatchObject({ status: 'claimed', claimed_by: 'HOME-1', claimed_at: NOW.toISOString(), attempts: 1 })
     expect(store.rows.get(uuid(3))!.status).toBe('queued')
   })
@@ -106,6 +106,13 @@ describe('claim', () => {
     expect(cloud.requests.map(r => r.id)).toEqual([uuid(1)])
     const home = await claim(store, 'LORIMER', 5, NOW)
     expect(home.requests.map(r => r.id)).toEqual([uuid(2)])
+  })
+
+  it('hands a machine what an earlier try already filed, so a second fetch reuses it', async () => {
+    const filed = [{ name: 'instagram_P1_01.jpg', sha256: sha('f'), mime: 'image/jpeg', bytes: 5, folder: 'cold_ideas' }]
+    const store = new MemoryStore([request(1, { media: filed } as Partial<WatchRequestRow>), request(2)])
+    const { requests } = await claim(store, 'HOME-1', 3, NOW)
+    expect(requests.map(r => r.media)).toEqual([filed, null])
   })
 
   it('hands the home computer the tag he picked when he pasted the link, unchanged', async () => {
@@ -183,6 +190,32 @@ describe('readings', () => {
     expect(same.written).toBe(1)
     expect(store.reads.get(sha('b'))!.read_md).toBe('again')
   })
+
+  it('never lets a reading of a hand-dropped file replace one made from his link, at any revision', async () => {
+    // 28 October: the other home computer read his filed carousel slides as new drops and overwrote all 16.
+    const store = new MemoryStore([])
+    await writeReads(store, [readRow('a')])
+    const drop = { ...readRow('a', 'cw-2026.11.2'), source_url: null, platform: 'own', read_md: '# Reading: own file' }
+    const out = await writeReads(store, [drop])
+    expect(out).toMatchObject({ written: 0, kept_newer: 1 })
+    expect(store.reads.get(sha('a'))!.platform).toBe('instagram')
+    expect(out.ids.get(sha('a'))).toBe(store.reads.get(sha('a'))!.id)
+    // A link reading still replaces a drop reading of the same file.
+    await writeReads(store, [{ ...readRow('c'), source_url: null, platform: 'own' }])
+    expect((await writeReads(store, [readRow('c')])).written).toBe(1)
+    expect(store.reads.get(sha('c'))!.platform).toBe('instagram')
+  })
+
+  it('tells a machine which dropped files it need not read: a link reading, or the same or a newer revision', async () => {
+    // 28 October: each home computer re-read the media the other had filed from links, nineteen files of work.
+    const store = new MemoryStore([])
+    await writeReads(store, [readRow('a', 'cw-2026.10.3')])
+    await writeReads(store, [{ ...readRow('b', 'cw-2026.10.3'), source_url: null, platform: 'own' }])
+    await writeReads(store, [{ ...readRow('c', 'cw-2026.11.2'), source_url: null, platform: 'own' }])
+    const held = await heldReads(store, [sha('a'), sha('b'), sha('c'), sha('d')], 'cw-2026.10.24')
+    // a: made from a link, never replaced by a drop; b: older, read again; c: newer; d: not here.
+    expect(held).toEqual({ [sha('a')]: 'cw-2026.10.3', [sha('c')]: 'cw-2026.11.2' })
+  })
 })
 
 describe('what the routes accept', () => {
@@ -210,6 +243,15 @@ describe('what the routes accept', () => {
     expect(parseReadOnly({ machine: 'HOME-1', reads: [{ ...readRow('a'), platform: 'own', source_url: null }] }).ok).toBe(true)
     expect(parseReadOnly({ machine: 'HOME-1', reads: [] })).toEqual({ ok: false, error: 'invalid_reads' })
     expect(parseReadOnly({ machine: 'HOME-1', reads: [{ ...readRow('a'), shape: 'audio' }] })).toEqual({ ok: false, error: 'invalid_reads' })
+  })
+
+  it('checks a held check: shas only, at most fifty, with the asking revision', () => {
+    expect(parseCheck({ machine: 'HOME-1', check: [sha('a'), sha('a')], engine_rev: 'cw-2026.10.24' }))
+      .toEqual({ ok: true, value: { machine: 'HOME-1', shas: [sha('a')], engine_rev: 'cw-2026.10.24' } })
+    expect(parseCheck({ machine: 'HOME-1', check: ['../x'], engine_rev: 'cw-2026.10.24' })).toEqual({ ok: false, error: 'invalid_check' })
+    expect(parseCheck({ machine: 'HOME-1', check: Array.from({ length: 51 }, (_, i) => sha(String(i))), engine_rev: 'cw' }))
+      .toEqual({ ok: false, error: 'invalid_check' })
+    expect(parseCheck({ machine: 'HOME-1', check: [sha('a')] })).toEqual({ ok: false, error: 'invalid_engine_rev' })
   })
 })
 
