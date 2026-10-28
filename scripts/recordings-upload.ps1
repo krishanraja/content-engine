@@ -116,6 +116,8 @@ $script:Problems = New-Object System.Collections.Generic.List[string]
 $script:FirstPass = $true
 $script:Watch = $null
 $script:WatchStartedAt = $null
+$script:WatchRepairAt = $null
+$script:WatchRepairOutcome = $null
 
 [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
 Add-Type -AssemblyName System.Net.Http
@@ -717,6 +719,10 @@ $WatchQuietMinutes = 6    # no log line for this long and no run under way: star
 $WatchStuckMinutes = 25   # one stage held this long: the run is stuck (a run ends itself after 20)
 $WatchDownMinutes = 15    # still no log line this long after this pass first started it: report it
 $WatchTimeLimit = 'PT30M'
+$WatchRepairEveryMinutes = 60
+# 0x8007010B, "The directory name is invalid": the task's Start in folder is not there. Both machines answered this
+# on 28 October 2026, after the watcher had been silent since 25 and 26 October.
+$WatchBadDirectory = 2147942667
 
 function ConvertTo-UtcTime([string]$Text) {
   if (-not $Text) { return $null }
@@ -778,13 +784,92 @@ function Update-Watcher([string]$Repo, [string]$Python) {
   } finally { $ErrorActionPreference = $previous }
 }
 
+function Test-WatcherClone([string]$Path) {
+  if (-not $Path) { return $false }
+  return ((Test-Path -LiteralPath (Join-Path $Path 'content_watcher\watch.py') -PathType Leaf) -and
+    (Test-Path -LiteralPath (Join-Path $Path 'scripts\install-content-watch.ps1') -PathType Leaf))
+}
+
+function Find-WatcherClone([string]$Was) {
+  # Where the watcher's clone is now. The repository was renamed from video-compression to content-watcher on
+  # 24 October 2026, and a folder can move with a rename: look beside where the task pointed, beside this clone,
+  # and in the dev folder and each folder in it.
+  $bases = New-Object System.Collections.Generic.List[string]
+  if ($Was) { $bases.Add((Split-Path -Parent $Was)) }
+  $bases.Add((Split-Path -Parent $RepoRoot))
+  $bases.Add((Split-Path -Parent (Split-Path -Parent $RepoRoot)))
+  $dev = Join-Path $env:USERPROFILE 'dev'
+  if (Test-Path -LiteralPath $dev -PathType Container) {
+    $bases.Add($dev)
+    foreach ($child in @(Get-ChildItem -LiteralPath $dev -Directory -ErrorAction SilentlyContinue)) { $bases.Add($child.FullName) }
+  }
+  foreach ($base in $bases) {
+    if (-not $base) { continue }
+    foreach ($name in @('content-watcher', 'video-compression')) {
+      $candidate = Join-Path $base $name
+      if (Test-WatcherClone $candidate) { return $candidate }
+    }
+  }
+  return $null
+}
+
+function Repair-WatchTask([string]$Was) {
+  # The task cannot start: its folder is gone, or Windows says the folder is invalid. Runs the watcher's own
+  # installer from wherever its clone is now, which installs the package from there and registers the task again
+  # (krishanraja/content-watcher scripts/install-content-watch.ps1). With no clone on this machine, the public
+  # repository is cloned where the old one was. At most once an hour; the report says how it went either way.
+  if ($script:WatchRepairAt -and ([DateTime]::UtcNow - $script:WatchRepairAt).TotalMinutes -lt $WatchRepairEveryMinutes) {
+    if ($script:WatchRepairOutcome -ne 'ok') { Add-Problem 'watch_task_broken' }
+    return
+  }
+  $script:WatchRepairAt = [DateTime]::UtcNow
+  $script:WatchRepairOutcome = 'failed'
+  $clone = Find-WatcherClone $Was
+  $previous = $ErrorActionPreference
+  $ErrorActionPreference = 'Continue'
+  try {
+    if (-not $clone) {
+      $git = Get-Command git.exe -ErrorAction SilentlyContinue
+      $parent = if ($Was) { Split-Path -Parent $Was } else { $null }
+      if (-not $parent -or -not (Test-Path -LiteralPath $parent -PathType Container)) { $parent = Join-Path $env:USERPROFILE 'dev' }
+      $target = Join-Path $parent 'content-watcher'
+      if ($null -ne $git -and -not (Test-Path -LiteralPath $target)) {
+        $output = @(& $git.Source clone --quiet https://github.com/krishanraja/content-watcher.git $target 2>&1)
+        if ($LASTEXITCODE -eq 0 -and (Test-WatcherClone $target)) {
+          $clone = $target
+          [void]$script:Watch.repaired.Add('cloned_watcher')
+          Write-Log "the content watcher was cloned to $target"
+        } else { Write-Log "the content watcher could not be cloned: $($output -join ' ')" }
+      }
+    }
+    if ($clone) {
+      $installer = Join-Path $clone 'scripts\install-content-watch.ps1'
+      $output = @(& powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File $installer 2>&1)
+      if ($LASTEXITCODE -eq 0) {
+        $script:WatchRepairOutcome = 'ok'
+        [void]$script:Watch.repaired.Add('reinstalled_task')
+        Write-Log "the content watcher's task was registered again from $clone"
+      } else { Write-Log "the content watcher could not be installed again from ${clone}: $(($output | Select-Object -Last 3) -join ' ')" }
+    } else { Write-Log "the content watcher's clone is not on this machine" }
+  } finally { $ErrorActionPreference = $previous }
+  if ($script:WatchRepairOutcome -ne 'ok') { Add-Problem 'watch_task_broken' }
+}
+
 function Invoke-WatchKeeper {
   $script:Watch = @{ repaired = (New-Object System.Collections.Generic.List[string]) }
   $task = Get-ScheduledTask -TaskName $WatchTaskName -ErrorAction SilentlyContinue
   if ($null -eq $task) { Add-Problem 'watch_not_installed'; return }
   $action = @($task.Actions)[0]
+  $repo = ([string](Get-Field $action 'WorkingDirectory')).Trim('"')
+  $info = Get-ScheduledTaskInfo -TaskName $WatchTaskName -ErrorAction SilentlyContinue
+  if (-not (Test-WatcherClone $repo) -or ($info -and [int64]$info.LastTaskResult -eq $WatchBadDirectory)) {
+    Repair-WatchTask $repo
+    $task = Get-ScheduledTask -TaskName $WatchTaskName -ErrorAction SilentlyContinue
+    if ($null -eq $task) { Add-Problem 'watch_not_installed'; return }
+    $action = @($task.Actions)[0]
+    $repo = ([string](Get-Field $action 'WorkingDirectory')).Trim('"')
+  }
   $pythonw = [string](Get-Field $action 'Execute')
-  $repo = [string](Get-Field $action 'WorkingDirectory')
   $python = Join-Path (Split-Path -Parent $pythonw) 'python.exe'
   if (-not (Test-Path -LiteralPath $python -PathType Leaf)) { $python = $pythonw }
   if ($repo -and (Test-Path -LiteralPath $repo -PathType Container)) { $script:Watch.head = Update-Watcher $repo $python }

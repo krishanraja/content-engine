@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process'
-import { mkdtempSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { mkdtempSync, mkdirSync, readFileSync, realpathSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it, vi } from 'vitest'
@@ -42,13 +42,15 @@ Set-StrictMode -Version Latest
 $tokens = $null; $errors = $null
 $ast = [System.Management.Automation.Language.Parser]::ParseFile('${SCRIPT.replace(/'/g, "''")}', [ref]$tokens, [ref]$errors)
 if ($errors.Count) { foreach ($e in $errors) { Write-Output ('PARSE ' + $e.Message) }; exit 2 }
-$wanted = @('Get-Field', 'Read-JsonFile', 'ConvertTo-UtcTime', 'Read-WatchLogLine', 'Update-Watcher', 'Invoke-WatchKeeper', 'Get-WatchBlock')
+$wanted = @('Get-Field', 'Read-JsonFile', 'ConvertTo-UtcTime', 'Read-WatchLogLine', 'Update-Watcher', 'Invoke-WatchKeeper', 'Get-WatchBlock',
+  'Test-WatcherClone', 'Find-WatcherClone', 'Repair-WatchTask')
 foreach ($f in $ast.FindAll({ param($n) $n -is [System.Management.Automation.Language.FunctionDefinitionAst] }, $true)) {
   if ($wanted -contains $f.Name) { . ([ScriptBlock]::Create($f.Extent.Text)) }
 }
 $WatchTaskName = 'Mindmake Content Watcher (not installed on CI)'
 $WatchQuietMinutes = 6; $WatchStuckMinutes = 25; $WatchDownMinutes = 15; $WatchTimeLimit = 'PT30M'
-$script:Watch = $null; $script:WatchStartedAt = $null
+$WatchRepairEveryMinutes = 60; $WatchBadDirectory = 2147942667
+$script:Watch = $null; $script:WatchStartedAt = $null; $script:WatchRepairAt = $null; $script:WatchRepairOutcome = $null
 $script:Problems = New-Object System.Collections.Generic.List[string]
 function Add-Problem([string]$Code) { if (-not $script:Problems.Contains($Code)) { $script:Problems.Add($Code) } }
 function Write-Log([string]$Message) { }
@@ -64,5 +66,39 @@ $line = Read-WatchLogLine
     expect(result.counts).toEqual({ claimed: 0, 'engine.engine_tls_untrusted': 1, seconds: 0 })
     expect(result.utc).toBe('2026-10-26T07:59:23')
     expect(result.block).toEqual({ repaired: [] })
+  })
+
+  // Both machines, 28 October 2026: the task answered 0x8007010B, "The directory name is invalid", after the
+  // repository was renamed from video-compression to content-watcher. The keeper finds the clone where it is now.
+  it.runIf(process.platform === 'win32')('finds the watcher clone after its folder was renamed, and only a real clone', () => {
+    const root = mkdtempSync(join(tmpdir(), 'cwdev-'))
+    const dev = join(root, 'dev')
+    const moved = join(dev, 'mindmake', 'content-watcher')
+    for (const dir of [join(moved, 'content_watcher'), join(moved, 'scripts'), join(dev, 'other', 'video-compression')]) mkdirSync(dir, { recursive: true })
+    writeFileSync(join(moved, 'content_watcher', 'watch.py'), '')
+    writeFileSync(join(moved, 'scripts', 'install-content-watch.ps1'), '')
+    const command = `
+$ErrorActionPreference = 'Stop'
+Set-StrictMode -Version Latest
+$tokens = $null; $errors = $null
+$ast = [System.Management.Automation.Language.Parser]::ParseFile('${SCRIPT.replace(/'/g, "''")}', [ref]$tokens, [ref]$errors)
+foreach ($f in $ast.FindAll({ param($n) $n -is [System.Management.Automation.Language.FunctionDefinitionAst] }, $true)) {
+  if (@('Test-WatcherClone', 'Find-WatcherClone') -contains $f.Name) { . ([ScriptBlock]::Create($f.Extent.Text)) }
+}
+$env:USERPROFILE = '${root.replace(/'/g, "''")}'
+$RepoRoot = '${join(root, 'elsewhere', 'recordings-source').replace(/'/g, "''")}'
+[ordered]@{
+  moved = Find-WatcherClone '${join(dev, 'mindmake', 'video-compression').replace(/'/g, "''")}'
+  unknown = Find-WatcherClone ''
+  empty = Test-WatcherClone '${join(dev, 'other', 'video-compression').replace(/'/g, "''")}'
+} | ConvertTo-Json -Compress
+`
+    const out = execFileSync('powershell.exe', ['-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-Command', command], { encoding: 'utf8' })
+    const result = JSON.parse(out.trim().split(/\r?\n/).pop()!)
+    // The temp folder can come back in its short 8.3 form (RUNNER~1) and PowerShell answers the long one: same folder.
+    const real = (p: string) => realpathSync.native(p).toLowerCase()
+    expect(real(result.moved)).toBe(real(moved))
+    expect(real(result.unknown)).toBe(real(moved))
+    expect(result.empty).toBe(false)
   })
 })

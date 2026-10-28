@@ -43,6 +43,7 @@ export const LANE_PROBLEMS: Readonly<Record<string, string>> = Object.freeze({
   watch_key_problem: 'has a content watcher with no engine key, or one the engine refuses',
   watch_run_failed: 'has a content watcher whose runs fail (its health report names the cause)',
   watch_not_running: 'has a content watcher that has not run for 15 minutes even after this pass started it',
+  watch_task_broken: 'has a content watcher whose task cannot start, and this pass could not install it again (its log says why)',
 })
 
 /** A report older than this no longer fails the job: a machine that is off is
