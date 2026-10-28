@@ -41,8 +41,8 @@ class MemoryStore implements WatchStore {
   }
   async get(id: string) { const r = this.rows.get(id); return r ? { ...r } : null }
   async readRevs(shas: string[]) {
-    const out = new Map<string, { id: string; engine_rev: string }>()
-    for (const s of shas) { const r = this.reads.get(s); if (r) out.set(s, { id: r.id, engine_rev: r.engine_rev }) }
+    const out = new Map<string, { id: string; engine_rev: string; linked: boolean }>()
+    for (const s of shas) { const r = this.reads.get(s); if (r) out.set(s, { id: r.id, engine_rev: r.engine_rev, linked: r.source_url !== null }) }
     return out
   }
   async upsertReads(rows: ReadRow[]) {
@@ -182,6 +182,21 @@ describe('readings', () => {
     const same = await writeReads(store, [{ ...readRow('b'), read_md: 'again' }])
     expect(same.written).toBe(1)
     expect(store.reads.get(sha('b'))!.read_md).toBe('again')
+  })
+
+  it('never lets a reading of a hand-dropped file replace one made from his link, at any revision', async () => {
+    // 28 October: the other home computer read his filed carousel slides as new drops and overwrote all 16.
+    const store = new MemoryStore([])
+    await writeReads(store, [readRow('a')])
+    const drop = { ...readRow('a', 'cw-2026.11.2'), source_url: null, platform: 'own', read_md: '# Reading: own file' }
+    const out = await writeReads(store, [drop])
+    expect(out).toMatchObject({ written: 0, kept_newer: 1 })
+    expect(store.reads.get(sha('a'))!.platform).toBe('instagram')
+    expect(out.ids.get(sha('a'))).toBe(store.reads.get(sha('a'))!.id)
+    // A link reading still replaces a drop reading of the same file.
+    await writeReads(store, [{ ...readRow('c'), source_url: null, platform: 'own' }])
+    expect((await writeReads(store, [readRow('c')])).written).toBe(1)
+    expect(store.reads.get(sha('c'))!.platform).toBe('instagram')
   })
 })
 

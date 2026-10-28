@@ -73,7 +73,7 @@ export interface WatchStore {
   updateIf(id: string, was: { status: string; claimed_at: string | null }, patch: Record<string, unknown>): Promise<WatchRequestRow | null>
   get(id: string): Promise<WatchRequestRow | null>
   /** The engine revision and id of each reading already stored, by sha256. */
-  readRevs(shas: string[]): Promise<Map<string, { id: string; engine_rev: string }>>
+  readRevs(shas: string[]): Promise<Map<string, { id: string; engine_rev: string; linked?: boolean }>>
   /** Insert or replace readings by sha256; returns each one's id. */
   upsertReads(rows: ReadRow[]): Promise<Map<string, string>>
 }
@@ -228,12 +228,17 @@ export async function claim(store: WatchStore, machine: string, limit: number, n
   return { requests: claimed.map(claimView), expired }
 }
 
-/** Write readings, never letting an older engine revision replace a newer one. */
+/** Write readings, never letting an older engine revision replace a newer one, and never letting a reading of a
+ *  hand-dropped file replace one made from the link Krish pasted. On 28 October both home computers read the same
+ *  files: one from the link (its post, caption and slides), the other as files that had just appeared in the synced
+ *  folder, and the second overwrote all 16 slides of his carousel and his Short within minutes. */
 export async function writeReads(store: WatchStore, rows: ReadRow[]) {
   const existing = await store.readRevs(rows.map(r => r.sha256))
   const toWrite = rows.filter(r => {
     const found = existing.get(r.sha256)
-    return !found || compareRev(r.engine_rev, found.engine_rev) >= 0
+    if (!found) return true
+    if (found.linked && !r.source_url) return false
+    return compareRev(r.engine_rev, found.engine_rev) >= 0
   })
   const written = toWrite.length ? await store.upsertReads(toWrite) : new Map<string, string>()
   const ids = new Map<string, string>()

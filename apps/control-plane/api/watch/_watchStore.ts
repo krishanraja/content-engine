@@ -31,11 +31,13 @@ export const watchStore: WatchStore = {
     return (data as WatchRequestRow | null) ?? null
   },
   async readRevs(shas) {
-    const out = new Map<string, { id: string; engine_rev: string }>()
+    const out = new Map<string, { id: string; engine_rev: string; linked: boolean }>()
     if (!shas.length) return out
-    const { data, error } = await supabase.from('content_reads').select('id, sha256, engine_rev').in('sha256', shas)
+    const { data, error } = await supabase.from('content_reads').select('id, sha256, engine_rev, source_url').in('sha256', shas)
     if (error) throw new Error('watch_store_unavailable')
-    for (const row of data || []) out.set(row.sha256 as string, { id: row.id as string, engine_rev: row.engine_rev as string })
+    for (const row of data || []) {
+      out.set(row.sha256 as string, { id: row.id as string, engine_rev: row.engine_rev as string, linked: row.source_url != null })
+    }
     return out
   },
   async upsertReads(rows: ReadRow[]) {
