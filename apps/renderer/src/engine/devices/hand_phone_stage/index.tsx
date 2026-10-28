@@ -2,6 +2,7 @@ import React from 'react'
 import { Img } from 'remotion'
 import { glassKind } from '../../kit/glassRegistry'
 import { PH, PW, Screen, uiClipPath } from '../../kit/phoneGlass'
+import { footageLayout } from '../../kit/glass/footage'
 import type { DeviceProps } from '../types'
 import { phoneState } from './state'
 const plateRoot='plates/hand-held-screen/'
@@ -19,7 +20,28 @@ export function Device({object,events,box,tokens,frame}:DeviceProps) {
   // Backdrops and scrims use canvas placement inside the continuous plate world.
   const inverse=`rotate(${-s.ambientRoll}deg) scale(${1/s.ambientScale}) scale(${1/s.cam.k}) rotate(${-s.cam.rot}deg) translate(${-s.cam.tx}px,${-s.cam.ty}px)`
   const full:React.CSSProperties={position:'absolute',left:0,top:0,width:box.width,height:box.height,transformOrigin:'0 0'}
+  // BrandFrame is the following sibling in FormatMaster. Its existing Grain has
+  // no mask input, so scope a clip to that sibling's grain only. The viewport
+  // intersection follows the very same glass, ambient and camera transforms.
+  const footage=s.glass.find(l=>l.kind==='footage' && l.opacity>0)
+  let grainClip: string | undefined
+  const footageParams=s.params.glass.footage
+  if(footage && typeof footageParams?.src==='string') {
+    const l=footageLayout(footageParams as {src:string},s.cam.k)
+    const u0=Math.max(0,l.cx-l.height/2),u1=Math.min(screen.W,l.cx+l.height/2)
+    const v0=Math.max(0,l.cy-l.width/2),v1=Math.min(screen.H,l.cy+l.width/2)
+    if(u1>u0 && v1>v0) {
+      const rad=s.ambientRoll*Math.PI/180,c=Math.cos(rad),sn=Math.sin(rad)
+      const points=[[u0,v0],[u1,v0],[u1,v1],[u0,v1]].map(([u,v])=>{
+        const [x,y]=screen.u2p(u!,v!)
+        const p=s.cam.p2c(s.ambientScale*(c*x-sn*y),s.ambientScale*(sn*x+c*y))
+        return `${p[0]+box.left}px ${p[1]+box.top}px`
+      })
+      grainClip=`polygon(evenodd, 0px 0px, ${box.width}px 0px, ${box.width}px ${box.height}px, 0px ${box.height}px, 0px 0px, ${points.join(', ')}, ${points[0]})`
+    }
+  }
   return <div data-device="hand_phone_stage" style={{...full,left:box.left,top:box.top,overflow:'hidden',background:tokens.ink,opacity:s.opacity}}>
+    {grainClip && <style data-footage-grain-mask="">{`div:has(> div > [data-device="hand_phone_stage"]) ~ div > div[aria-hidden="true"][style*="mix-blend-mode:screen"] { clip-path: ${grainClip}; }`}</style>}
     <div data-phone-world="" style={{position:'absolute',left:0,top:0,width:PW,height:PH,transformOrigin:'0 0',transform:s.cam.css()+' '+ambient}}>
       <div style={{...full,transform:inverse}}>
         {s.backdrops.map(layer=>{
