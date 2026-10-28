@@ -97,7 +97,7 @@ def measure(image, lock, *, plate_on_screen=False, exempt=(), caption_words=None
         solid = float(word['conf']) >= 75 and sum(c.isalnum() for c in word['text']) >= 3
         if h < minimum and solid:
             small.append(word)
-        if (solid and _inside(x + w / 2, y + h / 2, zones['caption'])
+        if ((solid or float(word['conf']) >= 90) and _inside(x + w / 2, y + h / 2, zones['caption'])
                 and not set(qc_captions._tokens(word['text'])).issubset(allowed)):
             caption.append(word)
         if (not _inside(x + w / 2, y + h / 2, zones['marquee'])
