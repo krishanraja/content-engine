@@ -48,7 +48,7 @@ First, the people who used the app. According to Wired, the list of what Disney 
 
 Second, everyone with a claim against it. Families sued Character.AI, saying its chatbots harmed children; those families agreed to settle, and a referee approved each settlement on 11 October, the day before the bankruptcy. When it filed, 46 states and territories were investigating it, and several states have sued. Wired reports the deal is built so that whatever is left of Character.AI keeps responsibility for those legal battles, some of them still going.
 
-So the money followed the people. Google paid billions to use the tech and hire the founders. Disney is paying millions for the rest of the team. Everyone else gets the empty box.
+So the money followed the people. Google paid $2.7 billion to use the tech and hire the founders. Disney is paying millions for the rest of the team. Everyone else gets the empty box.
 
 If your business runs on someone else's AI, this is the part worth sitting with. You can't stop your supplier being bought or shut down. You can spot the signs early, and in this story they showed up years before the end.
 

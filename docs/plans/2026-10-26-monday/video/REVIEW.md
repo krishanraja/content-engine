@@ -65,11 +65,13 @@ on Monday's tab of the week's board (The two cuts, for your review).
    every named company's real logo on the cuts and thumbnails, so OpenAI's symbol is on the 90-second cut's Sora page,
    Warner Music Group's on its prediction page, and the three thumbnails' logo strip carries OpenAI, Warner Music Group
    and Universal Music Group. The long cut already carries them all.
-4. **The post's `3 Video` folder waits on one answer about the article, not on the cuts.** The prediction is kept as
-   recorded and the re-check has run ($0.26: Monday's fact checks total about $1.28 against the $1.20 you approved). The
-   gate still wants your sign-off of eight sentences no source confirms word for word, listed in
-   `review/fact-signoff.md`. Then the pack is built, the thumbnails with the new logo strip go out with it, and the cuts
-   are sent.
+4. **The post's `3 Video` folder waits on the covers, not the cuts or the article.** The fact gate now passes (prediction
+   kept as recorded; the eight sentences signed in your words; two paid re-checks, $0.26 and $0.20, so Monday's fact
+   checks total about $1.48 against the $1.20 you approved). The library's Visual gate still wants the real logos of
+   every company the article names on the cover too: OpenAI, Warner Music Group and Universal Music Group are missing
+   from the signed covers, which carry Google, Disney and Character.AI. Either a small logo strip under the rows, as on
+   the thumbnails (the words stay), or those three named as mentions-only in `config/logo-registry.json`. Then the pack
+   is built and the cuts are sent.
 
 Nothing has been published, sent or scheduled. Fact status: the article's fact gate is still open (`making.py show`:
 "the fact gate did not pass"); the video's figures are the ones the signed direction and the filed sources carry.
