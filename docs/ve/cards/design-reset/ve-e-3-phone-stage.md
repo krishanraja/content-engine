@@ -32,7 +32,8 @@ Format H's stage is one real phone in one real hand on a real-world plate. The c
 5. `config/ve/formats/hand-held-screen.json`: add `cameras` with the five approved camera states for beats `open, result_a, result_b, evidence, verdict`, values read from `ref/H/build.py` `f1()..f5()` (after `safe()` and `fit_bg()`; the table in `H-anatomy.md` section 2 is the cross-check). Drop `hand_phone_stage` from `pending_devices`; leave the rest.
 6. Register the device (`registry.ts`, `config/ve/devices.json` verbs above); add `move` to the verb enums in `props.ts` and `production-spec.ts` (additive; if card ve-e-1 already added `draw`, keep it).
 
-## Tests and acceptance (every command exits 0)
+## Tests
+## Acceptance
 `phone.test.ts`: the parity vectors; `homography` maps the unit rectangle onto the quad; port `check_cover` and assert the five cameras leave no canvas corner uncovered (F4's declared plate edge excepted). `device.test.ts`: nothing renders before `enter`; at a `move` the camera is the old one at +0 and the new one at +18, monotone between; `fill` swaps the glass kind; markup holds the current `matrix3d(` and no `overflow:visible` or `#` colour; all five cameras render. `tests/ve_phone_stage_test.py`: the format JSON has five cameras with `k` 1.8, 1.9, 2.1, 1.95, 1.55 and rot -3, -10, -1, -104.5, -8; compile accepts `move` and `fill` for this device only.
 npx vitest run apps/renderer/src/engine
 node node_modules/typescript/bin/tsc --noEmit --pretty false

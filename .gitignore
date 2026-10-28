@@ -56,3 +56,8 @@ supabase/.temp/
 
 # ve working media and card logs (never committed; docs/ve/ENGINE.md)
 .ve-work/
+
+# ve design lock: golden key frames and calibration fixtures are tracked on purpose
+!fixtures/ve/design-lock/**/*.jpg
+!assets/plates/**/*.jpg
+!assets/plates/**/*.png

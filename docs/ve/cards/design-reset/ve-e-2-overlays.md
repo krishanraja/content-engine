@@ -27,7 +27,8 @@ Every approved frame is a hero object plus overlays: the loud headline, stickers
 ## Kit invariants (write them as one helper in `kit/` and call it from every device test)
 Render each device's React element tree to static markup (`react-dom/server`) at a settled frame and assert: no `blur(` and no `box-shadow` with a non-zero blur radius; every font-size >= 30 px; font families only from `HOUSE_FONTS`; every colour is one of the passed tokens (no `#`, no `rgb(`); Anton text is uppercase; `headline` has no `rotate` in its transform while `sticker` and `stamp` stay within their tilt ranges; `stamp` border is 3 px; nothing positioned outside the 1080x1920 canvas; before the first event nothing visible.
 
-## Tests and acceptance (every command exits 0)
+## Tests
+## Acceptance
 Each device test checks state before and after its verbs, the brand invariants above, and that text longer than the zone is shrunk (headline) rather than overflowing. `tests/ve_overlays_test.py` (unittest): `config/ve/devices.json` lists the five devices with exactly the verbs above and compile accepts each verb only for its device; existing tests pass.
 npx vitest run apps/renderer/src/engine
 node node_modules/typescript/bin/tsc --noEmit --pretty false
