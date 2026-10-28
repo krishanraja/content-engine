@@ -29,6 +29,8 @@ export function testGridStateAt(object: EngineObject, events: readonly EngineEve
   let marked: EngineEvent | null = null
   let exited: EngineEvent | null = null
   let highlighted = new Set<string>()
+  let carry: EngineEvent | null = null
+  let carried = new Set<string>()
   for (const event of timeline.fired) {
     switch (event.verb) {
       case 'enter': entered = event; exited = null; break
@@ -37,7 +39,12 @@ export function testGridStateAt(object: EngineObject, events: readonly EngineEve
         for (const id of select(event.toState, params)) if (!stamps.has(id)) stamps.set(id, event)
         break
       case 'highlight': highlighted = select(event.toState, params); break
-      // carry preserves every accumulated result and the current emphasis.
+      case 'carry':
+        if (!carry) {
+          carry = event
+          carried = new Set([...highlighted].filter((id) => !stamps.has(id)))
+        }
+        break
       case 'exit': exited = event; break
     }
   }
@@ -57,15 +64,18 @@ export function testGridStateAt(object: EngineObject, events: readonly EngineEve
       const stampProgress = stamp ? progress(elapsed(stamp), MOTION.slapFrames, ENTER) : 0
       const ghostAge = marked ? elapsed(marked) - index * MOTION.staggerFrames : -1
       const isHighlighted = highlighted.has(cell.id)
+      const isCarried = carried.has(cell.id) && !stamp
       return {
         ...cell,
         stamped: Boolean(stamp),
         tick: Boolean(stamp) && cell.value > 0,
         stampProgress,
-        ghost: params.answerKey && Boolean(marked) && ghostAge >= 0 && !stamp,
+        carried: isCarried,
+        carryProgress: isCarried && carry ? progress(elapsed(carry), MOTION.dropFrames, ENTER) : 0,
+        ghost: params.answerKey && Boolean(marked) && ghostAge >= 0 && !stamp && !isCarried,
         ghostProgress: params.answerKey && marked ? progress(ghostAge, MOTION.staggerFrames, ENTER) : 0,
-        opacity: highlighted.size === 0 || isHighlighted ? 1 : 0.35,
-        scale: isHighlighted ? 1.08 : 1,
+        opacity: isCarried || highlighted.size === 0 || isHighlighted ? 1 : 0.35,
+        scale: isCarried ? 1 : isHighlighted ? 1.08 : 1,
       }
     }),
   }

@@ -1,6 +1,7 @@
 import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
+import { MOTION } from '../../clock'
 import { EngineEventSchema, EngineObjectSchema, EngineTokensSchema } from '../../props'
 import type { EngineEvent } from '../../props'
 import { slotsFor } from '../../layouts'
@@ -57,12 +58,49 @@ describe('test_grid persistent scoreboard', () => {
   it('retains ticks and emphasis through highlight, carry, exit and repeated entry', () => {
     const focused = at(156)
     const held = at(186)
-    expect(held.cells).toEqual(focused.cells)
-    expect(held.cells.find((cell) => cell.id === 'deepseek:xinjiang')).toMatchObject({ opacity: 1, scale: 1.08, tick: false })
+    expect(held.cells.filter((cell) => cell.stamped)).toEqual(focused.cells.filter((cell) => cell.stamped))
+    expect(held.cells.find((cell) => cell.id === 'deepseek:xinjiang')).toMatchObject({ opacity: 1, scale: 1, tick: false, carried: true })
     expect(held.cells.filter((cell) => cell.opacity === 0.35)).toHaveLength(5)
     expect(at(216).cells.filter((cell) => cell.tick)).toHaveLength(5)
     const reentered: EngineEvent = { id: 'again', obj: object.obj, verb: 'enter', toState: 'hold results', atFrame: 220 }
     expect(at(230, [...events, reentered]).cells.filter((cell) => cell.tick)).toHaveLength(5)
+  })
+
+  it('carries exactly the highlighted unstamped cell with seekable drop progress', () => {
+    const carryFrame = events.find((event) => event.verb === 'carry')!.atFrame
+    for (let frame = 0; frame < carryFrame; frame++) {
+      expect(at(frame).cells.every((cell) => !cell.carried && cell.carryProgress === 0)).toBe(true)
+    }
+    expect(at(carryFrame).cells.filter((cell) => cell.carried).map((cell) => cell.id)).toEqual(['deepseek:xinjiang'])
+    const values = Array.from({ length: MOTION.dropFrames + 1 }, (_, offset) =>
+      at(carryFrame + offset).cells.find((cell) => cell.id === 'deepseek:xinjiang')!.carryProgress)
+    expect(values[0]).toBe(0)
+    expect(values.at(-1)).toBe(1)
+    for (let i = 1; i < values.length; i++) {
+      expect(values[i]).toBeGreaterThan(values[i - 1]!)
+      expect(values[i]).toBeLessThanOrEqual(1)
+    }
+    expect(at(carryFrame, [...events].reverse())).toEqual(at(carryFrame))
+    expect(at(carryFrame + MOTION.dropFrames).cells.filter((cell) => !cell.carried).every((cell) => cell.carryProgress === 0)).toBe(true)
+  })
+
+  it('captures only the first carry selection and excludes stamps', () => {
+    const cues: EngineEvent[] = [
+      ...events.filter((event) => event.verb !== 'highlight'),
+      { id: 'all', obj: object.obj, verb: 'highlight', toState: '*:*', atFrame: 150 },
+      { id: 'later-focus', obj: object.obj, verb: 'highlight', toState: 'claude:*', atFrame: 190 },
+      { id: 'later-carry', obj: object.obj, verb: 'carry', toState: 'hold', atFrame: 195 },
+    ]
+    expect(at(200, cues).cells.filter((cell) => cell.carried).map((cell) => cell.id)).toEqual(['deepseek:xinjiang'])
+    expect(at(200, cues).cells.find((cell) => cell.carried)).toMatchObject({ opacity: 1, scale: 1, carryProgress: 1 })
+    expect(at(200, cues).cells.filter((cell) => cell.stamped)).toEqual(at(200, cues.filter((event) => event.verb !== 'carry')).cells.filter((cell) => cell.stamped))
+  })
+
+  it('carries nothing without a highlight, including on later carry events', () => {
+    const cues = events.filter((event) => event.verb !== 'highlight')
+    cues.push({ id: 'late-focus', obj: object.obj, verb: 'highlight', toState: 'deepseek:xinjiang', atFrame: 190 },
+      { id: 'late-carry', obj: object.obj, verb: 'carry', toState: 'hold', atFrame: 195 })
+    for (const frame of [180, 188, 200]) expect(at(frame, cues).cells.every((cell) => !cell.carried && cell.carryProgress === 0)).toBe(true)
   })
 
   it('drops for eight frames, fades for six, and hides outside the object lifespan', () => {
@@ -107,6 +145,25 @@ describe('test_grid persistent scoreboard', () => {
   })
 
   for (const aspect of ['9:16', '16:9'] as const) {
+    it(`renders the hollow carried answer and shrinking outline in ${aspect}`, () => {
+      const carryFrame = events.find((event) => event.verb === 'carry')!.atFrame
+      for (const offset of [0, 4, MOTION.dropFrames]) {
+        const frame = carryFrame + offset
+        const state = at(frame).cells.find((cell) => cell.carried)!
+        const html = renderToStaticMarkup(createElement(TestGrid, {
+          object, events, frame, aspect, tokens: EngineTokensSchema.parse(fixture.tokens),
+          box: aspect === '9:16' ? fixture.boxes.tall : fixture.boxes.wide,
+        }))
+        expect(html.match(/data-carry="true"/g)).toHaveLength(1)
+        expect(html).toContain('aria-label="DeepSeek, XINJIANG: ANSWER DELETED"')
+        expect(html).toContain('color:transparent')
+        expect(html).toContain('-webkit-text-stroke:')
+        expect(html).toContain('border:2px dashed black')
+        expect(html).toContain(`scale(${2.4 - 1.4 * state.carryProgress})`)
+        expect(html).toContain(`opacity:${state.carryProgress}`)
+      }
+    })
+
     it(`renders six persistent cells and provenance in the ${aspect} slot`, () => {
       for (const frame of [0, 29, 48, 66, 126, 156, 186, 216]) {
         const html = renderToStaticMarkup(createElement(TestGrid, {

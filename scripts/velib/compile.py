@@ -147,6 +147,8 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     beats = []
     events = []
     selected = cut['beats']
+    device_verbs = load_json(ROOT / 'config' / 've' / 'devices.json')['devices']
+    by_object = {obj['obj']: obj for obj in spec.get('objects', [])}
     duration = _frame(rows[-1]['end_s']) + 12
     for index, beat in enumerate(selected):
         if beat.get('plate', {}).get('source') not in ('take', 'none'):
@@ -166,6 +168,16 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
                 raise ValueError(f'event outside beat {beat["id"]}')
             compiled = {'id': f'{beat["id"]}-{event_index}', 'obj': event['obj'], 'verb': event['verb'],
                         'toState': event['to_state'], 'atFrame': event_frame}
+            obj = by_object.get(event['obj'])
+            if obj is None:
+                raise ValueError(f'event {compiled["id"]}: object {event["obj"]} is missing')
+            device = obj['device']
+            if device not in device_verbs:
+                raise ValueError(f'event {compiled["id"]}: object {event["obj"]}, device {device}, '
+                                 f'verb {event["verb"]}: device missing from devices.json')
+            if event['verb'] not in device_verbs[device]['verbs']:
+                raise ValueError(f'event {compiled["id"]}: object {event["obj"]}, device {device} '
+                                 f'does not draw verb {event["verb"]}')
             if event.get('sfx'):
                 compiled['sfx'] = event['sfx']
             events.append(compiled)

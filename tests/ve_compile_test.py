@@ -63,6 +63,26 @@ def timed_words():
 
 
 class CompileTest(unittest.TestCase):
+    def test_undrawn_verb_refused(self):
+        spec = load_json(FIXTURE / 'spec.json')
+        beat = spec['cuts']['proof-tall']['beats'][0]
+        event = beat['events'][0]
+        obj = next(obj for obj in spec['objects'] if obj['obj'] == event['obj'])
+        obj['device'] = 'query_chip'
+        event['verb'] = 'carry'
+        with self.assertRaises(ValueError) as caught:
+            compile_cut(spec, 'proof-tall', timed_words(), FIXTURE)
+        for name in (f'{beat["id"]}-0', obj['obj'], 'query_chip', 'carry'):
+            self.assertIn(name, str(caught.exception))
+
+    def test_undeclared_device_refused(self):
+        spec = load_json(FIXTURE / 'spec.json')
+        event = spec['cuts']['proof-tall']['beats'][0]['events'][0]
+        obj = next(obj for obj in spec['objects'] if obj['obj'] == event['obj'])
+        obj['device'] = 'undeclared_device'
+        with self.assertRaisesRegex(ValueError, 'undeclared_device.*missing from devices.json'):
+            compile_cut(spec, 'proof-tall', timed_words(), FIXTURE)
+
     def test_fixture(self):
         spec = load_json(FIXTURE / 'spec.json')
         words = timed_words()
