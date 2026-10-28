@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<title>TWO PASSPORTS · mind.the.gap module · key frames</title>
+<meta name="viewport" content="width=1080">
+<style>
+/* ===== fonts: local brand files only ===== */
+@font-face{font-family:"Anton";src:url("../brand/fonts/Anton-Regular.ttf");font-weight:400}
+@font-face{font-family:"Fraunces";src:url("../brand/fonts/Fraunces-Italic-Variable.ttf");font-style:italic;font-weight:100 900}
+@font-face{font-family:"Archivo";src:url("../brand/fonts/Archivo-Variable.ttf");font-weight:100 900;font-stretch:62% 125%}
+@font-face{font-family:"Plex";src:url("../brand/fonts/IBMPlexMono-Regular.ttf");font-weight:400}
+@font-face{font-family:"Plex";src:url("../brand/fonts/IBMPlexMono-Medium.ttf");font-weight:500}
+@font-face{font-family:"Plex";src:url("../brand/fonts/IBMPlexMono-SemiBold.ttf");font-weight:600}
+@font-face{font-family:"Plex";src:url("../brand/fonts/IBMPlexMono-Bold.ttf");font-weight:700}
+
+/* ===== tokens ===== */
+:root{
+  --ink:#0C1512; --ink-soft:#16221D; --ink-deep:#070D0B;
+  --cream:#F4EFE4; --mint:#7EF0C0; --coral:#FF6A4D;
+  --paper:#EEE3CE;
+  --halftone:radial-gradient(circle at 7px 7px, rgba(12,21,18,.17) 1.9px, rgba(12,21,18,0) 2.5px);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--ink-deep);width:1080px}
+body{-webkit-font-smoothing:antialiased}
+.frame{position:relative;width:1080px;height:1920px;overflow:hidden;background:var(--ink);isolation:isolate}
+body:has(.frame:target) .frame:not(:target){display:none}
+.a{position:absolute}
+
+/* ===== ground: ink table, printed rosette, light bands, grain ===== */
+.table{position:absolute;inset:0;z-index:0;background:
+  radial-gradient(90% 55% at 16% 6%, #1a2b23 0%, rgba(12,21,18,0) 70%),
+  linear-gradient(180deg,#0C1512 0%,#0B1411 58%,#070D0B 100%)}
+.table::before{content:"";position:absolute;inset:-12%;background:linear-gradient(112deg,transparent 0 21%,rgba(244,239,228,.055) 28%,transparent 36%,transparent 60%,rgba(244,239,228,.045) 68%,transparent 77%)}
+.rosette{position:absolute;width:1500px;height:1500px;background:url("assets/rosette.svg") center/contain no-repeat;opacity:.085;z-index:0}
+.grain{position:absolute;inset:0;z-index:50;pointer-events:none;opacity:.07;mix-blend-mode:screen;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='g' x='0' y='0' width='100%25' height='100%25'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .96  0 0 0 0 .94  0 0 0 0 .89  2.6 0 0 0 -.8'/></filter><rect width='100%25' height='100%25' filter='url(%23g)'/></svg>")}
+.grain.fine{z-index:51;opacity:.03;mix-blend-mode:normal}
+
+/* ===== type roles ===== */
+.h{position:absolute;font-family:"Anton";font-weight:400;text-transform:uppercase;line-height:.88;color:var(--cream);white-space:nowrap;letter-spacing:0;z-index:20}
+.h .ln{display:block}
+.swipe{position:relative;display:inline-block;color:var(--ink);padding:0 .07em;margin-left:-.07em;z-index:0;isolation:isolate}
+.swipe::before{content:"";position:absolute;z-index:-1;left:-.02em;right:-.02em;top:-.015em;bottom:-.01em;background:var(--coral);transform:skewX(-8deg);background-image:var(--halftone);background-size:14px 14px}
+.dek{position:absolute;font-family:"Fraunces";font-style:italic;font-weight:400;font-size:46px;line-height:1.16;color:var(--cream);z-index:20}
+.lab{font-family:"Plex";font-weight:500;font-size:30px;line-height:1;letter-spacing:.14em;text-transform:uppercase}
+.pill{position:absolute;left:72px;top:72px;z-index:30;font-family:"Plex";font-weight:600;font-size:30px;line-height:1;letter-spacing:.04em;color:var(--ink);background:var(--coral);padding:12px 20px 13px;background-image:var(--halftone);background-size:14px 14px}
+.ill{position:absolute;right:108px;top:84px;z-index:30;font-family:"Plex";font-weight:500;font-size:28px;line-height:1;letter-spacing:.14em;text-transform:uppercase;color:var(--cream);opacity:.74}
+
+/* ===== sticker (voice in miniature) ===== */
+.sticker{position:absolute;z-index:40;font-family:"Plex";font-weight:600;font-size:34px;line-height:1;letter-spacing:.06em;text-transform:uppercase;color:var(--ink);background:var(--coral);border:2px solid var(--ink);border-radius:999px;padding:17px 30px 18px;box-shadow:5px 6px 0 var(--ink-deep);white-space:nowrap;background-image:var(--halftone);background-size:14px 14px;text-align:center}
+.sticker.two{border-radius:46px;padding:18px 34px 20px;font-size:44px;line-height:1.08}
+
+/* ===== passport: cover, stacked leaves, sheet, spine thread ===== */
+.page{position:absolute;width:900px;height:1700px;z-index:10}
+.page .cover{position:absolute;left:-8px;top:-14px;right:-30px;bottom:-60px;border-radius:12px 64px 0 0;background:linear-gradient(160deg,#17251f 0%,#0b1310 70%);box-shadow:0 46px 80px rgba(0,0,0,.62),0 8px 18px rgba(0,0,0,.5),inset 0 0 0 2px rgba(244,239,228,.06)}
+.page .stk{position:absolute;inset:0;border-radius:8px 52px 0 0;background:#d9ccb1;box-shadow:0 0 0 1px rgba(70,52,26,.28)}
+.page .stk.s1{transform:translate(8px,3px)}
+.page .stk.s2{transform:translate(15px,6px);background:#cdbfa3}
+.page .stk.s3{transform:translate(22px,9px);background:#bfae8f}
+.page .stk::after{content:"";position:absolute;right:0;top:40px;bottom:0;width:100%;background:repeating-linear-gradient(90deg,transparent 0 calc(100% - 0px),transparent 0)}
+.page .sheet{position:absolute;inset:0;border-radius:8px 48px 0 0;overflow:hidden;background:url("assets/paper.jpg") 0 0/1088px auto,var(--paper);box-shadow:0 0 0 1px rgba(70,52,26,.30)}
+.page .sheet::before{content:"";position:absolute;inset:0;background:url("assets/guilloche.svg") 0 0/900px 1700px no-repeat;mix-blend-mode:multiply;opacity:.95}
+.page .sheet::after{content:"";position:absolute;inset:0;background:
+  linear-gradient(118deg,rgba(255,251,238,.38) 0%,rgba(255,251,238,0) 36%),
+  linear-gradient(104deg,rgba(0,0,0,0) 34%,rgba(92,66,32,.12) 47%,rgba(0,0,0,0) 60%),
+  linear-gradient(90deg,rgba(58,40,16,.36) 0,rgba(58,40,16,.10) 44px,rgba(58,40,16,0) 92px),
+  linear-gradient(180deg,rgba(0,0,0,0) 62%,rgba(40,28,12,.10) 100%)}
+.page .stitch{position:absolute;left:12px;top:0;width:34px;height:1700px;z-index:3}
+/* mirrored passport (spine on the right) */
+.page.r .cover{left:-30px;right:-8px;border-radius:64px 12px 0 0;background:linear-gradient(200deg,#17251f 0%,#0b1310 70%)}
+.page.r .stk{border-radius:52px 8px 0 0}
+.page.r .stk.s1{transform:translate(-8px,3px)}
+.page.r .stk.s2{transform:translate(-15px,6px)}
+.page.r .stk.s3{transform:translate(-22px,9px)}
+.page.r .sheet{border-radius:48px 8px 0 0}
+.page.r .sheet::after{background:
+  linear-gradient(242deg,rgba(255,251,238,.38) 0%,rgba(255,251,238,0) 36%),
+  linear-gradient(256deg,rgba(0,0,0,0) 34%,rgba(92,66,32,.12) 47%,rgba(0,0,0,0) 60%),
+  linear-gradient(270deg,rgba(58,40,16,.36) 0,rgba(58,40,16,.10) 44px,rgba(58,40,16,0) 92px),
+  linear-gradient(180deg,rgba(0,0,0,0) 62%,rgba(40,28,12,.10) 100%)}
+.page.r .stitch{left:auto;right:12px}
+.page.peek .sheet::before{background-position:0 -800px}
+/* page furniture (ink on paper) */
+.p-lab{position:absolute;color:var(--ink);opacity:.86;z-index:4;mix-blend-mode:multiply}
+.mrz{position:absolute;z-index:4;font-family:"Plex";font-weight:500;font-size:30px;line-height:1.3;letter-spacing:.02em;color:var(--ink);opacity:.8;white-space:pre;mix-blend-mode:multiply}
+.flag{position:absolute;z-index:4;mix-blend-mode:multiply;filter:saturate(.88) contrast(.96);box-shadow:0 0 0 1px rgba(12,21,18,.18)}
+.flag::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 3px 3px,rgba(12,21,18,.2) 1.1px,transparent 1.5px);background-size:7px 7px}
+.flag img{display:block;width:100%;height:100%}
+.slot{position:absolute;z-index:4;border:3px dashed rgba(12,21,18,.78);color:rgba(12,21,18,.85);font-family:"Plex";font-weight:700;display:flex;align-items:center;justify-content:center;mix-blend-mode:multiply;
+  background:repeating-linear-gradient(135deg,rgba(12,21,18,.0) 0 11px,rgba(12,21,18,.13) 11px 13px)}
+.ghost{position:absolute;z-index:4;border-radius:22px;background:rgba(138,124,100,.17);box-shadow:inset 0 0 0 2px rgba(110,96,74,.16);display:flex;align-items:center;justify-content:center;font-family:"Plex";font-weight:700;font-size:118px;color:rgba(86,74,56,.30);letter-spacing:.02em;mix-blend-mode:multiply;
+  background-image:repeating-radial-gradient(circle at 50% 60%,rgba(95,156,154,.20) 0 1.5px,transparent 1.5px 9px)}
+
+/* ===== stamps: real type, 3px border, slap on ===== */
+.stamp{position:absolute;z-index:6;font-family:"Plex";font-weight:700;text-transform:uppercase;color:var(--ink);border:3px solid var(--ink);mix-blend-mode:multiply;filter:url(#stampink);white-space:nowrap}
+.stamp .top{display:block;font-weight:600;font-size:30px;line-height:1;letter-spacing:.14em;padding:15px 24px 14px;border-bottom:3px solid var(--ink)}
+.stamp .big{display:block;line-height:1;text-align:center;letter-spacing:.18em;text-indent:.18em}
+.stamp.fill{background-color:var(--coral);background-image:var(--halftone);background-size:14px 14px}
+.stamp.dash{border-style:dashed}
+.stamp.dash .top{border-bottom-style:dashed}
+
+/* ===== brutal card (evidence quote) ===== */
+.card{position:absolute;z-index:8;background:var(--cream);border:2px solid var(--ink);box-shadow:10px 10px 0 var(--ink);color:var(--ink)}
+.card .lab{opacity:.8}
+.card .q{font-family:"Archivo";font-weight:500;font-size:44px;line-height:1.2;font-stretch:100%}
+
+/* ===== scribbles: hand-drawn annotation layer ===== */
+.scr{position:absolute;left:0;top:0;width:1080px;height:1920px;z-index:45;pointer-events:none}
+.scr path{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.scr .k{stroke:#0C1512;stroke-width:17;opacity:.92}
+.scr .m{stroke:#7EF0C0;stroke-width:8}
+
+/* ===== caption placeholder (engine supplies the real captions) ===== */
+.caption{position:absolute;left:72px;top:1180px;width:900px;height:320px;z-index:60;display:flex;align-items:center;justify-content:center;background:rgba(7,13,11,.55);outline:2px dashed rgba(244,239,228,.5);outline-offset:-2px;font-family:"Plex";font-weight:500;font-size:30px;letter-spacing:.14em;color:rgba(244,239,228,.82)}
+
+/* ===== threads (mind.the.gap device) ===== */
+.thr path{fill:none;stroke-linecap:round}
+</style>
+</head>
+<body>
+<!-- shared SVG filters live outside the frames so :target hiding never breaks them -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="stampink" x="-4%" y="-4%" width="108%" height="108%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" seed="5" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.0" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.33" numOctaves="3" seed="11" result="w"/>
+      <feColorMatrix in="w" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  8 0 0 0 -1.3" result="wa"/>
+      <feComposite in="d" in2="wa" operator="in"/>
+    </filter>
+    <filter id="blur9"><feGaussianBlur stdDeviation="9"/></filter>
+    <filter id="blur3"><feGaussianBlur stdDeviation="3"/></filter>
+    <pattern id="weave" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(38)">
+      <rect width="4" height="4" fill="rgba(0,0,0,0)"/><rect width="1.7" height="4" fill="rgba(12,21,18,.17)"/>
+    </pattern>
+  </defs>
+</svg>
+
+<!-- ============================================================ F1 · TITLE -->
+<section class="frame" id="f1">
+  <div class="table"></div>
+  <div class="rosette" style="left:-210px;top:-170px;opacity:.12"></div>
+  <div class="grain"></div>
+
+  <div class="pill">mind.the.gap</div>
+  <div class="ill">Illustration</div>
+
+  <h1 class="h" style="left:72px;top:144px;font-size:212px">
+    <span class="ln"><span class="swipe">Two</span></span>
+    <span class="ln">Passports</span>
+  </h1>
+  <p class="dek" style="left:482px;top:162px;width:490px">Every AI carries two. Where it was born, and where it lives.</p>
+
+  <!-- passport 1 -->
+  <div class="page" style="left:72px;top:612px;width:440px">
+    <div class="cover"></div><div class="stk s3"></div><div class="stk s2"></div><div class="stk s1"></div>
+    <div class="sheet"></div>
+    <svg class="stitch" viewBox="0 0 34 1700"><path d="M18 6 C8 260 28 520 16 760 S24 1300 16 1700" fill="none" stroke="rgba(12,21,18,.32)" stroke-width="9" stroke-dasharray="30 17" stroke-linecap="round" transform="translate(2,3)"/><path d="M18 6 C8 260 28 520 16 760 S24 1300 16 1700" fill="none" stroke="#7EF0C0" stroke-width="7" stroke-dasharray="30 17" stroke-linecap="round"/></svg>
+    <div class="ghost" style="left:72px;top:78px;width:236px;height:306px;font-size:132px">AI</div>
+    <div class="mrz" style="left:72px;top:964px;font-size:30px">P&lt;BORN&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+1&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</div>
+  </div>
+  <!-- passport 2 -->
+  <div class="page" style="left:532px;top:672px;width:440px">
+    <div class="cover"></div><div class="stk s3"></div><div class="stk s2"></div><div class="stk s1"></div>
+    <div class="sheet" style="background-position:-300px -260px,0 0"></div>
+    <svg class="stitch" viewBox="0 0 34 1700"><path d="M16 6 C26 260 6 520 18 760 S10 1300 18 1700" fill="none" stroke="rgba(12,21,18,.32)" stroke-width="9" stroke-dasharray="30 17" stroke-linecap="round" transform="translate(2,3)"/><path d="M16 6 C26 260 6 520 18 760 S10 1300 18 1700" fill="none" stroke="#7EF0C0" stroke-width="7" stroke-dasharray="30 17" stroke-linecap="round"/></svg>
+    <div class="ghost" style="left:72px;top:78px;width:236px;height:306px;font-size:132px">AI</div>
+    <div class="mrz" style="left:72px;top:904px;font-size:30px">P&lt;LIVES&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+2&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</div>
+  </div>
+
+  <!-- the ribbon that ties them: sits in the gap, becomes the threads in frame 4 -->
+  <svg class="a" style="left:0;top:0;z-index:22" width="1080" height="1920" viewBox="0 0 1080 1920">
+    <defs><clipPath id="rcut"><path d="M0 628 L496 628 L524 672 L552 628 L1080 628 L1080 1920 L0 1920 Z"/></clipPath></defs><g clip-path="url(#rcut)">%%RIBBON%%</g>
+  </svg>
+
+  <div class="sticker" style="left:350px;top:640px;transform:rotate(-6deg)">Born</div>
+  <div class="sticker" style="left:800px;top:704px;transform:rotate(4deg)">Lives</div>
+
+  <svg class="scr" viewBox="0 0 1080 1920">%%S1%%</svg>
+  <div class="caption">CAPTION</div>
+  <div class="grain fine"></div>
+</section>
+
+<!-- ============================================================ F2 · BORN -->
+<section class="frame" id="f2">
+  <div class="table"></div>
+  <div class="rosette" style="left:-320px;top:-380px"></div>
+  <div class="grain"></div>
+
+  <div class="pill">mind.the.gap</div>
+  <div class="ill">Illustration</div>
+
+  <h1 class="h" style="left:72px;top:146px;font-size:240px"><span class="ln">Born</span></h1>
+  <p class="dek" style="left:578px;top:206px;width:394px">Where the company behind it was founded.</p>
+
+  <div class="page" style="left:72px;top:432px">
+    <div class="cover"></div><div class="stk s3"></div><div class="stk s2"></div><div class="stk s1"></div>
+    <div class="sheet"></div>
+    <svg class="stitch" viewBox="0 0 34 1700"><path d="M18 6 C8 260 28 520 16 760 S24 1300 16 1700" fill="none" stroke="rgba(12,21,18,.32)" stroke-width="9" stroke-dasharray="30 17" stroke-linecap="round" transform="translate(2,3)"/><path d="M18 6 C8 260 28 520 16 760 S24 1300 16 1700" fill="none" stroke="#7EF0C0" stroke-width="7" stroke-dasharray="30 17" stroke-linecap="round"/></svg>
+
+    <div class="p-lab lab" style="left:92px;top:40px">Home country</div>
+
+    <div class="flag" style="left:640px;top:92px;width:214px;height:113px"><img src="assets/flag-usa.svg" alt=""></div>
+    <div class="stamp" style="left:92px;top:92px;width:520px;height:292px;transform:rotate(-5deg)">
+      <span class="top">Claude · ChatGPT</span>
+      <span class="big" style="font-size:176px;padding-top:14px">USA</span>
+    </div>
+
+    <div class="flag" style="left:92px;top:452px;width:156px;height:104px"><img src="assets/flag-china.svg" alt=""></div>
+    <div class="stamp" style="left:300px;top:410px;width:548px;height:292px;transform:rotate(3deg)">
+      <span class="top">DeepSeek</span>
+      <span class="big" style="font-size:118px;padding-top:46px">China</span>
+    </div>
+
+    <div class="mrz" style="left:92px;top:1128px">P&lt;BORN&lt;&lt;USA&lt;USA&lt;CHN&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+1&lt;OF&lt;2&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</div>
+  </div>
+
+  <div class="sticker" style="left:626px;top:392px;transform:rotate(4deg);font-size:30px;padding:16px 26px 17px">Passport 1 of 2</div>
+
+  <svg class="scr" viewBox="0 0 1080 1920">%%S2%%</svg>
+  <div class="caption">CAPTION</div>
+  <div class="grain fine"></div>
+</section>
+
+<!-- ============================================================ F3 · LIVES -->
+<section class="frame" id="f3">
+  <div class="table"></div>
+  <!-- hardware plate: backdrop for the header band only -->
+  <div class="a" style="left:0;top:0;width:1080px;height:520px;z-index:1;background:url('../plates/hardware.png') 0 -1090px/1080px auto no-repeat;-webkit-mask-image:linear-gradient(180deg,#000 0%,#000 55%,transparent 100%);mask-image:linear-gradient(180deg,#000 0%,#000 55%,transparent 100%);opacity:.9"></div>
+  <div class="a" style="left:0;top:0;width:1080px;height:520px;z-index:2;background:linear-gradient(90deg,rgba(12,21,18,.94) 0%,rgba(12,21,18,.78) 55%,rgba(12,21,18,.62) 100%)"></div>
+  <div class="rosette" style="left:-80px;top:700px"></div>
+  <div class="grain"></div>
+
+  <div class="pill">mind.the.gap</div>
+  <div class="ill">Illustration</div>
+
+  <h1 class="h" style="left:72px;top:146px;font-size:240px"><span class="ln">Lives</span></h1>
+  <p class="dek" style="left:586px;top:206px;width:386px">Where it runs, and whose law it answers to.</p>
+
+  <div class="page r" style="left:72px;top:432px">
+    <div class="cover"></div><div class="stk s3"></div><div class="stk s2"></div><div class="stk s1"></div>
+    <div class="sheet" style="background-position:-180px -420px,0 0"></div>
+    <svg class="stitch" viewBox="0 0 34 1700"><path d="M16 6 C26 260 6 520 18 760 S10 1300 18 1700" fill="none" stroke="rgba(12,21,18,.32)" stroke-width="9" stroke-dasharray="30 17" stroke-linecap="round" transform="translate(2,3)"/><path d="M16 6 C26 260 6 520 18 760 S10 1300 18 1700" fill="none" stroke="#7EF0C0" stroke-width="7" stroke-dasharray="30 17" stroke-linecap="round"/></svg>
+
+    <div class="p-lab lab" style="left:46px;top:40px">Country of residence</div>
+
+    <div class="slot" style="left:60px;top:118px;width:212px;height:114px;font-size:64px">?</div>
+    <div class="stamp dash" style="left:296px;top:104px;width:520px;height:292px;transform:rotate(4deg)">
+      <span class="top">Claude · ChatGPT</span>
+      <span class="big" style="font-size:176px;padding-top:14px">???</span>
+    </div>
+
+    <div class="slot" style="left:604px;top:468px;width:206px;height:108px;font-size:64px">?</div>
+    <div class="stamp dash" style="left:50px;top:426px;width:520px;height:292px;transform:rotate(-3deg)">
+      <span class="top">DeepSeek</span>
+      <span class="big" style="font-size:176px;padding-top:14px">???</span>
+    </div>
+
+    <div class="mrz" style="left:46px;top:1128px">P&lt;LIVES&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+2&lt;OF&lt;2&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</div>
+  </div>
+
+  <div class="sticker" style="left:120px;top:384px;transform:rotate(-5deg);font-size:30px;padding:16px 26px 17px">Passport 2 of 2</div>
+  <div class="sticker" style="left:404px;top:816px;transform:rotate(-6deg);font-size:38px;padding:19px 34px 20px">Sample · not a claim</div>
+
+  <svg class="scr" viewBox="0 0 1080 1920">%%S3%%</svg>
+  <div class="caption">CAPTION</div>
+  <div class="grain fine"></div>
+</section>
+
+<!-- ============================================================ F4 · THE GAP -->
+<section class="frame" id="f4">
+  <div class="table"></div>
+  <div class="rosette" style="left:-210px;top:470px;opacity:.13"></div>
+  <div class="grain"></div>
+
+  <div class="pill">mind.the.gap</div>
+  <div class="ill">Illustration</div>
+
+  <h1 class="h" style="left:72px;top:150px;font-size:240px"><span class="ln">The <span class="swipe">Gap</span></span></h1>
+  <p class="dek" style="left:72px;top:392px;width:900px">Born in one place.<br>Answering to rules in another.</p>
+
+  <!-- paper tabs: the two passports reduced to one stamped page each -->
+  <div class="a" style="left:72px;top:552px;width:328px;height:318px;z-index:10;background:url('assets/paper.jpg') 0 0/1088px auto,var(--paper);box-shadow:0 30px 50px rgba(0,0,0,.55),0 4px 10px rgba(0,0,0,.5),inset 0 0 0 1px rgba(70,52,26,.3);border-radius:10px 40px 10px 10px">
+    <div class="a" style="inset:0;border-radius:inherit;background:linear-gradient(118deg,rgba(255,251,238,.4),rgba(255,251,238,0) 45%),linear-gradient(180deg,rgba(0,0,0,0) 60%,rgba(40,28,12,.14))"></div>
+    <div class="p-lab lab" style="left:26px;top:24px">Born</div>
+    <div class="stamp" style="left:22px;top:100px;width:284px;height:172px;transform:rotate(-3deg)"><span class="top" style="font-size:30px;padding:11px 18px 10px">DeepSeek</span><span class="big" style="font-size:64px;padding-top:18px">China</span></div>
+  </div>
+  <div class="a" style="left:644px;top:576px;width:328px;height:318px;z-index:10;background:url('assets/paper.jpg') -400px -300px/1088px auto,var(--paper);box-shadow:0 30px 50px rgba(0,0,0,.55),0 4px 10px rgba(0,0,0,.5),inset 0 0 0 1px rgba(70,52,26,.3);border-radius:40px 10px 10px 10px">
+    <div class="a" style="inset:0;border-radius:inherit;background:linear-gradient(242deg,rgba(255,251,238,.4),rgba(255,251,238,0) 45%),linear-gradient(180deg,rgba(0,0,0,0) 60%,rgba(40,28,12,.14))"></div>
+    <div class="p-lab lab" style="left:26px;top:24px">Lives</div>
+    <div class="stamp dash" style="left:22px;top:100px;width:284px;height:172px;transform:rotate(3deg)"><span class="top" style="font-size:30px;padding:11px 18px 10px">DeepSeek</span><span class="big" style="font-size:64px;padding-top:18px">???</span></div>
+  </div>
+
+  <!-- threads on a time axis -->
+  <svg class="a thr" style="left:0;top:0;z-index:12" width="1080" height="1920" viewBox="0 0 1080 1920">%%THREADS%%</svg>
+
+  <div class="a lab" style="left:566px;top:1094px;z-index:20;color:var(--cream)">The test</div>
+  <div class="a lab" style="left:566px;top:1590px;z-index:20;color:var(--cream)">The call</div>
+
+  <!-- next passport rising: hand-off to frame 5 -->
+  <div class="page peek" style="left:72px;top:1696px">
+    <div class="cover"></div><div class="stk s3"></div><div class="stk s2"></div><div class="stk s1"></div>
+    <div class="sheet"></div>
+    <svg class="stitch" viewBox="0 0 34 1700"><path d="M18 6 C8 260 28 520 16 760 S24 1300 16 1700" fill="none" stroke="rgba(12,21,18,.32)" stroke-width="9" stroke-dasharray="30 17" stroke-linecap="round" transform="translate(2,3)"/><path d="M18 6 C8 260 28 520 16 760 S24 1300 16 1700" fill="none" stroke="#7EF0C0" stroke-width="7" stroke-dasharray="30 17" stroke-linecap="round"/></svg>
+  </div>
+
+  <div class="sticker" style="left:422px;top:648px;transform:rotate(-4deg);font-size:34px;padding:16px 26px 17px">The gap</div>
+
+  <svg class="scr" viewBox="0 0 1080 1920">%%S4%%</svg>
+  <div class="caption">CAPTION</div>
+  <div class="grain fine"></div>
+</section>
+
+<!-- ============================================================ F5 · VERDICT -->
+<section class="frame" id="f5">
+  <div class="table"></div>
+  <div class="rosette" style="left:-300px;top:-420px"></div>
+  <div class="grain"></div>
+
+  <div class="pill">mind.the.gap</div>
+  <div class="ill">Illustration</div>
+
+  <h1 class="h" style="left:72px;top:140px;font-size:174px"><span class="ln">The verdict</span></h1>
+  <p class="dek" style="left:72px;top:300px;width:500px;font-size:42px">Where an AI lives may decide what it can say.</p>
+
+  <div class="page" style="left:72px;top:424px">
+    <div class="cover"></div><div class="stk s3"></div><div class="stk s2"></div><div class="stk s1"></div>
+    <div class="sheet" style="background-position:-100px -500px,0 0"></div>
+    <svg class="stitch" viewBox="0 0 34 1700"><path d="M18 6 C8 260 28 520 16 760 S24 1300 16 1700" fill="none" stroke="rgba(12,21,18,.32)" stroke-width="9" stroke-dasharray="30 17" stroke-linecap="round" transform="translate(2,3)"/><path d="M18 6 C8 260 28 520 16 760 S24 1300 16 1700" fill="none" stroke="#7EF0C0" stroke-width="7" stroke-dasharray="30 17" stroke-linecap="round"/></svg>
+
+    <div class="p-lab lab" style="left:92px;top:36px">Cotton test</div>
+
+    <div class="stamp fill" style="left:92px;top:80px;width:690px;height:144px;transform:rotate(-2.5deg)">
+      <span class="top" style="padding:11px 22px 10px">Claude · ChatGPT</span>
+      <span class="big" style="font-size:70px;padding-top:10px;letter-spacing:.1em;text-indent:.1em">2/2 Flagged</span>
+    </div>
+
+    <div class="stamp fill" style="left:70px;top:250px;width:752px;height:208px;transform:rotate(2deg)">
+      <span class="top" style="padding:11px 22px 10px">DeepSeek · 3 of 3 runs</span>
+      <span class="big" style="font-size:96px;padding-top:22px;letter-spacing:.08em;text-indent:.08em">0/1 Deleted</span>
+    </div>
+
+    <div class="card" style="left:70px;top:486px;width:758px;height:236px;padding:16px 26px 0">
+      <div class="lab" style="font-size:30px;margin-bottom:10px">Xinjiang answer, replaced with</div>
+      <div class="q">“Sorry, that’s beyond my current scope. Let’s talk about something else.”</div>
+    </div>
+
+    <div class="mrz" style="left:92px;top:1128px">P&lt;CALL&lt;&lt;2027&lt;03&lt;&lt;SURE&lt;70&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+COTTON&lt;XINJIANG&lt;TURKMENISTAN&lt;&lt;&lt;&lt;</div>
+  </div>
+
+  <div class="sticker two" style="left:606px;top:312px;transform:rotate(4deg);font-size:40px;padding:17px 30px 18px">Due 2027-03<br>70% sure</div>
+
+  <svg class="scr" viewBox="0 0 1080 1920">%%S5%%</svg>
+  <div class="caption">CAPTION</div>
+  <div class="grain fine"></div>
+</section>
+</body>
+</html>
