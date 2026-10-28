@@ -48,9 +48,11 @@ function literal(value: string): string {
   return `'${value.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`
 }
 
-/** Drive as Krish (domain-wide delegation, drive.file: only what this app made), like the cloud backup's uploads. */
+/** Drive as Krish (domain-wide delegation), narrowest scope first like the cloud backup's uploads (watch/upload.ts):
+ *  drive.file (only what this app made), then drive. */
 export async function googleFeedbackDrive(): Promise<FeedbackDrive | null> {
   const token = await googleAccessToken(['https://www.googleapis.com/auth/drive.file'])
+    ?? await googleAccessToken(['https://www.googleapis.com/auth/drive'])
   if (!token) return null
   const headers = { Authorization: `Bearer ${token}` }
   async function createFolder(parentId: string | null, name: string): Promise<string> {
