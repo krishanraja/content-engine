@@ -67,7 +67,7 @@ describe('claim', () => {
     const store = new MemoryStore([request(1), request(2), request(3)])
     const out = await claim(store, 'HOME-1', 2, NOW)
     expect(out.requests.map(r => r.id)).toEqual([uuid(1), uuid(2)])
-    expect(out.requests[0]).toEqual({ id: uuid(1), url: 'https://www.instagram.com/reel/R1/', url_key: 'https://www.instagram.com/reel/R1/', platform: 'instagram', lane: null, note: null, attempts: 1 })
+    expect(out.requests[0]).toEqual({ id: uuid(1), url: 'https://www.instagram.com/reel/R1/', url_key: 'https://www.instagram.com/reel/R1/', platform: 'instagram', lane: null, note: null, attempts: 1, media: null })
     expect(store.rows.get(uuid(1))).toMatchObject({ status: 'claimed', claimed_by: 'HOME-1', claimed_at: NOW.toISOString(), attempts: 1 })
     expect(store.rows.get(uuid(3))!.status).toBe('queued')
   })
@@ -106,6 +106,13 @@ describe('claim', () => {
     expect(cloud.requests.map(r => r.id)).toEqual([uuid(1)])
     const home = await claim(store, 'LORIMER', 5, NOW)
     expect(home.requests.map(r => r.id)).toEqual([uuid(2)])
+  })
+
+  it('hands a machine what an earlier try already filed, so a second fetch reuses it', async () => {
+    const filed = [{ name: 'instagram_P1_01.jpg', sha256: sha('f'), mime: 'image/jpeg', bytes: 5, folder: 'cold_ideas' }]
+    const store = new MemoryStore([request(1, { media: filed } as Partial<WatchRequestRow>), request(2)])
+    const { requests } = await claim(store, 'HOME-1', 3, NOW)
+    expect(requests.map(r => r.media)).toEqual([filed, null])
   })
 
   it('hands the home computer the tag he picked when he pasted the link, unchanged', async () => {
