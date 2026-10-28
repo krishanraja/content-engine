@@ -1,0 +1,2097 @@
+{
+  "file": "docs/plans/2026-10-23-friday-two-passports-ve/ve/friday-short-tall.mp4",
+  "sha256": "b9968894aaf226f988837462fd979db0ac9b0ab0c8afbf6b4202319922c8d319",
+  "duration_s": 78.63,
+  "format": "hand-held-screen",
+  "checks": {
+    "loudness.integrated": {
+      "value": -14.0,
+      "target": "-14 ±1",
+      "pass": true
+    },
+    "loudness.true_peak": {
+      "value": -1.6,
+      "target": "<= -1",
+      "pass": true
+    },
+    "loudness.long_silence": {
+      "value": [],
+      "target": "none over 0.7 s below -50 dB",
+      "pass": true
+    },
+    "motion.change_density": {
+      "value": 0.859,
+      "target": ">= 0.75",
+      "pass": true
+    },
+    "motion.longest_still": {
+      "value": 2,
+      "target": "<= 3 s",
+      "pass": true,
+      "runs": [
+        [
+          76,
+          2
+        ],
+        [
+          15,
+          1
+        ],
+        [
+          18,
+          1
+        ],
+        [
+          30,
+          1
+        ],
+        [
+          32,
+          1
+        ],
+        [
+          34,
+          1
+        ]
+      ]
+    },
+    "motion.periodicity": {
+      "value": null,
+      "target": "no repeating loop 2-10 s",
+      "pass": true
+    },
+    "sync.av_xcorr": {
+      "value": [
+        {
+          "segment": 0,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999844
+        },
+        {
+          "segment": 1,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999997
+        },
+        {
+          "segment": 2,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999995
+        },
+        {
+          "segment": 3,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999991
+        },
+        {
+          "segment": 4,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999993
+        },
+        {
+          "segment": 5,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999991
+        },
+        {
+          "segment": 6,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999992
+        },
+        {
+          "segment": 7,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999985
+        },
+        {
+          "segment": 8,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999988
+        },
+        {
+          "segment": 9,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999993
+        },
+        {
+          "segment": 10,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999991
+        },
+        {
+          "segment": 11,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999989
+        },
+        {
+          "segment": 12,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999982
+        },
+        {
+          "segment": 13,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999989
+        },
+        {
+          "segment": 14,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999988
+        },
+        {
+          "segment": 15,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999983
+        },
+        {
+          "segment": 16,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999989
+        },
+        {
+          "segment": 17,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999995
+        },
+        {
+          "segment": 18,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999988
+        }
+      ],
+      "target": "every segment |lag| <= 33 ms; correlation >= 0.5",
+      "pass": true,
+      "status": "measured"
+    },
+    "joins.decoder": {
+      "value": [],
+      "target": "RMS step <= 6 dB, click <= 6x median, spectral flux <= 0.5",
+      "pass": true,
+      "status": "measured",
+      "join_times_s": [],
+      "failed_join_times_s": []
+    },
+    "captions.ocr": {
+      "value": [
+        {
+          "page": 0,
+          "frame": 69,
+          "text": "You may already be\r\nusing",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 1,
+          "frame": 105,
+          "text": "a Chinese Al.",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
+        },
+        {
+          "page": 2,
+          "frame": 156,
+          "text": "Does that matter?\r\nL-=~,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 3,
+          "frame": 222,
+          "text": "Airbnb's boss said its\r\nown",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 4,
+          "frame": 279,
+          "text": "customer service\r\nleans on Qwen,",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
+        },
+        {
+          "page": 5,
+          "frame": 320,
+          "text": "which is a Chinese\r\nAl.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 6,
+          "frame": 361,
+          "text": "He called it fast and",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 7,
+          "frame": 408,
+          "text": "cheap, which is\r\nwhat most",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
+        },
+        {
+          "page": 8,
+          "frame": 438,
+          "text": "of us want froma",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 9,
+          "frame": 470,
+          "text": "holiday fling.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 10,
+          "frame": 533,
+          "text": "See, every Al has\r\ntwo",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 11,
+          "frame": 582,
+          "text": "passports, where it\r\nwas born",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
+        },
+        {
+          "page": 12,
+          "frame": 625,
+          "text": "and where it lives.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 13,
+          "frame": 667,
+          "text": "Where it was born\r\nshapes",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
+        },
+        {
+          "page": 14,
+          "frame": 686,
+          "text": "its answers.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 15,
+          "frame": 738,
+          "text": "An American\r\nnewspaper recently",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 16,
+          "frame": 798,
+          "text": "asked Chinese\r\nchatbots some news",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 17,
+          "frame": 840,
+          "text": "questions, anda\r\nthird of",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
+        },
+        {
+          "page": 18,
+          "frame": 880,
+          "text": "the time they\r\nrefused,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 19,
+          "frame": 927,
+          "text": "gave China's line,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 20,
+          "frame": 976,
+          "text": "or got it wrong.",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
+        },
+        {
+          "page": 21,
+          "frame": 1038,
+          "text": "Claude, an American\r\nAl,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 22,
+          "frame": 1094,
+          "text": "answered them all.",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
+        },
+        {
+          "page": 23,
+          "frame": 1179,
+          "text": "Where it lives\r\ndecides who",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 24,
+          "frame": 1213,
+          "text": "sees your data.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 25,
+          "frame": 1249,
+          "text": "Use DeepSeek,",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
+        },
+        {
+          "page": 26,
+          "frame": 1287,
+          "text": "another Chinese Al,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 27,
+          "frame": 1321,
+          "text": "and it keeps yours in",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 28,
+          "frame": 1382,
+          "text": "China. And at work,",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
+        },
+        {
+          "page": 29,
+          "frame": 1415,
+          "text": "l asked Claude,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 30,
+          "frame": 1472,
+          "text": "ChatGPT, and\r\nDeepSeek abouta",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 31,
+          "frame": 1531,
+          "text": "supplier's cotton\r\nfrom Xinjiang in",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
+        },
+        {
+          "page": 32,
+          "frame": 1624,
+          "text": "China. Two flagged\r\nforced labour.",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
+        },
+        {
+          "page": 33,
+          "frame": 1669,
+          "text": "Now watch\r\nDeepSeek.",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
+        },
+        {
+          "page": 34,
+          "frame": 1706,
+          "text": "It writes an answer,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 35,
+          "frame": 1742,
+          "text": "then deletes it.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 36,
+          "frame": 1784,
+          "text": "Every time.",
+          "agreement": 1.0,
+          "variant": "raw_2x",
+          "pass": true
+        },
+        {
+          "page": 37,
+          "frame": 1834,
+          "text": "My call is it's fine,",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
+        },
+        {
+          "page": 38,
+          "frame": 1986,
+          "text": "you. And here's what\r\ni",
+          "agreement": 1.0,
+          "variant": "raw_2x",
+          "pass": true
+        },
+        {
+          "page": 39,
+          "frame": 2009,
+          "text": "do with this\r\ninformation if",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 40,
+          "frame": 2022,
+          "text": "Il were you.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 41,
+          "frame": 2067,
+          "text": "Ask software\r\nsuppliers which Al",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
+        },
+        {
+          "page": 42,
+          "frame": 2099,
+          "text": "they use and where\r\nit",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 43,
+          "frame": 2145,
+          "text": "lives. And keepa\r\n[second",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 44,
+          "frame": 2166,
+          "text": "Al ready.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 45,
+          "frame": 2197,
+          "text": "The full deep dive is",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 46,
+          "frame": 2229,
+          "text": "at\r\nmakeyourmindup.ai.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        }
+      ],
+      "target": "token agreement >= 0.98 on every page",
+      "pass": true,
+      "status": "measured"
+    },
+    "brand.mark_tile": {
+      "value": null,
+      "target": "not defined for STAGE layouts",
+      "pass": null,
+      "status": "not applicable"
+    },
+    "motion.cue_sync": {
+      "value": null,
+      "target": "not defined for STAGE layouts",
+      "pass": null,
+      "status": "not applicable"
+    },
+    "audio.bed": {
+      "value": [
+        {
+          "check": "bed present",
+          "value": true,
+          "pass": true
+        },
+        {
+          "check": "under speech",
+          "value": -18.93,
+          "target": "-21.0 to -12.0 dB re voice",
+          "pass": true
+        },
+        {
+          "check": "true peak",
+          "value": -1.69,
+          "target": "<= -1.0 dBTP",
+          "pass": true
+        },
+        {
+          "check": "in pauses",
+          "value": -10.41,
+          "target": "-13.0 to -6.0 dB re voice",
+          "pass": true
+        },
+        {
+          "check": "the music breathes",
+          "value": 8.52,
+          "target": ">= 4.0 dB",
+          "pass": true
+        }
+      ],
+      "target": "bed present, under speech in range, true peak, and (ducked) breathing in pauses",
+      "pass": true,
+      "status": "measured"
+    },
+    "keyframe_match": {
+      "value": {
+        "hook": {
+          "ssim": null,
+          "min": 0.75,
+          "pass": true,
+          "golden": null,
+          "note": "extra beat: no golden, composition-checked"
+        },
+        "matter": {
+          "ssim": null,
+          "min": 0.75,
+          "pass": true,
+          "golden": null,
+          "note": "extra beat: no golden, composition-checked"
+        },
+        "airbnb": {
+          "ssim": null,
+          "min": 0.75,
+          "pass": true,
+          "golden": null,
+          "note": "extra beat: no golden, composition-checked"
+        },
+        "fling": {
+          "ssim": null,
+          "min": 0.75,
+          "pass": true,
+          "golden": null,
+          "note": "extra beat: no golden, composition-checked"
+        },
+        "title": {
+          "ssim": 0.777349871898966,
+          "min": 0.75,
+          "pass": true,
+          "golden": "two-passports",
+          "frame": 631
+        },
+        "born": {
+          "ssim": 0.84994617729453,
+          "min": 0.75,
+          "pass": true,
+          "golden": "two-passports",
+          "frame": 819
+        },
+        "born_third": {
+          "ssim": null,
+          "min": 0.75,
+          "pass": true,
+          "golden": null,
+          "note": "extra beat: no golden, composition-checked"
+        },
+        "born_claude": {
+          "ssim": null,
+          "min": 0.75,
+          "pass": true,
+          "golden": null,
+          "note": "extra beat: no golden, composition-checked"
+        },
+        "lives": {
+          "ssim": 0.8542950607381915,
+          "min": 0.75,
+          "pass": true,
+          "golden": "two-passports",
+          "frame": 1342
+        },
+        "open": {
+          "ssim": 0.8192461047715506,
+          "min": 0.75,
+          "pass": true,
+          "golden": "hand-held-screen",
+          "frame": 1532
+        },
+        "result_a": {
+          "ssim": 0.7544489607042469,
+          "min": 0.75,
+          "pass": true,
+          "golden": "hand-held-screen",
+          "frame": 1632
+        },
+        "result_b": {
+          "ssim": 0.7976486721582083,
+          "min": 0.75,
+          "pass": true,
+          "golden": "hand-held-screen",
+          "frame": 1675
+        },
+        "evidence": {
+          "ssim": 0.821952584664116,
+          "min": 0.75,
+          "pass": true,
+          "golden": "hand-held-screen",
+          "frame": 1711
+        },
+        "verdict": {
+          "ssim": 0.8284093672539569,
+          "min": 0.75,
+          "pass": true,
+          "golden": "hand-held-screen",
+          "frame": 1793
+        },
+        "my_call": {
+          "ssim": null,
+          "min": 0.75,
+          "pass": true,
+          "golden": null,
+          "note": "extra beat: no golden, composition-checked"
+        },
+        "call": {
+          "ssim": null,
+          "min": 0.75,
+          "pass": true,
+          "golden": null,
+          "note": "extra beat: no golden, composition-checked"
+        },
+        "act_a": {
+          "ssim": null,
+          "min": 0.75,
+          "pass": true,
+          "golden": null,
+          "note": "extra beat: no golden, composition-checked"
+        },
+        "act_b": {
+          "ssim": null,
+          "min": 0.75,
+          "pass": true,
+          "golden": null,
+          "note": "extra beat: no golden, composition-checked"
+        },
+        "close": {
+          "ssim": null,
+          "min": 0.75,
+          "pass": true,
+          "golden": null,
+          "note": "extra beat: no golden, composition-checked"
+        }
+      },
+      "target": "approved golden keyframes",
+      "pass": true,
+      "status": "measured"
+    },
+    "composition": {
+      "value": {
+        "hook": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 94.03
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            },
+            "illustration": {
+              "pass": true,
+              "value": 0.43478260869565216
+            }
+          },
+          "findings": [],
+          "frame": 98
+        },
+        "matter": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 93.95
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            },
+            "illustration": {
+              "pass": true,
+              "value": 0.42105263157894735
+            }
+          },
+          "findings": [],
+          "frame": 169
+        },
+        "airbnb": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 91.19
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            },
+            "illustration": {
+              "pass": true,
+              "value": 0.45454545454545453
+            }
+          },
+          "findings": [],
+          "frame": 304
+        },
+        "fling": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 92.96
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            },
+            "illustration": {
+              "pass": true,
+              "value": 0.5
+            }
+          },
+          "findings": [],
+          "frame": 461
+        },
+        "title": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 95.45
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            },
+            "illustration": {
+              "pass": true,
+              "value": null
+            }
+          },
+          "findings": [],
+          "frame": 631
+        },
+        "born": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 94.4
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            },
+            "illustration": {
+              "pass": true,
+              "value": null
+            }
+          },
+          "findings": [],
+          "frame": 819
+        },
+        "born_third": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 92.2
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            },
+            "illustration": {
+              "pass": true,
+              "value": null
+            }
+          },
+          "findings": [],
+          "frame": 964
+        },
+        "born_claude": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 92.16
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            },
+            "illustration": {
+              "pass": true,
+              "value": null
+            }
+          },
+          "findings": [],
+          "frame": 1099
+        },
+        "lives": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 92.34
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            },
+            "illustration": {
+              "pass": true,
+              "value": null
+            }
+          },
+          "findings": [],
+          "frame": 1342
+        },
+        "open": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 95.04
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            },
+            "illustration": {
+              "pass": true,
+              "value": 0.6
+            }
+          },
+          "findings": [],
+          "frame": 1532
+        },
+        "result_a": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 94.11
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            },
+            "illustration": {
+              "pass": true,
+              "value": 0.5263157894736842
+            }
+          },
+          "findings": [],
+          "frame": 1632
+        },
+        "result_b": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 92.72
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            },
+            "illustration": {
+              "pass": true,
+              "value": 0.6
+            }
+          },
+          "findings": [],
+          "frame": 1675
+        },
+        "evidence": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 96.47
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            },
+            "illustration": {
+              "pass": true,
+              "value": 0.5555555555555556
+            }
+          },
+          "findings": [],
+          "frame": 1711
+        },
+        "verdict": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 95.01
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            },
+            "illustration": {
+              "pass": true,
+              "value": 0.43478260869565216
+            }
+          },
+          "findings": [],
+          "frame": 1793
+        },
+        "my_call": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 95.48
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            },
+            "illustration": {
+              "pass": true,
+              "value": null
+            }
+          },
+          "findings": [],
+          "frame": 1850
+        },
+        "call": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 95.48
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            },
+            "illustration": {
+              "pass": true,
+              "value": null
+            }
+          },
+          "findings": [],
+          "frame": 1950
+        },
+        "act_a": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 91.84
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            },
+            "illustration": {
+              "pass": true,
+              "value": null
+            }
+          },
+          "findings": [],
+          "frame": 2113
+        },
+        "act_b": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 86.19
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            },
+            "illustration": {
+              "pass": true,
+              "value": null
+            }
+          },
+          "findings": [],
+          "frame": 2173
+        },
+        "close": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 86.51
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            },
+            "illustration": {
+              "pass": true,
+              "value": null
+            }
+          },
+          "findings": [],
+          "frame": 2238
+        }
+      },
+      "target": "design lock composition thresholds",
+      "pass": true,
+      "status": "measured"
+    }
+  },
+  "keyframes": {
+    "applies": true,
+    "pass": true,
+    "beats": {
+      "hook": {
+        "ssim": null,
+        "min": 0.75,
+        "pass": true,
+        "golden": null,
+        "note": "extra beat: no golden, composition-checked"
+      },
+      "matter": {
+        "ssim": null,
+        "min": 0.75,
+        "pass": true,
+        "golden": null,
+        "note": "extra beat: no golden, composition-checked"
+      },
+      "airbnb": {
+        "ssim": null,
+        "min": 0.75,
+        "pass": true,
+        "golden": null,
+        "note": "extra beat: no golden, composition-checked"
+      },
+      "fling": {
+        "ssim": null,
+        "min": 0.75,
+        "pass": true,
+        "golden": null,
+        "note": "extra beat: no golden, composition-checked"
+      },
+      "title": {
+        "ssim": 0.777349871898966,
+        "min": 0.75,
+        "pass": true,
+        "golden": "two-passports",
+        "frame": 631
+      },
+      "born": {
+        "ssim": 0.84994617729453,
+        "min": 0.75,
+        "pass": true,
+        "golden": "two-passports",
+        "frame": 819
+      },
+      "born_third": {
+        "ssim": null,
+        "min": 0.75,
+        "pass": true,
+        "golden": null,
+        "note": "extra beat: no golden, composition-checked"
+      },
+      "born_claude": {
+        "ssim": null,
+        "min": 0.75,
+        "pass": true,
+        "golden": null,
+        "note": "extra beat: no golden, composition-checked"
+      },
+      "lives": {
+        "ssim": 0.8542950607381915,
+        "min": 0.75,
+        "pass": true,
+        "golden": "two-passports",
+        "frame": 1342
+      },
+      "open": {
+        "ssim": 0.8192461047715506,
+        "min": 0.75,
+        "pass": true,
+        "golden": "hand-held-screen",
+        "frame": 1532
+      },
+      "result_a": {
+        "ssim": 0.7544489607042469,
+        "min": 0.75,
+        "pass": true,
+        "golden": "hand-held-screen",
+        "frame": 1632
+      },
+      "result_b": {
+        "ssim": 0.7976486721582083,
+        "min": 0.75,
+        "pass": true,
+        "golden": "hand-held-screen",
+        "frame": 1675
+      },
+      "evidence": {
+        "ssim": 0.821952584664116,
+        "min": 0.75,
+        "pass": true,
+        "golden": "hand-held-screen",
+        "frame": 1711
+      },
+      "verdict": {
+        "ssim": 0.8284093672539569,
+        "min": 0.75,
+        "pass": true,
+        "golden": "hand-held-screen",
+        "frame": 1793
+      },
+      "my_call": {
+        "ssim": null,
+        "min": 0.75,
+        "pass": true,
+        "golden": null,
+        "note": "extra beat: no golden, composition-checked"
+      },
+      "call": {
+        "ssim": null,
+        "min": 0.75,
+        "pass": true,
+        "golden": null,
+        "note": "extra beat: no golden, composition-checked"
+      },
+      "act_a": {
+        "ssim": null,
+        "min": 0.75,
+        "pass": true,
+        "golden": null,
+        "note": "extra beat: no golden, composition-checked"
+      },
+      "act_b": {
+        "ssim": null,
+        "min": 0.75,
+        "pass": true,
+        "golden": null,
+        "note": "extra beat: no golden, composition-checked"
+      },
+      "close": {
+        "ssim": null,
+        "min": 0.75,
+        "pass": true,
+        "golden": null,
+        "note": "extra beat: no golden, composition-checked"
+      }
+    },
+    "findings": []
+  },
+  "composition": {
+    "applies": true,
+    "pass": true,
+    "beats": {
+      "hook": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 94.03
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          },
+          "illustration": {
+            "pass": true,
+            "value": 0.43478260869565216
+          }
+        },
+        "findings": [],
+        "frame": 98
+      },
+      "matter": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 93.95
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          },
+          "illustration": {
+            "pass": true,
+            "value": 0.42105263157894735
+          }
+        },
+        "findings": [],
+        "frame": 169
+      },
+      "airbnb": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 91.19
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          },
+          "illustration": {
+            "pass": true,
+            "value": 0.45454545454545453
+          }
+        },
+        "findings": [],
+        "frame": 304
+      },
+      "fling": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 92.96
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          },
+          "illustration": {
+            "pass": true,
+            "value": 0.5
+          }
+        },
+        "findings": [],
+        "frame": 461
+      },
+      "title": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 95.45
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          },
+          "illustration": {
+            "pass": true,
+            "value": null
+          }
+        },
+        "findings": [],
+        "frame": 631
+      },
+      "born": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 94.4
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          },
+          "illustration": {
+            "pass": true,
+            "value": null
+          }
+        },
+        "findings": [],
+        "frame": 819
+      },
+      "born_third": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 92.2
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          },
+          "illustration": {
+            "pass": true,
+            "value": null
+          }
+        },
+        "findings": [],
+        "frame": 964
+      },
+      "born_claude": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 92.16
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          },
+          "illustration": {
+            "pass": true,
+            "value": null
+          }
+        },
+        "findings": [],
+        "frame": 1099
+      },
+      "lives": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 92.34
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          },
+          "illustration": {
+            "pass": true,
+            "value": null
+          }
+        },
+        "findings": [],
+        "frame": 1342
+      },
+      "open": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 95.04
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          },
+          "illustration": {
+            "pass": true,
+            "value": 0.6
+          }
+        },
+        "findings": [],
+        "frame": 1532
+      },
+      "result_a": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 94.11
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          },
+          "illustration": {
+            "pass": true,
+            "value": 0.5263157894736842
+          }
+        },
+        "findings": [],
+        "frame": 1632
+      },
+      "result_b": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 92.72
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          },
+          "illustration": {
+            "pass": true,
+            "value": 0.6
+          }
+        },
+        "findings": [],
+        "frame": 1675
+      },
+      "evidence": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 96.47
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          },
+          "illustration": {
+            "pass": true,
+            "value": 0.5555555555555556
+          }
+        },
+        "findings": [],
+        "frame": 1711
+      },
+      "verdict": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 95.01
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          },
+          "illustration": {
+            "pass": true,
+            "value": 0.43478260869565216
+          }
+        },
+        "findings": [],
+        "frame": 1793
+      },
+      "my_call": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 95.48
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          },
+          "illustration": {
+            "pass": true,
+            "value": null
+          }
+        },
+        "findings": [],
+        "frame": 1850
+      },
+      "call": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 95.48
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          },
+          "illustration": {
+            "pass": true,
+            "value": null
+          }
+        },
+        "findings": [],
+        "frame": 1950
+      },
+      "act_a": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 91.84
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          },
+          "illustration": {
+            "pass": true,
+            "value": null
+          }
+        },
+        "findings": [],
+        "frame": 2113
+      },
+      "act_b": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 86.19
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          },
+          "illustration": {
+            "pass": true,
+            "value": null
+          }
+        },
+        "findings": [],
+        "frame": 2173
+      },
+      "close": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 86.51
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          },
+          "illustration": {
+            "pass": true,
+            "value": null
+          }
+        },
+        "findings": [],
+        "frame": 2238
+      }
+    }
+  },
+  "measured_pass": true,
+  "complete": true
+}
