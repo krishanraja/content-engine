@@ -1,7 +1,7 @@
 ---
 repo: krishanraja/content-engine
 product: Mindmake content engine
-as_of: 2026-10-27
+as_of: 2026-10-28
 head: 02669ea
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
@@ -32,7 +32,7 @@ Stories a writer can carry without asking Krish:
 
 Objection it answers: "AI content is slop." Here is an engine that grades its judges against the editor and never counts its own actions as taste.
 
-## Where it is right now (as of 2026-10-27)
+## Where it is right now (as of 2026-10-28)
 
 Carousel provenance rule clarified on 26 October: no public illustration-generation
 boilerplate in artwork, captions or descriptions. Retain private provenance and
@@ -116,6 +116,7 @@ production with its existing owner. The exact production handoff still applies.
 
 ## What changed recently
 
+- 2026-10-28 **The first pasted links are waiting on the home computers.** Krish saved a YouTube Short and an Instagram post through the new link box (both tagged Content); after 9 hours neither home computer had claimed them, while the engine's claim route answers. Next: check content-watcher's scheduled task on a home computer (`WORKBENCH.md`, 27 October, pasted links).
 - 2026-10-27 **A link Krish pastes on the Inspiration board is tagged Production or Content when he pastes it, and a phone saves one in a press** (control-center PR #573; learning `paste-a-link-tagged`). Krish: "Why can't I add links into my inspiration board pre-tagged for production or content? I'm supposed to be able to add this quickly and easily on mobile." The claim route already passed `lane` to content-watcher, which files by it; a test here now holds that. No pasted link had ever been saved before this; the first live run is his share of one reel. North Star check (2026-10-27): holds; this feeds the taste the drafting reads, not this week's count.
 - 2026-10-24 **The Sunday loop is rebuilt for 25 October: his Inspiration House is read, every idea carries styles to choose from, and nothing renders without a signed creative direction.** Krish: "Double check my inspirationhouse gets read properly when ideas are being built", "suggest script and production styles that I can choose from", "Claude gets the scripts and the visual creative direction locked so that codex can take over", "Yes, Sunday is my recording day". The gather (`include=sources`) now reads `inspiration_items`, `content_reads`, `creator_moves` and `taste_claims`; on live data on 24 Oct it found 3 cards he routed to Make a piece that had no idea row, 39 cards he has not answered, 1 production reference and 10 taste claims. The board refuses ideas that drop a routed card, a day without two script formats and one untried experiment, and a new per-day feeder script; brief and scripts are due Sunday morning and midday (layout lock updated with his words). `kit.py` and `make.py` refuse a piece from 26 Oct without `creative-direction.json` signed by him for the exact script words (`docs/CREATIVE_DIRECTION.md`). AGENTS.md opens with the start route Codex reads. Still open: production asking to publish (Codex runs no hooks), a cut-boundary audio check for chopped words, and required status checks on main (his permission).
 
@@ -215,7 +216,7 @@ production with its existing owner. The exact production handoff still applies.
 ## What is next and what is waiting on Krish
 
 - Waiting on Krish (ve): yes or no to the Phase 1 Codex cards drawing paid credits before the weekly window resets (about 2 Nov), or build them in Claude instead; then the 19.5 s 'my test' proof (Gate 2). Also his yes to the `.claude/settings.json` change (drop the dead board-ui-guard hook, allow `scripts/ve.py`), which the auto-mode classifier would not let Claude make.
-- North Star check (2026-10-27): holds.
+- North Star check (2026-10-28): holds.
 - Next for ve (2026-10-27): `ve ledger` wraps `session_token_audit.py --codex --json` and reports each `ve` run against the Friday 23 baseline (256.6M input tokens, 12.5 active hours) before any saving is claimed.
 - Next (2026-10-27), single next action: Krish's three answers on Monday's article (`docs/plans/2026-10-26-monday/review/fact-signoff.md`): keep the recorded prediction or not, the re-check of four corrected lines (about $0.13), and seven lines to sign; then his paste of Monday's `CODEX_PROMPT.md` into Codex, his yes on Friday's one Bessen line, and his recordings of Wednesday and Friday (all four scripts are in Teleprompter; board build 300316fd).
 - Earlier (Sunday 25 October, his recording day): publish the 26 Oct board (`week_board.py --target web`, then `board_web.py publish-web --apply`) and take his three picks; then `make-piece` per day, the story one question at a time, then scripts into Teleprompter. Earlier plan: `plan-week` gathers (`board_feed.py gather 2026-10-26`, which needs this change deployed), builds the Ideas tab with styles and every routed Inspiration card covered, a separate reader kills weak ideas first; he picks; then `make-piece` for Monday, Wednesday and Friday: story, scripts in Teleprompter by midday, creative direction before he records.
