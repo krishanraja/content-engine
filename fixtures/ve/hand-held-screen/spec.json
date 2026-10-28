@@ -212,7 +212,7 @@
             "kind": "recording",
             "pixelWidth": 1087,
             "pixelHeight": 780,
-            "trimBefore": 102
+            "trimBefore": 39
           },
           "bubble": {
             "label": "DeepSeek",
@@ -495,29 +495,6 @@
       }
     },
     {
-      "obj": "verdict_headline",
-      "device": "headline",
-      "meaning": "verdict headline in the approved hand-held screen story",
-      "persist": {
-        "from_beat": "verdict",
-        "to_beat": "verdict"
-      },
-      "params": {
-        "lines": [
-          "3/3"
-        ],
-        "swipe": {
-          "line": 0,
-          "word": 0
-        },
-        "at": {
-          "x": 72,
-          "y": 690,
-          "w": 280
-        }
-      }
-    },
-    {
       "obj": "verdict_scribble",
       "device": "scribble",
       "meaning": "verdict scribble in the approved hand-held screen story",
@@ -681,8 +658,7 @@
           "to": {
             "x": 410,
             "y": 536
-          },
-          "label": "the xinjiang answer"
+          }
         }
       }
     },
@@ -771,8 +747,7 @@
         },
         "end": {
           "x": 892,
-          "y": 620,
-          "label": "23 OCT"
+          "y": 620
         },
         "tone": "cream"
       }
@@ -1091,6 +1066,13 @@
               "verb": "draw",
               "to_state": "visible",
               "silent": true
+            },
+            {
+              "at_w": 43,
+              "obj": "evidence_scribble",
+              "verb": "exit",
+              "to_state": "gone",
+              "silent": true
             }
           ]
         },
@@ -1109,7 +1091,6 @@
           },
           "uses": [
             "phone",
-            "verdict_headline",
             "verdict_provenance",
             "verdict_strip",
             "deletion_stamp",
@@ -1130,13 +1111,6 @@
               "obj": "phone",
               "verb": "fill",
               "to_state": "bubble",
-              "silent": true
-            },
-            {
-              "at_w": 46,
-              "obj": "verdict_headline",
-              "verb": "enter",
-              "to_state": "visible",
               "silent": true
             },
             {

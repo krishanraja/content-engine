@@ -412,7 +412,6 @@
       "toFrame": 632,
       "uses": [
         "phone",
-        "verdict_headline",
         "verdict_provenance",
         "verdict_strip",
         "deletion_stamp",
@@ -563,7 +562,7 @@
             "kind": "recording",
             "pixelWidth": 1087,
             "pixelHeight": 780,
-            "trimBefore": 102
+            "trimBefore": 39
           },
           "bubble": {
             "label": "DeepSeek",
@@ -834,28 +833,6 @@
       }
     },
     {
-      "obj": "verdict_headline",
-      "device": "headline",
-      "meaning": "verdict headline in the approved hand-held screen story",
-      "fromFrame": 541,
-      "toFrame": 632,
-      "variants": {},
-      "params": {
-        "lines": [
-          "3/3"
-        ],
-        "swipe": {
-          "line": 0,
-          "word": 0
-        },
-        "at": {
-          "x": 72,
-          "y": 690,
-          "w": 280
-        }
-      }
-    },
-    {
       "obj": "verdict_scribble",
       "device": "scribble",
       "meaning": "verdict scribble in the approved hand-held screen story",
@@ -1010,8 +987,7 @@
           "to": {
             "x": 410,
             "y": 536
-          },
-          "label": "the xinjiang answer"
+          }
         }
       }
     },
@@ -1099,8 +1075,7 @@
         },
         "end": {
           "x": 892,
-          "y": 620,
-          "label": "23 OCT"
+          "y": 620
         },
         "tone": "cream"
       }
@@ -1290,6 +1265,13 @@
       "atFrame": 475
     },
     {
+      "id": "evidence-5",
+      "obj": "evidence_scribble",
+      "verb": "exit",
+      "toState": "gone",
+      "atFrame": 500
+    },
+    {
       "id": "verdict-0",
       "obj": "phone",
       "verb": "move",
@@ -1305,90 +1287,83 @@
     },
     {
       "id": "verdict-2",
-      "obj": "verdict_headline",
+      "obj": "result_threads",
       "verb": "enter",
       "toState": "visible",
       "atFrame": 541
     },
     {
       "id": "verdict-3",
-      "obj": "result_threads",
-      "verb": "enter",
-      "toState": "visible",
-      "atFrame": 541
-    },
-    {
-      "id": "verdict-4",
       "obj": "deletion_stamp",
       "verb": "stamp",
       "toState": "visible",
       "atFrame": 551
     },
     {
-      "id": "verdict-5",
+      "id": "verdict-4",
       "obj": "result_threads",
       "verb": "mark",
       "toState": "claude:xinjiang",
       "atFrame": 551
     },
     {
-      "id": "verdict-6",
+      "id": "verdict-5",
       "obj": "result_threads",
       "verb": "mark",
       "toState": "claude:turkmenistan",
       "atFrame": 551
     },
     {
-      "id": "verdict-7",
+      "id": "verdict-6",
       "obj": "result_threads",
       "verb": "mark",
       "toState": "chatgpt:xinjiang",
       "atFrame": 551
     },
     {
-      "id": "verdict-8",
+      "id": "verdict-7",
       "obj": "result_threads",
       "verb": "mark",
       "toState": "chatgpt:turkmenistan",
       "atFrame": 551
     },
     {
-      "id": "verdict-9",
+      "id": "verdict-8",
       "obj": "verdict_provenance",
       "verb": "enter",
       "toState": "visible",
       "atFrame": 557
     },
     {
-      "id": "verdict-10",
+      "id": "verdict-9",
       "obj": "result_threads",
       "verb": "mark",
       "toState": "deepseek:xinjiang",
       "atFrame": 557
     },
     {
-      "id": "verdict-11",
+      "id": "verdict-10",
       "obj": "result_threads",
       "verb": "mark",
       "toState": "deepseek:turkmenistan",
       "atFrame": 557
     },
     {
-      "id": "verdict-12",
+      "id": "verdict-11",
       "obj": "verdict_scribble",
       "verb": "draw",
       "toState": "visible",
       "atFrame": 570
     },
     {
-      "id": "verdict-13",
+      "id": "verdict-12",
       "obj": "verdict_strip",
       "verb": "enter",
       "toState": "visible",
       "atFrame": 570
     },
     {
-      "id": "verdict-14",
+      "id": "verdict-13",
       "obj": "verdict_strip",
       "verb": "count_to",
       "toState": "3/3",

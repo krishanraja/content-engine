@@ -102,10 +102,11 @@ def measure(image, lock, *, plate_on_screen=False, exempt=(), caption_words=None
         if ((solid or float(word['conf']) >= 90) and _inside(x + w / 2, y + h / 2, zones['caption'])
                 and not set(qc_captions._tokens(word['text'])).issubset(allowed)):
             caption.append(word)
-        if (not _inside(x + w / 2, y + h / 2, zones['marquee'])
+        strong = solid or float(word['conf']) >= 90  # one stray glyph on a photo is OCR noise, not a layout fault
+        if (strong and not _inside(x + w / 2, y + h / 2, zones['marquee'])
                 and (x + w > zones['platform']['right_x'] + PLATFORM_TOLERANCE_PX or y + h > zones['platform']['bottom_y'] + PLATFORM_TOLERANCE_PX)):
             platform.append(word)
-        if (not _inside(x + w / 2, y + h / 2, zones['marquee'])
+        if (strong and not _inside(x + w / 2, y + h / 2, zones['marquee'])
                 and (min(x, y, 1080 - x - w, 1920 - y - h) < limits['edge_margin_px']
                      or x < limits['key_content_margin_px'] - 12)):
             edges.append(word)

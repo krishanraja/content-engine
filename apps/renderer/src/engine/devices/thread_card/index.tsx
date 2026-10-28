@@ -109,7 +109,7 @@ export function Device({ object, events, tokens, aspect, frame }: DeviceProps) {
         const angle = Math.atan2(dy, dx) * 180 / Math.PI - 90
         return <g><g transform={`translate(${p.knot.x} ${p.knot.y}) rotate(${angle})`}>
           {twisted(0, 0, length).map((d, i) => <path key={i} d={d} fill="none" stroke={i ? tokens.cream : colour} strokeWidth={5} />)}
-        </g>{dot(p.end.x, p.end.y)}{label(p.end.label, p.end.x + 28, p.end.y + 60)}</g>
+        </g>{dot(p.end.x, p.end.y)}{p.end.label ? label(p.end.label, p.end.x + 28, p.end.y + 60) : null}</g>
       })() : null}
       {dot(p.knot.x, p.knot.y)}{p.knot.label ? label(p.knot.label, p.knot.x + 28, p.knot.y - 24) : null}
     </g> : null}

@@ -8,7 +8,7 @@ export const ParamsSchema = z.object({
   threads: z.array(z.object({ id: z.string().min(1), name: z.string().min(1), tally: z.string().optional(), y: coordinate,
     style: z.enum(['solid', 'dashed']), marks: z.array(z.object({ station: z.string().min(1), state: z.enum(['planted', 'bare', 'parted']) }).strict()) }).strict()).min(1),
   knot: point.extend({ label: z.string().optional() }).strict().optional(),
-  end: point.extend({ label: z.string().min(1) }).strict().optional(),
+  end: point.extend({ label: z.string().min(1).optional() }).strict().optional(),
   tone: z.enum(['cream', 'channel']),
 }).strict().superRefine((p, ctx) => {
   const error = (message: string) => ctx.addIssue({ code: 'custom', message })
