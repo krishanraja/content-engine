@@ -4,6 +4,7 @@
 
 ## 27 October: pasted links tagged Production or Content; the first live run is one reel (Claude)
 
+- **No windows (28 Oct):** Krish: "HIDE ALL CONSOLE POP UPS FOREVER FROM EVERY REPO AND LOCAL TASK". Each pass runs his console tasks through `run-hidden.exe` (`scripts/windowless.ps1`); content-watcher #16 hides every child and skips media the engine holds. Read `windows` per machine on the lane.
 - **Asked (Krish, 27 Oct):** "Why can't I add links into my inspiration board pre-tagged for production or content? I'm supposed to be able to add this quickly and easily on mobile", with the reel `https://www.instagram.com/reel/DewxbWfjDHB/` to run end to end (learning `paste-a-link-tagged`).
 - **Found:** `content_watch_requests` had never held a row: no pasted link had ever been saved, so the chain (Control Center, content-watcher on a home computer, the taste ledger's quick card run) has never run live. The engine and content-watcher already honour a lane; Control Center never sent one.
 - **Done:** control-center PR #573 (branch `ccr-1b7d26a8-1tri9s`): two required chips (Production, Content) in the link box, the route refuses a link without one (`bad_lane`) and writes `lane`, a re-tag moves only a queued or failed request, and a phone gets Save a link at the top of the Inspiration page. Here: a test that a claim hands content-watcher the lane unchanged.

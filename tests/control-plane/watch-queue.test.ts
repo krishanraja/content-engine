@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import {
-  claim, compareRev, parseClaim, parseReadOnly, parseReport, report, writeReads,
+  claim, compareRev, heldReads, parseCheck, parseClaim, parseReadOnly, parseReport, report, writeReads,
   type ReadRow, type WatchRequestRow, type WatchStore,
 } from '../../apps/control-plane/api/watch/_watch.js'
 
@@ -205,6 +205,17 @@ describe('readings', () => {
     expect((await writeReads(store, [readRow('c')])).written).toBe(1)
     expect(store.reads.get(sha('c'))!.platform).toBe('instagram')
   })
+
+  it('tells a machine which dropped files it need not read: a link reading, or the same or a newer revision', async () => {
+    // 28 October: each home computer re-read the media the other had filed from links, nineteen files of work.
+    const store = new MemoryStore([])
+    await writeReads(store, [readRow('a', 'cw-2026.10.3')])
+    await writeReads(store, [{ ...readRow('b', 'cw-2026.10.3'), source_url: null, platform: 'own' }])
+    await writeReads(store, [{ ...readRow('c', 'cw-2026.11.2'), source_url: null, platform: 'own' }])
+    const held = await heldReads(store, [sha('a'), sha('b'), sha('c'), sha('d')], 'cw-2026.10.24')
+    // a: made from a link, never replaced by a drop; b: older, read again; c: newer; d: not here.
+    expect(held).toEqual({ [sha('a')]: 'cw-2026.10.3', [sha('c')]: 'cw-2026.11.2' })
+  })
 })
 
 describe('what the routes accept', () => {
@@ -232,6 +243,15 @@ describe('what the routes accept', () => {
     expect(parseReadOnly({ machine: 'HOME-1', reads: [{ ...readRow('a'), platform: 'own', source_url: null }] }).ok).toBe(true)
     expect(parseReadOnly({ machine: 'HOME-1', reads: [] })).toEqual({ ok: false, error: 'invalid_reads' })
     expect(parseReadOnly({ machine: 'HOME-1', reads: [{ ...readRow('a'), shape: 'audio' }] })).toEqual({ ok: false, error: 'invalid_reads' })
+  })
+
+  it('checks a held check: shas only, at most fifty, with the asking revision', () => {
+    expect(parseCheck({ machine: 'HOME-1', check: [sha('a'), sha('a')], engine_rev: 'cw-2026.10.24' }))
+      .toEqual({ ok: true, value: { machine: 'HOME-1', shas: [sha('a')], engine_rev: 'cw-2026.10.24' } })
+    expect(parseCheck({ machine: 'HOME-1', check: ['../x'], engine_rev: 'cw-2026.10.24' })).toEqual({ ok: false, error: 'invalid_check' })
+    expect(parseCheck({ machine: 'HOME-1', check: Array.from({ length: 51 }, (_, i) => sha(String(i))), engine_rev: 'cw' }))
+      .toEqual({ ok: false, error: 'invalid_check' })
+    expect(parseCheck({ machine: 'HOME-1', check: [sha('a')] })).toEqual({ ok: false, error: 'invalid_engine_rev' })
   })
 })
 

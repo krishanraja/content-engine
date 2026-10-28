@@ -44,6 +44,7 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `scripts/quick-edit/`
 - `scripts/signals/`
 - `scripts/velib/`
+- `scripts/windowless/`
 - `supabase/migrations/`
 - `tests/`
 - `tests/control-plane/`
@@ -2238,8 +2239,10 @@ What the compiler looks for, as pure functions.
 - `const LANE_PROBLEMS: Readonly<Record<string, string>>`
 - `const LANE_REPORT_FRESH_HOURS`
 - `interface WatchHealth`
+- `interface WindowsHealth`
 - `interface LaneReport`
 - `function parseWatchHealth(value: unknown): WatchHealth | undefined`
+- `function parseWindowsHealth(value: unknown): WindowsHealth | undefined`
 - `function parseLaneReport(value: unknown, now: string): LaneReport | null`
 - `function laneKey(machine: string): string`
 - `function lanePlainProblems(reports: readonly LaneReport[], now: number): string[]`
@@ -2752,6 +2755,8 @@ The content-watcher queue: what the home computers may claim, report and read, d
 - `interface ReportBody`
 - `function parseReport(body: unknown): Parsed<ReportBody>`
 - `function parseReadOnly(body: unknown): Parsed<{ machine: string; reads: ReadRow[] }>`
+- `function parseCheck(body: unknown): Parsed<{ machine: string; shas: string[]; engine_rev: string }>`
+- `async function heldReads(store: WatchStore, shas: string[], engineRev: string): Promise<Record<string, string>>`
 - `function compareRev(a: string, b: string): number`
 - `function claimView(row: WatchRequestRow)`
 - `async function waiting(store: WatchStore, machine: string, now = new Date()): Promise<number>`

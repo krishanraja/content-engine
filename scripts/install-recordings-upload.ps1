@@ -85,7 +85,19 @@ if (-not $SkipCheck) {
 }
 
 $arguments = "-NoProfile -NonInteractive -ExecutionPolicy Bypass -WindowStyle Hidden -File `"$uploadScript`" -Loop -EveryMinutes $EveryMinutes"
-$action = New-ScheduledTaskAction -Execute $powershell -Argument $arguments -WorkingDirectory $repoRoot
+# Through run-hidden.exe, so no window opens, not even for a moment (scripts\windowless.ps1; Krish, 2026-10-28:
+# "HIDE ALL CONSOLE POP UPS FOREVER FROM EVERY REPO AND LOCAL TASK").
+. (Join-Path $PSScriptRoot 'windowless.ps1')
+$expectedExecute = $powershell
+$expectedArguments = $arguments
+try {
+  $action = New-WindowlessTaskAction $powershell $arguments $repoRoot
+  $expectedExecute = Get-WindowlessLauncher
+  $expectedArguments = Format-WindowlessCommand $powershell $arguments
+} catch {
+  Write-Output "run-hidden.exe could not be built on this machine ($($_.Exception.Message)), so the task runs PowerShell hidden, which can show a window for a moment. The recordings pass tries again each pass."
+  $action = New-ScheduledTaskAction -Execute $powershell -Argument $arguments -WorkingDirectory $repoRoot
+}
 $logonTrigger = New-ScheduledTaskTrigger -AtLogOn -User $userId
 # A trigger every few minutes for ten years: while the upload runs, IgnoreNew
 # leaves it alone; after sleep, an update or a crash, it starts it again.
@@ -114,8 +126,8 @@ Register-ScheduledTask -TaskName $TaskName -InputObject $task -Force | Out-Null
 $installed = Get-ScheduledTask -TaskName $TaskName -ErrorAction Stop
 $installedActions = @($installed.Actions)
 $actionMatches = $installedActions.Count -eq 1 `
-  -and [string]::Equals([System.IO.Path]::GetFullPath($installedActions[0].Execute), [System.IO.Path]::GetFullPath($powershell), [System.StringComparison]::OrdinalIgnoreCase) `
-  -and [string]::Equals($installedActions[0].Arguments, $arguments, [System.StringComparison]::Ordinal)
+  -and [string]::Equals([System.IO.Path]::GetFullPath($installedActions[0].Execute), [System.IO.Path]::GetFullPath($expectedExecute), [System.StringComparison]::OrdinalIgnoreCase) `
+  -and [string]::Equals($installedActions[0].Arguments, $expectedArguments, [System.StringComparison]::Ordinal)
 if (-not $actionMatches) { throw 'The installed task does not run recordings-upload.ps1 as intended.' }
 $installedTriggers = @($installed.Triggers)
 $hasLogon = @($installedTriggers | Where-Object { $_.CimClass.CimClassName -eq 'MSFT_TaskLogonTrigger' }).Count -eq 1
