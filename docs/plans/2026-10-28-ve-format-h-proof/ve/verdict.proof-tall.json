@@ -2,37 +2,46 @@
   "schema": "ve-verdict/1",
   "piece": "2026-10-23-friday-my-test",
   "cut": "proof-tall",
-  "sha256": "8245d045a2fb710c4ce731b26d82519d1c298e04abc2f38eb553baf490c2853b",
-  "reviewer": "critic-fresh-3",
-  "reviewed_at": "2026-10-28T15:35:19.684853+00:00",
+  "sha256": "e661608967a8ca2a9c53c1f0e5ad03c69a6717b426883e45017edfe865be6ecd",
+  "reviewer": "critic-fresh-4",
+  "reviewed_at": "2026-10-28T15:48:11.472705+00:00",
   "lens_sha256": "2d62c9e235d86f192747eaeea0115befc2ef3ae7b6448684248271100582f7c1",
   "frames_viewed": [
     {
-      "at_s": 0.5
+      "at_s": 0.3
+    },
+    {
+      "at_s": 1.0
     },
     {
       "at_s": 2.0
     },
     {
-      "at_s": 3.3
+      "at_s": 3.0
+    },
+    {
+      "at_s": 3.1
+    },
+    {
+      "at_s": 3.2
     },
     {
       "at_s": 4.0
     },
     {
+      "at_s": 5.0
+    },
+    {
       "at_s": 5.5
+    },
+    {
+      "at_s": 6.5
     },
     {
       "at_s": 6.9
     },
     {
       "at_s": 7.0
-    },
-    {
-      "at_s": 7.2
-    },
-    {
-      "at_s": 7.3
     },
     {
       "at_s": 7.4
@@ -50,7 +59,13 @@
       "at_s": 7.8
     },
     {
-      "at_s": 9.0
+      "at_s": 8.5
+    },
+    {
+      "at_s": 9.5
+    },
+    {
+      "at_s": 9.8
     },
     {
       "at_s": 10.5
@@ -74,6 +89,9 @@
       "at_s": 11.6
     },
     {
+      "at_s": 11.9
+    },
+    {
       "at_s": 12.0
     },
     {
@@ -83,37 +101,37 @@
       "at_s": 12.8
     },
     {
-      "at_s": 12.9
+      "at_s": 12.87
     },
     {
-      "at_s": 13.0
+      "at_s": 12.95
     },
     {
-      "at_s": 13.1
+      "at_s": 13.05
     },
     {
-      "at_s": 13.2
+      "at_s": 13.15
+    },
+    {
+      "at_s": 13.3
     },
     {
       "at_s": 14.0
     },
     {
+      "at_s": 14.5
+    },
+    {
       "at_s": 15.0
     },
     {
-      "at_s": 15.4
+      "at_s": 15.5
     },
     {
-      "at_s": 15.7
-    },
-    {
-      "at_s": 15.9
+      "at_s": 16.0
     },
     {
       "at_s": 16.4
-    },
-    {
-      "at_s": 16.5
     },
     {
       "at_s": 16.6
@@ -122,7 +140,7 @@
       "at_s": 16.7
     },
     {
-      "at_s": 16.85
+      "at_s": 16.8
     },
     {
       "at_s": 17.0
@@ -131,7 +149,7 @@
       "at_s": 17.5
     },
     {
-      "at_s": 17.9
+      "at_s": 18.0
     },
     {
       "at_s": 18.07
@@ -140,118 +158,97 @@
       "at_s": 18.15
     },
     {
-      "at_s": 18.2
+      "at_s": 18.22
     },
     {
       "at_s": 18.3
     },
     {
-      "at_s": 18.5
-    },
-    {
       "at_s": 19.0
-    },
-    {
-      "at_s": 19.2
     },
     {
       "at_s": 19.5
     },
     {
-      "at_s": 20.5
+      "at_s": 20.0
     },
     {
       "at_s": 20.9
-    },
-    {
-      "at_s": 21.0
     }
   ],
   "findings": [
     {
-      "severity": "block",
-      "area": "motion",
-      "frame_s": 7.7,
-      "text": "Open to result_a transition (about 7.4 to 7.75 s): the phone screen is still double-exposed. 'FLAGGED IT?' prints on top of 'SAME WORK PROMPT / THE COUNTRY CHANGES' at 7.4, 7.5, 7.6, and at 7.7 the CLAUDE card sits across the 'UK clothing company' box and a ghost TURKMENISTAN. Reads as a see-through screen, not a clean change of state."
-    },
-    {
-      "severity": "block",
-      "area": "motion",
-      "frame_s": 12.95,
-      "text": "Result_b to evidence transition (12.87 to about 13.15 s): the DeepSeek 0/1 flag cards show through the semi-transparent recording at 12.9 and 13.0 (rotated Xinjiang, Turkmenistan, flag and numeral ghosts under the DeepSeek page text), and the phone body crosses the XINJIANG swipe at 13.0. Clean by 13.2. Ghosted cross-dissolve still present."
-    },
-    {
-      "severity": "fix",
-      "area": "motion",
-      "frame_s": 11.3,
-      "text": "Result_a to result_b transition (11.2 to about 11.5 s): the 'DeepSeek' label overprints 'FLAGGED IT?' (11.2, 11.3, 11.4), and at 11.5 the Claude and ChatGPT cards ghost through the DeepSeek cards (two flag poles, 2/2 under the 1). Clean at 11.6. Shorter and less severe than the 7.4 window but the same defect."
-    },
-    {
-      "severity": "fix",
-      "area": "motion",
-      "frame_s": 18.15,
-      "text": "Evidence to verdict transition (18.03 to about 18.35 s): the rotated real recording (user prompt bubble, 'Sorry, that's beyond my current scope') shows through the retyped DEEPSEEK bubble, so the refusal reads twice at 18.07 and 18.15. Not on the owner's list, same ghosting class. Clean by 18.5."
-    },
-    {
-      "severity": "fix",
-      "area": "composition",
-      "frame_s": 14.5,
-      "text": "'SCREEN RECORDING DEEPSEEK 23 OCT 2026' sticker (13.7 to about 18 s) is a cream ellipse, not the approved rounded-rectangle sticker. 'SCREEN' starts hard against the left curve, the '2' of '23' hangs off the bottom-left edge onto the dark ground, '2026' touches the right edge, and its lower-left edge touches the XINJIANG swipe. The text is still overflowing and cramped, so (e) is only partly fixed."
-    },
-    {
       "severity": "fix",
       "area": "composition",
       "frame_s": 4.0,
-      "text": "Open-beat scribble loop (drawn from 3.13 s, held to 7.3 s) runs under the caption card: its lower arc is cut by the black caption block at y 1180, so the loop does not close in the key band. Shorten or lift the loop to end by y 1170."
+      "text": "Open-beat scribble loop (drawn 3.13 s, held to 7.3 s) still dips under the engine caption card: its lower right arc is clipped at y about 1180, ten pixels past the 1170 key band, and from 6.9 s it rings TURKMENISTAN alone with empty ink inside the loop. Shrink or lift the loop so it closes above y 1170."
+    },
+    {
+      "severity": "fix",
+      "area": "composition",
+      "frame_s": 14.0,
+      "text": "The cream SCREEN RECORDING sticker is now a clean rounded rectangle with the text inside it, but its lower-left corner overlaps the top-right corner of the coral XINJIANG swipe (about 15 px, 13.5 to 18.0 s). Nudge the sticker 20 px right or up."
+    },
+    {
+      "severity": "fix",
+      "area": "composition",
+      "frame_s": 19.0,
+      "text": "Thread end-ring is tangent to the top edge of the KRISH'S TEST sticker (zoomed crop at 19.0 s, still true at 20.5 s): the ring touches the sticker outline rather than clearing it. Move the sticker 20 px down or shorten the end thread."
     },
     {
       "severity": "note",
-      "area": "composition",
+      "area": "motion",
+      "frame_s": 12.0,
+      "text": "Stamp slap overshoot: at 12.0 s the Turkmenistan flag is oversized and hides the label down to 'nistan' for about one frame (clear by 12.1 s). Similarly at 9.8 s the ChatGPT 2/2 numeral overshoots its card and meets the scribble loop for a few frames. Transient and reads as a slap, but a visible collision on a paused frame."
+    },
+    {
+      "severity": "note",
+      "area": "evidence",
       "frame_s": 16.7,
-      "text": "After the real deletion lands (answer replaced by 'Sorry, that's beyond my current scope' between 16.6 and 16.7 s) the mint evidence underline stays for about 0.1 to 0.15 s on blank white (visible at 16.7, gone by 16.85). Deletion timing matches 'deletes' at 16.68 s; the underline is not on blank space while the answer is on screen (15.9 to 16.6), so (g) is essentially fixed."
+      "text": "Deletion is in sync (text present at 16.6 s, gone at 16.7 s, 'deletes' swipe lands 16.7 s). The mint underline stays at full strength over blank white at 16.7 s and fades by about 17.0 s, so it floats on empty space for roughly 0.3 s. It reads as a strike-out ghost; shorten the fade if you want it clean."
     },
     {
       "severity": "note",
       "area": "composition",
-      "frame_s": 20.5,
-      "text": "Thread end-ring now sits above the KRISH'S TEST sticker and clears the type (19.5 to 21.0 s); the lower ring is tangent to the sticker's top edge with no overlap on letters. A few px more gap would be cleaner but this is no longer a collision."
+      "frame_s": 8.5,
+      "text": "Approved-design concern: from about 7.7 to 9.3 s the glass shows one small Claude card in the top third of the phone with the rest of the screen empty ink, which is longer than a brief empty body. ChatGPT only arrives at about 9.3 s while the headline and dek already say two for two."
     },
     {
       "severity": "note",
-      "area": "brand",
-      "frame_s": 9.0,
-      "text": "Halftone on coral (headline swipe, KRISH'S TEST sticker, marquee) is now a sparse, darker-coral dot that is visible between letters but does not break legibility at phone size (zoomed at 12.0 and 20.9). Mostly fixed; slight residual texture around the type."
+      "area": "evidence",
+      "frame_s": 17.5,
+      "text": "Real refusal text ('Sorry, that's beyond my current scope') is about 20 px in the recording from 16.7 s while the 44 px pull-quote card still quotes the deleted answer; the refusal only gets its own 44 px bubble from 18.07 s. Approved retyped-bubble design, so a note only."
     },
     {
       "severity": "note",
-      "area": "composition",
-      "frame_s": 9.0,
-      "text": "Result_a at 9.0 s: the phone screen has a dead band between the Claude card and the caption card (about y 860 to 1180) before the ChatGPT card arrives; at 11.3 the ChatGPT card tucks under the caption block. Brief, within the approved layout."
+      "area": "evidence",
+      "frame_s": 15.0,
+      "text": "ILLUSTRATION tag stays on screen across the real DeepSeek recording beat. It is spec-correct (a generated plate is behind it) and the cream SCREEN RECORDING sticker labels the real footage, but the two labels sit close together. Evidence is not redrawn: the recording, cursor, streamed answer and deletion are the real capture."
     },
     {
       "severity": "note",
       "area": "copy",
       "frame_s": 12.5,
-      "text": "Result_b shows a bare '0' and '1' beside the Xinjiang and Turkmenistan flag panels with no unit; the card context and the dek ('DeepSeek flagged Turkmenistan. It did not flag Xinjiang.') carry the meaning, so low risk. The 3/3 on the verdict strip does carry its label and denominator."
+      "text": "DeepSeek cards show bare 0 and 1 under the flags with no denominator or unit; the 2/2, ? OUT OF 2 and 3/3 numbers all carry a denominator and the KRISH'S TEST 23 OCT producer sticker. Minor Critic Q4 gap."
     },
     {
       "severity": "note",
-      "area": "other",
-      "frame_s": 15.0,
-      "text": "Generated hand plate: fingertips along the top edge of the recording (13.2 to 18 s) have a waxy, chocolate-like sheen. Tagged ILLUSTRATION, but it is the one place the plate looks synthetic."
-    },
-    {
-      "severity": "note",
-      "area": "evidence",
-      "frame_s": 15.9,
-      "text": "Pull quote is now a bordered card, verbatim, large (about 44 px), with 'DEEPSEEK WROTE' attribution in mint Plex Mono on ink; the evidence scribble draws on at 15.83 s underneath the quoted clause in the real recording, so it points at real text. (f) is fixed. Approved-design concern only: the real recording's white band."
+      "area": "brand",
+      "frame_s": 19.5,
+      "text": "Verdict scribble is mint on a dark phone screen; the template says cream on dark and mint on light. Mint on ink is brand-legal (13.4:1) but the open, result and evidence scribbles use cream or mint-on-white, so this one is a slight inconsistency."
     },
     {
       "severity": "note",
       "area": "composition",
-      "frame_s": 19.5,
-      "text": "Verdict beat is free of collisions from 18.5 to 21.07 s: thread chart, ANSWER DELETED stamp with leader, sticker, mint-ringed DeepSeek bubble, caption card, 3/3 strip and marquee all sit apart. Approved-design concerns only: the thread chart, no headline on this beat, the retyped refusal bubble."
+      "frame_s": 19.0,
+      "text": "Approved-design concern: the thread chart's cream hairlines and the TURKMENISTAN header (cap height 21 px, about 30 px type) sit over a bright cotton boll, so contrast is lower on the right half of the chart. It is also structurally close to a table (ruled header, two rule columns, three rows), though flags, wobble and the parted DeepSeek thread keep it from reading as a spreadsheet."
+    },
+    {
+      "severity": "note",
+      "area": "motion",
+      "frame_s": 0.3,
+      "text": "First 0.3 s is an empty ink frame with only the header and a 'Now,' caption; the phone enters at frame 9. A poster or autoplay first frame has no focal object."
     }
   ],
-  "blocking": true
+  "blocking": false
 }
