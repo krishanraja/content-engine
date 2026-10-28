@@ -419,6 +419,26 @@ def ledger_problems(data):
     return out
 
 
+def not_for_us(data):
+    """The modules Krish marked not for us in the bank."""
+    return {m.get('id') for m in data.get('bank', []) if m.get('krish_verdict') == 'not for us'}
+
+
+def pick_modules(asked, known, data):
+    """The modules a style trial may use: "all" is every module it knows that Krish has not
+    ruled out; naming one he ruled out, or one it does not know, is refused. Returns
+    (modules, problem)."""
+    banned = not_for_us(data)
+    if asked == 'all':
+        return set(known) - banned, None
+    picked = {m.strip() for m in asked.split(',') if m.strip()}
+    if picked - set(known):
+        return set(), f'unknown modules {sorted(picked - set(known))}; known: {", ".join(known)}'
+    if picked & banned:
+        return set(), f'Krish marked {sorted(picked & banned)} not for us in config/style-references.json'
+    return picked, None
+
+
 def self_test():
     n = 0
     def t(name, ok):
@@ -426,6 +446,12 @@ def self_test():
         if not ok:
             sys.exit(f'references self-test FAILED: {name}')
         n += 1
+    ruled = {'bank': [{'id': 'a', 'krish_verdict': 'untested'}, {'id': 'b', 'krish_verdict': 'not for us'}]}
+    t('"all" leaves out a module he marked not for us', pick_modules('all', ('a', 'b'), ruled) == ({'a'}, None))
+    t('naming a module he marked not for us is refused', 'not for us' in (pick_modules('a,b', ('a', 'b'), ruled)[1] or ''))
+    t('an unknown module is refused', 'unknown' in (pick_modules('c', ('a', 'b'), ruled)[1] or ''))
+    t('the treated background is not for us (Krish, 28 Oct: "Yes remove those.")',
+      'treated-background' in not_for_us(json.loads(LEDGER.read_text())))
     shots = shots_from_cuts([1.0, 1.5, 4.0], 10.0)
     t('cuts make shots', [s['length'] for s in shots] == [1.0, 0.5, 2.5, 6.0])
     p = pace(shots, 10.0)

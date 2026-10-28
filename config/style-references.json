@@ -349,7 +349,8 @@
    "how": "The speaker is cut from the room (a person mask, feathered and steady from frame to frame) and the room is softened, darkened and graded towards the brand's ink, with a vignette, so it reads as a set, not a spare room.",
    "from": "Jack Roberts Story ad, 17 Oct (Krish: \"The background of the person has also been treated when he's talking so it doesn't look too amateur\")",
    "fits": "every cut",
-   "krish_verdict": "untested"
+   "krish_verdict": "not for us",
+   "krish_said": "2026-10-28, asked whether this treated background (still listed here after his rejection r878b8d2745, \"the background blur on both videos is so weird, I look like I am in some sort of green fire\") should be removed: \"Yes remove those.\""
   },
   {
    "id": "one-stat-per-frame",
@@ -634,7 +635,6 @@
     "name": "Face-led with proving cutaways",
     "pitch": "Him to camera, cut away to the evidence on the exact words it proves.",
     "modules": [
-     "treated-background",
      "words-in-scene",
      "screen-proof"
     ],
@@ -695,7 +695,6 @@
     "name": "The lit talking head",
     "pitch": "A carefully lit, close talking head with kinetic subtitles and drawn cutaways, Fry style.",
     "modules": [
-     "treated-background",
      "kinetic-serif-captions",
      "flat-illustration",
      "full-face-vertical"
@@ -736,8 +735,7 @@
     "modules": [
      "word-bounce-in",
      "constant-motion",
-     "fast-phrase-cuts",
-     "treated-background"
+     "fast-phrase-cuts"
     ],
     "fits": "the 90-second cut",
     "status": "trial",

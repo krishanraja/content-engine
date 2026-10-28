@@ -17,13 +17,14 @@ has also been treated when he's talking so it doesn't look too amateur."
 
 ## The modules it can mix (`--recipe`)
 
-Ids are the bank's. `--recipe all` turns every one on; otherwise give a comma
-list, and a module left out is simply not applied.
+Ids are the bank's. `--recipe all` turns on every one Krish has not marked
+"not for us" in the bank; otherwise give a comma list, and a module left out is
+simply not applied. Naming a module he marked "not for us" stops the trial.
 
 | module | what the renderer does |
 | --- | --- |
 | `full-face-vertical` | Crops in on the face (mediapipe finds it on every frame) so he fills the tall frame: 118% (close), 134% (closer) and 150% (the punch-in on a payoff). No split screen. Where a caption would sit on his chin the face is lifted as far as the frame allows, and where the source's bottom edge stops that, the shot goes up to 0.10 closer (a closer framing is what lifts the chin when the window sits on the bottom edge). |
-| `treated-background` | Cuts him from the room and turns the room into a set (below). |
+| `treated-background` | Not for us (Krish, 28 Oct 2026, "Yes remove those.", after the background blur he called "some sort of green fire"); kept only so the trial can say so. Cut him from the room and turned the room into a set (below). |
 | `kinetic-serif-captions` | Two to four words at a time, low over the chest, inside the safe area: every group sits on one bottom line just above the platform UI and a payoff's lead-in line stacks above it. A light geometric sans for most words, the word that carries the meaning in bold, the payoff phrase in a large italic serif with a peach-to-cream gradient and a soft warm glow. Never a subtitle bar. Groups break at phrase boundaries (never ending on "the", "of", "about"; never splitting before "of"; a pause or comma is a good break), never across a sentence end, a real pause or a cut. |
 | `word-bounce-in` | Each word arrives on the frame it is said, scaling from ~5% to 108% and settling at 100% over 180 ms while it fades in and rises 14 px. The group holds, drifts up a few pixels, then clears (80 ms) before a pause, or swaps on the frame the next group starts (no blank frame between them). |
 | `dark-object-card` | A full-screen cutaway: charcoal-to-slate gradient, live film grain, two words at the top (light then bold, each arriving when he says it), one to three real logos in the middle with a warm glow, each arriving when he names it. The card settles in (106% to 100%), then pushes in 5% and drifts up while it holds. |

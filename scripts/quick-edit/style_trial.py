@@ -62,6 +62,18 @@ MODULES = (
     'constant-motion',
 )
 
+
+def pick_recipe(asked):
+    """The modules a trial uses, never one Krish marked not for us in the style bank
+    (the treated background, 28 Oct: "Yes remove those."); references.pick_modules says how."""
+    sys.path.insert(0, str(HERE))
+    from references import LEDGER, pick_modules
+    recipe, problem = pick_modules(asked, MODULES, json.loads(LEDGER.read_text()))
+    if problem:
+        raise SystemExit(problem)
+    return recipe
+
+
 # Type: sizes in px at 1080 wide; weights on the variable axes.
 SANS_SIZE = 80
 SERIF_SIZE = 128
@@ -1458,10 +1470,7 @@ def contact_sheet(video, out_jpg, every=0.5, cols=8, tw=216):
 def render(args):
     t_start = time.time()
     take = Path(args.take)
-    recipe = set(MODULES) if args.recipe == 'all' else {m.strip() for m in args.recipe.split(',') if m.strip()}
-    unknown = recipe - set(MODULES)
-    if unknown:
-        raise SystemExit(f'unknown modules {sorted(unknown)}; known: {", ".join(MODULES)}')
+    recipe = pick_recipe(args.recipe)
     start, end = float(args.start), float(args.end)
     dur = end - start
     nframes = int(round(dur * FPS))
