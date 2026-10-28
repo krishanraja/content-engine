@@ -3,7 +3,7 @@ name: make-piece
 description: Make one piece end to end from the piece id Control Center sent, through the workroom, the fact gate, the visual gate, the scripts (each opening straight on the hook and closing on what Krish would do, held to a reading age of 12 and read back by two fresh readers, then sent to Krish's teleprompter.com account to read while he records), the publish page and the pack, recording every step on the piece's board row so Control Center shows it live, and keep that day's tab of the week's publish board current, copying Krish's ticks onto the record. Use when a session starts with "piece_id:" or when Krish asks to make a piece he picked in Control Center.
 ---
 
-# Make a piece
+# Make a piece
 
 > Video is made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`); the quick-edit path stays the fallback until ve passes Phase 3.
 
@@ -38,7 +38,11 @@ chat that started it.
 ## Before anything
 
 1. Read `AGENTS.md`, `WORKBENCH.md` and `docs/CONTENT_ENGINE.md` ("Driving it
-   from an agent session").
+   from an agent session"), and the rejection floor for every maker this step
+   is (`python3 scripts/floor.py --format script`, `--format title`, `--format
+   article`, `--format card` ...): what Krish rejected, in his words, and the
+   standards nothing may fall beneath (AGENTS.md rule 20). Check the finished
+   words and pictures against it before they go to him.
 2. Read the piece: `python3 scripts/engine.py GET "/api/content-ideas?id=<uuid>"`
    and where it is: `python3 scripts/post-pack/making.py <uuid> show`.
 3. Record this session on the piece so the board shows it is being made:
