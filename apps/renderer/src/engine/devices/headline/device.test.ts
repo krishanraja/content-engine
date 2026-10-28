@@ -48,3 +48,14 @@ it('staggers two lines by three frames, colours just one word, and places its de
   expect(render(25)).toContain('font-style:italic')
   expect(render(25, { lines: ['HI'], dek: 'A human line.' })).toContain('left:')
 })
+
+it('lets a splash title take a taller room, and nothing else', () => {
+  const lines = ['TWO', 'PASSPORTS']
+  const zone = headlineLayout(lines, 878, 0)
+  const splash = headlineLayout(lines, 878, 0, 373)
+  expect(zone.size).toBeLessThanOrEqual(153)
+  expect(splash.size).toBeGreaterThanOrEqual(200)
+  expect(splash.size).toBeLessThanOrEqual(240)
+  expect(splash.height).toBeLessThanOrEqual(373)
+  expect(() => headlineLayout(['X'.repeat(100)], 888, -1, 373)).toThrow(/150px/)
+})

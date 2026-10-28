@@ -17,6 +17,26 @@ def _tokens(text: str) -> list[str]:
     return re.findall(r'\w+', text.casefold(), flags=re.UNICODE)
 
 
+# Tesseract cannot tell the heavy sans capital I from a lower-case l ("AI" reads "Al", "I asked" reads "l asked"),
+# and neither can a viewer in this face. Both sides are folded the same way, so only that one ambiguity is forgiven.
+_CONFUSABLE = str.maketrans('l1|', 'iii')
+
+
+def fold(token: str) -> str:
+    return token.translate(_CONFUSABLE)
+
+
+def crop_to_caption_box(pixels):
+    """Keep the caption box only. A one-line page leaves the textured picture behind the rest of the fixed
+    OCR region (cream passport paper reads as stray words). The box is the solid dark run down the region's left
+    edge, ended by its bright channel-colour rule; on a dark picture the run never ends and nothing is cropped."""
+    column = pixels[:, 4:12].mean(axis=1)
+    bright = np.flatnonzero(column > 90)
+    if len(bright) and bright[0] >= 40 and (column[:bright[0]] < 70).all():
+        return pixels[:int(bright[0])]
+    return pixels
+
+
 def spaceless_match(expected: str, actual: str) -> float:
     """Share tracked/fused word matching with composition's illustration tag."""
     return SequenceMatcher(None, ''.join(_tokens(expected)), ''.join(_tokens(actual))).ratio()
@@ -103,13 +123,14 @@ def _normalise(pixels):
 
 def _read_candidates(executable, pixels, expected):
     normalised = _normalise(pixels)
+    expected = [fold(token) for token in expected]
     best = None
     for variant, image in (('raw', pixels), ('normalised', normalised),
                            ('raw_2x', pixels.repeat(2, axis=0).repeat(2, axis=1)),
                            ('normalised_2x', normalised.repeat(2, axis=0).repeat(2, axis=1))):
         seen = _recognise(executable, image)
         # A lone stray glyph from the picture behind the caption is not a caption word; real one-letter words are in `expected`.
-        actual = [token for token in _tokens(seen) if len(token) > 1 or token in expected]
+        actual = [fold(token) for token in _tokens(seen) if len(token) > 1 or fold(token) in expected]
         agreement = _agreement(expected, actual)
         # Tesseract fuses tightly set words ("writes a" -> "writesa"). Word spacing is gated by the caption
         # geometry lint, so identical letters in identical order count as a full match.
@@ -148,7 +169,7 @@ def ocr(render, pages, region) -> dict:
         pixels = gray_frames(render, frame, frame, region)[0].astype('uint8')
         words = ' '.join(word['text'] if isinstance(word, dict) else str(word) for word in page['words'])
         expected = _tokens(words)
-        best = _read_candidates(executable, pixels.reshape(h, w), expected)
+        best = _read_candidates(executable, crop_to_caption_box(pixels.reshape(h, w)), expected)
         rows.append({'page': index, 'frame': frame, **best,
                      'pass': bool(expected) and best['agreement'] >= 0.98})
     report = measurement(rows, 'token agreement >= 0.98 on every page')

@@ -199,6 +199,11 @@ class CompileTest(unittest.TestCase):
         self.assertEqual(whole['durationFrames'], base + ENDING_FRAMES)
         self.assertEqual(whole['ending'], {'fromFrame': base, 'url': whole['series']['site']})
         self.assertEqual(whole['captions'][-1]['toFrame'], base)
+        # The last beat runs through the ending band so BrandFrame stays mounted and draws it.
+        self.assertEqual(whole['beats'][-1]['toFrame'], base + ENDING_FRAMES)
+        self.assertEqual(excerpt['beats'][-1]['toFrame'], base)
+        self.assertTrue(all(o['toFrame'] == base + ENDING_FRAMES for o in whole['objects'] if o['toFrame'] > base - 1
+                            and o['toFrame'] >= excerpt['beats'][-1]['fromFrame']))
         del spec['call']
         self.assertNotIn('ending', compile_cut(spec, 'proof-tall', words, FIXTURE))
 

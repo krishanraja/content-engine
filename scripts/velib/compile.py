@@ -297,6 +297,13 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     if spec.get('call') and not cut.get('excerpt', False):
         props['ending'] = {'fromFrame': duration, 'url': props['series']['site']}
         props['durationFrames'] += ENDING_FRAMES
+        # The ending band is drawn by BrandFrame, which FormatMaster mounts only for an active beat, so the last
+        # beat (and what persists to it) runs through the ending. Captions stop at its start.
+        end_frame = props['durationFrames']
+        props['beats'][-1]['toFrame'] = end_frame
+        for compiled in props['objects']:
+            if compiled['toFrame'] == duration:
+                compiled['toFrame'] = end_frame
     if spec.get('call'):
         call = spec['call']
         props['call'] = {'statement': call['statement'], 'due': call['due'], 'confidencePercent': call['confidence_percent']}

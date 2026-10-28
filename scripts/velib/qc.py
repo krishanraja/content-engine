@@ -153,6 +153,14 @@ def _renderer_layouts() -> dict:
     return result
 
 
+def caption_pages_shown(props: dict) -> list:
+    """Caption pages the renderer draws when OCR samples them. The dated call card replaces the captions for the
+    whole call beat (CaptionTrack returns null there), so a page whose middle frame falls inside it is not on screen."""
+    calls = [(b['fromFrame'], b['toFrame']) for b in props['beats'] if b.get('role') == 'call'] if props.get('call') else []
+    return [page for page in props['captions']
+            if not any(start <= (page['fromFrame'] + page['toFrame']) // 2 < end for start, end in calls)]
+
+
 def inputs_from_props(props: dict) -> dict:
     """Resolve QC inputs on the renderer's global 30 fps clock."""
     # Mirrors apps/renderer/src/engine/layouts/index.ts, slotsFor():
@@ -182,7 +190,7 @@ def inputs_from_props(props: dict) -> dict:
     edl = [{'fromFrame': b['fromFrame'], 'toFrame': b['toFrame'],
             'trimBeforeFrames': b['fromFrame'] + stem.get('trimBeforeFrames', 0)} for b in beats]
     joins = sorted({s['fromFrame'] / props.get('fps', 30) for s in props.get('segments', []) if s['fromFrame'] > 0})
-    return dict(pages=props['captions'], beats=beats, aspect=aspect, events=events, slots=slots,
+    return dict(pages=caption_pages_shown(props), beats=beats, aspect=aspect, events=events, slots=slots,
                 region=region, mark_png=props['brand']['mark']['src'], dialogue_master=stem['src'],
                 edl=edl, joins=joins)
 
