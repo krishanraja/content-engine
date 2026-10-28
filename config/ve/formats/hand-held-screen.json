@@ -3,7 +3,7 @@
   "status": "trial",
   "purpose": "A full-canvas hand-held phone carries the evidence through five approved beats",
   "layers": [
-    "phone_stage",
+    "hand_phone_stage",
     "plate_stage",
     "scribble",
     "BrandFrame"
@@ -12,7 +12,7 @@
     "STAGE"
   ],
   "devices": [
-    "phone_stage",
+    "hand_phone_stage",
     "plate_stage",
     "scribble"
   ],
@@ -40,7 +40,6 @@
   ],
   "intro_outro": "story stand-off (approved) unless Gate 0 changes the sting",
   "pending_devices": [
-    "phone_stage",
     "plate_stage",
     "scribble"
   ],
@@ -66,5 +65,68 @@
       "id": "verdict",
       "layout": "STAGE"
     }
-  ]
+  ],
+  "cameras": {
+    "open": {
+      "k": 1.8,
+      "rot": -3,
+      "tx": -78.65644928971597,
+      "ty": 535.8923197737188,
+      "backdrop": "cotton_flip",
+      "bg": {
+        "k": 1.75,
+        "x": -60,
+        "y": -210
+      }
+    },
+    "result_a": {
+      "k": 1.9,
+      "rot": -10.0,
+      "tx": -267.859411132586,
+      "ty": 435.78673434414554,
+      "backdrop": "cotton",
+      "bg": {
+        "k": 1.5,
+        "x": -90,
+        "y": -330
+      }
+    },
+    "result_b": {
+      "k": 2.1,
+      "rot": -1.0,
+      "tx": -235.02146620145396,
+      "ty": 385.1362339261145,
+      "backdrop": "hardware",
+      "bg": {
+        "k": 1.6,
+        "x": -330,
+        "y": -120
+      }
+    },
+    "evidence": {
+      "k": 1.95,
+      "rot": -104.5,
+      "tx": -197.16446995191598,
+      "ty": 1648.2556674889338,
+      "backdrop": "hardware",
+      "bg": {
+        "k": 2.45,
+        "x": 2234.340706848784,
+        "y": -668.8363130591613,
+        "rot": 75.5
+      }
+    },
+    "verdict": {
+      "k": 1.55,
+      "rot": -8.0,
+      "tx": -176.82774955021893,
+      "ty": 695.7458944361322,
+      "backdrop": "cotton_flip",
+      "bg": {
+        "k": 1.4,
+        "x": -180,
+        "y": -120
+      }
+    }
+  }
 }
