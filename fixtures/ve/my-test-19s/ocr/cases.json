@@ -1,0 +1,32 @@
+[
+ {
+  "file": "tall-p1.pgm.gz",
+  "frame": 113,
+  "expected": "from both over forced labour."
+ },
+ {
+  "file": "tall-p9.pgm.gz",
+  "frame": 546,
+  "expected": "answer, deletes it and changes"
+ },
+ {
+  "file": "tall-p10.pgm.gz",
+  "frame": 617,
+  "expected": "the subject every single time."
+ },
+ {
+  "file": "wide-p1.pgm.gz",
+  "frame": 113,
+  "expected": "from both over forced labour."
+ },
+ {
+  "file": "wide-p9.pgm.gz",
+  "frame": 546,
+  "expected": "answer, deletes it and changes"
+ },
+ {
+  "file": "wide-p10.pgm.gz",
+  "frame": 617,
+  "expected": "the subject every single time."
+ }
+]
