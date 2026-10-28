@@ -56,7 +56,9 @@ Both takes are on the piece's record, stamped with the scripts' hashes.
    Your face share must match the direction (5-minute 12 of 38 beats, 90-second 2 of 10).
 6. **Brand and sound:** no intro sting (`config/intro-sting.json` is still a candidate); the licensed bed from
    `config/music-library.json`, low under the voice, through `produce-video`.
-7. **No captions in the picture.** Make the caption file from a fresh transcript of the finished file only.
+7. **Captions burned into every cut** (Krish, 2026-10-27: captions burned into every cut): the house captions in
+   `creative-direction.json` `brand.captions` (`"caption_style": "house"` in each make.py config). The caption file
+   (`.srt`) still comes from a fresh transcript of the finished file only.
 8. **Prove it before anyone sees it.** Transcribe each finished file and compare it word by word with what he said
    (minus the one cut): every word present, in order, none clipped. Lip sync within 40 ms at the start, middle and
    end. The automated media reviewer is **not** qualified (it invented speech in silent files,

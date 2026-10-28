@@ -14,3 +14,8 @@ Official logo assets, all fetched on 26 October 2026. openai-symbol-cream.svg is
 Not written: sora.svg, because no official SVG exists to fetch (Brandfetch holds a 180 px PNG only, OpenAI's brand page offers only the OpenAI wordmark and the Blossom, and sora.chatgpt.com refuses automated requests). interpositive.svg, because the only Brandfetch hits for the name are two unrelated companies (a Budapest studio and a film-marketing site), and the Netflix-owned InterPositive has no website of its own to take an SVG from.
 
 disney-script.svg: the Disney script wordmark, unmodified, from Wikimedia Commons (File:Disney wordmark.svg, upload.wikimedia.org/wikipedia/commons/a/a4/Disney_wordmark.svg), fetched 26 October 2026; disney-script-cream.svg is the same paths with the root fill set to #F4EFE4 for the ink card. Used in place of disney-wordmark (The Walt Disney Company lockup), which reads too small in a thumbnail row.
+
+Added 27 October 2026 (Claude Code, for beat 11 of the 5-minute cut: "Marvel, Star Wars and Disney wordmarks"):
+
+- marvel.svg: the Marvel wordmark (white on the red box), Wikimedia Commons, File:Marvel_Logo.svg (upload.wikimedia.org/wikipedia/commons/b/b9/Marvel_Logo.svg, sha1 923ef4cb7322494a374590e516f238a252cab176 as Commons lists it; public domain on Commons, artist Rian Hughes; its description names another company, but the artwork is the Marvel wordmark). Unmodified.
+- star-wars.svg: the Star Wars wordmark, Wikimedia Commons, File:Star_Wars_Logo.svg (upload.wikimedia.org/wikipedia/commons/6/6c/Star_Wars_Logo.svg, sha1 a27a53f7b31dfc508ac759d4af9d3644a50d24e6; public domain on Commons). Unmodified. star-wars-ink.svg: the same artwork with only its black backing rectangle removed, so the yellow letters sit on the ink desk.

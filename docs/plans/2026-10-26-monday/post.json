@@ -1,0 +1,11 @@
+{
+ "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+ "date": "2026-10-26",
+ "subchannel": "follow_the_money",
+ "subject": "Disney, Google and Character.AI",
+ "video_title": "Why is Disney eating the scraps of bankrupt Character.AI?",
+ "files": [
+  {"kind":"video-script", "cut":"long", "file":"../2026-10-26-draft-script.md"},
+  {"kind":"video-script", "cut":"short", "file":"../2026-10-26-draft-script-90s.md"}
+ ]
+}

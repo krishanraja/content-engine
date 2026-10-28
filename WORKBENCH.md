@@ -15,6 +15,22 @@
 - **Cloud backup, proven live 28 Oct 06:58 UTC:** `cloud-gh` took Krish's carousel through `.github/workflows/watch-cloud.yml` (started by hand with `wait_minutes`, the link made claimable at a set second past both home computers' minute ticks), fetched it through `POST /api/watch/apify` (the engine's key; no GitHub secret, which the session proxy cannot write), reused the filed slides (`media` in the claim) and stored the full reading. Still unproven against Google: the keyless PUT of a new file; `GET /api/watch/upload?session=1` asks a session's status with no key (expect 308) without making a file. Every pasted link so far is a card: `fad59d76`, `3d3c3999`, `36e7f24a`, `80f72ec5`.
 - **Cloud fetch of both links (no writes, free routes only): both refused**, which is expected of a cloud machine and does not predict the home result. The Short: YouTube's bot check (`blocked:bot_check`), the home computers have the token helper and cobalt for this. The post: Instagram's embed answered `not_found:ig_removed` and gave no cover, so a logged-out reader cannot see it; at home it goes on to Instaloader and Apify (under the $5 cap), and if every route misses it fails as a class Krish can read on its card ("Paste it again to retry").
 
+## 28 October: Monday 26's cuts rebuilt on his review, on the board and in the archive (Claude Code)
+
+- **Ruling (Krish, 28 Oct):** the first picture after the sting is a provocative motion statement, not a logo; every
+  infographic must really move; the open-top box is "tacky"; one closing screen, "Ever". Memory notes:
+  `video-pictures-must-move-and-open-hard`, `one-closing-screen-only`.
+- **Made:** `docs/plans/2026-10-26-monday/video/motion.py` (a timeline-driven Chromium renderer: the opener, the bust and
+  every drawn page as an mp4), a company card in `draw_panels.py`, his screen recording in `whatitis.py`, the house end
+  card trimmed to its question screen. 5-minute 4:43.5, 90-second 1:25.7; measurements in `video/REVIEW.md`.
+- **Filed:** masters, share copies and thumbnails in the Drive archive; Monday's board tab carries both cuts as a
+  "review" section, built with `week_board.py`'s own inputs after a control rebuild matched the live board exactly.
+  The Drive library holds one Monday folder (covers only); the duplicate and two `working` canary folders went to
+  `_Archive/PREVIOUS VERSIONS - archive, not current, do not use/2026-10-28 moved out of 3 Posts` (nothing deleted).
+- **Held:** the post's `3 Video`: the library's visual gate wants the real logos of Udio and ElevenLabs (named once in
+  the article) on both cuts and more on the thumbnails, and the article's fact gate is open. Waiting on Krish: full
+  playback, the word-budget ruling, and the logo-or-article call.
+
 ## 27 October: Wednesday and Friday in Teleprompter; Monday's three questions (Claude)
 
 - **Asked (Krish, 27 Oct):** "yes to all three, send weds and keep going", then "yes to all three, send fri and keep going. Give me any genuine questions you have here as opposed to just saying "Monday is still with you." I have no idea what that means." (learning `ask-the-real-question`, encoded in make-piece "Before you stop").
@@ -48,31 +64,7 @@ Friday production with its existing production owner. Growth briefs receive
 a checked creative package through the existing editorial/Studio path. This change updates repository guidance
 only; it does not mutate a tracked Studio session, learning record or board.
 
-## 24 October: Friday locked and signed off; Codex makes the videos (Claude)
-
-- **Signed off by Krish:** storyboard, no trim, titles, outline ("signed off, keep, all A"), prediction A2 ("a2"), and
-  the six first-person test lines in the fact gate ("yes, $0.30, and I sign off my test lines"). Spend: $1.09 of the
-  $1.30 he approved.
-- **Done:** the article (`docs/plans/2026-10-23-draft-body.md`, on the piece; fact gate `ok`, voice, AI scan and spine
-  checks pass) and every channel's copy (`docs/plans/2026-10-23-friday/locked/board-copy/`: `article.md`,
-  `publishing-copy.md`; voice score 4.5, bar 6). The board shows the signed storyboards (revision 50).
-- **Waiting on Krish:** start Codex by pasting `docs/plans/2026-10-23-friday/locked/CODEX_PROMPT.md` (the part below
-  the line) into a new Codex session on a home computer. Then his look at the four videos on the board, then his yes
-  to the final board publish.
-- **Changed after sign-off (his answers, 24 Oct):** the 90-second on-camera cut loses the recap and three small repeats
-  ("Cut the recap (Recommended)"), and both vertical cuts are sped to 1.12x ("Speed both to 1.12x (Recommended)") so the
-  whole file with intro and outro runs under 89 s. His warning, "last time Codex glitched a bunch of words on the
-  speedup and also misaligned the captions", is `config/learnings.json` `speedup-without-glitches` and the
-  "Speed without glitches" section of `CODEX.md`.
-- **Making record completed by Claude (24 Oct, after Codex stopped on it):** Visual gate (cover and thumbnails drawn
-  from his picked words, gate passed), Scripts with both read-backs (two fresh readers each, nothing lost) and Pack
-  (sent to the Two passports library folder) are recorded; every step up to Recorded reads done. `scripts/pages/build.py`
-  now tries the smaller headline sizes on its ladder before refusing a 3:2 cover.
-- **Codex** works from `locked/CODEX.md` and nothing else; it fills only the chapter times in `publishing-copy.md`.
-- **Where things are:** takes in the engine's recordings store (`recording.py list`); evidence captures under
-  `2 Covers and images/Evidence` and the storyboards under `2 Covers and images/Storyboard` in the post's library
-  folder. The Anthropic and GitHub reference clip (Video Engine > Inspiration) had still not reached the library;
-  Codex fetches it first (`motion-system.md`).
+The 24 October Friday-locked notes are in `docs/history/2026-10-28-workbench-24oct-friday-locked.md`.
 
 ## The idea queue: read it first
 
