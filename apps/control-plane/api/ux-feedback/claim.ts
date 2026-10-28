@@ -6,9 +6,11 @@ import { feedbackStore } from './_feedbackStore.js'
 // POST /api/ux-feedback/claim { machine }, on the engine key.
 //
 // A home computer running content-watcher claims the oldest feedback video Krish added in Control Center (queued, or
-// claimed over an hour ago by a machine that went quiet) and gets a signed URL to download it from, good for an hour.
-// Answers { ok, recording: { id, name, note, mime, bytes, attempts, download_url } | null, expired }. A cloud machine
-// is refused: a feedback video is read on his own computer. Logs nothing about the recording.
+// claimed over an hour ago by a machine that went quiet; a failed try waits 10 minutes times its tries first). It
+// gets where the recording sits in his Drive, so it reads the copy his Drive has synced to it, checked by size and
+// MD5: { ok, recording: { id, name, note, mime, bytes, md5, drive_file_id, drive_path, venture, venture_label,
+// attempts } | null, expired }. No download link and no Drive key reach the machine. A cloud machine is refused:
+// it has no synced Drive. Logs nothing about the recording.
 //
 // GET /api/ux-feedback/claim, on the engine key: { ok, waiting }, how many could be claimed now, claiming none.
 
