@@ -1,0 +1,46 @@
+{
+  "objects": [
+    {
+      "obj": "stamp",
+      "device": "stamp",
+      "meaning": "Approved overlay fixture",
+      "params": {
+        "kind": "outline",
+        "top": "THE ANSWER",
+        "main": "UNKNOWN",
+        "tiltDeg": -3,
+        "at": {
+          "x": 100,
+          "y": 600,
+          "w": 390,
+          "h": 100
+        },
+        "leader": {
+          "to": {
+            "x": 600,
+            "y": 800
+          },
+          "label": "The clause"
+        }
+      },
+      "fromFrame": 0,
+      "toFrame": 180
+    }
+  ],
+  "events": [
+    {
+      "id": "show",
+      "obj": "stamp",
+      "verb": "stamp",
+      "toState": "visible",
+      "atFrame": 10
+    },
+    {
+      "id": "hide",
+      "obj": "stamp",
+      "verb": "exit",
+      "toState": "hidden",
+      "atFrame": 100
+    }
+  ]
+}

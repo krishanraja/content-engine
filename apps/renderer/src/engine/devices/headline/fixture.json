@@ -1,0 +1,38 @@
+{
+  "objects": [
+    {
+      "obj": "headline",
+      "device": "headline",
+      "meaning": "Approved overlay fixture",
+      "params": {
+        "lines": [
+          "SAME",
+          "QUESTION"
+        ],
+        "swipe": {
+          "line": 0,
+          "word": 0
+        },
+        "dek": "Only the country changes."
+      },
+      "fromFrame": 0,
+      "toFrame": 180
+    }
+  ],
+  "events": [
+    {
+      "id": "show",
+      "obj": "headline",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 10
+    },
+    {
+      "id": "hide",
+      "obj": "headline",
+      "verb": "exit",
+      "toState": "hidden",
+      "atFrame": 100
+    }
+  ]
+}
