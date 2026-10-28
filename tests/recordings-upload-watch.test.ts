@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process'
-import { mkdtempSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { mkdtempSync, mkdirSync, readFileSync, realpathSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it, vi } from 'vitest'
@@ -95,8 +95,10 @@ $RepoRoot = '${join(root, 'elsewhere', 'recordings-source').replace(/'/g, "''")}
 `
     const out = execFileSync('powershell.exe', ['-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-Command', command], { encoding: 'utf8' })
     const result = JSON.parse(out.trim().split(/\r?\n/).pop()!)
-    expect(result.moved).toBe(moved)
-    expect(result.unknown).toBe(moved)
+    // The temp folder can come back in its short 8.3 form (RUNNER~1) and PowerShell answers the long one: same folder.
+    const real = (p: string) => realpathSync.native(p).toLowerCase()
+    expect(real(result.moved)).toBe(real(moved))
+    expect(real(result.unknown)).toBe(real(moved))
     expect(result.empty).toBe(false)
   })
 })
