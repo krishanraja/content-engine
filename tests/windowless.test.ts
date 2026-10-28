@@ -75,7 +75,7 @@ Copy-Item -LiteralPath (Join-Path $env:SystemRoot 'System32\\cmd.exe') -Destinat
 $hold = [System.IO.File]::Open($launcher, 'Open', 'Read', 'Read, Delete')
 $script:WindowlessLauncher = $null
 $again = Get-WindowlessLauncher
-$replaced = ((Get-FileHash -LiteralPath $again).Hash -eq (Get-FileHash -LiteralPath $build).Hash) -and $again -eq $launcher
+$replaced = ((Get-WindowlessFileHash $again) -eq (Get-WindowlessFileHash $build)) -and $again -eq $launcher
 $hold.Dispose()
 $script:WindowlessLauncher = $null
 [void](Get-WindowlessLauncher)

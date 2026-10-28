@@ -67,6 +67,14 @@ function Invoke-Windowless([string]$Launcher, [string]$Execute, [string]$Argumen
   } finally { $process.Dispose() }
 }
 
+function Get-WindowlessFileHash([string]$Path) {
+  # By .NET, not Get-FileHash: that one lives in a module file Windows PowerShell can fail to find when it is started
+  # from PowerShell 7, as it is on the Windows CI machine (28 October: "Get-FileHash is not recognized").
+  $sha = [System.Security.Cryptography.SHA256]::Create()
+  $stream = [System.IO.File]::Open($Path, 'Open', 'Read', 'ReadWrite, Delete')
+  try { return [System.BitConverter]::ToString($sha.ComputeHash($stream)) } finally { $stream.Dispose(); $sha.Dispose() }
+}
+
 function Get-WindowlessLauncher {
   param([string]$Root = (Get-WindowlessRoot))
   if ($script:WindowlessLauncher -and (Test-Path -LiteralPath $script:WindowlessLauncher -PathType Leaf)) { return $script:WindowlessLauncher }
@@ -96,7 +104,7 @@ function Get-WindowlessLauncher {
   # is pointed at it once with admin rights, and every later build reaches it with none (28 October: three such tasks
   # on Surface). A copy in use is renamed aside, which Windows allows for a running program, and swept once free.
   $stable = Join-Path $Root 'run-hidden.exe'
-  if (-not (Test-Path -LiteralPath $stable -PathType Leaf) -or (Get-FileHash -LiteralPath $stable).Hash -ne (Get-FileHash -LiteralPath $target).Hash) {
+  if (-not (Test-Path -LiteralPath $stable -PathType Leaf) -or (Get-WindowlessFileHash $stable) -ne (Get-WindowlessFileHash $target)) {
     if (Test-Path -LiteralPath $stable) { Move-Item -LiteralPath $stable -Destination (Join-Path $Root ('run-hidden.' + [guid]::NewGuid().ToString('N') + '.old')) }
     Copy-Item -LiteralPath $target -Destination $stable
   }
