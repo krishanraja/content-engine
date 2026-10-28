@@ -215,6 +215,27 @@ def cmd_qc(args) -> int:
     return 0 if report['measured_pass'] else 1
 
 
+def cmd_keyframes(args) -> int:
+    from velib import designlock, qc_keyframes
+    try:
+        lock, props = designlock.load(), load_json(args.props)
+        report = qc_keyframes.keyframe_checks(args.video, props, lock, args.format)
+        if not report['applies']:
+            print(report['note'])
+            return 0
+        for name, row in report['beats'].items():
+            score = f'{row["ssim"]:.4f}' if row['ssim'] is not None else 'unavailable'
+            print(f'{name} ssim {score} min {row["min"]:.2f} {"pass" if row["pass"] else "FAIL"}')
+        for finding in report['findings']:
+            print(finding)
+        if args.sheet:
+            qc_keyframes.sheet(args.video, props, lock, args.format, args.sheet)
+        return 0 if report['pass'] else 1
+    except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
+        print(f've keyframes: {error}', file=sys.stderr)
+        return 1
+
+
 def cmd_study(args) -> int:
     from velib.qc import duration_s, frame_diffs, motion
     from velib.common import ffmpeg
@@ -441,6 +462,9 @@ def main() -> int:
     p = sub.add_parser('start'); p.add_argument('piece'); p.set_defaults(fn=cmd_start)
     p = sub.add_parser('lint'); p.add_argument('spec'); p.set_defaults(fn=cmd_lint)
     p = sub.add_parser('qc'); p.add_argument('cut'); p.add_argument('--format', required=True); p.add_argument('--out'); p.add_argument('--props'); p.set_defaults(fn=cmd_qc)
+    p = sub.add_parser('keyframes', help='compare rendered beats with approved stills')
+    p.add_argument('format'); p.add_argument('video'); p.add_argument('props'); p.add_argument('--sheet')
+    p.set_defaults(fn=cmd_keyframes)
     p = sub.add_parser('study'); p.add_argument('ref'); p.add_argument('--out'); p.set_defaults(fn=cmd_study)
     p = sub.add_parser('card'); p.add_argument('fields'); p.set_defaults(fn=cmd_card)
     p = sub.add_parser('dispatch'); p.add_argument('card'); p.add_argument('--wait', action='store_true')

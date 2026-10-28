@@ -64,6 +64,12 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
     for cut_id, cut in spec['cuts'].items():
         beats = cut['beats']
         where = f'cuts.{cut_id}'
+        if spec['format'] in lock['formats']:
+            names = lock['formats'][spec['format']]['beats']
+            if [beat.get('id') for beat in beats] != names:
+                out.append(f'{where}: beat ids must be {", ".join(names)} for format {spec["format"]}')
+            if not beats:
+                continue
         # dialogue
         if cut['aspect'] == '9:16' and cut['max_s'] > 89:
             out.append(f'dialogue.short_max {where}.max_s: a 9:16 short is 89 s or less')
