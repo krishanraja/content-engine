@@ -72,5 +72,47 @@ class ClarityGateTests(unittest.TestCase):
             self.assertTrue(vc.delivery_problems(report, base))
 
 
+    def test_his_ruling_sets_one_videos_word_limits_and_nothing_else(self):
+        # Synthetic test evidence, never used as a production review.
+        with tempfile.TemporaryDirectory() as td:
+            base = Path(td)
+            (base/'narration.txt').write_text('Every AI has two passports.')
+            m = self.fixture(); m['video_sha256'] = 'a'*64
+            m['states'][0]['text'][0]['value'] = 'alpha bravo charlie delta echo foxtrot golf hotel india'
+            m['narration_sha256'] = vc.digest(base/'narration.txt')
+            (base/'manifest.json').write_text(json.dumps(m))
+            review = {'video_sha256': 'a'*64, 'inventory_complete': True, 'semantic_nonduplication': 'pass',
+                'reviewer': 'SYNTHETIC TEST FIXTURE', 'reviewer_kind': 'human', 'author_review': False,
+                'responses': [{'id': 'passport', 'exposure_seconds': 3, 'sound': False, 'captions': False,
+                    'answer': 'Nine words', 'correct_subject': True, 'correct_point': True, 'misleading_inference': False}]}
+            (base/'review.json').write_text(json.dumps(review))
+            check = {'status': 'pass'}
+            for key, filename in [('manifest', 'manifest.json'), ('review', 'review.json'), ('narration', 'narration.txt')]:
+                check[key] = {'path': filename, 'sha256': vc.digest(base/filename)}
+            report = {'video_sha256': 'a'*64, 'final_narration_sha256': check['narration']['sha256'], 'checks': {'visual_clarity': check}}
+            self.assertTrue(any('word budget' in p for p in vc.delivery_problems(report, base)))
+            check['ruling'] = {'by': 'Krish', 'said': 'Happy with the words on screen.', 'date': '2026-10-28', 'max_primary_words': 9, 'max_total_words': 16}
+            self.assertEqual(vc.delivery_problems(report, base), [])
+            check['ruling']['by'] = 'Claude'
+            self.assertEqual(vc.delivery_problems(report, base), ['visual clarity ruling is not in his words'])
+            check['ruling'].update(by='Krish', max_primary_words=8)
+            self.assertTrue(any('word budget' in p for p in vc.delivery_problems(report, base)))
+            (base/'narration.txt').write_text('alpha bravo charlie delta')
+            check['narration']['sha256'] = report['final_narration_sha256'] = vc.digest(base/'narration.txt')
+            m['narration_sha256'] = check['narration']['sha256']
+            (base/'manifest.json').write_text(json.dumps(m)); check['manifest']['sha256'] = vc.digest(base/'manifest.json')
+            check['ruling'].update(max_primary_words=9)
+            self.assertTrue(any('repeats narration' in p for p in vc.delivery_problems(report, base)))
+            check['ruling']['accepted_repeats'] = ['passport']
+            self.assertEqual(vc.delivery_problems(report, base), [])
+            review['responses'][0].update(correct_point=False)
+            (base/'review.json').write_text(json.dumps(review)); check['review']['sha256'] = vc.digest(base/'review.json')
+            self.assertEqual(vc.delivery_problems(report, base), ['three-second comprehension failed or lacks actual response evidence'])
+            check['ruling']['accepted_states'] = ['elsewhere']
+            self.assertTrue(vc.delivery_problems(report, base))
+            check['ruling']['accepted_states'] = ['passport']
+            self.assertEqual(vc.delivery_problems(report, base), [])
+
+
 if __name__ == '__main__':
     unittest.main()
