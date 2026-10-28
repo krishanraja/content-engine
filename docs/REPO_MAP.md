@@ -167,6 +167,7 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/video-studio/runner/project`
 - `/api/video-studio/runner/watch`
 - `/api/video-studio/session`
+- `/api/watch/apify`
 - `/api/watch/claim`
 - `/api/watch/read`
 - `/api/watch/report`
@@ -2701,6 +2702,18 @@ Which Windows runner may take work, and how each one looks from the cloud.
 
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 
+### `apps/control-plane/api/watch/_paid.ts`
+
+Apify runs for the cloud backup, made by the engine so its key never leaves it.
+
+- `const WATCH_ACTORS: Record<string, { maxUsd: number; timeoutSec: number }>`
+- `const MAX_INPUT_CHARS`
+- `const MAX_ITEMS`
+- `interface PaidRunBody`
+- `function parsePaidRun(body: unknown): Parsed<PaidRunBody>`
+- `function postToken(url: string): string | null`
+- `async function checkPaidRun(store: WatchStore, body: PaidRunBody): Promise<{ ok: true } | { ok: false; status: number; …`
+
 ### `apps/control-plane/api/watch/_upload.ts`
 
 The cloud backup's way into Krish's two Inspiration folders.
@@ -2750,6 +2763,11 @@ The content-watcher queue: what the home computers may claim, report and read, d
 ### `apps/control-plane/api/watch/_watchStore.ts`
 
 - `const watchStore: WatchStore`
+
+### `apps/control-plane/api/watch/apify.ts`
+
+- `const config`
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
 
 ### `apps/control-plane/api/watch/claim.ts`
 
