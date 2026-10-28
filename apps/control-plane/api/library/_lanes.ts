@@ -76,8 +76,8 @@ export interface WindowsHealth {
   left: number
   /** Why each task left was not changed, by class: elevated, access_denied or other. */
   left_by?: Record<string, number>
-  /** Our own tasks among them, by name ("Mindmake ..."); anyone else's task is only counted. */
-  left_ours?: string[]
+  /** The tasks left, by name (at most five, plain characters), since which program owns one decides its fix. */
+  left_names?: string[]
 }
 
 export interface LaneReport {
@@ -132,8 +132,8 @@ export function parseWindowsHealth(value: unknown): WindowsHealth | undefined {
   const w = value as Record<string, unknown>
   if (w.launcher !== 'ok' && w.launcher !== 'failed') return undefined
   const count = (n: unknown) => (Number.isInteger(n) && (n as number) >= 0 && (n as number) <= 10_000 ? n as number : 0)
-  const ours = Array.isArray(w.left_ours)
-    ? [...new Set(w.left_ours.filter((n): n is string => typeof n === 'string' && /^Mindmake [A-Za-z0-9 ._-]{1,60}$/.test(n)))].slice(0, 10)
+  const names = Array.isArray(w.left_names)
+    ? [...new Set(w.left_names.filter((n): n is string => typeof n === 'string' && /^[A-Za-z0-9 ._()-]{1,80}$/.test(n)))].slice(0, 5)
     : []
   const leftBy: Record<string, number> = {}
   if (w.left_by && typeof w.left_by === 'object' && !Array.isArray(w.left_by)) {
@@ -144,7 +144,7 @@ export function parseWindowsHealth(value: unknown): WindowsHealth | undefined {
   return {
     launcher: w.launcher, hidden: count(w.hidden), wrapped: count(w.wrapped), left: count(w.left),
     ...(Object.keys(leftBy).length ? { left_by: leftBy } : {}),
-    ...(ours.length ? { left_ours: ours } : {}),
+    ...(names.length ? { left_names: names } : {}),
   }
 }
 

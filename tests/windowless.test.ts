@@ -44,7 +44,7 @@ describe('the windowless launcher and keeper', () => {
     const pass = upload.slice(upload.indexOf('  if (-not $Check) {\n'), upload.indexOf('function Publish-Music {'))
     expect(pass).toContain('try { Invoke-Windows } catch {')
     const block = upload.slice(upload.indexOf('function Get-WindowsBlock {'), upload.indexOf('function Send-LaneReport {'))
-    expect([...block.matchAll(/^\s{4}([a-z_]+) = /gm)].map(m => m[1])).toEqual(['launcher', 'hidden', 'wrapped', 'left', 'left_by', 'left_ours'])
+    expect([...block.matchAll(/^\s{4}([a-z_]+) = /gm)].map(m => m[1])).toEqual(['launcher', 'hidden', 'wrapped', 'left', 'left_by', 'left_names'])
   })
 
   it('installs both loop tasks through the launcher, and falls back to a hidden PowerShell only when it cannot be built', () => {

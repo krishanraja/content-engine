@@ -122,7 +122,7 @@ function Invoke-WindowKeeper {
   # Every task of his that would open a console window runs through run-hidden.exe after this. Returns counts only:
   # launcher ok or failed, tasks already hidden, tasks changed now, and tasks that could not be changed.
   param([string]$TaskPathPrefix = '\', [string]$Root = (Get-WindowlessRoot))
-  $result = [ordered]@{ launcher = 'failed'; hidden = 0; wrapped = 0; left = 0; left_by = [ordered]@{}; left_ours = @() }
+  $result = [ordered]@{ launcher = 'failed'; hidden = 0; wrapped = 0; left = 0; left_by = [ordered]@{}; left_names = @() }
   try { $launcher = Get-WindowlessLauncher -Root $Root } catch { $result['error'] = $_.Exception.Message; return $result }
   $result.launcher = 'ok'
   $me = [System.Security.Principal.WindowsIdentity]::GetCurrent().User
@@ -173,8 +173,9 @@ function Invoke-WindowKeeper {
       $result['error'] = "$($task.TaskName): $($_.Exception.Message)"
       $why = Get-WindowlessReason $task $_.Exception
       $result.left_by[$why] = 1 + [int]$result.left_by[$why]
-      # Our own tasks are named, so the engine can say which; anyone else's stays a count.
-      if ($task.TaskName -match '^Mindmake [A-Za-z0-9 ._-]{1,60}$') { $result.left_ours += $task.TaskName }
+      # A task still opening windows is named, at most five, in plain characters: which program it belongs to decides
+      # what fixes it (28 October: Surface left three, refused, none of them ours). Never its command or its folder.
+      if (@($result.left_names).Count -lt 5) { $result.left_names += (($task.TaskName -replace '[^A-Za-z0-9 ._()-]', '_') -replace '^(.{0,80}).*$', '$1') }
     }
   }
   return $result
