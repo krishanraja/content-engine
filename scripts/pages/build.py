@@ -852,6 +852,8 @@ h1 span { display: block; color: var(--accent); }
 .rows { margin-top: 26px; width: 100%; display: flex; flex-direction: column; gap: 12px; }
 .row { background: rgba(var(--shade), .9); border: 2px solid #2A3430; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
 .row img { height: 64px; }
+.strip { margin-top: 12px; width: 100%; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px 26px; background: rgba(var(--shade), .9); border: 2px solid #2A3430; padding: 8px 16px; }
+.strip img { height: 34px; }
 .mono { font-family: "IBM Plex Mono", monospace; }
 .tag { font-size: var(--words); line-height: 1; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: 8px 14px; color: var(--ink); white-space: nowrap; }
 .ft { margin-top: 18px; font-size: var(--fine); line-height: 1.1; color: #AEAEA5; white-space: nowrap; }
@@ -881,6 +883,18 @@ def split_headline(text):
     With none of those, all of it is in colour."""
     m = re.match(r'^(.*[,.:?])\s+(\S.*)$', text.strip())
     return (m.group(1), m.group(2)) if m else ('', text.strip())
+
+
+def strip_html(c, base):
+    """More real logos in a small line under the cover's rows, so a cover can carry every company the piece names
+    (Krish, 2026-10-28: "Add a logo strip"; the visual gate holds a cover to that as it holds a thumbnail).
+    "strip": [{"logo": a logo that reads on dark ink, "name": the company}], the same facts a thumbnail takes."""
+    items = []
+    for item in c.get('strip', []):
+        if not isinstance(item, dict) or not item.get('logo') or not item.get('name'):
+            brand.fail('"cover": each logo in "strip" needs "logo" (one that reads on dark ink) and "name" (the company)')
+        items.append(f'<img src="{brand.data_uri(resolve(base, item["logo"]), 800)}" alt="{attr(item["name"])}">')
+    return f'<div class="strip">{"".join(items)}</div>' if items else ''
 
 
 def beside(face, words):
@@ -950,7 +964,7 @@ def cover_html(facts, base, refresh=False):
 <div id="card">{photo}<div id="safe">
 <img class="wm" src="{brand.brand_uri('wordmark', refresh)}" alt="makeyourmindup">
 <h1>{esc(lead) + ' ' if lead else ''}<span>{esc(last)}</span></h1>
-{beside(face, (f'<p class="sub">{esc(c["subline"])}</p>' if c.get('subline') else '') + (f'<div class="rows">{"".join(rows)}</div>' if rows else ''))}
+{beside(face, (f'<p class="sub">{esc(c["subline"])}</p>' if c.get('subline') else '') + (f'<div class="rows">{"".join(rows)}</div>' if rows else '') + strip_html(c, base))}
 <p class="ft mono" data-fine-print>{esc(ch['name'])} · {esc(label)}</p>
 </div></div>
 </body>
@@ -1070,7 +1084,7 @@ def draw_cover(facts, base, out, refresh=False):
     cv = facts.get('cover') or {}
     (out / 'cover.json').write_text(json.dumps({
         'drawer': 'scripts/pages/build.py --cover', 'sha256': hashlib.sha256(png).hexdigest(),
-        'portrait': bool(cv.get('portrait')), 'rows': [r.get('name', '') for r in cv.get('rows', [])],
+        'portrait': bool(cv.get('portrait')), 'rows': [r.get('name', '') for r in cv.get('rows', [])], 'strip': [x.get('name', '') for x in cv.get('strip', [])],
         'background': background(cv, base) is not None, 'headline_px': size, 'drawn_at': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'),
     }, indent=1) + '\n', encoding='utf-8')
     print(f'{out / "cover.png"}  {COVER_W} x {COVER_H}, the 3:2 cover. Do not upload it to Substack, whose upload box crops it: upload {COVER_SHAPES["upload"]["file"]}, below')
@@ -1175,6 +1189,8 @@ h1 { margin-top: 16px; font-family: "Anton", Impact, sans-serif; font-weight: 40
 h1 span { display: block; color: var(--accent); }
 .sub { margin-top: 14px; font-family: "Archivo", Arial, sans-serif; font-size: var(--words); line-height: 1.1; font-weight: 700; }
 .rows { margin-top: 20px; width: 100%; display: flex; flex-direction: column; gap: 10px; }
+.strip { margin-top: 10px; width: 100%; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 24px; background: rgba(var(--shade), .9); border: 2px solid #2A3430; padding: 6px 14px; }
+.strip img { height: calc(var(--logo) * .5); }
 .row { background: rgba(var(--shade), .9); border: 2px solid #2A3430; padding: 8px 18px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
 .row img { height: var(--logo); }
 .mono { font-family: "IBM Plex Mono", monospace; }
@@ -1234,7 +1250,7 @@ def cover_shape_html(facts, base, shape, refresh=False):
     wm = f'<img class="wm" src="{brand.brand_uri("wordmark", refresh)}" alt="makeyourmindup">'
     h1 = f'<h1>{esc(lead) + " " if lead else ""}<span>{esc(last)}</span></h1>'
     sub = f'<p class="sub">{esc(c["subline"])}</p>' if c.get('subline') else ''
-    rws = f'<div class="rows">{"".join(rows)}</div>' if rows else ''
+    rws = (f'<div class="rows">{"".join(rows)}</div>' if rows else '') + strip_html(c, base)
     ft = f'<p class="ft mono" data-fine-print>{esc(ch["name"])} · {esc(label)}</p>'
     if spec['layout'] == 'side':
         inner = f'{face}<div class="col">{wm}{h1}{sub}{rws}{ft}</div>'
@@ -1395,7 +1411,7 @@ def draw_cover_shape(facts, base, out, shape, refresh=False):
     # scripts/post-pack/visual_gate.py packs the cover only when this matches it.
     (out / receipt).write_text(json.dumps({
         'drawer': 'scripts/pages/build.py --cover', 'shape': shape, 'file': name, 'width': W, 'height': H,
-        'sha256': hashlib.sha256(png).hexdigest(), 'portrait': bool(cv.get('portrait')), 'rows': [r.get('name', '') for r in cv.get('rows', [])],
+        'sha256': hashlib.sha256(png).hexdigest(), 'portrait': bool(cv.get('portrait')), 'rows': [r.get('name', '') for r in cv.get('rows', [])], 'strip': [x.get('name', '') for x in cv.get('strip', [])],
         'background': background(cv, base) is not None, 'headline_px': fit['head'], 'face_px': fit['face'] if cv.get('portrait') else 0,
         'label': fit['label'], 'safe': list(spec['safe']), 'drawn_at': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'),
     }, indent=1) + '\n', encoding='utf-8')

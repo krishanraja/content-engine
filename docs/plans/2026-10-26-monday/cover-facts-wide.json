@@ -25,6 +25,20 @@
     "tag": "$20M",
     "colour": "mint"
    }
+  ],
+  "strip": [
+   {
+    "logo": "logos/openai-symbol-cream.svg",
+    "name": "OpenAI"
+   },
+   {
+    "logo": "logos/warner-music-group-cream.svg",
+    "name": "Warner Music Group"
+   },
+   {
+    "logo": "logos/universal-music-group-cream.svg",
+    "name": "Universal Music Group"
+   }
   ]
  },
  "thumbs": {

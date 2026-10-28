@@ -341,7 +341,7 @@ fields for the thumbnails alone, and its `"strip": [{"logo", "name"}]` adds
 more real logos in a line under the rows, so a thumbnail can carry every
 company the piece names (the visual gate holds each one to that). Both or
 neither: it refuses if a word, the face or a logo would sit where a
-platform covers or crops it, or a word would be too small to read.
+platform covers or crops it, or a word would be too small to read. The cover takes the same `"strip": [{"logo", "name"}]` in its own `"cover"` facts (Krish, 2026-10-28: "Add a logo strip"): a small line of real logos under the rows, in the 3:2 cover and in every other shape, so the cover can carry every company the piece names; its receipts list the names as `strip`.
 
 **The video's story intro reads two more fields** (`scripts/quick-edit/story_io.py`):
 `"video_title"`, the title card's words (short, at most 60 characters; else
