@@ -1,0 +1,590 @@
+{
+  "file": "docs/plans/2026-10-28-ve-format-h-proof/ve/proof-tall.mp4",
+  "sha256": "e661608967a8ca2a9c53c1f0e5ad03c69a6717b426883e45017edfe865be6ecd",
+  "duration_s": 21.08,
+  "format": "hand-held-screen",
+  "checks": {
+    "loudness.integrated": {
+      "value": -13.9,
+      "target": "-14 ±1",
+      "pass": true
+    },
+    "loudness.true_peak": {
+      "value": -1.6,
+      "target": "<= -1",
+      "pass": true
+    },
+    "loudness.long_silence": {
+      "value": [],
+      "target": "none over 0.7 s below -50 dB",
+      "pass": true
+    },
+    "motion.change_density": {
+      "value": 1.0,
+      "target": ">= 0.75",
+      "pass": true
+    },
+    "motion.longest_still": {
+      "value": 0,
+      "target": "<= 3 s",
+      "pass": true,
+      "runs": []
+    },
+    "motion.periodicity": {
+      "value": null,
+      "target": "no repeating loop 2-10 s",
+      "pass": true
+    },
+    "sync.av_xcorr": {
+      "value": [
+        {
+          "segment": 0,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999984
+        },
+        {
+          "segment": 1,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.99999
+        },
+        {
+          "segment": 2,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999988
+        },
+        {
+          "segment": 3,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999984
+        },
+        {
+          "segment": 4,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999959
+        }
+      ],
+      "target": "every segment |lag| <= 33 ms; correlation >= 0.5",
+      "pass": true,
+      "status": "measured"
+    },
+    "joins.decoder": {
+      "value": [],
+      "target": "RMS step <= 6 dB, click <= 6x median, spectral flux <= 0.5",
+      "pass": true,
+      "status": "measured",
+      "join_times_s": [],
+      "failed_join_times_s": []
+    },
+    "captions.ocr": {
+      "value": [
+        {
+          "page": 0,
+          "frame": 54,
+          "text": "Now, America has\r\nblocked cotton",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 1,
+          "frame": 113,
+          "text": "from both over\r\nforced labour.",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
+        },
+        {
+          "page": 2,
+          "frame": 160,
+          "text": "So, a good answer\r\nshould",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 3,
+          "frame": 201,
+          "text": "flag it both times.",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
+        },
+        {
+          "page": 4,
+          "frame": 275,
+          "text": "Claude and ChatGPT\r\nflagged forced",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 5,
+          "frame": 304,
+          "text": "labour both times,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 6,
+          "frame": 354,
+          "text": "and so did DeepSeek\r\nfor",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 7,
+          "frame": 433,
+          "text": "Turkmenistan. Now\r\nwatch DeepSeek on",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 8,
+          "frame": 477,
+          "text": "Xinjiang. it writesa\r\nfull",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 9,
+          "frame": 546,
+          "text": "answer, deletes it\r\nand changes",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
+        },
+        {
+          "page": 10,
+          "frame": 617,
+          "text": "the subject every\r\nsingle time.",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
+        }
+      ],
+      "target": "token agreement >= 0.98 on every page",
+      "pass": true,
+      "status": "measured"
+    },
+    "brand.mark_tile": {
+      "value": null,
+      "target": "not defined for STAGE layouts",
+      "pass": null,
+      "status": "not applicable"
+    },
+    "motion.cue_sync": {
+      "value": null,
+      "target": "not defined for STAGE layouts",
+      "pass": null,
+      "status": "not applicable"
+    },
+    "keyframe_match": {
+      "value": {
+        "open": {
+          "ssim": 0.8974012555989936,
+          "min": 0.75,
+          "pass": true,
+          "frame": 176
+        },
+        "result_a": {
+          "ssim": 0.8826063088803805,
+          "min": 0.75,
+          "pass": true,
+          "frame": 312
+        },
+        "result_b": {
+          "ssim": 0.9113785746800017,
+          "min": 0.75,
+          "pass": true,
+          "frame": 376
+        },
+        "evidence": {
+          "ssim": 0.8774976625347509,
+          "min": 0.75,
+          "pass": true,
+          "frame": 448
+        },
+        "verdict": {
+          "ssim": 0.8805179425303684,
+          "min": 0.75,
+          "pass": true,
+          "frame": 614
+        }
+      },
+      "target": "approved golden keyframes",
+      "pass": true,
+      "status": "measured"
+    },
+    "composition": {
+      "value": {
+        "open": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 96.62
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            },
+            "illustration": {
+              "pass": true,
+              "value": 0.9166666666666666
+            }
+          },
+          "findings": [],
+          "frame": 176
+        },
+        "result_a": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 95.67
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            },
+            "illustration": {
+              "pass": true,
+              "value": 1.0
+            }
+          },
+          "findings": [],
+          "frame": 312
+        },
+        "result_b": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 94.68
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            },
+            "illustration": {
+              "pass": true,
+              "value": 0.9166666666666666
+            }
+          },
+          "findings": [],
+          "frame": 376
+        },
+        "evidence": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 97.46
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            },
+            "illustration": {
+              "pass": true,
+              "value": 1.0
+            }
+          },
+          "findings": [],
+          "frame": 448
+        },
+        "verdict": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 95.82
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            },
+            "illustration": {
+              "pass": true,
+              "value": 1.0
+            }
+          },
+          "findings": [],
+          "frame": 614
+        }
+      },
+      "target": "design lock composition thresholds",
+      "pass": true,
+      "status": "measured"
+    }
+  },
+  "keyframes": {
+    "applies": true,
+    "pass": true,
+    "beats": {
+      "open": {
+        "ssim": 0.8974012555989936,
+        "min": 0.75,
+        "pass": true,
+        "frame": 176
+      },
+      "result_a": {
+        "ssim": 0.8826063088803805,
+        "min": 0.75,
+        "pass": true,
+        "frame": 312
+      },
+      "result_b": {
+        "ssim": 0.9113785746800017,
+        "min": 0.75,
+        "pass": true,
+        "frame": 376
+      },
+      "evidence": {
+        "ssim": 0.8774976625347509,
+        "min": 0.75,
+        "pass": true,
+        "frame": 448
+      },
+      "verdict": {
+        "ssim": 0.8805179425303684,
+        "min": 0.75,
+        "pass": true,
+        "frame": 614
+      }
+    },
+    "findings": []
+  },
+  "composition": {
+    "applies": true,
+    "pass": true,
+    "beats": {
+      "open": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 96.62
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          },
+          "illustration": {
+            "pass": true,
+            "value": 0.9166666666666666
+          }
+        },
+        "findings": [],
+        "frame": 176
+      },
+      "result_a": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 95.67
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          },
+          "illustration": {
+            "pass": true,
+            "value": 1.0
+          }
+        },
+        "findings": [],
+        "frame": 312
+      },
+      "result_b": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 94.68
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          },
+          "illustration": {
+            "pass": true,
+            "value": 0.9166666666666666
+          }
+        },
+        "findings": [],
+        "frame": 376
+      },
+      "evidence": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 97.46
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          },
+          "illustration": {
+            "pass": true,
+            "value": 1.0
+          }
+        },
+        "findings": [],
+        "frame": 448
+      },
+      "verdict": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 95.82
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          },
+          "illustration": {
+            "pass": true,
+            "value": 1.0
+          }
+        },
+        "findings": [],
+        "frame": 614
+      }
+    }
+  },
+  "measured_pass": true,
+  "complete": true
+}

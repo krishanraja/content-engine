@@ -4,6 +4,7 @@
     "sticker": { "verbs": ["enter", "exit"] },
     "stamp": { "verbs": ["stamp", "exit"] },
     "stat_strip": { "verbs": ["enter", "count_to", "exit"] },
+    "quote_card": { "verbs": ["enter", "exit"] },
     "marquee": { "verbs": ["enter", "exit"] },
     "test_grid": { "verbs": ["enter", "mark", "stamp", "highlight", "carry", "exit"] },
     "record_card": { "verbs": ["enter", "stamp", "exit"] },

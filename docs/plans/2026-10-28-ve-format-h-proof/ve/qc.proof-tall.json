@@ -1,6 +1,6 @@
 {
   "file": "docs/plans/2026-10-28-ve-format-h-proof/ve/proof-tall.mp4",
-  "sha256": "1963be472ea5472ea6c00cd6dc9c35bd8148cba57c8ce0a7bf6ba67480f8a674",
+  "sha256": "e661608967a8ca2a9c53c1f0e5ad03c69a6717b426883e45017edfe865be6ecd",
   "duration_s": 21.08,
   "format": "hand-held-screen",
   "checks": {
@@ -111,7 +111,7 @@
           "frame": 201,
           "text": "flag it both times.",
           "agreement": 1.0,
-          "variant": "raw",
+          "variant": "normalised",
           "pass": true
         },
         {
@@ -149,7 +149,7 @@
         {
           "page": 8,
           "frame": 477,
-          "text": "Xinjiang. It writesa\r\nfull",
+          "text": "Xinjiang. it writesa\r\nfull",
           "agreement": 1.0,
           "variant": "raw",
           "pass": true
@@ -190,31 +190,31 @@
     "keyframe_match": {
       "value": {
         "open": {
-          "ssim": 0.8600900470143954,
+          "ssim": 0.8974012555989936,
           "min": 0.75,
           "pass": true,
           "frame": 176
         },
         "result_a": {
-          "ssim": 0.842160114402089,
+          "ssim": 0.8826063088803805,
           "min": 0.75,
           "pass": true,
           "frame": 312
         },
         "result_b": {
-          "ssim": 0.8860694962270348,
+          "ssim": 0.9113785746800017,
           "min": 0.75,
           "pass": true,
           "frame": 376
         },
         "evidence": {
-          "ssim": 0.8919539401345351,
+          "ssim": 0.8774976625347509,
           "min": 0.75,
           "pass": true,
           "frame": 448
         },
         "verdict": {
-          "ssim": 0.8518870485592959,
+          "ssim": 0.8805179425303684,
           "min": 0.75,
           "pass": true,
           "frame": 614
@@ -262,7 +262,7 @@
           "checks": {
             "fill_pct": {
               "pass": true,
-              "value": 95.62
+              "value": 95.67
             },
             "small_text": {
               "pass": true,
@@ -293,7 +293,7 @@
           "checks": {
             "fill_pct": {
               "pass": true,
-              "value": 94.11
+              "value": 94.68
             },
             "small_text": {
               "pass": true,
@@ -324,7 +324,7 @@
           "checks": {
             "fill_pct": {
               "pass": true,
-              "value": 97.76
+              "value": 97.46
             },
             "small_text": {
               "pass": true,
@@ -355,7 +355,7 @@
           "checks": {
             "fill_pct": {
               "pass": true,
-              "value": 95.83
+              "value": 95.82
             },
             "small_text": {
               "pass": true,
@@ -392,31 +392,31 @@
     "pass": true,
     "beats": {
       "open": {
-        "ssim": 0.8600900470143954,
+        "ssim": 0.8974012555989936,
         "min": 0.75,
         "pass": true,
         "frame": 176
       },
       "result_a": {
-        "ssim": 0.842160114402089,
+        "ssim": 0.8826063088803805,
         "min": 0.75,
         "pass": true,
         "frame": 312
       },
       "result_b": {
-        "ssim": 0.8860694962270348,
+        "ssim": 0.9113785746800017,
         "min": 0.75,
         "pass": true,
         "frame": 376
       },
       "evidence": {
-        "ssim": 0.8919539401345351,
+        "ssim": 0.8774976625347509,
         "min": 0.75,
         "pass": true,
         "frame": 448
       },
       "verdict": {
-        "ssim": 0.8518870485592959,
+        "ssim": 0.8805179425303684,
         "min": 0.75,
         "pass": true,
         "frame": 614
@@ -464,7 +464,7 @@
         "checks": {
           "fill_pct": {
             "pass": true,
-            "value": 95.62
+            "value": 95.67
           },
           "small_text": {
             "pass": true,
@@ -495,7 +495,7 @@
         "checks": {
           "fill_pct": {
             "pass": true,
-            "value": 94.11
+            "value": 94.68
           },
           "small_text": {
             "pass": true,
@@ -526,7 +526,7 @@
         "checks": {
           "fill_pct": {
             "pass": true,
-            "value": 97.76
+            "value": 97.46
           },
           "small_text": {
             "pass": true,
@@ -557,7 +557,7 @@
         "checks": {
           "fill_pct": {
             "pass": true,
-            "value": 95.83
+            "value": 95.82
           },
           "small_text": {
             "pass": true,

@@ -25,7 +25,7 @@ export function Prompt({ params, tokens, sinceFrames, k }: GlassProps) {
           {t > 0 && <div data-slot="next" style={{ height: row, color: tokens.mint }}>{p.next.toUpperCase()}</div>}
         </div>
       </div>
-      {t < 1 && <div data-next="" style={{ fontFamily: HOUSE_FONTS.display, fontSize: size, lineHeight: 1.12, opacity: .45, position: 'absolute', left: 26, top: 246 }}>{p.next.toUpperCase()}</div>}
+      {t === 0 && <div data-next="" style={{ fontFamily: HOUSE_FONTS.display, fontSize: size, lineHeight: 1.12, opacity: .45, position: 'absolute', left: 26, top: 246 }}>{p.next.toUpperCase()}</div>}
     </div>
   </div>
 }

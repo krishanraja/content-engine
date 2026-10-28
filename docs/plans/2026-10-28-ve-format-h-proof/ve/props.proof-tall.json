@@ -397,6 +397,7 @@
         "phone",
         "evidence_headline",
         "recording_label",
+        "evidence_quote",
         "evidence_scribble",
         "marquee"
       ],
@@ -800,12 +801,6 @@
         "swipe": {
           "line": 1,
           "word": 0
-        },
-        "dek": "\"Xinjiang cotton\" carries a strong forced-labour…",
-        "dekAt": {
-          "x": 72,
-          "y": 1516,
-          "w": 888
         }
       }
     },
@@ -935,8 +930,8 @@
         "text": "SCREEN\nRECORDING\nDEEPSEEK\n23 OCT 2026",
         "tiltDeg": -3,
         "at": {
-          "x": 684,
-          "y": 176
+          "x": 620,
+          "y": 148
         },
         "tone": "cream"
       }
@@ -1078,6 +1073,23 @@
           "y": 574
         },
         "tone": "cream"
+      }
+    },
+    {
+      "obj": "evidence_quote",
+      "device": "quote_card",
+      "meaning": "Verbatim pull quote from the real recording, attributed",
+      "fromFrame": 386,
+      "toFrame": 541,
+      "variants": {},
+      "params": {
+        "quote": "\"Xinjiang cotton\" carries a strong forced-labour…",
+        "label": "DeepSeek wrote",
+        "at": {
+          "x": 72,
+          "y": 1508,
+          "w": 888
+        }
       }
     }
   ],
@@ -1270,6 +1282,13 @@
       "verb": "exit",
       "toState": "gone",
       "atFrame": 500
+    },
+    {
+      "id": "evidence-6",
+      "obj": "evidence_quote",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 412
     },
     {
       "id": "verdict-0",

@@ -3369,6 +3369,18 @@ Run a Vercel serverless handler locally against the real environment.
 
 - `function queryState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
+### `apps/renderer/src/engine/devices/quote_card/index.tsx`
+
+- `function Device({ object, events, tokens, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/quote_card/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/quote_card/state.ts`
+
+- `function quoteCardState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
 ### `apps/renderer/src/engine/devices/record_card/index.tsx`
 
 - `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`

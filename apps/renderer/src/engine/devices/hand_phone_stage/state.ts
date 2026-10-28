@@ -23,10 +23,8 @@ export function phoneState(object: EngineObject, events: readonly EngineEvent[],
     const t=progress(at-backdropAt,12)
     return backdropLayers.map((l,i)=>({...l,opacity:i===backdropLayers.length-1?t:l.opacity*(1-t)})).filter(l=>l.opacity>0)
   }
-  const fadeGlass=(at: number)=>{
-    const t=progress(at-fillAt,MOTION.enterFrames)
-    return glassLayers.map((l,i)=>({...l,opacity:i===glassLayers.length-1?t:l.opacity*(1-t)})).filter(l=>l.opacity>0)
-  }
+  // Glass content is a hard cut, on the action: a crossfade under a moving camera reads as a ghosted, see-through screen.
+  const fadeGlass=(_at: number)=>glassLayers
   // Before any transition the initial layer is fully opaque.
   const cameraAt=(at: number)=>Number.isFinite(moveAt)?lerpCam(from,target,progress(at-moveAt,18,HERO)):asCam(target)
   for (const event of relevant) {
@@ -42,8 +40,7 @@ export function phoneState(object: EngineObject, events: readonly EngineEvent[],
     }
     if(event.verb==='fill') {
       if(event.toState!=='blank' && !Object.hasOwn(params.glass,event.toState)) throw new Error(`ve: missing glass params ${event.toState}`)
-      const prior=Number.isFinite(fillAt)?fadeGlass(event.atFrame):glassLayers
-      glassLayers=[...prior,{camera,kind:event.toState,atFrame:event.atFrame,opacity:1}]; fillAt=event.atFrame
+      glassLayers=[{camera,kind:event.toState,atFrame:event.atFrame,opacity:1}]; fillAt=event.atFrame
     }
   }
   const exitEvent=relevant.findLast(e=>e.verb==='exit')

@@ -104,7 +104,7 @@ def measure(image, lock, *, plate_on_screen=False, exempt=(), caption_words=None
             caption.append(word)
         strong = solid or float(word['conf']) >= 90  # one stray glyph on a photo is OCR noise, not a layout fault
         if (strong and not _inside(x + w / 2, y + h / 2, zones['marquee'])
-                and (x + w > zones['platform']['right_x'] + PLATFORM_TOLERANCE_PX or y + h > zones['platform']['bottom_y'] + PLATFORM_TOLERANCE_PX)):
+                and (x + w > zones['platform']['right_x'] + PLATFORM_TOLERANCE_PX or y + h / 2 > zones['platform']['bottom_y'])):  # most of the word sits in the platform zone
             platform.append(word)
         if (strong and not _inside(x + w / 2, y + h / 2, zones['marquee'])
                 and (min(x, y, 1080 - x - w, 1920 - y - h) < limits['edge_margin_px']
