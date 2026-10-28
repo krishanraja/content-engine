@@ -14,6 +14,7 @@ import re
 from pathlib import Path, PureWindowsPath
 
 from .common import ROOT, load_json
+from .lint import pending_devices_error
 
 FPS = 30
 ENDING_FRAMES = 105
@@ -107,6 +108,9 @@ def _params(params: dict, source) -> dict:
 
 def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Path, *, report: dict | None = None) -> dict:
     """Return EngineRenderProps without writing files or changing the spec."""
+    pending_error = pending_devices_error(spec['format'])
+    if pending_error:
+        raise ValueError(pending_error)
     cut = spec['cuts'][cut_id]
     # These words already describe the dialogue master's final clock. Do not
     # silently apply source edits a second time, or retime only the picture.

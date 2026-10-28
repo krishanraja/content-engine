@@ -373,7 +373,7 @@ class RendererLayoutMirrorTest(unittest.TestCase):
         self.assertEqual(layouts['9:16']['F1'][0], (120, 852, 660, 290))
         self.assertEqual(layouts['16:9']['F1'][0], (1176, 54, 648, 490))
         for aspect in layouts.values():
-            self.assertEqual(set(aspect), {'P1', 'P3', 'P6', 'F1', 'F3'})
+            self.assertEqual(set(aspect), {'P1', 'P3', 'P6', 'F1', 'F3', 'STAGE'})
             self.assertTrue(all(len(box) == 4 for boxes in aspect.values() for box in boxes))
 
 

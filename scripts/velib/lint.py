@@ -35,9 +35,26 @@ def _strings(node, path=''):
         yield path, node
 
 
+def pending_devices_error(format_id: str, fmt: dict | None = None) -> str | None:
+    """A format becomes usable only when all its pending devices are registered."""
+    if fmt is None:
+        fmt = load_json(CONFIG / 'formats' / f'{format_id}.json')
+    pending = fmt.get('pending_devices', [])
+    if not pending:
+        return None
+    devices = load_json(CONFIG / 'devices.json')['devices']
+    missing = [name for name in pending if name not in devices]
+    if missing:
+        return f"format {format_id} needs devices not built yet: {', '.join(missing)}"
+    return None
+
+
 def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
     out: list[str] = []
     fmt = load_json(CONFIG / 'formats' / f"{spec['format']}.json")
+    pending_error = pending_devices_error(spec['format'], fmt)
+    if pending_error:
+        return [pending_error]
     objects = {o['obj']: o for o in spec['objects']}
 
     # brand

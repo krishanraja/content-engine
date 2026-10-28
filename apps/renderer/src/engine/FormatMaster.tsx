@@ -37,7 +37,7 @@ export function FormatMaster(props: EngineRenderProps) {
         // Beats mount by frame range with no time offset, so media nested inside a device (a recording's own
         // Sequence) runs on the same global clock as everything else (INV-ONE-CLOCK).
         if (frame < beat.fromFrame || frame >= beat.toFrame) return null
-        const slots = slotsFor(beat.layout, props.aspect)
+        const slots = slotsFor(beat.layout, props.aspect, beat.uses.length)
         return (
           <AbsoluteFill key={`devices-${beat.id}`}>
             {beat.uses.map((id, index) => {
@@ -48,7 +48,7 @@ export function FormatMaster(props: EngineRenderProps) {
               const box = slots[index]
               if (!box) throw new Error(`ve: no slot ${index} in ${beat.layout}`)
               // Clip in frame coordinates so the device receives the original slot box.
-              // Every device is clipped to its slot: no device can draw over another or over the captions.
+              // STAGE shares the whole canvas; other layouts retain their slot clips.
               const clipPath = `inset(${box.top}px ${width - box.left - box.width}px ${height - box.top - box.height}px ${box.left}px${beat.layout === 'P6' && index === 1 ? ' round 40px' : ''})`
               return (
                 <AbsoluteFill key={id} style={{ clipPath }}>

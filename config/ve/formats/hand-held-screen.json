@@ -1,0 +1,70 @@
+{
+  "id": "hand-held-screen",
+  "status": "trial",
+  "purpose": "A full-canvas hand-held phone carries the evidence through five approved beats",
+  "layers": [
+    "phone_stage",
+    "plate_stage",
+    "scribble",
+    "BrandFrame"
+  ],
+  "layouts": [
+    "STAGE"
+  ],
+  "devices": [
+    "phone_stage",
+    "plate_stage",
+    "scribble"
+  ],
+  "generation": "stills from ChatGPT Images (Codex card); short animations of approved stills from Runway or Higgsfield; never type, numbers, logos or Krish's mouth",
+  "crew": [
+    "story",
+    "creative",
+    "brand",
+    "motion",
+    "captions",
+    "sound",
+    "provenance"
+  ],
+  "qc": {
+    "change_density_min": 0.75,
+    "longest_still_s": 3,
+    "layout_types_per_min_tall": 1,
+    "plates_labelled": 1.0,
+    "caption_ocr_min": 0.98
+  },
+  "fps": 30,
+  "aspects": [
+    "9:16",
+    "16:9"
+  ],
+  "intro_outro": "story stand-off (approved) unless Gate 0 changes the sting",
+  "pending_devices": [
+    "phone_stage",
+    "plate_stage",
+    "scribble"
+  ],
+  "design_lock": "hand-held-screen",
+  "beats": [
+    {
+      "id": "open",
+      "layout": "STAGE"
+    },
+    {
+      "id": "result_a",
+      "layout": "STAGE"
+    },
+    {
+      "id": "result_b",
+      "layout": "STAGE"
+    },
+    {
+      "id": "evidence",
+      "layout": "STAGE"
+    },
+    {
+      "id": "verdict",
+      "layout": "STAGE"
+    }
+  ]
+}
