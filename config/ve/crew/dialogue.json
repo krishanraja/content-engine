@@ -1,0 +1,28 @@
+{
+  "id": "dialogue",
+  "title": "Dialogue editor",
+  "owns": [
+    "edit",
+    "EDL"
+  ],
+  "lints": [
+    "dialogue.speed",
+    "dialogue.short_max"
+  ],
+  "qc": [
+    "qc_joins.decoder",
+    "qc_sync.av_xcorr"
+  ],
+  "corpus": [
+    "11"
+  ],
+  "failures": [
+    "R01",
+    "R04",
+    "R19",
+    "F09",
+    "F10"
+  ],
+  "card": "config/ve/crew/dialogue.card.md",
+  "lens": "config/ve/crew/dialogue.lens.md"
+}

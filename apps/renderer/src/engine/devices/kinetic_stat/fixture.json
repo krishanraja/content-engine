@@ -1,0 +1,8 @@
+{
+  "objects": [{ "obj": "stat", "device": "kinetic_stat", "meaning": "The checked share", "dataset": { "unit": "checks", "denominator": 100, "producerLabel": "Fixture audit", "rows": [{ "label": "passed", "value": 72 }] }, "params": {}, "fromFrame": 0, "toFrame": 180 }],
+  "events": [
+    { "id": "enter", "obj": "stat", "verb": "enter", "toState": "visible", "atFrame": 10 },
+    { "id": "count", "obj": "stat", "verb": "count_to", "toState": "passed", "atFrame": 30 },
+    { "id": "carry", "obj": "stat", "verb": "carry", "toState": "hold", "atFrame": 35 }
+  ]
+}

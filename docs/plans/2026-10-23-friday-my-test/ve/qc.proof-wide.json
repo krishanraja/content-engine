@@ -1,0 +1,406 @@
+{
+  "file": ".ve-work/my-test-19s/proof-wide.mp4",
+  "sha256": "08424223557b70868d3ffb3438c6f49e1414ce5c33f41efdfda41236e66cb035",
+  "duration_s": 21.08,
+  "format": "scoreboard-test",
+  "checks": {
+    "loudness.integrated": {
+      "value": -13.9,
+      "target": "-14 ±1",
+      "pass": true
+    },
+    "loudness.true_peak": {
+      "value": -1.6,
+      "target": "<= -1",
+      "pass": true
+    },
+    "loudness.long_silence": {
+      "value": [],
+      "target": "none over 0.7 s below -50 dB",
+      "pass": true
+    },
+    "motion.change_density": {
+      "value": 0.75,
+      "target": ">= 0.7",
+      "pass": true
+    },
+    "motion.longest_still": {
+      "value": 1,
+      "target": "<= 3 s",
+      "pass": true,
+      "runs": [
+        [
+          2,
+          1
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          6,
+          1
+        ],
+        [
+          8,
+          1
+        ],
+        [
+          11,
+          1
+        ]
+      ]
+    },
+    "motion.periodicity": {
+      "value": null,
+      "target": "no repeating loop 2-10 s",
+      "pass": true
+    },
+    "sync.av_xcorr": {
+      "value": [
+        {
+          "segment": 0,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999985
+        },
+        {
+          "segment": 1,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999985
+        },
+        {
+          "segment": 2,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.99999
+        },
+        {
+          "segment": 3,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999984
+        },
+        {
+          "segment": 4,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999959
+        }
+      ],
+      "target": "every segment |lag| <= 33 ms; correlation >= 0.5",
+      "pass": true,
+      "status": "measured"
+    },
+    "joins.decoder": {
+      "value": [],
+      "target": "RMS step <= 6 dB, click <= 6x median, spectral flux <= 0.5",
+      "pass": true,
+      "status": "measured",
+      "join_times_s": [],
+      "failed_join_times_s": []
+    },
+    "captions.ocr": {
+      "value": [
+        {
+          "page": 0,
+          "frame": 54,
+          "text": "Now, America has blocked cotton",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 1,
+          "frame": 113,
+          "text": "from both over forced labour.",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
+        },
+        {
+          "page": 2,
+          "frame": 160,
+          "text": "So, a good answer should",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 3,
+          "frame": 201,
+          "text": "flag it both times.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 4,
+          "frame": 275,
+          "text": "Claude and ChatGPT flagged forced",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 5,
+          "frame": 304,
+          "text": "labour both times,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 6,
+          "frame": 354,
+          "text": "and so did DeepSeek for",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 7,
+          "frame": 433,
+          "text": "Turkmenistan. Now watch DeepSeek on",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 8,
+          "frame": 477,
+          "text": "Xinjiang. It writes a full",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 9,
+          "frame": 546,
+          "text": "answer, deletes it and changes",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
+        },
+        {
+          "page": 10,
+          "frame": 617,
+          "text": "the subject every single time.",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
+        }
+      ],
+      "target": "token agreement >= 0.98 on every page",
+      "pass": true,
+      "status": "measured"
+    },
+    "brand.mark_tile": {
+      "value": [
+        {
+          "beat": "b1-ban",
+          "frame": 60,
+          "score": 0.9791182218631382,
+          "pass": true
+        },
+        {
+          "beat": "b2-key",
+          "frame": 170,
+          "score": 0.9791181367165498,
+          "pass": true
+        },
+        {
+          "beat": "b3-pass",
+          "frame": 302,
+          "score": 0.9792931519385161,
+          "pass": true
+        },
+        {
+          "beat": "b4-watch",
+          "frame": 463,
+          "score": 0.9792113897338166,
+          "pass": true
+        },
+        {
+          "beat": "b5-every",
+          "frame": 586,
+          "score": 0.9792113897338166,
+          "pass": true
+        }
+      ],
+      "target": "mark NCC >= 0.8 at every beat midpoint",
+      "pass": true,
+      "status": "measured"
+    },
+    "motion.cue_sync": {
+      "value": [
+        {
+          "event": "b1-ban-0",
+          "atFrame": 9,
+          "peak_frame": 9,
+          "lag_frames": 0,
+          "peak_difference": 45.04380416870117,
+          "event_difference": 45.04380416870117,
+          "threshold": 1e-06,
+          "pass": true
+        },
+        {
+          "event": "b1-ban-1",
+          "atFrame": 47,
+          "peak_frame": 48,
+          "lag_frames": 1,
+          "peak_difference": 51.515769958496094,
+          "event_difference": 51.515769958496094,
+          "threshold": 1e-06,
+          "pass": true
+        },
+        {
+          "event": "b1-ban-2",
+          "atFrame": 94,
+          "peak_frame": 94,
+          "lag_frames": 0,
+          "peak_difference": 1.8591443300247192,
+          "event_difference": 1.8591443300247192,
+          "threshold": 0.0003308323648525402,
+          "pass": true
+        },
+        {
+          "event": "b2-key-0",
+          "atFrame": 163,
+          "peak_frame": 167,
+          "lag_frames": 4,
+          "peak_difference": 0.012688988819718361,
+          "event_difference": 0.01233185175806284,
+          "threshold": 1e-06,
+          "pass": true
+        },
+        {
+          "event": "b2-key-1",
+          "atFrame": 176,
+          "peak_frame": 173,
+          "lag_frames": -3,
+          "peak_difference": 0.01306534931063652,
+          "event_difference": 0.01223877351731062,
+          "threshold": 0.006586295552551746,
+          "pass": true
+        },
+        {
+          "event": "b3-pass-0",
+          "atFrame": 220,
+          "peak_frame": 221,
+          "lag_frames": 1,
+          "peak_difference": 0.30977240204811096,
+          "event_difference": 0.30977240204811096,
+          "threshold": 0.0004916957987006754,
+          "pass": true
+        },
+        {
+          "event": "b3-pass-1",
+          "atFrame": 241,
+          "peak_frame": 242,
+          "lag_frames": 1,
+          "peak_difference": 0.3091481626033783,
+          "event_difference": 0.3091481626033783,
+          "threshold": 7.284382445504889e-05,
+          "pass": true
+        },
+        {
+          "event": "b3-pass-2",
+          "atFrame": 339,
+          "peak_frame": 340,
+          "lag_frames": 1,
+          "peak_difference": 0.154720276594162,
+          "event_difference": 0.154720276594162,
+          "threshold": 1e-06,
+          "pass": true
+        },
+        {
+          "event": "b4-watch-0",
+          "atFrame": 386,
+          "peak_frame": 386,
+          "lag_frames": 0,
+          "peak_difference": 59.748802185058594,
+          "event_difference": 59.748802185058594,
+          "threshold": 1e-06,
+          "pass": true
+        },
+        {
+          "event": "b4-watch-1",
+          "atFrame": 400,
+          "peak_frame": 401,
+          "lag_frames": 1,
+          "peak_difference": 19.35666275024414,
+          "event_difference": 19.35666275024414,
+          "threshold": 1e-06,
+          "pass": true
+        },
+        {
+          "event": "b4-watch-2",
+          "atFrame": 461,
+          "peak_frame": 461,
+          "lag_frames": 0,
+          "peak_difference": 175.43218994140625,
+          "event_difference": 175.43218994140625,
+          "threshold": 0.00827936246059835,
+          "pass": true
+        },
+        {
+          "event": "b4-watch-3",
+          "atFrame": 500,
+          "peak_frame": 506,
+          "lag_frames": 6,
+          "peak_difference": 169.4173583984375,
+          "event_difference": 21.005460739135742,
+          "threshold": 0.00226478063268587,
+          "pass": true
+        },
+        {
+          "event": "b5-every-0",
+          "atFrame": 541,
+          "peak_frame": 541,
+          "lag_frames": 0,
+          "peak_difference": 30.604385375976562,
+          "event_difference": 30.604385375976562,
+          "threshold": 7.946598634589463e-05,
+          "pass": true
+        },
+        {
+          "event": "b5-every-1",
+          "atFrame": 570,
+          "peak_frame": 570,
+          "lag_frames": 0,
+          "peak_difference": 23.158578872680664,
+          "event_difference": 23.158578872680664,
+          "threshold": 1e-06,
+          "pass": true
+        },
+        {
+          "event": "b5-every-2",
+          "atFrame": 570,
+          "peak_frame": 570,
+          "lag_frames": 0,
+          "peak_difference": 23.158578872680664,
+          "event_difference": 23.158578872680664,
+          "threshold": 1e-06,
+          "pass": true
+        },
+        {
+          "event": "b5-every-3",
+          "atFrame": 601,
+          "peak_frame": 602,
+          "lag_frames": 1,
+          "peak_difference": 5.823718070983887,
+          "event_difference": 5.823718070983887,
+          "threshold": 1e-06,
+          "pass": true
+        }
+      ],
+      "target": "change within +/-2 frames > max(FLOOR, 3x median of previous 15 frames)",
+      "pass": true,
+      "status": "measured"
+    }
+  },
+  "measured_pass": true,
+  "complete": true
+}

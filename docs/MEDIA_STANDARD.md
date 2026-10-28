@@ -2,6 +2,8 @@
 
 Krish approved implementation on 26 October 2026. This is the production contract for videos and carousels. `config/media-standard.json` is its machine-readable owner. Run `node --import tsx scripts/media-standard.ts show` to obtain the current standard and hash before production. A missing standard, reviewer or tool is a repair task, never permission to substitute a generic template.
 
+Video is made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`); the quick-edit path stays the fallback until ve passes Phase 3.
+
 **Rollout: candidate pending calibration.** Run `node --import tsx scripts/media-standard.ts rollout` at session start. The eight-case reviewer pilot failed, so automatic signed qualification is not active. The design instructions still apply to every new piece; existing approval, audio, visual-clarity and delivery checks remain in force. The new proof/signature requirements described below become mandatory only after reviewed activation in `config/media-quality-rollout.json`. Pending status is not a quality pass and must never be described as enforced minimum taste. The qualification API itself always remains strict.
 
 Activation requires a repository-reviewed record bound to the current standard, named reviewer keys and passed calibration, regression and readiness evidence. There is no request, environment or CLI opt-out. Malformed or stale rollout configuration fails. The schema checks evidence bindings; repository review must verify the evidence itself and the provisioned registry. Merging the implementation does not approve activation.

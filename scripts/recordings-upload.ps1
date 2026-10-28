@@ -85,6 +85,13 @@ param(
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 
+# Every scheduled task of his that would open a console window runs through run-hidden.exe, checked each pass
+# (scripts\windowless.ps1, Invoke-WindowKeeper). Krish, 2026-10-28: "HIDE ALL CONSOLE POP UPS FOREVER FROM EVERY REPO
+# AND LOCAL TASK". A copy from before that file has no keeper, and the pass goes on without it.
+$WindowlessScript = Join-Path $PSScriptRoot 'windowless.ps1'
+if (Test-Path -LiteralPath $WindowlessScript -PathType Leaf) { . $WindowlessScript }
+$script:Windows = $null
+
 $RepoRoot = [System.IO.Path]::GetFullPath((Split-Path -Parent $PSScriptRoot))
 $SourceFolderName = 'recordings-source'
 $RunnerCredential = 'MindmakeVideoStudio/control-center-runner-token-v3'
@@ -114,6 +121,10 @@ $script:PlacingNotReady = ''
 $script:PassSent = $true
 $script:Problems = New-Object System.Collections.Generic.List[string]
 $script:FirstPass = $true
+$script:Watch = $null
+$script:WatchStartedAt = $null
+$script:WatchRepairAt = $null
+$script:WatchRepairOutcome = $null
 
 [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
 Add-Type -AssemblyName System.Net.Http
@@ -666,6 +677,8 @@ function Invoke-Pass {
     # ... so that you can learn from them"). Never a reason to fail a pass.
     try { Publish-References } catch { Write-Log "the style references were not published this pass: $($_.Exception.Message)"; Add-Problem 'references_publish_failed' }
     try { Publish-Working } catch { Write-Log "the working files were not published this pass: $($_.Exception.Message)"; Add-Problem 'working_publish_failed' }
+    try { Invoke-WatchKeeper } catch { Write-Log "the content watcher was not checked this pass: $($_.Exception.Message)" }
+    try { Invoke-Windows } catch { Write-Log "the scheduled tasks' windows were not checked this pass: $($_.Exception.Message)" }
     Send-LaneReport
   }
   return ($sent -and $placed)
@@ -697,6 +710,292 @@ function Publish-Working {
   if ($run.out -match '"sent":\s*[1-9]') { Write-Log "working files published: $($run.out -replace "`n", ' | ')" }
 }
 
+# ---- the content watcher on this machine --------------------------------------
+# krishanraja/content-watcher fetches and reads the links Krish pastes on the
+# Inspiration board, from its own scheduled task. On 25 and 26 October 2026 that
+# task stopped on both machines and nothing outside them could see it: Krish was
+# asked to open Task Scheduler and paste its log. Krish, 2026-10-28: "i should
+# never really need to copy and paste log files to you like this, ever, this is
+# ridiculous". So this pass, which runs every five minutes and updates itself,
+# keeps the watcher up to date, starts a run when none has logged lately, stops
+# a run that is stuck, and sends the watcher's health with its own report
+# (api/library/_lanes.ts, watch). A session reads it back with
+# GET /api/library/recordings/lane on the engine key. Nothing here ever stops a
+# recordings pass.
+$WatchTaskName = 'Mindmake Content Watcher'
+$WatchQuietMinutes = 6    # no log line for this long and no run under way: start one (its own trigger runs every minute)
+$WatchStuckMinutes = 25   # one stage held this long: the run is stuck (a run ends itself after 20)
+$WatchDownMinutes = 15    # still no log line this long after this pass first started it: report it
+$WatchTimeLimit = 'PT30M'
+$WatchRepairEveryMinutes = 60
+# 0x8007010B, "The directory name is invalid": the task's Start in folder is not there. Both machines answered this
+# on 28 October 2026, after the watcher had been silent since 25 and 26 October.
+$WatchBadDirectory = 2147942667
+
+function ConvertTo-UtcTime([string]$Text) {
+  if (-not $Text) { return $null }
+  $styles = [System.Globalization.DateTimeStyles]::AssumeUniversal -bor [System.Globalization.DateTimeStyles]::AdjustToUniversal
+  $value = [DateTime]::MinValue
+  if ([DateTime]::TryParse($Text, [System.Globalization.CultureInfo]::InvariantCulture, $styles, [ref]$value)) { return $value }
+  return $null
+}
+
+function Read-WatchLogLine {
+  # The watcher's last log line: its time and its counts (class names only).
+  $path = Join-Path $env:LOCALAPPDATA 'content-watcher\watch.log'
+  if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { return $null }
+  $last = @(Get-Content -LiteralPath $path -Tail 1 -Encoding UTF8 -ErrorAction SilentlyContinue)
+  if ($last.Count -eq 0 -or -not $last[0]) { return $null }
+  $line = [string]$last[0]
+  $space = $line.IndexOf(' ')
+  if ($space -lt 10) { return $null }
+  $counts = [ordered]@{}
+  try {
+    $parsed = $line.Substring($space + 1) | ConvertFrom-Json
+    foreach ($property in $parsed.PSObject.Properties) {
+      if ($property.Value -is [int] -or $property.Value -is [long]) { $counts[$property.Name] = [int]$property.Value }
+    }
+  } catch { }
+  return @{ at = $line.Substring(0, $space); time = (ConvertTo-UtcTime $line.Substring(0, $space)); counts = $counts }
+}
+
+function Read-WatchRecent([int]$Hours = 6) {
+  # Every log line of the last few hours, summed by key (class names only). The last line alone hides a failure:
+  # on 28 October an Instagram post spent its three tries in five minutes and the next minute's run said claimed 0.
+  $path = Join-Path $env:LOCALAPPDATA 'content-watcher\watch.log'
+  $sum = [ordered]@{}
+  if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { return $sum }
+  $since = [DateTime]::UtcNow.AddHours(-$Hours)
+  foreach ($line in @(Get-Content -LiteralPath $path -Tail (60 * $Hours + 30) -Encoding UTF8 -ErrorAction SilentlyContinue)) {
+    $text = [string]$line
+    $space = $text.IndexOf(' ')
+    if ($space -lt 10) { continue }
+    $time = ConvertTo-UtcTime $text.Substring(0, $space)
+    if ($null -eq $time -or $time -lt $since) { continue }
+    try { $parsed = $text.Substring($space + 1) | ConvertFrom-Json } catch { continue }
+    foreach ($property in $parsed.PSObject.Properties) {
+      if ($property.Name -eq 'seconds') { continue }
+      if ($property.Value -is [int] -or $property.Value -is [long]) {
+        if ($sum.Contains($property.Name)) { $sum[$property.Name] = [int]$sum[$property.Name] + [int]$property.Value }
+        else { $sum[$property.Name] = [int]$property.Value }
+      }
+    }
+  }
+  return $sum
+}
+
+function Update-Watcher([string]$Repo, [string]$Python) {
+  # Brings the watcher's own clone up to date (it is installed editable, so new
+  # code runs at once) and installs its dependencies again when they changed.
+  # Returns the short HEAD, or $null when this is not a git clone.
+  $git = Get-Command git.exe -ErrorAction SilentlyContinue
+  if ($null -eq $git -or -not (Test-Path -LiteralPath (Join-Path $Repo '.git'))) { return $null }
+  $previous = $ErrorActionPreference
+  $ErrorActionPreference = 'Continue'
+  try {
+    $before = (& $git.Source -C $Repo rev-parse HEAD 2>$null | Select-Object -First 1)
+    $output = @(& $git.Source -C $Repo pull --ff-only --quiet 2>&1)
+    $pulled = ($LASTEXITCODE -eq 0)
+    $after = (& $git.Source -C $Repo rev-parse HEAD 2>$null | Select-Object -First 1)
+    if (-not $pulled) {
+      Write-Log "the content watcher was not updated: git pull did not finish ($($output -join ' '))"
+      Add-Problem 'watch_update_failed'
+    } elseif ($before -and $after -and $before -ne $after) {
+      $changed = @(& $git.Source -C $Repo diff --name-only $before $after -- pyproject.toml 2>$null)
+      if ($changed.Count -gt 0) {
+        $pip = @(& $Python -m pip install --quiet --upgrade -e "$($Repo)[watch]" 2>&1)
+        if ($LASTEXITCODE -ne 0) {
+          Write-Log "the content watcher's dependencies were not installed: $(($pip | Select-Object -Last 3) -join ' ')"
+          Add-Problem 'watch_update_failed'
+        } else { [void]$script:Watch.repaired.Add('installed_dependencies') }
+      }
+      Write-Log "the content watcher was updated to $($after.Substring(0, 7))"
+      [void]$script:Watch.repaired.Add('updated')
+    }
+    if ($after) { return $after.Substring(0, 7) }
+    return $null
+  } finally { $ErrorActionPreference = $previous }
+}
+
+function Test-WatcherClone([string]$Path) {
+  if (-not $Path) { return $false }
+  return ((Test-Path -LiteralPath (Join-Path $Path 'content_watcher\watch.py') -PathType Leaf) -and
+    (Test-Path -LiteralPath (Join-Path $Path 'scripts\install-content-watch.ps1') -PathType Leaf))
+}
+
+function Find-WatcherClone([string]$Was) {
+  # Where the watcher's clone is now. The repository was renamed from video-compression to content-watcher on
+  # 24 October 2026, and a folder can move with a rename: look beside where the task pointed, beside this clone,
+  # and in the dev folder and each folder in it.
+  $bases = New-Object System.Collections.Generic.List[string]
+  if ($Was) { $bases.Add((Split-Path -Parent $Was)) }
+  $bases.Add((Split-Path -Parent $RepoRoot))
+  $bases.Add((Split-Path -Parent (Split-Path -Parent $RepoRoot)))
+  $dev = Join-Path $env:USERPROFILE 'dev'
+  if (Test-Path -LiteralPath $dev -PathType Container) {
+    $bases.Add($dev)
+    foreach ($child in @(Get-ChildItem -LiteralPath $dev -Directory -ErrorAction SilentlyContinue)) { $bases.Add($child.FullName) }
+  }
+  foreach ($base in $bases) {
+    if (-not $base) { continue }
+    foreach ($name in @('content-watcher', 'video-compression')) {
+      $candidate = Join-Path $base $name
+      if (Test-WatcherClone $candidate) { return $candidate }
+    }
+  }
+  return $null
+}
+
+function Repair-WatchTask([string]$Was) {
+  # The task cannot start: its folder is gone, or Windows says the folder is invalid. Runs the watcher's own
+  # installer from wherever its clone is now, which installs the package from there and registers the task again
+  # (krishanraja/content-watcher scripts/install-content-watch.ps1). With no clone on this machine, the public
+  # repository is cloned where the old one was. At most once an hour; the report says how it went either way.
+  if ($script:WatchRepairAt -and ([DateTime]::UtcNow - $script:WatchRepairAt).TotalMinutes -lt $WatchRepairEveryMinutes) {
+    if ($script:WatchRepairOutcome -ne 'ok') { Add-Problem 'watch_task_broken' }
+    return
+  }
+  $script:WatchRepairAt = [DateTime]::UtcNow
+  $script:WatchRepairOutcome = 'failed'
+  $clone = Find-WatcherClone $Was
+  $previous = $ErrorActionPreference
+  $ErrorActionPreference = 'Continue'
+  try {
+    if (-not $clone) {
+      $git = Get-Command git.exe -ErrorAction SilentlyContinue
+      $parent = if ($Was) { Split-Path -Parent $Was } else { $null }
+      if (-not $parent -or -not (Test-Path -LiteralPath $parent -PathType Container)) { $parent = Join-Path $env:USERPROFILE 'dev' }
+      $target = Join-Path $parent 'content-watcher'
+      if ($null -ne $git -and -not (Test-Path -LiteralPath $target)) {
+        $output = @(& $git.Source clone --quiet https://github.com/krishanraja/content-watcher.git $target 2>&1)
+        if ($LASTEXITCODE -eq 0 -and (Test-WatcherClone $target)) {
+          $clone = $target
+          [void]$script:Watch.repaired.Add('cloned_watcher')
+          Write-Log "the content watcher was cloned to $target"
+        } else { Write-Log "the content watcher could not be cloned: $($output -join ' ')" }
+      }
+    }
+    if ($clone) {
+      $installer = Join-Path $clone 'scripts\install-content-watch.ps1'
+      $output = @(& powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File $installer 2>&1)
+      if ($LASTEXITCODE -eq 0) {
+        $script:WatchRepairOutcome = 'ok'
+        [void]$script:Watch.repaired.Add('reinstalled_task')
+        Write-Log "the content watcher's task was registered again from $clone"
+      } else { Write-Log "the content watcher could not be installed again from ${clone}: $(($output | Select-Object -Last 3) -join ' ')" }
+    } else { Write-Log "the content watcher's clone is not on this machine" }
+  } finally { $ErrorActionPreference = $previous }
+  if ($script:WatchRepairOutcome -ne 'ok') { Add-Problem 'watch_task_broken' }
+}
+
+function Invoke-WatchKeeper {
+  $script:Watch = @{ repaired = (New-Object System.Collections.Generic.List[string]) }
+  $task = Get-ScheduledTask -TaskName $WatchTaskName -ErrorAction SilentlyContinue
+  if ($null -eq $task) { Add-Problem 'watch_not_installed'; return }
+  $action = @($task.Actions)[0]
+  $repo = ([string](Get-Field $action 'WorkingDirectory')).Trim('"')
+  $info = Get-ScheduledTaskInfo -TaskName $WatchTaskName -ErrorAction SilentlyContinue
+  if (-not (Test-WatcherClone $repo) -or ($info -and [int64]$info.LastTaskResult -eq $WatchBadDirectory)) {
+    Repair-WatchTask $repo
+    $task = Get-ScheduledTask -TaskName $WatchTaskName -ErrorAction SilentlyContinue
+    if ($null -eq $task) { Add-Problem 'watch_not_installed'; return }
+    $action = @($task.Actions)[0]
+    $repo = ([string](Get-Field $action 'WorkingDirectory')).Trim('"')
+  }
+  $pythonw = [string](Get-Field $action 'Execute')
+  $python = Join-Path (Split-Path -Parent $pythonw) 'python.exe'
+  if (-not (Test-Path -LiteralPath $python -PathType Leaf)) { $python = $pythonw }
+  if ($repo -and (Test-Path -LiteralPath $repo -PathType Container)) { $script:Watch.head = Update-Watcher $repo $python }
+
+  # The task itself: on, and never allowed to hold a run for hours.
+  try {
+    if ($task.State -eq 'Disabled') {
+      [void](Enable-ScheduledTask -TaskName $WatchTaskName -ErrorAction Stop)
+      [void]$script:Watch.repaired.Add('enabled_task')
+      $task = Get-ScheduledTask -TaskName $WatchTaskName
+    }
+    if ($task.Settings.ExecutionTimeLimit -ne $WatchTimeLimit) {
+      $settings = $task.Settings
+      $settings.ExecutionTimeLimit = $WatchTimeLimit
+      [void](Set-ScheduledTask -TaskName $WatchTaskName -Settings $settings -ErrorAction Stop)
+      [void]$script:Watch.repaired.Add('shortened_time_limit')
+      $task = Get-ScheduledTask -TaskName $WatchTaskName
+    }
+  } catch { Write-Log "the content watcher's task settings were not changed: $($_.Exception.Message)" }
+
+  $now = [DateTime]::UtcNow
+  $log = Read-WatchLogLine
+  $beat = Read-JsonFile (Join-Path $env:LOCALAPPDATA 'content-watcher\watch.heartbeat')
+  $beatAt = ConvertTo-UtcTime ([string](Get-Field $beat 'at'))
+  $quiet = ($null -eq $log -or $null -eq $log.time -or ($now - $log.time).TotalMinutes -ge $WatchQuietMinutes)
+  # A run under way says so in its heartbeat: a stage other than done, written within the stuck limit. A long read
+  # (a video heard by whisper) holds one stage for minutes and is left alone.
+  $underWay = ([string](Get-Field $beat 'stage') -ne 'done' -and $null -ne $beatAt -and ($now - $beatAt).TotalMinutes -lt $WatchStuckMinutes)
+  try {
+    if ($quiet -and -not $underWay) {
+      if ($task.State -eq 'Running') {
+        Stop-ScheduledTask -TaskName $WatchTaskName -ErrorAction Stop
+        [void]$script:Watch.repaired.Add('stopped_stuck_run')
+        Write-Log 'the content watcher had a run that was not moving; it was stopped'
+      }
+      if ($script:WatchStartedAt -and ($now - $script:WatchStartedAt).TotalMinutes -ge $WatchDownMinutes) { Add-Problem 'watch_not_running' }
+      Start-ScheduledTask -TaskName $WatchTaskName -ErrorAction Stop
+      if (-not $script:WatchStartedAt) { $script:WatchStartedAt = $now }
+      [void]$script:Watch.repaired.Add('started_run')
+    } elseif (-not $quiet) { $script:WatchStartedAt = $null }
+  } catch { Write-Log "the content watcher could not be started: $($_.Exception.Message)"; Add-Problem 'watch_run_failed' }
+
+  # What its last run said, as a problem Control Center names.
+  if ($null -ne $log) {
+    $keys = @($log.counts.Keys)
+    if ($keys | Where-Object { $_ -in @('engine.no_engine_key', 'engine.engine_refused_key') }) { Add-Problem 'watch_key_problem' }
+    elseif ($keys | Where-Object { $_ -like 'engine.*' }) { Add-Problem 'watch_cannot_reach_engine' }
+    if ($keys | Where-Object { $_ -like 'run.error.*' -or $_ -eq 'killed.over_time' }) { Add-Problem 'watch_run_failed' }
+  }
+  $info = Get-ScheduledTaskInfo -TaskName $WatchTaskName -ErrorAction SilentlyContinue
+  $script:Watch.last_run_at = if ($log) { $log.at } else { $null }
+  $script:Watch.counts = if ($log) { $log.counts } else { @{} }
+  $script:Watch.recent = Read-WatchRecent
+  $script:Watch.stage = [string](Get-Field $beat 'stage')
+  $script:Watch.stage_at = [string](Get-Field $beat 'at')
+  $script:Watch.task_state = [string]$task.State
+  $script:Watch.task_result = if ($info) { [int64]$info.LastTaskResult } else { $null }
+}
+
+function Get-WatchBlock {
+  if ($null -eq $script:Watch) { return $null }
+  $block = [ordered]@{}
+  foreach ($name in @('last_run_at', 'counts', 'recent', 'stage', 'stage_at', 'task_state', 'task_result', 'head')) {
+    if ($script:Watch.ContainsKey($name) -and $null -ne $script:Watch[$name] -and $script:Watch[$name] -ne '') { $block[$name] = $script:Watch[$name] }
+  }
+  $block['repaired'] = @($script:Watch.repaired)
+  return $block
+}
+
+function Invoke-Windows {
+  # Each pass: no task of his opens a window. Counts reach the engine in the report's windows block; what changed is
+  # in changed.log beside run-hidden.exe on this machine.
+  $script:Windows = $null
+  if (-not (Get-Command Invoke-WindowKeeper -ErrorAction SilentlyContinue)) { return }
+  $result = Invoke-WindowKeeper
+  $script:Windows = $result
+  if ($result.launcher -ne 'ok') { Write-Log "run-hidden.exe is not ready on this machine: $($result['error'])"; return }
+  if ($result.wrapped) { Write-Log "$($result.wrapped) scheduled task(s) now run with no window" }
+  if ($result.left) { Write-Log "$($result.left) scheduled task(s) still open a window and could not be changed: $($result['error'])" }
+}
+
+function Get-WindowsBlock {
+  if ($null -eq $script:Windows) { return $null }
+  return [ordered]@{
+    launcher = [string]$script:Windows.launcher
+    hidden = [int]$script:Windows.hidden
+    wrapped = [int]$script:Windows.wrapped
+    left = [int]$script:Windows.left
+    left_by = $script:Windows['left_by']
+    left_names = @($script:Windows['left_names'])
+  }
+}
+
 function Send-LaneReport {
   # What this pass found, to the engine, so a problem here reaches Control
   # Center (api/library/_lanes.ts). An empty list says this machine is well.
@@ -707,7 +1006,12 @@ function Send-LaneReport {
     $machine = ($env:COMPUTERNAME -replace '[^A-Za-z0-9_-]', '-')
     $client = New-HttpClient ([TimeSpan]::FromMinutes(2))
     try {
-      [void](Invoke-Engine $client $base $token '/api/library/recordings/lane' ([ordered]@{ machine = $machine; problems = @($script:Problems) }))
+      $report = [ordered]@{ machine = $machine; problems = @($script:Problems) }
+      $watch = Get-WatchBlock
+      if ($null -ne $watch) { $report['watch'] = $watch }
+      $windows = Get-WindowsBlock
+      if ($null -ne $windows) { $report['windows'] = $windows }
+      [void](Invoke-Engine $client $base $token '/api/library/recordings/lane' $report)
     } finally { $client.Dispose() }
   } catch {
     Write-Log "this pass's report did not reach the engine: $($_.Exception.Message)"
@@ -756,13 +1060,20 @@ try {
   # The scheduled task: a pass every few minutes in one hidden process. Before
   # each pass it pulls its own copy; when that changes this script, it ends,
   # and the task's next trigger starts the new one.
+  # This script and the window keeper it loads at start (scripts\windowless.ps1): a change to either ends the loop, so
+  # the next start runs both as they are now (28 October: a keeper change waited in memory behind an unchanged loop).
   $scriptPath = $PSCommandPath
-  $scriptSha = Get-Sha256 $scriptPath
+  function Get-SourceStamp {
+    $stamp = Get-Sha256 $scriptPath
+    if (Test-Path -LiteralPath $WindowlessScript -PathType Leaf) { $stamp += Get-Sha256 $WindowlessScript }
+    return $stamp
+  }
+  $scriptSha = Get-SourceStamp
   Write-Log "recordings upload started: a pass every $EveryMinutes minutes"
   while ($true) {
     try { Update-Source } catch { Write-Log "the update check failed: $($_.Exception.Message)" }
-    if ((Get-Sha256 $scriptPath) -ne $scriptSha) {
-      Write-Log 'recordings-upload.ps1 has changed; ending so the scheduled task starts the new version'
+    if ((Get-SourceStamp) -ne $scriptSha) {
+      Write-Log 'recordings-upload.ps1 or windowless.ps1 has changed; ending so the scheduled task starts the new version'
       exit 0
     }
     try { [void](Invoke-Pass) }

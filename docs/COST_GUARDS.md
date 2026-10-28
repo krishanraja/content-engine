@@ -71,3 +71,10 @@ nothing the work reads and roughly halves the floor of every call. Measure with
 
 `python3 scripts/session_token_audit.py --line` prints a session's calls, tokens read and first and last
 context; every handover carries that line. The engine's own spend is `meter_daily` (stage per `unit_key`).
+
+Codex work is measured from its own logs with `--codex` (`~/.codex/sessions`, read for numbers only, never
+words): per thread its model and tool calls, input (cached included), cached, output and reasoning tokens, wall
+and active hours, and the weekly limit and credits at its start and end. `--session ID --children` adds the
+thread's child agents; `--since`, `--until` and `--cwd-contains` pick the threads; `--json` is the interface
+`ve ledger` wraps. It reproduces the Friday 23 October production measured on 27 October: the main thread
+188.3M input tokens, 256.6M with its 19 child agents, 97.7% of it cached.

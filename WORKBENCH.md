@@ -2,26 +2,34 @@
 
 [Story correction and Growth handoff, 26 Oct](docs/history/2026-10-26-story-closeout.md).
 
-## 27 October: Monday 26's two cuts on the quick-edit route, captions burned in (Claude Code)
+## 27 October: pasted links tagged Production or Content; the first live run is one reel (Claude)
 
-- **Ruling (Krish, 27 Oct): captions burned into every cut.** The "no captions" line copied from Friday's locked brief
-  is gone from Monday's direction, `CODEX.md` and `receipts.md`; make.py's `"caption_style": "house"` draws the house
-  captions (ink block, channel-colour shadow, one figure on the mint swipe). Direction re-signed: "Signed, go
-  (Recommended)" (also the 19 Oct route's framing: pictures beside or above his face, no full-frame cutaways).
-- **Made** (branch `claude/monday26-captions`, worktree `content-engine-monday26`, files under
-  `.cache/produce/2026-10-26-b358e788/`): 5-minute 16:9 (4:45.5) and 90-second 9:16 (1:27.7), stabilised takes,
-  room treated, story intro and outro, licensed bed, 41 panels from live captures, review packet
-  `docs/plans/2026-10-26-monday/video/REVIEW.md`. Scripts: `docs/plans/2026-10-26-monday/video/`.
-- **Engine fixes found by measuring:** lip sync (a window starting between frames put the picture a frame early;
-  the voice-repair denoiser delayed the voice 25 ms; `make.py` now aligns both); the 9:16 quality gate forced two
-  beat changes in the short (direction `production_notes`).
-- **Waiting on Krish:** full-playback acceptance of both cuts; a ruling on the visual-clarity word budget (Claude's
-  25 Oct defaults fail his approved story intro and outro, the signed receipts and logo rows), which blocks library
-  filing. Nothing published, sent or scheduled.
-- **Baseline for the `ve` engine (old route, one session):** wall clock 09:16 to about 15:45 on 27 Oct (about 6.5 h,
-  of which about 3 h was waiting on renders, transcription and SyncNet on this CPU); Claude Code (Opus 5.5) about
-  0.82 M tokens of context in one session, about 7 points of the account's weekly all-model limit (86% to 93%);
-  Codex none. Renders: 5-minute about 30 min a pass (three passes), 90-second about 12 min (four passes).
+- **No windows (28 Oct):** Krish: "HIDE ALL CONSOLE POP UPS FOREVER FROM EVERY REPO AND LOCAL TASK". Each pass runs his console tasks through `run-hidden.exe` (`scripts/windowless.ps1`); content-watcher #16 hides every child and skips media the engine holds. Read `windows` per machine on the lane.
+- **Asked (Krish, 27 Oct):** "Why can't I add links into my inspiration board pre-tagged for production or content? I'm supposed to be able to add this quickly and easily on mobile", with the reel `https://www.instagram.com/reel/DewxbWfjDHB/` to run end to end (learning `paste-a-link-tagged`).
+- **Found:** `content_watch_requests` had never held a row: no pasted link had ever been saved, so the chain (Control Center, content-watcher on a home computer, the taste ledger's quick card run) has never run live. The engine and content-watcher already honour a lane; Control Center never sent one.
+- **Done:** control-center PR #573 (branch `ccr-1b7d26a8-1tri9s`): two required chips (Production, Content) in the link box, the route refuses a link without one (`bad_lane`) and writes `lane`, a re-tag moves only a queued or failed request, and a phone gets Save a link at the top of the Inspiration page. Here: a test that a claim hands content-watcher the lane unchanged.
+- **Cloud trial of the reel (no writes):** content-watcher's free Instagram embed route fetched it without signing in (48.2 s, 9:16, with sound) and the reading got the caption, all 13 spoken sentences, the hook, pace (153 words a minute), loudness (-14.1 LUFS) and the on-screen text every 3 s. It also said **1 shot, 0 cuts**: the reel is about 12 animated scenes on one constant background, no face, so ffmpeg's scene score (0 changes even at 0.12) sees no cut. A production read of motion graphics needs a beat measure (on-screen layout changes), not only hard cuts; that is content-watcher's to add (`content_watcher/read/visual.py`).
+- **Live (27 Oct 13:57 UTC):** control-center #573 merged and deployed (Vercel production READY on `0d4193e`); content-engine #189 merged.
+- **The live run stalled at the home computers (28 Oct):** his two links (a YouTube Short `fad59d76` and an Instagram post `3d3c3999`, both tagged Content) sat `queued` with 0 attempts; the watchers had been silent since 25 and 26 October. The first reading, from logs he pasted (never again), is in `docs/history/2026-10-28-workbench-watcher-stall.md`. PR 201 (merged) made the recordings pass keep the watcher and send its health; content-watcher PR 9 (merged) makes a run end after 20 minutes and name its errors.
+- **Repaired and proven, 28 Oct 03:39 UTC (PR 202 live):** the keeper found no clone on either computer, cloned content-watcher and ran its installer (`cloned_watcher`, `reinstalled_task`); Lorimer claimed both links within the minute, so the cause is proven. The Short (`fad59d76`) is `read` with its card (Content Inspo, `heard: words`). The Instagram post (`3d3c3999`) is `failed`, class `other`, three tries spent in five minutes. Next: read `recent` on the lane route for its step classes, fix, and queue it again.
+- **Cloud backup, proven live 28 Oct 06:58 UTC:** `cloud-gh` took Krish's carousel through `.github/workflows/watch-cloud.yml` (started by hand with `wait_minutes`, the link made claimable at a set second past both home computers' minute ticks), fetched it through `POST /api/watch/apify` (the engine's key; no GitHub secret, which the session proxy cannot write), reused the filed slides (`media` in the claim) and stored the full reading. Still unproven against Google: the keyless PUT of a new file; `GET /api/watch/upload?session=1` asks a session's status with no key (expect 308) without making a file. Every pasted link so far is a card: `fad59d76`, `3d3c3999`, `36e7f24a`, `80f72ec5`.
+- **Cloud fetch of both links (no writes, free routes only): both refused**, which is expected of a cloud machine and does not predict the home result. The Short: YouTube's bot check (`blocked:bot_check`), the home computers have the token helper and cobalt for this. The post: Instagram's embed answered `not_found:ig_removed` and gave no cover, so a logged-out reader cannot see it; at home it goes on to Instaloader and Apify (under the $5 cap), and if every route misses it fails as a class Krish can read on its card ("Paste it again to retry").
+
+## 28 October: Monday 26's cuts rebuilt on his review, on the board and in the archive (Claude Code)
+
+- **Ruling (Krish, 28 Oct):** the first picture after the sting is a provocative motion statement, not a logo; every
+  infographic must really move; the open-top box is "tacky"; one closing screen, "Ever". Memory notes:
+  `video-pictures-must-move-and-open-hard`, `one-closing-screen-only`.
+- **Made:** `docs/plans/2026-10-26-monday/video/motion.py` (a timeline-driven Chromium renderer: the opener, the bust and
+  every drawn page as an mp4), a company card in `draw_panels.py`, his screen recording in `whatitis.py`, the house end
+  card trimmed to its question screen. 5-minute 4:43.5, 90-second 1:25.7; measurements in `video/REVIEW.md`.
+- **Filed:** masters, share copies and thumbnails in the Drive archive; Monday's board tab carries both cuts as a
+  "review" section, built with `week_board.py`'s own inputs after a control rebuild matched the live board exactly.
+  The Drive library holds one Monday folder (covers only); the duplicate and two `working` canary folders went to
+  `_Archive/PREVIOUS VERSIONS - archive, not current, do not use/2026-10-28 moved out of 3 Posts` (nothing deleted).
+- **Held:** the post's `3 Video`: the library's visual gate wants the real logos of Udio and ElevenLabs (named once in
+  the article) on both cuts and more on the thumbnails, and the article's fact gate is open. Waiting on Krish: full
+  playback, the word-budget ruling, and the logo-or-article call.
 
 ## 27 October: Wednesday and Friday in Teleprompter; Monday's three questions (Claude)
 
@@ -56,31 +64,7 @@ Friday production with its existing production owner. Growth briefs receive
 a checked creative package through the existing editorial/Studio path. This change updates repository guidance
 only; it does not mutate a tracked Studio session, learning record or board.
 
-## 24 October: Friday locked and signed off; Codex makes the videos (Claude)
-
-- **Signed off by Krish:** storyboard, no trim, titles, outline ("signed off, keep, all A"), prediction A2 ("a2"), and
-  the six first-person test lines in the fact gate ("yes, $0.30, and I sign off my test lines"). Spend: $1.09 of the
-  $1.30 he approved.
-- **Done:** the article (`docs/plans/2026-10-23-draft-body.md`, on the piece; fact gate `ok`, voice, AI scan and spine
-  checks pass) and every channel's copy (`docs/plans/2026-10-23-friday/locked/board-copy/`: `article.md`,
-  `publishing-copy.md`; voice score 4.5, bar 6). The board shows the signed storyboards (revision 50).
-- **Waiting on Krish:** start Codex by pasting `docs/plans/2026-10-23-friday/locked/CODEX_PROMPT.md` (the part below
-  the line) into a new Codex session on a home computer. Then his look at the four videos on the board, then his yes
-  to the final board publish.
-- **Changed after sign-off (his answers, 24 Oct):** the 90-second on-camera cut loses the recap and three small repeats
-  ("Cut the recap (Recommended)"), and both vertical cuts are sped to 1.12x ("Speed both to 1.12x (Recommended)") so the
-  whole file with intro and outro runs under 89 s. His warning, "last time Codex glitched a bunch of words on the
-  speedup and also misaligned the captions", is `config/learnings.json` `speedup-without-glitches` and the
-  "Speed without glitches" section of `CODEX.md`.
-- **Making record completed by Claude (24 Oct, after Codex stopped on it):** Visual gate (cover and thumbnails drawn
-  from his picked words, gate passed), Scripts with both read-backs (two fresh readers each, nothing lost) and Pack
-  (sent to the Two passports library folder) are recorded; every step up to Recorded reads done. `scripts/pages/build.py`
-  now tries the smaller headline sizes on its ladder before refusing a 3:2 cover.
-- **Codex** works from `locked/CODEX.md` and nothing else; it fills only the chapter times in `publishing-copy.md`.
-- **Where things are:** takes in the engine's recordings store (`recording.py list`); evidence captures under
-  `2 Covers and images/Evidence` and the storyboards under `2 Covers and images/Storyboard` in the post's library
-  folder. The Anthropic and GitHub reference clip (Video Engine > Inspiration) had still not reached the library;
-  Codex fetches it first (`motion-system.md`).
+The 24 October Friday-locked notes are in `docs/history/2026-10-28-workbench-24oct-friday-locked.md`.
 
 ## The idea queue: read it first
 
@@ -90,40 +74,11 @@ The source-backed review and Krish's full-playback acceptance supersede the
 older hold; see the current release entry above and its immutable receipts.
 No further spend or public posting is authorised.
 
-### 19 Oct, Monday in review on the board
-
-Monday is on its tab of https://claude.ai/artifact/CDgS3JDULpzvRnxkHwLkVk in draft (version 5): outline, article and both scripts in review boxes, and one call waiting on him (sign off both scripts). Fact gate open (three runs, $0.43 then less, his sign-offs on the example month and three framing lines); spine judge passed; scripts pass story_check and four read-back rounds, waiting on his words, then Teleprompter. The other board link (4SZR…) is his other account: a session there republishes the same file. Workroom: https://claude.ai/artifact/DdBDf3JPCAdjkmDj7ss6na. Still to do: cover and thumbnails, publish page, pack.
-
-### 19 Oct, later: three narratives written, waiting on his sign-off
-
-He answered the seven questions (his words are in each narrative file). The three narratives are in
-`docs/plans/2026-10-19-week/narrative-mon.md`, `-wed.md` and `-fri.md`; nothing is made until he signs each.
-Monday's end message changed: Google's pricing page (read 19 Oct, updated 16 Oct) shows the reused-input rate
-doubles too ($0.10 to $0.20), so reuse makes the bill smaller but does not stop it doubling; the figure is
-"about 95% cheaper", never "a tenth". The research he pasted is in `research-mon-argon.md` (unchecked leads
-except the Standard rows read at Google's page). Wednesday's line-up is his: Muse, Grok Bot, dots, Gemini
-Spark and Poke scored, OpenClaw as the origin only, Viktor out. "Narrative before making" is now standing:
-the first step of `make-piece` (learning `narrative-before-making`, encoded). Parked ideas: `parked.md`
-(the AI-shopper rulebook parked, three let go; none was in the queue, so nothing was written). Other board
-link (`4SZR…`): per his 14 Oct ruling, a session on his other account rebuilds and republishes it; that link
-returns 404 from this account. Monday's narrative is signed and its outline approved (`docs/plans/2026-10-19-outline.md`, with his downgrade section). Monday's workroom and draft are done (handover, "Done in the first session"); the fact gate waits on his yes to the paid run. **Next:** `docs/handovers/2026-10-19-monday-argon-make.md`; Wednesday and Friday still wait on his sign-off.
-
-### 19 Oct: queue live, picks saved, next is the editorial narrative
-
-Live: the idea queue (migration applied, PRs content-engine #94 and control-center #481 merged). His picks (Mon
-`5b5bfadc`, Wed `d7a20885`, Fri `7083d6ad`) are `drafting`, scheduled for their days and on the day tabs of
-https://claude.ai/artifact/CDgS3JDULpzvRnxkHwLkVk (version 4). No making session was started. The queue holds
-his four marked ideas, all triaged; his two Drops are recorded as dropped. His feedback is five entries in
-`config/learnings.json` (business-leader test, simple then unpacked, show the money, no repeat within three
-weeks, reading his marks) plus `narrative-before-making`, open until he says whether it is standing.
-**Next:** a fresh session runs `docs/handovers/2026-10-19-editorial-narrative.md`: one signed-off narrative
-(end message, checkpoints, drift rule) per day before anything is made.
-Waiting on him: the seven questions at the end of that handover, and the merge of two small PRs (engine
-`question` field; Control Center shows it). The other account's board is now
-migrated. The Argon "a tenth" figure remains with the editorial work (the row's numbers give a twentieth).
+The week of 19 October's queue notes are in `docs/history/2026-10-27-workbench-19oct-queue.md`.
 
 ## How Krish wants to be worked with
 
+- **Never ask Krish to open a log, Task Scheduler or a file on his computer** (Krish, 2026-10-28: "i should never really need to copy and paste log files to you like this, ever, this is ridiculous"; learning `never-paste-logs`). Read each home computer's health from the engine: `GET /api/library/recordings/lane` on the engine key gives every machine's last report, with its content watcher's last run, counts, stage and task state. If the engine cannot see something, build the report that lets it.
 - **Every title earns the click, from the piece, never from nothing** (house
   rule TITLE_EARNS_THE_CLICK; `scripts/post-pack/title_check.py`). No straw
   man ("Muse isn't ChatGPT", "X vs Y isn't a fair fight"), no bare topic

@@ -1,0 +1,47 @@
+{
+  "id": "voice-led-pictures",
+  "status": "trial",
+  "purpose": "Krish's voice over labelled editorial stills that move with parallax and annotation, evidence cards and kinetic stats",
+  "layers": [
+    "paper or halftone finish",
+    "labelled illustration plates (2.5D parallax)",
+    "pen_annotation",
+    "document_zoom / kinetic_stat",
+    "BrandFrame"
+  ],
+  "layouts": [
+    "F1",
+    "P6",
+    "F3"
+  ],
+  "devices": [
+    "photo_parallax",
+    "pen_annotation",
+    "document_zoom",
+    "kinetic_stat",
+    "record_card"
+  ],
+  "generation": "stills from ChatGPT Images (Codex card); short animations of approved stills from Runway or Higgsfield; never type, numbers, logos or Krish's mouth",
+  "crew": [
+    "story",
+    "creative",
+    "brand",
+    "motion",
+    "captions",
+    "sound",
+    "provenance"
+  ],
+  "qc": {
+    "change_density_min": 0.75,
+    "longest_still_s": 3,
+    "layout_types_per_min_tall": 4,
+    "plates_labelled": 1.0,
+    "caption_ocr_min": 0.98
+  },
+  "fps": 30,
+  "aspects": [
+    "9:16",
+    "16:9"
+  ],
+  "intro_outro": "story stand-off (approved) unless Gate 0 changes the sting"
+}

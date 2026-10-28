@@ -2435,7 +2435,7 @@ def main():
             fl.mkdir()
             for f in fonts.glob('*.ttf'):
                 (fl / f.name).write_bytes(f.read_bytes())
-        run(['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error', *inputs, '-filter_complex_script', gfile.name, '-map', '[V]', '-map', audio_map,
+        run(['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error', *inputs, '-/filter_complex', gfile.name, '-map', '[V]', '-map', audio_map,
              '-c:v', 'libx264', '-preset', 'fast', '-crf', '19', '-profile:v', 'high', '-pix_fmt', 'yuv420p',
              '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-ac', '2', '-movflags', '+faststart', final.name], cwd=out)
         report[f'{asp}_file'] = final.name

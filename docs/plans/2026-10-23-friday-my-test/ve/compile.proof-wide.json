@@ -1,0 +1,15 @@
+{
+  "lint": "clean",
+  "sfx_missing": [
+    "b1-ban-0",
+    "b1-ban-1",
+    "b2-key-0",
+    "b3-pass-0",
+    "b3-pass-1",
+    "b3-pass-2",
+    "b4-watch-1",
+    "b4-watch-3",
+    "b5-every-1"
+  ],
+  "props_sha256": "0a081b2fb122d6499f038ea9f905b497eb494964ad1a957fe4751b26cd9a1a44"
+}

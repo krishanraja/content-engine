@@ -34,17 +34,118 @@ export const LANE_PROBLEMS: Readonly<Record<string, string>> = Object.freeze({
   library_root_missing: 'cannot find the asset library (makeyourmindup) folder on its H: drive',
   library_env_stale: 'has a MINDMAKE_LIBRARY_ROOT setting that points at a folder that is not there; it used config/studio.json instead. Delete the setting',
   library_sync_failed: 'could not file the asset library into Drive on its last pass (library-sync.log on that machine says why)',
+  // The content watcher on the same machine (krishanraja/content-watcher), kept running and up to date by this pass.
+  // Krish, 2026-10-28: "i should never really need to copy and paste log files to you like this, ever, this is
+  // ridiculous". Its health travels in the report's `watch` block; GET /api/library/recordings/lane reads it back.
+  watch_not_installed: 'has no content watcher installed, so the links you paste are left to the other computer and the cloud backup',
+  watch_update_failed: 'could not bring its content watcher up to date',
+  watch_cannot_reach_engine: 'has a content watcher that cannot reach the engine (its health report names the cause)',
+  watch_key_problem: 'has a content watcher with no engine key, or one the engine refuses',
+  watch_run_failed: 'has a content watcher whose runs fail (its health report names the cause)',
+  watch_not_running: 'has a content watcher that has not run for 15 minutes even after this pass started it',
+  watch_task_broken: 'has a content watcher whose task cannot start, and this pass could not install it again (its log says why)',
 })
 
 /** A report older than this no longer fails the job: a machine that is off is
  *  not a fault, the other one does the work. */
 export const LANE_REPORT_FRESH_HOURS = 6
 
+/** The content watcher's health on one machine, as its recordings pass read it: class names, counts and times only,
+ *  never a link, a caption, a file name or a message. */
+export interface WatchHealth {
+  last_run_at: string | null
+  counts: Record<string, number>
+  /** Every watcher run of the last 6 hours, summed, by the same keys as counts. */
+  recent?: Record<string, number>
+  stage: string | null
+  stage_at: string | null
+  task_state: string | null
+  task_result: number | null
+  head: string | null
+  repaired: string[]
+}
+
+/** Whether the machine's scheduled tasks open windows, as its recordings pass found them (scripts/windowless.ps1):
+ *  the launcher that hides them built and proved, tasks already hidden, tasks changed this pass, tasks that could not
+ *  be changed. Counts only, never a task's name or command. Krish, 2026-10-28: "HIDE ALL CONSOLE POP UPS FOREVER FROM
+ *  EVERY REPO AND LOCAL TASK". */
+export interface WindowsHealth {
+  launcher: 'ok' | 'failed'
+  hidden: number
+  wrapped: number
+  left: number
+  /** Why each task left was not changed, by class: elevated, access_denied or other. */
+  left_by?: Record<string, number>
+  /** The tasks left, by name (at most five, plain characters), since which program owns one decides its fix. */
+  left_names?: string[]
+}
+
 export interface LaneReport {
   schema_version: 1
   machine: string
   at: string
   problems: string[]
+  watch?: WatchHealth
+  windows?: WindowsHealth
+}
+
+const COUNT_KEY_RE = /^[a-z0-9_.]{1,80}$/
+const ISO_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$/
+const isoOrNull = (v: unknown) => (typeof v === 'string' && ISO_RE.test(v) ? v : null)
+const wordOrNull = (v: unknown, re: RegExp) => (typeof v === 'string' && re.test(v) ? v : null)
+
+/** A watch block with anything outside its shape dropped; a block that is not an object is no block. */
+export function parseWatchHealth(value: unknown): WatchHealth | undefined {
+  if (value === null || typeof value !== 'object' || Array.isArray(value)) return undefined
+  const w = value as Record<string, unknown>
+  const countsOf = (value: unknown): Record<string, number> => {
+    const out: Record<string, number> = {}
+    if (value && typeof value === 'object' && !Array.isArray(value)) {
+      for (const [key, n] of Object.entries(value as Record<string, unknown>).slice(0, 60)) {
+        if (COUNT_KEY_RE.test(key) && Number.isInteger(n) && (n as number) >= 0 && (n as number) <= 1_000_000) out[key] = n as number
+      }
+    }
+    return out
+  }
+  const counts = countsOf(w.counts)
+  // Every run of the last 6 hours, summed: the last line alone hides a failure the next minute's empty run covers.
+  // On 28 October an Instagram post spent its three tries in five minutes and the report showed only claimed: 0.
+  const recent = countsOf(w.recent)
+  const repaired = Array.isArray(w.repaired)
+    ? [...new Set(w.repaired.filter((r): r is string => typeof r === 'string' && /^[a-z_]{1,40}$/.test(r)))].slice(0, 10)
+    : []
+  return {
+    last_run_at: isoOrNull(w.last_run_at),
+    counts,
+    ...(Object.keys(recent).length ? { recent } : {}),
+    stage: wordOrNull(w.stage, /^[a-z_]{1,20}$/),
+    stage_at: isoOrNull(w.stage_at),
+    task_state: wordOrNull(w.task_state, /^[A-Za-z]{1,20}$/),
+    task_result: Number.isInteger(w.task_result) ? (w.task_result as number) : null,
+    head: wordOrNull(w.head, /^[0-9a-f]{7,40}$/),
+    repaired,
+  }
+}
+
+export function parseWindowsHealth(value: unknown): WindowsHealth | undefined {
+  if (value === null || typeof value !== 'object' || Array.isArray(value)) return undefined
+  const w = value as Record<string, unknown>
+  if (w.launcher !== 'ok' && w.launcher !== 'failed') return undefined
+  const count = (n: unknown) => (Number.isInteger(n) && (n as number) >= 0 && (n as number) <= 10_000 ? n as number : 0)
+  const names = Array.isArray(w.left_names)
+    ? [...new Set(w.left_names.filter((n): n is string => typeof n === 'string' && /^[A-Za-z0-9 ._()-]{1,80}$/.test(n)))].slice(0, 5)
+    : []
+  const leftBy: Record<string, number> = {}
+  if (w.left_by && typeof w.left_by === 'object' && !Array.isArray(w.left_by)) {
+    for (const [why, n] of Object.entries(w.left_by as Record<string, unknown>)) {
+      if (['elevated', 'access_denied', 'other'].includes(why) && count(n)) leftBy[why] = count(n)
+    }
+  }
+  return {
+    launcher: w.launcher, hidden: count(w.hidden), wrapped: count(w.wrapped), left: count(w.left),
+    ...(Object.keys(leftBy).length ? { left_by: leftBy } : {}),
+    ...(names.length ? { left_names: names } : {}),
+  }
 }
 
 const MACHINE_RE = /^[A-Za-z0-9][A-Za-z0-9_-]{0,62}$/
@@ -55,7 +156,12 @@ export function parseLaneReport(value: unknown, now: string): LaneReport | null 
   if (!Array.isArray(body.problems) || body.problems.length > 20) return null
   const problems = [...new Set(body.problems)]
   if (problems.some((p) => typeof p !== 'string' || !Object.prototype.hasOwnProperty.call(LANE_PROBLEMS, p))) return null
-  return { schema_version: 1, machine: body.machine, at: now, problems: (problems as string[]).sort() }
+  const watch = parseWatchHealth(body.watch)
+  const windows = parseWindowsHealth(body.windows)
+  return {
+    schema_version: 1, machine: body.machine, at: now, problems: (problems as string[]).sort(),
+    ...(watch ? { watch } : {}), ...(windows ? { windows } : {}),
+  }
 }
 
 export function laneKey(machine: string): string {

@@ -9,7 +9,24 @@
 // Everything here is pure, so the tests run with no database: the routes pass in a WatchStore.
 
 export const STALE_CLAIM_MS = 30 * 60 * 1000
+// The cloud backup (a machine named cloud...) takes a link only once it has waited this long, so the home computers,
+// which cost nothing, get it first. Krish, 2026-10-28: "yes build the cloud backup".
+export const CLOUD_GRACE_MS = 15 * 60 * 1000
+export const isCloudMachine = (machine: string) => /^cloud/i.test(machine)
 export const MAX_ATTEMPTS = 3
+// A try that failed waits this long, times the tries so far, before anyone may claim it again. On 28 October an
+// Instagram post spent all three tries in five minutes across both home computers: a block that clears in an hour
+// took the link for good.
+export const RETRY_AFTER_MS = 20 * 60 * 1000
+
+/** Whether a request may be claimed now: never before a cloud machine's wait, nor before a failed try's wait. */
+export function claimableNow(row: WatchRequestRow, machine: string, now: Date): boolean {
+  if (isCloudMachine(machine) && Date.parse(row.requested_at) > now.getTime() - CLOUD_GRACE_MS) return false
+  if (row.status === 'queued' && row.attempts > 0 && row.updated_at) {
+    if (Date.parse(row.updated_at) > now.getTime() - RETRY_AFTER_MS * row.attempts) return false
+  }
+  return true
+}
 export const MAX_CLAIM = 10
 export const MAX_FILES = 50
 
@@ -33,6 +50,10 @@ export interface WatchRequestRow {
   claimed_by: string | null
   claimed_at: string | null
   requested_at: string
+  /** When the request last changed: for a failed try sent back to the queue, when it failed. */
+  updated_at?: string | null
+  /** What an earlier try already filed, when it got that far. */
+  media?: MediaEntry[] | null
 }
 
 export interface MediaEntry { name: string; sha256: string; mime: string; bytes: number; folder: string }
@@ -54,7 +75,7 @@ export interface WatchStore {
   updateIf(id: string, was: { status: string; claimed_at: string | null }, patch: Record<string, unknown>): Promise<WatchRequestRow | null>
   get(id: string): Promise<WatchRequestRow | null>
   /** The engine revision and id of each reading already stored, by sha256. */
-  readRevs(shas: string[]): Promise<Map<string, { id: string; engine_rev: string }>>
+  readRevs(shas: string[]): Promise<Map<string, { id: string; engine_rev: string; linked?: boolean }>>
   /** Insert or replace readings by sha256; returns each one's id. */
   upsertReads(rows: ReadRow[]): Promise<Map<string, string>>
 }
@@ -165,22 +186,56 @@ export function parseReadOnly(body: unknown): Parsed<{ machine: string; reads: R
   return { ok: true, value: { machine: b.machine, reads } }
 }
 
+/** The check a machine makes before reading a dropped file: which of these media it need not read, because the
+ *  engine holds a reading of the same or a newer revision, or one made from a link, which a drop reading never
+ *  replaces (writeReads). The folders also hold what the other machine and the cloud filed from links: on
+ *  28 October 2026 each home computer re-read those, nineteen files of work and a window for every program it ran. */
+export function parseCheck(body: unknown): Parsed<{ machine: string; shas: string[]; engine_rev: string }> {
+  const b = obj(body)
+  if (!b || typeof b.machine !== 'string' || !MACHINE_RE.test(b.machine)) return { ok: false, error: 'invalid_machine' }
+  const shas = b.check
+  if (!Array.isArray(shas) || shas.length < 1 || shas.length > MAX_FILES
+    || !shas.every(sha => typeof sha === 'string' && SHA256_RE.test(sha))) return { ok: false, error: 'invalid_check' }
+  if (typeof b.engine_rev !== 'string' || b.engine_rev.length < 1 || b.engine_rev.length > 40) return { ok: false, error: 'invalid_engine_rev' }
+  return { ok: true, value: { machine: b.machine, shas: [...new Set(shas as string[])], engine_rev: b.engine_rev } }
+}
+
+export async function heldReads(store: WatchStore, shas: string[], engineRev: string): Promise<Record<string, string>> {
+  const existing = await store.readRevs(shas)
+  const held: Record<string, string> = {}
+  for (const sha of shas) {
+    const found = existing.get(sha)
+    if (found && (found.linked || compareRev(found.engine_rev, engineRev) >= 0)) held[sha] = found.engine_rev
+  }
+  return held
+}
+
 /** Revisions compare by their numbers, so cw-2026.10.24 is older than cw-2026.11.2. */
 export function compareRev(a: string, b: string): number {
   return a.localeCompare(b, 'en', { numeric: true })
 }
 
+/** What a machine gets for each claimed request, with what an earlier try already filed: the platform's CDN can
+ *  hand a second fetch different bytes (28 October: the same slide came back 194,030 bytes, then 167,614), so a try
+ *  that re-fetches reuses the filed files by name instead of filing a second copy (content-watcher filing.py). */
 export function claimView(row: WatchRequestRow) {
   return {
     id: row.id, url: row.url, url_key: row.url_key, platform: row.platform,
     lane: row.lane, note: row.note, attempts: row.attempts,
+    media: Array.isArray(row.media) && row.media.length ? row.media : null,
   }
+}
+
+/** How many requests this machine could claim now, without claiming any: the cloud backup's cheap first look. */
+export async function waiting(store: WatchStore, machine: string, now = new Date()): Promise<number> {
+  const staleBefore = new Date(now.getTime() - STALE_CLAIM_MS).toISOString()
+  return (await store.claimable(staleBefore, MAX_CLAIM * 3)).filter(row => claimableNow(row, machine, now)).length
 }
 
 /** Claim up to `limit` requests for one machine. A row another machine changed first is skipped, never taken twice. */
 export async function claim(store: WatchStore, machine: string, limit: number, now = new Date()) {
   const staleBefore = new Date(now.getTime() - STALE_CLAIM_MS).toISOString()
-  const candidates = await store.claimable(staleBefore, limit * 3)
+  const candidates = (await store.claimable(staleBefore, limit * 3)).filter(row => claimableNow(row, machine, now))
   const claimed: WatchRequestRow[] = []
   let expired = 0
   for (const row of candidates) {
@@ -203,12 +258,17 @@ export async function claim(store: WatchStore, machine: string, limit: number, n
   return { requests: claimed.map(claimView), expired }
 }
 
-/** Write readings, never letting an older engine revision replace a newer one. */
+/** Write readings, never letting an older engine revision replace a newer one, and never letting a reading of a
+ *  hand-dropped file replace one made from the link Krish pasted. On 28 October both home computers read the same
+ *  files: one from the link (its post, caption and slides), the other as files that had just appeared in the synced
+ *  folder, and the second overwrote all 16 slides of his carousel and his Short within minutes. */
 export async function writeReads(store: WatchStore, rows: ReadRow[]) {
   const existing = await store.readRevs(rows.map(r => r.sha256))
   const toWrite = rows.filter(r => {
     const found = existing.get(r.sha256)
-    return !found || compareRev(r.engine_rev, found.engine_rev) >= 0
+    if (!found) return true
+    if (found.linked && !r.source_url) return false
+    return compareRev(r.engine_rev, found.engine_rev) >= 0
   })
   const written = toWrite.length ? await store.upsertReads(toWrite) : new Map<string, string>()
   const ids = new Map<string, string>()

@@ -27,6 +27,7 @@ describe('the engine gates', () => {
     ['the cover drawer and thumbnails', ['scripts/pages/build.py', '--self-test']],
     ['video transcript clocks, word cues, continuous music and delivery evidence', ['tests/quick_edit_quality_test.py']],
     ['Claude model routing preserves strict skill validation', ['tests/validate_skills_test.py']],
+    ['the Codex token ledger: calls, tokens, child agents and the weekly limit, never words', ['tests/session_token_audit_codex_test.py']],
   ] as const) {
     it(name, () => {
       const r = py([...args])

@@ -158,7 +158,7 @@ export async function framePerceptualHashes(path: string): Promise<string[]> {
   const { stdout } = await runBuffer('ffmpeg', [
     '-hide_banner', '-loglevel', 'error', '-i', resolve(path),
     '-vf', `fps=1/5,scale=${size}:${size}:flags=area,format=gray`,
-    '-an', '-vsync', '0', '-f', 'rawvideo', 'pipe:1',
+    '-an', '-fps_mode', 'passthrough', '-f', 'rawvideo', 'pipe:1',
   ], { timeoutMs: 600_000 })
   const frameSize = size * size
   const hashes: string[] = []

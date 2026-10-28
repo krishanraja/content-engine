@@ -1,5 +1,9 @@
 # Creative direction: the one brief production renders from
 
+Video is made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`); the quick-edit path stays the fallback until ve passes Phase 3.
+
+For `schema_version: 2`, use ve's spec, `python scripts/ve.py lint <spec.json>` and the protocol in `docs/ve/ENGINE.md`. Beat spans and events use word indexes; layouts and devices come from `config/ve/` and `apps/renderer/src/engine/`. The `creative_direction.py` template, `signed` block, field list and quick-edit checks below describe the legacy direction contract, not schema 2. Keep the editorial ownership and independent review requirements for both paths.
+
 Krish, 2026-10-24: "Once the videos are recorded, Claude gets the scripts and the visual creative direction locked so
 that codex can take over on the video production, and ensures that it does a great job of producing the final publish
 board. the copy of the article and what goes in the visuals etc is all Claude responsibility."

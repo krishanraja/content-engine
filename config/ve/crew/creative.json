@@ -1,0 +1,26 @@
+{
+  "id": "creative",
+  "title": "Creative director",
+  "owns": [
+    "format",
+    "signature",
+    "device per beat"
+  ],
+  "lints": [
+    "creative.decision_engine",
+    "creative.no_repeat",
+    "creative.novelty"
+  ],
+  "qc": [],
+  "corpus": [
+    "2",
+    "14.4"
+  ],
+  "failures": [
+    "R07",
+    "F01",
+    "F03"
+  ],
+  "card": "config/ve/crew/creative.card.md",
+  "lens": "config/ve/crew/creative.lens.md"
+}

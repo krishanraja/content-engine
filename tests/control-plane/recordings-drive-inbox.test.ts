@@ -87,7 +87,7 @@ vi.mock('../../apps/control-plane/api/library/_inboxDrive.js', async (original) 
 import driveInbox from '../../apps/control-plane/api/library/recordings/drive-inbox.js'
 import lane from '../../apps/control-plane/api/library/recordings/lane.js'
 import { INBOX_FOLDER_ID, INBOX_RUN_BUDGET_MS, copyFits, planInbox } from '../../apps/control-plane/api/library/_inboxDrive.js'
-import { LANE_REPORT_FRESH_HOURS, lanePlainProblems, parseLaneReport } from '../../apps/control-plane/api/library/_lanes.js'
+import { LANE_PROBLEMS, LANE_REPORT_FRESH_HOURS, lanePlainProblems, parseLaneReport } from '../../apps/control-plane/api/library/_lanes.js'
 import { LIBRARY_MAX_BYTES, libraryMimeTypes } from '../../apps/control-plane/api/library/_library.js'
 import { CONTENT_ENGINE_JOBS } from '../../apps/control-plane/lib/contentEngineSchedule.js'
 import { JOBS } from '../../apps/control-plane/api/content-engine/_jobs.js'
@@ -243,6 +243,78 @@ describe('POST /api/library/recordings/lane', () => {
     const report = parseLaneReport({ machine: 'B', problems: ['inbox_unreachable'] }, new Date(0).toISOString())!
     expect(lanePlainProblems([report], 1000)).toHaveLength(1)
     expect(lanePlainProblems([report], LANE_REPORT_FRESH_HOURS * 3_600_000 + 1)).toEqual([])
+  })
+})
+
+describe('the content watcher in the lane report', () => {
+  // Krish, 2026-10-28: "i should never really need to copy and paste log files to you like this, ever, this is
+  // ridiculous". The recordings pass sends the watcher's health; the engine keeps its shape and nothing else.
+  it('keeps the watch block by its shape and drops anything else', () => {
+    const report = parseLaneReport({
+      machine: 'SURFACE', problems: ['watch_cannot_reach_engine'],
+      watch: {
+        last_run_at: '2026-10-26T07:59:23Z', stage: 'claim', stage_at: '2026-10-26T07:59:23Z', task_state: 'Running',
+        task_result: 267009, head: '827475f', repaired: ['stopped_stuck_run', 'started_run', 'Bad Word'],
+        counts: { claimed: 0, 'engine.engine_tls_untrusted': 1, 'https://x.example/reel': 1, seconds: -1, note: 'a caption' },
+        message: 'a whole log line',
+      },
+    }, new Date(0).toISOString())!
+    expect(report.problems).toEqual(['watch_cannot_reach_engine'])
+    expect(report.watch).toEqual({
+      last_run_at: '2026-10-26T07:59:23Z', stage: 'claim', stage_at: '2026-10-26T07:59:23Z', task_state: 'Running',
+      task_result: 267009, head: '827475f', repaired: ['stopped_stuck_run', 'started_run'],
+      counts: { claimed: 0, 'engine.engine_tls_untrusted': 1 },
+    })
+    expect(lanePlainProblems([report], 1000)).toEqual([`home computer SURFACE ${LANE_PROBLEMS.watch_cannot_reach_engine}`])
+  })
+
+  it('keeps the last six hours of runs, summed, by the same rules as the last line', () => {
+    // 28 October: an Instagram post spent its three tries in five minutes; the last line said only claimed: 0.
+    const report = parseLaneReport({
+      machine: 'LORIMER', problems: [],
+      watch: { counts: { claimed: 0 }, recent: { claimed: 2, read: 1, 'failed.other': 1, 'method.apify.blocked': 1, 'https://x.example/p': 1, 'request.error': -2 } },
+    }, new Date(0).toISOString())!
+    expect(report.watch?.recent).toEqual({ claimed: 2, read: 1, 'failed.other': 1, 'method.apify.blocked': 1 })
+    const none = parseLaneReport({ machine: 'LORIMER', problems: [], watch: { counts: {}, recent: {} } }, new Date(0).toISOString())!
+    expect(none.watch).not.toHaveProperty('recent')
+  })
+
+  it('keeps the windows block as counts only, and drops one that is not its shape', () => {
+    // Krish, 2026-10-28: "HIDE ALL CONSOLE POP UPS FOREVER FROM EVERY REPO AND LOCAL TASK" (scripts/windowless.ps1).
+    const report = parseLaneReport({
+      machine: 'SURFACE', problems: [],
+      windows: { launcher: 'ok', hidden: 2, wrapped: 1, left: 0, error: 'Mindmake Library Sync: access denied' },
+    }, new Date(0).toISOString())!
+    expect(report.windows).toEqual({ launcher: 'ok', hidden: 2, wrapped: 1, left: 0 })
+    const left = parseLaneReport({
+      machine: 'SURFACE', problems: [],
+      windows: { launcher: 'ok', hidden: 4, wrapped: 0, left: 3, left_by: { elevated: 2, other: 1, 'C:\\x': 1 },
+        left_names: ['Mindmake Library Sync', 'Some Vendor Updater (user)', 'C:\\Users\\k\\x.ps1'] },
+    }, new Date(0).toISOString())!
+    expect(left.windows).toEqual({ launcher: 'ok', hidden: 4, wrapped: 0, left: 3, left_by: { elevated: 2, other: 1 },
+      left_names: ['Mindmake Library Sync', 'Some Vendor Updater (user)'] })
+    expect(parseLaneReport({ machine: 'A', problems: [], windows: { launcher: 'maybe' } }, new Date(0).toISOString())).not.toHaveProperty('windows')
+    expect(parseLaneReport({ machine: 'A', problems: [], windows: { launcher: 'failed', hidden: -1 } }, new Date(0).toISOString())!.windows)
+      .toEqual({ launcher: 'failed', hidden: 0, wrapped: 0, left: 0 })
+  })
+
+  it('accepts a report with no watch block, as every pass before this one sent', () => {
+    expect(parseLaneReport({ machine: 'A', problems: [] }, new Date(0).toISOString())).toEqual(
+      { schema_version: 1, machine: 'A', at: new Date(0).toISOString(), problems: [] })
+  })
+
+  it('gives every machine\'s last report back to the engine key, and to nothing else', async () => {
+    process.env.ENGINE_OPERATOR_TOKEN = 'e'.repeat(48)
+    try {
+      const post = await call(lane, { method: 'POST', headers: { authorization: `Bearer ${RUNNER}`, 'content-type': 'application/json' },
+        body: { machine: 'LORIMER', problems: ['watch_run_failed'], watch: { last_run_at: '2026-10-25T07:59:17Z', counts: { claimed: 0 } } } })
+      expect(post.statusCode).toBe(200)
+      expect((await call(lane, { method: 'GET', headers: {} })).statusCode).toBe(401)
+      expect((await call(lane, { method: 'GET', headers: { authorization: `Bearer ${RUNNER}` } })).statusCode).toBe(401)
+      const read = await call(lane, { method: 'GET', headers: { authorization: `Bearer ${'e'.repeat(48)}` } })
+      expect(read.statusCode).toBe(200)
+      expect(read.body.reports.map((r: any) => [r.machine, r.problems, r.watch?.counts])).toEqual([['LORIMER', ['watch_run_failed'], { claimed: 0 }]])
+    } finally { delete process.env.ENGINE_OPERATOR_TOKEN }
   })
 })
 
