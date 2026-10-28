@@ -1,5 +1,10 @@
 {
   "devices": {
+    "headline": { "verbs": ["enter", "exit"] },
+    "sticker": { "verbs": ["enter", "exit"] },
+    "stamp": { "verbs": ["stamp", "exit"] },
+    "stat_strip": { "verbs": ["enter", "count_to", "exit"] },
+    "marquee": { "verbs": ["enter", "exit"] },
     "test_grid": { "verbs": ["enter", "mark", "stamp", "highlight", "carry", "exit"] },
     "record_card": { "verbs": ["enter", "stamp", "exit"] },
     "query_chip": { "verbs": ["enter", "highlight", "exit"] },
