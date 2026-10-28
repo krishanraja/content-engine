@@ -13,6 +13,10 @@ import { watchStore } from './_watchStore.js'
 //
 // GET /api/watch/upload, on the engine key: the probe. For each folder, which delegated scope can add a file there,
 // or Google's reason for each refusal. It writes nothing.
+//
+// GET /api/watch/upload?session=1 also proves the step the cloud machine takes with no key: it opens a session for a
+// two-byte file in Production Inspo, sends one byte with no Authorization (Google answers 308, "resume incomplete"),
+// then cancels the session. An upload that never completes never becomes a file.
 
 const SCOPES = ['https://www.googleapis.com/auth/drive.file', 'https://www.googleapis.com/auth/drive'] as const
 const DRIVE = 'https://www.googleapis.com/drive/v3'
@@ -71,6 +75,29 @@ function googleDriveWriter(token: string): DriveWriter {
   }
 }
 
+/** Open a session, send one byte of two with no key, cancel it: the PUT a cloud machine makes, proven without a file. */
+async function sessionProbe(): Promise<{ put_without_key: number | string; cancelled: number | string }> {
+  const access = await folderAccess(WATCH_FOLDER_IDS.video_inspiration)
+  if (!access.token) return { put_without_key: 'no_access', cancelled: 'none' }
+  let url: string
+  try {
+    url = await googleDriveWriter(access.token).startUpload(WATCH_FOLDER_IDS.video_inspiration, '.content-watch-probe', 'text/plain', 2)
+  } catch (e) {
+    return { put_without_key: (e as Error).message.slice(0, 60), cancelled: 'none' }
+  }
+  let put: number | string = 'threw'
+  let cancelled: number | string = 'threw'
+  try {
+    const r = await fetch(url, { method: 'PUT', headers: { 'Content-Range': 'bytes 0-0/2' }, body: 'x' })
+    put = r.status
+  } catch { /* reported as threw */ }
+  try {
+    const r = await fetch(url, { method: 'DELETE' })
+    cancelled = r.status
+  } catch { /* reported as threw */ }
+  return { put_without_key: put, cancelled }
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (guardEngine(req, res, ['GET', 'POST'])) return
   if (req.method === 'GET') {
@@ -79,7 +106,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const access = await folderAccess(id)
       folders[folder] = { scope: access.scope, tried: access.tried }
     }
-    return res.status(200).json({ ok: true, writable: Object.values(folders).every(f => f.scope !== null), folders })
+    const writable = Object.values(folders).every(f => f.scope !== null)
+    if (req.query?.session !== '1') return res.status(200).json({ ok: true, writable, folders })
+    return res.status(200).json({ ok: true, writable, folders, session: await sessionProbe() })
   }
   const parsed = parseUpload(req.body)
   if ('error' in parsed) return res.status(400).json({ ok: false, error: parsed.error })
