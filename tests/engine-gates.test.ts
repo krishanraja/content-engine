@@ -25,6 +25,8 @@ describe('the engine gates', () => {
     ['one spine per piece', ['scripts/post-pack/spine_check.py', '--self-test']],
     ['the style references: cuts, zooms and the ledger', ['scripts/quick-edit/references.py', '--self-test']],
     ['the cover drawer and thumbnails', ['scripts/pages/build.py', '--self-test']],
+    ['the rejection floor reader (AGENTS.md rule 20)', ['scripts/floor.py', '--self-test']],
+    ['the rejection floor file, when it is there, is whole', ['scripts/floor.py', '--check']],
     ['video transcript clocks, word cues, continuous music and delivery evidence', ['tests/quick_edit_quality_test.py']],
     ['Claude model routing preserves strict skill validation', ['tests/validate_skills_test.py']],
     ['the Codex token ledger: calls, tokens, child agents and the weekly limit, never words', ['tests/session_token_audit_codex_test.py']],

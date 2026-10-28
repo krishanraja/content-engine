@@ -2,7 +2,7 @@
 
 Studio entry: `docs/ENGINE_SESSION.md`, `studio.session.open`. Video: `python scripts/ve.py`; read `docs/ve/ENGINE.md`, follow `docs/ve/RUNBOOK.md`. One signed spec; no per-piece compositions or render scripts. ve has no publish verb. Codex builds devices from cards. Quick-edit stays the fallback until ve passes Phase 3. Local runs: `. scripts/ve-env.sh` (Bash). AGENTS.md owns these rules and records current code/procedure gaps; read its Video production section.
 
-Before any work run `python3 scripts/check_failures.py`, then read the entries in `config/failures.json` and `config/learnings.json` ("say nothing twice", AGENTS.md) that bear on your work.
+Before any work run `python3 scripts/check_failures.py`, then read the entries in `config/failures.json` and `config/learnings.json` ("say nothing twice", AGENTS.md) that bear on your work, and `python3 scripts/floor.py --format <maker>` for what you are making (the rejection floor, AGENTS.md rule 20).
 
 # Claude Code in this repository
 
