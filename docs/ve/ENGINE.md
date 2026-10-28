@@ -2,6 +2,9 @@
 
 Read this and [RUNBOOK.md](RUNBOOK.md), then the signed spec and <=36 KB pack (`ve start`). Do not load NOW.md, WORKBENCH.md, learnings or failures while producing. Never read big files, individual images or raw logs into context: use QC JSON and one contact sheet.
 
+
+**Design:** what a frame must look like, and the gates that enforce it, is `docs/ve/design/TEMPLATE.md` with the lock `config/ve/design-lock.json` (F19). A format or device card is refused until its lock is frozen.
+
 ## Why ve exists
 
 Friday 23 Oct took a 62-hour thread, about 253M tokens, and four rejected cuts. Bespoke code bypassed gates, receipts were self-written, and prose rules lacked enforcement. ve uses one signed spec, one data-fed composition, specialists as code and measured readiness.

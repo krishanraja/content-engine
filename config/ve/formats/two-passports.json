@@ -1,0 +1,462 @@
+{
+  "id": "two-passports",
+  "status": "trial",
+  "purpose": "Two passport pages explain where an AI was born and where it lives",
+  "layers": [
+    "passport_page",
+    "scribble",
+    "thread_card",
+    "BrandFrame"
+  ],
+  "layouts": [
+    "STAGE"
+  ],
+  "devices": [
+    "passport_page",
+    "scribble",
+    "thread_card"
+  ],
+  "generation": "stills from ChatGPT Images (Codex card); short animations of approved stills from Runway or Higgsfield; never type, numbers, logos or Krish's mouth",
+  "crew": [
+    "story",
+    "creative",
+    "brand",
+    "motion",
+    "captions",
+    "sound",
+    "provenance"
+  ],
+  "qc": {
+    "change_density_min": 0.75,
+    "longest_still_s": 3,
+    "layout_types_per_min_tall": 1,
+    "plates_labelled": 1.0,
+    "caption_ocr_min": 0.98
+  },
+  "fps": 30,
+  "aspects": [
+    "9:16",
+    "16:9"
+  ],
+  "intro_outro": "story stand-off (approved) unless Gate 0 changes the sting",
+  "pending_devices": [
+    "scribble",
+    "thread_card"
+  ],
+  "design_lock": "two-passports",
+  "beats": [
+    {
+      "id": "title",
+      "layout": "STAGE",
+      "template": [
+        {
+          "obj": "title",
+          "device": "headline",
+          "params": {
+            "text": "TWO PASSPORTS",
+            "at": {
+              "x": 72,
+              "y": 144
+            }
+          }
+        },
+        {
+          "obj": "title-born",
+          "device": "passport_page",
+          "params": {
+            "spine": "left",
+            "at": {
+              "x": 72,
+              "y": 612
+            },
+            "label": "BORN",
+            "fields": [],
+            "ghostAI": true,
+            "mrz": [
+              "P<ILLUSTRATION",
+              "SAMPLE<NOT<A<CLAIM"
+            ]
+          }
+        },
+        {
+          "obj": "title-lives",
+          "device": "passport_page",
+          "params": {
+            "spine": "right",
+            "at": {
+              "x": 532,
+              "y": 672
+            },
+            "label": "LIVES",
+            "fields": [],
+            "ghostAI": true,
+            "mrz": [
+              "P<ILLUSTRATION",
+              "SAMPLE<NOT<A<CLAIM"
+            ]
+          }
+        },
+        {
+          "obj": "title-label-born",
+          "device": "sticker",
+          "params": {
+            "text": "BORN",
+            "at": {
+              "x": 350,
+              "y": 640
+            }
+          }
+        },
+        {
+          "obj": "title-label-lives",
+          "device": "sticker",
+          "params": {
+            "text": "LIVES",
+            "at": {
+              "x": 800,
+              "y": 704
+            }
+          }
+        },
+        {
+          "obj": "title-brace",
+          "device": "scribble",
+          "params": {
+            "shape": "bracket",
+            "at": {
+              "x": 96,
+              "y": 546
+            },
+            "width": 852
+          }
+        }
+      ]
+    },
+    {
+      "id": "born",
+      "layout": "STAGE",
+      "template": [
+        {
+          "obj": "born-head",
+          "device": "headline",
+          "params": {
+            "text": "BORN",
+            "at": {
+              "x": 72,
+              "y": 146
+            }
+          }
+        },
+        {
+          "obj": "born-page",
+          "device": "passport_page",
+          "params": {
+            "spine": "left",
+            "at": {
+              "x": 72,
+              "y": 432
+            },
+            "label": "HOME COUNTRY",
+            "fields": [
+              {
+                "id": "entry-a",
+                "label": "ILLUSTRATIVE ENTRY",
+                "top": "ILLUSTRATIVE ENTRY",
+                "at": {
+                  "x": 92,
+                  "y": 92
+                },
+                "state": "sample",
+                "flag": "unknown",
+                "tiltDeg": -5
+              },
+              {
+                "id": "entry-b",
+                "label": "ILLUSTRATIVE ENTRY",
+                "top": "ILLUSTRATIVE ENTRY",
+                "at": {
+                  "x": 300,
+                  "y": 410
+                },
+                "state": "sample",
+                "flag": "unknown",
+                "tiltDeg": 3
+              }
+            ],
+            "ghostAI": false,
+            "mrz": [
+              "P<ILLUSTRATION",
+              "SAMPLE<NOT<A<CLAIM"
+            ],
+            "sampleText": "SAMPLE \u00b7 NOT A CLAIM"
+          }
+        },
+        {
+          "obj": "born-label",
+          "device": "sticker",
+          "params": {
+            "text": "PASSPORT 1 OF 2",
+            "at": {
+              "x": 626,
+              "y": 392
+            }
+          }
+        },
+        {
+          "obj": "born-loop",
+          "device": "scribble",
+          "params": {
+            "shape": "loop",
+            "target": "born-page.entry-b"
+          }
+        }
+      ]
+    },
+    {
+      "id": "lives",
+      "layout": "STAGE",
+      "template": [
+        {
+          "obj": "lives-head",
+          "device": "headline",
+          "params": {
+            "text": "LIVES",
+            "at": {
+              "x": 72,
+              "y": 146
+            }
+          }
+        },
+        {
+          "obj": "lives-page",
+          "device": "passport_page",
+          "params": {
+            "spine": "right",
+            "at": {
+              "x": 72,
+              "y": 432
+            },
+            "label": "COUNTRY OF RESIDENCE",
+            "fields": [
+              {
+                "id": "entry-a",
+                "label": "ILLUSTRATIVE ENTRY",
+                "top": "ILLUSTRATIVE ENTRY",
+                "at": {
+                  "x": 296,
+                  "y": 104
+                },
+                "state": "sample",
+                "flag": "unknown",
+                "tiltDeg": 4
+              },
+              {
+                "id": "entry-b",
+                "label": "ILLUSTRATIVE ENTRY",
+                "top": "ILLUSTRATIVE ENTRY",
+                "at": {
+                  "x": 50,
+                  "y": 426
+                },
+                "state": "sample",
+                "flag": "unknown",
+                "tiltDeg": -3
+              }
+            ],
+            "ghostAI": false,
+            "mrz": [
+              "P<ILLUSTRATION",
+              "SAMPLE<NOT<A<CLAIM"
+            ],
+            "sampleText": "SAMPLE \u00b7 NOT A CLAIM"
+          }
+        },
+        {
+          "obj": "lives-label",
+          "device": "sticker",
+          "params": {
+            "text": "PASSPORT 2 OF 2",
+            "at": {
+              "x": 120,
+              "y": 384
+            }
+          }
+        },
+        {
+          "obj": "lives-underline",
+          "device": "scribble",
+          "params": {
+            "shape": "underline",
+            "target": "lives-page.entry-b"
+          }
+        }
+      ]
+    },
+    {
+      "id": "gap",
+      "layout": "STAGE",
+      "template": [
+        {
+          "obj": "gap-head",
+          "device": "headline",
+          "params": {
+            "text": "THE GAP",
+            "at": {
+              "x": 72,
+              "y": 150
+            }
+          }
+        },
+        {
+          "obj": "gap-threads",
+          "device": "thread_card",
+          "params": {
+            "at": {
+              "x": 72,
+              "y": 552
+            },
+            "born": "???",
+            "lives": "???",
+            "sampleText": "SAMPLE \u00b7 NOT A CLAIM",
+            "knotLabel": "THE TEST",
+            "endLabel": "THE CALL"
+          }
+        },
+        {
+          "obj": "gap-label",
+          "device": "sticker",
+          "params": {
+            "text": "THE GAP",
+            "at": {
+              "x": 422,
+              "y": 648
+            }
+          }
+        },
+        {
+          "obj": "gap-arrow",
+          "device": "scribble",
+          "params": {
+            "shape": "arrow",
+            "at": {
+              "x": 408,
+              "y": 730
+            },
+            "width": 232
+          }
+        },
+        {
+          "obj": "gap-next",
+          "device": "passport_page",
+          "params": {
+            "spine": "left",
+            "at": {
+              "x": 72,
+              "y": 1696
+            },
+            "label": "ILLUSTRATION",
+            "fields": [],
+            "ghostAI": false,
+            "mrz": [
+              "P<ILLUSTRATION",
+              "SAMPLE<NOT<A<CLAIM"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "verdict",
+      "layout": "STAGE",
+      "template": [
+        {
+          "obj": "verdict-head",
+          "device": "headline",
+          "params": {
+            "text": "THE VERDICT",
+            "at": {
+              "x": 72,
+              "y": 140
+            }
+          }
+        },
+        {
+          "obj": "verdict-page",
+          "device": "passport_page",
+          "params": {
+            "spine": "left",
+            "at": {
+              "x": 72,
+              "y": 424
+            },
+            "label": "ILLUSTRATIVE TEST",
+            "fields": [
+              {
+                "id": "result-a",
+                "label": "ILLUSTRATIVE ENTRY",
+                "top": "ILLUSTRATIVE ENTRY",
+                "at": {
+                  "x": 92,
+                  "y": 80
+                },
+                "state": "sample",
+                "flag": "unknown",
+                "tiltDeg": -2.5
+              },
+              {
+                "id": "result-b",
+                "label": "ILLUSTRATIVE ENTRY",
+                "top": "ILLUSTRATIVE ENTRY",
+                "at": {
+                  "x": 70,
+                  "y": 250
+                },
+                "state": "sample",
+                "flag": "unknown",
+                "tiltDeg": 2
+              }
+            ],
+            "ghostAI": false,
+            "mrz": [
+              "P<ILLUSTRATION",
+              "SAMPLE<NOT<A<CLAIM"
+            ],
+            "sampleText": "SAMPLE \u00b7 NOT A CLAIM"
+          }
+        },
+        {
+          "obj": "verdict-stamp",
+          "device": "stamp",
+          "params": {
+            "at": {
+              "x": 164,
+              "y": 504
+            },
+            "top": "SAMPLE",
+            "main": "???"
+          }
+        },
+        {
+          "obj": "verdict-label",
+          "device": "sticker",
+          "params": {
+            "text": "SAMPLE \u00b7 NOT A CLAIM",
+            "at": {
+              "x": 606,
+              "y": 312
+            }
+          }
+        },
+        {
+          "obj": "verdict-loop",
+          "device": "scribble",
+          "params": {
+            "shape": "loop",
+            "target": "verdict-page.result-b"
+          }
+        }
+      ]
+    }
+  ],
+  "template_note": "Illustrative authoring defaults only. Pending overlay devices retain their gate; their template params are proposals for those device cards. No country, residence, score, date or confidence is asserted. Title pages require the host camera framing defined in P-motion.md; page geometry stays 900px."
+}

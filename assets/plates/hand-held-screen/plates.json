@@ -1,0 +1,17 @@
+{
+  "format": "hand-held-screen",
+  "note": "Derived from the approved illustration plates (hand with phone, cotton, server hardware) by build_plates.py; see docs/ve/design/formats/ref/H/build_plates.py. Generated illustration: every frame that shows one carries the ILLUSTRATION tag.",
+  "approved_by": "Krish",
+  "approved_on": "2026-10-28",
+  "source_prompt": "not recorded: made in a Codex imagegen session on 2026-10-24 (Documents/Codex/2026-10-24/.../motion-v6/assets)",
+  "plate_px": [941, 1672],
+  "files": {
+    "bg-cotton.jpg": "backdrop: cotton boll and cream collar, graded toward ink",
+    "bg-cotton-flip.jpg": "the same, flipped",
+    "bg-hardware.jpg": "backdrop: server rack, graded toward ink",
+    "phone-bezel.png": "hand and phone with the glass cut transparent",
+    "phone-glass.png": "soft reflections, clipped to the glass",
+    "quad.json": "the four glass corners in plate px: TL TR BR BL"
+  },
+  "credits_logged": 0
+}

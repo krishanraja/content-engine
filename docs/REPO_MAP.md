@@ -15,6 +15,7 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `apps/control-plane/`
 - `apps/renderer/`
 - `apps/runner/`
+- `assets/`
 - `config/`
 - `config/ve/`
 - `docs/`
@@ -3189,6 +3190,10 @@ Run a Vercel serverless handler locally against the real environment.
 
 - `function MarkTile({ props }: { props: EngineRenderProps })`
 
+### `apps/renderer/src/engine/chrome/StageHeader.tsx`
+
+- `function StageHeader({ props, frame }: { props: EngineRenderProps; frame: number })`
+
 ### `apps/renderer/src/engine/chrome/tokens.ts`
 
 - `function houseTokens(tokens: EngineTokens): HouseTokens`
@@ -3220,6 +3225,34 @@ Run a Vercel serverless handler locally against the real environment.
 
 - `function evidenceState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
+### `apps/renderer/src/engine/devices/hand_phone_stage/index.tsx`
+
+- `function Plate({name,style}:{name:string;style?:React.CSSProperties})`
+- `function Device({object,events,box,tokens,frame}:DeviceProps)`
+
+### `apps/renderer/src/engine/devices/hand_phone_stage/schema.ts`
+
+- `const CameraSchema`
+- `const ParamsSchema`
+- `type StageCamera = z.infer<typeof CameraSchema>`
+
+### `apps/renderer/src/engine/devices/hand_phone_stage/state.ts`
+
+- `function phoneState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
+### `apps/renderer/src/engine/devices/headline/index.tsx`
+
+- `function headlineLayout(lines: string[], width: number, swipedLine = -1)`
+- `function Device({ object, events, tokens, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/headline/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/headline/state.ts`
+
+- `function headlineState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
 ### `apps/renderer/src/engine/devices/kinetic_stat/index.tsx`
 
 - `function kineticLayout(box: Box, text: string, unit: string, producerLabel: string, aspect: DeviceProps['aspect'])`
@@ -3232,6 +3265,33 @@ Run a Vercel serverless handler locally against the real environment.
 ### `apps/renderer/src/engine/devices/kinetic_stat/state.ts`
 
 - `function kineticState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
+### `apps/renderer/src/engine/devices/marquee/index.tsx`
+
+- `function Device({ object, events, tokens, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/marquee/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/marquee/state.ts`
+
+- `function marqueeState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
+### `apps/renderer/src/engine/devices/passport_page/index.tsx`
+
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/passport_page/schema.ts`
+
+- `const FieldSchema`
+- `const ParamsSchema`
+- `type PassportParams = z.infer<typeof ParamsSchema>`
+
+### `apps/renderer/src/engine/devices/passport_page/state.ts`
+
+- `function passportState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+- `function mrzLine(text: string)`
 
 ### `apps/renderer/src/engine/devices/query_chip/index.tsx`
 
@@ -3262,6 +3322,54 @@ Run a Vercel serverless handler locally against the real environment.
 
 - `const DEVICES: DeviceRegistry`
 
+### `apps/renderer/src/engine/devices/scribble/index.tsx`
+
+- `function Device({ object, events, tokens, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/scribble/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/scribble/state.ts`
+
+- `function scribbleState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
+### `apps/renderer/src/engine/devices/stamp/index.tsx`
+
+- `function Device({ object, events, tokens, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/stamp/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/stamp/state.ts`
+
+- `function stampState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
+### `apps/renderer/src/engine/devices/stat_strip/index.tsx`
+
+- `function Device({ object, events, tokens, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/stat_strip/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/stat_strip/state.ts`
+
+- `function statStripState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
+### `apps/renderer/src/engine/devices/sticker/index.tsx`
+
+- `function Device({ object, events, tokens, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/sticker/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/sticker/state.ts`
+
+- `function stickerState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
 ### `apps/renderer/src/engine/devices/test_grid/index.tsx`
 
 - `export { testGridStateAt } from './state'`
@@ -3278,6 +3386,15 @@ Run a Vercel serverless handler locally against the real environment.
 ### `apps/renderer/src/engine/devices/test_grid/state.ts`
 
 - `function testGridStateAt(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
+### `apps/renderer/src/engine/devices/thread_card/index.tsx`
+
+- `function threadState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+- `function Device({ object, events, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/thread_card/schema.ts`
+
+- `const ParamsSchema`
 
 ### `apps/renderer/src/engine/devices/types.ts`
 
@@ -3306,9 +3423,128 @@ Run a Vercel serverless handler locally against the real environment.
 - `export { slotsFor } from './layouts'`
 - `export { EngineAudio } from './audio'`
 
+### `apps/renderer/src/engine/kit/Scribble.tsx`
+
+- `function Scribble({ d, colour, tokens, sinceFrames, exiting = false }: { d: string; colour: 'cream' | 'mint'; tokens: E…`
+
+### `apps/renderer/src/engine/kit/camera.ts`
+
+- `interface Camera`
+- `class Cam`
+- `function lerpCam(a: Camera, b: Camera, t: number): Cam`
+
+### `apps/renderer/src/engine/kit/flags.tsx`
+
+- `function PrintedFlag({ kind, tokens, width = 214, height = 113 }: { kind: 'usa' | 'china' | 'unknown'; tokens: EngineTo…`
+
+### `apps/renderer/src/engine/kit/glass/bubble.tsx`
+
+- `const BubbleParams`
+- `function Bubble({ params, tokens, sinceFrames, k }: GlassProps)`
+
+### `apps/renderer/src/engine/kit/glass/cards.tsx`
+
+- `const CardsParams`
+- `function Pennant({ planted, elapsed, tokens, height = 72 }: { planted: boolean; elapsed: number; tokens: GlassProps['to…`
+- `function Cards({ params, tokens, sinceFrames, k }: GlassProps)`
+
+### `apps/renderer/src/engine/kit/glass/footage.tsx`
+
+- `const FootageParams`
+- `type FootageInput = z.input<typeof FootageParams>`
+- `function footageLayout(params: FootageInput, k: number)`
+- `function footagePointToCanvas(screen: Screen, params: FootageInput, x: number, y: number): Point`
+- `function Footage({ params, frame, sinceFrames, k }: GlassProps)`
+
+### `apps/renderer/src/engine/kit/glass/prompt.tsx`
+
+- `const PromptParams`
+- `function Prompt({ params, tokens, sinceFrames, k }: GlassProps)`
+
+### `apps/renderer/src/engine/kit/glass/shared.ts`
+
+- `export { HOUSE_FONTS }`
+- `const Text`
+- `const Frame`
+- `function scale(k: number)`
+- `const typeSize = (px: number, k: number, reference: number) =>`
+- `const cardStyle = (tokens: EngineTokens): React.CSSProperties =>`
+
+### `apps/renderer/src/engine/kit/glassKinds.ts`
+
+- `const H_GLASS_KINDS: Record<string, GlassKind>`
+
+### `apps/renderer/src/engine/kit/glassRegistry.ts`
+
+- `interface GlassProps`
+- `type GlassKind = (props: GlassProps) => React.ReactElement`
+- `const GLASS_KINDS: Record<string, GlassKind>`
+- `function glassKind(id: string): GlassKind`
+
+### `apps/renderer/src/engine/kit/homography.ts`
+
+Direct port of ref/H/build.py: eight unknowns, h22 fixed at one.
+
+- `type Point = readonly [number, number]`
+- `type Homography = readonly [Point3, Point3, Point3]`
+- `function homography(src: readonly Point[], dst: readonly Point[]): Homography`
+- `function matrix3d(h: Homography): string`
+
+### `apps/renderer/src/engine/kit/lock.ts`
+
+Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
+
+- `const CANVAS`
+- `const SCRIBBLE`
+- `const ZONES`
+
+### `apps/renderer/src/engine/kit/overlay.ts`
+
+- `const houseTokens = (tokens: EngineTokens) =>`
+- `const halftone = (tokens: EngineTokens) =>`
+- `function overlayState(object: EngineObject, events: readonly EngineEvent[], frame: number, verb = 'enter', duration: nu…`
+- `function canvasRect(x: number, y: number, w: number, h: number)`
+- `function rotatedBounds(x: number, y: number, w: number, h: number, degrees: number, shadow = 0)`
+
+### `apps/renderer/src/engine/kit/overlayInvariants.ts`
+
+- `const overlayTestProps: Pick<DeviceProps, 'box' | 'tokens' | 'aspect'>`
+- `function assertOverlayMarkup(markup: string, id: string)`
+- `function assertOverlayInvariants(Device: DeviceComponent, object: EngineObject, events: readonly EngineEvent[], id: str…`
+
+### `apps/renderer/src/engine/kit/passport.tsx`
+
+- `const PASSPORT`
+- `function PassportPaper({ spine, tokens, children, shimmer = 0 }: { spine: 'left' | 'right'; tokens: EngineTokens; child…`
+
+### `apps/renderer/src/engine/kit/phoneGlass.ts`
+
+- `const PW`
+- `const PH`
+- `const GW`
+- `const GH`
+- `const QUAD: readonly Point[]`
+- `class Screen`
+- `function uiClipPath(expand=9,rad=36): string`
+
+### `apps/renderer/src/engine/kit/scribblePath.ts`
+
+- `type Point = readonly [number, number]`
+- `type Target = { x: number; y: number; w: number; h: number }`
+- `type ScribbleSpec`
+- `function scribblePath(spec: ScribbleSpec, seed: string): string`
+
+### `apps/renderer/src/engine/kit/threadPath.ts`
+
+- `interface Point`
+- `function weave(from: Point, to: Point, opts: { seed?: number; wobble?: number } = {}): string`
+- `function twisted(x: number, y0: number, y1: number, phase = 0, amp = 9, period = 96): [string, string]`
+- `function parted(from: Point, to: Point, gap: { center: Point; radius: number; clearance?: number })`
+- `function pennant(planted: boolean, h = 84)`
+
 ### `apps/renderer/src/engine/layouts/index.ts`
 
-- `function slotsFor(layout: Layout, aspect: Aspect): Box[]`
+- `function slotsFor(layout: Layout, aspect: Aspect, count = 1): Box[]`
 
 ### `apps/renderer/src/engine/props.ts`
 

@@ -7,13 +7,13 @@ import { IdentifierV1Schema, NarrativeBeatV1Schema, Sha256V1Schema } from './v2.
  *  script (w), never seconds, so a treatment can be written before recording.
  *  docs/ve/ENGINE.md explains the fields; config/ve holds formats, crew and tokens. */
 
-export const VE_FORMATS = ['face-with-proof', 'scoreboard-test', 'voice-led-pictures'] as const
+export const VE_FORMATS = ['face-with-proof', 'scoreboard-test', 'voice-led-pictures', 'hand-held-screen', 'two-passports'] as const
 export const VeFormatSchema = z.enum(VE_FORMATS)
 export const VeSeriesSchema = z.enum(['mind.the.gap', 'follow.the.money', 'under.the.hood'])
 export const VeAspectSchema = z.enum(['9:16', '16:9'])
-export const VeLayoutSchema = z.enum(['P1', 'P3', 'P6', 'F1', 'F3'])
+export const VeLayoutSchema = z.enum(['P1', 'P3', 'P6', 'F1', 'F3', 'STAGE'])
 export const VeRoleSchema = z.enum(['hook', 'anchor', 'bridge', 'pivot', 'payoff', 'call'])
-export const VeVerbSchema = z.enum(['enter', 'mark', 'fill', 'stamp', 'count_to', 'highlight', 'carry', 'exit'])
+export const VeVerbSchema = z.enum(['enter', 'move', 'mark', 'fill', 'stamp', 'count_to', 'highlight', 'carry', 'exit', 'draw'])
 export const VeTransitionSchema = z.enum(['cut', 'cut_on_curve', 'carry', 'zoom_out'])
 export const VeFinishSchema = z.enum(['house_grain', 'halftone_news', 'analog_paper'])
 

@@ -169,7 +169,8 @@ def inputs_from_props(props: dict) -> dict:
         if len(active) != 1:
             raise ValueError(f"Cue {event.get('id', event['obj'])} has no unique beat slot")
         beat = active[0]
-        box = layouts[aspect][beat['layout']][beat['uses'].index(event['obj'])]
+        slot_index = 0 if beat['layout'] == 'STAGE' else beat['uses'].index(event['obj'])
+        box = layouts[aspect][beat['layout']][slot_index]
         slots[event.get('id', event['obj'])] = box
         slots.setdefault(event['obj'], box)
     # boxFor('caption') in apps/renderer/src/engine/geometry.ts, using
@@ -188,7 +189,8 @@ def inputs_from_props(props: dict) -> dict:
 
 def run_qc(path: str, format_id: str, targets: dict | None = None, *,
            dialogue_master: str | None = None, edl=None, joins=None, pages=None, region=None,
-           mark_png: str | None = None, beats=None, aspect=None, events=None, slots=None) -> dict:
+           mark_png: str | None = None, beats=None, aspect=None, events=None, slots=None,
+           composition_props=None) -> dict:
     fmt = load_json(CONFIG / 'formats' / f'{format_id}.json')['qc']
     targets = targets or {'lufs': -14, 'tp': -1}
     loud = loudness(path)
@@ -218,6 +220,16 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
          lambda: qc_brand.mark_tile(path, mark_png, beats, aspect)),
         ('motion.cue_sync', events is not None and slots is not None, lambda: qc_cues.cue_sync(path, events, slots)),
     ]
+    # STAGE beats compose the whole screen under a moving camera. The square mark tile is replaced by the logo in
+    # the stage header, and an object's slot is the full canvas, so "change near the event inside its slot" cannot
+    # separate an event from the camera. Both checks apply to the other layouts only; events on STAGE devices are
+    # proved by their device tests and the key-frame match.
+    stage_beats = [b for b in (beats or []) if b.get('layout') == 'STAGE']
+    if stage_beats and len(stage_beats) == len(beats or []):
+        for name in ('brand.mark_tile', 'motion.cue_sync'):
+            checks[name] = {'value': None, 'target': 'not defined for STAGE layouts', 'pass': None,
+                            'status': 'not applicable'}
+        optional = [row for row in optional if row[0] not in ('brand.mark_tile', 'motion.cue_sync')]
     for name, supplied, measure in optional:
         if supplied:
             try:
@@ -225,7 +237,33 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
             except (ValueError, KeyError, TypeError, OSError, subprocess.CalledProcessError) as exc:
                 checks[name] = {'value': None, 'target': 'valid decodable measurement inputs',
                                 'pass': False, 'status': 'error', 'reason': str(exc)}
-    built = [c['pass'] for c in checks.values() if c['pass'] is not None]
+    from . import designlock, qc_keyframes
+    try:
+        keyframes = qc_keyframes.keyframe_checks(path, {'beats': beats or []}, designlock.load(), format_id)
+    except (ValueError, KeyError, TypeError, OSError, subprocess.CalledProcessError) as exc:
+        keyframes = {'applies': True, 'pass': False, 'beats': {}, 'findings': [str(exc)]}
+    checks['keyframe_match'] = {
+        'value': keyframes.get('beats'), 'target': 'approved golden keyframes',
+        'pass': keyframes.get('pass'),
+        'status': 'measured' if keyframes['applies'] else 'not applicable',
+    }
+    from . import qc_composition
+    props = composition_props or {'aspect': aspect, 'beats': beats or [], 'captions': pages or []}
+    try:
+        if props.get('aspect') is None:
+            composition = {'applies': True, 'pass': None, 'beats': {}, 'status': 'not_run',
+                           'note': 'composition needs props with an explicit aspect and beats'}
+        else:
+            composition = qc_composition.composition_checks(path, props, designlock.load())
+    except (ValueError, KeyError, TypeError, OSError, subprocess.CalledProcessError) as exc:
+        composition = {'applies': True, 'pass': False, 'beats': {}, 'findings': [str(exc)]}
+    checks['composition'] = {
+        'value': composition.get('beats'), 'target': 'design lock composition thresholds',
+        'pass': composition.get('pass'),
+        'status': composition.get('status', 'measured') if composition['applies'] else 'not applicable',
+    }
+    applicable = [c for c in checks.values() if c.get('status') != 'not applicable']
+    built = [c['pass'] for c in applicable if c['pass'] is not None]
     return {'file': path, 'sha256': sha256_file(path), 'duration_s': round(duration_s(path), 3), 'format': format_id,
-            'checks': checks, 'measured_pass': all(built),
-            'complete': all(c['pass'] is not None and c.get('status') != 'incomplete' for c in checks.values())}
+            'checks': checks, 'keyframes': keyframes, 'composition': composition, 'measured_pass': all(built),
+            'complete': all(c['pass'] is not None and c.get('status') != 'incomplete' for c in applicable)}

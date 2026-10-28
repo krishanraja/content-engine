@@ -16,7 +16,7 @@ export const EngineImageSchema = z.object({ src: z.string().min(1), pixelWidth: 
 export const EngineEventSchema = z.object({
   id: z.string().min(1),
   obj: z.string().min(1),
-  verb: z.enum(['enter', 'mark', 'fill', 'stamp', 'count_to', 'highlight', 'carry', 'exit']),
+  verb: z.enum(['enter', 'move', 'mark', 'fill', 'stamp', 'count_to', 'highlight', 'carry', 'exit', 'draw']),
   toState: z.string().min(1),
   atFrame: Frame,
   sfx: z.string().optional(),
@@ -40,11 +40,13 @@ export const EngineObjectSchema = z.object({
 export const EngineBeatSchema = z.object({
   id: z.string().min(1),
   role: z.enum(['hook', 'anchor', 'bridge', 'pivot', 'payoff', 'call']),
-  layout: z.enum(['P1', 'P3', 'P6', 'F1', 'F3']),
+  layout: z.enum(['P1', 'P3', 'P6', 'F1', 'F3', 'STAGE']),
   fromFrame: Frame,
   toFrame: Frame,
   uses: z.array(z.string()),
   transitionOut: z.enum(['cut', 'cut_on_curve', 'carry', 'zoom_out']),
+  /** Approved frame within this beat; when absent, use 80% through the beat. */
+  keyFrame: Frame.optional(),
   sectionBeat: z.boolean().default(false), // the beat that carries the channel pill
 }).strict()
 
@@ -71,7 +73,7 @@ export const EngineAudioSchema = z.object({
 export const EngineRenderPropsSchema = z.object({
   pieceId: z.string().min(1),
   cutId: z.string().min(1),
-  format: z.enum(['face-with-proof', 'scoreboard-test', 'voice-led-pictures']),
+  format: z.enum(['face-with-proof', 'scoreboard-test', 'voice-led-pictures', 'hand-held-screen', 'two-passports']),
   aspect: z.enum(['9:16', '16:9']),
   fps: z.literal(30),
   durationFrames: z.number().int().positive(),

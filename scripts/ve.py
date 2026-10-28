@@ -39,6 +39,13 @@ def cmd_doctor(_args) -> int:
     def check(name, ok, detail, hard=True):
         rows.append(('PASS' if ok else ('FAIL' if hard else 'WARN'), name, detail))
 
+    from velib import designlock
+    try:
+        findings = designlock.validate(designlock.load())
+        check('design lock', not findings, '; '.join(findings) or 'valid')
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        check('design lock', False, str(error))
+
     exe = shutil.which('ffmpeg')
     version = subprocess.run([exe, '-version'], capture_output=True, text=True).stdout.split('\n')[0] if exe else ''
     check('ffmpeg', bool(exe), version or 'not on PATH')
@@ -50,6 +57,14 @@ def cmd_doctor(_args) -> int:
     check('node', bool(node), subprocess.run([node, '--version'], capture_output=True, text=True).stdout.strip() if node else 'missing')
     check('remotion', (ROOT / 'node_modules' / 'remotion' / 'package.json').exists(), 'node_modules/remotion')
     check('house fonts', (ROOT / 'node_modules' / '@fontsource' / 'anton').exists(), '@fontsource/anton and friends')
+    from velib import fonts
+    fonts_ok, font_lines = fonts.check()
+    check('brand fonts', fonts_ok, '; '.join(font_lines))
+    try:
+        kit = load_json(fonts.MANIFEST).get('source')
+        check('Drive font kit', bool(kit) and Path(kit).is_dir(), kit or 'source is absent from font manifest', hard=False)
+    except (OSError, ValueError, TypeError) as error:
+        check('Drive font kit', False, str(error), hard=False)
     try:
         import numpy  # noqa: F401
         check('numpy', True, numpy.__version__)
@@ -85,6 +100,60 @@ def cmd_doctor(_args) -> int:
     return 1 if any(r[0] == 'FAIL' for r in rows) else 0
 
 
+def cmd_lock(args) -> int:
+    from velib import designlock
+    try:
+        lock = designlock.load()
+        if args.action == 'show':
+            print(json.dumps(lock['formats'][args.format] if args.format else lock, indent=2))
+        elif args.action == 'check':
+            findings = designlock.validate(lock)
+            if findings:
+                print('\n'.join(findings))
+                return 1
+            print('design lock: valid')
+            for fmt in lock['formats']:
+                ok, reasons = designlock.frozen(lock, fmt)
+                print(f'{fmt}: ' + ('frozen' if ok else 'not frozen: ' + '; '.join(reasons)))
+        else:
+            if args.mapping is None:
+                mapping = {beat: f'f{i}.png' for i, beat in enumerate(lock['formats'][args.format]['beats'], 1)}
+            else:
+                mapping = {}
+                for item in args.mapping:
+                    beat, sep, filename = item.partition('=')
+                    if not sep or not filename or beat in mapping:
+                        raise ValueError(f'invalid or duplicate --map entry: {item}')
+                    mapping[beat] = filename
+            designlock.freeze(args.format, args.src_dir, mapping, force=args.force)
+            print(f'design lock: frozen {args.format}')
+        return 0
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        print(f've lock: {error}', file=sys.stderr)
+        return 1
+
+
+def cmd_fonts(args) -> int:
+    from velib import fonts
+    try:
+        if args.action == 'check':
+            ok, lines = fonts.check()
+            print('\n'.join(lines))
+            return 0 if ok else 1
+        if args.action == 'css':
+            print(fonts.css(args.rel), end='')
+            return 0
+        source = args.kit_dir or load_json(fonts.MANIFEST).get('source')
+        if not source:
+            print('ve fonts sync: source is absent from font manifest; supply --from', file=sys.stderr)
+            return 1
+        print('\n'.join(fonts.sync(source, update_manifest=args.update_manifest)))
+        return 0
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        print(f've fonts: {error}', file=sys.stderr)
+        return 1
+
+
 def spec_path_for(piece: str) -> Path:
     folder = piece_dir(piece)
     for name in ('ve/spec.json', 'creative-direction.json'):
@@ -96,6 +165,10 @@ def spec_path_for(piece: str) -> Path:
 def cmd_lint(args) -> int:
     from velib.lint import lint
     spec, problems = lint(Path(args.spec))
+    if spec is not None:
+        from velib import designlock
+        if spec['format'] not in designlock.load()['formats']:
+            print(f'note: format {spec["format"]} is legacy: composition and design approval are enforced at packet time')
     for line in problems[:20]:
         print(line)
     if len(problems) > 20:
@@ -131,7 +204,10 @@ def cmd_start(args) -> int:
 
 def cmd_qc(args) -> int:
     from velib.qc import inputs_from_props, run_qc
-    inputs = inputs_from_props(load_json(args.props)) if getattr(args, 'props', None) else {}
+    props = load_json(args.props) if getattr(args, 'props', None) else None
+    inputs = inputs_from_props(props) if props is not None else {}
+    if props is not None and props.get('aspect') == '9:16':
+        inputs['composition_props'] = props
     report = run_qc(args.cut, args.format, **inputs)
     out = Path(args.out) if args.out else Path(args.cut).with_suffix('.qc.json')
     write_json(out, report)
@@ -140,6 +216,47 @@ def cmd_qc(args) -> int:
         print(f"{state:8} {name:24} {json.dumps(check['value'])[:80]}  target {check['target']}")
     print(f"ve qc: {'measured checks pass' if report['measured_pass'] else 'FAILS'}; {'complete' if report['complete'] else 'incomplete (not_run checks)'} -> {out}")
     return 0 if report['measured_pass'] else 1
+
+
+def cmd_comp(args) -> int:
+    from velib import designlock, qc_composition
+    lock = designlock.load()
+    reports = {}
+    for filename in args.images:
+        try:
+            boxes = [tuple(int(v) for v in box.split(',')) for box in (args.exempt or [])]
+            reports[filename] = qc_composition.measure(filename, lock, plate_on_screen=args.plate, exempt=boxes)
+        except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
+            reports[filename] = {'pass': False, 'checks': {}, 'findings': [str(error)]}
+    if args.json:
+        print(json.dumps(reports, indent=2))
+    else:
+        for filename, report in reports.items():
+            print(f"{'PASS' if report['pass'] else 'FAIL'} {filename}")
+            for finding in report['findings']:
+                print(f'  {finding}')
+    return 0 if all(report['pass'] for report in reports.values()) else 1
+
+
+def cmd_keyframes(args) -> int:
+    from velib import designlock, qc_keyframes
+    try:
+        lock, props = designlock.load(), load_json(args.props)
+        report = qc_keyframes.keyframe_checks(args.video, props, lock, args.format)
+        if not report['applies']:
+            print(report['note'])
+            return 0
+        for name, row in report['beats'].items():
+            score = f'{row["ssim"]:.4f}' if row['ssim'] is not None else 'unavailable'
+            print(f'{name} ssim {score} min {row["min"]:.2f} {"pass" if row["pass"] else "FAIL"}')
+        for finding in report['findings']:
+            print(finding)
+        if args.sheet:
+            qc_keyframes.sheet(args.video, props, lock, args.format, args.sheet)
+        return 0 if report['pass'] else 1
+    except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
+        print(f've keyframes: {error}', file=sys.stderr)
+        return 1
 
 
 def cmd_study(args) -> int:
@@ -186,43 +303,71 @@ def cmd_verify_card(args) -> int:
     return 1 if problems else 0
 
 
+def cmd_verdict(args) -> int:
+    from velib import verdict
+    try:
+        spec_file = spec_path_for(args.piece)
+        spec = load_json(spec_file)
+        findings = load_json(args.findings)
+        if not isinstance(findings, list):
+            raise ValueError('findings file must hold a list')
+        viewed = [float(s) for s in args.viewed.split(',') if s.strip()]
+        path = verdict.write(spec, args.cut, verdict.ve_dir(spec_file), args.reviewer, findings, viewed)
+        print(f've verdict: {path}')
+        return 0
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        print(f've verdict: {error}')
+        return 1
+
+
+def cmd_packet(args) -> int:
+    from velib import packet, verdict
+    try:
+        spec_file = spec_path_for(args.piece)
+        spec = load_json(spec_file)
+        directory = verdict.ve_dir(spec_file)
+        for cut in args.legacy_ok:
+            if spec['format'] not in packet.designlock.load()['formats']:
+                print(f'{cut}: LEGACY: no design lock')
+        out = packet.assemble(spec, directory, args.out or directory / 'packet', args.legacy_ok)
+        print(f've packet: {out}')
+        return 0
+    except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
+        print(f've packet: {error}')
+        return 1
+
+
 def cmd_status(args) -> int:
-    from velib.common import sha256_file
+    from velib import packet, verdict
     from velib.lint import lint
     spec_file = spec_path_for(args.piece)
     spec, problems = lint(spec_file)
     if spec is None:
         print('NOT READY: the spec does not pass its schema')
         return 1
-    ve_dir = spec_file.parent if spec_file.parent.name == 've' else spec_file.parent / 've'
-    finals = {a['artifact_hash']: a for a in spec['approvals'] if a['gate'] == 'final'}
+    directory = verdict.ve_dir(spec_file)
     ready = not problems
     print(f"lint: {'clean' if not problems else f'{len(problems)} finding(s)'}")
     for cut in spec['cuts']:
-        qc_file, verdict_file = ve_dir / f'qc.{cut}.json', ve_dir / f'verdict.{cut}.json'
-        reasons = []
-        compile_file = ve_dir / f'compile.{cut}.json'
-        if compile_file.exists() and load_json(compile_file).get('sfx_missing'):
-            reasons.append('sfx kit missing')
-        if not qc_file.exists():
-            reasons.append('no qc')
-        else:
-            qc = load_json(qc_file)
-            if not Path(qc['file']).exists() or sha256_file(qc['file']) != qc['sha256']:
-                reasons.append('qc is for a different file')
-            if not qc['measured_pass']:
-                reasons.append('measured checks fail')
-            if not qc['complete']:
-                reasons.append('qc incomplete')
-            if qc['sha256'] not in finals:
-                reasons.append("no final approval from Krish for this file")
-        if not verdict_file.exists():
-            reasons.append('no Critic verdict')
-        elif load_json(verdict_file).get('blocking'):
-            reasons.append('Critic blocks')
+        try:
+            mechanical, qc, video, digest = packet.mechanical(spec, cut, directory)
+            compile_file = directory / f'compile.{cut}.json'
+            if compile_file.exists() and load_json(compile_file).get('sfx_missing') and 'sfx kit missing' not in mechanical:
+                mechanical.append('sfx kit missing')
+            design = packet.design(spec, cut, directory, digest)
+            final = [] if digest and any(a.get('gate') == 'final' and a.get('by') == 'Krish'
+                                         and a.get('artifact_hash') == digest for a in spec.get('approvals', [])) else [
+                                             'no final approval from Krish for this file']
+        except (OSError, ValueError, KeyError, TypeError) as error:
+            mechanical, design, final = [str(error)], ['design could not be checked'], []
+        print(f'{cut}:')
+        print('  mechanical: ' + ('INVALID (' + '; '.join(mechanical) + ')' if mechanical else 'VALID'))
+        print('  design: ' + ('NOT APPROVED (' + '; '.join(design) + ')' if design else 'APPROVED'))
+        reasons = mechanical + design + final
         print(f"{cut}: {'READY' if not reasons else 'NOT READY (' + '; '.join(reasons) + ')'}")
         ready = ready and not reasons
     return 0 if ready else 1
+
 
 
 def cmd_coverage(_args) -> int:
@@ -351,9 +496,30 @@ def main() -> int:
     parser = argparse.ArgumentParser(prog='ve', description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = parser.add_subparsers(dest='cmd', required=True)
     sub.add_parser('doctor').set_defaults(fn=cmd_doctor)
+    p = sub.add_parser('comp', help='measure still composition against the tall design lock')
+    p.add_argument('images', nargs='+'); p.add_argument('--plate', action='store_true')
+    p.add_argument('--exempt', action='append', metavar='X,Y,W,H', help='real footage box whose text is evidence, never retyped')
+    p.add_argument('--json', action='store_true'); p.set_defaults(fn=cmd_comp)
+    p = sub.add_parser('lock', help='check, show or freeze approved format designs')
+    actions = p.add_subparsers(dest='action', required=True)
+    actions.add_parser('check')
+    a = actions.add_parser('show'); a.add_argument('format', nargs='?')
+    a = actions.add_parser('freeze'); a.add_argument('format'); a.add_argument('--from', dest='src_dir', required=True)
+    a.add_argument('--map', dest='mapping', nargs='+', action='extend'); a.add_argument('--force', action='store_true')
+    p.set_defaults(fn=cmd_lock)
+    p = sub.add_parser('fonts', help='check, declare or sync the offline brand font kit')
+    actions = p.add_subparsers(dest='action', required=True)
+    actions.add_parser('check')
+    a = actions.add_parser('css'); a.add_argument('--rel', default='assets/fonts/makeyourmindup')
+    a = actions.add_parser('sync'); a.add_argument('--from', dest='kit_dir')
+    a.add_argument('--update-manifest', action='store_true')
+    p.set_defaults(fn=cmd_fonts)
     p = sub.add_parser('start'); p.add_argument('piece'); p.set_defaults(fn=cmd_start)
     p = sub.add_parser('lint'); p.add_argument('spec'); p.set_defaults(fn=cmd_lint)
     p = sub.add_parser('qc'); p.add_argument('cut'); p.add_argument('--format', required=True); p.add_argument('--out'); p.add_argument('--props'); p.set_defaults(fn=cmd_qc)
+    p = sub.add_parser('keyframes', help='compare rendered beats with approved stills')
+    p.add_argument('format'); p.add_argument('video'); p.add_argument('props'); p.add_argument('--sheet')
+    p.set_defaults(fn=cmd_keyframes)
     p = sub.add_parser('study'); p.add_argument('ref'); p.add_argument('--out'); p.set_defaults(fn=cmd_study)
     p = sub.add_parser('card'); p.add_argument('fields'); p.set_defaults(fn=cmd_card)
     p = sub.add_parser('dispatch'); p.add_argument('card'); p.add_argument('--wait', action='store_true')
@@ -362,6 +528,17 @@ def main() -> int:
     p.set_defaults(fn=cmd_dispatch)
     p = sub.add_parser('verify-card'); p.add_argument('card'); p.add_argument('--cwd', required=True); p.set_defaults(fn=cmd_verify_card)
     p = sub.add_parser('status'); p.add_argument('piece'); p.set_defaults(fn=cmd_status)
+    p = sub.add_parser('verdict', help='record a hash-bound independent Critic review')
+    actions = p.add_subparsers(dest='action', required=True)
+    a = actions.add_parser('write'); a.add_argument('piece'); a.add_argument('cut')
+    a.add_argument('--reviewer', required=True); a.add_argument('--findings', required=True)
+    a.add_argument('--viewed', default='', help='comma-separated viewed frame times in seconds')
+    a.set_defaults(fn=cmd_verdict)
+    p = sub.add_parser('packet', help='assemble measured and judged cuts for approval')
+    p.add_argument('piece'); p.add_argument('--out')
+    p.add_argument('--legacy-ok', action='append', default=[], metavar='CUT',
+                   help='explicitly identify a legacy cut; QC and Critic remain mandatory')
+    p.set_defaults(fn=cmd_packet)
     sub.add_parser('coverage').set_defaults(fn=cmd_coverage)
     p = sub.add_parser('compile', help='compile a linted spec and cut-ready word timings')
     p.add_argument('spec'); p.add_argument('--cut', required=True); p.add_argument('--words', required=True)

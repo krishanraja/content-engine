@@ -14,6 +14,7 @@ import re
 from pathlib import Path, PureWindowsPath
 
 from .common import ROOT, load_json
+from .lint import pending_devices_error
 
 FPS = 30
 ENDING_FRAMES = 105
@@ -96,17 +97,21 @@ def _caption_groups(rows: list[dict], aspect: str = '9:16', emphasis=()) -> list
 
 def _params(params: dict, source) -> dict:
     """Copy device params, resolving media paths (src, rows[].logoSrc) against the assets folder."""
-    out = json.loads(json.dumps(params))
-    if isinstance(out.get('src'), str):
-        out['src'] = source(out['src'])
-    for row in out.get('rows', []) if isinstance(out.get('rows'), list) else []:
-        if isinstance(row, dict) and isinstance(row.get('logoSrc'), str):
-            row['logoSrc'] = source(row['logoSrc'])
-    return out
+    def visit(value):
+        if isinstance(value, list):
+            return [visit(item) for item in value]
+        if isinstance(value, dict):
+            return {key: source(item) if key in ('src', 'logoSrc') and isinstance(item, str)
+                    else visit(item) for key, item in value.items()}
+        return value
+    return visit(params)
 
 
 def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Path, *, report: dict | None = None) -> dict:
     """Return EngineRenderProps without writing files or changing the spec."""
+    pending_error = pending_devices_error(spec['format'])
+    if pending_error:
+        raise ValueError(pending_error)
     cut = spec['cuts'][cut_id]
     # These words already describe the dialogue master's final clock. Do not
     # silently apply source edits a second time, or retime only the picture.
@@ -145,14 +150,29 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         return by_word[index]['atFrame']
 
     beats = []
+    illustration_labels = []
     events = []
     selected = cut['beats']
     device_verbs = load_json(ROOT / 'config' / 've' / 'devices.json')['devices']
     by_object = {obj['obj']: obj for obj in spec.get('objects', [])}
     duration = _frame(rows[-1]['end_s']) + 12
     for index, beat in enumerate(selected):
-        if beat.get('plate', {}).get('source') not in ('take', 'none'):
-            raise ValueError(f'beat {beat["id"]}: asset plates arrive in Phase 2')
+        plate_root = ROOT / 'assets' / 'plates' / spec['format']
+        has_phone = any(by_object.get(name, {}).get('device') == 'hand_phone_stage'
+                        for name in beat.get('uses', []))
+        plate_source = beat.get('plate', {}).get('source', 'take')
+        sidecar = plate_root / 'plates.json'
+        plate_backed = has_phone and sidecar.is_file()
+        if plate_source not in ('take', 'none'):
+            asset = next((a for a in spec.get('assets', [])
+                          if 'asset:' + a['id'] == plate_source), {})
+            manifest = load_json(sidecar) if plate_backed else {}
+            allowed_paths = {'plates/' + spec['format'] + '/' + name
+                             for name in manifest.get('files', {})}
+            if asset.get('path') not in allowed_paths:
+                raise ValueError(f'beat {beat["id"]}: asset plates arrive in Phase 2')
+        if has_phone and spec['format'] == 'hand-held-screen' and not plate_backed:
+            raise ValueError(f'beat {beat["id"]}: missing plate sidecar {sidecar}')
         # The first beat owns the opening frames (pre-roll included), so a cut never opens on bare ink.
         start = 0 if index == 0 else at(beat['span']['from_w'])
         at(beat['span']['to_w'])
@@ -162,6 +182,14 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         beats.append({'id': beat['id'], 'role': beat['role'], 'layout': beat['layout'],
                       'fromFrame': start, 'toFrame': end, 'uses': list(beat.get('uses', [])),
                       'transitionOut': beat.get('transition_out', 'cut'), 'sectionBeat': index == 0})
+        # The v2 spec reserves extensible metadata in style; beat-level keyFrame
+        # is not yet in its strict schema. Always emit an explicit engine frame.
+        fraction = spec.get('style', {}).get('keyFrames', {}).get(beat['id'], 0.8)
+        if isinstance(fraction, bool) or not isinstance(fraction, (int, float)) or not 0 <= fraction < 1:
+            raise ValueError(f'beat {beat["id"]}: keyFrames fraction must be in [0, 1)')
+        beats[-1]['keyFrame'] = min(end - 1, start + round((end - start) * fraction))
+        if plate_backed:
+            illustration_labels.append({'fromFrame': start, 'toFrame': end, 'text': 'ILLUSTRATION'})
         for event_index, event in enumerate(beat.get('events', [])):
             event_frame = at(event['at_w'])
             if not start <= event_frame < end:
@@ -247,7 +275,7 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         'segments': [] if spec['audio']['master'] == 'vo' else [
             {'src': take, 'trimBeforeFrames': 0, 'fromFrame': 0, 'durationFrames': duration}],
         'audio': {'stem': {'src': resolve_source(f'audio.{cut_id}.wav'), 'trimBeforeFrames': 0}, 'sfx': []},
-        'captions': captions, 'beats': beats, 'objects': objects, 'events': events, 'illustrationLabels': [],
+        'captions': captions, 'beats': beats, 'objects': objects, 'events': events, 'illustrationLabels': illustration_labels,
     }
     sfx, missing = [], []
     kit_path = ROOT / 'config' / 've' / 'sfx-kits' / f"{spec['audio']['sfx_kit']}.json"

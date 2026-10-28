@@ -17,7 +17,25 @@ WORDS_PER_SECOND = 2.6  # Krish's measured read rate, used only before ingest gi
 
 
 def schema(spec_path: Path) -> tuple[dict | None, list[str]]:
-    result = run(['npx', 'tsx', 'packages/contracts/scripts/check-spec.ts', str(spec_path), '--normalized'])
+    # Installed TypeScript in-process, matching ve_compile_test.py. Avoid
+    # tsx/esbuild's child process (EPERM in the Windows card sandbox).
+    code = r"""
+const fs = require('node:fs'), ts = require('typescript'), Module = require('node:module');
+const resolve = Module._resolveFilename;
+Module._resolveFilename = function(id, parent, ...rest) {
+  try { return resolve.call(this, id, parent, ...rest); }
+  catch (error) {
+    if (id.startsWith('.') && id.endsWith('.js')) return resolve.call(this, id.slice(0, -3) + '.ts', parent, ...rest);
+    throw error;
+  }
+};
+require.extensions['.ts'] = (module, filename) => module._compile(ts.transpileModule(fs.readFileSync(filename, 'utf8'), {
+  compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, esModuleInterop: true }
+}).outputText, filename);
+process.argv = [process.argv[0], 'check-spec.ts', process.argv[1], '--normalized'];
+require('./packages/contracts/scripts/check-spec.ts');
+"""
+    result = run(['node', '-e', code, str(spec_path)])
     if result.returncode == 0:
         return json.loads(result.stdout), []
     lines = [line for line in (result.stdout + result.stderr).splitlines() if line.strip()]
@@ -35,10 +53,38 @@ def _strings(node, path=''):
         yield path, node
 
 
+def pending_devices_error(format_id: str, fmt: dict | None = None) -> str | None:
+    """A format becomes usable only when all its pending devices are registered."""
+    if fmt is None:
+        fmt = load_json(CONFIG / 'formats' / f'{format_id}.json')
+    pending = fmt.get('pending_devices', [])
+    if not pending:
+        return None
+    devices = load_json(CONFIG / 'devices.json')['devices']
+    missing = [name for name in pending if name not in devices]
+    if missing:
+        return f"format {format_id} needs devices not built yet: {', '.join(missing)}"
+    return None
+
+
 def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
     out: list[str] = []
+    from . import designlock
+    lock = designlock.load()
+    if spec['format'] in lock['formats'] and not designlock.frozen(lock, spec['format'])[0]:
+        out.append(f'format {spec["format"]} has no frozen design lock')
     fmt = load_json(CONFIG / 'formats' / f"{spec['format']}.json")
     objects = {o['obj']: o for o in spec['objects']}
+    if spec['format'] in lock['formats']:
+        allowed = lock.get('thresholds', {}).get('scribbles_per_beat', 1)
+        for cut_id, cut in spec['cuts'].items():
+            for index, beat in enumerate(cut['beats']):
+                scribbles = sum(objects.get(name, {}).get('device') == 'scribble' for name in set(beat['uses']))
+                if scribbles > allowed:
+                    out.append(f'scribbles_per_beat cuts.{cut_id}.beats.{index}: beat {beat["id"]} uses {scribbles} scribbles, the design lock allows {allowed}')
+    pending_error = pending_devices_error(spec['format'], fmt)
+    if pending_error:
+        return out + [pending_error]
 
     # brand
     for path, text in _strings(spec):
@@ -60,6 +106,12 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
     for cut_id, cut in spec['cuts'].items():
         beats = cut['beats']
         where = f'cuts.{cut_id}'
+        if spec['format'] in lock['formats']:
+            names = lock['formats'][spec['format']]['beats']
+            if [beat.get('id') for beat in beats] != names:
+                out.append(f'{where}: beat ids must be {", ".join(names)} for format {spec["format"]}')
+            if not beats:
+                continue
         # dialogue
         if cut['aspect'] == '9:16' and cut['max_s'] > 89:
             out.append(f'dialogue.short_max {where}.max_s: a 9:16 short is 89 s or less')
@@ -116,7 +168,7 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
             for event in beat['events']:
                 first_verb.setdefault(event['obj'], (event['at_w'], event['verb']))
         for obj_id, (word, verb) in first_verb.items():
-            if verb != 'enter':
+            if verb != 'enter' and not ((verb, objects.get(obj_id, {}).get('device')) in {('draw', 'scribble'), ('stamp', 'stamp')}):
                 out.append(f'motion.enters {where}: {obj_id} first acts with "{verb}" at word {word}; an object enters before anything else happens to it, or it never appears')
         if cut['aspect'] == '9:16' and whole:
             minutes = max(1.0, (beats[-1]['span']['to_w'] - beats[0]['span']['from_w']) / (WORDS_PER_SECOND * 60))

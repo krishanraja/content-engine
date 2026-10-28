@@ -1,32 +1,29 @@
-# ve status (28 Oct 2026, Phase 1 complete, awaiting Gate 2)
+# ve status (28 Oct 2026: Phase 1 engine merged; format H built and proven; awaiting Krish's Gate 2 on the new frames)
 
-Read `docs/ve/RUNBOOK.md` to produce. This page says what ve can and cannot do right now. Everything here was measured on the 19.5 s `my-test` proofs (tall and wide), on ffmpeg n8.1.2 with tesseract OCR (`. scripts/ve-env.sh`).
+Read `docs/ve/RUNBOOK.md` to produce and `docs/ve/design/TEMPLATE.md` for what a frame must look like. This page says what ve can and cannot do right now.
 
 ## Can do
-- **Spec to picture in one clock:** `ve lint`, `ve compile`, `ve render` (tall 9:16 and wide 16:9) through one `FormatMaster`. Compile refuses a verb the device does not draw and anything Phase 1 cannot draw truthfully.
-- **Devices:** `test_grid` (enter, mark, stamp, highlight, carry, exit), `record_card`, `query_chip`, `evidence_card`, `kinetic_stat`, plus BrandFrame, captions (always on), call card and ending band (unit-tested).
-- **QC with no tokens:** `ve qc --props` runs 11 checks: loudness, density, longest still, periodicity, joins, mark tile, A/V sync, caption OCR, cue sync and more. Both proofs pass all 11, OCR included.
-- **Render fixes:** props travel as ASCII escapes (no "Â·"); AAC priming (2048 samples, 42.7 ms) is measured and removed, residual 0.
-- **Budgets that refuse:** `ve time` (60 engine minutes) and `ve ledger` (3.3M Claude tokens, 2.1M Codex tokens, 12.6M total, 1.2 allowance points); `ve dispatch --piece` refuses past a cap or above 80% of the weekly Codex allowance.
-- **Codex cards:** `ve card`, `ve dispatch`, `ve verify-card`. Cards 1-7 and the doc cards were built this way.
-- **Measured:** each proof renders in about 2.5 minutes (tall 160 s, wide 134 s).
+- **Spec to picture in one clock:** `ve lint`, `ve compile`, `ve render` (tall 9:16 and wide 16:9) through one `FormatMaster`. Compile refuses a verb the device does not draw and anything it cannot draw truthfully.
+- **Design is a gate, not a hope (F19):** `config/ve/design-lock.json` holds the approved zones, type roles, thresholds, scribble, plate rules and the ten approved key frames (formats `hand-held-screen` and `two-passports`, frozen 28 Oct). `ve lock check|show|freeze`. A device card or spec for a format without a frozen lock is refused.
+- **Formats and devices:** format H (hand-held screen) and the two-passports module on the full-canvas `STAGE` layout. Devices: `hand_phone_stage` (real hand and phone, camera that never cuts, UI on the glass in perspective, glass kinds prompt, cards, footage, bubble), `headline`, `sticker`, `stamp`, `stat_strip`, `marquee`, `scribble` (hand-drawn draw-on, one per beat), `thread_card`, `passport_page`; the original five devices remain.
+- **QC with no tokens:** `ve qc --props` runs the 11 mechanical checks plus **composition** (screen fill at least 80% outside the caption zone, nothing under 30 px, caption and platform zones, edges, ILLUSTRATION tag) and **key-frame match** (render vs approved still: caption zone masked, smoothed, SSIM at least 0.75; faithful render 0.83 or more, wrong beat 0.67 or less, rejected frames 0.65 or less). `ve comp` and `ve keyframes` run them on stills and videos.
+- **Packet and status:** `ve verdict write` binds a Critic verdict (frames viewed, findings) to the exact mp4 hash. `ve packet` refuses to assemble a Gate packet unless QC, composition, key frames, a frozen lock and a non-blocking Critic verdict hold for that file. `ve status` separates "mechanically valid" from "design approved".
+- **Fonts:** the four makeyourmindup faces are vendored with licences and a hash manifest (`ve fonts check|css|sync`, a hard `ve doctor` row).
+- **Budgets, cards, render fixes:** `ve time`, `ve ledger`, `ve card|dispatch|verify-card`; ASCII props transport; AAC priming removed; subprocess output decoded as UTF-8 (a quote's ellipsis no longer turns into mojibake).
+- **Measured on the format H proof (21 s, tall):** mechanical checks pass and complete; key frames 0.83 to 0.89; composition passes on all five beats; render about 2.8 minutes.
 
 ## Cannot do yet (do not pretend otherwise)
-- `ve ingest`, `ve stills` and `ve file` are placeholders (exit 2). Word timings with `end_s` and the archive step come from another route until they are built.
-- **No sound effects:** no sfx kit exists, so compile lists `sfx_missing` ids and `ve status` blocks on it. Known Phase 2 gap.
-- **No generated assets:** asset plates and generated media are refused; Runway, Higgsfield and ChatGPT Images are not wired.
-- **No publish, send or schedule verb**, by design.
-- **Tall recordings (ruling, 28 Oct, Krish delegated the call):** real footage stays as the proof; no typed replica, because evidence is never regenerated. A tighter crop cannot enlarge text that wraps the full source width (the my-test recording is about 1080 px wide and already shows at about 1:1), so the footage plays as a short proof glimpse and the words are carried as a labelled quote on the card (the `mark` verb already draws them as real text). If a future recording's text is narrower, crop to it; aim for body text of about 28 px in frame.
-- **Tall layout has a dead band** under the grid and stat in beats 4-5, and the grid jumps from F3 to F1 without an animated move.
-- **Call card and ending band** are not visible in the 19.5 s excerpt proof.
-- **One real format** (`face-with-proof`) has been proven end to end; others are config only.
-
-## Efficiency baseline (Codex token ledger, `scripts/session_token_audit.py --codex`)
-- Friday 22-26 Oct: 20 threads, 1709 calls, 249.3M input (97.7% cached) and 1.0M output: the 253M baseline reproduced within 1%.
-- ve build, 27-28 Oct (cards 1-7, fixes and doc cards): 25 threads, 465 calls, 33.5M input (94.6% cached), 0.24M output. That is capital, not per-piece cost.
-- AGENTS.md went from 38 KB to 11.8 KB (nothing lost: the rest is in `docs/AGENTS-REFERENCE.md`); the session pack is about 19 KB of 36 KB, with ENGINE.md first and per-piece findings last, so the prefix is stable.
-- Per-piece targets are now enforced by `ve time` and `ve ledger`; the first production run will give the first real per-piece number.
+- **The format H proof is not Critic-approved.** Round 1 (fresh Critic) rejected it with 5 blocks; those were fixed (verdict-beat collisions, evidence beat 2 s ahead of the narration, scribble on blank space, mojibake). Round 2 said REWORK (narrow) with one block, the thread end-ring on the "KRISH'S TEST" sticker; it was fixed by moving the ring, and that final render was not reviewed again (the RUNBOOK allows 2 fix loops). The verdict file on disk is for the earlier render, so `ve status` correctly shows it as a different file and `ve packet` would refuse. Open fix-level items from round 2: ghosted cross-dissolves and a see-through phone screen at 7.4 to 7.6 s, 11.2 to 11.4 s and 12.9 to 13.1 s; a duplicated TURKMENISTAN at 6.9 s; the open-beat card and scribble clipped by the caption block; halftone dots over sticker type; the recording sticker cramped and without its record dot; the pull quote without its "DEEPSEEK WROTE" attribution; dek lines that repeat the captions. Next step: one fix pass on those, a fresh Critic, then `ve packet`.
+- **No publish, send or schedule verb**, by design. Krish publishes.
+- `ve ingest`, `ve stills` and `ve file` are placeholders (exit 2). Word end times and the archive step come from another route.
+- **No sound effects kit:** compile lists `sfx_missing`; `ve status` blocks on it.
+- **No generated assets pipeline:** ChatGPT Images, Runway and Higgsfield are not wired; plates are the approved derived illustrations in `assets/plates/`. Flags in the passports module are simplified drawings and need a licensed set; the passport paper is a procedural substitute for the original photograph.
+- **Two QC checks do not apply to STAGE layouts:** the square mark tile (the logo is in the stage header) and cue sync (a full-canvas slot under a moving camera cannot show an event separately). Events on STAGE devices are proved by device tests and the key-frame match.
+- The proof uses the original test story and the real DeepSeek recording at about 1:1; its text is evidence and is never enlarged or retyped (a verbatim pull quote carries it).
+- Format `two-passports` has its devices and approved frames but no rendered proof yet; the wide aspect has no design lock.
+- One composition test skips on this machine (pinned ffmpeg path); the checks run in every real QC.
 
 ## Local caveats
-- The user-level `MINDMAKE_DRIVE_ROOT`, `MINDMAKE_ARCHIVE_ROOT` and `MINDMAKE_MEDIA_INBOX` variables send some tests at the real Drive; `scripts/ve-env.sh` clears them.
-- In a git worktree, `tests/archive-naming.test.ts` can write to the real Drive because `@mindmake/core` resolves through the junctioned `node_modules` to the main checkout. CI is unaffected. Run it from the main checkout.
+- `. scripts/ve-env.sh` pins ffmpeg and tesseract and clears `MINDMAKE_*` Drive variables.
+- In a git worktree, `tests/archive-naming.test.ts` can write to the real Drive (junctioned `node_modules`). CI is unaffected; run it from the main checkout.
+- Codex's sandbox cannot run vitest or create temp dirs: Claude re-runs every card's acceptance outside it before merging.

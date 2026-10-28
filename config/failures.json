@@ -1390,6 +1390,46 @@
     "test": "none planned; process only, never to be reported as guarded",
     "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
    }
+  },
+  {
+   "id": "F19-mechanically-valid-design-rejected",
+   "on": "2026-10-28",
+   "krish": "The use of the screen is terrible, and the visuals look like Microsoft Excel from 20 years ago. This is awful. Everything's cramped into corners, misaligned. It's not even the right branding, to be honest. Don't really know where to start on this. How bad it is, but it would need to be so, so, so much better to pass. I can't publish this.",
+   "what": "The ve Gate 2 proofs passed all 11 mechanical QC checks and were handed to Krish for approval. They were small widgets in fixed corner boxes, a grid of cells, the wrong branding and a dead lower half. The Critic never ran, and nothing measured screen use, text size, corners, the caption or platform zones, or brand fidelity.",
+   "symptom": "A proof with measured_pass true and complete true looked like a 20-year-old spreadsheet and was rejected on sight; the packet said nothing about design.",
+   "cause": "A system gap, not a one-off: QC measured mechanics only, layouts were fixed small slot boxes, no design was approved before device cards were built, no key frame was compared, and a packet could be assembled with no Critic verdict.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "scripts/velib/cards.py",
+     "contains": "no frozen design lock for",
+     "how": "a device or format card for a format whose design lock is not frozen with approved key frames is refused at card write and at dispatch",
+     "test": "python tests/ve_designlock_test.py"
+    },
+    {
+     "file": "scripts/velib/qc_composition.py",
+     "contains": "the lock needs",
+     "how": "QC measures screen fill, smallest text, caption zone, platform zone, edges and the ILLUSTRATION tag against the lock; the four rejected Gate 2 frames must fail and the ten approved frames must pass",
+     "test": "python tests/ve_composition_test.py"
+    },
+    {
+     "file": "scripts/velib/qc_keyframes.py",
+     "contains": "ssim",
+     "how": "the render at each beat's key frame must match the approved still (structural similarity above the lock's minimum), or QC fails",
+     "test": "python tests/ve_keyframes_test.py"
+    },
+    {
+     "file": "scripts/velib/packet.py",
+     "contains": "Not yet approved: design and final",
+     "how": "ve packet refuses to assemble a Gate packet without passing QC, composition, key frames, a locked format and a non-blocking Critic verdict bound to the exact file that viewed every beat; ve status separates mechanically valid from design approved",
+     "test": "python tests/ve_packet_test.py"
+    }
+   ],
+   "source": "docs/ve/design/TEMPLATE.md; config/ve/design-lock.json; docs/ve/cards/design-reset/",
+   "registry": [],
+   "related": [
+    "F18-reporting-not-executed"
+   ]
   }
  ]
 }

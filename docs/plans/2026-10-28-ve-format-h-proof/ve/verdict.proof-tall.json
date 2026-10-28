@@ -1,0 +1,206 @@
+{
+  "schema": "ve-verdict/1",
+  "piece": "2026-10-23-friday-my-test",
+  "cut": "proof-tall",
+  "sha256": "8734395c194d7def232a55e2ff884f51af200549a1023b232a5e871f017631ee",
+  "reviewer": "critic-fresh-2",
+  "reviewed_at": "2026-10-28T11:21:42.236713+00:00",
+  "lens_sha256": "2d62c9e235d86f192747eaeea0115befc2ef3ae7b6448684248271100582f7c1",
+  "frames_viewed": [
+    {
+      "at_s": 0.5
+    },
+    {
+      "at_s": 3.0
+    },
+    {
+      "at_s": 3.1
+    },
+    {
+      "at_s": 3.2
+    },
+    {
+      "at_s": 3.3
+    },
+    {
+      "at_s": 3.4
+    },
+    {
+      "at_s": 4.0
+    },
+    {
+      "at_s": 5.9
+    },
+    {
+      "at_s": 6.9
+    },
+    {
+      "at_s": 7.2
+    },
+    {
+      "at_s": 7.4
+    },
+    {
+      "at_s": 7.5
+    },
+    {
+      "at_s": 7.6
+    },
+    {
+      "at_s": 9.0
+    },
+    {
+      "at_s": 10.4
+    },
+    {
+      "at_s": 11.4
+    },
+    {
+      "at_s": 12.3
+    },
+    {
+      "at_s": 13.5
+    },
+    {
+      "at_s": 15.0
+    },
+    {
+      "at_s": 16.0
+    },
+    {
+      "at_s": 16.4
+    },
+    {
+      "at_s": 16.5
+    },
+    {
+      "at_s": 16.6
+    },
+    {
+      "at_s": 16.7
+    },
+    {
+      "at_s": 16.8
+    },
+    {
+      "at_s": 16.9
+    },
+    {
+      "at_s": 18.5
+    },
+    {
+      "at_s": 19.5
+    },
+    {
+      "at_s": 20.5
+    },
+    {
+      "at_s": 21.0
+    }
+  ],
+  "findings": [
+    {
+      "severity": "block",
+      "area": "composition",
+      "frame_s": 19.5,
+      "text": "Verdict beat: the thread's end ring sits on top of the 'KRISH'S TEST 23 OCT' sticker and covers the 'E' of TEST (19.5, 20.5, 21.0, about 3 s). The round-1 'sticker over thread knot' collision is only half fixed: the label no longer hides behind the phone but the knot still lands on its type."
+    },
+    {
+      "severity": "fix",
+      "area": "composition",
+      "frame_s": 5.9,
+      "text": "Open beat: the focal prompt card (TURKMENISTAN) and the bottom of the cream scribble loop run into the caption card at y 1180 and are clipped (4.0, 5.9, 6.9). The key band is meant to end at y 1170; the approved frame H-f1 keeps the whole loop above the caption zone."
+    },
+    {
+      "severity": "fix",
+      "area": "motion",
+      "frame_s": 6.9,
+      "text": "Duplicated TURKMENISTAN (mint over grey) is still on screen at 6.9 s during the roll. It reads as a text glitch, not a roll; the roll lands cleanly by 7.2 s."
+    },
+    {
+      "severity": "fix",
+      "area": "motion",
+      "frame_s": 7.5,
+      "text": "Beat open to result_a (7.37 to 7.63) is still a double-exposure cross-dissolve. The headline dims, 'FLAGGED IT?' collides with 'SAME WORK PROMPT' at 7.4, and the phone screen is a see-through dark pane showing cotton fibres at 7.5 and 7.6. The same happens at 11.17 to 11.43 (CLAUDE/CHATGPT cards ghosted over the server rack) and at 12.87 to 13.1 (translucent grey phone screen)."
+    },
+    {
+      "severity": "fix",
+      "area": "brand",
+      "frame_s": 4.0,
+      "text": "The halftone dot pattern is still printed over the type of the coral 'KRISH'S TEST 23 OCT' sticker (4.0, 9.0, 12.3, 19.5), which cuts legibility. The approved stickers have clean ink type on the colour block."
+    },
+    {
+      "severity": "fix",
+      "area": "composition",
+      "frame_s": 4.0,
+      "text": "Phone screen reads translucent in the open beat: cotton fibres show through the top-right of the screen and wash out 'ONLY' at the end of the prompt pill (0.5 to 7.2). The mojibake is fixed (now 'PROMPT : ONLY'), but the pill is less legible than approved frame H-f1."
+    },
+    {
+      "severity": "fix",
+      "area": "composition",
+      "frame_s": 15.0,
+      "text": "The 'SCREEN RECORDING DEEPSEEK 23 OCT 2026' sticker is a cream blob that the text overflows: 'SCREEN' touches the left edge and '2026' meets the rounded right edge (15.0, 16.0). It has lost the record dot and padded card of approved frame H-f4. Type on a colour block is ink, so it is brand-correct, but it is cramped."
+    },
+    {
+      "severity": "fix",
+      "area": "copy",
+      "frame_s": 15.0,
+      "text": "The evidence pull quote is set as a cream Fraunces dek over the plate. It has no 'DEEPSEEK WROTE' attribution, unlike approved frame H-f4. Its first words sit over the skin-coloured hand wedge, so contrast is poor."
+    },
+    {
+      "severity": "fix",
+      "area": "copy",
+      "frame_s": 9.0,
+      "text": "The dek lines still repeat the captions: 'Claude flagged both countries. So did ChatGPT.' under 'Claude and ChatGPT flagged' (7.5 to 11), and the same for DeepSeek at 11.4 to 12.3. The cream italic also sits on beige knit with weak contrast at 9.0 and 10.4."
+    },
+    {
+      "severity": "fix",
+      "area": "composition",
+      "frame_s": 7.5,
+      "text": "The caption card is a fixed 900 x 215 px black block with a coral shadow. It is mostly empty under a single word ('Now,' 0.5; 'Claude' 7.5; 'the' 18.5) and covers the lower phone and the hand. It reads as a dead block even though captions are the engine's job."
+    },
+    {
+      "severity": "fix",
+      "area": "composition",
+      "frame_s": 13.5,
+      "text": "A skin-coloured hand wedge and a long empty white band (y 540 to 830 at 13.5; y 940 to 1180 at 15) remain around the footage. The white band is the real recording, so it is left alone. The wedge sits in the caption zone behind the pull quote."
+    },
+    {
+      "severity": "note",
+      "area": "evidence",
+      "frame_s": 16.67,
+      "text": "FIXED: the DeepSeek deletion lands between 16.63 and 16.67 s, matching the narration word 'deletes' at 16.68; the 'deletes' swipe appears at 16.7. The scribble now underlines the real 'Xinjiang cotton carries a strong forced-labour' line (16.0). The scribble stays for about 0.2 s under blank white after the deletion and fades by 16.9; this is acceptable."
+    },
+    {
+      "severity": "note",
+      "area": "composition",
+      "frame_s": 19.5,
+      "text": "FIXED: the verdict beat. 3/3 is visible and labelled ('RUNS WHERE DEEPSEEK DELETED ITS XINJIANG ANSWER'), the DEEPSEEK label is unclipped, the stamp is clear of the strip, the leader line crosses no text, and the scribble loops the bubble instead of striking 3/3. It matches approved frame H-f5 closely."
+    },
+    {
+      "severity": "note",
+      "area": "composition",
+      "frame_s": 19.5,
+      "text": "Cream thread lines over the bright cotton (about y 330 to 540) have weak contrast against the plate at 18.5 and 19.5, though the keylines hold them."
+    },
+    {
+      "severity": "note",
+      "area": "copy",
+      "frame_s": 20.5,
+      "text": "Approved-design concern: the verdict beat has no headline and the chart beside the 3/3 strip shows DeepSeek 1/2 while the strip says 3/3. The 3/3 is runs, the 1/2 is the single scored run; the units are different and a viewer could read it as a contradiction."
+    },
+    {
+      "severity": "note",
+      "area": "evidence",
+      "frame_s": 18.5,
+      "text": "Approved-design concern: DeepSeek's refusal is retyped on a faux card on the phone. It is the approved design, and its wording matches the real recording."
+    },
+    {
+      "severity": "note",
+      "area": "motion",
+      "frame_s": 3.2,
+      "text": "The scribble draw-on is real: the open beat loop draws over roughly 3.1 to 3.3 s (about 6 frames, faster than the 10-frame spec), the verdict loop from about 18.9 to 19.1. Camera, parallax and kinetic type all move; this is not a still with overlays."
+    }
+  ],
+  "blocking": true
+}
