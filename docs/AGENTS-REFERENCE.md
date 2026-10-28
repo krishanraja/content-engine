@@ -174,6 +174,17 @@ Descript was retired on 2026-10-12, the day it was set up, in his words
 above; no session calls it. Records written before then keep a `descript`
 field that nothing reads.
 
+Since 2026-10-28 a checked script no longer goes on its own. Krish: "Once I
+approve, the two scripts will go to teleprompter", and "Server sends
+directly". His Approve scripts press on the week's publish board is the
+approval; the server sends with his key (`apps/control-plane/api/_teleprompter.ts`,
+`TELEPROMPTER_API_KEY`, which he places himself), its tools fixed in code,
+and reads each script back against the approved hash. Until the key is in
+place, the session send above is the fallback, and `teleprompter_send.py
+plan` refuses any cut whose exact words he has not approved on the board
+(`config/teleprompter.json`, `approval`). The terms and the never list above
+are unchanged.
+
 <a id="rule-13"></a>
 
 **Web publish board migration (19 October 2026).** Full parity is implemented
