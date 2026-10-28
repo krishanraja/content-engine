@@ -186,6 +186,30 @@ export function parseReadOnly(body: unknown): Parsed<{ machine: string; reads: R
   return { ok: true, value: { machine: b.machine, reads } }
 }
 
+/** The check a machine makes before reading a dropped file: which of these media it need not read, because the
+ *  engine holds a reading of the same or a newer revision, or one made from a link, which a drop reading never
+ *  replaces (writeReads). The folders also hold what the other machine and the cloud filed from links: on
+ *  28 October 2026 each home computer re-read those, nineteen files of work and a window for every program it ran. */
+export function parseCheck(body: unknown): Parsed<{ machine: string; shas: string[]; engine_rev: string }> {
+  const b = obj(body)
+  if (!b || typeof b.machine !== 'string' || !MACHINE_RE.test(b.machine)) return { ok: false, error: 'invalid_machine' }
+  const shas = b.check
+  if (!Array.isArray(shas) || shas.length < 1 || shas.length > MAX_FILES
+    || !shas.every(sha => typeof sha === 'string' && SHA256_RE.test(sha))) return { ok: false, error: 'invalid_check' }
+  if (typeof b.engine_rev !== 'string' || b.engine_rev.length < 1 || b.engine_rev.length > 40) return { ok: false, error: 'invalid_engine_rev' }
+  return { ok: true, value: { machine: b.machine, shas: [...new Set(shas as string[])], engine_rev: b.engine_rev } }
+}
+
+export async function heldReads(store: WatchStore, shas: string[], engineRev: string): Promise<Record<string, string>> {
+  const existing = await store.readRevs(shas)
+  const held: Record<string, string> = {}
+  for (const sha of shas) {
+    const found = existing.get(sha)
+    if (found && (found.linked || compareRev(found.engine_rev, engineRev) >= 0)) held[sha] = found.engine_rev
+  }
+  return held
+}
+
 /** Revisions compare by their numbers, so cw-2026.10.24 is older than cw-2026.11.2. */
 export function compareRev(a: string, b: string): number {
   return a.localeCompare(b, 'en', { numeric: true })

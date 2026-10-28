@@ -65,12 +65,24 @@ export interface WatchHealth {
   repaired: string[]
 }
 
+/** Whether the machine's scheduled tasks open windows, as its recordings pass found them (scripts/windowless.ps1):
+ *  the launcher that hides them built and proved, tasks already hidden, tasks changed this pass, tasks that could not
+ *  be changed. Counts only, never a task's name or command. Krish, 2026-10-28: "HIDE ALL CONSOLE POP UPS FOREVER FROM
+ *  EVERY REPO AND LOCAL TASK". */
+export interface WindowsHealth {
+  launcher: 'ok' | 'failed'
+  hidden: number
+  wrapped: number
+  left: number
+}
+
 export interface LaneReport {
   schema_version: 1
   machine: string
   at: string
   problems: string[]
   watch?: WatchHealth
+  windows?: WindowsHealth
 }
 
 const COUNT_KEY_RE = /^[a-z0-9_.]{1,80}$/
@@ -111,6 +123,14 @@ export function parseWatchHealth(value: unknown): WatchHealth | undefined {
   }
 }
 
+export function parseWindowsHealth(value: unknown): WindowsHealth | undefined {
+  if (value === null || typeof value !== 'object' || Array.isArray(value)) return undefined
+  const w = value as Record<string, unknown>
+  if (w.launcher !== 'ok' && w.launcher !== 'failed') return undefined
+  const count = (n: unknown) => (Number.isInteger(n) && (n as number) >= 0 && (n as number) <= 10_000 ? n as number : 0)
+  return { launcher: w.launcher, hidden: count(w.hidden), wrapped: count(w.wrapped), left: count(w.left) }
+}
+
 const MACHINE_RE = /^[A-Za-z0-9][A-Za-z0-9_-]{0,62}$/
 
 export function parseLaneReport(value: unknown, now: string): LaneReport | null {
@@ -120,7 +140,11 @@ export function parseLaneReport(value: unknown, now: string): LaneReport | null 
   const problems = [...new Set(body.problems)]
   if (problems.some((p) => typeof p !== 'string' || !Object.prototype.hasOwnProperty.call(LANE_PROBLEMS, p))) return null
   const watch = parseWatchHealth(body.watch)
-  return { schema_version: 1, machine: body.machine, at: now, problems: (problems as string[]).sort(), ...(watch ? { watch } : {}) }
+  const windows = parseWindowsHealth(body.windows)
+  return {
+    schema_version: 1, machine: body.machine, at: now, problems: (problems as string[]).sort(),
+    ...(watch ? { watch } : {}), ...(windows ? { windows } : {}),
+  }
 }
 
 export function laneKey(machine: string): string {
