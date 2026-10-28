@@ -181,6 +181,7 @@ class FrozenTest(unittest.TestCase):
             stack.enter_context(patch.object(qc, 'long_silences', return_value=[]))
             stack.enter_context(patch.object(qc, 'sha256_file', return_value='synthetic'))
             stack.enter_context(patch.object(qc, 'duration_s', return_value=5))
+            stack.enter_context(patch('velib.qc_composition.composition_checks', return_value={'applies': False, 'note': 'synthetic frames'}))
             for module, name in [('qc_sync', 'av_xcorr'), ('qc_joins', 'decoder'), ('qc_captions', 'ocr'),
                                  ('qc_brand', 'mark_tile'), ('qc_cues', 'cue_sync')]:
                 stack.enter_context(patch(f'velib.{module}.{name}', return_value={'pass': True, 'status': 'measured'}))
