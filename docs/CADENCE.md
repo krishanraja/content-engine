@@ -16,6 +16,10 @@ in any other ideas that we can flesh out?"
 
 ## The standing answers (never asked again)
 
+Video is made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`); the quick-edit path stays the fallback until ve passes Phase 3.
+
+The render and filing steps below describe the fallback workflow. A schema 2 direction follows ve's protocol; it does not go through `kit.py` or `make.py`.
+
 - **Two cuts, every piece** (house rule TWO_CUTS): a 5-minute video and a
   90-second version, each recorded from its own script with its own hook
   and outro. `story_check.py` holds the lengths.
