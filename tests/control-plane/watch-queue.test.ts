@@ -100,6 +100,14 @@ describe('claim', () => {
 
   // Krish, 2026-10-27: "Why can't I add links into my inspiration board pre-tagged for production or content?" Control
   // Center writes his tag as lane; content-watcher files by it (production: Production Inspo, strategy: Content Inspo).
+  it('leaves a link to the home computers for 15 minutes before the cloud backup may take it', async () => {
+    const store = new MemoryStore([request(1, { requested_at: minutesAgo(16) }), request(2, { requested_at: minutesAgo(5) })])
+    const cloud = await claim(store, 'cloud-github', 5, NOW)
+    expect(cloud.requests.map(r => r.id)).toEqual([uuid(1)])
+    const home = await claim(store, 'LORIMER', 5, NOW)
+    expect(home.requests.map(r => r.id)).toEqual([uuid(2)])
+  })
+
   it('hands the home computer the tag he picked when he pasted the link, unchanged', async () => {
     const store = new MemoryStore([request(1, { lane: 'production' }), request(2, { lane: 'strategy' })])
     const out = await claim(store, 'HOME-1', 2, NOW)

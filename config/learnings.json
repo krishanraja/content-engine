@@ -1722,6 +1722,36 @@
           "how": "The claim view carries the lane"
         }
       ]
+    },
+    {
+      "id": "never-paste-logs",
+      "on": "2026-10-28",
+      "krish": "i should never really need to copy and paste log files to you like this, ever, this is ridiculous",
+      "why": "The content watcher on both home computers had stopped on 25 and 26 October, and the only record of why was a log file on each machine. The session asked him to open Task Scheduler, press Run and paste the log from each computer, because nothing outside the machines could see their state.",
+      "means": "Every job on the home computers sends its own health to the engine, where a session reads it (GET /api/library/recordings/lane on the engine key). A session never asks Krish to open a log, Task Scheduler or a file on his computer, or to press anything there to diagnose; it reads the engine, and when the engine cannot see something, it builds the report that lets it. The recordings pass, which updates itself on both machines every five minutes, keeps the content watcher updated, starts it when it goes quiet, stops a run that is stuck and sends its health.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "scripts/recordings-upload.ps1",
+          "contains": "function Invoke-WatchKeeper",
+          "how": "The recordings pass keeps the content watcher running and sends its health"
+        },
+        {
+          "file": "apps/control-plane/api/library/recordings/lane.ts",
+          "contains": "GET /api/library/recordings/lane, on the engine key",
+          "how": "A session reads every home computer's health without asking Krish"
+        },
+        {
+          "file": "tests/recordings-upload-watch.test.ts",
+          "contains": "i should never really need to copy and paste log files",
+          "how": "A test that only known problems are sent and the keeper runs in Windows PowerShell"
+        },
+        {
+          "file": "WORKBENCH.md",
+          "contains": "Never ask Krish to open a log",
+          "how": "How Krish wants to be worked with"
+        }
+      ]
     }
   ]
 }

@@ -87,7 +87,7 @@ vi.mock('../../apps/control-plane/api/library/_inboxDrive.js', async (original) 
 import driveInbox from '../../apps/control-plane/api/library/recordings/drive-inbox.js'
 import lane from '../../apps/control-plane/api/library/recordings/lane.js'
 import { INBOX_FOLDER_ID, INBOX_RUN_BUDGET_MS, copyFits, planInbox } from '../../apps/control-plane/api/library/_inboxDrive.js'
-import { LANE_REPORT_FRESH_HOURS, lanePlainProblems, parseLaneReport } from '../../apps/control-plane/api/library/_lanes.js'
+import { LANE_PROBLEMS, LANE_REPORT_FRESH_HOURS, lanePlainProblems, parseLaneReport } from '../../apps/control-plane/api/library/_lanes.js'
 import { LIBRARY_MAX_BYTES, libraryMimeTypes } from '../../apps/control-plane/api/library/_library.js'
 import { CONTENT_ENGINE_JOBS } from '../../apps/control-plane/lib/contentEngineSchedule.js'
 import { JOBS } from '../../apps/control-plane/api/content-engine/_jobs.js'
@@ -243,6 +243,48 @@ describe('POST /api/library/recordings/lane', () => {
     const report = parseLaneReport({ machine: 'B', problems: ['inbox_unreachable'] }, new Date(0).toISOString())!
     expect(lanePlainProblems([report], 1000)).toHaveLength(1)
     expect(lanePlainProblems([report], LANE_REPORT_FRESH_HOURS * 3_600_000 + 1)).toEqual([])
+  })
+})
+
+describe('the content watcher in the lane report', () => {
+  // Krish, 2026-10-28: "i should never really need to copy and paste log files to you like this, ever, this is
+  // ridiculous". The recordings pass sends the watcher's health; the engine keeps its shape and nothing else.
+  it('keeps the watch block by its shape and drops anything else', () => {
+    const report = parseLaneReport({
+      machine: 'SURFACE', problems: ['watch_cannot_reach_engine'],
+      watch: {
+        last_run_at: '2026-10-26T07:59:23Z', stage: 'claim', stage_at: '2026-10-26T07:59:23Z', task_state: 'Running',
+        task_result: 267009, head: '827475f', repaired: ['stopped_stuck_run', 'started_run', 'Bad Word'],
+        counts: { claimed: 0, 'engine.engine_tls_untrusted': 1, 'https://x.example/reel': 1, seconds: -1, note: 'a caption' },
+        message: 'a whole log line',
+      },
+    }, new Date(0).toISOString())!
+    expect(report.problems).toEqual(['watch_cannot_reach_engine'])
+    expect(report.watch).toEqual({
+      last_run_at: '2026-10-26T07:59:23Z', stage: 'claim', stage_at: '2026-10-26T07:59:23Z', task_state: 'Running',
+      task_result: 267009, head: '827475f', repaired: ['stopped_stuck_run', 'started_run'],
+      counts: { claimed: 0, 'engine.engine_tls_untrusted': 1 },
+    })
+    expect(lanePlainProblems([report], 1000)).toEqual([`home computer SURFACE ${LANE_PROBLEMS.watch_cannot_reach_engine}`])
+  })
+
+  it('accepts a report with no watch block, as every pass before this one sent', () => {
+    expect(parseLaneReport({ machine: 'A', problems: [] }, new Date(0).toISOString())).toEqual(
+      { schema_version: 1, machine: 'A', at: new Date(0).toISOString(), problems: [] })
+  })
+
+  it('gives every machine\'s last report back to the engine key, and to nothing else', async () => {
+    process.env.ENGINE_OPERATOR_TOKEN = 'e'.repeat(48)
+    try {
+      const post = await call(lane, { method: 'POST', headers: { authorization: `Bearer ${RUNNER}`, 'content-type': 'application/json' },
+        body: { machine: 'LORIMER', problems: ['watch_run_failed'], watch: { last_run_at: '2026-10-25T07:59:17Z', counts: { claimed: 0 } } } })
+      expect(post.statusCode).toBe(200)
+      expect((await call(lane, { method: 'GET', headers: {} })).statusCode).toBe(401)
+      expect((await call(lane, { method: 'GET', headers: { authorization: `Bearer ${RUNNER}` } })).statusCode).toBe(401)
+      const read = await call(lane, { method: 'GET', headers: { authorization: `Bearer ${'e'.repeat(48)}` } })
+      expect(read.statusCode).toBe(200)
+      expect(read.body.reports.map((r: any) => [r.machine, r.problems, r.watch?.counts])).toEqual([['LORIMER', ['watch_run_failed'], { claimed: 0 }]])
+    } finally { delete process.env.ENGINE_OPERATOR_TOKEN }
   })
 })
 
