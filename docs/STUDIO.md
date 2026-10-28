@@ -12,6 +12,10 @@ fit together is in `docs/SYSTEM_MAP.md`; why either exists is in
 
 ## What it is
 
+Video is made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`); the quick-edit path stays the fallback until ve passes Phase 3.
+
+The job-based Studio protocol below remains distinct from ve's schema 2 spec and `FormatMaster` renderer. Its V1/V2 commands and branding details describe that job path.
+
 The Studio turns an approved editorial brief into a finished Short or a swipe
 carousel. It is deterministic: every stage writes content-addressed artifacts
 into a job folder, every gate binds Krish's approval to an exact artifact
@@ -100,13 +104,13 @@ You've got the logos as per the website for all of that"
 (`fixtures/feedback/studio-branding-mark-channel-20260926.json`), then
 "placement approved" on the piece 2 storyboard: the mark alone on every
 beat, top left; the full logo and the channel once, at the end, and nothing
-at the opening. That placement still holds in the Studio. The quick-edit
+at the opening. That placement still holds in the job-based Studio renderer. The quick-edit
 cuts changed on 2026-10-12: both of a piece's videos are made with
-`scripts/quick-edit` (the only path that makes 16:9 as well as 9:16), and
+`scripts/quick-edit` (the fallback path for both 16:9 and 9:16; ve also renders both), and
 there Krish asked for an opening, "I also want the video to have a 1-2 sec
 animated make your mind up intro visual before my face comes in" (house rule
-INTRO_STING), with licensed music under the video (MUSIC_BED). The Studio
-stays without music or an intro until its audio ledger exists: its contract
+INTRO_STING), with licensed music under the video (MUSIC_BED). The job-based Studio
+stays without music or an intro until its audio ledger exists: its V2 contract
 refuses music until then (`packages/contracts/src/v2.ts`), its dialogue
 timeline must start at 0, and `config/music-library.json` is the first
 ledger it could read. Version 1 kept the Mindmake Studio look
@@ -121,7 +125,7 @@ blocks and halftone dots on colour blocks; stickers tilt, type and logos
 never do. The logo takes no effects either, so every logo sits above the
 grain (the approved mock had grain over the logo; the brand book wins).
 
-What it draws:
+What the job-based Studio renderer draws (ve uses `apps/renderer/src/engine/`):
 
 - A Short. The mark on an ink tile with a 10 px hard shadow in the
   channel's colour, top left on every beat (left 72, top 150, inside the
@@ -302,7 +306,7 @@ The V1 graph still exists only so V1 jobs can resume. New work is V2.
 | Core | the job store, stage logic, editorial gates, evidence, art director, feedback, runner protocol | `packages/core` |
 | CLI | the `studio` command; `studio --help` and `studio v2 --help` print the machine-readable groups | `packages/cli`; `scripts/studio.ps1` on Windows |
 | Runner | a Windows daemon: heartbeats, Drive Inbox discovery, claims queued commands and approved production briefs from Control Center, writes signed local decisions | `apps/runner`, logic in `packages/core/src/runner.ts` |
-| Renderer | Remotion compositions `MindmakeStoryV2` (1080x1920), `MindmakeCarouselSlide` (1080x1350) and the V1 `MindmakeShort` | `apps/renderer` |
+| Renderer | ve: `FormatMaster` (1080x1920 or 1920x1080); job-based Studio: `MindmakeStoryV2` (1080x1920), `MindmakeCarouselSlide` (1080x1350) and the V1 `MindmakeShort` | `apps/renderer` |
 | Carousel director | authored swipe stories of 5 to 10 slides; PNG for Instagram, PNG plus PDF for LinkedIn | `packages/core/src/carousel.ts`, `config/carousel-visual-direction.json` |
 | Station harnesses | a typed boundary (`station.json`) and a judgement card (`STATION.md`) per stage; checked for parity with the stage graph by `npm run check:stations`. Nothing reads them at runtime | `.agents/skills/mindmake-video/stations/` |
 | Art director | one governed registry of visual devices with fail-closed eligibility and scoring | `config/techniques.json`, `docs/ART_DIRECTOR_REPERTOIRE.md` |

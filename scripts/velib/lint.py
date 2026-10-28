@@ -111,6 +111,13 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
                         lo, hi = ids.index(persist['from_beat']), ids.index(persist['to_beat'])
                         if not lo <= index <= hi:
                             out.append(f'motion.carry {at}.uses: {used_obj} is used outside its persist range {persist["from_beat"]}..{persist["to_beat"]}')
+        first_verb: dict[str, tuple[int, str]] = {}
+        for beat in beats:
+            for event in beat['events']:
+                first_verb.setdefault(event['obj'], (event['at_w'], event['verb']))
+        for obj_id, (word, verb) in first_verb.items():
+            if verb != 'enter':
+                out.append(f'motion.enters {where}: {obj_id} first acts with "{verb}" at word {word}; an object enters before anything else happens to it, or it never appears')
         if cut['aspect'] == '9:16' and whole:
             minutes = max(1.0, (beats[-1]['span']['to_w'] - beats[0]['span']['from_w']) / (WORDS_PER_SECOND * 60))
             need = math.ceil(fmt['qc'].get('layout_types_per_min_tall', 1) * min(minutes, 1.0))

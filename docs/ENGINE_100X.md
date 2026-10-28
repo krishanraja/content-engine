@@ -125,8 +125,10 @@ only a reader; connector means reached through an MCP connector in a session.
 
 ### Cut: ten times richer post, in order of what it adds
 
+Video is made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`); the quick-edit path stays the fallback until ve passes Phase 3.
+
 1. **The data graphics** (news wall, odds bars) dropped in by anchor word
-   (`scripts/quick-edit`, in place).
+   (ve: word-indexed events compiled to frames; `scripts/quick-edit` remains the fallback).
 2. **Sound** from Runway or ElevenLabs: the receipt tearing, the till, a quiet
    bed under the cold open and outro. Krish's voice stays the only voice.
 3. **Screen captures** of the interactive for the beat it explains.

@@ -12,6 +12,10 @@ import { StoryIntroStandoff, STORY_INTRO_FRAMES } from './story/StoryIntroStando
 import { StoryOutroStandoff, STORY_OUTRO_FRAMES } from './story/StoryOutroStandoff'
 import { StoryStandoffPropsSchema } from './story/props'
 import { mondayStandoffProps } from './story/monday'
+import { FormatMaster } from './engine'
+import { EngineRenderPropsSchema, type EngineRenderProps } from './engine/props'
+import { fromAsciiProps } from './engine/transport'
+import veDefaultProps from '../../../fixtures/ve/engine-core/props.json'
 
 const defaultProps: ShortProps = {
   sourceFile: 'placeholder.mp4',
@@ -94,9 +98,42 @@ const thumbnailDefaultProps: ThumbnailProps = {
   tokens: { ink: '#0C1512', inkDeep: '#070D0B', inkSoft: '#16221D', cream: '#F4EFE4', mint: '#7EF0C0', section: '#FF6A4D' },
 }
 
+function TransportFormatMaster(props: EngineRenderProps) {
+  return <FormatMaster {...EngineRenderPropsSchema.parse(fromAsciiProps(props))} />
+}
+
 export function RemotionRoot() {
   return (
     <>
+      <Composition
+        id="VeFormatMasterTall"
+        component={TransportFormatMaster}
+        width={1080}
+        height={1920}
+        fps={30}
+        durationInFrames={120}
+        schema={EngineRenderPropsSchema}
+        defaultProps={EngineRenderPropsSchema.parse({ ...veDefaultProps, aspect: '9:16' })}
+        calculateMetadata={({ props }) => {
+          const parsed = EngineRenderPropsSchema.parse(fromAsciiProps(props))
+          // Keep transport props intact: the component decodes its own copy once.
+          return { durationInFrames: parsed.durationFrames }
+        }}
+      />
+      <Composition
+        id="VeFormatMasterWide"
+        component={TransportFormatMaster}
+        width={1920}
+        height={1080}
+        fps={30}
+        durationInFrames={120}
+        schema={EngineRenderPropsSchema}
+        defaultProps={EngineRenderPropsSchema.parse({ ...veDefaultProps, aspect: '16:9' })}
+        calculateMetadata={({ props }) => {
+          const parsed = EngineRenderPropsSchema.parse(fromAsciiProps(props))
+          return { durationInFrames: parsed.durationFrames }
+        }}
+      />
       <Composition
         id="MindmakeShort"
         component={MindmakeShort}

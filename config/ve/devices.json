@@ -1,0 +1,9 @@
+{
+  "devices": {
+    "test_grid": { "verbs": ["enter", "mark", "stamp", "highlight", "carry", "exit"] },
+    "record_card": { "verbs": ["enter", "stamp", "exit"] },
+    "query_chip": { "verbs": ["enter", "highlight", "exit"] },
+    "evidence_card": { "verbs": ["enter", "fill", "mark", "stamp", "exit"] },
+    "kinetic_stat": { "verbs": ["enter", "count_to", "exit"] }
+  }
+}

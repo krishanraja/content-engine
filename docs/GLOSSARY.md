@@ -119,6 +119,10 @@ this repository start with a retired name.
 
 ## The Studio
 
+Video is made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`); the quick-edit path stays the fallback until ve passes Phase 3.
+
+- **ve.** The spec-driven video engine: schema 2 `creative-direction.json`, word-indexed beats and events, `FormatMaster`, and measured readiness from `python scripts/ve.py status <piece>`. The job and station terms below describe the separate job-based Studio protocol.
+
 - **Series.** The Studio's own classification, still `money_of_ai` and
   `built_with_ai`. Not the same thing as a subchannel (see Names).
 - **Job.** One production run, a folder of content-addressed artifacts and an

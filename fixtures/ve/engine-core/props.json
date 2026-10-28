@@ -1,0 +1,31 @@
+{
+  "pieceId": "engine-core-fixture",
+  "cutId": "voiceover-tall",
+  "format": "voice-led-pictures",
+  "aspect": "9:16",
+  "fps": 30,
+  "durationFrames": 120,
+  "tokens": {
+    "ink": "rgb(12, 21, 18)", "inkDeep": "rgb(7, 13, 11)", "inkSoft": "rgb(22, 34, 29)",
+    "cream": "rgb(244, 239, 228)", "mint": "rgb(126, 240, 192)", "channel": "rgb(255, 106, 77)"
+  },
+  "series": { "label": "mind.the.gap", "day": "Fridays", "promise": "Follow the pattern", "site": "makeyourmindup.ai" },
+  "brand": {
+    "mark": { "src": "fixture-mark.png", "pixelWidth": 100, "pixelHeight": 100 },
+    "logo": { "src": "fixture-logo.png", "pixelWidth": 300, "pixelHeight": 100 },
+    "stacked": { "src": "fixture-stacked.png", "pixelWidth": 100, "pixelHeight": 200 }
+  },
+  "segments": [],
+  "audio": { "stem": { "src": "fixture-voiceover.wav", "trimBeforeFrames": 6 }, "sfx": [] },
+  "captions": [
+    { "fromFrame": 0, "toFrame": 60, "words": [{ "text": "Watch the pattern.", "atFrame": 0 }], "swipeIndex": null },
+    { "fromFrame": 60, "toFrame": 120, "words": [{ "text": "Check what changed.", "atFrame": 60 }], "swipeIndex": null }
+  ],
+  "beats": [
+    { "id": "hook", "role": "hook", "layout": "F3", "fromFrame": 0, "toFrame": 60, "uses": [], "transitionOut": "cut", "sectionBeat": true },
+    { "id": "call", "role": "call", "layout": "F3", "fromFrame": 60, "toFrame": 120, "uses": [], "transitionOut": "cut", "sectionBeat": false }
+  ],
+  "objects": [],
+  "events": [],
+  "illustrationLabels": []
+}

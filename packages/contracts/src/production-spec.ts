@@ -78,6 +78,9 @@ export const VeObjectSchema = z.object({
   dataset: SlugSchema.optional(),
   meaning: z.string().min(8),
   persist: z.object({ from_beat: SlugSchema, to_beat: SlugSchema }).strict(),
+  /** Device parameters, validated by the device's own schema (apps/renderer/src/engine/devices/<id>/schema.ts).
+   *  Media paths (src, logoSrc) are relative to the piece's assets folder. */
+  params: z.record(z.string(), z.unknown()).default({}),
 }).strict()
 
 export const VeSignatureSchema = z.object({

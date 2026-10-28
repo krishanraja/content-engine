@@ -2,6 +2,10 @@
 
 > Scope: the Video and Carousel Studio, plus the recovery of the content engine's crons. For the whole system start at `README.md`. Its known stale passages are listed in `docs/STUDIO.md`, "The detailed Studio documents".
 
+Video is made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`); the quick-edit path stays the fallback until ve passes Phase 3.
+
+The `studio` commands, job state and exit codes below describe the job-based Studio. For ve, use `python scripts/ve.py <command> -h`; `ingest`, `stills` and `file` currently return exit 2 as placeholders. `compile`, `render`, `qc`, `ledger` and `time` are implemented; a successful QC command alone does not establish readiness (`ve status <piece>`).
+
 ## Source and state
 
 GitHub is authoritative for source, configuration, schemas, tests, and skills. On Windows, runtime state defaults to `%USERPROFILE%\Documents\MindmakeVideoStudio\runtime` and is never committed. This explicit non-virtualized path keeps Codex and the independent Scheduled Task on one job, receipt, Python, browser, and cache root. An approved package is filed in `MINDMAKE_ARCHIVE_ROOT` by `studio v2 package archive`, in a folder named by the date, the piece's title and where to post it ("The archive", below).
@@ -314,8 +318,8 @@ For source or visual calibration, create the V2 job with `--purpose calibration`
 ## Cloud engine recovery
 
 The control plane runs 16 scheduled jobs from `apps/control-plane/vercel.json`.
-Everything here works with the Windows machine off. Only rendering, packaging
-and upload need it, and those wait rather than fail.
+Everything here works with the Windows machine off. Only the job-based Studio runner's rendering, packaging
+and upload need it, and those wait rather than fail; ve rendering is a separate CLI path.
 
 **A job failed, or the obligation strip says one is stale.**
 
