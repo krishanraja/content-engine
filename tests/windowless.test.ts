@@ -44,7 +44,7 @@ describe('the windowless launcher and keeper', () => {
     const pass = upload.slice(upload.indexOf('  if (-not $Check) {\n'), upload.indexOf('function Publish-Music {'))
     expect(pass).toContain('try { Invoke-Windows } catch {')
     const block = upload.slice(upload.indexOf('function Get-WindowsBlock {'), upload.indexOf('function Send-LaneReport {'))
-    expect([...block.matchAll(/^\s{4}([a-z]+) = /gm)].map(m => m[1])).toEqual(['launcher', 'hidden', 'wrapped', 'left'])
+    expect([...block.matchAll(/^\s{4}([a-z_]+) = /gm)].map(m => m[1])).toEqual(['launcher', 'hidden', 'wrapped', 'left', 'left_by', 'left_ours'])
   })
 
   it('installs both loop tasks through the launcher, and falls back to a hidden PowerShell only when it cannot be built', () => {
@@ -138,15 +138,20 @@ $principal = New-ScheduledTaskPrincipal -UserId $user -LogonType Interactive -Ru
 try {
   Register-ScheduledTask -TaskName 'console' -TaskPath $path -Action $action -Principal $principal -Force | Out-Null
   Register-ScheduledTask -TaskName 'gui' -TaskPath $path -Action $gui -Principal $principal -Force | Out-Null
+  $older = New-ScheduledTaskAction -Execute (Join-Path $env:TEMP 'run-hidden-000000000000.exe') -Argument '"%windir%\\System32\\cmd.exe" /c exit 0'
+  Register-ScheduledTask -TaskName 'older' -TaskPath $path -Action $older -Principal $principal -Force | Out-Null
   Disable-ScheduledTask -TaskName 'console' -TaskPath $path | Out-Null
   $first = Invoke-WindowKeeper -TaskPathPrefix $path
   $second = Invoke-WindowKeeper -TaskPathPrefix $path
+  $o = @((Get-ScheduledTask -TaskName 'older' -TaskPath $path).Actions)[0]
+  $ran = Invoke-Windowless $o.Execute '%windir%\\System32\\cmd.exe' '/c exit 5'
   $task = Get-ScheduledTask -TaskName 'console' -TaskPath $path
   $a = @($task.Actions)[0]
   $g = @((Get-ScheduledTask -TaskName 'gui' -TaskPath $path).Actions)[0]
   [ordered]@{
     first = $first; second = $second; execute = (Split-Path -Leaf $a.Execute); arguments = $a.Arguments
     directory = $a.WorkingDirectory; enabled = $task.Settings.Enabled; gui = $g.Execute
+    older = (Split-Path -Leaf $o.Execute); older_arguments = $o.Arguments; ran = $ran
     log = @(Get-Content -LiteralPath (Join-Path $env:LOCALAPPDATA 'Mindmake\\windowless\\changed.log')).Count
   } | ConvertTo-Json -Compress -Depth 4
 } finally {
@@ -154,13 +159,17 @@ try {
 }
 `
     const result = powershell(home, command)
-    expect(result.first).toMatchObject({ launcher: 'ok', wrapped: 1, hidden: 0, left: 0 })
-    expect(result.second).toMatchObject({ launcher: 'ok', wrapped: 0, hidden: 1, left: 0 })
+    // console and older are changed; gui has no console and is left alone.
+    expect(result.first).toMatchObject({ launcher: 'ok', wrapped: 2, hidden: 0, left: 0 })
+    expect(result.second).toMatchObject({ launcher: 'ok', wrapped: 0, hidden: 2, left: 0 })
+    expect(result.older).toBe(result.execute)  // an older build of the launcher is replaced by this one
+    expect(result.older_arguments).toBe('"%windir%\\System32\\cmd.exe" /c exit 0')
+    expect(result.ran).toBe(5)  // %windir% in the program's path is expanded
     expect(result.execute).toMatch(/^run-hidden-[0-9a-f]{12}\.exe$/)
     expect(result.arguments).toBe('"cmd.exe" /c exit 0')
     expect(result.directory).toBeTruthy()
     expect(result.enabled).toBe(false)
     expect(result.gui).toBe('notepad.exe')
-    expect(result.log).toBe(1)
+    expect(result.log).toBe(2)
   }, 180_000)
 })

@@ -991,6 +991,8 @@ function Get-WindowsBlock {
     hidden = [int]$script:Windows.hidden
     wrapped = [int]$script:Windows.wrapped
     left = [int]$script:Windows.left
+    left_by = $script:Windows['left_by']
+    left_ours = @($script:Windows['left_ours'])
   }
 }
 

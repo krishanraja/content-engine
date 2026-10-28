@@ -122,7 +122,7 @@ function Invoke-WindowKeeper {
   # Every task of his that would open a console window runs through run-hidden.exe after this. Returns counts only:
   # launcher ok or failed, tasks already hidden, tasks changed now, and tasks that could not be changed.
   param([string]$TaskPathPrefix = '\', [string]$Root = (Get-WindowlessRoot))
-  $result = [ordered]@{ launcher = 'failed'; hidden = 0; wrapped = 0; left = 0 }
+  $result = [ordered]@{ launcher = 'failed'; hidden = 0; wrapped = 0; left = 0; left_by = [ordered]@{}; left_ours = @() }
   try { $launcher = Get-WindowlessLauncher -Root $Root } catch { $result['error'] = $_.Exception.Message; return $result }
   $result.launcher = 'ok'
   $me = [System.Security.Principal.WindowsIdentity]::GetCurrent().User
@@ -171,9 +171,23 @@ function Invoke-WindowKeeper {
     } catch {
       $result.left++
       $result['error'] = "$($task.TaskName): $($_.Exception.Message)"
+      $why = Get-WindowlessReason $task $_.Exception
+      $result.left_by[$why] = 1 + [int]$result.left_by[$why]
+      # Our own tasks are named, so the engine can say which; anyone else's stays a count.
+      if ($task.TaskName -match '^Mindmake [A-Za-z0-9 ._-]{1,60}$') { $result.left_ours += $task.TaskName }
     }
   }
   return $result
+}
+
+function Get-WindowlessReason($Task, $Exception) {
+  # Why a task could not be changed, as a class the engine can carry (never the task's name or command):
+  # elevated (it runs with highest privileges, which a pass without them cannot change), access_denied, or other.
+  if ([string](Get-WindowlessField $Task.Principal 'RunLevel') -eq 'Highest') { return 'elevated' }
+  for ($e = $Exception; $null -ne $e; $e = $e.InnerException) {
+    if ($e.HResult -eq -2147024891 -or $e.Message -match 'Access is denied') { return 'access_denied' }
+  }
+  return 'other'
 }
 
 function Get-WindowlessField($Object, [string]$Name) {
