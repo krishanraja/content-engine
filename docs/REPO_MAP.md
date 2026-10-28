@@ -2248,9 +2248,12 @@ What the compiler looks for, as pure functions.
 - `const LANE_REPORT_FRESH_HOURS`
 - `interface WatchHealth`
 - `interface WindowsHealth`
+- `const PREFLIGHT_CHECKS: readonly string[]`
+- `interface PreflightHealth`
 - `interface LaneReport`
 - `function parseWatchHealth(value: unknown): WatchHealth | undefined`
 - `function parseWindowsHealth(value: unknown): WindowsHealth | undefined`
+- `function parsePreflightHealth(value: unknown): PreflightHealth | undefined`
 - `function parseLaneReport(value: unknown, now: string): LaneReport | null`
 - `function laneKey(machine: string): string`
 - `function lanePlainProblems(reports: readonly LaneReport[], now: number): string[]`

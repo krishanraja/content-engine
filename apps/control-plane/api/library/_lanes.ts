@@ -44,6 +44,11 @@ export const LANE_PROBLEMS: Readonly<Record<string, string>> = Object.freeze({
   watch_run_failed: 'has a content watcher whose runs fail (its health report names the cause)',
   watch_not_running: 'has a content watcher that has not run for 15 minutes even after this pass started it',
   watch_task_broken: 'has a content watcher whose task cannot start, and this pass could not install it again (its log says why)',
+  // The Saturday overnight preflight (scripts/overnight/preflight.ps1), which this pass runs once each Saturday after
+  // 18:00 local. Reported while its failed result is under 48 hours old ($PreflightFailedHours in
+  // scripts/recordings-upload.ps1), so a machine that could not run the overnight production unattended is named
+  // before Sunday night.
+  preflight_failed: 'failed its Saturday overnight preflight, so it may not run the overnight production unattended (GET /api/library/recordings/lane names the checks that failed)',
 })
 
 /** A report older than this no longer fails the job: a machine that is off is
@@ -80,6 +85,38 @@ export interface WindowsHealth {
   left_names?: string[]
 }
 
+/** The checks of the Saturday overnight preflight (scripts/overnight/preflight.ps1), and preflight_stopped for a
+ *  preflight that did not finish. Plan Wave 1, the clock's "Sat 18:00 Preflight" row: whether this machine could run
+ *  the overnight production unattended, proved a week before the runner exists. */
+export const PREFLIGHT_CHECKS: readonly string[] = Object.freeze([
+  'claude_cli', 'claude_headless', 'codex_companion', 'codex_login', 'codex_allowance', 'ffmpeg', 'tesseract', 'disk', 'drive',
+  'preflight_stopped',
+])
+
+/** The preflight's last result on one machine, as its recordings pass sends it with every report: names, versions,
+ *  counts and times only, never a path, a message or an account. */
+export interface PreflightHealth {
+  at: string | null
+  ok: boolean
+  failed: string[]
+  claude_version: string | null
+  /** The permission mode the headless turn ran in; never bypassPermissions on a machine that passed. */
+  permission_mode: string | null
+  /** Where the headless turn's key came from (Claude Code's apiKeySource: none means his own sign-in). */
+  auth: string | null
+  /** The MCP servers the headless turn loaded, each with its status. */
+  mcp_servers: { name: string; status: string }[]
+  codex_companion: string | null
+  codex_login: boolean | null
+  codex_weekly_used_pct: number | null
+  codex_resets_at: string | null
+  ffmpeg: string | null
+  tesseract: string | null
+  free_gb: number | null
+  drive_reachable: number | null
+  drive_folders: number | null
+}
+
 export interface LaneReport {
   schema_version: 1
   machine: string
@@ -87,6 +124,7 @@ export interface LaneReport {
   problems: string[]
   watch?: WatchHealth
   windows?: WindowsHealth
+  preflight?: PreflightHealth
 }
 
 const COUNT_KEY_RE = /^[a-z0-9_.]{1,80}$/
@@ -148,6 +186,50 @@ export function parseWindowsHealth(value: unknown): WindowsHealth | undefined {
   }
 }
 
+const VERSION_RE = /^[0-9A-Za-z.+_-]{1,60}$/
+const MCP_NAME_RE = /^[A-Za-z0-9][A-Za-z0-9 ._:()@\/-]{0,79}$/
+/** MCP servers kept per report: a Claude Code with every claude.ai connector loads about 50 (51 measured on 28 October
+ *  2026), and a server cut off here is one a session cannot see. */
+const MCP_SERVERS_KEPT = 100
+
+/** A preflight block with anything outside its shape dropped; a block with no ok is no block. */
+export function parsePreflightHealth(value: unknown): PreflightHealth | undefined {
+  if (value === null || typeof value !== 'object' || Array.isArray(value)) return undefined
+  const p = value as Record<string, unknown>
+  if (typeof p.ok !== 'boolean') return undefined
+  const number = (n: unknown, max: number) => (typeof n === 'number' && Number.isFinite(n) && n >= 0 && n <= max ? Math.round(n * 10) / 10 : null)
+  const count = (n: unknown) => (Number.isInteger(n) && (n as number) >= 0 && (n as number) <= 100 ? n as number : null)
+  const failed = Array.isArray(p.failed)
+    ? [...new Set(p.failed.filter((f): f is string => typeof f === 'string' && PREFLIGHT_CHECKS.includes(f)))]
+    : []
+  const servers: { name: string; status: string }[] = []
+  if (Array.isArray(p.mcp_servers)) {
+    for (const server of p.mcp_servers.slice(0, MCP_SERVERS_KEPT)) {
+      if (!server || typeof server !== 'object' || Array.isArray(server)) continue
+      const { name, status } = server as Record<string, unknown>
+      if (typeof name === 'string' && MCP_NAME_RE.test(name) && typeof status === 'string' && /^[a-z_-]{1,20}$/.test(status)) servers.push({ name, status })
+    }
+  }
+  return {
+    at: isoOrNull(p.at),
+    ok: p.ok && failed.length === 0,
+    failed,
+    claude_version: wordOrNull(p.claude_version, VERSION_RE),
+    permission_mode: wordOrNull(p.permission_mode, /^[A-Za-z]{1,30}$/),
+    auth: wordOrNull(p.auth, /^[A-Za-z_]{1,40}$/),
+    mcp_servers: servers,
+    codex_companion: wordOrNull(p.codex_companion, VERSION_RE),
+    codex_login: typeof p.codex_login === 'boolean' ? p.codex_login : null,
+    codex_weekly_used_pct: number(p.codex_weekly_used_pct, 100),
+    codex_resets_at: isoOrNull(p.codex_resets_at),
+    ffmpeg: wordOrNull(p.ffmpeg, VERSION_RE),
+    tesseract: wordOrNull(p.tesseract, VERSION_RE),
+    free_gb: number(p.free_gb, 1_000_000),
+    drive_reachable: count(p.drive_reachable),
+    drive_folders: count(p.drive_folders),
+  }
+}
+
 const MACHINE_RE = /^[A-Za-z0-9][A-Za-z0-9_-]{0,62}$/
 
 export function parseLaneReport(value: unknown, now: string): LaneReport | null {
@@ -158,9 +240,10 @@ export function parseLaneReport(value: unknown, now: string): LaneReport | null 
   if (problems.some((p) => typeof p !== 'string' || !Object.prototype.hasOwnProperty.call(LANE_PROBLEMS, p))) return null
   const watch = parseWatchHealth(body.watch)
   const windows = parseWindowsHealth(body.windows)
+  const preflight = parsePreflightHealth(body.preflight)
   return {
     schema_version: 1, machine: body.machine, at: now, problems: (problems as string[]).sort(),
-    ...(watch ? { watch } : {}), ...(windows ? { windows } : {}),
+    ...(watch ? { watch } : {}), ...(windows ? { windows } : {}), ...(preflight ? { preflight } : {}),
   }
 }
 

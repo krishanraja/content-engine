@@ -9,11 +9,13 @@ import { RECORDINGS_SENDER } from '../_recordings.js'
 
 // POST /api/library/recordings/lane, on the runner bearer.
 //
-//   { machine, problems: [code, ...], watch? }
+//   { machine, problems: [code, ...], watch?, windows?, preflight? }
 //
 // What a home computer's recordings upload found on this pass; an empty list
-// says it is healthy. The Inbox job reads these and fails, naming the machine,
-// while a fresh report holds a problem (api/library/_lanes.ts says why).
+// says it is healthy. preflight is the last Saturday overnight preflight that
+// machine ran (scripts/overnight/preflight.ps1), sent again with every pass.
+// The Inbox job reads these and fails, naming the machine, while a fresh
+// report holds a problem (api/library/_lanes.ts says why).
 //
 // GET /api/library/recordings/lane, on the engine key: every machine's last
 // report, with its content watcher's health, so a session reads what a home
