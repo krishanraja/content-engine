@@ -572,7 +572,7 @@ def _norm(text):
 
 
 def _names_piece(text, piece_id):
-    return bool(re.search(rf'^piece_id:\s*{re.escape(piece_id)}\s*$', text, re.M | re.I))
+    return bool(re.search(rf'^\s*piece_id:\s*{re.escape(piece_id)}\s*$', text, re.M | re.I))
 
 
 def _draft_date(paths):
@@ -597,15 +597,17 @@ def lock_signature(text):
 
 
 def lock_parts(text):
-    """{heading, normalised: its words} for each "## " part of a narrative lock, the signature left out."""
+    """{heading, normalised: its words} for each "## " part of a narrative lock, the signature left out. Lines are
+    read flush left, so a lock copied with the skill's indent reads the same."""
     parts, name, lines = {}, None, []
     for line in str(text).splitlines():
-        heading = re.match(r'^##\s+(.+?)\s*$', line)
+        line = line.strip()
+        heading = re.match(r'^##\s+(.+?)$', line)
         if heading:
             if name is not None:
                 parts[name] = '\n'.join(lines).strip()
             name, lines = _norm(heading.group(1)), []
-        elif name is not None and not LOCK_SIGNED.match(line.strip()):
+        elif name is not None and not LOCK_SIGNED.match(line):
             lines.append(line)
     if name is not None:
         parts[name] = '\n'.join(lines).strip()
@@ -634,7 +636,7 @@ def narrative_problems(text, piece_id, drafts_on=None):
     out = []
     if not _names_piece(text, piece_id):
         out.append(f'it does not name the piece: add the line "piece_id: {piece_id}"')
-    publishes = re.search(r'^Publishes:\s*(\d{4}-\d{2}-\d{2})\s*$', text, re.M)
+    publishes = re.search(r'^\s*Publishes:\s*(\d{4}-\d{2}-\d{2})\s*$', text, re.M)
     if not publishes:
         out.append('it does not say the day the piece publishes: add the line "Publishes: YYYY-MM-DD"')
     elif drafts_on and drafts_on != publishes.group(1):
@@ -2162,6 +2164,9 @@ def self_test():
         check('narrative: drafts dated by another day than it publishes are refused', 'publishes 2026-11-11' in refused(paths, pid, [plans]), True)
         lock_path.write_text(lock_text(other), encoding='utf-8')
         check('narrative: a lock for another piece is no lock for this one', 'no signed narrative lock' in refused(paths, pid, [plans]), True)
+        lock_path.write_text(''.join('   ' + line for line in lock_text(pid).splitlines(True)), encoding='utf-8')
+        check('narrative: a lock copied with the skill\'s indent reads the same', (narrative_gate(paths, pid, [plans]) or {}).get('signed'),
+              {'words': 'yes, lock it', 'on': '2026-11-01'})
         lock_path.write_text(lock_text(pid), encoding='utf-8')
         lock = narrative_gate(paths, pid, [plans])
         check('narrative: a signed, whole lock passes, with his words', (lock or {}).get('signed'), {'words': 'yes, lock it', 'on': '2026-11-01'})
