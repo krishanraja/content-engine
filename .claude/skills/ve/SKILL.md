@@ -5,11 +5,10 @@ description: "Run a piece through ve, the spec-driven video engine. Use when Kri
 
 # ve
 
-1. Read `docs/ve/ENGINE.md`, and nothing else from the repo's standing docs.
-2. Run `python scripts/ve.py doctor`. Report any blocker in one line and stop if it is a hard one.
-3. Run `python scripts/ve.py start <piece>`. It writes `docs/plans/<piece>/ve/session-pack.md` with the format card, the crew cards for this format, the allowed devices, open lint errors and gate status. Work only from that pack and the spec.
-4. Change the spec only through the documented fields. Run `python scripts/ve.py lint <spec>` after every change; fix what it prints.
-5. Never ask Krish questions mid-turn. Put them in the gate packet and end the session at the gate.
-6. Never write a pass, a receipt or a "ready" by hand. Run `python scripts/ve.py status <piece>`.
-7. Never write per-piece render code. If the library lacks a mechanism, write a card (`ve card device_new <id>`) and dispatch it (`ve dispatch`). Verify it with `ve verify-card` before you trust it.
-8. Never publish, send or schedule. Generation recipes follow `config/ve/tools.json`, including Krish's rulings of 27 Oct.
+1. Read docs/ve/ENGINE.md and docs/ve/RUNBOOK.md, then only the signed spec/session pack. No big files, individual images or raw logs: QC JSON and one contact sheet.
+2. In Bash `. scripts/ve-env.sh` pins ffmpeg n8.1.2/tesseract. `python scripts/ve.py doctor`: stop on hard blockers. `python scripts/ve.py start <piece>` writes the <=36 KB pack. Below, ve means python scripts/ve.py.
+3. Follow S0-S8 (55 min envelope). `ve time <piece> start <phase>`, stop, status; stop at gates, log Krish-wait separately. `ve ledger <piece> add claude_tokens <n>` and add codex_tokens <n> log actual usage; log allowance_points/credits too. `ve ledger <piece>` reports caps: 60 engine min, 3.3M Claude, 2.1M Codex, 12.6M total tokens, 1.2 allowance points. At 80% stop/ask at a gate; refuse past caps. Ledger only warns; time start checks engine time only.
+4. Lint after changes. Compile refuses unsupported device verbs (devices.json); test_grid draws carry. SFX kits are absent: sfx_missing references block status. ingest/stills/file are exit-2 placeholders; stop unless approved existing inputs cover a stage. Never claim filing succeeded.
+5. `ve render <props> <out> --spec <spec> --assets-dir <assets>` uses ASCII transport, corrects AAC lag and prints residual <=1 ms. `ve qc <cut> --format <format> --props <props> --out <ve-dir>/qc.<cut>.json`: require measured_pass and complete. Max 2 fix loops, fresh Critic, Krish's final gate. Never hand-write passes/ready; `ve status <piece>` computes it.
+6. No per-piece code. New hero only: `ve card <fields.json>`, `ve dispatch <card.md> --piece <piece>`, `ve verify-card <card.md> --cwd <worktree>`, independent golden-still review. Stop/log clock before dispatch; --piece checks recorded caps. Weekly allowance >80% needs Krish's paid-credit yes for --spend-approved.
+7. Batch questions/end at gates. Never publish/send/schedule. Recipes and realism/credit rulings follow config/ve/tools.json.

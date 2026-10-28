@@ -1,0 +1,58 @@
+{
+  "object": {
+    "obj": "grid",
+    "device": "test_grid",
+    "meaning": "Which models flag forced labour in each country",
+    "dataset": {
+      "unit": "answers that flag forced labour",
+      "denominator": 2,
+      "producerLabel": "KRISH'S TEST · 23 OCT",
+      "rows": [
+        { "label": "Claude · Xinjiang", "value": 1 },
+        { "label": "Claude · Turkmenistan", "value": 1 },
+        { "label": "ChatGPT · Xinjiang", "value": 1 },
+        { "label": "ChatGPT · Turkmenistan", "value": 1 },
+        { "label": "DeepSeek · Xinjiang", "value": 0 },
+        { "label": "DeepSeek · Turkmenistan", "value": 1 }
+      ]
+    },
+    "variants": {},
+    "params": {
+      "rows": [
+        { "id": "claude", "label": "Claude" },
+        { "id": "chatgpt", "label": "ChatGPT" },
+        { "id": "deepseek", "label": "DeepSeek" }
+      ],
+      "cols": [
+        { "id": "xinjiang", "label": "XINJIANG" },
+        { "id": "turkmenistan", "label": "TURKMENISTAN" }
+      ],
+      "cells": [
+        { "row": "claude", "col": "xinjiang", "datasetLabel": "Claude · Xinjiang" },
+        { "row": "claude", "col": "turkmenistan", "datasetLabel": "Claude · Turkmenistan" },
+        { "row": "chatgpt", "col": "xinjiang", "datasetLabel": "ChatGPT · Xinjiang" },
+        { "row": "chatgpt", "col": "turkmenistan", "datasetLabel": "ChatGPT · Turkmenistan" },
+        { "row": "deepseek", "col": "xinjiang", "datasetLabel": "DeepSeek · Xinjiang" },
+        { "row": "deepseek", "col": "turkmenistan", "datasetLabel": "DeepSeek · Turkmenistan" }
+      ],
+      "answerKey": true
+    },
+    "fromFrame": 0,
+    "toFrame": 240
+  },
+  "events": [
+    { "id": "enter", "obj": "grid", "verb": "enter", "toState": "empty", "atFrame": 0 },
+    { "id": "key", "obj": "grid", "verb": "mark", "toState": "answer key", "atFrame": 30 },
+    { "id": "claude", "obj": "grid", "verb": "stamp", "toState": "claude:*", "atFrame": 60 },
+    { "id": "chatgpt", "obj": "grid", "verb": "stamp", "toState": "chatgpt:xinjiang,chatgpt:turkmenistan", "atFrame": 90 },
+    { "id": "deepseek", "obj": "grid", "verb": "stamp", "toState": "deepseek:turkmenistan", "atFrame": 120 },
+    { "id": "focus", "obj": "grid", "verb": "highlight", "toState": "deepseek:xinjiang", "atFrame": 150 },
+    { "id": "hold", "obj": "grid", "verb": "carry", "toState": "hold", "atFrame": 180 },
+    { "id": "exit", "obj": "grid", "verb": "exit", "toState": "out", "atFrame": 210 }
+  ],
+  "tokens": { "ink": "black", "inkDeep": "black", "inkSoft": "dimgray", "cream": "ivory", "mint": "mediumspringgreen", "channel": "plum" },
+  "boxes": {
+    "tall": { "left": 0, "top": 0, "width": 768, "height": 740 },
+    "wide": { "left": 0, "top": 0, "width": 1100, "height": 600 }
+  }
+}

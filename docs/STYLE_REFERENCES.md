@@ -184,6 +184,10 @@ piece is recorded on the format, as on a module.
 
 ## How it changes the videos
 
+Video is made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`); the quick-edit path stays the fallback until ve passes Phase 3.
+
+For ve, `python scripts/ve.py study <reference.mp4> [--out <grammar.json>]` measures cuts, change density, still runs and loops. The reference bank remains context for direction; only registered ve devices and verbs may render, and a new mechanism goes through `ve card`, `ve dispatch` and `ve verify-card`.
+
 - **Scripts** (make-piece): when a piece has a recipe, apply its opening,
   structure, breakdown, proof, tone and close modules, on top of the base.
   Without a recipe, propose one from the bank, using modules he has

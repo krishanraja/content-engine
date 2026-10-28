@@ -44,6 +44,7 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `scripts/quick-edit/`
 - `scripts/signals/`
 - `scripts/velib/`
+- `scripts/windowless/`
 - `supabase/migrations/`
 - `tests/`
 - `tests/control-plane/`
@@ -167,9 +168,11 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/video-studio/runner/project`
 - `/api/video-studio/runner/watch`
 - `/api/video-studio/session`
+- `/api/watch/apify`
 - `/api/watch/claim`
 - `/api/watch/read`
 - `/api/watch/report`
+- `/api/watch/upload`
 - `/api/week/options`
 - `/api/workbench`
 
@@ -2235,7 +2238,11 @@ What the compiler looks for, as pure functions.
 - `const LANE_PREFIX`
 - `const LANE_PROBLEMS: Readonly<Record<string, string>>`
 - `const LANE_REPORT_FRESH_HOURS`
+- `interface WatchHealth`
+- `interface WindowsHealth`
 - `interface LaneReport`
+- `function parseWatchHealth(value: unknown): WatchHealth | undefined`
+- `function parseWindowsHealth(value: unknown): WindowsHealth | undefined`
 - `function parseLaneReport(value: unknown, now: string): LaneReport | null`
 - `function laneKey(machine: string): string`
 - `function lanePlainProblems(reports: readonly LaneReport[], now: number): string[]`
@@ -2698,12 +2705,43 @@ Which Windows runner may take work, and how each one looks from the cloud.
 
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 
+### `apps/control-plane/api/watch/_paid.ts`
+
+Apify runs for the cloud backup, made by the engine so its key never leaves it.
+
+- `const WATCH_ACTORS: Record<string, { maxUsd: number; timeoutSec: number }>`
+- `const MAX_INPUT_CHARS`
+- `const MAX_ITEMS`
+- `interface PaidRunBody`
+- `function parsePaidRun(body: unknown): Parsed<PaidRunBody>`
+- `function postToken(url: string): string | null`
+- `async function checkPaidRun(store: WatchStore, body: PaidRunBody): Promise<{ ok: true } | { ok: false; status: number; …`
+
+### `apps/control-plane/api/watch/_upload.ts`
+
+The cloud backup's way into Krish's two Inspiration folders.
+
+- `const WATCH_FOLDER_IDS: Record<string, string>`
+- `const MAX_UPLOAD_BYTES`
+- `interface UploadBody`
+- `interface DriveFile`
+- `interface DriveWriter`
+- `type UploadOutcome`
+- `function parseUpload(body: unknown): Parsed<UploadBody>`
+- `function candidateNames(name: string): string[]`
+- `async function planUpload(store: WatchStore, drive: DriveWriter, body: UploadBody): Promise<UploadOutcome>`
+- `function driveLiteral(value: string): string`
+
 ### `apps/control-plane/api/watch/_watch.ts`
 
 The content-watcher queue: what the home computers may claim, report and read, decided without a database.
 
 - `const STALE_CLAIM_MS`
+- `const CLOUD_GRACE_MS`
+- `const isCloudMachine = (machine: string) =>`
 - `const MAX_ATTEMPTS`
+- `const RETRY_AFTER_MS`
+- `function claimableNow(row: WatchRequestRow, machine: string, now: Date): boolean`
 - `const MAX_CLAIM`
 - `const MAX_FILES`
 - `interface WatchRequestRow`
@@ -2717,8 +2755,11 @@ The content-watcher queue: what the home computers may claim, report and read, d
 - `interface ReportBody`
 - `function parseReport(body: unknown): Parsed<ReportBody>`
 - `function parseReadOnly(body: unknown): Parsed<{ machine: string; reads: ReadRow[] }>`
+- `function parseCheck(body: unknown): Parsed<{ machine: string; shas: string[]; engine_rev: string }>`
+- `async function heldReads(store: WatchStore, shas: string[], engineRev: string): Promise<Record<string, string>>`
 - `function compareRev(a: string, b: string): number`
 - `function claimView(row: WatchRequestRow)`
+- `async function waiting(store: WatchStore, machine: string, now = new Date()): Promise<number>`
 - `async function claim(store: WatchStore, machine: string, limit: number, now = new Date())`
 - `async function writeReads(store: WatchStore, rows: ReadRow[])`
 - `type ReportOutcome`
@@ -2727,6 +2768,11 @@ The content-watcher queue: what the home computers may claim, report and read, d
 ### `apps/control-plane/api/watch/_watchStore.ts`
 
 - `const watchStore: WatchStore`
+
+### `apps/control-plane/api/watch/apify.ts`
+
+- `const config`
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
 
 ### `apps/control-plane/api/watch/claim.ts`
 
@@ -2737,6 +2783,10 @@ The content-watcher queue: what the home computers may claim, report and read, d
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 
 ### `apps/control-plane/api/watch/report.ts`
+
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
+
+### `apps/control-plane/api/watch/upload.ts`
 
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 
@@ -3094,7 +3144,54 @@ Run a Vercel serverless handler locally against the real environment.
 ### `apps/renderer/src/engine/BrandFrame.tsx`
 
 - `interface BrandFrameProps`
-- `function BrandFrame(_input: BrandFrameProps): React.ReactElement | null`
+- `function BrandFrame({ props, beat, frame }: BrandFrameProps): React.ReactElement`
+
+### `apps/renderer/src/engine/FormatMaster.tsx`
+
+- `function FormatMaster(props: EngineRenderProps)`
+
+### `apps/renderer/src/engine/audio.tsx`
+
+- `function EngineAudio({ audio }: { audio: EngineRenderProps['audio'] })`
+
+### `apps/renderer/src/engine/chrome/CallCard.tsx`
+
+- `interface CallCardProps`
+- `const ENDING_SAFE`
+- `function callCardLayout(aspect: EngineRenderProps['aspect'], statement: string)`
+- `function callCardModel(props: EngineRenderProps, frame: number)`
+- `function CallCard({ props, frame }: CallCardProps): React.ReactElement | null`
+
+### `apps/renderer/src/engine/chrome/CaptionTrack.tsx`
+
+- `type CaptionPage = EngineRenderProps['captions'][number]`
+- `function captionPageAt(pages: readonly CaptionPage[], frame: number): CaptionPage | null`
+- `function captionLines(page: CaptionPage, aspect: Aspect): number[][]`
+- `function CaptionTrack({ props, frame }: { props: EngineRenderProps; frame: number })`
+
+### `apps/renderer/src/engine/chrome/ChannelPill.tsx`
+
+- `function ChannelPill({ props, beat }: { props: EngineRenderProps; beat: EngineBeat })`
+
+### `apps/renderer/src/engine/chrome/EndingBand.tsx`
+
+- `const BAND_ARRIVAL_FRAMES`
+- `interface EndingBandProps`
+- `function endingBandLayout(props: Pick<EngineRenderProps, 'aspect' | 'brand' | 'series' | 'ending'>)`
+- `function endingBandModel(props: EngineRenderProps, frame: number)`
+- `function EndingBand({ props, frame }: EndingBandProps): React.ReactElement | null`
+
+### `apps/renderer/src/engine/chrome/IllustrationLabel.tsx`
+
+- `function IllustrationLabel({ props, frame }: { props: EngineRenderProps; frame: number })`
+
+### `apps/renderer/src/engine/chrome/MarkTile.tsx`
+
+- `function MarkTile({ props }: { props: EngineRenderProps })`
+
+### `apps/renderer/src/engine/chrome/tokens.ts`
+
+- `function houseTokens(tokens: EngineTokens): HouseTokens`
 
 ### `apps/renderer/src/engine/clock.ts`
 
@@ -3109,9 +3206,78 @@ Run a Vercel serverless handler locally against the real environment.
 - `function progress(sinceFrames: number, durationFrames: number, easing: (t: number) => number = ENTER): number`
 - `function drift(frame: number, fromFrame: number, toFrame: number, pct: number = MOTION.driftPct): number`
 
+### `apps/renderer/src/engine/devices/evidence_card/index.tsx`
+
+- `function evidenceMediaStyle(crop: Params['crop']): React.CSSProperties`
+- `function evidenceLayout(box: Box, params: Params, text: string, media: boolean, aspect: DeviceProps['aspect'])`
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/evidence_card/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/evidence_card/state.ts`
+
+- `function evidenceState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
+### `apps/renderer/src/engine/devices/kinetic_stat/index.tsx`
+
+- `function kineticLayout(box: Box, text: string, unit: string, producerLabel: string, aspect: DeviceProps['aspect'])`
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/kinetic_stat/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/kinetic_stat/state.ts`
+
+- `function kineticState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
+### `apps/renderer/src/engine/devices/query_chip/index.tsx`
+
+- `function queryLayout(box: Box, text: string, aspect: DeviceProps['aspect'])`
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/query_chip/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/query_chip/state.ts`
+
+- `function queryState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
+### `apps/renderer/src/engine/devices/record_card/index.tsx`
+
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/record_card/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/record_card/state.ts`
+
+- `function recordState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
 ### `apps/renderer/src/engine/devices/registry.ts`
 
 - `const DEVICES: DeviceRegistry`
+
+### `apps/renderer/src/engine/devices/test_grid/index.tsx`
+
+- `export { testGridStateAt } from './state'`
+- `export { TestGridParamsSchema } from './schema'`
+- `function gridLayout(box: Box, rowCount: number, colCount: number, aspect: DeviceProps['aspect'])`
+- `function TestGrid({ object, events, box, tokens, aspect, frame }: DeviceProps): React.ReactElement`
+
+### `apps/renderer/src/engine/devices/test_grid/schema.ts`
+
+- `const TestGridParamsSchema`
+- `type TestGridParams = z.infer<typeof TestGridParamsSchema>`
+- `function resolveTestGrid(object: EngineObject)`
+
+### `apps/renderer/src/engine/devices/test_grid/state.ts`
+
+- `function testGridStateAt(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
 ### `apps/renderer/src/engine/devices/types.ts`
 
@@ -3119,6 +3285,30 @@ Run a Vercel serverless handler locally against the real environment.
 - `interface DeviceProps`
 - `type DeviceComponent = (props: DeviceProps) => React.ReactElement | null`
 - `type DeviceRegistry = Readonly<Record<string, DeviceComponent>>`
+
+### `apps/renderer/src/engine/fit.ts`
+
+- `function fitScale(natural: { width: number; height: number }, box: Box): number`
+- `function fitBox(natural: { width: number; height: number }, box: Box): Box`
+
+### `apps/renderer/src/engine/geometry.ts`
+
+- `export { HOUSE as TALL } from '../house/geometry'`
+- `const WIDE`
+- `type ChromeElement = 'mark' | 'caption' | 'pill' | 'illustrationLabel'`
+- `type Aspect = EngineRenderProps['aspect']`
+- `function boxFor(element: ChromeElement, aspect: Aspect): Box`
+- `function chromeZone(aspect: Aspect): Box`
+
+### `apps/renderer/src/engine/index.ts`
+
+- `export { FormatMaster } from './FormatMaster'`
+- `export { slotsFor } from './layouts'`
+- `export { EngineAudio } from './audio'`
+
+### `apps/renderer/src/engine/layouts/index.ts`
+
+- `function slotsFor(layout: Layout, aspect: Aspect): Box[]`
 
 ### `apps/renderer/src/engine/props.ts`
 
@@ -3136,6 +3326,14 @@ Run a Vercel serverless handler locally against the real environment.
 - `type EngineEvent = z.infer<typeof EngineEventSchema>`
 - `type EngineBeat = z.infer<typeof EngineBeatSchema>`
 - `type EngineTokens = z.infer<typeof EngineTokensSchema>`
+
+### `apps/renderer/src/engine/transport.ts`
+
+JSON-value transport: escape values only; keys retain their original spelling.
+
+- `function toAsciiProps<T>(value: T): T`
+- `function fromAsciiProps<T>(value: T): T`
+- `function lagSamples(rendered: Float32Array, stem: Float32Array, maxLag: number): number`
 
 ### `apps/renderer/src/evidence-label.ts`
 

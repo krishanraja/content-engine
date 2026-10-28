@@ -531,6 +531,29 @@ lets the bucket hold Matroska. Until it is applied an `.mkv` is refused with
 without it. The project's storage upload limit must be at least 500 MiB, as
 for the library.
 
+## The content watcher, kept by the recordings pass
+
+Each recordings pass (`scripts/recordings-upload.ps1`, `Invoke-WatchKeeper`) also looks after
+krishanraja/content-watcher on the same machine, found from its scheduled task `Mindmake Content
+Watcher`: it pulls the watcher's clone (installed editable, so new code runs at once) and installs its
+dependencies again when `pyproject.toml` changed; turns the task back on and caps a run at 30 minutes;
+starts a run when the watcher has logged nothing for 6 minutes and no run is under way (its
+`watch.heartbeat` names the stage); stops a run that has not moved for 25 minutes; and sends the
+watcher's last log line (counts and class names only), every run of the last 6 hours summed by the
+same keys (`recent`), stage, task state and last result with the pass's own report. When the task cannot start (its folder is gone, or Windows answers 0x8007010B,
+"The directory name is invalid"), it finds the watcher's clone where it is now (beside where the task
+pointed, beside this clone, or in `%USERPROFILE%\dev` and each folder in it, as `content-watcher` or
+`video-compression`), clones the public repository there if there is none, and runs the watcher's own
+`scripts\install-content-watch.ps1` from it, which installs the package from there and registers the
+task again; at most once an hour. Both machines answered 0x8007010B on 28 October 2026, silent since
+25 and 26 October (suspected: the local folder was renamed with the repository on 24 October). Problems
+it cannot fix become lane problems (`watch_not_installed`, `watch_cannot_reach_engine`,
+`watch_key_problem`, `watch_run_failed`, `watch_not_running`, `watch_update_failed`,
+`watch_task_broken`), which the Inbox job names in Control Center. A session reads every machine's
+last report with `GET /api/library/recordings/lane` on the engine key, and never asks Krish to open a
+log (Krish, 2026-10-28: "i should never really need to copy and paste log files to you like this,
+ever, this is ridiculous").
+
 ## Placing takes on the runners
 
 **What.** Each take Krish drops in the Inbox is placed on its piece and cut by

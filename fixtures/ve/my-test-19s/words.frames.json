@@ -1,0 +1,314 @@
+[
+  {
+    "w": 0,
+    "word": "Now,",
+    "onset_s": 0.0,
+    "frame": 0
+  },
+  {
+    "w": 1,
+    "word": "America",
+    "onset_s": 0.58,
+    "frame": 17
+  },
+  {
+    "w": 2,
+    "word": "has",
+    "onset_s": 0.84,
+    "frame": 25
+  },
+  {
+    "w": 3,
+    "word": "blocked",
+    "onset_s": 1.02,
+    "frame": 31
+  },
+  {
+    "w": 4,
+    "word": "cotton",
+    "onset_s": 1.28,
+    "frame": 38
+  },
+  {
+    "w": 5,
+    "word": "from",
+    "onset_s": 1.72,
+    "frame": 52
+  },
+  {
+    "w": 6,
+    "word": "both",
+    "onset_s": 1.9,
+    "frame": 57
+  },
+  {
+    "w": 7,
+    "word": "over",
+    "onset_s": 2.4,
+    "frame": 72
+  },
+  {
+    "w": 8,
+    "word": "forced",
+    "onset_s": 2.82,
+    "frame": 85
+  },
+  {
+    "w": 9,
+    "word": "labour.",
+    "onset_s": 3.12,
+    "frame": 94
+  },
+  {
+    "w": 10,
+    "word": "So,",
+    "onset_s": 3.76,
+    "frame": 113
+  },
+  {
+    "w": 11,
+    "word": "a",
+    "onset_s": 4.42,
+    "frame": 133
+  },
+  {
+    "w": 12,
+    "word": "good",
+    "onset_s": 4.5,
+    "frame": 135
+  },
+  {
+    "w": 13,
+    "word": "answer",
+    "onset_s": 4.62,
+    "frame": 139
+  },
+  {
+    "w": 14,
+    "word": "should",
+    "onset_s": 4.9,
+    "frame": 147
+  },
+  {
+    "w": 15,
+    "word": "flag",
+    "onset_s": 5.12,
+    "frame": 154
+  },
+  {
+    "w": 16,
+    "word": "it",
+    "onset_s": 5.42,
+    "frame": 163
+  },
+  {
+    "w": 17,
+    "word": "both",
+    "onset_s": 5.56,
+    "frame": 167
+  },
+  {
+    "w": 18,
+    "word": "times.",
+    "onset_s": 5.76,
+    "frame": 173
+  },
+  {
+    "w": 19,
+    "word": "Claude",
+    "onset_s": 7.02,
+    "frame": 211
+  },
+  {
+    "w": 20,
+    "word": "and",
+    "onset_s": 7.6,
+    "frame": 228
+  },
+  {
+    "w": 21,
+    "word": "ChatGPT",
+    "onset_s": 7.74,
+    "frame": 232
+  },
+  {
+    "w": 22,
+    "word": "flagged",
+    "onset_s": 8.22,
+    "frame": 247
+  },
+  {
+    "w": 23,
+    "word": "forced",
+    "onset_s": 8.72,
+    "frame": 262
+  },
+  {
+    "w": 24,
+    "word": "labour",
+    "onset_s": 9.0,
+    "frame": 270
+  },
+  {
+    "w": 25,
+    "word": "both",
+    "onset_s": 9.24,
+    "frame": 277
+  },
+  {
+    "w": 26,
+    "word": "times,",
+    "onset_s": 9.58,
+    "frame": 287
+  },
+  {
+    "w": 27,
+    "word": "and",
+    "onset_s": 10.06,
+    "frame": 302
+  },
+  {
+    "w": 28,
+    "word": "so",
+    "onset_s": 10.7,
+    "frame": 321
+  },
+  {
+    "w": 29,
+    "word": "did",
+    "onset_s": 10.88,
+    "frame": 326
+  },
+  {
+    "w": 30,
+    "word": "DeepSeek",
+    "onset_s": 11.0,
+    "frame": 330
+  },
+  {
+    "w": 31,
+    "word": "for",
+    "onset_s": 11.44,
+    "frame": 343
+  },
+  {
+    "w": 32,
+    "word": "Turkmenistan.",
+    "onset_s": 11.58,
+    "frame": 347
+  },
+  {
+    "w": 33,
+    "word": "Now",
+    "onset_s": 12.58,
+    "frame": 377
+  },
+  {
+    "w": 34,
+    "word": "watch",
+    "onset_s": 13.02,
+    "frame": 391
+  },
+  {
+    "w": 35,
+    "word": "DeepSeek",
+    "onset_s": 13.42,
+    "frame": 403
+  },
+  {
+    "w": 36,
+    "word": "on",
+    "onset_s": 14.04,
+    "frame": 421
+  },
+  {
+    "w": 37,
+    "word": "Xinjiang.",
+    "onset_s": 14.22,
+    "frame": 427
+  },
+  {
+    "w": 38,
+    "word": "It",
+    "onset_s": 14.9,
+    "frame": 447
+  },
+  {
+    "w": 39,
+    "word": "writes",
+    "onset_s": 15.06,
+    "frame": 452
+  },
+  {
+    "w": 40,
+    "word": "a",
+    "onset_s": 15.38,
+    "frame": 461
+  },
+  {
+    "w": 41,
+    "word": "full",
+    "onset_s": 15.52,
+    "frame": 466
+  },
+  {
+    "w": 42,
+    "word": "answer,",
+    "onset_s": 15.66,
+    "frame": 470
+  },
+  {
+    "w": 43,
+    "word": "deletes",
+    "onset_s": 16.38,
+    "frame": 491
+  },
+  {
+    "w": 44,
+    "word": "it",
+    "onset_s": 16.72,
+    "frame": 502
+  },
+  {
+    "w": 45,
+    "word": "and",
+    "onset_s": 16.96,
+    "frame": 509
+  },
+  {
+    "w": 46,
+    "word": "changes",
+    "onset_s": 17.74,
+    "frame": 532
+  },
+  {
+    "w": 47,
+    "word": "the",
+    "onset_s": 18.06,
+    "frame": 542
+  },
+  {
+    "w": 48,
+    "word": "subject",
+    "onset_s": 18.28,
+    "frame": 548
+  },
+  {
+    "w": 49,
+    "word": "every",
+    "onset_s": 18.7,
+    "frame": 561
+  },
+  {
+    "w": 50,
+    "word": "single",
+    "onset_s": 19.48,
+    "frame": 584
+  },
+  {
+    "w": 51,
+    "word": "time.",
+    "onset_s": 19.72,
+    "frame": 592
+  }
+]

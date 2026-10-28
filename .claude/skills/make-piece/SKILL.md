@@ -3,7 +3,10 @@ name: make-piece
 description: Make one piece end to end from the piece id Control Center sent, through the workroom, the fact gate, the visual gate, the scripts (each opening straight on the hook and closing on what Krish would do, held to a reading age of 12 and read back by two fresh readers, then sent to Krish's teleprompter.com account to read while he records), the publish page and the pack, recording every step on the piece's board row so Control Center shows it live, and keep that day's tab of the week's publish board current, copying Krish's ticks onto the record. Use when a session starts with "piece_id:" or when Krish asks to make a piece he picked in Control Center.
 ---
 
-# Make a piece
+# Make a piece
+
+> Video is made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`); the quick-edit path stays the fallback until ve passes Phase 3.
+
 
 ## Publish-board routing
 

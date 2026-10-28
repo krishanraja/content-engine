@@ -19,6 +19,8 @@ Control Center: collecting ideas, judging and routing them, drafting and
 rewriting pieces, cutting them for channels, handing approved pieces to the
 Studio, and recording what Krish decided so the engine can learn from it.
 
+Video is made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`); the quick-edit path stays the fallback until ve passes Phase 3.
+
 It moved here from `krishanraja/control-center` in PR #42, by Krish's decision
 recorded as ADR-019 (control-center, `docs/DECISIONS/019-content-engine-owns-the-control-plane.md`,
 2026-09-08): "The routes, the crons and the structural guards move to

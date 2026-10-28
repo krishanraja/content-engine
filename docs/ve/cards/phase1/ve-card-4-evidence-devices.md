@@ -42,6 +42,8 @@ Four library devices that the three v1 formats share. Each is persistent and eve
 - **All four:** register each in `registry.ts` (one line per device). Each gets a `device.test.ts` that checks its state machine by frame, with no rendering.
 
 ## Acceptance (every command must exit 0 inside your sandbox)
+Sandbox note: your sandbox may not reach node_modules, so `npx tsc` or `vitest` may not start. If so, do not install anything, do not change config and do not retry: write the code carefully to the contract, check it by reading, and say so in open_questions. Claude runs every acceptance command outside the sandbox.
+
 npx tsc --noEmit
 npx vitest run apps/renderer/src/engine/devices
 

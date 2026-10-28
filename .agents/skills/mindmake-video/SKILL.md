@@ -3,7 +3,10 @@ name: mindmake-video
 description: Operate Mindmaker's deterministic video and carousel studio from an approved Control Center production brief through visual direction, approvals, rendering, platform packaging, analytics, and controlled learning. Use only inside an already valid Mindmake Video Engine workflow.
 ---
 
-# Mindmake Video
+# Mindmake Video
+
+> Video is made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`); the quick-edit path stays the fallback until ve passes Phase 3.
+
 
 Use the repository CLI as the system of record. Do not improvise job state in chat or edit generated artifacts without recording the change.
 

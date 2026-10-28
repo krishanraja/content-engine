@@ -12,7 +12,10 @@
   python scripts/ve.py status <piece>                readiness, computed; nobody writes a pass
   python scripts/ve.py coverage                      failure register: behavioural guards vs markers
 
-ingest, compile, render, stills, ledger and file arrive with the Phase 1 cards; until then they say so.
+  python scripts/ve.py ledger <piece>               usage against the piece's caps
+  python scripts/ve.py time <piece> start <phase>    time an engine phase (stop/status available)
+
+ingest, stills and file arrive with the Phase 1 cards; until then they say so.
 ve has no publish, send or schedule verb."""
 from __future__ import annotations
 
@@ -127,8 +130,9 @@ def cmd_start(args) -> int:
 
 
 def cmd_qc(args) -> int:
-    from velib.qc import run_qc
-    report = run_qc(args.cut, args.format)
+    from velib.qc import inputs_from_props, run_qc
+    inputs = inputs_from_props(load_json(args.props)) if getattr(args, 'props', None) else {}
+    report = run_qc(args.cut, args.format, **inputs)
     out = Path(args.out) if args.out else Path(args.cut).with_suffix('.qc.json')
     write_json(out, report)
     for name, check in report['checks'].items():
@@ -164,6 +168,9 @@ def cmd_card(args) -> int:
 
 
 def cmd_dispatch(args) -> int:
+    if getattr(args, 'piece', None):
+        from velib.ledger import require_within
+        require_within(args.piece)
     from velib.cards import dispatch
     result = dispatch(Path(args.card), background=not args.wait, spend_approved=args.spend_approved)
     print((result.stdout or result.stderr).strip()[-2000:])
@@ -194,6 +201,9 @@ def cmd_status(args) -> int:
     for cut in spec['cuts']:
         qc_file, verdict_file = ve_dir / f'qc.{cut}.json', ve_dir / f'verdict.{cut}.json'
         reasons = []
+        compile_file = ve_dir / f'compile.{cut}.json'
+        if compile_file.exists() and load_json(compile_file).get('sfx_missing'):
+            reasons.append('sfx kit missing')
         if not qc_file.exists():
             reasons.append('no qc')
         else:
@@ -241,22 +251,146 @@ def not_yet(name: str):
     return handler
 
 
+def _usage_number(value):
+    return f'{value / 1000000:.1f}M' if abs(value) >= 1000000 else f'{value:g}'
+
+
+def _ledger_report(piece) -> int:
+    from velib import ledger
+    usage, limits = ledger.totals(piece), ledger.budget()
+    values = ledger.measures(usage)
+    for key, label, cap_key in ledger.MEASURES:
+        amount, cap = values[key], limits[cap_key]
+        print(f'{label} {_usage_number(amount)} / {_usage_number(cap)} ({amount / cap:.0%})')
+    print(f'credits {usage["credits"]:g}')
+    print(f'Krish-wait minutes {usage["krish_wait_seconds"] / 60:g}')
+    ok, lines = ledger._check(usage, limits)
+    for line in lines:
+        print(line)
+    return 0 if ok else 1
+
+
+def cmd_ledger(args) -> int:
+    from velib import ledger
+    try:
+        if getattr(args, 'action', None) == 'add':
+            ledger.add(args.piece, args.kind, args.amount, args.note)
+        return _ledger_report(args.piece)
+    except (ValueError, OSError) as error:
+        print(f've ledger: {error}', file=sys.stderr)
+        return 1
+
+
+def cmd_time(args) -> int:
+    from velib import ledger
+    try:
+        if args.action == 'start':
+            ledger.start_clock(args.piece, args.phase)
+            print(f've time: started phase {args.phase!r}')
+        elif args.action == 'stop':
+            seconds = ledger.stop_clock(args.piece)
+            print(f've time: recorded {seconds} engine seconds')
+            return _ledger_report(args.piece)
+        running = ledger.clock_status(args.piece)
+        seconds = ledger.totals(args.piece)['engine_seconds']
+        if running:
+            seconds += ledger.elapsed_seconds(running)
+        cap = ledger.budget()['engine_minutes_cap']
+        print(f'phase {running["phase"]!r}' if running else 'no running phase')
+        print(f'engine minutes {seconds / 60:g} / {cap:g} ({seconds / 60 / cap:.0%})')
+        return 1 if seconds / 60 > cap else 0
+    except (ValueError, OSError) as error:
+        print(f've time: {error}', file=sys.stderr)
+        return 1
+
+
+def cmd_compile(args) -> int:
+    from velib.lint import lint
+    spec, problems = lint(Path(args.spec))
+    if problems or spec is None:
+        for problem in problems:
+            print(problem)
+        return 1
+    from velib.compile import compile_cut
+    from velib.common import sha256_file
+    words = load_json(args.words)
+    if isinstance(words, dict):
+        words = words['words']
+    report = {}
+    props = compile_cut(spec, args.cut, words, args.assets_dir, report=report)
+    # The piece id is a directory name, never an arbitrary output path.
+    piece = spec['piece_id']
+    if not re.fullmatch(r'[a-zA-Z0-9][a-zA-Z0-9_-]*', piece):
+        raise ValueError('piece_id must be a safe plan folder name')
+    if not re.fullmatch(r'[a-z0-9][a-z0-9_-]{0,63}', args.cut):
+        raise ValueError('cut id must be a slug')
+    out = ROOT / 'docs' / 'plans' / piece / 've' / f'props.{args.cut}.json'
+    write_json(out, props)
+    report['props_sha256'] = sha256_file(out)
+    write_json(out.with_name(f'compile.{args.cut}.json'), report)
+    for event_id in report['sfx_missing']:
+        print(f'sfx missing: {event_id}')
+    print(f'{report["props_sha256"]}  {out}')
+    return 0
+
+
+def cmd_render(args) -> int:
+    from velib.lint import lint
+    spec, problems = lint(Path(args.spec))
+    if problems or spec is None:
+        for problem in problems:
+            print(problem)
+        return 1
+    from velib.render import check_asset_hashes, render
+    check_asset_hashes(spec, args.assets_dir)
+    render(args.props, args.out, args.scale)
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(prog='ve', description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = parser.add_subparsers(dest='cmd', required=True)
     sub.add_parser('doctor').set_defaults(fn=cmd_doctor)
     p = sub.add_parser('start'); p.add_argument('piece'); p.set_defaults(fn=cmd_start)
     p = sub.add_parser('lint'); p.add_argument('spec'); p.set_defaults(fn=cmd_lint)
-    p = sub.add_parser('qc'); p.add_argument('cut'); p.add_argument('--format', required=True); p.add_argument('--out'); p.set_defaults(fn=cmd_qc)
+    p = sub.add_parser('qc'); p.add_argument('cut'); p.add_argument('--format', required=True); p.add_argument('--out'); p.add_argument('--props'); p.set_defaults(fn=cmd_qc)
     p = sub.add_parser('study'); p.add_argument('ref'); p.add_argument('--out'); p.set_defaults(fn=cmd_study)
     p = sub.add_parser('card'); p.add_argument('fields'); p.set_defaults(fn=cmd_card)
     p = sub.add_parser('dispatch'); p.add_argument('card'); p.add_argument('--wait', action='store_true')
+    p.add_argument('--piece', help='refuse dispatch when this piece is over any budget cap')
     p.add_argument('--spend-approved', action='store_true', help="only after Krish's yes, in his words, to Codex drawing paid credits")
     p.set_defaults(fn=cmd_dispatch)
     p = sub.add_parser('verify-card'); p.add_argument('card'); p.add_argument('--cwd', required=True); p.set_defaults(fn=cmd_verify_card)
     p = sub.add_parser('status'); p.add_argument('piece'); p.set_defaults(fn=cmd_status)
     sub.add_parser('coverage').set_defaults(fn=cmd_coverage)
-    for name in ('ingest', 'compile', 'render', 'stills', 'ledger', 'file'):
+    p = sub.add_parser('compile', help='compile a linted spec and cut-ready word timings')
+    p.add_argument('spec'); p.add_argument('--cut', required=True); p.add_argument('--words', required=True)
+    p.add_argument('--assets-dir', required=True); p.set_defaults(fn=cmd_compile)
+    p = sub.add_parser('render', help='render compiled props through FormatMaster')
+    p.add_argument('props'); p.add_argument('out'); p.add_argument('--scale', type=float, default=1.0)
+    p.add_argument('--spec', required=True); p.add_argument('--assets-dir', required=True)
+    p.set_defaults(fn=cmd_render)
+    p = sub.add_parser('ledger', help='report or append piece usage against budget caps',
+                       description='Show piece usage and OK/WARN/OVER budget checks. Exit 1 when over a cap.')
+    p.add_argument('piece', help='piece folder name or existing directory')
+    actions = p.add_subparsers(dest='action')
+    a = actions.add_parser('add', help='append a usage entry and report the resulting totals',
+                           description='Append usage without changing existing ledger lines.')
+    a.add_argument('kind', choices=('claude_tokens', 'codex_tokens', 'allowance_points', 'credits',
+                                   'engine_seconds', 'krish_wait_seconds'))
+    a.add_argument('amount', type=float, help='finite non-negative amount')
+    a.add_argument('--note', default='', help='description of this usage')
+    p.set_defaults(fn=cmd_ledger)
+    p = sub.add_parser('time', help='start, stop or inspect the piece engine clock',
+                       description='Track engine phases separately from the append-only usage ledger.')
+    p.add_argument('piece', help='piece folder name or existing directory')
+    actions = p.add_subparsers(dest='action', required=True)
+    a = actions.add_parser('start', help='start a phase unless engine minutes are over the cap')
+    a.add_argument('phase', help='phase name recorded with elapsed engine seconds')
+    actions.add_parser('stop', help='append elapsed engine seconds and remove the running clock')
+    actions.add_parser('status', help='show the running phase and used minutes including elapsed time')
+    p.set_defaults(fn=cmd_time)
+    for name in ('ingest', 'stills', 'file'):
         p = sub.add_parser(name); p.add_argument('rest', nargs='*'); p.set_defaults(fn=not_yet(name))
     args = parser.parse_args()
     return args.fn(args)

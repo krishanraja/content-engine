@@ -4,6 +4,10 @@
 
 ## Purpose
 
+Video is made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`); the quick-edit path stays the fallback until ve passes Phase 3.
+
+The selection traces and `studio v2 repertoire` commands below belong to the job-based Studio. ve's executable devices and verbs live in `config/ve/devices.json` and `apps/renderer/src/engine/devices/registry.ts`; new library mechanisms use `ve card`, `ve dispatch` and `ve verify-card`, rather than per-piece render code.
+
 The repertoire gives every studio client one governed visual vocabulary. It is not an effects catalogue. Each device has a narrative job, eligibility rules, required inputs, a deterministic score, an executable render path, QA checks and a conservative fallback. GitHub owns approved definitions in `config/techniques.json`. Job artifacts own exact selections and usage history. Control Center shows redacted review projections only.
 
 The supplied Instagram Reel is retained in the governed Drive location named by `inspo/README.md`; an older Git commit remains historical provenance only. Its exact pointer, hash and observations are recorded in the registry. Its frames, composition, timing, copy and creator likeness are prohibited production inputs.

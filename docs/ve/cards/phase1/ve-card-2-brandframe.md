@@ -38,6 +38,8 @@ Implement BrandFrame (the stub exists) by wrapping the approved house kit, so ev
    - the CaptionTrack page selection returns exactly one page per frame and none between pages.
 
 ## Acceptance (every command must exit 0 inside your sandbox)
+Sandbox note: your sandbox may not reach node_modules, so `npx tsc` or `vitest` may not start. If so, do not install anything, do not change config and do not retry: write the code carefully to the contract, check it by reading, and say so in open_questions. Claude runs every acceptance command outside the sandbox.
+
 npx tsc --noEmit
 npx vitest run apps/renderer/src/engine/chrome
 
