@@ -1,6 +1,6 @@
 {
   "schema": "design-lock/1",
-  "status": "direction_approved",
+  "status": "frozen",
   "approved": {
     "by": "Krish",
     "on": "2026-10-28",
@@ -9,16 +9,52 @@
     "template": "docs/ve/design/TEMPLATE.md"
   },
   "aspect": "9:16",
-  "canvas": { "w": 1080, "h": 1920, "fps": 30 },
-  "grid": { "columns": 12, "margin": 72, "gutter": 24 },
+  "canvas": {
+    "w": 1080,
+    "h": 1920,
+    "fps": 30
+  },
+  "grid": {
+    "columns": 12,
+    "margin": 72,
+    "gutter": 24
+  },
   "zones": {
-    "header": { "x": 72, "y": 79, "w": 888, "h": 56 },
-    "headline": { "x": 72, "y": 150, "w": 888, "h": 270 },
-    "caption": { "x": 72, "y": 1180, "w": 900, "h": 320 },
+    "header": {
+      "x": 72,
+      "y": 79,
+      "w": 888,
+      "h": 56
+    },
+    "headline": {
+      "x": 72,
+      "y": 150,
+      "w": 888,
+      "h": 270
+    },
+    "caption": {
+      "x": 72,
+      "y": 1180,
+      "w": 900,
+      "h": 320
+    },
     "key_band_bottom_y": 1170,
-    "lower_line": { "x": 72, "y": 1516, "w": 936, "h": 104 },
-    "marquee": { "x": 0, "y": 1736, "w": 1080, "h": 62 },
-    "platform": { "right_x": 960, "bottom_y": 1640 }
+    "lower_line": {
+      "x": 72,
+      "y": 1516,
+      "w": 936,
+      "h": 104
+    },
+    "marquee": {
+      "x": 0,
+      "y": 1736,
+      "w": 1080,
+      "h": 62
+    },
+    "platform": {
+      "right_x": 960,
+      "bottom_y": 1640
+    }
   },
   "thresholds": {
     "min_text_px": 30,
@@ -32,21 +68,87 @@
     "scribbles_per_beat": 1,
     "min_distinct_moves_per_beat": 6,
     "keyframe_ssim_min": 0.8,
-    "keyframe_compare_size": [540, 960],
+    "keyframe_compare_size": [
+      540,
+      960
+    ],
     "grain_opacity": 0.07,
     "halftone_grid_px": 14,
     "calibration": "the approved key frames must pass composition QC and the rejected Gate 2 frames must fail it; tests assert both"
   },
   "type_roles": {
-    "headline": { "family": "display", "size_px": [150, 240], "line_height": 0.88, "case": "upper" },
-    "numeral": { "family": "display", "size_px": [100, 150], "case": "upper" },
-    "dek": { "family": "dek", "size_px": [42, 46], "line_height": 1.16, "style": "italic" },
-    "evidence_quote": { "family": "structure", "size_px_min": 44, "weight": [500, 600] },
-    "card_name": { "family": "structure", "size_px": [34, 46], "weight": 900, "stretch": 112, "case": "upper" },
-    "label": { "family": "data", "size_px_min": 30, "tracking_em": 0.14, "case": "upper" },
-    "sticker": { "family": "data", "size_px_min": 30, "weight": 600, "tilt_deg": [-8, 5] },
-    "stamp": { "family": "data", "size_px_min": 30, "weight": 700, "tracking_em": 0.18, "border_px": 3 },
-    "illustration_tag": { "family": "data", "size_px_min": 28, "tracking_em": 0.14, "case": "upper" }
+    "headline": {
+      "family": "display",
+      "size_px": [
+        150,
+        240
+      ],
+      "line_height": 0.88,
+      "case": "upper"
+    },
+    "numeral": {
+      "family": "display",
+      "size_px": [
+        100,
+        150
+      ],
+      "case": "upper"
+    },
+    "dek": {
+      "family": "dek",
+      "size_px": [
+        42,
+        46
+      ],
+      "line_height": 1.16,
+      "style": "italic"
+    },
+    "evidence_quote": {
+      "family": "structure",
+      "size_px_min": 44,
+      "weight": [
+        500,
+        600
+      ]
+    },
+    "card_name": {
+      "family": "structure",
+      "size_px": [
+        34,
+        46
+      ],
+      "weight": 900,
+      "stretch": 112,
+      "case": "upper"
+    },
+    "label": {
+      "family": "data",
+      "size_px_min": 30,
+      "tracking_em": 0.14,
+      "case": "upper"
+    },
+    "sticker": {
+      "family": "data",
+      "size_px_min": 30,
+      "weight": 600,
+      "tilt_deg": [
+        -8,
+        5
+      ]
+    },
+    "stamp": {
+      "family": "data",
+      "size_px_min": 30,
+      "weight": 700,
+      "tracking_em": 0.18,
+      "border_px": 3
+    },
+    "illustration_tag": {
+      "family": "data",
+      "size_px_min": 28,
+      "tracking_em": 0.14,
+      "case": "upper"
+    }
   },
   "colour_rules": {
     "ground": "ink",
@@ -58,12 +160,32 @@
     "channel_as_status": "never a country, a warning or a failure",
     "failure_shown_as": "an absence (bare pole, parted thread) plus a cream outline stamp"
   },
-  "kit": ["brutal_card", "sticker", "section_pill", "swipe", "stamp", "leader", "receipt", "marquee", "scribble"],
+  "kit": [
+    "brutal_card",
+    "sticker",
+    "section_pill",
+    "swipe",
+    "stamp",
+    "leader",
+    "receipt",
+    "marquee",
+    "scribble"
+  ],
   "scribble": {
-    "shapes": ["loop", "underline", "arrow", "bracket", "tick", "cross"],
+    "shapes": [
+      "loop",
+      "underline",
+      "arrow",
+      "bracket",
+      "tick",
+      "cross"
+    ],
     "stroke_px": 8,
     "keyline_px": 16,
-    "colours": ["cream", "mint"],
+    "colours": [
+      "cream",
+      "mint"
+    ],
     "draw_on_frames": 10,
     "path_length": 1,
     "per_beat": 1
@@ -73,14 +195,22 @@
     "exit_ms": 200,
     "stagger_frames": 3,
     "slap_frames": 5,
-    "hero_bezier": [0.16, 1, 0.3, 1],
+    "hero_bezier": [
+      0.16,
+      1,
+      0.3,
+      1
+    ],
     "ambient_drift_pct": 1.5,
     "tokens_source": "config/ve/brand-tokens.json"
   },
   "plates": {
     "source": "ChatGPT Images via a Codex imagegen card",
     "aspect": "9:16",
-    "min_px": [1882, 3344],
+    "min_px": [
+      1882,
+      3344
+    ],
     "candidates_per_plate": 4,
     "must_say": [
       "no text, numbers, flags, emblems, logos, faces or UI",
@@ -90,34 +220,182 @@
       "ink-green blacks, cream and mint, never coral",
       "repeat the prohibitions as the final sentence"
     ],
-    "never_in_plate": ["text", "numbers", "flags", "emblems", "maps", "logos", "faces", "readable screens", "arrows", "circles", "highlights", "coral"],
-    "reject_by": ["ocr_any_glyph", "blank_screen_flat", "critic_visual"],
-    "animation": { "tools": ["runway", "higgsfield"], "max_seconds": 5, "input": "approved still only", "evidence": false, "spend_needs": "Krish's yes per generation", "log": "ve ledger <piece> add" },
+    "never_in_plate": [
+      "text",
+      "numbers",
+      "flags",
+      "emblems",
+      "maps",
+      "logos",
+      "faces",
+      "readable screens",
+      "arrows",
+      "circles",
+      "highlights",
+      "coral"
+    ],
+    "reject_by": [
+      "ocr_any_glyph",
+      "blank_screen_flat",
+      "critic_visual"
+    ],
+    "animation": {
+      "tools": [
+        "runway",
+        "higgsfield"
+      ],
+      "max_seconds": 5,
+      "input": "approved still only",
+      "evidence": false,
+      "spend_needs": "Krish's yes per generation",
+      "log": "ve ledger <piece> add"
+    },
     "illustration_tag": "required on every frame that shows a generated plate",
-    "sidecar": ["prompt", "model", "date", "candidates", "chosen", "credits"]
+    "sidecar": [
+      "prompt",
+      "model",
+      "date",
+      "candidates",
+      "chosen",
+      "credits"
+    ]
   },
   "evidence": {
     "real_footage": "never redrawn, retyped, enlarged or generated",
     "text_under_min": "add a verbatim labelled pull quote at 44 px beside it"
   },
-  "gates": ["design_lock", "composition_qc", "keyframe_match", "mechanical_qc", "critic_verdict", "packet", "krish_final_hash"],
+  "gates": [
+    "design_lock",
+    "composition_qc",
+    "keyframe_match",
+    "mechanical_qc",
+    "critic_verdict",
+    "packet",
+    "krish_final_hash"
+  ],
   "formats": {
     "hand-held-screen": {
       "role": "base",
-      "beats": ["open", "result_a", "result_b", "evidence", "verdict"],
+      "beats": [
+        "open",
+        "result_a",
+        "result_b",
+        "evidence",
+        "verdict"
+      ],
       "frames_dir": "fixtures/ve/design-lock/hand-held-screen",
       "anatomy": "docs/ve/design/formats/H-anatomy.md",
       "motion": "docs/ve/design/formats/H-motion.md",
-      "keyframes": {}
+      "keyframes": {
+        "open": {
+          "file": "fixtures/ve/design-lock/hand-held-screen/open.jpg",
+          "sha256": "fa4130a9efba2ca88088eafec57f795e1c305e4a34387440a097b8d77fbb9585",
+          "source_sha256": "67f99dc7baa56a88226eff942976f2973b81779ae65fc754276a4a45bd2cae24",
+          "size": [
+            540,
+            960
+          ]
+        },
+        "result_a": {
+          "file": "fixtures/ve/design-lock/hand-held-screen/result_a.jpg",
+          "sha256": "b778eb369cac0bd778172b5cb0d0df0a05e6c9fb83091c7e5519c7503bdaf4d1",
+          "source_sha256": "94a146d57fa360ed64b8864db89f7bb8a3e9db0df5134acda7a4052db5dabffa",
+          "size": [
+            540,
+            960
+          ]
+        },
+        "result_b": {
+          "file": "fixtures/ve/design-lock/hand-held-screen/result_b.jpg",
+          "sha256": "43c232fbf7c2a319a77d0035a831198fec036b74abc20452f21bc5fe8ebe3b56",
+          "source_sha256": "803daa0bc60bef35c465524838a977899b2623f4e14cea324973c3fc4cdb9d23",
+          "size": [
+            540,
+            960
+          ]
+        },
+        "evidence": {
+          "file": "fixtures/ve/design-lock/hand-held-screen/evidence.jpg",
+          "sha256": "90195f384d4feff5a0e864dfcbcad3b5a8e3852f40a7e3fefea2618211324b9e",
+          "source_sha256": "f81be2914befb0198be4ab8044695815c8005ce7765aa01211c01a4900a77834",
+          "size": [
+            540,
+            960
+          ]
+        },
+        "verdict": {
+          "file": "fixtures/ve/design-lock/hand-held-screen/verdict.jpg",
+          "sha256": "024831d0cb5bc2d6624231cf132fa3293120476e7f22e0b6137bf0588252bdb0",
+          "source_sha256": "4427b485fa9aa6df4dc567fdf095f4a5bc3911769c836eaeb543664c92c83601",
+          "size": [
+            540,
+            960
+          ]
+        }
+      },
+      "frozen_on": "2026-10-28"
     },
     "two-passports": {
       "role": "module",
       "use_when": "a piece talks about where an AI lives (born versus lives)",
-      "beats": ["title", "born", "lives", "gap", "verdict"],
+      "beats": [
+        "title",
+        "born",
+        "lives",
+        "gap",
+        "verdict"
+      ],
       "frames_dir": "fixtures/ve/design-lock/two-passports",
       "anatomy": "docs/ve/design/formats/P-anatomy.md",
       "motion": "docs/ve/design/formats/P-motion.md",
-      "keyframes": {}
+      "keyframes": {
+        "title": {
+          "file": "fixtures/ve/design-lock/two-passports/title.jpg",
+          "sha256": "29a73a191ad84825fabb64fddd7a3eaf8a15d4fcfe5c840db520a12c65228ddf",
+          "source_sha256": "a8d6a3443ec2bfd5b5c3e85edc70f16117ec6a4995d88e160c04cec2914e56c5",
+          "size": [
+            540,
+            960
+          ]
+        },
+        "born": {
+          "file": "fixtures/ve/design-lock/two-passports/born.jpg",
+          "sha256": "def025c4081a4224e59b9163c6246de6cd216f63eeaf7f9dfbc41fa3f2eda621",
+          "source_sha256": "f32359a3314a860e7770a89b756e97c99929c978266c750093712de0a5bd51a4",
+          "size": [
+            540,
+            960
+          ]
+        },
+        "lives": {
+          "file": "fixtures/ve/design-lock/two-passports/lives.jpg",
+          "sha256": "a247738f73f332669c74b6469808ee8bf87dfede36fbee0dd415a5e19c98cbac",
+          "source_sha256": "e3917759a107696173c72d8b0ad05cda41dbfd9675ee0a3353cce041ad774370",
+          "size": [
+            540,
+            960
+          ]
+        },
+        "gap": {
+          "file": "fixtures/ve/design-lock/two-passports/gap.jpg",
+          "sha256": "0c1946a40d0935692b2e04f6f8e4d46bba9883733f6b90a368efb79c5885041b",
+          "source_sha256": "9428205840cf7b7238d58c2f6065a2e9b9e7388625be3258e8ea6e7f559d3455",
+          "size": [
+            540,
+            960
+          ]
+        },
+        "verdict": {
+          "file": "fixtures/ve/design-lock/two-passports/verdict.jpg",
+          "sha256": "211af820ca565a9920799340d06cbde7fcbfc1fa7d9344486972a0bb380ffe01",
+          "source_sha256": "4de4a594d85c9b13a0eb4ac54f732df0010ef35e53997a7019f51135e0e90046",
+          "size": [
+            540,
+            960
+          ]
+        }
+      },
+      "frozen_on": "2026-10-28"
     }
   }
 }
