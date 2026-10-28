@@ -81,10 +81,11 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    inspiration for step 2. The feed's posts from the last 8 days, the latest
    fresh posts from the channels he follows (`select title, excerpt,
    meta->>'account' as account, meta->>'url' as url, occurred_at from
-   taste_evidence where source = 'drive_cold' and source_ref like
-   'instagram:%' and occurred_at > now() - interval '8 days' order by
-   occurred_at desc`): other people's posts, so a topic signal and never his
-   view. The opinions about AI his cards carry (`facets->'opinion'`, a topic
+   taste_evidence where venture = 'publication' and source = 'drive_cold'
+   and source_ref like 'instagram:%' and occurred_at > now() - interval
+   '8 days' order by occurred_at desc`; the ledger is keyed by venture and
+   this repository reads Make Your Mind Up's, `publication`): other people's
+   posts, so a topic signal and never his view. The opinions about AI his cards carry (`facets->'opinion'`, a topic
    and the author's stance), where he tapped the topic or routed the card to
    a piece: a topic he may want to speak about, never his own stance. And
    the research corpora he named no piece for yet (`kind = 'corpus' and

@@ -5,6 +5,7 @@ import { isMonday, keepThroughWeek, mergeCovers, parseOptions, type WeekOptionMe
 import { buildSources, windows } from '../_weekSources.js'
 import { buildInspiration } from '../_inspirationSources.js'
 import { CUE_COLS, cuesFrom } from '../_feedbackCues.js'
+import { TASTE_VENTURE } from '../_taste.js'
 
 // GET  /api/week/options?week_start=YYYY-MM-DD
 //        what the Sunday session needs to plan the week: each publishing
@@ -169,11 +170,12 @@ async function readSources(week: string, slugs: string[]) {
   return { ...sources, empty: cues.empty ? [...sources.empty, cues.empty] : sources.empty, inspiration, cues: cues.cues }
 }
 
-/** His open feedback cues (_feedbackCues.ts). Never fails the gather: a table not applied yet, or a failed read, is
- *  said in `empty` and Sunday carries on. */
+/** His open feedback cues (_feedbackCues.ts), Make Your Mind Up's only (TASTE_VENTURE): a cue another venture's
+ *  session filed is that venture's. Never fails the gather: a table not applied yet, or a failed read, is said in
+ *  `empty` and Sunday carries on. */
 async function readCues() {
   try {
-    const res = await supabase.from('feedback_cues').select(CUE_COLS).eq('status', 'open').order('said_at', { ascending: true }).limit(1000)
+    const res = await supabase.from('feedback_cues').select(CUE_COLS).eq('venture', TASTE_VENTURE).eq('status', 'open').order('said_at', { ascending: true }).limit(1000)
     return cuesFrom({ data: (res.data || null) as Array<Record<string, any>> | null, error: res.error })
   } catch (e) {
     return cuesFrom({ data: null, error: { message: (e as Error).message } })
@@ -191,15 +193,16 @@ async function readInspiration(week: string) {
     supabase.from('inspiration_items').select(INSPO_COLS).or('route.eq.make_piece,routes.cs.{make_piece}').is('piece_id', null).limit(1000),
     supabase.from('content_reads').select('id,sha256,source_url,platform,shape,read_md,created_at').order('created_at', { ascending: false }).limit(60),
     supabase.from('creator_moves').select('id,creator_slug,post_url,why_it_works,krish_angle,content_idea_id,created_at').order('created_at', { ascending: false }).limit(20),
-    supabase.from('taste_claims').select('id,layer,kind,status,statement,krish,krish_source_id,support_n').in('status', ['candidate', 'proposed'])
-      .order('updated_at', { ascending: false }).limit(100),
+    // The ledger's claims and the answers they quote are Make Your Mind Up's only (TASTE_VENTURE).
+    supabase.from('taste_claims').select('id,layer,kind,status,statement,krish,krish_source_id,support_n').eq('venture', TASTE_VENTURE)
+      .in('status', ['candidate', 'proposed']).order('updated_at', { ascending: false }).limit(100),
   ])
   const failed = items.error || routed.error || reads.error || moves.error || claims.error
   if (failed) throw new Error(`inspiration: ${failed.message}`)
   // A claim keeps its quote while the answer it quotes is withdrawn; it is his words only while that answer stands.
   const quoted = [...new Set((claims.data || []).map((c: Record<string, any>) => c.krish_source_id).filter(Boolean))] as string[]
   const standing = quoted.length
-    ? await supabase.from('taste_evidence').select('id').in('id', quoted).is('withdrawn_at', null)
+    ? await supabase.from('taste_evidence').select('id').eq('venture', TASTE_VENTURE).in('id', quoted).is('withdrawn_at', null)
     : { data: [], error: null }
   if (standing.error) throw new Error(`inspiration: ${standing.error.message}`)
   const seen = new Set((items.data || []).map((r: Record<string, any>) => r.id))

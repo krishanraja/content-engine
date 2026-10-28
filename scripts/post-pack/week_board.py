@@ -784,12 +784,22 @@ def sweep_card(p, sweep):
     return ''.join(out)
 
 
+MYMU = 'Make Your Mind Up'  # the ledger's publication venture, as he reads it
+# Each venture's plain name, the same as VENTURE_LABELS in apps/control-plane/api/_taste.ts; a slug with no name here
+# is shown as it is, never hidden.
+VENTURE_LABELS = {'publication': MYMU, 'mindmake': 'Mindmake', 'heartside': 'Heartside', 'full_time': 'Full Time',
+                  'legibility': 'Legibility', 'mm_ctrl': 'CTRL', 'fractionl_pulse': 'Pulse', 'fractionl_circle': 'Circle',
+                  'signal_noise': 'Signal & Noise', 'investor': 'Investor'}
+
+
 def read_lessons(data, where='--lessons'):
     """What the weekly compiler proposed from his board edits, and what the taste ledger (krishanraja/inspirationhouse)
     proposed from what he saved and said: GET /api/video-studio/learning-proposals's answer (only proposals whose
     scope.key starts board_edit: or taste:), or a list of {id, assertion, evidence_count, kind?, status?}.
     Each stays a proposal until he approves it (AGENTS.md: every durable taste rule needs his explicit approval).
-    At most three taste lessons show, the cap the ledger keeps to."""
+    At most three taste lessons show, the cap the ledger keeps to. Each says the venture it is for (the route's
+    venture_label, or scope.venture; none is Make Your Mind Up's, Krish, 2026-10-28: "The ledger is keyed by venture
+    not repository"), and none is left out for its venture: this board is the only place he rewords a rule."""
     rows = data.get('proposals', data.get('lessons')) if isinstance(data, dict) else data
     if not isinstance(rows, list):
         raise BoardError(f'{where}: give the saved answer of GET /api/video-studio/learning-proposals, or a list of lessons')
@@ -807,11 +817,16 @@ def read_lessons(data, where='--lessons'):
         lid, says = str(r.get('id') or ''), str(r.get('assertion') or '').strip()
         count = r.get('evidence_count', r.get('independent_session_count'))
         status = r.get('status') or 'proposed'
+        scope = r.get('scope') if isinstance(r.get('scope'), dict) else {}
+        slug = str(r.get('venture') or scope.get('venture') or '').strip() or 'publication'
+        venture = str(r.get('venture_label') or '').strip() or VENTURE_LABELS.get(slug, slug)
+        if not venture or len(venture) > 60:
+            raise BoardError(f'{where}: lesson {i} names a venture the board cannot show: {venture!r}')
         if not LESSON_ID.match(lid) or not says or len(says) > 1600 or not isinstance(count, int) or count < 1:
             raise BoardError(f'{where}: lesson {i} needs an id, its assertion (at most 1600 characters) and how often it was seen')
         if (kind != 'taste' and kind not in EDIT_KINDS) or status not in ('proposed', 'approved', 'rejected', 'corrected'):
             raise BoardError(f'{where}: lesson {lid} has kind {kind!r} or status {status!r} the board does not know')
-        out.append({'id': lid, 'assertion': says, 'evidence_count': count, 'kind': kind, 'status': status})
+        out.append({'id': lid, 'assertion': says, 'evidence_count': count, 'kind': kind, 'status': status, 'venture': venture})
     if len(out) > 12:
         raise BoardError(f'{where}: {len(out)} lessons; give the 12 newest at most')
     return out
@@ -829,7 +844,7 @@ def lessons_card(p, lessons):
                    f'<span class="ls-state" data-lesson-state="{E(ls["id"])}" aria-live="polite"></span></div>') if ls['status'] == 'proposed' else ''
         items.append(f'<article class="ls-item" id="{p}lesson-{i}" data-lesson="{E(ls["id"])}"><p class="ls-says">{E(ls["assertion"])}</p>'
                      f'<p class="ls-meta"><span class="chip{" ok" if ls["status"] in ("approved", "corrected") else ""}">{E(chip)}</span> '
-                     f'{seen_line}</p>{buttons}</article>')
+                     f'For {E(ls.get("venture") or MYMU)}. {seen_line}</p>{buttons}</article>')
     return (f'<div class="card lessons" id="{p}lessons"><div class="row"><span class="lab">What I learned from your edits</span></div>'
             '<p class="ls-how">Patterns in the changes you saved on this board. Each stays a proposal until you say yes; only then '
             'does it become a rule the drafts follow.</p>' + ''.join(items) + '</div>')
@@ -3633,6 +3648,19 @@ def _editor_checks(check, week):
     taste_card = lessons_card('wed-', taste)
     check('lessons: a taste lesson says it came from what he saved and said, a reword is a standing rule in his words',
           'From what you saved and said, across 4 days' in taste_card and 'Reworded: a standing rule, in your words' in taste_card)
+    ventured = read_lessons({'proposals': [
+        {'id': '77777777-5555-4666-8777-888888888888', 'assertion': 'Open on the person.', 'independent_session_count': 3,
+         'status': 'proposed', 'scope': {'level': 'global', 'key': 'taste:packaging', 'source': 'taste_ledger', 'venture': 'heartside'},
+         'venture': 'heartside', 'venture_label': 'Heartside'},
+        {'id': '88888888-5555-4666-8777-888888888888', 'assertion': 'Name the event.', 'independent_session_count': 3,
+         'status': 'proposed', 'scope': {'level': 'global', 'key': 'taste:packaging', 'source': 'taste_ledger'}},
+        {'id': '99999999-5555-4666-8777-888888888888', 'assertion': 'Say the number.', 'independent_session_count': 3,
+         'status': 'proposed', 'scope': {'level': 'global', 'key': 'taste:packaging', 'source': 'taste_ledger', 'venture': ' mindmake '}}]})
+    ventured_card = lessons_card('wed-', ventured)
+    check('lessons: each says the venture it is for by its plain name, none is left out for its venture, and none named is Make Your Mind Up\'s',
+          [ls['venture'] for ls in ventured] == ['Heartside', MYMU, 'Mindmake'] and 'For Heartside.' in ventured_card
+          and 'For Mindmake.' in ventured_card
+          and f'For {MYMU}.' in ventured_card and f'For {MYMU}.' in lessons_card('wed-', lessons))
     page, manifest, warnings = board(week, pieces={'wed': WED_ID}, review=review, draft={'wed'}, sweeps={'wed': sweep}, lessons=lessons)
     check('editor: a fed week with the editor, Also changed and What I learned passes verify', verify(page) == [])
     card = page[page.index('<div class="rec rv ed" id="wed-review">'):page.index(REVIEW_END)]

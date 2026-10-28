@@ -1616,6 +1616,10 @@ _standards — the Five Standards gate, as a pure function.
 What Krish has confirmed he likes, for the writers.
 
 - `type TasteLane = 'voice' | 'strategy' | 'production' | 'visibility'`
+- `const TASTE_VENTURE`
+- `function proposalVenture(scope: unknown): string`
+- `function ventureLabel(slug: string): string`
+- `function withVenture<T extends { scope?: unknown }>(p: T): T & { venture: string; venture_label: string }`
 - `function renderTasteBlock(rows: Array<{ statement?: unknown; means?: unknown; layer?: unknown }>): string`
 - `async function loadTasteBlock(lanes: TasteLane[]): Promise<string>`
 
