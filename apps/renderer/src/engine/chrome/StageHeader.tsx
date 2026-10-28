@@ -11,13 +11,18 @@ const SHOW_ILLUSTRATION_TAG = false
 const LOGO = { left: 72, top: 86, width: 260 }
 const TAG = { left: 366, top: 82, width: 284, height: 52 }
 const PILL = { left: 690, top: 79, width: 270, height: 52 }
+// Wide (1920x1080): the same parts on 96 px margins and a 60 px top, logo left, pill right.
+const WIDE_LOGO = { left: 96, top: 62, width: 300 }
+const WIDE_PILL = { left: 1554, top: 56, width: 270, height: 52 }
 
 export function StageHeader({ props, frame }: { props: EngineRenderProps; frame: number }) {
   const tokens = houseTokens(props.tokens)
+  const wide = props.aspect === '16:9'
+  const LOGO_AT = wide ? WIDE_LOGO : LOGO, PILL_AT = wide ? WIDE_PILL : PILL
   const plate = props.illustrationLabels.some((label) => label.fromFrame <= frame && frame < label.toFrame)
   return <>
-    <div style={{ position: 'absolute', left: LOGO.left, top: LOGO.top, width: LOGO.width }}>
-      <HouseLogo image={props.brand.logo} width={LOGO.width} />
+    <div style={{ position: 'absolute', left: LOGO_AT.left, top: LOGO_AT.top, width: LOGO_AT.width }}>
+      <HouseLogo image={props.brand.logo} width={LOGO_AT.width} />
     </div>
     {SHOW_ILLUSTRATION_TAG && plate ? <div style={{
       position: 'absolute', ...TAG, boxSizing: 'border-box', display: 'grid', placeItems: 'center',
@@ -25,8 +30,8 @@ export function StageHeader({ props, frame }: { props: EngineRenderProps; frame:
       fontFamily: HOUSE_FONTS.data, fontWeight: 500, fontSize: 28, letterSpacing: '0.14em', lineHeight: 1,
     }}>ILLUSTRATION</div> : null}
     <div style={{
-      position: 'absolute', ...PILL, boxSizing: 'border-box', display: 'grid', placeItems: 'center',
-      borderRadius: PILL.height / 2, background: tokens.section, color: tokens.ink,
+      position: 'absolute', ...PILL_AT, boxSizing: 'border-box', display: 'grid', placeItems: 'center',
+      borderRadius: PILL_AT.height / 2, background: tokens.section, color: tokens.ink,
       fontFamily: HOUSE_FONTS.data, fontWeight: 500, fontSize: 30, lineHeight: 1,
     }}>{props.series.label}</div>
   </>

@@ -30,6 +30,11 @@ Read `docs/ve/RUNBOOK.md` to produce and `docs/ve/design/TEMPLATE.md` for what a
 - **Budget:** the engine-time cap is 120 minutes for this first whole production run (it included engine work), Krish, 28 Oct 2026.
 - **Word times** for the Friday short come from whisper small.en on the approved 1.12x voiceover, divided by 1.12, because ingest does not exist.
 
+## Audio and the wide cut (28 Oct 2026, the Friday long cut)
+- **Bed modes:** `audio.bed.mode` is `continuous` (flat, `under_vo_lu` below the voice) or `ducked`. Ducked sits about 9 to 10 dB under the voice in pauses and about 18 to 19 dB under it while speech plays (a voice-keyed sidechain compressor, 30 ms attack, 450 ms release), fades in over 1 s, lifts about 2 dB after the last word and fades out over the last 1.5 s; master about -14 LUFS, true peak at or below -1 dBTP. `velib.audio.premix` measures the bed against the voice from the separate stems and writes `<stem>.bed.json`; give it the cut's real length (`durationFrames / 30`) so the fade ends at the cut.
+- **QC row `audio.bed`:** reads that sidecar: bed present, under speech -21 to -12 dB re voice, true peak, and for a ducked bed in pauses -13 to -6 and a breathing depth of at least 4 dB. A missing sidecar is `not_run`, never a pass.
+- **Wide (16:9):** devices author both canvases. Overlay placement checks, the scribble and stamp layers and the stage header follow the active canvas; the thread card keeps its labels inside the wide margins; a headline may take up to 420 px when a splash title needs it. The design lock is 9:16 only, so for a wide cut `composition` and `keyframe_match` are not applicable (the key-frame row says so explicitly); the mechanical rows and the Critic are the gates. The wide hand-held-screen look is a first design, not a locked one.
+
 ## Local caveats
 - `. scripts/ve-env.sh` pins ffmpeg and tesseract and clears `MINDMAKE_*` Drive variables.
 - In a git worktree, `tests/archive-naming.test.ts` can write to the real Drive (junctioned `node_modules`). CI is unaffected; run it from the main checkout.

@@ -3,6 +3,7 @@ import { BrandFrame } from './BrandFrame'
 import { useEngineFrame } from './clock'
 import { DEVICES } from './devices/registry'
 import { slotsFor } from './layouts'
+import { setActiveCanvas } from './kit/lock'
 import { EngineAudio } from './audio'
 import type { EngineRenderProps } from './props'
 
@@ -12,6 +13,7 @@ export function FormatMaster(props: EngineRenderProps) {
   const objects = new Map(props.objects.map((object) => [object.obj, object]))
   const width = props.aspect === '9:16' ? 1080 : 1920
   const height = props.aspect === '9:16' ? 1920 : 1080
+  setActiveCanvas(width, height)
 
   return (
     <AbsoluteFill style={{ backgroundColor: props.tokens.ink, overflow: 'hidden' }}>

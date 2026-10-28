@@ -1,16 +1,16 @@
 {
   "file": "docs/plans/2026-10-23-friday-two-passports-ve/ve/friday-short-tall.mp4",
-  "sha256": "e0298c2f91e6a322e00d42d52da5c19fc5dade29cfce33c45a432d110bc6456e",
+  "sha256": "b9968894aaf226f988837462fd979db0ac9b0ab0c8afbf6b4202319922c8d319",
   "duration_s": 78.63,
   "format": "hand-held-screen",
   "checks": {
     "loudness.integrated": {
-      "value": -14.1,
+      "value": -14.0,
       "target": "-14 ±1",
       "pass": true
     },
     "loudness.true_peak": {
-      "value": -1.1,
+      "value": -1.6,
       "target": "<= -1",
       "pass": true
     },
@@ -66,7 +66,7 @@
           "segment": 0,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999969
+          "correlation": 0.999844
         },
         {
           "segment": 1,
@@ -78,37 +78,37 @@
           "segment": 2,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999993
+          "correlation": 0.999995
         },
         {
           "segment": 3,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999983
+          "correlation": 0.999991
         },
         {
           "segment": 4,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999991
+          "correlation": 0.999993
         },
         {
           "segment": 5,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999986
+          "correlation": 0.999991
         },
         {
           "segment": 6,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999989
+          "correlation": 0.999992
         },
         {
           "segment": 7,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.99999
+          "correlation": 0.999985
         },
         {
           "segment": 8,
@@ -120,61 +120,61 @@
           "segment": 9,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.99999
+          "correlation": 0.999993
         },
         {
           "segment": 10,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999995
+          "correlation": 0.999991
         },
         {
           "segment": 11,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999987
+          "correlation": 0.999989
         },
         {
           "segment": 12,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999978
+          "correlation": 0.999982
         },
         {
           "segment": 13,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999995
+          "correlation": 0.999989
         },
         {
           "segment": 14,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999993
+          "correlation": 0.999988
         },
         {
           "segment": 15,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999987
+          "correlation": 0.999983
         },
         {
           "segment": 16,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999992
+          "correlation": 0.999989
         },
         {
           "segment": 17,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999997
+          "correlation": 0.999995
         },
         {
           "segment": 18,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999994
+          "correlation": 0.999988
         }
       ],
       "target": "every segment |lag| <= 33 ms; correlation >= 0.5",
@@ -484,7 +484,7 @@
           "frame": 1784,
           "text": "Every time.",
           "agreement": 1.0,
-          "variant": "raw",
+          "variant": "raw_2x",
           "pass": true
         },
         {
@@ -498,7 +498,7 @@
         {
           "page": 38,
           "frame": 1986,
-          "text": "you. And here's what\r\nl",
+          "text": "you. And here's what\r\ni",
           "agreement": 1.0,
           "variant": "raw_2x",
           "pass": true
@@ -584,6 +584,42 @@
       "pass": null,
       "status": "not applicable"
     },
+    "audio.bed": {
+      "value": [
+        {
+          "check": "bed present",
+          "value": true,
+          "pass": true
+        },
+        {
+          "check": "under speech",
+          "value": -18.93,
+          "target": "-21.0 to -12.0 dB re voice",
+          "pass": true
+        },
+        {
+          "check": "true peak",
+          "value": -1.69,
+          "target": "<= -1.0 dBTP",
+          "pass": true
+        },
+        {
+          "check": "in pauses",
+          "value": -10.41,
+          "target": "-13.0 to -6.0 dB re voice",
+          "pass": true
+        },
+        {
+          "check": "the music breathes",
+          "value": 8.52,
+          "target": ">= 4.0 dB",
+          "pass": true
+        }
+      ],
+      "target": "bed present, under speech in range, true peak, and (ducked) breathing in pauses",
+      "pass": true,
+      "status": "measured"
+    },
     "keyframe_match": {
       "value": {
         "hook": {
@@ -650,7 +686,7 @@
           "frame": 1342
         },
         "open": {
-          "ssim": 0.8192353293550213,
+          "ssim": 0.8192461047715506,
           "min": 0.75,
           "pass": true,
           "golden": "hand-held-screen",
@@ -678,7 +714,7 @@
           "frame": 1711
         },
         "verdict": {
-          "ssim": 0.8283510391664158,
+          "ssim": 0.8284093672539569,
           "min": 0.75,
           "pass": true,
           "golden": "hand-held-screen",
@@ -1134,7 +1170,7 @@
           "checks": {
             "fill_pct": {
               "pass": true,
-              "value": 95.06
+              "value": 95.01
             },
             "small_text": {
               "pass": true,
@@ -1389,7 +1425,7 @@
         "frame": 1342
       },
       "open": {
-        "ssim": 0.8192353293550213,
+        "ssim": 0.8192461047715506,
         "min": 0.75,
         "pass": true,
         "golden": "hand-held-screen",
@@ -1417,7 +1453,7 @@
         "frame": 1711
       },
       "verdict": {
-        "ssim": 0.8283510391664158,
+        "ssim": 0.8284093672539569,
         "min": 0.75,
         "pass": true,
         "golden": "hand-held-screen",
@@ -1873,7 +1909,7 @@
         "checks": {
           "fill_pct": {
             "pass": true,
-            "value": 95.06
+            "value": 95.01
           },
           "small_text": {
             "pass": true,

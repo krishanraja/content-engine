@@ -87,6 +87,11 @@ class FridayFailuresAreRefused(unittest.TestCase):
     def test_IR102_episode_bed_under_a_voiceover(self):
         self.assertRefused(mutate(lambda s: s['audio']['bed'].update(mode='episode')), 'sound.bed_continuous')
 
+    def test_ducked_bed_under_a_voiceover_is_allowed(self):
+        found = codes_for(mutate(lambda s: s['audio']['bed'].update(mode='ducked')))
+        self.assertNotIn('sound.bed_continuous', found)
+        self.assertNotIn('SCHEMA', found)
+
     def test_R19_speed_change_without_krish_saying_so(self):
         self.assertRefused(mutate(lambda s: s['cuts']['proof-tall']['edit'].update(speed=1.12)), 'SCHEMA')
 

@@ -2,6 +2,7 @@ import React from 'react'
 import { MonoLabel } from '../../../house/components'
 import { HOUSE_FONTS } from '../../../house/geometry'
 import { textWidth } from '../../../house/metrics'
+import { ACTIVE_CANVAS } from '../../kit/lock'
 import { canvasRect, halftone, rotatedBounds } from '../../kit/overlay'
 import type { DeviceProps } from '../types'
 import { stampState } from './state'
@@ -10,13 +11,13 @@ export function Device({ object, events, tokens, frame }: DeviceProps) {
   if (!s.visible) return null
   const { x, y, w, h } = s.at
   rotatedBounds(x, y, w, h, s.tiltDeg)
-  if (s.leader && (s.leader.to.x < 8 || s.leader.to.x > 1072 || s.leader.to.y < 8 || s.leader.to.y > 1912))
+  if (s.leader && (s.leader.to.x < 8 || s.leader.to.x > ACTIVE_CANVAS.w - 8 || s.leader.to.y < 8 || s.leader.to.y > ACTIVE_CANVAS.h - 8))
     throw new Error('Leader dot outside canvas')
   const leaderWidth = Math.max(w, textWidth('mono', (s.leader?.label ?? '').toUpperCase(), 30, 0.16))
   if (Math.max(textWidth('mono', s.main.toUpperCase(), 30, 0.18), textWidth('mono', (s.top ?? '').toUpperCase(), 30, 0.18)) > w - 42 || h < (s.top ? 90 : 60))
     throw new Error('Stamp copy does not fit at 30px')
   return <>
-    {s.leader && <svg width={1080} height={1920} style={{ position: 'absolute', left: 0, top: 0, opacity: s.opacity }}>
+    {s.leader && <svg width={ACTIVE_CANVAS.w} height={ACTIVE_CANVAS.h} style={{ position: 'absolute', left: 0, top: 0, opacity: s.opacity }}>
       <line x1={x + w / 2} y1={y + h / 2} x2={s.leader.to.x} y2={s.leader.to.y} stroke={tokens.cream} strokeWidth={2} />
       <circle cx={s.leader.to.x} cy={s.leader.to.y} r={7} fill={tokens.ink} stroke={tokens.cream} strokeWidth={2} />
     </svg>}

@@ -1,6 +1,6 @@
 import { ENTER, EXIT, MOTION, progress, stateAt } from '../clock'
 import type { EngineEvent, EngineObject, EngineTokens } from '../props'
-import { CANVAS } from './lock'
+import { ACTIVE_CANVAS } from './lock'
 
 export const houseTokens = (tokens: EngineTokens) => ({ ...tokens, section: tokens.channel })
 export const halftone = (tokens: EngineTokens) => ({
@@ -24,8 +24,8 @@ export function overlayState(object: EngineObject, events: readonly EngineEvent[
 
 /** Reject impossible placements rather than silently clipping approved copy. */
 export function canvasRect(x: number, y: number, w: number, h: number) {
-  if (x < 0 || y < 0 || w <= 0 || h <= 0 || x + w > CANVAS.w || y + h > CANVAS.h)
-    throw new Error('Overlay outside 1080x1920 canvas')
+  if (x < 0 || y < 0 || w <= 0 || h <= 0 || x + w > ACTIVE_CANVAS.w || y + h > ACTIVE_CANVAS.h)
+    throw new Error(`Overlay outside ${ACTIVE_CANVAS.w}x${ACTIVE_CANVAS.h} canvas`)
   return { position: 'absolute' as const, left: x, top: y, width: w, height: h, boxSizing: 'border-box' as const }
 }
 

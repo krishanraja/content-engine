@@ -2,88 +2,52 @@
   "schema": "ve-verdict/1",
   "piece": "2026-10-23-friday-two-passports-ve",
   "cut": "friday-tall",
-  "sha256": "e0298c2f91e6a322e00d42d52da5c19fc5dade29cfce33c45a432d110bc6456e",
-  "reviewer": "critic-fresh-7",
-  "reviewed_at": "2026-10-28T21:03:44.355728+00:00",
+  "sha256": "b9968894aaf226f988837462fd979db0ac9b0ab0c8afbf6b4202319922c8d319",
+  "reviewer": "critic-fresh-8",
+  "reviewed_at": "2026-10-28T22:34:54.655602+00:00",
   "lens_sha256": "2d62c9e235d86f192747eaeea0115befc2ef3ae7b6448684248271100582f7c1",
   "frames_viewed": [
     {
-      "at_s": 0.4
+      "at_s": 2.03
     },
     {
-      "at_s": 1.5
-    },
-    {
-      "at_s": 3.82
-    },
-    {
-      "at_s": 5.05
+      "at_s": 4.47
     },
     {
       "at_s": 8.6
     },
     {
-      "at_s": 10.92
-    },
-    {
       "at_s": 13.78
-    },
-    {
-      "at_s": 16.8
     },
     {
       "at_s": 18.83
     },
     {
-      "at_s": 23.0
-    },
-    {
       "at_s": 24.45
     },
     {
-      "at_s": 28.03
-    },
-    {
-      "at_s": 31.5
+      "at_s": 30.45
     },
     {
       "at_s": 35.37
     },
     {
-      "at_s": 40.0
-    },
-    {
-      "at_s": 44.85
+      "at_s": 41.28
     },
     {
       "at_s": 48.83
     },
     {
-      "at_s": 52.32
-    },
-    {
       "at_s": 53.72
     },
     {
-      "at_s": 55.7
+      "at_s": 55.47
     },
     {
-      "at_s": 56.3
+      "at_s": 57.27
     },
     {
-      "at_s": 57.0
-    },
-    {
-      "at_s": 57.6
-    },
-    {
-      "at_s": 58.0
-    },
-    {
-      "at_s": 58.4
-    },
-    {
-      "at_s": 59.5
+      "at_s": 59.28
     },
     {
       "at_s": 61.08
@@ -92,78 +56,39 @@
       "at_s": 63.9
     },
     {
-      "at_s": 69.5
+      "at_s": 68.2
     },
     {
-      "at_s": 71.6
+      "at_s": 71.07
     },
     {
-      "at_s": 76.5
-    },
-    {
-      "at_s": 78.3
+      "at_s": 75.58
     }
   ],
   "findings": [
     {
-      "severity": "fix",
-      "area": "evidence",
-      "frame_s": 55.7,
-      "text": "Result_b phone card shows a large unlabelled '0' under a dashed flag for DeepSeek. No unit, no denominator, and the very next beat (56.3-57.0) shows DeepSeek writing 'carries a strong forced-labour...'. Reads as 'DeepSeek flagged nothing', which the recording contradicts. Drop the 0 or label it as final answers kept."
+      "severity": "note",
+      "area": "other",
+      "frame_s": 78.3,
+      "text": "Bed fade-out is truncated. The premix is 79.4 s but the cut is 78.634 s, so the planned 1.5 s fade (starts 77.9 s) is about half done at the cut. The ending is still soft: the last 20 ms sit near -50 dBFS and the last sample is -75 dBFS, so there is no click or hard cut. If the premix duration were set to the cut length the fade would complete."
     },
     {
-      "severity": "fix",
-      "area": "composition",
-      "frame_s": 31.5,
-      "text": "Born_third: the mint 35% strip sits on top of the passport's second MRZ line, so '1<OF<2' is half-hidden and reads as a clipped glitch (frames 30.45 to 33.02). Move the strip clear of the MRZ or lift the MRZ above it."
+      "severity": "note",
+      "area": "other",
+      "frame_s": 30.0,
+      "text": "Music presence rests mainly on the final mix, not on the sidecar. In the delivered file 99% of 100 ms windows are at or above -44.5 dBFS and only 1 of 786 is below -55 dBFS (the first 10 ms), so the bed never drops out. Under speech it sits about 19 dB under the voice, which is faint but present and inside the QC range."
     },
     {
-      "severity": "fix",
-      "area": "composition",
-      "frame_s": 40.0,
-      "text": "Lives page is near-empty (only the AI placeholder) from 37.5 to about 41 s while 'sees your data' is spoken; the DeepSeek/CHINA stamp only lands at 41.28. Born page is also bare for the first second (21.67). Previous 'never empty' fix is only partly met; land the first stamp or flag within about 0.8 s of each page opening."
-    },
-    {
-      "severity": "fix",
-      "area": "brand",
-      "frame_s": 1.5,
-      "text": "Mint is used as type colour in three places: 'AT STAKE' (1.5), 'DEEPSEEK' label on the phone card (59.5) and 'DEEPSEEK WROTE' under the pull quote (56.3-58.4). Template says mint never type; use cream/ink and keep mint to fills and highlights."
-    },
-    {
-      "severity": "fix",
-      "area": "composition",
-      "frame_s": 53.72,
-      "text": "Result_a: the white loop around the Claude card reaches up to the base of the headline 'THREE.' and brushes it; re-aim lower so it clears the headline."
+      "severity": "note",
+      "area": "other",
+      "frame_s": 65.0,
+      "text": "The 'breathes in pauses' evidence is thin. Only 7 pause windows (3.5 s of 0.5 s windows) were measured, and none after 60 s (by_minute in_pauses_db is null). bed_loud_windows_pct uses a -60 dBFS threshold, which is a weak audibility test. The numbers pass, but they show the bed rises about 8.5 dB in the few real gaps and say little about the rest of the piece."
     },
     {
       "severity": "note",
       "area": "evidence",
-      "frame_s": 57.6,
-      "text": "Evidence beat works: types in 56.3 (partial), full at 57.0, caption 'then deletes' at 57.6 with text still up, deleted state ('Sorry, that's beyond my current scope') at 58.0 and held to 58.4. Delete lands in about 0.4 s, so it is brisk; the real recording is untouched. The recording's own text is small (native), carried by the pull quote below."
-    },
-    {
-      "severity": "note",
-      "area": "copy",
-      "frame_s": 59.5,
-      "text": "'ANSWER DELETED' tag on the infographic and 'DEEPSEEK WROTE' on the quote are annotation labels that edge toward process labels. They serve the message, so I do not block; cut if Krish reads them as labels. The phone card re-typesets the deleted reply as a quote, not a redraw of the recording; acceptable."
-    },
-    {
-      "severity": "note",
-      "area": "copy",
-      "frame_s": 69.5,
-      "text": "Act_a: the 'WHICH AI' and 'WHERE IT LIVES' pills repeat the dek 'Which AI they use, and where it lives.' Redundant but legible, no overlap. The checkmark scribble on 70.42 sits over the 'AI' placeholder and hides it; fine."
-    },
-    {
-      "severity": "note",
-      "area": "composition",
-      "frame_s": 0.4,
-      "text": "Hook opens on a blank ink frame with only logo and pill for under 0.8 s, then the stakes headline USING A CHINESE AI? with the phone 'At stake' glass is in by 1.5 s. Previous fix verified; the first 0.4 s is still empty, so consider a faster first picture."
-    },
-    {
-      "severity": "note",
-      "area": "brand",
-      "frame_s": 76.5,
-      "text": "Ending verified: ONE closing screen, no ticker or marquee anywhere (75.58, 76.5, 78.3). The ending band sits over the passport page art and the page is static for about 3 s; acceptable. Verified fixed: phone prompt chip gone, Chesky to Bloomberg producer in the label (8.6), 35% strip carries 'OF 200 QUESTIONS ASKED' and Christian Science Monitor (31.5), holiday-fling dek readable (13.78, 16.8), no ILLUSTRATION or KRISH'S TEST stickers found."
+      "frame_s": 56.47,
+      "text": "Picture unchanged from the approved cut, so not a regression. The evidence-beat sticker 'SCREEN RECORDING DEEPSEEK 24 OCT 2026' is the one element that could be read as a provenance sticker under the hard rule. It names the producer, date and what the recording is, which Q4 asks for. Left for Krish's call."
     }
   ],
   "blocking": false
