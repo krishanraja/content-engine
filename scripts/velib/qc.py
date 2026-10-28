@@ -226,7 +226,18 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
             except (ValueError, KeyError, TypeError, OSError, subprocess.CalledProcessError) as exc:
                 checks[name] = {'value': None, 'target': 'valid decodable measurement inputs',
                                 'pass': False, 'status': 'error', 'reason': str(exc)}
-    built = [c['pass'] for c in checks.values() if c['pass'] is not None]
+    from . import designlock, qc_keyframes
+    try:
+        keyframes = qc_keyframes.keyframe_checks(path, {'beats': beats or []}, designlock.load(), format_id)
+    except (ValueError, KeyError, TypeError, OSError, subprocess.CalledProcessError) as exc:
+        keyframes = {'applies': True, 'pass': False, 'beats': {}, 'findings': [str(exc)]}
+    checks['keyframe_match'] = {
+        'value': keyframes.get('beats'), 'target': 'approved golden keyframes',
+        'pass': keyframes.get('pass'),
+        'status': 'measured' if keyframes['applies'] else 'not applicable',
+    }
+    applicable = [c for c in checks.values() if c.get('status') != 'not applicable']
+    built = [c['pass'] for c in applicable if c['pass'] is not None]
     return {'file': path, 'sha256': sha256_file(path), 'duration_s': round(duration_s(path), 3), 'format': format_id,
-            'checks': checks, 'measured_pass': all(built),
-            'complete': all(c['pass'] is not None and c.get('status') != 'incomplete' for c in checks.values())}
+            'checks': checks, 'keyframes': keyframes, 'measured_pass': all(built),
+            'complete': all(c['pass'] is not None and c.get('status') != 'incomplete' for c in applicable)}
