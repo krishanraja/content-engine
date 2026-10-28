@@ -14,6 +14,19 @@ export const STALE_CLAIM_MS = 30 * 60 * 1000
 export const CLOUD_GRACE_MS = 15 * 60 * 1000
 export const isCloudMachine = (machine: string) => /^cloud/i.test(machine)
 export const MAX_ATTEMPTS = 3
+// A try that failed waits this long, times the tries so far, before anyone may claim it again. On 28 October an
+// Instagram post spent all three tries in five minutes across both home computers: a block that clears in an hour
+// took the link for good.
+export const RETRY_AFTER_MS = 20 * 60 * 1000
+
+/** Whether a request may be claimed now: never before a cloud machine's wait, nor before a failed try's wait. */
+export function claimableNow(row: WatchRequestRow, machine: string, now: Date): boolean {
+  if (isCloudMachine(machine) && Date.parse(row.requested_at) > now.getTime() - CLOUD_GRACE_MS) return false
+  if (row.status === 'queued' && row.attempts > 0 && row.updated_at) {
+    if (Date.parse(row.updated_at) > now.getTime() - RETRY_AFTER_MS * row.attempts) return false
+  }
+  return true
+}
 export const MAX_CLAIM = 10
 export const MAX_FILES = 50
 
@@ -37,6 +50,8 @@ export interface WatchRequestRow {
   claimed_by: string | null
   claimed_at: string | null
   requested_at: string
+  /** When the request last changed: for a failed try sent back to the queue, when it failed. */
+  updated_at?: string | null
 }
 
 export interface MediaEntry { name: string; sha256: string; mime: string; bytes: number; folder: string }
@@ -184,18 +199,13 @@ export function claimView(row: WatchRequestRow) {
 /** How many requests this machine could claim now, without claiming any: the cloud backup's cheap first look. */
 export async function waiting(store: WatchStore, machine: string, now = new Date()): Promise<number> {
   const staleBefore = new Date(now.getTime() - STALE_CLAIM_MS).toISOString()
-  const waitedBefore = now.getTime() - CLOUD_GRACE_MS
-  return (await store.claimable(staleBefore, MAX_CLAIM * 3))
-    .filter(row => !isCloudMachine(machine) || Date.parse(row.requested_at) <= waitedBefore)
-    .length
+  return (await store.claimable(staleBefore, MAX_CLAIM * 3)).filter(row => claimableNow(row, machine, now)).length
 }
 
 /** Claim up to `limit` requests for one machine. A row another machine changed first is skipped, never taken twice. */
 export async function claim(store: WatchStore, machine: string, limit: number, now = new Date()) {
   const staleBefore = new Date(now.getTime() - STALE_CLAIM_MS).toISOString()
-  const waitedBefore = now.getTime() - CLOUD_GRACE_MS
-  const candidates = (await store.claimable(staleBefore, limit * 3))
-    .filter(row => !isCloudMachine(machine) || Date.parse(row.requested_at) <= waitedBefore)
+  const candidates = (await store.claimable(staleBefore, limit * 3)).filter(row => claimableNow(row, machine, now))
   const claimed: WatchRequestRow[] = []
   let expired = 0
   for (const row of candidates) {
