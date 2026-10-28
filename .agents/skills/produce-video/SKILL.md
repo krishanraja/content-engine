@@ -4,7 +4,7 @@ description: "Produce Krish's videos once he has recorded them. Use when he says
 model: sonnet
 ---
 
-# Produce the video
+# Produce the video
 
 > Video is made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`); the quick-edit path stays the fallback until ve passes Phase 3.
 
@@ -21,6 +21,12 @@ activation. While pending calibration, retain every existing approval, audio,
 clarity and delivery check; never claim the new automatic gate is active or that
 missing reviewer capability is a pass. Follow the rollout section in the guide.
 Repair routine failures internally and preserve existing user approvals.
+
+Then read the rejection floor for every cut you make (`python3 scripts/floor.py
+--format short_video`, `--format long_video`, and `captions`, `audio`, `motion`,
+`card`, `intro_outro`): every rejection Krish gave, in his words, and the
+standards no finished cut may fall beneath (AGENTS.md rule 20). Before a cut
+reaches him, check the finished file against each one, by eye and by ear.
 
 ## Publish-board routing
 

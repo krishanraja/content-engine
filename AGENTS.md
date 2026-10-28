@@ -20,7 +20,8 @@ with Growth's approved publishing route, not this repository.
 
 Codex reads no hooks and no `CLAUDE.md`, so the route is here (`docs/plans/2026-10-21-wednesday/FAILURE_REPORT_2026-10-24.md`):
 
-1. `python3 scripts/check_failures.py`, then `WORKBENCH.md` and `NOW.md`.
+1. `python3 scripts/check_failures.py`, then `python3 scripts/floor.py` (the rejection floor: what Krish rejected and the
+   standards nothing may fall beneath; `--format <maker>` for the one you are making), then `WORKBENCH.md` and `NOW.md`.
 2. Pick the one skill for the job and read it whole before acting: `.agents/skills/plan-week/SKILL.md` (Sunday ideas
    and the week's board), `.agents/skills/make-piece/SKILL.md` (a picked piece: story, scripts, creative direction,
    article), `.agents/skills/produce-video/SKILL.md` (cutting recorded takes).
@@ -96,6 +97,8 @@ Read linked detail before domain work; every moved paragraph remains verbatim.
 **Codex on a Windows home computer:** ([detail](docs/AGENTS-REFERENCE.md#rule-18))
 
 **His feedback on ideas is kept as cues, permanently** ([detail](docs/AGENTS-REFERENCE.md#rule-19))
+
+**Never ship beneath the rejection floor: read `python3 scripts/floor.py --format <maker>` before the brief and check the finished file against it.** ([detail](docs/AGENTS-REFERENCE.md#rule-20))
 
 ## Rules for every agent
 

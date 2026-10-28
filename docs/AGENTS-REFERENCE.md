@@ -315,6 +315,29 @@ them to a judge (`check-judges.ts`). His own example, the first entry: titles,
 headlines and thumbnail words are signed off after he records, because "only
 after recording do I really feel like I've got a message".
 
+<a id="rule-20"></a>
+
+**Never ship beneath the rejection floor** (Krish, 2026-10-28: "a separate side
+engine called Rejections (where all the working rejected production work goes,
+with the reason why I rejected it - acting as the floor, whilst Inspiration acts
+as the Ceiling)", and "It then makes it really easy for a new session to
+understand what is a no-no and what kind of stuff cannot be produced").
+`config/rejection-floor.json` holds every rejection he gave, with his words,
+and the standards read from them, by maker: `short_video`, `long_video`,
+`captions`, `motion`, `card`, `intro_outro`, `audio`, `cover`, `thumbnail`,
+`title`, `carousel`, `article`, `script`, `prediction`, `site`, `board`,
+`session` and `pipeline`. Before the brief, run `python3 scripts/floor.py
+--format <maker>` for each maker you are; before delivery, check the finished
+file against it. A standard is approved or reworded by Krish, or a draft the
+engine read into his rejections: follow both; reviewers and pre-delivery checks
+test work against approved and reworded standards and his words, for craft and
+process only, never what a piece is about (Ruling, Krish, 2026-10-28). The file
+is written only by the Rejections engine (krishanraja/inspirationhouse,
+`src/rejection/`) and changes only by a pull request he merges; never edit it.
+The records behind it, and what is kept of each asset (a still, a six-frame
+strip or a 4-second clip, never a master), live in `taste_rejections` and
+`taste_rejection_media`.
+
 ## Rules for every agent
 
 - **Krish decides.** Approve, drop, publish, and every choice of taste are
