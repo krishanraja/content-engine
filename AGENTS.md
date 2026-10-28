@@ -125,11 +125,11 @@ Code check (28 Oct 2026): compile/render lint first and use shared FormatMaster.
 Original domain paragraphs under the North Star heading are linked individually above. Read the applicable section before its work:
 
 - [What this repository is](docs/AGENTS-REFERENCE.md#what-this-repository-is)
-- [Say nothing twice](docs/AGENTS-REFERENCE.md#say-nothing-twice): relevant learnings/failures first; cues never go to judges.
+- [Say nothing twice](docs/AGENTS-REFERENCE.md#say-nothing-twice)
 - [Names](docs/AGENTS-REFERENCE.md#names)
 - [Content engine invariants](docs/AGENTS-REFERENCE.md#content-engine-invariants)
 - [Studio invariants](docs/AGENTS-REFERENCE.md#studio-invariants)
-- [Portable engine sessions (the Studio)](docs/AGENTS-REFERENCE.md#portable-engine-sessions-the-studio): `docs/ENGINE_SESSION.md`; tracked capability required for Studio mutations, otherwise read-only. No shadow memory or whole transcripts; exact first-message launcher only.
+- [Portable engine sessions (the Studio)](docs/AGENTS-REFERENCE.md#portable-engine-sessions-the-studio): `docs/ENGINE_SESSION.md`.
 - [Documentation](docs/AGENTS-REFERENCE.md#documentation)
 - [Krish canon](docs/AGENTS-REFERENCE.md#krish-canon)
 
@@ -139,7 +139,9 @@ Run `npm run verify` before pushing; validate skills with `npm run skills:valida
 
 ## Commit and closeout
 
-Commit code/config/specs/small data before stopping; file media through the authorised library route. Verify before pushing the session branch; never push directly to main. Open a PR and enable auto-merge through the authorised route; fix red CI on the branch. Never use `--auto`. No scheduled board builds, updates or publishes.
+Commit code/config/specs/small data before stopping; file media through the authorised library route. Verify before pushing the session branch; never push directly to main. Engine work never waits on a hand merge: run `npm run verify`, push the session branch, open a pull request and turn on auto-merge, so GitHub merges it to main once CI passes. Never `gh pr merge --auto` on a ve PR: wait for green CI, then merge by hand. Fix red CI on the branch. No session creates a scheduled task (a routine, a trigger, a cron) that builds, updates or publishes a publish board.
+
+Guarded rules. When Krish asks for files, hand him the files themselves. His words are exact typed quotes; a paraphrase stays an observation; a question his feedback already answers is not asked ("If you read what I am feeding back, it's pretty obvious what it is"). Inspiration links go to `Production Inspo` or `Content Inspo` ([detail](docs/AGENTS-REFERENCE.md)).
 
 Closeout: update NOW.md's as_of, status and single next action in the same work; leave head to the steward. For untouched NOW.md only, an exempt change's commit body says `Closeout: not needed, <reason>`. Keep exactly one dated line under "What is next and what is waiting on Krish", choosing holds or recalibration proposed with a reason:
 - North Star check (YYYY-MM-DD): holds.
