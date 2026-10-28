@@ -52,6 +52,8 @@ export interface WatchRequestRow {
   requested_at: string
   /** When the request last changed: for a failed try sent back to the queue, when it failed. */
   updated_at?: string | null
+  /** What an earlier try already filed, when it got that far. */
+  media?: MediaEntry[] | null
 }
 
 export interface MediaEntry { name: string; sha256: string; mime: string; bytes: number; folder: string }
@@ -189,10 +191,14 @@ export function compareRev(a: string, b: string): number {
   return a.localeCompare(b, 'en', { numeric: true })
 }
 
+/** What a machine gets for each claimed request, with what an earlier try already filed: the platform's CDN can
+ *  hand a second fetch different bytes (28 October: the same slide came back 194,030 bytes, then 167,614), so a try
+ *  that re-fetches reuses the filed files by name instead of filing a second copy (content-watcher filing.py). */
 export function claimView(row: WatchRequestRow) {
   return {
     id: row.id, url: row.url, url_key: row.url_key, platform: row.platform,
     lane: row.lane, note: row.note, attempts: row.attempts,
+    media: Array.isArray(row.media) && row.media.length ? row.media : null,
   }
 }
 

@@ -5,7 +5,7 @@ import type { ReadRow, WatchRequestRow, WatchStore } from './_watch.js'
 // Every request update is conditional on the status and claim the caller read, so two home computers
 // never both take or both report the same request.
 
-const COLUMNS = 'id, url, url_key, platform, lane, note, status, attempts, claimed_by, claimed_at, requested_at, updated_at'
+const COLUMNS = 'id, url, url_key, platform, lane, note, status, attempts, claimed_by, claimed_at, requested_at, updated_at, media'
 
 export const watchStore: WatchStore = {
   async claimable(staleBefore, limit) {
