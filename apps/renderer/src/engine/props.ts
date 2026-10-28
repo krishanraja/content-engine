@@ -87,7 +87,7 @@ export const EngineRenderPropsSchema = z.object({
   objects: z.array(EngineObjectSchema),
   events: z.array(EngineEventSchema),
   call: z.object({ statement: z.string(), due: z.string(), confidencePercent: z.number().int() }).strict().optional(),
-  ending: z.object({ fromFrame: Frame, url: z.string().min(1) }).strict().optional(),
+  ending: z.object({ fromFrame: Frame, url: z.string().min(1), ticker: z.boolean().default(true) }).strict().optional(),
   illustrationLabels: z.array(z.object({ fromFrame: Frame, toFrame: Frame, text: z.string().min(2) }).strict()).default([]),
 }).strict()
 

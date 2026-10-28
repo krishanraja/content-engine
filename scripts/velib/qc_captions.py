@@ -26,6 +26,12 @@ def fold(token: str) -> str:
     return token.translate(_CONFUSABLE)
 
 
+def lone_capital_i(token: str, expected: list) -> bool:
+    """A reading made only of I, l, 1 or | glyphs and at most two long is the single-letter word "I" when "i" is
+    expected on the page ("I were you" reads "Il"). Narrow on purpose: no other token is ever forgiven."""
+    return 'i' in expected and 0 < len(token) <= 2 and set(token) <= set('il1|')
+
+
 def crop_to_caption_box(pixels):
     """Keep the caption box only. A one-line page leaves the textured picture behind the rest of the fixed
     OCR region (cream passport paper reads as stray words). The box is the solid dark run down the region's left
@@ -130,7 +136,8 @@ def _read_candidates(executable, pixels, expected):
                            ('normalised_2x', normalised.repeat(2, axis=0).repeat(2, axis=1))):
         seen = _recognise(executable, image)
         # A lone stray glyph from the picture behind the caption is not a caption word; real one-letter words are in `expected`.
-        actual = [fold(token) for token in _tokens(seen) if len(token) > 1 or fold(token) in expected]
+        actual = ['i' if lone_capital_i(token, expected) else fold(token)
+                  for token in _tokens(seen) if len(token) > 1 or fold(token) in expected or lone_capital_i(token, expected)]
         agreement = _agreement(expected, actual)
         # Tesseract fuses tightly set words ("writes a" -> "writesa"). Word spacing is gated by the caption
         # geometry lint, so identical letters in identical order count as a full match.

@@ -113,3 +113,18 @@ describe.each(['9:16', '16:9'] as const)('%s chrome', (aspect) => {
     expect(renderToStaticMarkup(React.createElement(EndingBand, { props, frame: 179 }))).toBe('')
   })
 })
+
+describe('ending band without the ticker', () => {
+  it('draws ink, logo, day, pill and URL with no scrolling strip, and a shorter band', () => {
+    const base = fixture('9:16')
+    const quiet = EngineRenderPropsSchema.parse({ ...base, ending: { ...base.ending, ticker: false } })
+    expect(base.ending!.ticker).toBe(true)
+    expect(endingBandModel(quiet, 200)!.tickerHeight).toBe(0)
+    expect(endingBandModel(quiet, 200)!.height).toBe(endingBandModel(base, 200)!.height - (HOUSE.band.tickerHeight + HOUSE.band.tickerRule))
+    const withTicker = renderToStaticMarkup(React.createElement(EndingBand, { props: base, frame: 200 }))
+    const without = renderToStaticMarkup(React.createElement(EndingBand, { props: quiet, frame: 200 }))
+    expect(withTicker.toUpperCase()).toContain(base.series.promise.toUpperCase())
+    expect(without.toUpperCase()).not.toContain(base.series.promise.toUpperCase())
+    expect(without).toContain('makeyourmindup.ai')
+  })
+})

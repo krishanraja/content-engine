@@ -87,12 +87,16 @@
         "start": "hook",
         "glass": {
           "bubble": {
+            "hook": {
+              "label": "At stake",
+              "quote": "Who sees your data.\nWhat it tells you."
+            },
             "airbnb": {
-              "label": "Brian Chesky, Airbnb",
+              "label": "Chesky to Bloomberg",
               "quote": "We're relying a lot on Alibaba's Qwen model."
             },
             "fling": {
-              "label": "Brian Chesky, Airbnb",
+              "label": "Chesky to Bloomberg",
               "quote": "It's very good. It's also fast and cheap."
             }
           }
@@ -119,7 +123,7 @@
         "dek": "You may already be.",
         "dekAt": {
           "x": 72,
-          "y": 1524,
+          "y": 432,
           "w": 880
         }
       }
@@ -133,20 +137,19 @@
         "to_beat": "hook"
       },
       "params": {
-        "shape": "loop",
+        "shape": "underline",
         "colour": "cream",
         "seed": "4",
-        "cx": 412,
-        "cy": 364,
-        "u": [
-          345,
-          4
+        "from": [
+          215,
+          896
         ],
-        "v": [
-          -4,
-          64
+        "to": [
+          700,
+          916
         ],
-        "sq": 3
+        "amp": 2.4,
+        "double": true
       }
     },
     {
@@ -188,7 +191,7 @@
         "dek": "Airbnb's customer service leans on it.",
         "dekAt": {
           "x": 72,
-          "y": 1524,
+          "y": 430,
           "w": 880
         }
       }
@@ -202,20 +205,19 @@
         "to_beat": "airbnb"
       },
       "params": {
-        "shape": "loop",
+        "shape": "underline",
         "colour": "cream",
         "seed": "6",
-        "cx": 520,
-        "cy": 700,
-        "u": [
+        "from": [
           330,
-          10
+          818
         ],
-        "v": [
-          -10,
-          80
+        "to": [
+          640,
+          846
         ],
-        "sq": 3
+        "amp": 2.4,
+        "double": false
       }
     },
     {
@@ -238,7 +240,7 @@
         "dek": "Which is what most of us want from a holiday fling.",
         "dekAt": {
           "x": 72,
-          "y": 1524,
+          "y": 432,
           "w": 880
         }
       }
@@ -314,7 +316,11 @@
         },
         "label": "HOME COUNTRY",
         "fields": [],
-        "ghostAI": true
+        "ghostAI": true,
+        "mrz": [
+          "P<BORN",
+          "1<OF<2"
+        ]
       }
     },
     {
@@ -333,7 +339,11 @@
         },
         "label": "RESIDENCE",
         "fields": [],
-        "ghostAI": true
+        "ghostAI": true,
+        "mrz": [
+          "P<LIVES",
+          "2<OF<2"
+        ]
       }
     },
     {
@@ -419,7 +429,7 @@
             "main": "CHINA",
             "at": {
               "x": 300,
-              "y": 410
+              "y": 440
             },
             "state": "stamped",
             "flag": "china",
@@ -439,7 +449,11 @@
             "tiltDeg": -5
           }
         ],
-        "ghostAI": false
+        "ghostAI": false,
+        "mrz": [
+          "P<BORN<<USA<CHN",
+          "1<OF<2"
+        ]
       }
     },
     {
@@ -493,10 +507,10 @@
         "colour": "mint",
         "seed": "8",
         "target": {
-          "x": 352,
-          "y": 822,
-          "w": 560,
-          "h": 330
+          "x": 392,
+          "y": 958,
+          "w": 490,
+          "h": 130
         }
       }
     },
@@ -582,7 +596,7 @@
         "to_beat": "born_third"
       },
       "params": {
-        "label": "Chinese chatbot answers\nChristian Science Monitor",
+        "label": "Of 200 questions asked\nChristian Science Monitor",
         "numeral": "?"
       }
     },
@@ -618,10 +632,10 @@
         "colour": "mint",
         "seed": "3",
         "target": {
-          "x": 140,
-          "y": 512,
-          "w": 570,
-          "h": 320
+          "x": 190,
+          "y": 612,
+          "w": 450,
+          "h": 148
         }
       }
     },
@@ -648,14 +662,18 @@
             "main": "CHINA",
             "at": {
               "x": 296,
-              "y": 220
+              "y": 420
             },
             "state": "stamped",
             "flag": "china",
             "tiltDeg": 4
           }
         ],
-        "ghostAI": false
+        "ghostAI": true,
+        "mrz": [
+          "P<LIVES<<CHN",
+          "2<OF<2"
+        ]
       }
     },
     {
@@ -709,10 +727,10 @@
         "colour": "mint",
         "seed": "9",
         "target": {
-          "x": 350,
-          "y": 640,
-          "w": 560,
-          "h": 330
+          "x": 390,
+          "y": 948,
+          "w": 490,
+          "h": 140
         }
       }
     },
@@ -792,7 +810,8 @@
         "glass": {
           "prompt": {
             "lead": "UK clothing company. Our supplier gets its cotton from",
-            "active": "Xinjiang"
+            "active": "Xinjiang",
+            "chip": false
           },
           "cards": {
             "result_a": {
@@ -884,15 +903,15 @@
         "shape": "loop",
         "colour": "cream",
         "seed": "4",
-        "cx": 506.07734139709174,
-        "cy": 1043.6024964617277,
+        "cx": 480,
+        "cy": 884,
         "u": [
-          266.08748640527364,
-          45.316529821959506
+          190,
+          -35
         ],
         "v": [
-          -20,
-          78
+          28,
+          68
         ],
         "sq": 3
       }
@@ -1360,7 +1379,11 @@
         },
         "label": "HOME COUNTRY",
         "fields": [],
-        "ghostAI": true
+        "ghostAI": true,
+        "mrz": [
+          "P<BORN",
+          "1<OF<2"
+        ]
       }
     },
     {
@@ -1379,7 +1402,11 @@
         },
         "label": "RESIDENCE",
         "fields": [],
-        "ghostAI": true
+        "ghostAI": true,
+        "mrz": [
+          "P<LIVES",
+          "2<OF<2"
+        ]
       }
     },
     {
@@ -1470,7 +1497,11 @@
         },
         "label": "SECOND AI",
         "fields": [],
-        "ghostAI": true
+        "ghostAI": true,
+        "mrz": [
+          "P<SECOND<<AI",
+          "1<OF<1"
+        ]
       }
     },
     {
@@ -1592,6 +1623,12 @@
               "obj": "phone_hook",
               "verb": "move",
               "to_state": "hook"
+            },
+            {
+              "at_w": 0,
+              "obj": "phone_hook",
+              "verb": "fill",
+              "to_state": "bubble"
             },
             {
               "at_w": 0,
@@ -1840,7 +1877,7 @@
               "silent": true
             },
             {
-              "at_w": 69,
+              "at_w": 61,
               "obj": "born_page",
               "verb": "stamp",
               "to_state": "china",
@@ -2002,7 +2039,7 @@
               "silent": true
             },
             {
-              "at_w": 111,
+              "at_w": 105,
               "obj": "lives_page",
               "verb": "stamp",
               "to_state": "deepseek",
@@ -2596,6 +2633,7 @@
       "act_b": 0.95,
       "close": 0.8
     },
-    "timing_note": "Word times: raw whisper small.en of the approved 1.12x voiceover divided by 1.12; Gwen is Qwen."
+    "timing_note": "Word times: raw whisper small.en of the approved 1.12x voiceover divided by 1.12; Gwen is Qwen.",
+    "ending_ticker": false
   }
 }

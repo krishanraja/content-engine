@@ -296,6 +296,8 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         report.update(lint='clean', sfx_missing=missing)
     if spec.get('call') and not cut.get('excerpt', False):
         props['ending'] = {'fromFrame': duration, 'url': props['series']['site']}
+        if spec.get('style', {}).get('ending_ticker') is False:
+            props['ending']['ticker'] = False  # no scrolling promise strip (Krish: no marquee)
         props['durationFrames'] += ENDING_FRAMES
         # The ending band is drawn by BrandFrame, which FormatMaster mounts only for an active beat, so the last
         # beat (and what persists to it) runs through the ending. Captions stop at its start.

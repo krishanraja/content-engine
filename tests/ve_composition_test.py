@@ -26,7 +26,10 @@ FONT = ROOT / 'assets/fonts/makeyourmindup/IBMPlexMono-Regular.ttf'
 class Composition(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.lock = designlock.load()
+        # The shipped lock no longer requires the tag (Krish, 28 Oct 2026). These tests exercise the tag rule
+        # itself, which stays in the engine for a format that asks for it.
+        cls.lock = __import__('copy').deepcopy(designlock.load())
+        cls.lock['thresholds']['illustration_tag_required'] = True
 
     def image(self):
         return Image.new('RGB', (1080, 1920), comp._ink())
@@ -84,6 +87,9 @@ class Composition(unittest.TestCase):
         self.assertTrue(self.measure([self.word(h=21)])['checks']['small_text']['pass'])
         self.assertTrue(self.measure([self.word(y=1750)])['checks']['platform_zone']['pass'])
         self.assertTrue(self.measure([self.word(h=14, conf=59)])['checks']['small_text']['pass'])
+
+    def test_shipped_lock_does_not_require_the_tag(self):
+        self.assertIs(designlock.load()['thresholds']['illustration_tag_required'], False)
 
     def test_illustration_and_neighbours(self):
         self.assertFalse(self.measure(plate_on_screen=True)['checks']['illustration']['pass'])

@@ -35,6 +35,24 @@ class FoldTest(unittest.TestCase):
         self.assertEqual(row['agreement'], 1.0)
 
 
+class LoneIglyphTest(unittest.TestCase):
+    def test_only_i_like_glyph_runs_of_two_count_as_i_and_only_where_i_is_expected(self):
+        expected = ['if', 'i', 'were', 'you']
+        for reading in ('l', 'il', 'll', 'I', '1', '|l'):
+            self.assertTrue(qc_captions.lone_capital_i(reading.casefold(), expected), reading)
+        self.assertFalse(qc_captions.lone_capital_i('lll', expected))
+        self.assertFalse(qc_captions.lone_capital_i('ai', expected))
+        self.assertFalse(qc_captions.lone_capital_i('il', ['if', 'were', 'you']))
+
+    def test_il_reading_of_i_passes_but_il_where_no_i_is_expected_does_not(self):
+        with patch.object(qc_captions, '_recognise', return_value='Il were you.'):
+            row = qc_captions._read_candidates('x', np.zeros((20, 20), np.uint8), qc_captions._tokens('I were you.'))
+        self.assertEqual(row['agreement'], 1.0)
+        with patch.object(qc_captions, '_recognise', return_value='Il were you.'):
+            row = qc_captions._read_candidates('x', np.zeros((20, 20), np.uint8), qc_captions._tokens('we were you.'))
+        self.assertLess(row['agreement'], 0.98)
+
+
 class CropTest(unittest.TestCase):
     def test_crops_at_the_box_bottom_when_paper_follows(self):
         pixels = np.full((217, 900), 18, np.uint8)

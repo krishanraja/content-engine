@@ -152,7 +152,7 @@ describe('BrandFrame call and ending routing', () => {
     const beat = { ...props.beats[0]!, role: 'call' as const, fromFrame: 0, toFrame: 120 }
     props.beats = [beat]
     props.call = { statement: 'A checked call.', due: '2026-12-31', confidencePercent: 90 }
-    props.ending = { fromFrame: 90, url: 'makeyourmindup.ai' }
+    props.ending = { fromFrame: 90, url: 'makeyourmindup.ai', ticker: true }
     for (const [frame, card] of [[30, CallCard], [90, EndingBand], [100, EndingBand]] as const) {
       const nodes = elements(BrandFrame({ props, beat, frame }))
       expect(nodes.filter((node) => node.type === card)).toHaveLength(1)

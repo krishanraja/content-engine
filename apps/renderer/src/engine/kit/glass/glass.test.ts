@@ -60,6 +60,14 @@ describe('H glass kinds', () => {
     }
     expect(() => render('prompt', 0, { lead: 'x', next: 'y' })).toThrow()
   })
+  it('draws the prompt card with no chip when chip is false', () => {
+    const base = { lead: 'Our supplier gets cotton from', active: 'Xinjiang' }
+    expect(render('prompt', 30, base)).toContain('SAME WORK PROMPT')
+    const quiet = render('prompt', 30, { ...base, chip: false })
+    expect(quiet).not.toContain('SAME WORK PROMPT')
+    expect(quiet).toContain('XINJIANG')
+    expect(quiet).toContain('border-radius:0;top:0;width')
+  })
   it('plants flags on their own cues, preserves ghosts and slaps the supplied score', () => {
     expect(render('cards', 21)).not.toContain('data-flag="planted"')
     expect(render('cards', 22)).toContain('data-flag="planted"')

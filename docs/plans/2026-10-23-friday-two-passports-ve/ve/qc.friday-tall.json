@@ -1,6 +1,6 @@
 {
   "file": "docs/plans/2026-10-23-friday-two-passports-ve/ve/friday-short-tall.mp4",
-  "sha256": "21436eebed676e02f0e7ab4d73ced885f6021c2bd733b2baeb758f333bd1da9f",
+  "sha256": "e0298c2f91e6a322e00d42d52da5c19fc5dade29cfce33c45a432d110bc6456e",
   "duration_s": 78.63,
   "format": "hand-held-screen",
   "checks": {
@@ -210,7 +210,7 @@
         {
           "page": 2,
           "frame": 156,
-          "text": "Does that matter?",
+          "text": "Does that matter?\r\nL-=~,",
           "agreement": 1.0,
           "variant": "raw",
           "pass": true
@@ -268,7 +268,7 @@
           "frame": 470,
           "text": "holiday fling.",
           "agreement": 1.0,
-          "variant": "normalised",
+          "variant": "raw",
           "pass": true
         },
         {
@@ -497,11 +497,11 @@
         },
         {
           "page": 38,
-          "frame": 1864,
-          "text": "ee eee ere ee ae aes re ree eee mee Pen are Seer\r\ngovernment will announce new\r\n} public money for its own national Al\r\nmodel ora sovereign Al programme.\r\npo — ees\r\n| wheat CALE ca ea ae ar eet Tae",
-          "agreement": 0.0,
-          "variant": "raw",
-          "pass": false
+          "frame": 1986,
+          "text": "you. And here's what\r\nl",
+          "agreement": 1.0,
+          "variant": "raw_2x",
+          "pass": true
         },
         {
           "page": 39,
@@ -515,9 +515,9 @@
           "page": 40,
           "frame": 2022,
           "text": "Il were you.",
-          "agreement": 0.6666666666666667,
+          "agreement": 1.0,
           "variant": "raw",
-          "pass": false
+          "pass": true
         },
         {
           "page": 41,
@@ -569,7 +569,7 @@
         }
       ],
       "target": "token agreement >= 0.98 on every page",
-      "pass": false,
+      "pass": true,
       "status": "measured"
     },
     "brand.mark_tile": {
@@ -615,14 +615,14 @@
           "note": "extra beat: no golden, composition-checked"
         },
         "title": {
-          "ssim": 0.782128987924073,
+          "ssim": 0.777349871898966,
           "min": 0.75,
           "pass": true,
           "golden": "two-passports",
           "frame": 631
         },
         "born": {
-          "ssim": 0.8508795515111813,
+          "ssim": 0.84994617729453,
           "min": 0.75,
           "pass": true,
           "golden": "two-passports",
@@ -643,14 +643,14 @@
           "note": "extra beat: no golden, composition-checked"
         },
         "lives": {
-          "ssim": 0.8388872322783257,
+          "ssim": 0.8542950607381915,
           "min": 0.75,
           "pass": true,
           "golden": "two-passports",
           "frame": 1342
         },
         "open": {
-          "ssim": 0.8203210491640767,
+          "ssim": 0.8192353293550213,
           "min": 0.75,
           "pass": true,
           "golden": "hand-held-screen",
@@ -678,7 +678,7 @@
           "frame": 1711
         },
         "verdict": {
-          "ssim": 0.8283992010369844,
+          "ssim": 0.8283510391664158,
           "min": 0.75,
           "pass": true,
           "golden": "hand-held-screen",
@@ -731,7 +731,7 @@
           "checks": {
             "fill_pct": {
               "pass": true,
-              "value": 93.07
+              "value": 94.03
             },
             "small_text": {
               "pass": true,
@@ -751,7 +751,7 @@
             },
             "illustration": {
               "pass": true,
-              "value": 0.47058823529411764
+              "value": 0.43478260869565216
             }
           },
           "findings": [],
@@ -782,7 +782,7 @@
             },
             "illustration": {
               "pass": true,
-              "value": 0.4
+              "value": 0.42105263157894735
             }
           },
           "findings": [],
@@ -793,7 +793,7 @@
           "checks": {
             "fill_pct": {
               "pass": true,
-              "value": 89.97
+              "value": 91.19
             },
             "small_text": {
               "pass": true,
@@ -824,7 +824,7 @@
           "checks": {
             "fill_pct": {
               "pass": true,
-              "value": 91.43
+              "value": 92.96
             },
             "small_text": {
               "pass": true,
@@ -844,7 +844,7 @@
             },
             "illustration": {
               "pass": true,
-              "value": 0.4444444444444444
+              "value": 0.5
             }
           },
           "findings": [],
@@ -948,7 +948,7 @@
           "checks": {
             "fill_pct": {
               "pass": true,
-              "value": 92.19
+              "value": 92.16
             },
             "small_text": {
               "pass": true,
@@ -979,7 +979,7 @@
           "checks": {
             "fill_pct": {
               "pass": true,
-              "value": 92.37
+              "value": 92.34
             },
             "small_text": {
               "pass": true,
@@ -1134,7 +1134,7 @@
           "checks": {
             "fill_pct": {
               "pass": true,
-              "value": 94.94
+              "value": 95.06
             },
             "small_text": {
               "pass": true,
@@ -1354,14 +1354,14 @@
         "note": "extra beat: no golden, composition-checked"
       },
       "title": {
-        "ssim": 0.782128987924073,
+        "ssim": 0.777349871898966,
         "min": 0.75,
         "pass": true,
         "golden": "two-passports",
         "frame": 631
       },
       "born": {
-        "ssim": 0.8508795515111813,
+        "ssim": 0.84994617729453,
         "min": 0.75,
         "pass": true,
         "golden": "two-passports",
@@ -1382,14 +1382,14 @@
         "note": "extra beat: no golden, composition-checked"
       },
       "lives": {
-        "ssim": 0.8388872322783257,
+        "ssim": 0.8542950607381915,
         "min": 0.75,
         "pass": true,
         "golden": "two-passports",
         "frame": 1342
       },
       "open": {
-        "ssim": 0.8203210491640767,
+        "ssim": 0.8192353293550213,
         "min": 0.75,
         "pass": true,
         "golden": "hand-held-screen",
@@ -1417,7 +1417,7 @@
         "frame": 1711
       },
       "verdict": {
-        "ssim": 0.8283992010369844,
+        "ssim": 0.8283510391664158,
         "min": 0.75,
         "pass": true,
         "golden": "hand-held-screen",
@@ -1470,7 +1470,7 @@
         "checks": {
           "fill_pct": {
             "pass": true,
-            "value": 93.07
+            "value": 94.03
           },
           "small_text": {
             "pass": true,
@@ -1490,7 +1490,7 @@
           },
           "illustration": {
             "pass": true,
-            "value": 0.47058823529411764
+            "value": 0.43478260869565216
           }
         },
         "findings": [],
@@ -1521,7 +1521,7 @@
           },
           "illustration": {
             "pass": true,
-            "value": 0.4
+            "value": 0.42105263157894735
           }
         },
         "findings": [],
@@ -1532,7 +1532,7 @@
         "checks": {
           "fill_pct": {
             "pass": true,
-            "value": 89.97
+            "value": 91.19
           },
           "small_text": {
             "pass": true,
@@ -1563,7 +1563,7 @@
         "checks": {
           "fill_pct": {
             "pass": true,
-            "value": 91.43
+            "value": 92.96
           },
           "small_text": {
             "pass": true,
@@ -1583,7 +1583,7 @@
           },
           "illustration": {
             "pass": true,
-            "value": 0.4444444444444444
+            "value": 0.5
           }
         },
         "findings": [],
@@ -1687,7 +1687,7 @@
         "checks": {
           "fill_pct": {
             "pass": true,
-            "value": 92.19
+            "value": 92.16
           },
           "small_text": {
             "pass": true,
@@ -1718,7 +1718,7 @@
         "checks": {
           "fill_pct": {
             "pass": true,
-            "value": 92.37
+            "value": 92.34
           },
           "small_text": {
             "pass": true,
@@ -1873,7 +1873,7 @@
         "checks": {
           "fill_pct": {
             "pass": true,
-            "value": 94.94
+            "value": 95.06
           },
           "small_text": {
             "pass": true,
@@ -2056,6 +2056,6 @@
       }
     }
   },
-  "measured_pass": false,
+  "measured_pass": true,
   "complete": true
 }
