@@ -453,6 +453,39 @@ point at live in a local working folder, the music folder in Drive, or
 `.cache/`.
 
 
+## The words gate
+
+Krish, 24 Oct: "random small cuts and chopped words" in the published
+Wednesday long video. Every finished cut now goes through `words_gate.py`
+(blocking): a content word of the signed script (the config's `script`) that
+he said in the take and that is missing from the finished file, beyond the
+approved removals, holds the cut. make.py writes the approved removals (the
+config's `remove` rows, with Krish's words when they carry them) as
+`<name>.edl.json`, transcribes the finished file (faster-whisper, as it
+already did for the `heard` check), writes the result into the cut's
+`.validation.json` as `checks.words`, bound to the video's sha256, and exits
+non-zero after writing everything, naming each lost word and where it was.
+`quality.delivery_problems` refuses a failed or stale words check wherever
+the receipt travels (send.py, making.py video, the archive). Function-word
+differences and lost ad-libs are listed, never blocking. Any cut can be
+checked by hand:
+
+```
+python3 words_gate.py --script SCRIPT.txt --take-words TAKE.words.json --final CUT.mp4 [--edl CUT.edl.json]
+```
+
+It is not calibrated yet (config/failures.json, chopped-words-published stays
+open): Monday 26's accepted cuts must pass and Wednesday 21's published long
+cut and Friday's 17 Oct words cut must fail. A clipped tail the transcriber
+still hears whole is caught only by the joins-in-gaps check (Wave 2).
+
+Beside it, `advisory_qc.py` runs the ve measures that can run on a quick-edit
+cut (joins, captions, brand mark, composition) and writes them under
+`advisory` in the receipt, each marked `"advisory": true, "blocking": false`.
+In Wave 1 none of them blocks; a measure that cannot run here (no tesseract,
+no house mark on this machine, a 16:9 cut the 9:16 lock does not cover) says
+why. Tests: `tests/quick_edit_words_gate_test.py`.
+
 ## Evidence-backed caption repairs
 
 When independent recognition or human listening finds a spoken word missing from

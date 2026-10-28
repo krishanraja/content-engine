@@ -28,6 +28,7 @@ describe('the engine gates', () => {
     ['the rejection floor reader (AGENTS.md rule 20)', ['scripts/floor.py', '--self-test']],
     ['the rejection floor file, when it is there, is whole', ['scripts/floor.py', '--check']],
     ['video transcript clocks, word cues, continuous music and delivery evidence', ['tests/quick_edit_quality_test.py']],
+    ['the words gate: no content word he said is lost from a cut (chopped-words-published, open until calibrated)', ['tests/quick_edit_words_gate_test.py']],
     ['Claude model routing preserves strict skill validation', ['tests/validate_skills_test.py']],
     ['the Codex token ledger: calls, tokens, child agents and the weekly limit, never words', ['tests/session_token_audit_codex_test.py']],
   ] as const) {

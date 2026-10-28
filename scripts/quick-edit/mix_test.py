@@ -149,7 +149,13 @@ def render(config, out, shape, env):
               'from unittest.mock import patch\nimport media_standard\n'
               'make.transcribe = lambda *args, **kwargs: []\n'
               "with patch.object(make.quality.importlib.metadata, 'version', return_value='synthetic-asr-test'), patch.object(media_standard, 'preflight') as proof:\n"
-              '    make.main()\n'
+              '    try:\n'
+              '        make.main()\n'
+              '    except SystemExit as held:\n'
+              '        # Synthetic tones have no script and no heard words: the words gate holds the cut, after writing it.\n'
+              "        assert str(held.code).startswith('Words gate: held'), held.code\n"
+              '    else:\n'
+              "        raise AssertionError('the words gate let a cut with no heard words through')\n"
               '    proof.assert_called_once()\n'
               "    assert proof.call_args.kwargs['full_production'] is True\n")
     p = subprocess.run([sys.executable, '-c', runner, str(WORK / config), '--out', str(WORK / out), '--only', shape],
@@ -158,6 +164,9 @@ def render(config, out, shape, env):
         raise SystemExit(f'make.py failed on {config} {shape}:\n{p.stderr[-3000:]}')
     receipt = json.loads((WORK / out / f'{Path(config).stem}-{shape}.mp4.validation.json').read_text())
     assert receipt['checks']['heard']['status'] == 'fail', 'Synthetic tones cannot pass speech verification'
+    assert receipt['checks']['words']['status'] == 'fail', 'Synthetic tones cannot pass the words gate'
+    assert all(row['advisory'] is True and row['blocking'] is False for row in receipt['advisory']['rows'].values()), \
+        'every ve measure on a quick-edit cut is advisory in Wave 1'
     return json.loads((WORK / out / f'{Path(config).stem}.report.json').read_text())
 
 
