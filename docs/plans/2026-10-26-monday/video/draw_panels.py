@@ -70,8 +70,15 @@ def receipt(header, lines, footer, shown, size='m'):
 
 
 def box(labels, title='CHARACTER.AI', size='m', dim=()):
-    pills = ''.join(f'<span class="pill{" dim" if l in dim else ""}">{esc(l)}</span>' for l in labels)
-    return f'<div class="box {size}"><div class="bt">{logo("characterai-cream.svg", 54 if size == "m" else 40)}</div><div class="bin">{pills}</div></div>'
+    """The firm as a company card: its logo and an "in Chapter 11" tag over what it holds. What has left is a
+    dashed empty slot (the old open-top box was ruled tacky on 28 Oct)."""
+    def chip(l):
+        cls = ' dim' if l in dim else ''
+        cls += ' law' if 'LAWSUIT' in l else ''
+        return f'<span class="chip{cls}">{esc(l)}</span>'
+    chips = ''.join(chip(l) for l in labels) or '<span class="chip dim">&nbsp;</span>' * 3
+    return (f'<div class="co {size}"><div class="cot">{logo("characterai-cream.svg", 54 if size == "m" else 40)}'
+            f'<em>IN CHAPTER 11</em></div><div class="cob">{chips}</div></div>')
 
 
 def spotlight(cap_id, sharp, crop_w, aspect, record, fill=0.62):
@@ -152,14 +159,17 @@ main::before{content:"";position:absolute;left:0;top:0;width:100%;height:10px;ba
 .rf{font:500 34px/1.2 "IBM Plex Mono";text-align:center;letter-spacing:1px;color:rgba(12,21,18,.75)}
 .receipt.s .rh{font-size:40px}.receipt.s .line{font-size:40px}.receipt.s .rf{font-size:26px}
 .receipt.xs .rh{font-size:38px}.receipt.xs .line{font-size:38px;margin:14px 0}.receipt.xs .rf{font-size:24px}.receipt.xs .rule{margin:16px 0}
-.box{border:5px solid rgba(244,239,228,.6);border-top:none;border-radius:0 0 14px 14px;padding:24px 26px 30px;position:relative;min-width:440px;min-height:420px;display:flex;flex-direction:column;align-items:center}
-.box::before{content:"";position:absolute;top:-30px;left:-24px;right:-24px;height:30px;border:5px solid rgba(244,239,228,.6);border-bottom:none;transform:skewX(-14deg)}
-.box.s{min-width:300px;min-height:340px}
 .\39x16 .line{font-size:40px}
-.bt{margin:10px 0 26px}
-.bin{display:flex;flex-direction:column;align-items:center;gap:18px}
-.pill{font:700 38px/1 "IBM Plex Mono";letter-spacing:1px;background:rgba(244,239,228,.12);border:3px solid rgba(244,239,228,.7);padding:14px 20px;border-radius:8px;white-space:nowrap}
-.pill.dim{visibility:hidden}
+.co{width:520px;border:4px solid rgba(244,239,228,.5);border-radius:30px;background:linear-gradient(180deg,rgba(244,239,228,.09),rgba(244,239,228,.02));padding:28px 30px 32px;display:flex;flex-direction:column;gap:24px;box-shadow:0 24px 60px rgba(0,0,0,.5)}
+.co.s{width:420px;padding:22px 24px 26px}
+.cot{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-bottom:22px;border-bottom:3px solid rgba(244,239,228,.2)}
+.cot em{font:700 22px/1 "IBM Plex Mono";font-style:normal;letter-spacing:2px;color:#0C1512;background:#FFD84D;padding:9px 12px;border-radius:6px;white-space:nowrap}
+.cob{display:flex;flex-direction:column;gap:16px}
+.chip{font:700 38px/1 "IBM Plex Mono";letter-spacing:1px;background:#F4EFE4;color:#0C1512;padding:20px 24px;border-radius:12px;white-space:nowrap;box-shadow:0 8px 22px rgba(0,0,0,.45);text-align:center}
+.chip.law{background:#FFD84D}
+.chip.mv{background:#7EF0C0}
+.chip.dim{background:transparent;color:transparent;border:3px dashed rgba(244,239,228,.35);box-shadow:none}
+.co.s .chip{font-size:32px;padding:16px 18px}
 .arrow{width:200px;height:24px;background:#7EF0C0;position:relative;border-radius:4px}
 .arrow::after{content:"";position:absolute;right:-30px;top:-22px;border:34px solid transparent;border-left:40px solid #7EF0C0;border-right:none}
 .col{display:flex;flex-direction:column;align-items:center;gap:22px}
@@ -287,8 +297,8 @@ def build(records):
     def money_map(moved, size='m', label=None):
         left = box(['THE PEOPLE', 'THE CODE', 'THE LAWSUITS'] if not moved else ['THE LAWSUITS'], size=size)
         right = (f'<div class="col">{logo("disney-script-cream.svg", 120)}' +
-                 (''.join(f'<span class="pill" style="border-color:#7EF0C0">{p}</span>' for p in ('THE PEOPLE', 'THE CODE')) if moved else
-                  '<span class="pill dim">THE PEOPLE</span><span class="pill dim">THE CODE</span>') + '</div>')
+                 (''.join(f'<span class="chip mv">{p}</span>' for p in ('THE PEOPLE', 'THE CODE')) if moved else
+                  '<span class="chip dim">THE PEOPLE</span><span class="chip dim">THE CODE</span>') + '</div>')
         arrow = '<div class="arrow"></div>' if moved else '<div style="width:200px"></div>'
         return f'<div class="row" style="gap:36px">{left}{arrow}{right}</div>'
     add('l21', W, [(page(W, money_map(False), None, 'COURT FILINGS'),
@@ -380,7 +390,7 @@ def build(records):
                     txt(('character.ai', 'identity', 'the firm'), ('CHARACTER.AI · CHAPTER 11', 'identity', 'its bankruptcy chapter')))])
     def money_map_t(moved, label=None):
         left = box(['THE PEOPLE', 'THE LAWSUITS'] if not moved else ['THE LAWSUITS'], size='s')
-        right = f'<div class="col">{logo("disney-script-cream.svg", 90)}<span class="pill{"" if moved else " dim"}" style="border-color:#7EF0C0">THE PEOPLE</span></div>'
+        right = f'<div class="col">{logo("disney-script-cream.svg", 90)}<span class="chip mv{"" if moved else " dim"}">THE PEOPLE</span></div>'
         arrow = '<div class="arrow" style="width:110px"></div>' if moved else '<div style="width:110px"></div>'
         return page(T, f'<div class="row" style="gap:30px">{left}{arrow}{right}</div>', label, 'COURT FILINGS')
     add('s06', T, [(money_map_t(False), txt(('THE PEOPLE THE LAWSUITS', 'identity', 'what sits in the firm'), ('COURT FILINGS', 'source', 'filings'))),
@@ -403,7 +413,11 @@ def build(records):
                         for i, q in enumerate(qs))
         return page(T, f'<div class="mini">{cards}</div>', label, 'THIS STORY' if k else None)
     add('s08', T, [(mini(0, '4 QUESTIONS'), txt(('4 QUESTIONS', 'quantity', 'how many checks are coming'), ('1 2 3 4', 'identity', 'the numbered cards')))])
-    add('s09', T, [(mini(k), txt(*([(f'{i + 1} {q}', 'relationship', 'a question to ask') for i, q in enumerate(qs[:k])] + [('THIS STORY', 'source', 'the proof is in this story')]))) for k in (1, 2, 3, 4)])
+    # The label's line is kept (a blank one) on pages 1-4 so the cards do not move when "THE FOUR CLUES" arrives on page 5.
+    add('s09', T, [(mini(k, label), txt(*([(f'{i + 1} {q}', 'relationship', 'a question to ask') for i, q in enumerate(qs[:k])] +
+                                          ([('THE FOUR CLUES', 'relationship', 'what the four questions are')] if label.strip() else []) +
+                                          [('THIS STORY', 'source', 'the proof is in this story')])))
+                   for k, label in ((1, ' '), (2, ' '), (3, ' '), (4, ' '), (4, 'THE FOUR CLUES'))])
     mark = f'<img style="width:720px" src="{brand.brand_uri("wordmark", full=True)}">'
     endt = lambda url: (f'<div class="col" style="gap:40px">{mark}<div class="mono" style="color:#FFD84D;font-size:46px">follow.the.money</div>'
                         f'<div class="big" style="font-size:96px;{"" if url else "visibility:hidden"}">MAKEYOURMINDUP.AI</div></div>')

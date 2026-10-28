@@ -1,67 +1,73 @@
 # Monday 26 October: both cuts, for your review
 
 Piece `b358e788-209f-427b-a84d-1f79a8ebb430`, "Why is Disney eating the scraps of bankrupt Character.AI?"
-(follow.the.money). Made by Claude Code on 27 October on the 19 Oct quick-edit route (kit.py, make.py,
-quality.py), from the direction you re-signed today ("Signed, go (Recommended)"), with captions burned in
-(your ruling of 27 Oct). You are the only listener: nothing below replaces your full playback.
+(follow.the.money). Made by Claude Code on the 19 Oct quick-edit route (kit.py, make.py, quality.py), from the
+direction you re-signed on 27 October, with captions burned in (your ruling of 27 Oct). Rebuilt on 28 October on your
+review of the first cuts: a real opener, pictures that move, no green background, one end screen (below). You are the
+only listener: nothing below replaces your full playback.
 
 ## Watch
 
 | Cut | File to watch (share copy, under 29 MiB) | Master | Length |
 |---|---|---|---|
-| 5-minute, 16:9 | `.cache/produce/2026-10-26-b358e788/long/share/disney-google-and-character-ai-long-16x9.mp4` | `long/disney-google-and-character-ai-long-16x9.mp4` (sha256 `c3353756ba9465ffac0f8a75b997a26cb343a211037eef024dbb3ab66ee1f0d6`) | 4:45.5 (intro 3.5 s, you 4:36.0, outro 6.0 s) |
-| 90-second, 9:16 | `.cache/produce/2026-10-26-b358e788/short/share/disney-google-and-character-ai-short-9x16.mp4` | `short/disney-google-and-character-ai-short-9x16.mp4` (sha256 `f9710b85397cf2c4601b6075a1da726cb61bf197a606109d6fc4bfc8bf471fc3`) | 1:27.7 (intro 3.5 s, you 1:18.2, outro 6.0 s) |
+| 5-minute, 16:9 | `.cache/produce/2026-10-26-b358e788/long/share/disney-google-and-character-ai-long-16x9.mp4` | `long/disney-google-and-character-ai-long-16x9.mp4` (sha256 `14ccfef0f31e42814db4b4743d35cd75d047d95e0520171f755b9cd31b1a3294`) | 4:43.5 (intro 3.5 s, you 4:36.0, outro 4.0 s) |
+| 90-second, 9:16 | `.cache/produce/2026-10-26-b358e788/short/share/disney-google-and-character-ai-short-9x16.mp4` | `short/disney-google-and-character-ai-short-9x16.mp4` (sha256 `a465974cffa1755eacdb5c2f86a36964c2e7daeb2187adf4b9359ee460d26481`) | 1:25.7 (intro 3.5 s, you 1:18.2, outro 4.0 s) |
 
-Paths are under the worktree `C:\Users\krish\dev\mindmake\content-engine-monday26`. Both share copies were
-also sent to you in this session.
+Paths are under the worktree `C:\Users\krish\dev\mindmake\content-engine-monday26`. The same files, masters and share
+copies, are in the Drive archive (`Video Engine/Archive/2026-10-26 Disney, Google and Character.AI (post to ...)`) and
+on Monday's tab of the week's board (The two cuts, for your review).
+
+## What changed on 28 October, and where
+
+- **The first picture is a statement** (`video/motion.py`, opener): a wall of chat tiles, "MILLIONS MADE FRIENDS HERE.",
+  and on the word "bust" hazard tape ("CHAPTER 11", "FILED 12 OCT 2026 · COURT FILING"), "NOW IT'S BANKRUPT." and the
+  wall falling away. In the 90-second cut the wall opens it (0:04) and "OUT OF CASH.", "LAWSUITS." and the same slam
+  close the paragraph on "went bust" (0:10). "Millions", not a number: no source in the project gives a user count.
+- **Every picture moves**: objects arrive with weight, receipts print and their numbers count up, the VOID stamp
+  slams, arrows draw, chips fly from the firm's card to Disney's, a scan line crosses each document, the ground and
+  camera drift. The old open-top box is a company card with an "IN CHAPTER 11" tag.
+- **What Character.AI is**: your own screen recording of its home page, zoomed to the character row, with hand-drawn
+  rings on "Psychologist", "Ella - dating coach" and the "79.1m" count. The first frame is cropped above the
+  "Try saying" block so no real person's name or photo shows. About 4 s at 0:23 (5-minute), 3.4 s at 0:06 (90-second).
+- **The room behind you** is your real room, steadied only. The darkened-and-softened treatment is dropped.
+- **One close**: the question screen and the URL, held 4 s. The teaser and logo screens of the house end card, and the
+  branded call-to-action panels before it, are gone. The 5-minute cut holds "PLAN B · YOUR DATA" to the end; the
+  90-second cut holds the four questions, with "THE FOUR CLUES" arriving on "These are the clues".
 
 ## What I measured on the final files
 
 | | 5-minute | 90-second |
 |---|---|---|
-| Loudness, final encode (ebur128) | -14.1 LUFS, true peak -1.6 dBTP | -14.2 LUFS, true peak -1.0 dBTP |
+| Loudness, final encode (ebur128) | -14.2 LUFS, true peak -1.7 dBTP | -14.2 LUFS, true peak -1.0 dBTP |
 | Music bed (No Curves, licensed) | episode bed: open, six chapter lifts, close; 16.6 LU under you | continuous, 17.1 LU under you |
 | Camera joins | one: 2:17.5, the ruled cut of "which is fair enough" (in the 0.44 s silence after "children.", both words whole) | none: one continuous take |
-| Lip sync (SyncNet, calibrated, a window on every join, the rest of your speech tiled) | after the engine fix: 36 of 44 windows pass (0 or -40 ms), the join window passes; 7 low-confidence; one fails at 4:03 (-80 ms, its neighbours -40). Before the fix the cut read -80 ms throughout | pass before the fix (12 of 12, 0 or -40 ms); the re-render with the fix is being measured |
-| Every word, finished file heard again | 872 of 875 words as captioned; the 3 others are below, for your ear | 249 of 249 |
+| Lip sync (SyncNet, calibrated, a window on every join, the rest of your speech tiled) | 32 of 44 windows pass (0 or -40 ms) and the join window (2:14.5) passes; 11 are inconclusive (your face was found in under 90% of their frames, offsets 0 or -40 ms); one fails at 4:03 (-80 ms, confidence 7.3, its neighbours -40). A negative offset is the sound arriving after the picture: 80 ms late is inside the usual tolerance, but it is the one spot to watch on playback | 11 of 12 windows pass (0 or +40 ms); one (0:34, 0 ms) is inconclusive because your face was found in 80% of its frames; none fail |
+| Every word, finished file heard again | 874 heard of 875 captioned; the 8 differences are small words (below) | 249 of 249 in the render's own check; 248 of 249 on a second listen (below) |
 | Camera shake (wall tracker, your hands left out) | 1.94 -> 1.67 px RMS, p95 3.58 -> 2.13 px (a 7.7% steady crop) | 1.96 -> 1.01 px RMS, p95 4.02 -> 2.05 px (2% crop) |
-| Room behind you | darkened and softened, you untouched (person mask, never cut out) | same |
-| Contact sheets | every second, and every quarter second of intro and outro, inspected | same |
+| Contact sheets | the first 12 s, the last 13 s and one frame every 8 s inspected | the whole cut, one frame every 2.6 s, inspected |
 
 ## Listen for (captions only; the sound is never touched)
 
-- **5-minute, 2:14:** captions say "families **and** US states" (the script); the transcriber hears "families **in**".
-- **5-minute, 1:45:** "66 of **Character.AI's** staff" (the script); heard without the "'s".
-- **5-minute, 3:03:** "Warner Music bought an AI **firm** too" (the script and your clean take); the mixed file is heard as "film".
-- **90-second, 0:12:** captions say "faced lawsuits over **harm to** children". Both transcribers heard your raw take as "haunted"; the finished file is heard as "harm to", the script's words.
-- **5-minute, 0:04:** "Disney **has** basically asked" (the second listen); and **0:13** "Google hired that same **business as founders**", as you said it.
+- **5-minute:** your voice is the take you approved on 27 October; only the pictures and the end screen changed. The
+  word check hears small words differently from the captions (the/a, "Character.AI's" without the "'s", "all
+  together" as one word, "and US" as "in U S"). Captions follow the script: "families **and** US states".
+- **90-second, 0:12:** captions say "faced lawsuits over **harm to** children". Both transcribers heard your raw take as
+  "haunted"; the finished file is heard as "harm to", the script's words.
 - **5-minute, 2:17:** the one cut, "which is fair enough". Clip: `review/packet/long-join-2m17-which-is-fair-enough-cut.mp4`.
 
-## Where the cuts differ from the storyboard you signed on 26 October, and why
-
-1. **The 19 Oct route's framing** (re-signed today): pictures sit beside your face (16:9) or above it (9:16); no
-   full-frame cutaways. Moves are changes of picture on the word that names them, with the house crossfade;
-   the three single documents push in slowly.
-2. **The 90-second cut, two beats:** make.py's 9:16 gate (always on since 19 Oct) needs a picture over 90% of your
-   words, no gap over 1.5 s and 20 changes a minute. So beat 1's label is a panel above your face, and beat 8
-   shows the four question cards arriving blank ("4 QUESTIONS") before they fill in. Recorded in the direction's
-   `production_notes`.
-3. **The six chapter cards are not in the video.** The direction has no beat for them; their headings are the
-   YouTube chapter list (`long/disney-google-and-character-ai-long-16x9.chapters.txt`), and the drawn cards stay
-   in the library folder.
-4. **No intro sting** (still a candidate); the approved story intro and outro open and close both cuts.
-
-## Two decisions that are yours
+## Three decisions that are yours
 
 1. **Accept both cuts on full playback**, or tell me what to change.
-2. **Library filing is blocked by the visual-clarity gate's word budget**, until you rule. Its numbers (8 main
-   words, 16 in all, no three words of yours repeated) are Claude's defaults from 25 October, not yours. They
-   fail your approved story intro and outro (24 to 33 words), the signed receipts (9 to 13 words), the logo rows
-   that spell the names you say, and the four-question card. Recommended: the approved story intro and outro,
-   and real logos, count as pictures, not words; everything else keeps the budget, with the receipts and cards
-   as signed. Or keep the gate as it is, and I cut the receipts and cards down to fit (the intro and outro would
-   still block filing).
+2. **How many words may show on screen at once?** The visual-clarity gate's numbers (8 main words, 16 in all, no three
+   words of yours repeated) are Claude's defaults from 25 October, not yours. They fail your approved story intro and
+   outro (24 to 33 words), the signed receipts (9 to 13 words), the logo rows that spell the names you say, and the
+   four-question card. Recommended: the approved story intro and outro, and real logos, count as pictures, not words;
+   everything else keeps the budget. Or keep the gate as it is, and I cut the receipts and cards down to fit.
+3. **The article names Udio and ElevenLabs** (once, with Universal Music), so the library's visual gate wants their
+   real logos on both cuts and both thumbnails, plus OpenAI, Warner Music Group and Universal Music Group on the
+   thumbnails. Until then the cuts stay in the archive and on the board, and nothing goes to the post's `3 Video`
+   folder. Add the logos, or take the two names out of the article (which then needs its fact check again).
 
-Nothing has been published, sent or scheduled. Fact status: the article's fact gate is still open
-(`making.py show`: "the fact gate did not pass"); the video's figures are the ones the signed direction and the
-filed sources carry. Transport: both files decode end to end; sizes and hashes above.
+Nothing has been published, sent or scheduled. Fact status: the article's fact gate is still open (`making.py show`:
+"the fact gate did not pass"); the video's figures are the ones the signed direction and the filed sources carry.
+Transport: both files decode end to end; sizes and hashes above.

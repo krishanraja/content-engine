@@ -20,7 +20,8 @@ W, T = '16x9', '9x16'
 
 def cue(cid, start, end, shape, pages=None, on=None, panel=None, **extra):
     """pages: the drawn page ids in order (draw_panels.py names); a single page needs no `on`."""
-    files = [f'../panels/{p}-{shape}.png' for p in (pages or [cid])]
+    # a page that motion.py has animated plays as its mp4; the still is the fallback
+    files = [f'../panels/{p}-{shape}.' + ('mp4' if (WORK / 'panels' / f'{p}-{shape}.mp4').exists() else 'png') for p in (pages or [cid])]
     if panel:
         files = [panel]
     c = {'id': cid, 'panel': files[0], 'start': start, 'end': end, **extra}
@@ -32,20 +33,23 @@ def cue(cid, start, end, shape, pages=None, on=None, panel=None, **extra):
 
 
 LONG = [
-    cue('l01', 'go bust', 'business as founders', W),
+    # The first picture after the sting: the wall of friends, the statement, and the slam on "bust" (motion.py).
+    cue('l01', 'Disney has basically asked', 'business as founders', W, panel='../panels/open-16x9.mp4'),
     cue('l02', 'So why are Disney', 'in the future', W, ['l02-p1', 'l02-p2', 'l02-p3'],
         ['So why are', 'Disney and Google', 'Google both paying']),
-    cue('l03', "I've been reading the court", 'up characters', W, panel='../panels/l03-push-16x9.mp4'),
+    cue('l03', "I've been reading the court", 'papers on Character', W),
+    # What the app is: his own screen recording of its home page, pushed in, with hand-drawn rings (whatitis.py).
+    cue('l03w', 'the app where millions', 'up characters', W, panel='../panels/whatitis-16x9.mp4'),
     cue('l05', "Let's start with Google", 'behind the app', W),
     cue('l06', 'So in 2024', 'research team away', W, ['l06-p1', 'l06-p2', 'l06-p3'],
         ['So in 2024', 'reportedly paid', 'hired the founders']),
-    cue('l08', 'rest of the staff stayed', 'started running low', W, panel='../panels/l08-push-16x9.mp4'),
+    cue('l08', 'rest of the staff stayed', 'started running low', W),
     cue('l09', 'Disney wanted something else', 'last December', W),
     cue('l10', 'Disney agreed to put', 'retired video app', W, ['l10-p1', 'l10-p2'], ['Disney agreed to', 'over 200']),
     cue('l11', 'but Sora belonged', "someone else's app", W, ['l11-p1', 'l11-p2'], ['but Sora belonged', "someone else's app"]),
     cue('l12', 'Then in March', 'shut Sora down', W, ['l12-p1', 'l12-p2'], ['Then in March', 'shut Sora down']),
     cue('l13', 'the deal died', 'no money changed hands', W, ['l13-p2', 'l13-p3'], ['the deal died', 'no money changed']),
-    cue('l15', 'So Disney changed its plan', 'technology chief', W, panel='../panels/l15-push-16x9.mp4'),
+    cue('l15', 'So Disney changed its plan', 'technology chief', W),
     cue('l16', 'And this month', 'for three years', W, ['l16-p1', 'l16-p2'], ['And this month', 'jobs to 66']),
     cue('l17', 'On top of that', 'keeping children safe', W, ['l16-p2', 'l17'], ['On top of that', 'has bid']),
     cue('l19', 'filed for bankruptcy', '12th of October', W, ['l19-p1', 'l19-p2'], ['filed for bankruptcy', '12th of October']),
@@ -65,14 +69,17 @@ LONG = [
     cue('l34', 'Secondly, is your tool', 'it vanished', W),
     cue('l35', 'Number three, is the firm', 'exactly about that', W),
     cue('l36', 'And fourth, is it collecting', 'went through the court', W),
-    cue('l37', 'line up with plan B', 'your own data', W),
-    cue('l38', 'The full deep dive', 'makeyourmindup ai', W),
+    cue('l37', 'line up with plan B', 'your own data', W, tail=7.0),   # holds to the end: one close, no second branded screen
+    # One close (Krish, 28 Oct: "we also don't need three separate outro transitions and screens. Ever."): the
+    # branded call-to-action screen that used to sit here repeated the end card, so his face holds over the URL.
 ]
 
 SHORT = [
     # Beat 1's label above his face, and beat 8's four blank cards: make.py's 9:16 gate needs a picture over
     # 90% of his words, no gap over 1.5 s and 20 changes a minute (creative-direction.json production_notes).
-    cue('s01', "I've been having a look", 'went bust', T, ['s01-p1', 's01-p2'], ["I've been having a look", 'court papers']),
+    cue('s01', "I've been having a look", 'on Character', T, panel='../panels/open-9x16.mp4'),
+    cue('s01w', 'which is a chat', 'fictional characters', T, panel='../panels/whatitis-9x16.mp4'),
+    cue('s01b', 'It ran low on cash', 'went bust', T, panel='../panels/bust-9x16.mp4'),
     cue('s02', 'So why did Google', 'pay for it', T, ['s02-p1', 's02-p2', 's02-p3'], ['So why did', 'Google and now', 'now Disney pay']),
     cue('s03', 'Google went for the brains', 'founders away', T, ['s03-p1', 's03-p2', 's03-p3'],
         ['Google went for', 'reportedly paid', 'hired the founders']),
@@ -83,9 +90,8 @@ SHORT = [
     cue('s07', 'So my prediction', 'all three of these will', T, ['s07-p1', 's07-p2', 's07-p3', 's07-p4', 's07-p5'],
         ['So my prediction', 'Skydance Universal', 'Universal Music and', 'Comcast will', 'around 75']),
     cue('s08', "So here's what I would do", 'your AI tool', T),
-    cue('s09', 'Are its founders', 'piling up lawsuits', T, ['s09-p1', 's09-p2', 's09-p3', 's09-p4'],
-        ['Are its founders', 'Is your tool', 'Is it short', 'And is it piling']),
-    cue('s10', 'The full deep dive', 'MakeYourMindUp ai', T, ['s10-p1', 's10-p2'], ['The full deep dive', 'MakeYourMindUp']),
+    cue('s09', 'Are its founders', 'piling up lawsuits', T, ['s09-p1', 's09-p2', 's09-p3', 's09-p4', 's09-p5'],
+        ['Are its founders', 'Is your tool', 'Is it short', 'And is it piling', 'These are the clues'], tail=6.0),   # holds the four questions to the end: one close
 ]
 
 # Krish's ruling on the takes (creative-direction.json take_edits): keep everything he said; the
@@ -125,8 +131,8 @@ def configure(cut, shape, cues, extra):
     path = KIT / f'{cut}.json'
     cfg = json.loads(path.read_text(encoding='utf-8'))
     cfg.update({
-        'source': f'../takes/{cut}-treated.mp4', 'crop': [1080, 1920, 0, 0],
-        'intro': {shape: f'../story-io/intro-{shape}.mp4'}, 'endcard': {shape: f'../story-io/outro-{shape}.mp4'},
+        'source': f'../takes/{cut}-stable.mp4', 'crop': [1080, 1920, 0, 0],
+        'intro': {shape: f'../story-io/intro-{shape}.mp4'}, 'endcard': {shape: f'../story-io/outro-one-{shape}.mp4'},
         'intro_override': f"Krish, {STORY['on']}: {STORY['words']}",
         'music': 'auto', 'series': 'follow_the_money', 'voice': 'repair', 'reframe': False,
         'max_gap': 0.9, 'pad_before': 0.2, 'pad_after': 0.3,

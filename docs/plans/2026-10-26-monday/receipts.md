@@ -7,6 +7,29 @@ Krish signed ("yes, go to the scripts", 26 October): "A money map: two receipts 
 followed the people, and everyone else was left with the box." Built inside the brand book; nothing here adds a colour
 or a font. Every beat that names this file in `creative-direction.json` is drawn from these rules.
 
+## Revised 28 October 2026, on Krish's review of the first cuts
+
+His words: "We've wasted one of the most important frames on such a boring visual treatment. This should be a
+motion-designed, headline-grabbing statement ... provocative and visually intense", "what the hell is that stupid box
+around character.ai? That's a horrible, tacky, unprofessional, low-quality visual", "These infographics ... still don't
+move enough. They don't catch the eye enough. There's not enough happening", and "we also don't need three separate
+outro transitions and screens. Ever." Four changes, which override anything below that says otherwise:
+
+1. **The first picture is a statement, not a logo.** Frame one after the sting is the wall of friends (the chat tiles
+   of the people who made friends there), the words "MILLIONS MADE FRIENDS HERE.", and on the spoken word "bust" a
+   slam: hazard tape reading "CHAPTER 11" and "FILED 12 OCT 2026 · COURT FILING", "NOW IT'S BANKRUPT.", the wall
+   falling away. In the 90-second cut the same wall opens it and the slam closes the paragraph on "went bust",
+   with "OUT OF CASH." and "LAWSUITS." landing on those words. "Millions", not a number: no source in the project
+   gives a user count, so none is printed (Krish's "45 million" is waiting for one).
+2. **Everything moves.** Nothing below sits still: objects arrive with weight, receipts print line by line and their
+   numbers count up, the stamp slams with a shake and a flash, arrows draw, chips fly from one card to the other, a
+   scan line crosses each document, and the ground and camera drift on every picture (`video/motion.py`). The rule
+   that nothing moves between ideas, and that logos never move, is dropped. Words still land on the words that name
+   them.
+3. **The box is a company card.** The open-top box is gone: the firm is a card with its logo and an "IN CHAPTER 11"
+   tag, holding what it holds as cream chips. What left is a dashed empty slot.
+4. **One close.** One end screen (the question and the URL, held 4 s); no teaser, no logo screen, no repeated CTA panel.
+
 ## The one rule: the picture adds, the voice tells
 
 - No on-screen label repeats the sentence being said (the burned captions carry his words). Labels add only what
