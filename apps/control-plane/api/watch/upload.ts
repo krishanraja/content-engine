@@ -14,9 +14,11 @@ import { watchStore } from './_watchStore.js'
 // GET /api/watch/upload, on the engine key: the probe. For each folder, which delegated scope can add a file there,
 // or Google's reason for each refusal. It writes nothing.
 //
-// GET /api/watch/upload?session=1 also proves the step the cloud machine takes with no key: it opens a session for a
-// two-byte file in Production Inspo, sends one byte with no Authorization (Google answers 308, "resume incomplete"),
-// then cancels the session. An upload that never completes never becomes a file.
+// GET /api/watch/upload?session=1 also proves the session URL the cloud machine PUTs to takes no key: it opens a
+// session for a two-byte file in Production Inspo, asks its status with no Authorization (an empty PUT with
+// Content-Range bytes */2; a live, unfinished session answers 308), then cancels it. An upload that never completes
+// never becomes a file. (A one-byte chunk cannot be the test: Google refuses any chunk but the last that is not a
+// multiple of 256 KiB, with or without a key.)
 
 const SCOPES = ['https://www.googleapis.com/auth/drive.file', 'https://www.googleapis.com/auth/drive'] as const
 const DRIVE = 'https://www.googleapis.com/drive/v3'
@@ -75,8 +77,8 @@ function googleDriveWriter(token: string): DriveWriter {
   }
 }
 
-/** Open a session, send one byte of two with no key, cancel it: the PUT a cloud machine makes, proven without a file. */
-async function sessionProbe(): Promise<{ put_without_key: number | string; cancelled: number | string }> {
+/** Open a session, ask its status with no key, cancel it: the URL a cloud machine PUTs to, proven without a file. */
+async function sessionProbe(): Promise<{ put_without_key: number | string; cancelled: number | string; said?: string }> {
   const access = await folderAccess(WATCH_FOLDER_IDS.video_inspiration)
   if (!access.token) return { put_without_key: 'no_access', cancelled: 'none' }
   let url: string
@@ -87,15 +89,17 @@ async function sessionProbe(): Promise<{ put_without_key: number | string; cance
   }
   let put: number | string = 'threw'
   let cancelled: number | string = 'threw'
+  let said: string | undefined
   try {
-    const r = await fetch(url, { method: 'PUT', headers: { 'Content-Range': 'bytes 0-0/2' }, body: 'x' })
+    const r = await fetch(url, { method: 'PUT', headers: { 'Content-Range': 'bytes */2', 'Content-Length': '0' } })
     put = r.status
+    if (r.status !== 308) said = (await r.text()).replace(/\s+/g, ' ').slice(0, 160)
   } catch { /* reported as threw */ }
   try {
-    const r = await fetch(url, { method: 'DELETE' })
+    const r = await fetch(url, { method: 'DELETE', headers: { 'Content-Length': '0' } })
     cancelled = r.status
   } catch { /* reported as threw */ }
-  return { put_without_key: put, cancelled }
+  return { put_without_key: put, cancelled, ...(said ? { said } : {}) }
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
