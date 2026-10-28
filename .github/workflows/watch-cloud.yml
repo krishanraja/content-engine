@@ -1,0 +1,103 @@
+name: Cloud backup for pasted links
+
+# Krish, 2026-10-28: "yes build the cloud backup". A link he pastes on the Inspiration board goes to the home
+# computers first; they cost nothing and read best. When neither has taken it within 15 minutes
+# (apps/control-plane/api/watch/_watch.ts, CLOUD_GRACE_MS), this job takes it as the machine cloud-gh:
+# content-watcher fetches it (the free routes, then Apify under this machine's own monthly cap), files it into the
+# Inspiration folder its tag names through the engine (api/watch/upload.ts: add only, as Krish), reads it and reports.
+#
+# Most runs only look: one request to the engine, and nothing is set up unless a link is waiting and the engine can
+# file into Drive. This repository is public, so nothing here prints a link, a caption or a file name: the log
+# carries counts and class names only, as the home computers' does.
+
+on:
+  schedule:
+    - cron: '4,19,34,49 * * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: watch-cloud
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      ENGINE: https://content-engine-flame-nu.vercel.app
+      MACHINE: cloud-gh
+      CONTENT_WATCH_HOME: /home/runner/cw
+    steps:
+      - name: Is a link waiting, and can the engine file into Drive?
+        id: look
+        env:
+          KEY: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
+          HAS_APIFY: ${{ secrets.APIFY_TOKEN != '' }}
+        run: |
+          waiting=$(curl -fsS -H "Authorization: Bearer $KEY" "$ENGINE/api/watch/claim?machine=$MACHINE" | jq -r '.waiting // 0')
+          echo "Links waiting for the cloud backup: $waiting"
+          if [ "$waiting" = "0" ]; then echo "go=false" >> "$GITHUB_OUTPUT"; exit 0; fi
+          # Each claim spends one of a link's three tries. From GitHub's machine Instagram and YouTube refuse the free
+          # routes, so without Apify a claim would only spend his tries: leave the link to the home computers.
+          if [ "$HAS_APIFY" != "true" ]; then
+            echo "::warning::$waiting link(s) waiting, but this repository has no APIFY_TOKEN secret, so the cloud backup leaves them to the home computers."
+            echo "go=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          writable=$(curl -fsS -H "Authorization: Bearer $KEY" "$ENGINE/api/watch/upload" | jq -r '.writable')
+          if [ "$writable" != "true" ]; then
+            echo "::warning::$waiting link(s) waiting, but the engine cannot file into Drive yet: GET /api/watch/upload says why."
+            echo "go=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          echo "go=true" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-python@v5
+        if: steps.look.outputs.go == 'true'
+        with:
+          python-version: '3.12'
+
+      - name: Tools (ffmpeg, tesseract, YouTube's token helper)
+        if: steps.look.outputs.go == 'true'
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg tesseract-ocr > /dev/null
+          docker run --name bgutil-provider -d --init -p 127.0.0.1:4416:4416 brainicism/bgutil-ytdlp-pot-provider > /dev/null
+
+      - name: Install content-watcher
+        if: steps.look.outputs.go == 'true'
+        run: |
+          pip install --quiet "content-watcher[watch] @ git+https://github.com/krishanraja/content-watcher@main"
+          python -m playwright install --with-deps chromium > /dev/null 2>&1 || echo "::warning::no headless browser: Instagram's embed backup is skipped"
+
+      # This machine's Apify spend ledger, kept between runs. Only the ledger: nothing read from a post is cached.
+      - uses: actions/cache/restore@v4
+        if: steps.look.outputs.go == 'true'
+        with:
+          path: /home/runner/cw/apify-spend.json
+          key: cw-cloud-ledger-${{ github.run_id }}
+          restore-keys: cw-cloud-ledger-
+
+      - uses: actions/cache@v4
+        if: steps.look.outputs.go == 'true'
+        with:
+          path: ~/.cache/huggingface
+          key: faster-whisper-small-1
+
+      - name: Take, fetch, file, read and report
+        if: steps.look.outputs.go == 'true'
+        env:
+          MINDMAKE_ENGINE_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+        run: |
+          mkdir -p "$CONTENT_WATCH_HOME"
+          content-watch config --filing engine --machine "$MACHINE" --engine-url "$ENGINE" --whisper-model small --apify-cap 2 > /dev/null
+          content-watch watch --once > /dev/null 2>&1 || true
+          echo "This run (counts and classes only):"
+          tail -n 1 "$CONTENT_WATCH_HOME/watch.log"
+
+      - uses: actions/cache/save@v4
+        if: always() && steps.look.outputs.go == 'true'
+        with:
+          path: /home/runner/cw/apify-spend.json
+          key: cw-cloud-ledger-${{ github.run_id }}
