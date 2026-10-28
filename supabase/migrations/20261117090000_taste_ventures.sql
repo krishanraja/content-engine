@@ -88,13 +88,14 @@ from public.taste_venture_repositories m where m.repository = lower(btrim(r.repo
 update public.taste_rejection_inbox r set venture = m.venture
 from public.taste_venture_repositories m where m.repository = lower(btrim(r.repository));
 
--- What a report became: evidence, records and cues carry the reporting repository in meta.
+-- What a report or capture became: evidence, records and cues carry the reporting repository in meta. A capture's record
+-- takes its capture's venture, as the engine files it.
 update public.taste_evidence e set venture = m.venture
 from public.taste_venture_repositories m
 where e.source = 'session_report' and m.repository = lower(btrim(e.meta->>'repository')) and e.venture <> m.venture;
 update public.taste_rejections r set venture = m.venture
 from public.taste_venture_repositories m
-where r.source = 'session_report' and m.repository = lower(btrim(r.meta->>'repository')) and r.venture <> m.venture;
+where r.source in ('session_report', 'inbox') and m.repository = lower(btrim(r.meta->>'repository')) and r.venture <> m.venture;
 update public.feedback_cues c set venture = m.venture
 from public.taste_venture_repositories m
 where c.source = 'session_report' and m.repository = lower(btrim(c.meta->>'repository')) and c.venture <> m.venture;
