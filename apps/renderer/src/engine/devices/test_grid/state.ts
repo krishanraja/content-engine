@@ -65,13 +65,15 @@ export function testGridStateAt(object: EngineObject, events: readonly EngineEve
       const ghostAge = marked ? elapsed(marked) - index * MOTION.staggerFrames : -1
       const isHighlighted = highlighted.has(cell.id)
       const isCarried = carried.has(cell.id) && !stamp
+      const carryProgress = isCarried && carry ? progress(elapsed(carry), MOTION.dropFrames, ENTER) : 0
       return {
         ...cell,
         stamped: Boolean(stamp),
         tick: Boolean(stamp) && cell.value > 0,
         stampProgress,
         carried: isCarried,
-        carryProgress: isCarried && carry ? progress(elapsed(carry), MOTION.dropFrames, ENTER) : 0,
+        carryProgress,
+        carryFill: carryProgress,
         ghost: params.answerKey && Boolean(marked) && ghostAge >= 0 && !stamp && !isCarried,
         ghostProgress: params.answerKey && marked ? progress(ghostAge, MOTION.staggerFrames, ENTER) : 0,
         opacity: isCarried || highlighted.size === 0 || isHighlighted ? 1 : 0.35,
