@@ -8,7 +8,7 @@ import subprocess
 
 import numpy as np
 
-from .common import CONFIG, ffmpeg, load_json, sha256_file
+from .common import CONFIG, ROOT, ffmpeg, load_json, sha256_file
 
 CHANGE_THRESHOLD = 1.0  # mean abs grey difference on 64x64 frames at 5 fps; above ambient drift (calibrated on the reference)
 GRID = 64
@@ -141,26 +141,23 @@ def measurement(rows: list, target: str) -> dict:
             'status': 'measured'}
 
 
+def _renderer_layouts() -> dict:
+    """Slot boxes parsed from the renderer's own table (apps/renderer/src/engine/layouts/index.ts),
+    so QC can never measure a stale copy. Boxes are x, y, width, height in beat.uses order."""
+    source = (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'layouts' / 'index.ts').read_text(encoding='utf-8')
+    result = {}
+    for aspect, name in (('9:16', 'TALL'), ('16:9', 'WIDE')):
+        block = re.search(r'const ' + name + r': Record<Layout, readonly Box\[\]> = \{(.*?)\n\}\n', source, re.S).group(1)
+        result[aspect] = {layout: [tuple(int(n) for n in re.findall(r'-?\d+', box)) for box in re.findall(r'\{ left:[^}]*\}', body)]
+                          for layout, body in re.findall(r'\n  (\w+): \[(.*?)\n  \],', block, re.S)}
+    return result
+
+
 def inputs_from_props(props: dict) -> dict:
     """Resolve QC inputs on the renderer's global 30 fps clock."""
     # Mirrors apps/renderer/src/engine/layouts/index.ts, slotsFor():
     # boxes are x, y, width, height in beat.uses order, authored per aspect.
-    layouts = {
-        '9:16': {
-            'P1': [(120, 288, 768, 552), (144, 312, 720, 160)],
-            'P3': [(120, 288, 768, 324), (120, 624, 768, 216), (120, 852, 660, 290)],
-            'P6': [(120, 288, 768, 552), (424, 576, 464, 264)],
-            'F1': [(120, 288, 768, 552), (144, 312, 720, 232), (144, 568, 720, 248)],
-            'F3': [(120, 376, 768, 464), (120, 288, 768, 72)],
-        },
-        '16:9': {
-            'P1': [(96, 54, 1728, 726), (132, 90, 640, 200)],
-            'P3': [(96, 54, 1026, 560), (1140, 54, 684, 726), (96, 630, 1026, 150)],
-            'P6': [(96, 54, 1728, 726), (998, 400, 826, 380)],
-            'F1': [(96, 54, 1728, 726), (132, 90, 768, 320), (1020, 440, 768, 320)],
-            'F3': [(96, 150, 1728, 630), (96, 54, 1728, 80)],
-        },
-    }
+    layouts = _renderer_layouts()
     aspect, beats, events = props['aspect'], props['beats'], props['events']
     slots = {}
     for event in events:

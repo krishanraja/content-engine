@@ -359,11 +359,22 @@ class QCContracts(unittest.TestCase):
             {'fromFrame': 60, 'toFrame': 120, 'trimBeforeFrames': 63}])
         call = mocks['cue_sync'].call_args.args
         self.assertEqual(call[:2], ('cut.mp4', props['events']))
-        self.assertEqual(call[2]['enter'], (96, 54, 1728, 726))
-        self.assertEqual(call[2]['exit'], (96, 54, 1026, 560))
+        self.assertEqual(call[2]['enter'], (96, 208, 1728, 572))
+        self.assertEqual(call[2]['exit'], (96, 208, 1026, 420))
         with self.measurements(), patch.object(ve, 'write_json') as write, redirect_stdout(io.StringIO()):
             self.assertEqual(ve.cmd_qc(Namespace(cut='cut.mp4', format='scoreboard-test', out=None)), 0)
         self.assertFalse(write.call_args.args[1]['complete'])
+
+
+class RendererLayoutMirrorTest(unittest.TestCase):
+    def test_qc_slots_come_from_the_renderer_table(self):
+        from velib.qc import _renderer_layouts
+        layouts = _renderer_layouts()
+        self.assertEqual(layouts['9:16']['F1'][0], (120, 852, 660, 290))
+        self.assertEqual(layouts['16:9']['F1'][0], (1176, 54, 648, 490))
+        for aspect in layouts.values():
+            self.assertEqual(set(aspect), {'P1', 'P3', 'P6', 'F1', 'F3'})
+            self.assertTrue(all(len(box) == 4 for boxes in aspect.values() for box in boxes))
 
 
 if __name__ == '__main__':

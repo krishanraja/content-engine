@@ -1,7 +1,7 @@
 {
   "file": ".ve-work/my-test-19s/proof-wide.mp4",
-  "sha256": "2dcf16dc36e4953c899a01c2e9e96164d881cd46b4daacea68ce7edb8d62f0e8",
-  "duration_s": 21.12,
+  "sha256": "08424223557b70868d3ffb3438c6f49e1414ce5c33f41efdfda41236e66cb035",
+  "duration_s": 21.08,
   "format": "scoreboard-test",
   "checks": {
     "loudness.integrated": {
@@ -20,7 +20,7 @@
       "pass": true
     },
     "motion.change_density": {
-      "value": 0.7,
+      "value": 0.75,
       "target": ">= 0.7",
       "pass": true
     },
@@ -48,10 +48,6 @@
         [
           11,
           1
-        ],
-        [
-          19,
-          1
         ]
       ]
     },
@@ -64,37 +60,37 @@
       "value": [
         {
           "segment": 0,
-          "lag_ms": 40,
-          "pass": false,
-          "correlation": 0.972933
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999985
         },
         {
           "segment": 1,
-          "lag_ms": 40,
-          "pass": false,
-          "correlation": 0.97751
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999985
         },
         {
           "segment": 2,
-          "lag_ms": 40,
-          "pass": false,
-          "correlation": 0.983206
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.99999
         },
         {
           "segment": 3,
-          "lag_ms": 40,
-          "pass": false,
-          "correlation": 0.982099
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999984
         },
         {
           "segment": 4,
-          "lag_ms": 40,
-          "pass": false,
-          "correlation": 0.961438
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999959
         }
       ],
       "target": "every segment |lag| <= 33 ms; correlation >= 0.5",
-      "pass": false,
+      "pass": true,
       "status": "measured"
     },
     "joins.decoder": {
@@ -110,97 +106,108 @@
         {
           "page": 0,
           "frame": 54,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "Now, America has blocked cotton",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
         },
         {
           "page": 1,
           "frame": 113,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "from both over forced labour.",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
         },
         {
           "page": 2,
           "frame": 160,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "So, a good answer should",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
         },
         {
           "page": 3,
           "frame": 201,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "flag it both times.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
         },
         {
           "page": 4,
           "frame": 275,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "Claude and ChatGPT flagged forced",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
         },
         {
           "page": 5,
           "frame": 304,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "labour both times,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
         },
         {
           "page": 6,
-          "frame": null,
-          "pass": null,
-          "status": "not_sampled",
-          "reason": "No fully revealed caption window"
+          "frame": 354,
+          "text": "and so did DeepSeek for",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
         },
         {
           "page": 7,
           "frame": 433,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "Turkmenistan. Now watch DeepSeek on",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
         },
         {
           "page": 8,
-          "frame": null,
-          "pass": null,
-          "status": "not_sampled",
-          "reason": "No fully revealed caption window"
+          "frame": 477,
+          "text": "Xinjiang. It writes a full",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
         },
         {
           "page": 9,
           "frame": 546,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "answer, deletes it and changes",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
         },
         {
           "page": 10,
           "frame": 617,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "the subject every single time.",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
         }
       ],
       "target": "token agreement >= 0.98 on every page",
-      "pass": null,
-      "status": "incomplete"
+      "pass": true,
+      "status": "measured"
     },
     "brand.mark_tile": {
       "value": [
         {
           "beat": "b1-ban",
           "frame": 60,
-          "score": 0.9791099378079697,
+          "score": 0.9791182218631382,
           "pass": true
         },
         {
           "beat": "b2-key",
           "frame": 170,
-          "score": 0.9791099381857756,
+          "score": 0.9791181367165498,
           "pass": true
         },
         {
@@ -233,8 +240,8 @@
           "atFrame": 9,
           "peak_frame": 9,
           "lag_frames": 0,
-          "peak_difference": 40.951072692871094,
-          "event_difference": 40.951072692871094,
+          "peak_difference": 45.04380416870117,
+          "event_difference": 45.04380416870117,
           "threshold": 1e-06,
           "pass": true
         },
@@ -243,9 +250,9 @@
           "atFrame": 47,
           "peak_frame": 48,
           "lag_frames": 1,
-          "peak_difference": 33.70754623413086,
-          "event_difference": 33.70754623413086,
-          "threshold": 8.680555401952006e-05,
+          "peak_difference": 51.515769958496094,
+          "event_difference": 51.515769958496094,
+          "threshold": 1e-06,
           "pass": true
         },
         {
@@ -253,9 +260,9 @@
           "atFrame": 94,
           "peak_frame": 94,
           "lag_frames": 0,
-          "peak_difference": 1.684038758277893,
-          "event_difference": 1.684038758277893,
-          "threshold": 0.00024250441492768005,
+          "peak_difference": 1.8591443300247192,
+          "event_difference": 1.8591443300247192,
+          "threshold": 0.0003308323648525402,
           "pass": true
         },
         {
@@ -263,8 +270,8 @@
           "atFrame": 163,
           "peak_frame": 167,
           "lag_frames": 4,
-          "peak_difference": 0.011566725559532642,
-          "event_difference": 0.011255327612161636,
+          "peak_difference": 0.012688988819718361,
+          "event_difference": 0.01233185175806284,
           "threshold": 1e-06,
           "pass": true
         },
@@ -273,9 +280,9 @@
           "atFrame": 176,
           "peak_frame": 173,
           "lag_frames": -3,
-          "peak_difference": 0.011733906343579292,
-          "event_difference": 0.01104956679046154,
-          "threshold": 0.00555279990658164,
+          "peak_difference": 0.01306534931063652,
+          "event_difference": 0.01223877351731062,
+          "threshold": 0.006586295552551746,
           "pass": true
         },
         {
@@ -283,9 +290,9 @@
           "atFrame": 220,
           "peak_frame": 221,
           "lag_frames": 1,
-          "peak_difference": 0.2814190089702606,
-          "event_difference": 0.2814190089702606,
-          "threshold": 0.00033619929308770224,
+          "peak_difference": 0.30977240204811096,
+          "event_difference": 0.30977240204811096,
+          "threshold": 0.0004916957987006754,
           "pass": true
         },
         {
@@ -293,9 +300,9 @@
           "atFrame": 241,
           "peak_frame": 242,
           "lag_frames": 1,
-          "peak_difference": 0.28080448508262634,
-          "event_difference": 0.28080448508262634,
-          "threshold": 1.1022927765225177e-05,
+          "peak_difference": 0.3091481626033783,
+          "event_difference": 0.3091481626033783,
+          "threshold": 7.284382445504889e-05,
           "pass": true
         },
         {
@@ -303,8 +310,8 @@
           "atFrame": 339,
           "peak_frame": 340,
           "lag_frames": 1,
-          "peak_difference": 0.14047619700431824,
-          "event_difference": 0.14047619700431824,
+          "peak_difference": 0.154720276594162,
+          "event_difference": 0.154720276594162,
           "threshold": 1e-06,
           "pass": true
         },
@@ -313,9 +320,9 @@
           "atFrame": 386,
           "peak_frame": 386,
           "lag_frames": 0,
-          "peak_difference": 41.334861755371094,
-          "event_difference": 41.334861755371094,
-          "threshold": 1.913070082082413e-05,
+          "peak_difference": 59.748802185058594,
+          "event_difference": 59.748802185058594,
+          "threshold": 1e-06,
           "pass": true
         },
         {
@@ -323,8 +330,8 @@
           "atFrame": 400,
           "peak_frame": 401,
           "lag_frames": 1,
-          "peak_difference": 37.79412841796875,
-          "event_difference": 37.79412841796875,
+          "peak_difference": 19.35666275024414,
+          "event_difference": 19.35666275024414,
           "threshold": 1e-06,
           "pass": true
         },
@@ -333,9 +340,9 @@
           "atFrame": 461,
           "peak_frame": 461,
           "lag_frames": 0,
-          "peak_difference": 71.17032623291016,
-          "event_difference": 71.17032623291016,
-          "threshold": 0.0006347656308207661,
+          "peak_difference": 175.43218994140625,
+          "event_difference": 175.43218994140625,
+          "threshold": 0.00827936246059835,
           "pass": true
         },
         {
@@ -343,9 +350,9 @@
           "atFrame": 500,
           "peak_frame": 506,
           "lag_frames": 6,
-          "peak_difference": 65.7725601196289,
-          "event_difference": 12.8603515625,
-          "threshold": 0.0007690429338254035,
+          "peak_difference": 169.4173583984375,
+          "event_difference": 21.005460739135742,
+          "threshold": 0.00226478063268587,
           "pass": true
         },
         {
@@ -353,9 +360,9 @@
           "atFrame": 541,
           "peak_frame": 541,
           "lag_frames": 0,
-          "peak_difference": 54.870662689208984,
-          "event_difference": 54.870662689208984,
-          "threshold": 1e-06,
+          "peak_difference": 30.604385375976562,
+          "event_difference": 30.604385375976562,
+          "threshold": 7.946598634589463e-05,
           "pass": true
         },
         {
@@ -363,9 +370,9 @@
           "atFrame": 570,
           "peak_frame": 570,
           "lag_frames": 0,
-          "peak_difference": 12.663891792297363,
-          "event_difference": 12.663891792297363,
-          "threshold": 9.765625509317033e-05,
+          "peak_difference": 23.158578872680664,
+          "event_difference": 23.158578872680664,
+          "threshold": 1e-06,
           "pass": true
         },
         {
@@ -373,27 +380,27 @@
           "atFrame": 570,
           "peak_frame": 570,
           "lag_frames": 0,
-          "peak_difference": 12.663891792297363,
-          "event_difference": 12.663891792297363,
-          "threshold": 9.765625509317033e-05,
+          "peak_difference": 23.158578872680664,
+          "event_difference": 23.158578872680664,
+          "threshold": 1e-06,
           "pass": true
         },
         {
           "event": "b5-every-3",
           "atFrame": 601,
-          "peak_frame": 604,
-          "lag_frames": 3,
-          "peak_difference": 1.6901767253875732,
-          "event_difference": 0.05362255871295929,
-          "threshold": 0.1058095134794712,
-          "pass": false
+          "peak_frame": 602,
+          "lag_frames": 1,
+          "peak_difference": 5.823718070983887,
+          "event_difference": 5.823718070983887,
+          "threshold": 1e-06,
+          "pass": true
         }
       ],
       "target": "change within +/-2 frames > max(FLOOR, 3x median of previous 15 frames)",
-      "pass": false,
+      "pass": true,
       "status": "measured"
     }
   },
-  "measured_pass": false,
-  "complete": false
+  "measured_pass": true,
+  "complete": true
 }

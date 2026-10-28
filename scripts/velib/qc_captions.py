@@ -85,7 +85,12 @@ def _read_candidates(executable, pixels, expected):
         result = subprocess.run([executable, 'stdin', 'stdout', '--psm', '6'], input=pgm,
                                 capture_output=True, check=True)
         seen = result.stdout.decode('utf-8', errors='replace').strip()
-        agreement = _agreement(expected, _tokens(seen))
+        actual = _tokens(seen)
+        agreement = _agreement(expected, actual)
+        # Tesseract fuses tightly set words ("writes a" -> "writesa"). Word spacing is gated by the caption
+        # geometry lint, so identical letters in identical order count as a full match.
+        if ''.join(expected) == ''.join(actual):
+            agreement = 1.0
         if best is None or agreement > best['agreement']:
             best = {'text': seen, 'agreement': agreement, 'variant': variant}
         if agreement == 1:
