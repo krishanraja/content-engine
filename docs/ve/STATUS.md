@@ -16,7 +16,7 @@ Read `docs/ve/RUNBOOK.md` to produce. This page says what ve can and cannot do r
 - **No sound effects:** no sfx kit exists, so compile lists `sfx_missing` ids and `ve status` blocks on it. Known Phase 2 gap.
 - **No generated assets:** asset plates and generated media are refused; Runway, Higgsfield and ChatGPT Images are not wired.
 - **No publish, send or schedule verb**, by design.
-- **Tall recordings are small** (the evidence recording reads at about a third of the frame width). Needs Krish's choice: tighter zoom, or a typed replica plus a recording chip.
+- **Tall recordings (ruling, 28 Oct, Krish delegated the call):** real footage stays as the proof; no typed replica, because evidence is never regenerated. A tighter crop cannot enlarge text that wraps the full source width (the my-test recording is about 1080 px wide and already shows at about 1:1), so the footage plays as a short proof glimpse and the words are carried as a labelled quote on the card (the `mark` verb already draws them as real text). If a future recording's text is narrower, crop to it; aim for body text of about 28 px in frame.
 - **Tall layout has a dead band** under the grid and stat in beats 4-5, and the grid jumps from F3 to F1 without an animated move.
 - **Call card and ending band** are not visible in the 19.5 s excerpt proof.
 - **One real format** (`face-with-proof`) has been proven end to end; others are config only.
