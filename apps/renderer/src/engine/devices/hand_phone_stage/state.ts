@@ -3,7 +3,7 @@ import { Cam, lerpCam } from '../../kit/camera'
 import type { EngineEvent, EngineObject } from '../../props'
 import { ParamsSchema, type StageCamera } from './schema'
 interface BackdropLayer { id: string; camera: StageCamera; opacity: number }
-interface GlassLayer { kind: string; atFrame: number; opacity: number }
+interface GlassLayer { camera: string; kind: string; atFrame: number; opacity: number }
 const asCam=(c: StageCamera)=>new Cam(c.k,c.rot,c.tx,c.ty)
 export function phoneState(object: EngineObject, events: readonly EngineEvent[], frame: number) {
   const params=ParamsSchema.parse(object.params)
@@ -15,9 +15,10 @@ export function phoneState(object: EngineObject, events: readonly EngineEvent[],
     if (!c) throw new Error(`ve: unknown phone camera ${id}`)
     return c
   }
+  let camera=params.start
   let target=cameraFor(params.start), from=asCam(target), moveAt=-Infinity
   let backdropLayers: BackdropLayer[]=[{id:params.start,camera:target,opacity:1}], backdropAt=-Infinity
-  let glassLayers: GlassLayer[]=[{kind:'blank',atFrame:entrance?.atFrame ?? object.fromFrame,opacity:1}], fillAt=-Infinity
+  let glassLayers: GlassLayer[]=[{camera,kind:'blank',atFrame:entrance?.atFrame ?? object.fromFrame,opacity:1}], fillAt=-Infinity
   const fadeBack=(at: number)=>{
     const t=progress(at-backdropAt,12)
     return backdropLayers.map((l,i)=>({...l,opacity:i===backdropLayers.length-1?t:l.opacity*(1-t)})).filter(l=>l.opacity>0)
@@ -31,6 +32,7 @@ export function phoneState(object: EngineObject, events: readonly EngineEvent[],
   for (const event of relevant) {
     if(event.verb==='move') {
       const next=cameraFor(event.toState)
+      camera=event.toState
       from=cameraAt(event.atFrame); moveAt=event.atFrame; target=next
       const last=backdropLayers.at(-1)!.camera
       if(last.backdrop!==next.backdrop || JSON.stringify(last.bg)!==JSON.stringify(next.bg)) {
@@ -41,7 +43,7 @@ export function phoneState(object: EngineObject, events: readonly EngineEvent[],
     if(event.verb==='fill') {
       if(event.toState!=='blank' && !Object.hasOwn(params.glass,event.toState)) throw new Error(`ve: missing glass params ${event.toState}`)
       const prior=Number.isFinite(fillAt)?fadeGlass(event.atFrame):glassLayers
-      glassLayers=[...prior,{kind:event.toState,atFrame:event.atFrame,opacity:1}]; fillAt=event.atFrame
+      glassLayers=[...prior,{camera,kind:event.toState,atFrame:event.atFrame,opacity:1}]; fillAt=event.atFrame
     }
   }
   const exitEvent=relevant.findLast(e=>e.verb==='exit')
