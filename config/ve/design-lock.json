@@ -70,6 +70,7 @@
     "keyframe_ssim_min": 0.75,
     "keyframe_blur_px": 6,
     "keyframe_mask_caption": true,
+    "illustration_tag_required": false,
     "keyframe_compare_size": [
       540,
       960
@@ -252,7 +253,7 @@
       "spend_needs": "Krish's yes per generation",
       "log": "ve ledger <piece> add"
     },
-    "illustration_tag": "required on every frame that shows a generated plate",
+    "illustration_tag": "not drawn on video (Krish, 28 Oct 2026); say it in the post copy instead",
     "sidecar": [
       "prompt",
       "model",

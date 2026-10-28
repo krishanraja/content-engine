@@ -222,27 +222,6 @@
       }
     },
     {
-      "obj": "marquee",
-      "device": "marquee",
-      "meaning": "marquee in the approved hand-held screen story",
-      "persist": {
-        "from_beat": "open",
-        "to_beat": "verdict"
-      },
-      "params": {
-        "items": [
-          "mind.the.gap · Fridays",
-          "What's coming, before it's obvious",
-          "No added sermons",
-          "Contains British spelling"
-        ],
-        "at": {
-          "y": 1736,
-          "h": 62
-        }
-      }
-    },
-    {
       "obj": "open_headline",
       "device": "headline",
       "meaning": "open headline in the approved hand-held screen story",
@@ -290,24 +269,6 @@
           115.69521381721391
         ],
         "sq": 3
-      }
-    },
-    {
-      "obj": "open_provenance",
-      "device": "sticker",
-      "meaning": "open provenance in the approved hand-held screen story",
-      "persist": {
-        "from_beat": "open",
-        "to_beat": "open"
-      },
-      "params": {
-        "text": "KRISH'S TEST\n23 OCT",
-        "tiltDeg": 4,
-        "at": {
-          "x": 684,
-          "y": 176
-        },
-        "tone": "channel"
       }
     },
     {
@@ -361,24 +322,6 @@
       }
     },
     {
-      "obj": "result_a_provenance",
-      "device": "sticker",
-      "meaning": "result a provenance in the approved hand-held screen story",
-      "persist": {
-        "from_beat": "result_a",
-        "to_beat": "result_a"
-      },
-      "params": {
-        "text": "KRISH'S TEST\n23 OCT",
-        "tiltDeg": 4,
-        "at": {
-          "x": 684,
-          "y": 336
-        },
-        "tone": "channel"
-      }
-    },
-    {
       "obj": "result_b_headline",
       "device": "headline",
       "meaning": "result b headline in the approved hand-held screen story",
@@ -425,24 +368,6 @@
         ],
         "bend": -46,
         "head": 50
-      }
-    },
-    {
-      "obj": "result_b_provenance",
-      "device": "sticker",
-      "meaning": "result b provenance in the approved hand-held screen story",
-      "persist": {
-        "from_beat": "result_b",
-        "to_beat": "result_b"
-      },
-      "params": {
-        "text": "KRISH'S TEST\n23 OCT",
-        "tiltDeg": -4,
-        "at": {
-          "x": 684,
-          "y": 372
-        },
-        "tone": "channel"
       }
     },
     {
@@ -511,24 +436,6 @@
           155.01544262718247
         ],
         "sq": 3.4
-      }
-    },
-    {
-      "obj": "verdict_provenance",
-      "device": "sticker",
-      "meaning": "verdict provenance in the approved hand-held screen story",
-      "persist": {
-        "from_beat": "verdict",
-        "to_beat": "verdict"
-      },
-      "params": {
-        "text": "KRISH'S TEST\n23 OCT",
-        "tiltDeg": 4,
-        "at": {
-          "x": 684,
-          "y": 586
-        },
-        "tone": "channel"
       }
     },
     {
@@ -739,10 +646,6 @@
           "x": 892,
           "y": 436
         },
-        "end": {
-          "x": 892,
-          "y": 574
-        },
         "tone": "cream"
       }
     },
@@ -819,13 +722,11 @@
           "uses": [
             "phone",
             "open_headline",
-            "open_provenance",
             "contestant_claude",
             "contestant_chatgpt",
             "contestant_deepseek",
             "open_strip",
-            "open_scribble",
-            "marquee"
+            "open_scribble"
           ],
           "events": [
             {
@@ -851,13 +752,6 @@
             },
             {
               "at_w": 0,
-              "obj": "marquee",
-              "verb": "enter",
-              "to_state": "visible",
-              "silent": true
-            },
-            {
-              "at_w": 0,
               "obj": "open_headline",
               "verb": "enter",
               "to_state": "visible",
@@ -866,13 +760,6 @@
             {
               "at_w": 3,
               "obj": "contestant_claude",
-              "verb": "enter",
-              "to_state": "visible",
-              "silent": true
-            },
-            {
-              "at_w": 4,
-              "obj": "open_provenance",
               "verb": "enter",
               "to_state": "visible",
               "silent": true
@@ -923,9 +810,7 @@
           "uses": [
             "phone",
             "result_a_headline",
-            "result_a_provenance",
-            "result_a_scribble",
-            "marquee"
+            "result_a_scribble"
           ],
           "events": [
             {
@@ -945,13 +830,6 @@
             {
               "at_w": 19,
               "obj": "result_a_headline",
-              "verb": "enter",
-              "to_state": "visible",
-              "silent": true
-            },
-            {
-              "at_w": 22,
-              "obj": "result_a_provenance",
               "verb": "enter",
               "to_state": "visible",
               "silent": true
@@ -981,9 +859,7 @@
           "uses": [
             "phone",
             "result_b_headline",
-            "result_b_provenance",
-            "result_b_scribble",
-            "marquee"
+            "result_b_scribble"
           ],
           "events": [
             {
@@ -1003,13 +879,6 @@
             {
               "at_w": 29,
               "obj": "result_b_headline",
-              "verb": "enter",
-              "to_state": "visible",
-              "silent": true
-            },
-            {
-              "at_w": 30,
-              "obj": "result_b_provenance",
               "verb": "enter",
               "to_state": "visible",
               "silent": true
@@ -1041,8 +910,7 @@
             "evidence_headline",
             "recording_label",
             "evidence_quote",
-            "evidence_scribble",
-            "marquee"
+            "evidence_scribble"
           ],
           "events": [
             {
@@ -1111,12 +979,10 @@
           },
           "uses": [
             "phone",
-            "verdict_provenance",
             "verdict_strip",
             "deletion_stamp",
             "result_threads",
-            "verdict_scribble",
-            "marquee"
+            "verdict_scribble"
           ],
           "events": [
             {
@@ -1173,13 +1039,6 @@
               "obj": "result_threads",
               "verb": "mark",
               "to_state": "chatgpt:turkmenistan",
-              "silent": true
-            },
-            {
-              "at_w": 48,
-              "obj": "verdict_provenance",
-              "verb": "enter",
-              "to_state": "visible",
               "silent": true
             },
             {

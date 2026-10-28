@@ -1,6 +1,6 @@
 {
   "file": "docs/plans/2026-10-28-ve-format-h-proof/ve/proof-tall.mp4",
-  "sha256": "e661608967a8ca2a9c53c1f0e5ad03c69a6717b426883e45017edfe865be6ecd",
+  "sha256": "c56651739fe8957795e3dbf17783acbc20c4f627114e36cd79f9e9e55983ee01",
   "duration_s": 21.08,
   "format": "hand-held-screen",
   "checks": {
@@ -109,7 +109,7 @@
         {
           "page": 3,
           "frame": 201,
-          "text": "flag it both times.",
+          "text": "flag it both times.\r\na, ~f",
           "agreement": 1.0,
           "variant": "normalised",
           "pass": true
@@ -190,31 +190,31 @@
     "keyframe_match": {
       "value": {
         "open": {
-          "ssim": 0.8974012555989936,
+          "ssim": 0.8590400271050791,
           "min": 0.75,
           "pass": true,
           "frame": 176
         },
         "result_a": {
-          "ssim": 0.8826063088803805,
+          "ssim": 0.8337214998260396,
           "min": 0.75,
           "pass": true,
           "frame": 312
         },
         "result_b": {
-          "ssim": 0.9113785746800017,
+          "ssim": 0.859554318635471,
           "min": 0.75,
           "pass": true,
           "frame": 376
         },
         "evidence": {
-          "ssim": 0.8774976625347509,
+          "ssim": 0.8391012852575959,
           "min": 0.75,
           "pass": true,
           "frame": 448
         },
         "verdict": {
-          "ssim": 0.8805179425303684,
+          "ssim": 0.8339677455730842,
           "min": 0.75,
           "pass": true,
           "frame": 614
@@ -231,7 +231,7 @@
           "checks": {
             "fill_pct": {
               "pass": true,
-              "value": 96.62
+              "value": 95.72
             },
             "small_text": {
               "pass": true,
@@ -251,7 +251,7 @@
             },
             "illustration": {
               "pass": true,
-              "value": 0.9166666666666666
+              "value": 0.5
             }
           },
           "findings": [],
@@ -262,7 +262,7 @@
           "checks": {
             "fill_pct": {
               "pass": true,
-              "value": 95.67
+              "value": 93.94
             },
             "small_text": {
               "pass": true,
@@ -282,7 +282,7 @@
             },
             "illustration": {
               "pass": true,
-              "value": 1.0
+              "value": 0.43478260869565216
             }
           },
           "findings": [],
@@ -293,7 +293,7 @@
           "checks": {
             "fill_pct": {
               "pass": true,
-              "value": 94.68
+              "value": 90.2
             },
             "small_text": {
               "pass": true,
@@ -313,7 +313,7 @@
             },
             "illustration": {
               "pass": true,
-              "value": 0.9166666666666666
+              "value": 0.4166666666666667
             }
           },
           "findings": [],
@@ -324,7 +324,7 @@
           "checks": {
             "fill_pct": {
               "pass": true,
-              "value": 97.46
+              "value": 96.28
             },
             "small_text": {
               "pass": true,
@@ -344,7 +344,7 @@
             },
             "illustration": {
               "pass": true,
-              "value": 1.0
+              "value": 0.5555555555555556
             }
           },
           "findings": [],
@@ -355,7 +355,7 @@
           "checks": {
             "fill_pct": {
               "pass": true,
-              "value": 95.82
+              "value": 95.21
             },
             "small_text": {
               "pass": true,
@@ -375,7 +375,7 @@
             },
             "illustration": {
               "pass": true,
-              "value": 1.0
+              "value": 0.43478260869565216
             }
           },
           "findings": [],
@@ -392,31 +392,31 @@
     "pass": true,
     "beats": {
       "open": {
-        "ssim": 0.8974012555989936,
+        "ssim": 0.8590400271050791,
         "min": 0.75,
         "pass": true,
         "frame": 176
       },
       "result_a": {
-        "ssim": 0.8826063088803805,
+        "ssim": 0.8337214998260396,
         "min": 0.75,
         "pass": true,
         "frame": 312
       },
       "result_b": {
-        "ssim": 0.9113785746800017,
+        "ssim": 0.859554318635471,
         "min": 0.75,
         "pass": true,
         "frame": 376
       },
       "evidence": {
-        "ssim": 0.8774976625347509,
+        "ssim": 0.8391012852575959,
         "min": 0.75,
         "pass": true,
         "frame": 448
       },
       "verdict": {
-        "ssim": 0.8805179425303684,
+        "ssim": 0.8339677455730842,
         "min": 0.75,
         "pass": true,
         "frame": 614
@@ -433,7 +433,7 @@
         "checks": {
           "fill_pct": {
             "pass": true,
-            "value": 96.62
+            "value": 95.72
           },
           "small_text": {
             "pass": true,
@@ -453,7 +453,7 @@
           },
           "illustration": {
             "pass": true,
-            "value": 0.9166666666666666
+            "value": 0.5
           }
         },
         "findings": [],
@@ -464,7 +464,7 @@
         "checks": {
           "fill_pct": {
             "pass": true,
-            "value": 95.67
+            "value": 93.94
           },
           "small_text": {
             "pass": true,
@@ -484,7 +484,7 @@
           },
           "illustration": {
             "pass": true,
-            "value": 1.0
+            "value": 0.43478260869565216
           }
         },
         "findings": [],
@@ -495,7 +495,7 @@
         "checks": {
           "fill_pct": {
             "pass": true,
-            "value": 94.68
+            "value": 90.2
           },
           "small_text": {
             "pass": true,
@@ -515,7 +515,7 @@
           },
           "illustration": {
             "pass": true,
-            "value": 0.9166666666666666
+            "value": 0.4166666666666667
           }
         },
         "findings": [],
@@ -526,7 +526,7 @@
         "checks": {
           "fill_pct": {
             "pass": true,
-            "value": 97.46
+            "value": 96.28
           },
           "small_text": {
             "pass": true,
@@ -546,7 +546,7 @@
           },
           "illustration": {
             "pass": true,
-            "value": 1.0
+            "value": 0.5555555555555556
           }
         },
         "findings": [],
@@ -557,7 +557,7 @@
         "checks": {
           "fill_pct": {
             "pass": true,
-            "value": 95.82
+            "value": 95.21
           },
           "small_text": {
             "pass": true,
@@ -577,7 +577,7 @@
           },
           "illustration": {
             "pass": true,
-            "value": 1.0
+            "value": 0.43478260869565216
           }
         },
         "findings": [],

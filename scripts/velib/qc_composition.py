@@ -111,7 +111,7 @@ def measure(image, lock, *, plate_on_screen=False, exempt=(), caption_words=None
                      or x < limits['key_content_margin_px'] - 12)):
             edges.append(word)
     score = _label_score(candidates) if plate_on_screen else None
-    if plate_on_screen and score < 0.8 and ocr_words is None:
+    if plate_on_screen and score < 0.8 and ocr_words is None and limits.get('illustration_tag_required', True):
         header = zones['header']
         crop = image.crop((340, header['y'] - 20, 680, header['y'] + header['h'] + 20))
         crop = crop.resize((crop.width * 3, crop.height * 3), Image.LANCZOS)
@@ -119,7 +119,7 @@ def measure(image, lock, *, plate_on_screen=False, exempt=(), caption_words=None
     checks = {'fill_pct': {'pass': fill >= limits['fill_min_pct'], 'value': fill},
               **{name: {'pass': not value, 'value': value} for name, value in
                  [('small_text', small), ('caption_zone', caption), ('platform_zone', platform), ('edges', edges)]},
-              'illustration': {'pass': not plate_on_screen or score >= 0.8, 'value': score}}
+              'illustration': {'pass': not plate_on_screen or score >= 0.8 or not limits.get('illustration_tag_required', True), 'value': score}}
     findings = []
     if not checks['fill_pct']['pass']:
         findings.append(f"fill {fill:g}% outside the caption zone, the lock needs {limits['fill_min_pct']}%.")
