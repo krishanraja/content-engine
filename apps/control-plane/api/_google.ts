@@ -34,6 +34,10 @@ export interface TokenOptions {
    *  whole request with unauthorized_client, which reads as "no service
    *  account" and sends you looking in the wrong place. */
   impersonate?: boolean
+  /** Act as this Workspace user instead of GOOGLE_IMPERSONATE_SUBJECT: his Drive
+   *  belongs to krish@mindmake.co (GOOGLE_DRIVE_OWNER), a different address from
+   *  the one Gmail sends as. Ignored when `impersonate` is false. */
+  subject?: string
   /** Surface why a token could not be issued. Callers that report to a human
    *  pass this; the ones that fall back silently do not. */
   onError?: (reason: string) => void
@@ -42,7 +46,7 @@ export interface TokenOptions {
 export async function googleAccessToken(scopes: string[], options: TokenOptions = {}): Promise<string | null> {
   const email = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL
   let key = process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY
-  const subject = options.impersonate === false ? undefined : process.env.GOOGLE_IMPERSONATE_SUBJECT
+  const subject = options.impersonate === false ? undefined : (options.subject || process.env.GOOGLE_IMPERSONATE_SUBJECT)
   const fail = (reason: string) => { options.onError?.(reason); return null }
   if (!email || !key) return fail('service account email or private key is unset')
   key = key.replace(/\\n/g, '\n') // env stores PEM newlines escaped

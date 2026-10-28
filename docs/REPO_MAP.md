@@ -146,6 +146,9 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/trends/entities`
 - `/api/trends/metrics`
 - `/api/triage/sweep`
+- `/api/ux-feedback/claim`
+- `/api/ux-feedback/drive`
+- `/api/ux-feedback/report`
 - `/api/video-studio/candidates`
 - `/api/video-studio/commands/[id]`
 - `/api/video-studio/commands/[id]/recover`
@@ -2437,6 +2440,66 @@ Alias matching for the entity layer. Pure, no client, no I/O.
 ### `apps/control-plane/api/triage/sweep.ts`
 
 - `export default withContentRun('triage_sweep', handler)`
+
+### `apps/control-plane/api/ux-feedback/_feedback.ts`
+
+Feedback videos Krish records on his phone about one of his own products: what a home computer may claim, where
+
+- `const STALE_CLAIM_MS`
+- `const RETRY_AFTER_MS`
+- `const MAX_ATTEMPTS`
+- `const MAX_DRIVE_FILES`
+- `const MAX_DRIVE_FILE_BYTES`
+- `const MAX_SIGNALS`
+- `const STILLS_FOLDER`
+- `const PROMPT_FILE`
+- `interface FeedbackRow`
+- `interface FeedbackStore`
+- `interface FeedbackDrive`
+- `type Mailer`
+- `interface Signal`
+- `interface Summary`
+- `function parseMachine(body: unknown): Parsed<{ machine: string }>`
+- `function claimView(row: FeedbackRow)`
+- `function claimableNow(row: FeedbackRow, now: Date): boolean`
+- `async function waiting(store: FeedbackStore, now = new Date()): Promise<number>`
+- `type ClaimOutcome`
+- `async function claimOne(store: FeedbackStore, machine: string, now = new Date()): Promise<ClaimOutcome>`
+- `interface DriveFileAsk`
+- `interface DriveBody`
+- `function parseDrive(body: unknown): Parsed<DriveBody>`
+- `function folderName(row: Pick<FeedbackRow, 'name' | 'requested_at'>): string`
+- `function ventureFolder(folders: Array<{ id: string; name: string }>, row: Pick<FeedbackRow, 'venture' | 'venture_label'…`
+- `const folderUrl = (id: string) =>`
+- `const fileUrl = (id: string) =>`
+- `type DriveOutcome`
+- `async function planDrive(store: FeedbackStore, drive: FeedbackDrive, body: DriveBody, now = new Date()): Promise<DriveO…`
+- `interface ReportBody`
+- `function parseReport(body: unknown): Parsed<ReportBody>`
+- `function composePrompt(row: FeedbackRow, summary: Summary, links: { folder: string; feedback: string }): string`
+- `function composeEmail(row: FeedbackRow, summary: Summary, links: { folder: string; feedback: string; prompt: string | n…`
+- `type ReportOutcome`
+- `async function report(store: FeedbackStore, drive: FeedbackDrive | null, mailer: Mailer, body: ReportBody, now = new Da…`
+
+### `apps/control-plane/api/ux-feedback/_feedbackStore.ts`
+
+- `const feedbackStore: FeedbackStore`
+- `class DriveRefused`
+- `async function bugsAndIssuesId(): Promise<string | null>`
+- `async function googleFeedbackDrive(onError?: (reason: string) => void): Promise<FeedbackDrive | null>`
+- `const krishMailer: Mailer`
+
+### `apps/control-plane/api/ux-feedback/claim.ts`
+
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
+
+### `apps/control-plane/api/ux-feedback/drive.ts`
+
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
+
+### `apps/control-plane/api/ux-feedback/report.ts`
+
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
 
 ### `apps/control-plane/api/video-studio/_contracts.ts`
 
