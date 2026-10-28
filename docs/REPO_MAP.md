@@ -44,6 +44,7 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `scripts/quick-edit/`
 - `scripts/signals/`
 - `scripts/velib/`
+- `scripts/windowless/`
 - `supabase/migrations/`
 - `tests/`
 - `tests/control-plane/`
