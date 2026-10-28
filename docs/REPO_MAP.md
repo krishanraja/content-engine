@@ -2235,7 +2235,9 @@ What the compiler looks for, as pure functions.
 - `const LANE_PREFIX`
 - `const LANE_PROBLEMS: Readonly<Record<string, string>>`
 - `const LANE_REPORT_FRESH_HOURS`
+- `interface WatchHealth`
 - `interface LaneReport`
+- `function parseWatchHealth(value: unknown): WatchHealth | undefined`
 - `function parseLaneReport(value: unknown, now: string): LaneReport | null`
 - `function laneKey(machine: string): string`
 - `function lanePlainProblems(reports: readonly LaneReport[], now: number): string[]`
@@ -2703,6 +2705,8 @@ Which Windows runner may take work, and how each one looks from the cloud.
 The content-watcher queue: what the home computers may claim, report and read, decided without a database.
 
 - `const STALE_CLAIM_MS`
+- `const CLOUD_GRACE_MS`
+- `const isCloudMachine = (machine: string) =>`
 - `const MAX_ATTEMPTS`
 - `const MAX_CLAIM`
 - `const MAX_FILES`

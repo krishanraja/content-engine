@@ -9,6 +9,10 @@
 // Everything here is pure, so the tests run with no database: the routes pass in a WatchStore.
 
 export const STALE_CLAIM_MS = 30 * 60 * 1000
+// The cloud backup (a machine named cloud...) takes a link only once it has waited this long, so the home computers,
+// which cost nothing, get it first. Krish, 2026-10-28: "yes build the cloud backup".
+export const CLOUD_GRACE_MS = 15 * 60 * 1000
+export const isCloudMachine = (machine: string) => /^cloud/i.test(machine)
 export const MAX_ATTEMPTS = 3
 export const MAX_CLAIM = 10
 export const MAX_FILES = 50
@@ -180,7 +184,9 @@ export function claimView(row: WatchRequestRow) {
 /** Claim up to `limit` requests for one machine. A row another machine changed first is skipped, never taken twice. */
 export async function claim(store: WatchStore, machine: string, limit: number, now = new Date()) {
   const staleBefore = new Date(now.getTime() - STALE_CLAIM_MS).toISOString()
-  const candidates = await store.claimable(staleBefore, limit * 3)
+  const waitedBefore = now.getTime() - CLOUD_GRACE_MS
+  const candidates = (await store.claimable(staleBefore, limit * 3))
+    .filter(row => !isCloudMachine(machine) || Date.parse(row.requested_at) <= waitedBefore)
   const claimed: WatchRequestRow[] = []
   let expired = 0
   for (const row of candidates) {

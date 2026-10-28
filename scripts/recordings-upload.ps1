@@ -114,6 +114,8 @@ $script:PlacingNotReady = ''
 $script:PassSent = $true
 $script:Problems = New-Object System.Collections.Generic.List[string]
 $script:FirstPass = $true
+$script:Watch = $null
+$script:WatchStartedAt = $null
 
 [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
 Add-Type -AssemblyName System.Net.Http
@@ -666,6 +668,7 @@ function Invoke-Pass {
     # ... so that you can learn from them"). Never a reason to fail a pass.
     try { Publish-References } catch { Write-Log "the style references were not published this pass: $($_.Exception.Message)"; Add-Problem 'references_publish_failed' }
     try { Publish-Working } catch { Write-Log "the working files were not published this pass: $($_.Exception.Message)"; Add-Problem 'working_publish_failed' }
+    try { Invoke-WatchKeeper } catch { Write-Log "the content watcher was not checked this pass: $($_.Exception.Message)" }
     Send-LaneReport
   }
   return ($sent -and $placed)
@@ -697,6 +700,159 @@ function Publish-Working {
   if ($run.out -match '"sent":\s*[1-9]') { Write-Log "working files published: $($run.out -replace "`n", ' | ')" }
 }
 
+# ---- the content watcher on this machine --------------------------------------
+# krishanraja/content-watcher fetches and reads the links Krish pastes on the
+# Inspiration board, from its own scheduled task. On 25 and 26 October 2026 that
+# task stopped on both machines and nothing outside them could see it: Krish was
+# asked to open Task Scheduler and paste its log. Krish, 2026-10-28: "i should
+# never really need to copy and paste log files to you like this, ever, this is
+# ridiculous". So this pass, which runs every five minutes and updates itself,
+# keeps the watcher up to date, starts a run when none has logged lately, stops
+# a run that is stuck, and sends the watcher's health with its own report
+# (api/library/_lanes.ts, watch). A session reads it back with
+# GET /api/library/recordings/lane on the engine key. Nothing here ever stops a
+# recordings pass.
+$WatchTaskName = 'Mindmake Content Watcher'
+$WatchQuietMinutes = 6    # no log line for this long and no run under way: start one (its own trigger runs every minute)
+$WatchStuckMinutes = 25   # one stage held this long: the run is stuck (a run ends itself after 20)
+$WatchDownMinutes = 15    # still no log line this long after this pass first started it: report it
+$WatchTimeLimit = 'PT30M'
+
+function ConvertTo-UtcTime([string]$Text) {
+  if (-not $Text) { return $null }
+  $styles = [System.Globalization.DateTimeStyles]::AssumeUniversal -bor [System.Globalization.DateTimeStyles]::AdjustToUniversal
+  $value = [DateTime]::MinValue
+  if ([DateTime]::TryParse($Text, [System.Globalization.CultureInfo]::InvariantCulture, $styles, [ref]$value)) { return $value }
+  return $null
+}
+
+function Read-WatchLogLine {
+  # The watcher's last log line: its time and its counts (class names only).
+  $path = Join-Path $env:LOCALAPPDATA 'content-watcher\watch.log'
+  if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { return $null }
+  $last = @(Get-Content -LiteralPath $path -Tail 1 -Encoding UTF8 -ErrorAction SilentlyContinue)
+  if ($last.Count -eq 0 -or -not $last[0]) { return $null }
+  $line = [string]$last[0]
+  $space = $line.IndexOf(' ')
+  if ($space -lt 10) { return $null }
+  $counts = [ordered]@{}
+  try {
+    $parsed = $line.Substring($space + 1) | ConvertFrom-Json
+    foreach ($property in $parsed.PSObject.Properties) {
+      if ($property.Value -is [int] -or $property.Value -is [long]) { $counts[$property.Name] = [int]$property.Value }
+    }
+  } catch { }
+  return @{ at = $line.Substring(0, $space); time = (ConvertTo-UtcTime $line.Substring(0, $space)); counts = $counts }
+}
+
+function Update-Watcher([string]$Repo, [string]$Python) {
+  # Brings the watcher's own clone up to date (it is installed editable, so new
+  # code runs at once) and installs its dependencies again when they changed.
+  # Returns the short HEAD, or $null when this is not a git clone.
+  $git = Get-Command git.exe -ErrorAction SilentlyContinue
+  if ($null -eq $git -or -not (Test-Path -LiteralPath (Join-Path $Repo '.git'))) { return $null }
+  $previous = $ErrorActionPreference
+  $ErrorActionPreference = 'Continue'
+  try {
+    $before = (& $git.Source -C $Repo rev-parse HEAD 2>$null | Select-Object -First 1)
+    $output = @(& $git.Source -C $Repo pull --ff-only --quiet 2>&1)
+    $pulled = ($LASTEXITCODE -eq 0)
+    $after = (& $git.Source -C $Repo rev-parse HEAD 2>$null | Select-Object -First 1)
+    if (-not $pulled) {
+      Write-Log "the content watcher was not updated: git pull did not finish ($($output -join ' '))"
+      Add-Problem 'watch_update_failed'
+    } elseif ($before -and $after -and $before -ne $after) {
+      $changed = @(& $git.Source -C $Repo diff --name-only $before $after -- pyproject.toml 2>$null)
+      if ($changed.Count -gt 0) {
+        $pip = @(& $Python -m pip install --quiet --upgrade -e "$($Repo)[watch]" 2>&1)
+        if ($LASTEXITCODE -ne 0) {
+          Write-Log "the content watcher's dependencies were not installed: $(($pip | Select-Object -Last 3) -join ' ')"
+          Add-Problem 'watch_update_failed'
+        } else { [void]$script:Watch.repaired.Add('installed_dependencies') }
+      }
+      Write-Log "the content watcher was updated to $($after.Substring(0, 7))"
+      [void]$script:Watch.repaired.Add('updated')
+    }
+    if ($after) { return $after.Substring(0, 7) }
+    return $null
+  } finally { $ErrorActionPreference = $previous }
+}
+
+function Invoke-WatchKeeper {
+  $script:Watch = @{ repaired = (New-Object System.Collections.Generic.List[string]) }
+  $task = Get-ScheduledTask -TaskName $WatchTaskName -ErrorAction SilentlyContinue
+  if ($null -eq $task) { Add-Problem 'watch_not_installed'; return }
+  $action = @($task.Actions)[0]
+  $pythonw = [string](Get-Field $action 'Execute')
+  $repo = [string](Get-Field $action 'WorkingDirectory')
+  $python = Join-Path (Split-Path -Parent $pythonw) 'python.exe'
+  if (-not (Test-Path -LiteralPath $python -PathType Leaf)) { $python = $pythonw }
+  if ($repo -and (Test-Path -LiteralPath $repo -PathType Container)) { $script:Watch.head = Update-Watcher $repo $python }
+
+  # The task itself: on, and never allowed to hold a run for hours.
+  try {
+    if ($task.State -eq 'Disabled') {
+      [void](Enable-ScheduledTask -TaskName $WatchTaskName -ErrorAction Stop)
+      [void]$script:Watch.repaired.Add('enabled_task')
+      $task = Get-ScheduledTask -TaskName $WatchTaskName
+    }
+    if ($task.Settings.ExecutionTimeLimit -ne $WatchTimeLimit) {
+      $settings = $task.Settings
+      $settings.ExecutionTimeLimit = $WatchTimeLimit
+      [void](Set-ScheduledTask -TaskName $WatchTaskName -Settings $settings -ErrorAction Stop)
+      [void]$script:Watch.repaired.Add('shortened_time_limit')
+      $task = Get-ScheduledTask -TaskName $WatchTaskName
+    }
+  } catch { Write-Log "the content watcher's task settings were not changed: $($_.Exception.Message)" }
+
+  $now = [DateTime]::UtcNow
+  $log = Read-WatchLogLine
+  $beat = Read-JsonFile (Join-Path $env:LOCALAPPDATA 'content-watcher\watch.heartbeat')
+  $beatAt = ConvertTo-UtcTime ([string](Get-Field $beat 'at'))
+  $quiet = ($null -eq $log -or $null -eq $log.time -or ($now - $log.time).TotalMinutes -ge $WatchQuietMinutes)
+  # A run under way says so in its heartbeat: a stage other than done, written within the stuck limit. A long read
+  # (a video heard by whisper) holds one stage for minutes and is left alone.
+  $underWay = ([string](Get-Field $beat 'stage') -ne 'done' -and $null -ne $beatAt -and ($now - $beatAt).TotalMinutes -lt $WatchStuckMinutes)
+  try {
+    if ($quiet -and -not $underWay) {
+      if ($task.State -eq 'Running') {
+        Stop-ScheduledTask -TaskName $WatchTaskName -ErrorAction Stop
+        [void]$script:Watch.repaired.Add('stopped_stuck_run')
+        Write-Log 'the content watcher had a run that was not moving; it was stopped'
+      }
+      if ($script:WatchStartedAt -and ($now - $script:WatchStartedAt).TotalMinutes -ge $WatchDownMinutes) { Add-Problem 'watch_not_running' }
+      Start-ScheduledTask -TaskName $WatchTaskName -ErrorAction Stop
+      if (-not $script:WatchStartedAt) { $script:WatchStartedAt = $now }
+      [void]$script:Watch.repaired.Add('started_run')
+    } elseif (-not $quiet) { $script:WatchStartedAt = $null }
+  } catch { Write-Log "the content watcher could not be started: $($_.Exception.Message)"; Add-Problem 'watch_run_failed' }
+
+  # What its last run said, as a problem Control Center names.
+  if ($null -ne $log) {
+    $keys = @($log.counts.Keys)
+    if ($keys | Where-Object { $_ -in @('engine.no_engine_key', 'engine.engine_refused_key') }) { Add-Problem 'watch_key_problem' }
+    elseif ($keys | Where-Object { $_ -like 'engine.*' }) { Add-Problem 'watch_cannot_reach_engine' }
+    if ($keys | Where-Object { $_ -like 'run.error.*' -or $_ -eq 'killed.over_time' }) { Add-Problem 'watch_run_failed' }
+  }
+  $info = Get-ScheduledTaskInfo -TaskName $WatchTaskName -ErrorAction SilentlyContinue
+  $script:Watch.last_run_at = if ($log) { $log.at } else { $null }
+  $script:Watch.counts = if ($log) { $log.counts } else { @{} }
+  $script:Watch.stage = [string](Get-Field $beat 'stage')
+  $script:Watch.stage_at = [string](Get-Field $beat 'at')
+  $script:Watch.task_state = [string]$task.State
+  $script:Watch.task_result = if ($info) { [int64]$info.LastTaskResult } else { $null }
+}
+
+function Get-WatchBlock {
+  if ($null -eq $script:Watch) { return $null }
+  $block = [ordered]@{}
+  foreach ($name in @('last_run_at', 'counts', 'stage', 'stage_at', 'task_state', 'task_result', 'head')) {
+    if ($script:Watch.ContainsKey($name) -and $null -ne $script:Watch[$name] -and $script:Watch[$name] -ne '') { $block[$name] = $script:Watch[$name] }
+  }
+  $block['repaired'] = @($script:Watch.repaired)
+  return $block
+}
+
 function Send-LaneReport {
   # What this pass found, to the engine, so a problem here reaches Control
   # Center (api/library/_lanes.ts). An empty list says this machine is well.
@@ -707,7 +863,10 @@ function Send-LaneReport {
     $machine = ($env:COMPUTERNAME -replace '[^A-Za-z0-9_-]', '-')
     $client = New-HttpClient ([TimeSpan]::FromMinutes(2))
     try {
-      [void](Invoke-Engine $client $base $token '/api/library/recordings/lane' ([ordered]@{ machine = $machine; problems = @($script:Problems) }))
+      $report = [ordered]@{ machine = $machine; problems = @($script:Problems) }
+      $watch = Get-WatchBlock
+      if ($null -ne $watch) { $report['watch'] = $watch }
+      [void](Invoke-Engine $client $base $token '/api/library/recordings/lane' $report)
     } finally { $client.Dispose() }
   } catch {
     Write-Log "this pass's report did not reach the engine: $($_.Exception.Message)"
