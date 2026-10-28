@@ -1,6 +1,6 @@
 {
   "file": "docs/plans/2026-10-28-ve-format-h-proof/ve/proof-tall.mp4",
-  "sha256": "8734395c194d7def232a55e2ff884f51af200549a1023b232a5e871f017631ee",
+  "sha256": "1963be472ea5472ea6c00cd6dc9c35bd8148cba57c8ce0a7bf6ba67480f8a674",
   "duration_s": 21.08,
   "format": "hand-held-screen",
   "checks": {
@@ -190,7 +190,7 @@
     "keyframe_match": {
       "value": {
         "open": {
-          "ssim": 0.8600602085632995,
+          "ssim": 0.8600900470143954,
           "min": 0.75,
           "pass": true,
           "frame": 176
@@ -214,7 +214,7 @@
           "frame": 448
         },
         "verdict": {
-          "ssim": 0.851781873310359,
+          "ssim": 0.8518870485592959,
           "min": 0.75,
           "pass": true,
           "frame": 614
@@ -355,7 +355,7 @@
           "checks": {
             "fill_pct": {
               "pass": true,
-              "value": 95.81
+              "value": 95.83
             },
             "small_text": {
               "pass": true,
@@ -392,7 +392,7 @@
     "pass": true,
     "beats": {
       "open": {
-        "ssim": 0.8600602085632995,
+        "ssim": 0.8600900470143954,
         "min": 0.75,
         "pass": true,
         "frame": 176
@@ -416,7 +416,7 @@
         "frame": 448
       },
       "verdict": {
-        "ssim": 0.851781873310359,
+        "ssim": 0.8518870485592959,
         "min": 0.75,
         "pass": true,
         "frame": 614
@@ -557,7 +557,7 @@
         "checks": {
           "fill_pct": {
             "pass": true,
-            "value": 95.81
+            "value": 95.83
           },
           "small_text": {
             "pass": true,
