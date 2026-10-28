@@ -4,7 +4,10 @@ description: "Produce Krish's videos once he has recorded them. Use when he says
 model: sonnet
 ---
 
-# Produce the video
+# Produce the video
+
+> Video is made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`); the quick-edit path stays the fallback until ve passes Phase 3.
+
 
 ## Mandatory quality floor
 
