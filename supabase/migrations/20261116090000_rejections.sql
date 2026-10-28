@@ -288,13 +288,19 @@ begin
   if (old.collected_at is not null and new.collected_at is null) then
     raise exception 'taste_rejection_inbox: a filed capture stays filed';
   end if;
-  if (new.id, new.kind, new.said, new.said_where, new.said_at, new.piece, new.formats, new.note, new.screenshot,
-      new.screenshot_mime, new.master_drive_id, new.master_sha256, new.at_ms, new.whole_cut, new.session_ref,
+  if (new.id, new.kind, new.said, new.said_where, new.said_at, new.piece, new.formats, new.note,
+      new.master_drive_id, new.master_sha256, new.at_ms, new.whole_cut, new.session_ref,
       new.repository, new.surface, new.emitter_id, new.client_report_id, new.reported_at)
      is distinct from
-     (old.id, old.kind, old.said, old.said_where, old.said_at, old.piece, old.formats, old.note, old.screenshot,
-      old.screenshot_mime, old.master_drive_id, old.master_sha256, old.at_ms, old.whole_cut, old.session_ref,
+     (old.id, old.kind, old.said, old.said_where, old.said_at, old.piece, old.formats, old.note,
+      old.master_drive_id, old.master_sha256, old.at_ms, old.whole_cut, old.session_ref,
       old.repository, old.surface, old.emitter_id, old.client_report_id, old.reported_at) then
+    raise exception 'taste_rejection_inbox: a capture is kept as it was filed';
+  end if;
+  -- The raw screenshot is let go once the capture is collected, the engine having kept its re-encoded still (Krish,
+  -- 2026-10-28: release the raw upload after the engine keeps its copy). It is never changed, and never let go before.
+  if (new.screenshot, new.screenshot_mime) is distinct from (old.screenshot, old.screenshot_mime)
+     and not (new.screenshot is null and new.screenshot_mime is null and new.collected_at is not null) then
     raise exception 'taste_rejection_inbox: a capture is kept as it was filed';
   end if;
   return new;
@@ -454,7 +460,7 @@ comment on table public.taste_rejections is
 comment on table public.taste_rejection_media is
   'What is kept of a rejected asset: a screenshot or strip (at most 400 KB) or a clip (an mp4 of at most 1.6 MB and 4.5 s). A master is never stored.';
 comment on table public.taste_rejection_inbox is
-  'What a session''s one-step capture files: his words with where and when, and a screenshot, a master with the moment, or a whole cut. Read once by the inspirationhouse rejections engine; kept as filed.';
+  'What a session''s one-step capture files: his words with where and when, and a screenshot, a master with the moment, or a whole cut. Read once by the inspirationhouse rejections engine; kept as filed, except that a raw screenshot is let go once the engine has kept its re-encoded still.';
 comment on table public.taste_floor_standards is
   'The standards the inspirationhouse engine reads into his rejections, form or workflow only, decided only through mindmake_studio_learning_proposals. support_n is recounted by trigger.';
 comment on view public.taste_floor is
