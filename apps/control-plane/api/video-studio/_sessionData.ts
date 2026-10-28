@@ -1,6 +1,7 @@
 import { createHash, randomUUID } from 'node:crypto'
 import { supabase } from '../_supabase.js'
 import { listReviews, reviewListProjection } from './_data.js'
+import { withVenture } from '../_taste.js'
 import {
   STUDIO_MCP_CAPABILITIES,
   type CloseStudioSessionInput,
@@ -262,5 +263,5 @@ export async function listStudioLearning(sessionId: string): Promise<RecordValue
   await requireTrackedSession(sessionId)
   const result = await supabase.from('mindmake_studio_learning_proposals').select('id,weekly_batch_id,proposal_class,assertion,scope,evidence_event_ids,independent_session_count,independent_job_count,counterexamples,regression_cases,proposed_change,status,decided_at,decided_by,created_at').order('created_at', { ascending: false }).limit(100)
   if (result.error) throw new Error('studio_learning_lookup_failed')
-  return { ok: true, proposals: result.data ?? [] }
+  return { ok: true, proposals: (result.data ?? []).map(withVenture) }
 }

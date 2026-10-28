@@ -7,6 +7,7 @@ import {
 } from '../_videoStudioAuth.js'
 import { VIDEO_STUDIO_CONTROL_SCHEMA_VERSION, sendVideoStudioError } from './_contracts.js'
 import { enforceVideoStudioRateLimit } from './_data.js'
+import { withVenture } from '../_taste.js'
 
 // GET  /api/video-studio/learning-proposals            the open proposals
 // POST /api/video-studio/learning-proposals            { id, decision, krish? }
@@ -17,6 +18,11 @@ import { enforceVideoStudioRateLimit } from './_data.js'
 // is Krish's ruling on one assertion. Approval does not change any engine
 // configuration on its own: the studio's activation boundary is a reviewed
 // Git commit (docs/ENGINE_SESSION.md), and the proposal row is the receipt.
+//
+// Every venture's proposals are listed, each with its venture (scope.venture,
+// none meaning Make Your Mind Up's) and that venture's plain name. The board is
+// the only place Krish rewords a rule, so it shows them all, labelled, and
+// filters none.
 
 // corrected: right idea, his wording. It needs his words, which replace the
 // engine's on every reader (taste_profile_current reads decision_note first).
@@ -38,7 +44,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(200).json({
       ok: true,
       schema_version: VIDEO_STUDIO_CONTROL_SCHEMA_VERSION,
-      proposals: data || [],
+      proposals: (data || []).map(withVenture),
       server_time: new Date().toISOString(),
     })
   }
