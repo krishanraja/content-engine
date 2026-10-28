@@ -56,12 +56,12 @@ class CallBeatTest(unittest.TestCase):
              'captions': [{'fromFrame': 80, 'toFrame': 110, 'words': []},
                           {'fromFrame': 100, 'toFrame': 150, 'words': []},
                           {'fromFrame': 150, 'toFrame': 200, 'words': []},
-                          {'fromFrame': 190, 'toFrame': 260, 'words': []}],
+                          {'fromFrame': 190, 'toFrame': 260, 'words': [{'text': 'x', 'atFrame': 195}]}],
              'call': {'statement': 'One more country will fund its own AI.', 'due': '2026-12-31', 'confidencePercent': 90}}
 
     def test_pages_inside_the_call_beat_are_not_expected(self):
         shown = qc.caption_pages_shown(self.props)
-        # the page that starts in the card but runs on after it is sampled mostly outside it, so it is expected
+        # a page is judged at the frame OCR samples; the one that starts in the card but is sampled after it is expected
         self.assertEqual([page['fromFrame'] for page in shown], [80, 190])
         without = {key: value for key, value in self.props.items() if key != 'call'}
         self.assertEqual(len(qc.caption_pages_shown(without)), 4)

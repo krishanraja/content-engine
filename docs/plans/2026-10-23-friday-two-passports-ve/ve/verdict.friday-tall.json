@@ -1,0 +1,200 @@
+{
+  "schema": "ve-verdict/1",
+  "piece": "2026-10-23-friday-two-passports-ve",
+  "cut": "friday-tall",
+  "sha256": "21436eebed676e02f0e7ab4d73ced885f6021c2bd733b2baeb758f333bd1da9f",
+  "reviewer": "critic-fresh-6",
+  "reviewed_at": "2026-10-28T20:38:15.746758+00:00",
+  "lens_sha256": "2d62c9e235d86f192747eaeea0115befc2ef3ae7b6448684248271100582f7c1",
+  "frames_viewed": [
+    {
+      "at_s": 0.4
+    },
+    {
+      "at_s": 2.03
+    },
+    {
+      "at_s": 3.82
+    },
+    {
+      "at_s": 5.78
+    },
+    {
+      "at_s": 8.6
+    },
+    {
+      "at_s": 10.92
+    },
+    {
+      "at_s": 13.78
+    },
+    {
+      "at_s": 16.15
+    },
+    {
+      "at_s": 18.83
+    },
+    {
+      "at_s": 21.67
+    },
+    {
+      "at_s": 24.45
+    },
+    {
+      "at_s": 27.38
+    },
+    {
+      "at_s": 30.45
+    },
+    {
+      "at_s": 33.67
+    },
+    {
+      "at_s": 35.37
+    },
+    {
+      "at_s": 37.87
+    },
+    {
+      "at_s": 41.28
+    },
+    {
+      "at_s": 44.85
+    },
+    {
+      "at_s": 48.83
+    },
+    {
+      "at_s": 52.32
+    },
+    {
+      "at_s": 53.72
+    },
+    {
+      "at_s": 55.47
+    },
+    {
+      "at_s": 56.3
+    },
+    {
+      "at_s": 57.0
+    },
+    {
+      "at_s": 57.6
+    },
+    {
+      "at_s": 58.0
+    },
+    {
+      "at_s": 58.4
+    },
+    {
+      "at_s": 58.87
+    },
+    {
+      "at_s": 61.08
+    },
+    {
+      "at_s": 62.47
+    },
+    {
+      "at_s": 63.9
+    },
+    {
+      "at_s": 68.2
+    },
+    {
+      "at_s": 70.42
+    },
+    {
+      "at_s": 71.07
+    },
+    {
+      "at_s": 72.93
+    },
+    {
+      "at_s": 75.58
+    },
+    {
+      "at_s": 77.0
+    },
+    {
+      "at_s": 78.38
+    }
+  ],
+  "findings": [
+    {
+      "severity": "block",
+      "area": "brand",
+      "frame_s": 75.58,
+      "text": "The ending band carries a scrolling ticker 'EVERY CALL SCORED IN PUBLIC + FRIDAYS' (the text is at a different offset at 75.58, 77.0 and 78.38 and is cropped at both edges). That is a marquee, which Krish's rules ban. 'FRIDAYS' is also repeated inside the band's own lockup directly below, and the ticker line is not part of the spoken script. Remove the ticker strip from the ending band, or make it static single-line copy if the engine allows. Everything else on the end is one closing screen: the band plus the URL makeyourmindup.ai, with no second outro."
+    },
+    {
+      "severity": "fix",
+      "area": "evidence",
+      "frame_s": 52.32,
+      "text": "The phone card reads 'SAME WORK PROMPT - ONLY THE COUNTRY CHANGES'. That implies a controlled multi-country comparison. The record backs only one prompt, 3 runs, and which AIs flagged. The line is not spoken and not in the record I was given. Cut it or replace it with a record-backed label, because it reads as a claim the video cannot support. The prompt text on the card is also a paraphrase of the real prompt in the recording ('We're a UK clothing company with 200 staff...')."
+    },
+    {
+      "severity": "fix",
+      "area": "composition",
+      "frame_s": 3.82,
+      "text": "Hook: the scribble loop is drawn over the headline 'CHINESE AI?'. Its ink keyline covers the tops of the letters and clips the '?'. The scribble should point at an object, not strike through the title. The same pattern shows at 10.92, where the loop crops the quote card's 'BRIAN CHESKY, AIRBNB' label and runs off the card edge at 'Alibaba's'."
+    },
+    {
+      "severity": "fix",
+      "area": "composition",
+      "frame_s": 35.37,
+      "text": "Born_claude: the USA stamp sits on top of the CHINA stamp and hides its 'CHINESE CHATBOTS' label, which reads 'CHI..ESE CHATBOTS'. The green loop also runs through the 'HOME COUNTRY' label, so it reads 'HOM..COUNTRY'. The overlaps hurt reading, so offset the stamps and move the loop. Similar clipping at 44.85, where the loop strikes through the 'DEEPSEEK' label on the lives stamp, and at 27.38, where it clips 'CHINESE CHATBOTS'."
+    },
+    {
+      "severity": "fix",
+      "area": "composition",
+      "frame_s": 13.78,
+      "text": "Dek legibility: 'Which is what most of us want from a holiday fling.' runs across the fingertip. Cream italic over mid-tone skin loses contrast at 'want from a holiday'. The deks at 3.82 and 8.6 ('You may already be.', 'Airbnb's customer service leans on it.') are thin italic over a dark phone and are small, and they only restate the caption directly above. Move the dek off the hand or drop it where it duplicates the caption."
+    },
+    {
+      "severity": "fix",
+      "area": "motion",
+      "frame_s": 22.5,
+      "text": "Born beat (21.25-27.64): the passport page is empty (only 'HOME COUNTRY' and the 'PASSPORT 1 OF 2' sticker) from about 21.7 to 24.45 while the voice says 'Where it was born shapes its answers' and 'An American newspaper recently'. The CHINA stamp only lands by about 27 s, so about 3 s is dead and the infographic is not yet explaining anything. Land the BORN stamp earlier or put the key object on it."
+    },
+    {
+      "severity": "fix",
+      "area": "composition",
+      "frame_s": 72.93,
+      "text": "Every passport beat (title, born, lives, act, close) leaves the lower third of the page (y 1500-1920) as blank cream with the engine caption block floating on it. At 72.93 and 75.58 the whole bottom half is empty paper. Q8 asks for the whole screen, one focal point. Push the page so content, not dead paper, sits under the caption zone."
+    },
+    {
+      "severity": "note",
+      "area": "motion",
+      "frame_s": 57.6,
+      "text": "Evidence beat: the answer types across 56.0-56.5 (partial text at 56.3, full by 57.0 with the mint underline), holds full at 57.0 and 57.6, and is replaced by 'Sorry, that's beyond my current scope. Let's talk about something else.' by 58.0, as the caption reaches 'then deletes it'. The type and delete land in step with 'writes an answer, then deletes it', and the real recording is intact. The deletion lags the words 'then deletes' by about 0.3 s, which is acceptable. The pull quote at 44 px and the SCREEN RECORDING 24 OCT 2026 label are allowed."
+    },
+    {
+      "severity": "note",
+      "area": "copy",
+      "frame_s": 6.0,
+      "text": "Hook: 0.4 s opens on an empty dark frame, then 'USING A CHINESE AI? DOES THAT MATTER?' over a hand with a blank phone screen from 2 to 6 s. The question is clear but the stakes (your data, its answers) are not named until about 37 s, and nothing on the phone moves for the first 6 s. It is acceptable muted, but it is not a hard open. Put the Qwen or Airbnb fact or a live object on the phone earlier."
+    },
+    {
+      "severity": "note",
+      "area": "brand",
+      "frame_s": 16.15,
+      "text": "The Chesky quote is attributed 'BRIAN CHESKY, AIRBNB' with no producer (Bloomberg). Q4: add the producer. The stat on the 35% strip names its producer (Christian Science Monitor) but not its denominator (200 queries). The wording 'A THIRD OF THE TIME' against 35% is consistent."
+    },
+    {
+      "severity": "note",
+      "area": "copy",
+      "frame_s": 66.0,
+      "text": "The act_a caption breaks onto a lone 'I' on its own line at 65.48 ('you. And here's what / I'). This is an engine line-break widow. The call card (62.47) states a different dated prediction from the spoken call, which is by design. The ghost 'AI' placeholder boxes in the passports (68.2, 70.42) are the only unexplained marks, and the tick sits on one. They are tolerable as a form field."
+    },
+    {
+      "severity": "note",
+      "area": "other",
+      "frame_s": 30.45,
+      "text": "Banned-mark check across every sampled frame: no ILLUSTRATION tag, no 'KRISH'S TEST' sticker, no AI-generated note, no exclamation marks or em dashes in on-screen text, and no table or grid of cells. 'PASSPORT 1 OF 2' and 'PASSPORT 2 OF 2' are module content, not process labels. One scribble per beat holds. The thread diagram at 58.87 plus the loop on the quote card is slightly busy but is a single scribble."
+    }
+  ],
+  "blocking": true
+}
