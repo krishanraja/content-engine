@@ -55,6 +55,8 @@ export const LANE_REPORT_FRESH_HOURS = 6
 export interface WatchHealth {
   last_run_at: string | null
   counts: Record<string, number>
+  /** Every watcher run of the last 6 hours, summed, by the same keys as counts. */
+  recent?: Record<string, number>
   stage: string | null
   stage_at: string | null
   task_state: string | null
@@ -80,18 +82,26 @@ const wordOrNull = (v: unknown, re: RegExp) => (typeof v === 'string' && re.test
 export function parseWatchHealth(value: unknown): WatchHealth | undefined {
   if (value === null || typeof value !== 'object' || Array.isArray(value)) return undefined
   const w = value as Record<string, unknown>
-  const counts: Record<string, number> = {}
-  if (w.counts && typeof w.counts === 'object' && !Array.isArray(w.counts)) {
-    for (const [key, n] of Object.entries(w.counts as Record<string, unknown>).slice(0, 60)) {
-      if (COUNT_KEY_RE.test(key) && Number.isInteger(n) && (n as number) >= 0 && (n as number) <= 1_000_000) counts[key] = n as number
+  const countsOf = (value: unknown): Record<string, number> => {
+    const out: Record<string, number> = {}
+    if (value && typeof value === 'object' && !Array.isArray(value)) {
+      for (const [key, n] of Object.entries(value as Record<string, unknown>).slice(0, 60)) {
+        if (COUNT_KEY_RE.test(key) && Number.isInteger(n) && (n as number) >= 0 && (n as number) <= 1_000_000) out[key] = n as number
+      }
     }
+    return out
   }
+  const counts = countsOf(w.counts)
+  // Every run of the last 6 hours, summed: the last line alone hides a failure the next minute's empty run covers.
+  // On 28 October an Instagram post spent its three tries in five minutes and the report showed only claimed: 0.
+  const recent = countsOf(w.recent)
   const repaired = Array.isArray(w.repaired)
     ? [...new Set(w.repaired.filter((r): r is string => typeof r === 'string' && /^[a-z_]{1,40}$/.test(r)))].slice(0, 10)
     : []
   return {
     last_run_at: isoOrNull(w.last_run_at),
     counts,
+    ...(Object.keys(recent).length ? { recent } : {}),
     stage: wordOrNull(w.stage, /^[a-z_]{1,20}$/),
     stage_at: isoOrNull(w.stage_at),
     task_state: wordOrNull(w.task_state, /^[A-Za-z]{1,20}$/),

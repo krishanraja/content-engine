@@ -268,6 +268,17 @@ describe('the content watcher in the lane report', () => {
     expect(lanePlainProblems([report], 1000)).toEqual([`home computer SURFACE ${LANE_PROBLEMS.watch_cannot_reach_engine}`])
   })
 
+  it('keeps the last six hours of runs, summed, by the same rules as the last line', () => {
+    // 28 October: an Instagram post spent its three tries in five minutes; the last line said only claimed: 0.
+    const report = parseLaneReport({
+      machine: 'LORIMER', problems: [],
+      watch: { counts: { claimed: 0 }, recent: { claimed: 2, read: 1, 'failed.other': 1, 'method.apify.blocked': 1, 'https://x.example/p': 1, 'request.error': -2 } },
+    }, new Date(0).toISOString())!
+    expect(report.watch?.recent).toEqual({ claimed: 2, read: 1, 'failed.other': 1, 'method.apify.blocked': 1 })
+    const none = parseLaneReport({ machine: 'LORIMER', problems: [], watch: { counts: {}, recent: {} } }, new Date(0).toISOString())!
+    expect(none.watch).not.toHaveProperty('recent')
+  })
+
   it('accepts a report with no watch block, as every pass before this one sent', () => {
     expect(parseLaneReport({ machine: 'A', problems: [] }, new Date(0).toISOString())).toEqual(
       { schema_version: 1, machine: 'A', at: new Date(0).toISOString(), problems: [] })

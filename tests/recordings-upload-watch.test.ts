@@ -26,7 +26,7 @@ describe('the content watcher keeper in the recordings pass', () => {
     expect(upload).toContain('try { Invoke-WatchKeeper } catch { Write-Log "the content watcher was not checked this pass')
     const keeper = upload.slice(upload.indexOf('# ---- the content watcher on this machine'), upload.indexOf('function Send-LaneReport {'))
     expect(keeper).not.toMatch(/Remove-Item|Rename-Item|Copy-Item|Set-Content|Out-File|Unregister-ScheduledTask/)
-    expect(keeper).toContain("foreach ($name in @('last_run_at', 'counts', 'stage', 'stage_at', 'task_state', 'task_result', 'head'))")
+    expect(keeper).toContain("foreach ($name in @('last_run_at', 'counts', 'recent', 'stage', 'stage_at', 'task_state', 'task_result', 'head'))")
   })
 
   // Real Windows PowerShell, on the Windows CI machine only: the whole script parses, and the keeper runs.
@@ -42,7 +42,7 @@ Set-StrictMode -Version Latest
 $tokens = $null; $errors = $null
 $ast = [System.Management.Automation.Language.Parser]::ParseFile('${SCRIPT.replace(/'/g, "''")}', [ref]$tokens, [ref]$errors)
 if ($errors.Count) { foreach ($e in $errors) { Write-Output ('PARSE ' + $e.Message) }; exit 2 }
-$wanted = @('Get-Field', 'Read-JsonFile', 'ConvertTo-UtcTime', 'Read-WatchLogLine', 'Update-Watcher', 'Invoke-WatchKeeper', 'Get-WatchBlock',
+$wanted = @('Get-Field', 'Read-JsonFile', 'ConvertTo-UtcTime', 'Read-WatchLogLine', 'Read-WatchRecent', 'Update-Watcher', 'Invoke-WatchKeeper', 'Get-WatchBlock',
   'Test-WatcherClone', 'Find-WatcherClone', 'Repair-WatchTask')
 foreach ($f in $ast.FindAll({ param($n) $n -is [System.Management.Automation.Language.FunctionDefinitionAst] }, $true)) {
   if ($wanted -contains $f.Name) { . ([ScriptBlock]::Create($f.Extent.Text)) }
@@ -66,6 +66,32 @@ $line = Read-WatchLogLine
     expect(result.counts).toEqual({ claimed: 0, 'engine.engine_tls_untrusted': 1, seconds: 0 })
     expect(result.utc).toBe('2026-10-26T07:59:23')
     expect(result.block).toEqual({ repaired: [] })
+  })
+
+  it.runIf(process.platform === 'win32')('sums the last six hours of runs, by class, and leaves older runs out', () => {
+    const home = mkdtempSync(join(tmpdir(), 'cwr-'))
+    mkdirSync(join(home, 'content-watcher'))
+    const at = (minutesAgo: number) => new Date(Date.now() - minutesAgo * 60_000).toISOString().slice(0, 19) + 'Z'
+    writeFileSync(join(home, 'content-watcher', 'watch.log'), [
+      `${at(600)} {"claimed":1,"failed.other":1,"seconds":3}`,
+      `${at(30)} {"claimed":2,"failed.other":1,"method.instagram_embed.blocked":1,"read":1,"seconds":40}`,
+      `${at(29)} {"claimed":1,"failed.other":1,"seconds":2}`,
+      `${at(1)} {"claimed":0,"seconds":0}`,
+      'not a log line',
+    ].join('\n') + '\n')
+    const command = `
+$ErrorActionPreference = 'Stop'
+Set-StrictMode -Version Latest
+$tokens = $null; $errors = $null
+$ast = [System.Management.Automation.Language.Parser]::ParseFile('${SCRIPT.replace(/'/g, "''")}', [ref]$tokens, [ref]$errors)
+foreach ($f in $ast.FindAll({ param($n) $n -is [System.Management.Automation.Language.FunctionDefinitionAst] }, $true)) {
+  if (@('ConvertTo-UtcTime', 'Read-WatchRecent') -contains $f.Name) { . ([ScriptBlock]::Create($f.Extent.Text)) }
+}
+$env:LOCALAPPDATA = '${home.replace(/'/g, "''")}'
+Read-WatchRecent | ConvertTo-Json -Compress
+`
+    const out = execFileSync('powershell.exe', ['-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-Command', command], { encoding: 'utf8' })
+    expect(JSON.parse(out.trim().split(/\r?\n/).pop()!)).toEqual({ claimed: 3, 'failed.other': 2, 'method.instagram_embed.blocked': 1, read: 1 })
   })
 
   // Both machines, 28 October 2026: the task answered 0x8007010B, "The directory name is invalid", after the
