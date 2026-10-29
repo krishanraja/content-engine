@@ -1,0 +1,74 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Board mock B</title><link rel="stylesheet" href="base.css">
+<style>
+body{background:#0C1512;color:#F4EFE4}
+.wrap{max-width:1440px;margin:0 auto;padding:18px 16px 48px}
+.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
+.top .range{font:500 12px/1.2 Plex,monospace;color:#a9b4ae;margin-top:6px}
+.weeks{display:flex;gap:4px;background:#15201b;border-radius:12px;padding:4px}
+.weeks a{font:700 12px/1 Plex,monospace;padding:12px;border-radius:9px;color:#a9b4ae;text-decoration:none}
+.weeks a.on{background:#F4EFE4;color:#0C1512}
+.banner{display:flex;align-items:center;gap:10px;background:#15201b;border:1px solid #2b3832;border-radius:14px;padding:12px 14px;margin-bottom:14px;font-size:14px}
+.banner b{font:400 26px/1 Anton;color:var(--mint)}
+.banner span{color:#c9d1cc}
+.rail{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:14px;position:sticky;top:0;background:#0C1512;padding:6px 0;z-index:2}
+.rail a{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 0;border-radius:12px;color:#F4EFE4;text-decoration:none;border:1px solid #2b3832}
+.rail a b{font:700 11px/1 Plex,monospace;text-transform:uppercase}.rail a span{font:400 20px/1 Anton}
+.rail a.sel{background:#F4EFE4;color:#0C1512}
+.rail a .badge{position:absolute;top:-6px;right:-4px;min-width:20px;height:20px;border-radius:10px;background:var(--coral);color:#0C1512;font:700 11px/20px Plex,monospace;text-align:center}
+.rail a .bar{width:60%;height:4px;border-radius:2px}
+.week{display:grid;gap:12px}
+@media(min-width:1000px){.week{grid-template-columns:repeat(7,minmax(0,1fr))}.rail{display:none}.day{display:flex!important}}
+.day{display:none;flex-direction:column;background:#F4EFE4;color:#0C1512;border-radius:18px;overflow:hidden}
+.day.sel{display:flex}
+.dh{padding:12px 12px 10px;display:flex;align-items:baseline;gap:8px;border-bottom:1px solid var(--line)}
+.dh .n{font:400 26px/1 Anton;text-transform:uppercase}.dh .d{font:500 12px/1 Plex,monospace;color:var(--muted)}
+.dh .tag{margin-left:auto}
+.slot{padding:8px 12px;font:700 10.5px/1.3 Plex,monospace;text-transform:uppercase;letter-spacing:.05em}
+.post{padding:12px;display:flex;flex-direction:column;gap:9px;border-bottom:1px solid var(--line)}
+.post.ask{background:#fff1ea;box-shadow:inset 4px 0 0 var(--coral)}
+.post .k{display:flex;justify-content:space-between;font:500 11px/1 Plex,monospace;color:var(--muted)}
+.post .thumb-l{max-height:300px}.post .t{font-weight:700;font-size:15px;line-height:1.25}
+.post .c{font:italic 400 14px/1.3 Fraunces,Georgia,serif;color:#3b4440}
+.gallery{display:flex;flex-wrap:wrap;gap:6px}
+.gallery .a{flex:1 1 64px;min-width:0;height:44px;border-radius:8px;border:1px dashed #b9b1a1;font:700 9.5px/1.1 Plex,monospace;text-transform:uppercase;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--muted);padding:2px}
+.stage{font:700 10px/1 Plex,monospace;text-transform:uppercase;letter-spacing:.05em;display:flex;gap:4px;flex-wrap:wrap}
+.stage span{padding:5px 6px;border-radius:6px;background:#e7e0d1;color:#8b8f89}.stage span.done{background:#d6efe3;color:var(--ok)}.stage span.now{background:#0C1512;color:var(--mint)}
+.wait{font-size:12.5px;color:var(--bad);font-weight:600}
+.acts{display:flex;gap:8px}.acts .btn{flex:1}
+.foot{margin-top:auto;padding:12px;display:flex;align-items:center;justify-content:space-between;gap:8px;background:#ebe4d5}
+.foot .q{font:700 10.5px/1.2 Plex,monospace;text-transform:uppercase;color:var(--muted)}
+@media(min-width:1000px){.post .thumb-l .th{font-size:15px}.chip{font-size:10.5px;padding:5px 7px}.acts{flex-direction:column}.foot{flex-direction:column;align-items:stretch}.feel{justify-content:stretch}.feel button{flex:1}}
+</style></head><body>
+<div class="mockbar"><span>Mock B · The week, day by day</span><span>Synthetic data</span></div>
+<div class="wrap" id="app"></div>
+<script src="data.js"></script>
+<script>
+const asksOn = d => d.posts.filter(p=>p.status==='concept').length + W.asks.filter(a=>a.day===d.key && a.kind!=='approve').length + (d.piece && d.piece.blocked && /you/.test(d.piece.blocked) ? 1 : 0) + (W.asks.some(a=>a.day===d.key && /Substack/.test(a.what)) ? 1 : 0)
+const sel = (W.days.find(d=>asksOn(d)>0) || W.days[0]).key
+const total = W.days.reduce((n,d)=>n+asksOn(d),0)
+const stage = pc => `<div class="stage">${STAGES.map((s,i)=>`<span class="${i<pc.stage?'done':i===pc.stage?'now':''}">${s}</span>`).join('')}</div>`
+const postHtml = (d,p) => {
+  const st = STATUS[p.status], piece = p.kind==='piece'
+  return `<div class="post ${p.status==='concept'?'ask':''}">
+    <div class="k"><span>${KINDS[p.kind].glyph} ${KINDS[p.kind].label}</span><span>${p.time} · <b class="status tone-${st.tone}">${st.label}</b></span></div>
+    ${thumb(p,d,'l')}
+    <div class="t">${E(p.title)}</div><div class="c">${E(p.claim)}</div>
+    ${piece?stage(d.piece)+`<div class="gallery">${d.piece.assets.map(a=>`<div class="a">${a}</div>`).join('')}</div>`+(d.piece.blocked?`<div class="wait">Waiting: ${E(d.piece.blocked)}</div>`:''):''}
+    <div class="chips">${p.channels.map(chip).join('')}</div>
+    ${p.status==='concept'?`<div class="acts"><button class="btn mint">Approve</button><button class="btn ghost">Skip</button></div>`:''}
+    ${piece && W.asks.some(a=>a.day===d.key && /Substack/.test(a.what))?`<div class="acts"><button class="btn mint">Approve Substack post</button></div>`:''}
+  </div>`
+}
+document.getElementById('app').innerHTML = `
+<div class="top"><div><h1>${W.label}</h1><div class="range">${W.range}</div></div>
+<nav class="weeks"><a href="?week=this" class="${weekKey==='this'?'on':''}">This week</a><a href="?week=next" class="${weekKey==='next'?'on':''}">Next week</a></nav></div>
+<div class="banner"><b>${total}</b><span>${total===1?'thing needs':'things need'} you this week, marked on its day. ${E(W.note)}</span></div>
+<nav class="rail">${W.days.map(d=>`<a href="#${d.key}" class="${d.key===sel?'sel':''}">${asksOn(d)?`<span class="badge">${asksOn(d)}</span>`:''}<b>${d.name}</b><span>${d.date.split(' ')[0]}</span><i class="bar" style="background:${d.piece?SERIES[d.piece.series].color:'#2b3832'}"></i></a>`).join('')}</nav>
+<div class="week">${W.days.map(d=>`<section class="day ${d.key===sel?'sel':''}" id="${d.key}">
+  <div class="dh"><span class="n">${d.name}</span><span class="d">${d.date}</span><span class="tag">${W.today===d.key?'<span class="pill" style="background:var(--mint)">Today</span>':''}</span></div>
+  <div class="slot" style="background:${d.piece?SERIES[d.piece.series].color:'#e7e0d1'}">${d.piece?SERIES[d.piece.series].label:['mon','wed','fri'].includes(d.key)?'No series piece':'Off day'}</div>
+  ${d.posts.map(p=>postHtml(d,p)).join('')}
+  <div class="foot"><span class="q">How did ${d.name} land?</span><span class="feel"><button>Liked</button><button>Not it</button></span></div>
+</section>`).join('')}</div>`
+</script></body></html>

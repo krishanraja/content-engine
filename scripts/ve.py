@@ -13,6 +13,9 @@
   python scripts/ve.py coverage                      failure register: behavioural guards vs markers
 
   python scripts/ve.py ledger <piece>               usage against the piece's caps
+  python scripts/ve.py ledger <piece> reserve <provider> <amount>   reserve against Control Center's credit caps
+  python scripts/ve.py budget pull|verify|hash|status  the credit caps Control Center places on the publication
+  python scripts/ve.py lock spend                    the design lock's spend consent becomes Control Center's caps
   python scripts/ve.py time <piece> start <phase>    time an engine phase (stop/status available)
 
   python scripts/ve.py ingest <piece> --take <id> --media <file> --aligner-a <name> --aligner-b <name> [--clock-a/-b <json>]
@@ -112,6 +115,14 @@ def cmd_lock(args) -> int:
         lock = designlock.load()
         if args.action == 'show':
             print(json.dumps(lock['formats'][args.format] if args.format else lock, indent=2))
+        elif args.action == 'spend':
+            from velib import credits
+            record = credits.load(args.record) if args.record else credits.load()
+            problems = credits.verify(record)
+            if problems:
+                raise ValueError('the credit read does not stand: ' + '; '.join(problems))
+            designlock.spend_from_budget(record)
+            print(f'design lock: spend is the credit caps Control Center placed, read on {record["pulled_on"]}')
         elif args.action == 'check':
             findings = designlock.validate(lock)
             if findings:
@@ -359,7 +370,7 @@ def cmd_dispatch(args) -> int:
         from velib.ledger import require_within
         require_within(args.piece)
     from velib.cards import dispatch
-    result = dispatch(Path(args.card), background=not args.wait, spend_approved=args.spend_approved)
+    result = dispatch(Path(args.card), background=not args.wait)
     print((result.stdout or result.stderr).strip()[-2000:])
     return result.returncode
 
@@ -632,12 +643,59 @@ def _ledger_report(piece) -> int:
 def cmd_ledger(args) -> int:
     from velib import ledger
     try:
-        if getattr(args, 'action', None) == 'add':
+        action = getattr(args, 'action', None)
+        if action == 'add':
             ledger.add(args.piece, args.kind, args.amount, args.note)
+        elif action == 'reserve':
+            print(f've ledger: reserved {args.amount:g} {args.provider}: {ledger.reserve(args.provider, args.amount, args.piece, args.note)}')
+            return 0
+        elif action == 'settle':
+            ledger.settle(args.id, args.amount)
+            print(f've ledger: settled {args.id} at {args.amount:g}')
+            return 0
         return _ledger_report(args.piece)
     except (ValueError, OSError) as error:
         print(f've ledger: {error}', file=sys.stderr)
         return 1
+
+
+def cmd_budget(args) -> int:
+    from velib import credits, ledger
+    path = Path(args.record) if args.record else credits.RECORD
+    if args.action == 'pull':
+        if not args.read:
+            print('ve budget pull: give the get_engine_credits answer as a file (--read FILE)', file=sys.stderr)
+            return 1
+        try:
+            record = credits.from_read(load_json(args.read))
+        except (OSError, ValueError) as error:
+            print(f've budget pull: {error}', file=sys.stderr)
+            return 1
+        saved = credits.save(record, path)
+        problems = credits.verify(record)
+        print(f've budget: saved {saved} ({record["record_sha256"][:12]})' + ('' if not problems else ': ' + '; '.join(problems)))
+        return 0 if not problems else 1
+    try:
+        record = credits.load(path)
+    except FileNotFoundError:
+        print(f've budget: no {path.name}: run ve budget pull --read FILE with Control Center\'s credit read', file=sys.stderr)
+        return 1
+    except (OSError, ValueError) as error:
+        print(f've budget: {error}', file=sys.stderr)
+        return 1
+    if args.action == 'hash':
+        print(credits.record_hash(record))
+        return 0
+    problems = credits.verify(record)
+    if args.action == 'verify':
+        print('ve budget: ' + ('the credit read stands' if not problems else '; '.join(problems)))
+        return 0 if not problems else 1
+    week = credits.week_of()
+    for provider, entry in ledger.weekly(week, record).items():
+        cap = entry['cap'] if entry['cap'] is not None else f'no {credits.POOLS[provider]} pool placed'
+        print(f'{provider}: {entry["used"]:g} used or reserved ({entry["settled"]:g} settled, {entry["open"]:g} open) / {cap}')
+    print(f'week of {week}: ' + ('budget stands' if not problems else 'budget does not stand: ' + '; '.join(problems)))
+    return 0 if not problems else 1
 
 
 def cmd_time(args) -> int:
@@ -729,6 +787,8 @@ def main() -> int:
     actions = p.add_subparsers(dest='action', required=True)
     actions.add_parser('check')
     a = actions.add_parser('show'); a.add_argument('format', nargs='?')
+    a = actions.add_parser('spend', help="replace the per-generation yes with the credit caps Control Center places")
+    a.add_argument('--record', help='default config/ve/credit-budget.json')
     a = actions.add_parser('draft', help='write an unfrozen lock entry with key-frame slots; only Gate 2 freezes it')
     a.add_argument('format'); a.add_argument('--aspect', choices=('9:16', '16:9'), required=True)
     a.add_argument('--beats', nargs='+', required=True); a.add_argument('--modules', nargs='*')
@@ -770,7 +830,6 @@ def main() -> int:
     p.set_defaults(fn=cmd_sprint)
     p = sub.add_parser('dispatch'); p.add_argument('card'); p.add_argument('--wait', action='store_true')
     p.add_argument('--piece', help='refuse dispatch when this piece is over any budget cap')
-    p.add_argument('--spend-approved', action='store_true', help="only after Krish's yes, in his words, to Codex drawing paid credits")
     p.set_defaults(fn=cmd_dispatch)
     p = sub.add_parser('verify-card'); p.add_argument('card'); p.add_argument('--cwd', required=True); p.set_defaults(fn=cmd_verify_card)
     p = sub.add_parser('status'); p.add_argument('piece'); p.set_defaults(fn=cmd_status)
@@ -804,7 +863,20 @@ def main() -> int:
                                    'engine_seconds', 'krish_wait_seconds'))
     a.add_argument('amount', type=float, help='finite non-negative amount')
     a.add_argument('--note', default='', help='description of this usage')
+    a = actions.add_parser('reserve', help='reserve credits against the Control Center credit caps; refused over a cap',
+                           description='Reserve before a dispatch or generation runs; settle it with what the provider charged.')
+    a.add_argument('provider', choices=('codex_allowance_points', 'codex_paid_credits', 'runway_credits', 'higgsfield_credits',
+                                        'elevenlabs_credits'))
+    a.add_argument('amount', type=float, help='finite non-negative amount')
+    a.add_argument('--note', default='', help='what it is for')
+    a = actions.add_parser('settle', help='record what a reservation really cost')
+    a.add_argument('id'); a.add_argument('amount', type=float)
     p.set_defaults(fn=cmd_ledger)
+    p = sub.add_parser('budget', help='pull, verify, hash or show the credit caps Control Center places on the publication')
+    p.add_argument('action', choices=('pull', 'verify', 'hash', 'status'))
+    p.add_argument('--read', help='pull: a get_engine_credits answer (JSON) for growth-makeyourmindup')
+    p.add_argument('--record', help='default .ve-work/credits/credit-budget.json (never committed), or VE_CREDIT_BUDGET')
+    p.set_defaults(fn=cmd_budget)
     p = sub.add_parser('time', help='start, stop or inspect the piece engine clock',
                        description='Track engine phases separately from the append-only usage ledger.')
     p.add_argument('piece', help='piece folder name or existing directory')

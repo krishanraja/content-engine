@@ -195,7 +195,7 @@ class PieceLedger(unittest.TestCase):
         self.assertEqual(self.path.read_bytes(), before)
 
     def test_dispatch_guard_runs_before_dispatch_and_is_optional(self):
-        args = argparse.Namespace(card='test.md', wait=False, spend_approved=False, piece=self.piece)
+        args = argparse.Namespace(card='test.md', wait=False, piece=self.piece)
         with patch('velib.cards.dispatch') as dispatch:
             dispatch.return_value = subprocess.CompletedProcess([], 0, 'sent', '')
             with contextlib.redirect_stdout(io.StringIO()):
