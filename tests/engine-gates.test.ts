@@ -25,6 +25,7 @@ describe('the engine gates', () => {
     ['one spine per piece', ['scripts/post-pack/spine_check.py', '--self-test']],
     ['the style references: cuts, zooms and the ledger', ['scripts/quick-edit/references.py', '--self-test']],
     ['the cover drawer and thumbnails', ['scripts/pages/build.py', '--self-test']],
+    ['a post folder is bound to its piece, frozen at the first send, and a spread piece is reported (W3.5)', ['scripts/post-pack/post_binding.py', 'self-test']],
     ['the rejection floor reader (AGENTS.md rule 20)', ['scripts/floor.py', '--self-test']],
     ['the rejection floor file, when it is there, is whole', ['scripts/floor.py', '--check']],
     ['the bar: the reference cuts Krish named, their page, and floor.py printing them first for every video maker', ['tests/floor_bar_test.py']],
