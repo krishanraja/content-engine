@@ -18,13 +18,16 @@ A standard is approved or reworded by Krish, or a draft the engine read into his
 pre-delivery checks test work against approved and reworded standards and his words, for craft and process only,
 never what a piece is about (Ruling, Krish, 2026-10-28). Makers follow the drafts too.
 
-The bar comes first for a video maker. Krish, 2026-10-28: "the video production quality standards for the latest
-Friday (AI Passports) and Monday (character.ai) pieces are the floor for what I expect". config/reference-cuts.json
-names those cuts and the quality names of docs/production/THE_BAR.md, and keeps his general words of the same day
-and his rulings on the questions put to him. The qualities are the engine's reading of the cuts, a draft until he
-approves their wording, except the points he ruled; the printed bar says so. --format prints a short version of it
-before the rejection standards for the makers in full_bar_for_makers, led by his general words and the rulings that
-bite in production, and a one-line pointer for the other video makers and for --format all. --check holds the two
+The bar comes first for a video maker, held in the three layers Krish asked for on 2026-10-29 ("I would much rather
+the engine know what kind of thing doesn't fly with me, rather than implement incredibly specific rules
+everywhere"): the floor (a short list of nevers, each with his words and the gate that already holds it; the only
+things a check may refuse), the aims (what great looks like: the cuts he named on 2026-10-28, the brand book, his
+general words, the qualities of docs/production/THE_BAR.md and its reference moments, never a checklist) and what is
+under test (choices he made for now, each the current default, recorded per piece and judged on engagement).
+config/reference-cuts.json holds all three. The aims are the engine's reading of the cuts, a draft until he approves
+their wording, except the points he ruled; the printed bar says so. --format prints a short version of it before the
+rejection standards for the makers in full_bar_for_makers, led by his 29 October words, then the floor, the aims and
+what is under test, and a one-line pointer for the other video makers and for --format all. --check holds the two
 files together: his words, the rulings, the quality names, the reference moments and each quality's comparison
 points, word for word; every point the page marks as his words must be his exact words, and a quality that cites a
 ruling must quote its answer or name it. The printed bar carries no hashes or file ids (they stay in the
@@ -165,7 +168,10 @@ MEASURED = {'duration', 'duration_s', 'length', 'length_s', 'seconds', 'runtime'
             'scene_changes', 'events_per_second', 'caption_changes', 'bpm', 'tempo', 'lufs', 'loudness',
             'true_peak', 'loudness_range', 'palette', 'sampled_palette', 'hex'}
 BAR_HINT = ('Making a video? The bar comes first: python3 scripts/floor.py --format short_video (or long_video) prints '
-            'the production quality floor from the cuts Krish named; config/reference-cuts.json names its page.')
+            'its floor, its aims from the cuts Krish named and what is under test; config/reference-cuts.json names its '
+            'page.')
+# Where each ruling Krish gave lands in the printed bar: a never of the floor, an aim, or a choice under test.
+LAYERS = ('floor', 'aim', 'under_test')
 
 
 def read_bar(path=BAR):
@@ -283,8 +289,8 @@ def bar_problems(bar, page):
     """Problems with the references and their page, as plain sentences. Empty when they are whole and agree.
     `page` is the text of the bar's page, or None when it is missing."""
     problems = []
-    for key in ('doc', 'ruling', 'general', 'rulings', 'standing', 'principle', 'measured_values', 'applies_to_makers',
-                'qualities', 'references', 'reference_moments'):
+    for key in ('doc', 'taste', 'ruling', 'general', 'rulings', 'standing', 'principle', 'measured_values',
+                'applies_to_makers', 'floor', 'under_test', 'qualities', 'references', 'reference_moments'):
         if not bar.get(key):
             problems.append(f'missing {key}')
     if problems:
@@ -412,7 +418,9 @@ def bar_problems(bar, page):
             problems.append(f'ruling {item.get("n")} is {item.get("status")} in the references but open on the page')
     # A point marked as his words quotes his exact words, and a quality that cites a ruling quotes its answer or names it.
     his = [str(item.get('answer', '')) for item in items] + [bar['general']['words'], bar['ruling']['words'],
-                                                             bar['ruling'].get('correction') or '']
+                                                             bar['ruling'].get('correction') or '',
+                                                             str(bar['taste'].get('words') or '')]
+    his += [str(words) for never in bar['floor'].get('nevers') or [] for words in never.get('words') or []]
     for said in HIS_MARK.findall(page):
         if not any(said in words for words in his):
             problems.append(f'{bar["doc"]} marks words as his that are not his exact words: {said[:60]!r}')
@@ -456,47 +464,68 @@ def para(text, indent='  ', then=None):
                          subsequent_indent=indent if then is None else then, break_on_hyphens=False)
 
 
+def ruled_in(item):
+    """His words for a ruling, as the printed bar gives them: an option he picked, or the part of his exact answer that
+    bites (`quote`; the whole answer stays in the file and on the page)."""
+    if item.get('picked'):
+        return f'Krish picked: {quote(item["answer"])}'
+    return f'In his words: {quote(item.get("quote") or item["answer"])}'
+
+
 def bar_lines(bar):
-    """The short form of the bar a video maker reads first. His words, then the engine's reading marked as such, the
-    quality names and where to watch: no hashes, no file ids and no measured values."""
-    r, g = bar['ruling'], bar['general']
+    """The short form of the bar a video maker reads first: his words on how taste is held, then the floor, the aims
+    and what is under test, each in a few lines; the page holds the rest. The aims are marked as the engine's reading
+    where they are; no hashes, no file ids and no measured values."""
+    r, g, t = bar['ruling'], bar['general'], bar['taste']
     draft = bar['standing'] == 'draft'
-    lines = ['The bar: the production quality floor for every video, whatever its story, format or length.',
-             f'  {g["by"]}, {g["on"]}, on how every video should be made:',
-             textwrap.indent(f'"{g["words"]}"', '    '),
-             f'  His rulings that bite in production ({bar["rulings"]["on"]}):']
     items = bar['rulings']['items']
+    by_n = {item.get('n'): item for item in items}
+    lines = ['The bar: how every video should look, sound and feel, held in three layers.',
+             f'  {t["by"]}, {t["on"]}, on how he wants taste held:',
+             para(quote(t['words']), indent='    ')]
+    lines.append('Floor: the only things a check may refuse. Each is his words and the gate that already holds it.')
+    for never in bar['floor'].get('nevers') or []:
+        said = ' And: '.join(quote(w) for w in never.get('words') or [])
+        text = f'- {never["title"]}. {never["never"]}' + (f' In his words ({never["on"]}): {said}' if said else '')
+        lines.append(para(f'{text} Held by: {never["held_by"]}.', then='    '))
+    lines.append('Aims: what great looks like. Aim at them and compare against them; never a checklist, and no check '
+                 'refuses on them.')
+    lines += [f'  {g["by"]}, {g["on"]}, on how every video should be made:', textwrap.indent(f'"{g["words"]}"', '    ')]
     for item in items:
-        if item['status'] == 'ruled' and item.get('production'):
-            # `quote` is the part of his exact answer that bites; the whole answer stays in the file and on the page.
-            words = item.get('quote') or item['answer']
-            lines.append(para(f'- {item["topic"]}: {item["production"]}. In his words: {quote(words)}', then='    '))
+        if item['status'] == 'ruled' and item.get('production') and item.get('layer', 'aim') == 'aim':
+            lines.append(para(f'- {item["topic"]} ({item.get("on", bar["rulings"]["on"])}): {ruled_in(item)}',
+                              then='    '))
     for item in items:
         if item['status'] == 'open':
             lines.append(para(f'- Still open ({item["topic"].lower()}): {item["question"]} {item["changed"]}', then='    '))
-    lines.append(para(f'{r["by"]} named the pieces on {r["on"]}. In his words: {quote(r["words"])}'))
-    if r.get('correction'):
-        lines.append(para(f'And: {quote(r["correction"])}'))
+    # The part of his naming words that bites; the whole of them stays in the file and on the page.
+    lines.append(para(f'{r["by"]} named the cuts on {r["on"]}. In his words: {quote(r.get("quote") or r["words"])}'))
     lines.append(para(f'Standing: {bar["standing"]}. {bar.get("standing_note", "")}'))
     lines.append(para(("The engine's reading of those cuts, a draft: " if draft else '') + bar['principle']))
-    lines.append(f'The qualities ({bar["doc"]} has each one: the bar, the reference moments, what falls below it, '
-                 'the points to compare beside and how it is checked):')
-    lines += [f'  {i}. {q["name"]}' for i, q in enumerate(bar['qualities'], 1)]
-    lines.append('The references: watch each whole, in motion, at full size, with sound (config/reference-cuts.json '
-                 'names the files and the moments):')
+    names = '; '.join(q['name'].split(':')[0] for q in bar['qualities'])
+    lines.append(para(f'The qualities ({bar["doc"]} has each one: what great looks like, what does not fly and the '
+                      f'moments to compare beside): {names}.'))
+    lines.append('  The references, each watched whole, in motion, at full size, with sound:')
     for ref in bar['references']:
         served = ref['served_from']
-        line = (f'- {ref["published_on"]} {ref["series"]}, {ref["piece"]}: {ref["which_file"]} '
-                f'({FAMILIES[ref["format_family"]]}); board week {served["board_week"]}, asset {served["asset"]}')
+        line = (f'- {ref["label"]}: {ref["published_on"]} {ref["series"]} ({FAMILIES[ref["format_family"]]}), '
+                f'board week {served["board_week"]}, asset {served["asset"]}')
         if ref.get('identity') != 'confirmed':
             line += ('. Identity unconfirmed: whether this is the latest cut is not established; '
                      'config/reference-cuts.json says what is')
         lines.append(para(line, then='    '))
     for later in bar.get('not_yet_references', []):
         family = f' ({FAMILIES[later["format_family"]]})' if later.get('format_family') in FAMILIES else ''
-        lines.append(para(f'- Not a reference yet: {later["which_file"]}{family} of {later["piece"]}. {later["status"]}',
-                          then='    '))
-    lines.append(para(bar['measured_values']))
+        lines.append(para(f'- Not a reference yet: {later["which_file"]}{family} of {later["piece"]}. '
+                          f'{later["status"].split(". ")[0].rstrip(".")}.', then='    '))
+    lines.append(para(bar['measured_values'].split('. ')[0].rstrip('.') + '.'))
+    lines.append('Under test: choices he made for now, each the current default, recorded per piece and judged on '
+                 'real engagement; never a refusal.')
+    record = bar['under_test'].get('record', '').split(',')[0].rsplit('.', 1)[-1]
+    for choice in bar['under_test'].get('choices') or []:
+        item = by_n.get(choice.get('ruling'))
+        words = f' {ruled_in(item)} ({item.get("on", bar["rulings"]["on"])})' if item else ''
+        lines.append(para(f'- {choice["title"]} ({record}.{choice["id"]}): {choice["what"]}{words}', then='    '))
     return lines
 
 
@@ -505,9 +534,9 @@ def bar_pointer(bar, fmt):
     applies."""
     full = ' or '.join(f'--format {m}' for m in bar.get('full_bar_for_makers', [])) or 'the page'
     who = 'this maker too' if applies(bar, fmt) else 'every video maker'
-    return para(f'The bar: {bar["doc"]} is the production quality floor for {who}, from the cuts '
-                f'{bar["ruling"]["by"]} named on {bar["ruling"]["on"]} (standing: {bar["standing"]}). Read it before '
-                f'the brief; python3 scripts/floor.py {full} prints it whole.', indent='', then='  ')
+    return para(f'The bar: {bar["doc"]} holds the floor, the aims and what is under test for {who}, the aims from '
+                f'the cuts {bar["ruling"]["by"]} named on {bar["ruling"]["on"]} (standing: {bar["standing"]}). Read it '
+                f'before the brief; python3 scripts/floor.py {full} prints it.', indent='', then='  ')
 
 
 def show_bar(bar, fmt):
@@ -621,11 +650,19 @@ def self_test():
         'ruling': {'by': 'Krish', 'on': '2026-10-28', 'words': 'synthetic: these two are the floor',
                    'correction': 'synthetic: only production quality'},
         'general': {'by': 'Krish', 'on': '2026-10-28', 'words': 'synthetic: in general\n- keep it simple\n\nOn brand.'},
+        'taste': {'by': 'Krish', 'on': '2026-10-29', 'words': 'synthetic: kinds, never narrow rules'},
+        'floor': {'nevers': [{'id': 'name', 'title': 'His name', 'never': 'Synthetic: no name.', 'on': '2026-10-28',
+                              'words': ['synthetic: no name, ever'], 'held_by': 'the synthetic lint'}]},
+        'under_test': {'record': 'content_ideas.meta.making.production_choices, written by making.py',
+                       'choices': [{'id': 'opening', 'title': 'The hook first', 'ruling': 3, 'what': 'Synthetic: hook.'}]},
         'rulings': {'on': '2026-10-28', 'section': 'Rulings', 'items': [
-            {'n': 1, 'topic': 'Music', 'status': 'ruled', 'question': 'Synthetic: throughout?', 'answer': 'synthetic: yes',
-             'production': 'the bed is heard throughout', 'changed': 'Sound.'},
+            {'n': 1, 'topic': 'Music', 'status': 'ruled', 'layer': 'aim', 'question': 'Synthetic: throughout?',
+             'answer': 'synthetic: yes', 'production': 'the bed is heard throughout', 'changed': 'Sound.'},
             {'n': 2, 'topic': 'Readings', 'status': 'open', 'question': 'Synthetic: one idea?', 'answer': 'synthetic: ask me',
-             'changed': 'Synthetic: drafts until he answers.'}]},
+             'changed': 'Synthetic: drafts until he answers.'},
+            {'n': 3, 'on': '2026-10-29', 'topic': 'Opening', 'status': 'ruled', 'layer': 'under_test', 'picked': True,
+             'question': 'Synthetic: which opening?', 'answer': 'The hook', 'production': 'the hook first',
+             'changed': 'Under test.'}]},
         'standing': 'draft', 'standing_note': 'Synthetic: the engine reads the cuts; he has not approved it.',
         'principle': 'Synthetic: every frame looks owned.',
         'measured_values': 'Context about the references, never targets.',
@@ -652,7 +689,9 @@ def self_test():
             '## Reference moments\n\n### Synthetic tall (23 October)\n\n- 00:01.5 to 00:04: A build.\n'
             '- 00:00: Measured, not yet heard: a sting.\n\n## What is not the bar\n\n### x\n\n## Rulings\n\n'
             '1. **Music.** Synthetic: throughout? His answer: "synthetic: yes" Changed: sound.\n'
-            '2. **Readings.** Synthetic: one idea? His answer: "synthetic: ask me" Still open.\n')
+            '2. **Readings.** Synthetic: one idea? His answer: "synthetic: ask me" Still open.\n'
+            '3. **Opening.** Synthetic: which opening? His answer: Krish picked: "The hook" Changed: under test.\n'
+            'Never synthetic (Krish, 28 Oct: "synthetic: no name, ever"); held (Krish, 29 Oct: "synthetic: kinds").\n')
     assert bar_problems(bar, page) == [], bar_problems(bar, page)
     assert any('headings' in p for p in bar_problems(bar, page.replace('### 2. Sound finish', '### 2. Sound'))), \
         'a quality renamed on one side only must be caught'
@@ -704,20 +743,34 @@ def self_test():
     # Words marked as his on the page are his exact words, and a quality citing a ruling quotes or names it.
     assert any('not his exact words' in p for p in bar_problems(bar, page.replace('(Krish, 28 Oct: "synthetic: yes")',
                                                                               '(Krish, 28 Oct: "synthetic: always")')))
+    # His words on the floor and on how taste is held count as his words, and only exactly.
+    assert any('not his exact words' in p for p in bar_problems(bar, page.replace('"synthetic: no name, ever"',
+                                                                              '"synthetic: no names"')))
+    assert any('not his exact words' in p for p in bar_problems(bar, page.replace('"synthetic: kinds"', '"synthetic: rules"')))
+    for layer in ('taste', 'floor', 'under_test'):
+        b = json.loads(json.dumps(bar))
+        del b[layer]
+        assert bar_problems(b, page) == [f'missing {layer}'], layer
     unquoted = page.replace(' (Krish, 28 Oct: "synthetic: yes")', '')
     assert any('cites ruling 1' in p for p in bar_problems(bar, unquoted)), bar_problems(bar, unquoted)
     out = io.StringIO()
     with contextlib.redirect_stdout(out):
         assert show_format(doc, 'short_video', False, 40, bar=bar) == 0
     text = out.getvalue()
-    assert text.index('The bar: the production quality floor') < text.index('The rejection floor for short_video') \
+    assert text.index('The bar: how every video should look') < text.index('The rejection floor for short_video') \
         < text.index('Approved standards'), text
+    # His words on how taste is held lead; then the floor, the aims and what is under test, in that order.
+    assert text.index('"synthetic: kinds, never narrow rules"') < text.index('Floor: ') \
+        < text.index('- His name. Synthetic: no name. In his words (2026-10-28): "synthetic: no name, ever" Held by: the '
+                     'synthetic lint.') < text.index('Aims: ') < text.index('Under test: '), text
     assert text.index('"synthetic: these two are the floor"') < text.index('Standing: draft.') \
         < text.index("The engine's reading of those cuts, a draft:"), text
-    assert text.index('    "synthetic: in general\n    - keep it simple\n\n    On brand."') < text.index('His rulings') \
-        < text.index('- Music: the bed is heard throughout. In his words: "synthetic: yes"') \
+    assert text.index('    "synthetic: in general\n    - keep it simple\n\n    On brand."') \
+        < text.index('- Music (2026-10-28): In his words: "synthetic: yes"') \
         < text.index('- Still open (readings):') < text.index('"synthetic: these two are the floor"'), text
-    assert '  2. Sound finish' in text and 'Identity unconfirmed' in text, text
+    assert '- The hook first (production_choices.opening): Synthetic: hook. Krish picked: "The hook" (2026-10-29)' in text
+    assert 'Opening (2026-10-29)' not in text, 'a choice under test is printed under test, never as an aim'
+    assert 'Finish; Sound finish.' in text and 'Identity unconfirmed' in text, text
     assert 'board week 2026-10-19, asset syn-video' in text and 'Not a reference yet: the long cut' in text, text
     assert 'c' * 64 not in text and 'synthetic-drive-id' not in text, 'no hashes or file ids in the printed bar'
     bare = io.StringIO()
