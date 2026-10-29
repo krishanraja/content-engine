@@ -3867,6 +3867,7 @@ Fitting type into a box, as a pure function of a width measurer, so the
 
 - `function brandLockupRenderModel(branding: RuntimeBranding, placement?: RuntimeBrandCue)`
 - `function publicationLockupRenderModel(branding: RuntimeBranding, placement?: RuntimeBrandCue)`
+- `function assetLabelModel(asset: RuntimeAsset): { label?: string; source?: string } | null`
 - `function MindmakeStoryV2(props: V2RenderProps)`
 
 ### `apps/renderer/src/v2/index.ts`
