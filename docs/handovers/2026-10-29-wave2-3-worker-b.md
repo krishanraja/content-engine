@@ -1,7 +1,6 @@
 # Handover: Waves 2 and 3, worker B (board, publish manifest, Drive, docs), 29 October 2026
 
-Session: claude.ai/code session_01JRhKytbX5BWpyjUcyYSXRa. Stopped by cost guard G1 at 674k tokens with every package
-pushed. Orchestrator: session_01JRhKyrvZVBC6wX9CHa6R6i (growth-makeyourmindup). Worker A (gates, overnight, ve):
+Session: claude.ai/code session_01JRhKytbX5BWpyjUcyYSXRa. Every package is merged except #261, a ve PR left for Krish's hand merge (CI green). Orchestrator: session_01JRhKyrvZVBC6wX9CHa6R6i (growth-makeyourmindup). Worker A (gates, overnight, ve):
 session_01JRhKyr4DLZsJQieLe5D33B.
 
 ## Pull requests
@@ -9,13 +8,13 @@ session_01JRhKyr4DLZsJQieLe5D33B.
 | PR | Package | State | Next step |
 |---|---|---|---|
 | #246 | W2.1 Archive, layout v3, Scores press, piece_scores migration (not applied), publish-watch schedule match | merged | none |
-| #247 | W2.8 piece manifest (draft, seal, dispatch with per_item_review on every slot) | CI was queued | merge with a merge commit once green |
-| #250 | W2.9 snackable cuts, Growth growth-offdays/1 Off days, off-day presses on any day | CI was queued; main merged in | merge once green |
-| #252 | W2.10 only the eight nevers block; one-sitting sort proposal | CI almost green | merge once green |
-| #256 | W2.11 config/studio.json local_roots, paths.ts readers, produce-video skill | CI re-running after a fix | merge once green (worker A's readers are #249) |
-| #259 | W2.12 NOW.md history moved verbatim, NOW.md and skill-core byte caps, G8 proposal | CI was queued | merge once green |
+| #247 | W2.8 piece manifest (draft, seal, dispatch with per_item_review on every slot) | merged | none |
+| #250 | W2.9 snackable cuts, Growth growth-offdays/1 Off days, off-day presses on any day | merged | none |
+| #252 | W2.10 only the eight nevers block; one-sitting sort proposal | merged | none |
+| #256 | W2.11 config/studio.json local_roots, paths.ts readers, produce-video skill | merged | none |
+| #259 | W2.12 NOW.md history moved verbatim, NOW.md and skill-core byte caps, G8 proposal | merged | none |
 | #261 | W2.12 Codex card max_minutes and max_calls (ve) | CI was queued | Krish's hand merge after green; never auto |
-| #262 | W3.5 post folders bound to pieces, frozen at first send; test posts and renders outside 3 Video refused | CI was queued | merge once green |
+| #262 | W3.5 post folders bound to pieces, frozen at first send; test posts and renders outside 3 Video refused | merged | none |
 
 W3.3 is worker A's #245 (merged); no second hook. W3.9 was read only (below).
 
