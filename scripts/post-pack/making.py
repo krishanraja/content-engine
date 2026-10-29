@@ -121,10 +121,13 @@ ideas to nail down the narrative arc"). A piece that publishes from 9 Nov
 docs/plans/<Monday>-week/narrative-lock-<day>.md, naming the piece
 ("piece_id: <uuid>") and the day it publishes ("Publishes: YYYY-MM-DD"),
 holding every part (LOCK_PARTS) and ending on his signature, Signed by
-Krish: "<his words>", <date>. `scripts` refuses without it, its outline is
-the approved one (no second "Approved by Krish" is asked for) and the drafts
-are dated by the day it publishes. `narrative` checks it and writes nothing.
-The backlog before 9 Nov keeps the outline gate alone.
+Krish: "<his words>", <date>, lock sha256 <hash>, where the hash binds the
+words he signed (lock_body_hash): a lock changed after he signed is refused.
+`scripts` refuses without it, its outline is the approved one (no second
+"Approved by Krish" is asked for) and the drafts are dated by the day it
+publishes; undated drafts with no lock are refused, since their day is not
+known. `narrative` checks it, prints the hash to sign with, and writes
+nothing. The backlog before 9 Nov keeps the outline gate alone.
 
 Everything here records something that already happened. It never sends,
 posts, spends or deletes. A piece id is the content_ideas row (post.json
@@ -562,9 +565,15 @@ OUTLINE_FROM = '2026-10-09'  # dated drafts from here on need an approved outlin
 NARRATIVE_FROM = '2026-11-09'
 PLANS = HERE.parents[1] / 'docs' / 'plans'
 LOCK_GLOB = '*/narrative-lock-*.md'
-LOCK_PARTS = ('Surface story', 'Deeper story', 'Arc', 'The fun', 'His close', 'Facts to check', 'Outline', 'Style recipe',
-              'Music bed')
-LOCK_SIGNED = re.compile(r'^Signed by Krish\b[^:\n]*:\s*"(?P<words>.+)"\s*,\s*(?P<date>\d{4}-\d{2}-\d{2})\b')
+# "The use" is what makes it useful, the one thing a business leader does differently on Monday (his "powerful,
+# useful, and fun to consume").
+LOCK_PARTS = ('Surface story', 'Deeper story', 'Arc', 'The fun', 'The use', 'His close', 'Facts to check', 'Outline',
+              'Style recipe', 'Music bed')
+# His signature binds the words he signed: the sha256 of everything above it (lock_body_hash), so a lock edited after
+# he signed no longer stands under the same signature (the drift rule). This catches a change by accident or habit;
+# a session that recomputes the hash after editing still gets through, which only a press of his own would stop.
+LOCK_SIGNED = re.compile(r'^Signed by Krish\b[^:\n]*:\s*"(?P<words>.+)"\s*,\s*(?P<date>\d{4}-\d{2}-\d{2})\b'
+                         r'(?:\s*,\s*lock sha256\s+(?P<sha>[0-9a-fA-F]{64})\b)?')
 
 
 def _norm(text):
@@ -582,10 +591,14 @@ def _draft_date(paths):
     return m.group(1) if m else None
 
 
+def _lock_lines(text):
+    return [line.strip() for line in str(text).splitlines() if line.strip()]
+
+
 def lock_signature(text):
-    """(his words, date) from a narrative lock's last line, or None. Nothing below his signature is signed, so the
-    signature is the last line that is not blank; a template's "<his words>" is no signature."""
-    lines = [line.strip() for line in str(text).splitlines() if line.strip()]
+    """(his words, date, lock sha256 or None) from a narrative lock's last line, or None. Nothing below his signature
+    is signed, so the signature is the last line that is not blank; a template's "<his words>" is no signature."""
+    lines = _lock_lines(text)
     m = LOCK_SIGNED.match(lines[-1]) if lines else None
     if not m or re.fullmatch(r'<[^>]*>', m.group('words').strip()):
         return None
@@ -593,7 +606,17 @@ def lock_signature(text):
         datetime.strptime(m.group('date'), '%Y-%m-%d')
     except ValueError:
         return None
-    return m.group('words').strip(), m.group('date')
+    return m.group('words').strip(), m.group('date'), (m.group('sha') or '').lower() or None
+
+
+def lock_body_hash(text):
+    """The sha256 of the words a signature binds: every line above it that is not blank, each read flush left, so the
+    indent a lock was copied with and its blank lines never change it, and any word does. An unsigned lock hashes
+    whole: that is the hash he signs with."""
+    lines = _lock_lines(text)
+    if lines and LOCK_SIGNED.match(lines[-1]):
+        lines = lines[:-1]
+    return hashlib.sha256('\n'.join(lines).encode('utf-8')).hexdigest()
 
 
 def lock_parts(text):
@@ -628,10 +651,33 @@ def lock_outline(text):
     return outline + (f'\nApproved by Krish: "{signed[0]}", {signed[1]} (his signature on the narrative lock)\n' if signed else '')
 
 
+def signature_problems(text):
+    """Why the lock's signature does not stand, [] when it does: its last line is Krish's signature in his own words,
+    carrying the sha256 of the words above it, and those words have not changed since."""
+    signed = lock_signature(text)
+    if not signed:
+        return ['not signed: its last line is his signature in his own words, Signed by Krish: "<his words>", YYYY-MM-DD, '
+                f'lock sha256 {lock_body_hash(text)} (nothing below it counts; `making.py PIECE narrative LOCK` prints the hash)']
+    if not signed[2]:
+        return ['not signed: his signature carries no lock sha256, so it is not bound to the words he signed; end it with '
+                f'", lock sha256 {lock_body_hash(text)}" once he has seen these exact words']
+    if signed[2] != lock_body_hash(text):
+        return [f'not signed for these words: the lock changed after he signed it (signed {signed[2][:12]}, now '
+                f'{lock_body_hash(text)[:12]}). A signed lock is never edited: put the changed lock to him and he signs it '
+                'again (the drift rule)']
+    return []
+
+
 def narrative_problems(text, piece_id, drafts_on=None):
     """Why a narrative lock does not stand for this piece yet, [] when it does: it names the piece and the day it
     publishes, holds every part with words under it, its outline has one spine (spine_check), and its last line is
-    Krish's signature in his own words. drafts_on is the dated drafts' date, which must be the day it publishes."""
+    Krish's signature in his own words, bound to the words above it. drafts_on is the dated drafts' date, which must
+    be the day it publishes."""
+    return body_problems(text, piece_id, drafts_on) + signature_problems(text)
+
+
+def body_problems(text, piece_id, drafts_on=None):
+    """narrative_problems without the signature: what must hold before he is asked to sign."""
     import spine_check
     out = []
     if not _names_piece(text, piece_id):
@@ -650,9 +696,6 @@ def narrative_problems(text, piece_id, drafts_on=None):
         why = [w for w in spine_check.outline_problems(lock_outline(text)) if not w.startswith('not approved')]
         if why:
             out.append('its outline: ' + '; '.join(why))
-    if not lock_signature(text):
-        out.append('not signed: its last line is his signature in his own words, '
-                   'Signed by Krish: "<his words>", YYYY-MM-DD (nothing below it counts)')
     return out
 
 
@@ -688,7 +731,12 @@ def narrative_gate(paths, piece_id, roots=None):
         raise MakingError('more than one narrative lock names this piece (' + ', '.join(map(str, locks)) +
                           '): one piece has one lock, the one Krish signed; remove the piece id from the others')
     if not locks:
-        if on and on >= NARRATIVE_FROM:
+        if not on:
+            raise MakingError('no narrative lock names this piece and the drafts carry no date, so the day it publishes is not '
+                              'known: name the drafts by that day, docs/plans/<YYYY-MM-DD>-draft-script.md and '
+                              f'-draft-script-90s.md (make-piece, the Scripts row). From {NARRATIVE_FROM} a piece also needs the '
+                              'narrative lock Krish signs in the Sunday room (plan-week)')
+        if on >= NARRATIVE_FROM:
             raise MakingError(f'no signed narrative lock for this piece. A piece that publishes from {NARRATIVE_FROM} starts '
                               'from the lock Krish signs in the Sunday room (plan-week): docs/plans/<Monday>-week/'
                               f'narrative-lock-<day>.md with the line "piece_id: {piece_id}". Make nothing until it is signed')
@@ -697,7 +745,7 @@ def narrative_gate(paths, piece_id, roots=None):
     why, signed = narrative_problems(text, piece_id, on), lock_signature(text)
     if why or not signed:
         raise MakingError(f'the narrative lock {locks[0]} does not stand yet: ' + '; '.join(why or ['not signed']))
-    return {'path': str(locks[0]), 'outline': lock_outline(text), 'signed': {'words': signed[0], 'on': signed[1]}}
+    return {'path': str(locks[0]), 'outline': lock_outline(text), 'signed': {'words': signed[0], 'on': signed[1], 'sha256': signed[2]}}
 
 
 def narrative_report(piece_id, path=None, roots=None):
@@ -711,13 +759,15 @@ def narrative_report(piece_id, path=None, roots=None):
     if len(locks) > 1:
         return 1, ['more than one narrative lock names this piece: ' + ', '.join(map(str, locks))]
     text = locks[0].read_text(encoding='utf-8')
-    why = narrative_problems(text, piece_id)
-    if why:
-        return 1, [f'narrative lock {locks[0]}: not ready'] + [f'  {w}' for w in why]
+    body, sign = body_problems(text, piece_id), signature_problems(text)
+    if body or sign:
+        to_sign = ([f'  once he has seen these exact words and signs, its last line is: Signed by Krish: "<his words>", '
+                    f'<YYYY-MM-DD>, lock sha256 {lock_body_hash(text)}'] if not body else [])
+        return 1, [f'narrative lock {locks[0]}: not ready'] + [f'  {w}' for w in body + sign] + to_sign
     import spine_check
-    words, on = lock_signature(text)
+    words, on, sha = lock_signature(text)
     return 0, [f'narrative lock {locks[0]}: signed',
-               f'  Signed by Krish: "{words}", {on}',
+               f'  Signed by Krish: "{words}", {on}, lock sha256 {sha}',
                f'  spine: {spine_check.parse_outline(lock_outline(text))["spine"]}',
                '  it stands for the outline\'s approval and the style recipe\'s yes: he signs once per piece']
 
@@ -1850,15 +1900,17 @@ def self_test():
     code, err = run([pid, 'recorded', 'long', 'recordings/' + 'a' * 64 + '.mp4'], lambda m, path, b: (503, '{}') if path == RECORDINGS_LIST else fake(m, path, b))
     check('recorded: a store that cannot be read records nothing', (code, 'could not be read' in err), (1, True))
 
+    # `scripts` reads the day a piece publishes from its drafts' names: these are dated before the outline rule.
+    LONG_DRAFT, SHORT_DRAFT = '2026-10-01-draft-script.md', '2026-10-01-draft-script-90s.md'
     with tempfile.TemporaryDirectory() as tmp:
-        (Path(tmp) / 'long.md').write_text('the long script\n', encoding='utf-8')
-        (Path(tmp) / 'short.md').write_text('a changed short script\n', encoding='utf-8')
+        (Path(tmp) / LONG_DRAFT).write_text('the long script\n', encoding='utf-8')
+        (Path(tmp) / SHORT_DRAFT).write_text('a changed short script\n', encoding='utf-8')
         hashed['script_check']['hashes'] = {'long': script_hash('the long script\n'), 'short': 'c' * 64}
         quiet_check = lambda cut, path, series=None: (0, '')
         real_check = globals()['_story_check']
         globals()['_story_check'] = quiet_check  # the words are what is under test here, not story_check
         try:
-            code, err = run([pid, 'scripts', str(Path(tmp) / 'long.md'), str(Path(tmp) / 'short.md')], holds)
+            code, err = run([pid, 'scripts', str(Path(tmp) / LONG_DRAFT), str(Path(tmp) / SHORT_DRAFT)], holds)
         finally:
             globals()['_story_check'] = real_check
         sent = next(b for m, _, b in reversed(seen) if m == 'POST' and b and 'script_check' in b)['script_check']
@@ -1869,8 +1921,8 @@ def self_test():
 
     # `scripts` asks Krish about a take on the record of the words that just changed.
     with tempfile.TemporaryDirectory() as tmp:
-        (Path(tmp) / 'long.md').write_text('the long script, changed again\n', encoding='utf-8')
-        (Path(tmp) / 'short.md').write_text('a changed short script\n', encoding='utf-8')
+        (Path(tmp) / LONG_DRAFT).write_text('the long script, changed again\n', encoding='utf-8')
+        (Path(tmp) / SHORT_DRAFT).write_text('a changed short script\n', encoding='utf-8')
         new_long = script_hash('the long script, changed again\n')
         old_take = {'cut': 'long', 'path': 'recordings/' + '7' * 64 + '.mp4', 'at': '2026-10-12T11:00:00Z', 'script_sha256': script_hash('the long script\n')}
         asked_posts = []
@@ -1888,7 +1940,7 @@ def self_test():
             return 200, json.dumps({'ok': True, 'making': after, 'steps': []})
         globals()['_story_check'], real_check = (lambda cut, path, series=None: (0, '')), globals()['_story_check']
         try:
-            code, err = run(['--by', 'Claude Code', pid, 'scripts', str(Path(tmp) / 'long.md'), str(Path(tmp) / 'short.md')], changing)
+            code, err = run(['--by', 'Claude Code', pid, 'scripts', str(Path(tmp) / LONG_DRAFT), str(Path(tmp) / SHORT_DRAFT)], changing)
         finally:
             globals()['_story_check'] = real_check
         item = (asked_posts[-1]['items'][0] if asked_posts else {})
@@ -1901,8 +1953,8 @@ def self_test():
 
     # The series is still passed to the story check (the line itself is retired, house rule SERIES_OPENER).
     with tempfile.TemporaryDirectory() as tmp:
-        (Path(tmp) / 'long.md').write_text('the long script\n', encoding='utf-8')
-        (Path(tmp) / 'short.md').write_text('the short script\n', encoding='utf-8')
+        (Path(tmp) / LONG_DRAFT).write_text('the long script\n', encoding='utf-8')
+        (Path(tmp) / SHORT_DRAFT).write_text('the short script\n', encoding='utf-8')
         asked_series = []
         globals()['_story_check'], real_check = (lambda cut, path, series=None: (asked_series.append(series), (0, ''))[1]), globals()['_story_check']
         try:
@@ -1911,7 +1963,7 @@ def self_test():
                 if method == 'GET':
                     return 200, json.dumps({'ok': True, 'lane_slot': 'follow_the_money', 'making': {}, 'steps': []})
                 return 200, json.dumps({'ok': True, 'steps': []})
-            run(['--by', 'Claude Code', pid, 'scripts', str(Path(tmp) / 'long.md'), str(Path(tmp) / 'short.md')], with_slot)
+            run(['--by', 'Claude Code', pid, 'scripts', str(Path(tmp) / LONG_DRAFT), str(Path(tmp) / SHORT_DRAFT)], with_slot)
             check('scripts: each script is checked with the piece\'s series, from the making route', asked_series, ['follow_the_money'] * 2)
             asked_series.clear()
 
@@ -1922,10 +1974,10 @@ def self_test():
                 if method == 'GET':
                     return 200, json.dumps({'ok': True, 'making': {}, 'steps': []})
                 return 200, json.dumps({'ok': True, 'steps': []})
-            run(['--by', 'Claude Code', pid, 'scripts', str(Path(tmp) / 'long.md'), str(Path(tmp) / 'short.md')], older_route)
+            run(['--by', 'Claude Code', pid, 'scripts', str(Path(tmp) / LONG_DRAFT), str(Path(tmp) / SHORT_DRAFT)], older_route)
             check('scripts: a making route with no lane_slot: the piece is read for it', asked_series, ['mind_the_gap'] * 2)
             asked_series.clear()
-            run(['--by', 'Claude Code', pid, 'scripts', str(Path(tmp) / 'long.md'), str(Path(tmp) / 'short.md'), '--series', 'under_the_hood'], older_route)
+            run(['--by', 'Claude Code', pid, 'scripts', str(Path(tmp) / LONG_DRAFT), str(Path(tmp) / SHORT_DRAFT), '--series', 'under_the_hood'], older_route)
             check('scripts: --series given wins', asked_series, ['under_the_hood'] * 2)
         finally:
             globals()['_story_check'] = real_check
@@ -2118,15 +2170,19 @@ def self_test():
     # The narrative lock (Krish, 2026-10-28: "Claude interviews me on all three ideas to nail down the narrative arc"):
     # from the week of 9 Nov the scripts refuse without his signed lock, which is also the outline's approval.
     def lock_text(piece, publishes='2026-11-09', signature='Signed by Krish: "yes, lock it", 2026-11-01', drop=None):
+        """A lock for the piece; the signature gets the sha256 of the words above it unless it carries one or is empty."""
         parts = {'Surface story': 'Three firms cut prices in one week.', 'Deeper story': 'The price is the bait.',
                  'Arc': '- Open on the cut\n- Turn on who pays\n- Close on the bill', 'The fun': 'The receipt prints forever.',
+                 'The use': 'On Monday, ask which of your tools moved to usage pricing.',
                  'His close': 'Check what you pay for before Monday.', 'Facts to check': '- The price cut | https://example.org | to check',
                  'Outline': 'Spine: Who pays for the cheap model?\nAnswer: You do, later.\n'
                             '1. THE CUT | proves: the price fell\n2. THE BILL | proves: you pay later',
                  'Style recipe': 'Script: receipt. Production: statement wall.', 'Music bed': 'The approved follow.the.money bed.'}
         body = ''.join(f'## {name}\n\n{words}\n\n' for name, words in parts.items() if name != drop)
-        return (f'# Narrative lock: Mon 9 Nov follow.the.money - Cheap models\n\npiece_id: {piece}\nPublishes: {publishes}\n\n'
-                f'{body}{signature}\n')
+        text = f'# Narrative lock: Mon 9 Nov follow.the.money - Cheap models\n\npiece_id: {piece}\nPublishes: {publishes}\n\n{body}'
+        if signature and 'lock sha256' not in signature and '<his words>' not in signature:
+            signature += f', lock sha256 {lock_body_hash(text)}'
+        return f'{text}{signature}\n'
 
     def scripts_at(folder, date):
         long_path, short_path = folder / f'{date}-draft-script.md', folder / f'{date}-draft-script-90s.md'
@@ -2156,6 +2212,23 @@ def self_test():
         check('narrative: the template\'s placeholder is no signature', 'not signed' in refused(paths, pid, [plans]), True)
         lock_path.write_text(lock_text(pid) + '\n## Later\n\nAdded after he signed.\n', encoding='utf-8')
         check('narrative: words below his signature are not signed', 'not signed' in refused(paths, pid, [plans]), True)
+        lock_path.write_text(lock_text(pid).replace('Spine: Who pays for the cheap model?', 'Spine: Who pays for the free model?'),
+                             encoding='utf-8')
+        check('narrative: a spine changed after he signed is refused under the same signature (the drift rule)',
+              'changed after he signed' in refused(paths, pid, [plans]), True)
+        lock_path.write_text(lock_text(pid).replace('Three firms cut prices', 'Four firms cut prices'), encoding='utf-8')
+        check('narrative: any word changed above his signature is refused', 'changed after he signed' in refused(paths, pid, [plans]), True)
+        lock_path.write_text(lock_text(pid, signature='Signed by Krish: "yes, lock it", 2026-11-01, lock sha256 ' + '0' * 64),
+                             encoding='utf-8')
+        check('narrative: a signature bound to other words is refused', 'changed after he signed' in refused(paths, pid, [plans]), True)
+        unbound = lock_text(pid, signature='')
+        lock_path.write_text(unbound + 'Signed by Krish: "yes, lock it", 2026-11-01\n', encoding='utf-8')
+        check('narrative: a signature with no lock sha256 is not bound to his words', 'carries no lock sha256' in refused(paths, pid, [plans]), True)
+        code, lines = narrative_report(pid, roots=[plans])
+        check('narrative: the check prints the hash to sign with', (code, any(f'lock sha256 {lock_body_hash(unbound)}' in line for line in lines)),
+              (1, True))
+        lock_path.write_text(lock_text(pid, drop='The use'), encoding='utf-8')
+        check('narrative: the use (his Monday action) is a part he signs', 'The use' in refused(paths, pid, [plans]), True)
         lock_path.write_text(lock_text(pid, drop='Music bed'), encoding='utf-8')
         check('narrative: a missing part is named', 'Music bed' in refused(paths, pid, [plans]), True)
         lock_path.write_text(lock_text(pid).replace('Spine: Who pays for the cheap model?', 'Spine: Who pays.'), encoding='utf-8')
@@ -2164,12 +2237,14 @@ def self_test():
         check('narrative: drafts dated by another day than it publishes are refused', 'publishes 2026-11-11' in refused(paths, pid, [plans]), True)
         lock_path.write_text(lock_text(other), encoding='utf-8')
         check('narrative: a lock for another piece is no lock for this one', 'no signed narrative lock' in refused(paths, pid, [plans]), True)
+        signed_sha = lock_body_hash(lock_text(pid, signature=''))
         lock_path.write_text(''.join('   ' + line for line in lock_text(pid).splitlines(True)), encoding='utf-8')
         check('narrative: a lock copied with the skill\'s indent reads the same', (narrative_gate(paths, pid, [plans]) or {}).get('signed'),
-              {'words': 'yes, lock it', 'on': '2026-11-01'})
+              {'words': 'yes, lock it', 'on': '2026-11-01', 'sha256': signed_sha})
         lock_path.write_text(lock_text(pid), encoding='utf-8')
         lock = narrative_gate(paths, pid, [plans])
-        check('narrative: a signed, whole lock passes, with his words', (lock or {}).get('signed'), {'words': 'yes, lock it', 'on': '2026-11-01'})
+        check('narrative: a signed, whole lock passes, with his words', (lock or {}).get('signed'),
+              {'words': 'yes, lock it', 'on': '2026-11-01', 'sha256': signed_sha})
         try:
             outline_gate(paths, lock)
             gated = 'passed'
@@ -2216,6 +2291,10 @@ def self_test():
         check('narrative: before 9 Nov the outline still needs his approval', 'no approved outline' in kept, True)
         old = scripts_at(plans, '2026-10-26')
         check('narrative: the October backlog needs no lock', narrative_gate(old, pid, [plans]), None)
+        (plans / 'long.md').write_text('Words.\n', encoding='utf-8')
+        undated = [str(plans / 'long.md'), str(plans / 'short.md')]
+        check('narrative: undated drafts with no lock are refused, since the day it publishes is not known',
+              'carry no date' in refused(undated, pid, [plans]), True)
 
     if fails:
         print('making self-test FAILED:\n  ' + '\n  '.join(fails))
