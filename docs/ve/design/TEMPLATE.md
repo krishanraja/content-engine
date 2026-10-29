@@ -49,7 +49,7 @@ At least six distinct moves per beat (camera, parallax, kinetic type, counter, w
 
 ## Quality bar (the gates, in order)
 1. **Design lock**: no device card or compile for a format without an approved lock.
-2. **Composition QC** on rendered frames: fill at least 80% outside the caption zone, nothing under 30 px (44 px for quotes), caption zone clear, nothing key beyond x 960 or y 1640, nothing hugging a corner, ILLUSTRATION present when a plate is on screen.
+2. **Composition QC** on rendered frames: fill at least 80% outside the caption zone, nothing under 30 px (44 px for quotes), caption zone clear, nothing key beyond x 960 or y 1640, nothing hugging a corner. No ILLUSTRATION tag is required on a plate (the lock sets `illustration_tag_required: false`; Images, rule 4).
 3. **Golden key frames**: the render at each declared key frame matches the approved still (structural similarity above the lock's threshold).
 4. **Mechanical QC** (11 checks) as before.
 5. **Critic verdict** bound to the mp4's hash.
