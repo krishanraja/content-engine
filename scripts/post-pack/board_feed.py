@@ -173,6 +173,26 @@ def taps(week, read=None):
     return his_taps((answer or {}).get('documents') if isinstance(answer, dict) else [])
 
 
+def archive(week, call=None, out_dir=None):
+    """(path written, summary line): the Archive for a board from layout v3 on (W2.1), every published piece since the
+    Launch with his scores, from GET /api/board/<Monday>/archive, written to docs/plans/<Monday>-week/archive.json for
+    week_board.py --archive. Read-only."""
+    call = call or making._engine_call
+    wk = monday(week).isoformat()
+    data = get(call, f'/api/board/{wk}/archive')
+    rows = data.get('rows')
+    if not isinstance(rows, list):
+        raise FeedError(f'GET /api/board/{wk}/archive: no rows')
+    out = Path(out_dir) if out_dir else ROOT / 'docs' / 'plans' / f'{wk}-week'
+    out.mkdir(parents=True, exist_ok=True)
+    path = out / 'archive.json'
+    path.write_text(json.dumps({'week_start': wk, 'scores': data.get('scores'), 'rows': rows}, indent=1) + '\n', encoding='utf-8')
+    scored = sum(1 for r in rows if isinstance(r, dict) and r.get('scores'))
+    line = f'archive: {len(rows)} published pieces, {scored} scored' + (
+        '; the score table waits on the Wave 2 migration batch' if data.get('scores') == 'waits_on_migration' else '')
+    return str(path), line
+
+
 def self_test():
     """No engine: a fake answer for each route, then what gather writes and says."""
     import tempfile
@@ -236,6 +256,19 @@ def self_test():
         problems.append('an engine error must be said, never written as an empty pool')
     except FeedError:
         pass
+    row = {'piece_id': '11111111-2222-4333-8444-555555555555', 'date': '2026-10-12', 'series': 'follow_the_money', 'title': 'T',
+           'links': [], 'scores': {'hindsight': {'narrative': 8, 'production': 6}}}
+    seen = []
+
+    def arch(method, path, body):
+        seen.append((method, path))
+        return 200, json.dumps({'ok': True, 'scores': 'waits_on_migration', 'rows': [row, dict(row, scores={})]})
+    with tempfile.TemporaryDirectory() as tmp:
+        path, line = archive('2026-11-09', arch, tmp)
+        if seen != [('GET', '/api/board/2026-11-09/archive')] or json.loads(Path(path).read_text(encoding='utf-8'))['rows'][0] != row:
+            problems.append('archive reads the board\'s Archive view once and writes its rows as given')
+        if line != 'archive: 2 published pieces, 1 scored; the score table waits on the Wave 2 migration batch':
+            problems.append(f'archive says how many pieces and scores, and when the score table is not there yet ({line})')
     m = ['11111111-2222-4333-8444-555555555555', '22222222-3333-4444-8555-666666666666']
     docs = [{'id': 'combine-1', 'updated_by': 'Krish', 'body': {'combine': True, 'members': m, 'pick': 'combine-1'}},
             {'id': 'combine-2', 'updated_by': 'engine_operator', 'body': {'combine': True, 'members': m, 'pick': 'combine-2'}},
@@ -261,8 +294,18 @@ def main(argv=None):
     c = sub.add_parser('cover', help='check ideas.json carries every must_cover id and the style rules before the board is built')
     c.add_argument('week', help='the Monday the week starts on, YYYY-MM-DD')
     c.add_argument('--ideas', help='an ideas file other than docs/plans/<Monday>-week/ideas.json')
+    a = sub.add_parser('archive', help='the Archive (layout v3): every published piece and his scores, into docs/plans/<Monday>-week/archive.json')
+    a.add_argument('week', help='the Monday of the board, YYYY-MM-DD')
     sub.add_parser('self-test')
     args = ap.parse_args(argv)
+    if args.cmd == 'archive':
+        try:
+            path, line = archive(args.week)
+        except (FeedError, ValueError, OSError) as error:
+            print(f'board_feed archive: {error}', file=sys.stderr)
+            return 1
+        print(f'{line}\nwrote {path}; build with --archive {path}')
+        return 0
     if args.cmd == 'taps':
         try:
             bodies, skipped = taps(args.week)

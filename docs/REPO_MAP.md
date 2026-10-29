@@ -1393,6 +1393,7 @@ The publish watcher's pure half: which piece a live Substack post is.
 - `const PUBLICATION_ARCHIVE`
 - `const WATCH_FROM`
 - `const ASK_WITHIN_HOURS`
+- `const SCHEDULE_DAYS`
 - `interface Post`
 - `interface Candidate`
 - `function normTitle(s: string | null | undefined): string`
@@ -1877,6 +1878,15 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `const config`
 - `export default withContentRun('arcs_surface', handler)`
 
+### `apps/control-plane/api/board/_archive.ts`
+
+- `const ARCHIVE_FROM`
+- `interface ArchivePiece`
+- `interface ArchiveScore`
+- `interface ArchiveRow`
+- `function archiveRows(pieces: readonly ArchivePiece[], scores: readonly ArchiveScore[]): ArchiveRow[]`
+- `async function readArchive(db: SupabaseClient): Promise<{ rows: ArchiveRow[]; scores: 'live' | 'waits_on_migration' }>`
+
 ### `apps/control-plane/api/board/_contracts.ts`
 
 - `const collections`
@@ -1894,6 +1904,9 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `const OFFDAY_ID`
 - `const DECISION_ID`
 - `const DECISION_KIND`
+- `const SCORE_ID`
+- `const SCORE_BASES`
+- `function scoreBody(id: string, body: Record<string, unknown>): boolean`
 - `const SCRIPT_CUTS`
 - `const TITLE_SURFACES`
 - `function validBody(collection: string, id: string, body: unknown): boolean`
@@ -1919,6 +1932,7 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `class PressError`
 - `async function preparePress(collection: string, id: string, body: Body): Promise<Body>`
 - `async function heldBecause(making: unknown, texts: Record<string, string>): Promise<string | null>`
+- `function scoreRow(week: string, id: string, body: Body, now: string)`
 - `function offdayDate(week: string, day: string): string`
 - `async function placeOffday(db: SupabaseClient, ctx: { week: string; id: string; body: Body; who: string; now: string })…`
 - `async function afterPress(db: SupabaseClient, ctx: { week: string; collection: string; id: string; body: Body; who: str…`
