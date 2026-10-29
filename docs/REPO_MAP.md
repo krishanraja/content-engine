@@ -1927,6 +1927,17 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 
 - `function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: PressDeps = {})`
 
+### `apps/control-plane/api/board/_posted.ts`
+
+- `const POSTED_CHANNELS`
+- `type PostedChannel = keyof typeof POSTED_CHANNELS`
+- `const POSTED_ACTOR`
+- `interface PostedInput`
+- `interface PostedResult`
+- `function postedInput(body: unknown): { input?: PostedInput; problem?: string }`
+- `function dayDate(week: string, day: keyof typeof DAY_OFFSET): string`
+- `async function recordPosted(db: SupabaseClient, week: string, raw: unknown, now: string): Promise<PostedResult>`
+
 ### `apps/control-plane/api/board/_presses.ts`
 
 - `type Sender = (input: SendApprovedInput) => Promise<SendResult>`
