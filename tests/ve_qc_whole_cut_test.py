@@ -44,6 +44,14 @@ class LoneIglyphTest(unittest.TestCase):
         self.assertFalse(qc_captions.lone_capital_i('ai', expected))
         self.assertFalse(qc_captions.lone_capital_i('il', ['if', 'were', 'you']))
 
+    def test_a_lone_pipe_is_the_word_i_only_where_i_is_expected(self):
+        with patch.object(qc_captions, '_recognise', return_value='this information if | were'):
+            row = qc_captions._read_candidates('x', np.zeros((20, 20), np.uint8), qc_captions._tokens('this information if I were'))
+        self.assertEqual(row['agreement'], 1.0)
+        with patch.object(qc_captions, '_recognise', return_value='this information if | were'):
+            row = qc_captions._read_candidates('x', np.zeros((20, 20), np.uint8), qc_captions._tokens('this information if we were'))
+        self.assertLess(row['agreement'], 1.0)
+
     def test_il_reading_of_i_passes_but_il_where_no_i_is_expected_does_not(self):
         with patch.object(qc_captions, '_recognise', return_value='Il were you.'):
             row = qc_captions._read_candidates('x', np.zeros((20, 20), np.uint8), qc_captions._tokens('I were you.'))
@@ -54,18 +62,29 @@ class LoneIglyphTest(unittest.TestCase):
 
 
 class CropTest(unittest.TestCase):
-    def test_crops_at_the_box_bottom_when_paper_follows(self):
-        pixels = np.full((217, 900), 18, np.uint8)
-        pixels[150:, :] = 230            # cream paper below a one-line box
-        self.assertEqual(qc_captions.crop_to_caption_box(pixels).shape, (150, 900))
+    def test_box_height_follows_its_lines(self):
+        self.assertEqual(qc_captions.caption_box_height(1, True), 72 + 57 + 6)
+        self.assertEqual(qc_captions.caption_box_height(2, True), 72 + 114 + 6)
+        self.assertEqual(qc_captions.caption_box_height(1, False), 72 + 72 + 6)
 
-    def test_dark_picture_leaves_the_region_alone(self):
-        pixels = np.full((217, 900), 18, np.uint8)
-        self.assertEqual(qc_captions.crop_to_caption_box(pixels).shape, (217, 900))
+    def test_wide_box_sits_on_the_bottom_of_the_region(self):
+        pixels = np.zeros((187, 1400), np.uint8)
+        pixels[:50] = 255                      # the picture above a one-line box
+        crop = qc_captions.crop_to_caption_box(pixels, 1, True)
+        self.assertEqual(crop.shape[0], qc_captions.caption_box_height(1, True))
+        self.assertTrue((crop == 0).all())
 
-    def test_a_bright_row_at_the_top_is_not_a_box_end(self):
-        pixels = np.full((217, 900), 230, np.uint8)
-        self.assertEqual(qc_captions.crop_to_caption_box(pixels).shape, (217, 900))
+    def test_tall_box_hangs_from_the_top_and_a_full_box_is_not_cropped(self):
+        pixels = np.zeros((217, 900), np.uint8)
+        pixels[150:] = 255
+        self.assertTrue((qc_captions.crop_to_caption_box(pixels, 1, False) == 0).all())
+        self.assertEqual(qc_captions.crop_to_caption_box(pixels, 2, False).shape, (217, 900) if qc_captions.caption_box_height(2, False) >= 217 else (qc_captions.caption_box_height(2, False), 900))
+
+    def test_page_lines_come_from_the_engine_geometry(self):
+        page = {'words': [{'text': 'every'}, {'text': 'AI'}, {'text': 'has'}, {'text': 'two'}], 'swipeIndex': None}
+        self.assertEqual(qc_captions.page_lines(page, True), 1)
+        long = {'words': [{'text': 'passports,'}] * 5, 'swipeIndex': 2}
+        self.assertEqual(qc_captions.page_lines(long, True), 2)
 
 
 class CallBeatTest(unittest.TestCase):

@@ -59,3 +59,10 @@ it('lets a splash title take a taller room, and nothing else', () => {
   expect(splash.height).toBeLessThanOrEqual(373)
   expect(() => headlineLayout(['X'.repeat(100)], 888, -1, 373)).toThrow(/150px/)
 })
+
+it('puts an ink panel behind the dek only when asked', () => {
+  const withDek = (extra: object) => ({ ...object, params: { ...object.params, dek: 'A short human line.', dekAt: { x: 72, y: 460, w: 600 }, ...extra } })
+  const html = (o: typeof object) => renderToStaticMarkup(React.createElement(Device, { object: o, events, tokens: { ink: 'black', inkDeep: 'black', inkSoft: 'gray', cream: 'ivory', mint: 'green', channel: 'coral' }, box: { left: 0, top: 0, width: 1080, height: 1920 }, aspect: '9:16', frame: 60 }))
+  expect(html(withDek({}))).not.toContain('data-dek-back')
+  expect(html(withDek({ dekBack: true }))).toContain('data-dek-back')
+})
