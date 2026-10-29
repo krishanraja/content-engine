@@ -52,6 +52,7 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `tests/fixtures/`
 - `tests/helpers/`
 - `tests/integration/`
+- `vendor/`
 
 ## Content engine routes
 
@@ -447,6 +448,20 @@ _content — shared helpers for the Content Engine API routes
 - `interface Look`
 - `async function askChecksToLook(itemIds: string[], deps: { env?: Record<string, string | undefined>; fetchImpl?: FetchLi…`
 - `async function askChecksForPiece(ideaId: string, deps: Parameters<typeof askChecksToLook>[1] = {}): Promise<Look>`
+
+### `apps/control-plane/api/_copyLint.ts`
+
+The copy lint: the deterministic check on every public word around a piece.
+
+- `const COPY_SURFACES`
+- `type CopySurface = (typeof COPY_SURFACES)[number]`
+- `interface CopyLintHit`
+- `const COPY_LINT_VERSION: string`
+- `function normaliseCopy(text: string): string`
+- `function copyLint(text: string, appliesTo: string): CopyLintHit[]`
+- `function copyLintReason(id: string): string`
+- `interface CopyField`
+- `function copyFields(data: unknown): CopyField[]`
 
 ### `apps/control-plane/api/_creatorFingerprint.ts`
 

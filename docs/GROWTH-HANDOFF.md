@@ -40,7 +40,8 @@ approval or evidence that a volume system has been built and measured.
 - Source piece identity/version, canonical article/video URLs and claims.
 - Stable references and SHA-256 hashes for accepted finished assets, order,
   format, dimensions/duration and exact creative acceptance state.
-- Exact channel copy, alt text, continuation and platform-specific needs.
+- Exact channel copy, alt text, continuation and platform-specific needs,
+  clean under the copy lint (`config/copy-lint.json`, Krish, 28 Oct 2026).
 - Source, rights and production QA evidence. Unresolved gaps stay explicit.
 
 Growth owns platform packaging, metadata, target accounts, queue, authorised
