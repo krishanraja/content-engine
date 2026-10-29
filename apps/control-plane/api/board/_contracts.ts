@@ -42,7 +42,10 @@ const TP_ID = /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/
 export const PRESS_USES = ['wider_piece_context', 'track_over_time', 'next_week', 'not_for_us'] as const
 // The off days (Krish, 2026-10-28: "I'm happy to plan the Tuesday, Thursday, Saturday, and Sunday content within the
 // Sunday ideas session if you give me a few options to approve as you do the Mon/wed/fri"): queue/off-<day>-<option>.
-export const OFFDAY_ID = /^off-(tue|thu|sat|sun)-[a-zA-Z0-9][a-zA-Z0-9_.:-]{0,59}$/
+// Growth's off-day lane runs every day (Krish, 2026-10-29: "Mix wins: every day"), so its options may sit on any day;
+// a piece he records stays a Tuesday, Thursday, Saturday or Sunday piece (recordedOffday).
+export const OFFDAY_ID = /^off-(mon|tue|wed|thu|fri|sat|sun)-[a-zA-Z0-9][a-zA-Z0-9_.:-]{0,59}$/
+const RECORDED_DAYS = ['tue', 'thu', 'sat', 'sun']
 // His decisions on a day's tab, stored in picks beside the day's pick: <day>-scripts (Approve scripts), <day>-titles
 // (Titles), <day>-publish (Approve for publish) and <day>-reject-<asset> (Reject asset).
 export const DECISION_ID = /^(mon|wed|fri)-(scripts|titles|publish|reject-([a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}))$/
@@ -125,7 +128,7 @@ export function validBody(collection: string, id: string, body: unknown): boolea
 export const RECORDED_STYLES = ['to_camera', 'voiceover'] as const
 export const RECORDED_SERIES = ['follow_the_money', 'under_the_hood', 'mind_the_gap'] as const
 function recordedOffday(body: Record<string, unknown>): boolean {
-  return body.kind === 'recorded' && typeof body.piece_id === 'string' && UUID.test(body.piece_id)
+  return body.kind === 'recorded' && RECORDED_DAYS.includes(String(body.day)) && typeof body.piece_id === 'string' && UUID.test(body.piece_id)
     && (RECORDED_SERIES as readonly unknown[]).includes(body.series) && (RECORDED_STYLES as readonly unknown[]).includes(body.style)
     && typeof body.script === 'string' && body.script.trim().length > 0 && body.script.length <= 20_000
     && (!('script_sha256' in body) || SHA256.test(String(body.script_sha256)))

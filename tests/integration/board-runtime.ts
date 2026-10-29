@@ -214,6 +214,8 @@ try{
     for(const [collection,id,value] of [
       ['queue','mon-2',{pick:'mon-2',use:'next_week',target_week:'2026-11-16',queued:true}],
       ['queue','off-tue-o1',{pick:'off-tue-o1',use:'offday',day:'tue',approved:true,copy_sha256:'c'.repeat(64)}],
+      // Growth's mix runs every day (Krish, 2026-10-29: "Mix wins: every day"): an option on a series day is pressed too.
+      ['queue','off-mon-meme-c1',{pick:'off-mon-meme-c1',use:'offday',day:'mon',approved:true,copy_sha256:'c'.repeat(64)}],
       ['picks','mon',{pick:'mon-2',day:'mon',story:'Choice',note:'Lead with the deal.'}],
       ['picks','mon-titles',{kind:'titles',day:'mon',picks:{long_title:'X'}}],
       ['picks','mon-publish',{kind:'approve_publish',day:'mon',piece_id:piece,approved:true}],
@@ -222,6 +224,9 @@ try{
       await put(`${presses}/${collection}/${id}`,{body:value,revision:0},200,krish)
     }
     assert.deepEqual((await get(presses+'/titles')).documents.map((d:Row)=>d.id),['mon-titles'])
+    // A piece he records stays an off-day piece: on Monday it is refused.
+    await put(presses+'/queue/off-mon-r1',{body:{pick:'off-mon-r1',use:'offday',day:'mon',approved:true,copy_sha256:'c'.repeat(64),kind:'recorded',
+      piece_id:piece,series:'follow_the_money',style:'to_camera',script:'Words.',folder_title:'F',title:'T'},revision:0},400,krish)
     await put(presses+'/approvals/mon-scripts',{body:approval,revision:2},400,krish)
   }
   await put(week+'/comments/orphan',{body:{thread_id:'absent',anchor:'mon-article',text:'Wrong'},revision:0},400)
