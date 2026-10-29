@@ -3,7 +3,8 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 import { createHash } from 'node:crypto'
 import { Readable } from 'node:stream'
 import { pipeline } from 'node:stream/promises'
-import { actor, canonical, collections, digest, hisOnlyRefusal, fileSpec, monday, revision, validBody, validSourceBody, validId, validManifest, type BoardFile, type Manifest } from './_contracts.js'
+import { actor, canonical, collections, digest, hisOnlyRefusal, fileSpec, monday, revision, validBody, validSourceBody, validId, validManifest, views, type BoardFile, type Manifest, type View } from './_contracts.js'
+import { PressError, afterPress, preparePress, type PressDeps } from './_presses.js'
 import { MediaQualityError, qualifyBoard } from '../_mediaQuality.js'
 import { mediaQualityEnforced, mediaQualityRollout } from '../../../../packages/core/src/media-rollout.js'
 
@@ -16,9 +17,10 @@ function must(result: { error?: unknown }) { if (result.error) throw new BoardEr
 
 // Ten maximum-sized documents stay safely below the host's buffered JSON limit.
 const PAGE_SIZE = 10
-async function rows(db: SupabaseClient, table: string, week: string, collection: string | undefined, offset: number) {
+async function rows(db: SupabaseClient, table: string, week: string, collection: string | undefined, offset: number, kind?: string) {
     let query = db.from(table).select('*').eq('week', week)
     if (collection) query = query.eq('collection', collection)
+    if (kind) query = query.eq('body->>kind', kind)
     const result = await query.order(table === 'board_ticks' ? 'tick_id' : table === 'board_imports' ? 'source_sha256' : 'doc_id').range(offset, offset + PAGE_SIZE - 1)
     must(result)
     return result.data
@@ -58,7 +60,7 @@ async function verifyFile(db: SupabaseClient, file: BoardFile) {
   if (type !== file.type && !(file.type === 'text/html' && type === 'text/plain')) throw new BoardError(422, 'board_file_type_mismatch')
 }
 
-export function createBoardHandler(getDb: () => Promise<SupabaseClient>) {
+export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: PressDeps = {}) {
   return async (req: VercelRequest, res: VercelResponse) => {
     res.setHeader('Cache-Control', 'private, no-store')
     res.setHeader('Vary', 'Cookie, Authorization')
@@ -87,6 +89,12 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>) {
       if (!monday(week)) throw new BoardError(400, 'invalid_week')
       const offset = Number(req.query.offset || 0)
       if (!Number.isSafeInteger(offset) || offset < 0) throw new BoardError(400, 'invalid_offset')
+      if (collection && Object.hasOwn(views, collection)) {
+        // A read-only view of his day decisions in picks (views in _contracts.ts): listed, never written.
+        if (method !== 'GET' || id) throw new BoardError(400, 'read_only_view')
+        const data = await rows(db, 'board_documents', week, 'picks', offset, views[collection as View])
+        return res.status(200).json({ ok: true, week, collection, next_offset: data.length === PAGE_SIZE ? offset + PAGE_SIZE : null, documents: data.map(r => ({ id: r.doc_id, body: r.body, revision: r.revision, updated_at: r.updated_at, updated_by: r.updated_by })) })
+      }
       if (collection) {
         if (!collections.includes(collection as typeof collections[number])) throw new BoardError(400, 'invalid_collection')
         if (method === 'GET' && !id) {
@@ -101,9 +109,13 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>) {
           must(parent)
           if (!parent.data || parent.data.body.thread_id !== req.body.body.thread_id || parent.data.body.anchor !== req.body.body.anchor) throw new BoardError(400, 'comment_thread_not_found')
         }
-        const result = await db.rpc('board_save', { p_week: week, p_collection: collection, p_id: id, p_body: req.body.body, p_revision: req.body.revision, p_actor: who })
+        // His presses (_presses.ts): an approval of scripts binds the hash of the words he saw, then sends them to
+        // Teleprompter; a rejection with his reason files one row in the rejection inbox.
+        const body = await preparePress(collection, id, req.body.body)
+        const result = await db.rpc('board_save', { p_week: week, p_collection: collection, p_id: id, p_body: body, p_revision: req.body.revision, p_actor: who })
         must(result)
-        return res.status(result.data.ok ? 200 : 409).json(result.data)
+        const after = await afterPress(db, { week, collection, id, body, who, saved: result.data }, deps)
+        return res.status(result.data.ok ? 200 : 409).json(after || result.data)
       }
       if (op === 'uploads' && method === 'POST') {
         const file = req.body?.file
@@ -206,7 +218,8 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>) {
       throw new BoardError(404, 'board_route_not_found')
     } catch (error) {
       if (res.headersSent) { res.end(); return }
-      return res.status(error instanceof BoardError ? error.status : 503).json({ ok: false, error: error instanceof BoardError ? error.message : 'board_unavailable' })
+      const known = error instanceof BoardError || error instanceof PressError
+      return res.status(known ? error.status : 503).json({ ok: false, error: known ? error.message : 'board_unavailable' })
     }
   }
 }
