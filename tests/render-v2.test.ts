@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest'
 import { BrandThemeV1Schema, PENDING_BRAND_SOURCE_COMMIT, ProductionBriefV1Schema, RenderManifestV2Schema, SourceVisualAnalysisV1Schema, TreatmentRegistryV1Schema, VisualNarrativePlanV1Schema, type BrandThemeV1, type ProductionBriefV1, type RenderManifestV2, type SourceVisualAnalysisV1 } from '@mindmake/contracts'
 import { boundRenderCallIssuesV2, brandGeometryContextIssues, brandLayerCollisionIssues, brandThemeRefusal, importProductionBrief, materializeProductionBriefJob, officialWordmarkUrl, publicationLegibilityReport, completeStageV2, createJobV2, hashValue, loadExactBrandGeometryContextV2, loadPinnedRenderRegistryV2, loudnormSecondPassFilterV2, manifestToV2RenderProps, renderCallFromBriefV2, renderCallIssuesV2, renderStoryV2, renderV2CacheKey, renderV2Styleframes, resolveBrandPlacementForShot, resolveBrandTimeline, validateV2RenderReadiness, type BrandGeometryContextV2 } from '@mindmake/core'
 import studioConfig from '../config/studio.json'
-import { brandLockupRenderModel, publicationLockupRenderModel } from '../apps/renderer/src/v2/MindmakeStory'
+import { assetLabelModel, brandLockupRenderModel, publicationLockupRenderModel } from '../apps/renderer/src/v2/MindmakeStory'
 import { houseBandModel, houseCallModel, houseCaptionHidden, houseCaptionModel, houseMarkModel, houseStickerModel } from '../apps/renderer/src/v2/HouseShort'
 import { houseCallFrame, houseSwipeIndex } from '../apps/renderer/src/house/geometry'
 import { cameraCropAt, defaultLayerBounds, deterministicUnit, primaryAttentionLayerId, sourceStartForShot, transitionOpacity } from '../apps/renderer/src/v2/timeline'
@@ -298,6 +298,20 @@ describe('V2 runtime props', () => {
   it('keeps evidence attribution and source domain in the render payload', () => {
     const props = manifestToV2RenderProps(evidenceManifest('approved'), { sourceFiles: { 'camera-main': 'source-camera.mp4' }, assetFiles: { 'proof-card': 'proof.png' } })
     expect(props.assets[0]).toMatchObject({ attribution: 'Example source', sourceDomain: 'example.com', truthRole: 'evidence' })
+    // The label names the source; no EVIDENCE word that only describes the process (Krish, 28 Oct 2026).
+    expect(assetLabelModel(props.assets[0]!)).toEqual({ source: 'Example source · example.com' })
+  })
+
+  it('draws an asset label only when it names something: never VISUAL, OWNED ARTIFACT or EVIDENCE', () => {
+    const asset = { assetId: 'a', assetFile: 'a.png', mediaKind: 'image', contentKind: 'screenshot', generated: false } as const
+    for (const truthRole of ['evidence', 'owned_artifact', 'illustration', 'decoration'] as const) {
+      expect(assetLabelModel({ ...asset, truthRole })).toBeNull()
+      expect(assetLabelModel({ ...asset, truthRole, label: 'OUR TEST · 23 OCT' })).toEqual({ label: 'OUR TEST · 23 OCT' })
+    }
+    expect(assetLabelModel({ ...asset, truthRole: 'owned_artifact', label: '  ', attribution: 'DeepSeek' })).toEqual({ source: 'DeepSeek' })
+    expect(assetLabelModel({ ...asset, truthRole: 'illustration', generated: true, label: 'Generated with Firefly' })).toBeNull()
+    const source = readFileSync(join(__dirname, '../apps/renderer/src/v2/MindmakeStory.tsx'), 'utf8')
+    expect(source).not.toMatch(/'(?:EVIDENCE|OWNED ARTIFACT|VISUAL)'/)
   })
 
   it('binds cache identity to profile, implementation and duration', () => {

@@ -72,7 +72,7 @@ function Scene({id,p}:{id:string;p:ShortProps}){
  </>}
  {(id==='S09-work'||id==='S10-flagged')&&<>
   <Photo src={a.cotton!}/><rect width={1080} height={700} fill={I} opacity={.36}/>
-  <Text x={75} y={150} size={50}>MY TEST</Text>
+  <Text x={75} y={150} size={50}>OUR TEST</Text>
   {(id==='S09-work'?['Claude','ChatGPT','DeepSeek']:['Claude','ChatGPT']).map((name,i)=><g key={name} opacity={go(f,i*9,i*9+18)}><rect x={70+i*330} y={235} width={280} height={250} fill={I} opacity={.92}/><Mark a={a} name={name} x={130+i*330} y={265} w={150}/><Text x={210+i*330} y={480} size={42} font={sans} anchor="middle">{name}</Text></g>)}
   {id==='S09-work'?<g opacity={go(f,145,160)}><Flag a={a} k="cn" x={665} y={650} w={100}/><Text x={630} y={820} size={53}>XINJIANG</Text></g>:<g><Pen d="M300 530Q780 560 770 1205M734 1167L771 1211L809 1163" progress={go(f,4,29)} width={15}/><g transform="translate(800 1300) rotate(-18)" filter="url(#pen-fibre)" opacity={go(f,20,28)}><path d="M0 -92Q10 -99 18 -83L100 65Q109 80 90 82L-93 80Q-108 80 -98 62Z" fill={P} fillOpacity={.94} stroke={R} strokeWidth={11} pathLength={1} strokeDasharray={1} strokeDashoffset={1-go(f,20,42)}/><path d="M3 -42L3 14M3 43L3 46" stroke={R} strokeWidth={14} strokeLinecap="round" opacity={go(f,36,44)}/></g></g>}
   <rect y={1720} width={1080} height={200} fill="url(#ink-fade)"/>

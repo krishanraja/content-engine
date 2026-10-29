@@ -4,7 +4,7 @@ A reusable five-frame module for any piece that talks about where an AI lives. E
 
 Files: `index.html` (five frames, `#f1` to `#f5` show one frame), `f1.png` to `f5.png` (renders), `assets/` (paper, guilloche, rosette, flags, all derived or generated here), `tools/` (scripts that rebuild `index.html` and the assets; `tools/index.template.html` is the editable source). Brand files are read from `../brand/`, the hardware plate from `../plates/`.
 
-Sample data used in the mock is for illustration only. Nothing in it says where any assistant's data physically lives; the LIVES page carries a SAMPLE sticker and `???` placeholders.
+Sample data used in the mock is for illustration only. Nothing in it says where any assistant's data physically lives; the LIVES page carries `???` placeholders. The mock's SAMPLE sticker is no longer drawn (Krish, 28 Oct 2026: "It's just the ones that say "Krish's read" or "illustrative" that are stupid because they add no value to the content.").
 
 ## 1. Canvas, grid, safe zones
 
@@ -63,7 +63,6 @@ Per frame (absolute coordinates; tilts in degrees, positive is clockwise):
 | F3 | stamp A, dashed (+4) | 368 | 536 | 520 | 292 |
 | F3 | flag slot B | 676 | 900 | 206 | 108 |
 | F3 | stamp B, dashed (-3) | 122 | 858 | 520 | 292 |
-| F3 | sticker SAMPLE (-6) | 404 | 816 | 540 | 84 |
 | F3 | scribble: double underline | 214 | 1114 | 352 | 30 |
 | F4 | headline THE GAP (GAP swiped) | 72 | 150 | 752 | 211 |
 | F4 | dek, 2 lines, under headline | 72 | 392 | 900 | 108 |
@@ -98,7 +97,7 @@ The page component is the one reusable object: 900 x 1700, bleeding off the bott
 | dek | Fraunces italic | 46 (F5: 42) | 400 | sentence | 0 | 1.16 |
 | label | IBM Plex Mono | 30 | 500 | uppercase | 0.14em | 1 |
 | section pill | IBM Plex Mono | 30 | 600 | lowercase | 0.04em | 1 |
-| sticker | IBM Plex Mono | 30 to 44 (BORN/LIVES 34, PASSPORT n OF 2 30, THE GAP 34, SAMPLE 38, DUE 40) | 600 | uppercase | 0.06em | 1 |
+| sticker | IBM Plex Mono | 30 to 44 (BORN/LIVES 34, PASSPORT n OF 2 30, THE GAP 34, DUE 40) | 600 | uppercase | 0.06em | 1 |
 | stamp, top line | IBM Plex Mono | 30 | 600 | uppercase | 0.14em | 1 |
 | stamp, main line | IBM Plex Mono | 176 (USA, ???), 118 (CHINA), 96 (0/1 DELETED), 70 (2/2 FLAGGED), 64 (tab stamps) | 700 | uppercase | 0.18em (0.10 and 0.08em on the long verdict lines) | 1 |
 | MRZ | IBM Plex Mono | 30 | 500 | uppercase | 0.02em | 1.3 |
@@ -134,7 +133,6 @@ Minimum text on the canvas is 30 px; the evidence quote is 44 px. Colour: type o
 | sticker `PASSPORT 2 OF 2` | F3 | SLOT `STICKER_LIVES` | |
 | page label `COUNTRY OF RESIDENCE` | F3 | SLOT `LABEL_LIVES` | |
 | LIVES stamps (up to 3) | F3 | SLOT `LIVES_STAMPS[]` with `state`: STAMPED, SAMPLE or BLANK | sample: all SAMPLE, shown as `???` in dashed outline |
-| SAMPLE sticker | F3 | SLOT `SAMPLE_TEXT` = "Sample · not a claim" | must stay on screen until real data replaces the placeholders |
 | hardware plate band | F3 | SLOT `LIVES_BACKDROP` | any dark plate; masked to ink |
 | underline scribble | F3 | SLOT target = the blank for the AI in focus | |
 | headline `THE GAP` | F4 | SLOT `GAP_WORD`, swiped word | |
@@ -177,12 +175,12 @@ Brand grammar
 
 Screen
 10. Hero subject fills the frame outside the caption zone: the passport page is 900 wide and bleeds off the bottom. A crude count of canvas outside the caption zone that carries page, type, stamps or thread (bright marks, 31 px reach) gives F1 77%, F2 84%, F3 83%, F4 80%, F5 85%. F1 is the one under 80% by that count; the rosette ground print covers all of it but is not counted because it is deliberately faint.
-11. One focal point per frame: F1 the two words, F2 the stamp that slaps last, F3 the SAMPLE sticker, F4 the knot, F5 the hero stamp.
+11. One focal point per frame: F1 the two words, F2 the stamp that slaps last, F3 the dashed `???` stamps, F4 the knot, F5 the hero stamp.
 12. One scribble per frame, 8 px mint stroke with a 17 px ink keyline, hand-wobbled, pointing at the single most important thing: F1 the pair, F2 CHINA, F3 the blank, F4 the gap, F5 0/1.
 13. Dek placement: to the right of a single short word (up to five letters), under a longer headline.
 14. Stamps on paper: label stamps (BORN, LIVES) are ink outlines multiplied into the paper; verdict stamps are coral blocks with ink type; unknowns are dashed outlines with `???`. Stamps judge a product, never a person.
 15. A stamp never sits in the caption zone. The MRZ lines sit in the strip just under it (y 1552 to 1640).
-16. Do not claim where data lives. The LIVES page is `STAMPED` only with sourced data; otherwise `SAMPLE` or `BLANK`, and the SAMPLE sticker stays on screen.
+16. Do not claim where data lives. The LIVES page is `STAMPED` only with sourced data; otherwise `SAMPLE` or `BLANK`, drawn as a dashed `???` that claims nothing. No sticker or disclaimer goes on top.
 17. No tables, grids of cells or spreadsheet looks: the three results are stamps and a card laid like paper on a desk, not rows.
 
 Motion hooks (see `motion.md`): every stamp, sticker and scribble is its own layer so it can slap or draw on; the page, ribbon and threads are separate layers for parallax.
@@ -209,7 +207,7 @@ Text slots
 - Headlines: `TITLE_SWIPE_WORD`, `TITLE_WORD_2`, `BORN_WORD`, `LIVES_WORD`, `GAP_WORD`, `VERDICT_HEAD`.
 - Deks: `F1_DEK`, `BORN_DEK`, `LIVES_DEK`, `GAP_DEK`, `CALL_DEK`.
 - Labels: `LABEL_BORN` (HOME COUNTRY), `LABEL_LIVES` (COUNTRY OF RESIDENCE), `TEST_LABEL` (COTTON TEST), `KNOT_LABEL` (THE TEST), `END_LABEL` (THE CALL).
-- Stickers: `STICKER_P1`, `STICKER_P2`, `STICKER_BORN`, `STICKER_LIVES`, `GAP_STICKER`, `SAMPLE_TEXT`.
+- Stickers: `STICKER_P1`, `STICKER_P2`, `STICKER_BORN`, `STICKER_LIVES`, `GAP_STICKER`.
 - Evidence: `EVIDENCE.label`, `EVIDENCE.quote` (verbatim, attributed in the label, 44 px, three lines at most).
 - `TEST_SUBJECTS` (COTTON, XINJIANG, TURKMENISTAN) feeds the last MRZ line.
 

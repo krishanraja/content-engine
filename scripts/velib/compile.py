@@ -18,6 +18,12 @@ from .lint import pending_devices_error
 
 FPS = 30
 ENDING_FRAMES = 105
+# The opening, under test (Krish, 29 Oct 2026: "I'd pick number one here but I think that we need to test and learn.
+# We need to figure out what the right tone is over time based on real engagement. Let's go with number one for
+# now."): the hook is the intro. The first beat owns frame 0 with the logo and the
+# series tag in its corners, and no story card or logo sting comes before it. Each compile report records the
+# opening it used, so real engagement can settle it.
+OPENING = 'hook'
 
 
 def source(path: str, assets_dir: str | Path) -> str:
@@ -290,7 +296,7 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         sfx.append({'src': resolve_source(sound['path']), 'atFrame': event['atFrame'], 'gainDb': gain})
     props['audio']['sfx'] = sfx
     if report is not None:
-        report.update(lint='clean', sfx_missing=missing)
+        report.update(lint='clean', sfx_missing=missing, opening=OPENING)
     if spec.get('call') and not cut.get('excerpt', False):
         props['ending'] = {'fromFrame': duration, 'url': props['series']['site']}
         props['durationFrames'] += ENDING_FRAMES
