@@ -209,7 +209,8 @@ function sourceCropStyle(source: RuntimeSource, shot: V2RuntimeShot, bounds: Ret
 
 function AssetTruthLabel({ asset, branding, full }: { asset: RuntimeAsset; branding: RuntimeBranding; full: boolean }) {
   if (asset.truthRole === 'decoration' && !asset.label) return null
-  // No ILLUSTRATION tag on a generated picture (Krish, 28 Oct 2026: "Yes remove those.").
+  // No ILLUSTRATION tag on a generated picture (Krish, 28 Oct 2026: "Yes remove those."); the contract's provenance
+  // label for it stays in the record and is never drawn.
   if (asset.generated) return null
   const fonts = brandFonts(branding)
   const role = asset.truthRole === 'evidence' ? 'EVIDENCE' : asset.truthRole === 'owned_artifact' ? 'OWNED ARTIFACT' : 'VISUAL'

@@ -26,7 +26,8 @@ approves their wording, except the points he ruled; the printed bar says so. --f
 before the rejection standards for the makers in full_bar_for_makers, led by his general words and the rulings that
 bite in production, and a one-line pointer for the other video makers and for --format all. --check holds the two
 files together: his words, the rulings, the quality names, the reference moments and each quality's comparison
-points, word for word. The printed bar carries no hashes or file ids (they stay in the
+points, word for word; every point the page marks as his words must be his exact words, and a quality that cites a
+ruling must quote its answer or name it. The printed bar carries no hashes or file ids (they stay in the
 file) and no measured value: those describe the references, never targets. Only --check and a --format read it, so a
 broken file never stops another maker's floor or the summary.
 
@@ -143,8 +144,11 @@ KEPT = {'still': 'still', 'moment': 'moment, clip kept', 'whole_cut': 'whole cut
 FAMILIES = {'voiceover': 'voiceover', 'split_screen': 'split screen'}
 STANDINGS = ('draft', 'approved')
 IDENTITIES = ('confirmed', 'unconfirmed')
-# A question put to him is ruled (his answer settles it) or open (he asked for better questions first).
-RULING_STATUSES = ('ruled', 'open')
+# A question put to him is ruled (his answer settles it), answered (his answer is recorded but settles nothing, as when
+# he is not sure) or open (he asked for better questions first).
+RULING_STATUSES = ('ruled', 'answered', 'open')
+# A point the page marks as his words: (Krish, 28 Oct: "...").
+HIS_MARK = re.compile(r'\(Krish, \d{1,2} [A-Z][a-z]{2}: "(.*?)"\)')
 STAMP = re.compile(r'^\d\d:\d\d(\.\d+)?$')
 SHA256 = re.compile(r'^[0-9a-f]{64}$')
 # A bullet under the page's '## Reference moments': "- 00:22.0 to 00:22.3: what it shows".
@@ -211,6 +215,18 @@ def bar_headings(text):
     """The quality headings of the bar's page, in order, without their numbers."""
     return [re.sub(r'^\d+\.\s+', '', line[4:].strip())
             for line in section(text, '## The qualities') if line.startswith('### ')]
+
+
+def quality_texts(text):
+    """quality name -> the text under its heading on the page."""
+    found, name = {}, None
+    for line in section(text, '## The qualities'):
+        if line.startswith('### '):
+            name = re.sub(r'^\d+\.\s+', '', line[4:].strip())
+            found[name] = ''
+        elif name:
+            found[name] += line + '\n'
+    return found
 
 
 def page_moments(text, labels):
@@ -392,8 +408,22 @@ def bar_problems(bar, page):
             problems.append(f'ruling {item.get("n")}: his answer on the page is not the one in the references')
         elif item.get('status') == 'open' and 'Still open' not in line:
             problems.append(f'ruling {item.get("n")} is open in the references but not on the page')
-        elif item.get('status') == 'ruled' and 'Still open' in line:
-            problems.append(f'ruling {item.get("n")} is ruled in the references but open on the page')
+        elif item.get('status') != 'open' and 'Still open' in line:
+            problems.append(f'ruling {item.get("n")} is {item.get("status")} in the references but open on the page')
+    # A point marked as his words quotes his exact words, and a quality that cites a ruling quotes its answer or names it.
+    his = [str(item.get('answer', '')) for item in items] + [bar['general']['words'], bar['ruling']['words'],
+                                                             bar['ruling'].get('correction') or '']
+    for said in HIS_MARK.findall(page):
+        if not any(said in words for words in his):
+            problems.append(f'{bar["doc"]} marks words as his that are not his exact words: {said[:60]!r}')
+    texts = quality_texts(page)
+    for q in bar['qualities']:
+        text = texts.get(q.get('name'), '')
+        for n in q.get('ruled', []):
+            answer = next((str(i.get('answer')) for i in items if i.get('n') == n), '')
+            if f'ruling {n}' not in text and not any(said in answer for said in HIS_MARK.findall(text)):
+                problems.append(f'quality {q.get("id")}: cites ruling {n}, but its section on the page neither quotes '
+                                'his answer nor names the ruling')
     # One home per fact: the page's moments and comparison points say what the file says, word for word.
     on_page, unread = page_moments(page, labels)
     problems += unread
@@ -617,7 +647,8 @@ def self_test():
     page = ('# Bar\n\n> "synthetic: in general\n> - keep it simple\n>\n> On brand."\n\n> "synthetic: these two are the floor"\n\n'
             'Synthetic: the engine reads the cuts; he has not approved it.\n\n## The qualities\n\n'
             '### 1. Finish: every frame owned\n\n**Compare beside.** Synthetic tall 00:02.\n\n'
-            '### 2. Sound finish\n\n**Compare beside.** Synthetic tall 00:00 to 00:03.\n\n'
+            '### 2. Sound finish\n\nHeard throughout (Krish, 28 Oct: "synthetic: yes").\n\n'
+            '**Compare beside.** Synthetic tall 00:00 to 00:03.\n\n'
             '## Reference moments\n\n### Synthetic tall (23 October)\n\n- 00:01.5 to 00:04: A build.\n'
             '- 00:00: Measured, not yet heard: a sting.\n\n## What is not the bar\n\n### x\n\n## Rulings\n\n'
             '1. **Music.** Synthetic: throughout? His answer: "synthetic: yes" Changed: sound.\n'
@@ -664,6 +695,17 @@ def self_test():
     b = json.loads(json.dumps(bar))
     b['qualities'][0]['ruled'] = [2]
     assert any('not a ruled answer' in p for p in bar_problems(b, page))
+    b = json.loads(json.dumps(bar))
+    b['rulings']['items'][0]['status'] = 'answered'
+    del b['rulings']['items'][0]['production'], b['qualities'][1]['ruled']
+    assert bar_problems(b, page) == [], bar_problems(b, page)
+    assert any('answered in the references but open' in p
+               for p in bar_problems(b, page.replace('"synthetic: yes" Changed', '"synthetic: yes" Still open')))
+    # Words marked as his on the page are his exact words, and a quality citing a ruling quotes or names it.
+    assert any('not his exact words' in p for p in bar_problems(bar, page.replace('(Krish, 28 Oct: "synthetic: yes")',
+                                                                              '(Krish, 28 Oct: "synthetic: always")')))
+    unquoted = page.replace(' (Krish, 28 Oct: "synthetic: yes")', '')
+    assert any('cites ruling 1' in p for p in bar_problems(bar, unquoted)), bar_problems(bar, unquoted)
     out = io.StringIO()
     with contextlib.redirect_stdout(out):
         assert show_format(doc, 'short_video', False, 40, bar=bar) == 0

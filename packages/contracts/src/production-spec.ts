@@ -104,6 +104,7 @@ export const VeAssetSchema = z.object({
   job_id: z.string().min(1).optional(),
   prompt_ref: z.string().min(1).optional(),
   credits: z.number().nonnegative().optional(),
+  // A note for the record only: ve never draws it and no check requires it (no ILLUSTRATION tag, Krish, 28 Oct 2026).
   label: z.string().min(2).optional(),
 }).strict().superRefine((v, c) => {
   if (v.origin === 'generated') {

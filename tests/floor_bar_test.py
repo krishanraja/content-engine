@@ -81,6 +81,25 @@ def ruling_line(n):
     return next(line for line in floor.section(PAGE, RULINGS) if line.startswith(f'{n}. **'))
 
 
+def items_by_n(n):
+    return next(item for item in BAR['rulings']['items'] if item['n'] == n)
+
+
+def bank_modules(bank):
+    """Every module entry of the style bank, wherever the bank keeps its list."""
+    found = []
+    stack = [bank]
+    while stack:
+        node = stack.pop()
+        if isinstance(node, dict):
+            if 'krish_verdict' in node and 'id' in node:
+                found.append(node)
+            stack.extend(node.values())
+        elif isinstance(node, list):
+            stack.extend(node)
+    return found
+
+
 def floor_only(maker):
     expected = io.StringIO()
     with contextlib.redirect_stdout(expected):
@@ -118,6 +137,12 @@ class TheBar(unittest.TestCase):
         self.assertFalse(BAR['production_input'])
         for label in ('**Friday tall: confirmed.**', '**Monday tall: confirmed.**', '**Monday wide: confirmed.**'):
             self.assertIn(label, PAGE)
+        # Friday tall reached Drive and the board that evening; whether he had watched it when he named the floor is not known.
+        friday = next(r for r in BAR['references'] if r['id'] == 'fri23-tall')['identity_evidence']
+        for text in (friday, PAGE):
+            self.assertIn('21:28:54', text)
+            self.assertIn('21:35:59', text)
+            self.assertIn('whether he had watched this file when he first named the floor is not established', text)
         self.assertNotIn('unconfirmed', PAGE)
 
     def test_the_bar_is_a_draft_reading_until_he_approves_it(self):
@@ -136,7 +161,12 @@ class TheBar(unittest.TestCase):
         self.assertLess(PAGE.index(quoted), PAGE.index(floor.blockquote(BAR['ruling']['words'])))
         self.assertEqual(PAGE.index('> "'), PAGE.index(quoted))
         principle = floor.section(PAGE, '## The principle')
-        self.assertTrue(next(line for line in principle if line.strip()).startswith('His words lead (Krish, 28 Oct)'))
+        lead = next(line for line in principle if line.strip())
+        self.assertTrue(lead.startswith('His words lead (Krish, 28 Oct): "minimal random components and labels"'))
+        # Under his marker, only his exact words: every quoted phrase in the lead is from his general words.
+        self.assertEqual(lead.count('"') % 2, 0)
+        for said in lead.split('"')[1::2]:
+            self.assertIn(said, GENERAL)
         for maker in ('short_video', 'long_video'):
             _, text = run('--format', maker)
             block = textwrap.indent(f'"{GENERAL}"', '    ')
@@ -164,6 +194,10 @@ class TheBar(unittest.TestCase):
             self.assertIn(f'- {items[n]["topic"]}: {flat(items[n]["production"])}. In his words: "{words}"', bar)
         for n in (4, 7):
             self.assertNotIn('production', items[n])
+        # Not sure is an answer, not a ruling: it confirms the bytes, never his approval of them.
+        self.assertEqual(items[7]['status'], 'answered')
+        self.assertIn('it confirms the bytes, not his approval of them', ruling_line(7))
+        self.assertIn('it confirms the bytes, not his approval of them', items[7]['changed'])
 
     def test_question_five_is_still_open(self):
         five = next(item for item in BAR['rulings']['items'] if item['n'] == 5)
@@ -206,7 +240,13 @@ class TheBar(unittest.TestCase):
         typography = quality(7)
         self.assertIn('(Krish, 28 Oct: "I don\'t mind those labels.")', typography)
         self.assertIn('Labels that name a source, a date, a record or what is on screen are fine', typography)
-        self.assertIn('no label that names Krish', typography)
+        # His words rule out a label that tags something as his, never every label that names him.
+        narrow = "no label that tags something as Krish's (his read, his take, his test)"
+        self.assertIn(narrow, typography)
+        self.assertIn(narrow, ruling_line(2))
+        self.assertIn("no label that tags something as Krish's: his read, his take, his test", items_by_n(2)['production'])
+        self.assertNotIn('label that names Krish', PAGE)
+        self.assertNotIn('names Krish', json.dumps(BAR))
         self.assertNotIn('A label names a record, never a process', typography)
         self.assertIn('- Whether a piece uses mono labels.', PAGE)
 
@@ -214,8 +254,16 @@ class TheBar(unittest.TestCase):
         branding = quality(6)
         self.assertIn(f'(Krish, 28 Oct: "{ANSWERS[3]}")', branding)
         for source in ('The book gives each lockup one job (p. 04)', 'hands-off rules (p. 05)', '`docs/STUDIO.md` applies the book',
-                       'Where a reference departs from the book', '`docs/brandbooknew/`'):
+                       'the placement Krish approved on 26 September 2026, for the job-based Studio', '`docs/brandbooknew/`',
+                       "Where a reference departs from them (Monday tall carries no mark tile in its body), the book and "
+                       "`docs/STUDIO.md`'s approved placement for a Short win",
+                       "whether that every-beat tile binds a quick-edit tall cut such as Monday tall is Krish's decision"):
             self.assertIn(source, branding)
+        # The question rested on a premise the book does not support, and the rulings say so.
+        self.assertIn("The question's premise was wrong: the book itself does not ask for a mark tile on every beat",
+                      ruling_line(3))
+        self.assertNotIn('the book wins', PAGE)
+        self.assertNotIn('the book wins', items_by_n(3)['production'])
         # The bar's own judgment on where the mark sits is gone.
         for judgment in ('the lockup clearly at the open and the close', "Placement is the brand book's call",
                          'Whether a small brand mark sits on every frame'):
@@ -228,7 +276,8 @@ class TheBar(unittest.TestCase):
             r"ILLUSTRATION present|requires ILLUSTRATION|carries (an|the small) ILLUSTRATION tag because|illustrationLabels"
             r"|illustration_labels|IllustrationLabel|illustration_tag_required|min_tag_px|plates_labelled"
             r"|generated pictures carry|labelled as illustration on screen|P<ILLUSTRATION|>ILLUSTRATION<"
-            r"|(producer_label|producerLabel)\"?: \"KRISH'S TEST|provenance sticker slaps|Krish\\?'s test<br>")
+            r"|(producer_label|producerLabel)\"?: \"KRISH'S TEST|provenance sticker slaps|Krish\\?'s test<br>"
+            r"|28 px ILLUSTRATION|only for the ILLUSTRATION tag")
         found = []
         for top in ('scripts', 'apps/renderer/src', 'packages', 'config/ve', 'docs/ve', 'assets/plates', 'fixtures/ve'):
             for path in sorted((ROOT / top).rglob('*')):
@@ -241,18 +290,35 @@ class TheBar(unittest.TestCase):
         four = ruling_line(4)
         self.assertIn(f'His answer: "{ANSWERS[4]}"', four)
         self.assertIn('gone for good', four)
+        # The treated background is already out of the style bank, in his words; nobody asks him again.
+        bank = json.loads((ROOT / 'config' / 'style-references.json').read_text(encoding='utf-8'))
+        treated = [m for m in bank_modules(bank) if m.get('id') == 'treated-background']
+        self.assertEqual([m['krish_verdict'] for m in treated], ['not for us'])
+        self.assertIn(f'"{ANSWERS[4]}"', treated[0]['krish_said'])
+        for text in (four, items_by_n(4)['changed']):
+            self.assertIn('the style trial refuses it', text)
+            self.assertNotIn('in person', text)
 
     def test_outside_logos_are_the_official_mark_in_full_colour_or_one_colour(self):
         self.assertNotIn('house look', PAGE)
         self.assertNotIn('monochrome', PAGE)
         self.assertNotIn('Google left in full colour', PAGE)
         branding = quality(6)
-        self.assertIn('the company\'s official mark, in full colour or as a one-colour version of that same official mark, '
-                      'whichever fits the rest of the production', branding)
+        self.assertIn("the company's official mark in full colour, or as the company's own published one-colour version of "
+                      'it, whichever fits the rest of the production', branding)
         self.assertIn(f'(Krish, 28 Oct: "{ANSWERS[6]}")', branding)
-        self.assertIn('Their shape is never redrawn or altered (`docs/MEDIA_STANDARD.md`)', branding)
-        self.assertNotIn("Krish's decision on rights", PAGE)
-        self.assertIn('the shape is never redrawn or altered', BAR['related']['logos'])
+        self.assertIn('We never recolour or redraw a mark ourselves (`docs/MEDIA_STANDARD.md`)', branding)
+        # He was asked about each company's own one-colour mark; recolouring a mark ourselves stays his call on rights.
+        asked = ("Is a one-colour house treatment allowed, using only each company's own official one-colour mark?")
+        self.assertIn(asked, ruling_line(6))
+        self.assertIn(asked, items_by_n(6)['question'])
+        for text in (branding, ruling_line(6), items_by_n(6)['changed'], BAR['related']['logos']):
+            self.assertIn("Krish's decision on rights", text)
+            self.assertIn('a house colour the company does not publish', text)
+        self.assertNotIn('one-colour version of that same', PAGE)
+        self.assertNotIn('one-colour version of that same', json.dumps(BAR))
+        self.assertIn('never recoloured or redrawn by us', BAR['related']['logos'])
+        self.assertIn('never recoloured or redrawn by us', items_by_n(6)['production'])
 
     def test_the_gate_is_his_exact_file_approval(self):
         self.assertNotIn('Monday review', PAGE)
