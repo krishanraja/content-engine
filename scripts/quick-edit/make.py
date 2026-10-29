@@ -78,6 +78,8 @@ import music
 import spelling
 import transcriber
 import quality
+import words_gate
+import advisory_qc
 from archive import ArchiveError, archive_root, archive_videos, plan as archive_plan, read_package
 from share import share_copy
 
@@ -2218,6 +2220,11 @@ def main():
                            cfg.get('prompt') or (script_prompt(P(cfg['script'])) if cfg.get('script') else ''), identity)
 
     cuts = resolve_removals(words, cfg.get('remove', []) + cfg.get('remove_words', []))
+    try:
+        # A mishearing the words gate may forgive carries Krish's own words; refused here, before any render.
+        words_gate.heard_as_rows({'heard_as': cfg.get('heard_as', [])})
+    except words_gate.WordsGateError as error:
+        sys.exit(f'heard_as: {error}')
     if speed and cfg.get('words') and document and not document.get('provenance'):
         # A words file named in the config was heard from the take before it was sped up, so its times are on
         # the raw clock: put them on the sped clock, or the cut points, captions and cards all land late, more
@@ -2402,6 +2409,23 @@ def main():
               **({'voice_repair': repaired} if repaired else {}),
               'sniffs': [{'at': f"{e['s'] // 60:.0f}:{e['s'] % 60:05.2f}", **e} for e in sniffed],
               **({'speed': {'factor': speed[0], 'krish': speed[1]}} if speed else {}), 'fps': FPS}
+    # The approved removals: the config's "remove" rows resolved to the take's words, each with Krish's words
+    # when it carries them. The words gate (words_gate.py) reads this EDL; nothing else it finds missing is approved.
+    removal_rows = cfg.get('remove', []) + cfg.get('remove_words', [])
+    edl = {'schema': 'quick-edit-edl/1', 'take_words': str(wpath), 'removals': [
+        {'take_index': [a, b], 'words': ' '.join(words[k]['w'].strip() for k in range(a, b + 1)),
+         'from_s': words[a]['s'], 'to_s': words[b]['e'], **({'krish': r['krish']} if isinstance(r, dict) and r.get('krish') else {})}
+        for (a, b), r in zip(cuts, removal_rows)],
+        # The finished file's mishearings Krish has cleared, each with his words (words_gate.heard_as_rows).
+        'heard_as': cfg.get('heard_as', [])}
+    edl_path = out / f"{cfg['name']}.edl.json"
+    edl_path.write_text(json.dumps(edl, indent=1), encoding='utf-8')
+    if cfg.get('quality_required') and cfg.get('script') and P(cfg['script']).is_file():
+        # A removal that cuts the only time he said a word of the script needs his words on the row: refused before any render.
+        refused = words_gate.unapproved_removals(P(cfg['script']).read_text(encoding='utf-8-sig'), words, edl)
+        if refused:
+            sys.exit('Words gate: ' + ' | '.join(r['message'] for r in refused))
+    words_held = []
     fonts = Path(__file__).resolve().parent / 'fonts'
     shapes = {}
     for asp in aspects:
@@ -2492,6 +2516,23 @@ def main():
                 'visual_clarity':{'status':'not_run','reason':'Minimal rendered words, no script repetition, recognisable cues and independent three-second comprehension evidence required'},
                 'full_review':{'status':'not_run'}},
                 'script_diff':quality.word_diff(script_words(cfg,P), heard)}
+            # The words gate, blocking (plan W3 3a): no content word of the signed script he said in the take is
+            # missing from this file beyond the EDL's approved removals. Machine written, bound to these bytes.
+            script_file = P(cfg['script']) if cfg.get('script') else None
+            script_text = script_file.read_text(encoding='utf-8-sig') if script_file and script_file.is_file() else ''
+            words_check = words_gate.bind(words_gate.check(script_text, words, heard, edl),
+                                          script=script_file if script_text else None, take=wpath,
+                                          final_words=out/f'{final.stem}.heard.json', edl=edl_path, video=final,
+                                          final_provenance=final_identity)
+            receipt['checks']['words'] = words_check
+            if words_check['status'] != 'pass':
+                words_held.append(f'{asp}: {words_gate.summary(words_check)}')
+            # The ve measures that can run on this cut, advisory only in Wave 1: they never block (advisory_qc.py).
+            receipt['advisory'] = advisory_qc.rows(
+                final, shape=asp, joins=[round(tl['intro_s'] + g['off'], 3) for g in segs[1:]],
+                pages=advisory_qc.caption_pages(groups, wins, asp, tl['intro_s'], FPS),
+                beats=advisory_qc.beats_of(wins, tl['main_s'], tl['intro_s'], FPS),
+                mark=P(cfg['brand_mark']) if cfg.get('brand_mark') else None)
             Path(str(final)+'.validation.json').write_text(json.dumps(receipt,indent=2),encoding='utf-8')
         shapes[asp] = {
             'file': final.name, 'intro_seconds': tl['intro_s'], 'main_seconds': tl['main_s'], 'outro_seconds': tl['outro_s'],
@@ -2499,7 +2540,9 @@ def main():
             'intro': intro and {'source': intro['source'], 'series': intro['series'], 'file': str(intro['file']), 'sha256': intro['sha256'],
                                 'seconds': intro['seconds'], 'own_sound_replaced': intro['own_sound_replaced']},
             'music': cut_audio['music'], 'voice_gain_db': round(voice_gain, 2), 'loudness': loudness, 'episode': said,
-            'srt': f"{cfg['name']}-{asp}.srt", 'warnings': warnings}
+            'srt': f"{cfg['name']}-{asp}.srt", 'warnings': warnings,
+            **({'words': {'status': words_check['status'], 'summary': words_gate.summary(words_check)}}
+               if cfg.get('quality_required') else {})}
         if args.share_mib:
             # A cut too long for a chat-size copy (Friday 16 Oct's 14-minute deep cut, 19 Oct) goes without one;
             # the cut itself is finished, so the report is still written.
@@ -2551,6 +2594,9 @@ def main():
         print(f'note: {w}', file=sys.stderr)
     if missing:
         print('MISSING CUES:', missing, file=sys.stderr)
+    if words_held:
+        # Everything is written first (the cut, its receipt, the report), so the evidence stays; the cut is held.
+        sys.exit('Words gate: held, the cut is written but must not ship. ' + ' | '.join(words_held))
     if archive_failed:
         sys.exit(f'archive: {archive_failed}')
 

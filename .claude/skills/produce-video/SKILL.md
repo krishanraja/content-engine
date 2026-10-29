@@ -1,6 +1,6 @@
 ---
 name: produce-video
-description: "Produce Krish's videos once he has recorded them. Use when he says he has dropped, recorded or uploaded his video or recordings, or asks to produce, cut or make the video or videos for a piece or a day, such as 'I've dropped the video', 'the recordings are in the Inbox', 'produce Monday's video' or 'make the videos for this week'. It works out by itself which new recording is which piece's long or short cut, with no file name or piece id, then makes the 16:9 long cut and the 9:16 short cut, each with the approved intro sting, the licensed music bed from the ledger and a thumbnail for its size, files them in the archive and the post's library folder and records them on the piece. Runs end to end on any machine: a cloud session (the Sunday-night run), GitHub's machine or either home computer; takes, music and pictures all come from the engine. It is not the one-line launcher of the video-engine skill, not a Studio job from a production brief, and not for general questions about video or editing."
+description: "Produce Krish's videos once he has recorded them. Use when he says he has dropped, recorded or uploaded his video or recordings, or asks to produce, cut or make the video or videos for a piece or a day, such as 'I've dropped the video', 'the recordings are in the Inbox', 'produce Monday's video' or 'make the videos for this week'. It works out by itself which new recording is which piece's long or short cut, with no file name or piece id, then makes the 16:9 long cut and the 9:16 short cut, each with the licensed music bed from the ledger and a thumbnail for its size, files them in the archive and the post's library folder and records them on the piece. Runs end to end on any machine: a cloud session (the Sunday-night run), GitHub's machine (produce-day, by hand only) or either home computer; takes, music and pictures all come from the engine. It is not the one-line launcher of the video-engine skill, not a Studio job from a production brief, and not for general questions about video or editing."
 model: sonnet
 ---
 
@@ -243,13 +243,20 @@ No one is in its chat.
   post's `3 Video` folder through `send.py` (Library Sync writes Drive).
   Never send Krish to a home computer, never relay a runner's status light
   as his blocker, and never ask him for a music licence number (Epidemic
-  Sound has none; `config/music-licences/` is the record). The midday run
-  (`.github/workflows/produce-day.yml`, `scripts/produce_day.py`) did
-  every step below by itself on GitHub's machine at 12:00 New York on
-  Monday, Wednesday and Friday; from 1 November the cuts are made on the
-  recording Sunday night instead (Krish, 2026-10-28: "record the entire
-  week on a Sunday, but it does not go live until the Monday after (8 days
-  later)"), and the midday run is not relied on.
+  Sound has none; `config/music-licences/` is the record). From 1 November
+  the cuts are made on the recording Sunday night (Krish, 2026-10-28:
+  "record the entire week on a Sunday, but it does not go live until the
+  Monday after (8 days later)"). The production run
+  (`.github/workflows/produce-day.yml`, `scripts/produce_day.py`) runs
+  by hand only since that ruling: nothing makes the videos by itself at
+  noon any more. It does the
+  steps below on GitHub's machine or a home computer, and stops red when a
+  gate holds a cut (the words gate, or a receipt the delivery gates refuse),
+  sending nothing. In Wave 1 no machine records a cut's review evidence, so
+  a fresh run always stops there: this session watches both cuts, records
+  the evidence, then files with `produce_day.py --file-only` (its stop
+  message gives the command, and on GitHub the cuts are in the run's
+  artifacts).
 - **A home computer** (Windows): work in `C:\Users\krish\dev\content-engine`,
   never in `Documents\MindmakeVideoStudio\runner-source`, at the latest
   `main` (`git pull --ff-only`). Codex runs every step outside its sandbox
