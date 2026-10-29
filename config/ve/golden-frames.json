@@ -1,0 +1,23 @@
+{
+  "schema": "ve-golden-frames/1",
+  "about": "Interim golden frames: 5 to 10 moments Krish names from Production Inspo (config/style-references.json, Drive folder Ventures > Inspiration > Production Inspo). The Critic ranks plate candidates and judges cuts against them, with Monday 26's frames, until his scores exist. Each slot records a reference and a time only: the clip and any extracted frame stay off the repository (Production Inspo is studied, never published). A slot is filled only with his own words naming it; an agent never fills one for him.",
+  "min": 5,
+  "max": 10,
+  "fill": "python scripts/ve.py golden fill <slot> --reference <file in config/style-references.json> --at <mm:ss.s> --said \"<his exact words>\" [--clip <local path to the clip>]",
+  "interim": {
+    "about": "Monday 26's accepted cuts serve beside his named frames until his scores exist. Their moments are read live from config/reference-cuts.json (reference_moments), never copied here.",
+    "references": ["mon26-tall", "mon26-wide"]
+  },
+  "slots": [
+    {"slot": "g1", "status": "empty"},
+    {"slot": "g2", "status": "empty"},
+    {"slot": "g3", "status": "empty"},
+    {"slot": "g4", "status": "empty"},
+    {"slot": "g5", "status": "empty"},
+    {"slot": "g6", "status": "empty"},
+    {"slot": "g7", "status": "empty"},
+    {"slot": "g8", "status": "empty"},
+    {"slot": "g9", "status": "empty"},
+    {"slot": "g10", "status": "empty"}
+  ]
+}

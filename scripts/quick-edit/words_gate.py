@@ -39,8 +39,8 @@ and Wednesday 21's published long cut and Friday's 90-second cut from the 17
 Oct words file fail, a pass is evidence, not proof. A clipped tail the
 transcriber still hears as the whole word is not caught here; joins inside
 words are the joins-in-gaps check (scripts/cutgates/gaps.py). check_aligners
-runs the check on every aligner's pass (faster-whisper, and ElevenLabs Scribe
-when config/gates.json lets it run): a word fails only when every pass lost it.
+runs the check on every aligner's pass (faster-whisper, plus any local pass
+handed in; no paid aligner): a word fails only when every pass lost it.
 The five calibration cuts are config/gate-calibration.json, run by
 scripts/cutgates/calibrate.py. chopped-words-published stays open until they
 behave as listed on the real files.

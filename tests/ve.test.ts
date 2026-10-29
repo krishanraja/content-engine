@@ -45,7 +45,11 @@ describe('ve', () => {
     ['QC measures holds, redraw loops, dead air and loudness on real media', 'tests/ve_qc_test.py'],
     ['removing a card worktree never follows its node_modules link', 'tests/ve_cards_test.py'],
     ['ve qc runs the calibrated cut gates: words, joins in gaps, captions clock and renderer truth (W2.4)', 'tests/ve_gates_test.py'],
+    ['ve conform cuts only in gaps both aligners agree on, with 20-40 ms fades and one speed for picture and sound (F09, F10)', 'tests/ve_conform_test.py'],
+    ['ve in shadow: draft locks wait for Gate 2, file needs READY, briefs carry the floor, golden slots wait for his words', 'tests/ve_shadow_test.py'],
     ['one local layout: every reader resolves from config/studio.json and the path guard fails on a planted path', 'tests/ve_local_roots_test.py'],
+    ['the route check at parity: per-piece code is banned only for a move that has a device', 'tests/ve_route_test.py'],
+    ['the weekly device sprint: briefs, cards from filled fields, Gate 2 in his words, the Archive feed', 'tests/ve_sprint_test.py'],
   ] as const) {
     it(name, () => {
       const r = py([file])

@@ -265,11 +265,12 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
                                 'pass': False, 'status': 'error', 'reason': str(exc)}
     from . import designlock, qc_keyframes
     try:
-        if aspect == '16:9':
-            # The design lock's stills are 9:16. A wide cut is held to the mechanical checks and the Critic only.
-            keyframes = {'applies': False, 'note': 'the design lock is 9:16 only'}
+        view = designlock.for_aspect(designlock.load(), aspect or '9:16')
+        if aspect == '16:9' and format_id not in view['formats']:
+            # No frozen wide lock for this format: a wide cut is held to the mechanical checks and the Critic only.
+            keyframes = {'applies': False, 'note': 'no 16:9 design lock for this format'}
         else:
-            keyframes = qc_keyframes.keyframe_checks(path, {'beats': beats or []}, designlock.load(), format_id)
+            keyframes = qc_keyframes.keyframe_checks(path, {'beats': beats or []}, view, format_id)
     except (ValueError, KeyError, TypeError, OSError, subprocess.CalledProcessError) as exc:
         keyframes = {'applies': True, 'pass': False, 'beats': {}, 'findings': [str(exc)]}
     checks['keyframe_match'] = {

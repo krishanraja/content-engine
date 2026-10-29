@@ -15,8 +15,14 @@
   python scripts/ve.py ledger <piece>               usage against the piece's caps
   python scripts/ve.py time <piece> start <phase>    time an engine phase (stop/status available)
 
-ingest, stills and file arrive with the Phase 1 cards; until then they say so.
-ve has no publish, send or schedule verb."""
+  python scripts/ve.py ingest <piece> --take <id> --media <file> --aligner-a <name> --aligner-b <name> [--clock-a/-b <json>]
+  python scripts/ve.py conform <piece> --cut <cut> [--render --assets-dir <dir> --joins-reel]
+  python scripts/ve.py brief <piece> [--cut <cut>]   one brief per plate, with card fields; never dispatches
+  python scripts/ve.py file <piece> --subject <text>  READY cuts to the archive and the post's 3 Video folder
+  python scripts/ve.py lock draft|check|show|freeze  design locks (only Krish's Gate 2 freezes one)
+  python scripts/ve.py golden show|check|fill        interim golden frames he names
+
+stills arrives later; until then it says so. ve has no publish, send or schedule verb."""
 from __future__ import annotations
 
 import argparse
@@ -115,9 +121,18 @@ def cmd_lock(args) -> int:
             for fmt in lock['formats']:
                 ok, reasons = designlock.frozen(lock, fmt)
                 print(f'{fmt}: ' + ('frozen' if ok else 'not frozen: ' + '; '.join(reasons)))
+            for fmt, entry in lock.get('drafts', {}).items():
+                print(f'{fmt}: draft, {entry["status"]} ({len(entry["beats"])} key-frame slots; '
+                      f'modules: {", ".join(entry.get("modules", [])) or "none"})')
+        elif args.action == 'draft':
+            entry = designlock.draft(args.format, args.aspect, args.beats, anatomy=args.anatomy, motion=args.motion,
+                                     modules=args.modules or [], purpose=args.purpose)
+            print(f'design lock: drafted {designlock.lock_key(args.format, args.aspect)}, {entry["status"]}; '
+                  'only Krish freezes it at Gate 2')
         else:
             if args.mapping is None:
-                mapping = {beat: f'f{i}.png' for i, beat in enumerate(lock['formats'][args.format]['beats'], 1)}
+                entry = lock['formats'].get(args.format) or lock.get('drafts', {})[args.format]
+                mapping = {beat: f'f{i}.png' for i, beat in enumerate(entry['beats'], 1)}
             else:
                 mapping = {}
                 for item in args.mapping:
@@ -230,6 +245,9 @@ def cmd_qc(args) -> int:
     from velib.qc import inputs_from_props, run_qc
     props = load_json(args.props) if getattr(args, 'props', None) else None
     inputs = inputs_from_props(props) if props is not None else {}
+    if getattr(args, 'edl', None):
+        # The conformed take is one picture segment: its joins come from the EDL ve conform wrote.
+        inputs['joins'] = [join['at_s'] for join in load_json(args.edl).get('joins', [])]
     if props is not None and props.get('aspect') == '9:16':
         inputs['composition_props'] = props
     inputs.update(_gate_inputs(args))
@@ -311,6 +329,31 @@ def cmd_card(args) -> int:
     return 0
 
 
+def cmd_sprint(args) -> int:
+    from velib import sprint
+    if args.action == 'start':
+        for path in sprint.start(args.week, args.ref):
+            print(f've sprint: wrote {path.relative_to(ROOT)}; fill it from its brief and the reference, then ve sprint cards')
+        if not sprint.has_ve_brief():
+            print('ve sprint: ve brief is not on this checkout yet (W2.7): the briefs are pending and cards wait for them')
+    elif args.action == 'cards':
+        for card in sprint.cards(args.week):
+            print(f've sprint: wrote {card.relative_to(ROOT)}; dispatch it with ve dispatch, then Gate 2')
+    elif args.action == 'gate2':
+        entry = sprint.gate2(args.device, args.words, args.where, args.at)
+        print(f"ve sprint: Gate 2 yes recorded for {entry['device']} ({args.at})")
+    elif args.action == 'status':
+        s = sprint.status()
+        print(f"ve sprint: {s['count']} library devices; {s['sprint_devices']} from sprints, {s['proven']} proven at Gate 2")
+        for e in s['entries']:
+            gate = f"Gate 2 yes {e['gate2']['at']}" if e.get('gate2') else ('built, awaiting Gate 2' if e['built'] else 'carded')
+            print(f"  {e['week']}  {e['device']:<24} {e['aim']:<15} {gate}")
+    elif args.action == 'feed':
+        data = sprint.feed(Path(args.archive) if args.archive else None, Path(args.out))
+        print(f"ve sprint: wrote {args.out} ({len(data['rows'])} Archive rows, {data['devices']['count']} devices)")
+    return 0
+
+
 def cmd_dispatch(args) -> int:
     if getattr(args, 'piece', None):
         from velib.ledger import require_within
@@ -376,17 +419,8 @@ def cmd_status(args) -> int:
     ready = not problems
     print(f"lint: {'clean' if not problems else f'{len(problems)} finding(s)'}")
     for cut in spec['cuts']:
-        try:
-            mechanical, qc, video, digest = packet.mechanical(spec, cut, directory)
-            compile_file = directory / f'compile.{cut}.json'
-            if compile_file.exists() and load_json(compile_file).get('sfx_missing') and 'sfx kit missing' not in mechanical:
-                mechanical.append('sfx kit missing')
-            design = packet.design(spec, cut, directory, digest)
-            final = [] if digest and any(a.get('gate') == 'final' and a.get('by') == 'Krish'
-                                         and a.get('artifact_hash') == digest for a in spec.get('approvals', [])) else [
-                                             'no final approval from Krish for this file']
-        except (OSError, ValueError, KeyError, TypeError) as error:
-            mechanical, design, final = [str(error)], ['design could not be checked'], []
+        state = packet.readiness(spec, cut, directory)
+        mechanical, design, final = state['mechanical'], state['design'], state['final']
         print(f'{cut}:')
         print('  mechanical: ' + ('INVALID (' + '; '.join(mechanical) + ')' if mechanical else 'VALID'))
         print('  design: ' + ('NOT APPROVED (' + '; '.join(design) + ')' if design else 'APPROVED'))
@@ -414,6 +448,159 @@ def cmd_coverage(_args) -> int:
     print(f've coverage: {total} failures; behavioural {behavioural}, marker-only {marker} (scores 0), planned {planned}, none {none}')
     print(f'score: {behavioural}/{total} prevented by a mechanism with a passing test')
     return 0
+
+
+def _ve_dir(piece):
+    from velib import verdict
+    spec_file = spec_path_for(piece)
+    return spec_file, load_json(spec_file), verdict.ve_dir(spec_file)
+
+
+def cmd_ingest(args) -> int:
+    from velib import takes
+    try:
+        spec_file, spec, directory = _ve_dir(args.piece)
+        path = takes.ingest(directory, spec['piece_id'], args.take, args.media, clock_a=args.clock_a, clock_b=args.clock_b,
+                            aligner_a=args.aligner_a, aligner_b=args.aligner_b)
+        record = takes.load_take(directory, args.take)
+        print(f"ve ingest: {args.take} ({record['media']['duration_s']} s; {len(record['aligners']['a']['words'])} words from "
+              f"{record['aligners']['a']['name']}, {len(record['aligners']['b']['words'])} from {record['aligners']['b']['name']}) -> {path}")
+        return 0
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        print(f've ingest: {error}', file=sys.stderr)
+        return 1
+
+
+def _script(directory, given):
+    from velib import conform
+    path = Path(given) if given else directory / 'script.words.json'
+    if not path.is_file():
+        raise ValueError(f'no signed script words at {path}: give --script')
+    return conform.load_script(path)
+
+
+def cmd_conform(args) -> int:
+    from velib import conform
+    try:
+        spec_file, spec, directory = _ve_dir(args.piece)
+        from velib.lint import lint
+        linted, problems = lint(spec_file)
+        if problems or linted is None:
+            print('\n'.join(problems[:20]) or 'the spec does not pass its schema')
+            return 1
+        script, script_sha = _script(directory, args.script)
+        edl = conform.conform(linted, args.cut, script, directory, takes=args.takes or None,
+                              crossfade_s=args.crossfade_ms / 1000, script_sha256=script_sha)
+        records = conform.records_for(edl, directory)
+        findings = conform.lint_edl(edl, records, linted)
+        if findings:
+            print('\n'.join(findings))
+            print('ve conform: the EDL fails the F09 lint; nothing written')
+            return 1
+        edl_path, words_path = conform.write(edl, directory)
+        print(f"ve conform: {len(edl['segments'])} segment(s), {len(edl['joins'])} join(s), {len(edl['flubs_removed'])} flub(s) removed, "
+              f"{len(edl['unscripted_kept'])} unscripted word(s) kept for his ear; {edl['duration_s']} s at speed {edl['speed']}")
+        for kept in edl['unscripted_kept']:
+            print(f"  kept: \"{kept['word']}\" in line {kept['line']} ({kept['take']} at {kept['src_s']} s): no agreed gap lets it go")
+        print(f've conform: {edl_path}\nve conform: {words_path}')
+        if args.render:
+            if not args.assets_dir:
+                raise ValueError('--render needs --assets-dir')
+            out = conform.render(edl, records, Path(args.assets_dir))
+            for key in ('picture', 'dialogue'):
+                if key in out:
+                    print(f've conform: {out[key]} ({out[key + "_sha256"]})')
+            if args.joins_reel:
+                reel = conform.joins_reel(edl, out['dialogue'], directory / f'joins.{args.cut}.wav')
+                print(f've conform: joins reel {reel["reel"] or "(no joins)"}')
+        return 0
+    except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
+        print(f've conform: {error}', file=sys.stderr)
+        return 1
+
+
+def cmd_file(args) -> int:
+    from velib import filing
+    try:
+        _spec_file, spec, directory = _ve_dir(args.piece)
+        cuts = args.cut or list(spec['cuts'])
+        result = filing.file(spec, directory, cuts, subject=args.subject, when=args.date, archive_at=args.archive,
+                             library_at=args.library, dry_run=args.dry_run)
+        if result.get('dry_run'):
+            print(f"ve file (dry run): post folder {result['post_folder']}; archive folder {result['archive_folder']}")
+            for item in result['files']:
+                print(f"  {item['cut']} ({item['shape']}) -> {item['library']}")
+            return 0
+        print(f"ve file: archive {result['archive']}")
+        for item in result['files']:
+            print(f"  {item['cut']} ({item['shape']}, {item['sha256'][:12]}) -> {item['library']}")
+        return 0
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        print(f've file: {error}', file=sys.stderr)
+        return 1
+
+
+def cmd_brief(args) -> int:
+    from velib import brief
+    try:
+        _spec_file, spec, directory = _ve_dir(args.piece)
+        script = None
+        if (directory / 'script.words.json').is_file() or args.script:
+            script, _sha = _script(directory, args.script)
+        words = None
+        cut = args.cut
+        if cut and (directory / f'words.{cut}.json').is_file():
+            words = load_json(directory / f'words.{cut}.json')
+        moves = {}
+        for item in args.move or []:
+            beat, sep, move = item.partition('=')
+            if not sep:
+                raise ValueError(f'--move takes BEAT=MOVE, not {item}')
+            moves[beat] = move
+        if args.check:
+            if not args.plate:
+                raise ValueError('--check needs --plate')
+            found = [b for b in brief.build_briefs(spec, cut=cut, script=script, words=words, beats=args.beat, moves=moves)
+                     if b['plate'] == args.plate]
+            if not found:
+                raise ValueError(f'no plate {args.plate} in this piece')
+            report = brief.check_candidates(found[0], args.check)
+            for finding in report['findings']:
+                print(finding)
+            print(f"ve brief: {args.plate} candidates {'pass' if report['pass'] else 'FAIL'}; OCR {report['ocr']}")
+            return 0 if report['pass'] else 1
+        paths = brief.write_briefs(spec, directory, cut=cut, script=script, words=words, beats=args.beat, moves=moves)
+        if not paths:
+            print('ve brief: no plate slots (no beat uses a generated asset; name one with --beat)')
+            return 0
+        for path in paths:
+            print(f've brief: {path}')
+        print('ve brief: card fields beside each brief; ve card writes a card from them. Nothing was dispatched.')
+        return 0
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        print(f've brief: {error}', file=sys.stderr)
+        return 1
+
+
+def cmd_golden(args) -> int:
+    from velib import golden
+    try:
+        doc = golden.load()
+        if args.action == 'fill':
+            entry = golden.fill(args.slot, args.reference, args.at, args.said, clip=args.clip, force=args.force)
+            print(f"ve golden: {entry['slot']} named: {entry['reference']} at {entry['at']}")
+            doc = golden.load()
+        state = golden.status(doc)
+        for slot in doc['slots']:
+            print(f"{slot['slot']:4} " + (f"{slot['reference']} at {slot['at']}: \"{slot['said']}\"" if slot.get('status') == 'named' else 'empty'))
+        print(f"named {state['named']} of {state['min']} to {state['max']}; " +
+              ('ready' if state['ready'] else f"waiting on Krish: {doc['fill']}"))
+        moments = golden.interim(doc)
+        print(f"interim: {len(moments)} Monday 26 moment(s) from config/reference-cuts.json serve beside them")
+        return 1 if args.action == 'check' and not state['ready'] else 0
+    except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
+        print(f've golden: {error}', file=sys.stderr)
+        return 1
 
 
 def not_yet(name: str):
@@ -485,11 +672,22 @@ def cmd_compile(args) -> int:
         return 1
     from velib.compile import compile_cut
     from velib.common import sha256_file
-    words = load_json(args.words)
+    edl = None
+    if getattr(args, 'edl', None):
+        from velib import conform, verdict
+        edl = load_json(args.edl)
+        findings = conform.lint_edl(edl, conform.records_for(edl, verdict.ve_dir(Path(args.spec))), spec)
+        if findings:
+            print('\n'.join(findings))
+            return 1
+    if not getattr(args, 'words', None) and edl is None:
+        print('ve compile: give --words, or --edl from ve conform')
+        return 1
+    words = load_json(args.words) if args.words else edl['words']
     if isinstance(words, dict):
         words = words['words']
     report = {}
-    props = compile_cut(spec, args.cut, words, args.assets_dir, report=report)
+    props = compile_cut(spec, args.cut, words, args.assets_dir, report=report, edl=edl)
     # The piece id is a directory name, never an arbitrary output path.
     piece = spec['piece_id']
     if not re.fullmatch(r'[a-zA-Z0-9][a-zA-Z0-9_-]*', piece):
@@ -531,6 +729,11 @@ def main() -> int:
     actions = p.add_subparsers(dest='action', required=True)
     actions.add_parser('check')
     a = actions.add_parser('show'); a.add_argument('format', nargs='?')
+    a = actions.add_parser('draft', help='write an unfrozen lock entry with key-frame slots; only Gate 2 freezes it')
+    a.add_argument('format'); a.add_argument('--aspect', choices=('9:16', '16:9'), required=True)
+    a.add_argument('--beats', nargs='+', required=True); a.add_argument('--modules', nargs='*')
+    a.add_argument('--anatomy', required=True); a.add_argument('--motion', required=True)
+    a.add_argument('--purpose', default='')
     a = actions.add_parser('freeze'); a.add_argument('format'); a.add_argument('--from', dest='src_dir', required=True)
     a.add_argument('--map', dest='mapping', nargs='+', action='extend'); a.add_argument('--force', action='store_true')
     p.set_defaults(fn=cmd_lock)
@@ -549,12 +752,22 @@ def main() -> int:
     p.add_argument('--heard', action='append', metavar='ALIGNER=WORDS.json', help="an aligner's words for this render (repeatable)")
     p.add_argument('--transcribe', action='store_true', help='hear the render here with faster-whisper (no paid aligner)')
     p.add_argument('--captions-drawn-by', default='faster-whisper', help='the aligner whose words drew the captions')
+    p.add_argument('--edl', help='the EDL ve conform wrote: QC measures its joins')
     p.set_defaults(fn=cmd_qc)
     p = sub.add_parser('keyframes', help='compare rendered beats with approved stills')
     p.add_argument('format'); p.add_argument('video'); p.add_argument('props'); p.add_argument('--sheet')
     p.set_defaults(fn=cmd_keyframes)
     p = sub.add_parser('study'); p.add_argument('ref'); p.add_argument('--out'); p.set_defaults(fn=cmd_study)
     p = sub.add_parser('card'); p.add_argument('fields'); p.set_defaults(fn=cmd_card)
+    p = sub.add_parser('sprint', help='the weekly device sprint: brief, card, Gate 2 record (docs/ve/SPRINT.md)')
+    actions = p.add_subparsers(dest='action', required=True)
+    a = actions.add_parser('start'); a.add_argument('week'); a.add_argument('--ref', action='append', required=True)
+    a = actions.add_parser('cards'); a.add_argument('week')
+    a = actions.add_parser('gate2'); a.add_argument('device'); a.add_argument('--words', required=True)
+    a.add_argument('--where', required=True); a.add_argument('--at', required=True)
+    actions.add_parser('status')
+    a = actions.add_parser('feed'); a.add_argument('--archive'); a.add_argument('--out', required=True)
+    p.set_defaults(fn=cmd_sprint)
     p = sub.add_parser('dispatch'); p.add_argument('card'); p.add_argument('--wait', action='store_true')
     p.add_argument('--piece', help='refuse dispatch when this piece is over any budget cap')
     p.add_argument('--spend-approved', action='store_true', help="only after Krish's yes, in his words, to Codex drawing paid credits")
@@ -574,7 +787,8 @@ def main() -> int:
     p.set_defaults(fn=cmd_packet)
     sub.add_parser('coverage').set_defaults(fn=cmd_coverage)
     p = sub.add_parser('compile', help='compile a linted spec and cut-ready word timings')
-    p.add_argument('spec'); p.add_argument('--cut', required=True); p.add_argument('--words', required=True)
+    p.add_argument('spec'); p.add_argument('--cut', required=True); p.add_argument('--words')
+    p.add_argument('--edl', help='the EDL from ve conform; its words are used when --words is absent')
     p.add_argument('--assets-dir', required=True); p.set_defaults(fn=cmd_compile)
     p = sub.add_parser('render', help='render compiled props through FormatMaster')
     p.add_argument('props'); p.add_argument('out'); p.add_argument('--scale', type=float, default=1.0)
@@ -600,8 +814,40 @@ def main() -> int:
     actions.add_parser('stop', help='append elapsed engine seconds and remove the running clock')
     actions.add_parser('status', help='show the running phase and used minutes including elapsed time')
     p.set_defaults(fn=cmd_time)
-    for name in ('ingest', 'stills', 'file'):
-        p = sub.add_parser(name); p.add_argument('rest', nargs='*'); p.set_defaults(fn=not_yet(name))
+    p = sub.add_parser('ingest', help='bring a take and its two word clocks into the piece (media hashed, never copied)')
+    p.add_argument('piece'); p.add_argument('--take', required=True); p.add_argument('--media', required=True)
+    p.add_argument('--clock-a', help='aligner A word clock JSON; without it a local faster-whisper:<model> runs')
+    p.add_argument('--clock-b', help='aligner B word clock JSON (a second local model)')
+    p.add_argument('--aligner-a', required=True, help='for example faster-whisper:small.en')
+    p.add_argument('--aligner-b', required=True, help='for example faster-whisper:medium.en (no paid aligner)')
+    p.set_defaults(fn=cmd_ingest)
+    p = sub.add_parser('conform', help='choose takes line by line, remove flubs, cut only in agreed gaps, write the EDL')
+    p.add_argument('piece'); p.add_argument('--cut', required=True); p.add_argument('--script')
+    p.add_argument('--takes', nargs='+', help='take ids in preference order, later preferred (default: all ingested)')
+    p.add_argument('--crossfade-ms', type=float, default=30.0, help='20 to 40 ms')
+    p.add_argument('--render', action='store_true', help='render the conformed picture and dialogue in one graph')
+    p.add_argument('--assets-dir'); p.add_argument('--joins-reel', action='store_true')
+    p.set_defaults(fn=cmd_conform)
+    p = sub.add_parser('file', help="file READY cuts in the archive and the post's 3 Video folder, bound to piece_id")
+    p.add_argument('piece'); p.add_argument('--subject', required=True); p.add_argument('--date')
+    p.add_argument('--cut', action='append', help='a cut to file (default: every cut; one per shape)')
+    p.add_argument('--archive', help='the archive folder (default MINDMAKE_ARCHIVE_ROOT)')
+    p.add_argument('--library', help='the makeyourmindup library folder (default MINDMAKE_LIBRARY_ROOT)')
+    p.add_argument('--dry-run', action='store_true'); p.set_defaults(fn=cmd_file)
+    p = sub.add_parser('brief', help='write one brief and its card fields per plate; never dispatches')
+    p.add_argument('piece'); p.add_argument('--cut'); p.add_argument('--script')
+    p.add_argument('--beat', nargs='+', help='brief these beats as plate slots too')
+    p.add_argument('--move', nargs='+', metavar='BEAT=MOVE', help='a named move from config/ve/plate-moves.json')
+    p.add_argument('--check', metavar='DIR', help="check a plate's candidates against its brief")
+    p.add_argument('--plate'); p.set_defaults(fn=cmd_brief)
+    p = sub.add_parser('golden', help="interim golden frames: Krish's named Production Inspo moments")
+    actions = p.add_subparsers(dest='action', required=True)
+    actions.add_parser('show'); actions.add_parser('check')
+    a = actions.add_parser('fill'); a.add_argument('slot'); a.add_argument('--reference', required=True)
+    a.add_argument('--at', required=True); a.add_argument('--said', required=True, help="Krish's exact words naming it")
+    a.add_argument('--clip'); a.add_argument('--force', action='store_true')
+    p.set_defaults(fn=cmd_golden)
+    p = sub.add_parser('stills'); p.add_argument('rest', nargs='*'); p.set_defaults(fn=not_yet('stills'))
     args = parser.parse_args()
     return args.fn(args)
 
