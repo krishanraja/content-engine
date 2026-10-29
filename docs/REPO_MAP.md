@@ -1877,6 +1877,15 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `const config`
 - `export default withContentRun('arcs_surface', handler)`
 
+### `apps/control-plane/api/board/_archive.ts`
+
+- `const ARCHIVE_FROM`
+- `interface ArchivePiece`
+- `interface ArchiveScore`
+- `interface ArchiveRow`
+- `function archiveRows(pieces: readonly ArchivePiece[], scores: readonly ArchiveScore[]): ArchiveRow[]`
+- `async function readArchive(db: SupabaseClient): Promise<{ rows: ArchiveRow[]; scores: 'live' | 'waits_on_migration' }>`
+
 ### `apps/control-plane/api/board/_contracts.ts`
 
 - `const collections`
