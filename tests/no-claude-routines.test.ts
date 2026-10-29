@@ -169,7 +169,7 @@ for typed in ('20261109', '2026-W46-1', '2026-11-10', ''):
         print('refused')
 `)
     expect(run.stderr).toBe('')
-    expect(run.stdout.trim().split('\n')).toEqual(['2026-11-09', '2026-11-09', '2026-11-09', 'False', 'True', '2026-11-09',
+    expect(run.stdout.trim().split(/\r?\n/)).toEqual(['2026-11-09', '2026-11-09', '2026-11-09', 'False', 'True', '2026-11-09',
       'refused', 'refused', 'refused', 'refused'])
     // The workflow puts the normalised Monday, never the typed text, into its output.
     expect(read('.github/workflows/sunday-ideas.yml')).toContain('monday=$(python3 scripts/sunday_ideas.py week --date "$WEEK")')
