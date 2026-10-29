@@ -60,6 +60,15 @@ full eight-card Grok Bot vs Muse revision 03 as the production pilot on
 asset hashes preserved in private approval evidence. This is not publication
 approval or evidence that a volume system has been built and measured.
 
+## Snackable cuts for the off-day lane (W2.9)
+
+`scripts/quick-edit/snackable.py plan --master CUT --words CUT.heard.json --manifest "0 Publish/manifest.json" --from N --to M`
+takes one continuous stretch of a master Krish approved (its sha256 is in the
+piece's sealed manifest) by word range, cut in and out only in gaps at least
+80 ms wide and 30 ms clear of either word, so no word of his is clipped,
+changed or put out of sync. `render --plan P --out FILE` cuts it; nothing is
+posted. Growth's off-day lane takes the file from there.
+
 ## Return a production package
 
 - Source piece identity/version, canonical article/video URLs and claims.
