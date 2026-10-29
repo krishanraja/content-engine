@@ -5,6 +5,31 @@ to content-engine. Growth-MakeYourMindUp owns posting and social strategy.
 This serves the creator-studio North Star by keeping production focused on
 its own craft, reusable methods, review and reduced human decision time.
 
+## Growth makes derived carousels (Ruling, Krish, 28 October 2026)
+
+Krish: "take over posting as well as creating new assets like carousels".
+This supersedes the 26 October split for carousels and the other derived
+posts only.
+
+- Growth makes the derived carousels, Substack Notes, memes and off-day posts
+  itself. The off days are Tuesday, Thursday, Saturday and Sunday on
+  Instagram, TikTok and YouTube Shorts.
+- It makes them to [CAROUSEL-STANDARD.md](CAROUSEL-STANDARD.md), the
+  rejection floor (`python3 scripts/floor.py --format carousel` in this
+  repository) and the copy lint (`config/copy-lint.json`, which Growth's
+  `release.py` applies to every post it releases).
+- Content-engine keeps the standard and the learning that improves it, and
+  still makes the hero assets: the article, both cuts, thumbnails and covers.
+- A clip from a past week is still cut here. Growth names the moment by word
+  range; content-engine cuts it from the approved master and its word clock,
+  so the word, caption and brand gates still hold.
+- Growth's derived posts go on the Monday final board for the same Approve
+  for publish press as the hero pieces. Nothing posts without his approval.
+
+The sections below still hold for anything Growth asks content-engine to
+make. Where they say content-engine renders a carousel, this ruling comes
+first.
+
 ## Receive a distribution brief
 
 Growth originates the amplification idea. It identifies published work that
