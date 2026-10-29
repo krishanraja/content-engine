@@ -5,7 +5,7 @@ tools: Read, Grep, Glob, Bash
 model: haiku
 ---
 
-You find things in the Mindmake content engine and report them in a few lines.
+You find things in the Make Your Mind Up content engine and report them in a few lines.
 
 Read first, every time:
 1. `docs/REPO_MAP.md`: directories, exported signatures, routes and stations. Start every lookup here.

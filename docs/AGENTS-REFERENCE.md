@@ -22,6 +22,8 @@ everything is.
 
 **No Claude artifact, ever; engine work merges to main by itself.** Krish, 2026-10-19: "we are now retiring the Claude artefact permanently and we are working in content.krishraja.com for all published board updates ... Make sure the entire engine never ever Produces another artefact in the future and always pushes to that URL and merges to main automatically." Every board update (the week's board, a day's tab in draft, the workroom, a publish page) is built with `week_board.py --target web` (the default) and published with `board_web.py publish-web --apply` (`docs/PUBLISH_BOARDS.md`); `scripts/hooks/artifact_gate.py` refuses every Artifact publish and every ArtifactData write. Engine work never waits on a hand merge: run `npm run verify`, push the session branch, open a pull request and turn on auto-merge, so GitHub merges it to main once CI passes. Never push to main directly; a red CI is fixed on the branch. No session creates a scheduled task (a routine, a trigger, a cron) that builds, updates or publishes a publish board: Krish deleted those from both accounts on 2026-10-19 ("We are not ready for this yet"), and board updates happen only in a session he started, until he says otherwise.
 
+Amended (Ruling, Krish, 2026-10-28): he said otherwise for two boards. "on a Sunday, Claude Code proactively brings me ideas", and "an overnight Codex run will actually produce me the final assets and the final publish board first thing Monday morning". Exactly two scheduled routines may build a board: the Sunday ideas board (Saturday night, ready by Sunday morning) and the Monday final board (built from the records by 06:30 Monday). Each feeds `week_board.py`'s inputs and publishes to content.krishraja.com like any session. Every other board update still happens only in a session he started (`docs/CADENCE.md`, "The rhythm from 1 November 2026"); until he says otherwise, any other scheduled job (the Monday repair round, the titles fallback) writes records only.
+
 <a id="rule-04"></a>
 
 **Cost: six standing rules.** Krish, 2026-10-18: "They should all become standing rules" (the six habits in `docs/COST_AUDIT_2026-10-18.md`; one six-day session read 1,086M tokens because every step re-read a 459k-token context). (1) One fresh session per job, started from its handover and stopped when the job is done. (2) Switch topics by writing the handover and starting a new session. (3) Fewer, bigger steps: one script, not five commands. (4) Keep big outputs out of the chat: never read a board into the conversation (the builder reads the saved copy), one contact sheet per output, quiet logs. (5) Sonnet for production work (renders, packs, filing, board rebuilds), Opus for writing and judgment. (6) Agents and workflows only for work that needs a separate reader. Before any paid run, estimate it from `meter_daily`'s last run, never from a count. The guards that will enforce these are in `docs/COST_GUARDS.md`. When Krish asks for files (Markdown, an export), hand him the files themselves; never also put them on a board or make an artifact (Krish, 2026-10-18: "I don't need these as artefacts. I need them as Markdown.").
@@ -174,6 +176,17 @@ Descript was retired on 2026-10-12, the day it was set up, in his words
 above; no session calls it. Records written before then keep a `descript`
 field that nothing reads.
 
+Amended (Ruling, Krish, 2026-10-28): "Once I approve, the two scripts will go
+to teleprompter" and "Server sends directly". This replaces the 12 October
+"Yes, automatic": a cut's script is sent only when he presses Approve scripts
+for its day on the board, and the engine's server sends it
+(`apps/control-plane/api/_teleprompter.ts`, `sendApprovedScripts`, with the
+`TELEPROMPTER_API_KEY` secret), refusing any text whose hash is not the one he
+approved and reading each script back. The never list above is unchanged:
+no `move_script`, no `update_folder`, no deletion. Until the key is stored,
+the press fires the make routine and a session sends through the connector
+under the same scope.
+
 <a id="rule-13"></a>
 
 **Web publish board migration (19 October 2026).** Full parity is implemented
@@ -261,8 +274,10 @@ separate Windows user that cannot see the engine key or reach the internet.
 
 ## What this repository is
 
-The Mindmake content engine: the engine behind Krish's publication and the
-Shorts and carousels made from it. Two halves share one purpose and one
+The Make Your Mind Up content engine: the engine behind Krish's publication and the
+Shorts and carousels made from it. It is a makeyourmindup product (Ruling,
+Krish, 2026-10-28: "content-engine, which is not a mindmake product, it's a
+makeyourmindup product"). Two halves share one purpose and one
 database:
 
 - **The content engine**, `apps/control-plane/`: ideation, curation, drafting,

@@ -3,6 +3,72 @@
 **Publish boards:** follow `docs/PUBLISH_BOARDS.md` and `config/boards.json.web_cutover`. After verified active cutover, both weeks live at content.krishraja.com and all new board interactions use the authenticated web API. Older Claude board instructions in this document are preserved compatibility/history, not directions to synchronize artifacts.
 
 
+## The rhythm from 1 November 2026
+
+Krish, 2026-10-28: "record the entire week on a Sunday, but it does not go live
+until the Monday after (8 days later)". That replaces the same-day rhythm of
+11 October further down this page: Monday made and recorded the Sunday it was
+picked, Wednesday and Friday when he starts them, and the midday run of
+`produce-day.yml` on each publishing day. Code that still follows the old
+rhythm moves over in the plan's later waves; the board's new layout (rule
+`recording_sunday`) starts with the week of 9 November.
+
+**The shape of a week.** Call the recording Sunday S.
+
+- **Monday, Wednesday and Friday: the three hero pieces.** Each has an article
+  and two cuts (the 5-minute and the 90-second). They go live on Monday S+8,
+  Wednesday S+10 and Friday S+12.
+- **Tuesday, Thursday, Saturday and Sunday: off-day posts** on Instagram,
+  TikTok and YouTube Shorts: memes, uplifting AI news carousels, simple advice
+  on levelling up with AI, and short clips from past weeks. Growth owns this
+  lane and makes the posts. He approves them in the same Sunday session
+  (Krish, 2026-10-28: "I'm happy to plan the Tuesday, Thursday, Saturday, and
+  Sunday content within the Sunday ideas session if you give me a few options
+  to approve as you do the Mon/wed/fri"). The first off-day posts go out on
+  Tuesday 10 November.
+
+**The clock.** Times are his, in New York.
+
+| When | What happens | Who |
+|---|---|---|
+| Saturday 23:00 to Sunday 06:00 | The Sunday ideas board: 3 or 4 options for each of Monday, Wednesday and Friday, with last week's "next week" items first, and 2 or 3 off-day options for each of Tuesday, Thursday, Saturday and Sunday (Krish, 2026-10-28: "on a Sunday, Claude Code proactively brings me ideas") | the Sunday routine (Claude Code); Growth for the off days |
+| Sunday, by 10:00 | One press on every idea: pick it for a day (with a note if he likes), keep it for a wider piece, track it as a future trend, queue it for next week, or reject it. Approve or skip each off-day option | Krish, about 15 minutes |
+| Sunday, 10:00 to 11:45 | The interview, one question at a time, ending in one signed narrative lock per piece (Krish, 2026-10-28: "Claude interviews me on all three ideas to nail down the narrative arc") | the Sunday room session, with Krish |
+| As each lock is signed | One fresh make session per piece. The two scripts come first (reading age, kill list, copy lint, two fresh readers, a fact check of what they claim); the article follows | Claude Code |
+| About 12:30 | **Approve scripts**, one press per day. The engine's server sends both scripts to Teleprompter and reads them back (Krish, 2026-10-28: "Once I approve, the two scripts will go to teleprompter"; "Server sends directly"). Until the Teleprompter key is stored, the press starts a session that sends them through the connector | Krish, then the engine |
+| 13:00 to 15:00 | He records all six cuts and drops each take in the Video Engine Inbox; each take is placed on its piece and cut | Krish, then the recordings lane |
+| About 15:30 | **Titles**: three options for each surface, chosen with one Sunday evening press (Krish, 2026-10-28: "Sunday evening press"). The plan, not Krish, set the time and the fallback: if he picks none by 21:30, the top-ranked ones are used | Krish |
+| Sunday night | Every final asset is made: both cuts of each piece, thumbnails and covers, each through the gates. On 1 November this runs on quick-edit in a session the titles press starts; the unattended run on the home computers is planned from 8 November | the engine |
+| Monday, 06:30 | The final publish board, built from the records, with each held item and its reason (Krish, 2026-10-28: "an overnight Codex run will actually produce me the final assets and the final publish board first thing Monday morning") | the Monday board routine |
+| Monday, about 45 minutes | He watches each cut at full size, signs off the article's facts, then presses **Approve for publish** or **Reject asset** (with a reason) for each day | Krish |
+| After his approval | Growth schedules each approved post and reads it back (Krish, 2026-10-28: "Approve each day Monday") | Growth |
+
+The Sunday ideas board and the Monday final board are the only two boards a
+scheduled routine may build (`AGENTS.md`, "Commit and closeout"). Until Krish
+says otherwise, the plan's other scheduled jobs (the Monday 07:30 repair round
+on held cuts, the 21:30 titles fallback) write records only, and the board
+shows what they did at its next build. Codex no
+longer cuts video: it makes pictures for named slots and never edits a cut
+(`docs/ve/ENGINE.md`, "Codex"). The engine assembles every cut.
+
+**The change-over, 2 to 13 November.**
+
+- The backlog goes live the week of 2 November: Monday 26 October's piece on
+  Monday 2 November, Wednesday 28 October's on Wednesday 4 November, and
+  Friday 30 October's on Friday 6 November. He records Wednesday 28 and
+  Friday 30 before Sunday 1 November.
+- Sunday 1 November records only the week of 9 November, which goes live on
+  Monday 9, Wednesday 11 and Friday 13 November.
+- From then on, every Sunday records the week that goes live 8 days later.
+
+**What still holds from below.** The rest of this page is the rhythm Krish
+set on 11 October. Its standing answers (two cuts, the channels), where
+completion is recorded, which tool writes which step, and the rules for
+Teleprompter and for takes still hold wherever this section does not change
+them. Its week table and its same-day production are history.
+
+## Before 1 November: the rhythm of 11 October
+
 Krish, 2026-10-11, superseding the Sunday, Tuesday and Thursday slates of 10
 October: "We're going to enable planning for the whole week on a Sunday.
 Every Sunday we're going to decide which of the three pieces are going to go
@@ -27,7 +93,7 @@ The render and filing steps below describe the fallback workflow. A schema 2 dir
   and Instagram (`docs/AMPLIFICATION.md`). LinkedIn, WhatsApp and Substack
   Notes stay available as optional steps.
 
-## The week
+## The week (before 1 November)
 
 Times are Krish's, in New York (`system_config.operator_timezone`).
 
@@ -92,7 +158,7 @@ board, the strip and both skills read the same table.
 | The Sunday question and the pick | Control Center (cron), Krish | `api/content/slate.ts`, the week page | the work board's week item; the pick and its day |
 | Workroom, fact-checked draft, visual gate, scripts, publish page, pack | Claude Code | `.agents/skills/make-piece` | `meta.making.workroom`, `.publish_manager`, `.visual_gate`, `.script_check`, `.pack`; the body through the engine |
 | The read-back | Claude Code, at the Scripts step: two fresh readers, each an ordinary 12-year-old hearing the script once | `make-piece` ("The Scripts step", step 4), `making.py <piece> read-back` | `meta.making.script_check.read_back`: who read each cut, when, "nothing lost", and the hash of the words they heard |
-| Scripts into Teleprompter | Claude Code, at the Scripts step, or any session that `teleprompter_send.py pending` shows a cut still to send | `make-piece` ("The Scripts step", step 6), `scripts/post-pack/teleprompter_send.py` | one folder per piece and one script per cut in his teleprompter.com account, then `meta.making.teleprompter` (the folder, each cut's script and title, and the hash of the words sent) |
+| Scripts into Teleprompter | Claude Code, at the Scripts step, or any session that `teleprompter_send.py pending` shows a cut still to send; from 1 November, only on his Approve scripts press | `make-piece` ("The Scripts step", step 6), `scripts/post-pack/teleprompter_send.py` | one folder per piece and one script per cut in his teleprompter.com account, then `meta.making.teleprompter` (the folder, each cut's script and title, and the hash of the words sent) |
 | Record | Krish records, then drops each take in the Inbox; the home computers' recordings lane writes it, and the production session one the lane has not placed | `scripts/post-pack/recording_match.py --record`, run by `scripts/recordings-upload.ps1` at the end of every pass on either machine (`--board --by "Recordings lane"`) and in `.agents/skills/produce-video` | `meta.making.recordings`, each take with the hash of the script it was read from (`script_sha256`) |
 | Video assets | Codex, on a home computer (Claude Code there too when Krish engages it) | `.agents/skills/produce-video` | `meta.making.video_assets`, each cut with its thumbnail and music track; the cuts and thumbnails in the archive and in the post's library folder (`3 Video`). Never the visual gate or the pack |
 | Publish board with the cuts | Claude Code | `make-piece` (last step) | the publish page; and the pack again with the cuts (`build.py --replace`, which records Visual gate and Pack, then `send.py`) when the session holds the post's working folder and the cut files |
@@ -109,7 +175,7 @@ Where each thing lives, and nowhere else:
 | The runner's bearer | Credential Manager on each runner machine | the recordings and library lanes |
 | Control Center's secrets (access code, cron secret, the routine's id and token) | Control Center's Vercel project | its own routes; the slate cron speaks to the board on the access-code cookie |
 | Recordings | the engine's recordings lane (object store plus manifest), fed only from the top of the Video Engine Inbox | the home computers place each Inbox take on its piece and cut by themselves (`scripts/recordings-upload.ps1`, then `scripts/post-pack/recording_match.py`); `scripts/post-pack/recording.py get` fetches a take by its Inbox name or by the path its piece's record holds (`recordings/<sha256>.<ext>`); never the Drive connector (10 MB cap) |
-| Scripts for Krish to read while he records | his teleprompter.com account: one folder per piece ("Mon 12 Oct follow.the.money - Who gets paid for AI songs"), one script per cut ("Mon 12 Oct - 5-minute - Who gets paid for AI songs"); and the publish page's Copy | each cut's script title on the piece's making record (`meta.making.teleprompter`), shown on Control Center's Record step ("Read from Teleprompter: <title>") and on the week's publish board. Sent at the Scripts step by `teleprompter_send.py`; words that change update the same script in place, and nothing there is ever deleted |
+| Scripts for Krish to read while he records | his teleprompter.com account: one folder per piece ("Mon 12 Oct follow.the.money - Who gets paid for AI songs"), one script per cut ("Mon 12 Oct - 5-minute - Who gets paid for AI songs"); and the publish page's Copy | each cut's script title on the piece's making record (`meta.making.teleprompter`), shown on Control Center's Record step ("Read from Teleprompter: <title>") and on the week's publish board. Sent at the Scripts step by `teleprompter_send.py` (from 1 November, only on his Approve scripts press); words that change update the same script in place, and nothing there is ever deleted |
 | The week's publish board and all decisions | content.krishraja.com, authenticated dated boards and immutable builds | each week's `week-publish-board-<Monday>` item and `WORKBENCH.md`; every tool reads all six collections with `board_web.py`, following `docs/PUBLISH_BOARDS.md` |
 | Licensed music | Drive, `makeyourmindup > 00_Brand-Assets > 07_Music` (`MINDMAKE_MUSIC_ROOT`), each licence certificate beside its track; the ledger `config/music-library.json` in GitHub | `scripts/quick-edit/music.py` on a home computer; only approved ledger tracks, never browsed |
 | The pack, the publish page, the finished cuts | Krish's Drive library, written by his own machine from the engine's library store | `build.py`, `send.py`; the Drive folder is the canonical copy for every tool and for Krish |

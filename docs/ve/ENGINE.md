@@ -75,7 +75,7 @@ All commands accept `-h` / `--help`. Render scale defaults to 1 and must be
 finite and positive. Render requires the source spec and the same staged assets
 folder used to compile it, so lint and asset hashes are checked before rendering.
 
-Compile/render lint first: findings print, exit 1, no new output. Words need unique indexes, text, ordered onset_s and finite numeric end_s >= onset_s. The onset-only 19-second fixture needs real aligned ends; synthetic test ends are not alignment. Compile refuses unapplied source edits and includes only objects in the cut's beat `uses`. Phase 1 refuses asset plates/used generated-asset references: the generated assets pipeline is not wired. Media paths must be relative and contained under assets, never URLs/absolute paths.
+Compile/render lint first: findings print, exit 1, no new output. Words need unique indexes, text, ordered onset_s and finite numeric end_s >= onset_s. The onset-only 19-second fixture needs real aligned ends; synthetic test ends are not alignment. Compile refuses unapplied source edits and includes only objects in the cut's beat `uses`. Phase 1 refuses asset plates and used generated-asset references, in compile.py's own words: "asset plates arrive in Phase 2". Media paths must be relative and contained under assets, never URLs/absolute paths.
 
 Captions use exact Archivo-heavy widths, aspect geometry/swipe padding. Pages: 2-5 words, <=2 lines, prefer punctuation; a single word only if it fills a line. Oversize words are refused by name. Dialogue: `round(last end_s * 30) + 12` frames. Whole cuts with a call add a 105-frame ending; captions stop at its start. Excerpts have no ending.
 
@@ -90,12 +90,17 @@ Render transports string values as ASCII escapes, decoded for drawing. It measur
 - One EDL drives picture, dialogue, bed, SFX/captions. No manual mux or separate retiming; AAC correction preserves video.
 - No per-piece compositions/render scripts. New hero mechanisms become library devices via cards.
 - Never hand-write a pass/receipt/ready. status checks lint, QC bound to the existing MP4 SHA, completeness, Critic verdict and Krish's exact-file approval.
-- Evidence is real; a generated picture never stands in for a real place, record or test, and carries no ILLUSTRATION tag (Krish, 28 Oct 2026: "Yes remove those."). Numbers name producers; mind.the.gap ends in a dated call. No synthetic Krish without realism-test approval. Follow tools.json recipes/rulings.
+- Evidence is real; a generated picture never stands in for a real place, record or test. A generated plate carries no on-screen label, tag or provenance note, and no ILLUSTRATION tag (Krish, 28 Oct 2026: "No one cares that things are AI-generated"; "Yes remove those."); its sidecar keeps the provenance. Numbers name producers; mind.the.gap ends in a dated call. No synthetic Krish without realism-test approval. Follow tools.json recipes/rulings.
 - No publish/send/schedule verb.
 
 ## Codex
 
-Claude writes exact cards from fields JSON. Codex builds library devices in worktrees between pieces. dispatch uses the plugin companion with pinned model/effort. verify-card reruns acceptance outside the sandbox/checks write_allow; Claude then renders golden stills/reviews one contact sheet. Codex's report is never proof; Codex never renders/files/edits a production piece in flight.
+Codex is a visual asset maker (Ruling, Krish, 2026-10-28: "Visual asset maker"). It makes pictures; the engine assembles every cut. Two jobs:
+
+- **Library devices.** Claude writes exact cards from fields JSON. Codex builds devices in worktrees between pieces. dispatch uses the plugin companion with pinned model/effort. verify-card reruns acceptance outside the sandbox/checks write_allow; Claude then renders golden stills/reviews one contact sheet.
+- **Visual plates into named slots.** A slot is named in the spec, with its geometry, its duration and the line it sits under; Codex makes candidate pictures for it (stills first, then motion of an approved still: `docs/ve/design/TEMPLATE.md`, "Images: how plates are made"), and the engine places the chosen one. Codex never picks a slot's size, timing or position. Compile still refuses generated plates until Phase 2 (above); a per-plate brief written by the engine and Critic ranking of candidates are planned work, not built.
+
+Codex never edits a cut: it never renders, assembles, trims, retimes, captions, mixes or files a production piece, and never touches its words or audio. Its report is never proof.
 
 ## Budget
 

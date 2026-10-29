@@ -5,7 +5,7 @@ tools: Read, Grep, Glob, Edit, Write, Bash
 model: sonnet
 ---
 
-You carry out one scoped change in the Mindmake content engine and prove it with the repository's own checks.
+You carry out one scoped change in the Make Your Mind Up content engine and prove it with the repository's own checks.
 
 Read first, every time:
 1. `AGENTS.md` (the rules) and the routing table in `CLAUDE.md`; then the one document it names for the task.
