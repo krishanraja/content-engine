@@ -2392,6 +2392,15 @@ What the compiler looks for, as pure functions.
 - `function libraryFileView(row: LibraryFileRow)`
 - `function isLibraryObjectKey(value: unknown): value is string`
 
+### `apps/control-plane/api/library/_placeTakes.ts`
+
+Takes place themselves (Wave 2, W2.3): once the Inbox job has copied a take
+
+- `const PLACE_TAKES_EVENT`
+- `const PLACE_TAKES_REPO`
+- `type PlaceTakesDispatch`
+- `async function dispatchPlaceTakes( takes: number, env: Record<string, string | undefined> = process.env, fetcher: Fetch…`
+
 ### `apps/control-plane/api/library/_recordings.ts`
 
 - `const RECORDING_PREFIX`
