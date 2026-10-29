@@ -1,5 +1,31 @@
 # Current state
 
+## 29 October: read NOW.md first; what below is now wrong
+
+`NOW.md` holds the current state, checked against the code on 2026-10-29. The
+rest of this file was last verified on 2026-09-25 and is history where it
+disagrees. Known to be wrong below:
+
+- **Owner and product.** The engine is a Make Your Mind Up product, not a
+  Mindmake one (Ruling, Krish, 2026-10-28); its `plan-week` is the one ideation
+  path, and Growth-MakeYourMindUp posts and makes the derived assets
+  (`docs/GROWTH-HANDOFF.md`).
+- **"No piece has ever been published."** Wednesday 21 October's long cut was
+  published by Krish and carries a reported audible defect
+  (`docs/plans/2026-10-21-wednesday/FAILURE_REPORT_2026-10-24.md`); Monday 26
+  October is approved and ready to publish. The North Star count of published
+  assets per week is in `NOW.md`.
+- **Scheduling.** No Claude routine or claude.ai schedule runs any part of the
+  engine (Ruling, Krish, 2026-10-29). GitHub Actions runs Claude Code on his
+  subscription: `.github/workflows/sunday-ideas.yml` and `make-piece.yml`, both
+  waiting on the secret `CLAUDE_CODE_OAUTH_TOKEN`; the Vercel crons below are
+  separate and unchanged by that ruling.
+- **Video.** `scripts/ve.py` is the video engine and quick-edit the fallback
+  until ve passes Phase 3 (`docs/ve/STATUS.md`); the Studio's Shorts route
+  below is not how videos are made today.
+- **Taste.** Only the eight nevers in `docs/production/THE_BAR.md` may block a
+  piece on taste; no public word names Krish (house rule `NO_NAME`).
+
 ## 19 October: both publish boards live, web cutover verified
 
 Use https://content.krishraja.com/board/2026-10-19 and

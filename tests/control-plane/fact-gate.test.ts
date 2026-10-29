@@ -282,6 +282,7 @@ describe('the confidence line is never a claim', () => {
     assert.equal(isConfidenceLine('How sure we are: 75%.'), true)
     assert.equal(isConfidenceLine('  How sure we are: 60%'), true)
     assert.equal(isConfidenceLine('How sure we are: [Krish to set]'), true)
+    assert.equal(isConfidenceLine('How sure we are: [to set]'), true)
     assert.equal(isConfidenceLine('How sure we are: 75%, because Cisco said so.'), false)
     assert.equal(isConfidenceLine('Glean estimated that 95% of usage runs on the priciest models.'), false)
   })
@@ -334,6 +335,7 @@ describe('Krish\'s confidence under either label', () => {
     assert.deepEqual(readPieceCall(PIECE_1), { ok: true, call: { statement: 'By 30 June 2027, Amazon opens an authorised route for shopping agents, and that route still shows them sponsored listings.', due: '2027-06-30', confidence_percent: 70 } })
     assert.equal(bodyHash(at('65%')), bodyHash(PIECE_1))
     assert.equal(bodyHash(at('[Krish to set]')), bodyHash(PIECE_1))
+    assert.equal(bodyHash(at('[to set]')), bodyHash(PIECE_1))
     const fc = summarise([verified()], [], PIECE_1, 'perplexity:sonar-pro')
     assert.equal(gateStatus({ fact_check: fc }, at('65%')).ok, true)
   })
@@ -368,9 +370,25 @@ describe('Krish\'s confidence under either label', () => {
     }
   })
 
+  test('the new placeholder hashes as the old one and the number did, so every stored passed check holds', () => {
+    // Until 2026-10-29 drafts carried "[Krish to set]", which named him (Krish,
+    // 2026-10-28: "Remember, no content refers to Krish, ever."). Drafts now
+    // carry "[to set]"; the hash still reads both as the old one.
+    const edition = readFileSync('editions/2026-09-who-picks-your-ai/body.md', 'utf8')
+    const hashes = ['75%.', '[Krish to set]', '[to set]'].map(c => bodyHash(edition.replace('75%.', c)))
+    assert.deepEqual(new Set(hashes).size, 1)
+    assert.equal(hashes[0], JSON.parse(readFileSync('editions/2026-09-who-picks-your-ai/edition.json', 'utf8')).fact_check.body_hash)
+    assert.notEqual(bodyHash(edition.replace('75%.', '[to sort]')), hashes[0], 'any other bracket is text')
+    // A confidence line outside any call is read by the line rule alone.
+    const bare = (c: string) => `Cisco did the sums, $900 million a year.\n\nHow sure we are: ${c}`
+    const stored = createHash('sha256').update(bare('[Krish to set]')).digest('hex')
+    for (const c of ['75%.', '[Krish to set]', '[to set]']) assert.equal(bodyHash(bare(c)), stored, c)
+  })
+
   test('the sentence "Confidence: 70%." is never a claim, and a sentence with more in it still is', () => {
     assert.equal(isConfidenceLine('Confidence: 70%.'), true)
     assert.equal(isConfidenceLine('Confidence: [Krish to set].'), true)
+    assert.equal(isConfidenceLine('Confidence: [to set].'), true)
     assert.equal(isConfidenceLine('Confidence: 70%, because Amazon said so.'), false)
     assert.equal(isConfidenceLine('Consumer confidence: 62% in August, per the survey.'), false)
     assert.equal(isConfidenceLine('Consumer confidence: 62%.'), false)

@@ -1,13 +1,13 @@
 {
   "objects": [{
-    "obj": "passport", "device": "passport_page", "meaning": "Illustrative passport, no physical residence claim",
+    "obj": "passport", "device": "passport_page", "meaning": "passport page; the unknown field claims no residence",
     "params": {
-      "spine": "left", "at": {"x": 72, "y": 432}, "label": "ILLUSTRATIVE RECORD",
+      "spine": "left", "at": {"x": 72, "y": 432}, "label": "COUNTRY OF RESIDENCE",
       "fields": [
         {"id": "a", "label": "Example A", "at": {"x": 92, "y": 92}, "state": "stamped", "top": "EXAMPLE A", "main": "USA", "flag": "usa", "tiltDeg": -5},
         {"id": "b", "label": "Example B", "at": {"x": 296, "y": 426}, "state": "sample", "top": "EXAMPLE B", "flag": "unknown", "tiltDeg": 3}
       ],
-      "sampleText": "SAMPLE · NOT A CLAIM", "mrz": ["p<illustration", "sample<not<a<claim"]
+      "mrz": ["p<<", "0000000000<0<<<0000000<0000000"]
     },
     "fromFrame": 0, "toFrame": 180
   }],

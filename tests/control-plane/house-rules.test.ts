@@ -15,7 +15,7 @@ import { VOICE_ABSOLUTES } from '../../apps/control-plane/api/_finalPass.js'
 // Piece 2 as published in its edition (Krish set 75% on 2026-09-26), and the
 // same text as it stood when it passed the fact gate, before he set it.
 const PASSED = readFileSync('editions/2026-09-who-picks-your-ai/body.md', 'utf8')
-const UNSET = PASSED.replace('How sure we are: 75%.', 'How sure we are: [Krish to set]')
+const UNSET = PASSED.replace('How sure we are: 75%.', 'How sure we are: [to set]')
 const factsOk = { ok: true, reason: null }
 // Krish, 2026-10-19: a call must fall within 92 days. PASSED is due 30 September 2027 and
 // the Call in the other fixtures 30 June 2027, so a fixed `now` keeps each inside the window.
@@ -236,6 +236,21 @@ describe('the checks before approval, on real text', () => {
     const edition = JSON.parse(readFileSync('editions/2026-09-who-picks-your-ai/edition.json', 'utf8'))
     assert.equal(bodyHash(set.trim()), edition.fact_check.body_hash)
     assert.equal(bodyHash(set.replace('75%.', '60%')), bodyHash(set))
+  })
+  test('a piece that names Krish is held, in any spelling, with no override (house rule NO_NAME)', () => {
+    // Krish, 2026-10-28: "Remember, no content refers to Krish, ever."
+    const clear = PASSED.replace('75%.', '85%.')
+    const failing = (t: string) => publishStatus(publishChecks(t, factsOk, NOW_SEP)).failing.map(c => c.id)
+    assert.deepEqual(failing(clear), [])
+    for (const named of [`By Krish Raja\n\n${clear}`, clear.replace('## OUR PREDICTION', "Krish's test showed it.\n\n## OUR PREDICTION"), `${clear}\n\nMore at krishraja.com`]) {
+      assert.deepEqual(failing(named), ['NO_NAME'], named.slice(0, 40))
+    }
+    const check = publishChecks(`By Krish Raja. ${clear}`, factsOk, NOW_SEP).find(c => c.id === 'NO_NAME')!
+    assert.equal(check.blocking, true)
+    assert.match(check.detail, /"Krish Raja"/)
+    // The old placeholder named him; the one drafts carry now does not.
+    assert.ok(failing(PASSED.replace('How sure we are: 75%.', 'How sure we are: [Krish to set]')).includes('NO_NAME'))
+    assert.ok(!failing(UNSET).includes('NO_NAME'))
   })
   test('only the number is exempt: words added to the confidence line are checked like any other', () => {
     const set = PASSED
@@ -488,23 +503,25 @@ describe('real logos, real pages, and a cover with personality (VISUAL_EVIDENCE,
   })
 })
 
-describe('the sting, the music bed and a thumbnail for every size (Krish, 2026-10-12)', () => {
+describe('the opening, the music bed and a thumbnail for every size (Krish, 2026-10-12 and 2026-10-29)', () => {
   const rule = (id: string) => {
     const r = HOUSE_RULES.find(x => x.id === id)
     assert.ok(r, id)
     return r
   }
-  const VIDEO_RULES = ['INTRO_STING', 'MUSIC_BED', 'THUMBNAIL_EVERY_SIZE']
+  const VIDEO_RULES = ['HOOK_IS_THE_INTRO', 'MUSIC_BED', 'THUMBNAIL_EVERY_SIZE']
+  const ON: Record<string, string> = { HOOK_IS_THE_INTRO: '2026-10-29', MUSIC_BED: '2026-10-12', THUMBNAIL_EVERY_SIZE: '2026-10-12' }
   test('all three are live, dated, in his words, and on the production stage only', () => {
     for (const id of VIDEO_RULES) {
       const r = rule(id)
       assert.equal(r.status, 'live', id)
-      assert.equal(r.on, '2026-10-12', id)
+      assert.equal(r.on, ON[id], id)
       assert.deepEqual(r.stages, ['production'], id)
       assert.ok(rulesFor('production').includes(r), id)
     }
-    assert.ok(rule('INTRO_STING').said.includes('1-2 sec animated make your mind up intro visual before my face comes in'))
+    assert.ok(rule('HOOK_IS_THE_INTRO').said.startsWith('I\'d pick number one here but I think that we need to test and learn. We need to figure out what the right tone is over time based on real engagement. Let\'s go with number one for now.'))
     assert.ok(rule('MUSIC_BED').said.includes('(high volume during the intro, low whilst I am talking, higher during the outro)'))
+    assert.ok(rule('MUSIC_BED').said.includes('"Yes I think music should be audible throughout but just lower."'))
     assert.ok(rule('THUMBNAIL_EVERY_SIZE').said.includes('I always want a video thumbnail for all video sizes produced as an asset every time'))
   })
   test('no writer, judge, final pass or shot planner reads them: the script writer and the channel cuts never carry LUFS or a sting', () => {
@@ -525,24 +542,27 @@ describe('the sting, the music bed and a thumbnail for every size (Krish, 2026-1
     assert.doesNotMatch(houseRulesBlock('visual'), /LUFS|intro-sting|thumbnail_override/)
     assert.doesNotMatch(houseRulesBlock('write'), /LUFS|intro-sting|thumbnail_override/)
   })
-  test('the sting rule says what is true today: used only once approved, and none approved while Krish\'s last word was a rejection', () => {
-    const sting = JSON.parse(readFileSync('config/intro-sting.json', 'utf8'))
-    const r = rule('INTRO_STING')
-    assert.ok(r.text.includes(`(${sting.seconds} by default)`))
-    assert.ok(['candidate', 'approved'].includes(sting.status))
-    assert.match(r.text, /status "approved"/)
+  test('the opening rule says what is true today: the sting and the story card are retired into it, and it is a choice under test', () => {
+    const r = rule('HOOK_IS_THE_INTRO')
+    // Krish, 2026-10-29: option one, "The hook is the intro". It replaced both 12 October opening rules.
+    assert.equal(HOUSE_RULES.find(x => x.id === 'INTRO_STING'), undefined, 'INTRO_STING is retired, recorded in HOOK_IS_THE_INTRO')
+    assert.match(r.text, /INTRO_STING, 2026-10-12 to 2026-10-29/)
+    assert.match(r.text, /intro half of STORY_INTRO_OUTRO \(the animated story card, 2026-10-12 to 2026-10-29\)/)
+    assert.match(r.text, /no story card and no logo intro/)
+    assert.match(r.text, /wordmark and the series tag are on screen from the very first frame/)
+    // His "test and learn": a default under test, recorded per cut, refusing nothing.
+    assert.match(r.text, /current choice to test, not a fixed rule, and it refuses nothing/)
+    assert.match(r.text, /records the opening it used \("opening"\)/)
     assert.match(r.text, /intro_override/)
-    if (sting.status === 'approved') {
-      assert.doesNotMatch(r.text, /No design is approved yet/, 'the rule still says no design is approved')
-    } else {
-      assert.match(r.text, /No design is approved yet/)
-      assert.equal(sting.source_sha256, null)
-    }
-    if (sting.last_decision?.decision === 'rejected') {
-      assert.equal(sting.last_decision.by, 'Krish')
-      assert.ok(r.text.includes(`on ${sting.last_decision.on} he rejected`), 'the date of his rejection')
-      assert.ok(r.text.includes(`("${sting.last_decision.words}")`), 'his words, exactly as the config holds them')
-    }
+    const said = 'I\'d pick number one here but I think that we need to test and learn. We need to figure out what the right tone is over time based on real engagement. Let\'s go with number one for now.'
+    const sting = JSON.parse(readFileSync('config/intro-sting.json', 'utf8'))
+    assert.equal(sting.status, 'retired')
+    assert.deepEqual([sting.retired.on, sting.retired.by, sting.retired.rule, sting.retired.words], ['2026-10-29', 'Krish', 'HOOK_IS_THE_INTRO', said])
+    assert.equal(sting.source_sha256, null, 'no sting design was ever approved')
+    assert.equal(sting.last_decision.decision, 'rejected')
+    const story = JSON.parse(readFileSync('config/story-intro-outro.json', 'utf8'))
+    assert.deepEqual([story.retired.story_intro.on, story.retired.story_intro.rule, story.retired.story_intro.words], ['2026-10-29', 'HOOK_IS_THE_INTRO', said])
+    assert.deepEqual(Object.keys(story.required).sort(), ['audio_treatment', 'outro_card'])
   })
   test('the music rule states the ledger\'s folder and levels, so the two cannot drift', () => {
     const ledger = JSON.parse(readFileSync('config/music-library.json', 'utf8'))
@@ -554,6 +574,8 @@ describe('the sting, the music bed and a thumbnail for every size (Krish, 2026-1
     assert.ok(r.text.includes(`up over ${lv.ramp_up_s} seconds after his last word`) && lv.ramp_down_s === 0.5 && r.text.includes('over half a second'))
     assert.ok(r.text.includes(`finishes at ${lv.final_integrated_lufs} LUFS integrated with true peak at most ${lv.max_true_peak_dbtp} dBTP`))
     assert.match(r.text, /stay proposed until he approves them by ear/)
+    // Krish, 2026-10-28: "Yes I think music should be audible throughout but just lower."
+    assert.match(r.text, /audible under the whole of every cut, wide or tall, low under his voice, and never drops out/)
   })
   test('the thumbnail sizes are the ones the drawer writes', () => {
     const build = readFileSync('scripts/pages/build.py', 'utf8')
@@ -767,7 +789,7 @@ describe('reading age 12 is a hard gate on every script (R7, Krish, 2026-10-12)'
   })
 })
 
-describe('a story intro, its audio treatment and an outro card, in every format (STORY_INTRO_OUTRO, Krish, 2026-10-12)', () => {
+describe('its audio treatment and one calm outro card, in every format (STORY_INTRO_OUTRO, Krish, 2026-10-12; the intro half retired 2026-10-29)', () => {
   test('the rule is live, in his words, on the production stage, and the stand-off is approved in his words', () => {
     const r = HOUSE_RULES.find(x => x.id === 'STORY_INTRO_OUTRO')!
     assert.equal(r.status, 'live')
@@ -779,14 +801,15 @@ describe('a story intro, its audio treatment and an outro card, in every format 
     assert.equal(cfg.approved.by, 'Krish')
     assert.ok(cfg.approved.words.includes('todays video goes out with the new intro and outro animations'))
     assert.equal(cfg.said.words, r.said)
-    assert.equal(cfg.until_approved, 'story intro and outro not designed yet')
+    assert.equal(cfg.until_approved, 'story outro not designed yet')
     assert.ok(r.text.includes(cfg.until_approved))
+    assert.match(r.text, /retired on 2026-10-29 by HOOK_IS_THE_INTRO/)
   })
   test('produce-video stops before the final render until the designs are approved', () => {
     const skill = readFileSync('.agents/skills/produce-video/SKILL.md', 'utf8').replace(/\s+/g, ' ')
     assert.ok(skill.includes('house rule `STORY_INTRO_OUTRO`'))
     assert.ok(skill.includes('config/story-intro-outro.json'))
-    assert.ok(skill.includes('say "story intro and outro not designed yet"'))
+    assert.ok(skill.includes('say "story outro not designed yet"'))
     assert.ok(skill.includes('stop before the final render'))
     assert.ok(skill.indexOf('STORY_INTRO_OUTRO') < skill.indexOf('python scripts/quick-edit/make.py WORK/kit/long.json --out WORK/long --only 16x9 --share-mib 29'))
   })
@@ -798,10 +821,12 @@ describe('a story intro, its audio treatment and an outro card, in every format 
 // 1,700 words, short 160 to 195). What he records is v6, his own edit of both
 // at 21:32 UTC on 16 October, put through on his words, so it is not held to
 // the gate here. Since 2026-10-21 the series line is retired and every script
-// closes as SCRIPT_CLOSE says, so v5 keeps every old gate (length, reading
-// age, the story) and fails on nothing but that close.
-describe('this week\'s unrecorded scripts keep every gate but the new close (R7, SCRIPT_CLOSE)', () => {
-  test('Friday\'s v5 deep cut and 90-second cut fit their lengths and a 12-year-old can follow them; only the close of 2026-10-21 is missing', async () => {
+// closes as SCRIPT_CLOSE says, and since 2026-10-28 no script says his name
+// (house rule NO_NAME), which the mind.the.gap line does ("I'm Krish."). So
+// v5 keeps every old gate (length, reading age, the story) and fails on
+// nothing but that close and that name.
+describe('this week\'s unrecorded scripts keep every gate but the new close and the name (R7, SCRIPT_CLOSE, NO_NAME)', () => {
+  test('Friday\'s v5 deep cut and 90-second cut fit their lengths and a 12-year-old can follow them; only the close of 2026-10-21 and the name of 2026-10-28 fail', async () => {
     const { spawnSync } = await import('node:child_process')
     for (const [file, cut, series] of [
       ['docs/plans/2026-10-09-script-deep-v5.md', 'deep', 'mind_the_gap'],
@@ -809,8 +834,73 @@ describe('this week\'s unrecorded scripts keep every gate but the new close (R7,
     ] as const) {
       const out = spawnSync(process.platform === 'win32' ? 'python' : 'python3', ['scripts/post-pack/story_check.py', '--cut', cut, '--series', series, file], { encoding: 'utf8' })
       const found = out.stdout.split('\n').filter(l => l.startsWith('  - '))
-      assert.ok(found.length > 0, `${file}: v5 predates the new close and should be told so`)
-      for (const line of found) assert.match(line, /SCRIPT_CLOSE/, `${file}: ${line}`)
+      assert.ok(found.some(l => /SCRIPT_CLOSE/.test(l)), `${file}: v5 predates the new close and should be told so`)
+      assert.ok(found.some(l => /NO_NAME/.test(l)), `${file}: v5 opens on a series line that says his name`)
+      for (const line of found) assert.match(line, /SCRIPT_CLOSE|NO_NAME/, `${file}: ${line}`)
     }
+  })
+})
+
+// Krish, 2026-10-28: "Remember, no content refers to Krish, ever. I still see
+// that popping up from time to time. Even articles written are not authored by
+// Krish. My face only, for assets and the video format." Then his four answers
+// of 2026-10-29, and, of comparisons: "I think my point was that pictures never
+// add zero value above and beyond the words. They have to be additive in
+// meaning. I'm all up for visually clear ideas."
+describe('no public word names Krish, and every picture adds meaning (NO_NAME, ANALOGY_IN_SCRIPTS_ONLY)', () => {
+  test('NO_NAME is live, in his words, with his four answers, and reaches every stage that writes or checks a public word', () => {
+    const r = HOUSE_RULES.find(x => x.id === 'NO_NAME')
+    assert.ok(r)
+    assert.equal(r.status, 'live')
+    assert.ok(r.said.startsWith('"Remember, no content refers to Krish, ever. I still see that popping up from time to time. Even articles written are not authored by Krish. My face only, for assets and the video format."'))
+    for (const picked of ['"We"', '"No, personal stays personal"', '"Drop it"', '"Yes, block it"']) assert.ok(r.said.includes(picked), picked)
+    assert.deepEqual([...r.stages].sort(), ['final_pass', 'judge_draft', 'publish_check', 'visual', 'write'])
+    for (const stage of ['write', 'judge_draft', 'final_pass', 'visual'] as const) assert.ok(houseRulesBlock(stage).includes(r.text), stage)
+    assert.match(r.text, /OUR TEST · <date>" by default/)
+    assert.match(r.text, /makeyourmindup · <date> · <n> minute read/)
+    // A video label he presents reading OUR TEST or MY TEST is his to pick: a default, never a refusal.
+    assert.doesNotMatch(r.text, /MY TEST|OUR CALL|By Krish/)
+  })
+  test('articles speak as "we", the scripts he speaks keep "I", and no writer example names him', () => {
+    const voice = HOUSE_RULES.find(x => x.id === 'SOUNDS_LIKE_KRISH')!
+    assert.match(voice.text, /In an article and its title, subtitle and description, "we" and "our" carry the publication's view/)
+    assert.match(voice.text, /in a video script he speaks, "I" and "my" carry his/)
+    assert.doesNotMatch(voice.text, /"I" and "my" carry his view: a moment from his own work/)
+    assert.doesNotMatch(HOUSE_RULES.find(x => x.id === 'HOOK_AND_CTA')!.text, /what Krish did/)
+    for (const [file, framing] of [
+      ['apps/control-plane/api/content-ideas/[id]/draft.ts', /You are drafting one piece for makeyourmindup/],
+      ['apps/control-plane/api/_revisePrompt.ts', /rewriting a draft for makeyourmindup/],
+      ['apps/control-plane/api/briefs/assemble.ts', /You write in the publication\\?'s voice and never name its maker/],
+      ['apps/control-plane/api/_humor.ts', /rewriting a passage of a makeyourmindup draft/],
+      ['apps/control-plane/api/content-ideas/[id]/chat.ts', /content partner on makeyourmindup/],
+    ] as const) {
+      const source = readFileSync(file, 'utf8')
+      assert.match(source, framing, file)
+      assert.doesNotMatch(source, /in Krish Raja's voice|Krish Raja's publication|You write as Krish|passage of Krish Raja's draft|Krish Raja's content partner/, file)
+    }
+    // The weekly brief is an article: its position section speaks as "we", under a public heading that says so.
+    const brief = readFileSync('apps/control-plane/api/briefs/assemble.ts', 'utf8')
+    assert.match(brief, /7\. OUR POSITION, 80 to 140 words, in the publication\\'s "we"/)
+    assert.match(brief, /'## Our position'/)
+    assert.doesNotMatch(brief, /MY POSITION|## My position|first person/)
+  })
+  test('a picture must add meaning beyond the words; a visually clear idea with the real facts is welcome; one that stands in for them is out', () => {
+    const r = HOUSE_RULES.find(x => x.id === 'ANALOGY_IN_SCRIPTS_ONLY')!
+    assert.ok(r.said.includes('Then, 2026-10-29, asked whether a picture may show the everyday thing a script compares something to: "I think my point was that pictures never add zero value above and beyond the words. They have to be additive in meaning. I\'m all up for visually clear ideas."'))
+    assert.match(r.text, /adds meaning beyond the words said over it/)
+    assert.match(r.text, /A visually clear idea is welcome, a comparison included, when the real facts are on it/)
+    assert.match(r.text, /stands in for the facts \(the 16 October race between two cars/)
+    // Names alone can carry a comparison (the passports): figures only where there are any.
+    assert.match(r.text, /on a comparison the real names, and the real figures where there are any/)
+    assert.doesNotMatch(r.text, /names and numbers on any comparison/)
+    assert.doesNotMatch(r.text, /never act out an analogy/)
+    // The article and script sentences are kept.
+    assert.match(r.text, /Analogies, comic comparisons and exaggeration belong in the video scripts/)
+    assert.match(r.text, /The article stays more professional/)
+    const relatable = HOUSE_RULES.find(x => x.id === 'RELATABLE_EXPLANATION')!
+    assert.match(relatable.text, /a picture of one must add meaning beyond the words, with the real facts on it, never stand in for them/)
+    assert.doesNotMatch(relatable.text, /a picture never acts one out/)
+    const gate = readFileSync(join(__dirname, '../../scripts/post-pack/visual_gate.py'), 'utf8')
+    assert.match(gate, /pictures never add zero value above and beyond '\s+'the words\. They have to be additive in meaning\./)
   })
 })

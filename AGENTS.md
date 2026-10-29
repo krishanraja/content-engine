@@ -1,6 +1,16 @@
 # AGENTS.md
 
-## Production and growth ownership (Ruling, Krish, 2026-10-26)
+## Ownership (Rulings, Krish, 2026-10-26 and 2026-10-28)
+
+This repository is the Make Your Mind Up content engine (Ruling, Krish,
+2026-10-28: "content-engine, which is not a mindmake product, it's a
+makeyourmindup product"; "Content-engine produces content for
+makeyourmindup.ai, which is hosted at makeyourmindup repo"). Its `plan-week`
+is the one ideation path: makeyourmindup's Watch, Score, Assemble and
+Dispatch machine and its intake runner are superseded, and this engine runs
+makeyourmindup's kill list from a pinned copy
+(`vendor/makeyourmindup/kill-list/`). Package, environment and credential
+names keep their `mindmake` spelling.
 
 Content-engine owns content production and all production standards,
 including carousel narrative, copy, design, rendering and creative QA.
@@ -11,6 +21,13 @@ and docs/CAROUSEL-STANDARD.md for the transferred production requirements.
 Use existing editorial/Studio routes; do not build a social scheduler here
 or duplicate production standards in Growth. Public posting authority stays
 with Growth's approved publishing route, not this repository.
+
+Carousels changed hands on 28 October (Ruling, Krish, 2026-10-28: "take over
+posting as well as creating new assets like carousels"). Growth now makes the
+derived carousels, Notes, memes and off-day posts itself, to this
+repository's `docs/CAROUSEL-STANDARD.md`, the rejection floor and the copy
+lint. Content-engine keeps the standard and makes the hero assets: the
+article, both cuts, thumbnails and covers.
 
 **Publish boards:** follow `docs/PUBLISH_BOARDS.md` and `config/boards.json.web_cutover`. After verified active cutover, both weeks live at content.krishraja.com and all new board interactions use the authenticated web API. Older Claude board instructions in this document are preserved compatibility/history, not directions to synchronize artifacts.
 
@@ -84,7 +101,7 @@ Read linked detail before domain work; every moved paragraph remains verbatim.
 
 **Every video script opens straight on its hook, closes on what he would do, and a 12-year-old can follow it; every article ends with "3 things you can do tomorrow".** ([detail](docs/AGENTS-REFERENCE.md#rule-11))
 
-**Each checked script goes to Krish's teleprompter.com account, and nothing there is ever deleted.** ([detail](docs/AGENTS-REFERENCE.md#rule-12))
+**Each script goes to Krish's teleprompter.com account once he approves its exact words, and nothing there is ever deleted.** ([detail](docs/AGENTS-REFERENCE.md#rule-12))
 
 **Web publish board migration (19 October 2026).** ([detail](docs/AGENTS-REFERENCE.md#rule-13))
 
@@ -119,9 +136,9 @@ Read linked detail before domain work; every moved paragraph remains verbatim.
 
 ## Video production
 
-Video is made with `python scripts/ve.py`: read `docs/ve/ENGINE.md`, follow `docs/ve/RUNBOOK.md`. One signed spec (`creative-direction.json`, `schema_version: 2`); no per-piece compositions or render scripts. Codex builds library devices from cards (`card`, `dispatch`, `verify-card`). ve has no publish verb. Quick-edit stays the fallback until ve passes Phase 3. Local runs use `. scripts/ve-env.sh` (Bash). Licensed music lives only at `MINDMAKE_MUSIC_ROOT` with `config/music-library.json`; never browse Drive for audio.
+Video is made with `python scripts/ve.py`: read `docs/ve/ENGINE.md`, follow `docs/ve/RUNBOOK.md`. One signed spec (`creative-direction.json`, `schema_version: 2`); no per-piece compositions or render scripts. Codex is a visual asset maker (Ruling, Krish, 2026-10-28: "Visual asset maker"): it builds library devices from cards (`card`, `dispatch`, `verify-card`) and makes visual plates for named slots, and it never edits a cut. ve has no publish verb. Quick-edit stays the fallback until ve passes Phase 3. Local runs use `. scripts/ve-env.sh` (Bash). Licensed music lives only at `MINDMAKE_MUSIC_ROOT` with `config/music-library.json`; never browse Drive for audio.
 
-Code check (28 Oct 2026): compile/render lint first and use shared FormatMaster. The schema makes `signed` optional; sign-off remains an operator gate. RUNBOOK.md and STATUS.md are in `docs/ve/` since 28 Oct 2026. Phase 3 fallback is policy, not a CLI switch. [Legacy route](docs/AGENTS-REFERENCE.md#rule-17).
+Code check (28 Oct 2026): compile/render lint first and use shared FormatMaster. The schema makes `signed` optional; sign-off remains an operator gate. `docs/ve/RUNBOOK.md` is the procedure and `docs/ve/STATUS.md` says what ve can and cannot do today. Phase 3 fallback is policy, not a CLI switch. [Legacy route](docs/AGENTS-REFERENCE.md#rule-17).
 
 ## Reference index
 
@@ -142,7 +159,7 @@ Run `npm run verify` before pushing; validate skills with `npm run skills:valida
 
 ## Commit and closeout
 
-Commit code/config/specs/small data before stopping; file media through the authorised library route. Verify before pushing the session branch; never push directly to main. Engine work never waits on a hand merge: run `npm run verify`, push the session branch, open a pull request and turn on auto-merge, so GitHub merges it to main once CI passes. Never `gh pr merge --auto` on a ve PR: wait for green CI, then merge by hand. Fix red CI on the branch. No session creates a scheduled task (a routine, a trigger, a cron) that builds, updates or publishes a publish board.
+Commit code/config/specs/small data before stopping; file media through the authorised library route. Verify before pushing the session branch; never push directly to main. Engine work never waits on a hand merge: run `npm run verify`, push the session branch, open a pull request and turn on auto-merge, so GitHub merges it to main once CI passes. Never `gh pr merge --auto` on a ve PR: wait for green CI, then merge by hand. Fix red CI on the branch. Zero Claude routines (Ruling, Krish, 2026-10-29: "FYI, I want zero Claude routines. No Claude schedules of any kind in this architecture"): no claude.ai scheduled or fired trigger, and no headless Claude on a home-computer timer. GitHub Actions is the scheduler ("Could you not get Github to trigger Claude subscription to do something and then update the content.krishraja.com board?"): judgment work runs as Claude Code inside a GitHub Actions job on his subscription (`CLAUDE_CODE_OAUTH_TOKEN`, never an API key) and writes to the board only through the engine API; `tests/no-claude-routines.test.ts` refuses anything else. Exactly two scheduled jobs may build a publish board: the Sunday ideas board and the Monday final board (Ruling, Krish, 2026-10-28: "on a Sunday, Claude Code proactively brings me ideas"; "an overnight Codex run will actually produce me the final assets and the final publish board first thing Monday morning"). The first is `.github/workflows/sunday-ideas.yml`; the second is built by code (`week_board.py`) from the overnight runner (Wave 2; until then the first session on Monday), never by Claude on a timer. No session creates a scheduled task (a routine, a trigger, a cron) that builds, updates or publishes a publish board, other than those two. The timed API calls (the engine's Vercel crons, inspirationhouse's daily runs, the fact gate) stay, held under $15 a week for this chain (Krish, 2026-10-29: "happy with $15 a week"). So, until Krish says otherwise, any other scheduled job (the Monday repair round, the titles default when he has not pressed) writes records only, and the board shows them at its next build.
 
 Guarded rules. When Krish asks for files, hand him the files themselves. His words are exact typed quotes; a paraphrase stays an observation; a question his feedback already answers is not asked ("If you read what I am feeding back, it's pretty obvious what it is"). Inspiration links go to `Production Inspo` or `Content Inspo` ([detail](docs/AGENTS-REFERENCE.md)).
 

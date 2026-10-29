@@ -2,18 +2,15 @@
 
 [Story correction and Growth handoff, 26 Oct](docs/history/2026-10-26-story-closeout.md).
 
-## 27 October: pasted links tagged Production or Content; the first live run is one reel (Claude)
+## 29 October: the Sunday loop, no name, the bar, zero routines (Claude Code)
 
-- **No windows (28 Oct):** Krish: "HIDE ALL CONSOLE POP UPS FOREVER FROM EVERY REPO AND LOCAL TASK". Each pass runs his console tasks through `run-hidden.exe` (`scripts/windowless.ps1`); content-watcher #16 hides every child and skips media the engine holds. Read `windows` per machine on the lane.
-- **Asked (Krish, 27 Oct):** "Why can't I add links into my inspiration board pre-tagged for production or content? I'm supposed to be able to add this quickly and easily on mobile", with the reel `https://www.instagram.com/reel/DewxbWfjDHB/` to run end to end (learning `paste-a-link-tagged`).
-- **Found:** `content_watch_requests` had never held a row: no pasted link had ever been saved, so the chain (Control Center, content-watcher on a home computer, the taste ledger's quick card run) has never run live. The engine and content-watcher already honour a lane; Control Center never sent one.
-- **Done:** control-center PR #573 (branch `ccr-1b7d26a8-1tri9s`): two required chips (Production, Content) in the link box, the route refuses a link without one (`bad_lane`) and writes `lane`, a re-tag moves only a queued or failed request, and a phone gets Save a link at the top of the Inspiration page. Here: a test that a claim hands content-watcher the lane unchanged.
-- **Cloud trial of the reel (no writes):** content-watcher's free Instagram embed route fetched it without signing in (48.2 s, 9:16, with sound) and the reading got the caption, all 13 spoken sentences, the hook, pace (153 words a minute), loudness (-14.1 LUFS) and the on-screen text every 3 s. It also said **1 shot, 0 cuts**: the reel is about 12 animated scenes on one constant background, no face, so ffmpeg's scene score (0 changes even at 0.12) sees no cut. A production read of motion graphics needs a beat measure (on-screen layout changes), not only hard cuts; that is content-watcher's to add (`content_watcher/read/visual.py`).
-- **Live (27 Oct 13:57 UTC):** control-center #573 merged and deployed (Vercel production READY on `0d4193e`); content-engine #189 merged.
-- **The live run stalled at the home computers (28 Oct):** his two links (a YouTube Short `fad59d76` and an Instagram post `3d3c3999`, both tagged Content) sat `queued` with 0 attempts; the watchers had been silent since 25 and 26 October. The first reading, from logs he pasted (never again), is in `docs/history/2026-10-28-workbench-watcher-stall.md`. PR 201 (merged) made the recordings pass keep the watcher and send its health; content-watcher PR 9 (merged) makes a run end after 20 minutes and name its errors.
-- **Repaired and proven, 28 Oct 03:39 UTC (PR 202 live):** the keeper found no clone on either computer, cloned content-watcher and ran its installer (`cloned_watcher`, `reinstalled_task`); Lorimer claimed both links within the minute, so the cause is proven. The Short (`fad59d76`) is `read` with its card (Content Inspo, `heard: words`). The Instagram post (`3d3c3999`) is `failed`, class `other`, three tries spent in five minutes. Next: read `recent` on the lane route for its step classes, fix, and queue it again.
-- **Cloud backup, proven live 28 Oct 06:58 UTC:** `cloud-gh` took Krish's carousel through `.github/workflows/watch-cloud.yml` (started by hand with `wait_minutes`, the link made claimable at a set second past both home computers' minute ticks), fetched it through `POST /api/watch/apify` (the engine's key; no GitHub secret, which the session proxy cannot write), reused the filed slides (`media` in the claim) and stored the full reading. Still unproven against Google: the keyless PUT of a new file; `GET /api/watch/upload?session=1` asks a session's status with no key (expect 308) without making a file. Every pasted link so far is a card: `fad59d76`, `3d3c3999`, `36e7f24a`, `80f72ec5`.
-- **Cloud fetch of both links (no writes, free routes only): both refused**, which is expected of a cloud machine and does not predict the home result. The Short: YouTube's bot check (`blocked:bot_check`), the home computers have the token helper and cobalt for this. The post: Instagram's embed answered `not_found:ig_removed` and gave no cover, so a logged-out reader cannot see it; at home it goes on to Instaloader and Apify (under the $5 cap), and if every route misses it fails as a class Krish can read on its card ("Paste it again to retry").
+On session branch `claude/fervent-brown-d8e55b`, going to main by pull request (the ve part by hand after green CI). `NOW.md` has the detail; the plan for what follows is `docs/plans/2026-11-07-wave-2.md`, then `docs/plans/2026-11-14-wave-3.md`.
+
+- **Rulings (Krish):** "Remember, no content refers to Krish, ever." (28 Oct); "I would much rather the engine know what kind of thing doesn't fly with me, rather than implement incredibly specific rules everywhere"; "Yes, that's the floor"; "The hook is the intro"; "FYI, I want zero Claude routines. No Claude schedules of any kind in this architecture"; "happy with $15 a week".
+- **Built:** the board's five presses, script approval with the server Teleprompter send, titles and Reject with reason; the Sunday room in plan-week and the narrative lock in `making.py`; `no_name` in the copy lint, the kill list (`personal_name`), ve's lint and quick-edit's captions, with articles in "we"; `docs/production/THE_BAR.md` (eight nevers, aims, choices under test, `making.py <piece> choices`); every cut opens on its hook with the music bed under all of it; house rules `NO_NAME` and `HOOK_IS_THE_INTRO`, approved in person (`60b87ff`); `.github/workflows/sunday-ideas.yml` and `make-piece.yml` on `CLAUDE_CODE_OAUTH_TOKEN`, guarded by `tests/no-claude-routines.test.ts`; the Saturday preflight with no Claude turn.
+- **Never run yet:** both workflows fail at their first step until the secret exists.
+- **Only Krish can:** add `CLAUDE_CODE_OAUTH_TOKEN` (`claude setup-token`) and run Actions > Sunday ideas once before Saturday 31 October; delete the two claude.ai routines; give Control Center's `GITHUB_TOKEN` Contents: write and Actions: read here; decide auto-merge for make runs and a reader for the $15 cap.
+- **Dates:** the dry run, Saturday 31 October 18:00 New York; the first Sunday loop, 1 November.
 
 ## 28 October: Monday 26's cuts rebuilt on his review, on the board and in the archive (Claude Code)
 
@@ -30,16 +27,6 @@
 - **Accepted:** "yes, watched, I approve" and "Happy with the words on screen." (Krish, 28 Oct). His `ruling` in each
   receipt sets the words limits and names the pictures the blind model review judged unclear (long: l19-p1, l25, l27, l33,
   l36, l37; short: s07-p5); sync at 4:03 (-80 ms) is recorded, not hidden. Nothing is posted: he presses publish.
-
-## 27 October: Wednesday and Friday in Teleprompter; Monday's three questions (Claude)
-
-- **Asked (Krish, 27 Oct):** "yes to all three, send weds and keep going", then "yes to all three, send fri and keep going. Give me any genuine questions you have here as opposed to just saying "Monday is still with you." I have no idea what that means." (learning `ask-the-real-question`, encoded in make-piece "Before you stop").
-- **Wednesday (Claude Duet):** no prediction (his "lets give weds the same treatment as friday"); closes on his first job for Duet (keeping his Drive notes current from email and calendar), one question, a word to IT. Six rounds of fresh readers, then his sign-off; both Teleprompter scripts updated in place and recorded. Article passes the fact gate (third run $0.14; his sign-off on six Reddit and Help Center lines). `docs/plans/2026-10-28-wednesday/`.
-- **Friday (who trains your 2030 seniors):** outline approved; article filed with four sources (Anthropic report, IMF/Bessen, NPR Planet Money, Stanford page), voice and AI scan pass; two fact runs ($0.34, $0.13) fixed a misattributed quote and "the Anthropic Institute"; seven of his lines signed. One line waits on his yes: "James Bessen looked at what actually happened, in a piece for the IMF" (the IMF byline reads "James Bessen"). Scripts in Teleprompter (folder "Fri 30 Oct mind.the.gap - Who trains your 2030 seniors") after three reader rounds and his sign-off. `docs/plans/2026-10-30-friday/`.
-- **Monday, waiting on Krish (put to him as questions, `docs/plans/2026-10-26-monday/review/fact-signoff.md`):** keep the recorded prediction (1 March 2027, 75%) though it breaks the three-month and 80% rules (an exception needs his words); a re-check of four corrected article lines (about $0.13, refused by this session's permission system without his yes today; the corrections are in `docs/plans/2026-10-26-draft-body.md` and go onto the piece with that run); sign-off of seven lines; his paste of `CODEX_PROMPT.md` into Codex.
-- **Publish checks:** Wednesday and Friday may be approved with no prediction while their articles make none (`_publishChecks.ts`, PR #187). `scripts/engine.py` no longer asks a budget for a free sign-off.
-- **Board:** build 300316fd (inputs `.cache/week-board/2026-10-26/run3/`); in a cloud session the board reads and publishes through `BOARD_BASE_URL=https://content-engine-flame-nu.vercel.app`.
-- **Spend 27 Oct:** fact checks $0.61 (Wednesday $0.14, Friday $0.34 and $0.13) against his $1.05.
 
 ## 26 October: Monday to its one sign-off; Wednesday and Friday next (Claude)
 
@@ -157,9 +144,11 @@ The week of 19 October's queue notes are in `docs/history/2026-10-27-workbench-1
 - He reads his scripts in teleprompter.com and drops each take at the top
   of the Video Engine Inbox. His words, 2026-10-12: "Also note that Descript
   is permanently gone, teleprompter.com is permanently in, connected via MCP
-  here". Every checked script goes there by itself, one folder per piece
-  and one script per cut, updated in place, and nothing there is ever
-  deleted (`AGENTS.md`, `config/teleprompter.json`).
+  here". A script goes there only once he approves its exact words (his
+  words, 2026-10-28: "Once I approve, the two scripts will go to
+  teleprompter"; `teleprompter_send.py plan` refuses until he has), one
+  folder per piece and one script per cut, updated in place, and nothing
+  there is ever deleted (`AGENTS.md`, `config/teleprompter.json`).
 
 - Never hand him a blocker you have not checked is real, and never one a
   session can clear itself. His words, 2026-10-12, after a session relayed
@@ -187,10 +176,13 @@ The week of 19 October's queue notes are in `docs/history/2026-10-27-workbench-1
   - the story intro and outro: `scripts/quick-edit/story_io.py props --plan
     <plan>` then `render`.
   Then kit.py, make.py, the thumbnails, send.py and making.py as
-  `produce-video` says. The midday run (`.github/workflows/produce-day.yml`,
-  `scripts/produce_day.py`) does all of it by itself at 12:00 New York on
-  Monday, Wednesday and Friday, on GitHub's machine (his choice: "GitHub
-  always renders"); its Run workflow button is the one click.
+  `produce-video` says. The production run (`.github/workflows/produce-day.yml`,
+  `scripts/produce_day.py`) does all of it on GitHub's machine (his choice:
+  "GitHub always renders") from its Run workflow button, by hand only since
+  the 28 Oct ruling ("record the entire week on a Sunday, but it does not go
+  live until the Monday after (8 days later)"); it stops red when a gate
+  holds a cut, and in Wave 1 always before filing, since no machine records
+  the review evidence yet.
 - Epidemic Sound gives no per-track licence number. His safelisted channels
   are the licence record (`config/music-licences/`, screenshot of 12
   October); never ask him for licence details again. LinkedIn and every
@@ -278,10 +270,11 @@ All on main; each has its tests.
   1:27) in Drive `3 Posts/2026-10-12 Mon .../3 Video`, with NO CURVES, the
   stand-off story intro and outro, thumbnails, and five covers. Only posting
   is left, and that is his.
-- **The midday run** (`.github/workflows/produce-day.yml`,
-  `scripts/produce_day.py`): Monday, Wednesday and Friday at 12:00 New York,
-  GitHub renders both cuts end to end (his choice: "GitHub always renders");
-  the Run workflow button is the one click. The secret ENGINE_OPERATOR_TOKEN
+- **The production run** (`.github/workflows/produce-day.yml`,
+  `scripts/produce_day.py`): by hand only since the 28 Oct ruling (the noon
+  schedule is gone), GitHub renders both cuts end to end (his choice: "GitHub
+  always renders") from the Run workflow button, and stops red when a gate
+  holds a cut. The secret ENGINE_OPERATOR_TOKEN
   is set. A stop writes one board item `videos-<date>` saying what stopped.
   No schedule puts the videos on the board: Krish deleted the publish board
   schedules from both accounts on 19 Oct ("We are not ready for this yet").
@@ -447,21 +440,17 @@ https://controlcenter.krishraja.com/#/board:
    notes are its entry under "Latest handoff". On his words, either carry
    Wednesday on in this session (`make-piece`: draft, fact gate, visual
    gate, scripts with the under.the.hood line, read-back, Teleprompter,
-   publish page, board) or fire the "Make a piece" routine
-   (trig_01BNH3a98CuVV9sGW9b56DNJ) with `piece_id:
-   7554ed4a-560b-4365-b266-ea72abeed7ef`, quoting his words in the fire
-   text. Never both.
+   publish page, board) or start one `make-piece.yml` run with `piece_id:
+   7554ed4a-560b-4365-b266-ea72abeed7ef`; never a routine (29 Oct). Never
+   both.
 7. **Read-backs already behind us.** No cut, Monday's or Friday's, has a
    two-reader pass on record, whatever the 16:45 entry below says ("each
    cut passed `story_check.py` and two fresh 12-year-old readers": they
    passed `story_check.py`; the strict readers still lost the thread in
    places). Monday's takes are recorded, so leave Monday's words alone and
    record no pass for them; Friday's get theirs in step 5.
-8. **Only Krish can**: attach the Teleprompter connector to both routines
-   ("Plan the week" trig_016PWevC6fzViu6mHpKSAbHM and "Make a piece"
-   trig_01BNH3a98CuVV9sGW9b56DNJ) and remove Descript from them, in
-   claude.ai; until he does, a routine session stops at the Teleprompter
-   send and says so. Still open with him: the second sting design
+8. **Retired 29 Oct:** the "Plan the week" and "Make a piece" routines
+   (zero Claude routines, top of this file). Still open with him: the second sting design
    (https://claude.ai/artifact/FnDVNoCk1CqxGKTHRYENKH, which the story
    intro may absorb; step 3), and Library Sync on the backup computer.
 
@@ -754,7 +743,7 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
-- 2026-10-24: **Wednesday's production outcome failed.** Krish reports that he published only the horizontal long video, later noticed random small cuts and chopped words in it, and scrapped the vertical video and article. The defect is reported, not independently located or attributed. His latest decision supersedes the earlier “Both approved” playback and the 23 October “board ready” handoff. `docs/plans/2026-10-21-wednesday/FAILURE_REPORT_2026-10-24.md` documents the observed failures, limits of the old checks, Claude/Codex execution differences and exact corrective owners. The report is a handoff for Claude, not a restart order. No live public-platform or private-board readback was done in this report session. **Next:** reconcile the making record and private board to published-long-with-reported-defect / withdrawn-short-and-article; preserve history; compare the exact public upload with the accepted export before attributing the defect; do not alter the public cut or publish anything else without Krish's instruction.
+- 2026-10-29: **The Sunday loop is built and waits on one secret.** Everything in the 29 October section above is on `claude/fervent-brown-d8e55b`; `npm run verify` passes except `tests/quick-edit-mix.test.ts` (this container's ffmpeg 6.1.1, the repository pins 8.1.2). **Next:** Krish adds `CLAUDE_CODE_OAUTH_TOKEN` and runs Sunday ideas by hand once before Saturday 31 October; then the dry run, the first Sunday loop on 1 November, and Wave 2.
 
 - Older handoffs (12 to 23 October): `docs/history/2026-10-18-WORKBENCH-handoffs.md`. This section holds only the newest one: when you write a new handoff, move the one it replaces to the top of that file (G11, `scripts/check_workbench.py`).
 

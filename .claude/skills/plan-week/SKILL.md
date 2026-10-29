@@ -1,6 +1,6 @@
 ---
 name: plan-week
-description: Plan the publishing week on Sunday. Research three or four options for each publishing day (Monday follow.the.money, Wednesday under.the.hood, Friday mind.the.gap), stress-test them, write them onto the pieces through /api/week/options so Control Center's week page (#/week) shows them, flesh out the ideas Krish dropped in, put the week's one question on the board, and make the week's publish board (one page, a tab for each day, a tick for every step). Use when the Sunday "Plan the week" routine fires, or when Krish asks to plan or re-plan the week.
+description: Plan the publishing week and run the Sunday room. Research three or four options for each publishing day (Monday follow.the.money, Wednesday under.the.hood, Friday mind.the.gap) and the off-day options, stress-test them, write them onto the pieces through /api/week/options and onto the Ideas tab of the week's publish board by 06:00 Sunday, read back Krish's five presses from the board, interview him one question at a time on all three picks to find the deeper story, write one narrative lock per piece for him to sign, start each signed piece's make in its own fresh session, and send approved scripts to Teleprompter when the server could not. Use when the Sunday ideas run fires in GitHub Actions, or when Krish asks to plan or re-plan the week.
 ---
 
 # Plan the week
@@ -21,17 +21,68 @@ every Artifact publish and every ArtifactData write. Any Artifact, ArtifactData,
 ArtifactComments or dual-account step below is history: read an old artifact
 only to recover what it holds.
 
-Krish, 2026-10-11: "Every Sunday we're going to decide which of the three
-pieces are going to go out on Monday, Wednesday, and Friday. We're going to
-get Monday's piece all the way to iteration and the publish board, whilst
-leaving Wednesday and Friday as topic confirmed and waiting on me", and the
-only question he wants asked: "What are we writing about this week? Here are
-your ideas and options. Do you want to drop in any other ideas that we can
-flesh out?" Never ask him anything else on a Sunday: the standing answers are
-in `docs/CADENCE.md` (a 5-minute video and a 90-second cut, every piece; Substack
-and YouTube, then Shorts, TikTok and Instagram).
+## The Sunday loop (rulings, Krish, 2026-10-28)
 
-The week runs Monday to Friday. On Sunday it is the coming week.
+Krish records the whole week on a Sunday, and it goes live eight days later:
+"record the entire week on a Sunday, but it does not go live until the Monday
+after (8 days later)". So on the recording Sunday the week this skill plans
+starts on the Monday eight days later (`<Monday>` below): on Sunday 1
+November it is the week of 9 November, whose pieces go live on Monday 9,
+Wednesday 11 and Friday 13 November. The backlog is not this loop's: Monday
+26, Wednesday 28 and Friday 30 October go live on 2, 4 and 6 November.
+
+"on a Sunday, Claude Code proactively brings me ideas", and then "Claude
+interviews me on all three ideas to nail down the narrative arc, make it
+really powerful, useful, and fun to consume, and really find the deeper story
+beneath the surface story." That retires both halves of the rule of 11
+October (Monday's piece only, and never asking him anything else on a
+Sunday). The publish board is the one surface (his answer: "Publish board");
+Control Center's #/week only tracks it. Still never ask him what
+`docs/CADENCE.md` already answers (a 5-minute video and a 90-second cut, every
+piece; Substack and YouTube, then Shorts, TikTok and Instagram).
+
+**Zero Claude routines** (Ruling, Krish, 2026-10-29: "FYI, I want zero
+Claude routines. No Claude schedules of any kind in this architecture"; then
+"Could you not get Github to trigger Claude subscription to do something and
+then update the content.krishraja.com board?"). No claude.ai scheduled or
+fired trigger and no headless Claude on a home-computer timer runs any step
+here. GitHub Actions is the scheduler, and Claude Code runs inside its job on
+his subscription (`CLAUDE_CODE_OAUTH_TOKEN`), writing to the board only
+through the engine API:
+
+- **The Sunday ideas run**, `.github/workflows/sunday-ideas.yml`: GitHub's
+  cron fires it early on Saturday (UTC), twice, because GitHub fires late; a
+  guard (`scripts/sunday_ideas.py built`) makes it do nothing once the week's
+  Ideas tab is live. It runs steps 1 to 7 only (of step 0, only the
+  Inspiration cards routed to a piece), and keeps `ideas.json` and
+  `combine.json` on the branch `sunday-ideas/<Monday>-<run>`.
+- **The Sunday room** is a session Krish opens himself. It merges that branch
+  into its own, writes the `WORKBENCH.md` lines the run could not keep (step
+  7 and "Without the connectors"), does step 0's close-out, then steps 8 to
+  12. The run only reads the Inspiration cards (through `/api/week/options`)
+  and never marks them; the room marks `routed_at` on the ones the plan took,
+  after merging the branch.
+- **Each signed piece's make** is one run of `.github/workflows/make-piece.yml`
+  (step 11), never a routine.
+
+The clock, in his local time (Control Center's operator time zone). Each row
+names the checkpoint Control Center watches for it:
+
+| When | What | Checkpoint |
+|---|---|---|
+| Saturday, by 06:00 Sunday | The Sunday ideas run (GitHub Actions) does steps 1 to 7: the Ideas tab is live | `week_ideas_ready` |
+| Sun by 10:00 | Krish's five presses on every idea, about 15 minutes | `week_picked` |
+| Sun 10:00 to 11:45 | The triage readback (step 8), then the interview (step 9), about 105 minutes | `narratives_locked` |
+| As each lock is signed | That piece's make starts in its own fresh session (step 11) | `scripts_ready` |
+| About 12:30 | His Approve scripts press per day: the server sends both scripts to Teleprompter and reads them back (step 12) | `scripts_sent` |
+| About 15:30 | His Titles press: three options per surface. It starts the Sunday-night run (`produce-video`); a surface he has not picked by 21:30 takes its top-ranked option | `titles_picked` |
+
+Once the Ideas tab is live, the Sunday room does three things only: the
+triage readback, the interview and one signed narrative lock per piece. Then
+it starts each signed piece's make, and sends approved scripts to
+Teleprompter only when the server could not. It never drafts a script, an
+article or a visual: each piece's make session does, from its signed lock
+(`.agents/skills/make-piece/SKILL.md`).
 
 ## Steps
 
@@ -42,12 +93,15 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    item stays open, and every session's tick copy keeps reading it as last
    week's board until every picked day on it is at 100%, because Krish
    posts Friday's reposts at the weekend. Then `python3
-   scripts/post-pack/teleprompter_send.py pending`: a cut it lists is sent
-   to Teleprompter exactly as `make-piece`'s "The Scripts step" says, step 6
-   (his standing yes covers any session), or, without the Teleprompter
-   connector, named in one line on the week's board item. A cut sent by hand
-   gets its record line instead, and one held back after a failed send is
-   only named. Then relay his taps and comments on the ending week's "What I
+   scripts/post-pack/teleprompter_send.py pending`, and again with `--week
+   <Monday>` (the week this room plans is eight days out): a cut it lists
+   goes to Teleprompter only once his Approve scripts press holds its exact
+   words (step 12; Krish, 2026-10-28: "Once I approve, the two scripts will
+   go to teleprompter", which replaces the standing yes of 12 October). A
+   cut whose press came back `no_key` is sent as step 12 says; one with no
+   press waits for it, named in one line on its day's tab. A cut sent by
+   hand gets its record line instead, and one held back after a failed send
+   is only named. Then relay his taps and comments on the ending week's "What I
    learned" lessons, the taste ledger's `taste:` ones included, exactly as
    `make-piece` says (yes, no, or a comment as his rewording), and only those
    whose `updated_by` is Krish. One he left alone stays proposed. Next, read
@@ -99,13 +153,21 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    reads that file, never your memory of it). Tell him how many wait and
    how many have no verdict yet, and offer the queued ideas that fit each
    day before you research anything new. Copy his board marks into the
-   engine first: every `QUEUE <pick> <verdict> <reason>` comment and
-   `queue/<pick>` doc on last week's board (web `queue` and `comments`
-   collections after active cutover; ArtifactData only for legacy sources)
-   goes to `POST /api/idea-queue` (`action: queue` with `verdict`, `reason`,
+   engine first: every `QUEUE <pick> <verdict> <reason>` comment and every
+   `queue/<pick>` doc with no `use` on last week's board (a week before the
+   fixed layout; web `queue` and `comments` collections after active
+   cutover; ArtifactData only for legacy sources) goes to
+   `POST /api/idea-queue` (`action: queue` with `verdict`, `reason`,
    `angle`, `decided_by: "Krish"`, the idea's `so_what`, `story` as `idea`,
    `source_url`, `series`, `from_week`, `from_pick`). A mark with no verdict
-   is only queued. Never write a verdict he did not give.
+   is only queued. Never write a verdict he did not give. Of his presses
+   (a `queue/<pick>` doc with `use`), only Next week (`use: next_week`)
+   goes there, as `action: queue` with no verdict, so it is offered first
+   next week. Never relay Wider piece, Future trend, Reject or an off-day
+   press to the idea queue: queuing those would offer again an idea he
+   rejected or set aside. The Inspiration House cue run reads every press
+   from the board itself (`src/collect/feedbackCues.ts`, documents Krish
+   wrote) and files it as a cue; Growth reads the off-day ones.
    Copy his Combine taps the same way: `python3 scripts/post-pack/board_feed.py taps <last Monday>`
    prints a synthesize body for every `queue/combine-<n>` doc Krish wrote
    himself (`updated_by: "Krish"`; it skips any other writer and says so,
@@ -180,7 +242,12 @@ The week runs Monday to Friday. On Sunday it is the coming week.
 3b. **The Ideas tab** (Krish, 2026-10-18: "adding a 4th tab at the front:
    Ideas. Cementing Ideas and basic narrative is Sunday's job", then "give
    me more than 3 from all my suggested sources and the ones I threw at
-   other sessions last week"). Draw the ideas from his own words first:
+   other sessions last week"). It is live by 06:00 on the recording
+   Sunday, so he can press before 10:00. Last week's Next week presses come
+   first, before anything new: every queued idea he marked for this week
+   (`use: next_week` with `target_week` this `<Monday>`, in the idea queue
+   and in `queue/<idea_id>` on last week's board) is offered on the day it
+   fits. Then draw the ideas from his own words:
    every idea he gave any session since the last Sunday (`krish-ideas-*`
    and `said-` items on `GET /api/workbench`, `dropped_by_krish`, his cold
    ideas in the Inspo folder), then the sources `docs/prompts/sunday-ideas-tab.md`
@@ -229,12 +296,8 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    the same day (a company's own claim says so) and leave out any you
    cannot; no titles, which are his after he records. Stale or unchecked
    filler never pads a day. The board builds it as its first tab with
-   `--ideas` and refuses a day with fewer than four checked ideas. His pick
-   is saved in the board's store (`picks/<day>`) and posted as a comment
-   (`PICK <day>`): read both `picks` and `comments` through
-   `board_web.py read WEEK COLLECTION` on the active web board, then write the picked idea onto its piece as the day's
-   rank 1 option through `/api/week/options` (creating its row first if it
-   has none).
+   `--ideas` and refuses a day with fewer than four checked ideas. His
+   five presses on each idea are read back in step 8.
    **What his 19 Oct triage taught** (`config/learnings.json`, entries
    `ideas-pass-the-business-leader-test`, `simplify-and-unpack-the-concept`,
    `follow-the-money-traces-the-money`, `no-repeat-topic-within-weeks` and
@@ -257,6 +320,19 @@ The week runs Monday to Friday. On Sunday it is the coming week.
      his words as the brief; curious and not queued is "pass for now" with
      his reason; drop is never offered again; his own angle on a picked
      idea is its brief.
+3c. **The Off days options** (Krish, 2026-10-28: "I'm happy to plan the
+   Tuesday, Thursday, Saturday, and Sunday content within the Sunday ideas
+   session if you give me a few options to approve as you do the
+   Mon/wed/fri"). Read `.agents/skills/plan-week/references/offdays.md`
+   first: 2 to 3 options each for Tuesday, Thursday, Saturday and Sunday on
+   the Make Your Mind Up Instagram, TikTok and YouTube Shorts channels. Its
+   gates: someone else's image or clip is never reposted; every news claim
+   names its primary source, is checked against it the same day and passes
+   the fact gate; each option's copy passes the copy lint and the kill list
+   before it reaches the tab; they go into ideas.json `offdays` and reach
+   the tab only through `week_board.py --ideas`, never by patching the page,
+   and until the board has its Off days part the room says so in step 8.
+   Growth owns the lane; his one press approves or skips each.
 4. Write each day's options, best first, one recommended:
    `python3 scripts/engine.py POST /api/week/options @options.json` with
    `{"week_start": "<Monday>", "series": "<slug>", "options": [{"id": "<uuid>", "rank": 1, "pitch": "two or three plain sentences", "why_now": "the dated event, with its date", "recommended": true, "covers": ["<must_cover id>"]}]}`.
@@ -274,16 +350,19 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    (`control-center api/content/slate.ts`), and the week page reads the options
    live, so nothing else is needed. Check that the board item
    `week-<Monday>` exists; if the cron has not run yet, it will.
-6. Do not pick, schedule, draft or spend. Picking is Krish's press on the week
-   page; his Monday pick starts the make-piece session on its own.
+6. Do not pick, schedule, draft or spend. Picking is Krish's press on the
+   board's Ideas tab; a pick starts nothing by itself. Each piece's make
+   starts once he signs its narrative lock (steps 10 and 11).
    **Sunday is his recording day** (Krish, 2026-10-24: "Yes, Sunday is my
-   recording day"). Once he has picked all three days, the same Sunday runs
-   `make-piece` for Monday, then Wednesday, then Friday: the story with him
-   one question at a time, then the scripts, checked and in Teleprompter by
-   midday (`config/board-layout.json` `rhythm`), and the creative direction
-   for every cut (`docs/CREATIVE_DIRECTION.md`) before he records. After he
-   records, the storyboard goes to him for sign-off; production (Codex or
-   Claude) renders only from the signed direction.
+   recording day"). The room locks the three stories with him; each make
+   session takes its piece to checked scripts on the day's tab for his
+   Approve scripts press by about 12:30, with the creative direction for
+   every cut (`docs/CREATIVE_DIRECTION.md`) before he records. He records
+   from 13:00, presses Titles at about 15:30 and signs each storyboard on
+   its day's tab. His Titles press starts the Sunday-night run
+   (`.agents/skills/produce-video/SKILL.md`), which renders only from the
+   signed direction; 21:30 is only the deadline for a surface he has not
+   picked.
 6b. **No weekly deep cut: a 15-minute feature only when Krish calls one**
    (house rule FEATURE, Krish, 2026-10-21: "all videos are generally 90 sec
    and 5 min. From time to time I might do a special 15 min feature"; asked
@@ -365,17 +444,163 @@ The week runs Monday to Friday. On Sunday it is the coming week.
      publish board" (replacing the one there), where it stays until that
      week's item is done.
    - **When the picks come in.** This run is early on Sunday, before Krish
-     picks, so most tabs start as not picked. The session his Monday pick
-     starts (`make-piece`, "The week's publish board") rebuilds the board
-     with the picks and republishes it to this same link, with `--previous`
-     so no day it holds is lost, and no tick is lost; so does any session
-     that finds a day picked or made that the board does not show yet. When
-     this skill runs again in the same week (Krish asks to re-plan), it
-     republishes to this week's link rather than making another.
+     picks, so most tabs start as not picked. The room rebuilds the board
+     with the picks after the triage readback (step 8) and republishes it to
+     this same link, with `--previous` so no day it holds is lost, and no
+     tick is lost; from then on each make session keeps its own day's tab
+     current (`make-piece`, "The week's publish board"), and so does any
+     session that finds a day picked or made that the board does not show
+     yet. When this skill runs again in the same week (Krish asks to
+     re-plan), it republishes to this week's link rather than making
+     another.
+
+The Sunday room now waits for him in this same session: he comes back
+after his presses, by 10:00.
+
+8. **The triage readback.** His five presses on the Ideas tab are his
+   decisions, and the board writes each into the store that holds it: Pick
+   for day (`picks/<day>`, with his optional `note`; the pick reaches its
+   piece by itself), Wider piece (`queue/<idea_id>` with `use:
+   wider_piece_context`), Future trend (`use: track_over_time`), Next week
+   (`use: next_week` with `target_week`) and Reject (`use: not_for_us`, with
+   his `reason`), and on the off-day options, approve or skip (`use:
+   offday` with `day` and `approved`). Read them: `python3
+   scripts/post-pack/board_web.py read <Monday> picks`, then the same with
+   `queue` and `comments`. Only documents whose `updated_by` is Krish are
+   his; nothing else is read back as his. Then say it back to him in one
+   message, by day: what he picked, with his note in his exact words; each
+   idea he kept for a wider piece, a future trend or next week, and each he
+   rejected with his reason in his exact words; and the off-day posts he
+   approved. Check that each pick reached its piece (`scheduled` in
+   `python3 scripts/engine.py GET "/api/week/options?week_start=<Monday>"
+   --full`), and name any that did not; for one that did not, write the
+   picked idea onto its piece as the day's rank 1 option through
+   `/api/week/options` (creating its row first if it has none), as before.
+   Never relay a pick he makes in chat
+   as a board tap: what he types in the room is relayed as his words with
+   where he typed them ("Sunday room chat" and the time), only through a
+   route that takes his words with their source (the idea queue's
+   `decided_by: "Krish"` with his words as the reason, for example), and
+   his press on the board is still what records a pick. Rebuild the board
+   with the picks (step 7, "When the picks come in"). A day with no pick:
+   its pick is the first question of step 9, with your best guess.
+   **Check the day tabs' presses now, not at 12:30.** `python3
+   scripts/post-pack/board_web.py read <Monday> approvals`, then the same
+   with `titles`. If either is refused (the command's "invalid choice", or
+   the board answering `invalid_collection`), that press is not on the board
+   yet; it lands with the board's own change. Say so at the top of the
+   readback, in one line, and on the week's board item: with no Approve
+   scripts press no script reaches Teleprompter (neither the server nor
+   `teleprompter_send.py plan` sends without his press, and nothing stands
+   in for it), so he reads each script from its day's tab while he records;
+   with no Titles press the night's cuts take each surface's top-ranked
+   option (`produce-video`, "The Sunday-night run").
+9. **The interview** (Krish, 2026-10-28: "Claude interviews me on all three
+   ideas to nail down the narrative arc, make it really powerful, useful,
+   and fun to consume, and really find the deeper story beneath the surface
+   story"), about 105 minutes, 10:00 to 11:45. Read
+   `.agents/skills/plan-week/references/sunday-room.md` first: it holds the
+   protocol, which never bends. One question at a time (learning
+   `one-question-at-a-time`), each with your best guess and each settling one
+   part of a lock; check before you ask; his answers kept verbatim in
+   `docs/plans/<Monday>-week/interview.md`, never the rest of the chat; and
+   the 11:45 clock. **Confidentiality is a hard gate:** an answer he says is
+   off the record, or one that names a client, a deal figure or anything
+   else private, stays out of `interview.md` and the lock, which merge to
+   main; the file says only that something was withheld. Before the first
+   question, read the floor for scripts and articles (`python3
+   scripts/floor.py --format script`, `--format article`), each pick's
+   research (its `sources.json` entries, the corpus he linked to it, `select
+   name, drive_file_id, read_as, note_for_claude from inspiration_items where
+   kind = 'corpus' and piece_id = '<piece_id>'`, and his note on the pick)
+   and the published and in-flight pieces of the last three weeks, with
+   their end messages and Monday actions: no question repeats what is
+   already settled, and step 10 checks each lock against them.
+10. **One narrative lock per piece, signed by him**:
+   `docs/plans/<Monday>-week/narrative-lock-<day>.md`, in exactly the shape
+   `.agents/skills/plan-week/references/sunday-room.md` gives: its piece and
+   the day it publishes, then Surface story, Deeper story, Arc, The fun, The
+   use (the one thing a business leader does differently on Monday), His
+   close, Facts to check, Outline (one spine, at most six sections, house
+   rule ONE_SPINE), Style recipe and Music bed. **Three checks before it
+   goes to him**, on its Answer, The use, His close and any test it runs,
+   the same checks the backlog's Narrative step makes (`make-piece`), and
+   say in the room what each found:
+   - *Against the research.* Each is checked against the piece's sources
+     before he signs: a line the evidence does not hold changes here, never
+     later.
+   - *Against the series' recent pieces* (read in step 9). A takeaway or a
+     Monday action a recent piece already landed is never the Answer or The
+     use again; the lock says what is new (Krish, 2026-10-26: "we've already
+     done that message takeaway with the Muse versus Grok piece"; learning
+     `no-repeat-contract-takeaway`: never "check your contract" again unless
+     he asks).
+   - *A test is an experiment.* A test the piece runs is designed before it
+     is run: what it tests, one thing changed only (a matched control), the
+     same access and settings for every tool, prompts that need nothing
+     outside their own words, and what will be read from each answer
+     written down before any answer exists (Krish, 2026-10-23: "I don't
+     think you are really thinking much about how to design a test that
+     yields the experiment needed").
+   Then `python3 scripts/post-pack/making.py <uuid> narrative <lock>` until
+   only his signature is missing; it prints the lock's sha256. Put the whole
+   lock to him in the room, the words themselves and never a pointer to
+   them, and ask him to sign it. Once he does, the last line is his exact
+   typed words, the date and that hash: `Signed by Krish: "<his words>",
+   <YYYY-MM-DD>, lock sha256 <hash>`. Run `narrative` again until it says
+   signed, commit the lock and `interview.md`, push the room's session
+   branch and open its pull request with auto-merge on (`AGENTS.md`,
+   "Commit and closeout"; nothing lives only in this container). The signed
+   lock stands for the outline's approval and the style recipe's yes
+   (`make-piece`): he signs once per piece. A signed lock is never edited:
+   `making.py` refuses one whose words changed under his signature. A change
+   to its end message, its close, its use, its spine or a section after he
+   signed goes back to him, and the changed lock gets a new hash and his new
+   signature (the drift rule). From 9 November `making.py scripts` refuses a
+   piece without it.
+11. **Start that piece's make, in its own fresh run**, as soon as its
+   lock is signed and pushed; one run per piece, and never a piece made in
+   the room. First check none is at work on it (`python3
+   scripts/post-pack/making.py <uuid> show`: a session that started under
+   six hours ago may be), then dispatch `.github/workflows/make-piece.yml`
+   (Claude Code in GitHub Actions on his subscription) at the room's pushed
+   branch, exactly as `.agents/skills/plan-week/references/sunday-room.md`
+   ("Starting each make") gives; never a routine (Krish, 2026-10-29: "I
+   want zero Claude routines"). It cannot be dispatched from here: say so
+   to him in one line, with the Run workflow page and the piece id to paste.
+   The run records itself on the piece (`make-piece`, "Before anything");
+   the room records nothing for it.
+12. **Approve scripts, and Teleprompter** (about 12:30; Krish, 2026-10-28:
+   "Once I approve, the two scripts will go to teleprompter" and "Server
+   sends directly", which replace the standing yes of 12 October). Each
+   make session puts its two checked scripts on its day's tab. His Approve
+   scripts press binds to their exact sha256, and the server sends them
+   itself (`sendApprovedScripts` in `apps/control-plane/api/_teleprompter.ts`:
+   `create_folder`, `create_script`, and `update_script` with text and
+   duration only, then a readback), answering `sent`, `no_key`, `refused` or
+   `error`. Read each press and its answer on the board: `python3
+   scripts/post-pack/board_web.py read <Monday> approvals` (the collection
+   `config/teleprompter.json` `approval.collection` names; only documents
+   whose `updated_by` is Krish are his press). No such collection on the
+   board yet: step 8 said so, and nothing is sent.
+   - `sent`: nothing to do; `making.py <uuid> show` says, per cut,
+     "Teleprompter, 5-minute cut: holds the current words".
+   - `no_key` (the Teleprompter key is not set yet): the room sends exactly
+     the words his press approved through the Teleprompter connector, by
+     `teleprompter_send.py plan` and the calls it prints, as
+     `.agents/skills/plan-week/references/sunday-room.md` ("When the server
+     answered no_key") gives, then reads each one back. Words changed since
+     his press are not sent: the cut goes back on its tab for a new press.
+     Never `move_script` or `update_folder`, never a second folder or
+     script, never his `fontSize`, `speed`, `alignment` or `timedSpeed`.
+   - `refused`: the approval did not hold for these words; send nothing,
+     and say why on the day's tab for a new press.
+   - `error`: one line on the day's tab with what Teleprompter said; his
+     press again retries the server's send.
 
 ## Without the connectors
 
-The scheduled Sunday routine may run with no Drive and no Firecrawl
+The Sunday ideas run in GitHub Actions has no Drive and no Firecrawl
 connector. Then research with the built-in web search and web fetch instead,
 and skip the Cold Ideas & Inspo folder rather than guessing what is in it.
 Say which sources were unavailable on the week's board item, in one plain line
@@ -392,15 +617,17 @@ board).
 Put the same line in `WORKBENCH.md`, because the slate cron rewrites the week
 item's text each morning.
 
-Without the Teleprompter connector, nothing is sent to Teleprompter (step 0
-names what waits). Descript was retired on 12 October (Krish: "Descript is
-permanently gone, teleprompter.com is permanently in, connected via MCP
-here"): nothing is sent there. The active web board needs the existing engine
+The server sends approved scripts to Teleprompter itself; only a `no_key`
+answer needs the Teleprompter connector (step 12). Without it, name each
+waiting cut in one line on its day's tab. Descript was retired on 12
+October (Krish: "Descript is permanently gone, teleprompter.com is
+permanently in, connected via MCP here"): nothing is sent there. The active web board needs the existing engine
 operator credential, not an Artifact connector. If authenticated board reads
 fail, record that specific blocker; never treat inaccessible feedback as empty.
 
 ## Before you stop
 
 Copy the week's ticks once more (a board made this run has none yet).
-Update `WORKBENCH.md` and end every reply with
-https://controlcenter.krishraja.com/#/week.
+Commit what the room made (`ideas.json`, `interview.md`, each lock) and push
+the room's branch. Update `WORKBENCH.md` and end every reply with the week's
+publish board, https://content.krishraja.com/board/<Monday>.

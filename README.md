@@ -1,15 +1,22 @@
-# Mindmake content engine
+# Make Your Mind Up content engine
 
 **Publish boards:** follow `docs/PUBLISH_BOARDS.md` and `config/boards.json.web_cutover`. After verified active cutover, both weeks live at content.krishraja.com and all new board interactions use the authenticated web API. Older Claude board instructions in this document are preserved compatibility/history, not directions to synchronize artifacts.
 
 
-The engine behind Krish Raja's media business: makeyourmindup, the Mindmake
+The engine behind Krish Raja's media business: makeyourmindup, his
 publication (hosted on Substack, with its cover page at makeyourmindup.ai), and
 the Shorts and carousels made from it. It finds what is worth saying, judges
 it, routes it to the right subchannel, drafts it in Krish's voice to that
 subchannel's mandate, cuts it for each channel and produces the media, and it
 learns from every decision Krish makes along the way. Krish makes every
 decision that matters; nothing publishes itself.
+
+It is a makeyourmindup product, not a Mindmake one (Ruling, Krish, 2026-10-28:
+"content-engine, which is not a mindmake product, it's a makeyourmindup
+product"; "Content-engine produces content for makeyourmindup.ai, which is
+hosted at makeyourmindup repo"). Package, environment and credential names keep
+their `mindmake` spelling, because renaming them would break the machines that
+read them.
 
 As of 2026-09-25 it is building: the choosing half runs around the clock, the
 first pieces were walked through drafting on 2026-09-24, and nothing has been
@@ -35,7 +42,7 @@ published yet. Current state: `NOW.md` (short) and `docs/STATE.md` (full).
 | use an outside tool on a post, or record what one added | `docs/TOOL_BANK.md` |
 | reach a service (which are live, their secret names, what to rotate) | `docs/INTEGRATIONS.md` |
 | see every plausible way a tool could make the content far better | `docs/ENGINE_100X.md` |
-| run the week: plan all three pieces on Sunday, make Monday's the same day, Wednesday and Friday when Krish starts them; the standing answers (two cuts, the channels) | `docs/CADENCE.md` |
+| run the week: record the whole week on Sunday and go live the Monday after; the Sunday ideas board, the interview, the Monday final board; the standing answers (two cuts, the channels) | `docs/CADENCE.md` |
 | publish a finished post to every channel, from Drive (one Substack video post, then the rest) | `docs/AMPLIFICATION.md` |
 | read a free public signal: prediction-market odds, news velocity, Hacker News, SEC filings | `scripts/signals/README.md` |
 | pin a Call to a prediction market, or read the scoreboard feed | `docs/CONTENT_ENGINE.md`, `/api/content-ideas/[id]/call-market` and `/api/calls` |

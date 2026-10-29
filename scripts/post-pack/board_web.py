@@ -204,7 +204,8 @@ def main():
     pub = sub.add_parser('publish-web'); pub.add_argument('page'); pub.add_argument('--assets'); pub.add_argument('--apply', action='store_true')
     pub.add_argument('--expected-build', help='refuse to replace a build other than the one used for preparation')
     convert = sub.add_parser('convert-export'); convert.add_argument('page'); convert.add_argument('--week',required=True); convert.add_argument('--source',required=True); convert.add_argument('--expected-sha256',required=True); convert.add_argument('--output',required=True)
-    read = sub.add_parser('read'); read.add_argument('week'); read.add_argument('collection', choices=['ticks','links','edits','picks','queue','comments'])
+    # approvals and titles are read-only views of his day decisions in picks (api/board/_contracts.ts views).
+    read = sub.add_parser('read'); read.add_argument('week'); read.add_argument('collection', choices=['ticks','links','edits','picks','queue','comments','approvals','titles'])
     download = sub.add_parser('download'); download.add_argument('week'); download.add_argument('--output', required=True)
     rollback = sub.add_parser('rollback'); rollback.add_argument('week'); rollback.add_argument('build'); rollback.add_argument('--apply', action='store_true')
     args = p.parse_args()

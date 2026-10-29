@@ -1,6 +1,14 @@
 # Carousel quality standard
 
-Owner: content-engine. Taste authority: Krish Raja. Updated 26 October 2026.
+Owner: content-engine. Taste authority: Krish Raja. Updated 28 October 2026.
+
+Who makes carousels (Ruling, Krish, 28 October 2026: "take over posting as
+well as creating new assets like carousels"): Growth-MakeYourMindUp now makes
+the derived carousels itself, to this standard, the rejection floor
+(`python3 scripts/floor.py --format carousel`) and the copy lint
+(`config/copy-lint.json`). Content-engine keeps this standard: a change to it
+is made here, never in Growth. Where the route below says content-engine
+renders a carousel, read it as the route for whoever makes it.
 
 Status: approved production reference. On 26 October 2026 Krish approved the
 complete eight-card Grok Bot vs Muse revision 03 as the production pilot,

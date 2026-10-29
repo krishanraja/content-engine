@@ -1,16 +1,30 @@
 #!/usr/bin/env python3
-"""teleprompter_send: every checked script into Krish's teleprompter.com
+"""teleprompter_send: every script Krish approved into his teleprompter.com
 account, and the record of where it went.
 
 Krish, 2026-10-12: "Also note that Descript is permanently gone,
-teleprompter.com is permanently in, connected via MCP here". Asked "May
-every checked script go into your teleprompter.com account automatically,
-starting with Monday's two now?", he picked "Yes, automatic, Monday now",
-whose terms were: "One script per cut, in a folder per piece (e.g. "Mon 12
-Oct follow.the.money"). When the words change, the same script is updated
-in place. Nothing is ever deleted." His words, the tools allowed and the
-names are in config/teleprompter.json; nothing is planned or recorded unless
-its status is "confirmed".
+teleprompter.com is permanently in, connected via MCP here", on the terms:
+"One script per cut, in a folder per piece (e.g. "Mon 12 Oct
+follow.the.money"). When the words change, the same script is updated in
+place. Nothing is ever deleted." On 2026-10-28 his standing yes of that day
+("Yes, automatic, Monday now") gave way to "Once I approve, the two scripts
+will go to teleprompter", and "Server sends directly": the engine's server
+sends them itself when he presses Approve scripts on the board
+(apps/control-plane/api/_teleprompter.ts, called by api/board/_presses.ts),
+and until his key is in place (the press's answer is no_key) a session
+sends them through its connector, by this file. His words, the tools allowed and the names are in
+config/teleprompter.json; nothing is planned or recorded unless its status
+is "confirmed".
+
+His approval is read from the week's publish board, where his Approve
+scripts press writes it: the documents of the board store config
+approval.collection names, written by Krish himself (the board records who
+wrote each one; a document a session wrote never counts), naming the piece
+and the approved hash of each cut's words. Either hash binds those exact
+words: making.py script_hash of the script file the scripts' check passed,
+or of the words Teleprompter shows (spoken_text). The newest document naming
+a cut counts, and `approved: false` withdraws it. The board is the one place
+he approves; the making record keeps what was sent.
 
 One folder per piece, named "<Ddd D Mon> <series> - <subject>" ("Mon 12 Oct
 follow.the.money - Who gets paid for AI songs"), holding one script per
@@ -23,7 +37,7 @@ only for such a piece. A script's text is the script file's spoken
 words, any markdown stripped, its paragraphs separated by a blank line; its
 duration is those words at 150 a minute, in whole seconds.
 
-    python teleprompter_send.py plan PIECE long.md short.md [--post post.json] [--json]
+    python teleprompter_send.py plan PIECE long.md short.md [--post post.json] [--week YYYY-MM-DD] [--json]
     python teleprompter_send.py plan PIECE long.md short.md feature.md     # a 15-minute feature piece
     python teleprompter_send.py record PIECE CUT --folder ID --script ID --sha SHA256
                    [--title TITLE] [--folder-name NAME] [--sent-at TIME]
@@ -33,10 +47,12 @@ duration is those words at 150 a minute, in whole seconds.
 
 `plan` sends nothing. It reads the piece's making record from the engine,
 refuses unless the scripts' check passed, each file holds the words it
-passed (making.script_hash), and each cut it would send was read back by two
+passed (making.script_hash), each cut it would send was read back by two
 fresh readers with nothing lost (making.py read-back; house rule R7, Krish,
 2026-10-12: "I can't even understand what I'm reading off the
-teleprompter"), and prints the Teleprompter calls to make, in
+teleprompter"), and Krish approved those exact words on the board (above;
+`--week` names the board week when it is not the piece's own or the one or
+two after it), and prints the Teleprompter calls to make, in
 order: create_folder only when the record holds no folder for the piece
 (after list_folders shows none of that name), then for each cut either
 create_script (after list_scripts_in_folder shows none of that title) or,
@@ -48,7 +64,10 @@ deleted, moved or renamed.
 
 The calls are made by the Claude Code session that holds the Teleprompter
 connector (make-piece, the Scripts step), never by this file: it holds no
-Teleprompter key. `record` writes what was made onto the piece's making
+Teleprompter key. (The server's own send, with Krish's key, is
+apps/control-plane/api/_teleprompter.ts; this is the route until that send
+is wired to the board's press and the key is in place, and its fallback
+after.) `record` writes what was made onto the piece's making
 record (making.teleprompter_patch; making.py teleprompter is the same),
 with the ids checked as Teleprompter's uppercase UUIDs, and refuses a
 folder other than the one the record holds for the piece. A send that fails
@@ -129,6 +148,11 @@ def load_config(path=CONFIG):
         raise TeleprompterError(f'{name} allows a delete; Krish\'s terms were "Nothing is ever deleted"')
     if sorted(cfg['update_fields']) != ['duration', 'text']:
         raise TeleprompterError(f'{name}: an update sends only text and duration (Krish may set the rest), not {cfg["update_fields"]}')
+    rule = cfg.get('approval')
+    if (not isinstance(rule, dict) or not re.fullmatch(r'[a-z][a-z0-9_]{0,40}', str(rule.get('collection') or ''))
+            or rule.get('writer') != 'Krish'):
+        raise TeleprompterError(f'{name} has no approval: the board store his Approve scripts press writes, written by Krish alone '
+                                '(Krish, 2026-10-28: "Once I approve, the two scripts will go to teleprompter"), so nothing goes to Teleprompter')
     return cfg
 
 
@@ -266,6 +290,113 @@ def resolve_names(piece_id, record, post_path=None, plans=PLANS):
     raise TeleprompterError('nothing names the piece\'s day, series and subject: give --post post.json')
 
 
+# ---------------------------------------------------------------- his approval
+
+def approval_weeks(piece_id, record, post_path=None, plans=PLANS, week=None, today=None):
+    """The board weeks to look in for his Approve scripts press: the one
+    --week names, else the Monday of the piece's date and the two after it
+    (a piece can go live a week or two after its date), then this Monday and
+    next."""
+    if week:
+        return [week_monday(week)]
+    when = None
+    path = Path(post_path) if post_path else find_post(piece_id, plans)
+    if path:
+        try:
+            when = date.fromisoformat(str(json.loads(Path(path).read_text(encoding='utf-8-sig')).get('date'))[:10])
+        except (OSError, ValueError, AttributeError):
+            when = None
+    pack = (record or {}).get('pack') if isinstance((record or {}).get('pack'), dict) else {}
+    hit = PACK_FOLDER.match(str(pack.get('folder') or '').strip())
+    if when is None and hit:
+        when = date.fromisoformat(hit.group(1))
+    found = []
+    if when:
+        first = when - timedelta(days=when.weekday())
+        found += [first + timedelta(days=7 * n) for n in range(3)]
+    this = week_monday(today=today)
+    found += [this, this + timedelta(days=7)]
+    return list(dict.fromkeys(found))
+
+
+def board_documents(week, collection, call=None):
+    """Every document in one store of one week's board, each with who wrote it (updated_by)."""
+    docs, offset, seen = [], 0, set()
+    while True:
+        path = f'/api/board/{week.isoformat()}/{collection}' + (f'?offset={offset}' if offset else '')
+        status, text = (call or making._engine_call)('GET', path, None)
+        try:
+            data = json.loads(text) if status == 200 else None
+        except ValueError:
+            data = None
+        if not isinstance(data, dict):
+            raise TeleprompterError(f'the board\'s "{collection}" store for the week of {week.isoformat()} answered {status} ({str(text)[:120]}), '
+                                    'so Krish\'s Approve scripts press cannot be read and nothing is sent')
+        docs += [d for d in data.get('documents') or [] if isinstance(d, dict)]
+        nxt = data.get('next_offset')
+        if nxt is None:
+            return docs
+        if not isinstance(nxt, int) or nxt <= offset or nxt in seen:
+            raise TeleprompterError(f'the board\'s "{collection}" store for the week of {week.isoformat()} did not page forward, so nothing is sent')
+        seen.add(nxt)
+        offset = nxt
+
+
+def approved_hashes(body):
+    """{cut: sha256} an approval holds: scripts (or hashes) as {cut: sha256} or [{cut, sha256}]."""
+    held = body.get('scripts', body.get('hashes'))
+    if isinstance(held, dict):
+        pairs = held.items()
+    elif isinstance(held, list):
+        pairs = [(item.get('cut'), item.get('sha256')) for item in held if isinstance(item, dict)]
+    else:
+        return {}
+    return {cut: sha for cut, sha in pairs if cut in ALL_CUTS and isinstance(sha, str) and making.SHA256.match(sha)}
+
+
+def his_approval(piece_id, wanted, cfg, weeks, call=None):
+    """Krish's approval of these exact words, read from the board:
+    {cut: {'sha256', 'doc', 'week', 'at'}} for every cut in wanted, which
+    maps each cut to the two hashes that bind its words (the script file's
+    and the words Teleprompter shows). The newest document he wrote that
+    names the piece and the cut counts. Anything else is refused."""
+    rule = cfg['approval']
+    latest, others = {}, 0
+    oldest = datetime.min.replace(tzinfo=timezone.utc)
+    for week in weeks:
+        for doc in board_documents(week, rule['collection'], call):
+            body = doc.get('body') if isinstance(doc.get('body'), dict) else {}
+            if str(body.get('piece_id') or '').lower() != piece_id:
+                continue
+            if doc.get('updated_by') != rule['writer']:
+                others += 1  # a session wrote it: never his press
+                continue
+            at = _when(doc.get('updated_at') or body.get('at')) or oldest
+            withdrawn = body.get('approved') is False
+            for cut, sha in (approved_hashes(body) or ({c: None for c in wanted} if withdrawn else {})).items():
+                if cut not in latest or at > latest[cut]['when']:
+                    latest[cut] = {'sha256': sha, 'withdrawn': withdrawn, 'doc': str(doc.get('id') or ''), 'week': week.isoformat(),
+                                   'at': str(doc.get('updated_at') or body.get('at') or ''), 'when': at}
+    problems = []
+    for cut, (file_sha, words_sha) in wanted.items():
+        hit, name = latest.get(cut), making.CUT_NAME[cut]
+        if not hit:
+            problems.append(f'the {name} script has no approval from him')
+        elif hit['withdrawn']:
+            problems.append(f'he withdrew his approval of the {name} script ({hit["at"]})')
+        elif hit['sha256'] not in (file_sha, words_sha):
+            problems.append(f'he approved other words for the {name} script (his approval {hit["sha256"][:12]}, these words {file_sha[:12]})')
+    if problems:
+        looked = ', '.join(w.isoformat() for w in weeks)
+        ignored = (f'; {others} document{"s" if others > 1 else ""} naming the piece {"were" if others > 1 else "was"} written by someone else '
+                   'and do not count') if others else ''
+        raise TeleprompterError('nothing goes to Teleprompter until Krish approves those exact words (Krish, 2026-10-28: "Once I approve, the '
+                                f'two scripts will go to teleprompter"): {"; ".join(problems)}. Read from the board\'s "{rule["collection"]}" '
+                                f'store for the weeks of {looked}{ignored}. He approves them with the Approve scripts press on the day\'s tab; '
+                                '--week names another board week')
+    return {cut: {k: v for k, v in latest[cut].items() if k not in ('when', 'withdrawn')} for cut in wanted}
+
+
 # ---------------------------------------------------------------- the plan
 
 def _q(value):
@@ -293,10 +424,13 @@ def hand_made(piece_id, cut, workbench=WORKBENCH):
     return None
 
 
-def plan(piece_id, script_paths, call=None, cfg=None, post_path=None, plans=PLANS, workbench=WORKBENCH, features=None):
+def plan(piece_id, script_paths, call=None, cfg=None, post_path=None, plans=PLANS, workbench=WORKBENCH, features=None, week=None,
+         today=None):
     """What to send for each cut, and the calls that send it. Sends nothing.
     A third script is the 15-minute feature, taken only for a piece Krish
     called one for (making.feature_piece; features is its file, for the
+    self-test). A cut to send needs his approval of its exact words on the
+    board (his_approval; week names the board week, today is for the
     self-test)."""
     cfg = cfg or load_config()
     if not making.UUID.match(piece_id or ''):
@@ -352,6 +486,10 @@ def plan(piece_id, script_paths, call=None, cfg=None, post_path=None, plans=PLAN
     folder_id = held.get('folder_id') if making.TELEPROMPTER_ID.match(str(held.get('folder_id') or '')) else None
     name = held.get('folder_name') if folder_id and held.get('folder_name') else folder_name(names)
     out.update(names=names, names_from=where, folder_id=folder_id, folder_name=name)
+    # Krish, 2026-10-28: "Once I approve, the two scripts will go to teleprompter". Words already there need no approval.
+    sending = {cut: (hashes[cut], making.script_hash(spoken_text(texts[cut]))) for cut in cuts if states[cut][0] != 'in'}
+    if sending:
+        out['approval'] = his_approval(piece_id, sending, cfg, approval_weeks(piece_id, record, post_path, plans, week, today), call)
     for cut, path in zip(cuts, script_paths):
         state, entry = states[cut]
         entry = entry or {}
@@ -404,6 +542,10 @@ def show_plan(p, cfg=None):
         if c['action'] == 'none':
             lines.append(f'{c["name"]} cut: Teleprompter already holds these words (sent {c.get("sent_at")}), script "{c.get("title")}"; '
                          'nothing to do.')
+        elif (p.get('approval') or {}).get(c['cut']):
+            got = p['approval'][c['cut']]
+            lines.append(f'{c["name"]} cut: Krish approved these exact words on the board ({got["at"]}, document "{got["doc"]}", week of '
+                         f'{got["week"]}).')
     if p.get('feature_left'):
         lines.append(f'{making.CUT_NAME[making.FEATURE]}: its words are on the record, but no file was given for it, so it is not in '
                      'this plan: plan again with it third (plan PIECE long.md short.md feature.md).')
@@ -619,12 +761,19 @@ def self_test():
     cfg = load_config()
     said = cfg['said']
     check('config: his words, verbatim',
-          (said['switch']['words'], said['send']['asked'], said['send']['picked'], said['send']['terms']),
+          (said['switch']['words'], said['send']['words'], said['route']['words'], said['terms']['words']),
           ('Also note that Descript is permanently gone, teleprompter.com is permanently in, connected via MCP here',
-           'May every checked script go into your teleprompter.com account automatically, starting with Monday\'s two now?',
-           'Yes, automatic, Monday now',
+           'Once I approve, the two scripts will go to teleprompter',
+           'Server sends directly',
            'One script per cut, in a folder per piece (e.g. "Mon 12 Oct follow.the.money"). When the words change, the same script is '
            'updated in place. Nothing is ever deleted.'))
+    check('config: the standing yes of 12 October is kept only as superseded, by his words of 28 October',
+          (cfg['superseded']['send']['picked'], said['send']['on'], said['route']['on'], 'picked' in said['send']),
+          ('Yes, automatic, Monday now', '2026-10-28', '2026-10-28', False))
+    check('config: his approval is read from the board, written by Krish alone', (cfg['approval']['collection'], cfg['approval']['writer']),
+          ('approvals', 'Krish'))
+    check('config: the server\'s key is named, never held', (cfg['server']['secret'], 'ttp_' in json.dumps(cfg).replace('(ttp_...)', '')),
+          ('TELEPROMPTER_API_KEY', False))
     check('config: the tools allowed, and never a delete, a move or a rename',
           (sorted(cfg['allowed_tools']), any(t in cfg['allowed_tools'] for t in ('move_script', 'update_folder'))),
           (['create_folder', 'create_script', 'get_folder', 'get_script', 'list_folders', 'list_scripts', 'list_scripts_in_folder',
@@ -634,7 +783,9 @@ def self_test():
     with tempfile.TemporaryDirectory() as tmp:
         for label, change, words in (('a proposed config', {'status': 'proposed'}, 'not confirmed by Krish'),
                                      ('a delete allowed', {'allowed_tools': cfg['allowed_tools'] + ['delete_script']}, 'Nothing is ever deleted'),
-                                     ('an update that sends the font', {'update_fields': ['text', 'duration', 'fontSize']}, 'only text and duration')):
+                                     ('an update that sends the font', {'update_fields': ['text', 'duration', 'fontSize']}, 'only text and duration'),
+                                     ('an approval anyone may write', {'approval': {**cfg['approval'], 'writer': 'engine_operator'}}, 'written by Krish alone'),
+                                     ('no approval', {'approval': None}, 'has no approval')):
             path = Path(tmp) / 'teleprompter.json'
             path.write_text(json.dumps({**cfg, **change}), encoding='utf-8')
             refused(f'config: {label} is refused', lambda: load_config(path), words)
@@ -671,6 +822,20 @@ def self_test():
     check('names: from a folder made before', names_from_folder('Fri 16 Oct mind.the.gap - Why so many AIs'), friday)
     refused('names: a title over 200 characters is refused', lambda: script_title({**names, 'subject': 'x' * 300}, 'long', cfg), '200 characters')
 
+    # His approval as the board holds it: a document his press wrote (updated_by Krish), naming the piece and each cut's hash.
+    def his(piece, scripts, at='2026-10-11T18:00:00Z', by='Krish', doc='mon-scripts', **extra):
+        return {'id': doc, 'body': {'day': 'mon', 'piece_id': piece, 'scripts': scripts, **extra}, 'revision': 1, 'updated_at': at,
+                'updated_by': by}
+
+    def with_board(engine_, docs, reads=None):
+        def call(method, path, body):
+            if path.startswith('/api/board/'):
+                if reads is not None:
+                    reads.append((method, path))
+                return 200, json.dumps({'ok': True, 'documents': list(docs), 'next_offset': None})
+            return engine_(method, path, body)
+        return call
+
     # The plan, against a stand-in engine.
     pid = post['piece_id']
     folder, long_id, short_id = '86B6F74B-2F8A-4477-AE44-8DA1119D1CD9', '45F414D8-31E1-4B2D-BBE4-44EBA042B346', 'ED3DE98A-7158-4448-A622-A2A5115FFA83'
@@ -686,15 +851,15 @@ def self_test():
         read = lambda sha: {'script_sha256': sha, 'at': '2026-10-12T15:36:00Z', 'by': 'Claude Code', 'readers': ['A', 'B'], 'found': 'nothing lost'}
         holds = {'script_check': {'passed': True, 'checked_at': '2026-10-12T15:35:35Z', 'problems': [], 'hashes': {'long': long_sha, 'short': short_sha},
                                   'read_back': {'long': read(long_sha), 'short': read(short_sha)}}}
-        gets = []
-
-        def engine(method, path, body):
-            gets.append((method, path))
-            return 200, json.dumps({'ok': True, 'making': holds, 'steps': []})
+        gets, board_reads = [], []
+        approvals = [his(pid, {'long': long_sha, 'short': short_sha})]
+        making_ = lambda method, path, body: (gets.append((method, path)), (200, json.dumps({'ok': True, 'making': holds, 'steps': []})))[1]
+        engine = with_board(making_, approvals, board_reads)
         go = lambda **kw: plan(pid, [t / 'long.md', t / 'short.md'], engine, cfg, post_path=t / 'post.json', workbench=bench, **kw)
         first = go()
         shown = show_plan(first, cfg)
         check('plan: the record is read, nothing is written', [m for m, _ in gets], ['GET'])
+        check('plan: the board is only read, for his approval', sorted({m for m, _ in board_reads}), ['GET'])
         check('plan: no folder on the record: list_folders, then create_folder with his name for it',
               (first['new_folder'], first['folder_name'], 'list_folders {"limit": 100}' in shown,
                'create_folder {"name": "Mon 12 Oct follow.the.money - Who gets paid for AI songs"}' in shown), (True, folder_name(names), True, True))
@@ -771,6 +936,59 @@ def self_test():
         (t / 'other.json').write_text(json.dumps({**post, 'piece_id': '904658db-4df2-4537-a0ed-ebe93e081db7'}), encoding='utf-8')
         refused('plan: another piece\'s post.json is refused',
                 lambda: plan(pid, [t / 'long.md', t / 'short.md'], engine, cfg, post_path=t / 'other.json', workbench=bench), 'is the post of piece')
+
+        # His approval (Krish, 2026-10-28: "Once I approve, the two scripts will go to teleprompter"): a cut to send needs it, on its exact words.
+        saved = holds.pop('teleprompter')
+        before = len(board_reads)
+        both = go(today=date(2026, 10, 12))
+        check('approval: read from the board, the piece\'s own week first, then the two after it, then this week and next',
+              [path for _, path in board_reads[before:]], [f'/api/board/{w}/approvals' for w in ('2026-10-12', '2026-10-19', '2026-10-26')])
+        check('approval: the plan names his approval of each cut it sends',
+              (sorted(both['approval']), '5-minute cut: Krish approved these exact words on the board (2026-10-11T18:00:00Z, document '
+               '"mon-scripts", week of 2026-10-12).' in show_plan(both, cfg)), (['long', 'short'], True))
+        approvals[:] = []
+        refused('approval: none on the board, nothing planned', go, 'nothing goes to Teleprompter until Krish approves those exact words')
+        approvals[:] = [his(pid, {'long': long_sha, 'short': short_sha}, by='engine_operator')]
+        refused('approval: a document a session wrote is never his press', go, 'written by someone else and do not count')
+        approvals[:] = [his(pid, {'long': 'c' * 64, 'short': short_sha})]
+        refused('approval: an approval of other words is refused, naming the cut', go, 'he approved other words for the 5-minute script')
+        approvals[:] = [his(pid, {'long': long_sha, 'short': short_sha}), his(pid, {}, at='2026-10-11T19:00:00Z', doc='mon-withdrawn', approved=False)]
+        refused('approval: a newer withdrawal stands', go, 'he withdrew his approval of the 5-minute script')
+        approvals[:] = [his('904658db-4df2-4537-a0ed-ebe93e081db7', {'long': long_sha, 'short': short_sha})]
+        refused('approval: another piece\'s approval does not count', go, 'the 90-second script has no approval from him')
+        approvals[:] = [his(pid, {'long': long_sha, 'short': short_sha}, at='2026-10-11T17:00:00+00:00', doc='older'),
+                        his(pid, {'long': 'c' * 64, 'short': 'd' * 64}, at='2026-10-11T18:30:00Z', doc='newer')]
+        refused('approval: the newest approval of a cut is the one that counts', go, 'he approved other words for the 90-second script')
+        approvals.reverse()
+        approvals[0]['updated_at'], approvals[1]['updated_at'] = '2026-10-11T17:00:00Z', '2026-10-11T18:30:00+00:00'
+        approvals[1]['body']['scripts'] = {'long': long_sha, 'short': short_sha}
+        check('approval: a newer approval of the current words counts over older ones', both['approval']['long']['sha256'] == go()['approval']['long']['sha256'], True)
+        shown_sha = making.script_hash(spoken_text(long_words))
+        approvals[:] = [his(pid, [{'cut': 'long', 'sha256': shown_sha}, {'cut': 'short', 'sha256': short_sha}])]
+        check('approval: the words Teleprompter shows bind them too, read from a list of {cut, sha256}',
+              (shown_sha != long_sha, go()['approval']['long']['sha256']), (True, shown_sha))
+        approvals[:] = [his(pid, {'long': long_sha, 'short': short_sha})]
+        before = len(board_reads)
+        go(week='2026-11-11')
+        check('approval: --week reads that board week alone', [path for _, path in board_reads[before:]], ['/api/board/2026-11-09/approvals'])
+
+        def paged(method, path, body):
+            if not path.startswith('/api/board/'):
+                return making_(method, path, body)
+            offset = int(path.split('offset=')[1]) if 'offset=' in path else 0
+            docs = [his('904658db-4df2-4537-a0ed-ebe93e081db7', {}, doc=f'other-{n}') for n in range(10)] + [his(pid, {'long': long_sha, 'short': short_sha})]
+            return 200, json.dumps({'ok': True, 'documents': docs[offset:offset + 10], 'next_offset': offset + 10 if offset + 10 < len(docs) else None})
+        check('approval: every page of the board\'s store is read', sorted(plan(pid, [t / 'long.md', t / 'short.md'], paged, cfg, post_path=t / 'post.json',
+                                                                            workbench=bench, week='2026-10-12')['approval']), ['long', 'short'])
+        no_store = lambda method, path, body: (400, json.dumps({'ok': False, 'error': 'invalid_collection'})) if path.startswith('/api/board/') else making_(method, path, body)
+        refused('approval: a board store that cannot be read refuses, loudly',
+                lambda: plan(pid, [t / 'long.md', t / 'short.md'], no_store, cfg, post_path=t / 'post.json', workbench=bench), 'cannot be read and nothing is sent')
+        holds['teleprompter'] = saved
+        approvals[:] = []
+        before = len(board_reads)
+        check('approval: words Teleprompter already holds need none, and the board is not asked',
+              ([c['action'] for c in go()['cuts']], len(board_reads) - before), (['none', 'none'], 0))
+        approvals[:] = [his(pid, {'long': long_sha, 'short': short_sha})]
 
         # record: the ids checked, the folder kept, the patch written.
         posts = []
@@ -870,7 +1088,7 @@ def self_test():
         features.write_text(json.dumps({'pieces': {pid: {'said': 'Krish, 2026-10-21: a feature for this one'}}}), encoding='utf-8')
         not_features = t / 'none.json'
         not_features.write_text(json.dumps({'pieces': {}}), encoding='utf-8')
-        feature_engine = lambda method, path, body: (200, json.dumps({'ok': True, 'making': feature_record, 'steps': []}))
+        feature_engine = with_board(lambda method, path, body: (200, json.dumps({'ok': True, 'making': feature_record, 'steps': []})), [his(pid, shas)])
         three = [plans_dir / f'{c}.md' for c in words]
         p = plan(pid, three, feature_engine, cfg, post_path=plans_dir / 'post.json', workbench=bench, features=features)
         made = [c for c in p['cuts'] if c['cut'] == 'feature'][0]
@@ -897,7 +1115,7 @@ def self_test():
               (two['feature_left'], [c['cut'] for c in two['cuts']], 'plan again with it third' in show_plan(two, cfg)), (True, ['long', 'short'], True))
         updated = {**feature_record, 'teleprompter': {**feature_record['teleprompter'], 'cuts': {**sent, 'feature': {
             'script_id': feature_id, 'title': 'Mon 12 Oct - 15-minute feature - Who gets paid for AI songs', 'script_sha256': 'e' * 64, 'sent_at': 'x', 'by': 'y'}}}}
-        again = plan(pid, three, lambda m, path, b: (200, json.dumps({'ok': True, 'making': updated, 'steps': []})), cfg,
+        again = plan(pid, three, with_board(lambda m, path, b: (200, json.dumps({'ok': True, 'making': updated, 'steps': []})), [his(pid, shas)]), cfg,
                      post_path=plans_dir / 'post.json', workbench=bench, features=features)
         check('feature: changed feature words update its own script in place, text and duration only',
               (again['cuts'][2]['action'], again['cuts'][2]['call']['tool'], sorted(again['cuts'][2]['call']['args']), again['cuts'][2]['call']['args']['id']),
@@ -959,7 +1177,8 @@ def main(argv=None, call=None):
     ap.add_argument('what', nargs='?', choices=['plan', 'record', 'pending'])
     ap.add_argument('args', nargs='*')
     ap.add_argument('--post', metavar='POST_JSON', help='with plan: the post.json naming the piece (default: the one in docs/plans)')
-    ap.add_argument('--week', help='with pending: a day in the week to start from (default this week)')
+    ap.add_argument('--week', help='with pending: a day in the week to start from (default this week); with plan: the board week holding '
+                    'Krish\'s Approve scripts press (default the piece\'s week, the two after it, this week and next)')
     ap.add_argument('--retry', action='store_true', help='with pending: list a cut held back after a failed send too (Krish said go)')
     ap.add_argument('--json', action='store_true', help='with plan and pending: the answer as JSON')
     ap.add_argument('--by', help='with record: who is writing (default as making.py)')
@@ -981,7 +1200,7 @@ def main(argv=None, call=None):
             if len(a.args) not in (3, 4):
                 ap.error('plan PIECE long.md short.md (and feature.md third, for a 15-minute feature piece)')
             cfg = load_config()
-            p = plan(a.args[0], a.args[1:], call, cfg, post_path=a.post)
+            p = plan(a.args[0], a.args[1:], call, cfg, post_path=a.post, week=a.week)
             print(json.dumps(p, indent=1, ensure_ascii=False) if a.json else show_plan(p, cfg))
         elif a.what == 'record':
             if len(a.args) != 2:

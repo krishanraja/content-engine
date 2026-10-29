@@ -42,3 +42,10 @@ apps/renderer/**/*.avif binary
 assets/plates/** -text
 fixtures/ve/design-lock/** -text
 docs/ve/design/formats/ref/** -text
+
+# makeyourmindup's kill list is pinned by hash (vendor/makeyourmindup/kill-list/SOURCE.md,
+# tests/vendor-kill-list.test.ts): never convert its line endings.
+vendor/makeyourmindup/kill-list/** -text
+
+# tests/no-claude-routines.test.ts reads the workflows' exact text. Keep them LF on Windows too.
+.github/workflows/*.yml text eol=lf

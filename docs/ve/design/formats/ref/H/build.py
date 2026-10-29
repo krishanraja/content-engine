@@ -272,7 +272,6 @@ body:has(.frame:target) .frame:not(:target){display:none}
 /* kit of parts */
 .pill{position:absolute;font:500 30px/1 'Plex Mono',monospace;color:var(--ink);background-color:var(--coral);border-radius:999px;padding:11px 26px 12px;
  background-image:radial-gradient(circle at 7px 7px,rgba(12,21,18,.2) 1.7px,transparent 2.1px);background-size:14px 14px}
-.ill{position:absolute;font:500 28px/1 'Plex Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--cream);border:2px dashed rgba(244,239,228,.7);padding:11px 16px 10px;background:rgba(12,21,18,.55)}
 .sticker{position:absolute;font:600 30px/1.08 'Plex Mono',monospace;letter-spacing:.03em;text-transform:uppercase;color:var(--ink);background:var(--cream);
  border:2px solid var(--ink);border-radius:999px;padding:11px 26px 12px;box-shadow:5px 5px 0 var(--ink);white-space:nowrap}
 .sticker.coral{background-color:var(--coral);background-image:radial-gradient(circle at 7px 7px,rgba(12,21,18,.2) 1.7px,transparent 2.1px);background-size:14px 14px}
@@ -293,7 +292,6 @@ body:has(.frame:target) .frame:not(:target){display:none}
 
 def header():
     return ('<img class="logo" src="../brand/logos/makeyourmindup-horizontal-transparent-1200w.png" alt="makeyourmindup">'
-            '<div class="ill" style="left:366px;top:82px">ILLUSTRATION</div>'
             '<div class="pill" style="left:690px;top:79px;width:270px;text-align:center">mind.the.gap</div>')
 
 MARQUEE = ('<div class="band" style="top:1736px;height:62px;padding-top:16px;letter-spacing:.02em">'
@@ -329,10 +327,6 @@ def strip(label, big, bigsize=94, rightpad=48, labelw=560, big_left=None, label_
   <div class="anton" style="position:absolute;{big_pos};top:{(104-bigsize)/2-4:.0f}px;font-size:{bigsize}px;line-height:1;white-space:nowrap">{big}</div>
 </div>'''
 
-def prov(x, y, rot=4):
-    return (f'<div class="sticker coral" style="left:{x}px;top:{y}px;transform:rotate({rot}deg);border-radius:30px;line-height:1.12;'
-            f'padding:11px 24px 12px;letter-spacing:.01em">Krish\'s test<br>23 Oct</div>')
-
 # ------------------------------------------------------------------ F1  SETUP (0-4s)
 def f1():
     cam = safe(Cam.anchor(1.8, -3.0, QUAD[0], (440, 604)))
@@ -357,7 +351,6 @@ def f1():
     over = f'''
 <div class="abs anton" style="left:72px;top:176px;font-size:156px;white-space:nowrap">Will they<br><span class="swipe">flag</span> it?</div>
 <div class="abs dek" style="left:72px;top:456px;width:600px;font-size:44px;color:var(--cream)">America has just blocked cotton from both over forced labour.</div>
-{prov(684, 176, 4)}
 <div class="sticker" style="left:720px;top:322px;transform:rotate(-5deg)">Claude</div>
 <div class="sticker" style="left:712px;top:396px;transform:rotate(2.5deg)">ChatGPT</div>
 <div class="sticker" style="left:728px;top:470px;transform:rotate(-3deg)">DeepSeek</div>
@@ -390,7 +383,6 @@ def f2():
     sc = scribble_svg([scribble_loop(cx, cy, U, V, seed=7, sq=3.0, start=0.5)], color='var(--cream)')
     over = f'''
 <div class="abs anton" style="left:72px;top:176px;font-size:160px;white-space:nowrap">Two for <span class="swipe">two.</span></div>
-{prov(684, 336, 4)}
 <div class="abs dek" style="left:72px;top:1524px;width:880px;font-size:44px;color:var(--cream);line-height:1.12">Claude flagged both countries.<br>So did ChatGPT.</div>
 {sc}
 '''
@@ -418,7 +410,6 @@ def f3():
     sc = scribble_svg([scribble_arrow(64, 600, pe[0], pe[1], bend=-46, seed=3, head=50)], color='var(--cream)')
     over = f'''
 <div class="abs anton" style="left:72px;top:176px;font-size:150px;white-space:nowrap">The <span class="swipe">odd</span><br>one out.</div>
-{prov(684, 372, -4)}
 <div class="abs dek" style="left:72px;top:1524px;width:880px;font-size:44px;color:var(--cream);line-height:1.12">DeepSeek flagged Turkmenistan.<br>It did not flag Xinjiang.</div>
 {sc}
 '''
@@ -554,7 +545,6 @@ def f5():
 {flags}{names}{heads}
 <div class="stamp" style="left:{st[0]}px;top:{st[1]}px;transform:rotate(-4deg)">Answer deleted</div>
 {leader}
-{prov(684, 586, 4)}
 {strip('Runs where DeepSeek<br>deleted its Xinjiang answer', '3/3', bigsize=100, labelw=650, big_left=28, label_left=272)}
 {sc}
 '''

@@ -108,7 +108,7 @@ export function buildHumourSystem(o: {
     ? `\n\nCHANNEL CONTEXT (audience and bar, for grounding — do not let it flatten the comedy):\n${o.channelCorpus}`
     : ''
   return [
-    "You are Cleo, rewriting a passage of Krish Raja's draft. Krish is a British-Australian founder-operator in Brooklyn. This is a HUMOUR pass.",
+    "You are Cleo, rewriting a passage of a makeyourmindup draft. This is a HUMOUR pass. The passage never names or describes its maker (house rule NO_NAME).",
     '',
     o.voice ? `VOICE REFERENCE:\n${o.voice}` : '',
     '',

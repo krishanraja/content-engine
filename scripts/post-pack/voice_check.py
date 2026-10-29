@@ -20,7 +20,10 @@ What it looks for, each a habit of machine prose:
   - the colon reveal ("Here's why:", "The answer:")
   - a closing recap ("In short", "Ultimately", "The bottom line")
   - em dashes (house rule NO_EM_DASH)
-  - no "I" or "my" anywhere: no person behind it
+  - no "I", "my", "we" or "our" anywhere: no person behind it. An article
+    speaks as "we", the publication, and the scripts he speaks keep "I"
+    (Krish, 2026-10-28: "Even articles written are not authored by Krish.";
+    on the article's voice, Krish picked: "We"), so either counts
   - stiff, uncontracted English ("it is", "do not", "you are") where a person
     says "it's", "don't", "you're". Krish, 2026-10-13: "the article MUST not
     trigger AI written scans either - you need to bake this in and figure out
@@ -95,7 +98,8 @@ VAGUE_START = re.compile(r"^(?:this|that|these|those|it)\s+(?:is|are|was|means|s
 SPECIFIC = re.compile(r"\$?\d[\d,.]*%?|\b(?:January|February|March|April|May|June|July|August|September|October|November|December)\b|"
                       r"\b[A-Z][a-z]+(?:\s[A-Z][a-z]+)+\b")
 ASIDE = re.compile(r"\([^)]{3,}\)")
-FIRST_PERSON = re.compile(r"\b(?:I|I'm|I've|I'd|I'll|[Mm]y|[Mm]e)\b")
+# The person behind the piece: "I" in a script he speaks, "we" in an article, which speaks for the publication.
+FIRST_PERSON = re.compile(r"\b(?:I|I'm|I've|I'd|I'll|[Mm]y|[Mm]e|[Ww]e|[Oo]ur|[Oo]urs|[Uu]s)\b")
 
 
 def paragraphs(text):
@@ -196,7 +200,8 @@ def check(text):
     if words >= 300 and per_k < 4:
         score += 3 + (4 - per_k)
         findings.append({'where': 'whole piece', 'habit': 'no person behind it',
-                         'detail': f'{firsts} "I" or "my" in {words} words. Put in his own view, a moment from his work, a line he would say'})
+                         'detail': f'{firsts} "I", "my", "we" or "our" in {words} words. Put in our own view as "we", the publication, '
+                                   'a moment from the work, a line he would say'})
     stiff_by_para = []
     for i, p in enumerate(paras, 1):
         own = QUOTED.sub(' ', p.replace('’', "'"))
@@ -245,7 +250,7 @@ def scanner_layer(paras, sents, words):
         w = re.sub(r'\W', '', x.split()[0].lower())
         firsts[w] = firsts.get(w, 0) + 1
     top, c = max(firsts.items(), key=lambda kv: kv[1])
-    if len(sents) >= 15 and c / len(sents) > 0.14 and top not in ('i',):
+    if len(sents) >= 15 and c / len(sents) > 0.14 and top not in ('i', 'we'):
         score += min(4, (c / len(sents) - 0.14) * 40)
         out.append({'where': 'whole piece', 'habit': 'the same first word',
                     'detail': f'"{top.capitalize()}" starts {c} of {len(sents)} sentences. Start some on the thing, the person, the number'})
@@ -327,6 +332,14 @@ def self_test():
             'Looking ahead, the success of Muse will likely depend on the ability to balance utility with trust. If the company can demonstrate '
             'that it is a responsible steward of user data, Muse could become a central part of how people manage their digital lives. '
             'Ultimately, the choice will rest with users, who must weigh the convenience of an agent against the potential costs to privacy.')
+    # An article speaks as "we", the publication: that is a person behind it as much as "I" is.
+    ours = '\n\n'.join([
+        'We read the filing on a Tuesday. Three pages in, the price had moved twice, and nobody had said so in public.',
+        'Our first guess was a typo. It was not. The same line turned up in the March deck, word for word, with a new number.',
+        'So we rang the company. They said the change was routine (it was the third this year) and pointed us at a page.',
+    ] * 6)
+    theirs = re.sub(r'\b(?:We|we|Our|our|us)\b', 'they', ours)
+    no_person = lambda r: any(f['habit'] == 'no person behind it' for f in r['findings'])  # noqa: E731
     a, b = check(machine), check(person)
     c = check(chat)
     checks = [
@@ -340,7 +353,31 @@ def self_test():
         ('chat-model vocabulary is named', any(f['habit'] == 'chat-model vocabulary' for f in c['findings']), True),
         ('paragraphs glued with connectives are named', any(f['habit'] == 'joined with connectives' for f in c['findings']), True),
         ('quoted full forms do not count', any(f['habit'] == 'stiff, uncontracted English' for f in check(quoted)['findings']), False),
+        ('an article in our "we" has a person behind it', no_person(check(ours)), False),
+        ('with no "I" and no "we" there is none', no_person(check(theirs)), True),
     ]
+
+    # A draft that passes in "I", rewritten into our "we" for the article, scores about the same and still passes.
+    mine = '\n\n'.join([
+        "I read the Anthropic filing on Tuesday 14 October. Three pages in, the price per million tokens had moved twice, and nobody had said so in public.",
+        "My first guess was a typo. Nope.",
+        "The same line turned up in the March deck, word for word, with a new number beside it: $15 became $18, then $22 by the footnote on page 41.",
+        "So I rang their press office (a recorded message, then a woman called Dana who was lovely about it) and asked what changed. She sent me a link to a pricing page I had already read twice.",
+        "Fair enough. Companies change prices all the time, and most of the time it's dull.",
+        "What caught me was the timing. Google had cut Gemini by a third the week before, OpenAI kept GPT flat through September, and Mistral dropped its small model to almost nothing. Three rivals, three directions.",
+        "Would I switch? Not yet, honestly.",
+        "My test was simple. I ran the same 40 invoices through each model on a Friday afternoon, timed them with a stopwatch app on my phone, and wrote the totals on the back of an envelope that's still on my desk.",
+        "Claude was slowest by about nine seconds and cheapest per correct answer, because it got 38 right where the others managed 31 and 33.",
+        "That's the bit the price page leaves out. A cheaper model that gets a quarter of your invoices wrong costs you a person on Monday morning fixing them.",
+        "Here's the snag. My envelope isn't a benchmark, and 40 invoices from one accountant in Leeds tell you about one accountant in Leeds.",
+        "The renewal letter, when it came, was two lines long and signed by nobody in particular, which told me more than the pricing page did.",
+        "If you run a small firm, try it yourself before the next renewal lands in January. Take twenty of your own documents, run them through two models, and count the mistakes by hand.",
+    ])
+    as_we = re.sub(r"\b(I|My|my|me)\b", lambda m: {'I': 'we', 'My': 'Our', 'my': 'our', 'me': 'us'}[m.group(1)], mine)
+    as_we = re.sub(r'(^|[.?!]\s+)we\b', lambda m: m.group(1) + 'We', as_we, flags=re.M)
+    m1, m2 = check(mine), check(as_we)
+    checks.append(('a passing draft rewritten from "I" into our "we" scores about the same and still passes',
+                   (abs(m1['score'] - m2['score']) <= 1, m1['passes'], m2['passes']), (True, True, True)))
     bad = [(n, g, w) for n, g, w in checks if g != w]
     for n, g, w in bad:
         print(f'FAIL {n}: got {g!r}, want {w!r}')

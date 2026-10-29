@@ -32,12 +32,17 @@ class PassportTests(unittest.TestCase):
             names = [obj['obj'] for obj in beat['template']]
             self.assertEqual(len(names), len(set(names)))
             for obj in beat['template']:
+                # No SAMPLE sticker, SAMPLE stamp or illustrative label is drawn; an unknown is a dashed ??? that claims
+                # nothing (Krish, 28 Oct 2026: "It's just the ones that say "Krish's read" or "illustrative" that are
+                # stupid because they add no value to the content.").
+                drawn = json.dumps(obj['params'], ensure_ascii=False).replace('"state": "sample"', '')
+                self.assertNotRegex(drawn, r'(?i)\bsample\b|not a claim|illustrat')
                 if obj['device'] != 'passport_page':
                     continue
                 params = obj['params']
+                self.assertNotIn('sampleText', params)
                 for field in params['fields']:
                     self.assertEqual(field['state'], 'sample')
-                    self.assertIn('sampleText', params)
 
     def test_plate_sidecar_hashes_and_renderer_bundle_match_real_files(self):
         folder = ROOT / 'assets/plates/two-passports'

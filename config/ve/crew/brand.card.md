@@ -9,7 +9,8 @@ Owns the theme, BrandFrame, colour roles, logos and type. Source: `config/ve/bra
 | Colour | Name roles (`answer`, `surface`, `channel`), never hex. Mint means answer, brand or next action. |
 | Type | Anton for headlines and single big numbers. Archivo for structure and quoted answers. Fraunces italic for the human line. Plex Mono for labels, dates and provenance. |
 | Logos | Official files only (`config/logo-registry.json`), never rotated, equal optical size in a row. |
-| Numbers | Every digit on screen names whoever produced it (`producer_label`). |
+| Numbers | Every digit on screen names whoever produced it (`producer_label`). A test the publication ran is labelled OUR TEST · <date>, never a person's name. |
+| Name | No word on screen names Krish or a handle of his, ever (`brand.no_name`). His face appears; his name does not. |
 | Grain | 7%, behind everything, never over marks. |
 | Ending | Ending band with the spoken URL; the call card before it on mind.the.gap. |
 

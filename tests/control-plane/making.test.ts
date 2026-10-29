@@ -632,3 +632,46 @@ describe('the GET carries the piece\'s series', () => {
     expect((await call('GET')).body.lane_slot).toBeNull()
   })
 })
+
+// The choices under test (Rulings, Krish, 2026-10-29: "we need to test and
+// learn"): each piece records which opening, lead picture and big-moment
+// sound it used, so a retrospective can join them to engagement. A record,
+// never a gate: the steps do not change.
+describe('the choices under test on the making record', () => {
+  it('are kept choice by choice, with when; recording the sound later keeps the others; the steps are unchanged', async () => {
+    const before = (await call('GET')).body.steps
+    const one = await call('POST', { production_choices: { opening: 'hook_is_intro', lead_picture: 'story_object' } })
+    expect(one.status).toBe(200)
+    expect(one.body.making.production_choices).toMatchObject({ opening: 'hook_is_intro', lead_picture: 'story_object' })
+    expect(Date.parse(one.body.making.production_choices.at)).not.toBeNaN()
+    expect(one.body.steps).toEqual(before)
+    const two = await call('POST', { production_choices: { big_moment_sound: 'none', at: '2026-11-02T03:00:00Z' } })
+    expect(two.body.making.production_choices).toEqual({ opening: 'hook_is_intro', lead_picture: 'story_object', big_moment_sound: 'none', at: '2026-11-02T03:00:00Z' })
+    const three = await call('POST', { production_choices: { lead_picture: 'series_picture' } })
+    expect(three.body.making.production_choices).toMatchObject({ opening: 'hook_is_intro', lead_picture: 'series_picture', big_moment_sound: 'none' })
+  })
+
+  it('an unknown choice, a value that is not an option name, or no choice at all is refused by name, and nothing is written', async () => {
+    for (const [production_choices, problem] of [
+      [{ intro: 'hook_is_intro' }, /^unknown production choice "intro"/],
+      [{ opening: 'The hook is the intro' }, /^production_choices\.opening is the option used/],
+      [{ opening: 'hook_is_intro', lead_picture: 7 }, /^production_choices\.lead_picture is the option used/],
+      [{}, /^production_choices needs at least one of opening, lead_picture, big_moment_sound$/],
+      ['hook_is_intro', /^production_choices needs at least one of/],
+    ] as const) {
+      const out = await call('POST', { production_choices })
+      expect(out.status).toBe(400)
+      expect(out.body.problems[0]).toMatch(problem)
+    }
+    expect(db.writes).toHaveLength(0)
+  })
+
+  it('parseMakingPatch and mergeMaking: the option names only; a patch keeps what it does not mention', () => {
+    const { patch, problems } = parseMakingPatch({ production_choices: { opening: 'story_card', at: '2026-11-02T03:00:00Z' } }, '2026-11-02T04:00:00Z')
+    expect(problems).toEqual([])
+    expect(patch.production_choices).toEqual({ opening: 'story_card', at: '2026-11-02T03:00:00Z' })
+    const prev = mergeMaking(null, { production_choices: { lead_picture: 'story_object', at: '2026-11-01T20:00:00Z' } }, 'Claude Code', '2026-11-01T20:00:00Z')
+    const next = mergeMaking(prev, patch, 'Claude Code', '2026-11-02T04:00:00Z')
+    expect(next.production_choices).toEqual({ lead_picture: 'story_object', opening: 'story_card', at: '2026-11-02T03:00:00Z' })
+  })
+})

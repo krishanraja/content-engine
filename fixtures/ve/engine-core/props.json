@@ -26,6 +26,5 @@
     { "id": "call", "role": "call", "layout": "F3", "fromFrame": 60, "toFrame": 120, "uses": [], "transitionOut": "cut", "sectionBeat": false }
   ],
   "objects": [],
-  "events": [],
-  "illustrationLabels": []
+  "events": []
 }

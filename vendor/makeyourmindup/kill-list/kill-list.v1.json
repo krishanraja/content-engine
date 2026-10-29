@@ -1,0 +1,51 @@
+{
+  "version": "kill-list.v1",
+  "adopted": "2026-09-17",
+  "what_this_is": "The deterministic gate. No model calls, no secrets, runs in seconds on everything. It decides only what is decidable without judgement. Run it before any model call: spending a draft-gate token on an em dash is waste.",
+  "canon_exemption": {
+    "front_matter_key": "kill_list_scope",
+    "value": "canon",
+    "why": "A canon document names retired brands in order to forbid them. A gate that blocks its own rulebook does not survive contact with a deadline."
+  },
+  "paid_tier_exemption": {
+    "front_matter_key": "kill_list_scope",
+    "value": "paid_tier",
+    "allows": { "product_in_editorial": ["CTRL"] },
+    "why": "The media kit makes CTRL beta access in the paid tier the one permitted connection between the channel and mind/make. Paid-tier copy names it; every other rule still runs, Mindmake included."
+  },
+  "legal_entity_exemption": {
+    "front_matter_key": "kill_list_scope",
+    "value": "legal_entity",
+    "allows_exact": ["Mindmaker LLC", "Mindmaker Ltd"],
+    "why": "Mindmaker LLC (United States) and Mindmaker Ltd (United Kingdom) are the companies that operate the site, not the retired publication name. A file in this scope may write those two exact strings and nothing more: bare Mindmaker and Mindmaker Live stay vetoed, and every other rule still runs. Krish, 2026-10-19. On the cover the only such file is apps/cover/content/legal-entities.md, read by the footer note and the terms and privacy pages."
+  },
+  "vetoes": [
+    { "id": "em_dash", "pattern": "\\u2014", "says": "No em dashes anywhere, including code and on-screen text." },
+    { "id": "exclamation", "pattern": "!", "says": "No exclamation marks in editorial copy." },
+    { "id": "retired_name", "words": [
+        "Built with AI", "The Money of AI", "Mindmaker", "Mindmaker Live", "Techonomic",
+        "The Builder Economy", "inspect.the.build", "split.the.bill", "lift.the.lid", "Newsflash"
+      ], "says": "A retired name. See project-documentation/02_REPO_BRIEF.md. follow.the.money and under.the.hood are live again: renamed from split.the.bill and lift.the.lid on 2026-09-25, and live venture_formats is the truth." },
+    { "id": "product_in_editorial", "words": ["Mindmake", "CTRL", "mind/make OS"],
+      "says": "Mindmake and CTRL never appear inside an editorial piece. CTRL beta access in the paid tier is the only permitted connection." },
+    { "id": "personal_name", "words": [
+        "Krish", "Krishan", "Krish Raja", "Krisho", "TheRealKrisho", "krishraja", "krishraja1", "krishanraja"
+      ], "says": "His name, or one of the spellings and handles of it listed here. No public content names him or credits him as its author, and anyone else called Krish is blocked too, with no override. Arvind Krishna and Raja Koduri pass.",
+      "ruling": "Krish, 2026-10-28: \"Remember, no content refers to Krish, ever. I still see that popping up from time to time. Even articles written are not authored by Krish. My face only, for assets and the video format.\" Asked whether to block other people called Krish, Krish picked: \"Yes, block it\". Only the canon exemption skips it: no paid tier or legal entity scope relaxes it." },
+    { "id": "banned_vocabulary", "words": [
+        "game-changer", "game changer", "leverage", "unlock", "delve into", "dive in",
+        "let us dive", "in today's", "revolutionise", "revolutionize", "seamless",
+        "supercharge", "transformative", "paradigm shift", "at the end of the day"
+      ], "says": "Corporate filler." },
+    { "id": "preach_pattern", "patterns": [
+        "what this means for leaders", "the lesson here", "the takeaway is",
+        "we must all", "it is time to", "the real question for leaders",
+        "in the AI era", "leaders who fail to"
+      ], "says": "A closing moral or a lesson for leaders. Unappealable." }
+  ],
+  "warnings": [
+    { "id": "unattributed_number", "says": "A figure with no named producer nearby. A regex cannot decide attribution, so this flags a candidate and the Fact Checker holds the veto." },
+    { "id": "evidence_before_arithmetic", "says": "Arithmetic with no preceding paragraph on the quality of the evidence. Flagged, not blocked, for the same reason." }
+  ],
+  "why_two_are_warnings": "A crude heuristic with an absolute veto produces false blocks and gets the gate switched off in week two. The Fact Checker holds both vetoes."
+}

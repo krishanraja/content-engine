@@ -5,7 +5,10 @@
   1314 x 1080 (right of the speaker). kit.py has already trimmed the picture,
   laid a very tall one out in columns at its own gaps, and sized it to the
   pixel, so this page only places it: the browser never scales a word.
-  Placeholders start with a dollar sign; kit.py fills every one.
+  The tall panel keeps its pill's room but hides the pill: the series tag
+  is already in the corner of the tall cut's dress (dress.html), and one
+  label is enough. Placeholders start with a dollar sign; kit.py fills
+  every one.
 -->
 <html lang="en-GB"><head><meta charset="utf-8"><style>
 $fonts
@@ -19,6 +22,6 @@ body { background: $accent; color: $ink; font-family: 'Archivo', sans-serif; -we
         background: $picture_bg; box-shadow: 16px 16px 0 $shadow; }
 .card img { display: block; width: ${w}px; height: ${h}px; }
 </style></head><body>
-<span class="pill">$channel</span>
+<span class="pill" style="visibility: $pill_show">$channel</span>
 <div class="card"><img src="$picture" alt=""></div>
 </body></html>

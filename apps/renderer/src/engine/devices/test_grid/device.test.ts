@@ -51,7 +51,7 @@ describe('test_grid persistent scoreboard', () => {
       expect(state.cells.map(({ id, value }) => ({ id, value }))).toEqual(baseline.cells.map(({ id, value }) => ({ id, value })))
       expect(state.unit).toBe(baseline.unit)
       expect(state.denominator).toBe(2)
-      expect(state.producerLabel).toBe("KRISH'S TEST · 23 OCT")
+      expect(state.producerLabel).toBe("OUR TEST · 23 OCT")
     }
   })
 
@@ -180,7 +180,7 @@ describe('test_grid persistent scoreboard', () => {
           box: aspect === '9:16' ? fixture.boxes.tall : fixture.boxes.wide,
         }))
         expect(html.match(/role="cell"/g)).toHaveLength(6)
-        expect(html).toContain('KRISH&#x27;S TEST · 23 OCT')
+        expect(html).toContain('OUR TEST · 23 OCT')
         expect(html).toContain('OUT OF 2')
         expect(html).toContain('MYMU Plex Mono')
       }

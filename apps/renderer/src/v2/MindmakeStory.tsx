@@ -207,11 +207,24 @@ function sourceCropStyle(source: RuntimeSource, shot: V2RuntimeShot, bounds: Ret
   }
 }
 
+/** What a picture's label says on screen: its own label (a record or a date) and where it came from, or nothing.
+ *  No VISUAL, OWNED ARTIFACT or EVIDENCE word that only describes the process (Krish, 28 Oct 2026: "I don't mind
+ *  those labels. It's just the ones that say "Krish's read" or "illustrative" that are stupid because they add no
+ *  value to the content."). The truth role stays in the record and is never drawn. */
+export function assetLabelModel(asset: RuntimeAsset): { label?: string; source?: string } | null {
+  // No ILLUSTRATION tag on a generated picture (Krish, 28 Oct 2026: "Yes remove those."); the contract's provenance
+  // label for it stays in the record and is never drawn.
+  if (asset.generated) return null
+  const label = asset.label?.trim()
+  const source = [asset.attribution, asset.sourceDomain].filter(Boolean).join(' · ')
+  if (!label && !source) return null
+  return { ...(label ? { label } : {}), ...(source ? { source } : {}) }
+}
+
 function AssetTruthLabel({ asset, branding, full }: { asset: RuntimeAsset; branding: RuntimeBranding; full: boolean }) {
-  if (asset.truthRole === 'decoration' && !asset.label) return null
+  const model = assetLabelModel(asset)
+  if (!model) return null
   const fonts = brandFonts(branding)
-  const role = asset.generated ? 'ILLUSTRATION' : asset.truthRole === 'evidence' ? 'EVIDENCE' : asset.truthRole === 'owned_artifact' ? 'OWNED ARTIFACT' : 'VISUAL'
-  const sourceLine = [asset.attribution, asset.sourceDomain].filter(Boolean).join(' · ')
   return (
     <div style={{
       position: 'absolute',
@@ -219,7 +232,7 @@ function AssetTruthLabel({ asset, branding, full }: { asset: RuntimeAsset; brand
       right: full ? 48 : 18,
       maxWidth: full ? 650 : 'calc(100% - 36px)',
       padding: full ? '11px 16px' : '8px 11px',
-      background: asset.generated ? branding.colors.amber : branding.colors.mint,
+      background: branding.colors.mint,
       color: branding.colors.mintInk,
       borderRadius: 2,
       fontFamily: fonts.data,
@@ -229,8 +242,8 @@ function AssetTruthLabel({ asset, branding, full }: { asset: RuntimeAsset; brand
       textTransform: 'uppercase',
       boxShadow: '0 8px 24px rgba(0,0,0,.25)',
     }}>
-      <div>{role}{asset.label ? ` · ${asset.label}` : ''}</div>
-      {sourceLine ? <div style={{ marginTop: 5, fontSize: full ? 19 : 15, letterSpacing: 0.55, textTransform: 'none' }}>{sourceLine}</div> : null}
+      {model.label ? <div>{model.label}</div> : null}
+      {model.source ? <div style={{ marginTop: model.label ? 5 : 0, fontSize: full ? 19 : 15, letterSpacing: 0.55, textTransform: 'none' }}>{model.source}</div> : null}
     </div>
   )
 }

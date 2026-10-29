@@ -44,12 +44,12 @@ At least six distinct moves per beat (camera, parallax, kinetic type, counter, w
 1. **Stills** come from ChatGPT Images through a Codex imagegen card, 9:16, at least 1882x3344 (2x the stage), 4 candidates per plate. Prompts must say: no text, numbers, flags, emblems, logos, faces, UI, arrows or highlights; blank flat screens; calm dark at least 35% of the frame for type; one hand, one phone; palette ink-green blacks, cream and mint, never coral. Say it again as the last sentence.
 2. **Reject by machine first**: OCR finds any letter or digit; a flat-colour test for the blank screen; the Critic checks for flags, emblems, logos, faces. A hit means regenerate, never retouch.
 3. **Animation** (Runway, Higgsfield) only animates an approved still for up to 5 s, one-shot, never evidence. Each generation is logged with its credit cost (`ve ledger <piece> add`), and Krish approves every spend.
-4. **Every element on screen serves the message of the video.** No tag, provenance sticker, marquee, disclaimer or process label (Krish, 28 Oct 2026: "I hate all these stupid little abbreviations and marks"; "No one cares that things are AI-generated"). The real recording is never generated and never redrawn, and its own source label stays.
+4. **Every element on screen serves the message of the video.** No tag, provenance sticker, marquee, disclaimer or process label (Krish, 28 Oct 2026: "I hate all these stupid little abbreviations and marks"; "No one cares that things are AI-generated"). The real recording is never generated and never redrawn, and its own source label stays. Labels that name a source, a date, a record or what is on screen stay too (Krish, 28 Oct 2026: "I don't mind those labels. It's just the ones that say "Krish's read" or "illustrative" that are stupid because they add no value to the content.").
 5. Each plate has a sidecar: prompt, model, date, candidates, chosen, credits.
 
 ## Quality bar (the gates, in order)
 1. **Design lock**: no device card or compile for a format without an approved lock.
-2. **Composition QC** on rendered frames: fill at least 80% outside the caption zone, nothing under 30 px (44 px for quotes), caption zone clear, nothing key beyond x 960 or y 1640, nothing hugging a corner, ILLUSTRATION present when a plate is on screen.
+2. **Composition QC** on rendered frames: fill at least 80% outside the caption zone, nothing under 30 px (44 px for quotes), caption zone clear, nothing key beyond x 960 or y 1640, nothing hugging a corner. No ILLUSTRATION tag is drawn or checked (Krish, 28 Oct 2026: "Yes remove those.").
 3. **Golden key frames**: the render at each declared key frame matches the approved still (structural similarity above the lock's threshold).
 4. **Mechanical QC** (11 checks) as before.
 5. **Critic verdict** bound to the mp4's hash.

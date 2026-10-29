@@ -682,17 +682,40 @@ the script check, tied to the words they heard.
 ## Scripts into Teleprompter
 
 Krish, 2026-10-12: "Also note that Descript is permanently gone,
-teleprompter.com is permanently in, connected via MCP here". Asked "May
-every checked script go into your teleprompter.com account automatically,
-starting with Monday's two now?", he picked "Yes, automatic, Monday now",
-whose terms were: "One script per cut, in a folder per piece (e.g. "Mon 12
-Oct follow.the.money"). When the words change, the same script is updated
-in place. Nothing is ever deleted." His words, the tools allowed and the
-names are in `config/teleprompter.json`.
+teleprompter.com is permanently in, connected via MCP here", on the terms:
+"One script per cut, in a folder per piece (e.g. "Mon 12 Oct
+follow.the.money"). When the words change, the same script is updated in
+place. Nothing is ever deleted." On 2026-10-28 his standing yes of that day
+("Yes, automatic, Monday now") was replaced by "Once I approve, the two
+scripts will go to teleprompter", and "Server sends directly". His words,
+the tools allowed, where his approval is read and the server's key's name
+are in `config/teleprompter.json`.
+
+The server sends first. His Approve scripts press on a day's Drafts step
+writes `picks/<day>-scripts` (read as the `approvals` view), and the board's
+server (`apps/control-plane/api/board/_presses.ts`) first reads the piece's
+making record and holds any words the scripts' check did not pass or no two
+fresh readers read back, his saved edits included (`send.status: "held"`):
+the same gate `plan` holds a session to, below. Otherwise it calls
+`sendApprovedScripts` (`apps/control-plane/api/_teleprompter.ts`) with the
+document he wrote and records its answer in it as `send`. It checks that approval itself before any request (his
+document, this piece, not withdrawn, each cut's exact hash), holds the tools
+it may call in code, finds or makes the piece's folder, creates or updates
+one script per cut and reads each back. A send that read back is written to
+the piece's making record (its `teleprompter` field), so `pending` sees it;
+when that write fails, `send.recorded` is false and a session runs `record`
+with the ids in `send`. Until Krish places his key
+(`TELEPROMPTER_API_KEY`) it makes no request and answers `no_key`. Until
+both are in place, a session sends instead, as below. The board names the
+folder and the scripts with this file's `folder_name` and `script_title`, on
+the piece's post.json when there is one, so both routes find the same folder.
 
 `teleprompter_send.py` makes no Teleprompter call. `plan` reads the piece's
 making record, refuses unless the scripts' check passed, each file holds the
-words it passed and each cut to send was read back, and prints the calls the
+words it passed, each cut to send was read back, and Krish approved those
+exact words on the week's publish board (a document he wrote himself, read
+from the board's `approvals` view, naming the piece and each cut's hash; `--week`
+names the board week), and prints the calls the
 session makes with the Teleprompter connector, in order: `list_folders` and
 `create_folder` only when the record holds no folder for the piece ("Mon 12
 Oct follow.the.money - Who gets paid for AI songs"); for each cut never
@@ -714,7 +737,7 @@ line; a cut sent by hand that the record does not hold yet gets its
 six hours ago is held back until its words change or `--retry`.
 
     python scripts/post-pack/teleprompter_send.py pending [--week YYYY-MM-DD] [--retry]
-    python scripts/post-pack/teleprompter_send.py plan PIECE long.md short.md [--post post.json]
+    python scripts/post-pack/teleprompter_send.py plan PIECE long.md short.md [--post post.json] [--week YYYY-MM-DD]
     python scripts/post-pack/teleprompter_send.py plan PIECE long.md short.md feature.md   # a 15-minute feature piece: a third script, same folder
     python scripts/post-pack/teleprompter_send.py record PIECE CUT --folder ID --script ID --sha SHA256 [--title T] | --error "what Teleprompter said"
     python scripts/post-pack/teleprompter_send.py --self-test

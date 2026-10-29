@@ -30,31 +30,31 @@
       "denominator": 2,
       "rows": [
         {
-          "label": "Claude Â· Xinjiang",
+          "label": "Claude · Xinjiang",
           "value": 1
         },
         {
-          "label": "Claude Â· Turkmenistan",
+          "label": "Claude · Turkmenistan",
           "value": 1
         },
         {
-          "label": "ChatGPT Â· Xinjiang",
+          "label": "ChatGPT · Xinjiang",
           "value": 1
         },
         {
-          "label": "ChatGPT Â· Turkmenistan",
+          "label": "ChatGPT · Turkmenistan",
           "value": 1
         },
         {
-          "label": "DeepSeek Â· Xinjiang",
+          "label": "DeepSeek · Xinjiang",
           "value": 0
         },
         {
-          "label": "DeepSeek Â· Turkmenistan",
+          "label": "DeepSeek · Turkmenistan",
           "value": 1
         }
       ],
-      "producer_label": "KRISH'S TEST Â· 23 OCT",
+      "producer_label": "OUR TEST · 23 OCT",
       "source_url": "https://github.com/krishanraja/content-engine/tree/main/docs/plans/2026-10-23-friday",
       "retrieved_at": "2026-10-23"
     },
@@ -68,7 +68,7 @@
           "value": 3
         }
       ],
-      "producer_label": "KRISH'S TEST Â· 23 OCT",
+      "producer_label": "OUR TEST · 23 OCT",
       "source_url": "https://github.com/krishanraja/content-engine/tree/main/docs/plans/2026-10-23-friday",
       "retrieved_at": "2026-10-23"
     }

@@ -40,6 +40,7 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `scripts/`
 - `scripts/channel-kit/`
 - `scripts/hooks/`
+- `scripts/overnight/`
 - `scripts/pages/`
 - `scripts/post-pack/`
 - `scripts/quick-edit/`
@@ -52,6 +53,7 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `tests/fixtures/`
 - `tests/helpers/`
 - `tests/integration/`
+- `vendor/`
 
 ## Content engine routes
 
@@ -447,6 +449,20 @@ _content — shared helpers for the Content Engine API routes
 - `interface Look`
 - `async function askChecksToLook(itemIds: string[], deps: { env?: Record<string, string | undefined>; fetchImpl?: FetchLi…`
 - `async function askChecksForPiece(ideaId: string, deps: Parameters<typeof askChecksToLook>[1] = {}): Promise<Look>`
+
+### `apps/control-plane/api/_copyLint.ts`
+
+The copy lint: the deterministic check on every public word around a piece.
+
+- `const COPY_SURFACES`
+- `type CopySurface = (typeof COPY_SURFACES)[number]`
+- `interface CopyLintHit`
+- `const COPY_LINT_VERSION: string`
+- `function normaliseCopy(text: string): string`
+- `function copyLint(text: string, appliesTo: string): CopyLintHit[]`
+- `function copyLintReason(id: string): string`
+- `interface CopyField`
+- `function copyFields(data: unknown): CopyField[]`
 
 ### `apps/control-plane/api/_creatorFingerprint.ts`
 
@@ -1109,6 +1125,9 @@ The making record: where one piece is on its way from the workroom to
 - `interface MakingSession`
 - `interface MakingTeleprompterCut`
 - `interface MakingTeleprompter`
+- `const PRODUCTION_CHOICES`
+- `type ProductionChoice = (typeof PRODUCTION_CHOICES)[number]`
+- `type MakingProductionChoices = Partial<Record<ProductionChoice, string>> & { at: string }`
 - `interface Making`
 - `type MakingPatch`
 - `const SCRIPT_SHA256`
@@ -1623,6 +1642,33 @@ What Krish has confirmed he likes, for the writers.
 - `function renderTasteBlock(rows: Array<{ statement?: unknown; means?: unknown; layer?: unknown }>): string`
 - `async function loadTasteBlock(lanes: TasteLane[]): Promise<string>`
 
+### `apps/control-plane/api/_teleprompter.ts`
+
+- `const DEFAULT_TELEPROMPTER_MCP_URL`
+- `const WORDS_PER_MINUTE`
+- `const APPROVAL_WRITER`
+- `const ALLOWED_TOOLS: Readonly<Record<string, readonly string[]>>`
+- `class TeleprompterRefusal`
+- `class TeleprompterError`
+- `function assertAllowedCall(tool: string, args: unknown): void`
+- `function normalScript(text: string): string`
+- `function scriptHash(text: string): string`
+- `function spokenText(text: string): string`
+- `function durationSeconds(text: string): number`
+- `type FetchLike`
+- `interface TeleprompterClient`
+- `function createTeleprompterClient(opts: { url: string; key: string; fetchImpl?: FetchLike; timeoutMs?: number }): Telep…`
+- `type ApprovedCut = MakingCut`
+- `interface ApprovedScript`
+- `interface BoardApproval`
+- `interface SendApprovedInput`
+- `interface SentScript`
+- `interface SendResult`
+- `interface SendDeps`
+- `function approvedHashes(body: unknown): Partial<Record<ApprovedCut, string>>`
+- `async function sendApprovedScripts(input: SendApprovedInput, deps: SendDeps = {}): Promise<SendResult>`
+- `function teleprompterPatch(input: SendApprovedInput, result: SendResult, opts: { by: string; now: string; fileHashes: P…`
+
 ### `apps/control-plane/api/_text.ts`
 
 - `function stripMarkdownLinks(s: string): string`
@@ -1830,6 +1876,8 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 
 - `const collections`
 - `type Collection = typeof collections[number]`
+- `const views`
+- `type View = keyof typeof views`
 - `const MAX_HTML`
 - `const digest = (value: string | Uint8Array) =>`
 - `const canonical = (value: unknown): string =>`
@@ -1837,6 +1885,12 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `const validId = (id: string) =>`
 - `const revision = (n: unknown) =>`
 - `function actor(req: VercelRequest, operatorOnly = false): string | null`
+- `const PRESS_USES`
+- `const OFFDAY_ID`
+- `const DECISION_ID`
+- `const DECISION_KIND`
+- `const SCRIPT_CUTS`
+- `const TITLE_SURFACES`
 - `function validBody(collection: string, id: string, body: unknown): boolean`
 - `const COMMENT_ACTS`
 - `function combineWriterRefused(collection: string, body: unknown, who: string | null): boolean`
@@ -1849,7 +1903,16 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 
 ### `apps/control-plane/api/board/_handler.ts`
 
-- `function createBoardHandler(getDb: () => Promise<SupabaseClient>)`
+- `function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: PressDeps = {})`
+
+### `apps/control-plane/api/board/_presses.ts`
+
+- `type Sender = (input: SendApprovedInput) => Promise<SendResult>`
+- `interface PressDeps`
+- `class PressError`
+- `async function preparePress(collection: string, id: string, body: Body): Promise<Body>`
+- `async function heldBecause(making: unknown, texts: Record<string, string>): Promise<string | null>`
+- `async function afterPress(db: SupabaseClient, ctx: { week: string; collection: string; id: string; body: Body; who: str…`
 
 ### `apps/control-plane/api/board/index.ts`
 
@@ -2248,9 +2311,12 @@ What the compiler looks for, as pure functions.
 - `const LANE_REPORT_FRESH_HOURS`
 - `interface WatchHealth`
 - `interface WindowsHealth`
+- `const PREFLIGHT_CHECKS: readonly string[]`
+- `interface PreflightHealth`
 - `interface LaneReport`
 - `function parseWatchHealth(value: unknown): WatchHealth | undefined`
 - `function parseWindowsHealth(value: unknown): WindowsHealth | undefined`
+- `function parsePreflightHealth(value: unknown): PreflightHealth | undefined`
 - `function parseLaneReport(value: unknown, now: string): LaneReport | null`
 - `function laneKey(machine: string): string`
 - `function lanePlainProblems(reports: readonly LaneReport[], now: number): string[]`
@@ -3249,17 +3315,13 @@ Run a Vercel serverless handler locally against the real environment.
 - `function endingBandModel(props: EngineRenderProps, frame: number)`
 - `function EndingBand({ props, frame }: EndingBandProps): React.ReactElement | null`
 
-### `apps/renderer/src/engine/chrome/IllustrationLabel.tsx`
-
-- `function IllustrationLabel({ props, frame }: { props: EngineRenderProps; frame: number })`
-
 ### `apps/renderer/src/engine/chrome/MarkTile.tsx`
 
 - `function MarkTile({ props }: { props: EngineRenderProps })`
 
 ### `apps/renderer/src/engine/chrome/StageHeader.tsx`
 
-- `function StageHeader({ props, frame }: { props: EngineRenderProps; frame: number })`
+- `function StageHeader({ props }: { props: EngineRenderProps })`
 
 ### `apps/renderer/src/engine/chrome/tokens.ts`
 
@@ -3491,7 +3553,7 @@ Run a Vercel serverless handler locally against the real environment.
 
 - `export { HOUSE as TALL } from '../house/geometry'`
 - `const WIDE`
-- `type ChromeElement = 'mark' | 'caption' | 'pill' | 'illustrationLabel'`
+- `type ChromeElement = 'mark' | 'caption' | 'pill'`
 - `type Aspect = EngineRenderProps['aspect']`
 - `function boxFor(element: ChromeElement, aspect: Aspect): Box`
 - `function chromeZone(aspect: Aspect): Box`
@@ -3826,6 +3888,7 @@ Fitting type into a box, as a pure function of a width measurer, so the
 
 - `function brandLockupRenderModel(branding: RuntimeBranding, placement?: RuntimeBrandCue)`
 - `function publicationLockupRenderModel(branding: RuntimeBranding, placement?: RuntimeBrandCue)`
+- `function assetLabelModel(asset: RuntimeAsset): { label?: string; source?: string } | null`
 - `function MindmakeStoryV2(props: V2RenderProps)`
 
 ### `apps/renderer/src/v2/index.ts`
@@ -4593,7 +4656,10 @@ Where a finished video is filed: one folder per piece, whose name says the
 - `const VOICE_AI_LINE`
 - `function voiceOnCameraIssues(script: string): string[]`
 - `function normalizeSpokenToken(value: string): string`
-- `function applyPresenterIdentityCorrections(transcript: TranscriptDocument, presenterName: string, aliases: string[]): T…`
+- `function applyPresenterIdentityCorrections(transcript: TranscriptDocument, _presenterName: string, _aliases: string[]):…`
+- `const NO_NAME_BLOCK`
+- `const SELF_INTRODUCTION_BLOCK`
+- `function noNameIssues(texts: string[], declaredNonPresenterChris = false): string[]`
 - `function composeEditTranscript(transcript: TranscriptDocument, segments: EditSegmentV1[]): TranscriptDocument`
 - `function exactWordFidelity(captionScript: string, sourceTranscript: TranscriptDocument): Omit<EditorialValidation, 'har…`
 - `function meaningCriticalRemovalIssues(removedTokens: string[], acknowledged: Array<{ removed_token: string; category: s…`

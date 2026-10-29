@@ -63,12 +63,14 @@ describe('caption workflow', () => {
         ],
       }],
     }
-    const corrected = applyPresenterIdentityCorrections(transcript, 'Krish', ['Chris'])
-    const cues = verifiedTextCaptionCues("I'm Krish. Chris built the workflow.", corrected, 4000)
-    expect(cues.map((cue) => cue.text).join(' ')).toBe("I'm Krish. Chris built the workflow.")
-    expect(captionTranscriptSimilarity(cues, "I'm Krish. Chris built the workflow.")).toBe(1)
-    expect(corrected.segments[0]?.words?.[1]?.text).toBe('Krish')
-    expect(corrected.segments[0]?.words?.[2]?.text).toBe('Chris')
+    // Since 2026-10-28 the words stay as heard (house rule NO_NAME): the approved
+    // wording cuts the self-introduction and keeps the timings of what it says.
+    const heard = applyPresenterIdentityCorrections(transcript, 'Krish', ['Chris'])
+    const cues = verifiedTextCaptionCues('Chris built the workflow.', heard, 4000)
+    expect(cues.map((cue) => cue.text).join(' ')).toBe('Chris built the workflow.')
+    expect(captionTranscriptSimilarity(cues, 'Chris built the workflow.')).toBe(1)
+    expect(cues[0]?.start_ms).toBe(350)
+    expect(heard.segments[0]?.words?.map((word) => word.text)).toEqual(["I'm", 'Chris', 'Chris', 'built', 'the', 'workflow'])
   })
 
   it('rejects invented or reordered caption words', () => {

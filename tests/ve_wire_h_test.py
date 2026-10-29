@@ -56,10 +56,11 @@ class WireHTests(unittest.TestCase):
         for beat in self.props['beats']:
             fraction = self.spec['style']['keyFrames'][beat['id']]  # evidence is earlier: the real answer is replaced late in the beat
             self.assertEqual(beat['keyFrame'], beat['fromFrame'] + round(fraction * (beat['toFrame'] - beat['fromFrame'])))
-            self.assertTrue(any(label['fromFrame'] <= beat['fromFrame'] and label['toFrame'] >= beat['toFrame']
-                                and label['text'] == 'ILLUSTRATION' for label in self.props['illustrationLabels']))
             objects = {o['obj']: o for o in self.props['objects']}
             self.assertEqual(sum(objects[o]['device'] == 'scribble' for o in beat['uses']), 1)
+        # Every beat stands on a plate, and none carries an ILLUSTRATION tag (Krish, 28 Oct 2026: "Yes remove those.").
+        self.assertNotIn('illustrationLabels', self.props)
+        self.assertNotIn('ILLUSTRATION', json.dumps(self.props))
 
     def test_params_survive_without_mutation(self):
         before = copy.deepcopy(self.spec)

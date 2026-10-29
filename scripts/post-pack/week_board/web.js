@@ -122,6 +122,8 @@
           if ((inputVersions.get(key) || 0) === inputVersion) editing.delete(key);
           else editing.set(key, result.revision);
           states.get(collection).set(id, { body: result.body, revision: result.revision }); emit(collection);
+          // The server's answer to a press: what it sent (an approval of scripts) or filed (a rejection).
+          return result;
         } catch (e) {
           if (e.status === 409) {
             await refresh(collection).catch(() => {});

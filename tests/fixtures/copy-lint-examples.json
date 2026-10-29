@@ -1,0 +1,629 @@
+{
+  "_about": "Every pattern in config/copy-lint.json, with copy it must refuse and copy it must let through. A pass example is clean copy: it hits no pattern at all. Read by tests/copy_lint_test.py and tests/control-plane/copy-lint.test.ts.",
+  "patterns": {
+    "asterisk": {
+      "hit": [
+        {
+          "text": "Read the *full* story at makeyourmindup.ai",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "Prices fell 40%*",
+          "applies_to": "carousel_text"
+        },
+        {
+          "text": "**Disney** is hiring the team",
+          "applies_to": "video_onscreen"
+        },
+        {
+          "text": "Why Disney is eating the scraps*",
+          "applies_to": "titles"
+        }
+      ],
+      "pass": [
+        {
+          "text": "Google paid $2.7 billion for the tech and the founders in 2024.",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "$2.7B · $20M + $60M/YR · $0",
+          "applies_to": "video_onscreen"
+        }
+      ]
+    },
+    "markdown_emphasis": {
+      "hit": [
+        {
+          "text": "The _real_ cost is the lock-in",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "Disney is __hiring__ the team",
+          "applies_to": "carousel_text"
+        }
+      ],
+      "pass": [
+        {
+          "text": "Follow make_your_mind_up and read makeyourmindup.ai/follow_the_money",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "snake_case names stay as they are",
+          "applies_to": "article_metadata"
+        },
+        {
+          "text": "Follow @_name_ for the next one",
+          "applies_to": "channel_copy"
+        }
+      ]
+    },
+    "eyebrow_label": {
+      "hit": [
+        {
+          "text": "BREAKING: Google cuts its prices again",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "🚨 Just in: Disney bids for the team",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "AI NEWS",
+          "applies_to": "carousel_text"
+        },
+        {
+          "text": "Pro tip: ask for the end date",
+          "applies_to": "carousel_text"
+        },
+        {
+          "text": "[New] Disney hires the team",
+          "applies_to": "titles"
+        },
+        {
+          "text": "Deep dive: who pays for AI music",
+          "applies_to": "article_metadata"
+        },
+        {
+          "text": "TL;DR",
+          "applies_to": "video_onscreen"
+        },
+        {
+          "text": "🚨🚨🚨🚨 BREAKING NEWS",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "AI NEWS\u2028OpenAI halved its price",
+          "applies_to": "carousel_text"
+        }
+      ],
+      "pass": [
+        {
+          "text": "New rules for your next AI budget",
+          "applies_to": "titles"
+        },
+        {
+          "text": "Breaking a contract costs more than the tool.",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "CHAPTER 1 OF 6 · WIRED · THE 2024 DEAL",
+          "applies_to": "carousel_text"
+        },
+        {
+          "text": "PLAN B · YOUR DATA",
+          "applies_to": "video_onscreen"
+        }
+      ]
+    },
+    "bracket_tag": {
+      "hit": [
+        {
+          "text": "[VIDEO] Why Disney is eating the scraps",
+          "applies_to": "titles"
+        },
+        {
+          "text": "Prices fell last year [1]",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "【NEW】 Disney hires the team",
+          "applies_to": "carousel_text"
+        },
+        {
+          "text": "Disney hires the team [NEW]",
+          "applies_to": "titles"
+        }
+      ],
+      "pass": [
+        {
+          "text": "He said [Disney] would hire the team.",
+          "applies_to": "article_metadata"
+        },
+        {
+          "text": "Read it [here](https://makeyourmindup.ai)",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "\"We will [AI] everything,\" he said.",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "He said \"we will [AI] everything.\"",
+          "applies_to": "carousel_text"
+        }
+      ]
+    },
+    "caps_label_line": {
+      "hit": [
+        {
+          "text": "FOLLOW THE MONEY\n\nGoogle paid $2.7 billion for the tech in 2024.",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "DISNEY:\nThe bid is $20 million for the code.",
+          "applies_to": "article_metadata"
+        }
+      ],
+      "pass": [
+        {
+          "text": "GOOGLE PAID $2.7B FIRST\nThen Disney hired the rest of the team.",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "Google paid $2.7 billion.\nDISNEY PAID $20M",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "FOLLOW.THE.MONEY\nWhy is Disney eating the scraps",
+          "applies_to": "carousel_text"
+        },
+        {
+          "text": "AGI.\n\nWhat it means for your job.",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "NOBODY NOTICED.\n\nGoogle paid first.",
+          "applies_to": "channel_copy"
+        }
+      ]
+    },
+    "series_label": {
+      "hit": [
+        {
+          "text": "follow.the.money\n\nGoogle paid $2.7 billion for the tech in 2024.",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "follow.the.money | Why is Disney eating the scraps of bankrupt Character.AI?",
+          "applies_to": "titles"
+        },
+        {
+          "text": "mind.the.gap: who trains your 2030 seniors",
+          "applies_to": "article_metadata"
+        }
+      ],
+      "pass": [
+        {
+          "text": "More from follow.the.money at makeyourmindup.ai",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "FOLLOW.THE.MONEY",
+          "applies_to": "carousel_text"
+        }
+      ]
+    },
+    "ai_illustration_note": {
+      "hit": [
+        {
+          "text": "The scorecard illustration was generated with AI.",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "Scenes are AI-generated editorial illustrations.",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "AI-generated illustrations.",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "Illustration generated with Higgsfield",
+          "applies_to": "video_onscreen"
+        },
+        {
+          "text": "Visuals created with Runway and Higgsfield",
+          "applies_to": "carousel_text"
+        }
+      ],
+      "pass": [
+        {
+          "text": "AI-generated music changes who gets paid.",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "Disney rented space in OpenAI's Sora app",
+          "applies_to": "carousel_text"
+        },
+        {
+          "text": "The illustration that fooled a jury",
+          "applies_to": "video_onscreen"
+        }
+      ]
+    },
+    "ai_self_note": {
+      "hit": [
+        {
+          "text": "This video was made with Runway.",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "These images were AI-generated.",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "Our carousel was created using ChatGPT",
+          "applies_to": "carousel_text"
+        }
+      ],
+      "pass": [
+        {
+          "text": "This video shows how Disney bought the team.",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "Our prediction: Skydance buys an AI company by 1 March 2027.",
+          "applies_to": "channel_copy"
+        }
+      ]
+    },
+    "ai_provenance_label": {
+      "hit": [
+        {
+          "text": "Generated by AI",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "Made with AI",
+          "applies_to": "carousel_text"
+        },
+        {
+          "text": "(AI-generated)",
+          "applies_to": "carousel_text"
+        },
+        {
+          "text": "Created with ChatGPT and Midjourney.",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "Ideas mine · made with Higgsfield",
+          "applies_to": "video_onscreen"
+        },
+        {
+          "text": "Made with AI",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "Google cut its prices again. Made with AI",
+          "applies_to": "channel_copy"
+        }
+      ],
+      "pass": [
+        {
+          "text": "Videos made with Sora are flooding TikTok",
+          "applies_to": "titles"
+        },
+        {
+          "text": "A new app made with AI coding tools",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "Made with care in London",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "Google cut its prices. Videos made with Sora are next.",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "Runway made the ad.",
+          "applies_to": "channel_copy"
+        }
+      ]
+    },
+    "ai_credit_line": {
+      "hit": [
+        {
+          "text": "Image: Midjourney",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "Visuals by AI.",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "(Music via Suno)",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "Disney hired the team. Images by Midjourney.",
+          "applies_to": "carousel_text"
+        }
+      ],
+      "pass": [
+        {
+          "text": "Music by Suno is everywhere now",
+          "applies_to": "titles"
+        },
+        {
+          "text": "Image: Disney press office",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "Source: OpenAI",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "Credit: OpenAI",
+          "applies_to": "channel_copy"
+        }
+      ]
+    },
+    "ai_media_label": {
+      "hit": [
+        {
+          "text": "(AI image)",
+          "applies_to": "video_onscreen"
+        },
+        {
+          "text": "AI IMAGE",
+          "applies_to": "video_onscreen"
+        },
+        {
+          "text": "[AI illustration]",
+          "applies_to": "carousel_text"
+        }
+      ],
+      "pass": [
+        {
+          "text": "AI image generators got cheaper this year",
+          "applies_to": "titles"
+        },
+        {
+          "text": "DISNEY · DEC 2025",
+          "applies_to": "video_onscreen"
+        }
+      ]
+    },
+    "illustration_label": {
+      "hit": [
+        {
+          "text": "ILLUSTRATIVE AI",
+          "applies_to": "video_onscreen"
+        },
+        {
+          "text": "ILLUSTRATION",
+          "applies_to": "video_onscreen"
+        },
+        {
+          "text": "AI EXAMPLE",
+          "applies_to": "video_onscreen"
+        },
+        {
+          "text": "ILLUSTRATIVE MONTH • SAME WORKLOAD",
+          "applies_to": "carousel_text"
+        },
+        {
+          "text": "Prices fell 40% (illustrative)",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "Illustrative purposes only.",
+          "applies_to": "article_metadata"
+        },
+        {
+          "text": "Illustration: who pays the artists",
+          "applies_to": "titles"
+        }
+      ],
+      "pass": [
+        {
+          "text": "Illustration jobs are vanishing",
+          "applies_to": "titles"
+        },
+        {
+          "text": "Illustrators lost a third of their commissions",
+          "applies_to": "carousel_text"
+        },
+        {
+          "text": "AI examples that save an hour a week",
+          "applies_to": "titles"
+        },
+        {
+          "text": "These prices are illustrative, worked from the article's own sum.",
+          "applies_to": "channel_copy"
+        }
+      ]
+    },
+    "take_label": {
+      "hit": [
+        {
+          "text": "Krish's take",
+          "applies_to": "video_onscreen"
+        },
+        {
+          "text": "KRISH’S TAKE: renting is over",
+          "applies_to": "carousel_text"
+        },
+        {
+          "text": "My take: rent, then own",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "Here's my take: rent, then own",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "Hot take: Disney wins this one",
+          "applies_to": "titles"
+        },
+        {
+          "text": "Krish's read",
+          "applies_to": "video_onscreen"
+        },
+        {
+          "text": "Krish's read: hosting beats origin",
+          "applies_to": "carousel_text"
+        },
+        {
+          "text": "KRISH'S TEST 23 OCT",
+          "applies_to": "video_onscreen"
+        },
+        {
+          "text": "Commercial explanation • Krish’s assessment",
+          "applies_to": "carousel_text"
+        },
+        {
+          "text": "My read: rent, then own",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "Hot take\u2029",
+          "applies_to": "titles"
+        },
+        {
+          "text": "My take\u0085rent, then own",
+          "applies_to": "channel_copy"
+        }
+      ],
+      "pass": [
+        {
+          "text": "That is a hot take on Disney",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "The take rate fell to 15%",
+          "applies_to": "titles"
+        },
+        {
+          "text": "CHAPTER 6 OF 6 · WHAT I'D DO",
+          "applies_to": "carousel_text"
+        },
+        {
+          "text": "Café owners take: a third more",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "The take: Apple keeps 30%",
+          "applies_to": "titles"
+        }
+      ]
+    },
+    "no_name": {
+      "hit": [
+        {
+          "text": "By Krish Raja · 19 October 2026 · 6 minute read",
+          "applies_to": "article_metadata"
+        },
+        {
+          "text": "Krish's take on the deal.",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "KRISH’S CONFIDENCE",
+          "applies_to": "video_onscreen"
+        },
+        {
+          "text": "KRISH'S TEST · 23 OCT",
+          "applies_to": "video_onscreen"
+        },
+        {
+          "text": "What will AI cost next? Google, OpenAI and Anthropic, with Krish.",
+          "applies_to": "article_metadata"
+        },
+        {
+          "text": "Follow @TheRealKrisho for more",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "More at krishraja.com",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "Krishan Raja tested six models.",
+          "applies_to": "article_body"
+        },
+        {
+          "text": "How sure we are: [Krish to set]",
+          "applies_to": "article_body"
+        },
+        {
+          "text": "I've been following how money is changing because of AI. I'm Krish.",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "Rule 03 • Krish’s practical recommendation",
+          "applies_to": "carousel_text"
+        },
+        {
+          "text": "Why Krish thinks prices will double",
+          "applies_to": "titles"
+        },
+        {
+          "text": "github.com/krishanraja/content-engine",
+          "applies_to": "article_body"
+        },
+        {
+          "text": "Krish Mehta runs the AI team at a bank.",
+          "applies_to": "article_body"
+        },
+        {
+          "text": "Find us at krish_raja on Threads.",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "Krish2026 tested six models.",
+          "applies_to": "article_body"
+        },
+        {
+          "text": "Say hi to @krish_ai",
+          "applies_to": "channel_copy"
+        }
+      ],
+      "pass": [
+        {
+          "text": "Arvind Krishna said IBM will cut its AI prices.",
+          "applies_to": "article_body"
+        },
+        {
+          "text": "Sriram Krishnan advises the White House on AI.",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "Raja Koduri left Intel to start a chip company.",
+          "applies_to": "article_body"
+        },
+        {
+          "text": "Krishi Network is an AI app for farmers in India.",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "We ran the same prompt through DeepSeek and Claude. Our test, 23 October.",
+          "applies_to": "article_body"
+        },
+        {
+          "text": "OUR TEST · 23 OCT",
+          "applies_to": "video_onscreen"
+        },
+        {
+          "text": "How sure we are: 75%",
+          "applies_to": "article_body"
+        },
+        {
+          "text": "makeyourmindup · 19 October 2026 · 6 minute read",
+          "applies_to": "article_metadata"
+        }
+      ]
+    }
+  }
+}

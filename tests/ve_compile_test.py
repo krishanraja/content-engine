@@ -207,6 +207,22 @@ class CompileTest(unittest.TestCase):
         del spec['call']
         self.assertNotIn('ending', compile_cut(spec, 'proof-tall', words, FIXTURE))
 
+    def test_the_hook_is_the_intro(self):
+        # Under test (Krish, 29 Oct 2026, "Let's go with number one for now."): the first beat, the hook, owns
+        # frame 0 even when the first word comes later; no story card or logo sting is compiled ahead of it, and the
+        # one close is the ending band.
+        spec = load_json(FIXTURE / 'spec.json')
+        spec['cuts']['proof-tall']['excerpt'] = False
+        words = [dict(word, onset_s=word['onset_s'] + 1.0, end_s=word['end_s'] + 1.0) for word in timed_words()]
+        props = compile_cut(spec, 'proof-tall', words, FIXTURE)
+        first = props['beats'][0]
+        self.assertEqual((first['id'], first['fromFrame'], first['sectionBeat']),
+                         (spec['cuts']['proof-tall']['beats'][0]['id'], 0, True))
+        self.assertEqual(sum(beat['sectionBeat'] for beat in props['beats']), 1)
+        self.assertEqual(min(obj['fromFrame'] for obj in props['objects']), 0)
+        self.assertFalse({'intro', 'sting', 'storyCard', 'outro'} & set(props))
+        self.assertEqual(list(props['ending']), ['fromFrame', 'url'])
+
     def test_caption_widths_and_long_words(self):
         spec = load_json(FIXTURE / 'spec.json')
         for cut in spec['cuts']:
@@ -250,7 +266,7 @@ class CompileTest(unittest.TestCase):
         spec['assets'].append({'id': 'generated', 'path': 'picture.png', 'origin': 'generated'})
         for ref in ('picture.png', 'generated', 'asset:generated'):
             spec['objects'][0]['params']['extra'] = {'nested': [ref]}
-            with self.assertRaisesRegex(ValueError, 'illustration labels'):
+            with self.assertRaisesRegex(ValueError, 'generated assets pipeline arrives in Phase 2'):
                 compile_cut(spec, 'proof-tall', timed_words(), FIXTURE)
 
     def test_sfx_kit_present_and_absent(self):
@@ -264,7 +280,7 @@ class CompileTest(unittest.TestCase):
             report = {}
             props = compile_cut(spec, 'proof-tall', timed_words(), FIXTURE, report=report)
         sounded = [e for e in props['events'] if e.get('sfx')]
-        self.assertEqual(report, {'lint': 'clean', 'sfx_missing': []})
+        self.assertEqual(report, {'lint': 'clean', 'sfx_missing': [], 'opening': 'hook'})
         self.assertEqual(props['audio']['sfx'], [
             {'src': str((FIXTURE / f"sfx/{e['sfx']}.wav").resolve()), 'atFrame': e['atFrame'], 'gainDb': -6}
             for e in sounded])
@@ -287,8 +303,10 @@ class CompileTest(unittest.TestCase):
                 patch('velib.compile.Path.is_file', return_value=False), redirect_stdout(io.StringIO()):
             self.assertEqual(ve.cmd_compile(args), 0)
         report = writes['compile.proof-tall.json']
-        self.assertEqual(set(report), {'lint', 'sfx_missing', 'props_sha256'})
+        self.assertEqual(set(report), {'lint', 'sfx_missing', 'opening', 'props_sha256'})
         self.assertEqual(report['lint'], 'clean')
+        # The opening under test is recorded per cut (Krish, 29 Oct 2026: "we need to test and learn").
+        self.assertEqual(report['opening'], 'hook')
         self.assertEqual(report['props_sha256'], 'digest')
         self.assertTrue(report['sfx_missing'])
 

@@ -192,13 +192,17 @@ export async function selfCheck(opts: {
 // How sure we are is Krish's judgement and his alone (his ruling,
 // 2026-09-26: "I'd rather take a clearer stance than sit on the fence all the
 // time and say 60%", and he sets the number). On 2026-09-30 piece 3's first
-// draft was told to end with "How sure we are: [Krish to set]" and wrote
+// draft was told to end with "How sure we are: [Krish to set]" (now "[to set]",
+// house rule NO_NAME) and wrote
 // "How sure we are: 78%." on its own: an engine-invented number that could
 // have reached a reader as his stance (walk log F43). So after the model and
 // any retry, the confidence is put back in code.
 
 /** What a first draft says until Krish sets the number. */
 export const UNSET_CONFIDENCE = `How sure we are: ${UNSET}`
+/** The placeholder before 2026-10-29, which named him. A draft that still
+ *  carries it is read as unset, and a rewrite writes UNSET in its place. */
+const OLD_UNSET = '[Krish to set]'
 
 interface ConfidenceMention { start: number; end: number; text: string }
 
@@ -215,8 +219,10 @@ function confidenceMentions(text: string): ConfidenceMention[] {
       const at = scope.indexOf(`${m.value}%`, m.index)
       if (at >= 0) found.push({ start: offset + m.index, end: offset + at + m.value.length + 1 })
     }
-    const unset = `${label === 'how_sure_we_are' ? 'How sure we are' : 'Confidence'}: ${UNSET}`
-    for (let at = scope.indexOf(unset); at >= 0; at = scope.indexOf(unset, at + 1)) found.push({ start: offset + at, end: offset + at + unset.length })
+    for (const placeholder of [UNSET, OLD_UNSET]) {
+      const unset = `${label === 'how_sure_we_are' ? 'How sure we are' : 'Confidence'}: ${placeholder}`
+      for (let at = scope.indexOf(unset); at >= 0; at = scope.indexOf(unset, at + 1)) found.push({ start: offset + at, end: offset + at + unset.length })
+    }
   }
   read(0, text, 'how_sure_we_are')
   const section = callSectionOf(text)
@@ -240,15 +246,17 @@ function putBack(text: string, line: string): string {
 
 /**
  * Krish's confidence, after a writer. A first draft (`source` null) says
- * "How sure we are: [Krish to set]" whatever the model wrote. A rewrite keeps
+ * "How sure we are: [to set]" whatever the model wrote. A rewrite keeps
  * the source's confidence exactly, label and number ("How sure we are: 70%",
- * "Confidence: 70%", or the placeholder), and a rewrite of a source with none
- * gets the placeholder in place of any number it wrote. A confidence the
- * model dropped is put back. `restored` says whether anything changed.
+ * "Confidence: 70%", or the placeholder, the old "[Krish to set]" written as
+ * "[to set]"), and a rewrite of a source with none gets the placeholder in
+ * place of any number it wrote. A confidence the model dropped is put back.
+ * `restored` says whether anything changed. The fact gate's hash reads both
+ * placeholders the same, so the swap keeps a passed check in force.
  */
 export function guardConfidence(text: string, source: string | null): { text: string; restored: boolean } {
   const theirs = source === null ? [] : confidenceMentions(source)
-  const want = theirs[0]?.text ?? UNSET_CONFIDENCE
+  const want = (theirs[0]?.text ?? UNSET_CONFIDENCE).replace(OLD_UNSET, UNSET)
   const mine = confidenceMentions(text)
   let out = text
   for (const m of [...mine].reverse()) if (m.text !== want) out = out.slice(0, m.start) + want + out.slice(m.end)

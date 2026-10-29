@@ -12,6 +12,8 @@ describe('committed secret patterns', () => {
     `sk_${'e'.repeat(48)}`,
     `ex_${'f'.repeat(48)}`,
     `ghp_${'b'.repeat(40)}`,
+    `ttp_${'g'.repeat(40)}`,
+    `TELEPROMPTER_API_KEY=${synthetic}`,
     `Authorization: "Bearer ${'c'.repeat(40)}"`,
     ['-----BEGIN', ' PRIVATE KEY-----'].join(''),
   ])('rejects a synthetic credential family without storing a real credential', (candidate) => {
@@ -25,6 +27,8 @@ describe('committed secret patterns', () => {
     '# paste: [stored securely]',
     'MindmakeVideoStudio/studio-mcp-token-v2',
     'Authorization: Bearer ${VIDEO_STUDIO_MCP_TOKEN}',
+    'TELEPROMPTER_API_KEY=',
+    'his personal key (ttp_...)',
   ])('permits a non-secret placeholder or credential name', (candidate) => {
     expect(containsCommittedSecret(candidate)).toBe(false)
   })

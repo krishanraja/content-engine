@@ -12,7 +12,7 @@ from . import qc_captions
 from .qc_keyframes import _frame
 
 
-# Type and tags may run a few pixels past the platform edge (a 28 px tag, a dek line) without hiding behind platform UI.
+# Type may run a few pixels past the platform edge (a dek line) without hiding behind platform UI.
 PLATFORM_TOLERANCE_PX = 12
 
 
@@ -56,28 +56,7 @@ def _fill(image, caption):
     return round(float(mask[eligible].mean() * 100), 2)
 
 
-def _label_score(words):
-    # Caption OCR's spaceless token rule also handles a widely tracked tag.
-    best = 0.0
-    for first in words:
-        line = sorted([word for word in words
-                       if abs(word['y'] + word['h'] / 2 - first['y'] - first['h'] / 2)
-                       <= max(first['h'], word['h']) * 0.5], key=lambda word: word['x'])
-        for start in range(len(line)):
-            joined = ''
-            previous = None
-            for word in line[start:]:
-                if previous and word['x'] - previous['x'] - previous['w'] > 2 * max(word['h'], previous['h']):
-                    break
-                joined += ''.join(qc_captions._tokens(word['text']))
-                best = max(best, qc_captions.spaceless_match('illustration', joined))
-                previous = word
-                if len(joined) > 18:
-                    break
-    return best
-
-
-def measure(image, lock, *, plate_on_screen=False, exempt=(), caption_words=None, ocr_words=None) -> dict:
+def measure(image, lock, *, exempt=(), caption_words=None, ocr_words=None) -> dict:
     if not isinstance(image, Image.Image):
         with Image.open(image) as source:
             image = source.convert('RGB')
@@ -91,13 +70,11 @@ def measure(image, lock, *, plate_on_screen=False, exempt=(), caption_words=None
              and not any(_inside(word['x'] + word['w'] / 2, word['y'] + word['h'] / 2, box) for box in exempt)]
     allowed = {'caption'} if caption_words is None else set(caption_words)
     minimum = math.floor(0.62 * limits['min_text_px'])
-    tag_minimum = math.floor(0.62 * limits.get('min_tag_px', limits['min_text_px']))
     small, caption, platform, edges = [], [], [], []
     for word in candidates:
         x, y, w, h = (word[k] for k in ('x', 'y', 'w', 'h'))
         solid = float(word['conf']) >= 75 and sum(c.isalnum() for c in word['text']) >= 3
-        tag = len(word['text']) >= 5 and set(word['text'].lower()) <= set('illustration')
-        if h < (tag_minimum if tag else minimum) and solid and not _inside(x + w / 2, y + h / 2, zones['marquee']):
+        if h < minimum and solid and not _inside(x + w / 2, y + h / 2, zones['marquee']):
             small.append(word)
         if ((solid or float(word['conf']) >= 90) and _inside(x + w / 2, y + h / 2, zones['caption'])
                 and not {qc_captions.fold(t) for t in qc_captions._tokens(word['text'])}.issubset({qc_captions.fold(a) for a in allowed})):
@@ -110,16 +87,9 @@ def measure(image, lock, *, plate_on_screen=False, exempt=(), caption_words=None
                 and (min(x, y, 1080 - x - w, 1920 - y - h) < limits['edge_margin_px']
                      or x < limits['key_content_margin_px'] - 12)):
             edges.append(word)
-    score = _label_score(candidates) if plate_on_screen else None
-    if plate_on_screen and score < 0.8 and ocr_words is None and limits.get('illustration_tag_required', True):
-        header = zones['header']
-        crop = image.crop((340, header['y'] - 20, 680, header['y'] + header['h'] + 20))
-        crop = crop.resize((crop.width * 3, crop.height * 3), Image.LANCZOS)
-        score = max(score, _label_score([w for w in _words(crop) if float(w['conf']) >= 10]))
     checks = {'fill_pct': {'pass': fill >= limits['fill_min_pct'], 'value': fill},
               **{name: {'pass': not value, 'value': value} for name, value in
-                 [('small_text', small), ('caption_zone', caption), ('platform_zone', platform), ('edges', edges)]},
-              'illustration': {'pass': not plate_on_screen or score >= 0.8 or not limits.get('illustration_tag_required', True), 'value': score}}
+                 [('small_text', small), ('caption_zone', caption), ('platform_zone', platform), ('edges', edges)]}}
     findings = []
     if not checks['fill_pct']['pass']:
         findings.append(f"fill {fill:g}% outside the caption zone, the lock needs {limits['fill_min_pct']}%.")
@@ -131,8 +101,6 @@ def measure(image, lock, *, plate_on_screen=False, exempt=(), caption_words=None
         findings.append(f"platform_zone {word['text']!r} ends at ({word['x'] + word['w']}, {word['y'] + word['h']}), the limits are ({zones['platform']['right_x']}, {zones['platform']['bottom_y']}) outside the marquee.")
     for word in edges:
         findings.append(f"edges {word['text']!r} starts at ({word['x']}, {word['y']}), the limits are {limits['edge_margin_px']} px from each edge and x at least {limits['key_content_margin_px'] - 12} px.")
-    if not checks['illustration']['pass']:
-        findings.append(f'illustration label match {score:.2f}, the limit is at least 0.80 while a plate is on screen.')
     return {'pass': all(check['pass'] for check in checks.values()), 'checks': checks, 'findings': findings}
 
 
@@ -171,7 +139,6 @@ def composition_checks(video, props, lock) -> dict:
                    for word in page['words']
                    for token in qc_captions._tokens(word['text'] if isinstance(word, dict) else str(word))}
         allowed |= call_card_tokens(props, beat)
-        plate = any(label['fromFrame'] <= at < label['toFrame'] for label in props.get('illustrationLabels', []))
-        rows[beat['id']] = measure(image, lock, plate_on_screen=plate, caption_words=allowed, exempt=_footage_boxes(props, at))
+        rows[beat['id']] = measure(image, lock, caption_words=allowed, exempt=_footage_boxes(props, at))
         rows[beat['id']]['frame'] = at
     return {'applies': True, 'pass': bool(rows) and all(row['pass'] for row in rows.values()), 'beats': rows}

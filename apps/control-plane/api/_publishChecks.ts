@@ -6,6 +6,7 @@
 
 import { createHash } from 'node:crypto'
 import { notXYConstructions } from './_judges/deterministic.js'
+import { copyLint } from './_copyLint.js'
 // The one reader of a piece's call, shared with the Studio. Imported by its
 // relative path, as video-studio/_runnerContracts.ts explains; the file has no
 // dependencies of its own.
@@ -290,6 +291,11 @@ export function publishChecks(body: string, factGate: { ok: boolean; reason: str
   checks.push({ id: 'R2', name: 'No "Not X, Y"', blocking: true, ok: nxy.length === 0, detail: nxy.length ? `Found: ${nxy.slice(0, 3).map(h => `"${h}"`).join('; ')}` : 'None found.' })
   const dashes = emDashes(text).length
   checks.push({ id: 'NO_EM_DASH', name: 'No em dashes', blocking: true, ok: dashes === 0, detail: dashes ? `${dashes} found.` : 'None found.' })
+  // Krish, 2026-10-28: "Remember, no content refers to Krish, ever." The copy
+  // lint's one name pattern (config/copy-lint.json, no_name), with no override:
+  // his name, a spelling, a handle or a possessive anywhere in the piece.
+  const names = [...new Set(copyLint(text, 'article_body').filter(h => h.id === 'no_name').map(h => h.match))]
+  checks.push({ id: 'NO_NAME', name: 'Never names Krish', blocking: true, ok: names.length === 0, detail: names.length ? `Found: ${names.slice(0, 3).map(n => `"${n}"`).join(', ')}. No public word names him or credits him as its author.` : 'None found.' })
   const bangs = exclamationMarks(text)
   checks.push({ id: 'NO_EXCLAMATION', name: 'No exclamation marks', blocking: true, ok: bangs.length === 0, detail: bangs.length ? `${bangs.length} found outside quotations.` : 'None found.' })
   const us = americanSpellings(text)

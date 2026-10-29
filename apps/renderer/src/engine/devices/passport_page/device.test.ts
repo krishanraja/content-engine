@@ -38,21 +38,21 @@ describe('passport_page', () => {
     expect(at(35).fields[0]).toMatchObject({ scale: 1, opacity: 1, tilt: -5 })
     expect(html(35)).toContain('rotate(-5deg) scale(1)')
   })
-  it('shows dashed sample and blank unknowns and requires explicit sampleText', () => {
+  it('shows dashed sample and blank unknowns with no SAMPLE sticker or disclaimer', () => {
     expect(html(22)).toContain('???')
     expect(html(22)).toContain('3px dashed')
-    expect(html(22)).toContain('SAMPLE · NOT A CLAIM')
-    const params = { ...object.params, sampleText: undefined }
-    expect(() => html(70, { object: { ...object, params } })).toThrow(/sampleText/)
-    expect(ParamsSchema.safeParse({ ...params, sampleText: '  ' }).success).toBe(false)
+    // Krish, 28 Oct 2026: labels that add no value to the content are out; the dashed ??? claims nothing by itself.
+    expect(html(22)).not.toMatch(/SAMPLE|NOT A CLAIM|ILLUSTRATIVE|sample-sticker/)
+    expect(ParamsSchema.safeParse({ ...object.params, sampleText: 'SAMPLE · NOT A CLAIM' }).success).toBe(false)
     const blank = { ...object.params, fields: [{ id: 'blank', label: 'Unverified', at: { x: 92, y: 92 }, state: 'blank' }] }
     expect(html(22, { object: { ...object, params: blank } })).toContain('???')
   })
   it('normalises two MRZ lines to uppercase with filler and a fixed width', () => {
     expect(mrzLine('p<example name')).toBe('P<EXAMPLE<NAME'.padEnd(42, '<'))
     expect(mrzLine('a'.repeat(100))).toHaveLength(42)
-    expect(html()).toContain('P&lt;ILLUSTRATION&lt;')
-    expect(html()).not.toContain('sample&lt;not')
+    // Neutral filler: the machine line spells no ILLUSTRATION tag or disclaimer (Krish, 28 Oct 2026: "Yes remove those.").
+    expect(html()).toContain('P' + '&lt;'.repeat(41))
+    expect(html()).not.toMatch(/ILLUSTRATION|NOT&lt;A&lt;CLAIM|p&lt;/)
   })
   it('prints flags separately, keeps geometry level, and bleeds a 900px page off the bottom', () => {
     const markup = html()
@@ -96,7 +96,7 @@ describe('passport_page', () => {
   })
   it('uses the approved verdict stamp type sizes', () => {
     for (const [main, size] of [['0/1 DELETED', 96], ['2/2 FLAGGED', 70]] as const) {
-      const params = { ...object.params, fields: [{ id: 'a', label: 'ILLUSTRATIVE TEST',
+      const params = { ...object.params, fields: [{ id: 'a', label: 'DEEPSEEK · 3 RUNS',
         at: { x: 92, y: 92 }, state: 'stamped', main }] }
       expect(html(70, { object: { ...object, params } })).toContain(`font-size:${size}px`)
     }

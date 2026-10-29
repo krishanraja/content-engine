@@ -1,7 +1,7 @@
 {
  "_about": "The fixed layout of the publish board, as check_board_layout.py reads it from three fed weeks, the hash of its layout file and colours, and the words Krish approved it in. It changes only with --update --approved (Ruling, Krish, 2026-10-21: the layout is held by CI and changes only with his recorded words).",
  "layout_version": 2,
- "approved": "Krish, 2026-10-24: Yes, Sunday is my recording day.",
+ "approved": "Krish, 2026-10-28: \"pick an idea for a specific day AND add any optional comments easily, which can be saved, or I can: mark an idea as being useful in a future wider piece OR mark it as being an idea that should be stored for a future trend OR queue it for next week OR reject it\"; \"I'm happy to plan the Tuesday, Thursday, Saturday, and Sunday content within the Sunday ideas session if you give me a few options to approve as you do the Mon/wed/fri\"; \"Once I approve, the two scripts will go to teleprompter\"; \"Sunday evening press\"; \"Approve each day Monday\"",
  "files": {
   "config/board-layout.json": "e7e63fd5a9ffeb7b860273fbcae4e75cb1e103f6e0a278ab7e35bfbb145e1894",
   "scripts/post-pack/tokens.css": "a38811b2df781b9169b3576986fa59cca5d870469190560bf8f5e9515c4de42f"
@@ -79,6 +79,10 @@
     "section.q-day",
     "section.q-day",
     "section.q-day"
+   ],
+   "offdays": [
+    "div.sec-head",
+    "div.slot-empty"
    ]
   },
   "sunday": {
@@ -152,8 +156,8 @@
     "p.id-story",
     "ol.id-beats",
     "dl.id-facts",
+    "div.tri-why",
     "div.tri-row",
-    "label.qmark",
     "div.tri-why",
     "p.tri-state"
    ],
@@ -175,6 +179,20 @@
     "ol.q-joins",
     "button.btn-s",
     "p.q-state"
+   ],
+   "offdays": [
+    "div.sec-head",
+    "div.off-day",
+    "div.off-day",
+    "div.off-day",
+    "div.off-day"
+   ],
+   "offday_card": [
+    "div.id-flags",
+    "p.off-copy",
+    "p.id-why",
+    "div.tri-row",
+    "p.tri-state"
    ]
   },
   "midweek": {
@@ -204,6 +222,7 @@
       "p.st-what",
       "div.ticks rs-top",
       "div.rec dl",
+      "div.rec so",
       "h2.run-h",
       "section.run",
       "section.run",
@@ -225,12 +244,14 @@
      "drafts": [
       "p.st-what",
       "div.rec rv ed",
+      "div.rec ap",
       "div.card also",
       "div.card lessons"
      ],
      "record": [
       "p.st-what",
-      "div.slot-empty"
+      "div.slot-empty",
+      "div.rec tt"
      ],
      "publish": [
       "p.st-what",
@@ -248,7 +269,8 @@
      ],
      "record": [
       "p.st-what",
-      "div.slot-empty"
+      "div.slot-empty",
+      "div.rec tt"
      ],
      "publish": [
       "p.st-what",
@@ -263,8 +285,8 @@
     "p.id-story",
     "ol.id-beats",
     "dl.id-facts",
+    "div.tri-why",
     "div.tri-row",
-    "label.qmark",
     "div.tri-why",
     "p.tri-state"
    ],
@@ -276,6 +298,10 @@
     "section.q-day",
     "section.q-day",
     "section.q-day"
+   ],
+   "offdays": [
+    "div.sec-head",
+    "div.slot-empty"
    ]
   }
  }

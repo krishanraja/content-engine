@@ -14,6 +14,11 @@ DIGIT = re.compile(r'\d')
 DATA_DEVICES = {'kinetic_stat', 'bar_compare', 'test_grid', 'record_card', 'bar_race'}
 SOUNDED_VERBS = {'enter', 'stamp', 'mark'}
 WORDS_PER_SECOND = 2.6  # Krish's measured read rate, used only before ingest gives real times
+# His name, a spelling or handle of it, or a possessive of it ("KRISH'S TEST", "@TheRealKrisho", "krishraja.com").
+# Krish, 28 Oct 2026: "Remember, no content refers to Krish, ever." One pattern: copy-lint's no_name once
+# config/copy-lint.json carries it, this same regex until then. "Raja" alone and "Krishna" pass.
+NO_NAME = (r'\b(?:the[ \t_.-]?real[ \t_.-]?krisho|krisho|krish(?:an)?raja\d*|krish(?:an)?(?:[ \t]+raja)?)\b', 'i')
+NOT_PUBLIC = {'src', 'id', 'path'}  # device params that name a file or an id, never words on screen
 
 
 def schema(spec_path: Path) -> tuple[dict | None, list[str]]:
@@ -51,6 +56,37 @@ def _strings(node, path=''):
             yield from _strings(value, f'{path}.{index}')
     elif isinstance(node, str):
         yield path, node
+
+
+def no_name_pattern() -> re.Pattern:
+    regex, flags = NO_NAME
+    rules = CONFIG.parent / 'copy-lint.json'
+    if rules.is_file():
+        for rule in load_json(rules).get('patterns', []):
+            if rule.get('id') == 'no_name':
+                regex, flags = rule['regex'], rule.get('flags', '')
+    bits = re.ASCII | (re.IGNORECASE if 'i' in flags else 0) | (re.MULTILINE if 'm' in flags else 0)
+    return re.compile(regex, bits)
+
+
+def public_strings(spec: dict):
+    """The spec's words that reach the screen: device params (never a src, id or path), each dataset's producer
+    label, unit and row labels, and the dated call. Records such as signed.by, licence and take_edits.why name
+    him by right and are never read."""
+    for index, obj in enumerate(spec.get('objects', [])):
+        for path, text in _strings(obj.get('params', {}), f'objects.{index}.params'):
+            if path.rsplit('.', 1)[-1] not in NOT_PUBLIC:
+                yield path, text
+    for index, dataset in enumerate(spec.get('datasets', [])):
+        for key in ('producer_label', 'unit'):
+            if isinstance(dataset.get(key), str):
+                yield f'datasets.{index}.{key}', dataset[key]
+        for row, entry in enumerate(dataset.get('rows', [])):
+            if isinstance(entry.get('label'), str):
+                yield f'datasets.{index}.rows.{row}.label', entry['label']
+    statement = (spec.get('call') or {}).get('statement')
+    if isinstance(statement, str):
+        yield 'call.statement', statement
 
 
 def pending_devices_error(format_id: str, fmt: dict | None = None) -> str | None:
@@ -119,6 +155,13 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
     for obj in spec['objects']:
         if obj['device'] in DATA_DEVICES and not obj.get('dataset'):
             out.append(f"brand.digit_producer objects.{obj['obj']}: a {obj['device']} binds a dataset so its numbers name their producer")
+    # No override: any Krish on screen is refused, another person's included (Krish picked "Yes, block it", 28 Oct 2026).
+    name = no_name_pattern()
+    for path, text in public_strings(spec):
+        hit = name.search(text)
+        if hit:
+            out.append(f'brand.no_name {path}: "{hit.group(0)}" puts his name on screen; no public word names him, '
+                       'and a test the publication ran reads OUR TEST · <date>')
 
     budget = spec['budget']['credits']
     used: dict[str, float] = {}

@@ -64,6 +64,15 @@ ENGINE_BASE_URL, else the one scripts/engine.py uses. It authenticates with the
 runner's own bearer, read from Windows Credential Manager through
 scripts/get-credential.ps1 exactly as the runner reads it, and never shows it.
 
+Once each Saturday after 18:00 local, a pass also runs the overnight preflight
+(scripts\overnight\preflight.ps1, plan Wave 1: the clock's "Sat 18:00
+Preflight" row), with no window. It only reads: whether this machine could run
+the overnight production unattended (Claude Code installed, never started,
+the Codex companion, login and allowance, the pinned ffmpeg and Tesseract, free
+disk, Google Drive). Its result is kept as preflight.json beside this log, a
+failed one is tried once more 20 minutes later, and every report after carries
+its summary, so GET /api/library/recordings/lane reads it with no new key.
+
   powershell -NoProfile -ExecutionPolicy Bypass -File scripts\recordings-upload.ps1 -Check   what it would send and place, sending and placing nothing
   powershell -NoProfile -ExecutionPolicy Bypass -File scripts\recordings-upload.ps1          one pass
   powershell -NoProfile -ExecutionPolicy Bypass -File scripts\recordings-upload.ps1 -Loop    a pass every five minutes (the scheduled task)
@@ -116,6 +125,14 @@ $StateRoot = [System.IO.Path]::GetFullPath($StateRoot)
 $LogPath = Join-Path $StateRoot 'recordings-upload.log'
 $StatePath = Join-Path $StateRoot 'recordings.json'
 $PlacingStatePath = Join-Path $StateRoot 'placing.json'
+# The Saturday overnight preflight: its script, where its last result is kept, from when it runs, when a failed one is
+# tried once more (a machine miss re-fires once, the plan's clock), and how long a failed one is reported as a problem.
+$PreflightScript = Join-Path $RepoRoot 'scripts\overnight\preflight.ps1'
+$PreflightStatePath = Join-Path $StateRoot 'preflight.json'
+$PreflightHour = 18
+$PreflightRetryMinutes = 20
+$PreflightFailedHours = 48
+$script:Preflight = $null
 $script:LastPlacingNote = ''
 $script:PlacingNotReady = ''
 $script:PassSent = $true
@@ -156,8 +173,8 @@ function Get-Field($Object, [string]$Name) {
 }
 
 function Save-JsonFile([string]$Path, $Value) {
-  # Only ever called with $StatePath or $PlacingStatePath, beside the log:
-  # never anywhere in Drive.
+  # Only ever called with $StatePath, $PlacingStatePath or $PreflightStatePath,
+  # beside the log: never anywhere in Drive.
   [void][System.IO.Directory]::CreateDirectory($StateRoot)
   $temporary = "$Path.tmp"
   [System.IO.File]::WriteAllText($temporary, ($Value | ConvertTo-Json -Depth 6), (New-Object System.Text.UTF8Encoding($false)))
@@ -679,6 +696,7 @@ function Invoke-Pass {
     try { Publish-Working } catch { Write-Log "the working files were not published this pass: $($_.Exception.Message)"; Add-Problem 'working_publish_failed' }
     try { Invoke-WatchKeeper } catch { Write-Log "the content watcher was not checked this pass: $($_.Exception.Message)" }
     try { Invoke-Windows } catch { Write-Log "the scheduled tasks' windows were not checked this pass: $($_.Exception.Message)" }
+    try { Invoke-Preflight } catch { Write-Log "the Saturday overnight preflight did not run this pass: $($_.Exception.Message)" }
     Send-LaneReport
   }
   return ($sent -and $placed)
@@ -1011,11 +1029,88 @@ function Send-LaneReport {
       if ($null -ne $watch) { $report['watch'] = $watch }
       $windows = Get-WindowsBlock
       if ($null -ne $windows) { $report['windows'] = $windows }
+      $preflight = Get-PreflightBlock
+      if ($null -ne $preflight) { $report['preflight'] = $preflight }
       [void](Invoke-Engine $client $base $token '/api/library/recordings/lane' $report)
     } finally { $client.Dispose() }
   } catch {
     Write-Log "this pass's report did not reach the engine: $($_.Exception.Message)"
   }
+}
+
+# ---- the Saturday overnight preflight ------------------------------------------
+# Plan Wave 1, the clock's "Sat 18:00 Preflight" row (checkpoint preflight_ok): Wave 2 builds the overnight runner, and
+# this proves a week early whether this machine could run it unattended. scripts\overnight\preflight.ps1 only reads and
+# runs version and help commands; it starts every program with no window, and this starts it from this hidden pass, so
+# nothing shows on his screen (Krish, 2026-10-28: "HIDE ALL CONSOLE POP UPS FOREVER FROM EVERY REPO AND LOCAL TASK").
+# Its result is kept beside this log and its report rides on every lane report after. Nothing here stops a pass.
+
+function Test-PreflightDue($Last, [DateTime]$Now) {
+  # Once each Saturday from $PreflightHour local. A run that failed is tried once more $PreflightRetryMinutes later,
+  # then stands until the next Saturday.
+  if ($Now.DayOfWeek -ne [DayOfWeek]::Saturday -or $Now.Hour -lt $PreflightHour) { return $false }
+  $today = $Now.ToString('yyyy-MM-dd', [System.Globalization.CultureInfo]::InvariantCulture)
+  if ($null -eq $Last -or [string](Get-Field $Last 'local_date') -ne $today) { return $true }
+  if ([bool](Get-Field $Last 'ok') -or [int](Get-Field $Last 'attempt') -ge 2) { return $false }
+  $at = ConvertTo-UtcTime ([string](Get-Field $Last 'at'))
+  return ($null -eq $at -or ($Now.ToUniversalTime() - $at).TotalMinutes -ge $PreflightRetryMinutes)
+}
+
+function Invoke-Preflight {
+  $last = Read-JsonFile $PreflightStatePath
+  $script:Preflight = $last
+  if ((Test-PreflightDue $last (Get-Date)) -and (Test-Path -LiteralPath $PreflightScript -PathType Leaf)) {
+    Write-Log 'the Saturday overnight preflight is running (scripts\overnight\preflight.ps1: it reads, and changes nothing)'
+    # Under Continue, as every child here runs: Windows PowerShell turns a line on stderr into an error under Stop.
+    $previous = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'
+    try {
+      $output = @(& powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File $PreflightScript -RepoRoot $RepoRoot 2>$null)
+    } finally { $ErrorActionPreference = $previous }
+    # Its one JSON line, read whole even if a host wrapped it (a JSON string never holds a bare line break).
+    $result = $null
+    $text = (@($output | ForEach-Object { [string]$_ }) -join '').Trim()
+    $start = $text.IndexOf('{')
+    if ($start -ge 0) { try { $result = $text.Substring($start) | ConvertFrom-Json } catch { $result = $null } }
+    $now = Get-Date
+    if ($null -eq $result -or [string](Get-Field $result 'kind') -ne 'overnight_preflight') {
+      # A preflight that did not finish is a failed one, so it is tried once more and reported.
+      $at = $now.ToUniversalTime().ToString("yyyy-MM-dd'T'HH:mm:ss'Z'", [System.Globalization.CultureInfo]::InvariantCulture)
+      $result = [pscustomobject][ordered]@{
+        schema_version = 1; kind = 'overnight_preflight'; at = $at
+        local_date = $now.ToString('yyyy-MM-dd', [System.Globalization.CultureInfo]::InvariantCulture)
+        ok = $false; failed = @('preflight_stopped')
+        report = [pscustomobject][ordered]@{ at = $at; ok = $false; failed = @('preflight_stopped') }
+      }
+    }
+    $attempt = 1
+    if ($null -ne $last -and [string](Get-Field $last 'local_date') -eq [string](Get-Field $result 'local_date')) { $attempt = 1 + [int](Get-Field $last 'attempt') }
+    $result | Add-Member -NotePropertyName 'attempt' -NotePropertyValue $attempt -Force
+    Save-JsonFile $PreflightStatePath $result
+    $script:Preflight = $result
+    if ([bool](Get-Field $result 'ok')) { Write-Log 'the Saturday overnight preflight passed: this machine could run the overnight production unattended' }
+    else { Write-Log "the Saturday overnight preflight failed: $(@(Get-Field $result 'failed') -join ', ') (preflight.json beside this log says why)" }
+  }
+  if ($null -ne $script:Preflight -and -not [bool](Get-Field $script:Preflight 'ok')) {
+    $at = ConvertTo-UtcTime ([string](Get-Field $script:Preflight 'at'))
+    if ($null -ne $at -and ([DateTime]::UtcNow - $at).TotalHours -lt $PreflightFailedHours) { Add-Problem 'preflight_failed' }
+  }
+}
+
+function Get-PreflightBlock {
+  # The last preflight's report, by these names only (api/library/_lanes.ts, PreflightHealth): names, versions, counts
+  # and times, never a path, a message or an account.
+  if ($null -eq $script:Preflight) { return $null }
+  $report = Get-Field $script:Preflight 'report'
+  if ($null -eq $report) { return $null }
+  $block = [ordered]@{}
+  foreach ($name in @('at', 'ok', 'claude_version', 'codex_companion', 'codex_login', 'codex_weekly_used_pct',
+      'codex_resets_at', 'ffmpeg', 'tesseract', 'free_gb', 'drive_reachable', 'drive_folders')) {
+    $value = Get-Field $report $name
+    if ($null -ne $value) { $block[$name] = $value }
+  }
+  $block['failed'] = @(Get-Field $report 'failed' | Where-Object { $_ } | ForEach-Object { [string]$_ })
+  return $block
 }
 
 function Update-Source {

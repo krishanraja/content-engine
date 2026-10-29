@@ -30,7 +30,6 @@
     "change_density_min": 0.75,
     "longest_still_s": 3,
     "layout_types_per_min_tall": 1,
-    "plates_labelled": 1.0,
     "caption_ocr_min": 0.98
   },
   "fps": 30,
@@ -38,7 +37,7 @@
     "9:16",
     "16:9"
   ],
-  "intro_outro": "story stand-off (approved) unless Gate 0 changes the sting",
+  "intro_outro": "Under test (Krish, 29 Oct 2026, to be judged on real engagement): the hook is the intro. The first frame is the hook in the brand's dress, with the logo and the series tag in its corners from the start and no story card or logo sting ahead of it; compile records it as opening hook. One calm close, the ending band, held long enough to read.",
   "pending_devices": [
     "scribble",
     "thread_card"
@@ -73,8 +72,8 @@
             "fields": [],
             "ghostAI": true,
             "mrz": [
-              "P<ILLUSTRATION",
-              "SAMPLE<NOT<A<CLAIM"
+              "P<<",
+              "0000000000<0<<<0000000<0000000"
             ]
           }
         },
@@ -91,8 +90,8 @@
             "fields": [],
             "ghostAI": true,
             "mrz": [
-              "P<ILLUSTRATION",
-              "SAMPLE<NOT<A<CLAIM"
+              "P<<",
+              "0000000000<0<<<0000000<0000000"
             ]
           }
         },
@@ -160,8 +159,8 @@
             "fields": [
               {
                 "id": "entry-a",
-                "label": "ILLUSTRATIVE ENTRY",
-                "top": "ILLUSTRATIVE ENTRY",
+                "label": "ENTRY",
+                "top": "ENTRY",
                 "at": {
                   "x": 92,
                   "y": 92
@@ -172,8 +171,8 @@
               },
               {
                 "id": "entry-b",
-                "label": "ILLUSTRATIVE ENTRY",
-                "top": "ILLUSTRATIVE ENTRY",
+                "label": "ENTRY",
+                "top": "ENTRY",
                 "at": {
                   "x": 300,
                   "y": 410
@@ -185,10 +184,9 @@
             ],
             "ghostAI": false,
             "mrz": [
-              "P<ILLUSTRATION",
-              "SAMPLE<NOT<A<CLAIM"
-            ],
-            "sampleText": "SAMPLE \u00b7 NOT A CLAIM"
+              "P<<",
+              "0000000000<0<<<0000000<0000000"
+            ]
           }
         },
         {
@@ -240,8 +238,8 @@
             "fields": [
               {
                 "id": "entry-a",
-                "label": "ILLUSTRATIVE ENTRY",
-                "top": "ILLUSTRATIVE ENTRY",
+                "label": "ENTRY",
+                "top": "ENTRY",
                 "at": {
                   "x": 296,
                   "y": 104
@@ -252,8 +250,8 @@
               },
               {
                 "id": "entry-b",
-                "label": "ILLUSTRATIVE ENTRY",
-                "top": "ILLUSTRATIVE ENTRY",
+                "label": "ENTRY",
+                "top": "ENTRY",
                 "at": {
                   "x": 50,
                   "y": 426
@@ -265,10 +263,9 @@
             ],
             "ghostAI": false,
             "mrz": [
-              "P<ILLUSTRATION",
-              "SAMPLE<NOT<A<CLAIM"
-            ],
-            "sampleText": "SAMPLE \u00b7 NOT A CLAIM"
+              "P<<",
+              "0000000000<0<<<0000000<0000000"
+            ]
           }
         },
         {
@@ -317,7 +314,6 @@
             },
             "born": "???",
             "lives": "???",
-            "sampleText": "SAMPLE \u00b7 NOT A CLAIM",
             "knotLabel": "THE TEST",
             "endLabel": "THE CALL"
           }
@@ -354,12 +350,11 @@
               "x": 72,
               "y": 1696
             },
-            "label": "ILLUSTRATION",
             "fields": [],
             "ghostAI": false,
             "mrz": [
-              "P<ILLUSTRATION",
-              "SAMPLE<NOT<A<CLAIM"
+              "P<<",
+              "0000000000<0<<<0000000<0000000"
             ]
           }
         }
@@ -389,12 +384,12 @@
               "x": 72,
               "y": 424
             },
-            "label": "ILLUSTRATIVE TEST",
+            "label": "THE TEST",
             "fields": [
               {
                 "id": "result-a",
-                "label": "ILLUSTRATIVE ENTRY",
-                "top": "ILLUSTRATIVE ENTRY",
+                "label": "ENTRY",
+                "top": "ENTRY",
                 "at": {
                   "x": 92,
                   "y": 80
@@ -405,8 +400,8 @@
               },
               {
                 "id": "result-b",
-                "label": "ILLUSTRATIVE ENTRY",
-                "top": "ILLUSTRATIVE ENTRY",
+                "label": "ENTRY",
+                "top": "ENTRY",
                 "at": {
                   "x": 70,
                   "y": 250
@@ -418,10 +413,9 @@
             ],
             "ghostAI": false,
             "mrz": [
-              "P<ILLUSTRATION",
-              "SAMPLE<NOT<A<CLAIM"
-            ],
-            "sampleText": "SAMPLE \u00b7 NOT A CLAIM"
+              "P<<",
+              "0000000000<0<<<0000000<0000000"
+            ]
           }
         },
         {
@@ -432,19 +426,7 @@
               "x": 164,
               "y": 504
             },
-            "top": "SAMPLE",
             "main": "???"
-          }
-        },
-        {
-          "obj": "verdict-label",
-          "device": "sticker",
-          "params": {
-            "text": "SAMPLE \u00b7 NOT A CLAIM",
-            "at": {
-              "x": 606,
-              "y": 312
-            }
           }
         },
         {

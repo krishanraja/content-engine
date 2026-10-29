@@ -4,6 +4,11 @@ import { hasEngineAccess, operatorBearerAllowed } from '../_auth.js'
 
 export const collections = ['ticks', 'links', 'edits', 'picks', 'queue', 'comments'] as const
 export type Collection = typeof collections[number]
+// Read-only views of his day decisions, which are stored in picks (board_documents takes no other collection without a
+// migration): approvals lists his Approve scripts presses (config/teleprompter.json approval.collection, read by
+// teleprompter_send.py), titles his Titles presses. Each is the picks documents of that kind; nothing writes to a view.
+export const views = { approvals: 'approve_scripts', titles: 'titles' } as const
+export type View = keyof typeof views
 export const MAX_HTML = 16 * 1024 * 1024
 export const digest = (value: string | Uint8Array) => createHash('sha256').update(value).digest('hex')
 export const canonical = (value: unknown): string => {
@@ -28,6 +33,56 @@ export function actor(req: VercelRequest, operatorOnly = false): string | null {
 }
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 const object = (v: unknown): v is Record<string, unknown> => !!v && typeof v === 'object' && !Array.isArray(v)
+const SHA256 = /^[a-f0-9]{64}$/
+const TP_ID = /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/
+// Krish's five presses on an idea (Krish, 2026-10-28: "pick an idea for a specific day AND add any optional comments
+// easily, which can be saved, or I can: mark an idea as being useful in a future wider piece OR mark it as being an
+// idea that should be stored for a future trend OR queue it for next week OR reject it"). The pick is picks/<day>; the
+// other four are queue/<pick> with one of these uses (null takes a press back).
+export const PRESS_USES = ['wider_piece_context', 'track_over_time', 'next_week', 'not_for_us'] as const
+// The off days (Krish, 2026-10-28: "I'm happy to plan the Tuesday, Thursday, Saturday, and Sunday content within the
+// Sunday ideas session if you give me a few options to approve as you do the Mon/wed/fri"): queue/off-<day>-<option>.
+export const OFFDAY_ID = /^off-(tue|thu|sat|sun)-[a-zA-Z0-9][a-zA-Z0-9_.:-]{0,59}$/
+// His decisions on a day's tab, stored in picks beside the day's pick: <day>-scripts (Approve scripts), <day>-titles
+// (Titles), <day>-publish (Approve for publish) and <day>-reject-<asset> (Reject asset).
+export const DECISION_ID = /^(mon|wed|fri)-(scripts|titles|publish|reject-([a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}))$/
+export const DECISION_KIND = { scripts: 'approve_scripts', titles: 'titles', publish: 'approve_publish', reject: 'reject_asset' } as const
+export const SCRIPT_CUTS = ['long', 'short', 'feature'] as const
+export const TITLE_SURFACES = ['long_title', 'short_title', 'long_thumbnail', 'short_thumbnail'] as const
+const oneLine = (v: unknown, max: number) => typeof v === 'string' && v.trim().length > 0 && v.length <= max && !/[\x00-\x1f\x7f]/.test(v)
+/** An object whose keys are some of `keys` (at least one) and whose every value passes `ok`. */
+function keyed(v: unknown, keys: readonly string[], ok: (x: unknown) => boolean): v is Record<string, unknown> {
+  return object(v) && Object.keys(v).length > 0 && Object.entries(v).every(([k, x]) => keys.includes(k) && ok(x))
+}
+/** A day decision (DECISION_ID): what each of his presses on a day's tab must carry. The server adds send to an
+ *  approval of scripts, so a write that brings its own is refused. */
+function decisionBody(id: string, body: Record<string, unknown>): boolean {
+  const m = DECISION_ID.exec(id)
+  if (!m || body.day !== m[1] || 'send' in body) return false
+  const kind = m[2].startsWith('reject-') ? DECISION_KIND.reject : DECISION_KIND[m[2] as 'scripts' | 'titles' | 'publish']
+  if (body.kind !== kind) return false
+  const piece = typeof body.piece_id === 'string' && UUID.test(body.piece_id)
+  if (kind === 'titles') return (!('piece_id' in body) || piece) && keyed(body.picks, TITLE_SURFACES, x => oneLine(x, 300))
+  if (!piece) return false
+  if (kind === 'approve_publish') return typeof body.approved === 'boolean' && (!('manifest_sha256' in body) || SHA256.test(String(body.manifest_sha256)))
+  if (kind === 'reject_asset') {
+    return body.asset === m[3] && oneLine(body.label, 300) && typeof body.reason === 'string' && body.reason.trim().length > 0 && body.reason.length <= 4000
+      && (!('drive_id' in body) || /^[A-Za-z0-9_-]{10,80}$/.test(String(body.drive_id)))
+      && (!('at_ms' in body) || Number.isSafeInteger(body.at_ms) && Number(body.at_ms) >= 0 && Number(body.at_ms) <= 86_400_000)
+      && (!('formats' in body) || Array.isArray(body.formats) && body.formats.length <= 16 && body.formats.every(f => typeof f === 'string' && /^[a-z][a-z0-9_]{1,40}$/.test(f)))
+  }
+  // approve_scripts: the exact words of each cut he approved (texts), as he saw them on the Drafts step, with the
+  // Teleprompter names they go under; scripts, when given, is the hash of each (the server checks it, or fills it).
+  if (typeof body.approved !== 'boolean') return false
+  if (body.approved === false) return true
+  const cuts = object(body.texts) ? Object.keys(body.texts) : []
+  const same = (v: unknown) => object(v) && Object.keys(v).every(k => cuts.includes(k))
+  return keyed(body.texts, SCRIPT_CUTS, x => typeof x === 'string' && x.trim().length > 0 && x.length <= 100_000)
+    && keyed(body.titles, SCRIPT_CUTS, x => oneLine(x, 200)) && same(body.titles) && Object.keys(body.titles as object).length === cuts.length
+    && (!('scripts' in body) || keyed(body.scripts, SCRIPT_CUTS, x => SHA256.test(String(x))) && same(body.scripts))
+    && oneLine(body.folder_title, 200) && (!('folder_id' in body) || TP_ID.test(String(body.folder_id)))
+    && (!('script_ids' in body) || keyed(body.script_ids, SCRIPT_CUTS, x => TP_ID.test(String(x))) && same(body.script_ids))
+}
 export function validBody(collection: string, id: string, body: unknown): boolean {
   if (!validId(id) || !object(body) || Buffer.byteLength(JSON.stringify(body)) > 256 * 1024) return false
   if ('at' in body && (typeof body.at !== 'string' || !Number.isFinite(Date.parse(body.at)))) return false
@@ -36,12 +91,27 @@ export function validBody(collection: string, id: string, body: unknown): boolea
   if (collection === 'ticks') return typeof body.done === 'boolean' && day(body.day) && text('piece_id', 100) && text('step', 80) && text('label', 300) && id === `${body.day}-${body.step}`
   if (collection === 'links') return day(id) && ['article', 'youtube'].every(k => text(k, 2048) && (!body[k] || /^https?:\/\//.test(body[k] as string)))
   if (collection === 'edits') return text('text') && day(body.day) && text('item', 100) && id === `${body.day}-${body.item}`
-  if (collection === 'picks') return day(id) && day(body.day) && text('pick', 160) && text('story')
+  // His pick for a day, with his optional saved note; or one of his decisions on a day's tab (decisionBody).
+  if (collection === 'picks' && DECISION_ID.test(id)) return decisionBody(id, body)
+  if (collection === 'picks') return day(id) && day(body.day) && text('pick', 160) && text('story') && !('kind' in body)
+    && (!('note' in body) || body.note === null || text('note', 2000))
   // A Combine tap on the Queue tab's "Could combine" card: his choice only, recorded as queue/combine-<n>; the next
   // session runs synthesize on his word (Krish, 2026-10-21: nothing in the queue is combined without it).
   if (collection === 'queue' && body.combine !== undefined) return /^combine-\d{1,3}$/.test(id) && body.combine === true && body.pick === id
     && Array.isArray(body.members) && body.members.length >= 2 && body.members.length <= 5
     && body.members.every(m => typeof m === 'string' && UUID.test(m)) && new Set(body.members).size === body.members.length
+  // An off-day option he approved or skipped: queue/off-<day>-<option>, bound to the copy he was shown (copy_sha256).
+  if (collection === 'queue' && (OFFDAY_ID.test(id) || body.use === 'offday')) return OFFDAY_ID.test(id) && body.use === 'offday'
+    && body.pick === id && id.startsWith(`off-${String(body.day)}-`) && typeof body.approved === 'boolean'
+    && SHA256.test(String(body.copy_sha256)) && ['format', 'source', 'option_id'].every(k => !(k in body) || text(k, 1000))
+  // One of the four presses on an idea (PRESS_USES), or null to take it back: queue/<pick>, his optional note (a
+  // theme or a note for a wider piece), his reason on a Reject (required, so every rejection carries his words to learn
+  // from), and the Monday a Next week mark is for.
+  if (collection === 'queue' && 'use' in body) return body.pick === id && text('pick', 160) && typeof body.queued === 'boolean'
+    && (body.use === null || (PRESS_USES as readonly unknown[]).includes(body.use))
+    && ['note', 'reason'].every(k => !(k in body) || body[k] === null || text(k, 2000)) && (!('theme' in body) || body.theme === null || text('theme', 120))
+    && (body.use !== 'not_for_us' || typeof body.reason === 'string' && body.reason.trim().length > 0)
+    && (body.use === 'next_week' ? monday(String(body.target_week)) : !('target_week' in body) || body.target_week === null)
   if (collection === 'queue') return text('pick', 160) && typeof body.queued === 'boolean'
   if (collection === 'comments') return text('text', 30000) && text('thread_id', 160) && validId(String(body.thread_id)) && text('anchor', 160) && validId(String(body.anchor))
     && commentExtras(body)
@@ -67,13 +137,18 @@ export function combineWriterRefused(collection: string, body: unknown, who: str
   return collection === 'queue' && object(body) && body.combine !== undefined && who !== 'Krish'
 }
 /** The writes a session relays as his words: a Combine tap, a saved edit of a draft (edit_sweep.py carries it into
- *  every other draft and the ledger as decided_by Krish), and his taps on a change or a lesson (a comment with act).
- *  Only Krish writes them; any other writer gets the code to refuse with. A plain comment stays open to the engine. */
+ *  every other draft and the ledger as decided_by Krish), his taps on a change or a lesson (a comment with act), his
+ *  note on a pick, a press on an idea or an off-day option (a queue document with use), and his decisions on a day's
+ *  tab (a picks document with kind: Approve scripts, Titles, Approve for publish, Reject asset). Only Krish writes
+ *  them; any other writer gets the code to refuse with. A plain comment stays open to the engine. */
 export function hisOnlyRefusal(collection: string, body: unknown, who: string | null): string | null {
   if (who === 'Krish') return null
   if (combineWriterRefused(collection, body, who)) return 'combine_is_his_tap'
   if (collection === 'edits') return 'edit_is_his_save'
   if (collection === 'comments' && object(body) && 'act' in body) return 'tap_is_his'
+  if (collection === 'picks' && object(body) && 'kind' in body) return 'decision_is_his'
+  if (collection === 'picks' && object(body) && 'note' in body) return 'pick_note_is_his'
+  if (collection === 'queue' && object(body) && 'use' in body) return 'press_is_his'
   return null
 }
 // Source archives retain the export's selectors, missing anchors and synthesized

@@ -677,13 +677,32 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
       const l = r.closest("label.pick"); l.classList.toggle("on", on);
       l.querySelector(".t-when").textContent = busy[day] === r.value ? "saving" : on && v && v.at ? "picked " + hm(v.at) : "";
       r.closest(".id-card").classList.toggle("on", on);
+      // His optional note on the picked idea (the fixed layout): open under the pick he made, holding what he saved.
+      const note = document.querySelector(`[data-pick-note-for="${r.value}"]`);
+      if (note) {
+        note.hidden = !(on && mode === "live" && !busy[day]);
+        const i = note.querySelector("input");
+        if (document.activeElement !== i && i.dataset.unsaved !== "true") i.value = on && v && typeof v.note === "string" ? v.note : "";
+      }
     }
     const n = days.filter(d => saved[d]).length;
     const tab = document.querySelector('[data-tabprog="ideas"]');
     if (tab) tab.textContent = mode === "live" ? `${n} of ${days.length} picked` : `pick ${days.length}`;
     if (mode === "off") for (const d of days) say(d, "Picks are not saving in this view. Open it in claude.ai.", true);
-    else for (const d of days) if (!busy[d]) say(d, saved[d] ? (window.boardRuntime ? "Your pick is saved for this day's content workflow." : "Your pick is saved. Claude starts this day's piece from it.") : "");
+    else for (const d of days) if (!busy[d]) say(d, saved[d] ? (saved[d].note ? "Your pick and your note are saved." : window.boardRuntime ? "Your pick is saved for this day's content workflow." : "Your pick is saved. Claude starts this day's piece from it.") : "");
   }
+  document.addEventListener("input", e => { const i = e.target.closest && e.target.closest("input[data-pick-note]"); if (i) i.dataset.unsaved = "true" });
+  document.addEventListener("click", async e => {
+    const b = e.target.closest && e.target.closest('[data-act="save-pick-note"]'); if (!b) return;
+    const day = b.dataset.day, v = saved[day], i = document.querySelector(`[data-pick-note-for="${b.dataset.for}"] input`);
+    if (mode !== "live" || !pdb || busy[day] || !v || v.pick !== b.dataset.for || !i) { render(mode); return }
+    const text = i.value.trim(), body = Object.assign({}, v, { note: text || null, at: new Date().toISOString() });
+    busy[day] = v.pick; say(day, "Saving your note…"); render(mode);
+    let stored = false;
+    try { await pdb.doc("picks/" + day).set(body); saved[day] = body; stored = true; if (i.value.trim() === text) i.dataset.unsaved = "false" } catch {}
+    delete busy[day]; render(mode);
+    if (!stored) say(day, "Your note is not saved. Press Save again.", true);
+  });
   let mode = "loading";
   render(mode);
   (async () => {
@@ -722,7 +741,8 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
 // accounts can read. The next session copies them into the engine's one queue (POST /api/idea-queue with
 // decided_by "Krish"); nothing here writes to the engine.
 (() => {
-  const cards = [...document.querySelectorAll(".id-card[data-pick-card]")];
+  // Weeks before the fixed layout only: from it on his five presses (below) take this place.
+  const cards = [...document.querySelectorAll(".id-card[data-pick-card]")].filter(c => c.querySelector("[data-triage]"));
   if (!cards.length) return;
   const saved = {}, busy = {};
   let qdb = null, comments = null, mode = "loading";
@@ -855,5 +875,293 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
     } catch {}
     delete busy[cid]; render();
     if (!stored) say(cid, "Not saved. Tap Combine again.", true);
+  });
+})();
+
+// Krish's presses on the Ideas tab in the fixed layout (week_board.py presses_row and offdays_section). Krish,
+// 2026-10-28: "pick an idea for a specific day AND add any optional comments easily, which can be saved, or I can: mark
+// an idea as being useful in a future wider piece OR mark it as being an idea that should be stored for a future trend
+// OR queue it for next week OR reject it." The pick is above (picks/<day>, with his note); Wider piece, Future trend and
+// Next week are saved at once in queue/<pick> as its use, his optional words beside it, and Reject is saved once he
+// says why (his reason is required, so every rejection carries his words to learn from). A second tap on the same
+// press takes it back. Each
+// off-day option's Approve or Skip is saved in queue/off-<day>-<option>, bound to the copy he saw. Only he writes
+// these (api/board/_contracts.ts hisOnlyRefusal); a session reads them.
+(() => {
+  const rows = [...document.querySelectorAll("[data-presses-for]")];
+  const offs = [...document.querySelectorAll(".off-card[data-offday]")];
+  if (!rows.length && !offs.length) return;
+  const saved = {}, busy = {}, asking = {};
+  let qdb = null, mode = "loading";
+  const LABEL = { wider_piece_context: "Wider piece", track_over_time: "Future trend", next_week: "Next week", not_for_us: "Rejected" };
+  const ASK = { wider_piece_context: "A theme or a note (optional)", track_over_time: "A note (optional)", next_week: "A note (optional)", not_for_us: "Why? (required)" };
+  const WHY = "Say why first: your reason is what the engine learns from.";
+  const field = use => use === "not_for_us" ? "reason" : "note";
+  const say = (sel, msg, bad) => { const s = document.querySelector(sel); if (s) { s.textContent = msg; s.classList.toggle("bad", !!bad) } };
+  const weekOf = iso => { const d = new Date(iso + "T12:00:00Z"); return isNaN(d) ? iso : d.getUTCDate() + " " + d.toLocaleString("en-GB", { month: "short", timeZone: "UTC" }) };
+  function render(){
+    for (const row of rows) {
+      const pid = row.dataset.pressesFor, v = saved[pid] || {};
+      for (const b of row.querySelectorAll("[data-press]")) {
+        const on = v.use === b.dataset.press;
+        b.setAttribute("aria-pressed", on ? "true" : "false"); b.classList.toggle("on", on);
+        b.disabled = mode !== "live" || !!busy[pid];
+      }
+      // A Reject waiting for his reason (asking) opens the box before anything is saved.
+      const use = v.use || (asking[pid] ? "not_for_us" : null);
+      const box = document.querySelector(`[data-press-note-for="${pid}"]`), i = box?.querySelector("input");
+      if (box) {
+        box.hidden = !(mode === "live" && use && !busy[pid]);
+        if (use) i.placeholder = ASK[use];
+        if (i && document.activeElement !== i && i.dataset.unsaved !== "true") i.value = v.use ? (v[field(v.use)] || v.theme || "") : "";
+      }
+      if (busy[pid]) continue;
+      if (asking[pid] && !v.use) { say(`[data-pressstate="${pid}"]`, "Say why you reject it, then Save."); continue }
+      const words = v.use ? (v[field(v.use)] || v.theme || "") : "";
+      say(`[data-pressstate="${pid}"]`, mode === "off" ? "Presses are not saving in this view." : v.use
+        ? LABEL[v.use] + (v.use === "next_week" && v.target_week ? ", week of " + weekOf(v.target_week) : "") + (words ? ": " + words : "") + ". Saved." : "", mode === "off");
+    }
+    for (const c of offs) {
+      const id = c.dataset.offday, v = saved[id], same = !!v && v.copy_sha256 === c.dataset.copySha256;
+      for (const b of c.querySelectorAll('[data-act="offday"]')) {
+        const on = same && (b.dataset.value === "approve") === v.approved;
+        b.setAttribute("aria-pressed", on ? "true" : "false"); b.classList.toggle("on", on);
+        b.disabled = mode !== "live" || !!busy[id];
+      }
+      c.classList.toggle("on", same && v.approved === true);
+      if (!busy[id]) say(`[data-offstate="${id}"]`, mode === "off" ? "Presses are not saving in this view." : !v ? ""
+        : !same ? "The copy changed since you pressed. Press again." : v.approved ? "Approved. Saved." : "Skipped. Saved.", mode === "off" || (!!v && !same));
+    }
+  }
+  render();
+  (async () => {
+    try { qdb = window.claude?.use ? await window.claude.use("db") : null } catch { qdb = null }
+    if (!qdb) { mode = "off"; render(); return }
+    try {
+      qdb.collection("queue").onSnapshot(snap => {
+        for (const k of Object.keys(saved)) delete saved[k];
+        for (const d of snap.docs) if (d.exists) saved[d.id] = d.data() || {};
+        mode = "live"; render();
+      }, () => { mode = "broken"; for (const r of rows) say(`[data-pressstate="${r.dataset.pressesFor}"]`, "Saved presses could not load. Reload the page to try again.", true) });
+    } catch { mode = "broken"; render() }
+  })();
+  async function save(id, body, state){
+    if (mode !== "live" || !qdb || busy[id]) { render(); return false }
+    busy[id] = true; say(state, "Saving…"); render();
+    let stored = false;
+    try { await qdb.doc("queue/" + id).set(body); saved[id] = body; stored = true } catch {}
+    delete busy[id]; render();
+    if (!stored) say(state, "Not saved. Press it again.", true);
+    return stored;
+  }
+  // A press keeps the words he gave it until he presses another, or the same one again to take it back.
+  function ideaBody(pid, patch){
+    const c = document.getElementById("idea-" + pid), prev = saved[pid] || {};
+    const text = sel => c?.querySelector(sel)?.textContent || "";
+    const body = Object.assign({ use: prev.use ?? null, note: prev.note ?? null, reason: prev.reason ?? null, theme: prev.theme ?? null,
+      target_week: prev.target_week ?? null }, patch);
+    return Object.assign(body, { pick: pid, queued: body.use === "next_week", so_what: text(".id-sowhat"), story: text(".id-story"),
+      idea_id: c?.querySelector("[data-idea-id]")?.dataset.ideaId || null, series: c?.dataset.series, week: c?.dataset.week,
+      day: pid.split("-")[0], at: new Date().toISOString() });
+  }
+  document.addEventListener("click", e => {
+    const b = e.target.closest && e.target.closest("[data-press]");
+    if (b) {
+      const pid = b.dataset.for, use = b.dataset.press, again = (saved[pid] || {}).use === use;
+      const i = document.querySelector(`[data-press-note-for="${pid}"] input`); if (i) i.dataset.unsaved = "false";
+      // Reject saves only with his reason: the press opens the box, and Save sends it (a second tap closes it).
+      if (use === "not_for_us" && !again) {
+        asking[pid] = !asking[pid]; render();
+        if (asking[pid] && i) { i.value = ""; i.focus() }
+        return;
+      }
+      delete asking[pid];
+      save(pid, ideaBody(pid, again ? { use: null, note: null, reason: null, theme: null, target_week: null }
+        : { use, note: null, reason: null, theme: null, target_week: use === "next_week" ? b.dataset.targetWeek : null }), `[data-pressstate="${pid}"]`);
+      return;
+    }
+    const n = e.target.closest && e.target.closest('[data-act="save-press-note"]');
+    if (n) {
+      const pid = n.dataset.for, v = saved[pid] || {}, i = document.querySelector(`[data-press-note-for="${pid}"] input`);
+      const use = v.use || (asking[pid] ? "not_for_us" : null);
+      if (!use || !i) return;
+      const text = i.value.trim();
+      if (use === "not_for_us" && !text) { say(`[data-pressstate="${pid}"]`, WHY, true); return }
+      const patch = v.use ? { [field(use)]: text || null } : { use, note: null, reason: text, theme: null, target_week: null };
+      save(pid, ideaBody(pid, patch), `[data-pressstate="${pid}"]`).then(ok => { if (!ok) return; delete asking[pid]; if (i.value.trim() === text) i.dataset.unsaved = "false" });
+      return;
+    }
+    const o = e.target.closest && e.target.closest('[data-act="offday"]');
+    if (o) {
+      const c = document.getElementById(o.dataset.for); if (!c) return;
+      const id = c.dataset.offday;
+      save(id, { pick: id, use: "offday", day: c.dataset.offDay, approved: o.dataset.value === "approve", copy_sha256: c.dataset.copySha256,
+        format: c.dataset.format, source: c.dataset.source, option_id: c.dataset.optionId,
+        week: c.closest("[data-week]")?.dataset.week, at: new Date().toISOString() }, `[data-offstate="${id}"]`);
+    }
+  });
+  document.addEventListener("input", e => { const i = e.target.closest && e.target.closest("input[data-press-note]"); if (i) i.dataset.unsaved = "true" });
+})();
+
+// His decisions on a day's tab in the fixed layout (week_board.py approve_card, titles_card, signoff_card and
+// reject_parts), each saved at once in picks/<day>-<decision> by his press alone:
+//   - Approve scripts (Drafts): the exact words of each script as the Drafts step shows them, his saved edits
+//     included, with the names they go under in Teleprompter; the server sends them once the scripts' check passed on
+//     those words and two fresh readers heard them (otherwise it holds them for a session), reads them back, and writes
+//     what happened into the same document (send). Krish, 2026-10-28: "Once I approve, the two scripts will go to
+//     teleprompter"; "Server sends directly".
+//   - Titles (Record): his pick on each surface (Krish, 2026-10-28: "Sunday evening press").
+//   - Approve for publish (Publish): the day and the piece, and the hash of its manifest when the board has one
+//     (Krish, 2026-10-28: "Approve each day Monday").
+//   - Reject asset (Publish, beside each file): his reason, required, and on a video where in it; the server files his
+//     reason in the rejection inbox with the file's Drive id. The file itself is never copied anywhere.
+(() => {
+  const approves = [...document.querySelectorAll(".rec.ap[data-approve-day]")];
+  const titleCards = [...document.querySelectorAll(".rec.tt[data-titles-day]")].filter(c => c.querySelector("[data-title-surface]"));
+  const signoffs = [...document.querySelectorAll(".rec.so[data-signoff-day]")];
+  const rejects = [...document.querySelectorAll(".dl-item[data-asset]")];
+  if (!approves.length && !titleCards.length && !signoffs.length && !rejects.length) return;
+  const saved = {}, busy = {};
+  let ddb = null, mode = "loading";
+  const hm = at => { try { return new Date(at).toLocaleString([], { weekday: "short", hour: "2-digit", minute: "2-digit" }) } catch { return "" } };
+  const say = (sel, msg, bad) => { const s = document.querySelector(sel); if (s) { s.textContent = msg; s.classList.toggle("bad", !!bad) } };
+  const off = "Your presses are not saving in this view.";
+  const cutsOf = card => (card.dataset.cuts || "").split(" ").filter(Boolean);
+  const textOf = (card, cut) => document.querySelector(`textarea[data-review-id="${card.dataset["box" + cut[0].toUpperCase() + cut.slice(1)]}"]`)?.value;
+  const assetOf = item => item.dataset.asset;
+  const dayOf = el => el.closest(".pm[data-day]")?.dataset.day;
+  function render(){
+    for (const c of approves) {
+      const day = c.dataset.approveDay, id = day + "-scripts", v = saved[id], b = c.querySelector('[data-act="approve-scripts"]');
+      b.disabled = mode !== "live" || !!busy[id];
+      if (busy[id]) continue;
+      if (mode === "off") { say(`[data-approvestate="${day}"]`, off, true); continue }
+      if (!v || v.approved !== true) { say(`[data-approvestate="${day}"]`, ""); continue }
+      const changed = cutsOf(c).some(cut => (v.texts || {})[cut] !== textOf(c, cut));
+      const send = v.send || {};
+      // held: the words are not yet the ones the scripts' check passed and two fresh readers heard (the server's gate).
+      const what = send.status === "sent" ? "They are in Teleprompter, read back." + (send.recorded === false ? " A session records that on the piece." : "")
+        : send.status === "no_key" ? "Teleprompter is not connected to the server yet, so a session sends exactly these words."
+        : send.status === "held" ? "Not sent yet: a session checks these words and has two fresh readers hear them first, then sends exactly these words."
+        : send.status ? "The send did not go through" + (send.error ? " (" + send.error + ")" : "") + ", so a session sends exactly these words." : "";
+      say(`[data-approvestate="${day}"]`, changed ? "You changed the words since you approved them. Approve again to send these."
+        : `Approved ${hm(v.at || send.at)}. ${what}`.trim(), changed || (!!send.status && !["sent", "no_key", "held"].includes(send.status)));
+    }
+    for (const c of titleCards) {
+      const day = c.dataset.titlesDay, id = day + "-titles", v = saved[id] || {}, picks = v.picks || {};
+      for (const r of c.querySelectorAll("[data-title-surface]")) {
+        if (!busy[id] && !r.dataset.touched) r.checked = picks[r.dataset.titleSurface] === r.value;
+        r.disabled = mode !== "live" || !!busy[id];
+        r.closest("label.pick").classList.toggle("on", r.checked);
+      }
+      c.querySelector('[data-act="save-titles"]').disabled = mode !== "live" || !!busy[id];
+      if (!busy[id]) say(`[data-titlesstate="${day}"]`, mode === "off" ? off : v.picks ? `Saved ${hm(v.at)}.` : "", mode === "off");
+    }
+    for (const c of signoffs) {
+      const day = c.dataset.signoffDay, id = day + "-publish", v = saved[id] || {}, b = c.querySelector('[data-act="approve-publish"]');
+      b.disabled = mode !== "live" || !!busy[id] || !c.dataset.piece;
+      b.textContent = v.approved ? "Take back my approval" : "Approve for publish";
+      c.classList.toggle("on", v.approved === true);
+      if (!busy[id]) say(`[data-signoffstate="${day}"]`, mode === "off" ? off : v.approved ? `Approved for publish ${hm(v.at)}.` : "", mode === "off");
+    }
+    for (const item of rejects) {
+      const day = dayOf(item), id = day + "-reject-" + assetOf(item), v = saved[id];
+      const b = item.querySelector('[data-act="reject-asset"]'); if (b) b.disabled = mode !== "live" || !!busy[id];
+      item.classList.toggle("rejected", !!v);
+      if (!busy[id]) say(`[data-rejectstate="${item.id}"]`, mode === "off" ? off : v ? `Rejected ${hm(v.at)}: ${v.reason}` : "", mode === "off");
+    }
+  }
+  render();
+  (async () => {
+    try { ddb = window.claude?.use ? await window.claude.use("db") : null } catch { ddb = null }
+    if (!ddb) { mode = "off"; render(); return }
+    try {
+      ddb.collection("picks").onSnapshot(snap => {
+        for (const k of Object.keys(saved)) delete saved[k];
+        for (const d of snap.docs) if (d.exists && /^(mon|wed|fri)-/.test(d.id)) saved[d.id] = d.data() || {};
+        mode = "live"; render();
+      }, () => { mode = "broken"; render() });
+    } catch { mode = "broken"; render() }
+  })();
+  async function save(id, body, state, busyText){
+    if (mode !== "live" || !ddb || busy[id]) { render(); return null }
+    busy[id] = true; say(state, busyText || "Saving…"); render();
+    let result = null, error = null;
+    try { result = (await ddb.doc("picks/" + id).set(body)) || {}; saved[id] = result.body || body } catch (e) { error = e }
+    delete busy[id]; render();
+    if (error) say(state, error.message || "Not saved. Press it again.", true);
+    return error ? null : result;
+  }
+  document.addEventListener("change", e => {
+    const r = e.target.closest && e.target.closest("[data-title-surface]"); if (!r) return;
+    for (const x of r.closest(".tt-set").querySelectorAll("[data-title-surface]")) { x.dataset.touched = "1"; x.closest("label.pick").classList.toggle("on", x.checked) }
+  });
+  document.addEventListener("click", async e => {
+    const a = e.target.closest && e.target.closest('[data-act="approve-scripts"]');
+    if (a) {
+      const c = a.closest(".rec.ap"), day = c.dataset.approveDay, state = `[data-approvestate="${day}"]`;
+      if (document.querySelector(`.rv-save[data-save-day="${day}"]`)?.classList.contains("dirty") || document.querySelector(".rv-pedit")) {
+        say(state, "Save your changes first, then approve.", true); return;
+      }
+      const texts = {}, titles = {}, ids = {};
+      for (const cut of cutsOf(c)) {
+        const t = textOf(c, cut), k = cut[0].toUpperCase() + cut.slice(1);
+        if (typeof t !== "string" || !t.trim()) { say(state, "A script is missing from the drafts above.", true); return }
+        texts[cut] = t; titles[cut] = c.dataset["title" + k];
+        if (c.dataset["scriptId" + k]) ids[cut] = c.dataset["scriptId" + k];
+      }
+      const body = { kind: "approve_scripts", day, piece_id: c.dataset.piece, approved: true, texts, titles, folder_title: c.dataset.folderTitle, at: new Date().toISOString() };
+      if (c.dataset.folderId) body.folder_id = c.dataset.folderId;
+      if (Object.keys(ids).length) body.script_ids = ids;
+      await save(day + "-scripts", body, state, "Approving and sending to Teleprompter…");
+      return;
+    }
+    const t = e.target.closest && e.target.closest('[data-act="save-titles"]');
+    if (t) {
+      const c = t.closest(".rec.tt"), day = c.dataset.titlesDay, picks = {};
+      for (const r of c.querySelectorAll("[data-title-surface]:checked")) picks[r.dataset.titleSurface] = r.value;
+      if (!Object.keys(picks).length) { say(`[data-titlesstate="${day}"]`, "Pick at least one first.", true); return }
+      const body = { kind: "titles", day, picks, at: new Date().toISOString() };
+      if (c.dataset.piece) body.piece_id = c.dataset.piece;
+      if (await save(day + "-titles", body, `[data-titlesstate="${day}"]`)) for (const r of c.querySelectorAll("[data-title-surface]")) delete r.dataset.touched;
+      render();
+      return;
+    }
+    const p = e.target.closest && e.target.closest('[data-act="approve-publish"]');
+    if (p) {
+      const c = p.closest(".rec.so"), day = c.dataset.signoffDay, v = saved[day + "-publish"] || {};
+      const body = { kind: "approve_publish", day, piece_id: c.dataset.piece, approved: !v.approved, at: new Date().toISOString() };
+      if (c.dataset.manifestSha256) body.manifest_sha256 = c.dataset.manifestSha256;
+      await save(day + "-publish", body, `[data-signoffstate="${day}"]`);
+      return;
+    }
+    const r = e.target.closest && e.target.closest('[data-act="reject-asset"]');
+    if (r) {
+      const box = document.querySelector(`[data-reject-for="${r.dataset.for}"]`);
+      if (box) { box.hidden = !box.hidden; if (!box.hidden) box.querySelector("[data-reject-reason]").focus() }
+      return;
+    }
+    const s = e.target.closest && e.target.closest('[data-act="save-reject"]');
+    if (s) {
+      const item = document.getElementById(s.dataset.for), box = s.closest("[data-reject-for]"), day = dayOf(item), state = `[data-rejectstate="${item.id}"]`;
+      const reason = box.querySelector("[data-reject-reason]").value.trim();
+      if (!reason) { say(state, "Say why first: your reason is what the engine learns from.", true); return }
+      const piece = document.querySelector(`.rec.so[data-signoff-day="${day}"]`)?.dataset.piece;
+      if (!piece) { say(state, "This day has no piece on the board, so it cannot be rejected here.", true); return }
+      const body = { kind: "reject_asset", day, piece_id: piece, asset: assetOf(item), label: item.dataset.assetLabel, reason,
+        formats: (item.dataset.formats || "").split(",").filter(Boolean), at: new Date().toISOString() };
+      if (item.dataset.driveId) body.drive_id = item.dataset.driveId;
+      const at = (box.querySelector("[data-reject-at]")?.value || "").trim();
+      if (at) {
+        const m = /^(?:(\d{1,2}):)?(\d{1,2})$/.exec(at);
+        if (!m || Number(m[2]) > 59 && m[1]) { say(state, "Where in the video is minutes and seconds, for example 1:23.", true); return }
+        body.at_ms = ((Number(m[1] || 0) * 60) + Number(m[2])) * 1000;
+      }
+      const result = await save(day + "-reject-" + assetOf(item), body, state);
+      if (result) {
+        box.hidden = true;
+        if (result.inbox === "failed") say(state, `Rejected: ${reason}. The rejection log did not take it yet; a session files it from here.`, true);
+      }
+    }
   });
 })();

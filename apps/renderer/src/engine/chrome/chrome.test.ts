@@ -19,7 +19,7 @@ const props: EngineRenderProps = {
   series: { label: 'mind.the.gap', day: 'Friday', promise: 'Patterns', site: 'makeyourmindup.ai' },
   brand: { mark: image, logo: image, stacked: image }, segments: [],
   audio: { stem: { src: 'stem.wav', trimBeforeFrames: 0 }, sfx: [] },
-  captions: [first, adjacent, later], beats: [], objects: [], events: [], illustrationLabels: [],
+  captions: [first, adjacent, later], beats: [], objects: [], events: [],
 }
 
 describe('chrome geometry', () => {

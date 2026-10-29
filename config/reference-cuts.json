@@ -1,0 +1,475 @@
+{
+  "schema": "reference-cuts/1",
+  "about": "The bar for video production quality, held in the three layers Krish asked for on 29 October 2026. The floor is the eight nevers Krish confirmed on 29 October 2026 (ruling 12), each citing his earlier words or the rule it rests on, and the gate that already holds it, or held at review where none does yet: the only refusals this bar adds, while existing gates and the rejection floor's approved standards refuse as they do. The aims are what great looks like: the cuts he named, the brand book and his own words, with the fifteen qualities and the reference moments as things to aim at and compare against, never a checklist. Under test are choices he made for now, each the current default, recorded per piece on the making record and judged on real engagement. The page is docs/production/THE_BAR.md; this file names the reference files exactly, says how each one's identity was confirmed, lists the reference moments and each quality's comparison points by timestamp, and carries his words and rulings. The page and this file must agree (python3 scripts/floor.py --check). scripts/floor.py prints the bar for the makers in full_bar_for_makers and a one-line pointer for the other makers in applies_to_makers, before the rejection standards. Only Krish adds a reference, changes the bar or moves its standing from draft to approved.",
+  "doc": "docs/production/THE_BAR.md",
+  "taste": {
+    "by": "Krish",
+    "on": "2026-10-29",
+    "about": "how he wants taste held: the bar reads in three layers, the floor, the aims and what is under test; his words open the page and lead the printout",
+    "words": "I hope you understand that I would much rather the engine know what kind of thing doesn't fly with me, rather than implement incredibly specific rules everywhere which came from feedback on one piece of content for one specific reason. We're still in the test-and-learn phase of what works and what doesn't, and finding our feet on all of this stuff but there are some clear floor nervos and some clear aspirationals to aim at"
+  },
+  "ruling": {
+    "by": "Krish",
+    "on": "2026-10-28",
+    "words": "the video production quality standards for the latest Friday (AI Passports) and Monday (character.ai) pieces are the floor for what I expect in terms of premium quality, motion design, cinematic feeling, movement, branding etc. Friday's is a voiceover format and Monday's a regular split screen format. Do not be intensely literal here as every piece is different, but I want you to get a feel for the standards we are never to fall beneath ever again",
+    "quote": "Do not be intensely literal here as every piece is different, but I want you to get a feel for the standards we are never to fall beneath ever again",
+    "correction": "the long voiceover video is still being post produced so dont just assume that the voiceover format only has a 90sec version, you are only to look for production quality standards"
+  },
+  "general": {
+    "by": "Krish",
+    "on": "2026-10-28",
+    "about": "how every video should be made; his words lead the aims",
+    "words": "In general I think:\n- minimal random components and labels\n- good motion design\n- good animation\n- good visuals\n\nKeep it simple but keep it classy and on brand. I'd stick to the brand book for now."
+  },
+  "standing": "draft",
+  "standing_note": "The floor is his, confirmed on 29 October (ruling 12). The aims are the engine's reading of the cuts he named; he has not approved their wording except where it quotes him. Aim at them; only he approves them.",
+  "principle": "Every frame designed and owned by the brand; pictures and motion that add meaning beyond the words; light, depth and material; the brand as a system; real, dated proof; finished sound. Put each new moment beside a reference moment, in motion, at full size, with sound: would it sit beside it without looking cheaper, flatter, slower, busier or less owned? Never copy the references; each piece finds its own objects, devices and big moments.",
+  "measured_values": "Context about the references, never targets. Lengths, shapes, cut counts, frame timings, levels, tempo and sampled colours describe these three files only. They are kept out of config/reference-cuts.json on purpose, and floor.py --check refuses a measured field written there (duration, aspect, bpm, lufs and the like); it cannot see a figure inside a sentence, so none is written in one either. The existing gates set the only numeric limits.",
+  "production_input": false,
+  "applies_to_makers": ["short_video", "long_video", "motion", "captions", "card", "intro_outro", "audio"],
+  "full_bar_for_makers": ["short_video", "long_video"],
+  "floor": {
+    "about": "The only refusals this bar adds on taste, while existing gates and the rejection floor's approved standards refuse as they do: the eight nevers Krish confirmed on 29 October 2026 (ruling 12), in his order. Each keeps the list's words he confirmed (listed), the question's own wording (asked), his earlier words or the rule it rests on, and the gate that already holds it, or held at review where none does yet. No other refusal, gate, lint pattern or required field is added from feedback on one piece; everything else is an aim, a choice under test or an example of the kind of thing that does not fly.",
+    "ruling": 12,
+    "nevers": [
+      {
+        "id": "his_name",
+        "listed": "never names you or credits you as author",
+        "asked": "no content names you or credits you as author",
+        "never": "No public word names any Krish or credits him as an author: articles speak as \"we\", the scripts he speaks keep \"I\", and his face appears only in covers, thumbnails and video.",
+        "words": [
+          {
+            "on": "2026-10-28",
+            "said": "Remember, no content refers to Krish, ever. I still see that popping up from time to time. Even articles written are not authored by Krish. My face only, for assets and the video format."
+          }
+        ],
+        "picked": [
+          "The article's voice: Krish picked: \"We\" (the publication, in articles, their titles, subtitles and descriptions; the video scripts he speaks keep \"I\")",
+          "His personal accounts: Krish picked: \"No, personal stays personal\" (his own LinkedIn, X, TikTok, Threads and Substack Notes posts may stay first person, but his name never appears in any post text)",
+          "The face beside the article byline: Krish picked: \"Drop it\" (no face beside the byline; covers, thumbnails and video keep his face)",
+          "Another person called Krish: Krish picked: \"Yes, block it\" (any \"Krish\" in public copy is blocked, with no override)"
+        ],
+        "held_by": "the copy lint's no_name pattern, the article body included"
+      },
+      {
+        "id": "nothing_made_up",
+        "listed": "nothing made up; numbers credited to their producer",
+        "asked": "nothing made up: every fact and number true and credited to whoever produced it",
+        "rests_on": [
+          "AGENTS.md, Rules for every agent: \"Truth, rights, confidentiality, meaning preservation and canonical naming are hard gates.\"",
+          "makeyourmindup's AGENTS.md: \"No load-bearing number without a named producer. The producer is whoever made the number, never the outlet that repeated it.\""
+        ],
+        "held_by": "the fact gate; past it, crediting the producer is held at review"
+      },
+      {
+        "id": "every_word_in_sync",
+        "listed": "your words never cut, changed or out of sync",
+        "asked": "your words never cut, changed or out of sync",
+        "words": [
+          {
+            "on": "2026-10-19",
+            "said": "my words randomly chop out, making the video incomprehensible"
+          },
+          {
+            "on": "2026-10-19",
+            "said": "in the deep cut, my facial movements start misaligning with the audio as the video progresses, which is unbearable by the end"
+          }
+        ],
+        "held_by": "the words gate, the lip-sync gate and ve's joins and sync checks"
+      },
+      {
+        "id": "empty_labels",
+        "listed": "no AI notes, eyebrows, asterisks, take/read tags",
+        "asked": "no filler labels: AI notes, eyebrow text, asterisks, \"Krish's take\" or \"Krish's read\" style tags",
+        "never": "No asterisks, eyebrow kickers (BREAKING, JUST IN), notes that something was made by AI or is an illustration, or labels tagging something as Krish's (his read, his take, his test). A label naming a source, date, record or what is on screen is an aim (quality 7).",
+        "words": [
+          {
+            "on": "2026-10-28",
+            "said": "don't add stupid eyebrow text and asterisks and \"generated by AI\" and \"Krish's take\" verbal diahorrea like you tend to. This needs to feel like a world class media channel"
+          }
+        ],
+        "ruling": 2,
+        "held_by": "the copy lint"
+      },
+      {
+        "id": "nothing_goes_out_without_him",
+        "listed": "nothing posted/sent/spent without your yes; never Full Time or Heartside channels",
+        "asked": "nothing posted, sent or spent without your yes, and never the Full Time or Heartside channels",
+        "words": [
+          {
+            "on": "2026-10-28",
+            "said": "Approve each day Monday"
+          }
+        ],
+        "rests_on": [
+          "AGENTS.md, Rules for every agent: \"Public publishing is never automatic.\" and \"Spend. Stay within approval; check `meter_daily`.\"",
+          "Growth's plan of 28 October, W5, for the Full Time and Heartside channels, before he confirmed it"
+        ],
+        "held_by": "the publish guard; ve has no publish verb; Growth's channel allowlist; the cost guards hold a paid fact check to its budget, and any other spend is held at review"
+      },
+      {
+        "id": "real_marks_with_rights",
+        "listed": "real logos and images with rights, never redrawn",
+        "asked": "real logos and images used with the rights, never redrawn",
+        "words": [
+          {
+            "on": "2026-10-06",
+            "said": "Once again don't be afraid to use the real logos for any companies mentioned."
+          }
+        ],
+        "rests_on": [
+          "AGENTS.md, Rules for every agent: \"Truth, rights, confidentiality, meaning preservation and canonical naming are hard gates.\"",
+          "docs/MEDIA_STANDARD.md: \"never invent or redraw a logo.\""
+        ],
+        "held_by": "the visual gate, the media standard and the licensed music ledger"
+      },
+      {
+        "id": "one_opening_one_close",
+        "listed": "one opening, one close",
+        "asked": "one opening and one close, never two intros or several outros",
+        "words": [
+          {
+            "on": "2026-10-21",
+            "said": "why are there two separate intro sequences? that should NEVER happen."
+          },
+          {
+            "on": "2026-10-28",
+            "said": "we also don't need three separate outro transitions and screens. Ever."
+          }
+        ],
+        "rejection_floor_drafts": [
+          "s9d6db813a0",
+          "sad5604ad3b",
+          "se67ed0142d"
+        ],
+        "held_by": "held at review: no gate holds it yet"
+      },
+      {
+        "id": "no_em_dash_no_preaching",
+        "listed": "no em dashes, no preaching",
+        "asked": "no em dashes, no preaching",
+        "words": [
+          {
+            "where": "makeyourmindup's AGENTS.md",
+            "said": "we should not sound preachy or like we are trying to persuade anyone of anything like a missionary in content. thought leadership should do that job."
+          }
+        ],
+        "rests_on": [
+          "makeyourmindup's AGENTS.md: \"No em dashes anywhere, including code, on-screen text and commit messages.\"",
+          "makeyourmindup's AGENTS.md: \"No preaching. No closing moral, no lesson for leaders, no sentence telling the reader what to conclude, no final line reaching for significance, no sentence that would work on a conference slide.\""
+        ],
+        "held_by": "makeyourmindup's kill list, vendored here, and the voice check"
+      }
+    ]
+  },
+  "under_test": {
+    "about": "Choices Krish made for now, to be judged on real engagement (his words: \"we need to test and learn\"). Each is the current default, never a refusal and never written as a never. Each piece records which it used on its making record, so a retrospective can join the choice to how the piece did. To change a default, change it here: the creative direction's template and the record read it from this file.",
+    "record": "content_ideas.meta.making.production_choices, written by python3 scripts/post-pack/making.py <piece> choices <creative-direction.json>",
+    "choices": [
+      {
+        "id": "opening",
+        "title": "The hook is the intro",
+        "ruling": 8,
+        "default": "hook_is_intro",
+        "options": ["hook_is_intro", "story_card", "logo_intro"],
+        "what": "Friday 23's way: the first frame is the hook in the brand's dress, logo and series tag in the corners from the start; no story card or logo intro; one calm close, held long enough to read."
+      },
+      {
+        "id": "lead_picture",
+        "title": "The lead picture, chosen per piece",
+        "ruling": 9,
+        "default": "chosen_per_piece",
+        "options": ["series_picture", "story_object"],
+        "what": "The storyboard he signs shows both as stills, the series picture from the brand book and a story object, Claude's pick marked; his signature accepts it unless he ticks the other."
+      },
+      {
+        "id": "big_moment_sound",
+        "title": "One sound on the big moment",
+        "ruling": 11,
+        "default": "big_moment_only",
+        "until_approved": "none",
+        "approved_set": null,
+        "options": ["big_moment_only", "none"],
+        "what": "One sound under a piece's biggest moment, such as a low thud as BANKRUPT slams in, and nothing anywhere else. None until he approves a small set by ear (approved_set); whether Epidemic Sound covers sound effects is unchecked, and no spend is assumed."
+      }
+    ]
+  },
+  "related": {
+    "production_contract": "docs/MEDIA_STANDARD.md and config/media-standard.json (its exemplars are never production inputs either)",
+    "rejection_floor": "config/rejection-floor.json, read through scripts/floor.py: what he rejected, in his words, with dates: the examples of what does not fly",
+    "ve_key_frames": "config/ve/design-lock.json formats.*.keyframes: approved key frames for one ve format and module, matched by structural similarity; the reference cuts are never matched pixel for pixel",
+    "style_bank": "config/style-references.json: every style in the bank has to reach this bar",
+    "brand": "the brand book is the reference (ruling 3): krishanraja/makeyourmindup docs/brandbooknew/ (version 1.5); docs/STUDIO.md (makeyourmindup branding) and config/ve/brand-tokens.json carry it here and own the palette, type and brand rules",
+    "logos": "docs/MEDIA_STANDARD.md, Design before labels: outside brands appear as their accurate official marks, never invented or redrawn (and draft floor standard s53328195a4). Ruling 6: the official mark in full colour or the company's own published one-colour version, whichever fits the rest of the production; never recoloured or redrawn by us. Whether we may set a mark in a house colour the company does not publish is still Krish's decision on rights"
+  },
+  "qualities": [
+    {"id": "premium_finish", "name": "Premium finish: every frame looks made and owned", "ruled": [2, 4], "compare_beside": [{"ref": "fri23-tall", "at": "00:02"}, {"ref": "fri23-tall", "at": "00:54.4"}, {"ref": "mon26-tall", "at": "00:20"}, {"ref": "mon26-wide", "at": "00:44"}, {"ref": "fri23-tall", "at": "01:15", "to": "01:18"}, {"ref": "mon26-tall", "at": "01:21.7", "to": "01:25.7"}]},
+    {"id": "motion_explains", "name": "Pictures that explain: every part adds meaning", "ruled": [10], "compare_beside": [{"ref": "fri23-tall", "at": "00:22", "to": "00:36"}, {"ref": "mon26-tall", "at": "00:41", "to": "01:03"}]},
+    {"id": "motion_craft", "name": "Motion craft: weight, ease, stagger, exits", "compare_beside": [{"ref": "fri23-tall", "at": "00:22.0"}, {"ref": "mon26-wide", "at": "01:39.9"}]},
+    {"id": "cinematic", "name": "Cinematic feel: light, focus, depth, a living world", "compare_beside": [{"ref": "fri23-tall", "at": "00:02", "to": "00:16"}, {"ref": "mon26-wide", "at": "01:28", "to": "01:40"}]},
+    {"id": "pace", "name": "Movement and pace: alive, and timed to meaning", "ruled": [8], "compare_beside": [{"ref": "mon26-tall", "at": "00:03.5", "to": "00:13.5"}]},
+    {"id": "branding", "name": "Branding as a system", "ruled": [3, 6], "compare_beside": [{"ref": "fri23-tall", "at": "01:15", "to": "01:18"}, {"ref": "mon26-tall", "at": "01:21.7", "to": "01:25.7"}]},
+    {"id": "typography", "name": "Typography: few voices, fixed jobs, words that add", "ruled": [2], "compare_beside": [{"ref": "fri23-tall", "at": "00:02"}, {"ref": "mon26-tall", "at": "00:20"}]},
+    {"id": "composition", "name": "Composition and layout: the whole frame, one focal point", "compare_beside": [{"ref": "fri23-tall", "at": "00:54.4"}, {"ref": "mon26-wide", "at": "00:44"}]},
+    {"id": "colour", "name": "Colour and grade: an owned palette where colour means something", "compare_beside": [{"ref": "fri23-tall", "at": "00:02"}, {"ref": "mon26-tall", "at": "00:16", "to": "00:24"}]},
+    {"id": "texture", "name": "Texture and depth: material, never a flat template", "compare_beside": [{"ref": "fri23-tall", "at": "00:31.5"}, {"ref": "mon26-tall", "at": "00:16", "to": "00:20"}]},
+    {"id": "transitions", "name": "Transitions: motivated and seamless", "compare_beside": [{"ref": "mon26-wide", "at": "01:39.7"}, {"ref": "fri23-tall", "at": "00:16.4"}]},
+    {"id": "captions", "name": "Captions: burned in, branded, calm, in sync", "compare_beside": [{"ref": "fri23-tall", "at": "00:18"}, {"ref": "mon26-tall", "at": "00:20"}]},
+    {"id": "proof", "name": "Proof visuals: real, dated and designed", "compare_beside": [{"ref": "fri23-tall", "at": "00:50", "to": "01:02"}, {"ref": "mon26-tall", "at": "00:16", "to": "00:31"}]},
+    {"id": "sound", "name": "Sound finish", "ruled": [1, 11], "compare_beside": [{"ref": "mon26-wide", "at": "00:00", "to": "00:33"}, {"ref": "fri23-tall", "at": "00:27", "to": "01:05.7"}], "heard": false},
+    {"id": "on_camera", "name": "Krish on camera: real, steady, in sync", "compare_beside": [{"ref": "mon26-tall", "at": "00:16", "to": "00:24"}]}
+  ],
+  "references": [
+    {
+      "id": "fri23-tall",
+      "label": "Friday tall",
+      "piece": "Two passports (AI Passports)",
+      "piece_id": "7083d6ad-419e-4fdc-9aba-f3be7f3f3a23",
+      "published_on": "2026-10-23",
+      "series": "mind.the.gap",
+      "format_family": "voiceover",
+      "which_file": "the tall (9:16) cut",
+      "served_from": {
+        "board_week": "2026-10-19",
+        "asset": "fri-short-video",
+        "build": "902ba9d992502d525ffe21e3ada928068a930303f22a9e6f85b8512f27a16dd5",
+        "checked_at": "2026-10-28T23:48Z"
+      },
+      "sha256": "e0298c2f91e6a322e00d42d52da5c19fc5dade29cfce33c45a432d110bc6456e",
+      "drive_file_id": "1NEk2WEdXs0Bcw2Govt1khXV5dVEJTvT8",
+      "sha256_checked": "2026-10-28, against the copy downloaded for the study and the board's own copy (read only)",
+      "identity": "confirmed",
+      "identity_evidence": "Krish, 28 October 2026: \"I think so but I'm not sure. The ones I meant are in the publish board at content.krishraja.com for last Friday and Monday, just gone.\" On 2026-10-28 at 23:48 UTC the board was read (GET only): week 2026-10-19, build 902ba9d9, the Friday 23 October tab serves asset fri-short-video, 'Why every country wants its own AI - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4', as its 90-second video (tall, 9:16), sha256 e0298c2f91e6a322e00d42d52da5c19fc5dade29cfce33c45a432d110bc6456e. The board's copy, the Drive copy (the one video in the Friday post's 3 Video folder) and the study's copy all hash to it, and no newer tall cut is on the tab. Nothing on the tab records Krish approving this file. It first reached Drive at 2026-10-28T21:28:54Z (the Drive file's created time, read 2026-10-29) and the board at 2026-10-28T21:35:59Z (from the independent review's read of the board; not read again here), about an hour before the bar was first committed (87fca08, 22:45 UTC). When he first named the floor that day is not recorded, so whether he had watched this file when he first named the floor is not established. It reached Drive and the board after he rated four earlier Friday cuts -1/10 on 27 October (rejection floor record r89ec46b420); that it is a later cut than those four is read from the dates, not tested."
+    },
+    {
+      "id": "mon26-wide",
+      "label": "Monday wide",
+      "piece": "Why is Disney eating the scraps of bankrupt Character.AI?",
+      "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+      "published_on": "2026-10-26",
+      "series": "follow.the.money",
+      "format_family": "split_screen",
+      "which_file": "the wide (16:9) cut",
+      "served_from": {
+        "board_week": "2026-10-26",
+        "asset": "mon-video-long",
+        "build": "0c24f7ed9dc1cb9062d05be8d32d9b769fb9858d31bbd4b638c9de07efeecea4",
+        "checked_at": "2026-10-28T23:48Z"
+      },
+      "sha256": "14ccfef0f31e42814db4b4743d35cd75d047d95e0520171f755b9cd31b1a3294",
+      "drive_file_id": "1A8mx4YTcgchPLbmvBuFzde2_hCZ9H6Mh",
+      "sha256_checked": "2026-10-28, against the copy downloaded for the study and the board's own copy (read only)",
+      "identity": "confirmed",
+      "identity_evidence": "Krish, 28 October 2026: \"I think so but I'm not sure. The ones I meant are in the publish board at content.krishraja.com for last Friday and Monday, just gone.\" On 2026-10-28 at 23:48 UTC the board was read (GET only): week 2026-10-26, build 0c24f7ed, the Monday 26 October tab serves asset mon-video-long, 'Disney, Google and Character.AI - wide 16x9 - YouTube, Substack.mp4', as its 5-minute video (wide, 16:9), sha256 14ccfef0f31e42814db4b4743d35cd75d047d95e0520171f755b9cd31b1a3294, the same as the study's copy and the 28 October rebuild's 16:9 master in docs/plans/2026-10-26-monday/video/REVIEW.md. No newer wide cut is on the tab."
+    },
+    {
+      "id": "mon26-tall",
+      "label": "Monday tall",
+      "piece": "Why is Disney eating the scraps of bankrupt Character.AI?",
+      "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+      "published_on": "2026-10-26",
+      "series": "follow.the.money",
+      "format_family": "split_screen",
+      "which_file": "the tall (9:16) cut",
+      "served_from": {
+        "board_week": "2026-10-26",
+        "asset": "mon-video-short",
+        "build": "0c24f7ed9dc1cb9062d05be8d32d9b769fb9858d31bbd4b638c9de07efeecea4",
+        "checked_at": "2026-10-28T23:48Z"
+      },
+      "sha256": "39f1039c810681d1a6776b5a0c9f5f32696931cc47ea21ea4ec3f19b90888ecd",
+      "drive_file_id": "1Ll0n3YD8sqzUWHP6h5sI8helefOgVtRV",
+      "sha256_checked": "2026-10-28, against the copy downloaded for the study and the board's own copy (read only)",
+      "identity": "confirmed",
+      "identity_evidence": "Krish, 28 October 2026: \"I think so but I'm not sure. The ones I meant are in the publish board at content.krishraja.com for last Friday and Monday, just gone.\" On 2026-10-28 at 23:48 UTC the board was read (GET only): week 2026-10-26, build 0c24f7ed, the Monday 26 October tab serves asset mon-video-short, 'Disney, Google and Character.AI - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4', sha256 39f1039c810681d1a6776b5a0c9f5f32696931cc47ea21ea4ec3f19b90888ecd, the same as the study's copy (the archive master in Drive, Video Engine/Archive, the 2026-10-26 Disney, Google and Character.AI folder; not the smaller share copy, so the softness noted on the camera picture is not share-copy compression). No newer tall cut is on the tab. Its sha256 differs from the 9:16 master in REVIEW.md: the board serves the later file (suspected, not established: the logo revision REVIEW.md item 3 describes)."
+    }
+  ],
+  "not_yet_references": [
+    {
+      "piece": "Two passports (AI Passports)",
+      "piece_id": "7083d6ad-419e-4fdc-9aba-f3be7f3f3a23",
+      "format_family": "voiceover",
+      "which_file": "the long cut",
+      "status": "Still in post-production, owned by another session. It is not part of the reference and nothing in the bar was learnt from it. When it is finished, Krish says whether it joins."
+    }
+  ],
+  "rulings": {
+    "on": "2026-10-29",
+    "section": "Krish's rulings, 28 and 29 October 2026",
+    "items": [
+      {
+        "n": 1,
+        "on": "2026-10-28",
+        "topic": "Music",
+        "status": "ruled",
+        "layer": "aim",
+        "answer": "Yes I think music should be audible throughout but just lower.",
+        "question": "All three references drop the bed for stretches. His 19 October words for the deeper cut: \"the audio needs to be able to be heard the entire time, but just really low unless its intro, outro or or chapter card\". Does the same hold for the tall cuts?",
+        "production": "the licensed bed is audible under the whole of every cut, wide or tall, low under his voice, rising only at the intro, the outro and chapter cards; it never drops out",
+        "changed": "Quality 14, What is not the bar, the reference moments (the three drop-outs are slips) and the sound comparison points (Friday's stops before its drop-out)."
+      },
+      {
+        "n": 2,
+        "on": "2026-10-28",
+        "topic": "Labels",
+        "status": "ruled",
+        "layer": "floor",
+        "answer": "I think that sounds better for number 2. I don't mind those labels. It's just the ones that say \"Krish's read\" or \"illustrative\" that are stupid because they add no value to the content.",
+        "question": "Friday carries labels such as AT STAKE and CHESKY TO BLOOMBERG. Do these sit against his \"no eyebrow text\" words?",
+        "production": "a label that names a source, a date, a record or what is on screen is fine; one that adds nothing to the content is out (no AI-provenance, process or illustration tag, and no label that tags something as Krish's: his read, his take, his test)",
+        "quote": "I don't mind those labels. It's just the ones that say \"Krish's read\" or \"illustrative\" that are stupid because they add no value to the content.",
+        "changed": "Qualities 1 and 7 and What is not the bar."
+      },
+      {
+        "n": 3,
+        "on": "2026-10-28",
+        "topic": "Brand mark",
+        "status": "ruled",
+        "layer": "aim",
+        "answer": "I'd stick to the brand book for now.",
+        "question": "The brand book asks for a mark tile on every beat; Monday does not carry one in its body.",
+        "production": "the brand book places it (one job for each lockup, clear space, hands off the logo; brand book pp. 04 and 05); for a Short, docs/STUDIO.md applies it: the mark tile top left on every beat and the stacked logo once in the ending band (placement approved by Krish on 2026-09-26, for the job-based Studio); where a reference departs from them (Monday tall carries no mark tile in its body), the book and that approved placement for a Short win",
+        "changed": "Quality 6 cites the brand book and docs/STUDIO.md; the bar's own judgment on mark placement is gone. The question's premise was wrong: the book does not ask for a mark tile on every beat; docs/STUDIO.md does, for a Short. Whether that every-beat tile binds a quick-edit tall cut such as Monday tall is Krish's decision."
+      },
+      {
+        "n": 4,
+        "on": "2026-10-28",
+        "topic": "Stale documents",
+        "status": "ruled",
+        "answer": "Yes remove those.",
+        "question": "May docs/ve/design/TEMPLATE.md (the ILLUSTRATION tag), docs/ve/design/formats/H-motion.md (the KRISH'S TEST stickers) and config/style-references.json (the treated background) be removed?",
+        "changed": "The ILLUSTRATION tag and the KRISH'S TEST stickers are gone from compile, composition QC, the renderer, the ve spec schema, the design docs, crew cards, plate notes and fixtures. In config/style-references.json the bank marks the treated background \"not for us\", with his words; the three production formats that listed it no longer do, and the style trial refuses it (--recipe all leaves it out, and naming it stops the trial)."
+      },
+      {
+        "n": 5,
+        "on": "2026-10-28",
+        "topic": "Readings that go further than his words",
+        "status": "answered",
+        "answer": "I think you need to go a bit deeper and ask me proper questions here.",
+        "question": "One visual idea per piece (quality 2); one big impact, and at most one loud transition (qualities 4 and 11); a sting opens every piece (quality 14).",
+        "changed": "Answered by the four proper questions put to him on 29 October (rulings 8 to 11). The three readings that went beyond his words are dropped: one visual idea per piece as a count, one big impact and at most one loud transition, and a sting opening every piece. His recorded words already settle the rest: no fixed count of big moments; the first picture after the opening grabs; every part serves the message, and words on screen never repeat the words spoken; no stray flash, blink, ghosted double or glitch between pictures; one opening and one close; the look comes from the brand book; the passports return whenever a story is about where an AI lives."
+      },
+      {
+        "n": 6,
+        "on": "2026-10-28",
+        "topic": "Outside logos",
+        "status": "ruled",
+        "layer": "aim",
+        "answer": "I don't really care. I think it depends on the rest of the production.",
+        "question": "Monday's cuts show most outside companies' logos in one house colour. The approved media standard says accurate official marks, never redrawn. Is a one-colour house treatment allowed, using only each company's own official one-colour mark?",
+        "production": "the company's official mark in full colour, or the company's own published one-colour version of it, whichever fits the rest of the production; never recoloured or redrawn by us; a house colour the company does not publish waits on Krish's decision on rights",
+        "changed": "Quality 6 and What is not the bar. His answer covers the company's own one-colour mark only: whether we may set a mark in a house colour the company does not publish is still Krish's decision on rights, between only the colour versions the company itself publishes and any single house colour on the official shape."
+      },
+      {
+        "n": 7,
+        "on": "2026-10-28",
+        "topic": "Which files",
+        "status": "answered",
+        "answer": "I think so but I'm not sure. The ones I meant are in the publish board at content.krishraja.com for last Friday and Monday, just gone.",
+        "question": "Are the Friday tall and Monday tall files named in config/reference-cuts.json the latest cuts he meant?",
+        "changed": "The board check on 2026-10-28 found all three files are exactly the ones the Friday 23 October and Monday 26 October tabs serve; each identity is now confirmed. This answer is recorded, not ruled: it confirms the bytes, not his approval of them."
+      },
+      {
+        "n": 8,
+        "on": "2026-10-29",
+        "topic": "Opening",
+        "status": "ruled",
+        "layer": "under_test",
+        "answer": "I'd pick number one here but I think that we need to test and learn. We need to figure out what the right tone is over time based on real engagement. Let's go with number one for now.",
+        "question": "Two of his 12 October rules each open a video: a short animated make your mind up intro before his face comes in (house rule INTRO_STING; no design was ever approved) and an animated intro made for the story (house rule STORY_INTRO_OUTRO; Monday 26 opens on its story card). Friday 23 has neither: the hook itself builds from its first frames. Which one opening should every video have? Option one was \"The hook is the intro\", Friday 23's way.",
+        "quote": "We need to figure out what the right tone is over time based on real engagement. Let's go with number one for now.",
+      "production": "the hook is the intro (option one, Friday 23's way): the first frame is the hook in the brand's dress, with the logo and the series tag in the corners from the start; no story card and no logo intro; one calm close, held long enough to read",
+        "changed": "Under test, the opening: the current default, recorded per piece as production_choices.opening and judged on real engagement. It replaces both 12 October opening rules, house rule INTRO_STING and the intro half of STORY_INTRO_OUTRO; those house rules change in place only with his yes in person. Quality 5's first picture is now the one after the opening, and no sting is read into any piece."
+      },
+      {
+        "n": 9,
+        "on": "2026-10-29",
+        "topic": "Lead picture",
+        "status": "ruled",
+        "layer": "under_test",
+        "picked": true,
+        "answer": "Choose per piece",
+        "question": "His brand book gives each series its own picture: receipts and money flows for Monday, the product taken apart and stamped for Wednesday, lines that bend and meet in a dated call for Friday. Monday 26 leads with its series picture; Friday 23 leads with a new object made for its story, the two passports. From now on, what should a video's main picture be?",
+        "production": "chosen per piece: the storyboard shows both as stills, the series picture and a story object, with Claude's pick marked, and his signature accepts it unless he ticks the other",
+        "changed": "Under test, the lead picture: recorded per piece as production_choices.lead_picture and judged on real engagement. The creative direction carries both stills and the pick (docs/CREATIVE_DIRECTION.md), and ve's Gate 1 shows them (docs/ve/ENGINE.md). No storyboard waits on a tick."
+      },
+      {
+        "n": 10,
+        "on": "2026-10-29",
+        "topic": "Comparisons",
+        "status": "ruled",
+        "layer": "aim",
+        "answer": "I think my point was that pictures never add zero value above and beyond the words. They have to be additive in meaning. I'm all up for visually clear ideas.",
+        "question": "His 16 October rule says pictures never act out a comparison (house rule ANALOGY_IN_SCRIPTS_ONLY). Friday 23's passports act one out, and on 28 October he called them a powerful visual for every story about where an AI lives. The next time a script compares something to an everyday thing, may the picture show that thing?",
+        "production": "a picture, comparison or not, adds meaning beyond the words; a visually clear idea with the real facts on it is welcome, and one that adds nothing beyond the words, or stands in for the facts (the 16 October car race standing for an AI), is out; articles stay professional",
+        "quote": "They have to be additive in meaning. I'm all up for visually clear ideas.",
+        "changed": "Quality 2. His 16 October rule was about meaning, so the bar asks every picture to add meaning; it is an aim the Critic compares against, never a gate. House rule ANALOGY_IN_SCRIPTS_ONLY changes in place only with his yes in person."
+      },
+      {
+        "n": 11,
+        "on": "2026-10-29",
+        "topic": "Hit sounds",
+        "status": "ruled",
+        "layer": "under_test",
+        "picked": true,
+        "answer": "Only the big moment",
+        "question": "Neither reference gives a stamp or a slam a sound of its own (measured, not heard): only the voice and the music play at Friday's CHINA stamp and Monday's BANKRUPT slam. Should moments like these make a sound?",
+        "production": "one sound under a piece's biggest moment and nothing anywhere else, from a small set he approved by ear first; until then none",
+        "changed": "Under test, the sound on the big moment: recorded per piece as production_choices.big_moment_sound and judged on real engagement. Quality 14. The small hits the bar once heard in Monday wide are withdrawn until someone listens."
+      },
+      {
+        "n": 12,
+        "on": "2026-10-29",
+        "topic": "The floor",
+        "status": "ruled",
+        "layer": "floor",
+        "picked": true,
+        "answer": "Yes, that's the floor",
+        "question": "Is this the floor: the short list of clear nevers that are the only things the engine may hard-block? With it, the engine's best guess: the eight nevers, then what to reach for and what is under test. Everything else becomes an aim to reach for, a choice under test, or an example of the kind of thing that doesn't fly.",
+        "listed_aims": "Fri 23 + Mon 26 cuts, brand book, minimal random components, good motion, animation and visuals, simple, classy, on brand",
+        "listed_under_test": "hook as intro, lead picture per piece, one sound on the big moment",
+        "changed": "The floor is his eight nevers, in his order, in place of the five the engine drafted, each with his earlier words or the rule it rests on and the gate that already holds it, or held at review. The aims and what is under test agree with the list's aims and under test lines. The rejection floor's draft standards for one opening and one close (s9d6db813a0, sad5604ad3b and se67ed0142d in config/rejection-floor.json) now match never 7 and wait on the Rejections route to record his approval."
+      }
+    ]
+  },
+  "reference_moments": [
+    {"ref": "fri23-tall", "at": "00:00.67", "to": "00:04", "shows": ["pace", "typography", "cinematic", "captions"], "what": "USING A / CHINESE AI? builds on a living phone plate, with headline, coral slab, italic deck, word-by-word caption and a card tracked into the screen. The opening statement and the type system."},
+    {"ref": "fri23-tall", "at": "00:08", "to": "00:16", "shows": ["cinematic", "proof"], "what": "The CHESKY TO BLOOMBERG quote card tracked into the phone while the plate sways, with a hand-drawn underline and server racks soft behind. Cinematic plate and named source."},
+    {"ref": "fri23-tall", "at": "00:16.40", "to": "00:16.83", "shows": ["transitions"], "what": "A dark brand beat; TWO PASSPORTS lands first, then the page rises and fades up. A chapter transition."},
+    {"ref": "fri23-tall", "at": "00:22.0", "to": "00:22.3", "shows": ["motion_craft"], "what": "The CHINA stamp slams in oversized and tilted, then settles. Motion with weight."},
+    {"ref": "fri23-tall", "at": "00:25.9", "shows": ["motion_explains"], "what": "A mint marker loop drawn round CHINA in a few frames. Hand-drawn emphasis on the one thing that matters."},
+    {"ref": "fri23-tall", "at": "00:31.5", "shows": ["texture"], "what": "Passport paper with grain, security lines, halftone round the flag and stickers with offset shadows. Texture."},
+    {"ref": "fri23-tall", "at": "00:50", "to": "00:52.6", "shows": ["proof", "motion_explains"], "what": "'? OUT OF 3' held back, then filled to 2. A number withheld until it is proved."},
+    {"ref": "fri23-tall", "at": "00:54.4", "shows": ["composition"], "what": "Headline, a phone card with a circled entry, a caption and a mint band, all four readable. Composition."},
+    {"ref": "fri23-tall", "at": "00:56.07", "to": "00:58.5", "shows": ["cinematic", "proof", "transitions"], "what": "The phone swings and pushes into the dated DeepSeek screen recording, with the sentence underlined and quoted. The signature move, spent on the proof."},
+    {"ref": "fri23-tall", "at": "01:02.1", "to": "01:05.7", "shows": ["pace", "captions"], "what": "The OUR CALL card held to be read while the captions step aside. A read-hold and caption discipline."},
+    {"ref": "fri23-tall", "at": "01:15.13", "to": "01:18", "shows": ["branding"], "what": "The caption slab becomes the brand band strapped across the passport. A branded close that completes the metaphor."},
+    {"ref": "mon26-tall", "at": "00:00", "to": "00:00.9", "shows": ["motion_craft"], "what": "The story card builds piece by piece in reading order. Staggered build, the craft only: the hook is now the intro (under test)."},
+    {"ref": "mon26-tall", "at": "00:03.9", "to": "00:05.6", "shows": ["typography", "pace"], "what": "MILLIONS MADE FRIENDS HERE arrives word by word as spoken while the grid spreads. Type in time with speech."},
+    {"ref": "mon26-tall", "at": "00:12.96", "to": "00:13.7", "shows": ["cinematic", "colour", "transitions"], "what": "The BANKRUPT impact (flash, oversized slam, crawling tapes, debris) while the grid loses its colour. A big moment, with colour telling the story."},
+    {"ref": "mon26-tall", "at": "00:16.2", "to": "00:24", "shows": ["texture", "proof", "captions"], "what": "A torn-edged receipt rises, its lines build, and its mint figure matches the caption's mint chip. Texture, proof and captions speaking one language."},
+    {"ref": "mon26-tall", "at": "00:24", "to": "00:31", "shows": ["cinematic", "proof"], "what": "An article blurred except for the quoted phrase. Focus used as a lens, and honest proof."},
+    {"ref": "mon26-tall", "at": "00:43.9", "to": "00:51", "shows": ["motion_explains"], "what": "THE PEOPLE rides an arrow into Disney's slot while THE LAWSUITS stays behind. Motion that explains."},
+    {"ref": "mon26-tall", "at": "00:57.8", "to": "01:03.6", "shows": ["motion_explains", "motion_craft"], "what": "Empty slots fill as each company is named, then the counter slows hard into 75%. State change on the word."},
+    {"ref": "mon26-tall", "at": "01:21.7", "to": "01:25.7", "shows": ["branding", "pace"], "what": "One end card, its lines revealed one at a time, the underline drawing on. One close."},
+    {"ref": "mon26-wide", "at": "00:00", "to": "00:33", "shows": ["sound"], "what": "Measured, not yet heard: the music under the opening story card, a low bed under the hook and a tight voice edit. Sound finish.", "heard": false},
+    {"ref": "mon26-wide", "at": "00:34", "to": "00:36", "shows": ["cinematic"], "what": "A stage with a grid, two drifting light pools and a vignette. A lit ground."},
+    {"ref": "mon26-wide", "at": "01:15.0", "to": "01:19.4", "shows": ["transitions", "motion_explains"], "what": "Logos drop into the RENTED box. A transition that carries the thought on."},
+    {"ref": "mon26-wide", "at": "01:28", "to": "01:40.6", "shows": ["cinematic", "transitions", "motion_craft"], "what": "A slow push on the CTO document with one phrase in focus, then it defocuses as the receipt springs up and settles. Cinematic hold, transition and craft."},
+    {"ref": "mon26-wide", "at": "02:43.5", "to": "02:56", "shows": ["proof"], "what": "Comparison receipts count up into a side-by-side board. Proof that sums up."},
+    {"ref": "mon26-wide", "at": "03:29.2", "shows": ["motion_explains"], "what": "The counter rolls to 75% on 'I'm 75% sure'. A state change on the word."},
+    {"ref": "fri23-tall", "at": "00:00.00", "to": "00:00.66", "shows": ["pace"], "slip": true, "what": "SLIP, below the bar, do not copy: empty brand dark on the first frame."},
+    {"ref": "mon26-tall", "at": "00:42.9", "to": "00:43.1", "shows": ["transitions", "premium_finish"], "slip": true, "what": "SLIP, below the bar, do not copy: cross-dissolved layouts showing ghosted doubles."},
+    {"ref": "mon26-tall", "at": "01:17.9", "to": "01:18.2", "shows": ["transitions", "premium_finish"], "slip": true, "what": "SLIP, below the bar, do not copy: cross-dissolved layouts showing ghosted doubles."},
+    {"ref": "mon26-tall", "at": "01:21.35", "to": "01:21.6", "shows": ["transitions", "premium_finish"], "slip": true, "what": "SLIP, below the bar, do not copy: a face-on-face dissolve."},
+    {"ref": "fri23-tall", "at": "01:02.07", "shows": ["captions", "premium_finish"], "slip": true, "what": "SLIP, below the bar, do not copy: a one-frame caption blink before the OUR CALL card."},
+    {"ref": "fri23-tall", "at": "01:05.7", "to": "01:15.6", "shows": ["sound"], "slip": true, "heard": false, "what": "SLIP, below the bar, do not copy: the music bed drops out (measured, not yet heard)."},
+    {"ref": "mon26-tall", "at": "01:06", "to": "01:14.5", "shows": ["sound"], "slip": true, "heard": false, "what": "SLIP, below the bar, do not copy: the music bed drops out (measured, not yet heard)."},
+    {"ref": "mon26-wide", "at": "00:45", "to": "04:31", "shows": ["sound"], "slip": true, "heard": false, "what": "SLIP, below the bar, do not copy: the speech gaps fall to near digital silence, the bed with them (measured, not yet heard)."},
+    {"ref": "mon26-wide", "at": "00:26.97", "to": "00:27.16", "shows": ["transitions", "premium_finish"], "slip": true, "what": "SLIP, below the bar, do not copy: a ghosted cross-fade at an act break."},
+    {"ref": "mon26-wide", "at": "00:32.79", "to": "00:33.04", "shows": ["transitions", "premium_finish"], "slip": true, "what": "SLIP, below the bar, do not copy: a ghosted cross-fade at an act break."},
+    {"ref": "mon26-wide", "at": "01:19.45", "to": "01:19.83", "shows": ["transitions", "premium_finish"], "slip": true, "what": "SLIP, below the bar, do not copy: the change to the VOID stamp shows a ghosted double."},
+    {"ref": "mon26-wide", "at": "03:48.9", "to": "03:49.1", "shows": ["transitions", "premium_finish"], "slip": true, "what": "SLIP, below the bar, do not copy: a ghosted cross-fade at an act break."},
+    {"ref": "mon26-wide", "at": "04:39.2", "to": "04:39.45", "shows": ["transitions", "premium_finish"], "slip": true, "what": "SLIP, below the bar, do not copy: the change to the end card shows a ghosted double."}
+  ]
+}

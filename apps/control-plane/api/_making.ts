@@ -83,16 +83,18 @@ export interface MakingChannelPost { url?: string; posted_at: string }
 export interface MakingSession { url: string; started_at: string; by: string }
 /** Where one cut's script is in Krish's teleprompter.com account. Krish,
  *  2026-10-12: "Also note that Descript is permanently gone, teleprompter.com
- *  is permanently in, connected via MCP here", and, asked whether every
- *  checked script may go there automatically, "Yes, automatic, Monday now",
- *  on these terms: "One script per cut, in a folder per piece (e.g. "Mon 12
- *  Oct follow.the.money"). When the words change, the same script is updated
- *  in place. Nothing is ever deleted." `script_id` is the script's id (an
+ *  is permanently in, connected via MCP here", on these terms: "One script
+ *  per cut, in a folder per piece (e.g. "Mon 12 Oct follow.the.money"). When
+ *  the words change, the same script is updated in place. Nothing is ever
+ *  deleted." His standing yes of that day ("Yes, automatic, Monday now")
+ *  gave way on 2026-10-28 to "Once I approve, the two scripts will go to
+ *  teleprompter": a script goes only once he approves its exact words. `script_id` is the script's id (an
  *  uppercase UUID), `title` its title, and `script_sha256` the hash of the
  *  words it holds (making.py script_hash); `error` says why the last send
  *  failed and `failed_at` when, on the script the cut already had, or alone
  *  when none was made. Written by scripts/post-pack/teleprompter_send.py
- *  record (making.py teleprompter). */
+ *  record (making.py teleprompter), or by teleprompterPatch
+ *  (api/_teleprompter.ts) after a server send. */
 export interface MakingTeleprompterCut {
   script_id?: string
   title?: string
@@ -105,6 +107,17 @@ export interface MakingTeleprompterCut {
 /** The piece's one folder and its scripts, merged cut by cut. `folder_id`
  *  is absent only while no folder was made (a send that failed first). */
 export interface MakingTeleprompter { folder_id?: string; folder_name?: string; cuts: Partial<Record<MakingCut, MakingTeleprompterCut>> }
+
+/** The choices Krish put under test (Rulings, Krish, 2026-10-29: "we need to
+ *  test and learn"): which opening, which lead picture and which sound on the
+ *  big moment this piece used, so a retrospective can join each to how the
+ *  piece did. The defaults and their options live once, in
+ *  config/reference-cuts.json `under_test`; this record keeps only what was
+ *  used, merged choice by choice. A record, never a gate. */
+export const PRODUCTION_CHOICES = ['opening', 'lead_picture', 'big_moment_sound'] as const
+export type ProductionChoice = (typeof PRODUCTION_CHOICES)[number]
+export type MakingProductionChoices = Partial<Record<ProductionChoice, string>> & { at: string }
+const CHOICE_VALUE = /^[a-z][a-z0-9_]{0,59}$/
 
 export interface Making {
   /** When the record began: written on its first write and never moved, so
@@ -122,6 +135,8 @@ export interface Making {
   session?: MakingSession
   /** Where each cut's script is in Teleprompter; merged cut by cut. */
   teleprompter?: MakingTeleprompter
+  /** What the piece used of each choice under test; merged choice by choice. */
+  production_choices?: MakingProductionChoices
   /** Retired on 2026-10-12, when Descript was (Krish: "Descript is
    *  permanently gone"). Records written before then still hold it; it is
    *  kept as it is, so they still parse, and nothing reads it. */
@@ -342,6 +357,18 @@ export function parseMakingPatch(body: unknown, now: string): { patch: MakingPat
       if (problems.length === before) patch.teleprompter = { ...(folder ? { folder_id: folder } : {}), ...(name ? { folder_name: name } : {}), cuts }
     }
   }
+  if (body.production_choices !== undefined) {
+    const v = body.production_choices
+    const given = isObj(v) ? Object.entries(v).filter(([k]) => k !== 'at') : null
+    const choices: Partial<Record<ProductionChoice, string>> = {}
+    for (const [k, value] of given || []) {
+      if (!(PRODUCTION_CHOICES as readonly string[]).includes(k)) problems.push(`unknown production choice "${k}" (${PRODUCTION_CHOICES.join(', ')})`)
+      else if (typeof value !== 'string' || !CHOICE_VALUE.test(value)) problems.push(`production_choices.${k} is the option used, such as hook_is_intro (lower case, digits and underscores)`)
+      else choices[k as ProductionChoice] = value
+    }
+    if (!given || !given.length) problems.push(`production_choices needs at least one of ${PRODUCTION_CHOICES.join(', ')}`)
+    else if (Object.keys(choices).length === given.length) patch.production_choices = { ...choices, at: when(isObj(v) ? v.at : undefined, now) }
+  }
   // Descript was retired on 2026-10-12; a record of a send there is not taken.
   if (body.descript !== undefined) problems.push('descript was retired on 2026-10-12 (Krish: "Descript is permanently gone, teleprompter.com is permanently in"): record the Teleprompter send in teleprompter')
   return { patch, problems }
@@ -395,6 +422,11 @@ export function mergeMaking(prev: Making | null | undefined, patch: MakingPatch,
       else channels[k as MakingChannel] = v as MakingChannelPost
     }
     next.channels = channels
+  }
+  if (patch.production_choices) {
+    // Choice by choice: recording the sound after the render keeps the opening and the lead picture.
+    const held = isObj(base.production_choices) ? base.production_choices : {}
+    next.production_choices = { ...held, ...patch.production_choices }
   }
   if (patch.teleprompter) {
     // Cut by cut: a send of one cut keeps the other, and the folder the
