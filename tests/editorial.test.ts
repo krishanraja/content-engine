@@ -1,5 +1,5 @@
 import { CandidateV1Schema, JobManifestV1Schema, StageNameSchema } from '@mindmake/contracts'
-import { applyPresenterIdentityCorrections, BUILT_WITH_AI_EDITORIAL_RULE_ID, captionTreatmentIssues, OPENING_POSITION_UNSTATED, OPENING_PROMISE_MISSED, OPENING_PROMISE_UNCHECKED, OPENING_STANDING_UNSTATED, openingContractIssues, promiseMatchTerms, exactWordFidelity, INVESTIGATIVE_SHORT_REFERENCE_RULE_ID, meaningCriticalRemovalIssues, suggestCaptionTreatment, validateEditorialCandidate, validateShortNativeEditorialCandidate, storyArcIssues, STORY_NO_OPENING_QUESTION, STORY_NO_OUTRO, STORY_SPOKEN_STAMP, STORY_UNCHECKED, type EditorialThresholds, type TranscriptDocument } from '@mindmake/core'
+import { applyPresenterIdentityCorrections, BUILT_WITH_AI_EDITORIAL_RULE_ID, NO_NAME_BLOCK, SELF_INTRODUCTION_BLOCK, captionTreatmentIssues, OPENING_POSITION_UNSTATED, OPENING_PROMISE_MISSED, OPENING_PROMISE_UNCHECKED, OPENING_STANDING_UNSTATED, openingContractIssues, promiseMatchTerms, exactWordFidelity, INVESTIGATIVE_SHORT_REFERENCE_RULE_ID, meaningCriticalRemovalIssues, suggestCaptionTreatment, validateEditorialCandidate, validateShortNativeEditorialCandidate, storyArcIssues, STORY_NO_OPENING_QUESTION, STORY_NO_OUTRO, STORY_SPOKEN_STAMP, STORY_UNCHECKED, type EditorialThresholds, type TranscriptDocument } from '@mindmake/core'
 import { describe, expect, it } from 'vitest'
 
 const thresholds: EditorialThresholds = {
@@ -17,7 +17,7 @@ const thresholds: EditorialThresholds = {
 }
 
 function transcript(): TranscriptDocument {
-  const source = "Hi I'm Chris um um the useful part is not the AI model it is the workflow because the handoff gets faster that is the decision that saves the team time"
+  const source = "Hi I'm Chris um um I think the useful part is not the AI model it is the workflow because the handoff gets faster that is the decision that saves the team time"
   const words = source.split(' ')
   return applyPresenterIdentityCorrections({
     language: 'en',
@@ -55,7 +55,8 @@ function job() {
 function candidate(overrides: Record<string, unknown> = {}) {
   const source = transcript()
   const duration = source.segments[0]!.end_ms
-  const cleaned = "Hi I'm Krish the useful part is not the AI model it is the workflow because the handoff gets faster. That is the decision that saves the team time."
+  // The self-introduction is cut (house rule NO_NAME): the clean cut opens on the point.
+  const cleaned = "I think the useful part is not the AI model it is the workflow because the handoff gets faster. That is the decision that saves the team time."
   return CandidateV1Schema.parse({
     schema_version: 1,
     candidate_id: 'candidate-editorial',
@@ -98,10 +99,29 @@ function candidate(overrides: Record<string, unknown> = {}) {
 }
 
 describe('editorial judgement gates', () => {
-  it('corrects the known presenter identity without changing a guest named Chris', () => {
-    const corrected = transcript()
-    expect(corrected.segments[0]?.text).toContain("I'm Krish")
-    expect(corrected.segments[0]?.words?.[2]?.text).toBe('Krish')
+  // Krish, 2026-10-28: "Remember, no content refers to Krish, ever." (house rule NO_NAME)
+  it('never writes his name into a transcript: the words stay as they were heard', () => {
+    const heard = transcript()
+    expect(heard.segments[0]?.text).toContain("I'm Chris")
+    expect(heard.segments[0]?.words?.[2]?.text).toBe('Chris')
+    expect(JSON.stringify(heard)).not.toMatch(/Krish/)
+    expect(heard.corrections).toEqual([])
+  })
+
+  it('blocks a self-introduction until the edit cuts it, and any public word that names him, with no override', () => {
+    const source = transcript()
+    const intro = "Hi I'm Chris I think the useful part is not the AI model it is the workflow because the handoff gets faster. That is the decision that saves the team time."
+    const base = candidate()
+    const introduced = candidate({ transcript: intro, edit_plan: { ...base.edit_plan, caption_script: intro, segments: [{ ...base.edit_plan!.segments[0], transcript: intro }] } })
+    expect(validateEditorialCandidate(introduced, source, job(), thresholds).hard_blocks).toContain(SELF_INTRODUCTION_BLOCK)
+    for (const hook of ["Krish's test: the workflow beats the model.", 'The workflow beats the model, says Krish Raja.']) {
+      const named = candidate({ hook, identity_mentions: [{ name: 'Krish', role: 'subject', evidence: 'A different Krish, named in the source.' }] })
+      expect(validateEditorialCandidate(named, source, job(), thresholds).hard_blocks).toContain(NO_NAME_BLOCK)
+      expect(validateShortNativeEditorialCandidate(named, thresholds, 'Krish').hard_blocks).toContain(NO_NAME_BLOCK)
+    }
+    expect(validateShortNativeEditorialCandidate(candidate({ transcript: `My name is Krish. ${base.transcript}` }), thresholds, 'Krish').hard_blocks)
+      .toEqual(expect.arrayContaining([SELF_INTRODUCTION_BLOCK, NO_NAME_BLOCK]))
+    expect(validateEditorialCandidate(base, source, job(), thresholds).hard_blocks).toEqual([])
   })
 
   it('allows a real Chris only when the non-presenter identity is explicit', () => {
@@ -169,7 +189,7 @@ describe('editorial judgement gates', () => {
         continuous_baseline: { ...base.edit_plan!.continuous_baseline, verdict: 'rejected', rationale: 'The continuous version buries the strongest consequence after unnecessary setup.' },
         segments: [
           { segment_id: 'later', start_ms: split, end_ms: duration, role: 'body', transcript: 'because the handoff gets faster that is the decision that saves the team time', selection_reason: 'This later section states the decision and payoff.' },
-          { segment_id: 'earlier', start_ms: 0, end_ms: split, role: 'ending', transcript: "Hi I'm Krish the useful part is not the AI model it is the workflow", selection_reason: 'This earlier section establishes the central contrast.' },
+          { segment_id: 'earlier', start_ms: 0, end_ms: split, role: 'ending', transcript: 'I think the useful part is not the AI model it is the workflow', selection_reason: 'This earlier section establishes the central contrast.' },
         ],
         caption_script: base.transcript,
         source_order: { decision: 'preserved', rationale: 'This intentionally claims no reorder occurred.' },
