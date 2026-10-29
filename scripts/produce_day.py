@@ -75,6 +75,14 @@ import plan_files  # noqa: E402
 TZ = ZoneInfo('America/New_York')  # system_config.operator_timezone (docs/CADENCE.md)
 SERIES = {0: 'follow_the_money', 2: 'under_the_hood', 4: 'mind_the_gap'}
 SHAPE = {'long': '16x9', 'short': '9x16'}
+# --cut: one cut of the two, for the overnight run (scripts/overnight/overnight.py: the primary computer makes the long
+# cuts and the standby the shorts, plan Wave 2, W2.6). Both kits are still built, since the music is sized to the long
+# cut as it will run; only the named cut is rendered, filed and recorded. None makes both.
+ONLY = None
+
+
+def wanted():
+    return [ONLY] if ONLY else list(SHAPE)
 PY = sys.executable
 WORK_ROOT = REPO / '.cache' / 'produce'
 STORY_CONFIG = REPO / 'config' / 'story-intro-outro.json'
@@ -365,6 +373,8 @@ def make_cuts(post_path, piece, takes_at, music_root, clips, work, dry_run):
         cfg_path.write_text(json.dumps(cfg, indent=2), encoding='utf-8')
     rendered = {}
     for cut, shape in SHAPE.items():
+        if cut not in wanted():
+            continue
         cfg_path = kit / f'{cut}.json'
         cfg = json.loads(cfg_path.read_text(encoding='utf-8'))
         cfg['endcard'] = {**(cfg.get('endcard') or {}), shape: str(clips[shape]['outro'])}
@@ -552,6 +562,8 @@ def made_cuts(work):
     """The cuts an earlier run made in this work folder, for --file-only."""
     found = {}
     for cut, shape in SHAPE.items():
+        if cut not in wanted():
+            continue
         files = sorted((work / cut).glob(f'*-{shape}.mp4'))
         if not files:
             raise Stop(f'no {cut} cut was made in {work / cut}: run without --file-only first')
@@ -568,7 +580,10 @@ def main():
     ap.add_argument('--dry-run', action='store_true', help='everything up to the plans; nothing rendered, sent or recorded')
     ap.add_argument('--file-only', action='store_true',
                     help='file and record the cuts an earlier run made here, once their receipts pass the delivery gates')
+    ap.add_argument('--cut', choices=sorted(SHAPE), help='make, file and record this cut only (the overnight run splits the two between the computers)')
     a = ap.parse_args()
+    global ONLY
+    ONLY = a.cut
     if a.file_only and a.dry_run:
         ap.error('--file-only files what is made; --dry-run makes nothing')
     when = date.fromisoformat(a.date) if a.date else datetime.now(TZ).date()
@@ -581,7 +596,7 @@ def main():
         log(f'{when:%A %-d %B}: piece {piece}, plan {post_path.parent.name}')
         made = making(piece).get('video_assets') or []
         made = {v.get('cut') for v in made if isinstance(v, dict)} if isinstance(made, list) else set(made)
-        if all(c in made for c in SHAPE) and not a.dry_run and not a.redo:
+        if all(c in made for c in wanted()) and not a.dry_run and not a.redo:
             # Already made (a run started by hand earlier, as on 13 October for
             # Wednesday): the scheduled run never makes a day's videos twice.
             log('both cuts are already on the record; nothing to do')

@@ -89,7 +89,7 @@ export interface WindowsHealth {
  *  preflight that did not finish. Plan Wave 1, the clock's "Sat 18:00 Preflight" row: whether this machine could run
  *  the overnight production unattended, proved a week before the runner exists. */
 export const PREFLIGHT_CHECKS: readonly string[] = Object.freeze([
-  'claude_cli', 'codex_companion', 'codex_login', 'codex_allowance', 'ffmpeg', 'tesseract', 'disk', 'drive',
+  'claude_cli', 'codex_companion', 'codex_login', 'codex_profile', 'codex_allowance', 'ffmpeg', 'tesseract', 'disk', 'drive',
   'preflight_stopped',
 ])
 
@@ -105,6 +105,13 @@ export interface PreflightHealth {
   claude_version: string | null
   codex_companion: string | null
   codex_login: boolean | null
+  /** Codex's tool profile passed its audit and this machine's Codex has no MCP server of a forbidden kind (failure
+   *  production-asked-to-publish), and how many it has of that kind. */
+  codex_profile: boolean | null
+  codex_flagged: number | null
+  /** The machine's part in the overnight run (MINDMAKE_OVERNIGHT_ROLE): primary makes the long cuts and builds the
+   *  Monday board, standby makes the shorts. */
+  role: 'primary' | 'standby' | 'none' | null
   codex_weekly_used_pct: number | null
   codex_resets_at: string | null
   ffmpeg: string | null
@@ -112,6 +119,35 @@ export interface PreflightHealth {
   free_gb: number | null
   drive_reachable: number | null
   drive_folders: number | null
+}
+
+/** Why the overnight run held a cut (scripts/overnight/overnight.py, REASONS): codes only; the board says them in
+ *  words. */
+export const OVERNIGHT_REASONS: readonly string[] = Object.freeze([
+  'needs_new_take', 'critic_still_blocks', 'no_repairer', 'critic_failed', 'produce_failed', 'final_failed', 'gate_failed',
+  'codex_profile', 'not_wired', 'not_finished',
+])
+
+export interface OvernightCut {
+  day: 'mon' | 'wed' | 'fri'
+  cut: 'long' | 'short'
+  status: 'made' | 'held'
+  reason_code: string | null
+  /** Where the Critic named the failure: its area and time ("composition at 1:15"), never its words. */
+  where: string | null
+  url: string | null
+}
+
+/** The overnight run on one machine (plan Wave 2, W2.6), as its recordings pass sends it, so the primary computer
+ *  builds the Monday board with the standby's shorts and a session reads the night without a log. */
+export interface OvernightHealth {
+  week: string
+  role: 'primary' | 'standby'
+  state: 'running' | 'finished'
+  started_at: string | null
+  finished_at: string | null
+  critic_calibrated: boolean
+  cuts: OvernightCut[]
 }
 
 export interface LaneReport {
@@ -122,6 +158,7 @@ export interface LaneReport {
   watch?: WatchHealth
   windows?: WindowsHealth
   preflight?: PreflightHealth
+  overnight?: OvernightHealth
 }
 
 const COUNT_KEY_RE = /^[a-z0-9_.]{1,80}$/
@@ -202,6 +239,9 @@ export function parsePreflightHealth(value: unknown): PreflightHealth | undefine
     claude_version: wordOrNull(p.claude_version, VERSION_RE),
     codex_companion: wordOrNull(p.codex_companion, VERSION_RE),
     codex_login: typeof p.codex_login === 'boolean' ? p.codex_login : null,
+    codex_profile: typeof p.codex_profile === 'boolean' ? p.codex_profile : null,
+    codex_flagged: count(p.codex_flagged),
+    role: p.role === 'primary' || p.role === 'standby' || p.role === 'none' ? p.role : null,
     codex_weekly_used_pct: number(p.codex_weekly_used_pct, 100),
     codex_resets_at: isoOrNull(p.codex_resets_at),
     ffmpeg: wordOrNull(p.ffmpeg, VERSION_RE),
@@ -210,6 +250,53 @@ export function parsePreflightHealth(value: unknown): PreflightHealth | undefine
     drive_reachable: count(p.drive_reachable),
     drive_folders: count(p.drive_folders),
   }
+}
+
+const WHERE_RE = /^[a-z]{1,20} at \d{1,3}:\d{2}$/
+const DRIVE_URL_RE = /^https:\/\/drive\.google\.com\/[A-Za-z0-9/_?=&.-]{1,300}$/
+
+/** An overnight block with anything outside its shape dropped; a block with no week, role or state is no block. */
+export function parseOvernightHealth(value: unknown): OvernightHealth | undefined {
+  if (value === null || typeof value !== 'object' || Array.isArray(value)) return undefined
+  const o = value as Record<string, unknown>
+  if (typeof o.week !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(o.week)) return undefined
+  if (o.role !== 'primary' && o.role !== 'standby') return undefined
+  if (o.state !== 'running' && o.state !== 'finished') return undefined
+  const cuts: OvernightCut[] = []
+  for (const c of Array.isArray(o.cuts) ? o.cuts.slice(0, 12) : []) {
+    if (!c || typeof c !== 'object') continue
+    const x = c as Record<string, unknown>
+    if (!['mon', 'wed', 'fri'].includes(String(x.day)) || !['long', 'short'].includes(String(x.cut)) || !['made', 'held'].includes(String(x.status))) continue
+    cuts.push({
+      day: x.day as OvernightCut['day'], cut: x.cut as OvernightCut['cut'], status: x.status as OvernightCut['status'],
+      reason_code: typeof x.reason_code === 'string' && OVERNIGHT_REASONS.includes(x.reason_code) ? x.reason_code : null,
+      where: wordOrNull(x.where, WHERE_RE),
+      url: wordOrNull(x.url, DRIVE_URL_RE),
+    })
+  }
+  return {
+    week: o.week, role: o.role, state: o.state, started_at: isoOrNull(o.started_at), finished_at: isoOrNull(o.finished_at),
+    critic_calibrated: o.critic_calibrated === true, cuts,
+  }
+}
+
+/** Whether both computers could run the night: the last fresh preflight of each role (Saturday's checks, W2.6
+ *  "Preflight ... on both machines"). Pure. */
+export function overnightReadiness(reports: readonly LaneReport[], now: number): {
+  primary: { machine: string; ok: boolean; at: string | null; failed: string[] } | null
+  standby: { machine: string; ok: boolean; at: string | null; failed: string[] } | null
+  ready: boolean
+} {
+  const pick = (role: 'primary' | 'standby') => {
+    const fresh = reports.filter((r) => r.preflight?.role === role && Number.isFinite(Date.parse(r.at))
+      && now - Date.parse(r.at) <= 7 * 24 * 3_600_000)
+    fresh.sort((a, b) => Date.parse(b.preflight?.at || b.at) - Date.parse(a.preflight?.at || a.at))
+    const r = fresh[0]
+    return r ? { machine: r.machine, ok: r.preflight!.ok, at: r.preflight!.at, failed: r.preflight!.failed } : null
+  }
+  const primary = pick('primary')
+  const standby = pick('standby')
+  return { primary, standby, ready: !!primary?.ok && !!standby?.ok }
 }
 
 const MACHINE_RE = /^[A-Za-z0-9][A-Za-z0-9_-]{0,62}$/
@@ -223,9 +310,11 @@ export function parseLaneReport(value: unknown, now: string): LaneReport | null 
   const watch = parseWatchHealth(body.watch)
   const windows = parseWindowsHealth(body.windows)
   const preflight = parsePreflightHealth(body.preflight)
+  const overnight = parseOvernightHealth(body.overnight)
   return {
     schema_version: 1, machine: body.machine, at: now, problems: (problems as string[]).sort(),
     ...(watch ? { watch } : {}), ...(windows ? { windows } : {}), ...(preflight ? { preflight } : {}),
+    ...(overnight ? { overnight } : {}),
   }
 }
 

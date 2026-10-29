@@ -1,0 +1,44 @@
+{
+  "schema": "overnight/1",
+  "about": "The overnight run (plan Wave 2, W2.6), on Krish's two home computers, with no Claude on a timer: Codex and scripts only. His Titles press starts it: the recordings pass on each computer (scripts/recordings-upload.ps1, the windowless task already polling the engine) asks scripts/overnight/overnight.py due, and starts the run with no window. The primary computer makes the long cuts and builds the Monday board; the standby makes the shorts. Which computer is which is the setting MINDMAKE_OVERNIGHT_ROLE (primary or standby) on each. Steps are argument lists; a step set to null is not wired, and the run says so on the board instead of guessing.",
+  "days": ["mon", "wed", "fri"],
+  "roles": {
+    "primary": { "cuts": ["long"], "builds_board": true },
+    "standby": { "cuts": ["short"], "builds_board": false }
+  },
+  "repair": {
+    "max_rounds": 2,
+    "reduced_scale": 0.5,
+    "full_scale": 1.0,
+    "why": "Repairs render at reduced scale and the full-scale render runs once, at the end, after a fresh Critic passes the cut (W2.6, Speed and benchmark)."
+  },
+  "board": {
+    "timezone": "America/New_York",
+    "due": "06:30",
+    "wait_for_other_until": "06:10",
+    "poll_minutes": 5
+  },
+  "steps": {
+    "produce": {
+      "argv": ["{python}", "scripts/produce_day.py", "--date", "{date}", "--piece", "{piece_id}", "--cut", "{cut}"],
+      "takes_scale": false,
+      "codex": false,
+      "note": "quick-edit makes a cut at full size only (make.py has no scale), so on this route every repair render is full size until it takes one; the ve shadow route (W2.7) takes ve render --scale."
+    },
+    "critic": null,
+    "repair": null,
+    "final": null,
+    "gates": null
+  },
+  "critic_note": "The Critic route is wired on the primary computer once it is calibrated (python scripts/overnight/critic.py calibrate ... --record, config/critic-calibration.json): a fresh Codex task under config/codex-profile.json with a read-only card per round. Until a calibration record is there, a cut is made and shown on the board as not judged by a calibrated Critic; it is never called passed.",
+  "board_steps": {
+    "download": ["{python}", "scripts/post-pack/board_web.py", "download", "{week}", "--output", "{previous}"],
+    "build": ["{python}", "scripts/post-pack/week_board.py", "--week", "{week}", "--live", "--target", "web", "--previous", "{previous}", "{materials}", "--out", "{page}"],
+    "publish": ["{python}", "scripts/post-pack/board_web.py", "publish-web", "{page}", "--apply"]
+  },
+  "repair_round": {
+    "workflow": "repair-round.yml",
+    "dispatch": "gh",
+    "note": "When the board holds a cut a repair could mend, the primary starts one bounded repair round in GitHub Actions (gh workflow run), if gh is signed in on it; otherwise the run record says it is wanted and his press on the board or Control Center starts it."
+  }
+}

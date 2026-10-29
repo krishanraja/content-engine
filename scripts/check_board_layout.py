@@ -12,8 +12,9 @@ request (npm run verify).
     python3 scripts/check_board_layout.py --update --approved "Krish, YYYY-MM-DD: <his exact words>"
                                                      # rewrite the snapshot, with the words he approved the change in
 
-1. Three fed weeks (empty, Sunday's ideas, mid-week) build, pass week_board.verify(), and have exactly the structure
-   recorded in fixtures/week-board/fixed-layout.json: the tabs, each day's steps, and what sits in each step.
+1. Four fed weeks (empty, Sunday's ideas, mid-week, and a layout v3 week with the Archive) build, pass
+   week_board.verify(), and have exactly the structure recorded in fixtures/week-board/fixed-layout.json: the tabs, each
+   day's steps, and what sits in each step.
 2. Nothing but the board's own builders stamps a board: a script that patches a built board and stamps it again is
    how the layout drifted before (docs/plans/2026-10-19-*). The three that did it are named and frozen.
 3. The lock: the snapshot also records the sha256 of the layout file and the colours (LOCKED) and the words Krish
@@ -116,6 +117,14 @@ def weeks(tmp):
                                draft={'wed'}, calls={'wed': ['A call to make']}, queue=queue, ideas=ideas,
                                briefs={'wed': brief, 'fri': dict(brief, agreed=False)}, sweeps={'wed': sweep}, lessons=lessons,
                                titles=titles, manifests={'mon': 'd' * 64})[0]}
+    # Layout v3 (W2.1, from the week of 9 November): the Archive with his scores, and his Scores press on a made day.
+    archive = wb.read_archive({'rows': [
+        {'piece_id': wb.MON_ID, 'date': '2026-10-12', 'series': 'follow_the_money', 'title': TITLE,
+         'links': [{'label': 'Substack', 'url': 'https://example.com/p/warner'}], 'scores': {'hindsight': {'narrative': 8, 'production': 6}}},
+        {'piece_id': None, 'date': '2026-10-06', 'series': None, 'title': 'The Launch', 'links': [], 'scores': {}}]})
+    mon3 = wb.stand_in(tmp, 'mon3', TITLE, 'follow.the.money')
+    out['archive'] = wb.board(wb.V3_FROM, {'mon': mon3}, {'mon': wb.MON_ID}, archive=archive,
+                              videos={'mon': [video('long', 'a', 305), video('short', 'c', 86)]})[0]
     return out
 
 
@@ -141,7 +150,7 @@ def blocks(html):
 def structure(page):
     """The layout of a board, as data: each tab, and for each day each step's top-level blocks."""
     out = {'tabs': re.findall(r'role="tab" id="tab-([a-z]+)"', page), 'days': {}}
-    for name in wb.TOP_TABS[2:]:
+    for name in wb.DAY_TABS:
         start = page.rfind('<div', 0, page.find(f'id="panel-{name}"'))
         panel = wb.div_at(page, start)
         day = {}
@@ -169,6 +178,14 @@ def structure(page):
     card = re.search(r'<article class="off-card".*?</article>', page, re.S)
     if card:
         out['offday_card'] = blocks(card.group(0)[card.group(0).index('>') + 1:-len('</article>')])
+    # Layout v3: the Archive tab's blocks and what one row holds (W2.1).
+    at = page.find(f'id="panel-{wb.ARCHIVE_TAB}"')
+    if at >= 0:
+        archive = wb.div_at(page, page.rfind('<div', 0, at))
+        out['archive'] = blocks(archive[archive.index('>') + 1:-len('</div>')])
+        row = re.search(r'<li class="ar-row".*?</li>', archive, re.S)
+        if row:
+            out['archive_row'] = blocks(row.group(0)[row.group(0).index('>') + 1:-len('</li>')])
     return out
 
 
@@ -206,8 +223,8 @@ def browser(pages, tmp):
             web, _ = board_web.web_page(html, {'week_start': wb.LAYOUT_FROM.isoformat()})
             f = Path(tmp) / f'{name}.html'
             f.write_text(web, encoding='utf-8')
-            for tab in wb.TOP_TABS:
-                views = [f'{tab}/{s}' for s in wb.DAY_STEPS] if tab in wb.TOP_TABS[2:] else [tab]
+            for tab in re.findall(r'role="tab" id="tab-([a-z]+)"', html):
+                views = [f'{tab}/{s}' for s in wb.DAY_STEPS] if tab in wb.DAY_TABS else [tab]
                 for view in views:
                     page.goto(f.as_uri() + '#' + view)
                     page.wait_for_timeout(150)
@@ -272,6 +289,8 @@ def browser(pages, tmp):
                 problems += presses_in_browser(page, web)
             if name == 'midweek':
                 problems += decisions_in_browser(page, web)
+            if name == 'archive':
+                problems += scores_in_browser(page, web)
         if errors:
             problems.append(f'page errors: {errors[:3]}')
         b.close()
@@ -516,6 +535,35 @@ def decisions_in_browser(page, web):
     return problems
 
 
+def scores_in_browser(page, web):
+    """His Scores press by touch (layout v3, W2.1): on an Archive row, both marks are needed, then Save keeps
+    picks/score-<piece> with his marks, the basis (looking back on the Archive) and his note."""
+    saved, problems = [], []
+    week = board_api(page, web, 'archive', saved, lambda path, body: {'scores': 'filed'} if '/picks/score-' in path else None)
+    last = lambda path: next((b for p, b in reversed(saved) if p == f'/api/board/{week}/{path}'), None)
+    try:
+        page.goto('https://board.test/archive.html#archive')
+        page.wait_for_selector('[data-act="save-scores"][data-for="ar1-scores"]:not([disabled])', timeout=5000)
+        page.select_option('#ar1-scores [data-score="narrative"]', '9')
+        page.click('[data-act="save-scores"][data-for="ar1-scores"]')
+        said = text_once(page, '[data-scoresstate="ar1-scores"]', 'Pick both')
+        if last(f'picks/score-{wb.MON_ID}') or not said.startswith('Pick both'):
+            problems.append(f'archive: Scores saved with one mark missing, or did not ask for both ({said!r})')
+        page.select_option('#ar1-scores [data-score="production"]', '7')
+        page.fill('#ar1-scores [data-score="note"]', 'Strong open.')
+        page.click('[data-act="save-scores"][data-for="ar1-scores"]')
+        until(page, lambda: last(f'picks/score-{wb.MON_ID}'))
+        body = last(f'picks/score-{wb.MON_ID}') or {}
+        if (body.get('kind') != 'scores' or body.get('piece_id') != wb.MON_ID or body.get('narrative') != 9 or body.get('production') != 7
+                or body.get('basis') != 'hindsight' or body.get('note') != 'Strong open.'):
+            problems.append(f'archive: Scores did not save his marks, the basis and his note ({body})')
+    except Exception as error:  # noqa: BLE001 - a step that cannot run is reported, never passed
+        problems.append(f'archive: the Scores press could not be pressed ({str(error).splitlines()[0][:160]})')
+    finally:
+        page.unroute(re.compile(r'^https://board\.test/'))
+    return problems
+
+
 def file_hash(path):
     """sha256 of a text file with CRLF line ends read as LF, so git's Windows checkout hashes the same as Linux's."""
     return hashlib.sha256(Path(path).read_bytes().replace(b'\r\n', b'\n')).hexdigest()
@@ -639,7 +687,7 @@ def main(argv=None):
     if problems:
         print('check:board-layout FAILED:\n  ' + '\n  '.join(problems))
         return 1
-    print('check:board-layout passed: three fed weeks in the fixed layout Krish approved, its files unchanged, nothing else stamps a board'
+    print('check:board-layout passed: four fed weeks in the fixed layout Krish approved, its files unchanged, nothing else stamps a board'
           + (', and every view fits a phone' if args.browser else ''))
     return 0
 

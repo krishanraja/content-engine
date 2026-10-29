@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "about": "The cut gates (plan W2.4, Gates that are calibrated): words, joins in gaps, captions clock truth and captions renderer truth, read by scripts/cutgates on both routes (quick-edit make.py and ve qc). Floor never 3: his words never cut, changed or out of sync. Thresholds live here and nowhere else; a number marked placeholder is replaced by the one measured on the calibration cuts (config/gate-calibration.json).",
+  "required_from": "2026-11-16",
+  "required_from_note": "For a cut going to a post dated from here, the joins and captions checks must be in its receipt, machine written, bound to its bytes and passed: a missing or failed check holds it, and make.py holds the cut at render. Before that date they are measured and listed in the receipt and never block, because the gates were not calibrated when those cuts were made. The week of 16 November is the first made on quick-edit plus the calibrated gates (Wave 2 brief). The words check keeps its own date and rule (words_gate.REQUIRED_FROM).",
+  "calibration": {
+    "status": "uncalibrated",
+    "note": "Open until python3 scripts/cutgates/calibrate.py passes on the five real cuts on Krish's computer: Monday 26 Oct's accepted long and short must pass; Wednesday 21 Oct's published long cut, Friday 23 Oct's rejected join reel and Friday 16 Oct's 90-second cut from the 17 Oct words file must fail. CI runs the same command on synthetic stand-ins only."
+  },
+  "words": {
+    "blocks_on": "a content word of the signed script he said in the take, lost on every aligner's pass of the finished file",
+    "function_words": "listed, never blocking (words_gate.FUNCTION_WORDS)",
+    "heard_by_one_aligner": "a word lost on one aligner's pass and heard on the other's is listed, never blocking"
+  },
+  "joins": {
+    "min_gap_ms": 80,
+    "clearance_ms": 30,
+    "note": "Every join sits in a gap between words that every aligner agrees on, at least min_gap_ms wide, with at least clearance_ms between the join and the word on each side (F09: 2 ms fades 10 ms after a word end)."
+  },
+  "captions": {
+    "clock_tolerance_frames": 2,
+    "clock_tolerance_status": "placeholder, to be measured on Monday 26",
+    "clock_note": "Each caption page's first frame against the first word of the page as the aligner that did not draw the captions heard it in the finished audio.",
+    "min_located_fraction": 0.8,
+    "ocr_window_frames": 3,
+    "ocr_min_score": 0.98,
+    "pixel_change_threshold": 6.0,
+    "pixel_change_status": "placeholder, to be measured on Monday 26",
+    "render_note": "Caption page changes are found from pixel changes in the caption zone (mean absolute grey difference between neighbouring frames above pixel_change_threshold); OCR reads only within plus or minus ocr_window_frames of each page start; the text must match the props exactly and score at least ocr_min_score."
+  },
+  "second_aligner": {
+    "provider": "elevenlabs-scribe",
+    "model_id": "scribe_v1",
+    "enabled": false,
+    "env_flag": "MINDMAKE_SECOND_ALIGNER",
+    "env_value": "scribe",
+    "key_env": "ELEVENLABS_API_KEY",
+    "approved_by_krish": null,
+    "note": "Off by default. It runs only when enabled is true here AND the environment sets MINDMAKE_SECOND_ALIGNER=scribe AND ELEVENLABS_API_KEY is set. Turning it on needs Krish's yes on the key and the spend, in his words in approved_by_krish. With it off every gate runs on faster-whisper alone and says single aligner."
+  }
+}

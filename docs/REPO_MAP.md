@@ -40,6 +40,7 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `packages/core/`
 - `scripts/`
 - `scripts/channel-kit/`
+- `scripts/cutgates/`
 - `scripts/hooks/`
 - `scripts/overnight/`
 - `scripts/pages/`
@@ -1393,6 +1394,7 @@ The publish watcher's pure half: which piece a live Substack post is.
 - `const PUBLICATION_ARCHIVE`
 - `const WATCH_FROM`
 - `const ASK_WITHIN_HOURS`
+- `const SCHEDULE_DAYS`
 - `interface Post`
 - `interface Candidate`
 - `function normTitle(s: string | null | undefined): string`
@@ -1877,6 +1879,15 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `const config`
 - `export default withContentRun('arcs_surface', handler)`
 
+### `apps/control-plane/api/board/_archive.ts`
+
+- `const ARCHIVE_FROM`
+- `interface ArchivePiece`
+- `interface ArchiveScore`
+- `interface ArchiveRow`
+- `function archiveRows(pieces: readonly ArchivePiece[], scores: readonly ArchiveScore[]): ArchiveRow[]`
+- `async function readArchive(db: SupabaseClient): Promise<{ rows: ArchiveRow[]; scores: 'live' | 'waits_on_migration' }>`
+
 ### `apps/control-plane/api/board/_contracts.ts`
 
 - `const collections`
@@ -1894,6 +1905,9 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `const OFFDAY_ID`
 - `const DECISION_ID`
 - `const DECISION_KIND`
+- `const SCORE_ID`
+- `const SCORE_BASES`
+- `function scoreBody(id: string, body: Record<string, unknown>): boolean`
 - `const SCRIPT_CUTS`
 - `const TITLE_SURFACES`
 - `function validBody(collection: string, id: string, body: unknown): boolean`
@@ -1919,6 +1933,7 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `class PressError`
 - `async function preparePress(collection: string, id: string, body: Body): Promise<Body>`
 - `async function heldBecause(making: unknown, texts: Record<string, string>): Promise<string | null>`
+- `function scoreRow(week: string, id: string, body: Body, now: string)`
 - `function offdayDate(week: string, day: string): string`
 - `async function placeOffday(db: SupabaseClient, ctx: { week: string; id: string; body: Body; who: string; now: string })…`
 - `async function afterPress(db: SupabaseClient, ctx: { week: string; collection: string; id: string; body: Body; who: str…`
@@ -2322,10 +2337,15 @@ What the compiler looks for, as pure functions.
 - `interface WindowsHealth`
 - `const PREFLIGHT_CHECKS: readonly string[]`
 - `interface PreflightHealth`
+- `const OVERNIGHT_REASONS: readonly string[]`
+- `interface OvernightCut`
+- `interface OvernightHealth`
 - `interface LaneReport`
 - `function parseWatchHealth(value: unknown): WatchHealth | undefined`
 - `function parseWindowsHealth(value: unknown): WindowsHealth | undefined`
 - `function parsePreflightHealth(value: unknown): PreflightHealth | undefined`
+- `function parseOvernightHealth(value: unknown): OvernightHealth | undefined`
+- `function overnightReadiness(reports: readonly LaneReport[], now: number): { primary: { machine: string; ok: boolean; at…`
 - `function parseLaneReport(value: unknown, now: string): LaneReport | null`
 - `function laneKey(machine: string): string`
 - `function lanePlainProblems(reports: readonly LaneReport[], now: number): string[]`
@@ -2378,6 +2398,15 @@ What the compiler looks for, as pure functions.
 - `function libraryFileRow(value: unknown): LibraryFileRow | null`
 - `function libraryFileView(row: LibraryFileRow)`
 - `function isLibraryObjectKey(value: unknown): value is string`
+
+### `apps/control-plane/api/library/_placeTakes.ts`
+
+Takes place themselves (Wave 2, W2.3): once the Inbox job has copied a take
+
+- `const PLACE_TAKES_EVENT`
+- `const PLACE_TAKES_REPO`
+- `type PlaceTakesDispatch`
+- `async function dispatchPlaceTakes( takes: number, env: Record<string, string | undefined> = process.env, fetcher: Fetch…`
 
 ### `apps/control-plane/api/library/_recordings.ts`
 
