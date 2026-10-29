@@ -74,7 +74,7 @@ Put each new moment beside a reference moment, in motion, at full size, with sou
 ### Where it sits beside what is already here
 
 - `docs/MEDIA_STANDARD.md` and `config/media-standard.json` are the production contract (the brief, the proof, the independent review, the signed receipt); this page is the level of finish that contract is reviewed against. The references are never production inputs, and they are not among that standard's exemplars; whether they become exemplars is Krish's decision.
-- `config/rejection-floor.json` (read through `scripts/floor.py`) holds what Krish rejected, in his words, with dates: the examples of what does not fly.
+- `config/rejection-floor.json` (read through `scripts/floor.py`) holds what Krish rejected, in his words, with dates: the examples of what does not fly. A standard there binds a check once he approves or rewords it; its drafts are the engine's reading.
 - `config/ve/design-lock.json` holds the approved key frames for one ve format and one module (the two passports), matched by structural similarity. The reference cuts are never matched pixel for pixel.
 - `config/style-references.json` is the bank of styles; every style in it has to reach these aims.
 
