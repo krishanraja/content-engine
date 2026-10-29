@@ -33,6 +33,7 @@ describe('the engine gates', () => {
     ['the production run files each cut with its receipt and stops loudly when a gate holds it', ['tests/quick_edit_produce_day_test.py']],
     ['the calibrated cut gates: words on every aligner, joins in gaps, captions clock and renderer truth, receipts, the joins reel (W2.4)', ['tests/cutgates_test.py']],
     ['Claude model routing preserves strict skill validation', ['tests/validate_skills_test.py']],
+    ['the chat backstop keeps only his flagged, scrubbed lines, locally, once each (W3.3)', ['tests/taste_backstop_test.py']],
     ['the Codex token ledger: calls, tokens, child agents and the weekly limit, never words', ['tests/session_token_audit_codex_test.py']],
   ] as const) {
     it(name, () => {
