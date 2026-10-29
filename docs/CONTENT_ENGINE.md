@@ -868,8 +868,10 @@ service account, `GOOGLE_DRIVE_FOLDER_ID`); the factory
     (`docs/CADENCE.md`, `.agents/skills/plan-week`): a session writes each
     day's options with `/api/week/options`, Krish picks on the week page, and
     his Monday pick starts the making. A session that starts with `piece_id: <uuid>`
-    (Control Center's "Make it in Claude Code" button fires a Claude Code
-    routine with that line) follows `.agents/skills/make-piece/SKILL.md`:
+    (from 29 October one `make-piece.yml` run in GitHub Actions, dispatched by
+    the Sunday room or a press; Control Center's "Make it in Claude Code"
+    button still fires a routine until the Control Center item changes it to
+    dispatch that run) follows `.agents/skills/make-piece/SKILL.md`:
     workroom, fact gate, visual gate, scripts, publish page, pack, recording,
     video assets, channels. Every step is recorded on the piece with
     `python3 scripts/post-pack/making.py <uuid> ...` (`build.py` and `send.py`

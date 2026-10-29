@@ -39,7 +39,7 @@ rhythm moves over in the plan's later waves; the board's new layout (rule
 | 13:00 to 15:00 | He records all six cuts and drops each take in the Video Engine Inbox; each take is placed on its piece and cut | Krish, then the recordings lane |
 | About 15:30 | **Titles**: three options for each surface, chosen with one Sunday evening press (Krish, 2026-10-28: "Sunday evening press"). The plan, not Krish, set the time and the fallback: if he picks none by 21:30, the top-ranked ones are used | Krish |
 | Sunday night | Every final asset is made: both cuts of each piece, thumbnails and covers, each through the gates. On 1 November this runs on quick-edit in a session the titles press starts; the unattended run on the home computers is planned from 8 November | the engine |
-| Monday, 06:30 | The final publish board, built from the records, with each held item and its reason (Krish, 2026-10-28: "an overnight Codex run will actually produce me the final assets and the final publish board first thing Monday morning") | code (`week_board.py`), when the overnight production finishes |
+| Monday, 06:30 | The final publish board, built from the records, with each held item and its reason (Krish, 2026-10-28: "an overnight Codex run will actually produce me the final assets and the final publish board first thing Monday morning") | code (`week_board.py`), from the overnight runner (Wave 2; until then the first session on Monday) |
 | Monday, about 45 minutes | He watches each cut at full size, signs off the article's facts, then presses **Approve for publish** or **Reject asset** (with a reason) for each day | Krish |
 | After his approval | Growth schedules each approved post and reads it back (Krish, 2026-10-28: "Approve each day Monday") | Growth |
 
@@ -55,11 +55,14 @@ fires hours late, so the Sunday ideas run fires twice early on Saturday (UTC)
 and does nothing once the week's Ideas tab is live. The timed API calls (the
 engine's Vercel crons, inspirationhouse's daily runs, the fact gate) stay, and
 this chain's metered API spend stays under $15 a week (Krish, 2026-10-29:
-"happy with $15 a week"; about $13.80 measured, 15 to 28 October).
+"happy with $15 a week"; about $13.80 measured, 15 to 28 October). Nothing
+reads that cap back yet: the engine has no route that serves `meter_daily`
+over a week, so a weekly check against it is not built.
 
 The Sunday ideas board and the Monday final board are the only two boards a
 scheduled job may build (`AGENTS.md`, "Commit and closeout"); the Monday one
-is built by code, never by Claude on a timer. Until Krish
+is built by code (`week_board.py`) from the overnight runner (Wave 2; until
+then the first session on Monday), never by Claude on a timer. Until Krish
 says otherwise, the plan's other scheduled jobs (the Monday 07:30 repair round
 on held cuts, the 21:30 titles fallback) write records only, and the board
 shows what they did at its next build. Codex no
@@ -123,7 +126,7 @@ Times are Krish's, in New York (`system_config.operator_timezone`).
 | By hand only: the noon schedule is retired (Ruling, Krish, 2026-10-28: "record the entire week on a Sunday, but it does not go live until the Monday after (8 days later)"); the overnight runner replaces it in Wave 2 | GitHub's machine, from its Run workflow button (`.github/workflows/produce-day.yml`, `scripts/produce_day.py`; Krish, 2026-10-12: "GitHub always renders"), or `produce_day.py` on a home computer. A cut the words gate holds, or one whose receipt does not pass the delivery gates, stops the run red and sends nothing; `--file-only` files cuts already made there once their receipts pass | Waits for both takes on the day's piece, fetches them, the licensed music and the pictures from the engine, renders the story outro for the piece (each cut opens on the hook, house rule HOOK_IS_THE_INTRO), makes both cuts and their thumbnails, sends them to the post's `3 Video` folder (Library Sync puts them in Drive) and records them on the piece; a stop is one board item saying exactly what stopped. In Wave 1 no machine records a cut's review evidence, so a fresh run stops there; the session that watches both cuts records it and files them with `--file-only` | GitHub or a home computer, then a session |
 | Monday (before the midday run existed) | Codex on a home computer, or Claude Code there when he asks it (`.agents/skills/produce-video`) | Places any take still unplaced; both cuts produced opening on the hook in the brand's dress (house rule HOOK_IS_THE_INTRO, 2026-10-29; the sting and the story intro are retired), with the licensed music bed under the whole cut and a thumbnail for each size, and with the audio treatment and the one animated outro card once he approves their design (house rule STORY_INTRO_OUTRO: until then production stops before the final render, saying "story outro not designed yet"); filed in the archive and the post's library folder (`3 Video`) and onto the record | Codex |
 | Monday | The week's publish board, Monday's tab | He posts in the standing order and ticks each step as he goes; each tick is saved at once on the board, and the next making session copies each channel tick onto the piece (`making.py <piece> posted <channel>`) | Krish, then the next session |
-| When he is ready | The week page, Wednesday's and Friday's cards | "Make it in Claude Code" starts each one's making; it then follows Monday's path, on its own tab of the same week's board | Krish starts, Claude Code makes |
+| When he is ready | The week page, Wednesday's and Friday's cards | Each one's making is one `make-piece.yml` run, dispatched by the Sunday room or a press (Control Center's "Make it in Claude Code" button still fires a routine until the Control Center item changes it to dispatch that run); it then follows Monday's path, on its own tab of the same week's board | Krish starts, Claude Code makes |
 
 A day with nothing worth picking is a day with nothing picked; the options
 never force a piece.

@@ -59,7 +59,9 @@ through the engine API:
 - **The Sunday room** is a session Krish opens himself. It merges that branch
   into its own, writes the `WORKBENCH.md` lines the run could not keep (step
   7 and "Without the connectors"), does step 0's close-out, then steps 8 to
-  12.
+  12. The run only reads the Inspiration cards (through `/api/week/options`)
+  and never marks them; the room marks `routed_at` on the ones the plan took,
+  after merging the branch.
 - **Each signed piece's make** is one run of `.github/workflows/make-piece.yml`
   (step 11), never a routine.
 

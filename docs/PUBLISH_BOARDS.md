@@ -30,7 +30,8 @@ board. The Sunday ideas board is `.github/workflows/sunday-ideas.yml`: Claude
 Code inside a GitHub Actions job on his subscription (`CLAUDE_CODE_OAUTH_TOKEN`,
 never an API key), fired early on Saturday, idempotent for the week, and
 startable by hand. The Monday final board is built by code (`week_board.py`)
-when the overnight production finishes, never by Claude on a timer. Every
+from the overnight runner (Wave 2; until then the first session on Monday),
+never by Claude on a timer. Every
 other build is a session he started or a `make-piece.yml` run for a piece he
 signed. All of them write through the engine API (`ENGINE_OPERATOR_TOKEN`),
 by the same inputs below.

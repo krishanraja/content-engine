@@ -18,9 +18,18 @@ name: Make a piece
 # One-time setup (Krish): run `claude setup-token` on his own computer and add the result to this repository as the
 # Actions secret CLAUDE_CODE_OAUTH_TOKEN. Until it exists every run fails at its first step, naming that step.
 #
-# What the run commits is pushed to its own branch, claude/make-<piece>-<run>, with a pull request for review. A push
-# made with GitHub's own token starts no CI, so the pull request needs its checks started before it can merge.
+# What the run commits is pushed to its own branch, claude/make-<piece>-<run>, with a pull request. A push made with
+# GitHub's own token starts no CI, so the keep step starts CI on the branch itself (`gh workflow run ci.yml`, which
+# does start a run; its checks land on the pull request's head). Merge: by hand, once CI is green. A piece Claude made
+# with nobody watching is content, not engine work, so this run does not turn on auto-merge; whether it should
+# (AGENTS.md's auto-merge rule for engine work) is Krish's decision, and until he makes it the merge stays by hand.
 # This repository is public: Claude's full output stays out of the log (claude-code-action's default).
+#
+# The run may read untrusted web pages, so it is fenced by permissions, not by its prompt: Bash only for the named
+# engine scripts and git status, diff, add and commit (no curl, no git push, no shell), writes only under docs/plans/
+# and WORKBENCH.md, no read of /proc (where the step's secrets live), and the checkout keeps no GitHub credential
+# (persist-credentials: false). Only the keep step, after Claude has stopped, pushes, with the token passed for that
+# one command.
 
 on:
   workflow_dispatch:
@@ -38,6 +47,7 @@ concurrency:
 permissions:
   contents: write
   pull-requests: write
+  actions: write
   id-token: write
 
 jobs:
@@ -81,6 +91,7 @@ jobs:
         with:
           ref: ${{ steps.piece.outputs.ref }}
           fetch-depth: 0
+          persist-credentials: false
 
       - uses: actions/setup-node@v4
         with:
@@ -109,7 +120,8 @@ jobs:
           github_token: ${{ github.token }}
           claude_args: >-
             --max-turns 600
-            --allowedTools "Bash,Read,Write,Edit,Glob,Grep,WebSearch,WebFetch,Task,TodoWrite"
+            --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/engine.py:*),Bash(python3 scripts/post-pack/making.py:*),Bash(python3 scripts/post-pack/week_board.py:*),Bash(python3 scripts/post-pack/board_web.py:*),Bash(python3 scripts/post-pack/copy_lint.py:*),Bash(python3 scripts/post-pack/title_check.py:*),Bash(python3 scripts/post-pack/narration_diff.py:*),Bash(python3 scripts/post-pack/voice_check.py:*),Bash(python3 scripts/post-pack/story_check.py:*),Bash(python3 scripts/post-pack/ai_scan.py:*),Bash(python3 scripts/post-pack/creative_direction.py:*),Bash(python3 scripts/post-pack/edit_sweep.py:*),Bash(python3 scripts/post-pack/teleprompter_send.py:*),Bash(python3 scripts/pages/build.py:*),Bash(node vendor/makeyourmindup/kill-list/kill-list.mjs:*),Bash(git status:*),Bash(git diff:*),Bash(git log:*),Bash(git add:*),Bash(git commit:*),Read,Glob,Grep,Edit(docs/plans/**),Write(docs/plans/**),Edit(WORKBENCH.md),Write(WORKBENCH.md),WebSearch,WebFetch,Task,TodoWrite"
+            --disallowedTools "Read(//proc/**)"
           prompt: |
             piece_id: ${{ steps.piece.outputs.id }}
             Make this piece: follow .claude/skills/make-piece/SKILL.md in krishanraja/content-engine. Read the piece and
@@ -118,8 +130,10 @@ jobs:
             This run was started in GitHub Actions (.github/workflows/make-piece.yml), one fresh run for this piece.
             No one reads its chat: every question for Krish goes on the day's tab of the week's board as a press (a
             --waiting line or a comment thread), put as the question itself with your best guess, never as a message
-            here. Commit what you make on the current branch; do not push or open a pull request: the workflow pushes
-            the branch and opens one when you stop.
+            here. Run the engine scripts with python3 (the only commands this run may use besides git status, diff,
+            add and commit); every file you write goes under docs/plans/ or is WORKBENCH.md. Commit what you make on
+            the current branch; do not push or open a pull request: the workflow pushes the branch and opens one when
+            you stop.
 
       - name: Keep what the run made
         if: always()
@@ -130,8 +144,13 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           if [ -z "$(git log --oneline "origin/$BASE..HEAD" 2>/dev/null)" ]; then echo "No commits from this run."; exit 0; fi
-          git push origin "HEAD:refs/heads/$BRANCH"
+          # The checkout kept no credential, so the token is passed to this one push only.
+          auth=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)
+          git -c http.extraheader="AUTHORIZATION: basic $auth" push origin "HEAD:refs/heads/$BRANCH"
           gh pr create --base "$BASE" --head "$BRANCH" \
             --title "Make piece ${PIECE:0:8} (run ${{ github.run_id }})" \
-            --body "Made by the Make a piece run in GitHub Actions on Krish's subscription for piece $PIECE. Pushed with GitHub's own token, so start its checks before it merges." \
+            --body "Made by the Make a piece run in GitHub Actions on Krish's subscription for piece $PIECE. CI was started on the branch by the run; merge by hand once it is green." \
             || echo "::warning::The branch $BRANCH is pushed; no pull request was opened."
+          # A push with GitHub's own token starts no CI; a workflow_dispatch made with it does.
+          gh workflow run ci.yml --ref "$BRANCH" \
+            || echo "::warning::CI was not started on $BRANCH; start it from Actions > CI > Run workflow."

@@ -23,6 +23,11 @@ name: Sunday ideas
 #
 # This repository is public: Claude's full output stays out of the log (claude-code-action's default), and nothing
 # here prints a link, an idea or a source.
+#
+# The run reads untrusted web pages, so it is fenced by permissions, not by its prompt: Bash only for the named
+# engine scripts (no curl, no git push, no shell), writes only under docs/plans/, no read of /proc (where the step's
+# secrets live), and the checkout keeps no GitHub credential (persist-credentials: false). Only the keep step, after
+# Claude has stopped, pushes, with the token passed for that one command.
 
 on:
   schedule:
@@ -68,6 +73,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - uses: actions/setup-python@v5
         with:
@@ -80,7 +86,8 @@ jobs:
           WEEK: ${{ inputs.week }}
           FORCE: ${{ inputs.force }}
         run: |
-          if [ -n "$WEEK" ]; then monday="$WEEK"; else monday=$(python3 scripts/sunday_ideas.py week); fi
+          # A typed week is normalised to its YYYY-MM-DD Monday (or refused) before it names a folder or a branch.
+          if [ -n "$WEEK" ]; then monday=$(python3 scripts/sunday_ideas.py week --date "$WEEK"); else monday=$(python3 scripts/sunday_ideas.py week); fi
           state=$(python3 scripts/sunday_ideas.py built "$monday")
           echo "monday=$monday" >> "$GITHUB_OUTPUT"
           if [ "$state" = "built=true" ] && [ "$FORCE" != "true" ]; then
@@ -115,7 +122,8 @@ jobs:
           github_token: ${{ github.token }}
           claude_args: >-
             --max-turns 400
-            --allowedTools "Bash,Read,Write,Edit,Glob,Grep,WebSearch,WebFetch,Task,TodoWrite"
+            --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/engine.py:*),Bash(python3 scripts/sunday_ideas.py:*),Bash(python3 scripts/post-pack/week_board.py:*),Bash(python3 scripts/post-pack/board_web.py:*),Bash(python3 scripts/post-pack/board_feed.py:*),Bash(python3 scripts/post-pack/making.py:*),Bash(git status:*),Bash(git diff:*),Read,Glob,Grep,Edit(docs/plans/**),Write(docs/plans/**),WebSearch,WebFetch,Task,TodoWrite"
+            --disallowedTools "Read(//proc/**)"
           prompt: |
             The Sunday ideas run for the week starting Monday ${{ steps.guard.outputs.monday }}, fired by GitHub Actions
             (.github/workflows/sunday-ideas.yml). No one reads this run's chat.
@@ -127,8 +135,11 @@ jobs:
             says. Research with the built-in web search and web fetch: there is no Drive or Firecrawl connector here
             (the skill's "Without the connectors").
 
-            Of step 0 take only the Inspiration cards routed to a piece (they are ideas of his for step 2) and mark
-            the ones the plan took; the tick copy, the Teleprompter check and the lessons relay are the Sunday room's.
+            Of step 0 take only the Inspiration cards routed to a piece (they are ideas of his for step 2): read them
+            through GET /api/week/options?week_start=<Monday>&include=sources (python3 scripts/engine.py), and do not
+            mark them; the Sunday room marks routed_at after it merges this run's branch. The tick copy, the
+            Teleprompter check and the lessons relay are the Sunday room's too. Run the engine scripts with python3
+            (the only commands this run may use); every file you write goes under docs/plans/.
             Never write anything else: no triage readback, no interview, no narrative lock, no make, no Teleprompter,
             no day tab, no pick, no draft, no spend beyond this run. Stop
             after step 7. Never patch the built page. Leave docs/plans/<Monday>-week/ (ideas.json, combine.json) on
@@ -152,6 +163,7 @@ jobs:
         env:
           MONDAY: ${{ steps.guard.outputs.monday }}
           RUN_ID: ${{ github.run_id }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           folder="docs/plans/$MONDAY-week"
           [ -d "$folder" ] || { echo "::warning::No $folder was written."; exit 0; }
@@ -163,5 +175,7 @@ jobs:
           git commit -q -m "Sunday ideas for the week of $MONDAY (run $RUN_ID)" \
             -m "Written by the Sunday ideas run in GitHub Actions on Krish's subscription; the Sunday room merges it." \
             -m 'Ruling (Krish, 2026-10-29): "FYI, I want zero Claude routines. No Claude schedules of any kind in this architecture"'
-          git push origin "HEAD:refs/heads/sunday-ideas/$MONDAY-$RUN_ID"
+          # The checkout kept no credential, so the token is passed to this one push only.
+          auth=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)
+          git -c http.extraheader="AUTHORIZATION: basic $auth" push origin "HEAD:refs/heads/sunday-ideas/$MONDAY-$RUN_ID"
           echo "::notice::The week's ideas are on the branch sunday-ideas/$MONDAY-$RUN_ID."

@@ -8,6 +8,7 @@ the job on his subscription. GitHub's cron fires hours late, so the workflow has
 this guard makes every firing after the first one that built the Ideas tab do nothing.
 
     python3 scripts/sunday_ideas.py week [--today YYYY-MM-DD]   # the Monday the run plans
+    python3 scripts/sunday_ideas.py week --date YYYY-MM-DD      # a typed Monday, checked and printed as YYYY-MM-DD
     python3 scripts/sunday_ideas.py built MONDAY                 # built=true once the Ideas tab is live
 
 The week: Krish records the whole week on the Sunday and it goes live eight days later (plan-week, "The Sunday
@@ -21,6 +22,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import re
 import sys
 import urllib.request
 from pathlib import Path
@@ -39,6 +41,17 @@ def target_monday(today: dt.date) -> dt.date:
     otherwise the coming Sunday."""
     sunday = today + dt.timedelta(days=(6 - today.weekday()) % 7)
     return sunday + dt.timedelta(days=8)
+
+
+def monday_arg(text: str) -> dt.date:
+    """A typed Monday, exactly YYYY-MM-DD. fromisoformat alone also takes '20261109' and '2026-W46-1' on Python 3.11
+    and later, and the typed text names a folder and a branch, so anything but the plain form is refused."""
+    if not re.fullmatch(r'\d{4}-\d{2}-\d{2}', text or ''):
+        raise ValueError(f'{text!r} is not a date written YYYY-MM-DD')
+    day = dt.date.fromisoformat(text)
+    if day.weekday() != 0:
+        raise ValueError(f'{text} is not a Monday')
+    return day
 
 
 def has_ideas(page: str) -> bool:
@@ -64,16 +77,21 @@ def main() -> int:
     sub = parser.add_subparsers(dest='command', required=True)
     week = sub.add_parser('week')
     week.add_argument('--today', help='YYYY-MM-DD; default: today in New York')
+    week.add_argument('--date', help='a typed Monday, YYYY-MM-DD: checked and printed in that form')
     done = sub.add_parser('built')
     done.add_argument('monday')
     args = parser.parse_args()
-    if args.command == 'week':
-        today = dt.date.fromisoformat(args.today) if args.today else dt.datetime.now(NEW_YORK).date()
-        print(target_monday(today).isoformat())
-        return 0
-    monday = dt.date.fromisoformat(args.monday)
-    if monday.weekday() != 0:
-        print(f'sunday ideas: {args.monday} is not a Monday', file=sys.stderr)
+    try:
+        if args.command == 'week' and args.date:
+            print(monday_arg(args.date).isoformat())
+            return 0
+        if args.command == 'week':
+            today = dt.date.fromisoformat(args.today) if args.today else dt.datetime.now(NEW_YORK).date()
+            print(target_monday(today).isoformat())
+            return 0
+        monday = monday_arg(args.monday)
+    except ValueError as error:
+        print(f'sunday ideas: {error}', file=sys.stderr)
         return 2
     try:
         print(f'built={"true" if built(monday.isoformat()) else "false"}')

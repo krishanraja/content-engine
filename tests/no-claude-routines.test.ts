@@ -28,6 +28,12 @@ function files(dir: string, keep: (path: string) => boolean): string[] {
 
 const WORKFLOWS = files('.github/workflows', (p) => /\.ya?ml$/.test(p))
 const SKILLS = [...files('.agents/skills', () => true), ...files('.claude/skills', () => true)]
+// Code that could call the triggers API itself: the scripts and the engine's routes.
+const CODE = [...files('scripts', (p) => /\.(py|ts|mts|mjs|cjs|js|ps1|sh|cmd|bat)$/.test(p) && !/node_modules/.test(p)),
+  ...files('apps/control-plane/api', (p) => /\.(ts|mts|js)$/.test(p))]
+// The only secrets a workflow that runs Claude Code may name: his subscription, the board, and GitHub's own token.
+const CLAUDE_SECRETS = new Set(['CLAUDE_CODE_OAUTH_TOKEN', 'ENGINE_OPERATOR_TOKEN', 'GITHUB_TOKEN'])
+const runsClaude = (text: string) => /anthropics\/claude-code-action|\bclaude\s+(?:-p|--print)\b|npx\s+@anthropic-ai\/claude-code/.test(text)
 
 // What creates, changes or fires a Claude routine: the claude.ai triggers API and its tools, and the routine id the
 // old "Make it in Claude Code" press fired.
@@ -54,9 +60,10 @@ describe('zero Claude routines (Krish, 2026-10-29)', () => {
     expect(ROUTINE.some((p) => p.test('POST https://api.anthropic.com/v1/code/triggers/trig_1/run'))).toBe(true)
   })
 
-  it('no workflow or skill creates, changes or fires a Claude routine', () => {
+  it('no workflow or skill creates, changes or fires a Claude routine, nor does a script or an engine route', () => {
+    expect(CODE).toEqual(expect.arrayContaining(['scripts/engine.py', 'scripts/sunday_ideas.py', 'apps/control-plane/api/week/options.ts']))
     const found: string[] = []
-    for (const path of [...WORKFLOWS, ...SKILLS]) {
+    for (const path of [...WORKFLOWS, ...SKILLS, ...CODE]) {
       const text = read(path)
       for (const pattern of ROUTINE) if (pattern.test(text)) found.push(`${path}: ${pattern}`)
     }
@@ -64,7 +71,7 @@ describe('zero Claude routines (Krish, 2026-10-29)', () => {
   })
 
   it('every workflow that runs Claude Code runs it on CLAUDE_CODE_OAUTH_TOKEN, never an API key', () => {
-    const claude = WORKFLOWS.filter((path) => /anthropics\/claude-code-action|\bclaude\s+(?:-p|--print)\b|npx\s+@anthropic-ai\/claude-code/.test(read(path)))
+    const claude = WORKFLOWS.filter((path) => runsClaude(read(path)))
     expect(claude).toEqual(expect.arrayContaining(['.github/workflows/sunday-ideas.yml', '.github/workflows/make-piece.yml']))
     for (const path of WORKFLOWS) {
       const text = read(path)
@@ -81,7 +88,41 @@ describe('zero Claude routines (Krish, 2026-10-29)', () => {
       expect(text.indexOf('if [ -z "$CLAUDE_CODE_OAUTH_TOKEN" ]')).toBeLessThan(text.indexOf('anthropics/claude-code-action'))
       // Never permissions bypassed in an unattended run.
       expect(text).not.toMatch(/dangerously-skip-permissions|bypassPermissions/)
+      // No other secret reaches it: a key under another name would pass the API_KEY patterns.
+      const named = [...text.matchAll(/secrets\.([A-Za-z0-9_]+)/g)].map((m) => m[1]!)
+      expect(named.filter((name) => !CLAUDE_SECRETS.has(name)), path).toEqual([])
     }
+  })
+
+  it('an unattended Claude step is fenced by permissions: no bare Bash, Write or Edit, no /proc, no kept GitHub credential', () => {
+    const claude = WORKFLOWS.filter((path) => runsClaude(read(path)))
+    expect(claude.length).toBeGreaterThan(0)
+    for (const path of claude) {
+      const text = read(path)
+      const lists = [...text.matchAll(/--allowedTools\s+"([^"]*)"/g)].map((m) => m[1]!)
+      expect(lists.length, `${path}: each Claude Code step names its tools`).toBe((text.match(/uses:\s*anthropics\/claude-code-action@/g) || []).length)
+      for (const list of lists) {
+        const tools = list.split(',').map((tool) => tool.trim())
+        // A bare Bash lets a prompt injection on a fetched page run curl with the step's secrets, or git push.
+        for (const bare of ['Bash', 'Write', 'Edit', 'MultiEdit', 'NotebookEdit']) expect(tools, `${path}: bare ${bare}`).not.toContain(bare)
+        expect(tools.filter((tool) => /^Bash\((?:curl|wget|sh|bash|env|printenv|git push|git config|gh|npx|npm|node -e|python3? -c)\b/.test(tool)), path).toEqual([])
+      }
+      expect(text, path).toContain('--disallowedTools "Read(//proc/**)"')
+      // Every checkout leaves no token in .git/config for Claude to push with.
+      const checkouts = text.match(/uses:\s*actions\/checkout@\S+/g) || []
+      expect((text.match(/^\s+persist-credentials:\s*false\s*$/gm) || []).length, path).toBe(checkouts.length)
+    }
+    // The check catches what it is for: the tool list both runs had until 29 October.
+    const old = 'Bash,Read,Write,Edit,Glob,Grep,WebSearch,WebFetch,Task,TodoWrite'.split(',')
+    expect(['Bash', 'Write', 'Edit'].filter((bare) => old.includes(bare))).toHaveLength(3)
+  })
+
+  it('a make run starts CI on its branch, since a push with GitHub\'s own token starts none', () => {
+    expect(read('.github/workflows/ci.yml')).toMatch(/^\s+workflow_dispatch:/m)
+    const text = read('.github/workflows/make-piece.yml')
+    expect(text).toContain('gh workflow run ci.yml --ref "$BRANCH"')
+    expect(text).toMatch(/permissions:[\s\S]*actions: write/)
+    expect(text).not.toMatch(/gh pr merge/)
   })
 
   it('the Sunday ideas run is idempotent, fires early on Saturday, and can be started by hand', () => {
@@ -120,8 +161,17 @@ for d in ('2026-10-31', '2026-11-01', '2026-10-27'):
 print(s.has_ideas(w.ideas_waiting_panel(w.monday_of('2026-11-09'), False)))
 import inspect
 print(s.IDEAS_LIVE in inspect.getsource(w.ideas_panel))
+print(s.monday_arg('2026-11-09').isoformat())
+for typed in ('20261109', '2026-W46-1', '2026-11-10', ''):
+    try:
+        s.monday_arg(typed); print('taken', typed)
+    except ValueError:
+        print('refused')
 `)
     expect(run.stderr).toBe('')
-    expect(run.stdout.trim().split('\n')).toEqual(['2026-11-09', '2026-11-09', '2026-11-09', 'False', 'True'])
+    expect(run.stdout.trim().split('\n')).toEqual(['2026-11-09', '2026-11-09', '2026-11-09', 'False', 'True', '2026-11-09',
+      'refused', 'refused', 'refused', 'refused'])
+    // The workflow puts the normalised Monday, never the typed text, into its output.
+    expect(read('.github/workflows/sunday-ideas.yml')).toContain('monday=$(python3 scripts/sunday_ideas.py week --date "$WEEK")')
   })
 })
