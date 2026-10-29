@@ -333,11 +333,14 @@ class CompileTest(unittest.TestCase):
 
     def test_status_blocks_missing_sfx(self):
         spec = load_json(FIXTURE / 'spec.json')
+        report = {'sfx_missing': ['event'], 'blocking': False, 'file': 'missing',
+                  'sha256': 'hash', 'measured_pass': True, 'complete': True}
+        # ve status and ve file share packet.readiness, which reads compile.<cut>.json through verdict.read.
         with patch('velib.lint.lint', return_value=(spec, [])), \
                 patch('ve.spec_path_for', return_value=Path('spec.json')), \
                 patch('ve.Path.exists', side_effect=lambda: True), \
-                patch('ve.load_json', return_value={'sfx_missing': ['event'], 'blocking': False, 'file': 'missing',
-                                                   'sha256': 'hash', 'measured_pass': True, 'complete': True}), \
+                patch('ve.load_json', return_value=report), \
+                patch('velib.packet.verdict.read', return_value=report), \
                 patch('velib.common.sha256_file', return_value='hash'), redirect_stdout(io.StringIO()) as output:
             self.assertEqual(ve.cmd_status(Namespace(piece='piece')), 1)
         self.assertIn('sfx kit missing', output.getvalue())

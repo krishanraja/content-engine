@@ -1,0 +1,37 @@
+@font-face{font-family:Anton;src:url(file:///home/user/content-engine/assets/fonts/makeyourmindup/Anton-Regular.ttf)}
+@font-face{font-family:Archivo;src:url(file:///home/user/content-engine/assets/fonts/makeyourmindup/Archivo-Variable.ttf);font-weight:100 900}
+@font-face{font-family:Fraunces;font-style:italic;src:url(file:///home/user/content-engine/assets/fonts/makeyourmindup/Fraunces-Italic-Variable.ttf)}
+@font-face{font-family:Plex;src:url(file:///home/user/content-engine/assets/fonts/makeyourmindup/IBMPlexMono-Medium.ttf)}
+@font-face{font-family:Plex;font-weight:700;src:url(file:///home/user/content-engine/assets/fonts/makeyourmindup/IBMPlexMono-Bold.ttf)}
+:root{--bg:#F4EFE4;--ink:#0C1512;--card:#fffdf8;--line:#d9d2c3;--muted:#5b625e;--mint:#7EF0C0;--ok:#1f7a52;--bad:#b0412e;
+  --butter:#FFD84D;--lilac:#B7A6FF;--coral:#FF6A4D}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--ink);font:400 15px/1.45 Archivo,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.mono{font-family:Plex,ui-monospace,monospace}
+.mockbar{font:500 11px/1 Plex,monospace;letter-spacing:.04em;text-transform:uppercase;background:var(--ink);color:var(--bg);padding:6px 16px;display:flex;justify-content:space-between}
+button{font:inherit;cursor:pointer}
+/* Mock thumbnails */
+.thumb{background:var(--ink);border-radius:10px;padding:10px;display:flex;flex-direction:column;justify-content:space-between;color:var(--bg);position:relative;overflow:hidden;flex:none}
+.thumb::before{content:'';position:absolute;left:0;top:0;bottom:0;width:6px;background:var(--tc)}
+.thumb .tk{font:700 9px/1 Plex,monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--tc)}
+.thumb .th{font:400 14px/1.05 Anton,Impact,sans-serif;letter-spacing:.01em;text-transform:uppercase}
+.thumb-s{width:56px;height:70px;padding:6px 6px 6px 10px}.thumb-s .th{font-size:8.5px}.thumb-s .tk{font-size:7px}
+.thumb-m{width:96px;height:120px}.thumb-m .th{font-size:12px}
+.thumb-l{width:100%;aspect-ratio:4/5}.thumb-l .th{font-size:20px}
+/* Channel chips */
+.chip{display:inline-flex;align-items:center;gap:6px;font:500 11.5px/1 Plex,monospace;border:1px solid var(--line);border-radius:999px;padding:6px 9px;background:var(--card);white-space:nowrap}
+.chip i{width:7px;height:7px;border-radius:50%;background:#bdb6a6;flex:none}
+.chip b{font-weight:700;margin-left:2px}
+.st-scheduled i{background:var(--ok)}.st-live i{background:var(--mint);box-shadow:0 0 0 2px #0C151222}
+.st-live{border-color:#0C151233}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.pill{display:inline-block;font:700 10px/1 Plex,monospace;letter-spacing:.06em;text-transform:uppercase;padding:5px 8px;border-radius:999px;color:var(--ink)}
+.status{font:700 10.5px/1 Plex,monospace;letter-spacing:.05em;text-transform:uppercase}
+.tone-ask{color:var(--bad)}.tone-ok{color:var(--ok)}.tone-quiet{color:var(--muted)}.tone-live{color:var(--ink)}
+.btn{min-height:44px;padding:0 16px;border-radius:12px;border:1.5px solid var(--ink);background:var(--ink);color:var(--bg);font-weight:700;font-size:14px}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.mint{background:var(--mint);border-color:var(--mint);color:var(--ink)}
+.feel{display:inline-flex;gap:6px}
+.feel button{min-width:44px;height:44px;padding:0 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--card);font:700 11px/1 Plex,monospace;text-transform:uppercase}
+.dek{font:italic 400 17px/1.3 Fraunces,Georgia,serif}
+h1,.display{font:400 30px/1 Anton,Impact,sans-serif;letter-spacing:.01em;text-transform:uppercase}

@@ -113,8 +113,12 @@ def _params(params: dict, source) -> dict:
     return visit(params)
 
 
-def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Path, *, report: dict | None = None) -> dict:
-    """Return EngineRenderProps without writing files or changing the spec."""
+def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Path, *, report: dict | None = None,
+                edl: dict | None = None) -> dict:
+    """Return EngineRenderProps without writing files or changing the spec.
+
+    With an EDL from ve conform (already through its F09 lint), the source edits are applied: the words are the
+    conformed clock and the picture is the conformed take, rendered from the same graph as the dialogue."""
     pending_error = pending_devices_error(spec['format'])
     if pending_error:
         raise ValueError(pending_error)
@@ -122,7 +126,13 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     # These words already describe the dialogue master's final clock. Do not
     # silently apply source edits a second time, or retime only the picture.
     edit = cut.get('edit', {})
-    if edit.get('remove') or edit.get('speed', 1) != 1:
+    if edl is not None:
+        if edl.get('piece') != spec['piece_id'] or edl.get('cut') != cut_id:
+            raise ValueError('the EDL is for a different piece or cut')
+        if (edl.get('edit', {}).get('remove') != edit.get('remove', []) or edl.get('speed') != edit.get('speed', 1)
+                or edl.get('edit', {}).get('speed_said') != edit.get('speed_said')):
+            raise ValueError("the EDL's edit differs from the spec's approved edit: run ve conform again")
+    elif edit.get('remove') or edit.get('speed', 1) != 1:
         raise ValueError('compile needs a cut-ready dialogue master; source edits must be conformed before compilation')
     assets_dir = Path(assets_dir).resolve()
 
@@ -266,7 +276,10 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
                          'words': [{'text': word['text'], 'atFrame': word['atFrame']} for word in group],
                          'swipeIndex': hits[0] if hits else None})
     assets = {asset['id']: asset for asset in spec.get('assets', [])}
-    take = resolve_source(assets[cut['take']]['path'] if cut['take'] in assets else cut['take'])
+    if edl is not None:
+        take = resolve_source(edl['conformed']['picture'])
+    else:
+        take = resolve_source(assets[cut['take']]['path'] if cut['take'] in assets else cut['take'])
     props = {
         'pieceId': spec['piece_id'], 'cutId': cut_id, 'format': spec['format'], 'aspect': cut['aspect'],
         'fps': FPS, 'durationFrames': duration,
@@ -297,6 +310,10 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     props['audio']['sfx'] = sfx
     if report is not None:
         report.update(lint='clean', sfx_missing=missing, opening=OPENING)
+        if edl is not None:
+            report['edl'] = {'cut': cut_id, 'joins_s': [join['at_s'] for join in edl.get('joins', [])],
+                             'duration_frames': edl.get('duration_frames'),
+                             'picture_short_frames': max(0, duration - int(edl.get('duration_frames') or 0))}
     if spec.get('call') and not cut.get('excerpt', False):
         props['ending'] = {'fromFrame': duration, 'url': props['series']['site']}
         if spec.get('style', {}).get('ending_ticker') is False:

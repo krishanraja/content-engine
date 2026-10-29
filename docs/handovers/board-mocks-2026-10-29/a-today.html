@@ -1,0 +1,80 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Board mock A</title><link rel="stylesheet" href="base.css">
+<style>
+.wrap{max-width:1180px;margin:0 auto;padding:20px 16px 48px}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:18px}
+header .range{font:500 12px/1.2 Plex,monospace;color:var(--muted);margin-top:6px}
+.weeks{display:flex;gap:4px;background:#e9e2d3;border-radius:12px;padding:4px}
+.weeks a{font:700 12px/1 Plex,monospace;padding:10px 12px;border-radius:9px;color:var(--ink);text-decoration:none}
+.weeks a.on{background:var(--card);box-shadow:0 1px 2px #0002}
+.grid{display:grid;gap:22px}
+@media(min-width:960px){.grid{grid-template-columns:380px 1fr;align-items:start}.asks{position:sticky;top:16px}}
+.sect{font:700 11px/1 Plex,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 10px;display:flex;justify-content:space-between}
+.asks .q{background:var(--ink);color:var(--bg);border-radius:18px;padding:16px}
+.asks .q .sect{color:#a9b4ae}
+.ask{display:flex;gap:12px;align-items:center;padding:12px 0;border-top:1px solid #2b3832}
+.ask:first-of-type{border-top:0}
+.ask .n{font:400 22px/1 Anton;color:var(--mint);width:20px}
+.ask .w{flex:1;min-width:0}.ask .w b{display:block;font-weight:700;font-size:15px}.ask .w span{font-size:13px;color:#c9d1cc}
+.ask .btn{background:var(--mint);border-color:var(--mint);color:var(--ink);padding:0 12px;font-size:13px;white-space:nowrap}
+.note{margin-top:12px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-size:13.5px}
+.done{margin-top:12px;font-size:13px;color:var(--muted)}
+.done li{list-style:none;padding:6px 0;border-top:1px dashed var(--line);display:flex;gap:8px}
+.done ul{padding:0}.done i{font-style:normal;color:var(--ok)}
+.strip{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:14px}
+.strip a{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 0;border-radius:12px;background:var(--card);border:1px solid var(--line);text-decoration:none;color:var(--ink)}
+.strip a b{font:700 11px/1 Plex,monospace;text-transform:uppercase}.strip a span{font-size:11px;color:var(--muted)}
+.strip a.today{border:2px solid var(--ink)}
+.dots{display:flex;gap:3px;height:6px}.dots i{flex:none;width:6px;height:6px;border-radius:50%;background:#c9c2b2}.dots i.ask{background:var(--bad)}.dots i.live{background:var(--mint);outline:1px solid #0C151233}.dots i.piece{border-radius:2px}
+.day{background:var(--card);border:1px solid var(--line);border-radius:16px;margin-bottom:10px;overflow:hidden}
+.day h3{display:flex;align-items:center;gap:8px;padding:12px 14px;font:700 13px/1 Plex,monospace;text-transform:uppercase;border-bottom:1px solid var(--line)}
+.day h3 .d{color:var(--muted);font-weight:500}.day h3 .sp{flex:1}
+.row{display:flex;gap:12px;padding:12px 14px;border-top:1px solid var(--line)}
+.row:first-of-type{border-top:0}
+.row .body{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+.row .t{font-weight:700;font-size:15px;line-height:1.25}
+.row .meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font:500 11.5px/1 Plex,monospace;color:var(--muted)}
+.row.askrow{background:#fff4ef}
+.row .acts{display:flex;gap:8px;margin-top:2px}
+.lane{display:flex;gap:2px;margin-top:2px}
+.lane span{flex:1;font:700 9.5px/1 Plex,monospace;text-transform:uppercase;letter-spacing:.04em;padding:6px 0;text-align:center;background:#ece6d9;color:#8b8f89}
+.lane span:first-child{border-radius:6px 0 0 6px}.lane span:last-child{border-radius:0 6px 6px 0}
+.lane span.done{background:#d6efe3;color:var(--ok)}.lane span.now{background:var(--ink);color:var(--mint)}
+.wait{font-size:12.5px;color:var(--bad)}
+.empty{padding:12px 14px;font-size:13px;color:var(--muted)}
+</style></head><body>
+<div class="mockbar"><span>Mock A · Today first</span><span>Synthetic data</span></div>
+<div class="wrap" id="app"></div>
+<script src="data.js"></script>
+<script>
+const dots = d => (d.posts||[]).map(p => `<i class="${p.status==='concept'?'ask':p.status==='live'?'live':''} ${p.kind==='piece'?'piece':''}"></i>`).join('')
+const lane = pc => `<div class="lane">${STAGES.map((s,i)=>`<span class="${i<pc.stage?'done':i===pc.stage?'now':''}">${s}</span>`).join('')}</div>`
+const row = (d,p) => {
+  const st = STATUS[p.status], isPiece = p.kind==='piece'
+  return `<div class="row ${p.status==='concept'?'askrow':''}">${thumb(p,d,'s')}<div class="body">
+    <div class="meta">${isPiece?`<span class="pill" style="background:${SERIES[d.piece.series].color}">${SERIES[d.piece.series].label}</span>`:`<span>${KINDS[p.kind].glyph} ${KINDS[p.kind].label}</span>`}<span>${p.time}</span><span class="status tone-${st.tone}">${st.label}</span></div>
+    <div class="t">${E(p.title)}</div>
+    ${isPiece?lane(d.piece)+(d.piece.blocked?`<div class="wait">Waiting: ${E(d.piece.blocked)}</div>`:''):''}
+    <div class="chips">${p.channels.map(chip).join('')}</div>
+    ${p.status==='concept'?`<div class="acts"><button class="btn mint">Approve</button><button class="btn ghost">Skip</button></div>`:''}
+  </div></div>`
+}
+const askIcon = {approve:'✓', feel:'♥'}
+document.getElementById('app').innerHTML = `
+<header><div><h1>${W.label}</h1><div class="range">${W.range}</div></div>
+<nav class="weeks"><a href="?week=this" class="${weekKey==='this'?'on':''}">This week</a><a href="?week=next" class="${weekKey==='next'?'on':''}">Next week</a></nav></header>
+<div class="grid">
+ <aside class="asks"><div class="q"><div class="sect"><span>Needs you</span><span>${W.asks.length} asks · about 1 min</span></div>
+  ${W.asks.map((a,i)=>`<div class="ask"><span class="n">${i+1}</span><div class="w"><b>${E(a.what)}</b><span>${E(a.detail)}</span></div><button class="btn">${E(a.cta)}</button></div>`).join('')}
+ </div>
+ <div class="note">${E(W.note)}</div>
+ <div class="done"><div class="sect"><span>Done by the engine</span><span>Growth reports</span></div><ul>
+  ${W.days.flatMap(d=>d.posts.filter(p=>p.status==='live').map(p=>`<li><i>●</i>${d.name} ${p.time} · ${E(KINDS[p.kind].label)} live on ${p.channels.length} channels</li>`)).join('') || '<li>Nothing live yet this week</li>'}
+ </ul></div></aside>
+ <main>
+  <div class="strip">${W.days.map(d=>`<a href="#${d.key}" class="${W.today===d.key?'today':''}"><b>${d.name}</b><span>${d.date.split(' ')[0]}</span><div class="dots">${dots(d)}</div></a>`).join('')}</div>
+  ${W.days.map(d=>`<section class="day" id="${d.key}"><h3>${d.name} <span class="d">${d.date}</span><span class="sp"></span>${W.today===d.key?'<span class="pill" style="background:var(--mint)">Today</span>':''}<span class="feel"><button aria-label="Liked it">Liked</button><button aria-label="Disliked it">Not it</button></span></h3>
+   ${d.posts.map(p=>row(d,p)).join('')}</section>`).join('')}
+ </main>
+</div>`
+</script></body></html>
