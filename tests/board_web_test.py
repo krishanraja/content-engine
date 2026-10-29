@@ -176,4 +176,25 @@ class BoardWebTests(unittest.TestCase):
             self.assertEqual([kind for kind, _, _ in files],['export','html'])
             self.assertFalse((path.parent/'board-original.json').exists())
 
+class TeleprompterNamesTests(unittest.TestCase):
+    """The Approve scripts card names the folder and scripts as teleprompter_send.py does, so the server's send and a
+    session's send find the same folder (Krish, 2026-10-12: "One script per cut, in a folder per piece")."""
+    def test_names_come_from_the_post_as_the_session_reads_them(self):
+        import teleprompter_send as tps
+        from datetime import date
+        piece = 'f328382d-71b3-41a7-a221-d8615826f12e'  # docs/plans/2026-10-12-monday/post.json
+        names = tps.names_from_post(json.loads((ROOT/'docs/plans/2026-10-12-monday/post.json').read_text(encoding='utf-8-sig')))
+        folder, titles, subject = week_board.tp_names(piece, date(2026, 10, 19), 'follow.the.money', 'A different board subject', ['long', 'short'])
+        self.assertEqual(folder, tps.folder_name(names))
+        self.assertEqual(folder, 'Mon 12 Oct follow.the.money - Who gets paid for AI songs')
+        self.assertEqual(titles, {c: tps.script_title(names, c, tps.load_config()) for c in ('long', 'short')})
+        self.assertEqual(subject, 'Who gets paid for AI songs')
+
+    def test_without_a_post_the_board_names_them_and_says_when_nothing_does(self):
+        from datetime import date
+        piece = '00000000-0000-4000-8000-000000000000'
+        folder, titles, _ = week_board.tp_names(piece, date(2026, 11, 9), 'follow.the.money', 'Who pays for AI pictures. And why.', ['long'])
+        self.assertEqual((folder, titles), ('Mon 9 Nov follow.the.money - Who pays for AI pictures. And why', {'long': 'Mon 9 Nov - 5-minute - Who pays for AI pictures. And why'}))
+        self.assertEqual(week_board.tp_names(piece, date(2026, 11, 9), 'follow.the.money', '', ['long']), (None, {}, ''))
+
 if __name__ == '__main__': unittest.main()

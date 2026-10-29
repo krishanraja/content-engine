@@ -100,14 +100,22 @@ def weeks(tmp):
                            'gates': [{'where': 'Wednesday, Five-minute script', 'check': 'story_check', 'ok': True, 'problems': []}]})
     lessons = wb.read_lessons([{'id': 'lesson-1', 'assertion': 'On the publish board Krish made 3 number or fact edits in 28 days.',
                                 'evidence_count': 3, 'kind': 'number_fact', 'status': 'proposed'}])
+    # Krish's presses (Krish, 2026-10-28): the off days on Sunday, and Titles, Approve scripts, Approve for publish and
+    # Reject asset in the week.
+    opt = lambda k, n: {'id': f'o{n}', 'format': ('meme', 'news carousel', 'level-up move')[n - 1], 'source': 'A cue',
+                        'copy': f'The draft copy for {k} option {n}.'}
+    offdays = wb.read_offdays({k: [opt(k, n) for n in (1, 2)] for k, *_ in wb.OFF_DAYS})
+    titles = {'wed': wb.read_titles({'piece_id': wb.WED_ID, 'long_title': ['Who pays for a free AI picture', 'Free AI pictures are not free'],
+                                     'short_title': ['Who pays?'], 'long_thumbnail': ['WHO PAYS'], 'short_thumbnail': ['WHO PAYS']})}
     out = {'empty': wb.board(monday)[0],
-           'sunday': wb.board(monday, ideas=ideas, queue=queue, combine=combine)[0],
+           'sunday': wb.board(monday, ideas=ideas, queue=queue, combine=combine, offdays=offdays)[0],
            'midweek': wb.board(monday, {'mon': mon}, {'mon': wb.MON_ID, 'wed': wb.WED_ID, 'fri': wb.FRI_ID},
                                review={'wed': [('article', 'Article draft', '# The heading\n\nWords.\n\nMore words here.'),
                                                ('long', 'Five-minute script', 'Said.')]},
                                videos={'mon': [video('long', 'a', 305), video('short', 'c', 86)]},
                                draft={'wed'}, calls={'wed': ['A call to make']}, queue=queue, ideas=ideas,
-                               briefs={'wed': brief, 'fri': dict(brief, agreed=False)}, sweeps={'wed': sweep}, lessons=lessons)[0]}
+                               briefs={'wed': brief, 'fri': dict(brief, agreed=False)}, sweeps={'wed': sweep}, lessons=lessons,
+                               titles=titles, manifests={'mon': 'd' * 64})[0]}
     return out
 
 
@@ -154,6 +162,13 @@ def structure(page):
     combo = re.search(r'<article class="q-combo".*?</article>', queue, re.S)
     if combo:
         out['combine_card'] = blocks(combo.group(0)[combo.group(0).index('>') + 1:-len('</article>')])
+    # The off days on the Ideas tab, and what one option holds (Krish, 2026-10-28).
+    off = re.search(r'<section class="off-days".*?</section>', page, re.S)
+    if off:
+        out['offdays'] = blocks(off.group(0)[off.group(0).index('>') + 1:-len('</section>')])
+    card = re.search(r'<article class="off-card".*?</article>', page, re.S)
+    if card:
+        out['offday_card'] = blocks(card.group(0)[card.group(0).index('>') + 1:-len('</article>')])
     return out
 
 
@@ -254,6 +269,9 @@ def browser(pages, tmp):
                             or sorted(hit[0].get('members') or []) != sorted([wb.FRI_ID, wb.WED_ID])):
                         problems.append(f'sunday: tapping Combine did not save queue/combine-1 with its members ({saved})')
                 page.unroute(re.compile(r'^https://board\.test/'))
+                problems += presses_in_browser(page, web)
+            if name == 'midweek':
+                problems += decisions_in_browser(page, web)
         if errors:
             problems.append(f'page errors: {errors[:3]}')
         b.close()
@@ -353,6 +371,146 @@ def editor_in_browser(page, web):
         bar = text_once(page, '.rv-save[data-save-day="wed"] .rv-count', 'Not saved')
         if not bar.startswith('Not saved'):
             problems.append(f'midweek: a save that met another session\'s is not said ({bar!r})')
+    finally:
+        page.unroute(re.compile(r'^https://board\.test/'))
+    return problems
+
+
+def board_api(page, web, name, saved, answer=None):
+    """Serve one fed board and its store at https://board.test, keeping each write in saved as (path, body); answer(path,
+    body) may give the server's own answer to a write (a press's send or inbox)."""
+    week = wb.LAYOUT_FROM.isoformat()
+    docs = {}
+
+    def api(route):
+        req = route.request
+        path = req.url.split('board.test', 1)[1].split('?')[0]
+        if path == f'/{name}.html':
+            return route.fulfill(status=200, content_type='text/html', body=web)
+        if req.method == 'PUT':
+            body = json.loads(req.post_data or '{}').get('body')
+            saved.append((path, body))
+            extra = (answer(path, body) if answer else None) or {}
+            body = dict(body, **extra.pop('body', {}))
+            collection, doc = path.split('/')[-2:]
+            docs.setdefault(collection, {})[doc] = body
+            return route.fulfill(status=200, content_type='application/json', body=json.dumps({'ok': True, 'revision': 1, 'body': body, **extra}))
+        collection = path.rsplit('/', 1)[-1]
+        documents = [{'id': k, 'revision': 1, 'updated_by': 'Krish', 'body': v} for k, v in docs.get(collection, {}).items()]
+        reply = {'ok': True, 'weeks': [week]} if path == '/api/board/weeks' else {'ok': True, 'documents': documents, 'next_offset': None}
+        return route.fulfill(status=200, content_type='application/json', body=json.dumps(reply))
+    page.route(re.compile(r'^https://board\.test/'), api)
+    return week
+
+
+def presses_in_browser(page, web):
+    """His presses on the Ideas tab by touch (Krish, 2026-10-28): Reject an idea, saved only once he says why; take a
+    press back; Next week for the Monday after; a note on his pick; and Approve on an off-day option, bound to its
+    copy."""
+    saved, problems = [], []
+    week = board_api(page, web, 'sunday', saved)
+    nxt = (wb.LAYOUT_FROM + timedelta(days=7)).isoformat()
+    last = lambda path: next((b for p, b in reversed(saved) if p == f'/api/board/{week}/{path}'), None)
+    try:
+        page.goto('https://board.test/sunday.html#ideas')
+        page.wait_for_selector('[data-press="not_for_us"][data-for="mon-1"]:not([disabled])', timeout=5000)
+        # Reject asks for his reason first and saves nothing until he gives one (the board refuses a Reject without it).
+        page.click('[data-press="not_for_us"][data-for="mon-1"]')
+        page.wait_for_selector('[data-press-note-for="mon-1"]:not([hidden])', timeout=5000)
+        page.click('[data-act="save-press-note"][data-for="mon-1"]')
+        said = text_once(page, '[data-pressstate="mon-1"]', 'Say why first')
+        if last('queue/mon-1') or not said.startswith('Say why first'):
+            problems.append(f'sunday: Reject saved without his reason, or did not ask for it ({said!r})')
+        page.fill('[data-press-note="mon-1"]', 'Done to death this month.')
+        page.click('[data-act="save-press-note"][data-for="mon-1"]')
+        until(page, lambda: last('queue/mon-1'))
+        body = last('queue/mon-1') or {}
+        if (body.get('use') != 'not_for_us' or body.get('reason') != 'Done to death this month.' or body.get('pick') != 'mon-1'
+                or body.get('queued') is not False or not body.get('so_what')):
+            problems.append(f'sunday: Reject did not save queue/mon-1 with use not_for_us and his reason ({body})')
+        state = text_once(page, '[data-pressstate="mon-1"]', 'Rejected')
+        if not state.startswith('Rejected: Done to death this month.'):
+            problems.append(f'sunday: a saved Reject does not say so with his reason ({state!r})')
+        page.click('[data-press="not_for_us"][data-for="mon-1"]')
+        until(page, lambda: (last('queue/mon-1') or {}).get('use', 'x') is None)
+        if (last('queue/mon-1') or {}).get('use', 'x') is not None:
+            problems.append('sunday: a second tap on the same press does not take it back')
+        page.click('[data-press="next_week"][data-for="wed-2"]')
+        until(page, lambda: last('queue/wed-2'))
+        if (last('queue/wed-2') or {}).get('target_week') != nxt or (last('queue/wed-2') or {}).get('queued') is not True:
+            problems.append(f'sunday: Next week is not saved for the Monday after ({last("queue/wed-2")})')
+        page.click('label.pick:has(input[value="fri-3"])')
+        until(page, lambda: last('picks/fri'))
+        page.wait_for_selector('[data-pick-note-for="fri-3"]:not([hidden])', timeout=5000)
+        page.fill('[data-pick-note-for="fri-3"] input', 'Lead with the deal.')
+        page.click('[data-act="save-pick-note"][data-for="fri-3"]')
+        until(page, lambda: (last('picks/fri') or {}).get('note'))
+        if (last('picks/fri') or {}).get('note') != 'Lead with the deal.' or (last('picks/fri') or {}).get('pick') != 'fri-3':
+            problems.append(f'sunday: his note on a pick is not saved with it ({last("picks/fri")})')
+        page.click('[data-act="offday"][data-value="approve"][data-for="off-tue-o1"]')
+        until(page, lambda: last('queue/off-tue-o1'))
+        off = last('queue/off-tue-o1') or {}
+        want = hashlib.sha256('The draft copy for tue option 1.'.encode()).hexdigest()
+        if off.get('use') != 'offday' or off.get('day') != 'tue' or off.get('approved') is not True or off.get('copy_sha256') != want:
+            problems.append(f'sunday: Approve on an off-day option did not save it bound to its copy ({off})')
+    except Exception as error:  # noqa: BLE001 - a step that cannot run is reported, never passed
+        problems.append(f'sunday: the presses could not be pressed ({str(error).splitlines()[0][:160]})')
+    finally:
+        page.unroute(re.compile(r'^https://board\.test/'))
+    return problems
+
+
+def decisions_in_browser(page, web):
+    """His decisions on a day's tab by touch: Approve scripts sends the words the Drafts step shows and says what the
+    server did; Titles saves his pick on each surface; Reject asset needs his reason; Approve for publish binds the
+    manifest."""
+    saved, problems = [], []
+    answer = lambda path, body: ({'send': {'status': 'no_key'}, 'body': {'send': {'status': 'no_key', 'at': '2026-10-25T12:30:00Z'}}}
+                                 if path.endswith('/picks/wed-scripts') else {'inbox': 'filed'} if '/picks/mon-reject-' in path else None)
+    week = board_api(page, web, 'midweek', saved, answer)
+    last = lambda path: next((b for p, b in reversed(saved) if p == f'/api/board/{week}/{path}'), None)
+    try:
+        page.goto('https://board.test/midweek.html#wednesday/drafts')
+        page.wait_for_selector('[data-act="approve-scripts"][data-day="wed"]:not([disabled])', timeout=5000)
+        page.click('[data-act="approve-scripts"][data-day="wed"]')
+        until(page, lambda: last('picks/wed-scripts'))
+        body = last('picks/wed-scripts') or {}
+        if (body.get('kind') != 'approve_scripts' or body.get('approved') is not True or body.get('texts') != {'long': 'Said.'}
+                or body.get('piece_id') != wb.WED_ID or not str((body.get('titles') or {}).get('long', '')).startswith('Wed 28 Oct - 5-minute - ')
+                or 'send' in body):
+            problems.append(f'midweek: Approve scripts did not save the exact words with their Teleprompter names ({body})')
+        state = text_once(page, '[data-approvestate="wed"]', 'Approved')
+        if 'a session sends exactly these words' not in state:
+            problems.append(f'midweek: after Approve scripts the board does not say what the server did ({state!r})')
+        page.goto('https://board.test/midweek.html#wednesday/record')
+        page.wait_for_selector('[data-act="save-titles"][data-day="wed"]:not([disabled])', timeout=5000)
+        page.click('label.pick:has(input[data-title-surface="long_title"][value="Free AI pictures are not free"])')
+        page.click('[data-act="save-titles"][data-day="wed"]')
+        until(page, lambda: last('picks/wed-titles'))
+        if (last('picks/wed-titles') or {}).get('picks') != {'long_title': 'Free AI pictures are not free'}:
+            problems.append(f'midweek: Titles did not save his pick ({last("picks/wed-titles")})')
+        page.goto('https://board.test/midweek.html#monday/publish')
+        page.wait_for_selector('[data-act="reject-asset"][data-for="mon-dl-video-short"]:not([disabled])', timeout=5000)
+        page.click('[data-act="reject-asset"][data-for="mon-dl-video-short"]')
+        page.click('[data-act="save-reject"][data-for="mon-dl-video-short"]')
+        said = text_once(page, '[data-rejectstate="mon-dl-video-short"]', 'Say why')
+        if last('picks/mon-reject-video-short') or not said.startswith('Say why'):
+            problems.append('midweek: Reject asset saved without his reason')
+        page.fill('[data-reject-for="mon-dl-video-short"] [data-reject-reason]', 'The captions drift.')
+        page.fill('[data-reject-for="mon-dl-video-short"] [data-reject-at]', '1:23')
+        page.click('[data-act="save-reject"][data-for="mon-dl-video-short"]')
+        until(page, lambda: last('picks/mon-reject-video-short'))
+        rej = last('picks/mon-reject-video-short') or {}
+        if (rej.get('reason') != 'The captions drift.' or rej.get('at_ms') != 83000 or rej.get('asset') != 'video-short'
+                or rej.get('formats') != ['short_video'] or rej.get('drive_id') != 'c' * 25 or rej.get('piece_id') != wb.MON_ID):
+            problems.append(f'midweek: Reject asset did not save his reason with the file, its moment and Drive id ({rej})')
+        page.click('[data-act="approve-publish"][data-day="mon"]')
+        until(page, lambda: last('picks/mon-publish'))
+        pub = last('picks/mon-publish') or {}
+        if pub.get('approved') is not True or pub.get('manifest_sha256') != 'd' * 64 or pub.get('piece_id') != wb.MON_ID:
+            problems.append(f'midweek: Approve for publish did not save the day, the piece and its manifest ({pub})')
+    except Exception as error:  # noqa: BLE001 - a step that cannot run is reported, never passed
+        problems.append(f'midweek: the day\'s presses could not be pressed ({str(error).splitlines()[0][:160]})')
     finally:
         page.unroute(re.compile(r'^https://board\.test/'))
     return problems

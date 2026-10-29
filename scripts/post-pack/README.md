@@ -691,22 +691,30 @@ scripts will go to teleprompter", and "Server sends directly". His words,
 the tools allowed, where his approval is read and the server's key's name
 are in `config/teleprompter.json`.
 
-The server is to send first. `sendApprovedScripts`
-(`apps/control-plane/api/_teleprompter.ts`) is built and tested but not
-wired: nothing calls it until the board has the `approvals` store and the
-Approve scripts press that writes it. Then the press will call it with the
-document he wrote. It checks that approval itself before any request (his
+The server sends first. His Approve scripts press on a day's Drafts step
+writes `picks/<day>-scripts` (read as the `approvals` view), and the board's
+server (`apps/control-plane/api/board/_presses.ts`) first reads the piece's
+making record and holds any words the scripts' check did not pass or no two
+fresh readers read back, his saved edits included (`send.status: "held"`):
+the same gate `plan` holds a session to, below. Otherwise it calls
+`sendApprovedScripts` (`apps/control-plane/api/_teleprompter.ts`) with the
+document he wrote and records its answer in it as `send`. It checks that approval itself before any request (his
 document, this piece, not withdrawn, each cut's exact hash), holds the tools
 it may call in code, finds or makes the piece's folder, creates or updates
-one script per cut and reads each back. Until Krish places his key
+one script per cut and reads each back. A send that read back is written to
+the piece's making record (its `teleprompter` field), so `pending` sees it;
+when that write fails, `send.recorded` is false and a session runs `record`
+with the ids in `send`. Until Krish places his key
 (`TELEPROMPTER_API_KEY`) it makes no request and answers `no_key`. Until
-both are in place, a session sends instead, as below.
+both are in place, a session sends instead, as below. The board names the
+folder and the scripts with this file's `folder_name` and `script_title`, on
+the piece's post.json when there is one, so both routes find the same folder.
 
 `teleprompter_send.py` makes no Teleprompter call. `plan` reads the piece's
 making record, refuses unless the scripts' check passed, each file holds the
 words it passed, each cut to send was read back, and Krish approved those
-exact words on the week's publish board (a document he wrote himself in the
-board's `approvals` store, naming the piece and each cut's hash; `--week`
+exact words on the week's publish board (a document he wrote himself, read
+from the board's `approvals` view, naming the piece and each cut's hash; `--week`
 names the board week), and prints the calls the
 session makes with the Teleprompter connector, in order: `list_folders` and
 `create_folder` only when the record holds no folder for the piece ("Mon 12

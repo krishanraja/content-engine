@@ -9,6 +9,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { createBoardHandler } from '../../apps/control-plane/api/board/_handler.js'
 import { canonical, digest } from '../../apps/control-plane/api/board/_contracts.js'
+import { scriptHash } from '../../apps/control-plane/api/_teleprompter.js'
 import { BoardDeliverySchema, MEDIA_STANDARD_HASH, canonicalMediaJson, mediaDigest } from '../../packages/core/src/media-quality.js'
 import { MediaFixture } from '../helpers/media-quality.js'
 import rolloutConfig from '../../config/media-quality-rollout.json' with { type: 'json' }
@@ -33,11 +34,18 @@ const { PGlite } = await import(pathToFileURL(process.argv[2]).href)
 const pg = new PGlite()
 await pg.exec('create role anon; create role authenticated; create role service_role bypassrls; grant usage on schema public to service_role;')
 await pg.exec(await readFile(new URL('../../supabase/migrations/20261019120743_publish_board_web.sql', import.meta.url), 'utf8'))
+// The rejection inbox exactly as its migration makes it (the table, its checks, its index and its hold trigger), so an
+// asset Reject is filed against the real constraints; the migration's other tables need ones this database lacks.
+const rejections=await readFile(new URL('../../supabase/migrations/20261116090000_rejections.sql', import.meta.url), 'utf8')
+await pg.exec(rejections.slice(rejections.indexOf('create table public.taste_rejection_inbox ('), rejections.indexOf('create table public.taste_floor_standards (')))
+// The piece's row as the making route reads and writes it: its making record in meta, guarded on updated_at.
+await pg.exec(`create table public.content_ideas (id uuid primary key, meta jsonb not null default '{}'::jsonb, updated_at timestamptz not null default now());
+  grant select, insert, update on public.taste_rejection_inbox, public.content_ideas to service_role;`)
 await pg.exec('set role service_role')
 type Row = Record<string, unknown>
 class Query {
   filters: [string, unknown][] = []; sorting = ''; offset = 0; count = 10000; single = false; payload: Row[] | null = null; jsonFilter: [string,unknown] | null = null
-  constructor(readonly table: string) { assert.match(table,/^board_[a-z]+$/) }
+  constructor(readonly table: string) { assert.match(table,/^(board_[a-z]+|content_ideas|taste_rejection_inbox)$/) }
   select(_fields: string) { return this }
   eq(key: string, value: unknown) { this.filters.push([key,value]); return this }
   contains(key: string,value: unknown) { this.jsonFilter=[key,value]; return this }
@@ -56,7 +64,11 @@ class Query {
         return {data:null,error:null}
       }
       const params=this.filters.map(([,v])=>v)
-      const where=this.filters.map(([k],i)=>{ assert.match(k,/^[a-z_][a-z0-9_]*$/); return `${k}=$${i+1}` })
+      const where=this.filters.map(([k],i)=>{
+        // A JSON field (the approvals and titles views filter body->>kind), else a plain column.
+        const json=/^([a-z_][a-z0-9_]*)->>([a-z_][a-z0-9_]*)$/.exec(k)
+        if(json)return `${json[1]}->>'${json[2]}'=$${i+1}`
+        assert.match(k,/^[a-z_][a-z0-9_]*$/); return `${k}=$${i+1}` })
       if(this.jsonFilter){params.push(JSON.stringify(this.jsonFilter[1]));where.push(`${this.jsonFilter[0]} @> $${params.length}::jsonb`)}
       const result=await pg.query(`select * from ${this.table}${where.length?' where '+where.join(' and '):''}${this.sorting} limit ${this.count} offset ${this.offset}`,params)
       return {data:this.single?result.rows[0]||null:result.rows,error:null}
@@ -164,6 +176,54 @@ try{
     const krish={'Content-Type':'application/json',Cookie:cookie,Origin:origin}
     if(collection==='edits')await put(`${week}/${collection}/${id}`,{body:value,revision:0},403)
     await put(`${week}/${collection}/${id}`,{body:value,revision:0},200,collection==='edits'?krish:headers);assert.ok((await get(`${week}/${collection}`)).documents.some((d:Row)=>d.id===id))}
+  {
+    // Krish's presses go through the real SQL with no migration: each lands in a collection board_documents already
+    // takes, only his cookie writes it, and Approve scripts records the server's answer in a second CAS revision. The
+    // server sends only words the piece's making record shows checked and read back; with no Teleprompter key the
+    // send makes no request and answers no_key.
+    const presses='/api/board/2026-11-09', krish={'Content-Type':'application/json',Cookie:cookie,Origin:origin}
+    const piece='11111111-2222-4333-8444-555555555555'
+    delete process.env.TELEPROMPTER_API_KEY
+    const hashes={long:scriptHash('Said long.'),short:scriptHash('Said short.')}
+    const read=(sha:string)=>({script_sha256:sha,at:'2026-11-08T10:00:00Z',by:'Claude Code',readers:['one','two'],found:'nothing lost'})
+    await pg.query('insert into content_ideas (id, meta) values ($1, $2)',[piece,{making:{updated_at:'2026-11-08T10:00:00Z',by:'Claude Code',
+      script_check:{passed:true,checked_at:'2026-11-08T10:00:00Z',problems:[],hashes,read_back:{long:read(hashes.long),short:read(hashes.short)}}}}])
+    const approval={kind:'approve_scripts',day:'mon',piece_id:piece,approved:true,texts:{long:'Said long.',short:'Said short.'},
+      titles:{long:'Mon 9 Nov - 5-minute - X',short:'Mon 9 Nov - 90-second - X'},folder_title:'Mon 9 Nov follow.the.money - X'}
+    await put(presses+'/picks/mon-scripts',{body:approval,revision:0},403)
+    const approved=await put(presses+'/picks/mon-scripts',{body:approval,revision:0},200,krish)
+    assert.equal(approved.revision,2);assert.equal(approved.send.status,'no_key');assert.match(approved.body.scripts.long,/^[a-f0-9]{64}$/)
+    const view=(await get(presses+'/approvals')).documents
+    assert.deepEqual(view.map((d:Row)=>d.id),['mon-scripts']);assert.equal(view[0].updated_by,'Krish');assert.equal(view[0].body.send.status,'no_key')
+    // Words the check did not pass (his edit since) are held for a session, and nothing is sent.
+    const edited=await put(presses+'/picks/wed-scripts',{body:{...approval,day:'wed',texts:{long:'Said long, then changed.',short:'Said short.'}},revision:0},200,krish)
+    assert.equal(edited.send.status,'held');assert.match(edited.send.error,/not the words the scripts' check passed/)
+    // A rejected asset files his reason in the inbox once, against the table's own checks; a rejected idea files nothing.
+    const reject={kind:'reject_asset',day:'mon',piece_id:piece,asset:'video-short',label:'90-second video',reason:'The captions drift.',
+      drive_id:'a'.repeat(33),at_ms:83000,formats:['short_video'],at:'2026-11-09T07:40:00Z'}
+    assert.equal((await put(presses+'/picks/mon-reject-video-short',{body:reject,revision:0},200,krish)).inbox,'filed')
+    assert.equal((await put(presses+'/picks/mon-reject-video-short',{body:reject,revision:1},200,krish)).inbox,'filed')
+    await put(presses+'/queue/mon-3',{body:{pick:'mon-3',use:'not_for_us',queued:false,reason:'Done to death.'},revision:0},200,krish)
+    await put(presses+'/queue/mon-4',{body:{pick:'mon-4',use:'not_for_us',queued:false},revision:0},400,krish)
+    const inbox=(await pg.query('select said, said_where, piece, formats, master_drive_id, at_ms, whole_cut, repository, client_report_id from taste_rejection_inbox')).rows as Row[]
+    assert.equal(inbox.length,1,'the same words saved again file nothing twice, and an idea files nothing')
+    assert.deepEqual({...inbox[0],client_report_id:undefined},{said:'The captions drift.',said_where:'publish board, 2026-11-09 mon',piece,formats:['short_video'],
+      master_drive_id:'a'.repeat(33),at_ms:83000,whole_cut:false,repository:'krishanraja/content-engine',client_report_id:undefined})
+    // His press stays his: the operator key cannot write over it, whatever the body carries.
+    await put(presses+'/queue/mon-3',{body:{pick:'mon-3',queued:false},revision:1},403)
+    for(const [collection,id,value] of [
+      ['queue','mon-2',{pick:'mon-2',use:'next_week',target_week:'2026-11-16',queued:true}],
+      ['queue','off-tue-o1',{pick:'off-tue-o1',use:'offday',day:'tue',approved:true,copy_sha256:'c'.repeat(64)}],
+      ['picks','mon',{pick:'mon-2',day:'mon',story:'Choice',note:'Lead with the deal.'}],
+      ['picks','mon-titles',{kind:'titles',day:'mon',picks:{long_title:'X'}}],
+      ['picks','mon-publish',{kind:'approve_publish',day:'mon',piece_id:piece,approved:true}],
+    ] as const){
+      await put(`${presses}/${collection}/${id}`,{body:value,revision:0},403)
+      await put(`${presses}/${collection}/${id}`,{body:value,revision:0},200,krish)
+    }
+    assert.deepEqual((await get(presses+'/titles')).documents.map((d:Row)=>d.id),['mon-titles'])
+    await put(presses+'/approvals/mon-scripts',{body:approval,revision:2},400,krish)
+  }
   await put(week+'/comments/orphan',{body:{thread_id:'absent',anchor:'mon-article',text:'Wrong'},revision:0},400)
   for(let n=0;n<23;n++)await put(week+'/comments/page-'+String(n).padStart(2,'0'),{body:{thread_id:'page-'+String(n).padStart(2,'0'),anchor:'board-root',text:'Pagination '+n},revision:0})
   const firstPage=await (await fetch(origin+week+'/comments',{headers})).json()

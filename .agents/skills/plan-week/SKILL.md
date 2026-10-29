@@ -129,13 +129,21 @@ article or a visual: each piece's make session does, from its signed lock
    reads that file, never your memory of it). Tell him how many wait and
    how many have no verdict yet, and offer the queued ideas that fit each
    day before you research anything new. Copy his board marks into the
-   engine first: every `QUEUE <pick> <verdict> <reason>` comment and
-   `queue/<pick>` doc on last week's board (web `queue` and `comments`
-   collections after active cutover; ArtifactData only for legacy sources)
-   goes to `POST /api/idea-queue` (`action: queue` with `verdict`, `reason`,
+   engine first: every `QUEUE <pick> <verdict> <reason>` comment and every
+   `queue/<pick>` doc with no `use` on last week's board (a week before the
+   fixed layout; web `queue` and `comments` collections after active
+   cutover; ArtifactData only for legacy sources) goes to
+   `POST /api/idea-queue` (`action: queue` with `verdict`, `reason`,
    `angle`, `decided_by: "Krish"`, the idea's `so_what`, `story` as `idea`,
    `source_url`, `series`, `from_week`, `from_pick`). A mark with no verdict
-   is only queued. Never write a verdict he did not give.
+   is only queued. Never write a verdict he did not give. Of his presses
+   (a `queue/<pick>` doc with `use`), only Next week (`use: next_week`)
+   goes there, as `action: queue` with no verdict, so it is offered first
+   next week. Never relay Wider piece, Future trend, Reject or an off-day
+   press to the idea queue: queuing those would offer again an idea he
+   rejected or set aside. The Inspiration House cue run reads every press
+   from the board itself (`src/collect/feedbackCues.ts`, documents Krish
+   wrote) and files it as a cue; Growth reads the off-day ones.
    Copy his Combine taps the same way: `python3 scripts/post-pack/board_feed.py taps <last Monday>`
    prints a synthesize body for every `queue/combine-<n>` doc Krish wrote
    himself (`updated_by: "Krish"`; it skips any other writer and says so,

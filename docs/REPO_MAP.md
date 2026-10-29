@@ -1874,6 +1874,8 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 
 - `const collections`
 - `type Collection = typeof collections[number]`
+- `const views`
+- `type View = keyof typeof views`
 - `const MAX_HTML`
 - `const digest = (value: string | Uint8Array) =>`
 - `const canonical = (value: unknown): string =>`
@@ -1881,6 +1883,12 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `const validId = (id: string) =>`
 - `const revision = (n: unknown) =>`
 - `function actor(req: VercelRequest, operatorOnly = false): string | null`
+- `const PRESS_USES`
+- `const OFFDAY_ID`
+- `const DECISION_ID`
+- `const DECISION_KIND`
+- `const SCRIPT_CUTS`
+- `const TITLE_SURFACES`
 - `function validBody(collection: string, id: string, body: unknown): boolean`
 - `const COMMENT_ACTS`
 - `function combineWriterRefused(collection: string, body: unknown, who: string | null): boolean`
@@ -1893,7 +1901,16 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 
 ### `apps/control-plane/api/board/_handler.ts`
 
-- `function createBoardHandler(getDb: () => Promise<SupabaseClient>)`
+- `function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: PressDeps = {})`
+
+### `apps/control-plane/api/board/_presses.ts`
+
+- `type Sender = (input: SendApprovedInput) => Promise<SendResult>`
+- `interface PressDeps`
+- `class PressError`
+- `async function preparePress(collection: string, id: string, body: Body): Promise<Body>`
+- `async function heldBecause(making: unknown, texts: Record<string, string>): Promise<string | null>`
+- `async function afterPress(db: SupabaseClient, ctx: { week: string; collection: string; id: string; body: Body; who: str…`
 
 ### `apps/control-plane/api/board/index.ts`
 

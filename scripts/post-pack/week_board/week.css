@@ -135,6 +135,16 @@ label.qmark input:disabled + .box{opacity:.4}
 .tri-why input{flex:1;min-width:0;min-height:44px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;font:15px Archivo,system-ui,sans-serif;background:var(--bg);color:var(--ink)}
 .tri-state{margin:0;font-size:14px;font-weight:700;color:var(--ok)}.tri-state:empty{display:none}.tri-state.bad{color:var(--bad)}
 .id-card.queued{border-left:6px solid var(--ok)}
+.off-days{border-top:2px solid var(--ink);padding-top:12px;margin-top:20px;display:grid;gap:10px}
+.off-day{display:grid;gap:10px}.off-day h3{margin:8px 0 0;font:700 16px/1.3 Archivo,system-ui,sans-serif}
+.off-card{border:1px solid var(--line);border-radius:12px;background:var(--card);padding:12px 14px;display:grid;gap:8px}
+.off-card.on{border:2px solid var(--ok)}
+.off-copy{margin:0;font-size:16px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+.tt-set{border:0;margin:0;padding:0;display:grid;gap:2px;min-width:0}
+.tt-set legend{padding:0;margin:0 0 4px;font-weight:700}
+.tri-why.rj{flex-wrap:wrap}
+.dl-item.rejected .dl-name{text-decoration:line-through;color:var(--muted)}
+.rec.so.on{border-color:var(--ok)}
 .qd{border:1px dashed var(--ink);border-radius:12px;padding:10px 14px;background:var(--card)}
 .qd h3{margin:0 0 4px;font-size:16px}.qd-how{margin:0 0 6px;color:var(--muted);font-size:14px}
 .qd ul{margin:0;padding:0;list-style:none;display:grid;gap:6px}

@@ -21,10 +21,12 @@ import { TELEPROMPTER_ID, type MakingCut, type MakingPatch } from './_making.js'
 // instead (scripts/post-pack/teleprompter_send.py plan, which refuses until
 // the board holds his approval of those exact words).
 //
-// Nothing calls this yet. The board's Approve scripts press will, once the
-// board has the store that press writes (config/teleprompter.json approval:
-// the "approvals" collection, written by Krish alone). Until then the session
-// route above is the only one that sends.
+// The board's Approve scripts press calls it (api/board/_presses.ts): his
+// press writes picks/<day>-scripts (read as the "approvals" view,
+// config/teleprompter.json approval), written by Krish alone, and the server
+// then sends with that document as the approval and writes what happened into
+// it as send. Until his key is in place the answer is no_key and the session
+// route above sends.
 //
 // What may be called is fixed here in code, not trusted to a caller:
 // ALLOWED_TOOLS names every tool and every argument each may carry.
