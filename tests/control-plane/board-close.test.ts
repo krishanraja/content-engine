@@ -168,6 +168,21 @@ describe('which piece a post is', () => {
     expect(matchPost(post({ title: 'Higgsfield, taken apart: the $1bn AI video machine', type: 'podcast' }), pieces())).toEqual({ kind: 'none' })
     expect(matchPost(post({ title: 'Something else entirely' }), pieces())).toEqual({ kind: 'none' })
   })
+  it('a renamed article matches the one made, unpublished piece due on its day or up to three days before (W2.1)', () => {
+    const made = (id: string, scheduled_for: string, over: Record<string, unknown> = {}) =>
+      ({ id, idea: 'Every AI lab now sells a menu', state: 'review', published_url: null, transformed_outputs: null, scheduled_for, meta: { making: { updated_at: 'x', by: 'x' } }, ...over }) as Candidate
+    const renamed = post({ title: 'Why Claude and ChatGPT model launches keep speeding up', posted_at: '2026-10-19T09:50:52Z' })
+    expect(matchPost(renamed, [made('a', '2026-10-16')])).toMatchObject({ kind: 'one', by: 'schedule', piece: { id: 'a' } })
+    // Due four days before, published already (the video beside its article) or never made: no match.
+    expect(matchPost(renamed, [made('a', '2026-10-15')])).toEqual({ kind: 'none' })
+    expect(matchPost(renamed, [made('a', '2026-10-16', { state: 'published' })])).toEqual({ kind: 'none' })
+    expect(matchPost({ ...renamed, type: 'podcast' }, [made('a', '2026-10-16', { state: 'published' })])).toEqual({ kind: 'none' })
+    expect(matchPost(renamed, [made('a', '2026-10-16', { meta: {} })])).toEqual({ kind: 'none' })
+    // A video-only piece (no article) matches its video post by schedule, never by title.
+    expect(matchPost({ ...renamed, type: 'podcast' }, [made('a', '2026-10-16')])).toMatchObject({ kind: 'one', by: 'schedule' })
+    // Two made pieces due in the window: ambiguous, nothing written.
+    expect(matchPost(renamed, [made('a', '2026-10-16'), made('b', '2026-10-19')])).toEqual({ kind: 'ambiguous', ids: ['a', 'b'] })
+  })
   it('two pieces with the same title is ambiguous, never a guess', () => {
     const twins = [...pieces(), { ...pieces()[0], id: '00000000-0000-4000-8000-000000000001' }]
     expect(matchPost(post({ title: 'Higgsfield, taken apart: the $1bn AI video machine' }), twins).kind).toBe('ambiguous')
