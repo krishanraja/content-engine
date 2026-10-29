@@ -3,6 +3,69 @@
 **Publish boards:** follow `docs/PUBLISH_BOARDS.md` and `config/boards.json.web_cutover`. After verified active cutover, both weeks live at content.krishraja.com and all new board interactions use the authenticated web API. Older Claude board instructions in this document are preserved compatibility/history, not directions to synchronize artifacts.
 
 
+## The rhythm from 1 November 2026
+
+Krish, 2026-10-28: "record the entire week on a Sunday, but it does not go live
+until the Monday after (8 days later)". That replaces the same-day rhythm of
+11 October further down this page: Monday made and recorded the Sunday it was
+picked, Wednesday and Friday when he starts them, and the midday run of
+`produce-day.yml` on each publishing day. Code that still follows the old
+rhythm moves over in the plan's later waves; the board's new layout (rule
+`recording_sunday`) starts with the week of 9 November.
+
+**The shape of a week.** Call the recording Sunday S.
+
+- **Monday, Wednesday and Friday: the three hero pieces.** Each has an article
+  and two cuts (the 5-minute and the 90-second). They go live on Monday S+8,
+  Wednesday S+10 and Friday S+12.
+- **Tuesday, Thursday, Saturday and Sunday: off-day posts** on Instagram,
+  TikTok and YouTube Shorts: memes, uplifting AI news carousels, simple advice
+  on levelling up with AI, and short clips from past weeks. Growth owns this
+  lane and makes the posts. He approves them in the same Sunday session
+  (Krish, 2026-10-28: "I'm happy to plan the Tuesday, Thursday, Saturday, and
+  Sunday content within the Sunday ideas session if you give me a few options
+  to approve as you do the Mon/wed/fri"). The first off-day posts go out on
+  Tuesday 10 November.
+
+**The clock.** Times are his, in New York.
+
+| When | What happens | Who |
+|---|---|---|
+| Saturday 23:00 to Sunday 06:00 | The Sunday ideas board: 3 or 4 options for each of Monday, Wednesday and Friday, with last week's "next week" items first, and 2 or 3 off-day options for each of Tuesday, Thursday, Saturday and Sunday (Krish, 2026-10-28: "on a Sunday, Claude Code proactively brings me ideas") | the Sunday routine (Claude Code); Growth for the off days |
+| Sunday, by 10:00 | One press on every idea: pick it for a day (with a note if he likes), keep it for a wider piece, track it as a future trend, queue it for next week, or reject it. Approve or skip each off-day option | Krish, about 15 minutes |
+| Sunday, 10:00 to 11:45 | The interview, one question at a time, ending in one signed narrative lock per piece (Krish, 2026-10-28: "Claude interviews me on all three ideas to nail down the narrative arc") | the Sunday room session, with Krish |
+| As each lock is signed | One fresh make session per piece. The two scripts come first (reading age, kill list, copy lint, two fresh readers, a fact check of what they claim); the article follows | Claude Code |
+| About 12:30 | **Approve scripts**, one press per day. The engine's server sends both scripts to Teleprompter and reads them back (Krish, 2026-10-28: "Once I approve, the two scripts will go to teleprompter"; "Server sends directly"). Until the Teleprompter key is stored, the press starts a session that sends them through the connector | Krish, then the engine |
+| 13:00 to 15:00 | He records all six cuts and drops each take in the Video Engine Inbox; each take is placed on its piece and cut | Krish, then the recordings lane |
+| About 15:30 | **Titles**: three options for each surface. If he picks none by 21:30, the top-ranked ones are used (Krish, 2026-10-28: "Sunday evening press") | Krish |
+| Sunday night | Every final asset is made: both cuts of each piece, thumbnails and covers, each through the gates. On 1 November this runs on quick-edit in a session the titles press starts; the unattended run on the home computers is planned from 8 November | the engine |
+| Monday, 06:30 | The final publish board, built from the records, with each held item and its reason (Krish, 2026-10-28: "an overnight Codex run will actually produce me the final assets and the final publish board first thing Monday morning") | the Monday board routine |
+| Monday, about 45 minutes | He watches each cut at full size, signs off the article's facts, then presses **Approve for publish** or **Reject asset** (with a reason) for each day | Krish |
+| After his approval | Growth schedules each approved post and reads it back (Krish, 2026-10-28: "Approve each day Monday") | Growth |
+
+The Sunday ideas board and the Monday final board are the only two boards a
+scheduled routine may build (`AGENTS.md`, "Commit and closeout"). Codex no
+longer cuts video: it makes pictures for named slots and never edits a cut
+(`docs/ve/ENGINE.md`, "Codex"). The engine assembles every cut.
+
+**The change-over, 2 to 13 November.**
+
+- The backlog goes live the week of 2 November: Monday 26 October's piece on
+  Monday 2 November, Wednesday 28 October's on Wednesday 4 November, and
+  Friday 30 October's on Friday 6 November. He records Wednesday 28 and
+  Friday 30 before Sunday 1 November.
+- Sunday 1 November records only the week of 9 November, which goes live on
+  Monday 9, Wednesday 11 and Friday 13 November.
+- From then on, every Sunday records the week that goes live 8 days later.
+
+**What still holds from below.** The rest of this page is the rhythm Krish
+set on 11 October. Its standing answers (two cuts, the channels), where
+completion is recorded, which tool writes which step, and the rules for
+Teleprompter and for takes still hold wherever this section does not change
+them. Its week table and its same-day production are history.
+
+## Before 1 November: the rhythm of 11 October
+
 Krish, 2026-10-11, superseding the Sunday, Tuesday and Thursday slates of 10
 October: "We're going to enable planning for the whole week on a Sunday.
 Every Sunday we're going to decide which of the three pieces are going to go
