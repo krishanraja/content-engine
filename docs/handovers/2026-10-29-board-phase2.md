@@ -52,3 +52,22 @@ Then: "you can make the mocks now". The mocks are done. Everything else waits un
    - Prove it on fixtures with phone and desktop screenshots, and update the layout fixture with his words.
 
 Walls: nothing publishes, sends or posts. A migration goes to the orchestrator unapplied. No media is committed.
+
+## Krish's feedback on the mocks, 29 Oct 2026, typed in the session, verbatim
+
+"it feels like all components are just whatever size they feel like being - we need ultimate component stability and predictability and consistency. buttons and other components should be where i expect them to be, the size I expect them to be, no aggressive wrapping, etc etc. Seeing the next action on me in this format for any given piece is incredibly helpful, just one button per thing I need to approve of - perfect - as long as i can click through to what i am approving easily."
+
+He sent two screenshots with it: mock B's desktop week (the one he critiqued) and mock A's "Needs you" queue (the one he praised).
+
+What it asks of the build:
+- Every component has a fixed size and a fixed place. Every action button has one height and one width rule, and sits at the
+  same spot on every card. No button label wraps (B's "Approve Substack post" wrapped onto two lines).
+- Day cards are equal height, with footers aligned. Previews keep one aspect ratio and size. The asset tiles and the stage
+  lane keep one row with fixed cells, never wrapping onto a second line.
+- Keep A's "Needs you" queue: one row and one button per thing he approves.
+- Every ask links through to the thing it approves: the post, the words or the cut.
+
+The CI state when this was written:
+- #267 and #269 are merged with main.
+- Main itself fails `npm run typecheck`, with errors in `_content.ts`, `_meter.ts`, `_prices.ts` and `_publishChecks.ts`, none
+  of them from these PRs. Port the fix once one exists on main.
