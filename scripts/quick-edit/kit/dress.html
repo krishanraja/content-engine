@@ -1,0 +1,23 @@
+<!doctype html>
+<!--
+  kit.py: the tall cut's dress, a transparent 1080 x 1920 frame make.py lays
+  over the whole cut from its first frame (house rule HOOK_IS_THE_INTRO,
+  Krish 2026-10-29: the hook is the intro). The brand's own wordmark, small,
+  in the top left corner and the series tag in the top right, where the
+  Friday 23 October tall cut has them: clear of the captions (250 px down)
+  and of the platforms' buttons down the right (the tag ends 120 px from the
+  edge). Nothing else: no name and no label. Placeholders start with a
+  dollar sign; kit.py fills every one.
+-->
+<html lang="en-GB"><head><meta charset="utf-8"><style>
+$fonts
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1080px; height: 1920px; overflow: hidden; background: transparent; }
+.mark { position: absolute; left: 72px; top: 85px; width: 260px; height: auto; display: block; }
+.tag { position: absolute; right: 120px; top: 79px; height: 52px; display: flex; align-items: center; padding: 0 26px;
+       background: $accent; color: $ink; font-family: 'IBM Plex Mono', monospace; font-weight: 500; font-size: 30px; line-height: 1;
+       border-radius: 999px; white-space: nowrap; }
+</style></head><body>
+<img class="mark" src="$wordmark" alt="makeyourmindup">
+<span class="tag">$channel</span>
+</body></html>

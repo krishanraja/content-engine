@@ -6,7 +6,7 @@ import { afterAll, describe, expect, it } from 'vitest'
 
 // scripts/quick-edit/kit.py: the shared per-piece kit, so a new piece renders
 // through make.py without a graphics script of its own (the end cards, the
-// wide frame, the strap, every picture as a panel and a starter config whose
+// wide frame, the tall cut's dress, every picture as a panel and a starter config whose
 // cue words make.py finds in the script). scripts/post-pack/plan_files.py:
 // where a piece's scripts and pictures are on whichever machine runs it, so
 // kit.py finds them where every tool finds them.
@@ -90,7 +90,8 @@ describe('the shared video kit', () => {
 
   it('its folder holds HTML templates only, and nothing it commits has an em or en dash', () => {
     const templates = readdirSync(join(QUICK_EDIT, 'kit'))
-    expect(templates.sort()).toEqual(['endcard.html', 'frame16.html', 'panel.html', 'strap.html'])
+    // The name strap is retired (Krish, 2026-10-28: "Remember, no content refers to Krish, ever."); the dress took its place.
+    expect(templates.sort()).toEqual(['dress.html', 'endcard.html', 'frame16.html', 'panel.html'])
     for (const file of [join(QUICK_EDIT, 'kit.py'), join(POST_PACK, 'plan_files.py'), ...templates.map(name => join(QUICK_EDIT, 'kit', name))]) {
       const text = readFileSync(file, 'utf8')
       expect(text, file).not.toContain(String.fromCharCode(0x2014))
