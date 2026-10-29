@@ -217,10 +217,13 @@ class FrozenTest(unittest.TestCase):
             stack.enter_context(patch.object(qc, 'duration_s', return_value=5))
             stack.enter_context(patch('velib.qc_composition.composition_checks', return_value={'applies': False, 'note': 'synthetic frames'}))
             for module, name in [('qc_sync', 'av_xcorr'), ('qc_joins', 'decoder'), ('qc_captions', 'ocr'),
-                                 ('qc_brand', 'mark_tile'), ('qc_cues', 'cue_sync'), ('qc_audio', 'bed')]:
+                                 ('qc_brand', 'mark_tile'), ('qc_cues', 'cue_sync'), ('qc_audio', 'bed'),
+                                 ('qc_gates', 'words_lost'), ('qc_gates', 'joins_in_gaps'), ('qc_gates', 'captions_clock'),
+                                 ('qc_gates', 'captions_render')]:
                 stack.enter_context(patch(f'velib.{module}.{name}', return_value={'pass': True, 'status': 'measured'}))
             inputs = dict(dialogue_master='master', edl=[], joins=[], pages=[], region=[], mark_png='mark',
-                          beats=self.props['beats'], aspect='9:16', events=[], slots={})
+                          beats=self.props['beats'], aspect='9:16', events=[], slots={},
+                          heard={'faster-whisper': []}, script='', take_words=[])
             with patch.object(kf, 'keyframe_checks', return_value={'applies': False, 'note': 'legacy format'}):
                 report = qc.run_qc('unused', 'scoreboard-test', **inputs)
                 self.assertTrue(report['complete'])

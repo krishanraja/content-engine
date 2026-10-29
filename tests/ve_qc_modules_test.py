@@ -17,7 +17,7 @@ from unittest.mock import patch
 sys.dont_write_bytecode = True
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
-from velib import qc, qc_sync, qc_joins, qc_captions, qc_brand, qc_cues, qc_audio  # noqa: E402
+from velib import qc, qc_sync, qc_joins, qc_captions, qc_brand, qc_cues, qc_audio, qc_gates  # noqa: E402
 import ve  # noqa: E402
 import numpy as np  # noqa: E402
 
@@ -329,7 +329,9 @@ class QCContracts(unittest.TestCase):
                 passed = {'value': [], 'target': 'synthetic', 'pass': True, 'status': 'measured'}
                 mocks = {}
                 for module, name in ((qc_sync, 'av_xcorr'), (qc_joins, 'decoder'), (qc_captions, 'ocr'),
-                                     (qc_brand, 'mark_tile'), (qc_cues, 'cue_sync'), (qc_audio, 'bed')):
+                                     (qc_brand, 'mark_tile'), (qc_cues, 'cue_sync'), (qc_audio, 'bed'),
+                                     (qc_gates, 'words_lost'), (qc_gates, 'joins_in_gaps'), (qc_gates, 'captions_clock'),
+                                     (qc_gates, 'captions_render')):
                     mocks[name] = stack.enter_context(patch.object(module, name, return_value=passed))
                 stack.enter_context(patch.object(qc, 'loudness', return_value={'integrated_lufs': -14, 'true_peak_dbtp': -1}))
                 stack.enter_context(patch.object(qc, 'frame_diffs', return_value=np.full(150, 2.)))
@@ -341,13 +343,15 @@ class QCContracts(unittest.TestCase):
 
     def test_props_command_supplies_every_measurement_and_can_complete(self):
         props = self.props()
+        gates = {'heard': {'faster-whisper': [{'w': 'hello', 's': 0.7, 'e': 0.9}]}, 'script': 'hello', 'take_words': []}
         with self.measurements() as mocks, patch.object(qc, 'run_qc', wraps=qc.run_qc) as run_qc, \
-                patch.object(ve, 'load_json', return_value=props), \
+                patch.object(ve, 'load_json', return_value=props), patch.object(ve, '_gate_inputs', return_value=gates), \
                 patch.object(ve, 'write_json') as write, redirect_stdout(io.StringIO()), \
                 patch.object(sys, 'argv', ['ve', 'qc', 'cut.mp4', '--format', 'scoreboard-test', '--props', 'props.json']):
             self.assertEqual(ve.main(), 0)
         self.assertEqual(set(run_qc.call_args.kwargs),
-                         {'pages', 'beats', 'aspect', 'events', 'slots', 'region', 'mark_png', 'dialogue_master', 'edl', 'joins'})
+                         {'pages', 'beats', 'aspect', 'events', 'slots', 'region', 'mark_png', 'dialogue_master', 'edl', 'joins',
+                          'heard', 'script', 'take_words'})
         report = write.call_args.args[1]
         self.assertTrue(report['complete'], report)
         self.assertTrue(report['measured_pass'], report)
