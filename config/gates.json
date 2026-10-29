@@ -29,13 +29,8 @@
     "render_note": "Caption page changes are found from pixel changes in the caption zone (mean absolute grey difference between neighbouring frames above pixel_change_threshold); OCR reads only within plus or minus ocr_window_frames of each page start; the text must match the props exactly and score at least ocr_min_score."
   },
   "second_aligner": {
-    "provider": "elevenlabs-scribe",
-    "model_id": "scribe_v1",
     "enabled": false,
-    "env_flag": "MINDMAKE_SECOND_ALIGNER",
-    "env_value": "scribe",
-    "key_env": "ELEVENLABS_API_KEY",
-    "approved_by_krish": null,
-    "note": "Off by default. It runs only when enabled is true here AND the environment sets MINDMAKE_SECOND_ALIGNER=scribe AND ELEVENLABS_API_KEY is set. Turning it on needs Krish's yes on the key and the spend, in his words in approved_by_krish. With it off every gate runs on faster-whisper alone and says single aligner."
+    "ruling": "Krish, 2026-10-29: \"do not use eleven labs for this\"",
+    "note": "No paid second aligner. ElevenLabs Scribe was removed on his ruling; the gates run on faster-whisper and say \"single aligner\". A second local aligner (another faster-whisper model) can be passed in by name; nothing here calls a paid service."
   }
 }
