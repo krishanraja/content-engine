@@ -2,12 +2,14 @@
 """G11, the lean start (docs/COST_GUARDS.md): WORKBENCH.md is the live state, read first by every session in
 every tool, so it stays small. Fails when it passes 64 KB or when "Latest handoff" holds more than its newest
 entry (older ones go to docs/history/2026-10-18-WORKBENCH-handoffs.md). Krish, 2026-10-18: "They should all
-become standing rules." Run by `npm run verify`."""
+become standing rules." NOW.md is held the same way (W2.12): over NOW_LIMIT, its history moves to docs/history/
+verbatim. Run by `npm run verify`."""
 import re
 import sys
 from pathlib import Path
 
 LIMIT = 64_000
+NOW_LIMIT = 14_000  # NOW.md, the current-state page every session reads (W2.12)
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -25,8 +27,13 @@ def problems(text):
     return out
 
 
+def now_problems(text):
+    size = len(text.encode('utf-8'))
+    return [f'NOW.md is {size:,} bytes, over {NOW_LIMIT:,}: move its history to docs/history/ verbatim (W2.12).'] if size > NOW_LIMIT else []
+
+
 def main():
-    why = problems((ROOT / 'WORKBENCH.md').read_text(encoding='utf-8'))
+    why = problems((ROOT / 'WORKBENCH.md').read_text(encoding='utf-8')) + now_problems((ROOT / 'NOW.md').read_text(encoding='utf-8'))
     for w in why:
         print(w)
     if not why:

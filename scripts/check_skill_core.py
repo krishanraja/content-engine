@@ -9,7 +9,8 @@ So this refuses:
 - a house rule ID (the `id:` values in apps/control-plane/api/_houseRules.ts) named in a skill's references
   but not in its SKILL.md;
 - a reference file the core does not name by its repository path (a reference nobody is told to read);
-- with --against REV: a house rule ID named in that revision's SKILL.md and no longer named in the core.
+- with --against REV: a house rule ID named in that revision's SKILL.md and no longer named in the core;
+- a skill core over its byte cap (W2.12, CORE_CAPS): a core that grows past it moves a section to references/.
 
     python3 scripts/check_skill_core.py                  # make-piece and produce-video
     python3 scripts/check_skill_core.py --against REV    # and nothing named at REV has left the core
@@ -27,6 +28,23 @@ SKILLS = ROOT / '.agents' / 'skills'
 # reference is named by its repository path).
 SPLIT = ('make-piece', 'produce-video')
 RULES = ROOT / 'apps' / 'control-plane' / 'api' / '_houseRules.ts'
+# Byte caps on every skill core (W2.12): each core's size on 29 October 2026 with about a tenth of headroom. A session
+# reads the whole core at its start, so a core that grows costs every session; past its cap a section moves to
+# references/ and the core names it.
+CORE_CAPS = {'make-piece': 63_000, 'plan-week': 49_000, 'produce-video': 60_000, 'mindmake-video': 9_000,
+             've': 6_000, 'video-engine': 4_500}
+
+
+def cap_problems(skills=SKILLS, caps=CORE_CAPS) -> list[str]:
+    out = []
+    for core in sorted(Path(skills).glob('*/SKILL.md')):
+        name, size = core.parent.name, len(core.read_bytes())
+        cap = caps.get(name)
+        if cap is None:
+            out.append(f'{name}: SKILL.md has no byte cap; add it to CORE_CAPS in scripts/check_skill_core.py')
+        elif size > cap:
+            out.append(f'{name}: SKILL.md is {size:,} bytes, over its cap of {cap:,}: move a section to references/ and name it')
+    return out
 
 
 def rule_ids() -> list[str]:
@@ -64,15 +82,25 @@ def problems(against: str | None = None) -> list[str]:
 def main() -> int:
     args = sys.argv[1:]
     against = args[1] if len(args) == 2 and args[0] == '--against' else None
+    if args == ['--self-test']:
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            for name, size in (('small', 10), ('big', 200), ('new', 10)):
+                (Path(tmp) / name).mkdir()
+                (Path(tmp) / name / 'SKILL.md').write_bytes(b'x' * size)
+            found = cap_problems(tmp, {'small': 100, 'big': 100})
+        ok = len(found) == 2 and any('big: SKILL.md is 200 bytes, over its cap' in f for f in found) and any('new: SKILL.md has no byte cap' in f for f in found)
+        print('skill core caps self-test ' + ('passed' if ok else f'FAILED: {found}'))
+        return 0 if ok else 1
     if args and not against:
         print(__doc__)
         return 2
-    found = problems(against)
+    found = problems(against) + cap_problems()
     for p in found:
         print(p, file=sys.stderr)
     if found:
         return 1
-    print('skill cores: every house rule a reference carries is named in its SKILL.md' + (f', and nothing named at {against} has left' if against else ''))
+    print('skill cores: under their byte caps, and every house rule a reference carries is named in its SKILL.md' + (f', and nothing named at {against} has left' if against else ''))
     return 0
 
 
