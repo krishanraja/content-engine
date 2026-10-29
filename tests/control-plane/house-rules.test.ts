@@ -15,7 +15,7 @@ import { VOICE_ABSOLUTES } from '../../apps/control-plane/api/_finalPass.js'
 // Piece 2 as published in its edition (Krish set 75% on 2026-09-26), and the
 // same text as it stood when it passed the fact gate, before he set it.
 const PASSED = readFileSync('editions/2026-09-who-picks-your-ai/body.md', 'utf8')
-const UNSET = PASSED.replace('How sure we are: 75%.', 'How sure we are: [Krish to set]')
+const UNSET = PASSED.replace('How sure we are: 75%.', 'How sure we are: [to set]')
 const factsOk = { ok: true, reason: null }
 // Krish, 2026-10-19: a call must fall within 92 days. PASSED is due 30 September 2027 and
 // the Call in the other fixtures 30 June 2027, so a fixed `now` keeps each inside the window.
@@ -236,6 +236,21 @@ describe('the checks before approval, on real text', () => {
     const edition = JSON.parse(readFileSync('editions/2026-09-who-picks-your-ai/edition.json', 'utf8'))
     assert.equal(bodyHash(set.trim()), edition.fact_check.body_hash)
     assert.equal(bodyHash(set.replace('75%.', '60%')), bodyHash(set))
+  })
+  test('a piece that names Krish is held, in any spelling, with no override (house rule NO_NAME)', () => {
+    // Krish, 2026-10-28: "Remember, no content refers to Krish, ever."
+    const clear = PASSED.replace('75%.', '85%.')
+    const failing = (t: string) => publishStatus(publishChecks(t, factsOk, NOW_SEP)).failing.map(c => c.id)
+    assert.deepEqual(failing(clear), [])
+    for (const named of [`By Krish Raja\n\n${clear}`, clear.replace('## OUR PREDICTION', "Krish's test showed it.\n\n## OUR PREDICTION"), `${clear}\n\nMore at krishraja.com`]) {
+      assert.deepEqual(failing(named), ['NO_NAME'], named.slice(0, 40))
+    }
+    const check = publishChecks(`By Krish Raja. ${clear}`, factsOk, NOW_SEP).find(c => c.id === 'NO_NAME')!
+    assert.equal(check.blocking, true)
+    assert.match(check.detail, /"Krish Raja"/)
+    // The old placeholder named him; the one drafts carry now does not.
+    assert.ok(failing(PASSED.replace('How sure we are: 75%.', 'How sure we are: [Krish to set]')).includes('NO_NAME'))
+    assert.ok(!failing(UNSET).includes('NO_NAME'))
   })
   test('only the number is exempt: words added to the confidence line are checked like any other', () => {
     const set = PASSED
@@ -798,10 +813,12 @@ describe('a story intro, its audio treatment and an outro card, in every format 
 // 1,700 words, short 160 to 195). What he records is v6, his own edit of both
 // at 21:32 UTC on 16 October, put through on his words, so it is not held to
 // the gate here. Since 2026-10-21 the series line is retired and every script
-// closes as SCRIPT_CLOSE says, so v5 keeps every old gate (length, reading
-// age, the story) and fails on nothing but that close.
-describe('this week\'s unrecorded scripts keep every gate but the new close (R7, SCRIPT_CLOSE)', () => {
-  test('Friday\'s v5 deep cut and 90-second cut fit their lengths and a 12-year-old can follow them; only the close of 2026-10-21 is missing', async () => {
+// closes as SCRIPT_CLOSE says, and since 2026-10-28 no script says his name
+// (house rule NO_NAME), which the mind.the.gap line does ("I'm Krish."). So
+// v5 keeps every old gate (length, reading age, the story) and fails on
+// nothing but that close and that name.
+describe('this week\'s unrecorded scripts keep every gate but the new close and the name (R7, SCRIPT_CLOSE, NO_NAME)', () => {
+  test('Friday\'s v5 deep cut and 90-second cut fit their lengths and a 12-year-old can follow them; only the close of 2026-10-21 and the name of 2026-10-28 fail', async () => {
     const { spawnSync } = await import('node:child_process')
     for (const [file, cut, series] of [
       ['docs/plans/2026-10-09-script-deep-v5.md', 'deep', 'mind_the_gap'],
@@ -809,8 +826,64 @@ describe('this week\'s unrecorded scripts keep every gate but the new close (R7,
     ] as const) {
       const out = spawnSync(process.platform === 'win32' ? 'python' : 'python3', ['scripts/post-pack/story_check.py', '--cut', cut, '--series', series, file], { encoding: 'utf8' })
       const found = out.stdout.split('\n').filter(l => l.startsWith('  - '))
-      assert.ok(found.length > 0, `${file}: v5 predates the new close and should be told so`)
-      for (const line of found) assert.match(line, /SCRIPT_CLOSE/, `${file}: ${line}`)
+      assert.ok(found.some(l => /SCRIPT_CLOSE/.test(l)), `${file}: v5 predates the new close and should be told so`)
+      assert.ok(found.some(l => /NO_NAME/.test(l)), `${file}: v5 opens on a series line that says his name`)
+      for (const line of found) assert.match(line, /SCRIPT_CLOSE|NO_NAME/, `${file}: ${line}`)
     }
+  })
+})
+
+// Krish, 2026-10-28: "Remember, no content refers to Krish, ever. I still see
+// that popping up from time to time. Even articles written are not authored by
+// Krish. My face only, for assets and the video format." Then his four answers
+// of 2026-10-29, and, of comparisons: "I think my point was that pictures never
+// add zero value above and beyond the words. They have to be additive in
+// meaning. I'm all up for visually clear ideas."
+describe('no public word names Krish, and every picture adds meaning (NO_NAME, ANALOGY_IN_SCRIPTS_ONLY)', () => {
+  test('NO_NAME is live, in his words, with his four answers, and reaches every stage that writes or checks a public word', () => {
+    const r = HOUSE_RULES.find(x => x.id === 'NO_NAME')
+    assert.ok(r)
+    assert.equal(r.status, 'live')
+    assert.ok(r.said.startsWith('"Remember, no content refers to Krish, ever. I still see that popping up from time to time. Even articles written are not authored by Krish. My face only, for assets and the video format."'))
+    for (const picked of ['"We"', '"No, personal stays personal"', '"Drop it"', '"Yes, block it"']) assert.ok(r.said.includes(picked), picked)
+    assert.deepEqual([...r.stages].sort(), ['final_pass', 'judge_draft', 'publish_check', 'visual', 'write'])
+    for (const stage of ['write', 'judge_draft', 'final_pass', 'visual'] as const) assert.ok(houseRulesBlock(stage).includes(r.text), stage)
+    assert.match(r.text, /OUR TEST · <date>/)
+    assert.match(r.text, /makeyourmindup · <date> · <n> minute read/)
+    assert.doesNotMatch(r.text, /MY TEST ·|By Krish/)
+  })
+  test('articles speak as "we", the scripts he speaks keep "I", and no writer example names him', () => {
+    const voice = HOUSE_RULES.find(x => x.id === 'SOUNDS_LIKE_KRISH')!
+    assert.match(voice.text, /In an article and its title, subtitle and description, "we" and "our" carry the publication's view/)
+    assert.match(voice.text, /in a video script he speaks, "I" and "my" carry his/)
+    assert.doesNotMatch(voice.text, /"I" and "my" carry his view: a moment from his own work/)
+    assert.doesNotMatch(HOUSE_RULES.find(x => x.id === 'HOOK_AND_CTA')!.text, /what Krish did/)
+    for (const [file, framing] of [
+      ['apps/control-plane/api/content-ideas/[id]/draft.ts', /You are drafting one piece for makeyourmindup/],
+      ['apps/control-plane/api/_revisePrompt.ts', /rewriting a draft for makeyourmindup/],
+      ['apps/control-plane/api/briefs/assemble.ts', /You write in the publication\\?'s voice and never name its maker/],
+      ['apps/control-plane/api/_humor.ts', /rewriting a passage of a makeyourmindup draft/],
+      ['apps/control-plane/api/content-ideas/[id]/chat.ts', /content partner on makeyourmindup/],
+    ] as const) {
+      const source = readFileSync(file, 'utf8')
+      assert.match(source, framing, file)
+      assert.doesNotMatch(source, /in Krish Raja's voice|Krish Raja's publication|You write as Krish|passage of Krish Raja's draft|Krish Raja's content partner/, file)
+    }
+  })
+  test('a picture must add meaning beyond the words; a visually clear idea with the real facts is welcome; one that stands in for them is out', () => {
+    const r = HOUSE_RULES.find(x => x.id === 'ANALOGY_IN_SCRIPTS_ONLY')!
+    assert.ok(r.said.includes('Then, 2026-10-29, asked whether a picture may show the everyday thing a script compares something to: "I think my point was that pictures never add zero value above and beyond the words. They have to be additive in meaning. I\'m all up for visually clear ideas."'))
+    assert.match(r.text, /adds meaning beyond the words said over it/)
+    assert.match(r.text, /A visually clear idea is welcome, a comparison included, when the real facts are on it/)
+    assert.match(r.text, /stands in for the facts \(the 16 October race between two cars/)
+    assert.doesNotMatch(r.text, /never act out an analogy/)
+    // The article and script sentences are kept.
+    assert.match(r.text, /Analogies, comic comparisons and exaggeration belong in the video scripts/)
+    assert.match(r.text, /The article stays more professional/)
+    const relatable = HOUSE_RULES.find(x => x.id === 'RELATABLE_EXPLANATION')!
+    assert.match(relatable.text, /a picture of one must add meaning beyond the words, with the real facts on it, never stand in for them/)
+    assert.doesNotMatch(relatable.text, /a picture never acts one out/)
+    const gate = readFileSync(join(__dirname, '../../scripts/post-pack/visual_gate.py'), 'utf8')
+    assert.match(gate, /pictures never add zero value above and beyond '\s+'the words\. They have to be additive in meaning\./)
   })
 })

@@ -190,7 +190,7 @@ export async function runAssemble(force = false) {
   const channelMandate = corpusForChannel(corpus, 'publication', 3000)
 
   const system = [
-    'You write the Publication weekly brief for business leaders making real AI decisions. You write as Krish.',
+    'You write the Publication weekly brief for business leaders making real AI decisions. You write in the publication\'s voice and never name its maker (house rule NO_NAME).',
     voice ? `VOICE:\n${voice}` : '',
     channelMandate ? `CHANNEL MANDATE:\n${channelMandate}` : '',
     standingNotesPrompt(standingNotes),

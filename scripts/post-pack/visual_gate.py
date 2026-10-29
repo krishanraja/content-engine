@@ -51,7 +51,12 @@ The five checks:
      "data_source" and what it "measures". Krish, 2026-10-16: "I don't think
      the visuals should have analogies in them. The visuals should look like
      genuine reviews of the actual product, with statistics, rather than
-     having analogies." (house rule ANALOGY_IN_SCRIPTS_ONLY)
+     having analogies." Then, 2026-10-29: "I think my point was that pictures
+     never add zero value above and beyond the words. They have to be
+     additive in meaning. I'm all up for visually clear ideas." So a visually
+     clear idea, a comparison included, is welcome with the real facts on it;
+     a picture that adds nothing, or stands in for the facts, is not (house
+     rule ANALOGY_IN_SCRIPTS_ONLY)
 
     python visual_gate.py post.json            # explain what would pass or fail
     python visual_gate.py --self-test
@@ -271,9 +276,10 @@ def real_thing_problems(post):
         if shows not in SHOWS:
             found.append(f'"{label}" does not say what real thing it shows: give it "shows": one of '
                          + ', '.join(f'"{k}" ({v})' for k, v in SHOWS.items())
-                         + '. A drawing that acts out an analogy is not one: analogies belong in the spoken script '
-                         '(house rule ANALOGY_IN_SCRIPTS_ONLY; Krish, 2026-10-16: "The visuals should look like genuine reviews '
-                         'of the actual product, with statistics, rather than having analogies")')
+                         + '. A picture adds meaning beyond the words with the real facts on it: a visually clear idea, a '
+                         'comparison included, is welcome with the real names and numbers on it, never one that stands in for them '
+                         '(house rule ANALOGY_IN_SCRIPTS_ONLY; Krish, 2026-10-29: "pictures never add zero value above and beyond '
+                         'the words. They have to be additive in meaning. I\'m all up for visually clear ideas.")')
         elif shows == 'chart':
             if not str(f.get('data_source') or '').strip():
                 found.append(f'"{label}" is a chart with no "data_source": name who measured the numbers and when '
@@ -413,6 +419,9 @@ def self_test():
                  'measures': 'Intelligence Index: 10 hard tests, 0 to 100, higher is better'}
         check('a picture of a post from 16 Oct that does not say what real thing it shows is refused, naming his rule',
               any('ANALOGY_IN_SCRIPTS_ONLY' in x for x in real_thing_problems({'date': '2026-10-16', 'files': [race]})), True)
+        said = ' '.join(real_thing_problems({'date': '2026-10-29', 'files': [race]}))
+        check('the refusal says a picture must add meaning, in his words of 29 Oct, and no longer bans every comparison',
+              ('They have to be additive in meaning.' in said, 'visually clear idea' in said, 'acts out an analogy' in said), (True, True, False))
         check('the same picture on a post already made before then is left alone',
               real_thing_problems({'date': '2026-10-14', 'files': [race]}), [])
         check('a chart with its source and what it measures passes; a screenshot passes',

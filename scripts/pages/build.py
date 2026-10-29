@@ -73,6 +73,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import brand  # noqa: E402
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'post-pack'))
 import title_check  # noqa: E402  the anti-dumb filter (house rule TITLE_EARNS_THE_CLICK)
+import copy_lint  # noqa: E402  the name rule (no_name), for the page's own self-test
 import card  # noqa: E402
 
 CHOICE = re.compile(r'^(Guess|Future|Scenario|Option|Outcome) (one|two|three|four|five)\. (.+)$', re.S)
@@ -242,8 +243,18 @@ def missing_sentences(body, h):
 
 # ---------------------------------------------------------------- facts
 
+def refuse_author(facts, path):
+    """Krish, 2026-10-28: "Even articles written are not authored by Krish." The
+    page has no author: its byline is the publication, the date and the
+    minutes, with no face beside it (Krish picked "Drop it", 29 Oct). A facts
+    file that names one is refused, so no name can come back through it."""
+    if 'author' in facts:
+        brand.fail(f'{path}: "author" is not read: a page is by makeyourmindup and names no author (house rule NO_NAME); take the field out')
+
+
 def load_facts(path, body_override, assets):
     facts = json.loads(Path(path).read_text(encoding='utf-8'))
+    refuse_author(facts, path)
     base = Path(assets) if assets else Path(path).resolve().parent
     for key in ('subchannel', 'headline', 'deck', 'date'):
         if not facts.get(key):
@@ -437,7 +448,6 @@ a { color: inherit; }
 .hero .dek { font-family: var(--serif); font-style: italic; font-size: clamp(20px, 2.3vw, 26px); line-height: 1.35; margin: 0 0 24px; max-width: 34ch; }
 .hero-art { margin: 0; border: 2px solid var(--ink); box-shadow: var(--shadow); background: var(--cream); }
 .byline { display: flex; align-items: center; gap: 12px; font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; }
-.byline img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--ink); }
 main.col { max-width: 720px; margin: 0 auto; padding-inline: 16px; padding-block: 56px 24px; }
 main.col p, main.col li { font-size: 19px; line-height: 1.68; font-weight: 500; }
 main.col p { margin: 0 0 1.15em; }
@@ -595,7 +605,7 @@ def render_page(facts, base, body, r, refresh):
   <div>
     <h1>{esc(facts['headline'])}</h1>
     <p class="dek">{esc(facts['deck'])}</p>
-    <div class="byline"><img src="{brand.brand_uri('krish', refresh)}" alt="" width="40" height="40"><span>By {esc(facts.get('author', brand.AUTHOR))} · {long_date(facts['date'])} · {minutes} minute read</span></div>
+    <div class="byline"><span>makeyourmindup · {long_date(facts['date'])} · {minutes} minute read</span></div>
   </div>
   {art}
 </section>
@@ -939,7 +949,7 @@ def cover_html(facts, base, refresh=False):
     face = ''
     if c.get('portrait'):
         source = brand.fetch(brand.portrait_for(facts.get('date')), refresh) if c['portrait'] is True else resolve(base, c['portrait'])
-        face = f'<div class="face" role="img" aria-label="{attr(facts.get("author", brand.AUTHOR))}" style="background-image:url({brand.data_uri(source, 600)})"></div>'
+        face = f'<div class="face" aria-hidden="true" style="background-image:url({brand.data_uri(source, 600)})"></div>'
     photo = ''
     if background(c, base):
         photo = (f'<div class="ph" style="background-image:url({brand.data_uri(background(c, base), 2000)})"></div>'
@@ -1241,7 +1251,7 @@ def cover_shape_html(facts, base, shape, refresh=False):
     face = ''
     if c.get('portrait'):
         source = brand.fetch(brand.portrait_for(facts.get('date')), refresh) if c['portrait'] is True else resolve(base, c['portrait'])
-        face = f'<div class="face" role="img" aria-label="{attr(facts.get("author", brand.AUTHOR))}" style="background-image:url({brand.data_uri(source, 900)})"></div>'
+        face = f'<div class="face" aria-hidden="true" style="background-image:url({brand.data_uri(source, 900)})"></div>'
     photo = ''
     if background(c, base):
         photo = (f'<div class="ph" style="background-image:url({brand.data_uri(background(c, base), 2000)})"></div>'
@@ -1614,7 +1624,7 @@ def thumb_html(facts, base, shape, refresh=False):
     face = ''
     if c.get('portrait'):
         source = brand.fetch(brand.portrait_for(facts.get('date')), refresh) if c['portrait'] is True else resolve(base, c['portrait'])
-        face = f'<div class="face" role="img" aria-label="{attr(facts.get("author", brand.AUTHOR))}" style="background-image:url({brand.data_uri(source, 900)})"></div>'
+        face = f'<div class="face" aria-hidden="true" style="background-image:url({brand.data_uri(source, 900)})"></div>'
     photo = ''
     if background(c, base):
         photo = (f'<div class="ph" style="background-image:url({brand.data_uri(background(c, base), 2000)})"></div>'
@@ -2041,6 +2051,26 @@ def _self_test():
                 check('a logo that is not on this machine is refused', False, True)
             except SystemExit:
                 check('a logo that is not on this machine is refused', True, True)
+            # House rule NO_NAME (Krish, 2026-10-28: "Even articles written are not authored by Krish. My face
+            # only, for assets and the video format."): the byline is the publication, with no face (Krish
+            # picked "Drop it", 29 Oct); covers and thumbnails keep his face, as a picture with no name.
+            article = dict(facts, deck='Two answers to one agent.', date='2026-10-12')
+            words = 'Warner sued Suno. Now it takes a cut of every song.\n\nHow sure we are: 70%.'
+            page = render_page(article, tmp, words, build(article, tmp, words, {}), False)
+            byline = re.search(r'<div class="byline">(.*?)</div>', page).group(1)
+            check('the byline is the publication, the date and the minutes, with no face',
+                  byline, '<span>makeyourmindup · Monday 12 October 2026 · 1 minute read</span>')
+            check('the page says "By " nowhere and never names him',
+                  ('By ' in page_text(page), [h['match'] for h in copy_lint.copy_lint(page_text(page), 'article_body') if h['id'] == 'no_name']), (False, []))
+            drawn = [cover_html(article, tmp)] + [cover_shape_html(article, tmp, sh) for sh in COVER_SHAPES] + [thumb_html(facts, tmp, sh) for sh in THUMB_SHAPES]
+            check('every cover and thumbnail keeps the face, hidden from screen readers and labelled with no name',
+                  [('class="face" aria-hidden="true"' in d, 'role="img" aria-label' in d.split('class="face"')[1][:40]) for d in drawn],
+                  [(True, False)] * len(drawn))
+            try:
+                refuse_author({'author': 'Krish Raja'}, 'facts.json')
+                check('a facts file that names an author is refused', False, True)
+            except SystemExit as stop:
+                check('a facts file that names an author is refused', 'names no author' in str(stop), True)
         finally:
             brand.font_css, brand.brand_uri, brand.fetch = saved
 
@@ -2080,6 +2110,7 @@ def main():
 
     out = Path(a.out) if a.out else brand.ROOT / '.cache' / 'pages' / Path(a.facts).resolve().parent.name
     raw = json.loads(Path(a.facts).read_text(encoding='utf-8'))
+    refuse_author(raw, a.facts)
     base = Path(a.assets) if a.assets else Path(a.facts).resolve().parent
     if (a.cover or a.thumbs) and not (a.check or a.shots) and not page_ready(raw, base, a.body):
         # Cover facts: only the artwork.

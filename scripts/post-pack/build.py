@@ -37,6 +37,7 @@ It copies; the files it was given stay where they are.
 import argparse
 import contextlib
 import hashlib
+import html.parser
 import io
 import json
 import re
@@ -49,6 +50,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import library
 import story_check  # noqa: E402
+import copy_lint  # noqa: E402  the name rule (no_name), the one regex for his name
 import visual_gate  # noqa: E402
 import making  # noqa: E402  records the pack on the piece's board row
 import edge_check  # noqa: E402
@@ -434,6 +436,86 @@ def visual_gate_or_refuse(post, planned, base):
                         '\n  Fix it (scripts/post-pack/visual_gate.py), or record Krish\'s own words in "visual_gate_override".')
 
 
+# Every packed file a reader sees words in. The READ ME and the manifest are
+# the engine's own notes, never posted, so they are not read.
+NAME_GATE_TEXT = ('.md', '.txt', '.srt', '.vtt', '.json', '.html', '.htm')
+
+
+class _PageWords(html.parser.HTMLParser):
+    """What a reader of a packed page sees or hears read out: its text, and
+    each tag's alt, title and aria-label. Never a src, an href, a data URI, or
+    a script's or a style's code."""
+
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.words, self._code = [], 0
+
+    def handle_starttag(self, tag, attrs):
+        if tag in ('script', 'style'):
+            self._code += 1
+        for key, value in attrs:
+            if key in ('alt', 'title', 'aria-label') and value and not value.startswith('data:'):
+                self.words.append(value)
+
+    def handle_endtag(self, tag):
+        if tag in ('script', 'style') and self._code:
+            self._code -= 1
+
+    def handle_data(self, data):
+        if not self._code:
+            self.words.append(data)
+
+
+def _json_words(value):
+    """Every string a JSON file holds, never its keys and never a data URI."""
+    if isinstance(value, str):
+        return [] if value.startswith('data:') else [value]
+    if isinstance(value, list):
+        return [w for v in value for w in _json_words(v)]
+    if isinstance(value, dict):
+        return [w for v in value.values() for w in _json_words(v)]
+    return []
+
+
+def packed_words(item):
+    """The words a reader meets in one planned file, or None for a picture or a video."""
+    suffix = Path(item['name']).suffix.lower()
+    if suffix not in NAME_GATE_TEXT:
+        return None
+    raw = item['text'] if 'text' in item else item['source'].read_text(encoding='utf-8-sig', errors='replace')
+    if suffix in ('.html', '.htm'):
+        page = _PageWords()
+        page.feed(raw)
+        page.close()
+        return '\n'.join(page.words)
+    if suffix == '.json':
+        try:
+            return '\n'.join(_json_words(json.loads(raw)))
+        except ValueError:
+            return raw
+    return raw
+
+
+def name_gate_or_refuse(planned):
+    """Krish, 2026-10-28: "Remember, no content refers to Krish, ever. I still
+    see that popping up from time to time. Even articles written are not
+    authored by Krish. My face only, for assets and the video format." Every
+    packed text file (the article, its pages, scripts, captions and channel
+    words) is read with the copy lint's name rule, and any hit stops the
+    pack. A picture of his face is never read, whatever its file is called.
+    There is no override: the ruling says "ever" (house rule NO_NAME)."""
+    found = []
+    for item in planned:
+        words = packed_words(item)
+        if words is None:
+            continue
+        found += [f'{item["path"]}: {json.dumps(hit["match"], ensure_ascii=False)}'
+                  for hit in copy_lint.copy_lint(words, 'article_body') if hit['id'] == 'no_name']
+    if found:
+        raise PackError('the pack names Krish, and no public word may (house rule NO_NAME):\n  - ' + '\n  - '.join(found) +
+                        '\n  Take the name out of the words. There is no override: "no content refers to Krish, ever."')
+
+
 _warned = set()
 
 
@@ -548,6 +630,7 @@ def build(post_path, out=DEFAULT_OUT, replace=False, today=None):
         raise PackError(str(error))
     thumbnail_gate_or_refuse(post, planned)
     visual_gate_or_refuse(post, planned, post_path.parent)
+    name_gate_or_refuse(planned)
     made = today or datetime.now(timezone.utc).date().isoformat()
     readme = read_me(post, folder, planned, made)
 
@@ -617,7 +700,7 @@ def self_test():
         for name, body in (('out/substack.html', b'<p>post</p>'), ('out/page.html', b'<p>page</p>'),
                            ('body.md', b'The words.\n'), ('out/email-pictures-off.html', b'<p>email</p>'),
                            ('out/cover.png', b'cover'), ('img/1-look-or-pay.png', b'one'),
-                           ('script.md', b"I've been following how money is changing because of AI. I'm Krish.\n\nWhy does this matter? Say this.\n"), ('v-9x16.mp4', b'tall'), ('v-16x9.mp4', b'wide'),
+                           ('script.md', b"I've been following how money is changing because of AI.\n\nWhy does this matter? Say this.\n"), ('v-9x16.mp4', b'tall'), ('v-16x9.mp4', b'wide'),
                            ('share/v-9x16.mp4', b'tall share'), ('card.png', b'card')):
             (work / name).parent.mkdir(parents=True, exist_ok=True)
             (work / name).write_bytes(body)
@@ -786,6 +869,22 @@ def self_test():
                 lambda: variant(files=[{'kind': 'thumbnail', 'shape': 'wide', 'file': 'hand/thumb-wide-1280x720.jpg'}]), 'was not drawn by the house drawer')
         refused('a picture cut off at an edge', lambda: variant(files=[{'kind': 'image', 'file': 'img/cut.png'}]), 'is cut off')
         check('Krish can let a cut picture through in his own words', bool(variant(subject='Edge override', files=[{'kind': 'image', 'file': 'img/cut.png', 'edge_check_override': 'Krish, 2026-10-07: it bleeds on purpose'}])), True)
+        # House rule NO_NAME (Krish, 2026-10-28: "no content refers to Krish, ever"): no override.
+        (work / 'byline.html').write_text('<p class="byline">By Krish Raja \u00b7 5 October 2026</p>', encoding='utf-8')
+        refused('a web page with his name in the byline', lambda: variant(files=[{'kind': 'web-page', 'file': 'byline.html'}]),
+                'names Krish, and no public word may')
+        (work / 'alt.html').write_text('<img src="data:image/png;base64,QUJD" alt="Krish on the follow.the.money cover">', encoding='utf-8')
+        refused('a picture whose alt text names him', lambda: variant(files=[{'kind': 'substack-copy', 'file': 'alt.html'}]), '"Krish"')
+        (work / 'linked.html').write_text('<p>The words.</p><img src="krish.png" alt="The cover"><a href="https://krishraja.com/">Read it</a>'
+                                          '<script>var by = "Krish"</script>', encoding='utf-8')
+        check('a page with his name only in a src, an href or a script packs', bool(variant(subject='Linked page', files=[{'kind': 'web-page', 'file': 'linked.html'}])), True)
+        (work / 'captions.srt').write_text("1\n00:00:00,000 --> 00:00:02,000\nHi, I'm Krish.\n", encoding='utf-8')
+        refused('captions that name him', lambda: variant(files=[{'kind': 'captions', 'file': 'captions.srt'}]), 'captions.srt: "Krish"')
+        refused('a LinkedIn post that names him, with an override that never applies',
+                lambda: variant(files=[{'kind': 'linkedin-post', 'text': 'More from Krish Raja at makeyourmindup.ai', 'story_check_override': 'Krish, 2026-10-28'}]),
+                'linkedin-post.txt: "Krish Raja"')
+        shutil.copyfile(work / 'img/1-look-or-pay.png', work / 'img/krish.png')
+        check('a picture of his face named krish.png packs', bool(variant(subject='Face file', files=[{'kind': 'image', 'file': 'img/krish.png'}])), True)
         refused('a script that fails the story check', lambda: variant(files=[{'kind': 'video-script', 'text': 'One: the billion. Real, with small print.'}]), 'fails the story check')
         check('Krish can let one through in his own words', bool(variant(files=[{'kind': 'video-script', 'text': 'Hello.', 'story_check_override': 'Krish, 2026-10-06: record it as it is'}])), True)
         before = said.getvalue()

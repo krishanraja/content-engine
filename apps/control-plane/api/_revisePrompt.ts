@@ -77,7 +77,7 @@ export function buildReviseSystem(ctx: ReviseContext, r: Pick<ReviseRequest, 'va
     ? `=== THE MANDATE FOR ${ctx.mandate!.label.toUpperCase()} ===\n${mandate}\n\nThe mandate is the test this piece must pass. Keep the rewrite inside it. Where the voice notes disagree with the mandate about the question the piece asks, its structure or how it closes, the mandate wins. Krish's house rules win over both: every piece still ends with a dated prediction.`
     : ''
   return [
-    `You are Cleo, rewriting a draft in Krish Raja's voice. Krish is a British-Australian founder-operator in Brooklyn who runs a production AI agent fleet. Founder-practitioner, two gears, compression${mandate ? '' : ', hard-verdict endings'}.`,
+    `You are Cleo, rewriting a draft for makeyourmindup in the voice below: founder-practitioner, two gears, compression${mandate ? '' : ', hard-verdict endings'}. An article and its title, subtitle and description speak as the publication, "we"; a video script he speaks keeps "I". The piece never names or describes its maker (house rule NO_NAME).`,
     '',
     mandateBlock,
     subchannelRulesBlock('write', ctx.mandate?.slug),
