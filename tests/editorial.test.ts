@@ -1,5 +1,5 @@
 import { CandidateV1Schema, JobManifestV1Schema, StageNameSchema } from '@mindmake/contracts'
-import { applyPresenterIdentityCorrections, BUILT_WITH_AI_EDITORIAL_RULE_ID, NO_NAME_BLOCK, SELF_INTRODUCTION_BLOCK, captionTreatmentIssues, OPENING_POSITION_UNSTATED, OPENING_PROMISE_MISSED, OPENING_PROMISE_UNCHECKED, OPENING_STANDING_UNSTATED, openingContractIssues, promiseMatchTerms, exactWordFidelity, INVESTIGATIVE_SHORT_REFERENCE_RULE_ID, meaningCriticalRemovalIssues, suggestCaptionTreatment, validateEditorialCandidate, validateShortNativeEditorialCandidate, storyArcIssues, STORY_NO_OPENING_QUESTION, STORY_NO_OUTRO, STORY_SPOKEN_STAMP, STORY_UNCHECKED, type EditorialThresholds, type TranscriptDocument } from '@mindmake/core'
+import { applyPresenterIdentityCorrections, BUILT_WITH_AI_EDITORIAL_RULE_ID, NO_NAME_BLOCK, noNameIssues, SELF_INTRODUCTION_BLOCK, captionTreatmentIssues, OPENING_POSITION_UNSTATED, OPENING_PROMISE_MISSED, OPENING_PROMISE_UNCHECKED, OPENING_STANDING_UNSTATED, openingContractIssues, promiseMatchTerms, exactWordFidelity, INVESTIGATIVE_SHORT_REFERENCE_RULE_ID, meaningCriticalRemovalIssues, suggestCaptionTreatment, validateEditorialCandidate, validateShortNativeEditorialCandidate, storyArcIssues, STORY_NO_OPENING_QUESTION, STORY_NO_OUTRO, STORY_SPOKEN_STAMP, STORY_UNCHECKED, type EditorialThresholds, type TranscriptDocument } from '@mindmake/core'
 import { describe, expect, it } from 'vitest'
 
 const thresholds: EditorialThresholds = {
@@ -129,6 +129,17 @@ describe('editorial judgement gates', () => {
     expect(validateEditorialCandidate(unresolved, transcript(), job(), thresholds).hard_blocks).toContain('unresolved identity mention: the verified presenter is Krish; declare a real guest or subject named Chris explicitly')
     const declared = candidate({ hook: 'Chris built a useful workflow.', identity_mentions: [{ name: 'Chris', role: 'subject', evidence: 'Named in the verified source material.' }] })
     expect(validateEditorialCandidate(declared, transcript(), job(), thresholds).hard_blocks).not.toContain('unresolved identity mention: the verified presenter is Krish; declare a real guest or subject named Chris explicitly')
+  })
+
+  it('lets a declared guest called Chris introduce himself, never the presenter and never "I\'m Krish"', () => {
+    const guest = "Hi, I'm Chris from Acme, and we built this. My name is Chris Lattner."
+    const chris = [{ name: 'Chris', role: 'subject', evidence: 'A guest named in the verified source material.' }]
+    expect(noNameIssues([guest], true)).toEqual([])
+    expect(validateShortNativeEditorialCandidate(candidate({ transcript: guest, identity_mentions: chris }), thresholds, 'Krish').hard_blocks).not.toContain(SELF_INTRODUCTION_BLOCK)
+    expect(validateEditorialCandidate(candidate({ hook: guest, identity_mentions: chris }), transcript(), job(), thresholds).hard_blocks).not.toContain(SELF_INTRODUCTION_BLOCK)
+    expect(noNameIssues([guest])).toEqual([SELF_INTRODUCTION_BLOCK])
+    expect(validateShortNativeEditorialCandidate(candidate({ transcript: guest }), thresholds, 'Krish').hard_blocks).toContain(SELF_INTRODUCTION_BLOCK)
+    expect(noNameIssues(["I'm Krish, and we built this."], true)).toEqual(expect.arrayContaining([SELF_INTRODUCTION_BLOCK, NO_NAME_BLOCK]))
   })
 
   it('accepts removal-only caption treatment and preserves exact source order', () => {

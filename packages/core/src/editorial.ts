@@ -227,18 +227,22 @@ export function applyPresenterIdentityCorrections(transcript: TranscriptDocument
 // no_name), read here so the Studio refuses the words every other gate does,
 // and a self-introduction by name, as the recogniser hears it ("I'm Chris") or
 // as he says it. Neither has an override (Krish, 2026-10-29, of anyone else
-// called Krish, picked "Yes, block it").
+// called Krish, picked "Yes, block it"). A real guest or subject called Chris,
+// declared in identity_mentions, may say "I'm Chris"; "I'm Krish" never passes.
 const NO_NAME_SPEC = (copyLint.patterns as Array<{ id: string; regex: string; flags: string }>).find((p) => p.id === 'no_name')
 if (!NO_NAME_SPEC) throw new Error('config/copy-lint.json has no no_name pattern')
 const NO_NAME = new RegExp(NO_NAME_SPEC.regex, NO_NAME_SPEC.flags)
 const SELF_INTRODUCTION = /\b(?:i(?:['’]m|\s+am)|my\s+name\s+is)\s+(?:krish|chris)\b/i
+const SELF_INTRODUCTION_KRISH = /\b(?:i(?:['’]m|\s+am)|my\s+name\s+is)\s+krish\b/i
 export const NO_NAME_BLOCK = 'the public words name Krish: no hook, payoff, caption or spoken line names him, so cut it (house rule NO_NAME)'
 export const SELF_INTRODUCTION_BLOCK = 'the presenter introduces himself by name ("I\'m Chris" is how the recogniser hears "I\'m Krish"): cut the self-introduction from the edit (house rule NO_NAME)'
 
-/** Hard blocks for public words that name him or carry his self-introduction. */
-export function noNameIssues(texts: string[]): string[] {
+/** Hard blocks for public words that name him or carry his self-introduction.
+ *  declaredNonPresenterChris: the candidate declares a guest or subject called Chris. */
+export function noNameIssues(texts: string[], declaredNonPresenterChris = false): string[] {
   const text = texts.join('\n')
-  return [...(SELF_INTRODUCTION.test(text) ? [SELF_INTRODUCTION_BLOCK] : []), ...(NO_NAME.test(text) ? [NO_NAME_BLOCK] : [])]
+  const introduction = declaredNonPresenterChris ? SELF_INTRODUCTION_KRISH : SELF_INTRODUCTION
+  return [...(introduction.test(text) ? [SELF_INTRODUCTION_BLOCK] : []), ...(NO_NAME.test(text) ? [NO_NAME_BLOCK] : [])]
 }
 
 export function composeEditTranscript(transcript: TranscriptDocument, segments: EditSegmentV1[]): TranscriptDocument {
@@ -406,7 +410,7 @@ export function validateEditorialCandidate(candidate: CandidateV1, transcript: T
   const publicCandidateText = `${candidate.transcript} ${candidate.hook} ${candidate.payoff}`
   const declaredNonPresenterChris = candidate.identity_mentions.some((mention) => normalizeSpokenToken(mention.name) === 'chris' && mention.role !== 'presenter')
   if (job.presenter_name?.toLowerCase() === 'krish' && /\bchris\b/i.test(publicCandidateText) && !declaredNonPresenterChris) hardBlocks.push('unresolved identity mention: the verified presenter is Krish; declare a real guest or subject named Chris explicitly')
-  hardBlocks.push(...noNameIssues([publicCandidateText, plan.caption_script]))
+  hardBlocks.push(...noNameIssues([publicCandidateText, plan.caption_script], declaredNonPresenterChris))
 
   if (editorial.disposition !== 'publishable') hardBlocks.push(`editorial disposition is ${editorial.disposition}; do not create a treatment`)
   for (const [name, passed] of Object.entries(editorial.semantic_checks)) if (!passed) hardBlocks.push(`semantic check failed: ${name.replaceAll('_', ' ')}`)
@@ -462,7 +466,7 @@ export function validateShortNativeEditorialCandidate(candidate: CandidateV1, th
   if (presenterName && presenterMentions.some((mention) => normalizeSpokenToken(mention.name) !== normalizeSpokenToken(presenterName))) hardBlocks.push(`presenter identity violation: the verified presenter is ${presenterName}`)
   const declaredNonPresenterChris = candidate.identity_mentions.some((mention) => normalizeSpokenToken(mention.name) === 'chris' && mention.role !== 'presenter')
   if (presenterName?.toLowerCase() === 'krish' && /\bchris\b/i.test(`${candidate.transcript} ${candidate.hook} ${candidate.payoff}`) && !declaredNonPresenterChris) hardBlocks.push('unresolved identity mention: the verified presenter is Krish; declare a real guest or subject named Chris explicitly')
-  hardBlocks.push(...noNameIssues([candidate.transcript, candidate.hook, candidate.payoff]))
+  hardBlocks.push(...noNameIssues([candidate.transcript, candidate.hook, candidate.payoff], declaredNonPresenterChris))
   if (candidate.transcript.split(/\s+/).length > 180) softBlocks.push('short-native script may exceed the intended short-form duration; verify delivery time before recording')
   hardBlocks.push(...storyArcIssues(candidate.transcript))
   softBlocks.push(...voiceOnCameraIssues(candidate.transcript))
