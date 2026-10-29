@@ -19,7 +19,7 @@ or it writes neither (the rule in `editions/README.md`).
 
 | File | What it is |
 |---|---|
-| `page.html` | The piece in the makeyourmindup look, in its subchannel's colour: masthead, headline, deck and byline, the body with its source links and images, opinion labelled ("Our read:"), the choices as cards, the dated call with how sure we are, the sources and the subscribe band. One file: the fonts and images are inside it. |
+| `page.html` | The piece in the makeyourmindup look, in its subchannel's colour: masthead, headline, deck and byline (makeyourmindup, the date and the minutes: no author and no face, house rule NO_NAME), the body with its source links and images, opinion labelled ("Our read:"), the choices as cards, the dated call with how sure we are, the sources and the subscribe band. One file: the fonts and images are inside it. |
 | `substack.html` | The same words in one column, ready for Substack. Copy buttons for the title, the subtitle and the post. The post is headings, paragraphs, lists, quotes, links and images, nothing else, because Substack's editor drops layout and crashes on pasted side-by-side blocks. The images are inside the copy, in place, so they paste with the words. |
 | `phone-images.png` | Every image in the post at the width a phone shows it (358 pixels). Look at it before publishing: a word you cannot read there, a reader on a phone cannot read either. |
 | `cover-1200x630.png` | With `--cover`: the cover to upload in Substack's post settings, at the 1200 x 630 (1.91:1) its upload box asks for. |
@@ -315,8 +315,9 @@ from it:
   left out on purpose: the approved pages had none, so their labels drew at
   700.
 - **Logos** (the wordmark, the masthead, the mark, from
-  `https://www.makeyourmindup.ai/brand/`) and Krish's byline photo (the one
-  on the cover site) are fetched from the live site and cached in
+  `https://www.makeyourmindup.ai/brand/`) and Krish's photo for covers and
+  thumbnails (the one on the cover site; the article byline has no face since
+  29 Oct) are fetched from the live site and cached in
   `.cache/makeyourmindup/`, which git ignores. A fresh copy is
   fetched once a week, or now with `--refresh-brand`. If the site cannot be
   reached, the cached copy is used.

@@ -29,11 +29,14 @@ parts a rule can see, and refuses to pack a script that fails one:
     cut that opening line from every content piece moving forward and just
     launch straight in to "I put GrokBot and Muse head to head" etc."
     (house rule SERIES_OPENER, retired as a requirement). Nothing here asks
-    for the line or for "I'm Krish" any more, and --series is still taken
-    (the piece's lane_slot) so older callers work. A script recorded on the
-    old lines keeps them: SERIES_OPENERS stays in
-    apps/control-plane/api/_houseRules.ts and the hook's room still starts
-    after a series line that is there;
+    for the line any more, and --series is still taken (the piece's
+    lane_slot) so older callers work. SERIES_OPENERS stays in
+    apps/control-plane/api/_houseRules.ts as history only, and the hook's
+    room still starts after a series line that is there;
+  - it never says his name. Krish, 2026-10-28: "Remember, no content refers
+    to Krish, ever." He speaks as I to camera, so "I'm Krish" and the old
+    series lines that end with it are refused (house rule NO_NAME), by the
+    copy lint's one name pattern (config/copy-lint.json, no_name);
   - a 12-year-old can follow it, heard once (house rule R7, the hard gate on
     every script). Krish, 2026-10-12: "Every single script should be
     understandable by a 12-year-old. I can't even understand what I'm
@@ -66,6 +69,10 @@ import json
 import re
 import sys
 from pathlib import Path
+
+if str(Path(__file__).resolve().parent) not in sys.path:
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+import copy_lint  # noqa: E402  the name rule (no_name): one pattern for his name, in copy and in speech
 
 UNCHECKED = 'NOT YET FACT-CHECKED'
 OPENING_WORDS = 90
@@ -180,6 +187,21 @@ def series_problems(beats, series):
     a series this file has never heard of is not a refusal. The function and
     the --series argument stay so older callers (making.py) keep working."""
     return []
+
+
+def name_problems(spoken):
+    """House rule NO_NAME. Krish, 2026-10-28: "Remember, no content refers to
+    Krish, ever. I still see that popping up from time to time. Even articles
+    written are not authored by Krish. My face only, for assets and the video
+    format." He speaks as I to camera and never says his name, so a script
+    that does ("I'm Krish", an old series line) is refused. The pattern is the
+    copy lint's no_name, so a script, a caption and a page refuse the same
+    words."""
+    names = sorted({h['match'] for h in copy_lint.copy_lint(spoken, 'article_body') if h['id'] == 'no_name'})
+    if not names:
+        return []
+    return [f'it says his name ({", ".join(chr(34) + n + chr(34) for n in names)}): he speaks as I to camera and never says it, '
+            'so cut the line (house rule NO_NAME; Krish, 2026-10-28: "Remember, no content refers to Krish, ever.")']
 
 
 def close_problems(beats):
@@ -546,6 +568,7 @@ def problems(text, cut=None, series=None):
     if not words:
         return found + ['no spoken words found: a script is only the words Krish says, one plain paragraph per thought (house rule SCRIPT_ONLY)']
     found += series_problems(beats, series)
+    found += name_problems(' '.join(beats))
     found += rejected_problems(' '.join(beats))
     found += score_problems(beats)
     # A script recorded on the old lines still has its series line: the hook's room starts after it.
@@ -906,7 +929,8 @@ def self_test():
     check('problems() carries the length rule when the cut is known', any('TWO_CUTS' in p for p in problems(GOOD, 'long')), len(' '.join(spoken_paragraphs(GOOD)).split()) not in range(675, 826))
 
     # The series line is retired (house rule SERIES_OPENER; Krish, 2026-10-21): nothing asks for it,
-    # nothing counts "I'm Krish", and an unknown series is not a refusal. The lines stay readable.
+    # and an unknown series is not a refusal. The lines stay readable, as history only: each ends
+    # "I'm Krish.", so since 2026-10-28 saying one is refused (house rule NO_NAME).
     lines = series_openers()
     check('the three retired series lines are still readable from the house rules', lines, {
         'follow_the_money': "I've been following how money is changing because of AI. I'm Krish.",
@@ -914,10 +938,18 @@ def self_test():
         'mind_the_gap': "I've been keeping a beady eye on what's coming with AI, before everyone notices. I'm Krish."})
     check('a script with no series line passes, whatever series it is given',
           [problems(GOOD, None, s_) for s_ in (None, 'under_the_hood', 'money_of_ai', 'nothing_at_all')], [[], [], [], []])
-    check('a script recorded on the old line still passes, and its hook room starts after the line',
-          problems(lines['under_the_hood'] + '\n\n' + GOOD, None, 'under_the_hood'), [])
+    for slot_, line_ in lines.items():
+        check(f'a script that says the old {slot_} line is refused, naming NO_NAME',
+              [p for p in problems(line_ + '\n\n' + GOOD, None, slot_) if 'NO_NAME' in p][:1],
+              ['it says his name ("Krish"): he speaks as I to camera and never says it, so cut the line '
+               '(house rule NO_NAME; Krish, 2026-10-28: "Remember, no content refers to Krish, ever.")'])
+    check('the old line is the only thing refused in it', len(problems(lines['under_the_hood'] + '\n\n' + GOOD, None, 'under_the_hood')), 1)
     again = GOOD.replace('Then check who pays for its ads.', "I'm Krish. Then check who pays for its ads.")
-    check('"I\'m Krish" is no longer counted', [series_problems([again], 'under_the_hood'), problems(again)], [[], []])
+    check('"I\'m Krish" is refused, naming NO_NAME, and the series rule still asks nothing',
+          (series_problems([again], 'under_the_hood'), [p for p in problems(again) if 'NO_NAME' in p] != []), ([], True))
+    check('a name refused in any spelling or handle, and other names pass',
+          [bool(name_problems(w)) for w in ("I'm Krish Raja.", 'Follow TheRealKrisho.', 'Arvind Krishna said so.', 'Raja Koduri left Intel.')],
+          [True, True, False, False])
     late = lines['follow_the_money'] + ' ' + ' '.join(['Word'] * 80) + ' and so who gets paid?'
     check('the hook\'s room starts after the series line: a question 81 words in passes', any('open on a question' in p for p in problems(late)), False)
 

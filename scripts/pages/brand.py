@@ -32,6 +32,9 @@ ROOT = Path(__file__).resolve().parents[2]
 CACHE = ROOT / '.cache' / 'makeyourmindup'
 SITE_URL = 'https://www.makeyourmindup.ai'
 SUBSTACK = 'https://mindmakerlive.substack.com'
+# No page reads this (house rule NO_NAME; Krish, 2026-10-28: "no content refers
+# to Krish, ever"). Only the retiring tall-cut name strap still does
+# (scripts/quick-edit/kit.py page_strap); delete this with the strap.
 AUTHOR = 'Krish Raja'
 
 # The live cover site serves these. `max_width` is the size inlined into a page

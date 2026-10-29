@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { spawnSync } from 'node:child_process'
-import { readFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { SECRET_PATTERNS } from '../scripts/secret-patterns.js'
@@ -73,6 +74,32 @@ describe('taste-guard', () => {
     expect(hook('taste-guard.mjs', write('apps/control-plane/api/_houseRules.ts', 'x'))?.permissionDecision).toBe('ask')
     expect(hook('taste-guard.mjs', write('config/title-verdicts.json', '{}'))?.permissionDecision).toBe('ask')
     expect(hook('taste-guard.mjs', write('supabase/migrations/20990101000000_x.sql', "update venture_formats set mandate = 'x';"))?.permissionDecision).toBe('ask')
+  })
+  it('knows a guarded file in any worktree of this repository, and nothing in another repository', async () => {
+    // A linked worktree's .git is a file naming its git folder, whose commondir names the repository's own .git.
+    // Built in a temporary folder, so the test never adds a worktree to the repository itself.
+    const lib = await import(pathToFileURL(join(repoRoot, '.claude', 'hooks', 'lib.mjs')).href) as { gitCommonDir: (top: string) => string | null }
+    const common = lib.gitCommonDir(repoRoot)
+    expect(common).toBeTruthy()
+    const tmp = mkdtempSync(join(tmpdir(), 'taste-guard-'))
+    try {
+      mkdirSync(join(tmp, 'gitdir'))
+      writeFileSync(join(tmp, 'gitdir', 'commondir'), `${common}\n`)
+      const worktree = join(tmp, 'wt', 'i-copy')
+      mkdirSync(worktree, { recursive: true })
+      writeFileSync(join(worktree, '.git'), `gitdir: ${join(tmp, 'gitdir')}\n`)
+      const other = join(tmp, 'other')
+      mkdirSync(join(other, '.git'), { recursive: true })
+      expect(hook('taste-guard.mjs', write(join(worktree, 'apps', 'control-plane', 'api', '_houseRules.ts'), 'x'))?.permissionDecision).toBe('ask')
+      expect(hook('taste-guard.mjs', write(join(worktree, 'config', 'intro-sting.json'), '{}'))?.permissionDecision).toBe('ask')
+      expect(hook('taste-guard.mjs', write(join(worktree, 'docs', 'NORTH_STAR.md'), 'x'))?.permissionDecision).toBe('deny')
+      expect(hook('taste-guard.mjs', write(join(worktree, 'docs', 'STATE.md'), 'x'))).toBeUndefined()
+      expect(hook('taste-guard.mjs', write(join(other, 'apps', 'control-plane', 'api', '_houseRules.ts'), 'x'))).toBeUndefined()
+      expect(hook('taste-guard.mjs', write(join(tmp, 'apps', 'control-plane', 'api', '_houseRules.ts'), 'x'))).toBeUndefined()
+      expect(hook('secret-guard.mjs', write(join(worktree, '.env'), 'A=1\n'))?.permissionDecision).toBe('deny')
+    } finally {
+      rmSync(tmp, { recursive: true, force: true })
+    }
   })
 })
 

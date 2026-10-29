@@ -518,6 +518,112 @@
           "applies_to": "titles"
         }
       ]
+    },
+    "no_name": {
+      "hit": [
+        {
+          "text": "By Krish Raja · 19 October 2026 · 6 minute read",
+          "applies_to": "article_metadata"
+        },
+        {
+          "text": "Krish's take on the deal.",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "KRISH’S CONFIDENCE",
+          "applies_to": "video_onscreen"
+        },
+        {
+          "text": "KRISH'S TEST · 23 OCT",
+          "applies_to": "video_onscreen"
+        },
+        {
+          "text": "What will AI cost next? Google, OpenAI and Anthropic, with Krish.",
+          "applies_to": "article_metadata"
+        },
+        {
+          "text": "Follow @TheRealKrisho for more",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "More at krishraja.com",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "Krishan Raja tested six models.",
+          "applies_to": "article_body"
+        },
+        {
+          "text": "How sure we are: [Krish to set]",
+          "applies_to": "article_body"
+        },
+        {
+          "text": "I've been following how money is changing because of AI. I'm Krish.",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "Rule 03 • Krish’s practical recommendation",
+          "applies_to": "carousel_text"
+        },
+        {
+          "text": "Why Krish thinks prices will double",
+          "applies_to": "titles"
+        },
+        {
+          "text": "github.com/krishanraja/content-engine",
+          "applies_to": "article_body"
+        },
+        {
+          "text": "Krish Mehta runs the AI team at a bank.",
+          "applies_to": "article_body"
+        },
+        {
+          "text": "Find us at krish_raja on Threads.",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "Krish2026 tested six models.",
+          "applies_to": "article_body"
+        },
+        {
+          "text": "Say hi to @krish_ai",
+          "applies_to": "channel_copy"
+        }
+      ],
+      "pass": [
+        {
+          "text": "Arvind Krishna said IBM will cut its AI prices.",
+          "applies_to": "article_body"
+        },
+        {
+          "text": "Sriram Krishnan advises the White House on AI.",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "Raja Koduri left Intel to start a chip company.",
+          "applies_to": "article_body"
+        },
+        {
+          "text": "Krishi Network is an AI app for farmers in India.",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "We ran the same prompt through DeepSeek and Claude. Our test, 23 October.",
+          "applies_to": "article_body"
+        },
+        {
+          "text": "OUR TEST · 23 OCT",
+          "applies_to": "video_onscreen"
+        },
+        {
+          "text": "How sure we are: 75%",
+          "applies_to": "article_body"
+        },
+        {
+          "text": "makeyourmindup · 19 October 2026 · 6 minute read",
+          "applies_to": "article_metadata"
+        }
+      ]
     }
   }
 }

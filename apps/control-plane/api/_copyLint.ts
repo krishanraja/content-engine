@@ -10,14 +10,16 @@
 // reads the same file, so CI (scripts/check-public-copy.ts) and every session
 // that runs it read the same patterns, and tests/control-plane/copy-lint.test.ts
 // holds the two to the same answers.
-// Each pattern names the surfaces it covers; none covers the article body's
-// markdown source, where emphasis and headings are the markdown itself.
+// Each pattern names the surfaces it covers. Only the name rule (no_name:
+// Krish, 2026-10-28, "no content refers to Krish, ever") covers the article
+// body; no other pattern reads the body's markdown source, where emphasis and
+// headings are the markdown itself.
 //
 // Pure and network-free: it runs before any paid call.
 
 import lint from '../../../config/copy-lint.json' with { type: 'json' }
 
-export const COPY_SURFACES = ['channel_copy', 'carousel_text', 'video_onscreen', 'titles', 'article_metadata'] as const
+export const COPY_SURFACES = ['channel_copy', 'carousel_text', 'video_onscreen', 'titles', 'article_metadata', 'article_body'] as const
 export type CopySurface = (typeof COPY_SURFACES)[number]
 
 export interface CopyLintHit {
@@ -94,6 +96,8 @@ const str = (v: unknown): string | null => (typeof v === 'string' ? v : null)
  *   cover facts         headline and deck (article metadata), video_title,
  *                       comment_question and the cover and thumbnail words
  *   creative direction  cuts.<cut>.beats[].on_screen_text
+ *   publish manager     title (title), subtitle and every picture's alt text
+ *                       (article metadata)
  */
 export function copyFields(data: unknown): CopyField[] {
   const out: CopyField[] = []
@@ -145,6 +149,17 @@ export function copyFields(data: unknown): CopyField[] {
         if (text !== null && text.trim()) out.push({ where: `cuts.${cut}.beats[${bi}].on_screen_text`, text, appliesTo: 'video_onscreen' })
       })
     }
+  }
+  // publish_manager.py's manager.json: a title, the body's path and the pictures.
+  const title = str(data.title)
+  if (title !== null && str(data.body) !== null && Array.isArray(data.images)) {
+    out.push({ where: 'title', text: title, appliesTo: 'titles' })
+    const subtitle = str(data.subtitle)
+    if (subtitle !== null) out.push({ where: 'subtitle', text: subtitle, appliesTo: 'article_metadata' })
+    data.images.forEach((image, ii) => {
+      const alt = isObj(image) ? str(image.alt) : null
+      if (alt !== null) out.push({ where: `images[${ii}].alt`, text: alt, appliesTo: 'article_metadata' })
+    })
   }
   return out
 }

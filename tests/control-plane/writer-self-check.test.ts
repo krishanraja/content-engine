@@ -57,6 +57,7 @@ vi.mock('../../apps/control-plane/api/_subchannels.js', () => ({
 }))
 
 const { blockingHits, selfCheck, correctionFor, guardConfidence } = await import('../../apps/control-plane/api/_selfCheck.js')
+const { bodyHash } = await import('../../apps/control-plane/api/_factGate.js')
 
 const TOKEN = 'eot_' + 's'.repeat(40)
 const ID = '00000000-0000-4000-8000-000000000042'
@@ -84,7 +85,7 @@ const P1_FIXED = P1
 // still reads above age 13).
 const P3 = fixture('piece3-v1-first-draft.md')
 // The placeholder in place of the 78% the draft wrote on its own.
-const unset = (text: string) => text.replace('How sure we are: 78%.', 'How sure we are: [Krish to set].')
+const unset = (text: string) => text.replace('How sure we are: 78%.', 'How sure we are: [to set].')
 const P3_R2_FIXED = P3
   .replace('So the 27 years is a flavour, not an ingredient.', 'So the 27 years is a flavour. It never went into the dough.')
   .replace("That's not matching or exceeding the leading models. That's finishing third", 'Koa finished third')
@@ -141,7 +142,7 @@ async function draft(...answers: Reply[]) {
   provider()
   const { default: handler } = await import('../../apps/control-plane/api/content-ideas/[id]/draft.js')
   const r = response()
-  await handler({ method: 'POST', headers: { authorization: `Bearer ${TOKEN}` }, query: { id: ID }, body: { instruction: 'End with "How sure we are: [Krish to set]".' } } as never, r.res as never)
+  await handler({ method: 'POST', headers: { authorization: `Bearer ${TOKEN}` }, query: { id: ID }, body: { instruction: 'End with "How sure we are: [to set]".' } } as never, r.res as never)
   return r.out
 }
 
@@ -222,7 +223,7 @@ describe('the reading-age correction never offers the call', () => {
     const text = [
       'Organisational infrastructure considerations necessitate comprehensive evaluation methodologies regarding proprietary implementations everywhere.',
       'Short one. Another short one.',
-      '## OUR PREDICTION', '', call, '', 'How sure we are: [Krish to set]',
+      '## OUR PREDICTION', '', call, '', 'How sure we are: [to set]',
     ].join('\n\n')
     const correction = correctionFor(text, [{ rule: 'R7', found: 'Reads at about age 16.0. Above 13 cannot be approved.' }], 'Return only the whole rewritten text.')
     expect(correction).toContain('Organisational infrastructure considerations')
@@ -350,19 +351,19 @@ const CALL_PARAGRAPH = '**The Call.** By 30 June 2027, Amazon opens an authorise
 const P1_PARAGRAPH = P1.replace(/## OUR PREDICTION[\s\S]*$/, CALL_PARAGRAPH)
 
 describe('guardConfidence', () => {
-  it('a first draft says "How sure we are: [Krish to set]", whatever the model wrote', () => {
+  it('a first draft says "How sure we are: [to set]", whatever the model wrote', () => {
     const r = guardConfidence(P3, null)
     expect(r.restored).toBe(true)
     expect(r.text).toBe(unset(P3))
     expect(guardConfidence(unset(P3), null)).toEqual({ text: unset(P3), restored: false })
     // Under the other label too, in the house form.
-    expect(guardConfidence(P1_PARAGRAPH, null).text.endsWith('sponsored listings. How sure we are: [Krish to set].')).toBe(true)
+    expect(guardConfidence(P1_PARAGRAPH, null).text.endsWith('sponsored listings. How sure we are: [to set].')).toBe(true)
   })
 
   it('a first draft that dropped the line gets the placeholder back, at the end of the call', () => {
     const r = guardConfidence(P3.replace('\n\nHow sure we are: 78%.', ''), null)
     expect(r.restored).toBe(true)
-    expect(r.text.endsWith("echoing exactly the Nemotron-into-Koa move.\n\nHow sure we are: [Krish to set]")).toBe(true)
+    expect(r.text.endsWith("echoing exactly the Nemotron-into-Koa move.\n\nHow sure we are: [to set]")).toBe(true)
   })
 
   it('a rewrite keeps the source\'s "How sure we are:" number, and gets it back when dropped', () => {
@@ -382,6 +383,14 @@ describe('guardConfidence', () => {
     expect(guardConfidence(P3, waiting)).toEqual({ text: waiting, restored: true })
   })
 
+  it('a draft still carrying the old placeholder that named him gets the new one, and the fact check holds', () => {
+    // Krish, 2026-10-28: "Remember, no content refers to Krish, ever." (house rule NO_NAME)
+    const old = P3.replace('How sure we are: 78%.', 'How sure we are: [Krish to set].')
+    expect(guardConfidence(old, old)).toEqual({ text: unset(P3), restored: true })
+    expect(guardConfidence(old, null)).toEqual({ text: unset(P3), restored: true })
+    expect(bodyHash(unset(P3))).toBe(bodyHash(old))
+  })
+
   it('leaves a labelled number outside the call alone: it is a fact about something else', () => {
     const text = P1.replace('## WHO GETS PAID', 'Consumer confidence: 62% in August.\n\n## WHO GETS PAID')
     expect(guardConfidence(text, P1)).toEqual({ text, restored: false })
@@ -391,7 +400,7 @@ describe('guardConfidence', () => {
 describe('the routes put the confidence back after the model and after any retry', () => {
   it('draft: the 78% piece 3 wrote on its own, in the first answer and again in the retry, becomes the placeholder', async () => {
     const out = await draft(asJson(P3), asJson(P3_R2_FIXED))
-    expect(out.body.body.endsWith('How sure we are: [Krish to set].')).toBe(true)
+    expect(out.body.body.endsWith('How sure we are: [to set].')).toBe(true)
     expect(out.body.body).not.toContain('78%')
     expect(out.body.self_check.confidence_restored).toBe(true)
     const written = db.updates.find(u => u.table === 'content_ideas')!.values as { body: string }
