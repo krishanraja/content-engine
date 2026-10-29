@@ -14,16 +14,30 @@ What it does, in order:
   3. Finds each graphic's moment from the words themselves (an anchor phrase
      where it starts and one where it ends), so a re-recording needs no new
      timings unless the words change.
-  4. Renders both shapes: the intro sting first (when Krish has approved it,
-     in the colour of the piece's series), graphics in, captions timed to the
-     words, the end card on the end. The sting's own sound is never mixed:
-     its stretch is silence under the music bed.
+  4. Renders both shapes, each opening straight on the hook (house rule
+     HOOK_IS_THE_INTRO, Krish 2026-10-29: no story card and no logo intro in
+     front of it): the tall cut in the brand's dress from its first frame
+     (the wordmark and the series tag in the top corners, kit.py's
+     dress-9x16.png), the wide cut on its branded frame; graphics in,
+     captions timed to the words, the one outro card on the end. Each
+     report records the opening it used ("opening"), so real engagement can
+     settle the choice. A clip goes in front only on Krish's own words for
+     that piece ("intro_override"); its own sound is never mixed.
   5. Mixes the sound: his voice, the licensed music bed under the whole
-     video (high over the sting, low under his voice, higher over the end
-     card), then one two-pass loudness pass on the final mix (-14 LUFS,
-     true peak at most -1 dBTP), measured again after the encode.
-  6. Writes preview frames at the sting and every graphic, and a report of
+     video and never dropping out (low under his voice, higher over the end
+     card; Krish, 2026-10-28: "Yes I think music should be audible
+     throughout but just lower."), then one two-pass loudness pass on the
+     final mix (-14 LUFS, true peak at most -1 dBTP), measured again after
+     the encode.
+  6. Writes preview frames at the opening and every graphic, and a report of
      what it did, the music it used and the loudness it measured.
+
+No caption carries his name, and no tall cut carries a name strap (Krish,
+2026-10-28: "Remember, no content refers to Krish, ever. I still see that
+popping up from time to time. Even articles written are not authored by
+Krish. My face only, for assets and the video format."): a caption that
+says it, or a self-introduction such as "I'm Krish", stops the run before
+anything renders, naming where he said it so it can be cut with "remove".
 
 Needs Python 3.10+, ffmpeg and ffprobe on the PATH, and for transcription
 the pinned faster-whisper from requirements.lock.txt (`python -m pip install
@@ -35,7 +49,7 @@ newest pair cannot decode sound). Run from anywhere:
     python make.py --self-test
 
 `--plan` stops after the transcript: it prints every cut, every graphic's
-window, the caption count, the intro and the music each cut will get, and
+window, the caption count, the opening and the music each cut will get, and
 renders nothing. Run it first.
 `--share-mib` also writes a copy of each finished video under that size
 (share.py), for chat uploads that stop at 30 MiB.
@@ -57,7 +71,7 @@ the report list each one under "spellings"; a US spelling no script word
 covers is a warning. A number the transcriber split at its punctuation
 ("$150" and ",000", "70" and "%") is one caption word again.
 
-Neither the sting's own sound nor the end card's is ever mixed: both
+Neither an opening clip's own sound nor the end card's is ever mixed: both
 stretches are silence, with the music bed over them.
 """
 import argparse
@@ -73,7 +87,7 @@ import sys
 from pathlib import Path
 
 import episode
-import intro as sting
+import intro as sting  # the three series names; the sting itself is retired (HOOK_IS_THE_INTRO)
 import music
 import spelling
 import transcriber
@@ -97,12 +111,12 @@ SIZE = {'9x16': (1080, 1920), '16x9': (1920, 1080)}
 # pass, so that pass is a plain gain and the AAC encode stays under -1 dBTP.
 LIMIT_DBTP = -2.0
 # House rule TWO_CUTS: the short cut runs at most 90 seconds. Krish has not
-# yet ruled on whether those 90 seconds count the intro sting and the end
-# card, so the check reads the one figure named here: 'main_s', his speech
+# yet ruled on whether those 90 seconds count the end card (and any opening
+# clip), so the check reads the one figure named here: 'main_s', his speech
 # alone (the captioned main), which is what story_check's word budget (225
 # words at 150 a minute) measures too. The report shows total_seconds, with
-# the sting and the end card, either way. If he rules that the 90 seconds is
-# the whole video, make 'measures' 'total_s'.
+# the end card, either way. If he rules that the 90 seconds is the whole
+# video, make 'measures' 'total_s'.
 TALL_CAP = {'seconds': 90, 'measures': 'main_s'}
 NORM = f'aresample={RATE},aformat=sample_fmts=fltp:sample_rates={RATE}:channel_layouts=stereo'
 BRAND = [(['follow', 'the', 'money'], 'follow.the.money'), (['under', 'the', 'hood'], 'under.the.hood'),
@@ -118,12 +132,13 @@ def run(cmd, quiet=False, **kw):
 # Names the transcriber gets wrong, fixed in every video's captions before the
 # config's own fixes. Krish, 2026-10-07, of the Higgsfield video: "the subtitle
 # called Byte Dance, 'Bike Dance.'" Add a name here when a video gets it wrong,
-# so the next one cannot.
+# so the next one cannot. His own name is never one of them: no caption says it
+# (Krish, 2026-10-28; name_in_captions), so "Chris" is never turned into it.
 DEFAULT_FIXES = [
     ['Bike Dance', 'ByteDance'], ['Byte Dance', 'ByteDance'], ['Bite Dance', 'ByteDance'], ['Bytedance', 'ByteDance'],
     ['Higgs field', 'Higgsfield'], ['Higsfield', 'Higgsfield'], ['Open AI', 'OpenAI'], ['Sorah', 'Sora'],
     ['Chat GPT', 'ChatGPT'], ['XAI', 'xAI'], ['Deep Seek', 'DeepSeek'], ['Mid Journey', 'Midjourney'], ['Eleven Labs', 'ElevenLabs'],
-    ['MakeYourMindUp .ai', 'makeyourmindup.ai'], ['Chris', 'Krish'], ['theater', 'theatre'],
+    ['MakeYourMindUp .ai', 'makeyourmindup.ai'], ['theater', 'theatre'],
     # The AI-plans pieces (2026-10-09): names the transcriber gets wrong.
     ['Clawed', 'Claude'], ['Entropic', 'Anthropic'], ['Anthropics', 'Anthropic\'s'],
     ['Semi Analysis', 'SemiAnalysis'], ['Semi analysis', 'SemiAnalysis'], ['Semianalysis', 'SemiAnalysis'],
@@ -156,14 +171,15 @@ def default_logo(out):
 
 def script_prompt(path):
     """The names in the script, as a hint for the transcriber, so it hears
-    "ByteDance" and "Higgsfield" the way they are spelt."""
+    "ByteDance" and "Higgsfield" the way they are spelt. It names the
+    publication, never Krish: no caption says his name (Krish, 2026-10-28)."""
     text = Path(path).read_text(encoding='utf-8-sig')
     names = []
     for m in re.finditer(r"\b(?:[A-Z][a-z]*[A-Z][A-Za-z]*|[A-Z][a-z]{2,}(?:\s+[A-Z][a-z]{2,})*|[A-Z]{2,}[a-z]*)\b", text):
         word = m.group(0)
         if word not in names and word.split()[0] not in {'The', 'This', 'That', 'And', 'But', 'So', 'Now', 'Our', 'If', 'One', 'First', 'Then', 'When', 'What', 'How', 'Why', 'Think', 'People', 'Every', 'Most', 'Nobody', 'Instead', 'Expensive', 'Choose', 'Line', 'Before', 'Square', 'Written', 'On', 'In', 'It', 'They', 'You', 'We', 'He', 'She', 'Let', 'Back'}:
             names.append(word)
-    return 'Krish, makeyourmindup. ' + ', '.join(names[:60]) + '.'
+    return 'makeyourmindup. ' + ', '.join(names[:60]) + '.'
 
 
 def norm(t):
@@ -772,6 +788,73 @@ def tokens(ws, replacements, spell=None, names=()):
     return out
 
 
+NO_NAME_RULING = ('Krish, 2026-10-28: "Remember, no content refers to Krish, ever. I still see that popping up from time to time. '
+                  'Even articles written are not authored by Krish. My face only, for assets and the video format."')
+# The captions are his own words as heard, so his name reaches one only when he
+# says it or the transcriber hears another word as it. Any "Krish" is refused
+# (asked whether another Krish may be named, Krish picked: "Yes, block it", with
+# no override), and so is a self-introduction under whatever the transcriber
+# heard for the name ("I'm Chris"). The copy lint's "no_name" pattern
+# (config/copy-lint.json) is read as well once that file carries one.
+NAME_SAID = (re.compile(r'\bkrish', re.I),
+             re.compile(r"\b(?:i\s*['’]?\s*m|i\s+am|my\s+name\s*(?:['’]\s*s|\s+is))\s+(?:chris|krish(?:an)?)\b", re.I))
+
+
+def name_patterns():
+    pats = list(NAME_SAID)
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'post-pack'))
+    try:
+        import copy_lint
+        pats += [rx for pid, rx, applies in copy_lint.patterns() if pid == 'no_name' and 'video_onscreen' in applies]
+    except (ImportError, OSError, ValueError, KeyError):
+        pass
+    return pats
+
+
+def name_in_captions(toks, words=None):
+    """Every place the caption words (tokens()) say his name or introduce him:
+    [{"said", "cut_s", "take_s"}], take_s on the words file's clock when the
+    token keeps its source word."""
+    text, starts = '', []
+    for t in toks:
+        starts.append(len(text))
+        text += str(t['w']) + ' '
+    spans = []
+    for rx in name_patterns():
+        for m in rx.finditer(text):
+            spans.append((max(k for k, at in enumerate(starts) if at <= m.start()), max(k for k, at in enumerate(starts) if at < m.end())))
+    merged = []
+    for i, j in sorted(spans):
+        if merged and i <= merged[-1][1]:
+            merged[-1] = (merged[-1][0], max(j, merged[-1][1]))
+        else:
+            merged.append((i, j))
+    out = []
+    for i, j in merged:
+        src = toks[i].get('src')
+        take = words[src]['s'] if words is not None and isinstance(src, int) and 0 <= src < len(words) else None
+        out.append({'said': ' '.join(str(t['w']) for t in toks[i:j + 1]), 'cut_s': toks[i]['s'], 'take_s': take})
+    return out
+
+
+def name_refusal(hits):
+    """Why the run stops: where he said it, so it can be cut with "remove"."""
+    clock = lambda t: f'{t // 60:.0f}:{t % 60:05.2f}'
+    where = '; '.join(f'"{h["said"]}" at {clock(h["cut_s"])} in the cut' + (f' ({clock(h["take_s"])} in the take)' if h['take_s'] is not None else '')
+                      for h in hits)
+    return (f'the captions name him: {where}. No content refers to him ({NO_NAME_RULING}). '
+            'Cut it from the take with a "remove" row ({"say": "the words", "after": "the words before them"}) and plan again')
+
+
+def strap_problem(cfg):
+    """The name strap is retired: it put his name on the tall cut (kit.py no
+    longer draws one). None when the config carries none."""
+    if cfg.get('strap'):
+        return (f'"strap" in the config would put his name on screen, and no content refers to him ({NO_NAME_RULING}). '
+                'Take "strap" out of the config: the tall cut carries the brand\'s dress instead (kit.py, "dress")')
+    return None
+
+
 def reviewed_caption_tokens(cfg, resolve, tokens, identity, edited, duration):
     if not cfg.get('caption_repairs'):
         return tokens, None
@@ -966,14 +1049,17 @@ def intro_override(cfg):
 
 
 def resolve_intro(cfg, asp, P, base='.'):
-    """The sting in front of this cut: (intro, note). intro is None when the
-    cut has none, and note says why. The config's "intro" is "auto" (the
-    house sting once Krish has approved it, config/intro-sting.json, in the
-    colour of the piece's series), false, or {"9x16": file, "16x9": file}.
-    A file named in the config is used only when it is the approved house
-    render for this shape and series (the same sha256), or when the config
-    carries Krish's own words in "intro_override". Its own sound is never
-    used: make.py lays silence under it. A sting problem never stops a render."""
+    """Anything in front of the hook in this cut: (intro, note). intro is
+    None when the cut opens straight on the hook, which every cut does by
+    default (house rule HOOK_IS_THE_INTRO, Krish, 2026-10-29: "Let's go with
+    number one for now"; the sting is retired, config/intro-sting.json, so
+    "auto" gives none and says nothing). The config's "intro" is "auto",
+    false, or {"9x16": file, "16x9": file}: a file named there goes in front
+    only on Krish's own words for this piece in "intro_override" (or if a
+    house sting is ever approved again, as that render), so a different
+    opening can be tried on his say and the report records it ("opening").
+    Its own sound is never used: make.py lays silence under it. An opening
+    problem never stops a render."""
     want = cfg.get('intro', 'auto')
     if want is False or want is None:
         return None, None
@@ -1009,8 +1095,8 @@ def resolve_intro(cfg, asp, P, base='.'):
         return None, f'the intro {path} could not be read ({e}), so this cut has no intro'
     lo, hi = sting.SECONDS
     if source == 'override':
-        # A story intro (house rule STORY_INTRO_OUTRO) runs longer than the
-        # 1 to 2 s sting: up to STORY_INTRO_MAX_S, on Krish's words.
+        # A clip on Krish's words may run longer than the retired 1 to 2 s
+        # sting: up to STORY_INTRO_MAX_S.
         lo, hi = sting.SECONDS[0], STORY_INTRO_MAX_S
     if not lo - 0.5 / FPS <= info['seconds'] <= hi + 0.5 / FPS:
         return None, f'the intro {path.name} runs {info["seconds"]} s, outside {lo} to {hi} s, so this cut has no intro'
@@ -1024,16 +1110,27 @@ def resolve_intro(cfg, asp, P, base='.'):
              'own_sound_replaced': info['audio'], **info}, '; '.join(notes) or None)
 
 
+def opening_of(intro):
+    """What the cut opened on, for its report. The hook as the intro is
+    Krish's choice to test (house rule HOOK_IS_THE_INTRO, 2026-10-29: "we
+    need to figure out what the right tone is over time based on real
+    engagement"), so every cut records it and engagement can settle it."""
+    if intro is None:
+        return {'kind': 'hook', 'rule': 'HOOK_IS_THE_INTRO'}
+    return {'kind': 'clip', 'source': intro['source'], 'file': str(intro['file']), 'seconds': intro['seconds']}
+
+
 def piece_key(cfg):
     """What ties both cuts of one piece to the same music."""
     return str(cfg.get('piece_id') or cfg.get('piece') or cfg.get('subject') or cfg['name'])
 
 
-# The story intro and outro (house rule STORY_INTRO_OUTRO,
-# config/story-intro-outro.json): the longest each may run.
+# The longest a clip in front of the hook may run, on Krish's words only
+# (the story intro it was made for is retired, HOOK_IS_THE_INTRO), and the
+# longest the story outro runs (STORY_INTRO_OUTRO, config/story-intro-outro.json).
 STORY_INTRO_MAX_S = 5.0
 STORY_OUTRO_MAX_S = 6.0
-# What a cut adds to its recording at most: the longest intro and end card.
+# What a cut adds to its recording at most: the longest opening clip and end card.
 CUT_EXTRA_S = max(sting.SECONDS[1], STORY_INTRO_MAX_S) + STORY_OUTRO_MAX_S
 
 
@@ -1068,11 +1165,18 @@ def resolve_music(cfg, asp, seconds, base='.'):
     if want is False or want is None:
         return None, None
     notes = []
-    if cfg.get('music_mode') == 'episode':
-        # A long episode's bed plays only in its open, lifts and close, so it needs that much music, not the whole cut.
-        seconds = float(cfg.get('music_seconds') or music.episode_seconds(seconds, range(8)))
-    elif cfg.get('music_mode') == 'episode_bed':
-        seconds = 0  # Chapter restarts are validated against the actual cue windows.
+    mode = cfg.get('music_mode')
+    if mode == 'episode':
+        # The old episode bed played only in the open, at the chapter turns and
+        # in the close, and dropped out under the talk between them. Krish,
+        # 2026-10-28: "Yes I think music should be audible throughout but just
+        # lower." So it is the continuous bed now, low under his voice, lifting
+        # at the chapter cards (the one he approved by ear on 19 October).
+        mode = 'episode_bed'
+        notes.append('"music_mode": "episode" plays the continuous bed ("episode_bed"): the music is audible under the whole cut, '
+                     'low under his voice (Krish, 2026-10-28)')
+    if mode == 'episode_bed':
+        seconds = 0  # Restarts go in the chapter cards, and further ones under a two-second crossfade where a stretch outruns the track.
     try:
         data = music.load()
         platforms = music.SHAPE_PLATFORMS[asp]
@@ -1101,22 +1205,20 @@ def resolve_music(cfg, asp, seconds, base='.'):
             return None, '"music" in the config is "auto", false or a track id; this cut has voice only'
         path = music.resolve(track, data)
         levels = dict(music.levels_of(data))
-        if cfg.get('music_mode') == 'episode_bed':
+        if mode == 'episode_bed':
             levels.update(cfg.get('episode_bed_levels') or {})
     except music.MusicError as e:
         return None, f'the music could not be used ({e}), so this cut has voice only'
     ledger = music.ledger_path()
     if ledger.resolve() != music.LEDGER.resolve():
         notes.append(f'the music came from {ledger}, not config/music-library.json')
-    mode = cfg.get('music_mode') if cfg.get('music_mode') in ('episode','episode_bed') else None
-    if mode == 'episode':
-        notes.append('a long episode: the bed plays under the open, a lift at each chapter turn and the close, not under the whole talk')
+    mode = mode if mode == 'episode_bed' else None
     return ({'track': track, 'file': path, 'levels': levels, 'ledger': str(ledger), 'needs': needs, 'needs_from': needs_from, 'mode': mode},
             '; '.join(notes) or None)
 
 
 def timeline(intro_frames, main_frames, end_frames, ws):
-    """The cut's clock: the sting, the captioned main and the end card, in
+    """The cut's clock: any opening clip, the captioned main and the end card, in
     whole frames, and when Krish's first and last words fall on it."""
     I, M, E = intro_frames / FPS, main_frames / FPS, end_frames / FPS
     vs = I + (ws[0]['s'] if ws else 0.0)
@@ -1126,9 +1228,9 @@ def timeline(intro_frames, main_frames, end_frames, ws):
 
 
 def preview_shots(tl, wins):
-    """Preview frame times on the finished cut: one in the sting (named
-    `intro`), then the opening, every graphic and the end card, each moved
-    on by the sting's length."""
+    """Preview frame times on the finished cut: one in any opening clip
+    (named `intro`), then the opening, every graphic and the end card, each
+    moved on by that clip's length."""
     I = tl['intro_s']
     shots = [('intro', round(I * 0.7, 2))] if I > 0 else []
     main = [1.0] + [round((c['s'] + c['e']) / 2, 2) for c in wins] + [round(tl['main_s'] + 2.0, 2)]
@@ -1142,8 +1244,8 @@ def length_warnings(asp, tl):
         return []
     if measures == 'main_s':
         return [f'the tall cut\'s speech runs {tl["main_s"]:.1f} s (main_seconds, his words alone), over the {cap} s cap for the short cut '
-                f'(house rule TWO_CUTS); with the sting and the end card the whole video runs {tl["total_s"]:.1f} s (total_seconds)']
-    return [f'the whole tall cut runs {tl["total_s"]:.1f} s (total_seconds, with the sting and the end card), over the {cap} s cap '
+                f'(house rule TWO_CUTS); with the end card the whole video runs {tl["total_s"]:.1f} s (total_seconds)']
+    return [f'the whole tall cut runs {tl["total_s"]:.1f} s (total_seconds, with the end card), over the {cap} s cap '
             f'for the short cut (house rule TWO_CUTS); his speech alone runs {tl["main_s"]:.1f} s (main_seconds)']
 
 
@@ -1185,22 +1287,22 @@ def ffmpeg(*args, cwd=None):
 
 
 def build_audio(work, edited, voice_gain, intro, end, tl, bed):
-    """The cut's sound as three files in `work`: dialog.wav (the sting's
-    silence, his voice set to the target, the end card's silence), bed.wav
-    (the music under the whole cut, or none), and mix.wav, the final mix.
-    Neither the sting's nor the end card's own sound is ever mixed. Returns
-    what the report needs."""
+    """The cut's sound as three files in `work`: dialog.wav (any opening
+    clip's silence, his voice set to the target, the end card's silence),
+    bed.wav (the music under the whole cut, never dropping out, or none),
+    and mix.wav, the final mix. Neither an opening clip's nor the end card's
+    own sound is ever mixed. Returns what the report needs."""
     work.mkdir(parents=True, exist_ok=True)
     smp = {k: round(tl[k] * RATE) for k in ('intro_s', 'main_s', 'outro_s', 'total_s')}
     inputs, g, labels = ['-i', str(edited)], [], []
     if intro:
-        # The sting's own sound, if it has any, is never mixed: its stretch
+        # An opening clip's own sound, if it has any, is never mixed: its stretch
         # is silence here, and the music bed is up over it.
         g.append(f'anullsrc=r={RATE}:cl=stereo,{NORM},atrim=end_sample={smp["intro_s"]},asetpts=PTS-STARTPTS[ia]')
         labels.append('[ia]')
     g.append(f'[0:a]{NORM},highpass=f=70,volume={voice_gain:.3f}dB,apad,atrim=end_sample={smp["main_s"]},asetpts=PTS-STARTPTS[va]')
     labels.append('[va]')
-    # The end card's own sound, like the sting's, is never mixed: its stretch
+    # The end card's own sound, like an opening clip's, is never mixed: its stretch
     # is silence here, and the music bed rises over it. Only a ledger track
     # goes under a cut (house rule MUSIC_BED).
     g.append(f'anullsrc=r={RATE}:cl=stereo,{NORM},atrim=end_sample={smp["outro_s"]},asetpts=PTS-STARTPTS[ea]')
@@ -1229,26 +1331,6 @@ def build_audio(work, edited, voice_gain, intro, end, tl, bed):
         result.update(bed=stem, music={**placed, 'track_id':track['id'], 'sha256':track['sha256'],
                                      'levels':levels, 'file':track['file'], 'ledger':bed['ledger'],
                                      'local_level_correction':correction,'continuity':continuity})
-        mix_in += ['-i', str(stem)]
-        mix = '[0:a][1:a]amix=inputs=2:duration=first:normalize=0[m]'
-    elif bed and bed.get('mode') == 'episode':
-        # A long episode: the bed under the open, a lift at each chapter turn and
-        # the close, not under the whole talk (music.episode_bed; the corpus).
-        track, levels = bed['track'], bed['levels']
-        accents = tl.get('accents') or ()
-        # Each piece measured where it sits, then set from that, as the bed under a short cut is.
-        chain, placed = music.episode_bed(track, tl, levels, accents, unity=True)
-        raw = work / 'bed-raw.wav'
-        ffmpeg('-i', str(bed['file']), '-filter_complex', chain, '-map', '[bed]', '-c:a', 'pcm_f32le', str(raw))
-        refs = [music.ebur128(raw, *p['core'])['I'] if p['core'] else None for p in placed['pieces']]
-        raw.unlink()
-        chain, placed = music.episode_bed(track, tl, levels, accents, refs=refs)
-        stem = work / 'bed.wav'
-        ffmpeg('-i', str(bed['file']), '-filter_complex', chain, '-map', '[bed]', '-c:a', 'pcm_f32le', str(stem))
-        result.update(bed=stem, music={
-            'track_id': track['id'], 'title': track.get('title'), 'artist': track.get('artist'), 'sha256': track['sha256'], 'file': track['file'],
-            'ledger': bed['ledger'], 'levels': levels, 'gains_db': placed['gains_db'], 'windows': placed['windows'], 'mode': 'episode',
-            'pieces': placed['pieces'], 'chosen_for': bed.get('needs'), 'chosen_for_from': bed.get('needs_from')})
         mix_in += ['-i', str(stem)]
         mix = '[0:a][1:a]amix=inputs=2:duration=first:normalize=0[m]'
     elif bed:
@@ -1391,8 +1473,8 @@ def bounded_decode_inputs(inputs, threads=2):
 
 def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix):
     """The ffmpeg inputs and filter graph for one shape: the captioned main
-    (graphics, the tall logo, the strap, the captions), joined after the sting
-    and before the end card, with the finished mix as its sound."""
+    (graphics, the tall cut's dress, the captions), joined after any opening
+    clip and before the end card, with the finished mix as its sound."""
     cw, ch, cx, cy = crop
     W, H = SIZE[asp]
     wins = expand_pages(wins, asp, ws)
@@ -1461,7 +1543,7 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
                 g.append(f"[{n}:v]format=rgba,{f}[pp{n}]")
                 g.append(f"[{cur}][pp{n}]overlay=0:0:enable='between(t,{c['s']},{stop})'[c{r_i}_{j + 1}]")
                 cur, n = f'c{r_i}_{j + 1}', n + 1
-            # With a sting in front, the first split-screen run must already
+            # With a clip in front, the first split-screen run must already
             # be opaque at the cut. Fading it over the full-frame speaker
             # creates a short double-image immediately after the intro.
             fade_in='' if intro is not None and r_i==0 and rs<=1/FPS else f'fade=t=in:st={rs}:d={FADE_S}:alpha=1,'
@@ -1475,25 +1557,29 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
             g.append(f"[{n}:v]format=rgba,{card_fit(card, 1920 - px if px else 1920, 1080)}{f}[pp{n}]")
             g.append(f"[{last}][pp{n}]overlay=x={px}:y={py}:enable='between(t,{c['s']},{stop})'[s{k}]")
             last, n, k = f's{k}', n + 1, k + 1
-    if asp == '9x16' and intro is None and cfg.get('logo', True) is not False:
-        # The makeyourmindup logo in the opening seconds of every tall video
-        # (Krish, 2026-10-07: "put the Make Your Mind Up logo in the first
-        # few seconds of the video somewhere on vertical video"). The PNG is
-        # the whole frame, transparent, so it says where the logo sits. It is
-        # laid on the captioned main, before the sting is joined in front, so
-        # with a sting it starts as his face comes in, never over the sting.
+    dress = cfg['dress'].get(asp) if isinstance(cfg.get('dress'), dict) else None
+    if dress:
+        # The brand's dress from the first frame to the end card (house rule
+        # HOOK_IS_THE_INTRO, Krish, 2026-10-29: the hook is the intro): the
+        # makeyourmindup wordmark and the series tag in the top corners, as
+        # the Friday 23 October tall cut has them. kit.py draws it from the
+        # brand's own wordmark; a transparent whole frame laid over the
+        # pictures, under the captions, with no entrance of its own.
+        inputs += ['-loop', '1', '-framerate', str(FPS), '-t', f'{total:.3f}', '-i', str(P(dress))]
+        g.append(f"[{last}][{n}:v]overlay=0:0[s{k}]")
+        last, n, k = f's{k}', n + 1, k + 1
+    elif asp == '9x16' and intro is None and cfg.get('logo', True) is not False:
+        # A config kit.py did not dress: the makeyourmindup logo in the opening
+        # seconds of the tall video (Krish, 2026-10-07: "put the Make Your Mind
+        # Up logo in the first few seconds of the video somewhere on vertical
+        # video"). The PNG is the whole frame, transparent, so it says where the
+        # logo sits. With an opening clip in front it is left out: the clip
+        # carries the brand, and a second logo entrance after it is not wanted.
         lg = cfg['logo'] if isinstance(cfg.get('logo'), dict) else {}
         secs = lg.get('seconds', 3.0)
         inputs += ['-loop', '1', '-framerate', str(FPS), '-t', f'{total:.3f}', '-i', str(P(lg['png']) if lg.get('png') else default_logo(out))]
         g.append(f"[{n}:v]format=rgba,fade=t=out:st={max(0.0, secs - 0.4):.2f}:d=0.4:alpha=1[lg]")
         g.append(f"[{last}][lg]overlay=0:0:enable='between(t,0,{secs:.2f})'[s{k}]")
-        last, n, k = f's{k}', n + 1, k + 1
-    if asp == '9x16' and cfg.get('strap'):
-        st = cfg['strap']
-        hit = find(ws, st['after']) if st.get('after') else (0, 0)
-        t0 = ws[hit[0]]['s'] if hit else 0.3
-        inputs += ['-loop', '1', '-framerate', str(FPS), '-t', f'{total:.3f}', '-i', str(P(st['png']))]
-        g.append(f"[{last}][{n}:v]overlay=0:0:enable='between(t,{t0:.2f},{t0 + st.get('seconds', 3.5):.2f})'[s{k}]")
         last, n, k = f's{k}', n + 1, k + 1
     if cfg.get('scoreboard'):
         import scoreboard
@@ -1532,7 +1618,7 @@ def default_levels():
 
 
 def cut_plan(cfg, asp, P, main_frames, ws, base='.'):
-    """What one shape's cut will be, before anything is rendered: its sting,
+    """What one shape's cut will be, before anything is rendered: its opening,
     its end card, its clock, its music and anything to say about them."""
     notes = []
     intro, note = resolve_intro(cfg, asp, P, base)
@@ -1582,7 +1668,7 @@ def episode_extras(cfg, P, ws, wins, toks, tl):
 
 def measure_cut(final, tl, cut_audio):
     """The finished file's loudness after the encode: integrated, true peak,
-    each stretch (the sting, his voice, the end card after the bed has
+    each stretch (any opening clip, his voice, the end card after the bed has
     risen) and, from the two stems, how far the bed sits under his voice."""
     whole = music.ebur128(final)
     windows = (cut_audio['music'] or {}).get('windows') or {}
@@ -1730,8 +1816,39 @@ def self_test():
                           {'file': 'end.mp4', 'frames': 510, 'held_s': 13.0}, Path('mix.wav'))
     checks.append(('a long episode\'s end card holds its last frame for the end-screen tiles',
                    any('tpad=stop_mode=clone:stop_duration=13.000,trim=end_frame=510' in line for line in g), True))
-    got, why = resolve_intro({'name': 't'}, '9x16', same)
-    checks.append(('a candidate sting is left out and the report says why', (got, 'candidate' in (why or '')), (None, sting.load()['status'] == 'candidate')))
+    # The hook is the intro (house rule HOOK_IS_THE_INTRO, Krish, 2026-10-29): the retired sting gives nothing, and says nothing.
+    checks.append(('"intro": "auto" opens on the hook, with no clip and no note, while the sting is retired',
+                   (resolve_intro({'name': 't'}, '9x16', same), sting.load()['status']), ((None, None), 'retired')))
+    checks.append(('each cut records what it opened on, so engagement can settle the choice',
+                   (opening_of(None), opening_of({'source': 'override', 'file': Path('clip.mp4'), 'seconds': 3.0})['kind']),
+                   ({'kind': 'hook', 'rule': 'HOOK_IS_THE_INTRO'}, 'clip')))
+    dressed = dict(fake, dress={'9x16': 'dress-9x16.png'})
+    _, g, _ = video_graph(dressed, '9x16', same, Path('.'), Path('edited.mkv'), 20.0, [], ws, [720, 1280, 0, 0], None,
+                          {'file': 'end.mp4', 'frames': 120}, Path('mix.wav'))
+    dress_line = [line for line in g if line.endswith('overlay=0:0[s2]')]
+    checks.append(('the tall cut wears its dress from the first frame to the end card, with no window, fade or entrance',
+                   (len(dress_line), any('dress-9x16.png' in str(x) for x in _), any('enable=' in line or 'fade' in line for line in dress_line)),
+                   (1, False, False)))
+    inputs_dressed, _, _ = video_graph(dressed, '9x16', same, Path('.'), Path('edited.mkv'), 20.0, [], ws, [720, 1280, 0, 0], None,
+                                       {'file': 'end.mp4', 'frames': 120}, Path('mix.wav'))
+    checks.append(('the dress is kit.py\'s picture, and it replaces the three-second opening logo',
+                   ('dress-9x16.png' in inputs_dressed, any("enable='between(t,0,3.00)'" in line for line in g)), (True, False)))
+    _, g, _ = video_graph(dressed, '9x16', same, Path('.'), Path('edited.mkv'), 20.0, first_picture, ws, [720, 1280, 0, 0], None,
+                          {'file': 'end.mp4', 'frames': 120}, Path('mix.wav'))
+    order = [i for i, line in enumerate(g) if line.endswith('[run0]') or ('[s' in line and line.endswith('overlay=0:0[s3]'))]
+    checks.append(('the dress sits over the pictures, so the corners stay on through them', len(order) == 2 and order[0] < order[1], True))
+    # No name on screen (Krish, 2026-10-28: "Remember, no content refers to Krish, ever.").
+    strap = strap_problem({'strap': {'png': 'strap-9x16.png', 'after': 'so'}})
+    import tempfile as _st
+    with _st.TemporaryDirectory() as tmp:
+        strapped = Path(tmp) / 'strapped.json'
+        strapped.write_text(json.dumps({'name': 't', 'source': 'none.mp4', 'strap': {'png': 'strap-9x16.png'}}))
+        ran = subprocess.run([sys.executable, str(Path(__file__).resolve()), str(strapped), '--out', str(Path(tmp) / 'out'), '--plan'],
+                             capture_output=True, text=True)
+    checks.append(('make.py stops on a strap config before it reads anything else', (ran.returncode != 0, 'no content refers to Krish, ever' in ran.stderr),
+                   (True, True)))
+    checks.append(('a strap config is refused, quoting his ruling; "strap": false is no matter',
+                   (bool(strap) and 'no content refers to Krish, ever' in strap, strap_problem({'strap': False}), strap_problem({})), (True, None, None)))
     checks.append(('"intro": false is no intro and no note', resolve_intro({'intro': False}, '9x16', same), (None, None)))
     checks.append(('"music": false is no music and no note', resolve_music({'name': 't', 'music': False}, '9x16', 30), (None, None)))
     if not os.environ.get('MINDMAKE_MUSIC_LEDGER'):
@@ -1787,6 +1904,26 @@ def caption_self_test():
     bands = [face_band(cw, ch, round(ch * 100 / 720), round(ch * 450 / 720)) for cw, ch in ((1080, 1920), (1920, 1080), (720, 1280))]
     checks.append(('the tall face band is filled edge to edge from inside the frame, never fitted with gaps a bigger Krish shows through',
                    all(abs(bw / bh - 1080 / 920) < 0.01 and bx >= 0 and by >= 0 for bx, by, bw, bh in bands), True))
+    # His name never reaches a caption, nor a self-introduction under a misheard name (Krish, 2026-10-28).
+    named = lambda *raw: [h['said'] for h in name_in_captions(tokens(heard(*raw), DEFAULT_FIXES), [{'s': 100.0 + n} for n in range(len(raw))])]
+    checks.append(('"Chris" is no longer turned into his name', said(heard(' Chris', ' Lehane')), ['Chris', 'Lehane']))
+    checks.append(('a self-introduction is found under any hearing of the name, and his name anywhere',
+                   (named(' Hi,', " I'm", ' Chris,', ' and'), named(' My', ' name', ' is', ' Krish.'), named(' Krish\'s', ' test'),
+                    named(' this', ' is', ' Krish', ' here')), (["I'm Chris,"], ['My name is Krish.'], ["Krish's"], ['Krish'])))
+    checks.append(('another Chris, Christmas and Christine are not his name',
+                   (named(' Chris', ' Lehane', ' said'), named(' This', ' is', ' Chris', ' Lehane\'s', ' view'), named(' Christmas'), named(' I\'m', ' Christine')),
+                   ([], [], [], [])))
+    where = name_in_captions(tokens(heard(' So', " I'm", ' Krish.'), DEFAULT_FIXES), [{'s': 100.0 + n} for n in range(3)])
+    refusal = name_refusal(where)
+    checks.append(('the refusal names the time in the cut and in the take, and how to cut it',
+                   (where[0]['cut_s'], where[0]['take_s'], '0:00.40 in the cut' in refusal, '1:41.00 in the take' in refusal, '"remove"' in refusal,
+                    'no content refers to Krish, ever' in refusal), (0.4, 101.0, True, True, True, True)))
+    import tempfile as _tf
+    with _tf.TemporaryDirectory() as tmp:
+        script = Path(tmp) / 'script.md'
+        script.write_text('I put GrokBot and Muse head to head. ByteDance pays for it.\n', encoding='utf-8')
+        hint = script_prompt(script)
+    checks.append(('the transcriber\'s hint names the publication, never him', (hint.startswith('makeyourmindup. '), 'krish' in hint.lower()), (True, False)))
     checks.append(('a joined number never splits across two caption groups',
                    any(t['w'] in ('60,202', '$2.45') for g in chunked for t in g) and not any(t['w'] in (',202', '.45') for g in chunked for t in g), True))
     # The script's spellings (house rule BRITISH_SPELLING).
@@ -2072,7 +2209,7 @@ def doctor(as_json=False):
         if module == 'faster_whisper':
             ok, detail = transcriber_decodes()
             add('faster_whisper decode', 'ok' if ok else 'fail', detail)
-    add('node', 'ok' if shutil.which('node') else 'warn', shutil.which('node') or 'not on the PATH: the intro sting cannot be rendered here')
+    add('node', 'ok' if shutil.which('node') else 'warn', shutil.which('node') or 'not on the PATH: the story outro cannot be rendered here')
     for env, why in (('MINDMAKE_MUSIC_ROOT', 'the licensed music'), ('MINDMAKE_ARCHIVE_ROOT', 'the video archive')):
         value = os.environ.get(env)
         if not value:
@@ -2106,12 +2243,15 @@ def doctor(as_json=False):
         add('music ledger', 'fail', str(e))
     try:
         s = sting.status()
-        every = [f'{shape} {series}' for shape, per in s['renders'].items() for series in per]
-        ready = [f'{shape} {series}' for shape, per in s['renders'].items() for series, r in per.items() if r['approved']]
-        add('intro sting', 'ok' if s['status'] == 'approved' and len(ready) == len(every) and not s['source_problem'] else 'warn',
-            f'{s["status"]}; rendered here for {", ".join(ready) or "no shape and series"}'
-            + (f'; its source cannot be used: {s["source_problem"]}' if s['source_problem'] else '')
-            + ('' if s['status'] == 'approved' else '; cuts render without it until Krish approves it'))
+        if s['status'] == 'retired':
+            add('opening', 'ok', f'every cut opens on the hook (house rule {s["retired"]["rule"]}, Krish, {s["retired"]["on"]}); the sting is retired')
+        else:
+            every = [f'{shape} {series}' for shape, per in s['renders'].items() for series in per]
+            ready = [f'{shape} {series}' for shape, per in s['renders'].items() for series, r in per.items() if r['approved']]
+            add('intro sting', 'ok' if s['status'] == 'approved' and len(ready) == len(every) and not s['source_problem'] else 'warn',
+                f'{s["status"]}; rendered here for {", ".join(ready) or "no shape and series"}'
+                + (f'; its source cannot be used: {s["source_problem"]}' if s['source_problem'] else '')
+                + ('' if s['status'] == 'approved' else '; cuts render without it until Krish approves it'))
     except (OSError, ValueError) as e:
         add('intro sting', 'warn', str(e))
     failed = [r for r in rows if r['state'] == 'fail']
@@ -2174,6 +2314,9 @@ def main():
     cfg_path = Path(args.config).resolve()
     base = cfg_path.parent
     cfg = json.loads(cfg_path.read_text())
+    strapped = strap_problem(cfg)
+    if strapped:
+        sys.exit(f'make: {strapped}')
     held = direction_problem(cfg)
     if held and not args.plan:
         sys.exit(f'make: {held}')
@@ -2266,6 +2409,10 @@ def main():
     spell = spellings(ws, script_words(cfg, P))
     # And a name the script spells as one word is captioned whole, however the transcriber split it.
     names = script_names(script_words(cfg, P))
+    # His name never reaches a caption (Krish, 2026-10-28), checked before anything renders.
+    named = name_in_captions(tokens(ws, DEFAULT_FIXES + cfg.get('replacements', []), spell, names), words)
+    if named:
+        sys.exit(f'make: {name_refusal(named)}')
     spelt = [{'heard': ws[i]['w'], 'script': respell(ws[i]['w'], w), 'at': ws[i]['s']} for i, w in sorted(spell.items())]
     if cfg['crop'] == 'auto':
         cfg['crop'] = auto_crop(src, dur)
@@ -2286,6 +2433,8 @@ def main():
     if args.plan:
         toks = tokens(ws, DEFAULT_FIXES + cfg.get('replacements', []), spell, names)
         toks,_=reviewed_caption_tokens(cfg,P,toks,identity,out/f"{cfg['name']}.edited.mkv",total)
+        if name_in_captions(toks, words):
+            sys.exit(f'make: {name_refusal(name_in_captions(toks, words))}')
         early += spelling_warnings(toks)
         groups = chunks(toks, sorted({c['s'] for c in wins} | {c['e'] for c in wins}))
         shapes = {}
@@ -2297,7 +2446,8 @@ def main():
                 continue
             tl = plan['timeline']
             said, warns, _ = episode_extras(cfg, P, ws, wins, toks, tl)
-            shapes[asp] = {'intro': plan['intro'] and str(plan['intro']['file']), 'intro_source': plan['intro'] and plan['intro']['source'],
+            shapes[asp] = {'opening': opening_of(plan['intro']),
+                           'intro': plan['intro'] and str(plan['intro']['file']), 'intro_source': plan['intro'] and plan['intro']['source'],
                            'intro_series': plan['intro'] and plan['intro']['series'], 'music': plan['bed'] and plan['bed']['track']['id'],
                            'intro_seconds': tl['intro_s'], 'main_seconds': tl['main_s'], 'outro_seconds': tl['outro_s'],
                            'total_seconds': tl['total_s'], 'episode': said, 'warnings': plan['warnings'] + warns}
@@ -2400,6 +2550,8 @@ def main():
     toks = tokens(ws, DEFAULT_FIXES + cfg.get('replacements', []), spell, names)
     retained_source_tokens = list(toks)
     toks,caption_repairs=reviewed_caption_tokens(cfg,P,toks,identity,edited,total)
+    if name_in_captions(toks, words):
+        sys.exit(f'make: {name_refusal(name_in_captions(toks, words))}')
     early += spelling_warnings(toks)
     bounds = sorted({c['s'] for c in wins} | {c['e'] for c in wins})
     groups = chunks(toks, bounds)
@@ -2432,11 +2584,11 @@ def main():
         plan = cut_plan(cfg, asp, P, main_frames, ws, base)
         tl, intro, end, bed = plan['timeline'], plan['intro'], plan['end'], plan['bed']
         warnings = list(plan['warnings'])
-        # The chapter turns on the video's clock, for an episode bed's lifts.
-        tl['accents'] = [ws[h[0]]['s'] + tl['intro_s'] for c in episode.chapters_of(cfg, P)[1:]
-                         for h in [find_loose(ws, c['starts'])] if h]
+        # The chapter cards on the video's clock: the continuous bed lifts under each and restarts inside one.
         tl['chapter_cards'] = [(c['s']+tl['intro_s'],c['e']+tl['intro_s'])
                                for c in wins if c.get('chapter') or c['id'].startswith('fri-chapter-')]
+        # Where a picture comes in or goes: a track shorter than the cut starts again on one of these when one is near (music.restarts).
+        tl['turns'] = sorted({round(c[k] + tl['intro_s'], 3) for c in wins for k in ('s', 'e')})
         target = (bed['levels'] if bed else default_levels())['final_integrated_lufs']
         if voice_in <= -69.9:
             warnings.append('the recording measured as silence, so its level was left alone')
@@ -2535,7 +2687,7 @@ def main():
                 mark=P(cfg['brand_mark']) if cfg.get('brand_mark') else None)
             Path(str(final)+'.validation.json').write_text(json.dumps(receipt,indent=2),encoding='utf-8')
         shapes[asp] = {
-            'file': final.name, 'intro_seconds': tl['intro_s'], 'main_seconds': tl['main_s'], 'outro_seconds': tl['outro_s'],
+            'file': final.name, 'opening': opening_of(intro), 'intro_seconds': tl['intro_s'], 'main_seconds': tl['main_s'], 'outro_seconds': tl['outro_s'],
             'total_seconds': tl['total_s'], 'voice_start_seconds': tl['voice_start_s'], 'voice_end_seconds': tl['voice_end_s'],
             'intro': intro and {'source': intro['source'], 'series': intro['series'], 'file': str(intro['file']), 'sha256': intro['sha256'],
                                 'seconds': intro['seconds'], 'own_sound_replaced': intro['own_sound_replaced']},
