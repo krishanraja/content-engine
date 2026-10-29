@@ -13,9 +13,9 @@
   python scripts/ve.py coverage                      failure register: behavioural guards vs markers
 
   python scripts/ve.py ledger <piece>               usage against the piece's caps
-  python scripts/ve.py ledger <piece> reserve <provider> <amount>   reserve against the weekly credit budget
-  python scripts/ve.py budget verify|hash|status    the weekly credit budget Krish signs (config/ve/credit-budget.json)
-  python scripts/ve.py lock spend                    the design lock's spend consent becomes his signed weekly cap
+  python scripts/ve.py ledger <piece> reserve <provider> <amount>   reserve against Control Center's credit caps
+  python scripts/ve.py budget pull|verify|hash|status  the credit caps Control Center places on the publication
+  python scripts/ve.py lock spend                    the design lock's spend consent becomes Control Center's caps
   python scripts/ve.py time <piece> start <phase>    time an engine phase (stop/status available)
 
 ingest, stills and file arrive with the Phase 1 cards; until then they say so.
@@ -114,7 +114,7 @@ def cmd_lock(args) -> int:
             record = credits.load(args.record) if args.record else credits.load()
             problems = credits.verify(record)
             if problems:
-                raise ValueError('the weekly credit budget does not stand: ' + '; '.join(problems))
+                raise ValueError('the credit read does not stand: ' + '; '.join(problems))
             designlock.spend_from_budget(record)
             print(f'design lock: spend is the credit caps Control Center placed, read on {record["pulled_on"]}')
         elif args.action == 'check':
@@ -289,8 +289,10 @@ def cmd_study(args) -> int:
 
 def cmd_card(args) -> int:
     from velib.cards import write_card
+    from velib.common import card_worktree
     fields = load_json(args.fields)
     out = Path(fields.pop('path'))
+    fields.setdefault('cwd', card_worktree(fields['card_id']))  # the local layout's worktree, never a typed path (W2.11)
     print(f've card: wrote {write_card(out, **fields)}')
     return 0
 
@@ -562,7 +564,7 @@ def main() -> int:
     actions = p.add_subparsers(dest='action', required=True)
     actions.add_parser('check')
     a = actions.add_parser('show'); a.add_argument('format', nargs='?')
-    a = actions.add_parser('spend', help="replace the per-generation yes with Krish's signed weekly credit budget, in his words")
+    a = actions.add_parser('spend', help="replace the per-generation yes with the credit caps Control Center places")
     a.add_argument('--record', help='default config/ve/credit-budget.json')
     a = actions.add_parser('freeze'); a.add_argument('format'); a.add_argument('--from', dest='src_dir', required=True)
     a.add_argument('--map', dest='mapping', nargs='+', action='extend'); a.add_argument('--force', action='store_true')
@@ -616,7 +618,7 @@ def main() -> int:
                                    'engine_seconds', 'krish_wait_seconds'))
     a.add_argument('amount', type=float, help='finite non-negative amount')
     a.add_argument('--note', default='', help='description of this usage')
-    a = actions.add_parser('reserve', help='reserve credits against the weekly budget Krish signed; refused over his cap',
+    a = actions.add_parser('reserve', help='reserve credits against the Control Center credit caps; refused over a cap',
                            description='Reserve before a dispatch or generation runs; settle it with what the provider charged.')
     a.add_argument('provider', choices=('codex_allowance_points', 'codex_paid_credits', 'runway_credits', 'higgsfield_credits',
                                         'elevenlabs_credits'))

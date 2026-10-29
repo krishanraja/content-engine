@@ -81,6 +81,7 @@ MCP connector in a session, no engine secret).
 | Hacker News | `scripts/signals/collect.py hn` | `HN_ALGOLIA_KEY` (public API needs none) | **keyless, live**; the handed value placed in Vercel env, 2026-10-09; ROTATE |
 | SEC EDGAR | `scripts/signals/collect.py sec` | none | **keyless, live** |
 | GitHub (engine reads) | build-signals route, scoped token | `GITHUB_TOKEN` | **needs scoped key** (use the master once to mint a two-repo token; do not store the master) |
+| GitHub (place the new takes) | the Inbox job (`api/library/recordings/drive-inbox.ts`) sends a `take-copied` repository_dispatch to `.github/workflows/place-takes.yml` (`api/library/_placeTakes.ts`); the job itself uses `ENGINE_OPERATOR_TOKEN`, already an Actions secret | `PLACE_TAKES_DISPATCH_TOKEN` (a fine-grained token on this repository only, Contents: read and write, which is what repository_dispatch asks for); `CONTENT_ENGINE_REPO` overrides the repository | **needs key** (without it the Inbox job sends nothing and answers `place_takes: not_configured`; Run workflow, or the home computers' pass, places the takes) |
 | GitHub (this session) | the `mcp__github__*` connector, proxy-authenticated | none | **connector, live** |
 | Firecrawl | the `mcp__Firecrawl__*` connector | none | **connector, live** (tested 2026-10-09) |
 | Exa (search like a page) | `api/_enrich.ts` (`webResearch`, the fallback behind Perplexity, already live) and `scripts/signals/collect.py exa` | `EXA_API_KEY` | **placed in content-engine Vercel env, 2026-10-09; ROTATE** (was exposed in chat) |

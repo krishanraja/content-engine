@@ -44,8 +44,9 @@ describe('ve', () => {
     ['the crew lints refuse every Friday failure a spec can carry', 'tests/ve_lint_test.py'],
     ['QC measures holds, redraw loops, dead air and loudness on real media', 'tests/ve_qc_test.py'],
     ['removing a card worktree never follows its node_modules link', 'tests/ve_cards_test.py'],
-    ['dispatch and generations reserve against the weekly credit budget Krish signs, and refuse over it', 'tests/ve_credits_test.py'],
+    ['dispatch and generations reserve against the credit caps Control Center places on the publication, and refuse over them', 'tests/ve_credits_test.py'],
     ['the piece ledger, its clock and the dispatch cap check', 'tests/ve_ledger_test.py'],
+    ['one local layout: every reader resolves from config/studio.json and the path guard fails on a planted path', 'tests/ve_local_roots_test.py'],
   ] as const) {
     it(name, () => {
       const r = py([file])
