@@ -794,9 +794,11 @@ NO_NAME_RULING = ('Krish, 2026-10-28: "Remember, no content refers to Krish, eve
 # says it or the transcriber hears another word as it. Any "Krish" is refused
 # (asked whether another Krish may be named, Krish picked: "Yes, block it", with
 # no override), and so is a self-introduction under whatever the transcriber
-# heard for the name ("I'm Chris"). The copy lint's "no_name" pattern
-# (config/copy-lint.json) is read as well once that file carries one.
-NAME_SAID = (re.compile(r'\bkrish', re.I),
+# heard for the name ("I'm Chris"). The word is closed at its end, so another
+# name that only starts with those letters (Krishna, Krishnan) is left alone.
+# The copy lint's "no_name" pattern (config/copy-lint.json) is read as well
+# once that file carries one.
+NAME_SAID = (re.compile(r'\bkrish(?:an)?(?:raja\d*)?\b', re.I),
              re.compile(r"\b(?:i\s*['’]?\s*m|i\s+am|my\s+name\s*(?:['’]\s*s|\s+is))\s+(?:chris|krish(?:an)?)\b", re.I))
 
 
@@ -1913,6 +1915,9 @@ def caption_self_test():
     checks.append(('another Chris, Christmas and Christine are not his name',
                    (named(' Chris', ' Lehane', ' said'), named(' This', ' is', ' Chris', ' Lehane\'s', ' view'), named(' Christmas'), named(' I\'m', ' Christine')),
                    ([], [], [], [])))
+    checks.append(('another name that only starts with the letters of his is not his name',
+                   (named(' Arvind', ' Krishna'), named(' Sriram', ' Krishnan'), named(' Krishi'), named(' Krishan', ' Raja'), named(' at', ' krishraja.com')),
+                   ([], [], [], ['Krishan'], ['krishraja.com'])))
     where = name_in_captions(tokens(heard(' So', " I'm", ' Krish.'), DEFAULT_FIXES), [{'s': 100.0 + n} for n in range(3)])
     refusal = name_refusal(where)
     checks.append(('the refusal names the time in the cut and in the take, and how to cut it',
