@@ -31,15 +31,15 @@ describe('config/asset-spec.json', () => {
   })
   it('holds the frames the cutters, the archive and the publish page use', () => {
     const size = /SIZE = \{'9x16': \((\d+), (\d+)\), '16x9': \((\d+), (\d+)\)\}/.exec(read('scripts/quick-edit/make.py'))!
-    expect(frame('short_video')).toEqual([+size[1], +size[2]])
-    expect(frame('long_video')).toEqual([+size[3], +size[4]])
+    expect(frame('short_video')).toEqual([+size[1]!, +size[2]!])
+    expect(frame('long_video')).toEqual([+size[3]!, +size[4]!])
     const thumbs = /THUMB_SIZE = \{'tall': \((\d+), (\d+)\), 'wide': \((\d+), (\d+)\)\}/.exec(read('scripts/quick-edit/archive.py'))!
-    expect(frame('thumb_tall')).toEqual([+thumbs[1], +thumbs[2]])
-    expect(frame('thumb_wide')).toEqual([+thumbs[3], +thumbs[4]])
+    expect(frame('thumb_tall')).toEqual([+thumbs[1]!, +thumbs[2]!])
+    expect(frame('thumb_wide')).toEqual([+thumbs[3]!, +thumbs[4]!])
     const pm = read('scripts/post-pack/publish_manager.py')
-    for (const [role, name] of [['vertical-cover', 'vertical_cover'], ['square-cover', 'square_cover'], ['share-card-cover', 'share_card_cover']]) {
+    for (const [role, name] of [['vertical-cover', 'vertical_cover'], ['square-cover', 'square_cover'], ['share-card-cover', 'share_card_cover']] as const) {
       const m = new RegExp(`'${role}': '[^']*\\((\\d+) x (\\d+)\\)'`).exec(pm)!
-      expect(frame(name), role).toEqual([+m[1], +m[2]])
+      expect(frame(name), role).toEqual([+m[1]!, +m[2]!])
     }
   })
   it('keeps the explainer\'s modules as config/style-references.json holds them', () => {
