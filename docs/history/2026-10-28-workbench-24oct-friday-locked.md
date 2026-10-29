@@ -1,3 +1,7 @@
+> **Historical.** Archived 2026-10-29 by the docs steward. Not current guidance.
+> Replaced by: `WORKBENCH.md` and `docs/ve/STATUS.md`
+> Reason: moved from WORKBENCH.md on 2026-10-28 to keep it within its size limit; Friday 23 was later rebuilt on ve.
+
 # Moved from WORKBENCH.md on 28 October 2026
 
 ## 24 October: Friday locked and signed off; Codex makes the videos (Claude)

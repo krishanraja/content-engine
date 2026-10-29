@@ -5,6 +5,14 @@ Newest first. Entries are written by the docs steward (see the steward link in
 describes current behaviour; `NOW.md` and `docs/STATE.md` do.
 Files moved here keep their body verbatim under a Historical banner.
 
+## 2026-10-29
+
+- moved `NOW.md` as it stood at `262af4bd` to `docs/history/2026-10-29-NOW.md`, whole and verbatim under the Historical banner, replaced by a rewritten `NOW.md`, because the NOW.md audit (`config/now-audit.json`, Ruling, Krish, 2026-10-28) failed it on six rules: 139,056 characters against 16,000, 290 lines against 200, 108 "What changed recently" bullets against 12, 44 "Where it is right now" bullets against 8, 8 "Next" lines against 1, and four stale open claims.
+- rolled from NOW.md: 96 "What changed recently" bullets, dated 2026-09-27 to 2026-10-28, including the 9 older than 30 days (oldest 2026-09-27). They are kept word for word in `docs/history/2026-10-29-NOW.md`, "What changed recently"; the 12 newest stay in NOW.md, shortened.
+- rolled from NOW.md: the "Ownership correction verified 26 October 2026" section (folded into "What it is" as one sentence pointing at `docs/GROWTH-HANDOFF.md`), 36 "Where it is right now" bullets describing how the engine got here (Monday 12 October to Friday 23 October, the crons, the Studio runners, the board's readiness rule, Spotify, the style bank), and seven superseded "Next" lines (25 to 27 October). All are in the archived file.
+- decision: added the Historical banner to three files moved into `docs/history/` by working sessions without one: `2026-10-26-story-closeout.md`, `2026-10-26-workbench-wednesday-outcome.md` and `2026-10-28-workbench-24oct-friday-locked.md`. Bodies unchanged.
+- reconciled at `262af4b`: NOW.md takes the 390 non-steward commits of 22 to 28 October: ve Phase 1 and format H on a frozen design lock after the F19 design rejection, Friday 23's short made whole on ve, Monday 26 ready to publish, Wednesday 28 and Friday 30 ready to record, the rejection floor, the taste ledger keyed by venture, the UX feedback lane, the windowless home computers and the pasted-link lane with its cloud backup. `AGENTS.md`, Video production, no longer says `docs/ve/RUNBOOK.md` and `docs/ve/STATUS.md` are absent: both were added on 2026-10-28. No other document was checked against the code in this run; `docs/STATE.md`, `docs/SYSTEM_MAP.md`, `docs/GLOSSARY.md` and `docs/STUDIO.md` keep their stamps and stay named in NOW.md "Do not trust". The North Star check line is carried forward as the session of 2026-10-28 wrote it.
+
 ## 2026-10-23
 
 - rolled from NOW.md, to keep the file under the schema's 200 lines after the North Star number line was added (these bullets were 27 days old, inside the 30-day window):
