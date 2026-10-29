@@ -4,7 +4,11 @@ Krish, 2026-10-28: "don't add stupid eyebrow text and asterisks and "generated
 by AI" and "Krish's take" verbal diahorrea like you tend to. This needs to feel
 like a world class media channel". And of the labels on screen: "It's just the
 ones that say "Krish's read" or "illustrative" that are stupid because they add
-no value to the content."
+no value to the content." And of his name, 28 Oct: "Remember, no content refers
+to Krish, ever. I still see that popping up from time to time. Even articles
+written are not authored by Krish. My face only, for assets and the video
+format." On 29 Oct, asked about other people called Krish, Krish picked: "Yes,
+block it".
 
 Run: python3 tests/copy_lint_test.py (tests/control-plane/copy-lint.test.ts runs it on every push).
 """
@@ -21,6 +25,8 @@ import copy_lint  # noqa: E402
 
 EXAMPLES = json.loads((ROOT / 'tests' / 'fixtures' / 'copy-lint-examples.json').read_text(encoding='utf-8'))['patterns']
 CONFIG = json.loads((ROOT / 'config' / 'copy-lint.json').read_text(encoding='utf-8'))
+# Every surface but the article body, which only the name rule reads.
+PUBLIC_WORDS = tuple(s for s in copy_lint.SURFACES if s != 'article_body')
 
 # Monday 26 October (follow.the.money, Character.AI): the copy Krish picked and
 # approved on 26 Oct ("All recommended") and the on-screen words he settled on
@@ -63,7 +69,12 @@ class ConfigShape(unittest.TestCase):
         for pid in ('asterisk', 'eyebrow_label', 'ai_provenance_label', 'ai_illustration_note', 'take_label',
                     'illustration_label'):
             spec = next(p for p in CONFIG['patterns'] if p['id'] == pid)
-            self.assertEqual(set(spec['applies_to']), set(copy_lint.SURFACES), pid)
+            self.assertEqual(set(spec['applies_to']), set(PUBLIC_WORDS), pid)
+
+    def test_the_name_rule_covers_every_surface_and_is_the_only_one_on_the_article_body(self):
+        spec = next(p for p in CONFIG['patterns'] if p['id'] == 'no_name')
+        self.assertEqual(set(spec['applies_to']), set(copy_lint.SURFACES))
+        self.assertEqual([p['id'] for p in CONFIG['patterns'] if 'article_body' in p['applies_to']], ['no_name'])
 
 
 class Examples(unittest.TestCase):
@@ -86,7 +97,20 @@ class Examples(unittest.TestCase):
 
     def test_an_unknown_surface_is_refused(self):
         with self.assertRaises(ValueError):
-            copy_lint.copy_lint('Plain copy', 'article_body')
+            copy_lint.copy_lint('Plain copy', 'article_markdown')
+
+    def test_the_article_body_keeps_its_markdown_and_loses_his_name(self):
+        self.assertEqual(copy_lint.copy_lint('**bold** and _this_', 'article_body'), [])
+        self.assertEqual(copy_lint.copy_lint('## AI NEWS\n\n[1] My take: rent', 'article_body'), [])
+        hits = copy_lint.copy_lint('**By Krish Raja**, 19 October', 'article_body')
+        self.assertEqual([(h['id'], h['match']) for h in hits], [('no_name', 'Krish Raja')])
+
+    def test_the_name_rule_has_no_override(self):
+        # Krish, 28 Oct 2026: "no content refers to Krish, ever"; 29 Oct, of other
+        # people called Krish, Krish picked: "Yes, block it".
+        for words in ('Krish Mehta, a banker, said so.', 'krish', 'KRISH', 'Krish-approved', '[Krish to set]'):
+            for surface in copy_lint.SURFACES:
+                self.assertIn('no_name', [h['id'] for h in copy_lint.copy_lint(words, surface)], (words, surface))
 
     def test_line_ends_read_the_same_either_way(self):
         a = copy_lint.copy_lint('FOLLOW THE MONEY\r\n\r\nGoogle paid first.', 'channel_copy')
@@ -113,7 +137,7 @@ class ApprovedCopy(unittest.TestCase):
         seen = set()
         for rel in APPROVED:
             seen |= {s for _, _, s in copy_lint.fields(json.loads((ROOT / rel).read_text(encoding='utf-8')))}
-        self.assertEqual(seen, set(copy_lint.SURFACES))
+        self.assertEqual(seen, set(PUBLIC_WORDS))
 
 
 class Cli(unittest.TestCase):
@@ -174,7 +198,8 @@ class Cli(unittest.TestCase):
             r = run('--json', str(f))
             self.assertEqual(r.returncode, 1, r.stdout + r.stderr)
             hits = json.loads(r.stdout)['hits']
-            self.assertEqual([(h['id'], h['where']) for h in hits], [('take_label', 'sections[0].copy[1] (Description)')])
+            self.assertEqual([(h['id'], h['where']) for h in hits], [('no_name', 'sections[0].copy[1] (Description)'),
+                                                                     ('take_label', 'sections[0].copy[1] (Description)')])
             self.assertEqual(run(*[str(ROOT / p) for p in APPROVED]).returncode, 0)
 
 

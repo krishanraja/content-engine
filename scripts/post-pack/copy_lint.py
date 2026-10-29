@@ -17,9 +17,11 @@ patterns. Each pattern says which public surface it covers:
   video_onscreen    on-screen words, covers and thumbnails
   titles            video, episode, Short and article titles
   article_metadata  the article's headline, deck and description
+  article_body      the article's markdown body, read by the name rule only
 
-It never runs on the article body's markdown source, where emphasis and
-headings are the markdown itself.
+Only the name rule (no_name: Krish, 2026-10-28, "no content refers to Krish,
+ever") reads the article body. No other pattern runs on the body's markdown
+source, where emphasis and headings are the markdown itself.
 
     python3 scripts/post-pack/copy_lint.py [--applies-to channel_copy] caption.txt [more files]
     python3 scripts/post-pack/copy_lint.py materials.json cards.json cover-facts.json creative-direction.json
@@ -44,7 +46,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
 CONFIG = REPO / 'config' / 'copy-lint.json'
-SURFACES = ('channel_copy', 'carousel_text', 'video_onscreen', 'titles', 'article_metadata')
+SURFACES = ('channel_copy', 'carousel_text', 'video_onscreen', 'titles', 'article_metadata', 'article_body')
 _FLAGS = {'i': re.IGNORECASE, 'm': re.MULTILINE}
 _compiled = None
 
@@ -119,7 +121,9 @@ def fields(data):
     Carousel cards: cards[].kicker and cards[].lines[].text.
     Cover facts: headline and deck (article metadata), video_title (title),
     comment_question and the cover and thumbnail words (on screen).
-    Creative direction: cuts.<cut>.beats[].on_screen_text (on screen)."""
+    Creative direction: cuts.<cut>.beats[].on_screen_text (on screen).
+    Publish manager (publish_manager.py's manager.json): title (title),
+    subtitle and every picture's alt text (article metadata)."""
     out = []
     if not isinstance(data, dict):
         return out
@@ -160,13 +164,25 @@ def fields(data):
                 words = beat.get('on_screen_text') if isinstance(beat, dict) else None
                 if isinstance(words, str) and words.strip():
                     out.append((f'cuts.{cut}.beats[{bi}].on_screen_text', words, 'video_onscreen'))
+    if _publish_manager(data):
+        out.append(('title', data['title'], 'titles'))
+        if isinstance(data.get('subtitle'), str):
+            out.append(('subtitle', data['subtitle'], 'article_metadata'))
+        for ii, image in enumerate(data['images']):
+            if isinstance(image, dict) and isinstance(image.get('alt'), str):
+                out.append((f'images[{ii}].alt', image['alt'], 'article_metadata'))
     return out
+
+
+def _publish_manager(data):
+    """publish_manager.py's manager.json: a title, the body's path and the pictures."""
+    return isinstance(data.get('title'), str) and isinstance(data.get('body'), str) and isinstance(data.get('images'), list)
 
 
 def known_shape(data):
     """True when the JSON is one of the shapes fields() reads, even with no words in it yet."""
     return isinstance(data, dict) and (isinstance(data.get('sections'), list) or isinstance(data.get('cards'), list)
-                                       or isinstance(data.get('cuts'), dict)
+                                       or isinstance(data.get('cuts'), dict) or _publish_manager(data)
                                        or any(k in data for k in ('subchannel', 'cover', 'thumbs')))
 
 
@@ -199,7 +215,7 @@ def lint_file(path, applies_to=None):
             raise Unreadable(f'{path}: not JSON ({exc})')
         if not known_shape(data):
             raise Unreadable(f'{path}: not a shape the copy lint reads (board materials, carousel cards, cover facts, '
-                             'a creative direction); lint the words as a text file with --applies-to')
+                             'a creative direction, a publish manager); lint the words as a text file with --applies-to')
         for where, text, surface in fields(data):
             base = _line_in_file(raw, text)
             for h in copy_lint(text, surface):
@@ -212,7 +228,7 @@ def lint_file(path, applies_to=None):
 
 
 def main(argv=None):
-    ap = argparse.ArgumentParser(description='The copy lint: eyebrows, asterisks, AI-provenance notes and take labels in public copy.')
+    ap = argparse.ArgumentParser(description='The copy lint: eyebrows, asterisks, AI-provenance notes, take labels and his name in public copy.')
     ap.add_argument('--applies-to', choices=SURFACES, help='the surface a text file is (default: channel_copy); never applies to a JSON file, whose fields carry their own')
     ap.add_argument('--json', action='store_true', help='print the hits as JSON')
     ap.add_argument('files', nargs='+')
