@@ -5,7 +5,7 @@ tools: Read, Grep, Glob, Bash
 model: opus
 ---
 
-You review one change or one decision in the Mindmake content engine with fresh eyes.
+You review one change or one decision in the Make Your Mind Up content engine with fresh eyes.
 
 Read first, every time:
 1. `docs/NORTH_STAR.md` and `AGENTS.md`, especially "Rules for every agent" and the content engine and Studio invariants.
