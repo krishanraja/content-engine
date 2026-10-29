@@ -26,15 +26,16 @@ A session feeds the slots and nothing else:
 
 | Step | What feeds it | Input |
 |---|---|---|
-| Ideas | the week's checked ideas, each with `source_kind` (`his`, `inspo` or `engine`, required from the fixed layout on, shown as its chip), `why_here` (the nearest idea he liked, from the gather), `beats` (3 to 5 lines of the sketch), `covers` (the gather's `must_cover` ids it answers) and `style` (a script format, a production format and one experiment from `config/style-references.json` `formats`, shown as "Suggested style" and "Or try something new"); `accounted` in the file gives the reason for any `must_cover` id no idea carries. The build refuses a fixed week without `sources.json` beside it, a routed card left off, or styles that do not diverge (`board_feed.py cover <Monday>`) | `--ideas ideas.json` (plan-week, from `board_feed.py gather`) |
+| Ideas | his five presses on every idea and the Off days ("His presses", below), then the week's checked ideas, each with `source_kind` (`his`, `inspo` or `engine`, required from the fixed layout on, shown as its chip), `why_here` (the nearest idea he liked, from the gather), `beats` (3 to 5 lines of the sketch), `covers` (the gather's `must_cover` ids it answers) and `style` (a script format, a production format and one experiment from `config/style-references.json` `formats`, shown as "Suggested style" and "Or try something new"); `accounted` in the file gives the reason for any `must_cover` id no idea carries. The build refuses a fixed week without `sources.json` beside it, a routed card left off, or styles that do not diverge (`board_feed.py cover <Monday>`). ideas.json `offdays` (`{"tue": [...], "thu": [...], "sat": [...], "sun": [...]}`, 2 to 3 options a day given, each `{id?, format, source, copy}`, `source` a line or `{label, url}`) feeds the Off days | `--ideas ideas.json` (plan-week, from `board_feed.py gather`) |
 | Queue | the idea queue | `--queue queue.json` (GET /api/idea-queue) |
 | Queue: Could combine | two to five queued ideas that make one bigger piece: `[{"members": [queued ids], "series", "thesis", "joins": [3 to 5 beats]}]`, each a card with a Combine button that saves `queue/combine-<n>`; the next session runs synthesize on his tap (decided_by Krish) | `--combine combine.json` (with `--queue`; groups from GET /api/idea-queue?combine=1) |
 | Brief | the record-ready brief: idea, 3 to 6 beats, ending, takeaway, angle, tone, reader | `--brief DAY=brief.json` (kept on rebuild) |
 | Drafts | the article and scripts in review: a read view (Markdown drawn, no `#` signs) where a tap edits a paragraph, picked words take "Comment on this" (the comment carries `box`, `paragraph` and `quote`), and one Save bar per day saves `edits/<day>-<item>` (`text`, `day`, `item`, `base_sha256`, `at`) | `--draft DAY --review DAY=...` |
 | Drafts: Also changed | where his saved edit was carried (`scripts/post-pack/edit_sweep.py`): each change with Undo, suggestions with Change it too, recorded scripts left alone, and the gates run again; kept on a rebuild while that day's words are unchanged | `--sweep DAY=sweep.json` (the file edit_sweep.py writes) |
 | Drafts: What I learned from your edits | the compiler's proposals from his board edits (scope `board_edit:<class>`), and up to three a week from the taste ledger (scope `taste:<layer or lane>`, from what he saved and said), each with the venture it is for (none named is Make Your Mind Up's) and Make it a rule and Not a rule; a comment on one is his rewording; it stays a proposal until he says yes | `--lessons lessons.json` (GET /api/video-studio/learning-proposals) |
-| Record | the Teleprompter scripts and the scripts to read | `--teleprompter`, the publish page's scripts |
-| Publish | a made day's run-sheet (below): the day's progress, Download first, then one card per place to post, each with its tick | the publish page (`--day`, read as data), the videos and the pack folder on the record, `--materials DAY=...` |
+| Drafts: Approve scripts | under the drafts, when a day's drafts hold its scripts (a label that says script and names its cut, as `story_check.cut_of` reads it): the press that sends them to Teleprompter | the `--review` boxes; `--teleprompter` names their folder and titles when the record holds them, else `--pending` or the brief names the subject |
+| Record | the Teleprompter scripts and the scripts to read, then Titles: his pick on each surface | `--teleprompter`, the publish page's scripts; `--titles DAY=titles.json` (`{"piece_id"?, "long_title": [...], "short_title": [...], "long_thumbnail": [...], "short_thumbnail": [...]}`, 1 to 5 options a surface, best first; kept on rebuild) |
+| Publish | a made day's run-sheet (below): the day's progress, Download first (each ready file with Reject), Approve for publish, then one card per place to post, each with its tick | the publish page (`--day`, read as data), the videos and the pack folder on the record, `--materials DAY=...`, `--publish-manifest DAY=PATH` (its sha256 rides on Approve for publish; kept on rebuild) |
 | Heading | what waits on Krish | `--waiting DAY=...` |
 
 Never add a section, a banner, a style or a script to a built board, and never
@@ -52,6 +53,51 @@ layout is held by CI and changes only with his recorded words (Ruling, Krish,
 either file or the structure differs, until
 `python3 scripts/check_board_layout.py --update --approved "Krish, YYYY-MM-DD: <his exact words>"`
 writes the change with his words.
+
+### His presses
+
+Krish, 2026-10-28, asked where he presses and approves: "Publish board". On the
+Ideas tab: "pick an idea for a specific day AND add any optional comments
+easily, which can be saved, or I can: mark an idea as being useful in a future
+wider piece OR mark it as being an idea that should be stored for a future trend
+OR queue it for next week OR reject it", and of the off days, "I'm happy to plan
+the Tuesday, Thursday, Saturday, and Sunday content within the Sunday ideas
+session if you give me a few options to approve as you do the Mon/wed/fri". On
+the day tabs: "Once I approve, the two scripts will go to teleprompter" and
+"Server sends directly"; titles are a "Sunday evening press"; go-live is
+"Approve each day Monday".
+
+Every press saves at once into a store `board_documents` already takes, so no
+migration was needed. Only the access-cookie actor (Krish) writes them: the
+board refuses any other writer with `pick_note_is_his`, `press_is_his` or
+`decision_is_his` (`apps/control-plane/api/board/_contracts.ts`
+`hisOnlyRefusal`). A session reads them and never writes them; a document whose
+`updated_by` is not Krish is never his.
+
+| Press | Where | Writes | What the server does | Who reads it |
+|---|---|---|---|---|
+| Pick for the day, with a note | Ideas, the pick box | `picks/<day>` `{pick, idea_id, series, story, day, at, note?}` | nothing new | plan-week: the pick reaches its piece; the note is his words for the brief |
+| Wider piece | Ideas | `queue/<pick>` `{use: "wider_piece_context", note?}` | nothing | plan-week relays it as a `wider_piece_context` cue, his note as said (a theme when he named one) |
+| Future trend | Ideas | `queue/<pick>` `{use: "track_over_time", note?}` | nothing | plan-week relays it as a `track_over_time` cue |
+| Next week | Ideas | `queue/<pick>` `{use: "next_week", target_week: <the Monday after>, queued: true, note?}` | nothing | plan-week offers it first on the day it fits the week of `target_week` |
+| Reject | Ideas | `queue/<pick>` `{use: "not_for_us", reason?}` | with a typed reason, one `taste_rejection_inbox` row (`said` his reason, `said_where` "publish board, <week> <day>", `piece` the idea id, `meta.rule_kind` "subject"); without one, nothing | plan-week (a `not_for_us` cue); the inspirationhouse rejections job reads the inbox |
+| Take a press back | Ideas, the same press again | `queue/<pick>` `{use: null}` | nothing | plan-week |
+| Approve or Skip an off-day option | Ideas, Off days | `queue/off-<day>-<option>` `{use: "offday", day, approved, copy_sha256, format, source, option_id}` | nothing | Growth makes and schedules what he approved, only while `copy_sha256` is the copy it holds |
+| Approve scripts | Drafts | `picks/<day>-scripts` `{kind: "approve_scripts", day, piece_id, approved, texts: {cut: words}, scripts: {cut: sha256}, titles: {cut}, folder_title, folder_id?, script_ids?}` | works out `scripts` from `texts` (refused as `approval_hash_mismatch` when the press brings others), sends them with `sendApprovedScripts` and writes its answer into the same document as `send` `{status: sent, no_key, refused or error, folder_id?, scripts?, error?, at, by}` | `teleprompter_send.py plan` (the `approvals` view); on `no_key` a session sends exactly those words through the connector |
+| Titles | Record | `picks/<day>-titles` `{kind: "titles", day, piece_id?, picks: {long_title?, short_title?, long_thumbnail?, short_thumbnail?}}` | nothing | produce-video's Sunday-night run and the title round (the `titles` view) |
+| Approve for publish | Publish, after Download first | `picks/<day>-publish` `{kind: "approve_publish", day, piece_id, approved, manifest_sha256?}` | nothing in Wave 1 | Growth and Control Center, once the go-live route reads it |
+| Reject asset | Publish, beside each ready file | `picks/<day>-reject-<asset>` `{kind: "reject_asset", day, piece_id, asset, label, reason, drive_id?, at_ms?, formats?}`; the reason is required | one `taste_rejection_inbox` row: his reason, where and when, the piece, the formats, and the file's Drive id with the moment (`at_ms`) or as the whole cut; the file itself is never copied | the inspirationhouse rejections job; the next session's repair round |
+
+Each inbox row's `client_report_id` is the hash of the week, the document and his
+words, so a press saved again files nothing twice. A row that the inbox could
+not take is said on the board, and the board document still holds his reason
+for a session to file.
+
+`GET /api/board/<Monday>/approvals` and `/titles` (`board_web.py read <Monday>
+approvals`) are read-only views of the `picks` documents of that kind; nothing
+writes to a view. A press the build cannot draw is left out with a warning
+(two drafts naming one cut, or no subject for the Teleprompter names), never
+drawn half.
 
 Sunday's sources: `python3 scripts/post-pack/board_feed.py gather <Monday>`
 reads `GET /api/week/options?include=sources` and `GET /api/idea-queue?combine=1`
@@ -155,6 +201,9 @@ python scripts/post-pack/board_web.py read 2026-10-19 queue
 python scripts/post-pack/board_web.py read 2026-10-19 comments
 ```
 
+`approvals` and `titles` read his Approve scripts and Titles presses alone;
+`picks` holds them too, beside his day picks ("His presses", above).
+
 Substitute the actual Monday. The CLI follows every page. Failed or inaccessible
 reads are blockers, never empty feedback. Access uses the existing engine operator
 credential; do not paste it into a prompt, file, generated HTML or command line.
@@ -167,9 +216,13 @@ credential; do not paste it into a prompt, file, generated HTML or command line.
 - Edits are Krish's saved words. Apply them to source drafts before rebuilding,
   preserving the built-at guard against older saves covering newer built text.
   Tell him before changing a script he has recorded.
-- Picks supply his day/idea choices; use the existing week-options workflow.
-- Queue decisions supply his verdict, reason and angle; use the existing
-  idea-queue workflow and attribution. Never invent his decision.
+- Picks supply his day/idea choices, with his note; use the existing
+  week-options workflow. `picks/<day>-<decision>` documents (a `kind`) are his
+  decisions on a day's tab, never a pick.
+- Queue decisions supply his presses (`use`, with his note or reason) or, on
+  weeks before the fixed layout, his verdict, reason and angle; use the existing
+  idea-queue and feedback-cue workflows and attribution. Never invent his
+  decision.
 - Comments include roots and replies with stable anchors. Read the whole thread,
   retain original metadata and distinguish notes from authorization to publish.
 

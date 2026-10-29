@@ -9,10 +9,10 @@ follow.the.money"). When the words change, the same script is updated in
 place. Nothing is ever deleted." On 2026-10-28 his standing yes of that day
 ("Yes, automatic, Monday now") gave way to "Once I approve, the two scripts
 will go to teleprompter", and "Server sends directly": the engine's server
-is to send them itself (apps/control-plane/api/_teleprompter.ts, built but
-not wired), once the board's Approve scripts press calls it and his key is
-in place, and until then a session sends them through its connector, by
-this file. His words, the tools allowed and the names are in
+sends them itself when he presses Approve scripts on the board
+(apps/control-plane/api/_teleprompter.ts, called by api/board/_presses.ts),
+and until his key is in place (the press's answer is no_key) a session
+sends them through its connector, by this file. His words, the tools allowed and the names are in
 config/teleprompter.json; nothing is planned or recorded unless its status
 is "confirmed".
 
