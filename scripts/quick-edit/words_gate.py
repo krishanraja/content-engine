@@ -38,8 +38,12 @@ Calibration (plan W3 3a): until Monday 26's accepted long and short cuts pass
 and Wednesday 21's published long cut and Friday's 90-second cut from the 17
 Oct words file fail, a pass is evidence, not proof. A clipped tail the
 transcriber still hears as the whole word is not caught here; joins inside
-words are the joins-in-gaps check (Wave 2). chopped-words-published stays open
-until then.
+words are the joins-in-gaps check (scripts/cutgates/gaps.py). check_aligners
+runs the check on every aligner's pass (faster-whisper, and ElevenLabs Scribe
+when config/gates.json lets it run): a word fails only when every pass lost it.
+The five calibration cuts are config/gate-calibration.json, run by
+scripts/cutgates/calibrate.py. chopped-words-published stays open until they
+behave as listed on the real files.
 
     python3 scripts/quick-edit/words_gate.py --script SCRIPT.txt --take-words TAKE.words.json \\
         --final CUT.mp4|CUT.heard.json [--edl EDL.json] [--receipt CUT.mp4.validation.json] [--no-receipt] [--model small.en]
@@ -71,7 +75,8 @@ CALIBRATION = {
     'status': 'uncalibrated',
     'note': ('OPEN until calibrated on real cuts (plan W3 3a): Monday 26 Oct\'s accepted long and short must pass; '
              'Wednesday 21 Oct\'s published long cut and Friday\'s 90-second cut from the 17 Oct words file must fail. '
-             'A clipped tail the transcriber still hears whole is caught only by joins-in-gaps (Wave 2).'),
+             'A clipped tail the transcriber still hears whole is caught by joins-in-gaps (scripts/cutgates/gaps.py). '
+             'The harness is scripts/cutgates/calibrate.py on config/gate-calibration.json.'),
 }
 
 # The fixed function-word list: articles, pronouns, prepositions, conjunctions,
@@ -514,6 +519,51 @@ def check(script, take, final, edl=None):
     if reasons:
         result['reason'] = '; '.join(reasons)
     return result
+
+
+def check_aligners(script, take, finals, edl=None):
+    """The words check on every aligner's pass of the finished file (plan W2.4). finals: {aligner: words}, in the
+    order the aligners rank (faster-whisper first). A content word lost on every pass that could be compared
+    fails the cut, named as check() names it; one lost on some passes and heard on another is listed under
+    heard_by_one_aligner, never blocking. With one aligner the result says "single aligner" and is that pass's
+    check, nothing more."""
+    names = [n for n in finals]
+    if not names:
+        raise WordsGateError('no aligner heard the finished file')
+    per = {n: check(script, take, finals[n], edl) for n in names}
+    compared = [n for n in names if 'counts' in per[n]]
+    base = dict(per[compared[0] if compared else names[0]])
+    base['aligners'] = names
+    base['agreement'] = 'single aligner' if len(names) == 1 else f'{len(names)} aligners'
+    base['per_aligner'] = {n: {'status': r['status'], 'lost': [x['word'] for x in r.get('lost', [])],
+                               **({'reason': r['reason']} if r.get('reason') else {})} for n, r in per.items()}
+    if len(names) == 1 or not compared:
+        base['heard_by_one_aligner'] = []
+        return base
+    lost_in = [{row['take_index'] for row in per[n]['lost']} for n in compared]
+    everywhere = set.intersection(*lost_in)
+    base['lost'] = [row for row in per[compared[0]]['lost'] if row['take_index'] in everywhere]
+    seen, some = set(), []
+    for n in compared:
+        for row in per[n]['lost']:
+            if row['take_index'] not in everywhere and row['take_index'] not in seen:
+                seen.add(row['take_index'])
+                some.append({**row, 'lost_by': [m for m in compared if row['take_index'] in {r['take_index'] for r in per[m]['lost']}]})
+    base['heard_by_one_aligner'] = some
+    base['not_compared'] = [n for n in names if n not in compared]
+    base['counts'] = {**base.get('counts', {}), 'lost': len(base['lost']), 'heard_by_one_aligner': len(some)}
+    reasons = []
+    if base['lost']:
+        reasons.append(f'{len(base["lost"])} content word(s) of the signed script he said in the take are missing from the final '
+                       f'cut on every aligner\'s pass ({", ".join(compared)})')
+    if base['unapproved_removals']:
+        reasons.append(f'{len(base["unapproved_removals"])} removal(s) cut the only time he said a word of the script, '
+                       'without his words approving it')
+    base['status'] = 'fail' if reasons else 'pass'
+    base.pop('reason', None)
+    if reasons:
+        base['reason'] = '; '.join(reasons)
+    return base
 
 
 def summary(result):
