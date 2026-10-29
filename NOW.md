@@ -33,7 +33,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## Where it is right now (as of 2026-10-29)
 
-<!-- north-star-state {"week_of": "2026-10-26", "week_target": 1, "current": 1, "current_as_of": "2026-10-23", "current_source": "Control Center content_ideas (1 published in the last 7 days)", "urgency": 1, "urgency_reason": "at 100% of this week's target"} --> **North Star number: U1, on pace.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 1, against 1 this week, on the way to 30 by 30 November 2026.
+<!-- north-star-state {"week_of":"2026-10-26","week_target":1,"current":0,"current_as_of":"2026-10-29","current_source":"Control Center content_ideas (0 published in the last 7 days)","urgency":4,"urgency_reason":"at 0% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 0, against 1 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
 Lifecycle: building. Claims below are as the sessions of 27 and 28 October recorded them; the full earlier record is in `docs/history/2026-10-29-NOW.md`.
 
