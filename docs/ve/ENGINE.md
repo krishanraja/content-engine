@@ -75,7 +75,7 @@ All commands accept `-h` / `--help`. Render scale defaults to 1 and must be
 finite and positive. Render requires the source spec and the same staged assets
 folder used to compile it, so lint and asset hashes are checked before rendering.
 
-Compile/render lint first: findings print, exit 1, no new output. Words need unique indexes, text, ordered onset_s and finite numeric end_s >= onset_s. The onset-only 19-second fixture needs real aligned ends; synthetic test ends are not alignment. Compile refuses unapplied source edits and includes only objects in the cut's beat `uses`. Phase 1 refuses asset plates/used generated-asset references: illustration labels are not wired. Media paths must be relative and contained under assets, never URLs/absolute paths.
+Compile/render lint first: findings print, exit 1, no new output. Words need unique indexes, text, ordered onset_s and finite numeric end_s >= onset_s. The onset-only 19-second fixture needs real aligned ends; synthetic test ends are not alignment. Compile refuses unapplied source edits and includes only objects in the cut's beat `uses`. Phase 1 refuses asset plates/used generated-asset references: the generated assets pipeline is not wired. Media paths must be relative and contained under assets, never URLs/absolute paths.
 
 Captions use exact Archivo-heavy widths, aspect geometry/swipe padding. Pages: 2-5 words, <=2 lines, prefer punctuation; a single word only if it fills a line. Oversize words are refused by name. Dialogue: `round(last end_s * 30) + 12` frames. Whole cuts with a call add a 105-frame ending; captions stop at its start. Excerpts have no ending.
 
@@ -90,7 +90,7 @@ Render transports string values as ASCII escapes, decoded for drawing. It measur
 - One EDL drives picture, dialogue, bed, SFX/captions. No manual mux or separate retiming; AAC correction preserves video.
 - No per-piece compositions/render scripts. New hero mechanisms become library devices via cards.
 - Never hand-write a pass/receipt/ready. status checks lint, QC bound to the existing MP4 SHA, completeness, Critic verdict and Krish's exact-file approval.
-- Evidence is real; generated illustrations need labels. Numbers name producers; mind.the.gap ends in a dated call. No synthetic Krish without realism-test approval. Follow tools.json recipes/rulings.
+- Evidence is real; a generated picture never stands in for a real place, record or test, and carries no ILLUSTRATION tag (Krish, 28 Oct 2026: "Yes remove those."). Numbers name producers; mind.the.gap ends in a dated call. No synthetic Krish without realism-test approval. Follow tools.json recipes/rulings.
 - No publish/send/schedule verb.
 
 ## Codex

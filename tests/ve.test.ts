@@ -33,6 +33,13 @@ describe('ve', () => {
     expect(ProductionSpecV2Schema.safeParse(spec).success).toBe(false)
   })
 
+  it('a generated picture needs no on-screen ILLUSTRATION label (Krish, 28 Oct 2026: "Yes remove those.")', () => {
+    const spec = fixture()
+    spec.assets.push({ id: 'plate', kind: 'illustration', origin: 'generated', path: 'plate.png', sha256: '0'.repeat(64), licence: 'generated', tool: 'imagegen' })
+    const parsed = ProductionSpecV2Schema.safeParse(spec)
+    expect(parsed.success, JSON.stringify(parsed.error?.issues)).toBe(true)
+  })
+
   for (const [name, file] of [
     ['the crew lints refuse every Friday failure a spec can carry', 'tests/ve_lint_test.py'],
     ['QC measures holds, redraw loops, dead air and loudness on real media', 'tests/ve_qc_test.py'],

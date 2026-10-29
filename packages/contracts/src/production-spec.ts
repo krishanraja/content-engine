@@ -104,11 +104,11 @@ export const VeAssetSchema = z.object({
   job_id: z.string().min(1).optional(),
   prompt_ref: z.string().min(1).optional(),
   credits: z.number().nonnegative().optional(),
+  // A note for the record only: ve never draws it and no check requires it (no ILLUSTRATION tag, Krish, 28 Oct 2026).
   label: z.string().min(2).optional(),
 }).strict().superRefine((v, c) => {
   if (v.origin === 'generated') {
     if (!['illustration', 'broll', 'sfx', 'music'].includes(v.kind)) c.addIssue({ code: 'custom', path: ['kind'], message: 'generated media is illustration, broll, sfx or music, never evidence' })
-    if (['illustration', 'broll'].includes(v.kind) && !v.label) c.addIssue({ code: 'custom', path: ['label'], message: 'generated pictures carry an on-screen label' })
     if (!v.tool) c.addIssue({ code: 'custom', path: ['tool'], message: 'generated media names the tool that made it' })
   }
   if (/\bCC[ -]BY/i.test(v.licence) && !v.credit) c.addIssue({ code: 'custom', path: ['credit'], message: 'a CC BY licence needs its credit line' })

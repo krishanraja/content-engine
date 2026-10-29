@@ -4,7 +4,7 @@ import { fromAsciiProps, lagSamples, toAsciiProps } from './transport'
 describe('ASCII props transport', () => {
   const strings = [
     'SAME WORK PROMPT · ONLY THE COUNTRY CHANGES',
-    "KRISH'S TEST · 23 OCT",
+    "OUR TEST · 23 OCT",
     'Sorry, that’s beyond',
     'An emoji: 😀',
     'A literal backslash: \\',

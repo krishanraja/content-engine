@@ -55,7 +55,6 @@ export function Photographic(p:PhotographicProps) {
     <text x={760} y={1502} textAnchor="end" fill={CREAM} fontFamily="MYMU Anton" fontSize={126}>CHINA</text>
     <image href={p.assets.cn} x={793} y={1417} width={112} height={84}/>
    </g>
-   <text x={470} y={1624} textAnchor="middle" fill={CREAM} opacity={.8} fontFamily="MYMU Plex Mono" fontSize={39}>ILLUSTRATION</text>
   </svg>
  </AbsoluteFill>
 }

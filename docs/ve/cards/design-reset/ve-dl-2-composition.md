@@ -21,7 +21,7 @@ The first proofs passed all 11 mechanical checks and Krish rejected them ("terri
 
 ## Contract: `scripts/velib/qc_composition.py`
 Reuse the OCR call and spaceless fuzzy matching in `qc_captions.py`; write no new OCR code.
-`measure(image, lock, *, plate_on_screen=False, exempt=(), caption_words=None, ocr_words=None) -> dict`
+`measure(image, lock, *, exempt=(), caption_words=None, ocr_words=None) -> dict`
 - `image`: path or PIL image, 1080x1920 (else ValueError). `exempt`: `(x,y,w,h)` boxes (real footage) skipped by the text checks. `caption_words`: allowed lower-case words in the caption zone (None: only `caption`). `ocr_words`: optional precomputed `{text,conf,x,y,w,h}` list so tests can skip tesseract.
 - Checks, each `{pass, value}`:
   1. `fill_pct`: share of the canvas outside `zones.caption` that carries content: luminance contrast of at least 14 levels against the ground (`ink`, Rec.601, from the tokens) and/or local gradient energy, dilated 31 px (work on a 4x downscaled mask). Choose the mask so every approved frame scores at least `fill_min_pct + 3` and every rejected frame at most `fill_min_pct - 15`. 7% grain on an empty ink frame must NOT count as content.
@@ -29,25 +29,25 @@ Reuse the OCR call and spaceless fuzzy matching in `qc_captions.py`; write no ne
   3. `caption_zone`: OCR words centred inside `zones.caption` and not in `caption_words`.
   4. `platform_zone`: non-exempt words, outside `zones.marquee`, ending beyond `platform.right_x` or `bottom_y`.
   5. `edges`: words closer than `edge_margin_px` to an edge or starting left of `key_content_margin_px - 12`.
-  6. `illustration`: when `plate_on_screen`, a word (or the spaceless join of line neighbours) matches `ILLUSTRATION` at ratio >= 0.8.
+  6. No `illustration` check: a plate on screen needs no ILLUSTRATION tag (Krish, 28 Oct 2026: "Yes remove those.").
   Return `{pass, checks, findings}`; each finding is a plain sentence with value and limit (`fill 37% outside the caption zone, the lock needs 80%`).
 
-`composition_checks(video, props, lock) -> dict`: for a 9:16 cut, per beat take the frame at `beat.keyFrame` if present, else 80% through the beat (pinned ffmpeg, as `qc.py` does); `caption_words` from `props['captions']` pages covering it; `plate_on_screen` from `props['illustrationLabels']`; return `{applies: True, pass, beats: {id: result}}`. A 16:9 cut returns `{applies: False, note: "the design lock is 9:16 only"}`.
+`composition_checks(video, props, lock) -> dict`: for a 9:16 cut, per beat take the frame at `beat.keyFrame` if present, else 80% through the beat (pinned ffmpeg, as `qc.py` does); `caption_words` from `props['captions']` pages covering it; return `{applies: True, pass, beats: {id: result}}`. A 16:9 cut returns `{applies: False, note: "the design lock is 9:16 only"}`.
 
 ## Wiring
 - `qc.py::run_qc`: for 9:16 add a row `composition` (aggregate) that counts toward `measured_pass` and `complete`; per-beat detail under a new key `composition`. A 16:9 cut gets a `not applicable` row that never fails. Keep every existing row and JSON key.
-- `ve comp IMAGE... [--plate] [--json]`: runs `measure` on stills, prints verdict and findings, exit 1 if any fails.
+- `ve comp IMAGE... [--json]`: runs `measure` on stills, prints verdict and findings, exit 1 if any fails.
 
 ## Tests: `tests/ve_composition_test.py` (unittest)
 - every approved fixture passes, every rejected one fails with a finding; print each fixture's `fill_pct`;
-- synthetic cases (PIL plus the vendored fonts): empty ink plus 7% noise fails fill; one corner widget fails fill; 20 px text fails `small_text`, 30 px Plex Mono caps pass; a word at x 1000 fails `platform_zone`; at x 10 fails `edges`; a non-caption word in the caption zone fails, a listed word passes; `plate_on_screen` without ILLUSTRATION fails, with a 28 px tag passes; an exempt box silences only its own text;
+- synthetic cases (PIL plus the vendored fonts): empty ink plus 7% noise fails fill; one corner widget fails fill; 20 px text fails `small_text`, 30 px Plex Mono caps pass; a word at x 1000 fails `platform_zone`; at x 10 fails `edges`; a non-caption word in the caption zone fails, a listed word passes; a frame on a plate passes with no tag; an exempt box silences only its own text;
 - `composition_checks` on a 2 s synthetic two-beat video (pinned ffmpeg; skip with a printed reason if missing), and a 16:9 stub returns `applies: False`;
 - existing ve python tests still pass.
 
 ## Acceptance (every command exits 0)
 python tests/ve_composition_test.py
 python tests/ve_qc_modules_test.py
-python scripts/ve.py comp fixtures/ve/design-lock/approved/H-f1.jpg --plate
+python scripts/ve.py comp fixtures/ve/design-lock/approved/H-f1.jpg
 python scripts/ve.py doctor
 (`ve comp` on rejected/tall-1.jpg must exit 1: run it and report the code.)
 

@@ -13,7 +13,7 @@ export const WIDE = {
   pill: { left: 208, top: 82, width: 640, height: 60 },
 } as const
 
-export type ChromeElement = 'mark' | 'caption' | 'pill' | 'illustrationLabel'
+export type ChromeElement = 'mark' | 'caption' | 'pill'
 export type Aspect = EngineRenderProps['aspect']
 
 /** Caption boxes reserve two lines plus padding. Shadows are outside the returned box. */
@@ -37,10 +37,6 @@ export function boxFor(element: ChromeElement, aspect: Aspect): Box {
     }
     case 'pill':
       return wide ? { ...WIDE.pill } : { left: 248, top: 188, width: 650, height: 60 }
-    case 'illustrationLabel':
-      return wide
-        ? { left: 64, top: 204, width: 260, height: 44 }
-        : { left: 72, top: 322, width: 260, height: 44 }
   }
 }
 

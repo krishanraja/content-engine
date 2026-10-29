@@ -1,10 +1,10 @@
 {
   "id": "voice-led-pictures",
   "status": "trial",
-  "purpose": "Krish's voice over labelled editorial stills that move with parallax and annotation, evidence cards and kinetic stats",
+  "purpose": "Krish's voice over editorial stills that move with parallax and annotation, evidence cards and kinetic stats",
   "layers": [
     "paper or halftone finish",
-    "labelled illustration plates (2.5D parallax)",
+    "illustration plates (2.5D parallax)",
     "pen_annotation",
     "document_zoom / kinetic_stat",
     "BrandFrame"
@@ -35,7 +35,6 @@
     "change_density_min": 0.75,
     "longest_still_s": 3,
     "layout_types_per_min_tall": 4,
-    "plates_labelled": 1.0,
     "caption_ocr_min": 0.98
   },
   "fps": 30,

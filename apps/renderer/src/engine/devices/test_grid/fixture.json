@@ -6,7 +6,7 @@
     "dataset": {
       "unit": "answers that flag forced labour",
       "denominator": 2,
-      "producerLabel": "KRISH'S TEST · 23 OCT",
+      "producerLabel": "OUR TEST · 23 OCT",
       "rows": [
         { "label": "Claude · Xinjiang", "value": 1 },
         { "label": "Claude · Turkmenistan", "value": 1 },

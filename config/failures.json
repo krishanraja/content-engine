@@ -1409,7 +1409,7 @@
     {
      "file": "scripts/velib/qc_composition.py",
      "contains": "the lock needs",
-     "how": "QC measures screen fill, smallest text, caption zone, platform zone, edges and the ILLUSTRATION tag against the lock; the four rejected Gate 2 frames must fail and the ten approved frames must pass",
+     "how": "QC measures screen fill, smallest text, caption zone, platform zone and edges against the lock, and no longer looks for an ILLUSTRATION tag (Krish, 28 Oct 2026: \"Yes remove those.\"); the four rejected Gate 2 frames must fail and the ten approved frames must pass",
      "test": "python tests/ve_composition_test.py"
     },
     {

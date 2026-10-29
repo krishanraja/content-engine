@@ -20,9 +20,8 @@ Shared by every frame:
 
 | zone | x | y | w | h | holds |
 |---|---|---|---|---|---|
-| header row | 72 | 72 | 900 | 55 | section pill (left), ILLUSTRATION tag (right edge 972) |
+| header row | 72 | 72 | 900 | 55 | section pill (left) |
 | section pill | 72 | 72 | 270 | 55 | `mind.the.gap` |
-| illustration tag | 703 | 84 | 269 | 28 | `ILLUSTRATION` |
 | headline band | 72 | 140 to 150 | 900 | 153 to 373 | Anton headline (see per-frame) |
 | hero page | 72 | 424 to 432 | 900 | 1700 (bleeds off) | passport page |
 | caption zone | 72 | 1180 | 900 | 320 | CAPTION placeholder |
@@ -99,7 +98,6 @@ The page component is the one reusable object: 900 x 1700, bleeding off the bott
 | dek | Fraunces italic | 46 (F5: 42) | 400 | sentence | 0 | 1.16 |
 | label | IBM Plex Mono | 30 | 500 | uppercase | 0.14em | 1 |
 | section pill | IBM Plex Mono | 30 | 600 | lowercase | 0.04em | 1 |
-| illustration tag | IBM Plex Mono | 28 | 500 | uppercase | 0.14em | 1 |
 | sticker | IBM Plex Mono | 30 to 44 (BORN/LIVES 34, PASSPORT n OF 2 30, THE GAP 34, SAMPLE 38, DUE 40) | 600 | uppercase | 0.06em | 1 |
 | stamp, top line | IBM Plex Mono | 30 | 600 | uppercase | 0.14em | 1 |
 | stamp, main line | IBM Plex Mono | 176 (USA, ???), 118 (CHINA), 96 (0/1 DELETED), 70 (2/2 FLAGGED), 64 (tab stamps) | 700 | uppercase | 0.18em (0.10 and 0.08em on the long verdict lines) | 1 |
@@ -107,7 +105,7 @@ The page component is the one reusable object: 900 x 1700, bleeding off the bott
 | evidence quote | Archivo | 44 | 500 | as spoken | 0 | 1.2 |
 | flag slot mark and ghost AI | IBM Plex Mono | 64 and 132 | 700 | uppercase | 0 | 1 |
 
-Minimum text on the canvas is 30 px (the ILLUSTRATION tag is 28 px, as the brief allows); the evidence quote is 44 px. Colour: type on cream, paper, coral and mint is always ink; type on the ink table is cream. Mint is never type.
+Minimum text on the canvas is 30 px; the evidence quote is 44 px. Colour: type on cream, paper, coral and mint is always ink; type on the ink table is cream. Mint is never type.
 
 ## 4. Elements and data slots
 
@@ -117,7 +115,6 @@ Minimum text on the canvas is 30 px (the ILLUSTRATION tag is 28 px, as the brief
 |---|---|---|---|
 | ground: ink table, light bands, rosette print, 7% grain | all | fixed | rosette opacity 0.085 to 0.13 |
 | section pill `mind.the.gap` | all | fixed | coral block, ink type, halftone |
-| ILLUSTRATION tag | all | fixed while any plate-derived image is on screen | |
 | title words | F1 | SLOT `TITLE_SWIPE_WORD` = TWO, `TITLE_WORD_2` = PASSPORTS | one swiped word |
 | F1 dek | F1 | SLOT `F1_DEK` = "Every AI carries two. Where it was born, and where it lives." | |
 | passports 1 and 2, ghost portrait with `AI` | F1 | fixed | portrait ghost text is the word AI |
@@ -161,7 +158,7 @@ Minimum text on the canvas is 30 px (the ILLUSTRATION tag is 28 px, as the brief
 
 ## 5. Z-order (bottom to top, the same in every frame)
 
-0 ground (ink gradient, light bands) and rosette print; F3 only: 1 hardware band, 2 ink gradient over it. 3 stitched spine thread (inside the page). 4 page furniture: labels, flags, flag slots, ghost portrait, MRZ. 6 stamps (multiplied into the paper, rough-edge filter). 8 evidence card. 10 page (cover, stacked leaves, sheet; paper texture, guilloche multiplied, light, spine shade) and, in F4, the paper tabs. 12 threads (F4). 20 headline and dek. 22 ribbon (F1). 30 section pill and ILLUSTRATION tag. 40 stickers. 45 scribble layer (ink keyline path under mint path). 50 grain at 7%. 51 fine grain at 3%. 60 caption placeholder.
+0 ground (ink gradient, light bands) and rosette print; F3 only: 1 hardware band, 2 ink gradient over it. 3 stitched spine thread (inside the page). 4 page furniture: labels, flags, flag slots, ghost portrait, MRZ. 6 stamps (multiplied into the paper, rough-edge filter). 8 evidence card. 10 page (cover, stacked leaves, sheet; paper texture, guilloche multiplied, light, spine shade) and, in F4, the paper tabs. 12 threads (F4). 20 headline and dek. 22 ribbon (F1). 30 section pill. 40 stickers. 45 scribble layer (ink keyline path under mint path). 50 grain at 7%. 51 fine grain at 3%. 60 caption placeholder.
 
 (Items 3 to 8 sit inside the page's own stacking context; the numbers show their order within it.)
 
@@ -174,9 +171,9 @@ Brand grammar
 4. Kit of parts as drawn in the book: square brutal card with 2 px ink border and a hard 10 px offset shadow (no blur), pill stickers tilted between -8 and +5 degrees with a 5 px hard shadow, stamps with a 3 px border and 0.18em tracking, highlighter swipe, halftone dots on a 14 px grid over every coral block. Soft shadows appear only on photographed things (the paper pages and tabs), never on kit parts.
 5. Printed, not rendered: 7% fractal grain over every frame, a rosette ground print (the passport security-print language), 3% fine grain on top.
 6. Only stickers and stamps tilt. Pages, tabs, type and layout are level; the passports are shot flat-lay square to the camera. The ribbon and threads are objects, not layout, so they curve.
-7. No logo in the module (the host piece owns it). If the host wants it here, use the horizontal lockup from `brand/logos/` on ink, level, untouched, with half its height clear around it, and swap places with the ILLUSTRATION tag.
+7. No logo in the module (the host piece owns it). If the host wants it here, use the horizontal lockup from `brand/logos/` on ink, level, untouched, with half its height clear around it, at the right end of the header row.
 8. Voice: British spelling, no em dashes, no exclamation marks, no sermons. The dated call uses the book's own format (`DUE yyyy-mm`, `nn% SURE`).
-9. Every frame carries the small ILLUSTRATION tag (Plex Mono 28 px) because the paper and backdrop come from generated plates.
+9. No frame carries an ILLUSTRATION tag, although the paper and backdrop come from generated plates (Krish, 28 Oct 2026: "Yes remove those.").
 
 Screen
 10. Hero subject fills the frame outside the caption zone: the passport page is 900 wide and bleeds off the bottom. A crude count of canvas outside the caption zone that carries page, type, stamps or thread (bright marks, 31 px reach) gives F1 77%, F2 84%, F3 83%, F4 80%, F5 85%. F1 is the one under 80% by that count; the rosette ground print covers all of it but is not counted because it is deliberately faint.
@@ -225,7 +222,7 @@ Images
 - Backdrop for F3: `LIVES_BACKDROP` (`plates/hardware.png`, cropped to the band, ink gradient over it). Any other dark plate works if the headline holds 4.5:1.
 - Ribbon, threads, guilloche, rosette: generated vector, no slot.
 
-Fixed copy (change only with the owner): `mind.the.gap`, `ILLUSTRATION`, `CAPTION`.
+Fixed copy (change only with the owner): `mind.the.gap`, `CAPTION`.
 
 ## 8. Image generation spec (plates this module needs)
 
@@ -247,7 +244,7 @@ Plates (count: 3 required, 1 optional)
 3. `two-passports-ribbon.png` (required, the F1 hero if a single photograph is preferred). Prompt: "Photorealistic top-down flat lay of two identical open passport pages side by side on dark ink-green felt, both square to the camera, the second 60 px lower than the first, spines on the left of each. A woven mint-green grosgrain ribbon 52 mm wide lies in the gap between them, running top to bottom with a gentle S-curve and a swallow-tail cut at its top end, no shadow from other objects across it so it can be keyed against the felt. Pages blank cream security paper with generic pale teal-grey guilloche only. [then the shared no-text sentence]". Used as is, or cut: the ribbon keys cleanly against the felt because mint on near-black has no overlap in saturation.
 4. `paper-macro.png` (optional). Prompt: "Macro top-down photograph of blank warm cream cotton paper with a fine embossed crinkle, even light, no edges, no lines, no guilloche, no stains, no text." Aspect 1:1, 4096 x 4096. Only needed if the pages in plates 1 to 3 are not clean enough to build the seamless texture.
 
-Backdrop plates are not needed: F3 uses the existing hardware plate. If another country-neutral backdrop is wanted, keep it dark enough for a cream headline and add the ILLUSTRATION tag.
+Backdrop plates are not needed: F3 uses the existing hardware plate. If another country-neutral backdrop is wanted, keep it dark enough for a cream headline.
 
 ## 9. Rebuilding
 

@@ -18,7 +18,7 @@ def _tokens(text: str) -> list[str]:
 
 
 def spaceless_match(expected: str, actual: str) -> float:
-    """Share tracked/fused word matching with composition's illustration tag."""
+    """Tracked or fused words match their spaced form (caption OCR)."""
     return SequenceMatcher(None, ''.join(_tokens(expected)), ''.join(_tokens(actual))).ratio()
 
 

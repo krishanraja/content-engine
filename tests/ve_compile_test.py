@@ -245,7 +245,7 @@ class CompileTest(unittest.TestCase):
         spec['assets'].append({'id': 'generated', 'path': 'picture.png', 'origin': 'generated'})
         for ref in ('picture.png', 'generated', 'asset:generated'):
             spec['objects'][0]['params']['extra'] = {'nested': [ref]}
-            with self.assertRaisesRegex(ValueError, 'illustration labels'):
+            with self.assertRaisesRegex(ValueError, 'generated assets pipeline arrives in Phase 2'):
                 compile_cut(spec, 'proof-tall', timed_words(), FIXTURE)
 
     def test_sfx_kit_present_and_absent(self):

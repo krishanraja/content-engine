@@ -20,11 +20,14 @@ never what a piece is about (Ruling, Krish, 2026-10-28). Makers follow the draft
 
 The bar comes first for a video maker. Krish, 2026-10-28: "the video production quality standards for the latest
 Friday (AI Passports) and Monday (character.ai) pieces are the floor for what I expect". config/reference-cuts.json
-names those cuts and the quality names of docs/production/THE_BAR.md. The qualities are the engine's reading of
-the cuts, a draft until he approves their wording, and the printed bar says so. --format prints a short version of
-it before the rejection standards for the makers in full_bar_for_makers, and a one-line pointer for the other video
-makers and for --format all. --check holds the two files together: the quality names, the reference moments and
-each quality's comparison points, word for word. The printed bar carries no hashes or file ids (they stay in the
+names those cuts and the quality names of docs/production/THE_BAR.md, and keeps his general words of the same day
+and his rulings on the questions put to him. The qualities are the engine's reading of the cuts, a draft until he
+approves their wording, except the points he ruled; the printed bar says so. --format prints a short version of it
+before the rejection standards for the makers in full_bar_for_makers, led by his general words and the rulings that
+bite in production, and a one-line pointer for the other video makers and for --format all. --check holds the two
+files together: his words, the rulings, the quality names, the reference moments and each quality's comparison
+points, word for word; every point the page marks as his words must be his exact words, and a quality that cites a
+ruling must quote its answer or name it. The printed bar carries no hashes or file ids (they stay in the
 file) and no measured value: those describe the references, never targets. Only --check and a --format read it, so a
 broken file never stops another maker's floor or the summary.
 
@@ -141,6 +144,11 @@ KEPT = {'still': 'still', 'moment': 'moment, clip kept', 'whole_cut': 'whole cut
 FAMILIES = {'voiceover': 'voiceover', 'split_screen': 'split screen'}
 STANDINGS = ('draft', 'approved')
 IDENTITIES = ('confirmed', 'unconfirmed')
+# A question put to him is ruled (his answer settles it), answered (his answer is recorded but settles nothing, as when
+# he is not sure) or open (he asked for better questions first).
+RULING_STATUSES = ('ruled', 'answered', 'open')
+# A point the page marks as his words: (Krish, 28 Oct: "...").
+HIS_MARK = re.compile(r'\(Krish, \d{1,2} [A-Z][a-z]{2}: "(.*?)"\)')
 STAMP = re.compile(r'^\d\d:\d\d(\.\d+)?$')
 SHA256 = re.compile(r'^[0-9a-f]{64}$')
 # A bullet under the page's '## Reference moments': "- 00:22.0 to 00:22.3: what it shows".
@@ -179,6 +187,11 @@ def load_bar(path=BAR):
     return read_bar(path)[0]
 
 
+def blockquote(words):
+    """His words as the page quotes them: in quotes, each of his lines kept, inside a '> ' block."""
+    return '\n'.join(f'> {line}' if line else '>' for line in f'"{words}"'.split('\n'))
+
+
 def applies(bar, fmt):
     return bool(bar) and fmt in bar.get('applies_to_makers', [])
 
@@ -202,6 +215,18 @@ def bar_headings(text):
     """The quality headings of the bar's page, in order, without their numbers."""
     return [re.sub(r'^\d+\.\s+', '', line[4:].strip())
             for line in section(text, '## The qualities') if line.startswith('### ')]
+
+
+def quality_texts(text):
+    """quality name -> the text under its heading on the page."""
+    found, name = {}, None
+    for line in section(text, '## The qualities'):
+        if line.startswith('### '):
+            name = re.sub(r'^\d+\.\s+', '', line[4:].strip())
+            found[name] = ''
+        elif name:
+            found[name] += line + '\n'
+    return found
 
 
 def page_moments(text, labels):
@@ -258,14 +283,34 @@ def bar_problems(bar, page):
     """Problems with the references and their page, as plain sentences. Empty when they are whole and agree.
     `page` is the text of the bar's page, or None when it is missing."""
     problems = []
-    for key in ('doc', 'ruling', 'standing', 'principle', 'measured_values', 'applies_to_makers', 'qualities',
-                'references', 'reference_moments'):
+    for key in ('doc', 'ruling', 'general', 'rulings', 'standing', 'principle', 'measured_values', 'applies_to_makers',
+                'qualities', 'references', 'reference_moments'):
         if not bar.get(key):
             problems.append(f'missing {key}')
     if problems:
         return problems
     if not bar['ruling'].get('words') or not bar['ruling'].get('on'):
         problems.append('the ruling has no words or no date')
+    if not bar['general'].get('words') or not bar['general'].get('on'):
+        problems.append('his general words have no words or no date')
+    # Each question put to him keeps his exact answer and says what changed, or what holds while it stays open.
+    items = bar['rulings'].get('items') or []
+    numbers = [item.get('n') for item in items]
+    if not bar['rulings'].get('section') or not items:
+        problems.append('the rulings need their page section and their items')
+    if len(set(numbers)) != len(numbers):
+        problems.append('every ruling needs its own number')
+    ruled = {item.get('n') for item in items if item.get('status') == 'ruled'}
+    for item in items:
+        if item.get('status') not in RULING_STATUSES:
+            problems.append(f'ruling {item.get("n")}: status must be one of {", ".join(RULING_STATUSES)}')
+        for key in ('topic', 'question', 'answer', 'changed'):
+            if not item.get(key):
+                problems.append(f'ruling {item.get("n")}: missing {key}')
+        if item.get('production') and item.get('status') != 'ruled':
+            problems.append(f'ruling {item.get("n")}: only a ruled answer bites in production')
+        if item.get('quote') and item['quote'] not in str(item.get('answer')):
+            problems.append(f'ruling {item.get("n")}: its quote is not his exact words from the answer')
     # His words named the cuts; the qualities are the engine's reading of them until he approves their wording.
     if bar['standing'] not in STANDINGS:
         problems.append(f'standing must be one of {", ".join(STANDINGS)}')
@@ -324,6 +369,9 @@ def bar_problems(bar, page):
         if 'sound' in m.get('shows', []) and not isinstance(m.get('heard'), bool):
             problems.append(f'reference moment {i + 1}: a sound moment must say whether it was heard')
     for q in bar['qualities']:
+        for n in q.get('ruled', []):
+            if n not in ruled:
+                problems.append(f'quality {q.get("id")}: ruling {n} is not a ruled answer')
         for j, m in enumerate(q.get('compare_beside', [])):
             problems += moment(m, f'quality {q.get("id")} comparison {j + 1}')
         if q.get('id') == 'sound' and not isinstance(q.get('heard'), bool):
@@ -342,6 +390,40 @@ def bar_problems(bar, page):
                         + (' (the order differs)' if sorted(names) == sorted(headings) else ''))
     if bar['standing'] == 'draft' and bar.get('standing_note') and bar['standing_note'] not in page:
         problems.append(f'{bar["doc"]} does not carry the draft standing_note under his words')
+    # His words are quoted on the page exactly as the file keeps them, and his general words open it.
+    general, earlier = blockquote(bar['general']['words']), blockquote(bar['ruling']['words'])
+    if general not in page:
+        problems.append(f'{bar["doc"]} does not quote his general words exactly')
+    elif earlier in page and page.index(general) > page.index(earlier):
+        problems.append(f'{bar["doc"]} must open with his general words, before his earlier words')
+    title = f'## {bar["rulings"].get("section")}'
+    lines = [line for line in section(page, title) if line.strip()]
+    if not lines:
+        problems.append(f'{bar["doc"]} has no section {title!r}')
+    for item in items:
+        line = next((x for x in lines if x.startswith(f'{item.get("n")}. **')), None)
+        if line is None:
+            problems.append(f'ruling {item.get("n")} is not on the page')
+        elif f'"{item.get("answer")}"' not in line:
+            problems.append(f'ruling {item.get("n")}: his answer on the page is not the one in the references')
+        elif item.get('status') == 'open' and 'Still open' not in line:
+            problems.append(f'ruling {item.get("n")} is open in the references but not on the page')
+        elif item.get('status') != 'open' and 'Still open' in line:
+            problems.append(f'ruling {item.get("n")} is {item.get("status")} in the references but open on the page')
+    # A point marked as his words quotes his exact words, and a quality that cites a ruling quotes its answer or names it.
+    his = [str(item.get('answer', '')) for item in items] + [bar['general']['words'], bar['ruling']['words'],
+                                                             bar['ruling'].get('correction') or '']
+    for said in HIS_MARK.findall(page):
+        if not any(said in words for words in his):
+            problems.append(f'{bar["doc"]} marks words as his that are not his exact words: {said[:60]!r}')
+    texts = quality_texts(page)
+    for q in bar['qualities']:
+        text = texts.get(q.get('name'), '')
+        for n in q.get('ruled', []):
+            answer = next((str(i.get('answer')) for i in items if i.get('n') == n), '')
+            if f'ruling {n}' not in text and not any(said in answer for said in HIS_MARK.findall(text)):
+                problems.append(f'quality {q.get("id")}: cites ruling {n}, but its section on the page neither quotes '
+                                'his answer nor names the ruling')
     # One home per fact: the page's moments and comparison points say what the file says, word for word.
     on_page, unread = page_moments(page, labels)
     problems += unread
@@ -377,10 +459,22 @@ def para(text, indent='  ', then=None):
 def bar_lines(bar):
     """The short form of the bar a video maker reads first. His words, then the engine's reading marked as such, the
     quality names and where to watch: no hashes, no file ids and no measured values."""
-    r = bar['ruling']
+    r, g = bar['ruling'], bar['general']
     draft = bar['standing'] == 'draft'
     lines = ['The bar: the production quality floor for every video, whatever its story, format or length.',
-             para(f'{r["by"]} named the pieces on {r["on"]}. In his words: {quote(r["words"])}')]
+             f'  {g["by"]}, {g["on"]}, on how every video should be made:',
+             textwrap.indent(f'"{g["words"]}"', '    '),
+             f'  His rulings that bite in production ({bar["rulings"]["on"]}):']
+    items = bar['rulings']['items']
+    for item in items:
+        if item['status'] == 'ruled' and item.get('production'):
+            # `quote` is the part of his exact answer that bites; the whole answer stays in the file and on the page.
+            words = item.get('quote') or item['answer']
+            lines.append(para(f'- {item["topic"]}: {item["production"]}. In his words: {quote(words)}', then='    '))
+    for item in items:
+        if item['status'] == 'open':
+            lines.append(para(f'- Still open ({item["topic"].lower()}): {item["question"]} {item["changed"]}', then='    '))
+    lines.append(para(f'{r["by"]} named the pieces on {r["on"]}. In his words: {quote(r["words"])}'))
     if r.get('correction'):
         lines.append(para(f'And: {quote(r["correction"])}'))
     lines.append(para(f'Standing: {bar["standing"]}. {bar.get("standing_note", "")}'))
@@ -526,13 +620,19 @@ def self_test():
         'doc': 'docs/production/SYNTHETIC_BAR.md',
         'ruling': {'by': 'Krish', 'on': '2026-10-28', 'words': 'synthetic: these two are the floor',
                    'correction': 'synthetic: only production quality'},
+        'general': {'by': 'Krish', 'on': '2026-10-28', 'words': 'synthetic: in general\n- keep it simple\n\nOn brand.'},
+        'rulings': {'on': '2026-10-28', 'section': 'Rulings', 'items': [
+            {'n': 1, 'topic': 'Music', 'status': 'ruled', 'question': 'Synthetic: throughout?', 'answer': 'synthetic: yes',
+             'production': 'the bed is heard throughout', 'changed': 'Sound.'},
+            {'n': 2, 'topic': 'Readings', 'status': 'open', 'question': 'Synthetic: one idea?', 'answer': 'synthetic: ask me',
+             'changed': 'Synthetic: drafts until he answers.'}]},
         'standing': 'draft', 'standing_note': 'Synthetic: the engine reads the cuts; he has not approved it.',
         'principle': 'Synthetic: every frame looks owned.',
         'measured_values': 'Context about the references, never targets.',
         'applies_to_makers': ['short_video', 'motion'], 'full_bar_for_makers': ['short_video'],
         'qualities': [{'id': 'finish', 'name': 'Finish: every frame owned',
                        'compare_beside': [{'ref': 'ref-a', 'at': '00:02'}]},
-                      {'id': 'sound', 'name': 'Sound finish', 'heard': False,
+                      {'id': 'sound', 'name': 'Sound finish', 'heard': False, 'ruled': [1],
                        'compare_beside': [{'ref': 'ref-a', 'at': '00:00', 'to': '00:03'}]}],
         'references': [{'id': 'ref-a', 'label': 'Synthetic tall', 'piece': 'Synthetic piece',
                         'published_on': '2026-10-23', 'series': 'synthetic', 'format_family': 'voiceover',
@@ -544,11 +644,15 @@ def self_test():
                               {'ref': 'ref-a', 'at': '00:00', 'shows': ['sound'], 'heard': False,
                                'what': 'Measured, not yet heard: a sting.'}],
     }
-    page = ('# Bar\n\nSynthetic: the engine reads the cuts; he has not approved it.\n\n## The qualities\n\n'
+    page = ('# Bar\n\n> "synthetic: in general\n> - keep it simple\n>\n> On brand."\n\n> "synthetic: these two are the floor"\n\n'
+            'Synthetic: the engine reads the cuts; he has not approved it.\n\n## The qualities\n\n'
             '### 1. Finish: every frame owned\n\n**Compare beside.** Synthetic tall 00:02.\n\n'
-            '### 2. Sound finish\n\n**Compare beside.** Synthetic tall 00:00 to 00:03.\n\n'
+            '### 2. Sound finish\n\nHeard throughout (Krish, 28 Oct: "synthetic: yes").\n\n'
+            '**Compare beside.** Synthetic tall 00:00 to 00:03.\n\n'
             '## Reference moments\n\n### Synthetic tall (23 October)\n\n- 00:01.5 to 00:04: A build.\n'
-            '- 00:00: Measured, not yet heard: a sting.\n\n## What is not the bar\n\n### x\n')
+            '- 00:00: Measured, not yet heard: a sting.\n\n## What is not the bar\n\n### x\n\n## Rulings\n\n'
+            '1. **Music.** Synthetic: throughout? His answer: "synthetic: yes" Changed: sound.\n'
+            '2. **Readings.** Synthetic: one idea? His answer: "synthetic: ask me" Still open.\n')
     assert bar_problems(bar, page) == [], bar_problems(bar, page)
     assert any('headings' in p for p in bar_problems(bar, page.replace('### 2. Sound finish', '### 2. Sound'))), \
         'a quality renamed on one side only must be caught'
@@ -579,6 +683,29 @@ def self_test():
     b = json.loads(json.dumps(bar))
     del b['reference_moments'][1]['heard']
     assert any('heard' in p for p in bar_problems(b, page))
+    # His words, exactly: a changed answer, a general word, an open question marked ruled or a stray ruling is caught.
+    assert any('answer on the page' in p for p in bar_problems(bar, page.replace('"synthetic: yes"', '"synthetic: yes!"')))
+    assert any('general words exactly' in p for p in bar_problems(bar, page.replace('> - keep it simple', '> - keep it short')))
+    moved = page.replace('> "synthetic: these two are the floor"\n\n', '')
+    moved = moved.replace('# Bar\n\n', '# Bar\n\n> "synthetic: these two are the floor"\n\n')
+    assert any('open with his general words' in p for p in bar_problems(bar, moved)), bar_problems(bar, moved)
+    b = json.loads(json.dumps(bar))
+    b['rulings']['items'][1]['status'] = 'ruled'
+    assert any('open on the page' in p for p in bar_problems(b, page))
+    b = json.loads(json.dumps(bar))
+    b['qualities'][0]['ruled'] = [2]
+    assert any('not a ruled answer' in p for p in bar_problems(b, page))
+    b = json.loads(json.dumps(bar))
+    b['rulings']['items'][0]['status'] = 'answered'
+    del b['rulings']['items'][0]['production'], b['qualities'][1]['ruled']
+    assert bar_problems(b, page) == [], bar_problems(b, page)
+    assert any('answered in the references but open' in p
+               for p in bar_problems(b, page.replace('"synthetic: yes" Changed', '"synthetic: yes" Still open')))
+    # Words marked as his on the page are his exact words, and a quality citing a ruling quotes or names it.
+    assert any('not his exact words' in p for p in bar_problems(bar, page.replace('(Krish, 28 Oct: "synthetic: yes")',
+                                                                              '(Krish, 28 Oct: "synthetic: always")')))
+    unquoted = page.replace(' (Krish, 28 Oct: "synthetic: yes")', '')
+    assert any('cites ruling 1' in p for p in bar_problems(bar, unquoted)), bar_problems(bar, unquoted)
     out = io.StringIO()
     with contextlib.redirect_stdout(out):
         assert show_format(doc, 'short_video', False, 40, bar=bar) == 0
@@ -587,6 +714,9 @@ def self_test():
         < text.index('Approved standards'), text
     assert text.index('"synthetic: these two are the floor"') < text.index('Standing: draft.') \
         < text.index("The engine's reading of those cuts, a draft:"), text
+    assert text.index('    "synthetic: in general\n    - keep it simple\n\n    On brand."') < text.index('His rulings') \
+        < text.index('- Music: the bed is heard throughout. In his words: "synthetic: yes"') \
+        < text.index('- Still open (readings):') < text.index('"synthetic: these two are the floor"'), text
     assert '  2. Sound finish' in text and 'Identity unconfirmed' in text, text
     assert 'board week 2026-10-19, asset syn-video' in text and 'Not a reference yet: the long cut' in text, text
     assert 'c' * 64 not in text and 'synthetic-drive-id' not in text, 'no hashes or file ids in the printed bar'

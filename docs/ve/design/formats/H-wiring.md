@@ -6,11 +6,11 @@ the camera name with their layer, so the same fill kind selects each result.
 
 | Beat | Other objects | Cue words (original word indexes) |
 |---|---|---|
-| open | headline/dek, provenance, CLAUDE/CHATGPT/DEEPSEEK stickers, loop, scoring strip | Now 0, blocked 3, cotton 4, both 6, forced 8, labour 9 |
-| result_a | headline/lower dek, provenance, tall loop | Claude 19, flagged 22, both 25 |
-| result_b | headline/lower dek, provenance, arrow | did 29, DeepSeek 30, Turkmenistan 32 |
+| open | headline/dek, CLAUDE/CHATGPT/DEEPSEEK stickers, loop, scoring strip | Now 0, blocked 3, cotton 4, both 6, forced 8, labour 9 |
+| result_a | headline/lower dek, tall loop | Claude 19, flagged 22, both 25 |
+| result_b | headline/lower dek, arrow | did 29, DeepSeek 30, Turkmenistan 32 |
 | evidence | headline/pull quote, recording sticker, underline | Now 33, DeepSeek 35, full 41 |
-| verdict | headline, provenance, stamp/leader, threads, bubble loop, stat strip | changes 46, the 47, subject 48, every 49, single 50 |
+| verdict | headline, stamp/leader, threads, bubble loop, stat strip | changes 46, the 47, subject 48, every 49, single 50 |
 
 Cameras and backdrop placements are copied from the format config. Copy and
 canvas placements come from ref/H/build.py f1-f5/MARQUEE and H-anatomy sections 2-4.

@@ -271,7 +271,7 @@ export const AssetLedgerEntrySchema = z.object({
   rights_rationale: z.string().optional(),
   approved: z.boolean().default(false),
 }).superRefine((asset, context) => {
-  if (asset.generated && !asset.label?.trim()) context.addIssue({ code: 'custom', path: ['label'], message: 'generated visuals require an illustration label' })
+  if (asset.generated && !asset.label?.trim()) context.addIssue({ code: 'custom', path: ['label'], message: 'generated visuals require a provenance label, kept in the ledger and never drawn on screen' })
   if (/third[_ -]?party/i.test(asset.rights) && (!asset.attribution?.trim() || !asset.rights_rationale?.trim())) context.addIssue({ code: 'custom', path: ['rights'], message: 'third-party assets require attribution and a rights rationale' })
 })
 

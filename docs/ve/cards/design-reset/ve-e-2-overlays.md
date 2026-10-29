@@ -9,7 +9,7 @@ max_calls: 45
 cwd: C:/Users/krish/dev/mindmake/ce-cards/ve-e-2-overlays
 write_allow: [apps/renderer/src/engine/kit/*, apps/renderer/src/engine/devices/headline/*, apps/renderer/src/engine/devices/sticker/*, apps/renderer/src/engine/devices/stamp/*, apps/renderer/src/engine/devices/stat_strip/*, apps/renderer/src/engine/devices/marquee/*, apps/renderer/src/engine/devices/registry.ts, config/ve/devices.json, tests/ve_overlays_test.py]
 read: apps/renderer/src/engine/**, apps/renderer/src/house/**, docs/ve/design/formats/ref/H/index.html, docs/ve/design/formats/ref/H/build.py, docs/ve/design/formats/H-anatomy.md, docs/ve/design/TEMPLATE.md, config/ve/design-lock.json, apps/renderer/src/engine/devices/CONTRACT.md
-never: NOW.md, WORKBENCH.md, docs/plans/**, git commands, network, MCP tools, publishing, new dependencies, edits outside write_allow, raw hex or rgb colours in a device, Math.random, useCurrentFrame in a device, blurred box-shadows, font sizes under 30 px (28 only for the ILLUSTRATION tag), any change to the five existing devices
+never: NOW.md, WORKBENCH.md, docs/plans/**, git commands, network, MCP tools, publishing, new dependencies, edits outside write_allow, raw hex or rgb colours in a device, Math.random, useCurrentFrame in a device, blurred box-shadows, font sizes under 30 px, any change to the five existing devices
 ---
 
 # Overlay devices: headline, sticker, stamp, stat_strip, marquee

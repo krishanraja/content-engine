@@ -62,7 +62,7 @@ def build():
         "prompt": "No image generation. Reproduce supplied reference vectors; procedural neutral paper texture.",
         "candidates": 1, "chosen": "deterministic reference reproduction", "credits": 0,
         "credits_logged": 0, "plate_px": [900, 1700],
-        "note": "Flags are simplified illustrations. Production must use a licensed open set. Every composition using these plates requires ILLUSTRATION.",
+        "note": "Flags are simplified illustrations. Production must use a licensed open set. No ILLUSTRATION tag on screen (Krish, 28 Oct 2026).",
         "paper_substitution": "Historical blank-paper source photographs are absent. Seed 7 procedural crinkle replaces source sampling; this is not photographic reproduction or evidence.",
         "source": "docs/ve/design/formats/ref/P/tools/make_vectors.py and make_paper.py",
         "files": {name: {"sha256": hashlib.sha256((OUT / name).read_bytes()).hexdigest(),

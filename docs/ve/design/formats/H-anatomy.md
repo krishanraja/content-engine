@@ -19,17 +19,17 @@ Everything below is reproducible from `build_plates.py` (derives the plates once
 
 | Zone | x | y | w | h | Holds |
 |---|---|---|---|---|---|
-| Z1 Header | 72 | 79 | 888 | 56 | logo (72, 86, 260 x 30), ILLUSTRATION tag (366, 82, about 284 x 52), section pill (690, 79, 270 x 52) |
+| Z1 Header | 72 | 79 | 888 | 56 | logo (72, 86, 260 x 30), section pill (690, 79, 270 x 52) |
 | Z2 Headline | 72 | 176 | 888 | 270 | Anton, 1 or 2 lines, one coral-swiped word |
 | Z3 Dek (F1 only) | 72 | 456 | 600 | 110 | Fraunces italic, 2 lines |
-| Z4 Side stack | 684 | 176 | 276 | 370 | provenance sticker (684, 176 to 336, 2 lines) plus up to three contestant stickers (x 712 to 760, y 322 to 520) |
+| Z4 Side stack | 684 | 176 | 276 | 370 | up to three contestant stickers (x 712 to 760, y 322 to 520) |
 | Z5 Hero stage | 0 | 0 | 1080 | 1920 | phone, hand, glass UI; full bleed, moved by the camera |
 | Z6 Glass key band | varies | up to y 1170 | | | the part of the glass that is above the caption zone; every focal item lives here |
 | Z7 Caption | 72 | 1180 | 900 | 320 | reserved, nothing key inside |
 | Z8 Lower line | 72 | 1516 | 936 | 104 | one of: mint strip (F1, F5), dek (F2, F3 at 72, 1524, 880 wide), label sticker (F4 at 72, 1536, about 860 x 64) |
 | Z9 Marquee | 0 | 1736 | 1080 | 62 | coral band, ticker, decoration only |
 | Z10 Platform-safe | x > 960 or y > 1640 | | | | decoration only (the marquee, fingers, plate) |
-| Z11 Result card (F5) | 72 | 150 | 888 | 410 | threads and flags; stamp zone beneath at (76, 574) to (450, 690); provenance sticker at (690, 604) |
+| Z11 Result card (F5) | 72 | 150 | 888 | 410 | threads and flags; stamp zone beneath at (76, 574) to (450, 690) |
 
 Camera table (stage = 941 x 1672 plate, canvas = translate, rotate, scale, origin 0 0):
 
@@ -58,19 +58,17 @@ Camera table (stage = 941 x 1672 plate, canvas = translate, rotate, scale, origi
 | Label (strip, headings, UI) | IBM Plex Mono | 30 | 500 (600 on mint) | UPPER | +0.14em (UI chip .09em, UI row labels .06em) | 1.15 to 1.25 |
 | Sticker | IBM Plex Mono | 30 | 600 | UPPER | +0.03em | 1.08 |
 | Section pill | IBM Plex Mono | 30 | 500 | lower (mind.the.gap) | 0 | 1 |
-| ILLUSTRATION tag | IBM Plex Mono | 28 | 500 | UPPER | +0.14em | 1 |
 | Stamp | IBM Plex Mono | 30 | 700 | UPPER | +0.18em, 3 px border | 1 |
 | Part label (above stamp) | IBM Plex Mono | 30 | 500 | lower | 0 | 1 |
 | Marquee | IBM Plex Mono | 30 | 600 | as written | +0.02em | 1 |
 
-Nothing in the produced layer is under 30 px except the ILLUSTRATION tag (28 px, the brief minimum). The only smaller text anywhere is the real DeepSeek recording, which is evidence and is never retyped. Production should use the original video at full resolution; the supplied still is 1087 px wide.
+Nothing in the produced layer is under 30 px. The only smaller text anywhere is the real DeepSeek recording, which is evidence and is never retyped. Production should use the original video at full resolution; the supplied still is 1087 px wide.
 
 ## 4. Elements and data slots
 
 | Element | Slot (what the producer supplies per piece) |
 |---|---|
 | Section pill | section name (mind.the.gap) |
-| Provenance sticker | owner, date (KRISH'S TEST, 23 OCT) |
 | Headline | up to two lines of 14 or fewer characters, one swiped word |
 | Dek | one or two short sentences, British spelling, no sermon |
 | Chip on glass (F1) | the exact test chip |
@@ -96,7 +94,7 @@ Nothing in the produced layer is under 30 px except the ILLUSTRATION tag (28 px,
 4. Glass UI plane (perspective-mapped, clipped to the glass with rounded corners, with a faint mint glow)
 5. Phone bezel and hand plate (the glass is cut transparent, so it sits over the UI plane)
 6. Glass sheen (soft reflections, clipped to the glass; omitted over real footage)
-7. Header (logo, ILLUSTRATION tag, section pill)
+7. Header (logo, section pill)
 8. Overlay type, cards, stickers, stamps, leader lines
 9. Scribble (ink keyline, then cream or mint stroke)
 10. Marquee band
@@ -114,7 +112,7 @@ Nothing in the produced layer is under 30 px except the ILLUSTRATION tag (28 px,
 
 ## 7. Rules followed (so another designer can reproduce the system)
 
-1. Ground is ink #0C1512. Cream for reading, mint for the answer, flags and primary strip. Coral only as mind.the.gap's colour (pill, provenance sticker, swipe, marquee). Coral is never used for a country, warning or failure. A failure is shown by an absence (bare pole, parted thread) and a cream outline stamp.
+1. Ground is ink #0C1512. Cream for reading, mint for the answer, flags and primary strip. Coral only as mind.the.gap's colour (pill, swipe, marquee). Coral is never used for a country, warning or failure. A failure is shown by an absence (bare pole, parted thread) and a cream outline stamp.
 2. Type on a colour block is ink. Anton headlines are uppercase at 0.88 line height. One swiped word per headline. Fraunces italic is the one human line.
 3. Brutal cards: square corners, 2 px border (cream on ink), hard offset shadow, no blur. Stickers: Plex Mono 600 pill, 2 px ink border, tilt between -8 and +5 degrees. Stamps: 3 px border, heavy tracking, verdict on a part (the Xinjiang answer), leader is a thin cream line to an ink dot with a cream ring on the part.
 4. Type, logo and layout never tilt. Only stickers, stamps (and physical things: the phone, its screen, the real recording) tilt.
@@ -122,7 +120,7 @@ Nothing in the produced layer is under 30 px except the ILLUSTRATION tag (28 px,
 6. Printed, not rendered: fractal grain at 7.5% on every dark block, halftone dots on a 14 px grid on every coral block (pill, swipe, stickers, marquee).
 7. Exactly one scribble per frame: 8 px stroke, cream or mint, with a 16 px ink keyline (this is what makes mint visible on the white recording), hand-wobbled, pointing at the single key thing. Loops follow the screen's perspective, not the canvas axes. Paths are `pathLength=1` so a draw-on is a single dashoffset animation.
 8. The caption zone is empty (every focal item is above y 1180, or in the lower line from y 1516). The lower line is the only element in y 1500 to 1640. Nothing key is beyond x 960 or y 1640.
-9. Each frame carries an ILLUSTRATION tag because it uses generated plates. F4 shows the recording as real footage with the label SCREEN RECORDING · DEEPSEEK · 23 OCT 2026.
+9. No frame carries an ILLUSTRATION tag or a provenance sticker, although every frame stands on generated plates (Krish, 28 Oct 2026: "Yes remove those."). F4 shows the recording as real footage with the label SCREEN RECORDING · DEEPSEEK · 23 OCT 2026.
 10. Voice: British spelling, no em dashes, no exclamation marks, no sermons. The marquee uses the brand's own lines.
 11. One focal point per frame: F1 the country slot, F2 the two 2/2 numerals, F3 the missing flag, F4 the forced-labour clause in the real answer, F5 the refusal bubble.
 12. The 3 x 2 result is never a table. F2 and F3 show it as planted flags and numerals on cards. F5 shows it as three threads on a time axis (the mind.the.gap device) with flags planted, one thread parted at Xinjiang, a stamp and a dated call.

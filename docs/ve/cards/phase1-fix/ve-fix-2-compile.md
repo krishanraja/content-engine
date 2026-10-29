@@ -36,7 +36,7 @@ never: NOW.md, WORKBENCH.md, docs/plans/**, git commands, network, MCP tools, pu
    - A single word wider than one line raises `ValueError` naming the word.
 6. **Refuse what Phase 1 cannot draw.**
    - A beat whose `plate.source` is not `take` or `none`: `ValueError('... asset plates arrive in Phase 2')`.
-   - A used object whose params reference a generated asset: `ValueError` (illustration labels are not wired yet).
+   - A used object whose params reference a generated asset: `ValueError` (the generated assets pipeline is not wired yet).
 7. **Sound effects.**
    - If `config/ve/sfx-kits/<audio.sfx_kit>.json` exists, with the shape `{"<name>": {"path": "...", "gain_db": -6}}`, emit `audio.sfx: [{src, atFrame, gainDb}]` for every compiled event with `sfx`. `src` resolves under the assets folder.
    - Otherwise emit `[]` and report the missing event ids.

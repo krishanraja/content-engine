@@ -3249,17 +3249,13 @@ Run a Vercel serverless handler locally against the real environment.
 - `function endingBandModel(props: EngineRenderProps, frame: number)`
 - `function EndingBand({ props, frame }: EndingBandProps): React.ReactElement | null`
 
-### `apps/renderer/src/engine/chrome/IllustrationLabel.tsx`
-
-- `function IllustrationLabel({ props, frame }: { props: EngineRenderProps; frame: number })`
-
 ### `apps/renderer/src/engine/chrome/MarkTile.tsx`
 
 - `function MarkTile({ props }: { props: EngineRenderProps })`
 
 ### `apps/renderer/src/engine/chrome/StageHeader.tsx`
 
-- `function StageHeader({ props, frame }: { props: EngineRenderProps; frame: number })`
+- `function StageHeader({ props }: { props: EngineRenderProps })`
 
 ### `apps/renderer/src/engine/chrome/tokens.ts`
 
@@ -3491,7 +3487,7 @@ Run a Vercel serverless handler locally against the real environment.
 
 - `export { HOUSE as TALL } from '../house/geometry'`
 - `const WIDE`
-- `type ChromeElement = 'mark' | 'caption' | 'pill' | 'illustrationLabel'`
+- `type ChromeElement = 'mark' | 'caption' | 'pill'`
 - `type Aspect = EngineRenderProps['aspect']`
 - `function boxFor(element: ChromeElement, aspect: Aspect): Box`
 - `function chromeZone(aspect: Aspect): Box`
