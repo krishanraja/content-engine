@@ -71,27 +71,36 @@ Every press saves at once into a store `board_documents` already takes, so no
 migration was needed. Only the access-cookie actor (Krish) writes them: the
 board refuses any other writer with `pick_note_is_his`, `press_is_his` or
 `decision_is_his` (`apps/control-plane/api/board/_contracts.ts`
-`hisOnlyRefusal`). A session reads them and never writes them; a document whose
-`updated_by` is not Krish is never his.
+`hisOnlyRefusal`), and refuses any other writer a `picks` or `queue` document
+he saved, whatever the new body carries, with `his_document`
+(`apps/control-plane/api/board/_handler.ts`). A session reads them and never
+writes them; a document whose `updated_by` is not Krish is never his.
 
 | Press | Where | Writes | What the server does | Who reads it |
 |---|---|---|---|---|
 | Pick for the day, with a note | Ideas, the pick box | `picks/<day>` `{pick, idea_id, series, story, day, at, note?}` | nothing new | plan-week: the pick reaches its piece; the note is his words for the brief |
-| Wider piece | Ideas | `queue/<pick>` `{use: "wider_piece_context", note?}` | nothing | plan-week relays it as a `wider_piece_context` cue, his note as said (a theme when he named one) |
-| Future trend | Ideas | `queue/<pick>` `{use: "track_over_time", note?}` | nothing | plan-week relays it as a `track_over_time` cue |
-| Next week | Ideas | `queue/<pick>` `{use: "next_week", target_week: <the Monday after>, queued: true, note?}` | nothing | plan-week offers it first on the day it fits the week of `target_week` |
-| Reject | Ideas | `queue/<pick>` `{use: "not_for_us", reason?}` | with a typed reason, one `taste_rejection_inbox` row (`said` his reason, `said_where` "publish board, <week> <day>", `piece` the idea id, `meta.rule_kind` "subject"); without one, nothing | plan-week (a `not_for_us` cue); the inspirationhouse rejections job reads the inbox |
-| Take a press back | Ideas, the same press again | `queue/<pick>` `{use: null}` | nothing | plan-week |
+| Wider piece | Ideas | `queue/<pick>` `{use: "wider_piece_context", note?}` | nothing | the Inspiration House cue run reads it from the board (`src/collect/feedbackCues.ts`, documents Krish wrote) and files a `wider_piece_context` cue, his note as said (a theme when he named one); plan-week reads the cue. Never relayed to the idea queue |
+| Future trend | Ideas | `queue/<pick>` `{use: "track_over_time", note?}` | nothing | the cue run files a `track_over_time` cue; plan-week reads it. Never relayed to the idea queue |
+| Next week | Ideas | `queue/<pick>` `{use: "next_week", target_week: <the Monday after>, queued: true, note?}` | nothing | plan-week relays it to the idea queue (`action: queue`, no verdict) and offers it first on the day it fits the week of `target_week`; the cue run files a `future_piece` cue |
+| Reject | Ideas | `queue/<pick>` `{use: "not_for_us", reason}`; the reason is required (the board asks for it before it saves) | nothing: no rejection inbox row, since an idea is a subject and the rejection floor holds rules of form and process only | the cue run files a `not_for_us` cue, his reason as said, so the idea is never offered again. Never relayed to the idea queue |
+| Take a press back | Ideas, the same press again | `queue/<pick>` `{use: null}` | nothing | nothing reads it as a press |
 | Approve or Skip an off-day option | Ideas, Off days | `queue/off-<day>-<option>` `{use: "offday", day, approved, copy_sha256, format, source, option_id}` | nothing | Growth makes and schedules what he approved, only while `copy_sha256` is the copy it holds |
-| Approve scripts | Drafts | `picks/<day>-scripts` `{kind: "approve_scripts", day, piece_id, approved, texts: {cut: words}, scripts: {cut: sha256}, titles: {cut}, folder_title, folder_id?, script_ids?}` | works out `scripts` from `texts` (refused as `approval_hash_mismatch` when the press brings others), sends them with `sendApprovedScripts` and writes its answer into the same document as `send` `{status: sent, no_key, refused or error, folder_id?, scripts?, error?, at, by}` | `teleprompter_send.py plan` (the `approvals` view); on `no_key` a session sends exactly those words through the connector |
+| Approve scripts | Drafts | `picks/<day>-scripts` `{kind: "approve_scripts", day, piece_id, approved, texts: {cut: words}, scripts: {cut: sha256}, titles: {cut}, folder_title, folder_id?, script_ids?}` | works out `scripts` from `texts` (refused as `approval_hash_mismatch` when the press brings others); sends only words the piece's making record shows the scripts' check passed and two fresh readers read back (the gate `teleprompter_send.py plan` holds a session to), else holds them; sends with `sendApprovedScripts`, writes a send that read back to the piece's making record, and writes its answer into the same document as `send` `{status: sent, held, no_key, refused or error, folder_id?, scripts?, error?, recorded?, record_error?, at, by}` | `teleprompter_send.py plan` (the `approvals` view); on `held`, `no_key`, `refused` or `error` a session checks the words if they need it, then sends exactly those words through the connector; on `sent` with `recorded: false` a session records it with `teleprompter_send.py record` and the ids in `send` |
 | Titles | Record | `picks/<day>-titles` `{kind: "titles", day, piece_id?, picks: {long_title?, short_title?, long_thumbnail?, short_thumbnail?}}` | nothing | produce-video's Sunday-night run and the title round (the `titles` view) |
-| Approve for publish | Publish, after Download first | `picks/<day>-publish` `{kind: "approve_publish", day, piece_id, approved, manifest_sha256?}` | nothing in Wave 1 | Growth and Control Center, once the go-live route reads it |
+| Approve for publish | Publish, after Download first | `picks/<day>-publish` `{kind: "approve_publish", day, piece_id, approved, manifest_sha256?}` | nothing in Wave 1 | Growth and Control Center, once the go-live route reads it. It holds no fact sign-off: a go-live reader must also require the article's fact sign-off for the piece (the Article press, not built yet, and the fact gate), so a day never counts as approved with its facts unsigned |
 | Reject asset | Publish, beside each ready file | `picks/<day>-reject-<asset>` `{kind: "reject_asset", day, piece_id, asset, label, reason, drive_id?, at_ms?, formats?}`; the reason is required | one `taste_rejection_inbox` row: his reason, where and when, the piece, the formats, and the file's Drive id with the moment (`at_ms`) or as the whole cut; the file itself is never copied | the inspirationhouse rejections job; the next session's repair round |
 
-Each inbox row's `client_report_id` is the hash of the week, the document and his
-words, so a press saved again files nothing twice. A row that the inbox could
-not take is said on the board, and the board document still holds his reason
-for a session to file.
+Only a rejected asset files an inbox row. Each row's `client_report_id` is the
+hash of the week, the document and his words, so a press saved again files
+nothing twice. A row that the inbox could not take is said on the board, and
+the board document still holds his reason for a session to file.
+
+Each Approve scripts press writes its document twice: his save, then the
+server's, which adds `send`. `board_history` names Krish for both, because the approval must stay a document he wrote for
+`teleprompter_send.py` to count it; `send.by` ("content-engine server") marks
+the server's revision. A held send is not an error: his edited words, or words
+the scripts' check has not passed or no fresh readers heard, wait for a session
+to check them, and nothing reaches Teleprompter before that.
 
 `GET /api/board/<Monday>/approvals` and `/titles` (`board_web.py read <Monday>
 approvals`) are read-only views of the `picks` documents of that kind; nothing

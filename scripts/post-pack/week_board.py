@@ -547,6 +547,29 @@ def subject_line(text, most=60):
     return out.rstrip('.,;:') or words[:most]
 
 
+def tp_names(piece, when, series_label, subject, cuts):
+    """(folder, {cut: title}, subject): the names teleprompter_send.py gives the piece's folder and scripts, so the
+    server's send and a session's send look for the same folder and never make a second one (Krish's terms of
+    2026-10-12: "One script per cut, in a folder per piece"). They come from the piece's post.json in docs/plans when
+    there is one, as the session reads it; until then from the day on the board, its series and the board's subject.
+    (None, {}, '') when nothing names the subject."""
+    import teleprompter_send as tps  # noqa: E402  its names, never a second copy of how they are made
+    try:
+        post = tps.find_post(piece) if piece else None
+        from_post = tps.names_from_post(json.loads(post.read_text(encoding='utf-8-sig'))) if post else None
+    except (OSError, ValueError, tps.TeleprompterError):
+        from_post = None  # a post.json the session could not name the piece from either
+    cfg = {'cuts': {c: {'name': tp_cut_name(c)} for c in cuts}}
+    for names in (from_post, {'day': short_date(when), 'series': series_label, 'subject': subject_line(subject)}):
+        if not names or not names.get('subject'):
+            continue
+        try:
+            return tps.folder_name(names), {c: tps.script_title(names, c, cfg) for c in cuts}, names['subject']
+        except tps.TeleprompterError:
+            continue
+    return None, {}, ''
+
+
 def script_cuts(items, feature):
     """({cut: review slug}, {cuts named twice}) for the scripts among a day's drafts, by their labels as edit_sweep.py
     reads them (story_check.cut_of; a deep cut is the long one). An article or an outline is no script."""
@@ -566,9 +589,10 @@ def script_cuts(items, feature):
 
 def approve_card(day, p, weekday, items, piece, tp, when, series_label, subject, feature, warnings):
     """Approve scripts, under the drafts: his press records the exact words of each script as the Drafts step shows
-    them (his saved edits included), and the server sends them to Teleprompter (Krish, 2026-10-28: "Once I approve,
-    the two scripts will go to teleprompter"; "Server sends directly"). Each cut's draft, and the names it goes under
-    in Teleprompter, ride on the card."""
+    them (his saved edits included), and the server sends them to Teleprompter once the scripts' check passed on those
+    words and two fresh readers heard them, else holds them for a session (Krish, 2026-10-28: "Once I approve, the
+    two scripts will go to teleprompter"; "Server sends directly"). Each cut's draft, and the names it goes under in
+    Teleprompter (tp_names), ride on the card."""
     cuts, twice = script_cuts(items, feature)
     if twice:
         warnings.append(f'{weekday}: two drafts read as the {" and ".join(sorted(twice))} script; Approve scripts is left out '
@@ -576,15 +600,15 @@ def approve_card(day, p, weekday, items, piece, tp, when, series_label, subject,
         return ''
     if not cuts or not piece:
         return ''
-    subj = subject_line(subject)
+    order = [c for c in ('long', 'short', 'feature') if c in cuts]
+    named, titles, subj = tp_names(piece, when, series_label, subject, order)
     if not subj:
         warnings.append(f'{weekday}: nothing names the piece\'s subject, so Approve scripts is left out; give --pending {day}="<title>"')
         return ''
     held = (tp or {}).get('cuts') or {}
-    folder = (tp or {}).get('folder_name') or f'{short_date(when)} {series_label} - {subj}'
-    order = [c for c in ('long', 'short', 'feature') if c in cuts]
+    folder = (tp or {}).get('folder_name') or named
     attrs = ''.join(
-        f' data-box-{c}="{E(f"{day}-{cuts[c]}")}" data-title-{c}="{E((held.get(c) or {}).get("title") or f"{short_date(when)} - {tp_cut_name(c)} - {subj}")}"'
+        f' data-box-{c}="{E(f"{day}-{cuts[c]}")}" data-title-{c}="{E((held.get(c) or {}).get("title") or titles[c])}"'
         + (f' data-script-id-{c}="{E(held[c]["script_id"])}"' if (held.get(c) or {}).get('script_id') else '') for c in order)
     names = ' and the '.join(tp_cut_name(c) for c in order)
     return (f'<div class="rec ap" id="{p}approve" role="region" aria-labelledby="{p}approve-h" data-approve-day="{day}" '
@@ -592,7 +616,7 @@ def approve_card(day, p, weekday, items, piece, tp, when, series_label, subject,
             + (f' data-folder-id="{E(tp["folder_id"])}"' if (tp or {}).get('folder_id') else '') + attrs + '>'
             f'<div class="rec-head"><h2 id="{p}approve-h">Approve scripts</h2></div>'
             f'<p class="rec-how">Approving sends the {E(names)} script{"s" if len(order) > 1 else ""} above, as they stand, '
-            'to Teleprompter.</p>'
+            'to Teleprompter. Words changed since the scripts check are checked first.</p>'
             f'<button type="button" class="btn-s" data-act="approve-scripts" data-day="{day}" disabled>Approve scripts</button>'
             f'<p class="tri-state" data-approvestate="{day}" aria-live="polite"></p></div>')
 
@@ -2903,7 +2927,9 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
             'doc_id': 'off-<tue|thu|sat|sun>-<option id>', 'fields': ['pick', 'use', 'day', 'approved', 'copy_sha256', 'format', 'source', 'option_id', 'week', 'at']}
         manifest['db']['picks']['decisions'] = {
             '<day>-scripts': {'kind': 'approve_scripts', 'fields': ['kind', 'day', 'piece_id', 'approved', 'texts', 'scripts', 'titles', 'folder_title', 'folder_id', 'script_ids', 'at', 'send'],
-                              'then': 'the server sends them to Teleprompter and writes send {status, folder_id, scripts, error, at}'},
+                              'then': 'the server sends them to Teleprompter once the scripts check passed on them and two fresh readers '
+                                      'heard them (else status held), records a send on the making record, and writes send '
+                                      '{status, folder_id, scripts, error, recorded, record_error, at, by}'},
             '<day>-titles': {'kind': 'titles', 'fields': ['kind', 'day', 'piece_id', 'picks', 'at']},
             '<day>-publish': {'kind': 'approve_publish', 'fields': ['kind', 'day', 'piece_id', 'approved', 'manifest_sha256', 'at']},
             '<day>-reject-<asset>': {'kind': 'reject_asset', 'fields': ['kind', 'day', 'piece_id', 'asset', 'label', 'reason', 'drive_id', 'at_ms', 'formats', 'at'],

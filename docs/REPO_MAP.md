@@ -1892,6 +1892,7 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `interface PressDeps`
 - `class PressError`
 - `async function preparePress(collection: string, id: string, body: Body): Promise<Body>`
+- `async function heldBecause(making: unknown, texts: Record<string, string>): Promise<string | null>`
 - `async function afterPress(db: SupabaseClient, ctx: { week: string; collection: string; id: string; body: Body; who: str…`
 
 ### `apps/control-plane/api/board/index.ts`

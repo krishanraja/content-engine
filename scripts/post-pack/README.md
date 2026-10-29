@@ -693,14 +693,22 @@ are in `config/teleprompter.json`.
 
 The server sends first. His Approve scripts press on a day's Drafts step
 writes `picks/<day>-scripts` (read as the `approvals` view), and the board's
-server (`apps/control-plane/api/board/_presses.ts`) then calls
+server (`apps/control-plane/api/board/_presses.ts`) first reads the piece's
+making record and holds any words the scripts' check did not pass or no two
+fresh readers read back, his saved edits included (`send.status: "held"`):
+the same gate `plan` holds a session to, below. Otherwise it calls
 `sendApprovedScripts` (`apps/control-plane/api/_teleprompter.ts`) with the
 document he wrote and records its answer in it as `send`. It checks that approval itself before any request (his
 document, this piece, not withdrawn, each cut's exact hash), holds the tools
 it may call in code, finds or makes the piece's folder, creates or updates
-one script per cut and reads each back. Until Krish places his key
+one script per cut and reads each back. A send that read back is written to
+the piece's making record (its `teleprompter` field), so `pending` sees it;
+when that write fails, `send.recorded` is false and a session runs `record`
+with the ids in `send`. Until Krish places his key
 (`TELEPROMPTER_API_KEY`) it makes no request and answers `no_key`. Until
-both are in place, a session sends instead, as below.
+both are in place, a session sends instead, as below. The board names the
+folder and the scripts with this file's `folder_name` and `script_title`, on
+the piece's post.json when there is one, so both routes find the same folder.
 
 `teleprompter_send.py` makes no Teleprompter call. `plan` reads the piece's
 making record, refuses unless the scripts' check passed, each file holds the
