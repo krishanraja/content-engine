@@ -90,12 +90,17 @@ Render transports string values as ASCII escapes, decoded for drawing. It measur
 - One EDL drives picture, dialogue, bed, SFX/captions. No manual mux or separate retiming; AAC correction preserves video.
 - No per-piece compositions/render scripts. New hero mechanisms become library devices via cards.
 - Never hand-write a pass/receipt/ready. status checks lint, QC bound to the existing MP4 SHA, completeness, Critic verdict and Krish's exact-file approval.
-- Evidence is real; generated illustrations need labels. Numbers name producers; mind.the.gap ends in a dated call. No synthetic Krish without realism-test approval. Follow tools.json recipes/rulings.
+- Evidence is real. A generated plate carries no on-screen label, tag or provenance note (Krish, 28 Oct 2026; `config/ve/design-lock.json` sets `illustration_tag_required: false`); its sidecar keeps the provenance. Numbers name producers; mind.the.gap ends in a dated call. No synthetic Krish without realism-test approval. Follow tools.json recipes/rulings.
 - No publish/send/schedule verb.
 
 ## Codex
 
-Claude writes exact cards from fields JSON. Codex builds library devices in worktrees between pieces. dispatch uses the plugin companion with pinned model/effort. verify-card reruns acceptance outside the sandbox/checks write_allow; Claude then renders golden stills/reviews one contact sheet. Codex's report is never proof; Codex never renders/files/edits a production piece in flight.
+Codex is a visual asset maker (Ruling, Krish, 2026-10-28: "Visual asset maker"). It makes pictures; the engine assembles every cut. Two jobs:
+
+- **Library devices.** Claude writes exact cards from fields JSON. Codex builds devices in worktrees between pieces. dispatch uses the plugin companion with pinned model/effort. verify-card reruns acceptance outside the sandbox/checks write_allow; Claude then renders golden stills/reviews one contact sheet.
+- **Visual plates into named slots.** A slot is named in the spec, with its geometry, its duration and the line it sits under; Codex makes candidate pictures for it (stills first, then motion of an approved still: `docs/ve/design/TEMPLATE.md`, "Images: how plates are made"), and the engine places the chosen one. Codex never picks a slot's size, timing or position. Compile still refuses generated plates until Phase 2 (above); a per-plate brief written by the engine and Critic ranking of candidates are planned work, not built.
+
+Codex never edits a cut: it never renders, assembles, trims, retimes, captions, mixes or files a production piece, and never touches its words or audio. Its report is never proof.
 
 ## Budget
 
