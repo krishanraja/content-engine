@@ -10,7 +10,8 @@
   ],
   "lints": [
     "brand.no_hex",
-    "brand.digit_producer"
+    "brand.digit_producer",
+    "brand.no_name"
   ],
   "qc": [
     "qc_brand.mark_tile"

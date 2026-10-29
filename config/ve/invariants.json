@@ -43,6 +43,12 @@
       "enforced_by": "schema dataset.producer_label; lint brand.digit_producer"
     },
     {
+      "id": "INV-NO-NAME",
+      "rule": "No word on screen names Krish: not his name, a spelling or handle of it, or a possessive of it, and another person called Krish is blocked too. A test the publication ran is labelled OUR TEST \u00b7 <date>. His face appears; his name never does",
+      "enforced_by": "lint brand.no_name (copy-lint no_name, over the spec's public words only)",
+      "ruling": "Krish 2026-10-28: \"Remember, no content refers to Krish, ever. I still see that popping up from time to time. Even articles written are not authored by Krish. My face only, for assets and the video format.\" Krish picked: \"Yes, block it\" (D4, other people called Krish)"
+    },
+    {
       "id": "INV-SYNTHETIC-OFF",
       "rule": "No synthetic Krish (HeyGen avatar, voice clone) until Krish approves a realism test",
       "enforced_by": "tools.json requires_ruling realism_test; ve-assets refuses",
