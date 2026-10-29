@@ -52,6 +52,46 @@ test('a closing moral is a veto', () => {
   assert.ok(ids('The lesson here is that defaults matter.').includes('preach_pattern'))
 })
 
+test('his name, a spelling or a handle of it is a veto', () => {
+  // Ruling (Krish, 2026-10-28): "Remember, no content refers to Krish, ever."
+  for (const named of [
+    'By Krish Raja, 19 October 2026, six minute read',
+    "Krish's take on the deal.",
+    'KRISH’S CONFIDENCE',
+    'Krishan Raja tested six models.',
+    'Follow @TheRealKrisho for more',
+    'Krisho on what just moved.',
+    'More at krishraja.com',
+    'Threads: krishraja1',
+    'github.com/krishanraja/content-engine',
+    'linkedin.com/in/krish-raja',
+    // Another person called Krish is blocked too, with no override (Krish picked D4: "Yes, block it").
+    'Krish Patel runs the chip team.',
+  ]) {
+    assert.ok(ids(named).includes('personal_name'), `not caught: ${named}`)
+  }
+})
+
+test('other names that share his letters pass', () => {
+  for (const other of [
+    'Arvind Krishna said IBM will cut its AI prices.',
+    'Raja Koduri left Intel to start a chip company.',
+    'Sriram Krishnan advises the White House on AI.',
+    'Krishi Network is an AI app for farmers in India.',
+    'We ran the same prompt through DeepSeek and Claude. Our test, 23 October.',
+  ]) {
+    assert.deepEqual(ids(other), [], `a false block: ${other}`)
+  }
+})
+
+test('no scope but canon lets his name through', () => {
+  const scoped = (scope, body) => `---\nkill_list_scope: ${scope}\n---\n${body}\n`
+  assert.ok(ids(scoped('paid_tier', 'A live session with Krish.')).includes('personal_name'), 'the paid tier does not relax it')
+  assert.ok(ids(scoped('legal_entity', 'Mindmaker LLC, run by Krish Raja.')).includes('personal_name'), 'the legal entity scope does not relax it')
+  assert.deepEqual(ids(scoped('canon', 'Ruling (Krish, 2026-10-28): no content refers to Krish.')), [],
+    'canon must be allowed to record the rule it enforces')
+})
+
 test('paid tier may name CTRL and nothing else is relaxed', () => {
   const paid = body => `---\nkill_list_scope: paid_tier\n---\n${body}\n`
   assert.deepEqual(ids(paid('Beta access to CTRL.')), [], 'CTRL is the permitted paid-tier connection')
