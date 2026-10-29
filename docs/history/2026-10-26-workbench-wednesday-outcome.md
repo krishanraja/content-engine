@@ -1,3 +1,7 @@
+> **Historical.** Archived 2026-10-29 by the docs steward. Not current guidance.
+> Replaced by: `WORKBENCH.md` and `docs/plans/2026-10-21-wednesday/FAILURE_REPORT_2026-10-24.md`
+> Reason: moved from WORKBENCH.md on 2026-10-26 to keep it within its size limit (#170).
+
 # Preserved Workbench entry
 
 Moved intact on 26 October to keep the active Workbench within its size limit.
