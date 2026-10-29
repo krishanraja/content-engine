@@ -69,6 +69,28 @@ approval or evidence that a volume system has been built and measured.
   clean under the copy lint (`config/copy-lint.json`, Krish, 28 Oct 2026).
 - Source, rights and production QA evidence. Unresolved gaps stay explicit.
 
+### The piece manifest (W2.8)
+
+The package travels as `0 Publish/manifest.json` in the post's library folder, in
+Growth's closed shape (`content-engine-piece-manifest/1`, copied from Growth into
+`config/schema/piece-manifest.schema.json`), written by
+`scripts/post-pack/piece_manifest.py`:
+
+1. `draft SPEC --out "0 Publish/manifest.draft.json"`: assets in order with their
+   Drive ids and sha256, the exact words and alt text per channel, and QA. The
+   board's Approve for publish binds the draft's sha256
+   (`week_board.py --publish-manifest DAY=<draft>`), so his press approves exactly
+   that.
+2. `seal --draft D --approval <his picks/<day>-publish document> --out manifest.json`:
+   only his own approval (updated_by Krish), approved, for this piece, bound to
+   this draft, with QA passed, seals it; `approval_sha256` is the sha256 of his
+   press's canonical JSON. Growth refuses an unsealed draft.
+3. `dispatch --manifest M --url <direct download> --run-id makeyourmindup:<run> --slots S`:
+   the `growth-go-live-manifest` payload names the manifest as
+   `piece_manifest {url, sha256}` and marks every slot `per_item_review: true`,
+   so each post is its own go-live in Control Center: one decision per post. It
+   prints; `--deliver` sends it only with `--yes "Krish, YYYY-MM-DD: <his words>"`.
+
 Growth owns platform packaging, metadata, target accounts, queue, authorised
 scheduling/automatic posting, idempotency, native readback, live audits,
 social management and channel performance. Content-engine does not publish
