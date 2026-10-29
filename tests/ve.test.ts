@@ -44,6 +44,7 @@ describe('ve', () => {
     ['the crew lints refuse every Friday failure a spec can carry', 'tests/ve_lint_test.py'],
     ['QC measures holds, redraw loops, dead air and loudness on real media', 'tests/ve_qc_test.py'],
     ['removing a card worktree never follows its node_modules link', 'tests/ve_cards_test.py'],
+    ['one local layout: every reader resolves from config/studio.json and the path guard fails on a planted path', 'tests/ve_local_roots_test.py'],
   ] as const) {
     it(name, () => {
       const r = py([file])
