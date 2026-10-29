@@ -83,16 +83,18 @@ export interface MakingChannelPost { url?: string; posted_at: string }
 export interface MakingSession { url: string; started_at: string; by: string }
 /** Where one cut's script is in Krish's teleprompter.com account. Krish,
  *  2026-10-12: "Also note that Descript is permanently gone, teleprompter.com
- *  is permanently in, connected via MCP here", and, asked whether every
- *  checked script may go there automatically, "Yes, automatic, Monday now",
- *  on these terms: "One script per cut, in a folder per piece (e.g. "Mon 12
- *  Oct follow.the.money"). When the words change, the same script is updated
- *  in place. Nothing is ever deleted." `script_id` is the script's id (an
+ *  is permanently in, connected via MCP here", on these terms: "One script
+ *  per cut, in a folder per piece (e.g. "Mon 12 Oct follow.the.money"). When
+ *  the words change, the same script is updated in place. Nothing is ever
+ *  deleted." His standing yes of that day ("Yes, automatic, Monday now")
+ *  gave way on 2026-10-28 to "Once I approve, the two scripts will go to
+ *  teleprompter": a script goes only once he approves its exact words. `script_id` is the script's id (an
  *  uppercase UUID), `title` its title, and `script_sha256` the hash of the
  *  words it holds (making.py script_hash); `error` says why the last send
  *  failed and `failed_at` when, on the script the cut already had, or alone
  *  when none was made. Written by scripts/post-pack/teleprompter_send.py
- *  record (making.py teleprompter). */
+ *  record (making.py teleprompter), or by teleprompterPatch
+ *  (api/_teleprompter.ts) after a server send. */
 export interface MakingTeleprompterCut {
   script_id?: string
   title?: string

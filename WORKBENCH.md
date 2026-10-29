@@ -158,9 +158,11 @@ The week of 19 October's queue notes are in `docs/history/2026-10-27-workbench-1
 - He reads his scripts in teleprompter.com and drops each take at the top
   of the Video Engine Inbox. His words, 2026-10-12: "Also note that Descript
   is permanently gone, teleprompter.com is permanently in, connected via MCP
-  here". Every checked script goes there by itself, one folder per piece
-  and one script per cut, updated in place, and nothing there is ever
-  deleted (`AGENTS.md`, `config/teleprompter.json`).
+  here". A script goes there only once he approves its exact words (his
+  words, 2026-10-28: "Once I approve, the two scripts will go to
+  teleprompter"; `teleprompter_send.py plan` refuses until he has), one
+  folder per piece and one script per cut, updated in place, and nothing
+  there is ever deleted (`AGENTS.md`, `config/teleprompter.json`).
 
 - Never hand him a blocker you have not checked is real, and never one a
   session can clear itself. His words, 2026-10-12, after a session relayed

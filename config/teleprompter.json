@@ -1,5 +1,5 @@
 {
-  "about": "Krish's words on what goes into his teleprompter.com account, when, and exactly what may be done there. Read by scripts/post-pack/teleprompter_send.py, making.py teleprompter and apps/control-plane/api/_teleprompter.ts; nothing is sent or recorded unless status is \"confirmed\". Since 2026-10-28 nothing goes there until Krish approves those exact words with the Approve scripts press on the week's publish board (approval, below). Then the engine's server sends them itself with his personal API key and reads each one back (server, below). While that key is not in place, a Claude Code session that holds the Teleprompter connector sends them instead (make-piece, the Scripts step), and teleprompter_send.py plan refuses until his approval holds those exact hashes. This file names the key; it never holds it.",
+  "about": "Krish's words on what goes into his teleprompter.com account, when, and exactly what may be done there. Read by scripts/post-pack/teleprompter_send.py, making.py teleprompter and apps/control-plane/api/_teleprompter.ts; nothing is sent or recorded unless status is \"confirmed\". Since 2026-10-28 nothing goes there until Krish approves those exact words with the Approve scripts press on the week's publish board (approval, below). The engine's server is built to send them itself with his personal API key and read each one back (server, below), but nothing calls it until the board has that press and the key is in place. Until then a Claude Code session that holds the Teleprompter connector sends them instead (make-piece, the Scripts step), and teleprompter_send.py plan refuses until his approval holds those exact hashes. This file names the key; it never holds it.",
   "status": "confirmed",
   "said": {
     "switch": {
@@ -38,6 +38,8 @@
   },
   "server": {
     "code": "apps/control-plane/api/_teleprompter.ts sendApprovedScripts",
+    "status": "sender built and tested, not wired: it waits on the board's Approve scripts press (the approvals store) and on his key",
+    "approval": "checked in code before any request: the input carries the board document his press wrote, which must be written by Krish, name the piece, not be withdrawn, and hold each cut's hash (of the words sent, or of the script file given with them)",
     "secret": "TELEPROMPTER_API_KEY",
     "secret_by": "Krish makes a personal API key (ttp_...) at app.teleprompter.com/manage/settings and stores it as a content-engine Vercel secret himself; it never goes through a chat or a file",
     "url": "https://app.teleprompter.com/mcp",

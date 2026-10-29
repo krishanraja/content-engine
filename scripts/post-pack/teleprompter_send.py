@@ -9,9 +9,10 @@ follow.the.money"). When the words change, the same script is updated in
 place. Nothing is ever deleted." On 2026-10-28 his standing yes of that day
 ("Yes, automatic, Monday now") gave way to "Once I approve, the two scripts
 will go to teleprompter", and "Server sends directly": the engine's server
-sends them itself (apps/control-plane/api/_teleprompter.ts) once his key is
-in place, and until then a session sends them through its connector, by this
-file. His words, the tools allowed and the names are in
+is to send them itself (apps/control-plane/api/_teleprompter.ts, built but
+not wired), once the board's Approve scripts press calls it and his key is
+in place, and until then a session sends them through its connector, by
+this file. His words, the tools allowed and the names are in
 config/teleprompter.json; nothing is planned or recorded unless its status
 is "confirmed".
 
@@ -64,8 +65,9 @@ deleted, moved or renamed.
 The calls are made by the Claude Code session that holds the Teleprompter
 connector (make-piece, the Scripts step), never by this file: it holds no
 Teleprompter key. (The server's own send, with Krish's key, is
-apps/control-plane/api/_teleprompter.ts; this is its fallback while the key
-is not in place.) `record` writes what was made onto the piece's making
+apps/control-plane/api/_teleprompter.ts; this is the route until that send
+is wired to the board's press and the key is in place, and its fallback
+after.) `record` writes what was made onto the piece's making
 record (making.teleprompter_patch; making.py teleprompter is the same),
 with the ids checked as Teleprompter's uppercase UUIDs, and refuses a
 folder other than the one the record holds for the piece. A send that fails
