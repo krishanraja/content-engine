@@ -47,8 +47,10 @@ describe('the recordings upload on Krish\'s runner machines', () => {
     for (const line of body.split('\n').filter((l) => /Move-Item|Add-Content|WriteAllText/.test(l))) {
       expect(line).toMatch(/-LiteralPath \$(LogPath|temporary) |WriteAllText\(\$temporary,/)
     }
-    for (const line of body.split('\n').filter((l) => /Save-JsonFile \$/.test(l))) expect(line).toMatch(/Save-JsonFile \$(StatePath|PlacingStatePath) /)
+    // The Saturday overnight preflight's last result is kept beside them too (tests/overnight-preflight.test.ts).
+    for (const line of body.split('\n').filter((l) => /Save-JsonFile \$/.test(l))) expect(line).toMatch(/Save-JsonFile \$(StatePath|PlacingStatePath|PreflightStatePath) /)
     expect(upload).toContain("$PlacingStatePath = Join-Path $StateRoot 'placing.json'")
+    expect(upload).toContain("$PreflightStatePath = Join-Path $StateRoot 'preflight.json'")
     expect(upload).toContain("$StateRoot = Join-Path $env:USERPROFILE 'Documents\\MindmakeVideoStudio\\recordings-upload'")
   })
 
