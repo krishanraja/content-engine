@@ -28,6 +28,8 @@ describe('the engine gates', () => {
     ['the rejection floor reader (AGENTS.md rule 20)', ['scripts/floor.py', '--self-test']],
     ['the rejection floor file, when it is there, is whole', ['scripts/floor.py', '--check']],
     ['the bar: the reference cuts Krish named, their page, and floor.py printing them first for every video maker', ['tests/floor_bar_test.py']],
+    ['the floor blocks on his eight nevers alone, and a test reject shows for short_video (W2.10)', ['tests/floor_blocking_test.py']],
+    ['the one-sitting floor sort is a proposal: patterns to him, one-offs as dated examples (W2.10)', ['scripts/floor_sort.py', '--self-test']],
     ['video transcript clocks, word cues, continuous music and delivery evidence', ['tests/quick_edit_quality_test.py']],
     ['the words gate: no content word he said is lost from a cut (chopped-words-published, open until calibrated)', ['tests/quick_edit_words_gate_test.py']],
     ['the production run files each cut with its receipt and stops loudly when a gate holds it', ['tests/quick_edit_produce_day_test.py']],
