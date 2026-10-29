@@ -576,6 +576,18 @@
         {
           "text": "Krish Mehta runs the AI team at a bank.",
           "applies_to": "article_body"
+        },
+        {
+          "text": "Find us at krish_raja on Threads.",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "Krish2026 tested six models.",
+          "applies_to": "article_body"
+        },
+        {
+          "text": "Say hi to @krish_ai",
+          "applies_to": "channel_copy"
         }
       ],
       "pass": [

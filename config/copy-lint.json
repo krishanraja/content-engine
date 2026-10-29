@@ -168,9 +168,9 @@
     },
     {
       "id": "no_name",
-      "regex": "\\b(?:the[ \\t_.-]?real[ \\t_.-]?krisho|krisho|krish(?:an)?raja\\d*|krish(?:an)?(?:[ \\t]+raja)?)\\b",
+      "regex": "(?<![a-z])(?:the[ \\t_.-]?real[ \\t_.-]?krisho|krisho|krish(?:an)?raja\\d*|krish(?:an)?(?:[ \\t]+raja)?)(?![a-z])",
       "flags": "i",
-      "reason": "His name, a spelling or handle of it, or a possessive of it (\"By Krish Raja\", \"Krish's test\", \"@TheRealKrisho\", \"krishraja.com\"). No public content names him or credits him as its author; his face is the only part of him that appears, in assets and video. Every Krish is refused, another person called Krish too, with no override (Krish picked: \"Yes, block it\"). A test the publication ran is OUR TEST, in its own voice.",
+      "reason": "His name, a spelling or handle of it, or a possessive of it (\"By Krish Raja\", \"Krish's test\", \"@TheRealKrisho\", \"krishraja.com\"). No public content names him or credits him as its author; his face is the only part of him that appears, in assets and video. Every Krish is refused, another person called Krish too, with no override (Krish picked: \"Yes, block it\"). A label for a test the publication ran reads OUR TEST by default.",
       "applies_to": [
         "channel_copy",
         "carousel_text",
