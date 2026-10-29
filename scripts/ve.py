@@ -13,6 +13,9 @@
   python scripts/ve.py coverage                      failure register: behavioural guards vs markers
 
   python scripts/ve.py ledger <piece>               usage against the piece's caps
+  python scripts/ve.py ledger <piece> reserve <provider> <amount>   reserve against the weekly credit budget
+  python scripts/ve.py budget verify|hash|status    the weekly credit budget Krish signs (config/ve/credit-budget.json)
+  python scripts/ve.py lock spend                    the design lock's spend consent becomes his signed weekly cap
   python scripts/ve.py time <piece> start <phase>    time an engine phase (stop/status available)
 
 ingest, stills and file arrive with the Phase 1 cards; until then they say so.
@@ -106,6 +109,14 @@ def cmd_lock(args) -> int:
         lock = designlock.load()
         if args.action == 'show':
             print(json.dumps(lock['formats'][args.format] if args.format else lock, indent=2))
+        elif args.action == 'spend':
+            from velib import credits
+            record = credits.load(args.record) if args.record else credits.load()
+            problems = credits.verify(record)
+            if problems:
+                raise ValueError('the weekly credit budget does not stand: ' + '; '.join(problems))
+            designlock.spend_from_budget(record)
+            print(f'design lock: spend is the weekly credit budget Krish signed on {record["signed"]["on"]}: "{record["signed"]["said"]}"')
         elif args.action == 'check':
             findings = designlock.validate(lock)
             if findings:
@@ -289,7 +300,7 @@ def cmd_dispatch(args) -> int:
         from velib.ledger import require_within
         require_within(args.piece)
     from velib.cards import dispatch
-    result = dispatch(Path(args.card), background=not args.wait, spend_approved=args.spend_approved)
+    result = dispatch(Path(args.card), background=not args.wait)
     print((result.stdout or result.stderr).strip()[-2000:])
     return result.returncode
 
@@ -418,12 +429,45 @@ def _ledger_report(piece) -> int:
 def cmd_ledger(args) -> int:
     from velib import ledger
     try:
-        if getattr(args, 'action', None) == 'add':
+        action = getattr(args, 'action', None)
+        if action == 'add':
             ledger.add(args.piece, args.kind, args.amount, args.note)
+        elif action == 'reserve':
+            print(f've ledger: reserved {args.amount:g} {args.provider}: {ledger.reserve(args.provider, args.amount, args.piece, args.note)}')
+            return 0
+        elif action == 'settle':
+            ledger.settle(args.id, args.amount)
+            print(f've ledger: settled {args.id} at {args.amount:g}')
+            return 0
         return _ledger_report(args.piece)
     except (ValueError, OSError) as error:
         print(f've ledger: {error}', file=sys.stderr)
         return 1
+
+
+def cmd_budget(args) -> int:
+    from velib import credits, ledger
+    path = Path(args.record) if args.record else credits.RECORD
+    try:
+        record = credits.load(path)
+    except FileNotFoundError:
+        print(f've budget: no {path.name}: Krish signs it from config/ve/credit-budget.template.json', file=sys.stderr)
+        return 1
+    except (OSError, ValueError) as error:
+        print(f've budget: {error}', file=sys.stderr)
+        return 1
+    if args.action == 'hash':
+        print(credits.record_hash(record))
+        return 0
+    problems = credits.verify(record)
+    if args.action == 'verify':
+        print('ve budget: ' + ('signed by Krish and unchanged since' if not problems else '; '.join(problems)))
+        return 0 if not problems else 1
+    week = credits.week_of()
+    for provider, entry in ledger.weekly(week, record).items():
+        print(f'{provider}: {entry["used"]:g} used or reserved ({entry["settled"]:g} settled, {entry["open"]:g} open) / {entry["cap"]}')
+    print(f'week of {week}: ' + ('budget stands' if not problems else 'budget does not stand: ' + '; '.join(problems)))
+    return 0 if not problems else 1
 
 
 def cmd_time(args) -> int:
@@ -504,6 +548,8 @@ def main() -> int:
     actions = p.add_subparsers(dest='action', required=True)
     actions.add_parser('check')
     a = actions.add_parser('show'); a.add_argument('format', nargs='?')
+    a = actions.add_parser('spend', help="replace the per-generation yes with Krish's signed weekly credit budget, in his words")
+    a.add_argument('--record', help='default config/ve/credit-budget.json')
     a = actions.add_parser('freeze'); a.add_argument('format'); a.add_argument('--from', dest='src_dir', required=True)
     a.add_argument('--map', dest='mapping', nargs='+', action='extend'); a.add_argument('--force', action='store_true')
     p.set_defaults(fn=cmd_lock)
@@ -524,7 +570,6 @@ def main() -> int:
     p = sub.add_parser('card'); p.add_argument('fields'); p.set_defaults(fn=cmd_card)
     p = sub.add_parser('dispatch'); p.add_argument('card'); p.add_argument('--wait', action='store_true')
     p.add_argument('--piece', help='refuse dispatch when this piece is over any budget cap')
-    p.add_argument('--spend-approved', action='store_true', help="only after Krish's yes, in his words, to Codex drawing paid credits")
     p.set_defaults(fn=cmd_dispatch)
     p = sub.add_parser('verify-card'); p.add_argument('card'); p.add_argument('--cwd', required=True); p.set_defaults(fn=cmd_verify_card)
     p = sub.add_parser('status'); p.add_argument('piece'); p.set_defaults(fn=cmd_status)
@@ -557,7 +602,19 @@ def main() -> int:
                                    'engine_seconds', 'krish_wait_seconds'))
     a.add_argument('amount', type=float, help='finite non-negative amount')
     a.add_argument('--note', default='', help='description of this usage')
+    a = actions.add_parser('reserve', help='reserve credits against the weekly budget Krish signed; refused over his cap',
+                           description='Reserve before a dispatch or generation runs; settle it with what the provider charged.')
+    a.add_argument('provider', choices=('codex_allowance_points', 'codex_paid_credits', 'runway_credits', 'higgsfield_credits',
+                                        'elevenlabs_credits'))
+    a.add_argument('amount', type=float, help='finite non-negative amount')
+    a.add_argument('--note', default='', help='what it is for')
+    a = actions.add_parser('settle', help='record what a reservation really cost')
+    a.add_argument('id'); a.add_argument('amount', type=float)
     p.set_defaults(fn=cmd_ledger)
+    p = sub.add_parser('budget', help='verify, hash or show the weekly credit budget Krish signs')
+    p.add_argument('action', choices=('verify', 'hash', 'status'))
+    p.add_argument('--record', help='default config/ve/credit-budget.json')
+    p.set_defaults(fn=cmd_budget)
     p = sub.add_parser('time', help='start, stop or inspect the piece engine clock',
                        description='Track engine phases separately from the append-only usage ledger.')
     p.add_argument('piece', help='piece folder name or existing directory')

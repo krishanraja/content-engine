@@ -173,13 +173,51 @@ def remove_worktree(cwd: Path) -> None:
     subprocess.run(['git', 'worktree', 'remove', '--force', str(cwd)], cwd=ROOT, check=True)
 
 
-def dispatch(card_path: Path, background: bool = True, spend_approved: bool = False) -> subprocess.CompletedProcess:
+DEFAULT_TOOLS = 'shell, apply_patch'
+DEFAULT_ALLOWANCE_RESERVE = 1.0   # percent points of the weekly Codex window a card reserves unless it says (allowance_points:)
+DEFAULT_PAID_RESERVE = 40.0       # Codex credits a card reserves past the ceiling unless it says (paid_credits:)
+
+
+def _hold(card_path: Path, reasons: list[str]) -> None:
+    """A card that may not be sent is held: recorded beside it with the reason, and never sent."""
+    from datetime import datetime, timezone
+    write_json(card_path.with_suffix('.held.json'), {'card': card_path.name, 'held': True, 'reasons': reasons,
+                                                     'at': datetime.now(timezone.utc).isoformat(timespec='seconds')})
+    sys.exit('ve dispatch: held, not sent: ' + '; '.join(reasons))
+
+
+def _admit(card_path: Path, meta: dict) -> None:
+    """Codex runs only under its one tool profile (config/codex-profile.json, failure production-asked-to-publish):
+    the profile must pass its audit and every tool the card names must be one it allows, or the card is held."""
+    sys.path.insert(0, str(ROOT / 'scripts' / 'overnight'))
+    try:
+        import codex_profile
+        profile = codex_profile.load()
+    except (ImportError, OSError, ValueError) as error:
+        _hold(card_path, [f'no Codex tool profile to send it under ({error})'])
+    tools = [t.strip() for t in (meta.get('tools') or DEFAULT_TOOLS).strip('[]').split(',') if t.strip()]
+    reasons = codex_profile.admit(tools, profile)
+    if reasons:
+        _hold(card_path, reasons)
+
+
+def _reserve(card_path: Path, meta: dict) -> str:
+    """Reserve the card's credits against the weekly budget Krish signed, before anything is sent; refuse over it.
+    Past the weekly allowance ceiling Codex draws paid credits, which reserve against their own cap."""
+    from . import ledger
+    used = weekly_used_percent()
+    if used is not None and used > ALLOWANCE_CEILING:
+        return ledger.reserve('codex_paid_credits', float(meta.get('paid_credits') or DEFAULT_PAID_RESERVE),
+                              note=f'card {meta.get("card", card_path.stem)}: allowance at {used:.0f}%')
+    return ledger.reserve('codex_allowance_points', float(meta.get('allowance_points') or DEFAULT_ALLOWANCE_RESERVE),
+                          note=f'card {meta.get("card", card_path.stem)}')
+
+
+def dispatch(card_path: Path, background: bool = True) -> subprocess.CompletedProcess:
     meta = parse_card(card_path)
     _require_design_lock(meta)
-    used = weekly_used_percent()
-    if used is not None and used > ALLOWANCE_CEILING and not spend_approved:
-        sys.exit(f've dispatch: the weekly Codex allowance is at {used:.0f}% (ceiling {ALLOWANCE_CEILING}%), so Codex would draw paid credits. '
-                 "Pass --spend-approved only after Krish has said yes in his own words.")
+    _admit(card_path, meta)
+    _reserve(card_path, meta)
     cwd = meta.get('cwd') or str(ROOT)
     ensure_worktree(Path(cwd), meta.get('card', 'card'))
     cmd = ['node', companion(), 'task', '--fresh', '--write', '--model', meta.get('model', MODEL), '--effort', meta.get('effort', EFFORT),

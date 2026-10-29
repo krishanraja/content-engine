@@ -54,7 +54,10 @@ lint <spec>
 qc <cut> --format <format> [--out <path>] [--props <props>]
 study <ref> [--out <path>]
 card <fields>
-dispatch <card> [--wait] [--piece <piece>] [--spend-approved]
+dispatch <card> [--wait] [--piece <piece>]
+budget verify|hash|status
+ledger <piece> reserve <provider> <amount> | settle <id> <amount>
+lock spend
 verify-card <card> --cwd <worktree>
 status <piece>
 coverage
@@ -116,4 +119,4 @@ Caps come from `config/ve/budget.json`:
 
 `ledger <piece> add <kind> <amount>` appends actual usage; kinds: claude_tokens, codex_tokens, allowance_points, credits, engine_seconds, krish_wait_seconds. Amounts are finite/non-negative. Ledger reports OK/WARN/OVER, credits and wait minutes; exit 1 above any cap. Add still records over-cap usage. Credits/wait have no configured caps.
 
-At >=80% stop and ask at a gate; refuse work past caps. These are session stop rules: ledger only warns at 80%; dispatch enforces all recorded caps only with --piece; time start enforces engine time only and refuses duplicate clocks. time stop appends elapsed seconds/removes clock; time status includes live elapsed time. Ledger/dispatch totals include stopped/logged time only. Separately, weekly Codex usage >80% refuses dispatch unless --spend-approved carries Krish's paid-credit yes. No flag waives piece caps.
+At >=80% stop and ask at a gate; refuse work past caps. These are session stop rules: ledger only warns at 80%; dispatch enforces all recorded caps only with --piece; time start enforces engine time only and refuses duplicate clocks. time stop appends elapsed seconds/removes clock; time status includes live elapsed time. Ledger/dispatch totals include stopped/logged time only. Separately, every dispatch and generation reserves against the weekly credit budget Krish signs (config/ve/credit-budget.json, from its template; `ve budget verify` checks his signature and its sha256 the way other signed records are checked): Codex allowance points, or paid Codex credits once weekly use is past 80%, Runway, Higgsfield and ElevenLabs credits. Anything over his cap, and anything with no signed budget, is refused; a card whose tools the Codex profile (config/codex-profile.json) does not allow is held. `ve lock spend` makes the design lock's per-generation yes that weekly cap, in his words. This replaced the per-run --spend-approved flag (29 Oct 2026, plan Wave 2, W2.6). No flag waives piece caps.

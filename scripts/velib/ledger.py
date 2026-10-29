@@ -124,3 +124,77 @@ def stop_clock(piece):
     add(piece, 'engine_seconds', seconds, note=running['phase'])
     (piece_dir(piece) / 've' / 'clock.json').unlink()
     return seconds
+
+
+# ---- the weekly credit budget -----------------------------------------------------------------------------------
+# Every dispatch and generation reserves against the budget Krish signed (velib/credits.py) before it runs, and is
+# refused when the week's reservations and settled use would pass his cap. One file a week, append-only, on this
+# machine (VE_CREDIT_LEDGER names a folder both computers share, when there is one). A reservation is settled with
+# what the provider actually charged, so `ve budget status` can be read against the providers' own transactions.
+
+def credit_ledger_path(week):
+    import os
+    from pathlib import Path
+    from .common import WORK
+    root = os.environ.get('VE_CREDIT_LEDGER')
+    return (Path(root) if root else WORK / 'credits') / f'{week}.jsonl'
+
+
+def _credit_rows(week):
+    path = credit_ledger_path(week)
+    if not path.exists():
+        return []
+    with path.open(encoding='utf-8') as handle:
+        return [json.loads(line) for line in handle if line.strip()]
+
+
+def weekly(week, record=None):
+    """{provider: {cap, open, settled, used}} for the week: used is settled use plus open reservations."""
+    from .credits import PROVIDERS
+    rows = _credit_rows(week)
+    settled = {r['id']: r['amount'] for r in rows if r['kind'] == 'settle'}
+    out = {p: {'cap': (record or {}).get('caps', {}).get(p), 'open': 0, 'settled': 0, 'used': 0} for p in PROVIDERS}
+    for r in rows:
+        if r['kind'] != 'reserve':
+            continue
+        entry = out[r['provider']]
+        if r['id'] in settled:
+            entry['settled'] += settled[r['id']]
+        else:
+            entry['open'] += r['amount']
+    for entry in out.values():
+        entry['used'] = entry['settled'] + entry['open']
+    return out
+
+
+def reserve(provider, amount, piece='', note='', today=None, budget_path=None):
+    """Reserve credits against the signed weekly budget, or SystemExit naming the cap it would pass. Returns its id."""
+    import uuid
+    from .credits import PROVIDERS, standing, week_of
+    if provider not in PROVIDERS:
+        raise ValueError(f'unknown provider {provider!r}; expected one of {", ".join(PROVIDERS)}')
+    _validate('credits', amount)
+    record = standing(budget_path, today)
+    week = week_of(today)
+    entry = weekly(week, record)[provider]
+    if entry['used'] + amount > record['caps'][provider]:
+        raise SystemExit(f've: over the signed weekly credit budget: {provider} {entry["used"]:g} used or reserved + {amount:g} '
+                         f'> {record["caps"][provider]:g} for the week of {week}; nothing was dispatched')
+    rid = uuid.uuid4().hex[:12]
+    path = credit_ledger_path(week)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open('a', encoding='utf-8', newline='\n') as handle:
+        handle.write(json.dumps({'id': rid, 'ts': _now().isoformat(), 'kind': 'reserve', 'provider': provider,
+                                 'amount': amount, 'piece': str(piece), 'note': str(note)}) + '\n')
+    return rid
+
+
+def settle(rid, actual, today=None):
+    """Record what a reservation really cost (0 for a dispatch that never ran)."""
+    from .credits import week_of
+    _validate('credits', actual)
+    week = week_of(today)
+    if not any(r['kind'] == 'reserve' and r['id'] == rid for r in _credit_rows(week)):
+        raise ValueError(f'no reservation {rid} in the week of {week}')
+    with credit_ledger_path(week).open('a', encoding='utf-8', newline='\n') as handle:
+        handle.write(json.dumps({'id': rid, 'ts': _now().isoformat(), 'kind': 'settle', 'amount': actual}) + '\n')

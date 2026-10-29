@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ve weekly credit budget",
+  "type": "object",
+  "required": ["schema", "from_week", "caps", "signed"],
+  "properties": {
+    "schema": { "const": "ve-credit-budget/1" },
+    "about": { "type": "string" },
+    "from_week": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "caps": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["codex_allowance_points", "codex_paid_credits", "runway_credits", "higgsfield_credits", "elevenlabs_credits"],
+      "properties": {
+        "codex_allowance_points": { "type": "number", "minimum": 0 },
+        "codex_paid_credits": { "type": "number", "minimum": 0 },
+        "runway_credits": { "type": "number", "minimum": 0 },
+        "higgsfield_credits": { "type": "number", "minimum": 0 },
+        "elevenlabs_credits": { "type": "number", "minimum": 0 }
+      }
+    },
+    "units": { "type": "object" },
+    "signed": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["by", "said", "on", "record_sha256"],
+      "properties": {
+        "by": { "const": "Krish" },
+        "said": { "type": "string", "pattern": "\\S+\\s+\\S+" },
+        "on": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+        "record_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    }
+  }
+}
