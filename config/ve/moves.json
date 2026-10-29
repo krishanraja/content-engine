@@ -1,0 +1,164 @@
+{
+  "_note": "The moves a piece has hand-coded, and the library device that replaces each. scripts/ve/check_route.py bans new per-piece code for a move only once its device is registered in config/ve/devices.json (route check at parity, W3.1): until then quick-edit's per-piece code for it stays the fallback. signatures are case-insensitive regexes that recognise code drawing the move. per_piece is where per-piece code lives; config/ve/route-baseline.json holds the per-piece files that existed when the check began (history, by content hash). example is one line of per-piece code each move is recognised by (the tests plant it).",
+  "per_piece": [
+    "docs/plans/**",
+    "apps/renderer/src/pieces/**",
+    "scripts/quick-edit/render_*.mjs"
+  ],
+  "code_suffixes": [
+    ".py",
+    ".mjs",
+    ".js",
+    ".cjs",
+    ".ts",
+    ".tsx",
+    ".jsx",
+    ".html"
+  ],
+  "moves": [
+    {
+      "id": "statement-wall",
+      "name": "the statement wall: a wall of tiles builds behind a headline that slams in word by word, then falls away",
+      "device": "statement_wall",
+      "verbs": [
+        "enter",
+        "mark",
+        "exit"
+      ],
+      "card": "docs/ve/cards/w3-1-ports/ve-p-1-statement-wall.md",
+      "source": "docs/plans/2026-10-26-monday/video/motion.py (OPENER: tiles, words, the fall)",
+      "signatures": [
+        "statement[ _-]?wall",
+        "\\btiles\\.push\\(",
+        "id=\"wall\"|getElementById\\('wall'\\)"
+      ],
+      "example": "tiles.push({el, d, fall})"
+    },
+    {
+      "id": "hazard-tape-slam",
+      "name": "the hazard-tape slam: two striped tapes slam across the frame on the word, with a flash and a shake",
+      "device": "hazard_tape",
+      "verbs": [
+        "stamp",
+        "exit"
+      ],
+      "card": "docs/ve/cards/w3-1-ports/ve-p-2-hazard-tape.md",
+      "source": "docs/plans/2026-10-26-monday/video/motion.py (OPENER: the tape, #t1 #t2, flash, shake)",
+      "signatures": [
+        "hazard[ _-]?tape",
+        "class=\"tape",
+        "repeating-linear-gradient\\(-45deg"
+      ],
+      "example": "<div class=\"tape\" id=\"t1\"></div>"
+    },
+    {
+      "id": "printing-receipt",
+      "name": "the printing receipt: till paper prints its lines one at a time and its total counts up",
+      "device": "receipt_print",
+      "verbs": [
+        "enter",
+        "fill",
+        "count_to",
+        "stamp",
+        "exit"
+      ],
+      "card": "docs/ve/cards/w3-1-ports/ve-p-3-receipt-print.md",
+      "source": "docs/plans/2026-10-26-monday/video/draw_panels.py (receipt, void) and motion.py (GENERIC: .receipt, count)",
+      "signatures": [
+        "def receipt\\w*\\(",
+        "class=\"receipt",
+        "\\.receipt\\b.*(line|count)",
+        "receipt[ _-]?print"
+      ],
+      "example": "def receipt(header, lines, footer, shown):"
+    },
+    {
+      "id": "chip-transfer",
+      "name": "the chip transfer: labelled chips fly from one company card to another",
+      "device": "chip_transfer",
+      "verbs": [
+        "enter",
+        "move",
+        "exit"
+      ],
+      "card": "docs/ve/cards/w3-1-ports/ve-p-4-chip-transfer.md",
+      "source": "docs/plans/2026-10-26-monday/video/draw_panels.py (box, money_map) and motion.py (GENERIC: .chip with prevRects)",
+      "signatures": [
+        "chip[ _-]?transfer",
+        "prevRects\\[",
+        "class=\"chip mv"
+      ],
+      "example": "const q = prevRects[e.innerText]"
+    },
+    {
+      "id": "ringed-screen-recording",
+      "name": "the ringed screen recording: a screen recording zooms to a region and hand-drawn rings land on the words that matter",
+      "device": "ringed_recording",
+      "verbs": [
+        "enter",
+        "move",
+        "mark",
+        "exit"
+      ],
+      "card": "docs/ve/cards/w3-1-ports/ve-p-5-ringed-recording.md",
+      "source": "docs/plans/2026-10-26-monday/video/whatitis.py and draw_panels.py (spotlight, capture_page)",
+      "signatures": [
+        "ringed[ _-]?recording",
+        "def spotlight\\(",
+        "def ring_points\\(",
+        "ring.{0,40}(screen|record|capture)"
+      ],
+      "example": "def ring_points(cx, cy, rx, ry, rot, seed, upto):"
+    },
+    {
+      "id": "logo-card",
+      "name": "the logo card: the real logos of the companies named arrive one by one in a row, with a label",
+      "device": "logo_card",
+      "verbs": [
+        "enter",
+        "highlight",
+        "exit"
+      ],
+      "card": "docs/ve/cards/w3-1-ports/ve-p-6-logo-card.md",
+      "source": "docs/plans/2026-10-26-monday/video/draw_panels.py (logos3, logo, l01 l02 l05 l09)",
+      "signatures": [
+        "logo[ _-]?card",
+        "def logos\\d",
+        "img\\.logo"
+      ],
+      "example": "def logos3(order):"
+    },
+    {
+      "id": "hand-drawn-annotation",
+      "name": "a hand-drawn loop, underline, arrow, bracket, tick or cross drawn on over a beat",
+      "device": "scribble",
+      "verbs": [
+        "draw",
+        "exit"
+      ],
+      "card": "docs/ve/cards/design-reset/ve-e-1-scribble.md",
+      "source": "docs/ve/design/formats/ref/H/build.py (scribble_loop and the rest)",
+      "signatures": [
+        "def scribble_\\w+\\(",
+        "scribble_svg"
+      ],
+      "example": "def scribble_loop(cx, cy, u, v):"
+    },
+    {
+      "id": "slam-stamp",
+      "name": "a stamp that slams onto the frame (VOID, a verdict) with a tilt",
+      "device": "stamp",
+      "verbs": [
+        "stamp",
+        "exit"
+      ],
+      "card": "docs/ve/cards/design-reset/ve-e-2-overlays.md",
+      "source": "docs/plans/2026-10-26-monday/video/draw_panels.py (void)",
+      "signatures": [
+        "class=\"void",
+        "\\.void\\b.*\\bs:\\["
+      ],
+      "example": "<div class=\"void\">VOID</div>"
+    }
+  ]
+}
