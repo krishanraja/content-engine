@@ -1,4 +1,15 @@
-# G8: produce-video back to Opus at default effort, unless measured equal (a proposal for Krish)
+# G8: produce-video stays on Sonnet (decided by Krish, 29 October 2026)
+
+## Ruling
+
+Krish, 29 October 2026: "Sonnet produced the last character.ai one I believe, and it was one of the better ones."
+
+`produce-video` stays on Sonnet. The frontmatter (`model: sonnet`) and guard G8 stand as they are; the proposal below
+is kept for the record and is closed.
+
+---
+
+(The proposal as it was put to him:)
 
 Wave 2 plan, W2.12: "G8 decision: produce-video back to Opus at default effort unless measured equal." The decision is
 yours; nothing below changes the skill's frontmatter or `.claude/settings.json`.
@@ -28,6 +39,6 @@ Put `produce-video` back on Opus at default effort from the next cut, unless a m
 If Sonnet's cut fails a gate that Opus passes, or scores lower, Opus stays. If they are equal, Sonnet stays and the
 saving is recorded.
 
-## What it needs from you
+## What it needed from you
 
-One line: "Opus now", "measure first" or "keep Sonnet".
+One line: "Opus now", "measure first" or "keep Sonnet". Answered: keep Sonnet (above).
