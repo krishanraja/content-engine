@@ -18,12 +18,16 @@ if (Object.values(config.series).some((series) => /^paid$|^built$/i.test(series.
 const plans = new URL('../docs/plans/', import.meta.url)
 const files = readdirSync(plans, { recursive: true, encoding: 'utf8' }).filter((f) => f.endsWith('.json')).sort()
 const hits: string[] = []
+const unreadable: string[] = []
 let scanned = 0
 for (const rel of files) {
   let data: unknown
   try {
-    data = JSON.parse(await readFile(new URL(rel.replaceAll('\\', '/'), plans), 'utf8'))
-  } catch {
+    // A file saved on a Windows computer can start with a byte-order mark, which
+    // JSON.parse refuses and copy_lint.py reads past; read past it here too.
+    data = JSON.parse((await readFile(new URL(rel.replaceAll('\\', '/'), plans), 'utf8')).replace(/^\uFEFF/, ''))
+  } catch (error) {
+    unreadable.push(`docs/plans/${rel.replaceAll('\\', '/')}: ${(error as Error).message}`)
     continue
   }
   for (const field of copyFields(data)) {
@@ -33,5 +37,7 @@ for (const rel of files) {
     }
   }
 }
+// The check is never clean on a file it could not read.
+if (unreadable.length) throw new Error(`copy lint ${COPY_LINT_VERSION}: ${unreadable.length} plan file(s) are not JSON, so their public words were not read\n${unreadable.join('\n')}`)
 if (hits.length) throw new Error(`copy lint ${COPY_LINT_VERSION}: ${hits.length} hit(s) in public copy\n${hits.join('\n')}`)
 process.stdout.write(`public copy invariants passed (copy lint ${COPY_LINT_VERSION}: ${scanned} public fields clean)\n`)
