@@ -80,6 +80,10 @@ Defaults the orchestrator set, which Krish agreed need not wait on him (defaults
 - Placed takes stay where they are in the Inbox; nothing moves to `Inbox/used/`.
 - The hazard tape is house cream.
 
+Control Center placed the pools on 29 October (Krish approved): `codex`, `codex-credits`, `runway` and
+`higgsfield` for `growth-makeyourmindup`. `get_engine_credits` shows them once control-center#633 deploys; until
+then Codex card dispatch holds, as expected.
+
 ## For the next session on each home computer (approved 29 October)
 
 1. tesseract: install it so `tesseract` is on PATH (Windows: the UB Mannheim build, then add its folder to PATH),
@@ -100,5 +104,3 @@ Defaults the orchestrator set, which Krish agreed need not wait on him (defaults
 - Gate 2 on the face-with-proof key frames, and on each of the six devices once Codex builds them.
 - His 5 to 10 golden frames from Production Inspo.
 - 20 minutes on 9 Nov to score the shadow cuts side by side.
-- Control Center needs to place `codex`, `runway` and `higgsfield` pools on the publication (ai-harness or
-  Control Center owns that).
