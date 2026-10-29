@@ -15,7 +15,7 @@ import { VOICE_ABSOLUTES } from '../../apps/control-plane/api/_finalPass.js'
 // Piece 2 as published in its edition (Krish set 75% on 2026-09-26), and the
 // same text as it stood when it passed the fact gate, before he set it.
 const PASSED = readFileSync('editions/2026-09-who-picks-your-ai/body.md', 'utf8')
-const UNSET = PASSED.replace('How sure we are: 75%.', 'How sure we are: [Krish to set]')
+const UNSET = PASSED.replace('How sure we are: 75%.', 'How sure we are: [to set]')
 const factsOk = { ok: true, reason: null }
 // Krish, 2026-10-19: a call must fall within 92 days. PASSED is due 30 September 2027 and
 // the Call in the other fixtures 30 June 2027, so a fixed `now` keeps each inside the window.
@@ -236,6 +236,21 @@ describe('the checks before approval, on real text', () => {
     const edition = JSON.parse(readFileSync('editions/2026-09-who-picks-your-ai/edition.json', 'utf8'))
     assert.equal(bodyHash(set.trim()), edition.fact_check.body_hash)
     assert.equal(bodyHash(set.replace('75%.', '60%')), bodyHash(set))
+  })
+  test('a piece that names Krish is held, in any spelling, with no override (house rule NO_NAME)', () => {
+    // Krish, 2026-10-28: "Remember, no content refers to Krish, ever."
+    const clear = PASSED.replace('75%.', '85%.')
+    const failing = (t: string) => publishStatus(publishChecks(t, factsOk, NOW_SEP)).failing.map(c => c.id)
+    assert.deepEqual(failing(clear), [])
+    for (const named of [`By Krish Raja\n\n${clear}`, clear.replace('## OUR PREDICTION', "Krish's test showed it.\n\n## OUR PREDICTION"), `${clear}\n\nMore at krishraja.com`]) {
+      assert.deepEqual(failing(named), ['NO_NAME'], named.slice(0, 40))
+    }
+    const check = publishChecks(`By Krish Raja. ${clear}`, factsOk, NOW_SEP).find(c => c.id === 'NO_NAME')!
+    assert.equal(check.blocking, true)
+    assert.match(check.detail, /"Krish Raja"/)
+    // The old placeholder named him; the one drafts carry now does not.
+    assert.ok(failing(PASSED.replace('How sure we are: 75%.', 'How sure we are: [Krish to set]')).includes('NO_NAME'))
+    assert.ok(!failing(UNSET).includes('NO_NAME'))
   })
   test('only the number is exempt: words added to the confidence line are checked like any other', () => {
     const set = PASSED

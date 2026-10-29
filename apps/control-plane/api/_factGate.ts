@@ -196,23 +196,33 @@ export const PASSING: ReadonlySet<ClaimVerdict> = new Set(['verified', 'verified
  *  re-check; his ruling that day: a confidence no longer forces a fact
  *  re-check). A line that is only "How sure we are:" and a bare percentage or
  *  the placeholder is the form this first read, and is still read the same
- *  way, so every check stored before 2026-09-28 still matches its text. */
-const CONFIDENCE_LINE = /^([ \t]*How sure we are:)[ \t]*(?:\d{1,3}%\.?|\[Krish to set\])[ \t]*$/gim
+ *  way, so every check stored before 2026-09-28 still matches its text. The
+ *  placeholder is read in both spellings, the old one and UNSET. */
+const CONFIDENCE_LINE = /^([ \t]*How sure we are:)[ \t]*(?:\d{1,3}%\.?|\[(?:Krish )?to set\])[ \t]*$/gim
 /** Where Krish's confidence goes until he sets it. The writers put it in a
- *  first draft (api/_selfCheck.ts, guardConfidence). */
-export const UNSET = '[Krish to set]'
+ *  first draft (api/_selfCheck.ts, guardConfidence). Until 2026-10-29 it was
+ *  "[Krish to set]", which named him in the draft (Krish, 2026-10-28:
+ *  "Remember, no content refers to Krish, ever."; house rule NO_NAME). */
+export const UNSET = '[to set]'
+/** The placeholder every stored hash was taken over. The hash still reads
+ *  each confidence as this, so every passed fact check stored before the
+ *  placeholder changed still matches its text. Never written into a draft. */
+const HASHED_UNSET = '[Krish to set]'
+/** Either spelling of the placeholder after a label, inside the call. */
+const LABELLED_UNSET = /((?:How sure we are|Confidence):[ \t]*)\[(?:Krish )?to set\]/gi
 
 /** Each number the shared label reader (labelledConfidences in
  *  packages/contracts/src/call.ts) finds after "How sure we are:" or
- *  "Confidence:" becomes the placeholder. The number alone: the label and
- *  every other character stay as written. */
+ *  "Confidence:" becomes the placeholder, and so does either spelling of the
+ *  placeholder. The number alone: the label and every other character stay as
+ *  written. */
 function unsetLabelled(text: string): string {
   let out = text
   for (const m of labelledConfidences(text).reverse()) {
     const at = text.indexOf(`${m.value}%`, m.index)
-    if (at >= 0) out = out.slice(0, at) + UNSET + out.slice(at + m.value.length + 1)
+    if (at >= 0) out = out.slice(0, at) + HASHED_UNSET + out.slice(at + m.value.length + 1)
   }
-  return out
+  return out.replace(LABELLED_UNSET, `$1${HASHED_UNSET}`)
 }
 
 /** The text with Krish's confidence taken out, as the hash reads it. First the
@@ -225,7 +235,7 @@ function unsetLabelled(text: string): string {
  *  after the number, and a labelled number anywhere else in the piece
  *  ("Consumer confidence: 62% in August") are hashed as written. */
 export function withoutConfidence(text: string): string {
-  const lined = String(text ?? '').replace(CONFIDENCE_LINE, `$1 ${UNSET}`)
+  const lined = String(text ?? '').replace(CONFIDENCE_LINE, `$1 ${HASHED_UNSET}`)
   const section = callSectionOf(lined)
   if (!section) return lined
   const start = lined.indexOf(section)
@@ -234,7 +244,7 @@ export function withoutConfidence(text: string): string {
 }
 
 /** Nothing but a confidence: a label, the placeholder, a full stop at most. */
-const ONLY_CONFIDENCE = /^(?:How sure we are|Confidence):[ \t]*\[Krish to set\]\.?$/i
+const ONLY_CONFIDENCE = /^(?:How sure we are|Confidence):[ \t]*\[(?:Krish )?to set\]\.?$/i
 
 /** Whether a sentence is only Krish's confidence, "How sure we are: 75%." or
  *  "Confidence: 70%.". The extractor sometimes lists it as a claim; checked
@@ -244,7 +254,7 @@ const ONLY_CONFIDENCE = /^(?:How sure we are|Confidence):[ \t]*\[Krish to set\]\
  *  F41). A sentence with anything else in it is checked like any other. */
 export function isConfidenceLine(sentence: string): boolean {
   const s = String(sentence ?? '').trim()
-  return ONLY_CONFIDENCE.test(unsetLabelled(s.replace(new RegExp(CONFIDENCE_LINE.source, 'im'), `$1 ${UNSET}`)))
+  return ONLY_CONFIDENCE.test(unsetLabelled(s.replace(new RegExp(CONFIDENCE_LINE.source, 'im'), `$1 ${HASHED_UNSET}`)))
 }
 
 /** The hash a check is pinned to. It is taken over the text as save-draft

@@ -241,10 +241,12 @@ F43). How sure we are is his judgement (his ruling, 2026-09-26: "I'd rather
 take a clearer stance than sit on the fence all the time and say 60%", and
 he sets the number). After the model and any retry, in code
 (`guardConfidence`, `api/_selfCheck.ts`): a first draft says
-`How sure we are: [Krish to set]`, whatever the model wrote; a rewrite keeps
+`How sure we are: [to set]`, whatever the model wrote; a rewrite keeps
 the source text's confidence exactly, label and number ("How sure we are:
 70%." stays that, "Confidence: 70%." stays that, and the placeholder stays
-the placeholder); a rewrite of a text with no confidence gets the placeholder
+the placeholder, the old `[Krish to set]` written as `[to set]` because it
+named him, house rule NO_NAME; the fact gate's hash reads both the same, so a
+passed check holds); a rewrite of a text with no confidence gets the placeholder
 in place of any number the model wrote. A confidence the model dropped is put
 back at the end of the call (a paragraph of its own under a heading, the last
 sentence of a bold-label paragraph); with no call at all there is nowhere to

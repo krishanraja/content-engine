@@ -53,7 +53,7 @@ import { guardConfidence, selfCheck } from '../../_selfCheck.js'
 // and one more call fixes what they find (api/_selfCheck.ts). Piece 3's first
 // draft, 2026-09-30, broke R2 three times and read at about age 13.5. The
 // response says what the saved draft still breaks, as `self_check`. The
-// draft's confidence is always "How sure we are: [Krish to set]": the number
+// draft's confidence is always "How sure we are: [to set]": the number
 // is Krish's, and that draft wrote 78% on its own.
 
 const MAX_DRAFTS = 10
