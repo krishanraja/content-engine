@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { execFileSync } from 'node:child_process'
-import { DESCRIPTION_MAX, FEED_CUT, HOOK_MAX, MAX_HASHTAGS, READ_LINE, SUBTITLE_AIM, SUBTITLE_LINE, TITLE_AIM, TITLE_MAX } from '../apps/control-plane/api/_packaging.js'
+import { DESCRIPTION_MAX, FEED_CUT, HOOK_MAX, MAX_HASHTAGS, READ_LINE, SUBTITLE_AIM, SUBTITLE_LINE, TITLE_AIM, TITLE_MAX } from '../../apps/control-plane/api/_packaging.js'
 
 // config/asset-spec.json (Krish, 2026-10-29: "clean up the asset and title, subtitle, copy, descriptions and asset
 // sizes for exactly what we need to be producing now"): every number it holds is one the code already enforces, so
 // the two can never part. A null with an "open" note is a field nothing sets yet, never an invented one.
 
 const PY = process.platform === 'win32' ? 'python' : 'python3'
-const root = new URL('..', import.meta.url)
+const root = new URL('../..', import.meta.url)
 const read = (p: string) => readFileSync(new URL(p, root), 'utf8')
 const spec = JSON.parse(read('config/asset-spec.json'))
 const frame = (name: string) => spec.assets[name].frame
