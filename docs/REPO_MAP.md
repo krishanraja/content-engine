@@ -2321,10 +2321,15 @@ What the compiler looks for, as pure functions.
 - `interface WindowsHealth`
 - `const PREFLIGHT_CHECKS: readonly string[]`
 - `interface PreflightHealth`
+- `const OVERNIGHT_REASONS: readonly string[]`
+- `interface OvernightCut`
+- `interface OvernightHealth`
 - `interface LaneReport`
 - `function parseWatchHealth(value: unknown): WatchHealth | undefined`
 - `function parseWindowsHealth(value: unknown): WindowsHealth | undefined`
 - `function parsePreflightHealth(value: unknown): PreflightHealth | undefined`
+- `function parseOvernightHealth(value: unknown): OvernightHealth | undefined`
+- `function overnightReadiness(reports: readonly LaneReport[], now: number): { primary: { machine: string; ok: boolean; at…`
 - `function parseLaneReport(value: unknown, now: string): LaneReport | null`
 - `function laneKey(machine: string): string`
 - `function lanePlainProblems(reports: readonly LaneReport[], now: number): string[]`
