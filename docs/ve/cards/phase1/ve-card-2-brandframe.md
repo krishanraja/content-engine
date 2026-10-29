@@ -29,7 +29,7 @@ Implement BrandFrame (the stub exists) by wrapping the approved house kit, so ev
    - Reuse `SwipedText` and `Swipe` from house.
 3. `chrome/MarkTile`: use the house `MarkTile` with a 10 px `tokens.channel` hard shadow. It is present on every beat.
 4. `chrome/ChannelPill`: use the house `SectionPill`, lowercase Plex Mono on `tokens.channel`, shown only when `beat.sectionBeat` is true.
-5. No ILLUSTRATION chip on any frame (Krish, 28 Oct 2026: "Yes remove those."; the `chrome/IllustrationLabel` this card first asked for is removed).
+5. No ILLUSTRATION chip on any frame (Krish, 28 Oct 2026: "Yes remove those."; the tag component this card first asked for is removed).
 6. `BrandFrame` renders, in order: Grain (behind), MarkTile, ChannelPill, CaptionTrack.
    - The logo is never rotated, and no raw hex is used: colours come from `props.tokens`.
 7. Write `chrome/chrome.test.ts`. It checks that:
