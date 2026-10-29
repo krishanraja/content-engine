@@ -39,6 +39,7 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `packages/core/`
 - `scripts/`
 - `scripts/channel-kit/`
+- `scripts/cutgates/`
 - `scripts/hooks/`
 - `scripts/overnight/`
 - `scripts/pages/`
