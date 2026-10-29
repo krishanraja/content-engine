@@ -12,8 +12,11 @@ HOOK_IS_THE_INTRO).
   from the first frame: in the tall cut the brand's wordmark in the top left
   corner and the series tag in the top right, as the Friday 23 October tall
   cut has them (kit.py draws `dress-9x16.png`; make.py lays it over the whole
-  main, over the pictures and under the captions); in the wide cut the
-  branded frame beside him. Nothing goes in front of the hook: no story card
+  main, over the pictures and under the captions); in the wide cut its
+  existing branded frame for now (not yet put to Krish: the wide cut either
+  keeps that frame, with the series pill on each panel, or gets a corner
+  dress like the tall one; he chooses from a still of each). Nothing goes in
+  front of the hook: no story card
   and no logo intro.
 - **One opening and one close.** The close is one calm outro card, held long
   enough to read (house rule STORY_INTRO_OUTRO; the story outro). Krish,

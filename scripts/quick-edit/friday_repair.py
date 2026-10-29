@@ -1,5 +1,11 @@
 """Rebuild Friday's approved treatment from fresh words and original assets.
 
+RETIRED, kept as the record of the 19 October repair: it no longer runs. It
+puts a clip in front of the hook ("intro_override", against house rule
+HOOK_IS_THE_INTRO, 2026-10-29) and sets the name strap kit.py no longer
+writes, which make.py now refuses (Krish, 2026-10-28: no content refers to
+him). Nothing calls it; make a cut with kit.py and make.py instead.
+
 This makes local review inputs, never files or records a replacement.
 Run from the repository root after the engine asset retrieval.
 """

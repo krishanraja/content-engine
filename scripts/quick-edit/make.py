@@ -18,7 +18,8 @@ What it does, in order:
      HOOK_IS_THE_INTRO, Krish 2026-10-29: no story card and no logo intro in
      front of it): the tall cut in the brand's dress from its first frame
      (the wordmark and the series tag in the top corners, kit.py's
-     dress-9x16.png), the wide cut on its branded frame; graphics in,
+     dress-9x16.png), the wide cut on its existing branded frame for now
+     (its look is not yet put to Krish); graphics in,
      captions timed to the words, the one outro card on the end. Each
      report records the opening it used ("opening"), so real engagement can
      settle the choice. A clip goes in front only on Krish's own words for

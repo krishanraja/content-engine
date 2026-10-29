@@ -512,7 +512,8 @@ number one here but I think that we need to test and learn. We need to figure
 out what the right tone is over time based on real engagement. Let's go with
 number one for now." Every cut opens straight on his hook, in the brand's
 dress from its first frame (the tall cut's `dress` from kit.py; the wide
-cut's branded frame). Nothing goes in front: no story card and no logo
+cut keeps its existing branded frame for now, since which look it should
+have is not yet put to Krish). Nothing goes in front: no story card and no logo
 intro, so leave `"intro"` and `"intro_override"` out of a config. It is his
 choice to test, not a fixed rule: each report records the opening it used
 (`opening`), and another opening is tried only on his own words for that

@@ -226,8 +226,9 @@ to test and learn. We need to figure out what the right tone is over time
 based on real engagement. Let's go with number one for now." (house rule
 HOOK_IS_THE_INTRO). So every cut opens straight on his hook, in the brand's
 dress from the first frame: in the tall cut the wordmark and the series tag in
-the top corners (`dress`, above), in the wide cut the branded frame beside
-him. Nothing goes in front: no story card and no logo intro. The close is the
+the top corners (`dress`, above), in the wide cut its existing branded frame
+for now (which look the wide cut should have is not yet put to Krish).
+Nothing goes in front: no story card and no logo intro. The close is the
 one calm outro card (`endcard`; the story outro, house rule
 STORY_INTRO_OUTRO), so a video has one opening and one close (Krish,
 2026-10-21: "why are there two separate intro sequences? that should NEVER
