@@ -10,6 +10,7 @@ docs/CREATIVE_DIRECTION.md; this file holds it:
 
     python3 scripts/post-pack/creative_direction.py template docs/plans/PLAN --cut long --script FILE [--take on_camera|voiceover]
     python3 scripts/post-pack/creative_direction.py check docs/plans/PLAN/creative-direction.json [--for-render]
+    python3 scripts/post-pack/creative_direction.py choices docs/plans/PLAN/creative-direction.json
     python3 scripts/post-pack/creative_direction.py self-test
 
 `check` refuses a direction that leaves any spoken word without a decided picture, a picture without its source, a
@@ -17,6 +18,13 @@ beat without the point it lands (house rule VISUAL_EXPLAINS), crowded on-screen 
 a face in every beat when the style says otherwise, or no brand reference. `--for-render` also needs Krish's signed
 words bound to the exact script text (sha256): a script changed after he signed makes the direction stale.
 quick-edit's kit.py and make.py call gate() and refuse to render without it.
+
+The choices under test (Rulings, Krish, 2026-10-29: "we need to test and learn"; config/reference-cuts.json
+`under_test`) ride on the direction as `production_choices`: the opening, the sound on the big moment, and the lead
+picture, which the storyboard he signs shows as two stills, the series picture from the brand book and a story object,
+with Claude's pick marked (Krish picked: "Choose per piece"). His signature accepts the pick unless he ticks the other.
+`check` never refuses a direction over them, a missing tick included; `choices` prints them for the storyboard, and
+making.py <piece> choices records them on the piece.
 """
 import argparse
 import hashlib
@@ -29,6 +37,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 STYLES = ROOT / 'config' / 'style-references.json'
+BAR = ROOT / 'config' / 'reference-cuts.json'  # the bar; its `under_test` holds each choice's default and options
 FILE = 'creative-direction.json'
 # Pieces published on or after this day render only from a signed direction (the first Sunday of the new loop).
 FROM = date(2026, 10, 26)
@@ -43,6 +52,18 @@ ACCEPTANCE = [
     'Brand matches the reference frame: wordmark, captions, palette and the intro sting',
     'Fact, transport and editorial status reported separately; ready only when all three pass',
 ]
+
+
+# Each series' own picture: the brand book (v1.5, p. 11, "Its device.") gives one to each section.
+SERIES_PICTURE = {
+    'follow.the.money': 'The money map and the receipt: flows between parties, width is the amount.',
+    'under.the.hood': 'Real or theatre: the shipped thing, apart, every part stamped.',
+    'mind.the.gap': 'Threads on a time axis that bend and meet, ending in a dated call.',
+}
+LEAD_PICTURES = ('series_picture', 'story_object')
+# With the hook as the intro there is no sting, and a new direction says so rather than leaving brand.intro_sting for a
+# session to fill with a sting its opening does not use (ruling 8, under test).
+NO_STING = 'none: the hook is the intro (under test, ruling 8)'
 
 
 class DirectionError(Exception):
@@ -166,6 +187,56 @@ def check(doc, scripts=None, for_render=False):
     return out
 
 
+def under_test(path=BAR):
+    """choice id -> its entry in the bar's `under_test` (default, options, ruling): the one home of the defaults."""
+    data = json.loads(Path(path).read_text(encoding='utf-8'))
+    return {c['id']: c for c in (data.get('under_test') or {}).get('choices') or []}
+
+
+def choices_block(series='', path=BAR):
+    """A direction's starting production_choices: each default from the bar, the sound only once he has approved a set
+    by ear, and both lead pictures to draw as stills for the storyboard, the pick left for Claude to propose."""
+    tested = under_test(path)
+    sound = tested.get('big_moment_sound') or {}
+    return {
+        'opening': (tested.get('opening') or {}).get('default', ''),
+        'lead_picture': {
+            'series_picture': {'what': SERIES_PICTURE.get(series, ''), 'still': ''},
+            'story_object': {'what': '', 'still': ''},
+            'proposed': '',
+            'ticked': None,
+        },
+        'big_moment_sound': sound.get('default', '') if sound.get('approved_set') else sound.get('until_approved', ''),
+    }
+
+
+def production_choices(doc):
+    """What the piece used of each choice under test, flat, for the making record: his tick where he ticked the other
+    lead picture, else Claude's proposal. A choice not yet made is left out; nothing here is ever refused."""
+    block = (doc or {}).get('production_choices') or {}
+    lead = block.get('lead_picture') if isinstance(block.get('lead_picture'), dict) else {}
+    out = {'opening': block.get('opening'), 'lead_picture': lead.get('ticked') or lead.get('proposed'),
+           'big_moment_sound': block.get('big_moment_sound')}
+    return {k: v for k, v in out.items() if isinstance(v, str) and v}
+
+
+def choice_lines(doc):
+    """The choices as the storyboard shows them: both lead pictures as stills, the proposal marked."""
+    block = (doc or {}).get('production_choices') or {}
+    lead = block.get('lead_picture') if isinstance(block.get('lead_picture'), dict) else {}
+    picked = lead.get('ticked') or lead.get('proposed')
+    lines = [f'Opening (under test): {block.get("opening") or "not set"}']
+    for n, key in enumerate(LEAD_PICTURES):
+        still = lead.get(key) if isinstance(lead.get(key), dict) else {}
+        mark = ' <- his tick' if lead.get('ticked') == key else ' <- Claude proposes' if lead.get('proposed') == key else ''
+        lines.append(f'Lead picture {"AB"[n]}, {key.replace("_", " ")}: {still.get("what") or "(to draw)"}; still: '
+                     f'{still.get("still") or "(to draw)"}{mark}')
+    lines.append(f'His signature accepts {picked.replace("_", " ") if picked else "the proposal"} unless he ticks the '
+                 'other; no storyboard waits on a tick.')
+    lines.append(f'Sound on the big moment (under test): {block.get("big_moment_sound") or "not set"}')
+    return lines
+
+
 def gate(post_path, cut, script_text, publish_day=None):
     """For quick-edit before it draws or renders: the signed direction beside post.json, checked against the script
     it is about to use. Returns {path, sha256, signed} or raises DirectionError. Before FROM it returns None."""
@@ -204,6 +275,10 @@ def template(plan, cut, script_text, take='on_camera'):
         'max_face_share': DEFAULT_MAX_FACE_SHARE, 'cuts': {}, 'article': {'visuals': []}, 'do_not': [],
         'acceptance': ACCEPTANCE, 'signed': {'by': '', 'said': '', 'on': '', 'script_sha256': {}}}
     doc['cuts'][cut] = {'take': take, 'beats': beats}
+    doc.setdefault('production_choices', choices_block(str((doc.get('brand') or {}).get('series') or '')))
+    brand = doc.setdefault('brand', {})
+    if not brand.get('intro_sting') and (doc['production_choices'] or {}).get('opening') == 'hook_is_intro':
+        brand['intro_sting'] = NO_STING
     return path, doc
 
 
@@ -214,7 +289,7 @@ def _self_test():
     good = {
         'piece_id': '11111111-2222-4333-8444-555555555555', 'publish_day': '2026-10-26',
         'style': {'script': 'head-to-head', 'production': 'scoreboard-test'},
-        'brand': {'series': 'mind.the.gap', 'reference': 'docs/plans/2026-10-23-friday/creative-direction.md', 'captions': 'kinetic-serif-captions', 'intro_sting': 'config/intro-sting.json'},
+        'brand': {'series': 'mind.the.gap', 'reference': 'docs/plans/2026-10-23-friday/creative-direction.md', 'captions': 'kinetic-serif-captions', 'intro_sting': NO_STING},
         'cuts': {'long': {'take': 'on_camera', 'beats': [
             {'words': 'I put two assistants head to head.', 'point': 'the test is fair and the same for both', 'picture': {'kind': 'face'}, 'modules': ['live-scoreboard']},
             {'words': 'One deleted its own answer.', 'point': 'the censor acts after the answer is written', 'picture': {'kind': 'screen', 'what': 'the answer vanishing', 'source': 'capture:the DeepSeek moment', 'source_label': 'My test, 22 Oct'}, 'on_screen_text': 'It wrote it. Then deleted it.'},
@@ -285,6 +360,48 @@ def _self_test():
         path, doc = template(tmp, 'short', script)
         if len(doc['cuts']['short']['beats']) != 3 or check(doc) == []:
             probs.append('the template has one beat per sentence and is not ready until filled')
+        fresh = Path(tmp) / 'fresh'
+        fresh.mkdir()
+        _, new = template(fresh, 'long', script)
+        if new['brand'].get('intro_sting') != NO_STING or any('brand.intro_sting' in p for p in check(new)):
+            probs.append('a new direction that opens on the hook says it has no sting, and is not held for one')
+        # The choices under test: each default from the bar, both lead pictures to draw, the pick left to Claude.
+        seeded = doc.get('production_choices') or {}
+        tested = under_test()
+        if seeded.get('opening') != tested['opening']['default'] or seeded.get('opening') != 'hook_is_intro':
+            probs.append('the template opens on the bar\'s default opening, the hook as the intro')
+        if seeded.get('big_moment_sound') != 'none':
+            probs.append('no sound on the big moment until he approves a set by ear')
+        if sorted(k for k in seeded.get('lead_picture', {}) if k in LEAD_PICTURES) != sorted(LEAD_PICTURES) \
+                or seeded['lead_picture'].get('proposed') or seeded['lead_picture'].get('ticked') is not None:
+            probs.append('the template carries both lead pictures, with no pick made for Claude or him')
+        bar = json.loads(BAR.read_text(encoding='utf-8'))
+        bar['under_test']['choices'][2]['approved_set'] = 'config/music-library.json sfx, approved by ear'
+        approved = Path(tmp) / 'bar.json'
+        approved.write_text(json.dumps(bar))
+        if choices_block('mind.the.gap', approved)['big_moment_sound'] != 'big_moment_only':
+            probs.append('once he approves a set, the default is one sound on the big moment')
+        if choices_block('mind.the.gap')['lead_picture']['series_picture']['what'] != SERIES_PICTURE['mind.the.gap']:
+            probs.append('the series picture is the brand book\'s device for the piece\'s series')
+    # No new refusal: a direction with no choices, or no pick and no tick, is checked exactly as before.
+    for block in (None, choices_block()):
+        undecided = json.loads(json.dumps(good))
+        if block is not None:
+            undecided['production_choices'] = block
+        if check(undecided, {'long': script2}, for_render=True) != []:
+            probs.append('a missing pick or tick never holds a direction back')
+    picked = json.loads(json.dumps(good))
+    picked['production_choices'] = choices_block('mind.the.gap')
+    picked['production_choices']['lead_picture']['proposed'] = 'story_object'
+    if production_choices(picked) != {'opening': 'hook_is_intro', 'lead_picture': 'story_object', 'big_moment_sound': 'none'}:
+        probs.append(f'his signature accepts Claude\'s pick: {production_choices(picked)}')
+    if not any(line.endswith('<- Claude proposes') and 'story object' in line for line in choice_lines(picked)):
+        probs.append('the storyboard marks the proposal')
+    picked['production_choices']['lead_picture']['ticked'] = 'series_picture'
+    if production_choices(picked).get('lead_picture') != 'series_picture':
+        probs.append('his tick on the other picture wins')
+    if production_choices(good) != {}:
+        probs.append('a direction with no choices records none')
     return probs
 
 
@@ -302,10 +419,17 @@ def main(argv=None):
     c.add_argument('--for-render', action='store_true')
     h = sub.add_parser('hash', help='the sha256 Krish signs for a script (signed.script_sha256.<cut>)')
     h.add_argument('script')
+    k = sub.add_parser('choices', help='the choices under test, as the storyboard shows them and the record keeps them')
+    k.add_argument('path')
     sub.add_parser('self-test')
     args = ap.parse_args(argv)
     if args.cmd == 'hash':
         print(script_hash(Path(args.script).read_text(encoding='utf-8-sig')))
+        return 0
+    if args.cmd == 'choices':
+        doc = json.loads(Path(args.path).read_text(encoding='utf-8'))
+        print('\n'.join(choice_lines(doc)))
+        print('Recorded as: ' + json.dumps(production_choices(doc)))
         return 0
     if args.cmd == 'self-test':
         probs = _self_test()

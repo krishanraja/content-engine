@@ -23,6 +23,9 @@ that everything is fresh and synchronised in real time".
     python making.py PIECE_ID posted substack https://...    # after Krish posted it
     python making.py PIECE_ID session https://claude.ai/code/session_...
     python making.py PIECE_ID narrative [LOCK]                # whether its signed narrative lock stands; writes nothing
+    python making.py PIECE_ID choices [creative-direction.json] [--opening X] [--lead-picture X] [--big-moment-sound X]
+                                                             # which choice under test the piece used (the bar's
+                                                             # under_test), for the retrospective; a record, never a gate
     python making.py PIECE_ID read-back long --readers "reader A, ..." "reader B, ..." [--at TIME]
     python making.py PIECE_ID read-back long --krish-words "Krish, DATE: his words" [--readers ...]
     python making.py PIECE_ID drive-link long https://drive.google.com/file/d/<id>/view [--thumb-url https://drive.google.com/file/d/<thumb id>/view]
@@ -334,6 +337,10 @@ def show(piece_id, call=None):
                      f"since, so it does not count; record it again, or Krish says to use it")
     lines.extend(read_back_lines(record))
     lines.extend(teleprompter_lines(record))
+    chosen = record.get('production_choices') if isinstance(record.get('production_choices'), dict) else {}
+    used = ', '.join(f'{k} {v}' for k, v in chosen.items() if k != 'at')
+    if used:
+        lines.append(f'under test: {used} (recorded {chosen.get("at", "")})'.replace(' ()', ''))
     return '\n'.join(lines)
 
 
@@ -472,6 +479,29 @@ def teleprompter_patch(cut, folder=None, script=None, sha=None, title=None, fold
             raise MakingError('--title is the script\'s title (no title on the record for this script, and no folder name to make one from)')
     entry = {'script_id': script, 'title': title, 'script_sha256': sha, 'sent_at': _time(sent_at, '--sent-at') if sent_at else now(), 'by': who(by)}
     return {'teleprompter': {**out, 'cuts': {cut: entry}}}
+
+
+def choices_patch(direction=None, opening=None, lead_picture=None, big_moment_sound=None, bar=None):
+    """The choices under test this piece used (Rulings, Krish, 2026-10-29: "we need to test and learn"), for the
+    making record's production_choices: read from its creative direction, each flag overriding it, every value one of
+    the options config/reference-cuts.json lists for that choice. A record for the retrospective, never a gate."""
+    sys.path.insert(0, str(HERE))
+    import creative_direction
+    tested = creative_direction.under_test(bar or creative_direction.BAR)
+    chosen = {}
+    if direction:
+        chosen = creative_direction.production_choices(json.loads(Path(direction).read_text(encoding='utf-8')))
+    given = {'opening': opening, 'lead_picture': lead_picture, 'big_moment_sound': big_moment_sound}
+    chosen.update({k: v for k, v in given.items() if v})
+    if not chosen:
+        raise MakingError('no choice to record: give the piece\'s creative-direction.json, or --opening, --lead-picture '
+                          'or --big-moment-sound')
+    for key, value in chosen.items():
+        options = (tested.get(key) or {}).get('options') or []
+        if value not in options:
+            raise MakingError(f'{key} {value!r} is not one of its options in config/reference-cuts.json under_test '
+                              f'({", ".join(options)})')
+    return {'production_choices': chosen}
 
 
 def visual_gate_patch(post_path):
@@ -2303,6 +2333,35 @@ def self_test():
         check('narrative: undated drafts with no lock are refused, since the day it publishes is not known',
               'carry no date' in refused(undated, pid, [plans]), True)
 
+    # The choices under test: read from the direction, a flag overrides it, an option the bar does not list is refused
+    # before any engine call, and the record shows what was used.
+    with tempfile.TemporaryDirectory() as tmp:
+        import creative_direction
+        direction = Path(tmp) / 'creative-direction.json'
+        block = creative_direction.choices_block('mind.the.gap')
+        block['lead_picture']['proposed'] = 'story_object'
+        direction.write_text(json.dumps({'production_choices': block}), encoding='utf-8')
+        before = len(seen)
+        code, _ = run([pid, 'choices', str(direction)])
+        check('choices: read from the direction, his signature accepting the proposal',
+              (code, seen[-1][2].get('production_choices') if len(seen) > before else None),
+              (0, {'opening': 'hook_is_intro', 'lead_picture': 'story_object', 'big_moment_sound': 'none'}))
+        code, _ = run([pid, 'choices', str(direction), '--big-moment-sound', 'big_moment_only'])
+        check('choices: a flag records what was actually used', seen[-1][2]['production_choices']['big_moment_sound'],
+              'big_moment_only')
+        before = len(seen)
+        code, err = run([pid, 'choices', '--lead-picture', 'the passports'])
+        check('choices: an option the bar does not list is refused and nothing is written',
+              (code, 'not one of its options' in err, len(seen)), (1, True, before))
+        code, err = run([pid, 'choices'])
+        check('choices: nothing to record is refused', (code, 'no choice to record' in err, len(seen)), (1, True, before))
+
+        def held(method, path, body):
+            return 200, json.dumps({'ok': True, 'steps': [], 'making': {'production_choices': {
+                'opening': 'hook_is_intro', 'lead_picture': 'story_object', 'at': '2026-11-02T03:00:00Z'}}})
+        check('choices: show says what the piece used', show(pid, held).splitlines()[-1],
+              'under test: opening hook_is_intro, lead_picture story_object (recorded 2026-11-02T03:00:00Z)')
+
     if fails:
         print('making self-test FAILED:\n  ' + '\n  '.join(fails))
         return 1
@@ -2314,7 +2373,7 @@ def main(argv=None, call=None):
     ap = argparse.ArgumentParser(description="Record where a piece is, for Control Center's board.")
     ap.add_argument('piece_id', nargs='?')
     ap.add_argument('what', nargs='?', choices=['show', 'workroom', 'publish-manager', 'visual-gate', 'scripts', 'pack', 'recorded', 'video', 'posted', 'session',
-                                                     'read-back', 'teleprompter', 'drive-link', 'narrative'])
+                                                     'read-back', 'teleprompter', 'drive-link', 'narrative', 'choices'])
     ap.add_argument('args', nargs='*')
     ap.add_argument('--by', help=f'who is writing: Codex, Claude Code (default: {BY_ENV}, else {CODEX_BY} inside Codex, else {DEFAULT_BY})')
     ap.add_argument('--sent', action='store_true', help='with pack: the pack was sent to the library')
@@ -2340,6 +2399,9 @@ def main(argv=None, call=None):
     ap.add_argument('--title', metavar='TITLE', help='with teleprompter: the script\'s title')
     ap.add_argument('--sent-at', metavar='TIME', help='with teleprompter: when it was sent (default now)')
     ap.add_argument('--error', metavar='TEXT', help='with teleprompter: what Teleprompter said when the send failed')
+    ap.add_argument('--opening', metavar='OPTION', help='with choices: the opening the piece used (hook_is_intro ...)')
+    ap.add_argument('--lead-picture', metavar='OPTION', help='with choices: series_picture or story_object')
+    ap.add_argument('--big-moment-sound', metavar='OPTION', help='with choices: big_moment_only or none')
     ap.add_argument('--self-test', action='store_true')
     a = ap.parse_args(argv)
     if a.self_test:
@@ -2368,6 +2430,8 @@ def main(argv=None, call=None):
             patch = {a.what.replace('-', '_'): {'url': a.args[0]}}
         elif a.what == 'visual-gate':
             patch = visual_gate_patch(a.args[0])
+        elif a.what == 'choices':
+            patch = choices_patch(a.args[0] if a.args else None, a.opening, a.lead_picture, a.big_moment_sound)
         elif a.what == 'scripts':
             # From the week of 9 Nov the signed narrative lock comes first, and it is the outline's approval.
             lock = narrative_gate(a.args, a.piece_id)

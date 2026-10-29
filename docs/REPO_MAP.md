@@ -1126,6 +1126,9 @@ The making record: where one piece is on its way from the workroom to
 - `interface MakingSession`
 - `interface MakingTeleprompterCut`
 - `interface MakingTeleprompter`
+- `const PRODUCTION_CHOICES`
+- `type ProductionChoice = (typeof PRODUCTION_CHOICES)[number]`
+- `type MakingProductionChoices = Partial<Record<ProductionChoice, string>> & { at: string }`
 - `interface Making`
 - `type MakingPatch`
 - `const SCRIPT_SHA256`
