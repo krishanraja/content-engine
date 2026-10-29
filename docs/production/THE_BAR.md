@@ -1,6 +1,16 @@
 # The bar: the reference cuts for video production quality
 
-Krish, 28 October 2026, his exact words:
+Krish, 28 October 2026, his exact words on how every video should be made:
+
+> "In general I think:
+> - minimal random components and labels
+> - good motion design
+> - good animation
+> - good visuals
+>
+> Keep it simple but keep it classy and on brand. I'd stick to the brand book for now."
+
+Earlier the same day, naming the floor:
 
 > "the video production quality standards for the latest Friday (AI Passports) and Monday (character.ai) pieces are the floor for what I expect in terms of premium quality, motion design, cinematic feeling, movement, branding etc. Friday's is a voiceover format and Monday's a regular split screen format. Do not be intensely literal here as every piece is different, but I want you to get a feel for the standards we are never to fall beneath ever again"
 
@@ -8,17 +18,19 @@ And, correcting:
 
 > "the long voiceover video is still being post produced so dont just assume that the voiceover format only has a 90sec version, you are only to look for production quality standards"
 
-**Standing: draft.** The qualities below are the engine's reading of the cuts he named; he has not approved their wording. Follow them; only he approves them.
+**Standing: draft.** The qualities below are the engine's reading of the cuts he named. Where he ruled on 28 October, the point is marked (Krish, 28 Oct) with his words; he has not approved the rest of their wording. Follow them; only he approves them.
 
-His words name the pieces and what to look for in them. Everything after them on this page (the principle, the fifteen quality names and every paragraph under them) is the engine's reading of those cuts, taken from frame studies. Where that reading goes further than anything he has said, it is listed under "Open questions for Krish".
+His words say how every video should be made, name the pieces and say what to look for in them. Everything after them on this page (the principle, the fifteen quality names and every paragraph under them) is the engine's reading of those cuts, taken from frame studies, except the points he ruled on 28 October, each marked (Krish, 28 Oct) and quoting him. "Krish's rulings, 28 October 2026" at the end lists each question he was asked, his exact answer and what changed; the one he sent back for proper questions stays open there.
 
 So this page is about production quality only: finish, motion design, cinematic feel, movement, branding, type, layout, colour, texture, transitions, captions and sound. It says nothing about how long a piece is, what shape it is, how many cuts it has or what a format must contain.
 
 **Friday's long voiceover cut is still in post-production.** It is not part of the reference yet, and nothing here was learnt from it. Another session owns that work; leave it alone. When it is finished, Krish says whether it joins the references.
 
-The references are three finished files: Friday 23 October's tall voiceover cut, and Monday 26 October's wide and tall split-screen cuts. `config/reference-cuts.json` names each one exactly (piece, format family, the board week and asset the study took it to be, its sha256 and its Drive file id), says what is and is not established about whether it is the latest cut, lists the reference moments below by timestamp, and carries the quality names and each quality's comparison points. `python3 scripts/floor.py --format short_video` (or `long_video`) prints a short version of this page before the rejection standards; every other video maker gets a one-line pointer to it, so every production session reads it at the start (AGENTS.md rule 20).
+The references are three finished files: Friday 23 October's tall voiceover cut, and Monday 26 October's wide and tall split-screen cuts. `config/reference-cuts.json` names each one exactly (piece, format family, the board week and asset that serve it, its sha256 and its Drive file id), says how its identity was confirmed, lists the reference moments below by timestamp, and carries the quality names, each quality's comparison points, his general words and his rulings. `python3 scripts/floor.py --format short_video` (or `long_video`) prints a short version of this page before the rejection standards, led by his general words and the rulings that bite in production; every other video maker gets a one-line pointer to it, so every production session reads it at the start (AGENTS.md rule 20).
 
 ## The principle
+
+His words lead (Krish, 28 Oct): few components and few labels, good motion design, good animation and good visuals; simple, classy and on brand, with the brand book as the reference ("Keep it simple but keep it classy and on brand. I'd stick to the brand book for now.").
 
 Krish named two finished pieces as the floor: Friday 23 October (AI Passports, voiceover) and Monday 26 October (Character.AI, split screen). The engine's reading of how they feel at their best:
 
@@ -38,11 +50,11 @@ Before a brief, read `python3 scripts/floor.py --format <maker>` and check the f
 ### Where it sits beside what is already here
 
 - `docs/MEDIA_STANDARD.md` and `config/media-standard.json` are the production contract: the brief, the proof, the independent review and the signed receipt. This page is the level of finish that contract is reviewed against. Like the media standard's exemplars, the references are never production inputs: nothing is lifted from them into a new piece. The three cuts are not among that standard's exemplars; whether they become exemplars, which changes the standard's hash, is Krish's decision.
-- `docs/MEDIA_STANDARD.md` also owns how outside brands appear: their accurate official marks, never invented or redrawn (and the draft floor standard s53328195a4: official logos unaltered). Nothing on this page loosens that.
+- `docs/MEDIA_STANDARD.md` also owns how outside brands appear: their accurate official marks, never invented or redrawn (and the draft floor standard s53328195a4: official logos unaltered). His 28 October answer on colour (Krish, 28 Oct: "I don't really care. I think it depends on the rest of the production.") lets a piece use the official mark in full colour or a one-colour version of that same mark; the shape is never redrawn or altered, so nothing on this page loosens that standard.
 - `config/rejection-floor.json` (read through `scripts/floor.py`) holds what Krish rejected and the standards nothing may fall beneath. This page is the other side of it: what he named as the floor to reach.
 - `config/ve/design-lock.json` holds the approved key frames for one ve format (the hand-held screen) and one module (two passports), matched by structural similarity at render. The reference cuts are not key frames and are never matched pixel for pixel; they are a feel to reach.
 - `config/style-references.json` is the bank of styles. Every style in it, old or new, has to reach this bar.
-- `docs/STUDIO.md` (makeyourmindup branding) and `config/ve/brand-tokens.json` own the palette, the type and the brand rules. Where this page names a colour, the brand book's value is the one that counts.
+- The brand book is the reference (Krish, 28 Oct: "I'd stick to the brand book for now."). The book itself is in `krishanraja/makeyourmindup`, `docs/brandbooknew/` (version 1.5); `docs/STUDIO.md` (makeyourmindup branding) and `config/ve/brand-tokens.json` carry it into this repository and own the palette, the type and the brand rules. Where this page names a colour, the brand book's value is the one that counts.
 
 ### How this was read
 
@@ -54,21 +66,21 @@ Several of the "below the bar" quotes are about earlier cuts of these same two p
 
 `config/reference-cuts.json` keeps the evidence for each file (`identity`, `identity_evidence`). Every timestamp on this page points into the exact file that sha256 names.
 
-- **Monday wide: confirmed.** It has the same sha256 as the 28 October rebuild's 16:9 master in `docs/plans/2026-10-26-monday/video/REVIEW.md`, and the Drive archive copy has not changed since it was filed that morning.
-- **Monday tall: unconfirmed.** The studied file is the archive master copy in Drive, replaced there on 28 October; it is not the smaller share copy, so the softness noted under quality 15 is not share-copy compression. Its sha256 differs from the 9:16 master in REVIEW.md. Suspected, not established: the master was replaced by the later logo revision that REVIEW.md item 3 describes. Which copy the board serves was not read.
-- **Friday tall: unconfirmed.** The studied file is the one video in the Friday post's `3 Video` folder in Drive, uploaded on 28 October, after Krish rated all four Friday cuts -1/10 on 27 October (rejection floor record r89ec46b420). No making-record version and no board activation ties it to the board asset, so whether it is a later cut than those four, and which, is not established.
+Asked whether these are the latest cuts he meant, Krish said (28 October): "I think so but I'm not sure. The ones I meant are in the publish board at content.krishraja.com for last Friday and Monday, just gone." The board was read that night (28 October 2026, 23:48 UTC, read only): each file below is byte for byte the file its tab serves, by sha256, and neither tab holds a newer cut.
 
-Until the two are confirmed, the first Critic establishes which cut each file is before using its timestamps.
+- **Friday tall: confirmed.** Week 2026-10-19, the Friday 23 October tab, asset `fri-short-video`, listed there as the 90-second video (tall, 9:16). The board's copy, the Drive copy in the Friday post's `3 Video` folder and the study's copy have the same sha256. Nothing on the tab records Krish approving this file. It reached the board and Drive on 28 October, after he rated four earlier Friday cuts -1/10 on 27 October (rejection floor record r89ec46b420); that it is a later cut than those four is read from the dates, not tested.
+- **Monday wide: confirmed.** Week 2026-10-26, the Monday 26 October tab, asset `mon-video-long`. It also has the same sha256 as the 28 October rebuild's 16:9 master in `docs/plans/2026-10-26-monday/video/REVIEW.md`.
+- **Monday tall: confirmed.** Week 2026-10-26, the Monday 26 October tab, asset `mon-video-short`. It is the archive master copy, not the smaller share copy, so the softness noted under quality 15 is not share-copy compression. Its sha256 differs from the 9:16 master in REVIEW.md: the board serves the later file (suspected, not established: the logo revision that REVIEW.md item 3 describes).
 
 ## The qualities
 
 ### 1. Premium finish: every frame looks made and owned
 
-**The bar.** At full size, every frame looks deliberately designed and belongs to the brand, as you would expect from a world-class media channel. Nothing looks like a default template, a slide, clipart, a widget, an outline icon or a test render. No frame carries a process or provenance mark. The finished file is clean: no glitch frames, blinks, ghosted doubles or stray hardware, and no soft media sitting next to crisp graphics without a reason.
+**The bar.** At full size, every frame looks deliberately designed and belongs to the brand, as you would expect from a world-class media channel. Nothing looks like a default template, a slide, clipart, a widget, an outline icon or a test render. No frame carries a process or provenance mark, or any label that adds nothing to the content (Krish, 28 Oct: "It's just the ones that say "Krish's read" or "illustrative" that are stupid because they add no value to the content."). The finished file is clean: no glitch frames, blinks, ghosted doubles or stray hardware, and no soft media sitting next to crisp graphics without a reason.
 
 **In the references.** Friday 00:02: the phone plate carries a cream headline, one coral slab, an italic deck line, a caption slab and the series pill, and every piece of it is owned. Friday 00:54.4: four layers stack and all stay readable. Monday tall 00:20: a torn paper receipt, its mint figure matched by the caption's mint chip. Monday wide 00:44: a receipt sits on a lit stage. Both end cards (Friday 01:15 to 01:18, Monday tall 01:21.7 to 01:25.7).
 
-**Below the bar.** "These look like PowerPoint cliparts... These just look like cheap tacky emoji PDF infographics" (floor record rd1f92c1e7f). "the visuals look like Microsoft Excel from 20 years ago" (F19, which passed all 11 mechanical checks). "that stupid box around character.ai? That's a horrible, tacky, unprofessional, low-quality visual" (rf670596592). "I hate all these stupid little abbreviations and marks" (the ILLUSTRATION tag, KRISH'S TEST stickers and coral marquee, `docs/ve/STATUS.md`). "don't add stupid eyebrow text and asterisks and 'generated by AI' and 'Krish's take'... This needs to feel like a world class media channel" (commit 1881d38). F01: schematic boxes, labels and connectors.
+**Below the bar.** "These look like PowerPoint cliparts... These just look like cheap tacky emoji PDF infographics" (floor record rd1f92c1e7f). "the visuals look like Microsoft Excel from 20 years ago" (F19, which passed all 11 mechanical checks). "that stupid box around character.ai? That's a horrible, tacky, unprofessional, low-quality visual" (rf670596592). "I hate all these stupid little abbreviations and marks" (the ILLUSTRATION tag, KRISH'S TEST stickers and coral marquee, `docs/ve/STATUS.md`; the tag and the stickers are now gone from the engine, ruling 4). "don't add stupid eyebrow text and asterisks and 'generated by AI' and 'Krish's take'... This needs to feel like a world class media channel" (commit 1881d38). F01: schematic boxes, labels and connectors.
 
 Slips inside the references, never to repeat: ghosted double exposures at Monday tall 00:42.9 and 01:17.9, a face-on-face dissolve at 01:21.35, a one-frame caption blink at Friday 01:02.07, a soft upscaled screen recording at Monday wide 00:24 to 00:27, and waxy fingers on Friday plates at 100% (suspected, generated plates; 00:00.67 to 00:16 and 00:45.1 to 01:00.1).
 
@@ -132,9 +144,9 @@ Slips inside the references, never to repeat: Friday opens on empty brand dark w
 
 ### 6. Branding as a system
 
-**The bar.** The brand runs through every frame as a system, never as a watermark. That means the house palette with fixed meanings, the house type voices, the house caption style, the series identity, and the lockup clearly at the open and the close. Outside brands appear as their official marks, unaltered (`docs/MEDIA_STANDARD.md`; the draft floor standard s53328195a4), at equal size, with no effects and no tilt. A brand colour never stands for a country or a warning. There is one close screen.
+**The bar.** The brand runs through every frame as a system, never as a watermark: the house palette with fixed meanings, the house type voices, the house caption style and the series identity. The brand book places the marks (Krish, 28 Oct: "I'd stick to the brand book for now."). The book gives each lockup one job (p. 04): the stacked lockup is the primary, for covers, first screens and anything that gets a big moment; the horizontal lockup is for navigation, footers and email headers; the mark is for avatars, favicons and app icons. It keeps clear space round each, and its hands-off rules (p. 05) keep the logo on ink, level and untouched: never recoloured, stretched, rotated, outlined, glowing or shadowed, and never with a tagline bolted on. For video, `docs/STUDIO.md` applies the book: in a Short the mark sits on an ink tile with a hard shadow in the channel's colour, top left on every beat (top right when the shot's lead room asks for it), and the stacked logo closes the piece once, in the ending band, with the day, the section pill and the address. A full-screen STAGE beat carries the horizontal lockup, level and untouched, in its header (`config/ve/design-lock.json`, zones.header). `config/ve/brand-tokens.json` gives the channel colour only to the pill, the mark's shadow and the caption's shadow, and keeps grain behind marks and logos. Where a reference departs from the book (Monday carries no mark tile in its body), the book wins. Outside brands appear as the company's official mark, in full colour or as a one-colour version of that same official mark, whichever fits the rest of the production (Krish, 28 Oct: "I don't really care. I think it depends on the rest of the production."). Their shape is never redrawn or altered (`docs/MEDIA_STANDARD.md`); they sit at equal size, with no effects and no tilt. A brand colour never stands for a country or a warning. There is one close screen.
 
-**In the references.** Friday 00:00 to 01:18: a small wordmark sits top left and the mind.the.gap pill top right; at 01:15.13 the caption slab becomes the brand band strapped across the passport. Monday tall: the lockup and the follow.the.money pill bookend the piece (00:00 to 00:03.5 and 01:21.7 to 01:25.7), outside companies' logos appear as each one is named (00:52 to 01:05), and on the end card .ai is in yellow with a mint underline that draws on. Monday wide 00:03.5: the home layout with the MONDAYS card and the BRING A CALCULATOR sticker; 04:39.5: the yellow end card. How the references colour outside logos is not part of the bar: outside logos are the official marks, unaltered (`docs/MEDIA_STANDARD.md`, floor standard s53328195a4). Whether a one-colour house treatment is allowed, using only each company's own official one-colour mark, is Krish's decision on rights (open question 6).
+**In the references.** Friday 00:00 to 01:18: a small wordmark sits top left and the mind.the.gap pill top right; at 01:15.13 the caption slab becomes the brand band strapped across the passport. Monday tall: the lockup and the follow.the.money pill bookend the piece (00:00 to 00:03.5 and 01:21.7 to 01:25.7), outside companies' logos appear as each one is named (00:52 to 01:05), and on the end card .ai is in yellow with a mint underline that draws on. Monday wide 00:03.5: the home layout with the MONDAYS card and the BRING A CALCULATOR sticker; 04:39.5: the yellow end card. Monday shows most outside companies' logos in one colour. That fits when each is a one-colour version of the company's own official mark with its shape unchanged (ruling 6); the Critic checks each logo's shape against the official mark.
 
 **Below the bar.** "its not even on brand" (r89ec46b420). F07: the colours and fonts were present but the system was not applied, with no mark tile, no channel pill, a flattened type hierarchy and rotated logos. "It's not even the right branding" (F19). "there are no brand colours of mine" (rd1f92c1e7f). The tacky box round a logo (rf670596592). Three outro screens (r04686da8b0).
 
@@ -142,11 +154,11 @@ Slip inside Monday tall, never to repeat: a yellow top rule that shows at 00:06.
 
 **Compare beside.** Friday tall 01:15 to 01:18; Monday tall 01:21.7 to 01:25.7.
 
-**How it is checked.** The brand book (`docs/STUDIO.md` brand section, `config/ve/brand-tokens.json`). The ve `brand.mark_tile` check where it applies; it is not applied on STAGE layouts, so the hand-held format has no measured brand check. The quick-edit rule of a real logo for each named company. The Critic's side-by-side at the Compare beside points. Krish's exact-file approval (`docs/ve/ENGINE.md`, S7 Gate 3) decides.
+**How it is checked.** The brand book (`krishanraja/makeyourmindup` `docs/brandbooknew/`, pp. 04 and 05; in this repository `docs/STUDIO.md` brand section and `config/ve/brand-tokens.json`). The ve `brand.mark_tile` check where it applies; it is not applied on STAGE layouts, so the hand-held format has no measured brand check. The quick-edit rule of a real logo for each named company. The Critic's side-by-side at the Compare beside points. Krish's exact-file approval (`docs/ve/ENGINE.md`, S7 Gate 3) decides.
 
 ### 7. Typography: few voices, fixed jobs, words that add
 
-**The bar.** Use a small set of type voices, each with one job and one place, the same way all the way through. A heavy condensed display face carries headlines, with one meaning word picked out in a brand colour. A monospace carries records: sources, dates, figures. A heavy sans carries captions. A human italic, or a real publication's own serif inside its own page, appears only where it carries a voice. Type is large and legible with a clear hierarchy, so the eye never hunts, and it builds in time with speech. On-screen words add something: a source, a date, an exact number, a name or the changed word. They never repeat the sentence being spoken. A label names a record, never a process, a provenance note or an opinion tag.
+**The bar.** Use a small set of type voices, each with one job and one place, the same way all the way through. A heavy condensed display face carries headlines, with one meaning word picked out in a brand colour. A monospace carries records: sources, dates, figures. A heavy sans carries captions. A human italic, or a real publication's own serif inside its own page, appears only where it carries a voice. Type is large and legible with a clear hierarchy, so the eye never hunts, and it builds in time with speech. On-screen words add something: a source, a date, an exact number, a name or the changed word. They never repeat the sentence being spoken. Labels that name a source, a date, a record or what is on screen are fine, such as AT STAKE or CHESKY TO BLOOMBERG (Krish, 28 Oct: "I don't mind those labels."). A label that adds nothing to the content is out, and his two examples name it: "Krish's read" and "illustrative" (Krish, 28 Oct: "It's just the ones that say "Krish's read" or "illustrative" that are stupid because they add no value to the content."). So no provenance, process, AI-generation or illustration tag, and no label that names Krish. Labels stay few: "minimal random components and labels" (Krish, 28 Oct).
 
 **In the references.** Friday 00:02: USING A / CHINESE AI? on a coral slab, with the italic deck "You may already be." Friday 00:57.4: a mono label reads SCREEN RECORDING DEEPSEEK 24 OCT 2026. Monday tall 00:20: a receipt set in mono, with "$2.7B (REPORTED)" as a printed hedge. Monday tall: the source slugs sit bottom left all the way through, and at 01:22 the end-card question is set huge and flush left. Monday wide 03:22: OUR PREDICTION.
 
@@ -156,7 +168,7 @@ Slip inside Friday, never to repeat (also visible on the contact sheet): the cor
 
 **Compare beside.** Friday tall 00:02; Monday tall 00:20.
 
-**How it is checked.** The ve composition QC (minimum text size), the quick-edit `kit.py` legibility floor, and quick-edit `visual_clarity` (word budget, phrase overlap with the narration). The copy lint for eyebrows and provenance notes exists only on an unmerged branch (1881d38), so the Critic checks those by eye. The Critic's side-by-side at the Compare beside points. Krish's exact-file approval (`docs/ve/ENGINE.md`, S7 Gate 3) decides.
+**How it is checked.** The ve composition QC (minimum text size), the quick-edit `kit.py` legibility floor, and quick-edit `visual_clarity` (word budget, phrase overlap with the narration). The copy lint for eyebrows and provenance notes exists only on an unmerged branch (1881d38), so the Critic checks those by eye: a label that names a source, a date, a record or what is on screen stays, a label that adds nothing goes. The Critic's side-by-side at the Compare beside points. Krish's exact-file approval (`docs/ve/ENGINE.md`, S7 Gate 3) decides.
 
 ### 8. Composition and layout: the whole frame, one focal point
 
@@ -242,17 +254,19 @@ Slips inside the references, never to repeat: the Monday tall screen-recording s
 
 ### 14. Sound finish
 
-**The bar.** The sound is finished, not just loud enough. It meets delivery loudness and headroom through the existing gate. The voice is even from start to end, the joins are clean with no chopped words, the silences are clean with no hiss, and lip sync is tight. A licensed bed can be heard under the whole cut, low under speech and lifting at the open, the turns and the close. A sting opens the piece (an engine reading, open question 5), and the music follows the shape of the story. Small sound hits on graphic events are welcome where they help.
+**The bar.** The sound is finished, not just loud enough. It meets delivery loudness and headroom through the existing gate. The voice is even from start to end, the joins are clean with no chopped words, the silences are clean with no hiss, and lip sync is tight. The licensed bed is audible under the whole of every cut, wide or tall, sitting low under his voice (Krish, 28 Oct: "Yes I think music should be audible throughout but just lower."). It rises only where the piece calls for it: his 19 October words name the intro, the outro and chapter cards. It never drops out. A sting opens the piece (an engine reading, open question 5), and the music follows the shape of the story. Small sound hits on graphic events are welcome where they help.
 
 **In the references.** Measured, not yet heard (F03; the first Critic confirms each by ear before it becomes a comparison point): both references are mastered to delivery loudness with headroom and an even voice. Friday 00:00 to 00:04: light ticks under the cold open. Friday 00:27 to 01:05.7: a pulse under the proof. Monday wide 00:00 to 00:03.5: a stereo sting. Monday wide 00:54, 01:25, 02:24, 03:07 and 03:32: short swells at the act turns. Monday wide 01:12.45, 02:42.9 and 03:29.2: small hits as the logos land, the receipts drop and the counter rolls. Monday tall 01:21.7 to 01:25.5: the bed comes forward under the end card. Heard, by Krish, on the earlier voice audio: "The audio is fine." (rc62cff421a).
 
 **Below the bar.** "This MUST go out with music" (12 October). "on the deeper cut, the audio needs to be able to be heard the entire time, but just really low unless its intro, outro or or chapter card" (19 October, floor standard s81602cf68b). F09 and "so, so many more glitches and cuts" (r4648c55645). F10 and "The version with my face has no audio/video sync." (r87fc74b4c1).
 
-Also measured inside the references and not heard, so not proven: in all three cuts the voice loses its top end, so it may lack air (00:00 to end; suspected cause, not proven); the bed sits far under the voice and may vanish on a phone speaker (00:00 to end); Monday wide's speech gaps drop to near digital silence with no room tone (00:45 to 04:31).
+Slips inside the references, never to repeat (measured, not yet heard): the bed drops out at Friday tall 01:05.7 to 01:15.6 and Monday tall 01:06 to 01:14.5, and Monday wide's speech gaps fall to near digital silence with no room tone (00:45 to 04:31). The bed is audible throughout (ruling 1).
 
-**Compare beside.** Monday wide 00:00 to 00:33; Friday tall 00:27 to 01:18.
+Also measured inside the references and not heard, so not proven: in all three cuts the voice loses its top end, so it may lack air (00:00 to end; suspected cause, not proven); the bed sits far under the voice and may vanish on a phone speaker (00:00 to end), and his ruling asks for it to be heard.
 
-**How it is checked.** The existing gates: loudness of -14 LUFS, plus or minus 1, with true peak at or below -1 dBTP, and lip sync within 40 ms (quick-edit); the ve loudness, long-silence, sync and joins checks. The bed, the tone of the voice and the joins need a human listen at full length, on headphones and on a phone speaker (`config/failures.json`, `cut-called-done-unheard`). The first Critic listens to the Compare beside points and confirms or corrects the measured moments above by ear; until then they describe the references and are not comparison points. Krish's exact-file approval (`docs/ve/ENGINE.md`, S7 Gate 3) decides.
+**Compare beside.** Monday wide 00:00 to 00:33; Friday tall 00:27 to 01:05.7.
+
+**How it is checked.** The existing gates: loudness of -14 LUFS, plus or minus 1, with true peak at or below -1 dBTP, and lip sync within 40 ms (quick-edit); the ve loudness, long-silence, sync and joins checks. The bed, the tone of the voice and the joins need a human listen at full length, on headphones and on a phone speaker (`config/failures.json`, `cut-called-done-unheard`): the bed must be heard everywhere, low under speech (the draft floor standard s81602cf68b asks the same). The first Critic listens to the Compare beside points and confirms or corrects the measured moments above by ear; until then they describe the references and are not comparison points. Krish's exact-file approval (`docs/ve/ENGINE.md`, S7 Gate 3) decides.
 
 ### 15. Krish on camera: real, steady, in sync
 
@@ -278,13 +292,14 @@ Weak spots in the Monday camera, never to repeat: the image is soft and warm-cas
 - Copying a device literally: the passport, stamps and stickers, the hand-held phone, the receipts, the hazard tapes, the BANKRUPT slam, the confetti, the VOID stamp, the VS card, the three-lane route map or the 75% counter. Each piece finds its own object and its own big moment.
 - The specific story's motifs: cotton bolls, server racks, flags, Chapter 11, the grid of character cards.
 - Word-by-word captions versus phrase captions. Both references meet the bar in different ways.
-- Whether a small brand mark sits on every frame. Friday has one and Monday carries the brand through palette, type and captions between its bookends. Placement is the brand book's call.
+- Where the references put the brand mark. The brand book places it (quality 6).
 - Which material a piece uses: grain, halftone, grid, torn paper or something else.
 - The colour values sampled from frames. `config/ve/brand-tokens.json` is the source of the palette.
-- How the references colour outside companies' logos. Outside logos are the official marks, unaltered (`docs/MEDIA_STANDARD.md`).
+- Whether outside logos are in full colour or one colour. Either fits, chosen for the rest of the production (ruling 6); the official mark's shape never changes (`docs/MEDIA_STANDARD.md`).
+- Whether a piece uses mono labels. Labels that name a source, a date, a record or what is on screen are fine (ruling 2); only a label that adds nothing is out (quality 7).
 - Whether a piece is voiceover, on camera or both. The bar applies to any format.
 - The references' own slips, listed under each quality. They are not licence to repeat them.
-- The music drop-outs measured in the references (Friday 01:05.7 to 01:15.6, Monday tall 01:06 to 01:14.5, and Monday wide's near-silent speech gaps from 00:45 to 04:31). Monday wide is the deeper cut, so its gaps sit against his 19 October words, which are about the deeper cut. The two tall cuts' drop-outs sit against the engine's draft floor standard s81602cf68b, which carries his words to every cut and which he has not approved. None of them is a technique to copy until Krish rules (open question 1).
+- The music drop-outs measured in the references (Friday 01:05.7 to 01:15.6, Monday tall 01:06 to 01:14.5, and Monday wide's near-silent speech gaps from 00:45 to 04:31). They are slips, never a technique to copy: the bed is audible throughout every cut (Krish, 28 Oct: "Yes I think music should be audible throughout but just lower.").
 
 The studies also measured each file's scene changes, still holds, loudness, spectrum and palette. Those numbers describe these three files only. They are left out of this page and out of `config/reference-cuts.json` on purpose, so nobody mistakes them for targets. The existing gates set the only numeric limits.
 
@@ -307,6 +322,7 @@ Play each one in motion, at full size, with sound. Timestamps are into the file 
 - 01:15.13 to 01:18: The caption slab becomes the brand band strapped across the passport. A branded close that completes the metaphor.
 - 00:00.00 to 00:00.66: SLIP, below the bar, do not copy: empty brand dark on the first frame.
 - 01:02.07: SLIP, below the bar, do not copy: a one-frame caption blink before the OUR CALL card.
+- 01:05.7 to 01:15.6: SLIP, below the bar, do not copy: the music bed drops out (measured, not yet heard).
 
 ### Monday tall (26 October, split screen)
 
@@ -321,6 +337,7 @@ Play each one in motion, at full size, with sound. Timestamps are into the file 
 - 00:42.9 to 00:43.1: SLIP, below the bar, do not copy: cross-dissolved layouts showing ghosted doubles.
 - 01:17.9 to 01:18.2: SLIP, below the bar, do not copy: cross-dissolved layouts showing ghosted doubles.
 - 01:21.35 to 01:21.6: SLIP, below the bar, do not copy: a face-on-face dissolve.
+- 01:06 to 01:14.5: SLIP, below the bar, do not copy: the music bed drops out (measured, not yet heard).
 
 ### Monday wide (26 October, split screen)
 
@@ -330,18 +347,19 @@ Play each one in motion, at full size, with sound. Timestamps are into the file 
 - 01:28 to 01:40.6: A slow push on the CTO document with one phrase in focus, then it defocuses as the receipt springs up and settles. Cinematic hold, transition and craft.
 - 02:43.5 to 02:56: Comparison receipts count up into a side-by-side board. Proof that sums up.
 - 03:29.2: The counter rolls to 75% on 'I'm 75% sure', with a small sound hit (the hit measured, not yet heard). Sync of picture, word and sound.
+- 00:45 to 04:31: SLIP, below the bar, do not copy: the speech gaps fall to near digital silence, the bed with them (measured, not yet heard).
 
-## Open questions for Krish
+## Krish's rulings, 28 October 2026
 
-Reported, not resolved. Until he rules, the bar keeps his words, and where it goes further than his words it stays a draft.
+Each question as it was put to him, his exact answer, and what changed. One question is still open.
 
-1. **Music.** All three references drop the bed for stretches (see "What is not the bar"). On 19 October he said, of the deeper cut, "the audio needs to be able to be heard the entire time, but just really low unless its intro, outro or or chapter card" (floor standard s81602cf68b). Does the same hold for the tall cuts, as the engine's draft standard reads it? The bar keeps his words for the deeper cut.
-2. **Mono labels.** Friday carries labels such as "AT STAKE" (00:00.67 to 00:06) and "CHESKY TO BLOOMBERG" (00:08 to 00:16). These may sit against his "no eyebrow text" words. The bar keeps labels that name a source, date or record and drops process or provenance tags.
-3. **Brand mark.** The brand book asks for a mark tile on every beat; Monday does not carry one in its body.
-4. **Stale documents.** These still conflict with his 28 October removal of marks and his "green fire" rejection: `docs/ve/design/TEMPLATE.md` line 52 (the ILLUSTRATION tag), `docs/ve/design/formats/H-motion.md` (the KRISH'S TEST stickers) and `config/style-references.json` (the treated background, still listed).
-5. **Readings that go further than his words.** Three items in the bar are the engine's reading and are new rules he has never stated: one visual idea per piece (quality 2); one big impact, and at most one loud transition (qualities 4 and 11); and a sting opens every piece (quality 14; the produce-video route already adds the approved intro sting, so the question is whether it holds for every format and route). Makers follow them as drafts until he says yes, rewords them or drops them.
-6. **Outside logos.** Monday's cuts show most outside companies' logos in one house colour. The approved media standard says accurate official marks, never redrawn. Is a one-colour house treatment allowed, using only each company's own official one-colour mark? Until he rules, outside logos are the official marks, unaltered.
-7. **Which files.** Are the Friday tall and Monday tall files named in `config/reference-cuts.json` the latest cuts he meant ("Which files these are" above)?
+1. **Music.** All three references drop the bed for stretches; on 19 October he said of the deeper cut, "the audio needs to be able to be heard the entire time, but just really low unless its intro, outro or or chapter card". Does the same hold for the tall cuts? His answer: "Yes I think music should be audible throughout but just lower." Changed: quality 14, "What is not the bar", the reference moments and the sound comparison points now say the bed is audible under the whole of every cut, low under his voice, rising only at the intro, the outro and chapter cards. The references' three drop-outs are marked as slips, and the Friday comparison point now stops before its drop-out.
+2. **Mono labels.** Friday carries labels such as AT STAKE (00:00.67 to 00:06) and CHESKY TO BLOOMBERG (00:08 to 00:16). Do these sit against his "no eyebrow text" words? His answer: "I think that sounds better for number 2. I don't mind those labels. It's just the ones that say "Krish's read" or "illustrative" that are stupid because they add no value to the content." Changed: qualities 1 and 7 and "What is not the bar" keep labels that name a source, a date, a record or what is on screen, and rule out any label that adds nothing to the content: no provenance, process, AI-generation or illustration tag, and no label that names Krish.
+3. **Brand mark.** The brand book asks for a mark tile on every beat; Monday does not carry one in its body. His answer, in his general words: "I'd stick to the brand book for now." Changed: quality 6 now cites what the brand book says (each lockup's job, clear space, hands off the logo) and how `docs/STUDIO.md` applies it to video. The book itself does not ask for a mark tile on every beat; that placement is how `docs/STUDIO.md` applies the book to a Short. The bar's own judgment on where the mark sits is gone, and where a reference departs from the book, the book wins.
+4. **Stale documents.** May `docs/ve/design/TEMPLATE.md` (the ILLUSTRATION tag), `docs/ve/design/formats/H-motion.md` (the KRISH'S TEST stickers) and `config/style-references.json` (the treated background) be removed? His answer: "Yes remove those." Changed: the ILLUSTRATION tag and the KRISH'S TEST stickers are gone for good. Compile emits no tag, composition QC neither checks nor requires one, the renderer has no tag component, the ve spec no longer asks for an on-screen label on a generated picture, and the template, the H and P anatomies, H's motion and wiring, the reference mock, the crew cards, the plate notes and the fixtures no longer ask for either; a test's own label now speaks as the publication ("OUR TEST"). `config/style-references.json` is a taste file only he changes, so its treated background is removed in person, with him.
+5. **Readings that go further than his words.** One visual idea per piece (quality 2); one big impact, and at most one loud transition (qualities 4 and 11); a sting opens every piece (quality 14). His answer: "I think you need to go a bit deeper and ask me proper questions here." Still open: concrete questions are being put to him. Until he answers, the three readings stay drafts that makers follow but no gate enforces.
+6. **Outside logos.** Monday shows most outside companies' logos in one colour. Is a one-colour house treatment allowed? His answer: "I don't really care. I think it depends on the rest of the production." Changed: quality 6 and "What is not the bar" now say an outside company appears as its official mark, in full colour or as a one-colour version of that same official mark, whichever fits the rest of the production; its shape is never redrawn or altered, which keeps to `docs/MEDIA_STANDARD.md`.
+7. **Which files.** Are the files named in `config/reference-cuts.json` the latest cuts he meant? His answer: "I think so but I'm not sure. The ones I meant are in the publish board at content.krishraja.com for last Friday and Monday, just gone." Changed: the board check on 28 October found all three files are exactly the ones the Friday 23 October and Monday 26 October tabs serve, so each identity is now confirmed ("Which files these are").
 
 ## Changing the bar
 

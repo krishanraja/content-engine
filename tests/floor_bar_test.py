@@ -5,7 +5,8 @@ video makers, and nothing for any other maker.
 Krish, 2026-10-28: "the video production quality standards for the latest Friday (AI Passports) and Monday
 (character.ai) pieces are the floor for what I expect", and "the long voiceover video is still being post produced so
 dont just assume that the voiceover format only has a 90sec version, you are only to look for production quality
-standards". Run by tests/engine-gates.test.ts.
+standards". Later that day he answered the seven questions put to him; his exact words are pinned below, and question 5
+stays open. Run by tests/engine-gates.test.ts.
 """
 import contextlib
 import io
@@ -13,6 +14,7 @@ import json
 import re
 import sys
 import tempfile
+import textwrap
 import unittest
 from pathlib import Path
 
@@ -22,17 +24,41 @@ import floor  # noqa: E402
 
 BAR = json.loads((ROOT / 'config' / 'reference-cuts.json').read_text(encoding='utf-8'))
 PAGE = (ROOT / BAR['doc']).read_text(encoding='utf-8')
-# The three files the study hashed on 28 October 2026, and whether each is established as the latest cut he meant.
-# Only Monday's wide cut matches a recorded master (docs/plans/2026-10-26-monday/video/REVIEW.md).
+# The three files the study hashed on 28 October 2026. His answer pointed at the board, and the board read that night
+# (23:48 UTC, read only) serves exactly these bytes on the Friday 23 and Monday 26 October tabs, so each is confirmed.
 STUDIED = {
-    'fri23-tall': ('voiceover', 'e0298c2f91e6a322e00d42d52da5c19fc5dade29cfce33c45a432d110bc6456e', 'unconfirmed'),
+    'fri23-tall': ('voiceover', 'e0298c2f91e6a322e00d42d52da5c19fc5dade29cfce33c45a432d110bc6456e', 'confirmed'),
     'mon26-wide': ('split_screen', '14ccfef0f31e42814db4b4743d35cd75d047d95e0520171f755b9cd31b1a3294', 'confirmed'),
-    'mon26-tall': ('split_screen', '39f1039c810681d1a6776b5a0c9f5f32696931cc47ea21ea4ec3f19b90888ecd', 'unconfirmed'),
+    'mon26-tall': ('split_screen', '39f1039c810681d1a6776b5a0c9f5f32696931cc47ea21ea4ec3f19b90888ecd', 'confirmed'),
 }
+BOARD = {'fri23-tall': ('2026-10-19', 'fri-short-video'), 'mon26-wide': ('2026-10-26', 'mon-video-long'),
+         'mon26-tall': ('2026-10-26', 'mon-video-short')}
+# His exact typed words, 28 October 2026, character for character.
+GENERAL = """In general I think:
+- minimal random components and labels
+- good motion design
+- good animation
+- good visuals
+
+Keep it simple but keep it classy and on brand. I'd stick to the brand book for now."""
+ANSWERS = {
+    1: "Yes I think music should be audible throughout but just lower.",
+    2: ("I think that sounds better for number 2. I don't mind those labels. It's just the ones that say \"Krish's read\" "
+        "or \"illustrative\" that are stupid because they add no value to the content."),
+    3: "I'd stick to the brand book for now.",
+    4: "Yes remove those.",
+    5: "I think you need to go a bit deeper and ask me proper questions here.",
+    6: "I don't really care. I think it depends on the rest of the production.",
+    7: ("I think so but I'm not sure. The ones I meant are in the publish board at content.krishraja.com for last Friday "
+        "and Monday, just gone."),
+}
+RULINGS = "## Krish's rulings, 28 October 2026"
+READINGS = ('one visual idea per piece', 'one big impact', 'at most one loud transition', 'a sting opens every piece')
 FULL = ('short_video', 'long_video')
 POINTER = ('motion', 'captions', 'card', 'intro_outro', 'audio')
-DRAFT_LINE = ("The qualities below are the engine's reading of the cuts he named; he has not approved their wording. "
-              'Follow them; only he approves them.')
+DRAFT_LINE = ("The qualities below are the engine's reading of the cuts he named. Where he ruled on 28 October, the point "
+              "is marked (Krish, 28 Oct) with his words; he has not approved the rest of their wording. Follow them; only "
+              "he approves them.")
 
 
 def run(*args):
@@ -40,6 +66,19 @@ def run(*args):
     with contextlib.redirect_stdout(out):
         code = floor.main(list(args))
     return code, out.getvalue()
+
+
+def flat(text):
+    return ' '.join(text.split())
+
+
+def quality(number):
+    """One quality's section of the page, by its number."""
+    return PAGE.split(f'\n### {number}. ')[1].split('\n### ')[0]
+
+
+def ruling_line(n):
+    return next(line for line in floor.section(PAGE, RULINGS) if line.startswith(f'{n}. **'))
 
 
 def floor_only(maker):
@@ -67,30 +106,153 @@ class TheBar(unittest.TestCase):
         got = {r['id']: (r['format_family'], r['sha256'], r['identity']) for r in BAR['references']}
         self.assertEqual(got, STUDIED)
         for r in BAR['references']:
-            self.assertTrue(r['identity_evidence'], r['id'])
+            # Confirmed by his words and the board check: the board week, the asset, the sha256 and when it was read.
+            evidence = r['identity_evidence']
+            self.assertIn(f'"{ANSWERS[7]}"', evidence, r['id'])
+            self.assertEqual((r['served_from']['board_week'], r['served_from']['asset']), BOARD[r['id']])
+            self.assertEqual(r['served_from']['checked_at'], '2026-10-28T23:48Z')
+            for part in (*BOARD[r['id']], r['sha256'], 'GET only'):
+                self.assertIn(part, evidence, r['id'])
         self.assertIn('14ccfef0f31e42814db4b4743d35cd75d047d95e0520171f755b9cd31b1a3294',
                       (ROOT / 'docs/plans/2026-10-26-monday/video/REVIEW.md').read_text(encoding='utf-8'))
         self.assertFalse(BAR['production_input'])
-        for label in ('**Friday tall: unconfirmed.**', '**Monday tall: unconfirmed.**', '**Monday wide: confirmed.**'):
+        for label in ('**Friday tall: confirmed.**', '**Monday tall: confirmed.**', '**Monday wide: confirmed.**'):
             self.assertIn(label, PAGE)
+        self.assertNotIn('unconfirmed', PAGE)
 
     def test_the_bar_is_a_draft_reading_until_he_approves_it(self):
         self.assertEqual(BAR['standing'], 'draft')
         self.assertEqual(BAR['standing_note'], DRAFT_LINE)
         self.assertLess(PAGE.index(BAR['ruling']['correction']), PAGE.index(DRAFT_LINE))
         self.assertLess(PAGE.index(DRAFT_LINE), PAGE.index('## The principle'))
-        self.assertIn('## Open questions for Krish', PAGE)
-        for reading in ('one visual idea per piece', 'one big impact', 'at most one loud transition',
-                        'a sting opens every piece'):
-            self.assertIn(reading, PAGE.split('## Open questions for Krish')[1])
+        self.assertNotIn('## Open questions for Krish', PAGE)
+        self.assertIn(RULINGS, PAGE)
 
-    def test_outside_logos_stay_the_official_marks(self):
+    def test_his_general_words_open_the_page_and_lead_the_printout(self):
+        self.assertEqual(BAR['general']['words'], GENERAL)
+        self.assertEqual(BAR['general']['on'], '2026-10-28')
+        quoted = floor.blockquote(GENERAL)
+        self.assertEqual(quoted.splitlines()[0], '> "In general I think:')
+        self.assertLess(PAGE.index(quoted), PAGE.index(floor.blockquote(BAR['ruling']['words'])))
+        self.assertEqual(PAGE.index('> "'), PAGE.index(quoted))
+        principle = floor.section(PAGE, '## The principle')
+        self.assertTrue(next(line for line in principle if line.strip()).startswith('His words lead (Krish, 28 Oct)'))
+        for maker in ('short_video', 'long_video'):
+            _, text = run('--format', maker)
+            block = textwrap.indent(f'"{GENERAL}"', '    ')
+            self.assertIn(block, text, maker)
+            self.assertEqual(text.index(block), text.index('\n', text.index('on how every video should be made')) + 1)
+            self.assertLess(text.index(block), text.index('His rulings that bite in production'))
+            self.assertLess(text.index('His rulings that bite in production'), text.index('Krish named the pieces'))
+
+    def test_each_ruling_keeps_his_exact_answer(self):
+        items = {item['n']: item for item in BAR['rulings']['items']}
+        self.assertEqual({n: item['answer'] for n, item in items.items()}, ANSWERS)
+        self.assertEqual(BAR['rulings']['section'], RULINGS[3:])
+        for n, answer in ANSWERS.items():
+            line = ruling_line(n)
+            self.assertIn('His answer', line, n)
+            self.assertIn(f'"{answer}"', line, n)
+            self.assertIn('Still open' if n == 5 else 'Changed:', line, n)
+        # The rulings that bite in production print with his words, verbatim, and only those.
+        _, text = run('--format', 'short_video')
+        bar = flat(text[: text.index('The rejection floor for')])
+        for n in (1, 2, 3, 6):
+            self.assertEqual(items[n]['status'], 'ruled')
+            words = items[n].get('quote') or items[n]['answer']
+            self.assertIn(words, items[n]['answer'])
+            self.assertIn(f'- {items[n]["topic"]}: {flat(items[n]["production"])}. In his words: "{words}"', bar)
+        for n in (4, 7):
+            self.assertNotIn('production', items[n])
+
+    def test_question_five_is_still_open(self):
+        five = next(item for item in BAR['rulings']['items'] if item['n'] == 5)
+        self.assertEqual(five['status'], 'open')
+        self.assertNotIn('production', five)
+        self.assertEqual([item['n'] for item in BAR['rulings']['items'] if item['status'] == 'open'], [5])
+        line = ruling_line(5)
+        self.assertIn('Still open: concrete questions are being put to him.', line)
+        self.assertIn('the three readings stay drafts that makers follow but no gate enforces', line)
+        for reading in READINGS:
+            self.assertIn(reading, line.lower())
+        for number in (2, 4, 11, 14):
+            self.assertIn('open question 5', quality(number), number)
+        _, text = run('--format', 'long_video')
+        self.assertIn('- Still open (readings that go further than his words):', text)
+
+    def test_music_is_audible_throughout_every_cut(self):
+        sound = quality(14)
+        self.assertIn(f'(Krish, 28 Oct: "{ANSWERS[1]}")', sound)
+        self.assertIn('audible under the whole of every cut', sound)
+        self.assertNotIn('can be heard under', sound)
+        self.assertIn(f'(Krish, 28 Oct: "{ANSWERS[1]}")', PAGE.split('## What is not the bar')[1])
+        # The references' drop-outs are slips, and no sound comparison point runs into one.
+        drops = [m for m in BAR['reference_moments'] if m.get('slip') and 'sound' in m['shows']]
+        self.assertEqual({(m['ref'], m['at'], m['to']) for m in drops},
+                         {('fri23-tall', '01:05.7', '01:15.6'), ('mon26-tall', '01:06', '01:14.5'),
+                          ('mon26-wide', '00:45', '04:31')})
+        seconds = lambda stamp: int(stamp[:2]) * 60 + float(stamp[3:])
+        point = next(q for q in BAR['qualities'] if q['id'] == 'sound')
+        for c in point['compare_beside']:
+            for m in drops:
+                if m['ref'] == c['ref']:
+                    self.assertLessEqual(seconds(c.get('to', c['at'])), seconds(m['at']), c)
+
+    def test_labels_that_add_nothing_are_out_and_labels_that_name_something_stay(self):
+        core = ANSWERS[2].split('labels. ', 1)[1]
+        self.assertTrue(core.startswith("It's just the ones that say"))
+        for number in (1, 7):
+            self.assertIn(f'(Krish, 28 Oct: "{core}")', quality(number), number)
+        typography = quality(7)
+        self.assertIn('(Krish, 28 Oct: "I don\'t mind those labels.")', typography)
+        self.assertIn('Labels that name a source, a date, a record or what is on screen are fine', typography)
+        self.assertIn('no label that names Krish', typography)
+        self.assertNotIn('A label names a record, never a process', typography)
+        self.assertIn('- Whether a piece uses mono labels.', PAGE)
+
+    def test_the_brand_mark_follows_the_brand_book(self):
+        branding = quality(6)
+        self.assertIn(f'(Krish, 28 Oct: "{ANSWERS[3]}")', branding)
+        for source in ('The book gives each lockup one job (p. 04)', 'hands-off rules (p. 05)', '`docs/STUDIO.md` applies the book',
+                       'Where a reference departs from the book', '`docs/brandbooknew/`'):
+            self.assertIn(source, branding)
+        # The bar's own judgment on where the mark sits is gone.
+        for judgment in ('the lockup clearly at the open and the close', "Placement is the brand book's call",
+                         'Whether a small brand mark sits on every frame'):
+            self.assertNotIn(judgment, PAGE)
+        self.assertIn('- Where the references put the brand mark. The brand book places it (quality 6).', PAGE)
+
+    def test_no_illustration_tag_or_test_sticker_is_still_asked_for(self):
+        # Krish, 28 Oct 2026, on the ILLUSTRATION tag and the KRISH'S TEST stickers: "Yes remove those."
+        removed = re.compile(
+            r"ILLUSTRATION present|requires ILLUSTRATION|carries (an|the small) ILLUSTRATION tag because|illustrationLabels"
+            r"|illustration_labels|IllustrationLabel|illustration_tag_required|min_tag_px|plates_labelled"
+            r"|generated pictures carry|labelled as illustration on screen|P<ILLUSTRATION|>ILLUSTRATION<"
+            r"|(producer_label|producerLabel)\"?: \"KRISH'S TEST|provenance sticker slaps|Krish\\?'s test<br>")
+        found = []
+        for top in ('scripts', 'apps/renderer/src', 'packages', 'config/ve', 'docs/ve', 'assets/plates', 'fixtures/ve'):
+            for path in sorted((ROOT / top).rglob('*')):
+                if path.suffix not in ('.py', '.ts', '.tsx', '.json', '.md', '.html') or 'node_modules' in path.parts:
+                    continue
+                for number, line in enumerate(path.read_text(encoding='utf-8', errors='replace').splitlines(), 1):
+                    if removed.search(line):
+                        found.append(f'{path.relative_to(ROOT)}:{number}')
+        self.assertEqual(found, [])
+        four = ruling_line(4)
+        self.assertIn(f'His answer: "{ANSWERS[4]}"', four)
+        self.assertIn('gone for good', four)
+
+    def test_outside_logos_are_the_official_mark_in_full_colour_or_one_colour(self):
         self.assertNotIn('house look', PAGE)
         self.assertNotIn('monochrome', PAGE)
         self.assertNotIn('Google left in full colour', PAGE)
-        branding = PAGE.split('### 6. Branding as a system')[1].split('### 7.')[0]
-        self.assertIn('official marks, unaltered', branding)
-        self.assertIn('Krish\'s decision on rights', branding)
+        branding = quality(6)
+        self.assertIn('the company\'s official mark, in full colour or as a one-colour version of that same official mark, '
+                      'whichever fits the rest of the production', branding)
+        self.assertIn(f'(Krish, 28 Oct: "{ANSWERS[6]}")', branding)
+        self.assertIn('Their shape is never redrawn or altered (`docs/MEDIA_STANDARD.md`)', branding)
+        self.assertNotIn("Krish's decision on rights", PAGE)
+        self.assertIn('the shape is never redrawn or altered', BAR['related']['logos'])
 
     def test_the_gate_is_his_exact_file_approval(self):
         self.assertNotIn('Monday review', PAGE)
@@ -137,8 +299,7 @@ class TheBar(unittest.TestCase):
         self.assertNotIn('–', PAGE, 'no en dashes')
         for spelling in ('color ', 'gray ', 'center '):
             self.assertNotIn(spelling, PAGE.lower())
-        sections = ('## The principle', '## The qualities', '## What is not the bar', '## Reference moments',
-                    '## Open questions for Krish')
+        sections = ('## The principle', '## The qualities', '## What is not the bar', '## Reference moments', RULINGS)
         order = [PAGE.index(s) for s in sections]
         self.assertEqual(order, sorted(order))
         for part in ('**The bar.**', '**In the references.**', '**Below the bar.**', '**Compare beside.**',
@@ -158,7 +319,7 @@ class TheBar(unittest.TestCase):
             self.assertLess(text.index('The rejection floor for'), text.index('Approved standards'))
             for q in BAR['qualities']:
                 self.assertIn(q['name'], text)
-            self.assertEqual(text.count('Identity unconfirmed'), 2)
+            self.assertEqual(text.count('Identity unconfirmed'), 0)
             self.assertIn('never targets', text)
             self.assertIn('Not a reference yet: the long cut (voiceover)', text)
             self.assertTrue(text.endswith(floor_only(maker)), 'the floor after the bar is unchanged')
@@ -234,10 +395,16 @@ class TheBar(unittest.TestCase):
             drifted['reference_moments'][0]['at'] = '0:2'
             drifted['reference_moments'][1]['what'] = drifted['reference_moments'][1]['what'] + ' Changed.'
             drifted['qualities'][1]['compare_beside'][0]['to'] = '00:37'
+            drifted['general']['words'] = GENERAL.replace('good animation', 'great animation')
+            drifted['rulings']['items'][0]['answer'] = ANSWERS[1].replace('lower', 'quieter')
+            drifted['rulings']['items'][4]['status'] = 'ruled'
             path = Path(tmp) / 'reference-cuts.json'
             path.write_text(json.dumps(drifted), encoding='utf-8')
             code, text = run('--check', '--bar-file', str(path))
             self.assertEqual(code, 1)
+            self.assertIn('does not quote his general words exactly', text)
+            self.assertIn('ruling 1: his answer on the page is not the one in the references', text)
+            self.assertIn('ruling 5 is ruled in the references but open on the page', text)
             self.assertIn('the bar: the quality names and the headings', text)
             self.assertIn("'0:2' is not a MM:SS(.f) timestamp", text)
             self.assertIn('reference moment fri23-tall 00:08 to 00:16 is in the references only, or its words differ',
