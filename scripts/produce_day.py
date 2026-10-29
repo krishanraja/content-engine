@@ -27,7 +27,7 @@ Nothing here needs H:. Every input comes from the engine:
   - its takes:              its making record, then scripts/post-pack/recording.py get
   - the music:              scripts/quick-edit/music.py fetch
   - the pictures:           GET /api/library/file for the post's pack, staged where plan_files.py looks
-  - the story intro/outro:  scripts/quick-edit/story_io.py, from the plan's cover-facts.json
+  - the story outro:        scripts/quick-edit/story_io.py, from the plan's cover-facts.json (no intro: HOOK_IS_THE_INTRO)
 
 A fix Krish calls out in words ("in the short version, I botched from 1m11s
 to 1m15s and restarted my sentence", 2026-10-14) sits beside post.json in
@@ -270,23 +270,26 @@ def fetch_pictures(post_path):
 
 
 def story_clips(post_path, work):
-    """The story intro and outro rendered for this piece, both shapes, and Krish's words that let them in."""
+    """The story outro rendered for this piece, both shapes. No story intro:
+    every cut opens straight on the hook (house rule HOOK_IS_THE_INTRO, Krish,
+    2026-10-29: "Let's go with number one for now"), so nothing goes in front."""
     cfg = json.loads(STORY_CONFIG.read_text(encoding='utf-8'))
     approved = cfg.get('approved') or {}
     words = approved.get('words') if isinstance(approved, dict) else None
     if cfg.get('status') != 'approved' or not words:
-        raise Stop('the story intro and outro design is not approved in config/story-intro-outro.json')
+        raise Stop('the story outro design is not approved in config/story-intro-outro.json')
     out = work / 'story-io'
     props = out / 'props.json'
     run([PY, 'scripts/quick-edit/story_io.py', 'props', '--plan', post_path.parent, '--out', props],
-        what='the story intro props')
-    run([PY, 'scripts/quick-edit/story_io.py', 'render', '--piece-props', props, '--out', out], what='rendering the story intro and outro')
-    clips = {shape: {'intro': out / f'intro-{shape}.mp4', 'outro': out / f'outro-{shape}.mp4'} for shape in ('16x9', '9x16')}
+        what='the story outro props')
+    run([PY, 'scripts/quick-edit/story_io.py', 'render', '--piece-props', props, '--out', out, '--only', 'outro-16x9,outro-9x16'],
+        what='rendering the story outro')
+    clips = {shape: {'outro': out / f'outro-{shape}.mp4'} for shape in ('16x9', '9x16')}
     for shape, pair in clips.items():
         for what, path in pair.items():
             if not path.is_file():
                 raise Stop(f'the story {what} for {shape} was not rendered')
-    return clips, f'Krish, {approved.get("on", "")}: {words}'
+    return clips
 
 
 # ---------------------------------------------------------------- the cuts
@@ -312,7 +315,7 @@ def take_edits(post_path):
     return out
 
 
-def make_cuts(post_path, piece, takes_at, music_root, clips, intro_words, work, dry_run):
+def make_cuts(post_path, piece, takes_at, music_root, clips, work, dry_run):
     kit = work / 'kit'
     env = {'MINDMAKE_MUSIC_ROOT': music_root}
     for cut, take in takes_at.items():
@@ -346,8 +349,9 @@ def make_cuts(post_path, piece, takes_at, music_root, clips, intro_words, work, 
             cfg_path.write_text(json.dumps(cfg, indent=2), encoding='utf-8')
             log(f'the {cut} cut takes out what Krish called out: {removals}')
     # The music is sized to the long cut as it will run (trimmed, with the
-    # story intro and outro), not to its raw take: a track a little shorter
-    # than the take still covers the finished cut. Both cuts ask for the same.
+    # story outro), not to its raw take, and both cuts ask for the same. A
+    # track shorter than that starts again under a crossfade (music.py), so
+    # the bed never drops out.
     probe = run([PY, 'scripts/quick-edit/make.py', kit / 'long.json', '--out', work / 'long', '--only', '16x9', '--plan'],
                 env=env, ok=(0, 1), what='measuring the long cut')
     try:
@@ -357,14 +361,12 @@ def make_cuts(post_path, piece, takes_at, music_root, clips, intro_words, work, 
     for cut in SHAPE:
         cfg_path = kit / f'{cut}.json'
         cfg = json.loads(cfg_path.read_text(encoding='utf-8'))
-        cfg['music_seconds'] = round(float(trimmed) + 3.0 + 4.0 + 2.0, 1)
+        cfg['music_seconds'] = round(float(trimmed) + 4.0 + 2.0, 1)
         cfg_path.write_text(json.dumps(cfg, indent=2), encoding='utf-8')
     rendered = {}
     for cut, shape in SHAPE.items():
         cfg_path = kit / f'{cut}.json'
         cfg = json.loads(cfg_path.read_text(encoding='utf-8'))
-        cfg['intro'] = {shape: str(clips[shape]['intro'])}
-        cfg['intro_override'] = intro_words
         cfg['endcard'] = {**(cfg.get('endcard') or {}), shape: str(clips[shape]['outro'])}
         cfg_path.write_text(json.dumps(cfg, indent=2), encoding='utf-8')
         out = work / cut
@@ -424,7 +426,7 @@ def thumbs(post_path, work):
 def review_sheet(src, out):
     """One picture of the whole cut to look at before anyone calls it ready: a
     frame every second, and every quarter second through the first 4 and the
-    last 7 seconds, where the intro and the outro animate. Krish, 2026-10-13:
+    last 7 seconds, where the hook opens and the outro animates. Krish, 2026-10-13:
     "Did you actually watch these?" The runner's one-frame-per-beat previews
     hid a title running off the page."""
     from PIL import Image, ImageDraw
@@ -591,10 +593,10 @@ def main():
             music_root = fetch_music()
             fetch_pictures(post_path)
             check_cards(post_path)
-            clips, words = story_clips(post_path, work)
-            rendered = make_cuts(post_path, piece, takes_at, music_root, clips, words, work, a.dry_run)
+            clips = story_clips(post_path, work)
+            rendered = make_cuts(post_path, piece, takes_at, music_root, clips, work, a.dry_run)
         if a.dry_run:
-            log('dry run: both cuts planned with music, the story intro and outro; nothing rendered, sent or recorded')
+            log('dry run: both cuts planned with music and the story outro, each opening on the hook; nothing rendered, sent or recorded')
             return 0
         thumb = thumbs(post_path, work)
         folder = file_and_record(post_path, piece, rendered, thumb, work)

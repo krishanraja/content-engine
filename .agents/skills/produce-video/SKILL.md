@@ -129,8 +129,8 @@ scripts, the cover, the pictures, the visual gate, the pack) and nothing
 after Video assets (the publish board, the posting) is this skill's to write.
 
 Both cuts render through `scripts/quick-edit/make.py`, the only path that
-makes 16:9 as well as 9:16 and the only one that carries music and an
-opening sting (the Studio renders 9:16 only and refuses both). Each cut is
+makes 16:9 as well as 9:16 and the only one that carries music (the
+Studio renders 9:16 only and refuses it). Each cut is
 its own recording of its own script (house rule TWO_CUTS): the long cut
 renders with `--only 16x9`, the short cut with `--only 9x16`.
 
@@ -165,8 +165,8 @@ itself, stamped with the script it was read from (step 2). He never has to
 give a file name or a piece id. He is asked only when the matcher is unsure,
 in a session's reply to him (the lane holds one board item per take for a
 session, never on his list), and for approvals that are his alone (a music
-track, the mix levels, the sting's design, the story intro and outro
-designs).
+track, the mix levels, the story outro's design, any opening but the hook,
+and a sound under a piece's big moment).
 
 **Descript was retired on 12 October.** That morning his takes were to be
 recorded in Descript; the same afternoon Krish ruled "Descript is
@@ -273,16 +273,15 @@ No one is in its chat.
   --doctor` (or `--doctor --json`). It checks ffmpeg and ffprobe and every
   filter, the caption font, `faster-whisper`, Pillow, Playwright, node, the
   music folder and the archive folder, the music ledger, every approved
-  track's file against its sha256, and the sting for every shape and
-  series. **Exit 1 stops the run**: fix what it names first. A
+  track's file against its sha256, and the opening (the sting is retired:
+  every cut opens on the hook). **Exit 1 stops the run**: fix what it names first. A
   `faster_whisper` that is missing, or that imports but cannot decode a
   second of sound, is a FAIL, because the matcher and make.py both hear the
   takes with it. Install the pinned set, never an unpinned `pip install
   faster-whisper` (its newest pair cannot decode): `python -m pip install
   --require-hashes -r requirements.lock.txt`, or on a runner machine `npm run
-  bootstrap:python`. "No approved track" and "sting still
-  a candidate" are expected until Krish approves them: the cuts then go
-  without them and the report says so. The archive folder is
+  bootstrap:python`. "No approved track" is expected until Krish approves
+  one: the cuts then go without music and the report says so. The archive folder is
   `MINDMAKE_ARCHIVE_ROOT`, else on Windows `runtime.archive_root` in
   `config/studio.json`.
 
@@ -451,9 +450,15 @@ python scripts/quick-edit/kit.py docs/plans/PLAN/post.json --cut short --recordi
 ```
 
 It draws the house end cards for both shapes, the wide frame in the
-subchannel's look, the tall strap, a panel per picture, and writes a
-starter `long.json` or `short.json` for make.py (intro and music on auto,
-the same piece id on both, so both cuts get the same track).
+subchannel's look, the tall cut's dress (the brand's wordmark and the series
+tag in the top corners, from the first frame), a panel per picture, and
+writes a starter `long.json` or `short.json` for make.py (music on auto,
+the same piece id on both, so both cuts get the same track). It never draws
+a name strap: no content refers to Krish (Krish, 2026-10-28: "Remember, no
+content refers to Krish, ever. I still see that popping up from time to
+time. Even articles written are not authored by Krish. My face only, for
+assets and the video format."), and make.py stops on a config that still
+carries a `"strap"`.
 
 - **The scripts** come from the dated drafts the repository keeps beside
   the plan (`docs/plans/DATE-draft-script.md` and `-draft-script-90s.md`),
@@ -501,39 +506,49 @@ base (Krish's house rules win). Say in the report which modules were used,
 and set this cut's pace (cuts a minute, median shot) beside the pace of the
 references they came from. Then ask Krish for his verdict on each one.
 
-**First, the story intro, the audio treatment and the outro card: required
-before the final render** (house rule `STORY_INTRO_OUTRO`). Krish,
-2026-10-12: "when the videos come back bear in mind that I want a proper
-animated branded intro to this specific story visually, the audio
-treatment, and then a proper animated outro card. Across all formats, and
-this should be part of the system moving forward." A cut is finished only
-with all three made for its piece: an animated, branded intro to this
-story, in the 16:9 long cut and the 9:16 short cut; the audio treatment;
-and an animated outro card made for the piece, in both sizes. Design comes
-first, and the designs are his to approve (`krish-design`): read
-`config/story-intro-outro.json`. While its `status` is not `"approved"`,
-say "story intro and outro not designed yet" in one line, in the report and
-on the piece's board item for a home computer, and stop before the final
-render: the kit and `--plan` may go on, but no cut is rendered as finished,
-filed, sent to the library or recorded (`making.py video`) without them.
-Never build or improvise the designs here, and never ship a cut without
-them on anyone's word but Krish's own, quoted.
+**The opening: the hook is the intro** (house rule `HOOK_IS_THE_INTRO`).
+Krish, 2026-10-29, picking option one, "The hook is the intro": "I'd pick
+number one here but I think that we need to test and learn. We need to figure
+out what the right tone is over time based on real engagement. Let's go with
+number one for now." Every cut opens straight on his hook, in the brand's
+dress from its first frame (the tall cut's `dress` from kit.py; the wide
+cut keeps its existing branded frame for now, since which look it should
+have is not yet put to Krish). Nothing goes in front: no story card and no logo
+intro, so leave `"intro"` and `"intro_override"` out of a config. It is his
+choice to test, not a fixed rule: each report records the opening it used
+(`opening`), and another opening is tried only on his own words for that
+piece. Read `.agents/skills/produce-video/references/opening.md`.
+
+**Then the outro card and the audio treatment: required before the final
+render** (house rule `STORY_INTRO_OUTRO`). Krish, 2026-10-12: "when the
+videos come back bear in mind that I want a proper animated branded intro to
+this specific story visually, the audio treatment, and then a proper animated
+outro card. Across all formats, and this should be part of the system moving
+forward." Its intro half was retired on 2026-10-29 (above); the rest stands:
+a cut is finished only with the audio treatment (the bed under the whole cut,
+below) and one calm animated outro card made for the piece, held long enough
+to read, in both sizes (Krish, 2026-10-28: "we also don't need three separate
+outro transitions and screens. Ever."). Design comes first, and the designs
+are his to approve (`krish-design`): read `config/story-intro-outro.json`.
+While its `status` is not `"approved"`, say "story intro and outro not designed yet"
+in one line, in the report and on the piece's board item for a home
+computer, and stop before the final render: the kit and `--plan` may go on,
+but no cut is rendered as finished, filed, sent to the library or recorded
+(`making.py video`) without it. Never build or improvise the design here, and
+never ship a cut without it on anyone's word but Krish's own, quoted.
 
 Approved on 12 October: the stand-off (`config/story-intro-outro.json`,
-`approved`). Render the piece's own clips, then point each cut's config at
-them:
+`approved`). Render the piece's own outro, then point each cut's config at
+it:
 
 ```
 python scripts/quick-edit/story_io.py props --plan docs/plans/PLAN --out WORK/story-io/props.json
-python scripts/quick-edit/story_io.py render --piece-props WORK/story-io/props.json --out WORK/story-io
+python scripts/quick-edit/story_io.py render --piece-props WORK/story-io/props.json --out WORK/story-io --only outro-16x9,outro-9x16
 ```
 
-In `long.json` set `"intro": {"16x9": "WORK/story-io/intro-16x9.mp4"}` and
-`"endcard": {"16x9": "WORK/story-io/outro-16x9.mp4"}` (in `short.json` the
-`9x16` pair), and `"intro_override"` to `"Krish, <approved.on>:
-<approved.words>"` from the config. The intro runs 3 s and the outro 4 s;
-make.py takes an intro of up to 5 s on those words and sizes the music for
-both. `scripts/produce_day.py` does exactly this.
+In `long.json` set `"endcard": {"16x9": "WORK/story-io/outro-16x9.mp4"}`
+(in `short.json` the `9x16` one). The outro runs 4 s; make.py sizes the
+music for it. `scripts/produce_day.py` does exactly this.
 
 ```
 python scripts/quick-edit/make.py WORK/kit/long.json --out WORK/long --only 16x9 --plan
@@ -542,9 +557,13 @@ python scripts/quick-edit/make.py WORK/kit/short.json --out WORK/short --only 9x
 python scripts/quick-edit/make.py WORK/kit/short.json --out WORK/short --only 9x16 --share-mib 29
 ```
 
-- **Plan until clean.** Read `shapes.16x9` (or `9x16`): the sting or why
-  not, the music track or why not, the intro, main, end card and total
-  seconds, and the warnings. A graphic whose words were not found: change
+- **Plan until clean.** Read `shapes.16x9` (or `9x16`): the `opening` (the
+  hook), the music track or why not, the main, end card and total seconds,
+  and the warnings. A plan or render that stops on his name in the captions
+  ("the captions name him", with the time in the cut and in the take) means
+  he said it, or the transcriber heard a self-introduction: cut it with a
+  `remove` row (`{"say": ..., "after": ...}`) and plan again; never caption
+  it, and never turn "Chris" into it. A graphic whose words were not found: change
   its `start` and `end` to the words he actually said and plan again. A
   stumble or restart: `remove` (`{"say": ..., "after": ...}` or
   `{"restart_near": "m:ss"}`). A misheard name: `replacements`. A US
@@ -560,11 +579,21 @@ python scripts/quick-edit/make.py WORK/kit/short.json --out WORK/short --only 9x
 - **Render** each cut from its own recording with its own `--only`. Never
   `--archive` on either run (that files the two cuts in two folders), and
   never one recording for both shapes.
-- Each cut carries the intro sting once Krish has approved one, and the
-  music bed from the ledger when a licensed, approved track fits (read
-  `.agents/skills/produce-video/references/intro-sting.md` and
-  `.agents/skills/produce-video/references/music.md` before this step).
+- Each cut opens on the hook in the brand's dress and carries the music bed
+  from the ledger under the whole cut, low under his voice and never
+  dropping out (Krish, 2026-10-28: "Yes I think music should be audible
+  throughout but just lower."): a track shorter than the cut starts again
+  under a two-second crossfade. Read
+  `.agents/skills/produce-video/references/opening.md` and
+  `.agents/skills/produce-video/references/music.md` before this step.
   Neither ever blocks a render.
+- **No hit sounds yet.** There is no sound-effect system. When one is built
+  it follows Krish's pick of 2026-10-29, "Only the big moment": one sound
+  under a piece's biggest moment (a low thud as BANKRUPT slams in, say) and
+  nothing anywhere else, chosen from a small set played to him first, and
+  nothing used before he approves it by ear. Whether the Epidemic Sound
+  subscription covers sound effects is to be checked, never assumed, and
+  nothing is spent without his yes. Add no sound to a cut today.
 
 **A long episode** (a 15-minute feature Krish called, house rule FEATURE, or a deep cut already recorded under the retired DEEP_CUT) is made to
 `docs/production/one-shot-episode-corpus.md`, the standard Krish gave on 16
@@ -574,9 +603,14 @@ rule (`"max_gap": 0.9, "pad_before": 0.2, "pad_after": 0.3`),
 `"reframe": true` and `"emphasis"` on the pivotal lines, the chapter dividers
 as cues and `"chapters"` for the description's chapter list,
 `"captions": false` with the caption file (`NAME-16x9.srt`) uploaded to
-YouTube, `"end_screen_s": 20`, and `"music_mode": "episode"` with
-`"music_seconds"` so a three-minute track covers the open, the chapter lifts
-and the close. The short cut keeps the house look.
+YouTube, `"end_screen_s": 20`, and `"music_mode": "episode_bed"`: the
+continuous bed, low under his voice the whole way and lifting at each
+chapter card, the track starting again inside a card or under a crossfade
+where a stretch outruns it (`"episode"`, which used to drop the bed between
+the open, the turns and the close, now plays the same, and with no chapter
+cards lifts a little at each spoken chapter turn, as it did before: Krish,
+2026-10-16, "Feel free to raise the music slightly during the section
+dividers."). The short cut keeps the house look.
 
 A 15-minute feature goes through that same one-shot episode path; it is a
 third cut beside the 5-minute and the 90-second, which are made as usual.
@@ -640,14 +674,16 @@ report these numbers back in plain words:
 
 - `loudness.integrated` within -14 plus or minus 1 LU and
   `loudness.true_peak` at most -1.0 dBTP. With music, `bed_to_voice_lu`
-  about 17 and the intro, voice and outro short-term about -16, -14 and
-  -18. `normalisation` should be `linear`; `limited` comes with a warning.
-- `intro_seconds`, `main_seconds`, `outro_seconds`, `total_seconds`, and
-  `music` (the track id, its sha256 and the levels used).
+  about 17 and the voice and outro short-term about -14 and -18 (no intro
+  stretch: the cut opens on his first words). `normalisation` should be
+  `linear`; `limited` comes with a warning.
+- `opening` (`{"kind": "hook"}`), `intro_seconds` (0), `main_seconds`,
+  `outro_seconds`, `total_seconds`, and `music` (the track id, its sha256,
+  the levels used, and where a short track was started again).
 - **The 90 second check is on his speech.** House rule TWO_CUTS gives the
   short cut at most 90 seconds, and story_check holds its script to 225
   words, 90 seconds at 150 words a minute. Krish has not yet ruled whether
-  those 90 seconds include the sting and the 4 second end card, so make.py
+  those 90 seconds include the 4 second end card, so make.py
   checks `main_seconds` (his words alone) and the warning gives
   `total_seconds` beside it. When `main_seconds` is over 90, tighten it with
   `remove` where he stumbled or paused; never speed it up unless Krish has
@@ -664,8 +700,9 @@ report these numbers back in plain words:
   not a stop, and it is his open question in `WORKBENCH.md`.
 - Every other line in `warnings`, said as it is.
 
-Then look, with your own eyes, at `preview-SHAPE-intro.jpg` (when there is
-a sting), every `preview-SHAPE-NN.jpg` (each graphic on its line, its words
+Then look, with your own eyes, at every `preview-SHAPE-NN.jpg` (the first
+one the hook in the brand's dress, the wordmark and the series tag in the
+tall cut's top corners; each graphic on its line, its words
 readable on a phone, captions readable, his eyes in frame in the tall
 shape), `NAME.cut.txt` (misheard names, US spellings, and every number
 whole: "$150,000", "70%") and `thumbs-check.png`. A fault goes back to step 4
@@ -795,19 +832,22 @@ Read `.agents/skills/produce-video/references/backup-machine.md` before running 
 
 Read `.agents/skills/produce-video/references/music.md` before you choose or lay the licensed music bed from the ledger (step 4); it holds this section in full. House rules it carries: MUSIC_BED.
 
-## The intro sting
+## The opening
 
-Read `.agents/skills/produce-video/references/intro-sting.md` before you place the intro sting (step 4); it holds this section in full. House rules it carries: INTRO_STING.
+Read `.agents/skills/produce-video/references/opening.md` before you plan a cut's opening (step 4); it holds this section in full. House rules it carries: HOOK_IS_THE_INTRO (the retired INTRO_STING with it).
 
 ## Walls
 
 - Nothing here posts, publishes, spends or deletes, and nothing is sent to
   anyone. `send.py` only files work in Krish's own library, by his standing
   instruction.
-- No cut is finished, filed or recorded without its story intro, its audio
-  treatment and its outro card, in both sizes, from a design Krish
-  approved (`STORY_INTRO_OUTRO`, `config/story-intro-outro.json`): until
-  then the report says "story intro and outro not designed yet".
+- No cut is finished, filed or recorded without its audio treatment and its
+  one outro card, in both sizes, from a design Krish approved
+  (`STORY_INTRO_OUTRO`, `config/story-intro-outro.json`): until then the
+  report says "story intro and outro not designed yet". Nothing goes in front of the
+  hook (`HOOK_IS_THE_INTRO`).
+- No cut carries his name: no strap, no caption, no on-screen word (Krish,
+  2026-10-28). His face is the only part of him in a cut.
 - Nothing is sent to, read from or published in Descript, which Krish
   retired on 12 October, and nothing in Teleprompter is this skill's: it
   holds his scripts, put there by `make-piece`.
@@ -818,7 +858,7 @@ Read `.agents/skills/produce-video/references/intro-sting.md` before you place t
 - Never browse Drive for audio. Only a ledger track that passes every check
   goes under a video.
 - Never record an approval Krish did not give in words: a track, the
-  levels, the sting, a take the matcher was unsure of, a take of an older
+  levels, an opening, a sound, a take the matcher was unsure of, a take of an older
   script. Never write `--allow-missing`, `--allow-small`, `--krish-words`,
   `"intro_override"`, `"thumbnail_override"` or `"visual_gate_override"`
   words he did not say.

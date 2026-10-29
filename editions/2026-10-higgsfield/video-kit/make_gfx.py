@@ -8,7 +8,7 @@ Writes into this folder:
   gfx/hf-<id>-9x16.png   1080 x 1000, the tall panel
   gfx/hf-<id>-16x9.png   1314 x 1080, the wide panel
   gfx/hf-frame-16x9.png  1920 x 1080, the wide background (speaker column x 657 to 1263 left plain)
-  gfx/hf-strap-9x16.png  1080 x 1920, transparent name strap
+  gfx/hf-strap-9x16.png  1080 x 1920, transparent series strap (no name)
   endcard-9x16.png/.mp4 and endcard-16x9.png/.mp4  4 seconds, 30 fps, silent stereo AAC
 
 Every image is drawn from HTML in Chromium (Playwright) at its exact pixel
@@ -222,10 +222,12 @@ def frame16():
 
 
 def strap():
+    # The name pill is gone: no content refers to Krish (Krish, 2026-10-28: "Remember, no content refers to Krish, ever.
+    # I still see that popping up from time to time. Even articles written are not authored by Krish. My face only, for
+    # assets and the video format."). The edition's published configs stay as records; make.py refuses a strap config.
     return dict(W=1080, H=1920), """
-<div class="strap"><div class="name">Krish Raja</div><div class="ch">under.the.hood</div></div>""", f"""
+<div class="strap"><div class="ch">under.the.hood</div></div>""", f"""
 .strap {{ position: absolute; left: 60px; top: 1500px; display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }}
-.name {{ background: {INK}; color: {CREAM}; font-weight: 800; font-size: 58px; line-height: 1; padding: 16px 30px 18px; border-radius: 999px; }}
 .ch {{ background: {LAV}; color: {INK}; font-family: 'IBM Plex Mono', monospace; font-weight: 700; font-size: 38px; line-height: 1;
        padding: 12px 26px; border-radius: 999px; }}
 """

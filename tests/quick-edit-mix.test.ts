@@ -3,10 +3,12 @@ import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 
-// scripts/quick-edit: the intro sting, the licensed music bed and the final
+// scripts/quick-edit: the opening, the licensed music bed and the final
 // loudness pass. Krish, 2026-10-12: "use it correctly (high volume during the
-// intro, low whilst I am talking, higher during the outro)" and "a 1-2 sec
-// animated make your mind up intro visual before my face comes in".
+// intro, low whilst I am talking, higher during the outro)"; 2026-10-28: "Yes
+// I think music should be audible throughout but just lower."; and 2026-10-29,
+// picking "The hook is the intro" over the 12 October sting: "Let's go with
+// number one for now." (house rule HOOK_IS_THE_INTRO).
 
 const ROOT = join(__dirname, '..')
 const QUICK_EDIT = join(ROOT, 'scripts', 'quick-edit')
@@ -22,19 +24,19 @@ function run(script: string, args: string[] = []) {
 }
 
 describe('quick-edit checks itself', () => {
-  it('make.py --self-test: the cuts, the clock, the previews and the join order', () => {
+  it('make.py --self-test: the cuts, the clock, the previews, the opening, the dress and no name on screen', () => {
     const result = run('make.py', ['--self-test'])
     expect(result.status, result.stdout + result.stderr).toBe(0)
     expect(result.stdout).toMatch(/quick-edit self-test passed: \d+ checks/)
   }, 120_000)
 
-  it('music.py --self-test: the ledger, the pick and a real bed measured against the levels', () => {
+  it('music.py --self-test: the ledger, the pick, a real bed measured against the levels, and a bed that never runs out', () => {
     const result = run('music.py', ['--self-test'])
     expect(result.status, result.stdout + result.stderr).toBe(0)
     expect(result.stdout).toMatch(/music self-test passed: \d+ checks/)
   }, 120_000)
 
-  it('intro.py --self-test: a synthetic sting through the finishing path, and the approval gate', () => {
+  it('intro.py --self-test: a synthetic sting through the finishing path, the approval gate, and the sting retired', () => {
     const result = run('intro.py', ['--self-test'])
     expect(result.status, result.stdout + result.stderr).toBe(0)
     expect(result.stdout).toMatch(/intro self-test passed: \d+ checks/)
@@ -47,7 +49,7 @@ describe('quick-edit checks itself', () => {
   }, 1_200_000)
 })
 
-describe('the music and the sting wait for Krish', () => {
+describe('the music and the opening wait for Krish', () => {
   it('the committed ledger has the agreed shape and proposed levels, and no audio', () => {
     const ledger = JSON.parse(readFileSync(join(ROOT, 'config', 'music-library.json'), 'utf8'))
     expect(ledger.schema_version).toBe(1)
@@ -79,10 +81,16 @@ describe('the music and the sting wait for Krish', () => {
     expect(ledger.root_default_windows.startsWith(`${studio.runtime.drive_root}\\`)).toBe(false)
   })
 
-  it('the sting is 1 to 2 seconds, one composition per shape, rendered per series, and is only used once approved', () => {
+  it('the sting is 1 to 2 seconds, one composition per shape, rendered per series, only used once approved, and retired only on his words', () => {
     const sting = JSON.parse(readFileSync(join(ROOT, 'config', 'intro-sting.json'), 'utf8'))
     expect(sting.schema_version).toBe(1)
-    expect(['candidate', 'approved']).toContain(sting.status)
+    expect(['candidate', 'approved', 'retired']).toContain(sting.status)
+    // Krish, 2026-10-29: "The hook is the intro" (house rule HOOK_IS_THE_INTRO); no cut opens on a sting.
+    if (sting.status === 'retired') {
+      expect(sting.retired.by).toBe('Krish')
+      expect(sting.retired.rule).toBe('HOOK_IS_THE_INTRO')
+      expect(String(sting.retired.words)).toMatch(/^I'd pick number one here/)
+    }
     expect(sting.seconds).toBeGreaterThanOrEqual(1)
     expect(sting.seconds).toBeLessThanOrEqual(2)
     expect(Object.keys(sting.compositions).sort()).toEqual(['16x9', '9x16'])

@@ -4,23 +4,29 @@
 Everything is made here and written under .cache/quick-edit/mix-test only
 (audio and video are never committed): a 20 second voice-like recording
 with pauses and its words file, a looping chord as the music bed with a
-stand-in licence and ledger, a synthetic sting per shape, the graphics and
-the end cards. Then make.py renders three cuts and their reports are checked
-against the levels in config/music-library.json:
+stand-in licence and ledger, a stand-in dress (two corner blocks where
+kit.py's wordmark and series tag go), a synthetic opening clip per shape,
+the graphics and the end cards. Then make.py renders five cuts and their
+reports are checked against the levels in config/music-library.json:
 
-  tall 9x16 and wide 16x9, each with the sting and the bed: the timeline adds
-  up, the file is 30 fps with 48 kHz stereo sound, integrated loudness is
-  -14 +-1 LUFS, true peak is at most -1 dBTP, the bed sits at its intro,
-  voice and outro levels, the gap under the voice is about 17 LU, and the
-  tall logo pill shows only after the sting. The synthetic sting is not the
-  approved house sting, so the configs carry a stand-in "intro_override"
-  (make.py lets a config-named intro through only on that, or when it is the
-  approved house render), and the tall one has a loud tone of its own, which
-  must not reach the mix: the intro stretch still measures at the bed's
-  level. The bed is the track chosen for the piece's needs, both cuts alike;
+  tall 9x16 and wide 16x9 as every cut is made now (house rule
+  HOOK_IS_THE_INTRO, Krish, 2026-10-29): opening straight on the hook, the
+  report saying so ("opening"), the tall cut in its dress from the first
+  frame, over the pictures and off the end card, the wide cut on its branded
+  frame from the first frame; the file is 30 fps with 48 kHz stereo sound,
+  integrated loudness is -14 +-1 LUFS, true peak is at most -1 dBTP, the bed
+  sits at its voice and outro levels, the gap under the voice is about 17
+  LU, and the bed never drops out under the cut (Krish, 2026-10-28: "Yes I
+  think music should be audible throughout but just lower.");
 
-  tall 9x16 as things stand today (the sting a candidate, no approved track):
-  no intro, voice only, and the report says why, at the same loudness.
+  tall and wide with a clip in front, which only Krish's own words for a
+  piece put there ("intro_override"; here a stand-in): the report records
+  the clip as the opening and quotes the words, the tall clip's loud tone of
+  its own never reaches the mix (its stretch measures as the silent wide
+  clip's does), and no logo entrance follows it;
+
+  tall 9x16 with no approved track: voice only, and the report says why, at
+  the same loudness.
 
     python mix_test.py            prints the measured numbers, exits 1 on a miss
 """
@@ -41,7 +47,8 @@ import quality  # noqa: E402
 REPO = HERE.parents[1]
 WORK = REPO / '.cache' / 'quick-edit' / 'mix-test'
 LILAC, MINT, INK = (0xB7, 0xA6, 0xFF), (0x7E, 0xF0, 0xC0), (0x0C, 0x15, 0x12)
-OVERRIDE = 'Krish (a stand-in for the mix test, not his words): open with the synthetic sting'
+OVERRIDE = 'Krish (a stand-in for the mix test, not his words): open with the synthetic clip'
+CORAL = (0xFF, 0x6A, 0x4D)
 TEXT = ('this is a test of the music under the voice and it should sit low while I am talking '
         'then rise again when I stop so the end card has music behind it and the intro is loud '
         'before my face comes in and the whole thing lands at minus fourteen').split()
@@ -102,6 +109,11 @@ def make_media():
     logo = Image.new('RGBA', (1080, 1920), (0, 0, 0, 0))
     ImageDraw.Draw(logo).rounded_rectangle((320, 50, 760, 225), radius=22, fill=MINT + (255,))
     logo.save(WORK / 'logo.png')
+    # The stand-in dress: where kit.py's wordmark (top left) and series tag (top right) sit.
+    dress = Image.new('RGBA', (1080, 1920), (0, 0, 0, 0))
+    ImageDraw.Draw(dress).rectangle((72, 85, 332, 116), fill=MINT + (255,))
+    ImageDraw.Draw(dress).rounded_rectangle((690, 79, 960, 131), radius=26, fill=CORAL + (255,))
+    dress.save(WORK / 'dress.png')
     for asp, size in (('9x16', '1080x1920'), ('16x9', '1920x1080')):
         ff('-f', 'lavfi', '-i', f'color=c=0x0C1512:s={size}:r=30:d=4', '-f', 'lavfi', '-i', 'anullsrc=r=48000:cl=stereo', '-t', '4',
            '-c:v', 'libx264', '-preset', 'ultrafast', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '128k', WORK / f'end-{asp}.mp4')
@@ -135,9 +147,12 @@ def make_media():
                      'start': phrase, 'end': phrase, 'lead': .2, 'tail': .3})
     base = {'source': 'source.mp4', 'words': 'words.json', 'crop': [720, 1280, 0, 0], 'cues': cues, 'frame16': 'frame16.png',
             'endcard': {'9x16': 'end-9x16.mp4', '16x9': 'end-16x9.mp4'}, 'logo': {'png': 'logo.png'}, 'subject': 'Mix test', 'piece_id': 'mix-test'}
-    (WORK / 'full.json').write_text(json.dumps({**base, 'name': 'full', 'intro': {'9x16': 'sting-9x16-loud.mp4', '16x9': 'sting-16x9.mp4'},
+    (WORK / 'hook.json').write_text(json.dumps({**base, 'name': 'hook', 'dress': {'9x16': 'dress.png'}}))
+    (WORK / 'clip.json').write_text(json.dumps({**base, 'name': 'clip', 'intro': {'9x16': 'sting-9x16-loud.mp4', '16x9': 'sting-16x9.mp4'},
                                                 'intro_override': OVERRIDE}))
-    (WORK / 'today.json').write_text(json.dumps({**base, 'name': 'today'}))
+    (WORK / 'bare.json').write_text(json.dumps({**base, 'name': 'bare'}))
+    # No approved track: the committed levels, an empty list.
+    (WORK / 'no-tracks.json').write_text(json.dumps({**ledger, 'tracks': []}, indent=2))
     return ledger['levels']
 
 
@@ -191,60 +206,103 @@ def near(rgb, want, tol=40):
     return all(abs(a - b) <= tol for a, b in zip(rgb, want))
 
 
+def gaps(path, until):
+    """Every stretch of half a second or more under -60 dB in a sound file, up to `until` seconds."""
+    said = subprocess.run(['ffmpeg', '-hide_banner', '-nostats', '-i', str(path), '-t', f'{until:.3f}', '-af', 'silencedetect=noise=-60dB:d=0.5',
+                           '-f', 'null', '-'], capture_output=True, text=True).stderr
+    return [line.split('] ')[1] for line in said.splitlines() if 'silence_start' in line]
+
+
 def main():
     levels = make_media()
     env = {**os.environ, 'MINDMAKE_MUSIC_ROOT': str(WORK / 'music'), 'MINDMAKE_MUSIC_LEDGER': str(WORK / 'music-library.json')}
-    today_env = {k: v for k, v in os.environ.items() if k not in ('MINDMAKE_MUSIC_ROOT', 'MINDMAKE_MUSIC_LEDGER')}
+    bare_env = {**os.environ, 'MINDMAKE_MUSIC_LEDGER': str(WORK / 'no-tracks.json')}
+    bare_env.pop('MINDMAKE_MUSIC_ROOT', None)
     checks, table = [], []
     tol = levels['tolerance_lu']
-    for shape, out in (('9x16', 'tall'), ('16x9', 'wide')):
-        r = render('full.json', out, shape, env)
-        L = r['loudness']
-        final = WORK / out / r['shapes'][shape]['file']
-        info = probe(final)
-        table.append((f'{shape} with sting and bed', r['total_seconds'], L))
-        checks += [
-            (f'{shape}: the sting is 1.5 s and the clock adds up', (r['intro_seconds'], round(r['intro_seconds'] + r['main_seconds'] + r['outro_seconds'], 3)),
-             (1.5, round(r['total_seconds'], 3))),
+
+    def sound(shape, r, L, final, info):
+        return [
             (f'{shape}: 30 fps, every frame there, 48 kHz stereo', (info['fps'], abs(info['frames'] - round(r['total_seconds'] * 30)) <= 1, info['rate'], info['channels']),
              ('30/1', True, 48000, 2)),
             (f'{shape}: the file is as long as the clock', abs(info['seconds'] - r['total_seconds']) <= 0.05, True),
             (f'{shape}: the bed is the approved track', r['music'] and r['music']['track_id'], 'mix-test-chord'),
             (f'{shape}: chosen for the piece\'s needs, the same whichever cut asks', r['music'] and r['music']['chosen_for'], music.piece_needs()),
-            (f'{shape}: the synthetic sting is in on the override\'s words, and the report says so',
-             (r['intro'] and r['intro']['source'], any(OVERRIDE in w for w in r['warnings'])), ('override', True)),
-            (f'{shape}: the sting\'s own sound track is replaced with silence', r['intro'] and r['intro']['own_sound_replaced'], True),
             (f'{shape}: the final pass was a plain gain', L['normalisation'], 'linear'),
             (f'{shape}: integrated {L["integrated"]} LUFS is -14 +-{tol}', abs(L['integrated'] - levels['final_integrated_lufs']) <= tol, True),
             (f'{shape}: true peak {L["true_peak"]} dBTP is at most {levels["max_true_peak_dbtp"]}', L['true_peak'] <= levels['max_true_peak_dbtp'], True),
-            (f'{shape}: the intro {L["intro_short_term"]} LUFS is about {levels["intro_lufs"]}', abs(L['intro_short_term'] - levels['intro_lufs']) <= 1.5, True),
             (f'{shape}: the voice {L["voice_short_term"]} LUFS is about {levels["final_integrated_lufs"]}',
              abs(L['voice_short_term'] - levels['final_integrated_lufs']) <= 1.5, True),
             (f'{shape}: the outro {L["outro_short_term"]} LUFS is about {levels["outro_lufs"]}', abs(L['outro_short_term'] - levels['outro_lufs']) <= 1.5, True),
             (f'{shape}: the bed sits {L["bed_to_voice_lu"]} LU under the voice, about {levels["final_integrated_lufs"] - levels["bed_lufs"]:g}',
              abs(L['bed_to_voice_lu'] - (levels['final_integrated_lufs'] - levels['bed_lufs'])) <= 1.5, True),
-            (f'{shape}: a preview in the sting and the old ones moved on', all((WORK / out / f'preview-{shape}-{n}.jpg').exists() for n in ('intro', '00', '01', '02')), True),
-            (f'{shape}: the sting is the first thing on screen', near(pixel(final, 0.5, (intro.SHAPES[shape][0] // 2, intro.SHAPES[shape][1] // 2)), LILAC), True),
         ]
+
+    # Every cut now: the hook is the intro, in the brand's dress, the bed under all of it.
+    for shape, out in (('9x16', 'hook-tall'), ('16x9', 'hook-wide')):
+        r = render('hook.json', out, shape, env)
+        L = r['loudness']
+        final = WORK / out / r['shapes'][shape]['file']
+        info = probe(final)
+        table.append((f'{shape} on the hook, bed', r['total_seconds'], L))
+        checks += [
+            (f'{shape}: it opens on the hook, nothing in front, and the report records it',
+             (r['shapes'][shape]['opening'], r['intro_seconds'], round(r['main_seconds'] + r['outro_seconds'], 3)),
+             ({'kind': 'hook', 'rule': 'HOOK_IS_THE_INTRO'}, 0.0, round(r['total_seconds'], 3))),
+            (f'{shape}: no intro stretch to measure', L['intro_short_term'], None),
+            (f'{shape}: the bed never drops out under the cut (Krish, 2026-10-28)',
+             gaps(WORK / out / f'audio-{shape}' / 'bed.wav', r['total_seconds'] - 1.0), []),
+            (f'{shape}: the previews start at the opening, none in a clip', ((WORK / out / f'preview-{shape}-intro.jpg').exists(),
+                                                                          all((WORK / out / f'preview-{shape}-{n}.jpg').exists() for n in ('00', '01', '02'))), (False, True)),
+        ] + sound(shape, r, L, final, info)
+        if shape == '9x16':
+            T, M = r['total_seconds'], r['main_seconds']
+            checks += [
+                ('9x16: the dress is on the first frame: the wordmark top left, the series tag top right',
+                 (near(pixel(final, 0.02, (200, 100)), MINT), near(pixel(final, 0.02, (900, 105)), CORAL)), (True, True)),
+                ('9x16: it stays on over the pictures, to the last frame of the main',
+                 (near(pixel(final, M / 2, (200, 100)), MINT), near(pixel(final, M - 0.2, (900, 105)), CORAL)), (True, True)),
+                ('9x16: and is not on the end card', near(pixel(final, T - 1.0, (200, 100)), MINT), False),
+                ('9x16: the old three-second logo is not there', near(pixel(final, 1.0, (540, 140)), MINT), False),
+            ]
+        else:
+            checks.append(('16x9: the branded frame shows beside him from the first frame', near(pixel(final, 0.02, (100, 540)), MINT), True))
+
+    # A clip in front only on Krish's own words: recorded as the opening, its sound never mixed.
+    for shape, out in (('9x16', 'clip-tall'), ('16x9', 'clip-wide')):
+        r = render('clip.json', out, shape, env)
+        L = r['loudness']
+        final = WORK / out / r['shapes'][shape]['file']
+        table.append((f'{shape} with a clip, bed', r['total_seconds'], L))
+        checks += [
+            (f'{shape}: the clip is 1.5 s and the clock adds up', (r['intro_seconds'], round(r['intro_seconds'] + r['main_seconds'] + r['outro_seconds'], 3)),
+             (1.5, round(r['total_seconds'], 3))),
+            (f'{shape}: the report records the clip as the opening, in on the override\'s words',
+             (r['shapes'][shape]['opening']['kind'], r['intro'] and r['intro']['source'], any(OVERRIDE in w for w in r['warnings'])), ('clip', 'override', True)),
+            (f'{shape}: the clip\'s own sound track is replaced with silence', r['intro'] and r['intro']['own_sound_replaced'], True),
+            (f'{shape}: the intro {L["intro_short_term"]} LUFS is about {levels["intro_lufs"]}', abs(L['intro_short_term'] - levels['intro_lufs']) <= 1.5, True),
+            (f'{shape}: the clip is the first thing on screen', near(pixel(final, 0.5, (intro.SHAPES[shape][0] // 2, intro.SHAPES[shape][1] // 2)), LILAC), True),
+            (f'{shape}: the bed never drops out under the cut', gaps(WORK / out / f'audio-{shape}' / 'bed.wav', r['total_seconds'] - 1.0), []),
+        ] + sound(shape, r, L, final, probe(final))
         if shape == '9x16':
             I = r['intro_seconds']
             checks += [
-                ('9x16: no logo pill over the sting', near(pixel(final, I - 0.3, (540, 140)), MINT), False),
-                ('9x16: no second logo entrance follows the branded intro', near(pixel(final, I + 1.0, (540, 140)), MINT), False),
-                ('9x16: and is gone by 3 s into the main, as before', near(pixel(final, I + 3.3, (540, 140)), MINT), False),
+                ('9x16: no logo pill over the clip', near(pixel(final, I - 0.3, (540, 140)), MINT), False),
+                ('9x16: no second logo entrance follows it', near(pixel(final, I + 1.0, (540, 140)), MINT), False),
             ]
-    tall_intro, wide_intro = (L['intro_short_term'] for _, _, L in table[:2])
-    checks.append((f'9x16: the sting\'s loud tone stays out: its intro {tall_intro} LUFS matches the silent wide sting\'s {wide_intro}',
+    tall_intro, wide_intro = (L['intro_short_term'] for name, _, L in table if 'with a clip' in name)
+    checks.append((f'9x16: the clip\'s loud tone stays out: its intro {tall_intro} LUFS matches the silent wide clip\'s {wide_intro}',
                    abs(tall_intro - wide_intro) <= 0.3, True))
-    r = render('today.json', 'today', '9x16', today_env)
+
+    r = render('bare.json', 'bare', '9x16', bare_env)
     L = r['loudness']
-    table.append(('9x16 as today, voice only', r['total_seconds'], L))
+    table.append(('9x16 with no approved track', r['total_seconds'], L))
     checks += [
-        ('today: no sting while it is a candidate, and the report says why', (r['intro_seconds'], any('candidate' in w for w in r['warnings'])),
-         (0.0, intro.load()['status'] == 'candidate')),
-        ('today: no music without an approved track, and the report says why', (r['music'], any('voice only' in w for w in r['warnings'])), (None, True)),
-        (f'today: integrated {L["integrated"]} LUFS is -14 +-{tol}', abs(L['integrated'] - levels['final_integrated_lufs']) <= tol, True),
-        (f'today: true peak {L["true_peak"]} dBTP is at most {levels["max_true_peak_dbtp"]}', L['true_peak'] <= levels['max_true_peak_dbtp'], True),
+        ('no track: it opens on the hook, and nothing is said about a sting', (r['shapes']['9x16']['opening']['kind'], any('sting' in w for w in r['warnings'])),
+         ('hook', False)),
+        ('no track: voice only, and the report says why', (r['music'], any('voice only' in w for w in r['warnings'])), (None, True)),
+        (f'no track: integrated {L["integrated"]} LUFS is -14 +-{tol}', abs(L['integrated'] - levels['final_integrated_lufs']) <= tol, True),
+        (f'no track: true peak {L["true_peak"]} dBTP is at most {levels["max_true_peak_dbtp"]}', L['true_peak'] <= levels['max_true_peak_dbtp'], True),
     ]
     print(f'{"cut":28} {"secs":>6} {"integ":>6} {"peak":>6} {"intro":>6} {"voice":>6} {"outro":>6} {"gap":>5}')
     for name, secs, L in table:
