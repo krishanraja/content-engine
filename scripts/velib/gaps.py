@@ -3,16 +3,21 @@
 A gap is time that neither aligner hears as speech. It counts only when it is at least MIN_GAP_S long, and a join
 inside it keeps CLEARANCE_S from the nearest word edge of either aligner. Crossfades at a join last 20 to 40 ms.
 
-Meeting point (29 Oct 2026): the W2.4 gates worker writes the QC side of this rule (claude/w2-4-gates-ve). Whichever
-lands second keeps this module and deletes its own copy, so one function holds the thresholds for the dialogue
-editor (velib.conform) and the joins gate alike.
+One rule (29 Oct 2026): the gaps come from scripts/cutgates/gaps.py and the 80 ms and 30 ms thresholds from
+config/gates.json `joins`, the same rule the joins gate holds every cut to. This module only adapts it to the
+dialogue editor's words (onset_s, end_s) and adds what conform alone needs: crossfades and the cut point.
 """
 from __future__ import annotations
 
 import math
+import sys
+from pathlib import Path
 
-MIN_GAP_S = 0.080
-CLEARANCE_S = 0.030
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))  # scripts/, for the shared cutgates package
+from cutgates import gaps as _shared, settings as _settings  # noqa: E402
+
+MIN_GAP_S = _settings.rule('joins')['min_gap_ms'] / 1000
+CLEARANCE_S = _settings.rule('joins')['clearance_ms'] / 1000
 CROSSFADE_MIN_S = 0.020
 CROSSFADE_MAX_S = 0.040
 
@@ -47,16 +52,12 @@ def agreed_gaps(words_a, words_b, *, start_s: float = 0.0, end_s: float | None =
     Both aligners must have heard something: a single clock cannot agree with itself."""
     if not words_a or not words_b:
         raise ValueError('agreed gaps need two aligners; a single clock cannot agree with itself')
-    spans = speech(words_a, words_b)
-    last = spans[-1][1] if end_s is None else float(end_s)
-    out, cursor = [], float(start_s)
-    for onset, end in spans:
-        if onset - cursor >= min_gap_s - 1e-9:
-            out.append((cursor, onset))
-        cursor = max(cursor, end)
-    if last - cursor >= min_gap_s - 1e-9:
-        out.append((cursor, last))
-    return out
+    speech(words_a, words_b)  # validates both clocks
+    timed = {name: [{'w': w.get('word', ''), 's': w['onset_s'], 'e': w['end_s']} for w in words]
+             for name, words in (('a', words_a), ('b', words_b))}
+    last = max(w['end_s'] for w in list(words_a) + list(words_b)) if end_s is None else float(end_s)
+    return [(g['from_s'], min(g['to_s'], last)) for g in _shared.agreed_gaps(timed, float(start_s), last)
+            if min(g['to_s'], last) - g['from_s'] >= min_gap_s - 1e-9]
 
 
 def join_problem(at_s: float, gaps, *, clearance_s: float = CLEARANCE_S) -> str | None:
