@@ -499,6 +499,19 @@ def main():
             planned = plan(kit_root(source), a.prefix, a.purpose, brand_kit=True)
         else:
             planned = plan(a.folder, a.prefix, a.purpose)
+        if a.folder and (Path(a.folder) / MANIFEST).is_file():
+            # W3.5: the post folder is bound to its piece and its name freezes at the first send.
+            import post_binding
+            pack = json.loads((Path(a.folder) / MANIFEST).read_text(encoding='utf-8'))
+            piece = str(pack.get('piece_id') or '') or making.piece_id_of(Path(a.folder) / 'post.json')
+            if piece and pack.get('post_folder'):
+                try:
+                    record = making.record_of(piece)
+                except Exception as error:  # noqa: BLE001 - no record read, no send: the freeze cannot be checked
+                    raise SendError(f'the piece\'s record could not be read, so its folder name cannot be checked: {error}')
+                why = post_binding.frozen_problem(record, pack['post_folder'])
+                if why:
+                    raise SendError(why)
         if a.dry_run:
             for target, path, why in planned:
                 print(f'{target}  ({size_text(path.stat().st_size)})\n    {why}')

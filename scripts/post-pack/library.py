@@ -67,6 +67,9 @@ CONTENT_TYPES = {
 WINDOWS_UNSAFE = re.compile(r'[<>:"\\|?*]')
 CONTROL = re.compile('[\x00-\x1f\x7f-\x9f]')
 RESERVED = re.compile(r'(?:con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\..*)?', re.I)
+# W3.5: a canary or test post never reaches the real library, and a rendered video lives only in 3 Video.
+TEST_SUBJECT = re.compile(r'\b(?:canary|smoke[- ]test|dry[- ]run|fixture)\b|^(?:test|tests|testing)\b|\((?:test|canary)\)', re.I)
+RENDERS = ('mp4', 'mov', 'webm')
 
 
 class LibraryError(ValueError):
@@ -146,9 +149,14 @@ def refusal(path):
             return 'path_no_file'
         if not is_post_folder(parts[1]):
             return 'path_post_folder_invalid'
+        if TEST_SUBJECT.search(parts[1].split(' - ', 1)[1]):
+            return 'path_test_folder'
         inside = parts[2:]
         if not (inside == [POST_README] if len(inside) == 1 else inside[0] in POST_SECTIONS):
             return 'path_post_section_invalid'
+        last = parts[-1]
+        if inside[0] != VIDEO and last.rfind('.') > 0 and last.rsplit('.', 1)[1].lower() in RENDERS:
+            return 'path_render_outside_video'
     elif len(parts) < 2:
         return 'path_no_file'
     name = parts[-1]
@@ -177,6 +185,8 @@ REFUSALS = {
     'path_post_folder_invalid': 'the post folder is not named "YYYY-MM-DD Day subchannel - Subject" (or "YYYY-MM-DD Launch - Subject") with the day the date fell on',
     'path_post_section_invalid': f'inside a post folder a file goes in {", ".join(POST_SECTIONS)}, or is the {POST_README}',
     'path_type_not_allowed': 'the library does not take this kind of file',
+    'path_test_folder': 'it is a canary or test post; those never go into the real library',
+    'path_render_outside_video': f'a rendered video goes in {VIDEO} of its post, nowhere else',
 }
 
 

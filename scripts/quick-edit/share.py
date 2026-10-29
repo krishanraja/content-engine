@@ -23,8 +23,22 @@ def share_copy(src, dst, cap_mib=29.0, audio_kbps=128):
     secs = probe_seconds(src)
     budget_kbps = cap_mib * 1024 * 1024 * 8 / 1000 / secs * 0.96  # 4% for container and rate wobble
     v_kbps = int(budget_kbps - audio_kbps)
-    if v_kbps < 400:
-        raise SystemExit(f'cap too small: {v_kbps} kbps left for video over {secs:.1f}s')
+    # A copy that lands over the cap (rate wobble on a busy picture) is made again at a lower target, twice at most.
+    for attempt in range(3):
+        if v_kbps < 400:
+            raise SystemExit(f'cap too small: {v_kbps} kbps left for video over {secs:.1f}s')
+        _encode(src, dst, v_kbps, audio_kbps)
+        size = os.path.getsize(dst) / 1024 / 1024
+        if size < cap_mib:
+            break
+        v_kbps = int(v_kbps * cap_mib / size * 0.95)
+    if size >= cap_mib:
+        raise SystemExit(f'{dst} is {size:.1f} MiB, over the {cap_mib} MiB cap')
+    return {'file': dst, 'seconds': round(secs, 2), 'video_kbps': v_kbps, 'mib': round(size, 2), 'cap_mib': cap_mib,
+            'attempts': attempt + 1}
+
+
+def _encode(src, dst, v_kbps, audio_kbps):
     with tempfile.TemporaryDirectory() as tmp:
         log = os.path.join(tmp, 'pass')
         common = ['-c:v', 'libx264', '-preset', 'medium', '-b:v', f'{v_kbps}k',
@@ -35,10 +49,6 @@ def share_copy(src, dst, cap_mib=29.0, audio_kbps=128):
         subprocess.run(['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error', '-i', src, *common,
                         '-pass', '2', '-c:a', 'aac', '-b:a', f'{audio_kbps}k', '-ar', '48000',
                         '-movflags', '+faststart', dst], check=True)
-    size = os.path.getsize(dst) / 1024 / 1024
-    if size >= cap_mib:
-        raise SystemExit(f'{dst} is {size:.1f} MiB, over the {cap_mib} MiB cap')
-    return {'file': dst, 'seconds': round(secs, 2), 'video_kbps': v_kbps, 'mib': round(size, 2)}
 
 
 def main():

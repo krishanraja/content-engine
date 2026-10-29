@@ -28,6 +28,7 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `docs/plans/`
 - `docs/production/`
 - `docs/prompts/`
+- `docs/proposals/`
 - `docs/research/`
 - `docs/ve/`
 - `docs/walks/`
