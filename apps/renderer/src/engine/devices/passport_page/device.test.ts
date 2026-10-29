@@ -48,8 +48,9 @@ describe('passport_page', () => {
   it('normalises two MRZ lines to uppercase with filler and a fixed width', () => {
     expect(mrzLine('p<example name')).toBe('P<EXAMPLE<NAME'.padEnd(42, '<'))
     expect(mrzLine('a'.repeat(100))).toHaveLength(42)
-    expect(html()).toContain('P&lt;ILLUSTRATION&lt;')
-    expect(html()).not.toContain('sample&lt;not')
+    // Neutral filler: the machine line spells no ILLUSTRATION tag or disclaimer (Krish, 28 Oct 2026: "Yes remove those.").
+    expect(html()).toContain('P' + '&lt;'.repeat(41))
+    expect(html()).not.toMatch(/ILLUSTRATION|NOT&lt;A&lt;CLAIM|p&lt;/)
   })
   it('prints flags separately, keeps geometry level, and bleeds a 900px page off the bottom', () => {
     const markup = html()

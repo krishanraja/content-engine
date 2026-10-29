@@ -1,6 +1,6 @@
 {
   "format": "hand-held-screen",
-  "note": "Derived from the approved illustration plates (hand with phone, cotton, server hardware) by build_plates.py; see docs/ve/design/formats/ref/H/build_plates.py. Generated illustration: every frame that shows one carries the ILLUSTRATION tag.",
+  "note": "Derived from the approved illustration plates (hand with phone, cotton, server hardware) by build_plates.py; see docs/ve/design/formats/ref/H/build_plates.py. Generated illustration, never evidence; no ILLUSTRATION tag on screen (Krish, 28 Oct 2026).",
   "approved_by": "Krish",
   "approved_on": "2026-10-28",
   "source_prompt": "not recorded: made in a Codex imagegen session on 2026-10-24 (Documents/Codex/2026-10-24/.../motion-v6/assets)",

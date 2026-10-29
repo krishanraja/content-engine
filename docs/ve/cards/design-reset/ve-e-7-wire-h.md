@@ -24,7 +24,7 @@ All devices for format `hand-held-screen` now exist (`hand_phone_stage`, `headli
 5. `docs/ve/design/formats/H-wiring.md` (under 3 KB): the object list per beat, the cue words, where each number came from, and the exact `ve lint|compile|render|qc` commands for the proof.
 
 ## Tests: `tests/ve_wire_h_test.py` (unittest)
-The spec lints clean with no legacy note; compile produces props whose beats equal the lock's names and layouts are all STAGE; `params` survive compile; an `illustrationLabels` entry covers every beat; each beat has exactly one scribble object in use; every device named in the spec is in `config/ve/devices.json` and every verb used is allowed for it; every event frame lies inside its beat; the props validate (use the same TS or JSON-schema route the other compile tests use); existing ve tests pass.
+The spec lints clean with no legacy note; compile produces props whose beats equal the lock's names and layouts are all STAGE; `params` survive compile; the props carry no ILLUSTRATION tag; each beat has exactly one scribble object in use; every device named in the spec is in `config/ve/devices.json` and every verb used is allowed for it; every event frame lies inside its beat; the props validate (use the same TS or JSON-schema route the other compile tests use); existing ve tests pass.
 
 ## Acceptance
 python tests/ve_wire_h_test.py

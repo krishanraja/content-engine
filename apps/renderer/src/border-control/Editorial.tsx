@@ -34,7 +34,6 @@ function Scene({id,p}:{id:string;p:ShortProps}){
  {id==='S01-hook'&&<>
   <Atmosphere a={a}/><GenericPhone a={a} name={['DeepSeek','Qwen','Claude','ChatGPT'][Math.min(3,Math.floor(f/42))]!}/>
   <g opacity={go(f,18,40)}><Pen d="M312 514Q750 560 762 1210M722 1172L762 1220L801 1170" progress={go(f,18,76)}/><Text x={760} y={1430} font={display} size={250} fill={M} anchor="middle">?</Text></g>
-  <Text x={540} y={1835} anchor="middle" size={42}>ILLUSTRATION</Text>
  </>}
  {(id==='S02-airbnb'||id==='S03-fling')&&<>
   <image href={a.chesky} x={0} y={0} width={1080} height={1180} preserveAspectRatio="xMidYMid slice"/>
@@ -70,14 +69,13 @@ function Scene({id,p}:{id:string;p:ShortProps}){
   <Atmosphere a={a}/><GenericPhone a={a} name="Claude" f={f}/>
   <Pen d="M193 449Q145 394 296 406L481 455Q551 513 479 588L213 537Q167 509 193 449" progress={go(f,34,87)} width={10}/>
   <g opacity={go(f,15,35)}><Text x={95} y={1330} size={52}>BORN</Text><Flag a={a} k="us" x={310} y={1260} w={130}/><Text x={490} y={1330} size={62}>USA</Text></g>
-  <Text x={540} y={1835} anchor="middle" size={42}>ILLUSTRATION</Text>
  </>}
  {(id==='S09-work'||id==='S10-flagged')&&<>
   <Photo src={a.cotton!}/><rect width={1080} height={700} fill={I} opacity={.36}/>
   <Text x={75} y={150} size={50}>MY TEST</Text>
   {(id==='S09-work'?['Claude','ChatGPT','DeepSeek']:['Claude','ChatGPT']).map((name,i)=><g key={name} opacity={go(f,i*9,i*9+18)}><rect x={70+i*330} y={235} width={280} height={250} fill={I} opacity={.92}/><Mark a={a} name={name} x={130+i*330} y={265} w={150}/><Text x={210+i*330} y={480} size={42} font={sans} anchor="middle">{name}</Text></g>)}
   {id==='S09-work'?<g opacity={go(f,145,160)}><Flag a={a} k="cn" x={665} y={650} w={100}/><Text x={630} y={820} size={53}>XINJIANG</Text></g>:<g><Pen d="M300 530Q780 560 770 1205M734 1167L771 1211L809 1163" progress={go(f,4,29)} width={15}/><g transform="translate(800 1300) rotate(-18)" filter="url(#pen-fibre)" opacity={go(f,20,28)}><path d="M0 -92Q10 -99 18 -83L100 65Q109 80 90 82L-93 80Q-108 80 -98 62Z" fill={P} fillOpacity={.94} stroke={R} strokeWidth={11} pathLength={1} strokeDasharray={1} strokeDashoffset={1-go(f,20,42)}/><path d="M3 -42L3 14M3 43L3 46" stroke={R} strokeWidth={14} strokeLinecap="round" opacity={go(f,36,44)}/></g></g>}
-  <rect y={1720} width={1080} height={200} fill="url(#ink-fade)"/><Text x={540} y={1840} size={42} anchor="middle">ILLUSTRATION</Text>
+  <rect y={1720} width={1080} height={200} fill="url(#ink-fade)"/>
  </>}
  {id==='S13-do'&&<>
   <Atmosphere a={a}/>
@@ -86,7 +84,6 @@ function Scene({id,p}:{id:string;p:ShortProps}){
   <g transform={`translate(${380+250*(1-go(f,133,164))} 640) scale(.79)`} opacity={go(f,133,164)}><g mask="url(#second-phone-mask)"><GenericPhone a={a} name="ChatGPT" f={100}/></g></g>
   <g opacity={1-go(f,121,135)}><Text x={700} y={1430} size={250} font={display} fill={M}>?</Text><Pen d="M200 1290Q610 1460 735 1350" progress={go(f,22,66)} width={16}/></g>
   <Pen d="M295 570C650 620 390 850 650 1015M605 1016L658 1020L642 969" progress={go(f,166,190)} width={13}/>
-  <Text x={540} y={1835} size={42} anchor="middle">ILLUSTRATION</Text>
  </>}
  {id==='S14-close'&&<>
   <Atmosphere a={a}/><image href={a.wordmark} x={85} y={740} width={910} height={135}/><Text x={540} y={1000} size={66} anchor="middle" font={sans}>makeyourmindup.ai</Text>

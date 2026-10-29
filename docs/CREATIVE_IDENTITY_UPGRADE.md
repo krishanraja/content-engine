@@ -424,7 +424,8 @@ parameters, accessibility, fallback and tests, following
 `docs/ART_DIRECTOR_REPERTOIRE.md`. Check overlap with
 `progressive-value-reveal` and reuse it inside the money map where that is
 cleaner. Automatic layout for 2 to 12 elements, with a grouping rule above
-that. Generated imagery inside the product shot is labelled as illustration.
+that. Generated imagery inside the product shot never stands in for evidence
+and carries no ILLUSTRATION tag (Krish, 28 Oct 2026: "Yes remove those.").
 
 **Degraded mode.** The minimum graph renders the same device with fewer
 elements. Shares and ranges render as shares and ranges. A part without an

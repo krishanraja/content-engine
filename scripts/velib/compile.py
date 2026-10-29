@@ -150,7 +150,6 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         return by_word[index]['atFrame']
 
     beats = []
-    illustration_labels = []
     events = []
     selected = cut['beats']
     device_verbs = load_json(ROOT / 'config' / 've' / 'devices.json')['devices']
@@ -188,8 +187,6 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         if isinstance(fraction, bool) or not isinstance(fraction, (int, float)) or not 0 <= fraction < 1:
             raise ValueError(f'beat {beat["id"]}: keyFrames fraction must be in [0, 1)')
         beats[-1]['keyFrame'] = min(end - 1, start + round((end - start) * fraction))
-        if plate_backed:
-            illustration_labels.append({'fromFrame': start, 'toFrame': end, 'text': 'ILLUSTRATION'})
         for event_index, event in enumerate(beat.get('events', [])):
             event_frame = at(event['at_w'])
             if not start <= event_frame < end:
@@ -224,7 +221,7 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
             for value in node:
                 check_generated(value)
         elif isinstance(node, str) and node.replace('\\', '/').removeprefix('./') in generated:
-            raise ValueError(f'generated asset {node}: illustration labels arrive in Phase 2')
+            raise ValueError(f'generated asset {node}: the generated assets pipeline arrives in Phase 2')
 
     for obj in spec.get('objects', []):
         if obj['obj'] not in used:
@@ -275,7 +272,7 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         'segments': [] if spec['audio']['master'] == 'vo' else [
             {'src': take, 'trimBeforeFrames': 0, 'fromFrame': 0, 'durationFrames': duration}],
         'audio': {'stem': {'src': resolve_source(f'audio.{cut_id}.wav'), 'trimBeforeFrames': 0}, 'sfx': []},
-        'captions': captions, 'beats': beats, 'objects': objects, 'events': events, 'illustrationLabels': illustration_labels,
+        'captions': captions, 'beats': beats, 'objects': objects, 'events': events,
     }
     sfx, missing = [], []
     kit_path = ROOT / 'config' / 've' / 'sfx-kits' / f"{spec['audio']['sfx_kit']}.json"

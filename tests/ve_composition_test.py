@@ -8,7 +8,7 @@ import sys
 import tempfile
 import unittest
 import uuid
-from contextlib import redirect_stdout
+from contextlib import redirect_stderr, redirect_stdout
 from unittest.mock import patch
 
 sys.dont_write_bytecode = True
@@ -48,7 +48,7 @@ class Composition(unittest.TestCase):
             with self.subTest(fixture=path.name):
                 # H-f4 shows the real recording: its text is evidence, exempt by design.
                 exempt = [(0, 440, 1080, 740)] if path.name == 'H-f4.jpg' else []
-                report = comp.measure(path, self.lock, plate_on_screen=approved, exempt=exempt)
+                report = comp.measure(path, self.lock, exempt=exempt)
                 fill = report['checks']['fill_pct']['value']
                 print(f'{path.name}: fill_pct={fill:.2f}')
                 self.assertEqual(report['pass'], approved, report['findings'])
@@ -85,15 +85,18 @@ class Composition(unittest.TestCase):
         self.assertTrue(self.measure([self.word(y=1750)])['checks']['platform_zone']['pass'])
         self.assertTrue(self.measure([self.word(h=14, conf=59)])['checks']['small_text']['pass'])
 
-    def test_illustration_and_neighbours(self):
-        self.assertFalse(self.measure(plate_on_screen=True)['checks']['illustration']['pass'])
-        self.assertTrue(self.measure([self.word(text='ILLUSTRATION')], plate_on_screen=True)['checks']['illustration']['pass'])
-        words = [self.word(text='ILLUS', w=60), self.word(text='TRATION', x=170, w=85)]
-        self.assertTrue(self.measure(words, plate_on_screen=True)['checks']['illustration']['pass'])
-        words[1]['y'] = 700
-        self.assertFalse(self.measure(words, plate_on_screen=True)['checks']['illustration']['pass'])
-        letters = [self.word(text=letter, x=100 + i * 22, w=16) for i, letter in enumerate('ILLUSTRATION')]
-        self.assertTrue(self.measure(letters, plate_on_screen=True)['checks']['illustration']['pass'])
+    def test_no_illustration_tag_is_checked_or_required(self):
+        # Krish, 28 Oct 2026, on the ILLUSTRATION tag: "Yes remove those." A frame on a plate passes with no tag, and
+        # no word gets the tag's smaller-text allowance any more.
+        report = comp.measure(Image.new('RGB', (1080, 1920), 'white'), self.lock, ocr_words=[self.word()])
+        self.assertTrue(report['pass'], report['findings'])
+        self.assertNotIn('illustration', report['checks'])
+        with self.assertRaises(TypeError):
+            self.measure(plate_on_screen=True)
+        for key in ('illustration_tag_required', 'min_tag_px'):
+            self.assertNotIn(key, self.lock['thresholds'])
+        self.assertNotIn('illustration_tag', self.lock['type_roles'])
+        self.assertFalse(self.measure([self.word(text='ILLUSTRATION', h=17)])['checks']['small_text']['pass'])
 
     def test_single_letters_still_obey_zones(self):
         self.assertTrue(self.measure([self.word(text='A', h=10)])['checks']['small_text']['pass'])
@@ -115,7 +118,7 @@ class Composition(unittest.TestCase):
         with patch.object(comp.shutil, 'which', return_value=None):
             with self.assertRaisesRegex(OSError, 'tesseract'):
                 comp.measure(self.image(), self.lock)
-        self.assertEqual(qc_captions.spaceless_match('ILLUSTRATION', 'ILLUS TRATION'), 1)
+        self.assertEqual(qc_captions.spaceless_match('XINJIANG', 'XIN JIANG'), 1)
 
     def test_exempt_only_silences_its_own_text(self):
         words = [self.word(text='FIRST', x=10, h=14), self.word(text='SECOND', x=1000, h=14)]
@@ -123,8 +126,6 @@ class Composition(unittest.TestCase):
         self.assertEqual([w['text'] for w in report['checks']['small_text']['value']], ['SECOND'])
         self.assertFalse(report['checks']['platform_zone']['pass'])
         self.assertFalse(report['checks']['fill_pct']['pass'])
-        self.assertFalse(self.measure([self.word(text='ILLUSTRATION')], plate_on_screen=True,
-                                     exempt=[(90, 490, 200, 100)])['checks']['illustration']['pass'])
 
     @unittest.skipUnless(shutil.which('tesseract'), 'tesseract is missing')
     def test_real_font_ocr(self):
@@ -135,11 +136,6 @@ class Composition(unittest.TestCase):
             words = comp._words(image)
             self.assertTrue(any(w['conf'] >= 60 for w in words), words)
             self.assertEqual(not report['checks']['small_text']['pass'], small, report)
-        image = self.image()
-        ImageDraw.Draw(image).text((100, 100), 'ILLUSTRATION', font=ImageFont.truetype(str(FONT), 28), fill='white')
-        report = comp.measure(image, self.lock, plate_on_screen=True)
-        self.assertTrue(report['checks']['illustration']['pass'], report)
-        self.assertTrue(report['checks']['small_text']['pass'], report)
 
     def test_canvas_and_wide(self):
         with self.assertRaises(ValueError):
@@ -163,8 +159,7 @@ class Composition(unittest.TestCase):
                        capture_output=True, check=True)
         props = {'aspect': '9:16', 'beats': [dict(id='one', fromFrame=0, toFrame=30, keyFrame=7),
                                            dict(id='two', fromFrame=30, toFrame=60)],
-                 'captions': [dict(fromFrame=0, toFrame=30, words=[dict(text='Hello')])],
-                 'illustrationLabels': [dict(fromFrame=30, toFrame=60, text='ILLUSTRATION')]}
+                 'captions': [dict(fromFrame=0, toFrame=30, words=[dict(text='Hello')])]}
         original = comp.measure
         calls = []
 
@@ -176,10 +171,9 @@ class Composition(unittest.TestCase):
             report = comp.composition_checks(video, props, self.lock)
         self.assertEqual([row['frame'] for row in report['beats'].values()], [7, 54])
         self.assertEqual(calls[0]['caption_words'], {'hello'})
-        self.assertFalse(calls[0]['plate_on_screen'])
-        self.assertTrue(calls[1]['plate_on_screen'])
+        self.assertFalse(any('plate_on_screen' in call for call in calls))
         self.assertTrue(report['beats']['one']['pass'])
-        self.assertFalse(report['beats']['two']['pass'])
+        self.assertTrue(report['beats']['two']['pass'])
 
     def test_qc_wiring_and_cli(self):
         with patch.object(qc, 'loudness', return_value={'integrated_lufs': -14, 'true_peak_dbtp': -1}), \
@@ -192,9 +186,12 @@ class Composition(unittest.TestCase):
         self.assertFalse(report['checks']['composition']['pass'])
         self.assertIn('composition', report)
         with patch.object(comp, 'measure', return_value={'pass': False, 'checks': {}, 'findings': ['fill 0%, needs 80%.']}), \
-                patch.object(sys, 'argv', ['ve', 'comp', 'one.png', '--plate', '--json']), redirect_stdout(io.StringIO()) as output:
+                patch.object(sys, 'argv', ['ve', 'comp', 'one.png', '--json']), redirect_stdout(io.StringIO()) as output:
             self.assertEqual(ve.main(), 1)
         self.assertFalse(json.loads(output.getvalue())['one.png']['pass'])
+        with patch.object(sys, 'argv', ['ve', 'comp', 'one.png', '--plate']), redirect_stderr(io.StringIO()), \
+                self.assertRaises(SystemExit):
+            ve.main()
 
 
 if __name__ == '__main__':

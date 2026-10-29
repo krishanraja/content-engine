@@ -11,7 +11,7 @@ Decision engine (corpus 14.4; departing from it needs an `override_reason`):
 | Claim that needs proof | `evidence_card`: outlet, date and the quoted line, never a cropped screenshot |
 | Record that changes over the story | `record_card` (the ledger: fields fixed, one field restamped per case) |
 | Named place | `map_move` (v1.1), or a labelled still |
-| Abstract idea | A labelled illustration plate. Never literal stock. |
+| Abstract idea | An illustration plate, with no tag. Never literal stock. |
 | List of 3 or more | Progressive build; earlier items stay at 40% |
 | Topic pivot | Zoom out, or a chapter beat |
 

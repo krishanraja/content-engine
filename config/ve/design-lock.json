@@ -58,7 +58,6 @@
   },
   "thresholds": {
     "min_text_px": 30,
-    "min_tag_px": 28,
     "min_evidence_quote_px": 44,
     "fill_min_pct": 80,
     "fill_measured_outside": "caption",
@@ -70,7 +69,6 @@
     "keyframe_ssim_min": 0.75,
     "keyframe_blur_px": 6,
     "keyframe_mask_caption": true,
-    "illustration_tag_required": false,
     "keyframe_compare_size": [
       540,
       960
@@ -145,12 +143,6 @@
       "weight": 700,
       "tracking_em": 0.18,
       "border_px": 3
-    },
-    "illustration_tag": {
-      "family": "data",
-      "size_px_min": 28,
-      "tracking_em": 0.14,
-      "case": "upper"
     }
   },
   "colour_rules": {

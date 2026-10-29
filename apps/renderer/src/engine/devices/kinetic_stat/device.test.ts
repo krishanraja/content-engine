@@ -54,7 +54,7 @@ describe('kinetic_stat frame state', () => {
 describe('kinetic stat stacked geometry', () => {
   it.each(['9:16', '16:9'] as const)('stacks number, unit and producer without overlap in %s', (aspect) => {
     const box = slotsFor('F1', aspect)[2]!
-    const l = kineticLayout(box, '3/3', 'runs where DeepSeek deleted its Xinjiang answer', "KRISH'S TEST · 23 OCT", aspect)
+    const l = kineticLayout(box, '3/3', 'runs where DeepSeek deleted its Xinjiang answer', "OUR TEST · 23 OCT", aspect)
     const rects = [l.number, l.unit, l.producer]
     for (const [i, rect] of rects.entries()) {
       expect(rect.left).toBeGreaterThanOrEqual(box.left)

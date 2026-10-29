@@ -30,7 +30,6 @@
     "change_density_min": 0.75,
     "longest_still_s": 3,
     "layout_types_per_min_tall": 1,
-    "plates_labelled": 1.0,
     "caption_ocr_min": 0.98
   },
   "fps": 30,
@@ -73,8 +72,8 @@
             "fields": [],
             "ghostAI": true,
             "mrz": [
-              "P<ILLUSTRATION",
-              "SAMPLE<NOT<A<CLAIM"
+              "P<<",
+              "0000000000<0<<<0000000<0000000"
             ]
           }
         },
@@ -91,8 +90,8 @@
             "fields": [],
             "ghostAI": true,
             "mrz": [
-              "P<ILLUSTRATION",
-              "SAMPLE<NOT<A<CLAIM"
+              "P<<",
+              "0000000000<0<<<0000000<0000000"
             ]
           }
         },
@@ -185,8 +184,8 @@
             ],
             "ghostAI": false,
             "mrz": [
-              "P<ILLUSTRATION",
-              "SAMPLE<NOT<A<CLAIM"
+              "P<<",
+              "0000000000<0<<<0000000<0000000"
             ],
             "sampleText": "SAMPLE \u00b7 NOT A CLAIM"
           }
@@ -265,8 +264,8 @@
             ],
             "ghostAI": false,
             "mrz": [
-              "P<ILLUSTRATION",
-              "SAMPLE<NOT<A<CLAIM"
+              "P<<",
+              "0000000000<0<<<0000000<0000000"
             ],
             "sampleText": "SAMPLE \u00b7 NOT A CLAIM"
           }
@@ -354,12 +353,12 @@
               "x": 72,
               "y": 1696
             },
-            "label": "ILLUSTRATION",
+            "label": "PASSPORT",
             "fields": [],
             "ghostAI": false,
             "mrz": [
-              "P<ILLUSTRATION",
-              "SAMPLE<NOT<A<CLAIM"
+              "P<<",
+              "0000000000<0<<<0000000<0000000"
             ]
           }
         }
@@ -418,8 +417,8 @@
             ],
             "ghostAI": false,
             "mrz": [
-              "P<ILLUSTRATION",
-              "SAMPLE<NOT<A<CLAIM"
+              "P<<",
+              "0000000000<0<<<0000000<0000000"
             ],
             "sampleText": "SAMPLE \u00b7 NOT A CLAIM"
           }

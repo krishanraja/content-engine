@@ -4,7 +4,7 @@
     "chatgpt_images": {
       "slot": "stills",
       "route": "codex imagegen card",
-      "rule": "all publication stills (Krish 2026-10-27); labelled illustration"
+      "rule": "all publication stills (Krish 2026-10-27); no ILLUSTRATION tag on screen (Krish 2026-10-28)"
     },
     "runway": {
       "slot": "short animations of approved stills; reframe; background removal",

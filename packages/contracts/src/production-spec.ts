@@ -108,7 +108,6 @@ export const VeAssetSchema = z.object({
 }).strict().superRefine((v, c) => {
   if (v.origin === 'generated') {
     if (!['illustration', 'broll', 'sfx', 'music'].includes(v.kind)) c.addIssue({ code: 'custom', path: ['kind'], message: 'generated media is illustration, broll, sfx or music, never evidence' })
-    if (['illustration', 'broll'].includes(v.kind) && !v.label) c.addIssue({ code: 'custom', path: ['label'], message: 'generated pictures carry an on-screen label' })
     if (!v.tool) c.addIssue({ code: 'custom', path: ['tool'], message: 'generated media names the tool that made it' })
   }
   if (/\bCC[ -]BY/i.test(v.licence) && !v.credit) c.addIssue({ code: 'custom', path: ['credit'], message: 'a CC BY licence needs its credit line' })
