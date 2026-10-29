@@ -76,7 +76,7 @@ describe('thread_card', () => {
       for (const line of lines) {
         const width = textWidth(face, String(line.props.children), size, face === 'mono' ? 0.14 : 0) * (size === 34 ? 1.12 : 1)
         expect(x).toBeGreaterThanOrEqual(72)
-        expect(x + width).toBeLessThanOrEqual(960.001)
+        expect(x + width).toBeLessThanOrEqual(aspect === '9:16' ? 960.001 : 1824.001)
       }
       expect(y - size).toBeGreaterThanOrEqual(150)
       expect(y + (lines.length - 1) * size * 1.25).toBeLessThanOrEqual(aspect === '9:16' ? 1170 : 1008)
@@ -107,5 +107,15 @@ describe('thread_card', () => {
     expect(paths).toHaveLength(2)
     for (const path of paths) expect(path.props.d).toMatch(/902 436$/)
     expect(renderToStaticMarkup(tree)).toContain('REVIEW 30 NOV 2026')
+  })
+})
+
+describe('thread_card on the wide canvas', () => {
+  it('keeps a far-right station label beside its station, not pinned at the tall margin', () => {
+    const wide = { ...object, params: { ...object.params, stations: [{ id: 'far', label: 'Far', x: 1500 }], threads: [{ id: 'a', name: 'A', y: 400, style: 'solid', marks: [] }], axis: { y: 300, x0: 72, x1: 1780 } } }
+    const tree = Device({ ...props, object: wide, aspect: '16:9', box: { left: 0, top: 0, width: 1920, height: 1080 }, frame: 100 })
+    const label = elements(tree).filter(n => n.type === 'text').find(n => elements(n.props.children as ReactNode).some(l => String(l.props.children).toUpperCase() === 'FAR'))
+    expect(label).toBeTruthy()
+    expect(Number(label!.props.x)).toBeGreaterThan(1300)
   })
 })

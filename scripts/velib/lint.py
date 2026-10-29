@@ -202,9 +202,9 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
             if len(layouts) < need:
                 out.append(f'motion.layout_variety {where}: {len(layouts)} layout types, the format needs at least {need} a minute')
 
-    if spec['audio']['master'] == 'vo' and spec['audio']['bed']['mode'] != 'continuous':
+    if spec['audio']['master'] == 'vo' and spec['audio']['bed']['mode'] not in ('continuous', 'ducked'):
         if not any(a['gate'] == 'exception' for a in spec['approvals']):
-            out.append('sound.bed_continuous audio.bed.mode: a voiceover cut carries a continuous bed (episode mode needs an exception approval)')
+            out.append('sound.bed_continuous audio.bed.mode: a voiceover cut carries a continuous or ducked bed (episode mode needs an exception approval)')
 
     if history:
         hero = spec['signature']['hero']['device']

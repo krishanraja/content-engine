@@ -217,7 +217,7 @@ class FrozenTest(unittest.TestCase):
             stack.enter_context(patch.object(qc, 'duration_s', return_value=5))
             stack.enter_context(patch('velib.qc_composition.composition_checks', return_value={'applies': False, 'note': 'synthetic frames'}))
             for module, name in [('qc_sync', 'av_xcorr'), ('qc_joins', 'decoder'), ('qc_captions', 'ocr'),
-                                 ('qc_brand', 'mark_tile'), ('qc_cues', 'cue_sync')]:
+                                 ('qc_brand', 'mark_tile'), ('qc_cues', 'cue_sync'), ('qc_audio', 'bed')]:
                 stack.enter_context(patch(f'velib.{module}.{name}', return_value={'pass': True, 'status': 'measured'}))
             inputs = dict(dialogue_master='master', edl=[], joins=[], pages=[], region=[], mark_png='mark',
                           beats=self.props['beats'], aspect='9:16', events=[], slots={})
@@ -233,6 +233,12 @@ class FrozenTest(unittest.TestCase):
                 self.assertTrue(report['complete'])
                 self.assertEqual(report['measured_pass'], passed)
                 self.assertEqual(report['keyframes'], detail)
+            # a wide cut is never held to the tall stills, whatever the key-frame module would say
+            wide = dict(inputs, aspect='16:9')
+            with patch.object(kf, 'keyframe_checks', return_value={'applies': True, 'pass': False, 'beats': {}, 'findings': ['x']}):
+                report = qc.run_qc('unused', 'scoreboard-test', **wide)
+            self.assertEqual(report['checks']['keyframe_match']['status'], 'not applicable')
+            self.assertTrue(report['measured_pass'])
 
 
 if __name__ == '__main__':

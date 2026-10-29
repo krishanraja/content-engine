@@ -17,7 +17,7 @@ from unittest.mock import patch
 sys.dont_write_bytecode = True
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
-from velib import qc, qc_sync, qc_joins, qc_captions, qc_brand, qc_cues  # noqa: E402
+from velib import qc, qc_sync, qc_joins, qc_captions, qc_brand, qc_cues, qc_audio  # noqa: E402
 import ve  # noqa: E402
 import numpy as np  # noqa: E402
 
@@ -329,7 +329,7 @@ class QCContracts(unittest.TestCase):
                 passed = {'value': [], 'target': 'synthetic', 'pass': True, 'status': 'measured'}
                 mocks = {}
                 for module, name in ((qc_sync, 'av_xcorr'), (qc_joins, 'decoder'), (qc_captions, 'ocr'),
-                                     (qc_brand, 'mark_tile'), (qc_cues, 'cue_sync')):
+                                     (qc_brand, 'mark_tile'), (qc_cues, 'cue_sync'), (qc_audio, 'bed')):
                     mocks[name] = stack.enter_context(patch.object(module, name, return_value=passed))
                 stack.enter_context(patch.object(qc, 'loudness', return_value={'integrated_lufs': -14, 'true_peak_dbtp': -1}))
                 stack.enter_context(patch.object(qc, 'frame_diffs', return_value=np.full(150, 2.)))

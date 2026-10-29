@@ -1,0 +1,632 @@
+{
+  "schema": "ve-verdict/1",
+  "piece": "2026-10-23-friday-two-passports-long-ve",
+  "cut": "long-wide",
+  "sha256": "fff8641e11d0107a395b0b18d2047995b6350726271a4cca9b705e4bc4c5e97c",
+  "reviewer": "critic-fresh-12",
+  "reviewed_at": "2026-10-29T02:13:31.140285+00:00",
+  "lens_sha256": "2d62c9e235d86f192747eaeea0115befc2ef3ae7b6448684248271100582f7c1",
+  "frames_viewed": [
+    {
+      "at_s": 0.4
+    },
+    {
+      "at_s": 2.65
+    },
+    {
+      "at_s": 5.05
+    },
+    {
+      "at_s": 5.7
+    },
+    {
+      "at_s": 7.17
+    },
+    {
+      "at_s": 8.78
+    },
+    {
+      "at_s": 9.43
+    },
+    {
+      "at_s": 10.88
+    },
+    {
+      "at_s": 12.48
+    },
+    {
+      "at_s": 13.13
+    },
+    {
+      "at_s": 15.13
+    },
+    {
+      "at_s": 17.28
+    },
+    {
+      "at_s": 17.93
+    },
+    {
+      "at_s": 22.82
+    },
+    {
+      "at_s": 27.85
+    },
+    {
+      "at_s": 28.5
+    },
+    {
+      "at_s": 31.65
+    },
+    {
+      "at_s": 34.95
+    },
+    {
+      "at_s": 35.6
+    },
+    {
+      "at_s": 39.78
+    },
+    {
+      "at_s": 44.12
+    },
+    {
+      "at_s": 44.77
+    },
+    {
+      "at_s": 46.0
+    },
+    {
+      "at_s": 47.38
+    },
+    {
+      "at_s": 48.03
+    },
+    {
+      "at_s": 53.28
+    },
+    {
+      "at_s": 58.68
+    },
+    {
+      "at_s": 59.33
+    },
+    {
+      "at_s": 61.63
+    },
+    {
+      "at_s": 64.08
+    },
+    {
+      "at_s": 64.73
+    },
+    {
+      "at_s": 68.92
+    },
+    {
+      "at_s": 73.25
+    },
+    {
+      "at_s": 73.9
+    },
+    {
+      "at_s": 76.42
+    },
+    {
+      "at_s": 79.08
+    },
+    {
+      "at_s": 79.73
+    },
+    {
+      "at_s": 83.07
+    },
+    {
+      "at_s": 86.55
+    },
+    {
+      "at_s": 87.2
+    },
+    {
+      "at_s": 91.97
+    },
+    {
+      "at_s": 96.88
+    },
+    {
+      "at_s": 97.53
+    },
+    {
+      "at_s": 101.22
+    },
+    {
+      "at_s": 105.05
+    },
+    {
+      "at_s": 105.7
+    },
+    {
+      "at_s": 109.9
+    },
+    {
+      "at_s": 114.25
+    },
+    {
+      "at_s": 114.9
+    },
+    {
+      "at_s": 115.58
+    },
+    {
+      "at_s": 116.42
+    },
+    {
+      "at_s": 117.07
+    },
+    {
+      "at_s": 118.73
+    },
+    {
+      "at_s": 120.55
+    },
+    {
+      "at_s": 121.2
+    },
+    {
+      "at_s": 124.12
+    },
+    {
+      "at_s": 127.18
+    },
+    {
+      "at_s": 127.83
+    },
+    {
+      "at_s": 128.97
+    },
+    {
+      "at_s": 130.25
+    },
+    {
+      "at_s": 130.9
+    },
+    {
+      "at_s": 132.78
+    },
+    {
+      "at_s": 134.82
+    },
+    {
+      "at_s": 135.47
+    },
+    {
+      "at_s": 138.03
+    },
+    {
+      "at_s": 140.75
+    },
+    {
+      "at_s": 141.4
+    },
+    {
+      "at_s": 142.5
+    },
+    {
+      "at_s": 143.75
+    },
+    {
+      "at_s": 144.4
+    },
+    {
+      "at_s": 146.68
+    },
+    {
+      "at_s": 149.12
+    },
+    {
+      "at_s": 149.77
+    },
+    {
+      "at_s": 154.93
+    },
+    {
+      "at_s": 160.25
+    },
+    {
+      "at_s": 160.9
+    },
+    {
+      "at_s": 163.83
+    },
+    {
+      "at_s": 166.92
+    },
+    {
+      "at_s": 167.57
+    },
+    {
+      "at_s": 169.88
+    },
+    {
+      "at_s": 172.35
+    },
+    {
+      "at_s": 173.0
+    },
+    {
+      "at_s": 177.2
+    },
+    {
+      "at_s": 181.55
+    },
+    {
+      "at_s": 182.2
+    },
+    {
+      "at_s": 183.83
+    },
+    {
+      "at_s": 185.62
+    },
+    {
+      "at_s": 186.27
+    },
+    {
+      "at_s": 188.9
+    },
+    {
+      "at_s": 191.68
+    },
+    {
+      "at_s": 192.33
+    },
+    {
+      "at_s": 194.18
+    },
+    {
+      "at_s": 196.18
+    },
+    {
+      "at_s": 196.83
+    },
+    {
+      "at_s": 199.32
+    },
+    {
+      "at_s": 201.95
+    },
+    {
+      "at_s": 202.6
+    },
+    {
+      "at_s": 206.2
+    },
+    {
+      "at_s": 209.95
+    },
+    {
+      "at_s": 210.6
+    },
+    {
+      "at_s": 212.73
+    },
+    {
+      "at_s": 215.02
+    },
+    {
+      "at_s": 215.67
+    },
+    {
+      "at_s": 218.58
+    },
+    {
+      "at_s": 221.65
+    },
+    {
+      "at_s": 222.3
+    },
+    {
+      "at_s": 225.58
+    },
+    {
+      "at_s": 229.02
+    },
+    {
+      "at_s": 229.67
+    },
+    {
+      "at_s": 231.9
+    },
+    {
+      "at_s": 234.28
+    },
+    {
+      "at_s": 234.93
+    },
+    {
+      "at_s": 235.82
+    },
+    {
+      "at_s": 236.85
+    },
+    {
+      "at_s": 237.5
+    },
+    {
+      "at_s": 239.03
+    },
+    {
+      "at_s": 240.72
+    },
+    {
+      "at_s": 241.37
+    },
+    {
+      "at_s": 242.58
+    },
+    {
+      "at_s": 243.95
+    },
+    {
+      "at_s": 244.6
+    },
+    {
+      "at_s": 248.4
+    },
+    {
+      "at_s": 252.35
+    },
+    {
+      "at_s": 253.0
+    },
+    {
+      "at_s": 255.62
+    },
+    {
+      "at_s": 258.38
+    },
+    {
+      "at_s": 259.03
+    },
+    {
+      "at_s": 261.92
+    },
+    {
+      "at_s": 264.95
+    },
+    {
+      "at_s": 265.6
+    },
+    {
+      "at_s": 266.72
+    },
+    {
+      "at_s": 267.98
+    },
+    {
+      "at_s": 268.63
+    },
+    {
+      "at_s": 271.12
+    },
+    {
+      "at_s": 273.75
+    },
+    {
+      "at_s": 274.4
+    },
+    {
+      "at_s": 277.2
+    },
+    {
+      "at_s": 280.15
+    },
+    {
+      "at_s": 280.8
+    },
+    {
+      "at_s": 284.48
+    },
+    {
+      "at_s": 288.32
+    },
+    {
+      "at_s": 288.97
+    },
+    {
+      "at_s": 292.17
+    },
+    {
+      "at_s": 295.52
+    },
+    {
+      "at_s": 296.17
+    },
+    {
+      "at_s": 296.98
+    },
+    {
+      "at_s": 297.95
+    },
+    {
+      "at_s": 298.6
+    },
+    {
+      "at_s": 301.35
+    },
+    {
+      "at_s": 304.25
+    },
+    {
+      "at_s": 304.9
+    },
+    {
+      "at_s": 307.27
+    },
+    {
+      "at_s": 309.78
+    },
+    {
+      "at_s": 310.43
+    },
+    {
+      "at_s": 310.95
+    },
+    {
+      "at_s": 311.62
+    },
+    {
+      "at_s": 312.27
+    },
+    {
+      "at_s": 314.35
+    },
+    {
+      "at_s": 316.58
+    },
+    {
+      "at_s": 317.23
+    },
+    {
+      "at_s": 320.53
+    },
+    {
+      "at_s": 323.98
+    },
+    {
+      "at_s": 241.3
+    },
+    {
+      "at_s": 241.9
+    },
+    {
+      "at_s": 242.5
+    },
+    {
+      "at_s": 243.1
+    },
+    {
+      "at_s": 243.7
+    },
+    {
+      "at_s": 244.0
+    },
+    {
+      "at_s": 126.9
+    },
+    {
+      "at_s": 166.5
+    },
+    {
+      "at_s": 195.8
+    },
+    {
+      "at_s": 263.0
+    },
+    {
+      "at_s": 238.6
+    },
+    {
+      "at_s": 322.8
+    }
+  ],
+  "findings": [
+    {
+      "severity": "fix",
+      "area": "composition",
+      "frame_s": 126.9,
+      "text": "twopass beat (121 to 127 s): the 'WHOSE COMPUTERS IT RUNS ON' sticker lands on top of the 'BORN' sticker and hides it (visible alone at about 124 s), so the first passport loses its label. Stagger or reposition so BORN stays readable."
+    },
+    {
+      "severity": "fix",
+      "area": "composition",
+      "frame_s": 195.8,
+      "text": "takeout beat (192 to 196 s): the 'DEEPSEEK BORN / CHINA' stamp runs down into the caption box and its lower edge is covered by it (stamp bottom at about y 890 against caption top at y 830). Pull both stamps up so they clear the caption zone."
+    },
+    {
+      "severity": "fix",
+      "area": "evidence",
+      "frame_s": 142.0,
+      "text": "ds63 beat (141 to 144 s): headline reads 'DEEPSEEK: TWO IN THREE.' beside a 63% strip. 63% is not two in three (66.7%); the spoken line says 'nearly'. Change to 'NEARLY TWO IN THREE' so the headline does not overstate the figure. The strip itself (DEEPSEEK REFUSED OR WRONG, CHRISTIAN SCIENCE MONITOR, 63%) is correct."
+    },
+    {
+      "severity": "fix",
+      "area": "composition",
+      "frame_s": 263.0,
+      "text": "knew beat (258.6 to 265.2 s): the full stop of 'ANSWER.' touches the phone's left bezel (about 16 px overlap), and the real recording's text lines start under the notch, so 'Key risks', 'prevention', 'possible' read 'isks', 'evention', 'ssible'. Footage is not redrawn, so shift the headline left or the phone right a little."
+    },
+    {
+      "severity": "note",
+      "area": "evidence",
+      "frame_s": 241.9,
+      "text": "VERIFIED verdict thread (241.3 to 244.3 s, frames every 0.3 s): Claude and ChatGPT carry a mint flag at BOTH gates (Xinjiang and Turkmenistan), DeepSeek has a flag at Turkmenistan only with its Xinjiang thread parted (black dot, gap), tallies 2/2, 2/2, 1/2, strip 3/3 'RUNS WHERE DEEPSEEK DELETED ITS XINJIANG ANSWER', 'ANSWER DELETED' stamp, and a '?' resting value on the strip before 3/3 lands. Matches the record. The previous block is cleared."
+    },
+    {
+      "severity": "note",
+      "area": "evidence",
+      "frame_s": 238.6,
+      "text": "First evidence beat (237.4 to 240.4 s) now steps in time with the voice: prompt, answer appears, 'Sorry, that's beyond my current scope' replaces it, 'Xinjiang cotton carries a strong forced-labour...' pull quote at about 44 px, source label 'SCREEN RECORDING, DEEPSEEK, 24 OCT 2026' (allowed). Footage text is under 30 px but it is real footage with a verbatim quote beside it. Pass."
+    },
+    {
+      "severity": "note",
+      "area": "motion",
+      "frame_s": 270.0,
+      "text": "Call beat (268.2 to 274 s): the dated card holds still while the phone and background visibly move behind it (three sampled frames all differ); it replaces the captions by design. Card text, 'DUE 2026-12-31' and '90% SURE' are the engine's. Pass."
+    },
+    {
+      "severity": "note",
+      "area": "composition",
+      "frame_s": 166.5,
+      "text": "lives beat: the mint scribble circle round CHINA runs over the lower edge of the 'DEEPSEEK' stamp label and nearly reaches the passport's right spine. Still one scribble and readable; tighten the loop if time allows."
+    },
+    {
+      "severity": "note",
+      "area": "brand",
+      "frame_s": 243.1,
+      "text": "Mint is used as type in several places (phone card source labels such as 'CHESKY TO BLOOMBERG' and 'AT STAKE', 'TURKMENISTAN' and 'TAIWAN' on the phone card, 2/2 and 1 numerals, 'FLAGGED IT?'), whereas TEMPLATE.md says mint is never type. It sits on dark ink, matches the approved fixture family and is legible, so I do not block, but the rule as written is not kept."
+    },
+    {
+      "severity": "note",
+      "area": "composition",
+      "frame_s": 255.0,
+      "text": "Sparse headline-only or half-empty frames: A DRAW (252.6 to 258.6 s, lower half empty under the thread diagram), WHO'S IN THE RACE (64 to 66 s), KOREA (105 to 114 s, right half empty), SUPPLY CHAINS and OWN WORK QUESTIONS openings. Acceptable on a 16:9 stage with motion, but weaker than the phone beats."
+    },
+    {
+      "severity": "note",
+      "area": "composition",
+      "frame_s": 295.0,
+      "text": "Advice beats (288 to 317 s) repeat the same ghost passport (HOME COUNTRY, RESIDENCE, AI) behind unrelated headlines (TARIFFS, SUPPLY CHAINS, KNOW WHICH PASSPORTS, OWN WORK QUESTIONS); it carries little meaning there and slides under the captions. Only the tick on ASK YOUR SUPPLIERS (about 300 s) and SECOND AI (about 315 s) give it a job."
+    },
+    {
+      "severity": "note",
+      "area": "evidence",
+      "frame_s": 66.0,
+      "text": "Counters rest at '?' (China bar 64 to 66 s, 3% strip about 82 s, 63% strip about 142 s, 3/3 about 242 s) until the number lands, as the template asks; each resolves to the correct value (59 to 35, 3%, 63%, 3/3). Tallies 2/2 and 1/2 have no denominator on screen beyond the headline BOTH FLAGGED BOTH TIMES; acceptable."
+    },
+    {
+      "severity": "note",
+      "area": "copy",
+      "frame_s": 115.4,
+      "text": "Caption 'That's pretty Awkward.' keeps a capital A mid-sentence (the transcript word is 'Awkward.'). Lower-case it in the caption if the engine allows."
+    },
+    {
+      "severity": "note",
+      "area": "composition",
+      "frame_s": 3.0,
+      "text": "The caption box is a fixed wide bar even when it holds one word ('a', 'So', 'And'), so it reads empty for stretches (for example 2.65 s, 5.05 s, 66 s). Engine design; not a block."
+    },
+    {
+      "severity": "note",
+      "area": "other",
+      "frame_s": 322.8,
+      "text": "Ending is one closing screen: headline THE FULL DEEP DIVE kept, logo lock-up, FRIDAYS, mind.the.gap pill and makeyourmindup.ai, no ticker, no marquee, held to the last frame (324.1 s). URL text is about 30 px."
+    },
+    {
+      "severity": "note",
+      "area": "other",
+      "frame_s": 320.7,
+      "text": "Audio: integrated -14.1 LUFS, true peak -1.5 dBTP (ebur128), sample max -1.6 dB, no clipping (flat factor 0). Fade in over the first 1.1 s (digital silence to 0.3 s, music rising -49 to -36 LUFS momentary, voice enters at 1.1 s); fade out from 320.7 s (voice ends, music at about -21 M) down to -35 M and -73 dBFS at the last sample, so no hard cut. No silence of 0.3 s or more below -50 dB anywhere; short-term loudness stays between about -20 and -10 LUFS per 30 s block, no sawtooth. Four short pause troughs (87.4, 91.4, 222.3, 259.1 s) where the mix drops to about -40 to -54 dBFS RMS for 0.2 to 0.5 s: bed is low but present; not a block."
+    }
+  ],
+  "blocking": false
+}

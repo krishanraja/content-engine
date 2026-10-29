@@ -1,0 +1,2040 @@
+{
+  "file": "docs/plans/2026-10-23-friday-two-passports-long-ve/ve/friday-long-wide.mp4",
+  "sha256": "fff8641e11d0107a395b0b18d2047995b6350726271a4cca9b705e4bc4c5e97c",
+  "duration_s": 324.25,
+  "format": "hand-held-screen",
+  "checks": {
+    "loudness.integrated": {
+      "value": -14.1,
+      "target": "-14 ±1",
+      "pass": true
+    },
+    "loudness.true_peak": {
+      "value": -1.5,
+      "target": "<= -1",
+      "pass": true
+    },
+    "loudness.long_silence": {
+      "value": [],
+      "target": "none over 0.7 s below -50 dB",
+      "pass": true
+    },
+    "motion.change_density": {
+      "value": 0.796,
+      "target": ">= 0.75",
+      "pass": true
+    },
+    "motion.longest_still": {
+      "value": 3,
+      "target": "<= 3 s",
+      "pass": true,
+      "runs": [
+        [
+          87,
+          3
+        ],
+        [
+          321,
+          3
+        ],
+        [
+          23,
+          2
+        ],
+        [
+          65,
+          2
+        ],
+        [
+          99,
+          2
+        ],
+        [
+          112,
+          2
+        ]
+      ]
+    },
+    "motion.periodicity": {
+      "value": null,
+      "target": "no repeating loop 2-10 s",
+      "pass": true
+    },
+    "sync.av_xcorr": {
+      "value": [
+        {
+          "segment": 0,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999993
+        },
+        {
+          "segment": 1,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999993
+        },
+        {
+          "segment": 2,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999993
+        },
+        {
+          "segment": 3,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999991
+        },
+        {
+          "segment": 4,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999986
+        },
+        {
+          "segment": 5,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999987
+        },
+        {
+          "segment": 6,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999983
+        },
+        {
+          "segment": 7,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999992
+        },
+        {
+          "segment": 8,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999987
+        },
+        {
+          "segment": 9,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999987
+        },
+        {
+          "segment": 10,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999994
+        },
+        {
+          "segment": 11,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999989
+        },
+        {
+          "segment": 12,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999979
+        },
+        {
+          "segment": 13,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999996
+        },
+        {
+          "segment": 14,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.99999
+        },
+        {
+          "segment": 15,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999985
+        },
+        {
+          "segment": 16,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999991
+        },
+        {
+          "segment": 17,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999986
+        },
+        {
+          "segment": 18,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999995
+        },
+        {
+          "segment": 19,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999992
+        },
+        {
+          "segment": 20,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999986
+        },
+        {
+          "segment": 21,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.99999
+        },
+        {
+          "segment": 22,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999995
+        },
+        {
+          "segment": 23,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999989
+        },
+        {
+          "segment": 24,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.99999
+        },
+        {
+          "segment": 25,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.99999
+        },
+        {
+          "segment": 26,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999986
+        },
+        {
+          "segment": 27,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999992
+        },
+        {
+          "segment": 28,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999991
+        },
+        {
+          "segment": 29,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999993
+        },
+        {
+          "segment": 30,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999989
+        },
+        {
+          "segment": 31,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.99999
+        },
+        {
+          "segment": 32,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999992
+        },
+        {
+          "segment": 33,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999989
+        },
+        {
+          "segment": 34,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999991
+        },
+        {
+          "segment": 35,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999985
+        },
+        {
+          "segment": 36,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999992
+        },
+        {
+          "segment": 37,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999988
+        },
+        {
+          "segment": 38,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999984
+        },
+        {
+          "segment": 39,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999986
+        },
+        {
+          "segment": 40,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999988
+        },
+        {
+          "segment": 41,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999995
+        },
+        {
+          "segment": 42,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.99999
+        },
+        {
+          "segment": 43,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999993
+        },
+        {
+          "segment": 44,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999989
+        },
+        {
+          "segment": 45,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999995
+        },
+        {
+          "segment": 46,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999994
+        },
+        {
+          "segment": 47,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.99999
+        },
+        {
+          "segment": 48,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999986
+        },
+        {
+          "segment": 49,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999988
+        },
+        {
+          "segment": 50,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999993
+        },
+        {
+          "segment": 51,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999996
+        },
+        {
+          "segment": 52,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999995
+        },
+        {
+          "segment": 53,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999962
+        }
+      ],
+      "target": "every segment |lag| <= 33 ms; correlation >= 0.5",
+      "pass": true,
+      "status": "measured"
+    },
+    "joins.decoder": {
+      "value": [],
+      "target": "RMS step <= 6 dB, click <= 6x median, spectral flux <= 0.5",
+      "pass": true,
+      "status": "measured",
+      "join_times_s": [],
+      "failed_join_times_s": []
+    },
+    "captions.ocr": {
+      "value": [
+        {
+          "page": 0,
+          "frame": 72,
+          "text": "You may already be using",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 1,
+          "frame": 96,
+          "text": "a Chinese Al,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 2,
+          "frame": 136,
+          "text": "and you just might not",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 3,
+          "frame": 153,
+          "text": "know it.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 4,
+          "frame": 212,
+          "text": "So does it matter where",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 5,
+          "frame": 254,
+          "text": "your Al was born?",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 6,
+          "frame": 299,
+          "text": "I've been having a look",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 7,
+          "frame": 345,
+          "text": "at where the Als we",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 8,
+          "frame": 378,
+          "text": "all use come from.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 9,
+          "frame": 425,
+          "text": "And it matters more than",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 10,
+          "frame": 455,
+          "text": "you think for any business,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 11,
+          "frame": 493,
+          "text": "so I want to break",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 12,
+          "frame": 519,
+          "text": "it down for you.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 13,
+          "frame": 566,
+          "text": "Start with Airbnb.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 14,
+          "frame": 624,
+          "text": "Here's its boss last year.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 15,
+          "frame": 685,
+          "text": "He said its customer service",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 16,
+          "frame": 730,
+          "text": "Al relies alot on",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 17,
+          "frame": 779,
+          "text": "Qwen, which is a Chinese",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 18,
+          "frame": 826,
+          "text": "Al from Alibaba.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 19,
+          "frame": 886,
+          "text": "He called it fast and",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 20,
+          "frame": 913,
+          "text": "he called it cheap.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 21,
+          "frame": 949,
+          "text": "Which, to be fair,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 22,
+          "frame": 994,
+          "text": "is also what most of",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 23,
+          "frame": 1018,
+          "text": "us want from a holiday",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 24,
+          "frame": 1088,
+          "text": "fling. Then there's Cursor,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 25,
+          "frame": 1122,
+          "text": "a coding tool that lots",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 26,
+          "frame": 1155,
+          "text": "of software teams use.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 27,
+          "frame": 1209,
+          "text": "It built its newest Al",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 28,
+          "frame": 1241,
+          "text": "on top of a Chinese",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 29,
+          "frame": 1266,
+          "text": "one called Kimi,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 30,
+          "frame": 1319,
+          "text": "and didn't mention that at",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 31,
+          "frame": 1371,
+          "text": "first. Then people spotted it,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 32,
+          "frame": 1421,
+          "text": "and Cursor owned up.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 33,
+          "frame": 1463,
+          "text": "And Lindy,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 34,
+          "frame": 1492,
+          "text": "an American startup,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 35,
+          "frame": 1534,
+          "text": "moved all its Al work",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 36,
+          "frame": 1559,
+          "text": "on to DeepSeek,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 37,
+          "frame": 1607,
+          "text": "another Chinese Al.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 38,
+          "frame": 1671,
+          "text": "Its biggest bill used to",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 39,
+          "frame": 1688,
+          "text": "be Anthropic,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 40,
+          "frame": 1762,
+          "text": "the American company behind Claude.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 41,
+          "frame": 1853,
+          "text": "Its boss said DeepSeek was",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 42,
+          "frame": 1912,
+          "text": "just ten times cheaper.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 43,
+          "frame": 2004,
+          "text": "Now, who's in this race?",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 44,
+          "frame": 2063,
+          "text": "Mostly two countries.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 45,
+          "frame": 2139,
+          "text": "Stanford counts the most important",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 46,
+          "frame": 2198,
+          "text": "new Als each year.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 47,
+          "frame": 2275,
+          "text": "Last year America made fifty-nine",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 48,
+          "frame": 2352,
+          "text": "and China made thirty-five.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 49,
+          "frame": 2408,
+          "text": "But by March,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 50,
+          "frame": 2435,
+          "text": "Stanford found,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 51,
+          "frame": 2488,
+          "text": "the best Chinese Al scored",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 52,
+          "frame": 2553,
+          "text": "only about three percent behind",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 53,
+          "frame": 2597,
+          "text": "the best American one.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 54,
+          "frame": 2703,
+          "text": "And everyone else wants its",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 55,
+          "frame": 2743,
+          "text": "own. Britain,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 56,
+          "frame": 2790,
+          "text": "France, the Gulf,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 57,
+          "frame": 2867,
+          "text": "India and Korea are all",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 58,
+          "frame": 2910,
+          "text": "building or paying for one.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 59,
+          "frame": 2963,
+          "text": "That's what people mean by",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 60,
+          "frame": 2989,
+          "text": "sovereign Al:",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 61,
+          "frame": 3063,
+          "text": "a country making sure it",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 62,
+          "frame": 3108,
+          "text": "isn't stuck relying on someone",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 63,
+          "frame": 3203,
+          "text": "else's. South Korea even dropped",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 64,
+          "frame": 3240,
+          "text": "one of its own companies",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 65,
+          "frame": 3282,
+          "text": "from its national Al project.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 66,
+          "frame": 3339,
+          "text": "A piece of that company's",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 67,
+          "frame": 3373,
+          "text": "Al turned out to be",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 68,
+          "frame": 3422,
+          "text": "borrowed from Alibaba.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 69,
+          "frame": 3481,
+          "text": "That's pretty Awkward.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 70,
+          "frame": 3545,
+          "text": "So here's the trick:",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 71,
+          "frame": 3617,
+          "text": "every Al has two passports.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 72,
+          "frame": 3658,
+          "text": "One where it says it",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 73,
+          "frame": 3667,
+          "text": "was born,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 74,
+          "frame": 3714,
+          "text": "and the other where it",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 75,
+          "frame": 3737,
+          "text": "says it lives,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 76,
+          "frame": 3801,
+          "text": "meaning whose computers it runs",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 77,
+          "frame": 3863,
+          "text": "on. Where it was born",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 78,
+          "frame": 3910,
+          "text": "shapes what it tells you.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 79,
+          "frame": 3973,
+          "text": "An American newspaper asked four",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 80,
+          "frame": 4045,
+          "text": "Chinese chatbots two hundred news\r\nquestions.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 81,
+          "frame": 4096,
+          "text": "More than a third of",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 82,
+          "frame": 4104,
+          "text": "the time,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 83,
+          "frame": 4128,
+          "text": "they refused,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 84,
+          "frame": 4194,
+          "text": "gave the Chinese government's line,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 85,
+          "frame": 4225,
+          "text": "or got it wrong.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 86,
+          "frame": 4283,
+          "text": "DeepSeek did it nearly two",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 87,
+          "frame": 4332,
+          "text": "out of three times But",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 88,
+          "frame": 4375,
+          "text": "Claude, an American Al,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 89,
+          "frame": 4433,
+          "text": "got the same questions and",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 90,
+          "frame": 4474,
+          "text": "answered every single one.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 91,
+          "frame": 4548,
+          "text": "And China has company here.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 92,
+          "frame": 4629,
+          "text": "People caught Elon Musk's Grok",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 93,
+          "frame": 4695,
+          "text": "checking Elon Musk's posts before",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 94,
+          "frame": 4713,
+          "text": "it answered.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 95,
+          "frame": 4759,
+          "text": "Which is one way to",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 96,
+          "frame": 4796,
+          "text": "keep the boss happy.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 97,
+          "frame": 4854,
+          "text": "Now the second passport:",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 98,
+          "frame": 4943,
+          "text": "where it lives decides who",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 99,
+          "frame": 4995,
+          "text": "sees your data.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 100,
+          "frame": 5059,
+          "text": "Use DeepSeek's own app,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 101,
+          "frame": 5096,
+          "text": "and it says it stores",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 102,
+          "frame": 5158,
+          "text": "what you type in China.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 103,
+          "frame": 5216,
+          "text": "But you can bring an",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 104,
+          "frame": 5230,
+          "text": "Alhome.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 105,
+          "frame": 5291,
+          "text": "HSBC signed a deal to",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 106,
+          "frame": 5344,
+          "text": "run France's Mistral on its",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 107,
+          "frame": 5362,
+          "text": "own computers.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 108,
+          "frame": 5418,
+          "text": "So the bank's data doesn't",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 109,
+          "frame": 5450,
+          "text": "have to leave the bank.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 110,
+          "frame": 5507,
+          "text": "and what about runninga",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 111,
+          "frame": 5545,
+          "text": "Chinese Al on your own",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 112,
+          "frame": 5584,
+          "text": "computers? Well,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 113,
+          "frame": 5638,
+          "text": "America's government tried that with",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 114,
+          "frame": 5678,
+          "text": "DeepSeek, and the Chinese government's",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 115,
+          "frame": 5719,
+          "text": "talking points were still there,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 116,
+          "frame": 5746,
+          "text": "built in.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 117,
+          "frame": 5805,
+          "text": "You can take DeepSeek out",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 118,
+          "frame": 5815,
+          "text": "of China.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 119,
+          "frame": 5856,
+          "text": "But you can't take China",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 120,
+          "frame": 5885,
+          "text": "out of DeepSeek.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 121,
+          "frame": 5952,
+          "text": "So I tried it myself.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 122,
+          "frame": 6007,
+          "text": "The newspaper asked about the",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 123,
+          "frame": 6045,
+          "text": "news, but Il wanted to",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 124,
+          "frame": 6061,
+          "text": "know about work.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 125,
+          "frame": 6099,
+          "text": "So I gave Claude,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 126,
+          "frame": 6154,
+          "text": "ChatGPT and DeepSeek the same",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 127,
+          "frame": 6173,
+          "text": "work questions,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 128,
+          "frame": 6230,
+          "text": "and asked each one twice,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 129,
+          "frame": 6287,
+          "text": "changing only the country.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 130,
+          "frame": 6361,
+          "text": "If only the China answer",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 131,
+          "frame": 6418,
+          "text": "changes, that's the first passport",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 132,
+          "frame": 6466,
+          "text": "talking. First,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 133,
+          "frame": 6515,
+          "text": "a supplier whose cotton comes",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 134,
+          "frame": 6539,
+          "text": "from Xinjiang,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 135,
+          "frame": 6578,
+          "text": "a part of China.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 136,
+          "frame": 6634,
+          "text": "Then the same supplier in",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 137,
+          "frame": 6671,
+          "text": "Turkmenistan. Now,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 138,
+          "frame": 6724,
+          "text": "America has blocked cotton from",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 139,
+          "frame": 6767,
+          "text": "both over forced labour,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 140,
+          "frame": 6820,
+          "text": "so a good answer should",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 141,
+          "frame": 6859,
+          "text": "flag it both times.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 142,
+          "frame": 6933,
+          "text": "Claude and ChatGPT flagged forced",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 143,
+          "frame": 6962,
+          "text": "labour both times,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 144,
+          "frame": 7014,
+          "text": "and so did DeepSeek for",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 145,
+          "frame": 7092,
+          "text": "Turkmenistan. Now watch DeepSeek on",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 146,
+          "frame": 7136,
+          "text": "Xinjiang. It writes a full",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 147,
+          "frame": 7177,
+          "text": "answer, deletes it,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 148,
+          "frame": 7223,
+          "text": "and changes the subject.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 149,
+          "frame": 7293,
+          "text": "Every single time.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 150,
+          "frame": 7384,
+          "text": "Then a board briefing on",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 151,
+          "frame": 7430,
+          "text": "opening a sales office in",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 152,
+          "frame": 7497,
+          "text": "Taiwan, China says belongs to",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 153,
+          "frame": 7554,
+          "text": "it. And the same briefing",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 154,
+          "frame": 7572,
+          "text": "for Singapore.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 155,
+          "frame": 7603,
+          "text": "For Taiwan,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 156,
+          "frame": 7649,
+          "text": "all three flagged the risk",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 157,
+          "frame": 7674,
+          "text": "from China,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 158,
+          "frame": 7729,
+          "text": "and for Singapore none did.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 159,
+          "frame": 7756,
+          "text": "So that's a draw.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 160,
+          "frame": 7797,
+          "text": "But on Xinjiang,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 161,
+          "frame": 7849,
+          "text": "DeepSeek knew the answer.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 162,
+          "frame": 7896,
+          "text": "It just wasn't allowed to",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 163,
+          "frame": 7936,
+          "text": "let you keep it.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 164,
+          "frame": 7989,
+          "text": "So, my call?",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 165,
+          "frame": 8042,
+          "text": "Look at that passport again.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 166,
+          "frame": 8282,
+          "text": "And if you just want",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 167,
+          "frame": 8337,
+          "text": "a clever job done cheaply,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 168,
+          "frame": 8396,
+          "text": "it makes total sense.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 169,
+          "frame": 8461,
+          "text": "But remember what happened with",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 170,
+          "frame": 8480,
+          "text": "supply chains.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 171,
+          "frame": 8518,
+          "text": "Lots of firms had Chinese",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 172,
+          "frame": 8573,
+          "text": "parts buried deep in their",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 173,
+          "frame": 8624,
+          "text": "products, and then America put",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 174,
+          "frame": 8651,
+          "text": "tariffs on them.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 175,
+          "frame": 8702,
+          "text": "I reckon the same thing",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 176,
+          "frame": 8741,
+          "text": "is gonna happen with Al,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 177,
+          "frame": 8822,
+          "text": "so just know which passports",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 178,
+          "frame": 8858,
+          "text": "you're holding.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 179,
+          "frame": 8908,
+          "text": "Here's what I do with",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 180,
+          "frame": 8939,
+          "text": "this information if  i  were",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 181,
+          "frame": 8982,
+          "text": "you. Ask your main software",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 182,
+          "frame": 9062,
+          "text": "suppliers which Al their product",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 183,
+          "frame": 9080,
+          "text": "runs on,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 184,
+          "frame": 9121,
+          "text": "and where it runs.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 185,
+          "frame": 9182,
+          "text": "Then put your own work",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 186,
+          "frame": 9226,
+          "text": "questions to your team's Al,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 187,
+          "frame": 9295,
+          "text": "and one from another country.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 188,
+          "frame": 9336,
+          "text": "and have alookat",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 189,
+          "frame": 9352,
+          "text": "where they differ.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 190,
+          "frame": 9426,
+          "text": "And keep a second Al",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 191,
+          "frame": 9465,
+          "text": "ready, so you're never stuck",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 192,
+          "frame": 9498,
+          "text": "with one supplier.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 193,
+          "frame": 9560,
+          "text": "The full deep dive is",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 194,
+          "frame": 9595,
+          "text": "at makeyourmindup.al.",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
+        }
+      ],
+      "target": "token agreement >= 0.98 on every page",
+      "pass": true,
+      "status": "measured"
+    },
+    "brand.mark_tile": {
+      "value": null,
+      "target": "not defined for STAGE layouts",
+      "pass": null,
+      "status": "not applicable"
+    },
+    "motion.cue_sync": {
+      "value": null,
+      "target": "not defined for STAGE layouts",
+      "pass": null,
+      "status": "not applicable"
+    },
+    "audio.bed": {
+      "value": [
+        {
+          "check": "bed present",
+          "value": true,
+          "pass": true
+        },
+        {
+          "check": "under speech",
+          "value": -18.33,
+          "target": "-21.0 to -12.0 dB re voice",
+          "pass": true
+        },
+        {
+          "check": "true peak",
+          "value": -1.69,
+          "target": "<= -1.0 dBTP",
+          "pass": true
+        },
+        {
+          "check": "in pauses",
+          "value": -9.3,
+          "target": "-13.0 to -6.0 dB re voice",
+          "pass": true
+        },
+        {
+          "check": "the music breathes",
+          "value": 9.04,
+          "target": ">= 4.0 dB",
+          "pass": true
+        }
+      ],
+      "target": "bed present, under speech in range, true peak, and (ducked) breathing in pauses",
+      "pass": true,
+      "status": "measured"
+    },
+    "keyframe_match": {
+      "value": null,
+      "target": "approved golden keyframes",
+      "pass": null,
+      "status": "not applicable"
+    },
+    "composition": {
+      "value": null,
+      "target": "design lock composition thresholds",
+      "pass": null,
+      "status": "not applicable"
+    }
+  },
+  "keyframes": {
+    "applies": false,
+    "note": "the design lock is 9:16 only"
+  },
+  "composition": {
+    "applies": false,
+    "note": "the design lock is 9:16 only"
+  },
+  "measured_pass": true,
+  "complete": true
+}

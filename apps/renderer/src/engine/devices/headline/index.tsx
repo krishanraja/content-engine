@@ -49,6 +49,7 @@ export function Device({ object, events, tokens, frame }: DeviceProps) {
     {s.dek && <div style={{ ...canvasRect(s.dekAt?.x ?? (beside ? at.x + wordWidth + 32 : at.x),
       s.dekAt?.y ?? (beside ? at.y : at.y + l.height + 24), dekWidth, 110),
       color: tokens.cream, fontFamily: HOUSE_FONTS.dek, fontSize: 44, fontStyle: 'italic', lineHeight: 1.16,
-      opacity: s.opacity }}>{s.dek}</div>}
+      opacity: s.opacity, ...(s.dekBack ? { background: tokens.ink, boxShadow: `0 0 0 14px ${tokens.ink}`, width: 'fit-content', maxWidth: dekWidth, height: 'auto', minHeight: 0 } : {}) }}
+      data-dek-back={s.dekBack ? '' : undefined}>{s.dek}</div>}
   </>
 }

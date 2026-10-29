@@ -32,15 +32,27 @@ def lone_capital_i(token: str, expected: list) -> bool:
     return 'i' in expected and 0 < len(token) <= 2 and set(token) <= set('il1|')
 
 
-def crop_to_caption_box(pixels):
-    """Keep the caption box only. A one-line page leaves the textured picture behind the rest of the fixed
-    OCR region (cream passport paper reads as stray words). The box is the solid dark run down the region's left
-    edge, ended by its bright channel-colour rule; on a dark picture the run never ends and nothing is cropped."""
-    column = pixels[:, 4:12].mean(axis=1)
-    bright = np.flatnonzero(column > 90)
-    if len(bright) and bright[0] >= 40 and (column[:bright[0]] < 70).all():
-        return pixels[:int(bright[0])]
-    return pixels
+def caption_box_height(lines: int, wide: bool) -> int:
+    """The engine's caption box: 34 px above, 38 px below, `lines` lines of size x 1.06 (CaptionTrack.tsx, geometry.ts)."""
+    size = 54 if wide else 68
+    return int(34 + 38 + lines * size * 1.06 + 6)
+
+
+def crop_to_caption_box(pixels, lines: int, wide: bool):
+    """Keep the caption box only. The OCR region is fixed but the box is as tall as its lines: on a tall cut it hangs
+    from the top of the region, on a wide cut it sits on the bottom. The rest of the region is the picture (cream
+    passport paper, a phone, a headline) and reads as stray words."""
+    height = caption_box_height(lines, wide)
+    if height >= pixels.shape[0]:
+        return pixels
+    return pixels[-height:] if wide else pixels[:height]
+
+
+def page_lines(page: dict, wide: bool) -> int:
+    from .compile import caption_line_count
+    rows = [{'text': w['text'] if isinstance(w, dict) else str(w), 'w': i} for i, w in enumerate(page['words'])]
+    swipe = page.get('swipeIndex')
+    return caption_line_count(rows, '16:9' if wide else '9:16', {swipe} if swipe is not None else ())
 
 
 def spaceless_match(expected: str, actual: str) -> float:
@@ -135,6 +147,9 @@ def _read_candidates(executable, pixels, expected):
                            ('raw_2x', pixels.repeat(2, axis=0).repeat(2, axis=1)),
                            ('normalised_2x', normalised.repeat(2, axis=0).repeat(2, axis=1))):
         seen = _recognise(executable, image)
+        # A lone pipe is the heavy sans capital I read as a bar; it counts as the word I only where I is expected.
+        if 'i' in expected:
+            seen = re.sub(r'(?<!\w)\|(?!\w)', ' i ', seen)
         # A lone stray glyph from the picture behind the caption is not a caption word; real one-letter words are in `expected`.
         actual = ['i' if lone_capital_i(token, expected) else fold(token)
                   for token in _tokens(seen) if len(token) > 1 or fold(token) in expected or lone_capital_i(token, expected)]
@@ -176,7 +191,7 @@ def ocr(render, pages, region) -> dict:
         pixels = gray_frames(render, frame, frame, region)[0].astype('uint8')
         words = ' '.join(word['text'] if isinstance(word, dict) else str(word) for word in page['words'])
         expected = _tokens(words)
-        best = _read_candidates(executable, crop_to_caption_box(pixels.reshape(h, w)), expected)
+        best = _read_candidates(executable, crop_to_caption_box(pixels.reshape(h, w), page_lines(page, w > 1000), w > 1000), expected)
         rows.append({'page': index, 'frame': frame, **best,
                      'pass': bool(expected) and best['agreement'] >= 0.98})
     report = measurement(rows, 'token agreement >= 0.98 on every page')

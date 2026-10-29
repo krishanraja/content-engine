@@ -31,6 +31,8 @@ export function Device({ object, events, tokens, aspect, frame }: DeviceProps) {
   const p = state.params, width = aspect === '9:16' ? 1080 : 1920, height = aspect === '9:16' ? 1920 : 1080
   const colour = p.tone === 'channel' ? tokens.channel : tokens.cream
   const bottom = Math.min(1170, height - 72)
+  // Labels stay inside the right margin of their canvas: x 960 on the tall canvas (the platform strip), 96 px in from the edge when wide.
+  const right = aspect === '9:16' ? 960 : width - 96, widest = aspect === '9:16' ? 888 : 560
   // Wrap at measured glyph widths, never shrink below the locked type scale.
   const label = (text: string, x: number, y: number, role: 'label' | 'name' | 'tally' = 'label') => {
     const size = role === 'name' ? 34 : role === 'tally' ? 46 : 30
@@ -39,8 +41,8 @@ export function Device({ object, events, tokens, aspect, frame }: DeviceProps) {
     const content = role === 'label' ? text.toUpperCase() : text
     const stretch = role === 'name' ? 1.12 : 1
     const measured = (value: string) => textWidth(face, value, size, tracking) * stretch
-    const available = Math.min(888, Math.max(420, 960 - x))
-    const left = Math.max(72, Math.min(x, 960 - Math.min(available, measured(content))))
+    const available = Math.min(widest, Math.max(420, right - x))
+    const left = Math.max(72, Math.min(x, right - Math.min(available, measured(content))))
     const lines: string[] = ['']
     for (const char of content) {
       if (char === '\n' || measured(lines.at(-1)! + char) > available) lines.push(char === '\n' ? '' : char)

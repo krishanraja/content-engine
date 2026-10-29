@@ -119,7 +119,7 @@ export const VeAudioSchema = z.object({
   bed: z.object({
     ledger_id: z.string().min(1),
     epidemic_edit_id: z.string().min(1).optional(),
-    mode: z.enum(['continuous', 'episode']),
+    mode: z.enum(['continuous', 'episode', 'ducked']),
     under_vo_lu: z.number().max(-12).min(-30).default(-20),
   }).strict(),
   sfx_kit: z.string().min(1).default('house-v1'),
