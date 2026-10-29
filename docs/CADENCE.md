@@ -31,20 +31,35 @@ rhythm moves over in the plan's later waves; the board's new layout (rule
 
 | When | What happens | Who |
 |---|---|---|
-| Saturday 23:00 to Sunday 06:00 | The Sunday ideas board: 3 or 4 options for each of Monday, Wednesday and Friday, with last week's "next week" items first, and 2 or 3 off-day options for each of Tuesday, Thursday, Saturday and Sunday (Krish, 2026-10-28: "on a Sunday, Claude Code proactively brings me ideas") | the Sunday routine (Claude Code); Growth for the off days |
+| Saturday, ready by Sunday 06:00 | The Sunday ideas board: 3 or 4 options for each of Monday, Wednesday and Friday, with last week's "next week" items first, and 2 or 3 off-day options for each of Tuesday, Thursday, Saturday and Sunday (Krish, 2026-10-28: "on a Sunday, Claude Code proactively brings me ideas") | the Sunday ideas run: Claude Code in GitHub Actions on his subscription (`.github/workflows/sunday-ideas.yml`); Growth for the off days |
 | Sunday, by 10:00 | One press on every idea: pick it for a day (with a note if he likes), keep it for a wider piece, track it as a future trend, queue it for next week, or reject it. Approve or skip each off-day option | Krish, about 15 minutes |
 | Sunday, 10:00 to 11:45 | The interview, one question at a time, ending in one signed narrative lock per piece (Krish, 2026-10-28: "Claude interviews me on all three ideas to nail down the narrative arc") | the Sunday room session, with Krish |
-| As each lock is signed | One fresh make session per piece. The two scripts come first (reading age, kill list, copy lint, two fresh readers, a fact check of what they claim); the article follows | Claude Code |
-| About 12:30 | **Approve scripts**, one press per day. The engine's server sends both scripts to Teleprompter and reads them back (Krish, 2026-10-28: "Once I approve, the two scripts will go to teleprompter"; "Server sends directly"). Until the Teleprompter key is stored, the press starts a session that sends them through the connector | Krish, then the engine |
+| As each lock is signed | One fresh make run per piece (`.github/workflows/make-piece.yml`, Claude Code in GitHub Actions on his subscription). The two scripts come first (reading age, kill list, copy lint, two fresh readers, a fact check of what they claim); the article follows | Claude Code |
+| About 12:30 | **Approve scripts**, one press per day. The engine's server sends both scripts to Teleprompter and reads them back (Krish, 2026-10-28: "Once I approve, the two scripts will go to teleprompter"; "Server sends directly"). Until the Teleprompter key is stored, the Sunday room sends them through the connector | Krish, then the engine |
 | 13:00 to 15:00 | He records all six cuts and drops each take in the Video Engine Inbox; each take is placed on its piece and cut | Krish, then the recordings lane |
 | About 15:30 | **Titles**: three options for each surface, chosen with one Sunday evening press (Krish, 2026-10-28: "Sunday evening press"). The plan, not Krish, set the time and the fallback: if he picks none by 21:30, the top-ranked ones are used | Krish |
 | Sunday night | Every final asset is made: both cuts of each piece, thumbnails and covers, each through the gates. On 1 November this runs on quick-edit in a session the titles press starts; the unattended run on the home computers is planned from 8 November | the engine |
-| Monday, 06:30 | The final publish board, built from the records, with each held item and its reason (Krish, 2026-10-28: "an overnight Codex run will actually produce me the final assets and the final publish board first thing Monday morning") | the Monday board routine |
+| Monday, 06:30 | The final publish board, built from the records, with each held item and its reason (Krish, 2026-10-28: "an overnight Codex run will actually produce me the final assets and the final publish board first thing Monday morning") | code (`week_board.py`), when the overnight production finishes |
 | Monday, about 45 minutes | He watches each cut at full size, signs off the article's facts, then presses **Approve for publish** or **Reject asset** (with a reason) for each day | Krish |
 | After his approval | Growth schedules each approved post and reads it back (Krish, 2026-10-28: "Approve each day Monday") | Growth |
 
+**Zero Claude routines** (Ruling, Krish, 2026-10-29: "FYI, I want zero Claude
+routines. No Claude schedules of any kind in this architecture"). No claude.ai
+scheduled or fired trigger and no headless Claude on a home-computer timer.
+GitHub Actions is the scheduler ("Could you not get Github to trigger Claude
+subscription to do something and then update the content.krishraja.com
+board?"): the Sunday ideas run and each piece's make run Claude Code inside a
+GitHub Actions job on his subscription (`CLAUDE_CODE_OAUTH_TOKEN`, never an
+API key) and write to the board only through the engine API. GitHub's cron
+fires hours late, so the Sunday ideas run fires twice early on Saturday (UTC)
+and does nothing once the week's Ideas tab is live. The timed API calls (the
+engine's Vercel crons, inspirationhouse's daily runs, the fact gate) stay, and
+this chain's metered API spend stays under $15 a week (Krish, 2026-10-29:
+"happy with $15 a week"; about $13.80 measured, 15 to 28 October).
+
 The Sunday ideas board and the Monday final board are the only two boards a
-scheduled routine may build (`AGENTS.md`, "Commit and closeout"). Until Krish
+scheduled job may build (`AGENTS.md`, "Commit and closeout"); the Monday one
+is built by code, never by Claude on a timer. Until Krish
 says otherwise, the plan's other scheduled jobs (the Monday 07:30 repair round
 on held cuts, the 21:30 titles fallback) write records only, and the board
 shows what they did at its next build. Codex no
@@ -99,10 +114,10 @@ Times are Krish's, in New York (`system_config.operator_timezone`).
 
 | When | Where | What happens | Who |
 |---|---|---|---|
-| Sunday, early morning | A Claude Code session ("Plan the week" routine, `.agents/skills/plan-week`) | Copies the ending week's ticks onto the records; researches three or four options for Monday, Wednesday and Friday, fleshes out what he dropped in the Cold Ideas & Inspo folder, stress-tests them, and writes them onto the pieces (`/api/week/options`); then makes the week's publish board (`scripts/post-pack/week_board.py`): one private page with a tab for each day and a tick for every step, its link on the week's own board item `week-publish-board-<Monday>` (on him, at the top) and in `WORKBENCH.md`; the ending week's board stays read until every day on it is at 100% | Claude Code |
+| Sunday, early morning | A Claude Code session ("Plan the week", `.agents/skills/plan-week`; from 1 November the Sunday ideas run in GitHub Actions, never a routine) | Copies the ending week's ticks onto the records; researches three or four options for Monday, Wednesday and Friday, fleshes out what he dropped in the Cold Ideas & Inspo folder, stress-tests them, and writes them onto the pieces (`/api/week/options`); then makes the week's publish board (`scripts/post-pack/week_board.py`): one private page with a tab for each day and a tick for every step, its link on the week's own board item `week-publish-board-<Monday>` (on him, at the top) and in `WORKBENCH.md`; the ending week's board stays read until every day on it is at 100% | Claude Code |
 | Sunday, 8am (7am in winter) | The work board | One item asks the Sunday question and links to the week page (`control-center api/content/slate.ts`, refreshed every morning, done when all three days have a piece) | Control Center |
 | Sunday | Control Center, the week page (`#/week`) | He picks a piece for each day, or drops in an idea to flesh out. A pick holds its day (scheduled_for) | Krish |
-| Sunday, on the Monday pick | Claude Code ("Make a piece" routine, `.agents/skills/make-piece`) | Monday's piece is made through to its publish board: workroom, fact-checked article, visual gate, both scripts (each opening straight on the hook and closing on the deep dive line, held to a reading age of 12 and read back by two fresh readers, then sent to his teleprompter.com account: one folder for the piece, one script per cut), publish page, pack. The week's publish board is rebuilt with the picks and Monday's page and republished to its link, so its ticks stay | Claude Code |
+| Sunday, on the Monday pick | Claude Code ("Make a piece", `.agents/skills/make-piece`; from 1 November one `make-piece.yml` run per piece, never a routine) | Monday's piece is made through to its publish board: workroom, fact-checked article, visual gate, both scripts (each opening straight on the hook and closing on the deep dive line, held to a reading age of 12 and read back by two fresh readers, then sent to his teleprompter.com account: one folder for the piece, one script per cut), publish page, pack. The week's publish board is rebuilt with the picks and Monday's page and republished to its link, so its ticks stay | Claude Code |
 | Monday morning | teleprompter.com on his phone or laptop, and his camera | He records Monday's two cuts, each read from its own script in Teleprompter, then drops each take as its own file at the top of the Video Engine Inbox (any name), the one way a take comes back. Then he tells Codex or Claude Code "I've recorded" | Krish |
 | Within about 15 minutes of an Inbox drop | Whichever home computer is on (the recordings upload, every five minutes) | Each take reaches the engine, and the same lane places it on its piece and cut by itself (`recording_match.py --record --board --by "Recordings lane"`), stamped with the script it was read from; a take it is unsure of becomes one board item held for a session, never on his list (the session asks him in its reply) | the home computers |
 | By hand only: the noon schedule is retired (Ruling, Krish, 2026-10-28: "record the entire week on a Sunday, but it does not go live until the Monday after (8 days later)"); the overnight runner replaces it in Wave 2 | GitHub's machine, from its Run workflow button (`.github/workflows/produce-day.yml`, `scripts/produce_day.py`; Krish, 2026-10-12: "GitHub always renders"), or `produce_day.py` on a home computer. A cut the words gate holds, or one whose receipt does not pass the delivery gates, stops the run red and sends nothing; `--file-only` files cuts already made there once their receipts pass | Waits for both takes on the day's piece, fetches them, the licensed music and the pictures from the engine, renders the story outro for the piece (each cut opens on the hook, house rule HOOK_IS_THE_INTRO), makes both cuts and their thumbnails, sends them to the post's `3 Video` folder (Library Sync puts them in Drive) and records them on the piece; a stop is one board item saying exactly what stopped. In Wave 1 no machine records a cut's review evidence, so a fresh run stops there; the session that watches both cuts records it and files them with `--file-only` | GitHub or a home computer, then a session |
@@ -154,7 +169,7 @@ board, the strip and both skills read the same table.
 
 | Step | Owner | Skill | Writes |
 |---|---|---|---|
-| Options for the week | Claude Code (Sunday routine) | `.agents/skills/plan-week` | `meta.week_option` through `/api/week/options` |
+| Options for the week | Claude Code (the Sunday ideas run, GitHub Actions) | `.agents/skills/plan-week` | `meta.week_option` through `/api/week/options` |
 | The Sunday question and the pick | Control Center (cron), Krish | `api/content/slate.ts`, the week page | the work board's week item; the pick and its day |
 | Workroom, fact-checked draft, visual gate, scripts, publish page, pack | Claude Code | `.agents/skills/make-piece` | `meta.making.workroom`, `.publish_manager`, `.visual_gate`, `.script_check`, `.pack`; the body through the engine |
 | The read-back | Claude Code, at the Scripts step: two fresh readers, each an ordinary 12-year-old hearing the script once | `make-piece` ("The Scripts step", step 4), `making.py <piece> read-back` | `meta.making.script_check.read_back`: who read each cut, when, "nothing lost", and the hash of the words they heard |
@@ -173,7 +188,7 @@ Where each thing lives, and nowhere else:
 | The work board | the engine's `work_board_*` tables | `/api/workbench` on the engine key or Krish's cookie |
 | The engine key | Claude Code cloud: a network secret bound to the engine's host. Codex cloud: the environment secret. Windows home machines: Credential Manager, read by `scripts/engine.py` | never a file, a chat or a commit |
 | The runner's bearer | Credential Manager on each runner machine | the recordings and library lanes |
-| Control Center's secrets (access code, cron secret, the routine's id and token) | Control Center's Vercel project | its own routes; the slate cron speaks to the board on the access-code cookie |
+| Control Center's secrets (access code, cron secret) | Control Center's Vercel project | its own routes; the slate cron speaks to the board on the access-code cookie |
 | Recordings | the engine's recordings lane (object store plus manifest), fed only from the top of the Video Engine Inbox | the home computers place each Inbox take on its piece and cut by themselves (`scripts/recordings-upload.ps1`, then `scripts/post-pack/recording_match.py`); `scripts/post-pack/recording.py get` fetches a take by its Inbox name or by the path its piece's record holds (`recordings/<sha256>.<ext>`); never the Drive connector (10 MB cap) |
 | Scripts for Krish to read while he records | his teleprompter.com account: one folder per piece ("Mon 12 Oct follow.the.money - Who gets paid for AI songs"), one script per cut ("Mon 12 Oct - 5-minute - Who gets paid for AI songs"); and the publish page's Copy | each cut's script title on the piece's making record (`meta.making.teleprompter`), shown on Control Center's Record step ("Read from Teleprompter: <title>") and on the week's publish board. Sent at the Scripts step by `teleprompter_send.py` (from 1 November, only on his Approve scripts press); words that change update the same script in place, and nothing there is ever deleted |
 | The week's publish board and all decisions | content.krishraja.com, authenticated dated boards and immutable builds | each week's `week-publish-board-<Monday>` item and `WORKBENCH.md`; every tool reads all six collections with `board_web.py`, following `docs/PUBLISH_BOARDS.md` |
@@ -202,8 +217,9 @@ What could be misread, and what stops it:
    a file or a chat. Inside Codex's Windows sandbox it cannot be read: the
    skill says to run outside the sandbox with Krish's approval. In Claude
    Code's cloud the proxy adds it; the container never holds it.
-5. **Two sessions start for one piece.** Control Center fires one routine
-   per press and opens a live session instead of firing again. Codex has
+5. **Two sessions start for one piece.** One `make-piece.yml` run per piece:
+   its concurrency group is the piece, so a second dispatch waits instead of
+   running beside the first, and no routine is fired (Krish, 2026-10-29). Codex has
    no trigger from Control Center: Krish telling it he has dropped the
    takes is its signal, `recording_match.py` works out which take is which
    piece and cut, and the record shows the session making it.
@@ -211,10 +227,12 @@ What could be misread, and what stops it:
    (`system_config.operator_timezone`; the 10 October cron wrongly assumed
    Sydney). The slate cron runs every day at 12:00 UTC (8am New York in
    summer time, 7am in winter), puts the week's item on the board only when
-   it is Sunday in his zone, and only refreshes it on other days. The
-   planning routine runs at 6:47am New York on Sunday (CRON_TZ in the
-   routine). When his zone changes, the routine's schedule moves with
-   CRON_TZ; the slate needs no change, because the Sunday test reads his zone.
+   it is Sunday in his zone, and only refreshes it on other days. There is
+   no planning routine (Krish, 2026-10-29: "I want zero Claude routines"):
+   the Sunday ideas run fires on Saturday in UTC, early enough that GitHub's
+   lateness and either New York offset still put the Ideas tab live before
+   06:00 Sunday; the slate needs no change, because the Sunday test reads his
+   zone.
 7. **A pack rebuilt without the gate.** `build.py --replace` runs the
    visual gate again, so a cut added without its logos declared refuses
    the whole pack. Only Krish's own words in `visual_gate_override` pass

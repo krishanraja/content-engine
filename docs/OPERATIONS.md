@@ -481,10 +481,10 @@ computer produce the week's final assets overnight after Krish records on Sunday
 preflight proves a week early whether each machine could run it unattended.
 
 - **What it checks.** `scripts/overnight/preflight.ps1` checks the following:
-  - Claude Code is installed, and one headless `claude -p` turn answers. The turn runs from the repository with its
-    settings and hooks plus `scripts/overnight/preflight-profile.json`: permission mode `dontAsk`, bypass disabled,
-    no built-in tools, one short Haiku turn. The check lists the MCP servers that turn loaded, each with its status,
-    and fails if the turn ran with `bypassPermissions`.
+  - Claude Code is installed (`claude --version` only). It never starts a Claude turn. Ruling (Krish, 2026-10-29):
+    "FYI, I want zero Claude routines. No Claude schedules of any kind in this architecture". The overnight run is
+    Codex and scripts, started by his Titles press, so the headless `claude -p` turn this used to make tested
+    something the run never does, and making it from a Saturday timer was itself a scheduled Claude run.
   - The Codex plugin companion that `ve dispatch` uses runs `node <companion> help` and offers the task route with
     the flags dispatch passes. It never runs `task --help`: the companion reads help only as its first word, so that
     would start a real Codex task and spend.
@@ -494,10 +494,8 @@ preflight proves a week early whether each machine could run it unattended.
   - The pinned ffmpeg and Tesseract that `scripts/ve-env.sh` names are at their paths and run.
   - At least 40 GB is free on the Studio runtime's drive.
   - The Video Engine, Inbox, Archive and library folders in `config/studio.json` are reachable.
-- **What it never does.** It only reads, runs version and help commands, and makes one short headless Claude turn.
-  It never edits, sends or spends, and it writes no file of its own. The repository's own hooks run on that turn,
-  as on any session there: with no tool called they only read, and the closeout hook may fetch main into the
-  clone's remote refs, as the pass's own update does. Every program it starts has no window, its input closed and
+- **What it never does.** It only reads and runs version and help commands. It never starts Claude, never edits,
+  sends or spends, and it writes no file of its own. Every program it starts has no window, its input closed and
   its output read (`tests/overnight-preflight.test.ts` pins every program and argument it may start).
 - **When it runs.** The recordings pass (`scripts/recordings-upload.ps1`) runs it once each Saturday from 18:00
   local on both machines, from its hidden task.
@@ -511,7 +509,7 @@ preflight proves a week early whether each machine could run it unattended.
   - A failed preflight adds `preflight_failed` to that machine's problems for 48 hours. That fails the Inbox job,
     so Control Center shows it before Sunday night.
 - **By hand.** Run `powershell -NoProfile -ExecutionPolicy Bypass -File scripts\overnight\preflight.ps1`. It prints
-  the full result and changes nothing. Add `-RequireMcp <name>` to fail when that MCP server is not connected.
+  the full result and changes nothing.
 
 ## Publishing boundary
 

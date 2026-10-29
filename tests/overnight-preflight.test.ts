@@ -1,5 +1,5 @@
 import { spawnSync } from 'node:child_process'
-import { mkdtempSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdtempSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { describe, expect, it, vi } from 'vitest'
@@ -11,13 +11,14 @@ const { LANE_PROBLEMS, PREFLIGHT_CHECKS, parseLaneReport } = await import('../ap
 // once each Saturday after 18:00 local (plan Wave 1, the clock's "Sat 18:00 Preflight" row). It proves, a week before
 // the overnight runner exists, whether a machine could run it unattended, and it must never edit, send or spend.
 // Krish, 2026-10-28: "HIDE ALL CONSOLE POP UPS FOREVER FROM EVERY REPO AND LOCAL TASK".
+// Ruling (Krish, 2026-10-29): "FYI, I want zero Claude routines. No Claude schedules of any kind in this architecture".
+// So it never starts a Claude turn: the headless check it used to make from this Saturday timer is gone.
 
 const ROOT = join(__dirname, '..')
 const SCRIPT = join(ROOT, 'scripts', 'overnight', 'preflight.ps1')
 const read = (path: string) => readFileSync(join(ROOT, path), 'utf8').replace(/\r\n/g, '\n')
 const preflight = read('scripts/overnight/preflight.ps1')
 const upload = read('scripts/recordings-upload.ps1')
-const profile = JSON.parse(read('scripts/overnight/preflight-profile.json'))
 // What the script runs, with its help block and its comment lines taken out.
 const code = preflight.slice(preflight.indexOf('#>') + 2).split('\n').filter((line) => !/^\s*#/.test(line)).join('\n')
 const fn = (source: string, name: string) => {
@@ -40,14 +41,13 @@ function powershell(dir: string, script: string): Record<string, any> {
 // Every program the preflight starts, exactly. A new one is added here on purpose, after reading what it does.
 const RUNS = [
   "Invoke-Quiet $Claude @('--version') 30",
-  'Invoke-Quiet $Claude $arguments $ClaudeTimeoutSeconds',
   "Invoke-Quiet $node @($companion, 'help') 30",
   "Invoke-Quiet $codex @('login', 'status') 30",
   "Invoke-Quiet $python ($prefix + @($audit, '--codex', '--json')) 120 @{ PYTHONUTF8 = '1'; PYTHONIOENCODING = 'utf-8' }",
   "Invoke-Quiet $ffmpeg @('-version') 30",
   "Invoke-Quiet $tesseract @('--version') 30",
 ]
-const CHECKS = ['claude_cli', 'claude_headless', 'codex_companion', 'codex_login', 'codex_allowance', 'ffmpeg', 'tesseract', 'disk', 'drive']
+const CHECKS = ['claude_cli', 'codex_companion', 'codex_login', 'codex_allowance', 'ffmpeg', 'tesseract', 'disk', 'drive']
 const WRITES = /\b(Set-Content|Add-Content|Out-File|New-Item|Remove-Item|Move-Item|Copy-Item|Rename-Item|Clear-Content|Set-Item|Set-ItemProperty|New-ItemProperty|Remove-ItemProperty|Tee-Object|Export-[A-Za-z]+|Start-Process|Stop-Process|Invoke-Expression|Invoke-WebRequest|Invoke-RestMethod|Start-BitsTransfer|Send-MailMessage|Register-ScheduledTask|Set-ScheduledTask|Unregister-ScheduledTask|Start-ScheduledTask|Stop-ScheduledTask|Enable-ScheduledTask|Disable-ScheduledTask|Save-JsonFile|Send-Engine|Invoke-Engine|Send-LaneReport)\b/i
 // File and Directory only for reading; no environment setting kept, no network client, no process ended by .Kill.
 const NET_WRITES = /\[(System\.IO\.)?(File|Directory|FileInfo|DirectoryInfo)\]::(?!(ReadAllText|ReadAllLines|Exists)\b)\w+|::SetEnvironmentVariable\b|\b(HttpClient|WebClient|WebRequest|TcpClient|UploadString|UploadFile|SendAsync|PostAsync|PutAsync)\b|FileMode\]::|FileAccess\]::(Write|ReadWrite)|\$env:[A-Za-z_]+\s*=(?!=)|\.Kill\(/
@@ -55,9 +55,7 @@ const FORBIDDEN_ARGUMENTS = /dangerously|bypassPermissions'|'task'|'exec'|'push'
 
 describe('the overnight preflight on a home computer', () => {
   it('is plain ASCII, as every PowerShell script here is, so Windows PowerShell reads it as written', () => {
-    for (const source of [preflight, read('scripts/overnight/preflight-profile.json')]) {
-      expect([...source].filter((ch) => ch.charCodeAt(0) > 127)).toEqual([])
-    }
+    expect([...preflight].filter((ch) => ch.charCodeAt(0) > 127)).toEqual([])
   })
 
   it('calls no command that writes, sends, schedules or spends', () => {
@@ -91,23 +89,11 @@ describe('the overnight preflight on a home computer', () => {
     expect(fn(preflight, 'Find-Program')).toContain("if ($folder -match '\\\\WindowsApps\\\\?$') { continue }")
   })
 
-  it('runs one headless Claude turn with the preflight profile: no tools, dontAsk, bypass disabled, no session kept', () => {
-    const headless = code.slice(code.indexOf("Invoke-Check 'claude_headless'"), code.indexOf("Invoke-Check 'codex_companion'"))
-    const args = /\$arguments = @\(([\s\S]+?)\)\n/.exec(headless)![1]!
-    for (const part of ["'-p'", "'--output-format', 'stream-json', '--verbose'", "'--model', $Model", "'--permission-mode', 'dontAsk'",
-      "'--settings', $ProfilePath", "'--tools', ''", "'--no-session-persistence'"]) expect(args).toContain(part)
-    expect(args).not.toMatch(/dangerously|bypass|--allowedTools|--add-dir|--mcp-config/i)
-    expect(preflight).toContain("[string]$Model = 'haiku'")
-    expect(headless).toContain("if ($result.permission_mode -eq 'bypassPermissions' -or -not $result.permission_mode)")
-    expect(headless).toContain("[string](Get-Field $init 'permissionMode')")
-    expect(headless).toContain("@(Get-Field $init 'mcp_servers')")
-    expect(profile).toEqual({
-      permissions: {
-        defaultMode: 'dontAsk',
-        disableBypassPermissionsMode: 'disable',
-        deny: ['Bash', 'Edit', 'Write', 'NotebookEdit', 'WebFetch', 'WebSearch'],
-      },
-    })
+  it('never starts a Claude turn: Claude Code is only asked its version (no Claude on a timer, Krish, 2026-10-29)', () => {
+    expect([...code.matchAll(/Invoke-Quiet \$Claude (.+)$/gm)].map((m) => m[1])).toEqual(["@('--version') 30"])
+    expect(code).not.toMatch(/'-p'|--print|--permission-mode|--output-format|claude_headless|preflight-profile/)
+    expect(existsSync(join(ROOT, 'scripts', 'overnight', 'preflight-profile.json'))).toBe(false)
+    expect(preflight).toContain('It never starts Claude')
   })
 
   it('reads the pinned tools and the allowance ceiling from the one place each is written', () => {
@@ -147,7 +133,7 @@ describe('the overnight preflight on a home computer', () => {
   it('never gives the engine a path, a message or an account', () => {
     const report = code.slice(code.indexOf('$report = [ordered]@{'), code.indexOf('$result = [ordered]@{', code.indexOf('$report = [ordered]@{')))
     expect(report).toContain('codex_weekly_used_pct = ')
-    expect(report).not.toMatch(/detail|plan|credits|\$RepoRoot|\$ProfilePath|machine/)
+    expect(report).not.toMatch(/detail|plan|credits|\$RepoRoot|machine|permission_mode|mcp_servers|auth/)
     // codex login status can name the account; the check keeps only whether it says ChatGPT.
     const login = code.slice(code.indexOf("Invoke-Check 'codex_login'"), code.indexOf("Invoke-Check 'codex_allowance'"))
     expect(login).toContain('-match \'ChatGPT\'')
@@ -162,8 +148,7 @@ describe('the preflight in the lane report', () => {
       preflight: {
         at: '2026-10-31T18:02:11Z', ok: false, failed: ['codex_allowance', 'made_up', 'codex_allowance'],
         claude_version: '2.1.312', permission_mode: 'dontAsk', auth: 'none',
-        mcp_servers: [{ name: 'mindmake-studio', status: 'connected' }, { name: 'claude.ai Gmail', status: 'needs-auth' },
-          { name: 'C:\\Users\\krish\\x', status: 'connected' }, { name: 'ok', status: 'Has Spaces' }, 'stray'],
+        mcp_servers: [{ name: 'mindmake-studio', status: 'connected' }],
         codex_companion: '1.0.6', codex_login: true, codex_weekly_used_pct: 86.04, codex_resets_at: '2026-11-02T09:00:00Z',
         ffmpeg: 'n8.1.2-53-g1005b294ff', tesseract: '5.4.0.20240606', free_gb: 212.4, drive_reachable: 4, drive_folders: 4,
         detail: 'a whole message', path: 'C:\\Users\\krish',
@@ -172,18 +157,19 @@ describe('the preflight in the lane report', () => {
     expect(report.problems).toEqual(['preflight_failed'])
     expect(report.preflight).toEqual({
       at: '2026-10-31T18:02:11Z', ok: false, failed: ['codex_allowance'],
-      claude_version: '2.1.312', permission_mode: 'dontAsk', auth: 'none',
-      mcp_servers: [{ name: 'mindmake-studio', status: 'connected' }, { name: 'claude.ai Gmail', status: 'needs-auth' }],
+      claude_version: '2.1.312',
       codex_companion: '1.0.6', codex_login: true, codex_weekly_used_pct: 86, codex_resets_at: '2026-11-02T09:00:00Z',
       ffmpeg: 'n8.1.2-53-g1005b294ff', tesseract: '5.4.0.20240606', free_gb: 212.4, drive_reachable: 4, drive_folders: 4,
     })
     expect(LANE_PROBLEMS.preflight_failed).toMatch(/overnight preflight/)
   })
 
-  it('keeps every MCP server a Claude Code with all its connectors loads (51 measured on 28 October 2026)', () => {
-    const servers = Array.from({ length: 60 }, (_, i) => ({ name: `plugin:sales:server ${i}`, status: i % 2 ? 'needs-auth' : 'connected' }))
-    const report = parseLaneReport({ machine: 'A', problems: [], preflight: { ok: true, mcp_servers: servers } }, new Date(0).toISOString())!
-    expect(report.preflight?.mcp_servers).toEqual(servers)
+  it('drops what only the retired headless turn reported, as an older machine may still send it', () => {
+    const report = parseLaneReport({ machine: 'A', problems: [], preflight: { ok: false, failed: ['claude_headless', 'drive'], permission_mode: 'dontAsk', mcp_servers: [] } }, new Date(0).toISOString())!
+    expect(report.preflight?.failed).toEqual(['drive'])
+    expect(report.preflight?.ok).toBe(false)
+    expect(report.preflight).not.toHaveProperty('permission_mode')
+    expect(report.preflight).not.toHaveProperty('mcp_servers')
   })
 
   it('never reads a block that names a failed check as passed', () => {
@@ -308,7 +294,7 @@ $control = Watch-Run (Start-Process -FilePath (Join-Path $env:SystemRoot 'System
 $before = @([PreflightProbe]::Consoles())
 $start = New-Object System.Diagnostics.ProcessStartInfo
 $start.FileName = Join-Path $env:SystemRoot 'System32\\WindowsPowerShell\\v1.0\\powershell.exe'
-$start.Arguments = '-NoProfile -NonInteractive -ExecutionPolicy Bypass -File "${SCRIPT}" -RepoRoot "${ROOT}" -ClaudeTimeoutSeconds 60'
+$start.Arguments = '-NoProfile -NonInteractive -ExecutionPolicy Bypass -File "${SCRIPT}" -RepoRoot "${ROOT}"'
 $start.UseShellExecute = $false
 $start.CreateNoWindow = $true
 $start.RedirectStandardOutput = $true

@@ -30,10 +30,14 @@ ideas generator, which then saves my choices to the durable system and then a
 session here picks up that durable system. ... It shouldn't need to matter"
 which session. This skill is that pick-up.
 
-The input is one line, `piece_id: <uuid>`, sent by Control Center's "Make it
-in Claude Code" button (a Claude Code routine), by the Sunday room once
-Krish signed the piece's narrative lock (`plan-week`, step 11), or typed by
-Krish. Everything the session learns about the piece comes from the engine
+The input is one line, `piece_id: <uuid>`, sent by the Sunday room once
+Krish signed the piece's narrative lock (`plan-week`, step 11) through one
+run of `.github/workflows/make-piece.yml` (Claude Code in GitHub Actions on
+his subscription), by a press that dispatches that workflow, or typed by
+Krish. Never a routine (Ruling, Krish, 2026-10-29: "FYI, I want zero Claude
+routines. No Claude schedules of any kind in this architecture"). In a
+GitHub Actions run nobody reads the chat: every question is a press on the
+day's tab, and the workflow pushes what you commit. Everything the session learns about the piece comes from the engine
 and the repository, never from the chat that started it.
 
 ## From the signed narrative lock (pieces from 9 November)
@@ -99,7 +103,9 @@ does that with him and writes one narrative lock per piece,
 2. Read the piece: `python3 scripts/engine.py GET "/api/content-ideas?id=<uuid>"`
    and where it is: `python3 scripts/post-pack/making.py <uuid> show`.
 3. Record this session on the piece so the board shows it is being made:
-   `python3 scripts/post-pack/making.py <uuid> session <this session's https link>`.
+   `python3 scripts/post-pack/making.py <uuid> session <this session's https link>`
+   (in GitHub Actions, the run's link:
+   `$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID`).
 4. Copy Krish's ticks from the week's publish board onto the records ("The
    week's ticks", below).
 5. See what Teleprompter is missing: `python3

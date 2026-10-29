@@ -22,6 +22,19 @@ layout, the same every week:
   Sunday is his recording day (Krish, 2026-10-24: "Yes, Sunday is my recording
   day").
 
+**Who builds a board, and when** (Ruling, Krish, 2026-10-29: "FYI, I want zero
+Claude routines. No Claude schedules of any kind in this architecture"; then
+"Could you not get Github to trigger Claude subscription to do something and
+then update the content.krishraja.com board?"). No Claude routine builds a
+board. The Sunday ideas board is `.github/workflows/sunday-ideas.yml`: Claude
+Code inside a GitHub Actions job on his subscription (`CLAUDE_CODE_OAUTH_TOKEN`,
+never an API key), fired early on Saturday, idempotent for the week, and
+startable by hand. The Monday final board is built by code (`week_board.py`)
+when the overnight production finishes, never by Claude on a timer. Every
+other build is a session he started or a `make-piece.yml` run for a piece he
+signed. All of them write through the engine API (`ENGINE_OPERATOR_TOKEN`),
+by the same inputs below.
+
 A session feeds the slots and nothing else:
 
 | Step | What feeds it | Input |

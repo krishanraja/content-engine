@@ -67,7 +67,7 @@ scripts/get-credential.ps1 exactly as the runner reads it, and never shows it.
 Once each Saturday after 18:00 local, a pass also runs the overnight preflight
 (scripts\overnight\preflight.ps1, plan Wave 1: the clock's "Sat 18:00
 Preflight" row), with no window. It only reads: whether this machine could run
-the overnight production unattended (headless Claude Code and its MCP servers,
+the overnight production unattended (Claude Code installed, never started,
 the Codex companion, login and allowance, the pinned ffmpeg and Tesseract, free
 disk, Google Drive). Its result is kept as preflight.json beside this log, a
 failed one is tried once more 20 minutes later, and every report after carries
@@ -1104,14 +1104,12 @@ function Get-PreflightBlock {
   $report = Get-Field $script:Preflight 'report'
   if ($null -eq $report) { return $null }
   $block = [ordered]@{}
-  foreach ($name in @('at', 'ok', 'claude_version', 'permission_mode', 'auth', 'codex_companion', 'codex_login', 'codex_weekly_used_pct',
+  foreach ($name in @('at', 'ok', 'claude_version', 'codex_companion', 'codex_login', 'codex_weekly_used_pct',
       'codex_resets_at', 'ffmpeg', 'tesseract', 'free_gb', 'drive_reachable', 'drive_folders')) {
     $value = Get-Field $report $name
     if ($null -ne $value) { $block[$name] = $value }
   }
   $block['failed'] = @(Get-Field $report 'failed' | Where-Object { $_ } | ForEach-Object { [string]$_ })
-  $block['mcp_servers'] = @(Get-Field $report 'mcp_servers' | Where-Object { $null -ne $_ } |
-    ForEach-Object { [ordered]@{ name = [string](Get-Field $_ 'name'); status = [string](Get-Field $_ 'status') } })
   return $block
 }
 

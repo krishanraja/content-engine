@@ -2,6 +2,12 @@
 
 [Story correction and Growth handoff, 26 Oct](docs/history/2026-10-26-story-closeout.md).
 
+## 29 October: zero Claude routines (Claude Code)
+
+- **Ruling (Krish):** "FYI, I want zero Claude routines. No Claude schedules of any kind in this architecture"; "happy with $15 a week".
+- **Built:** `.github/workflows/sunday-ideas.yml` (Saturday, guarded by `scripts/sunday_ideas.py built`) and `make-piece.yml` (one run per signed piece), Claude Code on `CLAUDE_CODE_OAUTH_TOKEN`; the preflight starts no Claude.
+- **Only Krish can:** add that secret (`claude setup-token`); delete the two claude.ai routines.
+
 ## 27 October: pasted links tagged Production or Content; the first live run is one reel (Claude)
 
 - **No windows (28 Oct):** Krish: "HIDE ALL CONSOLE POP UPS FOREVER FROM EVERY REPO AND LOCAL TASK". Each pass runs his console tasks through `run-hidden.exe` (`scripts/windowless.ps1`); content-watcher #16 hides every child and skips media the engine holds. Read `windows` per machine on the lane.
@@ -454,21 +460,17 @@ https://controlcenter.krishraja.com/#/board:
    notes are its entry under "Latest handoff". On his words, either carry
    Wednesday on in this session (`make-piece`: draft, fact gate, visual
    gate, scripts with the under.the.hood line, read-back, Teleprompter,
-   publish page, board) or fire the "Make a piece" routine
-   (trig_01BNH3a98CuVV9sGW9b56DNJ) with `piece_id:
-   7554ed4a-560b-4365-b266-ea72abeed7ef`, quoting his words in the fire
-   text. Never both.
+   publish page, board) or start one `make-piece.yml` run with `piece_id:
+   7554ed4a-560b-4365-b266-ea72abeed7ef`; never a routine (29 Oct). Never
+   both.
 7. **Read-backs already behind us.** No cut, Monday's or Friday's, has a
    two-reader pass on record, whatever the 16:45 entry below says ("each
    cut passed `story_check.py` and two fresh 12-year-old readers": they
    passed `story_check.py`; the strict readers still lost the thread in
    places). Monday's takes are recorded, so leave Monday's words alone and
    record no pass for them; Friday's get theirs in step 5.
-8. **Only Krish can**: attach the Teleprompter connector to both routines
-   ("Plan the week" trig_016PWevC6fzViu6mHpKSAbHM and "Make a piece"
-   trig_01BNH3a98CuVV9sGW9b56DNJ) and remove Descript from them, in
-   claude.ai; until he does, a routine session stops at the Teleprompter
-   send and says so. Still open with him: the second sting design
+8. **Retired 29 Oct:** the "Plan the week" and "Make a piece" routines
+   (zero Claude routines, top of this file). Still open with him: the second sting design
    (https://claude.ai/artifact/FnDVNoCk1CqxGKTHRYENKH, which the story
    intro may absorb; step 3), and Library Sync on the backup computer.
 

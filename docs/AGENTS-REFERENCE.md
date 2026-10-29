@@ -24,6 +24,8 @@ everything is.
 
 Amended (Ruling, Krish, 2026-10-28): he said otherwise for two boards. "on a Sunday, Claude Code proactively brings me ideas", and "an overnight Codex run will actually produce me the final assets and the final publish board first thing Monday morning". Exactly two scheduled routines may build a board: the Sunday ideas board (Saturday night, ready by Sunday morning) and the Monday final board (built from the records by 06:30 Monday). Each feeds `week_board.py`'s inputs and publishes to content.krishraja.com like any session. Every other board update still happens only in a session he started (`docs/CADENCE.md`, "The rhythm from 1 November 2026"); until he says otherwise, any other scheduled job (the Monday repair round, the titles fallback) writes records only.
 
+Amended (Ruling, Krish, 2026-10-29): "FYI, I want zero Claude routines. No Claude schedules of any kind in this architecture". Then: "Minimal API usage under $5 a week. Could you not get Github to trigger Claude subscription to do something and then update the content.krishraja.com board?", and "happy with $15 a week". So no Claude routine of any kind: no claude.ai scheduled or fired trigger, and no headless Claude on a home-computer timer (the Saturday overnight preflight no longer starts one). GitHub Actions is the scheduler. The Sunday ideas board is `.github/workflows/sunday-ideas.yml`: Claude Code inside the job on his subscription (`CLAUDE_CODE_OAUTH_TOKEN`, made with `claude setup-token`; never an API key), fired early on Saturday with a guard that it already ran for the week, and `workflow_dispatch` by hand. Each signed piece's make is one run of `.github/workflows/make-piece.yml`. The Monday final board is built by code (`week_board.py`) when the overnight production finishes, never by Claude on a timer. Both write to the board only through the engine API (`ENGINE_OPERATOR_TOKEN`). The timed API calls (the engine's Vercel crons, inspirationhouse's daily runs, the fact gate) stay, and this chain's metered API spend stays under $15 a week (about $13.80 measured, 15 to 28 October). `tests/no-claude-routines.test.ts` fails on any workflow or skill that creates or fires a Claude routine, or runs Claude Code on an API key.
+
 <a id="rule-04"></a>
 
 **Cost: six standing rules.** Krish, 2026-10-18: "They should all become standing rules" (the six habits in `docs/COST_AUDIT_2026-10-18.md`; one six-day session read 1,086M tokens because every step re-read a 459k-token context). (1) One fresh session per job, started from its handover and stopped when the job is done. (2) Switch topics by writing the handover and starting a new session. (3) Fewer, bigger steps: one script, not five commands. (4) Keep big outputs out of the chat: never read a board into the conversation (the builder reads the saved copy), one contact sheet per output, quiet logs. (5) Sonnet for production work (renders, packs, filing, board rebuilds), Opus for writing and judgment. (6) Agents and workflows only for work that needs a separate reader. Before any paid run, estimate it from `meter_daily`'s last run, never from a count. The guards that will enforce these are in `docs/COST_GUARDS.md`. When Krish asks for files (Markdown, an export), hand him the files themselves; never also put them on a board or make an artifact (Krish, 2026-10-18: "I don't need these as artefacts. I need them as Markdown.").
@@ -184,8 +186,9 @@ for its day on the board, and the engine's server sends it
 `TELEPROMPTER_API_KEY` secret), refusing any text whose hash is not the one he
 approved and reading each script back. The never list above is unchanged:
 no `move_script`, no `update_folder`, no deletion. Until the key is stored,
-the press fires the make routine and a session sends through the connector
-under the same scope.
+the press answers `no_key` and the Sunday room he has open sends through the
+connector under the same scope (`plan-week`, step 12); no routine is fired
+(Krish, 2026-10-29: "I want zero Claude routines").
 
 <a id="rule-13"></a>
 

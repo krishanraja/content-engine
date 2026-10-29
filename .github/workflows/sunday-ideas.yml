@@ -1,0 +1,167 @@
+name: Sunday ideas
+
+# Ruling (Krish, 2026-10-29): "FYI, I want zero Claude routines. No Claude schedules of any kind in this
+# architecture". Then: "Could you not get Github to trigger Claude subscription to do something and then update the
+# content.krishraja.com board?", and on spend: "happy with $15 a week".
+#
+# So GitHub is the scheduler and Claude Code runs inside this job on his subscription, never on an API key: the
+# docs-steward pattern (.github/workflows/docs-steward.yml, which calls ai-harness's reusable workflow). It runs the
+# plan-week skill's ideas stage only (steps 1 to 7: research, three or four options for each publishing day and the
+# off-day options Growth feeds, written through /api/week/options and onto the week's board through week_board.py's
+# inputs and the engine API), so the Ideas tab is live by 06:00 Sunday in New York. It stops before the triage
+# readback and the interview, which happen in the Sunday room Krish opens himself.
+#
+# One-time setup (Krish): run `claude setup-token` on his own computer and add the result to this repository as the
+# Actions secret CLAUDE_CODE_OAUTH_TOKEN. Until it exists every run fails at its first step, naming that step. It never
+# falls back to an API key. ENGINE_OPERATOR_TOKEN (already set) is how it reads and writes the board.
+#
+# When: GitHub's cron fires hours late (3 to 5 hours measured on produce-day, October 2026), so it fires twice on
+# Saturday, early in UTC: 12:17 and 20:47 UTC. Even five hours late plus a four-hour run, the Ideas tab is live long
+# before 06:00 Sunday New York (10:00 or 11:00 UTC). The guard (scripts/sunday_ideas.py built) makes every firing after
+# the one that put the Ideas tab live do nothing, so the second firing is only a retry. Run workflow by hand any time;
+# "force" builds again even when the tab is live.
+#
+# This repository is public: Claude's full output stays out of the log (claude-code-action's default), and nothing
+# here prints a link, an idea or a source.
+
+on:
+  schedule:
+    - cron: '17 12 * * 6'
+    - cron: '47 20 * * 6'
+  workflow_dispatch:
+    inputs:
+      week:
+        description: 'The Monday the week starts on, YYYY-MM-DD (empty: eight days after the coming Sunday)'
+        required: false
+      force:
+        description: 'Run even if the Ideas tab for that week is already live'
+        type: boolean
+        default: false
+
+concurrency:
+  group: sunday-ideas
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  ideas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - name: Claude Code runs on Krish's subscription, never an API key
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
+        run: |
+          if [ -z "$CLAUDE_CODE_OAUTH_TOKEN" ]; then
+            echo "::error::No CLAUDE_CODE_OAUTH_TOKEN. One setup step for Krish: run 'claude setup-token' on your computer and add what it prints as the repository secret CLAUDE_CODE_OAUTH_TOKEN (Settings > Secrets and variables > Actions). This job never uses an API key instead."
+            exit 1
+          fi
+          if [ -z "$ENGINE_OPERATOR_TOKEN" ]; then
+            echo "::error::No ENGINE_OPERATOR_TOKEN, so the run cannot read or write the board."
+            exit 1
+          fi
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Which week, and is its Ideas tab already live?
+        id: guard
+        env:
+          ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
+          WEEK: ${{ inputs.week }}
+          FORCE: ${{ inputs.force }}
+        run: |
+          if [ -n "$WEEK" ]; then monday="$WEEK"; else monday=$(python3 scripts/sunday_ideas.py week); fi
+          state=$(python3 scripts/sunday_ideas.py built "$monday")
+          echo "monday=$monday" >> "$GITHUB_OUTPUT"
+          if [ "$state" = "built=true" ] && [ "$FORCE" != "true" ]; then
+            echo "::notice::The Ideas tab for the week of $monday is already live. Nothing to do."
+            echo "go=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "go=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/setup-node@v4
+        if: steps.guard.outputs.go == 'true'
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Install the tools the skill runs
+        if: steps.guard.outputs.go == 'true'
+        run: |
+          python -m pip install --require-hashes --no-deps -r requirements-ci.txt
+          npm ci
+          # The Claude Code installer needs its launcher directory to exist (the docs steward's fix, 2026-09-08).
+          mkdir -p "$HOME/.local/bin"
+
+      - name: The ideas stage of plan-week, in Claude Code on his subscription
+        if: steps.guard.outputs.go == 'true'
+        uses: anthropics/claude-code-action@v1
+        env:
+          ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
+          MONDAY: ${{ steps.guard.outputs.monday }}
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ github.token }}
+          claude_args: >-
+            --max-turns 400
+            --allowedTools "Bash,Read,Write,Edit,Glob,Grep,WebSearch,WebFetch,Task,TodoWrite"
+          prompt: |
+            The Sunday ideas run for the week starting Monday ${{ steps.guard.outputs.monday }}, fired by GitHub Actions
+            (.github/workflows/sunday-ideas.yml). No one reads this run's chat.
+
+            Follow .claude/skills/plan-week/SKILL.md, the ideas stage only: steps 1 to 7, so the Ideas tab of that
+            week's publish board is live at content.krishraja.com (week_board.py --target web with --ideas, --queue and
+            --combine, then board_web.py publish-web --apply, then its board item week-publish-board-<Monday>).
+            Write each day's options through /api/week/options and the off-day options into ideas.json as the skill
+            says. Research with the built-in web search and web fetch: there is no Drive or Firecrawl connector here
+            (the skill's "Without the connectors").
+
+            Of step 0 take only the Inspiration cards routed to a piece (they are ideas of his for step 2) and mark
+            the ones the plan took; the tick copy, the Teleprompter check and the lessons relay are the Sunday room's.
+            Never write anything else: no triage readback, no interview, no narrative lock, no make, no Teleprompter,
+            no day tab, no pick, no draft, no spend beyond this run. Stop
+            after step 7. Never patch the built page. Leave docs/plans/<Monday>-week/ (ideas.json, combine.json) on
+            disk and do not commit or push: the workflow keeps that folder on a branch for the Sunday room.
+            If the board refuses a build, fix the inputs and build again; if it still refuses, stop and say why.
+
+      - name: The Ideas tab is live
+        if: steps.guard.outputs.go == 'true'
+        env:
+          ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
+          MONDAY: ${{ steps.guard.outputs.monday }}
+        run: |
+          state=$(python3 scripts/sunday_ideas.py built "$MONDAY")
+          if [ "$state" != "built=true" ]; then
+            echo "::error::The run ended but the Ideas tab for the week of $MONDAY is not live."
+            exit 1
+          fi
+
+      - name: Keep the week's ideas for the Sunday room
+        if: always() && steps.guard.outputs.go == 'true'
+        env:
+          MONDAY: ${{ steps.guard.outputs.monday }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          folder="docs/plans/$MONDAY-week"
+          [ -d "$folder" ] || { echo "::warning::No $folder was written."; exit 0; }
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c "sunday-ideas/$MONDAY-$RUN_ID"
+          git add -- "$folder"
+          git diff --cached --quiet && { echo "Nothing new in $folder."; exit 0; }
+          git commit -q -m "Sunday ideas for the week of $MONDAY (run $RUN_ID)" \
+            -m "Written by the Sunday ideas run in GitHub Actions on Krish's subscription; the Sunday room merges it." \
+            -m 'Ruling (Krish, 2026-10-29): "FYI, I want zero Claude routines. No Claude schedules of any kind in this architecture"'
+          git push origin "HEAD:refs/heads/sunday-ideas/$MONDAY-$RUN_ID"
+          echo "::notice::The week's ideas are on the branch sunday-ideas/$MONDAY-$RUN_ID."

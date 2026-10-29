@@ -1,0 +1,137 @@
+name: Make a piece
+
+# Ruling (Krish, 2026-10-29): "FYI, I want zero Claude routines. No Claude schedules of any kind in this
+# architecture". Then: "Could you not get Github to trigger Claude subscription to do something and then update the
+# content.krishraja.com board?"
+#
+# One fresh run per piece, once Krish has signed its narrative lock (plan-week, step 11): Claude Code runs the
+# make-piece skill inside this job on his subscription, never on an API key (the docs-steward pattern,
+# .github/workflows/docs-steward.yml). It never runs on a schedule. It starts only when someone starts it:
+#   - the Sunday room, as each lock is signed: Run workflow on the room's pushed branch (the lock is not on main yet),
+#     for example `gh workflow run make-piece.yml --ref <room branch> -f piece_id=<uuid>`;
+#   - a repository_dispatch with event type make-piece and client_payload {"piece_id": "<uuid>", "ref": "<branch>"}
+#     (ref optional, default main), for a press elsewhere that starts a make;
+#   - Krish, from Actions > Make a piece > Run workflow.
+# Its questions for Krish go onto the day's tab of the week's board as presses, never into chat: nobody reads this
+# run's output. It writes to the board only through the engine API, on ENGINE_OPERATOR_TOKEN.
+#
+# One-time setup (Krish): run `claude setup-token` on his own computer and add the result to this repository as the
+# Actions secret CLAUDE_CODE_OAUTH_TOKEN. Until it exists every run fails at its first step, naming that step.
+#
+# What the run commits is pushed to its own branch, claude/make-<piece>-<run>, with a pull request for review. A push
+# made with GitHub's own token starts no CI, so the pull request needs its checks started before it can merge.
+# This repository is public: Claude's full output stays out of the log (claude-code-action's default).
+
+on:
+  workflow_dispatch:
+    inputs:
+      piece_id:
+        description: 'The piece id (a uuid) whose signed narrative lock this run makes'
+        required: true
+  repository_dispatch:
+    types: [make-piece]
+
+concurrency:
+  group: make-piece-${{ github.event.inputs.piece_id || github.event.client_payload.piece_id }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write
+
+jobs:
+  make:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - name: Claude Code runs on Krish's subscription, never an API key
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
+        run: |
+          if [ -z "$CLAUDE_CODE_OAUTH_TOKEN" ]; then
+            echo "::error::No CLAUDE_CODE_OAUTH_TOKEN. One setup step for Krish: run 'claude setup-token' on your computer and add what it prints as the repository secret CLAUDE_CODE_OAUTH_TOKEN (Settings > Secrets and variables > Actions). This job never uses an API key instead."
+            exit 1
+          fi
+          if [ -z "$ENGINE_OPERATOR_TOKEN" ]; then
+            echo "::error::No ENGINE_OPERATOR_TOKEN, so the run cannot read or write the piece or the board."
+            exit 1
+          fi
+
+      - name: Which piece, from which branch
+        id: piece
+        env:
+          PIECE: ${{ github.event.inputs.piece_id || github.event.client_payload.piece_id }}
+          REF: ${{ github.event.client_payload.ref || github.ref_name }}
+        run: |
+          if ! [[ "$PIECE" =~ ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$ ]]; then
+            echo "::error::piece_id must be a piece uuid (lower case)."
+            exit 1
+          fi
+          if ! [[ "$REF" =~ ^[A-Za-z0-9._/-]{1,200}$ ]]; then
+            echo "::error::ref must be a branch name."
+            exit 1
+          fi
+          echo "id=$PIECE" >> "$GITHUB_OUTPUT"
+          echo "ref=$REF" >> "$GITHUB_OUTPUT"
+          echo "short=${PIECE:0:8}" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.piece.outputs.ref }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install the tools the skill runs
+        run: |
+          python -m pip install --require-hashes --no-deps -r requirements-ci.txt
+          npm ci
+          # The Claude Code installer needs its launcher directory to exist (the docs steward's fix, 2026-09-08).
+          mkdir -p "$HOME/.local/bin"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c "claude/make-${{ steps.piece.outputs.short }}-${{ github.run_id }}"
+
+      - name: Make the piece, in Claude Code on his subscription
+        uses: anthropics/claude-code-action@v1
+        env:
+          ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ github.token }}
+          claude_args: >-
+            --max-turns 600
+            --allowedTools "Bash,Read,Write,Edit,Glob,Grep,WebSearch,WebFetch,Task,TodoWrite"
+          prompt: |
+            piece_id: ${{ steps.piece.outputs.id }}
+            Make this piece: follow .claude/skills/make-piece/SKILL.md in krishanraja/content-engine. Read the piece and
+            where it is from the engine, record this session on it, then do the first step that is not done.
+
+            This run was started in GitHub Actions (.github/workflows/make-piece.yml), one fresh run for this piece.
+            No one reads its chat: every question for Krish goes on the day's tab of the week's board as a press (a
+            --waiting line or a comment thread), put as the question itself with your best guess, never as a message
+            here. Commit what you make on the current branch; do not push or open a pull request: the workflow pushes
+            the branch and opens one when you stop.
+
+      - name: Keep what the run made
+        if: always()
+        env:
+          BRANCH: claude/make-${{ steps.piece.outputs.short }}-${{ github.run_id }}
+          BASE: ${{ steps.piece.outputs.ref }}
+          PIECE: ${{ steps.piece.outputs.id }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ -z "$(git log --oneline "origin/$BASE..HEAD" 2>/dev/null)" ]; then echo "No commits from this run."; exit 0; fi
+          git push origin "HEAD:refs/heads/$BRANCH"
+          gh pr create --base "$BASE" --head "$BRANCH" \
+            --title "Make piece ${PIECE:0:8} (run ${{ github.run_id }})" \
+            --body "Made by the Make a piece run in GitHub Actions on Krish's subscription for piece $PIECE. Pushed with GitHub's own token, so start its checks before it merges." \
+            || echo "::warning::The branch $BRANCH is pushed; no pull request was opened."
