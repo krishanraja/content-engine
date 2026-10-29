@@ -51,6 +51,7 @@ names the checkpoint Control Center watches for it:
 | Sun 10:00 to 11:45 | The triage readback (step 8), then the interview (step 9), about 105 minutes | `narratives_locked` |
 | As each lock is signed | That piece's make starts in its own fresh session (step 11) | `scripts_ready` |
 | About 12:30 | His Approve scripts press per day: the server sends both scripts to Teleprompter and reads them back (step 12) | `scripts_sent` |
+| About 15:30 | His Titles press: three options per surface. It starts the Sunday-night run (`produce-video`); a surface he has not picked by 21:30 takes its top-ranked option | `titles_picked` |
 
 Once the Ideas tab is live, the Sunday room does three things only: the
 triage readback, the interview and one signed narrative lock per piece. Then
@@ -306,12 +307,16 @@ article or a visual: each piece's make session does, from its signed lock
    channel_copy` (and `--applies-to carousel_text` for a carousel) and `node
    vendor/makeyourmindup/kill-list/kill-list.mjs` before it reaches the
    tab. Growth (growth-makeyourmindup) owns this lane and will feed it
-   automatically; until it does, the room drafts the options. They
-   reach the tab only through `week_board.py --ideas`, in the off-days part
-   `docs/PUBLISH_BOARDS.md` names, never by patching the page. His one press
-   approves or skips each (`queue/<idea_id>` with `use: offday`, its `day`
-   and `approved`); Growth makes and schedules what he approved, and this
-   repository cuts any snackable clip.
+   automatically; until it does, the room drafts the options. Write them
+   into ideas.json as `offdays`, `{"tue": [...], "thu": [...], "sat": [...],
+   "sun": [...]}`, each with its `format`, `source` and `copy`. They reach
+   the tab only through `week_board.py --ideas`, never by patching the page,
+   and only once the board has its Off days part (it lands with the board's
+   own change); until then `week_board.py` does not show them, so say so in
+   one line in the triage readback (step 8). His one press approves or skips
+   each (`queue/<idea_id>` with `use: offday`, its `day` and `approved`);
+   Growth makes and schedules what he approved, and this repository cuts any
+   snackable clip.
 4. Write each day's options, best first, one recommended:
    `python3 scripts/engine.py POST /api/week/options @options.json` with
    `{"week_start": "<Monday>", "series": "<slug>", "options": [{"id": "<uuid>", "rank": 1, "pitch": "two or three plain sentences", "why_now": "the dated event, with its date", "recommended": true, "covers": ["<must_cover id>"]}]}`.
@@ -338,8 +343,10 @@ article or a visual: each piece's make session does, from its signed lock
    Approve scripts press by about 12:30, with the creative direction for
    every cut (`docs/CREATIVE_DIRECTION.md`) before he records. He records
    from 13:00, presses Titles at about 15:30 and signs each storyboard on
-   its day's tab; the Sunday-night run (`.agents/skills/produce-video/SKILL.md`,
-   21:30) renders only from the signed direction.
+   its day's tab. His Titles press starts the Sunday-night run
+   (`.agents/skills/produce-video/SKILL.md`), which renders only from the
+   signed direction; 21:30 is only the deadline for a surface he has not
+   picked.
 6b. **No weekly deep cut: a 15-minute feature only when Krish calls one**
    (house rule FEATURE, Krish, 2026-10-21: "all videos are generally 90 sec
    and 5 min. From time to time I might do a special 15 min feature"; asked
@@ -461,117 +468,91 @@ after his presses, by 10:00.
    his press on the board is still what records a pick. Rebuild the board
    with the picks (step 7, "When the picks come in"). A day with no pick:
    its pick is the first question of step 9, with your best guess.
+   **Check the day tabs' presses now, not at 12:30.** `python3
+   scripts/post-pack/board_web.py read <Monday> approvals`, then the same
+   with `titles`. If either is refused (the command's "invalid choice", or
+   the board answering `invalid_collection`), that press is not on the board
+   yet; it lands with the board's own change. Say so at the top of the
+   readback, in one line, and on the week's board item: with no Approve
+   scripts press no script reaches Teleprompter (neither the server nor
+   `teleprompter_send.py plan` sends without his press, and nothing stands
+   in for it), so he reads each script from its day's tab while he records;
+   with no Titles press the night's cuts take each surface's top-ranked
+   option (`produce-video`, "The Sunday-night run").
 9. **The interview** (Krish, 2026-10-28: "Claude interviews me on all three
    ideas to nail down the narrative arc, make it really powerful, useful,
    and fun to consume, and really find the deeper story beneath the surface
-   story"), about 105 minutes, 10:00 to 11:45. Before the first question,
-   read the floor for scripts and articles (`python3 scripts/floor.py
-   --format script`, `--format article`), each pick's research (its
-   `sources.json` entries, the corpus he linked to it, `select name,
-   drive_file_id, read_as, note_for_claude from inspiration_items where kind
-   = 'corpus' and piece_id = '<piece_id>'`, and his note on the pick) and the
-   last three weeks' pieces, so no question repeats what is already settled.
-   The protocol, which never bends:
-   - **One question at a time** (learning `one-question-at-a-time`): the
-     one that changes the work most first, across all three picks rather
-     than Monday's first by habit, each with your best guess, and the next
-     only after he answers.
-   - **Each question settles one part of a lock** (step 10): the deeper
-     story beneath the surface story; the arc; what makes it fun to
-     consume; what makes it useful, the one thing a business leader does
-     differently on Monday; his close, his own call in his own words (ask
-     for it, never write it for him; learning `his-call-in-his-words`); the
-     facts that must be checked; the spine of the outline and its sections;
-     the style recipe (a script format, a production format and the
-     experiment, from `config/style-references.json` `formats`); and the
-     music bed (an approved track in the ledger, `config/music-library.json`;
-     never browse Drive for audio).
-   - **Check before you ask.** A fact you can check is checked, not asked;
-     what `docs/CADENCE.md`, the house rules or his recorded words already
-     answer is never asked. A line he gives that the evidence does not hold
-     is said back to him with what the source says, as the next question.
-   - **His answers are kept verbatim.** Each question in one line, its best
-     guess and his exact answer, with the time, go into
-     `docs/plans/<Monday>-week/interview.md` as he gives them: his words
-     exactly, and never the rest of the chat (exact excerpts, never whole
-     transcripts). A lock quotes his words where they decided a part; a
-     paraphrase is never his.
-   - **The clock.** When a piece's parts are all answered, put its lock to
-     him (step 10) without waiting for the others. At 11:45, say which
-     parts are still open, with your best guess for each, and ask whether
-     to sign as it stands: recording starts at 13:00.
+   story"), about 105 minutes, 10:00 to 11:45. Read
+   `.agents/skills/plan-week/references/sunday-room.md` first: it holds the
+   protocol, which never bends. One question at a time (learning
+   `one-question-at-a-time`), each with your best guess and each settling one
+   part of a lock; check before you ask; his answers kept verbatim in
+   `docs/plans/<Monday>-week/interview.md`, never the rest of the chat; and
+   the 11:45 clock. **Confidentiality is a hard gate:** an answer he says is
+   off the record, or one that names a client, a deal figure or anything
+   else private, stays out of `interview.md` and the lock, which merge to
+   main; the file says only that something was withheld. Before the first
+   question, read the floor for scripts and articles (`python3
+   scripts/floor.py --format script`, `--format article`), each pick's
+   research (its `sources.json` entries, the corpus he linked to it, `select
+   name, drive_file_id, read_as, note_for_claude from inspiration_items where
+   kind = 'corpus' and piece_id = '<piece_id>'`, and his note on the pick)
+   and the published and in-flight pieces of the last three weeks, with
+   their end messages and Monday actions: no question repeats what is
+   already settled, and step 10 checks each lock against them.
 10. **One narrative lock per piece, signed by him**:
-   `docs/plans/<Monday>-week/narrative-lock-<day>.md` (`mon`, `wed`,
-   `fri`), written flush left in exactly this shape:
-
-   ```
-   # Narrative lock: <Ddd D Mon> <series> - <subject>
-
-   piece_id: <uuid>
-   Publishes: <YYYY-MM-DD>
-
-   ## Surface story
-   ## Deeper story
-   ## Arc
-   ## The fun
-   ## His close
-   ## Facts to check
-   ## Outline
-   Spine: <the one question the piece answers>?
-   Answer: <its one-line answer>
-   1. <SECTION HEADING> | proves: <the part of the answer it proves>
-   ## Style recipe
-   ## Music bed
-
-   Signed by Krish: "<his words>", <YYYY-MM-DD>
-   ```
-
-   Every part has its words under it. Only the outline's sections are
-   numbered, at most six (house rule ONE_SPINE); everything else is plain
-   lines or `-` bullets, because the spine check reads numbered lines. Each
-   fact to check is `- <the claim> | <its source, linked> | <checked on
-   YYYY-MM-DD, or to check>`. `Publishes` is the day it goes live, and the
-   piece's dated drafts carry that date. Put the whole lock to him in the
-   room, the words themselves and never a pointer to them, and ask him to
-   sign it. Once he does, add his exact typed words as the last line;
-   nothing below his signature counts. Then `python3
-   scripts/post-pack/making.py <uuid> narrative` until it says signed,
-   commit the lock and `interview.md`, push the room's session branch and
-   open its pull request with auto-merge on (`AGENTS.md`, "Commit and
-   closeout"; nothing lives only in this container). The signed lock stands
-   for the outline's approval and the style recipe's yes (`make-piece`): he
-   signs once per piece. A change to its end message, its close, its spine
-   or a section after he signed goes back to him and is signed again (the
-   drift rule). From 9 November `making.py scripts` refuses a piece without
-   it.
+   `docs/plans/<Monday>-week/narrative-lock-<day>.md`, in exactly the shape
+   `.agents/skills/plan-week/references/sunday-room.md` gives: its piece and
+   the day it publishes, then Surface story, Deeper story, Arc, The fun, The
+   use (the one thing a business leader does differently on Monday), His
+   close, Facts to check, Outline (one spine, at most six sections, house
+   rule ONE_SPINE), Style recipe and Music bed. **Three checks before it
+   goes to him**, on its Answer, The use, His close and any test it runs,
+   the same checks the backlog's Narrative step makes (`make-piece`), and
+   say in the room what each found:
+   - *Against the research.* Each is checked against the piece's sources
+     before he signs: a line the evidence does not hold changes here, never
+     later.
+   - *Against the series' recent pieces* (read in step 9). A takeaway or a
+     Monday action a recent piece already landed is never the Answer or The
+     use again; the lock says what is new (Krish, 2026-10-26: "we've already
+     done that message takeaway with the Muse versus Grok piece"; learning
+     `no-repeat-contract-takeaway`: never "check your contract" again unless
+     he asks).
+   - *A test is an experiment.* A test the piece runs is designed before it
+     is run: what it tests, one thing changed only (a matched control), the
+     same access and settings for every tool, prompts that need nothing
+     outside their own words, and what will be read from each answer
+     written down before any answer exists (Krish, 2026-10-23: "I don't
+     think you are really thinking much about how to design a test that
+     yields the experiment needed").
+   Then `python3 scripts/post-pack/making.py <uuid> narrative <lock>` until
+   only his signature is missing; it prints the lock's sha256. Put the whole
+   lock to him in the room, the words themselves and never a pointer to
+   them, and ask him to sign it. Once he does, the last line is his exact
+   typed words, the date and that hash: `Signed by Krish: "<his words>",
+   <YYYY-MM-DD>, lock sha256 <hash>`. Run `narrative` again until it says
+   signed, commit the lock and `interview.md`, push the room's session
+   branch and open its pull request with auto-merge on (`AGENTS.md`,
+   "Commit and closeout"; nothing lives only in this container). The signed
+   lock stands for the outline's approval and the style recipe's yes
+   (`make-piece`): he signs once per piece. A signed lock is never edited:
+   `making.py` refuses one whose words changed under his signature. A change
+   to its end message, its close, its use, its spine or a section after he
+   signed goes back to him, and the changed lock gets a new hash and his new
+   signature (the drift rule). From 9 November `making.py scripts` refuses a
+   piece without it.
 11. **Start that piece's make, in its own fresh session**, as soon as its
    lock is signed and pushed; one session per piece, and never a piece made
-   in the room.
-   - First `python3 scripts/post-pack/making.py <uuid> show`: a session
-     that started on the piece under six hours ago may still be at work
-     (Control Center's rule, `LIVE_SESSION_MS` in control-center
-     `api/_make.ts`). Look at it with `get_session` (its id is in its
-     link). Still working: give him its link and start no second one.
-     Stopped (a make started before the lock was signed stops at the lock
-     and makes nothing): start a fresh one as below.
-   - Control Center's "Make it in Claude Code" (`POST /api/content/make`)
-     answers only his signed-in browser, and the routine it fires
-     (`CLAUDE_MAKE_ROUTINE_ID`, with the one-line payload `piece_id:
-     <uuid>`, `makePayload` in `api/_make.ts`) starts on `main`, where the
-     lock is not yet. So start the session with `create_session` on
-     `https://github.com/krishanraja/content-engine` at the room's pushed
-     branch (`source_revision`), its prompt two lines: `piece_id: <uuid>`,
-     then Control Center's own words (`makePrompt`): "Make this piece:
-     follow .claude/skills/make-piece/SKILL.md in krishanraja/content-engine.
-     Read the piece and where it is from the engine, record this session on
-     it, then do the first step that is not done."
-   - Without `create_session`, once the room's pull request has merged:
-     fire the make routine with `fire_trigger`, its id found with
-     `list_triggers` (the routine whose prompt follows make-piece), and the
-     text exactly `piece_id: <uuid>`. Neither works: say so to him in one
-     line, with those two lines to paste into a new claude.ai/code session.
-   - The new session records itself on the piece (`make-piece`, "Before
-     anything"); the room records nothing for it.
+   in the room. First check none is at work on it (`python3
+   scripts/post-pack/making.py <uuid> show`: a session that started under
+   six hours ago may be), then start it with `create_session` at the room's
+   pushed branch, or with `fire_trigger` once the room's pull request has
+   merged, exactly as `.agents/skills/plan-week/references/sunday-room.md`
+   ("Starting each make") gives. Neither works: say so to him in one line,
+   with the two lines to paste into a new claude.ai/code session. The new
+   session records itself on the piece (`make-piece`, "Before anything");
+   the room records nothing for it.
 12. **Approve scripts, and Teleprompter** (about 12:30; Krish, 2026-10-28:
    "Once I approve, the two scripts will go to teleprompter" and "Server
    sends directly", which replace the standing yes of 12 October). Each
@@ -580,22 +561,21 @@ after his presses, by 10:00.
    itself (`sendApprovedScripts` in `apps/control-plane/api/_teleprompter.ts`:
    `create_folder`, `create_script`, and `update_script` with text and
    duration only, then a readback), answering `sent`, `no_key`, `refused` or
-   `error`. Read each press and its answer on the board (`board_web.py read
-   <Monday>` with the approvals collection `docs/PUBLISH_BOARDS.md` names).
+   `error`. Read each press and its answer on the board: `python3
+   scripts/post-pack/board_web.py read <Monday> approvals` (the collection
+   `config/teleprompter.json` `approval.collection` names; only documents
+   whose `updated_by` is Krish are his press). No such collection on the
+   board yet: step 8 said so, and nothing is sent.
    - `sent`: nothing to do; `making.py <uuid> show` says, per cut,
      "Teleprompter, 5-minute cut: holds the current words".
    - `no_key` (the Teleprompter key is not set yet): the room sends exactly
-     those approved scripts through the Teleprompter connector itself. Per
-     cut, the script's current sha256 (`making.py`'s script hash, which
-     `teleprompter_send.py plan` prints) must equal the hash his press
-     approved; words changed since his press are not sent, and the cut goes
-     back on its tab for a new press. Then `python3
-     scripts/post-pack/teleprompter_send.py plan <uuid> long.md short.md`,
-     and exactly the calls it prints, as `make-piece` says ("The Scripts
-     step", step 6): never `move_script` or `update_folder`, never a second
-     folder or script, never his `fontSize`, `speed`, `alignment` or
-     `timedSpeed`. Run each `record` line it prints, then `get_script` each
-     cut and check its text is the approved words (the readback).
+     the words his press approved through the Teleprompter connector, by
+     `teleprompter_send.py plan` and the calls it prints, as
+     `.agents/skills/plan-week/references/sunday-room.md` ("When the server
+     answered no_key") gives, then reads each one back. Words changed since
+     his press are not sent: the cut goes back on its tab for a new press.
+     Never `move_script` or `update_folder`, never a second folder or
+     script, never his `fontSize`, `speed`, `alignment` or `timedSpeed`.
    - `refused`: the approval did not hold for these words; send nothing,
      and say why on the day's tab for a new press.
    - `error`: one line on the day's tab with what Teleprompter said; his
