@@ -1,6 +1,6 @@
 ---
 name: produce-video
-description: "Produce Krish's videos once he has recorded them. Use when he says he has dropped, recorded or uploaded his video or recordings, or asks to produce, cut or make the video or videos for a piece or a day, such as 'I've dropped the video', 'the recordings are in the Inbox', 'produce Monday's video' or 'make the videos for this week'. It works out by itself which new recording is which piece's long or short cut, with no file name or piece id, then makes the 16:9 long cut and the 9:16 short cut, each with the approved intro sting, the licensed music bed from the ledger and a thumbnail for its size, files them in the archive and the post's library folder and records them on the piece. Runs end to end on any machine: a cloud session (the Sunday-night run at 21:30), GitHub's machine or either home computer; takes, music and pictures all come from the engine. It is not the one-line launcher of the video-engine skill, not a Studio job from a production brief, and not for general questions about video or editing."
+description: "Produce Krish's videos once he has recorded them. Use when he says he has dropped, recorded or uploaded his video or recordings, or asks to produce, cut or make the video or videos for a piece or a day, such as 'I've dropped the video', 'the recordings are in the Inbox', 'produce Monday's video' or 'make the videos for this week'. It works out by itself which new recording is which piece's long or short cut, with no file name or piece id, then makes the 16:9 long cut and the 9:16 short cut, each with the approved intro sting, the licensed music bed from the ledger and a thumbnail for its size, files them in the archive and the post's library folder and records them on the piece. Runs end to end on any machine: a cloud session (the Sunday-night run his Titles press starts), GitHub's machine or either home computer; takes, music and pictures all come from the engine. It is not the one-line launcher of the video-engine skill, not a Studio job from a production brief, and not for general questions about video or editing."
 model: sonnet
 ---
 
@@ -119,8 +119,10 @@ move of 11 October ("I'm going to transfer all video production iteration
 through to Codex"). The engine assembles every cut, run by this skill: the
 Sunday-night run (below), or Claude Code when Krish engages it. The
 record's owner label for the step (`MAKING_OWNERS` in
-`apps/control-plane/api/_making.ts`) still says Codex; a Claude Code run
-writes `--by "Claude Code"`. Every write says who wrote it:
+`apps/control-plane/api/_making.ts`, mirrored in control-center's
+`src/lib/making.ts`) is stale: it still says Codex until both copies change
+together. The step is Claude Code's, and a Claude Code run writes `--by
+"Claude Code"`. Every write says who wrote it:
 set `MAKING_BY` in the preflight (step 1), or pass `--by Codex` or
 `--by "Claude Code"`. Nothing before the recordings (the article, the
 scripts, the cover, the pictures, the visual gate, the pack) and nothing
@@ -152,9 +154,10 @@ Commands are written `python`, as on Windows; it is `python3` in the cloud.
    do. A file over 500 MiB is skipped by the lane, so that one is produced
    on a home computer, straight from H:. This is the one way a take comes
    back.
-4. From 1 November, nothing more: the Sunday-night run (below) takes the
-   day's takes at 21:30. For a re-cut, or a take outside that run, he tells
-   Claude Code "I've recorded" or "I've dropped the video".
+4. From 1 November, his Titles press on the day's tab starts the night's
+   cuts (the Sunday-night run, below). For a re-cut, a take outside that
+   run, or while the press cannot start it yet, he tells Claude Code "I've
+   recorded" or "I've dropped the video".
 
 A take reaches the engine within about ten minutes, from whichever home
 computer is on, and the same lane then places it on its piece and cut by
@@ -203,65 +206,24 @@ defer this to Claude Code. Only an explicit legacy-artifact session needs
 ArtifactData. A Record tick is information only; Record is done from the takes
 on the record.
 
-## The Sunday-night run (21:30 Sunday, from 1 November)
+## The Sunday-night run (from 1 November)
 
-Krish, 2026-10-28: "an overnight Codex run will actually produce me the
-final assets and the final publish board first thing Monday morning", with
-Codex only as "Visual asset maker". For now that run is a scheduled cloud
-routine that starts this skill at 21:30 on the recording Sunday, his local
-time (Control Center's operator time zone), in a fresh session, until the
-overnight runner on the home computers takes over. It makes
-every cut recorded that day for the week eight days out (`plan-week`, "The
-Sunday loop"), on the quick-edit route (steps 1 to 9 below), and builds the
-Monday final board. No one is in its chat: whatever it cannot decide is
-held, with its reason, on the Monday board.
-
-1. **The floor first:** `python3 scripts/floor.py --format short_video` and
-   `--format long_video`, with the other makers "Mandatory quality floor"
-   names, read before the first cut.
-2. **The pieces and their takes:** the week's three pieces (`scheduled` in
-   `python3 scripts/engine.py GET "/api/week/options?week_start=<Monday>"
-   --full`), each with its takes (step 2). A cut with no take of its current
-   words is held: "no take of the current script".
-3. **The titles:** his Titles presses on each day's tab (`board_web.py read
-   <Monday>` with the titles collection `docs/PUBLISH_BOARDS.md` names). A
-   surface he has not picked by 21:30 takes the option ranked first on its
-   tab; the Monday board says it is the top-ranked option, not his pick, and
-   nothing records it as his (`title_check.py verdict --picked` is for his
-   press only).
-4. **Cut on quick-edit**, steps 3 to 5, from his signed creative direction
-   only. A cut whose storyboard he has not signed for its exact words is
-   held: "storyboard not signed" (`kit.py` refuses it anyway).
-5. **The words gate, blocking**, on every cut before it is filed:
-   `python3 scripts/quick-edit/words_gate.py --script <the cut's signed
-   script> --take-words WORK/<cut>/<NAME>.words.json --final
-   WORK/<cut>/<NAME>-<shape>.mp4`, with `--edl <its edl json>` when the cut
-   has one. It prints a JSON report; exit 1 names each content word the cut
-   lost, and the cut is held with those words as its reason: not filed, not
-   recorded, never shown as ready. No repair loop tonight: a held cut gets
-   one bounded repair round on Monday morning, or waits for his call.
-6. **Every other check is an advisory row** until it is calibrated: the report's numbers
-   (step 6), caption timing, the joins, brand and composition, wherever a
-   measure exists (`python scripts/ve.py qc <cut> --format <id>` only where
-   a ve format fits the cut). Each goes on the Monday board with its result,
-   or "not run" and why, and none holds a cut on its own yet. Every gate this
-   skill already enforces still holds: the story intro and outro, a
-   thumbnail of each shape, the visual gate, and the delivery receipt
-   `making.py video` checks.
-7. **File what passed** (steps 7 to 9): on a home computer the archive
-   first; on a cloud machine the staged folder of both cuts and their
-   thumbnails goes straight to `3 Posts/<post>/3 Video` with `send.py`, the
-   way `scripts/produce_day.py` stages it. Then `making.py --by "Claude
-   Code" <uuid> video ...` for each cut.
-8. **The Monday final board**, ready by 06:30: rebuild the week's board with
-   each day's materials (`week_board.py --materials DAY=JSON`, `status:
-   review`), its note naming every held cut and why, and the words gate
-   result and each advisory row per cut; never patch the page
-   (`docs/PUBLISH_BOARDS.md`). Nothing on it is called ready: he watches each
-   cut at full size on Monday and approves or rejects it there (`AGENTS.md`,
-   start route, rule 6).
-9. A run that cannot finish says what stopped on the week's board item
-   (step 10), in one line.
+His Titles press on the recording Sunday (about 15:30; Krish, 2026-10-28:
+"Sunday evening press") starts this skill for the week in a fresh session;
+until the board's press can fire it, he starts it by telling Claude Code
+"I've recorded". Nothing starts it at a fixed time, and 21:30 is only the
+deadline for a surface he has not picked, which then takes its top-ranked
+option, never recorded as his pick. Read
+`.agents/skills/produce-video/references/sunday-night.md` before the first
+cut: it holds the run in full. Its gates: the floor first; his signed
+storyboard for the cut's exact words, or the cut is held; the words gate
+(`scripts/quick-edit/words_gate.py`), blocking, so a cut that lost a content
+word, or a checkout without the gate, files nothing; every other check an
+advisory row until calibrated; and every gate below still holding. It
+builds no publish board: it records each cut, each held cut with its
+reason, and its report for the Monday board, which is built at 06:30 by its
+own routine (until that routine exists, by the first session on Monday).
+No one is in its chat.
 
 ## 1. Preflight: which tool, which machine
 
