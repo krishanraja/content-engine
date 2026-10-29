@@ -2,7 +2,9 @@
 
 Krish, 2026-10-28: "don't add stupid eyebrow text and asterisks and "generated
 by AI" and "Krish's take" verbal diahorrea like you tend to. This needs to feel
-like a world class media channel".
+like a world class media channel". And of the labels on screen: "It's just the
+ones that say "Krish's read" or "illustrative" that are stupid because they add
+no value to the content."
 
 Run: python3 tests/copy_lint_test.py (tests/control-plane/copy-lint.test.ts runs it on every push).
 """
@@ -58,7 +60,8 @@ class ConfigShape(unittest.TestCase):
             self.assertTrue(ex['pass'], f'{pid} has no must-pass example')
 
     def test_every_surface_he_named_is_covered_by_the_eyebrow_asterisk_ai_and_take_rules(self):
-        for pid in ('asterisk', 'eyebrow_label', 'ai_provenance_label', 'ai_illustration_note', 'take_label'):
+        for pid in ('asterisk', 'eyebrow_label', 'ai_provenance_label', 'ai_illustration_note', 'take_label',
+                    'illustration_label'):
             spec = next(p for p in CONFIG['patterns'] if p['id'] == pid)
             self.assertEqual(set(spec['applies_to']), set(copy_lint.SURFACES), pid)
 
@@ -89,6 +92,14 @@ class Examples(unittest.TestCase):
         a = copy_lint.copy_lint('FOLLOW THE MONEY\r\n\r\nGoogle paid first.', 'channel_copy')
         b = copy_lint.copy_lint('FOLLOW THE MONEY\n\nGoogle paid first.', 'channel_copy')
         self.assertEqual([(h['id'], h['index']) for h in a], [(h['id'], h['index']) for h in b])
+        for end in ('\u2028', '\u2029', '\u0085'):
+            c = copy_lint.copy_lint(f'FOLLOW THE MONEY{end}{end}Google paid first.', 'channel_copy')
+            self.assertEqual([(h['id'], h['index']) for h in c], [(h['id'], h['index']) for h in b], repr(end))
+
+    def test_no_reason_asks_for_a_mark_on_screen(self):
+        # Krish, 28 Oct 2026: "I hate all these stupid little abbreviations and marks".
+        for p in CONFIG['patterns']:
+            self.assertNotRegex(p['reason'], r'labelled|"ILLUSTRATION" in the video', p['id'])
 
 
 class ApprovedCopy(unittest.TestCase):
@@ -113,6 +124,38 @@ class Cli(unittest.TestCase):
             r = run(str(f))
             self.assertEqual(r.returncode, 1, r.stdout + r.stderr)
             self.assertIn(f'ai_provenance_label  {f}:2  "Made with AI"', r.stdout)
+
+    def test_applies_to_never_switches_a_json_fields_rules_off(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            f = Path(tmp) / 'materials.json'
+            f.write_text(json.dumps({'sections': [{'id': 'substack', 'copy': [
+                {'label': 'Caption', 'text': 'follow.the.money\n\nGoogle paid first.'}]}]}), encoding='utf-8')
+            for args in ([], ['--applies-to', 'video_onscreen']):
+                r = run('--json', *args, str(f))
+                self.assertEqual(r.returncode, 1, r.stdout + r.stderr)
+                self.assertEqual([h['id'] for h in json.loads(r.stdout)['hits']], ['series_label'], args)
+            self.assertIn('--applies-to does not apply', run('--applies-to', 'video_onscreen', str(f)).stderr)
+
+    def test_a_json_file_it_cannot_read_is_never_clean(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            titles = Path(tmp) / 'titles.json'
+            titles.write_text(json.dumps({'long': "Krish's take on Disney"}), encoding='utf-8')
+            r = run(str(titles))
+            self.assertEqual(r.returncode, 2, r.stdout + r.stderr)
+            self.assertIn('not a shape the copy lint reads', r.stderr)
+            broken = Path(tmp) / 'cards.json'
+            broken.write_text('{"cards": [', encoding='utf-8')
+            self.assertEqual(run(str(broken)).returncode, 2)
+            quiet = Path(tmp) / 'creative-direction.json'
+            quiet.write_text(json.dumps({'cuts': {'long': {'beats': [{'on_screen_text': ''}]}}}), encoding='utf-8')
+            self.assertEqual(run(str(quiet)).returncode, 0, 'a known shape with no words yet is clean')
+
+    def test_a_byte_order_mark_is_read_past(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            f = Path(tmp) / 'cards.json'
+            f.write_text(json.dumps({'cards': [{'kicker': 'AI NEWS: OpenAI halved its price', 'lines': []}]}),
+                         encoding='utf-8-sig')
+            self.assertEqual([h['id'] for h in copy_lint.lint_file(f)], ['eyebrow_label'])
 
     def test_applies_to_changes_what_is_checked(self):
         with tempfile.TemporaryDirectory() as tmp:

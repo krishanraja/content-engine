@@ -50,6 +50,10 @@
         {
           "text": "snake_case names stay as they are",
           "applies_to": "article_metadata"
+        },
+        {
+          "text": "Follow @_name_ for the next one",
+          "applies_to": "channel_copy"
         }
       ]
     },
@@ -86,6 +90,10 @@
         {
           "text": "🚨🚨🚨🚨 BREAKING NEWS",
           "applies_to": "channel_copy"
+        },
+        {
+          "text": "AI NEWS\u2028OpenAI halved its price",
+          "applies_to": "carousel_text"
         }
       ],
       "pass": [
@@ -120,6 +128,10 @@
         {
           "text": "【NEW】 Disney hires the team",
           "applies_to": "carousel_text"
+        },
+        {
+          "text": "Disney hires the team [NEW]",
+          "applies_to": "titles"
         }
       ],
       "pass": [
@@ -130,6 +142,14 @@
         {
           "text": "Read it [here](https://makeyourmindup.ai)",
           "applies_to": "channel_copy"
+        },
+        {
+          "text": "\"We will [AI] everything,\" he said.",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "He said \"we will [AI] everything.\"",
+          "applies_to": "carousel_text"
         }
       ]
     },
@@ -156,6 +176,14 @@
         {
           "text": "FOLLOW.THE.MONEY\nWhy is Disney eating the scraps",
           "applies_to": "carousel_text"
+        },
+        {
+          "text": "AGI.\n\nWhat it means for your job.",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "NOBODY NOTICED.\n\nGoogle paid first.",
+          "applies_to": "channel_copy"
         }
       ]
     },
@@ -214,12 +242,12 @@
           "applies_to": "channel_copy"
         },
         {
-          "text": "ILLUSTRATION",
-          "applies_to": "video_onscreen"
-        },
-        {
           "text": "Disney rented space in OpenAI's Sora app",
           "applies_to": "carousel_text"
+        },
+        {
+          "text": "The illustration that fooled a jury",
+          "applies_to": "video_onscreen"
         }
       ]
     },
@@ -296,6 +324,10 @@
         {
           "text": "Google cut its prices. Videos made with Sora are next.",
           "applies_to": "channel_copy"
+        },
+        {
+          "text": "Runway made the ad.",
+          "applies_to": "channel_copy"
         }
       ]
     },
@@ -326,6 +358,14 @@
         {
           "text": "Image: Disney press office",
           "applies_to": "channel_copy"
+        },
+        {
+          "text": "Source: OpenAI",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "Credit: OpenAI",
+          "applies_to": "channel_copy"
         }
       ]
     },
@@ -350,8 +390,58 @@
           "applies_to": "titles"
         },
         {
+          "text": "DISNEY · DEC 2025",
+          "applies_to": "video_onscreen"
+        }
+      ]
+    },
+    "illustration_label": {
+      "hit": [
+        {
+          "text": "ILLUSTRATIVE AI",
+          "applies_to": "video_onscreen"
+        },
+        {
           "text": "ILLUSTRATION",
           "applies_to": "video_onscreen"
+        },
+        {
+          "text": "AI EXAMPLE",
+          "applies_to": "video_onscreen"
+        },
+        {
+          "text": "ILLUSTRATIVE MONTH • SAME WORKLOAD",
+          "applies_to": "carousel_text"
+        },
+        {
+          "text": "Prices fell 40% (illustrative)",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "Illustrative purposes only.",
+          "applies_to": "article_metadata"
+        },
+        {
+          "text": "Illustration: who pays the artists",
+          "applies_to": "titles"
+        }
+      ],
+      "pass": [
+        {
+          "text": "Illustration jobs are vanishing",
+          "applies_to": "titles"
+        },
+        {
+          "text": "Illustrators lost a third of their commissions",
+          "applies_to": "carousel_text"
+        },
+        {
+          "text": "AI examples that save an hour a week",
+          "applies_to": "titles"
+        },
+        {
+          "text": "These prices are illustrative, worked from the article's own sum.",
+          "applies_to": "channel_copy"
         }
       ]
     },
@@ -376,6 +466,34 @@
         {
           "text": "Hot take: Disney wins this one",
           "applies_to": "titles"
+        },
+        {
+          "text": "Krish's read",
+          "applies_to": "video_onscreen"
+        },
+        {
+          "text": "Krish's read: hosting beats origin",
+          "applies_to": "carousel_text"
+        },
+        {
+          "text": "KRISH'S TEST 23 OCT",
+          "applies_to": "video_onscreen"
+        },
+        {
+          "text": "Commercial explanation • Krish’s assessment",
+          "applies_to": "carousel_text"
+        },
+        {
+          "text": "My read: rent, then own",
+          "applies_to": "channel_copy"
+        },
+        {
+          "text": "Hot take\u2029",
+          "applies_to": "titles"
+        },
+        {
+          "text": "My take\u0085rent, then own",
+          "applies_to": "channel_copy"
         }
       ],
       "pass": [
@@ -394,6 +512,10 @@
         {
           "text": "Café owners take: a third more",
           "applies_to": "channel_copy"
+        },
+        {
+          "text": "The take: Apple keeps 30%",
+          "applies_to": "titles"
         }
       ]
     }

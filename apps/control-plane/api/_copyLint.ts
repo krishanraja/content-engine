@@ -7,8 +7,9 @@
 // or descriptions (docs/CAROUSEL-STANDARD.md).
 //
 // The patterns live once, in config/copy-lint.json. scripts/post-pack/copy_lint.py
-// reads the same file, so a session and the server refuse the same things, and
-// tests/control-plane/copy-lint.test.ts holds the two to the same answers.
+// reads the same file, so CI (scripts/check-public-copy.ts) and every session
+// that runs it read the same patterns, and tests/control-plane/copy-lint.test.ts
+// holds the two to the same answers.
 // Each pattern names the surfaces it covers; none covers the article body's
 // markdown source, where emphasis and headings are the markdown itself.
 //
@@ -43,7 +44,13 @@ const PATTERNS = (lint.patterns as PatternSpec[]).map((p) => {
 
 /** Line ends as \n and every odd space as a plain one, as the Python lint reads them. */
 export function normaliseCopy(text: string): string {
-  return text.replace(/\r\n?/g, '\n').replace(/[   -   　﻿]/g, ' ')
+  // U+2028 and U+2029 end a line for JavaScript's ^, $ and \s but not for
+  // Python's ASCII rules, and pasted text can end a line with U+0085, so both
+  // readers turn all three into \n first.
+  return text
+    .replace(/\r\n?/g, '\n')
+    .replace(/[\u2028\u2029\u0085]/g, '\n')
+    .replace(/[\u00a0\u1680\u2000-\u200a\u202f\u205f\u3000\ufeff]/g, ' ')
 }
 
 /** Every hit in one piece of public copy, in order of where it starts. */

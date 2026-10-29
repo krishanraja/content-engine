@@ -8,9 +8,9 @@ illustration-generation boilerplate goes on public artwork, captions or
 descriptions (docs/CAROUSEL-STANDARD.md).
 
 The patterns live once, in config/copy-lint.json, and
-apps/control-plane/api/_copyLint.ts reads the same file, so the server and
-every session refuse the same things. Each pattern says which public surface
-it covers:
+apps/control-plane/api/_copyLint.ts reads the same file, so CI
+(scripts/check-public-copy.ts) and every session that runs this read the same
+patterns. Each pattern says which public surface it covers:
 
   channel_copy      captions, descriptions, Notes and posts
   carousel_text     every word on a carousel card
@@ -27,10 +27,13 @@ headings are the markdown itself.
 A text file is one piece of copy, linted as --applies-to (channel_copy when
 not given). A JSON file in one of the engine's own shapes (board materials,
 carousel cards, cover facts, a creative direction) is read field by field,
-each field as the surface it is; --applies-to overrides that.
+always each field as the surface it is: --applies-to never applies to a JSON
+file, so it cannot switch a field's rules off. A JSON file in none of those
+shapes is refused (exit 2), so the lint is never clean on a file it did not
+read.
 
 Prints one line per hit (id, file, line, match) and exits 1 on any hit, 0 when
-the copy is clean. Import copy_lint(text, applies_to) to use it in code.
+the copy is clean, 2 when a file cannot be read. Import copy_lint(text, applies_to) to use it in code.
 No model, no network, no secrets: it runs before any paid call.
 """
 import argparse
@@ -68,11 +71,15 @@ def patterns():
 
 
 _SPACES = re.compile('[\u00a0\u1680\u2000-\u200a\u202f\u205f\u3000\ufeff]')
+# U+2028 and U+2029 end a line for JavaScript's ^, $ and \s but not for
+# re.ASCII, and pasted text can end a line with U+0085, so both readers turn
+# all three into \n first.
+_LINE_ENDS = re.compile('[\u2028\u2029\u0085]')
 
 
 def normalise(text):
     """Line ends as \\n and every odd space as a plain one, so a pattern reads the same in Python and on the server."""
-    return _SPACES.sub(' ', text.replace('\r\n', '\n').replace('\r', '\n'))
+    return _SPACES.sub(' ', _LINE_ENDS.sub('\n', text.replace('\r\n', '\n').replace('\r', '\n')))
 
 
 def copy_lint(text, applies_to):
@@ -156,6 +163,13 @@ def fields(data):
     return out
 
 
+def known_shape(data):
+    """True when the JSON is one of the shapes fields() reads, even with no words in it yet."""
+    return isinstance(data, dict) and (isinstance(data.get('sections'), list) or isinstance(data.get('cards'), list)
+                                       or isinstance(data.get('cuts'), dict)
+                                       or any(k in data for k in ('subchannel', 'cover', 'thumbs')))
+
+
 def _line_in_file(raw, text, fallback=1):
     """The line in the JSON file where this string's value sits, so a hit can be found by eye."""
     encoded = json.dumps(text, ensure_ascii=False)[1:-1]
@@ -165,15 +179,30 @@ def _line_in_file(raw, text, fallback=1):
     return raw.count('\n', 0, at) + 1 if at >= 0 else fallback
 
 
+class Unreadable(ValueError):
+    """A file the lint cannot read, so it must not report it clean."""
+
+
 def lint_file(path, applies_to=None):
-    """Hits in one file: [{'id', 'file', 'line', 'match', 'where'}]."""
+    """Hits in one file: [{'id', 'file', 'line', 'match', 'where'}].
+
+    applies_to is the surface of a text file. A JSON file's fields are always
+    read as their own surfaces, whatever applies_to says, and a JSON file in
+    none of the engine's shapes raises Unreadable."""
     path = Path(path)
     raw = path.read_text(encoding='utf-8-sig')
     hits = []
     if path.suffix.lower() == '.json':
-        for where, text, surface in fields(json.loads(raw)):
+        try:
+            data = json.loads(raw)
+        except ValueError as exc:
+            raise Unreadable(f'{path}: not JSON ({exc})')
+        if not known_shape(data):
+            raise Unreadable(f'{path}: not a shape the copy lint reads (board materials, carousel cards, cover facts, '
+                             'a creative direction); lint the words as a text file with --applies-to')
+        for where, text, surface in fields(data):
             base = _line_in_file(raw, text)
-            for h in copy_lint(text, applies_to or surface):
+            for h in copy_lint(text, surface):
                 hits.append({'id': h['id'], 'file': str(path), 'line': base + h['line'] - 1,
                              'match': h['match'], 'where': where})
     else:
@@ -184,13 +213,19 @@ def lint_file(path, applies_to=None):
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description='The copy lint: eyebrows, asterisks, AI-provenance notes and take labels in public copy.')
-    ap.add_argument('--applies-to', choices=SURFACES, help='the surface this copy is (default: channel_copy for text; JSON fields carry their own)')
+    ap.add_argument('--applies-to', choices=SURFACES, help='the surface a text file is (default: channel_copy); never applies to a JSON file, whose fields carry their own')
     ap.add_argument('--json', action='store_true', help='print the hits as JSON')
     ap.add_argument('files', nargs='+')
     args = ap.parse_args(argv)
     hits = []
     for f in args.files:
-        hits.extend(lint_file(f, args.applies_to))
+        if args.applies_to and Path(f).suffix.lower() == '.json':
+            print(f'copy lint: --applies-to does not apply to {f}; each field is read as its own surface', file=sys.stderr)
+        try:
+            hits.extend(lint_file(f, args.applies_to))
+        except Unreadable as exc:
+            print(f'copy lint: {exc}', file=sys.stderr)
+            return 2
     if args.json:
         print(json.dumps({'ok': not hits, 'version': config()['version'], 'hits': hits}, indent=2, ensure_ascii=False))
     else:
