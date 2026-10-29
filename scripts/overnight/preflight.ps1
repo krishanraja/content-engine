@@ -20,9 +20,12 @@ The checks, each { ok, detail, ... }:
                    "task --help": the companion reads help only as its first word, so "task --help" would start a
                    real Codex task with the prompt "--help" and spend the allowance.
   codex_login      "codex login status" says ChatGPT (the test ve doctor uses).
+  codex_profile    Codex's tool profile (config\codex-profile.json) passes its audit, and none of the MCP servers this
+                   machine's Codex has ("codex mcp list --json", which only lists) is a forbidden kind: publish, share,
+                   deploy, TikTok, Buffer, workflow and the rest the profile names (failure production-asked-to-publish).
   codex_allowance  the weekly Codex allowance used, from python scripts\session_token_audit.py --codex --json. Above
-                   the ceiling in scripts\velib\cards.py (ALLOWANCE_CEILING) dispatch refuses a card without Krish's
-                   spend yes, so an overnight run could not send one alone. Unknown (no Codex thread on this machine in
+                   the ceiling in scripts\velib\cards.py (ALLOWANCE_CEILING) dispatch refuses a card the weekly credit
+                   budget Krish signed does not cover (config\ve\credit-budget.json), so an overnight run spends nothing alone. Unknown (no Codex thread on this machine in
                    the last 7 days) passes and says so.
   ffmpeg           the pinned build that scripts\ve-env.sh names runs from its path and is that build.
   tesseract        Tesseract at the path scripts\ve-env.sh names runs.
@@ -30,7 +33,9 @@ The checks, each { ok, detail, ... }:
   drive            the Video Engine, Inbox, Archive and library folders that config\studio.json names are reachable.
 
 The result also carries "report": the same findings as names, versions and counts only (never a path, a message or
-an account), which the recordings pass sends with its lane report. Exit 0 when every check passes, 1 when one fails.
+an account), which the recordings pass sends with its lane report, and this machine's overnight role (the setting
+MINDMAKE_OVERNIGHT_ROLE: primary makes the long cuts and builds the Monday board, standby makes the shorts), so the
+engine can say whether both computers could run the night (api/library/_lanes.ts, overnightReadiness). Exit 0 when every check passes, 1 when one fails.
 
   powershell -NoProfile -ExecutionPolicy Bypass -File scripts\overnight\preflight.ps1
 
@@ -262,6 +267,66 @@ Invoke-Check 'codex_login' {
   return [ordered]@{ ok = $false; detail = "codex login status does not say ChatGPT (exit $($run.code)), so Codex cards cannot run until Codex is signed in." }
 }
 
+function Get-ForbiddenHits([string]$Text, [string[]]$Forbidden) {
+  # The forbidden terms a name carries, read as scripts\overnight\codex_profile.py reads them (forbidden_terms): a term
+  # of four letters or fewer is a whole word, a longer one may start a word, one with an underscore is found anywhere.
+  $words = @(([regex]::Split($Text.ToLowerInvariant(), '[^a-z0-9]+')) | Where-Object { $_ })
+  $joined = $words -join '_'
+  $hits = @()
+  foreach ($term in $Forbidden) {
+    if (-not $term) { continue }
+    if ($term.Contains('_')) { $found = $joined.Contains($term) }
+    elseif ($term.Length -le 4) { $found = ($words -contains $term) }
+    else { $found = @($words | Where-Object { $_.StartsWith($term) }).Count -gt 0 }
+    if ($found) { $hits += $term }
+  }
+  return $hits
+}
+
+Invoke-Check 'codex_profile' {
+  # Codex's one tool profile (config\codex-profile.json; failure production-asked-to-publish: "Codex prepares the board
+  # and never publishes directly"). Codex runs no hooks, so it is held by what it can reach: the profile allows no
+  # forbidden tool and no escalation, and this machine's Codex has no MCP server of a forbidden kind (publish, share,
+  # deploy, TikTok, Buffer, workflow and the rest the profile names), which a card could reach whatever it says.
+  # "codex mcp list --json" only lists; the names are read here and never sent.
+  $profile = [System.IO.File]::ReadAllText((Join-Path $RepoRoot 'config\codex-profile.json')) | ConvertFrom-Json
+  $forbidden = [string[]]@(Get-Field $profile 'forbidden' | ForEach-Object { ([string]$_).ToLowerInvariant() })
+  $wrong = @()
+  if ([string](Get-Field $profile 'approval_policy') -ne 'never') { $wrong += 'approval_policy is not never' }
+  if ((Get-Field $profile 'network_access') -ne $false) { $wrong += 'network_access is not false' }
+  if (@(Get-Field $profile 'allowed_mcp_servers' | Where-Object { $_ }).Count) { $wrong += 'it allows an MCP server' }
+  foreach ($tool in @(Get-Field $profile 'allowed_tools')) { if ((Get-ForbiddenHits ([string]$tool) $forbidden).Count) { $wrong += "it allows $tool" } }
+  if ($wrong.Count) { return [ordered]@{ ok = $false; flagged = $null; detail = "config\codex-profile.json fails its audit: $($wrong -join '; ')." } }
+  $codex = Find-Program @('codex.exe', 'codex.cmd') @((Join-Path $env:APPDATA 'npm\codex.cmd'))
+  if (-not $codex) { return [ordered]@{ ok = $false; flagged = $null; detail = 'The Codex CLI is not on this machine, so its MCP servers cannot be checked.' } }
+  $run = Invoke-Quiet $codex @('mcp', 'list', '--json') 30
+  $listing = $null
+  try { if ($run.code -eq 0) { $listing = ([string]$run.out).Trim() | ConvertFrom-Json } } catch { $listing = $null }
+  if ($run.code -ne 0) { return [ordered]@{ ok = $false; flagged = $null; detail = "codex mcp list did not answer ($(Get-Short $run))." } }
+  # The listing is a list of servers, or an object holding one, or an object keyed by server name: each becomes a
+  # name and its settings.
+  $entries = @()
+  if ($null -ne $listing) {
+    $holder = Get-Field $listing 'servers'
+    if ($null -eq $holder) { $holder = Get-Field $listing 'mcp_servers' }
+    if ($null -ne $holder) { $listing = $holder }
+    if ($listing -is [System.Array]) { $entries = @($listing | ForEach-Object { [pscustomobject]@{ name = (Get-Field $_ 'name'); value = $_ } }) }
+    else { $entries = @($listing.PSObject.Properties | ForEach-Object { [pscustomobject]@{ name = $_.Name; value = $_.Value } }) }
+  }
+  $flagged = 0
+  foreach ($entry in $entries) {
+    $server = $entry.value
+    $transport = Get-Field $server 'transport'
+    $parts = @($entry.name, (Get-Field $server 'command'), (Get-Field $server 'url'), (Get-Field $transport 'command'), (Get-Field $transport 'url')) +
+      @(Get-Field $server 'args') + @(Get-Field $transport 'args')
+    $text = (@($parts | Where-Object { $_ } | ForEach-Object { [string]$_ })) -join ' '
+    if ((Get-ForbiddenHits $text $forbidden).Count) { $flagged += 1 }
+  }
+  $servers = $entries
+  if ($flagged) { return [ordered]@{ ok = $false; flagged = $flagged; detail = "this machine's Codex has $flagged MCP server(s) of a kind the profile forbids (codex mcp list names them); remove them before an unattended run." } }
+  return [ordered]@{ ok = $true; flagged = 0; detail = "the profile passes its audit and none of this machine's $($servers.Count) Codex MCP server(s) is a forbidden kind." }
+}
+
 Invoke-Check 'codex_allowance' {
   $cards = [System.IO.File]::ReadAllText((Join-Path $RepoRoot 'scripts\velib\cards.py'))
   $ceiling = [regex]::Match($cards, '(?m)^ALLOWANCE_CEILING = (\d+)')
@@ -304,7 +369,7 @@ Invoke-Check 'codex_allowance' {
   $result.ok = ($used -le $limit)
   if (-not $result.detail) {
     if ($result.ok) { $result.detail = "$($result.used_pct)% of the weekly Codex allowance is used (ceiling $limit%)." }
-    else { $result.detail = "$($result.used_pct)% of the weekly Codex allowance is used, over the $limit% ceiling: ve dispatch refuses a card without Krish's spend yes." }
+    else { $result.detail = "$($result.used_pct)% of the weekly Codex allowance is used, over the $limit% ceiling: ve dispatch refuses a card the weekly credit budget Krish signed does not cover." }
   }
   return $result
 }
@@ -358,6 +423,8 @@ Invoke-Check 'drive' {
 
 # ---- the result ---------------------------------------------------------------------------------------------------
 
+$Role = ([string](Get-Setting 'MINDMAKE_OVERNIGHT_ROLE')).Trim().ToLowerInvariant()
+if (@('primary', 'standby') -notcontains $Role) { $Role = 'none' }
 $failed = @($Checks.Keys | Where-Object { -not [bool](Get-Field $Checks[$_] 'ok') })
 $at = $Started.ToString("yyyy-MM-dd'T'HH:mm:ss'Z'", $Invariant)
 $allowance = $Checks['codex_allowance']
@@ -368,6 +435,9 @@ $report = [ordered]@{
   claude_version = Get-Field $Checks['claude_cli'] 'version'
   codex_companion = Get-Field $Checks['codex_companion'] 'version'
   codex_login = [bool](Get-Field $Checks['codex_login'] 'ok')
+  codex_profile = [bool](Get-Field $Checks['codex_profile'] 'ok')
+  codex_flagged = Get-Field $Checks['codex_profile'] 'flagged'
+  role = $Role
   codex_weekly_used_pct = Get-Field $allowance 'used_pct'
   codex_resets_at = Get-Field $allowance 'resets_at'
   ffmpeg = Get-Field $Checks['ffmpeg'] 'version'

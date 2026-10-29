@@ -183,17 +183,33 @@ def delivery_problems(video, receipt, target=None):
         if target is not None and report.get('library_path') != target:
             return ['video validation receipt names a different library destination']
         required = ('heard','sync','loudness','visuals','full_review')
-        problems = [f'{key} is not passed' for key in required
-                    if report.get('checks',{}).get(key,{}).get('status')!='pass']
+        # A check either ran and wrote what it measured, or the receipt names it under `missing` with the reason
+        # (plan W2.4): no receipt carries a placeholder status, and a missing check holds the cut.
+        missing = report.get('missing') if isinstance(report.get('missing'), dict) else {}
+        checks = report.get('checks', {})
+        problems = [(f'{key} is missing' + (f': {missing[key]}' if missing.get(key) else '')) if key not in checks
+                    else f'{key} is not passed' for key in required if checks.get(key, {}).get('status') != 'pass']
         # The words gate (words_gate.py) blocks wherever its check travels, and its absence blocks a cut for a post
         # dated from words_gate.REQUIRED_FROM (keyed on the destination, not on the receipt); its advisory rows never do.
         import words_gate
         problems += words_gate.delivery_problems(report, target)
+        # The joins and captions checks (scripts/cutgates/receipt.py) hold a cut for a post dated from
+        # config/gates.json required_from when one is missing, failed or bound to other bytes.
+        problems += cut_gate_problems(report, target)
         import visual_clarity
         import media_standard
         return problems + motion_problems(report) + visual_clarity.delivery_problems(report, Path(receipt).parent, video) + (media_standard.check('delivery', video, report.get('piece_id')) if media_standard.enforced() else [])
     except (OSError, ValueError, TypeError, AttributeError):
         return ['video validation receipt cannot be read']
+
+
+def cut_gate_problems(report, target=None):
+    import sys
+    scripts = str(Path(__file__).resolve().parents[1])
+    if scripts not in sys.path:
+        sys.path.append(scripts)  # after quick-edit's own modules, never ahead of them
+    from cutgates import receipt as cut_receipt
+    return cut_receipt.delivery_problems(report, target)
 
 
 def motion_problems(report):
