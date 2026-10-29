@@ -139,16 +139,17 @@ def frozen(lock, fmt, root=None) -> tuple[bool, list[str]]:
 
 
 def spend_from_budget(record, *, lock_path=None) -> dict:
-    """The design lock's per-generation consent becomes Krish's signed weekly cap (plan Wave 2, W2.6): plates'
-    animation spend is then whatever the weekly credit budget he signed covers, in his words and bound to its hash.
-    The caller checks the record stands (velib/credits.verify) first; this writes nothing else in the lock."""
+    """The design lock's per-generation consent becomes the weekly cap (plan Wave 2, W2.6): plates' animation spend
+    is whatever Control Center's credit read covers (Krish, 2026-10-29: credits are "handled by ai-harness and
+    control-center"), bound to that read's hash. The caller checks the record stands first; nothing else is written."""
     path = _path(lock_path).resolve()
     lock = load(path)
     animation = lock['plates']['animation']
-    signed = record['signed']
-    animation['spend_needs'] = 'within the weekly credit budget Krish signed (config/ve/credit-budget.json); ve ledger reserve before each generation'
-    animation['spend_signed'] = {'by': signed['by'], 'said': signed['said'], 'on': signed['on'],
-                                 'record_sha256': signed['record_sha256']}
+    animation['spend_needs'] = 'within the credit caps Control Center places on the publication (ve budget pull); ve ledger reserve before each generation'
+    animation.pop('spend_signed', None)
+    animation['spend_source'] = {'source': record['source'], 'engine_id': record['engine_id'], 'pulled_on': record['pulled_on'],
+                                 'record_sha256': record['record_sha256'],
+                                 'ruling': 'Krish, 2026-10-29: "this is now handled by ai-harness and control-center"'}
     path.write_text(json.dumps(lock, indent=2) + '\n', encoding='utf-8')
     return lock
 

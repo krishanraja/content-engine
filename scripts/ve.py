@@ -116,7 +116,7 @@ def cmd_lock(args) -> int:
             if problems:
                 raise ValueError('the weekly credit budget does not stand: ' + '; '.join(problems))
             designlock.spend_from_budget(record)
-            print(f'design lock: spend is the weekly credit budget Krish signed on {record["signed"]["on"]}: "{record["signed"]["said"]}"')
+            print(f'design lock: spend is the credit caps Control Center placed, read on {record["pulled_on"]}')
         elif args.action == 'check':
             findings = designlock.validate(lock)
             if findings:
@@ -448,10 +448,23 @@ def cmd_ledger(args) -> int:
 def cmd_budget(args) -> int:
     from velib import credits, ledger
     path = Path(args.record) if args.record else credits.RECORD
+    if args.action == 'pull':
+        if not args.read:
+            print('ve budget pull: give the get_engine_credits answer as a file (--read FILE)', file=sys.stderr)
+            return 1
+        try:
+            record = credits.from_read(load_json(args.read))
+        except (OSError, ValueError) as error:
+            print(f've budget pull: {error}', file=sys.stderr)
+            return 1
+        saved = credits.save(record, path)
+        problems = credits.verify(record)
+        print(f've budget: saved {saved} ({record["record_sha256"][:12]})' + ('' if not problems else ': ' + '; '.join(problems)))
+        return 0 if not problems else 1
     try:
         record = credits.load(path)
     except FileNotFoundError:
-        print(f've budget: no {path.name}: Krish signs it from config/ve/credit-budget.template.json', file=sys.stderr)
+        print(f've budget: no {path.name}: run ve budget pull --read FILE with Control Center\'s credit read', file=sys.stderr)
         return 1
     except (OSError, ValueError) as error:
         print(f've budget: {error}', file=sys.stderr)
@@ -461,11 +474,12 @@ def cmd_budget(args) -> int:
         return 0
     problems = credits.verify(record)
     if args.action == 'verify':
-        print('ve budget: ' + ('signed by Krish and unchanged since' if not problems else '; '.join(problems)))
+        print('ve budget: ' + ('the credit read stands' if not problems else '; '.join(problems)))
         return 0 if not problems else 1
     week = credits.week_of()
     for provider, entry in ledger.weekly(week, record).items():
-        print(f'{provider}: {entry["used"]:g} used or reserved ({entry["settled"]:g} settled, {entry["open"]:g} open) / {entry["cap"]}')
+        cap = entry['cap'] if entry['cap'] is not None else f'no {credits.POOLS[provider]} pool placed'
+        print(f'{provider}: {entry["used"]:g} used or reserved ({entry["settled"]:g} settled, {entry["open"]:g} open) / {cap}')
     print(f'week of {week}: ' + ('budget stands' if not problems else 'budget does not stand: ' + '; '.join(problems)))
     return 0 if not problems else 1
 
@@ -611,9 +625,10 @@ def main() -> int:
     a = actions.add_parser('settle', help='record what a reservation really cost')
     a.add_argument('id'); a.add_argument('amount', type=float)
     p.set_defaults(fn=cmd_ledger)
-    p = sub.add_parser('budget', help='verify, hash or show the weekly credit budget Krish signs')
-    p.add_argument('action', choices=('verify', 'hash', 'status'))
-    p.add_argument('--record', help='default config/ve/credit-budget.json')
+    p = sub.add_parser('budget', help='pull, verify, hash or show the credit caps Control Center places on the publication')
+    p.add_argument('action', choices=('pull', 'verify', 'hash', 'status'))
+    p.add_argument('--read', help='pull: a get_engine_credits answer (JSON) for growth-makeyourmindup')
+    p.add_argument('--record', help='default .ve-work/credits/credit-budget.json (never committed), or VE_CREDIT_BUDGET')
     p.set_defaults(fn=cmd_budget)
     p = sub.add_parser('time', help='start, stop or inspect the piece engine clock',
                        description='Track engine phases separately from the append-only usage ledger.')

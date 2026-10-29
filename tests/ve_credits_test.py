@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""The weekly credit budget (plan Wave 2, W2.6): signed by Krish like the engine's other signed records, reserved
-against before every dispatch and generation, and refusing anything over it. Synthetic records only: the test signs a
-throwaway copy in a temporary folder, never the repository's budget."""
+"""The weekly credit budget (plan Wave 2, W2.6): its caps are Control Center's credit read for the publication
+(Krish, 2026-10-29: credits are "handled by ai-harness and control-center"), reserved against before every dispatch and
+generation, refusing anything over a cap, and holding when the read is missing, held, unknown, stale or has no pool.
+Synthetic reads only, in a temporary folder."""
 import copy
 import datetime as dt
 import json
@@ -19,14 +20,20 @@ from velib import cards, credits, designlock, ledger  # noqa: E402
 MONDAY = dt.date(2026, 11, 16)
 
 
+def read(pools=None, held=False, known=True):
+    """A synthetic get_engine_credits answer (never real numbers)."""
+    pools = pools if pools is not None else {'codex': 3, 'codex-credits': 0, 'runway': 100, 'higgsfield': 50, 'elevenlabs': 0}
+    block = {'rule': 'synthetic', 'pools': [{'pool': k, 'tool': k, 'unit': 'credits', 'remaining_for_you': v,
+                                             'use_by': '2026-11-30', 'balance_as_of': '2026-11-16T00:00:00+00:00'}
+                                            for k, v in pools.items()]}
+    return {'ok': True, 'engine_id': 'growth-makeyourmindup', 'product_slug': 'publication', 'held': held,
+            'credits': block if known else None}
+
+
 def signed(caps=None):
-    record = json.loads(credits.TEMPLATE.read_text(encoding='utf-8'))
-    record['from_week'] = '2026-11-09'
-    record['caps'] = dict(caps or {'codex_allowance_points': 3, 'codex_paid_credits': 0, 'runway_credits': 100,
-                                   'higgsfield_credits': 50, 'elevenlabs_credits': 0})
-    record['signed'] = {'by': 'Krish', 'said': 'synthetic test words, never his', 'on': '2026-11-07', 'record_sha256': ''}
-    record['signed']['record_sha256'] = credits.record_hash(record)
-    return record
+    """The saved record (the name stays for the older tests below)."""
+    pools = None if caps is None else {credits.POOLS[k]: v for k, v in caps.items()}
+    return credits.from_read(read(pools), today=MONDAY)
 
 
 class BudgetTests(unittest.TestCase):
@@ -42,30 +49,56 @@ class BudgetTests(unittest.TestCase):
         self.env.stop()
         self.tmp.cleanup()
 
-    def test_the_template_is_never_signed(self):
-        template = json.loads(credits.TEMPLATE.read_text(encoding='utf-8'))
-        self.assertTrue(credits.verify(template))
-        self.assertEqual(template['signed']['by'], '')
-        self.assertTrue(all(v is None for v in template['caps'].values()))
-        self.assertFalse(credits.RECORD.exists(), 'the amounts are Krish\'s: no session commits a signed budget')
+    def test_no_session_commits_a_budget_or_types_a_cap(self):
+        self.assertFalse((ROOT / 'config' / 've' / 'credit-budget.json').exists())
+        self.assertFalse((ROOT / 'config' / 've' / 'credit-budget.template.json').exists())
+        self.assertNotIn('signed', json.dumps(signed()))
 
-    def test_a_signed_record_stands_and_an_edited_or_unsigned_one_does_not(self):
+    def test_a_pulled_read_stands_and_an_edited_held_or_unknown_one_does_not(self):
         self.assertEqual(credits.verify(signed()), [])
         edited = signed()
         edited['caps']['runway_credits'] = 1000
-        self.assertIn('changed after Krish signed', ' '.join(credits.verify(edited)))
-        other = signed()
-        other['signed']['by'] = 'Claude'
-        self.assertIn('not signed', ' '.join(credits.verify(other)))
-        short = signed()
-        short['signed']['said'] = 'yes'
-        self.assertTrue(credits.verify(short))
+        self.assertIn('edited after it was pulled', ' '.join(credits.verify(edited)))
+        held = credits.from_read(read(held=True), today=MONDAY)
+        self.assertIn('held: true', ' '.join(credits.verify(held)))
+        unknown = credits.from_read(read(known=False), today=MONDAY)
+        self.assertIn('unknown', ' '.join(credits.verify(unknown)))
+        other = read()
+        other['engine_id'] = 'growth-heartside'
+        self.assertTrue(credits.verify(credits.from_read(other, today=MONDAY)))
+        with self.assertRaises(ValueError):
+            credits.from_read({'ok': False, 'error': 'unknown_engine'})
+
+    def test_a_provider_with_no_pool_placed_holds_by_name(self):
+        path = self.dir / 'partial.json'
+        credits.save(credits.from_read(read({'elevenlabs': 10}), today=MONDAY), path)
+        with self.assertRaises(SystemExit) as held:
+            ledger.reserve('runway_credits', 1, today=MONDAY, budget_path=path)
+        self.assertIn('no runway pool', str(held.exception))
+        ledger.reserve('elevenlabs_credits', 10, today=MONDAY, budget_path=path)
+
+    def test_a_stale_read_holds(self):
+        with self.assertRaises(SystemExit) as stale:
+            ledger.reserve('runway_credits', 1, today=MONDAY + dt.timedelta(days=credits.MAX_AGE_DAYS + 1), budget_path=self.path)
+        self.assertIn('pull it again', str(stale.exception))
+
+    def test_ve_budget_pull_saves_the_read_bound_to_its_hash(self):
+        answer = self.dir / 'answer.json'
+        answer.write_text(json.dumps(read()), encoding='utf-8')
+        out = self.dir / 'pulled.json'
+        import subprocess
+        r = subprocess.run([sys.executable, str(ROOT / 'scripts' / 've.py'), 'budget', 'pull', '--read', str(answer),
+                            '--record', str(out)], capture_output=True, text=True)
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        saved = json.loads(out.read_text())
+        self.assertEqual(saved['record_sha256'], credits.record_hash(saved))
+        self.assertEqual(saved['caps']['runway_credits'], 100)
 
     def test_reservations_refuse_anything_over_the_cap(self):
         first = ledger.reserve('runway_credits', 60, 'p', 'plate', today=MONDAY, budget_path=self.path)
         with self.assertRaises(SystemExit) as over:
             ledger.reserve('runway_credits', 41, 'p', 'plate', today=MONDAY, budget_path=self.path)
-        self.assertIn('over the signed weekly credit budget', str(over.exception))
+        self.assertIn('over the credit cap from Control Center', str(over.exception))
         ledger.settle(first, 20, today=MONDAY)
         ledger.reserve('runway_credits', 41, 'p', 'plate', today=MONDAY, budget_path=self.path)
         week = ledger.weekly(MONDAY.isoformat(), signed())['runway_credits']
@@ -78,8 +111,6 @@ class BudgetTests(unittest.TestCase):
     def test_nothing_spends_without_a_signed_budget(self):
         with self.assertRaises(SystemExit):
             ledger.reserve('runway_credits', 1, today=MONDAY, budget_path=self.dir / 'missing.json')
-        with self.assertRaises(SystemExit):
-            ledger.reserve('runway_credits', 1, today=dt.date(2026, 11, 2), budget_path=self.path)
 
     def test_a_card_is_held_when_no_codex_profile_can_be_read(self):
         card = self.dir / 'card.md'
@@ -125,15 +156,15 @@ class BudgetTests(unittest.TestCase):
         self.assertNotIn('spend_approved', (ROOT / 'scripts' / 'velib' / 'cards.py').read_text())
         self.assertNotIn('--spend-approved', (ROOT / 'scripts' / 've.py').read_text())
 
-    def test_ve_lock_spend_carries_his_words_into_the_design_lock(self):
+    def test_ve_lock_spend_binds_the_design_lock_to_the_credit_read(self):
         lock = self.dir / 'design-lock.json'
         lock.write_text((ROOT / 'config' / 've' / 'design-lock.json').read_text(encoding='utf-8'), encoding='utf-8')
         record = signed()
         designlock.spend_from_budget(record, lock_path=lock)
         animation = json.loads(lock.read_text())['plates']['animation']
-        self.assertIn('weekly credit budget Krish signed', animation['spend_needs'])
-        self.assertEqual(animation['spend_signed']['said'], record['signed']['said'])
-        self.assertEqual(animation['spend_signed']['record_sha256'], credits.record_hash(record))
+        self.assertIn('Control Center', animation['spend_needs'])
+        self.assertEqual(animation['spend_source']['record_sha256'], credits.record_hash(record))
+        self.assertNotIn('spend_signed', animation)
 
 
 if __name__ == '__main__':

@@ -202,7 +202,7 @@ def _admit(card_path: Path, meta: dict) -> None:
 
 
 def _reserve(card_path: Path, meta: dict) -> str:
-    """Reserve the card's credits against the weekly budget Krish signed, before anything is sent; refuse over it.
+    """Reserve the card's credits against Control Center's credit read, before anything is sent; refuse over it.
     Past the weekly allowance ceiling Codex draws paid credits, which reserve against their own cap."""
     from . import ledger
     used = weekly_used_percent()

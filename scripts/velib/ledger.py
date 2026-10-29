@@ -127,8 +127,8 @@ def stop_clock(piece):
 
 
 # ---- the weekly credit budget -----------------------------------------------------------------------------------
-# Every dispatch and generation reserves against the budget Krish signed (velib/credits.py) before it runs, and is
-# refused when the week's reservations and settled use would pass his cap. One file a week, append-only, on this
+# Every dispatch and generation reserves against the credit read from Control Center (velib/credits.py) before it
+# runs, and is refused when the week's reservations and settled use would pass the cap that read gives. One file a week, append-only, on this
 # machine (VE_CREDIT_LEDGER names a folder both computers share, when there is one). A reservation is settled with
 # what the provider actually charged, so `ve budget status` can be read against the providers' own transactions.
 
@@ -168,18 +168,19 @@ def weekly(week, record=None):
 
 
 def reserve(provider, amount, piece='', note='', today=None, budget_path=None):
-    """Reserve credits against the signed weekly budget, or SystemExit naming the cap it would pass. Returns its id."""
+    """Reserve credits against Control Center's credit read, or SystemExit naming the cap it would pass. Returns its id."""
     import uuid
-    from .credits import PROVIDERS, standing, week_of
+    from .credits import PROVIDERS, cap, standing, week_of
     if provider not in PROVIDERS:
         raise ValueError(f'unknown provider {provider!r}; expected one of {", ".join(PROVIDERS)}')
     _validate('credits', amount)
     record = standing(budget_path, today)
     week = week_of(today)
+    limit = cap(record, provider)
     entry = weekly(week, record)[provider]
-    if entry['used'] + amount > record['caps'][provider]:
-        raise SystemExit(f've: over the signed weekly credit budget: {provider} {entry["used"]:g} used or reserved + {amount:g} '
-                         f'> {record["caps"][provider]:g} for the week of {week}; nothing was dispatched')
+    if entry['used'] + amount > limit:
+        raise SystemExit(f've: over the credit cap from Control Center: {provider} {entry["used"]:g} used or reserved + {amount:g} '
+                         f'> {limit:g} for the week of {week}; nothing was dispatched')
     rid = uuid.uuid4().hex[:12]
     path = credit_ledger_path(week)
     path.parent.mkdir(parents=True, exist_ok=True)
