@@ -41,6 +41,9 @@ import sys
 import urllib.request
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import asset_spec  # noqa: E402  config/asset-spec.json: the asset names the engine produces now
+
 SCHEMA = 'content-engine-piece-manifest/1'
 SCHEMA_FILE = Path(__file__).resolve().parents[2] / 'config' / 'schema' / 'piece-manifest.schema.json'
 # Growth's closed vocabularies (growth-makeyourmindup engine/run/release.py CHANNELS, engine/run/handoff.py, 38fada1).
@@ -114,6 +117,9 @@ def problems(value, draft=False):
                 or isinstance(a['order'], bool) or not isinstance(a['order'], int) or a['order'] < 1:
             out.append(f'asset {a!r:.80}: name (letters, digits, . _ -), drive_id, sha256 and order from 1')
             continue
+        if asset_spec.asset_kind(a['name']) is None:
+            out.append(f'asset {a["name"]}: not an asset the engine produces now (config/asset-spec.json: '
+                       f'{", ".join(asset_spec.known_names())})')
         if a['name'] in names or a['order'] in orders:
             out.append(f'asset {a["name"]}: a name or order used twice')
         names.add(a['name'])
@@ -251,7 +257,8 @@ def self_test():
     for bad, why in ((dict(spec, channels={'myspace': {'words': 'x', 'alt_text': None, 'assets': []}}), 'an unknown channel'),
                      (dict(spec, channels={'tiktok': {'words': 'x', 'alt_text': None, 'assets': ['nope']}}), 'an asset it does not hold'),
                      (dict(spec, channels={'tiktok': {'words': 'x', 'alt_text': ['a', 'b'], 'assets': ['short_video']}}), 'alt text not one per asset'),
-                     (dict(spec, assets=[{'name': '3 Video/x.mp4', 'drive_id': 'a' * 25, 'sha256': '1' * 64}]), 'a name with spaces')):
+                     (dict(spec, assets=[{'name': '3 Video/x.mp4', 'drive_id': 'a' * 25, 'sha256': '1' * 64}]), 'a name with spaces'),
+                     (dict(spec, assets=spec['assets'] + [{'name': 'teaser_gif', 'drive_id': 'c' * 25, 'sha256': '3' * 64}]), 'an asset the spec does not hold')):
         try:
             draft(bad)
             check(f'the draft refuses {why}', False)

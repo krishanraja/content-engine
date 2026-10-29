@@ -1,0 +1,89 @@
+{
+  "schema": "content-engine-asset-spec/1",
+  "_about": "What the engine produces now, format by format: title, subtitle, copy, description and asset sizes. Krish, 2026-10-29: \"I think we need to clean up the asset and title, subtitle, copy, descriptions and asset sizes for exactly what we need to be producing now as well, which lives in the content-engine.\" Every number here is one the code already holds, and tests/asset-spec.test.ts fails if the two part: `source` names where. A field that reads null with an `open` note is not set anywhere yet, and only Krish sets it; nothing invents one. Native caption limits on each social platform are Growth's (docs/CAROUSEL-STANDARD.md, Growth's publishing route), not this file's. Readers: scripts/post-pack/asset_spec.py (piece_manifest.py checks asset names against `assets`; scripts/quick-edit/snackable.py takes the off-day snackable's length and frame from `formats.snackable`).",
+  "assets": {
+    "long_video": {"format": "youtube_long", "frame": [1920, 1080], "source": "scripts/quick-edit/make.py SIZE['16x9']"},
+    "short_video": {"format": "short_9x16", "frame": [1080, 1920], "source": "scripts/quick-edit/make.py SIZE['9x16']"},
+    "feature_video": {"format": "youtube_long", "frame": [1920, 1080], "source": "house rule FEATURE: the week's third cut, the long frame"},
+    "snackable_video": {"format": "snackable", "frame": [1080, 1920], "source": "scripts/quick-edit/snackable.py: a stretch of an approved master"},
+    "thumb_wide": {"format": "youtube_long", "frame": [1280, 720], "source": "scripts/quick-edit/archive.py THUMB_SIZE['wide']"},
+    "thumb_tall": {"format": "short_9x16", "frame": [1080, 1920], "source": "scripts/quick-edit/archive.py THUMB_SIZE['tall']"},
+    "vertical_cover": {"format": "short_9x16", "frame": [1080, 1920], "source": "scripts/post-pack/publish_manager.py COVER_ROLES['vertical-cover']"},
+    "square_cover": {"format": "carousel", "frame": [1080, 1080], "source": "scripts/post-pack/publish_manager.py COVER_ROLES['square-cover']"},
+    "share_card_cover": {"format": "substack_article", "frame": [1200, 675], "source": "scripts/post-pack/publish_manager.py COVER_ROLES['share-card-cover']"},
+    "article_figure": {"format": "substack_article", "frame": null, "numbered": true, "source": "the article's figures (docs/CREATIVE_DIRECTION.md)", "open": "no figure size is set in code"},
+    "carousel_slide": {"format": "carousel", "frame": null, "numbered": true, "source": "Growth makes it to docs/CAROUSEL-STANDARD.md", "open": "no slide size is set in this repository; Krish or Growth names it"},
+    "meme": {"format": "meme", "frame": null, "source": "Growth's off-day lane", "open": "no meme size is set anywhere yet"}
+  },
+  "formats": {
+    "substack_article": {
+      "name": "The Substack article",
+      "title": {"aim": 60, "max": 100, "why": "it is also the email's subject line; Substack's phone feed cuts a title at about 110", "source": "apps/control-plane/api/_packaging.ts TITLE_AIM, TITLE_MAX, FEED_CUT"},
+      "subtitle": {"first_sentence_max": 60, "aim": 150, "source": "apps/control-plane/api/_packaging.ts SUBTITLE_LINE, SUBTITLE_AIM"},
+      "copy": {"ends_with": "3 things you can do tomorrow", "source": "AGENTS.md rule 11"},
+      "description": null,
+      "assets": ["share_card_cover", "article_figure"]
+    },
+    "substack_video_post": {
+      "name": "The Substack video post",
+      "title": {"aim": 60, "max": 100, "source": "apps/control-plane/api/_packaging.ts (the Substack title rules)"},
+      "subtitle": {"first_sentence_max": 60, "aim": 150, "source": "apps/control-plane/api/_packaging.ts"},
+      "copy": {"with": "the article", "source": "scripts/post-pack/week_board.py STEPS: 'Substack: video post with the article'"},
+      "description": null,
+      "assets": ["long_video", "thumb_wide"]
+    },
+    "youtube_long": {
+      "name": "The YouTube long cut",
+      "title": {"aim": 60, "max": 100, "no_angle_brackets": true, "source": "apps/control-plane/api/_packaging.ts TITLE_AIM, TITLE_MAX, YOUTUBE_LIMITS"},
+      "subtitle": null,
+      "description": {"max": 5000, "hook_max": 150, "read_line": "Read the full piece free at makeyourmindup.ai", "hashtags_max": 3, "source": "apps/control-plane/api/_packaging.ts DESCRIPTION_MAX, HOOK_MAX, READ_LINE, MAX_HASHTAGS"},
+      "copy": {"opens_on": "its hook", "closes_on": "what he would do", "source": "AGENTS.md rule 11"},
+      "length_seconds": null,
+      "open": "no length is fixed (docs/production/THE_BAR.md: nothing there sets a cut's length)",
+      "assets": ["long_video", "thumb_wide"]
+    },
+    "short_9x16": {
+      "name": "The 9:16 Short (YouTube Shorts, TikTok, Reels)",
+      "title": {"aim": 60, "max": 100, "source": "apps/control-plane/api/_packaging.ts (the YouTube title rules)"},
+      "subtitle": null,
+      "description": {"max": 5000, "hook_max": 150, "source": "apps/control-plane/api/_packaging.ts"},
+      "copy": {"opens_on": "its hook", "closes_on": "what he would do", "source": "AGENTS.md rule 11"},
+      "length_seconds": null,
+      "open": "no length is fixed (docs/production/THE_BAR.md)",
+      "assets": ["short_video", "thumb_tall", "vertical_cover"]
+    },
+    "snackable": {
+      "name": "The off-day snackable (Growth's off-day lane)",
+      "title": null, "subtitle": null, "description": null,
+      "copy": {"is": "one continuous stretch of a master he approved, never a new edit of his words", "source": "scripts/quick-edit/snackable.py"},
+      "length_seconds": {"min": 5, "max": 90, "source": "scripts/quick-edit/snackable.py MIN_SECONDS, MAX_SECONDS"},
+      "assets": ["snackable_video"]
+    },
+    "carousel": {
+      "name": "The carousel",
+      "made_by": "Growth, to docs/CAROUSEL-STANDARD.md, the rejection floor and the copy lint (AGENTS.md, Ownership)",
+      "title": null, "subtitle": null, "description": null,
+      "copy": {"is": "one focal idea per slide; the final slide's action is content", "source": "docs/CAROUSEL-STANDARD.md"},
+      "open": "slide count and slide size are not set in this repository",
+      "assets": ["square_cover", "carousel_slide"]
+    },
+    "meme": {
+      "name": "The meme",
+      "made_by": "Growth's off-day lane",
+      "title": null, "subtitle": null, "description": null, "copy": null,
+      "open": "no meme standard exists yet: Krish names what a meme here is",
+      "assets": ["meme"]
+    },
+    "fry_explainer": {
+      "name": "The explainer in the Hannah Fry style",
+      "script_format": "fry-explainer",
+      "production_format": "fry-talking-head",
+      "status": "trial",
+      "copy": {"modules": ["concession-open", "one-person-story", "mechanism-image", "wry-close"], "source": "config/style-references.json formats.script fry-explainer"},
+      "title": {"aim": 60, "max": 100, "source": "it ships as a long or short cut, under their title rules"},
+      "subtitle": null, "description": null,
+      "open": "whether it ships as the long cut, the short, or both is not set",
+      "assets": ["long_video", "short_video", "thumb_wide", "thumb_tall"]
+    }
+  }
+}
