@@ -8,7 +8,7 @@ import * as rollout from '../../packages/core/src/media-rollout.js'
 export async function attachQualifiedClientFixture(path: string, job: string) {
   vi.spyOn(rollout, 'mediaQualityEnforced').mockReturnValue(true)
   vi.stubEnv('ENGINE_OPERATOR_TOKEN', 'synthetic-client-fixture')
-  const artifact = { path: `3 Posts/2026-10-26 Mon follow.the.money - Fixture/3 Video/${job}.mp4`, sha256: await hashFile(path) }
+  const artifact = { path: `3 Posts/2026-10-26 Mon follow.the.money - Who gets paid/3 Video/${job}.mp4`, sha256: await hashFile(path) }
   const binding = { piece_id: 'fixture-piece', production_id: job, role: 'video', cut: 'short', artifact, receipt: { path: 'fixture-review.json', sha256: 'f'.repeat(64) } }
   await writeFile(`${path}.media-quality.json`, JSON.stringify(binding))
   vi.stubGlobal('fetch', async (_url: unknown, init: RequestInit) => {
