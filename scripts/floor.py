@@ -20,16 +20,17 @@ never what a piece is about (Ruling, Krish, 2026-10-28). Makers follow the draft
 
 The bar comes first for a video maker, held in the three layers Krish asked for on 2026-10-29 ("I would much rather
 the engine know what kind of thing doesn't fly with me, rather than implement incredibly specific rules
-everywhere"): the floor (a short list of nevers, each with his words and the gate that already holds it; the only
-things a check may refuse), the aims (what great looks like: the cuts he named on 2026-10-28, the brand book, his
+everywhere"): the floor (the eight nevers he confirmed on 2026-10-29, "Yes, that's the floor", in his order, each with
+his earlier words or the rule it rests on and the gate that already holds it, or held at review; the only things a
+check may refuse), the aims (what great looks like: the cuts he named on 2026-10-28, the brand book, his
 general words, the qualities of docs/production/THE_BAR.md and its reference moments, never a checklist) and what is
 under test (choices he made for now, each the current default, recorded per piece and judged on engagement).
 config/reference-cuts.json holds all three. The aims are the engine's reading of the cuts, a draft until he approves
 their wording, except the points he ruled; the printed bar says so. --format prints a short version of it before the
 rejection standards for the makers in full_bar_for_makers, led by his 29 October words, then the floor, the aims and
 what is under test, and a one-line pointer for the other video makers and for --format all. --check holds the two
-files together: his words, the rulings, the quality names, the reference moments and each quality's comparison
-points, word for word; every point the page marks as his words must be his exact words, and a quality that cites a
+files together: his words, the rulings, the floor's nevers (their listed words, in his order) and his confirmation of
+them, the quality names, the reference moments and each quality's comparison points, word for word; every point the page marks as his words must be his exact words, and a quality that cites a
 ruling must quote its answer or name it. The printed bar carries no hashes or file ids (they stay in the
 file) and no measured value: those describe the references, never targets. Only --check and a --format read it, so a
 broken file never stops another maker's floor or the summary.
@@ -170,6 +171,13 @@ MEASURED = {'duration', 'duration_s', 'length', 'length_s', 'seconds', 'runtime'
 BAR_HINT = ('Making a video? The bar comes first: python3 scripts/floor.py --format short_video (or long_video) prints '
             'its floor, its aims from the cuts Krish named and what is under test; config/reference-cuts.json names its '
             'page.')
+# The page's three layers, by heading: the floor's nevers, in his order, and the list's aims and under test lines he
+# confirmed with them (ruling 12) sit under these.
+FLOOR_SECTION = '## The floor: what never ships'
+AIMS_SECTION = '## The aims: what great looks like'
+UNDER_TEST_SECTION = '## Under test: the current defaults'
+# A numbered never on the page: "3. **your words never cut, changed or out of sync.** ...".
+PAGE_NEVER = re.compile(r'^(\d+)\. \*\*(.+?)\*\*')
 # Where each ruling Krish gave lands in the printed bar: a never of the floor, an aim, or a choice under test. --check
 # holds each ruling's layer to where it bites: a floor ruling is cited by a never, an under_test one by a choice.
 LAYERS = ('floor', 'aim', 'under_test')
@@ -192,6 +200,11 @@ def read_bar(path=BAR):
 
 def load_bar(path=BAR):
     return read_bar(path)[0]
+
+
+def never_words(never):
+    """What he said on one never, each {'said', 'on'} (a date) or {'said', 'where'} (where it is recorded)."""
+    return [w for w in never.get('words') or [] if isinstance(w, dict)]
 
 
 def blockquote(words):
@@ -320,7 +333,8 @@ def bar_problems(bar, page):
             problems.append(f'ruling {item.get("n")}: its quote is not his exact words from the answer')
     # A ruling's layer says where it bites, and the floor and what is under test agree with it.
     layer_of = {item.get('n'): item.get('layer') for item in items}
-    cited = {'floor': {never.get('ruling') for never in bar['floor'].get('nevers') or [] if never.get('ruling')},
+    cited = {'floor': {never.get('ruling') for never in bar['floor'].get('nevers') or [] if never.get('ruling')}
+             | ({bar['floor']['ruling']} if bar['floor'].get('ruling') is not None else set()),
              'under_test': {c.get('ruling') for c in bar['under_test'].get('choices') or [] if c.get('ruling')}}
     for item in items:
         layer = item.get('layer')
@@ -334,6 +348,25 @@ def bar_problems(bar, page):
             if layer_of.get(n) != layer:
                 problems.append(f'ruling {n}: cited by the {"floor" if layer == "floor" else "choices under test"}, '
                                 f'so its layer is {layer}, not {layer_of.get(n)}')
+    # The floor: his nevers, each in the words of the list he confirmed, with his words (when or where he said them)
+    # and the gate that already holds it; the ruling that confirmed them is a ruled answer.
+    nevers = bar['floor'].get('nevers') or []
+    never_ids = [never.get('id') for never in nevers]
+    if not nevers:
+        problems.append('the floor has no nevers')
+    if len(set(never_ids)) != len(never_ids) or not all(never_ids):
+        problems.append('every never needs its own id')
+    for never in nevers:
+        for key in ('listed', 'held_by'):
+            if not never.get(key):
+                problems.append(f'never {never.get("id")}: missing {key}')
+        for words in never.get('words') or []:
+            if not isinstance(words, dict) or not words.get('said') or not (words.get('on') or words.get('where')):
+                problems.append(f'never {never.get("id")}: each of his words needs what he said, and when or where')
+    confirmed = bar['floor'].get('ruling')
+    confirm = next((item for item in items if item.get('n') == confirmed), None) if confirmed is not None else None
+    if confirmed is not None and (confirm is None or confirm.get('status') != 'ruled'):
+        problems.append(f'the floor cites ruling {confirmed}, which is not a ruled answer')
     # His words named the cuts; the qualities are the engine's reading of them until he approves their wording.
     if bar['standing'] not in STANDINGS:
         problems.append(f'standing must be one of {", ".join(STANDINGS)}')
@@ -433,11 +466,41 @@ def bar_problems(bar, page):
             problems.append(f'ruling {item.get("n")} is open in the references but not on the page')
         elif item.get('status') != 'open' and 'Still open' in line:
             problems.append(f'ruling {item.get("n")} is {item.get("status")} in the references but open on the page')
+    # The floor on the page says what the file says: each never in the words of the list he confirmed, in his order,
+    # the question's own wording where it differs, held at review where no gate holds it, and his confirmation; the
+    # aims and under test sections carry the list's lines he confirmed with it.
+    floor_text = section(page, FLOOR_SECTION)
+    if not floor_text:
+        problems.append(f'{bar["doc"]} has no section {FLOOR_SECTION!r}')
+    else:
+        listed = [line for line in floor_text if PAGE_NEVER.match(line)]
+        on_page = [(int(PAGE_NEVER.match(line)[1]), PAGE_NEVER.match(line)[2]) for line in listed]
+        want = [(i, f'{never.get("listed")}.') for i, never in enumerate(nevers, 1)]
+        if on_page != want:
+            problems.append(f'the floor on {bar["doc"]} and in the references disagree: '
+                            f'{[f"{n}. {w}" for n, w in want if (n, w) not in on_page] or "same nevers"} in the '
+                            f'references only, {[f"{n}. {w}" for n, w in on_page if (n, w) not in want] or "same nevers"} '
+                            'on the page only' + (' (the order differs)' if sorted(w for _, w in on_page)
+                                                  == sorted(w for _, w in want) else ''))
+        for never, line in zip(nevers, listed):
+            if never.get('asked') and never['asked'] != never.get('listed') and f'Asked as: {never["asked"]}' not in line:
+                problems.append(f'never {never.get("id")}: the page does not give the question\'s own wording')
+            if str(never.get('held_by', '')).lower().startswith('held at review') and 'held at review' not in line.lower():
+                problems.append(f'never {never.get("id")}: no gate holds it, and the page does not say it is held at '
+                                'review')
+        if confirm:
+            said = (f'Krish picked: "{confirm.get("answer")}"' if confirm.get('picked')
+                    else f'"{confirm.get("answer")}"')
+            if said not in '\n'.join(floor_text):
+                problems.append(f'the floor on {bar["doc"]} does not carry his confirmation, {said}')
+    for key, title in (('listed_aims', AIMS_SECTION), ('listed_under_test', UNDER_TEST_SECTION)):
+        if confirm and confirm.get(key) and f'"{confirm[key]}"' not in '\n'.join(section(page, title)):
+            problems.append(f'ruling {confirm.get("n")}: the list\'s line he confirmed is not under {title!r}')
     # A point marked as his words quotes his exact words, and a quality that cites a ruling quotes its answer or names it.
     his = [str(item.get('answer', '')) for item in items] + [bar['general']['words'], bar['ruling']['words'],
                                                              bar['ruling'].get('correction') or '',
                                                              str(bar['taste'].get('words') or '')]
-    his += [str(words) for never in bar['floor'].get('nevers') or [] for words in never.get('words') or []]
+    his += [str(words['said']) for never in nevers for words in never_words(never) if words.get('said')]
     for said in HIS_MARK.findall(page):
         if not any(said in words for words in his):
             problems.append(f'{bar["doc"]} marks words as his that are not his exact words: {said[:60]!r}')
@@ -501,10 +564,16 @@ def bar_lines(bar):
              f'  {t["by"]}, {t["on"]}, on how he wants taste held:',
              para(quote(t['words']), indent='    ')]
     lines.append('Floor: the only refusals this bar adds; existing gates and approved standards refuse as they do.')
-    for never in bar['floor'].get('nevers') or []:
-        said = ' And: '.join(quote(w) for w in never.get('words') or [])
-        text = f'- {never["title"]}. {never["never"]}' + (f' In his words ({never["on"]}): {said}' if said else '')
-        lines.append(para(f'{text} Held by: {never["held_by"]}.', then='    '))
+    confirm = by_n.get(bar['floor'].get('ruling'))
+    if confirm:
+        lines.append(para(f'{confirm.get("by", "Krish")} confirmed these, in his order, on '
+                          f'{confirm.get("on", bar["rulings"]["on"])}: {ruled_in(confirm)}.'))
+    for i, never in enumerate(bar['floor'].get('nevers') or [], 1):
+        said = ' And '.join(f'({w.get("on") or w.get("where")}): {quote(w["said"])}' for w in never_words(never))
+        held = str(never['held_by'])
+        held = held[0].upper() + held[1:] if held.lower().startswith('held at review') else f'Held by: {held}'
+        text = f'- {i}. {never["listed"]}.' + (f' In his words {said}' if said else '')
+        lines.append(para(f'{text} {held}.', then='    '))
     lines.append('Aims: what great looks like, to aim at and compare against; never a checklist, and no check refuses on '
                  'them.')
     lines += [f'  {g["by"]}, {g["on"]}, on how every video should be made:', textwrap.indent(f'"{g["words"]}"', '    ')]
@@ -534,8 +603,8 @@ def bar_lines(bar):
         family = f' ({FAMILIES[later["format_family"]]})' if later.get('format_family') in FAMILIES else ''
         lines.append(para(f'- Not a reference yet: {later["which_file"]}{family} of {later["piece"]}. '
                           f'{later["status"].split(". ")[0].rstrip(".")}.', then='    '))
-    lines.append(para('Under test: his choices for now, each the current default, recorded per piece and judged on real '
-                      'engagement; never a refusal.', indent='', then='  '))
+    lines.append(para('Under test: his choices for now, each a default recorded per piece and judged on real engagement; '
+                      'never a refusal.', indent='', then='  '))
     record = bar['under_test'].get('record', '').split(',')[0].rsplit('.', 1)[-1]
     for choice in bar['under_test'].get('choices') or []:
         item = by_n.get(choice.get('ruling'))
@@ -666,8 +735,12 @@ def self_test():
                    'correction': 'synthetic: only production quality'},
         'general': {'by': 'Krish', 'on': '2026-10-28', 'words': 'synthetic: in general\n- keep it simple\n\nOn brand.'},
         'taste': {'by': 'Krish', 'on': '2026-10-29', 'words': 'synthetic: kinds, never narrow rules'},
-        'floor': {'nevers': [{'id': 'name', 'title': 'His name', 'never': 'Synthetic: no name.', 'on': '2026-10-28',
-                              'words': ['synthetic: no name, ever'], 'held_by': 'the synthetic lint'}]},
+        'floor': {'ruling': 4, 'nevers': [
+            {'id': 'name', 'listed': 'synthetic: no name', 'asked': 'synthetic: no name, as asked',
+             'words': [{'on': '2026-10-28', 'said': 'synthetic: no name, ever'}], 'held_by': 'the synthetic lint'},
+            {'id': 'close', 'listed': 'synthetic: one close',
+             'words': [{'where': 'a synthetic canon', 'said': 'synthetic: one close only'}],
+             'held_by': 'held at review: no gate holds it yet'}]},
         'under_test': {'record': 'content_ideas.meta.making.production_choices, written by making.py',
                        'choices': [{'id': 'opening', 'title': 'The hook first', 'ruling': 3, 'what': 'Synthetic: hook.'}]},
         'rulings': {'on': '2026-10-28', 'section': 'Rulings', 'items': [
@@ -677,7 +750,10 @@ def self_test():
              'changed': 'Synthetic: drafts until he answers.'},
             {'n': 3, 'on': '2026-10-29', 'topic': 'Opening', 'status': 'ruled', 'layer': 'under_test', 'picked': True,
              'question': 'Synthetic: which opening?', 'answer': 'The hook', 'production': 'the hook first',
-             'changed': 'Under test.'}]},
+             'changed': 'Under test.'},
+            {'n': 4, 'on': '2026-10-29', 'topic': 'The floor', 'status': 'ruled', 'layer': 'floor', 'picked': True,
+             'question': 'Synthetic: is this the floor?', 'answer': 'Yes, the floor', 'listed_aims': 'synthetic: aim high',
+             'listed_under_test': 'synthetic: the hook', 'changed': 'The floor.'}]},
         'standing': 'draft', 'standing_note': 'Synthetic: the engine reads the cuts; he has not approved it.',
         'principle': 'Synthetic: every frame looks owned.',
         'measured_values': 'Context about the references, never targets.',
@@ -697,15 +773,21 @@ def self_test():
                                'what': 'Measured, not yet heard: a sting.'}],
     }
     page = ('# Bar\n\n> "synthetic: in general\n> - keep it simple\n>\n> On brand."\n\n> "synthetic: these two are the floor"\n\n'
-            'Synthetic: the engine reads the cuts; he has not approved it.\n\n## The qualities\n\n'
+            'Synthetic: the engine reads the cuts; he has not approved it.\n\n## The floor: what never ships\n\n'
+            'Confirmed: Krish picked: "Yes, the floor".\n\n'
+            '1. **synthetic: no name.** Asked as: synthetic: no name, as asked. Held by the synthetic lint.\n'
+            '2. **synthetic: one close.** Held at review: no gate holds it yet.\n\n'
+            '## The aims: what great looks like\n\nAs listed: "synthetic: aim high".\n\n## The qualities\n\n'
             '### 1. Finish: every frame owned\n\n**Compare beside.** Synthetic tall 00:02.\n\n'
             '### 2. Sound finish\n\nHeard throughout (Krish, 28 Oct: "synthetic: yes").\n\n'
             '**Compare beside.** Synthetic tall 00:00 to 00:03.\n\n'
             '## Reference moments\n\n### Synthetic tall (23 October)\n\n- 00:01.5 to 00:04: A build.\n'
-            '- 00:00: Measured, not yet heard: a sting.\n\n## What is not the bar\n\n### x\n\n## Rulings\n\n'
+            '- 00:00: Measured, not yet heard: a sting.\n\n## Under test: the current defaults\n\n'
+            'As listed: "synthetic: the hook".\n\n## What is not the bar\n\n### x\n\n## Rulings\n\n'
             '1. **Music.** Synthetic: throughout? His answer: "synthetic: yes" Changed: sound.\n'
             '2. **Readings.** Synthetic: one idea? His answer: "synthetic: ask me" Still open.\n'
             '3. **Opening.** Synthetic: which opening? His answer: Krish picked: "The hook" Changed: under test.\n'
+            '4. **The floor.** Synthetic: is this the floor? His answer: Krish picked: "Yes, the floor" Changed: floor.\n'
             'Never synthetic (Krish, 28 Oct: "synthetic: no name, ever"); held (Krish, 29 Oct: "synthetic: kinds").\n')
     assert bar_problems(bar, page) == [], bar_problems(bar, page)
     assert any('headings' in p for p in bar_problems(bar, page.replace('### 2. Sound finish', '### 2. Sound'))), \
@@ -757,6 +839,34 @@ def self_test():
     b = json.loads(json.dumps(bar))
     b['rulings']['items'][0]['layer'] = 'aspiration'
     assert any('layer must be one of' in p for p in bar_problems(b, page)), bar_problems(b, page)
+    # The floor he confirmed: its nevers, their order, the question's wording, held at review, his confirmation and
+    # the list's aims and under test lines agree between the page and the file, and its ruling stays a floor ruling.
+    renamed = page.replace('1. **synthetic: no name.**', '1. **synthetic: no names.**')
+    assert any('the floor on' in p and 'disagree' in p for p in bar_problems(bar, renamed)), bar_problems(bar, renamed)
+    b = json.loads(json.dumps(bar))
+    b['floor']['nevers'].reverse()
+    assert any('order differs' in p for p in bar_problems(b, page)), bar_problems(b, page)
+    b = json.loads(json.dumps(bar))
+    b['floor']['nevers'].pop()
+    assert any('disagree' in p for p in bar_problems(b, page)), 'a never dropped from the file must be caught'
+    assert any("question's own wording" in p for p in bar_problems(bar, page.replace(' Asked as: synthetic: no name, as asked.', '')))
+    assert any('held at review' in p for p in bar_problems(bar, page.replace('Held at review: no gate', 'Held by: no gate')))
+    assert any('confirmation' in p for p in bar_problems(bar, page.replace('Krish picked: "Yes, the floor".', 'Yes.')))
+    assert any("'## The aims" in p for p in bar_problems(bar, page.replace('"synthetic: aim high"', '"synthetic: aim"')))
+    assert any("'## Under test" in p for p in bar_problems(bar, page.replace('"synthetic: the hook".', 'the hook.')))
+    b = json.loads(json.dumps(bar))
+    b['floor']['nevers'][1]['words'] = [{'said': 'synthetic: one close only'}]
+    assert any('when or where' in p for p in bar_problems(b, page)), bar_problems(b, page)
+    b = json.loads(json.dumps(bar))
+    del b['floor']['nevers'][0]['held_by']
+    assert any('missing held_by' in p for p in bar_problems(b, page)), bar_problems(b, page)
+    b = json.loads(json.dumps(bar))
+    b['rulings']['items'][3]['layer'] = 'aim'
+    assert any('cited by the floor, so its layer is floor' in p for p in bar_problems(b, page)), bar_problems(b, page)
+    b = json.loads(json.dumps(bar))
+    b['floor']['ruling'] = 2
+    assert any('the floor cites ruling 2, which is not a ruled answer' in p for p in bar_problems(b, page)), \
+        bar_problems(b, page)
     b = json.loads(json.dumps(bar))
     b['rulings']['items'][0]['status'] = 'answered'
     del b['rulings']['items'][0]['production'], b['qualities'][1]['ruled']
@@ -783,9 +893,14 @@ def self_test():
     assert text.index('The bar: how every video should look') < text.index('The rejection floor for short_video') \
         < text.index('Approved standards'), text
     # His words on how taste is held lead; then the floor, the aims and what is under test, in that order.
-    assert text.index('"synthetic: kinds, never narrow rules"') < text.index('Floor: ') \
-        < text.index('- His name. Synthetic: no name. In his words (2026-10-28): "synthetic: no name, ever" Held by: the '
-                     'synthetic lint.') < text.index('Aims: ') < text.index('Under test: '), text
+    flat = ' '.join(text.split())
+    assert flat.index('"synthetic: kinds, never narrow rules"') < flat.index('Floor: ') \
+        < flat.index('Krish confirmed these, in his order, on 2026-10-29: Krish picked: "Yes, the floor".') \
+        < flat.index('- 1. synthetic: no name. In his words (2026-10-28): "synthetic: no name, ever" Held by: the '
+                     'synthetic lint.') \
+        < flat.index('- 2. synthetic: one close. In his words (a synthetic canon): "synthetic: one close only" Held at '
+                     'review: no gate holds it yet.') < flat.index('Aims: ') < flat.index('Under test: '), text
+    assert 'The floor (2026-10-29)' not in text, 'the ruling that confirmed the floor is printed with the floor'
     assert text.index('"synthetic: these two are the floor"') < text.index('Standing: draft.') \
         < text.index("The engine's reading of those cuts, a draft:"), text
     assert text.index('    "synthetic: in general\n    - keep it simple\n\n    On brand."') \

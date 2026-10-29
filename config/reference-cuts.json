@@ -1,6 +1,6 @@
 {
   "schema": "reference-cuts/1",
-  "about": "The bar for video production quality, held in the three layers Krish asked for on 29 October 2026. The floor is the short list of nevers, each citing his words or the rule it rests on, and the gate that already holds it: the only refusals this bar adds, while existing gates and the rejection floor's approved standards refuse as they do. The aims are what great looks like: the cuts he named, the brand book and his own words, with the fifteen qualities and the reference moments as things to aim at and compare against, never a checklist. Under test are choices he made for now, each the current default, recorded per piece on the making record and judged on real engagement. The page is docs/production/THE_BAR.md; this file names the reference files exactly, says how each one's identity was confirmed, lists the reference moments and each quality's comparison points by timestamp, and carries his words and rulings. The page and this file must agree (python3 scripts/floor.py --check). scripts/floor.py prints the bar for the makers in full_bar_for_makers and a one-line pointer for the other makers in applies_to_makers, before the rejection standards. Only Krish adds a reference, changes the bar or moves its standing from draft to approved.",
+  "about": "The bar for video production quality, held in the three layers Krish asked for on 29 October 2026. The floor is the eight nevers Krish confirmed on 29 October 2026 (ruling 12), each citing his earlier words or the rule it rests on, and the gate that already holds it, or held at review where none does yet: the only refusals this bar adds, while existing gates and the rejection floor's approved standards refuse as they do. The aims are what great looks like: the cuts he named, the brand book and his own words, with the fifteen qualities and the reference moments as things to aim at and compare against, never a checklist. Under test are choices he made for now, each the current default, recorded per piece on the making record and judged on real engagement. The page is docs/production/THE_BAR.md; this file names the reference files exactly, says how each one's identity was confirmed, lists the reference moments and each quality's comparison points by timestamp, and carries his words and rulings. The page and this file must agree (python3 scripts/floor.py --check). scripts/floor.py prints the bar for the makers in full_bar_for_makers and a one-line pointer for the other makers in applies_to_makers, before the rejection standards. Only Krish adds a reference, changes the bar or moves its standing from draft to approved.",
   "doc": "docs/production/THE_BAR.md",
   "taste": {
     "by": "Krish",
@@ -22,23 +22,26 @@
     "words": "In general I think:\n- minimal random components and labels\n- good motion design\n- good animation\n- good visuals\n\nKeep it simple but keep it classy and on brand. I'd stick to the brand book for now."
   },
   "standing": "draft",
-  "standing_note": "Each never cites his words or the rule it rests on, and the rulings are his words. The aims are the engine's reading of the cuts he named, and he has not approved their wording except where it quotes him. Aim at them; only he approves them.",
+  "standing_note": "The floor is his, confirmed on 29 October (ruling 12). The aims are the engine's reading of the cuts he named; he has not approved their wording except where it quotes him. Aim at them; only he approves them.",
   "principle": "Every frame designed and owned by the brand; pictures and motion that add meaning beyond the words; light, depth and material; the brand as a system; real, dated proof; finished sound. Put each new moment beside a reference moment, in motion, at full size, with sound: would it sit beside it without looking cheaper, flatter, slower, busier or less owned? Never copy the references; each piece finds its own objects, devices and big moments.",
   "measured_values": "Context about the references, never targets. Lengths, shapes, cut counts, frame timings, levels, tempo and sampled colours describe these three files only. They are kept out of config/reference-cuts.json on purpose, and floor.py --check refuses a measured field written there (duration, aspect, bpm, lufs and the like); it cannot see a figure inside a sentence, so none is written in one either. The existing gates set the only numeric limits.",
   "production_input": false,
   "applies_to_makers": ["short_video", "long_video", "motion", "captions", "card", "intro_outro", "audio"],
   "full_bar_for_makers": ["short_video", "long_video"],
   "floor": {
-    "about": "The only refusals this bar adds on taste, while existing gates and the rejection floor's approved standards refuse as they do: a short list of nevers, each citing his words or the rule it rests on, and the gate that already holds it. No other refusal, gate, lint pattern or required field is added from feedback on one piece.",
+    "about": "The only refusals this bar adds on taste, while existing gates and the rejection floor's approved standards refuse as they do: the eight nevers Krish confirmed on 29 October 2026 (ruling 12), in his order. Each keeps the list's words he confirmed (listed), the question's own wording (asked), his earlier words or the rule it rests on, and the gate that already holds it, or held at review where none does yet. No other refusal, gate, lint pattern or required field is added from feedback on one piece; everything else is an aim, a choice under test or an example of the kind of thing that does not fly.",
+    "ruling": 12,
     "nevers": [
       {
         "id": "his_name",
-        "title": "His name in public content",
+        "listed": "never names you or credits you as author",
+        "asked": "no content names you or credits you as author",
         "never": "No public word names any Krish or credits him as an author: articles speak as \"we\", the scripts he speaks keep \"I\", and his face appears only in covers, thumbnails and video.",
-        "by": "Krish",
-        "on": "2026-10-28",
         "words": [
-          "Remember, no content refers to Krish, ever. I still see that popping up from time to time. Even articles written are not authored by Krish. My face only, for assets and the video format."
+          {
+            "on": "2026-10-28",
+            "said": "Remember, no content refers to Krish, ever. I still see that popping up from time to time. Even articles written are not authored by Krish. My face only, for assets and the video format."
+          }
         ],
         "picked": [
           "The article's voice: Krish picked: \"We\" (the publication, in articles, their titles, subtitles and descriptions; the video scripts he speaks keep \"I\")",
@@ -46,49 +49,116 @@
           "The face beside the article byline: Krish picked: \"Drop it\" (no face beside the byline; covers, thumbnails and video keep his face)",
           "Another person called Krish: Krish picked: \"Yes, block it\" (any \"Krish\" in public copy is blocked, with no override)"
         ],
-        "held_by": "the copy lint's no_name pattern (config/copy-lint.json), on every public surface and the article body"
+        "held_by": "the copy lint's no_name pattern, the article body included"
       },
       {
-        "id": "empty_labels",
-        "title": "Labels that add nothing",
-        "never": "No asterisks, eyebrow kickers (BREAKING, JUST IN), notes that something was made by AI or is an illustration, or labels tagging something as Krish's (his read, his take, his test). A label naming a source, date, record or what is on screen is an aim (quality 7).",
-        "by": "Krish",
-        "on": "2026-10-28",
-        "words": [
-          "don't add stupid eyebrow text and asterisks and \"generated by AI\" and \"Krish's take\" verbal diahorrea like you tend to. This needs to feel like a world class media channel"
+        "id": "nothing_made_up",
+        "listed": "nothing made up; numbers credited to their producer",
+        "asked": "nothing made up: every fact and number true and credited to whoever produced it",
+        "rests_on": [
+          "AGENTS.md, Rules for every agent: \"Truth, rights, confidentiality, meaning preservation and canonical naming are hard gates.\"",
+          "makeyourmindup's AGENTS.md: \"No load-bearing number without a named producer. The producer is whoever made the number, never the outlet that repeated it.\""
         ],
-        "ruling": 2,
-        "held_by": "the copy lint (config/copy-lint.json)"
-      },
-      {
-        "id": "truth_and_rights",
-        "title": "Truth and rights",
-        "never": "No claim a filed source does not hold, and no picture, clip, track or mark we have no right to use; an outside logo is never redrawn or recoloured by us.",
-        "source": "AGENTS.md, Rules for every agent: truth, rights, confidentiality, meaning preservation and canonical naming are hard gates",
-        "held_by": "the fact gate, the visual gate, docs/MEDIA_STANDARD.md and the licensed music ledger"
+        "held_by": "the fact gate; past it, crediting the producer is held at review"
       },
       {
         "id": "every_word_in_sync",
-        "title": "Every word, in sync",
-        "never": "No word he said is cut or chopped, and his picture and his voice never drift apart.",
-        "by": "Krish",
-        "on": "2026-10-19",
+        "listed": "your words never cut, changed or out of sync",
+        "asked": "your words never cut, changed or out of sync",
         "words": [
-          "my words randomly chop out, making the video incomprehensible",
-          "in the deep cut, my facial movements start misaligning with the audio as the video progresses, which is unbearable by the end"
+          {
+            "on": "2026-10-19",
+            "said": "my words randomly chop out, making the video incomprehensible"
+          },
+          {
+            "on": "2026-10-19",
+            "said": "in the deep cut, my facial movements start misaligning with the audio as the video progresses, which is unbearable by the end"
+          }
         ],
         "held_by": "the words gate, the lip-sync gate and ve's joins and sync checks"
       },
       {
-        "id": "nothing_goes_out_without_him",
-        "title": "Nothing goes out without him",
-        "never": "Nothing is published, scheduled or posted without his press, and nothing goes on another venture's channels, Full Time's or Heartside's (that part from Growth's plan of 28 October, W5, not his words).",
-        "by": "Krish",
-        "on": "2026-10-28",
+        "id": "empty_labels",
+        "listed": "no AI notes, eyebrows, asterisks, take/read tags",
+        "asked": "no filler labels: AI notes, eyebrow text, asterisks, \"Krish's take\" or \"Krish's read\" style tags",
+        "never": "No asterisks, eyebrow kickers (BREAKING, JUST IN), notes that something was made by AI or is an illustration, or labels tagging something as Krish's (his read, his take, his test). A label naming a source, date, record or what is on screen is an aim (quality 7).",
         "words": [
-          "Approve each day Monday"
+          {
+            "on": "2026-10-28",
+            "said": "don't add stupid eyebrow text and asterisks and \"generated by AI\" and \"Krish's take\" verbal diahorrea like you tend to. This needs to feel like a world class media channel"
+          }
         ],
-        "held_by": "the publish guard (.claude/hooks/publish-guard.mjs); ve has no publish verb; Growth's channel allowlist"
+        "ruling": 2,
+        "held_by": "the copy lint"
+      },
+      {
+        "id": "nothing_goes_out_without_him",
+        "listed": "nothing posted/sent/spent without your yes; never Full Time or Heartside channels",
+        "asked": "nothing posted, sent or spent without your yes, and never the Full Time or Heartside channels",
+        "words": [
+          {
+            "on": "2026-10-28",
+            "said": "Approve each day Monday"
+          }
+        ],
+        "rests_on": [
+          "AGENTS.md, Rules for every agent: \"Public publishing is never automatic.\" and \"Spend. Stay within approval; check `meter_daily`.\"",
+          "Growth's plan of 28 October, W5, for the Full Time and Heartside channels, before he confirmed it"
+        ],
+        "held_by": "the publish guard; ve has no publish verb; Growth's channel allowlist; the cost guards hold a paid fact check to its budget, and any other spend is held at review"
+      },
+      {
+        "id": "real_marks_with_rights",
+        "listed": "real logos and images with rights, never redrawn",
+        "asked": "real logos and images used with the rights, never redrawn",
+        "words": [
+          {
+            "on": "2026-10-06",
+            "said": "Once again don't be afraid to use the real logos for any companies mentioned."
+          }
+        ],
+        "rests_on": [
+          "AGENTS.md, Rules for every agent: \"Truth, rights, confidentiality, meaning preservation and canonical naming are hard gates.\"",
+          "docs/MEDIA_STANDARD.md: \"never invent or redraw a logo.\""
+        ],
+        "held_by": "the visual gate, the media standard and the licensed music ledger"
+      },
+      {
+        "id": "one_opening_one_close",
+        "listed": "one opening, one close",
+        "asked": "one opening and one close, never two intros or several outros",
+        "words": [
+          {
+            "on": "2026-10-21",
+            "said": "why are there two separate intro sequences? that should NEVER happen."
+          },
+          {
+            "on": "2026-10-28",
+            "said": "we also don't need three separate outro transitions and screens. Ever."
+          }
+        ],
+        "rejection_floor_drafts": [
+          "s9d6db813a0",
+          "sad5604ad3b",
+          "se67ed0142d"
+        ],
+        "held_by": "held at review: no gate holds it yet"
+      },
+      {
+        "id": "no_em_dash_no_preaching",
+        "listed": "no em dashes, no preaching",
+        "asked": "no em dashes, no preaching",
+        "words": [
+          {
+            "where": "makeyourmindup's AGENTS.md",
+            "said": "we should not sound preachy or like we are trying to persuade anyone of anything like a missionary in content. thought leadership should do that job."
+          }
+        ],
+        "rests_on": [
+          "makeyourmindup's AGENTS.md: \"No em dashes anywhere, including code, on-screen text and commit messages.\"",
+          "makeyourmindup's AGENTS.md: \"No preaching. No closing moral, no lesson for leaders, no sentence telling the reader what to conclude, no final line reaching for significance, no sentence that would work on a conference slide.\""
+        ],
+        "held_by": "makeyourmindup's kill list, vendored here, and the voice check"
       }
     ]
   },
@@ -346,6 +416,19 @@
         "question": "Neither reference gives a stamp or a slam a sound of its own (measured, not heard): only the voice and the music play at Friday's CHINA stamp and Monday's BANKRUPT slam. Should moments like these make a sound?",
         "production": "one sound under a piece's biggest moment and nothing anywhere else, from a small set he approved by ear first; until then none",
         "changed": "Under test, the sound on the big moment: recorded per piece as production_choices.big_moment_sound and judged on real engagement. Quality 14. The small hits the bar once heard in Monday wide are withdrawn until someone listens."
+      },
+      {
+        "n": 12,
+        "on": "2026-10-29",
+        "topic": "The floor",
+        "status": "ruled",
+        "layer": "floor",
+        "picked": true,
+        "answer": "Yes, that's the floor",
+        "question": "Is this the floor: the short list of clear nevers that are the only things the engine may hard-block? With it, the engine's best guess: the eight nevers, then what to reach for and what is under test. Everything else becomes an aim to reach for, a choice under test, or an example of the kind of thing that doesn't fly.",
+        "listed_aims": "Fri 23 + Mon 26 cuts, brand book, minimal random components, good motion, animation and visuals, simple, classy, on brand",
+        "listed_under_test": "hook as intro, lead picture per piece, one sound on the big moment",
+        "changed": "The floor is his eight nevers, in his order, in place of the five the engine drafted, each with his earlier words or the rule it rests on and the gate that already holds it, or held at review. The aims and what is under test agree with the list's aims and under test lines. The rejection floor's draft standards for one opening and one close (s9d6db813a0, sad5604ad3b and se67ed0142d in config/rejection-floor.json) now match never 7 and wait on the Rejections route to record his approval."
       }
     ]
   },
