@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "status": "retired",
+  "status": "candidate",
   "seconds": 1.5,
   "compositions": {
     "9x16": "MakeyourmindupStingTall",
@@ -21,13 +21,5 @@
     "decision": "rejected",
     "design": "the first sting design shown to him",
     "words": "it's ok, it's a bit boring and colourless and vanilla - and just what Powerpoint would do in 2008"
-  },
-  "retired": {
-    "on": "2026-10-29",
-    "by": "Krish",
-    "rule": "HOOK_IS_THE_INTRO",
-    "words": "I'd pick number one here but I think that we need to test and learn. We need to figure out what the right tone is over time based on real engagement. Let's go with number one for now.",
-    "picked": "The hook is the intro",
-    "means": "No cut opens on a sting: the first frame is the hook in the brand's dress (house rule HOOK_IS_THE_INTRO). No sting design was ever approved; last_decision keeps his last word on the one shown to him. His choice is a default under test, revisited on real engagement."
   }
 }

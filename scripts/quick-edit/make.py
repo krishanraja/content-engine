@@ -1818,9 +1818,13 @@ def self_test():
                           {'file': 'end.mp4', 'frames': 510, 'held_s': 13.0}, Path('mix.wav'))
     checks.append(('a long episode\'s end card holds its last frame for the end-screen tiles',
                    any('tpad=stop_mode=clone:stop_duration=13.000,trim=end_frame=510' in line for line in g), True))
-    # The hook is the intro (house rule HOOK_IS_THE_INTRO, Krish, 2026-10-29): the retired sting gives nothing, and says nothing.
-    checks.append(('"intro": "auto" opens on the hook, with no clip and no note, while the sting is retired',
-                   (resolve_intro({'name': 't'}, '9x16', same), sting.load()['status']), ((None, None), 'retired')))
+    # The hook is the intro (house rule HOOK_IS_THE_INTRO, Krish, 2026-10-29): "auto" puts no clip in front. The retired
+    # sting says nothing; until its retirement is approved in the taste-guarded config, the unapproved candidate says why.
+    status_now = sting.load()['status']
+    clip, why = resolve_intro({'name': 't'}, '9x16', same)
+    checks.append(('"intro": "auto" opens on the hook with no clip, and says nothing once the sting is retired',
+                   (clip, status_now in ('candidate', 'retired'), why is None if status_now == 'retired' else 'candidate' in (why or '')),
+                   (None, True, True)))
     checks.append(('each cut records what it opened on, so engagement can settle the choice',
                    (opening_of(None), opening_of({'source': 'override', 'file': Path('clip.mp4'), 'seconds': 3.0})['kind']),
                    ({'kind': 'hook', 'rule': 'HOOK_IS_THE_INTRO'}, 'clip')))

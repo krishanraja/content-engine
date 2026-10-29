@@ -632,9 +632,21 @@ def self_test():
     # isolated fixture checkout instead of depending on deletion succeeding.
     work = Path(tempfile.mkdtemp(prefix='intro-', dir=parent))
     committed = load()
-    checks.append(('the committed config is retired on Krish\'s words, never approved', (committed['status'], committed['approved_by'],
-                   committed['source_sha256'], committed['retired']['by'], committed['retired']['rule']), ('retired', None, None, 'Krish', 'HOOK_IS_THE_INTRO')))
-    checks.append(('make.py gets no sting and no note from the retired config: the cut opens on the hook', sting_for('9x16'), (None, None)))
+    # The retirement lands in the committed config only once Krish approves its
+    # words in person (config/intro-sting.json is taste-guarded); until then the
+    # config is the candidate he never approved. Each state is checked in full.
+    if committed['status'] == 'retired':
+        checks.append(('the committed config is retired on Krish\'s words, never approved', (committed['status'], committed['approved_by'],
+                       committed['source_sha256'], committed['retired']['by'], committed['retired']['rule']), ('retired', None, None, 'Krish', 'HOOK_IS_THE_INTRO')))
+        checks.append(('make.py gets no sting and no note from the retired config: the cut opens on the hook', sting_for('9x16'), (None, None)))
+    else:
+        checks.append(('the committed config waits for Krish', (committed['status'], committed['approved_by'], committed['source_sha256']), ('candidate', None, None)))
+    gone = committed.get('retired') or {'on': '2026-10-29', 'by': 'Krish', 'rule': 'HOOK_IS_THE_INTRO',
+                                        'words': "I'd pick number one here but I think that we need to test and learn. We need to figure out "
+                                                 "what the right tone is over time based on real engagement. Let's go with number one for now."}
+    as_retired = work / 'as-retired.json'
+    as_retired.write_text(json.dumps(dict(committed, status='retired', retired=gone)))
+    checks.append(('a retired config gives make.py no sting and no note: the cut opens on the hook', sting_for('9x16', as_retired), (None, None)))
     # The gate below runs on the same design as a candidate, as it stood before it was retired.
     cfg = {k: v for k, v in committed.items() if k != 'retired'}
     cfg['status'] = 'candidate'
@@ -801,10 +813,10 @@ def self_test():
     bad.write_text(json.dumps(dict(cfg, seconds=2.5)))
     refused('a 2.5 second sting is refused', lambda: load(bad), 'seconds')
     unsaid = work / 'unsaid.json'
-    unsaid.write_text(json.dumps(dict(committed, retired={'on': '2026-10-29', 'by': 'someone', 'rule': 'HOOK_IS_THE_INTRO', 'words': 'drop it'})))
+    unsaid.write_text(json.dumps(dict(committed, status='retired', retired={'on': '2026-10-29', 'by': 'someone', 'rule': 'HOOK_IS_THE_INTRO', 'words': 'drop it'})))
     refused('a sting retired on anyone\'s words but Krish\'s is refused', lambda: load(unsaid), 'Krish')
     retired = work / 'retired.json'
-    retired.write_text(json.dumps(dict(approved, status='retired', retired=committed['retired'])))
+    retired.write_text(json.dumps(dict(approved, status='retired', retired=gone)))
     got = sting_for('9x16', retired, cache, root)
     checks.append(('even an approved, rendered design gives no sting once retired', got, (None, None)))
     refused('and a retired sting is never rendered as finished', lambda: render('9x16', load(retired), root=root, cache=cache), 'retired')
