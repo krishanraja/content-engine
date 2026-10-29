@@ -5,7 +5,7 @@ import { MEDIA_STANDARD, MEDIA_STANDARD_HASH, briefProblems, boardDeliveryProble
 const key = generateKeyPairSync('ed25519')
 const keys = { independent: { public_key: key.publicKey.export({ type: 'spki', format: 'pem' }).toString(), reviewer_id: 'test-reviewer' } }
 const hash = mediaDigest('synthetic fixture, never a production approval')
-const ref = { path: '3 Posts/2026-10-26 Mon follow.the.money - Fixture/3 Video/fixture.json', sha256: hash }
+const ref = { path: '3 Posts/2026-10-26 Mon follow.the.money - Who gets paid/3 Video/fixture.json', sha256: hash }
 const brief = (): MediaBrief => ({ schema_version: 1, standard_sha256: MEDIA_STANDARD_HASH, piece_id: 'different-topic', production_id: 'heat-pump-job', surface: 'video_voiceover', cut: 'short', producer_run_id: 'producer-A', subject: 'How a heat pump moves heat',
   assets: [{ id: 'house', sha256: hash, kind: 'piece', piece_id: 'different-topic', source: 'Synthetic test fixture', truth_role: 'illustration', relevance: 'Heat moving across the house boundary' }],
   units: [{ id: 'opening', takeaway: 'Heat is transferred into the house', visual_cues: ['House cross section and heat path'], asset_ids: ['house'], visible_words: ['OUTSIDE', 'INSIDE'], word_purpose: 'Identify spaces', motion_purpose: 'Transfer heat across boundary' }],
