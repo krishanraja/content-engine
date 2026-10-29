@@ -1,0 +1,20 @@
+{
+  "schema": "codex-profile/1",
+  "name": "visual-asset-maker",
+  "about": "The one tool profile Codex runs under on the home computers, attended or overnight. Codex is a visual asset maker and a runner of scripts only (Ruling, Krish, 2026-10-28: \"Visual asset maker\"): it builds library devices from cards and makes visual plates for named slots. It has no publish, share, deploy, TikTok, Buffer or workflow tool and no escalation path. A card that needs a tool outside allowed_tools is held, never sent (failure production-asked-to-publish: \"Codex prepares the board and never publishes directly\"). Codex runs no hooks, so this profile, its audit (scripts/overnight/codex_profile.py audit) and the Saturday preflight's codex_profile check are what stop it. Changing this file needs Krish's words in the commit body.",
+  "approval_policy": "never",
+  "sandbox_mode": "workspace-write",
+  "network_access": false,
+  "allowed_tools": ["shell", "apply_patch", "view_image", "image_generation"],
+  "allowed_mcp_servers": [],
+  "forbidden": [
+    "publish", "share", "deploy", "tiktok", "buffer", "workflow", "schedule", "post", "send", "upload",
+    "substack", "youtube", "instagram", "linkedin", "teleprompter", "github", "git_push", "gh", "vercel",
+    "supabase", "gmail", "slack", "escalat", "danger", "bypass", "sign_in", "login"
+  ],
+  "codex_config": {
+    "approval_policy": "never",
+    "sandbox_mode": "workspace-write",
+    "sandbox_workspace_write.network_access": false
+  }
+}
