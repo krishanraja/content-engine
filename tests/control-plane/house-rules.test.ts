@@ -813,10 +813,12 @@ describe('a story intro, its audio treatment and an outro card, in every format 
 // 1,700 words, short 160 to 195). What he records is v6, his own edit of both
 // at 21:32 UTC on 16 October, put through on his words, so it is not held to
 // the gate here. Since 2026-10-21 the series line is retired and every script
-// closes as SCRIPT_CLOSE says, so v5 keeps every old gate (length, reading
-// age, the story) and fails on nothing but that close.
-describe('this week\'s unrecorded scripts keep every gate but the new close (R7, SCRIPT_CLOSE)', () => {
-  test('Friday\'s v5 deep cut and 90-second cut fit their lengths and a 12-year-old can follow them; only the close of 2026-10-21 is missing', async () => {
+// closes as SCRIPT_CLOSE says, and since 2026-10-28 no script says his name
+// (house rule NO_NAME), which the mind.the.gap line does ("I'm Krish."). So
+// v5 keeps every old gate (length, reading age, the story) and fails on
+// nothing but that close and that name.
+describe('this week\'s unrecorded scripts keep every gate but the new close and the name (R7, SCRIPT_CLOSE, NO_NAME)', () => {
+  test('Friday\'s v5 deep cut and 90-second cut fit their lengths and a 12-year-old can follow them; only the close of 2026-10-21 and the name of 2026-10-28 fail', async () => {
     const { spawnSync } = await import('node:child_process')
     for (const [file, cut, series] of [
       ['docs/plans/2026-10-09-script-deep-v5.md', 'deep', 'mind_the_gap'],
@@ -824,8 +826,9 @@ describe('this week\'s unrecorded scripts keep every gate but the new close (R7,
     ] as const) {
       const out = spawnSync(process.platform === 'win32' ? 'python' : 'python3', ['scripts/post-pack/story_check.py', '--cut', cut, '--series', series, file], { encoding: 'utf8' })
       const found = out.stdout.split('\n').filter(l => l.startsWith('  - '))
-      assert.ok(found.length > 0, `${file}: v5 predates the new close and should be told so`)
-      for (const line of found) assert.match(line, /SCRIPT_CLOSE/, `${file}: ${line}`)
+      assert.ok(found.some(l => /SCRIPT_CLOSE/.test(l)), `${file}: v5 predates the new close and should be told so`)
+      assert.ok(found.some(l => /NO_NAME/.test(l)), `${file}: v5 opens on a series line that says his name`)
+      for (const line of found) assert.match(line, /SCRIPT_CLOSE|NO_NAME/, `${file}: ${line}`)
     }
   })
 })
