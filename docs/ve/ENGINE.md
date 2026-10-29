@@ -34,12 +34,12 @@ Commands, outputs and 55-minute envelope: RUNBOOK.md. Batch questions; end sessi
 | S0 | doctor, start pack, ledger, start clock | Claude/scripts |
 | S1 | Two treatments, lint, stills; Gate 1: treatment, stills, bed, credits merged into storyboard sign-off. The stills show both lead pictures, the series picture from the brand book and a story object, with Claude's pick marked; his signature accepts it unless he ticks the other, and no gate waits on a tick (under test, `docs/production/THE_BAR.md`; recorded with `making.py <piece> choices --lead-picture ...`) | Director/Claude, Krish |
 | S2 | New hero only: card, dispatch --piece while Krish records, verify acceptance/golden stills | Claude dispatches/verifies; Codex builds |
-| S3 | ingest: intended two-aligner word clock; currently exit 2 | script |
+| S3 | ingest each take with two aligners' word clocks; conform: takes line by line, flubs out, joins only in agreed gaps, one speed, EDL | script |
 | S4 | Fresh Director session: lint, compile cut-ready timings/assets | Claude/scripts |
 | S5 | Trial format/device: render excerpt proof; Gate 2 acceptance | script, Krish |
 | S6 | Render each accepted cut | script |
 | S7 | QC --props, <=2 fix loops, fresh Critic, final packet; Gate 3: watch cuts/hear joins reel | scripts, Claude, Krish |
-| S8 | file: intended archive/library, currently exit 2; stop clock | script/Claude |
+| S8 | file READY cuts to the archive and the post's `3 Video` folder, bound to piece_id; stop clock | script/Claude |
 
 face-with-proof is proven; scoreboard-test and voice-led-pictures are trial. Registered devices: test_grid, record_card, query_chip, evidence_card, kinetic_stat; format lists also name future devices. Compile refuses device verbs absent from devices.json. test_grid draws carry with a dashed box and ANSWER DELETED outline text.
 
@@ -60,17 +60,31 @@ status <piece>
 coverage
 compile <spec> --cut <cut> --words <words.json> --assets-dir <assets>
 render <props> <out> --spec <spec> --assets-dir <assets> [--scale <number>]
-ingest [rest ...]
+ingest <piece> --take <id> --media <file> --aligner-a <name> --aligner-b <name> [--clock-a <json>] [--clock-b <json>]
+conform <piece> --cut <cut> [--script <words.json>] [--takes <id> ...] [--crossfade-ms 20..40] [--render --assets-dir <assets> [--joins-reel]]
+brief <piece> [--cut <cut>] [--beat <id> ...] [--move <beat>=<move> ...] [--check <dir> --plate <id>]
+golden show|check|fill <slot> --reference <file> --at <mm:ss.s> --said <his words>
+lock draft <format> --aspect 9:16|16:9 --beats <b> ... [--modules <format> ...] --anatomy <md> --motion <md>
 stills [rest ...]
 ledger <piece>
 ledger <piece> add <kind> <amount> [--note <text>]
 time <piece> start <phase>
 time <piece> stop
 time <piece> status
-file [rest ...]
+file <piece> --subject <text> [--date <YYYY-MM-DD>] [--cut <cut> ...] [--dry-run]
 ```
 
-`ingest`, `stills` and `file` are placeholders (exit 2). Stop unless approved inputs already exist through another route; quick-edit is fallback. Never claim complete ve production/filing from unavailable stages.
+`stills` is a placeholder (exit 2); quick-edit is fallback. Never claim complete ve production from unavailable stages.
+
+**ingest** writes `<piece>/ve/takes/<take>.json`: the media's path, SHA-256 and duration (the media is never copied) and both aligners' words. Two different aligners are required. Clocks arrive as files (ve, faster-whisper or ElevenLabs Scribe shapes); only a free local `faster-whisper:<model>` is ever run by ingest. Scribe needs Krish's yes on its key and spend; two local models count as two aligners.
+
+**conform** is the dialogue editor (F09). It splits the signed script (`<piece>/ve/script.words.json`, words `w` from 0) into lines, finds each line's readings in every take on aligner A's words, and chooses one per line over the whole cut: fewest unscripted words kept, then fewest joins, then most words both aligners heard, then the later take. A flub is removed with a cut only in a gap both aligners agree on (`velib/gaps.py`: at least 80 ms, 30 ms clearance); with no such gap it plays through and is listed for his ear. Joins crossfade over 20 to 40 ms (default 30). The approved `edit.speed` (with `speed_said`) applies to picture and sound in one ffmpeg graph. It writes `edl.<cut>.json` and `words.<cut>.json`; the F09 lint re-derives every gap from the take records and refuses a bad EDL. `--render` writes `conformed.<cut>.mp4` and `dialogue.<cut>.wav` under the assets folder; `--joins-reel` writes `joins.<cut>.wav` for Gate 3. `compile --edl` takes the EDL (its words, the conformed picture) and `qc --edl` measures its joins.
+
+**file** files only cuts `ve status` calls READY, through `scripts/quick-edit/archive.py` (`MINDMAKE_ARCHIVE_ROOT`) and the library rules of `scripts/post-pack/library.py` (`MINDMAKE_LIBRARY_ROOT`, `3 Posts/<post>/3 Video`), re-hashing each file first and never overwriting; it writes `ve-<piece_id>.json` beside the videos and `filed.json` in the piece. Shadow cuts are compared, not filed.
+
+**brief** writes `briefs/<plate>.brief.json` and `<plate>.card.json` (fields for `ve card`) per plate slot: the point, the line and duration, slot geometry, style recipe, a named move (`config/ve/plate-moves.json`), the eight floor nevers from `scripts/floor.py`, acceptance tests and the tool route; 2 treatments x 4 candidates; the Critic ranks the eight and blocks only on a never or a failed test. It never dispatches. `--check` runs the mechanical acceptance on a candidate folder.
+
+**lock draft** writes an unfrozen entry under `drafts` in the design lock with one empty key-frame slot per beat; a 16:9 entry is `<format>@16:9` on a 1920x1080 canvas. Only `lock freeze` with Krish's Gate 2 stills turns a draft into a lock; the formats a draft names become modules then. **golden** holds 5 to 10 Production Inspo moments he names (`config/ve/golden-frames.json`), filled only with his words; Monday 26's moments serve meanwhile.
 All commands accept `-h` / `--help`. Render scale defaults to 1 and must be
 finite and positive. Render requires the source spec and the same staged assets
 folder used to compile it, so lint and asset hashes are checked before rendering.
@@ -98,7 +112,7 @@ Render transports string values as ASCII escapes, decoded for drawing. It measur
 Codex is a visual asset maker (Ruling, Krish, 2026-10-28: "Visual asset maker"). It makes pictures; the engine assembles every cut. Two jobs:
 
 - **Library devices.** Claude writes exact cards from fields JSON. Codex builds devices in worktrees between pieces. dispatch uses the plugin companion with pinned model/effort. verify-card reruns acceptance outside the sandbox/checks write_allow; Claude then renders golden stills/reviews one contact sheet.
-- **Visual plates into named slots.** A slot is named in the spec, with its geometry, its duration and the line it sits under; Codex makes candidate pictures for it (stills first, then motion of an approved still: `docs/ve/design/TEMPLATE.md`, "Images: how plates are made"), and the engine places the chosen one. Codex never picks a slot's size, timing or position. Compile still refuses generated plates until Phase 2 (above); a per-plate brief written by the engine and Critic ranking of candidates are planned work, not built.
+- **Visual plates into named slots.** A slot is named in the spec, with its geometry, its duration and the line it sits under; Codex makes candidate pictures for it (stills first, then motion of an approved still: `docs/ve/design/TEMPLATE.md`, "Images: how plates are made"), and the engine places the chosen one. Codex never picks a slot's size, timing or position. Compile still refuses generated plates until Phase 2 (above). `ve brief` writes the per-plate brief and its card fields (above); dispatching it and the Critic's ranking of the eight candidates are not automated yet.
 
 Codex never edits a cut: it never renders, assembles, trims, retimes, captions, mixes or files a production piece, and never touches its words or audio. Its report is never proof.
 
