@@ -57,20 +57,48 @@ resolve by keeping both sides. Run `npx vitest run tests/ve.test.ts` and `npm ru
 - `FLOOR_PROPOSE_ENABLED` is not set in this repository or in any Vercel project. Inspirationhouse reads it,
   and its value there is unverified.
 
+## Answered on 29 October 2026
+
+Krish's answers, typed to the orchestrator in person ("1. yes. 2. yes. 3. yes. 4. yes"), to these exact questions:
+
+1. "Does your Epidemic Sound plan allow sound effects (not just music) in videos you publish?" Yes. Recorded in
+   `config/reference-cuts.json` (`big_moment_sound`) and `config/sfx-approved.json`. The small set still goes to him
+   to hear before any sound is used.
+2. "When a video shows a company's logo, is it OK to recolour it in our cream?" Yes. Recorded on
+   `config/reference-cuts.json` ruling 6 as `answered_2026_10_29`: the official shape, unedited, may be set in house
+   cream. Not applied yet, and to change together in one build: the bar page (`docs/production/THE_BAR.md`), ruling
+   6's production line, `tests/floor_bar_test.py`, and `scripts/post-pack/logo_gate.py`, which registers only
+   `full_colour` and `one_colour` and refuses a recoloured variant.
+3. "OK to install two free checking tools on both home computers? One checks lip-sync (SyncNet), the other reads
+   on-screen text (tesseract)." Yes. Approved for the next session on each home computer; nothing installed from the
+   cloud. Steps below.
+4. "Will you leave one home computer on overnight on Sunday 8 Nov, for the first overnight run?" Yes. The
+   primary/standby setting is approved for the next home-computer session; not set from the cloud. Steps below.
+
+Defaults the orchestrator set, which Krish agreed need not wait on him (defaults, not his rulings):
+- No `PLACE_TAKES_DISPATCH_TOKEN`: place-takes starts the way it does today.
+- Placed takes stay where they are in the Inbox; nothing moves to `Inbox/used/`.
+- The hazard tape is house cream.
+
+## For the next session on each home computer (approved 29 October)
+
+1. tesseract: install it so `tesseract` is on PATH (Windows: the UB Mannheim build, then add its folder to PATH),
+   and check with `tesseract --version`. The caption and composition checks (`scripts/cutgates/captions.py`,
+   `scripts/velib/qc_captions.py`, `qc_composition.py`) then run instead of reporting not_run.
+2. SyncNet: clone `joonson/syncnet_python` at the revision pinned in `config/lipsync.json` (`syncnet_revision`),
+   fetch its model, check the model's sha256 against `model_sha256` there, and set `MINDMAKE_SYNCNET_ROOT` and
+   `MINDMAKE_SYNCNET_MODEL` (user scope). `scripts/quick-edit/lipsync_gate.py` refuses a model whose digest differs.
+3. Then run `python3 scripts/cutgates/calibrate.py` and the Critic calibration, and keep both reports.
+4. Overnight role: set the user setting `MINDMAKE_OVERNIGHT_ROLE` to `primary` on one computer and `standby` on the
+   other (Windows: `[Environment]::SetEnvironmentVariable('MINDMAKE_OVERNIGHT_ROLE','primary','User')`); the upload
+   task reads it on its next pass. Run `scripts/overnight/preflight.ps1` on both and read their blocks.
+5. Sunday 8 November: the primary stays on and signed in overnight for the first run.
+
 ## Waiting on Krish (one line each)
-- Add `PLACE_TAKES_DISPATCH_TOKEN` in Vercel (a content-engine-only fine-grained token, Contents read and
-  write) so copied takes start place-takes by themselves.
-- Should placed takes move to `Inbox/used/`, which needs write access, or stay where they are?
 - By ear: approve the levels on Monday 26's 16:9 cut with the chapter lifts.
-- Does Epidemic Sound cover sound effects in published video? If so, a small set goes to him to hear.
-- Do house cream logo recolours count as a company's one-colour mark?
-- On both computers: install SyncNet and tesseract.
-  - Run `python3 scripts/cutgates/calibrate.py` and the Critic calibration.
-  - Leave one computer on and signed in on Sunday 8 Nov, with `MINDMAKE_OVERNIGHT_ROLE` set to primary on one
-    and standby on the other.
+- By ear: the small sound-effect set, before any is used.
 - Gate 2 on the face-with-proof key frames, and on each of the six devices once Codex builds them.
 - His 5 to 10 golden frames from Production Inspo.
-- The hazard tape: cream, or a hazard colour?
 - 20 minutes on 9 Nov to score the shadow cuts side by side.
 - Control Center needs to place `codex`, `runway` and `higgsfield` pools on the publication (ai-harness or
   Control Center owns that).
