@@ -70,7 +70,9 @@ describe('what each press may carry', () => {
     expect(validBody('queue', 'off-tue-meme-1', offday())).toBe(true)
     expect(validBody('queue', 'off-tue-meme-1', offday({ approved: false }))).toBe(true)
     expect(validBody('queue', 'off-tue-meme-1', offday({ day: 'thu' }))).toBe(false)
-    expect(validBody('queue', 'off-mon-meme-1', offday({ pick: 'off-mon-meme-1', day: 'mon' }))).toBe(false)
+    // Growth's mix runs every day (Krish, 2026-10-29: "Mix wins: every day"), so a Monday option is pressed too.
+    expect(validBody('queue', 'off-mon-meme-1', offday({ pick: 'off-mon-meme-1', day: 'mon' }))).toBe(true)
+    expect(validBody('queue', 'off-xyz-meme-1', offday({ pick: 'off-xyz-meme-1', day: 'xyz' }))).toBe(false)
     expect(validBody('queue', 'off-tue-meme-1', offday({ copy_sha256: 'short' }))).toBe(false)
     expect(validBody('queue', 'off-tue-meme-1', offday({ approved: 'yes' }))).toBe(false)
     expect(validBody('queue', 'off-tue-meme-1', { pick: 'off-tue-meme-1', queued: true })).toBe(false)

@@ -1418,6 +1418,12 @@ def presses_row(pid, key, monday):
 # in queue/off-<day>-<option> bound to the copy he saw (copy_sha256). Growth makes and schedules what he approved.
 OFF_DAYS = (('tue', 'Tuesday', 1), ('thu', 'Thursday', 3), ('sat', 'Saturday', 5), ('sun', 'Sunday', 6))
 OFF_ID = re.compile(r'^[A-Za-z0-9][A-Za-z0-9_.:-]{0,59}$')
+# Growth's off-day lane runs every day (Krish, 2026-10-29, choosing between two rulings: "Mix wins: every day"), so its
+# options (growth.py mix offdays, schema growth-offdays/1) may name Monday, Wednesday and Friday too; the series slot on
+# those days stays reserved for the piece's own cut, which is Growth's to keep. A piece he records stays an off-day
+# piece: Tuesday, Thursday, Saturday or Sunday.
+MIX_DAYS = (('mon', 'Monday', 0), ('tue', 'Tuesday', 1), ('wed', 'Wednesday', 2), ('thu', 'Thursday', 3),
+            ('fri', 'Friday', 4), ('sat', 'Saturday', 5), ('sun', 'Sunday', 6))
 # An off-day piece he records (Ruling, Krish, 2026-10-29: an idea he drops in can be a Tuesday, Thursday, Saturday or
 # Sunday piece, and it is one short cut: "could be a short with motion designed subtitles and branding, or voiceover
 # with motion designed infographics"). Its option carries the exact words he would read; his Approve is his approval
@@ -1435,10 +1441,10 @@ def read_offdays(data, where='ideas.json offdays'):
         return None
     if not isinstance(data, dict):
         raise BoardError(f'{where}: give {{"tue": [options], "thu": [...], "sat": [...], "sun": [...]}}')
-    days = {k for k, *_ in OFF_DAYS}
-    problems = [f'{k} is not an off day ({", ".join(d for d, *_ in OFF_DAYS)})' for k in data if k not in days]
+    days = {k for k, *_ in MIX_DAYS}
+    problems = [f'{k} is not a day ({", ".join(d for d, *_ in MIX_DAYS)})' for k in data if k not in days]
     out = {}
-    for key, weekday, _ in OFF_DAYS:
+    for key, weekday, _ in MIX_DAYS:
         opts = data.get(key)
         if opts is None:
             continue
@@ -1463,13 +1469,24 @@ def read_offdays(data, where='ideas.json offdays'):
             copy = str(o['copy']).strip()
             row = {'id': oid, 'format': str(o['format']).strip(), 'source': str(label).strip(), 'url': url or None,
                    'copy': copy, 'copy_sha256': hashlib.sha256(copy.encode('utf-8')).hexdigest()}
+            for k in ('share_line', 'needs'):
+                v = o.get(k)
+                if v not in (None, '', []):
+                    if k == 'needs' and isinstance(v, list) and all(isinstance(x, str) for x in v):
+                        row[k] = [x.strip() for x in v if x.strip()]
+                    elif k == 'share_line' and isinstance(v, str):
+                        row[k] = ' '.join(v.split())
+                    else:
+                        problems.append(f'{weekday} option {n}: {k} is ' + ('a list of lines' if k == 'needs' else 'one line'))
             covers = o.get('covers')
             if covers is not None:
                 if not isinstance(covers, list) or not all(isinstance(c, str) and c.strip() for c in covers):
                     problems.append(f'{weekday} option {n}: covers is a list of must_cover ids')
                 else:
                     row['covers'] = [c.strip() for c in covers]
-            if o.get('kind') == 'recorded':
+            if o.get('kind') == 'recorded' and key not in {k for k, *_ in OFF_DAYS}:
+                problems.append(f'{weekday} option {n}: a piece he records is a Tuesday, Thursday, Saturday or Sunday piece')
+            elif o.get('kind') == 'recorded':
                 found = recorded_problems(o)
                 problems.extend(f'{weekday} option {n}: {p}' for p in found)
                 if not found:
@@ -1483,10 +1500,40 @@ def read_offdays(data, where='ideas.json offdays'):
     return out
 
 
+def read_growth_offdays(data, monday, where='--offdays-plan'):
+    """(offdays for read_offdays, warnings) from Growth's Sunday Off-days section (growth.py mix offdays, schema
+    growth-offdays/1): {week_of, days: {date: [{concept_id, lane, formats, source_url, draft, share_line, needs, ready}]},
+    short}. Each option is his to approve or skip with one press; its copy is Growth's draft, bound by its hash. A day
+    with fewer than two options is left off and said."""
+    if not isinstance(data, dict) or data.get('schema') != 'growth-offdays/1' or not isinstance(data.get('days'), dict):
+        raise BoardError(f'{where}: give the growth-offdays/1 file growth.py mix offdays wrote')
+    if str(data.get('week_of')) != monday.isoformat():
+        raise BoardError(f'{where}: it is for the week of {data.get("week_of")}, not {monday.isoformat()}')
+    by_offset = {off: k for k, _, off in MIX_DAYS}
+    out, warnings = {}, []
+    for day, opts in sorted(data['days'].items()):
+        try:
+            key = by_offset.get((date.fromisoformat(day) - monday).days)
+        except ValueError:
+            key = None
+        if not key:
+            raise BoardError(f'{where}: {day} is not a day of the week of {monday.isoformat()}')
+        opts = [o for o in opts or [] if isinstance(o, dict)][:3]
+        if len(opts) < 2:
+            warnings.append(f'{where}: {day} has {len(opts)} option(s) from Growth, under the two the board shows')
+            continue
+        out[key] = [{'id': o.get('concept_id'), 'format': ', '.join(o.get('formats') or []) or o.get('lane'),
+                     'source': {'label': 'Source', 'url': o['source_url']} if str(o.get('source_url') or '').startswith('https://') else (o.get('lane') or 'Growth'),
+                     'copy': o.get('draft'), 'share_line': o.get('share_line'),
+                     'needs': list(o.get('needs') or []) + ([] if o.get('ready') else ['not ready yet'] if not o.get('needs') else [])}
+                    for o in opts]
+    return out, warnings
+
+
 def previous_option(o):
     """An off-day option as the previous board kept it, back in the shape read_offdays takes."""
     row = {'id': o['id'], 'format': o['format'], 'source': {'label': o['source'], 'url': o.get('url')} if o.get('url') else o['source'], 'copy': o['copy']}
-    for k in ('covers', 'kind', 'style', 'piece_id', 'series', 'title', 'script'):
+    for k in ('covers', 'kind', 'style', 'piece_id', 'series', 'title', 'script', 'share_line', 'needs'):
         if o.get(k) is not None:
             row[k] = o[k]
     if o.get('kind') == 'recorded':
@@ -1553,7 +1600,9 @@ def offdays_section(monday, offdays):
     if not offdays:
         return head + slot_empty('No options for Tuesday, Thursday, Saturday or Sunday yet.') + '</section>'
     parts = [head]
-    for key, weekday, offset in OFF_DAYS:
+    # Tuesday, Thursday, Saturday and Sunday always; Monday, Wednesday and Friday only when Growth's mix fed them.
+    shown = [d for d in MIX_DAYS if d[0] in {k for k, *_ in OFF_DAYS} or offdays.get(d[0])]
+    for key, weekday, offset in shown:
         when = monday + timedelta(days=offset)
         parts.append(f'<div class="off-day" id="offdays-{key}" data-off-day="{key}"><h3>{weekday} {when.day} {when.strftime("%B")}</h3>')
         opts = offdays.get(key)
@@ -1579,7 +1628,10 @@ def offdays_section(monday, offdays):
                 f'<article class="off-card" id="{E(did)}" data-offday="{E(did)}" data-off-day="{key}" data-option-id="{E(o["id"])}" '
                 f'data-format="{E(o["format"])}" data-source="{E(o["source"])}" data-copy-sha256="{o["copy_sha256"]}"{covers}{rec_attrs}>'
                 f'<div class="id-flags"><span class="id-flag">{E(o["format"])}</span></div>'
-                f'<p class="off-copy">{E(o["copy"])}</p>{rec_body}<p class="id-why"><span class="id-why-k">Source</span> {src}</p>'
+                f'<p class="off-copy">{E(o["copy"])}</p>{rec_body}'
+                + (f'<p class="id-why"><span class="id-why-k">Share line</span> {E(o["share_line"])}</p>' if o.get('share_line') else '')
+                + (f'<p class="id-how">Still needs: {E("; ".join(o["needs"]))}</p>' if o.get('needs') else '')
+                + f'<p class="id-why"><span class="id-why-k">Source</span> {src}</p>'
                 f'<div class="tri-row" role="group" aria-label="Approve or skip this option">'
                 f'<button type="button" class="tri" data-act="offday" data-value="approve" data-for="{E(did)}" aria-pressed="false" disabled>Approve</button>'
                 f'<button type="button" class="tri" data-act="offday" data-value="skip" data-for="{E(did)}" aria-pressed="false" disabled>Skip</button></div>'
@@ -3170,7 +3222,7 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
             'doc_id': '<pick>', 'fields': ['pick', 'use', 'note', 'theme', 'reason', 'target_week', 'queued', 'idea_id', 'so_what', 'story', 'series', 'week', 'day', 'at'],
             'uses': [u for u, _ in PRESSES], 'null_use': 'he took the press back'}
         manifest['db']['queue']['offday'] = {
-            'doc_id': 'off-<tue|thu|sat|sun>-<option id>', 'fields': ['pick', 'use', 'day', 'approved', 'copy_sha256', 'format', 'source', 'option_id', 'week', 'at'],
+            'doc_id': 'off-<day>-<option id>', 'fields': ['pick', 'use', 'day', 'approved', 'copy_sha256', 'format', 'source', 'option_id', 'week', 'at'],
             # A recorded option's Approve also carries the piece and the exact words (the server schedules it and sends them).
             'recorded_fields': ['kind', 'piece_id', 'series', 'style', 'script', 'script_sha256', 'folder_title', 'title']}
         manifest['db']['picks']['decisions'] = {
@@ -3554,6 +3606,14 @@ def build(args, get=None):
         ideas = read_ideas(raw, monday)
         if fixed_layout(monday):
             offdays = read_offdays(raw.get('offdays') if isinstance(raw, dict) else None)
+    if getattr(args, 'offdays_plan', None):
+        # Growth's Sunday Off-days section (growth-offdays/1): the days ideas.json did not give.
+        if not fixed_layout(monday):
+            raise BoardError(f'--offdays-plan: the week of {monday.isoformat()} is in the layout it was published in, which has no Off days')
+        mixed, plan_warnings = read_growth_offdays(read_json(args.offdays_plan, '--offdays-plan'), monday)
+        warnings.extend(plan_warnings)
+        given = dict((offdays and {k: [previous_option(o) for o in v] for k, v in offdays.items()}) or {})
+        offdays = read_offdays({**mixed, **given}, '--offdays-plan with ideas.json offdays')
         if fixed_layout(monday):
             # Krish, 2026-10-24: his Inspiration House read properly, and styles he can choose from that push. The
             # gather's sources.json sits beside ideas.json; a fixed week without it was never gathered.
@@ -4125,6 +4185,40 @@ def _fixed_checks(check, mon):
           LABEL['record-long'] == 'Record the 3-minute cut (Teleprompter)' and 'record-feature' not in LABEL)
 
 
+def _growth_offday_checks(check, week, ideas):
+    """W2.9: Growth's Sunday Off-days section (growth-offdays/1) on the Ideas tab, every day under "Mix wins: every
+    day", 2 to 3 options a day, each with one Approve or Skip bound to Growth's draft copy."""
+    o = lambda n, **kw: dict({'concept_id': f'meme-c{n}', 'lane': 'meme', 'formats': ['instagram:meme', 'tiktok:meme'],
+                              'source_url': 'https://example.com/cue', 'draft': f'Synthetic meme draft {n}.', 'share_line': 'Send this to your CFO.',
+                              'needs': [], 'ready': True}, **kw)
+    plan = {'schema': 'growth-offdays/1', 'week_of': week.isoformat(), 'short': [],
+            'days': {(week + timedelta(days=0)).isoformat(): [o(1), o(2)], (week + timedelta(days=1)).isoformat(): [o(3), o(4), o(5, ready=False)],
+                     (week + timedelta(days=3)).isoformat(): [o(6)]}}
+    mixed, warnings = read_growth_offdays(plan, week)
+    offdays = read_offdays(mixed, 'growth')
+    page, _, _ = board(week, ideas=ideas, offdays=offdays)
+    check('growth offdays: a day with two or three options shows, Monday too ("Mix wins: every day"), and a short day is said',
+          set(offdays) == {'mon', 'tue'} and 'id="offdays-mon"' in page and any('under the two' in w for w in warnings))
+    check('growth offdays: each option has one Approve and one Skip bound to the hash of Growth\'s draft',
+          'data-offday="off-mon-meme-c1"' in page and page.count('data-act="offday" data-value="approve"') == 5
+          and offdays['mon'][0]['copy_sha256'] == hashlib.sha256(b'Synthetic meme draft 1.').hexdigest())
+    check('growth offdays: the share line, the formats and what an option still needs are shown',
+          'Send this to your CFO.' in page and 'instagram:meme, tiktok:meme' in page and 'Still needs: not ready yet' in page)
+    check('growth offdays: the board passes verify', verify(page) == [])
+    for bad, why in ((dict(plan, week_of='2026-01-05'), 'another week'), (dict(plan, schema='x'), 'another schema'),
+                     (dict(plan, days={'2026-01-01': [o(1), o(2)]}), 'a day outside the week')):
+        try:
+            read_growth_offdays(bad, week)
+            check(f'growth offdays: {why} is refused', False)
+        except BoardError:
+            pass
+    try:
+        read_offdays({'mon': [{'id': 'r', 'format': 'short', 'source': 's', 'copy': 'c', 'kind': 'recorded'}, {'id': 'q', 'format': 'f', 'source': 's', 'copy': 'c'}]})
+        check('growth offdays: a recorded piece on a series day is refused', False)
+    except BoardError as error:
+        check('growth offdays: a recorded piece on a series day is refused', 'Tuesday, Thursday, Saturday or Sunday piece' in str(error))
+
+
 def _presses_checks(check, week, mon):
     """Krish's presses in the fixed layout (Krish, 2026-10-28): the five on an idea, the off days, Approve scripts,
     Titles, Approve for publish and Reject asset. Each is drawn from data, disabled until the store answers, and saved
@@ -4138,6 +4232,8 @@ def _presses_checks(check, week, mon):
     opt = lambda n, **kw: dict({'id': f'o{n}', 'format': 'meme', 'source': 'A cue from your inspo folder', 'copy': f'Option {n} copy.'}, **kw)
     offdays = read_offdays({'tue': [opt(1), opt(2, source={'label': 'The release note', 'url': 'https://example.com/r'})], 'sat': [opt(1), opt(2), opt(3)]})
     page, manifest, _ = board(week, ideas=ideas, offdays=offdays)
+    _growth_offday_checks(check, week, ideas)
+    use_layout(week)
     nxt = (week + timedelta(days=7)).isoformat()
     check('presses: every idea has a pick note and Wider piece, Future trend, Next week and Reject, never the old triage',
           page.count('data-pick-note="') == 12 and all(page.count(f'data-press="{u}"') == 12 for u, _ in PRESSES)
@@ -4153,7 +4249,7 @@ def _presses_checks(check, week, mon):
           'No options for Tuesday, Thursday, Saturday or Sunday yet.' in board(week, ideas=ideas)[0]
           and 'No options for Tuesday, Thursday, Saturday or Sunday yet.' in board(week)[0])
     for bad, want in (({'tue': [opt(1)]}, '2 to 3 options'), ({'tue': [opt(1), opt(2, copy='')]}, 'no copy'),
-                      ({'mon': [opt(1), opt(2)]}, 'not an off day'), ({'tue': [opt(1), opt(1)]}, 'once a day'),
+                      ({'xyz': [opt(1), opt(2)]}, 'is not a day'), ({'tue': [opt(1), opt(1)]}, 'once a day'),
                       ({'tue': [opt(1), opt(2, source={'label': 'x', 'url': 'http://x'})]}, 'https')):
         try:
             read_offdays(bad)
@@ -4931,6 +5027,8 @@ def parser():
                     '"short_thumbnail": [...]}, 1 to 5 options a surface, best first; kept on rebuild')
     ap.add_argument('--publish-manifest', action='append', metavar='DAY=PATH', help='the piece\'s manifest: its sha256 rides on the '
                     'day\'s Approve for publish press; kept on rebuild')
+    ap.add_argument('--offdays-plan', metavar='JSON', help='Growth\'s Sunday Off-days section (growth.py mix offdays, growth-offdays/1): '
+                    '2 to 3 options a day, each with Approve and Skip; ideas.json offdays wins for a day it gives')
     ap.add_argument('--archive', metavar='JSON', help='the Archive (boards from layout v3 on): GET /api/board/<Monday>/archive as '
                     'board_feed.py archive writes it, every piece since the Launch with his scores')
     ap.add_argument('--verify', metavar='PAGE', help='say why this built board may not be published (the publish hook runs it); exit 1 if it may not')
