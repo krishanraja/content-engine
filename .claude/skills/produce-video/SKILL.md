@@ -530,7 +530,7 @@ below) and one calm animated outro card made for the piece, held long enough
 to read, in both sizes (Krish, 2026-10-28: "we also don't need three separate
 outro transitions and screens. Ever."). Design comes first, and the designs
 are his to approve (`krish-design`): read `config/story-intro-outro.json`.
-While its `status` is not `"approved"`, say "story intro and outro not designed yet"
+While its `status` is not `"approved"`, say "story outro not designed yet"
 in one line, in the report and on the piece's board item for a home
 computer, and stop before the final render: the kit and `--plan` may go on,
 but no cut is rendered as finished, filed, sent to the library or recorded
@@ -844,7 +844,7 @@ Read `.agents/skills/produce-video/references/opening.md` before you plan a cut'
 - No cut is finished, filed or recorded without its audio treatment and its
   one outro card, in both sizes, from a design Krish approved
   (`STORY_INTRO_OUTRO`, `config/story-intro-outro.json`): until then the
-  report says "story intro and outro not designed yet". Nothing goes in front of the
+  report says "story outro not designed yet". Nothing goes in front of the
   hook (`HOOK_IS_THE_INTRO`).
 - No cut carries his name: no strap, no caption, no on-screen word (Krish,
   2026-10-28). His face is the only part of him in a cut.

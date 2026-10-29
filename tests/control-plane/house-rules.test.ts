@@ -503,23 +503,25 @@ describe('real logos, real pages, and a cover with personality (VISUAL_EVIDENCE,
   })
 })
 
-describe('the sting, the music bed and a thumbnail for every size (Krish, 2026-10-12)', () => {
+describe('the opening, the music bed and a thumbnail for every size (Krish, 2026-10-12 and 2026-10-29)', () => {
   const rule = (id: string) => {
     const r = HOUSE_RULES.find(x => x.id === id)
     assert.ok(r, id)
     return r
   }
-  const VIDEO_RULES = ['INTRO_STING', 'MUSIC_BED', 'THUMBNAIL_EVERY_SIZE']
+  const VIDEO_RULES = ['HOOK_IS_THE_INTRO', 'MUSIC_BED', 'THUMBNAIL_EVERY_SIZE']
+  const ON: Record<string, string> = { HOOK_IS_THE_INTRO: '2026-10-29', MUSIC_BED: '2026-10-12', THUMBNAIL_EVERY_SIZE: '2026-10-12' }
   test('all three are live, dated, in his words, and on the production stage only', () => {
     for (const id of VIDEO_RULES) {
       const r = rule(id)
       assert.equal(r.status, 'live', id)
-      assert.equal(r.on, '2026-10-12', id)
+      assert.equal(r.on, ON[id], id)
       assert.deepEqual(r.stages, ['production'], id)
       assert.ok(rulesFor('production').includes(r), id)
     }
-    assert.ok(rule('INTRO_STING').said.includes('1-2 sec animated make your mind up intro visual before my face comes in'))
+    assert.ok(rule('HOOK_IS_THE_INTRO').said.startsWith('I\'d pick number one here but I think that we need to test and learn. We need to figure out what the right tone is over time based on real engagement. Let\'s go with number one for now.'))
     assert.ok(rule('MUSIC_BED').said.includes('(high volume during the intro, low whilst I am talking, higher during the outro)'))
+    assert.ok(rule('MUSIC_BED').said.includes('"Yes I think music should be audible throughout but just lower."'))
     assert.ok(rule('THUMBNAIL_EVERY_SIZE').said.includes('I always want a video thumbnail for all video sizes produced as an asset every time'))
   })
   test('no writer, judge, final pass or shot planner reads them: the script writer and the channel cuts never carry LUFS or a sting', () => {
@@ -540,24 +542,27 @@ describe('the sting, the music bed and a thumbnail for every size (Krish, 2026-1
     assert.doesNotMatch(houseRulesBlock('visual'), /LUFS|intro-sting|thumbnail_override/)
     assert.doesNotMatch(houseRulesBlock('write'), /LUFS|intro-sting|thumbnail_override/)
   })
-  test('the sting rule says what is true today: used only once approved, and none approved while Krish\'s last word was a rejection', () => {
-    const sting = JSON.parse(readFileSync('config/intro-sting.json', 'utf8'))
-    const r = rule('INTRO_STING')
-    assert.ok(r.text.includes(`(${sting.seconds} by default)`))
-    assert.ok(['candidate', 'approved'].includes(sting.status))
-    assert.match(r.text, /status "approved"/)
+  test('the opening rule says what is true today: the sting and the story card are retired into it, and it is a choice under test', () => {
+    const r = rule('HOOK_IS_THE_INTRO')
+    // Krish, 2026-10-29: option one, "The hook is the intro". It replaced both 12 October opening rules.
+    assert.equal(HOUSE_RULES.find(x => x.id === 'INTRO_STING'), undefined, 'INTRO_STING is retired, recorded in HOOK_IS_THE_INTRO')
+    assert.match(r.text, /INTRO_STING, 2026-10-12 to 2026-10-29/)
+    assert.match(r.text, /intro half of STORY_INTRO_OUTRO \(the animated story card, 2026-10-12 to 2026-10-29\)/)
+    assert.match(r.text, /no story card and no logo intro/)
+    assert.match(r.text, /wordmark and the series tag are on screen from the very first frame/)
+    // His "test and learn": a default under test, recorded per cut, refusing nothing.
+    assert.match(r.text, /current choice to test, not a fixed rule, and it refuses nothing/)
+    assert.match(r.text, /records the opening it used \("opening"\)/)
     assert.match(r.text, /intro_override/)
-    if (sting.status === 'approved') {
-      assert.doesNotMatch(r.text, /No design is approved yet/, 'the rule still says no design is approved')
-    } else {
-      assert.match(r.text, /No design is approved yet/)
-      assert.equal(sting.source_sha256, null)
-    }
-    if (sting.last_decision?.decision === 'rejected') {
-      assert.equal(sting.last_decision.by, 'Krish')
-      assert.ok(r.text.includes(`on ${sting.last_decision.on} he rejected`), 'the date of his rejection')
-      assert.ok(r.text.includes(`("${sting.last_decision.words}")`), 'his words, exactly as the config holds them')
-    }
+    const said = 'I\'d pick number one here but I think that we need to test and learn. We need to figure out what the right tone is over time based on real engagement. Let\'s go with number one for now.'
+    const sting = JSON.parse(readFileSync('config/intro-sting.json', 'utf8'))
+    assert.equal(sting.status, 'retired')
+    assert.deepEqual([sting.retired.on, sting.retired.by, sting.retired.rule, sting.retired.words], ['2026-10-29', 'Krish', 'HOOK_IS_THE_INTRO', said])
+    assert.equal(sting.source_sha256, null, 'no sting design was ever approved')
+    assert.equal(sting.last_decision.decision, 'rejected')
+    const story = JSON.parse(readFileSync('config/story-intro-outro.json', 'utf8'))
+    assert.deepEqual([story.retired.story_intro.on, story.retired.story_intro.rule, story.retired.story_intro.words], ['2026-10-29', 'HOOK_IS_THE_INTRO', said])
+    assert.deepEqual(Object.keys(story.required).sort(), ['audio_treatment', 'outro_card'])
   })
   test('the music rule states the ledger\'s folder and levels, so the two cannot drift', () => {
     const ledger = JSON.parse(readFileSync('config/music-library.json', 'utf8'))
@@ -569,6 +574,8 @@ describe('the sting, the music bed and a thumbnail for every size (Krish, 2026-1
     assert.ok(r.text.includes(`up over ${lv.ramp_up_s} seconds after his last word`) && lv.ramp_down_s === 0.5 && r.text.includes('over half a second'))
     assert.ok(r.text.includes(`finishes at ${lv.final_integrated_lufs} LUFS integrated with true peak at most ${lv.max_true_peak_dbtp} dBTP`))
     assert.match(r.text, /stay proposed until he approves them by ear/)
+    // Krish, 2026-10-28: "Yes I think music should be audible throughout but just lower."
+    assert.match(r.text, /audible under the whole of every cut, wide or tall, low under his voice, and never drops out/)
   })
   test('the thumbnail sizes are the ones the drawer writes', () => {
     const build = readFileSync('scripts/pages/build.py', 'utf8')
@@ -782,7 +789,7 @@ describe('reading age 12 is a hard gate on every script (R7, Krish, 2026-10-12)'
   })
 })
 
-describe('a story intro, its audio treatment and an outro card, in every format (STORY_INTRO_OUTRO, Krish, 2026-10-12)', () => {
+describe('its audio treatment and one calm outro card, in every format (STORY_INTRO_OUTRO, Krish, 2026-10-12; the intro half retired 2026-10-29)', () => {
   test('the rule is live, in his words, on the production stage, and the stand-off is approved in his words', () => {
     const r = HOUSE_RULES.find(x => x.id === 'STORY_INTRO_OUTRO')!
     assert.equal(r.status, 'live')
@@ -794,14 +801,15 @@ describe('a story intro, its audio treatment and an outro card, in every format 
     assert.equal(cfg.approved.by, 'Krish')
     assert.ok(cfg.approved.words.includes('todays video goes out with the new intro and outro animations'))
     assert.equal(cfg.said.words, r.said)
-    assert.equal(cfg.until_approved, 'story intro and outro not designed yet')
+    assert.equal(cfg.until_approved, 'story outro not designed yet')
     assert.ok(r.text.includes(cfg.until_approved))
+    assert.match(r.text, /retired on 2026-10-29 by HOOK_IS_THE_INTRO/)
   })
   test('produce-video stops before the final render until the designs are approved', () => {
     const skill = readFileSync('.agents/skills/produce-video/SKILL.md', 'utf8').replace(/\s+/g, ' ')
     assert.ok(skill.includes('house rule `STORY_INTRO_OUTRO`'))
     assert.ok(skill.includes('config/story-intro-outro.json'))
-    assert.ok(skill.includes('say "story intro and outro not designed yet"'))
+    assert.ok(skill.includes('say "story outro not designed yet"'))
     assert.ok(skill.includes('stop before the final render'))
     assert.ok(skill.indexOf('STORY_INTRO_OUTRO') < skill.indexOf('python scripts/quick-edit/make.py WORK/kit/long.json --out WORK/long --only 16x9 --share-mib 29'))
   })
