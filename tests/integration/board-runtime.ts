@@ -56,7 +56,11 @@ class Query {
         return {data:null,error:null}
       }
       const params=this.filters.map(([,v])=>v)
-      const where=this.filters.map(([k],i)=>{ assert.match(k,/^[a-z_][a-z0-9_]*$/); return `${k}=$${i+1}` })
+      const where=this.filters.map(([k],i)=>{
+        // A JSON field (the approvals and titles views filter body->>kind), else a plain column.
+        const json=/^([a-z_][a-z0-9_]*)->>([a-z_][a-z0-9_]*)$/.exec(k)
+        if(json)return `${json[1]}->>'${json[2]}'=$${i+1}`
+        assert.match(k,/^[a-z_][a-z0-9_]*$/); return `${k}=$${i+1}` })
       if(this.jsonFilter){params.push(JSON.stringify(this.jsonFilter[1]));where.push(`${this.jsonFilter[0]} @> $${params.length}::jsonb`)}
       const result=await pg.query(`select * from ${this.table}${where.length?' where '+where.join(' and '):''}${this.sorting} limit ${this.count} offset ${this.offset}`,params)
       return {data:this.single?result.rows[0]||null:result.rows,error:null}
@@ -164,6 +168,33 @@ try{
     const krish={'Content-Type':'application/json',Cookie:cookie,Origin:origin}
     if(collection==='edits')await put(`${week}/${collection}/${id}`,{body:value,revision:0},403)
     await put(`${week}/${collection}/${id}`,{body:value,revision:0},200,collection==='edits'?krish:headers);assert.ok((await get(`${week}/${collection}`)).documents.some((d:Row)=>d.id===id))}
+  {
+    // Krish's presses go through the real SQL with no migration: each lands in a collection board_documents already
+    // takes, only his cookie writes it, and Approve scripts records the server's answer in a second CAS revision. With
+    // no Teleprompter key the send makes no request and answers no_key.
+    const presses='/api/board/2026-11-09', krish={'Content-Type':'application/json',Cookie:cookie,Origin:origin}
+    const piece='11111111-2222-4333-8444-555555555555'
+    delete process.env.TELEPROMPTER_API_KEY
+    const approval={kind:'approve_scripts',day:'mon',piece_id:piece,approved:true,texts:{long:'Said long.',short:'Said short.'},
+      titles:{long:'Mon 9 Nov - 5-minute - X',short:'Mon 9 Nov - 90-second - X'},folder_title:'Mon 9 Nov follow.the.money - X'}
+    await put(presses+'/picks/mon-scripts',{body:approval,revision:0},403)
+    const approved=await put(presses+'/picks/mon-scripts',{body:approval,revision:0},200,krish)
+    assert.equal(approved.revision,2);assert.equal(approved.send.status,'no_key');assert.match(approved.body.scripts.long,/^[a-f0-9]{64}$/)
+    const view=(await get(presses+'/approvals')).documents
+    assert.deepEqual(view.map((d:Row)=>d.id),['mon-scripts']);assert.equal(view[0].updated_by,'Krish');assert.equal(view[0].body.send.status,'no_key')
+    for(const [collection,id,value] of [
+      ['queue','mon-2',{pick:'mon-2',use:'next_week',target_week:'2026-11-16',queued:true}],
+      ['queue','off-tue-o1',{pick:'off-tue-o1',use:'offday',day:'tue',approved:true,copy_sha256:'c'.repeat(64)}],
+      ['picks','mon',{pick:'mon-2',day:'mon',story:'Choice',note:'Lead with the deal.'}],
+      ['picks','mon-titles',{kind:'titles',day:'mon',picks:{long_title:'X'}}],
+      ['picks','mon-publish',{kind:'approve_publish',day:'mon',piece_id:piece,approved:true}],
+    ] as const){
+      await put(`${presses}/${collection}/${id}`,{body:value,revision:0},403)
+      await put(`${presses}/${collection}/${id}`,{body:value,revision:0},200,krish)
+    }
+    assert.deepEqual((await get(presses+'/titles')).documents.map((d:Row)=>d.id),['mon-titles'])
+    await put(presses+'/approvals/mon-scripts',{body:approval,revision:2},400,krish)
+  }
   await put(week+'/comments/orphan',{body:{thread_id:'absent',anchor:'mon-article',text:'Wrong'},revision:0},400)
   for(let n=0;n<23;n++)await put(week+'/comments/page-'+String(n).padStart(2,'0'),{body:{thread_id:'page-'+String(n).padStart(2,'0'),anchor:'board-root',text:'Pagination '+n},revision:0})
   const firstPage=await (await fetch(origin+week+'/comments',{headers})).json()
