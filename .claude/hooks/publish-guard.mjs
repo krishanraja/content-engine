@@ -4,7 +4,10 @@
 //
 // Left alone on purpose, because AGENTS.md is his standing approval for them:
 // - scripts/post-pack/send.py: every post's assets go to his library folder the same day (Krish, 2026-10-06).
-// - Teleprompter create_folder, create_script, update_script: each checked script goes to his account (Krish, 2026-10-12).
+// - Teleprompter create_folder, create_script, update_script: a script goes to his account once he approves its exact
+//   words on the board (Krish, 2026-10-28: "Once I approve, the two scripts will go to teleprompter"). This hook does
+//   not check that approval: teleprompter_send.py plan refuses until it holds, and a session makes only the calls plan
+//   printed. Whether this hook should ask him before each of these calls is his decision, not yet made.
 // - scripts/engine.py: the content engine never posts.
 import { decide, readEvent } from './lib.mjs'
 

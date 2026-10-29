@@ -5,14 +5,15 @@ import { join } from 'node:path'
 import { afterAll, describe, expect, it } from 'vitest'
 import { makingSteps, mergeMaking, parseMakingPatch } from '../../apps/control-plane/api/_making.js'
 
-// scripts/post-pack/teleprompter_send.py: each checked script into Krish's
+// scripts/post-pack/teleprompter_send.py: each script Krish approved into his
 // teleprompter.com account, one folder per piece and one script per cut, and
 // the record of where it went. Krish, 2026-10-12: "Also note that Descript is
 // permanently gone, teleprompter.com is permanently in, connected via MCP
-// here"; of the automatic send, "Yes, automatic, Monday now", on these terms:
-// "One script per cut, in a folder per piece (e.g. "Mon 12 Oct
-// follow.the.money"). When the words change, the same script is updated in
-// place. Nothing is ever deleted." Nothing here reaches Teleprompter or the
+// here", on these terms: "One script per cut, in a folder per piece (e.g.
+// "Mon 12 Oct follow.the.money"). When the words change, the same script is
+// updated in place. Nothing is ever deleted." Krish, 2026-10-28: "Once I
+// approve, the two scripts will go to teleprompter", replacing his standing
+// "Yes, automatic, Monday now". Nothing here reaches Teleprompter or the
 // engine.
 
 const ROOT = join(__dirname, '..', '..')
@@ -51,9 +52,19 @@ describe('config/teleprompter.json holds Krish\'s rulings, verbatim', () => {
   it('his words and his terms', () => {
     expect(cfg.status).toBe('confirmed')
     expect(cfg.said.switch.words).toBe('Also note that Descript is permanently gone, teleprompter.com is permanently in, connected via MCP here')
-    expect(cfg.said.send.asked).toBe('May every checked script go into your teleprompter.com account automatically, starting with Monday\'s two now?')
-    expect(cfg.said.send.picked).toBe('Yes, automatic, Monday now')
-    expect(cfg.said.send.terms).toBe('One script per cut, in a folder per piece (e.g. "Mon 12 Oct follow.the.money"). When the words change, the same script is updated in place. Nothing is ever deleted.')
+    expect(cfg.said.send).toMatchObject({ on: '2026-10-28', words: 'Once I approve, the two scripts will go to teleprompter' })
+    expect(cfg.said.route).toEqual({ on: '2026-10-28', words: 'Server sends directly' })
+    expect(cfg.said.terms.words).toBe('One script per cut, in a folder per piece (e.g. "Mon 12 Oct follow.the.money"). When the words change, the same script is updated in place. Nothing is ever deleted.')
+  })
+  it('the standing yes of 12 October is superseded, kept only as the record of what he said then', () => {
+    expect(cfg.superseded.send.asked).toBe('May every checked script go into your teleprompter.com account automatically, starting with Monday\'s two now?')
+    expect(cfg.superseded.send.picked).toBe('Yes, automatic, Monday now')
+    expect(JSON.stringify(cfg.said)).not.toContain('Yes, automatic')
+  })
+  it('his approval is read from the board, written by him alone; the server\'s key is named and never held', () => {
+    expect(cfg.approval).toMatchObject({ collection: 'approvals', writer: 'Krish' })
+    expect(cfg.server).toMatchObject({ secret: 'TELEPROMPTER_API_KEY', url: 'https://app.teleprompter.com/mcp', url_env: 'TELEPROMPTER_MCP_URL' })
+    expect(JSON.stringify(cfg)).not.toMatch(/ttp_[A-Za-z0-9]/)
   })
   it('only the tools his terms need: no delete, no move, no rename; an update sends text and duration only', () => {
     expect([...cfg.allowed_tools].sort()).toEqual(['create_folder', 'create_script', 'get_folder', 'get_script', 'list_folders', 'list_scripts', 'list_scripts_in_folder', 'update_script'])
@@ -128,6 +139,42 @@ describe('the command line refuses before anything is written', () => {
     expect(out.status).toBe(1)
     expect(out.stderr).toMatch(/a script that was made is a send that worked/)
     expect(out.stderr).not.toMatch(/engine\.invalid|could not reach/i)
+  })
+
+  it('plan: scripts Krish has not approved on the board, word for word, are refused, and nothing is planned', () => {
+    const refusals = python(`
+import json, tempfile, making, teleprompter_send as ts
+from pathlib import Path
+cfg = ts.load_config()
+pid = '${PIECE}'
+out = {}
+with tempfile.TemporaryDirectory() as tmp:
+    t = Path(tmp)
+    (t / 'post.json').write_text(json.dumps({'piece_id': pid, 'date': '2026-11-02', 'subchannel': 'follow_the_money', 'subject': 'Who gets paid for AI songs'}))
+    words = {'long': 'The long script.\\n', 'short': 'The short script.\\n'}
+    for cut, text in words.items():
+        (t / f'{cut}.md').write_text(text)
+    sha = {cut: making.script_hash(text) for cut, text in words.items()}
+    read = {cut: {'script_sha256': s, 'at': 'x', 'by': 'C', 'readers': ['A', 'B'], 'found': 'nothing lost'} for cut, s in sha.items()}
+    record = {'script_check': {'passed': True, 'checked_at': 'x', 'problems': [], 'hashes': sha, 'read_back': read}}
+    def board(docs):
+        def call(method, path, body):
+            if path.startswith('/api/board/'):
+                return 200, json.dumps({'ok': True, 'documents': docs, 'next_offset': None})
+            return 200, json.dumps({'ok': True, 'making': record, 'steps': []})
+        return call
+    his = lambda scripts, by='Krish': {'id': 'mon-scripts', 'body': {'piece_id': pid, 'scripts': scripts}, 'updated_at': '2026-11-01T12:30:00Z', 'updated_by': by}
+    for name, docs in (('none', []), ('session', [his(sha, 'engine_operator')]), ('other words', [his({**sha, 'short': 'c' * 64})]), ('approved', [his(sha)])):
+        try:
+            p = ts.plan(pid, [t / 'long.md', t / 'short.md'], board(docs), cfg, post_path=t / 'post.json', workbench=t / 'WORKBENCH.md')
+            out[name] = 'planned: ' + ', '.join(c['action'] for c in p['cuts'])
+        except ts.TeleprompterError as error:
+            out[name] = str(error)
+print(json.dumps(out))`)
+    expect(refusals.none).toMatch(/^nothing goes to Teleprompter until Krish approves those exact words .*the 5-minute script has no approval from him/)
+    expect(refusals.session).toMatch(/written by someone else and do not count/)
+    expect(refusals['other words']).toMatch(/he approved other words for the 90-second script/)
+    expect(refusals.approved).toBe('planned: create, create')
   })
 
   it('plan: a piece id that is not a uuid is refused', () => {

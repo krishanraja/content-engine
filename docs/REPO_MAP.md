@@ -1623,6 +1623,33 @@ What Krish has confirmed he likes, for the writers.
 - `function renderTasteBlock(rows: Array<{ statement?: unknown; means?: unknown; layer?: unknown }>): string`
 - `async function loadTasteBlock(lanes: TasteLane[]): Promise<string>`
 
+### `apps/control-plane/api/_teleprompter.ts`
+
+- `const DEFAULT_TELEPROMPTER_MCP_URL`
+- `const WORDS_PER_MINUTE`
+- `const APPROVAL_WRITER`
+- `const ALLOWED_TOOLS: Readonly<Record<string, readonly string[]>>`
+- `class TeleprompterRefusal`
+- `class TeleprompterError`
+- `function assertAllowedCall(tool: string, args: unknown): void`
+- `function normalScript(text: string): string`
+- `function scriptHash(text: string): string`
+- `function spokenText(text: string): string`
+- `function durationSeconds(text: string): number`
+- `type FetchLike`
+- `interface TeleprompterClient`
+- `function createTeleprompterClient(opts: { url: string; key: string; fetchImpl?: FetchLike; timeoutMs?: number }): Telep…`
+- `type ApprovedCut = MakingCut`
+- `interface ApprovedScript`
+- `interface BoardApproval`
+- `interface SendApprovedInput`
+- `interface SentScript`
+- `interface SendResult`
+- `interface SendDeps`
+- `function approvedHashes(body: unknown): Partial<Record<ApprovedCut, string>>`
+- `async function sendApprovedScripts(input: SendApprovedInput, deps: SendDeps = {}): Promise<SendResult>`
+- `function teleprompterPatch(input: SendApprovedInput, result: SendResult, opts: { by: string; now: string; fileHashes: P…`
+
 ### `apps/control-plane/api/_text.ts`
 
 - `function stripMarkdownLinks(s: string): string`

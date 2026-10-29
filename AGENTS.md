@@ -84,7 +84,7 @@ Read linked detail before domain work; every moved paragraph remains verbatim.
 
 **Every video script opens straight on its hook, closes on what he would do, and a 12-year-old can follow it; every article ends with "3 things you can do tomorrow".** ([detail](docs/AGENTS-REFERENCE.md#rule-11))
 
-**Each checked script goes to Krish's teleprompter.com account, and nothing there is ever deleted.** ([detail](docs/AGENTS-REFERENCE.md#rule-12))
+**Each script goes to Krish's teleprompter.com account once he approves its exact words, and nothing there is ever deleted.** ([detail](docs/AGENTS-REFERENCE.md#rule-12))
 
 **Web publish board migration (19 October 2026).** ([detail](docs/AGENTS-REFERENCE.md#rule-13))
 

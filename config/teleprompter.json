@@ -1,5 +1,5 @@
 {
-  "about": "Krish's standing yes to every checked video script going into his teleprompter.com account, and exactly what a session may do there. Read by scripts/post-pack/teleprompter_send.py and making.py teleprompter; nothing is sent or recorded unless status is \"confirmed\". The calls are made by a Claude Code session that holds the Teleprompter connector (make-piece, the Scripts step); this repository holds no Teleprompter key.",
+  "about": "Krish's words on what goes into his teleprompter.com account, when, and exactly what may be done there. Read by scripts/post-pack/teleprompter_send.py, making.py teleprompter and apps/control-plane/api/_teleprompter.ts; nothing is sent or recorded unless status is \"confirmed\". Since 2026-10-28 nothing goes there until Krish approves those exact words with the Approve scripts press on the week's publish board (approval, below). The engine's server is built to send them itself with his personal API key and read each one back (server, below), but nothing calls it until the board has that press and the key is in place. Until then a Claude Code session that holds the Teleprompter connector sends them instead (make-piece, the Scripts step), and teleprompter_send.py plan refuses until his approval holds those exact hashes. This file names the key; it never holds it.",
   "status": "confirmed",
   "said": {
     "switch": {
@@ -7,11 +7,45 @@
       "words": "Also note that Descript is permanently gone, teleprompter.com is permanently in, connected via MCP here"
     },
     "send": {
+      "on": "2026-10-28",
+      "words": "Once I approve, the two scripts will go to teleprompter",
+      "replaces": "his standing yes of 2026-10-12 (superseded.send): a checked script no longer goes on its own; it goes once he approves those exact words on the board"
+    },
+    "route": {
+      "on": "2026-10-28",
+      "words": "Server sends directly"
+    },
+    "terms": {
+      "on": "2026-10-12",
+      "words": "One script per cut, in a folder per piece (e.g. \"Mon 12 Oct follow.the.money\"). When the words change, the same script is updated in place. Nothing is ever deleted."
+    }
+  },
+  "superseded": {
+    "send": {
       "on": "2026-10-12",
       "asked": "May every checked script go into your teleprompter.com account automatically, starting with Monday's two now?",
       "picked": "Yes, automatic, Monday now",
-      "terms": "One script per cut, in a folder per piece (e.g. \"Mon 12 Oct follow.the.money\"). When the words change, the same script is updated in place. Nothing is ever deleted."
+      "by": "said.send, Krish, 2026-10-28"
     }
+  },
+  "approval": {
+    "store": "the week's publish board: GET /api/board/<Monday>/<collection> (board_web.py read), each document with the actor who wrote it",
+    "collection": "approvals",
+    "writer": "Krish",
+    "body": "names the piece (piece_id) and the approved hash of each cut's words (scripts: {cut: sha256}, or [{cut, sha256}]); approved: false withdraws it. The newest document naming a cut is the one that counts",
+    "hash": "making.py script_hash of the words: either the script file the scripts' check passed or the words Teleprompter shows (its spoken text). Either one binds those exact words",
+    "weeks": "the Monday of the piece's date and the two after it, then this Monday and next; plan --week names one"
+  },
+  "server": {
+    "code": "apps/control-plane/api/_teleprompter.ts sendApprovedScripts",
+    "status": "sender built and tested, not wired: it waits on the board's Approve scripts press (the approvals store) and on his key",
+    "approval": "checked in code before any request: the input carries the board document his press wrote, which must be written by Krish, name the piece, not be withdrawn, and hold each cut's hash (of the words sent, or of the script file given with them)",
+    "secret": "TELEPROMPTER_API_KEY",
+    "secret_by": "Krish makes a personal API key (ttp_...) at app.teleprompter.com/manage/settings and stores it as a content-engine Vercel secret himself; it never goes through a chat or a file",
+    "url": "https://app.teleprompter.com/mcp",
+    "url_env": "TELEPROMPTER_MCP_URL",
+    "tools": ["list_folders", "list_scripts_in_folder", "get_script", "create_folder", "create_script", "update_script"],
+    "no_key": "With no key the server sends nothing and answers no_key; a session sends through the connector instead, by teleprompter_send.py plan"
   },
   "allowed_tools": [
     "list_folders",
