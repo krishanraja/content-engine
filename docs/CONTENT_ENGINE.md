@@ -407,7 +407,9 @@ file's fields are always read as their own surfaces); code calls
 `copyLint(text, appliesTo)` in `api/_copyLint.ts`; `npm run check:public-copy`
 lints every public field in `docs/plans` and every draft-body and publish-body
 as `article_body`, showing as notices only the name hits in five records filed
-before the ruling. Someone else's footage or image is
+before the ruling. The 12 and 14 Oct publish managers among them were never
+checked against their live Substack posts, whose cover alt text may still name
+him: Krish checks those two and fixes them by hand. Someone else's footage or image is
 credited as "Source: <owner>", never as made with a tool.
 makeyourmindup's kill list runs beside it before any paid call
 (`node vendor/makeyourmindup/kill-list/kill-list.mjs <paths>`, vendored with

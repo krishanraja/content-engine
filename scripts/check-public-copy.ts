@@ -27,8 +27,8 @@ const bodies = all.filter((f) => /(?:^|\/)[^/]*draft-body[^/]*\.md$|(?:^|\/)publ
 const FILED_BEFORE_THE_NAME_RULING: Record<string, string> = {
   '2026-10-09-draft-body-v2.md': 'a superseded draft holding the old "[Krish to set]" placeholder',
   '2026-10-09-draft-body-v3.md': 'a superseded draft holding the old "[Krish to set]" placeholder',
-  '2026-10-12-monday/manager.json': 'the 12 Oct publish manager as filed; its cover alt text names him',
-  '2026-10-14-wednesday/manager.json': 'the 14 Oct publish manager as filed; its cover alt text names him',
+  '2026-10-12-monday/manager.json': 'the 12 Oct publish manager as filed; its cover alt text names him; live post not checked, so Krish checks it and fixes it by hand',
+  '2026-10-14-wednesday/manager.json': 'the 14 Oct publish manager as filed; its cover alt text names him; live post not checked, so Krish checks it and fixes it by hand',
   '2026-10-19-monday/publish-manager.json': 'the 19 Oct publish manager as filed; the live post does not carry its alt text',
 }
 const hits: string[] = []
