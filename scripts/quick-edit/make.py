@@ -95,6 +95,9 @@ import transcriber
 import quality
 import words_gate
 import advisory_qc
+import floor_lines
+import lipsync_gate
+import sfx
 from archive import ArchiveError, archive_root, archive_videos, plan as archive_plan, read_package
 from share import share_copy
 
@@ -2598,6 +2601,12 @@ def main():
         if refused:
             sys.exit('Words gate: ' + ' | '.join(r['message'] for r in refused))
     words_held = []
+    # One sound on the big moment (sfx.py): refused before any render unless Krish approved it by ear; recorded either way.
+    try:
+        report['sfx'] = sfx.slot(cfg)
+    except sfx.SoundRefused as error:
+        sys.exit(f'Sound slot: {error}')
+    floor_held, stability = [], None
     fonts = Path(__file__).resolve().parent / 'fonts'
     shapes = {}
     for asp in aspects:
@@ -2685,7 +2694,9 @@ def main():
                        'source_provenance':identity,
                        'transcript_document':{'sha256':quality.digest(wpath),'derivation':(document or {}).get('derivation')},'checks': {
                 'heard':speech_check,
-                'sync':{'status':'not_run'},
+                # SyncNet on every on-camera segment (lipsync_gate.py, floor never 3); not_run where no model is installed.
+                'sync':lipsync_gate.check_cut(final, lipsync_gate.segment_spans(segs, tl['intro_s']),
+                                              [(c['s'] + tl['intro_s'], c['e'] + tl['intro_s']) for c in wins]),
                 'motion':{'status':'not_run','reason':'Mandatory camera-motion assessment and final framing review; stabilise when needed'},
                 'loudness':{'status':'fail' if loudness_warnings(loudness, levels) else 'pass', 'measurements':loudness},
                 'visuals':{'status':'inconclusive','coverage':visual_checks,'reason':'Full-size card and font review required'},
@@ -2701,6 +2712,8 @@ def main():
                                           final_words=out/f'{final.stem}.heard.json', edl=edl_path, video=final,
                                           final_provenance=final_identity)
             receipt['checks']['words'] = words_check
+            if receipt['checks']['sync']['status'] == 'fail':
+                floor_held.append(f"{asp}: {receipt['checks']['sync']['line']}")
             if words_check['status'] != 'pass':
                 words_held.append(f'{asp}: {words_gate.summary(words_check)}')
             # The ve measures that can run on this cut, advisory only in Wave 1: they never block (advisory_qc.py).
@@ -2727,6 +2740,16 @@ def main():
             except SystemExit as e:
                 report[f'{asp}_share'] = None
                 report.setdefault('notes', []).append(f'no chat-size copy: {e}')
+        # The published standard's measured lines (floor_lines.py): measured and reported; only the floor nevers hold.
+        if stability is None:
+            stability = floor_lines.stability(edited)
+        floor = [floor_lines.loudness_line(loudness, levels, final), floor_lines.share_line(report.get(f'{asp}_share')),
+                 floor_lines.chapters_line(asp, cut_audio['bed'], list(tl['chapter_cards']) + list(tl.get('accents') or ())),
+                 stability, report['sfx']]
+        if cfg.get('quality_required'):
+            floor.append(receipt['checks']['sync'])
+        shapes[asp]['floor'] = [row for row in floor if row]
+        shapes[asp]['floor_lines'] = floor_lines.lines(floor)
         # Preview: a frame in the sting, the opening, inside every graphic,
         # and the end card, all moved on by the sting's length.
         for label, t in preview_shots(tl, wins):
@@ -2773,6 +2796,8 @@ def main():
     if words_held:
         # Everything is written first (the cut, its receipt, the report), so the evidence stays; the cut is held.
         sys.exit('Words gate: held, the cut is written but must not ship. ' + ' | '.join(words_held))
+    if floor_held:
+        sys.exit('Lip sync: held, the cut is written but must not ship (floor never 3). ' + ' | '.join(floor_held))
     if archive_failed:
         sys.exit(f'archive: {archive_failed}')
 
