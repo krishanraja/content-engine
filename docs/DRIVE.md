@@ -133,3 +133,12 @@ The first three are in `04_Content` (`1ELCdOmMGXWmLpuheEoAKA-_4jvYbmbn3`).
   the media of links he pasted to `Ventures > Inspiration > Production Inspo`
   or `Content Inspo`. Add only: it never deletes,
   overwrites or renames, and it writes nowhere else.
+
+## Post folders are bound to their pieces (W3.5)
+
+A post's folder in `3 Posts` is bound to its piece: the piece's making record holds it (`pack.folder`). Its name freezes
+at the first send (`pack.sent_at`): `send.py` refuses the same piece under any other folder name. A canary, test,
+smoke-test, dry-run or fixture post is refused by the library's path rule (`path_test_folder`), and a rendered video
+inside a post goes only in `3 Video` (`path_render_outside_video`), in `scripts/post-pack/library.py` and the engine's
+routes alike. `python3 scripts/post-pack/post_binding.py report --records R --files F` flags any piece spread across
+folders and any folder no piece holds; Krish consolidates by hand (Monday 26 is his), and the report confirms it.

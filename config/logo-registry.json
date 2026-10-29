@@ -33,5 +33,7 @@
   "mentions_only": [
     "Reuters", "Stanford", "Substack", "YouTube", "LinkedIn", "Microsoft"
   ],
-  "mentions_only_about": "Named as a source or a channel, never as a subject: a piece that only cites them needs no logo. A piece about one of them moves it out of this list."
+  "mentions_only_about": "Named as a source or a channel, never as a subject: a piece that only cites them needs no logo. A piece about one of them moves it out of this list.",
+  "marks": [],
+  "marks_about": "The official mark files a render may use (floor never 6: real logos, used with the rights, never redrawn). scripts/post-pack/logo_gate.py hash-matches every logo file a cover, thumbnail or card uses against this list and refuses any file not here. Each entry: {\"company\": the first name above, \"variant\": \"full_colour\" or \"one_colour\" (the company's own one-colour version), \"file\": the path in this repository, \"sha256\": the file's, \"source\": where it came from (the company's brand page or Brandfetch asset URL, without its per-request token)}. Add one with: python3 scripts/post-pack/logo_gate.py register FILE --company NAME --variant full_colour --source URL. It starts empty: whether the house cream recolours in docs/plans/*/logos count as a one-colour version is Krish's call."
 }
