@@ -43,6 +43,7 @@ takes the long cut's length from kit.json, else asks for PIECE_SECONDS).
 import argparse
 import hashlib
 import json
+import math
 import os
 import re
 import shutil
@@ -82,6 +83,15 @@ RATE = 48000
 FADE_IN_S = 0.03   # no click where the track is cut in
 FADE_OUT_S = 1.0   # the bed fades over the last second of the video
 MIN_WINDOW_S = 0.4  # one ebur128 block: a shorter stretch has no loudness
+# The bed never runs out under a cut. Krish, 2026-10-28: "Yes I think music
+# should be audible throughout but just lower." A track shorter than the cut
+# starts again from its intro cue under the two-second crossfade he approved
+# for the deep cut's continuous bed (19 October), as often as the cut needs,
+# each restart on a picture turn where one is near. A track that plays less
+# than RESTART_MIN_S is still passed over unless it loops cleanly: a bed that
+# starts again every few seconds is no bed.
+RESTART_XF_S = 2.0
+RESTART_MIN_S = 60.0
 
 
 class MusicError(ValueError):
@@ -220,9 +230,18 @@ def problems(track, platforms=(), today=None, seconds=None):
         why.append('its loudness was never measured')
     if seconds is not None and not track.get('loopable') and isinstance(track.get('duration_s'), (int, float)):
         left = track['duration_s'] - float(track.get('intro_cue_s') or 0)
-        if left < seconds:
-            why.append(f'it runs {left:.1f} s from its intro cue, short of {seconds:.1f} s, and is not marked loopable')
+        if left < seconds and left < RESTART_MIN_S:
+            why.append(f'it runs {left:.1f} s from its intro cue, short of {seconds:.1f} s, is not marked loopable, '
+                       f'and is under the {RESTART_MIN_S:g} s a bed needs to start again under a crossfade')
     return why
+
+
+def covers(track, seconds):
+    """Whether the track plays `seconds` straight through (or loops cleanly),
+    with no restart."""
+    if seconds is None or track.get('loopable') or not isinstance(track.get('duration_s'), (int, float)):
+        return True
+    return track['duration_s'] - float(track.get('intro_cue_s') or 0) >= seconds
 
 
 def rotation(piece, data):
@@ -250,7 +269,13 @@ def pick(seconds, piece=None, platforms=(), data=None, today=None):
     for track in data.get('tracks', []):
         if track.get('status') != 'approved':
             skipped[track.get('id', '?')] = problems(track, platforms, today, seconds)
-    for track in rotation(piece, data):
+    # A track that plays the whole length straight first; else one that starts
+    # again under a crossfade, so the bed never drops out for want of length.
+    turn = rotation(piece, data)
+    for track in turn:
+        if not problems(track, platforms, today, seconds) and covers(track, seconds):
+            return track, skipped
+    for track in turn:
         why = problems(track, platforms, today, seconds)
         if not why:
             return track, skipped
@@ -350,11 +375,34 @@ def gain_expr(points):
     return f'pow(10,({expr})/20)'
 
 
+def restarts(a, b, room, turns=()):
+    """Where a track that plays `room` seconds between restarts starts again
+    between a and b: the crossfade centres, so no stretch between two runs
+    longer than `room`. Spread evenly, each moved onto the nearest picture
+    turn (`turns`, on the video's clock) within an eighth of `room` when one
+    is there and the rest still fits. [] when [a, b] fits in one run."""
+    if b - a <= room:
+        return []
+    n = math.ceil((b - a) / room)
+    out, prev = [], a
+    for k in range(1, n):
+        left = n - k + 1
+        ideal = prev + (b - prev) / left
+        near = [t for t in turns if abs(t - ideal) <= room / 8 and 2 * RESTART_XF_S <= t - prev <= room and b - t <= room * (left - 1)]
+        at = min(near, key=lambda t: abs(t - ideal)) if near else ideal
+        out.append(round(at, 4))
+        prev = at
+    return out
+
+
 def placement(track, timeline, src='0:a', out='raw', xf=0.8):
     """The track laid along the video without any level change: from its
     intro cue, looped when it is marked loopable and too short, and when it
     has an outro cue and is long enough, its ending crossfaded in as the bed
-    rises after the last word."""
+    rises after the last word. A track too short for the video that does not
+    loop starts again from its intro cue under a RESTART_XF_S crossfade, on
+    the picture turns in timeline["turns"] where it can (restarts()), so the
+    bed never runs out."""
     T = float(timeline['total_s'])
     ve = float(timeline['voice_end_s'])
     total = round(T * RATE)
@@ -373,6 +421,25 @@ def placement(track, timeline, src='0:a', out='raw', xf=0.8):
     if track.get('loopable') and length - cue < T:
         loop = f',aloop=loop=-1:size={int((length - cue) * RATE) + RATE}'
         how = 'looped'
+    elif length - cue < T:
+        x = RESTART_XF_S
+        at = restarts(0.0, T, length - cue - x, timeline.get('turns') or ())
+        # Each run overlaps the next by the crossfade, centred on its restart:
+        # faded out and in on the same straight-line curves acrossfade uses,
+        # laid at its time and summed (a chain of acrossfades fed by asplit
+        # stops after the first run on ffmpeg 6.1).
+        runs = list(zip([0.0] + [c - x / 2 for c in at], [c + x / 2 for c in at] + [T]))
+        lines = [f'[{src}]{norm},asplit={len(runs)}' + ''.join(f'[{out}_r{k}]' for k in range(len(runs)))]
+        for k, (s, e) in enumerate(runs):
+            fades = ([f'afade=t=in:st=0:d={x:.4f}:curve=tri'] if k else []) + ([f'afade=t=out:st={e - s - x:.4f}:d={x:.4f}:curve=tri'] if k < len(runs) - 1 else [])
+            ms = round(s * 1000)
+            lines.append(f'[{out}_r{k}]atrim=start={cue:.4f}:duration={e - s:.4f},asetpts=PTS-STARTPTS'
+                         + ''.join(',' + f for f in fades) + (f',adelay={ms}|{ms}' if ms else '') + f'[{out}_p{k}]')
+        # amix drops the timestamps once its first input ends; the envelope reads
+        # them, so they are counted again from the samples.
+        lines.append(''.join(f'[{out}_p{k}]' for k in range(len(runs))) + f'amix=inputs={len(runs)}:normalize=0:duration=longest,'
+                     f'asetpts=N/SR/TB,apad,atrim=end_sample={total},asetpts=PTS-STARTPTS[{out}]')
+        return ';'.join(lines), f'restarted at {", ".join(f"{c:.1f} s" for c in at)}'
     return f'[{src}]{norm},atrim=start={cue:.4f},asetpts=PTS-STARTPTS{loop},apad,atrim=end_sample={total},asetpts=PTS-STARTPTS[{out}]', how
 
 
@@ -394,19 +461,16 @@ def bed_filter(track, timeline, levels, src='0:a', out='bed', unity=False):
             f'afade=t=in:st=0:d={FADE_IN_S}{tail},atrim=end_sample={round(T * RATE)},asetpts=PTS-STARTPTS[{out}]')
 
 
-EPISODE_OPEN_S = 30.0    # the bed under the sting and his first 30 seconds
-EPISODE_CLOSE_S = 8.0    # and under his last 8, rising after his last word
-ACCENT_BEFORE_S, ACCENT_AFTER_S = 1.5, 4.0   # a short lift at each chapter turn
-# Krish, 2026-10-16: "Feel free to raise the music slightly during the section dividers." The lift
-# sits this far over the bed level, still well under his voice (the bed is about 17 LU under it).
-ACCENT_LIFT_DB = 4.0
-
-
 def continuous_episode_bed(track, timeline, levels, chapters, src='0:a', out='bed'):
-    """Continuous bed, with restarts hidden in actual chapter-card windows.
-
-    Kept separate from episode_bed so existing approved episode renders retain
-    their original treatment. Chapter windows use the finished video's clock.
+    """The bed for a long cut ("music_mode": "episode_bed", and "episode",
+    which used to play only in the open, the chapter turns and the close):
+    continuous and low under his voice, lifting at the chapter cards, with
+    restarts hidden in the chapter-card windows and, where a stretch outruns
+    the track, under a two-second crossfade between them (restarts()).
+    Krish, 2026-10-19, of the deeper cut: "the audio needs to be able to be
+    heard the entire time, but just really low unless its intro, outro or or
+    chapter card"; 2026-10-28: "Yes I think music should be audible throughout
+    but just lower." Chapter windows use the finished video's clock.
     """
     total = float(timeline['total_s'])
     vs, ve = timeline['voice_start_s'], timeline['voice_end_s']
@@ -415,6 +479,11 @@ def continuous_episode_bed(track, timeline, levels, chapters, src='0:a', out='be
     boundaries = sorted(set(boundaries))
     cue = float(track.get('intro_cue_s') or 0)
     available = track['duration_s']-cue
+    # A stretch between chapter cards longer than the track starts it again
+    # under the same two-second crossfade, on a picture turn where one is near,
+    # so the bed never runs out (Krish, 2026-10-28: audible throughout).
+    boundaries = sorted(set(boundaries + [t for a, b in zip(boundaries, boundaries[1:])
+                                          for t in restarts(a, b, available - RESTART_XF_S, timeline.get('turns') or ())]))
     pieces = []
     for i,(a,b) in enumerate(zip(boundaries,boundaries[1:])):
         start = a-1 if i else a
@@ -452,88 +521,6 @@ def continuous_episode_bed(track, timeline, levels, chapters, src='0:a', out='be
     lines.append(f"[{current}]volume='{gain_expr(envelope)}':eval=frame,atrim=end_sample={round(total*RATE)},asetpts=PTS-STARTPTS[{out}]")
     return ';'.join(lines), {'mode':'episode_bed','chapter_windows':cards,'restart_windows':pieces,
                             'envelope':envelope,'crossfade_s':2,'chapter_lufs':chapter}
-
-
-def episode_windows(timeline, accents=(), levels=None):
-    """Where the bed plays in a long episode (make.py "music_mode": "episode";
-    docs/production/one-shot-episode-corpus.md, "Music and rights": reserve
-    music for the cold open, chapter transitions or outro, ducked under
-    speech): [(start, end, kind)] on the video's clock, kind 'open',
-    'accent' or 'close', never overlapping."""
-    T, vs, ve = float(timeline['total_s']), float(timeline['voice_start_s']), float(timeline['voice_end_s'])
-    out = [(0.0, min(T, vs + EPISODE_OPEN_S), 'open')]
-    close = (max(out[0][1], ve - EPISODE_CLOSE_S), T, 'close')
-    for t in sorted(accents):
-        a, b = t - ACCENT_BEFORE_S, t + ACCENT_AFTER_S
-        if a > out[-1][1] + 1.0 and b < close[0] - 1.0:
-            out.append((round(a, 3), round(b, 3), 'accent'))
-    return [(round(a, 3), round(b, 3), k) for a, b, k in out + [close] if b - a > 0.5]
-
-
-def episode_seconds(timeline_or_total, accents=()):
-    """The music a long episode needs: the open, the accents and the close."""
-    return EPISODE_OPEN_S + len(accents) * (ACCENT_BEFORE_S + ACCENT_AFTER_S) + EPISODE_CLOSE_S + 10.0
-
-
-def episode_bed(track, timeline, levels, accents=(), src='0:a', out='bed', refs=None, unity=False):
-    """The bed for a long episode: the track in pieces, one per window
-    (episode_windows), taken in order from its intro cue and the close from
-    its outro cue when it has one, each set to the approved levels (intro
-    over the sting, the bed under his voice, the outro after his last word),
-    faded in and out, and laid at its time. (filter, what the report needs).
-    `unity` lays every piece at its own level, for measuring; `refs` is each
-    piece's measured loudness where it sits (else the track's average), so
-    each is set from what it really measures there, as the bed under a
-    short cut is (make.py build_audio)."""
-    T, I = float(timeline['total_s']), float(timeline.get('intro_s') or 0)
-    vs, ve = float(timeline['voice_start_s']), float(timeline['voice_end_s'])
-    ref = float(track['measured_lufs'])
-    cue, length = float(track.get('intro_cue_s') or 0), float(track.get('duration_s') or 0)
-    outro_cue = track.get('outro_cue_s')
-    norm = f'aresample={RATE},aformat=sample_fmts=fltp:sample_rates={RATE}:channel_layouts=stereo'
-    wins = episode_windows(timeline, accents, levels)
-    lines, labels, at, placed = [f'[{src}]{norm},asplit={len(wins)}' + ''.join(f'[{out}_s{k}]' for k in range(len(wins)))], [], cue, []
-    for k, (a, b, kind) in enumerate(wins):
-        d = b - a
-        own = refs[k] if refs and isinstance(refs[k], (int, float)) else ref
-        g = {'intro': levels['intro_lufs'] - own, 'bed': levels['bed_lufs'] - own, 'outro': levels['outro_lufs'] - own}
-        if unity:
-            g = {'intro': 0.0, 'bed': 0.0, 'outro': 0.0}
-        lift = 0.0
-        if kind == 'close' and isinstance(outro_cue, (int, float)) and length - outro_cue >= d:
-            start = float(outro_cue)
-        else:
-            start = at if at + d <= length else cue
-            at = start + d
-        if kind == 'open':
-            r0, r1 = max(0.0, vs - levels['ramp_down_s']) if I > 0 else 0.0, vs if I > 0 else 0.0
-            pts = [(0.0, g['intro'] if I > 0 else g['bed']), (r0, g['intro'] if I > 0 else g['bed']), (r1, g['bed']), (d, g['bed'])]
-            fades = f'afade=t=in:st=0:d={FADE_IN_S},afade=t=out:st={max(0.0, d - 3.0):.3f}:d=3'
-        elif kind == 'accent':
-            lift = 0.0 if unity else ACCENT_LIFT_DB  # measured at its own level, then lifted
-            pts = [(0.0, g['bed'] + lift), (d, g['bed'] + lift)]
-            fades = f'afade=t=in:st=0:d=1.0,afade=t=out:st={max(0.0, d - 1.5):.3f}:d=1.5'
-        else:
-            c, e = max(0.0, ve - a), min(d, ve - a + levels['ramp_up_s'])
-            pts = [(0.0, g['bed']), (c, g['bed']), (e, g['outro']), (d, g['outro'])]
-            fade = min(FADE_OUT_S, d)
-            fades = f'afade=t=in:st=0:d=1.0,afade=t=out:st={d - fade:.3f}:d={fade:.3f}'
-        ms = round(a * 1000)
-        lines.append(f'[{out}_s{k}]atrim=start={start:.4f}:duration={d:.4f},asetpts=PTS-STARTPTS,asetnsamples=n=480:p=0,'
-                     f"volume='{gain_expr(pts)}':eval=frame,{fades},adelay={ms}|{ms}[{out}_w{k}]")
-        labels.append(f'[{out}_w{k}]')
-        core = {'open': (max(a, vs), b - 3.0), 'accent': (a + 1.0, b - 1.5), 'close': (a + 1.0, min(b, ve))}[kind]
-        placed.append({'kind': kind, 'at': [round(a, 3), round(b, 3)], 'from_track_s': round(start, 3),
-                       'core': [round(core[0], 3), round(core[1], 3)] if core[1] - core[0] >= MIN_WINDOW_S else None,
-                       'gain_db': round(g['bed'] + (lift if kind == 'accent' else 0.0), 2)})
-    lines.append(f'{"".join(labels)}amix=inputs={len(labels)}:normalize=0:duration=longest,apad,'
-                 f'atrim=end_sample={round(T * RATE)},asetpts=PTS-STARTPTS[{out}]')
-    first = wins[0]
-    windows = {'intro': [0.0, round(max(0.0, vs - levels['ramp_down_s']), 4)] if I > 0 and vs - levels['ramp_down_s'] >= MIN_WINDOW_S else None,
-               'voice': [round(vs, 4), round(first[1] - 3.0, 4)] if first[1] - 3.0 - vs >= MIN_WINDOW_S else None,
-               'outro': [round(min(T, ve + levels['ramp_up_s']), 4), round(T - FADE_OUT_S, 4)] if T - FADE_OUT_S - ve - levels['ramp_up_s'] >= MIN_WINDOW_S else None}
-    base = {'intro': levels['intro_lufs'] - ref, 'bed': levels['bed_lufs'] - ref, 'outro': levels['outro_lufs'] - ref}
-    return ';'.join(lines), {'gains_db': {k: round(v, 2) for k, v in base.items()}, 'windows': windows, 'pieces': placed}
 
 
 # The commands.
@@ -728,16 +715,24 @@ def self_test():
                        ({'seconds': PIECE_SECONDS, 'platforms': ['youtube', 'substack', 'shorts', 'reels', 'tiktok', 'linkedin']}, 450.0)))
         # The second reviewer's case (2026-10-12): one approved, licensed 200 s
         # track that does not loop. Asked for a fixed 240 s, neither of
-        # Monday's cuts (177.8 s and 84.0 s) got it. Asked for the long cut's
-        # real length, both do.
+        # Monday's cuts (177.8 s and 84.0 s) got it, and both went out with
+        # his voice only. Since 2026-10-28 (Krish: "Yes I think music should be
+        # audible throughout but just lower.") a cut longer than the track
+        # gets it too, started again under a crossfade.
         c200 = dict(b_track, id='c-200-track', duration_s=200.0)
         only = {'tracks': [c200]}
-        checks.append(('a 200 s track under a 400 s floor goes under neither cut',
-                       (pick_for_piece(mon, 177.8, only)[0], pick_for_piece(mon, 84.0, only)[0]), (None, None)))
+        checks.append(('a 200 s track under a 400 s floor goes under both cuts, started again where it runs out',
+                       (pick_for_piece(mon, 177.8, only)[0]['id'], pick_for_piece(mon, 84.0, only)[0]['id']), ('c-200-track', 'c-200-track')))
         checks.append(('with the long cut\'s length both cuts get it, the same track',
                        (pick_for_piece(mon, 177.8, only, longest=183.8)[0]['id'], pick_for_piece(mon, 84.0, only, longest=183.8)[0]['id'],
                         pick_for_piece(mon, 84.0, only, longest=183.8)[2]['seconds']), ('c-200-track', 'c-200-track', 183.8)))
-        checks.append(('a long cut longer than its track still is not given it', pick_for_piece(mon, 205.0, only, longest=205.0)[0], None))
+        checks.append(('a long cut longer than its track is given it, never voice only', pick_for_piece(mon, 330.0, only, longest=330.0)[0]['id'], 'c-200-track'))
+        checks.append(('a track that plays the whole cut straight is still picked before one that must start again',
+                       pick_for_piece(mon, 205.0, {'tracks': [c200, dict(b_track, id='d-long-track')]})[0]['id'], 'd-long-track'))
+        brief = dict(b_track, id='e-brief-track', duration_s=RESTART_MIN_S - 1)
+        checks.append(('a track under a minute that does not loop is still passed over for a longer cut, and says why',
+                       (pick(90.0, 'p', (), {'tracks': [brief]})[0], 'start again' in ' '.join(pick(90.0, 'p', (), {'tracks': [brief]})[1]['e-brief-track'])),
+                       (None, True)))
         c_track = dict(b_track, id='c-long-track')
         abc = {'tracks': [a_track, b_track, c_track]}
         pairs = [(pick_for_piece(f'piece-{n}', 205.0, abc)[0]['id'], pick_for_piece(f'piece-{n}', 92.0, abc)[0]['id']) for n in range(12)]
@@ -787,6 +782,16 @@ def self_test():
                                    'bandpass=f=440:width_type=q:w=8,bandpass=f=440:width_type=q:w=8,volumedetect',
                                    '-f', 'null', '-'], capture_output=True, text=True).stderr
             checks.append(('the ending plays over the end card', float(re.search(r'mean_volume: (-?[\d.]+)', tone).group(1)) > -40, True))
+            # A track that does not loop, 40 s under a 100 s cut: started again under the crossfade, the bed never drops out.
+            restarted = Path(tmp) / 'restarted.wav'
+            under = {'total_s': 100.0, 'intro_s': 0.0, 'voice_start_s': 0.2, 'voice_end_s': 96.0, 'turns': [45.0]}
+            plain = dict(ending, outro_cue_s=None)
+            subprocess.run(['ffmpeg', '-hide_banner', '-loglevel', 'error', '-y', '-i', str(long), '-filter_complex',
+                            bed_filter(plain, under, levels), '-map', '[bed]', '-c:a', 'pcm_f32le', str(restarted)], check=True)
+            quiet = subprocess.run(['ffmpeg', '-hide_banner', '-nostats', '-i', str(restarted), '-t', '99', '-af', 'silencedetect=noise=-60dB:d=0.3',
+                                    '-f', 'null', '-'], capture_output=True, text=True).stderr
+            checks.append(('a 40 s track under a 100 s cut: the bed runs the whole length with no gap, started again twice',
+                           (round(probe(restarted)[0], 3), 'silence_start' in quiet, placement(plain, under)[1].count(' s')), (100.0, False, 2)))
         tampered.write_bytes(tampered.read_bytes()[:-4800])
         try:
             resolve(load(ledger)['tracks'][0])
@@ -819,21 +824,24 @@ def self_test():
                 os.environ.pop(k, None)
             else:
                 os.environ[k] = v
-    # A long episode's bed: the open, a lift at each chapter turn, the close (episode_windows, episode_bed).
-    tl = {'total_s': 900.0, 'intro_s': 3.0, 'voice_start_s': 3.2, 'voice_end_s': 893.0}
-    wins = episode_windows(tl, [3.5, 200.0, 400.0, 890.0])
-    checks.append(('an episode bed: the open, lifts at the turns clear of the open and the close, then the close',
-                   [(k, a, b) for a, b, k in wins], [('open', 0.0, 33.2), ('accent', 198.5, 204.0), ('accent', 398.5, 404.0), ('close', 885.0, 900.0)]))
-    fake = {'measured_lufs': -16.0, 'intro_cue_s': 2.0, 'duration_s': 190.0, 'outro_cue_s': 170.0}
-    lv = {'intro_lufs': -16, 'bed_lufs': -31, 'outro_lufs': -18, 'ramp_down_s': 0.5, 'ramp_up_s': 0.8}
-    chain, said = episode_bed(fake, tl, lv, [200.0, 400.0])
-    checks.append(('each piece laid at its time, the close from the outro cue, the levels from the ledger',
-                   ([p['from_track_s'] for p in said['pieces']], 'adelay=198500|198500' in chain, said['gains_db']),
-                   ([2.0, 35.2, 40.7, 170.0], True, {'intro': 0.0, 'bed': -15.0, 'outro': -2.0})))
-    checks.append(('the music lifts slightly at each section divider (Krish, 2026-10-16), measured without the lift',
-                   ([p['gain_db'] for p in said['pieces']], [p['gain_db'] for p in episode_bed(fake, tl, lv, [200.0, 400.0], unity=True)[1]['pieces']]),
-                   ([-15.0, -11.0, -11.0, -15.0], [0.0, 0.0, 0.0, 0.0])))
-    checks.append(('an episode needs about 80 s of music, so one 3-minute track covers it', episode_seconds(900.0, [1, 2, 3, 4, 5, 6]) < 189.8, True))
+    # Where a track too short for the cut starts again (restarts): evenly, on a picture turn when one is near.
+    checks.append(('a 300 s cut under a track that plays 188 s between restarts starts it again once, at the middle',
+                   (restarts(0.0, 300.0, 188.0), restarts(0.0, 150.0, 188.0)), ([150.0], [])))
+    checks.append(('a picture turn near the middle takes the restart; one far from it does not',
+                   (restarts(0.0, 300.0, 188.0, [10.0, 141.5, 290.0]), restarts(0.0, 300.0, 188.0, [60.0])), ([141.5], [150.0])))
+    checks.append(('a cut three times the track starts it twice, each stretch within it', restarts(0.0, 500.0, 188.0), [166.6667, 333.3333]))
+    cut = {'total_s': 300.0, 'intro_s': 0.0, 'voice_start_s': 0.2, 'voice_end_s': 296.0, 'turns': [141.5]}
+    chain, how = placement({'duration_s': 190.0, 'intro_cue_s': 0.0}, cut)
+    checks.append(('a track that does not loop is started again under a two-second crossfade, never left to run out',
+                   (how, chain.count('afade=t=in:st=0:d=2.0000:curve=tri'), 'duration=142.5000' in chain, 'duration=159.5000' in chain),
+                   ('restarted at 141.5 s', 1, True, True)))
+    # A long cut's continuous bed: restarts in the chapter cards, and further ones where a stretch outruns the track.
+    graph, said = continuous_episode_bed({'duration_s': 190.0, 'measured_lufs': -11.0, 'intro_cue_s': 0.0},
+                                         {'total_s': 900.0, 'voice_start_s': 0.2, 'voice_end_s': 893.0},
+                                         {'bed_lufs': -31, 'chapter_lufs': -22, 'intro_lufs': -16, 'outro_lufs': -18}, [(300.0, 303.0)])
+    checks.append(('a 15-minute cut under a 190 s track: no stretch longer than the track, the chapter card among the restarts',
+                   (all(b - a <= 190.0 for a, b in said['restart_windows']), any(abs(a - 299.0) < 1e-6 for a, _ in said['restart_windows']),
+                    graph.count('acrossfade=d=2'), len(said['restart_windows']) - 1), (True, True, 5, 5)))
     errors, _ = check(load(), strict=False)
     checks.append(('the committed ledger checks clean', errors, []))
     bad = [f'{label}: got {got!r}, want {want!r}' for label, got, want in checks if got != want]

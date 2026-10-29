@@ -163,7 +163,13 @@ class QualityTests(unittest.TestCase):
         self.assertEqual(points[140],-11)
         self.assertEqual(points[143.8],-20)
         self.assertEqual(points[139.5],-20)
-        with self.assertRaises(music.MusicError): music.continuous_episode_bed(track,tl,levels,[])
+        # With no chapter card the bed no longer fails: it starts the track again
+        # under the same crossfade, so the music never drops out (Krish,
+        # 2026-10-28: "Yes I think music should be audible throughout but just lower.").
+        graph,report = music.continuous_episode_bed(track,tl,levels,[])
+        self.assertEqual(report['restart_windows'],[(0.,151.),(149.,300.)])
+        self.assertIn('acrossfade=d=2',graph)
+        self.assertTrue(all(b-a<=track['duration_s'] for a,b in report['restart_windows']))
 
     def test_delivery_needs_exact_bytes_and_all_checks(self):
         with tempfile.TemporaryDirectory() as temp:
