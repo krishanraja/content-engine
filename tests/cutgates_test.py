@@ -2,7 +2,7 @@
 
 Floor never 3, Krish 19 Oct: "my words randomly chop out, making the video incomprehensible". Every stand-in is a
 few seconds of ffmpeg tones with caption boxes drawn in a caption zone; the aligner and the OCR are fixtures, so
-no model runs and no paid service is ever called (Scribe is mocked). These prove the gates fail as they should on
+no model runs and no paid service is ever called (there is none). These prove the gates fail as they should on
 each mutation and pass the intact cut; the calibration on the real cuts stays open (config/gate-calibration.json).
 """
 import io
@@ -20,7 +20,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
 sys.path.insert(1, str(ROOT / 'scripts/quick-edit'))
 sys.path.insert(2, str(ROOT / 'scripts/post-pack'))
-from cutgates import aligners, calibrate, captions, gaps, joins_reel, receipt, scribe, settings, synthetic  # noqa: E402
+from cutgates import aligners, calibrate, captions, gaps, joins_reel, receipt, settings, synthetic  # noqa: E402
 import board_materials  # noqa: E402
 import quality  # noqa: E402
 import words_gate  # noqa: E402
@@ -176,60 +176,29 @@ class TwoAlignerTests(Stand):
         self.assertEqual(checks['captions_clock']['drawn_by'], FW)
 
 
-class ScribeTests(unittest.TestCase):
-    ENV = {'MINDMAKE_SECOND_ALIGNER': 'scribe', 'ELEVENLABS_API_KEY': 'test-key-not-real'}
+class NoPaidAlignerTests(unittest.TestCase):
+    """Krish, 2026-10-29: "do not use eleven labs for this". The paid second aligner is gone, not merely off."""
 
-    def test_it_is_off_by_default_and_says_why(self):
-        off = settings.second_aligner({})
-        self.assertFalse(off['enabled'])
-        self.assertTrue(any('needs Krish' in r for r in off['reasons']))
+    def test_the_second_aligner_is_off_whatever_the_environment_says(self):
+        for env in ({}, {'MINDMAKE_SECOND_ALIGNER': 'scribe', 'ELEVENLABS_API_KEY': 'test-key-not-real'}):
+            off = settings.second_aligner(env)
+            self.assertFalse(off['enabled'])
+            self.assertTrue(any('do not use eleven labs' in r for r in off['reasons']))
         self.assertFalse(settings.load()['second_aligner']['enabled'])
-        with self.assertRaises(scribe.ScribeOff):
-            scribe.transcribe(__file__, environ=self.ENV, post=never)
+        self.assertFalse((ROOT / 'scripts' / 'cutgates' / 'scribe.py').exists())
 
-    def test_the_env_flag_alone_never_turns_it_on(self):
-        self.assertFalse(settings.second_aligner(self.ENV)['enabled'])
-
-    def test_with_scribe_off_the_gates_run_on_faster_whisper_alone_and_say_so(self):
+    def test_the_gates_run_on_faster_whisper_alone_and_say_so(self):
         heard = synthetic.words()
-        found = aligners.passes('unused.mp4', heard={FW: heard}, environ=self.ENV, post=never)
+        found = aligners.passes('unused.mp4', heard={FW: heard})
         self.assertEqual(list(found['aligners']), [FW])
         self.assertEqual(found['agreement'], 'single aligner')
-        self.assertFalse(found['second']['enabled'])
+        self.assertFalse(found['second']['ran'])
 
-    def test_when_allowed_the_client_sends_the_file_and_reads_word_timestamps(self):
-        cfg = dict(settings.load())
-        cfg['second_aligner'] = {**cfg['second_aligner'], 'enabled': True, 'approved_by_krish': 'Krish, test: yes'}
-        sent = {}
-
-        def post(url, body, headers):
-            sent.update(url=url, headers=headers, body=body)
-            return {'language_code': 'en', 'words': [
-                {'text': 'Disney', 'start': 0.41, 'end': 0.62, 'type': 'word'}, {'text': ' ', 'start': 0.62, 'end': 0.70, 'type': 'spacing'},
-                {'text': 'is', 'start': 0.70, 'end': 0.80, 'type': 'word'}]}
-
-        with tempfile.NamedTemporaryFile(suffix='.flac', delete=False) as f:
-            f.write(b'fLaC synthetic')
-        self.addCleanup(os.unlink, f.name)
-        with patch.object(settings, 'load', return_value=cfg):
-            got = scribe.transcribe(f.name, environ=self.ENV, post=post)
-        self.assertEqual(sent['url'], scribe.ENDPOINT)
-        self.assertEqual(sent['headers']['xi-api-key'], 'test-key-not-real')
-        self.assertIn(b'name="model_id"\r\n\r\nscribe_v1', sent['body'])
-        self.assertEqual(got['words'], [{'w': ' Disney', 's': 0.41, 'e': 0.62}, {'w': ' is', 's': 0.7, 'e': 0.8}])
-
-    def test_the_one_file_check_compares_word_timestamps_without_a_call(self):
-        a = synthetic.words()
-        b = [dict(w, s=round(w['s'] + 0.02, 3), e=round(w['e'] - 0.01, 3)) for w in a]
-        r = scribe.compare(a, b)
-        self.assertEqual(r['matched'], len(a))
-        self.assertEqual(r['start_ms']['median'], 20.0)
-        self.assertEqual(r['end_ms']['median'], 10.0)
-        out = io.StringIO()
-        with redirect_stdout(out):
-            code = scribe.main(['check', __file__], environ=self.ENV, post=never)
-        self.assertEqual(code, 2)
-        self.assertIn('not_allowed', out.getvalue())
+    def test_a_second_local_pass_handed_in_is_used_by_name(self):
+        heard = synthetic.words()
+        found = aligners.passes('unused.mp4', heard={FW: heard, 'faster-whisper-medium': heard})
+        self.assertEqual(list(found['aligners']), [FW, 'faster-whisper-medium'])
+        self.assertEqual(found['agreement'], '2 aligners')
 
 
 class ReceiptTests(Stand):

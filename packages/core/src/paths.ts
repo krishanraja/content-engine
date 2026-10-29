@@ -1,6 +1,7 @@
-import { existsSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { homedir } from 'node:os'
-import { join, resolve } from 'node:path'
+import { dirname, join, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 export interface StudioPaths {
   runtimeRoot: string
@@ -79,4 +80,68 @@ export function studioPaths(): StudioPaths {
 export function jobPath(jobId: string): string {
   if (!/^[a-z0-9][a-z0-9_-]{5,80}$/i.test(jobId)) throw new Error('invalid job id')
   return join(studioPaths().jobsRoot, jobId)
+}
+
+// One local layout (W2.11): config/studio.json local_roots names where the repositories, their worktrees and the
+// engine's runtime live on a home computer, with %NAME% for the computer's environment variables and {repo} and
+// {branch} filled in here. Every reader takes them from config; npm run check:local-paths refuses a hard-coded path.
+export interface LocalRoots { repos: string; worktrees: string; runtime: string; engineRuntime: string[] }
+
+const STUDIO_CONFIG = resolve(dirname(fileURLToPath(import.meta.url)), '../../..', 'config', 'studio.json')
+const SEGMENT = /^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$/
+
+/** %NAME% expanded from env; a name the computer does not set is an error, never a guess. */
+export function expandWindowsVars(value: string, env: NodeJS.ProcessEnv = process.env): string {
+  return value.replace(/%([A-Z_][A-Z0-9_]*)%/gi, (_, name: string) => {
+    const v = env[name] ?? env[name.toUpperCase()]
+    if (!v) throw new Error(`local_roots: %${name}% is not set on this computer`)
+    return v
+  })
+}
+
+export function readLocalRoots(config: unknown): LocalRoots {
+  const roots = (config as { local_roots?: Record<string, unknown> } | null)?.local_roots
+  const text = (k: string) => typeof roots?.[k] === 'string' && (roots[k] as string).trim() ? roots[k] as string : null
+  const repos = text('repos'), worktrees = text('worktrees'), runtime = text('runtime')
+  const engineRuntime = roots?.engine_runtime
+  if (!repos?.includes('{repo}') || !worktrees?.includes('{repo}') || !worktrees.includes('{branch}') || !runtime
+    || !Array.isArray(engineRuntime) || !engineRuntime.every(x => typeof x === 'string' && SEGMENT.test(x))) {
+    throw new Error('config/studio.json local_roots needs repos ({repo}), worktrees ({repo}, {branch}), runtime and engine_runtime')
+  }
+  return { repos, worktrees, runtime, engineRuntime: engineRuntime as string[] }
+}
+
+export function localRoots(configPath: string = STUDIO_CONFIG): LocalRoots {
+  return readLocalRoots(JSON.parse(readFileSync(configPath, 'utf8')))
+}
+
+const fill = (template: string, values: Record<string, string>, env: NodeJS.ProcessEnv) => {
+  for (const [k, v] of Object.entries(values)) {
+    if (!SEGMENT.test(v.replace(/\//g, '-'))) throw new Error(`local_roots: ${k} ${JSON.stringify(v)} is not a folder name`)
+  }
+  return expandWindowsVars(template.replace(/\{(repo|branch)\}/g, (_, k: string) => (values[k] ?? '').replace(/\//g, '-')), env)
+}
+
+/** Where a repository lives on a home computer, from config/studio.json local_roots. */
+export function repoPath(repo: string, roots: LocalRoots = localRoots(), env: NodeJS.ProcessEnv = process.env): string {
+  return fill(roots.repos, { repo }, env)
+}
+
+/** Where a worktree of a repository's branch lives (a branch's slashes become dashes). */
+export function worktreePath(repo: string, branch: string, roots: LocalRoots = localRoots(), env: NodeJS.ProcessEnv = process.env): string {
+  return fill(roots.worktrees, { repo, branch }, env)
+}
+
+/** The engine's own runtime root on a home computer. */
+export function engineRuntimeRoot(roots: LocalRoots = localRoots(), env: NodeJS.ProcessEnv = process.env): string {
+  return expandWindowsVars(roots.runtime, env)
+}
+
+/** The folders a pruner may empty: only engine-made runtime listed in local_roots.engine_runtime, under the runtime
+ *  root. Anything else asked for is refused by name, and nothing here deletes: a pruner deletes only after Krish's yes. */
+export function pruneTargets(asked: string[], roots: LocalRoots = localRoots(), env: NodeJS.ProcessEnv = process.env): { allowed: string[]; refused: string[] } {
+  const root = engineRuntimeRoot(roots, env)
+  const allowed: string[] = [], refused: string[] = []
+  for (const name of asked) (roots.engineRuntime.includes(name) ? allowed : refused).push(name)
+  return { allowed: allowed.map(name => `${root}\\${name}`), refused }
 }
