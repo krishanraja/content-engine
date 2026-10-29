@@ -6,7 +6,9 @@ Krish, 2026-10-29: "I hope you understand that I would much rather the engine kn
 me, rather than implement incredibly specific rules everywhere which came from feedback on one piece of content for one
 specific reason." So the bar holds a short floor of nevers (each with his words and the gate that already holds it),
 the aims (what great looks like, never a checklist) and what is under test (choices recorded per piece and judged on
-engagement). His exact words of 28 and 29 October are pinned below. Run by tests/engine-gates.test.ts.
+engagement). On 29 October he confirmed the floor, its eight nevers in his order (Krish picked: "Yes, that's the
+floor"). His exact words of 28 and 29 October, and the list he confirmed, are pinned below. Run by
+tests/engine-gates.test.ts.
 """
 import contextlib
 import io
@@ -63,8 +65,35 @@ ANSWERS = {
     10: ("I think my point was that pictures never add zero value above and beyond the words. They have to be additive "
          "in meaning. I'm all up for visually clear ideas."),
     11: "Only the big moment",
+    12: "Yes, that's the floor",
 }
-PICKED = (9, 11)  # options he picked, recorded as Krish picked: "<option>"
+PICKED = (9, 11, 12)  # options he picked, recorded as Krish picked: "<option>"
+# The floor he confirmed on 29 October, word for word and in his order: the list's words, then the question's own wording.
+LISTED = ('never names you or credits you as author',
+          'nothing made up; numbers credited to their producer',
+          'your words never cut, changed or out of sync',
+          'no AI notes, eyebrows, asterisks, take/read tags',
+          'nothing posted/sent/spent without your yes; never Full Time or Heartside channels',
+          'real logos and images with rights, never redrawn',
+          'one opening, one close',
+          'no em dashes, no preaching')
+ASKED = ('no content names you or credits you as author',
+         'nothing made up: every fact and number true and credited to whoever produced it',
+         'your words never cut, changed or out of sync',
+         'no filler labels: AI notes, eyebrow text, asterisks, "Krish\'s take" or "Krish\'s read" style tags',
+         'nothing posted, sent or spent without your yes, and never the Full Time or Heartside channels',
+         'real logos and images used with the rights, never redrawn',
+         'one opening and one close, never two intros or several outros',
+         'no em dashes, no preaching')
+NEVER_IDS = ['his_name', 'nothing_made_up', 'every_word_in_sync', 'empty_labels', 'nothing_goes_out_without_him',
+             'real_marks_with_rights', 'one_opening_one_close', 'no_em_dash_no_preaching']
+CONFIRMED_AIMS = ('Fri 23 + Mon 26 cuts, brand book, minimal random components, good motion, animation and visuals, simple, '
+                  'classy, on brand')
+CONFIRMED_UNDER_TEST = 'hook as intro, lead picture per piece, one sound on the big moment'
+# His words on one opening and one close, and the rejection floor's draft standards that hold the same never.
+INTRO = 'why are there two separate intro sequences? that should NEVER happen.'
+OUTRO = "we also don't need three separate outro transitions and screens. Ever."
+OPENING_DRAFTS = ('s9d6db813a0', 'sad5604ad3b', 'se67ed0142d')
 # His four answers on the no-name ruling (29 October), each the option he picked.
 NAME_PICKS = ('Krish picked: "We"', 'Krish picked: "No, personal stays personal"', 'Krish picked: "Drop it"',
               'Krish picked: "Yes, block it"')
@@ -75,9 +104,8 @@ UNDER_TEST = '## Under test: the current defaults'
 DROPPED = ('one visual idea per piece', 'one big impact', 'at most one loud transition', 'a sting opens every piece')
 FULL = ('short_video', 'long_video')
 POINTER = ('motion', 'captions', 'card', 'intro_outro', 'audio')
-DRAFT_LINE = ("Each never cites his words or the rule it rests on, and the rulings are his words. The aims are the engine's "
-              "reading of the cuts he named, and he has not approved their wording except where it quotes him. Aim at them; "
-              "only he approves them.")
+DRAFT_LINE = ("The floor is his, confirmed on 29 October (ruling 12). The aims are the engine's reading of the cuts he named; "
+              "he has not approved their wording except where it quotes him. Aim at them; only he approves them.")
 
 
 def run(*args):
@@ -176,24 +204,56 @@ class TheBar(unittest.TestCase):
         self.assertIn('No check refuses on an aim.', part(AIMS))
         self.assertNotIn('**How it is checked.**', PAGE)
 
-    def test_the_floor_is_a_short_list_of_nevers_each_with_his_words_and_a_gate_that_already_holds_it(self):
+    def test_the_floor_is_his_eight_nevers_in_his_order_each_with_his_words_and_a_gate_that_already_holds_it(self):
         nevers = BAR['floor']['nevers']
-        self.assertEqual([n['id'] for n in nevers], ['his_name', 'empty_labels', 'truth_and_rights',
-                                                     'every_word_in_sync', 'nothing_goes_out_without_him'])
+        self.assertEqual([n['id'] for n in nevers], NEVER_IDS)
+        # Word for word, in his order: the list he confirmed, and the question's own wording of each.
+        self.assertEqual(tuple(n['listed'] for n in nevers), LISTED)
+        self.assertEqual(tuple(n['asked'] for n in nevers), ASKED)
         section = part(FLOOR)
         numbered = [line for line in section.splitlines() if re.match(r'^\d+\. \*\*', line)]
-        self.assertEqual(len(numbered), len(nevers))
-        for never in nevers:
+        self.assertEqual(len(numbered), 8)
+        for i, (line, listed, asked) in enumerate(zip(numbered, LISTED, ASKED), 1):
+            self.assertTrue(line.startswith(f'{i}. **{listed}.**'), line[:80])
+            if asked != listed:
+                self.assertIn(f'Asked as: {asked}', line, i)
+        # His confirmation: the question as it was put, and the option he picked.
+        self.assertEqual(BAR['floor']['ruling'], 12)
+        self.assertIn('"Is this the floor: the short list of clear nevers that are the only things the engine may '
+                      'hard-block?"', section)
+        self.assertIn('Krish picked: "Yes, that\'s the floor" (ruling 12)', section)
+        for never, line in zip(nevers, numbered):
             self.assertTrue(never['held_by'].strip(), never['id'])
             for words in never.get('words', []):
-                self.assertIn(f'"{words}"', section, never['id'])
+                self.assertIn(f'"{words["said"]}"', line, never['id'])
+                self.assertTrue(words.get('on') or words.get('where'), never['id'])
+        # Where no gate holds a never yet, it says so plainly and invents none: one opening, one close.
+        held = {n['id'] for n in nevers if n['held_by'].startswith('held at review')}
+        self.assertEqual(held, {'one_opening_one_close'})
+        self.assertIn('Held at review: no gate holds it yet.', numbered[6])
+        self.assertIn('the separate reviewer who watches and listens to the finished asset checks it', section)
+        self.assertEqual([w['said'] for w in nevers[6]['words']], [INTRO, OUTRO])
+        self.assertIn(f'(Krish, 21 Oct: "{INTRO}")', numbered[6])
+        self.assertIn(f'(Krish, 28 Oct: "{OUTRO}")', numbered[6])
+        # The rejection floor's draft standards for one opening and one close match never 7 and wait on the
+        # Rejections route for his approval; this work never edits that file.
+        rejection = floor.load()
+        self.assertEqual(tuple(nevers[6]['rejection_floor_drafts']), OPENING_DRAFTS)
+        for ref in OPENING_DRAFTS:
+            self.assertEqual(rejection['standards'][ref]['standing'], 'draft', ref)
+            said = ' '.join(w['said'] for w in rejection['standards'][ref]['his_words'])
+            self.assertTrue(INTRO in said or OUTRO in said, ref)
+            self.assertIn(f'`{ref}`', numbered[6])
+            self.assertIn(ref, ruling_line(12))
+        self.assertIn('now match this never and wait on the Rejections route to record his approval', numbered[6])
+        # His name: his words and his four answers.
         name = nevers[0]
-        self.assertEqual(name['words'], [NAME])
-        self.assertIn(f'(Krish, 28 Oct: "{NAME}")', section)
+        self.assertEqual([w['said'] for w in name['words']], [NAME])
+        self.assertIn(f'(Krish, 28 Oct: "{NAME}")', numbered[0])
         self.assertEqual(len(name['picked']), 4)
         for pick, said in zip(name['picked'], NAME_PICKS):
             self.assertIn(said, pick)
-            self.assertIn(said, section)
+            self.assertIn(said, numbered[0])
         self.assertIn('no_name', name['held_by'])
         self.assertIn('the article body', name['held_by'])
         # The gate it names is real: the copy lint holds a no_name pattern that reads the article body too.
@@ -201,24 +261,60 @@ class TheBar(unittest.TestCase):
         no_name = [p for p in lint['patterns'] if p.get('id') == 'no_name']
         self.assertEqual(len(no_name), 1)
         self.assertIn('article_body', no_name[0]['applies_to'])
+        # Every file the floor names as a gate or a source is in the repository (Growth's allowlist lives in its own).
+        named = re.findall(r'`([\w./-]+/[\w.-]*)`', section)
+        self.assertTrue(named)
+        for path in named:
+            if path in ('engine/buffer_channels.py', 'krishanraja/growth-makeyourmindup'):
+                continue
+            self.assertTrue((ROOT / path).exists(), path)
+        self.assertIn('`engine/buffer_channels.py` in `krishanraja/growth-makeyourmindup`', numbered[4])
+        kill_list = json.loads((ROOT / 'vendor/makeyourmindup/kill-list/kill-list.v1.json').read_text(encoding='utf-8'))
+        self.assertLessEqual({'em_dash', 'preach_pattern'}, {v['id'] for v in kill_list['vetoes']})
         # The labels never is ruling 2, held by the copy lint's existing patterns; nothing else is added.
-        self.assertEqual(nevers[1]['ruling'], 2)
-        self.assertIn("a label that tags something as Krish's (his read, his take, his test)", section)
+        self.assertEqual(nevers[3]['ruling'], 2)
+        self.assertIn("a label that tags something as Krish's (his read, his take, his test)", numbered[3])
         self.assertIn('No other refusal, gate, lint pattern or required field is added from feedback on one piece.',
                       section)
         # The floor is what this bar adds; existing gates and approved rejection-floor standards keep refusing.
         self.assertIn("These are the only refusals this bar adds; existing gates and the rejection floor's approved "
                       'standards refuse as they do.', PAGE)
         self.assertNotIn('Only these may be refused', PAGE)
-        # Never 5 cites his words for his press, and Growth's plan for the other ventures' channels, never his words.
-        last = next(line for line in section.splitlines() if line.startswith('5. **'))
-        self.assertIn('without his press (Krish, 28 Oct: "Approve each day Monday").', last)
-        self.assertIn("rests on Growth's plan of 28 October, W5", last)
+        # Never 5 cites his words for his press, and Growth's plan for the other ventures' channels, which he confirmed.
+        self.assertIn('without his press (Krish, 28 Oct: "Approve each day Monday")', numbered[4])
+        self.assertIn("The channels part first came from Growth's plan of 28 October, W5; his confirmation makes it his.",
+                      numbered[4])
+        self.assertIn('any other spend is held at review', numbered[4])
+        # Earlier words, verbatim from the rules they rest on.
+        self.assertIn('("Truth, rights, confidentiality, meaning preservation and canonical naming are hard gates.")',
+                      numbered[1])
+        self.assertIn('("No load-bearing number without a named producer. The producer is whoever made the number, never '
+                      'the outlet that repeated it.")', numbered[1])
+        self.assertIn('"No em dashes anywhere, including code, on-screen text and commit messages."', numbered[7])
+        self.assertIn('"No preaching. No closing moral,', numbered[7])
         text = printed()
         floor_part = text[text.index('Floor: '): text.index('Aims: ')]
-        for never in nevers:
-            self.assertIn(f'- {never["title"]}.', floor_part)
+        self.assertIn('Krish confirmed these, in his order, on 2026-10-29: Krish picked: "Yes, that\'s the floor".',
+                      floor_part)
+        marks = [flat(floor_part).index(f'- {i}. {listed}.') for i, listed in enumerate(LISTED, 1)]
+        self.assertEqual(marks, sorted(marks))
         self.assertIn(flat(f'"{NAME}"'), flat(floor_part))
+        self.assertIn('Held at review: no gate holds it yet.', flat(floor_part))
+
+    def test_the_aims_and_under_test_agree_with_the_list_he_confirmed(self):
+        twelve = items_by_n(12)
+        self.assertEqual((twelve['listed_aims'], twelve['listed_under_test']), (CONFIRMED_AIMS, CONFIRMED_UNDER_TEST))
+        self.assertIn(f'"{CONFIRMED_AIMS}"', part(AIMS))
+        self.assertIn(f'"{CONFIRMED_UNDER_TEST}"', part(UNDER_TEST))
+        # The aims it lists are the ones the page aims at: the two cuts, the brand book and his general words.
+        for aim in ('minimal random components and labels', 'good motion design', 'good animation', 'good visuals',
+                    'Keep it simple but keep it classy and on brand', "I'd stick to the brand book for now."):
+            self.assertIn(aim, part(AIMS))
+        self.assertIn('Friday 23 October', part(AIMS))
+        self.assertIn('Monday 26 October', part(AIMS))
+        # The three it lists under test are the three choices recorded per piece, in its order.
+        self.assertEqual([c['id'] for c in BAR['under_test']['choices']], ['opening', 'lead_picture', 'big_moment_sound'])
+        self.assertEqual(BAR['under_test']['choices'][0]['default'], 'hook_is_intro')
 
     def test_the_bar_is_a_draft_reading_until_he_approves_it(self):
         self.assertEqual(BAR['standing'], 'draft')
@@ -261,7 +357,7 @@ class TheBar(unittest.TestCase):
             self.assertEqual(bool(items[n].get('picked')), n in PICKED, n)
         self.assertEqual([n for n, item in items.items() if item['status'] == 'open'], [])
         self.assertEqual({n for n, item in items.items() if item['status'] == 'answered'}, {5, 7})
-        for n in (8, 9, 10, 11):
+        for n in (8, 9, 10, 11, 12):
             self.assertEqual(items[n]['on'], '2026-10-29', n)
         # Each ruling that bites prints in its layer, with his words verbatim: the aims, then what is under test.
         text = flat(printed())
@@ -277,6 +373,10 @@ class TheBar(unittest.TestCase):
             self.assertIn(said, under_test, n)
             self.assertNotIn(said, aims, n)
         self.assertEqual(items[2]['layer'], 'floor')
+        # His confirmation of the floor is a floor ruling, printed with the floor, never as an aim.
+        self.assertEqual((items[12]['status'], items[12]['layer']), ('ruled', 'floor'))
+        self.assertNotIn('The floor (2026-10-29)', aims)
+        self.assertIn('Krish picked: "Yes, that\'s the floor"', text[text.index('Floor: '): text.index('Aims: ')])
         for n in (4, 7):
             self.assertNotIn('production', items[n])
         # Not sure is an answer, not a ruling: it confirms the bytes, never his approval of them.
@@ -389,7 +489,7 @@ class TheBar(unittest.TestCase):
         self.assertIn('whether it uses mono labels that name something', PAGE)
         # The floor's never is as narrow as his words and the lint that holds it: no source label reads as a
         # provenance note, a label that names something passes, and one that adds nothing is caught.
-        never = BAR['floor']['nevers'][1]['never']
+        never = next(n for n in BAR['floor']['nevers'] if n['id'] == 'empty_labels')['never']
         self.assertIsNone(re.search(r'(?<!AI-)provenance', never + part(FLOOR) + ruling_line(2)))
         self.assertIn('A label naming a source, date, record or what is on screen is an aim (quality 7).', never)
         sys.path.insert(0, str(ROOT / 'scripts' / 'post-pack'))
@@ -644,7 +744,13 @@ class TheBar(unittest.TestCase):
             drifted['general']['words'] = GENERAL.replace('good animation', 'great animation')
             drifted['rulings']['items'][0]['answer'] = ANSWERS[1].replace('lower', 'quieter')
             drifted['rulings']['items'][4]['status'] = 'open'
-            drifted['floor']['nevers'][0]['words'] = [NAME.replace('ever.', 'at all.')]
+            drifted['floor']['nevers'][0]['words'] = [{'on': '2026-10-28', 'said': NAME.replace('ever.', 'at all.')}]
+            # His floor, out of his order or reworded in the file only.
+            drifted['floor']['nevers'][1], drifted['floor']['nevers'][2] = (drifted['floor']['nevers'][2],
+                                                                            drifted['floor']['nevers'][1])
+            drifted['floor']['nevers'][7]['listed'] = 'no em dashes'
+            layered_twelve = next(item for item in drifted['rulings']['items'] if item['n'] == 12)
+            layered_twelve['listed_aims'] = CONFIRMED_AIMS.replace('simple, ', '')
             layered = {item['n']: item for item in drifted['rulings']['items']}
             layered[8]['layer'] = 'floor'
             layered[10]['layer'] = 'aspiration'
@@ -663,6 +769,10 @@ class TheBar(unittest.TestCase):
                           'disagree', text)
             # The page marks the floor's words as his: changed in the file, they no longer are.
             self.assertIn("marks words as his that are not his exact words: 'Remember, no content refers", text)
+            # The floor he confirmed: its order and its listed words agree, and the aims carry the list's line.
+            self.assertIn('the floor on docs/production/THE_BAR.md and in the references disagree', text)
+            self.assertIn("'8. no em dashes.'", text)
+            self.assertIn("ruling 12: the list's line he confirmed is not under '## The aims: what great looks like'", text)
             # Each ruling's layer agrees with where it bites.
             self.assertIn('ruling 8: its layer is floor, but no never of the floor cites it', text)
             self.assertIn('ruling 8: cited by the choices under test, so its layer is under_test, not floor', text)

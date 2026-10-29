@@ -1833,7 +1833,7 @@
       "encoded": [
         {
           "file": "docs/production/THE_BAR.md",
-          "contains": "**His name in public content.**",
+          "contains": "1. **never names you or credits you as author.**",
           "how": "The first never on the bar's floor, with his words and his four answers"
         },
         {
