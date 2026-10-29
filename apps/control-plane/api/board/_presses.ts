@@ -25,6 +25,8 @@ import type { Making } from '../_making.js'
 //     words to Teleprompter in the piece's folder with his press as the approval, records a send that read back, and
 //     writes the answer into the same document as send. A Skip after an Approve takes the piece off its day unless it is
 //     recorded; nothing in Teleprompter is touched.
+//   - Scores (picks/score-<piece>, on a day tab or in the Archive): one piece_scores row, his narrative and production
+//     marks out of 10, at publish or in hindsight, and his note; history kept, a save again files nothing twice.
 //   - Reject asset (picks/<day>-reject-<asset>): one row in the rejection inbox (taste_rejection_inbox), his reason as
 //     he typed it, where and when, the piece, the formats and the asset's Drive id and moment when the board knows
 //     them. Masters are never copied anywhere: a Drive id is a pointer.
@@ -138,6 +140,27 @@ async function recordSend(db: SupabaseClient, input: SendApprovedInput, result: 
   }
   return 'the piece changed twice while the send was being recorded'
 }
+
+/** The piece_scores row for his Scores press (supabase/migrations/20261118090000_piece_scores.sql). The board's
+ *  access-cookie actor is Krish, so his press is scored_by krish; only his writes reach here (hisOnlyRefusal). */
+export function scoreRow(week: string, id: string, body: Body, now: string) {
+  const note = typeof body.note === 'string' && body.note.trim() ? body.note : null
+  return {
+    piece_id: String(body.piece_id),
+    narrative: Number(body.narrative),
+    production: Number(body.production),
+    basis: String(body.basis),
+    scored_by: 'krish',
+    note,
+    scored_at: now,
+    said_where: `publish board, ${week} picks/${id}`,
+    // The same marks and note saved again file nothing twice; a changed score is a new row (history kept).
+    client_report_id: digest(canonical({ week, collection: 'picks', id, narrative: body.narrative, production: body.production, basis: body.basis, note })),
+  }
+}
+// The table is made by the Wave 2 migration batch, applied after Krish's yes. Until then a Scores press is kept as his
+// board document and the answer says the score waits on the migration, so nothing is lost and nothing crashes.
+const MISSING_TABLE = new Set(['42P01', 'PGRST205'])
 
 /** The rejection inbox row for a Reject asset press with his reason, or null when it has none. */
 function inboxRow(week: string, id: string, revision: number | undefined, body: Body, now: string) {
@@ -287,6 +310,15 @@ export async function afterPress(db: SupabaseClient, ctx: { week: string; collec
       return { ...saved, inbox: filed.error ? 'failed' : 'filed' }
     } catch {
       return { ...saved, inbox: 'failed' }
+    }
+  }
+  if (collection === 'picks' && body.kind === 'scores') {
+    try {
+      const filed = await db.from('piece_scores').upsert(scoreRow(week, id, body, now), { onConflict: 'client_report_id', ignoreDuplicates: true })
+      const code = String((filed.error as { code?: string } | null)?.code || '')
+      return { ...saved, scores: !filed.error ? 'filed' : MISSING_TABLE.has(code) ? 'waits_on_migration' : 'failed' }
+    } catch {
+      return { ...saved, scores: 'failed' }
     }
   }
   if (isRecordedOffday(collection, body)) return offdayRecorded(db, { week, id, body, who, saved }, now, deps)

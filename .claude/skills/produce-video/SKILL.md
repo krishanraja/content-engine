@@ -303,8 +303,15 @@ The home computers do this by themselves: at the end of every five-minute
 pass, the recordings upload (`scripts/recordings-upload.ps1`, on both
 machines) runs `recording_match.py --record --board --by "Recordings lane"`
 whenever the engine holds a take that no piece claims and that it has not
-already asked about. So by the time Krish says he has dropped the takes,
-they are often already on their piece. Look first, then match what is left:
+already asked about. GitHub's machine places them too, when the engine's
+Inbox job dispatches `.github/workflows/place-takes.yml` (`--record --board
+--clock`: each placed take with its word clock, `.cache/recordings/<sha256>.words.json`
+in that run's `place-takes` artifact; `scripts/post-pack/README.md`). The home
+computers stay the fallback until one real take has gone end to end through
+that job. A placed take belongs in the Inbox's `used/` folder and a duplicate
+is reported and kept; nothing moves it or deletes it. So by the time Krish
+says he has dropped the takes, they are often already on their piece. Look
+first, then match what is left:
 
 ```
 python scripts/post-pack/making.py PIECE_ID show              # Recorded, with a note for a cut still to record
