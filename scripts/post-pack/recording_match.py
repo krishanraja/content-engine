@@ -13,6 +13,10 @@ without me having to give the exact filename)".
     python scripts/post-pack/recording_match.py --record --board --by "Recordings lane" --json
                                                                   ... and ask Krish about each unsure take on the
                                                                   board, once (what the runners run each pass)
+    python scripts/post-pack/recording_match.py --record --board --clock --by "Place takes" --json
+                                                                  ... and build each placed take's word clock
+                                                                  first (what .github/workflows/place-takes.yml
+                                                                  runs, on GitHub's machine)
     python scripts/post-pack/recording_match.py --inbox           read the Inbox on this machine (H:) instead of
                                                                   the engine's copies; --inbox PATH names it
     python scripts/post-pack/recording_match.py --week 2026-10-12 start from that week (default: this one)
@@ -119,11 +123,34 @@ changed after it was recorded no longer counts there, and is asked about the
 same way ("use it", or record it again); `making.py scripts` asks the same
 question itself when it finds the words changed.
 
+--clock builds the word clock of each take about to be placed, before it is
+recorded: the whole take heard by faster-whisper small.en with word times,
+named from its script (make.transcribe, the way quick-edit hears a take),
+stamped with the take's provenance (quality.transcript_identity) and kept
+as .cache/recordings/<sha256>.words.json, in quick-edit's words.json shape,
+so a cut made from it can name it as its words. A clock that cannot be
+built is that take's failure (exit 1), and the take is not recorded, so the
+next run tries it again. A clock already there with the same provenance is
+used as it is.
+
+The Inbox's used/ convention. A take placed on its piece belongs in the
+Inbox's used/ folder, and the report says so (report "inbox" "used", and a
+"belongs in used/" line), keeping .cache/recordings/inbox-used.json, the
+book of takes recorded as moved. A duplicate (the same sha256 under a second
+name, or the same take again: the same words heard and the same length as a
+placed take) is reported (report "inbox" "duplicates", and a "duplicate,
+kept" line), never placed, never asked about and never deleted. Nothing is
+moved in Drive: the engine reads the Inbox with a read-only key (docs/
+DRIVE.md), so the move itself is Krish's, by hand, until he gives a route
+the right to write there. The upload lane never reads a subfolder, so a take
+in used/ is never sent or heard again.
+
 It never sends, posts, spends, moves or deletes anything, and never writes
 to the Inbox.
 """
 import argparse
 import hashlib
+import importlib.metadata
 import json
 import os
 import re
@@ -168,6 +195,12 @@ MIN_HEAD_WORDS = 12
 PACK_NAMES = {'long': 'video-script.md', 'short': 'video-script-90-seconds.md', 'feature': 'video-script-feature.md'}  # plan_files.USUAL
 SHA = re.compile(r'[0-9a-f]{64}')
 ANSWERED = 'answered.json'   # .cache/recordings/answered.json: the takes already asked about, or left alone
+USED = 'inbox-used.json'     # .cache/recordings/inbox-used.json: the takes that belong in the Inbox's used/ folder
+USED_FOLDER = 'used'         # the Inbox's subfolder for placed takes; the upload lane never reads a subfolder
+SAME_TAKE = 0.97             # a take heard the same as a placed one, word for word in order ...
+SAME_LENGTH = 1.0            # ... and as long, within a second, is the same take again
+NOT_MOVED = ('nothing in the Inbox was moved or deleted: the engine reads it with a read-only key, so a take that belongs '
+             'in used/ is moved there by hand')
 BOARD_PATH = '/api/workbench'
 BOARD_CLIENTS = {'codex': 'codex', 'claude code': 'claude_code'}  # anything else writes as the runner
 BEFORE_CHANGE = 'recorded before the script last changed'
@@ -609,8 +642,9 @@ def engine_recordings(listing):
         name = r.get('name')
         if not SHA.fullmatch(sha) or not recording.safe_name(name):
             continue
-        items.append({'name': name, 'sha256': sha, 'bytes': int(r.get('bytes') or 0), 'at': r.get('uploaded_at') or '',
-                      'source': 'engine', 'download': (r.get('download') or {}).get('url')})
+        names = [n for n in (r.get('names') or []) if isinstance(n, str) and recording.safe_name(n)] or [name]
+        items.append({'name': name, 'names': names if name in names else [name] + names, 'sha256': sha, 'bytes': int(r.get('bytes') or 0),
+                      'at': r.get('uploaded_at') or '', 'source': 'engine', 'download': (r.get('download') or {}).get('url')})
     return items
 
 
@@ -979,6 +1013,179 @@ def settle(answers):
     return answers
 
 
+# ------------------------------------------------------------- duplicates and used/
+
+def _starts(said):
+    return [w.get('s') for w in said if isinstance(w, dict)]
+
+
+def same_take(a_said, a_seconds, b_said, b_seconds):
+    """Whether two takes are the same recording again (a copy, a re-export),
+    never two reads of one script: the same words heard in the same order,
+    the same length within a second, and, where the words carry their times,
+    each word at the same moment (one offset for all, as a re-export may
+    start a little later). Two reads of one script never keep every word's
+    time; without times, only the very same words and length count."""
+    if not all(isinstance(x, (int, float)) for x in (a_seconds, b_seconds)) or abs(a_seconds - b_seconds) > SAME_LENGTH:
+        return False
+    a_words = words(' '.join(str(w.get('w', '')) for w in a_said))
+    b_words = words(' '.join(str(w.get('w', '')) for w in b_said))
+    if len(a_words) < MIN_HEAD_WORDS or ordered_similarity(a_words, b_words) < SAME_TAKE:
+        return False
+    a_at, b_at = _starts(a_said), _starts(b_said)
+    timed = bool(a_at) and len(a_at) == len(b_at) and all(isinstance(t, (int, float)) for t in a_at + b_at)
+    if not timed:
+        return a_words == b_words and abs(a_seconds - b_seconds) <= 0.1
+    gaps = sorted(b - a for a, b in zip(a_at, b_at))
+    offset = gaps[len(gaps) // 2]
+    return sum(1 for g in gaps if abs(g - offset) <= 0.08) >= 0.9 * len(gaps)
+
+
+def cached_head(sha, cache):
+    """(words, seconds) heard from a take before, from its cached opening, or None."""
+    try:
+        kept = json.loads((Path(cache) / f'{sha}.head.words.json').read_text(encoding='utf-8'))
+    except (OSError, ValueError):
+        return None
+    if isinstance(kept, dict) and isinstance(kept.get('words'), list):
+        return kept['words'], kept.get('recording_seconds')
+    return None
+
+
+def mark_duplicates(answers, heard, claimed, cache):
+    """A take heard the same as a take placed now or already on a piece's
+    record (same_take) is a duplicate: reported and kept, never placed,
+    never asked about. Only takes that are not being placed are looked at,
+    so a new take is never mistaken for a copy of itself."""
+    placed = [(a['sha256'], a['name'], heard[a['sha256']]) for a in answers if a['status'] == 'placed' and a.get('sha256') in heard]
+    for sha in sorted(claimed):
+        kept = cached_head(sha, cache)
+        if kept:
+            placed.append((sha, f'recordings/{sha}', kept))
+    for answer in answers:
+        sha = answer.get('sha256')
+        if answer['status'] not in ('older take', 'unsure') or answer.get('source') == 'record' or sha not in heard:
+            continue
+        said, seconds = heard[sha]
+        for other_sha, other_name, (other_said, other_seconds) in placed:
+            if other_sha != sha and same_take(said, seconds, other_said, other_seconds):
+                answer.update(status='duplicate', duplicate_of=other_sha,
+                              reason=f'the same take as "{other_name}" (the same words at the same moments, and as long); kept, never deleted')
+                break
+    return answers
+
+
+def inbox_report(listed, claimed, answers, recorded):
+    """What the Inbox's used/ convention says of this run: the takes that
+    belong in used/ (each placed on its piece now; read on this machine, a
+    file already on a piece's record too), and the duplicates, each kept:
+    the same take again (mark_duplicates), or the same bytes under a second
+    name (the engine keeps every name a take was copied under; on this
+    machine, a second file). Nothing is moved and nothing is deleted."""
+    by_sha = {}
+    for item in sorted(listed, key=lambda i: i['at']):
+        if item.get('sha256'):
+            by_sha.setdefault(item['sha256'], []).append(item)
+    used, dupes = [], []
+    for answer in answers:
+        if answer['status'] == 'placed' and (answer['piece_id'], answer['cut']) in recorded:
+            used.append({'sha256': answer['sha256'], 'name': answer['name'], 'piece_id': answer['piece_id'], 'cut': answer['cut'], 'path': answer['path']})
+        elif answer['status'] == 'duplicate':
+            dupes.append({'sha256': answer['sha256'], 'name': answer['name'], 'of': answer['duplicate_of'], 'why': 'same take', 'kept': True})
+    for sha, items in by_sha.items():
+        if sha in claimed and items[0]['source'] == 'inbox' and all(u['sha256'] != sha for u in used):
+            used.append({'sha256': sha, 'name': items[0]['name'], 'piece_id': None, 'cut': None, 'path': None, 'on_record': True})
+    for entry in used:
+        names = []
+        for item in by_sha.get(entry['sha256'], []):
+            for n in item.get('names') or [item['name']]:
+                if n not in names:
+                    names.append(n)
+        for n in names:
+            if n != entry['name']:
+                dupes.append({'sha256': entry['sha256'], 'name': n, 'of': entry['sha256'], 'why': 'same bytes', 'kept': True})
+    return {'used_folder': USED_FOLDER, 'used': used, 'duplicates': dupes, 'moved': False, 'deleted': False, 'why_not_moved': NOT_MOVED}
+
+
+def book_used(cache, inbox, stamp):
+    """Keeps .cache/recordings/inbox-used.json: each take that belongs in
+    used/, recorded as moved there (it is not moved: NOT_MOVED)."""
+    if not inbox['used']:
+        return
+    path = Path(cache) / USED
+    try:
+        book = json.loads(path.read_text(encoding='utf-8'))
+        book = book if isinstance(book, dict) else {}
+    except (OSError, ValueError):
+        book = {}
+    before = json.dumps(book, sort_keys=True)
+    for entry in inbox['used']:
+        held = book.get(entry['sha256']) if isinstance(book.get(entry['sha256']), dict) else {}
+        book[entry['sha256']] = {'names': sorted(set(held.get('names') or []) | {entry['name']}),
+                                 'piece_id': entry['piece_id'] or held.get('piece_id'), 'cut': entry['cut'] or held.get('cut'),
+                                 'to': f'{USED_FOLDER}/', 'moved': False, 'at': held.get('at') or stamp}
+    if json.dumps(book, sort_keys=True) != before:
+        try:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            partial = path.with_suffix('.json.part')
+            partial.write_text(json.dumps(book, indent=1, sort_keys=True), encoding='utf-8')
+            os.replace(partial, path)
+        except OSError:
+            pass
+
+
+# ------------------------------------------------------------- the word clock
+
+def word_clock(src, out, prompt=''):
+    """The whole take's word clock, as quick-edit hears a take (make.transcribe:
+    faster-whisper small.en, word times, the script's names as the hint),
+    stamped with its provenance so make.py takes it as the take's words
+    (quality.checked_words). One already there with the same provenance is
+    used as it is. Returns {'words': n, 'duration': seconds, 'reused': bool}."""
+    import make  # noqa: E402  quick-edit, imported only when a clock is built
+    import quality  # noqa: E402
+    try:
+        identity = quality.transcript_identity(src, 1, MODEL)
+    except importlib.metadata.PackageNotFoundError:
+        raise MatchError(f'faster-whisper is not installed here, so the word clock cannot be built: {TRANSCRIBER_FIX}') from None
+    out = Path(out)
+    try:
+        held = json.loads(out.read_text(encoding='utf-8'))
+        return {'words': len(quality.checked_words(held, identity)), 'duration': held.get('duration'), 'reused': True}
+    except (OSError, ValueError, AttributeError, KeyError, TypeError):
+        pass
+    said = make.transcribe(src, out, MODEL, prompt, identity)
+    held = json.loads(out.read_text(encoding='utf-8'))
+    return {'words': len(said), 'duration': held.get('duration'), 'reused': False}
+
+
+def clock_prompt(text):
+    """The script's names as the transcriber's hint (make.script_prompt reads a file)."""
+    if not text:
+        return ''
+    import make  # noqa: E402
+    with tempfile.TemporaryDirectory() as tmp:
+        script = Path(tmp) / 'script.md'
+        script.write_text(text, encoding='utf-8')
+        return make.script_prompt(script)
+
+
+def build_clock(answer, item, get_file, cache, scripts, make_clock):
+    """One placed take's word clock, by make_clock(src, out, prompt), kept as
+    .cache/recordings/<sha256>.words.json. Returns the report entry, or
+    raises MatchError."""
+    out = Path(cache) / f'{answer["sha256"]}.words.json'
+    text = ((scripts.get(answer['piece_id']) or {}).get(answer['cut']) or {}).get('text') or ''
+    try:
+        built = make_clock(get_file(item, cache), out, clock_prompt(text))
+    except MatchError:
+        raise
+    except Exception as error:  # noqa: BLE001 one clock that cannot be built is that take's failure
+        raise MatchError(f'its word clock could not be built ({type(error).__name__}: {str(error)[:200]}); {TRANSCRIBER_FIX}') from None
+    return {'sha256': answer['sha256'], 'name': answer['name'], 'piece_id': answer['piece_id'], 'cut': answer['cut'],
+            'words_file': str(out), 'words': built.get('words'), 'duration': built.get('duration'), 'reused': bool(built.get('reused'))}
+
+
 # ------------------------------------------------------------- the run
 
 def plain(answer, pieces):
@@ -1003,6 +1210,8 @@ def plain(answer, pieces):
         return f'left alone: "{name}" {answer.get("reason") or "arrived before any piece waiting for a recording began"}.'
     if answer['status'] == 'failed':
         return f'failed: "{name}": {answer["reason"]}.'
+    if answer['status'] == 'duplicate':
+        return f'duplicate, kept: "{name}" is {answer["reason"]}.'
     if answer.get('older_script'):
         return f'unsure: "{name}": {answer["reason"]}. Ask Krish whether to use it or record it again.'
     return f'unsure: "{name}": {answer["reason"]}. Ask Krish which piece and cut it is.'
@@ -1196,7 +1405,7 @@ def ask_on_board(answers, pieces, call, by, cache, out, now=None):
 
 
 def run(opts, call, list_items, get_file=local_copy, transcribe=transcribe_head, probe=probe_seconds,
-        out=print, cache=CACHE, plans=PLANS, roots=None):
+        out=print, cache=CACHE, plans=PLANS, roots=None, clock_with=word_clock):
     """The whole run, with every outside thing passed in. Returns (exit code, report)."""
     monday = week_monday(opts.get('week'))
     by = making.who(opts.get('by'))
@@ -1205,8 +1414,9 @@ def run(opts, call, list_items, get_file=local_copy, transcribe=transcribe_head,
     named = {i['sha256']: i for i in listed if i.get('sha256')}
     items = fresh(listed, claimed)
     overrides = parse_overrides(opts.get('words'), [i for i in items if i.get('sha256')])
-    report = {'week_start': monday.isoformat(), 'waiting': [], 'files': [], 'recorded': [], 'asked': [], 'noted': []}
+    report = {'week_start': monday.isoformat(), 'waiting': [], 'files': [], 'recorded': [], 'asked': [], 'noted': [], 'clocks': []}
     scripts = {}
+    heard, item_of, fetched = {}, {}, []  # what each take said, each take by sha256, and the copies fetched only to hear
     for piece in pieces:
         scripts[piece['id']] = scripts_for(piece, plans, roots)
         report['waiting'].append({'id': piece['id'], 'day': day_of(piece.get('scheduled_for')), 'subject': subject_of(piece),
@@ -1257,19 +1467,18 @@ def run(opts, call, list_items, get_file=local_copy, transcribe=transcribe_head,
             answers.append({**base, 'status': 'failed', 'reason': str(error)})
             continue
         finally:
-            if opts.get('board'):
-                for copy in copies:
-                    if copy not in there and copy.exists():
-                        try:
-                            copy.unlink()
-                        except OSError:
-                            pass
+            # With --clock a placed take is heard again whole, so its copy is kept until the run ends.
+            fetched.extend(c for c in copies if c not in there)
+            if opts.get('board') and not opts.get('clock'):
+                _drop(fetched)
+        heard[item['sha256']], item_of[item['sha256']] = (said, seconds), item
         answer = older_words({**base, 'recorded_at': made, **decide(item, said, seconds, candidates, scripts)}, item, before, candidates)
         answer['path'] = f'recordings/{item["sha256"]}.{ext_of(item["name"])}'
         if item['source'] == 'inbox' and item['bytes'] > LANE_LIMIT:
             answer['big'] = True
         answers.append(answer)
     settle(answers)
+    mark_duplicates(answers, heard, claimed, cache)
     # A take already on the record, of words that changed after it, unless a new take of that cut is placed now.
     placing = {(a['piece_id'], a['cut']) for a in answers if a['status'] == 'placed'}
     for piece in pieces:
@@ -1284,12 +1493,25 @@ def run(opts, call, list_items, get_file=local_copy, transcribe=transcribe_head,
                                                            f'was recorded, so it no longer counts'})
     for answer in answers:
         out(plain(answer, pieces))
-        report['files'].append({k: v for k, v in answer.items() if k != 'scores'} | {'scores': answer.get('scores', {})})
     by_id = {p['id']: p for p in pieces}
     order = {p['id']: n for n, p in enumerate(pieces)}
     # Written piece by piece, the nearest first, the long cut before the short.
     placed = sorted((a for a in answers if a['status'] == 'placed'), key=lambda a: (order[a['piece_id']], ALL_CUTS.index(a['cut'])))
+    recorded = set()
     for answer in placed:
+        if opts.get('clock'):
+            # The word clock first: a take whose clock cannot be built is not recorded, so the next run tries it again.
+            try:
+                built = build_clock(answer, item_of[answer["sha256"]], get_file, cache, scripts, clock_with)
+            except MatchError as error:
+                answer['status'] = 'failed'
+                answer['reason'] = f'it was not recorded: {error}'
+                out(f'failed: "{answer["name"]}" was not recorded on {label(by_id[answer["piece_id"]])}: {error}')
+                continue
+            report['clocks'].append(built)
+            out(f'word clock: "{answer["name"]}", {built["words"]} words'
+                + (f' over {clock(built["duration"])}' if isinstance(built.get('duration'), (int, float)) else '')
+                + f', in {built["words_file"]}' + (' (already built)' if built['reused'] else ''))
         if opts.get('record'):
             piece = by_id[answer['piece_id']]
             # Stamped with the script it was taken from: the piece's current words for that cut.
@@ -1301,14 +1523,30 @@ def run(opts, call, list_items, get_file=local_copy, transcribe=transcribe_head,
                 answer['reason'] = f'it was not recorded: {error}'
                 out(f'failed: "{answer["name"]}" was not recorded on {label(piece)}: {error}')
                 continue
+            recorded.add((answer['piece_id'], answer['cut']))
             report['recorded'].append({'piece_id': answer['piece_id'], 'cut': answer['cut'], 'path': answer['path'], 'by': by,
                                        **({'script_sha256': patch['recordings'][0]['script_sha256']} if 'script_sha256' in patch['recordings'][0] else {})})
             out(f'recorded on the board, by {by}: {label(piece)} {answer["cut"]} cut, "{answer["name"]}" ({answer["path"]})')
         else:
             out(f'to record it: {command_for(answer, by)}')
+    # Each take as it ended: a placed take whose clock or record failed says so.
+    report['files'] = [{k: v for k, v in answer.items() if k != 'scores'} | {'scores': answer.get('scores', {})} for answer in answers]
+    # The Inbox's used/ convention: what belongs in used/, and each duplicate, reported and kept.
+    report['inbox'] = inbox = inbox_report(listed, claimed, answers, recorded)
+    for entry in inbox['used']:
+        where = f'placed on {label(by_id[entry["piece_id"]])} as its {entry["cut"]} cut' if entry['piece_id'] in by_id else 'already on a piece\'s record'
+        out(f'belongs in {USED_FOLDER}/: "{entry["name"]}", {where}')
+    for entry in inbox['duplicates']:
+        if entry['why'] == 'same bytes':
+            out(f'duplicate, kept: "{entry["name"]}" is the same bytes (sha256 {entry["sha256"][:12]}) as a take placed on a piece')
+    if inbox['used'] or inbox['duplicates']:
+        out(NOT_MOVED + '.')
+    if opts.get('record'):
+        book_used(cache, inbox, datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z'))
     board_failed = False
     if opts.get('board'):
         report['asked'], report['noted'], board_failed = ask_on_board(answers, pieces, call, by, cache, out)
+        _drop(fetched)
     if board_failed or any(a['status'] == 'failed' for a in answers):
         code = 1
     elif any(a['status'] == 'unsure' for a in answers):
@@ -1317,6 +1555,16 @@ def run(opts, call, list_items, get_file=local_copy, transcribe=transcribe_head,
         code = 0
     report['exit'] = code
     return code, report
+
+
+def _drop(copies):
+    """Deletes the copies fetched only to hear a take (never one that was there before)."""
+    for copy in copies:
+        if copy.exists():
+            try:
+                copy.unlink()
+            except OSError:
+                pass
 
 
 def parse_overrides(values, items):
@@ -1806,6 +2054,109 @@ def self_test():
         ask_on_board(heard, [{'id': MON}], fake, 'Recordings lane', ends, lines.append, now='2026-10-12T10:00:00Z')
         check('ask_on_board: a question ended is not noted again', board_posts, [])
 
+        # Takes place themselves (place-takes.yml): --record --board --clock. The aligner is a stand-in.
+        events, before_posts = [], len(posts)
+        was_heard, heard_text['IMG_0001.mov'] = heard_text['IMG_0001.mov'], (_heard(fri_long[:110]), 96.0)
+        by_name = lambda src: heard_text.get(Path(src).name, ([], None))
+        fetching = dict(fetching, transcribe=lambda src: by_name(src)[0], probe=lambda src: by_name(src)[1])
+        mon_sha, fri_sha = hashlib.sha256(b'mon long').hexdigest(), hashlib.sha256(b'fri short').hexdigest()
+
+        def stub_clock(src, out, prompt):
+            events.append(('clock', Path(src).name, Path(src).is_file(), prompt.startswith('makeyourmindup.')))
+            Path(out).write_text(json.dumps({'duration': 174.0, 'words': [{'w': w, 's': n * 0.4, 'e': n * 0.4 + 0.3} for n, w in enumerate(mon_long[:20])],
+                                             'provenance': {'schema': 1, 'source_sha256': 'stand-in'}}), encoding='utf-8')
+            return {'words': 20, 'duration': 174.0, 'reused': False}
+
+        def watched(method, path, body):
+            if method == 'POST' and '/making' in path:
+                events.append(('record', path.split('/')[3]))
+            return fake(method, path, body)
+        placing = tmp / 'placing'
+        lines.clear()
+        code, report = run({'week': '2026-10-12', 'by': 'Place takes', 'record': True, 'board': True, 'clock': True}, watched,
+                           lambda: engine_recordings(listing), **{**fetching, 'cache': placing, 'clock_with': stub_clock})
+        check('--clock: each placed take gets its word clock, from the whole take on disk, named from its script (Friday has no short script here), '
+              'before it is recorded',
+              (code, [e for e in events if e[0] == 'clock'], [e[0] for e in events]),
+              (0, [('clock', 'monday long.mp4', True, True), ('clock', 'IMG_0001.mov', True, False)], ['clock', 'record', 'clock', 'record']))
+        check('--clock: the report lists each clock, kept as .cache/recordings/<sha256>.words.json in quick-edit\'s shape',
+              [(c['piece_id'], c['cut'], Path(c['words_file']).name, c['words'], len(json.loads(Path(c['words_file']).read_text())['words']))
+               for c in report['clocks']],
+              [(MON, 'long', f'{mon_sha}.words.json', 20, 20), (FRI, 'short', f'{fri_sha}.words.json', 20, 20)])
+        check('--clock: each take is placed on its piece, by the job\'s name', [(p.split('/')[3], b['by'], b['recordings'][0]['cut']) for p, b in posts[before_posts:]],
+              [(MON, 'Place takes', 'long'), (FRI, 'Place takes', 'short')])
+        check('--clock with --board: a take fetched only to hear it is kept until its clock is built, then deleted; the clocks stay',
+              (sorted(p.name for p in placing.iterdir() if not p.name.endswith('.json')), sorted(p.name for p in placing.glob('*.words.json') if '.head.' not in p.name)),
+              ([], sorted([f'{mon_sha}.words.json', f'{fri_sha}.words.json'])))
+        check('used/: each placed take belongs in the Inbox\'s used/ folder, said so, and nothing is moved or deleted',
+              (sorted((u['name'], u['cut']) for u in report['inbox']['used']), report['inbox']['moved'], report['inbox']['deleted'],
+               sum(1 for line in lines if line.startswith('belongs in used/: ')), lines.count(NOT_MOVED + '.')),
+              ([('IMG_0001.mov', 'short'), ('monday long.mp4', 'long')], False, False, 2, 1))
+        used_book = json.loads((placing / USED).read_text(encoding='utf-8')) if (placing / USED).is_file() else {}
+        check('used/: the book records each take as moved to used/, never as moved in Drive',
+              sorted((v['names'], v['piece_id'], v['to'], v['moved']) for v in used_book.values()),
+              sorted([(['monday long.mp4'], MON, 'used/', False), (['IMG_0001.mov'], FRI, 'used/', False)]))
+        # A clock that cannot be built: the take is not recorded, so the next run tries again.
+        events.clear()
+        before_posts = len(posts)
+
+        def no_clock(src, out, prompt):
+            raise MatchError('faster-whisper is not installed here')
+        code, report = run({'week': '2026-10-12', 'by': 'Place takes', 'record': True, 'clock': True}, watched,
+                           lambda: engine_recordings(listing), **{**common, 'cache': tmp / 'no-clock', 'clock_with': no_clock})
+        check('--clock: a clock that cannot be built fails the take (exit 1) and nothing is recorded or said to belong in used/',
+              (code, posts[before_posts:], sorted(f['status'] for f in report['files'] if f['name'] in ('monday long.mp4', 'IMG_0001.mov')),
+               report['inbox']['used']), (1, [], ['failed', 'failed'], []))
+        # A duplicate: the same bytes under a second name, and the same take again under other bytes. Reported, kept.
+        timed = lambda ws, start=0.0, step=0.4: [{'w': w, 's': round(start + n * step, 3), 'e': round(start + n * step + 0.3, 3)} for n, w in enumerate(ws)]
+        dup_listing = [{**item('monday long.mp4', b'mon long', '2026-10-12T08:00:00Z'), 'names': ['monday long.mp4', 'monday long copy.mp4']},
+                       item('monday long export.mp4', b'mon long, exported again', '2026-10-12T07:00:00Z'),
+                       item('monday long again.mp4', b'mon long, read again', '2026-10-12T06:00:00Z')]
+        dup_heard = {'monday long.mp4': (timed(mon_long[:110]), 174.0), 'monday long export.mp4': (timed(mon_long[:110], start=0.35), 174.4),
+                     'monday long again.mp4': (timed(mon_long[:110], step=0.43), 174.2)}
+        dups = tmp / 'dups'
+        lines.clear()
+        before_posts = len(posts)
+        code, report = run({'week': '2026-10-12', 'by': 'Place takes', 'record': True, 'board': True}, fake, lambda: engine_recordings(dup_listing),
+                           get_file=lambda i, cache: i['name'], transcribe=lambda src: dup_heard[src][0], probe=lambda src: dup_heard[src][1],
+                           out=lines.append, cache=dups, plans=plans, roots=[library_posts])
+        status = {f['name']: f['status'] for f in report['files']}
+        check('duplicate: the same take again (every word at the same moment, as long) is a duplicate of the placed one; a second read of the script is not',
+              (status.get('monday long.mp4'), status.get('monday long export.mp4'), status.get('monday long again.mp4')),
+              ('placed', 'duplicate', 'older take'))
+        check('duplicate: both kinds are reported, each kept',
+              sorted((d['name'], d['why'], d['kept']) for d in report['inbox']['duplicates']),
+              [('monday long copy.mp4', 'same bytes', True), ('monday long export.mp4', 'same take', True)])
+        check('duplicate: said plainly, never asked about on the board, never placed',
+              (any(line.startswith('duplicate, kept: "monday long export.mp4" is the same take as "monday long.mp4"') for line in lines),
+               any(line.startswith('duplicate, kept: "monday long copy.mp4" is the same bytes') for line in lines),
+               [p.split('/')[3] for p, b in posts[before_posts:]], [i['id'] for b in board_posts for i in b['items'] if 'export' in i['title']]),
+              (True, True, [MON], []))
+        check('duplicate: a duplicate leaves the exit as it was (0: every take placed or left alone)', code, 0)
+        check('same_take: a re-export a little later, the same take; a second read, or a length a second apart, not',
+              (same_take(timed(mon_long[:40]), 170.0, timed(mon_long[:40], start=1.2), 170.5), same_take(timed(mon_long[:40]), 170.0, timed(mon_long[:40], step=0.45), 170.0),
+               same_take(timed(mon_long[:40]), 170.0, timed(mon_long[:40]), 171.5), same_take(_heard(mon_long[:40]), 170.0, _heard(mon_long[:40]), 170.05),
+               same_take(_heard(mon_long[:40]), 170.0, _heard(mon_long[:40]), 170.5)),
+              (True, False, False, True, False))
+        # On this machine (--inbox): a file already on a piece's record belongs in used/; two files of the same bytes, one is a duplicate.
+        inbox_items = [{'name': 'on record.mp4', 'sha256': claimed_sha, 'at': '2026-10-12T08:00:00Z', 'source': 'inbox', 'bytes': 1},
+                       {'name': 'on record (1).mp4', 'sha256': claimed_sha, 'at': '2026-10-12T09:00:00Z', 'source': 'inbox', 'bytes': 1}]
+        shown = inbox_report(inbox_items, {claimed_sha}, [], set())
+        check('used/ on this machine: a file already on a record belongs in used/, the second copy of its bytes is a duplicate, kept',
+              ([(u['name'], u.get('on_record')) for u in shown['used']], [(d['name'], d['why']) for d in shown['duplicates']]),
+              ([('on record.mp4', True)], [('on record (1).mp4', 'same bytes')]))
+        heard_text['IMG_0001.mov'] = was_heard
+        # The real clock, where faster-whisper is not installed: a plain failure naming the pinned set, never a traceback.
+        try:
+            importlib.metadata.version('faster-whisper')
+        except importlib.metadata.PackageNotFoundError:
+            (tmp / 'take.wav').write_bytes(b'RIFF')
+            try:
+                word_clock(tmp / 'take.wav', tmp / 'take.words.json')
+                check('word_clock: with no faster-whisper it says so', 'no error', 'error')
+            except MatchError as error:
+                check('word_clock: with no faster-whisper it says so, naming the pinned set', ('not installed' in str(error), 'requirements.lock.txt' in str(error)), (True, True))
+
         # Nothing waiting.
         lines.clear()
         nothing = lambda m, p, b: (200, json.dumps({'ok': True, 'series': []})) if p.startswith('/api/week/options') else fake(m, p, b)
@@ -1996,6 +2347,8 @@ def main(argv=None):
     ap.add_argument('--record', action='store_true', help='record each sure match on its piece (making.py recorded)')
     ap.add_argument('--board', action='store_true', help='put each unsure take on Krish\'s board, once for each reason '
                     '(item take-<sha12>, closes_on take_placed), and keep .cache/recordings/answered.json')
+    ap.add_argument('--clock', action='store_true', help='build each placed take\'s word clock first (.cache/recordings/<sha256>.words.json), '
+                    'and record a take only once its clock is built')
     ap.add_argument('--by', help=f'who is recording it: Codex, Claude Code (default: {making.BY_ENV}, else {making.DEFAULT_BY})')
     ap.add_argument('--words', action='append', metavar='NAME=FILE', help='what was said in a take\'s first 45 seconds, instead of hearing it (for tests)')
     ap.add_argument('--json', action='store_true', help='print the whole answer as JSON')
@@ -2026,7 +2379,8 @@ def main(argv=None):
             except recording.RecordingError as error:
                 raise MatchError(str(error))
             list_items = lambda: items
-        code, report = run({'week': a.week, 'by': a.by, 'record': a.record, 'board': a.board, 'words': a.words}, making._engine_call, list_items, out=out)
+        code, report = run({'week': a.week, 'by': a.by, 'record': a.record, 'board': a.board, 'clock': a.clock, 'words': a.words},
+                           making._engine_call, list_items, out=out)
     except (MatchError, making.MakingError) as error:
         print(f'recording_match: {error}', file=sys.stderr)
         return 1

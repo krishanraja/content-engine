@@ -172,14 +172,14 @@ describe('planInbox', () => {
 describe('GET /api/library/recordings/drive-inbox', () => {
   it('copies a new take into the store keyed by its sha256, with the manifest confirm writes', async () => {
     const res = await call(driveInbox, asCron)
-    expect(res.body).toMatchObject({ ok: true, copied: 1, listed: 1, failed: 0 })
+    expect(res.body).toMatchObject({ ok: true, copied: 1, listed: 1, failed: 0, place_takes: 'not_configured' })
     expect(db.copies).toEqual([{ fileId: 'drive-file-1', url: `https://store.example/storage/v1/object/upload/sign/content-library/recordings/${SHA}.mp4?token=up` }])
     const manifest = JSON.parse(db.objects.get(`recordings/${SHA}.json`)!.body!)
     expect(manifest).toMatchObject({ schema_version: 1, sha256: SHA, md5: MD5, names: ['Fri take 1.mp4'], object_key: `recordings/${SHA}.mp4`, content_type: 'video/mp4' })
     expect(db.runs.at(-1)).toMatchObject({ job: 'recordings_drive_inbox', status: 'ok' })
 
     const again = await call(driveInbox, asCron)
-    expect(again.body).toMatchObject({ ok: true, copied: 0, already_there: 1 })
+    expect(again.body).toMatchObject({ ok: true, copied: 0, already_there: 1, place_takes: 'nothing_new' })
     expect(db.copies).toHaveLength(1)
   })
 

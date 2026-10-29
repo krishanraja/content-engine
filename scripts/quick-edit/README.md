@@ -551,6 +551,41 @@ In Wave 1 none of them blocks; a measure that cannot run here (no tesseract,
 no house mark on this machine, a 16:9 cut the 9:16 lock does not cover) says
 why. Tests: `tests/quick_edit_words_gate_test.py`.
 
+### The calibrated gates (Wave 2, W2.4)
+
+`scripts/cutgates` holds the gates quick-edit and ve share; their thresholds
+are in `config/gates.json` and nowhere else. On every finished cut make.py
+now writes, beside `checks.words`:
+
+- `checks.words` from `words_gate.check_aligners`: a content word lost on
+  every aligner's pass fails; one lost on one pass only is listed.
+- `checks.joins` (`cutgates/gaps.py`, `joins_in_gaps`): every join in a gap
+  every aligner agrees on, at least 80 ms wide, 30 ms clear of the word on
+  each side; a failure names the join's time and the words around it.
+- `checks.captions_clock` and `checks.captions_render` (`cutgates/captions.py`):
+  each caption page's first frame against the first word as the aligner that
+  did not draw the captions heard it (tolerance a placeholder until measured
+  on Monday 26), and each page found as a pixel change in the caption zone and
+  read by tesseract within 3 frames of its start (exact text, score 0.98).
+- `<cut>.joins-reel.m4a` and `.joins-reel.json`, for his ear;
+  `python3 scripts/cutgates/joins_reel.py board` turns the filed reels into a
+  `--materials` file for week_board.py.
+
+Each check names its machine and the video's sha256. A review check this run
+did not make is listed under `missing` with what makes it, never written as a
+placeholder status. For a post dated from `required_from` (16 Nov 2026) a
+missing, failed or stale joins or captions check holds the cut, at render and
+wherever the receipt travels; before then they are measured and listed only.
+The second aligner, ElevenLabs Scribe, is off: it runs only when
+`config/gates.json` carries Krish's yes and `MINDMAKE_SECOND_ALIGNER=scribe`
+and `ELEVENLABS_API_KEY` are set; until then every receipt says "single
+aligner". `python3 scripts/cutgates/scribe.py check FILE` is the one-file word
+timestamp check for the day he says yes.
+
+Calibration: `python3 scripts/cutgates/calibrate.py` on his computer runs every
+gate on the five cuts in `config/gate-calibration.json` and prints expected
+against actual; `--synthetic` is what CI runs. Tests: `tests/cutgates_test.py`.
+
 ## Evidence-backed caption repairs
 
 When independent recognition or human listening finds a spoken word missing from

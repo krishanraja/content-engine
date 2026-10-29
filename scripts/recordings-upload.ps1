@@ -133,6 +133,11 @@ $PreflightHour = 18
 $PreflightRetryMinutes = 20
 $PreflightFailedHours = 48
 $script:Preflight = $null
+# The overnight run (scripts\overnight\overnight.py, plan Wave 2, W2.6): started by his Titles press, once a week, as this
+# machine's role (MINDMAKE_OVERNIGHT_ROLE: primary or standby); what this machine last started is kept here.
+$OvernightScript = Join-Path $RepoRoot 'scripts\overnight\overnight.py'
+$OvernightStatePath = Join-Path $StateRoot 'overnight.json'
+$script:Overnight = $null
 $script:LastPlacingNote = ''
 $script:PlacingNotReady = ''
 $script:PassSent = $true
@@ -210,7 +215,7 @@ function Get-Setting([string]$Name) {
   return [Environment]::GetEnvironmentVariable($Name, 'Process')
 }
 
-$MindmakeSettings = @('MINDMAKE_DRIVE_ROOT', 'MINDMAKE_MEDIA_INBOX', 'MINDMAKE_ARCHIVE_ROOT', 'MINDMAKE_POSTS_ROOT', 'MINDMAKE_INSPIRATION', 'MINDMAKE_MUSIC_ROOT')
+$MindmakeSettings = @('MINDMAKE_DRIVE_ROOT', 'MINDMAKE_MEDIA_INBOX', 'MINDMAKE_ARCHIVE_ROOT', 'MINDMAKE_POSTS_ROOT', 'MINDMAKE_INSPIRATION', 'MINDMAKE_MUSIC_ROOT', 'MINDMAKE_OVERNIGHT_ROLE')
 
 function Sync-Settings {
   # This process's copy of each MINDMAKE_* setting, made equal to the
@@ -697,6 +702,7 @@ function Invoke-Pass {
     try { Invoke-WatchKeeper } catch { Write-Log "the content watcher was not checked this pass: $($_.Exception.Message)" }
     try { Invoke-Windows } catch { Write-Log "the scheduled tasks' windows were not checked this pass: $($_.Exception.Message)" }
     try { Invoke-Preflight } catch { Write-Log "the Saturday overnight preflight did not run this pass: $($_.Exception.Message)" }
+    try { Invoke-Overnight } catch { Write-Log "the overnight run was not checked this pass: $($_.Exception.Message)" }
     Send-LaneReport
   }
   return ($sent -and $placed)
@@ -1031,6 +1037,7 @@ function Send-LaneReport {
       if ($null -ne $windows) { $report['windows'] = $windows }
       $preflight = Get-PreflightBlock
       if ($null -ne $preflight) { $report['preflight'] = $preflight }
+      if ($null -ne $script:Overnight) { $report['overnight'] = $script:Overnight }
       [void](Invoke-Engine $client $base $token '/api/library/recordings/lane' $report)
     } finally { $client.Dispose() }
   } catch {
@@ -1097,6 +1104,64 @@ function Invoke-Preflight {
   }
 }
 
+# ---- the overnight run ---------------------------------------------------------
+# Plan Wave 2, W2.6: "His titles press tells the engine. The home runner starts the overnight run on the primary
+# computer, and the standby computer takes the shorts." No Claude runs on a timer (Ruling, Krish, 2026-10-29: "FYI, I
+# want zero Claude routines. No Claude schedules of any kind in this architecture"): this pass, already polling the
+# engine every five minutes with no window, asks scripts\overnight\overnight.py due from Saturday to Monday noon, and
+# once every picked day of the week has its Titles press it starts the run once, as this machine's role, with no window
+# (Krish, 2026-10-28: "HIDE ALL CONSOLE POP UPS FOREVER"). A machine with no role set starts nothing. The run's own
+# record rides on every lane report after, as codes and times only. Nothing here stops a pass.
+
+function Get-OvernightRole {
+  $role = ([string](Get-Setting 'MINDMAKE_OVERNIGHT_ROLE')).Trim().ToLowerInvariant()
+  if (@('primary', 'standby') -contains $role) { return $role }
+  return $null
+}
+
+function Test-OvernightWindow([DateTime]$Now) {
+  # Saturday, Sunday, or Monday before noon: when a Titles press can start the night.
+  if ($Now.DayOfWeek -eq [DayOfWeek]::Saturday -or $Now.DayOfWeek -eq [DayOfWeek]::Sunday) { return $true }
+  return ($Now.DayOfWeek -eq [DayOfWeek]::Monday -and $Now.Hour -lt 12)
+}
+
+function Start-Hidden([string]$Program, [string]$Arguments) {
+  # A long run, started with no window and left running when this pass ends; its own record says how it went.
+  $start = New-Object System.Diagnostics.ProcessStartInfo
+  $start.FileName = $Program
+  $start.Arguments = $Arguments
+  $start.WorkingDirectory = $RepoRoot
+  $start.UseShellExecute = $false
+  $start.CreateNoWindow = $true
+  $process = [System.Diagnostics.Process]::Start($start)
+  try { return $process.Id } finally { $process.Dispose() }
+}
+
+function Read-LastJson([string]$Text) {
+  $lines = @(([string]$Text).Trim() -split "`r?`n" | Where-Object { $_.Trim().StartsWith('{') })
+  if (-not $lines.Count) { return $null }
+  try { return ($lines[-1] | ConvertFrom-Json) } catch { return $null }
+}
+
+function Invoke-Overnight {
+  $role = Get-OvernightRole
+  if (-not $role -or -not (Test-Path -LiteralPath $OvernightScript -PathType Leaf) -or -not (Test-Path -LiteralPath $StudioPython -PathType Leaf)) { return }
+  if (Test-OvernightWindow (Get-Date)) {
+    $due = Invoke-StudioPython @($OvernightScript, 'due', '--json')
+    $answer = Read-LastJson $due.out
+    $week = [string](Get-Field $answer 'week')
+    $last = Read-JsonFile $OvernightStatePath
+    if ($due.code -eq 0 -and $week -match '^\d{4}-\d{2}-\d{2}$' -and [string](Get-Field $last 'week') -ne $week) {
+      Write-Log "his Titles press is recorded for every picked day of the week of ${week}: the overnight run starts on this machine as the $role, with no window"
+      $id = Start-Hidden $StudioPython ('"' + $OvernightScript + '" run --role ' + $role + ' --week ' + $week)
+      $at = [DateTime]::UtcNow.ToString("yyyy-MM-dd'T'HH:mm:ss'Z'", [System.Globalization.CultureInfo]::InvariantCulture)
+      Save-JsonFile $OvernightStatePath ([ordered]@{ week = $week; role = $role; started_at = $at; process = $id })
+    }
+  }
+  $status = Invoke-StudioPython @($OvernightScript, 'status', '--role', $role)
+  if ($status.code -eq 0) { $script:Overnight = Read-LastJson $status.out }
+}
+
 function Get-PreflightBlock {
   # The last preflight's report, by these names only (api/library/_lanes.ts, PreflightHealth): names, versions, counts
   # and times, never a path, a message or an account.
@@ -1104,7 +1169,7 @@ function Get-PreflightBlock {
   $report = Get-Field $script:Preflight 'report'
   if ($null -eq $report) { return $null }
   $block = [ordered]@{}
-  foreach ($name in @('at', 'ok', 'claude_version', 'codex_companion', 'codex_login', 'codex_weekly_used_pct',
+  foreach ($name in @('at', 'ok', 'claude_version', 'codex_companion', 'codex_login', 'codex_profile', 'codex_flagged', 'role', 'codex_weekly_used_pct',
       'codex_resets_at', 'ffmpeg', 'tesseract', 'free_gb', 'drive_reachable', 'drive_folders')) {
     $value = Get-Field $report $name
     if ($null -ne $value) { $block[$name] = $value }
