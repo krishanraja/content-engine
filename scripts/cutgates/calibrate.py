@@ -5,8 +5,8 @@
     python3 scripts/cutgates/calibrate.py --synthetic
 
 On Krish's computer it finds each cut's files under the roots (MINDMAKE_LIBRARY_ROOT, MINDMAKE_ARCHIVE_ROOT, this
-repository, his home folder, and any --root), hears each finished file with faster-whisper (and Scribe when
-config/gates.json lets it run) unless its heard words are already beside it, and runs the words, joins and
+repository, his home folder, and any --root), hears each finished file with faster-whisper (no paid
+second aligner) unless its heard words are already beside it, and runs the words, joins and
 captions gates. Monday 26's two cuts must pass; Wednesday 21's published long cut, Friday 23's rejected join reel
 and Friday 16's 90-second cut must fail, on a gate the manifest names. A cut whose files are not found is
 "incomplete", never a pass. Exit 0 only when every cut behaves as listed.

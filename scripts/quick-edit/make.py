@@ -2701,11 +2701,9 @@ def main():
             # missing from this file beyond the EDL's approved removals. Machine written, bound to these bytes.
             script_file = P(cfg['script']) if cfg.get('script') else None
             script_text = script_file.read_text(encoding='utf-8-sig') if script_file and script_file.is_file() else ''
-            # Every aligner's pass of the finished file (plan W2.4): faster-whisper's above, and ElevenLabs Scribe only
-            # when config/gates.json, MINDMAKE_SECOND_ALIGNER and the key all allow it; otherwise "single aligner".
+            # Every aligner's pass of the finished file (plan W2.4): faster-whisper's above. No paid second aligner
+            # (Krish, 2026-10-29: "do not use eleven labs for this"), so the report says "single aligner".
             heard_by = cut_aligners.passes(final, heard={cut_settings.FIRST: heard})
-            if cut_settings.SECOND in heard_by['aligners']:
-                (out/f'{final.stem}.scribe.json').write_text(json.dumps({'words': heard_by['aligners'][cut_settings.SECOND]}, indent=0), encoding='utf-8')
             words_check = words_gate.bind(words_gate.check_aligners(script_text, words, heard_by['aligners'], edl),
                                           script=script_file if script_text else None, take=wpath,
                                           final_words=out/f'{final.stem}.heard.json', edl=edl_path, video=final,

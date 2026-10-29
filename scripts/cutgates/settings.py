@@ -1,8 +1,7 @@
-"""config/gates.json, read once, and whether the second aligner may run."""
+"""config/gates.json, read once; the paid second aligner stays off."""
 from __future__ import annotations
 
 import json
-import os
 import re
 from functools import lru_cache
 from pathlib import Path
@@ -10,7 +9,6 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 CONFIG = ROOT / 'config' / 'gates.json'
 FIRST = 'faster-whisper'
-SECOND = 'scribe'
 
 
 @lru_cache(maxsize=1)
@@ -23,22 +21,10 @@ def rule(section: str) -> dict:
 
 
 def second_aligner(environ=None) -> dict:
-    """Whether ElevenLabs Scribe may run here, and why not. All three must hold: config/gates.json enables it
-    (his yes on the key and the spend, in his words), the environment flag asks for it, and the key is set.
-    Off is the default; off means the gates run on faster-whisper alone and say so."""
-    environ = os.environ if environ is None else environ
+    """The paid second aligner is permanently off (config/gates.json second_aligner.ruling): ElevenLabs Scribe was
+    removed on Krish's ruling, so the gates run on faster-whisper and say "single aligner". environ is ignored."""
     cfg = rule('second_aligner')
-    why = []
-    if cfg.get('enabled') is not True:
-        why.append('config/gates.json second_aligner.enabled is false (it needs Krish\'s yes on the ElevenLabs key and spend)')
-    elif not str(cfg.get('approved_by_krish') or '').strip().lower().startswith('krish'):
-        why.append('config/gates.json second_aligner.approved_by_krish does not carry his words')
-    if environ.get(cfg['env_flag'], '').strip().lower() != cfg['env_value']:
-        why.append(f'{cfg["env_flag"]} is not set to {cfg["env_value"]}')
-    if not environ.get(cfg['key_env']):
-        why.append(f'{cfg["key_env"]} is not set')
-    return {'enabled': not why, 'provider': cfg['provider'], 'model_id': cfg['model_id'],
-            'key_env': cfg['key_env'], 'reasons': why}
+    return {'enabled': False, 'provider': None, 'reasons': [f'removed: {cfg["ruling"]}']}
 
 
 def mode(names) -> str:
