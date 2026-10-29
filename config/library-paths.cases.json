@@ -6,7 +6,8 @@
     "A library path is relative, with forward slashes, and starts with one of top_folders. Inside \"3 Posts\" the next folder is one post's folder, and a file in it is either post_readme or sits inside one of post_sections.",
     "Every name is safe on Windows and Google Drive: no . or .. folder, no name starting with a dot, none of < > : \" \\ | ? * or a control character, no space at either end or dot at the end, none of Windows' reserved device names. Accented letters are written in their composed form (NFC). At most path_max characters in the whole path and part_max in one name, counted as Windows counts them (UTF-16 code units).",
     "The extension decides the type, from content_types; nothing else is taken. A file is at most max_bytes.",
-    "A post's folder: YYYY-MM-DD <Day> <subchannel> - <Subject>, with the day the date fell on (Mon, Tue, Wed, Thu, Fri, Sat or Sun) and the subchannel as the brand writes it; a launch post is YYYY-MM-DD Launch - <Subject>. The subject is made safe by the archive naming rule (config/archive-naming.cases.json) and cut at a space so the whole name stays within part_max."
+    "A post's folder: YYYY-MM-DD <Day> <subchannel> - <Subject>, with the day the date fell on (Mon, Tue, Wed, Thu, Fri, Sat or Sun) and the subchannel as the brand writes it; a launch post is YYYY-MM-DD Launch - <Subject>. The subject is made safe by the archive naming rule (config/archive-naming.cases.json) and cut at a space so the whole name stays within part_max.",
+    "A canary, test, smoke-test, dry-run or fixture post is refused (path_test_folder), and a rendered video (mp4, mov, webm) inside a post goes only in 3 Video (path_render_outside_video); W3.5."
   ],
   "top_folders": [
     "1 Brand kit (permanent)",
@@ -369,6 +370,35 @@
       "why": "an empty path",
       "path": "",
       "refused": "path_not_text"
+    },
+    {
+      "why": "a canary post never reaches the real library (W3.5)",
+      "path": "3 Posts/2026-10-05 Mon follow.the.money - Canary run/READ ME.txt",
+      "refused": "path_test_folder"
+    },
+    {
+      "why": "a test post never reaches the real library (W3.5)",
+      "path": "3 Posts/2026-10-05 Mon follow.the.money - Test pack/1 Article/substack-copy.html",
+      "refused": "path_test_folder"
+    },
+    {
+      "why": "a dry run never reaches the real library (W3.5)",
+      "path": "3 Posts/2026-10-05 Mon follow.the.money - Who gets paid (dry run)/READ ME.txt",
+      "refused": "path_test_folder"
+    },
+    {
+      "why": "a subject that only mentions a test is a real post",
+      "path": "3 Posts/2026-10-05 Mon follow.the.money - The Turing test is back/READ ME.txt"
+    },
+    {
+      "why": "a rendered video outside 3 Video is refused (W3.5)",
+      "path": "3 Posts/2026-10-05 Mon follow.the.money - Who gets paid/4 Social/clip.mp4",
+      "refused": "path_render_outside_video"
+    },
+    {
+      "why": "a rendered video outside 3 Video is refused, any case (W3.5)",
+      "path": "3 Posts/2026-10-05 Mon follow.the.money - Who gets paid/2 Covers and images/loop.MOV",
+      "refused": "path_render_outside_video"
     }
   ],
   "post_folders": [

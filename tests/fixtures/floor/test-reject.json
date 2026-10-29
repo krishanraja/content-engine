@@ -1,0 +1,60 @@
+{
+ "_about": "A synthetic rejection floor holding one test reject, as a clocked Rejections run would file it (W2.10 acceptance). Never real; read only by tests/floor_blocking_test.py.",
+ "version": "tttttttttttttttttttttttttttttttt",
+ "as_of": "2026-10-29",
+ "counts": {
+  "records": 1,
+  "standards": 1,
+  "approved": 0,
+  "patterns": 0
+ },
+ "formats": {
+  "short_video": {
+   "maker": "The 9:16 short cut",
+   "approved": [],
+   "draft": [
+    "stest"
+   ],
+   "rejected": [
+    "rtest"
+   ]
+  }
+ },
+ "standards": {
+  "stest": {
+   "standing": "draft",
+   "never_beneath": "Synthetic: never hold a test card past its line.",
+   "check_before_delivery": "Synthetic: scrub the test card.",
+   "formats": [
+    "short_video"
+   ],
+   "support": 1,
+   "records": [
+    "rtest"
+   ],
+   "boundary": [],
+   "his_words": [],
+   "weight": "one_off",
+   "productions": 1
+  }
+ },
+ "records": {
+  "rtest": {
+   "on": "2026-10-29",
+   "kind": "rejected",
+   "kept_as": "moment",
+   "piece": "TEST REJECT (synthetic, filed by a clocked run)",
+   "his_words": [
+    {
+     "said": "Synthetic test reject: this card holds too long.",
+     "on": "2026-10-29",
+     "is": "his words"
+    }
+   ],
+   "what": "synthetic: a test card",
+   "wanted_instead": null,
+   "media": [],
+   "liked_nearby": []
+  }
+ }
+}

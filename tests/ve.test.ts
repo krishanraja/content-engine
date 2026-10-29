@@ -45,6 +45,7 @@ describe('ve', () => {
     ['QC measures holds, redraw loops, dead air and loudness on real media', 'tests/ve_qc_test.py'],
     ['removing a card worktree never follows its node_modules link', 'tests/ve_cards_test.py'],
     ['ve qc runs the calibrated cut gates: words, joins in gaps, captions clock and renderer truth (W2.4)', 'tests/ve_gates_test.py'],
+    ['one local layout: every reader resolves from config/studio.json and the path guard fails on a planted path', 'tests/ve_local_roots_test.py'],
   ] as const) {
     it(name, () => {
       const r = py([file])
