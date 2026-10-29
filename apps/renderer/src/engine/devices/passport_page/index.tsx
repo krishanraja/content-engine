@@ -1,11 +1,14 @@
 import React from 'react'
-import { HOUSE_FONTS, HOUSE_HALFTONE } from '../../../house/geometry'
+import { HOUSE_FONTS } from '../../../house/geometry'
 import { PASSPORT, PassportPaper } from '../../kit/passport'
 import { PrintedFlag } from '../../kit/flags'
 import type { DeviceProps } from '../types'
 import { mrzLine, passportState } from './state'
 
-/** Page-relative positions are frame pixels. The STAGE slot supplies the origin, never a fit scale. */
+/** Page-relative positions are frame pixels. The STAGE slot supplies the origin, never a fit scale.
+ *  An unknown field is a dashed ??? that claims nothing; no SAMPLE sticker or disclaimer is drawn (Krish, 28 Oct 2026:
+ *  "It's just the ones that say "Krish's read" or "illustrative" that are stupid because they add no value to the
+ *  content."). */
 export function Device({ object, events, box, tokens, aspect, frame }: DeviceProps) {
   const state = passportState(object, events, frame)
   if (!state.visible) return null
@@ -53,14 +56,6 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
           </svg> : null}
         </React.Fragment>
       })}
-      {p.sampleText && p.fields.some((field) => field.state === 'sample') ? <div data-part="sample-sticker" style={{ ...mono,
-        position: 'absolute', left: 310, top: 384, width: 540, minHeight: 84, padding: '16px 20px', boxSizing: 'border-box',
-        backgroundColor: tokens.channel, backgroundImage: HOUSE_HALFTONE.image, backgroundSize: '14px 14px',
-        border: `2px solid ${tokens.ink}`, boxShadow: `5px 5px 0 ${tokens.ink}`, fontSize: 30, fontWeight: 600,
-        letterSpacing: '.06em' }}>
-        <div>SAMPLE · NOT A CLAIM</div>
-        {p.sampleText.toUpperCase() !== 'SAMPLE · NOT A CLAIM' ? <div>{p.sampleText}</div> : null}
-      </div> : null}
       {p.mrz ? <div data-part="mrz" style={{ ...mono, position: 'absolute', left: labelLeft,
         top: tall ? 1128 : 650, fontSize: 30, fontWeight: 500, letterSpacing: '.02em', lineHeight: 1.3, whiteSpace: 'pre' }}>
         {p.mrz.map((line, index) => <div key={index}>{mrzLine(line)}</div>)}

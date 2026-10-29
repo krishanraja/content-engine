@@ -35,13 +35,12 @@ describe('passport_page', () => {
     expect(at(35).fields[0]).toMatchObject({ scale: 1, opacity: 1, tilt: -5 })
     expect(html(35)).toContain('rotate(-5deg) scale(1)')
   })
-  it('shows dashed sample and blank unknowns and requires explicit sampleText', () => {
+  it('shows dashed sample and blank unknowns with no SAMPLE sticker or disclaimer', () => {
     expect(html(22)).toContain('???')
     expect(html(22)).toContain('3px dashed')
-    expect(html(22)).toContain('SAMPLE · NOT A CLAIM')
-    const params = { ...object.params, sampleText: undefined }
-    expect(() => html(70, { object: { ...object, params } })).toThrow(/sampleText/)
-    expect(ParamsSchema.safeParse({ ...params, sampleText: '  ' }).success).toBe(false)
+    // Krish, 28 Oct 2026: labels that add no value to the content are out; the dashed ??? claims nothing by itself.
+    expect(html(22)).not.toMatch(/SAMPLE|NOT A CLAIM|ILLUSTRATIVE|sample-sticker/)
+    expect(ParamsSchema.safeParse({ ...object.params, sampleText: 'SAMPLE · NOT A CLAIM' }).success).toBe(false)
     const blank = { ...object.params, fields: [{ id: 'blank', label: 'Unverified', at: { x: 92, y: 92 }, state: 'blank' }] }
     expect(html(22, { object: { ...object, params: blank } })).toContain('???')
   })
@@ -94,7 +93,7 @@ describe('passport_page', () => {
   })
   it('uses the approved verdict stamp type sizes', () => {
     for (const [main, size] of [['0/1 DELETED', 96], ['2/2 FLAGGED', 70]] as const) {
-      const params = { ...object.params, fields: [{ id: 'a', label: 'ILLUSTRATIVE TEST',
+      const params = { ...object.params, fields: [{ id: 'a', label: 'DEEPSEEK · 3 RUNS',
         at: { x: 92, y: 92 }, state: 'stamped', main }] }
       expect(html(70, { object: { ...object, params } })).toContain(`font-size:${size}px`)
     }

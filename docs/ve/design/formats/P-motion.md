@@ -69,7 +69,7 @@ Scribble: a double hand-drawn underline beneath the DeepSeek `???` (the blank). 
 4. f20 to f25, sticker drop: PASSPORT 2 OF 2 (SLAP) at -5 degrees; counter ticks 1 to 2.
 5. f30 to f46, ghost stamps: the dashed outline of stamp A traces itself (dash-offset around the perimeter, 12 f), then the `???` slaps lightly (SLAP, 3 px shake, "no ink, only a question"). The flag slot hatching wipes in diagonally.
 6. f46 to f62, the same for stamp B (DeepSeek), STAGGER of 16 f.
-7. f58 to f63, the SAMPLE sticker slaps across both stamps (SLAP, 10 degrees off to -6, 6 px shake). It is the loudest move in the beat on purpose: it is the honesty label.
+7. f58 to f63: nothing. The SAMPLE sticker that slapped here is gone (Krish, 28 Oct 2026: "It's just the ones that say "Krish's read" or "illustrative" that are stupid because they add no value to the content."); the dashed `???` is honest by itself.
 8. f70 to f80, scribble draw-on (above).
 9. Camera: push-in 100% to 102%; dashed outlines keep marching (dash offset, 8 px per second) so the blank never feels finished.
 10. Ambient: page float, stitch shimmer, grain.

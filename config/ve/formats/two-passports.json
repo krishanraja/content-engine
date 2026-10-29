@@ -159,8 +159,8 @@
             "fields": [
               {
                 "id": "entry-a",
-                "label": "ILLUSTRATIVE ENTRY",
-                "top": "ILLUSTRATIVE ENTRY",
+                "label": "ENTRY",
+                "top": "ENTRY",
                 "at": {
                   "x": 92,
                   "y": 92
@@ -171,8 +171,8 @@
               },
               {
                 "id": "entry-b",
-                "label": "ILLUSTRATIVE ENTRY",
-                "top": "ILLUSTRATIVE ENTRY",
+                "label": "ENTRY",
+                "top": "ENTRY",
                 "at": {
                   "x": 300,
                   "y": 410
@@ -186,8 +186,7 @@
             "mrz": [
               "P<<",
               "0000000000<0<<<0000000<0000000"
-            ],
-            "sampleText": "SAMPLE \u00b7 NOT A CLAIM"
+            ]
           }
         },
         {
@@ -239,8 +238,8 @@
             "fields": [
               {
                 "id": "entry-a",
-                "label": "ILLUSTRATIVE ENTRY",
-                "top": "ILLUSTRATIVE ENTRY",
+                "label": "ENTRY",
+                "top": "ENTRY",
                 "at": {
                   "x": 296,
                   "y": 104
@@ -251,8 +250,8 @@
               },
               {
                 "id": "entry-b",
-                "label": "ILLUSTRATIVE ENTRY",
-                "top": "ILLUSTRATIVE ENTRY",
+                "label": "ENTRY",
+                "top": "ENTRY",
                 "at": {
                   "x": 50,
                   "y": 426
@@ -266,8 +265,7 @@
             "mrz": [
               "P<<",
               "0000000000<0<<<0000000<0000000"
-            ],
-            "sampleText": "SAMPLE \u00b7 NOT A CLAIM"
+            ]
           }
         },
         {
@@ -316,7 +314,6 @@
             },
             "born": "???",
             "lives": "???",
-            "sampleText": "SAMPLE \u00b7 NOT A CLAIM",
             "knotLabel": "THE TEST",
             "endLabel": "THE CALL"
           }
@@ -387,12 +384,12 @@
               "x": 72,
               "y": 424
             },
-            "label": "ILLUSTRATIVE TEST",
+            "label": "THE TEST",
             "fields": [
               {
                 "id": "result-a",
-                "label": "ILLUSTRATIVE ENTRY",
-                "top": "ILLUSTRATIVE ENTRY",
+                "label": "ENTRY",
+                "top": "ENTRY",
                 "at": {
                   "x": 92,
                   "y": 80
@@ -403,8 +400,8 @@
               },
               {
                 "id": "result-b",
-                "label": "ILLUSTRATIVE ENTRY",
-                "top": "ILLUSTRATIVE ENTRY",
+                "label": "ENTRY",
+                "top": "ENTRY",
                 "at": {
                   "x": 70,
                   "y": 250
@@ -418,8 +415,7 @@
             "mrz": [
               "P<<",
               "0000000000<0<<<0000000<0000000"
-            ],
-            "sampleText": "SAMPLE \u00b7 NOT A CLAIM"
+            ]
           }
         },
         {
@@ -430,19 +426,7 @@
               "x": 164,
               "y": 504
             },
-            "top": "SAMPLE",
             "main": "???"
-          }
-        },
-        {
-          "obj": "verdict-label",
-          "device": "sticker",
-          "params": {
-            "text": "SAMPLE \u00b7 NOT A CLAIM",
-            "at": {
-              "x": 606,
-              "y": 312
-            }
           }
         },
         {
