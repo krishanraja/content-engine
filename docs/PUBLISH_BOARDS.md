@@ -16,6 +16,14 @@ layout, the same every week:
 
 - **Five tabs, in this order:** Ideas, Queue, Monday, Wednesday, Friday. On a
   phone they are a bar at the bottom.
+- **Layout v3, from the week of 9 November 2026** (`config/board-layout.json` `v3`; Krish, 2026-10-28: "backfill every
+  piece we've done historically, and allow me to add a score out of 10 for narrative quality and production quality"):
+  a sixth tab, **Archive**, last, with every piece from the Launch on 6 October (date, series, title, live links and
+  his two scores, newest first, each with a Scores press), a Scores press on each made day's Publish step, and the
+  `recording_sunday` rhythm: the board for week W is recorded on Sunday W-8 and goes live Monday W, so every day's
+  brief and scripts are due on that Sunday. Earlier boards keep version 2. Feed it with
+  `python3 scripts/post-pack/board_feed.py archive <Monday>` (read-only, `GET /api/board/<Monday>/archive`) and
+  build with `--archive docs/plans/<Monday>-week/archive.json`.
 - **Four steps in every day, in this order:** Brief, Drafts, Record, Publish.
   A step with nothing yet says when it fills, from the layout's `rhythm`: every
   day's brief on the Sunday morning and its scripts by Sunday midday, because
@@ -103,6 +111,7 @@ writes them; a document whose `updated_by` is not Krish is never his.
 | Approve scripts | Drafts | `picks/<day>-scripts` `{kind: "approve_scripts", day, piece_id, approved, texts: {cut: words}, scripts: {cut: sha256}, titles: {cut}, folder_title, folder_id?, script_ids?}` | works out `scripts` from `texts` (refused as `approval_hash_mismatch` when the press brings others); sends only words the piece's making record shows the scripts' check passed and two fresh readers read back (the gate `teleprompter_send.py plan` holds a session to), else holds them; sends with `sendApprovedScripts`, writes a send that read back to the piece's making record, and writes its answer into the same document as `send` `{status: sent, held, no_key, refused or error, folder_id?, scripts?, error?, recorded?, record_error?, at, by}` | `teleprompter_send.py plan` (the `approvals` view); on `held`, `no_key`, `refused` or `error` a session checks the words if they need it, then sends exactly those words through the connector; on `sent` with `recorded: false` a session records it with `teleprompter_send.py record` and the ids in `send` |
 | Titles | Record | `picks/<day>-titles` `{kind: "titles", day, piece_id?, picks: {long_title?, short_title?, long_thumbnail?, short_thumbnail?}}` | nothing | produce-video's Sunday-night run and the title round (the `titles` view) |
 | Approve for publish | Publish, after Download first | `picks/<day>-publish` `{kind: "approve_publish", day, piece_id, approved, manifest_sha256?}` | nothing on the server | `piece_manifest.py seal` (W2.8): only this press, bound to the draft manifest's sha256, seals `0 Publish/manifest.json` for Growth, whose go-live dispatch then names it with every slot `per_item_review` (one decision per post). Growth and Control Center read the go-live. It holds no fact sign-off: a go-live reader must also require the article's fact sign-off for the piece (the Article press, not built yet, and the fact gate), so a day never counts as approved with its facts unsigned |
+| Scores (layout v3) | Publish, last on a made day; and each Archive row | `picks/score-<piece>` `{kind: "scores", piece_id, narrative, production, basis: at_publish or hindsight, note?}`, each mark 1 to 10 | one `piece_scores` row, `scored_by` krish, history kept (a new score is a new row; the same marks saved again file nothing twice); answers `scores: filed`, or `waits_on_migration` until the Wave 2 migration batch is applied | the Archive, Control Center's #/week and the retrospective (W3.6), through `piece_scores_current`, which counts his scores only |
 | Reject asset | Publish, beside each ready file | `picks/<day>-reject-<asset>` `{kind: "reject_asset", day, piece_id, asset, label, reason, drive_id?, at_ms?, formats?}`; the reason is required | one `taste_rejection_inbox` row: his reason, where and when, the piece, the formats, and the file's Drive id with the moment (`at_ms`) or as the whole cut; the file itself is never copied | the inspirationhouse rejections job; the next session's repair round |
 
 Only a rejected asset files an inbox row. Each row's `client_report_id` is the

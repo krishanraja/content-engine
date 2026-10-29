@@ -1177,3 +1177,61 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
     }
   });
 })();
+
+// His Scores press (layout v3, W2.1; Krish, 2026-10-29: "allow me to add a score out of 10 for narrative quality and
+// production quality"): on each made day's Publish step and on each Archive row. Narrative and production out of 10,
+// when he scored it (at publish or looking back) and his note, saved as picks/score-<piece>; the server files each save
+// as one piece_scores row, history kept. Only his scores count.
+(() => {
+  const cards = [...document.querySelectorAll(".rec.sc[data-scores-piece]")];
+  if (!cards.length) return;
+  const saved = {}, busy = {};
+  let ddb = null, mode = "loading";
+  const hm = at => { try { return new Date(at).toLocaleString([], { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) } catch { return "" } };
+  const say = (c, msg, bad) => { const s = c.querySelector("[data-scoresstate]"); if (s) { s.textContent = msg; s.classList.toggle("bad", !!bad) } };
+  const field = (c, k) => c.querySelector(`[data-score="${k}"]`);
+  function render(){
+    for (const c of cards) {
+      const id = "score-" + c.dataset.scoresPiece, v = saved[id];
+      for (const el of c.querySelectorAll("[data-score]")) el.disabled = mode !== "live" || !!busy[id];
+      c.querySelector('[data-act="save-scores"]').disabled = mode !== "live" || !!busy[id];
+      c.classList.toggle("on", !!v);
+      if (busy[id]) continue;
+      if (v && !c.dataset.touched) {
+        field(c, "narrative").value = String(v.narrative); field(c, "production").value = String(v.production);
+        field(c, "basis").value = v.basis; field(c, "note").value = v.note || "";
+      }
+      say(c, mode === "off" ? "Your scores are not saving in this view." : v ? `Saved ${hm(v.at)}: narrative ${v.narrative}/10, production ${v.production}/10.` : "", mode === "off");
+    }
+  }
+  render();
+  (async () => {
+    try { ddb = window.claude?.use ? await window.claude.use("db") : null } catch { ddb = null }
+    if (!ddb) { mode = "off"; render(); return }
+    try {
+      ddb.collection("picks").onSnapshot(snap => {
+        for (const k of Object.keys(saved)) delete saved[k];
+        for (const d of snap.docs) if (d.exists && /^score-/.test(d.id)) saved[d.id] = d.data() || {};
+        mode = "live"; render();
+      }, () => { mode = "broken"; render() });
+    } catch { mode = "broken"; render() }
+  })();
+  document.addEventListener("change", e => { const c = e.target.closest && e.target.closest(".rec.sc"); if (c) c.dataset.touched = "1" });
+  document.addEventListener("click", async e => {
+    const b = e.target.closest && e.target.closest('[data-act="save-scores"]'); if (!b) return;
+    const c = document.getElementById(b.dataset.for), piece = c.dataset.scoresPiece, id = "score-" + piece;
+    const narrative = Number(field(c, "narrative").value), production = Number(field(c, "production").value);
+    if (!narrative || !production) { say(c, "Pick both scores first.", true); return }
+    if (mode !== "live" || !ddb || busy[id]) { render(); return }
+    const note = field(c, "note").value.trim();
+    const body = { kind: "scores", piece_id: piece, narrative, production, basis: field(c, "basis").value, at: new Date().toISOString() };
+    if (note) body.note = note;
+    busy[id] = true; say(c, "Saving…"); render();
+    let result = null, error = null;
+    try { result = (await ddb.doc("picks/" + id).set(body)) || {}; saved[id] = result.body || body } catch (err) { error = err }
+    delete busy[id]; delete c.dataset.touched; render();
+    if (error) say(c, error.message || "Not saved. Press it again.", true);
+    else if (result.scores === "waits_on_migration") say(c, "Saved on the board. Your score joins the record once the score table is switched on.", false);
+    else if (result.scores === "failed") say(c, "Saved on the board, but the record did not take it yet; a session files it from here.", true);
+  });
+})();
