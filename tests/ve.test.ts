@@ -46,6 +46,8 @@ describe('ve', () => {
     ['removing a card worktree never follows its node_modules link', 'tests/ve_cards_test.py'],
     ['a card is held to its own max_minutes and max_calls (W2.12)', 'tests/ve_card_limits_test.py'],
     ['one local layout: every reader resolves from config/studio.json and the path guard fails on a planted path', 'tests/ve_local_roots_test.py'],
+    ['the route check at parity: per-piece code is banned only for a move that has a device', 'tests/ve_route_test.py'],
+    ['the weekly device sprint: briefs, cards from filled fields, Gate 2 in his words, the Archive feed', 'tests/ve_sprint_test.py'],
   ] as const) {
     it(name, () => {
       const r = py([file])

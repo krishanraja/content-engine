@@ -286,6 +286,31 @@ def cmd_card(args) -> int:
     return 0
 
 
+def cmd_sprint(args) -> int:
+    from velib import sprint
+    if args.action == 'start':
+        for path in sprint.start(args.week, args.ref):
+            print(f've sprint: wrote {path.relative_to(ROOT)}; fill it from its brief and the reference, then ve sprint cards')
+        if not sprint.has_ve_brief():
+            print('ve sprint: ve brief is not on this checkout yet (W2.7): the briefs are pending and cards wait for them')
+    elif args.action == 'cards':
+        for card in sprint.cards(args.week):
+            print(f've sprint: wrote {card.relative_to(ROOT)}; dispatch it with ve dispatch, then Gate 2')
+    elif args.action == 'gate2':
+        entry = sprint.gate2(args.device, args.words, args.where, args.at)
+        print(f"ve sprint: Gate 2 yes recorded for {entry['device']} ({args.at})")
+    elif args.action == 'status':
+        s = sprint.status()
+        print(f"ve sprint: {s['count']} library devices; {s['sprint_devices']} from sprints, {s['proven']} proven at Gate 2")
+        for e in s['entries']:
+            gate = f"Gate 2 yes {e['gate2']['at']}" if e.get('gate2') else ('built, awaiting Gate 2' if e['built'] else 'carded')
+            print(f"  {e['week']}  {e['device']:<24} {e['aim']:<15} {gate}")
+    elif args.action == 'feed':
+        data = sprint.feed(Path(args.archive) if args.archive else None, Path(args.out))
+        print(f"ve sprint: wrote {args.out} ({len(data['rows'])} Archive rows, {data['devices']['count']} devices)")
+    return 0
+
+
 def cmd_dispatch(args) -> int:
     if getattr(args, 'piece', None):
         from velib.ledger import require_within
@@ -524,6 +549,15 @@ def main() -> int:
     p.set_defaults(fn=cmd_keyframes)
     p = sub.add_parser('study'); p.add_argument('ref'); p.add_argument('--out'); p.set_defaults(fn=cmd_study)
     p = sub.add_parser('card'); p.add_argument('fields'); p.set_defaults(fn=cmd_card)
+    p = sub.add_parser('sprint', help='the weekly device sprint: brief, card, Gate 2 record (docs/ve/SPRINT.md)')
+    actions = p.add_subparsers(dest='action', required=True)
+    a = actions.add_parser('start'); a.add_argument('week'); a.add_argument('--ref', action='append', required=True)
+    a = actions.add_parser('cards'); a.add_argument('week')
+    a = actions.add_parser('gate2'); a.add_argument('device'); a.add_argument('--words', required=True)
+    a.add_argument('--where', required=True); a.add_argument('--at', required=True)
+    actions.add_parser('status')
+    a = actions.add_parser('feed'); a.add_argument('--archive'); a.add_argument('--out', required=True)
+    p.set_defaults(fn=cmd_sprint)
     p = sub.add_parser('dispatch'); p.add_argument('card'); p.add_argument('--wait', action='store_true')
     p.add_argument('--piece', help='refuse dispatch when this piece is over any budget cap')
     p.add_argument('--spend-approved', action='store_true', help="only after Krish's yes, in his words, to Codex drawing paid credits")
