@@ -28,7 +28,7 @@ def _gate_row(result: dict, target: str, summary) -> dict:
 
 
 def heard_words(path: str, *, heard: dict | None = None, model: str = 'small.en') -> dict:
-    """Every aligner's words for the render: faster-whisper, and Scribe only when config/gates.json allows it."""
+    """Every aligner's words for the render: faster-whisper, plus any local pass handed in (no paid aligner)."""
     aligners, *_ = _cutgates()
     return aligners.passes(path, heard=heard, model=model)['aligners']
 

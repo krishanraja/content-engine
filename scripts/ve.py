@@ -204,8 +204,8 @@ def cmd_start(args) -> int:
 
 def _gate_inputs(args) -> dict:
     """The calibrated cut gates' inputs (plan W2.4): the signed script, the take's words, and every aligner's words
-    for the render (--heard NAME=WORDS.json, or --transcribe: faster-whisper here, Scribe only when config/gates.json
-    allows it). Nothing given, nothing added: those rows stay not_run and ve status reads the cut as not ready."""
+    for the render (--heard NAME=WORDS.json, or --transcribe: faster-whisper here; no paid aligner, Krish, 2026-10-29:
+    "do not use eleven labs for this"). Nothing given, nothing added: those rows stay not_run and ve status reads the cut as not ready."""
     out, heard = {}, {}
     for item in getattr(args, 'heard', None) or []:
         name, _, path = item.partition('=')
