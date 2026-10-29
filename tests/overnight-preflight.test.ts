@@ -322,7 +322,8 @@ $seen = Watch-Run $process 200
     expect(kept.ok).toBe(false)
     expect(kept.failed).toEqual(run.failed)
     expect(kept.at).toBe(run.at)
-    // It wrote nothing: the home it ran in holds only this test's own script.
-    expect(readdirSync(home)).toEqual(['test.ps1'])
+    // It wrote nothing: the home it ran in holds only this test's own script, beside the AppData profile folder
+    // Windows makes by itself for any program run under a fresh USERPROFILE.
+    expect(readdirSync(home).filter((name) => name !== 'AppData')).toEqual(['test.ps1'])
   }, 240_000)
 })
