@@ -98,6 +98,8 @@ import advisory_qc
 import floor_lines
 import lipsync_gate
 import sfx
+sys.path.append(str(Path(__file__).resolve().parents[1]))  # scripts/, after quick-edit's own modules
+from cutgates import aligners as cut_aligners, joins_reel, receipt as cut_receipt, settings as cut_settings  # noqa: E402
 from archive import ArchiveError, archive_root, archive_videos, plan as archive_plan, read_package
 from share import share_copy
 
@@ -2697,25 +2699,62 @@ def main():
                 # SyncNet on every on-camera segment (lipsync_gate.py, floor never 3); not_run where no model is installed.
                 'sync':lipsync_gate.check_cut(final, lipsync_gate.segment_spans(segs, tl['intro_s']),
                                               [(c['s'] + tl['intro_s'], c['e'] + tl['intro_s']) for c in wins]),
-                'motion':{'status':'not_run','reason':'Mandatory camera-motion assessment and final framing review; stabilise when needed'},
                 'loudness':{'status':'fail' if loudness_warnings(loudness, levels) else 'pass', 'measurements':loudness},
-                'visuals':{'status':'inconclusive','coverage':visual_checks,'reason':'Full-size card and font review required'},
-                'visual_clarity':{'status':'not_run','reason':'Minimal rendered words, no script repetition, recognisable cues and independent three-second comprehension evidence required'},
-                'full_review':{'status':'not_run'}},
+                'visuals':{'status':'inconclusive','coverage':visual_checks,'reason':'Full-size card and font review required'}},
+                # No placeholder statuses (plan W2.4): a check this run did not make is named here with what makes
+                # it, and quality.delivery_problems holds the cut until that machine writes its measured result.
+                'missing':{
+                'sync':'the lip-sync measure (sync_check.py) on these bytes',
+                'motion':'the camera-motion assessment and final framing review (wall_stabilize.py); stabilise when needed',
+                'visual_clarity':'minimal rendered words, no script repetition, recognisable cues and three-second comprehension evidence (visual_clarity.py)',
+                'full_review':'Krish playing the cut through at full size, in his own words'},
                 'script_diff':quality.word_diff(script_words(cfg,P), heard)}
             # The words gate, blocking (plan W3 3a): no content word of the signed script he said in the take is
             # missing from this file beyond the EDL's approved removals. Machine written, bound to these bytes.
             script_file = P(cfg['script']) if cfg.get('script') else None
             script_text = script_file.read_text(encoding='utf-8-sig') if script_file and script_file.is_file() else ''
-            words_check = words_gate.bind(words_gate.check(script_text, words, heard, edl),
+            # Every aligner's pass of the finished file (plan W2.4): faster-whisper's above, and ElevenLabs Scribe only
+            # when config/gates.json, MINDMAKE_SECOND_ALIGNER and the key all allow it; otherwise "single aligner".
+            heard_by = cut_aligners.passes(final, heard={cut_settings.FIRST: heard})
+            if cut_settings.SECOND in heard_by['aligners']:
+                (out/f'{final.stem}.scribe.json').write_text(json.dumps({'words': heard_by['aligners'][cut_settings.SECOND]}, indent=0), encoding='utf-8')
+            words_check = words_gate.bind(words_gate.check_aligners(script_text, words, heard_by['aligners'], edl),
                                           script=script_file if script_text else None, take=wpath,
                                           final_words=out/f'{final.stem}.heard.json', edl=edl_path, video=final,
                                           final_provenance=final_identity)
+            words_check['second_aligner'] = heard_by['second']
             receipt['checks']['words'] = words_check
-            if receipt['checks']['sync']['status'] == 'fail':
-                floor_held.append(f"{asp}: {receipt['checks']['sync']['line']}")
+            # A measured sync replaces its missing entry; with no scorer here it stays missing (no placeholder statuses).
+            sync_result = receipt['checks']['sync']
+            if sync_result['status'] == 'not_run':
+                receipt['missing']['sync'] += f" ({receipt['checks'].pop('sync')['reason']})"
+            else:
+                receipt['missing'].pop('sync', None)
+            if sync_result['status'] == 'fail':
+                floor_held.append(f"{asp}: {sync_result['line']}")
             if words_check['status'] != 'pass':
                 words_held.append(f'{asp}: {words_gate.summary(words_check)}')
+            # Joins in gaps and the captions' clock and renderer truth, machine written and bound to these bytes
+            # (scripts/cutgates). They hold the cut for a post dated from config/gates.json required_from; before
+            # it they are measured and listed, never blocking (the gates were not calibrated then).
+            pages = advisory_qc.caption_pages(groups, wins, asp, tl['intro_s'], FPS)
+            cut_checks = cut_receipt.cut_checks(
+                final, joins=[round(tl['intro_s'] + g['off'], 3) for g in segs[1:]], aligners=heard_by['aligners'],
+                captions=[(advisory_qc.CAPTION_BANDS[asp][band], [p for p in pages if p['band'] == band])
+                          for band in ('normal', 'over_graphic')], fps=FPS, drew=cut_settings.FIRST)
+            receipt['checks'].update(cut_checks)
+            gates_blocking = cut_settings.required_on(cfg.get('date'))
+            for check in cut_checks.values():
+                check['blocking'] = gates_blocking
+            if gates_blocking:
+                words_held += [f'{asp}: {line}' for line in cut_receipt.held(cut_checks)]
+            # The cut's joins reel, for his ear on the Monday board (joins_reel.py board feeds --materials).
+            try:
+                reel = joins_reel.build(final, cut_checks['joins']['joins'], out)
+                receipt['joins_reel'] = {'file': reel['reel'], 'index': f'{final.stem}.joins-reel.json',
+                                         **({'sha256': quality.digest(out / reel['reel'])} if (out / reel['reel']).is_file() else {})}
+            except (OSError, subprocess.CalledProcessError, KeyError, ValueError) as error:
+                receipt['joins_reel'] = {'error': f'{type(error).__name__}: {error}'[:300]}
             # The ve measures that can run on this cut, advisory only in Wave 1: they never block (advisory_qc.py).
             receipt['advisory'] = advisory_qc.rows(
                 final, shape=asp, joins=[round(tl['intro_s'] + g['off'], 3) for g in segs[1:]],
@@ -2747,7 +2786,7 @@ def main():
                  floor_lines.chapters_line(asp, cut_audio['bed'], list(tl['chapter_cards']) + list(tl.get('accents') or ())),
                  stability, report['sfx']]
         if cfg.get('quality_required'):
-            floor.append(receipt['checks']['sync'])
+            floor.append(sync_result)
         shapes[asp]['floor'] = [row for row in floor if row]
         shapes[asp]['floor_lines'] = floor_lines.lines(floor)
         # Preview: a frame in the sting, the opening, inside every graphic,
@@ -2795,7 +2834,7 @@ def main():
         print('MISSING CUES:', missing, file=sys.stderr)
     if words_held:
         # Everything is written first (the cut, its receipt, the report), so the evidence stays; the cut is held.
-        sys.exit('Words gate: held, the cut is written but must not ship. ' + ' | '.join(words_held))
+        sys.exit('Words gate: held, the cut is written but must not ship. ' + ' | '.join(words_held))  # joins and captions too
     if floor_held:
         sys.exit('Lip sync: held, the cut is written but must not ship (floor never 3). ' + ' | '.join(floor_held))
     if archive_failed:
