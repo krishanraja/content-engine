@@ -1,3 +1,7 @@
+> **Historical.** Archived 2026-10-29 by the docs steward. Not current guidance.
+> Replaced by: `WORKBENCH.md` and `NOW.md`
+> Reason: records the Story correction closed on 2026-10-26 (#186); kept as the record of that closeout.
+
 # 26 October: Growth Story correction returned
 
 The approved Grok/Muse Story set's frame-1 wordmark moved below the scene in

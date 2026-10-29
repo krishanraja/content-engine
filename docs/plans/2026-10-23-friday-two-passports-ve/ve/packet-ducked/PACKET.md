@@ -1,0 +1,1058 @@
+# Approval packet
+
+Not yet approved: design and final, both Krish's, both by exact file hash.
+
+## friday-tall
+SHA-256: b9968894aaf226f988837462fd979db0ac9b0ab0c8afbf6b4202319922c8d319
+
+### Measurements
+- loudness.integrated.value: -14.0
+- loudness.integrated.target: -14 ±1
+- loudness.integrated.pass: True
+- loudness.true_peak.value: -1.6
+- loudness.true_peak.target: <= -1
+- loudness.true_peak.pass: True
+- loudness.long_silence.target: none over 0.7 s below -50 dB
+- loudness.long_silence.pass: True
+- motion.change_density.value: 0.859
+- motion.change_density.target: >= 0.75
+- motion.change_density.pass: True
+- motion.longest_still.value: 2
+- motion.longest_still.target: <= 3 s
+- motion.longest_still.pass: True
+- motion.longest_still.runs[0][0]: 76
+- motion.longest_still.runs[0][1]: 2
+- motion.longest_still.runs[1][0]: 15
+- motion.longest_still.runs[1][1]: 1
+- motion.longest_still.runs[2][0]: 18
+- motion.longest_still.runs[2][1]: 1
+- motion.longest_still.runs[3][0]: 30
+- motion.longest_still.runs[3][1]: 1
+- motion.longest_still.runs[4][0]: 32
+- motion.longest_still.runs[4][1]: 1
+- motion.longest_still.runs[5][0]: 34
+- motion.longest_still.runs[5][1]: 1
+- motion.periodicity.value: None
+- motion.periodicity.target: no repeating loop 2-10 s
+- motion.periodicity.pass: True
+- sync.av_xcorr.value[0].segment: 0
+- sync.av_xcorr.value[0].lag_ms: 0
+- sync.av_xcorr.value[0].pass: True
+- sync.av_xcorr.value[0].correlation: 0.999844
+- sync.av_xcorr.value[1].segment: 1
+- sync.av_xcorr.value[1].lag_ms: 0
+- sync.av_xcorr.value[1].pass: True
+- sync.av_xcorr.value[1].correlation: 0.999997
+- sync.av_xcorr.value[2].segment: 2
+- sync.av_xcorr.value[2].lag_ms: 0
+- sync.av_xcorr.value[2].pass: True
+- sync.av_xcorr.value[2].correlation: 0.999995
+- sync.av_xcorr.value[3].segment: 3
+- sync.av_xcorr.value[3].lag_ms: 0
+- sync.av_xcorr.value[3].pass: True
+- sync.av_xcorr.value[3].correlation: 0.999991
+- sync.av_xcorr.value[4].segment: 4
+- sync.av_xcorr.value[4].lag_ms: 0
+- sync.av_xcorr.value[4].pass: True
+- sync.av_xcorr.value[4].correlation: 0.999993
+- sync.av_xcorr.value[5].segment: 5
+- sync.av_xcorr.value[5].lag_ms: 0
+- sync.av_xcorr.value[5].pass: True
+- sync.av_xcorr.value[5].correlation: 0.999991
+- sync.av_xcorr.value[6].segment: 6
+- sync.av_xcorr.value[6].lag_ms: 0
+- sync.av_xcorr.value[6].pass: True
+- sync.av_xcorr.value[6].correlation: 0.999992
+- sync.av_xcorr.value[7].segment: 7
+- sync.av_xcorr.value[7].lag_ms: 0
+- sync.av_xcorr.value[7].pass: True
+- sync.av_xcorr.value[7].correlation: 0.999985
+- sync.av_xcorr.value[8].segment: 8
+- sync.av_xcorr.value[8].lag_ms: 0
+- sync.av_xcorr.value[8].pass: True
+- sync.av_xcorr.value[8].correlation: 0.999988
+- sync.av_xcorr.value[9].segment: 9
+- sync.av_xcorr.value[9].lag_ms: 0
+- sync.av_xcorr.value[9].pass: True
+- sync.av_xcorr.value[9].correlation: 0.999993
+- sync.av_xcorr.value[10].segment: 10
+- sync.av_xcorr.value[10].lag_ms: 0
+- sync.av_xcorr.value[10].pass: True
+- sync.av_xcorr.value[10].correlation: 0.999991
+- sync.av_xcorr.value[11].segment: 11
+- sync.av_xcorr.value[11].lag_ms: 0
+- sync.av_xcorr.value[11].pass: True
+- sync.av_xcorr.value[11].correlation: 0.999989
+- sync.av_xcorr.value[12].segment: 12
+- sync.av_xcorr.value[12].lag_ms: 0
+- sync.av_xcorr.value[12].pass: True
+- sync.av_xcorr.value[12].correlation: 0.999982
+- sync.av_xcorr.value[13].segment: 13
+- sync.av_xcorr.value[13].lag_ms: 0
+- sync.av_xcorr.value[13].pass: True
+- sync.av_xcorr.value[13].correlation: 0.999989
+- sync.av_xcorr.value[14].segment: 14
+- sync.av_xcorr.value[14].lag_ms: 0
+- sync.av_xcorr.value[14].pass: True
+- sync.av_xcorr.value[14].correlation: 0.999988
+- sync.av_xcorr.value[15].segment: 15
+- sync.av_xcorr.value[15].lag_ms: 0
+- sync.av_xcorr.value[15].pass: True
+- sync.av_xcorr.value[15].correlation: 0.999983
+- sync.av_xcorr.value[16].segment: 16
+- sync.av_xcorr.value[16].lag_ms: 0
+- sync.av_xcorr.value[16].pass: True
+- sync.av_xcorr.value[16].correlation: 0.999989
+- sync.av_xcorr.value[17].segment: 17
+- sync.av_xcorr.value[17].lag_ms: 0
+- sync.av_xcorr.value[17].pass: True
+- sync.av_xcorr.value[17].correlation: 0.999995
+- sync.av_xcorr.value[18].segment: 18
+- sync.av_xcorr.value[18].lag_ms: 0
+- sync.av_xcorr.value[18].pass: True
+- sync.av_xcorr.value[18].correlation: 0.999988
+- sync.av_xcorr.target: every segment |lag| <= 33 ms; correlation >= 0.5
+- sync.av_xcorr.pass: True
+- sync.av_xcorr.status: measured
+- joins.decoder.target: RMS step <= 6 dB, click <= 6x median, spectral flux <= 0.5
+- joins.decoder.pass: True
+- joins.decoder.status: measured
+- captions.ocr.value[0].page: 0
+- captions.ocr.value[0].frame: 69
+- captions.ocr.value[0].text: You may already be
+using
+- captions.ocr.value[0].agreement: 1.0
+- captions.ocr.value[0].variant: raw
+- captions.ocr.value[0].pass: True
+- captions.ocr.value[1].page: 1
+- captions.ocr.value[1].frame: 105
+- captions.ocr.value[1].text: a Chinese Al.
+- captions.ocr.value[1].agreement: 1.0
+- captions.ocr.value[1].variant: normalised
+- captions.ocr.value[1].pass: True
+- captions.ocr.value[2].page: 2
+- captions.ocr.value[2].frame: 156
+- captions.ocr.value[2].text: Does that matter?
+L-=~,
+- captions.ocr.value[2].agreement: 1.0
+- captions.ocr.value[2].variant: raw
+- captions.ocr.value[2].pass: True
+- captions.ocr.value[3].page: 3
+- captions.ocr.value[3].frame: 222
+- captions.ocr.value[3].text: Airbnb's boss said its
+own
+- captions.ocr.value[3].agreement: 1.0
+- captions.ocr.value[3].variant: raw
+- captions.ocr.value[3].pass: True
+- captions.ocr.value[4].page: 4
+- captions.ocr.value[4].frame: 279
+- captions.ocr.value[4].text: customer service
+leans on Qwen,
+- captions.ocr.value[4].agreement: 1.0
+- captions.ocr.value[4].variant: normalised
+- captions.ocr.value[4].pass: True
+- captions.ocr.value[5].page: 5
+- captions.ocr.value[5].frame: 320
+- captions.ocr.value[5].text: which is a Chinese
+Al.
+- captions.ocr.value[5].agreement: 1.0
+- captions.ocr.value[5].variant: raw
+- captions.ocr.value[5].pass: True
+- captions.ocr.value[6].page: 6
+- captions.ocr.value[6].frame: 361
+- captions.ocr.value[6].text: He called it fast and
+- captions.ocr.value[6].agreement: 1.0
+- captions.ocr.value[6].variant: raw
+- captions.ocr.value[6].pass: True
+- captions.ocr.value[7].page: 7
+- captions.ocr.value[7].frame: 408
+- captions.ocr.value[7].text: cheap, which is
+what most
+- captions.ocr.value[7].agreement: 1.0
+- captions.ocr.value[7].variant: normalised
+- captions.ocr.value[7].pass: True
+- captions.ocr.value[8].page: 8
+- captions.ocr.value[8].frame: 438
+- captions.ocr.value[8].text: of us want froma
+- captions.ocr.value[8].agreement: 1.0
+- captions.ocr.value[8].variant: raw
+- captions.ocr.value[8].pass: True
+- captions.ocr.value[9].page: 9
+- captions.ocr.value[9].frame: 470
+- captions.ocr.value[9].text: holiday fling.
+- captions.ocr.value[9].agreement: 1.0
+- captions.ocr.value[9].variant: raw
+- captions.ocr.value[9].pass: True
+- captions.ocr.value[10].page: 10
+- captions.ocr.value[10].frame: 533
+- captions.ocr.value[10].text: See, every Al has
+two
+- captions.ocr.value[10].agreement: 1.0
+- captions.ocr.value[10].variant: raw
+- captions.ocr.value[10].pass: True
+- captions.ocr.value[11].page: 11
+- captions.ocr.value[11].frame: 582
+- captions.ocr.value[11].text: passports, where it
+was born
+- captions.ocr.value[11].agreement: 1.0
+- captions.ocr.value[11].variant: normalised
+- captions.ocr.value[11].pass: True
+- captions.ocr.value[12].page: 12
+- captions.ocr.value[12].frame: 625
+- captions.ocr.value[12].text: and where it lives.
+- captions.ocr.value[12].agreement: 1.0
+- captions.ocr.value[12].variant: raw
+- captions.ocr.value[12].pass: True
+- captions.ocr.value[13].page: 13
+- captions.ocr.value[13].frame: 667
+- captions.ocr.value[13].text: Where it was born
+shapes
+- captions.ocr.value[13].agreement: 1.0
+- captions.ocr.value[13].variant: normalised
+- captions.ocr.value[13].pass: True
+- captions.ocr.value[14].page: 14
+- captions.ocr.value[14].frame: 686
+- captions.ocr.value[14].text: its answers.
+- captions.ocr.value[14].agreement: 1.0
+- captions.ocr.value[14].variant: raw
+- captions.ocr.value[14].pass: True
+- captions.ocr.value[15].page: 15
+- captions.ocr.value[15].frame: 738
+- captions.ocr.value[15].text: An American
+newspaper recently
+- captions.ocr.value[15].agreement: 1.0
+- captions.ocr.value[15].variant: raw
+- captions.ocr.value[15].pass: True
+- captions.ocr.value[16].page: 16
+- captions.ocr.value[16].frame: 798
+- captions.ocr.value[16].text: asked Chinese
+chatbots some news
+- captions.ocr.value[16].agreement: 1.0
+- captions.ocr.value[16].variant: raw
+- captions.ocr.value[16].pass: True
+- captions.ocr.value[17].page: 17
+- captions.ocr.value[17].frame: 840
+- captions.ocr.value[17].text: questions, anda
+third of
+- captions.ocr.value[17].agreement: 1.0
+- captions.ocr.value[17].variant: normalised
+- captions.ocr.value[17].pass: True
+- captions.ocr.value[18].page: 18
+- captions.ocr.value[18].frame: 880
+- captions.ocr.value[18].text: the time they
+refused,
+- captions.ocr.value[18].agreement: 1.0
+- captions.ocr.value[18].variant: raw
+- captions.ocr.value[18].pass: True
+- captions.ocr.value[19].page: 19
+- captions.ocr.value[19].frame: 927
+- captions.ocr.value[19].text: gave China's line,
+- captions.ocr.value[19].agreement: 1.0
+- captions.ocr.value[19].variant: raw
+- captions.ocr.value[19].pass: True
+- captions.ocr.value[20].page: 20
+- captions.ocr.value[20].frame: 976
+- captions.ocr.value[20].text: or got it wrong.
+- captions.ocr.value[20].agreement: 1.0
+- captions.ocr.value[20].variant: normalised
+- captions.ocr.value[20].pass: True
+- captions.ocr.value[21].page: 21
+- captions.ocr.value[21].frame: 1038
+- captions.ocr.value[21].text: Claude, an American
+Al,
+- captions.ocr.value[21].agreement: 1.0
+- captions.ocr.value[21].variant: raw
+- captions.ocr.value[21].pass: True
+- captions.ocr.value[22].page: 22
+- captions.ocr.value[22].frame: 1094
+- captions.ocr.value[22].text: answered them all.
+- captions.ocr.value[22].agreement: 1.0
+- captions.ocr.value[22].variant: normalised
+- captions.ocr.value[22].pass: True
+- captions.ocr.value[23].page: 23
+- captions.ocr.value[23].frame: 1179
+- captions.ocr.value[23].text: Where it lives
+decides who
+- captions.ocr.value[23].agreement: 1.0
+- captions.ocr.value[23].variant: raw
+- captions.ocr.value[23].pass: True
+- captions.ocr.value[24].page: 24
+- captions.ocr.value[24].frame: 1213
+- captions.ocr.value[24].text: sees your data.
+- captions.ocr.value[24].agreement: 1.0
+- captions.ocr.value[24].variant: raw
+- captions.ocr.value[24].pass: True
+- captions.ocr.value[25].page: 25
+- captions.ocr.value[25].frame: 1249
+- captions.ocr.value[25].text: Use DeepSeek,
+- captions.ocr.value[25].agreement: 1.0
+- captions.ocr.value[25].variant: normalised
+- captions.ocr.value[25].pass: True
+- captions.ocr.value[26].page: 26
+- captions.ocr.value[26].frame: 1287
+- captions.ocr.value[26].text: another Chinese Al,
+- captions.ocr.value[26].agreement: 1.0
+- captions.ocr.value[26].variant: raw
+- captions.ocr.value[26].pass: True
+- captions.ocr.value[27].page: 27
+- captions.ocr.value[27].frame: 1321
+- captions.ocr.value[27].text: and it keeps yours in
+- captions.ocr.value[27].agreement: 1.0
+- captions.ocr.value[27].variant: raw
+- captions.ocr.value[27].pass: True
+- captions.ocr.value[28].page: 28
+- captions.ocr.value[28].frame: 1382
+- captions.ocr.value[28].text: China. And at work,
+- captions.ocr.value[28].agreement: 1.0
+- captions.ocr.value[28].variant: normalised
+- captions.ocr.value[28].pass: True
+- captions.ocr.value[29].page: 29
+- captions.ocr.value[29].frame: 1415
+- captions.ocr.value[29].text: l asked Claude,
+- captions.ocr.value[29].agreement: 1.0
+- captions.ocr.value[29].variant: raw
+- captions.ocr.value[29].pass: True
+- captions.ocr.value[30].page: 30
+- captions.ocr.value[30].frame: 1472
+- captions.ocr.value[30].text: ChatGPT, and
+DeepSeek abouta
+- captions.ocr.value[30].agreement: 1.0
+- captions.ocr.value[30].variant: raw
+- captions.ocr.value[30].pass: True
+- captions.ocr.value[31].page: 31
+- captions.ocr.value[31].frame: 1531
+- captions.ocr.value[31].text: supplier's cotton
+from Xinjiang in
+- captions.ocr.value[31].agreement: 1.0
+- captions.ocr.value[31].variant: normalised
+- captions.ocr.value[31].pass: True
+- captions.ocr.value[32].page: 32
+- captions.ocr.value[32].frame: 1624
+- captions.ocr.value[32].text: China. Two flagged
+forced labour.
+- captions.ocr.value[32].agreement: 1.0
+- captions.ocr.value[32].variant: normalised
+- captions.ocr.value[32].pass: True
+- captions.ocr.value[33].page: 33
+- captions.ocr.value[33].frame: 1669
+- captions.ocr.value[33].text: Now watch
+DeepSeek.
+- captions.ocr.value[33].agreement: 1.0
+- captions.ocr.value[33].variant: normalised
+- captions.ocr.value[33].pass: True
+- captions.ocr.value[34].page: 34
+- captions.ocr.value[34].frame: 1706
+- captions.ocr.value[34].text: It writes an answer,
+- captions.ocr.value[34].agreement: 1.0
+- captions.ocr.value[34].variant: raw
+- captions.ocr.value[34].pass: True
+- captions.ocr.value[35].page: 35
+- captions.ocr.value[35].frame: 1742
+- captions.ocr.value[35].text: then deletes it.
+- captions.ocr.value[35].agreement: 1.0
+- captions.ocr.value[35].variant: raw
+- captions.ocr.value[35].pass: True
+- captions.ocr.value[36].page: 36
+- captions.ocr.value[36].frame: 1784
+- captions.ocr.value[36].text: Every time.
+- captions.ocr.value[36].agreement: 1.0
+- captions.ocr.value[36].variant: raw_2x
+- captions.ocr.value[36].pass: True
+- captions.ocr.value[37].page: 37
+- captions.ocr.value[37].frame: 1834
+- captions.ocr.value[37].text: My call is it's fine,
+- captions.ocr.value[37].agreement: 1.0
+- captions.ocr.value[37].variant: normalised
+- captions.ocr.value[37].pass: True
+- captions.ocr.value[38].page: 38
+- captions.ocr.value[38].frame: 1986
+- captions.ocr.value[38].text: you. And here's what
+i
+- captions.ocr.value[38].agreement: 1.0
+- captions.ocr.value[38].variant: raw_2x
+- captions.ocr.value[38].pass: True
+- captions.ocr.value[39].page: 39
+- captions.ocr.value[39].frame: 2009
+- captions.ocr.value[39].text: do with this
+information if
+- captions.ocr.value[39].agreement: 1.0
+- captions.ocr.value[39].variant: raw
+- captions.ocr.value[39].pass: True
+- captions.ocr.value[40].page: 40
+- captions.ocr.value[40].frame: 2022
+- captions.ocr.value[40].text: Il were you.
+- captions.ocr.value[40].agreement: 1.0
+- captions.ocr.value[40].variant: raw
+- captions.ocr.value[40].pass: True
+- captions.ocr.value[41].page: 41
+- captions.ocr.value[41].frame: 2067
+- captions.ocr.value[41].text: Ask software
+suppliers which Al
+- captions.ocr.value[41].agreement: 1.0
+- captions.ocr.value[41].variant: normalised
+- captions.ocr.value[41].pass: True
+- captions.ocr.value[42].page: 42
+- captions.ocr.value[42].frame: 2099
+- captions.ocr.value[42].text: they use and where
+it
+- captions.ocr.value[42].agreement: 1.0
+- captions.ocr.value[42].variant: raw
+- captions.ocr.value[42].pass: True
+- captions.ocr.value[43].page: 43
+- captions.ocr.value[43].frame: 2145
+- captions.ocr.value[43].text: lives. And keepa
+[second
+- captions.ocr.value[43].agreement: 1.0
+- captions.ocr.value[43].variant: raw
+- captions.ocr.value[43].pass: True
+- captions.ocr.value[44].page: 44
+- captions.ocr.value[44].frame: 2166
+- captions.ocr.value[44].text: Al ready.
+- captions.ocr.value[44].agreement: 1.0
+- captions.ocr.value[44].variant: raw
+- captions.ocr.value[44].pass: True
+- captions.ocr.value[45].page: 45
+- captions.ocr.value[45].frame: 2197
+- captions.ocr.value[45].text: The full deep dive is
+- captions.ocr.value[45].agreement: 1.0
+- captions.ocr.value[45].variant: raw
+- captions.ocr.value[45].pass: True
+- captions.ocr.value[46].page: 46
+- captions.ocr.value[46].frame: 2229
+- captions.ocr.value[46].text: at
+makeyourmindup.ai.
+- captions.ocr.value[46].agreement: 1.0
+- captions.ocr.value[46].variant: raw
+- captions.ocr.value[46].pass: True
+- captions.ocr.target: token agreement >= 0.98 on every page
+- captions.ocr.pass: True
+- captions.ocr.status: measured
+- brand.mark_tile.value: None
+- brand.mark_tile.target: not defined for STAGE layouts
+- brand.mark_tile.pass: None
+- brand.mark_tile.status: not applicable
+- motion.cue_sync.value: None
+- motion.cue_sync.target: not defined for STAGE layouts
+- motion.cue_sync.pass: None
+- motion.cue_sync.status: not applicable
+- audio.bed.value[0].check: bed present
+- audio.bed.value[0].value: True
+- audio.bed.value[0].pass: True
+- audio.bed.value[1].check: under speech
+- audio.bed.value[1].value: -18.93
+- audio.bed.value[1].target: -21.0 to -12.0 dB re voice
+- audio.bed.value[1].pass: True
+- audio.bed.value[2].check: true peak
+- audio.bed.value[2].value: -1.69
+- audio.bed.value[2].target: <= -1.0 dBTP
+- audio.bed.value[2].pass: True
+- audio.bed.value[3].check: in pauses
+- audio.bed.value[3].value: -10.41
+- audio.bed.value[3].target: -13.0 to -6.0 dB re voice
+- audio.bed.value[3].pass: True
+- audio.bed.value[4].check: the music breathes
+- audio.bed.value[4].value: 8.52
+- audio.bed.value[4].target: >= 4.0 dB
+- audio.bed.value[4].pass: True
+- audio.bed.target: bed present, under speech in range, true peak, and (ducked) breathing in pauses
+- audio.bed.pass: True
+- audio.bed.status: measured
+- keyframe_match.value.hook.ssim: None
+- keyframe_match.value.hook.min: 0.75
+- keyframe_match.value.hook.pass: True
+- keyframe_match.value.hook.golden: None
+- keyframe_match.value.hook.note: extra beat: no golden, composition-checked
+- keyframe_match.value.matter.ssim: None
+- keyframe_match.value.matter.min: 0.75
+- keyframe_match.value.matter.pass: True
+- keyframe_match.value.matter.golden: None
+- keyframe_match.value.matter.note: extra beat: no golden, composition-checked
+- keyframe_match.value.airbnb.ssim: None
+- keyframe_match.value.airbnb.min: 0.75
+- keyframe_match.value.airbnb.pass: True
+- keyframe_match.value.airbnb.golden: None
+- keyframe_match.value.airbnb.note: extra beat: no golden, composition-checked
+- keyframe_match.value.fling.ssim: None
+- keyframe_match.value.fling.min: 0.75
+- keyframe_match.value.fling.pass: True
+- keyframe_match.value.fling.golden: None
+- keyframe_match.value.fling.note: extra beat: no golden, composition-checked
+- keyframe_match.value.title.ssim: 0.777349871898966
+- keyframe_match.value.title.min: 0.75
+- keyframe_match.value.title.pass: True
+- keyframe_match.value.title.golden: two-passports
+- keyframe_match.value.title.frame: 631
+- keyframe_match.value.born.ssim: 0.84994617729453
+- keyframe_match.value.born.min: 0.75
+- keyframe_match.value.born.pass: True
+- keyframe_match.value.born.golden: two-passports
+- keyframe_match.value.born.frame: 819
+- keyframe_match.value.born_third.ssim: None
+- keyframe_match.value.born_third.min: 0.75
+- keyframe_match.value.born_third.pass: True
+- keyframe_match.value.born_third.golden: None
+- keyframe_match.value.born_third.note: extra beat: no golden, composition-checked
+- keyframe_match.value.born_claude.ssim: None
+- keyframe_match.value.born_claude.min: 0.75
+- keyframe_match.value.born_claude.pass: True
+- keyframe_match.value.born_claude.golden: None
+- keyframe_match.value.born_claude.note: extra beat: no golden, composition-checked
+- keyframe_match.value.lives.ssim: 0.8542950607381915
+- keyframe_match.value.lives.min: 0.75
+- keyframe_match.value.lives.pass: True
+- keyframe_match.value.lives.golden: two-passports
+- keyframe_match.value.lives.frame: 1342
+- keyframe_match.value.open.ssim: 0.8192461047715506
+- keyframe_match.value.open.min: 0.75
+- keyframe_match.value.open.pass: True
+- keyframe_match.value.open.golden: hand-held-screen
+- keyframe_match.value.open.frame: 1532
+- keyframe_match.value.result_a.ssim: 0.7544489607042469
+- keyframe_match.value.result_a.min: 0.75
+- keyframe_match.value.result_a.pass: True
+- keyframe_match.value.result_a.golden: hand-held-screen
+- keyframe_match.value.result_a.frame: 1632
+- keyframe_match.value.result_b.ssim: 0.7976486721582083
+- keyframe_match.value.result_b.min: 0.75
+- keyframe_match.value.result_b.pass: True
+- keyframe_match.value.result_b.golden: hand-held-screen
+- keyframe_match.value.result_b.frame: 1675
+- keyframe_match.value.evidence.ssim: 0.821952584664116
+- keyframe_match.value.evidence.min: 0.75
+- keyframe_match.value.evidence.pass: True
+- keyframe_match.value.evidence.golden: hand-held-screen
+- keyframe_match.value.evidence.frame: 1711
+- keyframe_match.value.verdict.ssim: 0.8284093672539569
+- keyframe_match.value.verdict.min: 0.75
+- keyframe_match.value.verdict.pass: True
+- keyframe_match.value.verdict.golden: hand-held-screen
+- keyframe_match.value.verdict.frame: 1793
+- keyframe_match.value.my_call.ssim: None
+- keyframe_match.value.my_call.min: 0.75
+- keyframe_match.value.my_call.pass: True
+- keyframe_match.value.my_call.golden: None
+- keyframe_match.value.my_call.note: extra beat: no golden, composition-checked
+- keyframe_match.value.call.ssim: None
+- keyframe_match.value.call.min: 0.75
+- keyframe_match.value.call.pass: True
+- keyframe_match.value.call.golden: None
+- keyframe_match.value.call.note: extra beat: no golden, composition-checked
+- keyframe_match.value.act_a.ssim: None
+- keyframe_match.value.act_a.min: 0.75
+- keyframe_match.value.act_a.pass: True
+- keyframe_match.value.act_a.golden: None
+- keyframe_match.value.act_a.note: extra beat: no golden, composition-checked
+- keyframe_match.value.act_b.ssim: None
+- keyframe_match.value.act_b.min: 0.75
+- keyframe_match.value.act_b.pass: True
+- keyframe_match.value.act_b.golden: None
+- keyframe_match.value.act_b.note: extra beat: no golden, composition-checked
+- keyframe_match.value.close.ssim: None
+- keyframe_match.value.close.min: 0.75
+- keyframe_match.value.close.pass: True
+- keyframe_match.value.close.golden: None
+- keyframe_match.value.close.note: extra beat: no golden, composition-checked
+- keyframe_match.target: approved golden keyframes
+- keyframe_match.pass: True
+- keyframe_match.status: measured
+- composition.value.hook.pass: True
+- composition.value.hook.checks.fill_pct.pass: True
+- composition.value.hook.checks.fill_pct.value: 94.03
+- composition.value.hook.checks.small_text.pass: True
+- composition.value.hook.checks.caption_zone.pass: True
+- composition.value.hook.checks.platform_zone.pass: True
+- composition.value.hook.checks.edges.pass: True
+- composition.value.hook.checks.illustration.pass: True
+- composition.value.hook.checks.illustration.value: 0.43478260869565216
+- composition.value.hook.frame: 98
+- composition.value.matter.pass: True
+- composition.value.matter.checks.fill_pct.pass: True
+- composition.value.matter.checks.fill_pct.value: 93.95
+- composition.value.matter.checks.small_text.pass: True
+- composition.value.matter.checks.caption_zone.pass: True
+- composition.value.matter.checks.platform_zone.pass: True
+- composition.value.matter.checks.edges.pass: True
+- composition.value.matter.checks.illustration.pass: True
+- composition.value.matter.checks.illustration.value: 0.42105263157894735
+- composition.value.matter.frame: 169
+- composition.value.airbnb.pass: True
+- composition.value.airbnb.checks.fill_pct.pass: True
+- composition.value.airbnb.checks.fill_pct.value: 91.19
+- composition.value.airbnb.checks.small_text.pass: True
+- composition.value.airbnb.checks.caption_zone.pass: True
+- composition.value.airbnb.checks.platform_zone.pass: True
+- composition.value.airbnb.checks.edges.pass: True
+- composition.value.airbnb.checks.illustration.pass: True
+- composition.value.airbnb.checks.illustration.value: 0.45454545454545453
+- composition.value.airbnb.frame: 304
+- composition.value.fling.pass: True
+- composition.value.fling.checks.fill_pct.pass: True
+- composition.value.fling.checks.fill_pct.value: 92.96
+- composition.value.fling.checks.small_text.pass: True
+- composition.value.fling.checks.caption_zone.pass: True
+- composition.value.fling.checks.platform_zone.pass: True
+- composition.value.fling.checks.edges.pass: True
+- composition.value.fling.checks.illustration.pass: True
+- composition.value.fling.checks.illustration.value: 0.5
+- composition.value.fling.frame: 461
+- composition.value.title.pass: True
+- composition.value.title.checks.fill_pct.pass: True
+- composition.value.title.checks.fill_pct.value: 95.45
+- composition.value.title.checks.small_text.pass: True
+- composition.value.title.checks.caption_zone.pass: True
+- composition.value.title.checks.platform_zone.pass: True
+- composition.value.title.checks.edges.pass: True
+- composition.value.title.checks.illustration.pass: True
+- composition.value.title.checks.illustration.value: None
+- composition.value.title.frame: 631
+- composition.value.born.pass: True
+- composition.value.born.checks.fill_pct.pass: True
+- composition.value.born.checks.fill_pct.value: 94.4
+- composition.value.born.checks.small_text.pass: True
+- composition.value.born.checks.caption_zone.pass: True
+- composition.value.born.checks.platform_zone.pass: True
+- composition.value.born.checks.edges.pass: True
+- composition.value.born.checks.illustration.pass: True
+- composition.value.born.checks.illustration.value: None
+- composition.value.born.frame: 819
+- composition.value.born_third.pass: True
+- composition.value.born_third.checks.fill_pct.pass: True
+- composition.value.born_third.checks.fill_pct.value: 92.2
+- composition.value.born_third.checks.small_text.pass: True
+- composition.value.born_third.checks.caption_zone.pass: True
+- composition.value.born_third.checks.platform_zone.pass: True
+- composition.value.born_third.checks.edges.pass: True
+- composition.value.born_third.checks.illustration.pass: True
+- composition.value.born_third.checks.illustration.value: None
+- composition.value.born_third.frame: 964
+- composition.value.born_claude.pass: True
+- composition.value.born_claude.checks.fill_pct.pass: True
+- composition.value.born_claude.checks.fill_pct.value: 92.16
+- composition.value.born_claude.checks.small_text.pass: True
+- composition.value.born_claude.checks.caption_zone.pass: True
+- composition.value.born_claude.checks.platform_zone.pass: True
+- composition.value.born_claude.checks.edges.pass: True
+- composition.value.born_claude.checks.illustration.pass: True
+- composition.value.born_claude.checks.illustration.value: None
+- composition.value.born_claude.frame: 1099
+- composition.value.lives.pass: True
+- composition.value.lives.checks.fill_pct.pass: True
+- composition.value.lives.checks.fill_pct.value: 92.34
+- composition.value.lives.checks.small_text.pass: True
+- composition.value.lives.checks.caption_zone.pass: True
+- composition.value.lives.checks.platform_zone.pass: True
+- composition.value.lives.checks.edges.pass: True
+- composition.value.lives.checks.illustration.pass: True
+- composition.value.lives.checks.illustration.value: None
+- composition.value.lives.frame: 1342
+- composition.value.open.pass: True
+- composition.value.open.checks.fill_pct.pass: True
+- composition.value.open.checks.fill_pct.value: 95.04
+- composition.value.open.checks.small_text.pass: True
+- composition.value.open.checks.caption_zone.pass: True
+- composition.value.open.checks.platform_zone.pass: True
+- composition.value.open.checks.edges.pass: True
+- composition.value.open.checks.illustration.pass: True
+- composition.value.open.checks.illustration.value: 0.6
+- composition.value.open.frame: 1532
+- composition.value.result_a.pass: True
+- composition.value.result_a.checks.fill_pct.pass: True
+- composition.value.result_a.checks.fill_pct.value: 94.11
+- composition.value.result_a.checks.small_text.pass: True
+- composition.value.result_a.checks.caption_zone.pass: True
+- composition.value.result_a.checks.platform_zone.pass: True
+- composition.value.result_a.checks.edges.pass: True
+- composition.value.result_a.checks.illustration.pass: True
+- composition.value.result_a.checks.illustration.value: 0.5263157894736842
+- composition.value.result_a.frame: 1632
+- composition.value.result_b.pass: True
+- composition.value.result_b.checks.fill_pct.pass: True
+- composition.value.result_b.checks.fill_pct.value: 92.72
+- composition.value.result_b.checks.small_text.pass: True
+- composition.value.result_b.checks.caption_zone.pass: True
+- composition.value.result_b.checks.platform_zone.pass: True
+- composition.value.result_b.checks.edges.pass: True
+- composition.value.result_b.checks.illustration.pass: True
+- composition.value.result_b.checks.illustration.value: 0.6
+- composition.value.result_b.frame: 1675
+- composition.value.evidence.pass: True
+- composition.value.evidence.checks.fill_pct.pass: True
+- composition.value.evidence.checks.fill_pct.value: 96.47
+- composition.value.evidence.checks.small_text.pass: True
+- composition.value.evidence.checks.caption_zone.pass: True
+- composition.value.evidence.checks.platform_zone.pass: True
+- composition.value.evidence.checks.edges.pass: True
+- composition.value.evidence.checks.illustration.pass: True
+- composition.value.evidence.checks.illustration.value: 0.5555555555555556
+- composition.value.evidence.frame: 1711
+- composition.value.verdict.pass: True
+- composition.value.verdict.checks.fill_pct.pass: True
+- composition.value.verdict.checks.fill_pct.value: 95.01
+- composition.value.verdict.checks.small_text.pass: True
+- composition.value.verdict.checks.caption_zone.pass: True
+- composition.value.verdict.checks.platform_zone.pass: True
+- composition.value.verdict.checks.edges.pass: True
+- composition.value.verdict.checks.illustration.pass: True
+- composition.value.verdict.checks.illustration.value: 0.43478260869565216
+- composition.value.verdict.frame: 1793
+- composition.value.my_call.pass: True
+- composition.value.my_call.checks.fill_pct.pass: True
+- composition.value.my_call.checks.fill_pct.value: 95.48
+- composition.value.my_call.checks.small_text.pass: True
+- composition.value.my_call.checks.caption_zone.pass: True
+- composition.value.my_call.checks.platform_zone.pass: True
+- composition.value.my_call.checks.edges.pass: True
+- composition.value.my_call.checks.illustration.pass: True
+- composition.value.my_call.checks.illustration.value: None
+- composition.value.my_call.frame: 1850
+- composition.value.call.pass: True
+- composition.value.call.checks.fill_pct.pass: True
+- composition.value.call.checks.fill_pct.value: 95.48
+- composition.value.call.checks.small_text.pass: True
+- composition.value.call.checks.caption_zone.pass: True
+- composition.value.call.checks.platform_zone.pass: True
+- composition.value.call.checks.edges.pass: True
+- composition.value.call.checks.illustration.pass: True
+- composition.value.call.checks.illustration.value: None
+- composition.value.call.frame: 1950
+- composition.value.act_a.pass: True
+- composition.value.act_a.checks.fill_pct.pass: True
+- composition.value.act_a.checks.fill_pct.value: 91.84
+- composition.value.act_a.checks.small_text.pass: True
+- composition.value.act_a.checks.caption_zone.pass: True
+- composition.value.act_a.checks.platform_zone.pass: True
+- composition.value.act_a.checks.edges.pass: True
+- composition.value.act_a.checks.illustration.pass: True
+- composition.value.act_a.checks.illustration.value: None
+- composition.value.act_a.frame: 2113
+- composition.value.act_b.pass: True
+- composition.value.act_b.checks.fill_pct.pass: True
+- composition.value.act_b.checks.fill_pct.value: 86.19
+- composition.value.act_b.checks.small_text.pass: True
+- composition.value.act_b.checks.caption_zone.pass: True
+- composition.value.act_b.checks.platform_zone.pass: True
+- composition.value.act_b.checks.edges.pass: True
+- composition.value.act_b.checks.illustration.pass: True
+- composition.value.act_b.checks.illustration.value: None
+- composition.value.act_b.frame: 2173
+- composition.value.close.pass: True
+- composition.value.close.checks.fill_pct.pass: True
+- composition.value.close.checks.fill_pct.value: 86.51
+- composition.value.close.checks.small_text.pass: True
+- composition.value.close.checks.caption_zone.pass: True
+- composition.value.close.checks.platform_zone.pass: True
+- composition.value.close.checks.edges.pass: True
+- composition.value.close.checks.illustration.pass: True
+- composition.value.close.checks.illustration.value: None
+- composition.value.close.frame: 2238
+- composition.target: design lock composition thresholds
+- composition.pass: True
+- composition.status: measured
+- composition.applies: True
+- composition.pass: True
+- composition.beats.hook.pass: True
+- composition.beats.hook.checks.fill_pct.pass: True
+- composition.beats.hook.checks.fill_pct.value: 94.03
+- composition.beats.hook.checks.small_text.pass: True
+- composition.beats.hook.checks.caption_zone.pass: True
+- composition.beats.hook.checks.platform_zone.pass: True
+- composition.beats.hook.checks.edges.pass: True
+- composition.beats.hook.checks.illustration.pass: True
+- composition.beats.hook.checks.illustration.value: 0.43478260869565216
+- composition.beats.hook.frame: 98
+- composition.beats.matter.pass: True
+- composition.beats.matter.checks.fill_pct.pass: True
+- composition.beats.matter.checks.fill_pct.value: 93.95
+- composition.beats.matter.checks.small_text.pass: True
+- composition.beats.matter.checks.caption_zone.pass: True
+- composition.beats.matter.checks.platform_zone.pass: True
+- composition.beats.matter.checks.edges.pass: True
+- composition.beats.matter.checks.illustration.pass: True
+- composition.beats.matter.checks.illustration.value: 0.42105263157894735
+- composition.beats.matter.frame: 169
+- composition.beats.airbnb.pass: True
+- composition.beats.airbnb.checks.fill_pct.pass: True
+- composition.beats.airbnb.checks.fill_pct.value: 91.19
+- composition.beats.airbnb.checks.small_text.pass: True
+- composition.beats.airbnb.checks.caption_zone.pass: True
+- composition.beats.airbnb.checks.platform_zone.pass: True
+- composition.beats.airbnb.checks.edges.pass: True
+- composition.beats.airbnb.checks.illustration.pass: True
+- composition.beats.airbnb.checks.illustration.value: 0.45454545454545453
+- composition.beats.airbnb.frame: 304
+- composition.beats.fling.pass: True
+- composition.beats.fling.checks.fill_pct.pass: True
+- composition.beats.fling.checks.fill_pct.value: 92.96
+- composition.beats.fling.checks.small_text.pass: True
+- composition.beats.fling.checks.caption_zone.pass: True
+- composition.beats.fling.checks.platform_zone.pass: True
+- composition.beats.fling.checks.edges.pass: True
+- composition.beats.fling.checks.illustration.pass: True
+- composition.beats.fling.checks.illustration.value: 0.5
+- composition.beats.fling.frame: 461
+- composition.beats.title.pass: True
+- composition.beats.title.checks.fill_pct.pass: True
+- composition.beats.title.checks.fill_pct.value: 95.45
+- composition.beats.title.checks.small_text.pass: True
+- composition.beats.title.checks.caption_zone.pass: True
+- composition.beats.title.checks.platform_zone.pass: True
+- composition.beats.title.checks.edges.pass: True
+- composition.beats.title.checks.illustration.pass: True
+- composition.beats.title.checks.illustration.value: None
+- composition.beats.title.frame: 631
+- composition.beats.born.pass: True
+- composition.beats.born.checks.fill_pct.pass: True
+- composition.beats.born.checks.fill_pct.value: 94.4
+- composition.beats.born.checks.small_text.pass: True
+- composition.beats.born.checks.caption_zone.pass: True
+- composition.beats.born.checks.platform_zone.pass: True
+- composition.beats.born.checks.edges.pass: True
+- composition.beats.born.checks.illustration.pass: True
+- composition.beats.born.checks.illustration.value: None
+- composition.beats.born.frame: 819
+- composition.beats.born_third.pass: True
+- composition.beats.born_third.checks.fill_pct.pass: True
+- composition.beats.born_third.checks.fill_pct.value: 92.2
+- composition.beats.born_third.checks.small_text.pass: True
+- composition.beats.born_third.checks.caption_zone.pass: True
+- composition.beats.born_third.checks.platform_zone.pass: True
+- composition.beats.born_third.checks.edges.pass: True
+- composition.beats.born_third.checks.illustration.pass: True
+- composition.beats.born_third.checks.illustration.value: None
+- composition.beats.born_third.frame: 964
+- composition.beats.born_claude.pass: True
+- composition.beats.born_claude.checks.fill_pct.pass: True
+- composition.beats.born_claude.checks.fill_pct.value: 92.16
+- composition.beats.born_claude.checks.small_text.pass: True
+- composition.beats.born_claude.checks.caption_zone.pass: True
+- composition.beats.born_claude.checks.platform_zone.pass: True
+- composition.beats.born_claude.checks.edges.pass: True
+- composition.beats.born_claude.checks.illustration.pass: True
+- composition.beats.born_claude.checks.illustration.value: None
+- composition.beats.born_claude.frame: 1099
+- composition.beats.lives.pass: True
+- composition.beats.lives.checks.fill_pct.pass: True
+- composition.beats.lives.checks.fill_pct.value: 92.34
+- composition.beats.lives.checks.small_text.pass: True
+- composition.beats.lives.checks.caption_zone.pass: True
+- composition.beats.lives.checks.platform_zone.pass: True
+- composition.beats.lives.checks.edges.pass: True
+- composition.beats.lives.checks.illustration.pass: True
+- composition.beats.lives.checks.illustration.value: None
+- composition.beats.lives.frame: 1342
+- composition.beats.open.pass: True
+- composition.beats.open.checks.fill_pct.pass: True
+- composition.beats.open.checks.fill_pct.value: 95.04
+- composition.beats.open.checks.small_text.pass: True
+- composition.beats.open.checks.caption_zone.pass: True
+- composition.beats.open.checks.platform_zone.pass: True
+- composition.beats.open.checks.edges.pass: True
+- composition.beats.open.checks.illustration.pass: True
+- composition.beats.open.checks.illustration.value: 0.6
+- composition.beats.open.frame: 1532
+- composition.beats.result_a.pass: True
+- composition.beats.result_a.checks.fill_pct.pass: True
+- composition.beats.result_a.checks.fill_pct.value: 94.11
+- composition.beats.result_a.checks.small_text.pass: True
+- composition.beats.result_a.checks.caption_zone.pass: True
+- composition.beats.result_a.checks.platform_zone.pass: True
+- composition.beats.result_a.checks.edges.pass: True
+- composition.beats.result_a.checks.illustration.pass: True
+- composition.beats.result_a.checks.illustration.value: 0.5263157894736842
+- composition.beats.result_a.frame: 1632
+- composition.beats.result_b.pass: True
+- composition.beats.result_b.checks.fill_pct.pass: True
+- composition.beats.result_b.checks.fill_pct.value: 92.72
+- composition.beats.result_b.checks.small_text.pass: True
+- composition.beats.result_b.checks.caption_zone.pass: True
+- composition.beats.result_b.checks.platform_zone.pass: True
+- composition.beats.result_b.checks.edges.pass: True
+- composition.beats.result_b.checks.illustration.pass: True
+- composition.beats.result_b.checks.illustration.value: 0.6
+- composition.beats.result_b.frame: 1675
+- composition.beats.evidence.pass: True
+- composition.beats.evidence.checks.fill_pct.pass: True
+- composition.beats.evidence.checks.fill_pct.value: 96.47
+- composition.beats.evidence.checks.small_text.pass: True
+- composition.beats.evidence.checks.caption_zone.pass: True
+- composition.beats.evidence.checks.platform_zone.pass: True
+- composition.beats.evidence.checks.edges.pass: True
+- composition.beats.evidence.checks.illustration.pass: True
+- composition.beats.evidence.checks.illustration.value: 0.5555555555555556
+- composition.beats.evidence.frame: 1711
+- composition.beats.verdict.pass: True
+- composition.beats.verdict.checks.fill_pct.pass: True
+- composition.beats.verdict.checks.fill_pct.value: 95.01
+- composition.beats.verdict.checks.small_text.pass: True
+- composition.beats.verdict.checks.caption_zone.pass: True
+- composition.beats.verdict.checks.platform_zone.pass: True
+- composition.beats.verdict.checks.edges.pass: True
+- composition.beats.verdict.checks.illustration.pass: True
+- composition.beats.verdict.checks.illustration.value: 0.43478260869565216
+- composition.beats.verdict.frame: 1793
+- composition.beats.my_call.pass: True
+- composition.beats.my_call.checks.fill_pct.pass: True
+- composition.beats.my_call.checks.fill_pct.value: 95.48
+- composition.beats.my_call.checks.small_text.pass: True
+- composition.beats.my_call.checks.caption_zone.pass: True
+- composition.beats.my_call.checks.platform_zone.pass: True
+- composition.beats.my_call.checks.edges.pass: True
+- composition.beats.my_call.checks.illustration.pass: True
+- composition.beats.my_call.checks.illustration.value: None
+- composition.beats.my_call.frame: 1850
+- composition.beats.call.pass: True
+- composition.beats.call.checks.fill_pct.pass: True
+- composition.beats.call.checks.fill_pct.value: 95.48
+- composition.beats.call.checks.small_text.pass: True
+- composition.beats.call.checks.caption_zone.pass: True
+- composition.beats.call.checks.platform_zone.pass: True
+- composition.beats.call.checks.edges.pass: True
+- composition.beats.call.checks.illustration.pass: True
+- composition.beats.call.checks.illustration.value: None
+- composition.beats.call.frame: 1950
+- composition.beats.act_a.pass: True
+- composition.beats.act_a.checks.fill_pct.pass: True
+- composition.beats.act_a.checks.fill_pct.value: 91.84
+- composition.beats.act_a.checks.small_text.pass: True
+- composition.beats.act_a.checks.caption_zone.pass: True
+- composition.beats.act_a.checks.platform_zone.pass: True
+- composition.beats.act_a.checks.edges.pass: True
+- composition.beats.act_a.checks.illustration.pass: True
+- composition.beats.act_a.checks.illustration.value: None
+- composition.beats.act_a.frame: 2113
+- composition.beats.act_b.pass: True
+- composition.beats.act_b.checks.fill_pct.pass: True
+- composition.beats.act_b.checks.fill_pct.value: 86.19
+- composition.beats.act_b.checks.small_text.pass: True
+- composition.beats.act_b.checks.caption_zone.pass: True
+- composition.beats.act_b.checks.platform_zone.pass: True
+- composition.beats.act_b.checks.edges.pass: True
+- composition.beats.act_b.checks.illustration.pass: True
+- composition.beats.act_b.checks.illustration.value: None
+- composition.beats.act_b.frame: 2173
+- composition.beats.close.pass: True
+- composition.beats.close.checks.fill_pct.pass: True
+- composition.beats.close.checks.fill_pct.value: 86.51
+- composition.beats.close.checks.small_text.pass: True
+- composition.beats.close.checks.caption_zone.pass: True
+- composition.beats.close.checks.platform_zone.pass: True
+- composition.beats.close.checks.edges.pass: True
+- composition.beats.close.checks.illustration.pass: True
+- composition.beats.close.checks.illustration.value: None
+- composition.beats.close.frame: 2238
+- keyframes.applies: True
+- keyframes.pass: True
+- keyframes.beats.hook.ssim: None
+- keyframes.beats.hook.min: 0.75
+- keyframes.beats.hook.pass: True
+- keyframes.beats.hook.golden: None
+- keyframes.beats.hook.note: extra beat: no golden, composition-checked
+- keyframes.beats.matter.ssim: None
+- keyframes.beats.matter.min: 0.75
+- keyframes.beats.matter.pass: True
+- keyframes.beats.matter.golden: None
+- keyframes.beats.matter.note: extra beat: no golden, composition-checked
+- keyframes.beats.airbnb.ssim: None
+- keyframes.beats.airbnb.min: 0.75
+- keyframes.beats.airbnb.pass: True
+- keyframes.beats.airbnb.golden: None
+- keyframes.beats.airbnb.note: extra beat: no golden, composition-checked
+- keyframes.beats.fling.ssim: None
+- keyframes.beats.fling.min: 0.75
+- keyframes.beats.fling.pass: True
+- keyframes.beats.fling.golden: None
+- keyframes.beats.fling.note: extra beat: no golden, composition-checked
+- keyframes.beats.title.ssim: 0.777349871898966
+- keyframes.beats.title.min: 0.75
+- keyframes.beats.title.pass: True
+- keyframes.beats.title.golden: two-passports
+- keyframes.beats.title.frame: 631
+- keyframes.beats.born.ssim: 0.84994617729453
+- keyframes.beats.born.min: 0.75
+- keyframes.beats.born.pass: True
+- keyframes.beats.born.golden: two-passports
+- keyframes.beats.born.frame: 819
+- keyframes.beats.born_third.ssim: None
+- keyframes.beats.born_third.min: 0.75
+- keyframes.beats.born_third.pass: True
+- keyframes.beats.born_third.golden: None
+- keyframes.beats.born_third.note: extra beat: no golden, composition-checked
+- keyframes.beats.born_claude.ssim: None
+- keyframes.beats.born_claude.min: 0.75
+- keyframes.beats.born_claude.pass: True
+- keyframes.beats.born_claude.golden: None
+- keyframes.beats.born_claude.note: extra beat: no golden, composition-checked
+- keyframes.beats.lives.ssim: 0.8542950607381915
+- keyframes.beats.lives.min: 0.75
+- keyframes.beats.lives.pass: True
+- keyframes.beats.lives.golden: two-passports
+- keyframes.beats.lives.frame: 1342
+- keyframes.beats.open.ssim: 0.8192461047715506
+- keyframes.beats.open.min: 0.75
+- keyframes.beats.open.pass: True
+- keyframes.beats.open.golden: hand-held-screen
+- keyframes.beats.open.frame: 1532
+- keyframes.beats.result_a.ssim: 0.7544489607042469
+- keyframes.beats.result_a.min: 0.75
+- keyframes.beats.result_a.pass: True
+- keyframes.beats.result_a.golden: hand-held-screen
+- keyframes.beats.result_a.frame: 1632
+- keyframes.beats.result_b.ssim: 0.7976486721582083
+- keyframes.beats.result_b.min: 0.75
+- keyframes.beats.result_b.pass: True
+- keyframes.beats.result_b.golden: hand-held-screen
+- keyframes.beats.result_b.frame: 1675
+- keyframes.beats.evidence.ssim: 0.821952584664116
+- keyframes.beats.evidence.min: 0.75
+- keyframes.beats.evidence.pass: True
+- keyframes.beats.evidence.golden: hand-held-screen
+- keyframes.beats.evidence.frame: 1711
+- keyframes.beats.verdict.ssim: 0.8284093672539569
+- keyframes.beats.verdict.min: 0.75
+- keyframes.beats.verdict.pass: True
+- keyframes.beats.verdict.golden: hand-held-screen
+- keyframes.beats.verdict.frame: 1793
+- keyframes.beats.my_call.ssim: None
+- keyframes.beats.my_call.min: 0.75
+- keyframes.beats.my_call.pass: True
+- keyframes.beats.my_call.golden: None
+- keyframes.beats.my_call.note: extra beat: no golden, composition-checked
+- keyframes.beats.call.ssim: None
+- keyframes.beats.call.min: 0.75
+- keyframes.beats.call.pass: True
+- keyframes.beats.call.golden: None
+- keyframes.beats.call.note: extra beat: no golden, composition-checked
+- keyframes.beats.act_a.ssim: None
+- keyframes.beats.act_a.min: 0.75
+- keyframes.beats.act_a.pass: True
+- keyframes.beats.act_a.golden: None
+- keyframes.beats.act_a.note: extra beat: no golden, composition-checked
+- keyframes.beats.act_b.ssim: None
+- keyframes.beats.act_b.min: 0.75
+- keyframes.beats.act_b.pass: True
+- keyframes.beats.act_b.golden: None
+- keyframes.beats.act_b.note: extra beat: no golden, composition-checked
+- keyframes.beats.close.ssim: None
+- keyframes.beats.close.min: 0.75
+- keyframes.beats.close.pass: True
+- keyframes.beats.close.golden: None
+- keyframes.beats.close.note: extra beat: no golden, composition-checked
+
+### Critic findings
+note at 78.3 s (other):
+Bed fade-out is truncated. The premix is 79.4 s but the cut is 78.634 s, so the planned 1.5 s fade (starts 77.9 s) is about half done at the cut. The ending is still soft: the last 20 ms sit near -50 dBFS and the last sample is -75 dBFS, so there is no click or hard cut. If the premix duration were set to the cut length the fade would complete.
+
+note at 30.0 s (other):
+Music presence rests mainly on the final mix, not on the sidecar. In the delivered file 99% of 100 ms windows are at or above -44.5 dBFS and only 1 of 786 is below -55 dBFS (the first 10 ms), so the bed never drops out. Under speech it sits about 19 dB under the voice, which is faint but present and inside the QC range.
+
+note at 65.0 s (other):
+The 'breathes in pauses' evidence is thin. Only 7 pause windows (3.5 s of 0.5 s windows) were measured, and none after 60 s (by_minute in_pauses_db is null). bed_loud_windows_pct uses a -60 dBFS threshold, which is a weak audibility test. The numbers pass, but they show the bed rises about 8.5 dB in the few real gaps and say little about the rest of the piece.
+
+note at 56.47 s (evidence):
+Picture unchanged from the approved cut, so not a regression. The evidence-beat sticker 'SCREEN RECORDING DEEPSEEK 24 OCT 2026' is the one element that could be read as a provenance sticker under the hard rule. It names the producer, date and what the recording is, which Q4 asks for. Left for Krish's call.
+
+### Anything not measured
+- Design judgment and final approval are not mechanical measurements.
+- brand.mark_tile: not applicable
+- motion.cue_sync: not applicable
+

@@ -1,0 +1,95 @@
+{
+  "schema": "ve-verdict/1",
+  "piece": "2026-10-23-friday-two-passports-ve",
+  "cut": "friday-tall",
+  "sha256": "b9968894aaf226f988837462fd979db0ac9b0ab0c8afbf6b4202319922c8d319",
+  "reviewer": "critic-fresh-8",
+  "reviewed_at": "2026-10-28T22:34:54.655602+00:00",
+  "lens_sha256": "2d62c9e235d86f192747eaeea0115befc2ef3ae7b6448684248271100582f7c1",
+  "frames_viewed": [
+    {
+      "at_s": 2.03
+    },
+    {
+      "at_s": 4.47
+    },
+    {
+      "at_s": 8.6
+    },
+    {
+      "at_s": 13.78
+    },
+    {
+      "at_s": 18.83
+    },
+    {
+      "at_s": 24.45
+    },
+    {
+      "at_s": 30.45
+    },
+    {
+      "at_s": 35.37
+    },
+    {
+      "at_s": 41.28
+    },
+    {
+      "at_s": 48.83
+    },
+    {
+      "at_s": 53.72
+    },
+    {
+      "at_s": 55.47
+    },
+    {
+      "at_s": 57.27
+    },
+    {
+      "at_s": 59.28
+    },
+    {
+      "at_s": 61.08
+    },
+    {
+      "at_s": 63.9
+    },
+    {
+      "at_s": 68.2
+    },
+    {
+      "at_s": 71.07
+    },
+    {
+      "at_s": 75.58
+    }
+  ],
+  "findings": [
+    {
+      "severity": "note",
+      "area": "other",
+      "frame_s": 78.3,
+      "text": "Bed fade-out is truncated. The premix is 79.4 s but the cut is 78.634 s, so the planned 1.5 s fade (starts 77.9 s) is about half done at the cut. The ending is still soft: the last 20 ms sit near -50 dBFS and the last sample is -75 dBFS, so there is no click or hard cut. If the premix duration were set to the cut length the fade would complete."
+    },
+    {
+      "severity": "note",
+      "area": "other",
+      "frame_s": 30.0,
+      "text": "Music presence rests mainly on the final mix, not on the sidecar. In the delivered file 99% of 100 ms windows are at or above -44.5 dBFS and only 1 of 786 is below -55 dBFS (the first 10 ms), so the bed never drops out. Under speech it sits about 19 dB under the voice, which is faint but present and inside the QC range."
+    },
+    {
+      "severity": "note",
+      "area": "other",
+      "frame_s": 65.0,
+      "text": "The 'breathes in pauses' evidence is thin. Only 7 pause windows (3.5 s of 0.5 s windows) were measured, and none after 60 s (by_minute in_pauses_db is null). bed_loud_windows_pct uses a -60 dBFS threshold, which is a weak audibility test. The numbers pass, but they show the bed rises about 8.5 dB in the few real gaps and say little about the rest of the piece."
+    },
+    {
+      "severity": "note",
+      "area": "evidence",
+      "frame_s": 56.47,
+      "text": "Picture unchanged from the approved cut, so not a regression. The evidence-beat sticker 'SCREEN RECORDING DEEPSEEK 24 OCT 2026' is the one element that could be read as a provenance sticker under the hard rule. It names the producer, date and what the recording is, which Q4 asks for. Left for Krish's call."
+    }
+  ],
+  "blocking": false
+}

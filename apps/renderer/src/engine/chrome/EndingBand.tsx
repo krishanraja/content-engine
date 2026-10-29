@@ -21,7 +21,8 @@ export function endingBandLayout(props: Pick<EngineRenderProps, 'aspect' | 'bran
   const logoWidth = tall ? Math.min(HOUSE.band.logoWidth, width - safe.leftPx - safe.rightPx - HOUSE.band.mastGap - sideWidth) : 420
   const logoHeight = logoWidth * props.brand.stacked.pixelHeight / props.brand.stacked.pixelWidth
   const mastHeight = tall ? Math.max(logoHeight, 2 * HOUSE.mono.size * 1.3 + HOUSE.pill.size + 2 * HOUSE.band.sideGap + 2 * HOUSE.pill.paddingY) : 220
-  const tickerHeight = tall ? HOUSE.band.tickerHeight + HOUSE.band.tickerRule : 100
+  // `ending.ticker: false` draws the band without the scrolling promise strip: ink, logo, day, pill and the URL.
+  const tickerHeight = props.ending?.ticker === false ? 0 : tall ? HOUSE.band.tickerHeight + HOUSE.band.tickerRule : 100
   const height = tall ? tickerHeight + HOUSE.band.mastPaddingTop + mastHeight + HOUSE.band.mastPaddingBottom : 320
   const top = tall ? Math.min(1060, 1920 - safe.bottomPx - height) : 1080 - safe.bottomPx - height
   return { left: 0, top, width, height, logoWidth, tickerHeight,
@@ -52,11 +53,11 @@ export function EndingBand({ props, frame }: EndingBandProps): React.ReactElemen
   return (
     <div style={{ position: 'absolute', zIndex: 920, left: 0, top: model.top, width: model.width, height: model.height,
       background: tokens.ink, color: tokens.cream, opacity: Math.min(1, model.arrival * 1.5), pointerEvents: 'none' }}>
-      <div style={{ boxSizing: 'border-box', height: model.tickerHeight, display: 'flex', alignItems: 'center', whiteSpace: 'nowrap', overflow: 'hidden', borderBottom: `${b.tickerRule}px solid ${HOUSE_TICKER_RULE}`, paddingLeft: b.tickerPaddingLeft, fontFamily: HOUSE_FONTS.display, fontSize: b.tickerSize, textTransform: 'uppercase', letterSpacing: `${b.tickerLetterSpacingEm}em` }}>
+      {model.tickerHeight > 0 && <div style={{ boxSizing: 'border-box', height: model.tickerHeight, display: 'flex', alignItems: 'center', whiteSpace: 'nowrap', overflow: 'hidden', borderBottom: `${b.tickerRule}px solid ${HOUSE_TICKER_RULE}`, paddingLeft: b.tickerPaddingLeft, fontFamily: HOUSE_FONTS.display, fontSize: b.tickerSize, textTransform: 'uppercase', letterSpacing: `${b.tickerLetterSpacingEm}em` }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: b.tickerGap, flex: 'none', transform: `translateX(${-model.offset}px)` }}>
           {Array.from({ length: model.cycles }, () => cycle).flat().map((item, index) => item === '*' ? <TickerStar key={index} color={tokens.mint} /> : <span key={index}>{item}</span>)}
         </div>
-      </div>
+      </div>}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: b.mastGap,
         height: model.height - model.tickerHeight, boxSizing: 'border-box', padding: tall ? `${b.mastPaddingTop}px ${safe.rightPx}px ${b.mastPaddingBottom}px ${safe.leftPx}px` : `32px ${safe.rightPx}px 32px ${safe.leftPx}px` }}>
         <HouseLogo image={props.brand.stacked} width={model.logoWidth} />

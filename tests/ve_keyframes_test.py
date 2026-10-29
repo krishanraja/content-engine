@@ -23,6 +23,7 @@ sys.path.insert(0, str(ROOT / 'scripts'))
 import ve
 from velib import designlock, qc, qc_keyframes as kf
 from velib.common import ffmpeg
+from velib import lint
 from velib.lint import crew_lints
 
 
@@ -116,18 +117,35 @@ class FrozenTest(unittest.TestCase):
         self.assertIn('proof', ' '.join(report['findings']))
         self.assertTrue(report['beats']['close']['pass'])
 
-    def test_names_missing_and_extra_fail(self):
-        for change in ('rename', 'missing', 'extra'):
+    def test_locked_names_missing_fail_and_extras_are_golden_free(self):
+        for change in ('rename', 'missing'):
             props = copy.deepcopy(self.props)
             if change == 'rename':
                 props['beats'][0]['id'] = 'renamed'
-            elif change == 'missing':
-                props['beats'].pop()
             else:
-                props['beats'].append(dict(props['beats'][-1], id='extra'))
+                props['beats'].pop()
             report = self.checks(props)
             self.assertFalse(report['pass'], report)
-            self.assertIn('beat id', ' '.join(report['findings']))
+            self.assertIn('locked beat missing', ' '.join(report['findings']))
+        # An extra beat the lock does not name is composition-checked only: no golden, never a failure by itself.
+        props = copy.deepcopy(self.props)
+        props['beats'].append(dict(props['beats'][-1], id='extra'))
+        report = self.checks(props)
+        self.assertTrue(report['pass'], report)
+        self.assertIsNone(report['beats']['extra']['golden'])
+        self.assertIsNone(report['beats']['extra']['ssim'])
+
+    def test_module_beats_use_the_module_golden(self):
+        # A frozen module format's beats are held to the module's stills, and only when the module is frozen.
+        lock = copy.deepcopy(self.lock)
+        lock['formats']['mod'] = copy.deepcopy(lock['formats']['synthetic'])
+        lock['formats']['mod'].update(role='module', beats=['mod_a'], frames_dir='goldens-mod',
+                                      keyframes={'mod_a': dict(lock['formats']['synthetic']['keyframes']['open'], sha256='0' * 64)})
+        self.assertEqual(kf.golden_owner(lock, 'synthetic', 'open'), 'synthetic')
+        self.assertIsNone(kf.golden_owner(lock, 'synthetic', 'mod_a'))  # frozen() fails: the hash does not match
+        with patch.object(designlock, 'frozen', return_value=(True, [])):
+            self.assertEqual(kf.golden_owner(lock, 'synthetic', 'mod_a'), 'mod')
+        self.assertIsNone(kf.golden_owner(lock, 'synthetic', 'unnamed'))
 
     def test_unfrozen_legacy_and_bad_video(self):
         lock = copy.deepcopy(self.lock)
@@ -174,6 +192,22 @@ class FrozenTest(unittest.TestCase):
             findings = crew_lints(spec)
         self.assertIn(f'beat ids must be {", ".join(names)} for format {spec["format"]}', '\n'.join(findings))
 
+    def test_lint_extra_and_module_beats(self):
+        spec = json.loads((ROOT / 'fixtures/ve/my-test-19s/spec.json').read_text(encoding='utf-8'))
+        names = [b['id'] for b in next(iter(spec['cuts'].values()))['beats']]
+        lock = {'formats': {spec['format']: {'beats': names},
+                            'mod': {'beats': ['m1', 'm2', 'm3'], 'role': 'module'}}}
+        beats = next(iter(spec['cuts'].values()))['beats']
+        def problem(ids):
+            return lint.beat_sequence_problem(lock, spec['format'], ids)
+        self.assertIsNone(problem(names))
+        self.assertIsNone(problem(['extra'] + names[:2] + ['m1', 'm3', 'x'] + names[2:]))
+        self.assertIn('beat ids must be', problem(names[1:]))
+        self.assertIn('beat ids must be', problem(list(reversed(names))))
+        self.assertIn('module mod beats must keep its order', problem(['m3', 'm1'] + names))
+        self.assertIn('unique', problem(names + ['x', 'x']))
+        self.assertTrue(beats)
+
     def test_qc_aggregation(self):
         with ExitStack() as stack:
             stack.enter_context(patch.object(qc, 'loudness', return_value={'integrated_lufs': -14, 'true_peak_dbtp': -1}))
@@ -183,7 +217,7 @@ class FrozenTest(unittest.TestCase):
             stack.enter_context(patch.object(qc, 'duration_s', return_value=5))
             stack.enter_context(patch('velib.qc_composition.composition_checks', return_value={'applies': False, 'note': 'synthetic frames'}))
             for module, name in [('qc_sync', 'av_xcorr'), ('qc_joins', 'decoder'), ('qc_captions', 'ocr'),
-                                 ('qc_brand', 'mark_tile'), ('qc_cues', 'cue_sync')]:
+                                 ('qc_brand', 'mark_tile'), ('qc_cues', 'cue_sync'), ('qc_audio', 'bed')]:
                 stack.enter_context(patch(f'velib.{module}.{name}', return_value={'pass': True, 'status': 'measured'}))
             inputs = dict(dialogue_master='master', edl=[], joins=[], pages=[], region=[], mark_png='mark',
                           beats=self.props['beats'], aspect='9:16', events=[], slots={})
@@ -199,6 +233,12 @@ class FrozenTest(unittest.TestCase):
                 self.assertTrue(report['complete'])
                 self.assertEqual(report['measured_pass'], passed)
                 self.assertEqual(report['keyframes'], detail)
+            # a wide cut is never held to the tall stills, whatever the key-frame module would say
+            wide = dict(inputs, aspect='16:9')
+            with patch.object(kf, 'keyframe_checks', return_value={'applies': True, 'pass': False, 'beats': {}, 'findings': ['x']}):
+                report = qc.run_qc('unused', 'scoreboard-test', **wide)
+            self.assertEqual(report['checks']['keyframe_match']['status'], 'not applicable')
+            self.assertTrue(report['measured_pass'])
 
 
 if __name__ == '__main__':

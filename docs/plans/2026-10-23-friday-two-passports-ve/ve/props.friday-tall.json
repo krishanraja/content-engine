@@ -1,0 +1,3659 @@
+{
+  "pieceId": "2026-10-23-friday-two-passports-ve",
+  "cutId": "friday-tall",
+  "format": "hand-held-screen",
+  "aspect": "9:16",
+  "fps": 30,
+  "durationFrames": 2359,
+  "tokens": {
+    "ink": "#0C1512",
+    "inkDeep": "#070D0B",
+    "inkSoft": "#16221D",
+    "cream": "#F4EFE4",
+    "mint": "#7EF0C0",
+    "channel": "#FF6A4D"
+  },
+  "series": {
+    "label": "mind.the.gap",
+    "day": "Fridays",
+    "promise": "Every call scored in public",
+    "site": "makeyourmindup.ai"
+  },
+  "brand": {
+    "mark": {
+      "src": "C:\\Users\\krish\\dev\\mindmake\\content-engine-ve\\.ve-work\\friday-short\\assets\\src\\assets\\brand\\makeyourmindup\\makeyourmindup-mark.png",
+      "pixelWidth": 831,
+      "pixelHeight": 740
+    },
+    "logo": {
+      "src": "C:\\Users\\krish\\dev\\mindmake\\content-engine-ve\\.ve-work\\friday-short\\assets\\src\\assets\\brand\\makeyourmindup\\makeyourmindup-horizontal.png",
+      "pixelWidth": 1200,
+      "pixelHeight": 141
+    },
+    "stacked": {
+      "src": "C:\\Users\\krish\\dev\\mindmake\\content-engine-ve\\.ve-work\\friday-short\\assets\\src\\assets\\brand\\makeyourmindup\\makeyourmindup-stacked.png",
+      "pixelWidth": 2415,
+      "pixelHeight": 740
+    }
+  },
+  "segments": [],
+  "audio": {
+    "stem": {
+      "src": "C:\\Users\\krish\\dev\\mindmake\\content-engine-ve\\.ve-work\\friday-short\\assets\\audio.friday-tall.wav",
+      "trimBeforeFrames": 0
+    },
+    "sfx": []
+  },
+  "captions": [
+    {
+      "fromFrame": 19,
+      "toFrame": 73,
+      "words": [
+        {
+          "text": "You",
+          "atFrame": 19
+        },
+        {
+          "text": "may",
+          "atFrame": 35
+        },
+        {
+          "text": "already",
+          "atFrame": 41
+        },
+        {
+          "text": "be",
+          "atFrame": 52
+        },
+        {
+          "text": "using",
+          "atFrame": 64
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 73,
+      "toFrame": 122,
+      "words": [
+        {
+          "text": "a",
+          "atFrame": 73
+        },
+        {
+          "text": "Chinese",
+          "atFrame": 77
+        },
+        {
+          "text": "AI.",
+          "atFrame": 88
+        }
+      ],
+      "swipeIndex": 1
+    },
+    {
+      "fromFrame": 122,
+      "toFrame": 181,
+      "words": [
+        {
+          "text": "Does",
+          "atFrame": 122
+        },
+        {
+          "text": "that",
+          "atFrame": 124
+        },
+        {
+          "text": "matter?",
+          "atFrame": 130
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 181,
+      "toFrame": 228,
+      "words": [
+        {
+          "text": "Airbnb's",
+          "atFrame": 181
+        },
+        {
+          "text": "boss",
+          "atFrame": 196
+        },
+        {
+          "text": "said",
+          "atFrame": 201
+        },
+        {
+          "text": "its",
+          "atFrame": 208
+        },
+        {
+          "text": "own",
+          "atFrame": 215
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 228,
+      "toFrame": 286,
+      "words": [
+        {
+          "text": "customer",
+          "atFrame": 228
+        },
+        {
+          "text": "service",
+          "atFrame": 242
+        },
+        {
+          "text": "leans",
+          "atFrame": 254
+        },
+        {
+          "text": "on",
+          "atFrame": 261
+        },
+        {
+          "text": "Qwen,",
+          "atFrame": 271
+        }
+      ],
+      "swipeIndex": 4
+    },
+    {
+      "fromFrame": 286,
+      "toFrame": 335,
+      "words": [
+        {
+          "text": "which",
+          "atFrame": 286
+        },
+        {
+          "text": "is",
+          "atFrame": 288
+        },
+        {
+          "text": "a",
+          "atFrame": 291
+        },
+        {
+          "text": "Chinese",
+          "atFrame": 295
+        },
+        {
+          "text": "AI.",
+          "atFrame": 305
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 335,
+      "toFrame": 365,
+      "words": [
+        {
+          "text": "He",
+          "atFrame": 335
+        },
+        {
+          "text": "called",
+          "atFrame": 340
+        },
+        {
+          "text": "it",
+          "atFrame": 344
+        },
+        {
+          "text": "fast",
+          "atFrame": 349
+        },
+        {
+          "text": "and",
+          "atFrame": 357
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 365,
+      "toFrame": 413,
+      "words": [
+        {
+          "text": "cheap,",
+          "atFrame": 365
+        },
+        {
+          "text": "which",
+          "atFrame": 385
+        },
+        {
+          "text": "is",
+          "atFrame": 392
+        },
+        {
+          "text": "what",
+          "atFrame": 396
+        },
+        {
+          "text": "most",
+          "atFrame": 403
+        }
+      ],
+      "swipeIndex": 0
+    },
+    {
+      "fromFrame": 413,
+      "toFrame": 439,
+      "words": [
+        {
+          "text": "of",
+          "atFrame": 413
+        },
+        {
+          "text": "us",
+          "atFrame": 417
+        },
+        {
+          "text": "want",
+          "atFrame": 420
+        },
+        {
+          "text": "from",
+          "atFrame": 426
+        },
+        {
+          "text": "a",
+          "atFrame": 436
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 439,
+      "toFrame": 492,
+      "words": [
+        {
+          "text": "holiday",
+          "atFrame": 439
+        },
+        {
+          "text": "fling.",
+          "atFrame": 447
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 492,
+      "toFrame": 536,
+      "words": [
+        {
+          "text": "See,",
+          "atFrame": 492
+        },
+        {
+          "text": "every",
+          "atFrame": 498
+        },
+        {
+          "text": "AI",
+          "atFrame": 505
+        },
+        {
+          "text": "has",
+          "atFrame": 513
+        },
+        {
+          "text": "two",
+          "atFrame": 529
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 536,
+      "toFrame": 586,
+      "words": [
+        {
+          "text": "passports,",
+          "atFrame": 536
+        },
+        {
+          "text": "where",
+          "atFrame": 562
+        },
+        {
+          "text": "it",
+          "atFrame": 567
+        },
+        {
+          "text": "was",
+          "atFrame": 573
+        },
+        {
+          "text": "born",
+          "atFrame": 578
+        }
+      ],
+      "swipeIndex": 0
+    },
+    {
+      "fromFrame": 586,
+      "toFrame": 638,
+      "words": [
+        {
+          "text": "and",
+          "atFrame": 586
+        },
+        {
+          "text": "where",
+          "atFrame": 605
+        },
+        {
+          "text": "it",
+          "atFrame": 609
+        },
+        {
+          "text": "lives.",
+          "atFrame": 612
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 638,
+      "toFrame": 672,
+      "words": [
+        {
+          "text": "Where",
+          "atFrame": 638
+        },
+        {
+          "text": "it",
+          "atFrame": 642
+        },
+        {
+          "text": "was",
+          "atFrame": 646
+        },
+        {
+          "text": "born",
+          "atFrame": 649
+        },
+        {
+          "text": "shapes",
+          "atFrame": 661
+        }
+      ],
+      "swipeIndex": 3
+    },
+    {
+      "fromFrame": 672,
+      "toFrame": 692,
+      "words": [
+        {
+          "text": "its",
+          "atFrame": 672
+        },
+        {
+          "text": "answers.",
+          "atFrame": 680
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 692,
+      "toFrame": 745,
+      "words": [
+        {
+          "text": "An",
+          "atFrame": 692
+        },
+        {
+          "text": "American",
+          "atFrame": 712
+        },
+        {
+          "text": "newspaper",
+          "atFrame": 721
+        },
+        {
+          "text": "recently",
+          "atFrame": 731
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 745,
+      "toFrame": 802,
+      "words": [
+        {
+          "text": "asked",
+          "atFrame": 745
+        },
+        {
+          "text": "Chinese",
+          "atFrame": 758
+        },
+        {
+          "text": "chatbots",
+          "atFrame": 776
+        },
+        {
+          "text": "some",
+          "atFrame": 788
+        },
+        {
+          "text": "news",
+          "atFrame": 794
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 802,
+      "toFrame": 841,
+      "words": [
+        {
+          "text": "questions,",
+          "atFrame": 802
+        },
+        {
+          "text": "and",
+          "atFrame": 829
+        },
+        {
+          "text": "a",
+          "atFrame": 831
+        },
+        {
+          "text": "third",
+          "atFrame": 834
+        },
+        {
+          "text": "of",
+          "atFrame": 838
+        }
+      ],
+      "swipeIndex": 3
+    },
+    {
+      "fromFrame": 841,
+      "toFrame": 895,
+      "words": [
+        {
+          "text": "the",
+          "atFrame": 841
+        },
+        {
+          "text": "time",
+          "atFrame": 845
+        },
+        {
+          "text": "they",
+          "atFrame": 852
+        },
+        {
+          "text": "refused,",
+          "atFrame": 864
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 895,
+      "toFrame": 934,
+      "words": [
+        {
+          "text": "gave",
+          "atFrame": 895
+        },
+        {
+          "text": "China's",
+          "atFrame": 902
+        },
+        {
+          "text": "line,",
+          "atFrame": 919
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 934,
+      "toFrame": 998,
+      "words": [
+        {
+          "text": "or",
+          "atFrame": 934
+        },
+        {
+          "text": "got",
+          "atFrame": 940
+        },
+        {
+          "text": "it",
+          "atFrame": 949
+        },
+        {
+          "text": "wrong.",
+          "atFrame": 954
+        }
+      ],
+      "swipeIndex": 3
+    },
+    {
+      "fromFrame": 998,
+      "toFrame": 1055,
+      "words": [
+        {
+          "text": "Claude,",
+          "atFrame": 998
+        },
+        {
+          "text": "an",
+          "atFrame": 1007
+        },
+        {
+          "text": "American",
+          "atFrame": 1011
+        },
+        {
+          "text": "AI,",
+          "atFrame": 1021
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1055,
+      "toFrame": 1124,
+      "words": [
+        {
+          "text": "answered",
+          "atFrame": 1055
+        },
+        {
+          "text": "them",
+          "atFrame": 1056
+        },
+        {
+          "text": "all.",
+          "atFrame": 1063
+        }
+      ],
+      "swipeIndex": 0
+    },
+    {
+      "fromFrame": 1124,
+      "toFrame": 1183,
+      "words": [
+        {
+          "text": "Where",
+          "atFrame": 1124
+        },
+        {
+          "text": "it",
+          "atFrame": 1128
+        },
+        {
+          "text": "lives",
+          "atFrame": 1134
+        },
+        {
+          "text": "decides",
+          "atFrame": 1146
+        },
+        {
+          "text": "who",
+          "atFrame": 1175
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1183,
+      "toFrame": 1229,
+      "words": [
+        {
+          "text": "sees",
+          "atFrame": 1183
+        },
+        {
+          "text": "your",
+          "atFrame": 1191
+        },
+        {
+          "text": "data.",
+          "atFrame": 1196
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1229,
+      "toFrame": 1260,
+      "words": [
+        {
+          "text": "Use",
+          "atFrame": 1229
+        },
+        {
+          "text": "DeepSeek,",
+          "atFrame": 1238
+        }
+      ],
+      "swipeIndex": 1
+    },
+    {
+      "fromFrame": 1260,
+      "toFrame": 1295,
+      "words": [
+        {
+          "text": "another",
+          "atFrame": 1260
+        },
+        {
+          "text": "Chinese",
+          "atFrame": 1266
+        },
+        {
+          "text": "AI,",
+          "atFrame": 1278
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1295,
+      "toFrame": 1325,
+      "words": [
+        {
+          "text": "and",
+          "atFrame": 1295
+        },
+        {
+          "text": "it",
+          "atFrame": 1296
+        },
+        {
+          "text": "keeps",
+          "atFrame": 1301
+        },
+        {
+          "text": "yours",
+          "atFrame": 1309
+        },
+        {
+          "text": "in",
+          "atFrame": 1316
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1325,
+      "toFrame": 1393,
+      "words": [
+        {
+          "text": "China.",
+          "atFrame": 1325
+        },
+        {
+          "text": "And",
+          "atFrame": 1353
+        },
+        {
+          "text": "at",
+          "atFrame": 1368
+        },
+        {
+          "text": "work,",
+          "atFrame": 1371
+        }
+      ],
+      "swipeIndex": 0
+    },
+    {
+      "fromFrame": 1393,
+      "toFrame": 1427,
+      "words": [
+        {
+          "text": "I",
+          "atFrame": 1393
+        },
+        {
+          "text": "asked",
+          "atFrame": 1395
+        },
+        {
+          "text": "Claude,",
+          "atFrame": 1403
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1427,
+      "toFrame": 1475,
+      "words": [
+        {
+          "text": "ChatGPT,",
+          "atFrame": 1427
+        },
+        {
+          "text": "and",
+          "atFrame": 1447
+        },
+        {
+          "text": "DeepSeek",
+          "atFrame": 1450
+        },
+        {
+          "text": "about",
+          "atFrame": 1461
+        },
+        {
+          "text": "a",
+          "atFrame": 1468
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1475,
+      "toFrame": 1534,
+      "words": [
+        {
+          "text": "supplier's",
+          "atFrame": 1475
+        },
+        {
+          "text": "cotton",
+          "atFrame": 1491
+        },
+        {
+          "text": "from",
+          "atFrame": 1498
+        },
+        {
+          "text": "Xinjiang",
+          "atFrame": 1514
+        },
+        {
+          "text": "in",
+          "atFrame": 1527
+        }
+      ],
+      "swipeIndex": 3
+    },
+    {
+      "fromFrame": 1534,
+      "toFrame": 1646,
+      "words": [
+        {
+          "text": "China.",
+          "atFrame": 1534
+        },
+        {
+          "text": "Two",
+          "atFrame": 1577
+        },
+        {
+          "text": "flagged",
+          "atFrame": 1580
+        },
+        {
+          "text": "forced",
+          "atFrame": 1591
+        },
+        {
+          "text": "labour.",
+          "atFrame": 1601
+        }
+      ],
+      "swipeIndex": 3
+    },
+    {
+      "fromFrame": 1646,
+      "toFrame": 1682,
+      "words": [
+        {
+          "text": "Now",
+          "atFrame": 1646
+        },
+        {
+          "text": "watch",
+          "atFrame": 1649
+        },
+        {
+          "text": "DeepSeek.",
+          "atFrame": 1656
+        }
+      ],
+      "swipeIndex": 2
+    },
+    {
+      "fromFrame": 1682,
+      "toFrame": 1715,
+      "words": [
+        {
+          "text": "It",
+          "atFrame": 1682
+        },
+        {
+          "text": "writes",
+          "atFrame": 1684
+        },
+        {
+          "text": "an",
+          "atFrame": 1690
+        },
+        {
+          "text": "answer,",
+          "atFrame": 1696
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1715,
+      "toFrame": 1754,
+      "words": [
+        {
+          "text": "then",
+          "atFrame": 1715
+        },
+        {
+          "text": "deletes",
+          "atFrame": 1719
+        },
+        {
+          "text": "it.",
+          "atFrame": 1730
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1754,
+      "toFrame": 1803,
+      "words": [
+        {
+          "text": "Every",
+          "atFrame": 1754
+        },
+        {
+          "text": "time.",
+          "atFrame": 1764
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1803,
+      "toFrame": 1842,
+      "words": [
+        {
+          "text": "My",
+          "atFrame": 1803
+        },
+        {
+          "text": "call",
+          "atFrame": 1808
+        },
+        {
+          "text": "is",
+          "atFrame": 1814
+        },
+        {
+          "text": "it's",
+          "atFrame": 1820
+        },
+        {
+          "text": "fine,",
+          "atFrame": 1826
+        }
+      ],
+      "swipeIndex": 4
+    },
+    {
+      "fromFrame": 1842,
+      "toFrame": 1866,
+      "words": [
+        {
+          "text": "if",
+          "atFrame": 1842
+        },
+        {
+          "text": "you",
+          "atFrame": 1846
+        },
+        {
+          "text": "don't",
+          "atFrame": 1849
+        },
+        {
+          "text": "mind",
+          "atFrame": 1857
+        },
+        {
+          "text": "where",
+          "atFrame": 1862
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1866,
+      "toFrame": 1908,
+      "words": [
+        {
+          "text": "your",
+          "atFrame": 1866
+        },
+        {
+          "text": "data",
+          "atFrame": 1870
+        },
+        {
+          "text": "goes.",
+          "atFrame": 1879
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1908,
+      "toFrame": 1932,
+      "words": [
+        {
+          "text": "But",
+          "atFrame": 1908
+        },
+        {
+          "text": "check",
+          "atFrame": 1914
+        },
+        {
+          "text": "what",
+          "atFrame": 1920
+        },
+        {
+          "text": "it",
+          "atFrame": 1924
+        },
+        {
+          "text": "tells",
+          "atFrame": 1928
+        }
+      ],
+      "swipeIndex": 1
+    },
+    {
+      "fromFrame": 1932,
+      "toFrame": 1987,
+      "words": [
+        {
+          "text": "you.",
+          "atFrame": 1932
+        },
+        {
+          "text": "And",
+          "atFrame": 1972
+        },
+        {
+          "text": "here's",
+          "atFrame": 1977
+        },
+        {
+          "text": "what",
+          "atFrame": 1982
+        },
+        {
+          "text": "I",
+          "atFrame": 1984
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1987,
+      "toFrame": 2012,
+      "words": [
+        {
+          "text": "do",
+          "atFrame": 1987
+        },
+        {
+          "text": "with",
+          "atFrame": 1990
+        },
+        {
+          "text": "this",
+          "atFrame": 1993
+        },
+        {
+          "text": "information",
+          "atFrame": 1996
+        },
+        {
+          "text": "if",
+          "atFrame": 2006
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 2012,
+      "toFrame": 2025,
+      "words": [
+        {
+          "text": "I",
+          "atFrame": 2012
+        },
+        {
+          "text": "were",
+          "atFrame": 2015
+        },
+        {
+          "text": "you.",
+          "atFrame": 2018
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 2025,
+      "toFrame": 2071,
+      "words": [
+        {
+          "text": "Ask",
+          "atFrame": 2025
+        },
+        {
+          "text": "software",
+          "atFrame": 2030
+        },
+        {
+          "text": "suppliers",
+          "atFrame": 2043
+        },
+        {
+          "text": "which",
+          "atFrame": 2054
+        },
+        {
+          "text": "AI",
+          "atFrame": 2062
+        }
+      ],
+      "swipeIndex": 2
+    },
+    {
+      "fromFrame": 2071,
+      "toFrame": 2101,
+      "words": [
+        {
+          "text": "they",
+          "atFrame": 2071
+        },
+        {
+          "text": "use",
+          "atFrame": 2079
+        },
+        {
+          "text": "and",
+          "atFrame": 2087
+        },
+        {
+          "text": "where",
+          "atFrame": 2093
+        },
+        {
+          "text": "it",
+          "atFrame": 2097
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 2101,
+      "toFrame": 2149,
+      "words": [
+        {
+          "text": "lives.",
+          "atFrame": 2101
+        },
+        {
+          "text": "And",
+          "atFrame": 2120
+        },
+        {
+          "text": "keep",
+          "atFrame": 2128
+        },
+        {
+          "text": "a",
+          "atFrame": 2135
+        },
+        {
+          "text": "second",
+          "atFrame": 2141
+        }
+      ],
+      "swipeIndex": 4
+    },
+    {
+      "fromFrame": 2149,
+      "toFrame": 2176,
+      "words": [
+        {
+          "text": "AI",
+          "atFrame": 2149
+        },
+        {
+          "text": "ready.",
+          "atFrame": 2155
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 2176,
+      "toFrame": 2200,
+      "words": [
+        {
+          "text": "The",
+          "atFrame": 2176
+        },
+        {
+          "text": "full",
+          "atFrame": 2176
+        },
+        {
+          "text": "deep",
+          "atFrame": 2182
+        },
+        {
+          "text": "dive",
+          "atFrame": 2187
+        },
+        {
+          "text": "is",
+          "atFrame": 2194
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 2200,
+      "toFrame": 2254,
+      "words": [
+        {
+          "text": "at",
+          "atFrame": 2200
+        },
+        {
+          "text": "makeyourmindup.ai.",
+          "atFrame": 2204
+        }
+      ],
+      "swipeIndex": null
+    }
+  ],
+  "beats": [
+    {
+      "id": "hook",
+      "role": "hook",
+      "layout": "STAGE",
+      "fromFrame": 0,
+      "toFrame": 122,
+      "uses": [
+        "phone_hook",
+        "hook_head",
+        "hook_scribble"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": true,
+      "keyFrame": 98
+    },
+    {
+      "id": "matter",
+      "role": "bridge",
+      "layout": "STAGE",
+      "fromFrame": 122,
+      "toFrame": 181,
+      "uses": [
+        "phone_hook",
+        "matter_head"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "keyFrame": 169
+    },
+    {
+      "id": "airbnb",
+      "role": "anchor",
+      "layout": "STAGE",
+      "fromFrame": 181,
+      "toFrame": 335,
+      "uses": [
+        "phone_hook",
+        "airbnb_head",
+        "airbnb_scribble"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "keyFrame": 304
+    },
+    {
+      "id": "fling",
+      "role": "pivot",
+      "layout": "STAGE",
+      "fromFrame": 335,
+      "toFrame": 492,
+      "uses": [
+        "phone_hook",
+        "fling_head",
+        "fling_scribble"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "keyFrame": 461
+    },
+    {
+      "id": "title",
+      "role": "anchor",
+      "layout": "STAGE",
+      "fromFrame": 492,
+      "toFrame": 638,
+      "uses": [
+        "title_born",
+        "title_lives",
+        "title_head",
+        "title_sticker_born",
+        "title_sticker_lives",
+        "title_scribble"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "keyFrame": 631
+    },
+    {
+      "id": "born",
+      "role": "bridge",
+      "layout": "STAGE",
+      "fromFrame": 638,
+      "toFrame": 829,
+      "uses": [
+        "born_page",
+        "born_head",
+        "born_sticker",
+        "born_scribble"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "keyFrame": 819
+    },
+    {
+      "id": "born_third",
+      "role": "pivot",
+      "layout": "STAGE",
+      "fromFrame": 829,
+      "toFrame": 998,
+      "uses": [
+        "born_page",
+        "third_head",
+        "third_refused",
+        "third_line",
+        "third_wrong",
+        "third_strip"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "keyFrame": 964
+    },
+    {
+      "id": "born_claude",
+      "role": "anchor",
+      "layout": "STAGE",
+      "fromFrame": 998,
+      "toFrame": 1124,
+      "uses": [
+        "born_page",
+        "claude_head",
+        "claude_scribble"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "keyFrame": 1099
+    },
+    {
+      "id": "lives",
+      "role": "pivot",
+      "layout": "STAGE",
+      "fromFrame": 1124,
+      "toFrame": 1353,
+      "uses": [
+        "lives_page",
+        "lives_head",
+        "lives_sticker",
+        "lives_scribble"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "keyFrame": 1342
+    },
+    {
+      "id": "open",
+      "role": "anchor",
+      "layout": "STAGE",
+      "fromFrame": 1353,
+      "toFrame": 1577,
+      "uses": [
+        "phone",
+        "open_headline",
+        "contestant_claude",
+        "contestant_chatgpt",
+        "contestant_deepseek",
+        "open_strip",
+        "open_scribble"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "keyFrame": 1532
+    },
+    {
+      "id": "result_a",
+      "role": "bridge",
+      "layout": "STAGE",
+      "fromFrame": 1577,
+      "toFrame": 1646,
+      "uses": [
+        "phone",
+        "result_a_headline",
+        "open_strip",
+        "result_a_scribble"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "keyFrame": 1632
+    },
+    {
+      "id": "result_b",
+      "role": "pivot",
+      "layout": "STAGE",
+      "fromFrame": 1646,
+      "toFrame": 1682,
+      "uses": [
+        "phone",
+        "result_b_headline",
+        "result_b_scribble"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "keyFrame": 1675
+    },
+    {
+      "id": "evidence",
+      "role": "anchor",
+      "layout": "STAGE",
+      "fromFrame": 1682,
+      "toFrame": 1754,
+      "uses": [
+        "phone",
+        "evidence_headline",
+        "recording_label",
+        "evidence_quote",
+        "evidence_scribble"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "keyFrame": 1711
+    },
+    {
+      "id": "verdict",
+      "role": "payoff",
+      "layout": "STAGE",
+      "fromFrame": 1754,
+      "toFrame": 1803,
+      "uses": [
+        "phone",
+        "verdict_strip",
+        "deletion_stamp",
+        "result_threads",
+        "verdict_scribble"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "keyFrame": 1793
+    },
+    {
+      "id": "my_call",
+      "role": "bridge",
+      "layout": "STAGE",
+      "fromFrame": 1803,
+      "toFrame": 1862,
+      "uses": [
+        "call_page"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "keyFrame": 1850
+    },
+    {
+      "id": "call",
+      "role": "call",
+      "layout": "STAGE",
+      "fromFrame": 1862,
+      "toFrame": 1972,
+      "uses": [
+        "call_page"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "keyFrame": 1950
+    },
+    {
+      "id": "act_a",
+      "role": "anchor",
+      "layout": "STAGE",
+      "fromFrame": 1972,
+      "toFrame": 2120,
+      "uses": [
+        "act_born",
+        "act_lives",
+        "act_a_head",
+        "act_which",
+        "act_where",
+        "act_tick"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "keyFrame": 2113
+    },
+    {
+      "id": "act_b",
+      "role": "bridge",
+      "layout": "STAGE",
+      "fromFrame": 2120,
+      "toFrame": 2176,
+      "uses": [
+        "second_page",
+        "act_b_head",
+        "act_b_tick"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "keyFrame": 2173
+    },
+    {
+      "id": "close",
+      "role": "pivot",
+      "layout": "STAGE",
+      "fromFrame": 2176,
+      "toFrame": 2359,
+      "uses": [
+        "second_page",
+        "close_head"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "keyFrame": 2238
+    }
+  ],
+  "objects": [
+    {
+      "obj": "phone_hook",
+      "device": "hand_phone_stage",
+      "meaning": "hand and phone carry the Airbnb quote through the hook",
+      "fromFrame": 0,
+      "toFrame": 492,
+      "variants": {},
+      "params": {
+        "cameras": {
+          "hook": {
+            "k": 1.8,
+            "rot": -3,
+            "tx": -78.65644928971597,
+            "ty": 535.8923197737188,
+            "backdrop": "cotton_flip",
+            "bg": {
+              "k": 1.75,
+              "x": -60,
+              "y": -210
+            }
+          },
+          "matter": {
+            "k": 1.9,
+            "rot": -10,
+            "tx": -267.859411132586,
+            "ty": 435.78673434414554,
+            "backdrop": "cotton",
+            "bg": {
+              "k": 1.5,
+              "x": -90,
+              "y": -330
+            }
+          },
+          "airbnb": {
+            "k": 2.1,
+            "rot": -1,
+            "tx": -235.02146620145396,
+            "ty": 385.1362339261145,
+            "backdrop": "hardware",
+            "bg": {
+              "k": 1.6,
+              "x": -330,
+              "y": -120
+            }
+          },
+          "fling": {
+            "k": 1.55,
+            "rot": -8,
+            "tx": -176.82774955021893,
+            "ty": 695.7458944361322,
+            "backdrop": "cotton_flip",
+            "bg": {
+              "k": 1.4,
+              "x": -180,
+              "y": -120
+            }
+          }
+        },
+        "start": "hook",
+        "glass": {
+          "bubble": {
+            "hook": {
+              "label": "At stake",
+              "quote": "Who sees your data.\nWhat it tells you."
+            },
+            "airbnb": {
+              "label": "Chesky to Bloomberg",
+              "quote": "We're relying a lot on Alibaba's Qwen model."
+            },
+            "fling": {
+              "label": "Chesky to Bloomberg",
+              "quote": "It's very good. It's also fast and cheap."
+            }
+          }
+        }
+      }
+    },
+    {
+      "obj": "hook_head",
+      "device": "headline",
+      "meaning": "hook head",
+      "fromFrame": 0,
+      "toFrame": 122,
+      "variants": {},
+      "params": {
+        "lines": [
+          "USING A",
+          "CHINESE AI?"
+        ],
+        "swipe": {
+          "line": 1,
+          "word": 0
+        },
+        "dek": "You may already be.",
+        "dekAt": {
+          "x": 72,
+          "y": 432,
+          "w": 880
+        }
+      }
+    },
+    {
+      "obj": "hook_scribble",
+      "device": "scribble",
+      "meaning": "hook scribble",
+      "fromFrame": 0,
+      "toFrame": 122,
+      "variants": {},
+      "params": {
+        "shape": "underline",
+        "colour": "cream",
+        "seed": "4",
+        "from": [
+          215,
+          896
+        ],
+        "to": [
+          700,
+          916
+        ],
+        "amp": 2.4,
+        "double": true
+      }
+    },
+    {
+      "obj": "matter_head",
+      "device": "headline",
+      "meaning": "matter head",
+      "fromFrame": 122,
+      "toFrame": 181,
+      "variants": {},
+      "params": {
+        "lines": [
+          "DOES THAT",
+          "MATTER?"
+        ],
+        "swipe": {
+          "line": 1,
+          "word": 0
+        }
+      }
+    },
+    {
+      "obj": "airbnb_head",
+      "device": "headline",
+      "meaning": "airbnb head",
+      "fromFrame": 181,
+      "toFrame": 335,
+      "variants": {},
+      "params": {
+        "lines": [
+          "ALIBABA'S",
+          "QWEN."
+        ],
+        "swipe": {
+          "line": 1,
+          "word": 0
+        },
+        "dek": "Airbnb's customer service leans on it.",
+        "dekAt": {
+          "x": 72,
+          "y": 430,
+          "w": 880
+        }
+      }
+    },
+    {
+      "obj": "airbnb_scribble",
+      "device": "scribble",
+      "meaning": "airbnb scribble",
+      "fromFrame": 181,
+      "toFrame": 335,
+      "variants": {},
+      "params": {
+        "shape": "underline",
+        "colour": "cream",
+        "seed": "6",
+        "from": [
+          330,
+          818
+        ],
+        "to": [
+          640,
+          846
+        ],
+        "amp": 2.4,
+        "double": false
+      }
+    },
+    {
+      "obj": "fling_head",
+      "device": "headline",
+      "meaning": "fling head",
+      "fromFrame": 335,
+      "toFrame": 492,
+      "variants": {},
+      "params": {
+        "lines": [
+          "FAST AND",
+          "CHEAP."
+        ],
+        "swipe": {
+          "line": 1,
+          "word": 0
+        },
+        "dek": "Which is what most of us want from a holiday fling.",
+        "dekAt": {
+          "x": 72,
+          "y": 432,
+          "w": 880
+        }
+      }
+    },
+    {
+      "obj": "fling_scribble",
+      "device": "scribble",
+      "meaning": "fling scribble",
+      "fromFrame": 335,
+      "toFrame": 492,
+      "variants": {},
+      "params": {
+        "shape": "underline",
+        "colour": "cream",
+        "seed": "2",
+        "from": [
+          205,
+          968
+        ],
+        "to": [
+          610,
+          1002
+        ],
+        "amp": 2.4,
+        "double": false
+      }
+    },
+    {
+      "obj": "title_head",
+      "device": "headline",
+      "meaning": "title head",
+      "fromFrame": 492,
+      "toFrame": 638,
+      "variants": {},
+      "params": {
+        "lines": [
+          "TWO",
+          "PASSPORTS"
+        ],
+        "swipe": {
+          "line": 0,
+          "word": 0
+        },
+        "dek": "Where it was born, and where it lives.",
+        "dekAt": {
+          "x": 482,
+          "y": 168,
+          "w": 490
+        },
+        "at": {
+          "x": 72,
+          "y": 144,
+          "w": 878,
+          "h": 373
+        }
+      }
+    },
+    {
+      "obj": "title_born",
+      "device": "passport_page",
+      "meaning": "title born",
+      "fromFrame": 492,
+      "toFrame": 638,
+      "variants": {},
+      "params": {
+        "spine": "left",
+        "at": {
+          "x": 72,
+          "y": 612
+        },
+        "label": "HOME COUNTRY",
+        "fields": [],
+        "ghostAI": true,
+        "mrz": [
+          "P<BORN",
+          "1<OF<2"
+        ]
+      }
+    },
+    {
+      "obj": "title_lives",
+      "device": "passport_page",
+      "meaning": "title lives",
+      "fromFrame": 492,
+      "toFrame": 638,
+      "variants": {},
+      "params": {
+        "spine": "right",
+        "at": {
+          "x": 532,
+          "y": 672
+        },
+        "label": "RESIDENCE",
+        "fields": [],
+        "ghostAI": true,
+        "mrz": [
+          "P<LIVES",
+          "2<OF<2"
+        ]
+      }
+    },
+    {
+      "obj": "title_sticker_born",
+      "device": "sticker",
+      "meaning": "title sticker born",
+      "fromFrame": 492,
+      "toFrame": 638,
+      "variants": {},
+      "params": {
+        "text": "BORN",
+        "tiltDeg": -6,
+        "at": {
+          "x": 350,
+          "y": 640
+        },
+        "tone": "channel"
+      }
+    },
+    {
+      "obj": "title_sticker_lives",
+      "device": "sticker",
+      "meaning": "title sticker lives",
+      "fromFrame": 492,
+      "toFrame": 638,
+      "variants": {},
+      "params": {
+        "text": "LIVES",
+        "tiltDeg": 4,
+        "at": {
+          "x": 800,
+          "y": 704
+        },
+        "tone": "channel"
+      }
+    },
+    {
+      "obj": "title_scribble",
+      "device": "scribble",
+      "meaning": "title scribble",
+      "fromFrame": 492,
+      "toFrame": 638,
+      "variants": {},
+      "params": {
+        "shape": "underline",
+        "colour": "mint",
+        "seed": "5",
+        "from": [
+          96,
+          560
+        ],
+        "to": [
+          948,
+          556
+        ],
+        "amp": 7,
+        "double": false
+      }
+    },
+    {
+      "obj": "born_page",
+      "device": "passport_page",
+      "meaning": "born page",
+      "fromFrame": 638,
+      "toFrame": 1124,
+      "variants": {},
+      "params": {
+        "spine": "left",
+        "at": {
+          "x": 72,
+          "y": 432
+        },
+        "label": "HOME COUNTRY",
+        "fields": [
+          {
+            "id": "china",
+            "label": "Chinese chatbots",
+            "top": "Chinese chatbots",
+            "main": "CHINA",
+            "at": {
+              "x": 300,
+              "y": 440
+            },
+            "state": "stamped",
+            "flag": "china",
+            "tiltDeg": 3
+          },
+          {
+            "id": "usa",
+            "label": "Claude",
+            "top": "Claude",
+            "main": "USA",
+            "at": {
+              "x": 92,
+              "y": 92
+            },
+            "state": "stamped",
+            "flag": "usa",
+            "tiltDeg": -5
+          }
+        ],
+        "ghostAI": false,
+        "mrz": [
+          "P<BORN<<USA<CHN",
+          "1<OF<2"
+        ]
+      }
+    },
+    {
+      "obj": "born_head",
+      "device": "headline",
+      "meaning": "born head",
+      "fromFrame": 638,
+      "toFrame": 829,
+      "variants": {},
+      "params": {
+        "lines": [
+          "BORN"
+        ],
+        "dek": "Where the company was founded.",
+        "dekAt": {
+          "x": 578,
+          "y": 206,
+          "w": 394
+        }
+      }
+    },
+    {
+      "obj": "born_sticker",
+      "device": "sticker",
+      "meaning": "born sticker",
+      "fromFrame": 638,
+      "toFrame": 829,
+      "variants": {},
+      "params": {
+        "text": "PASSPORT 1 OF 2",
+        "tiltDeg": 4,
+        "at": {
+          "x": 626,
+          "y": 392
+        },
+        "tone": "cream"
+      }
+    },
+    {
+      "obj": "born_scribble",
+      "device": "scribble",
+      "meaning": "born scribble",
+      "fromFrame": 638,
+      "toFrame": 829,
+      "variants": {},
+      "params": {
+        "shape": "loop",
+        "colour": "mint",
+        "seed": "8",
+        "target": {
+          "x": 392,
+          "y": 958,
+          "w": 490,
+          "h": 130
+        }
+      }
+    },
+    {
+      "obj": "third_head",
+      "device": "headline",
+      "meaning": "third head",
+      "fromFrame": 829,
+      "toFrame": 998,
+      "variants": {},
+      "params": {
+        "lines": [
+          "A THIRD OF",
+          "THE TIME."
+        ],
+        "swipe": {
+          "line": 1,
+          "word": 0
+        }
+      }
+    },
+    {
+      "obj": "third_refused",
+      "device": "sticker",
+      "meaning": "third refused",
+      "fromFrame": 829,
+      "toFrame": 998,
+      "variants": {},
+      "params": {
+        "text": "REFUSED",
+        "tiltDeg": -6,
+        "at": {
+          "x": 560,
+          "y": 520
+        },
+        "tone": "cream"
+      }
+    },
+    {
+      "obj": "third_line",
+      "device": "sticker",
+      "meaning": "third line",
+      "fromFrame": 829,
+      "toFrame": 998,
+      "variants": {},
+      "params": {
+        "text": "CHINA'S LINE",
+        "tiltDeg": 3,
+        "at": {
+          "x": 470,
+          "y": 620
+        },
+        "tone": "cream"
+      }
+    },
+    {
+      "obj": "third_wrong",
+      "device": "sticker",
+      "meaning": "third wrong",
+      "fromFrame": 829,
+      "toFrame": 998,
+      "variants": {},
+      "params": {
+        "text": "WRONG",
+        "tiltDeg": -4,
+        "at": {
+          "x": 640,
+          "y": 720
+        },
+        "tone": "cream"
+      }
+    },
+    {
+      "obj": "third_strip",
+      "device": "stat_strip",
+      "meaning": "the Monitor figure",
+      "fromFrame": 829,
+      "toFrame": 998,
+      "variants": {},
+      "params": {
+        "label": "Of 200 questions asked\nChristian Science Monitor",
+        "numeral": "?"
+      }
+    },
+    {
+      "obj": "claude_head",
+      "device": "headline",
+      "meaning": "claude head",
+      "fromFrame": 998,
+      "toFrame": 1124,
+      "variants": {},
+      "params": {
+        "lines": [
+          "ANSWERED",
+          "THEM ALL."
+        ],
+        "swipe": {
+          "line": 1,
+          "word": 0
+        }
+      }
+    },
+    {
+      "obj": "claude_scribble",
+      "device": "scribble",
+      "meaning": "claude scribble",
+      "fromFrame": 998,
+      "toFrame": 1124,
+      "variants": {},
+      "params": {
+        "shape": "loop",
+        "colour": "mint",
+        "seed": "3",
+        "target": {
+          "x": 190,
+          "y": 612,
+          "w": 450,
+          "h": 148
+        }
+      }
+    },
+    {
+      "obj": "lives_page",
+      "device": "passport_page",
+      "meaning": "lives page",
+      "fromFrame": 1124,
+      "toFrame": 1353,
+      "variants": {},
+      "params": {
+        "spine": "right",
+        "at": {
+          "x": 72,
+          "y": 432
+        },
+        "label": "COUNTRY OF RESIDENCE",
+        "fields": [
+          {
+            "id": "deepseek",
+            "label": "DeepSeek",
+            "top": "DeepSeek",
+            "main": "CHINA",
+            "at": {
+              "x": 296,
+              "y": 420
+            },
+            "state": "stamped",
+            "flag": "china",
+            "tiltDeg": 4
+          }
+        ],
+        "ghostAI": true,
+        "mrz": [
+          "P<LIVES<<CHN",
+          "2<OF<2"
+        ]
+      }
+    },
+    {
+      "obj": "lives_head",
+      "device": "headline",
+      "meaning": "lives head",
+      "fromFrame": 1124,
+      "toFrame": 1353,
+      "variants": {},
+      "params": {
+        "lines": [
+          "LIVES"
+        ],
+        "dek": "Where your data ends up.",
+        "dekAt": {
+          "x": 586,
+          "y": 206,
+          "w": 386
+        }
+      }
+    },
+    {
+      "obj": "lives_sticker",
+      "device": "sticker",
+      "meaning": "lives sticker",
+      "fromFrame": 1124,
+      "toFrame": 1353,
+      "variants": {},
+      "params": {
+        "text": "PASSPORT 2 OF 2",
+        "tiltDeg": -5,
+        "at": {
+          "x": 120,
+          "y": 384
+        },
+        "tone": "cream"
+      }
+    },
+    {
+      "obj": "lives_scribble",
+      "device": "scribble",
+      "meaning": "lives scribble",
+      "fromFrame": 1124,
+      "toFrame": 1353,
+      "variants": {},
+      "params": {
+        "shape": "loop",
+        "colour": "mint",
+        "seed": "9",
+        "target": {
+          "x": 390,
+          "y": 948,
+          "w": 490,
+          "h": 140
+        }
+      }
+    },
+    {
+      "obj": "phone",
+      "device": "hand_phone_stage",
+      "meaning": "phone in the approved hand-held screen story",
+      "fromFrame": 1353,
+      "toFrame": 1803,
+      "variants": {},
+      "params": {
+        "cameras": {
+          "open": {
+            "k": 1.8,
+            "rot": -3,
+            "tx": -78.65644928971597,
+            "ty": 535.8923197737188,
+            "backdrop": "cotton_flip",
+            "bg": {
+              "k": 1.75,
+              "x": -60,
+              "y": -210
+            }
+          },
+          "result_a": {
+            "k": 1.9,
+            "rot": -10,
+            "tx": -267.859411132586,
+            "ty": 435.78673434414554,
+            "backdrop": "cotton",
+            "bg": {
+              "k": 1.5,
+              "x": -90,
+              "y": -330
+            }
+          },
+          "result_b": {
+            "k": 2.1,
+            "rot": -1,
+            "tx": -235.02146620145396,
+            "ty": 385.1362339261145,
+            "backdrop": "hardware",
+            "bg": {
+              "k": 1.6,
+              "x": -330,
+              "y": -120
+            }
+          },
+          "evidence": {
+            "k": 1.95,
+            "rot": -104.5,
+            "tx": -197.16446995191598,
+            "ty": 1648.2556674889338,
+            "backdrop": "hardware",
+            "bg": {
+              "k": 2.45,
+              "x": 2234.340706848784,
+              "y": -668.8363130591613,
+              "rot": 75.5
+            }
+          },
+          "verdict": {
+            "k": 1.55,
+            "rot": -8,
+            "tx": -176.82774955021893,
+            "ty": 695.7458944361322,
+            "backdrop": "cotton_flip",
+            "bg": {
+              "k": 1.4,
+              "x": -180,
+              "y": -120
+            }
+          }
+        },
+        "start": "open",
+        "glass": {
+          "prompt": {
+            "lead": "UK clothing company. Our supplier gets its cotton from",
+            "active": "Xinjiang",
+            "chip": false
+          },
+          "cards": {
+            "result_a": {
+              "cards": [
+                {
+                  "name": "Claude",
+                  "flags": [
+                    {
+                      "station": "Xinjiang",
+                      "planted": true
+                    }
+                  ]
+                },
+                {
+                  "name": "ChatGPT",
+                  "flags": [
+                    {
+                      "station": "Xinjiang",
+                      "planted": true
+                    }
+                  ]
+                }
+              ]
+            },
+            "result_b": {
+              "layout": "countries",
+              "cards": [
+                {
+                  "name": "DeepSeek",
+                  "score": "0",
+                  "flags": [
+                    {
+                      "station": "Xinjiang",
+                      "planted": false
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "footage": {
+            "src": "C:\\Users\\krish\\dev\\mindmake\\content-engine-ve\\.ve-work\\friday-short\\assets\\xinxiang.mp4",
+            "kind": "recording",
+            "pixelWidth": 1087,
+            "pixelHeight": 780,
+            "trimBefore": 102
+          },
+          "bubble": {
+            "label": "DeepSeek",
+            "quote": "Sorry, that's beyond my current scope. Let's talk about something else."
+          }
+        }
+      }
+    },
+    {
+      "obj": "open_headline",
+      "device": "headline",
+      "meaning": "open headline in the approved hand-held screen story",
+      "fromFrame": 1353,
+      "toFrame": 1577,
+      "variants": {},
+      "params": {
+        "lines": [
+          "WILL THEY",
+          "FLAG IT?"
+        ],
+        "swipe": {
+          "line": 1,
+          "word": 0
+        },
+        "dek": "One question, three AIs.",
+        "dekAt": {
+          "x": 72,
+          "y": 456,
+          "w": 600
+        }
+      }
+    },
+    {
+      "obj": "open_scribble",
+      "device": "scribble",
+      "meaning": "open scribble in the approved hand-held screen story",
+      "fromFrame": 1353,
+      "toFrame": 1577,
+      "variants": {},
+      "params": {
+        "shape": "loop",
+        "colour": "cream",
+        "seed": "4",
+        "cx": 480,
+        "cy": 884,
+        "u": [
+          190,
+          -35
+        ],
+        "v": [
+          28,
+          68
+        ],
+        "sq": 3
+      }
+    },
+    {
+      "obj": "contestant_claude",
+      "device": "sticker",
+      "meaning": "contestant claude in the approved hand-held screen story",
+      "fromFrame": 1353,
+      "toFrame": 1577,
+      "variants": {},
+      "params": {
+        "text": "CLAUDE",
+        "tiltDeg": -5,
+        "at": {
+          "x": 720,
+          "y": 322
+        },
+        "tone": "cream"
+      }
+    },
+    {
+      "obj": "contestant_chatgpt",
+      "device": "sticker",
+      "meaning": "contestant chatgpt in the approved hand-held screen story",
+      "fromFrame": 1353,
+      "toFrame": 1577,
+      "variants": {},
+      "params": {
+        "text": "CHATGPT",
+        "tiltDeg": 2.5,
+        "at": {
+          "x": 712,
+          "y": 396
+        },
+        "tone": "cream"
+      }
+    },
+    {
+      "obj": "contestant_deepseek",
+      "device": "sticker",
+      "meaning": "contestant deepseek in the approved hand-held screen story",
+      "fromFrame": 1353,
+      "toFrame": 1577,
+      "variants": {},
+      "params": {
+        "text": "DEEPSEEK",
+        "tiltDeg": -3,
+        "at": {
+          "x": 728,
+          "y": 470
+        },
+        "tone": "cream"
+      }
+    },
+    {
+      "obj": "open_strip",
+      "device": "stat_strip",
+      "meaning": "open strip in the approved hand-held screen story",
+      "fromFrame": 1353,
+      "toFrame": 1646,
+      "variants": {},
+      "params": {
+        "label": "AIs that flag\nforced labour",
+        "numeral": "?",
+        "unit": "out of 3"
+      }
+    },
+    {
+      "obj": "result_a_headline",
+      "device": "headline",
+      "meaning": "result a headline in the approved hand-held screen story",
+      "fromFrame": 1577,
+      "toFrame": 1646,
+      "variants": {},
+      "params": {
+        "lines": [
+          "TWO OF",
+          "THREE."
+        ],
+        "swipe": {
+          "line": 1,
+          "word": 0
+        },
+        "dek": "Claude flagged it. So did ChatGPT.",
+        "dekAt": {
+          "x": 72,
+          "y": 1524,
+          "w": 880
+        }
+      }
+    },
+    {
+      "obj": "result_a_scribble",
+      "device": "scribble",
+      "meaning": "result a scribble in the approved hand-held screen story",
+      "fromFrame": 1577,
+      "toFrame": 1646,
+      "variants": {},
+      "params": {
+        "shape": "loop",
+        "colour": "cream",
+        "seed": "7",
+        "cx": 330,
+        "cy": 690,
+        "u": [
+          226,
+          -40
+        ],
+        "v": [
+          40,
+          190
+        ],
+        "sq": 3
+      }
+    },
+    {
+      "obj": "result_b_headline",
+      "device": "headline",
+      "meaning": "result b headline in the approved hand-held screen story",
+      "fromFrame": 1646,
+      "toFrame": 1682,
+      "variants": {},
+      "params": {
+        "lines": [
+          "NOW WATCH",
+          "DEEPSEEK."
+        ],
+        "swipe": {
+          "line": 1,
+          "word": 0
+        },
+        "dek": "Same question. A different ending.",
+        "dekAt": {
+          "x": 72,
+          "y": 1524,
+          "w": 880
+        }
+      }
+    },
+    {
+      "obj": "result_b_scribble",
+      "device": "scribble",
+      "meaning": "result b scribble in the approved hand-held screen story",
+      "fromFrame": 1646,
+      "toFrame": 1682,
+      "variants": {},
+      "params": {
+        "shape": "arrow",
+        "colour": "cream",
+        "seed": "3",
+        "from": [
+          64,
+          600
+        ],
+        "to": [
+          394.1776756668451,
+          749.1995750456881
+        ],
+        "bend": -46,
+        "head": 50
+      }
+    },
+    {
+      "obj": "evidence_headline",
+      "device": "headline",
+      "meaning": "evidence headline in the approved hand-held screen story",
+      "fromFrame": 1682,
+      "toFrame": 1754,
+      "variants": {},
+      "params": {
+        "lines": [
+          "WRITES.",
+          "DELETES."
+        ],
+        "swipe": {
+          "line": 1,
+          "word": 0
+        }
+      }
+    },
+    {
+      "obj": "recording_label",
+      "device": "sticker",
+      "meaning": "recording label in the approved hand-held screen story",
+      "fromFrame": 1682,
+      "toFrame": 1754,
+      "variants": {},
+      "params": {
+        "text": "SCREEN\nRECORDING\nDEEPSEEK\n24 OCT 2026",
+        "tiltDeg": -3,
+        "at": {
+          "x": 620,
+          "y": 148
+        },
+        "tone": "cream"
+      }
+    },
+    {
+      "obj": "evidence_quote",
+      "device": "quote_card",
+      "meaning": "Verbatim pull quote from the real recording, attributed",
+      "fromFrame": 1682,
+      "toFrame": 1754,
+      "variants": {},
+      "params": {
+        "quote": "\"Xinjiang cotton\" carries a strong forced-labour…",
+        "label": "DeepSeek wrote",
+        "at": {
+          "x": 72,
+          "y": 1508,
+          "w": 888
+        }
+      }
+    },
+    {
+      "obj": "evidence_scribble",
+      "device": "scribble",
+      "meaning": "evidence scribble in the approved hand-held screen story",
+      "fromFrame": 1682,
+      "toFrame": 1754,
+      "variants": {},
+      "params": {
+        "shape": "underline",
+        "colour": "mint",
+        "seed": "5",
+        "from": [
+          512.9107119540313,
+          918.0136862615007
+        ],
+        "to": [
+          945.3614035484153,
+          952.9890512680731
+        ],
+        "amp": 2.2,
+        "double": false
+      }
+    },
+    {
+      "obj": "result_threads",
+      "device": "thread_card",
+      "meaning": "result threads in the approved hand-held screen story",
+      "fromFrame": 1754,
+      "toFrame": 1803,
+      "variants": {},
+      "params": {
+        "stations": [
+          {
+            "id": "xinjiang",
+            "label": "Xinjiang",
+            "x": 410
+          }
+        ],
+        "axis": {
+          "y": 240,
+          "x0": 72,
+          "x1": 946
+        },
+        "threads": [
+          {
+            "id": "claude",
+            "name": "Claude",
+            "y": 336,
+            "style": "solid",
+            "marks": [
+              {
+                "station": "xinjiang",
+                "state": "planted"
+              }
+            ]
+          },
+          {
+            "id": "chatgpt",
+            "name": "ChatGPT",
+            "y": 436,
+            "style": "solid",
+            "marks": [
+              {
+                "station": "xinjiang",
+                "state": "planted"
+              }
+            ]
+          },
+          {
+            "id": "deepseek",
+            "name": "DeepSeek",
+            "y": 536,
+            "style": "solid",
+            "marks": [
+              {
+                "station": "xinjiang",
+                "state": "parted"
+              }
+            ]
+          }
+        ],
+        "knot": {
+          "x": 892,
+          "y": 436
+        },
+        "tone": "cream"
+      }
+    },
+    {
+      "obj": "verdict_scribble",
+      "device": "scribble",
+      "meaning": "verdict scribble in the approved hand-held screen story",
+      "fromFrame": 1754,
+      "toFrame": 1803,
+      "variants": {},
+      "params": {
+        "shape": "loop",
+        "colour": "mint",
+        "seed": "9",
+        "cx": 416.9950522136717,
+        "cy": 944.1448571929218,
+        "u": [
+          245.1750465670088,
+          16.93510271154951
+        ],
+        "v": [
+          -30.328345766670804,
+          155.01544262718247
+        ],
+        "sq": 3.4
+      }
+    },
+    {
+      "obj": "verdict_strip",
+      "device": "stat_strip",
+      "meaning": "verdict strip in the approved hand-held screen story",
+      "fromFrame": 1754,
+      "toFrame": 1803,
+      "variants": {},
+      "params": {
+        "label": "Runs where DeepSeek\ndeleted its Xinjiang answer",
+        "numeral": "?"
+      }
+    },
+    {
+      "obj": "deletion_stamp",
+      "device": "stamp",
+      "meaning": "deletion stamp in the approved hand-held screen story",
+      "fromFrame": 1754,
+      "toFrame": 1803,
+      "variants": {},
+      "params": {
+        "kind": "outline",
+        "main": "ANSWER DELETED",
+        "tiltDeg": -4,
+        "at": {
+          "x": 76,
+          "y": 610,
+          "w": 374,
+          "h": 62
+        },
+        "leader": {
+          "to": {
+            "x": 410,
+            "y": 536
+          }
+        }
+      }
+    },
+    {
+      "obj": "call_page",
+      "device": "passport_page",
+      "meaning": "call page",
+      "fromFrame": 1803,
+      "toFrame": 1972,
+      "variants": {},
+      "params": {
+        "spine": "left",
+        "at": {
+          "x": 72,
+          "y": 150
+        },
+        "label": "DEEPSEEK",
+        "fields": [
+          {
+            "id": "born",
+            "label": "DeepSeek born",
+            "top": "DeepSeek · born",
+            "main": "CHINA",
+            "at": {
+              "x": 92,
+              "y": 92
+            },
+            "state": "stamped",
+            "flag": "china",
+            "tiltDeg": -4
+          },
+          {
+            "id": "lives",
+            "label": "DeepSeek lives",
+            "top": "DeepSeek · lives",
+            "main": "CHINA",
+            "at": {
+              "x": 300,
+              "y": 410
+            },
+            "state": "stamped",
+            "flag": "china",
+            "tiltDeg": 3
+          }
+        ],
+        "ghostAI": false
+      }
+    },
+    {
+      "obj": "act_a_head",
+      "device": "headline",
+      "meaning": "act a head",
+      "fromFrame": 1972,
+      "toFrame": 2120,
+      "variants": {},
+      "params": {
+        "lines": [
+          "ASK YOUR",
+          "SUPPLIERS."
+        ],
+        "swipe": {
+          "line": 1,
+          "word": 0
+        },
+        "dek": "Which AI they use, and where it lives.",
+        "dekAt": {
+          "x": 72,
+          "y": 452,
+          "w": 880
+        }
+      }
+    },
+    {
+      "obj": "act_born",
+      "device": "passport_page",
+      "meaning": "act born",
+      "fromFrame": 1972,
+      "toFrame": 2120,
+      "variants": {},
+      "params": {
+        "spine": "left",
+        "at": {
+          "x": 72,
+          "y": 612
+        },
+        "label": "HOME COUNTRY",
+        "fields": [],
+        "ghostAI": true,
+        "mrz": [
+          "P<BORN",
+          "1<OF<2"
+        ]
+      }
+    },
+    {
+      "obj": "act_lives",
+      "device": "passport_page",
+      "meaning": "act lives",
+      "fromFrame": 1972,
+      "toFrame": 2120,
+      "variants": {},
+      "params": {
+        "spine": "right",
+        "at": {
+          "x": 532,
+          "y": 672
+        },
+        "label": "RESIDENCE",
+        "fields": [],
+        "ghostAI": true,
+        "mrz": [
+          "P<LIVES",
+          "2<OF<2"
+        ]
+      }
+    },
+    {
+      "obj": "act_which",
+      "device": "sticker",
+      "meaning": "act which",
+      "fromFrame": 1972,
+      "toFrame": 2120,
+      "variants": {},
+      "params": {
+        "text": "WHICH AI",
+        "tiltDeg": -6,
+        "at": {
+          "x": 150,
+          "y": 540
+        },
+        "tone": "cream"
+      }
+    },
+    {
+      "obj": "act_where",
+      "device": "sticker",
+      "meaning": "act where",
+      "fromFrame": 1972,
+      "toFrame": 2120,
+      "variants": {},
+      "params": {
+        "text": "WHERE IT LIVES",
+        "tiltDeg": 4,
+        "at": {
+          "x": 600,
+          "y": 590
+        },
+        "tone": "cream"
+      }
+    },
+    {
+      "obj": "act_tick",
+      "device": "scribble",
+      "meaning": "act tick",
+      "fromFrame": 1972,
+      "toFrame": 2120,
+      "variants": {},
+      "params": {
+        "shape": "tick",
+        "colour": "mint",
+        "seed": "2",
+        "cx": 760,
+        "cy": 900,
+        "size": 160
+      }
+    },
+    {
+      "obj": "act_b_head",
+      "device": "headline",
+      "meaning": "act b head",
+      "fromFrame": 2120,
+      "toFrame": 2176,
+      "variants": {},
+      "params": {
+        "lines": [
+          "KEEP A",
+          "SECOND AI."
+        ],
+        "swipe": {
+          "line": 1,
+          "word": 0
+        }
+      }
+    },
+    {
+      "obj": "second_page",
+      "device": "passport_page",
+      "meaning": "second page",
+      "fromFrame": 2120,
+      "toFrame": 2359,
+      "variants": {},
+      "params": {
+        "spine": "left",
+        "at": {
+          "x": 72,
+          "y": 612
+        },
+        "label": "SECOND AI",
+        "fields": [],
+        "ghostAI": true,
+        "mrz": [
+          "P<SECOND<<AI",
+          "1<OF<1"
+        ]
+      }
+    },
+    {
+      "obj": "act_b_tick",
+      "device": "scribble",
+      "meaning": "act b tick",
+      "fromFrame": 2120,
+      "toFrame": 2176,
+      "variants": {},
+      "params": {
+        "shape": "tick",
+        "colour": "mint",
+        "seed": "6",
+        "cx": 700,
+        "cy": 820,
+        "size": 160
+      }
+    },
+    {
+      "obj": "close_head",
+      "device": "headline",
+      "meaning": "close head",
+      "fromFrame": 2176,
+      "toFrame": 2359,
+      "variants": {},
+      "params": {
+        "lines": [
+          "THE FULL",
+          "DEEP DIVE."
+        ],
+        "swipe": {
+          "line": 1,
+          "word": 0
+        }
+      }
+    }
+  ],
+  "events": [
+    {
+      "id": "hook-0",
+      "obj": "phone_hook",
+      "verb": "enter",
+      "toState": "hook",
+      "atFrame": 19
+    },
+    {
+      "id": "hook-1",
+      "obj": "phone_hook",
+      "verb": "move",
+      "toState": "hook",
+      "atFrame": 19
+    },
+    {
+      "id": "hook-2",
+      "obj": "phone_hook",
+      "verb": "fill",
+      "toState": "bubble",
+      "atFrame": 19
+    },
+    {
+      "id": "hook-3",
+      "obj": "hook_head",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 19
+    },
+    {
+      "id": "hook-4",
+      "obj": "hook_scribble",
+      "verb": "draw",
+      "toState": "visible",
+      "atFrame": 73
+    },
+    {
+      "id": "matter-0",
+      "obj": "phone_hook",
+      "verb": "move",
+      "toState": "matter",
+      "atFrame": 122
+    },
+    {
+      "id": "matter-1",
+      "obj": "matter_head",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 122
+    },
+    {
+      "id": "airbnb-0",
+      "obj": "phone_hook",
+      "verb": "move",
+      "toState": "airbnb",
+      "atFrame": 181
+    },
+    {
+      "id": "airbnb-1",
+      "obj": "phone_hook",
+      "verb": "fill",
+      "toState": "bubble",
+      "atFrame": 181
+    },
+    {
+      "id": "airbnb-2",
+      "obj": "airbnb_head",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 181
+    },
+    {
+      "id": "airbnb-3",
+      "obj": "airbnb_scribble",
+      "verb": "draw",
+      "toState": "visible",
+      "atFrame": 261
+    },
+    {
+      "id": "fling-0",
+      "obj": "phone_hook",
+      "verb": "move",
+      "toState": "fling",
+      "atFrame": 335
+    },
+    {
+      "id": "fling-1",
+      "obj": "phone_hook",
+      "verb": "fill",
+      "toState": "bubble",
+      "atFrame": 335
+    },
+    {
+      "id": "fling-2",
+      "obj": "fling_head",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 335
+    },
+    {
+      "id": "fling-3",
+      "obj": "fling_scribble",
+      "verb": "draw",
+      "toState": "visible",
+      "atFrame": 349
+    },
+    {
+      "id": "title-0",
+      "obj": "title_head",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 492
+    },
+    {
+      "id": "title-1",
+      "obj": "title_born",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 498
+    },
+    {
+      "id": "title-2",
+      "obj": "title_lives",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 529
+    },
+    {
+      "id": "title-3",
+      "obj": "title_sticker_born",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 578
+    },
+    {
+      "id": "title-4",
+      "obj": "title_sticker_lives",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 609
+    },
+    {
+      "id": "title-5",
+      "obj": "title_scribble",
+      "verb": "draw",
+      "toState": "visible",
+      "atFrame": 586
+    },
+    {
+      "id": "born-0",
+      "obj": "born_page",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 638
+    },
+    {
+      "id": "born-1",
+      "obj": "born_head",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 638
+    },
+    {
+      "id": "born-2",
+      "obj": "born_sticker",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 649
+    },
+    {
+      "id": "born-3",
+      "obj": "born_page",
+      "verb": "stamp",
+      "toState": "china",
+      "atFrame": 661
+    },
+    {
+      "id": "born-4",
+      "obj": "born_scribble",
+      "verb": "draw",
+      "toState": "visible",
+      "atFrame": 776
+    },
+    {
+      "id": "born_third-0",
+      "obj": "third_head",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 829
+    },
+    {
+      "id": "born_third-1",
+      "obj": "third_strip",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 829
+    },
+    {
+      "id": "born_third-2",
+      "obj": "third_strip",
+      "verb": "count_to",
+      "toState": "35%",
+      "atFrame": 834
+    },
+    {
+      "id": "born_third-3",
+      "obj": "third_refused",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 864
+    },
+    {
+      "id": "born_third-4",
+      "obj": "third_line",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 902
+    },
+    {
+      "id": "born_third-5",
+      "obj": "third_wrong",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 954
+    },
+    {
+      "id": "born_claude-0",
+      "obj": "claude_head",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 998
+    },
+    {
+      "id": "born_claude-1",
+      "obj": "born_page",
+      "verb": "stamp",
+      "toState": "usa",
+      "atFrame": 998
+    },
+    {
+      "id": "born_claude-2",
+      "obj": "claude_scribble",
+      "verb": "draw",
+      "toState": "visible",
+      "atFrame": 1055
+    },
+    {
+      "id": "lives-0",
+      "obj": "lives_page",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 1124
+    },
+    {
+      "id": "lives-1",
+      "obj": "lives_head",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 1124
+    },
+    {
+      "id": "lives-2",
+      "obj": "lives_sticker",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 1146
+    },
+    {
+      "id": "lives-3",
+      "obj": "lives_page",
+      "verb": "stamp",
+      "toState": "deepseek",
+      "atFrame": 1238
+    },
+    {
+      "id": "lives-4",
+      "obj": "lives_scribble",
+      "verb": "draw",
+      "toState": "visible",
+      "atFrame": 1316
+    },
+    {
+      "id": "open-0",
+      "obj": "phone",
+      "verb": "enter",
+      "toState": "open",
+      "atFrame": 1353
+    },
+    {
+      "id": "open-1",
+      "obj": "phone",
+      "verb": "move",
+      "toState": "open",
+      "atFrame": 1353
+    },
+    {
+      "id": "open-2",
+      "obj": "phone",
+      "verb": "fill",
+      "toState": "prompt",
+      "atFrame": 1353
+    },
+    {
+      "id": "open-3",
+      "obj": "open_headline",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 1353
+    },
+    {
+      "id": "open-4",
+      "obj": "contestant_claude",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 1403
+    },
+    {
+      "id": "open-5",
+      "obj": "contestant_chatgpt",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 1427
+    },
+    {
+      "id": "open-6",
+      "obj": "contestant_deepseek",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 1450
+    },
+    {
+      "id": "open-7",
+      "obj": "open_scribble",
+      "verb": "draw",
+      "toState": "visible",
+      "atFrame": 1491
+    },
+    {
+      "id": "open-8",
+      "obj": "open_strip",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 1475
+    },
+    {
+      "id": "result_a-0",
+      "obj": "phone",
+      "verb": "move",
+      "toState": "result_a",
+      "atFrame": 1577
+    },
+    {
+      "id": "result_a-1",
+      "obj": "phone",
+      "verb": "fill",
+      "toState": "cards",
+      "atFrame": 1577
+    },
+    {
+      "id": "result_a-2",
+      "obj": "result_a_headline",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 1577
+    },
+    {
+      "id": "result_a-3",
+      "obj": "open_strip",
+      "verb": "count_to",
+      "toState": "2",
+      "atFrame": 1577
+    },
+    {
+      "id": "result_a-4",
+      "obj": "result_a_scribble",
+      "verb": "draw",
+      "toState": "visible",
+      "atFrame": 1591
+    },
+    {
+      "id": "result_b-0",
+      "obj": "phone",
+      "verb": "move",
+      "toState": "result_b",
+      "atFrame": 1646
+    },
+    {
+      "id": "result_b-1",
+      "obj": "phone",
+      "verb": "fill",
+      "toState": "cards",
+      "atFrame": 1646
+    },
+    {
+      "id": "result_b-2",
+      "obj": "result_b_headline",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 1646
+    },
+    {
+      "id": "result_b-3",
+      "obj": "result_b_scribble",
+      "verb": "draw",
+      "toState": "visible",
+      "atFrame": 1656
+    },
+    {
+      "id": "evidence-0",
+      "obj": "phone",
+      "verb": "move",
+      "toState": "evidence",
+      "atFrame": 1682
+    },
+    {
+      "id": "evidence-1",
+      "obj": "phone",
+      "verb": "fill",
+      "toState": "footage",
+      "atFrame": 1682
+    },
+    {
+      "id": "evidence-2",
+      "obj": "evidence_headline",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 1682
+    },
+    {
+      "id": "evidence-3",
+      "obj": "recording_label",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 1684
+    },
+    {
+      "id": "evidence-4",
+      "obj": "evidence_quote",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 1684
+    },
+    {
+      "id": "evidence-5",
+      "obj": "evidence_scribble",
+      "verb": "draw",
+      "toState": "visible",
+      "atFrame": 1690
+    },
+    {
+      "id": "evidence-6",
+      "obj": "evidence_scribble",
+      "verb": "exit",
+      "toState": "gone",
+      "atFrame": 1715
+    },
+    {
+      "id": "verdict-0",
+      "obj": "phone",
+      "verb": "move",
+      "toState": "verdict",
+      "atFrame": 1754
+    },
+    {
+      "id": "verdict-1",
+      "obj": "phone",
+      "verb": "fill",
+      "toState": "bubble",
+      "atFrame": 1754
+    },
+    {
+      "id": "verdict-2",
+      "obj": "result_threads",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 1754
+    },
+    {
+      "id": "verdict-3",
+      "obj": "deletion_stamp",
+      "verb": "stamp",
+      "toState": "visible",
+      "atFrame": 1754
+    },
+    {
+      "id": "verdict-4",
+      "obj": "result_threads",
+      "verb": "mark",
+      "toState": "claude:xinjiang",
+      "atFrame": 1754
+    },
+    {
+      "id": "verdict-5",
+      "obj": "result_threads",
+      "verb": "mark",
+      "toState": "chatgpt:xinjiang",
+      "atFrame": 1754
+    },
+    {
+      "id": "verdict-6",
+      "obj": "result_threads",
+      "verb": "mark",
+      "toState": "deepseek:xinjiang",
+      "atFrame": 1754
+    },
+    {
+      "id": "verdict-7",
+      "obj": "verdict_scribble",
+      "verb": "draw",
+      "toState": "visible",
+      "atFrame": 1764
+    },
+    {
+      "id": "verdict-8",
+      "obj": "verdict_strip",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 1764
+    },
+    {
+      "id": "verdict-9",
+      "obj": "verdict_strip",
+      "verb": "count_to",
+      "toState": "3/3",
+      "atFrame": 1764
+    },
+    {
+      "id": "my_call-0",
+      "obj": "call_page",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 1803
+    },
+    {
+      "id": "my_call-1",
+      "obj": "call_page",
+      "verb": "stamp",
+      "toState": "born",
+      "atFrame": 1803
+    },
+    {
+      "id": "my_call-2",
+      "obj": "call_page",
+      "verb": "stamp",
+      "toState": "lives",
+      "atFrame": 1846
+    },
+    {
+      "id": "call-0",
+      "obj": "call_page",
+      "verb": "mark",
+      "toState": "lives",
+      "atFrame": 1862
+    },
+    {
+      "id": "call-1",
+      "obj": "call_page",
+      "verb": "mark",
+      "toState": "born",
+      "atFrame": 1914
+    },
+    {
+      "id": "act_a-0",
+      "obj": "act_a_head",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 1972
+    },
+    {
+      "id": "act_a-1",
+      "obj": "act_born",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 1977
+    },
+    {
+      "id": "act_a-2",
+      "obj": "act_lives",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 1984
+    },
+    {
+      "id": "act_a-3",
+      "obj": "act_which",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 2054
+    },
+    {
+      "id": "act_a-4",
+      "obj": "act_where",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 2093
+    },
+    {
+      "id": "act_a-5",
+      "obj": "act_tick",
+      "verb": "draw",
+      "toState": "visible",
+      "atFrame": 2093
+    },
+    {
+      "id": "act_b-0",
+      "obj": "act_b_head",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 2120
+    },
+    {
+      "id": "act_b-1",
+      "obj": "second_page",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 2120
+    },
+    {
+      "id": "act_b-2",
+      "obj": "act_b_tick",
+      "verb": "draw",
+      "toState": "visible",
+      "atFrame": 2141
+    },
+    {
+      "id": "close-0",
+      "obj": "close_head",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 2176
+    }
+  ],
+  "illustrationLabels": [
+    {
+      "fromFrame": 0,
+      "toFrame": 122,
+      "text": "ILLUSTRATION"
+    },
+    {
+      "fromFrame": 122,
+      "toFrame": 181,
+      "text": "ILLUSTRATION"
+    },
+    {
+      "fromFrame": 181,
+      "toFrame": 335,
+      "text": "ILLUSTRATION"
+    },
+    {
+      "fromFrame": 335,
+      "toFrame": 492,
+      "text": "ILLUSTRATION"
+    },
+    {
+      "fromFrame": 1353,
+      "toFrame": 1577,
+      "text": "ILLUSTRATION"
+    },
+    {
+      "fromFrame": 1577,
+      "toFrame": 1646,
+      "text": "ILLUSTRATION"
+    },
+    {
+      "fromFrame": 1646,
+      "toFrame": 1682,
+      "text": "ILLUSTRATION"
+    },
+    {
+      "fromFrame": 1682,
+      "toFrame": 1754,
+      "text": "ILLUSTRATION"
+    },
+    {
+      "fromFrame": 1754,
+      "toFrame": 1803,
+      "text": "ILLUSTRATION"
+    }
+  ],
+  "ending": {
+    "fromFrame": 2254,
+    "url": "makeyourmindup.ai",
+    "ticker": false
+  },
+  "call": {
+    "statement": "At least one more country's government will announce new public money for its own national AI model or a sovereign AI programme.",
+    "due": "2026-12-31",
+    "confidencePercent": 90
+  }
+}

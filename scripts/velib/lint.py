@@ -103,6 +103,32 @@ def pending_devices_error(format_id: str, fmt: dict | None = None) -> str | None
     return None
 
 
+def locked_beat_ids(lock: dict, fmt: str) -> tuple[list[str], dict[str, list[str]]]:
+    """The format's own locked beat names, and the beat names of every module format (role "module")."""
+    own = lock['formats'][fmt]['beats']
+    modules = {name: settings['beats'] for name, settings in lock['formats'].items()
+               if name != fmt and settings.get('role') == 'module'}
+    return own, modules
+
+
+def beat_sequence_problem(lock: dict, fmt: str, ids: list) -> str | None:
+    """A cut is the format's locked beats, in lock order and complete, plus any extra beats the story needs
+    (hook, stats, call, close) and the beats of a module format (for example two-passports) in that module's
+    order. A beat id the lock does not name has no golden frame: it is composition-checked only."""
+    own, modules = locked_beat_ids(lock, fmt)
+    if not ids:
+        return f'beat ids must be {", ".join(own)} for format {fmt}'
+    if [i for i in ids if i in own] != own:
+        return f'beat ids must be {", ".join(own)} for format {fmt}'
+    for name, names in modules.items():
+        used = [i for i in ids if i in names and i not in own]
+        if used != [n for n in names if n in used]:
+            return f'module {name} beats must keep its order {", ".join(names)}'
+    if len(set(ids)) != len(ids):
+        return 'beat ids must be unique'
+    return None
+
+
 def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
     out: list[str] = []
     from . import designlock
@@ -150,9 +176,9 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
         beats = cut['beats']
         where = f'cuts.{cut_id}'
         if spec['format'] in lock['formats']:
-            names = lock['formats'][spec['format']]['beats']
-            if [beat.get('id') for beat in beats] != names:
-                out.append(f'{where}: beat ids must be {", ".join(names)} for format {spec["format"]}')
+            problem = beat_sequence_problem(lock, spec['format'], [beat.get('id') for beat in beats])
+            if problem:
+                out.append(f'{where}: {problem}')
             if not beats:
                 continue
         # dialogue
@@ -219,9 +245,9 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
             if len(layouts) < need:
                 out.append(f'motion.layout_variety {where}: {len(layouts)} layout types, the format needs at least {need} a minute')
 
-    if spec['audio']['master'] == 'vo' and spec['audio']['bed']['mode'] != 'continuous':
+    if spec['audio']['master'] == 'vo' and spec['audio']['bed']['mode'] not in ('continuous', 'ducked'):
         if not any(a['gate'] == 'exception' for a in spec['approvals']):
-            out.append('sound.bed_continuous audio.bed.mode: a voiceover cut carries a continuous bed (episode mode needs an exception approval)')
+            out.append('sound.bed_continuous audio.bed.mode: a voiceover cut carries a continuous or ducked bed (episode mode needs an exception approval)')
 
     if history:
         hero = spec['signature']['hero']['device']

@@ -1,8 +1,9 @@
 {
-  "engine_minutes_cap": 60,
+  "engine_minutes_cap": 300,
   "claude_tokens_cap": 3300000,
   "codex_tokens_cap": 2100000,
   "total_tokens_cap": 12600000,
   "allowance_points_cap": 1.2,
-  "warn_fraction": 0.8
+  "warn_fraction": 0.8,
+  "note": "engine_minutes_cap raised 60 to 120 for the first whole production run (Krish, 28 Oct 2026), then to 300 for the long Friday cut (parent, 28 Oct 2026): whole cuts included engine work"
 }

@@ -48,3 +48,21 @@ it('staggers two lines by three frames, colours just one word, and places its de
   expect(render(25)).toContain('font-style:italic')
   expect(render(25, { lines: ['HI'], dek: 'A human line.' })).toContain('left:')
 })
+
+it('lets a splash title take a taller room, and nothing else', () => {
+  const lines = ['TWO', 'PASSPORTS']
+  const zone = headlineLayout(lines, 878, 0)
+  const splash = headlineLayout(lines, 878, 0, 373)
+  expect(zone.size).toBeLessThanOrEqual(153)
+  expect(splash.size).toBeGreaterThanOrEqual(200)
+  expect(splash.size).toBeLessThanOrEqual(240)
+  expect(splash.height).toBeLessThanOrEqual(373)
+  expect(() => headlineLayout(['X'.repeat(100)], 888, -1, 373)).toThrow(/150px/)
+})
+
+it('puts an ink panel behind the dek only when asked', () => {
+  const withDek = (extra: object) => ({ ...object, params: { ...object.params, dek: 'A short human line.', dekAt: { x: 72, y: 460, w: 600 }, ...extra } })
+  const html = (o: typeof object) => renderToStaticMarkup(React.createElement(Device, { object: o, events, tokens: { ink: 'black', inkDeep: 'black', inkSoft: 'gray', cream: 'ivory', mint: 'green', channel: 'coral' }, box: { left: 0, top: 0, width: 1080, height: 1920 }, aspect: '9:16', frame: 60 }))
+  expect(html(withDek({}))).not.toContain('data-dek-back')
+  expect(html(withDek({ dekBack: true }))).toContain('data-dek-back')
+})

@@ -132,7 +132,7 @@ class PieceLedger(unittest.TestCase):
             ledger.stop_clock(self.piece)
 
     def test_start_refused_when_engine_over_but_allowed_at_cap(self):
-        ledger.add(self.piece, 'engine_seconds', 3600)
+        ledger.add(self.piece, 'engine_seconds', ledger.budget()['engine_minutes_cap'] * 60)
         ledger.start_clock(self.piece, 'at-cap')
         ledger.stop_clock(self.piece)
         ledger.add(self.piece, 'engine_seconds', 1)
@@ -164,7 +164,7 @@ class PieceLedger(unittest.TestCase):
             result = self.call_cli('ledger', self.piece, 'add', 'credits', amount)
             self.assertEqual(result.returncode, 1, result.stderr)
             self.assertEqual(self.path.read_bytes(), before)
-        result = self.call_cli('ledger', self.piece, 'add', 'engine_seconds', '3601')
+        result = self.call_cli('ledger', self.piece, 'add', 'engine_seconds', str(int(ledger.budget()['engine_minutes_cap'] * 60) + 1))
         self.assertEqual(result.returncode, 1, result.stderr)
         self.assertIn('OVER engine minutes', result.stdout)
         result = self.call_cli('time', self.piece, 'start', 'render')
@@ -191,7 +191,7 @@ class PieceLedger(unittest.TestCase):
             with contextlib.redirect_stdout(io.StringIO()) as output:
                 self.assertEqual(ve.cmd_time(argparse.Namespace(piece=self.piece, action='status')), 0)
         self.assertIn("phase 'render'", output.getvalue())
-        self.assertIn('engine minutes 3 / 60', output.getvalue())
+        self.assertIn(f"engine minutes 3 / {ledger.budget()['engine_minutes_cap']:g}", output.getvalue())
         self.assertEqual(self.path.read_bytes(), before)
 
     def test_dispatch_guard_runs_before_dispatch_and_is_optional(self):

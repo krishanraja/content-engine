@@ -1,0 +1,1532 @@
+# Approval packet
+
+Not yet approved: design and final, both Krish's, both by exact file hash.
+
+## long-wide
+SHA-256: fff8641e11d0107a395b0b18d2047995b6350726271a4cca9b705e4bc4c5e97c
+
+### Measurements
+- loudness.integrated.value: -14.1
+- loudness.integrated.target: -14 ±1
+- loudness.integrated.pass: True
+- loudness.true_peak.value: -1.5
+- loudness.true_peak.target: <= -1
+- loudness.true_peak.pass: True
+- loudness.long_silence.target: none over 0.7 s below -50 dB
+- loudness.long_silence.pass: True
+- motion.change_density.value: 0.796
+- motion.change_density.target: >= 0.75
+- motion.change_density.pass: True
+- motion.longest_still.value: 3
+- motion.longest_still.target: <= 3 s
+- motion.longest_still.pass: True
+- motion.longest_still.runs[0][0]: 87
+- motion.longest_still.runs[0][1]: 3
+- motion.longest_still.runs[1][0]: 321
+- motion.longest_still.runs[1][1]: 3
+- motion.longest_still.runs[2][0]: 23
+- motion.longest_still.runs[2][1]: 2
+- motion.longest_still.runs[3][0]: 65
+- motion.longest_still.runs[3][1]: 2
+- motion.longest_still.runs[4][0]: 99
+- motion.longest_still.runs[4][1]: 2
+- motion.longest_still.runs[5][0]: 112
+- motion.longest_still.runs[5][1]: 2
+- motion.periodicity.value: None
+- motion.periodicity.target: no repeating loop 2-10 s
+- motion.periodicity.pass: True
+- sync.av_xcorr.value[0].segment: 0
+- sync.av_xcorr.value[0].lag_ms: 0
+- sync.av_xcorr.value[0].pass: True
+- sync.av_xcorr.value[0].correlation: 0.999993
+- sync.av_xcorr.value[1].segment: 1
+- sync.av_xcorr.value[1].lag_ms: 0
+- sync.av_xcorr.value[1].pass: True
+- sync.av_xcorr.value[1].correlation: 0.999993
+- sync.av_xcorr.value[2].segment: 2
+- sync.av_xcorr.value[2].lag_ms: 0
+- sync.av_xcorr.value[2].pass: True
+- sync.av_xcorr.value[2].correlation: 0.999993
+- sync.av_xcorr.value[3].segment: 3
+- sync.av_xcorr.value[3].lag_ms: 0
+- sync.av_xcorr.value[3].pass: True
+- sync.av_xcorr.value[3].correlation: 0.999991
+- sync.av_xcorr.value[4].segment: 4
+- sync.av_xcorr.value[4].lag_ms: 0
+- sync.av_xcorr.value[4].pass: True
+- sync.av_xcorr.value[4].correlation: 0.999986
+- sync.av_xcorr.value[5].segment: 5
+- sync.av_xcorr.value[5].lag_ms: 0
+- sync.av_xcorr.value[5].pass: True
+- sync.av_xcorr.value[5].correlation: 0.999987
+- sync.av_xcorr.value[6].segment: 6
+- sync.av_xcorr.value[6].lag_ms: 0
+- sync.av_xcorr.value[6].pass: True
+- sync.av_xcorr.value[6].correlation: 0.999983
+- sync.av_xcorr.value[7].segment: 7
+- sync.av_xcorr.value[7].lag_ms: 0
+- sync.av_xcorr.value[7].pass: True
+- sync.av_xcorr.value[7].correlation: 0.999992
+- sync.av_xcorr.value[8].segment: 8
+- sync.av_xcorr.value[8].lag_ms: 0
+- sync.av_xcorr.value[8].pass: True
+- sync.av_xcorr.value[8].correlation: 0.999987
+- sync.av_xcorr.value[9].segment: 9
+- sync.av_xcorr.value[9].lag_ms: 0
+- sync.av_xcorr.value[9].pass: True
+- sync.av_xcorr.value[9].correlation: 0.999987
+- sync.av_xcorr.value[10].segment: 10
+- sync.av_xcorr.value[10].lag_ms: 0
+- sync.av_xcorr.value[10].pass: True
+- sync.av_xcorr.value[10].correlation: 0.999994
+- sync.av_xcorr.value[11].segment: 11
+- sync.av_xcorr.value[11].lag_ms: 0
+- sync.av_xcorr.value[11].pass: True
+- sync.av_xcorr.value[11].correlation: 0.999989
+- sync.av_xcorr.value[12].segment: 12
+- sync.av_xcorr.value[12].lag_ms: 0
+- sync.av_xcorr.value[12].pass: True
+- sync.av_xcorr.value[12].correlation: 0.999979
+- sync.av_xcorr.value[13].segment: 13
+- sync.av_xcorr.value[13].lag_ms: 0
+- sync.av_xcorr.value[13].pass: True
+- sync.av_xcorr.value[13].correlation: 0.999996
+- sync.av_xcorr.value[14].segment: 14
+- sync.av_xcorr.value[14].lag_ms: 0
+- sync.av_xcorr.value[14].pass: True
+- sync.av_xcorr.value[14].correlation: 0.99999
+- sync.av_xcorr.value[15].segment: 15
+- sync.av_xcorr.value[15].lag_ms: 0
+- sync.av_xcorr.value[15].pass: True
+- sync.av_xcorr.value[15].correlation: 0.999985
+- sync.av_xcorr.value[16].segment: 16
+- sync.av_xcorr.value[16].lag_ms: 0
+- sync.av_xcorr.value[16].pass: True
+- sync.av_xcorr.value[16].correlation: 0.999991
+- sync.av_xcorr.value[17].segment: 17
+- sync.av_xcorr.value[17].lag_ms: 0
+- sync.av_xcorr.value[17].pass: True
+- sync.av_xcorr.value[17].correlation: 0.999986
+- sync.av_xcorr.value[18].segment: 18
+- sync.av_xcorr.value[18].lag_ms: 0
+- sync.av_xcorr.value[18].pass: True
+- sync.av_xcorr.value[18].correlation: 0.999995
+- sync.av_xcorr.value[19].segment: 19
+- sync.av_xcorr.value[19].lag_ms: 0
+- sync.av_xcorr.value[19].pass: True
+- sync.av_xcorr.value[19].correlation: 0.999992
+- sync.av_xcorr.value[20].segment: 20
+- sync.av_xcorr.value[20].lag_ms: 0
+- sync.av_xcorr.value[20].pass: True
+- sync.av_xcorr.value[20].correlation: 0.999986
+- sync.av_xcorr.value[21].segment: 21
+- sync.av_xcorr.value[21].lag_ms: 0
+- sync.av_xcorr.value[21].pass: True
+- sync.av_xcorr.value[21].correlation: 0.99999
+- sync.av_xcorr.value[22].segment: 22
+- sync.av_xcorr.value[22].lag_ms: 0
+- sync.av_xcorr.value[22].pass: True
+- sync.av_xcorr.value[22].correlation: 0.999995
+- sync.av_xcorr.value[23].segment: 23
+- sync.av_xcorr.value[23].lag_ms: 0
+- sync.av_xcorr.value[23].pass: True
+- sync.av_xcorr.value[23].correlation: 0.999989
+- sync.av_xcorr.value[24].segment: 24
+- sync.av_xcorr.value[24].lag_ms: 0
+- sync.av_xcorr.value[24].pass: True
+- sync.av_xcorr.value[24].correlation: 0.99999
+- sync.av_xcorr.value[25].segment: 25
+- sync.av_xcorr.value[25].lag_ms: 0
+- sync.av_xcorr.value[25].pass: True
+- sync.av_xcorr.value[25].correlation: 0.99999
+- sync.av_xcorr.value[26].segment: 26
+- sync.av_xcorr.value[26].lag_ms: 0
+- sync.av_xcorr.value[26].pass: True
+- sync.av_xcorr.value[26].correlation: 0.999986
+- sync.av_xcorr.value[27].segment: 27
+- sync.av_xcorr.value[27].lag_ms: 0
+- sync.av_xcorr.value[27].pass: True
+- sync.av_xcorr.value[27].correlation: 0.999992
+- sync.av_xcorr.value[28].segment: 28
+- sync.av_xcorr.value[28].lag_ms: 0
+- sync.av_xcorr.value[28].pass: True
+- sync.av_xcorr.value[28].correlation: 0.999991
+- sync.av_xcorr.value[29].segment: 29
+- sync.av_xcorr.value[29].lag_ms: 0
+- sync.av_xcorr.value[29].pass: True
+- sync.av_xcorr.value[29].correlation: 0.999993
+- sync.av_xcorr.value[30].segment: 30
+- sync.av_xcorr.value[30].lag_ms: 0
+- sync.av_xcorr.value[30].pass: True
+- sync.av_xcorr.value[30].correlation: 0.999989
+- sync.av_xcorr.value[31].segment: 31
+- sync.av_xcorr.value[31].lag_ms: 0
+- sync.av_xcorr.value[31].pass: True
+- sync.av_xcorr.value[31].correlation: 0.99999
+- sync.av_xcorr.value[32].segment: 32
+- sync.av_xcorr.value[32].lag_ms: 0
+- sync.av_xcorr.value[32].pass: True
+- sync.av_xcorr.value[32].correlation: 0.999992
+- sync.av_xcorr.value[33].segment: 33
+- sync.av_xcorr.value[33].lag_ms: 0
+- sync.av_xcorr.value[33].pass: True
+- sync.av_xcorr.value[33].correlation: 0.999989
+- sync.av_xcorr.value[34].segment: 34
+- sync.av_xcorr.value[34].lag_ms: 0
+- sync.av_xcorr.value[34].pass: True
+- sync.av_xcorr.value[34].correlation: 0.999991
+- sync.av_xcorr.value[35].segment: 35
+- sync.av_xcorr.value[35].lag_ms: 0
+- sync.av_xcorr.value[35].pass: True
+- sync.av_xcorr.value[35].correlation: 0.999985
+- sync.av_xcorr.value[36].segment: 36
+- sync.av_xcorr.value[36].lag_ms: 0
+- sync.av_xcorr.value[36].pass: True
+- sync.av_xcorr.value[36].correlation: 0.999992
+- sync.av_xcorr.value[37].segment: 37
+- sync.av_xcorr.value[37].lag_ms: 0
+- sync.av_xcorr.value[37].pass: True
+- sync.av_xcorr.value[37].correlation: 0.999988
+- sync.av_xcorr.value[38].segment: 38
+- sync.av_xcorr.value[38].lag_ms: 0
+- sync.av_xcorr.value[38].pass: True
+- sync.av_xcorr.value[38].correlation: 0.999984
+- sync.av_xcorr.value[39].segment: 39
+- sync.av_xcorr.value[39].lag_ms: 0
+- sync.av_xcorr.value[39].pass: True
+- sync.av_xcorr.value[39].correlation: 0.999986
+- sync.av_xcorr.value[40].segment: 40
+- sync.av_xcorr.value[40].lag_ms: 0
+- sync.av_xcorr.value[40].pass: True
+- sync.av_xcorr.value[40].correlation: 0.999988
+- sync.av_xcorr.value[41].segment: 41
+- sync.av_xcorr.value[41].lag_ms: 0
+- sync.av_xcorr.value[41].pass: True
+- sync.av_xcorr.value[41].correlation: 0.999995
+- sync.av_xcorr.value[42].segment: 42
+- sync.av_xcorr.value[42].lag_ms: 0
+- sync.av_xcorr.value[42].pass: True
+- sync.av_xcorr.value[42].correlation: 0.99999
+- sync.av_xcorr.value[43].segment: 43
+- sync.av_xcorr.value[43].lag_ms: 0
+- sync.av_xcorr.value[43].pass: True
+- sync.av_xcorr.value[43].correlation: 0.999993
+- sync.av_xcorr.value[44].segment: 44
+- sync.av_xcorr.value[44].lag_ms: 0
+- sync.av_xcorr.value[44].pass: True
+- sync.av_xcorr.value[44].correlation: 0.999989
+- sync.av_xcorr.value[45].segment: 45
+- sync.av_xcorr.value[45].lag_ms: 0
+- sync.av_xcorr.value[45].pass: True
+- sync.av_xcorr.value[45].correlation: 0.999995
+- sync.av_xcorr.value[46].segment: 46
+- sync.av_xcorr.value[46].lag_ms: 0
+- sync.av_xcorr.value[46].pass: True
+- sync.av_xcorr.value[46].correlation: 0.999994
+- sync.av_xcorr.value[47].segment: 47
+- sync.av_xcorr.value[47].lag_ms: 0
+- sync.av_xcorr.value[47].pass: True
+- sync.av_xcorr.value[47].correlation: 0.99999
+- sync.av_xcorr.value[48].segment: 48
+- sync.av_xcorr.value[48].lag_ms: 0
+- sync.av_xcorr.value[48].pass: True
+- sync.av_xcorr.value[48].correlation: 0.999986
+- sync.av_xcorr.value[49].segment: 49
+- sync.av_xcorr.value[49].lag_ms: 0
+- sync.av_xcorr.value[49].pass: True
+- sync.av_xcorr.value[49].correlation: 0.999988
+- sync.av_xcorr.value[50].segment: 50
+- sync.av_xcorr.value[50].lag_ms: 0
+- sync.av_xcorr.value[50].pass: True
+- sync.av_xcorr.value[50].correlation: 0.999993
+- sync.av_xcorr.value[51].segment: 51
+- sync.av_xcorr.value[51].lag_ms: 0
+- sync.av_xcorr.value[51].pass: True
+- sync.av_xcorr.value[51].correlation: 0.999996
+- sync.av_xcorr.value[52].segment: 52
+- sync.av_xcorr.value[52].lag_ms: 0
+- sync.av_xcorr.value[52].pass: True
+- sync.av_xcorr.value[52].correlation: 0.999995
+- sync.av_xcorr.value[53].segment: 53
+- sync.av_xcorr.value[53].lag_ms: 0
+- sync.av_xcorr.value[53].pass: True
+- sync.av_xcorr.value[53].correlation: 0.999962
+- sync.av_xcorr.target: every segment |lag| <= 33 ms; correlation >= 0.5
+- sync.av_xcorr.pass: True
+- sync.av_xcorr.status: measured
+- joins.decoder.target: RMS step <= 6 dB, click <= 6x median, spectral flux <= 0.5
+- joins.decoder.pass: True
+- joins.decoder.status: measured
+- captions.ocr.value[0].page: 0
+- captions.ocr.value[0].frame: 72
+- captions.ocr.value[0].text: You may already be using
+- captions.ocr.value[0].agreement: 1.0
+- captions.ocr.value[0].variant: raw
+- captions.ocr.value[0].pass: True
+- captions.ocr.value[1].page: 1
+- captions.ocr.value[1].frame: 96
+- captions.ocr.value[1].text: a Chinese Al,
+- captions.ocr.value[1].agreement: 1.0
+- captions.ocr.value[1].variant: raw
+- captions.ocr.value[1].pass: True
+- captions.ocr.value[2].page: 2
+- captions.ocr.value[2].frame: 136
+- captions.ocr.value[2].text: and you just might not
+- captions.ocr.value[2].agreement: 1.0
+- captions.ocr.value[2].variant: raw
+- captions.ocr.value[2].pass: True
+- captions.ocr.value[3].page: 3
+- captions.ocr.value[3].frame: 153
+- captions.ocr.value[3].text: know it.
+- captions.ocr.value[3].agreement: 1.0
+- captions.ocr.value[3].variant: raw
+- captions.ocr.value[3].pass: True
+- captions.ocr.value[4].page: 4
+- captions.ocr.value[4].frame: 212
+- captions.ocr.value[4].text: So does it matter where
+- captions.ocr.value[4].agreement: 1.0
+- captions.ocr.value[4].variant: raw
+- captions.ocr.value[4].pass: True
+- captions.ocr.value[5].page: 5
+- captions.ocr.value[5].frame: 254
+- captions.ocr.value[5].text: your Al was born?
+- captions.ocr.value[5].agreement: 1.0
+- captions.ocr.value[5].variant: raw
+- captions.ocr.value[5].pass: True
+- captions.ocr.value[6].page: 6
+- captions.ocr.value[6].frame: 299
+- captions.ocr.value[6].text: I've been having a look
+- captions.ocr.value[6].agreement: 1.0
+- captions.ocr.value[6].variant: raw
+- captions.ocr.value[6].pass: True
+- captions.ocr.value[7].page: 7
+- captions.ocr.value[7].frame: 345
+- captions.ocr.value[7].text: at where the Als we
+- captions.ocr.value[7].agreement: 1.0
+- captions.ocr.value[7].variant: raw
+- captions.ocr.value[7].pass: True
+- captions.ocr.value[8].page: 8
+- captions.ocr.value[8].frame: 378
+- captions.ocr.value[8].text: all use come from.
+- captions.ocr.value[8].agreement: 1.0
+- captions.ocr.value[8].variant: raw
+- captions.ocr.value[8].pass: True
+- captions.ocr.value[9].page: 9
+- captions.ocr.value[9].frame: 425
+- captions.ocr.value[9].text: And it matters more than
+- captions.ocr.value[9].agreement: 1.0
+- captions.ocr.value[9].variant: raw
+- captions.ocr.value[9].pass: True
+- captions.ocr.value[10].page: 10
+- captions.ocr.value[10].frame: 455
+- captions.ocr.value[10].text: you think for any business,
+- captions.ocr.value[10].agreement: 1.0
+- captions.ocr.value[10].variant: raw
+- captions.ocr.value[10].pass: True
+- captions.ocr.value[11].page: 11
+- captions.ocr.value[11].frame: 493
+- captions.ocr.value[11].text: so I want to break
+- captions.ocr.value[11].agreement: 1.0
+- captions.ocr.value[11].variant: raw
+- captions.ocr.value[11].pass: True
+- captions.ocr.value[12].page: 12
+- captions.ocr.value[12].frame: 519
+- captions.ocr.value[12].text: it down for you.
+- captions.ocr.value[12].agreement: 1.0
+- captions.ocr.value[12].variant: raw
+- captions.ocr.value[12].pass: True
+- captions.ocr.value[13].page: 13
+- captions.ocr.value[13].frame: 566
+- captions.ocr.value[13].text: Start with Airbnb.
+- captions.ocr.value[13].agreement: 1.0
+- captions.ocr.value[13].variant: raw
+- captions.ocr.value[13].pass: True
+- captions.ocr.value[14].page: 14
+- captions.ocr.value[14].frame: 624
+- captions.ocr.value[14].text: Here's its boss last year.
+- captions.ocr.value[14].agreement: 1.0
+- captions.ocr.value[14].variant: raw
+- captions.ocr.value[14].pass: True
+- captions.ocr.value[15].page: 15
+- captions.ocr.value[15].frame: 685
+- captions.ocr.value[15].text: He said its customer service
+- captions.ocr.value[15].agreement: 1.0
+- captions.ocr.value[15].variant: raw
+- captions.ocr.value[15].pass: True
+- captions.ocr.value[16].page: 16
+- captions.ocr.value[16].frame: 730
+- captions.ocr.value[16].text: Al relies alot on
+- captions.ocr.value[16].agreement: 1.0
+- captions.ocr.value[16].variant: raw
+- captions.ocr.value[16].pass: True
+- captions.ocr.value[17].page: 17
+- captions.ocr.value[17].frame: 779
+- captions.ocr.value[17].text: Qwen, which is a Chinese
+- captions.ocr.value[17].agreement: 1.0
+- captions.ocr.value[17].variant: raw
+- captions.ocr.value[17].pass: True
+- captions.ocr.value[18].page: 18
+- captions.ocr.value[18].frame: 826
+- captions.ocr.value[18].text: Al from Alibaba.
+- captions.ocr.value[18].agreement: 1.0
+- captions.ocr.value[18].variant: raw
+- captions.ocr.value[18].pass: True
+- captions.ocr.value[19].page: 19
+- captions.ocr.value[19].frame: 886
+- captions.ocr.value[19].text: He called it fast and
+- captions.ocr.value[19].agreement: 1.0
+- captions.ocr.value[19].variant: raw
+- captions.ocr.value[19].pass: True
+- captions.ocr.value[20].page: 20
+- captions.ocr.value[20].frame: 913
+- captions.ocr.value[20].text: he called it cheap.
+- captions.ocr.value[20].agreement: 1.0
+- captions.ocr.value[20].variant: raw
+- captions.ocr.value[20].pass: True
+- captions.ocr.value[21].page: 21
+- captions.ocr.value[21].frame: 949
+- captions.ocr.value[21].text: Which, to be fair,
+- captions.ocr.value[21].agreement: 1.0
+- captions.ocr.value[21].variant: raw
+- captions.ocr.value[21].pass: True
+- captions.ocr.value[22].page: 22
+- captions.ocr.value[22].frame: 994
+- captions.ocr.value[22].text: is also what most of
+- captions.ocr.value[22].agreement: 1.0
+- captions.ocr.value[22].variant: raw
+- captions.ocr.value[22].pass: True
+- captions.ocr.value[23].page: 23
+- captions.ocr.value[23].frame: 1018
+- captions.ocr.value[23].text: us want from a holiday
+- captions.ocr.value[23].agreement: 1.0
+- captions.ocr.value[23].variant: raw
+- captions.ocr.value[23].pass: True
+- captions.ocr.value[24].page: 24
+- captions.ocr.value[24].frame: 1088
+- captions.ocr.value[24].text: fling. Then there's Cursor,
+- captions.ocr.value[24].agreement: 1.0
+- captions.ocr.value[24].variant: raw
+- captions.ocr.value[24].pass: True
+- captions.ocr.value[25].page: 25
+- captions.ocr.value[25].frame: 1122
+- captions.ocr.value[25].text: a coding tool that lots
+- captions.ocr.value[25].agreement: 1.0
+- captions.ocr.value[25].variant: raw
+- captions.ocr.value[25].pass: True
+- captions.ocr.value[26].page: 26
+- captions.ocr.value[26].frame: 1155
+- captions.ocr.value[26].text: of software teams use.
+- captions.ocr.value[26].agreement: 1.0
+- captions.ocr.value[26].variant: raw
+- captions.ocr.value[26].pass: True
+- captions.ocr.value[27].page: 27
+- captions.ocr.value[27].frame: 1209
+- captions.ocr.value[27].text: It built its newest Al
+- captions.ocr.value[27].agreement: 1.0
+- captions.ocr.value[27].variant: raw
+- captions.ocr.value[27].pass: True
+- captions.ocr.value[28].page: 28
+- captions.ocr.value[28].frame: 1241
+- captions.ocr.value[28].text: on top of a Chinese
+- captions.ocr.value[28].agreement: 1.0
+- captions.ocr.value[28].variant: raw
+- captions.ocr.value[28].pass: True
+- captions.ocr.value[29].page: 29
+- captions.ocr.value[29].frame: 1266
+- captions.ocr.value[29].text: one called Kimi,
+- captions.ocr.value[29].agreement: 1.0
+- captions.ocr.value[29].variant: raw
+- captions.ocr.value[29].pass: True
+- captions.ocr.value[30].page: 30
+- captions.ocr.value[30].frame: 1319
+- captions.ocr.value[30].text: and didn't mention that at
+- captions.ocr.value[30].agreement: 1.0
+- captions.ocr.value[30].variant: raw
+- captions.ocr.value[30].pass: True
+- captions.ocr.value[31].page: 31
+- captions.ocr.value[31].frame: 1371
+- captions.ocr.value[31].text: first. Then people spotted it,
+- captions.ocr.value[31].agreement: 1.0
+- captions.ocr.value[31].variant: raw
+- captions.ocr.value[31].pass: True
+- captions.ocr.value[32].page: 32
+- captions.ocr.value[32].frame: 1421
+- captions.ocr.value[32].text: and Cursor owned up.
+- captions.ocr.value[32].agreement: 1.0
+- captions.ocr.value[32].variant: raw
+- captions.ocr.value[32].pass: True
+- captions.ocr.value[33].page: 33
+- captions.ocr.value[33].frame: 1463
+- captions.ocr.value[33].text: And Lindy,
+- captions.ocr.value[33].agreement: 1.0
+- captions.ocr.value[33].variant: raw
+- captions.ocr.value[33].pass: True
+- captions.ocr.value[34].page: 34
+- captions.ocr.value[34].frame: 1492
+- captions.ocr.value[34].text: an American startup,
+- captions.ocr.value[34].agreement: 1.0
+- captions.ocr.value[34].variant: raw
+- captions.ocr.value[34].pass: True
+- captions.ocr.value[35].page: 35
+- captions.ocr.value[35].frame: 1534
+- captions.ocr.value[35].text: moved all its Al work
+- captions.ocr.value[35].agreement: 1.0
+- captions.ocr.value[35].variant: raw
+- captions.ocr.value[35].pass: True
+- captions.ocr.value[36].page: 36
+- captions.ocr.value[36].frame: 1559
+- captions.ocr.value[36].text: on to DeepSeek,
+- captions.ocr.value[36].agreement: 1.0
+- captions.ocr.value[36].variant: raw
+- captions.ocr.value[36].pass: True
+- captions.ocr.value[37].page: 37
+- captions.ocr.value[37].frame: 1607
+- captions.ocr.value[37].text: another Chinese Al.
+- captions.ocr.value[37].agreement: 1.0
+- captions.ocr.value[37].variant: raw
+- captions.ocr.value[37].pass: True
+- captions.ocr.value[38].page: 38
+- captions.ocr.value[38].frame: 1671
+- captions.ocr.value[38].text: Its biggest bill used to
+- captions.ocr.value[38].agreement: 1.0
+- captions.ocr.value[38].variant: raw
+- captions.ocr.value[38].pass: True
+- captions.ocr.value[39].page: 39
+- captions.ocr.value[39].frame: 1688
+- captions.ocr.value[39].text: be Anthropic,
+- captions.ocr.value[39].agreement: 1.0
+- captions.ocr.value[39].variant: raw
+- captions.ocr.value[39].pass: True
+- captions.ocr.value[40].page: 40
+- captions.ocr.value[40].frame: 1762
+- captions.ocr.value[40].text: the American company behind Claude.
+- captions.ocr.value[40].agreement: 1.0
+- captions.ocr.value[40].variant: raw
+- captions.ocr.value[40].pass: True
+- captions.ocr.value[41].page: 41
+- captions.ocr.value[41].frame: 1853
+- captions.ocr.value[41].text: Its boss said DeepSeek was
+- captions.ocr.value[41].agreement: 1.0
+- captions.ocr.value[41].variant: raw
+- captions.ocr.value[41].pass: True
+- captions.ocr.value[42].page: 42
+- captions.ocr.value[42].frame: 1912
+- captions.ocr.value[42].text: just ten times cheaper.
+- captions.ocr.value[42].agreement: 1.0
+- captions.ocr.value[42].variant: raw
+- captions.ocr.value[42].pass: True
+- captions.ocr.value[43].page: 43
+- captions.ocr.value[43].frame: 2004
+- captions.ocr.value[43].text: Now, who's in this race?
+- captions.ocr.value[43].agreement: 1.0
+- captions.ocr.value[43].variant: raw
+- captions.ocr.value[43].pass: True
+- captions.ocr.value[44].page: 44
+- captions.ocr.value[44].frame: 2063
+- captions.ocr.value[44].text: Mostly two countries.
+- captions.ocr.value[44].agreement: 1.0
+- captions.ocr.value[44].variant: raw
+- captions.ocr.value[44].pass: True
+- captions.ocr.value[45].page: 45
+- captions.ocr.value[45].frame: 2139
+- captions.ocr.value[45].text: Stanford counts the most important
+- captions.ocr.value[45].agreement: 1.0
+- captions.ocr.value[45].variant: raw
+- captions.ocr.value[45].pass: True
+- captions.ocr.value[46].page: 46
+- captions.ocr.value[46].frame: 2198
+- captions.ocr.value[46].text: new Als each year.
+- captions.ocr.value[46].agreement: 1.0
+- captions.ocr.value[46].variant: raw
+- captions.ocr.value[46].pass: True
+- captions.ocr.value[47].page: 47
+- captions.ocr.value[47].frame: 2275
+- captions.ocr.value[47].text: Last year America made fifty-nine
+- captions.ocr.value[47].agreement: 1.0
+- captions.ocr.value[47].variant: raw
+- captions.ocr.value[47].pass: True
+- captions.ocr.value[48].page: 48
+- captions.ocr.value[48].frame: 2352
+- captions.ocr.value[48].text: and China made thirty-five.
+- captions.ocr.value[48].agreement: 1.0
+- captions.ocr.value[48].variant: raw
+- captions.ocr.value[48].pass: True
+- captions.ocr.value[49].page: 49
+- captions.ocr.value[49].frame: 2408
+- captions.ocr.value[49].text: But by March,
+- captions.ocr.value[49].agreement: 1.0
+- captions.ocr.value[49].variant: raw
+- captions.ocr.value[49].pass: True
+- captions.ocr.value[50].page: 50
+- captions.ocr.value[50].frame: 2435
+- captions.ocr.value[50].text: Stanford found,
+- captions.ocr.value[50].agreement: 1.0
+- captions.ocr.value[50].variant: raw
+- captions.ocr.value[50].pass: True
+- captions.ocr.value[51].page: 51
+- captions.ocr.value[51].frame: 2488
+- captions.ocr.value[51].text: the best Chinese Al scored
+- captions.ocr.value[51].agreement: 1.0
+- captions.ocr.value[51].variant: raw
+- captions.ocr.value[51].pass: True
+- captions.ocr.value[52].page: 52
+- captions.ocr.value[52].frame: 2553
+- captions.ocr.value[52].text: only about three percent behind
+- captions.ocr.value[52].agreement: 1.0
+- captions.ocr.value[52].variant: raw
+- captions.ocr.value[52].pass: True
+- captions.ocr.value[53].page: 53
+- captions.ocr.value[53].frame: 2597
+- captions.ocr.value[53].text: the best American one.
+- captions.ocr.value[53].agreement: 1.0
+- captions.ocr.value[53].variant: raw
+- captions.ocr.value[53].pass: True
+- captions.ocr.value[54].page: 54
+- captions.ocr.value[54].frame: 2703
+- captions.ocr.value[54].text: And everyone else wants its
+- captions.ocr.value[54].agreement: 1.0
+- captions.ocr.value[54].variant: raw
+- captions.ocr.value[54].pass: True
+- captions.ocr.value[55].page: 55
+- captions.ocr.value[55].frame: 2743
+- captions.ocr.value[55].text: own. Britain,
+- captions.ocr.value[55].agreement: 1.0
+- captions.ocr.value[55].variant: raw
+- captions.ocr.value[55].pass: True
+- captions.ocr.value[56].page: 56
+- captions.ocr.value[56].frame: 2790
+- captions.ocr.value[56].text: France, the Gulf,
+- captions.ocr.value[56].agreement: 1.0
+- captions.ocr.value[56].variant: raw
+- captions.ocr.value[56].pass: True
+- captions.ocr.value[57].page: 57
+- captions.ocr.value[57].frame: 2867
+- captions.ocr.value[57].text: India and Korea are all
+- captions.ocr.value[57].agreement: 1.0
+- captions.ocr.value[57].variant: raw
+- captions.ocr.value[57].pass: True
+- captions.ocr.value[58].page: 58
+- captions.ocr.value[58].frame: 2910
+- captions.ocr.value[58].text: building or paying for one.
+- captions.ocr.value[58].agreement: 1.0
+- captions.ocr.value[58].variant: raw
+- captions.ocr.value[58].pass: True
+- captions.ocr.value[59].page: 59
+- captions.ocr.value[59].frame: 2963
+- captions.ocr.value[59].text: That's what people mean by
+- captions.ocr.value[59].agreement: 1.0
+- captions.ocr.value[59].variant: raw
+- captions.ocr.value[59].pass: True
+- captions.ocr.value[60].page: 60
+- captions.ocr.value[60].frame: 2989
+- captions.ocr.value[60].text: sovereign Al:
+- captions.ocr.value[60].agreement: 1.0
+- captions.ocr.value[60].variant: raw
+- captions.ocr.value[60].pass: True
+- captions.ocr.value[61].page: 61
+- captions.ocr.value[61].frame: 3063
+- captions.ocr.value[61].text: a country making sure it
+- captions.ocr.value[61].agreement: 1.0
+- captions.ocr.value[61].variant: raw
+- captions.ocr.value[61].pass: True
+- captions.ocr.value[62].page: 62
+- captions.ocr.value[62].frame: 3108
+- captions.ocr.value[62].text: isn't stuck relying on someone
+- captions.ocr.value[62].agreement: 1.0
+- captions.ocr.value[62].variant: raw
+- captions.ocr.value[62].pass: True
+- captions.ocr.value[63].page: 63
+- captions.ocr.value[63].frame: 3203
+- captions.ocr.value[63].text: else's. South Korea even dropped
+- captions.ocr.value[63].agreement: 1.0
+- captions.ocr.value[63].variant: raw
+- captions.ocr.value[63].pass: True
+- captions.ocr.value[64].page: 64
+- captions.ocr.value[64].frame: 3240
+- captions.ocr.value[64].text: one of its own companies
+- captions.ocr.value[64].agreement: 1.0
+- captions.ocr.value[64].variant: raw
+- captions.ocr.value[64].pass: True
+- captions.ocr.value[65].page: 65
+- captions.ocr.value[65].frame: 3282
+- captions.ocr.value[65].text: from its national Al project.
+- captions.ocr.value[65].agreement: 1.0
+- captions.ocr.value[65].variant: raw
+- captions.ocr.value[65].pass: True
+- captions.ocr.value[66].page: 66
+- captions.ocr.value[66].frame: 3339
+- captions.ocr.value[66].text: A piece of that company's
+- captions.ocr.value[66].agreement: 1.0
+- captions.ocr.value[66].variant: raw
+- captions.ocr.value[66].pass: True
+- captions.ocr.value[67].page: 67
+- captions.ocr.value[67].frame: 3373
+- captions.ocr.value[67].text: Al turned out to be
+- captions.ocr.value[67].agreement: 1.0
+- captions.ocr.value[67].variant: raw
+- captions.ocr.value[67].pass: True
+- captions.ocr.value[68].page: 68
+- captions.ocr.value[68].frame: 3422
+- captions.ocr.value[68].text: borrowed from Alibaba.
+- captions.ocr.value[68].agreement: 1.0
+- captions.ocr.value[68].variant: raw
+- captions.ocr.value[68].pass: True
+- captions.ocr.value[69].page: 69
+- captions.ocr.value[69].frame: 3481
+- captions.ocr.value[69].text: That's pretty Awkward.
+- captions.ocr.value[69].agreement: 1.0
+- captions.ocr.value[69].variant: raw
+- captions.ocr.value[69].pass: True
+- captions.ocr.value[70].page: 70
+- captions.ocr.value[70].frame: 3545
+- captions.ocr.value[70].text: So here's the trick:
+- captions.ocr.value[70].agreement: 1.0
+- captions.ocr.value[70].variant: raw
+- captions.ocr.value[70].pass: True
+- captions.ocr.value[71].page: 71
+- captions.ocr.value[71].frame: 3617
+- captions.ocr.value[71].text: every Al has two passports.
+- captions.ocr.value[71].agreement: 1.0
+- captions.ocr.value[71].variant: raw
+- captions.ocr.value[71].pass: True
+- captions.ocr.value[72].page: 72
+- captions.ocr.value[72].frame: 3658
+- captions.ocr.value[72].text: One where it says it
+- captions.ocr.value[72].agreement: 1.0
+- captions.ocr.value[72].variant: raw
+- captions.ocr.value[72].pass: True
+- captions.ocr.value[73].page: 73
+- captions.ocr.value[73].frame: 3667
+- captions.ocr.value[73].text: was born,
+- captions.ocr.value[73].agreement: 1.0
+- captions.ocr.value[73].variant: raw
+- captions.ocr.value[73].pass: True
+- captions.ocr.value[74].page: 74
+- captions.ocr.value[74].frame: 3714
+- captions.ocr.value[74].text: and the other where it
+- captions.ocr.value[74].agreement: 1.0
+- captions.ocr.value[74].variant: raw
+- captions.ocr.value[74].pass: True
+- captions.ocr.value[75].page: 75
+- captions.ocr.value[75].frame: 3737
+- captions.ocr.value[75].text: says it lives,
+- captions.ocr.value[75].agreement: 1.0
+- captions.ocr.value[75].variant: raw
+- captions.ocr.value[75].pass: True
+- captions.ocr.value[76].page: 76
+- captions.ocr.value[76].frame: 3801
+- captions.ocr.value[76].text: meaning whose computers it runs
+- captions.ocr.value[76].agreement: 1.0
+- captions.ocr.value[76].variant: raw
+- captions.ocr.value[76].pass: True
+- captions.ocr.value[77].page: 77
+- captions.ocr.value[77].frame: 3863
+- captions.ocr.value[77].text: on. Where it was born
+- captions.ocr.value[77].agreement: 1.0
+- captions.ocr.value[77].variant: raw
+- captions.ocr.value[77].pass: True
+- captions.ocr.value[78].page: 78
+- captions.ocr.value[78].frame: 3910
+- captions.ocr.value[78].text: shapes what it tells you.
+- captions.ocr.value[78].agreement: 1.0
+- captions.ocr.value[78].variant: raw
+- captions.ocr.value[78].pass: True
+- captions.ocr.value[79].page: 79
+- captions.ocr.value[79].frame: 3973
+- captions.ocr.value[79].text: An American newspaper asked four
+- captions.ocr.value[79].agreement: 1.0
+- captions.ocr.value[79].variant: raw
+- captions.ocr.value[79].pass: True
+- captions.ocr.value[80].page: 80
+- captions.ocr.value[80].frame: 4045
+- captions.ocr.value[80].text: Chinese chatbots two hundred news
+questions.
+- captions.ocr.value[80].agreement: 1.0
+- captions.ocr.value[80].variant: raw
+- captions.ocr.value[80].pass: True
+- captions.ocr.value[81].page: 81
+- captions.ocr.value[81].frame: 4096
+- captions.ocr.value[81].text: More than a third of
+- captions.ocr.value[81].agreement: 1.0
+- captions.ocr.value[81].variant: raw
+- captions.ocr.value[81].pass: True
+- captions.ocr.value[82].page: 82
+- captions.ocr.value[82].frame: 4104
+- captions.ocr.value[82].text: the time,
+- captions.ocr.value[82].agreement: 1.0
+- captions.ocr.value[82].variant: raw
+- captions.ocr.value[82].pass: True
+- captions.ocr.value[83].page: 83
+- captions.ocr.value[83].frame: 4128
+- captions.ocr.value[83].text: they refused,
+- captions.ocr.value[83].agreement: 1.0
+- captions.ocr.value[83].variant: raw
+- captions.ocr.value[83].pass: True
+- captions.ocr.value[84].page: 84
+- captions.ocr.value[84].frame: 4194
+- captions.ocr.value[84].text: gave the Chinese government's line,
+- captions.ocr.value[84].agreement: 1.0
+- captions.ocr.value[84].variant: raw
+- captions.ocr.value[84].pass: True
+- captions.ocr.value[85].page: 85
+- captions.ocr.value[85].frame: 4225
+- captions.ocr.value[85].text: or got it wrong.
+- captions.ocr.value[85].agreement: 1.0
+- captions.ocr.value[85].variant: raw
+- captions.ocr.value[85].pass: True
+- captions.ocr.value[86].page: 86
+- captions.ocr.value[86].frame: 4283
+- captions.ocr.value[86].text: DeepSeek did it nearly two
+- captions.ocr.value[86].agreement: 1.0
+- captions.ocr.value[86].variant: raw
+- captions.ocr.value[86].pass: True
+- captions.ocr.value[87].page: 87
+- captions.ocr.value[87].frame: 4332
+- captions.ocr.value[87].text: out of three times But
+- captions.ocr.value[87].agreement: 1.0
+- captions.ocr.value[87].variant: raw
+- captions.ocr.value[87].pass: True
+- captions.ocr.value[88].page: 88
+- captions.ocr.value[88].frame: 4375
+- captions.ocr.value[88].text: Claude, an American Al,
+- captions.ocr.value[88].agreement: 1.0
+- captions.ocr.value[88].variant: raw
+- captions.ocr.value[88].pass: True
+- captions.ocr.value[89].page: 89
+- captions.ocr.value[89].frame: 4433
+- captions.ocr.value[89].text: got the same questions and
+- captions.ocr.value[89].agreement: 1.0
+- captions.ocr.value[89].variant: raw
+- captions.ocr.value[89].pass: True
+- captions.ocr.value[90].page: 90
+- captions.ocr.value[90].frame: 4474
+- captions.ocr.value[90].text: answered every single one.
+- captions.ocr.value[90].agreement: 1.0
+- captions.ocr.value[90].variant: raw
+- captions.ocr.value[90].pass: True
+- captions.ocr.value[91].page: 91
+- captions.ocr.value[91].frame: 4548
+- captions.ocr.value[91].text: And China has company here.
+- captions.ocr.value[91].agreement: 1.0
+- captions.ocr.value[91].variant: raw
+- captions.ocr.value[91].pass: True
+- captions.ocr.value[92].page: 92
+- captions.ocr.value[92].frame: 4629
+- captions.ocr.value[92].text: People caught Elon Musk's Grok
+- captions.ocr.value[92].agreement: 1.0
+- captions.ocr.value[92].variant: raw
+- captions.ocr.value[92].pass: True
+- captions.ocr.value[93].page: 93
+- captions.ocr.value[93].frame: 4695
+- captions.ocr.value[93].text: checking Elon Musk's posts before
+- captions.ocr.value[93].agreement: 1.0
+- captions.ocr.value[93].variant: raw
+- captions.ocr.value[93].pass: True
+- captions.ocr.value[94].page: 94
+- captions.ocr.value[94].frame: 4713
+- captions.ocr.value[94].text: it answered.
+- captions.ocr.value[94].agreement: 1.0
+- captions.ocr.value[94].variant: raw
+- captions.ocr.value[94].pass: True
+- captions.ocr.value[95].page: 95
+- captions.ocr.value[95].frame: 4759
+- captions.ocr.value[95].text: Which is one way to
+- captions.ocr.value[95].agreement: 1.0
+- captions.ocr.value[95].variant: raw
+- captions.ocr.value[95].pass: True
+- captions.ocr.value[96].page: 96
+- captions.ocr.value[96].frame: 4796
+- captions.ocr.value[96].text: keep the boss happy.
+- captions.ocr.value[96].agreement: 1.0
+- captions.ocr.value[96].variant: raw
+- captions.ocr.value[96].pass: True
+- captions.ocr.value[97].page: 97
+- captions.ocr.value[97].frame: 4854
+- captions.ocr.value[97].text: Now the second passport:
+- captions.ocr.value[97].agreement: 1.0
+- captions.ocr.value[97].variant: raw
+- captions.ocr.value[97].pass: True
+- captions.ocr.value[98].page: 98
+- captions.ocr.value[98].frame: 4943
+- captions.ocr.value[98].text: where it lives decides who
+- captions.ocr.value[98].agreement: 1.0
+- captions.ocr.value[98].variant: raw
+- captions.ocr.value[98].pass: True
+- captions.ocr.value[99].page: 99
+- captions.ocr.value[99].frame: 4995
+- captions.ocr.value[99].text: sees your data.
+- captions.ocr.value[99].agreement: 1.0
+- captions.ocr.value[99].variant: raw
+- captions.ocr.value[99].pass: True
+- captions.ocr.value[100].page: 100
+- captions.ocr.value[100].frame: 5059
+- captions.ocr.value[100].text: Use DeepSeek's own app,
+- captions.ocr.value[100].agreement: 1.0
+- captions.ocr.value[100].variant: raw
+- captions.ocr.value[100].pass: True
+- captions.ocr.value[101].page: 101
+- captions.ocr.value[101].frame: 5096
+- captions.ocr.value[101].text: and it says it stores
+- captions.ocr.value[101].agreement: 1.0
+- captions.ocr.value[101].variant: raw
+- captions.ocr.value[101].pass: True
+- captions.ocr.value[102].page: 102
+- captions.ocr.value[102].frame: 5158
+- captions.ocr.value[102].text: what you type in China.
+- captions.ocr.value[102].agreement: 1.0
+- captions.ocr.value[102].variant: raw
+- captions.ocr.value[102].pass: True
+- captions.ocr.value[103].page: 103
+- captions.ocr.value[103].frame: 5216
+- captions.ocr.value[103].text: But you can bring an
+- captions.ocr.value[103].agreement: 1.0
+- captions.ocr.value[103].variant: raw
+- captions.ocr.value[103].pass: True
+- captions.ocr.value[104].page: 104
+- captions.ocr.value[104].frame: 5230
+- captions.ocr.value[104].text: Alhome.
+- captions.ocr.value[104].agreement: 1.0
+- captions.ocr.value[104].variant: raw
+- captions.ocr.value[104].pass: True
+- captions.ocr.value[105].page: 105
+- captions.ocr.value[105].frame: 5291
+- captions.ocr.value[105].text: HSBC signed a deal to
+- captions.ocr.value[105].agreement: 1.0
+- captions.ocr.value[105].variant: raw
+- captions.ocr.value[105].pass: True
+- captions.ocr.value[106].page: 106
+- captions.ocr.value[106].frame: 5344
+- captions.ocr.value[106].text: run France's Mistral on its
+- captions.ocr.value[106].agreement: 1.0
+- captions.ocr.value[106].variant: raw
+- captions.ocr.value[106].pass: True
+- captions.ocr.value[107].page: 107
+- captions.ocr.value[107].frame: 5362
+- captions.ocr.value[107].text: own computers.
+- captions.ocr.value[107].agreement: 1.0
+- captions.ocr.value[107].variant: raw
+- captions.ocr.value[107].pass: True
+- captions.ocr.value[108].page: 108
+- captions.ocr.value[108].frame: 5418
+- captions.ocr.value[108].text: So the bank's data doesn't
+- captions.ocr.value[108].agreement: 1.0
+- captions.ocr.value[108].variant: raw
+- captions.ocr.value[108].pass: True
+- captions.ocr.value[109].page: 109
+- captions.ocr.value[109].frame: 5450
+- captions.ocr.value[109].text: have to leave the bank.
+- captions.ocr.value[109].agreement: 1.0
+- captions.ocr.value[109].variant: raw
+- captions.ocr.value[109].pass: True
+- captions.ocr.value[110].page: 110
+- captions.ocr.value[110].frame: 5507
+- captions.ocr.value[110].text: and what about runninga
+- captions.ocr.value[110].agreement: 1.0
+- captions.ocr.value[110].variant: raw
+- captions.ocr.value[110].pass: True
+- captions.ocr.value[111].page: 111
+- captions.ocr.value[111].frame: 5545
+- captions.ocr.value[111].text: Chinese Al on your own
+- captions.ocr.value[111].agreement: 1.0
+- captions.ocr.value[111].variant: raw
+- captions.ocr.value[111].pass: True
+- captions.ocr.value[112].page: 112
+- captions.ocr.value[112].frame: 5584
+- captions.ocr.value[112].text: computers? Well,
+- captions.ocr.value[112].agreement: 1.0
+- captions.ocr.value[112].variant: raw
+- captions.ocr.value[112].pass: True
+- captions.ocr.value[113].page: 113
+- captions.ocr.value[113].frame: 5638
+- captions.ocr.value[113].text: America's government tried that with
+- captions.ocr.value[113].agreement: 1.0
+- captions.ocr.value[113].variant: raw
+- captions.ocr.value[113].pass: True
+- captions.ocr.value[114].page: 114
+- captions.ocr.value[114].frame: 5678
+- captions.ocr.value[114].text: DeepSeek, and the Chinese government's
+- captions.ocr.value[114].agreement: 1.0
+- captions.ocr.value[114].variant: raw
+- captions.ocr.value[114].pass: True
+- captions.ocr.value[115].page: 115
+- captions.ocr.value[115].frame: 5719
+- captions.ocr.value[115].text: talking points were still there,
+- captions.ocr.value[115].agreement: 1.0
+- captions.ocr.value[115].variant: raw
+- captions.ocr.value[115].pass: True
+- captions.ocr.value[116].page: 116
+- captions.ocr.value[116].frame: 5746
+- captions.ocr.value[116].text: built in.
+- captions.ocr.value[116].agreement: 1.0
+- captions.ocr.value[116].variant: raw
+- captions.ocr.value[116].pass: True
+- captions.ocr.value[117].page: 117
+- captions.ocr.value[117].frame: 5805
+- captions.ocr.value[117].text: You can take DeepSeek out
+- captions.ocr.value[117].agreement: 1.0
+- captions.ocr.value[117].variant: raw
+- captions.ocr.value[117].pass: True
+- captions.ocr.value[118].page: 118
+- captions.ocr.value[118].frame: 5815
+- captions.ocr.value[118].text: of China.
+- captions.ocr.value[118].agreement: 1.0
+- captions.ocr.value[118].variant: raw
+- captions.ocr.value[118].pass: True
+- captions.ocr.value[119].page: 119
+- captions.ocr.value[119].frame: 5856
+- captions.ocr.value[119].text: But you can't take China
+- captions.ocr.value[119].agreement: 1.0
+- captions.ocr.value[119].variant: raw
+- captions.ocr.value[119].pass: True
+- captions.ocr.value[120].page: 120
+- captions.ocr.value[120].frame: 5885
+- captions.ocr.value[120].text: out of DeepSeek.
+- captions.ocr.value[120].agreement: 1.0
+- captions.ocr.value[120].variant: raw
+- captions.ocr.value[120].pass: True
+- captions.ocr.value[121].page: 121
+- captions.ocr.value[121].frame: 5952
+- captions.ocr.value[121].text: So I tried it myself.
+- captions.ocr.value[121].agreement: 1.0
+- captions.ocr.value[121].variant: raw
+- captions.ocr.value[121].pass: True
+- captions.ocr.value[122].page: 122
+- captions.ocr.value[122].frame: 6007
+- captions.ocr.value[122].text: The newspaper asked about the
+- captions.ocr.value[122].agreement: 1.0
+- captions.ocr.value[122].variant: raw
+- captions.ocr.value[122].pass: True
+- captions.ocr.value[123].page: 123
+- captions.ocr.value[123].frame: 6045
+- captions.ocr.value[123].text: news, but Il wanted to
+- captions.ocr.value[123].agreement: 1.0
+- captions.ocr.value[123].variant: raw
+- captions.ocr.value[123].pass: True
+- captions.ocr.value[124].page: 124
+- captions.ocr.value[124].frame: 6061
+- captions.ocr.value[124].text: know about work.
+- captions.ocr.value[124].agreement: 1.0
+- captions.ocr.value[124].variant: raw
+- captions.ocr.value[124].pass: True
+- captions.ocr.value[125].page: 125
+- captions.ocr.value[125].frame: 6099
+- captions.ocr.value[125].text: So I gave Claude,
+- captions.ocr.value[125].agreement: 1.0
+- captions.ocr.value[125].variant: raw
+- captions.ocr.value[125].pass: True
+- captions.ocr.value[126].page: 126
+- captions.ocr.value[126].frame: 6154
+- captions.ocr.value[126].text: ChatGPT and DeepSeek the same
+- captions.ocr.value[126].agreement: 1.0
+- captions.ocr.value[126].variant: raw
+- captions.ocr.value[126].pass: True
+- captions.ocr.value[127].page: 127
+- captions.ocr.value[127].frame: 6173
+- captions.ocr.value[127].text: work questions,
+- captions.ocr.value[127].agreement: 1.0
+- captions.ocr.value[127].variant: raw
+- captions.ocr.value[127].pass: True
+- captions.ocr.value[128].page: 128
+- captions.ocr.value[128].frame: 6230
+- captions.ocr.value[128].text: and asked each one twice,
+- captions.ocr.value[128].agreement: 1.0
+- captions.ocr.value[128].variant: raw
+- captions.ocr.value[128].pass: True
+- captions.ocr.value[129].page: 129
+- captions.ocr.value[129].frame: 6287
+- captions.ocr.value[129].text: changing only the country.
+- captions.ocr.value[129].agreement: 1.0
+- captions.ocr.value[129].variant: raw
+- captions.ocr.value[129].pass: True
+- captions.ocr.value[130].page: 130
+- captions.ocr.value[130].frame: 6361
+- captions.ocr.value[130].text: If only the China answer
+- captions.ocr.value[130].agreement: 1.0
+- captions.ocr.value[130].variant: raw
+- captions.ocr.value[130].pass: True
+- captions.ocr.value[131].page: 131
+- captions.ocr.value[131].frame: 6418
+- captions.ocr.value[131].text: changes, that's the first passport
+- captions.ocr.value[131].agreement: 1.0
+- captions.ocr.value[131].variant: raw
+- captions.ocr.value[131].pass: True
+- captions.ocr.value[132].page: 132
+- captions.ocr.value[132].frame: 6466
+- captions.ocr.value[132].text: talking. First,
+- captions.ocr.value[132].agreement: 1.0
+- captions.ocr.value[132].variant: raw
+- captions.ocr.value[132].pass: True
+- captions.ocr.value[133].page: 133
+- captions.ocr.value[133].frame: 6515
+- captions.ocr.value[133].text: a supplier whose cotton comes
+- captions.ocr.value[133].agreement: 1.0
+- captions.ocr.value[133].variant: raw
+- captions.ocr.value[133].pass: True
+- captions.ocr.value[134].page: 134
+- captions.ocr.value[134].frame: 6539
+- captions.ocr.value[134].text: from Xinjiang,
+- captions.ocr.value[134].agreement: 1.0
+- captions.ocr.value[134].variant: raw
+- captions.ocr.value[134].pass: True
+- captions.ocr.value[135].page: 135
+- captions.ocr.value[135].frame: 6578
+- captions.ocr.value[135].text: a part of China.
+- captions.ocr.value[135].agreement: 1.0
+- captions.ocr.value[135].variant: raw
+- captions.ocr.value[135].pass: True
+- captions.ocr.value[136].page: 136
+- captions.ocr.value[136].frame: 6634
+- captions.ocr.value[136].text: Then the same supplier in
+- captions.ocr.value[136].agreement: 1.0
+- captions.ocr.value[136].variant: raw
+- captions.ocr.value[136].pass: True
+- captions.ocr.value[137].page: 137
+- captions.ocr.value[137].frame: 6671
+- captions.ocr.value[137].text: Turkmenistan. Now,
+- captions.ocr.value[137].agreement: 1.0
+- captions.ocr.value[137].variant: raw
+- captions.ocr.value[137].pass: True
+- captions.ocr.value[138].page: 138
+- captions.ocr.value[138].frame: 6724
+- captions.ocr.value[138].text: America has blocked cotton from
+- captions.ocr.value[138].agreement: 1.0
+- captions.ocr.value[138].variant: raw
+- captions.ocr.value[138].pass: True
+- captions.ocr.value[139].page: 139
+- captions.ocr.value[139].frame: 6767
+- captions.ocr.value[139].text: both over forced labour,
+- captions.ocr.value[139].agreement: 1.0
+- captions.ocr.value[139].variant: raw
+- captions.ocr.value[139].pass: True
+- captions.ocr.value[140].page: 140
+- captions.ocr.value[140].frame: 6820
+- captions.ocr.value[140].text: so a good answer should
+- captions.ocr.value[140].agreement: 1.0
+- captions.ocr.value[140].variant: raw
+- captions.ocr.value[140].pass: True
+- captions.ocr.value[141].page: 141
+- captions.ocr.value[141].frame: 6859
+- captions.ocr.value[141].text: flag it both times.
+- captions.ocr.value[141].agreement: 1.0
+- captions.ocr.value[141].variant: raw
+- captions.ocr.value[141].pass: True
+- captions.ocr.value[142].page: 142
+- captions.ocr.value[142].frame: 6933
+- captions.ocr.value[142].text: Claude and ChatGPT flagged forced
+- captions.ocr.value[142].agreement: 1.0
+- captions.ocr.value[142].variant: raw
+- captions.ocr.value[142].pass: True
+- captions.ocr.value[143].page: 143
+- captions.ocr.value[143].frame: 6962
+- captions.ocr.value[143].text: labour both times,
+- captions.ocr.value[143].agreement: 1.0
+- captions.ocr.value[143].variant: raw
+- captions.ocr.value[143].pass: True
+- captions.ocr.value[144].page: 144
+- captions.ocr.value[144].frame: 7014
+- captions.ocr.value[144].text: and so did DeepSeek for
+- captions.ocr.value[144].agreement: 1.0
+- captions.ocr.value[144].variant: raw
+- captions.ocr.value[144].pass: True
+- captions.ocr.value[145].page: 145
+- captions.ocr.value[145].frame: 7092
+- captions.ocr.value[145].text: Turkmenistan. Now watch DeepSeek on
+- captions.ocr.value[145].agreement: 1.0
+- captions.ocr.value[145].variant: raw
+- captions.ocr.value[145].pass: True
+- captions.ocr.value[146].page: 146
+- captions.ocr.value[146].frame: 7136
+- captions.ocr.value[146].text: Xinjiang. It writes a full
+- captions.ocr.value[146].agreement: 1.0
+- captions.ocr.value[146].variant: raw
+- captions.ocr.value[146].pass: True
+- captions.ocr.value[147].page: 147
+- captions.ocr.value[147].frame: 7177
+- captions.ocr.value[147].text: answer, deletes it,
+- captions.ocr.value[147].agreement: 1.0
+- captions.ocr.value[147].variant: raw
+- captions.ocr.value[147].pass: True
+- captions.ocr.value[148].page: 148
+- captions.ocr.value[148].frame: 7223
+- captions.ocr.value[148].text: and changes the subject.
+- captions.ocr.value[148].agreement: 1.0
+- captions.ocr.value[148].variant: raw
+- captions.ocr.value[148].pass: True
+- captions.ocr.value[149].page: 149
+- captions.ocr.value[149].frame: 7293
+- captions.ocr.value[149].text: Every single time.
+- captions.ocr.value[149].agreement: 1.0
+- captions.ocr.value[149].variant: raw
+- captions.ocr.value[149].pass: True
+- captions.ocr.value[150].page: 150
+- captions.ocr.value[150].frame: 7384
+- captions.ocr.value[150].text: Then a board briefing on
+- captions.ocr.value[150].agreement: 1.0
+- captions.ocr.value[150].variant: raw
+- captions.ocr.value[150].pass: True
+- captions.ocr.value[151].page: 151
+- captions.ocr.value[151].frame: 7430
+- captions.ocr.value[151].text: opening a sales office in
+- captions.ocr.value[151].agreement: 1.0
+- captions.ocr.value[151].variant: raw
+- captions.ocr.value[151].pass: True
+- captions.ocr.value[152].page: 152
+- captions.ocr.value[152].frame: 7497
+- captions.ocr.value[152].text: Taiwan, China says belongs to
+- captions.ocr.value[152].agreement: 1.0
+- captions.ocr.value[152].variant: raw
+- captions.ocr.value[152].pass: True
+- captions.ocr.value[153].page: 153
+- captions.ocr.value[153].frame: 7554
+- captions.ocr.value[153].text: it. And the same briefing
+- captions.ocr.value[153].agreement: 1.0
+- captions.ocr.value[153].variant: raw
+- captions.ocr.value[153].pass: True
+- captions.ocr.value[154].page: 154
+- captions.ocr.value[154].frame: 7572
+- captions.ocr.value[154].text: for Singapore.
+- captions.ocr.value[154].agreement: 1.0
+- captions.ocr.value[154].variant: raw
+- captions.ocr.value[154].pass: True
+- captions.ocr.value[155].page: 155
+- captions.ocr.value[155].frame: 7603
+- captions.ocr.value[155].text: For Taiwan,
+- captions.ocr.value[155].agreement: 1.0
+- captions.ocr.value[155].variant: raw
+- captions.ocr.value[155].pass: True
+- captions.ocr.value[156].page: 156
+- captions.ocr.value[156].frame: 7649
+- captions.ocr.value[156].text: all three flagged the risk
+- captions.ocr.value[156].agreement: 1.0
+- captions.ocr.value[156].variant: raw
+- captions.ocr.value[156].pass: True
+- captions.ocr.value[157].page: 157
+- captions.ocr.value[157].frame: 7674
+- captions.ocr.value[157].text: from China,
+- captions.ocr.value[157].agreement: 1.0
+- captions.ocr.value[157].variant: raw
+- captions.ocr.value[157].pass: True
+- captions.ocr.value[158].page: 158
+- captions.ocr.value[158].frame: 7729
+- captions.ocr.value[158].text: and for Singapore none did.
+- captions.ocr.value[158].agreement: 1.0
+- captions.ocr.value[158].variant: raw
+- captions.ocr.value[158].pass: True
+- captions.ocr.value[159].page: 159
+- captions.ocr.value[159].frame: 7756
+- captions.ocr.value[159].text: So that's a draw.
+- captions.ocr.value[159].agreement: 1.0
+- captions.ocr.value[159].variant: raw
+- captions.ocr.value[159].pass: True
+- captions.ocr.value[160].page: 160
+- captions.ocr.value[160].frame: 7797
+- captions.ocr.value[160].text: But on Xinjiang,
+- captions.ocr.value[160].agreement: 1.0
+- captions.ocr.value[160].variant: raw
+- captions.ocr.value[160].pass: True
+- captions.ocr.value[161].page: 161
+- captions.ocr.value[161].frame: 7849
+- captions.ocr.value[161].text: DeepSeek knew the answer.
+- captions.ocr.value[161].agreement: 1.0
+- captions.ocr.value[161].variant: raw
+- captions.ocr.value[161].pass: True
+- captions.ocr.value[162].page: 162
+- captions.ocr.value[162].frame: 7896
+- captions.ocr.value[162].text: It just wasn't allowed to
+- captions.ocr.value[162].agreement: 1.0
+- captions.ocr.value[162].variant: raw
+- captions.ocr.value[162].pass: True
+- captions.ocr.value[163].page: 163
+- captions.ocr.value[163].frame: 7936
+- captions.ocr.value[163].text: let you keep it.
+- captions.ocr.value[163].agreement: 1.0
+- captions.ocr.value[163].variant: raw
+- captions.ocr.value[163].pass: True
+- captions.ocr.value[164].page: 164
+- captions.ocr.value[164].frame: 7989
+- captions.ocr.value[164].text: So, my call?
+- captions.ocr.value[164].agreement: 1.0
+- captions.ocr.value[164].variant: raw
+- captions.ocr.value[164].pass: True
+- captions.ocr.value[165].page: 165
+- captions.ocr.value[165].frame: 8042
+- captions.ocr.value[165].text: Look at that passport again.
+- captions.ocr.value[165].agreement: 1.0
+- captions.ocr.value[165].variant: raw
+- captions.ocr.value[165].pass: True
+- captions.ocr.value[166].page: 166
+- captions.ocr.value[166].frame: 8282
+- captions.ocr.value[166].text: And if you just want
+- captions.ocr.value[166].agreement: 1.0
+- captions.ocr.value[166].variant: raw
+- captions.ocr.value[166].pass: True
+- captions.ocr.value[167].page: 167
+- captions.ocr.value[167].frame: 8337
+- captions.ocr.value[167].text: a clever job done cheaply,
+- captions.ocr.value[167].agreement: 1.0
+- captions.ocr.value[167].variant: raw
+- captions.ocr.value[167].pass: True
+- captions.ocr.value[168].page: 168
+- captions.ocr.value[168].frame: 8396
+- captions.ocr.value[168].text: it makes total sense.
+- captions.ocr.value[168].agreement: 1.0
+- captions.ocr.value[168].variant: raw
+- captions.ocr.value[168].pass: True
+- captions.ocr.value[169].page: 169
+- captions.ocr.value[169].frame: 8461
+- captions.ocr.value[169].text: But remember what happened with
+- captions.ocr.value[169].agreement: 1.0
+- captions.ocr.value[169].variant: raw
+- captions.ocr.value[169].pass: True
+- captions.ocr.value[170].page: 170
+- captions.ocr.value[170].frame: 8480
+- captions.ocr.value[170].text: supply chains.
+- captions.ocr.value[170].agreement: 1.0
+- captions.ocr.value[170].variant: raw
+- captions.ocr.value[170].pass: True
+- captions.ocr.value[171].page: 171
+- captions.ocr.value[171].frame: 8518
+- captions.ocr.value[171].text: Lots of firms had Chinese
+- captions.ocr.value[171].agreement: 1.0
+- captions.ocr.value[171].variant: raw
+- captions.ocr.value[171].pass: True
+- captions.ocr.value[172].page: 172
+- captions.ocr.value[172].frame: 8573
+- captions.ocr.value[172].text: parts buried deep in their
+- captions.ocr.value[172].agreement: 1.0
+- captions.ocr.value[172].variant: raw
+- captions.ocr.value[172].pass: True
+- captions.ocr.value[173].page: 173
+- captions.ocr.value[173].frame: 8624
+- captions.ocr.value[173].text: products, and then America put
+- captions.ocr.value[173].agreement: 1.0
+- captions.ocr.value[173].variant: raw
+- captions.ocr.value[173].pass: True
+- captions.ocr.value[174].page: 174
+- captions.ocr.value[174].frame: 8651
+- captions.ocr.value[174].text: tariffs on them.
+- captions.ocr.value[174].agreement: 1.0
+- captions.ocr.value[174].variant: raw
+- captions.ocr.value[174].pass: True
+- captions.ocr.value[175].page: 175
+- captions.ocr.value[175].frame: 8702
+- captions.ocr.value[175].text: I reckon the same thing
+- captions.ocr.value[175].agreement: 1.0
+- captions.ocr.value[175].variant: raw
+- captions.ocr.value[175].pass: True
+- captions.ocr.value[176].page: 176
+- captions.ocr.value[176].frame: 8741
+- captions.ocr.value[176].text: is gonna happen with Al,
+- captions.ocr.value[176].agreement: 1.0
+- captions.ocr.value[176].variant: raw
+- captions.ocr.value[176].pass: True
+- captions.ocr.value[177].page: 177
+- captions.ocr.value[177].frame: 8822
+- captions.ocr.value[177].text: so just know which passports
+- captions.ocr.value[177].agreement: 1.0
+- captions.ocr.value[177].variant: raw
+- captions.ocr.value[177].pass: True
+- captions.ocr.value[178].page: 178
+- captions.ocr.value[178].frame: 8858
+- captions.ocr.value[178].text: you're holding.
+- captions.ocr.value[178].agreement: 1.0
+- captions.ocr.value[178].variant: raw
+- captions.ocr.value[178].pass: True
+- captions.ocr.value[179].page: 179
+- captions.ocr.value[179].frame: 8908
+- captions.ocr.value[179].text: Here's what I do with
+- captions.ocr.value[179].agreement: 1.0
+- captions.ocr.value[179].variant: raw
+- captions.ocr.value[179].pass: True
+- captions.ocr.value[180].page: 180
+- captions.ocr.value[180].frame: 8939
+- captions.ocr.value[180].text: this information if  i  were
+- captions.ocr.value[180].agreement: 1.0
+- captions.ocr.value[180].variant: raw
+- captions.ocr.value[180].pass: True
+- captions.ocr.value[181].page: 181
+- captions.ocr.value[181].frame: 8982
+- captions.ocr.value[181].text: you. Ask your main software
+- captions.ocr.value[181].agreement: 1.0
+- captions.ocr.value[181].variant: raw
+- captions.ocr.value[181].pass: True
+- captions.ocr.value[182].page: 182
+- captions.ocr.value[182].frame: 9062
+- captions.ocr.value[182].text: suppliers which Al their product
+- captions.ocr.value[182].agreement: 1.0
+- captions.ocr.value[182].variant: raw
+- captions.ocr.value[182].pass: True
+- captions.ocr.value[183].page: 183
+- captions.ocr.value[183].frame: 9080
+- captions.ocr.value[183].text: runs on,
+- captions.ocr.value[183].agreement: 1.0
+- captions.ocr.value[183].variant: raw
+- captions.ocr.value[183].pass: True
+- captions.ocr.value[184].page: 184
+- captions.ocr.value[184].frame: 9121
+- captions.ocr.value[184].text: and where it runs.
+- captions.ocr.value[184].agreement: 1.0
+- captions.ocr.value[184].variant: raw
+- captions.ocr.value[184].pass: True
+- captions.ocr.value[185].page: 185
+- captions.ocr.value[185].frame: 9182
+- captions.ocr.value[185].text: Then put your own work
+- captions.ocr.value[185].agreement: 1.0
+- captions.ocr.value[185].variant: raw
+- captions.ocr.value[185].pass: True
+- captions.ocr.value[186].page: 186
+- captions.ocr.value[186].frame: 9226
+- captions.ocr.value[186].text: questions to your team's Al,
+- captions.ocr.value[186].agreement: 1.0
+- captions.ocr.value[186].variant: raw
+- captions.ocr.value[186].pass: True
+- captions.ocr.value[187].page: 187
+- captions.ocr.value[187].frame: 9295
+- captions.ocr.value[187].text: and one from another country.
+- captions.ocr.value[187].agreement: 1.0
+- captions.ocr.value[187].variant: raw
+- captions.ocr.value[187].pass: True
+- captions.ocr.value[188].page: 188
+- captions.ocr.value[188].frame: 9336
+- captions.ocr.value[188].text: and have alookat
+- captions.ocr.value[188].agreement: 1.0
+- captions.ocr.value[188].variant: raw
+- captions.ocr.value[188].pass: True
+- captions.ocr.value[189].page: 189
+- captions.ocr.value[189].frame: 9352
+- captions.ocr.value[189].text: where they differ.
+- captions.ocr.value[189].agreement: 1.0
+- captions.ocr.value[189].variant: raw
+- captions.ocr.value[189].pass: True
+- captions.ocr.value[190].page: 190
+- captions.ocr.value[190].frame: 9426
+- captions.ocr.value[190].text: And keep a second Al
+- captions.ocr.value[190].agreement: 1.0
+- captions.ocr.value[190].variant: raw
+- captions.ocr.value[190].pass: True
+- captions.ocr.value[191].page: 191
+- captions.ocr.value[191].frame: 9465
+- captions.ocr.value[191].text: ready, so you're never stuck
+- captions.ocr.value[191].agreement: 1.0
+- captions.ocr.value[191].variant: raw
+- captions.ocr.value[191].pass: True
+- captions.ocr.value[192].page: 192
+- captions.ocr.value[192].frame: 9498
+- captions.ocr.value[192].text: with one supplier.
+- captions.ocr.value[192].agreement: 1.0
+- captions.ocr.value[192].variant: raw
+- captions.ocr.value[192].pass: True
+- captions.ocr.value[193].page: 193
+- captions.ocr.value[193].frame: 9560
+- captions.ocr.value[193].text: The full deep dive is
+- captions.ocr.value[193].agreement: 1.0
+- captions.ocr.value[193].variant: raw
+- captions.ocr.value[193].pass: True
+- captions.ocr.value[194].page: 194
+- captions.ocr.value[194].frame: 9595
+- captions.ocr.value[194].text: at makeyourmindup.al.
+- captions.ocr.value[194].agreement: 1.0
+- captions.ocr.value[194].variant: normalised
+- captions.ocr.value[194].pass: True
+- captions.ocr.target: token agreement >= 0.98 on every page
+- captions.ocr.pass: True
+- captions.ocr.status: measured
+- brand.mark_tile.value: None
+- brand.mark_tile.target: not defined for STAGE layouts
+- brand.mark_tile.pass: None
+- brand.mark_tile.status: not applicable
+- motion.cue_sync.value: None
+- motion.cue_sync.target: not defined for STAGE layouts
+- motion.cue_sync.pass: None
+- motion.cue_sync.status: not applicable
+- audio.bed.value[0].check: bed present
+- audio.bed.value[0].value: True
+- audio.bed.value[0].pass: True
+- audio.bed.value[1].check: under speech
+- audio.bed.value[1].value: -18.33
+- audio.bed.value[1].target: -21.0 to -12.0 dB re voice
+- audio.bed.value[1].pass: True
+- audio.bed.value[2].check: true peak
+- audio.bed.value[2].value: -1.69
+- audio.bed.value[2].target: <= -1.0 dBTP
+- audio.bed.value[2].pass: True
+- audio.bed.value[3].check: in pauses
+- audio.bed.value[3].value: -9.3
+- audio.bed.value[3].target: -13.0 to -6.0 dB re voice
+- audio.bed.value[3].pass: True
+- audio.bed.value[4].check: the music breathes
+- audio.bed.value[4].value: 9.04
+- audio.bed.value[4].target: >= 4.0 dB
+- audio.bed.value[4].pass: True
+- audio.bed.target: bed present, under speech in range, true peak, and (ducked) breathing in pauses
+- audio.bed.pass: True
+- audio.bed.status: measured
+- keyframe_match.value: None
+- keyframe_match.target: approved golden keyframes
+- keyframe_match.pass: None
+- keyframe_match.status: not applicable
+- composition.value: None
+- composition.target: design lock composition thresholds
+- composition.pass: None
+- composition.status: not applicable
+- composition.applies: False
+- composition.note: the design lock is 9:16 only
+- keyframes.applies: False
+- keyframes.note: the design lock is 9:16 only
+
+### Critic findings
+fix at 126.9 s (composition):
+twopass beat (121 to 127 s): the 'WHOSE COMPUTERS IT RUNS ON' sticker lands on top of the 'BORN' sticker and hides it (visible alone at about 124 s), so the first passport loses its label. Stagger or reposition so BORN stays readable.
+
+fix at 195.8 s (composition):
+takeout beat (192 to 196 s): the 'DEEPSEEK BORN / CHINA' stamp runs down into the caption box and its lower edge is covered by it (stamp bottom at about y 890 against caption top at y 830). Pull both stamps up so they clear the caption zone.
+
+fix at 142.0 s (evidence):
+ds63 beat (141 to 144 s): headline reads 'DEEPSEEK: TWO IN THREE.' beside a 63% strip. 63% is not two in three (66.7%); the spoken line says 'nearly'. Change to 'NEARLY TWO IN THREE' so the headline does not overstate the figure. The strip itself (DEEPSEEK REFUSED OR WRONG, CHRISTIAN SCIENCE MONITOR, 63%) is correct.
+
+fix at 263.0 s (composition):
+knew beat (258.6 to 265.2 s): the full stop of 'ANSWER.' touches the phone's left bezel (about 16 px overlap), and the real recording's text lines start under the notch, so 'Key risks', 'prevention', 'possible' read 'isks', 'evention', 'ssible'. Footage is not redrawn, so shift the headline left or the phone right a little.
+
+note at 241.9 s (evidence):
+VERIFIED verdict thread (241.3 to 244.3 s, frames every 0.3 s): Claude and ChatGPT carry a mint flag at BOTH gates (Xinjiang and Turkmenistan), DeepSeek has a flag at Turkmenistan only with its Xinjiang thread parted (black dot, gap), tallies 2/2, 2/2, 1/2, strip 3/3 'RUNS WHERE DEEPSEEK DELETED ITS XINJIANG ANSWER', 'ANSWER DELETED' stamp, and a '?' resting value on the strip before 3/3 lands. Matches the record. The previous block is cleared.
+
+note at 238.6 s (evidence):
+First evidence beat (237.4 to 240.4 s) now steps in time with the voice: prompt, answer appears, 'Sorry, that's beyond my current scope' replaces it, 'Xinjiang cotton carries a strong forced-labour...' pull quote at about 44 px, source label 'SCREEN RECORDING, DEEPSEEK, 24 OCT 2026' (allowed). Footage text is under 30 px but it is real footage with a verbatim quote beside it. Pass.
+
+note at 270.0 s (motion):
+Call beat (268.2 to 274 s): the dated card holds still while the phone and background visibly move behind it (three sampled frames all differ); it replaces the captions by design. Card text, 'DUE 2026-12-31' and '90% SURE' are the engine's. Pass.
+
+note at 166.5 s (composition):
+lives beat: the mint scribble circle round CHINA runs over the lower edge of the 'DEEPSEEK' stamp label and nearly reaches the passport's right spine. Still one scribble and readable; tighten the loop if time allows.
+
+note at 243.1 s (brand):
+Mint is used as type in several places (phone card source labels such as 'CHESKY TO BLOOMBERG' and 'AT STAKE', 'TURKMENISTAN' and 'TAIWAN' on the phone card, 2/2 and 1 numerals, 'FLAGGED IT?'), whereas TEMPLATE.md says mint is never type. It sits on dark ink, matches the approved fixture family and is legible, so I do not block, but the rule as written is not kept.
+
+note at 255.0 s (composition):
+Sparse headline-only or half-empty frames: A DRAW (252.6 to 258.6 s, lower half empty under the thread diagram), WHO'S IN THE RACE (64 to 66 s), KOREA (105 to 114 s, right half empty), SUPPLY CHAINS and OWN WORK QUESTIONS openings. Acceptable on a 16:9 stage with motion, but weaker than the phone beats.
+
+note at 295.0 s (composition):
+Advice beats (288 to 317 s) repeat the same ghost passport (HOME COUNTRY, RESIDENCE, AI) behind unrelated headlines (TARIFFS, SUPPLY CHAINS, KNOW WHICH PASSPORTS, OWN WORK QUESTIONS); it carries little meaning there and slides under the captions. Only the tick on ASK YOUR SUPPLIERS (about 300 s) and SECOND AI (about 315 s) give it a job.
+
+note at 66.0 s (evidence):
+Counters rest at '?' (China bar 64 to 66 s, 3% strip about 82 s, 63% strip about 142 s, 3/3 about 242 s) until the number lands, as the template asks; each resolves to the correct value (59 to 35, 3%, 63%, 3/3). Tallies 2/2 and 1/2 have no denominator on screen beyond the headline BOTH FLAGGED BOTH TIMES; acceptable.
+
+note at 115.4 s (copy):
+Caption 'That's pretty Awkward.' keeps a capital A mid-sentence (the transcript word is 'Awkward.'). Lower-case it in the caption if the engine allows.
+
+note at 3.0 s (composition):
+The caption box is a fixed wide bar even when it holds one word ('a', 'So', 'And'), so it reads empty for stretches (for example 2.65 s, 5.05 s, 66 s). Engine design; not a block.
+
+note at 322.8 s (other):
+Ending is one closing screen: headline THE FULL DEEP DIVE kept, logo lock-up, FRIDAYS, mind.the.gap pill and makeyourmindup.ai, no ticker, no marquee, held to the last frame (324.1 s). URL text is about 30 px.
+
+note at 320.7 s (other):
+Audio: integrated -14.1 LUFS, true peak -1.5 dBTP (ebur128), sample max -1.6 dB, no clipping (flat factor 0). Fade in over the first 1.1 s (digital silence to 0.3 s, music rising -49 to -36 LUFS momentary, voice enters at 1.1 s); fade out from 320.7 s (voice ends, music at about -21 M) down to -35 M and -73 dBFS at the last sample, so no hard cut. No silence of 0.3 s or more below -50 dB anywhere; short-term loudness stays between about -20 and -10 LUFS per 30 s block, no sawtooth. Four short pause troughs (87.4, 91.4, 222.3, 259.1 s) where the mix drops to about -40 to -54 dBFS RMS for 0.2 to 0.5 s: bed is low but present; not a block.
+
+### Anything not measured
+- Design judgment and final approval are not mechanical measurements.
+- brand.mark_tile: not applicable
+- motion.cue_sync: not applicable
+- keyframe_match: not applicable
+- composition: not applicable
+

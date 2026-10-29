@@ -153,6 +153,20 @@ def _renderer_layouts() -> dict:
     return result
 
 
+def caption_pages_shown(props: dict) -> list:
+    """Caption pages the renderer draws at the frame OCR samples. The dated call card replaces the captions for the
+    whole call beat (CaptionTrack returns null there), so a page sampled inside it is not on screen."""
+    calls = [(b['fromFrame'], b['toFrame']) for b in props['beats'] if b.get('role') == 'call'] if props.get('call') else []
+
+    def sampled(page):  # the same frame qc_captions.ocr reads
+        first, last = page['fromFrame'], page['toFrame']
+        revealed = max(first, max((int(w['atFrame']) for w in page['words']), default=first) + 2)
+        return (revealed + last - 1) // 2
+
+    return [page for page in props['captions']
+            if not any(start <= sampled(page) < end for start, end in calls)]
+
+
 def inputs_from_props(props: dict) -> dict:
     """Resolve QC inputs on the renderer's global 30 fps clock."""
     # Mirrors apps/renderer/src/engine/layouts/index.ts, slotsFor():
@@ -182,7 +196,7 @@ def inputs_from_props(props: dict) -> dict:
     edl = [{'fromFrame': b['fromFrame'], 'toFrame': b['toFrame'],
             'trimBeforeFrames': b['fromFrame'] + stem.get('trimBeforeFrames', 0)} for b in beats]
     joins = sorted({s['fromFrame'] / props.get('fps', 30) for s in props.get('segments', []) if s['fromFrame'] > 0})
-    return dict(pages=props['captions'], beats=beats, aspect=aspect, events=events, slots=slots,
+    return dict(pages=caption_pages_shown(props), beats=beats, aspect=aspect, events=events, slots=slots,
                 region=region, mark_png=props['brand']['mark']['src'], dialogue_master=stem['src'],
                 edl=edl, joins=joins)
 
@@ -208,13 +222,14 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
                                  'pass': move['longest_still_s'] <= fmt.get('longest_still_s', 99), 'runs': move['still_runs']},
         'motion.periodicity': {'value': move['loop_period_s'], 'target': 'no repeating loop 2-10 s', 'pass': move['loop_period_s'] is None},
     }
-    for name in ('sync.av_xcorr', 'joins.decoder', 'captions.ocr', 'brand.mark_tile', 'motion.cue_sync'):
+    for name in ('sync.av_xcorr', 'joins.decoder', 'captions.ocr', 'brand.mark_tile', 'motion.cue_sync', 'audio.bed'):
         checks[name] = {'value': None, 'target': 'see config/ve/crew', 'pass': None, 'status': 'not_run'}
-    from . import qc_sync, qc_joins, qc_captions, qc_brand, qc_cues
+    from . import qc_sync, qc_joins, qc_captions, qc_brand, qc_cues, qc_audio
     optional = [
         ('sync.av_xcorr', dialogue_master is not None and edl is not None,
          lambda: qc_sync.av_xcorr(path, dialogue_master, edl)),
         ('joins.decoder', joins is not None, lambda: qc_joins.decoder(path, joins)),
+        ('audio.bed', dialogue_master is not None, lambda: qc_audio.bed(dialogue_master)),
         ('captions.ocr', pages is not None and region is not None, lambda: qc_captions.ocr(path, pages, region)),
         ('brand.mark_tile', mark_png is not None and beats is not None and aspect is not None,
          lambda: qc_brand.mark_tile(path, mark_png, beats, aspect)),
@@ -239,7 +254,11 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
                                 'pass': False, 'status': 'error', 'reason': str(exc)}
     from . import designlock, qc_keyframes
     try:
-        keyframes = qc_keyframes.keyframe_checks(path, {'beats': beats or []}, designlock.load(), format_id)
+        if aspect == '16:9':
+            # The design lock's stills are 9:16. A wide cut is held to the mechanical checks and the Critic only.
+            keyframes = {'applies': False, 'note': 'the design lock is 9:16 only'}
+        else:
+            keyframes = qc_keyframes.keyframe_checks(path, {'beats': beats or []}, designlock.load(), format_id)
     except (ValueError, KeyError, TypeError, OSError, subprocess.CalledProcessError) as exc:
         keyframes = {'applies': True, 'pass': False, 'beats': {}, 'findings': [str(exc)]}
     checks['keyframe_match'] = {

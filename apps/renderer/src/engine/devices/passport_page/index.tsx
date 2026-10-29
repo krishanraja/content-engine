@@ -33,7 +33,7 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
         // Flags are separate printed furniture, never children of a tilted stamp.
         const flagLeft = field.at.x > 250 ? field.at.x - 236 : field.at.x + 548
         return <React.Fragment key={field.id}>
-          {field.flag ? <div style={{ position: 'absolute', left: flagLeft, top: field.at.y + 12 }}>
+          {field.flag && field.visible ? <div style={{ position: 'absolute', left: flagLeft, top: field.at.y + 12 }}>
             <PrintedFlag kind={field.state === 'stamped' ? field.flag : 'unknown'} tokens={tokens} />
           </div> : null}
           {field.visible ? <div data-field={field.id} data-state={field.state} aria-label={field.label} style={{ ...mono,

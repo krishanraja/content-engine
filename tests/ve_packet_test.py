@@ -1,6 +1,7 @@
 """Approval packet gates with temp pieces and pinned-ffmpeg video readback."""
 from __future__ import annotations
 
+import json
 import io
 import shutil
 import subprocess
@@ -189,6 +190,17 @@ class PacketTest(unittest.TestCase):
         self.assertIn('keyframe_match fails: one: ssim 0.2 min 0.8',self.packet()[1])
         self.lock['formats']['hand-held-screen']['keyframes'] = {}
         self.assertIn('has no frozen design lock',self.packet()[1])
+
+    def test_a_wide_cut_has_no_golden_rows_and_a_tall_cut_still_needs_them(self):
+        na = {'pass': None, 'status': 'not applicable', 'value': None}
+        self.qc['checks']['composition'] = dict(na)
+        self.qc['checks']['keyframe_match'] = dict(na)
+        self.save_qc()
+        tall_problems = packet.mechanical(self.spec, 'short', self.directory)[0]
+        self.assertTrue(any('keyframe_match fails' in p for p in tall_problems), tall_problems)
+        wide = json.loads(json.dumps(self.spec))
+        wide['cuts']['short']['aspect'] = '16:9'
+        self.assertEqual([p for p in packet.mechanical(wide, 'short', self.directory)[0] if 'fails' in p], [])
 
     def test_packet_video_success(self):
         if not FFMPEG:

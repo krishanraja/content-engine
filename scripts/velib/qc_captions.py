@@ -17,6 +17,44 @@ def _tokens(text: str) -> list[str]:
     return re.findall(r'\w+', text.casefold(), flags=re.UNICODE)
 
 
+# Tesseract cannot tell the heavy sans capital I from a lower-case l ("AI" reads "Al", "I asked" reads "l asked"),
+# and neither can a viewer in this face. Both sides are folded the same way, so only that one ambiguity is forgiven.
+_CONFUSABLE = str.maketrans('l1|', 'iii')
+
+
+def fold(token: str) -> str:
+    return token.translate(_CONFUSABLE)
+
+
+def lone_capital_i(token: str, expected: list) -> bool:
+    """A reading made only of I, l, 1 or | glyphs and at most two long is the single-letter word "I" when "i" is
+    expected on the page ("I were you" reads "Il"). Narrow on purpose: no other token is ever forgiven."""
+    return 'i' in expected and 0 < len(token) <= 2 and set(token) <= set('il1|')
+
+
+def caption_box_height(lines: int, wide: bool) -> int:
+    """The engine's caption box: 34 px above, 38 px below, `lines` lines of size x 1.06 (CaptionTrack.tsx, geometry.ts)."""
+    size = 54 if wide else 68
+    return int(34 + 38 + lines * size * 1.06 + 6)
+
+
+def crop_to_caption_box(pixels, lines: int, wide: bool):
+    """Keep the caption box only. The OCR region is fixed but the box is as tall as its lines: on a tall cut it hangs
+    from the top of the region, on a wide cut it sits on the bottom. The rest of the region is the picture (cream
+    passport paper, a phone, a headline) and reads as stray words."""
+    height = caption_box_height(lines, wide)
+    if height >= pixels.shape[0]:
+        return pixels
+    return pixels[-height:] if wide else pixels[:height]
+
+
+def page_lines(page: dict, wide: bool) -> int:
+    from .compile import caption_line_count
+    rows = [{'text': w['text'] if isinstance(w, dict) else str(w), 'w': i} for i, w in enumerate(page['words'])]
+    swipe = page.get('swipeIndex')
+    return caption_line_count(rows, '16:9' if wide else '9:16', {swipe} if swipe is not None else ())
+
+
 def spaceless_match(expected: str, actual: str) -> float:
     """Tracked or fused words match their spaced form (caption OCR)."""
     return SequenceMatcher(None, ''.join(_tokens(expected)), ''.join(_tokens(actual))).ratio()
@@ -103,13 +141,18 @@ def _normalise(pixels):
 
 def _read_candidates(executable, pixels, expected):
     normalised = _normalise(pixels)
+    expected = [fold(token) for token in expected]
     best = None
     for variant, image in (('raw', pixels), ('normalised', normalised),
                            ('raw_2x', pixels.repeat(2, axis=0).repeat(2, axis=1)),
                            ('normalised_2x', normalised.repeat(2, axis=0).repeat(2, axis=1))):
         seen = _recognise(executable, image)
+        # A lone pipe is the heavy sans capital I read as a bar; it counts as the word I only where I is expected.
+        if 'i' in expected:
+            seen = re.sub(r'(?<!\w)\|(?!\w)', ' i ', seen)
         # A lone stray glyph from the picture behind the caption is not a caption word; real one-letter words are in `expected`.
-        actual = [token for token in _tokens(seen) if len(token) > 1 or token in expected]
+        actual = ['i' if lone_capital_i(token, expected) else fold(token)
+                  for token in _tokens(seen) if len(token) > 1 or fold(token) in expected or lone_capital_i(token, expected)]
         agreement = _agreement(expected, actual)
         # Tesseract fuses tightly set words ("writes a" -> "writesa"). Word spacing is gated by the caption
         # geometry lint, so identical letters in identical order count as a full match.
@@ -148,7 +191,7 @@ def ocr(render, pages, region) -> dict:
         pixels = gray_frames(render, frame, frame, region)[0].astype('uint8')
         words = ' '.join(word['text'] if isinstance(word, dict) else str(word) for word in page['words'])
         expected = _tokens(words)
-        best = _read_candidates(executable, pixels.reshape(h, w), expected)
+        best = _read_candidates(executable, crop_to_caption_box(pixels.reshape(h, w), page_lines(page, w > 1000), w > 1000), expected)
         rows.append({'page': index, 'frame': frame, **best,
                      'pass': bool(expected) and best['agreement'] >= 0.98})
     report = measurement(rows, 'token agreement >= 0.98 on every page')

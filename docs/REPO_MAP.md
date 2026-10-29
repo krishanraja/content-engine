@@ -3372,7 +3372,7 @@ Run a Vercel serverless handler locally against the real environment.
 
 ### `apps/renderer/src/engine/devices/headline/index.tsx`
 
-- `function headlineLayout(lines: string[], width: number, swipedLine = -1)`
+- `function headlineLayout(lines: string[], width: number, swipedLine = -1, room: number = ZONES.headline.h)`
 - `function Device({ object, events, tokens, frame }: DeviceProps)`
 
 ### `apps/renderer/src/engine/devices/headline/schema.ts`
@@ -3637,6 +3637,8 @@ Direct port of ref/H/build.py: eight unknowns, h22 fixed at one.
 Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 
 - `const CANVAS`
+- `const ACTIVE_CANVAS`
+- `function setActiveCanvas(w: number, h: number)`
 - `const SCRIBBLE`
 - `const ZONES`
 
