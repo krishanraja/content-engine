@@ -50,6 +50,18 @@ const RECORDED_DAYS = ['tue', 'thu', 'sat', 'sun']
 // (Titles), <day>-publish (Approve for publish) and <day>-reject-<asset> (Reject asset).
 export const DECISION_ID = /^(mon|wed|fri)-(scripts|titles|publish|reject-([a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}))$/
 export const DECISION_KIND = { scripts: 'approve_scripts', titles: 'titles', publish: 'approve_publish', reject: 'reject_asset' } as const
+// His scores for a piece (Krish, 2026-10-29: "allow me to add a score out of 10 for narrative quality and production
+// quality"), pressed on a day tab or in the Archive: picks/score-<piece uuid>. The server files each save as one
+// piece_scores row (afterPress); the document keeps his latest press for the board to show.
+export const SCORE_ID = /^score-([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/
+export const SCORE_BASES = ['at_publish', 'hindsight'] as const
+export function scoreBody(id: string, body: Record<string, unknown>): boolean {
+  const m = SCORE_ID.exec(id)
+  const mark = (v: unknown) => Number.isSafeInteger(v) && Number(v) >= 1 && Number(v) <= 10
+  return !!m && body.kind === 'scores' && body.piece_id === m[1] && mark(body.narrative) && mark(body.production)
+    && (SCORE_BASES as readonly unknown[]).includes(body.basis) && !('send' in body)
+    && (!('note' in body) || body.note === null || typeof body.note === 'string' && body.note.length <= 4000)
+}
 export const SCRIPT_CUTS = ['long', 'short', 'feature'] as const
 export const TITLE_SURFACES = ['long_title', 'short_title', 'long_thumbnail', 'short_thumbnail'] as const
 const oneLine = (v: unknown, max: number) => typeof v === 'string' && v.trim().length > 0 && v.length <= max && !/[\x00-\x1f\x7f]/.test(v)
@@ -96,6 +108,7 @@ export function validBody(collection: string, id: string, body: unknown): boolea
   if (collection === 'edits') return text('text') && day(body.day) && text('item', 100) && id === `${body.day}-${body.item}`
   // His pick for a day, with his optional saved note; or one of his decisions on a day's tab (decisionBody).
   if (collection === 'picks' && DECISION_ID.test(id)) return decisionBody(id, body)
+  if (collection === 'picks' && (SCORE_ID.test(id) || body.kind === 'scores')) return scoreBody(id, body)
   if (collection === 'picks') return day(id) && day(body.day) && text('pick', 160) && text('story') && !('kind' in body)
     && (!('note' in body) || body.note === null || text('note', 2000))
   // A Combine tap on the Queue tab's "Could combine" card: his choice only, recorded as queue/combine-<n>; the next
@@ -157,7 +170,7 @@ export function combineWriterRefused(collection: string, body: unknown, who: str
 /** The writes a session relays as his words: a Combine tap, a saved edit of a draft (edit_sweep.py carries it into
  *  every other draft and the ledger as decided_by Krish), his taps on a change or a lesson (a comment with act), his
  *  note on a pick, a press on an idea or an off-day option (a queue document with use), and his decisions on a day's
- *  tab (a picks document with kind: Approve scripts, Titles, Approve for publish, Reject asset). Only Krish writes
+ *  tab (a picks document with kind: Approve scripts, Titles, Approve for publish, Reject asset, and his Scores). Only Krish writes
  *  them; any other writer gets the code to refuse with. A plain comment stays open to the engine. */
 export function hisOnlyRefusal(collection: string, body: unknown, who: string | null): string | null {
   if (who === 'Krish') return null
