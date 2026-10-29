@@ -109,6 +109,10 @@ describe('the hooks are wired', () => {
     for (const name of ['secret-guard.mjs', 'publish-guard.mjs', 'taste-guard.mjs', 'stop-check.mjs', 'cost_gate.py']) expect(settings).toContain(name)
     expect(JSON.parse(settings).model).toBe('opus')
   })
+  it('keeps the chat backstop on SessionEnd (W3.3, "Local file, runner posts")', () => {
+    const settings = JSON.parse(readFileSync(join(repoRoot, '.claude', 'settings.json'), 'utf8'))
+    expect(JSON.stringify(settings.hooks.SessionEnd)).toContain('scripts/taste_backstop.py')
+  })
   it('steps aside on a stop the hook itself caused', () => {
     const result = spawnSync(process.execPath, [join(repoRoot, '.claude', 'hooks', 'stop-check.mjs')], { input: JSON.stringify({ hook_event_name: 'Stop', stop_hook_active: true }), encoding: 'utf8' })
     expect(result.status).toBe(0)
