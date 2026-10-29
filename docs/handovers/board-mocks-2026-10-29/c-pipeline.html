@@ -1,0 +1,69 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Board mock C</title><link rel="stylesheet" href="base.css">
+<style>
+.wrap{max-width:1440px;margin:0 auto;padding:18px 16px 48px}
+.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
+.top .range{font:500 12px/1.2 Plex,monospace;color:var(--muted);margin-top:6px}
+.weeks{display:flex;gap:4px;background:#e9e2d3;border-radius:12px;padding:4px}
+.weeks a{font:700 12px/1 Plex,monospace;padding:12px;border-radius:9px;color:var(--ink);text-decoration:none}
+.weeks a.on{background:var(--ink);color:var(--bg)}
+.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin-bottom:16px;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+.flow a{display:flex;flex-direction:column;gap:4px;padding:10px 8px;background:var(--card);text-decoration:none;color:var(--ink);border-left:1px solid var(--line);position:relative}
+.flow a:first-child{border-left:0}
+.flow a b{font:700 10.5px/1 Plex,monospace;text-transform:uppercase;letter-spacing:.04em}
+.flow a span{font:400 24px/1 Anton}
+.flow a.has-ask{background:#fff1ea}.flow a.has-ask::after{content:'';position:absolute;top:8px;right:8px;width:8px;height:8px;border-radius:50%;background:var(--coral)}
+.flow a small{font:500 10px/1.1 Plex,monospace;color:var(--muted)}
+.mine{background:var(--ink);color:var(--bg);border-radius:16px;padding:14px;margin-bottom:16px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px}
+.mine b{font:400 22px/1 Anton;color:var(--mint)}
+.mine span{font-size:14px;flex:1;min-width:200px}
+.mine .who{font:700 10.5px/1 Plex,monospace;text-transform:uppercase;color:#a9b4ae}
+.board{display:grid;gap:14px}
+@media(min-width:1000px){.board{grid-template-columns:repeat(5,minmax(0,1fr));align-items:start}}
+.col h2{display:flex;justify-content:space-between;align-items:center;font:700 11px/1 Plex,monospace;text-transform:uppercase;letter-spacing:.08em;padding:0 2px 8px;border-bottom:2px solid var(--ink);margin-bottom:10px}
+.col h2 em{font-style:normal;color:var(--muted)}
+.col .hint{font-size:12px;color:var(--muted);margin:-4px 2px 10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px;margin-bottom:10px;display:grid;grid-template-columns:56px 1fr;gap:10px}
+.card.ask{border:2px solid var(--coral)}
+.card.piece{border-top:5px solid var(--sc)}
+.card .meta{display:flex;flex-wrap:wrap;gap:6px 8px;font:500 11px/1 Plex,monospace;color:var(--muted);margin-bottom:5px}
+.card .meta .d{color:var(--ink);font-weight:700}
+.card .t{font-weight:700;font-size:14.5px;line-height:1.25;margin-bottom:6px}
+.card .who{font-size:12px;font-weight:600;margin:4px 0 6px}
+.card .who.you{color:var(--bad)}.card .who.eng{color:var(--muted)}
+.card .full{grid-column:1/-1;display:flex;flex-direction:column;gap:8px}
+.card .acts{display:flex;gap:8px}.card .acts .btn{flex:1}
+.empty{border:1.5px dashed var(--line);border-radius:14px;padding:14px;font-size:13px;color:var(--muted);margin-bottom:10px}
+@media(min-width:1000px){.chip{font-size:10.5px;padding:5px 7px}}
+</style></head><body>
+<div class="mockbar"><span>Mock C · The pipeline, idea to amplify</span><span>Synthetic data</span></div>
+<div class="wrap" id="app"></div>
+<script src="data.js"></script>
+<script>
+// Where each item sits: a series piece by its stage; an off-day post by its status.
+const at = (d,p) => p.kind==='piece' ? d.piece.stage : ({concept:0, approved:1, drafted:1, scheduled:3, live:4})[p.status]
+const items = W.days.flatMap(d=>d.posts.map(p=>({d,p,s:at(d,p)})))
+const youOn = ({d,p}) => p.status==='concept' || (p.kind==='piece' && ((d.piece.blocked||'').includes('you') || W.asks.some(a=>a.day===d.key && /Substack/.test(a.what))))
+const hints = ['Concepts waiting for a yes', 'Words drafted, checked', 'Cuts and visuals in production', 'Approved and scheduled', 'Live, with results from Growth']
+const card = it => {
+  const {d,p} = it, piece = p.kind==='piece', st = STATUS[p.status], you = youOn(it)
+  const who = piece && d.piece.blocked ? `<div class="who ${/you/.test(d.piece.blocked)?'you':'eng'}">Waiting: ${E(d.piece.blocked)}</div>` : ''
+  const sub = piece && W.asks.some(a=>a.day===d.key && /Substack/.test(a.what))
+  return `<div class="card ${you?'ask':''} ${piece?'piece':''}" ${piece?`style="--sc:${SERIES[d.piece.series].color}"`:''}>
+    ${thumb(p,d,'s')}
+    <div><div class="meta"><span class="d">${d.name} ${d.date.split(' ')[0]}</span><span>${p.time}</span><span>${piece?SERIES[d.piece.series].label:KINDS[p.kind].label}</span></div>
+    <div class="t">${E(p.title)}</div>${who}<div class="status tone-${st.tone}">${st.label}</div></div>
+    <div class="full"><div class="chips">${p.channels.map(chip).join('')}</div>
+    ${p.status==='concept'?`<div class="acts"><button class="btn mint">Approve</button><button class="btn ghost">Skip</button></div>`:''}
+    ${sub?`<div class="acts"><button class="btn mint">Approve Substack post</button></div>`:''}
+    ${p.status==='live'?`<div class="acts"><span class="feel" style="width:100%"><button style="flex:1">Liked</button><button style="flex:1">Not it</button></span></div>`:''}</div>
+  </div>`
+}
+const yours = items.filter(youOn)
+document.getElementById('app').innerHTML = `
+<div class="top"><div><h1>${W.label}</h1><div class="range">${W.range}</div></div>
+<nav class="weeks"><a href="?week=this" class="${weekKey==='this'?'on':''}">This week</a><a href="?week=next" class="${weekKey==='next'?'on':''}">Next week</a></nav></div>
+<div class="mine"><b>${yours.length}</b><span>${yours.length?'cards wait on you, outlined in coral. Everything else moves by itself.':'Nothing waits on you.'}</span><span class="who">${E(W.note)}</span></div>
+<nav class="flow">${STAGES.map((s,i)=>{const n=items.filter(x=>x.s===i);return `<a href="#s${i}" class="${n.some(youOn)?'has-ask':''}"><b>${s}</b><span>${n.length}</span><small>${i===4?n.length+' live':n.filter(youOn).length?n.filter(youOn).length+' for you':'on track'}</small></a>`}).join('')}</nav>
+<div class="board">${STAGES.map((s,i)=>{const n=items.filter(x=>x.s===i).sort((a,b)=>youOn(b)-youOn(a));return `<section class="col" id="s${i}"><h2>${s}<em>${n.length}</em></h2><div class="hint">${hints[i]}</div>${n.map(card).join('')||'<div class="empty">Nothing here this week</div>'}</section>`}).join('')}</div>`
+</script></body></html>
