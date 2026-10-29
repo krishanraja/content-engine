@@ -54,8 +54,9 @@ lint <spec>
 qc <cut> --format <format> [--out <path>] [--props <props>]
 study <ref> [--out <path>]
 card <fields>
+sprint start <week> --ref <ref> [--ref <ref>] | cards <week> | gate2 <device> --words <his words> --where <where> --at <date> | status | feed --archive <in> --out <out>
 dispatch <card> [--wait] [--piece <piece>]
-budget verify|hash|status
+budget pull --read <file> | verify | hash | status
 ledger <piece> reserve <provider> <amount> | settle <id> <amount>
 lock spend
 verify-card <card> --cwd <worktree>
@@ -91,7 +92,7 @@ Render transports string values as ASCII escapes, decoded for drawing. It measur
 - Captions always on (schema); colour roles only, never hex.
 - Positions are signed-script word indexes; compile derives frames.
 - One EDL drives picture, dialogue, bed, SFX/captions. No manual mux or separate retiming; AAC correction preserves video.
-- No per-piece compositions/render scripts. New hero mechanisms become library devices via cards.
+- No per-piece compositions/render scripts. New hero mechanisms become library devices via cards. `npm run check:ve-route` (`scripts/ve/check_route.py`) bans per-piece code for every move in `config/ve/moves.json` whose device is registered; the weekly device sprint is `docs/ve/SPRINT.md`.
 - Never hand-write a pass/receipt/ready. status checks lint, QC bound to the existing MP4 SHA, completeness, Critic verdict and Krish's exact-file approval.
 - Evidence is real; a generated picture never stands in for a real place, record or test. A generated plate carries no on-screen label, tag or provenance note, and no ILLUSTRATION tag (Krish, 28 Oct 2026: "No one cares that things are AI-generated"; "Yes remove those."); its sidecar keeps the provenance. Numbers name producers; mind.the.gap ends in a dated call. No synthetic Krish without realism-test approval. Follow tools.json recipes/rulings.
 - No publish/send/schedule verb.
