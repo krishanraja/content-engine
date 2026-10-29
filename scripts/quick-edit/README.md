@@ -141,7 +141,7 @@ One JSON file per video. Paths are relative to the config file.
 | `captions` | `false`: no captions in the picture. The caption file `NAME-SHAPE.srt` is written for every cut either way, on the finished cut's clock (any opening clip included), lines of 42 characters or fewer, two at most. |
 | `chapters` | `[{"title", "starts"}]` or a `.chapters.md` path: `NAME-SHAPE.chapters.txt` for the YouTube description, 00:00 first, ascending, each at least 10 s on. The dividers themselves are ordinary cues. |
 | `end_screen_s` | `20`: warns when a picture runs into the last N seconds, kept for YouTube's end-screen tiles. |
-| `music_mode` | `"episode_bed"`, for a long cut: the continuous bed Krish approved by ear on 19 October, about -31 LUFS under his voice the whole way, lifting to about -22 under each chapter card (a cue with `"chapter": true`), the track starting again inside a chapter card or, where a stretch outruns it, under a two-second crossfade (`music.continuous_episode_bed`); the bed's continuity is measured and the render stops if it drops out under his voice. `"episode"` is the same now: it used to play only in the open, the chapter turns and the close and drop out between them, and Krish, 2026-10-28: "Yes I think music should be audible throughout but just lower." |
+| `music_mode` | `"episode_bed"`, for a long cut: the continuous bed Krish approved by ear on 19 October, about -31 LUFS under his voice the whole way, lifting to about -22 under each chapter card (a cue with `"chapter": true`), the track starting again inside a chapter card or, where a stretch outruns it, under a two-second crossfade (`music.continuous_episode_bed`); the bed's continuity is measured and the render stops if it drops out under his voice. `"episode"` is the same now: it used to play only in the open, the chapter turns and the close and drop out between them, and Krish, 2026-10-28: "Yes I think music should be audible throughout but just lower." A cut that asks for `"episode"` and has no chapter cards keeps the old lift instead, about 4 dB over the bed from 1.5 s before each spoken chapter turn to 4 s after it (Krish, 2026-10-16: "Feel free to raise the music slightly during the section dividers."; `music.ACCENT_LIFT_DB`). |
 | `speed` | `{"factor": 1.2, "krish": "Krish, DATE: his words"}`: the take sped up, picture and sound, pitch kept, before anything else. Refused without his own words and over 1.35. |
 | `heard_as` | `[{"said": "Claude", "heard": "clawed", "krish": "Krish, DATE: his words"}]`: a word the transcriber misheard in the finished file, cleared for the words gate (above) on his own words only. Refused without them, before anything renders. |
 
@@ -341,8 +341,7 @@ moment (a low thud as BANKRUPT slams in, say) and nothing anywhere else. The
 sound comes from a small set that is played to him first, and nothing is used
 before he approves it by ear. The Epidemic Sound subscription behind the music
 probably covers sound effects; that is to be checked with the licence, never
-assumed, and no spend is made without his yes. Each piece then records which
-sound it used, if any, so real engagement can settle the choice.
+assumed, and no spend is made without his yes.
 
 ## The report
 

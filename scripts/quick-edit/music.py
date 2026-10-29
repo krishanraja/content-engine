@@ -92,6 +92,13 @@ MIN_WINDOW_S = 0.4  # one ebur128 block: a shorter stretch has no loudness
 # starts again every few seconds is no bed.
 RESTART_XF_S = 2.0
 RESTART_MIN_S = 60.0
+# A long cut with no chapter cards ("music_mode": "episode") lifts its bed a
+# little at each spoken chapter turn, from 1.5 s before it to 4 s after. Krish,
+# 2026-10-16: "Feel free to raise the music slightly during the section
+# dividers." The lift sits this far over the bed level, still well under his
+# voice (the bed is about 17 LU under it).
+ACCENT_BEFORE_S, ACCENT_AFTER_S = 1.5, 4.0
+ACCENT_LIFT_DB = 4.0
 
 
 class MusicError(ValueError):
@@ -466,7 +473,10 @@ def continuous_episode_bed(track, timeline, levels, chapters, src='0:a', out='be
     which used to play only in the open, the chapter turns and the close):
     continuous and low under his voice, lifting at the chapter cards, with
     restarts hidden in the chapter-card windows and, where a stretch outruns
-    the track, under a two-second crossfade between them (restarts()).
+    the track, under a two-second crossfade between them (restarts()). A cut
+    with no cards that asked for "episode" lifts a little at each spoken
+    chapter turn instead (timeline "accents", ACCENT_LIFT_DB, levelled by
+    audio_quality.level_bed).
     Krish, 2026-10-19, of the deeper cut: "the audio needs to be able to be
     heard the entire time, but just really low unless its intro, outro or or
     chapter card"; 2026-10-28: "Yes I think music should be audible throughout
@@ -520,6 +530,7 @@ def continuous_episode_bed(track, timeline, levels, chapters, src='0:a', out='be
     envelope = [(t,target(t)) for t in points]
     lines.append(f"[{current}]volume='{gain_expr(envelope)}':eval=frame,atrim=end_sample={round(total*RATE)},asetpts=PTS-STARTPTS[{out}]")
     return ';'.join(lines), {'mode':'episode_bed','chapter_windows':cards,'restart_windows':pieces,
+                            'accent_windows':[list(w) for w in timeline.get('accents') or ()],
                             'envelope':envelope,'crossfade_s':2,'chapter_lufs':chapter}
 
 

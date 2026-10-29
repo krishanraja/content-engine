@@ -27,11 +27,16 @@ def measure(path):
     return {'points':rows,'silences':silences}
 
 
-def target_points(timeline,levels,chapters):
+def target_points(timeline,levels,chapters,accents=(),lift_db=0.):
+    """The bed's level over the cut: up for the open and the close, lifted to
+    the chapter level at each card, and lifted `lift_db` over the bed in each
+    accent window (a spoken chapter turn with no card), easing in over a
+    second and out over one and a half."""
     total=timeline['total_s'];vs=timeline['voice_start_s'];ve=timeline['voice_end_s']
-    baseline=levels['bed_lufs'];cards=list(chapters)
+    baseline=levels['bed_lufs'];cards=list(chapters);lifts=[(a,b) for a,b in accents if b-a>2.5] if lift_db else []
     times=sorted(set([0.,total,max(0,vs-.5),vs,ve,min(total,ve+.8)] +
-                     [max(0,min(total,t)) for a,b in cards for t in (a-.5,a,b,b+.8)]))
+                     [max(0,min(total,t)) for a,b in cards for t in (a-.5,a,b,b+.8)] +
+                     [max(0,min(total,t)) for a,b in lifts for t in (a,a+1.,b-1.5,b)]))
     def target(t):
         value=baseline
         if t<vs:
@@ -41,11 +46,14 @@ def target_points(timeline,levels,chapters):
         for a,b in cards:
             if a-.5<=t<=b+.8:
                 value=max(value,baseline+(levels.get('chapter_lufs',-22)-baseline)*max(0,min(1,(t-a+.5)/.5,(b+.8-t)/.8)))
+        for a,b in lifts:
+            if a<=t<=b:
+                value=max(value,baseline+lift_db*max(0,min(1,(t-a)/1.,(b-t)/1.5)))
         return value
     return [(t,target(t)) for t in times]
 
 
-def level_bed(source,destination,timeline,levels,chapters):
+def level_bed(source,destination,timeline,levels,chapters,accents=(),lift_db=0.):
     """Three-second local loudness drives smooth gain; no resampling or cuts.
 
     The input is a quiet 16-bit stereo stem with all approved crossfades already
@@ -56,7 +64,7 @@ def level_bed(source,destination,timeline,levels,chapters):
     refs=[(max(0,p['t']-1.4),p['S']) for p in measurements['points'] if p['t']>=2.9 and p.get('S',-120)>-70]
     if not refs:raise ValueError('Music has no reliable local loudness measurements')
     # One reference each second avoids following individual beats.
-    refs=refs[::10];curve=target_points(timeline,levels,chapters)
+    refs=refs[::10];curve=target_points(timeline,levels,chapters,accents,lift_db)
     with wave.open(str(source),'rb') as inp:
         if inp.getsampwidth()!=2 or inp.getframerate()!=48000:
             raise ValueError('Music reference must be signed 16-bit PCM at 48 kHz')

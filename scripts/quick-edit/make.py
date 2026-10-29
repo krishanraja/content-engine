@@ -853,7 +853,8 @@ def strap_problem(cfg):
     longer draws one). None when the config carries none."""
     if cfg.get('strap'):
         return (f'"strap" in the config would put his name on screen, and no content refers to him ({NO_NAME_RULING}). '
-                'Take "strap" out of the config: the tall cut carries the brand\'s dress instead (kit.py, "dress")')
+                'Replace "strap" with "dress": {"9x16": "dress-9x16.png"}, the brand\'s dress the tall cut carries instead: kit.py draws '
+                'that file on every run, even when it keeps a config edited by hand, so the cut opens in the brand\'s corners')
     return None
 
 
@@ -1173,10 +1174,14 @@ def resolve_music(cfg, asp, seconds, base='.'):
         # in the close, and dropped out under the talk between them. Krish,
         # 2026-10-28: "Yes I think music should be audible throughout but just
         # lower." So it is the continuous bed now, low under his voice, lifting
-        # at the chapter cards (the one he approved by ear on 19 October).
+        # at the chapter cards (the one he approved by ear on 19 October), or,
+        # with no cards, a little at each spoken chapter turn as the old bed did
+        # (Krish, 2026-10-16: "Feel free to raise the music slightly during the
+        # section dividers.").
         mode = 'episode_bed'
         notes.append('"music_mode": "episode" plays the continuous bed ("episode_bed"): the music is audible under the whole cut, '
-                     'low under his voice (Krish, 2026-10-28)')
+                     'low under his voice (Krish, 2026-10-28), lifting at its chapter cards, or a little at each spoken chapter turn '
+                     'when it has none')
     if mode == 'episode_bed':
         seconds = 0  # Restarts go in the chapter cards, and further ones under a two-second crossfade where a stretch outruns the track.
     try:
@@ -1214,8 +1219,10 @@ def resolve_music(cfg, asp, seconds, base='.'):
     ledger = music.ledger_path()
     if ledger.resolve() != music.LEDGER.resolve():
         notes.append(f'the music came from {ledger}, not config/music-library.json')
+    lift_turns = cfg.get('music_mode') == 'episode'
     mode = mode if mode == 'episode_bed' else None
-    return ({'track': track, 'file': path, 'levels': levels, 'ledger': str(ledger), 'needs': needs, 'needs_from': needs_from, 'mode': mode},
+    return ({'track': track, 'file': path, 'levels': levels, 'ledger': str(ledger), 'needs': needs, 'needs_from': needs_from, 'mode': mode,
+             'lift_turns': lift_turns},
             '; '.join(notes) or None)
 
 
@@ -1324,9 +1331,11 @@ def build_audio(work, edited, voice_gain, intro, end, tl, bed):
         raw=work/'bed-reference.wav'
         ffmpeg('-i', str(bed['file']), '-filter_complex', chain, '-map', '[bed]', '-c:a', 'pcm_s16le', str(raw))
         stem = work / 'bed.wav'
-        correction=audio_quality.level_bed(raw,stem,tl,levels,cards)
+        # A spoken chapter turn's lift (tl "accents") is levelled with the cards and, like them, left out of the speech-bed check.
+        accents=tl.get('accents') or ()
+        correction=audio_quality.level_bed(raw,stem,tl,levels,cards,accents,music.ACCENT_LIFT_DB)
         measured=audio_quality.measure(stem)
-        continuity=audio_quality.continuity_report(measured,tl['voice_start_s'],tl['voice_end_s'],cards)
+        continuity=audio_quality.continuity_report(measured,tl['voice_start_s'],tl['voice_end_s'],list(cards)+list(accents))
         (work/'music-continuity.json').write_text(json.dumps(continuity,indent=2))
         if continuity['status']!='pass':
             raise ValueError('Music continuity gate: '+'; '.join(continuity['problems']))
@@ -1853,8 +1862,9 @@ def self_test():
                              capture_output=True, text=True)
     checks.append(('make.py stops on a strap config before it reads anything else', (ran.returncode != 0, 'no content refers to Krish, ever' in ran.stderr),
                    (True, True)))
-    checks.append(('a strap config is refused, quoting his ruling; "strap": false is no matter',
-                   (bool(strap) and 'no content refers to Krish, ever' in strap, strap_problem({'strap': False}), strap_problem({})), (True, None, None)))
+    checks.append(('a strap config is refused, quoting his ruling and naming the dress to put in its place; "strap": false is no matter',
+                   (bool(strap) and 'no content refers to Krish, ever' in strap, '"dress": {"9x16": "dress-9x16.png"}' in (strap or ''),
+                    strap_problem({'strap': False}), strap_problem({})), (True, True, None, None)))
     checks.append(('"intro": false is no intro and no note', resolve_intro({'intro': False}, '9x16', same), (None, None)))
     checks.append(('"music": false is no music and no note', resolve_music({'name': 't', 'music': False}, '9x16', 30), (None, None)))
     if not os.environ.get('MINDMAKE_MUSIC_LEDGER'):
@@ -2596,6 +2606,10 @@ def main():
         # The chapter cards on the video's clock: the continuous bed lifts under each and restarts inside one.
         tl['chapter_cards'] = [(c['s']+tl['intro_s'],c['e']+tl['intro_s'])
                                for c in wins if c.get('chapter') or c['id'].startswith('fri-chapter-')]
+        # A config that asked for "episode" with no chapter cards lifts the bed a little at each spoken chapter turn instead.
+        if bed and bed.get('lift_turns') and not tl['chapter_cards']:
+            tl['accents'] = [(round(ws[h[0]]['s'] + tl['intro_s'] - music.ACCENT_BEFORE_S, 3), round(ws[h[0]]['s'] + tl['intro_s'] + music.ACCENT_AFTER_S, 3))
+                             for c in episode.chapters_of(cfg, P)[1:] for h in [find_loose(ws, c['starts'])] if h]
         # Where a picture comes in or goes: a track shorter than the cut starts again on one of these when one is near (music.restarts).
         tl['turns'] = sorted({round(c[k] + tl['intro_s'], 3) for c in wins for k in ('s', 'e')})
         target = (bed['levels'] if bed else default_levels())['final_integrated_lufs']

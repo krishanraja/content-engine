@@ -606,7 +606,10 @@ YouTube, `"end_screen_s": 20`, and `"music_mode": "episode_bed"`: the
 continuous bed, low under his voice the whole way and lifting at each
 chapter card, the track starting again inside a card or under a crossfade
 where a stretch outruns it (`"episode"`, which used to drop the bed between
-the open, the turns and the close, now plays the same). The short cut keeps the house look.
+the open, the turns and the close, now plays the same, and with no chapter
+cards lifts a little at each spoken chapter turn, as it did before: Krish,
+2026-10-16, "Feel free to raise the music slightly during the section
+dividers."). The short cut keeps the house look.
 
 A 15-minute feature goes through that same one-shot episode path; it is a
 third cut beside the 5-minute and the 90-second, which are made as usual.

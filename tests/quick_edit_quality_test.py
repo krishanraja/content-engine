@@ -89,6 +89,19 @@ class QualityTests(unittest.TestCase):
         self.assertEqual(audio_quality.continuity_report(loud,0,10,[])['status'],'fail')
         self.assertEqual(audio_quality.continuity_report({'points':[],'silences':[]},0,10,[])['status'],'fail')
 
+    def test_episode_bed_lifts_a_little_at_each_spoken_chapter_turn(self):
+        # Krish, 2026-10-16: "Feel free to raise the music slightly during the section dividers."
+        tl={'total_s':60.,'voice_start_s':.5,'voice_end_s':55.}
+        levels={'bed_lufs':-31,'chapter_lufs':-22,'intro_lufs':-16,'outro_lufs':-18}
+        at=lambda curve,t:min(curve,key=lambda p:abs(p[0]-t))[1]
+        lifted=audio_quality.target_points(tl,levels,[],[(20.,25.5)],4.)
+        self.assertEqual((at(lifted,21.),at(lifted,24.),at(lifted,10.),at(lifted,30.)),(-27.,-27.,-31,-31))
+        self.assertEqual(audio_quality.target_points(tl,levels,[],[(20.,25.5)],0.),audio_quality.target_points(tl,levels,[]))
+        # The lifted stretch is left out of the speech-bed check, as a chapter card is.
+        bed={'points':[{'t':t/10,'S':-27 if 50<=t<=150 else -31} for t in range(30,200)],'silences':[]}
+        self.assertEqual(audio_quality.continuity_report(bed,0,20,[(5.,15.)])['status'],'pass')
+        self.assertEqual(audio_quality.continuity_report(bed,0,20,[])['status'],'fail')
+
     def test_ambiguous_cue_is_not_resolved_by_first_hit(self):
         words=[{'w':w,'s':i,'e':i+.8} for i,w in enumerate('same gear same gear'.split())]
         with self.assertRaises(ValueError):quality.unique_anchor(words,'same gear',make.norm)
