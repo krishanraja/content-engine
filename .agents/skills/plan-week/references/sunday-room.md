@@ -79,23 +79,23 @@ Signed by Krish: "<his words>", <YYYY-MM-DD>, lock sha256 <the hash making.py pr
 
 ## Starting each make
 
-Step 11, once a piece's lock is signed and pushed; one fresh session per piece, never a piece made in the room.
+Step 11, once a piece's lock is signed and pushed; one fresh run per piece, never a piece made in the room.
 
 - First `python3 scripts/post-pack/making.py <uuid> show`: a session that started on the piece under six hours
   ago may still be at work (Control Center's rule, `LIVE_SESSION_MS` in control-center `api/_make.ts`). Look at it
-  with `get_session` (its id is in its link). Still working: give him its link and start no second one. Stopped (a
+  through its link on the record (a `make-piece.yml` run, `gh run view <id>`, or a session he opened). Still working: give him its link and start no second one. Stopped (a
   make started before the lock was signed stops at the lock and makes nothing): start a fresh one as below.
-- Control Center's "Make it in Claude Code" (`POST /api/content/make`) answers only his signed-in browser, and the
-  routine it fires (`CLAUDE_MAKE_ROUTINE_ID`, with the one-line payload `piece_id: <uuid>`, `makePayload` in
-  `api/_make.ts`) starts on `main`, where the lock is not yet. So start the session with `create_session` on
-  `https://github.com/krishanraja/content-engine` at the room's pushed branch (`source_revision`), its prompt two
-  lines: `piece_id: <uuid>`, then Control Center's own words (`makePrompt`): "Make this piece: follow
-  .claude/skills/make-piece/SKILL.md in krishanraja/content-engine. Read the piece and where it is from the
-  engine, record this session on it, then do the first step that is not done."
-- Without `create_session`, once the room's pull request has merged: fire the make routine with `fire_trigger`,
-  its id found with `list_triggers` (the routine whose prompt follows make-piece), and the text exactly
-  `piece_id: <uuid>`. Neither works: say so to him in one line, with those two lines to paste into a new
-  claude.ai/code session.
+- Never a routine (Ruling, Krish, 2026-10-29: "FYI, I want zero Claude routines. No Claude schedules of any kind in
+  this architecture"). The make runs as Claude Code inside GitHub Actions on his subscription:
+  `.github/workflows/make-piece.yml`, one run per piece, on the room's pushed branch, because the lock is not on
+  `main` until the room's pull request merges. Dispatch it with `gh workflow run make-piece.yml --ref <the room's
+  branch> -f piece_id=<uuid>` (or a `repository_dispatch` of event type `make-piece` with `client_payload`
+  `{"piece_id": "<uuid>", "ref": "<the room's branch>"}`), then `gh run list --workflow make-piece.yml --limit 3` to
+  see it queued. Its concurrency group is the piece, so a second dispatch waits for the first and never runs beside
+  it.
+- It cannot be dispatched from the room (no GitHub access here): say so to him in one line, with the page to press,
+  https://github.com/krishanraja/content-engine/actions/workflows/make-piece.yml (Run workflow, the room's branch,
+  the piece id).
 
 ## When the server answered no_key
 

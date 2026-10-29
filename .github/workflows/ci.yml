@@ -3,6 +3,8 @@ name: CI
 on:
   push:
   pull_request:
+  # make-piece.yml starts CI on its branch this way: its push, made with GitHub's own token, starts none.
+  workflow_dispatch:
 
 jobs:
   verify:

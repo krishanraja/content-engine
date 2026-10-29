@@ -221,8 +221,10 @@ storyboard for the cut's exact words, or the cut is held; the words gate
 word, or a checkout without the gate, files nothing; every other check an
 advisory row until calibrated; and every gate below still holding. It
 builds no publish board: it records each cut, each held cut with its
-reason, and its report for the Monday board, which is built at 06:30 by its
-own routine (until that routine exists, by the first session on Monday).
+reason, and its report for the Monday board, which code builds
+(`week_board.py`) when the overnight production finishes, never Claude on a
+timer (Krish, 2026-10-29: "I want zero Claude routines"); until that code
+runs, by the first session on Monday.
 No one is in its chat.
 
 ## 1. Preflight: which tool, which machine

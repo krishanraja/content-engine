@@ -1,6 +1,6 @@
 ---
 name: plan-week
-description: Plan the publishing week and run the Sunday room. Research three or four options for each publishing day (Monday follow.the.money, Wednesday under.the.hood, Friday mind.the.gap) and the off-day options, stress-test them, write them onto the pieces through /api/week/options and onto the Ideas tab of the week's publish board by 06:00 Sunday, read back Krish's five presses from the board, interview him one question at a time on all three picks to find the deeper story, write one narrative lock per piece for him to sign, start each signed piece's make in its own fresh session, and send approved scripts to Teleprompter when the server could not. Use when the Sunday ideas routine fires, or when Krish asks to plan or re-plan the week.
+description: Plan the publishing week and run the Sunday room. Research three or four options for each publishing day (Monday follow.the.money, Wednesday under.the.hood, Friday mind.the.gap) and the off-day options, stress-test them, write them onto the pieces through /api/week/options and onto the Ideas tab of the week's publish board by 06:00 Sunday, read back Krish's five presses from the board, interview him one question at a time on all three picks to find the deeper story, write one narrative lock per piece for him to sign, start each signed piece's make in its own fresh session, and send approved scripts to Teleprompter when the server could not. Use when the Sunday ideas run fires in GitHub Actions, or when Krish asks to plan or re-plan the week.
 ---
 
 # Plan the week
@@ -41,12 +41,36 @@ Control Center's #/week only tracks it. Still never ask him what
 `docs/CADENCE.md` already answers (a 5-minute video and a 90-second cut, every
 piece; Substack and YouTube, then Shorts, TikTok and Instagram).
 
+**Zero Claude routines** (Ruling, Krish, 2026-10-29: "FYI, I want zero
+Claude routines. No Claude schedules of any kind in this architecture"; then
+"Could you not get Github to trigger Claude subscription to do something and
+then update the content.krishraja.com board?"). No claude.ai scheduled or
+fired trigger and no headless Claude on a home-computer timer runs any step
+here. GitHub Actions is the scheduler, and Claude Code runs inside its job on
+his subscription (`CLAUDE_CODE_OAUTH_TOKEN`), writing to the board only
+through the engine API:
+
+- **The Sunday ideas run**, `.github/workflows/sunday-ideas.yml`: GitHub's
+  cron fires it early on Saturday (UTC), twice, because GitHub fires late; a
+  guard (`scripts/sunday_ideas.py built`) makes it do nothing once the week's
+  Ideas tab is live. It runs steps 1 to 7 only (of step 0, only the
+  Inspiration cards routed to a piece), and keeps `ideas.json` and
+  `combine.json` on the branch `sunday-ideas/<Monday>-<run>`.
+- **The Sunday room** is a session Krish opens himself. It merges that branch
+  into its own, writes the `WORKBENCH.md` lines the run could not keep (step
+  7 and "Without the connectors"), does step 0's close-out, then steps 8 to
+  12. The run only reads the Inspiration cards (through `/api/week/options`)
+  and never marks them; the room marks `routed_at` on the ones the plan took,
+  after merging the branch.
+- **Each signed piece's make** is one run of `.github/workflows/make-piece.yml`
+  (step 11), never a routine.
+
 The clock, in his local time (Control Center's operator time zone). Each row
 names the checkpoint Control Center watches for it:
 
 | When | What | Checkpoint |
 |---|---|---|
-| Sat 23:00 to Sun 06:00 | The Sunday ideas routine fires this skill into the Sunday room session; steps 0 to 7 put the Ideas tab live | `week_ideas_ready` |
+| Saturday, by 06:00 Sunday | The Sunday ideas run (GitHub Actions) does steps 1 to 7: the Ideas tab is live | `week_ideas_ready` |
 | Sun by 10:00 | Krish's five presses on every idea, about 15 minutes | `week_picked` |
 | Sun 10:00 to 11:45 | The triage readback (step 8), then the interview (step 9), about 105 minutes | `narratives_locked` |
 | As each lock is signed | That piece's make starts in its own fresh session (step 11) | `scripts_ready` |
@@ -534,16 +558,17 @@ after his presses, by 10:00.
    signed goes back to him, and the changed lock gets a new hash and his new
    signature (the drift rule). From 9 November `making.py scripts` refuses a
    piece without it.
-11. **Start that piece's make, in its own fresh session**, as soon as its
-   lock is signed and pushed; one session per piece, and never a piece made
-   in the room. First check none is at work on it (`python3
+11. **Start that piece's make, in its own fresh run**, as soon as its
+   lock is signed and pushed; one run per piece, and never a piece made in
+   the room. First check none is at work on it (`python3
    scripts/post-pack/making.py <uuid> show`: a session that started under
-   six hours ago may be), then start it with `create_session` at the room's
-   pushed branch, or with `fire_trigger` once the room's pull request has
-   merged, exactly as `.agents/skills/plan-week/references/sunday-room.md`
-   ("Starting each make") gives. Neither works: say so to him in one line,
-   with the two lines to paste into a new claude.ai/code session. The new
-   session records itself on the piece (`make-piece`, "Before anything");
+   six hours ago may be), then dispatch `.github/workflows/make-piece.yml`
+   (Claude Code in GitHub Actions on his subscription) at the room's pushed
+   branch, exactly as `.agents/skills/plan-week/references/sunday-room.md`
+   ("Starting each make") gives; never a routine (Krish, 2026-10-29: "I
+   want zero Claude routines"). It cannot be dispatched from here: say so
+   to him in one line, with the Run workflow page and the piece id to paste.
+   The run records itself on the piece (`make-piece`, "Before anything");
    the room records nothing for it.
 12. **Approve scripts, and Teleprompter** (about 12:30; Krish, 2026-10-28:
    "Once I approve, the two scripts will go to teleprompter" and "Server
@@ -575,7 +600,7 @@ after his presses, by 10:00.
 
 ## Without the connectors
 
-The scheduled Sunday routine may run with no Drive and no Firecrawl
+The Sunday ideas run in GitHub Actions has no Drive and no Firecrawl
 connector. Then research with the built-in web search and web fetch instead,
 and skip the Cold Ideas & Inspo folder rather than guessing what is in it.
 Say which sources were unavailable on the week's board item, in one plain line

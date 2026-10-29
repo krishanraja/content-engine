@@ -828,7 +828,7 @@
       "on": "2026-10-19",
       "krish": "I am deleting the publish board Claude schedules from both accounts FYI, scrub them from everywhere. We are not ready for this yet",
       "why": "The scheduled board-videos task ran on its own on both accounts while the board moved to content.krishraja.com; he wants board updates to come only from sessions he starts.",
-      "means": "No session creates or relies on a scheduled task that builds, updates or publishes a publish board, and no current document names one, until he says he is ready. Amended 2026-10-28, when he said so for two boards: \"on a Sunday, Claude Code proactively brings me ideas\"; \"an overnight Codex run will actually produce me the final assets and the final publish board first thing Monday morning\". Exactly those two routines (the Sunday ideas board and the Monday final board) may build a board; every other board update still comes from a session he started, and any other scheduled job writes records only.",
+      "means": "No session creates or relies on a scheduled task that builds, updates or publishes a publish board, and no current document names one, until he says he is ready. Amended 2026-10-28, when he said so for two boards: \"on a Sunday, Claude Code proactively brings me ideas\"; \"an overnight Codex run will actually produce me the final assets and the final publish board first thing Monday morning\". Exactly those two routines (the Sunday ideas board and the Monday final board) may build a board; every other board update still comes from a session he started, and any other scheduled job writes records only. Amended 2026-10-29: \"FYI, I want zero Claude routines. No Claude schedules of any kind in this architecture\"; then \"Could you not get Github to trigger Claude subscription to do something and then update the content.krishraja.com board?\", and \"happy with $15 a week\". So no claude.ai scheduled or fired trigger and no headless Claude on a home-computer timer. GitHub Actions is the scheduler: the Sunday ideas board is .github/workflows/sunday-ideas.yml, Claude Code inside the job on his subscription (CLAUDE_CODE_OAUTH_TOKEN, never an API key), and the Monday final board is built by code (week_board.py) when the overnight production finishes, never by Claude on a timer. The chain's metered API spend stays under $15 a week.",
       "status": "encoded",
       "encoded": [
         {
@@ -838,13 +838,28 @@
         },
         {
           "file": "AGENTS.md",
-          "contains": "Exactly two scheduled routines may build a publish board: the Sunday ideas board and the Monday final board",
+          "contains": "Exactly two scheduled jobs may build a publish board: the Sunday ideas board and the Monday final board",
           "how": "the 28 Oct exception, named so it cannot widen unseen"
         },
         {
           "file": "WORKBENCH.md",
           "contains": "No schedule puts the videos on the board",
           "how": "the handover no longer points sessions at the deleted schedule"
+        },
+        {
+          "file": "AGENTS.md",
+          "contains": "Zero Claude routines (Ruling, Krish, 2026-10-29: \"FYI, I want zero Claude routines. No Claude schedules of any kind in this architecture\")",
+          "how": "the 29 Oct amendment every agent reads: GitHub Actions on his subscription is the scheduler"
+        },
+        {
+          "file": "tests/no-claude-routines.test.ts",
+          "contains": "no workflow or skill creates, changes or fires a Claude routine",
+          "how": "fails on any workflow or skill that creates or fires a Claude routine, or runs Claude Code on an API key"
+        },
+        {
+          "file": "scripts/overnight/preflight.ps1",
+          "contains": "It never starts Claude",
+          "how": "the Saturday preflight no longer starts a headless Claude turn on a timer"
         }
       ]
     },

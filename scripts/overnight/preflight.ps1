@@ -3,21 +3,18 @@ The Saturday overnight preflight for one home computer (plan Wave 1, the clock's
 checkpoint preflight_ok). Wave 2 builds the overnight runner. This only proves, a week early, whether this machine
 could run it unattended.
 
-It reads, runs version and help commands, and makes one short headless Claude turn. It never edits, sends or spends,
-it writes no file of its own, and its one JSON result goes to stdout. Every program it starts has no window, its input closed and its output read here (Krish,
+It reads and runs version and help commands only. It never starts Claude: no Claude runs on a timer in this
+architecture (Ruling, Krish, 2026-10-29: "FYI, I want zero Claude routines. No Claude schedules of any kind in this
+architecture"). The overnight production is Codex and scripts, started by his Titles press, so the headless Claude
+turn this used to make was a check of something the run never does, and starting it from a Saturday timer was itself
+a scheduled Claude run. It never edits, sends or spends, it writes no file of its own, and its one JSON result goes
+to stdout. Every program it starts has no window, its input closed and its output read here (Krish,
 2026-10-28: "HIDE ALL CONSOLE POP UPS FOREVER FROM EVERY REPO AND LOCAL TASK").
 
 The checks, each { ok, detail, ... }:
 
-  claude_cli       Claude Code is installed, and its version.
-  claude_headless  one headless turn, claude -p, run from this repository with its own settings and hooks, plus the
-                   preflight profile (scripts\overnight\preflight-profile.json: permission mode dontAsk, bypass
-                   disabled, the writing tools denied) and no built-in tools. It passes when the turn answers and did
-                   not run with bypassPermissions. It lists the MCP servers the turn loaded, each with its status.
-                   One short turn on Haiku with no tools: nothing is edited or sent, and the model call is the
-                   smallest the check can make. The repository's own hooks run on it, as on any session there; with
-                   no tool called they only read, and the closeout hook may fetch main into this clone's remote
-                   refs, as the recordings pass's own update does.
+  claude_cli       Claude Code is installed, and its version (claude --version only; no turn, no model call). The
+                   sessions Krish opens on this machine use it.
   codex_companion  the Codex plugin companion that ve dispatch uses (scripts\velib\cards.py) is installed, and
                    "node <companion> help" runs and offers the task route with the flags dispatch passes. Never
                    "task --help": the companion reads help only as its first word, so "task --help" would start a
@@ -36,7 +33,6 @@ The result also carries "report": the same findings as names, versions and count
 an account), which the recordings pass sends with its lane report. Exit 0 when every check passes, 1 when one fails.
 
   powershell -NoProfile -ExecutionPolicy Bypass -File scripts\overnight\preflight.ps1
-  powershell -NoProfile -ExecutionPolicy Bypass -File scripts\overnight\preflight.ps1 -RequireMcp mindmake-studio
 
 The recordings pass (scripts\recordings-upload.ps1) runs it once each Saturday after 18:00 local, keeps the result as
 preflight.json beside its own log, and sends the report with every lane report (POST /api/library/recordings/lane, on
@@ -44,10 +40,7 @@ the runner key it already uses). A session reads it back with GET /api/library/r
 #>
 param(
   [string]$RepoRoot = '',
-  [string]$Model = 'haiku',
-  [string[]]$RequireMcp = @(),
-  [ValidateRange(1, 4000)][int]$MinFreeGB = 40,
-  [ValidateRange(30, 900)][int]$ClaudeTimeoutSeconds = 240
+  [ValidateRange(1, 4000)][int]$MinFreeGB = 40
 )
 
 $ErrorActionPreference = 'Stop'
@@ -57,11 +50,9 @@ $Started = [DateTime]::UtcNow
 $Invariant = [System.Globalization.CultureInfo]::InvariantCulture
 if (-not $RepoRoot) { $RepoRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot) }
 $RepoRoot = [System.IO.Path]::GetFullPath($RepoRoot)
-$ProfilePath = Join-Path $PSScriptRoot 'preflight-profile.json'
 $StudioRuntime = Join-Path $env:USERPROFILE 'Documents\MindmakeVideoStudio\runtime'
 $StudioPython = Join-Path $StudioRuntime 'python\Scripts\python.exe'
 $CompanionRoot = Join-Path $env:USERPROFILE '.claude\plugins\cache\openai-codex\codex'
-$Required = @($RequireMcp | ForEach-Object { ([string]$_).Split(',') } | ForEach-Object { $_.Trim() } | Where-Object { $_ })
 $Checks = [ordered]@{}
 
 # ---- reading, never writing ---------------------------------------------------------------------------------------
@@ -243,55 +234,6 @@ Invoke-Check 'claude_cli' {
   return [ordered]@{ ok = $true; version = $version.Groups[1].Value; detail = "Claude Code $($version.Groups[1].Value)." }
 }
 
-Invoke-Check 'claude_headless' {
-  $result = [ordered]@{ ok = $false; permission_mode = $null; model = $null; auth = $null; mcp_servers = @(); seconds = $null; detail = '' }
-  if (-not $Claude) { $result.detail = 'Claude Code is not installed, so no headless turn could run.'; return $result }
-  if (-not (Test-Path -LiteralPath $ProfilePath -PathType Leaf)) { $result.detail = 'scripts\overnight\preflight-profile.json is missing from this copy.'; return $result }
-  $arguments = @('-p', 'Reply with the one word ready and nothing else.', '--output-format', 'stream-json', '--verbose',
-    '--model', $Model, '--permission-mode', 'dontAsk', '--settings', $ProfilePath, '--tools', '', '--no-session-persistence')
-  $run = Invoke-Quiet $Claude $arguments $ClaudeTimeoutSeconds
-  $result.seconds = $run.seconds
-  $init = $null
-  $final = $null
-  foreach ($line in ($run.out -split "`r?`n")) {
-    if (-not $line.StartsWith('{')) { continue }
-    try { $item = $line | ConvertFrom-Json } catch { continue }
-    $type = [string](Get-Field $item 'type')
-    if ($type -eq 'system' -and [string](Get-Field $item 'subtype') -eq 'init') { $init = $item }
-    elseif ($type -eq 'result') { $final = $item }
-  }
-  if ($null -eq $init) {
-    # An unknown option or a refused login ends the turn before it starts; the first line says which.
-    $result.detail = "the headless turn did not start ($(Get-Short $run)). A Claude Code older than the flags this uses needs updating."
-    return $result
-  }
-  $result.permission_mode = [string](Get-Field $init 'permissionMode')
-  $result.model = [string](Get-Field $init 'model')
-  $result.auth = [string](Get-Field $init 'apiKeySource')
-  $servers = @()
-  foreach ($server in @(Get-Field $init 'mcp_servers')) {
-    if ($null -ne $server) { $servers += [ordered]@{ name = [string](Get-Field $server 'name'); status = [string](Get-Field $server 'status') } }
-  }
-  $result.mcp_servers = $servers
-  $problems = @()
-  if ($result.permission_mode -eq 'bypassPermissions' -or -not $result.permission_mode) { $problems += "it ran in permission mode '$($result.permission_mode)', and an unattended run must never bypass permissions" }
-  if ($run.timed_out) { $problems += "it did not finish in $ClaudeTimeoutSeconds seconds" }
-  elseif ($null -eq $final -or [bool](Get-Field $final 'is_error') -or [string](Get-Field $final 'result') -notmatch 'ready') {
-    $problems += "the turn did not answer ($([string](Get-Field $final 'subtype')); $(Get-Short $run))"
-  }
-  foreach ($name in $Required) {
-    $match = @($servers | Where-Object { $_.name -eq $name })
-    if (-not $match.Count) { $problems += "the MCP server $name did not load" }
-    elseif ($match[0].status -ne 'connected') { $problems += "the MCP server $name is $($match[0].status), not connected" }
-  }
-  $connected = @($servers | Where-Object { $_.status -eq 'connected' }).Count
-  $result.ok = ($problems.Count -eq 0)
-  if ($result.ok) {
-    $result.detail = "a headless turn answered in $($run.seconds) s, in permission mode $($result.permission_mode), with $connected of $($servers.Count) MCP server(s) connected."
-  } else { $result.detail = ($problems -join '; ') + '.' }
-  return $result
-}
-
 Invoke-Check 'codex_companion' {
   # The file ve dispatch picks (scripts\velib\cards.py, companion()): the last by name of every installed version.
   $found = [string[]]@(Get-ChildItem -LiteralPath $CompanionRoot -Directory -ErrorAction SilentlyContinue |
@@ -418,16 +360,12 @@ Invoke-Check 'drive' {
 
 $failed = @($Checks.Keys | Where-Object { -not [bool](Get-Field $Checks[$_] 'ok') })
 $at = $Started.ToString("yyyy-MM-dd'T'HH:mm:ss'Z'", $Invariant)
-$headless = $Checks['claude_headless']
 $allowance = $Checks['codex_allowance']
 $report = [ordered]@{
   at = $at
   ok = ($failed.Count -eq 0)
   failed = $failed
   claude_version = Get-Field $Checks['claude_cli'] 'version'
-  permission_mode = Get-Field $headless 'permission_mode'
-  auth = Get-Field $headless 'auth'
-  mcp_servers = @(Get-Field $headless 'mcp_servers' | Where-Object { $null -ne $_ })
   codex_companion = Get-Field $Checks['codex_companion'] 'version'
   codex_login = [bool](Get-Field $Checks['codex_login'] 'ok')
   codex_weekly_used_pct = Get-Field $allowance 'used_pct'

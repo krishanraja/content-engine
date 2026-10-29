@@ -57,7 +57,9 @@ is in its chat: whatever it cannot decide is held, with its reason, for the Mond
    report, `docs/plans/<Monday>-week/sunday-night.md`, gives per cut: filed or held and why, the words gate's
    result and each advisory row. Commit it and push the session branch with its pull request (`AGENTS.md`,
    "Commit and closeout"; nothing lives only in this container). The run builds no publish board: the Monday
-   final board is built from these records at 06:30 by its own routine (until that routine exists, by the first
-   session on Monday, `make-piece`, "Publish board"). Nothing on it is called ready: he watches each cut at full
+   final board is built from these records by code (`week_board.py`) when the overnight production finishes,
+   never by Claude on a timer (Ruling, Krish, 2026-10-29: "FYI, I want zero Claude routines. No Claude schedules of
+   any kind in this architecture"); until that code runs, by the first session on Monday, `make-piece`, "Publish
+   board"). Nothing on it is called ready: he watches each cut at full
    size on Monday and approves or rejects it there (`AGENTS.md`, start route, rule 6).
 9. A run that cannot finish says what stopped on the week's board item (step 10), in one line.
