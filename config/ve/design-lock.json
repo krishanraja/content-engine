@@ -392,5 +392,69 @@
       },
       "frozen_on": "2026-10-28"
     }
+  },
+  "drafts": {
+    "face-with-proof": {
+      "role": "base",
+      "aspect": "9:16",
+      "status": "awaiting Gate 2",
+      "drafted": "2026-10-29",
+      "awaiting": "Krish's Gate 2 approval of one still per beat; then ve lock freeze face-with-proof --from <stills dir>",
+      "purpose": "He on camera carries the argument; the proof arrives beside or over him on the words that name it",
+      "beats": [
+        "hook",
+        "face",
+        "proof",
+        "close"
+      ],
+      "modules": [
+        "hand-held-screen",
+        "two-passports"
+      ],
+      "frames_dir": "fixtures/ve/design-lock/face-with-proof",
+      "anatomy": "docs/ve/design/formats/F-anatomy.md",
+      "motion": "docs/ve/design/formats/F-motion.md",
+      "keyframe_slots": {
+        "hook": null,
+        "face": null,
+        "proof": null,
+        "close": null
+      }
+    },
+    "face-with-proof@16:9": {
+      "role": "base",
+      "aspect": "16:9",
+      "status": "awaiting Gate 2",
+      "drafted": "2026-10-29",
+      "awaiting": "Krish's Gate 2 approval of one still per beat; then ve lock freeze face-with-proof@16:9 --from <stills dir>",
+      "purpose": "He on camera carries the argument; the proof arrives beside or over him on the words that name it (wide)",
+      "beats": [
+        "hook",
+        "face",
+        "proof",
+        "close"
+      ],
+      "modules": [
+        "hand-held-screen",
+        "two-passports"
+      ],
+      "frames_dir": "fixtures/ve/design-lock/face-with-proof-wide",
+      "anatomy": "docs/ve/design/formats/F-anatomy.md",
+      "motion": "docs/ve/design/formats/F-motion.md",
+      "keyframe_slots": {
+        "hook": null,
+        "face": null,
+        "proof": null,
+        "close": null
+      },
+      "canvas": {
+        "w": 1920,
+        "h": 1080
+      },
+      "compare_size": [
+        960,
+        540
+      ]
+    }
   }
 }

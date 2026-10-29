@@ -22,7 +22,7 @@
       "rule": "a track enters the ledger only with Krish's approval; record the recording id"
     },
     "elevenlabs": {
-      "slot": "Scribe word timings (second aligner), voice isolator, one-off SFX",
+      "slot": "voice isolator, one-off SFX (never word timings: Krish, 2026-10-29, \"do not use eleven labs for this\")",
       "route": "Claude MCP",
       "requires_ruling": {
         "voice_clone": "realism_test"
