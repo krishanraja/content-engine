@@ -93,7 +93,6 @@ class ChapterLifts(Media):
         self.assertEqual(floor_lines.chapters_line('16x9', None, [(20, 24)])['status'], 'no_bed')
 
 
-@unittest.skipUnless(has_filter('vidstabdetect'), 'this ffmpeg has no vidstabdetect')
 class Stability(Media):
     def test_shaky_footage_measures_more_shake_than_steady(self):
         steady, shaky = self.tmp / 'steady.mp4', self.tmp / 'shaky.mp4'
@@ -102,6 +101,8 @@ class Stability(Media):
                'ultrafast', '-crf', '12', str(path))
         a, b = floor_lines.stability(steady), floor_lines.stability(shaky)
         self.assertEqual((a['status'], b['status']), ('measured', 'measured'), (a, b))
+        wall = floor_lines.stability(shaky, region=(0, 0, 0.5, 0.5))
+        self.assertGreater(wall['rms_px'], 5.0, wall)
         self.assertFalse(b['blocking'])
         self.assertLess(a['rms_px'], 1.0, a)
         self.assertGreater(b['rms_px'], 5.0, b)
@@ -114,13 +115,11 @@ class Stability(Media):
 
 
 class Shake(unittest.TestCase):
-    def test_region_keeps_only_the_wall(self):
-        # Fields on the left (the wall) still; fields on the right (him) move every frame.
-        steps = [(0, 0, [(0, 0, 50, 50), (0, 0, 60, 60), (9, 0, 500, 300), ((-1) ** k * 9, 0, 520, 320)]) for k in range(40)]
-        whole = floor_lines.shake(steps, 24)
-        wall = floor_lines.shake(steps, 24, region=(0, 0, 0.3, 1), size=(640, 360))
-        self.assertEqual(wall['rms_px'], 0.0)
-        self.assertIsNotNone(whole)
+    def test_a_steady_pan_is_not_shake_and_a_jitter_is(self):
+        pan = floor_lines.shake([(2.0, 0.0)] * 60, 24)
+        jitter = floor_lines.shake([((-1) ** k * 6.0, 0.0) for k in range(60)], 24)
+        self.assertLess(pan['rms_px'], 1.0, pan)
+        self.assertGreater(jitter['rms_px'], 2.0, jitter)
 
 
 class Scorer:

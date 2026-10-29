@@ -15,8 +15,8 @@ the report, never a refusal by itself:
              window over the bed just before it, measured on the bed stem;
              the levels themselves wait on his ear ("levels: awaiting by-ear
              approval") until he signs them;
-  stability  how much the camera shakes in his footage (an aim, measured with
-             ffmpeg's vidstabdetect; never blocking);
+  stability  how much the camera shakes in his footage (an aim, measured from
+             frame-to-frame brightness profiles; never blocking);
   sfx        whether the cut used a sound on the big moment (sfx.py).
 
     python floor_lines.py stability VIDEO [--region x0 y0 x1 y1]
@@ -26,8 +26,6 @@ import argparse
 import json
 import math
 import os
-import re
-import statistics
 import subprocess
 import tempfile
 from pathlib import Path
@@ -40,7 +38,8 @@ LEVELS_SIGN_OFF = 'levels: awaiting by-ear approval'
 LIFT_BEFORE_S = 8.0   # the bed is read over this stretch before each chapter window
 LIFT_GAP_S = 1.0      # and stops this far short of it, clear of the ramp up
 MIN_LIFT_LU = 1.0     # a lift under this reads as no lift (reported, never refused)
-STABILITY_WIDTH = 640  # analysis width; shake is reported back in source pixels
+STABILITY_WIDTH = 160  # analysis width; shake is reported back in source pixels
+STABILITY_CHUNKS, STABILITY_CHUNK_S = 6, 10.0  # long footage: six ten-second stretches spread through it
 SMOOTH_S = 1.0        # the intended camera path is the path averaged over this window
 
 
@@ -111,32 +110,43 @@ def chapters_line(shape, bed, windows, meter=None):
             'line': f'chapter lifts: the bed lifts in {len(lifted)} of {len(rows)} chapter windows{span}; {LEVELS_SIGN_OFF}'}
 
 
-def parse_trf(text):
-    """vidstabdetect's transforms file: per frame, the median local motion (dx, dy) in analysis pixels, or None."""
-    out = []
-    for line in text.splitlines():
-        if not line.startswith('Frame '):
-            continue
-        moves = re.findall(r'\(LM (-?\d+) (-?\d+) (-?\d+) (-?\d+) (\d+) ([\d.]+) ([\d.]+)\)', line)
-        if not moves:
-            out.append(None)
-            continue
-        out.append((statistics.median(int(m[0]) for m in moves), statistics.median(int(m[1]) for m in moves),
-                    [(int(m[0]), int(m[1]), int(m[2]), int(m[3])) for m in moves]))
-    return out
+def _profiles(raw, w, h):
+    """A grey frame's column and row brightness profiles, each with its mean taken out."""
+    cols = [0] * w
+    rows = []
+    for y in range(h):
+        line = raw[y * w:(y + 1) * w]
+        rows.append(sum(line))
+        for x in range(w):
+            cols[x] += line[x]
+    mc, mr = sum(cols) / w, sum(rows) / h
+    return [c - mc for c in cols], [r - mr for r in rows]
 
 
-def shake(steps, fps, scale=1.0, region=None, size=None):
+def _shift(a, b, most):
+    """The shift of profile b against a (in profile samples), sub-sample by a parabola through the best match."""
+    n = len(a)
+    scores = []
+    for d in range(-most, most + 1):
+        lo, hi = max(0, d), min(n, n + d)
+        if hi - lo < n // 2:
+            scores.append(float('inf'))
+            continue
+        scores.append(sum(abs(a[i - d] - b[i]) for i in range(lo, hi)) / (hi - lo))
+    k = min(range(len(scores)), key=scores.__getitem__)
+    offset = 0.0
+    if 0 < k < len(scores) - 1 and all(math.isfinite(s) for s in scores[k - 1:k + 2]):
+        l, c, r = scores[k - 1], scores[k], scores[k + 1]
+        den = l - 2 * c + r
+        offset = 0.5 * (l - r) / den if den > 0 else 0.0
+    return k - most + offset
+
+
+def shake(steps, fps, scale=1.0):
     """RMS and 95th percentile of the camera path's distance from its own one-second average, in source pixels.
-    region (x0, y0, x1, y1, as fractions of the analysed frame) keeps only the motion fields inside it, so his own
-    movement can be left out of what is measured."""
+    steps: per frame (dx, dy) in analysis pixels, or None where the frame could not be read."""
     path, x, y, used = [], 0.0, 0.0, 0
     for step in steps:
-        if step is not None and region and size:
-            w, h = size
-            inside = [(dx, dy) for dx, dy, fx, fy in step[2]
-                      if region[0] * w <= fx <= region[2] * w and region[1] * h <= fy <= region[3] * h]
-            step = (statistics.median(d[0] for d in inside), statistics.median(d[1] for d in inside)) if inside else None
         if step is not None:
             x, y, used = x + step[0], y + step[1], used + 1
         path.append((x, y))
@@ -145,53 +155,80 @@ def shake(steps, fps, scale=1.0, region=None, size=None):
     half = max(1, round(fps * SMOOTH_S / 2))
     residual = []
     for i, (px, py) in enumerate(path):
-        near = path[max(0, i - half):i + half + 1]
+        reach = min(half, i, len(path) - 1 - i)  # symmetric at the ends, so a steady pan reads as no shake
+        near = path[i - reach:i + reach + 1]
         mx, my = sum(p[0] for p in near) / len(near), sum(p[1] for p in near) / len(near)
         residual.append(math.hypot(px - mx, py - my) * scale)
     ordered = sorted(residual)
     return {'rms_px': round(math.sqrt(sum(r * r for r in residual) / len(residual)), 2),
             'p95_px': round(ordered[min(len(ordered) - 1, int(0.95 * len(ordered)))], 2),
-            'frames': len(path), 'frames_with_motion_fields': used}
+            'frames': len(path), 'frames_with_motion': used}
 
 
 def stability(video, region=None, start=None, seconds=None):
     """Measure the camera shake of a recording (an aim: measured and reported, never blocking)."""
     try:
         return _stability(video, region, start, seconds)
-    except (OSError, ValueError, KeyError, IndexError, subprocess.CalledProcessError) as error:
+    except (OSError, ValueError, KeyError, IndexError, ZeroDivisionError, subprocess.CalledProcessError) as error:
         return {'item': 'stability', 'status': 'not_measured', 'aim': True, 'reason': str(error)[-300:],
                 'line': 'stabilisation: not measured (the footage could not be read); an aim, never blocking'}
 
 
 def _stability(video, region, start, seconds):
+    """Global camera motion by integral projections: each frame's column and row brightness profiles, matched to the
+    previous frame's. region (x0, y0, x1, y1, fractions of the frame) keeps the measure to the wall, so his own
+    movement can be left out. Long footage is read in STABILITY_CHUNKS stretches of STABILITY_CHUNK_S spread through it."""
     probe = json.loads(subprocess.run(['ffprobe', '-v', 'error', '-select_streams', 'v:0', '-show_entries',
-                                       'stream=width,height,avg_frame_rate', '-of', 'json', str(video)],
-                                      capture_output=True, text=True, check=True).stdout)['streams'][0]
-    a, b = (int(x) for x in probe['avg_frame_rate'].split('/'))
+                                       'stream=width,height,avg_frame_rate:format=duration', '-of', 'json', str(video)],
+                                      capture_output=True, text=True, check=True).stdout)
+    stream = probe['streams'][0]
+    a, b = (int(x) for x in stream['avg_frame_rate'].split('/'))
     fps = a / b if b else 24.0
-    width, height = int(probe['width']), int(probe['height'])
-    scale = width / STABILITY_WIDTH
-    size = (STABILITY_WIDTH, round(height / scale / 2) * 2)
-    with tempfile.TemporaryDirectory() as tmp:
-        trf = Path(tmp) / 'motion.trf'
-        trim = ([] if start is None else ['-ss', f'{start:.3f}']) + ([] if seconds is None else ['-t', f'{seconds:.3f}'])
-        run = subprocess.run(['ffmpeg', '-v', 'error', '-nostdin', *trim, '-i', str(video), '-an', '-vf',
-                              f'scale={size[0]}:{size[1]},format=gray,vidstabdetect=result={trf.name}:shakiness=8:accuracy=15',
-                              '-f', 'null', '-'], cwd=tmp, capture_output=True, text=True)
-        if run.returncode or not trf.is_file():
-            return {'item': 'stability', 'status': 'not_measured', 'aim': True,
-                    'reason': (run.stderr.strip()[-300:] or 'ffmpeg wrote no motion file'),
-                    'line': 'stabilisation: not measured on this machine (ffmpeg needs vidstabdetect); an aim, never blocking'}
-        steps = parse_trf(trf.read_text(encoding='utf-8', errors='replace'))
-    got = shake(steps, fps, scale, region, size)
-    if got is None:
+    width, height = int(stream['width']), int(stream['height'])
+    crop = ''
+    if region:
+        cw, ch = max(16, int((region[2] - region[0]) * width)), max(16, int((region[3] - region[1]) * height))
+        crop = f'crop={cw}:{ch}:{int(region[0] * width)}:{int(region[1] * height)},'
+        width, height = cw, ch
+    w = STABILITY_WIDTH
+    h = max(16, round(height * w / width / 2) * 2)
+    scale = width / w
+    begin = start or 0.0
+    length = seconds if seconds is not None else float(probe.get('format', {}).get('duration') or 0) - begin
+    if length <= STABILITY_CHUNKS * STABILITY_CHUNK_S:
+        stretches = [(begin, length)]
+    else:
+        gap = (length - STABILITY_CHUNK_S) / (STABILITY_CHUNKS - 1)
+        stretches = [(begin + k * gap, STABILITY_CHUNK_S) for k in range(STABILITY_CHUNKS)]
+    most = max(2, round(w * 0.05))
+    result, frames, moved = None, 0, 0
+    sums = {'sq': 0.0, 'all': []}
+    for at, span in stretches:
+        raw = subprocess.run(['ffmpeg', '-v', 'error', '-nostdin', '-ss', f'{at:.3f}', '-t', f'{span:.3f}', '-i', str(video),
+                              '-an', '-vf', f'{crop}scale={w}:{h},format=gray', '-f', 'rawvideo', 'pipe:1'],
+                             capture_output=True, check=True).stdout
+        count = len(raw) // (w * h)
+        steps, prior = [], None
+        for k in range(count):
+            cols, rows = _profiles(raw[k * w * h:(k + 1) * w * h], w, h)
+            if prior is not None:
+                steps.append((_shift(prior[0], cols, most), _shift(prior[1], rows, most)))
+            prior = (cols, rows)
+        got = shake(steps, fps, scale)
+        if got:
+            frames += got['frames']
+            moved += got['frames_with_motion']
+            sums['all'].append(got)
+    if not sums['all']:
         return {'item': 'stability', 'status': 'not_measured', 'aim': True, 'reason': 'too few frames',
                 'line': 'stabilisation: not measured (too few frames); an aim, never blocking'}
-    return {'item': 'stability', 'status': 'measured', 'aim': True, 'blocking': False, 'method':
-            'ffmpeg vidstabdetect motion fields, median per frame, camera path against its one-second average',
-            'region': region, **got,
-            'line': f'stabilisation: camera shake {got["rms_px"]:g} px RMS, {got["p95_px"]:g} px at the 95th percentile, '
-                    f'over {got["frames"]} frames (an aim: measured and reported, never blocking)'}
+    rms = round(math.sqrt(sum(g['rms_px'] ** 2 * g['frames'] for g in sums['all']) / frames), 2)
+    p95 = max(g['p95_px'] for g in sums['all'])
+    return {'item': 'stability', 'status': 'measured', 'aim': True, 'blocking': False,
+            'method': 'integral projections of grey frames matched frame to frame; camera path against its one-second average',
+            'region': region, 'rms_px': rms, 'p95_px': p95, 'frames': frames, 'stretches': len(sums['all']),
+            'line': f'stabilisation: camera shake {rms:g} px RMS, {p95:g} px at the 95th percentile, '
+                    f'over {frames} frames (an aim: measured and reported, never blocking)'}
 
 
 def lines(rows):
