@@ -17,13 +17,13 @@
 // Pure and import-free, so every module can read it. The mechanical checks
 // that enforce the rules before approval live in api/_publishChecks.ts.
 //
-// A rule about finishing a recorded video (its sting, its music bed, its
+// A rule about finishing a recorded video (its opening, its music bed, its
 // thumbnails) is on the 'production' stage only. No writer, judge or shot
 // planner reads that stage: the tools that make the cut enforce it
 // (scripts/quick-edit, scripts/pages --thumbs, the visual gate and the making
-// record), so a script or a channel cut never carries LUFS figures or a sting
-// that is not approved. tests/control-plane/house-rules.test.ts holds each
-// such rule to the tools its source names.
+// record), so a script or a channel cut never carries LUFS figures or an
+// opening clip. tests/control-plane/house-rules.test.ts holds each such rule
+// to the tools its source names.
 
 export type Stage =
   | 'judge_idea'    // the panel, judging an idea or angle
@@ -385,16 +385,16 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
     stages: ['write', 'final_pass', 'production'],
   },
   {
-    id: 'INTRO_STING', name: 'A short animated makeyourmindup sting before Krish\'s face',
-    text: 'Every video is to open with the animated makeyourmindup sting, 1 to 2 seconds (1.5 by default), before Krish\'s face comes in, in both shapes and in the colour of the piece\'s series (follow.the.money\'s when it has none). It is joined in front of the captioned video, so no word, caption or graphic moves, and the music is up over it. Only a design Krish approved in words is used (config/intro-sting.json, status "approved", bound to the source hash of the exact previews he saw). No design is approved yet: on 2026-10-12 he rejected the first one shown to him ("it\'s ok, it\'s a bit boring and colourless and vanilla - and just what Powerpoint would do in 2008"), so until he approves another, every cut goes without a sting, its report says so, and a missing sting never stops a render. A clip named in a cut\'s config is used only when it is the approved render, or on Krish\'s own words in "intro_override". For the quick-edit cuts this replaces "nothing at the opening" (2026-09-26); the Studio keeps that placement, with no music, until its own audio ledger exists.',
-    said: 'I also want the video to have a 1-2 sec animated make your mind up intro visual before my face comes in',
-    on: '2026-10-12', source: 'chat, the video production request, then his word on the first design (config/intro-sting.json, "last_decision"); made by scripts/quick-edit/intro.py and make.py, the approval in config/intro-sting.json', status: 'live',
+    id: 'HOOK_IS_THE_INTRO', name: 'The hook is the intro: one opening on the hook, one calm close',
+    text: 'Every video, wide and tall, opens straight on its hook. The first frame is the hook in the brand\'s dress: the makeyourmindup wordmark and the series tag are on screen from the very first frame (in the tall cut, small in the top corners, as the Friday 23 October cut has them; in the wide cut, on the frame beside him). Nothing goes in front of the hook: no story card and no logo intro. The close is one calm outro card, held long enough to read (STORY_INTRO_OUTRO), so a video has one opening and one close. This is Krish\'s current choice to test, not a fixed rule, and it refuses nothing: each cut\'s report records the opening it used ("opening"), so real engagement can settle it, and a piece opens another way only on his own words for that piece ("intro_override"). It replaced the 1 to 2 second animated sting before his face (INTRO_STING, 2026-10-12 to 2026-10-29; no design was ever approved, config/intro-sting.json) and the intro half of STORY_INTRO_OUTRO (the animated story card, 2026-10-12 to 2026-10-29), which keeps the audio treatment and the outro card.',
+    said: 'I\'d pick number one here but I think that we need to test and learn. We need to figure out what the right tone is over time based on real engagement. Let\'s go with number one for now. (2026-10-29, picking option one, "The hook is the intro", for the one opening every video has. On the opening and the close before it: "why are there two separate intro sequences? that should NEVER happen." (2026-10-21) and "we also don\'t need three separate outro transitions and screens. Ever." (2026-10-28).)',
+    on: '2026-10-29', source: 'chat, 2026-10-29, the openings question; made by scripts/quick-edit/make.py (nothing in front of the hook, the dress over the whole tall cut, "opening" in each report) and scripts/quick-edit/kit.py (the dress), the retirement recorded in config/intro-sting.json and config/story-intro-outro.json', status: 'live',
     stages: ['production'],
   },
   {
     id: 'MUSIC_BED', name: 'Licensed music under every video: up for the intro, low under Krish, up for the outro',
-    text: 'Every video carries a licensed music bed: high over the intro, low while Krish is talking, higher over the outro. Only a track in the music ledger (config/music-library.json) that Krish approved in his words, whose licence is in date and covers every place the cut is posted, cleared for YouTube Content ID, is ever used. The files live in Drive at makeyourmindup > 00_Brand-Assets > 07_Music (MINDMAKE_MUSIC_ROOT), and nobody browses Drive for audio. The levels are about -16 LUFS over the intro, about -31 under his voice (about 17 LU below it) and about -18 over the end card, ramping down over half a second as his face comes in and up over 0.8 seconds after his last word; the whole mix then finishes at -14 LUFS integrated with true peak at most -1 dBTP, measured after the encode. The levels stay proposed until he approves them by ear. With no approved track, a cut has his voice only and its report says so.',
-    said: 'I am also going to get some licensed audio to put behind my videos, so help me prepare to put it somewhere you and codex will always know where that is, and use it correctly (high volume during the intro, low whilst I am talking, higher during the outro). Then, of makeyourmindup > 00_Brand-Assets > 07_Music: thats where it will live and the video runners need to know this',
+    text: 'Every video carries a licensed music bed: high over the intro, low while Krish is talking, higher over the outro. Only a track in the music ledger (config/music-library.json) that Krish approved in his words, whose licence is in date and covers every place the cut is posted, cleared for YouTube Content ID, is ever used. The files live in Drive at makeyourmindup > 00_Brand-Assets > 07_Music (MINDMAKE_MUSIC_ROOT), and nobody browses Drive for audio. The levels are about -16 LUFS over the intro, about -31 under his voice (about 17 LU below it) and about -18 over the end card, ramping down over half a second as his face comes in and up over 0.8 seconds after his last word; the whole mix then finishes at -14 LUFS integrated with true peak at most -1 dBTP, measured after the encode. The levels stay proposed until he approves them by ear. The bed is audible under the whole of every cut, wide or tall, low under his voice, and never drops out: a track shorter than the cut starts again from its intro cue under a two-second crossfade, and a long episode keeps the bed under his talk between its chapter lifts. With no approved track, a cut has his voice only and its report says so.',
+    said: 'I am also going to get some licensed audio to put behind my videos, so help me prepare to put it somewhere you and codex will always know where that is, and use it correctly (high volume during the intro, low whilst I am talking, higher during the outro). Then, of makeyourmindup > 00_Brand-Assets > 07_Music: thats where it will live and the video runners need to know this. Then, 2026-10-28: "Yes I think music should be audible throughout but just lower."',
     on: '2026-10-12', source: 'chat, the video production request; mixed by scripts/quick-edit/make.py with music.py, the ledger config/music-library.json', status: 'live',
     stages: ['production'],
   },
@@ -406,10 +406,10 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
     stages: ['production'],
   },
   {
-    id: 'STORY_INTRO_OUTRO', name: 'An animated intro made for each story, its audio treatment, and an animated outro card, in every format',
-    text: 'Every video, in every format (the 16:9 long cut and the 9:16 short cut), opens with a proper animated, branded intro made for that specific story, carries a designed audio treatment, and closes on a proper animated outro card made for that piece. Design comes first: the designs are shown to Krish and only his words approve one (krish-design). Until then no cut is finished: its report says "story intro and outro not designed yet", and production stops before the final render.',
+    id: 'STORY_INTRO_OUTRO', name: 'Its audio treatment and one calm animated outro card, in every format',
+    text: 'Every video, in every format (the 16:9 long cut and the 9:16 short cut), carries a designed audio treatment and closes on one calm, animated outro card made for that piece, held long enough to read. Design comes first: the designs are shown to Krish and only his words approve one (krish-design). Until then no cut is finished: its report says "story outro not designed yet", and production stops before the final render. The intro half of this rule, an animated intro made for each story, was retired on 2026-10-29 by HOOK_IS_THE_INTRO: no cut opens on a story card.',
     said: 'when the videos come back bear in mind that I want a proper animated branded intro to this specific story visually, the audio treatment, and then a proper animated outro card. Across all formats, and this should be part of the system moving forward.',
-    on: '2026-10-12', source: 'chat, as Monday\'s takes came back; held by .agents/skills/produce-video (the required step before the final render), which reads config/story-intro-outro.json, status "awaiting_design" until he approves a design', status: 'live',
+    on: '2026-10-12', source: 'chat, as Monday\'s takes came back; held by .agents/skills/produce-video (the required step before the final render), which reads config/story-intro-outro.json (the approved stand-off outro, rendered per piece by scripts/quick-edit/story_io.py), status "awaiting_design" until he approves a design', status: 'live',
     stages: ['production'],
   },
   {

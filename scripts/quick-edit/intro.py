@@ -1,9 +1,18 @@
 #!/usr/bin/env python3
 """The makeyourmindup intro sting: a 1 to 2 second animated opening before
-Krish's face comes in, one clip per shape and per series.
+Krish's face comes in, one clip per shape and per series. RETIRED.
 
 Krish, 2026-10-12: "I also want the video to have a 1-2 sec animated make
-your mind up intro visual before my face comes in".
+your mind up intro visual before my face comes in". No design was ever
+approved, and on 2026-10-29 he picked "The hook is the intro" (house rule
+HOOK_IS_THE_INTRO): "I'd pick number one here but I think that we need to test
+and learn. We need to figure out what the right tone is over time based on
+real engagement. Let's go with number one for now." So config/intro-sting.json
+says "retired", with his words, and sting_for() gives make.py no sting and no
+note: every cut opens on the hook. The machinery stays, so the choice is easy
+to change if real engagement says so; approving a sting again means changing
+that house rule with him first. make.py still reads the three series names
+here (series_name, SERIES, DEFAULT_SERIES).
 
 The design lives in the renderer as Remotion compositions named in
 config/intro-sting.json ("compositions": tall 9x16 and wide 16x9). Each
@@ -38,7 +47,7 @@ machine would have it, and so is one git does not track yet (git add it) and
 an asset reached through staticFile(), which the hash cannot follow.
 
 The design waits for Krish. config/intro-sting.json says "candidate" until he
-approves it, and while it does:
+approves it ("retired" since 2026-10-29, above), and while it does:
   - `render --preview` renders preview-<hash>-<shape>-<series>.mp4 to show him;
   - `render` without --preview refuses;
   - make.py renders without an intro and says so in its report.
@@ -82,6 +91,7 @@ SECONDS = (1.0, 2.0)
 INK = '0x0C1512'
 SHA256 = re.compile(r'[0-9a-f]{64}')
 DECISIONS = ('approved', 'rejected')
+STATUSES = ('candidate', 'approved', 'retired')
 # What a sting module may import, and the endings tried when an import names
 # a module without one (as TypeScript and the Remotion bundler do).
 CODE = ('.tsx', '.ts', '.jsx', '.js', '.mjs', '.cjs')
@@ -107,8 +117,13 @@ def load(path=None):
     cfg = json.loads(path.read_text(encoding='utf-8'))
     if cfg.get('schema_version') != 1:
         raise IntroError(f'{path}: schema_version must be 1')
-    if cfg.get('status') not in ('candidate', 'approved'):
-        raise IntroError(f'{path}: status is "candidate" or "approved"')
+    if cfg.get('status') not in STATUSES:
+        raise IntroError(f'{path}: status is "candidate", "approved" or "retired"')
+    if cfg['status'] == 'retired':
+        gone = cfg.get('retired')
+        if not (isinstance(gone, dict) and str(gone.get('by') or '').lower().startswith('krish') and str(gone.get('words') or '').strip()
+                and gone.get('on') and gone.get('rule')):
+            raise IntroError(f'{path}: a retired sting carries Krish\'s words retiring it: {{"on", "by": "Krish", "rule", "words"}}')
     secs = cfg.get('seconds')
     if not isinstance(secs, (int, float)) or not SECONDS[0] <= secs <= SECONDS[1]:
         raise IntroError(f'{path}: seconds is between {SECONDS[0]} and {SECONDS[1]}')
@@ -506,6 +521,8 @@ def render(shape, cfg=None, preview=False, browser_path=None, entry=None, force=
     if series not in cfg['series']:
         raise IntroError(f'the sting does not render {series}: config/intro-sting.json lists {", ".join(cfg["series"])}')
     root = root or (Path(entry).resolve().parent if entry else None)
+    if not preview and cfg['status'] == 'retired':
+        raise IntroError(f'the sting is retired (house rule {cfg["retired"]["rule"]}, Krish, {cfg["retired"]["on"]}): every cut opens on the hook')
     if not preview and cfg['status'] != 'approved':
         raise IntroError('the sting is still a candidate: render --preview, show Krish, and record his words with approve')
     digest, _ = source_hash(cfg, root)
@@ -536,9 +553,13 @@ def render(shape, cfg=None, preview=False, browser_path=None, entry=None, force=
 def sting_for(shape, config=None, cache=None, root=None, render_missing=True, series=None):
     """What make.py asks: the approved sting for this shape and series (an
     unknown or missing series gets follow_the_money's), or None and why. It
-    never raises: a render goes on without an intro rather than stop."""
+    never raises: a render goes on without an intro rather than stop. A
+    retired sting is (None, None): nothing is wrong, the cut opens on the hook
+    (house rule HOOK_IS_THE_INTRO)."""
     try:
         cfg = load(config)
+        if cfg['status'] == 'retired':
+            return None, None
         series = series_name(series) or DEFAULT_SERIES
         if series not in cfg['series']:
             series = DEFAULT_SERIES
@@ -570,6 +591,7 @@ def status(config=None):
             'registered': registered(cfg), 'source_sha256': digest, 'source_problem': problem,
             'approved_source_sha256': cfg.get('source_sha256'), 'source_files': files,
             'approved_by': cfg.get('approved_by'), 'approved_on': cfg.get('approved_on'), 'last_decision': cfg.get('last_decision'),
+            'retired': cfg.get('retired'),
             'renders': {shape: {series: {'approved': str(cached(shape, digest, False, None, series)) if digest and cached(shape, digest, False, None, series).exists() else None,
                                          'preview': str(cached(shape, digest, True, None, series)) if digest and cached(shape, digest, True, None, series).exists() else None}
                                 for series in cfg['series']}
@@ -609,8 +631,15 @@ def self_test():
     # Git's read-only objects can survive rmtree on Windows. Each run gets an
     # isolated fixture checkout instead of depending on deletion succeeding.
     work = Path(tempfile.mkdtemp(prefix='intro-', dir=parent))
-    cfg = load()
-    checks.append(('the committed config waits for Krish', (cfg['status'], cfg['approved_by'], cfg['source_sha256']), ('candidate', None, None)))
+    committed = load()
+    checks.append(('the committed config is retired on Krish\'s words, never approved', (committed['status'], committed['approved_by'],
+                   committed['source_sha256'], committed['retired']['by'], committed['retired']['rule']), ('retired', None, None, 'Krish', 'HOOK_IS_THE_INTRO')))
+    checks.append(('make.py gets no sting and no note from the retired config: the cut opens on the hook', sting_for('9x16'), (None, None)))
+    # The gate below runs on the same design as a candidate, as it stood before it was retired.
+    cfg = {k: v for k, v in committed.items() if k != 'retired'}
+    cfg['status'] = 'candidate'
+    (work / 'as-candidate.json').write_text(json.dumps(cfg))
+    cfg = load(work / 'as-candidate.json')
     decision = cfg.get('last_decision') or {}
     checks.append(('the committed config records his last word on the first design', (decision.get('decision'), decision.get('by')), ('rejected', 'Krish')))
     checks.append(('the committed sting is 1 to 2 seconds', SECONDS[0] <= cfg['seconds'] <= SECONDS[1], True))
@@ -771,6 +800,14 @@ def self_test():
     bad = work / 'bad.json'
     bad.write_text(json.dumps(dict(cfg, seconds=2.5)))
     refused('a 2.5 second sting is refused', lambda: load(bad), 'seconds')
+    unsaid = work / 'unsaid.json'
+    unsaid.write_text(json.dumps(dict(committed, retired={'on': '2026-10-29', 'by': 'someone', 'rule': 'HOOK_IS_THE_INTRO', 'words': 'drop it'})))
+    refused('a sting retired on anyone\'s words but Krish\'s is refused', lambda: load(unsaid), 'Krish')
+    retired = work / 'retired.json'
+    retired.write_text(json.dumps(dict(approved, status='retired', retired=committed['retired'])))
+    got = sting_for('9x16', retired, cache, root)
+    checks.append(('even an approved, rendered design gives no sting once retired', got, (None, None)))
+    refused('and a retired sting is never rendered as finished', lambda: render('9x16', load(retired), root=root, cache=cache), 'retired')
     failed = [f'{label}: got {got!r}, want {want!r}' for label, got, want in checks if got != want]
     print('\n'.join(failed) if failed else f'intro self-test passed: {len(checks)} checks')
     return 1 if failed else 0

@@ -1,16 +1,26 @@
 {
-  "about": "House rule STORY_INTRO_OUTRO: every video, in both sizes, opens with an animated branded intro made for its own story, carries a designed audio treatment, and closes on an animated outro card made for that piece. Read by .agents/skills/produce-video, which stops before the final render while status is not \"approved\". Nothing here is designed yet: the designs go to Krish first (krish-design), and only his words approve one. A piece listed under \"exceptions\", with Krish's own quoted words, is the one case a cut is finished without them.",
+  "about": "House rule STORY_INTRO_OUTRO: every video, in both sizes, carries a designed audio treatment and closes on one calm animated outro card made for its piece, held long enough to read. Its intro half (an animated intro made for each story) was retired on 2026-10-29 by house rule HOOK_IS_THE_INTRO: the hook is the intro, so no cut opens on a story card (\"retired\", below). Read by .agents/skills/produce-video, which stops before the final render while status is not \"approved\". The designs go to Krish first (krish-design), and only his words approve one. A piece listed under \"exceptions\", with Krish's own quoted words, is the one case a cut is finished without them.",
   "status": "approved",
   "said": {
     "on": "2026-10-12",
     "words": "when the videos come back bear in mind that I want a proper animated branded intro to this specific story visually, the audio treatment, and then a proper animated outro card. Across all formats, and this should be part of the system moving forward."
   },
   "required": {
-    "story_intro": "a proper animated, branded intro made for this specific story, in the 16:9 long cut and the 9:16 short cut",
-    "audio_treatment": "the audio treatment that goes with it, across the intro, the voice and the outro",
-    "outro_card": "a proper animated outro card made for this piece, in the 16:9 long cut and the 9:16 short cut"
+    "audio_treatment": "the audio treatment, across the voice and the outro: the licensed bed audible under the whole cut, low under his voice",
+    "outro_card": "one calm animated outro card made for this piece, held long enough to read, in the 16:9 long cut and the 9:16 short cut"
   },
-  "until_approved": "story intro and outro not designed yet",
+  "retired": {
+    "story_intro": {
+      "was": "a proper animated, branded intro made for this specific story, in the 16:9 long cut and the 9:16 short cut (the stand-off intro card, 3.5 s)",
+      "on": "2026-10-29",
+      "by": "Krish",
+      "rule": "HOOK_IS_THE_INTRO",
+      "picked": "The hook is the intro",
+      "words": "I'd pick number one here but I think that we need to test and learn. We need to figure out what the right tone is over time based on real engagement. Let's go with number one for now.",
+      "means": "No story card and no logo intro: the first frame is the hook in the brand's dress. The outro card and the audio treatment above stay. A default under test, revisited on real engagement."
+    }
+  },
+  "until_approved": "story outro not designed yet",
   "approved": {
     "on": "2026-10-12",
     "by": "Krish",

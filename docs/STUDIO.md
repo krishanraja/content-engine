@@ -109,7 +109,11 @@ cuts changed on 2026-10-12: both of a piece's videos are made with
 `scripts/quick-edit` (the fallback path for both 16:9 and 9:16; ve also renders both), and
 there Krish asked for an opening, "I also want the video to have a 1-2 sec
 animated make your mind up intro visual before my face comes in" (house rule
-INTRO_STING), with licensed music under the video (MUSIC_BED). The job-based Studio
+INTRO_STING, retired on 2026-10-29: no design was ever approved, and he picked
+"The hook is the intro", house rule HOOK_IS_THE_INTRO, so every quick-edit cut
+opens straight on the hook in the brand's dress, the wordmark and the series
+tag in the tall cut's top corners), with licensed music under the video
+(MUSIC_BED). The job-based Studio
 stays without music or an intro until its audio ledger exists: its V2 contract
 refuses music until then (`packages/contracts/src/v2.ts`), its dialogue
 timeline must start at 0, and `config/music-library.json` is the first
