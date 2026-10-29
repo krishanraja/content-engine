@@ -1,6 +1,6 @@
 ---
 name: produce-video
-description: "Produce Krish's videos once he has recorded them. Use when he says he has dropped, recorded or uploaded his video or recordings, or asks to produce, cut or make the video or videos for a piece or a day, such as 'I've dropped the video', 'the recordings are in the Inbox', 'produce Monday's video' or 'make the videos for this week'. It works out by itself which new recording is which piece's long or short cut, with no file name or piece id, then makes the 16:9 long cut and the 9:16 short cut, each with the approved intro sting, the licensed music bed from the ledger and a thumbnail for its size, files them in the archive and the post's library folder and records them on the piece. Runs end to end on any machine: a cloud session, GitHub's machine (the midday run, produce-day) or either home computer; takes, music and pictures all come from the engine. It is not the one-line launcher of the video-engine skill, not a Studio job from a production brief, and not for general questions about video or editing."
+description: "Produce Krish's videos once he has recorded them. Use when he says he has dropped, recorded or uploaded his video or recordings, or asks to produce, cut or make the video or videos for a piece or a day, such as 'I've dropped the video', 'the recordings are in the Inbox', 'produce Monday's video' or 'make the videos for this week'. It works out by itself which new recording is which piece's long or short cut, with no file name or piece id, then makes the 16:9 long cut and the 9:16 short cut, each with the approved intro sting, the licensed music bed from the ledger and a thumbnail for its size, files them in the archive and the post's library folder and records them on the piece. Runs end to end on any machine: a cloud session (the Sunday-night run), GitHub's machine or either home computer; takes, music and pictures all come from the engine. It is not the one-line launcher of the video-engine skill, not a Studio job from a production brief, and not for general questions about video or editing."
 model: sonnet
 ---
 
@@ -111,10 +111,18 @@ location, it will need to know which one it is (ideally automatiically
 without me having to give the exact filename), and exactly what to do from
 there, how to engage the backup runner machine if needed etc etc."
 
-This is that skill. Video is Codex's step (Krish, 2026-10-11: "I'm going to
-transfer all video production iteration through to Codex"; `MAKING_OWNERS`
-in `apps/control-plane/api/_making.ts`). Claude Code on a home computer runs
-the same skill when Krish engages it there. Every write says who wrote it:
+This is that skill. Codex is a visual asset maker, never an editor (Krish,
+2026-10-28: "Visual asset maker"): it makes pictures, plates and library
+devices from cards (`docs/ve/ENGINE.md`), and never cuts his takes, joins
+his words, draws captions or mixes sound. That retires, for editing, his
+move of 11 October ("I'm going to transfer all video production iteration
+through to Codex"). The engine assembles every cut, run by this skill: the
+Sunday-night run (below), or Claude Code when Krish engages it. The
+record's owner label for the step (`MAKING_OWNERS` in
+`apps/control-plane/api/_making.ts`, mirrored in control-center's
+`src/lib/making.ts`) is stale: it still says Codex until both copies change
+together. The step is Claude Code's, and a Claude Code run writes `--by
+"Claude Code"`. Every write says who wrote it:
 set `MAKING_BY` in the preflight (step 1), or pass `--by Codex` or
 `--by "Claude Code"`. Nothing before the recordings (the article, the
 scripts, the cover, the pictures, the visual gate, the pack) and nothing
@@ -146,8 +154,10 @@ Commands are written `python`, as on Windows; it is `python3` in the cloud.
    do. A file over 500 MiB is skipped by the lane, so that one is produced
    on a home computer, straight from H:. This is the one way a take comes
    back.
-4. Tells Codex (or Claude Code on a home computer) "I've recorded" or "I've
-   dropped the video".
+4. From 1 November, his Titles press on the day's tab starts the night's
+   cuts (the Sunday-night run, below). For a re-cut, a take outside that
+   run, or while the press cannot start it yet, he tells Claude Code "I've
+   recorded" or "I've dropped the video".
 
 A take reaches the engine within about ten minutes, from whichever home
 computer is on, and the same lane then places it on its piece and cut by
@@ -196,6 +206,25 @@ defer this to Claude Code. Only an explicit legacy-artifact session needs
 ArtifactData. A Record tick is information only; Record is done from the takes
 on the record.
 
+## The Sunday-night run (from 1 November)
+
+His Titles press on the recording Sunday (about 15:30; Krish, 2026-10-28:
+"Sunday evening press") starts this skill for the week in a fresh session;
+until the board's press can fire it, he starts it by telling Claude Code
+"I've recorded". Nothing starts it at a fixed time, and 21:30 is only the
+deadline for a surface he has not picked, which then takes its top-ranked
+option, never recorded as his pick. Read
+`.agents/skills/produce-video/references/sunday-night.md` before the first
+cut: it holds the run in full. Its gates: the floor first; his signed
+storyboard for the cut's exact words, or the cut is held; the words gate
+(`scripts/quick-edit/words_gate.py`), blocking, so a cut that lost a content
+word, or a checkout without the gate, files nothing; every other check an
+advisory row until calibrated; and every gate below still holding. It
+builds no publish board: it records each cut, each held cut with its
+reason, and its report for the Monday board, which is built at 06:30 by its
+own routine (until that routine exists, by the first session on Monday).
+No one is in its chat.
+
 ## 1. Preflight: which tool, which machine
 
 - **Who is writing.** Set it once, so every record this session makes (the
@@ -215,9 +244,12 @@ on the record.
   Never send Krish to a home computer, never relay a runner's status light
   as his blocker, and never ask him for a music licence number (Epidemic
   Sound has none; `config/music-licences/` is the record). The midday run
-  (`.github/workflows/produce-day.yml`, `scripts/produce_day.py`) does
+  (`.github/workflows/produce-day.yml`, `scripts/produce_day.py`) did
   every step below by itself on GitHub's machine at 12:00 New York on
-  Monday, Wednesday and Friday.
+  Monday, Wednesday and Friday; from 1 November the cuts are made on the
+  recording Sunday night instead (Krish, 2026-10-28: "record the entire
+  week on a Sunday, but it does not go live until the Monday after (8 days
+  later)"), and the midday run is not relied on.
 - **A home computer** (Windows): work in `C:\Users\krish\dev\content-engine`,
   never in `Documents\MindmakeVideoStudio\runner-source`, at the latest
   `main` (`git pull --ff-only`). Codex runs every step outside its sandbox
