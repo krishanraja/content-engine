@@ -43,11 +43,12 @@ const RUNS = [
   "Invoke-Quiet $Claude @('--version') 30",
   "Invoke-Quiet $node @($companion, 'help') 30",
   "Invoke-Quiet $codex @('login', 'status') 30",
+  "Invoke-Quiet $codex @('mcp', 'list', '--json') 30",
   "Invoke-Quiet $python ($prefix + @($audit, '--codex', '--json')) 120 @{ PYTHONUTF8 = '1'; PYTHONIOENCODING = 'utf-8' }",
   "Invoke-Quiet $ffmpeg @('-version') 30",
   "Invoke-Quiet $tesseract @('--version') 30",
 ]
-const CHECKS = ['claude_cli', 'codex_companion', 'codex_login', 'codex_allowance', 'ffmpeg', 'tesseract', 'disk', 'drive']
+const CHECKS = ['claude_cli', 'codex_companion', 'codex_login', 'codex_profile', 'codex_allowance', 'ffmpeg', 'tesseract', 'disk', 'drive']
 const WRITES = /\b(Set-Content|Add-Content|Out-File|New-Item|Remove-Item|Move-Item|Copy-Item|Rename-Item|Clear-Content|Set-Item|Set-ItemProperty|New-ItemProperty|Remove-ItemProperty|Tee-Object|Export-[A-Za-z]+|Start-Process|Stop-Process|Invoke-Expression|Invoke-WebRequest|Invoke-RestMethod|Start-BitsTransfer|Send-MailMessage|Register-ScheduledTask|Set-ScheduledTask|Unregister-ScheduledTask|Start-ScheduledTask|Stop-ScheduledTask|Enable-ScheduledTask|Disable-ScheduledTask|Save-JsonFile|Send-Engine|Invoke-Engine|Send-LaneReport)\b/i
 // File and Directory only for reading; no environment setting kept, no network client, no process ended by .Kill.
 const NET_WRITES = /\[(System\.IO\.)?(File|Directory|FileInfo|DirectoryInfo)\]::(?!(ReadAllText|ReadAllLines|Exists)\b)\w+|::SetEnvironmentVariable\b|\b(HttpClient|WebClient|WebRequest|TcpClient|UploadString|UploadFile|SendAsync|PostAsync|PutAsync)\b|FileMode\]::|FileAccess\]::(Write|ReadWrite)|\$env:[A-Za-z_]+\s*=(?!=)|\.Kill\(/
@@ -158,7 +159,8 @@ describe('the preflight in the lane report', () => {
     expect(report.preflight).toEqual({
       at: '2026-10-31T18:02:11Z', ok: false, failed: ['codex_allowance'],
       claude_version: '2.1.312',
-      codex_companion: '1.0.6', codex_login: true, codex_weekly_used_pct: 86, codex_resets_at: '2026-11-02T09:00:00Z',
+      codex_companion: '1.0.6', codex_login: true, codex_profile: null, codex_flagged: null, role: null,
+      codex_weekly_used_pct: 86, codex_resets_at: '2026-11-02T09:00:00Z',
       ffmpeg: 'n8.1.2-53-g1005b294ff', tesseract: '5.4.0.20240606', free_gb: 212.4, drive_reachable: 4, drive_folders: 4,
     })
     expect(LANE_PROBLEMS.preflight_failed).toMatch(/overnight preflight/)

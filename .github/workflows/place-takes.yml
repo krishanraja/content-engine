@@ -1,0 +1,151 @@
+name: Place the new takes
+
+# Wave 2, W2.3, "Takes place themselves". Each take Krish drops in the Video
+# Engine Inbox is copied into the recordings store by the engine's Inbox job
+# (apps/control-plane/api/library/recordings/drive-inbox.ts), which then sends
+# a repository_dispatch of type take-copied (api/library/_placeTakes.ts). This
+# job places each new take on its piece and cut, builds its word clock first,
+# and asks on the board about any take it is unsure of:
+#
+#   python scripts/post-pack/recording_match.py --record --board --clock --by "Place takes" --json
+#
+# It has no schedule, by Ruling (Krish, 2026-10-29): "I want zero Claude
+# routines. No Claude schedules of any kind in this architecture". It starts
+# only from that dispatch or from Run workflow (Actions > Place the new takes).
+# No Claude runs here, and it writes to the board only through the engine's
+# own routes (POST /api/content-ideas/<id>/making and /api/workbench), on the
+# engine key.
+#
+# Nothing in the Inbox is moved or deleted. A placed take belongs in the
+# Inbox's used/ folder and a duplicate is reported and kept (the run's summary
+# and report say which); the engine reads the Inbox with a read-only key, so
+# the move to used/ is by hand. The home computers' recordings upload keeps
+# placing takes too, the fallback until one real take has gone end to end
+# through this job; both write the same take by its path, so the record holds
+# it once.
+
+on:
+  workflow_dispatch:
+    inputs:
+      week:
+        description: 'A day in the week to start from, YYYY-MM-DD (empty: this week; the next is read too)'
+        required: false
+  repository_dispatch:
+    types: [take-copied]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: place-takes
+  cancel-in-progress: false
+
+jobs:
+  place:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      WHISPER_MODEL: small.en
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install hash-pinned FFmpeg and FFprobe
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          video_ffmpeg_build='ffmpeg-n8.1.2-53-g1005b294ff-linux64-gpl-8.1'
+          video_ffmpeg_sha256='e4a088c9b16d4b729396805e589394cef45a6d1e5427f8ca32ded8a86694d5b8'
+          video_ffmpeg_archive="$RUNNER_TEMP/$video_ffmpeg_build.tar.xz"
+          gh release download toolchain-ffmpeg-n8.1.2-53-g1005b294ff --repo "$GITHUB_REPOSITORY" --pattern "$video_ffmpeg_build.tar.xz" --dir "$RUNNER_TEMP"
+          echo "$video_ffmpeg_sha256  $video_ffmpeg_archive" | sha256sum --check --strict
+          tar -xJf "$video_ffmpeg_archive" -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/$video_ffmpeg_build/bin" >> "$GITHUB_PATH"
+      - name: Install the pinned transcriber
+        shell: bash
+        run: |
+          python -m pip install --require-hashes -r requirements.lock.txt \
+            || python -m pip install faster-whisper==1.2.0 ctranslate2==4.8.1 av==18.1.0
+      # The faster-whisper model, kept between runs by its name, so a run downloads it once.
+      - name: Restore the faster-whisper model
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: faster-whisper-${{ env.WHISPER_MODEL }}-${{ runner.os }}-v1
+      # The answered book and the used/ book, so a take is asked about once. No words and no media are kept here.
+      - name: Restore the books
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            .cache/recordings/answered.json
+            .cache/recordings/inbox-used.json
+          key: place-takes-books-${{ github.run_id }}
+          restore-keys: place-takes-books-
+      - name: Check the transcriber decodes here
+        run: python scripts/post-pack/recording_match.py --check-transcriber
+      - name: Place each new take on its piece, with its word clock
+        id: place
+        shell: bash
+        env:
+          ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
+          MAKING_BY: Place takes
+          WEEK: ${{ inputs.week }}
+        run: |
+          if [ -z "$ENGINE_OPERATOR_TOKEN" ]; then
+            echo "::error::The engine key (ENGINE_OPERATOR_TOKEN) is not set for this repository's Actions, so no take can be placed."
+            exit 1
+          fi
+          mkdir -p .cache/place-takes
+          args=(--record --board --clock --by "Place takes" --json)
+          [ -n "$WEEK" ] && args+=(--week "$WEEK")
+          set +e
+          python scripts/post-pack/recording_match.py "${args[@]}" > .cache/place-takes/report.json
+          code=$?
+          set -e
+          echo "exit=$code" >> "$GITHUB_OUTPUT"
+          # 0: every new take placed (or none); 2: a take is unsure and asked about on the board; 1: something failed.
+          [ "$code" -eq 1 ] && exit 1
+          exit 0
+      - name: Say what happened
+        if: always()
+        shell: bash
+        run: |
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json, pathlib
+          path = pathlib.Path('.cache/place-takes/report.json')
+          try:
+              report = json.loads(path.read_text(encoding='utf-8'))
+          except (OSError, ValueError):
+              print('No report: the placing step stopped before it wrote one.')
+              raise SystemExit(0)
+          print('## Place the new takes\n')
+          for line in report.get('lines') or []:
+              print(f'- {line}')
+          inbox = report.get('inbox') or {}
+          print(f"\nRecorded: {len(report.get('recorded') or [])}; word clocks: {len(report.get('clocks') or [])}; "
+                f"belong in used/: {len(inbox.get('used') or [])}; duplicates kept: {len(inbox.get('duplicates') or [])}; "
+                f"asked on the board: {len(report.get('asked') or [])}.")
+          PY
+      - name: Keep the books
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            .cache/recordings/answered.json
+            .cache/recordings/inbox-used.json
+          key: place-takes-books-${{ github.run_id }}
+      - name: Keep the report and each placed take's word clock
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: place-takes
+          path: |
+            .cache/place-takes/report.json
+            .cache/recordings/*.words.json
+            !.cache/recordings/*.head.words.json
+          if-no-files-found: ignore
+          retention-days: 14
