@@ -545,7 +545,7 @@ def main() -> int:
     p.add_argument('--script', help='the signed script, for words.lost')
     p.add_argument('--take-words', help="the take's words json, for words.lost")
     p.add_argument('--heard', action='append', metavar='ALIGNER=WORDS.json', help="an aligner's words for this render (repeatable)")
-    p.add_argument('--transcribe', action='store_true', help='hear the render here: faster-whisper, and Scribe only when config/gates.json allows it')
+    p.add_argument('--transcribe', action='store_true', help='hear the render here with faster-whisper (no paid aligner)')
     p.add_argument('--captions-drawn-by', default='faster-whisper', help='the aligner whose words drew the captions')
     p.set_defaults(fn=cmd_qc)
     p = sub.add_parser('keyframes', help='compare rendered beats with approved stills')
