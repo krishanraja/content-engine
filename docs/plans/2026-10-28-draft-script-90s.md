@@ -1,15 +1,13 @@
-Claude now messages you first. So what does that change if you already use Claude at work?
+I got early access to Claude Duet. So what does it actually change if you already use Claude? Let me break it down.
 
-Every few hours, Claude's new app, Duet, checks your email, calendar, Slack and other apps. It drafts replies and asks before sending.
+Duet is Claude's new app, and it messages you first. Every few hours it checks your email and calendar, then sends you a morning brief and drafts the work. And it waits for your yes before it sends, pays or signs anything.
 
-Early users like it, but it's slow. It also uses up your Claude usage limit, and your normal Claude stops when you hit it. And it's only in the US for now.
+There's no setup quiz, because it already knows what your Claude knows about you. But it only reads one email account, and mine is mostly bills.
 
-Duet changes who starts the work. You stop asking, and just say yes or no.
+It found me ten jobs I'd only do once they were on fire. It's slow, though. It loves a long think, like me. And it uses up your Claude limit.
 
-But you'll only stick with it if you hand it one weekly job. Set it up once, and Duet brings you a draft each week.
+Now, the best bit. I asked for a calendar scheduler and it built me a dashboard I can share. So I think that's where software is going. You ask once, and you get a tool.
 
-When I get Duet, its first job will be my project notes in Google Drive. Duet would update them each week from my email and calendar. Yours might be your team's tracker.
-
-Here's what I'd do with this info if I were you. Pick a weekly job where you paste information into Claude. Make sure that information is in apps like your email or Drive. When you get Duet, check every draft before you say yes.
+Here's what I'd do with this info if I were you. Pick one job you only do when someone nudges you. Then check every draft Duet makes before you say yes.
 
 The full deep dive is at makeyourmindup.ai.

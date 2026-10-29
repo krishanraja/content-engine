@@ -1,37 +1,35 @@
-Claude now messages you first. So what does that actually change for you, if you already use Claude at work?
+I got early access to Claude Duet. And the first thing that struck me is a really weird thing to say about an app. It knows what it knows about me.
 
-I've been reading what people say about Claude Duet. It's from Anthropic, who make Claude. So let me break it down.
+So what does it actually change if you already use Claude at work? Let me break it down.
 
-Claude Duet is a new Claude app, and it messages you first. Every few hours it checks your email, calendar, Slack and other work apps. Each morning it sends you a short brief. And while you're busy, it drafts replies, meeting prep and documents.
+Duet is Anthropic's new Claude app, and it messages you first. Every few hours it checks your email, your calendar, Slack and whatever else you've connected. Each morning it sends you a short brief. And in the meantime, it drafts replies, meeting prep and documents for you.
 
-Then it stops. Before it sends, pays, signs a document or deletes anything, it shows you what it wants to do. And it waits for your yes. It only sees the apps you connect, and you can cut any of them off.
+Then it stops. Before it sends a message, pays for something, signs or deletes anything, it shows you what it's about to do. And it waits for your yes.
 
-Now, can you get it? Right now it's only in the US, on Claude's paid personal plans, Pro and Max. You join a waitlist and wait to be let in. If your company pays for your Claude, you don't get it yet, and Anthropic hasn't said when you will. So most of you are getting ready.
+The setup is really seamless. Most apps ask you ten questions to customise your experience. Duet skips all that. Anthropic says it carries over your memory, your skills and your connected apps from your Claude account. I've lived my life in this Claude account for a while, and I've got everything connected. So it pretty much walked in already knowing me.
 
-So what do people think? The mood is mostly warm. People like how it looks, and that it asks first. But there are two moans. First, it's slow. Its work takes a while, so it's not for anything urgent. Second, all that checking in the background uses up your Claude plan's usage cap. That's the limit on how much Claude you get. Hit it, and normal Claude stops too, until the limit resets.
+There is one catch. It's tied to one email account. If you're anyone over the age of 15, you've probably got a few email accounts. And they're all a bit of a jumble. The one I connected is full of bills and not really my work stuff. And if your work email runs on Microsoft, Duet can't connect to it yet.
 
-Here's what the launch page and reviews don't spell out. I think if you already live in Claude, almost everything Duet does, normal Claude can already do. What it changes is who starts the work.
+So what did it do? It pulled a bunch of tasks for me. The first one was a job search, which was strange. So I said, get rid of that one and go and find ten tasks for my to-do list. And it came back with things I know I need to do. But I'd probably only do them once they're on fire. Lots of life admin. Bills to clear, money admin, that kind of thing.
 
-Today, you open Claude and paste in the email thread, the invite and your notes. Then you ask. With Duet, the work turns up first. A morning brief, a list of what it needs from you, and drafts waiting for a yes or a no.
+It's slow, though. In classic Claude style it loves a good long think, like me. It's clearly built for you to leave and come back.
 
-So your job changes, from asking to saying yes or no to its work.
+Here's what I think matters most. I clicked on the calendar scheduler. And it went away and built me what Claude calls an artifact. Basically a little dashboard, custom to me, that I can send to people. I asked for a one-off favour and I got a tool back. I didn't even know I was making a dashboard, but lo and behold, I've got a dashboard.
 
-One small business owner said normal Claude could already do everything they used Duet for. They just hadn't thought to use it that way. They'd fallen behind on their work. Once Duet started bringing them that work, they caught up in a day and a half.
+If you're a calendar-scheduling business or a note-taking business, I'd be worried. Because that's the hint about where software is going. You ask once, and it builds you a system you can use again and again.
 
-But here's the catch. A habit only sticks if something keeps pulling you back. One reviewer loved how it looks. But after the first few jobs, nothing it sent was worth opening, so they forgot to use it. That's a lot of polish for an app you stop opening.
+So here's what that changes if you already live in Claude. Today, you open Claude and paste in the email thread, the invite and your notes. Then you ask. With Duet, the work turns up first, and your job becomes saying yes or no.
 
-Duet uses your normal Claude account. It brings across what Claude remembers about you, and the apps you've already connected. But it can't open files on your laptop, so a job that needs those won't work.
+One small business owner on Reddit put it best. They said normal Claude could already do everything they used Duet for. They just hadn't thought to use it that way. They'd fallen behind on their work. Once Duet started bringing it to them, they caught up in a day and a half.
 
-So where do you start? Pick a weekly job where the information already sits in apps like your email, calendar or sales system. It's a job you still copy and paste into Claude by hand. That's the job to hand to Duet.
+But here's the catch. A habit only sticks if something keeps pulling you back. Claire Vo reviewed it on Lenny's Newsletter. She loved how it looks, but she still forgot to use it. And that's my read too. It's picking up things that really do need doing, but they'd only get done if someone nudged me. So it's only useful if it keeps doing the nudging.
 
-Prep for a client meeting is a good one: the invite and the last email thread, turned into one brief. Or your weekly sales check: which deals moved and which went quiet. Or reminders for unpaid invoices from your accounting software, drafted and waiting for your yes.
+Two more things. All that checking in the background counts toward your Claude plan's usage limit, so you can hit it sooner. And right now Duet is only for Pro and Max plans in the US, through a waitlist. If your company pays for your Claude, you don't get it yet.
 
-So what would I hand it first? The housekeeping. I keep notes in Google Drive on what's going on across my work, and Duet can reach them. Other tools I use read those notes too, so when they're out of date, everything built on them goes wrong. And I only update them when I remember to. So every week, I'd ask Duet to update them from my email and calendar, and show me the changes first. Your version might be the tracker or handover doc your team works from. It's only as good as its last update.
+So here's my question for you this week. Of the jobs in your week, which one only gets done when someone nudges you? That's the one to hand over first.
 
-So here's my question for you this week. Of the weekly jobs you paste into Claude, which one only gets done when you remember it? That's the one to hand over first.
+And if you run IT, a quick word. People will want to connect their work email to a personal Claude plan before your company gets Duet. That puts company email in an account your company doesn't control. So decide now whether that's allowed, before they ask.
 
-And if you run IT, a quick word. People will want to connect their work email to a personal Claude plan before your company gets Duet. That would put company email in an account your company doesn't control. So decide now whether that's allowed, before they ask.
-
-Here's what I'd do with this info if I were you. Pick that one weekly job. If your company allows it, connect the apps it needs to your work Claude now, in its settings. When you get Duet on your work account, let it draft for a week. Check every draft before you say yes. Then look in your Claude settings to see how much of your limit it used.
+Here's what I'd do with this info if I were you. Pick that one job you only do when it's on fire. Make sure the information it needs sits in apps Duet can reach. When you get Duet, let it draft for a week and check every draft before you say yes. Then look in your Claude settings to see how much of your limit it used.
 
 The full deep dive is at makeyourmindup.ai.
