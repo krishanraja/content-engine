@@ -873,8 +873,30 @@
    "on": "2026-10-24",
    "krish": "Codex prepares the board and never publishes directly (failure report, 24 Oct)",
    "what": "The production session asked Krish for a Substack sign-in code to publish. Only Claude Code's hook stops a publish; Codex runs no hooks.",
-   "status": "open",
-   "guards": []
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "config/codex-profile.json",
+     "contains": "\"approval_policy\": \"never\"",
+     "how": "Codex's one tool profile: a visual asset maker and runner of scripts only, with no publish, share, deploy, TikTok, Buffer or workflow tool, no MCP server, no network and no escalation path (plan Wave 2, W2.6)"
+    },
+    {
+     "file": "scripts/overnight/codex_profile.py",
+     "contains": "a forbidden kind of tool",
+     "how": "the profile audit refuses a profile that allows a forbidden tool, and a card that needs one is held, never sent; a planted forbidden tool must fail the audit",
+     "test": "python3 tests/overnight_test.py"
+    },
+    {
+     "file": "scripts/overnight/overnight.py",
+     "contains": "codex_ok = not codex_profile.audit",
+     "how": "the overnight run starts no Codex step unless the profile passes its audit; the held cut says why on the Monday board"
+    },
+    {
+     "file": "scripts/overnight/preflight.ps1",
+     "contains": "Invoke-Check 'codex_profile'",
+     "how": "the Saturday preflight on both computers fails when that machine's Codex has an MCP server of a forbidden kind, or the profile fails its audit"
+    }
+   ]
   },
   {
    "id": "chopped-words-published",

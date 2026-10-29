@@ -7,6 +7,7 @@ import { supabase } from '../../_supabase.js'
 import { isSignedPreviewUrlAllowed } from '../../video-studio/_previewStorage.js'
 import { INBOX_FOLDER_ID, INBOX_RUN_BUDGET_MS, copyDriveFile, copyFits, decideRecording, listInbox, planInbox, type InboxSkip } from '../_inboxDrive.js'
 import { lanePlainProblems, readLaneReports } from '../_lanes.js'
+import { dispatchPlaceTakes } from '../_placeTakes.js'
 import { configuredLibraryStore, verifyStoredLibraryObject } from '../_library.js'
 import { readRecordingManifest, recordingObjectKey, withName, writeRecordingManifest } from '../_recordings.js'
 
@@ -20,6 +21,10 @@ import { readRecordingManifest, recordingObjectKey, withName, writeRecordingMani
 // The home computers' upload keeps running beside it until this has carried a
 // real take end to end; both key the bytes by sha256, so the two never make
 // two copies.
+//
+// Once a take is copied (or new bytes are named), it asks GitHub to place
+// the new takes on their pieces (api/library/_placeTakes.ts, place-takes.yml);
+// the answer's place_takes says whether that was sent.
 //
 // It fails, so Control Center shows it, when the Inbox cannot be read by its
 // ID, when a recording could not be copied, and while a home computer's last
@@ -106,7 +111,9 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     }
   }
 
+  const placeTakes = await dispatchPlaceTakes(copied + named)
   const counts = {
+    place_takes: placeTakes.sent === true ? 'sent' : placeTakes.reason,
     listed: listing.files.length,
     copied,
     named,

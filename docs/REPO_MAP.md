@@ -17,6 +17,7 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `apps/runner/`
 - `assets/`
 - `config/`
+- `config/schema/`
 - `config/ve/`
 - `docs/`
 - `docs/brandbooknew/`
@@ -2336,10 +2337,15 @@ What the compiler looks for, as pure functions.
 - `interface WindowsHealth`
 - `const PREFLIGHT_CHECKS: readonly string[]`
 - `interface PreflightHealth`
+- `const OVERNIGHT_REASONS: readonly string[]`
+- `interface OvernightCut`
+- `interface OvernightHealth`
 - `interface LaneReport`
 - `function parseWatchHealth(value: unknown): WatchHealth | undefined`
 - `function parseWindowsHealth(value: unknown): WindowsHealth | undefined`
 - `function parsePreflightHealth(value: unknown): PreflightHealth | undefined`
+- `function parseOvernightHealth(value: unknown): OvernightHealth | undefined`
+- `function overnightReadiness(reports: readonly LaneReport[], now: number): { primary: { machine: string; ok: boolean; at…`
 - `function parseLaneReport(value: unknown, now: string): LaneReport | null`
 - `function laneKey(machine: string): string`
 - `function lanePlainProblems(reports: readonly LaneReport[], now: number): string[]`
@@ -2392,6 +2398,15 @@ What the compiler looks for, as pure functions.
 - `function libraryFileRow(value: unknown): LibraryFileRow | null`
 - `function libraryFileView(row: LibraryFileRow)`
 - `function isLibraryObjectKey(value: unknown): value is string`
+
+### `apps/control-plane/api/library/_placeTakes.ts`
+
+Takes place themselves (Wave 2, W2.3): once the Inbox job has copied a take
+
+- `const PLACE_TAKES_EVENT`
+- `const PLACE_TAKES_REPO`
+- `type PlaceTakesDispatch`
+- `async function dispatchPlaceTakes( takes: number, env: Record<string, string | undefined> = process.env, fetcher: Fetch…`
 
 ### `apps/control-plane/api/library/_recordings.ts`
 
