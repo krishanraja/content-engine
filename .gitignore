@@ -61,3 +61,6 @@ supabase/.temp/
 !fixtures/ve/design-lock/**/*.jpg
 !assets/plates/**/*.jpg
 !assets/plates/**/*.png
+
+# The chat backstop outbox (W3.3): his flagged lines stay local until the runner posts them
+.scratch/

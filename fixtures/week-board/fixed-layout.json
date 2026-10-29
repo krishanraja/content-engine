@@ -1,9 +1,9 @@
 {
  "_about": "The fixed layout of the publish board, as check_board_layout.py reads it from three fed weeks, the hash of its layout file and colours, and the words Krish approved it in. It changes only with --update --approved (Ruling, Krish, 2026-10-21: the layout is held by CI and changes only with his recorded words).",
- "layout_version": 2,
- "approved": "Krish, 2026-10-28: \"pick an idea for a specific day AND add any optional comments easily, which can be saved, or I can: mark an idea as being useful in a future wider piece OR mark it as being an idea that should be stored for a future trend OR queue it for next week OR reject it\"; \"I'm happy to plan the Tuesday, Thursday, Saturday, and Sunday content within the Sunday ideas session if you give me a few options to approve as you do the Mon/wed/fri\"; \"Once I approve, the two scripts will go to teleprompter\"; \"Sunday evening press\"; \"Approve each day Monday\"",
+ "layout_version": 3,
+ "approved": "Krish, 2026-10-28: backfill every piece we've done historically, and allow me to add a score out of 10 for narrative quality and production quality",
  "files": {
-  "config/board-layout.json": "e7e63fd5a9ffeb7b860273fbcae4e75cb1e103f6e0a278ab7e35bfbb145e1894",
+  "config/board-layout.json": "856042bec75f31845e745ca8bfd9ca6f85fd8b43f5ae91ea85385d6b05a0606a",
   "scripts/post-pack/tokens.css": "a38811b2df781b9169b3576986fa59cca5d870469190560bf8f5e9515c4de42f"
  },
  "weeks": {
@@ -302,6 +302,111 @@
    "offdays": [
     "div.sec-head",
     "div.slot-empty"
+   ]
+  },
+  "archive": {
+   "tabs": [
+    "ideas",
+    "queue",
+    "monday",
+    "wednesday",
+    "friday",
+    "archive"
+   ],
+   "days": {
+    "monday": {
+     "brief": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "drafts": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "record": [
+      "p.st-what",
+      "div.rec",
+      "div.rec-scripts"
+     ],
+     "publish": [
+      "p.st-what",
+      "div.ticks rs-top",
+      "div.rec dl",
+      "div.rec so",
+      "h2.run-h",
+      "section.run",
+      "section.run",
+      "section.run",
+      "section.run",
+      "section.run",
+      "h2.run-h",
+      "p.run-how",
+      "section.run opt",
+      "section.run opt",
+      "div.rec sc",
+      "p.save-note"
+     ]
+    },
+    "wednesday": {
+     "brief": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "drafts": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "record": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "publish": [
+      "p.st-what",
+      "div.slot-empty"
+     ]
+    },
+    "friday": {
+     "brief": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "drafts": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "record": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "publish": [
+      "p.st-what",
+      "div.slot-empty"
+     ]
+    }
+   },
+   "queue": [
+    "div.day-head",
+    "p.st-what",
+    "section.q-combine",
+    "section.q-day",
+    "section.q-day",
+    "section.q-day",
+    "section.q-day"
+   ],
+   "offdays": [
+    "div.sec-head",
+    "div.slot-empty"
+   ],
+   "archive": [
+    "div.day-head",
+    "ol.ar-list"
+   ],
+   "archive_row": [
+    "p.ar-meta",
+    "h2.ar-title",
+    "p.ar-links",
+    "p.ar-scores",
+    "div.rec sc"
    ]
   }
  }

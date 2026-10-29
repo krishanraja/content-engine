@@ -183,6 +183,9 @@ KNOWN_ACTS = {'text', 'article', 'image', 'download', 'done'}
 LAYOUT_FILE = Path(__file__).resolve().parents[2] / 'config' / 'board-layout.json'
 FEATURES_FILE = Path(__file__).resolve().parents[2] / 'config' / 'features.json'
 TOP_TABS = ('ideas', 'queue', 'monday', 'wednesday', 'friday')
+DAY_TABS = TOP_TABS[2:]
+# Layout v3 (from the week of 9 November 2026, W2.1) adds the Archive: every piece since the Launch, with his scores.
+ARCHIVE_TAB = 'archive'
 DAY_STEPS = ('brief', 'drafts', 'record', 'publish')
 
 
@@ -205,12 +208,30 @@ def load_layout(path=LAYOUT_FILE):
         if not isinstance((data.get('cuts') or {}).get(cut), dict):
             raise BoardError(f'{path}: no {cut} cut')
     date.fromisoformat(data['layout_from'])
+    v3 = data.get('v3')
+    if v3 is not None:
+        try:
+            v3_from = date.fromisoformat(v3['from'])
+        except (KeyError, TypeError, ValueError):
+            raise BoardError(f'{path}: v3 needs from, the Monday its boards start')
+        rhythm = v3.get('rhythm') or {}
+        if (v3_from.weekday() != 0 or v3_from <= date.fromisoformat(data['layout_from'])
+                or tuple(t.get('key') for t in v3.get('add_tabs') or []) != (ARCHIVE_TAB,)
+                or rhythm.get('rule') != 'recording_sunday'
+                or any((rhythm.get(k) or {}).get('on') != 'recording_sunday' for k in ('brief', 'drafts'))):
+            raise BoardError(f'{path}: v3 starts on a Monday after layout_from, adds the {ARCHIVE_TAB} tab alone and keeps the '
+                             'recording_sunday rhythm for the brief and the drafts')
     return data
 
 
 LAYOUT = load_layout()
 LAYOUT_FROM = date.fromisoformat(LAYOUT['layout_from'])
+V3 = LAYOUT.get('v3') or {}
+V3_FROM = date.fromisoformat(V3['from']) if V3 else None
 FIXED = False  # whether the board being built is in the fixed layout; set by use_layout()
+# The tabs, the steps' rhythm and the layout version of the board being built; set by use_layout(). Version 2 from
+# layout_from, version 3 from v3.from (the Archive, the Scores press and the recording_sunday rhythm).
+TABS, RHYTHM, VERSION = TOP_TABS, LAYOUT['rhythm'], 2
 FEATURE_ONLY = set()
 LEGACY_LAYOUT = {'STEPS': STEPS, 'SECTION_STEP': SECTION_STEP, 'CUTS': CUTS,
                  'DROPPED_CHANNELS': {'whatsapp': 'WhatsApp', 'notes': 'Substack Notes'}}
@@ -223,8 +244,12 @@ def fixed_layout(monday):
 def use_layout(monday):
     """Point the module's step and cut tables at the layout of this week: the fixed one from layout_from, else the
     one the week was published in. Every function below reads them, so one switch keeps a week in one layout."""
-    global STEPS, LABEL, STANDING, SECTION_STEP, CUTS, FIXED, FEATURE_ONLY, DROPPED_CHANNELS
+    global STEPS, LABEL, STANDING, SECTION_STEP, CUTS, FIXED, FEATURE_ONLY, DROPPED_CHANNELS, TABS, RHYTHM, VERSION
     FIXED = fixed_layout(monday)
+    v3 = bool(V3_FROM) and monday >= V3_FROM
+    TABS = TOP_TABS + ((ARCHIVE_TAB,) if v3 else ())
+    RHYTHM = V3['rhythm'] if v3 else LAYOUT['rhythm']
+    VERSION = V3['version'] if v3 else 2
     if FIXED:
         ps = LAYOUT['publish_steps']
         STEPS = tuple((s['key'], s['label'], s.get('channel'), bool(s.get('counted'))) for s in ps['steps'])
@@ -684,6 +709,104 @@ def signoff_card(day, p, piece, manifest_sha=None):
             '<p class="rec-how">Watch each cut at full size first. To send a file back, press Reject beside it above and say why.</p>'
             f'<button type="button" class="btn-s" data-act="approve-publish" data-day="{day}" disabled>Approve for publish</button>'
             f'<p class="tri-state" data-signoffstate="{day}" aria-live="polite"></p></div>')
+
+
+SCORE_BASES = (('at_publish', 'At publish'), ('hindsight', 'Looking back'))
+
+
+def scores_card(p, piece, basis='at_publish', shown=None):
+    """His Scores press (layout v3, W2.1; Krish, 2026-10-29: "allow me to add a score out of 10 for narrative quality and
+    production quality"): narrative and production out of 10, when he scored it, and his note, saved as
+    picks/score-<piece>; the server files each save as a piece_scores row. Only his scores count."""
+    marks = ''.join(f'<option value="{n}">{n}</option>' for n in range(1, 11))
+    sel = lambda key, label, opts: (f'<label class="sc-field"><span>{label}</span><select data-score="{key}" disabled>{opts}</select></label>')
+    bases = ''.join(f'<option value="{k}"{" selected" if k == basis else ""}>{t}</option>' for k, t in SCORE_BASES)
+    return (f'<div class="rec sc" id="{p}scores" role="region" aria-labelledby="{p}scores-h" data-scores-piece="{E(piece)}" '
+            f'data-scores-basis="{basis}"><div class="rec-head"><h2 id="{p}scores-h">Your scores</h2></div>'
+            '<p class="rec-how">Out of 10: how strong the story is, and how well it was made. Only your scores count.</p>'
+            + (f'<p class="sc-now">{E(shown)}</p>' if shown else '')
+            + sel('narrative', 'Narrative', '<option value="">Pick</option>' + marks)
+            + sel('production', 'Production', '<option value="">Pick</option>' + marks)
+            + sel('basis', 'When', bases)
+            + '<label class="sc-field sc-note"><span>Note (optional)</span><input type="text" data-score="note" maxlength="4000" disabled></label>'
+            f'<button type="button" class="btn-s" data-act="save-scores" data-for="{p}scores" disabled>Save scores</button>'
+            f'<p class="tri-state" data-scoresstate="{p}scores" aria-live="polite"></p></div>')
+
+
+SERIES_LABEL = {'follow_the_money': 'follow.the.money', 'under_the_hood': 'under.the.hood', 'mind_the_gap': 'mind.the.gap'}
+
+
+def read_archive(data, where='--archive'):
+    """[row]: every piece from the Launch on, newest first, from GET /api/board/<Monday>/archive (board_feed.py archive):
+    {"rows": [{"piece_id", "date", "series", "title", "links": [{"label", "url"}], "scores": {"at_publish"?,
+    "hindsight"?: {"narrative", "production", "note", "scored_at"}}}]}. A row may have no piece_id (a post the record does
+    not hold yet), and then it has no Scores press."""
+    rows = data.get('rows') if isinstance(data, dict) else data
+    if not isinstance(rows, list):
+        raise BoardError(f'{where}: give {{"rows": [...]}} from GET /api/board/<Monday>/archive')
+    out, problems = [], []
+    for n, r in enumerate(rows, 1):
+        if not isinstance(r, dict):
+            problems.append(f'row {n} is not an object')
+            continue
+        piece = r.get('piece_id')
+        try:
+            day = date.fromisoformat(str(r.get('date')))
+        except ValueError:
+            problems.append(f'row {n}: date is YYYY-MM-DD')
+            continue
+        title = ' '.join(str(r.get('title') or '').split())
+        links = [x for x in r.get('links') or [] if isinstance(x, dict) and str(x.get('url', '')).startswith('https://') and x.get('label')]
+        if piece is not None and not UUID.match(str(piece)):
+            problems.append(f'row {n}: piece_id is the content_ideas uuid or null')
+        if not title or len(title) > 300:
+            problems.append(f'row {n}: a title of up to 300 characters')
+        if r.get('series') is not None and r['series'] not in SERIES_LABEL:
+            problems.append(f'row {n}: series is one of {", ".join(SERIES_LABEL)} or null')
+        scores = {}
+        for basis, _ in SCORE_BASES:
+            sc = (r.get('scores') or {}).get(basis)
+            if sc is None:
+                continue
+            if not all(isinstance(sc.get(k), int) and 1 <= sc[k] <= 10 for k in ('narrative', 'production')):
+                problems.append(f'row {n}: {basis} scores are whole numbers from 1 to 10')
+                continue
+            scores[basis] = {'narrative': sc['narrative'], 'production': sc['production'], 'note': sc.get('note'), 'scored_at': sc.get('scored_at')}
+        out.append({'piece_id': piece, 'date': day, 'series': r.get('series'), 'title': title, 'links': links, 'scores': scores})
+    if problems:
+        raise BoardError(f'{where} is not ready to show:\n  ' + '\n  '.join(problems))
+    return sorted(out, key=lambda r: (r['date'], r['piece_id'] or ''), reverse=True)
+
+
+def score_line(scores):
+    """His latest scores in one line: looking back first, else at publish."""
+    for basis, label in (('hindsight', 'looking back'), ('at_publish', 'at publish')):
+        sc = scores.get(basis)
+        if sc:
+            return f'Narrative {sc["narrative"]}/10, production {sc["production"]}/10, {label}'
+    return 'Not scored yet'
+
+
+def archive_panel(rows, hidden):
+    """The Archive tab (layout v3, W2.1): every piece from the Launch on 6 October, newest first, each with its date,
+    series, title, live links, his two scores and the Scores press."""
+    items = []
+    for n, r in enumerate(rows or [], 1):
+        p = f'ar{n}-'
+        links = ''.join(f'<a class="btnlink" href="{E(x["url"])}" target="_blank" rel="noopener">{E(x["label"])}</a>' for x in r['links'])
+        piece = r['piece_id']
+        items.append(f'<li class="ar-row" id="{p}row"' + (f' data-piece="{E(piece)}"' if piece else '') + '>'
+                     f'<p class="ar-meta">{E(short_date(r["date"]))}' + (f' · {E(SERIES_LABEL[r["series"]])}' if r['series'] else '') + '</p>'
+                     f'<h2 class="ar-title">{E(r["title"])}</h2>'
+                     + (f'<p class="ar-links">{links}</p>' if links else '<p class="ar-links">No live link on the record yet.</p>')
+                     + f'<p class="ar-scores">{E(score_line(r["scores"]))}</p>'
+                     + (scores_card(p, piece, 'hindsight') if piece else '<p class="rec-how">Scores open once this piece is on the record.</p>')
+                     + '</li>')
+    body = (f'<ol class="ar-list">{"".join(items)}</ol>' if items else
+            '<p class="slot-empty">The Archive fills from the record once the week\'s archive is fed (board_feed.py archive).</p>')
+    return (f'<div class="pm fixed" id="panel-{ARCHIVE_TAB}" role="tabpanel" aria-labelledby="tab-{ARCHIVE_TAB}" data-day="{ARCHIVE_TAB}" '
+            f'tabindex="-1"{" hidden" if hidden else ""}><div class="day-head">'
+            + fixed_head('Every piece since the Launch', 'Archive') + '</div>' + body + '</div>')
 
 
 def asset_formats(iid):
@@ -1295,6 +1418,12 @@ def presses_row(pid, key, monday):
 # in queue/off-<day>-<option> bound to the copy he saw (copy_sha256). Growth makes and schedules what he approved.
 OFF_DAYS = (('tue', 'Tuesday', 1), ('thu', 'Thursday', 3), ('sat', 'Saturday', 5), ('sun', 'Sunday', 6))
 OFF_ID = re.compile(r'^[A-Za-z0-9][A-Za-z0-9_.:-]{0,59}$')
+# Growth's off-day lane runs every day (Krish, 2026-10-29, choosing between two rulings: "Mix wins: every day"), so its
+# options (growth.py mix offdays, schema growth-offdays/1) may name Monday, Wednesday and Friday too; the series slot on
+# those days stays reserved for the piece's own cut, which is Growth's to keep. A piece he records stays an off-day
+# piece: Tuesday, Thursday, Saturday or Sunday.
+MIX_DAYS = (('mon', 'Monday', 0), ('tue', 'Tuesday', 1), ('wed', 'Wednesday', 2), ('thu', 'Thursday', 3),
+            ('fri', 'Friday', 4), ('sat', 'Saturday', 5), ('sun', 'Sunday', 6))
 # An off-day piece he records (Ruling, Krish, 2026-10-29: an idea he drops in can be a Tuesday, Thursday, Saturday or
 # Sunday piece, and it is one short cut: "could be a short with motion designed subtitles and branding, or voiceover
 # with motion designed infographics"). Its option carries the exact words he would read; his Approve is his approval
@@ -1312,10 +1441,10 @@ def read_offdays(data, where='ideas.json offdays'):
         return None
     if not isinstance(data, dict):
         raise BoardError(f'{where}: give {{"tue": [options], "thu": [...], "sat": [...], "sun": [...]}}')
-    days = {k for k, *_ in OFF_DAYS}
-    problems = [f'{k} is not an off day ({", ".join(d for d, *_ in OFF_DAYS)})' for k in data if k not in days]
+    days = {k for k, *_ in MIX_DAYS}
+    problems = [f'{k} is not a day ({", ".join(d for d, *_ in MIX_DAYS)})' for k in data if k not in days]
     out = {}
-    for key, weekday, _ in OFF_DAYS:
+    for key, weekday, _ in MIX_DAYS:
         opts = data.get(key)
         if opts is None:
             continue
@@ -1340,13 +1469,24 @@ def read_offdays(data, where='ideas.json offdays'):
             copy = str(o['copy']).strip()
             row = {'id': oid, 'format': str(o['format']).strip(), 'source': str(label).strip(), 'url': url or None,
                    'copy': copy, 'copy_sha256': hashlib.sha256(copy.encode('utf-8')).hexdigest()}
+            for k in ('share_line', 'needs'):
+                v = o.get(k)
+                if v not in (None, '', []):
+                    if k == 'needs' and isinstance(v, list) and all(isinstance(x, str) for x in v):
+                        row[k] = [x.strip() for x in v if x.strip()]
+                    elif k == 'share_line' and isinstance(v, str):
+                        row[k] = ' '.join(v.split())
+                    else:
+                        problems.append(f'{weekday} option {n}: {k} is ' + ('a list of lines' if k == 'needs' else 'one line'))
             covers = o.get('covers')
             if covers is not None:
                 if not isinstance(covers, list) or not all(isinstance(c, str) and c.strip() for c in covers):
                     problems.append(f'{weekday} option {n}: covers is a list of must_cover ids')
                 else:
                     row['covers'] = [c.strip() for c in covers]
-            if o.get('kind') == 'recorded':
+            if o.get('kind') == 'recorded' and key not in {k for k, *_ in OFF_DAYS}:
+                problems.append(f'{weekday} option {n}: a piece he records is a Tuesday, Thursday, Saturday or Sunday piece')
+            elif o.get('kind') == 'recorded':
                 found = recorded_problems(o)
                 problems.extend(f'{weekday} option {n}: {p}' for p in found)
                 if not found:
@@ -1360,10 +1500,40 @@ def read_offdays(data, where='ideas.json offdays'):
     return out
 
 
+def read_growth_offdays(data, monday, where='--offdays-plan'):
+    """(offdays for read_offdays, warnings) from Growth's Sunday Off-days section (growth.py mix offdays, schema
+    growth-offdays/1): {week_of, days: {date: [{concept_id, lane, formats, source_url, draft, share_line, needs, ready}]},
+    short}. Each option is his to approve or skip with one press; its copy is Growth's draft, bound by its hash. A day
+    with fewer than two options is left off and said."""
+    if not isinstance(data, dict) or data.get('schema') != 'growth-offdays/1' or not isinstance(data.get('days'), dict):
+        raise BoardError(f'{where}: give the growth-offdays/1 file growth.py mix offdays wrote')
+    if str(data.get('week_of')) != monday.isoformat():
+        raise BoardError(f'{where}: it is for the week of {data.get("week_of")}, not {monday.isoformat()}')
+    by_offset = {off: k for k, _, off in MIX_DAYS}
+    out, warnings = {}, []
+    for day, opts in sorted(data['days'].items()):
+        try:
+            key = by_offset.get((date.fromisoformat(day) - monday).days)
+        except ValueError:
+            key = None
+        if not key:
+            raise BoardError(f'{where}: {day} is not a day of the week of {monday.isoformat()}')
+        opts = [o for o in opts or [] if isinstance(o, dict)][:3]
+        if len(opts) < 2:
+            warnings.append(f'{where}: {day} has {len(opts)} option(s) from Growth, under the two the board shows')
+            continue
+        out[key] = [{'id': o.get('concept_id'), 'format': ', '.join(o.get('formats') or []) or o.get('lane'),
+                     'source': {'label': 'Source', 'url': o['source_url']} if str(o.get('source_url') or '').startswith('https://') else (o.get('lane') or 'Growth'),
+                     'copy': o.get('draft'), 'share_line': o.get('share_line'),
+                     'needs': list(o.get('needs') or []) + ([] if o.get('ready') else ['not ready yet'] if not o.get('needs') else [])}
+                    for o in opts]
+    return out, warnings
+
+
 def previous_option(o):
     """An off-day option as the previous board kept it, back in the shape read_offdays takes."""
     row = {'id': o['id'], 'format': o['format'], 'source': {'label': o['source'], 'url': o.get('url')} if o.get('url') else o['source'], 'copy': o['copy']}
-    for k in ('covers', 'kind', 'style', 'piece_id', 'series', 'title', 'script'):
+    for k in ('covers', 'kind', 'style', 'piece_id', 'series', 'title', 'script', 'share_line', 'needs'):
         if o.get(k) is not None:
             row[k] = o[k]
     if o.get('kind') == 'recorded':
@@ -1430,7 +1600,9 @@ def offdays_section(monday, offdays):
     if not offdays:
         return head + slot_empty('No options for Tuesday, Thursday, Saturday or Sunday yet.') + '</section>'
     parts = [head]
-    for key, weekday, offset in OFF_DAYS:
+    # Tuesday, Thursday, Saturday and Sunday always; Monday, Wednesday and Friday only when Growth's mix fed them.
+    shown = [d for d in MIX_DAYS if d[0] in {k for k, *_ in OFF_DAYS} or offdays.get(d[0])]
+    for key, weekday, offset in shown:
         when = monday + timedelta(days=offset)
         parts.append(f'<div class="off-day" id="offdays-{key}" data-off-day="{key}"><h3>{weekday} {when.day} {when.strftime("%B")}</h3>')
         opts = offdays.get(key)
@@ -1456,7 +1628,10 @@ def offdays_section(monday, offdays):
                 f'<article class="off-card" id="{E(did)}" data-offday="{E(did)}" data-off-day="{key}" data-option-id="{E(o["id"])}" '
                 f'data-format="{E(o["format"])}" data-source="{E(o["source"])}" data-copy-sha256="{o["copy_sha256"]}"{covers}{rec_attrs}>'
                 f'<div class="id-flags"><span class="id-flag">{E(o["format"])}</span></div>'
-                f'<p class="off-copy">{E(o["copy"])}</p>{rec_body}<p class="id-why"><span class="id-why-k">Source</span> {src}</p>'
+                f'<p class="off-copy">{E(o["copy"])}</p>{rec_body}'
+                + (f'<p class="id-why"><span class="id-why-k">Share line</span> {E(o["share_line"])}</p>' if o.get('share_line') else '')
+                + (f'<p class="id-how">Still needs: {E("; ".join(o["needs"]))}</p>' if o.get('needs') else '')
+                + f'<p class="id-why"><span class="id-why-k">Source</span> {src}</p>'
                 f'<div class="tri-row" role="group" aria-label="Approve or skip this option">'
                 f'<button type="button" class="tri" data-act="offday" data-value="approve" data-for="{E(did)}" aria-pressed="false" disabled>Approve</button>'
                 f'<button type="button" class="tri" data-act="offday" data-value="skip" data-for="{E(did)}" aria-pressed="false" disabled>Skip</button></div>'
@@ -1756,6 +1931,9 @@ def due(when, rule):
     (Krish, 2026-10-24: "Yes, Sunday is my recording day")."""
     if rule.get('on') == 'sunday_before':
         d = when - timedelta(days=when.weekday() + 1)
+    elif rule.get('on') == 'recording_sunday':
+        # Layout v3: the board for week W is recorded on Sunday W-8 and goes live on Monday W.
+        d = when - timedelta(days=when.weekday() + 8)
     else:
         d = when - timedelta(days=int(rule['days_before']))
     return f'{short_date(d)}, {rule["when"]}'
@@ -2055,10 +2233,13 @@ def run_sheet(day, p, page, data, videos, delivery, feature, folder, warnings):
            f'<div class="meter" aria-hidden="true"><span data-meter="{day}"></span></div>'
            f'<p class="tick-note" data-note="{day}">Loading saved ticks.</p>'
            f'<ol class="rs-jump" aria-label="The steps that make 100%">{"".join(jump)}</ol></div>')
-    return (top + download_first + signoff_card(day, p, data.get('piece') or page.get('piece'), data.get('manifest_sha256'))
+    piece = data.get('piece') or page.get('piece')
+    # Layout v3: his Scores press, last on the made day (W2.1), at publish by default.
+    scores = scores_card(p, piece, 'at_publish') if VERSION >= 3 and piece and UUID.match(str(piece)) else ''
+    return (top + download_first + signoff_card(day, p, piece, data.get('manifest_sha256'))
             + '<h2 class="run-h">Then post, in this order</h2>' + ''.join(standing)
             + ('<h2 class="run-h">When you want them</h2><p class="run-how">Not counted toward 100%.</p>' + ''.join(optional) if optional else '')
-            + SAVE_NOTE)
+            + scores + SAVE_NOTE)
 
 
 def step_where(a, b):
@@ -2674,7 +2855,7 @@ def fixed_day(key, name, weekday, when, series_label, page, piece, pick, title, 
             delivery = board_materials.validate(materials[key], piece)
         except ValueError as error:
             raise BoardError(str(error)) from error
-    brief_due, drafts_due = due(when, LAYOUT['rhythm']['brief']), due(when, LAYOUT['rhythm']['drafts'])
+    brief_due, drafts_due = due(when, RHYTHM['brief']), due(when, RHYTHM['drafts'])
     files = board_materials.render(key, delivery) if delivery else ''
     attrs = ' data-feature="true"' if feature else ''
     sweep = (sweeps or {}).get(key)
@@ -2760,7 +2941,7 @@ def fixed_day(key, name, weekday, when, series_label, page, piece, pick, title, 
 
 def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pending=None, kept=None, videos=None, review=None,
           draft=(), calls=None, posted=None, kept_at=None, ideas=None, queue=None, materials=None, briefs=None, combine=None,
-          sweeps=None, lessons=None, folders=None, kept_draft=None, titles=None, offdays=None, manifests=None):
+          sweeps=None, lessons=None, folders=None, kept_draft=None, titles=None, offdays=None, manifests=None, archive=None):
     """(page, manifest, warnings). titles: {day: read_titles()}; offdays: read_offdays(); manifests: {day: the sha256
     of the piece's manifest}, for Approve for publish. folders: {day: the post's library folder, from its making record's pack}. ideas: {day: [idea]} from read_ideas(),
     shown as a first tab, Ideas, opened while no day is made. pages: {day: publish page text};
@@ -2780,6 +2961,9 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
         raise BoardError(f'--sweep and --lessons: the week of {monday.isoformat()} is in the layout it was published in; '
                          f'Also changed and What I learned are in the Drafts step of boards from {LAYOUT_FROM.isoformat()}')
     titles, offdays, manifests = titles or {}, offdays or None, manifests or {}
+    if archive is not None and VERSION < 3:
+        raise BoardError(f'--archive: the week of {monday.isoformat()} is in layout {VERSION}; the Archive is on boards from '
+                         f'{V3_FROM.isoformat() if V3_FROM else "layout v3"}')
     if (titles or offdays or manifests) and not FIXED:
         raise BoardError(f'--titles, off days and --publish-manifest: the week of {monday.isoformat()} is in the layout it was '
                          f'published in; his presses on them are on boards from {LAYOUT_FROM.isoformat()}')
@@ -2933,6 +3117,13 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
             'waiting': list(calls.get(key) or []) or None,
             'tick_ids': [f'{key}-{k}' for k, *_ in STEPS] if picked else [],
         })
+    if VERSION >= 3:
+        # Layout v3: the Archive, last, with every piece since the Launch and his scores (W2.1).
+        panels.append(archive_panel(archive, True))
+        tabs.append(
+            f'<button type="button" role="tab" id="tab-{ARCHIVE_TAB}" aria-controls="panel-{ARCHIVE_TAB}" aria-selected="false" tabindex="-1" '
+            f'data-day="{ARCHIVE_TAB}"><span class="t-day">Archive</span><span class="t-dot"> · </span>'
+            f'<span class="t-prog" data-tabprog="{ARCHIVE_TAB}">{len(archive or [])} pieces</span><span class="t-ch">Every piece</span></button>')
     missing = [d['name'] for d in days if d['state'] == 'not_picked']
     aside = ''
     if missing:
@@ -2947,7 +3138,7 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
     }
     if FIXED:
         # The briefs ride in the page, so a rebuild from the downloaded board (--previous) keeps them.
-        conf['layout'] = LAYOUT['version']
+        conf['layout'] = VERSION
         conf['briefs'] = briefs
         conf['sweeps'] = sweeps  # carried on a rebuild while the words they changed stand (build(), previous_sweeps)
         # His presses' inputs ride in the page too, so a rebuild without them keeps what he is pressing on (previous_conf).
@@ -2963,7 +3154,7 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
         'BASE_CSS': css, 'WEEK_CSS': template('week.css').strip(), 'KICKER': E(week_span(monday)),
         'TABLIST_LABEL': E(f'Publishing days, week of {monday.day} {monday.strftime("%B")}'),
         'TABS': ''.join(tabs), 'ASIDE': aside, 'PANELS': ''.join(panels), 'SCRIPT': script(conf),
-        'WK_CLASS': ' fixed' if FIXED else '', 'MAIN_ATTRS': f' data-layout="{LAYOUT["version"]}"' if FIXED else '',
+        'WK_CLASS': ' fixed' if FIXED else '', 'MAIN_ATTRS': f' data-layout="{VERSION}"' if FIXED else '',
     }, 'page.html')
     problems = check_page(page)
     if problems:
@@ -3017,7 +3208,12 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
         'warnings': warnings,
     }
     if FIXED:
-        manifest['layout'] = LAYOUT['version']
+        manifest['layout'] = VERSION
+        if VERSION >= 3:
+            manifest['archive'] = [{'piece_id': r['piece_id'], 'date': r['date'].isoformat(), 'scored': sorted(r['scores'])} for r in archive or []]
+            manifest['db']['picks']['scores'] = {
+                'doc_id': 'score-<piece uuid>', 'fields': ['kind', 'piece_id', 'narrative', 'production', 'basis', 'note', 'at'],
+                'then': 'the server files each save as one piece_scores row, scored_by krish; history kept'}
         manifest['briefs'] = briefs
         manifest['sweeps'] = sweeps
         manifest['lessons'] = [{'id': ls['id'], 'kind': ls['kind'], 'status': ls['status']} for ls in lessons or []]
@@ -3026,7 +3222,7 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
             'doc_id': '<pick>', 'fields': ['pick', 'use', 'note', 'theme', 'reason', 'target_week', 'queued', 'idea_id', 'so_what', 'story', 'series', 'week', 'day', 'at'],
             'uses': [u for u, _ in PRESSES], 'null_use': 'he took the press back'}
         manifest['db']['queue']['offday'] = {
-            'doc_id': 'off-<tue|thu|sat|sun>-<option id>', 'fields': ['pick', 'use', 'day', 'approved', 'copy_sha256', 'format', 'source', 'option_id', 'week', 'at'],
+            'doc_id': 'off-<day>-<option id>', 'fields': ['pick', 'use', 'day', 'approved', 'copy_sha256', 'format', 'source', 'option_id', 'week', 'at'],
             # A recorded option's Approve also carries the piece and the exact words (the server schedules it and sends them).
             'recorded_fields': ['kind', 'piece_id', 'series', 'style', 'script', 'script_sha256', 'folder_title', 'title']}
         manifest['db']['picks']['decisions'] = {
@@ -3146,12 +3342,15 @@ def fixed_problems(page):
     four steps and their four panels and nothing else, one stylesheet, and no banner laid over a tab by hand.
     Krish, 2026-10-21: the engine must "feed it in the right way consistently", never change its layout."""
     out = []
+    # The page says its own layout version: version 3 (from v3.from) adds the Archive, last.
+    version = int((re.search(r'<main id="week" data-layout="(\d+)"', page) or [None, '2'])[1])
+    TABS = TOP_TABS + ((ARCHIVE_TAB,) if version >= 3 else ())
     tabs = re.findall(r'<button type="button" role="tab" id="tab-([a-z]+)"', page)
-    if tuple(tabs) != TOP_TABS:
-        out.append(f'layout: the tabs are {tabs}, not {list(TOP_TABS)}')
+    if tuple(tabs) != TABS:
+        out.append(f'layout: the tabs are {tabs}, not {list(TABS)}')
     panels = re.findall(r'<div class="(pm[^"]*)" id="panel-([a-z]+)"', page)
-    if tuple(n for _, n in panels) != TOP_TABS:
-        out.append(f'layout: the tab panels are {[n for _, n in panels]}, not {list(TOP_TABS)}')
+    if tuple(n for _, n in panels) != TABS:
+        out.append(f'layout: the tab panels are {[n for _, n in panels]}, not {list(TABS)}')
     if any(c != 'pm fixed' for c, _ in panels):
         out.append('layout: a tab not drawn in the fixed layout (a kept or hand-made panel)')
     if page.count('<style>') != 1:
@@ -3178,6 +3377,15 @@ def fixed_problems(page):
             children.append(('div', re.match(r'<div class="([^"]+)"', block).group(1) if re.match(r'<div class="([^"]+)"', block) else block[:40]))
             at = nxt + len(block)
         kinds = [c for _, c in children]
+        if name == ARCHIVE_TAB:
+            # The Archive: its heading, then its list; each row with a piece carries his Scores press.
+            if kinds[:1] != ['day-head']:
+                out.append('layout: archive does not open with its heading')
+            for row in re.findall(r'<li class="ar-row".*?</li>', panel, re.S):
+                piece = re.search(r'data-piece="([^"]*)"', row)
+                if piece and UUID.match(piece.group(1)) and f'data-scores-piece="{piece.group(1)}"' not in row:
+                    out.append(f'layout: an Archive row without its Scores press ({piece.group(1)})')
+            continue
         if name in ('ideas', 'queue'):
             if not kinds or kinds[0] != 'day-head':
                 out.append(f'layout: {name} does not open with its heading')
@@ -3398,6 +3606,14 @@ def build(args, get=None):
         ideas = read_ideas(raw, monday)
         if fixed_layout(monday):
             offdays = read_offdays(raw.get('offdays') if isinstance(raw, dict) else None)
+    if getattr(args, 'offdays_plan', None):
+        # Growth's Sunday Off-days section (growth-offdays/1): the days ideas.json did not give.
+        if not fixed_layout(monday):
+            raise BoardError(f'--offdays-plan: the week of {monday.isoformat()} is in the layout it was published in, which has no Off days')
+        mixed, plan_warnings = read_growth_offdays(read_json(args.offdays_plan, '--offdays-plan'), monday)
+        warnings.extend(plan_warnings)
+        given = dict((offdays and {k: [previous_option(o) for o in v] for k, v in offdays.items()}) or {})
+        offdays = read_offdays({**mixed, **given}, '--offdays-plan with ideas.json offdays')
         if fixed_layout(monday):
             # Krish, 2026-10-24: his Inspiration House read properly, and styles he can choose from that push. The
             # gather's sources.json sits beside ideas.json; a fixed week without it was never gathered.
@@ -3466,7 +3682,8 @@ def build(args, get=None):
                 manifests[k] = sha
     page, manifest, more = board(monday, pages, pieces, scripts, picks, pending, kept, videos, review, draft, calls, posted, kept_at,
                                  ideas, queue, materials, briefs, combine, sweeps, lessons, folders, retained_drafts,
-                                 titles, offdays, manifests)
+                                 titles, offdays, manifests,
+                                 read_archive(read_json(args.archive, '--archive')) if getattr(args, 'archive', None) else None)
     if previous is not None:
         keep_previous(previous, manifest['days'], unpick, monday, fresh)
     manifest['warnings'] = warnings + more
@@ -3809,6 +4026,7 @@ def _self_test():
     _draft_checks(check, page, fri)
     _ideas_checks(check)
     _fixed_checks(check, mon)
+    _v3_checks(check, mon)
     _sources_checks(check)
     _style_cover_checks(check)
     delivery = {'piece_id': MON_ID, 'status': 'review', 'note': 'Fact review is still open.', 'sections': [
@@ -3834,6 +4052,45 @@ def _self_test():
         return 1
     print(f'week board self-test passed: {len(checks)} checks')
     return 0
+
+
+def _v3_checks(check, mon):
+    """Layout v3 (W2.1): from the week of 9 November the board adds the Archive, a Scores press on each made day and the
+    recording_sunday rhythm; earlier weeks keep version 2."""
+    week = V3_FROM
+    rows = read_archive({'rows': [
+        {'piece_id': MON_ID, 'date': '2026-10-12', 'series': 'follow_the_money', 'title': 'Warner sued Suno',
+         'links': [{'label': 'Substack', 'url': 'https://example.com/p/one'}], 'scores': {'hindsight': {'narrative': 8, 'production': 6}}},
+        {'piece_id': None, 'date': '2026-10-06', 'series': None, 'title': 'The Launch', 'links': [], 'scores': {}}]})
+    page, manifest, _ = board(week, {'mon': mon}, {'mon': MON_ID}, archive=rows)
+    check('v3: a fed week with the Archive passes verify', verify(page) == [])
+    check('v3: six tabs, the Archive last', re.findall(r'role="tab" id="tab-([a-z]+)"', page) == list(TOP_TABS) + [ARCHIVE_TAB])
+    check('v3: the board and its manifest say layout 3', 'data-layout="3"' in page and manifest.get('layout') == 3)
+    check('v3: the Archive lists the newest piece first, with its scores and its Scores press, and none on a row with no piece',
+          page.find('Warner sued Suno') < page.find('The Launch') and 'Narrative 8/10, production 6/10, looking back' in page
+          and page.count(f'data-scores-piece="{MON_ID}"') == 2 and 'Scores open once this piece is on the record' in page)
+    check('v3: a made day carries his Scores press on its Publish step, at publish by default',
+          re.search(r'id="mon-scores"[^>]*data-scores-piece="' + MON_ID + r'" data-scores-basis="at_publish"', page) is not None)
+    at = page.rfind(f'data-scores-piece="{MON_ID}"')  # the Archive row's, after the day tabs
+    stripped = page[:at] + 'data-x=""' + page[at + len(f'data-scores-piece="{MON_ID}"'):]
+    check('v3: verify refuses an Archive row without its Scores press', any('without its Scores press' in x for x in verify(stripped)))
+    empty, _, _ = board(week)
+    check('v3: the brief and drafts are due on the recording Sunday, W-8 (Monday 9 Nov: Sun 1 Nov)',
+          'Sun 1 Nov' in empty and verify(empty) == [])
+    try:
+        board(LAYOUT_FROM, archive=rows)
+        check('v3: an Archive on a version 2 week is refused', False)
+    except BoardError:
+        check('v3: an Archive on a version 2 week is refused', True)
+    old, _, _ = board(LAYOUT_FROM)
+    check('v3: a week before v3 keeps version 2, five tabs and no Archive',
+          'data-layout="2"' in old and 'id="tab-archive"' not in old and 'Sun 25 Oct' in old)
+    try:
+        read_archive({'rows': [{'piece_id': 'nope', 'date': '2026-10-12', 'title': 'X', 'scores': {'hindsight': {'narrative': 11, 'production': 1}}}]})
+        check('v3: read_archive refuses a bad piece id and a score over 10', False)
+    except BoardError as error:
+        check('v3: read_archive refuses a bad piece id and a score over 10', 'piece_id' in str(error) and '1 to 10' in str(error))
+    use_layout(LAYOUT_FROM)
 
 
 def _fixed_checks(check, mon):
@@ -3868,7 +4125,7 @@ def _fixed_checks(check, mon):
     check('fixed layout: the Queue tab lists his saved idea with his verdict and angle',
           'id="panel-queue"' in page and 'Saved' in page and '<span class="chip">Angle</span> who pays' in page)
     check('fixed layout: a brief rides in the page, so a rebuild from it keeps the brief', previous_briefs(page).get('wed', {}).get('idea') == 'One idea')
-    check('fixed layout: the manifest says the layout and carries the briefs', manifest.get('layout') == LAYOUT['version'] and 'fri' in manifest['briefs'])
+    check('fixed layout: the manifest says the layout and carries the briefs', manifest.get('layout') == VERSION == 2 and 'fri' in manifest['briefs'])
     empty, _, _ = board(week)
     check('fixed layout: an empty week still has every tab and step, each saying when it fills', verify(empty) == []
           and 'data-state="ideas-waiting"' in empty and empty.count('class="slot-empty"') >= 12)
@@ -3928,6 +4185,40 @@ def _fixed_checks(check, mon):
           LABEL['record-long'] == 'Record the 3-minute cut (Teleprompter)' and 'record-feature' not in LABEL)
 
 
+def _growth_offday_checks(check, week, ideas):
+    """W2.9: Growth's Sunday Off-days section (growth-offdays/1) on the Ideas tab, every day under "Mix wins: every
+    day", 2 to 3 options a day, each with one Approve or Skip bound to Growth's draft copy."""
+    o = lambda n, **kw: dict({'concept_id': f'meme-c{n}', 'lane': 'meme', 'formats': ['instagram:meme', 'tiktok:meme'],
+                              'source_url': 'https://example.com/cue', 'draft': f'Synthetic meme draft {n}.', 'share_line': 'Send this to your CFO.',
+                              'needs': [], 'ready': True}, **kw)
+    plan = {'schema': 'growth-offdays/1', 'week_of': week.isoformat(), 'short': [],
+            'days': {(week + timedelta(days=0)).isoformat(): [o(1), o(2)], (week + timedelta(days=1)).isoformat(): [o(3), o(4), o(5, ready=False)],
+                     (week + timedelta(days=3)).isoformat(): [o(6)]}}
+    mixed, warnings = read_growth_offdays(plan, week)
+    offdays = read_offdays(mixed, 'growth')
+    page, _, _ = board(week, ideas=ideas, offdays=offdays)
+    check('growth offdays: a day with two or three options shows, Monday too ("Mix wins: every day"), and a short day is said',
+          set(offdays) == {'mon', 'tue'} and 'id="offdays-mon"' in page and any('under the two' in w for w in warnings))
+    check('growth offdays: each option has one Approve and one Skip bound to the hash of Growth\'s draft',
+          'data-offday="off-mon-meme-c1"' in page and page.count('data-act="offday" data-value="approve"') == 5
+          and offdays['mon'][0]['copy_sha256'] == hashlib.sha256(b'Synthetic meme draft 1.').hexdigest())
+    check('growth offdays: the share line, the formats and what an option still needs are shown',
+          'Send this to your CFO.' in page and 'instagram:meme, tiktok:meme' in page and 'Still needs: not ready yet' in page)
+    check('growth offdays: the board passes verify', verify(page) == [])
+    for bad, why in ((dict(plan, week_of='2026-01-05'), 'another week'), (dict(plan, schema='x'), 'another schema'),
+                     (dict(plan, days={'2026-01-01': [o(1), o(2)]}), 'a day outside the week')):
+        try:
+            read_growth_offdays(bad, week)
+            check(f'growth offdays: {why} is refused', False)
+        except BoardError:
+            pass
+    try:
+        read_offdays({'mon': [{'id': 'r', 'format': 'short', 'source': 's', 'copy': 'c', 'kind': 'recorded'}, {'id': 'q', 'format': 'f', 'source': 's', 'copy': 'c'}]})
+        check('growth offdays: a recorded piece on a series day is refused', False)
+    except BoardError as error:
+        check('growth offdays: a recorded piece on a series day is refused', 'Tuesday, Thursday, Saturday or Sunday piece' in str(error))
+
+
 def _presses_checks(check, week, mon):
     """Krish's presses in the fixed layout (Krish, 2026-10-28): the five on an idea, the off days, Approve scripts,
     Titles, Approve for publish and Reject asset. Each is drawn from data, disabled until the store answers, and saved
@@ -3941,6 +4232,8 @@ def _presses_checks(check, week, mon):
     opt = lambda n, **kw: dict({'id': f'o{n}', 'format': 'meme', 'source': 'A cue from your inspo folder', 'copy': f'Option {n} copy.'}, **kw)
     offdays = read_offdays({'tue': [opt(1), opt(2, source={'label': 'The release note', 'url': 'https://example.com/r'})], 'sat': [opt(1), opt(2), opt(3)]})
     page, manifest, _ = board(week, ideas=ideas, offdays=offdays)
+    _growth_offday_checks(check, week, ideas)
+    use_layout(week)
     nxt = (week + timedelta(days=7)).isoformat()
     check('presses: every idea has a pick note and Wider piece, Future trend, Next week and Reject, never the old triage',
           page.count('data-pick-note="') == 12 and all(page.count(f'data-press="{u}"') == 12 for u, _ in PRESSES)
@@ -3956,7 +4249,7 @@ def _presses_checks(check, week, mon):
           'No options for Tuesday, Thursday, Saturday or Sunday yet.' in board(week, ideas=ideas)[0]
           and 'No options for Tuesday, Thursday, Saturday or Sunday yet.' in board(week)[0])
     for bad, want in (({'tue': [opt(1)]}, '2 to 3 options'), ({'tue': [opt(1), opt(2, copy='')]}, 'no copy'),
-                      ({'mon': [opt(1), opt(2)]}, 'not an off day'), ({'tue': [opt(1), opt(1)]}, 'once a day'),
+                      ({'xyz': [opt(1), opt(2)]}, 'is not a day'), ({'tue': [opt(1), opt(1)]}, 'once a day'),
                       ({'tue': [opt(1), opt(2, source={'label': 'x', 'url': 'http://x'})]}, 'https')):
         try:
             read_offdays(bad)
@@ -4734,6 +5027,10 @@ def parser():
                     '"short_thumbnail": [...]}, 1 to 5 options a surface, best first; kept on rebuild')
     ap.add_argument('--publish-manifest', action='append', metavar='DAY=PATH', help='the piece\'s manifest: its sha256 rides on the '
                     'day\'s Approve for publish press; kept on rebuild')
+    ap.add_argument('--offdays-plan', metavar='JSON', help='Growth\'s Sunday Off-days section (growth.py mix offdays, growth-offdays/1): '
+                    '2 to 3 options a day, each with Approve and Skip; ideas.json offdays wins for a day it gives')
+    ap.add_argument('--archive', metavar='JSON', help='the Archive (boards from layout v3 on): GET /api/board/<Monday>/archive as '
+                    'board_feed.py archive writes it, every piece since the Launch with his scores')
     ap.add_argument('--verify', metavar='PAGE', help='say why this built board may not be published (the publish hook runs it); exit 1 if it may not')
     ap.add_argument('--show', metavar='BOARD', help='print the days a board holds: its week-board.json, or its page as Artifact read saved it')
     ap.add_argument('--json', action='store_true', help='with --show: as JSON')
