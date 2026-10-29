@@ -657,10 +657,10 @@ def signature_problems(text):
     signed = lock_signature(text)
     if not signed:
         return ['not signed: its last line is his signature in his own words, Signed by Krish: "<his words>", YYYY-MM-DD, '
-                f'lock sha256 {lock_body_hash(text)} (nothing below it counts; `making.py PIECE narrative LOCK` prints the hash)']
+                'lock sha256 <hash> (nothing below it counts; `making.py PIECE narrative LOCK` prints the hash once every part holds)']
     if not signed[2]:
-        return ['not signed: his signature carries no lock sha256, so it is not bound to the words he signed; end it with '
-                f'", lock sha256 {lock_body_hash(text)}" once he has seen these exact words']
+        return ['not signed: his signature carries no lock sha256, so it is not bound to the words he signed; end it with the '
+                'hash `making.py PIECE narrative LOCK` prints, once he has seen these exact words']
     if signed[2] != lock_body_hash(text):
         return [f'not signed for these words: the lock changed after he signed it (signed {signed[2][:12]}, now '
                 f'{lock_body_hash(text)[:12]}). A signed lock is never edited: put the changed lock to him and he signs it '
@@ -761,8 +761,11 @@ def narrative_report(piece_id, path=None, roots=None):
     text = locks[0].read_text(encoding='utf-8')
     body, sign = body_problems(text, piece_id), signature_problems(text)
     if body or sign:
+        # The hash to sign with, for a lock he has not signed yet. A lock changed under his signature gets none here:
+        # it goes back to him (the drift rule), and the hash is printed once his signature is taken off.
+        signed = lock_signature(text)
         to_sign = ([f'  once he has seen these exact words and signs, its last line is: Signed by Krish: "<his words>", '
-                    f'<YYYY-MM-DD>, lock sha256 {lock_body_hash(text)}'] if not body else [])
+                    f'<YYYY-MM-DD>, lock sha256 {lock_body_hash(text)}'] if not body and not (signed and signed[2]) else [])
         return 1, [f'narrative lock {locks[0]}: not ready'] + [f'  {w}' for w in body + sign] + to_sign
     import spine_check
     words, on, sha = lock_signature(text)
@@ -2227,6 +2230,10 @@ def self_test():
         code, lines = narrative_report(pid, roots=[plans])
         check('narrative: the check prints the hash to sign with', (code, any(f'lock sha256 {lock_body_hash(unbound)}' in line for line in lines)),
               (1, True))
+        lock_path.write_text(lock_text(pid).replace('Three firms cut prices', 'Four firms cut prices'), encoding='utf-8')
+        code, lines = narrative_report(pid, roots=[plans])
+        check('narrative: a lock changed under his signature is never handed a new hash', (code, any('lock sha256' in line for line in lines)),
+              (1, False))
         lock_path.write_text(lock_text(pid, drop='The use'), encoding='utf-8')
         check('narrative: the use (his Monday action) is a part he signs', 'The use' in refused(paths, pid, [plans]), True)
         lock_path.write_text(lock_text(pid, drop='Music bed'), encoding='utf-8')
