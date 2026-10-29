@@ -217,6 +217,30 @@ def cmd_start(args) -> int:
     return 0
 
 
+def _gate_inputs(args) -> dict:
+    """The calibrated cut gates' inputs (plan W2.4): the signed script, the take's words, and every aligner's words
+    for the render (--heard NAME=WORDS.json, or --transcribe: faster-whisper here; no paid aligner, Krish, 2026-10-29:
+    "do not use eleven labs for this"). Nothing given, nothing added: those rows stay not_run and ve status reads the cut as not ready."""
+    out, heard = {}, {}
+    for item in getattr(args, 'heard', None) or []:
+        name, _, path = item.partition('=')
+        doc = load_json(path)
+        heard[name] = doc.get('words') if isinstance(doc, dict) else doc
+    if getattr(args, 'transcribe', False):
+        from velib import qc_gates
+        heard = qc_gates.heard_words(args.cut, heard=heard or None)
+    if heard:
+        out['heard'] = heard
+    if getattr(args, 'script', None):
+        out['script'] = Path(args.script).read_text(encoding='utf-8-sig')
+    if getattr(args, 'take_words', None):
+        doc = load_json(args.take_words)
+        out['take_words'] = doc.get('words') if isinstance(doc, dict) else doc
+    if getattr(args, 'captions_drawn_by', None) and out:
+        out['captions_drawn_by'] = args.captions_drawn_by
+    return out
+
+
 def cmd_qc(args) -> int:
     from velib.qc import inputs_from_props, run_qc
     props = load_json(args.props) if getattr(args, 'props', None) else None
@@ -226,6 +250,7 @@ def cmd_qc(args) -> int:
         inputs['joins'] = [join['at_s'] for join in load_json(args.edl).get('joins', [])]
     if props is not None and props.get('aspect') == '9:16':
         inputs['composition_props'] = props
+    inputs.update(_gate_inputs(args))
     report = run_qc(args.cut, args.format, **inputs)
     out = Path(args.out) if args.out else Path(args.cut).with_suffix('.qc.json')
     write_json(out, report)
@@ -722,7 +747,13 @@ def main() -> int:
     p = sub.add_parser('start'); p.add_argument('piece'); p.set_defaults(fn=cmd_start)
     p = sub.add_parser('lint'); p.add_argument('spec'); p.set_defaults(fn=cmd_lint)
     p = sub.add_parser('qc'); p.add_argument('cut'); p.add_argument('--format', required=True); p.add_argument('--out'); p.add_argument('--props')
-    p.add_argument('--edl', help='the EDL ve conform wrote: QC measures its joins'); p.set_defaults(fn=cmd_qc)
+    p.add_argument('--script', help='the signed script, for words.lost')
+    p.add_argument('--take-words', help="the take's words json, for words.lost")
+    p.add_argument('--heard', action='append', metavar='ALIGNER=WORDS.json', help="an aligner's words for this render (repeatable)")
+    p.add_argument('--transcribe', action='store_true', help='hear the render here with faster-whisper (no paid aligner)')
+    p.add_argument('--captions-drawn-by', default='faster-whisper', help='the aligner whose words drew the captions')
+    p.add_argument('--edl', help='the EDL ve conform wrote: QC measures its joins')
+    p.set_defaults(fn=cmd_qc)
     p = sub.add_parser('keyframes', help='compare rendered beats with approved stills')
     p.add_argument('format'); p.add_argument('video'); p.add_argument('props'); p.add_argument('--sheet')
     p.set_defaults(fn=cmd_keyframes)

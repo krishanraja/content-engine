@@ -204,7 +204,8 @@ def inputs_from_props(props: dict) -> dict:
 def run_qc(path: str, format_id: str, targets: dict | None = None, *,
            dialogue_master: str | None = None, edl=None, joins=None, pages=None, region=None,
            mark_png: str | None = None, beats=None, aspect=None, events=None, slots=None,
-           composition_props=None) -> dict:
+           composition_props=None, script: str | None = None, take_words=None, heard: dict | None = None,
+           captions_drawn_by: str = 'faster-whisper', caption_ocr=None, fps: float = 30) -> dict:
     fmt = load_json(CONFIG / 'formats' / f'{format_id}.json')['qc']
     targets = targets or {'lufs': -14, 'tp': -1}
     loud = loudness(path)
@@ -224,7 +225,10 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
     }
     for name in ('sync.av_xcorr', 'joins.decoder', 'captions.ocr', 'brand.mark_tile', 'motion.cue_sync', 'audio.bed'):
         checks[name] = {'value': None, 'target': 'see config/ve/crew', 'pass': None, 'status': 'not_run'}
-    from . import qc_sync, qc_joins, qc_captions, qc_brand, qc_cues, qc_audio
+    # The calibrated cut gates quick-edit runs too (plan W2.4, scripts/cutgates, config/gates.json).
+    for name in ('words.lost', 'joins.in_gaps', 'captions.clock', 'captions.render'):
+        checks[name] = {'value': None, 'target': 'see config/gates.json', 'pass': None, 'status': 'not_run'}
+    from . import qc_sync, qc_joins, qc_captions, qc_brand, qc_cues, qc_audio, qc_gates
     optional = [
         ('sync.av_xcorr', dialogue_master is not None and edl is not None,
          lambda: qc_sync.av_xcorr(path, dialogue_master, edl)),
@@ -234,6 +238,13 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
         ('brand.mark_tile', mark_png is not None and beats is not None and aspect is not None,
          lambda: qc_brand.mark_tile(path, mark_png, beats, aspect)),
         ('motion.cue_sync', events is not None and slots is not None, lambda: qc_cues.cue_sync(path, events, slots)),
+        ('words.lost', bool(heard) and script is not None and take_words is not None,
+         lambda: qc_gates.words_lost(script, take_words, heard)),
+        ('joins.in_gaps', bool(heard) and joins is not None, lambda: qc_gates.joins_in_gaps(joins, heard)),
+        ('captions.clock', bool(heard) and pages is not None,
+         lambda: qc_gates.captions_clock(pages, heard, captions_drawn_by, fps)),
+        ('captions.render', pages is not None and region is not None,
+         lambda: qc_gates.captions_render(path, pages, region, caption_ocr)),
     ]
     # STAGE beats compose the whole screen under a moving camera. The square mark tile is replaced by the logo in
     # the stage header, and an object's slot is the full canvas, so "change near the event inside its slot" cannot
