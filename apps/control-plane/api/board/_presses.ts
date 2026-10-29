@@ -17,6 +17,14 @@ import type { Making } from '../_making.js'
 //     "Once I approve, the two scripts will go to teleprompter", and "Server sends directly". That second revision is
 //     the server's: board_history names Krish for it, because the approval must stay his document for
 //     teleprompter_send.py to count it, and send.by says who wrote the answer.
+//   - Approve or Skip on an off-day piece he records (queue/off-<day>-<option>, kind recorded; Ruling, Krish,
+//     2026-10-29: an idea he drops in can be a Tuesday, Thursday, Saturday or Sunday piece, one short cut, said to camera
+//     or a voiceover over motion graphics). Before the save the hash of the exact words he saw is worked out here. After
+//     it the server puts the piece on its day in its series (placeOffday: scheduled_for, in flight, meta.offday, and a
+//     scripts' check of one short cut holding those words' hash and the read-back the board's build required), sends the
+//     words to Teleprompter in the piece's folder with his press as the approval, records a send that read back, and
+//     writes the answer into the same document as send. A Skip after an Approve takes the piece off its day unless it is
+//     recorded; nothing in Teleprompter is touched.
 //   - Reject asset (picks/<day>-reject-<asset>): one row in the rejection inbox (taste_rejection_inbox), his reason as
 //     he typed it, where and when, the piece, the formats and the asset's Drive id and moment when the board knows
 //     them. Masters are never copied anywhere: a Drive id is a pointer.
@@ -50,6 +58,14 @@ const THEN = 'so nothing was sent: a session checks them (making.py scripts), ha
 /** His Approve scripts body with the hash of each cut's words worked out here (scripts), or refused when the hashes it
  *  brought are not the hashes of its words. Any other body is returned as it came. */
 export async function preparePress(collection: string, id: string, body: Body): Promise<Body> {
+  if (isRecordedOffday(collection, body) && body.approved === true) {
+    // His Approve on an off-day piece he records: the hash of the exact words he saw, worked out here, so his approval
+    // binds those words (the same as Approve scripts, for the one short cut).
+    const { scriptHash } = await import('../_teleprompter.js')
+    const sha = scriptHash(String(body.script))
+    if (body.script_sha256 !== undefined && body.script_sha256 !== sha) throw new PressError(400, 'approval_hash_mismatch')
+    return { ...body, script_sha256: sha, scripts: { short: sha } }
+  }
   if (collection !== 'picks' || body.kind !== 'approve_scripts' || body.approved !== true || !isObj(body.texts)) return body
   const { scriptHash } = await import('../_teleprompter.js')
   const scripts: Record<string, string> = {}
@@ -89,7 +105,7 @@ async function sendInput(id: string, body: Body, who: string, at: string): Promi
     return { cut: cut as 'long' | 'short' | 'feature', title: titles[cut], text, sha256: scriptHash(text), source: texts[cut], ...(ids[cut] ? { script_id: ids[cut] } : {}) }
   })
   return {
-    piece_id: String(body.piece_id), day: body.day as 'mon' | 'wed' | 'fri', folder_title: String(body.folder_title),
+    piece_id: String(body.piece_id), day: body.day as SendApprovedInput['day'], folder_title: String(body.folder_title),
     ...(typeof body.folder_id === 'string' ? { folder_id: body.folder_id } : {}),
     scripts, approval: { id, updated_by: who, updated_at: at, body },
   }
@@ -151,6 +167,112 @@ function inboxRow(week: string, id: string, revision: number | undefined, body: 
   }
 }
 
+/** An off-day option he records (api/board/_contracts.ts recordedOffday): queue/off-<day>-<option>, kind recorded. */
+function isRecordedOffday(collection: string, body: Body): boolean {
+  return collection === 'queue' && body.use === 'offday' && body.kind === 'recorded'
+}
+
+const OFF_OFFSET: Record<string, number> = { tue: 1, thu: 3, sat: 5, sun: 6 }
+/** The date an off day falls on in the board's week (its Monday), YYYY-MM-DD. */
+export function offdayDate(week: string, day: string): string {
+  const d = new Date(`${week}T00:00:00Z`)
+  d.setUTCDate(d.getUTCDate() + (OFF_OFFSET[day] ?? 0))
+  return d.toISOString().slice(0, 10)
+}
+const UNPICKED = ['seeded', 'researching']
+
+/** The piece's row with the off day on it, or why it cannot hold it. Approved: the piece goes on its day in its
+ *  series, in flight (drafting), with the option he approved and its exact words (meta.offday) and a scripts' check of
+ *  one short cut (one_cut) holding the hash of those words and the read-back the board's build required, so
+ *  recording_match.py waits for his take. Skipped after an approval: the piece comes off the day and back to the state
+ *  it was in, unless he has recorded it; nothing in Teleprompter is touched (nothing there is ever deleted). Guarded on
+ *  the row's updated_at, read again once on a stale row. */
+export async function placeOffday(db: SupabaseClient, ctx: { week: string; id: string; body: Body; who: string; now: string }): Promise<{ ok: true; making: Making | null; changed: boolean } | { ok: false; error: string }> {
+  const { week, id, body, who, now } = ctx
+  const { mergeMaking } = await import('../_making.js')
+  const pieceId = String(body.piece_id), date = offdayDate(week, String(body.day)), sha = String(body.script_sha256 || '')
+  for (let tries = 0; tries < 2; tries++) {
+    const read = await db.from('content_ideas').select('id, state, scheduled_for, lane_slot, meta, buried_at, updated_at').eq('id', pieceId).maybeSingle()
+    if (read.error) return { ok: false, error: 'the idea could not be read' }
+    if (!read.data) return { ok: false, error: 'the idea is not in the engine' }
+    const row = read.data as Record<string, any>
+    const meta: Body = isObj(row.meta) ? row.meta : {}
+    const prev = isObj(meta.making) ? meta.making as unknown as Making : null
+    const was: Body = isObj(meta.offday) ? meta.offday : {}
+    let update: Body
+    if (body.approved === true) {
+      if (row.buried_at || row.state === 'published') return { ok: false, error: 'the idea is already published or buried' }
+      if (row.scheduled_for && row.scheduled_for !== date && !UNPICKED.includes(row.state) && was.doc !== `queue/${id}`)
+        return { ok: false, error: `the idea is already on ${row.scheduled_for}` }
+      const check = prev?.script_check
+      const same = check?.one_cut === true && check.hashes?.short === sha
+      const readers = Array.isArray(body.readers) ? (body.readers as unknown[]).map(String).filter(Boolean).slice(0, 6) : []
+      const making = mergeMaking(prev, {
+        script_check: {
+          passed: true, problems: [], one_cut: true, cuts: ['short'], hashes: { short: sha },
+          checked_at: same && check?.checked_at ? check.checked_at : now,
+          changed_at: { short: same && check?.changed_at?.short ? check.changed_at.short : now },
+          ...(readers.length >= 2 ? { read_back: { short: { script_sha256: sha, at: now, by: 'week_board.py', readers, found: 'nothing lost' as const } } } : {}),
+        },
+      }, SERVER, now)
+      const offday = {
+        week, day: body.day, date, doc: `queue/${id}`, option_id: body.option_id ?? null, style: body.style, series: body.series,
+        title: body.title, folder_title: body.folder_title, script: body.script, script_sha256: sha,
+        approved_by: who, approved_at: now, prior_state: was.doc === `queue/${id}` && was.prior_state ? was.prior_state : row.state,
+      }
+      update = { scheduled_for: date, lane_slot: body.series, state: UNPICKED.includes(row.state) ? 'drafting' : row.state,
+        meta: { ...meta, offday, making }, updated_at: now }
+    } else {
+      if (was.doc !== `queue/${id}` || was.withdrawn_at) return { ok: true, making: prev, changed: false }
+      if ((prev?.recordings || []).length) return { ok: false, error: 'it is already recorded, so it stays on its day' }
+      update = { scheduled_for: null, state: typeof was.prior_state === 'string' ? was.prior_state : row.state,
+        meta: { ...meta, offday: { ...was, withdrawn_at: now, withdrawn_by: who } }, updated_at: now }
+    }
+    const written = await db.from('content_ideas').update(update).eq('id', pieceId).eq('updated_at', row.updated_at).select('id')
+    if (written.error) return { ok: false, error: 'the idea could not be written' }
+    if (written.data?.length) return { ok: true, making: (update.meta as Body).making as Making ?? prev, changed: true }
+  }
+  return { ok: false, error: 'the idea changed twice while it was being put on its day' }
+}
+
+/** His press on an off-day option he records: the piece on its day (placeOffday), then, on an Approve, the exact words
+ *  he saw sent to Teleprompter in the piece's folder as its one short script, his press as the approval, and what
+ *  happened written into the same document as send. */
+async function offdayRecorded(db: SupabaseClient, ctx: { week: string; id: string; body: Body; who: string; saved: Saved }, now: string, deps: PressDeps): Promise<Saved | null> {
+  const { week, id, body, who, saved } = ctx
+  let answer: Body
+  type Placed = Awaited<ReturnType<typeof placeOffday>>
+  const placed: Placed = await placeOffday(db, { week, id, body, who, now }).catch((): Placed => ({ ok: false, error: 'the idea could not be written' }))
+  if (placed.ok === false) answer = { status: 'refused', at: now, by: SERVER, error: placed.error }
+  else if (body.approved !== true) return placed.changed ? { ...saved, placed: 'withdrawn' } : null
+  else {
+    const { scriptHash, spokenText } = await import('../_teleprompter.js')
+    const tp = placed.making?.teleprompter
+    const text = spokenText(String(body.script))
+    const input: SendApprovedInput = {
+      piece_id: String(body.piece_id), day: body.day as SendApprovedInput['day'], folder_title: String(body.folder_title),
+      ...(tp?.folder_id ? { folder_id: tp.folder_id } : {}),
+      scripts: [{ cut: 'short', title: String(body.title), text, sha256: scriptHash(text), source: String(body.script),
+        ...(tp?.cuts?.short?.script_id ? { script_id: tp.cuts.short.script_id } : {}) }],
+      approval: { id, updated_by: who, updated_at: now, body },
+    }
+    let result: SendResult
+    try {
+      const send = deps.send ?? (async (i: SendApprovedInput) => (await import('../_teleprompter.js')).sendApprovedScripts(i))
+      result = await send(input)
+    } catch (error) {
+      result = { status: 'error', error: String((error as Error)?.message || error).slice(0, 300) }
+    }
+    const unrecorded = result.status === 'sent' ? await recordSend(db, input, result, now).catch(() => 'the piece\'s making record could not be written') : null
+    answer = { status: result.status, at: now, by: SERVER, date: offdayDate(week, String(body.day)),
+      ...(result.folder_id ? { folder_id: result.folder_id } : {}), ...(result.scripts ? { scripts: result.scripts } : {}), ...(result.error ? { error: result.error } : {}),
+      ...(result.status === 'sent' ? { recorded: !unrecorded, ...(unrecorded ? { record_error: unrecorded } : {}) } : {}) }
+  }
+  const again = await db.rpc('board_save', { p_week: week, p_collection: 'queue', p_id: id, p_body: { ...body, send: answer }, p_revision: saved.revision, p_actor: who })
+  if (!again.error && again.data?.ok) return { ...again.data, send: answer }
+  return { ...saved, send: answer, send_recorded: false }
+}
+
 /** The side effects of a saved press, and the answer to send back: the saved document (with send, for Approve
  *  scripts) and, for a rejected asset, whether its inbox row was filed. Null when the press has none. */
 export async function afterPress(db: SupabaseClient, ctx: { week: string; collection: string; id: string; body: Body; who: string; saved: Saved }, deps: PressDeps = {}): Promise<Saved | null> {
@@ -167,6 +289,7 @@ export async function afterPress(db: SupabaseClient, ctx: { week: string; collec
       return { ...saved, inbox: 'failed' }
     }
   }
+  if (isRecordedOffday(collection, body)) return offdayRecorded(db, { week, id, body, who, saved }, now, deps)
   if (collection === 'picks' && body.kind === 'approve_scripts' && body.approved === true) {
     let result: Omit<SendResult, 'status'> & { status: SendResult['status'] | 'held' }
     let unrecorded: string | null = null

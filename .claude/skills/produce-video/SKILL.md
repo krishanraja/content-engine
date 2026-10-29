@@ -134,6 +134,16 @@ Studio renders 9:16 only and refuses it). Each cut is
 its own recording of its own script (house rule TWO_CUTS): the long cut
 renders with `--only 16x9`, the short cut with `--only 9x16`.
 
+**An off-day piece he records is the short cut alone** (Ruling, Krish,
+2026-10-29). Its making record says so (`script_check.one_cut`, read by
+`making.py one_cut` and `makingCuts`), and `meta.offday` (returned by the
+making route as `offday`) holds the style he approved: `to_camera` is his
+take with motion-designed subtitles and the brand; `voiceover` is his voice
+over motion-designed infographics, so the pictures carry the mechanism the
+words name. Make only the 9:16 short and its thumbnail (`--only 9x16`); never
+ask him for a long take of it, and the Video assets step is done with the
+short alone.
+
 Commands are written `python`, as on Windows; it is `python3` in the cloud.
 
 ## What Krish does

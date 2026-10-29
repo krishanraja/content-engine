@@ -12,6 +12,10 @@
 //                direction (config/styles.json, docs/CREATIVE_DIRECTION.md), never topics.
 //   liked        cards he answered with a why but did not route: what he likes, as evidence beside an idea.
 //   fresh        cards he has not answered yet, newest first: seeds the session may research into ideas.
+//   saved_why    on any card: the note he typed when he pasted its link (inspirationhouse src/tag/links.ts keeps it as
+//                the card's why_here while it is still that note). His words, so a card that carries them is owed a
+//                place on the board like a routed one (Krish, 2026-10-29, of a meme link he saved with "We should reskin
+//                this as a hilarious video meme": "check this ... makes it through correctly to the ideas board").
 //   corpora      content-watcher readings with no card: research he dropped in (a corpus, a long post).
 //   creators     creator moves: why a peer's post worked and Krish's own angle on it.
 //   claims       taste claims (form only, anti-echo), candidate or proposed: evidence of his taste, never a rule. A
@@ -59,12 +63,21 @@ export interface InspoCard {
   /** A suggested why he tapped (why_like_source 'picked'): his endorsement, never his words (inspirationhouse rule). */
   endorsed: string | null
   would_do: string | null
+  /** The note he typed when he pasted the link, verbatim, while the card still holds it as its why_here; or null. */
+  saved_why: string | null
   note_for_claude: string | null
   answered_at: string | null
   created_at: string | null
   piece_id: string | null
   tags: ReturnType<typeof labels>
   heard: string | null
+}
+
+/** His paste-time note (facets.link.note) while the card's why_here is still that note: an Undo on the page clears
+ *  why_here, and a guess never writes there. */
+export function savedWhy(r: Row): string | null {
+  const note = typeof r.facets?.link?.note === 'string' ? r.facets.link.note.trim() : ''
+  return note && typeof r.why_here === 'string' && r.why_here.trim() === note ? clip(note, 600) : null
 }
 
 export function card(r: Row): InspoCard {
@@ -76,7 +89,7 @@ export function card(r: Row): InspoCard {
     routes: routesOf(r),
     why_like: r.why_like_source === 'typed' ? clip(r.why_like, 600) : null,
     endorsed: r.why_like_source === 'picked' ? clip(r.why_like, 600) : null,
-    would_do: clip(r.would_do, 600), note_for_claude: clip(r.note_for_claude, 600),
+    would_do: clip(r.would_do, 600), saved_why: savedWhy(r), note_for_claude: clip(r.note_for_claude, 600),
     answered_at: r.answered_at || null, created_at: r.created_at || null, piece_id: r.piece_id || null,
     tags: labels(r), heard: clip(r.transcript),
   }
@@ -163,7 +176,12 @@ export function buildInspiration(input: { weekStart: string; items: Row[]; reads
       support: typeof c.support_n === 'number' ? c.support_n : null }))
     .sort((a, b) => (a.status === 'proposed' ? 0 : 1) - (b.status === 'proposed' ? 0 : 1))
 
-  const must_cover = routed.map(c => ({ id: c.id, what: `Inspiration card "${c.name}" you routed to Make a piece`, his_words: c.why_like || c.would_do || null, endorsed: c.endorsed }))
+  const must_cover = [
+    ...routed.map(c => ({ id: c.id, what: `Inspiration card "${c.name}" you routed to Make a piece`, his_words: c.why_like || c.would_do || c.saved_why || null, endorsed: c.endorsed })),
+    // A link he saved with his own words, not routed and not yet a piece: those words ask for something too.
+    ...cards.filter(c => c.saved_why && !c.piece_id && !c.routes.includes('make_piece') && !c.routes.includes('study_style'))
+      .sort(byNewest).map(c => ({ id: c.id, what: `Inspiration card "${c.name}" you saved with your words`, his_words: c.saved_why, endorsed: null })),
+  ]
   return {
     routed, study_style: studyStyle, liked, fresh, corpora, creators, claims, must_cover,
     counts: { routed: routed.length, study_style: studyStyle.length, liked: liked.length, fresh: fresh.length,

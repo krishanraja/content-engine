@@ -65,7 +65,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   if (req.method === 'GET') {
     const current = await verifiedMaking(supabase, ideaId, prev)
-    return res.status(200).json({ ok: true, idea_id: ideaId, state: (row as any).state, lane_slot: (row as any).lane_slot ?? null, media_quality_rollout: mediaQualityRollout().status, making: current, steps: makingSteps({ ...row, meta: { ...meta, making: current } } as any) })
+    return res.status(200).json({ ok: true, idea_id: ideaId, state: (row as any).state, lane_slot: (row as any).lane_slot ?? null, media_quality_rollout: mediaQualityRollout().status, making: current, steps: makingSteps({ ...row, meta: { ...meta, making: current } } as any),
+      // An off-day piece he records: the option he approved and its exact words, which recording_match.py hears takes against.
+      ...(meta.offday && typeof meta.offday === 'object' ? { offday: meta.offday } : {}) })
   }
 
   const now = new Date().toISOString()

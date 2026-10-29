@@ -104,6 +104,7 @@ export function validBody(collection: string, id: string, body: unknown): boolea
   if (collection === 'queue' && (OFFDAY_ID.test(id) || body.use === 'offday')) return OFFDAY_ID.test(id) && body.use === 'offday'
     && body.pick === id && id.startsWith(`off-${String(body.day)}-`) && typeof body.approved === 'boolean'
     && SHA256.test(String(body.copy_sha256)) && ['format', 'source', 'option_id'].every(k => !(k in body) || text(k, 1000))
+    && !('send' in body) && (body.kind === undefined || recordedOffday(body))
   // One of the four presses on an idea (PRESS_USES), or null to take it back: queue/<pick>, his optional note (a
   // theme or a note for a wider piece), his reason on a Reject (required, so every rejection carries his words to learn
   // from), and the Monday a Next week mark is for.
@@ -116,6 +117,20 @@ export function validBody(collection: string, id: string, body: unknown): boolea
   if (collection === 'comments') return text('text', 30000) && text('thread_id', 160) && validId(String(body.thread_id)) && text('anchor', 160) && validId(String(body.anchor))
     && commentExtras(body)
   return false
+}
+// An off-day piece he records (Ruling, Krish, 2026-10-29: an idea he drops in can be a Tuesday, Thursday, Saturday or
+// Sunday piece, one short cut, said to camera or a voiceover): his press on its option carries the piece, its series
+// and style, the exact words he saw and the names they go under in Teleprompter. The server works out the words' hash
+// itself (preparePress) and adds send, so a write that brings its own send is refused above.
+export const RECORDED_STYLES = ['to_camera', 'voiceover'] as const
+export const RECORDED_SERIES = ['follow_the_money', 'under_the_hood', 'mind_the_gap'] as const
+function recordedOffday(body: Record<string, unknown>): boolean {
+  return body.kind === 'recorded' && typeof body.piece_id === 'string' && UUID.test(body.piece_id)
+    && (RECORDED_SERIES as readonly unknown[]).includes(body.series) && (RECORDED_STYLES as readonly unknown[]).includes(body.style)
+    && typeof body.script === 'string' && body.script.trim().length > 0 && body.script.length <= 20_000
+    && (!('script_sha256' in body) || SHA256.test(String(body.script_sha256)))
+    && oneLine(body.folder_title, 200) && oneLine(body.title, 200)
+    && (!('readers' in body) || Array.isArray(body.readers) && body.readers.length <= 6 && body.readers.every(r => oneLine(r, 200)))
 }
 // What a comment may carry beyond its words (Krish, 2026-10-21: comment on any passage of a draft, and his taps on
 // "Also changed" and "What I learned from your edits"): where in which draft and the words he picked, or one of his

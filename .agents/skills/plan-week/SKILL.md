@@ -332,7 +332,13 @@ article or a visual: each piece's make session does, from its signed lock
    before it reaches the tab; they go into ideas.json `offdays` and reach
    the tab only through `week_board.py --ideas`, never by patching the page,
    and until the board has its Off days part the room says so in step 8.
-   Growth owns the lane; his one press approves or skips each.
+   Growth owns the lane; his one press approves or skips each. **His own
+   ideas go here as pieces he records** (Ruling, Krish, 2026-10-29): every
+   idea he dropped in (`must_cover`, `kind: his_idea`) is a recorded off-day
+   option, one 90-second cut said to camera or as a voiceover, unless his
+   words name Monday, Wednesday or Friday. Follow the reference's last part:
+   the script, its story check, two fresh readers, then `kind: recorded`.
+   His Approve schedules it and sends the script to Teleprompter itself.
 4. Write each day's options, best first, one recommended:
    `python3 scripts/engine.py POST /api/week/options @options.json` with
    `{"week_start": "<Monday>", "series": "<slug>", "options": [{"id": "<uuid>", "rank": 1, "pitch": "two or three plain sentences", "why_now": "the dated event, with its date", "recommended": true, "covers": ["<must_cover id>"]}]}`.

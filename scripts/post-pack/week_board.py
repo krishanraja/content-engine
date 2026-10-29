@@ -1144,8 +1144,12 @@ def coverage_problems(data, sources):
     piece, board items holding his words) is in some idea's `covers`, or in ideas.json `accounted` with a reason.
     Krish, 2026-10-24: "Double check my inspirationhouse gets read properly when ideas are being built"."""
     owed = [m for m in (sources or {}).get('must_cover') or [] if isinstance(m, dict) and m.get('id')]
-    covered = {str(c) for ideas in ((data or {}).get('days') or {}).values() for i in ideas or [] if isinstance(i, dict)
-               for c in (i.get('covers') or [])}
+    # An off-day option covers too (Krish, 2026-10-29: an idea he drops in may be a Tuesday, Thursday, Saturday or
+    # Sunday piece).
+    offdays = (data or {}).get('offdays') if isinstance((data or {}).get('offdays'), dict) else {}
+    options = [i for ideas in ((data or {}).get('days') or {}).values() for i in ideas or []] + \
+              [o for opts in offdays.values() if isinstance(opts, list) for o in opts]
+    covered = {str(c) for i in options if isinstance(i, dict) for c in (i.get('covers') or [])}
     accounted = (data or {}).get('accounted') or {}
     out = []
     if not isinstance(accounted, dict):
@@ -1291,6 +1295,14 @@ def presses_row(pid, key, monday):
 # in queue/off-<day>-<option> bound to the copy he saw (copy_sha256). Growth makes and schedules what he approved.
 OFF_DAYS = (('tue', 'Tuesday', 1), ('thu', 'Thursday', 3), ('sat', 'Saturday', 5), ('sun', 'Sunday', 6))
 OFF_ID = re.compile(r'^[A-Za-z0-9][A-Za-z0-9_.:-]{0,59}$')
+# An off-day piece he records (Ruling, Krish, 2026-10-29: an idea he drops in can be a Tuesday, Thursday, Saturday or
+# Sunday piece, and it is one short cut: "could be a short with motion designed subtitles and branding, or voiceover
+# with motion designed infographics"). Its option carries the exact words he would read; his Approve is his approval
+# of those words, and the server then schedules the piece and sends the script to Teleprompter
+# (apps/control-plane/api/board/_presses.ts, offdayRecorded).
+RECORDED_STYLES = {'to_camera': 'Said to camera', 'voiceover': 'Voiceover with motion graphics'}
+RECORDED_WORDS = (160, 195)  # a 90-second cut that finishes under 89 seconds (story_check's short cut)
+SERIES_LABELS = {slug: label for *_, slug, label in DAYS}
 
 
 def read_offdays(data, where='ideas.json offdays'):
@@ -1326,12 +1338,90 @@ def read_offdays(data, where='ideas.json offdays'):
                 problems.append(f'{weekday} option {n}: id {oid!r} is one short word, once a day')
             seen.add(oid)
             copy = str(o['copy']).strip()
-            rows.append({'id': oid, 'format': str(o['format']).strip(), 'source': str(label).strip(), 'url': url or None,
-                         'copy': copy, 'copy_sha256': hashlib.sha256(copy.encode('utf-8')).hexdigest()})
+            row = {'id': oid, 'format': str(o['format']).strip(), 'source': str(label).strip(), 'url': url or None,
+                   'copy': copy, 'copy_sha256': hashlib.sha256(copy.encode('utf-8')).hexdigest()}
+            covers = o.get('covers')
+            if covers is not None:
+                if not isinstance(covers, list) or not all(isinstance(c, str) and c.strip() for c in covers):
+                    problems.append(f'{weekday} option {n}: covers is a list of must_cover ids')
+                else:
+                    row['covers'] = [c.strip() for c in covers]
+            if o.get('kind') == 'recorded':
+                found = recorded_problems(o)
+                problems.extend(f'{weekday} option {n}: {p}' for p in found)
+                if not found:
+                    row.update(recorded_fields(o))
+            elif o.get('kind') is not None:
+                problems.append(f'{weekday} option {n}: kind is "recorded" or left out')
+            rows.append(row)
         out[key] = rows
     if problems:
         raise BoardError(f'{where} is not ready to show:\n  ' + '\n  '.join(problems))
     return out
+
+
+def previous_option(o):
+    """An off-day option as the previous board kept it, back in the shape read_offdays takes."""
+    row = {'id': o['id'], 'format': o['format'], 'source': {'label': o['source'], 'url': o.get('url')} if o.get('url') else o['source'], 'copy': o['copy']}
+    for k in ('covers', 'kind', 'style', 'piece_id', 'series', 'title', 'script'):
+        if o.get(k) is not None:
+            row[k] = o[k]
+    if o.get('kind') == 'recorded':
+        row['read_back'] = dict(o.get('read_back') or {}, script_sha256=o.get('script_sha256'))
+    return row
+
+
+def recorded_problems(o):
+    """Why a recorded off-day option is not ready to show, or []. It names his idea (piece_id), its series, its style,
+    a title, and the exact words, which pass the story check as a short cut (all but the article close, since an off-day
+    piece has no article: house rule SCRIPT_CLOSE names the deep dive) and were read back by two fresh readers with
+    nothing lost (house rule R7)."""
+    import making
+    import story_check
+    import teleprompter_send as tps
+    out = []
+    if o.get('style') not in RECORDED_STYLES:
+        out.append(f'style is one of {", ".join(RECORDED_STYLES)}')
+    if not UUID.match(str(o.get('piece_id') or '')):
+        out.append('piece_id is the content_ideas uuid of the idea it makes (his own, for an idea he dropped in)')
+    if o.get('series') not in SERIES_LABELS:
+        out.append(f'series is one of {", ".join(SERIES_LABELS)}')
+    title = ' '.join(str(o.get('title') or '').split())
+    if not 0 < len(title) <= 120:
+        out.append('title is the piece\'s subject in one line of up to 120 characters (it names the Teleprompter script)')
+    script = tps.spoken_text(str(o.get('script') or ''))
+    words = len(script.split())
+    if not RECORDED_WORDS[0] <= words <= RECORDED_WORDS[1]:
+        out.append(f'script is the exact words he reads, {RECORDED_WORDS[0]} to {RECORDED_WORDS[1]} words (it has {words})')
+    else:
+        found = [p for p in story_check.problems(script, 'short') if 'SCRIPT_CLOSE' not in p]
+        out.extend(f'script: {p}' for p in found[:5])
+    rb = o.get('read_back') if isinstance(o.get('read_back'), dict) else {}
+    readers = rb.get('readers') if isinstance(rb.get('readers'), list) else []
+    if rb.get('found') != 'nothing lost' or not 2 <= len(readers) <= 6 or not all(isinstance(r, str) and r.strip() for r in readers):
+        out.append('read_back is {"readers": [two to six fresh readers], "found": "nothing lost"} for these exact words (house rule R7)')
+    elif rb.get('script_sha256') not in (None, making.script_hash(script)):
+        out.append('read_back.script_sha256 is not the hash of these words: they changed after the readers heard them')
+    return out
+
+
+def recorded_fields(o):
+    """What a ready recorded option adds to its row: the words as Teleprompter shows them, their hash (making.py
+    script_hash, the same as the server's scriptHash), and the rest it needs."""
+    import making
+    import teleprompter_send as tps
+    script = tps.spoken_text(str(o['script']))
+    rb = o['read_back']
+    return {'kind': 'recorded', 'style': o['style'], 'piece_id': str(o['piece_id']).lower(), 'series': o['series'],
+            'title': ' '.join(str(o['title']).split()), 'script': script, 'script_sha256': making.script_hash(script),
+            'read_back': {'readers': [str(r).strip() for r in rb['readers']], 'found': 'nothing lost'}}
+
+
+def recorded_names(monday, key, o):
+    """(folder, script title) in Teleprompter for a recorded off-day option, named as every piece is (tp_names)."""
+    offset = next(off for k, _, off in OFF_DAYS if k == key)
+    folder, titles, _ = tp_names(None, monday + timedelta(days=offset), SERIES_LABELS[o['series']], o['title'], ['short'])
+    return folder, (titles or {}).get('short')
 
 
 def offdays_section(monday, offdays):
@@ -1350,11 +1440,23 @@ def offdays_section(monday, offdays):
         for o in opts:
             did = f'off-{key}-{o["id"]}'
             src = (f'<a href="{E(o["url"])}" target="_blank" rel="noopener">{E(o["source"])}</a>' if o['url'] else E(o['source']))
+            rec_attrs, rec_body = '', ''
+            if o.get('kind') == 'recorded':
+                folder, title = recorded_names(monday, key, o)
+                rec_attrs = (f' data-kind="recorded" data-piece="{E(o["piece_id"])}" data-series="{E(o["series"])}" data-style="{E(o["style"])}"'
+                             f' data-script-sha256="{o["script_sha256"]}" data-folder-title="{E(folder or "")}" data-tp-title="{E(title or "")}"'
+                             f' data-readers="{E("|".join(o["read_back"]["readers"]))}"')
+                rec_body = (f'<p class="id-why"><span class="id-why-k">How it is made</span> {E(RECORDED_STYLES[o["style"]])}, one 90-second cut, '
+                            f'{E(SERIES_LABELS[o["series"]])}</p>'
+                            f'<div class="off-script" data-offscript="{E(did)}">{E(o["script"])}</div>'
+                            f'<p class="id-how">Approve puts this piece on {weekday} and sends these exact words to Teleprompter'
+                            + (f' as "{E(title)}"' if title else '') + '. Skip leaves it for another week.</p>')
+            covers = f' data-covers="{E(" ".join(o["covers"]))}"' if o.get('covers') else ''
             parts.append(
                 f'<article class="off-card" id="{E(did)}" data-offday="{E(did)}" data-off-day="{key}" data-option-id="{E(o["id"])}" '
-                f'data-format="{E(o["format"])}" data-source="{E(o["source"])}" data-copy-sha256="{o["copy_sha256"]}">'
+                f'data-format="{E(o["format"])}" data-source="{E(o["source"])}" data-copy-sha256="{o["copy_sha256"]}"{covers}{rec_attrs}>'
                 f'<div class="id-flags"><span class="id-flag">{E(o["format"])}</span></div>'
-                f'<p class="off-copy">{E(o["copy"])}</p><p class="id-why"><span class="id-why-k">Source</span> {src}</p>'
+                f'<p class="off-copy">{E(o["copy"])}</p>{rec_body}<p class="id-why"><span class="id-why-k">Source</span> {src}</p>'
                 f'<div class="tri-row" role="group" aria-label="Approve or skip this option">'
                 f'<button type="button" class="tri" data-act="offday" data-value="approve" data-for="{E(did)}" aria-pressed="false" disabled>Approve</button>'
                 f'<button type="button" class="tri" data-act="offday" data-value="skip" data-for="{E(did)}" aria-pressed="false" disabled>Skip</button></div>'
@@ -2924,7 +3026,9 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
             'doc_id': '<pick>', 'fields': ['pick', 'use', 'note', 'theme', 'reason', 'target_week', 'queued', 'idea_id', 'so_what', 'story', 'series', 'week', 'day', 'at'],
             'uses': [u for u, _ in PRESSES], 'null_use': 'he took the press back'}
         manifest['db']['queue']['offday'] = {
-            'doc_id': 'off-<tue|thu|sat|sun>-<option id>', 'fields': ['pick', 'use', 'day', 'approved', 'copy_sha256', 'format', 'source', 'option_id', 'week', 'at']}
+            'doc_id': 'off-<tue|thu|sat|sun>-<option id>', 'fields': ['pick', 'use', 'day', 'approved', 'copy_sha256', 'format', 'source', 'option_id', 'week', 'at'],
+            # A recorded option's Approve also carries the piece and the exact words (the server schedules it and sends them).
+            'recorded_fields': ['kind', 'piece_id', 'series', 'style', 'script', 'script_sha256', 'folder_title', 'title']}
         manifest['db']['picks']['decisions'] = {
             '<day>-scripts': {'kind': 'approve_scripts', 'fields': ['kind', 'day', 'piece_id', 'approved', 'texts', 'scripts', 'titles', 'folder_title', 'folder_id', 'script_ids', 'at', 'send'],
                               'then': 'the server sends them to Teleprompter once the scripts check passed on them and two fresh readers '
@@ -3353,8 +3457,7 @@ def build(args, get=None):
                     continue
         if offdays is None:
             try:
-                offdays = read_offdays({k: [{'id': o['id'], 'format': o['format'], 'source': {'label': o['source'], 'url': o.get('url')} if o.get('url') else o['source'],
-                                             'copy': o['copy']} for o in v] for k, v in (previous_conf(before, 'offdays') or {}).items()},
+                offdays = read_offdays({k: [previous_option(o) for o in v] for k, v in (previous_conf(before, 'offdays') or {}).items()},
                                        'the previous board\'s off days')
             except (BoardError, KeyError, TypeError, AttributeError):
                 offdays = None
@@ -3860,6 +3963,39 @@ def _presses_checks(check, week, mon):
             check(f'presses: off days refuse {want}', False)
         except BoardError as error:
             check(f'presses: off days refuse {want}', want in str(error))
+    # An off-day piece he records (Ruling, Krish, 2026-10-29): the exact words on the card, bound to their hash.
+    said = ("Why does your team still copy the same numbers into three tools every Monday? "
+            + "I watched a small shop do this last week. They spent four hours moving data by hand. Then one person set up a simple agent. "
+              "It read the sales sheet, wrote the summary and sent it to the boss. The trick was picking one boring job first. " * 3
+            + "Here's what I'd do with this info if I were you. Pick the one task you repeat every week and hand just that to an agent.")
+    rec = lambda **kw: opt(9, **dict({'kind': 'recorded', 'format': 'Said to camera', 'style': 'to_camera', 'series': 'under_the_hood',
+                                      'piece_id': MON_ID, 'title': 'One boring job first', 'script': said, 'covers': [MON_ID],
+                                      'read_back': {'readers': ['Reader A', 'Reader B'], 'found': 'nothing lost'}}, **kw))
+    rec_days = read_offdays({'thu': [opt(1), rec()]})
+    rec_page, rec_manifest, _ = board(week, ideas=ideas, offdays=rec_days)
+    card = rec_page[rec_page.find('id="off-thu-o9"'):]
+    card = card[:card.find('</article>')]
+    check('recorded off day: the card holds the exact words, their hash, the piece, its series and style, and its Teleprompter names',
+          'data-kind="recorded"' in card and f'data-piece="{MON_ID}"' in card and 'data-series="under_the_hood"' in card
+          and f'data-script-sha256="{rec_days["thu"][1]["script_sha256"]}"' in card and 'data-offscript="off-thu-o9"' in card
+          and 'Why does your team still copy' in card and 'data-tp-title="' in card and 'data-folder-title="' in card
+          and 'data-readers="Reader A|Reader B"' in card and 'Approve puts this piece on Thursday' in card and f'data-covers="{MON_ID}"' in card)
+    check('recorded off day: its hash is the words as Teleprompter shows them', rec_days['thu'][1]['script_sha256']
+          == __import__('making').script_hash(__import__('teleprompter_send').spoken_text(said)))
+    check('recorded off day: a rebuild keeps it, words and all', read_offdays({k: [previous_option(o) for o in v] for k, v in previous_conf(rec_page, 'offdays').items()}) == rec_days)
+    check('recorded off day: the manifest names what its press carries', 'script' in rec_manifest['db']['queue']['offday']['recorded_fields'])
+    for bad, want in ((rec(style='dance'), 'style is one of'), (rec(piece_id='x'), 'piece_id'), (rec(series='other'), 'series is one of'),
+                      (rec(script='Too short.'), 'words (it has'), (rec(read_back={'readers': ['Only one'], 'found': 'nothing lost'}), 'read_back'),
+                      (rec(script=said.replace('I watched', 'NOT YET FACT-CHECKED I watched', 1)), 'script:'),
+                      (rec(read_back={'readers': ['A', 'B'], 'found': 'nothing lost', 'script_sha256': 'f' * 64}), 'changed after'),
+                      (rec(kind='video'), 'kind is "recorded"')):
+        try:
+            read_offdays({'thu': [opt(1), bad]})
+            check(f'recorded off day: refuses {want}', False)
+        except BoardError as error:
+            check(f'recorded off day: refuses {want}', want in str(error))
+    check('cover: an off-day option covers an idea he dropped in', coverage_problems({'days': {}, 'offdays': {'thu': [{'covers': ['his-1']}]}},
+          {'must_cover': [{'id': 'his-1', 'what': 'Your idea "x"'}]}) == [])
     check('presses: the off days ride in the page, so a rebuild keeps them', previous_conf(page, 'offdays') == offdays
           and manifest['offdays'] == offdays and 'decisions' in manifest['db']['picks'] and 'presses' in manifest['db']['queue'])
     # Approve scripts under a day's drafts, with the names its scripts take in Teleprompter.
