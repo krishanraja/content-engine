@@ -54,13 +54,16 @@ ACCEPTANCE = [
 ]
 
 
-# Each series' own picture: the brand book (v1.5, p. 12, "Its device.") gives one to each section.
+# Each series' own picture: the brand book (v1.5, p. 11, "Its device.") gives one to each section.
 SERIES_PICTURE = {
     'follow.the.money': 'The money map and the receipt: flows between parties, width is the amount.',
     'under.the.hood': 'Real or theatre: the shipped thing, apart, every part stamped.',
     'mind.the.gap': 'Threads on a time axis that bend and meet, ending in a dated call.',
 }
 LEAD_PICTURES = ('series_picture', 'story_object')
+# With the hook as the intro there is no sting, and a new direction says so rather than leaving brand.intro_sting for a
+# session to fill with a sting its opening does not use (ruling 8, under test).
+NO_STING = 'none: the hook is the intro (under test, ruling 8)'
 
 
 class DirectionError(Exception):
@@ -273,6 +276,9 @@ def template(plan, cut, script_text, take='on_camera'):
         'acceptance': ACCEPTANCE, 'signed': {'by': '', 'said': '', 'on': '', 'script_sha256': {}}}
     doc['cuts'][cut] = {'take': take, 'beats': beats}
     doc.setdefault('production_choices', choices_block(str((doc.get('brand') or {}).get('series') or '')))
+    brand = doc.setdefault('brand', {})
+    if not brand.get('intro_sting') and (doc['production_choices'] or {}).get('opening') == 'hook_is_intro':
+        brand['intro_sting'] = NO_STING
     return path, doc
 
 
@@ -283,7 +289,7 @@ def _self_test():
     good = {
         'piece_id': '11111111-2222-4333-8444-555555555555', 'publish_day': '2026-10-26',
         'style': {'script': 'head-to-head', 'production': 'scoreboard-test'},
-        'brand': {'series': 'mind.the.gap', 'reference': 'docs/plans/2026-10-23-friday/creative-direction.md', 'captions': 'kinetic-serif-captions', 'intro_sting': 'config/intro-sting.json'},
+        'brand': {'series': 'mind.the.gap', 'reference': 'docs/plans/2026-10-23-friday/creative-direction.md', 'captions': 'kinetic-serif-captions', 'intro_sting': NO_STING},
         'cuts': {'long': {'take': 'on_camera', 'beats': [
             {'words': 'I put two assistants head to head.', 'point': 'the test is fair and the same for both', 'picture': {'kind': 'face'}, 'modules': ['live-scoreboard']},
             {'words': 'One deleted its own answer.', 'point': 'the censor acts after the answer is written', 'picture': {'kind': 'screen', 'what': 'the answer vanishing', 'source': 'capture:the DeepSeek moment', 'source_label': 'My test, 22 Oct'}, 'on_screen_text': 'It wrote it. Then deleted it.'},
@@ -354,6 +360,11 @@ def _self_test():
         path, doc = template(tmp, 'short', script)
         if len(doc['cuts']['short']['beats']) != 3 or check(doc) == []:
             probs.append('the template has one beat per sentence and is not ready until filled')
+        fresh = Path(tmp) / 'fresh'
+        fresh.mkdir()
+        _, new = template(fresh, 'long', script)
+        if new['brand'].get('intro_sting') != NO_STING or any('brand.intro_sting' in p for p in check(new)):
+            probs.append('a new direction that opens on the hook says it has no sting, and is not held for one')
         # The choices under test: each default from the bar, both lead pictures to draw, the pick left to Claude.
         seeded = doc.get('production_choices') or {}
         tested = under_test()
