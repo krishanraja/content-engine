@@ -3574,6 +3574,8 @@ Direct port of ref/H/build.py: eight unknowns, h22 fixed at one.
 Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 
 - `const CANVAS`
+- `const ACTIVE_CANVAS`
+- `function setActiveCanvas(w: number, h: number)`
 - `const SCRIBBLE`
 - `const ZONES`
 
