@@ -44,6 +44,8 @@ describe('ve', () => {
     ['the crew lints refuse every Friday failure a spec can carry', 'tests/ve_lint_test.py'],
     ['QC measures holds, redraw loops, dead air and loudness on real media', 'tests/ve_qc_test.py'],
     ['removing a card worktree never follows its node_modules link', 'tests/ve_cards_test.py'],
+    ['dispatch and generations reserve against the credit caps Control Center places on the publication, and refuse over them', 'tests/ve_credits_test.py'],
+    ['the piece ledger, its clock and the dispatch cap check', 'tests/ve_ledger_test.py'],
     ['ve qc runs the calibrated cut gates: words, joins in gaps, captions clock and renderer truth (W2.4)', 'tests/ve_gates_test.py'],
     ['a card is held to its own max_minutes and max_calls (W2.12)', 'tests/ve_card_limits_test.py'],
     ['ve conform cuts only in gaps both aligners agree on, with 20-40 ms fades and one speed for picture and sound (F09, F10)', 'tests/ve_conform_test.py'],

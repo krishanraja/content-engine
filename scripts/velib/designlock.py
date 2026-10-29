@@ -144,6 +144,22 @@ def frozen(lock, fmt, root=None) -> tuple[bool, list[str]]:
     return not reasons, reasons
 
 
+def spend_from_budget(record, *, lock_path=None) -> dict:
+    """The design lock's per-generation consent becomes the weekly cap (plan Wave 2, W2.6): plates' animation spend
+    is whatever Control Center's credit read covers (Krish, 2026-10-29: credits are "handled by ai-harness and
+    control-center"), bound to that read's hash. The caller checks the record stands first; nothing else is written."""
+    path = _path(lock_path).resolve()
+    lock = load(path)
+    animation = lock['plates']['animation']
+    animation['spend_needs'] = 'within the credit caps Control Center places on the publication (ve budget pull); ve ledger reserve before each generation'
+    animation.pop('spend_signed', None)
+    animation['spend_source'] = {'source': record['source'], 'engine_id': record['engine_id'], 'pulled_on': record['pulled_on'],
+                                 'record_sha256': record['record_sha256'],
+                                 'ruling': 'Krish, 2026-10-29: "this is now handled by ai-harness and control-center"'}
+    path.write_text(json.dumps(lock, indent=2) + '\n', encoding='utf-8')
+    return lock
+
+
 def freeze(fmt, src_dir, mapping, *, lock_path=None, force=False, today=None) -> dict:
     path = _path(lock_path).resolve()
     root = path.parents[2] if path.parent.name == 've' and path.parent.parent.name == 'config' else path.parent
