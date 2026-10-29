@@ -6,7 +6,7 @@ quick-edit (scripts/quick-edit/make.py) and ve (scripts/velib/qc.py) call the sa
   - gaps.joins_in_gaps: every join sits in a gap every aligner agrees on (config/gates.json, joins);
   - captions.clock_truth and captions.renderer_truth: caption pages on the clock of the aligner that did not draw
     them, and as the renderer drew them, read by OCR near each page start;
-  - aligners: faster-whisper, and ElevenLabs Scribe behind a flag that is off by default;
+  - aligners: faster-whisper (no paid second aligner: Krish, 2026-10-29, "do not use eleven labs for this");
   - receipt: each check machine written and bound to the file's sha256, and what a missing check holds.
 
 The words gate itself stays scripts/quick-edit/words_gate.py (check_aligners for two passes).

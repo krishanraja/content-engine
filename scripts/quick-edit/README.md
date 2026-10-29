@@ -576,11 +576,10 @@ did not make is listed under `missing` with what makes it, never written as a
 placeholder status. For a post dated from `required_from` (16 Nov 2026) a
 missing, failed or stale joins or captions check holds the cut, at render and
 wherever the receipt travels; before then they are measured and listed only.
-The second aligner, ElevenLabs Scribe, is off: it runs only when
-`config/gates.json` carries Krish's yes and `MINDMAKE_SECOND_ALIGNER=scribe`
-and `ELEVENLABS_API_KEY` are set; until then every receipt says "single
-aligner". `python3 scripts/cutgates/scribe.py check FILE` is the one-file word
-timestamp check for the day he says yes.
+There is no paid second aligner (Krish, 2026-10-29: "do not use eleven labs
+for this"): ElevenLabs Scribe was removed, the gates run on faster-whisper and
+every receipt says "single aligner". A second local pass (another
+faster-whisper model) can be handed to the gates by name.
 
 Calibration: `python3 scripts/cutgates/calibrate.py` on his computer runs every
 gate on the five cuts in `config/gate-calibration.json` and prints expected
