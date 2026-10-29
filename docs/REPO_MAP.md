@@ -4637,7 +4637,7 @@ Where a finished video is filed: one folder per piece, whose name says the
 - `function applyPresenterIdentityCorrections(transcript: TranscriptDocument, _presenterName: string, _aliases: string[]):…`
 - `const NO_NAME_BLOCK`
 - `const SELF_INTRODUCTION_BLOCK`
-- `function noNameIssues(texts: string[]): string[]`
+- `function noNameIssues(texts: string[], declaredNonPresenterChris = false): string[]`
 - `function composeEditTranscript(transcript: TranscriptDocument, segments: EditSegmentV1[]): TranscriptDocument`
 - `function exactWordFidelity(captionScript: string, sourceTranscript: TranscriptDocument): Omit<EditorialValidation, 'har…`
 - `function meaningCriticalRemovalIssues(removedTokens: string[], acknowledged: Array<{ removed_token: string; category: s…`
