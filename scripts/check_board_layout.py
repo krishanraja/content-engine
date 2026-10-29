@@ -404,8 +404,9 @@ def board_api(page, web, name, saved, answer=None):
 
 
 def presses_in_browser(page, web):
-    """His presses on the Ideas tab by touch (Krish, 2026-10-28): Reject an idea, then say why; take a press back;
-    Next week for the Monday after; a note on his pick; and Approve on an off-day option, bound to its copy."""
+    """His presses on the Ideas tab by touch (Krish, 2026-10-28): Reject an idea, saved only once he says why; take a
+    press back; Next week for the Monday after; a note on his pick; and Approve on an off-day option, bound to its
+    copy."""
     saved, problems = [], []
     week = board_api(page, web, 'sunday', saved)
     nxt = (wb.LAYOUT_FROM + timedelta(days=7)).isoformat()
@@ -413,17 +414,20 @@ def presses_in_browser(page, web):
     try:
         page.goto('https://board.test/sunday.html#ideas')
         page.wait_for_selector('[data-press="not_for_us"][data-for="mon-1"]:not([disabled])', timeout=5000)
+        # Reject asks for his reason first and saves nothing until he gives one (the board refuses a Reject without it).
         page.click('[data-press="not_for_us"][data-for="mon-1"]')
-        until(page, lambda: last('queue/mon-1'))
-        body = last('queue/mon-1') or {}
-        if body.get('use') != 'not_for_us' or body.get('pick') != 'mon-1' or body.get('queued') is not False or not body.get('so_what'):
-            problems.append(f'sunday: Reject did not save queue/mon-1 with use not_for_us ({body})')
         page.wait_for_selector('[data-press-note-for="mon-1"]:not([hidden])', timeout=5000)
+        page.click('[data-act="save-press-note"][data-for="mon-1"]')
+        said = text_once(page, '[data-pressstate="mon-1"]', 'Say why first')
+        if last('queue/mon-1') or not said.startswith('Say why first'):
+            problems.append(f'sunday: Reject saved without his reason, or did not ask for it ({said!r})')
         page.fill('[data-press-note="mon-1"]', 'Done to death this month.')
         page.click('[data-act="save-press-note"][data-for="mon-1"]')
-        until(page, lambda: (last('queue/mon-1') or {}).get('reason'))
-        if (last('queue/mon-1') or {}).get('reason') != 'Done to death this month.' or (last('queue/mon-1') or {}).get('use') != 'not_for_us':
-            problems.append(f'sunday: his reason on a Reject is not saved with it ({last("queue/mon-1")})')
+        until(page, lambda: last('queue/mon-1'))
+        body = last('queue/mon-1') or {}
+        if (body.get('use') != 'not_for_us' or body.get('reason') != 'Done to death this month.' or body.get('pick') != 'mon-1'
+                or body.get('queued') is not False or not body.get('so_what')):
+            problems.append(f'sunday: Reject did not save queue/mon-1 with use not_for_us and his reason ({body})')
         state = text_once(page, '[data-pressstate="mon-1"]', 'Rejected')
         if not state.startswith('Rejected: Done to death this month.'):
             problems.append(f'sunday: a saved Reject does not say so with his reason ({state!r})')

@@ -105,10 +105,12 @@ export function validBody(collection: string, id: string, body: unknown): boolea
     && body.pick === id && id.startsWith(`off-${String(body.day)}-`) && typeof body.approved === 'boolean'
     && SHA256.test(String(body.copy_sha256)) && ['format', 'source', 'option_id'].every(k => !(k in body) || text(k, 1000))
   // One of the four presses on an idea (PRESS_USES), or null to take it back: queue/<pick>, his optional note (a
-  // theme or a note for a wider piece), his reason on a Reject, and the Monday a Next week mark is for.
+  // theme or a note for a wider piece), his reason on a Reject (required, so every rejection carries his words to learn
+  // from), and the Monday a Next week mark is for.
   if (collection === 'queue' && 'use' in body) return body.pick === id && text('pick', 160) && typeof body.queued === 'boolean'
     && (body.use === null || (PRESS_USES as readonly unknown[]).includes(body.use))
     && ['note', 'reason'].every(k => !(k in body) || body[k] === null || text(k, 2000)) && (!('theme' in body) || body.theme === null || text('theme', 120))
+    && (body.use !== 'not_for_us' || typeof body.reason === 'string' && body.reason.trim().length > 0)
     && (body.use === 'next_week' ? monday(String(body.target_week)) : !('target_week' in body) || body.target_week === null)
   if (collection === 'queue') return text('pick', 160) && typeof body.queued === 'boolean'
   if (collection === 'comments') return text('text', 30000) && text('thread_id', 160) && validId(String(body.thread_id)) && text('anchor', 160) && validId(String(body.anchor))

@@ -104,13 +104,21 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         if (method !== 'PUT' || !validBody(collection, id, req.body?.body) || !revision(req.body?.revision)) throw new BoardError(400, 'invalid_document_write')
         const refused = hisOnlyRefusal(collection, req.body.body, who)
         if (refused) throw new BoardError(403, refused)
+        // A pick or a press he saved stays his: any other writer is refused it, whatever its new body carries, since a
+        // body without his marks would erase his press, and every reader skips a document he did not write. A save he
+        // makes between this read and the write below changes the revision, so that write is refused as a conflict.
+        if (who !== 'Krish' && (collection === 'picks' || collection === 'queue')) {
+          const held = await db.from('board_documents').select('updated_by').eq('week', week).eq('collection', collection).eq('doc_id', id).maybeSingle()
+          must(held)
+          if (held.data?.updated_by === 'Krish') throw new BoardError(403, 'his_document')
+        }
         if (collection === 'comments' && req.body.body.thread_id !== id) {
           const parent = await db.from('board_documents').select('body').eq('week', week).eq('collection', 'comments').eq('doc_id', req.body.body.thread_id).maybeSingle()
           must(parent)
           if (!parent.data || parent.data.body.thread_id !== req.body.body.thread_id || parent.data.body.anchor !== req.body.body.anchor) throw new BoardError(400, 'comment_thread_not_found')
         }
         // His presses (_presses.ts): an approval of scripts binds the hash of the words he saw, then sends them to
-        // Teleprompter; a rejection with his reason files one row in the rejection inbox.
+        // Teleprompter once they are checked and read back; a rejected asset files his reason in the rejection inbox.
         const body = await preparePress(collection, id, req.body.body)
         const result = await db.rpc('board_save', { p_week: week, p_collection: collection, p_id: id, p_body: body, p_revision: req.body.revision, p_actor: who })
         must(result)

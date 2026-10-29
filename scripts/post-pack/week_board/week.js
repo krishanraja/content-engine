@@ -881,19 +881,21 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
 // Krish's presses on the Ideas tab in the fixed layout (week_board.py presses_row and offdays_section). Krish,
 // 2026-10-28: "pick an idea for a specific day AND add any optional comments easily, which can be saved, or I can: mark
 // an idea as being useful in a future wider piece OR mark it as being an idea that should be stored for a future trend
-// OR queue it for next week OR reject it." The pick is above (picks/<day>, with his note); Wider piece, Future trend,
-// Next week and Reject are saved at once in queue/<pick> as its use, his optional words beside it (a reason on a
-// Reject, which the server files in the rejection inbox), and a second tap on the same press takes it back. Each
+// OR queue it for next week OR reject it." The pick is above (picks/<day>, with his note); Wider piece, Future trend and
+// Next week are saved at once in queue/<pick> as its use, his optional words beside it, and Reject is saved once he
+// says why (his reason is required, so every rejection carries his words to learn from). A second tap on the same
+// press takes it back. Each
 // off-day option's Approve or Skip is saved in queue/off-<day>-<option>, bound to the copy he saw. Only he writes
 // these (api/board/_contracts.ts hisOnlyRefusal); a session reads them.
 (() => {
   const rows = [...document.querySelectorAll("[data-presses-for]")];
   const offs = [...document.querySelectorAll(".off-card[data-offday]")];
   if (!rows.length && !offs.length) return;
-  const saved = {}, busy = {};
+  const saved = {}, busy = {}, asking = {};
   let qdb = null, mode = "loading";
   const LABEL = { wider_piece_context: "Wider piece", track_over_time: "Future trend", next_week: "Next week", not_for_us: "Rejected" };
-  const ASK = { wider_piece_context: "A theme or a note (optional)", track_over_time: "A note (optional)", next_week: "A note (optional)", not_for_us: "Why? (optional)" };
+  const ASK = { wider_piece_context: "A theme or a note (optional)", track_over_time: "A note (optional)", next_week: "A note (optional)", not_for_us: "Why? (required)" };
+  const WHY = "Say why first: your reason is what the engine learns from.";
   const field = use => use === "not_for_us" ? "reason" : "note";
   const say = (sel, msg, bad) => { const s = document.querySelector(sel); if (s) { s.textContent = msg; s.classList.toggle("bad", !!bad) } };
   const weekOf = iso => { const d = new Date(iso + "T12:00:00Z"); return isNaN(d) ? iso : d.getUTCDate() + " " + d.toLocaleString("en-GB", { month: "short", timeZone: "UTC" }) };
@@ -905,13 +907,16 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
         b.setAttribute("aria-pressed", on ? "true" : "false"); b.classList.toggle("on", on);
         b.disabled = mode !== "live" || !!busy[pid];
       }
+      // A Reject waiting for his reason (asking) opens the box before anything is saved.
+      const use = v.use || (asking[pid] ? "not_for_us" : null);
       const box = document.querySelector(`[data-press-note-for="${pid}"]`), i = box?.querySelector("input");
       if (box) {
-        box.hidden = !(mode === "live" && v.use && !busy[pid]);
-        if (v.use) i.placeholder = ASK[v.use];
+        box.hidden = !(mode === "live" && use && !busy[pid]);
+        if (use) i.placeholder = ASK[use];
         if (i && document.activeElement !== i && i.dataset.unsaved !== "true") i.value = v.use ? (v[field(v.use)] || v.theme || "") : "";
       }
       if (busy[pid]) continue;
+      if (asking[pid] && !v.use) { say(`[data-pressstate="${pid}"]`, "Say why you reject it, then Save."); continue }
       const words = v.use ? (v[field(v.use)] || v.theme || "") : "";
       say(`[data-pressstate="${pid}"]`, mode === "off" ? "Presses are not saving in this view." : v.use
         ? LABEL[v.use] + (v.use === "next_week" && v.target_week ? ", week of " + weekOf(v.target_week) : "") + (words ? ": " + words : "") + ". Saved." : "", mode === "off");
@@ -964,6 +969,13 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
     if (b) {
       const pid = b.dataset.for, use = b.dataset.press, again = (saved[pid] || {}).use === use;
       const i = document.querySelector(`[data-press-note-for="${pid}"] input`); if (i) i.dataset.unsaved = "false";
+      // Reject saves only with his reason: the press opens the box, and Save sends it (a second tap closes it).
+      if (use === "not_for_us" && !again) {
+        asking[pid] = !asking[pid]; render();
+        if (asking[pid] && i) { i.value = ""; i.focus() }
+        return;
+      }
+      delete asking[pid];
       save(pid, ideaBody(pid, again ? { use: null, note: null, reason: null, theme: null, target_week: null }
         : { use, note: null, reason: null, theme: null, target_week: use === "next_week" ? b.dataset.targetWeek : null }), `[data-pressstate="${pid}"]`);
       return;
@@ -971,9 +983,12 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
     const n = e.target.closest && e.target.closest('[data-act="save-press-note"]');
     if (n) {
       const pid = n.dataset.for, v = saved[pid] || {}, i = document.querySelector(`[data-press-note-for="${pid}"] input`);
-      if (!v.use || !i) return;
+      const use = v.use || (asking[pid] ? "not_for_us" : null);
+      if (!use || !i) return;
       const text = i.value.trim();
-      save(pid, ideaBody(pid, { [field(v.use)]: text || null }), `[data-pressstate="${pid}"]`).then(ok => { if (ok && i.value.trim() === text) i.dataset.unsaved = "false" });
+      if (use === "not_for_us" && !text) { say(`[data-pressstate="${pid}"]`, WHY, true); return }
+      const patch = v.use ? { [field(use)]: text || null } : { use, note: null, reason: text, theme: null, target_week: null };
+      save(pid, ideaBody(pid, patch), `[data-pressstate="${pid}"]`).then(ok => { if (!ok) return; delete asking[pid]; if (i.value.trim() === text) i.dataset.unsaved = "false" });
       return;
     }
     const o = e.target.closest && e.target.closest('[data-act="offday"]');
@@ -991,7 +1006,8 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
 // His decisions on a day's tab in the fixed layout (week_board.py approve_card, titles_card, signoff_card and
 // reject_parts), each saved at once in picks/<day>-<decision> by his press alone:
 //   - Approve scripts (Drafts): the exact words of each script as the Drafts step shows them, his saved edits
-//     included, with the names they go under in Teleprompter; the server sends them and reads them back, and writes
+//     included, with the names they go under in Teleprompter; the server sends them once the scripts' check passed on
+//     those words and two fresh readers heard them (otherwise it holds them for a session), reads them back, and writes
 //     what happened into the same document (send). Krish, 2026-10-28: "Once I approve, the two scripts will go to
 //     teleprompter"; "Server sends directly".
 //   - Titles (Record): his pick on each surface (Krish, 2026-10-28: "Sunday evening press").
@@ -1023,11 +1039,13 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
       if (!v || v.approved !== true) { say(`[data-approvestate="${day}"]`, ""); continue }
       const changed = cutsOf(c).some(cut => (v.texts || {})[cut] !== textOf(c, cut));
       const send = v.send || {};
-      const what = send.status === "sent" ? "They are in Teleprompter, read back." : send.status === "no_key"
-        ? "Teleprompter is not connected to the server yet, so a session sends exactly these words." : send.status
-        ? "The send did not go through" + (send.error ? " (" + send.error + ")" : "") + ", so a session sends exactly these words." : "";
+      // held: the words are not yet the ones the scripts' check passed and two fresh readers heard (the server's gate).
+      const what = send.status === "sent" ? "They are in Teleprompter, read back." + (send.recorded === false ? " A session records that on the piece." : "")
+        : send.status === "no_key" ? "Teleprompter is not connected to the server yet, so a session sends exactly these words."
+        : send.status === "held" ? "Not sent yet: a session checks these words and has two fresh readers hear them first, then sends exactly these words."
+        : send.status ? "The send did not go through" + (send.error ? " (" + send.error + ")" : "") + ", so a session sends exactly these words." : "";
       say(`[data-approvestate="${day}"]`, changed ? "You changed the words since you approved them. Approve again to send these."
-        : `Approved ${hm(v.at || send.at)}. ${what}`.trim(), changed || (!!send.status && !["sent", "no_key"].includes(send.status)));
+        : `Approved ${hm(v.at || send.at)}. ${what}`.trim(), changed || (!!send.status && !["sent", "no_key", "held"].includes(send.status)));
     }
     for (const c of titleCards) {
       const day = c.dataset.titlesDay, id = day + "-titles", v = saved[id] || {}, picks = v.picks || {};
