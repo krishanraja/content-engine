@@ -61,7 +61,8 @@ def compare(rendered, golden_path, lock) -> dict:
         array = np.asarray(image, dtype=float).copy()
         zone = lock.get('zones', {}).get('caption') if thresholds.get('keyframe_mask_caption') else None
         if zone:
-            sx, sy = array.shape[1] / 1080, array.shape[0] / 1920
+            canvas = lock.get('canvas') or {'w': 1080, 'h': 1920}
+            sx, sy = array.shape[1] / canvas['w'], array.shape[0] / canvas['h']
             array[int(zone['y'] * sy):int((zone['y'] + zone['h']) * sy), int(zone['x'] * sx):int((zone['x'] + zone['w']) * sx)] = 128
         arrays.append(array)
     score = ssim(arrays[0], arrays[1])

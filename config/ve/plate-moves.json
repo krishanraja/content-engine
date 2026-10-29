@@ -1,0 +1,34 @@
+{
+  "schema": "ve-plate-moves/1",
+  "about": "The named moves a plate brief may give a still. Drawn from config/ve/brand-tokens.json motion (slide, drop, slap; nothing moves for its own sake; ambient drift 1.5%) and config/ve/tools.json (Runway and Higgsfield: short motion of an approved still only, never cinematic, never type, numbers, logos or a mouth). An engine move costs nothing; a generated move needs Krish's yes per generation and is logged with ve ledger.",
+  "moves": {
+    "still_drift": {
+      "what": "the approved still holds with the house ambient drift (1.5%)",
+      "made_by": "engine",
+      "spend": "none",
+      "max_seconds": null
+    },
+    "slide": {
+      "what": "the still slides in on the beat's first event with the slide token (12 frames), then drifts",
+      "made_by": "engine",
+      "spend": "none",
+      "max_seconds": null
+    },
+    "parallax": {
+      "what": "the still is separated into two or three layers that drift at different rates",
+      "made_by": "Canva separate-image-layers, then the engine",
+      "spend": "none beyond the Canva plan",
+      "max_seconds": null
+    },
+    "push_in": {
+      "what": "one slow push toward the subject of an approved still, one shot",
+      "made_by": "Runway or Higgsfield from the approved still",
+      "spend": "Krish's yes per generation; ve ledger <piece> add credits <n>",
+      "max_seconds": 5
+    }
+  },
+  "default": {
+    "rule": "hook and payoff beats of 5 s or less take push_in; every other plate takes still_drift. A brief may name another move by beat.",
+    "push_in_roles": ["hook", "payoff"]
+  }
+}
