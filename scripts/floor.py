@@ -170,7 +170,8 @@ MEASURED = {'duration', 'duration_s', 'length', 'length_s', 'seconds', 'runtime'
 BAR_HINT = ('Making a video? The bar comes first: python3 scripts/floor.py --format short_video (or long_video) prints '
             'its floor, its aims from the cuts Krish named and what is under test; config/reference-cuts.json names its '
             'page.')
-# Where each ruling Krish gave lands in the printed bar: a never of the floor, an aim, or a choice under test.
+# Where each ruling Krish gave lands in the printed bar: a never of the floor, an aim, or a choice under test. --check
+# holds each ruling's layer to where it bites: a floor ruling is cited by a never, an under_test one by a choice.
 LAYERS = ('floor', 'aim', 'under_test')
 
 
@@ -317,6 +318,22 @@ def bar_problems(bar, page):
             problems.append(f'ruling {item.get("n")}: only a ruled answer bites in production')
         if item.get('quote') and item['quote'] not in str(item.get('answer')):
             problems.append(f'ruling {item.get("n")}: its quote is not his exact words from the answer')
+    # A ruling's layer says where it bites, and the floor and what is under test agree with it.
+    layer_of = {item.get('n'): item.get('layer') for item in items}
+    cited = {'floor': {never.get('ruling') for never in bar['floor'].get('nevers') or [] if never.get('ruling')},
+             'under_test': {c.get('ruling') for c in bar['under_test'].get('choices') or [] if c.get('ruling')}}
+    for item in items:
+        layer = item.get('layer')
+        if layer is not None and layer not in LAYERS:
+            problems.append(f'ruling {item.get("n")}: layer must be one of {", ".join(LAYERS)}')
+        elif layer in cited and item.get('n') not in cited[layer]:
+            problems.append(f'ruling {item.get("n")}: its layer is {layer}, but no '
+                            + ('never of the floor' if layer == 'floor' else 'choice under test') + ' cites it')
+    for layer, numbers in cited.items():
+        for n in sorted(numbers, key=str):
+            if layer_of.get(n) != layer:
+                problems.append(f'ruling {n}: cited by the {"floor" if layer == "floor" else "choices under test"}, '
+                                f'so its layer is {layer}, not {layer_of.get(n)}')
     # His words named the cuts; the qualities are the engine's reading of them until he approves their wording.
     if bar['standing'] not in STANDINGS:
         problems.append(f'standing must be one of {", ".join(STANDINGS)}')
@@ -483,13 +500,13 @@ def bar_lines(bar):
     lines = ['The bar: how every video should look, sound and feel, held in three layers.',
              f'  {t["by"]}, {t["on"]}, on how he wants taste held:',
              para(quote(t['words']), indent='    ')]
-    lines.append('Floor: the only things a check may refuse. Each is his words and the gate that already holds it.')
+    lines.append('Floor: the only refusals this bar adds; existing gates and approved standards refuse as they do.')
     for never in bar['floor'].get('nevers') or []:
         said = ' And: '.join(quote(w) for w in never.get('words') or [])
         text = f'- {never["title"]}. {never["never"]}' + (f' In his words ({never["on"]}): {said}' if said else '')
         lines.append(para(f'{text} Held by: {never["held_by"]}.', then='    '))
-    lines.append('Aims: what great looks like. Aim at them and compare against them; never a checklist, and no check '
-                 'refuses on them.')
+    lines.append('Aims: what great looks like, to aim at and compare against; never a checklist, and no check refuses on '
+                 'them.')
     lines += [f'  {g["by"]}, {g["on"]}, on how every video should be made:', textwrap.indent(f'"{g["words"]}"', '    ')]
     for item in items:
         if item['status'] == 'ruled' and item.get('production') and item.get('layer', 'aim') == 'aim':
@@ -503,24 +520,22 @@ def bar_lines(bar):
     lines.append(para(f'Standing: {bar["standing"]}. {bar.get("standing_note", "")}'))
     lines.append(para(("The engine's reading of those cuts, a draft: " if draft else '') + bar['principle']))
     names = '; '.join(q['name'].split(':')[0] for q in bar['qualities'])
-    lines.append(para(f'The qualities ({bar["doc"]} has each one: what great looks like, what does not fly and the '
-                      f'moments to compare beside): {names}.'))
-    lines.append('  The references, each watched whole, in motion, at full size, with sound:')
+    lines.append(para(f'The qualities, each on {bar["doc"]}: {names}.'))
+    # Which file each reference is, how it was confirmed and what the studies measured live in the page and the file;
+    # the printout names them and warns only when a reference's identity is not confirmed.
+    labels = ', '.join(ref['label'] for ref in bar['references'])
+    lines.append(para(f'The references ({labels}) are named in config/reference-cuts.json; what the studies measured '
+                      'there is context, never targets.'))
     for ref in bar['references']:
-        served = ref['served_from']
-        line = (f'- {ref["label"]}: {ref["published_on"]} {ref["series"]} ({FAMILIES[ref["format_family"]]}), '
-                f'board week {served["board_week"]}, asset {served["asset"]}')
         if ref.get('identity') != 'confirmed':
-            line += ('. Identity unconfirmed: whether this is the latest cut is not established; '
-                     'config/reference-cuts.json says what is')
-        lines.append(para(line, then='    '))
+            lines.append(para(f'- {ref["label"]}. Identity unconfirmed: whether this is the latest cut is not '
+                              'established; config/reference-cuts.json says what is.', then='    '))
     for later in bar.get('not_yet_references', []):
         family = f' ({FAMILIES[later["format_family"]]})' if later.get('format_family') in FAMILIES else ''
         lines.append(para(f'- Not a reference yet: {later["which_file"]}{family} of {later["piece"]}. '
                           f'{later["status"].split(". ")[0].rstrip(".")}.', then='    '))
-    lines.append(para(bar['measured_values'].split('. ')[0].rstrip('.') + '.'))
-    lines.append('Under test: choices he made for now, each the current default, recorded per piece and judged on '
-                 'real engagement; never a refusal.')
+    lines.append(para('Under test: his choices for now, each the current default, recorded per piece and judged on real '
+                      'engagement; never a refusal.', indent='', then='  '))
     record = bar['under_test'].get('record', '').split(',')[0].rsplit('.', 1)[-1]
     for choice in bar['under_test'].get('choices') or []:
         item = by_n.get(choice.get('ruling'))
@@ -734,6 +749,14 @@ def self_test():
     b = json.loads(json.dumps(bar))
     b['qualities'][0]['ruled'] = [2]
     assert any('not a ruled answer' in p for p in bar_problems(b, page))
+    # A ruling's layer agrees with where it bites: a choice under test's ruling is under_test, and a layer is a layer.
+    b = json.loads(json.dumps(bar))
+    b['rulings']['items'][2]['layer'] = 'floor'
+    assert any('no never of the floor cites it' in p for p in bar_problems(b, page)) and \
+        any('so its layer is under_test' in p for p in bar_problems(b, page)), bar_problems(b, page)
+    b = json.loads(json.dumps(bar))
+    b['rulings']['items'][0]['layer'] = 'aspiration'
+    assert any('layer must be one of' in p for p in bar_problems(b, page)), bar_problems(b, page)
     b = json.loads(json.dumps(bar))
     b['rulings']['items'][0]['status'] = 'answered'
     del b['rulings']['items'][0]['production'], b['qualities'][1]['ruled']
@@ -771,7 +794,8 @@ def self_test():
     assert '- The hook first (production_choices.opening): Synthetic: hook. Krish picked: "The hook" (2026-10-29)' in text
     assert 'Opening (2026-10-29)' not in text, 'a choice under test is printed under test, never as an aim'
     assert 'Finish; Sound finish.' in text and 'Identity unconfirmed' in text, text
-    assert 'board week 2026-10-19, asset syn-video' in text and 'Not a reference yet: the long cut' in text, text
+    assert 'The references (Synthetic tall) are named in' in text and 'board week' not in text, text
+    assert 'Not a reference yet: the long cut' in text, text
     assert 'c' * 64 not in text and 'synthetic-drive-id' not in text, 'no hashes or file ids in the printed bar'
     bare = io.StringIO()
     with contextlib.redirect_stdout(bare):

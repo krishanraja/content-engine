@@ -1,6 +1,6 @@
 {
   "schema": "reference-cuts/1",
-  "about": "The bar for video production quality, held in the three layers Krish asked for on 29 October 2026. The floor is the short list of nevers, each with his words and the gate that already holds it: the only things a check may refuse. The aims are what great looks like: the cuts he named, the brand book and his own words, with the fifteen qualities and the reference moments as things to aim at and compare against, never a checklist. Under test are choices he made for now, each the current default, recorded per piece on the making record and judged on real engagement. The page is docs/production/THE_BAR.md; this file names the reference files exactly, says how each one's identity was confirmed, lists the reference moments and each quality's comparison points by timestamp, and carries his words and rulings. The page and this file must agree (python3 scripts/floor.py --check). scripts/floor.py prints the bar for the makers in full_bar_for_makers and a one-line pointer for the other makers in applies_to_makers, before the rejection standards. Only Krish adds a reference, changes the bar or moves its standing from draft to approved.",
+  "about": "The bar for video production quality, held in the three layers Krish asked for on 29 October 2026. The floor is the short list of nevers, each citing his words or the rule it rests on, and the gate that already holds it: the only refusals this bar adds, while existing gates and the rejection floor's approved standards refuse as they do. The aims are what great looks like: the cuts he named, the brand book and his own words, with the fifteen qualities and the reference moments as things to aim at and compare against, never a checklist. Under test are choices he made for now, each the current default, recorded per piece on the making record and judged on real engagement. The page is docs/production/THE_BAR.md; this file names the reference files exactly, says how each one's identity was confirmed, lists the reference moments and each quality's comparison points by timestamp, and carries his words and rulings. The page and this file must agree (python3 scripts/floor.py --check). scripts/floor.py prints the bar for the makers in full_bar_for_makers and a one-line pointer for the other makers in applies_to_makers, before the rejection standards. Only Krish adds a reference, changes the bar or moves its standing from draft to approved.",
   "doc": "docs/production/THE_BAR.md",
   "taste": {
     "by": "Krish",
@@ -22,19 +22,19 @@
     "words": "In general I think:\n- minimal random components and labels\n- good motion design\n- good animation\n- good visuals\n\nKeep it simple but keep it classy and on brand. I'd stick to the brand book for now."
   },
   "standing": "draft",
-  "standing_note": "The floor and the rulings are his words. The aims are the engine's reading of the cuts he named, and he has not approved their wording except where it quotes him. Aim at them; only he approves them.",
-  "principle": "Every frame designed and owned by the brand; pictures and motion that carry the argument and add meaning beyond the words; light, focus, depth and material; the brand as a system; proof that is real, dated and designed; finished sound. Put each new moment beside a reference moment, in motion, at full size, with sound: would it sit beside it without looking cheaper, flatter, slower, busier or less owned? Never copy the references; each piece finds its own objects, devices and big moments.",
+  "standing_note": "Each never cites his words or the rule it rests on, and the rulings are his words. The aims are the engine's reading of the cuts he named, and he has not approved their wording except where it quotes him. Aim at them; only he approves them.",
+  "principle": "Every frame designed and owned by the brand; pictures and motion that add meaning beyond the words; light, depth and material; the brand as a system; real, dated proof; finished sound. Put each new moment beside a reference moment, in motion, at full size, with sound: would it sit beside it without looking cheaper, flatter, slower, busier or less owned? Never copy the references; each piece finds its own objects, devices and big moments.",
   "measured_values": "Context about the references, never targets. Lengths, shapes, cut counts, frame timings, levels, tempo and sampled colours describe these three files only. They are kept out of config/reference-cuts.json on purpose, and floor.py --check refuses a measured field written there (duration, aspect, bpm, lufs and the like); it cannot see a figure inside a sentence, so none is written in one either. The existing gates set the only numeric limits.",
   "production_input": false,
   "applies_to_makers": ["short_video", "long_video", "motion", "captions", "card", "intro_outro", "audio"],
   "full_bar_for_makers": ["short_video", "long_video"],
   "floor": {
-    "about": "The only things a check may refuse on taste: a short list of nevers, each with his words where he gave them and the gate that already holds it. No other refusal, gate, lint pattern or required field is added from feedback on one piece.",
+    "about": "The only refusals this bar adds on taste, while existing gates and the rejection floor's approved standards refuse as they do: a short list of nevers, each citing his words or the rule it rests on, and the gate that already holds it. No other refusal, gate, lint pattern or required field is added from feedback on one piece.",
     "nevers": [
       {
         "id": "his_name",
         "title": "His name in public content",
-        "never": "No public word names Krish, any Krish, or credits him as an author: the publication speaks as \"we\" and the scripts he speaks keep \"I\"; his face appears only in covers, thumbnails and video, never beside a byline.",
+        "never": "No public word names any Krish or credits him as an author: articles speak as \"we\", the scripts he speaks keep \"I\", and his face appears only in covers, thumbnails and video.",
         "by": "Krish",
         "on": "2026-10-28",
         "words": [
@@ -51,14 +51,14 @@
       {
         "id": "empty_labels",
         "title": "Labels that add nothing",
-        "never": "No asterisks, eyebrow text, provenance, AI-generation or illustration notes, and no label that tags something as Krish's (his read, his take, his test).",
+        "never": "No asterisks, eyebrow kickers (BREAKING, JUST IN), notes that something was made by AI or is an illustration, or labels tagging something as Krish's (his read, his take, his test). A label naming a source, date, record or what is on screen is an aim (quality 7).",
         "by": "Krish",
         "on": "2026-10-28",
         "words": [
           "don't add stupid eyebrow text and asterisks and \"generated by AI\" and \"Krish's take\" verbal diahorrea like you tend to. This needs to feel like a world class media channel"
         ],
         "ruling": 2,
-        "held_by": "the copy lint's patterns (config/copy-lint.json)"
+        "held_by": "the copy lint (config/copy-lint.json)"
       },
       {
         "id": "truth_and_rights",
@@ -82,13 +82,13 @@
       {
         "id": "nothing_goes_out_without_him",
         "title": "Nothing goes out without him",
-        "never": "Nothing is published, scheduled or posted without his press, and nothing goes on another venture's channels (never Full Time's or Heartside's).",
+        "never": "Nothing is published, scheduled or posted without his press, and nothing goes on another venture's channels, Full Time's or Heartside's (that part from Growth's plan of 28 October, W5, not his words).",
         "by": "Krish",
         "on": "2026-10-28",
         "words": [
           "Approve each day Monday"
         ],
-        "held_by": "the publish guard (.claude/hooks/publish-guard.mjs); ve has no publish verb; Growth posts only what he approved, inside its own channel allowlist"
+        "held_by": "the publish guard (.claude/hooks/publish-guard.mjs); ve has no publish verb; Growth's channel allowlist"
       }
     ]
   },
@@ -102,7 +102,7 @@
         "ruling": 8,
         "default": "hook_is_intro",
         "options": ["hook_is_intro", "story_card", "logo_intro"],
-        "what": "Friday 23's way: the first frame is the hook in the brand's dress, with the logo and the series tag in the corners from the start; no story card and no logo intro before it; one calm close, held long enough to read."
+        "what": "Friday 23's way: the first frame is the hook in the brand's dress, logo and series tag in the corners from the start; no story card or logo intro; one calm close, held long enough to read."
       },
       {
         "id": "lead_picture",
@@ -110,7 +110,7 @@
         "ruling": 9,
         "default": "chosen_per_piece",
         "options": ["series_picture", "story_object"],
-        "what": "The storyboard he signs shows both as stills, the series picture from the brand book and a story object, with Claude's pick marked; his signature accepts it unless he ticks the other, and no storyboard waits on a tick."
+        "what": "The storyboard he signs shows both as stills, the series picture from the brand book and a story object, Claude's pick marked; his signature accepts it unless he ticks the other."
       },
       {
         "id": "big_moment_sound",
@@ -120,7 +120,7 @@
         "until_approved": "none",
         "approved_set": null,
         "options": ["big_moment_only", "none"],
-        "what": "One sound under a piece's biggest moment, such as a low thud as BANKRUPT slams in, and nothing anywhere else. Nothing is used before he approves a small set by ear, so until approved_set names that set a piece uses none and records none; whether Epidemic Sound covers sound effects is still to be checked, and no spend is assumed."
+        "what": "One sound under a piece's biggest moment, such as a low thud as BANKRUPT slams in, and nothing anywhere else. None until he approves a small set by ear (approved_set); whether Epidemic Sound covers sound effects is unchecked, and no spend is assumed."
       }
     ]
   },
@@ -246,7 +246,7 @@
         "layer": "floor",
         "answer": "I think that sounds better for number 2. I don't mind those labels. It's just the ones that say \"Krish's read\" or \"illustrative\" that are stupid because they add no value to the content.",
         "question": "Friday carries labels such as AT STAKE and CHESKY TO BLOOMBERG. Do these sit against his \"no eyebrow text\" words?",
-        "production": "a label that names a source, a date, a record or what is on screen is fine; one that adds nothing to the content is out (no provenance, process, AI-generation or illustration tag, and no label that tags something as Krish's: his read, his take, his test)",
+        "production": "a label that names a source, a date, a record or what is on screen is fine; one that adds nothing to the content is out (no AI-provenance, process or illustration tag, and no label that tags something as Krish's: his read, his take, his test)",
         "quote": "I don't mind those labels. It's just the ones that say \"Krish's read\" or \"illustrative\" that are stupid because they add no value to the content.",
         "changed": "Qualities 1 and 7 and What is not the bar."
       },

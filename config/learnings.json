@@ -1803,7 +1803,7 @@
       "on": "2026-10-29",
       "krish": "I hope you understand that I would much rather the engine know what kind of thing doesn't fly with me, rather than implement incredibly specific rules everywhere which came from feedback on one piece of content for one specific reason. We're still in the test-and-learn phase of what works and what doesn't, and finding our feet on all of this stuff but there are some clear floor nervos and some clear aspirationals to aim at",
       "why": "Feedback on one piece kept turning into narrow rules that went further than his words and fitted only that piece: one visual idea per piece as a count, one loud transition at most, a sting opening every video. Read as a checklist, rules like these refuse good work and still miss what he means.",
-      "means": "The engine knows the kinds of thing that do not fly, held in three layers. The floor is a short list of nevers, each with his words and a gate that already holds it; only these may be refused. The aims are what great looks like (the cuts he named, the brand book, his general words): aim at them and compare against them, never a checklist. Under test are choices he made for now, each the current default, recorded per piece on the making record (making.py <piece> choices) and judged on real engagement, never a refusal. Anything else he says about one piece is kept as a dated example of the kind of thing that does not fly, with his words where it already lives, and never becomes a new rule, gate, lint pattern or required field without his yes.",
+      "means": "The engine knows the kinds of thing that do not fly, held in three layers. The floor is a short list of nevers, each citing his words or the rule it rests on, and a gate that already holds it; they are the only refusals the bar adds, and existing gates and the rejection floor's approved standards refuse as they do. The aims are what great looks like (the cuts he named, the brand book, his general words): aim at them and compare against them, never a checklist. Under test are choices he made for now, each the current default, recorded per piece on the making record (making.py <piece> choices) and judged on real engagement, never a refusal. Anything else he says about one piece is kept as a dated example of the kind of thing that does not fly, with his words where it already lives, and never becomes a new rule, gate, lint pattern or required field without his yes.",
       "status": "encoded",
       "encoded": [
         {
@@ -1813,7 +1813,7 @@
         },
         {
           "file": "scripts/floor.py",
-          "contains": "Floor: the only things a check may refuse.",
+          "contains": "Floor: the only refusals this bar adds;",
           "how": "Every video maker reads the floor, the aims and what is under test before the brief"
         },
         {
@@ -1845,6 +1845,16 @@
           "file": ".agents/skills/make-piece/SKILL.md",
           "contains": "copy_lint.py --applies-to article_body",
           "how": "The article body is linted for his name before the fact gate"
+        },
+        {
+          "file": "config/copy-lint.json",
+          "contains": "\"id\": \"no_name\"",
+          "how": "The copy lint refuses any Krish on every public surface and the article body"
+        },
+        {
+          "file": "scripts/post-pack/voice_check.py",
+          "contains": "\"we\" in an article, which speaks for the publication",
+          "how": "The voice check counts the article's \"we\" as the person behind it, so an article in the publication's voice can pass"
         }
       ]
     }
