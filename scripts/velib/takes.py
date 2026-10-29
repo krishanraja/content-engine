@@ -6,10 +6,9 @@ each aligner heard, unchanged apart from normalising field names. The media itse
 Word clocks come in as JSON files (a list of words, or {"words": [...]}) in any of these shapes:
   {"word"|"text", "onset_s", "end_s"}  ve and quick-edit
   {"word"|"text", "start", "end"}      faster-whisper word timestamps
-  {"text", "start", "end", "type"}     ElevenLabs Scribe (only type "word" is kept)
-An aligner may also be run here, but only a local, free one: faster-whisper (`faster-whisper:<model>`). The second
-aligner's paid route (ElevenLabs Scribe) needs Krish's yes on its key and spend, so ingest never calls it; its output
-arrives as a file. Two passes of different local models count as two aligners; the same name twice does not.
+An aligner may also be run here, but only a local, free one: faster-whisper (`faster-whisper:<model>`). There is no
+paid aligner (Krish, 2026-10-29: "do not use eleven labs for this"): an ElevenLabs clock is refused. Two passes of different local models count as two aligners; the
+same name twice does not.
 """
 from __future__ import annotations
 
@@ -33,8 +32,6 @@ def normalise(raw) -> list[dict]:
     for item in words:
         if not isinstance(item, dict):
             raise ValueError(f'a word must be an object: {item!r}')
-        if item.get('type') not in (None, 'word'):
-            continue  # Scribe spacing and audio events are not words
         text = item.get('word', item.get('text'))
         onset = item.get('onset_s', item.get('start'))
         end = item.get('end_s', item.get('end'))
@@ -79,7 +76,9 @@ def ingest(ve_dir: Path, piece: str, take: str, media: str | Path, *, clock_a=No
     if not media.is_file():
         raise ValueError(f'{media} is not a file')
     if not aligner_a or not aligner_b or aligner_a == aligner_b:
-        raise ValueError('a take needs two different aligners (for example faster-whisper:small.en and elevenlabs:scribe_v1)')
+        raise ValueError('a take needs two different aligners (for example faster-whisper:small.en and faster-whisper:medium.en)')
+    if any(str(n).lower().startswith('elevenlabs') for n in (aligner_a, aligner_b)):
+        raise ValueError('no paid aligner (Krish, 2026-10-29: "do not use eleven labs for this"): use two local faster-whisper models')
     clocks = {}
     for key, given, name in (('a', clock_a, aligner_a), ('b', clock_b, aligner_b)):
         words = normalise(load_json(given)) if given else align_local(media, name)

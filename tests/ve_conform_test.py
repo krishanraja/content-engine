@@ -48,13 +48,13 @@ class ConformTest(unittest.TestCase):
         a = self.dir / f'{take}.a.json'
         b = self.dir / f'{take}.b.json'
         a.write_text(json.dumps(words_a))
-        b.write_text(json.dumps({'words': [{'text': w['word'], 'start': w['onset_s'], 'end': w['end_s'], 'type': 'word'}
+        b.write_text(json.dumps({'words': [{'text': w['word'], 'start': w['onset_s'], 'end': w['end_s']}
                                            for w in (words_b if words_b is not None else words_a)]}))
         if media is None:
             media = self.dir / f'{take}.bin'
             media.write_bytes(take.encode())
         return takes.ingest(self.ve, 'w27-fixture', take, media, clock_a=a, clock_b=b,
-                            aligner_a='faster-whisper:small.en', aligner_b='elevenlabs:scribe_v1', duration_s=duration)
+                            aligner_a='faster-whisper:small.en', aligner_b='faster-whisper:medium.en', duration_s=duration)
 
     # ingest -----------------------------------------------------------------
     def test_ingest_refuses_one_aligner_and_the_same_aligner_twice(self):
@@ -70,7 +70,7 @@ class ConformTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             gaps.agreed_gaps(words, [])
 
-    def test_ingest_reads_scribe_and_whisper_shapes_and_binds_the_media_hash(self):
+    def test_ingest_reads_both_clock_shapes_and_binds_the_media_hash(self):
         words, duration = clock(SCRIPT)
         path = self.ingest('take-1', words, duration)
         record = takes.load_take(self.ve, 'take-1')
@@ -80,6 +80,16 @@ class ConformTest(unittest.TestCase):
         self.assertIsNone(takes.check_media(record))
         Path(record['media']['path']).write_bytes(b'changed')
         self.assertIn('changed since ingest', takes.check_media(record))
+
+    def test_ingest_refuses_a_paid_aligner(self):
+        words, duration = clock(SCRIPT)
+        a = self.dir / 'pa.json'
+        a.write_text(json.dumps(words))
+        media = self.dir / 'paid.bin'
+        media.write_bytes(b'paid')
+        with self.assertRaises(ValueError):
+            takes.ingest(self.ve, 'w27-fixture', 'take-paid', media, clock_a=a, clock_b=a,
+                         aligner_a='faster-whisper:small.en', aligner_b='elevenlabs:scribe_v1', duration_s=duration)
 
     def test_ingest_refuses_words_after_the_media_ends(self):
         words, duration = clock(SCRIPT)
