@@ -28,6 +28,7 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `docs/plans/`
 - `docs/production/`
 - `docs/prompts/`
+- `docs/proposals/`
 - `docs/research/`
 - `docs/ve/`
 - `docs/walks/`
@@ -47,6 +48,7 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `scripts/post-pack/`
 - `scripts/quick-edit/`
 - `scripts/signals/`
+- `scripts/ve/`
 - `scripts/velib/`
 - `scripts/windowless/`
 - `supabase/migrations/`
@@ -4999,6 +5001,14 @@ The producer supplies work. An independently provisioned reviewer signs evidence
 - `function resolveWindowsDrivePath( value: string | undefined, fallback: string, exists: (path: string) => boolean = exis…`
 - `function studioPaths(): StudioPaths`
 - `function jobPath(jobId: string): string`
+- `interface LocalRoots`
+- `function expandWindowsVars(value: string, env: NodeJS.ProcessEnv = process.env): string`
+- `function readLocalRoots(config: unknown): LocalRoots`
+- `function localRoots(configPath: string = STUDIO_CONFIG): LocalRoots`
+- `function repoPath(repo: string, roots: LocalRoots = localRoots(), env: NodeJS.ProcessEnv = process.env): string`
+- `function worktreePath(repo: string, branch: string, roots: LocalRoots = localRoots(), env: NodeJS.ProcessEnv = process.…`
+- `function engineRuntimeRoot(roots: LocalRoots = localRoots(), env: NodeJS.ProcessEnv = process.env): string`
+- `function pruneTargets(asked: string[], roots: LocalRoots = localRoots(), env: NodeJS.ProcessEnv = process.env): { allow…`
 
 ### `packages/core/src/process.ts`
 

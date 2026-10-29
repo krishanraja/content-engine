@@ -8,6 +8,7 @@ delivery.
     python3 scripts/floor.py --format cover --approved-only
     python3 scripts/floor.py --formats                # the makers, by name
     python3 scripts/floor.py --check                  # the file is whole and well formed (exit 1 if not)
+    python3 scripts/floor.py --blocking               # the only taste standards a check may block on: his eight nevers (JSON)
     python3 scripts/floor.py --self-test              # the reader, on a synthetic floor (CI: tests/engine-gates.test.ts)
 
 The file, config/rejection-floor.json, is written only by the Rejections engine (krishanraja/inspirationhouse,
@@ -56,6 +57,33 @@ def load(path=FLOOR):
         return None
     with path.open(encoding='utf-8') as f:
         return json.load(f)
+
+
+# Only his eight nevers may block on taste (Krish, 2026-10-29: "I would much rather the engine know what kind of thing
+# doesn't fly with me, rather than implement incredibly specific rules everywhere"; "Yes, that's the floor"). Every
+# standard in the rejection floor, approved or draft, is an example of the kind of thing that does not fly: it guides
+# a maker and a reviewer, and no check refuses on it (W2.10). The nevers live in config/reference-cuts.json floor.
+NEVERS = 8
+
+
+def blocking(bar):
+    """[{id, never}]: the blocking taste standards, exactly his eight nevers in his order, or [] when the bar is missing."""
+    nevers = ((bar or {}).get('floor') or {}).get('nevers') or []
+    return [{'id': n.get('id'), 'never': n.get('listed')} for n in nevers]
+
+
+def blocking_problems(bar):
+    """Why the blocking set is not exactly his eight nevers, or []."""
+    found = blocking(bar)
+    ids = [n['id'] for n in found]
+    out = []
+    if len(found) != NEVERS:
+        out.append(f'the floor holds {len(found)} nevers; it holds exactly his {NEVERS}')
+    if len(set(ids)) != len(ids) or not all(isinstance(i, str) and i for i in ids):
+        out.append('each never has its own id')
+    if not all(isinstance(n['never'], str) and n['never'].strip() for n in found):
+        out.append('each never keeps the words he confirmed (listed)')
+    return out
 
 
 def check(doc):
@@ -640,15 +668,17 @@ def show_format(doc, fmt, approved_only, limit, bar=None):
     print(f'Floor version {doc["version"][:12]}, as of {doc["as_of"]}. Never ship beneath it.\n')
     approved = by_weight(entry.get('approved', []), doc)
     drafts = [] if approved_only else by_weight(entry.get('draft', []), doc)
-    print(f'Approved standards ({len(approved)}): these bind every check.')
+    print('Blocking: only his eight nevers, above. Every standard below is the kind of thing that does not fly: it guides '
+          'the work and a reviewer, and no check refuses on it (Krish, 2026-10-29).\n')
+    print(f'Approved standards ({len(approved)}): he approved their wording; follow them.')
     for ref in approved:
         print('\n'.join(standard_lines(ref, doc['standards'][ref])))
     if not approved:
-        print('- None approved yet. Until then, checks bind to his words below.')
+        print('- None approved yet.')
     if not approved_only:
         patterns = sum(1 for ref in drafts if doc['standards'][ref].get('weight') == 'pattern')
-        print(f'\nDraft standards ({len(drafts)}, {patterns} of them patterns): the engine\'s reading of his rejections. '
-              'Follow them; only he approves them. A PATTERN he raised about two or more productions comes first and matters most.')
+        print(f'\nDraft standards ({len(drafts)}, {patterns} of them patterns): the engine\'s reading of his rejections, examples of what '
+              'does not fly. Follow them; they never block, and only he approves them. A PATTERN he raised about two or more productions comes first.')
         for ref in drafts:
             print('\n'.join(standard_lines(ref, doc['standards'][ref])))
         recs = sorted(entry.get('rejected', []), key=lambda ref: doc['records'][ref]['on'], reverse=True)
@@ -940,17 +970,24 @@ def main(argv=None):
     p.add_argument('--approved-only', action='store_true', help='only the standards he approved or reworded')
     p.add_argument('--all', action='store_true', help='every rejection for the maker, not the newest 40')
     p.add_argument('--check', action='store_true', help='check the file is whole; exit 1 if not')
+    p.add_argument('--blocking', action='store_true', help='the only taste standards a check may block on, as JSON: his eight nevers')
     p.add_argument('--self-test', action='store_true', help=argparse.SUPPRESS)
     p.add_argument('--file', type=Path, default=FLOOR, help=argparse.SUPPRESS)
     p.add_argument('--bar-file', type=Path, default=BAR, help=argparse.SUPPRESS)
     a = p.parse_args(argv)
     if a.self_test:
         return self_test()
+    if a.blocking:
+        bar, error = read_bar(a.bar_file)
+        found = [] if error else blocking(bar)
+        problems = [error] if error else blocking_problems(bar)
+        print(json.dumps({'blocking': found, 'problems': problems}, indent=1))
+        return 1 if problems else 0
     doc = load(a.file)
     if a.check:
         problems = [f'rejection floor: {problem}' for problem in (check(doc) if doc is not None else [])]
         bar, error = read_bar(a.bar_file)
-        problems += [f'the bar: {error}'] if error else bar_check(bar)
+        problems += [f'the bar: {error}'] if error else bar_check(bar) + [f'the bar: {x}' for x in blocking_problems(bar)]
         if doc is None:
             print(NO_FLOOR)
         for problem in problems:
