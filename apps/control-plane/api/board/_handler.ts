@@ -5,6 +5,7 @@ import { Readable } from 'node:stream'
 import { pipeline } from 'node:stream/promises'
 import { actor, canonical, collections, digest, hisOnlyRefusal, fileSpec, monday, revision, validBody, validSourceBody, validId, validManifest, views, type BoardFile, type Manifest, type View } from './_contracts.js'
 import { PressError, afterPress, preparePress, type PressDeps } from './_presses.js'
+import { readArchive } from './_archive.js'
 import { MediaQualityError, qualifyBoard } from '../_mediaQuality.js'
 import { mediaQualityEnforced, mediaQualityRollout } from '../../../../packages/core/src/media-rollout.js'
 
@@ -89,6 +90,12 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
       if (!monday(week)) throw new BoardError(400, 'invalid_week')
       const offset = Number(req.query.offset || 0)
       if (!Number.isSafeInteger(offset) || offset < 0) throw new BoardError(400, 'invalid_offset')
+      if (collection === 'archive') {
+        // The Archive (_archive.ts): every published piece and his scores, read-only.
+        if (method !== 'GET' || id) throw new BoardError(400, 'read_only_view')
+        const archive = await readArchive(db).catch(() => { throw new BoardError(503, 'board_store_unavailable') })
+        return res.status(200).json({ ok: true, week, collection, ...archive })
+      }
       if (collection && Object.hasOwn(views, collection)) {
         // A read-only view of his day decisions in picks (views in _contracts.ts): listed, never written.
         if (method !== 'GET' || id) throw new BoardError(400, 'read_only_view')

@@ -39,16 +39,22 @@ await pg.exec(await readFile(new URL('../../supabase/migrations/20261019120743_p
 const rejections=await readFile(new URL('../../supabase/migrations/20261116090000_rejections.sql', import.meta.url), 'utf8')
 await pg.exec(rejections.slice(rejections.indexOf('create table public.taste_rejection_inbox ('), rejections.indexOf('create table public.taste_floor_standards (')))
 // The piece's row as the making route reads and writes it: its making record in meta, guarded on updated_at.
-await pg.exec(`create table public.content_ideas (id uuid primary key, meta jsonb not null default '{}'::jsonb, updated_at timestamptz not null default now());
+await pg.exec(`create table public.content_ideas (id uuid primary key, meta jsonb not null default '{}'::jsonb, updated_at timestamptz not null default now(),
+  state text not null default 'drafting', idea text, lane_slot text, scheduled_for date, published_at timestamptz, published_url text, transformed_outputs jsonb, buried_at timestamptz);
   grant select, insert, update on public.taste_rejection_inbox, public.content_ideas to service_role;`)
+// His scores exactly as their migration makes them (W2.1), loaded after content_ideas, which they reference.
+await pg.exec((await readFile(new URL('../../supabase/migrations/20261118090000_piece_scores.sql', import.meta.url), 'utf8')).replace(/^begin;$|^commit;$/gm, ''))
 await pg.exec('set role service_role')
 type Row = Record<string, unknown>
 class Query {
   filters: [string, unknown][] = []; sorting = ''; offset = 0; count = 10000; single = false; payload: Row[] | null = null; jsonFilter: [string,unknown] | null = null
-  constructor(readonly table: string) { assert.match(table,/^(board_[a-z]+|content_ideas|taste_rejection_inbox)$/) }
+  constructor(readonly table: string) { assert.match(table,/^(board_[a-z]+|content_ideas|taste_rejection_inbox|piece_scores|piece_scores_current)$/) }
   select(_fields: string) { return this }
   eq(key: string, value: unknown) { this.filters.push([key,value]); return this }
   contains(key: string,value: unknown) { this.jsonFilter=[key,value]; return this }
+  nulls: string[] = []; gtes: [string,unknown][] = []
+  is(key: string,value: null) { assert.equal(value,null); assert.match(key,/^[a-z_][a-z0-9_]*$/); this.nulls.push(key); return this }
+  gte(key: string,value: unknown) { assert.match(key,/^[a-z_][a-z0-9_]*$/); this.gtes.push([key,value]); return this }
   order(key: string, options?: {ascending?:boolean}) { assert.match(key,/^[a-z_][a-z0-9_]*$/); this.sorting=` order by ${key} ${options?.ascending===false?'desc':'asc'}`; return this }
   range(start: number,end: number) { this.offset=start; this.count=end-start+1; return this }
   limit(n: number) { this.count=n; return this }
@@ -70,6 +76,8 @@ class Query {
         if(json)return `${json[1]}->>'${json[2]}'=$${i+1}`
         assert.match(k,/^[a-z_][a-z0-9_]*$/); return `${k}=$${i+1}` })
       if(this.jsonFilter){params.push(JSON.stringify(this.jsonFilter[1]));where.push(`${this.jsonFilter[0]} @> $${params.length}::jsonb`)}
+      for(const k of this.nulls)where.push(`${k} is null`)
+      for(const [k,v] of this.gtes){params.push(v);where.push(`${k}>=$${params.length}`)}
       const result=await pg.query(`select * from ${this.table}${where.length?' where '+where.join(' and '):''}${this.sorting} limit ${this.count} offset ${this.offset}`,params)
       return {data:this.single?result.rows[0]||null:result.rows,error:null}
     } catch(error) {return {data:null,error}}
@@ -223,6 +231,39 @@ try{
     }
     assert.deepEqual((await get(presses+'/titles')).documents.map((d:Row)=>d.id),['mon-titles'])
     await put(presses+'/approvals/mon-scripts',{body:approval,revision:2},400,krish)
+    // His Scores press (W2.1): only his cookie writes it, each save files one piece_scores row against the table's own
+    // checks, the same marks saved again file nothing twice, a new score is a new row (history kept), and only his
+    // scores count in piece_scores_current. A model's guess is stored labelled and never counts.
+    const score={kind:'scores',piece_id:piece,narrative:8,production:6,basis:'hindsight',note:'The hook landed; the cut dragged.'}
+    await put(presses+'/picks/score-'+piece,{body:score,revision:0},403)
+    await put(presses+'/picks/score-'+piece,{body:{...score,narrative:11},revision:0},400,krish)
+    await put(presses+'/picks/score-'+piece,{body:{...score,piece_id:'22222222-2222-4333-8444-555555555555'},revision:0},400,krish)
+    const first=await put(presses+'/picks/score-'+piece,{body:score,revision:0},200,krish)
+    assert.equal(first.scores,'filed')
+    const again=await put(presses+'/picks/score-'+piece,{body:score,revision:first.revision},200,krish)
+    assert.equal(again.scores,'filed')
+    assert.equal((await put(presses+'/picks/score-'+piece,{body:{...score,production:7,note:null},revision:again.revision},200,krish)).scores,'filed')
+    const rows=(await pg.query('select narrative, production, basis, scored_by, counts, note, said_where from piece_scores order by id')).rows as Row[]
+    assert.equal(rows.length,2,'the same score saved again files nothing twice; a changed one is a new row')
+    assert.deepEqual(rows[0],{narrative:8,production:6,basis:'hindsight',scored_by:'krish',counts:true,note:'The hook landed; the cut dragged.',said_where:`publish board, 2026-11-09 picks/score-${piece}`})
+    await pg.query("insert into piece_scores (piece_id,narrative,production,basis,scored_by,said_where,client_report_id) values ($1,10,10,'hindsight','model:guess','test',$2)",[piece,'d'.repeat(64)])
+    const current=(await pg.query('select narrative, production, note from piece_scores_current where piece_id=$1',[piece])).rows as Row[]
+    assert.deepEqual(current,[{narrative:8,production:7,note:null}],'his latest score counts; the model guess never does')
+    // The Archive reads every published piece with his current scores, newest first; a model guess never shows.
+    await pg.query(`update content_ideas set state='published', idea='The idea', lane_slot='follow_the_money', published_at='2026-11-09T12:00:00Z',
+      published_url='https://example.com/p/one', meta=meta || '{"making":{"channels":{"youtube":{"url":"https://example.com/v/one"}}}}'::jsonb where id=$1`,[piece])
+    const archive=await get(presses+'/archive')
+    assert.equal(archive.scores,'live')
+    assert.deepEqual(archive.rows,[{piece_id:piece,date:'2026-11-09',series:'follow_the_money',title:'The idea',
+      links:[{label:'Substack',url:'https://example.com/p/one'},{label:'YouTube',url:'https://example.com/v/one'}],
+      scores:{hindsight:{narrative:8,production:7,note:null,scored_at:(archive.rows[0].scores.hindsight||{}).scored_at}}}])
+    await put(presses+'/archive/x',{body:{},revision:0},400,krish)
+    // The engine's role has no update or delete, and even the owner cannot change or drop a score.
+    await assert.rejects(pg.query('update piece_scores set narrative=1'),/permission denied/)
+    await pg.exec('reset role')
+    await assert.rejects(pg.query('update piece_scores set narrative=1'),/kept as he gave it/)
+    await assert.rejects(pg.query('delete from piece_scores'),/kept as he gave it/)
+    await pg.exec('set role service_role')
   }
   await put(week+'/comments/orphan',{body:{thread_id:'absent',anchor:'mon-article',text:'Wrong'},revision:0},400)
   for(let n=0;n<23;n++)await put(week+'/comments/page-'+String(n).padStart(2,'0'),{body:{thread_id:'page-'+String(n).padStart(2,'0'),anchor:'board-root',text:'Pagination '+n},revision:0})
