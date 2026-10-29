@@ -42,7 +42,6 @@ const TP_ID = /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/
 export const PRESS_USES = ['wider_piece_context', 'track_over_time', 'next_week', 'not_for_us'] as const
 // The off days (Krish, 2026-10-28: "I'm happy to plan the Tuesday, Thursday, Saturday, and Sunday content within the
 // Sunday ideas session if you give me a few options to approve as you do the Mon/wed/fri"): queue/off-<day>-<option>.
-export const OFF_DAYS = ['tue', 'thu', 'sat', 'sun'] as const
 export const OFFDAY_ID = /^off-(tue|thu|sat|sun)-[a-zA-Z0-9][a-zA-Z0-9_.:-]{0,59}$/
 // His decisions on a day's tab, stored in picks beside the day's pick: <day>-scripts (Approve scripts), <day>-titles
 // (Titles), <day>-publish (Approve for publish) and <day>-reject-<asset> (Reject asset).
