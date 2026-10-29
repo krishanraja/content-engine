@@ -6,7 +6,9 @@ weds the same treatment as friday"); the words signed 2026-10-27: "yes to all th
 ## In Teleprompter now
 
 Folder "Wed 28 Oct under.the.hood - Claude Duet": "Wed 28 Oct - 5-minute - Claude Duet" (about 5:30) and "Wed 28 Oct -
-90-second - Claude Duet" (about 1:18), updated in place on 27 Oct with the new close.
+90-second - Claude Duet" (about 1:18), updated in place on 27 Oct with the new close, and again on 29 Oct with the v2 scripts from Krish's own
+run-through (`v2-script.md`, `v2-script-90s.md`, outside lines in `v2-script-facts.md`; Krish, 2026-10-29: "yes, send
+the fixed words"). Recorded on the piece: story check passed, read-back by his words, Teleprompter hashes.
 
 ## Where it lands
 
