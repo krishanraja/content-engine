@@ -10,7 +10,15 @@
 //   2. by title: the post's title equals, letter for letter once spacing,
 //      case and punctuation are set aside, the piece's idea, its packaged
 //      Substack title (transformed_outputs.youtube_package.substack_title),
-//      or the headline its pack carried (meta.making.pack.headline).
+//      or the headline its pack carried (meta.making.pack.headline);
+//   3. by schedule (W2.1, 29 October 2026): an article whose title Krish
+//      changed in Substack matches the one piece that was made (it has a
+//      making record), is not published yet, and was due on the post's day
+//      or up to three days before it. The record of 16, 21, 23 and 26 October
+//      fell behind because every one of those posts went out under a new
+//      title and no session answered the question each raised, so a renamed
+//      post now matches its piece by when it was due, never by guesswork:
+//      two such pieces are ambiguous and write nothing.
 //
 // One match writes; two are ambiguous and write nothing; none is reported.
 // A title Krish changed in Substack at the last minute matches nothing, and
@@ -26,6 +34,8 @@ export const PUBLICATION_ARCHIVE = 'https://home.makeyourmindup.ai/api/v1/archiv
 export const WATCH_FROM = '2026-10-05T00:00:00Z'
 /** An unmatched post becomes a board question only while it is fresh. */
 export const ASK_WITHIN_HOURS = 72
+/** A renamed article matches the made piece that was due on its day or up to this many days before it. */
+export const SCHEDULE_DAYS = 3
 
 export interface Post { id: number; title: string; url: string; posted_at: string; type: string }
 export interface Candidate {
@@ -35,6 +45,8 @@ export interface Candidate {
   published_url: string | null
   meta: Record<string, any> | null
   transformed_outputs: Record<string, any> | null
+  /** The day it was due (YYYY-MM-DD), for a match by schedule. */
+  scheduled_for?: string | null
 }
 
 export function normTitle(s: string | null | undefined): string {
@@ -66,19 +78,34 @@ function addressesOf(c: Candidate): string[] {
   return [c.published_url, c.meta?.making?.channels?.substack?.url].filter((u): u is string => typeof u === 'string' && u.length > 0)
 }
 
-export type Match = { kind: 'one'; piece: Candidate; by: 'address' | 'title' } | { kind: 'none' } | { kind: 'ambiguous'; ids: string[] }
+export type Match = { kind: 'one'; piece: Candidate; by: 'address' | 'title' | 'schedule' } | { kind: 'none' } | { kind: 'ambiguous'; ids: string[] }
+
+/** Whether a made, unpublished piece was due on the post's day or up to SCHEDULE_DAYS before it. */
+function dueFor(post: Post, c: Candidate): boolean {
+  const due = typeof c.scheduled_for === 'string' ? Date.parse(`${c.scheduled_for.slice(0, 10)}T00:00:00Z`) : NaN
+  const day = Date.parse(`${post.posted_at.slice(0, 10)}T00:00:00Z`)
+  if (Number.isNaN(due) || Number.isNaN(day) || c.state === 'published' || !c.meta?.making) return false
+  const days = (day - due) / 86_400_000
+  return days >= 0 && days <= SCHEDULE_DAYS
+}
 
 export function matchPost(post: Post, pieces: readonly Candidate[]): Match {
   const byAddress = pieces.filter(c => addressesOf(c).includes(post.url))
   if (byAddress.length === 1) return { kind: 'one', piece: byAddress[0], by: 'address' }
   if (byAddress.length > 1) return { kind: 'ambiguous', ids: byAddress.map(c => c.id) }
-  // A video post (type "podcast") goes out under its own title; it matches
-  // only by address, never by a title that happens to resemble the article's.
-  if (post.type !== 'newsletter') return { kind: 'none' }
-  const t = normTitle(post.title)
-  const byTitle = pieces.filter(c => titlesOf(c).includes(t))
-  if (byTitle.length === 1) return { kind: 'one', piece: byTitle[0], by: 'title' }
-  if (byTitle.length > 1) return { kind: 'ambiguous', ids: byTitle.map(c => c.id) }
+  // A video post (type "podcast") goes out under its own title; it never
+  // matches by a title that happens to resemble the article's. A video-only
+  // piece (no article) still matches by schedule below, and a video that
+  // goes out beside its article finds that piece published already.
+  if (post.type === 'newsletter') {
+    const t = normTitle(post.title)
+    const byTitle = pieces.filter(c => titlesOf(c).includes(t))
+    if (byTitle.length === 1) return { kind: 'one', piece: byTitle[0], by: 'title' }
+    if (byTitle.length > 1) return { kind: 'ambiguous', ids: byTitle.map(c => c.id) }
+  }
+  const bySchedule = pieces.filter(c => dueFor(post, c))
+  if (bySchedule.length === 1) return { kind: 'one', piece: bySchedule[0], by: 'schedule' }
+  if (bySchedule.length > 1) return { kind: 'ambiguous', ids: bySchedule.map(c => c.id) }
   return { kind: 'none' }
 }
 
