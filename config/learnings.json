@@ -828,13 +828,18 @@
       "on": "2026-10-19",
       "krish": "I am deleting the publish board Claude schedules from both accounts FYI, scrub them from everywhere. We are not ready for this yet",
       "why": "The scheduled board-videos task ran on its own on both accounts while the board moved to content.krishraja.com; he wants board updates to come only from sessions he starts.",
-      "means": "No session creates or relies on a scheduled task that builds, updates or publishes a publish board, and no current document names one, until he says he is ready.",
+      "means": "No session creates or relies on a scheduled task that builds, updates or publishes a publish board, and no current document names one, until he says he is ready. Amended 2026-10-28, when he said so for two boards: \"on a Sunday, Claude Code proactively brings me ideas\"; \"an overnight Codex run will actually produce me the final assets and the final publish board first thing Monday morning\". Exactly those two routines (the Sunday ideas board and the Monday final board) may build a board; every other board update still comes from a session he started, and any other scheduled job writes records only.",
       "status": "encoded",
       "encoded": [
         {
           "file": "AGENTS.md",
           "contains": "No session creates a scheduled task (a routine, a trigger, a cron) that builds, updates or publishes a publish board",
           "how": "the standing rule every agent reads"
+        },
+        {
+          "file": "AGENTS.md",
+          "contains": "Exactly two scheduled routines may build a publish board: the Sunday ideas board and the Monday final board",
+          "how": "the 28 Oct exception, named so it cannot widen unseen"
         },
         {
           "file": "WORKBENCH.md",
