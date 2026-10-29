@@ -451,7 +451,8 @@ signed lock's His close; with no lock, the question goes on the day's tab.
    put them in `signed` with `creative_direction.py hash` of each script;
    his signature accepts your pick unless he ticks the other, and nothing
    waits on a tick. Then record the choices under test on the piece:
-   `making.py <uuid> choices creative-direction.json`. Production renders only from that signed file (kit.py
+   `making.py <uuid> choices creative-direction.json`.
+   Production renders only from that signed file (kit.py
    and make.py refuse anything else); a change to a script after he signs
    means a new storyboard.
 
