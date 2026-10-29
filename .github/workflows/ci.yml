@@ -115,6 +115,7 @@ jobs:
         run: |
           python tests/board_web_test.py
           node tests/board-db.mjs "$PWD/node_modules/@electric-sql/pglite/dist/index.js"
+          node tests/inspiration-said-cards.mjs "$PWD/node_modules/@electric-sql/pglite/dist/index.js"
           python tests/board_fixture.py "$RUNNER_TEMP/board-fixture.html"
           node --import tsx tests/integration/board-runtime.ts "$PWD/node_modules/@electric-sql/pglite/dist/index.js" "$PWD/node_modules/playwright/index.mjs" "$RUNNER_TEMP/board-fixture.html" "$RUNNER_TEMP/board-screenshots"
 
