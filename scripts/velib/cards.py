@@ -11,7 +11,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from .common import ROOT, load_json, write_json
+from .common import ROOT, card_worktree, load_json, native_path, write_json
 
 MODEL = 'gpt-6.1-sol'   # measured cheapest per allowance point (27.0M tokens per 1%); pin, never inherit astra/high
 EFFORT = 'medium'
@@ -183,9 +183,20 @@ def limit_problems(meta: dict, usage: dict | None) -> list[str]:
 
 
 def ensure_worktree(cwd: Path, card_id: str) -> None:
-    """A card runs in its own worktree cut from origin/main, with node_modules junctioned from the main checkout."""
+    """A card runs in its own worktree cut from origin/main, with node_modules junctioned from the main checkout.
+    A new worktree is made only where the local layout puts it (velib.common.card_worktree: config/studio.json
+    local_roots.worktrees, W2.11): a card still naming a typed path is refused and rewritten with ve card. One that
+    already exists is used where it is."""
     if cwd.exists():
         return
+    try:
+        expected = native_path(card_worktree(card_id))
+    except ValueError as error:
+        sys.exit(f've dispatch: {error}')
+    if os.path.normcase(os.path.abspath(cwd)) != os.path.normcase(os.path.abspath(expected)):
+        sys.exit(f've dispatch: card {card_id} names cwd {cwd}, but config/studio.json local_roots.worktrees puts its '
+                 f'worktree at {expected}; write the card again with ve card (it fills cwd from the config)')
+    cwd.parent.mkdir(parents=True, exist_ok=True)
     subprocess.run(['git', 'fetch', '-q', 'origin', 'main'], cwd=ROOT, check=True)
     subprocess.run(['git', 'worktree', 'add', '-q', '-b', f've-card/{card_id}', str(cwd), 'origin/main'], cwd=ROOT, check=True)
     modules = ROOT / 'node_modules'

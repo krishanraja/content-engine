@@ -987,6 +987,9 @@ def starter_config(post, cut, recording, out, cues, post_path, allowed=None):
         'piece_id': post.get('piece_id'),
         'tiktok': True,
         'music': 'auto',
+        # The 16:9 long cut's bed lifts at each chapter (Wave 2, W2.5): the continuous episode bed, low under his voice,
+        # rising at the chapter cards or a little at each spoken chapter turn (make.py resolve_music). Levels wait on his ear.
+        **({'music_mode': 'episode'} if shape == '16x9' else {}),
         'script': f'{cut}-script.txt',
         'remove': [],
         'replacements': [],

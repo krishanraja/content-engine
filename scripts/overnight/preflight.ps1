@@ -201,13 +201,18 @@ function ConvertFrom-ShellPath([string]$Path) {
 
 function Get-PinnedTools {
   # The pinned ffmpeg and Tesseract folders, read from scripts\ve-env.sh, the one place they are written, with
-  # VE_TOOLCHAIN in place of its default as the script itself does.
+  # VE_TOOLCHAIN in place of its default as the script itself does. The default is config\studio.json
+  # local_roots.toolchain, else the toolchain folder beside this checkout, as scripts\velib\common.py local_root
+  # resolves it for ve-env.sh (one local layout, W2.11).
   $text = [System.IO.File]::ReadAllText((Join-Path $RepoRoot 'scripts\ve-env.sh'))
-  $default = [regex]::Match($text, 'TOOLCHAIN="\$\{VE_TOOLCHAIN:-([^}"]+)\}"')
+  $default = [regex]::Match($text, 'TOOLCHAIN="\$\{VE_TOOLCHAIN:-\$_ve_toolchain\}"')
   $path = [regex]::Match($text, 'export PATH="([^"]+)"')
   if (-not $default.Success -or -not $path.Success) { throw 'scripts\ve-env.sh no longer names the toolchain and PATH the way this reads them' }
   $toolchain = Get-Setting 'VE_TOOLCHAIN'
-  if (-not $toolchain) { $toolchain = $default.Groups[1].Value }
+  if (-not $toolchain) {
+    $roots = ([System.IO.File]::ReadAllText((Join-Path $RepoRoot 'config\studio.json')) | ConvertFrom-Json).local_roots
+    $toolchain = if ($roots -and $roots.toolchain) { [string]$roots.toolchain } else { Join-Path (Split-Path -Parent $RepoRoot) 'toolchain' }
+  }
   $found = @{ ffmpeg = $null; build = $null; tesseract = $null }
   foreach ($entry in $path.Groups[1].Value.Split(':')) {
     if (-not $entry -or $entry -eq '$PATH') { continue }
