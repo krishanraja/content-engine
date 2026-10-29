@@ -29,7 +29,7 @@ import { ASK_WITHIN_HOURS, PUBLICATION_ARCHIVE, WATCH_FROM, matchPost, readPosts
 // 2026-10-11: "I am happy to Clear(complete)/Bump/Purge things off my lists
 // as I go but the rest should be automatically done."
 
-const PIECE_COLUMNS = 'id, idea, state, published_url, published_at, buried_at, meta, transformed_outputs, updated_at'
+const PIECE_COLUMNS = 'id, idea, state, published_url, published_at, buried_at, meta, transformed_outputs, updated_at, scheduled_for'
 
 async function handler(req: VercelRequest, res: VercelResponse) {
   // The cron's GET carries the cron secret; a session's POST, the engine key (or the dashboard's cookie).
