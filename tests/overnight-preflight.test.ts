@@ -101,7 +101,13 @@ describe('the overnight preflight on a home computer', () => {
     const pinned = fn(preflight, 'Get-PinnedTools')
     const pattern = (name: string) => new RegExp(/\[regex\]::Match\(\$text, '([^']+)'\)/g.exec(pinned.slice(pinned.indexOf(`$${name} = `)))![1]!)
     const env = read('scripts/ve-env.sh')
-    expect(pattern('default').exec(env)?.[1]).toBe('/c/Users/krish/dev/mindmake/toolchain')
+    // The toolchain default is config/studio.json local_roots.toolchain, else the toolchain folder beside the
+    // checkout; both read it the same way (one local layout, W2.11) and neither types a home-computer path.
+    expect(pattern('default').test(env)).toBe(true)
+    expect(env).toContain('common.py" local-root toolchain --shell')
+    expect(pinned).toContain('.local_roots')
+    expect(pinned).toContain("Join-Path (Split-Path -Parent $RepoRoot) 'toolchain'")
+    expect(read('scripts/velib/common.py')).toContain("'toolchain': parent + '\\\\toolchain'")
     const path = pattern('path').exec(env)?.[1]
     expect(path).toBeTruthy()
     const build = /ffmpeg-(n[0-9.]+-[0-9]+-g[0-9a-f]+)/.exec(path!)?.[1]

@@ -104,6 +104,8 @@ export type LibraryPathRefusal =
   | 'path_no_file'
   | 'path_post_folder_invalid'
   | 'path_post_section_invalid'
+  | 'path_test_folder'
+  | 'path_render_outside_video'
   | 'path_type_not_allowed'
 
 export interface LibraryPath {
@@ -131,6 +133,9 @@ function refuse(refusal: LibraryPathRefusal): LibraryPathCheck {
 
 /** `2026-10-05 Mon follow.the.money - Who gets paid` or
  *  `2026-10-05 Launch - Hello`: a real date, and the day it fell on. */
+const TEST_SUBJECT = /\b(?:canary|smoke[- ]test|dry[- ]run|fixture)\b|^(?:test|tests|testing)\b|\((?:test|canary)\)/i
+const RENDERS = ['mp4', 'mov', 'webm']
+
 export function isLibraryPostFolder(name: string): boolean {
   const match = POST_FOLDER.exec(name)
   if (!match) return false
@@ -164,11 +169,16 @@ export function checkLibraryPath(value: unknown): LibraryPathCheck {
   if (top === LIBRARY_POSTS) {
     if (parts.length < 3) return refuse('path_no_file')
     if (!isLibraryPostFolder(parts[1]!)) return refuse('path_post_folder_invalid')
+    // W3.5: a canary or test post never reaches the real library, and a rendered video lives only in 3 Video.
+    if (TEST_SUBJECT.test(parts[1]!.split(' - ').slice(1).join(' - '))) return refuse('path_test_folder')
     const inside = parts.slice(2)
     const placed = inside.length === 1
       ? inside[0] === LIBRARY_POST_README
       : (LIBRARY_POST_SECTIONS as readonly string[]).includes(inside[0]!)
     if (!placed) return refuse('path_post_section_invalid')
+    const last = parts[parts.length - 1]!
+    const ext = last.lastIndexOf('.') > 0 ? last.slice(last.lastIndexOf('.') + 1).toLowerCase() : ''
+    if (inside[0] !== '3 Video' && RENDERS.includes(ext)) return refuse('path_render_outside_video')
   } else if (parts.length < 2) {
     return refuse('path_no_file')
   }

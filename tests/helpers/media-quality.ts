@@ -6,7 +6,7 @@ export class MediaFixture {
   readonly proofKey = generateKeyPairSync('ed25519')
   readonly rows: Record<string, any>[] = []
   readonly objects = new Map<string, Buffer>()
-  readonly prefix = '3 Posts/2026-10-26 Mon follow.the.money - Fixture/3 Video/'
+  readonly prefix = '3 Posts/2026-10-26 Mon follow.the.money - Who gets paid/3 Video/'
   get keys() { return { final: { public_key: this.key.publicKey.export({ type: 'spki', format: 'pem' }).toString(), reviewer_id: 'fixture-final' }, proof: { public_key: this.proofKey.publicKey.export({ type: 'spki', format: 'pem' }).toString(), reviewer_id: 'fixture-proof' } } }
   put(name: string, data: string | Buffer, contentType = 'application/json') {
     const bytes = Buffer.from(data), sha256 = mediaDigest(bytes), path = this.prefix + name

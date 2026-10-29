@@ -1,0 +1,238 @@
+Reference excerpt for the W3.1 device ports, copied verbatim from docs/plans/2026-10-26-monday/video/draw_panels.py lines 1-117 (Monday 26, quick-edit per-piece code). Read it to port the move; never run or copy it.
+
+"""Draw every picture beat of Monday's two cuts as make.py panels, from the signed direction.
+
+The look is "Receipts" (../receipts.md): cream till receipts, the empty Character.AI box
+and real logos on the ink desk; documents are the live captures (capture_sources.py)
+with the proving words sharp and the rest of the page out of focus. Each beat is one
+panel, or one page per word it prints on (make.py "pages"): the 5-minute cut's panels
+are 1314 x 1080 (beside his face), the 90-second cut's 1080 x 1000 (above it).
+Every page's legible words are listed with their role for the visual-clarity
+inventory (panels.json). Run from the repository root after capture_sources.py:
+
+    python docs/plans/2026-10-26-monday/video/draw_panels.py
+"""
+import base64
+import html
+import io
+import json
+import sys
+from pathlib import Path
+
+from PIL import Image, ImageFilter
+
+ROOT = Path(__file__).resolve().parents[4]
+PLAN = Path(__file__).resolve().parents[1]
+WORK = ROOT / '.cache/produce/2026-10-26-b358e788'
+CAPS = WORK / 'captures'
+OUT = WORK / 'panels'
+sys.path.insert(0, str(ROOT / 'scripts/pages'))
+import brand
+
+SIZE = {'16x9': (1314, 1080), '9x16': (1080, 1000)}
+INK, CREAM, MINT, BUTTER = '#0C1512', '#F4EFE4', '#7EF0C0', '#FFD84D'
+
+
+def esc(s):
+    return html.escape(str(s))
+
+
+def uri(data, mime):
+    return f'data:{mime};base64,' + base64.b64encode(data).decode()
+
+
+def logo(name, h, extra='', w=None):
+    """A real logo; with w, fitted inside a w x h box so logos of different shapes read at one size."""
+    size = f'width:{w}px;height:{h}px;object-fit:contain' if w else f'height:{h}px;max-width:100%'
+    return f'<img class="logo" style="{size};{extra}" src="{uri((PLAN / "logos" / name).read_bytes(), "image/svg+xml")}">'
+
+
+def torn(width_px, teeth=26, depth=14):
+    """A clip-path with a torn top edge, for till paper."""
+    pts = []
+    for i in range(teeth + 1):
+        x = 100 * i / teeth
+        pts.append(f'{x:.2f}% {depth if i % 2 else 0}px')
+    return 'polygon(' + ', '.join(pts) + ', 100% 100%, 0% 100%)'
+
+
+# ------------------------------------------------------------------ the objects
+
+def receipt(header, lines, footer, shown, size='m'):
+    """Till paper: a header, priced lines (left, right, total?, sub-lines) and the source footer.
+    Lines past `shown` are not printed yet; the paper keeps its full length so it never jumps."""
+    rows = []
+    for i, (left, right, total, subs) in enumerate(lines):
+        vis = '' if i < shown else ' style="visibility:hidden"'
+        r = f'<b class="{"total" if total else ""}">{esc(right)}</b>' if right else ''
+        rows.append(f'<div class="line"{vis}><span>{esc(left)}</span><i></i>{r}</div>' +
+                    ''.join(f'<div class="sub"{vis}>{esc(s)}</div>' for s in subs))
+    return (f'<div class="receipt {size}" style="clip-path:{torn(0)}"><div class="rh">{esc(header)}</div>'
+            f'<div class="rule"></div>{"".join(rows)}<div class="rule"></div><div class="rf">{esc(footer)}</div></div>')
+
+
+def box(labels, title='CHARACTER.AI', size='m', dim=()):
+    """The firm as a company card: its logo and an "in Chapter 11" tag over what it holds. What has left is a
+    dashed empty slot (the old open-top box was ruled tacky on 28 Oct)."""
+    def chip(l):
+        cls = ' dim' if l in dim else ''
+        cls += ' law' if 'LAWSUIT' in l else ''
+        return f'<span class="chip{cls}">{esc(l)}</span>'
+    chips = ''.join(chip(l) for l in labels) or '<span class="chip dim">&nbsp;</span>' * 3
+    return (f'<div class="co {size}"><div class="cot">{logo("characterai-cream.svg", 54 if size == "m" else 40)}'
+            f'<em>IN CHAPTER 11</em></div><div class="cob">{chips}</div></div>')
+
+
+def spotlight(cap_id, sharp, crop_w, aspect, record, fill=0.62):
+    """The capture cropped round its marked words, every word but the marked ones out of focus."""
+    img = Image.open(CAPS / f'{cap_id}.png').convert('RGB')
+    if 'rects_px' in record:
+        groups = record['rects_px']
+    else:
+        groups = [[[x * 2, y * 2, w * 2, h * 2] for x, y, w, h in g] for g in record['rects_css']]
+    keep = [r for i in sharp for r in groups[i]]
+    every = [r for g in groups for r in g]
+    left, right = min(r[0] for r in every), max(r[0] + r[2] for r in every)
+    top, bottom = min(r[1] for r in every), max(r[1] + r[3] for r in every)
+    cx, cy = (left + right) / 2, (top + bottom) / 2
+    # The marked words fill about three fifths of the width, so they read large on a phone.
+    w = round(min(img.width, max(crop_w, (right - left) / fill, (bottom - top + 160) * aspect)))
+    h = round(w / aspect)
+    x0 = int(max(0, min(img.width - w, cx - w / 2)))
+    y0 = int(max(0, min(img.height - h, cy - h / 2)))
+    crop = img.crop((x0, y0, x0 + w, y0 + h))
+    soft = crop.filter(ImageFilter.GaussianBlur(9))
+    soft = Image.blend(soft, Image.new('RGB', soft.size, (200, 200, 196)), 0.18)
+    for x, y, rw, rh in keep:
+        pad = 10
+        b = (int(x - x0 - pad), int(y - y0 - pad), int(x - x0 + rw + pad), int(y - y0 + rh + pad))
+        region = crop.crop(b)
+        if 'rects_px' in record:
+            # A PDF page carries no mark of its own: lay the mint at 30% behind the words, as on the web pages.
+            region = Image.composite(Image.blend(region, Image.new('RGB', region.size, (126, 240, 192)), 0.30), region,
+                                     region.convert('L').point(lambda v: 255 if v > 160 else 0))
+        soft.paste(region, b[:2])
+    buf = io.BytesIO()
+    soft.save(buf, 'PNG')
+    return uri(buf.getvalue(), 'image/png'), (w, h)
+
+
+
+Reference excerpt for the W3.1 device ports, copied verbatim from docs/plans/2026-10-26-monday/video/draw_panels.py lines 216-330 (Monday 26, quick-edit per-piece code). Read it to port the move; never run or copy it.
+
+def build(records):
+    """{panel id: [(html, [(text, role, adds)])...]} per cut."""
+    W, T = '16x9', '9x16'
+    P = {}
+
+    def add(pid, shape, pages):
+        P[pid] = {'shape': shape, 'pages': pages}
+
+    def txt(*items):
+        return [{'value': v, 'role': r, 'adds': a} for v, r, a in items]
+
+    # ---------------- 5-minute cut (16:9)
+    add('l01', W, [(page(W, logo('characterai-cream.svg', 110, w=520), 'CHARACTER.AI · CHAPTER 11', layout='typeset'),
+                   txt(('CHARACTER.AI · CHAPTER 11', 'identity', 'names the firm and its bankruptcy chapter, which he does not say')))])
+    three = [('google-wordmark.svg', 130), ('characterai-cream.svg', 130), ('disney-script-cream.svg', 150)]
+    def logos3(order):
+        cells = ''.join(f'<div style="width:360px;display:flex;justify-content:center;{"" if n in order else "visibility:hidden"}">{logo(f, h, w=340)}</div>'
+                        for n, (f, h) in enumerate(three))
+        return f'<div class="row" style="gap:20px">{cells}</div>'
+    lab2 = 'TWO BUYERS · ONE COMPANY'
+    t2 = ('TWO BUYERS · ONE COMPANY', 'relationship', 'frames the two buyers of one firm')
+    add('l02', W, [(page(W, logos3({1}), None), txt()),
+                   (page(W, logos3({1, 2}), None), txt()),
+                   (page(W, logos3({0, 1, 2}), lab2), txt(t2))])
+    add('l03', W, [(capture_page(W, 'bw-filing', [0], None, 'BUSINESS WIRE · 12 OCT 2026', records),
+                    txt(('commenced a voluntary Chapter 11 case', 'source', 'the filing announcement in its own words'),
+                        ('BUSINESS WIRE · 12 OCT 2026', 'source', 'where and when it was announced')))])
+    add('l05', W, [(page(W, logo('google-g.svg', 170), 'GOOGLE · 2024', layout='typeset'),
+                    txt(('GOOGLE · 2024', 'identity', 'the first buyer and its year')))])
+    head, _, foot = R1_LONG
+    add('l06', W, [(page(W, receipt1_wide(0), None), txt(('GOOGLE · AUG 2024', 'identity', 'who paid and when'), (foot, 'source', 'the report'))),
+                   (page(W, receipt1_wide(1), None), txt(('GOOGLE · AUG 2024', 'identity', 'who paid and when'), ('USE OF THE TECH $2.7B (REPORTED)', 'quantity', 'the reported price, as a receipt line'), (foot, 'source', 'the report'))),
+                   (page(W, receipt1_wide(2), None), txt(('GOOGLE · AUG 2024', 'identity', 'who paid and when'), ('USE OF THE TECH $2.7B (REPORTED)', 'quantity', 'the reported price'), ('HIRES: THE FOUNDERS + research team', 'relationship', 'the people bought with it'), (foot, 'source', 'the report')))])
+    add('l08', W, [(capture_page(W, 'wired-majority', [0], 'MOST STAFF STAYED', 'WIRED · 19 OCT 2026', records),
+                    txt(('MOST STAFF STAYED', 'relationship', 'the takeaway of the highlighted report'), ('“vast majority”', 'source', 'Wired\'s words'), ('WIRED · 19 OCT 2026', 'source', 'the report')))])
+    add('l09', W, [(page(W, logo('disney-script-cream.svg', 190), 'DISNEY · DEC 2025', layout='typeset'),
+                    txt(('DISNEY · DEC 2025', 'identity', 'the second buyer and when its story starts')))])
+    add('l10', W, [(capture_page(W, 'disney-openai', [0], '$1B · 200+ CHARACTERS', 'DISNEY · DEC 2025', records),
+                    txt(('$1B · 200+ CHARACTERS', 'quantity', 'the two numbers of the deal'), ('$1 billion', 'source', 'Disney\'s release'), ('DISNEY · DEC 2025', 'source', 'the release'))),
+                   (capture_page(W, 'disney-openai', [0, 1], '$1B · 200+ CHARACTERS', 'DISNEY · DEC 2025', records),
+                    txt(('$1B · 200+ CHARACTERS', 'quantity', 'the two numbers of the deal'), ('$1 billion', 'source', 'Disney\'s release'), ('more than 200', 'source', 'Disney\'s release'), ('DISNEY · DEC 2025', 'source', 'the release')))])
+    marks = (f'<div class="row" style="gap:46px">{logo("marvel.svg", 110)}{logo("star-wars-ink.svg", 140)}{logo("disney-script-cream.svg", 120)}</div>')
+    door = f'<div class="door">{logo("openai-symbol-cream.svg", 90)}</div>'
+    add('l11', W, [(page(W, f'<div class="sora open"><div class="tag">SORA</div>{marks}{door}</div>', None), txt()),
+                   (page(W, f'<div class="sora"><div class="tag">SORA</div>{marks}{door}</div>', 'RENTED SPACE'),
+                    txt(('SORA', 'identity', 'whose app the characters were placed in'), ('RENTED SPACE', 'relationship', 'Disney did not own the app')))])
+    add('l12', W, [(capture_page(W, 'sora-shut', [0], None, 'OPENAI · 24 MAR 2026', records),
+                    txt(('shuttering its stand-alone', 'source', 'the report of the shutdown'), ('OPENAI · 24 MAR 2026', 'source', 'who decided and when'))),
+                   (capture_page(W, 'sora-shut', [0], 'SORA SHUT', 'OPENAI · 24 MAR 2026', records),
+                    txt(('SORA SHUT', 'relationship', 'the outcome'), ('shuttering its stand-alone', 'source', 'the report'), ('OPENAI · 24 MAR 2026', 'source', 'who decided and when')))])
+    vhead = 'DISNEY + OPENAI · DEC 2025'
+    def void(stamp, total):
+        st = '<div class="void">VOID</div>' if stamp else ''
+        vis = '' if total else ' style="visibility:hidden"'
+        return (f'<div class="receipt m" style="clip-path:{torn(0)}"><div class="rh">{esc(vhead)}</div><div class="rule"></div>'
+                f'<div style="position:relative;height:240px">{st}</div><div class="rule"></div>'
+                f'<div class="line"{vis}><span>TOTAL</span><i></i><b class="total">$0 CHANGED HANDS</b></div>'
+                f'<div class="rule"></div><div class="rf">REPORTS · MAR 2026</div></div>')
+    add('l13', W, [(page(W, void(False, False), None), txt((vhead, 'identity', 'the deal'), ('REPORTS · MAR 2026', 'source', 'reports'))),
+                   (page(W, void(True, False), None), txt((vhead, 'identity', 'the deal'), ('VOID', 'relationship', 'the deal died'), ('REPORTS · MAR 2026', 'source', 'reports'))),
+                   (page(W, void(True, True), None), txt((vhead, 'identity', 'the deal'), ('VOID', 'relationship', 'the deal died'), ('TOTAL $0 CHANGED HANDS', 'quantity', 'nothing was paid'), ('REPORTS · MAR 2026', 'source', 'reports')))])
+    add('l15', W, [(capture_page(W, 'disney-cto', [0], 'DISNEY\'S FIRST CTO', 'SEPT 2026', records),
+                    txt(('DISNEY\'S FIRST CTO', 'identity', 'the new role'), ('newly created position', 'source', 'Disney\'s release'), ('SEPT 2026', 'source', 'when')))])
+    r2h = 'DISNEY · OCT 2026'
+    add('l16', W, [(page(W, receipt(r2h, R2_LONG_LINES, 'COURT FILINGS VIA GIZMODO', 0), None), txt((r2h, 'identity', 'who is paying and when'), ('COURT FILINGS VIA GIZMODO', 'source', 'the filings'))),
+                   (page(W, receipt(r2h, R2_LONG_LINES, 'COURT FILINGS VIA GIZMODO', 1), None),
+                    txt((r2h, 'identity', 'who is paying and when'), ('66 STAFF ~$60M A YEAR × 3 YEARS', 'quantity', 'the team and its pay'), ('COURT FILINGS VIA GIZMODO', 'source', 'the filings')))])
+    add('l17', W, [(page(W, receipt(r2h, R2_LONG_LINES, 'WIRED · COURT FILINGS', 2), None),
+                    txt((r2h, 'identity', 'who'), ('66 STAFF ~$60M A YEAR × 3 YEARS', 'quantity', 'the team'), ('THE CODE (OPENING BID) $20M', 'quantity', 'the code\'s price'),
+                        ('trust and safety tools age prediction', 'identity', 'what the code is'), ('WIRED · COURT FILINGS', 'source', 'sources')))])
+    add('l19', W, [(capture_page(W, 'bw-date', [0], None, 'BUSINESS WIRE · 12 OCT 2026', records),
+                    txt(('Oct 12, 2026', 'source', 'the dateline'), ('BUSINESS WIRE · 12 OCT 2026', 'source', 'where'))),
+                   (capture_page(W, 'bw-date', [0], 'CHAPTER 11 · 12 OCT', 'BUSINESS WIRE · 12 OCT 2026', records),
+                    txt(('CHAPTER 11 · 12 OCT', 'identity', 'which bankruptcy and when'), ('Oct 12, 2026', 'source', 'the dateline'), ('BUSINESS WIRE · 12 OCT 2026', 'source', 'where')))])
+    cf = 'COURT FILING · CASE 26-11603 · OCT 2026'
+    add('l20', W, [(capture_page(W, 'court-filing', [], 'CASH · LAWSUITS', cf, records),
+                    txt(('CASH · LAWSUITS', 'relationship', 'the two reasons'), (cf, 'source', 'the filing'))),
+                   (capture_page(W, 'court-filing', [0], 'CASH · LAWSUITS', cf, records),
+                    txt(('CASH · LAWSUITS', 'relationship', 'the two reasons'), ('diminishing cash reserve', 'source', 'the filing\'s words'), (cf, 'source', 'the filing'))),
+                   (capture_page(W, 'court-filing', [0, 1], 'CASH · LAWSUITS', cf, records),
+                    txt(('CASH · LAWSUITS', 'relationship', 'the two reasons'), ('diminishing cash reserve', 'source', 'the filing\'s words'), ('litigation and regulatory risks', 'source', 'the filing\'s words'), (cf, 'source', 'the filing')))])
+    def money_map(moved, size='m', label=None):
+        left = box(['THE PEOPLE', 'THE CODE', 'THE LAWSUITS'] if not moved else ['THE LAWSUITS'], size=size)
+        right = (f'<div class="col">{logo("disney-script-cream.svg", 120)}' +
+                 (''.join(f'<span class="chip mv">{p}</span>' for p in ('THE PEOPLE', 'THE CODE')) if moved else
+                  '<span class="chip dim">THE PEOPLE</span><span class="chip dim">THE CODE</span>') + '</div>')
+        arrow = '<div class="arrow"></div>' if moved else '<div style="width:200px"></div>'
+        return f'<div class="row" style="gap:36px">{left}{arrow}{right}</div>'
+    add('l21', W, [(page(W, money_map(False), None, 'COURT FILINGS'),
+                    txt(('IN CHAPTER 11', 'identity', 'its bankruptcy chapter'), ('THE PEOPLE THE CODE THE LAWSUITS', 'identity', 'what sits in the firm'), ('COURT FILINGS', 'source', 'filings'))),
+                   (page(W, money_map(True), 'PEOPLE + CODE → DISNEY', 'COURT FILINGS'),
+                    txt(('IN CHAPTER 11', 'identity', 'its bankruptcy chapter'), ('PEOPLE + CODE → DISNEY', 'relationship', 'what moves'), ('THE LAWSUITS', 'identity', 'what stays'), ('THE PEOPLE THE CODE', 'identity', 'moved'), ('COURT FILINGS', 'source', 'filings')))])
+    def emptybox(labels, label=None, source=None):
+        return page(W, box(['THE APP', 'USERS’ CHATS', 'THE LAWSUITS'], dim=[l for l in ['THE APP', 'USERS’ CHATS', 'THE LAWSUITS'] if l not in labels]), label, source)
+    add('l23', W, [(emptybox([], None, 'COURT FILING · OCT 2026'), txt(('IN CHAPTER 11', 'identity', 'its bankruptcy chapter'), ('COURT FILING · OCT 2026', 'source', 'filing'))),
+                   (emptybox(['THE APP'], None, 'COURT FILING · OCT 2026'), txt(('IN CHAPTER 11', 'identity', 'its bankruptcy chapter'), ('THE APP', 'identity', 'left in the box'), ('COURT FILING · OCT 2026', 'source', 'filing'))),
+                   (emptybox(['THE APP', 'USERS’ CHATS'], 'NOT IN DISNEY’S BID', 'COURT FILING · OCT 2026'),
+                    txt(('IN CHAPTER 11', 'identity', 'its bankruptcy chapter'), ('NOT IN DISNEY’S BID', 'relationship', 'why they are left'), ('THE APP USERS’ CHATS', 'identity', 'left in the box'), ('COURT FILING · OCT 2026', 'source', 'filing')))])
+    add('l24', W, [(emptybox(['THE APP', 'USERS’ CHATS', 'THE LAWSUITS'], 'THE LAWSUITS STAY', 'CBS NEWS · OCT 2026'),
+                    txt(('IN CHAPTER 11', 'identity', 'its bankruptcy chapter'), ('THE LAWSUITS STAY', 'relationship', 'what stays behind'), ('THE APP USERS’ CHATS THE LAWSUITS', 'identity', 'the box'), ('CBS NEWS · OCT 2026', 'source', 'report')))])
+    def one_picture():
+        # The frame the cover echoes, filling the panel: the two receipts side by side, the empty box beneath with its $0.
+        r1 = receipt('GOOGLE · 2024', [('THE FOUNDERS', '$2.7B', True, [])], '', 1, 's')
+        r2 = receipt('DISNEY · 2026', [('THE TEAM', '$60M/YR', True, []), ('THE CODE', '$20M', True, [])], '', 2, 's')
+        bx = (f'<div class="row" style="gap:34px;align-items:center">{box([], size="s")}'
+              f'<span class="money" style="background:#F4EFE4;font-size:72px;padding:12px 26px">$0</span></div>')
+        return f'<div class="col" style="gap:44px"><div class="row" style="gap:40px;align-items:flex-start">{r1}{r2}</div>{bx}</div>'
+    add('l25', W, [(page(W, one_picture(), None, 'WIRED · GIZMODO · COURT FILINGS'),
+                    txt(('IN CHAPTER 11', 'identity', 'its bankruptcy chapter'), ('GOOGLE · 2024 THE FOUNDERS $2.7B', 'quantity', 'receipt one'), ('DISNEY · 2026 THE TEAM $60M/YR THE CODE $20M', 'quantity', 'receipt two'), ('$0', 'quantity', 'the box got nothing'), ('WIRED · GIZMODO · COURT FILINGS', 'source', 'sources')))])
+    def pairs(n):
+        a = (f'<div class="pair">{logo("netflix.svg", 120)}<div><div class="t">INTERPOSITIVE · $587M</div><div class="s">(REPORTED) · THE HOLLYWOOD REPORTER</div></div></div>')
+        b = (f'<div class="pair{"" if n > 1 else " hide"}">{logo("warner-music-group-cream.svg", 110)}<div><div class="t">SUREEL AI · JUNE 2026</div><div class="s">PR NEWSWIRE</div></div></div>')
+        return f'<div class="col" style="align-items:flex-start;gap:0">{a}{b}</div>'
+    add('l26', W, [(page(W, pairs(1), 'NETFLIX · WARNER MUSIC'), txt(('NETFLIX · WARNER MUSIC', 'identity', 'the buyers'), ('INTERPOSITIVE · $587M', 'quantity', 'what Netflix bought, reported price'), ('(REPORTED) THE HOLLYWOOD REPORTER', 'source', 'source'))),
+                   (page(W, pairs(2), 'NETFLIX · WARNER MUSIC'), txt(('NETFLIX · WARNER MUSIC', 'identity', 'the buyers'), ('INTERPOSITIVE · $587M', 'quantity', 'Netflix'), ('SUREEL AI · JUNE 2026', 'identity', 'what Warner bought and when'), ('(REPORTED) THE HOLLYWOOD REPORTER', 'source', 'source'), ('PR NEWSWIRE', 'source', 'source')))])
+
