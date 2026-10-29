@@ -144,6 +144,69 @@ class WordsGateTests(unittest.TestCase):
             self.assertIn(k, [x['take_index'] for x in r['lost']])
 
 
+    def monday(self, cut):
+        take = json.loads((FIXTURES / f'monday-26-{cut}.take.words.json').read_text(encoding='utf-8'))['words']
+        return (FIXTURES / f'monday-26-{cut}.script.txt').read_text(encoding='utf-8'), take
+
+    def test_numbers_dates_and_split_names_he_said_are_script_words(self):
+        # The script says "two hundred", "the twelfth of October", "the first of March" and "OpenAI"; the take was
+        # heard as "200", "12th", "1st" and "open AI". Each is a word of the script, so losing it fails.
+        script, take = self.monday('long')
+        self.assertEqual(wg.check(script, take, take)['status'], 'pass')
+        for said in ('200', '12th', '1st', 'open'):
+            at = next(k for k, w in enumerate(take) if w['w'].strip().lower().rstrip('.,') == said)
+            r = wg.check(script, take, without(take, at))
+            self.assertEqual(r['status'], 'fail', said)
+            self.assertEqual([x['take_index'] for x in r['lost']], [at], said)
+
+    def test_spelt_numbers_fold_both_ways(self):
+        script = 'It cost a hundred dollars on the twenty-first, over two hundred and six times.'
+        take = timed('It cost a hundred dollars on the twenty first, over two hundred and six times.')
+        final = timed('It cost $100 on the 21st, over 206 times.', 2.0)
+        r = wg.check(script, take, final)
+        self.assertEqual(r['status'], 'pass', wg.summary(r))
+        self.assertEqual(wg.check(script, take, timed('It cost $100 on the 21st, over times.'))['lost'][0]['token'], '206')
+
+    def test_a_removal_of_the_only_time_he_said_a_script_word_needs_his_words(self):
+        script, take = self.monday('long')
+        first = next(k for k, w in enumerate(take) if w['w'].strip().lower().startswith('bankruptcy'))
+        start = max(k for k in range(first) if take[k]['w'].strip().endswith(('.', ',', '?')) ) + 1
+        end = next(k for k in range(first, len(take)) if take[k]['w'].strip().endswith('.'))
+        final = shifted(without(take, *range(start, end + 1)), 3.2)
+        session = {'removals': [{'take_index': [start, end]}]}
+        r = wg.check(script, take, final, session)
+        self.assertEqual(r['status'], 'fail')
+        self.assertEqual(r['lost'], [])
+        self.assertIn('bankruptcy', r['unapproved_removals'][0]['only_said_here'])
+        self.assertIn('removal 1', wg.summary(r))
+        self.assertEqual(wg.unapproved_removals(script, take, session)[0]['only_said_here'], r['unapproved_removals'][0]['only_said_here'])
+        his = {'removals': [{'take_index': [start, end], 'krish': 'Krish, 2026-10-28: cut the bankruptcy line'}]}
+        r = wg.check(script, take, final, his)
+        self.assertEqual(r['status'], 'pass', wg.summary(r))
+        self.assertIn('bankruptcy', r['approved_removals'][0]['only_said_here'])
+        self.assertEqual(wg.unapproved_removals(script, take, his), [])
+
+    def test_a_mishearing_of_the_final_is_cleared_only_by_his_words(self):
+        script = 'The newest Claude model lost to the older one.'
+        take = timed(script)
+        final = timed('The newest clawed model lost to the older one.', 3.0)
+        r = wg.check(script, take, final)
+        self.assertEqual(r['status'], 'fail')
+        self.assertEqual(r['lost'][0]['final_heard_there'], 'clawed')
+        self.assertIn('the final has "clawed" there', r['lost'][0]['message'])
+        row = {'said': 'Claude', 'heard': 'clawed', 'krish': 'Krish, 2026-11-01: I said Claude there'}
+        r = wg.check(script, take, final, {'removals': [], 'heard_as': [row]})
+        self.assertEqual(r['status'], 'pass', wg.summary(r))
+        self.assertEqual(r['cleared_by_krish'], [{'word': 'Claude', 'heard': 'clawed', 'take_s': 0.6, 'krish': row['krish']}])
+        # It clears that mishearing only: a different word lost in its place still fails.
+        self.assertEqual(wg.check(script, take, timed('The newest model lost to the older one.'),
+                                  {'removals': [], 'heard_as': [row]})['status'], 'fail')
+        for bad in ({'said': 'Claude', 'heard': 'clawed'}, {'said': 'Claude', 'heard': 'clawed', 'krish': 'Claude: fine'},
+                    {'said': 'Claude', 'heard': 'Claude', 'krish': 'Krish: yes'}):
+            with self.assertRaises(wg.WordsGateError):
+                wg.check(script, take, final, {'removals': [], 'heard_as': [bad]})
+
+
 class ReceiptTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
@@ -189,6 +252,56 @@ class ReceiptTests(unittest.TestCase):
             code = wg.main([str(a) for a in args])
         return code, json.loads(out.getvalue()), err.getvalue()
 
+    def test_no_words_check_blocks_a_post_dated_from_the_gate_and_not_an_older_one(self):
+        report = self.passing_receipt()
+        self.receipt.write_text(json.dumps(report))
+        new = '3 Posts/2026-11-09 Mon follow.the.money - Who pays/3 Video/wide 16x9.mp4'
+        old = '3 Posts/2026-10-26 Mon follow.the.money - Disney/3 Video/wide 16x9.mp4'
+        self.assertEqual(wg.REQUIRED_FROM, '2026-10-27')
+        self.assertTrue(any(p.startswith('words gate did not run') for p in wg.delivery_problems(report, new)))
+        self.assertEqual(wg.delivery_problems(report, old), [])
+        self.assertEqual(wg.delivery_problems(report), [])
+        # Without a target, the receipt's own destination decides (making.py with a bare name).
+        self.assertTrue(wg.delivery_problems({**report, 'library_path': new}))
+        self.receipt.write_text(json.dumps({**report, 'library_path': new}))
+        with patch('visual_clarity.delivery_problems', return_value=[]), patch('media_standard.enforced', return_value=False):
+            self.assertTrue(any(p.startswith('words gate did not run')
+                                for p in quality.delivery_problems(self.video, self.receipt, new)))
+
+    def test_a_words_check_on_other_take_words_than_the_cut_was_made_from_blocks(self):
+        take = self.dir / 'take.json'
+        take.write_text(json.dumps({'words': TAKE}))
+        report = {**self.passing_receipt(), 'transcript_document': {'sha256': quality.digest(take)}}
+        report['checks']['words'] = wg.bind(wg.check(SCRIPT, TAKE, TAKE), take=take, video=self.video)
+        self.assertEqual(wg.delivery_problems(report), [])
+        other = self.dir / 'other.json'
+        other.write_text(json.dumps({'words': TAKE[:-1]}))
+        report['checks']['words'] = wg.bind(wg.check(SCRIPT, TAKE, TAKE), take=other, video=self.video)
+        self.assertEqual(wg.delivery_problems(report), ['words gate result was checked against other take words than the cut was made from'])
+
+    def test_a_check_by_hand_never_changes_the_words_the_cut_is_checked_against(self):
+        script, take, other = (self.dir / n for n in ('script.txt', 'take.json', 'other.json'))
+        script.write_text(SCRIPT)
+        take.write_text(json.dumps({'words': TAKE}))
+        other.write_text(json.dumps({'words': without(TAKE, 1)}))
+        made = wg.bind(wg.check(SCRIPT, TAKE, without(TAKE, 1)), script=script, take=take, video=self.video)
+        wg.record(self.receipt, made)
+        forged = wg.bind(wg.check(SCRIPT, without(TAKE, 1), without(TAKE, 1)), script=script, take=other, video=self.video)
+        with self.assertRaises(wg.WordsGateError):
+            wg.record(self.receipt, forged)
+        self.assertEqual(json.loads(self.receipt.read_text())['checks']['words']['status'], 'fail')
+        # A receipt that names the take words its cut was made from takes a check only on those.
+        self.receipt.write_text(json.dumps({**self.passing_receipt(), 'transcript_document': {'sha256': quality.digest(take)}}))
+        with self.assertRaises(wg.WordsGateError):
+            wg.record(self.receipt, forged)
+        wg.record(self.receipt, made)
+
+    def cli(self, *args):
+        out, err = io.StringIO(), io.StringIO()
+        with redirect_stdout(out), redirect_stderr(err):
+            code = wg.main([str(a) for a in args])
+        return code, json.loads(out.getvalue()), err.getvalue()
+
     def test_the_command_line(self):
         script, take, final, edl = (self.dir / n for n in ('script.txt', 'take.json', 'final.json', 'edl.json'))
         script.write_text(SCRIPT)
@@ -200,21 +313,41 @@ class ReceiptTests(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertEqual(report['lost'][0]['word'], 'Disney')
         self.assertIn('words gate: FAIL', err)
-        self.assertEqual(json.loads(self.receipt.read_text())['checks']['words']['status'], 'fail')
         self.assertEqual(set(report['inputs']), {'script', 'take_words', 'final_words', 'edl'})
+        # A words json is reported, never written into a receipt, even one whose provenance names the cut's bytes:
+        # copying the take's words into a json would otherwise forge a machine-written pass (F12).
         final.write_text(json.dumps({'words': TAKE, 'provenance': {'source_sha256': self.sha}}))
         code, report, _ = self.cli('--script', script, '--take-words', take, '--final', final, '--receipt', self.receipt)
-        self.assertEqual((code, report['status']), (0, 'pass'))
-        self.assertEqual(json.loads(self.receipt.read_text())['checks']['words']['video_sha256'], self.sha)
-        # A words json heard from other bytes never goes into this receipt.
-        final.write_text(json.dumps({'words': TAKE, 'provenance': {'source_sha256': 'a' * 64}}))
-        code, report, _ = self.cli('--script', script, '--take-words', take, '--final', final, '--receipt', self.receipt)
-        self.assertEqual(code, 1)
-        self.assertIn('could not be made', report['reason'])
-        self.assertEqual(json.loads(self.receipt.read_text())['checks']['words']['status'], 'pass')
+        self.assertEqual((code, report['status'], report['receipt']), (0, 'pass', None))
+        self.assertIn('never written into a receipt', report['receipt_not_written'])
+        self.assertNotIn('words', json.loads(self.receipt.read_text())['checks'])
         code, report, _ = self.cli('--script', self.dir / 'missing.txt', '--take-words', take, '--final', final)
         self.assertEqual(code, 1)
+        self.assertIn('could not be made', report['reason'])
 
+    def test_the_command_line_on_the_video_writes_the_receipt_it_heard(self):
+        script, take = self.dir / 'script.txt', self.dir / 'take.json'
+        script.write_text(SCRIPT)
+        take.write_text(json.dumps({'words': TAKE}))
+        self.receipt.write_text(json.dumps({**self.passing_receipt(), 'transcript_document': {'sha256': quality.digest(take)}}))
+        heard = {'words': shifted(TAKE, 3.2), 'provenance': {'source_sha256': self.sha}}
+        with patch.object(wg, 'transcribe', return_value=heard):
+            code, report, _ = self.cli('--script', script, '--take-words', take, '--final', self.video, '--no-receipt')
+            self.assertEqual((code, report['receipt']), (0, None))
+            self.assertNotIn('words', json.loads(self.receipt.read_text())['checks'])
+            code, report, _ = self.cli('--script', script, '--take-words', take, '--final', self.video)
+        self.assertEqual((code, report['status'], report['receipt']), (0, 'pass', str(self.receipt)))
+        written = json.loads(self.receipt.read_text())['checks']['words']
+        self.assertEqual((written['machine'], written['video_sha256']), (wg.MACHINE, self.sha))
+        self.assertEqual(wg.delivery_problems(json.loads(self.receipt.read_text())), [])
+        # Other take words than the cut was made from: the check is reported as not made and nothing is written.
+        other = self.dir / 'other.json'
+        other.write_text(json.dumps({'words': TAKE[:5]}))
+        with patch.object(wg, 'transcribe', return_value={'words': TAKE[:5], 'provenance': {'source_sha256': self.sha}}):
+            code, report, _ = self.cli('--script', script, '--take-words', other, '--final', self.video)
+        self.assertEqual(code, 1)
+        self.assertIn('could not be made', report['reason'])
+        self.assertEqual(json.loads(self.receipt.read_text())['checks']['words']['inputs']['take_words']['sha256'], quality.digest(take))
 
 class AdvisoryTests(unittest.TestCase):
     def test_rows_are_advisory_and_say_why_they_did_not_run(self):

@@ -2220,6 +2220,11 @@ def main():
                            cfg.get('prompt') or (script_prompt(P(cfg['script'])) if cfg.get('script') else ''), identity)
 
     cuts = resolve_removals(words, cfg.get('remove', []) + cfg.get('remove_words', []))
+    try:
+        # A mishearing the words gate may forgive carries Krish's own words; refused here, before any render.
+        words_gate.heard_as_rows({'heard_as': cfg.get('heard_as', [])})
+    except words_gate.WordsGateError as error:
+        sys.exit(f'heard_as: {error}')
     if speed and cfg.get('words') and document and not document.get('provenance'):
         # A words file named in the config was heard from the take before it was sped up, so its times are on
         # the raw clock: put them on the sped clock, or the cut points, captions and cards all land late, more
@@ -2410,9 +2415,16 @@ def main():
     edl = {'schema': 'quick-edit-edl/1', 'take_words': str(wpath), 'removals': [
         {'take_index': [a, b], 'words': ' '.join(words[k]['w'].strip() for k in range(a, b + 1)),
          'from_s': words[a]['s'], 'to_s': words[b]['e'], **({'krish': r['krish']} if isinstance(r, dict) and r.get('krish') else {})}
-        for (a, b), r in zip(cuts, removal_rows)]}
+        for (a, b), r in zip(cuts, removal_rows)],
+        # The finished file's mishearings Krish has cleared, each with his words (words_gate.heard_as_rows).
+        'heard_as': cfg.get('heard_as', [])}
     edl_path = out / f"{cfg['name']}.edl.json"
     edl_path.write_text(json.dumps(edl, indent=1), encoding='utf-8')
+    if cfg.get('quality_required') and cfg.get('script') and P(cfg['script']).is_file():
+        # A removal that cuts the only time he said a word of the script needs his words on the row: refused before any render.
+        refused = words_gate.unapproved_removals(P(cfg['script']).read_text(encoding='utf-8-sig'), words, edl)
+        if refused:
+            sys.exit('Words gate: ' + ' | '.join(r['message'] for r in refused))
     words_held = []
     fonts = Path(__file__).resolve().parent / 'fonts'
     shapes = {}

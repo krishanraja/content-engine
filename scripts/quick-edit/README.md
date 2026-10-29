@@ -142,6 +142,7 @@ One JSON file per video. Paths are relative to the config file.
 | `end_screen_s` | `20`: warns when a picture runs into the last N seconds, kept for YouTube's end-screen tiles. |
 | `music_mode` | `"episode"`: the bed plays under the sting and his first 30 s, lifts for 5.5 s at each chapter turn and comes back under his last 8 s and the end card, each piece measured where it sits and set to the approved levels (`music.episode_bed`). Give `music_seconds` (about 80 for seven chapters) so a three-minute track qualifies. |
 | `speed` | `{"factor": 1.2, "krish": "Krish, DATE: his words"}`: the take sped up, picture and sound, pitch kept, before anything else. Refused without his own words and over 1.35. |
+| `heard_as` | `[{"said": "Claude", "heard": "clawed", "krish": "Krish, DATE: his words"}]`: a word the transcriber misheard in the finished file, cleared for the words gate (above) on his own words only. Refused without them, before anything renders. |
 
 ## The kit: a piece's graphics and starter config
 
@@ -463,21 +464,69 @@ approved removals, holds the cut. make.py writes the approved removals (the
 config's `remove` rows, with Krish's words when they carry them) as
 `<name>.edl.json`, transcribes the finished file (faster-whisper, as it
 already did for the `heard` check), writes the result into the cut's
-`.validation.json` as `checks.words`, bound to the video's sha256, and exits
-non-zero after writing everything, naming each lost word and where it was.
-`quality.delivery_problems` refuses a failed or stale words check wherever
-the receipt travels (send.py, making.py video, the archive). Function-word
-differences and lost ad-libs are listed, never blocking. Any cut can be
-checked by hand:
+`.validation.json` as `checks.words`, bound to the video's sha256 and to the
+script, take words and EDL it read, and exits non-zero after writing
+everything, naming each lost word, where it was and what the final has there.
+`quality.delivery_problems` refuses a failed or stale words check wherever the
+receipt travels (send.py, making.py video, the archive), one checked against
+other take words than the cut was made from, and no words check at all for a
+cut going to a post dated from 27 Oct 2026 (`words_gate.REQUIRED_FROM`, read
+from the destination path, never from a mark in the receipt). Function-word
+differences and lost ad-libs are listed, never blocking.
+
+What counts as a word of the script: spelt numbers and ordinals fold ("two
+hundred" is "200", "the twelfth" is "12th"), and a name split or joined
+differently is one word ("open AI" for "OpenAI", "make your mind up" for
+"makeyourmindup"), in the take as in the final.
+
+Two rows need Krish's own words (a `krish` line starting "Krish"), and nothing
+else will do:
+
+- **A removal that cuts the only time he said a word of the script.** A false
+  start he said again passes without them; a `remove` row that takes out the
+  only "bankruptcy" fails, before anything renders, until it carries his words.
+- **A mishearing of the finished file.** `heard_as` in the config:
+  `[{"said": "Claude", "heard": "clawed", "krish": "Krish, DATE: his words"}]`.
+  make.py refuses a row without his words before it renders, writes the rows
+  into the EDL, and the receipt lists each word it cleared under
+  `cleared_by_krish`. A receipt is never edited to clear a word.
+
+Any cut can be checked by hand:
 
 ```
-python3 words_gate.py --script SCRIPT.txt --take-words TAKE.words.json --final CUT.mp4 [--edl CUT.edl.json]
+python3 words_gate.py --script SCRIPT.txt --take-words TAKE.words.json --final CUT.mp4 [--edl CUT.edl.json] [--no-receipt]
 ```
+
+Only a run that transcribes the finished video itself writes `checks.words`,
+and only into a receipt checked against the same signed script and take
+words (or, for an older receipt, the take words it names). With a words json
+as `--final` the report is printed and no receipt is written, so a pass
+cannot be made from words copied by hand. To clear a mishearing without a
+re-render, add the `heard_as` row with his words to the config and to the
+cut's `<name>.edl.json`, then run the command above on the video.
 
 It is not calibrated yet (config/failures.json, chopped-words-published stays
 open): Monday 26's accepted cuts must pass and Wednesday 21's published long
-cut and Friday's 17 Oct words cut must fail. A clipped tail the transcriber
-still hears whole is caught only by the joins-in-gaps check (Wave 2).
+cut and Friday's 17 Oct words cut must fail. The finished files live on the
+home computer that made them and in the Drive archive, not in this
+repository, so the run is a home-computer step, each with `--no-receipt`;
+Monday 26's long cut, for one:
+
+```
+python3 scripts/quick-edit/words_gate.py --no-receipt \
+  --script docs/plans/2026-10-26-draft-script.md \
+  --take-words docs/plans/2026-10-26-monday/takes/long.words.json \
+  --final .cache/produce/2026-10-26-b358e788/long/disney-google-and-character-ai-long-16x9.mp4
+```
+
+If the music bed runs under all of his speech, calibrate on a cut with the bed
+at that level. The take is transcribed with the script as a hint and the
+finished file without one; that difference is a suspected (not measured)
+cause of misheard names, which the calibration run will show. The only real
+evidence so far is two transcribers on Friday 9 Oct's 90-second cut (the take
+on small.en, the finished file on medium.en): 3 words held, among them
+"Claude" heard as "clawed". A clipped tail the transcriber still hears whole
+is caught only by the joins-in-gaps check (Wave 2).
 
 Beside it, `advisory_qc.py` runs the ve measures that can run on a quick-edit
 cut (joins, captions, brand mark, composition) and writes them under
