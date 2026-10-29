@@ -114,7 +114,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const [voice, corpus, taste] = await Promise.all([loadVoiceBlock(), loadCorpus(), loadTasteBlock(['voice', 'strategy'])])
   const system = [
-    `You are drafting one piece for Krish Raja's publication, in his voice, for the subchannel ${sub.label}.`,
+    `You are drafting one piece for makeyourmindup, in the voice below, for the subchannel ${sub.label}. The article and its title, subtitle and description speak as the publication, "we", and never name or describe its maker (house rule NO_NAME).`,
     `=== THE MANDATE FOR ${sub.label.toUpperCase()} ===\n${sub.mandate}\n\nThe mandate is the test this piece must pass. It governs the question the piece asks, its structure and how it closes. Where the voice notes below disagree with the mandate about structure or the close, the mandate wins. Krish's house rules win over both: every piece still ends with a dated prediction.`,
     subchannelRulesBlock('write', sub.slug),
     voice ? `=== VOICE ===\n${voice}` : '',

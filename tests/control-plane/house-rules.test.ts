@@ -832,3 +832,58 @@ describe('this week\'s unrecorded scripts keep every gate but the new close and 
     }
   })
 })
+
+// Krish, 2026-10-28: "Remember, no content refers to Krish, ever. I still see
+// that popping up from time to time. Even articles written are not authored by
+// Krish. My face only, for assets and the video format." Then his four answers
+// of 2026-10-29, and, of comparisons: "I think my point was that pictures never
+// add zero value above and beyond the words. They have to be additive in
+// meaning. I'm all up for visually clear ideas."
+describe('no public word names Krish, and every picture adds meaning (NO_NAME, ANALOGY_IN_SCRIPTS_ONLY)', () => {
+  test('NO_NAME is live, in his words, with his four answers, and reaches every stage that writes or checks a public word', () => {
+    const r = HOUSE_RULES.find(x => x.id === 'NO_NAME')
+    assert.ok(r)
+    assert.equal(r.status, 'live')
+    assert.ok(r.said.startsWith('"Remember, no content refers to Krish, ever. I still see that popping up from time to time. Even articles written are not authored by Krish. My face only, for assets and the video format."'))
+    for (const picked of ['"We"', '"No, personal stays personal"', '"Drop it"', '"Yes, block it"']) assert.ok(r.said.includes(picked), picked)
+    assert.deepEqual([...r.stages].sort(), ['final_pass', 'judge_draft', 'publish_check', 'visual', 'write'])
+    for (const stage of ['write', 'judge_draft', 'final_pass', 'visual'] as const) assert.ok(houseRulesBlock(stage).includes(r.text), stage)
+    assert.match(r.text, /OUR TEST · <date>/)
+    assert.match(r.text, /makeyourmindup · <date> · <n> minute read/)
+    assert.doesNotMatch(r.text, /MY TEST ·|By Krish/)
+  })
+  test('articles speak as "we", the scripts he speaks keep "I", and no writer example names him', () => {
+    const voice = HOUSE_RULES.find(x => x.id === 'SOUNDS_LIKE_KRISH')!
+    assert.match(voice.text, /In an article and its title, subtitle and description, "we" and "our" carry the publication's view/)
+    assert.match(voice.text, /in a video script he speaks, "I" and "my" carry his/)
+    assert.doesNotMatch(voice.text, /"I" and "my" carry his view: a moment from his own work/)
+    assert.doesNotMatch(HOUSE_RULES.find(x => x.id === 'HOOK_AND_CTA')!.text, /what Krish did/)
+    for (const [file, framing] of [
+      ['apps/control-plane/api/content-ideas/[id]/draft.ts', /You are drafting one piece for makeyourmindup/],
+      ['apps/control-plane/api/_revisePrompt.ts', /rewriting a draft for makeyourmindup/],
+      ['apps/control-plane/api/briefs/assemble.ts', /You write in the publication\\?'s voice and never name its maker/],
+      ['apps/control-plane/api/_humor.ts', /rewriting a passage of a makeyourmindup draft/],
+      ['apps/control-plane/api/content-ideas/[id]/chat.ts', /content partner on makeyourmindup/],
+    ] as const) {
+      const source = readFileSync(file, 'utf8')
+      assert.match(source, framing, file)
+      assert.doesNotMatch(source, /in Krish Raja's voice|Krish Raja's publication|You write as Krish|passage of Krish Raja's draft|Krish Raja's content partner/, file)
+    }
+  })
+  test('a picture must add meaning beyond the words; a visually clear idea with the real facts is welcome; one that stands in for them is out', () => {
+    const r = HOUSE_RULES.find(x => x.id === 'ANALOGY_IN_SCRIPTS_ONLY')!
+    assert.ok(r.said.includes('Then, 2026-10-29, asked whether a picture may show the everyday thing a script compares something to: "I think my point was that pictures never add zero value above and beyond the words. They have to be additive in meaning. I\'m all up for visually clear ideas."'))
+    assert.match(r.text, /adds meaning beyond the words said over it/)
+    assert.match(r.text, /A visually clear idea is welcome, a comparison included, when the real facts are on it/)
+    assert.match(r.text, /stands in for the facts \(the 16 October race between two cars/)
+    assert.doesNotMatch(r.text, /never act out an analogy/)
+    // The article and script sentences are kept.
+    assert.match(r.text, /Analogies, comic comparisons and exaggeration belong in the video scripts/)
+    assert.match(r.text, /The article stays more professional/)
+    const relatable = HOUSE_RULES.find(x => x.id === 'RELATABLE_EXPLANATION')!
+    assert.match(relatable.text, /a picture of one must add meaning beyond the words, with the real facts on it, never stand in for them/)
+    assert.doesNotMatch(relatable.text, /a picture never acts one out/)
+    const gate = readFileSync(join(__dirname, '../../scripts/post-pack/visual_gate.py'), 'utf8')
+    assert.match(gate, /pictures never add zero value above and beyond '\s+'the words\. They have to be additive in meaning\./)
+  })
+})

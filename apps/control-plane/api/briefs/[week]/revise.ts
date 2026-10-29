@@ -84,7 +84,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const system = [
     humour
       ? buildHumourSystem({ register: b.value as string, voice, channelCorpus: '', materialsBlock: '' })
-      : 'You edit the the publication weekly brief. You write as Krish, for business leaders.',
+      : 'You edit the publication weekly brief, for business leaders. You write in the publication\'s voice and never name its maker (house rule NO_NAME).',
     humour ? '' : (voice ? `VOICE:\n${voice}` : ''),
     humour ? '' : VOICE_GUARDRAILS,
     standingNotesPrompt(standingNotes),
