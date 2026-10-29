@@ -55,6 +55,21 @@ def get(call, path):
     return data
 
 
+def his_dropped(sources):
+    """The board owes him every idea he dropped in through Control Center's one door (a 'manual' row, his_via 'said')
+    that is still in the pool: each one is on the board, Mon/Wed/Fri or an off day, or accounted for with a reason.
+    Krish, 2026-10-29: a random idea he drops in "should appear on my Sunday board"."""
+    pool = [c for s in sources.get('series') or [] for c in s.get('pool') or []] + list(sources.get('unassigned') or [])
+    seen, out = set(), []
+    for c in pool:
+        if not isinstance(c, dict) or c.get('source_kind') != 'his' or c.get('his_via') != 'said' or not c.get('id') or c['id'] in seen:
+            continue
+        seen.add(c['id'])
+        out.append({'id': c['id'], 'what': f'Your idea "{c.get("idea")}" (dropped in {str(c.get("created_at") or "")[:10]})',
+                    'his_words': c.get('idea'), 'kind': 'his_idea'})
+    return out
+
+
 def gather(week, call=None, out_dir=None):
     """(path written, summary lines). call: (method, path, body) -> (status, text), the engine key by default."""
     call = call or making._engine_call
@@ -73,6 +88,7 @@ def gather(week, call=None, out_dir=None):
     relayed = sources.get('his_relayed') or []
     must_cover = list(inspo.get('must_cover') or []) + [
         {'id': r.get('id'), 'what': f'Your words on board item "{r.get("title")}"', 'his_words': r.get('detail')} for r in relayed if r.get('id')]
+    must_cover += his_dropped(sources)
     out = {
         'week_start': wk,
         'how': 'Read-only gather (board_feed.py). Write ideas.json from series[].pool and inspiration (routed, liked, fresh, corpora, '
@@ -160,7 +176,9 @@ def taps(week, read=None):
 def self_test():
     """No engine: a fake answer for each route, then what gather writes and says."""
     import tempfile
-    pool = [{'id': 'a', 'idea': 'His', 'source_kind': 'his', 'why_here': None}, {'id': 'b', 'idea': 'Engine', 'source_kind': 'engine', 'why_here': 'close to ...'}]
+    pool = [{'id': 'a', 'idea': 'His', 'source_kind': 'his', 'his_via': 'said', 'created_at': '2026-10-29T10:00:00Z', 'why_here': None},
+            {'id': 'r', 'idea': 'Researched', 'source_kind': 'his', 'his_via': 'research', 'why_here': None},
+            {'id': 'b', 'idea': 'Engine', 'source_kind': 'engine', 'why_here': 'close to ...'}]
     answers = {
         '/api/week/options?week_start=2026-10-26&include=sources': {'ok': True, 'series': [{'slug': 'follow_the_money', 'mandate': 'M', 'scheduled': []}],
             'sources': {'counts': {'his': 1, 'inspo': 0, 'engine': 1}, 'empty': [{'source': 'inspo', 'why': 'no scan'}],
@@ -183,8 +201,10 @@ def self_test():
             problems.append('gather must only read')
         if data['series'][0]['pool'][0]['source_kind'] != 'his' or data['series'][0]['mandate'] != 'M':
             problems.append('the pool keeps its order, his first, with the mandate beside it')
-        if [m['id'] for m in data['must_cover']] != ['card-1', 'said-1'] or not any('routed 1' in x for x in lines):
-            problems.append('every routed Inspiration card and relayed word is listed to cover, and the counts are said')
+        if [m['id'] for m in data['must_cover']] != ['card-1', 'said-1', 'a'] or not any('routed 1' in x for x in lines):
+            problems.append('every routed Inspiration card, relayed word and idea he dropped in is listed to cover, and the counts are said')
+        if not any('must cover: Your idea "His" (dropped in 2026-10-29)' in x for x in lines):
+            problems.append('an idea he dropped in through the one door is named in what the board must cover')
         if len(data['combine']) != 1 or len(data['queue']) != 2:
             problems.append('the queue and its combine groups are written')
         if not any('empty: inspo: no scan' in x for x in lines) or 'his 1, inspo 0, engine 1' not in lines[0]:

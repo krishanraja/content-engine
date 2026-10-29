@@ -298,6 +298,14 @@ def record_of(piece_id, call=None):
     return making if isinstance(making, dict) else {}
 
 
+def one_cut(record):
+    """An off-day piece he records, one short cut (Ruling, Krish, 2026-10-29): its check says one_cut and holds the
+    short's hash alone. Mirrors oneCut in apps/control-plane/api/_making.ts."""
+    check = record.get('script_check') if isinstance(record, dict) else None
+    hashes = check.get('hashes') if isinstance(check, dict) else None
+    return isinstance(check, dict) and check.get('one_cut') is True and isinstance(hashes, dict) and list(hashes) == ['short']
+
+
 def current_hashes(record):
     """{cut: sha256} of the scripts the last check passed, {} for a record
     made before the hashes were kept."""

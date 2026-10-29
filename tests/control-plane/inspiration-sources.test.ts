@@ -21,6 +21,21 @@ describe('the Inspiration House block', () => {
     expect(out.must_cover).toEqual([{ id: 'routed', what: 'Inspiration card "routed.jpg" you routed to Make a piece', his_words: 'the three-question test is simple', endorsed: null }])
   })
 
+  // Krish, 2026-10-29, of a YouTube link he saved with "We should reskin this as a hilarious video meme for when your AI
+  // talks to your customer's AI.": "check this meme idea ... makes it through correctly to the ideas board".
+  it('a link he saved with his own words is owed a place on the board, with those words', () => {
+    const note = "We should reskin this as a hilarious video meme for when your AI talks to your customer's AI."
+    const link = (extra: Record<string, any>) => ({ platform: 'youtube', link: { url: 'https://youtube.com/shorts/x', note }, ...extra })
+    const out = buildInspiration({ weekStart: WEEK, items: [
+      item('meme', { facets: link({}), why_here: note }),
+      item('undone', { facets: link({}), why_here: null }),
+      item('style', { facets: link({}), why_here: note, route: 'study_style', routes: ['study_style'] }),
+      item('made', { facets: link({}), why_here: note, piece_id: '11111111-2222-4333-8444-555555555555' }),
+    ] })
+    expect(out.fresh.find(c => c.id === 'meme')?.saved_why).toBe(note)
+    expect(out.must_cover).toEqual([{ id: 'meme', what: 'Inspiration card "meme.jpg" you saved with your words', his_words: note, endorsed: null }])
+  })
+
   it('a tapped suggestion is his endorsement, never his words', () => {
     const c = card(item('t', { why_like: 'It makes a debate relatable', why_like_source: 'picked', answered_by: 'Krish' }))
     expect(c.why_like).toBeNull()

@@ -182,7 +182,7 @@ async function readCues() {
   }
 }
 
-const INSPO_COLS = 'id,name,folder,lane,kind,facets,route,routes,why_like,why_like_source,would_do,note_for_claude,answered_at,answered_by,dismissed_at,created_at,piece_id,auto_tags,confirmed_tags,transcript'
+const INSPO_COLS = 'id,name,folder,lane,kind,facets,why_here,route,routes,why_like,why_like_source,would_do,note_for_claude,answered_at,answered_by,dismissed_at,created_at,piece_id,auto_tags,confirmed_tags,transcript'
 
 /** Inspiration House and content-watcher (_inspirationSources.ts). A table that cannot be read fails the gather
  *  loudly: Sunday must never look complete while his routed cards are missing (Krish, 2026-10-24). */

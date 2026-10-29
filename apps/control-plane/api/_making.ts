@@ -52,7 +52,7 @@ export interface MakingCheck { passed: boolean; checked_at: string; problems: st
  *  take look older than its script. `changed_at` is when each cut's words
  *  last changed, so a change to one cut never makes the other's take look
  *  old (scripts/post-pack/recording_match.py's time rule). */
-export type MakingScriptCheck = MakingCheck & { cuts?: MakingCut[]; hashes?: Partial<Record<MakingCut, string>>; changed_at?: Partial<Record<MakingCut, string>>; read_back?: Partial<Record<MakingCut, MakingReadBack>>; /** The one question the piece answers (house rule ONE_SPINE): the publish page then needs a passing spine check. */ spine?: string }
+export type MakingScriptCheck = MakingCheck & { cuts?: MakingCut[]; hashes?: Partial<Record<MakingCut, string>>; changed_at?: Partial<Record<MakingCut, string>>; read_back?: Partial<Record<MakingCut, MakingReadBack>>; /** The one question the piece answers (house rule ONE_SPINE): the publish page then needs a passing spine check. */ spine?: string; /** An off-day piece he records is one short cut (Ruling, Krish, 2026-10-29), written by the server when he approves its option; makingCuts then asks for the short alone. */ one_cut?: boolean }
 /** A cut read back by two fresh readers, each an ordinary 12-year-old
  *  hearing it once, who found nothing that lost them (house rule R7, the hard
  *  gate on every script; Krish, 2026-10-12: "Every single script should be
@@ -208,6 +208,7 @@ export function parseMakingPatch(body: unknown, now: string): { patch: MakingPat
     const check: MakingScriptCheck = { passed: v.passed, checked_at: when(v.checked_at, now), problems: list }
     if (key === 'script_check' && typeof v.spine === 'string' && v.spine.trim()) (check as MakingScriptCheck).spine = String(v.spine).trim().slice(0, 300)
     if (key === 'script_check' && Array.isArray(v.cuts)) check.cuts = v.cuts.filter(isCut)
+    if (key === 'script_check' && v.one_cut === true) (check as MakingScriptCheck).one_cut = true
     if (key === 'script_check' && v.hashes !== undefined) {
       const entries = isObj(v.hashes) ? Object.entries(v.hashes) : null
       if (!entries || !entries.every(([c, h]) => isCut(c) && typeof h === 'string' && SCRIPT_SHA256.test(h))) {
@@ -508,10 +509,20 @@ export function teleprompterNote(m: Partial<Making>): string {
   ].filter(Boolean).join('; ')
 }
 
+/** An off-day piece he records, one short cut (Ruling, Krish, 2026-10-29: "could be a short with motion designed
+ *  subtitles and branding, or voiceover with motion designed infographics"): its check says one_cut and holds the
+ *  short's hash alone. Mirrored in making.py one_cut. */
+export function oneCut(m: Partial<Making>): boolean {
+  const check = m.script_check, hashes = isObj(check?.hashes) ? Object.keys(check!.hashes!) : []
+  return check?.one_cut === true && hashes.length === 1 && hashes[0] === 'short'
+}
+
 /** The cuts a piece is recorded and produced in: the two every piece gets,
  *  and the 15-minute feature when its script check holds a feature hash
  *  (making.py records one only on a piece Krish called a feature for). */
 export function makingCuts(m: Partial<Making>): MakingCut[] {
+  // An off-day piece he records: the short alone, and only while its check holds the short's hash and no other.
+  if (oneCut(m)) return ['short']
   const feature = isObj(m.script_check?.hashes) && typeof m.script_check?.hashes?.feature === 'string'
   return feature ? [...MAKING_CUTS, 'feature'] : [...MAKING_CUTS]
 }
@@ -556,6 +567,8 @@ export function makingSteps(row: { id?: string; state?: string | null; body?: st
     : { key: 'pack', label: 'Pack', state: 'todo' })
   // Both cuts, every piece (TWO_CUTS, Krish, 2026-10-11), whatever cuts a
   // script check recorded: one recording or one video never finishes a step.
+  // The one exception is an off-day piece he records, one short cut (oneCut;
+  // Ruling, Krish, 2026-10-29).
   // A take counts only for the script it was taken from: one whose
   // script_sha256 is not the current hash for its cut was recorded from words
   // that have changed since (a take with no hash predates the hashes).

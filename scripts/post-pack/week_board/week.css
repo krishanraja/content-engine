@@ -140,6 +140,7 @@ label.qmark input:disabled + .box{opacity:.4}
 .off-card{border:1px solid var(--line);border-radius:12px;background:var(--card);padding:12px 14px;display:grid;gap:8px}
 .off-card.on{border:2px solid var(--ok)}
 .off-copy{margin:0;font-size:16px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+.off-script{margin:0;padding:10px 12px;border-left:3px solid var(--ink);background:var(--bg);font-size:16px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
 .tt-set{border:0;margin:0;padding:0;display:grid;gap:2px;min-width:0}
 .tt-set legend{padding:0;margin:0 0 4px;font-weight:700}
 .tri-why.rj{flex-wrap:wrap}

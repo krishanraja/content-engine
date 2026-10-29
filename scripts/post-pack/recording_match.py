@@ -333,6 +333,9 @@ def length_cut(seconds, cuts=CUTS):
     feature FEATURE_FROM and over."""
     if not isinstance(seconds, (int, float)):
         return None
+    if tuple(cuts) == ('short',):
+        # An off-day piece he records has the short cut alone: a take that runs like a short is it; a longer one is not.
+        return 'short' if seconds <= SHORT_UP_TO else None
     if FEATURE in cuts:
         if seconds >= FEATURE_FROM:
             return FEATURE
@@ -343,6 +346,8 @@ def length_cut(seconds, cuts=CUTS):
 
 def length_bands(cuts):
     """The lengths length_cut reads, in words, for a reason line."""
+    if tuple(cuts) == ('short',):
+        return f'its one cut, a short take ({clock(SHORT_UP_TO)} and under)'
     bands = f'a long take ({clock(LONG_FROM)} and over) and a short one ({clock(SHORT_UP_TO)} and under)'
     if FEATURE in cuts:
         bands = (f'a long take ({clock(LONG_FROM)} to {clock(LONG_UP_TO)}), a short one ({clock(SHORT_UP_TO)} and under) and '
@@ -403,7 +408,12 @@ def waiting_pieces(call, monday):
             continue
         hashes = making.current_hashes(record)
         # The feature is a cut of this piece only when its script check holds the feature's hash (a piece Krish called one for).
-        cuts = tuple(c for c in ALL_CUTS if c in CUTS or c in hashes)
+        # An off-day piece he records is the short cut alone (making.one_cut; Ruling, Krish, 2026-10-29), and the
+        # engine holds the exact words he approved for it (the making route's offday), heard like any other copy.
+        cuts = ('short',) if making.one_cut(record) else tuple(c for c in ALL_CUTS if c in CUTS or c in hashes)
+        offday = data.get('offday') if isinstance(data.get('offday'), dict) else {}
+        if cuts == ('short',) and isinstance(offday.get('script'), str) and offday['script'].strip():
+            piece['offday_script'] = offday['script']
         piece['cuts'] = list(cuts)
         # A cut counts as recorded only with a take of its current words.
         piece['recorded'] = sorted({r.get('cut') for r in recordings if r.get('cut') in cuts and take_counts(r, hashes)})
@@ -524,6 +534,8 @@ def scripts_for(piece, plans=PLANS, roots=None, show=committed):
     hashes = piece.get('hashes') if isinstance(piece.get('hashes'), dict) else {}
     cuts = cuts_of(piece)  # a feature piece's feature too
     copies = {cut: [] for cut in cuts}
+    if piece.get('offday_script') and 'short' in copies:
+        copies['short'].append({'text': piece['offday_script'], 'from': 'the off-day option he approved (the engine)'})
     post_path, post = find_post(piece['id'], plans)
     for entry in (post or {}).get('files') or []:
         if not isinstance(entry, dict) or entry.get('kind') != 'video-script':
@@ -1949,6 +1961,26 @@ def self_test():
               (0, [(FEAT, [{'cut': 'feature', 'path': f'recordings/{hashlib.sha256(data).hexdigest()}.mov', 'seconds': 912,
                             'script_sha256': feat_hashes['feature']}])]))
         check('feature: the run says the piece waits for its feature', any('(feature)' in line for line in lines if line.startswith('Waiting')), True)
+
+    # An off-day piece he records (Ruling, Krish, 2026-10-29): the short cut alone, heard against the words he approved.
+    OFF = '0d0d0d0d-1111-4222-8333-444455556666'
+    off_words = ' '.join(_prose(41, 170))
+    off_sha = making.script_hash(off_words)
+    def off_call(method, path, body):
+        if path.startswith('/api/week/options'):
+            return 200, json.dumps({'ok': True, 'series': [{'slug': 'under_the_hood', 'in_flight': [{'id': OFF, 'idea': 'Agents at work', 'state': 'drafting', 'scheduled_for': '2026-11-03'}]}]})
+        if path == f'/api/content-ideas/{OFF}/making':
+            return 200, json.dumps({'ok': True, 'steps': [{'key': 'scripts', 'state': 'done'}, {'key': 'record', 'state': 'now'}],
+                                    'making': {'script_check': {'passed': True, 'one_cut': True, 'cuts': ['short'], 'hashes': {'short': off_sha}}},
+                                    'offday': {'script': off_words, 'script_sha256': off_sha}})
+        return 404, '{}'
+    off_waiting, _ = waiting_pieces(off_call, date(2026, 11, 2))
+    check('off day: the piece waits for its short cut alone', [(p['id'], p['cuts']) for p in off_waiting], [(OFF, ['short'])])
+    with tempfile.TemporaryDirectory() as tmp:
+        off_found = scripts_for(off_waiting[0], plans=Path(tmp), roots=[], show=None)
+    check('off day: the words he approved are its current short script', (sorted(off_found), off_found.get('short', {}).get('current')), (['short'], True))
+    check('off day: a take that runs like a short is the short; a longer one is unsure', (length_cut(80, ('short',)), length_cut(200, ('short',))), ('short', None))
+    check('off day: a record without one_cut still asks for both cuts', making.one_cut({'script_check': {'hashes': {'short': off_sha}}}), False)
     if fails:
         print('recording match self-test FAILED:\n  ' + '\n  '.join(fails))
         return 1

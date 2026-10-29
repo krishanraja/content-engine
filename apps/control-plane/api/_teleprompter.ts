@@ -283,9 +283,14 @@ export interface BoardApproval {
   updated_at?: string
   body: { piece_id?: unknown; scripts?: unknown; hashes?: unknown; approved?: unknown; [key: string]: unknown }
 }
+/** The days a script goes out on: Monday, Wednesday and Friday, and the off days for a piece he records from an
+ *  off-day option (Ruling, Krish, 2026-10-29: "Tuesday, Thursday, Saturday, or Sunday publish"). */
+export const SEND_DAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'] as const
+export type SendDay = (typeof SEND_DAYS)[number]
 export interface SendApprovedInput {
   piece_id: string
-  day: 'mon' | 'wed' | 'fri'
+  /** The day it goes out: a publishing day, or an off day for a piece he records (Ruling, Krish, 2026-10-29). */
+  day: SendDay
   folder_title: string
   /** The piece's folder from the making record, when it has one: never a second folder. */
   folder_id?: string
@@ -330,7 +335,7 @@ function featurePiece(pieceId: string, features: Record<string, unknown>): boole
 function inputProblem(input: SendApprovedInput, features: Record<string, unknown>): string | null {
   if (!isObj(input)) return 'the input is an object'
   if (typeof input.piece_id !== 'string' || !UUID.test(input.piece_id)) return 'piece_id is the content_ideas uuid'
-  if (!['mon', 'wed', 'fri'].includes(String(input.day))) return 'day is mon, wed or fri'
+  if (!(SEND_DAYS as readonly string[]).includes(String(input.day))) return 'day is mon, wed or fri, or tue, thu, sat or sun for an off-day piece'
   if (!oneLine(input.folder_title)) return `folder_title is one line of 1 to ${MAX_NAME} characters`
   if (input.folder_id !== undefined && !(typeof input.folder_id === 'string' && TELEPROMPTER_ID.test(input.folder_id))) return 'folder_id is the folder\'s id, an uppercase UUID'
   if (!Array.isArray(input.scripts) || !input.scripts.length || input.scripts.length > CUTS.length) return 'scripts holds the long cut, the short cut, or both, and a feature piece\'s feature'

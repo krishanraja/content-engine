@@ -135,7 +135,8 @@ describe('no key, no request', () => {
     expect(await sendApprovedScripts(changed, { env: ENV, fetchImpl: fake.fetchImpl })).toMatchObject({ status: 'refused', error: expect.stringMatching(/90-second cut's sha256 is not the hash of its text/) })
     expect(await sendApprovedScripts(input(), { env: { TELEPROMPTER_API_KEY: 'sk-not-teleprompter' }, fetchImpl: fake.fetchImpl })).toMatchObject({ status: 'refused' })
     expect(await sendApprovedScripts(input(), { env: { ...ENV, TELEPROMPTER_MCP_URL: 'http://plain.invalid/mcp' }, fetchImpl: fake.fetchImpl })).toMatchObject({ status: 'refused' })
-    expect(await sendApprovedScripts(input({ day: 'tue' as any }), { env: ENV, fetchImpl: fake.fetchImpl })).toMatchObject({ status: 'refused' })
+    // Tuesday is an off day a piece he records can go out on (Ruling, Krish, 2026-10-29); a day that is no day is refused.
+    expect(await sendApprovedScripts(input({ day: 'someday' as any }), { env: ENV, fetchImpl: fake.fetchImpl })).toMatchObject({ status: 'refused' })
     expect(await sendApprovedScripts(input({ scripts: [input().scripts[0], input().scripts[0]] }), { env: ENV, fetchImpl: fake.fetchImpl })).toMatchObject({ status: 'refused' })
     expect(fake.fetchImpl).not.toHaveBeenCalled()
   })

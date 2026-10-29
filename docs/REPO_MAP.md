@@ -943,6 +943,7 @@ What Krish's Inspiration House holds, for Sunday's ideas (GET /api/week/options?
 - `const INSPO_FRESH_DAYS`
 - `const EXCERPT`
 - `interface InspoCard`
+- `function savedWhy(r: Row): string | null`
 - `function card(r: Row): InspoCard`
 - `interface InspirationBlock`
 - `function buildInspiration(input: { weekStart: string; items: Row[]; reads?: Row[]; moves?: Row[]; claims?: Row[]; quote…`
@@ -1143,6 +1144,7 @@ The making record: where one piece is on its way from the workroom to
 - `type TeleprompterState = 'in' | 'older' | 'failed' | 'missing'`
 - `function teleprompterStates(m: Partial<Making>): Partial<Record<MakingCut, TeleprompterState>>`
 - `function teleprompterNote(m: Partial<Making>): string`
+- `function oneCut(m: Partial<Making>): boolean`
 - `function makingCuts(m: Partial<Making>): MakingCut[]`
 - `const MAKING_OWNERS: Record<string, MakingOwner>`
 - `function makingSteps(row: { id?: string; state?: string | null; body?: string | null; meta?: Record<string, any> | null…`
@@ -1661,6 +1663,8 @@ What Krish has confirmed he likes, for the writers.
 - `type ApprovedCut = MakingCut`
 - `interface ApprovedScript`
 - `interface BoardApproval`
+- `const SEND_DAYS`
+- `type SendDay = (typeof SEND_DAYS)[number]`
 - `interface SendApprovedInput`
 - `interface SentScript`
 - `interface SendResult`
@@ -1892,6 +1896,8 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `const SCRIPT_CUTS`
 - `const TITLE_SURFACES`
 - `function validBody(collection: string, id: string, body: unknown): boolean`
+- `const RECORDED_STYLES`
+- `const RECORDED_SERIES`
 - `const COMMENT_ACTS`
 - `function combineWriterRefused(collection: string, body: unknown, who: string | null): boolean`
 - `function hisOnlyRefusal(collection: string, body: unknown, who: string | null): string | null`
@@ -1912,6 +1918,8 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `class PressError`
 - `async function preparePress(collection: string, id: string, body: Body): Promise<Body>`
 - `async function heldBecause(making: unknown, texts: Record<string, string>): Promise<string | null>`
+- `function offdayDate(week: string, day: string): string`
+- `async function placeOffday(db: SupabaseClient, ctx: { week: string; id: string; body: Body; who: string; now: string })…`
 - `async function afterPress(db: SupabaseClient, ctx: { week: string; collection: string; id: string; body: Body; who: str…`
 
 ### `apps/control-plane/api/board/index.ts`

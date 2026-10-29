@@ -892,6 +892,10 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
   const offs = [...document.querySelectorAll(".off-card[data-offday]")];
   if (!rows.length && !offs.length) return;
   const saved = {}, busy = {}, asking = {};
+  // What the server did with an approved piece he records (apps/control-plane/api/board/_presses.ts, offdayRecorded).
+  const OFF_SEND = { sent: "On its day, and the script is in Teleprompter.", held: "On its day; the script waits for a session to send it.",
+    no_key: "On its day; a session sends the script to Teleprompter.", refused: "Not sent to Teleprompter. A session looks at why.",
+    error: "Not sent to Teleprompter yet. A session tries again." };
   let qdb = null, mode = "loading";
   const LABEL = { wider_piece_context: "Wider piece", track_over_time: "Future trend", next_week: "Next week", not_for_us: "Rejected" };
   const ASK = { wider_piece_context: "A theme or a note (optional)", track_over_time: "A note (optional)", next_week: "A note (optional)", not_for_us: "Why? (required)" };
@@ -929,8 +933,10 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
         b.disabled = mode !== "live" || !!busy[id];
       }
       c.classList.toggle("on", same && v.approved === true);
+      const sent = same && v.approved && v.send ? OFF_SEND[v.send.status] : "";
       if (!busy[id]) say(`[data-offstate="${id}"]`, mode === "off" ? "Presses are not saving in this view." : !v ? ""
-        : !same ? "The copy changed since you pressed. Press again." : v.approved ? "Approved. Saved." : "Skipped. Saved.", mode === "off" || (!!v && !same));
+        : !same ? "The copy changed since you pressed. Press again." : v.approved ? "Approved. Saved." + (sent ? " " + sent : "") : "Skipped. Saved.",
+        mode === "off" || (!!v && !same) || (!!sent && v.send.status !== "sent"));
     }
   }
   render();
@@ -995,9 +1001,15 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
     if (o) {
       const c = document.getElementById(o.dataset.for); if (!c) return;
       const id = c.dataset.offday;
-      save(id, { pick: id, use: "offday", day: c.dataset.offDay, approved: o.dataset.value === "approve", copy_sha256: c.dataset.copySha256,
+      const body = { pick: id, use: "offday", day: c.dataset.offDay, approved: o.dataset.value === "approve", copy_sha256: c.dataset.copySha256,
         format: c.dataset.format, source: c.dataset.source, option_id: c.dataset.optionId,
-        week: c.closest("[data-week]")?.dataset.week, at: new Date().toISOString() }, `[data-offstate="${id}"]`);
+        week: c.closest("[data-week]")?.dataset.week, at: new Date().toISOString() };
+      // A piece he records (Ruling, Krish, 2026-10-29): his Approve carries the exact words he saw, and the server puts
+      // the piece on its day and sends those words to Teleprompter.
+      if (c.dataset.kind === "recorded") Object.assign(body, { kind: "recorded", piece_id: c.dataset.piece, series: c.dataset.series,
+        style: c.dataset.style, script: c.querySelector("[data-offscript]")?.textContent || "", script_sha256: c.dataset.scriptSha256,
+        folder_title: c.dataset.folderTitle, title: c.dataset.tpTitle, readers: (c.dataset.readers || "").split("|").filter(Boolean) });
+      save(id, body, `[data-offstate="${id}"]`);
     }
   });
   document.addEventListener("input", e => { const i = e.target.closest && e.target.closest("input[data-press-note]"); if (i) i.dataset.unsaved = "true" });
