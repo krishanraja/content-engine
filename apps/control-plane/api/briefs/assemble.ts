@@ -82,7 +82,7 @@ const BRIEF_SHAPE = [
   '4. THE CONSENSUS, 70 to 120 words: state the belief you are testing in its STRONGEST form and credit precisely what it gets right. It is a belief in circulation, never a named person\'s stupidity. A piece that beats a strawman has failed.',
   '5. WHERE THE EVIDENCE LANDS, 300 to 450 words: the investigation. Trace the mechanism, who pays, where the margin moves, what changes in the operating model when this lands. Name the second-order effect, not the obvious one. Then calibrate honestly: if the week only dents the belief rather than breaking it, say exactly that, and say what the evidence cannot support. Overclaiming is the failure this section exists to prevent.',
   '6. THE NEXT TWELVE MONTHS, 100 to 160 words: the thesis this confirms or forces, with its commercial consequence and the specific thing to watch that would prove it early. Use the shifts register momentum, an accelerating shift earns a firmer claim than a fading one. Close on a forward verdict. Never "time will tell", never a summary, never a question.',
-  '7. MY POSITION, 80 to 140 words, first person, grounded in the krish_week material supplied: the move you are making or the bet you are holding because of this. This is the section nobody else could write, so it needs a real decision in it, not a restatement of the argument.',
+  '7. OUR POSITION, 80 to 140 words, in the publication\'s "we" (house rule NO_NAME), grounded in the krish_week material supplied: the move we are making or the bet we are holding because of this. This is the section nobody else could write, so it needs a real decision in it, not a restatement of the argument.',
 ].join('\n')
 
 const BRIEF_LENS = [
@@ -288,7 +288,7 @@ export async function runAssemble(force = false) {
     '## The next twelve months',
     nextYear,
     '',
-    '## My position',
+    '## Our position',
     position,
     '',
     '## Sources',

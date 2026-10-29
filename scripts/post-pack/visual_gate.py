@@ -259,6 +259,8 @@ SHOWS = {
     'quote': 'a real quote, from its source',
     'logos': 'the companies\' own logos',
     'reconstruction': 'an explicitly labelled reconstruction, with its source and scope',
+    'comparison': 'a visually clear comparison with the real facts on it, with "facts" (the real names, and the real figures '
+                  'where there are any) and "data_source"',
 }
 
 
@@ -277,7 +279,8 @@ def real_thing_problems(post):
             found.append(f'"{label}" does not say what real thing it shows: give it "shows": one of '
                          + ', '.join(f'"{k}" ({v})' for k, v in SHOWS.items())
                          + '. A picture adds meaning beyond the words with the real facts on it: a visually clear idea, a '
-                         'comparison included, is welcome with the real names and numbers on it, never one that stands in for them '
+                         'comparison included, is welcome with the real facts on it (the real names, and the real figures where there '
+                         'are any), never one that stands in for them '
                          '(house rule ANALOGY_IN_SCRIPTS_ONLY; Krish, 2026-10-29: "pictures never add zero value above and beyond '
                          'the words. They have to be additive in meaning. I\'m all up for visually clear ideas.")')
         elif shows == 'chart':
@@ -292,6 +295,11 @@ def real_thing_problems(post):
         elif shows == 'reconstruction':
             if not str(f.get('data_source') or '').strip() or not str(f.get('scope') or '').strip():
                 found.append(f'"{label}" is a reconstruction without its source and scope; name both and label it as reconstructed')
+        elif shows == 'comparison':
+            if not str(f.get('facts') or '').strip() or not str(f.get('data_source') or '').strip():
+                found.append(f'"{label}" is a comparison without the real facts it carries and their source: give "facts" '
+                             '(the real names, and the real figures where there are any) and "data_source", and draw them on it, '
+                             'or it stands in for the facts (house rule ANALOGY_IN_SCRIPTS_ONLY)')
     return found
 
 
@@ -438,6 +446,16 @@ def self_test():
         for missing in ('data_source', 'scope'):
             check('a reconstruction requires '+missing,
                   len(real_thing_problems({'date': '2026-10-21', 'files': [reconstruction | {missing: ''}]})), 1)
+        # A comparison with the real facts on it adds meaning (Krish, 2026-10-29: "I'm all up for visually clear ideas.").
+        passports = {'kind': 'image', 'name': 'passports.png', 'shows': 'comparison',
+                     'facts': 'Claude: made by Anthropic, San Francisco; DeepSeek: made by DeepSeek, Hangzhou',
+                     'data_source': 'Anthropic and DeepSeek about pages, 23 October 2026'}
+        check('a named comparison with its facts and source passes',
+              real_thing_problems({'date': '2026-10-29', 'files': [passports]}), [])
+        check('the 16 Oct race called a comparison, with no facts on it, is still refused',
+              len(real_thing_problems({'date': '2026-10-29', 'files': [race | {'shows': 'comparison'}]})), 1)
+        check('a comparison with names but no source is refused',
+              len(real_thing_problems({'date': '2026-10-29', 'files': [passports | {'data_source': ''}]})), 1)
         check('calling a reconstruction an evidence pile still needs real pages',
               len(real_thing_problems({'date': '2026-10-21', 'files': [reconstruction | {'shows': 'evidence'}]})), 1)
         check('the real-thing check runs through problems()',

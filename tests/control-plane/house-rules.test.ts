@@ -848,9 +848,10 @@ describe('no public word names Krish, and every picture adds meaning (NO_NAME, A
     for (const picked of ['"We"', '"No, personal stays personal"', '"Drop it"', '"Yes, block it"']) assert.ok(r.said.includes(picked), picked)
     assert.deepEqual([...r.stages].sort(), ['final_pass', 'judge_draft', 'publish_check', 'visual', 'write'])
     for (const stage of ['write', 'judge_draft', 'final_pass', 'visual'] as const) assert.ok(houseRulesBlock(stage).includes(r.text), stage)
-    assert.match(r.text, /OUR TEST · <date>/)
+    assert.match(r.text, /OUR TEST · <date>" by default/)
     assert.match(r.text, /makeyourmindup · <date> · <n> minute read/)
-    assert.doesNotMatch(r.text, /MY TEST ·|By Krish/)
+    // A video label he presents reading OUR TEST or MY TEST is his to pick: a default, never a refusal.
+    assert.doesNotMatch(r.text, /MY TEST|OUR CALL|By Krish/)
   })
   test('articles speak as "we", the scripts he speaks keep "I", and no writer example names him', () => {
     const voice = HOUSE_RULES.find(x => x.id === 'SOUNDS_LIKE_KRISH')!
@@ -869,6 +870,11 @@ describe('no public word names Krish, and every picture adds meaning (NO_NAME, A
       assert.match(source, framing, file)
       assert.doesNotMatch(source, /in Krish Raja's voice|Krish Raja's publication|You write as Krish|passage of Krish Raja's draft|Krish Raja's content partner/, file)
     }
+    // The weekly brief is an article: its position section speaks as "we", under a public heading that says so.
+    const brief = readFileSync('apps/control-plane/api/briefs/assemble.ts', 'utf8')
+    assert.match(brief, /7\. OUR POSITION, 80 to 140 words, in the publication\\'s "we"/)
+    assert.match(brief, /'## Our position'/)
+    assert.doesNotMatch(brief, /MY POSITION|## My position|first person/)
   })
   test('a picture must add meaning beyond the words; a visually clear idea with the real facts is welcome; one that stands in for them is out', () => {
     const r = HOUSE_RULES.find(x => x.id === 'ANALOGY_IN_SCRIPTS_ONLY')!
@@ -876,6 +882,9 @@ describe('no public word names Krish, and every picture adds meaning (NO_NAME, A
     assert.match(r.text, /adds meaning beyond the words said over it/)
     assert.match(r.text, /A visually clear idea is welcome, a comparison included, when the real facts are on it/)
     assert.match(r.text, /stands in for the facts \(the 16 October race between two cars/)
+    // Names alone can carry a comparison (the passports): figures only where there are any.
+    assert.match(r.text, /on a comparison the real names, and the real figures where there are any/)
+    assert.doesNotMatch(r.text, /names and numbers on any comparison/)
     assert.doesNotMatch(r.text, /never act out an analogy/)
     // The article and script sentences are kept.
     assert.match(r.text, /Analogies, comic comparisons and exaggeration belong in the video scripts/)
