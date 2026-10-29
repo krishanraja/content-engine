@@ -80,7 +80,16 @@ class FilingTests(unittest.TestCase):
         self.assertIn('the short cut: words gate is not passed', said)
         self.assertIn('Disney', said)
         self.assertIn('--file-only', said)
+        self.assertNotIn('add the review evidence to each receipt', said)
+        self.assertIn('the session that watches both cuts at full size records it', said)
         self.assertEqual(sent, [])
+        # On GitHub the runner's folder goes with it: the stop says how to fetch the cuts from the run's artifacts.
+        with patch.dict(produce_day.os.environ, {'GITHUB_ACTIONS': 'true', 'GITHUB_RUN_ID': '123'}):
+            with self.assertRaises(produce_day.Stop) as stop:
+                self.file(sent)
+        self.assertIn('gh run download 123 -n produce-day-cuts -n produce-day-reports -D .cache/produce', str(stop.exception))
+        flow = (ROOT / '.github/workflows/produce-day.yml').read_text(encoding='utf-8')
+        self.assertIn('name: produce-day-cuts', flow)
 
     def test_a_passing_cut_is_sent_with_its_receipt_and_recorded_from_the_exact_file(self):
         for video in self.cuts.values():
@@ -113,6 +122,16 @@ class FilingTests(unittest.TestCase):
         for name in names.values():
             self.assertLessEqual(len(f'3 Posts/{folder}/3 Video/{name}.mp4.validation.json'), limit)
         self.assertTrue(produce_day.delivery_names(folder, 'Who pays')['long'].startswith('Who pays - wide 16x9'))
+        # The media-quality binding is filed beside the cut too, 3 characters longer than the receipt: Monday 26's
+        # folder with a 31-character subject kept the full names and its binding's path ran to 181 (over 180), so
+        # send.py refused the whole send.
+        folder = '2026-10-26 Mon follow.the.money - Disney, Google and Character.AI'
+        subject = 'Disney, Google and Character.AI'
+        self.assertEqual(len(subject), 31)
+        for name in produce_day.delivery_names(folder, subject).values():
+            for beside in ('.mp4', '.jpg', '.mp4.validation.json', '.mp4.media-quality.json'):
+                path = f'3 Posts/{folder}/3 Video/{name}{beside}'
+                self.assertIsNone(produce_day.library.refusal(path), path)
 
     def test_file_only_finds_the_cuts_made_here(self):
         self.assertEqual(produce_day.made_cuts(self.work), self.cuts)

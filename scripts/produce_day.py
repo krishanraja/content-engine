@@ -452,13 +452,19 @@ def review_sheet(src, out):
     return out
 
 
+# The longest name filed beside a cut (stage_cut): its media-quality binding, 3 characters longer than its receipt.
+BESIDE = ('.mp4', '.jpg', '.mp4.validation.json', '.mp4.media-quality.json')
+
+
 def delivery_names(folder, subject):
     """The two cuts' names in the library, short enough that every file filed beside
-    them (the cut, its thumbnail, its receipt) fits the path Windows opens."""
+    them (the cut, its thumbnail, its receipt, its media-quality binding) fits the
+    path Windows opens."""
     names = {'long': f'{subject} - wide 16x9 - YouTube, Substack', 'short': f'{subject} - tall 9x16 - Shorts, Reels, TikTok, LinkedIn'}
     # A long subject pushes the library path past what Windows opens (library.PATH_MAX);
     # the folder already carries the subject, so the files can drop it (2026-10-13).
-    if any(len(f'3 Posts/{folder}/3 Video/{n}.mp4.validation.json') > library.PATH_MAX for n in names.values()):
+    longest = max(BESIDE, key=len)
+    if any(library.utf16_length(f'3 Posts/{folder}/3 Video/{n}{longest}') > library.PATH_MAX for n in names.values()):
         names = {cut: n[len(subject) + 3:] for cut, n in names.items()}
     return names
 
@@ -490,6 +496,24 @@ def held_for_delivery(staged_cuts):
     return held
 
 
+def held_next(work):
+    """What happens after a hold, said plainly. No machine records a cut's review evidence
+    in Wave 1, so a fresh cut always stops here: the session that watches both cuts at full
+    size records it (produce-video, "Never call a video good without watching it") until
+    the receipts are machine-written (plan W3 3a, Wave 2). A GitHub runner's folder goes
+    with the runner, so its cuts travel in the run's artifacts."""
+    review = ('No machine records the review evidence yet: the session that watches both cuts at full size records it '
+              '(sync from sync_check.py, motion from wall_stabilize.py, visual clarity from visual_clarity.py, and the full '
+              'review from Krish\'s own words after he plays each cut through), and a lost word is cleared only by fixing '
+              'the cut or a heard_as row with his words. ')
+    run_id = os.environ.get('GITHUB_RUN_ID')
+    if os.environ.get('GITHUB_ACTIONS') == 'true' and run_id:
+        return review + (f'This runner\'s folder goes with it: the cuts and their receipts are in this run\'s artifacts for 7 days. '
+                         f'On the machine that files them: gh run download {run_id} -n produce-day-cuts -n produce-day-reports '
+                         f'-D {WORK_ROOT.relative_to(REPO).as_posix()}, then run this again there with --file-only and the same --date and --piece')
+    return review + f'The cuts and their receipts are in {work}; run this again on this machine with --file-only and the same --date and --piece'
+
+
 def file_and_record(post_path, piece, rendered, thumb, work):
     post = plan_files.load_post(post_path)
     folder = plan_files.pack_folder(post)
@@ -509,8 +533,7 @@ def file_and_record(post_path, piece, rendered, thumb, work):
     held = held_for_delivery(cuts)
     if held:
         raise Stop('held before the library, nothing sent: ' + ' | '.join(f'the {cut} cut: ' + '; '.join(p) for cut, p in held.items())
-                   + f'. The cuts and their receipts are in {work}; add the review evidence to each receipt, '
-                   'then run this again with --file-only')
+                   + '. ' + held_next(work))
     run([PY, 'scripts/post-pack/send.py', staged, '--as', f'3 Posts/{folder}/3 Video', '--purpose',
          'the finished video, its thumbnail and its validation receipt, made by the production run'], what='sending the videos to the library')
     for cut, src in rendered.items():

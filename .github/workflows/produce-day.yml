@@ -14,6 +14,12 @@ name: Produce the day's videos
 # York". The overnight runner replaces it in Wave 2 (plan W3 3e). Until then it
 # runs only by hand, and fails loudly: a cut the words gate holds, or one whose
 # receipt does not pass the delivery gates, stops the run red and sends nothing.
+# In Wave 1 no machine records a cut's review evidence (sync, motion, visual
+# clarity, his full review), so a fresh run always stops there: it produces the
+# cuts and their evidence, not a filing. The runner's folder goes with it, so the
+# two cuts are kept in the produce-day-cuts artifact; the session that reviews
+# them downloads both artifacts on the machine that files and runs
+# produce_day.py --file-only there (the stop message gives the command).
 #
 # One click: Actions > Produce the day's videos > Run workflow (any day, any date).
 
@@ -100,3 +106,14 @@ jobs:
             .cache/produce/**/review-*.png
           if-no-files-found: ignore
           retention-days: 14
+      - name: Keep the two cuts, for --file-only on the machine that files them
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: produce-day-cuts
+          path: |
+            .cache/produce/*/long/*-16x9.mp4
+            .cache/produce/*/short/*-9x16.mp4
+          if-no-files-found: ignore
+          compression-level: 0
+          retention-days: 7
