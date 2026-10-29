@@ -37,8 +37,10 @@ def mechanical(spec, cut, directory):
     lock = designlock.load()
     locked = spec['format'] in lock.get('formats', {})
     frozen = locked and designlock.frozen(lock, spec['format'])[0]
-    for name, applies in (('composition', spec['cuts'][cut]['aspect'] == '9:16'),
-                          ('keyframe_match', frozen)):
+    # The design lock is 9:16 only: a wide cut has no golden stills, so both lock rows are not applicable to it
+    # (QC says so itself) and the Critic is the design gate.
+    tall = spec['cuts'][cut]['aspect'] == '9:16'
+    for name, applies in (('composition', tall), ('keyframe_match', frozen and tall)):
         row = qc.get('checks', {}).get(name)
         if row is None and applies:
             out.append(f'{name} fails: missing row')
