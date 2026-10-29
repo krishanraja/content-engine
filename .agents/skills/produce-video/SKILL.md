@@ -269,7 +269,9 @@ No one is in its chat.
   the evidence, then files with `produce_day.py --file-only` (its stop
   message gives the command, and on GitHub the cuts are in the run's
   artifacts).
-- **A home computer** (Windows): work in `C:\Users\krish\dev\content-engine`,
+- **A home computer** (Windows): work in the content-engine folder that
+  config/studio.json `local_roots.repos` names (the one place that says where
+  the repositories live; `python scripts/velib/common.py repos` prints it),
   never in `Documents\MindmakeVideoStudio\runner-source`, at the latest
   `main` (`git pull --ff-only`). Codex runs every step outside its sandbox
   (ask for escalated permissions; Krish approves): inside it, the engine

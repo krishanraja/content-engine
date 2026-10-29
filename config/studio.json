@@ -390,5 +390,6 @@
       }
     }
   ],
-  "default_brand_theme": "mindmake-video-v1"
+  "default_brand_theme": "mindmake-video-v1",
+  "local_roots": {"_about": "One local layout on his home computers (W2.11). Repositories, their worktrees and the engine's runtime live under these roots; every reader takes them from here (packages/core/src/paths.ts localRoots, scripts/velib/common.py local_root, the produce-video skill), never from a hard-coded path, and npm run check:local-paths refuses one. %NAME% is the computer's environment variable; {repo} and {branch} are filled in by the reader. engine_runtime lists the only runtime folders the engine made and may prune. Moving an existing folder waits on Krish's consent row for that folder (Wave 3, filearchives).", "repos": "%USERPROFILE%\\dev\\makeyourmindup\\{repo}", "worktrees": "%USERPROFILE%\\dev\\makeyourmindup\\.worktrees\\{repo}\\{branch}", "runtime": "%LOCALAPPDATA%\\makeyourmindup", "engine_runtime": ["cache", "jobs", "renders", "logs", "tmp"]}
 }
