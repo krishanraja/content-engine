@@ -190,7 +190,7 @@
         "until_approved": "none",
         "approved_set": null,
         "options": ["big_moment_only", "none"],
-        "what": "One sound under a piece's biggest moment, such as a low thud as BANKRUPT slams in, and nothing anywhere else. None until he approves a small set by ear (approved_set); whether Epidemic Sound covers sound effects is unchecked, and no spend is assumed."
+        "what": "One sound under a piece's biggest moment, such as a low thud as BANKRUPT slams in, and nothing anywhere else. None until he approves a small set by ear (approved_set); Epidemic Sound covers sound effects (his yes, 29 Oct), and no spend is assumed."
       }
     ]
   },
@@ -357,6 +357,7 @@
         "layer": "aim",
         "answer": "I don't really care. I think it depends on the rest of the production.",
         "question": "Monday's cuts show most outside companies' logos in one house colour. The approved media standard says accurate official marks, never redrawn. Is a one-colour house treatment allowed, using only each company's own official one-colour mark?",
+        "answered_2026_10_29": {"question": "When a video shows a company's logo, is it OK to recolour it in our cream?", "answer": "yes", "applies": "the decision on rights above: the official shape, unedited, may be set in house cream. Not applied yet: the bar page, this ruling's production line and scripts/post-pack/logo_gate.py (no cream variant) still read the earlier rule, and change together in one build."},
         "production": "the company's official mark in full colour, or the company's own published one-colour version of it, whichever fits the rest of the production; never recoloured or redrawn by us; a house colour the company does not publish waits on Krish's decision on rights",
         "changed": "Quality 6 and What is not the bar. His answer covers the company's own one-colour mark only: whether we may set a mark in a house colour the company does not publish is still Krish's decision on rights, between only the colour versions the company itself publishes and any single house colour on the official shape."
       },
