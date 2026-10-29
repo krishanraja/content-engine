@@ -125,6 +125,63 @@ def weekly_used_percent() -> float | None:
     return info['used_percent'] if info else None
 
 
+# A card's own limits (W2.12): max_minutes and max_calls are enforced, not advice. A foreground dispatch is stopped at
+# max_minutes; verify-card reads the card's Codex session log and refuses a run that went past either limit.
+def card_limits(meta: dict) -> tuple[int, int]:
+    try:
+        minutes, calls = int(meta.get('max_minutes', 40)), int(meta.get('max_calls', 40))
+    except (TypeError, ValueError):
+        sys.exit(f've card {meta.get("card")}: max_minutes and max_calls are whole numbers')
+    if not (1 <= minutes <= 240 and 1 <= calls <= 400):
+        sys.exit(f've card {meta.get("card")}: max_minutes is 1 to 240 and max_calls 1 to 400')
+    return minutes, calls
+
+
+def card_usage(card_id: str, cwd: str, logs: list[str] | None = None) -> dict | None:
+    """{minutes, calls, log} for the newest Codex session that ran this card (its cwd is the card's worktree, or its
+    prompt names the card), from the session's own timestamps and tool calls; None when no log is found."""
+    from datetime import datetime
+    if logs is None:
+        logs = sorted(glob.glob(str(Path.home() / '.codex' / 'sessions' / '*' / '*' / '*' / '*.jsonl')), key=os.path.getmtime)
+    want_cwd = str(Path(cwd)).replace('\\', '/').rstrip('/').lower() if cwd else None
+    for log in reversed(logs[-40:]):
+        lines = Path(log).read_text(encoding='utf-8', errors='replace').splitlines()
+        events = []
+        for line in lines:
+            try:
+                events.append(json.loads(line))
+            except ValueError:
+                continue
+        meta_cwd = next((str((e.get('payload') or {}).get('cwd') or '') for e in events if e.get('type') == 'session_meta'), '')
+        mine = (want_cwd and meta_cwd.replace('\\', '/').rstrip('/').lower() == want_cwd) or f'card: {card_id}' in '\n'.join(lines)
+        if not mine:
+            continue
+        stamps = []
+        for e in events:
+            try:
+                stamps.append(datetime.fromisoformat(str(e.get('timestamp')).replace('Z', '+00:00')))
+            except ValueError:
+                continue
+        calls = sum(1 for e in events if (e.get('payload') or {}).get('type') in ('function_call', 'custom_tool_call', 'local_shell_call'))
+        minutes = (max(stamps) - min(stamps)).total_seconds() / 60 if len(stamps) > 1 else 0.0
+        return {'minutes': round(minutes, 1), 'calls': calls, 'log': log}
+    return None
+
+
+def limit_problems(meta: dict, usage: dict | None) -> list[str]:
+    """Why a card's run went past its own limits, or []. A run with no session log found is said, never passed."""
+    minutes, calls = card_limits(meta)
+    if usage is None:
+        return [f'no Codex session log found for card {meta.get("card")}: its minutes and calls cannot be checked against '
+                f'max_minutes {minutes} and max_calls {calls}']
+    out = []
+    if usage['minutes'] > minutes:
+        out.append(f'the run took {usage["minutes"]} minutes, past the card\'s max_minutes {minutes}')
+    if usage['calls'] > calls:
+        out.append(f'the run made {usage["calls"]} tool calls, past the card\'s max_calls {calls}')
+    return out
+
+
 def ensure_worktree(cwd: Path, card_id: str) -> None:
     """A card runs in its own worktree cut from origin/main, with node_modules junctioned from the main checkout.
     A new worktree is made only where the local layout puts it (velib.common.card_worktree: config/studio.json
@@ -184,20 +241,64 @@ def remove_worktree(cwd: Path) -> None:
     subprocess.run(['git', 'worktree', 'remove', '--force', str(cwd)], cwd=ROOT, check=True)
 
 
-def dispatch(card_path: Path, background: bool = True, spend_approved: bool = False) -> subprocess.CompletedProcess:
+DEFAULT_TOOLS = 'shell, apply_patch'
+DEFAULT_ALLOWANCE_RESERVE = 1.0   # percent points of the weekly Codex window a card reserves unless it says (allowance_points:)
+DEFAULT_PAID_RESERVE = 40.0       # Codex credits a card reserves past the ceiling unless it says (paid_credits:)
+
+
+def _hold(card_path: Path, reasons: list[str]) -> None:
+    """A card that may not be sent is held: recorded beside it with the reason, and never sent."""
+    from datetime import datetime, timezone
+    write_json(card_path.with_suffix('.held.json'), {'card': card_path.name, 'held': True, 'reasons': reasons,
+                                                     'at': datetime.now(timezone.utc).isoformat(timespec='seconds')})
+    sys.exit('ve dispatch: held, not sent: ' + '; '.join(reasons))
+
+
+def _admit(card_path: Path, meta: dict) -> None:
+    """Codex runs only under its one tool profile (config/codex-profile.json, failure production-asked-to-publish):
+    the profile must pass its audit and every tool the card names must be one it allows, or the card is held."""
+    sys.path.insert(0, str(ROOT / 'scripts' / 'overnight'))
+    try:
+        import codex_profile
+        profile = codex_profile.load()
+    except (ImportError, OSError, ValueError) as error:
+        _hold(card_path, [f'no Codex tool profile to send it under ({error})'])
+    tools = [t.strip() for t in (meta.get('tools') or DEFAULT_TOOLS).strip('[]').split(',') if t.strip()]
+    reasons = codex_profile.admit(tools, profile)
+    if reasons:
+        _hold(card_path, reasons)
+
+
+def _reserve(card_path: Path, meta: dict) -> str:
+    """Reserve the card's credits against Control Center's credit read, before anything is sent; refuse over it.
+    Past the weekly allowance ceiling Codex draws paid credits, which reserve against their own cap."""
+    from . import ledger
+    used = weekly_used_percent()
+    if used is not None and used > ALLOWANCE_CEILING:
+        return ledger.reserve('codex_paid_credits', float(meta.get('paid_credits') or DEFAULT_PAID_RESERVE),
+                              note=f'card {meta.get("card", card_path.stem)}: allowance at {used:.0f}%')
+    return ledger.reserve('codex_allowance_points', float(meta.get('allowance_points') or DEFAULT_ALLOWANCE_RESERVE),
+                          note=f'card {meta.get("card", card_path.stem)}')
+
+
+def dispatch(card_path: Path, background: bool = True) -> subprocess.CompletedProcess:
     meta = parse_card(card_path)
     _require_design_lock(meta)
-    used = weekly_used_percent()
-    if used is not None and used > ALLOWANCE_CEILING and not spend_approved:
-        sys.exit(f've dispatch: the weekly Codex allowance is at {used:.0f}% (ceiling {ALLOWANCE_CEILING}%), so Codex would draw paid credits. '
-                 "Pass --spend-approved only after Krish has said yes in his own words.")
+    _admit(card_path, meta)
+    _reserve(card_path, meta)
     cwd = meta.get('cwd') or str(ROOT)
+    minutes, _ = card_limits(meta)
     ensure_worktree(Path(cwd), meta.get('card', 'card'))
     cmd = ['node', companion(), 'task', '--fresh', '--write', '--model', meta.get('model', MODEL), '--effort', meta.get('effort', EFFORT),
            '--cwd', cwd, '--prompt-file', str(card_path.resolve())]
     if background:
+        # The companion runs on in the background; verify-card holds it to max_minutes and max_calls from its log.
         cmd.insert(3, '--background')
-    return subprocess.run(cmd, capture_output=True, text=True, cwd=cwd)
+        return subprocess.run(cmd, capture_output=True, text=True, cwd=cwd)
+    try:
+        return subprocess.run(cmd, capture_output=True, text=True, cwd=cwd, timeout=minutes * 60)
+    except subprocess.TimeoutExpired:
+        sys.exit(f've dispatch: card {meta.get("card")} ran past its max_minutes ({minutes}) and was stopped')
 
 
 def verify(card_path: Path, cwd: Path) -> list[str]:
@@ -216,4 +317,5 @@ def verify(card_path: Path, cwd: Path) -> list[str]:
         if result.returncode != 0:
             tail = (result.stdout + result.stderr).strip().splitlines()[-6:]
             problems.append(f'acceptance failed ({result.returncode}): {cmd}\n    ' + '\n    '.join(tail))
+    problems += limit_problems(meta, card_usage(meta.get('card', ''), meta.get('cwd') or str(cwd)))
     return problems
