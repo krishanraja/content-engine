@@ -1932,7 +1932,7 @@ def caption_self_test():
                    ([], [], [], [])))
     checks.append(('another name that only starts with the letters of his is not his name',
                    (named(' Arvind', ' Krishna'), named(' Sriram', ' Krishnan'), named(' Krishi'), named(' Krishan', ' Raja'), named(' at', ' krishraja.com')),
-                   ([], [], [], ['Krishan'], ['krishraja.com'])))
+                   ([], [], [], ['Krishan Raja'], ['krishraja.com'])))
     where = name_in_captions(tokens(heard(' So', " I'm", ' Krish.'), DEFAULT_FIXES), [{'s': 100.0 + n} for n in range(3)])
     refusal = name_refusal(where)
     checks.append(('the refusal names the time in the cut and in the take, and how to cut it',
