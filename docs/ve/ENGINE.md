@@ -32,7 +32,7 @@ Commands, outputs and 55-minute envelope: RUNBOOK.md. Batch questions; end sessi
 | Step | Action | Who |
 |---|---|---|
 | S0 | doctor, start pack, ledger, start clock | Claude/scripts |
-| S1 | Two treatments, lint, stills; Gate 1: treatment, stills, bed, credits merged into storyboard sign-off | Director/Claude, Krish |
+| S1 | Two treatments, lint, stills; Gate 1: treatment, stills, bed, credits merged into storyboard sign-off. The stills show both lead pictures, the series picture from the brand book and a story object, with Claude's pick marked; his signature accepts it unless he ticks the other, and no gate waits on a tick (under test, `docs/production/THE_BAR.md`; recorded with `making.py <piece> choices --lead-picture ...`) | Director/Claude, Krish |
 | S2 | New hero only: card, dispatch --piece while Krish records, verify acceptance/golden stills | Claude dispatches/verifies; Codex builds |
 | S3 | ingest: intended two-aligner word clock; currently exit 2 | script |
 | S4 | Fresh Director session: lint, compile cut-ready timings/assets | Claude/scripts |
