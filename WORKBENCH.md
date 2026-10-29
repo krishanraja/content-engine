@@ -188,10 +188,13 @@ The week of 19 October's queue notes are in `docs/history/2026-10-27-workbench-1
   - the story intro and outro: `scripts/quick-edit/story_io.py props --plan
     <plan>` then `render`.
   Then kit.py, make.py, the thumbnails, send.py and making.py as
-  `produce-video` says. The midday run (`.github/workflows/produce-day.yml`,
-  `scripts/produce_day.py`) does all of it by itself at 12:00 New York on
-  Monday, Wednesday and Friday, on GitHub's machine (his choice: "GitHub
-  always renders"); its Run workflow button is the one click.
+  `produce-video` says. The production run (`.github/workflows/produce-day.yml`,
+  `scripts/produce_day.py`) does all of it on GitHub's machine (his choice:
+  "GitHub always renders") from its Run workflow button, by hand only since
+  the 28 Oct ruling ("record the entire week on a Sunday, but it does not go
+  live until the Monday after (8 days later)"); it stops red when a gate
+  holds a cut, and in Wave 1 always before filing, since no machine records
+  the review evidence yet.
 - Epidemic Sound gives no per-track licence number. His safelisted channels
   are the licence record (`config/music-licences/`, screenshot of 12
   October); never ask him for licence details again. LinkedIn and every
@@ -279,10 +282,11 @@ All on main; each has its tests.
   1:27) in Drive `3 Posts/2026-10-12 Mon .../3 Video`, with NO CURVES, the
   stand-off story intro and outro, thumbnails, and five covers. Only posting
   is left, and that is his.
-- **The midday run** (`.github/workflows/produce-day.yml`,
-  `scripts/produce_day.py`): Monday, Wednesday and Friday at 12:00 New York,
-  GitHub renders both cuts end to end (his choice: "GitHub always renders");
-  the Run workflow button is the one click. The secret ENGINE_OPERATOR_TOKEN
+- **The production run** (`.github/workflows/produce-day.yml`,
+  `scripts/produce_day.py`): by hand only since the 28 Oct ruling (the noon
+  schedule is gone), GitHub renders both cuts end to end (his choice: "GitHub
+  always renders") from the Run workflow button, and stops red when a gate
+  holds a cut. The secret ENGINE_OPERATOR_TOKEN
   is set. A stop writes one board item `videos-<date>` saying what stopped.
   No schedule puts the videos on the board: Krish deleted the publish board
   schedules from both accounts on 19 Oct ("We are not ready for this yet").
