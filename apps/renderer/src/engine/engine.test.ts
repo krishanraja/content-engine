@@ -11,6 +11,9 @@ import { chromeZone } from './geometry'
 import { CallCard } from './chrome/CallCard'
 import { EndingBand } from './chrome/EndingBand'
 import { CaptionTrack } from './chrome/CaptionTrack'
+import { ChannelPill } from './chrome/ChannelPill'
+import { MarkTile } from './chrome/MarkTile'
+import { StageHeader } from './chrome/StageHeader'
 import { slotsFor } from './layouts'
 import { EngineRenderPropsSchema, type EngineBeat, type EngineRenderProps } from './props'
 
@@ -167,6 +170,28 @@ describe('BrandFrame call and ending routing', () => {
   })
 })
 
+describe('the hook is the intro', () => {
+  // Under test (Krish, 29 Oct 2026: "Let's go with number one for now."): the first frame is the hook in the brand's
+  // dress, the logo and the series tag in its corners from the start, with no story card or logo sting before it.
+  it.each(aspects)('draws the logo and the series tag on the first beat from frame 0 in %s', (aspect) => {
+    const props = EngineRenderPropsSchema.parse(fixture)
+    props.aspect = aspect
+    expect(props.beats[0]).toMatchObject({ fromFrame: 0, sectionBeat: true })
+    vi.mocked(useEngineFrame).mockReturnValueOnce(0)
+    const brands = elements(FormatMaster(props)).filter((node) => node.type === BrandFrame)
+    expect(brands.map((node) => (node.props.beat as EngineBeat).id)).toEqual([props.beats[0]!.id])
+    for (const layout of ['STAGE', 'P1', 'P3', 'P6', 'F3'] as const) {
+      const beat = { ...props.beats[0]!, layout }
+      const nodes = elements(BrandFrame({ props, beat, frame: 0 }))
+      if (layout === 'STAGE') {
+        expect(nodes.filter((node) => node.type === StageHeader)).toHaveLength(1)
+      } else {
+        expect(nodes.filter((node) => node.type === MarkTile)).toHaveLength(1)
+        expect(ChannelPill({ props, beat })).not.toBeNull()
+      }
+    }
+  })
+})
 
 describe('STAGE render props', () => {
   it('accepts STAGE, both approved formats and optional keyFrame', () => {
