@@ -162,6 +162,10 @@
       "destination": "/api/board?week=:week&op=uploads"
     },
     {
+      "source": "/api/board/:week/posted",
+      "destination": "/api/board?week=:week&op=posted"
+    },
+    {
       "source": "/api/board/:week/imports",
       "destination": "/api/board?week=:week&op=imports"
     },

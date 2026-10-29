@@ -1900,6 +1900,7 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `function monday(value: string): boolean`
 - `const validId = (id: string) =>`
 - `const revision = (n: unknown) =>`
+- `function growthWriter(req: VercelRequest): boolean`
 - `function actor(req: VercelRequest, operatorOnly = false): string | null`
 - `const PRESS_USES`
 - `const OFFDAY_ID`

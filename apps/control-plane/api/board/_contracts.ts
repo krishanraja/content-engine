@@ -1,4 +1,4 @@
-import { createHash } from 'node:crypto'
+import { createHash, timingSafeEqual } from 'node:crypto'
 import type { VercelRequest } from '@vercel/node'
 import { hasEngineAccess, operatorBearerAllowed } from '../_auth.js'
 
@@ -22,6 +22,15 @@ export function monday(value: string): boolean {
 }
 export const validId = (id: string) => /^[a-zA-Z0-9][a-zA-Z0-9_.:-]{0,159}$/.test(id)
 export const revision = (n: unknown) => Number.isSafeInteger(n) && Number(n) >= 0
+/** Growth's write-back key (POST /api/board/<Monday>/posted, _posted.ts): `Bearer GROWTH_WRITEBACK_TOKEN`, a key that
+ *  opens that one route and nothing else, or the engine operator's key. Never a match while the variable is unset. */
+export function growthWriter(req: VercelRequest): boolean {
+  const token = process.env.GROWTH_WRITEBACK_TOKEN || ''
+  const got = String(req.headers.authorization || '')
+  const want = `Bearer ${token}`
+  const same = Boolean(token) && got.length === want.length && timingSafeEqual(Buffer.from(got), Buffer.from(want))
+  return same || operatorBearerAllowed(req)
+}
 export function actor(req: VercelRequest, operatorOnly = false): string | null {
   if (operatorBearerAllowed(req)) return 'engine_operator'
   if (operatorOnly || !hasEngineAccess(req)) return null
