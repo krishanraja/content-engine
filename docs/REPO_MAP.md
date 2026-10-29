@@ -17,6 +17,7 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `apps/runner/`
 - `assets/`
 - `config/`
+- `config/schema/`
 - `config/ve/`
 - `docs/`
 - `docs/brandbooknew/`
