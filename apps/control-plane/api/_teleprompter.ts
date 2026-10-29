@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto'
-import { TELEPROMPTER_ID, type MakingPatch } from './_making.js'
+import featuresConfig from '../../../config/features.json' with { type: 'json' }
+import { TELEPROMPTER_ID, type MakingCut, type MakingPatch } from './_making.js'
 
 // The server's own Teleprompter send: the scripts Krish approved go into his
 // teleprompter.com account, one folder per piece and one script per cut, and
@@ -20,17 +21,32 @@ import { TELEPROMPTER_ID, type MakingPatch } from './_making.js'
 // instead (scripts/post-pack/teleprompter_send.py plan, which refuses until
 // the board holds his approval of those exact words).
 //
+// Nothing calls this yet. The board's Approve scripts press will, once the
+// board has the store that press writes (config/teleprompter.json approval:
+// the "approvals" collection, written by Krish alone). Until then the session
+// route above is the only one that sends.
+//
 // What may be called is fixed here in code, not trusted to a caller:
 // ALLOWED_TOOLS names every tool and every argument each may carry.
 // move_script, update_folder, any delete, and his font size, speed,
 // alignment or timed speed are refused before a request is made. An update
 // sends only the script's text and duration.
 //
-// The caller is the board's Approve scripts press, so the input is his
-// approval: each script's sha256 is scriptHash of the exact text he approved,
-// and a text whose hash differs is refused. Readback compares scriptHash of
-// the stored text with that sha256. teleprompterPatch turns a send that read
-// back into the making record's teleprompter field.
+// So is his approval. The input carries the board document his press wrote
+// (approval), and it is checked here before any request: written by Krish,
+// naming this piece, not withdrawn, and holding for each cut the hash of the
+// exact words sent. Either hash binds them, as in teleprompter_send.py: the
+// words Teleprompter shows (scriptHash of text), or the script file the
+// scripts' check passed (scriptHash of source, whose spoken words must be
+// that text). A text whose hash differs is refused. Readback compares
+// scriptHash of the stored text with the hash of the words sent.
+// teleprompterPatch turns a send that read back into the making record's
+// teleprompter field, and records it only when the record's scripts are the
+// words that were sent.
+//
+// The caller sends one piece at a time and passes folder_id once a send has
+// recorded one: two sends of the same piece at once could each find no
+// folder and each make one.
 
 /** Teleprompter's MCP address (teleprompter.com/mcp); TELEPROMPTER_MCP_URL overrides it. */
 export const DEFAULT_TELEPROMPTER_MCP_URL = 'https://app.teleprompter.com/mcp'
@@ -42,7 +58,9 @@ const MAX_TEXT = 1_000_000 // and on a script's text
 const PAGE = 100 // the most items Teleprompter lists at once
 const MAX_PAGES = 50 // past 5,000 a folder or script cannot be proved absent, so none is made
 const TIMEOUT_MS = 20_000
-const CUT_NAME = { long: '5-minute', short: '90-second' } as const
+const CUT_NAME = { long: '5-minute', short: '90-second', feature: '15-minute feature' } as const
+/** Whose board document is an approval (config/teleprompter.json approval.writer): his press, never a session's. */
+export const APPROVAL_WRITER = 'Krish'
 
 /** Every tool this sender may call, and every argument each may carry. Nothing else is ever sent. */
 export const ALLOWED_TOOLS: Readonly<Record<string, readonly string[]>> = Object.freeze({
@@ -72,11 +90,18 @@ export function assertAllowedCall(tool: string, args: unknown): void {
   if (extra.length) throw new TeleprompterRefusal(`${tool} may carry only ${allowed.join(', ')}, never ${extra.join(', ')}: Krish's settings are his to set`)
 }
 
+// Python's whitespace (str.isspace, and \s in its re), so words split and
+// match the same here as in teleprompter_send.py.
+const SPACE = '\\t\\n\\v\\f\\r \\x1c-\\x1f\\x85\\xa0\\u1680\\u2000-\\u200a\\u2028\\u2029\\u202f\\u205f\\u3000'
+const S = `[${SPACE}]`
+const NS = `[^${SPACE}]`
+const SPACES = new RegExp(`${S}+`, 'u')
+
 /** A script's words as they are hashed, the same as making.py script_hash:
  *  NFC, LF line endings, trailing spaces stripped from every line, blank
  *  lines trimmed at both ends, one final line ending. */
 export function normalScript(text: string): string {
-  const lines = String(text ?? '').normalize('NFC').replace(/^﻿+/, '').replace(/\r\n?/g, '\n').split('\n').map(line => line.replace(/\s+$/, ''))
+  const lines = String(text ?? '').normalize('NFC').replace(/^\ufeff+/, '').replace(/\r\n?/g, '\n').split('\n').map(line => line.replace(/\s+$/, ''))
   while (lines.length && !lines[0]) lines.shift()
   while (lines.length && !lines[lines.length - 1]) lines.pop()
   return lines.length ? `${lines.join('\n')}\n` : ''
@@ -87,9 +112,31 @@ export function scriptHash(text: string): string {
   return createHash('sha256').update(normalScript(text), 'utf8').digest('hex')
 }
 
+const MD_LINK = /\[([^\]]+)\]\([^)]*\)/g
+const MD_LINE_START = new RegExp(`^${S}{0,3}(?:#{1,6}${S}+|>${S}?|[-*+]${S}+|\\p{Nd}{1,2}[.)]${S}+)`, 'u')
+const MD_RULE = new RegExp(`^${S}*(?:-{3,}|\\*{3,}|_{3,})${S}*$`, 'u')
+const MD_BOLD = new RegExp(`(\\*\\*|__)(${NS}(?:.*?${NS})?)\\1`, 'gu')
+const MD_STAR = new RegExp(`(?<![\\p{L}\\p{N}_*])\\*(${NS}(?:.*?${NS})?)\\*(?![\\p{L}\\p{N}_*])`, 'gu')
+const MD_UNDER = new RegExp(`(?<![\\p{L}\\p{N}_])_(${NS}(?:.*?${NS})?)_(?![\\p{L}\\p{N}_])`, 'gu')
+
+/** The words Krish reads, as Teleprompter shows them, the same as
+ *  teleprompter_send.py spoken_text: the script's words (normalScript), any
+ *  markdown stripped, each paragraph on one line, paragraphs separated by a
+ *  blank line. */
+export function spokenText(text: string): string {
+  const paragraphs: string[] = []
+  for (const para of normalScript(text).split(/\n[ \t]*\n/)) {
+    const lines = para.split('\n').filter(line => !MD_RULE.test(line)).map(line => line.replace(MD_LINE_START, ''))
+    const words = lines.join(' ').split(SPACES).filter(Boolean).join(' ')
+      .replace(MD_LINK, '$1').replace(MD_BOLD, '$2').replace(MD_STAR, '$1').replace(MD_UNDER, '$1').replaceAll('`', '')
+    if (words) paragraphs.push(words)
+  }
+  return paragraphs.join('\n\n')
+}
+
 /** Its words at 150 a minute, in whole seconds (teleprompter_send.py duration_seconds). */
 export function durationSeconds(text: string): number {
-  const words = String(text ?? '').split(/\s+/).filter(Boolean).length
+  const words = String(text ?? '').split(SPACES).filter(Boolean).length
   return words ? Math.max(1, Math.round(words * 60 / WORDS_PER_MINUTE)) : 0
 }
 
@@ -208,18 +255,31 @@ async function findListed(client: TeleprompterClient, tool: 'list_folders' | 'li
   throw new TeleprompterError(`${tool} ran past ${MAX_PAGES * PAGE} items, so "${name}" cannot be proved absent and nothing new is made`)
 }
 
-export type ApprovedCut = 'long' | 'short'
+export type ApprovedCut = MakingCut
 export interface ApprovedScript {
   cut: ApprovedCut
   title: string
   /** The exact words Krish approved, as Teleprompter will show them. */
   text: string
-  /** scriptHash(text): the hash his approval holds. */
+  /** scriptHash(text). */
   sha256: string
+  /** The script file the scripts' check passed (its hash is script_check.hashes), when the
+   *  caller has it: text must then be its spoken words, and his approval may bind either. */
+  source?: string
   /** The cut's script already in Teleprompter, from the making record: updated in place. */
   script_id?: string
   /** Seconds; by default the words at 150 a minute. */
   duration?: number
+}
+/** The board document Krish's Approve scripts press wrote, as GET /api/board/<week>/approvals
+ *  returns it (config/teleprompter.json approval): who wrote it, and a body naming the piece and
+ *  each cut's approved hash, as scripts (or hashes) {cut: sha256} or [{cut, sha256}]; approved:
+ *  false withdraws it. Pass the newest one he wrote for the piece. */
+export interface BoardApproval {
+  id: string
+  updated_by: string
+  updated_at?: string
+  body: { piece_id?: unknown; scripts?: unknown; hashes?: unknown; approved?: unknown; [key: string]: unknown }
 }
 export interface SendApprovedInput {
   piece_id: string
@@ -228,33 +288,76 @@ export interface SendApprovedInput {
   /** The piece's folder from the making record, when it has one: never a second folder. */
   folder_id?: string
   scripts: ApprovedScript[]
+  /** His approval, checked here: nothing is sent without it. */
+  approval: BoardApproval
 }
 export interface SentScript { cut: string; script_id?: string; readback_ok: boolean; action?: 'create' | 'update' }
 export interface SendResult { status: 'sent' | 'no_key' | 'refused' | 'error'; folder_id?: string; scripts?: SentScript[]; error?: string }
-export interface SendDeps { env?: Record<string, string | undefined>; fetchImpl?: FetchLike; timeoutMs?: number }
+/** features: the pieces Krish called a 15-minute feature for (config/features.json pieces), for tests. */
+export interface SendDeps { env?: Record<string, string | undefined>; fetchImpl?: FetchLike; timeoutMs?: number; features?: Record<string, unknown> }
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+const SHA256 = /^[a-f0-9]{64}$/
+const DOC_ID = /^[a-zA-Z0-9][a-zA-Z0-9_.:-]{0,159}$/ // the board's document ids (api/board/_contracts.ts validId)
+const CUTS: readonly ApprovedCut[] = ['long', 'short', 'feature']
 const oneLine = (v: unknown) => typeof v === 'string' && v.trim().length > 0 && v.length <= MAX_NAME && !/[\x00-\x1f\x7f]/.test(v)
 
+/** {cut: sha256} an approval holds, the same as teleprompter_send.py approved_hashes:
+ *  scripts (or hashes) as {cut: sha256} or [{cut, sha256}]. */
+export function approvedHashes(body: unknown): Partial<Record<ApprovedCut, string>> {
+  if (!isObj(body)) return {}
+  const held = 'scripts' in body ? body.scripts : body.hashes
+  const pairs: Array<[unknown, unknown]> = isObj(held) ? Object.entries(held)
+    : Array.isArray(held) ? held.filter(isObj).map(item => [item.cut, item.sha256]) : []
+  const out: Partial<Record<ApprovedCut, string>> = {}
+  for (const [cut, sha] of pairs) if (CUTS.includes(cut as ApprovedCut) && typeof sha === 'string' && SHA256.test(sha)) out[cut as ApprovedCut] = sha
+  return out
+}
+
+/** The hashes that bind a script's words: the words Teleprompter shows, and the script file when it was given. */
+function bindingHashes(s: ApprovedScript): string[] {
+  return typeof s.source === 'string' ? [s.sha256, scriptHash(s.source)] : [s.sha256]
+}
+
+/** A piece Krish called a 15-minute feature for (making.py feature_piece). */
+function featurePiece(pieceId: string, features: Record<string, unknown>): boolean {
+  return isObj(features[pieceId.toLowerCase()]) || isObj(features[pieceId])
+}
+
 /** Why this input is not sent, or null. */
-function inputProblem(input: SendApprovedInput): string | null {
+function inputProblem(input: SendApprovedInput, features: Record<string, unknown>): string | null {
   if (!isObj(input)) return 'the input is an object'
   if (typeof input.piece_id !== 'string' || !UUID.test(input.piece_id)) return 'piece_id is the content_ideas uuid'
   if (!['mon', 'wed', 'fri'].includes(String(input.day))) return 'day is mon, wed or fri'
   if (!oneLine(input.folder_title)) return `folder_title is one line of 1 to ${MAX_NAME} characters`
   if (input.folder_id !== undefined && !(typeof input.folder_id === 'string' && TELEPROMPTER_ID.test(input.folder_id))) return 'folder_id is the folder\'s id, an uppercase UUID'
-  if (!Array.isArray(input.scripts) || !input.scripts.length || input.scripts.length > 2) return 'scripts holds the long cut, the short cut, or both'
+  if (!Array.isArray(input.scripts) || !input.scripts.length || input.scripts.length > CUTS.length) return 'scripts holds the long cut, the short cut, or both, and a feature piece\'s feature'
   const seen = new Set<string>()
   for (const s of input.scripts) {
-    if (!isObj(s) || !(s.cut === 'long' || s.cut === 'short') || seen.has(s.cut)) return 'each script is the long or the short cut, once'
+    if (!isObj(s) || !CUTS.includes(s.cut) || seen.has(s.cut)) return 'each script is the long cut, the short cut or the feature, once'
     seen.add(s.cut)
     const cut = `the ${CUT_NAME[s.cut]} cut`
+    if (s.cut === 'feature' && !featurePiece(input.piece_id, features)) return 'the 15-minute feature goes only for a piece Krish called one for (config/features.json, house rule FEATURE)'
     if (!oneLine(s.title)) return `${cut}'s title is one line of 1 to ${MAX_NAME} characters`
     if (typeof s.text !== 'string' || !s.text.trim() || s.text.length > MAX_TEXT) return `${cut}'s text is its words, 1 to ${MAX_TEXT} characters`
-    if (typeof s.sha256 !== 'string' || !/^[a-f0-9]{64}$/.test(s.sha256)) return `${cut}'s sha256 is the approved hash, 64 lowercase hex characters`
-    if (scriptHash(s.text) !== s.sha256) return `${cut}'s text is not the words Krish approved (its hash ${scriptHash(s.text).slice(0, 12)}, his approval ${s.sha256.slice(0, 12)}), so nothing is sent`
+    if (typeof s.sha256 !== 'string' || !SHA256.test(s.sha256)) return `${cut}'s sha256 is the hash of its words, 64 lowercase hex characters`
+    if (scriptHash(s.text) !== s.sha256) return `${cut}'s sha256 is not the hash of its text (${scriptHash(s.text).slice(0, 12)}), so nothing is sent`
+    if (s.source !== undefined && !(typeof s.source === 'string' && s.source.length <= MAX_TEXT && scriptHash(spokenText(s.source)) === s.sha256)) return `${cut}'s text is not the spoken words of its script file, so nothing is sent`
     if (s.script_id !== undefined && !(typeof s.script_id === 'string' && TELEPROMPTER_ID.test(s.script_id))) return `${cut}'s script_id is an uppercase UUID`
     if (s.duration !== undefined && !(typeof s.duration === 'number' && Number.isFinite(s.duration) && s.duration >= 0 && s.duration <= 86_400)) return `${cut}'s duration is seconds, 0 to 86400`
+  }
+  // Krish, 2026-10-28: "Once I approve, the two scripts will go to teleprompter". His press, on these exact words.
+  const a = input.approval
+  const nothing = 'so nothing goes to Teleprompter until he approves those exact words with the Approve scripts press'
+  if (!isObj(a) || !isObj(a.body) || typeof a.id !== 'string' || !DOC_ID.test(a.id)) return `there is no approval: the board document Krish's Approve scripts press wrote, ${nothing}`
+  if (a.updated_by !== APPROVAL_WRITER) return `the approval "${a.id}" was written by ${String(a.updated_by || 'no one named')}, and only Krish's press counts, ${nothing}`
+  if (String(a.body.piece_id ?? '').toLowerCase() !== input.piece_id.toLowerCase()) return `the approval "${a.id}" names another piece, ${nothing}`
+  if (a.body.approved === false) return `Krish withdrew his approval ("${a.id}"), ${nothing}`
+  const approved = approvedHashes(a.body)
+  for (const s of input.scripts) {
+    const his = approved[s.cut]
+    if (!his) return `his approval "${a.id}" holds no hash for the ${CUT_NAME[s.cut]} script, ${nothing}`
+    if (!bindingHashes(s).includes(his)) return `he approved other words for the ${CUT_NAME[s.cut]} script (his approval ${his.slice(0, 12)}, these words ${s.sha256.slice(0, 12)}), ${nothing}`
   }
   return null
 }
@@ -264,13 +367,17 @@ function clean(error: unknown, key: string): string {
   return text.split(key).join('[TELEPROMPTER_API_KEY]').replace(/\s+/g, ' ').trim().slice(0, 300)
 }
 
-/** Sends the scripts Krish approved: finds or makes the piece's folder,
- *  creates or updates one script per cut in place, then reads each back and
- *  compares the hash of the stored text with the approved hash. No key: no
- *  request at all, status no_key. Never throws. */
+const FEATURES: Record<string, unknown> = isObj(featuresConfig) && isObj((featuresConfig as Record<string, unknown>).pieces)
+  ? (featuresConfig as { pieces: Record<string, unknown> }).pieces : {}
+
+/** Sends the scripts Krish approved: refuses, before any request, unless his
+ *  approval (input.approval) binds every cut's exact words; finds or makes
+ *  the piece's folder, creates or updates one script per cut in place, then
+ *  reads each back and compares the hash of the stored text with the hash of
+ *  the words sent. No key: no request at all, status no_key. Never throws. */
 export async function sendApprovedScripts(input: SendApprovedInput, deps: SendDeps = {}): Promise<SendResult> {
   const env = deps.env ?? { TELEPROMPTER_API_KEY: process.env.TELEPROMPTER_API_KEY, TELEPROMPTER_MCP_URL: process.env.TELEPROMPTER_MCP_URL }
-  const problem = inputProblem(input)
+  const problem = inputProblem(input, deps.features ?? FEATURES)
   if (problem) return { status: 'refused', error: problem }
   const key = String(env.TELEPROMPTER_API_KEY ?? '').trim()
   if (!key) return { status: 'no_key', error: 'TELEPROMPTER_API_KEY is not set, so nothing was sent: a Claude Code session sends these scripts through its Teleprompter connector (teleprompter_send.py plan)' }
@@ -309,16 +416,22 @@ export async function sendApprovedScripts(input: SendApprovedInput, deps: SendDe
 }
 
 /** The making record's teleprompter field for a send that read back, or
- *  null. fileHashes are the making record's script hashes (script_check.hashes,
- *  the script files), so making.py teleprompter_state says "in"; without them
- *  the approved hash is recorded. */
-export function teleprompterPatch(input: SendApprovedInput, result: SendResult, opts: { by: string; now: string; fileHashes?: Partial<Record<ApprovedCut, string>> }): MakingPatch | null {
-  if (result.status !== 'sent' || !result.folder_id) return null
+ *  null. fileHashes are the making record's current script hashes
+ *  (script_check.hashes, the script files), so making.py teleprompter_state
+ *  says "in" only for the words Teleprompter holds: a cut is recorded only
+ *  when its file hash is one that binds the words sent (the words
+ *  themselves, or the script file given as source) and his approval binds it
+ *  too. Otherwise null: the scripts changed since, and nothing is recorded. */
+export function teleprompterPatch(input: SendApprovedInput, result: SendResult, opts: { by: string; now: string; fileHashes: Partial<Record<ApprovedCut, string>>; features?: Record<string, unknown> }): MakingPatch | null {
+  if (result.status !== 'sent' || !result.folder_id || !isObj(opts?.fileHashes)) return null
+  if (inputProblem(input, opts.features ?? FEATURES)) return null
   const cuts: NonNullable<MakingPatch['teleprompter']>['cuts'] = {}
   for (const s of input.scripts) {
     const sent = result.scripts?.find(x => x.cut === s.cut)
     if (!sent?.script_id || !sent.readback_ok) return null
-    cuts[s.cut] = { script_id: sent.script_id, title: s.title, script_sha256: opts.fileHashes?.[s.cut] ?? s.sha256, sent_at: opts.now, by: opts.by }
+    const file = opts.fileHashes[s.cut]
+    if (typeof file !== 'string' || !bindingHashes(s).includes(file)) return null
+    cuts[s.cut] = { script_id: sent.script_id, title: s.title, script_sha256: file, sent_at: opts.now, by: opts.by }
   }
   return { teleprompter: { folder_id: result.folder_id, folder_name: input.folder_title, cuts } }
 }

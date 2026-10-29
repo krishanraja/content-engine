@@ -1627,24 +1627,28 @@ What Krish has confirmed he likes, for the writers.
 
 - `const DEFAULT_TELEPROMPTER_MCP_URL`
 - `const WORDS_PER_MINUTE`
+- `const APPROVAL_WRITER`
 - `const ALLOWED_TOOLS: Readonly<Record<string, readonly string[]>>`
 - `class TeleprompterRefusal`
 - `class TeleprompterError`
 - `function assertAllowedCall(tool: string, args: unknown): void`
 - `function normalScript(text: string): string`
 - `function scriptHash(text: string): string`
+- `function spokenText(text: string): string`
 - `function durationSeconds(text: string): number`
 - `type FetchLike`
 - `interface TeleprompterClient`
 - `function createTeleprompterClient(opts: { url: string; key: string; fetchImpl?: FetchLike; timeoutMs?: number }): Telep…`
-- `type ApprovedCut = 'long' | 'short'`
+- `type ApprovedCut = MakingCut`
 - `interface ApprovedScript`
+- `interface BoardApproval`
 - `interface SendApprovedInput`
 - `interface SentScript`
 - `interface SendResult`
 - `interface SendDeps`
+- `function approvedHashes(body: unknown): Partial<Record<ApprovedCut, string>>`
 - `async function sendApprovedScripts(input: SendApprovedInput, deps: SendDeps = {}): Promise<SendResult>`
-- `function teleprompterPatch(input: SendApprovedInput, result: SendResult, opts: { by: string; now: string; fileHashes?: …`
+- `function teleprompterPatch(input: SendApprovedInput, result: SendResult, opts: { by: string; now: string; fileHashes: P…`
 
 ### `apps/control-plane/api/_text.ts`
 
