@@ -34,13 +34,14 @@ def mechanical(spec, cut, directory):
             out.append('measured checks fail')
         if qc.get('complete') is not True:
             out.append('qc incomplete')
-    lock = designlock.load()
+    aspect = spec['cuts'][cut]['aspect']
+    lock = designlock.for_aspect(designlock.load(), aspect)
     locked = spec['format'] in lock.get('formats', {})
     frozen = locked and designlock.frozen(lock, spec['format'])[0]
-    # The design lock is 9:16 only: a wide cut has no golden stills, so both lock rows are not applicable to it
-    # (QC says so itself) and the Critic is the design gate.
-    tall = spec['cuts'][cut]['aspect'] == '9:16'
-    for name, applies in (('composition', tall), ('keyframe_match', frozen and tall)):
+    # Composition zones are 9:16 only. Key frames apply to a wide cut once its format has a frozen <format>@16:9
+    # lock; until then both rows are not applicable to it (QC says so itself) and the Critic is the design gate.
+    tall = aspect == '9:16'
+    for name, applies in (('composition', tall), ('keyframe_match', frozen)):
         row = qc.get('checks', {}).get(name)
         if row is None and applies:
             out.append(f'{name} fails: missing row')
@@ -136,3 +137,20 @@ def assemble(spec, directory, out, legacy_ok=()):
     finally:
         shutil.rmtree(stage)
     return out
+
+
+def readiness(spec, cut, directory) -> dict:
+    """What `ve status` and `ve file` both ask of a cut: mechanical, design and Krish's final approval of the file."""
+    try:
+        reasons, _qc, video, digest = mechanical(spec, cut, directory)
+        compile_file = Path(directory) / f'compile.{cut}.json'
+        if compile_file.exists() and verdict.read(compile_file).get('sfx_missing') and 'sfx kit missing' not in reasons:
+            reasons.append('sfx kit missing')
+        design_reasons = design(spec, cut, directory, digest)
+        final = [] if digest and any(a.get('gate') == 'final' and a.get('by') == 'Krish'
+                                     and a.get('artifact_hash') == digest for a in spec.get('approvals', [])) else [
+                                         'no final approval from Krish for this file']
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        return {'mechanical': [str(error)], 'design': ['design could not be checked'], 'final': [],
+                'video': None, 'digest': None}
+    return {'mechanical': reasons, 'design': design_reasons, 'final': final, 'video': video, 'digest': digest}

@@ -5,7 +5,7 @@ import { createHash, createPublicKey, verify } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { z } from 'zod'
 import standard from '../../../config/media-standard.json' with { type: 'json' }
-import identity from '../../../config/studio.json' with { type: 'json' }
+import studio from '../../../config/studio.json' with { type: 'json' }
 import textPolicy from '../../../config/visual-clarity.json' with { type: 'json' }
 import carouselDirection from '../../../config/carousel-visual-direction.json' with { type: 'json' }
 
@@ -16,6 +16,9 @@ export const canonicalMediaJson = (v: unknown): string => {
 }
 export const mediaDigest = (v: string | Uint8Array) => createHash('sha256').update(v).digest('hex')
 export const MEDIA_STANDARD = standard
+// The studio's settings the standard binds: all of config/studio.json but local_roots, where the home computers keep
+// their folders (W2.11). Folder layout is not a media standard, so it never changes the reviewed hash.
+const { local_roots: _localRoots, ...identity } = studio as typeof studio & { local_roots?: unknown }
 // Bind actual inputs, not just a version label that a stale client can copy.
 export const MEDIA_STANDARD_HASH = mediaDigest(canonicalMediaJson({ standard, identity, textPolicy, carouselDirection }))
 const Sha = z.string().regex(/^[a-f0-9]{64}$/)

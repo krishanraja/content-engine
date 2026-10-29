@@ -11,6 +11,10 @@ from PIL import Image
 
 from .common import ROOT, load_json, sha256_file
 
+WIDE = '@16:9'
+WIDE_CANVAS = {'w': 1920, 'h': 1080}
+# boxFor('caption') on the wide canvas (apps/renderer/src/engine/geometry.ts), as QC's caption OCR reads it.
+WIDE_CAPTION = {'x': 260, 'y': 773, 'w': 1400, 'h': 187}
 GATES = ['design_lock', 'composition_qc', 'keyframe_match', 'mechanical_qc',
          'critic_verdict', 'packet', 'krish_final_hash']
 
@@ -92,6 +96,8 @@ def validate(lock, root=None) -> list[str]:
     if not formats:
         out.append('formats must not be empty')
     for fmt, settings in formats.items():
+        if settings.get('aspect', '9:16') == '16:9' and (not fmt.endswith(WIDE) or settings.get('canvas') != WIDE_CANVAS):
+            out.append(f'formats.{fmt}: a 16:9 entry is named <format>{WIDE} and its canvas is 1920x1080')
         beats = settings.get('beats')
         if (not isinstance(beats, list) or not beats or
                 any(not isinstance(b, str) or not b for b in beats) or len(set(beats)) != len(beats)):
@@ -142,15 +148,17 @@ def freeze(fmt, src_dir, mapping, *, lock_path=None, force=False, today=None) ->
     path = _path(lock_path).resolve()
     root = path.parents[2] if path.parent.name == 've' and path.parent.parent.name == 'config' else path.parent
     lock = load(path)
-    if fmt not in lock['formats']:
+    drafts = lock.get('drafts', {})
+    if fmt not in lock['formats'] and fmt not in drafts:
         raise ValueError(f'unknown format {fmt}')
-    settings = lock['formats'][fmt]
+    settings = lock['formats'][fmt] if fmt in lock['formats'] else _promoted(drafts[fmt])
     beats = settings['beats']
     if set(mapping) != set(beats):
         raise ValueError(f'mapping must cover every beat of {fmt} exactly: {", ".join(beats)}')
     if settings.get('keyframes') and not force:
         raise ValueError(f'{fmt} already has keyframes; use --force to replace them')
-    size = tuple(lock['thresholds']['keyframe_compare_size'])
+    size = tuple(settings.get('compare_size') or lock['thresholds']['keyframe_compare_size'])
+    canvas = settings.get('canvas') or lock.get('canvas') or {'w': 1080, 'h': 1920}
     prepared = []
     # Check all inputs before writing any golden file or changing the lock.
     for beat in beats:
@@ -160,8 +168,8 @@ def freeze(fmt, src_dir, mapping, *, lock_path=None, force=False, today=None) ->
         if target.exists() and not force:
             raise ValueError(f'{target} already exists; use --force to replace it')
         with Image.open(source) as image:
-            if image.size != (1080, 1920):
-                raise ValueError(f'{filename}: expected 1080x1920, got {image.width}x{image.height}')
+            if image.size != (canvas['w'], canvas['h']):
+                raise ValueError(f'{filename}: expected {canvas["w"]}x{canvas["h"]}, got {image.width}x{image.height}')
             output = io.BytesIO()
             image.convert('RGB').resize(size, Image.Resampling.LANCZOS).save(output, format='JPEG', quality=85)
         prepared.append((beat, target, output.getvalue(), sha256_file(source)))
@@ -172,7 +180,82 @@ def freeze(fmt, src_dir, mapping, *, lock_path=None, force=False, today=None) ->
         entries[beat] = {'file': target.relative_to(root).as_posix(), 'sha256': sha256_file(target),
                          'source_sha256': source_hash, 'size': list(size)}
     settings['keyframes'] = entries
+    if fmt not in lock['formats']:
+        # Gate 2: the draft becomes a lock, and the formats it names become modules inside it.
+        lock['formats'][fmt] = settings
+        del drafts[fmt]
+        if not drafts:
+            lock.pop('drafts', None)
+        for module in settings.get('modules', []):
+            if module in lock['formats']:
+                lock['formats'][module]['role'] = 'module'
     settings['frozen_on'] = (today or date.today()).isoformat() if not isinstance(today, str) else date.fromisoformat(today).isoformat()
     lock['status'] = 'frozen' if all(frozen(lock, name, root)[0] for name in lock['formats']) else 'direction_approved'
     path.write_text(json.dumps(lock, indent=2) + '\n', encoding='utf-8')
     return lock
+
+
+def lock_key(fmt: str, aspect: str) -> str:
+    """The lock entry for a format at an aspect: the format itself for 9:16, <format>@16:9 for the wide canvas."""
+    return fmt if aspect == '9:16' else f'{fmt}{WIDE}'
+
+
+def _promoted(entry: dict) -> dict:
+    """A draft as it enters formats at Gate 2: its slots and waiting status stay behind."""
+    return {k: v for k, v in entry.items() if k not in ('status', 'keyframe_slots', 'awaiting', 'drafted')}
+
+
+def for_aspect(lock: dict, aspect: str) -> dict:
+    """The lock as one aspect sees it, so lint, QC and packets read wide entries under their plain format names.
+
+    9:16 is the lock as written, less any wide entries. 16:9 holds only the wide entries, renamed to their format,
+    with the wide canvas, the wide caption zone and the wide comparison size."""
+    view = dict(lock)
+    if aspect == '9:16':
+        view['formats'] = {k: v for k, v in lock.get('formats', {}).items() if not k.endswith(WIDE)}
+        return view
+    wide = {k[:-len(WIDE)]: v for k, v in lock.get('formats', {}).items() if k.endswith(WIDE)}
+    view['formats'] = wide
+    view['canvas'] = {**lock.get('canvas', {}), **WIDE_CANVAS}
+    view['zones'] = {'caption': WIDE_CAPTION}
+    sizes = {tuple(v['compare_size']) for v in wide.values() if v.get('compare_size')}
+    view['thresholds'] = {**lock.get('thresholds', {}),
+                          'keyframe_compare_size': list(sizes.pop()) if len(sizes) == 1 else [960, 540]}
+    return view
+
+
+def draft(fmt: str, aspect: str, beats: list[str], *, anatomy: str, motion: str, modules=(), role='base',
+          purpose: str = '', lock_path=None, today=None) -> dict:
+    """Write an unfrozen lock entry under drafts: its beats, an empty key-frame slot per beat, and the modules it
+    will hold. Only `ve lock freeze` (Krish's Gate 2, with his approved stills) turns a draft into a lock."""
+    path = _path(lock_path).resolve()
+    lock = load(path)
+    if aspect not in ('9:16', '16:9'):
+        raise ValueError('aspect is 9:16 or 16:9')
+    key = lock_key(fmt, aspect)
+    if key in lock['formats']:
+        raise ValueError(f'{key} is already a lock; a draft never replaces one')
+    if not beats or len(set(beats)) != len(beats) or any(not isinstance(b, str) or not b for b in beats):
+        raise ValueError('a draft needs unique beat names')
+    unknown = [m for m in modules if m not in lock['formats']]
+    if unknown:
+        raise ValueError(f'modules must be existing locks: {", ".join(unknown)}')
+    root = path.parents[2] if path.parent.name == 've' and path.parent.parent.name == 'config' else path.parent
+    for filename in (anatomy, motion):
+        if not _under(root, filename).is_file():
+            raise ValueError(f'missing design file {filename}')
+    wide = aspect == '16:9'
+    entry = {
+        'role': role, 'aspect': aspect, 'status': 'awaiting Gate 2',
+        'drafted': today or date.today().isoformat(),
+        'awaiting': f"Krish's Gate 2 approval of one still per beat; then ve lock freeze {key} --from <stills dir>",
+        'purpose': purpose, 'beats': list(beats), 'modules': list(modules),
+        'frames_dir': f'fixtures/ve/design-lock/{fmt}' + ('-wide' if wide else ''),
+        'anatomy': anatomy, 'motion': motion,
+        'keyframe_slots': {beat: None for beat in beats},
+    }
+    if wide:
+        entry.update(canvas=dict(WIDE_CANVAS), compare_size=[960, 540])
+    lock.setdefault('drafts', {})[key] = entry
+    path.write_text(json.dumps(lock, indent=2) + '\n', encoding='utf-8')
+    return entry
