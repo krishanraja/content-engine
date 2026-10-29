@@ -105,9 +105,11 @@ def compose(cfg,base,out,api,plan_only=False):
     (out/(final.stem+'.srt')).write_text('\n'.join(srt),encoding='utf8')
     receipt={'video_sha256':quality.digest(final),'piece_id':cfg['piece_id'],'source_provenance':identity,'preparation':motion,
       'final_narration_sha256':quality.digest(narration),'caption_glossary':glossary,'timeline':tl,'music':sound['music'],'checks':{
-        'heard':quality.word_diff(words,heard),'loudness':{'status':'fail' if api.loudness_warnings(loud,bed['levels']) else 'pass','measurements':loud},
-        'sync':{'status':'not_run','reason':'Voiceover: verify scene cues and final caption clock'},
-        'motion':{'status':'not_run','reason':'No camera track; review composed animation and screen recording'},
-        'visuals':{'status':'not_run'},'visual_clarity':{'status':'not_run'},'full_review':{'status':'not_run'}}}
+        'heard':quality.word_diff(words,heard),'loudness':{'status':'fail' if api.loudness_warnings(loud,bed['levels']) else 'pass','measurements':loud}},
+      # No placeholder statuses (plan W2.4): what this run did not measure is named, and delivery holds until it is.
+      'missing':{'sync':'voiceover: the scene cues and the final caption clock on these bytes',
+        'motion':'no camera track: the composed animation and screen recording reviewed',
+        'visuals':'the full-size card and font review','visual_clarity':'visual_clarity.py on these bytes',
+        'full_review':'Krish playing the cut through at full size, in his own words'}}
     Path(str(final)+'.validation.json').write_text(json.dumps(receipt,indent=2),encoding='utf8')
     print(json.dumps({'file':str(final),'status':'working-render-review-required','timeline':tl,'checks':{k:v['status'] for k,v in receipt['checks'].items()}},indent=2))

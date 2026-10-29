@@ -1,0 +1,219 @@
+{
+  "schema": 1,
+  "about": "The five calibration cuts for the cut gates (plan W2.4). The real files are on Krish's computers and in the library on Drive, never in this repository: run python3 scripts/cutgates/calibrate.py there (with MINDMAKE_LIBRARY_ROOT and MINDMAKE_ARCHIVE_ROOT set, or --root). CI runs the same command with --synthetic on stand-ins. Each input is a list of path patterns tried in order under each root (the library, the archive, this repository); the first file found is used. Patterns marked to_confirm are the best reading of the plan folders and are confirmed or corrected on the first run on his computer.",
+  "roots_env": [
+    "MINDMAKE_LIBRARY_ROOT",
+    "MINDMAKE_ARCHIVE_ROOT"
+  ],
+  "cuts": [
+    {
+      "id": "mon26-long",
+      "label": "Monday 26 Oct, the accepted long cut",
+      "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+      "expect": "pass",
+      "shape": "16x9",
+      "gates": [
+        "words",
+        "joins",
+        "captions_clock",
+        "captions_render"
+      ],
+      "final": [
+        "3 Posts/2026-10-26 Mon follow.the.money - Disney, Google and Character.AI/3 Video/*16x9*.mp4",
+        ".cache/produce/2026-10-26-b358e788/long/disney-google-and-character-ai-long-16x9.mp4"
+      ],
+      "script": [
+        "docs/plans/2026-10-26-draft-script.md",
+        "docs/plans/2026-10-26-monday/video/monday-26-long.script.txt"
+      ],
+      "take_words": [
+        "docs/plans/2026-10-26-monday/takes/long.words.json",
+        "docs/plans/2026-10-26-monday/video/monday-26-long.take.words.json"
+      ],
+      "heard": [
+        ".cache/produce/2026-10-26-b358e788/long/disney-google-and-character-ai-long-16x9.heard.json"
+      ],
+      "joins": {
+        "from": "report",
+        "file": [
+          ".cache/produce/2026-10-26-b358e788/long/*.report.json",
+          ".cache/produce/2026-10-26-b358e788/long/*16x9.mp4.validation.json"
+        ]
+      },
+      "captions": {
+        "from": "ass",
+        "file": [
+          ".cache/produce/2026-10-26-b358e788/long/*16x9.ass"
+        ]
+      },
+      "to_confirm": [
+        "take_words",
+        "joins",
+        "captions"
+      ]
+    },
+    {
+      "id": "mon26-short",
+      "label": "Monday 26 Oct, the accepted short cut",
+      "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+      "expect": "pass",
+      "shape": "9x16",
+      "gates": [
+        "words",
+        "joins",
+        "captions_clock",
+        "captions_render"
+      ],
+      "final": [
+        "3 Posts/2026-10-26 Mon follow.the.money - Disney, Google and Character.AI/3 Video/*9x16*.mp4",
+        ".cache/produce/2026-10-26-b358e788/short/disney-google-and-character-ai-short-9x16.mp4"
+      ],
+      "script": [
+        "docs/plans/2026-10-26-draft-script-90s.md",
+        "docs/plans/2026-10-26-monday/video/monday-26-short.script.txt"
+      ],
+      "take_words": [
+        "docs/plans/2026-10-26-monday/takes/short.words.json",
+        "docs/plans/2026-10-26-monday/video/monday-26-short.take.words.json"
+      ],
+      "heard": [
+        ".cache/produce/2026-10-26-b358e788/short/disney-google-and-character-ai-short-9x16.heard.json"
+      ],
+      "joins": {
+        "from": "report",
+        "file": [
+          ".cache/produce/2026-10-26-b358e788/short/*.report.json",
+          ".cache/produce/2026-10-26-b358e788/short/*9x16.mp4.validation.json"
+        ]
+      },
+      "captions": {
+        "from": "ass",
+        "file": [
+          ".cache/produce/2026-10-26-b358e788/short/*9x16.ass"
+        ]
+      },
+      "to_confirm": [
+        "take_words",
+        "joins",
+        "captions"
+      ]
+    },
+    {
+      "id": "wed21-long",
+      "label": "Wednesday 21 Oct, the published long cut (chopped words, 24 Oct)",
+      "piece_id": "d7a20885-7001-4661-b444-9d7ca1043416",
+      "expect": "fail",
+      "caught_by": [
+        "words",
+        "joins"
+      ],
+      "shape": "16x9",
+      "gates": [
+        "words",
+        "joins",
+        "captions_clock",
+        "captions_render"
+      ],
+      "final": [
+        "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/3 Video/*16x9*.mp4",
+        "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/3 Video/Working - review/muse-vs-grok-long-16x9.mp4"
+      ],
+      "script": [
+        "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/3 Video/recorded-long-script.md"
+      ],
+      "take_words": [
+        ".scratch/wednesday-production-2026-10-21/**/*long*.words.json"
+      ],
+      "joins": {
+        "from": "report",
+        "file": [
+          ".scratch/wednesday-production-2026-10-21/render-long-revised/*.report.json"
+        ]
+      },
+      "captions": {
+        "from": "ass",
+        "file": [
+          ".scratch/wednesday-production-2026-10-21/render-long-revised/*16x9.ass"
+        ]
+      },
+      "to_confirm": [
+        "take_words",
+        "joins",
+        "captions"
+      ]
+    },
+    {
+      "id": "fri23-join-reel",
+      "label": "Friday 23 Oct, the ten-join reel Krish rejected on 26 Oct",
+      "piece_id": "7083d6ad-419e-4fdc-9aba-f3be7f3f3a23",
+      "expect": "fail",
+      "caught_by": [
+        "joins"
+      ],
+      "gates": [
+        "joins"
+      ],
+      "final": [
+        ".scratch/**/rejected-join-reel*.wav",
+        ".scratch/**/*join*reel*.wav",
+        ".scratch/**/*join*reel*.m4a"
+      ],
+      "joins": {
+        "from": "reel_midpoints",
+        "file": [
+          "docs/plans/2026-10-23-friday/revisions/motion-v6/rejected-join-reel.json"
+        ],
+        "note": "each clip is 3.99 s with its join at the middle: an inference from the clip lengths"
+      },
+      "to_confirm": [
+        "final",
+        "joins"
+      ]
+    },
+    {
+      "id": "fri16-90s",
+      "label": "Friday 16 Oct, the 90-second cut made from the 17 Oct words file (19 Oct: garbled captions, chopped words)",
+      "piece_id": "904658db-4df2-4537-a0ed-ebe93e081db7",
+      "expect": "fail",
+      "caught_by": [
+        "words",
+        "captions_clock"
+      ],
+      "shape": "9x16",
+      "gates": [
+        "words",
+        "joins",
+        "captions_clock",
+        "captions_render"
+      ],
+      "final": [
+        "3 Posts/2026-10-16 Fri mind.the.gap - Why so many AIs/3 Video/*9x16*.mp4"
+      ],
+      "script": [
+        "docs/plans/2026-10-09-friday/script-90s-v6-cut.md",
+        "docs/plans/2026-10-09-script-90s-v6.md"
+      ],
+      "take_words": [
+        "docs/plans/2026-10-09-friday/words/short.words.json"
+      ],
+      "joins": {
+        "from": "report",
+        "file": [
+          ".scratch/**/2026-10-16*/**/*.report.json"
+        ]
+      },
+      "captions": {
+        "from": "ass",
+        "file": [
+          ".scratch/**/2026-10-16*/**/*9x16.ass"
+        ]
+      },
+      "to_confirm": [
+        "final",
+        "script",
+        "joins",
+        "captions"
+      ]
+    }
+  ]
+}

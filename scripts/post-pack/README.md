@@ -644,6 +644,46 @@ places them (`-RequirePlacing` makes it a stop).
 It never writes to the Inbox, never sends anything outside the engine, and
 never produces a video: that is `.agents/skills/produce-video`.
 
+**On GitHub's machine (Wave 2, W2.3).** `.github/workflows/place-takes.yml`
+places the takes too, with no schedule (Ruling, Krish, 2026-10-29: "zero Claude
+routines"): the engine's Inbox job sends a `take-copied` repository_dispatch
+whenever it copies a take or names new bytes (`api/library/_placeTakes.ts`,
+on `PLACE_TAKES_DISPATCH_TOKEN`; without that token it sends nothing and says
+`place_takes: not_configured`), and Run workflow starts it by hand. On ubuntu,
+with the pinned transcriber and the faster-whisper model cached by its name,
+it runs
+
+```
+python scripts/post-pack/recording_match.py --record --board --clock --by "Place takes" --json
+```
+
+`--clock` builds each placed take's word clock before the take is recorded:
+the whole take heard as quick-edit hears it (`make.transcribe`, small.en, the
+script's names as the hint), stamped with its provenance
+(`quality.transcript_identity`), in `.cache/recordings/<sha256>.words.json`.
+A take whose clock cannot be built is not recorded, so the next run tries it
+again. The job keeps the report and the clocks as its `place-takes` artifact
+(14 days), and only the two books (`answered.json`, `inbox-used.json`) in its
+cache, never words or media. An unsure take leaves the job green (asked on the
+board); a failure turns it red.
+
+**The Inbox's used/ convention.** A take placed on its piece belongs in the
+Inbox's `used/` folder: the run says `belongs in used/` for it, and
+`.cache/recordings/inbox-used.json` books it as moved there (`"moved":
+false`). A duplicate is reported and kept, never placed, asked about or
+deleted: the same bytes under a second name (the engine keeps every name a
+take was copied under; on a home computer, a second file), or the same take
+again under other bytes (`same_take`: every word heard at the same moment and
+the same length, which two reads of one script never share). Nothing is moved
+in Drive: the engine reads the Inbox with a read-only key, so the move to
+`used/` is by hand until Krish gives a route the right to write there. The
+upload lane never reads a subfolder, so a take in `used/` is never sent again.
+
+**The home computers stay the fallback** until one real take has gone end to
+end through the job: their pass above keeps running unchanged. Both write a
+take by its path and the board item's id is fixed, so a take placed by both
+is held once.
+
 ## The scripts: the close, reading age 12 and the read-back
 
 `story_check.py --cut long|short --series <lane_slot> SCRIPT` refuses a

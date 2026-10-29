@@ -1,0 +1,107 @@
+{
+  "schema": "critic-calibration/1",
+  "about": "The cases the overnight Critic must block and pass before its verdicts hold or pass a cut (plan Wave 2, W2.6: \"it must block F19 and Friday's four cuts, and pass Monday 26\"). The F19 frames are in this repository; the Friday and Monday cuts are on his computers and Drive, never committed. CI runs the same calibration on synthetic stand-ins (tests/overnight_critic_test.py).",
+  "command": "On the primary computer: judge each case with the Critic route in config/overnight.json (a fresh Critic per case), save each answer as verdict.<case id>.json in one folder, then: python scripts/overnight/critic.py calibrate --verdicts <that folder> --media-root <the folder holding the Friday and Monday cuts> --record \"%USERPROFILE%/Documents/MindmakeVideoStudio/overnight/critic-calibrated.json\"",
+  "cases": [
+    {
+      "id": "F19-gate2-tall-1",
+      "expect": "block",
+      "what": "F19: a ve Gate 2 proof frame Krish rejected on 28 Oct (\"The use of the screen is terrible\")",
+      "media": {
+        "kind": "still",
+        "repo_path": "fixtures/ve/design-lock/rejected/tall-1.jpg"
+      }
+    },
+    {
+      "id": "F19-gate2-tall-2",
+      "expect": "block",
+      "what": "F19: a ve Gate 2 proof frame Krish rejected on 28 Oct (\"The use of the screen is terrible\")",
+      "media": {
+        "kind": "still",
+        "repo_path": "fixtures/ve/design-lock/rejected/tall-2.jpg"
+      }
+    },
+    {
+      "id": "F19-gate2-tall-3",
+      "expect": "block",
+      "what": "F19: a ve Gate 2 proof frame Krish rejected on 28 Oct (\"The use of the screen is terrible\")",
+      "media": {
+        "kind": "still",
+        "repo_path": "fixtures/ve/design-lock/rejected/tall-3.jpg"
+      }
+    },
+    {
+      "id": "F19-gate2-tall-4",
+      "expect": "block",
+      "what": "F19: a ve Gate 2 proof frame Krish rejected on 28 Oct (\"The use of the screen is terrible\")",
+      "media": {
+        "kind": "still",
+        "repo_path": "fixtures/ve/design-lock/rejected/tall-4.jpg"
+      }
+    },
+    {
+      "id": "fri23-short-voiceover-v7",
+      "expect": "block",
+      "what": "one of Friday's four cuts (Two passports, 23 Oct) the failure report found unusable (F01 to F18)",
+      "media": {
+        "kind": "video",
+        "name": "Friday-short-voiceover-v7-REVIEW.mp4",
+        "sha256": null,
+        "where": "named in docs/plans/2026-10-23-friday/audit-2026-10-27/INDEPENDENT-REVIEW.md; on his computers, never in this repository"
+      }
+    },
+    {
+      "id": "fri23-short-camera-v10",
+      "expect": "block",
+      "what": "one of Friday's four cuts (Two passports, 23 Oct) the failure report found unusable (F01 to F18)",
+      "media": {
+        "kind": "video",
+        "name": "Friday-short-camera-v10-REVIEW.mp4",
+        "sha256": null,
+        "where": "named in docs/plans/2026-10-23-friday/audit-2026-10-27/INDEPENDENT-REVIEW.md; on his computers, never in this repository"
+      }
+    },
+    {
+      "id": "fri23-long-voiceover-v10",
+      "expect": "block",
+      "what": "one of Friday's four cuts (Two passports, 23 Oct) the failure report found unusable (F01 to F18)",
+      "media": {
+        "kind": "video",
+        "name": "Friday-long-voiceover-v10-REVIEW.mp4",
+        "sha256": null,
+        "where": "named in docs/plans/2026-10-23-friday/audit-2026-10-27/INDEPENDENT-REVIEW.md; on his computers, never in this repository"
+      }
+    },
+    {
+      "id": "fri23-long-camera-v11",
+      "expect": "block",
+      "what": "one of Friday's four cuts (Two passports, 23 Oct) the failure report found unusable (F01 to F18)",
+      "media": {
+        "kind": "video",
+        "name": "Friday-long-camera-v11-REVIEW.mp4",
+        "sha256": null,
+        "where": "named in docs/plans/2026-10-23-friday/audit-2026-10-27/INDEPENDENT-REVIEW.md; on his computers, never in this repository"
+      }
+    },
+    {
+      "id": "mon26-wide",
+      "expect": "pass",
+      "what": "Monday 26 Oct, a cut Krish named as the bar (config/reference-cuts.json)",
+      "media": {
+        "kind": "video",
+        "sha256": "14ccfef0f31e42814db4b4743d35cd75d047d95e0520171f755b9cd31b1a3294",
+        "drive_file_id": "1A8mx4YTcgchPLbmvBuFzde2_hCZ9H6Mh"
+      }
+    },
+    {
+      "id": "mon26-tall",
+      "expect": "pass",
+      "what": "Monday 26 Oct, a cut Krish named as the bar (config/reference-cuts.json)",
+      "media": {
+        "kind": "video",
+        "sha256": "39f1039c810681d1a6776b5a0c9f5f32696931cc47ea21ea4ec3f19b90888ecd",
+        "drive_file_id": "1Ll0n3YD8sqzUWHP6h5sI8helefOgVtRV"
+      }
+    }
+  ]
+}
