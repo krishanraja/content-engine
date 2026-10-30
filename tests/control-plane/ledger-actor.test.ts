@@ -129,6 +129,19 @@ describe('an operator session cannot take a decision', () => {
     }
   })
 
+  test("a piece's series moves only to a live subchannel, and only on his relayed words", async () => {
+    const path = '../../apps/control-plane/api/content-ideas.js'
+    const bad = await call(path, { method: 'PATCH', headers: BEARER, body: { id: 'x', lane_slot: 'money_of_ai', decided_by: 'Krish', said: 'move it' } })
+    assert.equal((bad.body as { error: string }).error, 'lane_slot_invalid')
+    const own = await call(path, { method: 'PATCH', headers: BEARER, body: { id: 'x', lane_slot: 'follow_the_money' } })
+    assert.equal((own.body as { error: string }).error, 'series_is_his_call')
+    const wordless = await call(path, { method: 'PATCH', headers: BEARER, body: { id: 'x', lane_slot: 'follow_the_money', decided_by: 'Krish' } })
+    assert.equal((wordless.body as { error: string }).error, 'series_is_his_call')
+    const relayed = await call(path, { method: 'PATCH', headers: BEARER, body: { id: 'x', lane_slot: 'follow_the_money', decided_by: 'Krish', said: 'it is kind of a follow the money piece' } })
+    assert.notEqual(relayed.status, 403)
+    assert.ok(relayed.status >= 400, 'reached the database read, which is the point past the gate')
+  }, 30_000)
+
   test('moving a piece to review is not a decision, so it is not refused here', async () => {
     // It goes on to read the row, which the dead local database refuses.
     const out = await call('../../apps/control-plane/api/content-ideas.js', { method: 'PATCH', headers: BEARER, body: { id: 'x', state: 'review' } })

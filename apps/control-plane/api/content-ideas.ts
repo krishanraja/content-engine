@@ -375,6 +375,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (body.state === 'published') updates.published_at = new Date().toISOString()
     }
     if (typeof body.published_url === 'string') updates.published_url = body.published_url
+    // A piece's series (lane_slot) is Krish's call, so it moves only to a live
+    // subchannel and only from him: his browser, or a session relaying his
+    // exact words (decided_by: 'Krish' and said). The move is kept on the
+    // piece (meta.series_changes). Krish, 2026-10-29: "move what was recorded
+    // on 30th to 2nd (it is kind of a follow the money piece)".
+    const said = typeof body.said === 'string' ? body.said.trim().slice(0, 1600) : ''
+    if (body.lane_slot !== undefined) {
+      if (!(LIVE_SUBCHANNELS as readonly unknown[]).includes(body.lane_slot)) {
+        return res.status(400).json({ ok: false, error: 'lane_slot_invalid', detail: `A series is one of ${LIVE_SUBCHANNELS.join(', ')}.` })
+      }
+      updates.lane_slot = body.lane_slot
+    }
     // Content Engine v2 (spec §5): rescuing a Feed item before the Monday purge
     // converts it into an evergreen Library candidate (fate 3, R10).
     if (body.rescue === true) {
@@ -394,6 +406,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (operator?.observation && ['approved', 'dropped', 'published'].includes(String(updates.state))) {
       return res.status(403).json({ ok: false, error: 'a_decision_needs_krish', detail: "Relay Krish's own decision with decided_by: 'Krish'." })
     }
+    if (updates.lane_slot !== undefined && operator && (operator.observation || !said)) {
+      return res.status(403).json({ ok: false, error: 'series_is_his_call', detail: "Relay Krish's own words with decided_by: 'Krish' and said." })
+    }
 
     const changesApprovedContent = ['idea', 'thesis', 'body'].some((key) => Object.prototype.hasOwnProperty.call(updates, key))
     let current: {
@@ -407,7 +422,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       transformed_outputs: Record<string, unknown> | null
       updated_at: string
     } | null = null
-    if (changesApprovedContent || updates.state === 'review' || updates.state === 'approved' || updates.state === 'published') {
+    if (changesApprovedContent || updates.lane_slot !== undefined || updates.state === 'review' || updates.state === 'approved' || updates.state === 'published') {
       const read = await supabase
         .from('content_ideas')
         .select('idea,thesis,body,lane,lane_slot,state,meta,transformed_outputs,updated_at')
@@ -473,7 +488,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         thesis: typeof updates.thesis === 'string' ? updates.thesis : current.thesis,
         body: typeof updates.body === 'string' ? updates.body : current.body,
         lane: current.lane,
-        lane_slot: current.lane_slot,
+        lane_slot: typeof updates.lane_slot === 'string' ? updates.lane_slot : current.lane_slot,
       }
       const meta = jsonRecord(current.meta)
       const revisionChanged = contentRevisionHash(effectiveRevision) !== contentRevisionHash(current)
@@ -505,6 +520,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         }
         updates.transformed_outputs = { ...outputs, production_briefs: retiredBriefs }
         if (current.state === 'approved' && updates.state === undefined) updates.state = 'review'
+      }
+      if (typeof updates.lane_slot === 'string' && updates.lane_slot !== current.lane_slot) {
+        const base = jsonRecord(updates.meta ?? current.meta)
+        const changes = Array.isArray(base.series_changes) ? base.series_changes.slice(-19) : []
+        updates.meta = { ...base, series_changes: [...changes, {
+          from: current.lane_slot, to: updates.lane_slot, at: new Date().toISOString(),
+          by: operator ? operator.actor : 'Krish', said: said || null,
+        }] }
       }
     }
 
