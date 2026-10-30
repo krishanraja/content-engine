@@ -211,7 +211,9 @@ function Get-PinnedTools {
   $toolchain = Get-Setting 'VE_TOOLCHAIN'
   if (-not $toolchain) {
     $roots = ([System.IO.File]::ReadAllText((Join-Path $RepoRoot 'config\studio.json')) | ConvertFrom-Json).local_roots
-    $toolchain = if ($roots -and $roots.toolchain) { [string]$roots.toolchain } else { Join-Path (Split-Path -Parent $RepoRoot) 'toolchain' }
+    # Get-Field, not .toolchain: local_roots names no toolchain today, and strict mode throws on a missing property.
+    $configured = Get-Field $roots 'toolchain'
+    $toolchain = if ($configured) { [string]$configured } else { Join-Path (Split-Path -Parent $RepoRoot) 'toolchain' }
   }
   $found = @{ ffmpeg = $null; build = $null; tesseract = $null }
   foreach ($entry in $path.Groups[1].Value.Split(':')) {
@@ -300,7 +302,7 @@ Invoke-Check 'codex_profile' {
   if ([string](Get-Field $profile 'approval_policy') -ne 'never') { $wrong += 'approval_policy is not never' }
   if ((Get-Field $profile 'network_access') -ne $false) { $wrong += 'network_access is not false' }
   if (@(Get-Field $profile 'allowed_mcp_servers' | Where-Object { $_ }).Count) { $wrong += 'it allows an MCP server' }
-  foreach ($tool in @(Get-Field $profile 'allowed_tools')) { if ((Get-ForbiddenHits ([string]$tool) $forbidden).Count) { $wrong += "it allows $tool" } }
+  foreach ($tool in @(Get-Field $profile 'allowed_tools')) { if (@(Get-ForbiddenHits ([string]$tool) $forbidden).Count) { $wrong += "it allows $tool" } }
   if ($wrong.Count) { return [ordered]@{ ok = $false; flagged = $null; detail = "config\codex-profile.json fails its audit: $($wrong -join '; ')." } }
   $codex = Find-Program @('codex.exe', 'codex.cmd') @((Join-Path $env:APPDATA 'npm\codex.cmd'))
   if (-not $codex) { return [ordered]@{ ok = $false; flagged = $null; detail = 'The Codex CLI is not on this machine, so its MCP servers cannot be checked.' } }
@@ -325,7 +327,7 @@ Invoke-Check 'codex_profile' {
     $parts = @($entry.name, (Get-Field $server 'command'), (Get-Field $server 'url'), (Get-Field $transport 'command'), (Get-Field $transport 'url')) +
       @(Get-Field $server 'args') + @(Get-Field $transport 'args')
     $text = (@($parts | Where-Object { $_ } | ForEach-Object { [string]$_ })) -join ' '
-    if ((Get-ForbiddenHits $text $forbidden).Count) { $flagged += 1 }
+    if (@(Get-ForbiddenHits $text $forbidden).Count) { $flagged += 1 }
   }
   $servers = $entries
   if ($flagged) { return [ordered]@{ ok = $false; flagged = $flagged; detail = "this machine's Codex has $flagged MCP server(s) of a kind the profile forbids (codex mcp list names them); remove them before an unattended run." } }
