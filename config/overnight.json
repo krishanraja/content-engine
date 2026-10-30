@@ -25,12 +25,16 @@
       "codex": false,
       "note": "quick-edit makes a cut at full size only (make.py has no scale), so on this route every repair render is full size until it takes one; the ve shadow route (W2.7) takes ve render --scale."
     },
-    "critic": null,
+    "critic": {
+      "argv": ["{python}", "scripts/overnight/critic_run.py", "judge", "--file", "{file}", "--day", "{day}", "--cut", "{cut}", "--round", "{round}", "--scale", "{scale}", "--earlier", "{earlier}"],
+      "codex": true,
+      "note": "A fresh Codex task each round (codex exec --sandbox read-only), shown contact sheets of the cut and its maker's rejection floor; it returns findings only and critic_run.py writes the rest of the verdict. The run uses it only once critic-calibrated.json is recorded."
+    },
     "repair": null,
     "final": null,
     "gates": null
   },
-  "critic_note": "The Critic route is wired on the primary computer once it is calibrated (python scripts/overnight/critic.py calibrate ... --record, config/critic-calibration.json): a fresh Codex task under config/codex-profile.json with a read-only card per round. Until a calibration record is there, a cut is made and shown on the board as not judged by a calibrated Critic; it is never called passed.",
+  "critic_note": "The Critic route is steps.critic (scripts/overnight/critic_run.py judge): a fresh Codex task under config/codex-profile.json with a read-only card per round. The run calls it only once the primary computer has calibrated it (critic_run.py cases, then critic.py calibrate ... --record; config/critic-calibration.json). Until a calibration record is there, a cut is made and shown on the board as not judged by a calibrated Critic; it is never called passed.",
   "board_steps": {
     "download": ["{python}", "scripts/post-pack/board_web.py", "download", "{week}", "--output", "{previous}"],
     "build": ["{python}", "scripts/post-pack/week_board.py", "--week", "{week}", "--live", "--target", "web", "--previous", "{previous}", "{materials}", "--out", "{page}"],

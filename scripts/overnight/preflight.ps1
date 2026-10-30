@@ -199,11 +199,28 @@ function ConvertFrom-ShellPath([string]$Path) {
   return $Path.Replace('/', '\')
 }
 
+function Get-MainCheckout {
+  # The main checkout this preflight belongs to, as scripts\velib\common.py main_checkout finds it (the parent of
+  # git's common dir), read from the files git writes rather than by starting git: in a worktree .git is a file
+  # naming its gitdir, and that gitdir's commondir names the main clone's .git.
+  $dotgit = Join-Path $RepoRoot '.git'
+  if (-not (Test-Path -LiteralPath $dotgit -PathType Leaf)) { return $RepoRoot }
+  $line = [regex]::Match([System.IO.File]::ReadAllText($dotgit), '(?m)^gitdir:\s*(.+?)\s*$')
+  if (-not $line.Success) { return $RepoRoot }
+  $gitdir = $line.Groups[1].Value
+  if (-not [System.IO.Path]::IsPathRooted($gitdir)) { $gitdir = Join-Path $RepoRoot $gitdir }
+  $commondir = Join-Path $gitdir 'commondir'
+  if (-not (Test-Path -LiteralPath $commondir -PathType Leaf)) { return $RepoRoot }
+  $common = [System.IO.File]::ReadAllText($commondir).Trim()
+  if (-not [System.IO.Path]::IsPathRooted($common)) { $common = Join-Path $gitdir $common }
+  return Split-Path -Parent ([System.IO.Path]::GetFullPath($common))
+}
+
 function Get-PinnedTools {
   # The pinned ffmpeg and Tesseract folders, read from scripts\ve-env.sh, the one place they are written, with
   # VE_TOOLCHAIN in place of its default as the script itself does. The default is config\studio.json
-  # local_roots.toolchain, else the toolchain folder beside this checkout, as scripts\velib\common.py local_root
-  # resolves it for ve-env.sh (one local layout, W2.11).
+  # local_roots.toolchain (%NAME% expanded), else the toolchain folder beside the main checkout (a worktree's main
+  # clone), as scripts\velib\common.py local_root resolves it for ve-env.sh (one local layout, W2.11).
   $text = [System.IO.File]::ReadAllText((Join-Path $RepoRoot 'scripts\ve-env.sh'))
   $default = [regex]::Match($text, 'TOOLCHAIN="\$\{VE_TOOLCHAIN:-\$_ve_toolchain\}"')
   $path = [regex]::Match($text, 'export PATH="([^"]+)"')
@@ -213,8 +230,9 @@ function Get-PinnedTools {
     $roots = ([System.IO.File]::ReadAllText((Join-Path $RepoRoot 'config\studio.json')) | ConvertFrom-Json).local_roots
     # Get-Field, not .toolchain: local_roots names no toolchain today, and strict mode throws on a missing property.
     $configured = Get-Field $roots 'toolchain'
-    $toolchain = if ($configured) { [string]$configured } else { Join-Path (Split-Path -Parent $RepoRoot) 'toolchain' }
+    $toolchain = if ($configured) { [string]$configured } else { Join-Path (Split-Path -Parent (Get-MainCheckout)) 'toolchain' }
   }
+  $toolchain = [Environment]::ExpandEnvironmentVariables($toolchain)
   $found = @{ ffmpeg = $null; build = $null; tesseract = $null }
   foreach ($entry in $path.Groups[1].Value.Split(':')) {
     if (-not $entry -or $entry -eq '$PATH') { continue }

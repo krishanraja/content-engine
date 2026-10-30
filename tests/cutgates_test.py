@@ -295,6 +295,20 @@ class CalibrationTests(unittest.TestCase):
         self.assertEqual(row['actual'], 'incomplete')
         self.assertFalse(row['as_listed'])
 
+    def test_a_gate_krish_accepted_missing_does_not_make_the_cut_incomplete_but_a_fail_still_fails(self):
+        case = {'id': 'x', 'expect': 'pass', 'gates': ['words', 'joins'],
+                'accepted_missing': {'gates': ['joins'], 'ruling': 'Ruling (Krish, 2026-10-30): "accept incomplete"'}}
+        row = calibrate.verdict(case, {'words': {'status': 'pass'}, 'joins': {'status': 'missing'}})
+        self.assertEqual((row['actual'], row['as_listed'], row['accepted_missing']), ('pass', True, ['joins']))
+        row = calibrate.verdict(case, {'words': {'status': 'missing'}, 'joins': {'status': 'missing'}})
+        self.assertEqual((row['actual'], row['missing_gates']), ('incomplete', ['words']))
+        row = calibrate.verdict(case, {'words': {'status': 'pass'}, 'joins': {'status': 'fail'}})
+        self.assertEqual(row['actual'], 'fail')
+        mon = [c for c in json.loads((ROOT / 'config' / 'gate-calibration.json').read_text(encoding='utf-8'))['cuts']
+               if c['id'].startswith('mon26')]
+        self.assertTrue(all(c['accepted_missing']['gates'] == ['joins', 'captions_clock', 'captions_render'] and
+                            'words' not in c['accepted_missing']['gates'] for c in mon))
+
     def test_joins_come_from_a_receipt_or_the_reel_clip_midpoints(self):
         reel = {'from': 'reel_midpoints', 'file': ['docs/plans/2026-10-23-friday/revisions/motion-v6/rejected-join-reel.json']}
         joins, _ = calibrate.joins_from(reel, [ROOT])
@@ -316,6 +330,33 @@ class CalibrationTests(unittest.TestCase):
             pages = captions.pages_from_ass(ass, 30)
         self.assertEqual([(p['fromFrame'], p['toFrame'], captions.page_text(p)) for p in pages],
                          [(30, 75, 'Disney is building'), (75, 120, 'its own team')])
+
+    def test_caption_pages_fall_back_to_the_srt_filed_beside_the_cut(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            # Bytes, so the CRLF a Windows .srt carries is exactly what is read on every machine.
+            Path(tmp, 'Cut - wide 16x9.srt').write_bytes(b'1\r\n00:00:01,000 --> 00:00:02,500\r\n<i>Disney is</i>\r\nbuilding\r\n\r\n'
+                                                        b'2\r\n00:00:02,500 --> 00:00:04,000\r\nits own team\r\n')
+            spec = {'from': 'ass', 'file': ['*16x9.ass', '*16x9*.srt']}
+            pages, source = calibrate.pages_from(spec, [Path(tmp)], 30)
+        self.assertIn('sidecar .srt', source)
+        self.assertEqual([(p['fromFrame'], p['toFrame'], captions.page_text(p)) for p in pages],
+                         [(30, 75, 'Disney is building'), (75, 120, 'its own team')])
+
+    def test_the_library_and_archive_roots_come_from_studio_json(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            library, archive = Path(tmp, 'lib'), Path(tmp, 'arc')
+            library.mkdir()  # the archive is absent here, as Drive is on a computer that is off
+            studio = Path(tmp, 'studio.json')
+            studio.write_text(json.dumps({'runtime': {'library_root': str(library), 'archive_root': str(archive)}}))
+            self.assertEqual(calibrate.studio_roots(studio), [library, archive])
+            found = calibrate.roots(studio=studio)
+        self.assertIn(library, found)
+        self.assertNotIn(archive, found)
+        self.assertLess(found.index(library), found.index(ROOT))
+
+    def test_the_join_reel_is_read_from_drive_where_it_is_filed(self):
+        reel = next(c for c in json.loads(calibrate.MANIFEST.read_text(encoding='utf-8'))['cuts'] if c['id'] == 'fri23-join-reel')
+        self.assertTrue(reel['final'][0].endswith('3 Video/quality evidence/Friday-join-candidates.wav'))
 
 
 if __name__ == '__main__':

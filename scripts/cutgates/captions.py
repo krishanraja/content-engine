@@ -285,6 +285,31 @@ def pages_from_ass(path, fps: float) -> list[dict]:
     return merged
 
 
+def _srt_time(stamp: str) -> float:
+    hours, minutes, rest = stamp.strip().replace('.', ',').split(':')
+    seconds, millis = rest.split(',')
+    return int(hours) * 3600 + int(minutes) * 60 + int(seconds) + int(millis) / 1000
+
+
+def pages_from_srt(path, fps: float) -> list[dict]:
+    """Caption pages from a .srt beside a finished cut: one page a cue, tags dropped. The .srt is the cut's sidecar,
+    not the burned-in layer itself; captions_render checks the burned pixels against these pages."""
+    from pathlib import Path
+    pages = []
+    for block in re.split(r'\r?\n\s*\r?\n', Path(path).read_text(encoding='utf-8-sig').strip()):
+        lines = [line.strip() for line in block.splitlines() if line.strip()]
+        timing = next((i for i, line in enumerate(lines) if '-->' in line), None)
+        if timing is None:
+            continue
+        start, end = (part.strip().split(' ')[0] for part in lines[timing].split('-->'))
+        text = re.sub(r'<[^>]*>|\{[^}]*\}', '', ' '.join(lines[timing + 1:])).strip()
+        first, last = round(_srt_time(start) * fps), round(_srt_time(end) * fps)
+        if text and last > first:
+            pages.append({'fromFrame': first, 'toFrame': last, 'words': [{'text': t, 'atFrame': first} for t in text.split()]})
+    pages.sort(key=lambda page: page['fromFrame'])
+    return pages
+
+
 def summary(report) -> str:
     if report.get('status') == 'pass':
         return 'every caption page is on the heard clock' if report.get('part') == 'clock' else 'every caption page reads as the props say'
