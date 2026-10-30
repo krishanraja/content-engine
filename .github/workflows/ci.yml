@@ -230,6 +230,10 @@ jobs:
           psql_in supabase/migrations/20261023100000_board_target_decided.sql
           psql_in supabase/migrations/20261023100000_board_target_decided.sql
           psql_in tests/fixtures/control-plane/board-target-decided-regression.sql
+          # A late week-clock row from Control Center closes on clock; run twice.
+          psql_in supabase/migrations/20261119090000_board_clock_kind.sql
+          psql_in supabase/migrations/20261119090000_board_clock_kind.sql
+          psql_in tests/fixtures/control-plane/board-clock-regression.sql
           # Step 3, PR 1: honest sources. Before the migration a shift_write
           # insert fails the source foreign key; the migration runs twice; then
           # its read-back must refuse a missing owner foreign key and a source

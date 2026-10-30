@@ -551,7 +551,7 @@ describe('every item says how it ends, so a check can end it', () => {
   it('closeRefOk is the database rule, kind by kind', async () => {
     const { closeRefOk, CLOSE_KINDS } = await import('../../apps/control-plane/api/workbench.js')
     expect([...CLOSE_KINDS]).toEqual(['workroom', 'draft', 'visual_gate', 'scripts', 'pack', 'record', 'video', 'publish', 'published',
-      'week_planned', 'week_published', 'share_image_changed', 'job_ok', 'post_matched', 'take_placed', 'target_decided', 'session', 'his_word'])
+      'week_planned', 'week_published', 'share_image_changed', 'job_ok', 'post_matched', 'take_placed', 'target_decided', 'clock', 'session', 'his_word'])
     const cases: Array<[string, unknown, string | null, string, boolean]> = [
       ['record', {}, PIECE, 'monday-record', true],
       ['published', {}, null, 'monday-post', false],
@@ -571,6 +571,10 @@ describe('every item says how it ends, so a check can end it', () => {
       ['target_decided', { target_id: '0a1b2c3d-1111-4222-8333-444455556666' }, null, 'visibility-take-x', true],
       ['target_decided', { target_id: 'not-a-uuid' }, null, 'visibility-take-x', false],
       ['target_decided', {}, null, 'visibility-take-x', false],
+      ['clock', { week: '2026-11-16', row: 'week_picked' }, null, 'clock-2026-11-16-week_picked', true],
+      ['clock', { week: '2026-11-16', row: 'week_picked' }, null, 'clock-2026-11-09-week_picked', false],
+      ['clock', { week: '2026-11-16' }, null, 'clock-2026-11-16-', false],
+      ['clock', { week: '16 Nov', row: 'week_picked' }, null, 'clock-16 Nov-week_picked', false],
       ['session', {}, null, 'doing-x', true],
       ['his_word', null, null, 'you-x', true],
       ['someday', {}, null, 'x', false],
@@ -622,6 +626,18 @@ describe('every item says how it ends, so a check can end it', () => {
     expect(item(take.id)).toMatchObject({ lane: 'on_you', closes_on: 'target_decided', close_ref: { target_id: TARGET }, updated_by: 'visibility_score' })
     const noTarget = await call('POST', { action: 'upsert_items', client: 'visibility_score', items: [{ ...take, id: 'visibility-take-none', close_ref: {} }] }, 'krish')
     expect(noTarget.body.error).toBe('on_you_needs_close_ref')
+  })
+
+  it("a late row of Control Center's week clock reaches his list, closing on its own check", async () => {
+    const late = { id: 'clock-2026-11-16-week_picked', lane: 'on_you', rank: 2, area: 'Week of 2026-11-16',
+      title: 'Your picks on the Ideas tab is late for the week of 2026-11-16', detail: 'It was due 2026-11-08 15:00 UTC. This is your press.',
+      link: 'https://controlcenter.example/#/week', link_label: 'Open the week', only_you: 'judgment', closes_on: 'clock',
+      close_ref: { week: '2026-11-16', row: 'week_picked' }, prompt: null }
+    const out = await call('POST', { action: 'upsert_items', client: 'control_center', items: [late] }, 'krish')
+    expect(out.status).toBe(200)
+    expect(item(late.id)).toMatchObject({ lane: 'on_you', closes_on: 'clock', close_ref: { week: '2026-11-16', row: 'week_picked' } })
+    const wrongId = await call('POST', { action: 'upsert_items', client: 'control_center', items: [{ ...late, id: 'clock-2026-11-09-week_picked' }] }, 'krish')
+    expect(wrongId.body.error).toBe('on_you_needs_close_ref')
   })
 
   it('his_word goes on his list only from him: his cookie, his words relayed, or Control Center', async () => {
