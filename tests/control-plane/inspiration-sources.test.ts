@@ -36,6 +36,23 @@ describe('the Inspiration House block', () => {
     expect(out.must_cover).toEqual([{ id: 'meme', what: 'Inspiration card "meme.jpg" you saved with your words', his_words: note, endorsed: null }])
   })
 
+  // Migration 20261118093200 makes every said idea an inspiration card too; Sunday counts the content idea it landed in.
+  it('a said idea counts once: its card gives way to the content idea already listed, unless he answered the card', () => {
+    const IDEA = '22222222-2222-4333-8444-555555555555'
+    const said = (id: string, extra: Record<string, any> = {}) => item(id, { folder: null, kind: 'idea',
+      facets: { said: { excerpt: 'what agents cost a shop', landed_table: 'content_ideas', landed_id: IDEA } }, ...extra })
+    const out = buildInspiration({ weekStart: WEEK, listedIdeas: [IDEA], items: [
+      said('dup'),
+      said('routed', { route: 'make_piece', routes: ['make_piece'], answered_at: '2026-10-24T08:00:00Z', answered_by: 'Krish' }),
+      said('elsewhere', { facets: { said: { excerpt: 'x', landed_table: 'content_ideas', landed_id: '33333333-2222-4333-8444-555555555555' } } }),
+    ] })
+    const ids = [...out.fresh, ...out.routed].map(c => c.id)
+    expect(ids).not.toContain('dup')
+    expect(ids).toContain('routed')
+    expect(ids).toContain('elsewhere')
+    expect(buildInspiration({ weekStart: WEEK, items: [said('dup')] }).fresh.map(c => c.id)).toEqual(['dup'])
+  })
+
   it('a tapped suggestion is his endorsement, never his words', () => {
     const c = card(item('t', { why_like: 'It makes a debate relatable', why_like_source: 'picked', answered_by: 'Krish' }))
     expect(c.why_like).toBeNull()
