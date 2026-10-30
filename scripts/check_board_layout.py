@@ -424,8 +424,7 @@ def board_api(page, web, name, saved, answer=None):
 
 def presses_in_browser(page, web):
     """His presses on the Ideas tab by touch (Krish, 2026-10-28): Reject an idea, saved only once he says why; take a
-    press back; Next week for the Monday after; a note on his pick; and Approve on an off-day option, bound to its
-    copy."""
+    press back; Next week for the Monday after; a note on his pick; and Approve on the week's mix, bound to its hash."""
     saved, problems = [], []
     week = board_api(page, web, 'sunday', saved)
     nxt = (wb.LAYOUT_FROM + timedelta(days=7)).isoformat()
@@ -466,12 +465,15 @@ def presses_in_browser(page, web):
         until(page, lambda: (last('picks/fri') or {}).get('note'))
         if (last('picks/fri') or {}).get('note') != 'Lead with the deal.' or (last('picks/fri') or {}).get('pick') != 'fri-3':
             problems.append(f'sunday: his note on a pick is not saved with it ({last("picks/fri")})')
-        page.click('[data-act="offday"][data-value="approve"][data-for="off-tue-o1"]')
-        until(page, lambda: last('queue/off-tue-o1'))
-        off = last('queue/off-tue-o1') or {}
-        want = hashlib.sha256('The draft copy for tue option 1.'.encode()).hexdigest()
-        if off.get('use') != 'offday' or off.get('day') != 'tue' or off.get('approved') is not True or off.get('copy_sha256') != want:
-            problems.append(f'sunday: Approve on an off-day option did not save it bound to its copy ({off})')
+        # The week's mix is one press (Ruling, Krish, 2026-10-30: "approve the week's mix once, let Growth fill it").
+        page.click('[data-act="mix"]')
+        until(page, lambda: last('picks/mix'))
+        mix = last('picks/mix') or {}
+        days = mix.get('days') or {}
+        want = hashlib.sha256(json.dumps(days, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+        if (mix.get('kind') != 'mix' or mix.get('approved') is not True or mix.get('mix_sha256') != want
+                or set(days) != {k for k, *_ in wb.OFF_DAYS}):
+            problems.append(f'sunday: Approve this week\'s mix did not save picks/mix bound to the mix it showed ({mix})')
     except Exception as error:  # noqa: BLE001 - a step that cannot run is reported, never passed
         problems.append(f'sunday: the presses could not be pressed ({str(error).splitlines()[0][:160]})')
     finally:
