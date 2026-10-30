@@ -2911,7 +2911,7 @@ def previous_conf(text, field):
 
 def fixed_day(key, name, weekday, when, series_label, page, piece, pick, title, pending, draft, calls, review, materials,
               briefs, teleprompter, videos, ideas, hidden, panels, warnings, built_at, kept_at, sweeps=None, lessons=None,
-              folders=None, titles=None, manifests=None):
+              folders=None, titles=None, manifests=None, moved=None):
     """A day in the fixed layout, appended to panels; its state. Each step is filled from data, in the same place every
     week: Brief (the agreed brief), Drafts (the words to review), Record (Teleprompter, the scripts), Publish (the
     files first, then each place to post, each with its tick)."""
@@ -2987,7 +2987,13 @@ def fixed_day(key, name, weekday, when, series_label, page, piece, pick, title, 
                   slot_empty('The scripts go to Teleprompter once you approve them. How to record and send each take back is here then.'))
         if state != 'not_picked':
             record += titles_card(key, p, piece, held_titles)
-        if state == 'not_picked':
+        if state == 'not_picked' and key in (moved or {}):
+            to, href = moved_link(moved[key])
+            head = fixed_head(f'{series_label} · {when_s} · moved to {to}', weekday)
+            gone = slot_empty(f'This piece moved to {to}.') + f'<p class="id-how"><a href="{E(href)}">Open it on its board</a></p>'
+            slots = {'brief': gone, 'drafts': gone, 'record': gone, 'publish': gone}
+            notes = {'brief': f'moved to {to}'}
+        elif state == 'not_picked':
             head = fixed_head(f'{series_label} · {when_s} · not picked', weekday)
             slots = {'brief': slot_empty(f'{weekday}\'s {series_label} piece is not picked yet. Pick one on the Ideas tab.'),
                      'drafts': slot_empty(f'The draft article and scripts arrive by {drafts_due}, once a piece is picked and its brief agreed.'),
@@ -3024,6 +3030,31 @@ SERIES_CHANNELS = ('substack', 'youtube', 'shorts', 'tiktok', 'reels', 'linkedin
 OFF_CHANNELS = ('shorts', 'tiktok', 'reels', 'instagram', 'linkedin', 'x', 'threads', 'facebook', 'substack-notes')
 OFF_KINDS = {'meme': 'meme', 'carousel': 'carousel', 'good_news': 'news', 'news': 'news', 'level_up': 'levelup', 'levelup': 'levelup',
              'explainer': 'explainer', 'short': 'short'}
+
+
+def moved_of(values):
+    """{day: date} from --moved DAY=YYYY-MM-DD: the day Krish moved this day's piece to (Krish, 2026-10-30: "make sure
+    that the publish board posts are calibrated to their new dates"). The day leaves this board and says where it went."""
+    out = {}
+    for v in values or []:
+        k, sep, when = v.partition('=')
+        key = DAY_KEYS.get(k.strip().lower())
+        try:
+            day = date.fromisoformat(when.strip()) if sep else None
+        except ValueError:
+            day = None
+        if not (key and day):
+            raise BoardError(f'--moved {v}: give DAY=YYYY-MM-DD, the date the piece moved to')
+        out[key] = day
+    return out
+
+
+def moved_link(day):
+    """The board and the day a moved piece now sits on, e.g. ("Mon 9 Nov", "/board/2026-11-09#monday")."""
+    names = {0: 'monday', 2: 'wednesday', 4: 'friday'}
+    monday = day - timedelta(days=day.weekday())
+    tab = names.get(day.weekday())
+    return short_date(day), f'/board/{monday.isoformat()}' + (f'#{tab}' if tab else '')
 
 
 def gates_of(values):
@@ -3124,7 +3155,7 @@ def today_model(monday, days, videos, posted, offdays, parsed, now=None, gates=N
 def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pending=None, kept=None, videos=None, review=None,
           draft=(), calls=None, posted=None, kept_at=None, ideas=None, queue=None, materials=None, briefs=None, combine=None,
           sweeps=None, lessons=None, folders=None, kept_draft=None, titles=None, offdays=None, manifests=None, archive=None,
-          gates=None):
+          gates=None, moved=None):
     """(page, manifest, warnings). titles: {day: read_titles()}; offdays: read_offdays(); manifests: {day: the sha256
     of the piece's manifest}, for Approve for publish. folders: {day: the post's library folder, from its making record's pack}. ideas: {day: [idea]} from read_ideas(),
     shown as a first tab, Ideas, opened while no day is made. pages: {day: publish page text};
@@ -3231,7 +3262,7 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
         elif FIXED:
             state = fixed_day(key, name, weekday, when, series_label, page, piece, pick, title, pending, draft, calls, review,
                               materials, briefs, teleprompter, videos, ideas, key != opened, panels, warnings, built_at, kept_at,
-                              sweeps, lessons, folders, titles, manifests)
+                              sweeps, lessons, folders, titles, manifests, moved=moved)
         elif page:
             if not piece:
                 raise BoardError(f'{weekday} is made but has no piece id: give --piece {key}=<uuid>, or --options or --live '
@@ -3293,7 +3324,7 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
             f'<button type="button" role="tab" id="tab-{name}" aria-controls="panel-{name}" '
             f'aria-selected="{"true" if key == opened else "false"}" tabindex="{"0" if key == opened else "-1"}" data-day="{name}">'
             f'<span class="t-day"><span class="t-wd">{when.strftime("%a")}</span> <span class="t-dm">{when.day} {when.strftime("%b")}</span></span><span class="t-dot"> · </span>'
-            f'<span class="t-prog" data-tabprog="{key}">{f"{STANDING} steps" if picked else "not picked"}</span>'
+            f'<span class="t-prog" data-tabprog="{key}">{f"{STANDING} steps" if picked else "moved" if key in (moved or {}) else "not picked"}</span>'
             f'<span class="t-ch">{series_label}</span></button>')
         days.append({
             'day': key, 'name': weekday, 'date': when.isoformat(), 'series': slug, 'series_label': series_label,
@@ -3644,6 +3675,8 @@ def build(args, get=None):
     pieces = by_day(args.piece, '--piece')
     pending = by_day(args.pending, '--pending')
     unpick = set(by_day([f'{d}=x' for d in (args.unpick or [])], '--unpick'))
+    moved = moved_of(getattr(args, 'moved', None))
+    unpick |= set(moved)
     draft = set(by_day([f'{d}=x' for d in (getattr(args, 'draft', None) or [])], '--draft'))
     calls = {}
     for v in getattr(args, 'waiting', None) or []:
@@ -3920,7 +3953,7 @@ def build(args, get=None):
                                  ideas, queue, materials, briefs, combine, sweeps, lessons, folders, retained_drafts,
                                  titles, offdays, manifests,
                                  read_archive(read_json(args.archive, '--archive')) if getattr(args, 'archive', None) else None,
-                                 gates=gates_of(getattr(args, 'gate', None)))
+                                 gates=gates_of(getattr(args, 'gate', None)), moved=moved)
     if previous is not None:
         keep_previous(previous, manifest['days'], unpick, monday, fresh)
     manifest['warnings'] = warnings + more
@@ -4187,6 +4220,10 @@ def _self_test():
           bool(refusals['made without its page']) and '--day mon=<the saved file>' in refusals['made without its page'])
     check('--unpick: a day Krish moved or dropped may go', [d['state'] for d in unpicked['days']] == ['made', 'not_picked', 'made']
           and 'data-tick="wed-' not in unpicked_page)
+    check('--moved: a day that moved says where it went and links to its new day (Krish, 2026-10-30)',
+          moved_of(['mon=2026-11-09', 'fri=2026-11-02']) == {'mon': date(2026, 11, 9), 'fri': date(2026, 11, 2)}
+          and moved_link(date(2026, 11, 4)) == ('Wed 4 Nov', '/board/2026-11-02#wednesday')
+          and moved_link(date(2026, 11, 7)) == ('Sat 7 Nov', '/board/2026-11-02'))
     check('--previous of another week is refused', refused_other_week)
     check('--live: a picked piece with a publish page and no --day is refused, naming the page to read',
           bool(refused_unmade) and 'QpGeGjaqZwvyXwRnSadqyS' in refused_unmade and '--day mon=' in refused_unmade)
@@ -5267,6 +5304,7 @@ def parser():
                     '(the article, each script); his saves land in the board\'s store as edits/<day>-<item>')
     ap.add_argument('--draft', action='append', metavar='DAY', help='with --review: a day whose words are in review; its tab is the '
                     'review card, what waits on Krish and its checklist, never an older publish page')
+    ap.add_argument('--moved', action='append', metavar='DAY=YYYY-MM-DD', help='with --previous: the date Krish moved this day\'s piece to; the day leaves this board and links to its new day')
     ap.add_argument('--gate', action='append', metavar='DAY=URL', help='layout A: a cut the day waits on Krish\'s Gate 2 '
                     'verdict for; Today asks for it and the day\'s card opens it (an https link)')
     ap.add_argument('--waiting', action='append', metavar='DAY=WHAT', help='with --draft: one call waiting on Krish, in order, '
