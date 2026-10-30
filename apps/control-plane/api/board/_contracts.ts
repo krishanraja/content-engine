@@ -59,6 +59,18 @@ const RECORDED_DAYS = ['tue', 'thu', 'sat', 'sun']
 // (Titles), <day>-publish (Approve for publish) and <day>-reject-<asset> (Reject asset).
 export const DECISION_ID = /^(mon|wed|fri)-(scripts|titles|publish|reject-([a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}))$/
 export const DECISION_KIND = { scripts: 'approve_scripts', titles: 'titles', publish: 'approve_publish', reject: 'reject_asset' } as const
+// His Liked or Not it on a day's post (the Today view, layout A; Krish, 2026-10-29: "yes, go with A and your
+// recommendations and my feedback"): picks/<day>-feel, any day of the week, with his optional words. The server files
+// each press as one taste_reports row (afterPress), the road his feedback takes to the cues.
+export const FEEL_ID = /^(mon|tue|wed|thu|fri|sat|sun)-feel(?:-[1-9])?$/
+export const FEELS = ['liked', 'not_it'] as const
+export function feelBody(id: string, body: Record<string, unknown>): boolean {
+  const m = FEEL_ID.exec(id)
+  return !!m && body.kind === 'feel' && body.day === m[1] && (FEELS as readonly unknown[]).includes(body.feel) && !('send' in body)
+    && (!('piece_id' in body) || typeof body.piece_id === 'string' && UUID.test(body.piece_id))
+    && (!('title' in body) || typeof body.title === 'string' && body.title.length <= 300)
+    && (!('note' in body) || body.note === null || typeof body.note === 'string' && body.note.length <= 2000)
+}
 // His scores for a piece (Krish, 2026-10-29: "allow me to add a score out of 10 for narrative quality and production
 // quality"), pressed on a day tab or in the Archive: picks/score-<piece uuid>. The server files each save as one
 // piece_scores row (afterPress); the document keeps his latest press for the board to show.
@@ -118,6 +130,7 @@ export function validBody(collection: string, id: string, body: unknown): boolea
   if (collection === 'links') return day(id) && ['article', 'youtube'].every(k => text(k, 2048) && (!body[k] || /^https?:\/\//.test(body[k] as string)))
   if (collection === 'edits') return text('text') && day(body.day) && text('item', 100) && id === `${body.day}-${body.item}`
   // His pick for a day, with his optional saved note; or one of his decisions on a day's tab (decisionBody).
+  if (collection === 'picks' && FEEL_ID.test(id)) return feelBody(id, body)
   if (collection === 'picks' && DECISION_ID.test(id)) return decisionBody(id, body)
   if (collection === 'picks' && (SCORE_ID.test(id) || body.kind === 'scores')) return scoreBody(id, body)
   if (collection === 'picks') return day(id) && day(body.day) && text('pick', 160) && text('story') && !('kind' in body)

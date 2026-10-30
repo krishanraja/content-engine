@@ -1917,6 +1917,9 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `const OFFDAY_ID`
 - `const DECISION_ID`
 - `const DECISION_KIND`
+- `const FEEL_ID`
+- `const FEELS`
+- `function feelBody(id: string, body: Record<string, unknown>): boolean`
 - `const SCORE_ID`
 - `const SCORE_BASES`
 - `function scoreBody(id: string, body: Record<string, unknown>): boolean`
@@ -1966,6 +1969,7 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `class PressError`
 - `async function preparePress(collection: string, id: string, body: Body): Promise<Body>`
 - `async function heldBecause(making: unknown, texts: Record<string, string>): Promise<string | null>`
+- `function feelReport(week: string, id: string, body: Body, now: string)`
 - `function scoreRow(week: string, id: string, body: Body, now: string)`
 - `function offdayDate(week: string, day: string): string`
 - `async function placeOffday(db: SupabaseClient, ctx: { week: string; id: string; body: Body; who: string; now: string })…`

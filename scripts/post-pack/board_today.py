@@ -46,6 +46,9 @@ CHANNEL_LABELS = {'substack': 'Substack', 'youtube': 'YouTube', 'shorts': 'Short
                   'instagram': 'Instagram', 'linkedin': 'LinkedIn', 'spotify': 'Spotify', 'x': 'X', 'threads': 'Threads',
                   'facebook': 'Facebook', 'substack-notes': 'Notes'}
 CTA_MAX = 12  # a button label fits BTN_W at 14px without wrapping; longer labels are refused, never squeezed
+# An ask's two lines fit the Needs you row in full at 390px wide (no ellipsis hides what he approves): the what is
+# short ("Substack, Mon 2 Nov"), the detail says the one thing more. Longer is refused at the source, never clipped.
+WHAT_MAX, DETAIL_MAX = 22, 30
 FEEL = (('liked', 'Liked'), ('not_it', 'Not it'))
 HREF = re.compile(r'^(https://\S+|#[A-Za-z0-9_-]+)$')
 TIME = re.compile(r'^([01]\d|2[0-3]):[0-5]\d$')
@@ -72,6 +75,8 @@ def check(model):
         _need(isinstance(a, dict) and a.get('what') and a.get('cta'), f'{where}: what and cta')
         _need(len(str(a['cta'])) <= CTA_MAX, f'{where}: cta "{a["cta"]}" is longer than {CTA_MAX} characters, so it would not fit its button')
         _need(HREF.match(str(a.get('href', ''))), f'{where}: href links to what it approves (https or #anchor)')
+        _need(len(str(a['what'])) <= WHAT_MAX, f'{where}: what "{a["what"]}" is longer than {WHAT_MAX} characters, so it would not show in full')
+        _need(len(str(a.get('detail', ''))) <= DETAIL_MAX, f'{where}: detail is longer than {DETAIL_MAX} characters, so it would not show in full')
         _need(a.get('day') in DAY_KEYS, f'{where}: day')
     days = model.get('days') or []
     _need(isinstance(days, list) and [d.get('key') for d in days] == list(DAY_KEYS), 'days are mon to sun, in order')
@@ -144,26 +149,31 @@ def _assets(p):
 
 def _card(d, p, i):
     label, tone = STATUS[p['status']]
-    act = p.get('action') or {'label': 'Open', 'href': f'#open-{d["key"]}'}
+    act = p.get('action') or {'label': 'Open', 'href': f'#td-open-{d["key"]}'}
     primary = ' go' if p['status'] == 'concept' else ''
     chans = p.get('channels') or []
     waiting = f'<span class="wait">Waiting: {E(p["waiting"])}</span>' if p.get('waiting') else (p.get('claim') and f'<span class="claim">{E(p["claim"])}</span>') or '<span class="claim"></span>'
-    return (f'<article class="card{" need" if primary else ""}" id="post-{d["key"]}-{i}">'
+    return (f'<article class="card{" need" if primary else ""}" id="td-post-{d["key"]}-{i}">'
             f'<div class="c-meta">{_pill(p)}<span class="c-time">{E(p["time"])}</span><span class="c-st tone-{tone}">{E(label)}</span></div>'
             f'<div class="c-mid">{_preview(p, "s")}<div class="c-txt"><h4 class="c-title">{E(p["title"])}</h4>{waiting}</div></div>'
             f'{_lane(p["stage"])}{_assets(p)}'
-            f'<div class="c-foot"><span class="c-ch">{len(chans)} channel{"s" if len(chans) != 1 else ""}</span>'
-            f'<a class="btn{primary}" href="{E(act["href"])}">{E(act["label"])}</a></div></article>')
+            f'<div class="c-foot">{_feel(d, p, i)}<a class="btn{primary}" href="{E(act["href"])}">{E(act["label"])}</a></div></article>')
 
 
 def _empty_card(d):
     return (f'<article class="card empty"><div class="c-empty">Nothing planned for {E(dict((k, n) for k, _, n in DAYS)[d["key"]])}</div>'
-            f'<div class="c-foot"><span class="c-ch">0 channels</span><a class="btn ghost" href="#open-{d["key"]}">Open</a></div></article>')
+            f'<div class="c-foot"><span class="feels"></span><a class="btn ghost" href="#td-open-{d["key"]}">Open</a></div></article>')
 
 
-def _feel(d):
-    return ''.join(f'<button type="button" class="feel{" on" if d.get("feel") == k else ""}" data-feel="{k}" data-day="{d["key"]}" '
-                   f'aria-pressed="{"true" if d.get("feel") == k else "false"}">{E(v)}</button>' for k, v in FEEL)
+def _feel(d, p, i):
+    """Liked and Not it, in the card's footer beside its button, so each post is one unit. The first post of a day is
+    picks/<day>-feel; another post the same day is <day>-feel-<n>."""
+    fid = f'{d["key"]}-feel' + (f'-{i}' if i else '')
+    on = (d.get('feel') if i == 0 else None) or p.get('feel')
+    about = (f' data-piece="{E(p["piece_id"])}"' if p.get('piece_id') else '') + f' data-title="{E(p["title"])}"'
+    return ('<span class="feels" role="group" aria-label="How did it land?">' + ''.join(
+        f'<button type="button" class="feel{" on" if on == k else ""}" data-feel="{k}" data-feel-id="{fid}" data-feel-day="{d["key"]}"{about} '
+        f'aria-pressed="{"true" if on == k else "false"}">{E(v)}</button>' for k, v in FEEL) + '</span>')
 
 
 def _open_panel(d, name, date):
@@ -179,12 +189,18 @@ def _open_panel(d, name, date):
             link = f'<a class="btn ghost" href="{E(a["href"])}">Open</a>' if a.get('href') else '<span class="btn ghost off">Not yet</span>'
             rows.append(f'<li><span class="o-name">{E(label)}: {E(p["title"])}</span><span class="o-st as-{a["state"]}">{E(a["state"])}</span>{link}</li>')
     big = _preview(lead, 'l') if lead else '<div class="pv pv-l pv-none" aria-hidden="true"></div>'
-    return (f'<section class="open" id="open-{d["key"]}" aria-label="{E(name)} opened"><div class="o-in">'
-            f'<div class="o-head"><b>{E(name)}</b><span>{E(date)}</span><a class="btn ghost" href="#top">Close</a></div>'
+    for p in posts:
+        chans = ', '.join(CHANNEL_LABELS[c] for c in p.get('channels') or [])
+        if chans:
+            rows.append(f'<li><span class="o-name">Goes out on: {E(chans)}</span></li>')
+    return (f'<section class="open" id="td-open-{d["key"]}" aria-label="{E(name)} opened"><div class="o-in">'
+            f'<div class="o-head"><b>{E(name)}</b><span>{E(date)}</span><a class="btn ghost" href="#td-top">Close</a></div>'
             f'<div class="o-body">{big}<ul class="o-list">{"".join(rows) or "<li><span class=o-name>No assets yet</span></li>"}</ul></div></div></section>')
 
 
-def render(model, fonts=None, title=None):
+def inner(model):
+    """The Today view's body, one <div class="today-a">, every id prefixed td-: drawn alone (render) or as the board's
+    Today tab (week_board.py), whose one stylesheet carries scoped_css()."""
     model = check(model)
     names = {k: (s, n) for k, s, n in DAYS}
     counts = stage_counts(model)
@@ -199,7 +215,7 @@ def render(model, fonts=None, title=None):
         short, _ = names[d['key']]
         posts = d.get('posts') or []
         dots = ''.join(f'<i class="{"need" if p["status"] == "concept" else "live" if p["status"] == "live" else ""}"></i>' for p in posts[:4])
-        strip.append(f'<a href="#{d["key"]}" class="{"today" if model.get("today") == d["key"] else ""}"><b>{short}</b>'
+        strip.append(f'<a href="#td-{d["key"]}" class="{"today" if model.get("today") == d["key"] else ""}"><b>{short}</b>'
                      f'<span>{E(d.get("date", ""))}</span><span class="dots">{dots}</span></a>')
     sections, opens = [], []
     for d in model['days']:
@@ -207,21 +223,52 @@ def render(model, fonts=None, title=None):
         posts = d.get('posts') or []
         cards = ''.join(_card(d, p, i) for i, p in enumerate(posts)) or _empty_card(d)
         today = '<span class="pill today">Today</span>' if model.get('today') == d['key'] else '<span class="pill today off"></span>'
-        sections.append(f'<section class="day" id="{d["key"]}"><h3><span class="d-name"><span class="long">{E(name)}</span><span class="short">{E(short)}</span></span><span class="d-date">{E(d.get("date", ""))}</span>'
-                        f'{today}<span class="sp"></span>{_feel(d)}</h3><div class="cards">{cards}</div></section>')
+        sections.append(f'<section class="day" id="td-{d["key"]}"><h3><span class="d-name"><span class="long">{E(name)}</span><span class="short">{E(short)}</span></span><span class="d-date">{E(d.get("date", ""))}</span>'
+                        f'{today}</h3><div class="cards">{cards}</div></section>')
         opens.append(_open_panel(d, name, d.get('date', '')))
-    css = CSS + (font_faces(fonts) if fonts else GOOGLE_FONTS)
+    note = f'<p class="note">{E(model["note"])}</p>' if model.get('note') else ''
+    return (f'<div class="today-a" id="td-top"><div class="wrap">'
+            f'<div class="top"><h2 class="t-h">{E(model.get("label", "This week"))}</h2><div class="range">{E(model.get("range", ""))}</div></div>'
+            f'<div class="stages" role="list" aria-label="Posts by stage">{stage_strip}</div><div class="grid">'
+            f'<div class="asks"><div class="q"><div class="sect"><span>Needs you</span><span>{len(asks)} ask{"s" if len(asks) != 1 else ""}</span></div><ol>{ask_rows}</ol></div>{note}</div>'
+            f'<div class="tmain"><nav class="strip" aria-label="Days">{"".join(strip)}</nav>{"".join(sections)}</div>'
+            f'</div></div>{"".join(opens)}</div>')
+
+
+def scoped_css(root='.today-a'):
+    """CSS with every rule under root, so the view sits inside the board's one stylesheet and touches nothing else."""
+    def scope(block):
+        out, at = [], 0
+        while at < len(block):
+            brace = block.find('{', at)
+            if brace < 0:
+                break
+            head = block[at:brace].strip()
+            if head.startswith('@media'):
+                depth, j = 1, brace + 1
+                while depth:
+                    depth += {'{': 1, '}': -1}.get(block[j], 0)
+                    j += 1
+                out.append(f'{head}{{{scope(block[brace + 1:j - 1])}}}')
+                at = j
+                continue
+            close = block.index('}', brace)
+            sels = []
+            for sel in head.split(','):
+                sel = sel.strip()
+                sels.append(root if sel in (':root', 'body') else f'{root} *' if sel == '*' else f'{root} {sel}')
+            out.append(f'{",".join(sels)}{{{block[brace + 1:close]}}}')
+            at = close + 1
+        return ''.join(out)
+    return scope(CSS)
+
+
+def render(model, fonts=None, title=None):
+    body = inner(model)
+    css = (font_faces(fonts) if fonts else GOOGLE_FONTS) + scoped_css() + 'body{margin:0;background:#F4EFE4}'
     head_title = E(title or f'Publish board, week of {model["week"]}')
     return f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{head_title}</title><style>{css}</style></head><body id="top">
-<div class="wrap">
-<header class="top"><div><h1>{E(model.get("label", "This week"))}</h1><div class="range">{E(model.get("range", ""))}</div></div></header>
-<div class="stages" role="list" aria-label="Posts by stage">{stage_strip}</div>
-<div class="grid">
-<aside class="asks"><div class="q"><div class="sect"><span>Needs you</span><span>{len(asks)} ask{"s" if len(asks) != 1 else ""}</span></div><ol>{ask_rows}</ol></div>
-{f'<p class="note">{E(model["note"])}</p>' if model.get("note") else ""}</aside>
-<main><nav class="strip" aria-label="Days">{"".join(strip)}</nav>{"".join(sections)}</main>
-</div></div>{"".join(opens)}</body></html>'''
+<title>{head_title}</title><style>{css}</style></head><body>{body}</body></html>'''
 
 
 GOOGLE_FONTS = '@import url("https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;700&family=IBM+Plex+Mono:wght@500;700&display=swap");'
@@ -244,7 +291,7 @@ body{background:var(--bg);color:var(--ink);font:400 15px/1.4 Archivo,system-ui,s
 a{color:inherit}
 .one{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .wrap{max-width:1180px;margin:0 auto;padding:20px 16px 48px}
-h1{font:400 30px/1 Anton,Impact,sans-serif;text-transform:uppercase;letter-spacing:.01em}
+.t-h{font:400 30px/1 Anton,Impact,sans-serif;text-transform:uppercase;letter-spacing:.01em}
 .range{font:500 12px/1.2 var(--mono);color:var(--muted);margin-top:6px;white-space:nowrap}
 .top{margin-bottom:14px}
 .btn{flex:none;display:inline-flex;align-items:center;justify-content:center;width:var(--bw);height:var(--bh);border-radius:12px;
@@ -279,10 +326,9 @@ h1{font:400 30px/1 Anton,Impact,sans-serif;text-transform:uppercase;letter-spaci
 @media(max-width:519px){.d-name{width:40px}.d-name .long{display:none}.d-name .short{display:inline}}.d-date{width:56px;color:var(--muted);font-weight:500}.sp{flex:1}
 .pill{display:inline-block;flex:none;font:700 10px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:5px 8px;border-radius:999px;white-space:nowrap}
 .pill.kind{background:#e3ddcf}.pill.today{width:56px;text-align:center;background:var(--mint)}.pill.today.off{visibility:hidden}
-.feel{flex:none;width:64px;height:32px;border-radius:9px;border:1.5px solid var(--line);background:var(--card);font:700 11px/1 var(--mono);text-transform:uppercase;cursor:pointer;white-space:nowrap}
+.feels{display:flex;gap:6px}.feel{flex:none;width:60px;height:var(--bh);border-radius:9px;border:1.5px solid var(--line);background:var(--card);font:700 11px/1 var(--mono);text-transform:uppercase;cursor:pointer;white-space:nowrap}
 .feel.on{border-color:var(--ink);background:var(--ink);color:var(--bg)}
-.cards{display:grid;gap:10px;grid-template-columns:minmax(0,1fr)}
-@media(min-width:720px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.cards{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr))}
 .card{height:var(--card-h);display:flex;flex-direction:column;gap:8px;padding:12px;background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
 .card.need{background:#fff4ef;border-color:#e9b9a9}
 .c-meta{display:flex;align-items:center;gap:10px;height:20px;font:500 11.5px/1 var(--mono);color:var(--muted);white-space:nowrap}
@@ -342,6 +388,10 @@ const { chromium } = require('playwright'); const path = require('path')
     ...[...document.querySelectorAll('body *')].filter(e => e.offsetParent || getComputedStyle(e).position === 'fixed').map(e => Math.ceil(e.getBoundingClientRect().right))))
   const name = path.basename(f, '.html') + (h ? '-' + h.slice(1) : '') + '-' + vw + '.png'
   await p.screenshot({ path: path.join(out, name), fullPage: !h })
+  // What he approves is never cut off: no ask line, title or label hides text behind an ellipsis.
+  const cut = await p.evaluate(() => [...document.querySelectorAll('.ask .w b, .ask .w span, .btn, .feel, .sc span, .lane span, .as')]
+    .filter(e => e.offsetParent && e.scrollWidth > e.clientWidth + 1).map(e => e.textContent.trim().slice(0, 40)))
+  if (cut.length) errs.push('cut off: ' + cut.join(' | '))
   console.log(JSON.stringify({ shot: name, scrollWidth: sw, width: w, errors: errs }))
   await p.close() }
  await b.close() })()'''
