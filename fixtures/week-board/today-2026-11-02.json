@@ -7,29 +7,29 @@
  "note": "Mon, Wed and Fri are back. Every piece is recorded; nothing waits on a new recording until Fri 6 Nov.",
  "asks": [
   {
-   "what": "Substack post for Mon 2 Nov",
-   "detail": "Approve it, then post it yourself",
+   "what": "Substack, Mon 2 Nov",
+   "detail": "Approve, then post it yourself",
    "cta": "Approve",
    "href": "https://content.krishraja.com/board/2026-11-02#monday-publish",
    "day": "mon"
   },
   {
-   "what": "Titles for Wed 4 Nov",
+   "what": "Titles, Wed 4 Nov",
    "detail": "3 options, best first",
    "cta": "Pick title",
    "href": "https://content.krishraja.com/board/2026-11-02#wednesday-publish",
    "day": "wed"
   },
   {
-   "what": "The 90s cut for Fri 6 Nov",
-   "detail": "Watch it at full size, then approve",
+   "what": "90s cut, Fri 6 Nov",
+   "detail": "Watch it at full size",
    "cta": "Watch cut",
    "href": "https://content.krishraja.com/board/2026-11-02#friday-record",
    "day": "fri"
   },
   {
-   "what": "Level-up post for Thu 5 Nov",
-   "detail": "\"Ask your AI who it is allowed to email\"",
+   "what": "Level up, Thu 5 Nov",
+   "detail": "Who your AI may email",
    "cta": "Approve",
    "href": "https://content.krishraja.com/board/2026-11-02#queue-thu",
    "day": "thu"

@@ -7,22 +7,22 @@
  "note": "No Monday, Wednesday or Friday piece this week. The cadence restarts Mon 2 Nov.",
  "asks": [
   {
-   "what": "Carousel for Fri 30 Oct",
-   "detail": "\"Five AI prices that moved this month\"",
+   "what": "Carousel, Fri 30 Oct",
+   "detail": "Five AI prices that moved",
    "cta": "Approve",
    "href": "https://content.krishraja.com/board/2026-10-26#queue-fri",
    "day": "fri"
   },
   {
-   "what": "Meme for Sat 31 Oct",
-   "detail": "\"The intern who never sleeps\"",
+   "what": "Meme, Sat 31 Oct",
+   "detail": "The intern who never sleeps",
    "cta": "Approve",
    "href": "https://content.krishraja.com/board/2026-10-26#queue-sat",
    "day": "sat"
   },
   {
-   "what": "How did Wednesday land?",
-   "detail": "Carousel, 4.1k views, 212 saves",
+   "what": "How did Wed land?",
+   "detail": "4.1k views, 212 saves",
    "cta": "Rate it",
    "href": "#wed",
    "day": "wed"
