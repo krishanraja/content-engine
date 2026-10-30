@@ -258,6 +258,33 @@ class CriticRouteTests(unittest.TestCase):
         self.assertEqual(critic.calibrate(manifest, critic.read_verdicts(out), media), [])
         self.assertEqual(len({v['critic_id'] for v in critic.read_verdicts(out).values()}), len(manifest['cases']))
 
+    def test_calibrate_takes_the_same_media_roots_as_cases(self):
+        manifest = critic.load_manifest()
+        friday, other = self.dir / 'friday', self.dir / 'other'
+        friday.mkdir()
+        other.mkdir()
+        judged = {}
+        for i, case in enumerate(manifest['cases']):
+            if case['media'].get('name'):
+                (friday / case['media']['name']).write_bytes(case['id'].encode())
+            sha = critic.case_sha(case, [other, friday])
+            judged[case['id']] = verdict([finding()] if case['expect'] == 'block' else [], critic_id=f'c-{i}', sha=sha,
+                                         day='calibration', cut='still')
+        self.assertEqual(critic.calibrate(manifest, judged, [other, friday]), [])
+        self.assertTrue(critic.calibrate(manifest, judged, other))
+        out = self.dir / 'verdicts'
+        out.mkdir()
+        for cid, v in judged.items():
+            (out / f'verdict.{cid}.json').write_text(json.dumps(v), encoding='utf-8')
+        with mock.patch('sys.stdout'):
+            self.assertEqual(critic.main(['calibrate', '--verdicts', str(out), '--media-root', str(other),
+                                          '--media-root', str(friday)]), 0)
+
+    def test_the_card_says_a_brief_cross_fade_at_a_scene_change_is_intended(self):
+        # Ruling (Krish, 2026-10-30): "the cross fades are fine", on mon26-wide's act-break dissolves.
+        self.assertIn('cross-fade between two layouts at a scene or act change is intended', critic_run.CARD)
+        self.assertIn('two layouts stay stuck on screen together', critic_run.CARD)
+
     def test_the_overnight_run_calls_the_critic_route(self):
         step = overnight.load_config()['steps']['critic']
         self.assertTrue(step['codex'])

@@ -54,6 +54,10 @@ The rejection floor for {maker}:
 Answer with one JSON object and nothing else:
 {{"findings": [{{"failure": "...", "area": "...", "at_s": 0.0, "needs": "..."}}]}}
 
+- A brief cross-fade between two layouts at a scene or act change is intended (Krish, 30 Oct: "the cross fades are
+  fine"): a contact-sheet frame that catches one mid-dissolve, with both layouts faintly overlapping, is not a failure.
+  It is a failure when two layouts stay stuck on screen together, or the overlap holds for more than a moment (it shows
+  on two or more frames in a row, 1.5 s apart).
 - One finding per failure you can see. An empty list means the cut passes. Do not invent failures to look thorough,
   and do not pass a cut that falls beneath the floor.
 - failure: one line naming what failed on screen, under 300 characters. Name the failure only: never a fix, a

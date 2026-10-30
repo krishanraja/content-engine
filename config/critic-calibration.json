@@ -1,7 +1,7 @@
 {
   "schema": "critic-calibration/1",
   "about": "The cases the overnight Critic must block and pass before its verdicts hold or pass a cut (plan Wave 2, W2.6: \"it must block F19 and Friday's four cuts, and pass Monday 26\"). The F19 frames are in this repository; the Friday and Monday cuts are on his computers and Drive, never committed. CI runs the same calibration on synthetic stand-ins (tests/overnight_critic_test.py).",
-  "command": "On the primary computer, from the repository: python scripts/overnight/critic_run.py cases --out <a new verdicts folder> --media-root <the folder holding the four Friday REVIEW cuts> --media-root <the folder holding Monday's two cuts>, then: python scripts/overnight/critic.py calibrate --verdicts <that verdicts folder> --media-root <the Friday folder> --record \"%USERPROFILE%/Documents/MindmakeVideoStudio/overnight/critic-calibrated.json\"",
+  "command": "On the primary computer, from the repository: python scripts/overnight/critic_run.py cases --out <a new verdicts folder> --media-root <the folder holding the four Friday REVIEW cuts> --media-root <the folder holding Monday's two cuts>, then: python scripts/overnight/critic.py calibrate --verdicts <that verdicts folder> --media-root <the Friday folder> --media-root <the Monday folder> --record \"%USERPROFILE%/Documents/MindmakeVideoStudio/overnight/critic-calibrated.json\"",
   "cases": [
     {
       "id": "F19-gate2-tall-1",
