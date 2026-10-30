@@ -56,7 +56,8 @@ import { verifiedMaking } from './_verifiedMaking.js'
 // happy to Clear(complete)/Bump/Purge things off my lists as I go but the
 // rest should be automatically done." The kinds are CLOSE_KINDS: a piece's
 // making step or published, the week's two items, a share image, a job, a
-// post or a take a machine could not place, work a session holds (session),
+// post or a take a machine could not place, a late row of Control Center's
+// week clock (clock), work a session holds (session),
 // and his_word, which nothing can see, so only his Clear ends it. What a kind
 // needs beyond itself is in close_ref (closeRefOk, the same rule as the
 // database's board_close_ref_ok). The sweep writes as client done_check: it
@@ -79,7 +80,8 @@ import { verifiedMaking } from './_verifiedMaking.js'
 export const LANES = ['on_you', 'in_progress', 'done', 'archived'] as const
 type Lane = typeof LANES[number]
 const CLOSED_LANES = new Set<string>(['done', 'archived'])
-const ID = /^[a-z0-9][a-z0-9-]{1,79}$/
+/** An item id. Underscores since 2026-10-30: Control Center's clock items are clock-<Monday>-<row> and its rows are snake_case. */
+const ID = /^[a-z0-9][a-z0-9_-]{1,79}$/
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 const SIGNAL_STATES = new Set(['', 'ok', 'warn', 'bad'])
 const MAX_ITEMS = 50
@@ -128,17 +130,20 @@ export const DONE_CHECK = 'done_check'
 export const PIECE_KINDS = ['workroom', 'draft', 'visual_gate', 'scripts', 'pack', 'record', 'video', 'publish', 'published'] as const
 /** Every way an item ends. The list in the newest migration's
  *  work_board_items_closes_on_check is the same. */
-export const CLOSE_KINDS = new Set<string>([...PIECE_KINDS, 'week_planned', 'week_published', 'share_image_changed', 'job_ok', 'post_matched', 'take_placed', 'target_decided', 'session', 'his_word'])
+export const CLOSE_KINDS = new Set<string>([...PIECE_KINDS, 'week_planned', 'week_published', 'share_image_changed', 'job_ok', 'post_matched', 'take_placed', 'target_decided', 'clock', 'session', 'his_word'])
 /** Kinds that are never on Krish: work a session holds, and the questions a machine holds for one. */
 export const NOT_ON_HIM = new Set(['session', 'post_matched', 'take_placed'])
 /** Kinds whose close_ref must be whole on any open item (the rest are checked on him). */
-const REF_KINDS = new Set(['week_published', 'share_image_changed', 'job_ok', 'post_matched', 'take_placed', 'target_decided'])
+const REF_KINDS = new Set(['week_published', 'share_image_changed', 'job_ok', 'post_matched', 'take_placed', 'target_decided', 'clock'])
 const PIECE_KIND_SET = new Set<string>(PIECE_KINDS)
 /** Why only Krish can do an item: the walls only he passes, his face and voice, his login, his call. */
 export const ONLY_YOU = new Set(['send', 'post', 'spend', 'delete', 'permission', 'credential', 'face', 'login', 'judgment'])
 const WEEK_ITEM = /^week-\d{4}-\d{2}-\d{2}$/
 const WEEK_BOARD = /^week-publish-board-\d{4}-\d{2}-\d{2}$/
 const TAKE_ITEM = /^take-[0-9a-f]{12}$/
+/** A row of Control Center's week clock (CLOCK_ROWS in its src/lib/weekClock.ts). */
+const CLOCK_WEEK = /^\d{4}-\d{2}-\d{2}$/
+const CLOCK_ROW = /^[a-z][a-z_]{1,39}$/
 const OPEN_LANES = new Set<string>(['on_you', 'in_progress'])
 const MAX_CLOSE_REF = 1024
 const MAX_PROOF = 300
@@ -186,6 +191,7 @@ export const CLOSE_REF_NEEDS: Record<string, string> = {
   post_matched: 'close_ref {"url": the post\'s https address}',
   take_placed: 'the id take-<the first 12 of its sha256>',
   target_decided: 'close_ref {"target_id": the visibility target\'s uuid}',
+  clock: 'the id clock-<its Monday>-<row> and close_ref {"week": its Monday, "row": the clock row}',
 }
 
 /** True when an item carries what its kind needs. The same rule as the
@@ -202,6 +208,7 @@ export function closeRefOk(kind: unknown, ref: unknown, ideaId: unknown, id: unk
   if (k === 'post_matched') return /^https:\/\//.test(str(r.url))
   if (k === 'take_placed') return TAKE_ITEM.test(String(id))
   if (k === 'target_decided') return UUID.test(str(r.target_id))
+  if (k === 'clock') return CLOCK_WEEK.test(str(r.week)) && CLOCK_ROW.test(str(r.row)) && String(id) === `clock-${str(r.week)}-${str(r.row)}`
   return k === 'session' || k === 'his_word'
 }
 
