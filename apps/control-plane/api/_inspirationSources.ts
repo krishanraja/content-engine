@@ -128,9 +128,14 @@ function readingExcerpt(md: string): string | null {
  * quote counts as his words only while that row stands; with no list, no quote is shown.
  */
 export function buildInspiration(input: { weekStart: string; items: Row[]; reads?: Row[]; moves?: Row[]; claims?: Row[];
-  quotesStanding?: string[] }): InspirationBlock {
+  quotesStanding?: string[]; listedIdeas?: string[] }): InspirationBlock {
   const freshSince = new Date(Date.parse(`${input.weekStart}T00:00:00Z`) - INSPO_FRESH_DAYS * 86_400_000).toISOString()
-  const live = input.items.filter(r => !r.dismissed_at && !r.facets?.part_of)
+  // A said idea's card whose content idea is already on the board (listedIdeas) is the same idea twice; it is left
+  // out unless he has answered or routed the card itself, which keeps his press.
+  const listed = new Set(input.listedIdeas || [])
+  const twice = (r: Row) => r.facets?.said?.landed_table === 'content_ideas' && listed.has(String(r.facets.said.landed_id))
+    && !r.answered_at && !routesOf(r).length
+  const live = input.items.filter(r => !r.dismissed_at && !r.facets?.part_of && !twice(r))
   const cards = live.map(card)
   const byNewest = (a: InspoCard, b: InspoCard) => String(b.answered_at || b.created_at || '').localeCompare(String(a.answered_at || a.created_at || ''))
   // A routed card that already became a piece (piece_id) is done; the rest are owed a place on the board.
