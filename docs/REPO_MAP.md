@@ -1902,6 +1902,7 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `function monday(value: string): boolean`
 - `const validId = (id: string) =>`
 - `const revision = (n: unknown) =>`
+- `function growthWriter(req: VercelRequest): boolean`
 - `function actor(req: VercelRequest, operatorOnly = false): string | null`
 - `const PRESS_USES`
 - `const OFFDAY_ID`
@@ -1927,6 +1928,17 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 ### `apps/control-plane/api/board/_handler.ts`
 
 - `function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: PressDeps = {})`
+
+### `apps/control-plane/api/board/_posted.ts`
+
+- `const POSTED_CHANNELS`
+- `type PostedChannel = keyof typeof POSTED_CHANNELS`
+- `const POSTED_ACTOR`
+- `interface PostedInput`
+- `interface PostedResult`
+- `function postedInput(body: unknown): { input?: PostedInput; problem?: string }`
+- `function dayDate(week: string, day: keyof typeof DAY_OFFSET): string`
+- `async function recordPosted(db: SupabaseClient, week: string, raw: unknown, now: string): Promise<PostedResult>`
 
 ### `apps/control-plane/api/board/_presses.ts`
 
