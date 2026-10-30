@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-10-26","week_target":1,"current":1,"current_as_of":"2026-10-30","current_source":"Control Center content_ideas in the publication's series (1 published in the last 7 days)","urgency":1,"urgency_reason":"at 100% of this week's target"} --> **North Star number: U1, on pace.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 1, against 1 this week, on the way to 30 by 30 November 2026. Steady, and one proposal a week that would raise the ceiling.
 
+- ve dispatch runs Codex cards under the Studio's own Codex home (runtime\codex-home, built by scripts/overnight/codex_home.py): no MCP server, no plugin, sign-in and sessions shared with ~/.codex. Krish keeps buffer and teleprompter in his everyday Codex. LORIMER (standby) has it built and passes preflight 9/9. (2026-10-30)
 - Friday 23's two cuts carry the steady bed on the passed picture (framemd5 identical); Krish heard and approved both exact files, recorded in each spec, and they are in the post's 3 Video folder as "... - music fixed 30 Oct.mp4". `ve status` is NOT READY: the caption QC rows fail as they do on the old passed files, and the long cut's Critic blocks a ~1 s music sag at 172.5 s after the loop restart. (2026-10-30)
 - **SURFACE calibration (2026-10-30).** Gate roots from `studio.json`, `.srt` caption pages, the Critic wired. Krish ruled: near-homophones pass, a word with no room in the final is unmeasured, mon26's unfiled joins and captions are accepted missing, wed21's lost words are real, short cross-fades pass the Critic.
 - Krish approves the week's filler mix once (picks/mix, Ideas, Off days) and Growth fills it, posting only within an approved mix it reads from the week's pieces; a piece he records keeps its own press. (2026-10-30)
@@ -47,12 +48,13 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
+- 2026-10-30 Codex cards no longer inherit the everyday Codex's MCP servers and plugins (on LORIMER 38 plugins, GitHub, Supabase, Stripe, Vercel and Gmail among them); Krish, 30 Oct, "do the separate settings folder fix".
 - 2026-10-30 `ve premix` found no music ledger on its first real run (it looked under config/ve/); it now reads config/music-library.json.
 Everything to 29 October 2026 is in `docs/history/2026-10-29-NOW-changed-recently.md`, 30 October lines in `docs/history/2026-10-30-NOW-moved-3.md` and `-4.md`, all verbatim (W2.12); `npm run check:workbench` holds the byte cap.
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-10-30): Krish decides whether the long cut's 172.5 s sag is fixed or accepted as he heard it.
+- Next (2026-10-30): on SURFACE, run `python scripts/overnight/codex_home.py build`, then the preflight, so its card runs also drop ~/.codex's plugins.
 - Then: the dry run on Saturday 31 October, 18:00 New York (read both machines' preflight blocks first), and the first Sunday loop on 1 November, recording `production_choices` for each piece made. After that the plan is Wave 2 (`docs/plans/2026-11-07-wave-2.md`: unattended overnight cuts, calibrated gates, ve in shadow, Growth posting what he approved, by 7 November) and Wave 3 (`docs/plans/2026-11-14-wave-3.md`: the ve cutover, one inspiration source, the retrospective, by 14 November).
 - Waiting on Krish (as of 2026-10-29): Control Center's `GITHUB_TOKEN` needs Contents: write and Actions: read on this repository for the make press; whether a make run's pull request auto-merges on green CI; whether the $15 cap gets a reader; the Buffer plan (due 31 October); approving the three one-opening, one-close floor standards through the Rejections route; OUR TEST or MY TEST on a video label he presents; "we" in article titles while video titles keep "I".
 - Waiting on Krish (as of 2026-10-28): his Gate 2 verdict on the format H proof and Friday 23's cuts; his yes to the Bessen line for Friday 30; his recordings of Wednesday 28 and Friday 30; applying the three migrations above; the floor's Drive access and `FLOOR_SYNC_TOKEN`.
