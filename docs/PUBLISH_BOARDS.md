@@ -212,6 +212,12 @@ gate. A normal rebuild carries these materials from `--previous`; do not lose
 them when refreshing the article. Existing copy boxes can be refreshed by
 stable ID with `copy_updates`, retaining their comment anchors.
 
+A materials file may name the Download first row it stands in for, with `"fills"`: `video-long`,
+`video-short`, `thumb-long` or `thumb-short` (each once). On a made day whose making record holds
+no such cut, that file is the row's Download, and it is not listed again under "Prepared for this
+piece". The record wins wherever it holds the cut, and the cut is still not made on the record,
+which only `making.py video` writes.
+
 Resolve every download into the immutable web manifest. Activate with
 `board_web.py publish-web PAGE --assets MAP --expected-build BUILD_ID --apply`
 so a concurrent board publication causes a refusal instead of overwriting it.
