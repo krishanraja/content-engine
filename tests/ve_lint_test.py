@@ -92,9 +92,28 @@ class FridayFailuresAreRefused(unittest.TestCase):
     def test_IR102_episode_bed_under_a_voiceover(self):
         self.assertRefused(mutate(lambda s: s['audio']['bed'].update(mode='episode')), 'sound.bed_continuous')
 
-    def test_ducked_bed_under_a_voiceover_is_allowed(self):
-        found = codes_for(mutate(lambda s: s['audio']['bed'].update(mode='ducked')))
+    def test_episode_bed_under_a_voiceover_is_allowed(self):
+        found = codes_for(mutate(lambda s: s['audio']['bed'].update(mode='episode_bed')))
         self.assertNotIn('sound.bed_continuous', found)
+        self.assertNotIn('SCHEMA', found)
+
+    def test_a_long_cut_carries_the_episode_bed(self):
+        # Krish, Gate 2, 2026-10-30, of a ducked long cut: "It's not professional at all."
+        def long_ducked(s):
+            whole_tall(s)
+            s['cuts']['proof-tall']['max_s'] = 330
+            s['audio']['bed'].update(mode='ducked')
+        self.assertRefused(mutate(long_ducked), 'sound.long_cut_bed')
+
+        def long_episode(s):
+            long_ducked(s)
+            s['audio']['bed'].update(mode='episode_bed')
+        self.assertNotIn('sound.long_cut_bed', codes_for(mutate(long_episode)))
+
+    def test_ducked_bed_is_refused_on_a_short_too(self):
+        # Krish, Gate 2, 2026-10-30: "Same issue with the 90-second video on that day"
+        found = codes_for(mutate(lambda s: s['audio']['bed'].update(mode='ducked')))
+        self.assertIn('sound.bed_steady', found)
         self.assertNotIn('SCHEMA', found)
 
     def test_R19_speed_change_without_krish_saying_so(self):

@@ -14,6 +14,7 @@ DIGIT = re.compile(r'\d')
 DATA_DEVICES = {'kinetic_stat', 'bar_compare', 'test_grid', 'record_card', 'bar_race'}
 SOUNDED_VERBS = {'enter', 'stamp', 'mark'}
 WORDS_PER_SECOND = 2.6  # Krish's measured read rate, used only before ingest gives real times
+LONG_CUT_S = 90  # a cut allowed past this is a long cut: its bed is episode_bed
 # His name, a spelling or handle of it, or a possessive of it ("KRISH'S TEST", "@TheRealKrisho", "krishraja.com").
 # Krish, 28 Oct 2026: "Remember, no content refers to Krish, ever." One pattern: copy-lint's no_name once
 # config/copy-lint.json carries it, this same regex until then. "Raja" alone and "Krishna" pass.
@@ -245,9 +246,19 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
             if len(layouts) < need:
                 out.append(f'motion.layout_variety {where}: {len(layouts)} layout types, the format needs at least {need} a minute')
 
-    if spec['audio']['master'] == 'vo' and spec['audio']['bed']['mode'] not in ('continuous', 'ducked'):
+    bed_mode = spec['audio']['bed']['mode']
+    if spec['audio']['master'] == 'vo' and bed_mode not in ('continuous', 'ducked', 'episode_bed'):
         if not any(a['gate'] == 'exception' for a in spec['approvals']):
-            out.append('sound.bed_continuous audio.bed.mode: a voiceover cut carries a continuous or ducked bed (episode mode needs an exception approval)')
+            out.append('sound.bed_continuous audio.bed.mode: a voiceover cut carries a continuous, ducked or episode_bed bed (episode mode needs an exception approval)')
+    # A long cut carries the approved episode bed: one low level under the voice, lifts only at chapter cards
+    # (config/learnings.json deep-cut-music-always-under). Krish, Gate 2, 2026-10-30, of a ducked long cut:
+    # "Sometimes it just turns off randomly. Sometimes it's quiet. Sometimes it gets louder." and of its ducked
+    # 90-second cut: "Same issue with the 90-second video on that day". So no cut carries a ducked bed.
+    long_cuts = [cid for cid, cut in spec['cuts'].items() if cut['max_s'] > LONG_CUT_S and not cut.get('excerpt')]
+    if long_cuts and bed_mode != 'episode_bed':
+        out.append(f'sound.long_cut_bed audio.bed.mode: {", ".join(long_cuts)} run past {LONG_CUT_S} s, so the bed is episode_bed, not {bed_mode}')
+    elif bed_mode == 'ducked':
+        out.append('sound.bed_steady audio.bed.mode: a ducked bed swings with the voice; use episode_bed (or continuous)')
 
     if history:
         hero = spec['signature']['hero']['device']
