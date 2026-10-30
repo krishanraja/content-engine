@@ -1,7 +1,7 @@
 ---
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
-as_of: 2026-10-29
+as_of: 2026-10-30
 head: 262af4b
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
@@ -43,7 +43,7 @@ Lifecycle: building. The 29 October work below is on the session branch `claude/
 - **Every cut opens on its hook, with music under the whole of it (2026-10-29).** House rule `HOOK_IS_THE_INTRO` retires the story card and sting; quick-edit and ve both open on the hook with the wordmark and series tag in the corners from the first frame, and record the opening used. ve no longer draws ILLUSTRATION, SAMPLE, KRISH'S TEST or the Studio v2 chips; a test label reads OUR TEST. The music bed loops under a two-second crossfade so it never drops out.
 - **ve is the video engine on main; quick-edit stays the fallback until ve passes Phase 3** (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`, `docs/ve/STATUS.md`). Friday 23's short and long cut were made whole in ve (#237, #240), each with a fresh Critic SEND; his Gate 2 verdict on them and on the re-rendered format H proof is his.
 - **The week of 26 October.** Monday 26 (follow.the.money, Character.AI) is approved and ready to publish (#236); Wednesday 28 and Friday 30 are ready to record, scripts in Teleprompter, and one Friday line (James Bessen's IMF byline) waits on his yes. Nothing is posted.
-- **The Monday, Wednesday and Friday cadence restarts on 2 November (Ruling, Krish, 2026-10-29).** Through the engine's schedule route: Friday 30 to Monday 2 November, Wednesday 28 to Wednesday 4, Friday 23 to Friday 6, Monday 26 to Monday 9; nothing on a Monday, Wednesday or Friday before 2 November (`docs/plans/2026-10-29-cadence-restart.md`). The boards of 19 and 26 October still show the old days: no route carries a day across weeks.
+- **The cadence restarts on 2 November; its boards are live (2026-10-30).** Monday 2 (`9a0c97af`, now follow.the.money on his words) and Wednesday 4 are carried in review onto content.krishraja.com/board/2026-11-02; Friday 6 (`7083d6ad`) shows picked until its publish page is remade; Monday 9 is made on /board/2026-11-09. `POST /api/board/<Monday>/carry` and `week_board.py --carry` move a day across weeks. Layout A (Today first) is the board from 2 November (#282).
 - **Known red check:** `npm run verify` passes on the session branch except `tests/quick-edit-mix.test.ts` (`mix_test`, this container's ffmpeg 6.1.1; the repository pins 8.1.2). Migrations `20261116090000_rejections.sql`, `20261116100000_ux_feedback_recordings.sql` and `20261117090000_taste_ventures.sql` are not recorded as applied as of 2026-10-28.
 
 ## What changed recently
@@ -57,9 +57,9 @@ Everything to 29 October 2026 is in `docs/history/2026-10-29-NOW-changed-recentl
 - Waiting on Krish (as of 2026-10-29): Control Center's `GITHUB_TOKEN` needs Contents: write and Actions: read on this repository for the make press; whether a make run's pull request auto-merges on green CI; whether the $15 cap gets a reader; the Buffer plan (due 31 October); approving the three one-opening, one-close floor standards through the Rejections route; OUR TEST or MY TEST on a video label he presents; "we" in article titles while video titles keep "I".
 - Waiting on Krish (as of 2026-10-28): his Gate 2 verdict on the format H proof and Friday 23's cuts; his yes to the Bessen line for Friday 30; his recordings of Wednesday 28 and Friday 30; applying the three migrations above; the floor's Drive access and `FLOOR_SYNC_TOKEN`.
 - Waiting on Krish (as of 2026-10-29, Wave 2 and 3 production): by ear, the levels and a sound-effect set; Gate 2 on face-with-proof frames and six devices; 5 to 10 golden frames; 20 minutes on 9 Nov scoring shadow cuts. His 29 Oct answers and the home-computer steps: the handover above.
-- Waiting on Krish (as of 2026-10-29, cadence): whether the 2 November piece (`9a0c97af`, now mind.the.gap) becomes follow.the.money; then the 2 and 9 November boards, which need publish pages made for Friday 6 and Monday 9 and a way to carry review words across weeks (`docs/plans/2026-10-29-cadence-restart.md`).
+- Waiting on Krish (as of 2026-10-30, boards): Friday 6's publish page needs the long cut's chapter times (after his Gate 2), or his yes to remake it without them; then the moved days come off the 19 and 26 October boards.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): CI stays advisory, so a session waits for green before it merges.
-- North Star check (2026-10-29): holds.
+- North Star check (2026-10-30): holds.
 
 ## Read next
 
