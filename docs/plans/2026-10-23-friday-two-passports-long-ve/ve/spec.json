@@ -3658,7 +3658,7 @@
     "master": "vo",
     "bed": {
       "ledger_id": "no-curves-instrumental",
-      "mode": "ducked",
+      "mode": "episode_bed",
       "under_vo_lu": -20
     },
     "sfx_kit": "house-v1"

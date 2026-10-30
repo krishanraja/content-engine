@@ -30,6 +30,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -762,6 +763,57 @@ def cmd_compile(args) -> int:
     return 0
 
 
+def cmd_premix(args) -> int:
+    """The cut's premixed stem from the spec's own bed: the ledger track (by id, checked by hash, from
+    MINDMAKE_MUSIC_ROOT), the ledger's approved levels, the cut's length from its props and the first and last word
+    from its words. Only the chapter-card windows are given (--lift, checked to lie inside the cut); ve has no
+    chapter-card layout yet, so a cut without cards has none."""
+    from velib import audio
+    from velib.common import sha256_file
+    from velib.lint import lint
+    try:
+        spec, problems = lint(Path(args.spec))
+        if problems or spec is None:
+            print('\n'.join(problems[:20]) or 'the spec does not pass its schema')
+            return 1
+        if args.cut not in spec['cuts']:
+            raise ValueError(f'{args.cut} is not a cut in the spec')
+        bed = spec['audio']['bed']
+        ledger = load_json(CONFIG / 'music-library.json')
+        track = next((t for t in ledger['tracks'] if t['id'] == bed['ledger_id'] and t.get('status') == 'approved'), None)
+        if track is None:
+            raise ValueError(f"{bed['ledger_id']} is not an approved track in config/music-library.json")
+        root = os.environ.get(ledger.get('root_env') or 'MINDMAKE_MUSIC_ROOT') or os.environ.get('MINDMAKE_MUSIC_ROOT')
+        if not root:
+            raise ValueError('MINDMAKE_MUSIC_ROOT is not set (python scripts/quick-edit/music.py fetch prints it)')
+        music = Path(root) / Path(track['file']).name
+        if track.get('sha256') and sha256_file(music) != track['sha256']:
+            raise ValueError(f'{music.name} does not match the ledger sha256')
+        props = load_json(args.props)
+        if props.get('cutId') != args.cut:
+            raise ValueError(f"the props are for {props.get('cutId')}, not {args.cut}")
+        if props['audio']['stem'].get('trimBeforeFrames', 0):
+            raise ValueError('the props trim the stem; the premix starts at frame 0 of the conformed dialogue')
+        fps = props.get('fps', 30)
+        words = load_json(args.words)
+        words = words['words'] if isinstance(words, dict) else words
+        start_s = 0.0  # dialogue.<cut>.wav is already conformed to the cut's clock
+        lifts = [[float(a), float(b)] for a, b in (w.split('-', 1) for w in args.lift or [])]
+        result = audio.premix(args.dialogue, str(music), args.out, start_s, props['durationFrames'] / fps,
+                              bed_start_s=float(track.get('intro_cue_s') or 0), under_vo_lu=bed['under_vo_lu'],
+                              lufs=spec['audio'].get('targets', {}).get('lufs', -14), tp=spec['audio'].get('targets', {}).get('tp', -1),
+                              mode=bed['mode'], last_word_end_s=float(words[-1]['end_s']) - start_s,
+                              levels=ledger['levels'] | {'chapter_lufs': ledger['levels'].get('chapter_lufs', -22)},
+                              voice_start_s=float(words[0]['onset_s']) - start_s, lifts=lifts)
+        print(json.dumps({k: result[k] for k in ('stem', 'integrated_lufs', 'true_peak_dbtp')} | {'bed': {
+            k: result['bed'].get(k) for k in ('mode', 'bed_lufs_in_master', 'crossfades_s', 'lifts', 'bed_under_speech_db', 'duck_depth_db')}}, indent=1))
+        print(f've premix: {sha256_file(Path(args.out))}  {args.out}')
+        return 0
+    except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
+        print(f've premix: {error}', file=sys.stderr)
+        return 1
+
+
 def cmd_render(args) -> int:
     from velib.lint import lint
     spec, problems = lint(Path(args.spec))
@@ -849,6 +901,11 @@ def main() -> int:
     p.add_argument('spec'); p.add_argument('--cut', required=True); p.add_argument('--words')
     p.add_argument('--edl', help='the EDL from ve conform; its words are used when --words is absent')
     p.add_argument('--assets-dir', required=True); p.set_defaults(fn=cmd_compile)
+    p = sub.add_parser('premix', help="premix the cut's dialogue with the spec's bed into audio.<cut>.wav")
+    p.add_argument('spec'); p.add_argument('--cut', required=True); p.add_argument('--dialogue', required=True)
+    p.add_argument('--words', required=True); p.add_argument('--props', required=True); p.add_argument('--out', required=True)
+    p.add_argument('--lift', action='append', metavar='FROM-TO', help='a chapter-card window in seconds on the cut clock')
+    p.set_defaults(fn=cmd_premix)
     p = sub.add_parser('render', help='render compiled props through FormatMaster')
     p.add_argument('props'); p.add_argument('out'); p.add_argument('--scale', type=float, default=1.0)
     p.add_argument('--spec', required=True); p.add_argument('--assets-dir', required=True)

@@ -223,7 +223,7 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
                                  'pass': move['longest_still_s'] <= fmt.get('longest_still_s', 99), 'runs': move['still_runs']},
         'motion.periodicity': {'value': move['loop_period_s'], 'target': 'no repeating loop 2-10 s', 'pass': move['loop_period_s'] is None},
     }
-    for name in ('sync.av_xcorr', 'joins.decoder', 'captions.ocr', 'brand.mark_tile', 'motion.cue_sync', 'audio.bed'):
+    for name in ('sync.av_xcorr', 'joins.decoder', 'captions.ocr', 'brand.mark_tile', 'motion.cue_sync', 'audio.bed', 'audio.bed_continuity'):
         checks[name] = {'value': None, 'target': 'see config/ve/crew', 'pass': None, 'status': 'not_run'}
     # The calibrated cut gates quick-edit runs too (plan W2.4, scripts/cutgates, config/gates.json).
     for name in ('words.lost', 'joins.in_gaps', 'captions.clock', 'captions.render'):
@@ -234,6 +234,7 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
          lambda: qc_sync.av_xcorr(path, dialogue_master, edl)),
         ('joins.decoder', joins is not None, lambda: qc_joins.decoder(path, joins)),
         ('audio.bed', dialogue_master is not None, lambda: qc_audio.bed(dialogue_master)),
+        ('audio.bed_continuity', dialogue_master is not None, lambda: qc_audio.continuity(path, dialogue_master)),
         ('captions.ocr', pages is not None and region is not None, lambda: qc_captions.ocr(path, pages, region)),
         ('brand.mark_tile', mark_png is not None and beats is not None and aspect is not None,
          lambda: qc_brand.mark_tile(path, mark_png, beats, aspect)),
