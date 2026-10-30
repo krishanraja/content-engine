@@ -1,3 +1,7 @@
+> **Historical.** Archived 2026-10-29 by a working session (W2.12); banner added 2026-10-30 by the docs steward. Not current guidance.
+> Replaced by: `NOW.md`
+> Reason: moved verbatim out of NOW.md to keep it under its byte cap; the body below is unchanged.
+
 # NOW.md: what changed recently, to 29 October 2026
 
 Moved verbatim from NOW.md on 29 October 2026 (W2.12), so NOW.md stays under its byte cap (scripts/check_workbench.py). Every line below is exactly as NOW.md held it.

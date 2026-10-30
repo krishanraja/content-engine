@@ -1,8 +1,8 @@
 ---
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
-as_of: 2026-10-29
-head: 262af4b
+as_of: 2026-10-30
+head: 0426c98
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
 state_doc: docs/STATE.md
@@ -30,11 +30,11 @@ Stories a writer can carry without asking Krish:
 
 Objection it answers: "AI content is slop." Here is an engine that grades its judges against the editor, refuses to ship beneath his recorded rejections, and never counts its own actions as taste.
 
-## Where it is right now (as of 2026-10-29)
+## Where it is right now (as of 2026-10-30)
 
 <!-- north-star-state {"week_of":"2026-10-26","week_target":1,"current":0,"current_as_of":"2026-10-29","current_source":"Control Center content_ideas (0 published in the last 7 days)","urgency":4,"urgency_reason":"at 0% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 0, against 1 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
-Lifecycle: building. The 29 October work below is on the session branch `claude/fervent-brown-d8e55b`, going to main by pull request; the ve part is merged by hand after green CI. Everything older is in `docs/history/2026-10-29-NOW.md` and `docs/history/2026-10-29-NOW-closeout-fold.md`.
+Lifecycle: building. The 29 October work below is merged (#241, #242), as are the Wave 2 and 3 packages (#245 to #271), tested on synthetic fixtures only (`docs/handovers/2026-10-29-*`). Everything older is in `docs/history/2026-10-29-NOW.md` and `docs/history/2026-10-29-NOW-closeout-fold.md`.
 
 - **The Sunday loop is built, not yet run (2026-10-29).** `.github/workflows/sunday-ideas.yml` (Saturday, 12:17 and 20:47 UTC, idle once the week's Ideas tab is live) runs plan-week's ideas stage; `.github/workflows/make-piece.yml` makes one signed piece per run (from the Sunday room or `repository_dispatch` `make-piece`). Both run Claude Code on Krish's subscription (`CLAUDE_CODE_OAUTH_TOKEN`) and fail at their first step until that secret exists. On the board he presses five ways on each idea, approves scripts (the server sends them to Teleprompter), sets titles and rejects with a reason; the narrative lock gates `making.py`.
 - **Zero Claude routines (Ruling, Krish, 2026-10-29).** GitHub Actions is the scheduler; `tests/no-claude-routines.test.ts` fails on any workflow, skill, script or route that creates or fires a Claude routine or runs Claude Code on an API key. The Saturday preflight (`scripts/overnight/preflight.ps1`, both home computers, no window) checks Codex, allowance and tools and starts no Claude turn. Timed API spend is held to $15 a week, but nothing reads `meter_daily` against that cap yet.
@@ -42,8 +42,7 @@ Lifecycle: building. The 29 October work below is on the session branch `claude/
 - **The production bar is three layers (`docs/production/THE_BAR.md`, 2026-10-29).** Only the eight nevers he confirmed may hard-block on taste (no name; nothing made up, numbers credited; his words never cut or out of sync; no AI notes, eyebrows, asterisks or take tags; nothing posted, sent or spent without his yes, never Full Time or Heartside; real logos and images with rights; one opening, one close; no em dashes, no preaching). Aims guide; choices under test (the hook as the intro, the lead picture per piece, one sound on the big moment) are recorded per piece with `making.py <piece> choices`. `floor.py` prints the eight for every video maker.
 - **Every cut opens on its hook, with music under the whole of it (2026-10-29).** House rule `HOOK_IS_THE_INTRO` retires the story card and sting; quick-edit and ve both open on the hook with the wordmark and series tag in the corners from the first frame, and record the opening used. ve no longer draws ILLUSTRATION, SAMPLE, KRISH'S TEST or the Studio v2 chips; a test label reads OUR TEST. The music bed loops under a two-second crossfade so it never drops out.
 - **ve is the video engine on main; quick-edit stays the fallback until ve passes Phase 3** (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`, `docs/ve/STATUS.md`). Friday 23's short and long cut were made whole in ve (#237, #240), each with a fresh Critic SEND; his Gate 2 verdict on them and on the re-rendered format H proof is his.
-- **The week of 26 October.** Monday 26 (follow.the.money, Character.AI) is approved and ready to publish (#236); Wednesday 28 and Friday 30 are ready to record, scripts in Teleprompter, and one Friday line (James Bessen's IMF byline) waits on his yes. Nothing is posted.
-- **The Monday, Wednesday and Friday cadence restarts on 2 November (Ruling, Krish, 2026-10-29).** Through the engine's schedule route: Friday 30 to Monday 2 November, Wednesday 28 to Wednesday 4, Friday 23 to Friday 6, Monday 26 to Monday 9; nothing on a Monday, Wednesday or Friday before 2 November (`docs/plans/2026-10-29-cadence-restart.md`). The boards of 19 and 26 October still show the old days: no route carries a day across weeks.
+- **The Monday, Wednesday and Friday cadence restarts on 2 November (Ruling, Krish, 2026-10-29).** Monday 26 (follow.the.money, Character.AI) is approved and ready to publish (#236); Wednesday 28 and Friday 30 are ready to record, scripts in Teleprompter, and one Friday line (James Bessen's IMF byline) waits on his yes. Nothing is posted. Through the engine's schedule route: Friday 30 to Monday 2 November, Wednesday 28 to Wednesday 4, Friday 23 to Friday 6, Monday 26 to Monday 9; nothing on a Monday, Wednesday or Friday before 2 November (`docs/plans/2026-10-29-cadence-restart.md`). The boards of 19 and 26 October still show the old days: no route carries a day across weeks.
 - **Known red check:** `npm run verify` passes on the session branch except `tests/quick-edit-mix.test.ts` (`mix_test`, this container's ffmpeg 6.1.1; the repository pins 8.1.2). Migrations `20261116090000_rejections.sql`, `20261116100000_ux_feedback_recordings.sql` and `20261117090000_taste_ventures.sql` are not recorded as applied as of 2026-10-28.
 
 ## What changed recently
@@ -53,10 +52,10 @@ Everything to 29 October 2026 is in `docs/history/2026-10-29-NOW-changed-recentl
 ## What is next and what is waiting on Krish
 
 - Next (2026-10-29): Krish runs `claude setup-token` on his own computer, adds it as the content-engine Actions secret `CLAUDE_CODE_OAUTH_TOKEN`, deletes the "Plan the week" and "Make a piece" routines in claude.ai, and runs Actions > Sunday ideas by hand once before Saturday 31 October.
-- Then: the dry run on Saturday 31 October, 18:00 New York (read both machines' preflight blocks first), and the first Sunday loop on 1 November, recording `production_choices` for each piece made. After that the plan is Wave 2 (`docs/plans/2026-11-07-wave-2.md`: unattended overnight cuts, calibrated gates, ve in shadow, Growth posting what he approved, by 7 November) and Wave 3 (`docs/plans/2026-11-14-wave-3.md`: the ve cutover, one inspiration source, the retrospective, by 14 November).
+- Then: the dry run on Saturday 31 October, 18:00 New York (read both machines' preflight blocks first), and the first Sunday loop on 1 November, recording `production_choices` for each piece made. After that Wave 2 runs for real (`docs/plans/2026-11-07-wave-2.md`: unattended overnight cuts, calibrated gates, ve in shadow, Growth posting what he approved, by 7 November) and Wave 3 (`docs/plans/2026-11-14-wave-3.md`: the ve cutover, one inspiration source, the retrospective, by 14 November).
 - Waiting on Krish (as of 2026-10-29): Control Center's `GITHUB_TOKEN` needs Contents: write and Actions: read on this repository for the make press; whether a make run's pull request auto-merges on green CI; whether the $15 cap gets a reader; the Buffer plan (due 31 October); approving the three one-opening, one-close floor standards through the Rejections route; OUR TEST or MY TEST on a video label he presents; "we" in article titles while video titles keep "I".
 - Waiting on Krish (as of 2026-10-28): his Gate 2 verdict on the format H proof and Friday 23's cuts; his yes to the Bessen line for Friday 30; his recordings of Wednesday 28 and Friday 30; applying the three migrations above; the floor's Drive access and `FLOOR_SYNC_TOKEN`.
-- Waiting on Krish (as of 2026-10-29, Wave 2 and 3 production): by ear, the levels and a sound-effect set; Gate 2 on face-with-proof frames and six devices; 5 to 10 golden frames; 20 minutes on 9 Nov scoring shadow cuts. His 29 Oct answers and the home-computer steps: the handover above.
+- Waiting on Krish (as of 2026-10-29, Wave 2 and 3 production): by ear, the levels and a sound-effect set; Gate 2 on face-with-proof frames and six devices; 5 to 10 golden frames; 20 minutes on 9 Nov scoring shadow cuts. His 29 Oct answers and the home-computer steps: `docs/handovers/2026-10-29-waves-2-3-production.md`; worker B's: `docs/handovers/2026-10-29-wave2-3-worker-b.md`.
 - Waiting on Krish (as of 2026-10-29, cadence): whether the 2 November piece (`9a0c97af`, now mind.the.gap) becomes follow.the.money; then the 2 and 9 November boards, which need publish pages made for Friday 6 and Monday 9 and a way to carry review words across weeks (`docs/plans/2026-10-29-cadence-restart.md`).
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): CI stays advisory, so a session waits for green before it merges.
 - North Star check (2026-10-29): holds.

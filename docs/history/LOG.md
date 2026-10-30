@@ -5,6 +5,11 @@ Newest first. Entries are written by the docs steward (see the steward link in
 describes current behaviour; `NOW.md` and `docs/STATE.md` do.
 Files moved here keep their body verbatim under a Historical banner.
 
+## 2026-10-30
+
+- reconciled at `0426c98`: NOW.md takes the 241 non-steward commits after `262af4b`, which sessions had already closed out in NOW.md without moving `head`. No closeout note was waiting in `now-notes/`. Fixed the audit's `where_too_many` (9 "Where it is right now" bullets against 8) by folding the week of 26 October bullet into the cadence restart bullet, which moves the same four pieces. Corrected the stale claim that the 29 October work sat on the session branch `claude/fervent-brown-d8e55b` (merged as #241), recorded that the Wave 2 and 3 packages are merged (#245 to #265, #268, #270, #271) and untried on a real take, and pointed the Wave 2 and 3 waits at the two handovers in `docs/handovers/` instead of "the handover above". No document was moved. The stamps the digest lists as older than the code (`README.md`, `docs/CONTENT_ENGINE.md`, `docs/GLOSSARY.md`, `docs/STUDIO.md`, `docs/SYSTEM_MAP.md`, `docs/CAROUSEL_ENGINE_STATE.md`) were not checked in this run and not bumped; the last four stay named in NOW.md "Do not trust". The North Star check line is carried forward as the session of 2026-10-29 wrote it.
+- decision: added the Historical banner to `docs/history/2026-10-29-NOW-changed-recently.md`, moved here by the W2.12 session (#259) without one, which failed the validator. Body unchanged.
+
 ## 2026-10-29
 
 - folded the eight closeout notes in `now-notes/` (2026-10-28-overnight-preflight and seven of 2026-10-29: copy, engine, floor, story, ve, vendor, video) into NOW.md with `foldRepository` from `.claude/hooks/harness-closeout.mjs`, which deleted them. The folded file (26,581 characters, 15 "Where it is right now" and 19 "What changed recently" bullets) is kept whole in `docs/history/2026-10-29-NOW-closeout-fold.md`; NOW.md was then rewritten to the audit's limits and checked against the code.
