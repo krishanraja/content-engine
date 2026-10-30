@@ -114,6 +114,8 @@ jobs:
       - name: Verify artifact conversion, migration and interactive web parity
         run: |
           python tests/board_web_test.py
+          python tests/board_today_test.py
+          python scripts/post-pack/board_today.py fixtures/week-board/today-2026-10-26.json fixtures/week-board/today-2026-11-02.json --out "$RUNNER_TEMP/board-today" --shoot --open mon
           node tests/board-db.mjs "$PWD/node_modules/@electric-sql/pglite/dist/index.js"
           node tests/inspiration-said-cards.mjs "$PWD/node_modules/@electric-sql/pglite/dist/index.js"
           python tests/board_fixture.py "$RUNNER_TEMP/board-fixture.html"

@@ -1,0 +1,236 @@
+{
+ "_about": "Synthetic fixture for the Today view (layout A). Every post, number and status is made up to show the layout.",
+ "week": "2026-10-26",
+ "label": "This week",
+ "range": "Mon 26 Oct to Sun 1 Nov",
+ "today": "fri",
+ "note": "No Monday, Wednesday or Friday piece this week. The cadence restarts Mon 2 Nov.",
+ "asks": [
+  {
+   "what": "Carousel for Fri 30 Oct",
+   "detail": "\"Five AI prices that moved this month\"",
+   "cta": "Approve",
+   "href": "https://content.krishraja.com/board/2026-10-26#queue-fri",
+   "day": "fri"
+  },
+  {
+   "what": "Meme for Sat 31 Oct",
+   "detail": "\"The intern who never sleeps\"",
+   "cta": "Approve",
+   "href": "https://content.krishraja.com/board/2026-10-26#queue-sat",
+   "day": "sat"
+  },
+  {
+   "what": "How did Wednesday land?",
+   "detail": "Carousel, 4.1k views, 212 saves",
+   "cta": "Rate it",
+   "href": "#wed",
+   "day": "wed"
+  }
+ ],
+ "days": [
+  {
+   "key": "mon",
+   "date": "26 Oct",
+   "posts": [
+    {
+     "kind": "news",
+     "title": "A hospital cut wait times with one AI triage step",
+     "claim": "Wait times fell 18% in a 3-month trial",
+     "status": "live",
+     "stage": 4,
+     "time": "08:30",
+     "channels": [
+      "linkedin",
+      "threads",
+      "x"
+     ],
+     "assets": [
+      {
+       "slot": "still",
+       "state": "ready",
+       "href": "https://content.krishraja.com/board/2026-10-26#queue-mon"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "tue",
+   "date": "27 Oct",
+   "posts": [
+    {
+     "kind": "levelup",
+     "title": "One prompt that turns a meeting into three actions",
+     "claim": "Paste the notes, ask for owner, action and date",
+     "status": "live",
+     "stage": 4,
+     "time": "12:00",
+     "channels": [
+      "linkedin",
+      "instagram"
+     ],
+     "assets": [
+      {
+       "slot": "still",
+       "state": "ready",
+       "href": "https://content.krishraja.com/board/2026-10-26#queue-tue"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "wed",
+   "date": "28 Oct",
+   "feel": "liked",
+   "posts": [
+    {
+     "kind": "carousel",
+     "title": "Who actually pays when an AI app goes bust",
+     "claim": "Users get nothing; the code and people get sold",
+     "status": "live",
+     "stage": 4,
+     "time": "09:00",
+     "channels": [
+      "instagram",
+      "linkedin"
+     ],
+     "assets": [
+      {
+       "slot": "still",
+       "state": "ready",
+       "href": "https://content.krishraja.com/board/2026-10-26#queue-wed"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "thu",
+   "date": "29 Oct",
+   "posts": [
+    {
+     "kind": "explainer",
+     "title": "Why your AI gives a different answer in Paris",
+     "claim": "Where a model is built shapes what it refuses",
+     "status": "scheduled",
+     "stage": 3,
+     "time": "17:30",
+     "channels": [
+      "tiktok",
+      "shorts",
+      "reels"
+     ],
+     "assets": [
+      {
+       "slot": "short",
+       "state": "ready",
+       "href": "https://content.krishraja.com/board/2026-10-26#queue-thu"
+      }
+     ]
+    },
+    {
+     "kind": "meme",
+     "title": "Me reading the terms of service at 2am",
+     "claim": "Nobody reads them; here is the one line that matters",
+     "status": "live",
+     "stage": 4,
+     "time": "08:00",
+     "channels": [
+      "instagram",
+      "x"
+     ],
+     "assets": [
+      {
+       "slot": "still",
+       "state": "ready",
+       "href": "https://content.krishraja.com/board/2026-10-26#queue-thu"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "fri",
+   "date": "30 Oct",
+   "posts": [
+    {
+     "kind": "carousel",
+     "title": "Five AI prices that moved this month",
+     "claim": "Two went up, three went down, one doubled",
+     "status": "concept",
+     "stage": 1,
+     "time": "09:00",
+     "channels": [
+      "instagram",
+      "linkedin"
+     ],
+     "assets": [
+      {
+       "slot": "still",
+       "state": "making"
+      }
+     ],
+     "action": {
+      "label": "Approve",
+      "href": "https://content.krishraja.com/board/2026-10-26#queue-fri"
+     }
+    }
+   ]
+  },
+  {
+   "key": "sat",
+   "date": "31 Oct",
+   "posts": [
+    {
+     "kind": "meme",
+     "title": "The intern who never sleeps",
+     "claim": "Agents work nights; someone still signs off",
+     "status": "concept",
+     "stage": 1,
+     "time": "10:00",
+     "channels": [
+      "instagram",
+      "threads"
+     ],
+     "assets": [
+      {
+       "slot": "still",
+       "state": "making"
+      }
+     ],
+     "action": {
+      "label": "Approve",
+      "href": "https://content.krishraja.com/board/2026-10-26#queue-sat"
+     }
+    }
+   ]
+  },
+  {
+   "key": "sun",
+   "date": "1 Nov",
+   "posts": [
+    {
+     "kind": "news",
+     "title": "A small charity used AI to answer 3x more calls",
+     "claim": "Same staff, triple the callbacks",
+     "status": "drafted",
+     "stage": 2,
+     "time": "11:00",
+     "channels": [
+      "linkedin",
+      "substack-notes"
+     ],
+     "assets": [
+      {
+       "slot": "still",
+       "state": "ready",
+       "href": "https://content.krishraja.com/board/2026-10-26#queue-sun"
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}
