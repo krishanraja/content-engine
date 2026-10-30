@@ -1,16 +1,16 @@
 {
-  "file": "docs/plans/2026-10-23-friday-two-passports-long-ve/ve/friday-long-wide.mp4",
-  "sha256": "fff8641e11d0107a395b0b18d2047995b6350726271a4cca9b705e4bc4c5e97c",
-  "duration_s": 324.25,
+  "file": "docs/plans/2026-10-23-friday-two-passports-long-ve/ve/friday-long-wide.bed2.mp4",
+  "sha256": "d09ec3a990d590a383981354d54be16c62aa6b588252fff24581c7fdf4814fc5",
+  "duration_s": 324.23,
   "format": "hand-held-screen",
   "checks": {
     "loudness.integrated": {
-      "value": -14.1,
+      "value": -14.2,
       "target": "-14 ±1",
       "pass": true
     },
     "loudness.true_peak": {
-      "value": -1.5,
+      "value": -1.4,
       "target": "<= -1",
       "pass": true
     },
@@ -66,7 +66,7 @@
           "segment": 0,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999993
+          "correlation": 0.999998
         },
         {
           "segment": 1,
@@ -78,43 +78,43 @@
           "segment": 2,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999993
+          "correlation": 0.999991
         },
         {
           "segment": 3,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999991
+          "correlation": 0.999987
         },
         {
           "segment": 4,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999986
+          "correlation": 0.999984
         },
         {
           "segment": 5,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999987
+          "correlation": 0.999992
         },
         {
           "segment": 6,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999983
+          "correlation": 0.999988
         },
         {
           "segment": 7,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999992
+          "correlation": 0.999995
         },
         {
           "segment": 8,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999987
+          "correlation": 0.99999
         },
         {
           "segment": 9,
@@ -126,7 +126,7 @@
           "segment": 10,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999994
+          "correlation": 0.99999
         },
         {
           "segment": 11,
@@ -138,7 +138,7 @@
           "segment": 12,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999979
+          "correlation": 0.99998
         },
         {
           "segment": 13,
@@ -150,103 +150,103 @@
           "segment": 14,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.99999
+          "correlation": 0.999991
         },
         {
           "segment": 15,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999985
+          "correlation": 0.999977
         },
         {
           "segment": 16,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999991
+          "correlation": 0.999998
         },
         {
           "segment": 17,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999986
+          "correlation": 0.999993
         },
         {
           "segment": 18,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999995
+          "correlation": 0.999997
         },
         {
           "segment": 19,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999992
+          "correlation": 0.999993
         },
         {
           "segment": 20,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999986
+          "correlation": 0.999994
         },
         {
           "segment": 21,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.99999
+          "correlation": 0.999995
         },
         {
           "segment": 22,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999995
+          "correlation": 0.999988
         },
         {
           "segment": 23,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999989
+          "correlation": 0.999999
         },
         {
           "segment": 24,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.99999
+          "correlation": 0.999994
         },
         {
           "segment": 25,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.99999
+          "correlation": 0.999983
         },
         {
           "segment": 26,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999986
+          "correlation": 0.999992
         },
         {
           "segment": 27,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999992
+          "correlation": 0.999985
         },
         {
           "segment": 28,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999991
+          "correlation": 0.999994
         },
         {
           "segment": 29,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999993
+          "correlation": 0.999991
         },
         {
           "segment": 30,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999989
+          "correlation": 0.999974
         },
         {
           "segment": 31,
@@ -258,7 +258,7 @@
           "segment": 32,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999992
+          "correlation": 0.999987
         },
         {
           "segment": 33,
@@ -270,61 +270,61 @@
           "segment": 34,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999991
+          "correlation": 0.999993
         },
         {
           "segment": 35,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999985
+          "correlation": 0.999992
         },
         {
           "segment": 36,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999992
+          "correlation": 0.999996
         },
         {
           "segment": 37,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999988
+          "correlation": 0.999997
         },
         {
           "segment": 38,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999984
+          "correlation": 0.999986
         },
         {
           "segment": 39,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999986
+          "correlation": 0.999994
         },
         {
           "segment": 40,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999988
+          "correlation": 0.999993
         },
         {
           "segment": 41,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999995
+          "correlation": 0.99999
         },
         {
           "segment": 42,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.99999
+          "correlation": 0.999988
         },
         {
           "segment": 43,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999993
+          "correlation": 0.999995
         },
         {
           "segment": 44,
@@ -342,49 +342,49 @@
           "segment": 46,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999994
+          "correlation": 0.999986
         },
         {
           "segment": 47,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.99999
+          "correlation": 0.999991
         },
         {
           "segment": 48,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999986
+          "correlation": 0.999998
         },
         {
           "segment": 49,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999988
+          "correlation": 0.999985
         },
         {
           "segment": 50,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999993
+          "correlation": 0.999994
         },
         {
           "segment": 51,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999996
+          "correlation": 1.0
         },
         {
           "segment": 52,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999995
+          "correlation": 0.999998
         },
         {
           "segment": 53,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999962
+          "correlation": 0.99998
         }
       ],
       "target": "every segment |lag| <= 33 ms; correlation >= 0.5",
@@ -1987,7 +1987,7 @@
         },
         {
           "check": "under speech",
-          "value": -18.33,
+          "value": -16.52,
           "target": "-21.0 to -12.0 dB re voice",
           "pass": true
         },
@@ -1998,21 +1998,70 @@
           "pass": true
         },
         {
-          "check": "in pauses",
-          "value": -9.3,
-          "target": "-13.0 to -6.0 dB re voice",
+          "check": "a steady bed",
+          "value": "episode_bed",
+          "target": "episode_bed",
           "pass": true
         },
         {
-          "check": "the music breathes",
-          "value": 9.04,
-          "target": ">= 4.0 dB",
+          "check": "bed level in the master",
+          "value": -31.4,
+          "target": "-31 ±1.5 LUFS short-term median",
+          "pass": true
+        },
+        {
+          "check": "bed holds one level",
+          "value": 3.1,
+          "target": "<= 4.0 LU short-term p95-p5 outside lifts",
+          "pass": true
+        },
+        {
+          "check": "bed never swells or sags",
+          "value": 2.5,
+          "target": "<= 3.0 LU from the median, held 1.0 s, outside lifts",
+          "pass": true
+        },
+        {
+          "check": "bed never drops out",
+          "value": [],
+          "target": "no 0.25 s 15 dB under its own running level (50 ms windows)",
           "pass": true
         }
       ],
-      "target": "bed present, under speech in range, true peak, and (ducked) breathing in pauses",
+      "target": "bed present, under speech in range, true peak, (ducked) breathing in pauses, (episode) one steady level with no drop-outs",
       "pass": true,
       "status": "measured"
+    },
+    "audio.bed_continuity": {
+      "value": [],
+      "target": "no 0.25 s under -49.0 dBFS (50 ms RMS) from 1.5 to 322.7 s",
+      "pass": true,
+      "status": "measured"
+    },
+    "words.lost": {
+      "value": null,
+      "target": "see config/gates.json",
+      "pass": null,
+      "status": "not_run"
+    },
+    "joins.in_gaps": {
+      "value": null,
+      "target": "see config/gates.json",
+      "pass": null,
+      "status": "not_run"
+    },
+    "captions.clock": {
+      "value": null,
+      "target": "see config/gates.json",
+      "pass": null,
+      "status": "not_run"
+    },
+    "captions.render": {
+      "value": null,
+      "target": "valid decodable measurement inputs",
+      "pass": false,
+      "status": "error",
+      "reason": "Command '['C:\\\\Users\\\\krish\\\\dev\\\\mindmake\\\\toolchain\\\\ffmpeg-n8.1.2-53-g1005b294ff-win64-gpl-8.1\\\\bin\\\\ffmpeg.EXE', '-nostdin', '-v', 'error', '-i', 'docs/plans/2026-10-23-friday-two-passports-long-ve/ve/friday-long-wide.bed2.mp4', '-an', '-vf', 'select=between(n\\\\,75\\\\,78)+between(n\\\\,140\\\\,143)+between(n\\\\,217\\\\,220)+between(n\\\\,271\\\\,274)+between(n\\\\,301\\\\,304)+between(n\\\\,348\\\\,351)+between(n\\\\,382\\\\,385)+between(n\\\\,427\\\\,430)+between(n\\\\,459\\\\,462)+between(n\\\\,495\\\\,498)+between(n\\\\,526\\\\,529)+between(n\\\\,580\\\\,583)+between(n\\\\,629\\\\,632)+between(n\\\\,690\\\\,693)+between(n\\\\,736\\\\,739)+between(n\\\\,784\\\\,787)+between(n\\\\,843\\\\,846)+between(n\\\\,892\\\\,895)+between(n\\\\,921\\\\,924)+between(n\\\\,954\\\\,957)+between(n\\\\,996\\\\,999)+between(n\\\\,1024\\\\,1027)+between(n\\\\,1092\\\\,1095)+between(n\\\\,1125\\\\,1128)+between(n\\\\,1160\\\\,1163)+between(n\\\\,1212\\\\,1215)+between(n\\\\,1245\\\\,1248)+between(n\\\\,1272\\\\,1275)+between(n\\\\,1321\\\\,1324)+between(n\\\\,1377\\\\,1380)+between(n\\\\,1429\\\\,1432)+between(n\\\\,1498\\\\,1501)+between(n\\\\,1538\\\\,1541)+between(n\\\\,1568\\\\,1571)+between(n\\\\,1622\\\\,1625)+between(n\\\\,1673\\\\,1676)+between(n\\\\,1699\\\\,1702)+between(n\\\\,1768\\\\,1771)+between(n\\\\,1856\\\\,1859)+between(n\\\\,1930\\\\,1933)+between(n\\\\,2025\\\\,2028)+between(n\\\\,2080\\\\,2083)+between(n\\\\,2151\\\\,2154)+between(n\\\\,2205\\\\,2208)+between(n\\\\,2288\\\\,2291)+between(n\\\\,2380\\\\,2383)+between(n\\\\,2441\\\\,2444)+between(n\\\\,2493\\\\,2496)+between(n\\\\,2562\\\\,2565)+between(n\\\\,2604\\\\,2607)+between(n\\\\,2707\\\\,2710)+between(n\\\\,2794\\\\,2797)+between(n\\\\,2869\\\\,2872)+between(n\\\\,2914\\\\,2917)+between(n\\\\,2966\\\\,2969)+between(n\\\\,2995\\\\,2998)+between(n\\\\,3065\\\\,3068)+between(n\\\\,3113\\\\,3116)+between(n\\\\,3208\\\\,3211)+between(n\\\\,3245\\\\,3248)+between(n\\\\,3288\\\\,3291)+between(n\\\\,3345\\\\,3348)+between(n\\\\,3375\\\\,3378)+between(n\\\\,3435\\\\,3438)+between(n\\\\,3500\\\\,3503)+between(n\\\\,3561\\\\,3564)+between(n\\\\,3624\\\\,3627)+between(n\\\\,3660\\\\,3663)+between(n\\\\,3716\\\\,3719)+between(n\\\\,3804\\\\,3807)+between(n\\\\,3869\\\\,3872)+between(n\\\\,3915\\\\,3918)+between(n\\\\,3980\\\\,3983)+between(n\\\\,4052\\\\,4055)+between(n\\\\,4097\\\\,4100)+between(n\\\\,4136\\\\,4139)+between(n\\\\,4197\\\\,4200)+between(n\\\\,4230\\\\,4233)+between(n\\\\,4290\\\\,4293)+between(n\\\\,4344\\\\,4347)+between(n\\\\,4379\\\\,4382)+between(n\\\\,4443\\\\,4446)+between(n\\\\,4481\\\\,4484)+between(n\\\\,4556\\\\,4559)+between(n\\\\,4634\\\\,4637)+between(n\\\\,4704\\\\,4707)+between(n\\\\,4761\\\\,4764)+between(n\\\\,4815\\\\,4818)+between(n\\\\,4860\\\\,4863)+between(n\\\\,4953\\\\,4956)+between(n\\\\,5015\\\\,5018)+between(n\\\\,5063\\\\,5066)+between(n\\\\,5101\\\\,5104)+between(n\\\\,5178\\\\,5181)+between(n\\\\,5218\\\\,5221)+between(n\\\\,5298\\\\,5301)+between(n\\\\,5346\\\\,5349)+between(n\\\\,5370\\\\,5373)+between(n\\\\,5423\\\\,5426)+between(n\\\\,5454\\\\,5457)+between(n\\\\,5510\\\\,5513)+between(n\\\\,5549\\\\,5552)+between(n\\\\,5592\\\\,5595)+between(n\\\\,5640\\\\,5643)+between(n\\\\,5684\\\\,5687)+between(n\\\\,5723\\\\,5726)+between(n\\\\,5758\\\\,5761)+between(n\\\\,5808\\\\,5811)+between(n\\\\,5862\\\\,5865)+between(n\\\\,5893\\\\,5896)+between(n\\\\,5966\\\\,5969)+between(n\\\\,6008\\\\,6011)+between(n\\\\,6048\\\\,6051)+between(n\\\\,6066\\\\,6069)+between(n\\\\,6104\\\\,6107)+between(n\\\\,6158\\\\,6161)+between(n\\\\,6181\\\\,6184)+between(n\\\\,6238\\\\,6241)+between(n\\\\,6306\\\\,6309)+between(n\\\\,6366\\\\,6369)+between(n\\\\,6424\\\\,6427)+between(n\\\\,6473\\\\,6476)+between(n\\\\,6524\\\\,6527)+between(n\\\\,6546\\\\,6549)+between(n\\\\,6591\\\\,6594)+between(n\\\\,6636\\\\,6639)+between(n\\\\,6684\\\\,6687)+between(n\\\\,6726\\\\,6729)+between(n\\\\,6771\\\\,6774)+between(n\\\\,6823\\\\,6826)+between(n\\\\,6878\\\\,6881)+between(n\\\\,6938\\\\,6941)+between(n\\\\,6969\\\\,6972)+between(n\\\\,7017\\\\,7020)+between(n\\\\,7095\\\\,7098)+between(n\\\\,7138\\\\,7141)+between(n\\\\,7181\\\\,7184)+between(n\\\\,7229\\\\,7232)+between(n\\\\,7326\\\\,7329)+between(n\\\\,7388\\\\,7391)+between(n\\\\,7433\\\\,7436)+between(n\\\\,7501\\\\,7504)+between(n\\\\,7558\\\\,7561)+between(n\\\\,7578\\\\,7581)+between(n\\\\,7656\\\\,7659)+between(n\\\\,7732\\\\,7735)+between(n\\\\,7759\\\\,7762)+between(n\\\\,7805\\\\,7808)+between(n\\\\,7852\\\\,7855)+between(n\\\\,7900\\\\,7903)+between(n\\\\,7956\\\\,7959)+between(n\\\\,8220\\\\,8223)+between(n\\\\,8286\\\\,8289)+between(n\\\\,8344\\\\,8347)+between(n\\\\,8412\\\\,8415)+between(n\\\\,8465\\\\,8468)+between(n\\\\,8484\\\\,8487)+between(n\\\\,8523\\\\,8526)+between(n\\\\,8577\\\\,8580)+between(n\\\\,8628\\\\,8631)+between(n\\\\,8657\\\\,8660)+between(n\\\\,8706\\\\,8709)+between(n\\\\,8745\\\\,8748)+between(n\\\\,8830\\\\,8833)+between(n\\\\,8873\\\\,8876)+between(n\\\\,8911\\\\,8914)+between(n\\\\,8940\\\\,8943)+between(n\\\\,8988\\\\,8991)+between(n\\\\,9067\\\\,9070)+between(n\\\\,9135\\\\,9138)+between(n\\\\,9186\\\\,9189)+between(n\\\\,9229\\\\,9232)+between(n\\\\,9301\\\\,9304)+between(n\\\\,9338\\\\,9341)+between(n\\\\,9356\\\\,9359)+between(n\\\\,9430\\\\,9433)+between(n\\\\,9472\\\\,9475)+between(n\\\\,9505\\\\,9508)+between(n\\\\,9565\\\\,9568),crop=1400:187:260:773:exact=1,format=gray', '-fps_mode', 'passthrough', '-f', 'rawvideo', '-']' returned non-zero exit status 4294967284."
     },
     "keyframe_match": {
       "value": null,
@@ -2029,12 +2078,12 @@
   },
   "keyframes": {
     "applies": false,
-    "note": "the design lock is 9:16 only"
+    "note": "no 16:9 design lock for this format"
   },
   "composition": {
     "applies": false,
     "note": "the design lock is 9:16 only"
   },
-  "measured_pass": true,
-  "complete": true
+  "measured_pass": false,
+  "complete": false
 }

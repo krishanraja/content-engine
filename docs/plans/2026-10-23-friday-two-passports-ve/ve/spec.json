@@ -2603,7 +2603,15 @@
       ]
     }
   },
-  "approvals": [],
+  "approvals": [
+    {
+      "gate": "final",
+      "by": "Krish",
+      "said": "they both look fine to me / yes, they sound perfect too",
+      "on": "2026-10-30",
+      "artifact_hash": "06ff699f042bb21a70ccd2b848bd66e745d37ba0fdf16f98fd971feeb59bae43"
+    }
+  ],
   "budget": {
     "tokens_cap": 1500000,
     "credits": {
