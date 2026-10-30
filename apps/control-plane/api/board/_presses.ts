@@ -3,6 +3,8 @@ import { DECISION_ID, canonical, digest } from './_contracts.js'
 import type { SendApprovedInput, SendResult } from '../_teleprompter.js'
 import type { Making } from '../_making.js'
 
+const PIECE_UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
 // What Krish's presses on the publish board do beyond saving the board document (docs/PUBLISH_BOARDS.md, "His
 // presses"). Each runs on the server, after his document is saved, so a session never stands in for his press:
 //
@@ -143,6 +145,33 @@ async function recordSend(db: SupabaseClient, input: SendApprovedInput, result: 
 
 /** The piece_scores row for his Scores press (supabase/migrations/20261118090000_piece_scores.sql). The board's
  *  access-cookie actor is Krish, so his press is scored_by krish; only his writes reach here (hisOnlyRefusal). */
+/** His Liked or Not it on a day's post, as one taste_reports row. His typed words, when he gave them, are krish_words
+ *  with where and when; a bare press is an observation saying what he pressed, never words put in his mouth. */
+export function feelReport(week: string, id: string, body: Body, now: string) {
+  const note = typeof body.note === 'string' && body.note.trim() ? body.note.trim().slice(0, 2000) : null
+  const piece = typeof body.piece_id === 'string' && PIECE_UUID.test(body.piece_id) ? body.piece_id : null
+  const title = typeof body.title === 'string' && body.title.trim() ? body.title.trim().slice(0, 300) : null
+  const what = body.feel === 'liked' ? 'Liked' : 'Not it'
+  return {
+    kind: note ? 'krish_words' : 'observation',
+    body: note ?? `Krish pressed ${what} on the publish board for ${String(body.day)} of the week of ${week}${title ? `: ${title}` : ''}.`,
+    said_where: note ? `publish board, ${week} picks/${id}` : null,
+    said_at: note ? now : null,
+    lane: 'production',
+    polarity: body.feel === 'liked' ? 'likes' : 'dislikes',
+    subject_ref: piece ? `piece:${piece}` : null,
+    subject: piece ? (title || `the ${String(body.day)} post of the week of ${week}`) : null,
+    session_ref: 'content.krishraja.com publish board',
+    repository: 'krishanraja/content-engine',
+    surface: 'publish_board',
+    emitter_id: 'content-engine-board',
+    // The same press saved again files nothing twice; a changed press is a new row.
+    client_report_id: `feel-${digest(canonical({ week, id, feel: body.feel, note, piece }))}`.slice(0, 96),
+    reported_at: now,
+    meta: { press: body.feel, week, day: body.day },
+  }
+}
+
 export function scoreRow(week: string, id: string, body: Body, now: string) {
   const note = typeof body.note === 'string' && body.note.trim() ? body.note : null
   return {
@@ -319,6 +348,15 @@ export async function afterPress(db: SupabaseClient, ctx: { week: string; collec
       return { ...saved, scores: !filed.error ? 'filed' : MISSING_TABLE.has(code) ? 'waits_on_migration' : 'failed' }
     } catch {
       return { ...saved, scores: 'failed' }
+    }
+  }
+  if (collection === 'picks' && body.kind === 'feel') {
+    try {
+      const filed = await db.from('taste_reports').upsert(feelReport(week, id, body, now), { onConflict: 'emitter_id,client_report_id', ignoreDuplicates: true })
+      const code = String((filed.error as { code?: string } | null)?.code || '')
+      return { ...saved, taste: !filed.error ? 'filed' : MISSING_TABLE.has(code) ? 'waits_on_migration' : 'failed' }
+    } catch {
+      return { ...saved, taste: 'failed' }
     }
   }
   if (isRecordedOffday(collection, body)) return offdayRecorded(db, { week, id, body, who, saved }, now, deps)

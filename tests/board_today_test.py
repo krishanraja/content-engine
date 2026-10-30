@@ -19,7 +19,7 @@ class TodayView(unittest.TestCase):
             page = bt.render(m)
             self.assertIn('Needs you', page)
             for d in bt.DAY_KEYS:
-                self.assertIn(f'id="open-{d}"', page)
+                self.assertIn(f'id="td-open-{d}"', page)
             self.assertNotIn('—', page)
 
     def test_one_button_per_ask_and_it_links_to_what_it_approves(self):
