@@ -1,13 +1,4 @@
-# 2026-10-30: board phase 2
-
-Status: merged #275 (closes_on clock, migration applied by the orchestrator), #276 (a piece's series through the
-engine; 9a0c97af set to follow_the_money on Krish's words), #277 (Growth's pieces read and posted on any day),
-#278 (the Today view on fixtures). Open and green or near it: #279 (the cross-week carry; 2 and 9 Nov registered),
-#280 (a said idea counts once on Sunday), #281 (Today fixes; Liked or Not it filed to taste_reports), #282 (layout A
-wired into week_board.py, Today first from 2 November). Live: the 2 Nov board (Mon and Wed carried in review, Fri
-picked) and the 9 Nov board (Mon made, its assets copied into the week).
-
-Next: Friday 6's publish page (7083d6ad) waits on the long cut's chapter times or Krish's yes to leave them out; then
-rebuild 2 Nov with Friday made, rebuild both weeks in layout A, and take the moved days off the 19 and 26 Oct boards.
-
-- North Star check (2026-10-30): holds.
+Status: The cadence restart's boards are live: 2 November (Monday 9a0c97af, now follow.the.money on his words, and Wednesday carried in review; Friday 7083d6ad shows picked) and 9 November (Monday made, its assets copied in). A day moves across weeks with POST /api/board/<Monday>/carry and week_board.py --carry; Growth reads each week's pieces; a late week-clock row reaches his list; layout A (Today first, Liked or Not it filed to taste) is the board from 2 November.
+Changed: Board phase 2 (#275 to #283): Krish chose layout A on 29 October ("yes, go with A and your recommendations and my feedback").
+Next: Once Krish gives his Gate 2 verdict on Friday 23's long cut (due Wednesday 4 November), read its chapter times, remake Friday 6's publish page from the approved words and rebuild the 2 November board with Friday made; then take the moved days off the 19 and 26 October boards.
+North Star check (2026-10-30): holds.
