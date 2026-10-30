@@ -170,6 +170,10 @@
       "destination": "/api/board?week=:week&op=pieces"
     },
     {
+      "source": "/api/board/:week/carry",
+      "destination": "/api/board?week=:week&op=carry"
+    },
+    {
       "source": "/api/board/:week/imports",
       "destination": "/api/board?week=:week&op=imports"
     },

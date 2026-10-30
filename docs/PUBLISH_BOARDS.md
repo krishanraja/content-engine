@@ -272,6 +272,14 @@ unrelated draft panel, its review boxes and waiting calls verbatim; the builder
 refuses a changed piece id or any replacement inputs for the retained day.
 Rebuild that day with `--draft DAY --review DAY=...` when its own words change.
 
+When a piece moves to a day in another week, carry it: `POST /api/board/<new Monday>/carry`
+`{"from_week", "from_day", "to_day"}` (operator key) copies the day's ticks, links, his edits, his decisions and
+every comment thread inside the day to the new day, as the writer each already had (`_carry.ts`; the day's pick
+is not carried, the new week's pick comes from its options). Then build the new week with
+`--carry DAY=OLD_PAGE.html:FROMDAY`, which moves a made or in-review fixed-layout panel with its ids, date and
+series line. A day from before the fixed layout is drawn from its record with `--piece` instead. Take the day
+off the old week's board only after the new board reads back.
+
 Build with `week_board.py --target web` plus the usual week/day inputs. Run
 `--verify`, then `board_web.py publish-web PAGE.html` for the dry-run manifest.
 Provide `--assets FILE.json` for existing direct downloads. After the applicable
