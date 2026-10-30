@@ -2659,6 +2659,49 @@ def kept_panel(text, key):
     return drop_channels(panel, key)
 
 
+DAY_ATTR = re.compile(r'(?<=["\'#\s])((?:rvs?|rvp)-)?(mon|wed|fri)-')
+
+
+def carried_panel(text, src, dst, when, where='--carry'):
+    """A day's whole panel from another week's board page, moved to day dst of this week (Krish, 2026-10-29: the
+    Monday, Wednesday and Friday cadence restarts on 2 November, and a piece keeps its page, his words and his notes
+    when it moves). Every id, reference and day attribute moves from src to dst, and the head names the new date and
+    the new day's series. A made day comes as --keep takes it, a draft day as --keep-draft does; the state is the
+    panel's own. Returns (state, panel)."""
+    sname = next(n for k, n, *_ in DAYS if k == src)
+    start = text.find(f'id="panel-{sname}"')
+    start = text.rfind('<div class="pm', 0, start) if start >= 0 else -1
+    if start < 0:
+        raise BoardError(f'{where}: that board has no {sname} tab')
+    head = text[start:start + 400]
+    if 'data-state="draft"' in head:
+        state, panel = 'draft', kept_draft_panel(text, src)
+    elif f'data-prefix="{src}-"' in head:
+        state, panel = 'made', kept_panel(text, src)
+    else:
+        raise BoardError(f'{where}: the {sname} tab there is neither made nor in review, so there is nothing to carry')
+    if not panel.startswith('<div class="pm fixed"'):
+        raise BoardError(f'{where}: that {sname} tab is in the old layout; build the day from its record (--piece) instead')
+    _, dname, dweekday, _, _, dlabel = next(d for d in DAYS if d[0] == dst)
+    sweekday = next(w for k, _, w, *_ in DAYS if k == src)
+    if src != dst:
+        panel = panel.replace(f'panel-{sname}', f'panel-{dname}').replace(f'tab-{sname}', f'tab-{dname}')
+        panel = DAY_ATTR.sub(lambda m: (m[1] or '') + dst + '-', panel)
+        panel = re.sub(rf'(data-day=")({src})(")', rf'\g<1>{dst}\3', panel)
+        left = re.findall(rf'="[^"]*(?<![a-z]){src}-[^"]*"', panel)
+        if left:
+            raise BoardError(f'{where}: {len(left)} {src} reference(s) could not be moved, e.g. {left[0][:60]}')
+    # The head: the new day's series and date, and its day name in the heading.
+    dh = panel.find('<div class="day-head">')
+    if dh >= 0:
+        old = div_at(panel, dh)
+        new = re.sub(r'(<div class="kick">)[^<·]*·\s*[^<·]*?(?=\s*·|<)',
+                     lambda m: f'{m[1]}{dlabel} · {when.strftime("%a")} {when.day} {when.strftime("%b")}', old, count=1)
+        new = new.replace(f'{sweekday}&#x27;s', f'{dweekday}&#x27;s').replace(f"{sweekday}'s", f"{dweekday}'s")
+        panel = panel.replace(old, new, 1)
+    return state, panel
+
+
 def kept_draft_panel(text, key):
     """Carry an unrelated draft tab from the verified previous board verbatim."""
     name = next(n for k, n, *_ in DAYS if k == key)
@@ -3604,6 +3647,32 @@ def build(args, get=None):
         _, retained_calls = previous_draft(Path(args.previous).read_text(encoding='utf-8-sig'), key)
         if retained_calls:
             calls[key] = retained_calls
+    for v in getattr(args, 'carry', None) or []:
+        k, sep, rest = v.partition('=')
+        path, sep2, frm = rest.rpartition(':')
+        key, src = DAY_KEYS.get(k.strip().lower()), DAY_KEYS.get(frm.strip().lower())
+        if not (sep and sep2 and key and src and path):
+            raise BoardError(f'--carry {v}: give DAY=PAGE:FROMDAY, e.g. mon=board-2026-10-26.html:fri')
+        if key in pages or key in kept or key in retained_drafts or key in draft:
+            raise BoardError(f'--carry {key}: give only one state for this day')
+        try:
+            src_text = Path(path).read_text(encoding='utf-8-sig')
+        except OSError as error:
+            raise BoardError(f'--carry {v}: cannot read {path}: {error.strerror}')
+        held = (board_days(src_text, f'--carry {path}')['days'].get(src) or {}).get('piece_id')
+        if not held:
+            raise BoardError(f'--carry {v}: that board names no piece on {src}')
+        if pieces.get(key) and pieces[key] != held:
+            raise BoardError(f'--carry {key}: --piece says {pieces[key]}, the carried tab holds {held}')
+        pieces[key] = held
+        state, panel = carried_panel(src_text, src, key, monday + timedelta(days=next(o for d, _, _, o, *_ in DAYS if d == key)), f'--carry {v}')
+        if state == 'made':
+            kept[key] = panel
+        else:
+            retained_drafts[key] = panel
+            _, carried_calls = previous_draft(src_text, src)
+            if carried_calls:
+                calls[key] = carried_calls
     for key in sorted(draft & (set(pages) | set(kept))):
         raise BoardError(f'--draft {key} with --day or --keep {key}: a day in review shows its review card, never an older publish page')
     scripts, unmade, videos, posted, fresh, folders = {}, [], {}, {}, set(), {}
@@ -4290,6 +4359,15 @@ def _fixed_checks(check, mon):
     again, _, _ = board(week, kept={'mon': kept_mon}, pieces={'mon': MON_ID})
     check('fixed layout: a made day can be kept from the page, as it stands, and still passes verify',
           kept_mon.startswith('<div class="pm fixed" id="panel-monday"') and verify(again) == [])
+    later = week + timedelta(days=7)
+    state, moved_mon = carried_panel(page, 'mon', 'fri', later + timedelta(days=4))
+    carried, _, _ = board(later, kept={'fri': moved_mon}, pieces={'fri': MON_ID})
+    check('a made day carried to another week and day: its ids and ticks move, its head names the new day, verify passes',
+          state == 'made' and 'id="panel-friday"' in moved_mon and 'data-prefix="fri-"' in moved_mon
+          and not re.search(r'="[^"]*(?<![a-z])mon-[^"]*"', moved_mon) and 'mind.the.gap · Fri ' in moved_mon and verify(carried) == [])
+    dstate, moved_wed = carried_panel(page, 'wed', 'mon', later)
+    check('a day in review carried to another day keeps its boxes under the new day',
+          dstate == 'draft' and 'id="rv-mon-article"' in moved_wed and 'rv-wed-' not in moved_wed)
     stale = {'wed': dict(read_brief(brief), piece_id=FRI_ID)}
     moved, _, moved_warnings = board(week, pieces={'wed': WED_ID}, briefs=stale)
     check('fixed layout: a brief carried from the old board for another piece never shows under the new pick',
@@ -5112,6 +5190,8 @@ def parser():
                     'a day it held is never lost')
     ap.add_argument('--keep', action='append', metavar='DAY', help='with --previous (its page): carry a made day over exactly as the board holds it, '
                     'when its publish page cannot be read any more')
+    ap.add_argument('--carry', action='append', metavar='DAY=PAGE:FROMDAY', help='carry a made or in-review day from another '
+                    'week\'s board page to DAY of this week, ids, date and series moved with it (a piece that moved weeks)')
     ap.add_argument('--keep-draft', action='append', metavar='DAY', help='with --previous (its page): retain an unrelated draft day exactly as shown, '
                     'including its editable review boxes, while another day advances')
     ap.add_argument('--brief', action='append', metavar='DAY=JSON', help='the day\'s record-ready brief (boards from the fixed layout on): '

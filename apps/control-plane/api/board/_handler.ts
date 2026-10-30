@@ -7,6 +7,8 @@ import { actor, canonical, growthWriter, collections, digest, hisOnlyRefusal, fi
 import { PressError, afterPress, preparePress, type PressDeps } from './_presses.js'
 import { readArchive } from './_archive.js'
 import { readPieces, recordPosted } from './_posted.js'
+import { carryDay } from './_carry.js'
+import { operatorBearerAllowed } from '../_auth.js'
 import { MediaQualityError, qualifyBoard } from '../_mediaQuality.js'
 import { mediaQualityEnforced, mediaQualityRollout } from '../../../../packages/core/src/media-rollout.js'
 
@@ -71,6 +73,17 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
     const method = req.method || ''
     if (!['GET', 'PUT', 'POST'].includes(method)) return res.status(405).json({ ok: false, error: 'method_not_allowed' })
     const op = scalar(req.query.op), collection = scalar(req.query.collection), id = scalar(req.query.id)
+    if (op === 'carry') {
+      // The cross-week carry (_carry.ts): the engine operator's key only.
+      if (!operatorBearerAllowed(req)) return res.status(401).json({ ok: false, error: 'unauthorized' })
+      if (method !== 'POST') return res.status(405).json({ ok: false, error: 'method_not_allowed' })
+      const week = scalar(req.query.week)
+      if (!monday(week)) return res.status(400).json({ ok: false, error: 'invalid_week' })
+      try {
+        const result = await carryDay(await getDb(), week, req.body)
+        return res.status(result.status).json(result.body)
+      } catch { return res.status(503).json({ ok: false, error: 'board_store_unavailable' }) }
+    }
     if (op === 'pieces') {
       // Growth's read (_posted.ts readPieces): which piece sits on which day, and its boxes. The same key; read-only.
       if (!growthWriter(req)) return res.status(401).json({ ok: false, error: 'unauthorized' })
