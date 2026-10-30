@@ -100,11 +100,30 @@ class WordsGateTests(unittest.TestCase):
         self.assertEqual(r['status'], 'pass', wg.summary(r))
         self.assertTrue(any(x['word'] == 'Higgsfield' for x in r['heard_differently']))
 
-    def test_a_word_heard_shorter_is_never_excused(self):
+    def test_a_word_heard_clipped_is_never_excused(self):
         take = timed('It will not keep the lawsuits.')
-        r = wg.check(SCRIPT, take, timed('It will not keep the lawsuit.'))
+        r = wg.check(SCRIPT, take, timed('It will not keep the law.'))
         self.assertEqual(r['status'], 'fail')
         self.assertEqual(r['lost'][0]['word'], 'lawsuits.')
+
+    def test_a_near_homophone_in_the_same_place_is_listed_not_lost(self):
+        # Ruling (Krish, 2026-10-30): "yes allow near homophones", on Monday 26's accepted cuts.
+        script = 'The star of the show owns the stack and lives at makeyourmindup.ai today.'
+        take = timed(script)
+        final = timed('The start of the show own the stack and lives at makeyourmindup.io today.', 2.0)
+        r = wg.check(script, take, final)
+        self.assertEqual(r['status'], 'pass', wg.summary(r))
+        near = {x['word'].strip('.'): x['heard'] for x in r['heard_differently'] if x.get('near_homophone')}
+        self.assertEqual(near, {'star': 'start', 'owns': 'own', 'makeyourmindup.ai': 'makeyourmindup.io'})
+        self.assertEqual(r['counts']['near_homophones'], 3)
+
+    def test_a_word_that_changes_what_is_said_is_never_a_near_homophone(self):
+        for said, heard in (('not', 'note'), ('no', 'not'), ('only', 'lonly'), ('six', 'sixty'), ('all', 'ball')):
+            self.assertFalse(wg.near_homophone(said, heard), (said, heard))
+        take = timed('It will not keep the lawsuits.')
+        r = wg.check(SCRIPT, take, timed('It will note keep the lawsuits.'))
+        self.assertEqual(r['status'], 'fail')
+        self.assertEqual(r['lost'][0]['word'], 'not')
 
     def test_it_fails_closed_without_a_script_or_heard_words(self):
         self.assertIn('no signed script', wg.check('', TAKE, TAKE)['reason'])

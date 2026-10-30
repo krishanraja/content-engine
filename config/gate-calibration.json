@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "about": "The five calibration cuts for the cut gates (plan W2.4). The real files are on Krish's computers and in the library on Drive, never in this repository: run python3 scripts/cutgates/calibrate.py there (it also reads config/studio.json runtime library_root and archive_root, so no --root is needed on his computers; MINDMAKE_LIBRARY_ROOT, MINDMAKE_ARCHIVE_ROOT or --root add more). CI runs the same command with --synthetic on stand-ins. Each input is a list of path patterns tried in order under each root (the library, the archive, this repository); the first file found is used. Patterns marked to_confirm are the best reading of the plan folders and are confirmed or corrected on the first run on his computer. Captions are read from the cut's .ass when it exists, else the .srt filed beside the finished cut (a sidecar: captions_render checks the burned pixels against it).",
+  "about": "The five calibration cuts for the cut gates (plan W2.4). The real files are on Krish's computers and in the library on Drive, never in this repository: run python3 scripts/cutgates/calibrate.py there (it also reads config/studio.json runtime library_root and archive_root, so no --root is needed on his computers; MINDMAKE_LIBRARY_ROOT, MINDMAKE_ARCHIVE_ROOT or --root add more). CI runs the same command with --synthetic on stand-ins. Each input is a list of path patterns tried in order under each root (the library, the archive, this repository); the first file found is used. Patterns marked to_confirm are the best reading of the plan folders and are confirmed or corrected on the first run on his computer. Captions are read from the cut's .ass when it exists, else the .srt filed beside the finished cut (a sidecar: captions_render checks the burned pixels against it). A gate a case lists under accepted_missing (Krish's ruling, quoted there) is reported as accepted_missing when its inputs are not found and does not make the cut incomplete; a fail on it still fails.",
   "roots_env": [
     "MINDMAKE_LIBRARY_ROOT",
     "MINDMAKE_ARCHIVE_ROOT"
@@ -50,7 +50,15 @@
         "take_words",
         "joins",
         "captions"
-      ]
+      ],
+      "accepted_missing": {
+        "gates": [
+          "joins",
+          "captions_clock",
+          "captions_render"
+        ],
+        "ruling": "Ruling (Krish, 2026-10-30): \"accept incomplete\". The join times and caption pages of the Monday 26 cuts lived in cloud-session containers and were never filed; nothing on Drive holds them, so these gates are missing by his ruling, not passed."
+      }
     },
     {
       "id": "mon26-short",
@@ -96,7 +104,15 @@
         "take_words",
         "joins",
         "captions"
-      ]
+      ],
+      "accepted_missing": {
+        "gates": [
+          "joins",
+          "captions_clock",
+          "captions_render"
+        ],
+        "ruling": "Ruling (Krish, 2026-10-30): \"accept incomplete\". The join times and caption pages of the Monday 26 cuts lived in cloud-session containers and were never filed; nothing on Drive holds them, so these gates are missing by his ruling, not passed."
+      }
     },
     {
       "id": "wed21-long",
@@ -135,13 +151,15 @@
         "file": [
           ".scratch/wednesday-production-2026-10-21/render-long-revised/*16x9.ass",
           "3 Posts/2026-10-21 Wed under.the.hood - Muse vs Grok Bot/3 Video/*16x9*.srt"
-        ]
+        ],
+        "ruling": "Ruling (Krish, 2026-10-30): \"yes\", the .srt filed beside the cut counts as its caption pages when its .ass is not found."
       },
       "to_confirm": [
         "take_words",
         "joins",
         "captions"
-      ]
+      ],
+      "ruling": "Ruling (Krish, 2026-10-30): \"yes\", the 121 lost words are real chops in the published long cut (the 23 Oct source replacement was the short cut, not this one), so its take words stand."
     },
     {
       "id": "fri23-join-reel",
@@ -209,7 +227,8 @@
         "file": [
           ".scratch/**/2026-10-16*/**/*9x16.ass",
           "3 Posts/2026-10-16 Fri mind.the.gap - Why so many AIs/3 Video/*short 9x16*.srt"
-        ]
+        ],
+        "ruling": "Ruling (Krish, 2026-10-30): \"yes\", the .srt filed beside the cut counts as its caption pages when its .ass is not found."
       },
       "to_confirm": [
         "final",

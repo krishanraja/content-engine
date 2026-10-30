@@ -9,7 +9,7 @@ config/studio.json runtime library_root and archive_root, this repository and hi
 second aligner) unless its heard words are already beside it, and runs the words, joins and
 captions gates. Monday 26's two cuts must pass; Wednesday 21's published long cut, Friday 23's rejected join reel
 and Friday 16's 90-second cut must fail, on a gate the manifest names. A cut whose files are not found is
-"incomplete", never a pass. Exit 0 only when every cut behaves as listed.
+"incomplete", never a pass, unless Krish accepted that gate missing (the case's accepted_missing, his words quoted). Exit 0 only when every cut behaves as listed.
 
 --synthetic runs the same gates on stand-ins made here (ffmpeg tones, a mocked aligner and OCR): what CI runs.
 It proves the harness and the gates' logic, not the calibration, which only the real files can.
@@ -160,7 +160,10 @@ def run_gates(case, *, video, script, take, heard_by, joins, pages, region, fps,
 
 def verdict(case, gates) -> dict:
     failed = [g for g, r in gates.items() if r['status'] == 'fail']
-    missing = [g for g, r in gates.items() if r['status'] not in ('pass', 'fail')]
+    accepted = set((case.get('accepted_missing') or {}).get('gates') or [])
+    unheard = [g for g, r in gates.items() if r['status'] not in ('pass', 'fail')]
+    missing = [g for g in unheard if g not in accepted]
+    accepted_missing = [g for g in unheard if g in accepted]
     actual = 'fail' if failed else 'incomplete' if missing else 'pass'
     if case['expect'] == 'pass':
         ok = actual == 'pass'
@@ -168,7 +171,8 @@ def verdict(case, gates) -> dict:
         want = case.get('caught_by') or list(gates)
         ok = any(g in failed for g in want)
     return {'id': case['id'], 'label': case.get('label'), 'expect': case['expect'], 'actual': actual,
-            'failed_gates': failed, 'missing_gates': missing, 'caught_by_expected': case.get('caught_by'),
+            'failed_gates': failed, 'missing_gates': missing, 'accepted_missing': accepted_missing,
+            'caught_by_expected': case.get('caught_by'),
             'as_listed': ok, 'gates': gates}
 
 
@@ -232,7 +236,8 @@ def main(argv=None):
         mark = 'as listed' if r['as_listed'] else 'NOT AS LISTED'
         print(f'{r["id"]:16} expect {r["expect"]:4}  actual {r["actual"]:10} {mark}'
               + (f'  failed: {", ".join(r["failed_gates"])}' if r['failed_gates'] else '')
-              + (f'  missing: {", ".join(r["missing_gates"])}' if r['missing_gates'] else ''))
+              + (f'  missing: {", ".join(r["missing_gates"])}' if r['missing_gates'] else '')
+              + (f'  accepted missing: {", ".join(r["accepted_missing"])}' if r.get('accepted_missing') else ''))
     print(f'calibration ({report["mode"]}): ' + ('every cut behaves as listed' if report['all_as_listed'] else 'NOT calibrated'))
     return 0 if report['all_as_listed'] else 1
 
