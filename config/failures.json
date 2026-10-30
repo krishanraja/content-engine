@@ -1461,6 +1461,35 @@
    "related": [
     "F18-reporting-not-executed"
    ]
+  },
+  {
+   "id": "F20-long-cut-bed-swung-and-stopped",
+   "on": "2026-10-30",
+   "krish": "The pictures are fine. The video visuals are fine, but the music audio track behind it is quite volatile. Sometimes it just turns off randomly. Sometimes it's quiet. Sometimes it gets louder. It's not professional at all.",
+   "what": "Friday 23's ve long cut (sha256 fff8641e...) carried a ducked bed: a voice-keyed sidechain compressor (ratio 8, 30 ms attack, 450 ms release) held the music about 9 dB higher in pauses than under speech. QC passed it, and its 'the music breathes' row required that swing. The approved episode bed (config/learnings.json deep-cut-music-always-under) was never built into ve. The licensed track also stops for about 0.3 s at 73.2 s, about 30 dB down, and nothing measured that.",
+   "symptom": "Gate 2 passed the pictures and rejected the sound: the bed swung between loud and quiet, and seemed to switch off.",
+   "cause": "Mechanism shown by tests on synthetic and real-track audio (not on the rejected render, whose stems are on the home computer): the ducked mode moves the music with the voice by design, and no gate measured the bed's own level, spread or gaps. ve had no long-cut bed, and the lint let any voiceover cut choose ducked.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "scripts/velib/lint.py",
+     "contains": "sound.long_cut_bed",
+     "how": "a cut allowed past 90 s must carry the episode_bed",
+     "test": "python -m unittest tests.ve_lint_test"
+    },
+    {
+     "file": "scripts/velib/audio.py",
+     "contains": "def track_stops",
+     "how": "the episode bed is never keyed by the voice, holds bed_lufs in the master, plays around the track's own stops and restarts it under 2 s crossfades",
+     "test": "python -m unittest tests.ve_audio_test"
+    },
+    {
+     "file": "scripts/velib/qc_audio.py",
+     "contains": "def continuity",
+     "how": "QC meters the kept music stem (level, spread, drop-outs) and the render itself (no stretch with no music under a pause)",
+     "test": "python -m unittest tests.ve_audio_test"
+    }
+   ]
   }
  ]
 }
