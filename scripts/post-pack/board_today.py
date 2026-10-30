@@ -48,9 +48,9 @@ CHANNEL_LABELS = {'substack': 'Substack', 'youtube': 'YouTube', 'shorts': 'Short
 CTA_MAX = 12  # a button label fits BTN_W at 14px without wrapping; longer labels are refused, never squeezed
 # An ask's two lines fit the Needs you row in full at 390px wide (no ellipsis hides what he approves): the what is
 # short ("Substack, Mon 2 Nov"), the detail says the one thing more. Longer is refused at the source, never clipped.
-WHAT_MAX, DETAIL_MAX = 22, 30
+WHAT_MAX, DETAIL_MAX = 20, 26
 FEEL = (('liked', 'Liked'), ('not_it', 'Not it'))
-HREF = re.compile(r'^(https://\S+|#[A-Za-z0-9_-]+)$')
+HREF = re.compile(r'^(https://\S+|#[A-Za-z0-9_-]+(/[a-z]+)?)$')
 TIME = re.compile(r'^([01]\d|2[0-3]):[0-5]\d$')
 
 
@@ -161,8 +161,9 @@ def _card(d, p, i):
 
 
 def _empty_card(d):
-    return (f'<article class="card empty"><div class="c-empty">Nothing planned for {E(dict((k, n) for k, _, n in DAYS)[d["key"]])}</div>'
-            f'<div class="c-foot"><span class="feels"></span><a class="btn ghost" href="#td-open-{d["key"]}">Open</a></div></article>')
+    # A day with nothing planned is one short row of its own fixed height, never a tall empty card.
+    return (f'<article class="card empty"><span class="c-empty">Nothing planned</span>'
+            f'<a class="btn ghost" href="#td-open-{d["key"]}">Open</a></article>')
 
 
 def _feel(d, p, i):
@@ -198,7 +199,7 @@ def _open_panel(d, name, date):
             f'<div class="o-body">{big}<ul class="o-list">{"".join(rows) or "<li><span class=o-name>No assets yet</span></li>"}</ul></div></div></section>')
 
 
-def inner(model):
+def inner(model, heading=True):
     """The Today view's body, one <div class="today-a">, every id prefixed td-: drawn alone (render) or as the board's
     Today tab (week_board.py), whose one stylesheet carries scoped_css()."""
     model = check(model)
@@ -228,8 +229,8 @@ def inner(model):
         opens.append(_open_panel(d, name, d.get('date', '')))
     note = f'<p class="note">{E(model["note"])}</p>' if model.get('note') else ''
     return (f'<div class="today-a" id="td-top"><div class="wrap">'
-            f'<div class="top"><h2 class="t-h">{E(model.get("label", "This week"))}</h2><div class="range">{E(model.get("range", ""))}</div></div>'
-            f'<div class="stages" role="list" aria-label="Posts by stage">{stage_strip}</div><div class="grid">'
+            + (f'<div class="top"><h2 class="t-h">{E(model.get("label", "This week"))}</h2><div class="range">{E(model.get("range", ""))}</div></div>' if heading else '')
+            + f'<div class="stages" role="list" aria-label="Posts by stage">{stage_strip}</div><div class="grid">'
             f'<div class="asks"><div class="q"><div class="sect"><span>Needs you</span><span>{len(asks)} ask{"s" if len(asks) != 1 else ""}</span></div><ol>{ask_rows}</ol></div>{note}</div>'
             f'<div class="tmain"><nav class="strip" aria-label="Days">{"".join(strip)}</nav>{"".join(sections)}</div>'
             f'</div></div>{"".join(opens)}</div>')
@@ -302,7 +303,8 @@ a{color:inherit}
 .sc{height:56px;background:var(--card);border:1px solid var(--line);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
 .sc b{font:400 22px/1 Anton,sans-serif}.sc span{font:700 10px/1 var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--muted);white-space:nowrap}
 .grid{display:grid;gap:22px;grid-template-columns:minmax(0,1fr)}
-@media(min-width:960px){.grid{grid-template-columns:380px minmax(0,1fr);align-items:start}.asks{position:sticky;top:16px}}
+:root{container-type:inline-size}
+@container (min-width:1000px){.grid{grid-template-columns:380px minmax(0,1fr);align-items:start}.asks{position:sticky;top:16px}}
 .sect{font:700 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;display:flex;justify-content:space-between;margin-bottom:6px;white-space:nowrap}
 .q{background:var(--ink);color:var(--bg);border-radius:18px;padding:16px}
 .q .sect{color:#a9b4ae}
@@ -357,7 +359,7 @@ a{color:inherit}
 .as.missing{background:#fbe6e0;border-color:#efc4b7;color:var(--bad)}.as.none{border-style:dashed;color:#c4beb1;background:transparent}
 .c-foot{margin-top:auto;display:flex;align-items:center;justify-content:space-between;height:var(--bh)}
 .c-ch{font:500 11.5px/1 var(--mono);color:var(--muted);white-space:nowrap}
-.card.empty{justify-content:space-between}.c-empty{font-size:13px;color:var(--muted)}
+.card.empty{height:68px;flex-direction:row;align-items:center;justify-content:space-between}.c-empty{font-size:13px;color:var(--muted);white-space:nowrap}
 .open{display:none;position:fixed;inset:0;background:#0c151299;padding:16px;overflow:auto;z-index:5}
 .open:target{display:block}
 .o-in{max-width:880px;min-width:0;margin:0 auto;background:var(--card);border-radius:18px;padding:16px}

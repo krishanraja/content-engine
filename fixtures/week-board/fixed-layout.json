@@ -1,9 +1,9 @@
 {
  "_about": "The fixed layout of the publish board, as check_board_layout.py reads it from three fed weeks, the hash of its layout file and colours, and the words Krish approved it in. It changes only with --update --approved (Ruling, Krish, 2026-10-21: the layout is held by CI and changes only with his recorded words).",
  "layout_version": 3,
- "approved": "Krish, 2026-10-28: backfill every piece we've done historically, and allow me to add a score out of 10 for narrative quality and production quality",
+ "approved": "Krish, 2026-10-29: yes, go with A and your recommendations and my feedback",
  "files": {
-  "config/board-layout.json": "856042bec75f31845e745ca8bfd9ca6f85fd8b43f5ae91ea85385d6b05a0606a",
+  "config/board-layout.json": "970820443675c3722ebd3f6857489f738e28ed1affb223a0f5e8ea64be2552f9",
   "scripts/post-pack/tokens.css": "a38811b2df781b9169b3576986fa59cca5d870469190560bf8f5e9515c4de42f"
  },
  "weeks": {
@@ -306,6 +306,7 @@
   },
   "archive": {
    "tabs": [
+    "today",
     "ideas",
     "queue",
     "monday",
