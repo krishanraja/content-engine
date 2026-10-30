@@ -1931,14 +1931,24 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 
 ### `apps/control-plane/api/board/_posted.ts`
 
+- `type PostedDay = keyof typeof DAY_OFFSET`
+- `const DAYS`
+- `const SERIES_DAYS: readonly PostedDay[]`
+- `const BOARD_CHANNELS`
+- `const GROWTH_CHANNELS`
 - `const POSTED_CHANNELS`
 - `type PostedChannel = keyof typeof POSTED_CHANNELS`
+- `const SERIES_DAY_CHANNELS: readonly PostedChannel[]`
+- `const OFF_DAY_CHANNELS: readonly PostedChannel[]`
+- `const OFF_DAY_SLOT`
 - `const POSTED_ACTOR`
 - `interface PostedInput`
 - `interface PostedResult`
 - `function postedInput(body: unknown): { input?: PostedInput; problem?: string }`
-- `function dayDate(week: string, day: keyof typeof DAY_OFFSET): string`
+- `function dayDate(week: string, day: PostedDay): string`
 - `async function recordPosted(db: SupabaseClient, week: string, raw: unknown, now: string): Promise<PostedResult>`
+- `interface PieceDay`
+- `async function readPieces(db: SupabaseClient, week: string): Promise<{ status: number; body: Body }>`
 
 ### `apps/control-plane/api/board/_presses.ts`
 

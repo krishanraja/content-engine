@@ -111,8 +111,10 @@ export function validBody(collection: string, id: string, body: unknown): boolea
   if (!validId(id) || !object(body) || Buffer.byteLength(JSON.stringify(body)) > 256 * 1024) return false
   if ('at' in body && (typeof body.at !== 'string' || !Number.isFinite(Date.parse(body.at)))) return false
   const day = (v: unknown) => ['mon', 'wed', 'fri'].includes(String(v))
+  // A box may sit on any day: an off-day post Growth makes has its own boxes (2026-10-30).
+  const anyDay = (v: unknown) => ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].includes(String(v))
   const text = (k: string, max = 150000) => typeof body[k] === 'string' && (body[k] as string).length <= max
-  if (collection === 'ticks') return typeof body.done === 'boolean' && day(body.day) && text('piece_id', 100) && text('step', 80) && text('label', 300) && id === `${body.day}-${body.step}`
+  if (collection === 'ticks') return typeof body.done === 'boolean' && anyDay(body.day) && text('piece_id', 100) && text('step', 80) && text('label', 300) && id === `${body.day}-${body.step}`
   if (collection === 'links') return day(id) && ['article', 'youtube'].every(k => text(k, 2048) && (!body[k] || /^https?:\/\//.test(body[k] as string)))
   if (collection === 'edits') return text('text') && day(body.day) && text('item', 100) && id === `${body.day}-${body.item}`
   // His pick for a day, with his optional saved note; or one of his decisions on a day's tab (decisionBody).

@@ -6,7 +6,7 @@ import { pipeline } from 'node:stream/promises'
 import { actor, canonical, growthWriter, collections, digest, hisOnlyRefusal, fileSpec, monday, revision, validBody, validSourceBody, validId, validManifest, views, type BoardFile, type Manifest, type View } from './_contracts.js'
 import { PressError, afterPress, preparePress, type PressDeps } from './_presses.js'
 import { readArchive } from './_archive.js'
-import { recordPosted } from './_posted.js'
+import { readPieces, recordPosted } from './_posted.js'
 import { MediaQualityError, qualifyBoard } from '../_mediaQuality.js'
 import { mediaQualityEnforced, mediaQualityRollout } from '../../../../packages/core/src/media-rollout.js'
 
@@ -71,6 +71,17 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
     const method = req.method || ''
     if (!['GET', 'PUT', 'POST'].includes(method)) return res.status(405).json({ ok: false, error: 'method_not_allowed' })
     const op = scalar(req.query.op), collection = scalar(req.query.collection), id = scalar(req.query.id)
+    if (op === 'pieces') {
+      // Growth's read (_posted.ts readPieces): which piece sits on which day, and its boxes. The same key; read-only.
+      if (!growthWriter(req)) return res.status(401).json({ ok: false, error: 'unauthorized' })
+      if (method !== 'GET') return res.status(405).json({ ok: false, error: 'method_not_allowed' })
+      const week = scalar(req.query.week)
+      if (!monday(week)) return res.status(400).json({ ok: false, error: 'invalid_week' })
+      try {
+        const result = await readPieces(await getDb(), week)
+        return res.status(result.status).json(result.body)
+      } catch { return res.status(503).json({ ok: false, error: 'board_store_unavailable' }) }
+    }
     if (op === 'posted') {
       // Growth's write-back (_posted.ts): its own key, or the engine operator's; never a browser.
       if (!growthWriter(req)) return res.status(401).json({ ok: false, error: 'unauthorized' })

@@ -156,7 +156,8 @@ sys.path.insert(0, str(HERE.parent))
 import engine  # noqa: E402
 
 CHANNELS = ('substack', 'youtube', 'shorts', 'tiktok', 'reels', 'linkedin', 'whatsapp', 'notes', 'spotify',
-            'feature_youtube', 'feature_spotify')  # the 15-minute feature's own two posts (config/board-layout.json)
+            'feature_youtube', 'feature_spotify',  # the 15-minute feature's own two posts (config/board-layout.json)
+            'instagram', 'x', 'threads', 'facebook')  # Growth's posts, reported through the board's posted route
 CUTS = ('long', 'short')  # the two cuts every piece gets (house rule TWO_CUTS)
 FEATURE = 'feature'
 # Every cut a record can hold: the feature only on a piece Krish called a 15-minute feature for (house rule FEATURE).

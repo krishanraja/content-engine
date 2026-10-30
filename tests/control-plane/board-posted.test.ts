@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { createBoardHandler } from '../../apps/control-plane/api/board/_handler.js'
 import { readFileSync } from 'node:fs'
-import { POSTED_CHANNELS, dayDate, postedInput } from '../../apps/control-plane/api/board/_posted.js'
+import { BOARD_CHANNELS, OFF_DAY_CHANNELS, POSTED_CHANNELS, SERIES_DAY_CHANNELS, dayDate, postedInput, readPieces } from '../../apps/control-plane/api/board/_posted.js'
 vi.mock('../../packages/core/src/media-rollout.js', () => ({ mediaQualityEnforced: () => false, mediaQualityRollout: () => ({ status: 'candidate_pending_calibration' }) }))
 
 // Growth's write-back (Krish, 2026-10-29: "we need the growth repo to keep the publish board check boxes update with
@@ -76,13 +76,16 @@ function setup(opts: Parameters<typeof fakeDb>[0] = {}) {
 describe('what a post must carry', () => {
   it('takes the six fields and nothing else', () => {
     expect(postedInput(post()).input?.channel).toBe('linkedin')
-    expect(postedInput(post({ day: 'tue' })).problem).toMatch(/mon, wed or fri/)
+    expect(postedInput(post({ day: 'tue' })).input?.day).toBe('tue')
+    expect(postedInput(post({ day: 'someday' })).problem).toMatch(/mon, tue, wed, thu, fri, sat, sun/)
+    for (const channel of ['instagram', 'x', 'threads', 'facebook', 'substack-notes']) expect(postedInput(post({ channel })).input?.channel).toBe(channel)
     expect(postedInput(post({ channel: 'whatsapp' })).problem).toMatch(/channel/)
     expect(postedInput(post({ post_url: 'http://x' })).problem).toMatch(/https/)
     expect(postedInput(post({ posted_at: 'soon' })).problem).toMatch(/ISO/)
     expect(postedInput(post({ buffer_post_id: '' })).problem).toMatch(/Buffer/)
     expect(postedInput(post({ done: true })).problem).toMatch(/unknown fields: done/)
     expect(dayDate('2026-11-02', 'fri')).toBe('2026-11-06')
+    expect(dayDate('2026-11-02', 'sun')).toBe('2026-11-08')
   })
 })
 
@@ -91,7 +94,13 @@ describe('the boxes it ticks', () => {
     const py = readFileSync(new URL('../../scripts/post-pack/week_board.py', import.meta.url), 'utf8')
     const steps = [...py.matchAll(/^    \('([a-z-]+)', '([^']+)', '([a-z]+)', (?:True|False)\),$/gm)].map(m => [m[1], m[2]])
     expect(steps.length).toBeGreaterThan(0)
-    expect(Object.fromEntries(steps)).toEqual(POSTED_CHANNELS)
+    expect(Object.fromEntries(steps)).toEqual(BOARD_CHANNELS)
+  })
+  it('are every box Growth may fill, and a day lists only boxes the route takes', () => {
+    const growth = ['shorts', 'youtube', 'tiktok', 'reels', 'instagram', 'linkedin', 'x', 'threads', 'facebook', 'substack-notes']
+    for (const box of growth) expect(Object.keys(POSTED_CHANNELS)).toContain(box)
+    for (const box of [...SERIES_DAY_CHANNELS, ...OFF_DAY_CHANNELS]) expect(Object.keys(POSTED_CHANNELS)).toContain(box)
+    expect(OFF_DAY_CHANNELS).not.toContain('substack')
   })
 })
 
@@ -153,5 +162,81 @@ describe('POST /api/board/<Monday>/posted', () => {
   it('reads the box again once when it changed under the write', async () => {
     expect((await setup({ conflicts: 1 }).call(post())).out.ok).toBe(true)
     expect((await setup({ conflicts: 2 }).call(post())).out.error).toBe('revision_conflict')
+  })
+})
+
+describe('an off-day post and the channels Growth adds', () => {
+  it('ticks an off-day box and records Substack Notes on the piece as notes', async () => {
+    const s = setup({ scheduled: '2026-11-10' })
+    const r = await s.call(post({ day: 'tue', channel: 'substack-notes', post_url: 'https://substack.com/@x/note/c-1' }))
+    expect(r.status).toBe(200)
+    expect(r.out.tick_id).toBe('tue-substack-notes')
+    expect(s.ticks.get('tue-substack-notes')!.body).toMatchObject({ done: true, day: 'tue', step: 'substack-notes', label: 'Substack Notes' })
+    expect(s.piece().meta.making.channels.notes).toMatchObject({ buffer_post_id: 'buf_1' })
+    const again = await s.call(post({ day: 'tue', channel: 'substack-notes', post_url: 'https://substack.com/@x/note/c-1' }))
+    expect(again.out).toMatchObject({ duplicate: true, making_channel: { buffer_post_id: 'buf_1' } })
+  })
+  it('records x, threads, facebook and instagram under their own names', async () => {
+    const s = setup({ scheduled: '2026-11-15' })
+    let n = 0
+    for (const channel of ['x', 'threads', 'facebook', 'instagram']) {
+      expect((await s.call(post({ day: 'sun', channel, buffer_post_id: `buf_${++n}` }))).status).toBe(200)
+      expect(s.piece().meta.making.channels[channel]).toMatchObject({ buffer_post_id: `buf_${n}` })
+    }
+  })
+})
+
+describe('GET /api/board/<Monday>/pieces', () => {
+  const A = '11111111-2222-4333-8444-555555555555', B = '22222222-2222-4333-8444-555555555555', C = '33333333-2222-4333-8444-555555555555'
+  const rows = [
+    { id: A, scheduled_for: '2026-11-02', lane_slot: 'mind_the_gap', state: 'drafting', meta: {}, updated_at: '2026-10-30T02:00:00Z' },
+    { id: B, scheduled_for: '2026-11-02', lane_slot: 'follow_the_money', state: 'drafting', meta: {}, updated_at: '2026-10-29T00:00:00Z' },
+    { id: C, scheduled_for: '2026-11-05', lane_slot: 'under_the_hood', state: 'drafting', meta: { offday: { date: '2026-11-05', slot: '17:30' } }, updated_at: '2026-10-29T00:00:00Z' },
+    { id: '44444444-2222-4333-8444-555555555555', scheduled_for: '2026-11-04', lane_slot: 'under_the_hood', state: 'dropped', meta: {}, updated_at: '2026-10-29T00:00:00Z' },
+    { id: '55555555-2222-4333-8444-555555555555', scheduled_for: '2026-11-07', lane_slot: 'mind_the_gap', state: 'drafting', buried_at: '2026-10-29T00:00:00Z', meta: {}, updated_at: '2026-10-29T00:00:00Z' },
+    { id: '66666666-2222-4333-8444-555555555555', scheduled_for: '2026-11-08', lane_slot: 'mind_the_gap', state: 'drafting', meta: { offday: { date: '2026-11-08', slot: 'noonish' } }, updated_at: '2026-10-29T00:00:00Z' },
+  ]
+  const db = (fail = false) => {
+    const f: Record<string, unknown> = {}
+    const q: any = {
+      select: () => q,
+      gte: (k: string, v: string) => { f.gte = [k, v]; return q },
+      lte: (k: string, v: string) => { f.lte = [k, v]; return Promise.resolve(fail ? { data: null, error: { message: 'down' } } : { data: rows.filter(r => r.scheduled_for >= String((f.gte as string[])[1]) && r.scheduled_for <= v), error: null }) },
+    }
+    return { from: (t: string) => { expect(t).toBe('content_ideas'); return q } }
+  }
+  it('lists each day once: a series day its own series\' piece, an off day with its slot', async () => {
+    const out = await readPieces(db() as never, '2026-11-02')
+    expect(out.status).toBe(200)
+    expect(out.body).toEqual({ days: [
+      { day: 'mon', date: '2026-11-02', piece_id: B, channels: [...SERIES_DAY_CHANNELS] },
+      { day: 'thu', date: '2026-11-05', piece_id: C, channels: [...OFF_DAY_CHANNELS], slot: '17:30' },
+      { day: 'sun', date: '2026-11-08', piece_id: '66666666-2222-4333-8444-555555555555', channels: [...OFF_DAY_CHANNELS], slot: '12:30' },
+    ] })
+    expect((await readPieces(db(true) as never, '2026-11-02')).status).toBe(503)
+  })
+  it('opens only to Growth\'s key or the operator\'s, and only to GET', async () => {
+    process.env.ENGINE_OPERATOR_TOKEN = 'synthetic-operator'
+    process.env.GROWTH_WRITEBACK_TOKEN = 'synthetic-growth'
+    process.env.ACCESS_CODE = 'synthetic-board-test'
+    const handler = createBoardHandler(async () => db() as never)
+    const call = async (auth: string, method = 'GET', week = '2026-11-02') => {
+      let status = 0; let out: any
+      const res = { setHeader() {}, status(code: number) { status = code; return this }, json(v: unknown) { out = v } } as unknown as VercelResponse
+      await handler({ method, headers: auth ? { authorization: auth } : {}, query: { week, op: 'pieces' } } as unknown as VercelRequest, res)
+      return { status, out }
+    }
+    expect((await call('')).status).toBe(401)
+    expect((await call('Bearer wrong')).status).toBe(401)
+    expect((await call('Bearer synthetic-growth', 'POST')).status).toBe(405)
+    expect((await call('Bearer synthetic-growth', 'GET', '2026-11-03')).out.error).toBe('invalid_week')
+    const ok = await call('Bearer synthetic-growth')
+    expect(ok.status).toBe(200)
+    expect(ok.out.days.map((d: any) => d.day)).toEqual(['mon', 'thu', 'sun'])
+    expect((await call('Bearer synthetic-operator')).status).toBe(200)
+  })
+  it('is routed at /api/board/<Monday>/pieces', () => {
+    const v = JSON.parse(readFileSync(new URL('../../apps/control-plane/vercel.json', import.meta.url), 'utf8'))
+    expect(JSON.stringify(v)).toContain('"source":"/api/board/:week/pieces","destination":"/api/board?week=:week&op=pieces"')
   })
 })
