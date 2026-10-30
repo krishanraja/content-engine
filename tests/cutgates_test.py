@@ -317,6 +317,32 @@ class CalibrationTests(unittest.TestCase):
         self.assertEqual([(p['fromFrame'], p['toFrame'], captions.page_text(p)) for p in pages],
                          [(30, 75, 'Disney is building'), (75, 120, 'its own team')])
 
+    def test_caption_pages_fall_back_to_the_srt_filed_beside_the_cut(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            Path(tmp, 'Cut - wide 16x9.srt').write_text('1\r\n00:00:01,000 --> 00:00:02,500\r\n<i>Disney is</i>\r\nbuilding\r\n\r\n'
+                                                       '2\r\n00:00:02,500 --> 00:00:04,000\r\nits own team\r\n', encoding='utf-8')
+            spec = {'from': 'ass', 'file': ['*16x9.ass', '*16x9*.srt']}
+            pages, source = calibrate.pages_from(spec, [Path(tmp)], 30)
+        self.assertIn('sidecar .srt', source)
+        self.assertEqual([(p['fromFrame'], p['toFrame'], captions.page_text(p)) for p in pages],
+                         [(30, 75, 'Disney is building'), (75, 120, 'its own team')])
+
+    def test_the_library_and_archive_roots_come_from_studio_json(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            library, archive = Path(tmp, 'lib'), Path(tmp, 'arc')
+            library.mkdir()  # the archive is absent here, as Drive is on a computer that is off
+            studio = Path(tmp, 'studio.json')
+            studio.write_text(json.dumps({'runtime': {'library_root': str(library), 'archive_root': str(archive)}}))
+            self.assertEqual(calibrate.studio_roots(studio), [library, archive])
+            found = calibrate.roots(studio=studio)
+        self.assertIn(library, found)
+        self.assertNotIn(archive, found)
+        self.assertLess(found.index(library), found.index(ROOT))
+
+    def test_the_join_reel_is_read_from_drive_where_it_is_filed(self):
+        reel = next(c for c in json.loads(calibrate.MANIFEST.read_text(encoding='utf-8'))['cuts'] if c['id'] == 'fri23-join-reel')
+        self.assertTrue(reel['final'][0].endswith('3 Video/quality evidence/Friday-join-candidates.wav'))
+
 
 if __name__ == '__main__':
     unittest.main()

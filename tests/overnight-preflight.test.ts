@@ -106,7 +106,11 @@ describe('the overnight preflight on a home computer', () => {
     expect(pattern('default').test(env)).toBe(true)
     expect(env).toContain('common.py" local-root toolchain --shell')
     expect(pinned).toContain('.local_roots')
-    expect(pinned).toContain("Join-Path (Split-Path -Parent $RepoRoot) 'toolchain'")
+    // Beside the main checkout, not beside a worktree (a worktree's .git file names its gitdir, whose commondir is the
+    // main clone's .git), as common.py main_checkout finds it; read from files, so no git process is started.
+    expect(pinned).toContain("Join-Path (Split-Path -Parent (Get-MainCheckout)) 'toolchain'")
+    expect(pinned).toContain('[Environment]::ExpandEnvironmentVariables($toolchain)')
+    expect(fn(preflight, 'Get-MainCheckout')).toContain("Join-Path $gitdir 'commondir'")
     expect(read('scripts/velib/common.py')).toContain("'toolchain': parent + '\\\\toolchain'")
     const path = pattern('path').exec(env)?.[1]
     expect(path).toBeTruthy()
@@ -315,12 +319,16 @@ $seen = Watch-Run $process 200
 `)
     expect(result.control, 'the probe saw no window from the control, so it proves nothing').toBeGreaterThan(0)
     expect(result.seen).toBe(0)
-    expect(result.exit).toBe(1)  // no Google Drive and no Claude Code on the CI machine
+    expect(result.exit).toBe(1)  // the empty home has no Codex companion on any machine, so a check always fails
     const run = JSON.parse(String(result.out).trim().split(/\r?\n/).pop()!)
     expect(run).toMatchObject({ schema_version: 1, kind: 'overnight_preflight', ok: false })
     expect(Object.keys(run.checks)).toEqual(CHECKS)
     expect(run.failed).toEqual(CHECKS.filter((name) => !run.checks[name].ok))
-    expect(run.checks.drive).toMatchObject({ ok: false, folders: 4 })
+    // The drive check reads the folders config/studio.json names: absent on the CI machine, present on Krish's own
+    // computers when Google Drive is signed in, so the expectation is the machine's own answer, not a fixed false.
+    const runtime = JSON.parse(read('config/studio.json')).runtime
+    const reachable = ['drive_root', 'media_inbox', 'archive_root', 'library_root'].filter((key) => runtime[key] && existsSync(runtime[key])).length
+    expect(run.checks.drive).toMatchObject({ ok: reachable === 4, reachable, folders: 4 })
     expect(run.checks.disk.free_gb).toBeGreaterThan(0)
     expect(run.checks.codex_companion.ok).toBe(false)
     // The audit ran and its totals were read: nothing in the empty home, so the allowance is unknown and passes.

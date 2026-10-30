@@ -4,8 +4,8 @@
     python3 scripts/cutgates/calibrate.py [--manifest config/gate-calibration.json] [--root DIR ...] [--out report.json]
     python3 scripts/cutgates/calibrate.py --synthetic
 
-On Krish's computer it finds each cut's files under the roots (MINDMAKE_LIBRARY_ROOT, MINDMAKE_ARCHIVE_ROOT, this
-repository, his home folder, and any --root), hears each finished file with faster-whisper (no paid
+On Krish's computer it finds each cut's files under the roots (any --root, MINDMAKE_LIBRARY_ROOT, MINDMAKE_ARCHIVE_ROOT,
+config/studio.json runtime library_root and archive_root, this repository and his home folder), hears each finished file with faster-whisper (no paid
 second aligner) unless its heard words are already beside it, and runs the words, joins and
 captions gates. Monday 26's two cuts must pass; Wednesday 21's published long cut, Friday 23's rejected join reel
 and Friday 16's 90-second cut must fail, on a gate the manifest names. A cut whose files are not found is
@@ -33,13 +33,34 @@ MANIFEST = settings.ROOT / 'config' / 'gate-calibration.json'
 BANDS = {'9x16': [60, 230, 960, 200], '16x9': [360, 900, 1200, 160]}  # advisory_qc.CAPTION_BANDS, the usual place
 
 
-def roots(extra=()) -> list[Path]:
+STUDIO = settings.ROOT / 'config' / 'studio.json'
+
+
+def studio_roots(studio: Path = STUDIO) -> list[Path]:
+    """The library and archive folders config/studio.json names for his computers (runtime), %NAME% expanded."""
+    try:
+        runtime = json.loads(studio.read_text(encoding='utf-8')).get('runtime') or {}
+    except (OSError, ValueError):
+        return []
+    out = []
+    for key in ('library_root', 'archive_root'):
+        value = runtime.get(key)
+        if isinstance(value, str) and value:
+            out.append(Path(os.path.expandvars(value)))
+    return out
+
+
+def roots(extra=(), studio: Path = STUDIO) -> list[Path]:
     found = [Path(r) for r in extra]
     for name in json.loads(MANIFEST.read_text(encoding='utf-8')).get('roots_env', []):
         if os.environ.get(name):
             found.append(Path(os.environ[name]))
-    found += [settings.ROOT, Path.home()]
-    return [r for r in found if r.is_dir()]
+    found += studio_roots(studio) + [settings.ROOT, Path.home()]
+    out = []
+    for root in found:
+        if root.is_dir() and root not in out:
+            out.append(root)
+    return out
 
 
 def find(patterns, where) -> Path | None:
@@ -82,8 +103,11 @@ def pages_from(spec, where, fps) -> tuple[list | None, str]:
     path = find((spec or {}).get('file'), where)
     if path is None:
         return None, 'no caption file was found'
-    if spec.get('from') == 'ass':
+    if path.suffix.lower() == '.ass':
         return captions.pages_from_ass(path, fps), str(path)
+    if path.suffix.lower() == '.srt':
+        return captions.pages_from_srt(path, fps), f'{path} (the cut\'s sidecar .srt)'
+
     doc = json.loads(path.read_text(encoding='utf-8-sig'))
     return (doc.get('pages') if isinstance(doc, dict) else doc), str(path)
 

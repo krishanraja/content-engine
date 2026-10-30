@@ -42,7 +42,7 @@ describe('the overnight run', () => {
     expect(fn(upload, 'Get-OvernightRole')).toContain("@('primary', 'standby') -contains $role")
     expect(upload).toContain("'MINDMAKE_OVERNIGHT_ROLE')")
     expect(fn(upload, 'Send-LaneReport')).toContain("$report['overnight'] = $script:Overnight")
-    for (const path of ['scripts/overnight/overnight.py', 'scripts/overnight/critic.py', 'scripts/overnight/codex_profile.py']) {
+    for (const path of ['scripts/overnight/overnight.py', 'scripts/overnight/critic.py', 'scripts/overnight/critic_run.py', 'scripts/overnight/codex_profile.py']) {
       const text = read(path)
       expect(text, path).not.toMatch(/Register-ScheduledTask|schtasks|crontab|claude\s+(-p|--print)|anthropics\/claude-code-action/)
     }
