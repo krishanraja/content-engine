@@ -23,8 +23,15 @@ posts only.
 - A clip from a past week is still cut here. Growth names the moment by word
   range; content-engine cuts it from the approved master and its word clock,
   so the word, caption and brand gates still hold.
-- Growth's derived posts go on the Monday final board for the same Approve
-  for publish press as the hero pieces. Nothing posts without his approval.
+- Krish approves the week's mix once and Growth fills it (Ruling, Krish,
+  30 October 2026: "approve the week's mix once, let Growth fill it"). The
+  Sunday Off days section shows the mix by day (the formats Growth proposes)
+  with one Approve, saved in `picks/mix` with the mix and its sha256. Growth
+  reads it from `GET /api/board/<Monday>/pieces` (`mix`) and makes and posts
+  within it only once `approved` is true and the hash matches the mix it
+  proposed; nothing outside the approved mix goes out. A piece he records
+  himself keeps its own Approve on its exact words. This replaces the
+  earlier per-post Approve for the derived posts.
 
 The sections below still hold for anything Growth asks content-engine to
 make. Where they say content-engine renders a carousel, this ruling comes

@@ -52,6 +52,23 @@ describe('what a Liked or Not it carries', () => {
   })
 })
 
+describe('his one press on the week\'s mix (Ruling, Krish, 2026-10-30)', () => {
+  const mix = { kind: 'mix', approved: true, days: { tue: ['carousel', 'meme'], sun: ['explainer'] }, mix_sha256: 'b'.repeat(64), at: '2026-11-01T18:00:00Z' }
+  it('is picks/mix, the mix by day and its hash, never a send', () => {
+    expect(validBody('picks', 'mix', mix)).toBe(true)
+    expect(validBody('picks', 'mix', { ...mix, approved: false })).toBe(true)
+    expect(validBody('picks', 'mon', mix)).toBe(false)
+    expect(validBody('picks', 'mix', { ...mix, days: {} })).toBe(false)
+    expect(validBody('picks', 'mix', { ...mix, days: { xyz: ['meme'] } })).toBe(false)
+    expect(validBody('picks', 'mix', { ...mix, mix_sha256: 'nope' })).toBe(false)
+    expect(validBody('picks', 'mix', { ...mix, send: true })).toBe(false)
+  })
+  it('is his alone', () => {
+    expect(hisOnlyRefusal('picks', mix, 'engine_operator')).toBe('decision_is_his')
+    expect(hisOnlyRefusal('picks', mix, 'Krish')).toBeNull()
+  })
+})
+
 describe('the press on the board', () => {
   it('saves his press and files it once', async () => {
     process.env.ACCESS_CODE = 'synthetic-board-test'

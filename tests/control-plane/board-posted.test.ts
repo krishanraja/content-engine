@@ -196,14 +196,16 @@ describe('GET /api/board/<Monday>/pieces', () => {
     { id: '55555555-2222-4333-8444-555555555555', scheduled_for: '2026-11-07', lane_slot: 'mind_the_gap', state: 'drafting', buried_at: '2026-10-29T00:00:00Z', meta: {}, updated_at: '2026-10-29T00:00:00Z' },
     { id: '66666666-2222-4333-8444-555555555555', scheduled_for: '2026-11-08', lane_slot: 'mind_the_gap', state: 'drafting', meta: { offday: { date: '2026-11-08', slot: 'noonish' } }, updated_at: '2026-10-29T00:00:00Z' },
   ]
-  const db = (fail = false) => {
+  const MIX = { kind: 'mix', approved: true, days: { tue: ['carousel'], sat: ['meme'] }, mix_sha256: 'a'.repeat(64), at: '2026-11-01T18:00:00Z' }
+  const db = (fail = false, mix: unknown = null) => {
     const f: Record<string, unknown> = {}
     const q: any = {
       select: () => q,
       gte: (k: string, v: string) => { f.gte = [k, v]; return q },
       lte: (k: string, v: string) => { f.lte = [k, v]; return Promise.resolve(fail ? { data: null, error: { message: 'down' } } : { data: rows.filter(r => r.scheduled_for >= String((f.gte as string[])[1]) && r.scheduled_for <= v), error: null }) },
     }
-    return { from: (t: string) => { expect(t).toBe('content_ideas'); return q } }
+    const doc: any = { select: () => doc, eq: () => doc, maybeSingle: async () => ({ data: mix ? { body: mix } : null, error: null }) }
+    return { from: (t: string) => { expect(['content_ideas', 'board_documents']).toContain(t); return t === 'board_documents' ? doc : q } }
   }
   it('lists each day once: a series day its own series\' piece, an off day with its slot', async () => {
     const out = await readPieces(db() as never, '2026-11-02')
@@ -212,8 +214,13 @@ describe('GET /api/board/<Monday>/pieces', () => {
       { day: 'mon', date: '2026-11-02', piece_id: B, channels: [...SERIES_DAY_CHANNELS] },
       { day: 'thu', date: '2026-11-05', piece_id: C, channels: [...OFF_DAY_CHANNELS], slot: '17:30' },
       { day: 'sun', date: '2026-11-08', piece_id: '66666666-2222-4333-8444-555555555555', channels: [...OFF_DAY_CHANNELS], slot: '12:30' },
-    ] })
+    ], mix: null })
     expect((await readPieces(db(true) as never, '2026-11-02')).status).toBe(503)
+  })
+  it('carries his one press on the week\'s mix, so Growth fills only what he approved (Ruling, Krish, 2026-10-30)', async () => {
+    const out = await readPieces(db(false, MIX) as never, '2026-11-02')
+    expect(out.body.mix).toEqual({ approved: true, days: { tue: ['carousel'], sat: ['meme'] }, mix_sha256: 'a'.repeat(64), at: '2026-11-01T18:00:00Z' })
+    expect((await readPieces(db(false, { ...MIX, approved: false }) as never, '2026-11-02')).body.mix.approved).toBe(false)
   })
   it('opens only to Growth\'s key or the operator\'s, and only to GET', async () => {
     process.env.ENGINE_OPERATOR_TOKEN = 'synthetic-operator'

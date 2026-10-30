@@ -63,6 +63,19 @@ export const DECISION_KIND = { scripts: 'approve_scripts', titles: 'titles', pub
 // recommendations and my feedback"; 2026-10-30: "the two feedback buttons need to just be an open text box for my
 // retrospective thoughts and feedback rather than Y/N buttons"): picks/<day>-feel, any day of the week, his words, with
 // the older Liked or Not it press still read. The server files each save as one taste_reports row (afterPress).
+// His one press on the week's filler (Ruling, Krish, 2026-10-30: "approve the week's mix once, let Growth fill it"):
+// picks/mix, the mix by day exactly as the board showed it and its sha256. Growth reads it with the week's pieces
+// (readPieces) and makes and posts within it; a piece he records keeps its own press on its exact words.
+export const MIX_ID = 'mix'
+const MIX_DAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
+export function mixBody(body: Record<string, unknown>): boolean {
+  const days = body.days
+  return body.kind === 'mix' && typeof body.approved === 'boolean' && SHA256.test(String(body.mix_sha256)) && !('send' in body)
+    && !!days && typeof days === 'object' && !Array.isArray(days) && Object.keys(days).length > 0
+    && Object.entries(days as Record<string, unknown>).every(([d, v]) => MIX_DAYS.includes(d) && Array.isArray(v) && v.length > 0 && v.length <= 12
+      && v.every(x => typeof x === 'string' && x.length > 0 && x.length <= 200))
+    && (!('note' in body) || body.note === null || typeof body.note === 'string' && body.note.length <= 2000)
+}
 export const FEEL_ID = /^(mon|tue|wed|thu|fri|sat|sun)-feel(?:-[1-9])?$/
 export const FEELS = ['liked', 'not_it'] as const
 export function feelBody(id: string, body: Record<string, unknown>): boolean {
@@ -134,6 +147,7 @@ export function validBody(collection: string, id: string, body: unknown): boolea
   if (collection === 'edits') return text('text') && day(body.day) && text('item', 100) && id === `${body.day}-${body.item}`
   // His pick for a day, with his optional saved note; or one of his decisions on a day's tab (decisionBody).
   if (collection === 'picks' && FEEL_ID.test(id)) return feelBody(id, body)
+  if (collection === 'picks' && (id === MIX_ID || body.kind === 'mix')) return id === MIX_ID && mixBody(body)
   if (collection === 'picks' && DECISION_ID.test(id)) return decisionBody(id, body)
   if (collection === 'picks' && (SCORE_ID.test(id) || body.kind === 'scores')) return scoreBody(id, body)
   if (collection === 'picks') return day(id) && day(body.day) && text('pick', 160) && text('story') && !('kind' in body)
