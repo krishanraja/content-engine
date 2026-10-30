@@ -20,6 +20,13 @@ ROWS = ('words.lost', 'joins.in_gaps', 'captions.clock', 'captions.render')
 
 
 class VeGateTests(unittest.TestCase):
+    def test_ve_take_words_reach_the_words_gate_as_its_own_shape(self):
+        # ve's words.json carries the index in "w" and the text in "word"; the gate raised on every ve cut before.
+        doc = {'clock': 'x', 'words': [{'w': 0, 'word': 'You', 'onset_s': 0.6, 'end_s': 1.1}]}
+        self.assertEqual(qc_gates.gate_words(doc)['words'], [{'w': 'You', 's': 0.6, 'e': 1.1}])
+        gate = {'words': [{'w': 'You', 's': 0.6, 'e': 1.1}]}
+        self.assertIs(qc_gates.gate_words(gate), gate)
+
     def build(self, kind):
         tmp = tempfile.TemporaryDirectory()
         self.addCleanup(tmp.cleanup)

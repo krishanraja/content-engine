@@ -33,10 +33,22 @@ def heard_words(path: str, *, heard: dict | None = None, model: str = 'small.en'
     return aligners.passes(path, heard=heard, model=model)['aligners']
 
 
+def gate_words(doc):
+    """A take's words as the words gate reads them ({w, s, e}). ve's words.json holds {word, onset_s, end_s}; without
+    this every ve words.lost row raised before it measured anything (Friday 23's cuts, 30 Oct 2026)."""
+    words = doc.get('words') if isinstance(doc, dict) else doc
+    if not isinstance(words, list) or all(isinstance(w, dict) and isinstance(w.get('w'), str) for w in words):
+        return doc
+    # ve's "w" is the word's index; its text is "word".
+    out = [{'w': w['word'], 's': w.get('onset_s'), 'e': w.get('end_s')} if isinstance(w, dict) and isinstance(w.get('word'), str) else w
+           for w in words]
+    return {**doc, 'words': out} if isinstance(doc, dict) else out
+
+
 def words_lost(script: str, take_words, heard: dict, edl=None) -> dict:
     """The words gate on every aligner's pass of the render (words_gate.check_aligners)."""
     *_, words_gate = _cutgates()
-    result = words_gate.check_aligners(script, take_words, heard, edl)
+    result = words_gate.check_aligners(script, gate_words(take_words), heard, edl)
     return _gate_row(result, 'no content word of the signed script lost on every aligner\'s pass', words_gate.summary)
 
 

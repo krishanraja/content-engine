@@ -34,7 +34,6 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-10-26","week_target":1,"current":1,"current_as_of":"2026-10-30","current_source":"Control Center content_ideas in the publication's series (1 published in the last 7 days)","urgency":1,"urgency_reason":"at 100% of this week's target"} --> **North Star number: U1, on pace.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 1, against 1 this week, on the way to 30 by 30 November 2026. Steady, and one proposal a week that would raise the ceiling.
 
-- a made day's board materials can fill its Download first video and thumbnail rows (`"fills"`) when the making record holds no such cut, and a moved day says where it went on boards before the fixed layout too. Friday 6 Nov is made on the 2 November board (build c8060ff2) with its music-fixed cuts as private board downloads, and the 19 October board (build be3bc7f1) says Friday moved to Fri 6 Nov. (2026-10-30)
 - ve dispatch runs Codex cards under the Studio's own Codex home (runtime\codex-home, built by scripts/overnight/codex_home.py): no MCP server, no plugin, sign-in and sessions shared with ~/.codex. Krish keeps buffer and teleprompter in his everyday Codex. LORIMER (standby) has it built and passes preflight 9/9. (2026-10-30)
 - **SURFACE calibration (2026-10-30).** Gate roots from `studio.json`, `.srt` caption pages, the Critic wired. Krish ruled: near-homophones pass, a word with no room in the final is unmeasured, mon26's unfiled joins and captions are accepted missing, wed21's lost words are real, short cross-fades pass the Critic.
 - Krish approves the week's filler mix once (picks/mix, Ideas, Off days) and Growth fills it, posting only within an approved mix it reads from the week's pieces; a piece he records keeps its own press. (2026-10-30)
@@ -48,8 +47,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
-- 2026-10-30 Codex cards no longer inherit the everyday Codex's MCP servers and plugins (on LORIMER 38 plugins, GitHub, Supabase, Stripe, Vercel and Gmail among them); Krish, 30 Oct, "do the separate settings folder fix".
-Everything to 29 October 2026 is in `docs/history/2026-10-29-NOW-changed-recently.md`, 30 October lines in `docs/history/2026-10-30-NOW-moved-3.md` and `-4.md` and `-5.md`, all verbatim (W2.12); `npm run check:workbench` holds the byte cap.
+Everything to 29 October 2026 is in `docs/history/2026-10-29-NOW-changed-recently.md`, 30 October lines in `docs/history/2026-10-30-NOW-moved-3.md` and `-4.md`, `-5.md` and `-6.md`, all verbatim (W2.12); `npm run check:workbench` holds the byte cap.
 
 ## What is next and what is waiting on Krish
 

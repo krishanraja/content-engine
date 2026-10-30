@@ -11,7 +11,7 @@ Bed modes (spec audio.bed.mode):
   ledger's bed_lufs (-31, approved by ear) in the finished master, never keyed by the voice. It lifts only in the
   windows it is given (chapter cards, to chapter_lufs, 0.5 s rise and 0.8 s fall), before the first word (intro_lufs)
   and after the last (outro_lufs). It plays around the track's own stops (a break where the music falls silent) and
-  restarts the track when the cut outlasts it, each join under a 2 s equal-power crossfade, and a
+  restarts the track when the cut outlasts it (from where its body begins, never its quiet intro), each join under a 2 s equal-power crossfade, and a
   slow gain ride keyed by the music itself (3 s, at most 8 dB either way) holds the track's own loud and quiet
   passages to one level. Krish, Gate 2, 2026-10-30, of the ducked bed on Friday 23's long cut: "Sometimes it just
   turns off randomly. Sometimes it's quiet. Sometimes it gets louder. It's not professional at all."
@@ -41,6 +41,7 @@ LIFT_RISE_S, LIFT_FALL_S = 0.5, 0.8
 LEVEL_WINDOW_S, LEVEL_SMOOTH_S, LEVEL_MAX_DB = 0.5, 3.0, 8.0
 GAP_WINDOW_S, GAP_MEDIAN_S, GAP_BELOW_DB, GAP_MIN_S = 0.05, 3.0, 15.0, 0.25
 STOP_PAD_S, TAIL_BELOW_DB = 0.15, 12.0
+INTRO_SPAN_S, INTRO_STEP_S, INTRO_SPARSE_SHARE = 4.0, 0.25, 0.1
 EPISODE_LEVELS = ('bed_lufs', 'intro_lufs', 'outro_lufs')
 
 
@@ -181,11 +182,31 @@ def track_stops(path: str) -> list[tuple[float, float]]:
     return stops
 
 
+def track_intro(path: str) -> float:
+    """Where the track's body begins, on its own clock: the first point from which, over the next INTRO_SPAN_S, at
+    most INTRO_SPARSE_SHARE of its 0.25 s windows fall TAIL_BELOW_DB under the track's median (a sparse intro of
+    single hits leaves most of them there). A restart starts here, never in the intro: on Friday 23's long cut the
+    restart at 172 s played NO CURVES' sparse opening (its first 18 s, a third of it in gaps against a twentieth in
+    the body), and under a pause in the voice the bed sagged (the independent review's block at 172.5 s, 30 Oct 2026)."""
+    db = _short_db(_decode(path))
+    per = int(INTRO_STEP_S / GAP_WINDOW_S)
+    q = np.array([db[i:i + per].mean() for i in range(0, len(db) - per + 1, per)])
+    span = int(INTRO_SPAN_S / INTRO_STEP_S)
+    if len(q) <= span:
+        return 0.0
+    gap = q < np.median(q) - TAIL_BELOW_DB
+    share = np.convolve(gap.astype(float), np.ones(span) / span, mode='valid')
+    found = np.nonzero(share <= INTRO_SPARSE_SHARE)[0]
+    return round(float(found[0]) * INTRO_STEP_S, 2) if len(found) else 0.0
+
+
 def tile(track: np.ndarray, total: int, crossfade_s: float = CROSSFADE_S,
-         stops: list[tuple[float, float]] = ()) -> tuple[np.ndarray, list[float]]:
+         stops: list[tuple[float, float]] = (), restart_from_s: float = 0.0) -> tuple[np.ndarray, list[float]]:
     """The track's playable stretches (everything outside `stops`, in seconds on the track's clock) laid end to end,
     the track starting again after its last one, until `total` samples are covered. Every join, over a stop or a
-    restart, is an equal-power crossfade. Returns the samples and the crossfade centres in seconds."""
+    restart, is an equal-power crossfade. The first play keeps the track's intro; every restart begins at
+    restart_from_s (track_intro), so a restart never drops the bed into the quiet intro. Returns the samples and the
+    crossfade centres in seconds."""
     xf = int(SR * crossfade_s)
     edges, at = [], 0
     for a, b in sorted(stops):
@@ -203,6 +224,8 @@ def tile(track: np.ndarray, total: int, crossfade_s: float = CROSSFADE_S,
     centres, at, k = [], 0, 0
     while True:
         a, b = pieces[k % len(pieces)]
+        if k >= len(pieces) and b - max(a, int(restart_from_s * SR)) >= 3 * xf:
+            a = max(a, int(restart_from_s * SR))
         run = track[a:b].copy()
         if k:
             run[:xf] *= fade_in
@@ -257,12 +280,12 @@ def episode_envelope(n: int, levels: dict, *, voice_start_s: float, last_word_en
 
 
 def _episode_bed(tmp_bed: str, out: str, *, duration_s: float, gain_db: float, envelope_db: np.ndarray,
-                 stops: list[tuple[float, float]]) -> list[float]:
+                 stops: list[tuple[float, float]], restart_from_s: float = 0.0) -> list[float]:
     """The episode bed alone at its final relative level, played around the track's stops; returns the crossfade
     centres."""
     track = _decode_stereo(tmp_bed)
     n = int(round(duration_s * SR))
-    bed, centres = tile(track, n, stops=stops)
+    bed, centres = tile(track, n, stops=stops, restart_from_s=restart_from_s)
     bed *= level_ride(bed)[:, None]
     bed *= (10 ** ((gain_db + envelope_db[:n]) / 20))[:, None]
     _write_stereo(bed, out)
@@ -380,15 +403,18 @@ def premix(dialogue: str, bed: str | None, out: str, start_s: float, duration_s:
             envelope = episode_envelope(int(round(duration_s * SR)), levels, voice_start_s=voice_start_s,
                                         last_word_end_s=last_end, lifts=[tuple(w) for w in lifts], duration_s=duration_s)
             stops = track_stops(tmp_bed)
+            intro = track_intro(tmp_bed)
             probe = str(Path(out).with_suffix('.probe.wav'))
-            _episode_bed(tmp_bed, probe, duration_s=duration_s, gain_db=0.0, envelope_db=np.zeros_like(envelope), stops=stops)
+            _episode_bed(tmp_bed, probe, duration_s=duration_s, gain_db=0.0, envelope_db=np.zeros_like(envelope), stops=stops,
+                         restart_from_s=intro)
             body = body_window(voice_start_s, last_end, duration_s)
             raw = ebur128(probe, *body)['I']
             Path(probe).unlink(missing_ok=True)
             gain = float(levels['bed_lufs']) - lufs + voice - raw
             for _ in range(3):
                 rendered = gain
-                centres = _episode_bed(tmp_bed, bed_stem, duration_s=duration_s, gain_db=gain, envelope_db=envelope, stops=stops)
+                centres = _episode_bed(tmp_bed, bed_stem, duration_s=duration_s, gain_db=gain, envelope_db=envelope, stops=stops,
+                                       restart_from_s=intro)
                 graph = ('[0:a]aformat=sample_rates=48000:channel_layouts=stereo[v];[1:a]aformat=sample_rates=48000:channel_layouts=stereo[b];'
                          '[v][b]amix=inputs=2:normalize=0:duration=first[m]')
                 _sum([tmp_dialogue, bed_stem], graph, summed, '[m]')
@@ -402,7 +428,7 @@ def premix(dialogue: str, bed: str | None, out: str, start_s: float, duration_s:
             _run(['-i', bed_stem, '-af', f'volume={master_gain:.2f}dB', music])
             report.update(gain_db=round(rendered, 2), level_miss_db=round(miss, 2), master_gain_db=round(master_gain, 2), bed_lufs_in_master=round(got, 2),
                           levels={k: levels[k] for k in (*EPISODE_LEVELS, 'chapter_lufs') if k in levels},
-                          lifts=[list(w) for w in lifts], track_stops_s=[list(w) for w in stops], crossfades_s=centres, crossfade_s=CROSSFADE_S,
+                          lifts=[list(w) for w in lifts], track_stops_s=[list(w) for w in stops], track_intro_s=intro, crossfades_s=centres, crossfade_s=CROSSFADE_S,
                           voice_start_s=voice_start_s, last_word_end_s=last_end, body_s=list(body),
                           music_stem=Path(music).name)
         elif mode == 'continuous':
