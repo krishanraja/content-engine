@@ -2135,17 +2135,43 @@ def immutable_video_download(video):
     return None
 
 
-def dl_videos(p, videos, feature):
+def material_rows(videos, delivery, feature):
+    """{row: material file} for the Download first rows the day's materials fill (board_materials.FILLS): a cut, or its
+    thumbnail, that the making record does not hold. The record wins whenever it holds the cut."""
+    held = {v['cut'] for v in videos or [] if isinstance(v, dict) and v.get('cut') in ('long', 'short', 'feature')}
+    cuts = {cut for cut, _, _ in video_cuts(feature)}
+    return {row: item for row, item in board_materials.fills(delivery).items()
+            if row.split('-', 1)[1] in cuts and row.split('-', 1)[1] not in held}
+
+
+def material_actions(item):
+    return f'<a class="btnlink dl-btn" href="{E(item["url"])}" target="_blank" rel="noopener">Download</a>'
+
+
+def material_extra(item):
+    return f'<img class="dl-pic" src="{E(item["preview"])}" alt="{E(item["label"])} preview">' if item.get('preview') else ''
+
+
+def dl_videos(p, videos, feature, materials=None):
     """The first files in Download first: each finished video, then each one's thumbnail, from the making record.
     Krish, 2026-10-14: "You should always link the Google Drive videos because I need to actually download them onto
     my computer"; 2026-10-12: "I always want a video thumbnail for all video sizes produced as an asset every time".
-    Its own group, so a kept day's videos are drawn again from the record (board(), --keep)."""
+    Its own group, so a kept day's videos are drawn again from the record (board(), --keep). A cut the record does
+    not hold takes the day's materials file that fills its row (material_rows), so a finished cut that is not on the
+    record yet still downloads from its own row; it never marks the cut made on the record."""
     by_cut = {v['cut']: v for v in videos or [] if isinstance(v, dict) and v.get('cut') in ('long', 'short', 'feature')}
+    materials = materials or {}
     cuts = LAYOUT['cuts']
     rows, thumbs = [], []
     for cut, label, where in video_cuts(feature):
         v = by_cut.get(cut)
         name = cuts[cut]['name']
+        if not v and (f'video-{cut}' in materials or f'thumb-{cut}' in materials):
+            for row, out, title in ((f'video-{cut}', rows, label), (f'thumb-{cut}', thumbs, f'Thumbnail for the {name}')):
+                item = materials.get(row)
+                out.append(dl_item(p, row, title, f'For {where}', material_actions(item), 'ready', material_extra(item)) if item else
+                           dl_item(p, row, title, f'For {where}', '<span class="rec-none">Not made yet</span>', 'waiting'))
+            continue
         if not v:
             rows.append(dl_item(p, f'video-{cut}', label, f'For {where}', '<span class="rec-none">Not made yet</span>', 'waiting'))
             thumbs.append(dl_item(p, f'thumb-{cut}', f'Thumbnail for the {name}', f'For {where}',
@@ -2221,10 +2247,11 @@ def run_sheet(day, p, page, data, videos, delivery, feature, folder, warnings):
         label_of[iid] = f'Picture {n} in the article'
         files.append(dl_item(p, iid, f'Picture {n} in the article: {x["label"]}', 'For Substack, if a picture does not come through with the article',
                              pic_actions(p, x), 'ready', pic_extra(p, x)))
-    groups = dl_videos(p, videos, feature) + ('<div class="dl-group" data-dl-group="files"><ol class="dl-list">' + ''.join(files) + '</ol></div>'
-                                             if files else '')
+    filled = material_rows(videos, delivery, feature) if delivery else {}
+    groups = dl_videos(p, videos, feature, filled) + ('<div class="dl-group" data-dl-group="files"><ol class="dl-list">' + ''.join(files) + '</ol></div>'
+                                                     if files else '')
     if delivery:
-        groups += board_materials.render_group(day, delivery)
+        groups += board_materials.render_group(day, delivery, set(filled))
     on_page = len(re.findall(r'data-act="download"', groups))
     where = (f'In Drive: makeyourmindup, 3 Posts, {folder}.' if folder else
              'In Drive: makeyourmindup, 3 Posts, in the post\'s own folder.')
@@ -4678,6 +4705,29 @@ def _runsheet_checks(check, week, mon):
           'the article, its pictures, then the prepared files)',
           order[:7] == ['video-long', 'video-short', 'thumb-long', 'thumb-short', 'img-cover', 'article', 'img-pic']
           and 'data-dl="material"' in sub[sub.index('id="mon-dl-img-pic"'):])
+    # A finished cut not on the record yet fills its own row from the materials; the record wins where it holds the cut.
+    filling = {'mon': {'piece_id': MON_ID, 'status': 'ready', 'note': 'The finished cuts.',
+                       'sections': [{'id': 'video', 'title': 'Finished videos', 'files': [
+                           {'label': 'Download the 5-minute video', 'url': '/api/board/2026-10-26/assets/l?sha=' + 'a' * 64, 'fills': 'video-long'},
+                           {'label': 'Download its thumbnail', 'url': '/api/board/2026-10-26/assets/t?sha=' + 'b' * 64, 'fills': 'thumb-long'},
+                           {'label': 'Download the 90-second video', 'url': 'https://example.com/s.mp4', 'fills': 'video-short'}]}]}}
+    filled, _, _ = board(week, {'mon': mon}, {'mon': MON_ID}, videos={'mon': videos['mon'][1:]}, materials=filling)
+    use_layout(week)
+    fsub = re.sub(r'\sdata-materials="[^"]*"', '', div_at(filled, filled.find('<div class="subpanel" role="tabpanel" id="mon-sub-publish"')))
+    row = lambda r: (re.search(r'<li class="dl-item" id="mon-dl-%s".*?</li>' % r, fsub, re.S) or [''])[0]
+    check('run-sheet: a cut the record lacks downloads from its own row, from the materials that fill it, and is not listed twice',
+          verify(filled) == [] and '/api/board/2026-10-26/assets/l?sha=' in row('video-long') and 'data-state="ready"' in row('video-long')
+          and '/assets/t?sha=' in row('thumb-long') and fsub.count('/api/board/2026-10-26/assets/l?sha=') == 1
+          and 'example.com/s.mp4' not in row('video-short') and drive('c') in row('video-short')
+          and fsub.count('example.com/s.mp4') == 1 and 'Not made yet' not in fsub
+          and board_materials.previous(filled) == filling)
+    try:
+        board_materials.validate({**filling['mon'], 'sections': [{'id': 'v', 'title': 'V', 'files': [
+            {'label': 'a', 'url': 'https://example.com/a', 'fills': 'video-long'},
+            {'label': 'b', 'url': 'https://example.com/b', 'fills': 'video-long'}]}]}, MON_ID)
+        check('materials refuse two files filling one row', False)
+    except ValueError:
+        check('materials refuse two files filling one row', True)
     runs = re.findall(r'<section class="run(?: opt)?" id="mon-([a-z0-9-]+)" data-run="([a-z-]+)"', sub)
     check('run-sheet: one card per place to post, in config/board-layout.json\'s order, under the ids the page gave them',
           [k for _, k in runs] == [s['key'] for s in LAYOUT['publish_steps']['steps'] if s.get('channel') and not s.get('feature_only')]

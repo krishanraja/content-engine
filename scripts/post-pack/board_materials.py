@@ -8,6 +8,16 @@ import json
 import re
 from urllib.parse import urlparse
 
+# The Download first rows a material file may stand in for while the making record has no cut for it
+# (week_board.py dl_videos). The record wins whenever it has the cut; the day's state never changes.
+FILLS = ('video-long', 'video-short', 'video-feature', 'thumb-long', 'thumb-short', 'thumb-feature')
+
+
+def fills(data):
+    """{row: file} for the material files that fill a Download first row."""
+    return {item['fills']: item for section in (data or {}).get('sections', [])
+            for item in section.get('files', []) if item.get('fills')}
+
 
 def validate(data, piece):
     if not isinstance(data, dict) or data.get('piece_id') != piece:
@@ -17,7 +27,7 @@ def validate(data, piece):
     sections = data.get('sections')
     if not isinstance(sections, list) or not sections:
         raise ValueError('Publishing materials require sections')
-    seen = set()
+    seen, filled = set(), set()
     for section in sections:
         sid = section.get('id', '')
         if not re.fullmatch(r'[a-z][a-z0-9-]{0,60}', sid) or sid in seen:
@@ -34,6 +44,11 @@ def validate(data, piece):
             preview = item.get('preview')
             if preview and not (isinstance(preview, str) and preview.startswith('data:image/jpeg;base64,')):
                 raise ValueError('Publishing material previews must be embedded JPEG images')
+            fills = item.get('fills')
+            if fills is not None and (fills not in FILLS or fills in filled):
+                raise ValueError(f'A publishing material fills one of {", ".join(FILLS)}, each once')
+            if fills:
+                filled.add(fills)
         for item in section.get('copy', []):
             if not item.get('label') or not isinstance(item.get('text'), str) or not item['text'].strip():
                 raise ValueError('Publishing copy requires a label and nonempty text')
@@ -64,15 +79,22 @@ def previous(page):
         r'<div class="(?:rec|dl-group mat)" id="(mon|wed|fri)-materials" data-materials="([^"]*)"', page)}
 
 
-def render_group(day, data):
+def render_group(day, data, shown=()):
     """The same materials inside a made day's Download first, on boards in the fixed layout (week_board.py
     run_sheet): each file one big button in the day's one list of downloads, the copy beside it, under the ids
-    render() gives them, so a rebuild (previous) and a copy refresh (update_copy) still find them."""
+    render() gives them, so a rebuild (previous) and a copy refresh (update_copy) still find them. A file already
+    drawn in its own Download first row (shown, its fills) is not drawn twice; with nothing left to draw, the group
+    only carries the materials for the next rebuild."""
     e = html.escape
-    parts = [f'<div class="dl-group mat" id="{day}-materials" data-materials="{e(json.dumps(data), quote=True)}">',
+    carrier = f'<div class="dl-group mat" id="{day}-materials" data-materials="{e(json.dumps(data), quote=True)}"'
+    sections = [dict(s, files=[f for f in s.get('files', []) if f.get('fills') not in shown]) for s in data['sections']]
+    sections = [s for s in sections if s['files'] or s.get('copy')]
+    if not sections:
+        return carrier + ' hidden></div>'
+    parts = [carrier + '>',
              f'<h3 class="dl-h">Prepared for this piece: {"on a review hold" if data["status"] == "review" else "ready"}</h3>',
              f'<p class="dl-note">{e(data["note"])}</p>']
-    for section in data['sections']:
+    for section in sections:
         sid = f'{day}-materials-{section["id"]}'
         parts += [f'<section class="sec" id="{sid}"><h4 class="dl-sub">{e(section["title"])}</h4>']
         if section.get('note'):
