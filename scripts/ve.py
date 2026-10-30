@@ -41,6 +41,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from velib.common import CONFIG, ROOT, load_json, piece_dir, run, write_json  # noqa: E402
 
 PACK_LIMIT = 36 * 1024
+MUSIC_LEDGER = ROOT / 'config' / 'music-library.json'  # beside config/ve, not in it
 
 
 def cmd_doctor(_args) -> int:
@@ -779,7 +780,7 @@ def cmd_premix(args) -> int:
         if args.cut not in spec['cuts']:
             raise ValueError(f'{args.cut} is not a cut in the spec')
         bed = spec['audio']['bed']
-        ledger = load_json(CONFIG / 'music-library.json')
+        ledger = load_json(MUSIC_LEDGER)
         track = next((t for t in ledger['tracks'] if t['id'] == bed['ledger_id'] and t.get('status') == 'approved'), None)
         if track is None:
             raise ValueError(f"{bed['ledger_id']} is not an approved track in config/music-library.json")
