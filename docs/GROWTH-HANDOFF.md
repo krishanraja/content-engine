@@ -107,6 +107,30 @@ public social posts. Its existing private uploads and publish boards do not
 make it a second social scheduler. Creative acceptance and publication
 approval remain distinct and tied to exact asset/payload identities.
 
+## Tick the board when a post goes out
+
+Krish, 2026-10-29: "Now that the growth repo takes care of more or less ALL posting, we need the growth repo to keep
+the publish board check boxes update with what it has done and when." Growth sends one call per live post:
+
+```
+POST https://content.krishraja.com/api/board/<Monday>/posted
+Authorization: Bearer <GROWTH_WRITEBACK_TOKEN>
+Content-Type: application/json
+
+{"day": "mon", "piece_id": "<content_ideas id>", "channel": "linkedin",
+ "post_url": "https://...", "posted_at": "2026-11-09T14:00:00Z", "buffer_post_id": "<Buffer post id>"}
+```
+
+- `day` is `mon`, `wed` or `fri`; `channel` is one of the day's posting boxes: `substack`, `youtube`, `shorts`,
+  `tiktok`, `reels`, `linkedin`, `spotify`. No other field is taken.
+- The piece must be scheduled for that day of that week (`content_ideas.scheduled_for`), or the answer is 409
+  `not_this_day` and nothing is written.
+- It ticks `<day>-<channel>` (actor `growth`, with every post on that box under `posts`) and records the channel on
+  the piece's making record (`channels.<channel>`: `posted_at`, `url`, `buffer_post_id`).
+- Idempotent per post: the same `buffer_post_id` again answers `duplicate: true` and writes nothing new. An answer
+  with `making_channel: null` means the box is ticked but the making record was not; send the same call again.
+- The key opens this route only. `ENGINE_OPERATOR_TOKEN` also works. It records what Growth posted; it posts nothing.
+
 ## Improve each engine at its own job
 
 Growth returns dated observed reach, saves/shares, relevant replies, follower
