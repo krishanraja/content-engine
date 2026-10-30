@@ -33,7 +33,10 @@ from pathlib import Path
 GAP_MIN = 0.080      # a join sits in a gap at least this wide (W2.4)
 CLEAR = 0.030        # and at least this far from either word
 PAD_MAX = 0.250      # never more than this of the gap is kept beside the words
-MIN_SECONDS, MAX_SECONDS = 5.0, 90.0
+# The snackable's length is the spec's (config/asset-spec.json formats.snackable, read by asset_spec.py).
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'post-pack'))
+import asset_spec  # noqa: E402
+MIN_SECONDS, MAX_SECONDS, _FRAME = asset_spec.snackable()
 
 
 class SnackError(Exception):
