@@ -1867,7 +1867,7 @@ def made_panel(page, day, name, p, links, hidden, warnings, videos=None, deep=Fa
             + body + '</div>')
 
 
-def not_made_panel(day, name, weekday, when, series_label, pick, hidden, draft=False, calls=(), deep=False):
+def not_made_panel(day, name, weekday, when, series_label, pick, hidden, draft=False, calls=(), deep=False, moved=None):
     """A tab with no publish page: a day not picked, a day picked and not
     made, or a day in draft. A day in draft is a piece whose words are in
     review (--draft, with --review): its tab is the review card, a line
@@ -1895,6 +1895,15 @@ def not_made_panel(day, name, weekday, when, series_label, pick, hidden, draft=F
             'LINE': E(f'{said} Picked for {weekday} and not made yet. Its publish board appears in this tab once it is made.'),
             'CALLS': '',
             'CHECKLIST': checklist(day, p, deep),
+        }
+    elif moved:
+        # A piece that moved to another day says where it went and links to it, as the fixed layout does (--moved).
+        to, href = moved_link(moved)
+        values = {
+            'STATE': 'not_picked', 'KICK': E(f'{series_label} · {when} · moved to {to}'), 'HEADING': E(weekday),
+            'LINE': E(f'This piece moved to {to}.'),
+            'CALLS': f'<p class="id-how"><a href="{E(href)}">Open it on its board</a></p>',
+            'CHECKLIST': '',
         }
     else:
         values = {
@@ -3309,7 +3318,8 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
                           if (piece and i.get('id') == piece) or (title and i['story'].strip() == str(title).strip())), None)
             panels.append(not_made_panel(key, name, weekday, short_date(when), series_label,
                                          {'title': title, 'plain': plain} if state == 'picked' else None, key != opened,
-                                         state == 'draft', calls.get(key) or (), bool(piece) and piece == deep_piece))
+                                         state == 'draft', calls.get(key) or (), bool(piece) and piece == deep_piece,
+                                         (moved or {}).get(key) if state == 'not_picked' else None))
         if state == 'made' and posted.get(key):
             panels[-1] = posted_kick(panels[-1], posted[key], weekday, warnings)
         if calls.get(key) and state != 'draft':
@@ -4129,6 +4139,9 @@ def _self_test():
         unpicked_page, unpicked = build(parser().parse_args(['--week', '2026-10-12', '--previous', f'{tmp}/prev.html', '--day', f'mon={tmp}/mon.html',
                                                              '--day', f'fri={tmp}/mon.html', '--piece', f'mon={MON_ID}', '--piece', f'fri={FRI_ID}',
                                                              '--unpick', 'wed']))
+        moved_page, _ = build(parser().parse_args(['--week', '2026-10-12', '--previous', f'{tmp}/prev.html', '--day', f'mon={tmp}/mon.html',
+                                                   '--day', f'fri={tmp}/mon.html', '--piece', f'mon={MON_ID}', '--piece', f'fri={FRI_ID}',
+                                                   '--moved', 'wed=2026-11-04']))
         try:
             build(parser().parse_args(['--week', '2026-10-19', '--previous', f'{tmp}/prev.html']))
             refused_other_week = False
@@ -4251,6 +4264,10 @@ def _self_test():
           moved_of(['mon=2026-11-09', 'fri=2026-11-02']) == {'mon': date(2026, 11, 9), 'fri': date(2026, 11, 2)}
           and moved_link(date(2026, 11, 4)) == ('Wed 4 Nov', '/board/2026-11-02#wednesday')
           and moved_link(date(2026, 11, 7)) == ('Sat 7 Nov', '/board/2026-11-02'))
+    moved_wed = div_at(moved_page, moved_page.find('<div class="pm" id="panel-wednesday"'))
+    check('--moved: a board in the layout before the fixed one says so too, and links to the new day',
+          'moved to Wed 4 Nov' in moved_wed and 'This piece moved to Wed 4 Nov.' in moved_wed
+          and 'href="/board/2026-11-02#wednesday"' in moved_wed and 'not picked' not in moved_wed)
     check('--previous of another week is refused', refused_other_week)
     check('--live: a picked piece with a publish page and no --day is refused, naming the page to read',
           bool(refused_unmade) and 'QpGeGjaqZwvyXwRnSadqyS' in refused_unmade and '--day mon=' in refused_unmade)
