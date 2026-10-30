@@ -319,8 +319,9 @@ class CalibrationTests(unittest.TestCase):
 
     def test_caption_pages_fall_back_to_the_srt_filed_beside_the_cut(self):
         with tempfile.TemporaryDirectory() as tmp:
-            Path(tmp, 'Cut - wide 16x9.srt').write_text('1\r\n00:00:01,000 --> 00:00:02,500\r\n<i>Disney is</i>\r\nbuilding\r\n\r\n'
-                                                       '2\r\n00:00:02,500 --> 00:00:04,000\r\nits own team\r\n', encoding='utf-8')
+            # Bytes, so the CRLF a Windows .srt carries is exactly what is read on every machine.
+            Path(tmp, 'Cut - wide 16x9.srt').write_bytes(b'1\r\n00:00:01,000 --> 00:00:02,500\r\n<i>Disney is</i>\r\nbuilding\r\n\r\n'
+                                                        b'2\r\n00:00:02,500 --> 00:00:04,000\r\nits own team\r\n')
             spec = {'from': 'ass', 'file': ['*16x9.ass', '*16x9*.srt']}
             pages, source = calibrate.pages_from(spec, [Path(tmp)], 30)
         self.assertIn('sidecar .srt', source)
