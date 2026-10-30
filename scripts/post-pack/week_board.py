@@ -2997,7 +2997,19 @@ OFF_KINDS = {'meme': 'meme', 'carousel': 'carousel', 'good_news': 'news', 'news'
              'explainer': 'explainer', 'short': 'short'}
 
 
-def today_model(monday, days, videos, posted, offdays, parsed, now=None):
+def gates_of(values):
+    """{day: https link} from --gate DAY=URL: the cut a day waits on his Gate 2 verdict for."""
+    out = {}
+    for v in values or []:
+        k, sep, url = v.partition('=')
+        key = DAY_KEYS.get(k.strip().lower())
+        if not (sep and key and re.match(r'^https://\S+$', url.strip())):
+            raise BoardError(f'--gate {v}: give DAY=URL, the https link to the cut he judges')
+        out[key] = url.strip()
+    return out
+
+
+def today_model(monday, days, videos, posted, offdays, parsed, now=None, gates=None):
     """The Today view's model (board_today.check) from what the board already holds: each day's piece and its state,
     its finished videos, whether Substack went out, Sunday's off-day options and the publish page's pictures. Every
     ask is one short line and one button linking to the step it approves; nothing here invents a word of the post."""
@@ -3037,10 +3049,17 @@ def today_model(monday, days, videos, posted, offdays, parsed, now=None):
                              else (1, 'making') if state == 'draft' else (0, 'making'))
             step = 'publish' if state == 'made' else 'drafts' if state == 'draft' else 'brief'
             act = {'label': 'Approve' if state == 'made' and not live else 'Open', 'href': f'#{name}/{step}'}
+            gate = (gates or {}).get(key)
+            if gate:
+                # His Gate 2 verdict on a cut the piece waits on (--gate): the card's one button and an ask open that cut.
+                act = {'label': 'Watch cut', 'href': gate}
             posts.append({'kind': 'piece', 'series': d['series'], 'title': d.get('title') or 'Picked, not made yet',
                           'piece_id': d.get('piece_id'), 'status': status, 'stage': stage, 'time': '12:30',
                           'waiting': 'Your call waits on the Drafts step' if d.get('waiting') else None,
                           'channels': list(SERIES_CHANNELS), 'assets': assets, 'action': act})
+            if gate:
+                out['asks'].append({'what': f'Gate 2, {short(when)}', 'detail': 'Judge the long cut',
+                                    'cta': 'Watch cut', 'href': gate, 'day': key})
             if state == 'draft' and d.get('waiting'):
                 n = len(d['waiting'])
                 out['asks'].append({'what': f'Words, {short(when)}', 'detail': f'{n} call{"s" if n != 1 else ""} wait on you',
@@ -3065,7 +3084,8 @@ def today_model(monday, days, videos, posted, offdays, parsed, now=None):
 
 def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pending=None, kept=None, videos=None, review=None,
           draft=(), calls=None, posted=None, kept_at=None, ideas=None, queue=None, materials=None, briefs=None, combine=None,
-          sweeps=None, lessons=None, folders=None, kept_draft=None, titles=None, offdays=None, manifests=None, archive=None):
+          sweeps=None, lessons=None, folders=None, kept_draft=None, titles=None, offdays=None, manifests=None, archive=None,
+          gates=None):
     """(page, manifest, warnings). titles: {day: read_titles()}; offdays: read_offdays(); manifests: {day: the sha256
     of the piece's manifest}, for Approve for publish. folders: {day: the post's library folder, from its making record's pack}. ideas: {day: [idea]} from read_ideas(),
     shown as a first tab, Ideas, opened while no day is made. pages: {day: publish page text};
@@ -3251,7 +3271,7 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
             f'data-day="{ARCHIVE_TAB}"><span class="t-day">Archive</span><span class="t-dot"> · </span>'
             f'<span class="t-prog" data-tabprog="{ARCHIVE_TAB}">{len(archive or [])} pieces</span><span class="t-ch">Every piece</span></button>')
     if TODAY_ON:
-        model = today_model(monday, days, videos or {}, posted, offdays, parsed)
+        model = today_model(monday, days, videos or {}, posted, offdays, parsed, gates=gates)
         panels.insert(0, f'<div class="pm fixed" id="panel-{TODAY_TAB}" role="tabpanel" aria-labelledby="tab-{TODAY_TAB}" '
                          f'data-day="{TODAY_TAB}" tabindex="-1"><div class="day-head"><div class="kick">{E(week_span(monday))}</div>'
                          f'<h1>{E(model["label"])}</h1></div>{board_today.inner(model, heading=False)}</div>')
@@ -3860,7 +3880,8 @@ def build(args, get=None):
     page, manifest, more = board(monday, pages, pieces, scripts, picks, pending, kept, videos, review, draft, calls, posted, kept_at,
                                  ideas, queue, materials, briefs, combine, sweeps, lessons, folders, retained_drafts,
                                  titles, offdays, manifests,
-                                 read_archive(read_json(args.archive, '--archive')) if getattr(args, 'archive', None) else None)
+                                 read_archive(read_json(args.archive, '--archive')) if getattr(args, 'archive', None) else None,
+                                 gates=gates_of(getattr(args, 'gate', None)))
     if previous is not None:
         keep_previous(previous, manifest['days'], unpick, monday, fresh)
     manifest['warnings'] = warnings + more
@@ -4244,6 +4265,10 @@ def _v3_checks(check, mon):
     check('v3: the tabs, Today first from today.from, the Archive last',
           re.findall(r'role="tab" id="tab-([a-z]+)"', page) == [TODAY_TAB] * (week >= TODAY_FROM) + list(TOP_TABS) + [ARCHIVE_TAB])
     if week >= TODAY_FROM:
+        gated, _, _ = board(week, {'mon': mon}, {'mon': MON_ID}, archive=rows, gates={'mon': 'https://example.com/board#friday'})
+        gp = gated[gated.find('id="panel-today"'):]
+        check('layout A: a Gate 2 cut is one ask and the day card\'s button, both opening the cut',
+              gp.count('href="https://example.com/board#friday">Watch cut</a>') == 2 and 'Gate 2, Mon ' in gp)
         panel = page[page.find('id="panel-today"'):]
         check('layout A: the board opens on Today, a made Monday asks for its publish approval and links to that step',
               'aria-selected="true" tabindex="0" data-day="today"' in page and 'href="#monday/publish">Approve</a>' in panel
@@ -5202,6 +5227,8 @@ def parser():
                     '(the article, each script); his saves land in the board\'s store as edits/<day>-<item>')
     ap.add_argument('--draft', action='append', metavar='DAY', help='with --review: a day whose words are in review; its tab is the '
                     'review card, what waits on Krish and its checklist, never an older publish page')
+    ap.add_argument('--gate', action='append', metavar='DAY=URL', help='layout A: a cut the day waits on Krish\'s Gate 2 '
+                    'verdict for; Today asks for it and the day\'s card opens it (an https link)')
     ap.add_argument('--waiting', action='append', metavar='DAY=WHAT', help='with --draft: one call waiting on Krish, in order, '
                     'listed in that day\'s tab')
     ap.add_argument('--drop-review', action='append', metavar='DAY=ID', help='with --draft: a review box the board being '
