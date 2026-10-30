@@ -211,7 +211,9 @@ function Get-PinnedTools {
   $toolchain = Get-Setting 'VE_TOOLCHAIN'
   if (-not $toolchain) {
     $roots = ([System.IO.File]::ReadAllText((Join-Path $RepoRoot 'config\studio.json')) | ConvertFrom-Json).local_roots
-    $toolchain = if (Get-Field $roots 'toolchain') { [string](Get-Field $roots 'toolchain') } else { Join-Path (Split-Path -Parent $RepoRoot) 'toolchain' }
+    # Get-Field, not .toolchain: local_roots names no toolchain today, and strict mode throws on a missing property.
+    $configured = Get-Field $roots 'toolchain'
+    $toolchain = if ($configured) { [string]$configured } else { Join-Path (Split-Path -Parent $RepoRoot) 'toolchain' }
   }
   $found = @{ ffmpeg = $null; build = $null; tesseract = $null }
   foreach ($entry in $path.Groups[1].Value.Split(':')) {
