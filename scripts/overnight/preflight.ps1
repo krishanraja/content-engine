@@ -19,10 +19,12 @@ The checks, each { ok, detail, ... }:
                    "node <companion> help" runs and offers the task route with the flags dispatch passes. Never
                    "task --help": the companion reads help only as its first word, so "task --help" would start a
                    real Codex task with the prompt "--help" and spend the allowance.
-  codex_login      "codex login status" says ChatGPT (the test ve doctor uses).
-  codex_profile    Codex's tool profile (config\codex-profile.json) passes its audit, and none of the MCP servers this
-                   machine's Codex has ("codex mcp list --json", which only lists) is a forbidden kind: publish, share,
-                   deploy, TikTok, Buffer, workflow and the rest the profile names (failure production-asked-to-publish).
+  codex_login      "codex login status" says ChatGPT (the test ve doctor uses), in the Codex home dispatch uses.
+  codex_profile    Codex's tool profile (config\codex-profile.json) passes its audit, and none of the MCP servers the
+                   Codex that runs cards has ("codex mcp list --json", which only lists) is a forbidden kind: publish,
+                   share, deploy, TikTok, Buffer, workflow and the rest the profile names (failure
+                   production-asked-to-publish). That Codex is the Studio's own home once scripts\overnight\codex_home.py
+                   has built it (which must then pass its check), else this machine's ~/.codex.
   codex_allowance  the weekly Codex allowance used, from python scripts\session_token_audit.py --codex --json. Above
                    the ceiling in scripts\velib\cards.py (ALLOWANCE_CEILING) dispatch refuses a card the weekly credit
                    budget Krish signed does not cover (config\ve\credit-budget.json), so an overnight run spends nothing alone. Unknown (no Codex thread on this machine in
@@ -58,6 +60,11 @@ $RepoRoot = [System.IO.Path]::GetFullPath($RepoRoot)
 $StudioRuntime = Join-Path $env:USERPROFILE 'Documents\MindmakeVideoStudio\runtime'
 $StudioPython = Join-Path $StudioRuntime 'python\Scripts\python.exe'
 $CompanionRoot = Join-Path $env:USERPROFILE '.claude\plugins\cache\openai-codex\codex'
+# The Codex home ve dispatch runs cards under once it is built (scripts\overnight\codex_home.py: no MCP server, no
+# plugin), else Codex's own ~/.codex. The login and profile checks read the one dispatch uses.
+$CodexHome = Join-Path $StudioRuntime 'codex-home'
+$CodexEnv = @{}
+if (Test-Path -LiteralPath (Join-Path $CodexHome 'config.toml') -PathType Leaf) { $CodexEnv = @{ CODEX_HOME = $CodexHome } }
 $Checks = [ordered]@{}
 
 # ---- reading, never writing ---------------------------------------------------------------------------------------
@@ -109,6 +116,16 @@ function Find-Program([string[]]$Names, [string[]]$Also = @()) {
       } catch { }
     }
   }
+  return $null
+}
+
+function Find-Python {
+  # The Studio's pinned Python, else the py launcher, else python.exe: @{ path; prefix }, or $null.
+  if (Test-Path -LiteralPath $StudioPython -PathType Leaf) { return @{ path = $StudioPython; prefix = @() } }
+  $launcher = Find-Program @('py.exe')
+  if ($launcher) { return @{ path = $launcher; prefix = @('-3') } }
+  $plain = Find-Program @('python.exe')
+  if ($plain) { return @{ path = $plain; prefix = @() } }
   return $null
 }
 
@@ -286,7 +303,7 @@ Invoke-Check 'codex_companion' {
 Invoke-Check 'codex_login' {
   $codex = Find-Program @('codex.exe', 'codex.cmd') @((Join-Path $env:APPDATA 'npm\codex.cmd'))
   if (-not $codex) { return [ordered]@{ ok = $false; detail = 'The Codex CLI is not on this machine, so Codex cards cannot run.' } }
-  $run = Invoke-Quiet $codex @('login', 'status') 30
+  $run = Invoke-Quiet $codex @('login', 'status') 30 $CodexEnv
   # Only whether it says ChatGPT: the status line can name the account, and it is never repeated here.
   if ("$($run.out) $($run.err)" -match 'ChatGPT') { return [ordered]@{ ok = $true; detail = 'Codex is signed in with ChatGPT.' } }
   return [ordered]@{ ok = $false; detail = "codex login status does not say ChatGPT (exit $($run.code)), so Codex cards cannot run until Codex is signed in." }
@@ -324,7 +341,17 @@ Invoke-Check 'codex_profile' {
   if ($wrong.Count) { return [ordered]@{ ok = $false; flagged = $null; detail = "config\codex-profile.json fails its audit: $($wrong -join '; ')." } }
   $codex = Find-Program @('codex.exe', 'codex.cmd') @((Join-Path $env:APPDATA 'npm\codex.cmd'))
   if (-not $codex) { return [ordered]@{ ok = $false; flagged = $null; detail = 'The Codex CLI is not on this machine, so its MCP servers cannot be checked.' } }
-  $run = Invoke-Quiet $codex @('mcp', 'list', '--json') 30
+  $whose = "this machine's Codex"
+  if ($CodexEnv.Count) {
+    # The Studio's Codex home must still be what codex_home.py builds: its own config, the shared sign-in and sessions.
+    $python = Find-Python
+    if (-not $python) { return [ordered]@{ ok = $false; flagged = $null; detail = 'No Python on this machine to check the Studio''s Codex home with.' } }
+    $check = Join-Path $RepoRoot 'scripts\overnight\codex_home.py'
+    $run = Invoke-Quiet $python.path ($python.prefix + @($check, 'check')) 60 @{ PYTHONUTF8 = '1'; PYTHONIOENCODING = 'utf-8' }
+    if ($run.code -ne 0) { return [ordered]@{ ok = $false; flagged = $null; detail = "the Studio's Codex home fails its check: $(Get-Short $run)" } }
+    $whose = "the Studio's Codex home"
+  }
+  $run = Invoke-Quiet $codex @('mcp', 'list', '--json') 30 $CodexEnv
   $listing = $null
   try { if ($run.code -eq 0) { $listing = ([string]$run.out).Trim() | ConvertFrom-Json } } catch { $listing = $null }
   if ($run.code -ne 0) { return [ordered]@{ ok = $false; flagged = $null; detail = "codex mcp list did not answer ($(Get-Short $run))." } }
@@ -350,8 +377,8 @@ Invoke-Check 'codex_profile' {
     if (@(Get-ForbiddenHits $text $forbidden).Count) { $flagged += 1 }
   }
   $servers = $entries
-  if ($flagged) { return [ordered]@{ ok = $false; flagged = $flagged; detail = "this machine's Codex has $flagged MCP server(s) of a kind the profile forbids (codex mcp list names them); remove them before an unattended run." } }
-  return [ordered]@{ ok = $true; flagged = 0; detail = "the profile passes its audit and none of this machine's $($servers.Count) Codex MCP server(s) is a forbidden kind." }
+  if ($flagged) { return [ordered]@{ ok = $false; flagged = $flagged; detail = "$whose has $flagged MCP server(s) of a kind the profile forbids (codex mcp list names them); remove them before an unattended run, or build the Studio's own home (python scripts\overnight\codex_home.py build)." } }
+  return [ordered]@{ ok = $true; flagged = 0; detail = "the profile passes its audit and none of the $($servers.Count) MCP server(s) $whose has is a forbidden kind." }
 }
 
 Invoke-Check 'codex_allowance' {
@@ -359,13 +386,10 @@ Invoke-Check 'codex_allowance' {
   $ceiling = [regex]::Match($cards, '(?m)^ALLOWANCE_CEILING = (\d+)')
   if (-not $ceiling.Success) { throw 'scripts\velib\cards.py no longer names ALLOWANCE_CEILING' }
   $limit = [int]$ceiling.Groups[1].Value
+  $found = Find-Python
   $python = $null
   $prefix = @()
-  if (Test-Path -LiteralPath $StudioPython -PathType Leaf) { $python = $StudioPython }
-  else {
-    $python = Find-Program @('py.exe')
-    if ($python) { $prefix = @('-3') } else { $python = Find-Program @('python.exe') }
-  }
+  if ($found) { $python = $found.path; $prefix = $found.prefix }
   if (-not $python) { return [ordered]@{ ok = $false; used_pct = $null; detail = 'No Python on this machine to read the Codex allowance with.' } }
   $audit = Join-Path $RepoRoot 'scripts\session_token_audit.py'
   $run = Invoke-Quiet $python ($prefix + @($audit, '--codex', '--json')) 120 @{ PYTHONUTF8 = '1'; PYTHONIOENCODING = 'utf-8' }

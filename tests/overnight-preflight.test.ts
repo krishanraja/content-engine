@@ -42,8 +42,9 @@ function powershell(dir: string, script: string): Record<string, any> {
 const RUNS = [
   "Invoke-Quiet $Claude @('--version') 30",
   "Invoke-Quiet $node @($companion, 'help') 30",
-  "Invoke-Quiet $codex @('login', 'status') 30",
-  "Invoke-Quiet $codex @('mcp', 'list', '--json') 30",
+  "Invoke-Quiet $codex @('login', 'status') 30 $CodexEnv",
+  "Invoke-Quiet $python.path ($python.prefix + @($check, 'check')) 60 @{ PYTHONUTF8 = '1'; PYTHONIOENCODING = 'utf-8' }",
+  "Invoke-Quiet $codex @('mcp', 'list', '--json') 30 $CodexEnv",
   "Invoke-Quiet $python ($prefix + @($audit, '--codex', '--json')) 120 @{ PYTHONUTF8 = '1'; PYTHONIOENCODING = 'utf-8' }",
   "Invoke-Quiet $ffmpeg @('-version') 30",
   "Invoke-Quiet $tesseract @('--version') 30",

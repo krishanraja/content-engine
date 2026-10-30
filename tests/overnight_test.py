@@ -15,6 +15,7 @@ from unittest import mock
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts' / 'overnight'))
 sys.path.insert(0, str(ROOT / 'scripts' / 'post-pack'))
+import codex_home  # noqa: E402
 import codex_profile  # noqa: E402
 import critic  # noqa: E402
 import critic_run  # noqa: E402
@@ -87,6 +88,70 @@ class CodexProfileTests(unittest.TestCase):
                                  capture_output=True, text=True)
             self.assertEqual(run.returncode, 1, run.stdout)
 
+
+
+class CodexHomeTests(unittest.TestCase):
+    """The Codex home ve dispatch runs cards under (Krish, 30 Oct: "do the separate settings folder fix")."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.main = Path(self.tmp.name) / 'dot-codex'
+        self.home = Path(self.tmp.name) / 'codex-home'
+        (self.main / 'sessions').mkdir(parents=True)
+        (self.main / 'auth.json').write_text('{"auth_mode": "chatgpt"}', encoding='utf-8')
+        (self.main / 'config.toml').write_text('[mcp_servers.buffer]\ncommand = "buffer"\n', encoding='utf-8')
+
+    def test_no_home_until_built_so_dispatch_runs_as_before(self):
+        self.assertIsNone(codex_home.active(self.home))
+        self.assertTrue(codex_home.check(self.home, self.main))
+
+    def test_the_built_home_has_only_the_profile_and_no_tool_feature(self):
+        self.assertEqual(codex_home.build(self.home, self.main), [])
+        self.assertEqual(codex_home.active(self.home), self.home)
+        config = (self.home / 'config.toml').read_text(encoding='utf-8')
+        self.assertIn('approval_policy = "never"', config)
+        self.assertIn('[sandbox_workspace_write]\nnetwork_access = false', config)
+        for feature in ('apps', 'plugins', 'remote_plugin', 'computer_use', 'browser_use'):
+            self.assertIn(f'\n{feature} = false', config)
+        self.assertNotIn('mcp_servers', config)
+        self.assertNotIn('buffer', config)
+
+    def test_sign_in_and_sessions_are_shared_not_copied(self):
+        codex_home.build(self.home, self.main)
+        (self.main / 'auth.json').write_text('{"auth_mode": "chatgpt", "refreshed": true}', encoding='utf-8')
+        self.assertIn('refreshed', (self.home / 'auth.json').read_text(encoding='utf-8'))
+        (self.home / 'sessions' / 'run.jsonl').write_text('{}', encoding='utf-8')
+        self.assertTrue((self.main / 'sessions' / 'run.jsonl').is_file())
+
+    def test_a_drifted_home_fails_its_check_and_build_repairs_it(self):
+        codex_home.build(self.home, self.main)
+        with open(self.home / 'config.toml', 'a', encoding='utf-8') as config:
+            config.write('[mcp_servers.buffer]\ncommand = "buffer"\n')
+        (self.home / 'auth.json').unlink()
+        (self.home / 'auth.json').write_text('{"auth_mode": "chatgpt"}', encoding='utf-8')
+        problems = ' '.join(codex_home.check(self.home, self.main))
+        for words in ('config.toml is not', '[mcp_servers.buffer]', 'auth.json is not the same file'):
+            self.assertIn(words, problems)
+        self.assertEqual(codex_home.build(self.home, self.main), [])
+
+    def test_build_never_uses_the_everyday_home_as_its_own(self):
+        self.assertTrue(codex_home.build(self.main, self.main))
+
+    def test_dispatch_runs_codex_under_the_built_home_and_never_a_shared_runtime(self):
+        sys.path.insert(0, str(ROOT / 'scripts'))
+        from velib import cards
+        env = {'CODEX_COMPANION_APP_SERVER_ENDPOINT': 'pipe', 'KEEP': '1'}
+        with mock.patch.dict(os.environ, env, clear=False), mock.patch.object(codex_home, 'active', return_value=None):
+            run_env = cards.codex_env()
+        self.assertNotIn('CODEX_COMPANION_APP_SERVER_ENDPOINT', run_env)
+        self.assertEqual(run_env['KEEP'], '1')
+        codex_home.build(self.home, self.main)
+        with mock.patch.object(codex_home, 'active', return_value=self.home),                 mock.patch.object(codex_home, 'check', return_value=[]):
+            self.assertEqual(cards.codex_env()['CODEX_HOME'], str(self.home))
+        with mock.patch.object(codex_home, 'active', return_value=self.home),                 mock.patch.object(codex_home, 'check', return_value=['config.toml is not ...']):
+            with self.assertRaises(SystemExit):
+                cards.codex_env()
 
 def verdict(findings=(), critic_id='c1', round_no=1, sha=SHA, day='mon', cut='long'):
     return {'schema': 'overnight-critic/1', 'critic_id': critic_id, 'round': round_no, 'day': day, 'cut': cut,
