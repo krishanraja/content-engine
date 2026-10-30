@@ -766,7 +766,8 @@ def cmd_compile(args) -> int:
 def cmd_premix(args) -> int:
     """The cut's premixed stem from the spec's own bed: the ledger track (by id, checked by hash, from
     MINDMAKE_MUSIC_ROOT), the ledger's approved levels, the cut's length from its props and the first and last word
-    from its words. Nothing about the bed is typed by hand."""
+    from its words. Only the chapter-card windows are given (--lift, checked to lie inside the cut); ve has no
+    chapter-card layout yet, so a cut without cards has none."""
     from velib import audio
     from velib.common import sha256_file
     from velib.lint import lint
@@ -775,6 +776,8 @@ def cmd_premix(args) -> int:
         if problems or spec is None:
             print('\n'.join(problems[:20]) or 'the spec does not pass its schema')
             return 1
+        if args.cut not in spec['cuts']:
+            raise ValueError(f'{args.cut} is not a cut in the spec')
         bed = spec['audio']['bed']
         ledger = load_json(CONFIG / 'music-library.json')
         track = next((t for t in ledger['tracks'] if t['id'] == bed['ledger_id'] and t.get('status') == 'approved'), None)
@@ -787,10 +790,14 @@ def cmd_premix(args) -> int:
         if track.get('sha256') and sha256_file(music) != track['sha256']:
             raise ValueError(f'{music.name} does not match the ledger sha256')
         props = load_json(args.props)
+        if props.get('cutId') != args.cut:
+            raise ValueError(f"the props are for {props.get('cutId')}, not {args.cut}")
+        if props['audio']['stem'].get('trimBeforeFrames', 0):
+            raise ValueError('the props trim the stem; the premix starts at frame 0 of the conformed dialogue')
         fps = props.get('fps', 30)
         words = load_json(args.words)
         words = words['words'] if isinstance(words, dict) else words
-        start_s = props['audio']['stem'].get('trimBeforeFrames', 0) / fps
+        start_s = 0.0  # dialogue.<cut>.wav is already conformed to the cut's clock
         lifts = [[float(a), float(b)] for a, b in (w.split('-', 1) for w in args.lift or [])]
         result = audio.premix(args.dialogue, str(music), args.out, start_s, props['durationFrames'] / fps,
                               bed_start_s=float(track.get('intro_cue_s') or 0), under_vo_lu=bed['under_vo_lu'],

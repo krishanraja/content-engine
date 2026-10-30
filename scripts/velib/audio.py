@@ -39,7 +39,8 @@ RATIO, ATTACK_MS, RELEASE_MS = 8, 30, 450
 CROSSFADE_S = 2.0
 LIFT_RISE_S, LIFT_FALL_S = 0.5, 0.8
 LEVEL_WINDOW_S, LEVEL_SMOOTH_S, LEVEL_MAX_DB = 0.5, 3.0, 8.0
-STOP_BELOW_LU, STOP_MIN_S, STOP_PAD_S = 18.0, 0.2, 0.15
+GAP_WINDOW_S, GAP_MEDIAN_S, GAP_BELOW_DB, GAP_MIN_S = 0.05, 3.0, 15.0, 0.25
+STOP_PAD_S, TAIL_BELOW_DB = 0.15, 12.0
 EPISODE_LEVELS = ('bed_lufs', 'intro_lufs', 'outro_lufs')
 
 
@@ -116,24 +117,67 @@ def _write_stereo(samples: np.ndarray, out: str) -> None:
                    input=np.ascontiguousarray(samples, dtype=np.float32).tobytes(), check=True)
 
 
+def _short_db(samples: np.ndarray, window_s: float = GAP_WINDOW_S) -> np.ndarray:
+    """RMS in dBFS per 50 ms window of mono samples: short enough to see a 0.3 s stop, which a 400 ms loudness
+    meter averages away."""
+    size = int(SR * window_s)
+    count = len(samples) // size
+    if count == 0:
+        return np.array([])
+    blocks = samples[:count * size].astype(np.float64).reshape(count, size)
+    return 10 * np.log10(np.maximum((blocks ** 2).mean(axis=1), 1e-12))
+
+
+def _runs(mask: np.ndarray, min_s: float, window_s: float = GAP_WINDOW_S) -> list[tuple[float, float]]:
+    """Runs of True at least min_s long: [(from_s, length_s)]."""
+    out, i, n = [], 0, len(mask)
+    need = int(round(min_s / window_s))
+    while i < n:
+        if mask[i]:
+            j = i
+            while j < n and mask[j]:
+                j += 1
+            if j - i >= need:
+                out.append((round(i * window_s, 2), round((j - i) * window_s, 2)))
+            i = j
+        else:
+            i += 1
+    return out
+
+
+def gaps(samples: np.ndarray, *, start_s: float = 0.0, end_s: float | None = None,
+         floor_dbfs: float | None = None) -> list[tuple[float, float]]:
+    """Drop-outs in mono samples between start_s and end_s, on 50 ms RMS windows: GAP_MIN_S or longer either
+    GAP_BELOW_DB under the music's own running median (3 s), or, given floor_dbfs, under that fixed floor (for a
+    mix, where speech would raise the median). [(from_s, length_s)] on the samples' clock."""
+    db = _short_db(samples)
+    if not len(db):
+        return []
+    if floor_dbfs is None:
+        taps = int(GAP_MEDIAN_S / GAP_WINDOW_S)
+        padded = np.pad(db, (taps // 2, taps - 1 - taps // 2), mode='edge')
+        reference = np.median(np.lib.stride_tricks.sliding_window_view(padded, taps), axis=1) - GAP_BELOW_DB
+    else:
+        reference = np.full_like(db, floor_dbfs)
+    times = np.arange(len(db)) * GAP_WINDOW_S
+    inside = (times >= start_s) & (times < (end_s if end_s is not None else times[-1] + 1))
+    return _runs(inside & (db < reference), GAP_MIN_S)
+
+
 def track_stops(path: str) -> list[tuple[float, float]]:
-    """Where the track itself goes quiet: momentary loudness STOP_BELOW_LU or more under its integrated level for
-    STOP_MIN_S or longer, padded by STOP_PAD_S, and its fade at the end. On Friday 23's track ("NO CURVES") the
-    music stops for about 0.3 s at 73.2 s, about 30 dB down: under a low bed that is the music switching off."""
-    meter = ebur128(path)
-    floor = meter['I'] - STOP_BELOW_LU
-    frames = meter['M']
-    # a momentary frame at t is the 400 ms before t, so a run of quiet frames from t0 to t1 is quiet from t0 - 0.4
-    stops, first, last = [], None, None
-    for t, value in frames:
-        if value < floor:
-            first, last = (t if first is None else first), t
-        elif first is not None:
-            if last - first + 0.1 >= STOP_MIN_S - 1e-6:
-                stops.append((round(max(0.0, first - 0.4 - STOP_PAD_S), 2), round(last + STOP_PAD_S, 2)))
-            first = None
-    if first is not None:  # quiet to the end: the track's own fade
-        stops.append((round(max(0.0, first - 0.4 - STOP_PAD_S), 2), round(frames[-1][0] + 1, 2)))
+    """Where the track itself goes quiet, on its own clock: each drop-out (gaps()) padded by STOP_PAD_S, and its fade
+    at the end (where its 3 s running level falls TAIL_BELOW_DB under the track's median and stays there). On
+    Friday 23's track ("NO CURVES") the music stops for about 0.45 s at 72.95 s: under a low bed that is the music
+    switching off."""
+    mono = _decode(path)
+    stops = [(round(max(0.0, a - STOP_PAD_S), 2), round(a + n + STOP_PAD_S, 2)) for a, n in gaps(mono)]
+    db = _short_db(mono)
+    taps = int(GAP_MEDIAN_S / GAP_WINDOW_S)
+    if len(db) > taps:
+        level = np.convolve(db, np.ones(taps) / taps, mode='same')
+        loud = np.nonzero(level >= np.median(db) - TAIL_BELOW_DB)[0]
+        if len(loud) and loud[-1] < len(db) - 1:
+            stops.append((round(float(loud[-1]) * GAP_WINDOW_S, 2), round(len(mono) / SR + 1, 2)))
     return stops
 
 
@@ -251,6 +295,7 @@ def _master(summed: str, out: str, lufs: float, tp: float) -> dict:
         if abs(miss) <= 0.3 and float(final['input_tp']) <= tp:
             break
         gain += miss
+    final['gain_db'] = gain  # the gain applied ahead of the limiter: what a low bed under the voice receives
     return final
 
 
@@ -307,9 +352,14 @@ def premix(dialogue: str, bed: str | None, out: str, start_s: float, duration_s:
         missing = [k for k in EPISODE_LEVELS if not isinstance((levels or {}).get(k), (int, float))]
         if missing or lifts is None:
             raise ValueError('an episode_bed needs the ledger levels (' + ', '.join(missing or ['lifts']) + ')')
+        bad = [w for w in lifts if not (0 <= float(w[0]) < float(w[1]) <= duration_s)]
+        if bad:
+            raise ValueError(f'a lift window must lie inside the cut (0 to {duration_s:.2f} s): {bad}')
     Path(out).parent.mkdir(parents=True, exist_ok=True)
     tmp_dialogue = str(Path(out).with_suffix('.dialogue.wav'))
-    _run(['-ss', f'{start_s:.3f}', '-t', f'{duration_s:.3f}', '-i', dialogue, '-ac', '2', '-ar', '48000', tmp_dialogue])
+    # padded to the cut's length: the dialogue ends at the last word, the cut runs on through its ending card
+    _run(['-ss', f'{start_s:.3f}', '-t', f'{duration_s:.3f}', '-i', dialogue, '-af', f'apad=whole_dur={duration_s:.3f}',
+          '-ac', '2', '-ar', '48000', tmp_dialogue])
     voice = float(_measure(tmp_dialogue)['input_i'])
     summed = str(Path(out).with_suffix('.sum.wav'))
     tmp_bed = str(Path(out).with_suffix('.bed.wav'))
@@ -336,20 +386,21 @@ def premix(dialogue: str, bed: str | None, out: str, start_s: float, duration_s:
             raw = ebur128(probe, *body)['I']
             Path(probe).unlink(missing_ok=True)
             gain = float(levels['bed_lufs']) - lufs + voice - raw
-            for _ in range(2):
+            for _ in range(3):
+                rendered = gain
                 centres = _episode_bed(tmp_bed, bed_stem, duration_s=duration_s, gain_db=gain, envelope_db=envelope, stops=stops)
                 graph = ('[0:a]aformat=sample_rates=48000:channel_layouts=stereo[v];[1:a]aformat=sample_rates=48000:channel_layouts=stereo[b];'
                          '[v][b]amix=inputs=2:normalize=0:duration=first[m]')
                 _sum([tmp_dialogue, bed_stem], graph, summed, '[m]')
                 final = _master(summed, out, lufs, tp)
-                master_gain = float(final['input_i']) - float(_measure(summed)['input_i'])
+                master_gain = float(final['gain_db'])
                 got = ebur128(bed_stem, *body, gain_db=master_gain)['I']
                 miss = float(levels['bed_lufs']) - got
-                if abs(miss) <= 0.5:
+                if abs(miss) <= 0.3:
                     break
                 gain += miss
             _run(['-i', bed_stem, '-af', f'volume={master_gain:.2f}dB', music])
-            report.update(gain_db=round(gain, 2), master_gain_db=round(master_gain, 2), bed_lufs_in_master=round(got, 2),
+            report.update(gain_db=round(rendered, 2), level_miss_db=round(miss, 2), master_gain_db=round(master_gain, 2), bed_lufs_in_master=round(got, 2),
                           levels={k: levels[k] for k in (*EPISODE_LEVELS, 'chapter_lufs') if k in levels},
                           lifts=[list(w) for w in lifts], track_stops_s=[list(w) for w in stops], crossfades_s=centres, crossfade_s=CROSSFADE_S,
                           voice_start_s=voice_start_s, last_word_end_s=last_end, body_s=list(body),
