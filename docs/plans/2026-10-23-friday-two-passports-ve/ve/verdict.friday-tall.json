@@ -2,93 +2,132 @@
   "schema": "ve-verdict/1",
   "piece": "2026-10-23-friday-two-passports-ve",
   "cut": "friday-tall",
-  "sha256": "b9968894aaf226f988837462fd979db0ac9b0ab0c8afbf6b4202319922c8d319",
-  "reviewer": "critic-fresh-8",
-  "reviewed_at": "2026-10-28T22:34:54.655602+00:00",
+  "sha256": "06ff699f042bb21a70ccd2b848bd66e745d37ba0fdf16f98fd971feeb59bae43",
+  "reviewer": "independent Critic, fresh Claude Opus context, 2026-10-30",
+  "reviewed_at": "2026-10-30T13:25:35.195938+00:00",
   "lens_sha256": "2d62c9e235d86f192747eaeea0115befc2ef3ae7b6448684248271100582f7c1",
   "frames_viewed": [
     {
-      "at_s": 2.03
+      "at_s": 0.5
     },
     {
-      "at_s": 4.47
+      "at_s": 3.0
     },
     {
-      "at_s": 8.6
+      "at_s": 8.0
     },
     {
-      "at_s": 13.78
+      "at_s": 13.5
     },
     {
-      "at_s": 18.83
+      "at_s": 19.0
     },
     {
-      "at_s": 24.45
+      "at_s": 26.0
     },
     {
-      "at_s": 30.45
+      "at_s": 31.0
     },
     {
-      "at_s": 35.37
+      "at_s": 38.0
     },
     {
-      "at_s": 41.28
+      "at_s": 44.0
     },
     {
-      "at_s": 48.83
+      "at_s": 50.5
     },
     {
-      "at_s": 53.72
+      "at_s": 56.5
     },
     {
-      "at_s": 55.47
+      "at_s": 61.0
     },
     {
-      "at_s": 57.27
+      "at_s": 64.5
     },
     {
-      "at_s": 59.28
+      "at_s": 65.2
     },
     {
-      "at_s": 61.08
+      "at_s": 66.3
     },
     {
-      "at_s": 63.9
+      "at_s": 68.5
     },
     {
-      "at_s": 68.2
+      "at_s": 73.0
     },
     {
-      "at_s": 71.07
+      "at_s": 74.1
     },
     {
-      "at_s": 75.58
+      "at_s": 75.3
+    },
+    {
+      "at_s": 78.5
     }
   ],
   "findings": [
     {
-      "severity": "note",
+      "severity": "fix",
       "area": "other",
-      "frame_s": 78.3,
-      "text": "Bed fade-out is truncated. The premix is 79.4 s but the cut is 78.634 s, so the planned 1.5 s fade (starts 77.9 s) is about half done at the cut. The ending is still soft: the last 20 ms sit near -50 dBFS and the last sample is -75 dBFS, so there is no click or hard cut. If the premix duration were set to the cut length the fade would complete."
+      "frame_s": 75.25,
+      "text": "Outro music jumps from about -44 dB to -15 dB RMS within 30 ms when the end card appears (short-term loudness -35 to -22 LUFS, about 13 LU above the bed) and holds to the end; this is the one place it still 'gets louder', so ramp it over 0.5-1 s and/or cap it about 6 LU above the bed."
+    },
+    {
+      "severity": "fix",
+      "area": "other",
+      "frame_s": 1.5,
+      "text": "At the intro-to-bed seam the music fades to digital silence (1.42-1.56 s, exact zeros 1.520-1.555 s) and re-enters hard with no crossfade; it is masked under the word 'already' but is a real stop and restart."
     },
     {
       "severity": "note",
       "area": "other",
-      "frame_s": 30.0,
-      "text": "Music presence rests mainly on the final mix, not on the sidecar. In the delivered file 99% of 100 ms windows are at or above -44.5 dBFS and only 1 of 786 is below -55 dBFS (the first 10 ms), so the bed never drops out. Under speech it sits about 19 dB under the voice, which is faint but present and inside the QC range."
+      "frame_s": 40.0,
+      "text": "Body bed is steady and unducked: 3-second block power -32.4 to -33.6 dB across 3-75 s, speech vs pause 0.8 dB apart, fitted music gain 0.96-0.99 throughout (rejected mix: 8.5 dB duck, about 9 dB swings)."
     },
     {
       "severity": "note",
       "area": "other",
-      "frame_s": 65.0,
-      "text": "The 'breathes in pauses' evidence is thin. Only 7 pause windows (3.5 s of 0.5 s windows) were measured, and none after 60 s (by_minute in_pauses_db is null). bed_loud_windows_pct uses a -60 dBFS threshold, which is a weak audibility test. The numbers pass, but they show the bed rises about 8.5 dB in the few real gaps and say little about the rest of the piece."
+      "frame_s": 16.1,
+      "text": "The music has 150-200 ms rests at -52 to -63 dB about every 2-5 s (15 instances); all but one are under speech, the one at 16.1 s falls in a voice pause."
+    },
+    {
+      "severity": "note",
+      "area": "other",
+      "frame_s": 23.0,
+      "text": "Bed short-term loudness steps down about 2 LU around 22-24 s (-33.3 to -35.5 LUFS) and stays there; gradual, not a swell."
+    },
+    {
+      "severity": "note",
+      "area": "other",
+      "frame_s": 78.6,
+      "text": "Final mp4 is -14.0 LUFS integrated, -1.4 dBTP true peak, 3.9 LU loudness range; the ending is a 0.4 s fade to -55 dB, not a hard cut."
+    },
+    {
+      "severity": "note",
+      "area": "copy",
+      "frame_s": 66.3,
+      "text": "Voiceover ad-libs against the script in about eight places, including 'what I do with this information if I were you' (script: 'what I'd do with this info') and 'And at work,' replacing 'Does it matter at work?'."
     },
     {
       "severity": "note",
       "area": "evidence",
-      "frame_s": 56.47,
-      "text": "Picture unchanged from the approved cut, so not a regression. The evidence-beat sticker 'SCREEN RECORDING DEEPSEEK 24 OCT 2026' is the one element that could be read as a provenance sticker under the hard rule. It names the producer, date and what the recording is, which Q4 asks for. Left for Krish's call."
+      "frame_s": 0,
+      "text": "The script path in the brief no longer exists; the post folder is now '2026-11-06 Fri mind.the.gap - Two passports'."
+    },
+    {
+      "severity": "note",
+      "area": "composition",
+      "frame_s": 31.0,
+      "text": "The '35% / Christian Science Monitor' stat band partly covers the passport code line ('1<OF<2'); unchanged picture the owner already accepted."
+    },
+    {
+      "severity": "note",
+      "area": "composition",
+      "frame_s": 66.3,
+      "text": "One caption page shows only the single word 'do', an awkward break in 'here's what I do'."
     }
   ],
   "blocking": false

@@ -279,7 +279,8 @@ every comment thread inside the day to the new day, as the writer each already h
 is not carried, the new week's pick comes from its options). Then build the new week with
 `--carry DAY=OLD_PAGE.html:FROMDAY`, which moves a made or in-review fixed-layout panel with its ids, date and
 series line. A day from before the fixed layout is drawn from its record with `--piece` instead. Take the day
-off the old week's board only after the new board reads back.
+off the old week's board only after the new board reads back, with `--moved DAY=YYYY-MM-DD` (its new date):
+the old day then says where the piece went and links to its new day.
 
 From the week of 2 November the board opens on Today (layout A, `board_today.py`). When a day waits on Krish's
 Gate 2 verdict on a cut, give `--gate DAY=https://...` (the cut's link): Today asks for it and the day's card opens it.
