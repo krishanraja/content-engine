@@ -1,4 +1,0 @@
-Status: The cadence restart's boards are live: 2 November (Monday 9a0c97af, now follow.the.money on his words, and Wednesday carried in review; Friday 7083d6ad shows picked) and 9 November (Monday made, its assets copied in). A day moves across weeks with POST /api/board/<Monday>/carry and week_board.py --carry; Growth reads each week's pieces; a late week-clock row reaches his list; layout A (Today first, Liked or Not it filed to taste) is the board from 2 November.
-Changed: Board phase 2 (#275 to #283): Krish chose layout A on 29 October ("yes, go with A and your recommendations and my feedback").
-Next: Once Krish gives his Gate 2 verdict on Friday 23's long cut (due Wednesday 4 November), read its chapter times, remake Friday 6's publish page from the approved words and rebuild the 2 November board with Friday made; then take the moved days off the 19 and 26 October boards.
-North Star check (2026-10-30): holds.
