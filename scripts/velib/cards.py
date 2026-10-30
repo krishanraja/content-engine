@@ -281,6 +281,23 @@ def _reserve(card_path: Path, meta: dict) -> str:
                           note=f'card {meta.get("card", card_path.stem)}')
 
 
+def codex_env() -> dict:
+    """The environment Codex runs cards in: CODEX_HOME set to the Studio's own Codex home once it is built
+    (scripts/overnight/codex_home.py: no MCP server, no plugin, Krish's everyday ~/.codex untouched; Krish, 30 Oct,
+    "do the separate settings folder fix"), and never a shared Codex runtime another session started under ~/.codex.
+    A built home that fails its check stops the dispatch rather than falling back to ~/.codex."""
+    sys.path.insert(0, str(ROOT / 'scripts' / 'overnight'))
+    import codex_home
+    env = {k: v for k, v in os.environ.items() if k != 'CODEX_COMPANION_APP_SERVER_ENDPOINT'}
+    home = codex_home.active()
+    if home:
+        problems = codex_home.check(home)
+        if problems:
+            sys.exit("ve dispatch: the Studio's Codex home fails its check: " + '; '.join(problems))
+        env['CODEX_HOME'] = str(home)
+    return env
+
+
 def dispatch(card_path: Path, background: bool = True) -> subprocess.CompletedProcess:
     meta = parse_card(card_path)
     _require_design_lock(meta)
@@ -289,14 +306,15 @@ def dispatch(card_path: Path, background: bool = True) -> subprocess.CompletedPr
     cwd = meta.get('cwd') or str(ROOT)
     minutes, _ = card_limits(meta)
     ensure_worktree(Path(cwd), meta.get('card', 'card'))
+    env = codex_env()
     cmd = ['node', companion(), 'task', '--fresh', '--write', '--model', meta.get('model', MODEL), '--effort', meta.get('effort', EFFORT),
            '--cwd', cwd, '--prompt-file', str(card_path.resolve())]
     if background:
         # The companion runs on in the background; verify-card holds it to max_minutes and max_calls from its log.
         cmd.insert(3, '--background')
-        return subprocess.run(cmd, capture_output=True, text=True, cwd=cwd)
+        return subprocess.run(cmd, capture_output=True, text=True, cwd=cwd, env=env)
     try:
-        return subprocess.run(cmd, capture_output=True, text=True, cwd=cwd, timeout=minutes * 60)
+        return subprocess.run(cmd, capture_output=True, text=True, cwd=cwd, env=env, timeout=minutes * 60)
     except subprocess.TimeoutExpired:
         sys.exit(f've dispatch: card {meta.get("card")} ran past its max_minutes ({minutes}) and was stopped')
 
