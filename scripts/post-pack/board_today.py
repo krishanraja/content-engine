@@ -49,7 +49,7 @@ CTA_MAX = 12  # a button label fits BTN_W at 14px without wrapping; longer label
 # An ask's two lines fit the Needs you row in full at 390px wide (no ellipsis hides what he approves): the what is
 # short ("Substack, Mon 2 Nov"), the detail says the one thing more. Longer is refused at the source, never clipped.
 WHAT_MAX, DETAIL_MAX = 20, 26
-FEEL = (('liked', 'Liked'), ('not_it', 'Not it'))
+NOTE_MAX = 2000  # his retrospective words on a post, as the server takes them (_contracts.ts feelBody)
 HREF = re.compile(r'^(https://\S+|#[A-Za-z0-9_-]+(/[a-z]+)?)$')
 TIME = re.compile(r'^([01]\d|2[0-3]):[0-5]\d$')
 
@@ -81,7 +81,7 @@ def check(model):
     days = model.get('days') or []
     _need(isinstance(days, list) and [d.get('key') for d in days] == list(DAY_KEYS), 'days are mon to sun, in order')
     for d in days:
-        _need(d.get('feel') in (None, 'liked', 'not_it'), f'{d["key"]}: feel')
+        _need(not d.get('open') or HREF.match(str(d['open'])), f'{d["key"]}: open links to the day (#monday)')
         for j, p in enumerate(d.get('posts') or []):
             where = f'{d["key"]}.posts[{j}]'
             _need(p.get('kind') in KINDS, f'{where}: kind is one of {", ".join(KINDS)}')
@@ -157,7 +157,8 @@ def _card(d, p, i):
             f'<div class="c-meta">{_pill(p)}<span class="c-time">{E(p["time"])}</span><span class="c-st tone-{tone}">{E(label)}</span></div>'
             f'<div class="c-mid">{_preview(p, "s")}<div class="c-txt"><h4 class="c-title">{E(p["title"])}</h4>{waiting}</div></div>'
             f'{_lane(p["stage"])}{_assets(p)}'
-            f'<div class="c-foot">{_feel(d, p, i)}<a class="btn{primary}" href="{E(act["href"])}">{E(act["label"])}</a></div></article>')
+            f'{_note(d, p, i)}<div class="c-foot"><button type="button" class="btn ghost fb-save" data-fb-save="{_note_id(d, i)}" disabled>Save</button>'
+            f'<span class="fb-st" data-fb-st="{_note_id(d, i)}"></span><a class="btn{primary}" href="{E(act["href"])}">{E(act["label"])}</a></div></article>')
 
 
 def _empty_card(d):
@@ -166,15 +167,18 @@ def _empty_card(d):
             f'<a class="btn ghost" href="#td-open-{d["key"]}">Open</a></article>')
 
 
-def _feel(d, p, i):
-    """Liked and Not it, in the card's footer beside its button, so each post is one unit. The first post of a day is
-    picks/<day>-feel; another post the same day is <day>-feel-<n>."""
-    fid = f'{d["key"]}-feel' + (f'-{i}' if i else '')
-    on = (d.get('feel') if i == 0 else None) or p.get('feel')
+def _note_id(d, i):
+    return f'{d["key"]}-feel' + (f'-{i}' if i else '')
+
+
+def _note(d, p, i):
+    """His retrospective thoughts on the post, an open box in the card (Krish, 2026-10-30: "the two feedback buttons need
+    to just be an open text box for my retrospective thoughts and feedback rather than Y/N buttons"). Saved by his Save
+    in picks/<day>-feel (another post the same day, <day>-feel-<n>); the server files his words to his taste ledger."""
+    fid = _note_id(d, i)
     about = (f' data-piece="{E(p["piece_id"])}"' if p.get('piece_id') else '') + f' data-title="{E(p["title"])}"'
-    return ('<span class="feels" role="group" aria-label="How did it land?">' + ''.join(
-        f'<button type="button" class="feel{" on" if on == k else ""}" data-feel="{k}" data-feel-id="{fid}" data-feel-day="{d["key"]}"{about} '
-        f'aria-pressed="{"true" if on == k else "false"}">{E(v)}</button>' for k, v in FEEL) + '</span>')
+    return (f'<textarea class="fb" rows="1" maxlength="{NOTE_MAX}" data-fb="{fid}" data-fb-day="{d["key"]}"{about} '
+            f'aria-label="Your thoughts on {E(p["title"])}" placeholder="Your thoughts on how it landed" disabled></textarea>')
 
 
 def _open_panel(d, name, date):
@@ -216,7 +220,7 @@ def inner(model, heading=True):
         short, _ = names[d['key']]
         posts = d.get('posts') or []
         dots = ''.join(f'<i class="{"need" if p["status"] == "concept" else "live" if p["status"] == "live" else ""}"></i>' for p in posts[:4])
-        strip.append(f'<a href="#td-{d["key"]}" class="{"today" if model.get("today") == d["key"] else ""}"><b>{short}</b>'
+        strip.append(f'<a href="{E(d.get("open") or "#td-" + d["key"])}" class="{"today" if model.get("today") == d["key"] else ""}"><b>{short}</b>'
                      f'<span>{E(d.get("date", ""))}</span><span class="dots">{dots}</span></a>')
     sections, opens = [], []
     for d in model['days']:
@@ -224,7 +228,8 @@ def inner(model, heading=True):
         posts = d.get('posts') or []
         cards = ''.join(_card(d, p, i) for i, p in enumerate(posts)) or _empty_card(d)
         today = '<span class="pill today">Today</span>' if model.get('today') == d['key'] else '<span class="pill today off"></span>'
-        sections.append(f'<section class="day" id="td-{d["key"]}"><h3><span class="d-name"><span class="long">{E(name)}</span><span class="short">{E(short)}</span></span><span class="d-date">{E(d.get("date", ""))}</span>'
+        tag = f'a href="{E(d["open"])}"' if d.get('open') else 'span'
+        sections.append(f'<section class="day" id="td-{d["key"]}"><h3><{tag} class="d-name"><span class="long">{E(name)}</span><span class="short">{E(short)}</span></{tag.split()[0]}><span class="d-date">{E(d.get("date", ""))}</span>'
                         f'{today}</h3><div class="cards">{cards}</div></section>')
         opens.append(_open_panel(d, name, d.get('date', '')))
     note = f'<p class="note">{E(model["note"])}</p>' if model.get('note') else ''
@@ -286,7 +291,7 @@ def font_faces(root):
 # One button size everywhere (--bw x --bh); every text box is one line with an ellipsis or a fixed clamp.
 CSS = '''
 :root{--bg:#F4EFE4;--ink:#0C1512;--card:#fffdf8;--line:#d9d2c3;--muted:#5b625e;--mint:#7EF0C0;--ok:#1f7a52;--bad:#b0412e;
---bw:112px;--bh:44px;--card-h:236px;--pv-w:72px;--pv-h:90px;--mono:"IBM Plex Mono",ui-monospace,monospace}
+--bw:112px;--bh:44px;--card-h:288px;--pv-w:72px;--pv-h:90px;--mono:"IBM Plex Mono",ui-monospace,monospace}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--ink);font:400 15px/1.4 Archivo,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
 a{color:inherit}
@@ -328,8 +333,10 @@ a{color:inherit}
 @media(max-width:519px){.d-name{width:40px}.d-name .long{display:none}.d-name .short{display:inline}}.d-date{width:56px;color:var(--muted);font-weight:500}.sp{flex:1}
 .pill{display:inline-block;flex:none;font:700 10px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:5px 8px;border-radius:999px;white-space:nowrap}
 .pill.kind{background:#e3ddcf}.pill.today{width:56px;text-align:center;background:var(--mint)}.pill.today.off{visibility:hidden}
-.feels{display:flex;gap:6px}.feel{flex:none;width:60px;height:var(--bh);border-radius:9px;border:1.5px solid var(--line);background:var(--card);font:700 11px/1 var(--mono);text-transform:uppercase;cursor:pointer;white-space:nowrap}
-.feel.on{border-color:var(--ink);background:var(--ink);color:var(--bg)}
+.fb{flex:none;width:100%;height:var(--bh);resize:none;border:1.5px solid var(--line);border-radius:10px;background:#fff;padding:12px;font:400 14px/1.35 Archivo,sans-serif;color:var(--ink)}
+.fb:focus{outline:2px solid var(--ok);outline-offset:1px}
+.fb-st{flex:1;min-width:0;padding:0 8px;font:600 11px/1 var(--mono);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.fb-st.bad{color:var(--bad)}
+a.d-name{text-decoration:underline;text-underline-offset:3px}
 .cards{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr))}
 .card{height:var(--card-h);display:flex;flex-direction:column;gap:8px;padding:12px;background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
 .card.need{background:#fff4ef;border-color:#e9b9a9}
@@ -357,7 +364,7 @@ a{color:inherit}
 .as{display:flex;align-items:center;justify-content:center;border-radius:6px;font:700 9.5px/1 var(--mono);text-transform:uppercase;text-decoration:none;white-space:nowrap;overflow:hidden;border:1px solid var(--line)}
 .as.ready{background:#d6efe3;border-color:#bfe3d0;color:var(--ok)}.as.making{background:#fff6d6;border-color:#f0dea0;color:#7a5d00}
 .as.missing{background:#fbe6e0;border-color:#efc4b7;color:var(--bad)}.as.none{border-style:dashed;color:#c4beb1;background:transparent}
-.c-foot{margin-top:auto;display:flex;align-items:center;justify-content:space-between;height:var(--bh)}
+.c-foot{margin-top:auto;display:flex;align-items:center;gap:0;height:var(--bh)}
 .c-ch{font:500 11.5px/1 var(--mono);color:var(--muted);white-space:nowrap}
 .card.empty{height:68px;flex-direction:row;align-items:center;justify-content:space-between}.c-empty{font-size:13px;color:var(--muted);white-space:nowrap}
 .open{display:none;position:fixed;inset:0;background:#0c151299;padding:16px;overflow:auto;z-index:5}
@@ -391,7 +398,7 @@ const { chromium } = require('playwright'); const path = require('path')
   const name = path.basename(f, '.html') + (h ? '-' + h.slice(1) : '') + '-' + vw + '.png'
   await p.screenshot({ path: path.join(out, name), fullPage: !h })
   // What he approves is never cut off: no ask line, title or label hides text behind an ellipsis.
-  const cut = await p.evaluate(() => [...document.querySelectorAll('.ask .w b, .ask .w span, .btn, .feel, .sc span, .lane span, .as')]
+  const cut = await p.evaluate(() => [...document.querySelectorAll('.ask .w b, .ask .w span, .btn, .fb-st, .sc span, .lane span, .as')]
     .filter(e => e.offsetParent && e.scrollWidth > e.clientWidth + 1).map(e => e.textContent.trim().slice(0, 40)))
   if (cut.length) errs.push('cut off: ' + cut.join(' | '))
   console.log(JSON.stringify({ shot: name, scrollWidth: sw, width: w, errors: errs }))

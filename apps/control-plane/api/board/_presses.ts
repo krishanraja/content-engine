@@ -145,20 +145,20 @@ async function recordSend(db: SupabaseClient, input: SendApprovedInput, result: 
 
 /** The piece_scores row for his Scores press (supabase/migrations/20261118090000_piece_scores.sql). The board's
  *  access-cookie actor is Krish, so his press is scored_by krish; only his writes reach here (hisOnlyRefusal). */
-/** His Liked or Not it on a day's post, as one taste_reports row. His typed words, when he gave them, are krish_words
- *  with where and when; a bare press is an observation saying what he pressed, never words put in his mouth. */
+/** His thoughts on a day's post (or an older Liked or Not it press), as one taste_reports row. His typed words are
+ *  krish_words with where and when; a bare press is an observation saying what he pressed, never words put in his mouth. */
 export function feelReport(week: string, id: string, body: Body, now: string) {
   const note = typeof body.note === 'string' && body.note.trim() ? body.note.trim().slice(0, 2000) : null
   const piece = typeof body.piece_id === 'string' && PIECE_UUID.test(body.piece_id) ? body.piece_id : null
   const title = typeof body.title === 'string' && body.title.trim() ? body.title.trim().slice(0, 300) : null
-  const what = body.feel === 'liked' ? 'Liked' : 'Not it'
+  const what = body.feel === 'liked' ? 'Liked' : body.feel === 'not_it' ? 'Not it' : null
   return {
     kind: note ? 'krish_words' : 'observation',
     body: note ?? `Krish pressed ${what} on the publish board for ${String(body.day)} of the week of ${week}${title ? `: ${title}` : ''}.`,
     said_where: note ? `publish board, ${week} picks/${id}` : null,
     said_at: note ? now : null,
     lane: 'production',
-    polarity: body.feel === 'liked' ? 'likes' : 'dislikes',
+    polarity: body.feel === 'liked' ? 'likes' : body.feel === 'not_it' ? 'dislikes' : 'neutral',
     subject_ref: piece ? `piece:${piece}` : null,
     subject: piece ? (title || `the ${String(body.day)} post of the week of ${week}`) : null,
     session_ref: 'content.krishraja.com publish board',
@@ -168,7 +168,7 @@ export function feelReport(week: string, id: string, body: Body, now: string) {
     // The same press saved again files nothing twice; a changed press is a new row.
     client_report_id: `feel-${digest(canonical({ week, id, feel: body.feel, note, piece }))}`.slice(0, 96),
     reported_at: now,
-    meta: { press: body.feel, week, day: body.day },
+    meta: { press: what ? body.feel : 'note', week, day: body.day },
   }
 }
 

@@ -17,6 +17,12 @@ html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + var(--tabh) + 56px)}
 .wk-txt{font:600 12.5px "IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
 .wk-aside{font-size:12.5px;color:var(--muted)}
 @media (max-width:640px){.wk button[role=tab]{flex-direction:column;flex-wrap:nowrap;gap:1px;padding:5px 4px}.wk .t-dot{display:none}.wk button[role=tab] .t-ch{flex-basis:auto;font-size:10.5px}.wk button[role=tab] .t-prog{font-weight:400;font-size:12px}.wk-aside{display:none}}
+/* Fixed weeks: each tab is its own lines, day, progress, series, and no line ever wraps or breaks a word (Krish, 2026-10-30: "the text wraps improperly"). Below the width a series name fits whole, the tab drops that line. */
+.wk.fixed button[role=tab]{flex-direction:column;flex-wrap:nowrap;gap:2px;padding:6px 4px}.wk.fixed .t-dot{display:none}
+.wk.fixed button[role=tab]>span{white-space:nowrap;max-width:100%}
+.wk.fixed button[role=tab] .t-ch{flex-basis:auto;font:600 11.5px/1.2 Archivo,system-ui,sans-serif;overflow-wrap:normal}
+@media (max-width:900px){.wk.fixed button[role=tab] .t-ch{display:none}}
+@media (max-width:760px){.wk.fixed .t-day:has(.t-wd){display:flex;flex-direction:column;align-items:center}.wk.fixed .t-day:has(.t-wd) .t-dm{font-weight:400}}
 .meter{height:8px;border-radius:999px;background:var(--line);overflow:hidden}
 .meter span{display:block;height:100%;width:0;background:var(--ok);border-radius:999px;transition:width .3s}
 .pm:focus{outline:none}
@@ -197,6 +203,8 @@ label.qmark input:disabled + .box{opacity:.4}
 .wk.fixed button[role=tab]{min-height:52px;padding:4px 2px;font-size:12.5px}
 .wk.fixed button[role=tab] .t-ch{display:none}
 .wk.fixed button[role=tab] .t-prog{font-size:11px}
+/* Seven tabs share a phone's width: a day tab is its weekday over its date, the others their name over their count. */
+.wk.fixed button[role=tab]{font-size:11.5px;padding:4px 1px}.wk.fixed button[role=tab]:has(.t-wd) .t-prog{display:none}
 #week[data-layout]{padding-bottom:calc(110px + env(safe-area-inset-bottom,0px))}
 .steps{gap:4px}.st{padding:6px;font-size:13px;min-height:48px}.st-note{font-size:10.5px}
 .pm.fixed .rec-head h2,.pm.fixed .ticks-head h2,.pm.fixed .sec-head>h2,.pm.fixed section>h2{font-size:22px}
