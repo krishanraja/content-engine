@@ -1,6 +1,7 @@
 {
   "about": [
     "The approved set for one sound on the big moment (docs/production/THE_BAR.md, under test: production_choices.big_moment_sound). Krish's words, 29 Oct 2026: choose a small set, play it to him, and nothing is used before he approves it by ear.",
+    "Licence: his Epidemic Sound plan covers sound effects in published video (Krish, 29 Oct 2026, asked \"Does your Epidemic Sound plan allow sound effects (not just music) in videos you publish?\": \"yes\"). The set still waits on his by-ear approval.",
     "It starts empty. scripts/quick-edit/sfx.py refuses any sound that is not listed here by id and sha256, so until he approves a set a piece uses none and records sfx_used: false.",
     "An entry, written only after his by-ear yes: {\"id\": \"...\", \"title\": \"...\", \"provider\": \"Epidemic Sound\", \"provider_id\": \"...\", \"file\": \"<path under MINDMAKE_MUSIC_ROOT>\", \"sha256\": \"...\", \"approved_by\": \"Krish\", \"approved_on\": \"YYYY-MM-DD\", \"approval_words\": \"<his exact words>\"}."
   ],
