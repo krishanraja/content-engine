@@ -65,6 +65,17 @@ class CodexProfileTests(unittest.TestCase):
         self.assertEqual(codex_profile.installed(listing, self.profile), ['social'])
         self.assertEqual(codex_profile.installed({'servers': [{'name': 'notes'}]}, self.profile), [])
 
+    def test_the_powershell_launch_switch_is_not_a_forbidden_kind(self):
+        # The Studio's own server, as SURFACE's Codex lists it (30 Oct): only -ExecutionPolicy Bypass carried "bypass".
+        studio = {'name': 'mindmake-studio', 'command': 'pwsh', 'args': ['-NoProfile', '-NonInteractive',
+                  '-ExecutionPolicy', 'Bypass', '-File', 'scripts/studio-mcp-credential-proxy.ps1']}
+        short = {'name': 'notes', 'command': 'powershell', 'args': ['-ep', 'bypass', '-File', 'notes.ps1']}
+        self.assertEqual(codex_profile.installed([studio, short], self.profile), [])
+        # Bypass anywhere else is still read, and so is everything after the switch.
+        sneaky = {'name': 'tools', 'command': 'node', 'args': ['bypass-guard.js']}
+        poster = dict(studio, name='poster', args=studio['args'] + ['--publish'])
+        self.assertEqual(codex_profile.installed([sneaky, poster], self.profile), ['tools', 'poster'])
+
     def test_the_cli_fails_on_a_planted_profile(self):
         with tempfile.TemporaryDirectory() as tmp:
             bad = copy.deepcopy(self.profile)
