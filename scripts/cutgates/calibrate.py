@@ -4,12 +4,12 @@
     python3 scripts/cutgates/calibrate.py [--manifest config/gate-calibration.json] [--root DIR ...] [--out report.json]
     python3 scripts/cutgates/calibrate.py --synthetic
 
-On Krish's computer it finds each cut's files under the roots (MINDMAKE_LIBRARY_ROOT, MINDMAKE_ARCHIVE_ROOT, this
-repository, his home folder, and any --root), hears each finished file with faster-whisper (no paid
+On Krish's computer it finds each cut's files under the roots (any --root, MINDMAKE_LIBRARY_ROOT, MINDMAKE_ARCHIVE_ROOT,
+config/studio.json runtime library_root and archive_root, this repository and his home folder), hears each finished file with faster-whisper (no paid
 second aligner) unless its heard words are already beside it, and runs the words, joins and
 captions gates. Monday 26's two cuts must pass; Wednesday 21's published long cut, Friday 23's rejected join reel
 and Friday 16's 90-second cut must fail, on a gate the manifest names. A cut whose files are not found is
-"incomplete", never a pass. Exit 0 only when every cut behaves as listed.
+"incomplete", never a pass, unless Krish accepted that gate missing (the case's accepted_missing, his words quoted). Exit 0 only when every cut behaves as listed.
 
 --synthetic runs the same gates on stand-ins made here (ffmpeg tones, a mocked aligner and OCR): what CI runs.
 It proves the harness and the gates' logic, not the calibration, which only the real files can.
@@ -33,13 +33,34 @@ MANIFEST = settings.ROOT / 'config' / 'gate-calibration.json'
 BANDS = {'9x16': [60, 230, 960, 200], '16x9': [360, 900, 1200, 160]}  # advisory_qc.CAPTION_BANDS, the usual place
 
 
-def roots(extra=()) -> list[Path]:
+STUDIO = settings.ROOT / 'config' / 'studio.json'
+
+
+def studio_roots(studio: Path = STUDIO) -> list[Path]:
+    """The library and archive folders config/studio.json names for his computers (runtime), %NAME% expanded."""
+    try:
+        runtime = json.loads(studio.read_text(encoding='utf-8')).get('runtime') or {}
+    except (OSError, ValueError):
+        return []
+    out = []
+    for key in ('library_root', 'archive_root'):
+        value = runtime.get(key)
+        if isinstance(value, str) and value:
+            out.append(Path(os.path.expandvars(value)))
+    return out
+
+
+def roots(extra=(), studio: Path = STUDIO) -> list[Path]:
     found = [Path(r) for r in extra]
     for name in json.loads(MANIFEST.read_text(encoding='utf-8')).get('roots_env', []):
         if os.environ.get(name):
             found.append(Path(os.environ[name]))
-    found += [settings.ROOT, Path.home()]
-    return [r for r in found if r.is_dir()]
+    found += studio_roots(studio) + [settings.ROOT, Path.home()]
+    out = []
+    for root in found:
+        if root.is_dir() and root not in out:
+            out.append(root)
+    return out
 
 
 def find(patterns, where) -> Path | None:
@@ -82,8 +103,11 @@ def pages_from(spec, where, fps) -> tuple[list | None, str]:
     path = find((spec or {}).get('file'), where)
     if path is None:
         return None, 'no caption file was found'
-    if spec.get('from') == 'ass':
+    if path.suffix.lower() == '.ass':
         return captions.pages_from_ass(path, fps), str(path)
+    if path.suffix.lower() == '.srt':
+        return captions.pages_from_srt(path, fps), f'{path} (the cut\'s sidecar .srt)'
+
     doc = json.loads(path.read_text(encoding='utf-8-sig'))
     return (doc.get('pages') if isinstance(doc, dict) else doc), str(path)
 
@@ -136,7 +160,10 @@ def run_gates(case, *, video, script, take, heard_by, joins, pages, region, fps,
 
 def verdict(case, gates) -> dict:
     failed = [g for g, r in gates.items() if r['status'] == 'fail']
-    missing = [g for g, r in gates.items() if r['status'] not in ('pass', 'fail')]
+    accepted = set((case.get('accepted_missing') or {}).get('gates') or [])
+    unheard = [g for g, r in gates.items() if r['status'] not in ('pass', 'fail')]
+    missing = [g for g in unheard if g not in accepted]
+    accepted_missing = [g for g in unheard if g in accepted]
     actual = 'fail' if failed else 'incomplete' if missing else 'pass'
     if case['expect'] == 'pass':
         ok = actual == 'pass'
@@ -144,7 +171,8 @@ def verdict(case, gates) -> dict:
         want = case.get('caught_by') or list(gates)
         ok = any(g in failed for g in want)
     return {'id': case['id'], 'label': case.get('label'), 'expect': case['expect'], 'actual': actual,
-            'failed_gates': failed, 'missing_gates': missing, 'caught_by_expected': case.get('caught_by'),
+            'failed_gates': failed, 'missing_gates': missing, 'accepted_missing': accepted_missing,
+            'caught_by_expected': case.get('caught_by'),
             'as_listed': ok, 'gates': gates}
 
 
@@ -208,7 +236,8 @@ def main(argv=None):
         mark = 'as listed' if r['as_listed'] else 'NOT AS LISTED'
         print(f'{r["id"]:16} expect {r["expect"]:4}  actual {r["actual"]:10} {mark}'
               + (f'  failed: {", ".join(r["failed_gates"])}' if r['failed_gates'] else '')
-              + (f'  missing: {", ".join(r["missing_gates"])}' if r['missing_gates'] else ''))
+              + (f'  missing: {", ".join(r["missing_gates"])}' if r['missing_gates'] else '')
+              + (f'  accepted missing: {", ".join(r["accepted_missing"])}' if r.get('accepted_missing') else ''))
     print(f'calibration ({report["mode"]}): ' + ('every cut behaves as listed' if report['all_as_listed'] else 'NOT calibrated'))
     return 0 if report['all_as_listed'] else 1
 

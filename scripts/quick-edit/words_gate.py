@@ -29,7 +29,18 @@ numbers fold ("sixty-six" and "66", "twelfth" and "12th" are one word) and a
 name the transcriber splits ("Higgs field", "open AI") is the same word as the
 name whole, in the take as in the final.
 
-A transcriber's mishearing of the finished file ("Claude" heard as "clawed")
+A near-homophone in the same place is a hearing, not a loss (Ruling, Krish,
+2026-10-30, on Monday 26's accepted cuts failing on "star" and "start", ".ai"
+and ".io", "own" and "owns": "yes allow near homophones"): a lost word is
+excused when the final has, in the same changed stretch, an unmatched word one
+letter away from it (one added or dropped at the end, or one changed), or both
+are web endings (.ai, .io, .com ...). It is listed under heard_differently with
+near_homophone true, never silently. A word that changes what is said (not, no,
+never, a negative contraction, all, only, more, a number) is never excused this
+way. A tail clipped to a shorter word is then left to joins-in-gaps
+(scripts/cutgates/gaps.py), which checks every join lands in a gap.
+
+Any other mishearing of the finished file ("Claude" heard as "clawed")
 is cleared only by a "heard_as" row in the EDL that carries Krish's words
 ({"said": "Claude", "heard": "clawed", "krish": "Krish, DATE: ..."}), listed in
 the receipt under cleared_by_krish; never by editing a receipt.
@@ -65,7 +76,7 @@ import re
 import sys
 from pathlib import Path
 
-VERSION = 'words-gate/2'
+VERSION = 'words-gate/3'
 MACHINE = 'scripts/quick-edit/words_gate.py'
 VIDEO_SUFFIXES = ('.mp4', '.mov', '.mkv', '.webm', '.m4v')
 # A cut for a post dated from here (Wednesday 28 Oct, the first piece made after this gate) is delivered only with
@@ -373,9 +384,9 @@ def clock(t):
 def _excused(exp, fin):
     """Positions in a block of take tokens that the final says differently but
     whole, and the final tokens that said them: a name split or joined ("Higgs
-    field" for "Higgsfield", "AI" for "A I"). Only the exact letters count; a
-    word heard shorter is never excused, because a clipped tail is the failure
-    this gate exists for."""
+    field" for "Higgsfield", "AI" for "A I"). Only the exact letters count here;
+    a near-homophone one letter apart is check()'s, under the 30 Oct ruling, and
+    a word heard clipped shorter than that is never excused."""
     hit, used = {}, set()
     if exp and fin and ''.join(x['t'] for x in exp) == ''.join(y['t'] for y in fin):
         return {k: ' '.join(y['w'] for y in fin) for k in range(len(exp))}, set(range(len(fin)))
@@ -396,6 +407,28 @@ def _excused(exp, fin):
                 used.update(range(q, q + b))
                 break
     return hit, used
+
+
+NEVER_NEAR = frozenset({'not', 'no', 'never', 'none', 'nor', 'all', 'only', 'more', 'less', 'most', 'least'})
+WEB_ENDINGS = frozenset({'ai', 'io', 'co', 'com', 'net', 'org', 'app', 'dev', 'tv'})
+
+
+def _one_letter_apart(a, b):
+    if len(a) > len(b):
+        a, b = b, a
+    if len(b) - len(a) == 1:
+        return len(a) >= 3 and b[:-1] == a
+    return len(a) == len(b) >= 3 and sum(x != y for x, y in zip(a, b)) == 1
+
+
+def near_homophone(said, heard):
+    """Whether the final's word is a near-homophone of the word he said (the 30 Oct ruling): one letter apart, or
+    two web endings. Never a word that changes what is said, a number or a negative."""
+    if said == heard or not (said.isalpha() and heard.isalpha()):
+        return False
+    if {said, heard} & (NEVER_NEAR | NUMBER_WORDS) or said.endswith("n't") or heard.endswith("n't"):
+        return False
+    return _one_letter_apart(said, heard) or (said in WEB_ENDINGS and heard in WEB_ENDINGS)
 
 
 def _removals_checked(take_toks, expected, removals):
@@ -464,12 +497,24 @@ def check(script, take, final, edl=None):
         block, said = expected[i1:i2], final_toks[j1:j2]
         excused, used = _excused(block, said)
         cleared = _cleared(block, said, excused, used, clears)
+        near = set()
+        for k, tok in enumerate(block):
+            if k in excused or k in cleared or tok['t'] in FUNCTION_WORDS or not tok['scripted']:
+                continue
+            q = next((q for q, t in enumerate(said) if q not in used and near_homophone(tok['t'], t['t'])), None)
+            if q is not None:
+                excused[k] = said[q]['w'].strip()
+                used.add(q)
+                near.add(k)
         heard_there = ' '.join(t['w'].strip() for q, t in enumerate(said) if q not in used) or None
         before = final_toks[j1 - 1].get('e') if j1 > 0 else 0.0
         after = final_toks[j2].get('s') if j2 < len(final_toks) else None
         for k, tok in enumerate(block):
             if k in excused:
-                result['heard_differently'].append({'word': tok['w'], 'heard': excused[k], 'take_s': tok.get('s')})
+                row = {'word': tok['w'], 'heard': excused[k], 'take_s': tok.get('s')}
+                if k in near:
+                    row['near_homophone'] = True
+                result['heard_differently'].append(row)
                 continue
             if k in cleared:
                 result['cleared_by_krish'].append({'word': tok['w'], 'heard': cleared[k]['heard'], 'take_s': tok.get('s'),
@@ -507,6 +552,7 @@ def check(script, take, final, edl=None):
                                                                      - {t['t'] for t in take_toks}),
                         'lost': len(result['lost']), 'unapproved_removals': len(result['unapproved_removals']),
                         'cleared_by_krish': len(result['cleared_by_krish']),
+                        'near_homophones': sum(1 for r in result['heard_differently'] if r.get('near_homophone')),
                         'function_word_differences': len(result['function_word_differences']),
                         'adlib_losses': len(result['adlib_losses'])}
     reasons = []

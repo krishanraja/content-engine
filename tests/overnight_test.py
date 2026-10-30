@@ -17,6 +17,7 @@ sys.path.insert(0, str(ROOT / 'scripts' / 'overnight'))
 sys.path.insert(0, str(ROOT / 'scripts' / 'post-pack'))
 import codex_profile  # noqa: E402
 import critic  # noqa: E402
+import critic_run  # noqa: E402
 import overnight  # noqa: E402
 import board_materials  # noqa: E402
 
@@ -168,6 +169,102 @@ class CalibrationTests(unittest.TestCase):
         self.assertTrue(critic.calibrate(self.manifest, judged, self.media))
         del judged['fri23-short-camera-v10']
         self.assertIn('fri23-short-camera-v10: no verdict', critic.calibrate(self.manifest, judged, self.media))
+
+
+class CriticRouteTests(unittest.TestCase):
+    """scripts/overnight/critic_run.py with a fake Codex: the verdict is written around the Critic's findings."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.dir = Path(self.tmp.name)
+        self.cards = []
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def fake(self, answer, code=0, by_case=None):
+        def run(images, card, out):
+            self.cards.append((images, card))
+            text = answer
+            if by_case:
+                case = card.split('calibration case ', 1)[1].split(':', 1)[0]
+                text = json.dumps({'findings': [] if by_case(case) else [
+                    {'failure': 'the chart covers his face', 'area': 'composition', 'at_s': 0, 'needs': 'spec'}]})
+            Path(out).write_text(text, encoding='utf-8')
+            return code
+        return run
+
+    def test_the_critic_names_failures_and_the_route_writes_the_rest_of_the_verdict(self):
+        still = ROOT / 'fixtures/ve/design-lock/rejected/tall-1.jpg'
+        answer = 'Here it is:\n```json\n{"findings": [{"failure": "the headline runs off the frame", "area": "copy", "at_s": 0, "needs": "spec"}]}\n```'
+        got, problems = critic_run.judge(still, day='mon', cut='still', round_no=2, scale=0.5, earlier=['codex-critic-old'],
+                                         runner=self.fake(answer))
+        self.assertEqual(problems, [])
+        self.assertEqual(critic.validate(got), [])
+        self.assertEqual((got['file_sha256'], got['round'], got['scale'], got['viewed'], got['blocking']),
+                         (critic._sha(still), 2, 0.5, [0.0], True))
+        self.assertNotEqual(got['critic_id'], 'codex-critic-old')
+        images, card = self.cards[0]
+        self.assertEqual(images, [still])
+        self.assertIn('docs/production/THE_BAR.md', card)
+        self.assertIn('The rejection floor for short_video', card)
+
+    def test_an_answer_that_is_not_a_critics_verdict_is_refused(self):
+        still = ROOT / 'fixtures/ve/design-lock/rejected/tall-1.jpg'
+        fix = json.dumps({'findings': [{'failure': 'you should move the chart up', 'area': 'composition', 'at_s': 0, 'needs': 'spec'}]})
+        for answer, code in ((fix, 0), ('looks fine to me', 0), (json.dumps({'findings': []}), 3)):
+            got, problems = critic_run.judge(still, day='mon', cut='still', round_no=1, runner=self.fake(answer, code))
+            self.assertIsNone(got)
+            self.assertTrue(problems, answer)
+
+    def test_a_cut_is_shown_to_the_critic_as_timed_contact_sheets(self):
+        video = self.dir / 'cut.mp4'
+        subprocess.run(['ffmpeg', '-nostdin', '-loglevel', 'error', '-y', '-f', 'lavfi', '-i', 'testsrc=size=320x180:rate=25',
+                        '-t', '30', str(video)], check=True)
+        got, problems = critic_run.judge(video, day='fri', cut='long', round_no=1,
+                                         runner=self.fake(json.dumps({'findings': []})))
+        self.assertEqual(problems, [])
+        self.assertFalse(got['blocking'])
+        self.assertEqual(got['viewed'][:3], [0.0, 1.5, 3.0])
+        self.assertEqual(len(self.cards[0][0]), 2)
+        self.assertIn('Image 2: 4 frames', self.cards[0][1])
+        self.assertIn('The rejection floor for long_video', self.cards[0][1])
+
+    def test_codex_runs_read_only_with_the_pictures(self):
+        with mock.patch.object(critic_run.subprocess, 'run', return_value=Proc()) as run:
+            critic_run.codex_runner([Path('a.jpg'), Path('b.jpg')], 'card', Path('out.txt'))
+        argv = run.call_args.args[0]
+        self.assertEqual(argv[1:2], ['exec'])
+        self.assertIn(['--sandbox', 'read-only'], [argv[i:i + 2] for i in range(len(argv))])
+        self.assertEqual([argv[i + 1] for i, a in enumerate(argv) if a == '--image'], ['a.jpg', 'b.jpg'])
+        self.assertEqual(run.call_args.kwargs['input'], 'card')
+
+    def test_the_cases_it_judges_calibrate_the_critic(self):
+        manifest = critic.load_manifest()
+        media = self.dir / 'media'
+        media.mkdir()
+        for case in manifest['cases']:
+            if case['media'].get('name') or case['media'].get('sha256'):
+                path = media / (case['media'].get('name') or f'{case["id"]}.mp4')
+                subprocess.run(['ffmpeg', '-nostdin', '-loglevel', 'error', '-y', '-f', 'lavfi', '-i',
+                                f'color=c=gray:size=64x36:rate=5', '-t', '2', '-metadata', f'title={case["id"]}', str(path)], check=True)
+                if case['media'].get('sha256'):
+                    case['media']['sha256'] = critic._sha(path)
+        path = self.dir / 'manifest.json'
+        path.write_text(json.dumps(manifest), encoding='utf-8')
+        out = self.dir / 'verdicts'
+        rows = critic_run.judge_cases(out, [media], manifest=path, runner=self.fake('', by_case=lambda c: c.startswith('mon26')))
+        self.assertTrue(all(r['ok'] for r in rows), rows)
+        self.assertEqual(critic.calibrate(manifest, critic.read_verdicts(out), media), [])
+        self.assertEqual(len({v['critic_id'] for v in critic.read_verdicts(out).values()}), len(manifest['cases']))
+
+    def test_the_overnight_run_calls_the_critic_route(self):
+        step = overnight.load_config()['steps']['critic']
+        self.assertTrue(step['codex'])
+        argv = overnight.expand(step['argv'], {'python': 'py', 'file': 'c.mp4', 'day': 'mon', 'cut': 'long', 'round': 1,
+                                               'scale': 0.5, 'earlier': ''})
+        self.assertEqual(argv[:3], ['py', 'scripts/overnight/critic_run.py', 'judge'])
+        self.assertTrue((ROOT / argv[1]).is_file())
 
 
 class DueTests(unittest.TestCase):
