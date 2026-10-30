@@ -40,6 +40,15 @@ never, a negative contraction, all, only, more, a number) is never excused this
 way. A tail clipped to a shorter word is then left to joins-in-gaps
 (scripts/cutgates/gaps.py), which checks every join lands in a gap.
 
+A word the final cut has no room to measure is unmeasured, not lost (Ruling,
+Krish, 2026-10-30, on "app" in Monday 26's short, lost "between 0:07.10 and
+0:07.10": "app is there"): when the transcriber heard nothing in its place and
+the final's words either side of it touch (UNMEASURED_WINDOW_S or less apart),
+the transcriber folded it into a neighbour rather than the cut losing it. It is
+listed under unmeasured, never silently, and does not fail the cut. A chop
+that takes a word out leaves the same touching neighbours, so the joins-in-gaps
+gate (scripts/cutgates/gaps.py) is what catches that.
+
 Any other mishearing of the finished file ("Claude" heard as "clawed")
 is cleared only by a "heard_as" row in the EDL that carries Krish's words
 ({"said": "Claude", "heard": "clawed", "krish": "Krish, DATE: ..."}), listed in
@@ -76,7 +85,7 @@ import re
 import sys
 from pathlib import Path
 
-VERSION = 'words-gate/3'
+VERSION = 'words-gate/4'
 MACHINE = 'scripts/quick-edit/words_gate.py'
 VIDEO_SUFFIXES = ('.mp4', '.mov', '.mkv', '.webm', '.m4v')
 # A cut for a post dated from here (Wednesday 28 Oct, the first piece made after this gate) is delivered only with
@@ -409,6 +418,7 @@ def _excused(exp, fin):
     return hit, used
 
 
+UNMEASURED_WINDOW_S = 0.02  # the final's neighbours this close (a shared timestamp, give or take) leave a word no room
 NEVER_NEAR = frozenset({'not', 'no', 'never', 'none', 'nor', 'all', 'only', 'more', 'less', 'most', 'least'})
 WEB_ENDINGS = frozenset({'ai', 'io', 'co', 'com', 'net', 'org', 'app', 'dev', 'tv'})
 
@@ -468,7 +478,7 @@ def check(script, take, final, edl=None):
     mishearings Krish cleared (heard_as_rows)."""
     result = {'machine': MACHINE, 'version': VERSION, 'status': 'fail', 'lost': [], 'unapproved_removals': [],
               'function_word_differences': [], 'adlib_losses': [], 'heard_differently': [], 'cleared_by_krish': [],
-              'added_in_final': [], 'approved_removals': [], 'calibration': CALIBRATION}
+              'added_in_final': [], 'approved_removals': [], 'unmeasured': [], 'calibration': CALIBRATION}
     if not str(script or '').strip():
         result['reason'] = 'no signed script: the words gate cannot say which words he was meant to say, so the cut is held'
         return result
@@ -529,6 +539,12 @@ def check(script, take, final, edl=None):
                 row['final_heard_there'] = heard_there
             if tok['t'] in FUNCTION_WORDS:
                 result['function_word_differences'].append(row)
+            elif tok['scripted'] and not heard_there and isinstance(before, (int, float)) and isinstance(after, (int, float)) \
+                    and after - before <= UNMEASURED_WINDOW_S:
+                row['message'] = (f'"{tok["w"].strip()}" is unmeasured: said at {clock(tok.get("s"))} in the take; the final\'s '
+                                  f'words either side of it touch at {clock(before)}, so the transcriber had no room to hear it '
+                                  f'(the joins gate checks for a chop there): {context}')
+                result['unmeasured'].append(row)
             elif tok['scripted']:
                 instead = f' (the final has "{heard_there}" there)' if heard_there else ''
                 row['message'] = (f'"{tok["w"].strip()}" is lost: said at {clock(tok.get("s"))} in the take, not heard in the final cut '
@@ -537,7 +553,7 @@ def check(script, take, final, edl=None):
             else:
                 result['adlib_losses'].append(row)
         result['added_in_final'] += [{'word': t['w'], 'final_s': t.get('s')} for q, t in enumerate(said) if q not in used]
-    for key in ('lost', 'function_word_differences', 'adlib_losses'):
+    for key in ('lost', 'unmeasured', 'function_word_differences', 'adlib_losses'):
         # One row a word: a word that is two tokens ("Character.AI") is named once.
         rows, seen = [], set()
         for row in result[key]:
@@ -552,6 +568,7 @@ def check(script, take, final, edl=None):
                                                                      - {t['t'] for t in take_toks}),
                         'lost': len(result['lost']), 'unapproved_removals': len(result['unapproved_removals']),
                         'cleared_by_krish': len(result['cleared_by_krish']),
+                        'unmeasured': len(result['unmeasured']),
                         'near_homophones': sum(1 for r in result['heard_differently'] if r.get('near_homophone')),
                         'function_word_differences': len(result['function_word_differences']),
                         'adlib_losses': len(result['adlib_losses'])}
@@ -615,7 +632,8 @@ def check_aligners(script, take, finals, edl=None):
 def summary(result):
     """One line for a log or a refusal: what was lost, by name and place."""
     if result.get('status') == 'pass':
-        return 'no content word lost'
+        unmeasured = [r['word'].strip() for r in result.get('unmeasured') or []]
+        return 'no content word lost' + (f' ({len(unmeasured)} unmeasured: {", ".join(unmeasured)})' if unmeasured else '')
     named = [r['message'] for r in (result.get('lost') or []) + (result.get('unapproved_removals') or [])]
     if not named:
         return result.get('reason', 'the words check did not pass')

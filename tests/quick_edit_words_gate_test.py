@@ -117,6 +117,30 @@ class WordsGateTests(unittest.TestCase):
         self.assertEqual(near, {'star': 'start', 'owns': 'own', 'makeyourmindup.ai': 'makeyourmindup.io'})
         self.assertEqual(r['counts']['near_homophones'], 3)
 
+    def test_a_word_with_no_room_in_the_final_is_unmeasured_not_lost(self):
+        # Ruling (Krish, 2026-10-30): "app is there", Monday 26's short, "app" lost between 0:07.10 and 0:07.10.
+        script = 'Character.AI, which is a chat app with millions of users.'
+        take = timed(script, 2.0)
+        final = [{'w': w, 's': s, 'e': e} for w, s, e in (
+            ('Character.AI,', 5.9, 6.4), ('which', 6.45, 6.6), ('is', 6.6, 6.7), ('a', 6.7, 6.75), ('chat', 6.75, 7.10),
+            ('with', 7.10, 7.3), ('millions', 7.3, 7.7), ('of', 7.7, 7.8), ('users.', 7.8, 8.2))]
+        r = wg.check(script, take, final)
+        self.assertEqual(r['status'], 'pass', wg.summary(r))
+        self.assertEqual([x['word'] for x in r['unmeasured']], ['app'])
+        self.assertEqual(r['unmeasured'][0]['final_between_s'], [7.10, 7.10])
+        self.assertEqual(r['counts']['unmeasured'], 1)
+        self.assertIn('1 unmeasured: app', wg.summary(r))
+
+    def test_a_word_missing_where_the_final_leaves_room_is_still_lost(self):
+        script = 'Character.AI, which is a chat app with millions of users.'
+        final = [{'w': w, 's': s, 'e': e} for w, s, e in (
+            ('Character.AI,', 5.9, 6.4), ('which', 6.45, 6.6), ('is', 6.6, 6.7), ('a', 6.7, 6.75), ('chat', 6.75, 7.10),
+            ('with', 7.40, 7.6), ('millions', 7.6, 8.0), ('of', 8.0, 8.1), ('users.', 8.1, 8.5))]
+        r = wg.check(script, timed(script, 2.0), final)
+        self.assertEqual(r['status'], 'fail')
+        self.assertEqual([x['word'] for x in r['lost']], ['app'])
+        self.assertEqual(r['unmeasured'], [])
+
     def test_a_word_that_changes_what_is_said_is_never_a_near_homophone(self):
         for said, heard in (('not', 'note'), ('no', 'not'), ('only', 'lonly'), ('six', 'sixty'), ('all', 'ball')):
             self.assertFalse(wg.near_homophone(said, heard), (said, heard))
