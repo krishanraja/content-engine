@@ -26,6 +26,15 @@ describe('what a Liked or Not it carries', () => {
     expect(validBody('picks', 'tue-feel-1', feel())).toBe(true)
     expect(validBody('picks', 'tue-feel-x', feel())).toBe(false)
   })
+  it('his open words alone, the box that replaced the two buttons (Krish, 2026-10-30)', () => {
+    const words = { kind: 'feel', day: 'tue', note: 'The hook took too long', piece_id: PIECE, title: 'Four jobs AI is learning first', at: '2026-11-03T18:00:00Z' }
+    expect(validBody('picks', 'tue-feel', words)).toBe(true)
+    expect(validBody('picks', 'tue-feel', { ...words, note: '   ' })).toBe(false)
+    expect(validBody('picks', 'tue-feel', { ...words, note: undefined })).toBe(false)
+    expect(validBody('picks', 'tue-feel', { ...words, note: 'x'.repeat(2001) })).toBe(false)
+    const filed = feelReport('2026-11-02', 'tue-feel', words, '2026-11-03T18:00:01Z')
+    expect(filed).toMatchObject({ kind: 'krish_words', body: 'The hook took too long', polarity: 'neutral', meta: { press: 'note' } })
+  })
   it('is his alone', () => {
     expect(hisOnlyRefusal('picks', feel(), 'engine_operator')).toBe('decision_is_his')
     expect(hisOnlyRefusal('picks', feel(), 'Krish')).toBeNull()

@@ -59,14 +59,17 @@ const RECORDED_DAYS = ['tue', 'thu', 'sat', 'sun']
 // (Titles), <day>-publish (Approve for publish) and <day>-reject-<asset> (Reject asset).
 export const DECISION_ID = /^(mon|wed|fri)-(scripts|titles|publish|reject-([a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}))$/
 export const DECISION_KIND = { scripts: 'approve_scripts', titles: 'titles', publish: 'approve_publish', reject: 'reject_asset' } as const
-// His Liked or Not it on a day's post (the Today view, layout A; Krish, 2026-10-29: "yes, go with A and your
-// recommendations and my feedback"): picks/<day>-feel, any day of the week, with his optional words. The server files
-// each press as one taste_reports row (afterPress), the road his feedback takes to the cues.
+// His retrospective thoughts on a day's post (the Today view, layout A; Krish, 2026-10-29: "yes, go with A and your
+// recommendations and my feedback"; 2026-10-30: "the two feedback buttons need to just be an open text box for my
+// retrospective thoughts and feedback rather than Y/N buttons"): picks/<day>-feel, any day of the week, his words, with
+// the older Liked or Not it press still read. The server files each save as one taste_reports row (afterPress).
 export const FEEL_ID = /^(mon|tue|wed|thu|fri|sat|sun)-feel(?:-[1-9])?$/
 export const FEELS = ['liked', 'not_it'] as const
 export function feelBody(id: string, body: Record<string, unknown>): boolean {
   const m = FEEL_ID.exec(id)
-  return !!m && body.kind === 'feel' && body.day === m[1] && (FEELS as readonly unknown[]).includes(body.feel) && !('send' in body)
+  const words = typeof body.note === 'string' && body.note.trim().length > 0
+  return !!m && body.kind === 'feel' && body.day === m[1] && !('send' in body)
+    && ('feel' in body ? (FEELS as readonly unknown[]).includes(body.feel) : words)
     && (!('piece_id' in body) || typeof body.piece_id === 'string' && UUID.test(body.piece_id))
     && (!('title' in body) || typeof body.title === 'string' && body.title.length <= 300)
     && (!('note' in body) || body.note === null || typeof body.note === 'string' && body.note.length <= 2000)

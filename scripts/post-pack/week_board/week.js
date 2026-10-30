@@ -1240,25 +1240,36 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
   });
 })();
 
-// Layout A (board_today.py): Liked or Not it on each post, saved at once in picks/<day>-feel (another post that day,
-// <day>-feel-<n>) by his press alone; the server files it to taste_reports.
+// Layout A (board_today.py): his retrospective thoughts on each post, an open box saved by his Save in picks/<day>-feel
+// (another post that day, <day>-feel-<n>); the server files his words to taste_reports. A saved note fills its box again.
 (() => {
-  const btns = [...document.querySelectorAll(".today-a [data-feel]")]; if (!btns.length) return;
+  const boxes = [...document.querySelectorAll(".today-a textarea[data-fb]")]; if (!boxes.length) return;
   const saved = {}; let fdb = null;
-  const paint = () => { for (const b of btns) { const v = saved[b.dataset.feelId], on = !!v && v.feel === b.dataset.feel;
-    b.classList.toggle("on", on); b.setAttribute("aria-pressed", on ? "true" : "false"); b.disabled = !fdb } };
-  paint();
+  const btn = id => document.querySelector(`.today-a [data-fb-save="${id}"]`), st = id => document.querySelector(`.today-a [data-fb-st="${id}"]`);
+  const say = (id, text, bad) => { const s = st(id); if (s) { s.textContent = text; s.classList.toggle("bad", !!bad) } };
+  const sync = box => { const id = box.dataset.fb, was = (saved[id] && saved[id].note) || "", b = btn(id);
+    if (b) b.disabled = !fdb || !box.value.trim() || box.value.trim() === was.trim() };
+  const fill = () => { for (const box of boxes) { const v = saved[box.dataset.fb];
+    box.disabled = !fdb; if (v && typeof v.note === "string" && document.activeElement !== box && !box.dataset.dirty) { box.value = v.note; say(box.dataset.fb, "Saved") }
+    sync(box) } };
+  fill();
   (async () => {
     try { fdb = window.claude?.use ? await window.claude.use("db") : null } catch { fdb = null }
-    paint(); if (!fdb) return;
-    try { fdb.collection("picks").onSnapshot(snap => { for (const d of snap.docs) if (d.exists && /-feel(-\d)?$/.test(d.id)) saved[d.id] = d.data() || {}; paint() }, () => {}) } catch {}
+    if (!fdb) { for (const box of boxes) say(box.dataset.fb, "Saving is off in this view", true) }
+    fill(); if (!fdb) return;
+    try { fdb.collection("picks").onSnapshot(snap => { for (const d of snap.docs) if (d.exists && /-feel(-\d)?$/.test(d.id)) saved[d.id] = d.data() || {}; fill() }, () => {}) } catch {}
   })();
+  for (const box of boxes) box.addEventListener("input", () => { box.dataset.dirty = "1"; say(box.dataset.fb, ""); sync(box) });
   document.addEventListener("click", async e => {
-    const b = e.target.closest && e.target.closest(".today-a [data-feel]"); if (!b || !fdb) return;
-    const id = b.dataset.feelId, body = { kind: "feel", day: b.dataset.feelDay, feel: b.dataset.feel, at: new Date().toISOString() };
-    if (b.dataset.piece) body.piece_id = b.dataset.piece;
-    if (b.dataset.title) body.title = b.dataset.title;
-    const prev = saved[id]; saved[id] = body; paint();
-    try { await fdb.doc("picks/" + id).set(body) } catch { if (prev) saved[id] = prev; else delete saved[id]; paint() }
+    const b = e.target.closest && e.target.closest(".today-a [data-fb-save]"); if (!b || !fdb) return;
+    const id = b.dataset.fbSave, box = document.querySelector(`.today-a textarea[data-fb="${id}"]`); if (!box) return;
+    const note = box.value.trim(); if (!note) return;
+    const body = { kind: "feel", day: box.dataset.fbDay, note, at: new Date().toISOString() };
+    if (box.dataset.piece) body.piece_id = box.dataset.piece;
+    if (box.dataset.title) body.title = box.dataset.title;
+    b.disabled = true; say(id, "Saving");
+    try { await fdb.doc("picks/" + id).set(body); saved[id] = body; delete box.dataset.dirty; say(id, "Saved") }
+    catch { say(id, "Not saved. Try again", true) }
+    sync(box);
   });
 })();

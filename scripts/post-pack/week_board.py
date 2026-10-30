@@ -3078,7 +3078,10 @@ def today_model(monday, days, videos, posted, offdays, parsed, now=None, gates=N
         if opts:
             out['asks'].append({'what': f'Off day, {short(when)}', 'detail': f'{len(opts)} option{"s" if len(opts) != 1 else ""} to approve or skip',
                                 'cta': 'Choose', 'href': f'#offdays-{key}', 'day': key})
-        out['days'].append({'key': key, 'date': f'{when.day} {when.strftime("%b")}', 'posts': posts})
+        # A series day has its own page on the board; the calendar's day opens it (Krish, 2026-10-30: "I should be able
+        # to click through to Monday from that board if it is to act as my calendar board").
+        out['days'].append({'key': key, 'date': f'{when.day} {when.strftime("%b")}', 'posts': posts,
+                            **({'open': f'#{names[key]}'} if key in names else {})})
     return out
 
 
@@ -3253,7 +3256,7 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
         tabs.append(
             f'<button type="button" role="tab" id="tab-{name}" aria-controls="panel-{name}" '
             f'aria-selected="{"true" if key == opened else "false"}" tabindex="{"0" if key == opened else "-1"}" data-day="{name}">'
-            f'<span class="t-day">{short_date(when)}</span><span class="t-dot"> · </span>'
+            f'<span class="t-day"><span class="t-wd">{when.strftime("%a")}</span> <span class="t-dm">{when.day} {when.strftime("%b")}</span></span><span class="t-dot"> · </span>'
             f'<span class="t-prog" data-tabprog="{key}">{f"{STANDING} steps" if picked else "not picked"}</span>'
             f'<span class="t-ch">{series_label}</span></button>')
         days.append({
@@ -3413,8 +3416,8 @@ def check_page(page):
     if dups:
         problems.append(f'{len(dups)} ids used twice: {sorted(dups)[:8]}')
     refs = re.findall(r'\s(?:data-ref|for|aria-controls|aria-labelledby)="([^"]+)"', page) + re.findall(r'\shref="#([^"]+)"', page)
-    # A link to a day's step (#monday/publish) is a route week.js opens (fromHash), not an id.
-    route = re.compile(r'(%s)/(%s)' % ('|'.join(n for _, n, *_ in DAYS), '|'.join(DAY_STEPS)))
+    # A link to a day (#monday) or a day's step (#monday/publish) is a route week.js opens (fromHash), not an id.
+    route = re.compile(r'(%s)(/(%s))?' % ('|'.join(n for _, n, *_ in DAYS), '|'.join(DAY_STEPS)))
     dangling = sorted({x for r in refs for x in r.split() if x not in seen and not route.fullmatch(x)})
     if dangling:
         problems.append(f'references to no id: {dangling[:8]}')

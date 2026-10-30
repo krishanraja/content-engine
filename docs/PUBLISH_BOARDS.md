@@ -282,6 +282,8 @@ off the old week's board only after the new board reads back.
 
 From the week of 2 November the board opens on Today (layout A, `board_today.py`). When a day waits on Krish's
 Gate 2 verdict on a cut, give `--gate DAY=https://...` (the cut's link): Today asks for it and the day's card opens it.
+Each post on Today has an open box for his thoughts after it goes out, saved by his Save in `picks/<day>-feel` and filed
+to his taste ledger as his words (Krish, 2026-10-30); the calendar strip and a series day's heading open that day's page.
 
 Build with `week_board.py --target web` plus the usual week/day inputs. Run
 `--verify`, then `board_web.py publish-web PAGE.html` for the dry-run manifest.

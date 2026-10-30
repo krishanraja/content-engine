@@ -54,6 +54,25 @@ class TodayView(unittest.TestCase):
         self.assertIn('width:var(--bw);height:var(--bh)', bt.CSS)
         self.assertIn('height:var(--card-h)', bt.CSS)
 
+    def test_each_post_has_an_open_box_for_his_thoughts_never_two_buttons(self):
+        # Krish, 2026-10-30: "the two feedback buttons need to just be an open text box for my retrospective thoughts".
+        page = bt.render(FIX[1])
+        posts = page.count('<article class="card"') + page.count('<article class="card need"')
+        self.assertEqual(page.count('<textarea class="fb"'), posts)
+        self.assertEqual(page.count('data-fb-save='), posts)
+        self.assertNotIn('data-feel=', page)
+
+    def test_a_series_day_opens_its_own_page_from_the_calendar(self):
+        # Krish, 2026-10-30: "I should be able to click through to Monday from that board".
+        m = copy.deepcopy(FIX[1])
+        m['days'][0]['open'] = '#monday'
+        page = bt.render(m)
+        self.assertIn('<a href="#monday" class=', page)
+        self.assertIn('<a href="#monday" class="d-name">', page)
+        m['days'][0]['open'] = 'javascript:alert(1)'
+        with self.assertRaises(bt.ModelError):
+            bt.check(m)
+
 
 if __name__ == '__main__':
     unittest.main()
