@@ -166,7 +166,10 @@ async function readSources(week: string, slugs: string[]) {
   if (failed) throw new Error(failed.message)
   const tasteRows = [...(marked.data || []), ...(picked.data || []), ...(chosen.data || [])] as Array<Record<string, any>>
   const sources = buildSources({ weekStart: week, series: slugs, rows: (rows.data || []) as Array<Record<string, any>>, tasteRows, relayed: (relayed.data || []) as Array<Record<string, any>> })
-  const [inspiration, cues] = await Promise.all([readInspiration(week), readCues()])
+  // A said idea is a manual content idea and an inspiration card at once (20261118093200_inspiration_said_cards.sql);
+  // the idea already read here is the one Sunday counts, so its card is not counted again.
+  const listed = ((rows.data || []) as Array<Record<string, any>>).map(r => String(r.id))
+  const [inspiration, cues] = await Promise.all([readInspiration(week, listed), readCues()])
   return { ...sources, empty: cues.empty ? [...sources.empty, cues.empty] : sources.empty, inspiration, cues: cues.cues }
 }
 
@@ -186,7 +189,7 @@ const INSPO_COLS = 'id,name,folder,lane,kind,facets,why_here,route,routes,why_li
 
 /** Inspiration House and content-watcher (_inspirationSources.ts). A table that cannot be read fails the gather
  *  loudly: Sunday must never look complete while his routed cards are missing (Krish, 2026-10-24). */
-async function readInspiration(week: string) {
+async function readInspiration(week: string, listed: string[] = []) {
   const [items, routed, reads, moves, claims] = await Promise.all([
     supabase.from('inspiration_items').select(INSPO_COLS).order('created_at', { ascending: false }).limit(500),
     // Every card he routed to Make a piece, however old: the newest 500 above could leave one out of must_cover.
@@ -209,6 +212,6 @@ async function readInspiration(week: string) {
   const all = [...(items.data || []), ...(routed.data || []).filter((r: Record<string, any>) => !seen.has(r.id))]
   return buildInspiration({ weekStart: week, items: all as Array<Record<string, any>>,
     reads: (reads.data || []) as Array<Record<string, any>>, moves: (moves.data || []) as Array<Record<string, any>>,
-    claims: (claims.data || []) as Array<Record<string, any>>,
+    claims: (claims.data || []) as Array<Record<string, any>>, listedIdeas: listed,
     quotesStanding: (standing.data || []).map((r: Record<string, any>) => String(r.id)) })
 }

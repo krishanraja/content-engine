@@ -1890,6 +1890,15 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `function archiveRows(pieces: readonly ArchivePiece[], scores: readonly ArchiveScore[]): ArchiveRow[]`
 - `async function readArchive(db: SupabaseClient): Promise<{ rows: ArchiveRow[]; scores: 'live' | 'waits_on_migration' }>`
 
+### `apps/control-plane/api/board/_carry.ts`
+
+- `const CARRY_DAYS`
+- `interface CarryInput`
+- `function carryInput(body: unknown): { input?: CarryInput; problem?: string }`
+- `function moveRef(ref: string, from: Day, to: Day): string | null`
+- `function dayDocuments(ticks: Body[], docs: Body[], from: Day, to: Day, fromWeek: string): Doc[]`
+- `async function carryDay(db: SupabaseClient, toWeek: string, raw: unknown): Promise<{ status: number; body: Body }>`
+
 ### `apps/control-plane/api/board/_contracts.ts`
 
 - `const collections`
