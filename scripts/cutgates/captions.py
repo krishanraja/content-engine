@@ -7,7 +7,8 @@ captions.clock_tolerance_frames (config/gates.json; a placeholder until measured
 garbled"); a clock like that is what this fails.
 
 Renderer truth: the caption pages are found from pixel changes in the caption zone, and read by OCR only within
-plus or minus captions.ocr_window_frames of each page start. The text must match the props exactly and score at
+plus or minus captions.ocr_window_frames of each page start (a page whose words appear one by one is read once its
+last word is on screen, read_frames). The text must match the props exactly and score at
 least captions.ocr_min_score. OCR is tesseract through scripts/velib/qc_captions.py; without it the check says
 it is missing, and a missing check holds the cut.
 
@@ -26,6 +27,9 @@ from . import settings
 MACHINE = 'scripts/cutgates/captions.py'
 VERSION = 'captions/1'
 _CONFUSABLE = str.maketrans('l1|', 'iii')
+RUNS_PER_DECODE = 40
+# A page whose words appear one by one is read once its last word is on screen, for at most this many frames.
+REVEALED_READ_FRAMES = 15
 
 
 def tokens(text) -> list[str]:
@@ -175,13 +179,17 @@ class TesseractReader:
             if b != a + 1:
                 runs.append((start, a))
                 start = b
-        select = '+'.join(f'between(n\\,{a}\\,{b})' for a, b in runs)
-        raw = subprocess.run([_ffmpeg(), '-nostdin', '-v', 'error', '-i', self.video, '-an', '-vf',
-                              f'select={select},crop={w}:{h}:{x}:{y}:exact=1,format=gray', '-fps_mode', 'passthrough',
-                              '-f', 'rawvideo', '-'], capture_output=True, check=True).stdout
-        got = np.frombuffer(raw, np.uint8).reshape(-1, h, w)
-        for frame, pixels in zip(wanted, got):
-            self.frames[frame] = pixels
+        # One decode per batch of runs: a single select of every run (hundreds on a 5-minute cut) is a filter
+        # expression ffmpeg on Windows refuses (exit -12 on Friday 23's long cut, 30 Oct 2026).
+        for k in range(0, len(runs), RUNS_PER_DECODE):
+            batch = runs[k:k + RUNS_PER_DECODE]
+            select = '+'.join(f'between(n\\,{a}\\,{b})' for a, b in batch)
+            raw = subprocess.run([_ffmpeg(), '-nostdin', '-v', 'error', '-i', self.video, '-an', '-vf',
+                                  f'select={select},crop={w}:{h}:{x}:{y}:exact=1,format=gray', '-fps_mode', 'passthrough',
+                                  '-f', 'rawvideo', '-'], capture_output=True, check=True).stdout
+            got = np.frombuffer(raw, np.uint8).reshape(-1, h, w)
+            for frame, pixels in zip([f for a, b in batch for f in range(a, b + 1)], got):
+                self.frames[frame] = pixels
 
     def __call__(self, frame, expected_text):
         if frame not in self.frames:
@@ -194,6 +202,19 @@ class TesseractReader:
 
 def _fold(text):
     return [t.translate(_CONFUSABLE) for t in tokens(text)]
+
+
+def read_frames(page, change, win):
+    """The frames a page is read on. A page drawn whole is read within the window of its start; a page whose words
+    appear one by one (each word's atFrame, as ve's props give them) is read from the frame its last word lands,
+    when the whole page is on screen, never before."""
+    start, end = int(page['fromFrame']), int(page['toFrame'])
+    landed = [int(w['atFrame']) for w in page.get('words', [])
+              if isinstance(w, dict) and isinstance(w.get('atFrame'), (int, float))]
+    full = max(landed) if landed else None
+    if full is not None and full > start + win:
+        return range(full, min(full + REVEALED_READ_FRAMES, end - 1) + 1)
+    return range(max(change, start - win), min(start + win, end - 1) + 1)
 
 
 def renderer_truth(video, pages, region, *, ocr=None, window: int | None = None, min_score: float | None = None,
@@ -221,7 +242,7 @@ def renderer_truth(video, pages, region, *, ocr=None, window: int | None = None,
             near = [c for c in changes if abs(c - start) <= win]
             if near:
                 change = min(near, key=lambda c: abs(c - start))
-                wanted += range(max(change, start - win), min(start + win, end - 1) + 1)
+                wanted += read_frames(page, change, win)
         reader.prefetch(wanted)
     for p, page in enumerate(pages):
         start, end = int(page['fromFrame']), int(page['toFrame'])
@@ -236,7 +257,7 @@ def renderer_truth(video, pages, region, *, ocr=None, window: int | None = None,
         change = min(near, key=lambda c: abs(c - start))
         row['change_frame'] = change
         best = None
-        for frame in range(max(change, start - win), min(start + win, end - 1) + 1):
+        for frame in read_frames(page, change, win):
             seen = reader(frame, want)
             exact = _fold(seen['text']) == _fold(want) or ''.join(_fold(seen['text'])) == ''.join(_fold(want))
             cand = {'frame': frame, 'read': seen['text'], 'score': round(float(seen['score']), 4), 'exact': exact}
@@ -247,7 +268,7 @@ def renderer_truth(video, pages, region, *, ocr=None, window: int | None = None,
         row.update(best or {'frame': None, 'read': None, 'score': 0.0, 'exact': False})
         row['status'] = 'pass' if row['exact'] and row['score'] >= least else 'fail'
         if row['status'] == 'fail':
-            row['message'] = (f'caption page {p} reads "{(row["read"] or "")[:60]}" near frame {start}, '
+            row['message'] = (f'caption page {p} reads "{(row["read"] or "")[:60]}" near frame {row.get("frame") or start}, '
                               f'not "{want[:60]}" (score {row["score"]}, needs an exact match and {least})')
         report['pages'].append(row)
     report['failed'] = [r for r in report['pages'] if r['status'] == 'fail']

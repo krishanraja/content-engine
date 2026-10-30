@@ -285,6 +285,27 @@ class TileTest(unittest.TestCase):
             self.assertGreater(float(windows.min()), float(np.median(windows)) - 6)
 
 
+    def test_a_restart_skips_the_tracks_sparse_intro_and_the_first_play_keeps_it(self):
+        # Friday 23's long cut restarted NO CURVES at 172 s into its sparse first 18 s, and the bed sagged under a
+        # pause in the voice (the independent review's block, 30 Oct 2026). Here: 6 s of single hits, then a steady body.
+        sr = audio.SR
+        hits = np.zeros((sr * 6, 2))
+        for k in range(6):
+            hits[k * sr:k * sr + sr // 10] = 0.3
+        track = np.vstack([hits, np.ones((sr * 14, 2)) * 0.3])
+        with tempfile.TemporaryDirectory(dir=ROOT / 'tests', prefix='ve-intro-') as folder:
+            path = Path(folder) / 'intro.wav'
+            audio._write_stereo(track, str(path))
+            intro = audio.track_intro(str(path))
+        self.assertTrue(5.5 <= intro <= 6.5, intro)
+        bed, centres = audio.tile(track, sr * 50, restart_from_s=intro)
+        self.assertTrue(centres)
+        first = audio._short_db(bed[:sr * 6].mean(axis=1))
+        self.assertLess(float(first.min()), -40)  # the first play keeps the intro
+        after = audio._short_db(bed[int((centres[0] + audio.CROSSFADE_S) * sr):].mean(axis=1))
+        self.assertGreater(float(after.min()), -12)  # no restart lands in it
+
+
 class PremixLedgerTest(unittest.TestCase):
     def test_premix_reads_the_committed_music_ledger(self):
         import ve

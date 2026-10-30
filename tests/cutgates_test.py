@@ -134,6 +134,41 @@ class MutationTests(Stand):
         self.assertEqual(render['status'], 'pass', captions.summary(render))
         self.assertEqual(sum(1 for a in passes if 'select' in ' '.join(map(str, a))), 1)
 
+    def test_the_tesseract_reader_batches_its_decodes_and_still_reads_every_frame(self):
+        case = self.build('intact')
+        drawn = {}
+        for k, page in enumerate(case['drawn']):
+            drawn.update({f: (synthetic.shade(k), captions.page_text(page)) for f in range(page['fromFrame'], page['toFrame'])})
+        passes = []
+
+        def by_shade(_exe, pixels, _expected):
+            shade = float(pixels[10:50, 10:310].mean())
+            text = next((t for s, t in sorted(set(drawn.values())) if abs(s - shade) < 12), '')
+            return {'text': text, 'agreement': 1.0 if text else 0.0}
+
+        real_run = captions.subprocess.run
+
+        def counted(args, **kwargs):
+            passes.append(args)
+            return real_run(args, **kwargs)
+
+        reader = captions.TesseractReader('tesseract', case['video'], case['region'])
+        with patch.object(captions, 'RUNS_PER_DECODE', 1), \
+                patch.object(reader.qc_captions, '_read_candidates', side_effect=by_shade), \
+                patch.object(captions.subprocess, 'run', side_effect=counted):
+            render = captions.renderer_truth(case['video'], case['pages'], case['region'], ocr=reader)
+        self.assertEqual(render['status'], 'pass', captions.summary(render))
+        self.assertGreater(sum(1 for a in passes if 'select' in ' '.join(map(str, a))), 1)
+
+    def test_a_page_revealed_word_by_word_is_read_once_its_last_word_is_on_screen(self):
+        page = {'fromFrame': 100, 'toFrame': 160, 'words': [{'text': 'a', 'atFrame': 100}, {'text': 'Chinese', 'atFrame': 104},
+                                                            {'text': 'AI.', 'atFrame': 115}]}
+        self.assertEqual(list(captions.read_frames(page, 100, 3)), list(range(115, 131)))
+        whole = {'fromFrame': 100, 'toFrame': 160, 'words': [{'text': 'a'}, {'text': 'Chinese'}]}
+        self.assertEqual(list(captions.read_frames(whole, 101, 3)), [101, 102, 103])
+        short = {'fromFrame': 100, 'toFrame': 118, 'words': [{'text': 'a', 'atFrame': 100}, {'text': 'b', 'atFrame': 110}]}
+        self.assertEqual(list(captions.read_frames(short, 100, 3)), list(range(110, 118)))
+
     def test_without_tesseract_the_renderer_check_is_missing_and_holds(self):
         case = self.build('intact')
         with patch('cutgates.captions.shutil.which', return_value=None):
