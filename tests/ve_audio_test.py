@@ -285,5 +285,14 @@ class TileTest(unittest.TestCase):
             self.assertGreater(float(windows.min()), float(np.median(windows)) - 6)
 
 
+class PremixLedgerTest(unittest.TestCase):
+    def test_premix_reads_the_committed_music_ledger(self):
+        import ve
+        self.assertTrue(ve.MUSIC_LEDGER.is_file(), ve.MUSIC_LEDGER)
+        spec = json.loads((ROOT / 'docs/plans/2026-10-23-friday-two-passports-long-ve/ve/spec.json').read_text(encoding='utf-8'))
+        ids = {t['id'] for t in json.loads(ve.MUSIC_LEDGER.read_text(encoding='utf-8'))['tracks'] if t.get('status') == 'approved'}
+        self.assertIn(spec['audio']['bed']['ledger_id'], ids)
+
+
 if __name__ == '__main__':
     unittest.main()
