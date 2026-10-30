@@ -20,11 +20,13 @@ from velib import cards, credits, designlock, ledger  # noqa: E402
 MONDAY = dt.date(2026, 11, 16)
 
 
-def read(pools=None, held=False, known=True):
-    """A synthetic get_engine_credits answer (never real numbers)."""
+def read(pools=None, held=False, known=True, use_by='2026-11-22', modes=None):
+    """A synthetic get_engine_credits answer (never real numbers). use_by falls inside MONDAY's week, so a monthly
+    pool's weekly cap is its whole remaining share unless a test says otherwise."""
     pools = pools if pools is not None else {'codex': 3, 'codex-credits': 0, 'runway': 100, 'higgsfield': 50, 'elevenlabs': 0}
     block = {'rule': 'synthetic', 'pools': [{'pool': k, 'tool': k, 'unit': 'credits', 'remaining_for_you': v,
-                                             'use_by': '2026-11-30', 'balance_as_of': '2026-11-16T00:00:00+00:00'}
+                                             'use_by': use_by, 'balance_as_of': '2026-11-16T00:00:00+00:00',
+                                             **({'mode': modes[k]} if modes and k in modes else {})}
                                             for k, v in pools.items()]}
     return {'ok': True, 'engine_id': 'growth-makeyourmindup', 'product_slug': 'publication', 'held': held,
             'credits': block if known else None}
@@ -92,7 +94,31 @@ class BudgetTests(unittest.TestCase):
         self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
         saved = json.loads(out.read_text())
         self.assertEqual(saved['record_sha256'], credits.record_hash(saved))
-        self.assertEqual(saved['caps']['runway_credits'], 100)
+        self.assertEqual(saved['caps']['codex_allowance_points'], 3)
+
+    def test_a_monthly_share_is_spread_over_the_weeks_left_and_weekly_pools_are_read_as_they_are(self):
+        # Control Center, 29 Oct 2026: runway and higgsfield are shares of a monthly cycle; codex and codex-credits
+        # are weekly already.
+        record = credits.from_read(read(use_by='2026-12-14'), today=MONDAY)   # four weeks left
+        self.assertEqual(record['caps']['runway_credits'], 25)
+        self.assertEqual(record['caps']['higgsfield_credits'], 12.5)
+        self.assertEqual(record['caps']['codex_allowance_points'], 3)
+        last = credits.from_read(read(use_by='2026-11-18'), today=MONDAY)     # this week is the last
+        self.assertEqual(last['caps']['runway_credits'], 100)
+        undated = read()
+        for pool in undated['credits']['pools']:
+            pool.pop('use_by')
+        self.assertIsNone(credits.from_read(undated, today=MONDAY)['caps']['runway_credits'])
+        self.assertEqual(credits.from_read(undated, today=MONDAY)['caps']['codex_allowance_points'], 3)
+
+    def test_a_pool_keeps_its_mode_and_an_unknown_mode_holds(self):
+        record = credits.from_read(read(pools={'codex': 3, 'codex-credits': 200, 'runway': 100, 'higgsfield': 50},
+                                        modes={'codex-credits': 'ceiling', 'runway': 'surprise'}), today=MONDAY)
+        self.assertEqual(record['pools']['codex-credits']['mode'], 'ceiling')
+        self.assertNotIn('mode', record['pools']['codex'])                     # no mode means use_it
+        self.assertEqual(record['caps']['codex_paid_credits'], 200)            # a ceiling's grant is its balance
+        self.assertEqual(record['caps']['codex_allowance_points'], 3)
+        self.assertIsNone(record['caps']['runway_credits'])
 
     def test_reservations_refuse_anything_over_the_cap(self):
         first = ledger.reserve('runway_credits', 60, 'p', 'plate', today=MONDAY, budget_path=self.path)

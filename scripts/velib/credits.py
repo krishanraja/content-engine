@@ -11,6 +11,13 @@ publication, remaining_for_you, use_by and the balance's as_of. `ve budget pull 
 sha256, at config/ve/credit-budget.json's place on this machine (VE_CREDIT_BUDGET names another); a session with the
 Control Center connector, or Growth's runner, writes FILE. Nothing here invents a cap: a missing read, a held engine,
 unknown credits, a read older than MAX_AGE_DAYS or a provider with no pool placed all hold with that reason.
+
+How Control Center states a pool (its credits session, 29 Oct 2026): each pool has a mode, use_it (prepaid, spend
+before reset; the default when none is given) or ceiling (pay as you go, a cap and never a target). codex is a weekly
+percent window and codex-credits a ceiling whose grant is its balance, so both are weekly as read. runway and
+higgsfield are shares of a monthly cycle, so their weekly cap is remaining_for_you over the weeks left before use_by.
+This local ledger only refuses before anything is sent: the booking itself is Control Center's (reserve_credit_spend,
+then settle_credit_spend, then record_credit_balance, by the session that runs the dispatch; docs/ve/RUNBOOK.md).
 """
 from __future__ import annotations
 
@@ -32,6 +39,9 @@ PROVIDERS = ('codex_allowance_points', 'codex_paid_credits', 'runway_credits', '
 # Each provider is reserved against one Control Center pool of the publication, by pool key.
 POOLS = {'codex_allowance_points': 'codex', 'codex_paid_credits': 'codex-credits', 'runway_credits': 'runway',
          'higgsfield_credits': 'higgsfield', 'elevenlabs_credits': 'elevenlabs'}
+# Shares of a monthly cycle: a week may spend what is left over the weeks before use_by.
+MONTHLY_POOLS = ('runway', 'higgsfield')
+MODES = ('use_it', 'ceiling')
 
 
 def record_hash(record: dict) -> str:
@@ -46,18 +56,35 @@ def from_read(read: dict, today: dt.date | None = None) -> dict:
         raise ValueError('not a get_engine_credits answer with ok: true')
     credits = read.get('credits')
     pools = {p['pool']: p for p in (credits or {}).get('pools', []) if isinstance(p, dict) and isinstance(p.get('pool'), str)}
+    today = today or _today()
     caps = {}
     for provider, pool in POOLS.items():
-        left = (pools.get(pool) or {}).get('remaining_for_you')
-        caps[provider] = left if type(left) in (int, float) and math.isfinite(left) and left >= 0 else None
+        caps[provider] = weekly_cap(pool, pools.get(pool) or {}, today)
     record = {'schema': SCHEMA, 'source': SOURCE, 'engine_id': read.get('engine_id'), 'held': bool(read.get('held')),
-              'credits_known': credits is not None, 'pulled_on': (today or _today()).isoformat(),
+              'credits_known': credits is not None, 'pulled_on': today.isoformat(),
               'as_of': max((str(p.get('balance_as_of') or '') for p in pools.values()), default='') or None,
               'caps': caps, 'pools': {k: {f: v for f, v in p.items() if f in ('tool', 'unit', 'remaining_for_you', 'use_by',
-                                                                               'resets_on', 'balance_as_of')}
+                                                                               'resets_on', 'balance_as_of', 'mode')}
                                        for k, p in pools.items()}}
     record['record_sha256'] = record_hash(record)
     return record
+
+
+def weekly_cap(pool: str, entry: dict, today: dt.date):
+    """This week's cap for one pool as Control Center states it, or None (hold) when it states none we can use."""
+    left = entry.get('remaining_for_you')
+    if not (type(left) in (int, float) and math.isfinite(left) and left >= 0):
+        return None
+    if (entry.get('mode') or 'use_it') not in MODES:
+        return None
+    if pool not in MONTHLY_POOLS:
+        return left
+    try:
+        use_by = dt.date.fromisoformat(str(entry.get('use_by'))[:10])
+    except ValueError:
+        return None
+    weeks = max(1, math.ceil((use_by - today).days / 7))
+    return left / weeks
 
 
 def verify(record) -> list[str]:
