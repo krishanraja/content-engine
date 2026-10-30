@@ -143,15 +143,23 @@ def _sha(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _roots(media_root) -> list[Path]:
+    if not media_root:
+        return []
+    return [Path(r) for r in ([media_root] if isinstance(media_root, (str, Path)) else media_root)]
+
+
 def case_sha(case, media_root=None) -> str | None:
-    """The sha256 a case's verdict must be about: its repository file's, its manifest's, or its file in media_root's."""
+    """The sha256 a case's verdict must be about: its repository file's, its manifest's, or its file directly in a
+    media root (one folder, or a list of them, as critic_run.py cases takes them)."""
     media = case['media']
     if media.get('repo_path'):
         return _sha(ROOT / media['repo_path'])
     if media.get('sha256'):
         return media['sha256']
-    if media_root and media.get('name') and (Path(media_root) / media['name']).is_file():
-        return _sha(Path(media_root) / media['name'])
+    for root in _roots(media_root):
+        if media.get('name') and (root / media['name']).is_file():
+            return _sha(root / media['name'])
     return None
 
 
@@ -217,7 +225,8 @@ def main(argv=None) -> int:
     c = sub.add_parser('check'); c.add_argument('verdict')
     sub.add_parser('manifest')
     k = sub.add_parser('calibrate'); k.add_argument('--verdicts', required=True)
-    k.add_argument('--media-root', help='the folder on his computer that holds the cuts the manifest names')
+    k.add_argument('--media-root', action='append', default=[],
+                   help='a folder on his computer that holds cuts the manifest names (repeat it, as critic_run.py cases takes it)')
     k.add_argument('--record', help='on a pass, write the calibration record here')
     args = ap.parse_args(argv)
     if args.cmd == 'check':
