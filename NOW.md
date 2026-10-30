@@ -47,7 +47,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
-Everything to 29 October 2026 is in `docs/history/2026-10-29-NOW-changed-recently.md`, and lines settled on 30 October in `docs/history/2026-10-30-NOW-moved-3.md`, moved verbatim (W2.12); NOW.md is held under its byte cap by `npm run check:workbench`.
+Everything to 29 October 2026 is in `docs/history/2026-10-29-NOW-changed-recently.md`, 30 October lines in `docs/history/2026-10-30-NOW-moved-3.md`, both verbatim (W2.12); `npm run check:workbench` holds the byte cap.
 
 ## What is next and what is waiting on Krish
 
