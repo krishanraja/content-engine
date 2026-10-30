@@ -325,6 +325,8 @@ Invoke-Check 'codex_profile' {
     $parts = @($entry.name, (Get-Field $server 'command'), (Get-Field $server 'url'), (Get-Field $transport 'command'), (Get-Field $transport 'url')) +
       @(Get-Field $server 'args') + @(Get-Field $transport 'args')
     $text = (@($parts | Where-Object { $_ } | ForEach-Object { [string]$_ })) -join ' '
+    # PowerShell's launch switch grants Codex nothing; it goes before the terms are read, as codex_profile.py LAUNCH_SWITCH.
+    $text = $text -replace '(?i)(?<!\S)-(?:executionpolicy|ep)\s+bypass(?!\S)', ' '
     if (@(Get-ForbiddenHits $text $forbidden).Count) { $flagged += 1 }
   }
   $servers = $entries

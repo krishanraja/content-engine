@@ -33,6 +33,10 @@ PROFILE = ROOT / 'config' / 'codex-profile.json'
 # The kinds the brief names, which every profile must forbid whatever else it lists (W2.6: "no publish, share, deploy,
 # TikTok, Buffer or workflow tools, and no escalation path").
 REQUIRED_FORBIDDEN = ('publish', 'share', 'deploy', 'tiktok', 'buffer', 'workflow', 'escalat')
+# PowerShell's script-launch switch, which every pwsh-started server carries: it lets Windows run the script and grants
+# Codex nothing, so it is taken out of a server's command line before the forbidden terms are read (the Studio's own
+# server tripped "bypass" on it, 30 Oct). Only the switch and its Bypass value go; every other word is still read.
+LAUNCH_SWITCH = re.compile(r'(?i)(?<!\S)-(?:executionpolicy|ep)\s+bypass(?!\S)')
 
 
 def load(path: Path | str | None = None) -> dict:
@@ -136,6 +140,7 @@ def installed(listing, profile: dict) -> list[str]:
         words = ' '.join(str(x) for x in [name, server.get('command') or '', transport.get('command') or '',
                                          *(server.get('args') or []), *(transport.get('args') or []),
                                          server.get('url') or '', transport.get('url') or ''])
+        words = LAUNCH_SWITCH.sub(' ', words)
         if forbidden_terms(words, profile):
             out.append(name or 'unnamed')
     return out
