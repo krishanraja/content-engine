@@ -1273,3 +1273,32 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
     sync(box);
   });
 })();
+
+// The week's mix (week_board.py mix_bar; Ruling, Krish, 2026-10-30: "approve the week's mix once, let Growth fill it"):
+// one Approve, saved in picks/mix with the mix by day exactly as shown and its hash. Growth makes and posts within it.
+(() => {
+  const bar = document.querySelector(".mix[data-mix-sha256]"); if (!bar) return;
+  const btn = bar.querySelector('[data-act="mix"]'), st = bar.querySelector("[data-mixstate]");
+  let fdb = null, saved = null, busy = false;
+  const paint = () => {
+    const same = !!saved && saved.mix_sha256 === bar.dataset.mixSha256, on = same && saved.approved === true;
+    btn.classList.toggle("on", on); btn.setAttribute("aria-pressed", on ? "true" : "false"); btn.disabled = !fdb || busy || on;
+    bar.classList.toggle("on", on);
+    if (!busy) { st.textContent = !fdb ? "Presses are not saving in this view." : on ? "Approved. Growth fills this mix." : saved && !same ? "Growth changed the mix since you pressed. Press again." : "";
+      st.classList.toggle("bad", !fdb || (!!saved && !same)) }
+  };
+  paint();
+  (async () => {
+    try { fdb = window.claude?.use ? await window.claude.use("db") : null } catch { fdb = null }
+    paint(); if (!fdb) return;
+    try { fdb.collection("picks").onSnapshot(snap => { for (const d of snap.docs) if (d.exists && d.id === "mix") saved = d.data() || null; paint() }, () => {}) } catch {}
+  })();
+  btn.addEventListener("click", async () => {
+    if (!fdb || busy) return;
+    let days = {}; try { days = JSON.parse(bar.dataset.mix || "{}") } catch { return }
+    const body = { kind: "mix", approved: true, days, mix_sha256: bar.dataset.mixSha256, at: new Date().toISOString() };
+    busy = true; st.textContent = "Saving"; paint();
+    try { await fdb.doc("picks/mix").set(body); saved = body } catch { st.textContent = "Not saved. Try again"; st.classList.add("bad") }
+    busy = false; paint();
+  });
+})();

@@ -167,5 +167,11 @@ export async function readPieces(db: SupabaseClient, week: string): Promise<{ st
     }
     days.push(entry)
   }
-  return { status: 200, body: { days } }
+  // His one press on the week's filler (picks/mix, Ruling, Krish, 2026-10-30): Growth makes and posts within this mix,
+  // and only once approved is true. Null until he presses.
+  const pressed = await db.from('board_documents').select('body').eq('week', week).eq('collection', 'picks').eq('doc_id', 'mix').maybeSingle()
+  if (pressed.error) return { status: 503, body: { ok: false, error: 'board_store_unavailable' } }
+  const m = isObj(pressed.data) && isObj(pressed.data.body) ? pressed.data.body : null
+  const mix = m && m.kind === 'mix' ? { approved: m.approved === true, days: m.days, mix_sha256: m.mix_sha256, at: m.at ?? null } : null
+  return { status: 200, body: { days, mix } }
 }

@@ -144,6 +144,7 @@ label.qmark input:disabled + .box{opacity:.4}
 .off-days{border-top:2px solid var(--ink);padding-top:12px;margin-top:20px;display:grid;gap:10px}
 .off-day{display:grid;gap:10px}.off-day h3{margin:8px 0 0;font:700 16px/1.3 Archivo,system-ui,sans-serif}
 .off-card{border:1px solid var(--line);border-radius:12px;background:var(--card);padding:12px 14px;display:grid;gap:8px}
+.mix{border:2px solid var(--ink);border-radius:12px;background:var(--card);padding:12px 14px;display:grid;gap:8px}.mix.on{border-color:var(--ok)}.mix h3{margin:0;font:700 16px/1.3 Archivo,system-ui,sans-serif}.mix-days{margin:0;padding-left:20px;display:grid;gap:2px;font-size:15px}.mix-days b{display:inline-block;min-width:96px}
 .off-card.on{border:2px solid var(--ok)}
 .off-copy{margin:0;font-size:16px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
 .off-script{margin:0;padding:10px 12px;border-left:3px solid var(--ink);background:var(--bg);font-size:16px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}

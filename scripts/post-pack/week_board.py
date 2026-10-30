@@ -1600,12 +1600,40 @@ def recorded_names(monday, key, o):
     return folder, (titles or {}).get('short')
 
 
+def week_mix(offdays):
+    """The week's mix Growth proposes, {day: [format, ...]}, from every option Growth fills (a piece he records is not
+    in it: his Approve on its exact words stays its own press), with the sha256 his one press is bound to."""
+    days = {}
+    for key, *_ in MIX_DAYS:
+        kinds = sorted({str(o.get('format') or 'post') for o in (offdays or {}).get(key) or [] if o.get('kind') != 'recorded'})
+        if kinds:
+            days[key] = kinds
+    return days, hashlib.sha256(json.dumps(days, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+
+
+def mix_bar(monday, offdays):
+    """One press for the week's filler (Ruling, Krish, 2026-10-30: "approve the week's mix once, let Growth fill it"):
+    the mix by day, and Approve, saved in picks/mix bound to the mix's hash. Growth then makes and posts within it."""
+    days, sha = week_mix(offdays)
+    if not days:
+        return ''
+    names = {k: n for k, n, _ in MIX_DAYS}
+    rows = ''.join(f'<li><b>{E(names[k])}</b> {E(", ".join(v))}</li>' for k, v in days.items())
+    return (f'<div class="mix" id="ideas-offdays-mix" data-mix-week="{monday.isoformat()}" data-mix-sha256="{sha}" '
+            f'data-mix="{E(json.dumps(days, sort_keys=True, separators=(",", ":")))}"><h3>This week\'s mix</h3>'
+            f'<p class="id-how">Approve once and Growth makes and posts these, filling each day from the options below. '
+            f'Nothing outside this mix goes out.</p><ul class="mix-days">{rows}</ul>'
+            f'<div class="tri-row"><button type="button" class="tri" data-act="mix" aria-pressed="false" disabled>Approve this week\'s mix</button></div>'
+            f'<p class="tri-state" data-mixstate aria-live="polite"></p></div>')
+
+
 def offdays_section(monday, offdays):
-    """The Off days part of the Ideas tab: each off day's options with Approve and Skip, or one plain line."""
+    """The Off days part of the Ideas tab: the week's mix with its one Approve, each day's options under it (a piece
+    he records keeps its own Approve and Skip, on its exact words), or one plain line."""
     head = f'<section class="off-days" id="ideas-offdays" data-week="{monday.isoformat()}"><div class="sec-head"><h2>Off days</h2></div>'
     if not offdays:
         return head + slot_empty('No options for Tuesday, Thursday, Saturday or Sunday yet.') + '</section>'
-    parts = [head]
+    parts = [head, mix_bar(monday, offdays)]
     # Tuesday, Thursday, Saturday and Sunday always; Monday, Wednesday and Friday only when Growth's mix fed them.
     shown = [d for d in MIX_DAYS if d[0] in {k for k, *_ in OFF_DAYS} or offdays.get(d[0])]
     for key, weekday, offset in shown:
@@ -1638,10 +1666,11 @@ def offdays_section(monday, offdays):
                 + (f'<p class="id-why"><span class="id-why-k">Share line</span> {E(o["share_line"])}</p>' if o.get('share_line') else '')
                 + (f'<p class="id-how">Still needs: {E("; ".join(o["needs"]))}</p>' if o.get('needs') else '')
                 + f'<p class="id-why"><span class="id-why-k">Source</span> {src}</p>'
+                + ('' if o.get('kind') != 'recorded' else
                 f'<div class="tri-row" role="group" aria-label="Approve or skip this option">'
                 f'<button type="button" class="tri" data-act="offday" data-value="approve" data-for="{E(did)}" aria-pressed="false" disabled>Approve</button>'
                 f'<button type="button" class="tri" data-act="offday" data-value="skip" data-for="{E(did)}" aria-pressed="false" disabled>Skip</button></div>'
-                f'<p class="tri-state" data-offstate="{E(did)}" aria-live="polite"></p></article>')
+                f'<p class="tri-state" data-offstate="{E(did)}" aria-live="polite"></p>') + '</article>')
         parts.append('</div>')
     parts.append('</section>')
     return ''.join(parts)
@@ -3074,14 +3103,21 @@ def today_model(monday, days, videos, posted, offdays, parsed, now=None, gates=N
                           'title': copy[:120] or str(o.get('format') or 'Off-day post'), 'claim': f'From: {o.get("source")}' if o.get('source') else None,
                           'status': 'concept', 'stage': 0, 'time': '12:30', 'channels': list(OFF_CHANNELS),
                           'assets': [{'slot': 'still', 'state': 'making'}], 'piece_id': o.get('piece_id'),
-                          'action': {'label': 'Approve', 'href': f'#offdays-{key}'}})
-        if opts:
-            out['asks'].append({'what': f'Off day, {short(when)}', 'detail': f'{len(opts)} option{"s" if len(opts) != 1 else ""} to approve or skip',
+                          'action': {'label': 'Approve', 'href': f'#offdays-{key}'} if o.get('kind') == 'recorded'
+                          else {'label': 'See mix', 'href': '#ideas-offdays-mix'}})
+        mine = [o for o in opts if o.get('kind') == 'recorded']
+        if mine:
+            out['asks'].append({'what': f'Record, {short(when)}', 'detail': f'{len(mine)} piece{"s" if len(mine) != 1 else ""} to approve or skip',
                                 'cta': 'Choose', 'href': f'#offdays-{key}', 'day': key})
         # A series day has its own page on the board; the calendar's day opens it (Krish, 2026-10-30: "I should be able
         # to click through to Monday from that board if it is to act as my calendar board").
         out['days'].append({'key': key, 'date': f'{when.day} {when.strftime("%b")}', 'posts': posts,
                             **({'open': f'#{names[key]}'} if key in names else {})})
+    mix = week_mix(offdays)[0]
+    if mix:
+        # The week's filler is one press, not one per post (Ruling, Krish, 2026-10-30).
+        out['asks'].insert(0, {'what': "This week's mix", 'detail': 'Approve once, Growth fills it',
+                               'cta': 'Approve', 'href': '#ideas-offdays-mix', 'day': next(iter(mix))})
     return out
 
 
@@ -4422,8 +4458,9 @@ def _growth_offday_checks(check, week, ideas):
     page, _, _ = board(week, ideas=ideas, offdays=offdays)
     check('growth offdays: a day with two or three options shows, Monday too ("Mix wins: every day"), and a short day is said',
           set(offdays) == {'mon', 'tue'} and 'id="offdays-mon"' in page and any('under the two' in w for w in warnings))
-    check('growth offdays: each option has one Approve and one Skip bound to the hash of Growth\'s draft',
-          'data-offday="off-mon-meme-c1"' in page and page.count('data-act="offday" data-value="approve"') == 5
+    check('growth offdays: the week\'s mix is one Approve, bound to its hash; no option has a press of its own (Ruling, Krish, 2026-10-30)',
+          'data-offday="off-mon-meme-c1"' in page and page.count('data-act="offday" data-value') == 0 and page.count('data-act="mix" aria-pressed') == 1
+          and f'data-mix-sha256="{week_mix(offdays)[1]}"' in page
           and offdays['mon'][0]['copy_sha256'] == hashlib.sha256(b'Synthetic meme draft 1.').hexdigest())
     check('growth offdays: the share line, the formats and what an option still needs are shown',
           'Send this to your CFO.' in page and 'instagram:meme, tiktok:meme' in page and 'Still needs: not ready yet' in page)
@@ -4465,7 +4502,7 @@ def _presses_checks(check, week, mon):
     check('presses: verify refuses an idea card without its presses',
           any('Friday has 3 checked' in w for w in verify(page.replace('data-press="not_for_us" data-for="fri-4"', 'data-x="not_for_us" data-for="fri-4"', 1))))
     check('presses: the off days show each option with its format, source and copy, bound to the copy\'s hash',
-          'id="off-tue-o1"' in page and 'id="off-sat-o3"' in page and page.count('data-act="offday" data-value="approve"') == 5
+          'id="off-tue-o1"' in page and 'id="off-sat-o3"' in page and page.count('data-act="mix" aria-pressed') == 1
           and f'data-copy-sha256="{hashlib.sha256(b"Option 1 copy.").hexdigest()}"' in page and '>The release note</a>' in page
           and 'No options for Thursday yet.' in page and 'No options for Sunday yet.' in page)
     check('presses: with no off-day options the section says so in one plain line, also before the ideas come',

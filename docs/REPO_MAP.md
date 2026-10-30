@@ -1918,6 +1918,8 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `const OFFDAY_ID`
 - `const DECISION_ID`
 - `const DECISION_KIND`
+- `const MIX_ID`
+- `function mixBody(body: Record<string, unknown>): boolean`
 - `const FEEL_ID`
 - `const FEELS`
 - `function feelBody(id: string, body: Record<string, unknown>): boolean`
