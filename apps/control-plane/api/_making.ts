@@ -79,7 +79,8 @@ export interface MakingRecording { cut: MakingCut; path: string; at: string; sec
 export interface MakingThumbnail { path: string; url?: string }
 /** `music` is the licensed track's id in config/music-library.json. */
 export interface MakingVideoAsset { cut: MakingCut; name: string; path: string; at: string; url?: string; seconds?: number; thumbnail?: MakingThumbnail; music?: string; sha256?: string; quality_receipt?: MediaRef; quality_review?: unknown }
-export interface MakingChannelPost { url?: string; posted_at: string }
+/** buffer_post_id: the Buffer post Growth posted it with (board/_posted.ts), when Growth posted it. */
+export interface MakingChannelPost { url?: string; posted_at: string; buffer_post_id?: string }
 export interface MakingSession { url: string; started_at: string; by: string }
 /** Where one cut's script is in Krish's teleprompter.com account. Krish,
  *  2026-10-12: "Also note that Descript is permanently gone, teleprompter.com
