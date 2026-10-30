@@ -110,9 +110,10 @@ class FridayFailuresAreRefused(unittest.TestCase):
             s['audio']['bed'].update(mode='episode_bed')
         self.assertNotIn('sound.long_cut_bed', codes_for(mutate(long_episode)))
 
-    def test_ducked_bed_under_a_voiceover_is_allowed(self):
+    def test_ducked_bed_is_refused_on_a_short_too(self):
+        # Krish, Gate 2, 2026-10-30: "Same issue with the 90-second video on that day"
         found = codes_for(mutate(lambda s: s['audio']['bed'].update(mode='ducked')))
-        self.assertNotIn('sound.bed_continuous', found)
+        self.assertIn('sound.bed_steady', found)
         self.assertNotIn('SCHEMA', found)
 
     def test_R19_speed_change_without_krish_saying_so(self):

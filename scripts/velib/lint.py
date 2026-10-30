@@ -252,10 +252,13 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
             out.append('sound.bed_continuous audio.bed.mode: a voiceover cut carries a continuous, ducked or episode_bed bed (episode mode needs an exception approval)')
     # A long cut carries the approved episode bed: one low level under the voice, lifts only at chapter cards
     # (config/learnings.json deep-cut-music-always-under). Krish, Gate 2, 2026-10-30, of a ducked long cut:
-    # "Sometimes it just turns off randomly. Sometimes it's quiet. Sometimes it gets louder."
+    # "Sometimes it just turns off randomly. Sometimes it's quiet. Sometimes it gets louder." and of its ducked
+    # 90-second cut: "Same issue with the 90-second video on that day". So no cut carries a ducked bed.
     long_cuts = [cid for cid, cut in spec['cuts'].items() if cut['max_s'] > LONG_CUT_S and not cut.get('excerpt')]
     if long_cuts and bed_mode != 'episode_bed':
         out.append(f'sound.long_cut_bed audio.bed.mode: {", ".join(long_cuts)} run past {LONG_CUT_S} s, so the bed is episode_bed, not {bed_mode}')
+    elif bed_mode == 'ducked':
+        out.append('sound.bed_steady audio.bed.mode: a ducked bed swings with the voice; use episode_bed (or continuous)')
 
     if history:
         hero = spec['signature']['hero']['device']
