@@ -23,6 +23,8 @@ describe('what a Liked or Not it carries', () => {
     expect(validBody('picks', 'tue-feel', feel({ day: 'wed' }))).toBe(false)
     expect(validBody('picks', 'tue-feel', feel({ send: true }))).toBe(false)
     expect(validBody('picks', 'tue-feel', feel({ note: 'too busy, one idea per slide' }))).toBe(true)
+    expect(validBody('picks', 'tue-feel-1', feel())).toBe(true)
+    expect(validBody('picks', 'tue-feel-x', feel())).toBe(false)
   })
   it('is his alone', () => {
     expect(hisOnlyRefusal('picks', feel(), 'engine_operator')).toBe('decision_is_his')

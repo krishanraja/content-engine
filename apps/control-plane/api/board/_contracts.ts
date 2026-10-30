@@ -62,7 +62,7 @@ export const DECISION_KIND = { scripts: 'approve_scripts', titles: 'titles', pub
 // His Liked or Not it on a day's post (the Today view, layout A; Krish, 2026-10-29: "yes, go with A and your
 // recommendations and my feedback"): picks/<day>-feel, any day of the week, with his optional words. The server files
 // each press as one taste_reports row (afterPress), the road his feedback takes to the cues.
-export const FEEL_ID = /^(mon|tue|wed|thu|fri|sat|sun)-feel$/
+export const FEEL_ID = /^(mon|tue|wed|thu|fri|sat|sun)-feel(?:-[1-9])?$/
 export const FEELS = ['liked', 'not_it'] as const
 export function feelBody(id: string, body: Record<string, unknown>): boolean {
   const m = FEEL_ID.exec(id)
