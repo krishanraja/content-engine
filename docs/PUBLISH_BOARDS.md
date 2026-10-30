@@ -280,6 +280,9 @@ is not carried, the new week's pick comes from its options). Then build the new 
 series line. A day from before the fixed layout is drawn from its record with `--piece` instead. Take the day
 off the old week's board only after the new board reads back.
 
+From the week of 2 November the board opens on Today (layout A, `board_today.py`). When a day waits on Krish's
+Gate 2 verdict on a cut, give `--gate DAY=https://...` (the cut's link): Today asks for it and the day's card opens it.
+
 Build with `week_board.py --target web` plus the usual week/day inputs. Run
 `--verify`, then `board_web.py publish-web PAGE.html` for the dry-run manifest.
 Provide `--assets FILE.json` for existing direct downloads. After the applicable

@@ -284,6 +284,10 @@ function fromHash(){
   const step = /^([a-z]+)\/([a-z]+)$/.exec(h);
   if (step && tabs.some(t => t.dataset.day === step[1])) { select(step[1], { top: true }); selectSub(document.getElementById("panel-" + step[1]), step[2]); return true }
   for (const p in PREFIX) if (h.startsWith(p)) { select(PREFIX[p]); const el = document.getElementById(h); if (el) { openStepOf(el); el.scrollIntoView() } return true }
+  // Any other id (an off day's options on the Ideas tab, a post on Today): open the tab that holds it, then show it.
+  const el = document.getElementById(h), tp = el && el.closest("[role=tabpanel]");
+  const tab = tp && tabs.find(t => t.getAttribute("aria-controls") === tp.id);
+  if (tab) { select(tab.dataset.day); openStepOf(el); el.scrollIntoView(); return true }
   return false;
 }
 tabs.forEach((t, i) => {
@@ -1233,5 +1237,28 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
     if (error) say(c, error.message || "Not saved. Press it again.", true);
     else if (result.scores === "waits_on_migration") say(c, "Saved on the board. Your score joins the record once the score table is switched on.", false);
     else if (result.scores === "failed") say(c, "Saved on the board, but the record did not take it yet; a session files it from here.", true);
+  });
+})();
+
+// Layout A (board_today.py): Liked or Not it on each post, saved at once in picks/<day>-feel (another post that day,
+// <day>-feel-<n>) by his press alone; the server files it to taste_reports.
+(() => {
+  const btns = [...document.querySelectorAll(".today-a [data-feel]")]; if (!btns.length) return;
+  const saved = {}; let fdb = null;
+  const paint = () => { for (const b of btns) { const v = saved[b.dataset.feelId], on = !!v && v.feel === b.dataset.feel;
+    b.classList.toggle("on", on); b.setAttribute("aria-pressed", on ? "true" : "false"); b.disabled = !fdb } };
+  paint();
+  (async () => {
+    try { fdb = window.claude?.use ? await window.claude.use("db") : null } catch { fdb = null }
+    paint(); if (!fdb) return;
+    try { fdb.collection("picks").onSnapshot(snap => { for (const d of snap.docs) if (d.exists && /-feel(-\d)?$/.test(d.id)) saved[d.id] = d.data() || {}; paint() }, () => {}) } catch {}
+  })();
+  document.addEventListener("click", async e => {
+    const b = e.target.closest && e.target.closest(".today-a [data-feel]"); if (!b || !fdb) return;
+    const id = b.dataset.feelId, body = { kind: "feel", day: b.dataset.feelDay, feel: b.dataset.feel, at: new Date().toISOString() };
+    if (b.dataset.piece) body.piece_id = b.dataset.piece;
+    if (b.dataset.title) body.title = b.dataset.title;
+    const prev = saved[id]; saved[id] = body; paint();
+    try { await fdb.doc("picks/" + id).set(body) } catch { if (prev) saved[id] = prev; else delete saved[id]; paint() }
   });
 })();

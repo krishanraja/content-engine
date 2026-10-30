@@ -110,6 +110,7 @@ sys.path.insert(0, str(HERE))
 import engine_stamp  # noqa: E402  the engine's stamp on a page it built
 import publish_kit  # noqa: E402
 import publish_manager  # noqa: E402
+import board_today  # noqa: E402
 import board_materials  # noqa: E402
 import story_check  # noqa: E402  which cut a script's label names
 
@@ -186,6 +187,7 @@ TOP_TABS = ('ideas', 'queue', 'monday', 'wednesday', 'friday')
 DAY_TABS = TOP_TABS[2:]
 # Layout v3 (from the week of 9 November 2026, W2.1) adds the Archive: every piece since the Launch, with his scores.
 ARCHIVE_TAB = 'archive'
+TODAY_TAB = 'today'  # layout A's first tab, from today.from (board_today.py)
 DAY_STEPS = ('brief', 'drafts', 'record', 'publish')
 
 
@@ -227,6 +229,9 @@ def load_layout(path=LAYOUT_FILE):
 LAYOUT = load_layout()
 LAYOUT_FROM = date.fromisoformat(LAYOUT['layout_from'])
 V3 = LAYOUT.get('v3') or {}
+TODAY = LAYOUT.get('today') or {}
+TODAY_FROM = date.fromisoformat(TODAY['from']) if TODAY else None
+TODAY_ON = False  # whether the board being built opens on Today; set by use_layout()
 V3_FROM = date.fromisoformat(V3['from']) if V3 else None
 FIXED = False  # whether the board being built is in the fixed layout; set by use_layout()
 # The tabs, the steps' rhythm and the layout version of the board being built; set by use_layout(). Version 2 from
@@ -244,10 +249,11 @@ def fixed_layout(monday):
 def use_layout(monday):
     """Point the module's step and cut tables at the layout of this week: the fixed one from layout_from, else the
     one the week was published in. Every function below reads them, so one switch keeps a week in one layout."""
-    global STEPS, LABEL, STANDING, SECTION_STEP, CUTS, FIXED, FEATURE_ONLY, DROPPED_CHANNELS, TABS, RHYTHM, VERSION
+    global STEPS, LABEL, STANDING, SECTION_STEP, CUTS, FIXED, FEATURE_ONLY, DROPPED_CHANNELS, TABS, RHYTHM, VERSION, TODAY_ON
     FIXED = fixed_layout(monday)
+    TODAY_ON = FIXED and bool(TODAY_FROM) and monday >= TODAY_FROM
     v3 = bool(V3_FROM) and monday >= V3_FROM
-    TABS = TOP_TABS + ((ARCHIVE_TAB,) if v3 else ())
+    TABS = ((TODAY_TAB,) if TODAY_ON else ()) + TOP_TABS + ((ARCHIVE_TAB,) if v3 else ())
     RHYTHM = V3['rhythm'] if v3 else LAYOUT['rhythm']
     VERSION = V3['version'] if v3 else 2
     if FIXED:
@@ -2982,9 +2988,104 @@ def fixed_day(key, name, weekday, when, series_label, page, piece, pick, title, 
     return state
 
 
+# ------------------------------------------------------------------ layout A: Today
+
+# The boxes a post goes out on, the same lists Growth reads (apps/control-plane/api/board/_posted.ts).
+SERIES_CHANNELS = ('substack', 'youtube', 'shorts', 'tiktok', 'reels', 'linkedin', 'spotify', 'x', 'threads', 'facebook', 'substack-notes')
+OFF_CHANNELS = ('shorts', 'tiktok', 'reels', 'instagram', 'linkedin', 'x', 'threads', 'facebook', 'substack-notes')
+OFF_KINDS = {'meme': 'meme', 'carousel': 'carousel', 'good_news': 'news', 'news': 'news', 'level_up': 'levelup', 'levelup': 'levelup',
+             'explainer': 'explainer', 'short': 'short'}
+
+
+def gates_of(values):
+    """{day: https link} from --gate DAY=URL: the cut a day waits on his Gate 2 verdict for."""
+    out = {}
+    for v in values or []:
+        k, sep, url = v.partition('=')
+        key = DAY_KEYS.get(k.strip().lower())
+        if not (sep and key and re.match(r'^https://\S+$', url.strip())):
+            raise BoardError(f'--gate {v}: give DAY=URL, the https link to the cut he judges')
+        out[key] = url.strip()
+    return out
+
+
+def today_model(monday, days, videos, posted, offdays, parsed, now=None, gates=None):
+    """The Today view's model (board_today.check) from what the board already holds: each day's piece and its state,
+    its finished videos, whether Substack went out, Sunday's off-day options and the publish page's pictures. Every
+    ask is one short line and one button linking to the step it approves; nothing here invents a word of the post."""
+    today = (now or datetime.now(timezone.utc)).date()
+    sunday = monday + timedelta(days=6)
+    label = ('This week' if monday <= today <= sunday else 'Next week' if monday - timedelta(days=7) <= today < monday
+             else f'Week of {monday.day} {monday.strftime("%b")}')
+    short = lambda d: f'{d.strftime("%a")} {d.day} {d.strftime("%b")}'
+    keys = [k for k, *_ in board_today.DAYS]
+    out = {'week': monday.isoformat(), 'label': label, 'range': f'{short(monday)} to {short(sunday)}',
+           'today': keys[(today - monday).days] if monday <= today <= sunday else None, 'asks': [], 'days': []}
+    by_day = {d['day']: d for d in days}
+    names = {k: name for k, name, *_ in DAYS}
+    for i, key in enumerate(keys):
+        when = monday + timedelta(days=i)
+        posts = []
+        d = by_day.get(key)
+        if d and d['state'] != 'not_picked':
+            name, state = names[key], d['state']
+            vids = {v.get('cut'): v for v in (videos.get(key) or []) if isinstance(v, dict)}
+            assets = []
+            for cut in ('long', 'short'):
+                v = vids.get(cut)
+                if v and (drive_links(v.get('url')) or str(v.get('url') or '').startswith('/api/board/')):
+                    assets.append({'slot': cut, 'state': 'ready', 'href': f'#{name}/publish'})
+                elif state in ('draft', 'made'):
+                    assets.append({'slot': cut, 'state': 'making'})
+            if state == 'draft':
+                assets.append({'slot': 'article', 'state': 'making', 'href': f'#{name}/drafts'})
+            elif state == 'made':
+                assets.append({'slot': 'article', 'state': 'ready', 'href': f'#{name}/publish'})
+                covers = [im for im in ((parsed.get(key) or {}).get('images') or []) if im.get('role') in ('cover', 'substack-cover')]
+                assets.append({'slot': 'cover', 'state': 'ready', 'href': f'#{name}/publish'} if covers else {'slot': 'cover', 'state': 'missing'})
+            live = key in posted
+            cuts_ready = sum(1 for a in assets if a['slot'] in ('long', 'short') and a['state'] == 'ready') == 2
+            stage, status = ((4, 'live') if live else (3 if cuts_ready else 2, 'approved') if state == 'made'
+                             else (1, 'making') if state == 'draft' else (0, 'making'))
+            step = 'publish' if state == 'made' else 'drafts' if state == 'draft' else 'brief'
+            act = {'label': 'Approve' if state == 'made' and not live else 'Open', 'href': f'#{name}/{step}'}
+            gate = (gates or {}).get(key)
+            if gate:
+                # His Gate 2 verdict on a cut the piece waits on (--gate): the card's one button and an ask open that cut.
+                act = {'label': 'Watch cut', 'href': gate}
+            posts.append({'kind': 'piece', 'series': d['series'], 'title': d.get('title') or 'Picked, not made yet',
+                          'piece_id': d.get('piece_id'), 'status': status, 'stage': stage, 'time': '12:30',
+                          'waiting': 'Your call waits on the Drafts step' if d.get('waiting') else None,
+                          'channels': list(SERIES_CHANNELS), 'assets': assets, 'action': act})
+            if gate:
+                out['asks'].append({'what': f'Gate 2, {short(when)}', 'detail': 'Judge the long cut',
+                                    'cta': 'Watch cut', 'href': gate, 'day': key})
+            if state == 'draft' and d.get('waiting'):
+                n = len(d['waiting'])
+                out['asks'].append({'what': f'Words, {short(when)}', 'detail': f'{n} call{"s" if n != 1 else ""} wait on you',
+                                    'cta': 'Open', 'href': f'#{name}/drafts', 'day': key})
+            elif state == 'made' and not live:
+                out['asks'].append({'what': f'Publish, {short(when)}', 'detail': 'Approve, then post it',
+                                    'cta': 'Approve', 'href': f'#{name}/publish', 'day': key})
+        opts = (offdays or {}).get(key) or []
+        for o in opts:
+            copy = ' '.join(str(o.get('copy') or '').split())
+            posts.append({'kind': 'short' if o.get('kind') == 'recorded' else OFF_KINDS.get(str(o.get('format') or '').lower(), 'note'),
+                          'title': copy[:120] or str(o.get('format') or 'Off-day post'), 'claim': f'From: {o.get("source")}' if o.get('source') else None,
+                          'status': 'concept', 'stage': 0, 'time': '12:30', 'channels': list(OFF_CHANNELS),
+                          'assets': [{'slot': 'still', 'state': 'making'}], 'piece_id': o.get('piece_id'),
+                          'action': {'label': 'Approve', 'href': f'#offdays-{key}'}})
+        if opts:
+            out['asks'].append({'what': f'Off day, {short(when)}', 'detail': f'{len(opts)} option{"s" if len(opts) != 1 else ""} to approve or skip',
+                                'cta': 'Choose', 'href': f'#offdays-{key}', 'day': key})
+        out['days'].append({'key': key, 'date': f'{when.day} {when.strftime("%b")}', 'posts': posts})
+    return out
+
+
 def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pending=None, kept=None, videos=None, review=None,
           draft=(), calls=None, posted=None, kept_at=None, ideas=None, queue=None, materials=None, briefs=None, combine=None,
-          sweeps=None, lessons=None, folders=None, kept_draft=None, titles=None, offdays=None, manifests=None, archive=None):
+          sweeps=None, lessons=None, folders=None, kept_draft=None, titles=None, offdays=None, manifests=None, archive=None,
+          gates=None):
     """(page, manifest, warnings). titles: {day: read_titles()}; offdays: read_offdays(); manifests: {day: the sha256
     of the piece's manifest}, for Approve for publish. folders: {day: the post's library folder, from its making record's pack}. ideas: {day: [idea]} from read_ideas(),
     shown as a first tab, Ideas, opened while no day is made. pages: {day: publish page text};
@@ -3020,6 +3121,8 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
     opened = next((k for k in order if k in parsed or k in kept), None) or next((k for k in order if k in pieces or k in picks or k in pending), None)
     if not opened:
         opened = 'ideas' if ideas or FIXED else 'mon'
+    if TODAY_ON:
+        opened = TODAY_TAB  # layout A: the board opens on Today, the Needs you queue first
     if FIXED:
         # The fixed layout's first two tabs are always there: Ideas (waiting until Sunday's ideas come) and Queue.
         panels.append(ideas_panel(monday, ideas, opened != 'ideas', queue, offdays) if ideas else
@@ -3167,6 +3270,16 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
             f'<button type="button" role="tab" id="tab-{ARCHIVE_TAB}" aria-controls="panel-{ARCHIVE_TAB}" aria-selected="false" tabindex="-1" '
             f'data-day="{ARCHIVE_TAB}"><span class="t-day">Archive</span><span class="t-dot"> · </span>'
             f'<span class="t-prog" data-tabprog="{ARCHIVE_TAB}">{len(archive or [])} pieces</span><span class="t-ch">Every piece</span></button>')
+    if TODAY_ON:
+        model = today_model(monday, days, videos or {}, posted, offdays, parsed, gates=gates)
+        panels.insert(0, f'<div class="pm fixed" id="panel-{TODAY_TAB}" role="tabpanel" aria-labelledby="tab-{TODAY_TAB}" '
+                         f'data-day="{TODAY_TAB}" tabindex="-1"><div class="day-head"><div class="kick">{E(week_span(monday))}</div>'
+                         f'<h1>{E(model["label"])}</h1></div>{board_today.inner(model, heading=False)}</div>')
+        asks = len(model['asks'])
+        tabs.insert(0, f'<button type="button" role="tab" id="tab-{TODAY_TAB}" aria-controls="panel-{TODAY_TAB}" aria-selected="true" '
+                       f'tabindex="0" data-day="{TODAY_TAB}"><span class="t-day">Today</span><span class="t-dot"> · </span>'
+                       f'<span class="t-prog" data-tabprog="{TODAY_TAB}">{asks} ask{"s" if asks != 1 else ""}</span>'
+                       f'<span class="t-ch">Needs you</span></button>')
     missing = [d['name'] for d in days if d['state'] == 'not_picked']
     aside = ''
     if missing:
@@ -3194,10 +3307,10 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
     css = publish_manager.CSS.strip() if FIXED else '\n'.join(blocks or [publish_manager.CSS.strip()])
     page = fill(template('page.html'), {
         'TITLE': html.escape(board_title(monday), quote=False),
-        'BASE_CSS': css, 'WEEK_CSS': template('week.css').strip(), 'KICKER': E(week_span(monday)),
+        'BASE_CSS': css, 'WEEK_CSS': template('week.css').strip() + (board_today.scoped_css() if TODAY_ON else ''), 'KICKER': E(week_span(monday)),
         'TABLIST_LABEL': E(f'Publishing days, week of {monday.day} {monday.strftime("%B")}'),
         'TABS': ''.join(tabs), 'ASIDE': aside, 'PANELS': ''.join(panels), 'SCRIPT': script(conf),
-        'WK_CLASS': ' fixed' if FIXED else '', 'MAIN_ATTRS': f' data-layout="{VERSION}"' if FIXED else '',
+        'WK_CLASS': ' fixed' if FIXED else '', 'MAIN_ATTRS': (f' data-layout="{VERSION}"' + (' data-today="1"' if TODAY_ON else '')) if FIXED else '',
     }, 'page.html')
     problems = check_page(page)
     if problems:
@@ -3300,7 +3413,9 @@ def check_page(page):
     if dups:
         problems.append(f'{len(dups)} ids used twice: {sorted(dups)[:8]}')
     refs = re.findall(r'\s(?:data-ref|for|aria-controls|aria-labelledby)="([^"]+)"', page) + re.findall(r'\shref="#([^"]+)"', page)
-    dangling = sorted({x for r in refs for x in r.split() if x not in seen})
+    # A link to a day's step (#monday/publish) is a route week.js opens (fromHash), not an id.
+    route = re.compile(r'(%s)/(%s)' % ('|'.join(n for _, n, *_ in DAYS), '|'.join(DAY_STEPS)))
+    dangling = sorted({x for r in refs for x in r.split() if x not in seen and not route.fullmatch(x)})
     if dangling:
         problems.append(f'references to no id: {dangling[:8]}')
     keys = {k for k, *_ in STEPS}
@@ -3387,7 +3502,8 @@ def fixed_problems(page):
     out = []
     # The page says its own layout version: version 3 (from v3.from) adds the Archive, last.
     version = int((re.search(r'<main id="week" data-layout="(\d+)"', page) or [None, '2'])[1])
-    TABS = TOP_TABS + ((ARCHIVE_TAB,) if version >= 3 else ())
+    today = bool(re.search(r'<main id="week" data-layout="\d+" data-today="1"', page))
+    TABS = ((TODAY_TAB,) if today else ()) + TOP_TABS + ((ARCHIVE_TAB,) if version >= 3 else ())
     tabs = re.findall(r'<button type="button" role="tab" id="tab-([a-z]+)"', page)
     if tuple(tabs) != TABS:
         out.append(f'layout: the tabs are {tabs}, not {list(TABS)}')
@@ -3420,6 +3536,18 @@ def fixed_problems(page):
             children.append(('div', re.match(r'<div class="([^"]+)"', block).group(1) if re.match(r'<div class="([^"]+)"', block) else block[:40]))
             at = nxt + len(block)
         kinds = [c for _, c in children]
+        if name == TODAY_TAB:
+            # Layout A: its heading, then the view. One button per ask, each a link to what it approves, and no
+            # button label longer than its fixed width holds.
+            if kinds != ['day-head', 'today-a']:
+                out.append(f'layout: today holds {kinds}, not its heading and the Today view')
+            for ask in re.findall(r'<li class="ask">.*?</li>', panel, re.S):
+                if ask.count('class="btn') > 1 or ('<span class="n">' in ask and not re.search(r'<a class="btn go" href="(https://|#)', ask)):
+                    out.append('layout: a Needs you row without its one button linking to what it approves')
+            for label in re.findall(r'<a class="btn[^"]*" href="[^"]*">([^<]*)</a>', panel):
+                if len(html.unescape(label)) > board_today.CTA_MAX:
+                    out.append(f'layout: a Today button label longer than its button holds ({label})')
+            continue
         if name == ARCHIVE_TAB:
             # The Archive: its heading, then its list; each row with a piece carries his Scores press.
             if kinds[:1] != ['day-head']:
@@ -3752,7 +3880,8 @@ def build(args, get=None):
     page, manifest, more = board(monday, pages, pieces, scripts, picks, pending, kept, videos, review, draft, calls, posted, kept_at,
                                  ideas, queue, materials, briefs, combine, sweeps, lessons, folders, retained_drafts,
                                  titles, offdays, manifests,
-                                 read_archive(read_json(args.archive, '--archive')) if getattr(args, 'archive', None) else None)
+                                 read_archive(read_json(args.archive, '--archive')) if getattr(args, 'archive', None) else None,
+                                 gates=gates_of(getattr(args, 'gate', None)))
     if previous is not None:
         keep_previous(previous, manifest['days'], unpick, monday, fresh)
     manifest['warnings'] = warnings + more
@@ -4133,7 +4262,20 @@ def _v3_checks(check, mon):
         {'piece_id': None, 'date': '2026-10-06', 'series': None, 'title': 'The Launch', 'links': [], 'scores': {}}]})
     page, manifest, _ = board(week, {'mon': mon}, {'mon': MON_ID}, archive=rows)
     check('v3: a fed week with the Archive passes verify', verify(page) == [])
-    check('v3: six tabs, the Archive last', re.findall(r'role="tab" id="tab-([a-z]+)"', page) == list(TOP_TABS) + [ARCHIVE_TAB])
+    check('v3: the tabs, Today first from today.from, the Archive last',
+          re.findall(r'role="tab" id="tab-([a-z]+)"', page) == [TODAY_TAB] * (week >= TODAY_FROM) + list(TOP_TABS) + [ARCHIVE_TAB])
+    if week >= TODAY_FROM:
+        gated, _, _ = board(week, {'mon': mon}, {'mon': MON_ID}, archive=rows, gates={'mon': 'https://example.com/board#friday'})
+        gp = gated[gated.find('id="panel-today"'):]
+        check('layout A: a Gate 2 cut is one ask and the day card\'s button, both opening the cut',
+              gp.count('href="https://example.com/board#friday">Watch cut</a>') == 2 and 'Gate 2, Mon ' in gp)
+        panel = page[page.find('id="panel-today"'):]
+        check('layout A: the board opens on Today, a made Monday asks for its publish approval and links to that step',
+              'aria-selected="true" tabindex="0" data-day="today"' in page and 'href="#monday/publish">Approve</a>' in panel
+              and 'data-today="1"' in page)
+        broken = page.replace('href="#monday/publish">Approve</a></li>', 'href="#monday/publish">Approve this now please</a></li>', 1)
+        check('layout A: verify refuses a Today button label longer than its button holds',
+              any('Today button label' in p for p in fixed_problems(broken)))
     check('v3: the board and its manifest say layout 3', 'data-layout="3"' in page and manifest.get('layout') == 3)
     check('v3: the Archive lists the newest piece first, with its scores and its Scores press, and none on a row with no piece',
           page.find('Warner sued Suno') < page.find('The Launch') and 'Narrative 8/10, production 6/10, looking back' in page
@@ -5085,6 +5227,8 @@ def parser():
                     '(the article, each script); his saves land in the board\'s store as edits/<day>-<item>')
     ap.add_argument('--draft', action='append', metavar='DAY', help='with --review: a day whose words are in review; its tab is the '
                     'review card, what waits on Krish and its checklist, never an older publish page')
+    ap.add_argument('--gate', action='append', metavar='DAY=URL', help='layout A: a cut the day waits on Krish\'s Gate 2 '
+                    'verdict for; Today asks for it and the day\'s card opens it (an https link)')
     ap.add_argument('--waiting', action='append', metavar='DAY=WHAT', help='with --draft: one call waiting on Krish, in order, '
                     'listed in that day\'s tab')
     ap.add_argument('--drop-review', action='append', metavar='DAY=ID', help='with --draft: a review box the board being '
