@@ -32,7 +32,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## Where it is right now (as of 2026-10-30)
 
-<!-- north-star-state {"week_of":"2026-10-26","week_target":1,"current":0,"current_as_of":"2026-10-29","current_source":"Control Center content_ideas (0 published in the last 7 days)","urgency":4,"urgency_reason":"at 0% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 0, against 1 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
+<!-- north-star-state {"week_of":"2026-10-26","week_target":1,"current":1,"current_as_of":"2026-10-30","current_source":"Control Center content_ideas in the publication's series (1 published in the last 7 days)","urgency":1,"urgency_reason":"at 100% of this week's target"} --> **North Star number: U1, on pace.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 1, against 1 this week, on the way to 30 by 30 November 2026. Steady, and one proposal a week that would raise the ceiling.
 
 Lifecycle: building. The 29 October work below is on the session branch `claude/fervent-brown-d8e55b`, going to main by pull request; the ve part is merged by hand after green CI. Everything older is in `docs/history/2026-10-29-NOW.md` and `docs/history/2026-10-29-NOW-closeout-fold.md`.
 
