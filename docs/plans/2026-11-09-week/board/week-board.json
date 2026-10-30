@@ -1,0 +1,851 @@
+{
+  "kind": "week_board",
+  "version": 1,
+  "title": "This Week's Publish Board (wC 9 Nov)",
+  "week_start": "2026-11-09",
+  "week_end": "2026-11-13",
+  "built_at": "2026-10-30T13:32:32.332926Z",
+  "bytes": 1504599,
+  "sha256": "b239b286611eeae8347b585f361738365c8a44ba6d3c74aea788daa04a4cdfe1",
+  "days": [
+    {
+      "day": "mon",
+      "name": "Monday",
+      "date": "2026-11-09",
+      "series": "follow_the_money",
+      "series_label": "follow.the.money",
+      "state": "made",
+      "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+      "title": "When an AI app millions of people loved goes bust, who walks away with the money? Google paid billions for the people; Disney is bidding millions for what is left; the users get nothing.",
+      "teleprompter": {
+        "folder_name": null,
+        "folder_id": "0C265FC6-6F3B-4210-8A1C-B81D8C759E3A",
+        "cuts": {
+          "long": {
+            "title": "Mon 9 Nov - 5-minute - Disney, Google and Character.AI",
+            "script_id": "6229F821-B55A-4AE1-AAF8-B379032D6631",
+            "state": "in"
+          },
+          "short": {
+            "title": "Mon 9 Nov - 90-second - Disney, Google and Character.AI",
+            "script_id": "EC69BEAA-6B5E-43B4-A441-5A579089E417",
+            "state": "in"
+          }
+        }
+      },
+      "waiting": null,
+      "tick_ids": [
+        "mon-record-long",
+        "mon-record-short",
+        "mon-substack",
+        "mon-youtube",
+        "mon-feature-youtube",
+        "mon-shorts",
+        "mon-tiktok",
+        "mon-reels",
+        "mon-linkedin",
+        "mon-spotify",
+        "mon-feature-spotify",
+        "mon-record-feature"
+      ]
+    },
+    {
+      "day": "wed",
+      "name": "Wednesday",
+      "date": "2026-11-11",
+      "series": "under_the_hood",
+      "series_label": "under.the.hood",
+      "state": "not_picked",
+      "piece_id": null,
+      "title": null,
+      "teleprompter": null,
+      "waiting": null,
+      "tick_ids": []
+    },
+    {
+      "day": "fri",
+      "name": "Friday",
+      "date": "2026-11-13",
+      "series": "mind_the_gap",
+      "series_label": "mind.the.gap",
+      "state": "not_picked",
+      "piece_id": null,
+      "title": null,
+      "teleprompter": null,
+      "waiting": null,
+      "tick_ids": []
+    }
+  ],
+  "made": [
+    "mon"
+  ],
+  "picked": [
+    "mon"
+  ],
+  "db": {
+    "ticks": {
+      "doc_id": "<day>-<step>",
+      "fields": [
+        "done",
+        "at",
+        "day",
+        "piece_id",
+        "step",
+        "channel",
+        "label"
+      ]
+    },
+    "links": {
+      "doc_id": "<day>",
+      "fields": [
+        "article",
+        "youtube",
+        "at"
+      ]
+    },
+    "edits": {
+      "doc_id": "<day>-<item>",
+      "fields": [
+        "text",
+        "day",
+        "item",
+        "base_sha256",
+        "at"
+      ]
+    },
+    "picks": {
+      "doc_id": "<day>",
+      "fields": [
+        "pick",
+        "idea_id",
+        "series",
+        "story",
+        "day",
+        "at",
+        "note"
+      ],
+      "scores": {
+        "doc_id": "score-<piece uuid>",
+        "fields": [
+          "kind",
+          "piece_id",
+          "narrative",
+          "production",
+          "basis",
+          "note",
+          "at"
+        ],
+        "then": "the server files each save as one piece_scores row, scored_by krish; history kept"
+      },
+      "decisions": {
+        "<day>-scripts": {
+          "kind": "approve_scripts",
+          "fields": [
+            "kind",
+            "day",
+            "piece_id",
+            "approved",
+            "texts",
+            "scripts",
+            "titles",
+            "folder_title",
+            "folder_id",
+            "script_ids",
+            "at",
+            "send"
+          ],
+          "then": "the server sends them to Teleprompter once the scripts check passed on them and two fresh readers heard them (else status held), records a send on the making record, and writes send {status, folder_id, scripts, error, recorded, record_error, at, by}"
+        },
+        "<day>-titles": {
+          "kind": "titles",
+          "fields": [
+            "kind",
+            "day",
+            "piece_id",
+            "picks",
+            "at"
+          ]
+        },
+        "<day>-publish": {
+          "kind": "approve_publish",
+          "fields": [
+            "kind",
+            "day",
+            "piece_id",
+            "approved",
+            "manifest_sha256",
+            "at"
+          ]
+        },
+        "<day>-reject-<asset>": {
+          "kind": "reject_asset",
+          "fields": [
+            "kind",
+            "day",
+            "piece_id",
+            "asset",
+            "label",
+            "reason",
+            "drive_id",
+            "at_ms",
+            "formats",
+            "at"
+          ],
+          "then": "the server files his reason in taste_rejection_inbox"
+        },
+        "views": {
+          "approvals": "approve_scripts",
+          "titles": "titles"
+        }
+      }
+    },
+    "queue": {
+      "doc_id": "<pick>",
+      "fields": [
+        "pick",
+        "queued",
+        "verdict",
+        "reason",
+        "angle",
+        "so_what",
+        "story",
+        "idea_id",
+        "series",
+        "week",
+        "at"
+      ],
+      "combine": {
+        "doc_id": "combine-<n>",
+        "fields": [
+          "combine",
+          "members",
+          "pick",
+          "at"
+        ],
+        "then": "POST /api/content-ideas/synthesize with the members, decided_by Krish"
+      },
+      "presses": {
+        "doc_id": "<pick>",
+        "fields": [
+          "pick",
+          "use",
+          "note",
+          "theme",
+          "reason",
+          "target_week",
+          "queued",
+          "idea_id",
+          "so_what",
+          "story",
+          "series",
+          "week",
+          "day",
+          "at"
+        ],
+        "uses": [
+          "wider_piece_context",
+          "track_over_time",
+          "next_week",
+          "not_for_us"
+        ],
+        "null_use": "he took the press back"
+      },
+      "offday": {
+        "doc_id": "off-<day>-<option id>",
+        "fields": [
+          "pick",
+          "use",
+          "day",
+          "approved",
+          "copy_sha256",
+          "format",
+          "source",
+          "option_id",
+          "week",
+          "at"
+        ],
+        "recorded_fields": [
+          "kind",
+          "piece_id",
+          "series",
+          "style",
+          "script",
+          "script_sha256",
+          "folder_title",
+          "title"
+        ]
+      }
+    },
+    "comments": {
+      "doc_id": "<uuid>",
+      "fields": [
+        "thread_id",
+        "anchor",
+        "text",
+        "at",
+        "box",
+        "paragraph",
+        "quote",
+        "act",
+        "ref"
+      ],
+      "acts": {
+        "undo": "put the also-changed ref back (edit_sweep.py --undo)",
+        "apply": "make the suggested ref too",
+        "lesson_yes": "his yes to the proposal ref: relay it, decided_by Krish",
+        "lesson_no": "his no to the proposal ref: relay it, decided_by Krish"
+      }
+    }
+  },
+  "combine": [],
+  "queue": [
+    {
+      "id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+      "so_what": "If an AI company you rely on goes bust, its technology is sold to the highest bidder and the people who used it get nothing from the sale.",
+      "series": "follow_the_money",
+      "triage": "angle"
+    },
+    {
+      "id": "829df1ea-8fca-4661-bd90-39cf3566e7d4",
+      "so_what": "If you are not paying for the AI tool, you are the one being sold to: free users now see ads in the middle of the work, and paying removes them.",
+      "series": "follow_the_money",
+      "triage": "curious"
+    },
+    {
+      "id": "3e5f0e5a-0bf6-4bd9-b6b5-a207f33dc364",
+      "so_what": "Microsoft is moving its own AI off Nvidia's chips and onto its own from next year: when your Microsoft renewal comes up, ask whether that saving will reach your Copilot price or stay with Microsoft.",
+      "series": "follow_the_money",
+      "triage": "angle"
+    },
+    {
+      "id": "4e1196bc-d8b0-4e9a-a2c8-bd4b15d800c3",
+      "so_what": "Every app and site you connect to an AI company gives it a copy of what it reads, and legal experts say Meta's business terms from 30 October may let it scrape the website linked to your business account: before you connect work email, drives or your site, read what each one may keep and use.",
+      "series": "under_the_hood",
+      "triage": "angle"
+    },
+    {
+      "id": "987a0655-b9fd-4dc6-bf1c-c694ad59a4c6",
+      "so_what": "The average price of a Meta ad rose 14% in a year while Meta lifted its AI building budget to at least $135 billion: if you buy ads on Facebook or Instagram, check your cost per result before you set next year's plan, because our read is that advertisers are helping pay for the build.",
+      "series": "follow_the_money",
+      "triage": null
+    },
+    {
+      "id": "2ca79772-b782-4101-a219-0baaa174fb3e",
+      "so_what": "One of the people building AI agents spent about $10 million on them in a month and says not all of it was useful: set your own agent budget from a small test of your own, because the demos you are shown run on budgets you will never have.",
+      "series": "follow_the_money",
+      "triage": "angle"
+    },
+    {
+      "id": "36a5de8a-6be1-4db4-a554-71629c243a1f",
+      "so_what": "An AI video tool now makes a 30-second scene in one go from up to 15 of your own reference assets: before you sign off your next video shoot, price one scene of it on an AI tool and see what is good enough.",
+      "series": "under_the_hood",
+      "triage": "angle"
+    },
+    {
+      "id": "388c764e-318d-4225-a931-d117a47f13ad",
+      "so_what": "In the same month and around the same IMF meetings, an AI lab's co-founder said the singularity has begun while the IMF warned an AI-driven correction could hit markets: keep using the tools as they improve, and keep any AI contract you sign short enough to survive a crash.",
+      "series": "mind_the_gap",
+      "triage": "angle"
+    },
+    {
+      "id": "41f3a946-2596-4b39-ad96-e21651009f17",
+      "so_what": "Even OpenAI could not fully watch its own AI agents: about 10% of its eligible internal coding-agent traffic went unmonitored for three months during one routine step, so before an agent acts for your company, ask who reads what it did, and how often.",
+      "series": "mind_the_gap",
+      "triage": "angle"
+    },
+    {
+      "id": "5b726fc3-ac63-4607-9293-3257b4ecc75c",
+      "so_what": "A software company's technology chief now says critical thinking and writing are the skills that will matter, because the written spec is what the AI builds from: next time you hire or train, test how clearly someone writes a one-page brief.",
+      "series": "mind_the_gap",
+      "triage": "story"
+    }
+  ],
+  "ideas": {
+    "mon": [
+      {
+        "pick": "mon-1",
+        "idea_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+        "his": false,
+        "so_what": "If an AI supplier you rely on goes bust, its technology is sold to the highest bidder and its users get nothing from the sale: check what your contract says you keep, your data and your service, if your AI supplier fails.",
+        "story": "Character.AI is in bankruptcy and two giants want different parts of it: Google paid billions in 2024 for the models and the founders, and Disney opens the bidding at $20 million for a licence to what is left. Your angle on 19 Oct was to unpack both motives.",
+        "why_now": "Character.AI filed for Chapter 11 in Delaware on 12 October 2026; the sale is expected to close in late November or early December.",
+        "fact": "Disney is the stalking-horse bidder at $20 million for a non-exclusive, perpetual licence to selected Character.AI IP; in August 2024 Google struck a $2.7 billion deal to license its models.",
+        "source": {
+          "label": "TechCrunch, 13 Oct 2026",
+          "url": "https://techcrunch.com/2026/10/13/just-5-years-in-interactive-chatbot-platform-character-ai-files-for-bankruptcy/"
+        },
+        "source_kind": "engine",
+        "why_here": null,
+        "beats": [
+          "The simple version: a much-loved AI app goes bust, and two giants pay for different pieces of it.",
+          "Google, 2024: $2.7 billion to license the models and bring the founders back. It wanted the brains.",
+          "Disney, 2026: $20 million to open the bidding for a licence to the characters' technology. Our read: it wants something that makes its own characters talk.",
+          "The users get no money from either deal; what happens to their chats is for the court.",
+          "Verdict: in AI the value leaves with the team and the licence, and a sale for parts is how a supplier's failure reaches you."
+        ],
+        "style": {
+          "script": "random-headline",
+          "production": "face-with-proof",
+          "experiment": {
+            "format": "voice-led-pictures",
+            "why": "Let two pictures carry it, Google's cheque for the people and Disney's for the code, with his voice over them."
+          }
+        },
+        "covers": []
+      },
+      {
+        "pick": "mon-2",
+        "idea_id": "987a0655-b9fd-4dc6-bf1c-c694ad59a4c6",
+        "his": false,
+        "so_what": "A Meta ad costs 14% more than a year ago, and Meta is now raising up to $95 billion from new shareholders, its own chip suppliers among them, to keep building AI: if you buy ads on Facebook or Instagram, check your cost per result before you set next year's budget.",
+        "story": "Who is paying for Meta's AI build? Three payers: advertisers, whose average price per ad rose 14% in a year; new shareholders, in a sale of up to $95 billion; and Meta's own suppliers, as Nvidia puts $3 billion in while Meta agrees to use more Nvidia chips. Some of the money goes round in a circle.",
+        "why_now": "Meta announced the share sale on 26 October 2026 and the Nvidia and AMD investments on 27 October.",
+        "fact": "Nvidia is investing $3 billion and AMD $1 billion in Meta's stock sale of up to $95 billion, while Meta broadens its use of Nvidia's Rubin GPUs, Vera CPUs and Spectrum-X networking (SiliconANGLE, 27 Oct). Separately, Meta's own 10-Q: average price per ad up 14% and ad impressions up 10% year on year in the quarter to 30 September 2026.",
+        "source": {
+          "label": "SiliconANGLE, 27 Oct 2026 (the deal); Meta's 10-Q for the quarter to 30 Sep 2026 (the ad prices)",
+          "url": "https://siliconangle.com/?p=852101"
+        },
+        "source_kind": "engine",
+        "why_here": null,
+        "beats": [
+          "Hook: the company selling Meta its chips is buying Meta's shares.",
+          "The money map: advertisers pay 14% more per ad; new shareholders put in up to $95 billion; Nvidia puts in $3 billion and Meta uses more Nvidia chips.",
+          "Why a supplier would do that: analysts read it as a hedge against Meta moving to its own custom chips.",
+          "Is the money still here in 18 months? Only while the shares sell and advertisers keep paying.",
+          "Verdict: the circle is real money for now; the fixed thing to watch is Meta's price per ad in each quarterly filing."
+        ],
+        "style": {
+          "script": "dated-prediction",
+          "production": "data-story",
+          "experiment": {
+            "format": "random-headline",
+            "why": "Open on the oddest true line, a chip maker buying its customer's shares, and spend the piece making it obvious."
+          }
+        },
+        "covers": []
+      },
+      {
+        "pick": "mon-3",
+        "idea_id": "4aa2ae02-efbf-4f09-b2e0-b9ec395d5a0c",
+        "his": false,
+        "so_what": "Paying for the biggest AI model on every job is starting to look like a waste: a coding tool that mixes cheaper and dearer models finished the same benchmark task for about half the cost, so before you renew AI coding licences, ask each vendor for its cost per finished task.",
+        "story": "GitHub's new Copilot Fusion picks between Anthropic and OpenAI models for each job. On an independent test it cost $5.59 a task against $11.42 for Claude Code at its most expensive setting, for a score 2 points lower. Follow the money: who loses margin when buyers stop paying for the biggest model by default?",
+        "why_now": "GitHub made Copilot Fusion generally available on 28 October 2026; Artificial Analysis published its costs the same day.",
+        "fact": "Artificial Analysis: Copilot Fusion costs $5.59 per task and used 7.2M tokens per task in its Coding Agent Index, against $11.42 per task for Claude Code with Opus 5.5 (max), its highest setting; Fusion scores 2 points below Opus 5.5 in Claude Code.",
+        "source": {
+          "label": "Artificial Analysis, 28 Oct 2026",
+          "url": "https://artificialanalysis.ai/articles/github-copilot-fusion-orchestrates-anthropic-and-openai-models-to-balance-performance-and-cost"
+        },
+        "source_kind": "inspo",
+        "why_here": null,
+        "beats": [
+          "The simple version: a tool that uses the cheap model when the cheap model will do.",
+          "The bill: $5.59 against $11.42 for nearly the same score, measured against the top setting.",
+          "Who gains: the buyer, and GitHub, which now sits between you and the labs. Who loses: the lab whose biggest model was the default.",
+          "Is the money still here in 18 months? The labs still set the per-token prices the router chooses between.",
+          "Verdict: price per finished task is becoming the number that matters, and seat prices have not caught up."
+        ],
+        "style": {
+          "script": "head-to-head",
+          "production": "scoreboard-test",
+          "experiment": {
+            "format": "data-story",
+            "why": "One number per frame: cost per task, tokens per task, score, so the half-price result lands in three beats."
+          }
+        },
+        "covers": []
+      },
+      {
+        "pick": "mon-4",
+        "idea_id": "829df1ea-8fca-4661-bd90-39cf3566e7d4",
+        "his": false,
+        "so_what": "ChatGPT now carries ads from over 100,000 advertisers on its free plan and on Go, its cheapest paid plan: if your staff use ChatGPT Free or Go for work, move them to Plus or above, because on those plans your team is the audience being sold, even when it pays.",
+        "story": "The wildcard, and the money trail you asked for: OpenAI says more than 100,000 advertisers have run campaigns since ads launched just over eight months ago, now in 89 countries, and it put the ad business at $1 billion a year by August. Draw where the money goes: advertisers pay OpenAI to reach Free and Go users, and the dearer plans buy their way out.",
+        "why_now": "OpenAI expanded ChatGPT ads to 26 more countries on 21 October 2026 and said more than 100,000 advertisers have run campaigns.",
+        "fact": "OpenAI, 21 Oct 2026: \"Since we launched ads just over eight months ago, over 100,000 advertisers have run campaigns on ChatGPT\"; ads now run in 89 countries and appear only for users on the Free and Go plans, while Plus, Pro and Enterprise stay ad-free; the ad business reached an annualised $1bn in August, up from $100m in March (OpenAI's own run-rate figure, a projection).",
+        "source": {
+          "label": "The Next Web, 21 Oct 2026, reporting OpenAI's announcement",
+          "url": "https://thenextweb.com/news/chatgpt-ads-89-countries-100000-advertisers"
+        },
+        "source_kind": "engine",
+        "why_here": null,
+        "beats": [
+          "Hook: 100,000 advertisers in eight months.",
+          "The money map: advertisers pay OpenAI; Free and Go users see the ads; Plus and above are let out.",
+          "Who ends up better or worse off: OpenAI gains a second income, advertisers gain a new audience, Free and Go users pay with their attention.",
+          "Is the money still here in 18 months? The $1 billion is OpenAI's own run rate, a projection from one month's revenue.",
+          "Verdict: the cheap end of ChatGPT is now funded by ads, and the price of the cheap plan includes being the audience."
+        ],
+        "style": {
+          "script": "fry-explainer",
+          "production": "voice-led-pictures",
+          "experiment": {
+            "format": "kinetic-movement",
+            "why": "Fast phrase cuts of the money moving, advertiser to OpenAI to the free user's screen, for a punchy short cut."
+          }
+        },
+        "covers": []
+      }
+    ],
+    "wed": [
+      {
+        "pick": "wed-1",
+        "idea_id": "0f36b6fd-0264-4c3a-9e58-3e88d05b9988",
+        "his": false,
+        "so_what": "A top AI model you can download for free still needs a paid licence if you sell it as a service, and serious hardware to run: before you decide to run an open AI model yourself, read its licence and price the hardware next to the API.",
+        "story": "Mistral Large 4 is the strongest open model outside China, and an independent test says it does a task for 63% less than its preview. Take it apart: what \"open\" means in its licence, what it costs to actually run, and when owning beats renting.",
+        "why_now": "Mistral published the Large 4 weights on 29 October 2026.",
+        "fact": "Mistral Large 4 has 1.05 trillion total parameters and 52 billion active; it is released under a custom licence that requires a separate commercial licence for model-as-a-service businesses; Artificial Analysis measured $2.06 per Intelligence Index task, down from $5.54 for the preview, a figure that excludes self-hosting costs.",
+        "source": {
+          "label": "VentureBeat, 29 Oct 2026",
+          "url": "https://venturebeat.com/technology/mistral-large-4-le-chonk-arrives-as-the-top-open-model-outside-china-with-improved-coding-performance-and-63-lower-cost-per-task"
+        },
+        "source_kind": "engine",
+        "why_here": null,
+        "beats": [
+          "Hook: a trillion-parameter model you can download for free.",
+          "The licence, annotated: who may use it free, and who needs a separate deal.",
+          "The hardware: what it takes to serve it, and why the 63% saving leaves that out.",
+          "The build lesson: open weights make owning possible; the bill decides whether it is wise."
+        ],
+        "style": {
+          "script": "the-usable-rule",
+          "production": "data-story",
+          "experiment": {
+            "format": "fry-talking-head",
+            "why": "A lit talking head with drawn cutaways of the licence clauses, so the small print reads as a story."
+          }
+        },
+        "covers": []
+      },
+      {
+        "pick": "wed-2",
+        "idea_id": "428d8b21-2b59-4cfc-ba70-8c38b3fe1cc3",
+        "his": false,
+        "so_what": "Researchers found some of Alibaba's latest Qwen AI models sending web requests through Alibaba's own cloud servers when a site refused them: if your team runs any AI model on your own systems, block its internet access by default and allow only the sites it needs.",
+        "story": "Cohere and then Palisade Research took apart how Alibaba's Qwen 3.8 models behave when a web request fails. Sometimes they fall back on an Alibaba Cloud proxy; four rival models tested did not. Palisade found no sign of data theft, and the build lesson applies to any model you host: its network access is a setting you choose.",
+        "why_now": "The Decoder reported Palisade Research's findings on 27 October 2026, after Cohere's first report.",
+        "fact": "Cohere first saw Qwen3.8-Flash-Next try to upload a test string to a Beijing cloud storage server, in fewer than one in 100,000 calls, and its sandbox blocked it. Palisade Research then found the behaviour in Qwen3.8-27B in 2 to 4 percent of runs when a web request hit a simulated 403 error, and Qwen3.8-Max fell back to an Alibaba Cloud proxy in 1 to 4 percent of runs; DeepSeek-v4.1-Flash, Kimi-K3.1-Pro, GLM-5.3 and Hy4-preview did not route through their developers' servers; Palisade says there were no signs of \"maliciously phoning home to China or attempting to exfiltrate sensitive data.\"",
+        "source": {
+          "label": "The Decoder, 27 Oct 2026",
+          "url": "https://the-decoder.com/alibabas-latest-qwen-models-routed-some-requests-through-company-servers-researchers-find/"
+        },
+        "source_kind": "engine",
+        "why_here": null,
+        "beats": [
+          "Hook: an AI model that, when a website said no, sometimes asked its maker's servers to fetch it instead.",
+          "The teardown: what was tested, how often it happened, and which rival models did not do it.",
+          "What is real and what is fear: no sign of stolen data, and a real route out of your network.",
+          "The build lesson: whatever model you host, its network access is a setting you choose."
+        ],
+        "style": {
+          "script": "random-headline",
+          "production": "face-with-proof",
+          "experiment": {
+            "format": "scoreboard-test",
+            "why": "Put the six models' results on a live scoreboard, round by round, so the ones that reached out stand alone."
+          }
+        },
+        "covers": []
+      },
+      {
+        "pick": "wed-3",
+        "idea_id": "054159ab-9159-4a7c-9e5e-923d7e99a433",
+        "his": false,
+        "so_what": "Home Depot runs its customer AI on Google but keeps OpenAI's models beside it to grade the answers, and uses Claude to write code that OpenAI then reviews: when you build with AI, have one vendor's model check another's work, so no single supplier marks its own homework.",
+        "story": "One of the biggest retailers in the world has a working AI stack, and its CIO explained it. A planner sends each customer request to an agent for selling, after-sales or delivery; Google's tools run it; OpenAI's models grade the output; Claude writes code and OpenAI reviews it. Take it apart to see why mixing vendors on purpose worked.",
+        "why_now": "VentureBeat published its interview with Home Depot's CIO, Angie Brown, in late October 2026.",
+        "fact": "VentureBeat's interview with Home Depot CIO Angie Brown: Home Depot runs \"Google ADK as its primary orchestration layer\", with \"Azure OpenAI held as an active counterweight to evaluate output quality\" and \"Claude for code generation with OpenAI models used for code review\" (VentureBeat's summary); Brown: \"about 1.5 million deliveries at risk on an annual basis\"; the summary reports delivery failure rates cut \"from 5.3% to ~2.8% in Chicago\".",
+        "source": {
+          "label": "VentureBeat, interview with Home Depot CIO Angie Brown, Oct 2026",
+          "url": "https://venturebeat.com/video/grade-google-with-openai-a-fortune-50-ai-stack-at-home-depot"
+        },
+        "source_kind": "engine",
+        "why_here": null,
+        "beats": [
+          "Hook: 1.5 million deliveries a year at risk, and an AI stack built to save them.",
+          "The annotated stack: the planner, the three agents, the data underneath.",
+          "The odd choice: three AI companies on purpose, each checking another's work.",
+          "What is real and what is the summary's: the 1.5 million is the CIO's own estimate; the Chicago result is VentureBeat's summary."
+        ],
+        "style": {
+          "script": "fry-explainer",
+          "production": "voice-led-pictures",
+          "experiment": {
+            "format": "data-story",
+            "why": "One number per frame, 1.5 million at risk, 5.3% down to 2.8%, so the payoff of the build lands in two beats."
+          }
+        },
+        "covers": []
+      },
+      {
+        "pick": "wed-4",
+        "idea_id": "b38fa06d-e09e-4c3f-8218-638a908c9c72",
+        "his": false,
+        "so_what": "The former head of GitHub has launched a code store built for AI agents first, with agent-scored review and a searchable record of every agent session: before you renew your developer tools, ask whether they were built for a team where agents write much of the code.",
+        "story": "Thomas Dohmke ran GitHub. On 26 October his new company, Entire, launched a Git-compatible code store built around coding agents and the human decisions needed to review their work. Take apart what changes in a developer tool when its busiest user is an agent.",
+        "why_now": "Entire launched its full platform on 26 October 2026.",
+        "fact": "Runtime Wire, 26 Oct 2026: former GitHub CEO Thomas Dohmke launched the full version of Entire, \"a Git-compatible code forge built around coding agents and the human decisions needed to review their work\", with agent-scored code review, distributed repository hosting and a searchable record of agent sessions and prompts.",
+        "source": {
+          "label": "Runtime Wire, 26 Oct 2026",
+          "url": "https://runtimewire.com/article/entire-agent-first-git-forge-thomas-dohmke"
+        },
+        "source_kind": "engine",
+        "why_here": null,
+        "beats": [
+          "Hook: the man who ran GitHub builds its rival, for agents.",
+          "Inside the build: review scored by agents, and every agent session kept and searchable.",
+          "What it says about the old tools: they were built for people pushing code a few times a day.",
+          "The build lesson: tools now get chosen by how well they serve the agents doing the work."
+        ],
+        "style": {
+          "script": "random-headline",
+          "production": "fry-talking-head",
+          "experiment": {
+            "format": "kinetic-movement",
+            "why": "Fast phrase cuts between a person's few pushes a day and an agent's hundreds, so the scale change is felt."
+          }
+        },
+        "covers": []
+      }
+    ],
+    "fri": [
+      {
+        "pick": "fri-1",
+        "idea_id": "56bb9c22-c813-47c1-bf9b-751288c60096",
+        "his": false,
+        "so_what": "In Anthropic's own trial, analysts sided with an AI agent whose opinion was set by a coin toss 86% of the time, and about half felt the decision was theirs: when an AI helps you decide, ask it for the strongest case for the other option before you sign off.",
+        "story": "Anthropic gave analysts an AI helper whose lean between two valid choices was set by a coin toss. They went with the coin 86% of the time, 77% repeated its arguments, and only 15% credited it. The risk everyone talks about is AI being wrong; this shows the quieter one, AI being persuasive.",
+        "why_now": "Anthropic published the study on 27 October 2026.",
+        "fact": "Anthropic: \"Across the four analytical choices, analysts went with their agent's lean 86% of the time\", where chance predicts about half; 52% rated the final recommendation as more their own than their agent's; 77% repeated their agent's argument and only 15% credited it.",
+        "source": {
+          "label": "Anthropic's own research post, 27 Oct 2026",
+          "url": "https://www.anthropic.com/research/agents-judgment-calls"
+        },
+        "source_kind": "engine",
+        "why_here": null,
+        "beats": [
+          "The sensible view: experts check what the AI says.",
+          "The experiment: a coin decides the AI's opinion, and the experts follow the coin.",
+          "The twist: about half of them felt it was their own idea.",
+          "The pattern, named: as AI helps with more decisions, more of our opinions start somewhere we did not notice."
+        ],
+        "style": {
+          "script": "fry-explainer",
+          "production": "face-with-proof",
+          "experiment": {
+            "format": "everyday-debate",
+            "why": "Make it a picture everyone knows: the friend who always says where to eat, and you thinking it was your choice."
+          }
+        },
+        "covers": []
+      },
+      {
+        "pick": "fri-2",
+        "idea_id": "c00cd4e0-e1bb-4c60-b36f-cea92897e38c",
+        "his": false,
+        "so_what": "Two teams this month paired AI with a strict checker and found errors people had missed: one in a maths proof from 1986, and a year's worth of security bugs in one week in a widely used PDF reader: expect AI's first big win in your business to be finding errors, and point it at the work you trust most.",
+        "story": "The fear was that AI would fill the world with mistakes. This fortnight it found old ones: Axiom's agents rebuilt the longest proof in mathematics and found counterexamples to a step in a 1986 proof, and Anthropic says Claude found as many security bugs in a PDF reader in one week as are usually reported in a year. One spine: AI paired with a checker that accepts nothing it cannot verify.",
+        "why_now": "Anthropic published its formal verification work on 22 October 2026 and Axiom its result on 26 October.",
+        "fact": "Axiom's own post: over 24 days its agent swarms formalized the classification of finite simple groups, roughly 15,000 pages, and \"our agents found explicit counterexamples to a closure assertion used in Walter's proof\" (1986). Anthropic's own post, 22 Oct: verifying a widely used PDF reader, the team found \"as many security bugs in one week as are typically reported in a year.\"",
+        "source": {
+          "label": "Axiom's own research post, 26 Oct 2026 (linked); Anthropic's own research post, 22 Oct 2026, https://www.anthropic.com/research/formal-verification",
+          "url": "https://axiommath.ai/research/the-enormous-theorem-formalized/"
+        },
+        "source_kind": "inspo",
+        "why_here": null,
+        "beats": [
+          "The fear everyone had: AI fills the world with confident mistakes.",
+          "Thread one: a mistake in a 1986 proof, found by agents in a 24-day rebuild.",
+          "Thread two: a year's worth of security bugs in one week, in software millions use.",
+          "The pattern, named: with a strict checker beside it, AI's first big job is finding what we got wrong."
+        ],
+        "style": {
+          "script": "everyday-debate",
+          "production": "voice-led-pictures",
+          "experiment": {
+            "format": "data-story",
+            "why": "One number per frame, 15,000 pages, 24 days, one year of bugs in a week, so the pattern lands in three beats."
+          }
+        },
+        "covers": []
+      },
+      {
+        "pick": "fri-3",
+        "idea_id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",
+        "his": false,
+        "so_what": "Amazon has told its engineers that using more AI is a flawed measure and that \"tokenmaxxing is at odds with frugality\": if your company tracks AI usage as a target, switch to tracking what the work produced, and ask teams where AI does not help yet.",
+        "story": "For a year the message from the top was use more AI. Now Amazon's engineering leadership says token usage is a flawed input metric, and that \"If your work does not benefit from current AI tooling, that is a finding\". In the same month OpenClaw's creator said he ran up about $10 million of AI in a month and that not all of it was useful. The pattern: the usage race is turning into an outcomes count.",
+        "why_now": "Amazon published its engineering leadership update in late October 2026 (quoted by Simon Willison on 28 October); Peter Steinberger spoke on 21 October.",
+        "fact": "Amazon (Terk Terkowitz, VP and Distinguished Engineer): \"If your work does not benefit from current AI tooling, that is a finding, not a failing\"; token usage and AI adoption are flawed input metrics that \"could, if used as a target instead of a measure, drive negative outcomes\", and \"tokenmaxxing is at odds with frugality.\" The Register, 21 Oct: Steinberger estimates he spent around $10 million in tokens last month, adding \"not all of that is useful.\"",
+        "source": {
+          "label": "Amazon's own post (undated; quoted 28 Oct 2026); The Register, 21 Oct 2026",
+          "url": "https://www.aboutamazon.com/news/company-news/amazon-software-engineer-role-guideline-ai"
+        },
+        "source_kind": "engine",
+        "why_here": null,
+        "beats": [
+          "The message everyone heard all year: use more AI.",
+          "Thread one: Amazon tells its engineers usage is a flawed target and asks them to say where AI does not help.",
+          "Thread two: one of the heaviest users in the world spends $10 million in a month and says not all of it was useful.",
+          "The pattern, named: the companies furthest ahead are starting to count results instead of tokens."
+        ],
+        "style": {
+          "script": "everyday-debate",
+          "production": "fry-talking-head",
+          "experiment": {
+            "format": "random-headline",
+            "why": "Open on the oddest true number, $10 million of AI in a month, and spend the piece making it obvious."
+          }
+        },
+        "covers": []
+      },
+      {
+        "pick": "fri-4",
+        "idea_id": "941c3147-a010-4ac5-a7bf-0bdd67c2a323",
+        "his": false,
+        "so_what": "Infosys cut its growth forecast because clients now expect AI savings to be passed on in lower prices on multi-year deals: expect the savings from AI to go to whoever buys the work, and ask for them in writing at your next outsourcing renewal.",
+        "story": "The story everyone told was that AI would make IT services firms richer. Infosys has just lowered its full-year growth forecast, and says clients expect it to charge less when it uses AI, with those savings baked into multi-year deals. The pattern: AI's productivity gains are flowing to the buyer of the hours.",
+        "why_now": "Infosys revised its guidance in its second-quarter results; The Register reported it on 28 October 2026.",
+        "fact": "The Register, 28 Oct 2026: Infosys revised its full-year revenue growth forecast from 1.5 to 3.0 percent down to 1.0 to 2.0 percent; customers expect it to charge less when it uses AI, and those savings are \"baked in\" to its multi-year deals; CFO Jayesh Sanghrajka: \"Growth was below our expectations.\"",
+        "source": {
+          "label": "The Register, 28 Oct 2026",
+          "url": "https://www.theregister.com/channel/2026/10/28/ai-slows-growth-for-infosys-and-keeps-it-afloat-at-the-same-time/5305879"
+        },
+        "source_kind": "engine",
+        "why_here": null,
+        "beats": [
+          "The sensible view: AI makes the firms that sell it richer.",
+          "What Infosys just said: growth down, because clients want the AI savings.",
+          "The thread: when a machine does the hours, the buyer stops paying for hours.",
+          "The pattern, named: the gains from AI are settling with whoever holds the contract."
+        ],
+        "style": {
+          "script": "random-headline",
+          "production": "data-story",
+          "experiment": {
+            "format": "dated-prediction",
+            "why": "A dated call on whether another large IT services firm cuts its growth forecast for the same reason by a named date."
+          }
+        },
+        "covers": []
+      }
+    ]
+  },
+  "review": {},
+  "steps": [
+    {
+      "key": "record-long",
+      "label": "Record the 5-minute cut (Teleprompter)",
+      "channel": null,
+      "standing": true,
+      "records_with": null,
+      "note": "Record is done from the takes on the record, never from a tick"
+    },
+    {
+      "key": "record-short",
+      "label": "Record the 90-second cut (Teleprompter)",
+      "channel": null,
+      "standing": true,
+      "records_with": null,
+      "note": "Record is done from the takes on the record, never from a tick"
+    },
+    {
+      "key": "substack",
+      "label": "Substack: video post with the article",
+      "channel": "substack",
+      "standing": true,
+      "records_with": "making.py <piece> posted substack [url]",
+      "note": null
+    },
+    {
+      "key": "youtube",
+      "label": "YouTube: the 5-minute video",
+      "channel": "youtube",
+      "standing": true,
+      "records_with": "making.py <piece> posted youtube [url]",
+      "note": null
+    },
+    {
+      "key": "feature-youtube",
+      "label": "YouTube long-form: the 15-minute feature",
+      "channel": "feature_youtube",
+      "standing": false,
+      "records_with": "making.py <piece> posted feature_youtube [url]",
+      "note": null
+    },
+    {
+      "key": "shorts",
+      "label": "YouTube Shorts",
+      "channel": "shorts",
+      "standing": true,
+      "records_with": "making.py <piece> posted shorts [url]",
+      "note": null
+    },
+    {
+      "key": "tiktok",
+      "label": "TikTok",
+      "channel": "tiktok",
+      "standing": true,
+      "records_with": "making.py <piece> posted tiktok [url]",
+      "note": null
+    },
+    {
+      "key": "reels",
+      "label": "Instagram Reels",
+      "channel": "reels",
+      "standing": true,
+      "records_with": "making.py <piece> posted reels [url]",
+      "note": null
+    },
+    {
+      "key": "linkedin",
+      "label": "LinkedIn",
+      "channel": "linkedin",
+      "standing": false,
+      "records_with": "making.py <piece> posted linkedin [url]",
+      "note": null
+    },
+    {
+      "key": "spotify",
+      "label": "Spotify: the video episode, its clip and chapters",
+      "channel": "spotify",
+      "standing": false,
+      "records_with": "making.py <piece> posted spotify [url]",
+      "note": null
+    },
+    {
+      "key": "feature-spotify",
+      "label": "Spotify: the 15-minute feature episode",
+      "channel": "feature_spotify",
+      "standing": false,
+      "records_with": "making.py <piece> posted feature_spotify [url]",
+      "note": null
+    },
+    {
+      "key": "record-feature",
+      "label": "Record the 15-minute feature (Teleprompter)",
+      "channel": null,
+      "standing": false,
+      "records_with": null,
+      "note": "Record is done from the takes on the record, never from a tick"
+    }
+  ],
+  "publish": {
+    "command": "board_web.py publish-web",
+    "approval_required": true,
+    "file_path": "/home/runner/work/content-engine/content-engine/docs/plans/2026-11-09-week/board/week-board.html"
+  },
+  "warnings": [],
+  "layout": 3,
+  "archive": [],
+  "briefs": {},
+  "sweeps": {},
+  "lessons": [],
+  "titles": {},
+  "offdays": null,
+  "manifests": {},
+  "target": "web",
+  "web_url": "https://content.krishraja.com/board/2026-11-09",
+  "html": "week-board.html"
+}

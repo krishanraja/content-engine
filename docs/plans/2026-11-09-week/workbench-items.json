@@ -1,0 +1,28 @@
+{
+  "action": "upsert_items",
+  "client": "claude_code",
+  "items": [
+    {
+      "id": "week-publish-board-2026-11-09",
+      "lane": "on_you",
+      "rank": 0,
+      "area": "This week",
+      "title": "This week's publish board, 9 to 13 November",
+      "detail": "Start on the Ideas tab: pick one idea each for Wednesday and Friday, four checked ideas a day. Monday is already made and recorded (Character.AI). Tick each step as you do it; every tick is saved at once, and the next session copies it onto the piece. The off-day options, your lock-down short among them with its script, are written but not on the board yet: the board refuses any off-day option until a code fix to its mix button lands.",
+      "only_you": "post",
+      "closes_on": "week_published",
+      "link": "https://content.krishraja.com/board/2026-11-09",
+      "link_label": "Open this week's publish board"
+    },
+    {
+      "id": "week-2026-11-09",
+      "lane": "on_you",
+      "title": "Plan the week of 9 November",
+      "detail": "Wednesday and Friday each have four ideas on the Ideas tab, best first; Monday is already Character.AI. Researched with web search only: Drive and Firecrawl were not connected, so the Cold Ideas & Inspo folder was not read.",
+      "only_you": "judgment",
+      "link": "https://controlcenter.krishraja.com/#/week",
+      "link_label": "Open the week",
+      "closes_on": "week_planned"
+    }
+  ]
+}

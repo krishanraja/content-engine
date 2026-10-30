@@ -1,0 +1,8 @@
+[
+  {"id": "mon-video-long", "existing_sha256": "14ccfef0f31e42814db4b4743d35cd75d047d95e0520171f755b9cd31b1a3294", "source_url": "https://drive.usercontent.google.com/download?id=1zV1u-XAJE9XDy8geNxLBMtgmYKpu0wrO&amp;export=download"},
+  {"id": "mon-video-short", "existing_sha256": "39f1039c810681d1a6776b5a0c9f5f32696931cc47ea21ea4ec3f19b90888ecd", "source_url": "https://drive.usercontent.google.com/download?id=1YY3asVoqWaD9fuTI18NkMkAy5hgqmEQ7&amp;export=download"},
+  {"id": "mon-thumb-wide", "existing_sha256": "09be53efc8447eccb1ffdd585e681f8d78a6bd709e2a8409caf8298243dde79a", "source_url": "https://drive.usercontent.google.com/download?id=1RSNmWTScUaL0_W6mp3MAQYwDQzTPaSS7&amp;export=download"},
+  {"id": "mon-thumb-tall", "existing_sha256": "93604f2b816a4383f5532b7c042e8f267907faf528cb947de8f5d89a6be5b683", "source_url": "https://drive.usercontent.google.com/download?id=1Zt8BHUtCL-MeO7haePkDh1h9AFbQk-gJ&amp;export=download"},
+  {"id": "mon-cards-sheet", "existing_sha256": "e4e5d53231275fed934b28da6c12745b4f2824121bbcde3a0edf0f8fa54e94c0", "source_url": "/api/board/2026-11-09/assets/mon-cards-sheet?sha=e4e5d53231275fed934b28da6c12745b4f2824121bbcde3a0edf0f8fa54e94c0"},
+  {"id": "mon-card-ch6", "existing_sha256": "878b7a8bbadd1db7b640e14181834192d1357334bd18faafc905d0fae90fa365", "source_url": "/api/board/2026-11-09/assets/mon-card-ch6?sha=878b7a8bbadd1db7b640e14181834192d1357334bd18faafc905d0fae90fa365"}
+]

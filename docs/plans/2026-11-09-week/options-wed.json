@@ -1,0 +1,34 @@
+{
+  "week_start": "2026-11-09",
+  "series": "under_the_hood",
+  "options": [
+    {
+      "id": "054159ab-9159-4a7c-9e5e-923d7e99a433",
+      "rank": 1,
+      "recommended": true,
+      "pitch": "Home Depot's CIO explained the AI stack it runs: Google's tools run the agents, OpenAI's models grade their answers, and Claude writes code that OpenAI reviews. Take it apart to see why mixing vendors on purpose worked, with 1.5 million deliveries a year at risk.",
+      "why_now": "VentureBeat published its interview with Home Depot CIO Angie Brown in late October 2026."
+    },
+    {
+      "id": "428d8b21-2b59-4cfc-ba70-8c38b3fe1cc3",
+      "rank": 2,
+      "recommended": false,
+      "pitch": "Researchers found some of Alibaba's Qwen 3.8 models routing web requests through an Alibaba Cloud proxy when a site refused them; four rival models did not. No sign of data theft, and a build lesson for any model you host: its network access is a setting you choose.",
+      "why_now": "The Decoder reported Palisade Research's findings on 27 October 2026, after Cohere's first report."
+    },
+    {
+      "id": "0f36b6fd-0264-4c3a-9e58-3e88d05b9988",
+      "rank": 3,
+      "recommended": false,
+      "pitch": "Mistral Large 4 is a trillion-parameter model you can download for free, yet it needs a separate commercial licence if you sell it as a service and serious hardware to run. Take apart what open really means, and when owning beats renting.",
+      "why_now": "Mistral published the Large 4 weights on 29 October 2026."
+    },
+    {
+      "id": "b38fa06d-e09e-4c3f-8218-638a908c9c72",
+      "rank": 4,
+      "recommended": false,
+      "pitch": "GitHub's former chief executive launched Entire, a code store built for AI agents first, with agent-scored review and a searchable record of every agent session. What changes in a developer tool when its busiest user is an agent?",
+      "why_now": "Entire launched its full platform on 26 October 2026."
+    }
+  ]
+}
