@@ -76,9 +76,11 @@
   {
    "kind": "image",
    "file": "../../../../.cache/pack/mon/figure-ladder.png",
-   "purpose": "Twice the job came back bigger: city bank branches needed 13 tellers instead of 20 but opened 43% more branches, and spreadsheets cut 400,000 clerk jobs while adding 600,000 accounting jobs. At Anthropic, juniors fell from 27% to 9% of new technical hires.",
+   "purpose": "The article's one figure: twice the job came back bigger (tellers, clerks); Anthropic's junior hires fell from 27% to 9%.",
    "logos": [],
-   "shows": "chart"
+   "shows": "chart",
+   "data_source": "IMF (Bessen, 2015), NPR Planet Money (2015), Anthropic report (16 Oct 2026); numbers as in the fact-checked article",
+   "measures": "Each panel counts jobs: tellers per city branch (20 to 13) and branch count (+43%); clerk jobs lost (400,000) and accountant jobs added (600,000); juniors as a share of Anthropic's new technical hires (27% to 9%)"
   },
   {
    "kind": "video-script",

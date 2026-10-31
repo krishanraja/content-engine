@@ -84,12 +84,22 @@
   {
    "kind": "image",
    "file": "../../../../.cache/pack/wed/figure-asking-to-approving.png",
-   "purpose": "From asking to approving: today you open Claude, copy the email thread, the invite and your notes, paste them in and ask; with Claude Duet a morning brief, meeting prep, a draft reply and a note to the team arrive first, each waiting for your yes.",
+   "purpose": "The article's one figure: the same weekly job, today (you gather and ask) and with Claude Duet (the work turns up and waits for yes).",
    "logos": [
     "Anthropic",
     "Google"
    ],
-   "shows": "chart"
+   "shows": "comparison",
+   "data_source": "Anthropic, Introducing Claude Duet (21 Oct 2026); logos per imagery/logos/sources.json",
+   "facts": [
+    "Claude Duet",
+    "Gmail",
+    "Google Calendar",
+    "Slack",
+    "Claude",
+    "morning brief",
+    "waits for your yes before it sends, pays, signs or deletes"
+   ]
   },
   {
    "kind": "video-script",
