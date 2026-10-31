@@ -3,7 +3,7 @@ import { supabase } from '../_supabase.js'
 import { guardEngine, operatorBearerAllowed } from '../_auth.js'
 import { isMonday, keepThroughWeek, mergeCovers, parseOptions, type WeekOptionMeta } from '../_weekOptions.js'
 import { buildSources, windows } from '../_weekSources.js'
-import { buildInspiration } from '../_inspirationSources.js'
+import { buildInspiration, RECENT_DAYS } from '../_inspirationSources.js'
 import { CUE_COLS, cuesFrom } from '../_feedbackCues.js'
 import { TASTE_VENTURE } from '../_taste.js'
 
@@ -190,17 +190,24 @@ const INSPO_COLS = 'id,name,folder,lane,kind,facets,why_here,route,routes,why_li
 /** Inspiration House and content-watcher (_inspirationSources.ts). A table that cannot be read fails the gather
  *  loudly: Sunday must never look complete while his routed cards are missing (Krish, 2026-10-24). */
 async function readInspiration(week: string, listed: string[] = []) {
-  const [items, routed, reads, moves, claims] = await Promise.all([
+  const recentSince = new Date(Date.parse(`${week}T00:00:00Z`) - RECENT_DAYS * 86_400_000).toISOString().slice(0, 10)
+  const [items, routed, asked, recent, reads, moves, claims] = await Promise.all([
     supabase.from('inspiration_items').select(INSPO_COLS).order('created_at', { ascending: false }).limit(500),
     // Every card he routed to Make a piece, however old: the newest 500 above could leave one out of must_cover.
     supabase.from('inspiration_items').select(INSPO_COLS).or('route.eq.make_piece,routes.cs.{make_piece}').is('piece_id', null).limit(1000),
+    // Every card he typed words on, dismissed or routed included (asks, Krish 2026-10-31); buildAsks keeps the ASK_DAYS window.
+    supabase.from('inspiration_items').select(INSPO_COLS).or('why_here.not.is.null,why_like_source.eq.typed,would_do.not.is.null')
+      .order('created_at', { ascending: false }).limit(1000),
+    // Pieces scheduled in the RECENT_DAYS before the week, for the no-repeat check (board_feed.py cover).
+    supabase.from('content_ideas').select('id,idea,state,lane_slot,scheduled_for,meta').in('state', PICKED_STATES).is('buried_at', null)
+      .gte('scheduled_for', recentSince).lt('scheduled_for', week).limit(200),
     supabase.from('content_reads').select('id,sha256,source_url,platform,shape,read_md,created_at').order('created_at', { ascending: false }).limit(60),
     supabase.from('creator_moves').select('id,creator_slug,post_url,why_it_works,krish_angle,content_idea_id,created_at').order('created_at', { ascending: false }).limit(20),
     // The ledger's claims and the answers they quote are Make Your Mind Up's only (TASTE_VENTURE).
     supabase.from('taste_claims').select('id,layer,kind,status,statement,krish,krish_source_id,support_n').eq('venture', TASTE_VENTURE)
       .in('status', ['candidate', 'proposed']).order('updated_at', { ascending: false }).limit(100),
   ])
-  const failed = items.error || routed.error || reads.error || moves.error || claims.error
+  const failed = items.error || routed.error || asked.error || recent.error || reads.error || moves.error || claims.error
   if (failed) throw new Error(`inspiration: ${failed.message}`)
   // A claim keeps its quote while the answer it quotes is withdrawn; it is his words only while that answer stands.
   const quoted = [...new Set((claims.data || []).map((c: Record<string, any>) => c.krish_source_id).filter(Boolean))] as string[]
@@ -209,9 +216,10 @@ async function readInspiration(week: string, listed: string[] = []) {
     : { data: [], error: null }
   if (standing.error) throw new Error(`inspiration: ${standing.error.message}`)
   const seen = new Set((items.data || []).map((r: Record<string, any>) => r.id))
-  const all = [...(items.data || []), ...(routed.data || []).filter((r: Record<string, any>) => !seen.has(r.id))]
+  const all = [...(items.data || [])] as Array<Record<string, any>>
+  for (const r of [...(routed.data || []), ...(asked.data || [])] as Array<Record<string, any>>) if (!seen.has(r.id)) { seen.add(r.id); all.push(r) }
   return buildInspiration({ weekStart: week, items: all as Array<Record<string, any>>,
     reads: (reads.data || []) as Array<Record<string, any>>, moves: (moves.data || []) as Array<Record<string, any>>,
-    claims: (claims.data || []) as Array<Record<string, any>>, listedIdeas: listed,
+    claims: (claims.data || []) as Array<Record<string, any>>, listedIdeas: listed, recentPieces: (recent.data || []) as Array<Record<string, any>>,
     quotesStanding: (standing.data || []).map((r: Record<string, any>) => String(r.id)) })
 }
