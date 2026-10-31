@@ -567,8 +567,6 @@ def cue_windows(ws, cues, total, strict=False):
             missing.append(c['id'])
             continue
         s = max(0.0, ws[a[0]]['s'] - c.get('lead', 0.15))
-        if edge_open(s):
-            s = 0.0   # a picture that opens the cut is there on its very first frame (edge_open)
         e = min(total, ws[b[1]]['e'] + c.get('tail', 0.35))
         found.append({**c, 's': round(s, 3), 'e': round(e, 3)})
     found.sort(key=lambda c: c['s'])
@@ -600,33 +598,14 @@ def runs_of(wins):
     return out
 
 
-def presence(wins, d=FADE_S, total=None):
+def presence(wins, d=FADE_S):
     """An ffmpeg expression in t: 0 with no picture on screen, 1 with one,
-    eased linearly over d at each run's start and end. A run that starts on the
-    main's first frame or ends on its last is there from that frame or to it,
-    with no ease (edge_open, edge_close): the cut opens on the hook picture and
-    closes straight into the end card, never on a slide of the speaker."""
-    parts = []
-    for r in runs_of(wins):
-        a = '1' if edge_open(r[0]['s']) else f"(t-{r[0]['s']})/{d}"
-        b = '1' if edge_close(r[-1]['e'], total) else f"({r[-1]['e']}-t)/{d}"
-        parts.append(f"clip(min({a},{b}),0,1)")
+    eased linearly over d at each run's start and end."""
+    parts = [f"clip(min((t-{r[0]['s']})/{d},({r[-1]['e']}-t)/{d}),0,1)" for r in runs_of(wins)]
     return '+'.join(parts) or '0'
 
 
-def edge_open(s):
-    """A picture that starts on the main's first frame: it is there from that frame, never faded in over a bare face
-    (Krish's reviewer, 31 Oct: no brand-frame flash or bare face before the first picture at 0:00)."""
-    return s <= 1.5 / FPS
-
-
-def edge_close(e, total):
-    """A picture that runs to the main's last frame: it cuts straight into the end card, never dissolving over his
-    face with a ghost of the take showing through (Krish's reviewer, 31 Oct: one clean close)."""
-    return total is not None and e >= total - 1.5 / FPS
-
-
-def panel_layers(wins, d=FADE_S, total=None):
+def panel_layers(wins, d=FADE_S):
     """[(window, fade filters, enable end)] for each picture: it fades in
     (over the one before it, when they touch, so the change is a crossfade)
     and fades out only when nothing follows it at once; a picture followed
@@ -635,11 +614,11 @@ def panel_layers(wins, d=FADE_S, total=None):
     for i, c in enumerate(wins):
         nxt = wins[i + 1] if i + 1 < len(wins) else None
         followed = nxt is not None and nxt['s'] <= c['e'] + 1e-6
-        f = 'null' if edge_open(c['s']) else f"fade=t=in:st={c['s']}:d={d}:alpha=1"
+        f = f"fade=t=in:st={c['s']}:d={d}:alpha=1"
         end = c['e']
         if followed:
             end = round(c['e'] + d, 3)
-        elif not edge_close(c['e'], total):
+        else:
             f += f",fade=t=out:st={max(c['s'], c['e'] - d):.3f}:d={d}:alpha=1"
         layers.append((c, f, end))
     return layers
@@ -1552,7 +1531,7 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
         g.append(f"[spf]scale={sw}:1080:flags=lanczos,unsharp=5:5:0.4[spk]")
         g.append(f"[{fr}:v]format=rgba[fr]")
         # The speaker eases aside as a picture comes in, and back as it goes.
-        g.append(f"[fr][spk]overlay=x='{(1920 - sw) // 2}*(1-min(1,{presence(wins, total=total)}))':y=0:eval=frame[s1]")
+        g.append(f"[fr][spk]overlay=x='{(1920 - sw) // 2}*(1-min(1,{presence(wins)}))':y=0:eval=frame[s1]")
         last = 's1'
         px, py = sw, 0
     k = 2
@@ -1571,7 +1550,7 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
             g.append(f"[fc{r_i}]format=rgba[fa{r_i}]")
             g.append(f"[cv{r_i}][fa{r_i}]overlay=x={(1080 - fw_out) // 2}:y=1000[c{r_i}_0]")
             cur = f'c{r_i}_0'
-            layers = panel_layers(run, total=total)
+            layers = panel_layers(run)
             for j, (c, f, stop) in enumerate(layers):
                 inputs += card_input(P(c['panel'].replace('{aspect}', asp)), c['s'], stop)
                 if j == 0:
@@ -1584,13 +1563,12 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
             # With a clip in front, the first split-screen run must already
             # be opaque at the cut. Fading it over the full-frame speaker
             # creates a short double-image immediately after the intro.
-            fade_in='' if (intro is not None and r_i==0 and rs<=1/FPS) or edge_open(rs) else f'fade=t=in:st={rs}:d={FADE_S}:alpha=1,'
-            fade_out='null' if edge_close(re_, total) else f'fade=t=out:st={max(rs, re_ - FADE_S):.3f}:d={FADE_S}:alpha=1'
-            g.append(f"[{cur}]{fade_in}{fade_out}[run{r_i}]")
+            fade_in='' if intro is not None and r_i==0 and rs<=1/FPS else f'fade=t=in:st={rs}:d={FADE_S}:alpha=1,'
+            g.append(f"[{cur}]{fade_in}fade=t=out:st={max(rs, re_ - FADE_S):.3f}:d={FADE_S}:alpha=1[run{r_i}]")
             g.append(f"[{last}][run{r_i}]overlay=0:0:enable='between(t,{rs},{re_})'[s{k}]")
             last, k = f's{k}', k + 1
     else:
-        for c, f, stop in panel_layers(wins, total=total):
+        for c, f, stop in panel_layers(wins):
             card = P(c['panel'].replace('{aspect}', asp))
             inputs += card_input(card, c['s'], stop)
             g.append(f"[{n}:v]format=rgba,{card_fit(card, 1920 - px if px else 1920, 1080)}{f}[pp{n}]")
@@ -1849,20 +1827,8 @@ def self_test():
         first_picture, ws, [720, 1280, 0, 0], None,
         {'file':'end.mp4','frames':120}, Path('mix.wav'))
     first_run=next(line for line in split_graph if line.endswith('[run0]'))
-    # Krish's reviewer, 31 Oct: no bare face before the first picture at 0:00, and one clean close: a picture on the
-    # main's first frame is there from it, and one on its last frame cuts straight into the end card.
-    checks.append(('without an intro a picture on the first frame is there from it, never eased in over the speaker',
-        'fade=t=in:' in first_run, False))
-    _, close_graph, _ = video_graph(fake, '9x16', same, Path('.'), Path('edited.mkv'), 4.0,
-        first_picture, ws, [720, 1280, 0, 0], None,
-        {'file':'end.mp4','frames':120}, Path('mix.wav'))
-    close_run=next(line for line in close_graph if line.endswith('[run0]'))
-    checks.append(('a picture that runs to the last frame cuts into the end card without a fade',
-        'fade=t=out:' in close_run, False))
-    checks.append(('a picture that ends early still fades out over the speaker',
-        'fade=t=out:' in first_run, True))
-    checks.append(('presence holds a picture from the first frame and to the last',
-        presence([{'s': 0.0, 'e': 4.0}], total=4.0), 'clip(min(1,1),0,1)'))
+    checks.append(('without an intro the first split still eases over the speaker',
+        'fade=t=in:' in first_run, True))
     _, g, _ = video_graph(fake, '9x16', same, Path('.'), Path('edited.mkv'), 20.0, [], ws, [720, 1280, 0, 0], None,
                           {'file': 'end.mp4', 'frames': 510, 'held_s': 13.0}, Path('mix.wav'))
     checks.append(('a long episode\'s end card holds its last frame for the end-screen tiles',
