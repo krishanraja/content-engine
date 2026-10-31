@@ -17,7 +17,18 @@ manager.json:
                 {"id": "vertical", "file": "img/cover-1080x1920.png", "alt": "...", "role": "vertical-cover"},
                 {"id": "decoder", "file": "img/decoder.png", "alt": "...", "after_heading": "FIRST, WHAT YOU ARE LOOKING AT"}],
      "words": "path/to/publish.json",              # the channel words (publish_kit.py's input)
-     "scripts": [{"label": "Video script (long)", "file": "script.md"}, ...]}
+     "scripts": [{"label": "Video script (long)", "file": "script.md"}, ...],
+     "facts": "page-facts.json",                   # optional; page-facts.json beside the manifest is read anyway
+     "figures_none_reason": "..."}                 # only for an article meant to go out with no picture
+
+The pack's figures (page-facts.json "figures": image, alt, after) join the
+pictures by themselves, each after the heading of the section holding its
+"after" words. The page is refused (PublishCheckError) when the article has no
+picture, when an "after_heading" matches no heading (case-insensitive), or when
+it has fewer pictures than the creative direction's article.visuals plans;
+"figures_none_reason" lets a deliberately picture-free article through.
+
+    python publish_manager.py manager.json --check   # the picture check alone
 
 "role": "cover" is the 1200 x 630 cover to upload in Substack's settings;
 "vertical-cover", "square-cover" and "share-card-cover" each get their own
@@ -33,6 +44,7 @@ import argparse
 import base64
 import html
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -97,7 +109,122 @@ def article_text(md, images):
     return '\n\n'.join(out)
 
 
-TOKENS = '\n'.join(l for l in (Path(__file__).resolve().parent / 'tokens.css').read_text(encoding='utf-8').splitlines() if l.startswith((':root', '@media')))
+# ---------------------------------------------------------------- the article's pictures
+# Krish, 2026-10-31: the Substack articles had lost their pictures. Monday 9 Nov's page had six headings and none,
+# and nothing failed: a picture reaches the article only as an image with "after_heading", a heading that matched
+# nothing dropped its picture silently, and the pack's own figures (page-facts.json "figures", placed by
+# scripts/pages/build.py) never reached this page. So the planned figures are fed in here, and the page is refused
+# when the article would go out with no picture, or a picture names a heading the article does not have.
+
+class PublishCheckError(ValueError):
+    """The publish page is not ready: its article's pictures are missing or misplaced."""
+
+
+def _plain(md):
+    """A body block as words: source links to their text, no ** or *."""
+    t = re.sub(r'\[([^\]]+)\]\((https?://[^)\s]+)\)', r'\1', md)
+    return ' '.join(t.replace('**', '').replace('*', '').split())
+
+
+def headings(md):
+    """The article's section headings, as written."""
+    return [b.strip()[3:].strip() for b in md.replace('\r', '').split('\n\n') if b.strip().startswith('## ')]
+
+
+def heading_for(md, anchor):
+    """The heading of the section whose words hold the anchor (page-facts "after"), or None."""
+    current, want = None, ' '.join(anchor.split())
+    for block in [b.strip() for b in md.replace('\r', '').split('\n\n') if b.strip()]:
+        if block.startswith('## '):
+            current = block[3:].strip()
+        elif want in _plain(block):
+            return current
+    return None
+
+
+def facts_path(m, base):
+    """The pack's page facts: the manifest's "facts", else page-facts.json beside it (the pack's own layout)."""
+    if m.get('facts'):
+        return base / m['facts']
+    p = base / 'page-facts.json'
+    return p if p.is_file() else None
+
+
+def planned_figures(m, base, md):
+    """The pack's figures (page-facts.json "figures": image, alt, after) as publish-page pictures, each after the
+    heading of the section that holds its anchor. A figure the manifest already carries (same file) is kept as is."""
+    fp = facts_path(m, base)
+    if fp is None:
+        return []
+    if not fp.is_file():
+        raise PublishCheckError(f'publish_manager: the manifest names page facts that are not there: {fp}')
+    facts = json.loads(fp.read_text(encoding='utf-8'))
+    have = {(base / i['file']).resolve() for i in m.get('images', []) if i.get('file') and i.get('after_heading')}
+    out = []
+    for n, f in enumerate(facts.get('figures') or [], 1):
+        file = (fp.parent / f['image']).resolve()
+        if file in have:
+            continue
+        head = heading_for(md, f.get('after', ''))
+        if not head:
+            raise PublishCheckError(f'publish_manager: figure {f["image"]} is placed after "{f.get("after")}", '
+                                    'which is under no heading of the article (or not in it at all)')
+        rel = Path(os.path.relpath(file, base.resolve())).as_posix()
+        out.append({'id': f.get('id') or re.sub(r'[^a-z0-9]+', '-', Path(f['image']).stem.lower()).strip('-') or f'figure-{n}',
+                    'file': rel, 'alt': f.get('alt', ''), 'after_heading': head,
+                    **({'caption': f['caption']} if f.get('caption') else {})})
+    return out
+
+
+def planned_visuals(m, base):
+    """How many article pictures the signed creative direction plans (its "article.visuals"): the manifest's
+    "creative_direction", else the plan folder's creative-direction.json one or two levels up. None when there is none."""
+    cands = [base / m['creative_direction']] if m.get('creative_direction') else [base / 'creative-direction.json',
+                                                                                  base.parent / 'creative-direction.json']
+    for p in cands:
+        if p.is_file():
+            return len((json.loads(p.read_text(encoding='utf-8')).get('article') or {}).get('visuals') or [])
+    return None
+
+
+def check_figures(m, md, images, planned=None):
+    """The publish check on the article's pictures. Raises PublishCheckError when an "after_heading" matches no
+    heading of the article (case-insensitive, as article_html places them), when the article has no picture at all
+    (unless the manifest says why in "figures_none_reason"), or when it has fewer than the creative direction plans."""
+    heads = {h.strip().upper() for h in headings(md)}
+    stray = [i for i in images if i.get('after_heading') and i['after_heading'].strip().upper() not in heads]
+    if stray:
+        raise PublishCheckError('publish_manager: a picture names a heading the article does not have, so it would be '
+                                'dropped from the article:\n' + '\n'.join(f'  {i["id"]}: "{i["after_heading"]}"' for i in stray)
+                                + '\n  the headings are: ' + '; '.join(headings(md)))
+    placed = [i for i in images if i.get('after_heading')]
+    why = (m.get('figures_none_reason') or '').strip()
+    if not placed and not why:
+        raise PublishCheckError('publish_manager: the article has no pictures (no image with "after_heading", and no '
+                                'page-facts.json figures). Add the figures, or say why it goes out without one in '
+                                '"figures_none_reason".')
+    if planned and len(placed) < planned and not why:
+        raise PublishCheckError(f'publish_manager: the creative direction plans {planned} article picture(s); the page '
+                                f'has {len(placed)}. Add them, or say why in "figures_none_reason".')
+    return len(placed)
+
+
+def resolve_images(m, base, md):
+    """The manifest's pictures plus the pack's planned figures, checked."""
+    images = list(m.get('images', [])) + planned_figures(m, base, md)
+    check_figures(m, md, images, planned_visuals(m, base))
+    return images
+
+
+def check(src):
+    """Check a manifest's article pictures without building the page; returns how many the article carries."""
+    src = Path(src)
+    m = json.loads(src.read_text(encoding='utf-8'))
+    md = (src.parent / m['body']).read_text(encoding='utf-8')
+    return sum(1 for i in resolve_images(m, src.parent, md) if i.get('after_heading'))
+
+
+TOKENS ='\n'.join(l for l in (Path(__file__).resolve().parent / 'tokens.css').read_text(encoding='utf-8').splitlines() if l.startswith((':root', '@media')))
 CSS = '\n' + TOKENS + '\n' + r'''*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Archivo,system-ui,-apple-system,sans-serif}
 main{max-width:820px;margin:0 auto;padding:24px 16px 96px}
 .kick{font:12px "IBM Plex Mono",ui-monospace,monospace;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
@@ -279,13 +406,13 @@ def page_data(words, images):
 
 
 def page(m, base):
+    md = (base / m['body']).read_text(encoding='utf-8')
     images = []
-    for i in m.get('images', []):
+    for i in resolve_images(m, base, md):
         path = (base / i['file'])
         raw = compact_png(path) if i.get('after_heading') else path.read_bytes()
         data = 'data:image/png;base64,' + base64.b64encode(raw).decode()
         images.append({**i, 'data': data})
-    md = (base / m['body']).read_text(encoding='utf-8')
     body_imgs = [i for i in images if i.get('after_heading')]
     words = json.loads((base / m['words']).read_text(encoding='utf-8')) if m.get('words') else {}
     links = words.get('links') or {}
@@ -392,6 +519,31 @@ def self_test():
                                               'scripts': [{'label': 'Script', 'file': 's.md'}]}), encoding='utf-8')
         h = build(t / 'm.json', t / 'out').read_text(encoding='utf-8')
         kept = compact_png(t / 'a.png')  # a 1-pixel PNG: smaller as itself, so it keeps its bytes
+
+        def refused(manifest):
+            (t / 'x.json').write_text(json.dumps(manifest), encoding='utf-8')
+            try:
+                build(t / 'x.json', t / 'outx')
+            except PublishCheckError as e:
+                return str(e)
+            return ''
+        base = {'title': 'Amazon locked Muse out <x>', 'body': 'body.md', 'words': 'words.json'}
+        cover = {'id': 'cover', 'file': 'a.png', 'alt': 'C', 'role': 'cover'}
+        no_pics = refused({**base, 'images': [cover]})
+        stray = refused({**base, 'images': [cover, {'id': 'p', 'file': 'a.png', 'alt': 'A', 'after_heading': 'NOT A HEADING'}]})
+        excused = refused({**base, 'images': [cover], 'figures_none_reason': 'a letter, words only'})
+        lower = refused({**base, 'images': [cover, {'id': 'p', 'file': 'a.png', 'alt': 'A', 'after_heading': 'the part'}]})
+        (t / 'pack').mkdir()
+        (t / 'pack' / 'page-facts.json').write_text(json.dumps({'figures': [{'image': '../a.png', 'alt': 'Fed', 'after': 'bold fact'}]}), encoding='utf-8')
+        (t / 'pack' / 'm.json').write_text(json.dumps({**base, 'body': '../body.md', 'words': '../words.json',
+                                                       'images': [{**cover, 'file': '../a.png'}]}), encoding='utf-8')
+        fed = build(t / 'pack' / 'm.json', t / 'outf').read_text(encoding='utf-8')
+        (t / 'creative-direction.json').write_text(json.dumps({'article': {'visuals': [{'what': 'one'}, {'what': 'two'}]}}), encoding='utf-8')
+        short = ''
+        try:
+            check(t / 'pack' / 'm.json')
+        except PublishCheckError as e:
+            short = str(e)
     checks = [
         ('the article copies with its pictures', 'data-act="article"' in h and '<h2>THE PART</h2>\n<figure><img src="data:image/png;base64,' in h),
         ('a named file links to its Drive copy, and only an https one',
@@ -411,6 +563,13 @@ def self_test():
         ('the page carries its words and its pictures\' roles as data, for the board\'s run-sheet',
          (lambda d: d['words'].get('linkedin_post') == 'L {ARTICLE_URL}' and {'id': 'vertical', 'role': 'vertical-cover', 'alt': 'V'} in d['images'])(
              json.loads(re.search(r'<script type="application/json" id="pm-data">(.*?)</script>', h, re.S).group(1)))),
+        ('an article with no picture is refused', 'has no pictures' in no_pics),
+        ('a picture under a heading the article lacks is refused, not dropped', 'NOT A HEADING' in stray),
+        ('figures_none_reason lets a picture-free article through', excused == ''),
+        ('headings still match case-insensitively', lower == ''),
+        ("the pack's page-facts figures reach the article after their section's heading",
+         '<h2>THE PART</h2>\n<figure><img src="data:image/png;base64,' in fed and 'alt="Fed"' in fed),
+        ('fewer pictures than the creative direction plans is refused', 'plans 2 article picture' in short),
     ]
     for name, ok in checks:
         if not ok:
@@ -426,13 +585,21 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description='One self-contained publish page with Copy on every word and picture.')
     ap.add_argument('manager', nargs='?')
     ap.add_argument('--out', default='.')
+    ap.add_argument('--check', action='store_true', help="check the article's pictures only; build nothing")
     ap.add_argument('--self-test', action='store_true')
     a = ap.parse_args(argv)
     if a.self_test:
         return self_test()
     if not a.manager:
         ap.error('give manager.json')
-    print(build(a.manager, a.out))
+    try:
+        if a.check:
+            print(f'publish_manager: the article carries {check(a.manager)} picture(s)')
+        else:
+            print(build(a.manager, a.out))
+    except PublishCheckError as e:
+        print(e, file=sys.stderr)
+        return 1
     return 0
 
 
