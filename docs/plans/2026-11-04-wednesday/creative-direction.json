@@ -847,10 +847,14 @@
   "Fact, transport and editorial status reported separately; ready only when all three pass"
  ],
  "signed": {
-  "by": "",
-  "said": "",
-  "on": "",
-  "script_sha256": {}
+  "by": "Krish",
+  "said": "Yes, signed off, all recommended for both days",
+  "on": "2026-10-31",
+  "script_sha256": {
+   "long": "bf03c6dca9b17b0309c96d139dd5079ad00ec4906cbf3469497a155989f8aa63",
+   "short": "c7697a4b983e9018a77d08f1ce4a159ce3b7ae51b8c779b8910ecfd49e7b1fc4"
+  },
+  "what": "the storyboard, the imagery board (31 Oct: more animation and movement on every beat), the lead picture as proposed, every recommended take edit and title A"
  },
  "production_choices": {
   "opening": "hook_is_intro",
