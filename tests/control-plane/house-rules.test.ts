@@ -653,22 +653,26 @@ describe('every script opens straight on the hook: the series line is retired (S
   })
 })
 
-describe('every script closes on what he would do, then the deep dive line (SCRIPT_CLOSE, Krish, 2026-10-21)', () => {
+describe('every script closes on the one thing he would do, then the deep dive line (SCRIPT_CLOSE, Ruling, Krish, 2026-10-31)', () => {
   test('the rule is live, carries his words, and reaches the writers, the draft judges and the final pass', () => {
     const r = HOUSE_RULES.find(x => x.id === 'SCRIPT_CLOSE')
     assert.ok(r)
     assert.equal(r.status, 'live')
-    assert.equal(r.on, '2026-10-21')
-    assert.equal(r.said, 'Also trim the closing to "the full deep dive is at makeyourmindup.ai." right after a "Here\'s what I\'d do with this info if I were you" closing line. That needs to be the format moving forward for all scripts.')
-    assert.match(r.text, /starts exactly "Here's what I'd do with this info if I were you"/)
+    assert.equal(r.on, '2026-10-31')
+    assert.match(r.said, /^I think it's so complex, and then the last paragraph of all my scripts still sounds a bit bossy and preachy\./)
+    assert.match(r.said, /Yes, replace it/)
+    assert.match(r.text, /the one thing Krish himself would do with this, in his own first person/)
+    assert.match(r.text, /at most 3 sentences/)
+    assert.match(r.text, /never a list of orders/)
     assert.match(r.text, /final sentence is exactly "The full deep dive is at makeyourmindup\.ai\." with nothing after it/)
     assert.match(r.text, /no sign-off, no "I'm Krish", no question for the comments/)
     for (const stage of ['write', 'judge_draft', 'final_pass'] as Stage[]) assert.ok(r.stages.includes(stage), stage)
     assert.ok(existsSync('scripts/post-pack/story_check.py') && r.source.includes('scripts/post-pack/story_check.py'))
   })
-  test('the writer prompt closes on it, and story_check.py refuses a script that does not', async () => {
+  test('the writer prompt closes on it, and story_check.py refuses a bossy close or the retired line', async () => {
     const video = await import('../../apps/control-plane/api/_video.js')
-    assert.match(video.STORY_OUTRO, /starts exactly "Here's what I'd do with this info if I were you"/)
+    assert.match(video.STORY_OUTRO, /the one thing Krish himself would do with this, in his own first person/)
+    assert.match(video.STORY_OUTRO, /never the retired line "Here's what I'd do with this info if I were you"/)
     assert.match(video.STORY_OUTRO, /exactly "The full deep dive is at makeyourmindup\.ai\." with nothing after it/)
     for (const f of video.VIDEO_FORMATS.filter(x => x.seconds >= 60)) assert.match(f.shape, /STORY_OUTRO/, f.id)
     const { spawnSync } = await import('node:child_process')
@@ -680,16 +684,36 @@ describe('every script closes on what he would do, then the deep dive line (SCRI
     }
     const found = ask([
       'body = " ".join(["More words that fill the middle of the script."] * 20)',
-      'good = "I put two AI helpers head to head. So which one would you trust?\\n\\n" + body + "\\n\\nSo here is my call.\\n\\nHere\'s what I\'d do with this info if I were you. Check what you pay for.\\n\\nThe full deep dive is at makeyourmindup.ai."',
+      'good = "I put two AI helpers head to head. So which one would you trust?\\n\\n" + body + "\\n\\nSo here is my call.\\n\\nIf I paid for one, I\'d check the bill first.\\n\\nThe full deep dive is at makeyourmindup.ai."',
       'old = good.replace("The full deep dive is at makeyourmindup.ai.", "The full teardown is free at makeyourmindup.ai. What do you think? I\'m Krish.")',
-      'skipped = good.replace("Here\'s what I\'d do with this info if I were you. ", "")',
-      'print(json.dumps([[p for p in s.problems(t) if "SCRIPT_CLOSE" in p] for t in (good, old, skipped)]))',
+      'retired = good.replace("If I paid for one", "Here\'s what I\'d do with this info if I were you. If I paid for one")',
+      'bossy = good.replace("If I paid for one, I\'d check the bill first.", "Pick one tool. Ask its maker four things. Check every draft.")',
+      'print(json.dumps([[p for p in s.problems(t) if "SCRIPT_CLOSE" in p] for t in (good, old, retired, bossy)]))',
     ].join('\n'))
     assert.deepEqual(found[0], [])
-    assert.equal(found[1].length, 1)
-    assert.match(found[1][0], /last sentence must be exactly "The full deep dive is at makeyourmindup\.ai\."/)
-    assert.equal(found[2].length, 1)
-    assert.match(found[2][0], /Here's what I'd do with this info if I were you/)
+    assert.ok(found[1].some((p: string) => /last sentence must be exactly "The full deep dive is at makeyourmindup\.ai\."/.test(p)))
+    assert.ok(found[2].some((p: string) => /Krish retired on 2026-10-31/.test(p)))
+    assert.ok(found[3].some((p: string) => /bossy and preachy/.test(p)))
+  })
+})
+
+describe('a slow listener can follow every script, heard once (LISTENING, Ruling, Krish, 2026-10-31)', () => {
+  test('the rule is live, its numbers live once in the house rules, and story_check.py reads them', async () => {
+    const r = HOUSE_RULES.find(x => x.id === 'LISTENING')
+    assert.ok(r)
+    assert.equal(r.status, 'live')
+    assert.equal(r.on, '2026-10-31')
+    assert.match(r.said, /^I still feel like all my video scripts are a little bit hard to follow\./)
+    assert.match(r.said, /Yes, a hard rule/)
+    for (const stage of ['write', 'judge_draft', 'final_pass'] as Stage[]) assert.ok(r.stages.includes(stage), stage)
+    const { LISTENING } = await import('../../apps/control-plane/api/_houseRules.js')
+    assert.deepEqual([LISTENING.long.figures, LISTENING.short.figures, LISTENING.long.names, LISTENING.short.names], [3, 1, 8, 4])
+    assert.match(r.text, /at most 3 figures in a 5-minute cut and 1 in a 90-second cut/)
+    const { spawnSync } = await import('node:child_process')
+    const out = spawnSync(process.platform === 'win32' ? 'python' : 'python3',
+      ['-c', 'import json, story_check as s\nprint(json.dumps(s.listen_rules()))'], { cwd: join(__dirname, '../../scripts/post-pack'), encoding: 'utf8' })
+    assert.equal(out.status, 0, out.stderr)
+    assert.deepEqual(JSON.parse(out.stdout), JSON.parse(JSON.stringify(LISTENING)))
   })
 })
 

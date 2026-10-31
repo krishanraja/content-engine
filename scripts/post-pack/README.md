@@ -688,13 +688,16 @@ is held once.
 
 `story_check.py --cut long|short --series <lane_slot> SCRIPT` refuses a
 script of a minute or more that does not close the way Krish ruled on
-2026-10-21 (house rule SCRIPT_CLOSE): "trim the closing to "the full deep
-dive is at makeyourmindup.ai." right after a "Here's what I'd do with this
-info if I were you" closing line. That needs to be the format moving forward
-for all scripts." So a beat in its last three beats has the sentence "Here's
-what I'd do with this info if I were you" (a trailing colon, full stop or
-comma and curly apostrophes are fine), and the last sentence is exactly "The
-full deep dive is at makeyourmindup.ai." with nothing after it. The series
+2026-10-31 (house rule SCRIPT_CLOSE): "the last paragraph of all my scripts
+still sounds a bit bossy and preachy", then "Yes, replace it". So the beat
+before the last line says the one thing he would do, in his first person, in
+at most three sentences with at most one order, and never the retired
+"Here's what I'd do with this info if I were you" (his 2026-10-21 lead-in);
+the last sentence is still exactly "The full deep dive is at
+makeyourmindup.ai." with nothing after it. It also refuses a script holding
+more figures or names than a listener keeps heard once (house rule
+LISTENING, "Yes, a hard rule", 2026-10-31; the numbers are LISTENING in
+`apps/control-plane/api/_houseRules.ts`). The series
 line is retired the same day (house rule SERIES_OPENER; "we need to cut that
 opening line from every content piece moving forward and just launch
 straight in to "I put GrokBot and Muse head to head" etc."): nothing asks

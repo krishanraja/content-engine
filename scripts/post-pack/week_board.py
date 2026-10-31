@@ -4601,7 +4601,7 @@ def _presses_checks(check, week, mon):
     said = ("Why does your team still copy the same numbers into three tools every Monday? "
             + "I watched a small shop do this last week. They spent four hours moving data by hand. Then one person set up a simple agent. "
               "It read the sales sheet, wrote the summary and sent it to the boss. The trick was picking one boring job first. " * 3
-            + "Here's what I'd do with this info if I were you. Pick the one task you repeat every week and hand just that to an agent.")
+            + "If I ran that shop, I'd do one thing. I'd hand the agent just the one task we repeat every week.")
     rec = lambda **kw: opt(9, **dict({'kind': 'recorded', 'format': 'Said to camera', 'style': 'to_camera', 'series': 'under_the_hood',
                                       'piece_id': MON_ID, 'title': 'One boring job first', 'script': said, 'covers': [MON_ID],
                                       'read_back': {'readers': ['Reader A', 'Reader B'], 'found': 'nothing lost'}}, **kw))
