@@ -5,6 +5,12 @@ Newest first. Entries are written by the docs steward (see the steward link in
 describes current behaviour; `NOW.md` and `docs/STATE.md` do.
 Files moved here keep their body verbatim under a Historical banner.
 
+## 2026-10-31
+
+- moved: two 31 October "Where it is right now" lines from NOW.md, verbatim, to `docs/history/2026-10-31-NOW-moved-5.md`: Friday 6 Nov "filed and waiting on one press", superseded by the line saying it is approved and sealed, and the first ve receipt line, superseded by the heard-row line saying the 90-second cut passes every receipt row. NOW.md was 14,501 bytes against the 14,000 cap in `scripts/check_workbench.py`.
+- banner: `docs/history/2026-10-31-NOW-moved-4.md` arrived in `d9fd150b` (#307) with no Historical banner, which failed the strict validator; the banner was added above the unchanged body.
+- reconciled at `40005cb`: 89 non-steward commits since `de5b942`, each closed out by its session in NOW.md (Monday 2 Nov and Wednesday 4 Nov made, Friday 6 Nov sealed, the script closing rules, routed clips, the ve heard row). The NOW.md audit passed and no closeout note waited in `now-notes/`. `head` moved from `de5b942` to `40005cb`.
+
 ## 2026-10-29
 
 - folded the eight closeout notes in `now-notes/` (2026-10-28-overnight-preflight and seven of 2026-10-29: copy, engine, floor, story, ve, vendor, video) into NOW.md with `foldRepository` from `.claude/hooks/harness-closeout.mjs`, which deleted them. The folded file (26,581 characters, 15 "Where it is right now" and 19 "What changed recently" bullets) is kept whole in `docs/history/2026-10-29-NOW-closeout-fold.md`; NOW.md was then rewritten to the audit's limits and checked against the code.
