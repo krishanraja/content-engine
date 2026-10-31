@@ -2,9 +2,10 @@
 making record or into the library (plan W2.4). Every row is made here, from these bytes, or named under `missing`
 with what makes it; nothing is copied from a session's word, and nothing here is a placeholder pass.
 
-  heard        the cut heard again here (faster-whisper, as words_gate hears it) against the take's words: every
-               difference is a spelling, a mishearing Krish cleared in the cut's rulings ("heard_as"), or a removal
-               he approved ("removals"), or the row fails
+  heard        the cut heard again here (faster-whisper, as words_gate hears it) against the same transcriber's
+               hearing of the voice master the cut was mixed from, so a difference is the cut's and never two
+               transcribers disagreeing (Ruling, Krish, 2026-10-31); every difference is a spelling, a mishearing he
+               cleared in the cut's rulings ("heard_as"), or a removal he approved ("removals"), or the row fails
   sync, motion not_applicable only when the cut's own props hold no picture segments (quality.voiceover_problems)
   loudness     ve qc's loudness rows on these bytes
   visuals      the independent Critic's verdict on these bytes (ve verdict), not blocking
@@ -45,10 +46,10 @@ def _repo_ref(path: Path) -> dict:
     return {'path': path.resolve().relative_to(ROOT.resolve()).as_posix(), 'sha256': quality.digest(path)}
 
 
-def heard_words(cut: Path, model: str = 'small.en') -> dict:
-    """The cut heard here, kept beside it; a kept hearing is reused only when its provenance names these bytes."""
+def heard_words(cut: Path, model: str = 'small.en', kept: Path | None = None) -> dict:
+    """The file heard here, kept beside the cut; a kept hearing is reused only when its provenance names these bytes."""
     quality, _, words_gate = _quick_edit()
-    kept = cut.with_name(cut.name + '.heard.json')
+    kept = kept or cut.with_name(cut.name + '.heard.json')
     if kept.is_file():
         doc = json.loads(kept.read_text(encoding='utf-8'))
         if doc.get('provenance') == quality.transcript_identity(cut, 1, model):
@@ -77,6 +78,11 @@ def heard_check(take: list, heard: list, rulings: dict) -> dict:
         hit = next((i for i in range(len(seq) - n + 1) if n and same(seq[i:i + n], part)), None)
         return None if hit is None else seq[:hit] + seq[hit + n:]
 
+    noise_rows = []
+    for row in rulings.get('transcriber_differences') or []:
+        if not (isinstance(row, dict) and words_gate.krish_words(row.get('krish'))):
+            raise words_gate.WordsGateError(f'a transcriber_differences row clears a place only with his own words (starting "Krish"): {row!r}')
+        noise_rows.append({**row, 'master_t': words_gate.canonical(row.get('master', '')), 'cut_t': words_gate.canonical(row.get('cut', ''))})
     cleared, left = [], []
     for change in diff['changes']:
         at = list(range(change['expected_index'], change['expected_index'] + len(change['expected'])))
@@ -85,6 +91,17 @@ def heard_check(take: list, heard: list, rulings: dict) -> dict:
         if len(expected) < len(at):
             how.append({'by': 'removal', 'krish': removed[next(owner[i] for i in at if owner[i] in removed)]})
         heard_here = list(change['heard'])
+        # A difference he ruled the transcriber's, not the cut's, named exactly (master hearing and cut hearing).
+        noise = next((n for n in noise_rows if same(change['expected'], n['master_t']) and same(heard_here, n['cut_t'])), None)
+        if noise:
+            cleared.append({**change, 'by': 'transcriber', 'krish': noise['krish']})
+            continue
+        # The cut's word in this place is one he cleared as a mishearing (Klen for Qwen): the cut holds that word,
+        # whatever the transcriber made of the voice master there (Gwen), so the place is cleared, named with both.
+        whole = next((r for r in rows if change['kind'] == 'replace' and expected and same(heard_here, r['heard_t'])), None)
+        if whole:
+            cleared.append({**change, 'by': 'heard_as', 'krish': whole['krish'], 'said': whole['said']})
+            continue
         for row in rows:
             e, h = cut_out(expected, row['said_t']), cut_out(heard_here, row['heard_t'])
             if e is not None and h is not None:
@@ -101,8 +118,8 @@ def heard_check(take: list, heard: list, rulings: dict) -> dict:
             'changes': left, 'cleared': cleared}
 
 
-def build(cut, *, piece_id: str, library_path: str, props, spec, take_words, script, rulings, qc, verdict,
-          clarity_dir=None, model: str = 'small.en') -> dict:
+def build(cut, *, piece_id: str, library_path: str, props, spec, take_words, voice_master, script, rulings, qc,
+          verdict, clarity_dir=None, model: str = 'small.en') -> dict:
     """Write <cut>.validation.json and return it with quality.delivery_problems' answer."""
     quality, visual_clarity, words_gate = _quick_edit()
     from .qc_gates import gate_words
@@ -128,7 +145,14 @@ def build(cut, *, piece_id: str, library_path: str, props, spec, take_words, scr
     narration.write_text(' '.join(w['w'].strip() for w in heard['words']), encoding='utf-8')
     receipt['final_narration_sha256'] = quality.digest(narration)
     receipt['source_provenance'] = heard['provenance']
-    checks['heard'] = heard_check(take['words'], heard['words'], rules)
+    master = Path(voice_master)
+    voice = heard_words(master, model, kept=cut.with_name(cut.name + '.voice-master.heard.json'))
+    receipt['voice_master'] = {'path': str(master), 'sha256': voice['provenance']['source_sha256'],
+                               'heard': voice['provenance']}
+    # The rulings' removals index the take's words, not this hearing, and the master already holds them: only his
+    # heard_as rows apply here.
+    checks['heard'] = heard_check(voice['words'], heard['words'], {'heard_as': rules.get('heard_as', []),
+                                                                         'transcriber_differences': rules.get('transcriber_differences', [])})
 
     if receipt['footage']['camera_segments'] == 0:
         why = 'voiceover: the props hold no picture segments, so there is no camera footage'
