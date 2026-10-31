@@ -1,0 +1,3 @@
+Status: Friday 6 Nov is filed and waiting on one press. Both cuts are in the library with their receipts (the long cut is the music restart mix, ece2e8ee; the 90-second cut is 06ff699f) and recorded on the making record with the house drawer's thumbnails and Drive links (Video assets done). The draft publish manifest (sha256 40a83bc8, eight channels' words, QA passed) is in 0 Publish and bound to Approve for publish on the 2 November board (build 179e5194, read back).
+Next: when Krish presses Approve for publish on Friday, seal the manifest (piece_manifest.py seal) for Growth; if he changes any channel words, redraft and rebuild the board first.
+North Star check (2026-10-31): holds.
