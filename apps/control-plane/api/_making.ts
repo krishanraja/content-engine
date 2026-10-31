@@ -121,6 +121,22 @@ export type ProductionChoice = (typeof PRODUCTION_CHOICES)[number]
 export type MakingProductionChoices = Partial<Record<ProductionChoice, string>> & { at: string }
 const CHOICE_VALUE = /^[a-z][a-z0-9_]{0,59}$/
 
+/** What Krish changed reading one cut's script aloud (scripts/voice/spoken_delta.py): counts, rates and a
+ *  few short examples, never the transcript (Krish, 2026-10-31: "start the script vs recording comparison"). */
+export const SPOKEN_COUNTS = ['words_script', 'words_said', 'kept', 'swapped', 'cut', 'added', 'contracted', 'expanded', 'changes'] as const
+export const SPOKEN_KINDS = ['swapped', 'cut', 'added', 'contracted', 'expanded'] as const
+const SPOKEN_EXAMPLES = 8
+const SPOKEN_EXAMPLE_CHARS = 120
+export interface MakingSpokenExample { script: string; said: string }
+export type MakingSpokenDelta = Record<(typeof SPOKEN_COUNTS)[number], number> & {
+  minutes: number | null
+  changes_per_minute: number | null
+  changes_per_100_words: number | null
+  examples: Partial<Record<(typeof SPOKEN_KINDS)[number], MakingSpokenExample[]>>
+  script_sha256: string
+  at: string
+}
+
 export interface Making {
   /** When the record began: written on its first write and never moved, so
    *  re-running a step never makes a take look as if it came before the
@@ -139,6 +155,8 @@ export interface Making {
   teleprompter?: MakingTeleprompter
   /** What the piece used of each choice under test; merged choice by choice. */
   production_choices?: MakingProductionChoices
+  /** What he changed reading each cut aloud; merged cut by cut. */
+  spoken_delta?: Partial<Record<MakingCut, MakingSpokenDelta>>
   /** Retired on 2026-10-12, when Descript was (Krish: "Descript is
    *  permanently gone"). Records written before then still hold it; it is
    *  kept as it is, so they still parse, and nothing reads it. */
@@ -163,6 +181,42 @@ export const SCRIPT_SHA256 = /^[a-f0-9]{64}$/
 export const TELEPROMPTER_ID = /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/
 /** Teleprompter's limit on a folder name and a script title. */
 const MAX_TELEPROMPTER_NAME = 200
+
+function count(v: unknown): number | null { return typeof v === 'number' && Number.isInteger(v) && v >= 0 && v <= 100000 ? v : null }
+function rate(v: unknown): number | null | undefined { return v === null ? null : typeof v === 'number' && Number.isFinite(v) && v >= 0 && v <= 100000 ? v : undefined }
+
+/** One cut of a spoken_delta patch, or the reason it is refused. Only counts and short examples are taken. */
+function parseSpokenDelta(cut: string, v: unknown, now: string): { entry?: MakingSpokenDelta; problem?: string } {
+  const at = `spoken_delta.${cut}`
+  if (!isCut(cut)) return { problem: `unknown cut "${cut}" in spoken_delta (long, short, feature)` }
+  if (!isObj(v)) return { problem: `${at} must be an object` }
+  const nums: Partial<Record<(typeof SPOKEN_COUNTS)[number], number>> = {}
+  for (const k of SPOKEN_COUNTS) {
+    const n = count(v[k])
+    if (n === null) return { problem: `${at}.${k} is a whole number of words` }
+    nums[k] = n
+  }
+  const rates: Record<string, number | null> = {}
+  for (const k of ['minutes', 'changes_per_minute', 'changes_per_100_words'] as const) {
+    const r = rate(v[k])
+    if (r === undefined) return { problem: `${at}.${k} is a number or null` }
+    rates[k] = r
+  }
+  const sha = typeof v.script_sha256 === 'string' && SCRIPT_SHA256.test(v.script_sha256) ? v.script_sha256 : null
+  if (!sha) return { problem: `${at}.script_sha256 is the script's sha256, as making.py script_hash writes it` }
+  const examples: MakingSpokenDelta['examples'] = {}
+  const given = v.examples === undefined ? {} : v.examples
+  if (!isObj(given)) return { problem: `${at}.examples maps a kind to its examples` }
+  for (const [kind, list] of Object.entries(given)) {
+    if (!(SPOKEN_KINDS as readonly string[]).includes(kind)) return { problem: `unknown kind "${kind}" in ${at}.examples (${SPOKEN_KINDS.join(', ')})` }
+    if (!Array.isArray(list) || list.length > SPOKEN_EXAMPLES) return { problem: `${at}.examples.${kind} is a list of at most ${SPOKEN_EXAMPLES}` }
+    const ok = list.map(e => isObj(e) && typeof e.script === 'string' && typeof e.said === 'string'
+      && e.script.length <= SPOKEN_EXAMPLE_CHARS && e.said.length <= SPOKEN_EXAMPLE_CHARS ? { script: e.script, said: e.said } : null)
+    if (ok.some(e => !e)) return { problem: `${at}.examples.${kind}: each is {script, said}, at most ${SPOKEN_EXAMPLE_CHARS} characters a side` }
+    examples[kind as (typeof SPOKEN_KINDS)[number]] = ok as MakingSpokenExample[]
+  }
+  return { entry: { ...(nums as Record<(typeof SPOKEN_COUNTS)[number], number>), minutes: rates.minutes ?? null, changes_per_minute: rates.changes_per_minute ?? null, changes_per_100_words: rates.changes_per_100_words ?? null, examples, script_sha256: sha, at: when(v.at, now) } }
+}
 
 /** One cut of a teleprompter patch, or the reason it is refused. */
 function parseTeleprompterCut(cut: string, v: unknown, by: string, now: string): { entry?: MakingTeleprompterCut; problem?: string } {
@@ -372,6 +426,20 @@ export function parseMakingPatch(body: unknown, now: string): { patch: MakingPat
     if (!given || !given.length) problems.push(`production_choices needs at least one of ${PRODUCTION_CHOICES.join(', ')}`)
     else if (Object.keys(choices).length === given.length) patch.production_choices = { ...choices, at: when(isObj(v) ? v.at : undefined, now) }
   }
+  if (body.spoken_delta !== undefined) {
+    const v = body.spoken_delta
+    if (!isObj(v) || !Object.keys(v).length) problems.push('spoken_delta needs a cut: long, short or feature')
+    else {
+      const cuts: Partial<Record<MakingCut, MakingSpokenDelta>> = {}
+      const before = problems.length
+      for (const [cut, d] of Object.entries(v)) {
+        const { entry, problem } = parseSpokenDelta(cut, d, now)
+        if (problem || !entry) problems.push(problem || `${cut}: no delta`)
+        else cuts[cut as MakingCut] = entry
+      }
+      if (problems.length === before) patch.spoken_delta = cuts
+    }
+  }
   // Descript was retired on 2026-10-12; a record of a send there is not taken.
   if (body.descript !== undefined) problems.push('descript was retired on 2026-10-12 (Krish: "Descript is permanently gone, teleprompter.com is permanently in"): record the Teleprompter send in teleprompter')
   return { patch, problems }
@@ -430,6 +498,11 @@ export function mergeMaking(prev: Making | null | undefined, patch: MakingPatch,
     // Choice by choice: recording the sound after the render keeps the opening and the lead picture.
     const held = isObj(base.production_choices) ? base.production_choices : {}
     next.production_choices = { ...held, ...patch.production_choices }
+  }
+  if (patch.spoken_delta) {
+    // Cut by cut: the short's delta never drops the long's.
+    const held = isObj(base.spoken_delta) ? base.spoken_delta : {}
+    next.spoken_delta = { ...held, ...patch.spoken_delta }
   }
   if (patch.teleprompter) {
     // Cut by cut: a send of one cut keeps the other, and the folder the
