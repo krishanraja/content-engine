@@ -1683,10 +1683,11 @@ def fit_thumb(pg, shape):
     return dict(tried, ok=False)
 
 
-def thumbs_check_html(shots):
+def thumbs_check_html(shots, length='3:04'):
     """What a person checks: the wide thumbnail at a phone's width and at its
     smallest, with the video length where YouTube puts it, and the tall one
-    whole, with the 3:4 the profile grids keep marked, and in a grid tile."""
+    whole, with the 3:4 the profile grids keep marked, and in a grid tile.
+    `length` is the long cut's own length when the facts give it ("video_length"), so the badge is the real one."""
     label = "font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:.04em;color:#333;margin:0 0 8px;max-width:360px"
 
     def uri(shape):
@@ -1695,7 +1696,7 @@ def thumbs_check_html(shots):
     def wide(width):
         # The badge at YouTube's own size, which it keeps at every thumbnail size.
         badge = ('<span style="position:absolute;right:4px;bottom:4px;background:rgba(0,0,0,.8);color:#fff;'
-                 'font:600 12px/16px Arial,sans-serif;padding:1px 4px;border-radius:4px">3:04</span>')
+                 f'font:600 12px/16px Arial,sans-serif;padding:1px 4px;border-radius:4px">{html.escape(str(length))}</span>')
         return (f'<div><p style="{label}">The wide thumbnail {width} px wide, with the video length where YouTube puts it</p>'
                 f'<div style="position:relative;width:{width}px"><img src="{uri("wide")}" style="display:block;width:{width}px">{badge}</div></div>')
 
@@ -1756,7 +1757,7 @@ def draw_thumbs(facts, base, out, refresh=False):
             pg.close()
         if len(shots) == len(THUMB_SHAPES):
             sheet = b.new_page(viewport={'width': 1600, 'height': 700})
-            sheet.set_content(thumbs_check_html(shots))
+            sheet.set_content(thumbs_check_html(shots, facts.get('video_length') or '3:04'))
             card.settle(sheet)
             check = sheet.locator('#sheet').screenshot()
         b.close()
