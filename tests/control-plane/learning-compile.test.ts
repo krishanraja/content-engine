@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { describe, expect, it, test } from 'vitest'
-import { presetProposals, judgeProposals, handRewriteProposals, repeatedEditClassProposals, spokenProposals, likeness, plainer, toProposalRow, MAX_EVIDENCE } from '../../apps/control-plane/api/learning/_patterns.ts'
+import { presetProposals, judgeProposals, handRewriteProposals, repeatedEditClassProposals, spokenProposals, scoreContext, likeness, plainer, toProposalRow, MAX_EVIDENCE } from '../../apps/control-plane/api/learning/_patterns.ts'
 
 // What the compiler is allowed to say, and what it must stay quiet about.
 //
@@ -199,5 +199,22 @@ describe('spoken proposals: kinds of change he makes reading aloud', () => {
     expect(likeness('krish', 'chris')).toBeGreaterThanOrEqual(0.6)
     expect(likeness('dollars', 'bucks')).toBeLessThan(0.6)
     expect(plainer('looking', 'having a look')).toBe(true)
+  })
+})
+
+describe('his own scores beside a spoken proposal', () => {
+  const piece = (n: number) => `00000000-0000-4000-8000-00000000001${n}`
+  const plain = { words_script: 200, swapped: 2, added: 0, cut: 0, contracted: 0, expanded: 0,
+    examples: { swapped: [{ script: 'dollars', said: 'bucks' }, { script: 'polished', said: 'really nice' }] } }
+  const quiet = { words_script: 200, swapped: 0, added: 0, cut: 0, contracted: 0, expanded: 0, examples: {} }
+  it('says his narrative scores on the pieces that show the change against the rest, as context', () => {
+    const rows = [1, 2, 3].map(n => ({ piece_id: piece(n), cuts: { long: plain }, narrative: 8 }))
+      .concat([{ piece_id: piece(4), cuts: { long: quiet }, narrative: 6 }])
+    const got = spokenProposals(rows)
+    expect(got[0]!.assertion).toContain('8.0 out of 10 on these pieces against 6.0 on the others')
+  })
+  it('says nothing about scores when one side has none', () => {
+    const rows = [1, 2, 3].map(n => ({ piece_id: piece(n), cuts: { long: plain }, narrative: null }))
+    expect(scoreContext(rows, new Set([piece(1)]))).toBe('')
   })
 })

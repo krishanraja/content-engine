@@ -279,6 +279,20 @@ export interface SpokenRow {
   /** content_ideas.id: the piece the takes belong to, cited as the evidence. */
   piece_id: string
   cuts: Partial<Record<string, SpokenDelta>>
+  /** His own narrative score for the piece out of 10 (piece_scores_current), when he gave one. */
+  narrative?: number | null
+}
+
+/** What his own scores say beside a kind of change: the mean narrative score of the pieces that show it against the
+ *  pieces that do not, only when both sides hold scored pieces. A correlation on a handful of pieces, so it is said
+ *  as context for his decision, never as a reason. */
+export function scoreContext(rows: SpokenRow[], showing: Set<string>): string {
+  const mean = (xs: number[]) => xs.reduce((a, b) => a + b, 0) / xs.length
+  const scored = rows.filter(r => typeof r.narrative === 'number')
+  const yes = scored.filter(r => showing.has(r.piece_id)).map(r => r.narrative as number)
+  const no = scored.filter(r => !showing.has(r.piece_id)).map(r => r.narrative as number)
+  if (!yes.length || !no.length) return ''
+  return ` Your narrative scores: ${mean(yes).toFixed(1)} out of 10 on these pieces against ${mean(no).toFixed(1)} on the others (${yes.length} and ${no.length} scored; context, not proof).`
 }
 
 const ASIDE_OPENERS = ['which is', 'obviously', 'basically', 'you know', 'i mean', 'kind of', 'to be fair', 'of course']
@@ -347,7 +361,8 @@ export function spokenProposals(rows: SpokenRow[]): Proposal[] {
     const pieces = [...k.pieces].filter(([, hits]) => hits.length >= SPOKEN_PER_PIECE)
     if (pieces.length < MIN_INSTANCES) continue
     const shown = [...new Set(pieces.flatMap(([, hits]) => hits))].slice(0, 4)
-    proposals.push(spokenProposal(`spoken:${kind}`, `${k.rule} Seen in ${pieces.length} pieces, for example ${shown.join('; ')}.`,
+    proposals.push(spokenProposal(`spoken:${kind}`, `${k.rule} Seen in ${pieces.length} pieces, for example ${shown.join('; ')}.`
+      + scoreContext(rows, new Set(pieces.map(([id]) => id))),
       pieces.map(([id]) => id), { kind: 'spoken_register', change: kind }))
   }
   for (const [phrase, pieces] of dropped) {

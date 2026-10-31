@@ -84,6 +84,15 @@ async function handler(req: VercelRequest, res: VercelResponse) {
   const spokenRows: SpokenRow[] = spoken.error ? [] : ((spoken.data || []) as { id: string; spoken_delta: unknown }[])
     .filter(r => r.spoken_delta && typeof r.spoken_delta === 'object')
     .map(r => ({ piece_id: r.id, cuts: r.spoken_delta as SpokenRow['cuts'] }))
+  // His own narrative scores beside them (piece_scores_current: only his count). Context for his decision, never a reason.
+  if (spokenRows.length) {
+    const scores = await supabase.from('piece_scores_current').select('piece_id, narrative, basis').in('piece_id', spokenRows.map(r => r.piece_id))
+    const best = new Map<string, number>()
+    for (const r of (scores.error ? [] : scores.data || []) as { piece_id: string; narrative: number; basis: string }[]) {
+      if (r.basis === 'at_publish' || !best.has(r.piece_id)) best.set(r.piece_id, r.narrative)
+    }
+    for (const row of spokenRows) row.narrative = best.get(row.piece_id) ?? null
+  }
   // A pattern already on his list, kept or turned down, is never proposed again (Purge: "will not propose it again").
   const asked = await supabase.from('mindmake_studio_learning_proposals').select('scope').like('scope->>key', 'spoken:%').limit(1000)
   const askedKeys = new Set(((asked.data || []) as { scope: { key?: string } | null }[]).map(r => r.scope?.key).filter(Boolean))

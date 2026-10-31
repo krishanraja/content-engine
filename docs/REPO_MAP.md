@@ -2353,6 +2353,7 @@ What the compiler looks for, as pure functions.
 - `interface SpokenExample`
 - `interface SpokenDelta`
 - `interface SpokenRow`
+- `function scoreContext(rows: SpokenRow[], showing: Set<string>): string`
 - `const SPOKEN_PER_PIECE`
 - `function likeness(a: string, b: string): number`
 - `function plainer(script: string, said: string): boolean`
