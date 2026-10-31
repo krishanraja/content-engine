@@ -3174,7 +3174,7 @@ def today_model(monday, days, videos, posted, offdays, parsed, now=None, gates=N
                           else {'label': 'See mix', 'href': '#ideas-offdays-mix'}})
         mine = [o for o in opts if o.get('kind') == 'recorded']
         if mine:
-            out['asks'].append({'what': f'Record, {short(when)}', 'detail': f'{len(mine)} piece{"s" if len(mine) != 1 else ""} to approve or skip',
+            out['asks'].append({'what': f'Record, {short(when)}', 'detail': f'{len(mine)} piece{"s" if len(mine) != 1 else ""} to approve',
                                 'cta': 'Choose', 'href': f'#offdays-{key}', 'day': key})
         # A series day has its own page on the board; the calendar's day opens it (Krish, 2026-10-30: "I should be able
         # to click through to Monday from that board if it is to act as my calendar board").
@@ -3183,7 +3183,7 @@ def today_model(monday, days, videos, posted, offdays, parsed, now=None, gates=N
     mix = week_mix(offdays)[0]
     if mix:
         # The week's filler is one press, not one per post (Ruling, Krish, 2026-10-30).
-        out['asks'].insert(0, {'what': "This week's mix", 'detail': 'Approve once, Growth fills it',
+        out['asks'].insert(0, {'what': "This week's mix", 'detail': 'One press for the week',
                                'cta': 'Approve', 'href': '#ideas-offdays-mix', 'day': next(iter(mix))})
     return out
 
@@ -3912,15 +3912,6 @@ def build(args, get=None):
         ideas = read_ideas(raw, monday)
         if fixed_layout(monday):
             offdays = read_offdays(raw.get('offdays') if isinstance(raw, dict) else None)
-    if getattr(args, 'offdays_plan', None):
-        # Growth's Sunday Off-days section (growth-offdays/1): the days ideas.json did not give.
-        if not fixed_layout(monday):
-            raise BoardError(f'--offdays-plan: the week of {monday.isoformat()} is in the layout it was published in, which has no Off days')
-        mixed, plan_warnings = read_growth_offdays(read_json(args.offdays_plan, '--offdays-plan'), monday)
-        warnings.extend(plan_warnings)
-        given = dict((offdays and {k: [previous_option(o) for o in v] for k, v in offdays.items()}) or {})
-        offdays = read_offdays({**mixed, **given}, '--offdays-plan with ideas.json offdays')
-        if fixed_layout(monday):
             # Krish, 2026-10-24: his Inspiration House read properly, and styles he can choose from that push. The
             # gather's sources.json sits beside ideas.json; a fixed week without it was never gathered.
             src = Path(args.ideas).resolve().parent / 'sources.json'
@@ -3929,6 +3920,14 @@ def build(args, get=None):
             owed = coverage_problems(raw, read_json(str(src), 'sources.json')) + style_problems(raw)
             if owed:
                 raise BoardError('--ideas is not ready to show (board_feed.py cover):\n  ' + '\n  '.join(owed))
+    if getattr(args, 'offdays_plan', None):
+        # Growth's Sunday Off-days section (growth-offdays/1): the days ideas.json did not give.
+        if not fixed_layout(monday):
+            raise BoardError(f'--offdays-plan: the week of {monday.isoformat()} is in the layout it was published in, which has no Off days')
+        mixed, plan_warnings = read_growth_offdays(read_json(args.offdays_plan, '--offdays-plan'), monday)
+        warnings.extend(plan_warnings)
+        given = dict((offdays and {k: [previous_option(o) for o in v] for k, v in offdays.items()}) or {})
+        offdays = read_offdays({**mixed, **given}, '--offdays-plan with ideas.json offdays')
     queue = None
     if getattr(args, 'queue', None):
         saved = read_json(args.queue, '--queue')

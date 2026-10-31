@@ -14,16 +14,6 @@ Then it stops. Before it sends a message, makes a payment, signs a document or d
 
 For a Claude user, the interesting part is what comes along for the ride. Anthropic says Duet "carries over your memory, skills, and connected apps from your Claude account", and it can search your past chats so you don't have to repeat yourself. That means no awkward first date.
 
-## WHAT PEOPLE WHO ALREADY USE CLAUDE ARE FINDING
-
-For people who already work in Claude, the early reviews say the change is to their habits more than to what Claude can do, and that's why they keep coming back to cost, speed and remembering to use it.
-
-In its first week, the mood is curious and mostly warm about the idea and the design, and sceptical about cost, speed and access. Most people talking about it haven't got in yet. On Reddit, getting in is the single biggest topic: the waitlist, the US-only rule, and one plaintive "You know, us Teams users need love, too :)".
-
-The people who have used it agree it's polished. Very polished. Every's review calls it "the first personal agent I'd call a pro tool". Claire Vo of How I AI put it to work on an inbox, Slack, a sales pipeline and a sales deck, and the episode on Lenny's Newsletter is called "Claude Duet is beautiful. I still forgot to use it". Vo's write-up found it slow: "The work behind the interface was the slow part."
-
-The sharpest worry is your plan limits. Duet's background checks come out of the same allowance as the rest of your Claude work, and Anthropic says so. One Reddit user reports it used half their usage limit in a single morning, while they weren't using Claude at all. That's one report and nobody has checked it. Still, if you already hit your limit on heavy days, you'll feel it.
-
 ## FROM ASKING TO APPROVING
 
 Here's what neither the launch page nor the reviews say outright. For someone who already lives in Claude, Duet adds few new abilities. What it changes is who starts the work.
