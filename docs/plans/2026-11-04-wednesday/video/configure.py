@@ -37,7 +37,7 @@ PAGE_S = 2.6   # a continuous panel turns a page about this often in the 90-seco
 # The transcriber hears Duet as DeWitt or Dewitt, Claire Vo as Clairvaux and "draft" as "draw" (direction take_edits).
 # Captions only; the sound is never touched.
 REPLACE = [['DeWitt', 'Duet'], ['Dewitt', 'Duet'], ['De Witt', 'Duet'], ['Clairvaux', 'Claire Vo'], ['Claire Voe', 'Claire Vo'],
-           ['let it draw', 'let it draft'], ['makeyourmindup .ai', 'makeyourmindup.ai'], ['MakeYourMindUp .ai', 'makeyourmindup.ai'],
+           ['let it draw', 'let it draft'], ['a long thing like me', 'a long think like me'], ['makeyourmindup .ai', 'makeyourmindup.ai'], ['MakeYourMindUp .ai', 'makeyourmindup.ai'],
            ['make your mind up .ai', 'makeyourmindup.ai'], ['Lenny\'s newsletter', 'Lenny\'s Newsletter']]
 
 

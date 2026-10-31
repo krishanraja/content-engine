@@ -92,13 +92,13 @@ def wide(words, loud, at):
     W, H = 1280, 720
     img = Image.new('RGB', (W, H), INK)
     f = face(at)                                               # his portrait take, 1080x1920
-    f = f.crop((0, 120, 1080, 120 + 1080)).resize((720, 720), Image.LANCZOS)
+    f = f.crop((0, 270, 1080, 270 + 1080)).resize((720, 720), Image.LANCZOS)
     img.paste(f, (W - 720, 0))
-    shade = Image.linear_gradient('L').rotate(90).resize((260, H))   # ink fades into his picture
-    img.paste(Image.new('RGB', (260, H), INK), (W - 720, 0), shade)
+    shade = Image.linear_gradient('L').rotate(90).resize((110, H))   # ink fades into his picture
+    img.paste(Image.new('RGB', (110, H), INK), (W - 720, 0), shade)
     mark = claude_mark(150)
     img.paste(mark, (W - 720 - 40, H - 190), mark)
-    words_block(img, words, loud, (48, 170, 560), 132)
+    words_block(img, words, loud, (48, 170, 540), 124)
     dress(img, 1.0)
     return img
 
@@ -111,7 +111,7 @@ def tall(words, loud, at):
     img.paste(veil, (0, 0), mask)
     mark = claude_mark(170)
     img.paste(mark, (W - 230, 760), mark)
-    words_block(img, words, loud, (64, 190, 950), 200)
+    words_block(img, words, loud, (64, 150, 950), 168)
     dress(img, 1.5)
     return img
 
