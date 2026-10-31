@@ -135,7 +135,8 @@ const SCENES = {
   // Long 21, short 11: you ask once and it builds you a tool you use again and again.
   tool(t,T){ cam(t,T,0.06); let h=''; const fold = P.fold, uses = P.uses;
     const b = pop(t, 0.2), f = enter(clamp((t-fold)/0.6));
-    if (f < 1) h += el(`<div class="bubble" style="width:420px">Find me free slots<br>this week and next</div>`, 290, 300 + float(t), `opacity:${b*(1-f)};transform:scale(${1-0.5*f}) rotate(${-8*f}deg)`);
+    // the tile he tapped on Duet's Make screen, in Duet's own words (his recording, 11:50): one tap, then a tool
+    if (f < 1) h += el(`<div class="card" style="width:430px;padding:22px 26px;display:flex;gap:18px;align-items:center"><div style="width:62px;height:62px;border-radius:50%;background:#f6dfd6;display:flex;align-items:center;justify-content:center;font:30px Plex;color:#E8734E">▦</div><div><div style="font:800 30px Archivo">Calendar scheduler</div><div style="font:22px Archivo;color:#5b625e;margin-top:4px">Free slots this week, ready to offer</div></div></div>`, 280, 300 + float(t), `opacity:${b*(1-f)};transform:scale(${(1-0.5*f)*(1-0.06*Math.max(0,Math.sin(clamp((t-fold+0.5)/0.3)*Math.PI)))}) rotate(${-8*f}deg)`);
     if (f > 0) {
       const lit = uses.map(u => t > u ? 1 : 0);
       h += el(`<div class="tile"><div style="padding:30px;font:800 34px/1.05 Archivo;color:#F4EFE4">Calendar<br>scheduler</div>
@@ -223,8 +224,8 @@ const SCENES = {
         const go = exit(clamp((t-s.yes-0.6)/0.7)), nx = enter(clamp((t-s.yes-1.2)/0.8));
         h += `<div class="line" style="position:absolute;left:640px;top:${y-170}px;height:430px;opacity:${0.5+0.5*Math.abs(Math.sin(t*1.7))}"></div>`;
         h += `<div class="rail" style="top:${y+250}px;background-position-x:${t*40}px"></div>`;
-        h += order({title:'Reply to a client', logo:'gmail.svg'}, 200 + 900*go, y - 120, Math.sin(t*1.2)*0.8 + 6*go, st);
-        if (nx > 0) h += order({title:'Follow up a quote', logo:'gmail.svg'}, -400 + 600*nx, y - 120, Math.sin(t*1.4+1)*1.2, 0); }
+        h += order({title:'Draft reply', logo:'gmail.svg'}, 200 + 900*go, y - 120, Math.sin(t*1.2)*0.8 + 6*go, st);
+        if (nx > 0) h += order({title:'Meeting prep', logo:'google-calendar.svg'}, -400 + 600*nx, y - 120, Math.sin(t*1.4+1)*1.2, 0); }
     });
     world.innerHTML = h; },
   // Short 1: the opening: Claude Duet, the research preview he got into.
@@ -257,7 +258,8 @@ SCENES.ambient = function(t,T){ cam(t,T,0.06,30); let h=''; const LINE=760, SP=3
   const logos = P.logos || ['google-calendar.svg','gmail.svg','google-calendar.svg','gmail.svg'];
   h += `<div class="rail" style="top:800px;background-position-x:${t*40}px"></div>`;
   h += el(`<div class="line" style="height:600px"></div>`, LINE, 230, `opacity:${0.6+0.4*Math.abs(Math.sin(t*1.7))}`);
-  for (let k=-1;k<6;k++){ const x0 = (P.seed||0)*70 - 350 + k*SP + V*t;     // the queue moves up steadily
+  // enough orders behind the first that the queue never runs dry, however long the beat
+  for (let k=-Math.ceil(V*(T||30)/SP)-2;k<6;k++){ const x0 = (P.seed||0)*70 - 350 + k*SP + V*t;     // the queue moves up steadily
     const at = x0 + 330 > LINE ? (x0 + 330 - LINE)/V : -1;                      // seconds since it reached the line
     const st = at>0 ? clamp(at/0.17) : 0, ok = st>0;
     const x = ok && at > 0.6 ? x0 + 300*exit(clamp((at-0.6)/0.6)) : x0;
