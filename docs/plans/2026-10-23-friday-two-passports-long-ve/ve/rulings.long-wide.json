@@ -35,5 +35,138 @@
       "heard": "deep seeks",
       "krish": "Krish, 2026-10-31: \"agree with your recommendations\", answering the request to clear Qwen, ChatGPT, Kimi, four, Grok, DeepSeek's and want as mishearings of words he said"
     }
-  ]
+  ],
+  "transcriber_differences": [
+    {
+      "master": "and",
+      "cut": "an",
+      "krish": "Krish, 2026-10-31: \"i accept both\", answering \"accept the 25 flagged screens on the long cut as they are, and the eight heard differences are the transcriber, not the cut\""
+    },
+    {
+      "master": "",
+      "cut": "out",
+      "krish": "Krish, 2026-10-31: \"i accept both\", answering \"accept the 25 flagged screens on the long cut as they are, and the eight heard differences are the transcriber, not the cut\""
+    },
+    {
+      "master": "america has",
+      "cut": "america's",
+      "krish": "Krish, 2026-10-31: \"i accept both\", answering \"accept the 25 flagged screens on the long cut as they are, and the eight heard differences are the transcriber, not the cut\""
+    },
+    {
+      "master": "",
+      "cut": "the same briefing for singapore for taiwan",
+      "krish": "Krish, 2026-10-31: \"i accept both\", answering \"accept the 25 flagged screens on the long cut as they are, and the eight heard differences are the transcriber, not the cut\""
+    },
+    {
+      "master": "seeking you",
+      "cut": "seek knew",
+      "krish": "Krish, 2026-10-31: \"i accept both\", answering \"accept the 25 flagged screens on the long cut as they are, and the eight heard differences are the transcriber, not the cut\""
+    },
+    {
+      "master": "going to",
+      "cut": "gonna",
+      "krish": "Krish, 2026-10-31: \"i accept both\", answering \"accept the 25 flagged screens on the long cut as they are, and the eight heard differences are the transcriber, not the cut\""
+    },
+    {
+      "master": "one",
+      "cut": "on",
+      "krish": "Krish, 2026-10-31: \"i accept both\", answering \"accept the 25 flagged screens on the long cut as they are, and the eight heard differences are the transcriber, not the cut\""
+    },
+    {
+      "master": "at",
+      "cut": "it",
+      "krish": "Krish, 2026-10-31: \"i accept both\", answering \"accept the 25 flagged screens on the long cut as they are, and the eight heard differences are the transcriber, not the cut\""
+    }
+  ],
+  "visual_clarity": {
+    "by": "Krish",
+    "date": "2026-10-31",
+    "said": "Krish, 2026-10-31: \"agree with your recommendations\" (to \"happy with the words on screen on both Friday cuts\"), then \"i accept both\" (to \"accept the 25 flagged screens on the long cut as they are\")",
+    "max_primary_words": 104,
+    "max_total_words": 104,
+    "accepted_repeats": [
+      "airbnb",
+      "asks",
+      "awkward",
+      "behind",
+      "biz",
+      "blocked",
+      "board",
+      "bornshape",
+      "caisi",
+      "call",
+      "calllook",
+      "cheap",
+      "cheaper",
+      "claude",
+      "close",
+      "cursor",
+      "differ",
+      "draw",
+      "ds63",
+      "evidence",
+      "firstpass",
+      "fling",
+      "grok",
+      "home",
+      "hook",
+      "knew",
+      "korea",
+      "lindy",
+      "lives",
+      "look",
+      "matter",
+      "models",
+      "open",
+      "own",
+      "owned",
+      "ownpc",
+      "paper",
+      "policy",
+      "race",
+      "reckon",
+      "result_a",
+      "result_b",
+      "sameq",
+      "second",
+      "sovdef",
+      "sovereign",
+      "supply",
+      "takeout",
+      "third",
+      "trick",
+      "tried",
+      "twopass",
+      "verdict",
+      "whatd"
+    ],
+    "accepted_states": [
+      "look",
+      "biz",
+      "cursor",
+      "owned",
+      "korea",
+      "awkward",
+      "twopass",
+      "third",
+      "ownpc",
+      "caisi",
+      "takeout",
+      "sameq",
+      "firstpass",
+      "open",
+      "evidence",
+      "verdict",
+      "board",
+      "knew",
+      "calllook",
+      "call",
+      "cheap",
+      "supply",
+      "reckon",
+      "own",
+      "differ"
+    ],
+    "note": "Limits are the largest counts in this cut's rendered-text manifest; the accepted states are the 25 the blind three-second review found slow, unclear or off point, named to him one by one."
+  }
 }
