@@ -24,6 +24,10 @@ KIT, PANELS, RENDER = WORK / 'kit', WORK / 'panels', WORK / 'render'
 D = json.loads((PLAN / 'creative-direction.json').read_text(encoding='utf-8'))
 
 # beat number (1-based, creative-direction.json) -> panel name (panels/<name>-<shape>.mp4)
+# Krish's reviewer (31 Oct): the 16:9 cut never holds the still brand frame: every run of face beats has The Queue
+# drifting beside him. key: first beat of the run -> (panel, last beat of the run)
+LONG_RUNS = {1: ('l01-amb', 2), 9: ('l09-amb', 11), 19: ('l19-amb', 20), 26: ('l26-amb', 26), 28: ('l28-amb', 28),
+             31: ('l31-amb', 31), 33: ('l33-amb', 33), 36: ('l36-amb', 36)}
 LONG = {3: 'first', 4: 'l04-logos', 5: 'brief', 6: 'l06-stops', 7: 'setup', 8: 'l08-carries', 12: 'l12-microsoft',
         13: 'tasks', 14: 'reply', 15: 'todo', 16: 'think', 17: 'make', 18: 'calendar', 21: 'l21-tool', 22: 'l22-today',
         23: 'l23-duet', 24: 'l24-reddit', 25: 'l25-hours', 27: 'l27-vo', 29: 'l29-limits', 30: 'l30-plans', 32: 'l32-it',
@@ -123,9 +127,12 @@ def cues(cut, mapping, shape, paged=False):
     words, _ = take_words(cut)
     beats = D['cuts'][cut]['beats']
     out = []
-    for n, name in mapping.items():
+    for n, name in sorted(mapping.items()):
+        last = n
+        if isinstance(name, tuple):
+            name, last = name
         b = beats[n - 1]
-        s, e = window(b)
+        s, e = window(b)[0], window(beats[last - 1])[1]
         a = anchors(words, s, e)
         if not a:
             print(f'warn {cut} beat {n}: no words found in its window; no cue')
@@ -154,7 +161,7 @@ def face_pushes(cut, mapping):
     words, _ = take_words(cut)
     out = []
     for n, b in enumerate(D['cuts'][cut]['beats'], 1):
-        if n in mapping or b['picture']['kind'] != 'face':
+        if n in mapping or b['picture']['kind'] != 'face' or any(a <= n <= z for a, (_, z) in LONG_RUNS.items()):
             continue
         s, e = window(b)
         inside = [w for w in words if s - 0.05 <= w['s'] < e - 0.02 and norm(w['w'])]
@@ -181,7 +188,7 @@ def configure(cut, shape, cue_list, extra):
 if __name__ == '__main__':
     which = sys.argv[1:] or ['long', 'short']
     if 'long' in which:
-        c = cues('long', LONG, '16x9')
+        c = cues('long', {**LONG, **LONG_RUNS}, '16x9')
         # Krish, 2026-10-31: "way more animation than ever before and movement": his face is never a still frame
         # either: the framing changes at each hidden pause cut, and pushes in on the lines that carry the piece.
         configure('long', '16x9', c, {'music_mode': 'episode', 'music_seconds': 100, 'reframe': True,

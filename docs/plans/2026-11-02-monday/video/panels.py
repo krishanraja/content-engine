@@ -130,6 +130,19 @@ def event_time(ws, s, e, phrase):
     return None
 
 
+def unique(ws, heard, first):
+    """The fewest heard words (three or more) at the beat's start or end that occur only once in the whole take, so
+    make.py's strict anchors find exactly one place."""
+    toks = [norm(w['w']) for w in ws]
+    for n in range(3, len(heard) + 1):
+        part = heard[:n] if first else heard[-n:]
+        key = [norm(w['w']) for w in part]
+        hits = sum(1 for i in range(len(toks) - n + 1) if toks[i:i + n] == key)
+        if hits == 1:
+            return ' '.join(w['w'].strip() for w in part)
+    return ' '.join(w['w'].strip() for w in (heard[:3] if first else heard[-3:]))
+
+
 def beats():
     d = json.loads((PLAN / 'creative-direction.json').read_text())
     return {c: d['cuts'][c]['beats'] for c in ('long', 'short')}
@@ -149,7 +162,7 @@ def plan(cut):
         missing = [k for k, v in events.items() if v is None]
         events = {k: v for k, v in events.items() if v is not None}
         out.append({'id': cid, 'beat': n, 'scene': scene, 'params': {**params, 'dur': e - s}, 'events': events, 'missing': missing,
-                    's': s, 'e': e, 'start': ' '.join(w['w'].strip() for w in heard[:3]), 'end': ' '.join(w['w'].strip() for w in heard[-3:]),
+                    's': s, 'e': e, 'start': unique(ws, heard, True), 'end': unique(ws, heard, False),
                     'heard': heard})
     return out
 

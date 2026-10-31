@@ -205,7 +205,7 @@ def render(job):
             view = phone_view(covered(src, bars, name))
             last = src
         t = i / FPS
-        img = frame16(view, t, seconds, text) if shape == '16x9' else frame9(view, t, seconds, text if name != 'brief' else 'GMAIL · CALENDAR · SLACK · EVERY FEW HOURS', focus)
+        img = frame16(view, t, seconds, text) if shape == '16x9' else frame9(view, t, seconds, text if name != 'brief' else 'GMAIL · CALENDAR · SLACK', focus)
         enc.stdin.write(img.tobytes())
     enc.stdin.close(); enc.wait()
     return f'{out.name} {n} frames'

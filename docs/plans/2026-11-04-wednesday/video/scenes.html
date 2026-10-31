@@ -22,7 +22,7 @@ html,body{margin:0;background:var(--ink);overflow:hidden}
   border-radius:8px;color:var(--ink);box-shadow:0 26px 50px rgba(0,0,0,.6),0 2px 0 rgba(255,255,255,.4) inset;overflow:hidden}
 .order .band{height:52px;background:url('../../../../assets/plates/two-passports/guilloche.svg') center/cover,#d9d1bf;opacity:.85}
 .order .no{position:absolute;top:16px;left:20px;font:18px Plex;letter-spacing:2px}
-.order h3{margin:22px 20px 0;font:800 36px/1.05 Archivo}
+.order h3{margin:30px 20px 0;font:800 36px/1.05 Archivo}
 .order .from{position:absolute;left:20px;bottom:86px;display:flex;gap:10px;align-items:center;font:18px Plex;letter-spacing:1px}
 .order .from img{width:40px;height:40px}
 .order .slot{position:absolute;bottom:16px;height:56px;border:3px dashed rgba(12,21,18,.45);border-radius:10px;font:22px Plex;color:rgba(12,21,18,.55);
@@ -65,8 +65,8 @@ const float = (t, k=1) => Math.sin(t*1.3 + k)*4;
 let SCENE = null, P = {};
 function el(html, x, y, extra='') { return `<div class="a" style="left:${x}px;top:${y}px;${extra}">${html}</div>`; }
 function order(o, x, y, rot, stampP=0, barred=false) {
-  return el(`<div class="order"><div class="band"></div><div class="no">${o.no}</div><h3>${o.title}</h3>
-    <div class="from">${o.logo?`<img src="${LOGO}${o.logo}">`:''}${o.app||''}</div>
+  return el(`<div class="order"><div class="band"></div><h3>${o.title}</h3>
+    <div class="from">${o.logo?`<img src="${LOGO}${o.logo}">`:''}</div>
     ${barred?`<div class="slot barred">NOT EVEN WITH A YES</div>`:`<div class="slot nob">NO</div><div class="slot yes" style="opacity:${1-stampP}">YES</div>`}
     ${stampP>0?`<div class="stamp" style="opacity:${stampP};transform:scale(${1.6-0.6*enter(stampP)}) rotate(${-8+4*stampP}deg)">YES</div>`:''}</div>`,
     x, y, `transform:rotate(${rot}deg);transform-origin:50% -40px`);
@@ -94,7 +94,7 @@ const SCENES = {
       h += el(`<div class="logo"><img src="${LOGO}${f}"></div>`, x-60, y-60+float(t,i), `transform:scale(${p})`);
     });
     const m = pop(t,4.4); if (m) h += el(`<div class="chip">+ 6,000 MORE</div>`, 640, 690+float(t,4), `transform:scale(${m})`);
-    h += label(t,0.4,'EVERY FEW HOURS · 6,000+ CONNECTORS',60,880); world.innerHTML = h; },
+    world.innerHTML = h; },
   // Long 6, short 4: it stops at the line before it sends, pays, signs or deletes; two things are off-limits even with a yes.
   stops(t,T){ cam(t,T,0.05,30); const tall = P.tall; let h='';
     const O = [{no:'WORK ORDER 01',title:'Send a message',logo:'gmail.svg',app:'GMAIL'},{no:'WORK ORDER 02',title:'Make a payment',app:'PAYMENT'},
@@ -102,17 +102,16 @@ const SCENES = {
     const ats = P.ats, LINE = 820;
     h += `<div class="rail" style="top:800px;background-position-x:${t*40}px"></div>`;
     h += el(`<div class="line" style="height:600px"></div>`, LINE, 230, `opacity:${0.6+0.4*Math.abs(Math.sin(t*1.7))}`);
-    h += el(`<div class="src" style="color:#B7A6FF">WAITS FOR YOUR YES</div>`, LINE-120, 190);
-    O.forEach((o,i)=>{ if (ats[i]==null) return; const p = enter(clamp((t-ats[i])/0.7)); if(!p) return;
+    O.forEach((o,i)=>{ if (ats[i]==null) return; const p = enter(clamp(t/Math.max(ats[i],0.4)));
       const slot = LINE - 330 - i*70, x = -420 + (slot+420)*p, y = 420 - i*18;
       h += order(o, x, y, Math.sin(t*2+i)*1.4*(1-clamp((t-ats[i])/1.4)) + Math.sin(t*1.2+i)*0.6);
     });
     if (P.off != null && t > P.off) {   // off-limits even with a yes: trades, moving money
       const p = enter(clamp((t-P.off)/0.6));
       h += `<div class="a" style="inset:0;background:rgba(7,13,11,${0.72*p})"></div>`;
-      [['Trade securities','TRADES'],['Move money between accounts','TRANSFERS']].forEach(([title,app],i)=>{
+      [['Trade securities'],['Move money between accounts']].forEach(([title],i)=>{
         const q = pop(t, P.off + 0.25 + i*0.3); if(!q) return;
-        h += order({no:'OFF-LIMITS', title, app}, 170 + i*360, 280 + (1-Math.min(q,1))*300 + float(t,i), Math.sin(t+i)*1.2, 0, true);
+        h += order({title}, 170 + i*360, 280 + (1-Math.min(q,1))*300 + float(t,i), Math.sin(t+i)*1.2, 0, true);
       });
       h += label(t, P.off + 0.2, 'OFF-LIMITS EVEN WITH A YES', 60, 880);
     }
@@ -128,7 +127,7 @@ const SCENES = {
     if (P.logo) { const q = pop(t, P.logoAt||0.8); if (q) h += el(`<div class="logo"><img src="${LOGO}${P.logo}"></div>`, 800, 660+float(t), `transform:scale(${q})`); }
     if (P.bar != null) {   // the usage bar fills on "limit"
       const f = enter(clamp((t-P.bar)/1.2));
-      h += el(`<div class="card" style="width:520px;padding:22px 26px"><div class="src" style="color:#0C1512">SETTINGS · USAGE</div>
+      h += el(`<div class="card" style="width:520px;padding:22px 26px"><div style="font:800 30px Archivo">Settings › Usage</div>
         <div style="margin-top:14px;height:30px;border-radius:15px;background:#d9d1bf;overflow:hidden"><div style="height:100%;width:${15+70*f}%;background:#B7A6FF"></div></div></div>`, 420, 700 + float(t), `opacity:${clamp((t-P.bar+0.4)/0.4)}`);
     }
     h += label(t, P.labAt||0.4, P.label||'', 60, 700);
@@ -144,27 +143,27 @@ const SCENES = {
           background:${lit[i]?'#7EF0C0':'rgba(244,239,228,.08)'};color:${lit[i]?'#0C1512':'#a9b4ae'};transform:translateY(${lit[i]? -8*Math.sin(clamp((t-uses[i])/0.3)*Math.PI):0}px)">${d}</div>`).join('')}</div></div>`,
         350, 250 + float(t) , `transform:scale(${0.5+0.5*f}) rotate(${6*(1-f)}deg)`);
     }
-    const a = pop(t, fold - 0.2); if (a) h += el(`<div class="chip" style="background:#B7A6FF">ASK ONCE</div>`, 120, 180, `transform:scale(${a})`);
-    const u = pop(t, uses[0]); if (u) h += el(`<div class="chip">USE IT AGAIN AND AGAIN</div>`, 560, 640 + float(t,2), `transform:scale(${u})`);
+
     world.innerHTML = h; },
   // Long 22: today you paste the thread, the invite and your notes into Claude, then ask.
   today(t,T){ cam(t,T,0.05); let h='';
-    h += label(t,0.2,'TODAY',60,120);
+
     h += el(`<div class="card" style="width:520px;height:330px;padding:26px"><div style="display:flex;gap:14px;align-items:center"><img src="${CLAUDE}" style="width:46px"><b style="font:800 30px Archivo">Claude</b></div>
       <div style="margin-top:22px;height:150px;border:3px dashed rgba(12,21,18,.35);border-radius:14px"></div></div>`, 240, 420 + float(t) - 14*Math.max(0,Math.sin(Math.min(1,Math.max(0,(t-6)/0.25))*Math.PI)));
-    [['gmail.svg','THE EMAIL THREAD',P.ats[0],-60],['google-calendar.svg','THE INVITE',P.ats[1],420],[null,'YOUR NOTES',P.ats[2],760]].forEach(([lg,txt,at,x0],i)=>{
+    [['gmail.svg',P.ats[0],-60],['google-calendar.svg',P.ats[1],420],[null,P.ats[2],760]].forEach(([lg,at,x0],i)=>{
       const p = enter(clamp((t-at+0.6)/0.6)); if(!p) return;
       const x = x0 + (330+i*60 - x0)*p, y = 120 + (520-120)*p*p, s = 1 - 0.45*p;
-      h += el(`<div class="card" style="padding:16px 20px;display:flex;gap:12px;align-items:center;font:22px Plex">${lg?`<img src="${LOGO}${lg}" style="width:40px">`:''}${txt}</div>`, x, y, `transform:scale(${s}) rotate(${(1-p)*-10}deg)`);
+      const lines = [70,90,55].map(w=>`<div style="height:10px;width:${w}%;background:#cfc8b8;border-radius:5px;margin-top:10px"></div>`).join('');
+      h += el(`<div class="card" style="width:200px;padding:18px 20px">${lg?`<img src="${LOGO}${lg}" style="width:44px">`:'<div style="height:44px;width:44px;border-radius:8px;background:#e9e2d2"></div>'}${lines}</div>`, x, y, `transform:scale(${s}) rotate(${(1-p)*-10}deg)`);
     });
     const q = pop(t, P.ask); if (q) h += el(`<div class="bubble" style="font-size:64px;padding:10px 34px">?</div>`, 700, 330 + float(t), `transform:scale(${q})`);
     world.innerHTML = h; },
   // Long 23: with Duet the work turns up first, prepared, and your job is yes or no. The big moment.
   duet(t,T){ cam(t,T,0.07,30); let h=''; const LINE=820;
-    h += label(t,0.1,'WITH DUET',60,120);
+
     h += `<div class="rail" style="top:800px;background-position-x:${t*40}px"></div>`;
     h += el(`<div class="line" style="height:600px"></div>`, LINE, 230, `opacity:${0.6+0.4*Math.abs(Math.sin(t*1.7))}`);
-    const O = [{no:'READY',title:'Meeting prep',logo:'google-calendar.svg',app:'CALENDAR'},{no:'READY',title:'Draft reply',logo:'gmail.svg',app:'GMAIL'},{no:'READY',title:'Note',app:'NOTES'}];
+    const O = [{title:'Meeting prep',logo:'google-calendar.svg'},{title:'Draft reply',logo:'gmail.svg'},{title:'Note'}];
     const stamp = clamp((t-P.yes)/0.17), out = exit(clamp((t-P.yes-0.4)/0.55)), adv = enter(clamp((t-P.yes-0.75)/0.6));
     O.forEach((o,i)=>{ const p = enter(clamp((t-P.first-i*0.35)/0.7)); if(!p) return;
       let slot = LINE - 330 - i*330 + (i>0 ? 330*adv : 0); let x = -420 + (slot+420)*p;
@@ -175,16 +174,16 @@ const SCENES = {
   // Long 24: a small business owner's comment (the page wants a login, so it is drawn from the checked words; no username).
   reddit(t,T){ cam(t,T,0.05); let h=''; const p = pop(t,0.2), m = clamp((t-P.mark)/0.9);
     h += el(`<div class="card" style="width:820px"><div class="quote">“I’m not doing anything that I don’t think a normal version of Claude could do. <mark style="background:linear-gradient(90deg,#7EF0C0 ${m*100}%,transparent ${m*100}%)">I just hadn’t thought to use it this way.</mark>”</div></div>`, 90, 230 + float(t), `transform:scale(${Math.min(1,p)}) rotate(${-1+0.6*Math.sin(t*0.5)}deg)`);
-    h += label(t,0.5,'A SMALL BUSINESS OWNER · REDDIT r/ClaudeAI · 26 OCT',60,820);
+    h += label(t,0.5,'REDDIT r/ClaudeAI · 26 OCT 2026',60,820);
     world.innerHTML = h; },
   // Long 25: they caught up in 36 hours.
   hours(t,T){ cam(t,T,0.08); let h='';
     for (let i=0;i<9;i++){ const gone = enter(clamp((t-1.8-i*0.45)/0.5)); if (gone>=1) continue;   // the backlog clears, card by card
-      h += el(`<div class="card" style="width:260px;height:70px;padding:16px 20px;font:22px Plex">BEHIND · ${String(i+1).padStart(2,'0')}</div>`, 60 + (i%3)*20 + gone*700, 140 + i*62, `opacity:${1-gone};transform:rotate(${(i%2?1:-1)*2}deg)`); }
+      h += el(`<div class="card" style="width:260px;height:70px;padding:20px 22px"><div style="height:10px;width:${50+(i*17)%40}%;background:#cfc8b8;border-radius:5px"></div><div style="height:10px;width:${30+(i*23)%50}%;background:#e2dccd;border-radius:5px;margin-top:10px"></div></div>`, 60 + (i%3)*20 + gone*700, 140 + i*62, `opacity:${1-gone};transform:rotate(${(i%2?1:-1)*2}deg)`); }
     const r = clamp((t-P.roll)/0.9), n = Math.round(36*enter(r));
     if (t > P.roll - 0.2) h += el(`<div class="big" style="font-size:380px">${n}</div>`, 470, 230 + float(t), `opacity:${clamp((t-P.roll+0.2)/0.2)}`);
     const hr = pop(t, P.roll + 0.8); if (hr) h += el(`<div class="big" style="font-size:110px;color:#7EF0C0">HOURS</div>`, 500, 610, `transform:translateX(${(1-Math.min(hr,1))*80}px);opacity:${Math.min(1,hr)}`);
-    h += label(t, P.roll + 1.2, 'THE SAME OWNER, ON REDDIT', 470, 790);
+    h += label(t, P.roll + 1.2, 'REDDIT r/ClaudeAI · 26 OCT 2026', 470, 790);
     world.innerHTML = h; },
   // Long 30: Pro and Max in the US by waitlist; Team and Enterprise later.
   plans(t,T){ cam(t,T,0.05); let h='';
@@ -193,13 +192,13 @@ const SCENES = {
       h += el(`<div class="plan card" style="font-size:${n.length>4?34:54}px;background:${ok?'#F4EFE4':'#26322f'};color:${ok?'#0C1512':'#a9b4ae'}">${n}
         <div class="chip" style="font-size:20px;background:${ok?'#7EF0C0':'#B7A6FF'};color:#0C1512">${ok?'US · WAITLIST':'LATER'}</div></div>`, 30 + i*240, 330 + float(t,i), `transform:scale(${p})`);
     });
-    h += label(t, P.ats[2] + 0.4, 'TEAM AND ENTERPRISE: LATER', 60, 880);
+
     world.innerHTML = h; },
   // Long 32: work email into a personal Claude plan puts company email where the company has no say.
   it(t,T){ cam(t,T,0.05); let h='';
     const m = enter(clamp((t-P.move)/1.6));
-    h += el(`<div class="card" style="width:360px;height:330px;padding:26px;font:800 34px Archivo">Personal<br>Claude plan<div class="src" style="color:#0C1512;margin-top:14px">OUTSIDE THE COMPANY</div></div>`, 580, 330 + float(t));
-    h += el(`<div class="card" style="padding:18px 22px;display:flex;gap:12px;align-items:center;font:24px Plex"><img src="${LOGO}gmail.svg" style="width:42px"><img src="${LOGO}microsoft-365.svg" style="width:42px">WORK EMAIL</div>`,
+    h += el(`<div class="card" style="width:360px;height:330px;padding:26px;font:800 34px Archivo">Personal Claude plan, outside the company</div>`, 580, 330 + float(t));
+    h += el(`<div class="card" style="padding:18px 22px;display:flex;gap:12px;align-items:center;font:24px Plex"><img src="${LOGO}gmail.svg" style="width:42px"><img src="${LOGO}microsoft-365.svg" style="width:42px"></div>`,
       80 + 520*m, 300 + 250*m + float(t,1), `transform:scale(${1-0.25*m}) rotate(${-6+6*m}deg)`);
     const d = pop(t, P.decide); if (d) h += el(`<div class="card" style="padding:20px 26px;font:800 32px Archivo;display:flex;gap:16px;align-items:center">Allowed?
       <span class="chip" style="background:#7EF0C0">YES</span><span class="chip" style="background:#0C1512;color:#F4EFE4">NO</span></div>`, 120, 660, `transform:scale(${d})`);
@@ -209,22 +208,23 @@ const SCENES = {
   steps(t,T){ cam(t,T,0.05); let h='';
     P.items.forEach((s,i)=>{ const p = pop(t, s.at); if(!p) return; const y = 140 + i*370;
       h += el(`<div class="step">${s.n}</div>`, 60, y + float(t,i), `transform:scale(${p})`);
-      if (s.kind === 'fire') h += el(`<div class="card" style="width:560px;padding:24px 28px;font:800 36px Archivo">One weekly job<div style="display:inline-block;margin-left:16px" class="chip" ><span style="color:#0C1512">ON FIRE</span></div></div>`, 180, y + float(t,i+1), `transform:scale(${Math.min(1,p)})`);
-      if (s.kind === 'wire') { h += el(`<div class="card" style="width:260px;padding:22px 26px;font:800 32px Archivo">The job</div>`, 180, y + float(t,i+1));
+      if (s.kind === 'fire') [0,1,2].forEach(k=>{ const hot = k===1, g = hot ? 0.5+0.5*Math.abs(Math.sin(t*3)) : 0;
+          h += el(`<div class="card" style="width:170px;height:110px;padding:18px;border:4px solid ${hot?'#E8734E':'transparent'};box-shadow:0 0 ${30*g}px rgba(232,115,78,${0.8*g}),0 20px 40px rgba(0,0,0,.5)"><div style="height:12px;width:80%;background:#cfc8b8;border-radius:6px"></div><div style="height:12px;width:55%;background:#e2dccd;border-radius:6px;margin-top:12px"></div></div>`, 180 + k*190, y - 10 + float(t,k) - (hot? 18*Math.min(1,p) : 0), `transform:scale(${Math.min(1,p)})`); });
+      if (s.kind === 'wire') { h += el(`<div class="card" style="width:220px;height:110px;padding:18px;border:4px solid #E8734E"><div style="height:12px;width:80%;background:#cfc8b8;border-radius:6px"></div><div style="height:12px;width:55%;background:#e2dccd;border-radius:6px;margin-top:12px"></div></div>`, 200, y - 10 + float(t,i+1));
         [['gmail.svg',s.at+0.3],['google-calendar.svg',s.at+0.7],['slack.svg',s.at+1.1]].forEach(([f,a],k)=>{ const q = pop(t,a); if(!q) return;
           h += `<svg class="a" style="left:0;top:0;overflow:visible" width="1000" height="1000"><path d="M440 ${y+40} C 560 ${y+40}, 560 ${y-40+k*80}, 660 ${y-40+k*80}" stroke="#7EF0C0" stroke-width="4" fill="none" stroke-dasharray="${300*clamp((t-a)/0.4)} 300"/></svg>`;
           h += el(`<div class="logo" style="width:90px;height:90px;border-radius:22px"><img src="${LOGO}${f}" style="width:54px;height:54px"></div>`, 670, y - 85 + k*80 + float(t,k), `transform:scale(${q})`); }); }
       if (s.kind === 'week') { ['M','T','W','T','F','S','S'].forEach((d,k)=>{ const st = clamp((t - s.yes - k*0.18)/0.17);
           h += el(`<div class="card" style="width:96px;height:120px;padding:10px;font:20px Plex;text-align:center">${d}<div style="margin-top:14px;height:40px;border-radius:8px;border:3px ${st?'solid #7EF0C0':'dashed rgba(12,21,18,.4)'};background:${st?'#7EF0C0':'transparent'};font:18px Plex;line-height:34px">YES</div></div>`, 180 + k*108, y + float(t,k)*0.6, `transform:scale(${1+0.15*Math.sin(st*Math.PI)})`); }); }
       if (s.kind === 'usage') { const f = enter(clamp((t-s.fill)/1.0));
-        h += el(`<div class="card" style="width:600px;padding:22px 26px"><div class="src" style="color:#0C1512">SETTINGS · USAGE</div><div style="margin-top:14px;height:30px;border-radius:15px;background:#d9d1bf;overflow:hidden"><div style="height:100%;width:${10+60*f}%;background:#B7A6FF"></div></div></div>`, 180, y + float(t,i+1)); }
+        h += el(`<div class="card" style="width:600px;padding:22px 26px"><div style="font:800 30px Archivo">Settings › Usage</div><div style="margin-top:14px;height:30px;border-radius:15px;background:#d9d1bf;overflow:hidden"><div style="height:100%;width:${10+60*f}%;background:#B7A6FF"></div></div></div>`, 180, y + float(t,i+1)); }
       if (s.kind === 'draft') { const st = clamp((t-s.yes)/0.17);
         // after his yes the draft crosses the line and leaves; the next one queues up and waits for its yes
         const go = exit(clamp((t-s.yes-0.6)/0.7)), nx = enter(clamp((t-s.yes-1.2)/0.8));
         h += `<div class="line" style="position:absolute;left:640px;top:${y-170}px;height:430px;opacity:${0.5+0.5*Math.abs(Math.sin(t*1.7))}"></div>`;
         h += `<div class="rail" style="top:${y+250}px;background-position-x:${t*40}px"></div>`;
-        h += order({no:'DRAFT', title:'Reply to a client', logo:'gmail.svg', app:'GMAIL'}, 200 + 900*go, y - 120, Math.sin(t*1.2)*0.8 + 6*go, st);
-        if (nx > 0) h += order({no:'DRAFT', title:'Follow up a quote', logo:'gmail.svg', app:'GMAIL'}, -400 + 600*nx, y - 120, Math.sin(t*1.4+1)*1.2, 0); }
+        h += order({title:'Reply to a client', logo:'gmail.svg'}, 200 + 900*go, y - 120, Math.sin(t*1.2)*0.8 + 6*go, st);
+        if (nx > 0) h += order({title:'Follow up a quote', logo:'gmail.svg'}, -400 + 600*nx, y - 120, Math.sin(t*1.4+1)*1.2, 0); }
     });
     world.innerHTML = h; },
   // Short 1: the opening: Claude Duet, the research preview he got into.
@@ -234,23 +234,39 @@ const SCENES = {
     const word = 'CLAUDE DUET', n = Math.round(word.length * clamp((t-1.6)/0.6));
     h += el(`<div class="big" style="font-size:170px;white-space:nowrap;letter-spacing:${2+3*Math.sin(t*0.8)}px;transform:scale(${1+0.03*Math.sin(t*0.6)})">${word.slice(0,n)}<span style="opacity:${Math.sin(t*8)>0?1:0}">${n<word.length?'|':''}</span></div>`, 70, 420);
     const c = pop(t,2.4); if (c) h += el(`<div class="chip" style="background:#B7A6FF">RESEARCH PREVIEW · 21 OCT 2026</div>`, 200, 640 + float(t,2), `transform:scale(${c})`);
-    const q = pop(t,P.ask); if (q) h += el(`<div class="bubble" style="width:560px">What does it change if you already use Claude?</div>`, 220, 760 + float(t,3), `transform:scale(${q})`);
+
     world.innerHTML = h; },
   // Short 6: it reads one email account, and his is mostly bills; Microsoft 365 work email not yet.
   email(t,T){ cam(t,T,0.06); let h='';
-    const box = pop(t,1.3); h += el(`<div class="card" style="width:520px;height:440px;padding:24px"><div style="display:flex;gap:12px;align-items:center;font:800 30px Archivo"><img src="${LOGO}gmail.svg" style="width:44px">One inbox</div></div>`, 240, 200 + float(t), `transform:scale(${box})`);
-    for (let i=0;i<5;i++){ const p = pop(t, 1.9 + i*0.22); if(!p) continue; const bill = i!==2;
+    const box = pop(t,0.0); h += el(`<div class="card" style="width:520px;height:440px;padding:24px"><img src="${LOGO}gmail.svg" style="width:52px"></div>`, 240, 200 + float(t), `transform:scale(${box})`);
+    for (let i=0;i<5;i++){ const p = pop(t, 0.4 + i*0.25); if(!p) continue; const bill = i!==2;
       h += el(`<div style="width:450px;height:56px;border-radius:10px;background:${bill?'#e9e2d2':'#fff'};display:flex;align-items:center;gap:14px;padding:0 18px;font:22px Plex;color:#0C1512">
-        <span style="width:30px;height:22px;border:3px solid #0C1512;border-radius:4px"></span>${bill?'BILL':'EVERYTHING ELSE'}${bill&&t>P.bills+i*0.1?'<span class="chip" style="margin-left:auto;font-size:16px;padding:4px 10px;background:#B7A6FF">BILL</span>':''}</div>`, 275, 290 + i*66, `transform:translateX(${(1-Math.min(p,1))*-60}px);opacity:${Math.min(1,p)}`); }
+        <span style="width:30px;height:22px;border:3px solid #0C1512;border-radius:4px"></span>${bill?'BILL':''}${bill&&t>P.bills+i*0.1?'<span class="chip" style="margin-left:auto;font-size:16px;padding:4px 10px;background:#B7A6FF">BILL</span>':''}</div>`, 275, 290 + i*66, `transform:translateX(${(1-Math.min(p,1))*-60}px);opacity:${Math.min(1,p)}`); }
     const m = pop(t,P.ms); if (m) h += el(`<div class="card" style="padding:16px 22px;display:flex;gap:14px;align-items:center;font:22px Plex"><img src="${LOGO}microsoft-365.svg" style="width:44px">MICROSOFT 365 WORK EMAIL: NOT YET</div>`, 150, 700 + float(t,2), `transform:scale(${m})`);
     world.innerHTML = h; },
   // Short 12: the turn to what to do: two empty steps arrive on the rail, waiting to be filled.
   doit(t,T){ cam(t,T,0.06); let h='';
     h += `<div class="rail" style="top:640px;background-position-x:${t*40}px"></div>`;
-    [1,2].forEach((n,i)=>{ const p = pop(t, 0.3 + i*0.4); if(!p) return;
-      h += el(`<div class="step" style="width:150px;height:150px;font-size:110px">${n}</div>`, 220 + i*360 - (1-Math.min(p,1))*400, 470 + float(t,i)); });
+    [1,2].forEach((n,i)=>{ const p = pop(t, 0.0 + i*0.4); if(!p) return; const x = 120 + i*400 - (1-Math.min(p,1))*400;
+      h += el(`<div class="step" style="width:130px;height:130px;font-size:96px">${n}</div>`, x, 300 + float(t,i));
+      h += el(`<div style="width:250px;height:300px;border:4px dashed rgba(244,239,228,.5);border-radius:10px"></div>`, x + 20, 460 + float(t,i+2), `opacity:${Math.min(1,p)}`); });
     world.innerHTML = h; },
 };
+SCENES.ambient = function(t,T){ cam(t,T,0.06,30); let h=''; const LINE=760, SP=380, V=95;
+  const titles = P.titles || ['Morning brief','Ten jobs','Calendar scheduler','Draft reply'];
+  const logos = P.logos || ['google-calendar.svg','gmail.svg','google-calendar.svg','gmail.svg'];
+  h += `<div class="rail" style="top:800px;background-position-x:${t*40}px"></div>`;
+  h += el(`<div class="line" style="height:600px"></div>`, LINE, 230, `opacity:${0.6+0.4*Math.abs(Math.sin(t*1.7))}`);
+  for (let k=-1;k<6;k++){ const x0 = (P.seed||0)*70 - 350 + k*SP + V*t;     // the queue moves up steadily
+    const at = x0 + 330 > LINE ? (x0 + 330 - LINE)/V : -1;                      // seconds since it reached the line
+    const st = at>0 ? clamp(at/0.17) : 0, ok = st>0;
+    const x = ok && at > 0.6 ? x0 + 300*exit(clamp((at-0.6)/0.6)) : x0;
+    const i = ((k % titles.length) + titles.length) % titles.length;
+    if (x > 1300 || x < -420) continue;
+    h += order({title: titles[i], logo: logos[i]}, x, 420, Math.sin(t*1.3+k)*1.2, st);
+  }
+  if (P.label) h += label(t, 0.3, P.label, 60, 120);
+  world.innerHTML = h; };
 function show(id, params) { SCENE = SCENES[id]; P = params || {}; }
 function render(t) { SCENE(t, P.T || 6); document.getElementById('grain').style.transform = `translate(${(t*37)%40-20}px,${(t*23)%40-20}px)`; }
 </script>
