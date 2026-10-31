@@ -59,7 +59,7 @@ PANELS_SPEC = {
     's04-stops': ('stops', T, 5.0, {'ats': [1.9, 3.2, 2.3, None], 'off': 3.8}),
     's09-limits': ('doc', T, 3.2, {**page('help-limits.png'), 'bar': 1.5}),
     's11-tool': ('tool', T, 7.1, {'fold': 2.5, 'uses': [5.0, 5.5, 6.0]}),
-    's13-steps': ('steps', T, 8.2, {'items': [{'n': 1, 'kind': 'fire', 'at': 0.0}, {'n': 2, 'kind': 'draft', 'at': 3.0, 'yes': 5.9}]}),
+    's13-steps': ('steps', T, 11.5, {'items': [{'n': 1, 'kind': 'fire', 'at': 0.0}, {'n': 2, 'kind': 'draft', 'at': 3.0, 'yes': 5.9}]}),
 }
 
 
