@@ -131,6 +131,7 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/judge/ladder`
 - `/api/judge/sweep`
 - `/api/learning/compile`
+- `/api/learning/spoken-rules`
 - `/api/library/confirm`
 - `/api/library/file`
 - `/api/library/pending`
@@ -2380,6 +2381,10 @@ What the compiler looks for, as pure functions.
 ### `apps/control-plane/api/learning/compile.ts`
 
 - `export default withContentRun('learning_compile', handler)`
+
+### `apps/control-plane/api/learning/spoken-rules.ts`
+
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
 
 ### `apps/control-plane/api/library/_inboxDrive.ts`
 

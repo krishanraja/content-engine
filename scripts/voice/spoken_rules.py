@@ -23,20 +23,22 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'post-pack'))
 import making  # noqa: E402
 
-PATH = '/api/video-studio/learning-proposals?decided=spoken'
+PATH = '/api/learning/spoken-rules'
 
 
 def rules(call=None):
     """[(rule, decided_at, reworded)] the rules he kept, the newest first."""
-    data = (call or making._engine_call)('GET', PATH, None)
-    if isinstance(data, tuple):
-        data = data[1]
+    got = (call or making._engine_call)('GET', PATH, None)
+    status, data = got if isinstance(got, tuple) else (200, got)
     if isinstance(data, (str, bytes)):
         data = json.loads(data)
+    # An answer that is not a 200 with ok true is never read as "none kept": a refused key would hide every rule.
+    if status != 200 or not isinstance(data, dict) or data.get('ok') is not True or not isinstance(data.get('rules'), list):
+        raise RuntimeError(f'the engine answered {status}: {str(data)[:120]}')
     out = []
     for r in (data or {}).get('rules') or []:
         if isinstance(r, dict) and isinstance(r.get('rule'), str) and r['rule'].strip():
-            out.append({'rule': r['rule'].strip(), 'decided_at': r.get('decided_at'), 'reworded': bool(r.get('decision_note'))})
+            out.append({'rule': r['rule'].strip(), 'decided_at': r.get('decided_at'), 'reworded': bool(r.get('reworded'))})
     return out
 
 
