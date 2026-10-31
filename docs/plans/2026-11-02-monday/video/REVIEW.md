@@ -10,8 +10,8 @@ words by `video/panels.py`. Captions burned in. Krish's full playback is still h
 
 | Cut | Share copy (under 29 MiB) | Master | Length |
 |---|---|---|---|
-| 5-minute, 16:9 | `.cache/produce/2026-11-02-9a0c97af/long/share/who-trains-your-2030-seniors-long-16x9.mp4` (28.2 MiB) | `long/who-trains-your-2030-seniors-long-16x9.mp4` (sha256 `af739aa1db088bdf8cef9d3f15773db2650f5ffa3119352e1cbe1d9fde4441aa`) | 4:42.7 |
-| 90-second, 9:16 | `.cache/produce/2026-11-02-9a0c97af/short/share/who-trains-your-2030-seniors-short-9x16.mp4` (27.9 MiB) | `short/who-trains-your-2030-seniors-short-9x16.mp4` (sha256 `25c9a1f1437dab26d85bffdcc614fd3ea799f9379d393d2f71179b48636f314a`) | 1:07.0 |
+| 5-minute, 16:9 | `.cache/produce/2026-11-02-9a0c97af/long/share/who-trains-your-2030-seniors-long-16x9.mp4` (28.2 MiB) | `long/who-trains-your-2030-seniors-long-16x9.mp4` (sha256 `239c9969b10f83378174493de13755ca029937aa646ec57eb17eda5233e0e3f7`) | 4:42.7 |
+| 90-second, 9:16 | `.cache/produce/2026-11-02-9a0c97af/short/share/who-trains-your-2030-seniors-short-9x16.mp4` (27.9 MiB) | `short/who-trains-your-2030-seniors-short-9x16.mp4` (sha256 `a8c0359b0e1f3dad406872bf266c064945dd979d0cd0fe2fd7654d4c22d9e66d`) | 1:07.0 |
 
 Thumbnails (his picked words "CLAUDE IS EATING ITS OWN JOBS", over his face and the ladder): `thumbs/thumb-16x9.jpg`
 (1280x720) and `thumbs/thumb-9x16.jpg` (1080x1920), drawn by `video/thumbnails.py --words`.
@@ -40,6 +40,12 @@ Second review (31 Oct), also fixed: the brand is captioned "makeyourmindup.ai" w
 heard "makeyourmindhop"; caption words only, the sound untouched); the 90-second close has no cards over the last
 line and no fade back to his face before the end card; no WEEK boxes, no "TELLER · 13"; a page's credit sits at the
 top of the panel, clear of the page's footnotes; the question cards are blank mint cards on the gap, no sentence.
+
+Third review (31 Oct), also fixed: the 5-minute close matches the 90-second (numerals as small cards settling on
+the gap, lifting away before "The full deep dive", the ladder held to the end card); a page's credit sits in a
+solid ink band the page never reaches; "shrink to a few hours" is three weeks of day cells folding into one day;
+the hours and clerks panels are composed from their first half second; the 90-second cut's cards arrive solid and
+its opening page sits inside the panel. Thumbnails redrawn.
 
 ## What was made, and where
 
