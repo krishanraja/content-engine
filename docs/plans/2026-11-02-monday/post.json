@@ -2,5 +2,18 @@
  "piece_id": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67",
  "date": "2026-11-02",
  "subchannel": "follow_the_money",
- "subject": "Who trains your 2030 seniors"
+ "subject": "Who trains your 2030 seniors",
+ "video_title": "Anthropic's junior hires fell from 27% to 9%. Who trains your seniors?",
+ "files": [
+  {
+   "kind": "video-script",
+   "cut": "long",
+   "file": "script-long.md"
+  },
+  {
+   "kind": "video-script",
+   "cut": "short",
+   "file": "script-short.md"
+  }
+ ]
 }

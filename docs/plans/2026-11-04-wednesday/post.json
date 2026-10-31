@@ -2,5 +2,18 @@
  "piece_id": "b63d2507-dbb4-449d-bce4-f21e859ee2ad",
  "date": "2026-11-04",
  "subchannel": "under_the_hood",
- "subject": "Claude Duet"
+ "subject": "Claude Duet",
+ "video_title": "I asked Claude Duet for a favour. It built me a tool.",
+ "files": [
+  {
+   "kind": "video-script",
+   "cut": "long",
+   "file": "script-long.md"
+  },
+  {
+   "kind": "video-script",
+   "cut": "short",
+   "file": "script-short.md"
+  }
+ ]
 }
