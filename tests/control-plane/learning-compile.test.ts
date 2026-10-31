@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
-import { test } from 'vitest'
-import { presetProposals, judgeProposals, handRewriteProposals, repeatedEditClassProposals, toProposalRow, MAX_EVIDENCE } from '../../apps/control-plane/api/learning/_patterns.ts'
+import { describe, expect, it, test } from 'vitest'
+import { presetProposals, judgeProposals, handRewriteProposals, repeatedEditClassProposals, spokenProposals, likeness, plainer, toProposalRow, MAX_EVIDENCE } from '../../apps/control-plane/api/learning/_patterns.ts'
 
 // What the compiler is allowed to say, and what it must stay quiet about.
 //
@@ -167,4 +167,37 @@ test('evidence is unique and capped at what the table holds', () => {
   const [proposal] = judgeProposals(rows)
   assert.equal(proposal!.evidence_ids.length, MAX_EVIDENCE)
   assert.equal(new Set(proposal!.evidence_ids).size, MAX_EVIDENCE)
+})
+
+// What he changes reading his scripts aloud (Krish, 2026-10-31: "build the learner proposals onto my list").
+describe('spoken proposals: kinds of change he makes reading aloud', () => {
+  const piece = (n: number) => `00000000-0000-4000-8000-00000000000${n}`
+  const delta = (examples: Record<string, { script: string; said: string }[]>) =>
+    ({ words_script: 200, swapped: 2, added: 2, cut: 0, contracted: 0, expanded: 0, examples })
+  const plain = delta({ swapped: [{ script: 'dollars', said: 'bucks' }, { script: 'polished', said: 'really nice' }] })
+
+  it('proposes saying it plainer when three pieces swap to everyday words, citing the pieces', () => {
+    const got = spokenProposals([1, 2, 3].map(n => ({ piece_id: piece(n), cuts: { long: plain } })))
+    expect(got).toHaveLength(1)
+    expect(got[0]!.scope).toMatchObject({ key: 'spoken:plainer', venture: 'publication', lane: 'voice' })
+    expect(got[0]!.evidence_ids).toEqual([piece(1), piece(2), piece(3)])
+    expect(got[0]!.assertion).toContain('"dollars" said as "bucks"')
+    expect(toProposalRow(got[0]!, '2026-11-01').ok).toBe(true)
+  })
+  it('never proposes from two pieces, from a mishearing, or from filler', () => {
+    expect(spokenProposals([1, 2].map(n => ({ piece_id: piece(n), cuts: { long: plain } })))).toEqual([])
+    const misheard = delta({ swapped: [{ script: 'krish', said: 'chris' }, { script: 'qwen', said: 'quinn' }], added: [{ script: '', said: 'so' }, { script: '', said: 'the' }] })
+    expect(spokenProposals([1, 2, 3].map(n => ({ piece_id: piece(n), cuts: { short: misheard } })))).toEqual([])
+  })
+  it('proposes an aside and a phrase he always drops, each once', () => {
+    const d = delta({ added: [{ script: '', said: 'which is fair enough' }, { script: '', said: 'and you can guess who' }],
+                      cut: [{ script: 'i have been reading', said: '' }] })
+    const keys = spokenProposals([1, 2, 3].map(n => ({ piece_id: piece(n), cuts: { long: d } }))).map(p => p.scope.key)
+    expect(keys.sort()).toEqual(['spoken:aside', 'spoken:drops:i have been reading'])
+  })
+  it('reads likeness the way the mishearing guard needs', () => {
+    expect(likeness('krish', 'chris')).toBeGreaterThanOrEqual(0.6)
+    expect(likeness('dollars', 'bucks')).toBeLessThan(0.6)
+    expect(plainer('looking', 'having a look')).toBe(true)
+  })
 })

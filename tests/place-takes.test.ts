@@ -26,9 +26,9 @@ describe('place-takes.yml', () => {
     expect(PLACE_TAKES_EVENT).toBe('take-copied')
   })
 
-  it('runs recording_match.py --record --board --clock on ubuntu, after checking the pinned transcriber decodes', () => {
+  it('runs recording_match.py --record --board --clock --spoken on ubuntu, after checking the pinned transcriber decodes', () => {
     expect(code).toContain('runs-on: ubuntu-latest')
-    expect(code).toContain('args=(--record --board --clock --by "Place takes" --json)')
+    expect(code).toContain('args=(--record --board --clock --spoken --by "Place takes" --json)')
     expect(code).toContain('python scripts/post-pack/recording_match.py "${args[@]}"')
     expect(code.indexOf('--check-transcriber')).toBeGreaterThan(-1)
     expect(code.indexOf('--check-transcriber')).toBeLessThan(code.indexOf('args=(--record'))

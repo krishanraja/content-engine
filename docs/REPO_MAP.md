@@ -2350,6 +2350,14 @@ What the compiler looks for, as pure functions.
 - `function repeatedEditClassProposals(rows: EditRow[], now: number = Date.now()): Proposal[]`
 - `const MAX_EVIDENCE`
 - `function toProposalRow(p: Proposal, batch: string): { ok: true; row: Record<string, unknown> } | { ok: false; reason: s…`
+- `interface SpokenExample`
+- `interface SpokenDelta`
+- `interface SpokenRow`
+- `const SPOKEN_PER_PIECE`
+- `function likeness(a: string, b: string): number`
+- `function plainer(script: string, said: string): boolean`
+- `function aside(said: string): boolean`
+- `function spokenProposals(rows: SpokenRow[]): Proposal[]`
 
 ### `apps/control-plane/api/learning/compile.ts`
 

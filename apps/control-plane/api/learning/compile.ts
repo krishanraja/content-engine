@@ -4,8 +4,8 @@ import { withContentRun } from '../_runs.js'
 import { supabase } from '../_supabase.js'
 import {
   LOOKBACK_DAYS, MIN_INSTANCES,
-  presetProposals, judgeProposals, handRewriteProposals, repeatedEditClassProposals, toProposalRow,
-  type CalibrationRow, type EditRow,
+  presetProposals, judgeProposals, handRewriteProposals, repeatedEditClassProposals, spokenProposals, toProposalRow,
+  type CalibrationRow, type EditRow, type SpokenRow,
 } from './_patterns.js'
 
 // The weekly compiler ADR-017 deferred.
@@ -73,26 +73,47 @@ async function handler(req: VercelRequest, res: VercelResponse) {
   const editRows = (edits.data || []) as EditRow[]
   const calibrationRows = (calibration.data || []) as CalibrationRow[]
 
+  // What he changed reading his scripts aloud, as the place-takes job recorded it on each piece (making.spoken_delta;
+  // Krish, 2026-10-31: "build the learner proposals onto my list"). A failed read leaves these out, never the week.
+  const spoken = await supabase
+    .from('content_ideas')
+    .select('id, meta->making->spoken_delta')
+    .not('meta->making->spoken_delta', 'is', null)
+    .gte('updated_at', since)
+    .limit(500)
+  const spokenRows: SpokenRow[] = spoken.error ? [] : ((spoken.data || []) as { id: string; spoken_delta: unknown }[])
+    .filter(r => r.spoken_delta && typeof r.spoken_delta === 'object')
+    .map(r => ({ piece_id: r.id, cuts: r.spoken_delta as SpokenRow['cuts'] }))
+  // A pattern already on his list, kept or turned down, is never proposed again (Purge: "will not propose it again").
+  const asked = await supabase.from('mindmake_studio_learning_proposals').select('scope').like('scope->>key', 'spoken:%').limit(1000)
+  const askedKeys = new Set(((asked.data || []) as { scope: { key?: string } | null }[]).map(r => r.scope?.key).filter(Boolean))
+  const spokenNew = asked.error ? [] : spokenProposals(spokenRows).filter(p => !askedKeys.has(String(p.scope.key)))
+
   // Honest about a thin corpus. A compiler that invents a proposal from two
   // events teaches Krish to ignore the whole surface, which costs far more
-  // than a quiet week.
-  if (editRows.length < MIN_INSTANCES) {
+  // than a quiet week. A thin week of edits still lets the read-aloud evidence speak.
+  const thinEdits = editRows.length < MIN_INSTANCES
+  if (thinEdits && !spokenNew.length) {
     return res.status(200).json({
       ok: true,
       skipped: `only ${editRows.length} edit events in ${LOOKBACK_DAYS} days: too thin to propose anything`,
       proposals: 0,
+      spoken_pieces: spokenRows.length,
     })
   }
 
   const proposals = [
-    ...presetProposals(editRows),
-    ...judgeProposals(calibrationRows),
-    ...handRewriteProposals(editRows),
-    ...repeatedEditClassProposals(editRows),
+    ...(thinEdits ? [] : [
+      ...presetProposals(editRows),
+      ...judgeProposals(calibrationRows),
+      ...handRewriteProposals(editRows),
+      ...repeatedEditClassProposals(editRows),
+    ]),
+    ...spokenNew,
   ]
 
   if (!proposals.length) {
-    return res.status(200).json({ ok: true, proposals: 0, edits_read: editRows.length, note: 'nothing recurred often enough to propose' })
+    return res.status(200).json({ ok: true, proposals: 0, edits_read: editRows.length, spoken_pieces: spokenRows.length, note: 'nothing recurred often enough to propose' })
   }
 
   // Every row is checked against the table's own rules before the insert, so
@@ -116,7 +137,7 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(500).json({ ok: false, error: `write_failed: ${error.message}`.slice(0, 500), proposals: rows.length })
   }
 
-  return res.status(200).json({ ok: true, proposals: rows.length, set_aside: setAside, edits_read: editRows.length })
+  return res.status(200).json({ ok: true, proposals: rows.length, set_aside: setAside, edits_read: editRows.length, spoken_pieces: spokenRows.length })
 }
 
 export default withContentRun('learning_compile', handler)
