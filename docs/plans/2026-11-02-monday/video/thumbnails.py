@@ -30,11 +30,11 @@ def page(w, h, face, words, tall):
     @font-face{{font-family:Plex;src:url('{(FONTS / 'IBMPlexMono-Medium.ttf').as_uri()}')}}
     html,body{{margin:0;width:{w}px;height:{h}px;background:#0C1512;overflow:hidden}}
     .face{{position:absolute;{'left:0;right:0;bottom:0;height:62%' if tall else 'left:0;top:0;bottom:0;width:46%'};background:url('{face.as_uri()}') center 25%/cover}}
-    .words{{position:absolute;{'left:60px;right:60px;top:120px' if tall else 'left:49%;right:40px;top:70px'};font-family:Anton;color:#F4EFE4;
-      font-size:{150 if tall else 104}px;line-height:.98;text-transform:uppercase}}
-    .words span{{box-shadow:inset 0 -.16em 0 #FFD84D}}
+    .words{{position:absolute;{'left:60px;right:340px;top:110px' if tall else 'left:49%;right:40px;top:70px'};font-family:Anton;color:#F4EFE4;
+      font-size:{124 if tall else 104}px;line-height:.98;text-transform:uppercase}}
+    .words span{{text-decoration:underline;text-decoration-color:#FFD84D;text-decoration-thickness:.09em;text-underline-offset:.08em}}
     .pill{{position:absolute;{'left:60px;top:40px' if tall else 'left:49%;bottom:44px'};font:500 {34 if tall else 26}px Plex;background:#FFD84D;color:#0C1512;padding:6px 16px;border-radius:999px}}"""
-    ladder = LADDER.format(pos='right:40px;top:640px;width:300px' if tall else 'right:40px;bottom:30px;height:56%')
+    ladder = LADDER.format(pos='right:50px;top:90px;height:560px' if tall else 'right:40px;bottom:30px;height:56%')
     return f'<!doctype html><meta charset=utf-8><style>{css}</style><div class=face></div>{ladder}<div class=words><span>{html.escape(words)}</span></div><div class=pill>follow.the.money</div>'
 
 
