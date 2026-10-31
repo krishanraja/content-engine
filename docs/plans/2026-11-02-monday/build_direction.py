@@ -223,6 +223,17 @@ TOP = {
 }
 
 
+# Krish, 2026-10-31: "I want way more animation than ever before and movement." Nothing holds still: every beat
+# carries a move of its own beneath the one on its word, and no picture rests longer than about 1.5 seconds.
+KEEP_MOVING = {
+    'face': 'his column breathes: a slow 3% push across the beat, the treated room drifting behind him, and the next picture already sliding in at its edge',
+    'document': 'the camera travels down the page to the line and keeps pushing while the highlight sweeps; paper lifts off the desk with a soft shadow; never still over 1.5 s',
+    'chart': 'everything keeps moving: the desk drifts, layers part in parallax, numbers count and never cut, marks arrive with a small overshoot; never still over 1.5 s',
+    'card': 'everything keeps moving: the desk drifts, layers part in parallax, objects ease in with a small overshoot and settle into a slow float; never still over 1.5 s',
+    'logo': 'logos slide in on their names and float, never pasted flat; never still over 1.5 s',
+}
+
+
 def norm(t):
     return re.sub(r"[^a-z0-9%]", '', t.lower().replace('one in four', '1in4'))
 
@@ -264,6 +275,10 @@ def build(cut, spec, direction):
             timing = f'{fmt(s)}-{fmt(e)} in the take ({e - s:.1f} s)'
         else:
             timing = 'not heard in the take: production checks by ear'
+        keep_moving = KEEP_MOVING.get(picture['kind'], KEEP_MOVING['card'])
+        motion = f'{motion}; {keep_moving}' if motion else keep_moving
+        if 'constant-motion' not in modules and picture['kind'] != 'face':
+            modules = modules + ['constant-motion']
         beats.append({'words': ' '.join(sentences[i] for i in group), 'point': point, 'picture': picture,
                       'on_screen_text': text, 'modules': modules, 'motion': motion, 'timing': timing})
     direction['cuts'][cut]['beats'] = beats

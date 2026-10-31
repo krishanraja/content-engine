@@ -31,7 +31,7 @@
      "modules": [
       "treated-background"
      ],
-     "motion": "still; the label types in on \"fallen off a cliff\"",
+     "motion": "still; the label types in on \"fallen off a cliff\"; his column breathes: a slow 3% push across the beat, the treated room drifting behind him, and the next picture already sliding in at its edge",
      "timing": "0:02.52-0:08.44 in the take (5.9 s)"
     },
     {
@@ -48,7 +48,7 @@
       "mechanism-image",
       "constant-motion"
      ],
-     "motion": "rungs draw bottom to top; 2030 lands on \"2030\"",
+     "motion": "rungs draw bottom to top; 2030 lands on \"2030\"; everything keeps moving: the desk drifts, layers part in parallax, objects ease in with a small overshoot and settle into a slow float; never still over 1.5 s",
      "timing": "0:09.36-0:14.44 in the take (5.1 s)"
     },
     {
@@ -62,9 +62,10 @@
      },
      "on_screen_text": "",
      "modules": [
-      "screen-proof"
+      "screen-proof",
+      "constant-motion"
      ],
-     "motion": "slow push into the title",
+     "motion": "slow push into the title; the camera travels down the page to the line and keeps pushing while the highlight sweeps; paper lifts off the desk with a soft shadow; never still over 1.5 s",
      "timing": "0:15.90-0:17.96 in the take (2.1 s)"
     },
     {
@@ -79,9 +80,10 @@
      "on_screen_text": "27% · EARLY 2025",
      "modules": [
       "one-stat-per-frame",
-      "number-in-scene"
+      "number-in-scene",
+      "constant-motion"
      ],
-     "motion": "the four marks arrive on \"one in four\"",
+     "motion": "the four marks arrive on \"one in four\"; everything keeps moving: the desk drifts, layers part in parallax, numbers count and never cut, marks arrive with a small overshoot; never still over 1.5 s",
      "timing": "0:20.64-0:25.80 in the take (5.2 s)"
     },
     {
@@ -96,9 +98,10 @@
      "on_screen_text": "27% → 9%",
      "modules": [
       "one-stat-per-frame",
-      "number-in-scene"
+      "number-in-scene",
+      "constant-motion"
      ],
-     "motion": "the count starts on \"27%\" and lands on \"9%\"; the piece's big moment",
+     "motion": "the count starts on \"27%\" and lands on \"9%\"; the piece's big moment; everything keeps moving: the desk drifts, layers part in parallax, numbers count and never cut, marks arrive with a small overshoot; never still over 1.5 s",
      "timing": "0:25.80-0:29.00 in the take (3.2 s)"
     },
     {
@@ -115,7 +118,7 @@
       "one-stat-per-frame",
       "constant-motion"
      ],
-     "motion": "the agent bar grows on \"far more hours\"",
+     "motion": "the agent bar grows on \"far more hours\"; everything keeps moving: the desk drifts, layers part in parallax, numbers count and never cut, marks arrive with a small overshoot; never still over 1.5 s",
      "timing": "0:29.82-0:36.16 in the take (6.3 s)"
     },
     {
@@ -129,9 +132,10 @@
      },
      "on_screen_text": "1 IN 3 ML MANAGERS",
      "modules": [
-      "screen-proof"
+      "screen-proof",
+      "constant-motion"
      ],
-     "motion": "highlight sweeps on \"hiring less\"",
+     "motion": "highlight sweeps on \"hiring less\"; the camera travels down the page to the line and keeps pushing while the highlight sweeps; paper lifts off the desk with a soft shadow; never still over 1.5 s",
      "timing": "0:36.16-0:39.70 in the take (3.5 s)"
     },
     {
@@ -147,7 +151,7 @@
      "modules": [
       "treated-background"
      ],
-     "motion": "",
+     "motion": "his column breathes: a slow 3% push across the beat, the treated room drifting behind him, and the next picture already sliding in at its edge",
      "timing": "0:40.18-0:45.14 in the take (5.0 s)"
     },
     {
@@ -161,9 +165,10 @@
      },
      "on_screen_text": "",
      "modules": [
-      "screen-proof"
+      "screen-proof",
+      "constant-motion"
      ],
-     "motion": "slow push into the title",
+     "motion": "slow push into the title; the camera travels down the page to the line and keeps pushing while the highlight sweeps; paper lifts off the desk with a soft shadow; never still over 1.5 s",
      "timing": "0:46.72-0:49.20 in the take (2.5 s)"
     },
     {
@@ -180,7 +185,7 @@
       "number-in-scene",
       "constant-motion"
      ],
-     "motion": "the two lines part on \"while senior jobs kept growing\"",
+     "motion": "the two lines part on \"while senior jobs kept growing\"; everything keeps moving: the desk drifts, layers part in parallax, numbers count and never cut, marks arrive with a small overshoot; never still over 1.5 s",
      "timing": "0:49.20-0:54.14 in the take (4.9 s)"
     },
     {
@@ -194,9 +199,10 @@
      },
      "on_screen_text": "",
      "modules": [
-      "screen-proof"
+      "screen-proof",
+      "constant-motion"
      ],
-     "motion": "highlight sweeps on \"slower hiring\"",
+     "motion": "highlight sweeps on \"slower hiring\"; the camera travels down the page to the line and keeps pushing while the highlight sweeps; paper lifts off the desk with a soft shadow; never still over 1.5 s",
      "timing": "0:54.60-0:59.06 in the take (4.5 s)"
     },
     {
@@ -212,7 +218,7 @@
      "modules": [
       "treated-background"
      ],
-     "motion": "the label lands on \"Twice\"",
+     "motion": "the label lands on \"Twice\"; his column breathes: a slow 3% push across the beat, the treated room drifting behind him, and the next picture already sliding in at its edge",
      "timing": "1:00.24-1:04.18 in the take (3.9 s)"
     },
     {
@@ -227,9 +233,10 @@
      "on_screen_text": "20 → 13 · 1988 TO 2004",
      "modules": [
       "one-stat-per-frame",
-      "number-in-scene"
+      "number-in-scene",
+      "constant-motion"
      ],
-     "motion": "marks fade on \"20 tellers to 13\"",
+     "motion": "marks fade on \"20 tellers to 13\"; everything keeps moving: the desk drifts, layers part in parallax, numbers count and never cut, marks arrive with a small overshoot; never still over 1.5 s",
      "timing": "1:05.48-1:13.54 in the take (8.1 s)"
     },
     {
@@ -244,9 +251,10 @@
      "on_screen_text": "+43% BRANCHES",
      "modules": [
       "one-stat-per-frame",
-      "number-in-scene"
+      "number-in-scene",
+      "constant-motion"
      ],
-     "motion": "copies appear on \"more branches\", the number on \"43%\"",
+     "motion": "copies appear on \"more branches\", the number on \"43%\"; everything keeps moving: the desk drifts, layers part in parallax, numbers count and never cut, marks arrive with a small overshoot; never still over 1.5 s",
      "timing": "1:13.94-1:19.28 in the take (5.3 s)"
     },
     {
@@ -260,9 +268,10 @@
      },
      "on_screen_text": "",
      "modules": [
-      "screen-proof"
+      "screen-proof",
+      "constant-motion"
      ],
-     "motion": "highlight sweeps on \"more time with customers\"",
+     "motion": "highlight sweeps on \"more time with customers\"; the camera travels down the page to the line and keeps pushing while the highlight sweeps; paper lifts off the desk with a soft shadow; never still over 1.5 s",
      "timing": "1:19.28-1:24.78 in the take (5.5 s)"
     },
     {
@@ -277,9 +286,10 @@
      "on_screen_text": "−400,000 · +600,000 · SINCE 1980",
      "modules": [
       "one-stat-per-frame",
-      "number-in-scene"
+      "number-in-scene",
+      "constant-motion"
      ],
-     "motion": "the fall on \"have gone\", the stack on \"added\"",
+     "motion": "the fall on \"have gone\", the stack on \"added\"; everything keeps moving: the desk drifts, layers part in parallax, numbers count and never cut, marks arrive with a small overshoot; never still over 1.5 s",
      "timing": "1:27.06-1:36.06 in the take (9.0 s)"
     },
     {
@@ -295,7 +305,7 @@
      "modules": [
       "treated-background"
      ],
-     "motion": "",
+     "motion": "his column breathes: a slow 3% push across the beat, the treated room drifting behind him, and the next picture already sliding in at its edge",
      "timing": "1:36.70-1:39.90 in the take (3.2 s)"
     },
     {
@@ -312,7 +322,7 @@
       "mechanism-image",
       "constant-motion"
      ],
-     "motion": "the ladder grows on \"got bigger\"",
+     "motion": "the ladder grows on \"got bigger\"; everything keeps moving: the desk drifts, layers part in parallax, objects ease in with a small overshoot and settle into a slow float; never still over 1.5 s",
      "timing": "1:39.90-1:47.08 in the take (7.2 s)"
     },
     {
@@ -328,7 +338,7 @@
      "modules": [
       "treated-background"
      ],
-     "motion": "",
+     "motion": "his column breathes: a slow 3% push across the beat, the treated room drifting behind him, and the next picture already sliding in at its edge",
      "timing": "1:49.38-1:50.12 in the take (0.7 s)"
     },
     {
@@ -342,9 +352,10 @@
      },
      "on_screen_text": "",
      "modules": [
-      "mechanism-image"
+      "mechanism-image",
+      "constant-motion"
      ],
-     "motion": "the bottom rung brightens on \"first step\"",
+     "motion": "the bottom rung brightens on \"first step\"; everything keeps moving: the desk drifts, layers part in parallax, objects ease in with a small overshoot and settle into a slow float; never still over 1.5 s",
      "timing": "1:50.32-1:58.28 in the take (8.0 s)"
     },
     {
@@ -358,9 +369,10 @@
      },
      "on_screen_text": "",
      "modules": [
-      "mechanism-image"
+      "mechanism-image",
+      "constant-motion"
      ],
-     "motion": "the bottom rung lifts away on \"first draft itself\"; hold",
+     "motion": "the bottom rung lifts away on \"first draft itself\"; hold; everything keeps moving: the desk drifts, layers part in parallax, objects ease in with a small overshoot and settle into a slow float; never still over 1.5 s",
      "timing": "1:58.96-2:03.24 in the take (4.3 s)"
     },
     {
@@ -374,9 +386,10 @@
      },
      "on_screen_text": "",
      "modules": [
-      "screen-proof"
+      "screen-proof",
+      "constant-motion"
      ],
-     "motion": "highlight sweeps on \"hands-on work\"",
+     "motion": "highlight sweeps on \"hands-on work\"; the camera travels down the page to the line and keeps pushing while the highlight sweeps; paper lifts off the desk with a soft shadow; never still over 1.5 s",
      "timing": "2:04.64-2:08.64 in the take (4.0 s)"
     },
     {
@@ -392,7 +405,7 @@
      "modules": [
       "treated-background"
      ],
-     "motion": "",
+     "motion": "his column breathes: a slow 3% push across the beat, the treated room drifting behind him, and the next picture already sliding in at its edge",
      "timing": "2:08.64-2:11.22 in the take (2.6 s)"
     },
     {
@@ -406,9 +419,10 @@
      },
      "on_screen_text": "",
      "modules": [
-      "screen-proof"
+      "screen-proof",
+      "constant-motion"
      ],
-     "motion": "highlight sweeps on \"never get hired\"",
+     "motion": "highlight sweeps on \"never get hired\"; the camera travels down the page to the line and keeps pushing while the highlight sweeps; paper lifts off the desk with a soft shadow; never still over 1.5 s",
      "timing": "2:11.22-2:20.10 in the take (8.9 s)"
     },
     {
@@ -422,9 +436,10 @@
      },
      "on_screen_text": "",
      "modules": [
-      "screen-proof"
+      "screen-proof",
+      "constant-motion"
      ],
-     "motion": "highlight sweeps on \"judgement\"",
+     "motion": "highlight sweeps on \"judgement\"; the camera travels down the page to the line and keeps pushing while the highlight sweeps; paper lifts off the desk with a soft shadow; never still over 1.5 s",
      "timing": "2:21.10-2:31.62 in the take (10.5 s)"
     },
     {
@@ -440,7 +455,7 @@
      "modules": [
       "treated-background"
      ],
-     "motion": "",
+     "motion": "his column breathes: a slow 3% push across the beat, the treated room drifting behind him, and the next picture already sliding in at its edge",
      "timing": "2:32.60-2:40.66 in the take (8.1 s)"
     },
     {
@@ -454,9 +469,10 @@
      },
      "on_screen_text": "JUDGEMENT",
      "modules": [
-      "mechanism-image"
+      "mechanism-image",
+      "constant-motion"
      ],
-     "motion": "the word lands on \"judgement\"; hold on the gap",
+     "motion": "the word lands on \"judgement\"; hold on the gap; everything keeps moving: the desk drifts, layers part in parallax, objects ease in with a small overshoot and settle into a slow float; never still over 1.5 s",
      "timing": "2:41.86-2:47.14 in the take (5.3 s)"
     },
     {
@@ -472,7 +488,7 @@
      "modules": [
       "treated-background"
      ],
-     "motion": "",
+     "motion": "his column breathes: a slow 3% push across the beat, the treated room drifting behind him, and the next picture already sliding in at its edge",
      "timing": "2:48.30-2:52.86 in the take (4.6 s)"
     },
     {
@@ -487,9 +503,10 @@
      "on_screen_text": "75% · OTHER AMERICANS 28%",
      "modules": [
       "one-stat-per-frame",
-      "number-in-scene"
+      "number-in-scene",
+      "constant-motion"
      ],
-     "motion": "75% lands on \"75%\"; 28% follows",
+     "motion": "75% lands on \"75%\"; 28% follows; everything keeps moving: the desk drifts, layers part in parallax, numbers count and never cut, marks arrive with a small overshoot; never still over 1.5 s",
      "timing": "2:55.50-2:59.34 in the take (3.8 s)"
     },
     {
@@ -506,7 +523,7 @@
       "mechanism-image",
       "constant-motion"
      ],
-     "motion": "the line runs down on \"juniors somewhere today\"",
+     "motion": "the line runs down on \"juniors somewhere today\"; everything keeps moving: the desk drifts, layers part in parallax, objects ease in with a small overshoot and settle into a slow float; never still over 1.5 s",
      "timing": "2:59.34-3:08.72 in the take (9.4 s)"
     },
     {
@@ -521,9 +538,10 @@
      "on_screen_text": "",
      "modules": [
       "one-person-story",
-      "mechanism-image"
+      "mechanism-image",
+      "constant-motion"
      ],
-     "motion": "the sheet opens on \"a new hire\"",
+     "motion": "the sheet opens on \"a new hire\"; everything keeps moving: the desk drifts, layers part in parallax, objects ease in with a small overshoot and settle into a slow float; never still over 1.5 s",
      "timing": "3:08.72-3:11.20 in the take (2.5 s)"
     },
     {
@@ -539,7 +557,7 @@
      "modules": [
       "constant-motion"
      ],
-     "motion": "the counter ticks on \"weeks and weeks\"",
+     "motion": "the counter ticks on \"weeks and weeks\"; everything keeps moving: the desk drifts, layers part in parallax, objects ease in with a small overshoot and settle into a slow float; never still over 1.5 s",
      "timing": "3:11.20-3:16.60 in the take (5.4 s)"
     },
     {
@@ -555,7 +573,7 @@
      "modules": [
       "constant-motion"
      ],
-     "motion": "the tries fail on \"the first attempt doesn't work\" and \"neither does the second\"",
+     "motion": "the tries fail on \"the first attempt doesn't work\" and \"neither does the second\"; everything keeps moving: the desk drifts, layers part in parallax, objects ease in with a small overshoot and settle into a slow float; never still over 1.5 s",
      "timing": "3:16.66-3:23.30 in the take (6.6 s)"
     },
     {
@@ -571,7 +589,7 @@
      "modules": [
       "treated-background"
      ],
-     "motion": "",
+     "motion": "his column breathes: a slow 3% push across the beat, the treated room drifting behind him, and the next picture already sliding in at its edge",
      "timing": "3:23.30-3:27.20 in the take (3.9 s)"
     },
     {
@@ -587,7 +605,7 @@
      "modules": [
       "constant-motion"
      ],
-     "motion": "the collapse on \"shrink to a few hours\"",
+     "motion": "the collapse on \"shrink to a few hours\"; everything keeps moving: the desk drifts, layers part in parallax, objects ease in with a small overshoot and settle into a slow float; never still over 1.5 s",
      "timing": "3:27.30-3:31.20 in the take (3.9 s)"
     },
     {
@@ -603,7 +621,7 @@
      "modules": [
       "treated-background"
      ],
-     "motion": "",
+     "motion": "his column breathes: a slow 3% push across the beat, the treated room drifting behind him, and the next picture already sliding in at its edge",
      "timing": "3:31.36-3:50.20 in the take (18.8 s)"
     },
     {
@@ -617,9 +635,10 @@
      },
      "on_screen_text": "NEXT HIRING MEETING",
      "modules": [
-      "mechanism-image"
+      "mechanism-image",
+      "constant-motion"
      ],
-     "motion": "one card per question, each on its question",
+     "motion": "one card per question, each on its question; everything keeps moving: the desk drifts, layers part in parallax, objects ease in with a small overshoot and settle into a slow float; never still over 1.5 s",
      "timing": "3:48.92-3:58.90 in the take (10.0 s)"
     },
     {
@@ -635,7 +654,7 @@
      "modules": [
       "treated-background"
      ],
-     "motion": "",
+     "motion": "his column breathes: a slow 3% push across the beat, the treated room drifting behind him, and the next picture already sliding in at its edge",
      "timing": "3:59.58-4:16.46 in the take (16.9 s)"
     },
     {
@@ -651,7 +670,7 @@
      "modules": [
       "treated-background"
      ],
-     "motion": "",
+     "motion": "his column breathes: a slow 3% push across the beat, the treated room drifting behind him, and the next picture already sliding in at its edge",
      "timing": "4:18.10-4:19.86 in the take (1.8 s)"
     },
     {
@@ -665,9 +684,10 @@
      },
      "on_screen_text": "1 · EACH TEAM, 4 YEARS OUT",
      "modules": [
-      "better-way"
+      "better-way",
+      "constant-motion"
      ],
-     "motion": "card on \"For each team\"",
+     "motion": "card on \"For each team\"; everything keeps moving: the desk drifts, layers part in parallax, objects ease in with a small overshoot and settle into a slow float; never still over 1.5 s",
      "timing": "4:20.52-4:27.90 in the take (7.4 s)"
     },
     {
@@ -681,9 +701,10 @@
      },
      "on_screen_text": "2 · YOUR LAST 3 HIRES",
      "modules": [
-      "better-way"
+      "better-way",
+      "constant-motion"
      ],
-     "motion": "card on \"last three\"",
+     "motion": "card on \"last three\"; everything keeps moving: the desk drifts, layers part in parallax, objects ease in with a small overshoot and settle into a slow float; never still over 1.5 s",
      "timing": "4:28.08-4:35.42 in the take (7.3 s)"
     },
     {
@@ -697,9 +718,10 @@
      },
      "on_screen_text": "3 · ONE DULL WEEKLY JOB",
      "modules": [
-      "better-way"
+      "better-way",
+      "constant-motion"
      ],
-     "motion": "card on \"dull weekly job\"",
+     "motion": "card on \"dull weekly job\"; everything keeps moving: the desk drifts, layers part in parallax, objects ease in with a small overshoot and settle into a slow float; never still over 1.5 s",
      "timing": "4:35.42-4:41.42 in the take (6.0 s)"
     },
     {
@@ -712,8 +734,10 @@
       "source_label": ""
      },
      "on_screen_text": "MAKEYOURMINDUP.AI",
-     "modules": [],
-     "motion": "one calm close, held long enough to read",
+     "modules": [
+      "constant-motion"
+     ],
+     "motion": "one calm close, held long enough to read; everything keeps moving: the desk drifts, layers part in parallax, objects ease in with a small overshoot and settle into a slow float; never still over 1.5 s",
      "timing": "4:41.98-4:45.60 in the take (3.6 s)"
     }
    ]
@@ -734,7 +758,7 @@
      "modules": [
       "full-face-vertical"
      ],
-     "motion": "the label types in on \"collapsed\"",
+     "motion": "the label types in on \"collapsed\"; his column breathes: a slow 3% push across the beat, the treated room drifting behind him, and the next picture already sliding in at its edge",
      "timing": "0:00.85-0:09.83 in the take (9.0 s)"
     },
     {
@@ -749,9 +773,10 @@
      "on_screen_text": "27% → 9%",
      "modules": [
       "one-stat-per-frame",
-      "number-in-scene"
+      "number-in-scene",
+      "constant-motion"
      ],
-     "motion": "the count starts on \"one in four\" and lands on \"one in ten\"",
+     "motion": "the count starts on \"one in four\" and lands on \"one in ten\"; everything keeps moving: the desk drifts, layers part in parallax, numbers count and never cut, marks arrive with a small overshoot; never still over 1.5 s",
      "timing": "0:10.53-0:16.59 in the take (6.1 s)"
     },
     {
@@ -765,9 +790,10 @@
      },
      "on_screen_text": "1 IN 3 ML MANAGERS",
      "modules": [
-      "screen-proof"
+      "screen-proof",
+      "constant-motion"
      ],
-     "motion": "highlight sweeps on \"AI is why\"",
+     "motion": "highlight sweeps on \"AI is why\"; the camera travels down the page to the line and keeps pushing while the highlight sweeps; paper lifts off the desk with a soft shadow; never still over 1.5 s",
      "timing": "0:16.99-0:19.25 in the take (2.3 s)"
     },
     {
@@ -781,9 +807,10 @@
      },
      "on_screen_text": "+43% BRANCHES · +600,000 ACCOUNTANTS",
      "modules": [
-      "one-stat-per-frame"
+      "one-stat-per-frame",
+      "constant-motion"
      ],
-     "motion": "one frame per tool, each on its name",
+     "motion": "one frame per tool, each on its name; everything keeps moving: the desk drifts, layers part in parallax, numbers count and never cut, marks arrive with a small overshoot; never still over 1.5 s",
      "timing": "0:19.91-0:25.11 in the take (5.2 s)"
     },
     {
@@ -799,7 +826,7 @@
      "modules": [
       "full-face-vertical"
      ],
-     "motion": "",
+     "motion": "his column breathes: a slow 3% push across the beat, the treated room drifting behind him, and the next picture already sliding in at its edge",
      "timing": "0:25.19-0:28.31 in the take (3.1 s)"
     },
     {
@@ -813,9 +840,10 @@
      },
      "on_screen_text": "",
      "modules": [
-      "mechanism-image"
+      "mechanism-image",
+      "constant-motion"
      ],
-     "motion": "the rung lifts away on \"first draft itself\"",
+     "motion": "the rung lifts away on \"first draft itself\"; everything keeps moving: the desk drifts, layers part in parallax, objects ease in with a small overshoot and settle into a slow float; never still over 1.5 s",
      "timing": "0:28.59-0:32.37 in the take (3.8 s)"
     },
     {
@@ -829,9 +857,10 @@
      },
      "on_screen_text": "",
      "modules": [
-      "screen-proof"
+      "screen-proof",
+      "constant-motion"
      ],
-     "motion": "highlight sweeps on \"never opens\"",
+     "motion": "highlight sweeps on \"never opens\"; the camera travels down the page to the line and keeps pushing while the highlight sweeps; paper lifts off the desk with a soft shadow; never still over 1.5 s",
      "timing": "0:32.89-0:36.65 in the take (3.8 s)"
     },
     {
@@ -847,7 +876,7 @@
      "modules": [
       "constant-motion"
      ],
-     "motion": "the action repeats on \"repeats\"",
+     "motion": "the action repeats on \"repeats\"; everything keeps moving: the desk drifts, layers part in parallax, objects ease in with a small overshoot and settle into a slow float; never still over 1.5 s",
      "timing": "0:37.19-0:44.41 in the take (7.2 s)"
     },
     {
@@ -861,9 +890,10 @@
      },
      "on_screen_text": "BEFORE YOU CUT A JUNIOR ROLE",
      "modules": [
-      "mechanism-image"
+      "mechanism-image",
+      "constant-motion"
      ],
-     "motion": "one card per question",
+     "motion": "one card per question; everything keeps moving: the desk drifts, layers part in parallax, objects ease in with a small overshoot and settle into a slow float; never still over 1.5 s",
      "timing": "0:45.79-0:50.37 in the take (4.6 s)"
     },
     {
@@ -879,7 +909,7 @@
      "modules": [
       "full-face-vertical"
      ],
-     "motion": "",
+     "motion": "his column breathes: a slow 3% push across the beat, the treated room drifting behind him, and the next picture already sliding in at its edge",
      "timing": "0:51.61-0:52.47 in the take (0.9 s)"
     },
     {
@@ -893,9 +923,10 @@
      },
      "on_screen_text": "1 · NAME THEM · 2 · ONE DULL JOB",
      "modules": [
-      "better-way"
+      "better-way",
+      "constant-motion"
      ],
-     "motion": "one card per action",
+     "motion": "one card per action; everything keeps moving: the desk drifts, layers part in parallax, objects ease in with a small overshoot and settle into a slow float; never still over 1.5 s",
      "timing": "0:52.61-1:01.67 in the take (9.1 s)"
     },
     {
@@ -908,8 +939,10 @@
       "source_label": ""
      },
      "on_screen_text": "MAKEYOURMINDUP.AI",
-     "modules": [],
-     "motion": "one calm close",
+     "modules": [
+      "constant-motion"
+     ],
+     "motion": "one calm close; everything keeps moving: the desk drifts, layers part in parallax, objects ease in with a small overshoot and settle into a slow float; never still over 1.5 s",
      "timing": "1:02.31-1:03.47 in the take (1.2 s)"
     }
    ]

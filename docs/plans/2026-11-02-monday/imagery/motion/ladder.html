@@ -1,0 +1,90 @@
+<!doctype html>
+<meta charset="utf-8">
+<!-- Monday 2 Nov motion test: "The Ladder", 16 s of the long cut (take 0:20.0 to 0:36.2).
+     render(t) draws the frame at t seconds; the page is transparent over the portrait column so his take shows through.
+     Easing and timings from config/ve/brand-tokens.json motion (enter 400 ms on 0.05,0.7,0.1,1). -->
+<style>
+@font-face{font-family:Anton;src:url('../../../../../assets/fonts/makeyourmindup/Anton-Regular.ttf')}
+@font-face{font-family:Archivo;src:url('../../../../../assets/fonts/makeyourmindup/Archivo-Variable.ttf')}
+@font-face{font-family:Plex;src:url('../../../../../assets/fonts/makeyourmindup/IBMPlexMono-Medium.ttf')}
+html,body{margin:0;width:1920px;height:1080px;background:transparent;overflow:hidden}
+#stage{position:absolute;left:608px;top:0;width:1312px;height:1080px;background:#0C1512;overflow:hidden}
+#grain{position:absolute;inset:0;opacity:.07;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>")}
+#cam{position:absolute;inset:0;transform-origin:50% 55%}
+.pill{position:absolute;left:660px;top:44px;font:500 22px Plex;color:#0C1512;background:#FFD84D;padding:6px 14px;border-radius:999px;z-index:5}
+.mark{position:absolute;right:56px;top:40px;font:900 30px Archivo;color:#F4EFE4;z-index:5}
+.credit{position:absolute;left:52px;top:110px;font:500 20px Plex;color:#a9b4ae;letter-spacing:1px}
+.label{position:absolute;font:500 26px Plex;color:#F4EFE4;letter-spacing:2px}
+.big{position:absolute;font-family:Anton;color:#F4EFE4;line-height:1}
+#cap{position:absolute;left:0;right:0;bottom:56px;text-align:center;z-index:6}
+#cap span{display:inline-block;font:900 46px Archivo;color:#F4EFE4;background:#0C1512;padding:6px 16px;box-shadow:8px 8px 0 #FFD84D;margin:0 2px}
+</style>
+<div class="pill">follow.the.money</div><div class="mark">makeyourmindup</div>
+<div id="stage"><div id="grain"></div><div id="cam">
+ <svg id="svg" width="1312" height="1080" viewBox="0 0 1312 1080" style="position:absolute;inset:0"></svg>
+ <div class="label" id="when" style="left:96px;top:200px"></div>
+ <div class="big" id="num" style="left:860px;top:640px;font-size:190px"></div>
+ <div class="big" id="was" style="left:860px;top:560px;font-size:72px;color:#5b625e;text-decoration:line-through"></div>
+ </div>
+ <div id="fixed" style="position:absolute;inset:0">
+  <svg id="bars" width="1312" height="1080" viewBox="0 0 1312 1080" style="position:absolute;inset:0"></svg>
+  <div class="label" id="hours" style="left:700px;top:200px"></div>
+  <div class="big" id="ratio" style="left:700px;top:250px;font-size:120px"></div>
+  <div class="credit" id="credit">ANTHROPIC · OCT 2026</div>
+ </div></div>
+<div id="cap"></div>
+<script>
+const E=(t)=>{t=Math.min(1,Math.max(0,t));return 1-Math.pow(1-t,3)};          // enter ease
+const W=(t,a,d)=>E((t-a)/d);                                                  // 0..1 progress from a over d s
+const CAPS=[[0.06,1.2,"Now, one number stands out."],[1.42,2.5,"In early 2025,"],[2.52,4.2,"about one in four"],
+ [4.2,5.78,"of its new technical hires were juniors."],[5.8,7.8,"Now it's fewer than one in ten,"],[7.84,9.4,"27% down to 9%."],
+ [9.42,10.32,"But why is that?"],[10.36,12.0,"By August, its AI agents,"],[12.0,14.0,"which work on tasks by themselves,"],
+ [14.02,16.2,"were putting in far more hours than its people."]];
+function caps(t){const c=CAPS.find(c=>t>=c[0]&&t<c[1]);const el=document.getElementById('cap');
+ if(!c){el.innerHTML='';return}const ws=c[2].split(' ');const k=Math.max(1,Math.ceil((t-c[0])/((c[1]-c[0])*0.7)*ws.length));
+ el.innerHTML='<span>'+ws.slice(0,k).join(' ')+'</span>'}
+function render(t){
+ caps(t);
+ const cam=document.getElementById('cam');
+ // the camera never rests: a slow drift, a push on the drop, a pull back to make room for the bars
+ const push=W(t,7.84,1.3)*0.06-W(t,9.4,0.8)*0.06, drift=Math.sin(t*0.35)*6;
+ const slide=W(t,9.4,0.9);
+ cam.style.transform=`translate(${drift - slide*330}px,${Math.cos(t*0.3)*4}px) scale(${1+push+t*0.002})`;
+ const s=document.getElementById('svg');let h='';
+ const L=470,R=790,rungs=[200,350,500,650];
+ // rails draw down, rungs draw bottom up
+ const rail=W(t,0.0,1.0);
+ h+=`<line x1="${L}" y1="120" x2="${L}" y2="${120+810*rail}" stroke="#F4EFE4" stroke-width="10" stroke-linecap="round"/>`;
+ h+=`<line x1="${R}" y1="120" x2="${R}" y2="${120+810*rail}" stroke="#F4EFE4" stroke-width="10" stroke-linecap="round"/>`;
+ rungs.slice().reverse().forEach((y,i)=>{const p=W(t,0.3+i*0.15,0.4);h+=`<line x1="${L}" y1="${y}" x2="${L+(R-L)*p}" y2="${y}" stroke="#F4EFE4" stroke-width="10" stroke-linecap="round"/>`});
+ // the junior rung: solid, then thins to a hairline on the drop
+ const jr=W(t,1.0,0.5), thin=W(t,7.84,1.3);
+ h+=`<line x1="${L}" y1="860" x2="${L+(R-L)*jr}" y2="860" stroke="#F4EFE4" stroke-width="${10-8.5*thin}" stroke-linecap="round" opacity="${1-0.55*thin}"/>`;
+ // four hires arrive on "one in four"; three leave on "fewer than one in ten"
+ for(let i=0;i<4;i++){const a=W(t,3.1+i*0.18,0.35), gone=i>0?W(t,6.3+i*0.2,0.5):0;const x=L+40+i*75, y=840-a*0;
+  const fill=i==0?'#FFD84D':'#F4EFE4';h+=`<circle cx="${x+20}" cy="${825-30*(1-a)}" r="${18*a}" fill="${fill}" opacity="${a*(1-gone)}"/>`}
+ // agent hours against staff hours, on the fixed layer
+ const bars=W(t,10.4,0.6); let hb='';
+ if(bars>0){const base=930, staff=95*W(t,11.3,0.6), agent=95*6*W(t,14.5,1.4);
+  hb+=`<rect x="980" y="${base-staff}" width="110" height="${staff}" fill="#F4EFE4" opacity="${bars}"/>`;
+  hb+=`<rect x="1130" y="${base-agent}" width="110" height="${agent}" fill="#7EF0C0" opacity="${bars}"/>`;
+  hb+=`<text x="1035" y="975" font-family="Plex" font-size="22" fill="#a9b4ae" text-anchor="middle" opacity="${bars}">STAFF</text>`;
+  hb+=`<text x="1185" y="975" font-family="Plex" font-size="22" fill="#a9b4ae" text-anchor="middle" opacity="${bars}">AGENTS</text>`}
+ s.innerHTML=h; document.getElementById('bars').innerHTML=hb;
+ const hrs=document.getElementById('hours'); hrs.textContent=t>=11.3?'AUGUST 2026 · HOURS WORKED':''; hrs.style.opacity=W(t,11.3,0.4);
+ // labels and numbers
+ const when=document.getElementById('when');
+ const lab = t>=1.42?'EARLY 2025':'';
+ when.textContent=lab; when.style.opacity=W(t,1.42,0.4)*(1-W(t,9.4,0.5)); when.style.transform=`translateX(${(1-W(t,1.42,0.4))*-40}px)`;
+ const num=document.getElementById('num'), was=document.getElementById('was');
+ let v=null;
+ if(t>=3.1&&t<7.84) v=Math.round(27*W(t,3.1,1.6));
+ else if(t>=7.84) v=Math.round(27-18*W(t,7.84,1.25));
+ num.textContent=v===null?'':v+'%'; num.style.opacity=t<9.4?1:1-W(t,9.4,0.5);
+ num.style.borderBottom='none';
+ was.textContent=t>=9.0?'27%':''; was.style.opacity=(t<9.4?W(t,9.0,0.3):1-W(t,9.4,0.5));
+ const r=document.getElementById('ratio'); r.textContent=t>=15.0?'6 TO 1':''; r.style.opacity=W(t,15.0,0.35); r.style.transform=`translateY(${(1-W(t,15.0,0.35))*30}px)`;
+ document.getElementById('credit').style.opacity=W(t,1.0,0.5);
+}
+render(0);
+</script>
