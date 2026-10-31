@@ -255,3 +255,137 @@ export function toProposalRow(p: Proposal, batch: string):
     },
   }
 }
+
+// ── What he changes reading his scripts aloud ──────────────────────────────
+//
+// Krish, 2026-10-31: "build the learner proposals onto my list". The place-takes job records, on each piece, what
+// he changed reading the exact script he was given (making.spoken_delta.<cut>, scripts/voice/spoken_delta.py): counts
+// and a few short examples a kind, never a transcript. A kind of change he makes in MIN_INSTANCES pieces or more
+// becomes a taste proposal for Make Your Mind Up on his list, citing the pieces. Approving one changes nothing by
+// itself: the rule is then reviewed into ai-harness krish-voice's voice profile (spoken script register). Keyed on
+// the form of the change (plainer words, an aside, a phrase he drops), never on what a piece was about (ANTI-ECHO).
+
+export interface SpokenExample { script: string; said: string }
+export interface SpokenDelta {
+  words_script: number
+  swapped: number
+  added: number
+  cut: number
+  contracted: number
+  expanded: number
+  examples?: Partial<Record<'swapped' | 'added' | 'cut' | 'contracted' | 'expanded', SpokenExample[]>>
+}
+export interface SpokenRow {
+  /** content_ideas.id: the piece the takes belong to, cited as the evidence. */
+  piece_id: string
+  cuts: Partial<Record<string, SpokenDelta>>
+  /** His own narrative score for the piece out of 10 (piece_scores_current), when he gave one. */
+  narrative?: number | null
+}
+
+/** What his own scores say beside a kind of change: the mean narrative score of the pieces that show it against the
+ *  pieces that do not, only when both sides hold scored pieces. A correlation on a handful of pieces, so it is said
+ *  as context for his decision, never as a reason. */
+export function scoreContext(rows: SpokenRow[], showing: Set<string>): string {
+  const mean = (xs: number[]) => xs.reduce((a, b) => a + b, 0) / xs.length
+  const scored = rows.filter(r => typeof r.narrative === 'number')
+  const yes = scored.filter(r => showing.has(r.piece_id)).map(r => r.narrative as number)
+  const no = scored.filter(r => !showing.has(r.piece_id)).map(r => r.narrative as number)
+  if (!yes.length || !no.length) return ''
+  return ` Your narrative scores: ${mean(yes).toFixed(1)} out of 10 on these pieces against ${mean(no).toFixed(1)} on the others (${yes.length} and ${no.length} scored; context, not proof).`
+}
+
+const ASIDE_OPENERS = ['which is', 'obviously', 'basically', 'you know', 'i mean', 'kind of', 'to be fair', 'of course']
+const FILLER = new Set(['the', 'a', 'an', 'and', 'of', 'to', 'in', 'is', 'it', 'that', 'this', 'for', 'on', 'with', 'as', 'at', 'be',
+  'are', 'was', 'or', 'but', 'by', 'from', 'i', 'you', 'we', 'they', 'he', 'she', 'which', 'what', 'who', 'its', 'their', 'his', 'her',
+  'our', 'your', 'my', 'me', 'us', 'them', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'can', 'could', 'just', 'there',
+  'here', 'then', 'than', 'if', 'not', 'no', 'all', 'about', 'up', 'out', 'so', 'now', 'really', 'actually', 'well'])
+/** A piece shows a kind of change when its examples hold it this many times. */
+export const SPOKEN_PER_PIECE = 2
+
+function clean(text: string): string {
+  return String(text || '').replace(/ \.\.\.$/, '').split(/\s+/).filter(Boolean).join(' ').toLowerCase()
+}
+function meaningful(phrase: string): boolean {
+  const words = phrase.split(' ').filter(Boolean)
+  return words.length > 0 && !words.every(w => FILLER.has(w))
+}
+/** How alike two strings sound on paper, 0 to 1: twice the longest common subsequence over both lengths. */
+export function likeness(a: string, b: string): number {
+  const x = a.replace(/ /g, ''), y = b.replace(/ /g, '')
+  if (!x.length && !y.length) return 1
+  let prev = new Array(y.length + 1).fill(0)
+  for (let i = 1; i <= x.length; i++) {
+    const row = new Array(y.length + 1).fill(0)
+    for (let j = 1; j <= y.length; j++) row[j] = x[i - 1] === y[j - 1] ? prev[j - 1] + 1 : Math.max(prev[j], row[j - 1])
+    prev = row
+  }
+  return (2 * prev[y.length]) / (x.length + y.length)
+}
+const meanLength = (p: string) => { const w = p.split(' ').filter(Boolean); return w.reduce((n, s) => n + s.length, 0) / w.length }
+/** Said in shorter, everyday words; a swap that sounds like the script word is the transcriber mishearing him. */
+export function plainer(script: string, said: string): boolean {
+  if (!script || !said || !meaningful(script) || !meaningful(said) || likeness(script, said) >= 0.6) return false
+  return meanLength(said) <= meanLength(script) - 0.5
+}
+export function aside(said: string): boolean {
+  return said.split(' ').filter(Boolean).length >= 3 || ASIDE_OPENERS.some(o => said.startsWith(o))
+}
+
+/** The kinds of change he makes reading aloud in MIN_INSTANCES pieces or more, as taste proposals. Pure. */
+export function spokenProposals(rows: SpokenRow[]): Proposal[] {
+  const kinds: Record<string, { rule: string; pieces: Map<string, string[]> }> = {
+    plainer: { rule: 'He says it plainer than the script. Proposed: spoken scripts use the everyday word first.', pieces: new Map() },
+    aside: { rule: 'He adds a short spoken aside. Proposed: spoken scripts leave room for one where a name or number needs explaining.', pieces: new Map() },
+  }
+  const dropped = new Map<string, Set<string>>()
+  for (const row of rows) {
+    for (const d of Object.values(row.cuts)) {
+      if (!d) continue
+      for (const e of d.examples?.swapped ?? []) {
+        const [sc, sd] = [clean(e.script), clean(e.said)]
+        if (plainer(sc, sd)) kinds.plainer!.pieces.set(row.piece_id, [...(kinds.plainer!.pieces.get(row.piece_id) ?? []), `"${sc}" said as "${sd}"`])
+      }
+      for (const e of d.examples?.added ?? []) {
+        const sd = clean(e.said)
+        if (aside(sd)) kinds.aside!.pieces.set(row.piece_id, [...(kinds.aside!.pieces.get(row.piece_id) ?? []), `"${sd}"`])
+      }
+      for (const e of d.examples?.cut ?? []) {
+        const sc = clean(e.script)
+        if (meaningful(sc) && sc.split(' ').length >= 2) dropped.set(sc, (dropped.get(sc) ?? new Set()).add(row.piece_id))
+      }
+    }
+  }
+  const proposals: Proposal[] = []
+  for (const [kind, k] of Object.entries(kinds)) {
+    const pieces = [...k.pieces].filter(([, hits]) => hits.length >= SPOKEN_PER_PIECE)
+    if (pieces.length < MIN_INSTANCES) continue
+    const shown = [...new Set(pieces.flatMap(([, hits]) => hits))].slice(0, 4)
+    proposals.push(spokenProposal(`spoken:${kind}`, `${k.rule} Seen in ${pieces.length} pieces, for example ${shown.join('; ')}.`
+      + scoreContext(rows, new Set(pieces.map(([id]) => id))),
+      pieces.map(([id]) => id), { kind: 'spoken_register', change: kind }))
+  }
+  for (const [phrase, pieces] of dropped) {
+    if (pieces.size < MIN_INSTANCES) continue
+    proposals.push(spokenProposal(`spoken:drops:${phrase.slice(0, 60)}`,
+      `He leaves out "${phrase}" when he reads his scripts, in ${pieces.size} pieces. Proposed: spoken scripts do not write it.`,
+      [...pieces], { kind: 'spoken_register', change: 'drop_phrase', phrase }))
+  }
+  return proposals
+}
+
+function spokenProposal(key: string, assertion: string, pieceIds: string[], change: Record<string, unknown>): Proposal {
+  return {
+    proposal_class: 'taste',
+    assertion: `${assertion} It stays a proposal until he approves it.`.slice(0, 1600),
+    scope: { level: 'global', key, venture: 'publication', lane: 'voice' },
+    evidence_count: pieceIds.length,
+    evidence_ids: evidenceIds(pieceIds),
+    counterexamples: ['takes read from a script not matched by its hash are not counted', 'a transcriber mishearing can look like a change'],
+    regression_cases: [
+      'Once approved, the next scripts drafted in the spoken register should draw fewer of these changes when he reads them; if they do not, the rule is not the cause.',
+      'Approving it changes no draft by itself: it is reviewed into ai-harness krish-voice (references/voice-profile.md, Spoken script).',
+    ],
+    proposed_change: { ...change, target: 'ai-harness skills/krish-voice/references/voice-profile.md#spoken-script' },
+  }
+}

@@ -22,6 +22,7 @@
 import { activeManualReviews, bodyHash, effectiveBlocking } from './_factGate.js'
 import { MediaRefSchema, mediaReviewProblems, type MediaRef } from '../../../packages/core/src/media-quality.js'
 import { mediaQualityEnforced } from '../../../packages/core/src/media-rollout.js'
+import type { ClipPlacement, ClipUseRecord } from './_routedClips.js'
 
 /** Every channel a piece can go to, in the order Krish posts them
  *  (docs/AMPLIFICATION.md). Krish, 2026-10-11: "I always want to repost to
@@ -121,6 +122,22 @@ export type ProductionChoice = (typeof PRODUCTION_CHOICES)[number]
 export type MakingProductionChoices = Partial<Record<ProductionChoice, string>> & { at: string }
 const CHOICE_VALUE = /^[a-z][a-z0-9_]{0,59}$/
 
+/** What Krish changed reading one cut's script aloud (scripts/voice/spoken_delta.py): counts, rates and a
+ *  few short examples, never the transcript (Krish, 2026-10-31: "start the script vs recording comparison"). */
+export const SPOKEN_COUNTS = ['words_script', 'words_said', 'kept', 'swapped', 'cut', 'added', 'contracted', 'expanded', 'changes'] as const
+export const SPOKEN_KINDS = ['swapped', 'cut', 'added', 'contracted', 'expanded'] as const
+const SPOKEN_EXAMPLES = 8
+const SPOKEN_EXAMPLE_CHARS = 120
+export interface MakingSpokenExample { script: string; said: string }
+export type MakingSpokenDelta = Record<(typeof SPOKEN_COUNTS)[number], number> & {
+  minutes: number | null
+  changes_per_minute: number | null
+  changes_per_100_words: number | null
+  examples: Partial<Record<(typeof SPOKEN_KINDS)[number], MakingSpokenExample[]>>
+  script_sha256: string
+  at: string
+}
+
 export interface Making {
   /** When the record began: written on its first write and never moved, so
    *  re-running a step never makes a take look as if it came before the
@@ -139,6 +156,15 @@ export interface Making {
   teleprompter?: MakingTeleprompter
   /** What the piece used of each choice under test; merged choice by choice. */
   production_choices?: MakingProductionChoices
+  /** What he changed reading each cut aloud; merged cut by cut. */
+  spoken_delta?: Partial<Record<MakingCut, MakingSpokenDelta>>
+  /** Where each cut plays the Inspiration clips routed to the piece (_routedClips.ts), keyed by card id; merged
+   *  cut by cut and clip by clip. making.py video refuses a cut that leaves out a clip his words say to play with
+   *  its sound. */
+  clip_placements?: Partial<Record<MakingCut, Record<string, ClipPlacement>>>
+  /** Krish's own words on how a linked card is used (show_with_sound or reference), keyed by card id; merged card by
+   *  card. Never inferred: a card with no entry is a reference. */
+  clip_uses?: Record<string, ClipUseRecord>
   /** Retired on 2026-10-12, when Descript was (Krish: "Descript is
    *  permanently gone"). Records written before then still hold it; it is
    *  kept as it is, so they still parse, and nothing reads it. */
@@ -163,6 +189,71 @@ export const SCRIPT_SHA256 = /^[a-f0-9]{64}$/
 export const TELEPROMPTER_ID = /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/
 /** Teleprompter's limit on a folder name and a script title. */
 const MAX_TELEPROMPTER_NAME = 200
+
+function count(v: unknown): number | null { return typeof v === 'number' && Number.isInteger(v) && v >= 0 && v <= 100000 ? v : null }
+function rate(v: unknown): number | null | undefined { return v === null ? null : typeof v === 'number' && Number.isFinite(v) && v >= 0 && v <= 100000 ? v : undefined }
+
+const CARD_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+const SECONDS_MAX = 4 * 3600
+function seconds(v: unknown): number | null | undefined {
+  if (v === undefined) return undefined
+  return typeof v === 'number' && Number.isFinite(v) && v >= 0 && v <= SECONDS_MAX ? Math.round(v * 100) / 100 : null
+}
+
+/** One clip's place in one cut. Playing it, with its sound on or off, gives where (at_s, and end_s when known); leaving
+ *  it out is omitted: true. Silence and leaving it out each take his words ("Krish, YYYY-MM-DD: ..."), checked again by
+ *  missingClips, so a session never decides either alone. */
+function parseClipPlacement(at: string, card: string, v: unknown, by: string, now: string): { entry?: ClipPlacement; problem?: string } {
+  if (!CARD_ID.test(card)) return { problem: `${at}: the key is the Inspiration card's id (inspiration_items.id, a uuid)` }
+  if (!isObj(v)) return { problem: `${at} must be an object` }
+  const said = v.said === undefined ? undefined : str(v.said, MAX_TEXT)
+  if (said === null || (said !== undefined && !/^Krish\b/.test(said))) return { problem: `${at}.said is Krish's own words, starting "Krish" and the date` }
+  if (v.omitted === true) {
+    if (!said) return { problem: `${at}: leaving a routed clip out of a cut takes Krish's words in said` }
+    return { entry: { omitted: true, said, at: when(v.at, now), by } }
+  }
+  if (v.omitted !== undefined && v.omitted !== false) return { problem: `${at}.omitted is true or left out` }
+  const start = seconds(v.at_s)
+  const end = seconds(v.end_s)
+  if (start === undefined || start === null) return { problem: `${at}.at_s is where the clip starts in the cut, in seconds` }
+  if (end === null || (end !== undefined && end <= start)) return { problem: `${at}.end_s is where it ends, after at_s` }
+  if (v.audio !== 'on' && v.audio !== 'off') return { problem: `${at}.audio is on or off: whether the clip's own sound plays` }
+  if (v.audio === 'off' && !said) return { problem: `${at}: playing a routed clip silent takes Krish's words in said` }
+  return { entry: { at_s: start, ...(end !== undefined ? { end_s: end } : {}), audio: v.audio, ...(said ? { said } : {}), at: when(v.at, now), by } }
+}
+
+/** One cut of a spoken_delta patch, or the reason it is refused. Only counts and short examples are taken. */
+function parseSpokenDelta(cut: string, v: unknown, now: string): { entry?: MakingSpokenDelta; problem?: string } {
+  const at = `spoken_delta.${cut}`
+  if (!isCut(cut)) return { problem: `unknown cut "${cut}" in spoken_delta (long, short, feature)` }
+  if (!isObj(v)) return { problem: `${at} must be an object` }
+  const nums: Partial<Record<(typeof SPOKEN_COUNTS)[number], number>> = {}
+  for (const k of SPOKEN_COUNTS) {
+    const n = count(v[k])
+    if (n === null) return { problem: `${at}.${k} is a whole number of words` }
+    nums[k] = n
+  }
+  const rates: Record<string, number | null> = {}
+  for (const k of ['minutes', 'changes_per_minute', 'changes_per_100_words'] as const) {
+    const r = rate(v[k])
+    if (r === undefined) return { problem: `${at}.${k} is a number or null` }
+    rates[k] = r
+  }
+  const sha = typeof v.script_sha256 === 'string' && SCRIPT_SHA256.test(v.script_sha256) ? v.script_sha256 : null
+  if (!sha) return { problem: `${at}.script_sha256 is the script's sha256, as making.py script_hash writes it` }
+  const examples: MakingSpokenDelta['examples'] = {}
+  const given = v.examples === undefined ? {} : v.examples
+  if (!isObj(given)) return { problem: `${at}.examples maps a kind to its examples` }
+  for (const [kind, list] of Object.entries(given)) {
+    if (!(SPOKEN_KINDS as readonly string[]).includes(kind)) return { problem: `unknown kind "${kind}" in ${at}.examples (${SPOKEN_KINDS.join(', ')})` }
+    if (!Array.isArray(list) || list.length > SPOKEN_EXAMPLES) return { problem: `${at}.examples.${kind} is a list of at most ${SPOKEN_EXAMPLES}` }
+    const ok = list.map(e => isObj(e) && typeof e.script === 'string' && typeof e.said === 'string'
+      && e.script.length <= SPOKEN_EXAMPLE_CHARS && e.said.length <= SPOKEN_EXAMPLE_CHARS ? { script: e.script, said: e.said } : null)
+    if (ok.some(e => !e)) return { problem: `${at}.examples.${kind}: each is {script, said}, at most ${SPOKEN_EXAMPLE_CHARS} characters a side` }
+    examples[kind as (typeof SPOKEN_KINDS)[number]] = ok as MakingSpokenExample[]
+  }
+  return { entry: { ...(nums as Record<(typeof SPOKEN_COUNTS)[number], number>), minutes: rates.minutes ?? null, changes_per_minute: rates.changes_per_minute ?? null, changes_per_100_words: rates.changes_per_100_words ?? null, examples, script_sha256: sha, at: when(v.at, now) } }
+}
 
 /** One cut of a teleprompter patch, or the reason it is refused. */
 function parseTeleprompterCut(cut: string, v: unknown, by: string, now: string): { entry?: MakingTeleprompterCut; problem?: string } {
@@ -372,6 +463,57 @@ export function parseMakingPatch(body: unknown, now: string): { patch: MakingPat
     if (!given || !given.length) problems.push(`production_choices needs at least one of ${PRODUCTION_CHOICES.join(', ')}`)
     else if (Object.keys(choices).length === given.length) patch.production_choices = { ...choices, at: when(isObj(v) ? v.at : undefined, now) }
   }
+  if (body.spoken_delta !== undefined) {
+    const v = body.spoken_delta
+    if (!isObj(v) || !Object.keys(v).length) problems.push('spoken_delta needs a cut: long, short or feature')
+    else {
+      const cuts: Partial<Record<MakingCut, MakingSpokenDelta>> = {}
+      const before = problems.length
+      for (const [cut, d] of Object.entries(v)) {
+        const { entry, problem } = parseSpokenDelta(cut, d, now)
+        if (problem || !entry) problems.push(problem || `${cut}: no delta`)
+        else cuts[cut as MakingCut] = entry
+      }
+      if (problems.length === before) patch.spoken_delta = cuts
+    }
+  }
+  if (body.clip_uses !== undefined) {
+    const v = body.clip_uses
+    if (!isObj(v) || !Object.keys(v).length) problems.push('clip_uses maps an Inspiration card id to {use, said}')
+    else {
+      const uses: Record<string, ClipUseRecord> = {}
+      const before = problems.length
+      for (const [card, u] of Object.entries(v)) {
+        const at = `clip_uses.${card}`
+        const said = isObj(u) ? str(u.said, MAX_TEXT) : null
+        if (!CARD_ID.test(card)) problems.push(`${at}: the key is the Inspiration card's id (inspiration_items.id, a uuid)`)
+        else if (!isObj(u) || (u.use !== 'show_with_sound' && u.use !== 'reference')) problems.push(`${at}.use is show_with_sound or reference`)
+        else if (!said || !/^Krish\b/.test(said)) problems.push(`${at}.said is Krish's own words, starting "Krish" and the date: how a clip is used is his call`)
+        else uses[card] = { use: u.use, said, at: when(u.at, now), by: str(body.by, 60) || 'Claude Code' }
+      }
+      if (problems.length === before) patch.clip_uses = uses
+    }
+  }
+  if (body.clip_placements !== undefined) {
+    const v = body.clip_placements
+    if (!isObj(v) || !Object.keys(v).length) problems.push('clip_placements needs a cut: long, short or feature')
+    else {
+      const cuts: NonNullable<Making['clip_placements']> = {}
+      const before = problems.length
+      for (const [cut, clips] of Object.entries(v)) {
+        if (!isCut(cut)) { problems.push(`unknown cut "${cut}" in clip_placements (long, short, feature)`); continue }
+        if (!isObj(clips) || !Object.keys(clips).length) { problems.push(`clip_placements.${cut} maps a card id to its place`); continue }
+        const held: Record<string, ClipPlacement> = {}
+        for (const [card, p] of Object.entries(clips)) {
+          const { entry, problem } = parseClipPlacement(`clip_placements.${cut}.${card}`, card, p, str(body.by, 60) || 'Claude Code', now)
+          if (problem || !entry) problems.push(problem || `${cut}.${card}: no placement`)
+          else held[card] = entry
+        }
+        cuts[cut as MakingCut] = held
+      }
+      if (problems.length === before) patch.clip_placements = cuts
+    }
+  }
   // Descript was retired on 2026-10-12; a record of a send there is not taken.
   if (body.descript !== undefined) problems.push('descript was retired on 2026-10-12 (Krish: "Descript is permanently gone, teleprompter.com is permanently in"): record the Teleprompter send in teleprompter')
   return { patch, problems }
@@ -430,6 +572,25 @@ export function mergeMaking(prev: Making | null | undefined, patch: MakingPatch,
     // Choice by choice: recording the sound after the render keeps the opening and the lead picture.
     const held = isObj(base.production_choices) ? base.production_choices : {}
     next.production_choices = { ...held, ...patch.production_choices }
+  }
+  if (patch.spoken_delta) {
+    // Cut by cut: the short's delta never drops the long's.
+    const held = isObj(base.spoken_delta) ? base.spoken_delta : {}
+    next.spoken_delta = { ...held, ...patch.spoken_delta }
+  }
+  if (patch.clip_uses) {
+    // Card by card: his words on one clip keep the others.
+    next.clip_uses = { ...(isObj(base.clip_uses) ? base.clip_uses : {}), ...patch.clip_uses }
+  }
+  if (patch.clip_placements) {
+    // Cut by cut, clip by clip: placing a clip in the short keeps the long's placements.
+    const held = isObj(base.clip_placements) ? base.clip_placements : {}
+    const merged: NonNullable<Making['clip_placements']> = { ...held }
+    for (const [cut, clips] of Object.entries(patch.clip_placements)) {
+      const before = isObj(held[cut as MakingCut]) ? held[cut as MakingCut] : {}
+      merged[cut as MakingCut] = { ...before, ...clips }
+    }
+    next.clip_placements = merged
   }
   if (patch.teleprompter) {
     // Cut by cut: a send of one cut keeps the other, and the folder the

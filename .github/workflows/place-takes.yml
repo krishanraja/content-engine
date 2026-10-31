@@ -5,9 +5,11 @@ name: Place the new takes
 # (apps/control-plane/api/library/recordings/drive-inbox.ts), which then sends
 # a repository_dispatch of type take-copied (api/library/_placeTakes.ts). This
 # job places each new take on its piece and cut, builds its word clock first,
-# and asks on the board about any take it is unsure of:
+# compares the take with the exact script he read and records spoken_delta on
+# the piece (scripts/voice/spoken_delta.py; Krish, 2026-10-31), and asks on
+# the board about any take it is unsure of:
 #
-#   python scripts/post-pack/recording_match.py --record --board --clock --by "Place takes" --json
+#   python scripts/post-pack/recording_match.py --record --board --clock --spoken --by "Place takes" --json
 #
 # It has no schedule, by Ruling (Krish, 2026-10-29): "I want zero Claude
 # routines. No Claude schedules of any kind in this architecture". It starts
@@ -100,7 +102,7 @@ jobs:
             exit 1
           fi
           mkdir -p .cache/place-takes
-          args=(--record --board --clock --by "Place takes" --json)
+          args=(--record --board --clock --spoken --by "Place takes" --json)
           [ -n "$WEEK" ] && args+=(--week "$WEEK")
           set +e
           python scripts/post-pack/recording_match.py "${args[@]}" > .cache/place-takes/report.json

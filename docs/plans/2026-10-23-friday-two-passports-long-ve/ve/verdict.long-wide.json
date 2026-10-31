@@ -2,121 +2,265 @@
   "schema": "ve-verdict/1",
   "piece": "2026-10-23-friday-two-passports-long-ve",
   "cut": "long-wide",
-  "sha256": "d09ec3a990d590a383981354d54be16c62aa6b588252fff24581c7fdf4814fc5",
-  "reviewer": "independent Critic, fresh Claude Opus context, 2026-10-30",
-  "reviewed_at": "2026-10-30T13:25:34.680213+00:00",
+  "sha256": "ece2e8ee2b1561d6c74834250246a75dc9ad16aad4d78c6d7325a4a264193e05",
+  "reviewer": "independent Critic, fresh Claude Opus context, 2026-10-30 (music restart mix)",
+  "reviewed_at": "2026-10-31T15:28:22.392300+00:00",
   "lens_sha256": "2d62c9e235d86f192747eaeea0115befc2ef3ae7b6448684248271100582f7c1",
   "frames_viewed": [
     {
-      "at_s": 0.5
+      "at_s": 4.23
     },
     {
-      "at_s": 2.6
+      "at_s": 8.3
     },
     {
-      "at_s": 20.0
+      "at_s": 12.0
     },
     {
-      "at_s": 34.3
+      "at_s": 16.57
     },
     {
-      "at_s": 65.2
+      "at_s": 26.0
     },
     {
-      "at_s": 74.1
+      "at_s": 33.77
     },
     {
-      "at_s": 116.0
+      "at_s": 42.53
     },
     {
-      "at_s": 172.0
+      "at_s": 46.97
     },
     {
-      "at_s": 173.5
+      "at_s": 56.67
     },
     {
-      "at_s": 236.1
+      "at_s": 63.27
     },
     {
-      "at_s": 243.7
+      "at_s": 71.67
     },
     {
-      "at_s": 245.1
+      "at_s": 78.17
     },
     {
-      "at_s": 270.0
+      "at_s": 85.3
     },
     {
-      "at_s": 322.0
+      "at_s": 95.07
+    },
+    {
+      "at_s": 103.67
+    },
+    {
+      "at_s": 112.67
+    },
+    {
+      "at_s": 116.23
+    },
+    {
+      "at_s": 119.97
+    },
+    {
+      "at_s": 126.1
+    },
+    {
+      "at_s": 129.9
+    },
+    {
+      "at_s": 134.17
+    },
+    {
+      "at_s": 139.8
+    },
+    {
+      "at_s": 143.4
+    },
+    {
+      "at_s": 148.3
+    },
+    {
+      "at_s": 158.27
+    },
+    {
+      "at_s": 165.83
+    },
+    {
+      "at_s": 171.5
+    },
+    {
+      "at_s": 179.97
+    },
+    {
+      "at_s": 185.07
+    },
+    {
+      "at_s": 190.73
+    },
+    {
+      "at_s": 195.53
+    },
+    {
+      "at_s": 201.03
+    },
+    {
+      "at_s": 208.6
+    },
+    {
+      "at_s": 214.27
+    },
+    {
+      "at_s": 220.57
+    },
+    {
+      "at_s": 227.8
+    },
+    {
+      "at_s": 233.47
+    },
+    {
+      "at_s": 236.6
+    },
+    {
+      "at_s": 238.63
+    },
+    {
+      "at_s": 243.57
+    },
+    {
+      "at_s": 250.93
+    },
+    {
+      "at_s": 257.43
+    },
+    {
+      "at_s": 262.57
+    },
+    {
+      "at_s": 267.63
+    },
+    {
+      "at_s": 272.83
+    },
+    {
+      "at_s": 279.13
+    },
+    {
+      "at_s": 286.93
+    },
+    {
+      "at_s": 294.33
+    },
+    {
+      "at_s": 297.7
+    },
+    {
+      "at_s": 303.23
+    },
+    {
+      "at_s": 308.93
+    },
+    {
+      "at_s": 311.5
+    },
+    {
+      "at_s": 315.83
+    },
+    {
+      "at_s": 319.97
     }
   ],
   "findings": [
     {
-      "severity": "block",
+      "severity": "note",
       "area": "other",
-      "frame_s": 172.5,
-      "text": "The loop restart at 172.0 s drops into the track's quiet intro: from 172.5 to 173.56 s the music falls to -45 to -62 dB (1 s average -41.7 against a -33 bed), mostly while the voice is silent, then snaps back to -28 dB within 20 ms, recreating the owner's 'turns off then gets louder' complaint."
+      "frame_s": 173.0,
+      "text": "Previous block cleared. 168-190 s, new music stem vs previous: 1 s RMS level in 171-175 s now bottoms at -35.0 dBFS at 172.75 s (1.9 dB under the cut-wide bed median of -33.15) where the previous stem fell to -41.7 dBFS at 173.0 s (-8.4 dB). 250 ms RMS minimum across 172.5-173.6 s: -39.4 dBFS new vs -49.0 dBFS previous. Over the voice gap 171.71-172.59 s the bed holds -32.6 to -37.1 dBFS (250 ms). Longest stretch anywhere in the cut with 1 s level more than 3 dB under the median is 0.35 s (126.45-126.80 s, a phrase gap in the source track that is also in the previous stem). No sag a listener would hear."
     },
     {
-      "severity": "fix",
+      "severity": "note",
+      "area": "other",
+      "frame_s": 171.95,
+      "text": "Bed steadiness and crossfades. Music stem 3 s level from 4 to 319 s spans only -34.55 to -31.49 dBFS (median -33.10); 1 s level median -33.15, 1st percentile -36.0. Under speech vs in pauses the 250 ms median is identical (-33.00 vs -33.02 dBFS); a least-squares fit puts the music in the mix at 0.94-0.995x (about -0.3 dB) in every 10 s block, so no ducking or pumping. Across all five 2 s equal-power crossfades the 1 s level stays within -30.8 to -36.1 dBFS: 65.15 s min -36.1 (+1.5 s), 74.10 s min -35.0, 171.95 s min -35.0, 217.85 s min -35.9, 226.80 s min -35.1. These dips are within the track's own variation. No drop-outs, no sample discontinuities (largest music sample step 0.164 at 321.12 s, inside the end hits)."
+    },
+    {
+      "severity": "note",
+      "area": "other",
+      "frame_s": 65.15,
+      "text": "Possible groove stumble, low confidence. Onset-envelope beat analysis (period about 1.14 s) puts the beat phase after the splice about 0.23 s off the phase before it at 65.15 s and 217.85 s (same splice used twice), and about 0.26 s off at 171.95 s; control points with no splice measure 0.00-0.07 s. With a 2 s overlap that can read as a brief doubled or flammed pulse rather than a level change. Phase coherence is weak (R 0.03-0.23), so confirm by ear; this does not affect level steadiness."
+    },
+    {
+      "severity": "note",
       "area": "other",
       "frame_s": 2.56,
-      "text": "The opening bed sits at -41 to -49 dB for 0 to 2.56 s, then jumps +15 to +18 dB within 20 ms under the first sentence; start the music past the track's quiet intro or fade it in."
+      "text": "Opening bed entrance is unchanged from the previous mix. The 1 s music level is -44.8 dBFS at 1.85 s, 11.7 dB under the bed from 1.05 to 2.2 s, while the voice starts at 0.69 s. The bed arrives at about 2.5-2.6 s (50 ms level rises from -53.8 to -28.9 dBFS) under 'using a Chinese AI'. A listener hears the music come in two seconds into the hook. That works as an entrance, but the bed is not steady from the first word."
     },
     {
-      "severity": "fix",
+      "severity": "note",
       "area": "other",
-      "frame_s": 321.08,
-      "text": "After the voice ends at 320.34 s the music jumps about 13 to 16 dB above the bed at 321.08 s for about 2.3 s, then fades in about 0.3 s, which contradicts the one-steady-level brief."
+      "frame_s": 321.43,
+      "text": "End hits, previously noted and still there, about 1.4 dB hotter than the previous stem. The last word ends at 320.55 s. Music hits land at 321.43, 321.85 and 322.29 s, peaking at -10.2, -10.5 and -9.8 dBFS (20 ms RMS), about 20 dB over the bed. The 1 s level reaches -18.6 dBFS at 322.3 s (+14.5 dB over the bed median, previous stem -20.0), roughly the voice's level in the mix. Over the end card this reads as a deliberate button, not a fault, but it clearly breaks the 'steady low bed'. Confirm it is intended. The bed then fades from about -30 to -57 dBFS in the last 0.2 s (324.03-324.23 s), a quick tail."
     },
     {
       "severity": "fix",
       "area": "other",
       "frame_s": 243.6,
-      "text": "A stray 0.25 s voiced blip (-18 dB RMS, peak -9.5 dBFS) at 243.58 to 243.83 s sits alone in the pause between 'Every single time.' and 'Then a board briefing'; it is in neither the script nor words.json and was also in the rejected mix."
+      "text": "A stray voice blip is still in the dialogue stem, which this mix did not change. At 243.58-243.82 s there is 0.24 s of voiced sound (pitch about 123 Hz, matching the narrator's 122 Hz) with peaks of -20 dBFS (5 ms RMS) in the stem. That is full speech level, about +13 dB in the mix. It sits in a 1.9 s gap between 'Every single time.' (ends 242.31 s) and 'Then' (244.21 s), with 1.28 s and 1.50 s of silence on either side, and no word is aligned to it. It will be heard as a stray syllable. Gate or cut it."
     },
     {
-      "severity": "note",
-      "area": "other",
-      "frame_s": 74.5,
-      "text": "After the 74.1 s and 245.1 s crossfades the bed changes texture (bass -6 dB, nothing above 5 kHz, weaker beat) with 0.3 to 0.4 s dips at 74.8 and 245.7 s; the level holds on a 1 s scale but the change is audible as a new section."
-    },
-    {
-      "severity": "note",
-      "area": "other",
-      "frame_s": 172.0,
-      "text": "The music bed is one 171 s arrangement played twice, so the second half repeats the first verbatim."
-    },
-    {
-      "severity": "note",
+      "severity": "fix",
       "area": "copy",
-      "frame_s": 245.1,
-      "text": "words.json onsets after pauses run 0.3 to 0.5 s ahead of the voice (1.1 s for 'Then' at 244.21 against 245.32 spoken), so some captions appear before the word is heard."
+      "frame_s": 116.23,
+      "text": "In the awkward beat the caption reads 'That's pretty Awkward.' with a capital A in mid-sentence. The aligned word is lowercase 'awkward'. It looks like the headline casing leaking into the caption."
     },
     {
-      "severity": "note",
-      "area": "copy",
-      "frame_s": 116.0,
-      "text": "The caption reads 'That's pretty Awkward.' with a capital A mid-sentence (picture unchanged from the accepted version)."
+      "severity": "fix",
+      "area": "composition",
+      "frame_s": 257.43,
+      "text": "In the draw beat the 'A DRAW.' headline is pushed up so its orange box starts about 8-10 px under the MAKE YOUR MIND/UP logo, with the UP bubble tail nearly touching it. Every other beat leaves about 40 px clear under the logo."
     },
     {
-      "severity": "note",
-      "area": "evidence",
-      "frame_s": 243.7,
-      "text": "The card claims '3/3 runs where DeepSeek deleted its Xinjiang answer' while the voice says each model was asked twice and the chart shows DeepSeek 1/2."
+      "severity": "fix",
+      "area": "composition",
+      "frame_s": 308.93,
+      "text": "In the own beat the comma after 'YOUR TEAM AI,' on line 1 drops into line 2 beside 'ANOTHER.'. With the tight leading it reads as 'ANOTHER’.', as if there were a stray apostrophe."
     },
     {
       "severity": "note",
       "area": "composition",
-      "frame_s": 270.0,
-      "text": "The call card stacks a 'THE CALL' label over the headline 'OUR CALL.', and its 90%-sure prediction is never spoken in the voiceover."
+      "frame_s": 139.8,
+      "text": "In the third beat the 'CHINA'S LINE' pill is tucked under the green stat strip, which hides its bottom edge. 'REFUSED' sits clear. It looks clipped rather than layered."
     },
     {
       "severity": "note",
-      "area": "other",
-      "frame_s": 0.0,
-      "text": "The music no longer follows the voice (speech -33.22 dB against pauses -33.31 dB, correlation 0.04, against 0.75 in the rejected mix), 20 s pause blocks hold -32.5 to -35.5 dB (rejected: -24.2 to -33.7), and the master measures -14.2 LUFS integrated, -1.4 dBTP, LRA 4.2 LU."
+      "area": "composition",
+      "frame_s": 134.17,
+      "text": "In the paper beat the caption plate is taller than on every other STAGE beat (top at about y=775 instead of about 832). The single line of text sits high in it with an empty band below, so the caption jumps position between beats."
+    },
+    {
+      "severity": "note",
+      "area": "composition",
+      "frame_s": 227.8,
+      "text": "In the blocked beat the mind.the.gap pill sits on the phone's top bezel and notch. The same pill-over-phone-corner overlap is milder at 8.3, 26.0, 46.97, 103.67, 158.27 and 190.73 s. It is the same in the approved picture, so this is for the record only."
+    },
+    {
+      "severity": "note",
+      "area": "evidence",
+      "frame_s": 243.57,
+      "text": "The verdict board mixes denominators. The chart shows 'DeepSeek 1/2' (prompts flagged) and the strip says '3/3 runs where DeepSeek deleted its Xinjiang answer'. A viewer may not see that 2 prompts and 3 runs are different counts. The column labels 'XINJIANG TURKMENISTAN' also run together as one line."
+    },
+    {
+      "severity": "note",
+      "area": "copy",
+      "frame_s": 272.83,
+      "text": "The call card reads 'THE CALL / OUR CALL.' with a forecast that is not spoken: a government will announce new public money for a national or sovereign AI by 2026-12-31, 90% sure. The VO says 'my call'. The card's 'our' does not match the VO's 'my', and the forecast appears only on screen."
+    },
+    {
+      "severity": "note",
+      "area": "evidence",
+      "frame_s": 63.27,
+      "text": "Figures checked against the script and on-screen sources, all consistent. The 59 vs 35 bars are drawn in proportion (568/960 px = 0.592 vs 35/59 = 0.593). 35% is 'more than a third'. 63% is 'nearly two in three'. 3% behind matches 'about three percent'. Ten times cheaper matches the 10x quote."
     }
   ],
-  "blocking": true
+  "blocking": false
 }

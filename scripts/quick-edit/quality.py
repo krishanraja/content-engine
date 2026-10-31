@@ -187,8 +187,14 @@ def delivery_problems(video, receipt, target=None):
         # (plan W2.4): no receipt carries a placeholder status, and a missing check holds the cut.
         missing = report.get('missing') if isinstance(report.get('missing'), dict) else {}
         checks = report.get('checks', {})
+        # A cut with no camera footage has no lips to sync and no camera to shake: sync stands as not_applicable, and
+        # only when the cut's own props prove it (voiceover_problems).
+        vo = voiceover_problems(report)
         problems = [(f'{key} is missing' + (f': {missing[key]}' if missing.get(key) else '')) if key not in checks
-                    else f'{key} is not passed' for key in required if checks.get(key, {}).get('status') != 'pass']
+                    else f'{key} is not passed' for key in required if checks.get(key, {}).get('status') != 'pass'
+                    and not (key == 'sync' and checks.get(key, {}).get('status') == 'not_applicable' and vo == [])]
+        if vo and any(checks.get(key, {}).get('status') == 'not_applicable' for key in ('sync', 'motion')):
+            problems += vo
         # The words gate (words_gate.py) blocks wherever its check travels, and its absence blocks a cut for a post
         # dated from words_gate.REQUIRED_FROM (keyed on the destination, not on the receipt); its advisory rows never do.
         import words_gate
@@ -212,6 +218,27 @@ def cut_gate_problems(report, target=None):
     return cut_receipt.delivery_problems(report, target)
 
 
+def voiceover_problems(report):
+    """Whether this is a voiceover cut, from the cut's own props: a ve composition whose picture segments are empty
+    shows no camera footage, so lip-sync and camera motion do not apply (Ruling, Krish, 2026-10-31, agreeing to
+    "count both as not applicable whenever the cut's own files show no camera footage"). The receipt names the props
+    by repository path and sha256, and the props are read again here, never taken from the receipt's word."""
+    footage = report.get('footage')
+    if not isinstance(footage, dict):
+        return ['not applicable needs the footage the cut was composed from (footage.props)']
+    props = footage.get('props') if isinstance(footage.get('props'), dict) else {}
+    path = Path(__file__).resolve().parents[2] / str(props.get('path', ''))
+    if not props.get('path') or not path.is_file() or digest(path) != props.get('sha256'):
+        return ['not applicable names props that are missing or changed']
+    try:
+        composed = json.loads(path.read_text(encoding='utf-8'))
+    except (OSError, ValueError):
+        return ['not applicable names props that cannot be read']
+    if not isinstance(composed, dict) or composed.get('segments') != [] or footage.get('camera_segments') != 0:
+        return ['not applicable only on a cut whose props show no camera footage']
+    return []
+
+
 def motion_problems(report):
     """Every delivery needs an assessed decision, including untreated footage.
 
@@ -220,6 +247,8 @@ def motion_problems(report):
     """
     check = report.get('checks', {}).get('motion', {})
     sha = lambda value: isinstance(value, str) and bool(re.fullmatch(r'[a-f0-9]{64}', value))
+    if check.get('status') == 'not_applicable' and voiceover_problems(report) == []:
+        return []
     if check.get('status') != 'pass':
         return ['motion assessment is not passed']
     assessment = check.get('assessment', {})

@@ -1,0 +1,48 @@
+{
+  "note": "Krish's rulings on this cut, in his words. words_gate reads this file as the cut's EDL; velib/receipt.py reads all of it.",
+  "removals": [],
+  "heard_as": [
+    {
+      "said": "Qwen",
+      "heard": "Klen",
+      "krish": "Krish, 2026-10-31: \"agree with your recommendations\", answering the request to clear Qwen, ChatGPT, Kimi, four, Grok, DeepSeek's and want as mishearings of words he said"
+    },
+    {
+      "said": "ChatGPT",
+      "heard": "ChachiPT",
+      "krish": "Krish, 2026-10-31: \"agree with your recommendations\", answering the request to clear Qwen, ChatGPT, Kimi, four, Grok, DeepSeek's and want as mishearings of words he said"
+    }
+  ],
+  "visual_clarity": {
+    "by": "Krish",
+    "date": "2026-10-31",
+    "said": "Krish, 2026-10-31: \"agree with your recommendations\" (to \"happy with the words on screen on both Friday cuts\"), then \"i accept\" (to \"accept title, third, deletion, born, my call and the call card as they are\")",
+    "max_primary_words": 49,
+    "max_total_words": 188,
+    "accepted_repeats": [
+      "act_a",
+      "act_b",
+      "airbnb",
+      "born_claude",
+      "born_third",
+      "close",
+      "evidence",
+      "fling",
+      "hook",
+      "lives",
+      "matter",
+      "open",
+      "result_b",
+      "title"
+    ],
+    "accepted_states": [
+      "title",
+      "born",
+      "born_third",
+      "evidence",
+      "my_call",
+      "call"
+    ],
+    "note": "Limits are the largest counts in this cut's rendered-text manifest; the accepted states are the six the blind three-second review found unclear or off point, named to him one by one."
+  }
+}

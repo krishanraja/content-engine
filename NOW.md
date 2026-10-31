@@ -1,7 +1,7 @@
 ---
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
-as_of: 2026-10-30
+as_of: 2026-10-31
 head: de5b942
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
@@ -30,19 +30,19 @@ Stories a writer can carry without asking Krish:
 
 Objection it answers: "AI content is slop." Here is an engine that grades its judges against the editor, refuses to ship beneath his recorded rejections, and never counts its own actions as taste.
 
-## Where it is right now (as of 2026-10-30)
+## Where it is right now (as of 2026-10-31)
 
 <!-- north-star-state {"week_of":"2026-10-26","week_target":1,"current":1,"current_as_of":"2026-10-30","current_source":"Control Center content_ideas in the publication's series (1 published in the last 7 days)","urgency":1,"urgency_reason":"at 100% of this week's target"} --> **North Star number: U1, on pace.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 1, against 1 this week, on the way to 30 by 30 November 2026. Steady, and one proposal a week that would raise the ceiling.
 
-- three ve faults fixed: the caption render check reads a word-by-word page once its last word is on screen and decodes in batches (it crashed on the 5-minute cut on Windows); ve's take words reach the words gate in its shape (words.lost raised on every ve cut); and the episode bed restarts a track where its body begins, never in its sparse intro (Friday 23's long-cut sag at 172.5 s). (2026-10-30)
-- ve dispatch runs Codex cards under the Studio's own Codex home (runtime\codex-home, built by scripts/overnight/codex_home.py): no MCP server, no plugin, sign-in and sessions shared with ~/.codex. Krish keeps buffer and teleprompter in his everyday Codex. LORIMER (standby) has it built and passes preflight 9/9. (2026-10-30)
-- **SURFACE calibration (2026-10-30).** Gate roots from `studio.json`, `.srt` caption pages, the Critic wired. Krish ruled: near-homophones pass, a word with no room in the final is unmeasured, mon26's unfiled joins and captions are accepted missing, wed21's lost words are real, short cross-fades pass the Critic.
+- Friday 6 Nov is filed and waiting on one press. Both cuts are in the library with their receipts (the long cut is the music restart mix, ece2e8ee; the 90-second cut is 06ff699f) and recorded on the making record with the house drawer's thumbnails and Drive links (Video assets done). The draft publish manifest (sha256 40a83bc8, eight channels' words, QA passed) is in 0 Publish and bound to Approve for publish on the 2 November board (build 179e5194, read back). (2026-10-31)
+- Clips Krish links to a piece reach post-production (2026-10-31): `GET /api/content-ideas/<id>/routed-clips` and `making.py <piece> clips` list them, `show_with_sound` only with his quoted words on the making record; `making.py video` warns on a cut that has not placed each one (a hard stop waits on his call). No renderer can yet play an outside clip with its own sound.
+- the ve heard row compares the cut with the same transcriber's hearing of its voice master (Ruling, Krish, 2026-10-31), and Friday 6 Nov's 90-second cut passes every receipt row under his rulings, including the six screens he accepted by name. (2026-10-31)
+- ve cuts can earn a validation receipt (`ve receipt`): heard again, bound to QC, the Critic verdict, Krish's final approval, the words gate and the visual clarity evidence; sync and motion stand as not applicable only when the props hold no picture segments (Ruling, Krish, 2026-10-31). Friday 6 Nov's tall cut passes every row but visual clarity: a blind three-second review finds six of its 19 screens unclear or off point. (2026-10-31)
 - Krish approves the week's filler mix once (picks/mix, Ideas, Off days) and Growth fills it, posting only within an approved mix it reads from the week's pieces; a piece he records keeps its own press. (2026-10-30)
 - **The Sunday loop is built, not yet run (2026-10-29).** `.github/workflows/sunday-ideas.yml` (Saturday, 12:17 and 20:47 UTC, idle once the week's Ideas tab is live) runs plan-week's ideas stage; `.github/workflows/make-piece.yml` makes one signed piece per run (from the Sunday room or `repository_dispatch` `make-piece`). Both run Claude Code on Krish's subscription (`CLAUDE_CODE_OAUTH_TOKEN`) and fail at their first step until that secret exists. On the board he presses five ways on each idea, approves scripts (the server sends them to Teleprompter), sets titles and rejects with a reason; the narrative lock gates `making.py`.
 - **Zero Claude routines (Ruling, Krish, 2026-10-29).** GitHub Actions is the scheduler; `tests/no-claude-routines.test.ts` fails on any workflow, skill, script or route that creates or fires a Claude routine or runs Claude Code on an API key. The Saturday preflight (`scripts/overnight/preflight.ps1`, both home computers, no window) checks Codex, allowance and tools and starts no Claude turn. Timed API spend is held to $15 a week, but nothing reads `meter_daily` against that cap yet.
 - **No public word names Krish (rulings of 28 and 29 October).** House rule `NO_NAME` (`60b87ff`), the copy lint's `no_name`, the kill list's `personal_name` veto, the pack, the story check, the Studio, the publish check, ve's spec lint and quick-edit's caption check all refuse it. Articles speak as "we"; the article byline is "makeyourmindup" with no face; scripts keep "I"; his face stays in video, covers and thumbnails.
 - **The production bar is three layers (`docs/production/THE_BAR.md`, 2026-10-29).** Only the eight nevers he confirmed may hard-block on taste (no name; nothing made up, numbers credited; his words never cut or out of sync; no AI notes, eyebrows, asterisks or take tags; nothing posted, sent or spent without his yes, never Full Time or Heartside; real logos and images with rights; one opening, one close; no em dashes, no preaching). Aims guide; choices under test (the hook as the intro, the lead picture per piece, one sound on the big moment) are recorded per piece with `making.py <piece> choices`. `floor.py` prints the eight for every video maker.
-- **Every cut opens on its hook, with music under the whole of it (2026-10-29).** House rule `HOOK_IS_THE_INTRO` retires the story card and sting; quick-edit and ve both open on the hook with the wordmark and series tag in the corners from the first frame, and record the opening used. ve no longer draws ILLUSTRATION, SAMPLE, KRISH'S TEST or the Studio v2 chips; a test label reads OUR TEST. The music bed loops under a two-second crossfade so it never drops out.
 - **ve is the video engine on main; quick-edit stays the fallback until ve passes Phase 3** (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`, `docs/ve/STATUS.md`). Friday 23's short and long cut were made whole in ve (#237, #240), each with a fresh Critic SEND; his Gate 2 verdict on them and on the re-rendered format H proof is his.
 - **Known red check:** `npm run verify` passes on the session branch except `tests/quick-edit-mix.test.ts` (`mix_test`, this container's ffmpeg 6.1.1; the repository pins 8.1.2). Migrations `20261116090000_rejections.sql`, `20261116100000_ux_feedback_recordings.sql` and `20261117090000_taste_ventures.sql` are not recorded as applied as of 2026-10-28.
 
@@ -52,13 +52,13 @@ Everything to 29 October 2026 is in `docs/history/2026-10-29-NOW-changed-recentl
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-10-30): Krish hears the re-bedded long cut and clears the two name mishearings, then the ve validation receipt and the voiceover rule for sync and motion.
+- Next (2026-10-31): when Krish presses Approve for publish on Friday, seal the manifest (piece_manifest.py seal) for Growth; if he changes any channel words, redraft and rebuild the board first.
 - Then: the dry run on Saturday 31 October, 18:00 New York (read both machines' preflight blocks first), and the first Sunday loop on 1 November, recording `production_choices` for each piece made. After that the plan is Wave 2 (`docs/plans/2026-11-07-wave-2.md`: unattended overnight cuts, calibrated gates, ve in shadow, Growth posting what he approved, by 7 November) and Wave 3 (`docs/plans/2026-11-14-wave-3.md`: the ve cutover, one inspiration source, the retrospective, by 14 November).
 - Waiting on Krish (as of 2026-10-29): Control Center's `GITHUB_TOKEN` needs Contents: write and Actions: read on this repository for the make press; whether a make run's pull request auto-merges on green CI; whether the $15 cap gets a reader; the Buffer plan (due 31 October); approving the three one-opening, one-close floor standards through the Rejections route; OUR TEST or MY TEST on a video label he presents; "we" in article titles while video titles keep "I".
 - Waiting on Krish (as of 2026-10-28): his Gate 2 verdict on the format H proof and Friday 23's cuts; his yes to the Bessen line for Friday 30; his recordings of Wednesday 28 and Friday 30; applying the three migrations above; the floor's Drive access and `FLOOR_SYNC_TOKEN`.
 - Waiting on Krish (as of 2026-10-29, Wave 2 and 3 production): by ear, the levels and a sound-effect set; Gate 2 on face-with-proof frames and six devices; 5 to 10 golden frames; 20 minutes on 9 Nov scoring shadow cuts. His 29 Oct answers and the home-computer steps: the handover above.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): CI stays advisory, so a session waits for green before it merges.
-- North Star check (2026-10-30): holds.
+- North Star check (2026-10-31): holds.
 
 ## Read next
 
