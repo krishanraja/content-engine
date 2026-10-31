@@ -3183,7 +3183,7 @@ def today_model(monday, days, videos, posted, offdays, parsed, now=None, gates=N
     mix = week_mix(offdays)[0]
     if mix:
         # The week's filler is one press, not one per post (Ruling, Krish, 2026-10-30).
-        out['asks'].insert(0, {'what': "This week's mix", 'detail': 'Approve once, Growth fills it',
+        out['asks'].insert(0, {'what': "This week's mix", 'detail': 'One press, Growth fills it',
                                'cta': 'Approve', 'href': '#ideas-offdays-mix', 'day': next(iter(mix))})
     return out
 
@@ -4337,6 +4337,8 @@ def _self_test():
           'v.at < built' in js and 'b.dataset.builtAt' in js)
     check('the page saves each review block to edits/<day>-<item> and opens the comment box on it',
           'rdb.doc("edits/" + id).set(' in js and 'comments.openComposer({ element:' in js and 'window.claude.use("comments")' in js)
+    check('a board with Today opens on it: the tab a viewer last opened is remembered only on boards without Today',
+          'if (!fromHash() && !tabs.some(t => t.dataset.day === "today")) { const r = remembered();' in js)
     check('a kept day drawn before section ticks (no sec-head) loses the dropped channels too',
           'notes' not in drop_channels('<section id="wed-s8"><h2>8. Substack Notes</h2><p>x</p></section>', 'wed').lower())
     check('finished videos: each cut offers its thumbnail, and one not linked yet says where it is',
@@ -4396,6 +4398,9 @@ def _v3_checks(check, mon):
         broken = page.replace('href="#monday/publish">Approve</a></li>', 'href="#monday/publish">Approve this now please</a></li>', 1)
         check('layout A: verify refuses a Today button label longer than its button holds',
               any('Today button label' in p for p in fixed_problems(broken)))
+        # The week's mix ask once broke every v3 build that had off-day options: its detail ran past DETAIL_MAX.
+        mixed = today_model(week, {}, {}, {}, {'tue': [{'id': 'a', 'format': 'Carousel', 'copy': 'x'}]}, {})
+        check('layout A: the week\'s mix ask fits its row', all(len(a['detail']) <= board_today.DETAIL_MAX for a in mixed['asks']))
     check('v3: the board and its manifest say layout 3', 'data-layout="3"' in page and manifest.get('layout') == 3)
     check('v3: the Archive lists the newest piece first, with its scores and its Scores press, and none on a row with no piece',
           page.find('Warner sued Suno') < page.find('The Launch') and 'Narrative 8/10, production 6/10, looking back' in page

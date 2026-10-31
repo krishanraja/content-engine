@@ -14,8 +14,10 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const OUT = join(ROOT, 'docs', 'REPO_MAP.md')
 const MAX = 120
 
+// now-notes/ holds closeout notes only until the fold moves them into NOW.md, so the map never lists it: a branch
+// carrying a note would otherwise fail check:repo-map, and main would go stale again at the fold.
 const tracked = execFileSync('git', ['ls-files', '--cached'], { cwd: ROOT, encoding: 'utf8' })
-  .split(/\r?\n/).filter((file) => file && file !== 'docs/REPO_MAP.md').sort()
+  .split(/\r?\n/).filter((file) => file && file !== 'docs/REPO_MAP.md' && !file.startsWith('now-notes/')).sort()
 
 const oneLine = (text) => {
   const flat = text.replace(/\s+/g, ' ').trim()
