@@ -1,0 +1,1000 @@
+{
+ "piece_id": "",
+ "publish_day": "2026-11-02",
+ "style": {
+  "script": "fry-explainer",
+  "production": "fry-talking-head",
+  "experiment": "data-story: one number per frame on one career ladder, 27 then 9, then six to one (his note on the chart he saved: the chart makes a boring research report instantly understandable)"
+ },
+ "brand": {
+  "series": "follow.the.money",
+  "reference": "docs/plans/2026-10-26-monday/creative-direction.json (signed 27 Oct, the accepted Monday 26 cuts) and scripts/post-pack/tokens.css",
+  "captions": "burned into every cut, as Monday 26 (Krish, 2026-10-27: captions burned into every cut): the house captions, cream Archivo Black on an ink block, a hard shadow in follow.the.money's butter, sentence case, at most one loud word per line. Kinetic: each line lands word by word on the word he says (fry-talking-head)",
+  "intro_sting": "none: the hook is the intro (under test, ruling 8)",
+  "route": "the 19 Oct quick-edit route (kit.py, make.py, quality.py) with the Ladder drawn by the timeline renderer Monday 26 used (docs/plans/2026-10-26-monday/video/motion.py): pictures sit beside his face (16:9) or above it (9:16), every change of picture lands on the word that names it, documents push in slowly"
+ },
+ "max_face_share": 0.6,
+ "cuts": {
+  "long": {
+   "take": "on_camera",
+   "beats": [
+    {
+     "words": "Junior hiring at Anthropic, the AI company behind Claude, has fallen off a cliff.",
+     "point": "The hook: the company that makes the AI is itself hiring far fewer juniors",
+     "picture": {
+      "kind": "face",
+      "what": "him to camera, his portrait in the full-height column, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "ANTHROPIC · ITS OWN STAFF",
+     "modules": [
+      "treated-background"
+     ],
+     "motion": "still; the label types in on \"fallen off a cliff\"",
+     "timing": "0:02.52-0:08.44 in the take (5.9 s)"
+    },
+    {
+     "words": "So who trains the seniors you'll need in 2030?",
+     "point": "The question the piece answers, set on the object the whole piece uses",
+     "picture": {
+      "kind": "card",
+      "what": "The Ladder appears, drawn in cream line on the ink desk; the top rung lights with 2030, the bottom rung is drawn last and faint",
+      "source": "docs/plans/2026-11-02-monday/motion-system.md",
+      "source_label": ""
+     },
+     "on_screen_text": "2030",
+     "modules": [
+      "mechanism-image",
+      "constant-motion"
+     ],
+     "motion": "rungs draw bottom to top; 2030 lands on \"2030\"",
+     "timing": "0:09.36-0:14.44 in the take (5.1 s)"
+    },
+    {
+     "words": "I've been reading Anthropic's study of its own staff. It matters if you hire, so let me break it down.",
+     "point": "This comes from Anthropic's own report on its own staff, not a rumour",
+     "picture": {
+      "kind": "document",
+      "what": "The report's cover, \"How Employment is Changing at Anthropic\", The Anthropic Institute",
+      "source": "https://www-cdn.anthropic.com/72628f1863c53432195db83279252dfd2cb53158/Employment%20at%20Anthropic.pdf",
+      "source_label": "ANTHROPIC · OCT 2026"
+     },
+     "on_screen_text": "",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "slow push into the title",
+     "timing": "0:15.90-0:17.96 in the take (2.1 s)"
+    },
+    {
+     "words": "One number stopped me. In early 2025, about one in four of its new technical hires were juniors.",
+     "point": "Early 2025: one in four new technical hires was a junior",
+     "picture": {
+      "kind": "chart",
+      "what": "The bottom rung holds four hire marks, one of them butter-underlined: the junior",
+      "source": "https://www-cdn.anthropic.com/72628f1863c53432195db83279252dfd2cb53158/Employment%20at%20Anthropic.pdf",
+      "source_label": "ANTHROPIC · OCT 2026"
+     },
+     "on_screen_text": "27% · EARLY 2025",
+     "modules": [
+      "one-stat-per-frame",
+      "number-in-scene"
+     ],
+     "motion": "the four marks arrive on \"one in four\"",
+     "timing": "0:20.64-0:25.80 in the take (5.2 s)"
+    },
+    {
+     "words": "Now it's fewer than one in ten, 27% down to 9%.",
+     "point": "The big moment: the junior share of hires fell from 27% to 9%",
+     "picture": {
+      "kind": "chart",
+      "what": "The bottom rung's number counts down 27 to 9 in one second and the rung thins to a hairline",
+      "source": "https://www-cdn.anthropic.com/72628f1863c53432195db83279252dfd2cb53158/Employment%20at%20Anthropic.pdf",
+      "source_label": "ANTHROPIC · OCT 2026"
+     },
+     "on_screen_text": "27% → 9%",
+     "modules": [
+      "one-stat-per-frame",
+      "number-in-scene"
+     ],
+     "motion": "the count starts on \"27%\" and lands on \"9%\"; the piece's big moment",
+     "timing": "0:25.80-0:29.00 in the take (3.2 s)"
+    },
+    {
+     "words": "Why? By August, its AI agents, which work on tasks by themselves, were putting in far more hours than its people.",
+     "point": "Why: by August AI agents were working six times the hours of the staff",
+     "picture": {
+      "kind": "chart",
+      "what": "Two bars side by side, staff hours and agent hours; the agent bar grows to six times the staff bar",
+      "source": "https://www-cdn.anthropic.com/72628f1863c53432195db83279252dfd2cb53158/Employment%20at%20Anthropic.pdf",
+      "source_label": "ANTHROPIC · OCT 2026"
+     },
+     "on_screen_text": "6 TO 1 · AUGUST",
+     "modules": [
+      "one-stat-per-frame",
+      "constant-motion"
+     ],
+     "motion": "the agent bar grows on \"far more hours\"",
+     "timing": "0:29.82-0:36.16 in the take (6.3 s)"
+    },
+    {
+     "words": "And many of its managers say AI is why they're hiring less.",
+     "point": "The managers say it out loud: AI is why they hire less",
+     "picture": {
+      "kind": "document",
+      "what": "The report's line \"Around a third of ML and a fifth of SWE managers reported hiring less due to AI\", highlighted",
+      "source": "https://www-cdn.anthropic.com/72628f1863c53432195db83279252dfd2cb53158/Employment%20at%20Anthropic.pdf",
+      "source_label": "ANTHROPIC · OCT 2026"
+     },
+     "on_screen_text": "1 IN 3 ML MANAGERS",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "highlight sweeps on \"hiring less\"",
+     "timing": "0:36.16-0:39.70 in the take (3.5 s)"
+    },
+    {
+     "words": "So when AI writes the first draft, there's less first-draft work to give a junior.",
+     "point": "The mechanism in one sentence: the first draft was the junior's work",
+     "picture": {
+      "kind": "face",
+      "what": "him to camera, his portrait in the full-height column, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [
+      "treated-background"
+     ],
+     "motion": "",
+     "timing": "0:40.18-0:45.14 in the take (5.0 s)"
+    },
+    {
+     "words": "And Anthropic isn't alone. A study of US firms found the same thing.",
+     "point": "It is not only Anthropic: a study of US firms finds the same",
+     "picture": {
+      "kind": "document",
+      "what": "The study's page, \"Generative AI as Seniority-Biased Technological Change\", Stanford Digital Economy Lab",
+      "source": "https://digitaleconomy.stanford.edu/event/seyed-m-hosseini-and-guy-lichtinger-generative-ai-as-seniority-biased-technological-change-evidence-from-u-s-resume-and-job-posting-data/",
+      "source_label": "HOSSEINI & LICHTINGER · 2025"
+     },
+     "on_screen_text": "",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "slow push into the title",
+     "timing": "0:46.72-0:49.20 in the take (2.5 s)"
+    },
+    {
+     "words": "Where companies brought in AI, junior jobs dropped while senior jobs kept growing.",
+     "point": "Where firms adopt AI, junior jobs fall while senior jobs keep rising",
+     "picture": {
+      "kind": "chart",
+      "what": "Two lines from 2023: senior employment keeps rising, junior employment turns down; no numbers on the axis, only the direction the study reports",
+      "source": "https://digitaleconomy.stanford.edu/event/seyed-m-hosseini-and-guy-lichtinger-generative-ai-as-seniority-biased-technological-change-evidence-from-u-s-resume-and-job-posting-data/",
+      "source_label": "HOSSEINI & LICHTINGER · 2025"
+     },
+     "on_screen_text": "SINCE 2023 · FIRMS USING AI",
+     "modules": [
+      "number-in-scene",
+      "constant-motion"
+     ],
+     "motion": "the two lines part on \"while senior jobs kept growing\"",
+     "timing": "0:49.20-0:54.14 in the take (4.9 s)"
+    },
+    {
+     "words": "It happened through slower hiring. Fewer juniors got taken on in the first place.",
+     "point": "It happens through hires that never happen, not layoffs",
+     "picture": {
+      "kind": "document",
+      "what": "The study's line \"The junior decline is driven primarily by slower hiring rather than increased separations\", highlighted",
+      "source": "https://digitaleconomy.stanford.edu/event/seyed-m-hosseini-and-guy-lichtinger-generative-ai-as-seniority-biased-technological-change-evidence-from-u-s-resume-and-job-posting-data/",
+      "source_label": "HOSSEINI & LICHTINGER · 2025"
+     },
+     "on_screen_text": "",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "highlight sweeps on \"slower hiring\"",
+     "timing": "0:54.60-0:59.06 in the take (4.5 s)"
+    },
+    {
+     "words": "Now, before anyone panics, we've been here before. Twice.",
+     "point": "The turn: this has happened before, twice",
+     "picture": {
+      "kind": "face",
+      "what": "him to camera, his portrait in the full-height column, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "ATMS · SPREADSHEETS",
+     "modules": [
+      "treated-background"
+     ],
+     "motion": "the label lands on \"Twice\"",
+     "timing": "1:00.24-1:04.18 in the take (3.9 s)"
+    },
+    {
+     "words": "You'd think cash machines would have finished off bank tellers. In America, an average city branch went from needing 20 tellers to 13.",
+     "point": "Cash machines cut the tellers a city branch needed from 20 to 13",
+     "picture": {
+      "kind": "chart",
+      "what": "A branch drawn as 20 teller marks; seven fade, 13 remain",
+      "source": "https://www.imf.org/external/pubs/ft/fandd/2015/03/bessen.htm",
+      "source_label": "IMF · BESSEN 2015"
+     },
+     "on_screen_text": "20 → 13 · 1988 TO 2004",
+     "modules": [
+      "one-stat-per-frame",
+      "number-in-scene"
+     ],
+     "motion": "marks fade on \"20 tellers to 13\"",
+     "timing": "1:05.48-1:13.54 in the take (8.1 s)"
+    },
+    {
+     "words": "But banks used the savings to open more branches. In cities, there were 43% more branches.",
+     "point": "Banks spent the savings on more branches: 43% more in cities",
+     "picture": {
+      "kind": "chart",
+      "what": "The branch copies itself across the desk until there are 43% more",
+      "source": "https://www.imf.org/external/pubs/ft/fandd/2015/03/bessen.htm",
+      "source_label": "IMF · BESSEN 2015"
+     },
+     "on_screen_text": "+43% BRANCHES",
+     "modules": [
+      "one-stat-per-frame",
+      "number-in-scene"
+     ],
+     "motion": "copies appear on \"more branches\", the number on \"43%\"",
+     "timing": "1:13.94-1:19.28 in the take (5.3 s)"
+    },
+    {
+     "words": "So teller jobs held up. And tellers spent less time counting cash and more time with customers.",
+     "point": "The teller job held up and changed: less cash, more people",
+     "picture": {
+      "kind": "document",
+      "what": "The IMF article's line \"cash handling became less important and human interaction more important\", highlighted",
+      "source": "https://www.imf.org/external/pubs/ft/fandd/2015/03/bessen.htm",
+      "source_label": "IMF · BESSEN 2015"
+     },
+     "on_screen_text": "",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "highlight sweeps on \"more time with customers\"",
+     "timing": "1:19.28-1:24.78 in the take (5.5 s)"
+    },
+    {
+     "words": "Then came spreadsheets. Since 1980, about 400,000 bookkeeping clerk jobs have gone. But 600,000 accountant jobs have been added.",
+     "point": "Spreadsheets took 400,000 clerk jobs and added 600,000 accountant jobs",
+     "picture": {
+      "kind": "chart",
+      "what": "400,000 clerk marks fall away; 600,000 accountant marks stack up above them, taller",
+      "source": "https://www.npr.org/sections/money/2015/02/25/389027988/episode-606-spreadsheets",
+      "source_label": "NPR PLANET MONEY · 2015"
+     },
+     "on_screen_text": "−400,000 · +600,000 · SINCE 1980",
+     "modules": [
+      "one-stat-per-frame",
+      "number-in-scene"
+     ],
+     "motion": "the fall on \"have gone\", the stack on \"added\"",
+     "timing": "1:27.06-1:36.06 in the take (9.0 s)"
+    },
+    {
+     "words": "That's because accounting got cheaper, so people bought more of it.",
+     "point": "Why the jobs grew back: cheaper work, more of it bought",
+     "picture": {
+      "kind": "face",
+      "what": "him to camera, his portrait in the full-height column, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [
+      "treated-background"
+     ],
+     "motion": "",
+     "timing": "1:36.70-1:39.90 in the take (3.2 s)"
+    },
+    {
+     "words": "So each time, a tool took the dull bottom of a job, and the job that was left got bigger.",
+     "point": "The pattern: the tool takes the bottom, the job grows taller",
+     "picture": {
+      "kind": "card",
+      "what": "Both scenes fold back into the Ladder, now taller than at the start, a new rung added at the top",
+      "source": "docs/plans/2026-11-02-monday/motion-system.md",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [
+      "mechanism-image",
+      "constant-motion"
+     ],
+     "motion": "the ladder grows on \"got bigger\"",
+     "timing": "1:39.90-1:47.08 in the take (7.2 s)"
+    },
+    {
+     "words": "Here's what worries me this time.",
+     "point": "His turn to what worries him this time",
+     "picture": {
+      "kind": "face",
+      "what": "him to camera, his portrait in the full-height column, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [
+      "treated-background"
+     ],
+     "motion": "",
+     "timing": "1:49.38-1:50.12 in the take (0.7 s)"
+    },
+    {
+     "words": "Back then, there was still a first step on the career ladder. Tellers moved to the customer side, and there were more accountant jobs to start in.",
+     "point": "Back then the bottom rung was still there to start on",
+     "picture": {
+      "kind": "card",
+      "what": "The taller Ladder, its bottom rung solid, marked TELLER and CLERK in Plex Mono as the two starting jobs",
+      "source": "docs/plans/2026-11-02-monday/motion-system.md",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [
+      "mechanism-image"
+     ],
+     "motion": "the bottom rung brightens on \"first step\"",
+     "timing": "1:50.32-1:58.28 in the take (8.0 s)"
+    },
+    {
+     "words": "This time, AI takes the first draft itself, the very work juniors learned on.",
+     "point": "This time the bottom rung itself goes: the first draft was the learning",
+     "picture": {
+      "kind": "card",
+      "what": "The Ladder with no bottom rung: the camera rests on the gap. The frame the cover and thumbnail echo",
+      "source": "docs/plans/2026-11-02-monday/motion-system.md",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [
+      "mechanism-image"
+     ],
+     "motion": "the bottom rung lifts away on \"first draft itself\"; hold",
+     "timing": "1:58.96-2:03.24 in the take (4.3 s)"
+    },
+    {
+     "words": "Anthropic's own report says staff in some roles are moving away from the hands-on work that built their skills.",
+     "point": "Anthropic's report says so itself",
+     "picture": {
+      "kind": "document",
+      "what": "The report's line \"In some roles, they are increasingly removed from the object-level work that originally built their skills\", highlighted",
+      "source": "https://www-cdn.anthropic.com/72628f1863c53432195db83279252dfd2cb53158/Employment%20at%20Anthropic.pdf",
+      "source_label": "ANTHROPIC · OCT 2026"
+     },
+     "on_screen_text": "",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "highlight sweeps on \"hands-on work\"",
+     "timing": "2:04.64-2:08.64 in the take (4.0 s)"
+    },
+    {
+     "words": "And I reckon juniors feel that most.",
+     "point": "His read: juniors feel this most, said as his",
+     "picture": {
+      "kind": "face",
+      "what": "him to camera, his portrait in the full-height column, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [
+      "treated-background"
+     ],
+     "motion": "",
+     "timing": "2:08.64-2:11.22 in the take (2.6 s)"
+    },
+    {
+     "words": "And the cut is quiet, because no one gets a redundancy letter. It hits the people who never get hired, so they never show up in anyone's numbers.",
+     "point": "The cut is invisible: it lands on people never hired",
+     "picture": {
+      "kind": "document",
+      "what": "The report's line \"Employment protections for incumbents will not benefit those not hired to begin with\", highlighted",
+      "source": "https://www-cdn.anthropic.com/72628f1863c53432195db83279252dfd2cb53158/Employment%20at%20Anthropic.pdf",
+      "source_label": "ANTHROPIC · OCT 2026"
+     },
+     "on_screen_text": "",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "highlight sweeps on \"never get hired\"",
+     "timing": "2:11.22-2:20.10 in the take (8.9 s)"
+    },
+    {
+     "words": "Hiring managers at Anthropic now focus more and more on judgement. And that makes sense. If AI writes the first draft, you need people who can tell good work from bad.",
+     "point": "What managers want now is judgement",
+     "picture": {
+      "kind": "document",
+      "what": "The report's line \"Hiring managers increasingly emphasize applicants' autonomy and judgment relative to specific technical expertise\", highlighted",
+      "source": "https://www-cdn.anthropic.com/72628f1863c53432195db83279252dfd2cb53158/Employment%20at%20Anthropic.pdf",
+      "source_label": "ANTHROPIC · OCT 2026"
+     },
+     "on_screen_text": "",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "highlight sweeps on \"judgement\"",
+     "timing": "2:21.10-2:31.62 in the take (10.5 s)"
+    },
+    {
+     "words": "But where did people learn judgement? In their junior years, doing the dull work, getting it wrong and being put right.",
+     "point": "Judgement is learned in the junior years",
+     "picture": {
+      "kind": "face",
+      "what": "him to camera, his portrait in the full-height column, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [
+      "treated-background"
+     ],
+     "motion": "",
+     "timing": "2:32.60-2:40.66 in the take (8.1 s)"
+    },
+    {
+     "words": "Take away the junior years, and you still need the judgement. You just have nowhere left to grow it.",
+     "point": "Take away the junior rung and judgement has nowhere to grow",
+     "picture": {
+      "kind": "card",
+      "what": "The Ladder with its gap; JUDGEMENT sits on a high rung with nothing beneath it to climb from",
+      "source": "docs/plans/2026-11-02-monday/motion-system.md",
+      "source_label": ""
+     },
+     "on_screen_text": "JUDGEMENT",
+     "modules": [
+      "mechanism-image"
+     ],
+     "motion": "the word lands on \"judgement\"; hold on the gap",
+     "timing": "2:41.86-2:47.14 in the take (5.3 s)"
+    },
+    {
+     "words": "So I think this is every company's problem, and Anthropic is just early to it.",
+     "point": "This is every company's problem, and Anthropic is only early",
+     "picture": {
+      "kind": "face",
+      "what": "him to camera, his portrait in the full-height column, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [
+      "treated-background"
+     ],
+     "motion": "",
+     "timing": "2:48.30-2:52.86 in the take (4.6 s)"
+    },
+    {
+     "words": "Anthropic's staff expect AI to do 75% of their own work by 2030.",
+     "point": "Anthropic's staff expect AI to do 75% of their work by 2030, against 28% for other Americans",
+     "picture": {
+      "kind": "chart",
+      "what": "Two numbers, 75% for Anthropic staff and 28% for other Americans, as of August",
+      "source": "https://www-cdn.anthropic.com/72628f1863c53432195db83279252dfd2cb53158/Employment%20at%20Anthropic.pdf",
+      "source_label": "ANTHROPIC · OCT 2026"
+     },
+     "on_screen_text": "75% · OTHER AMERICANS 28%",
+     "modules": [
+      "one-stat-per-frame",
+      "number-in-scene"
+     ],
+     "motion": "75% lands on \"75%\"; 28% follows",
+     "timing": "2:55.50-2:59.34 in the take (3.8 s)"
+    },
+    {
+     "words": "However much AI does for you, you'll still need seniors to judge its work. And your 2030 seniors are juniors somewhere today. If no one hires them, no one trains them.",
+     "point": "Your 2030 seniors are today's juniors: no hire, no training",
+     "picture": {
+      "kind": "card",
+      "what": "The Ladder's top rung lights mint with 2030; a line runs from it down to the gap where the junior rung was",
+      "source": "docs/plans/2026-11-02-monday/motion-system.md",
+      "source_label": ""
+     },
+     "on_screen_text": "2030",
+     "modules": [
+      "mechanism-image",
+      "constant-motion"
+     ],
+     "motion": "the line runs down on \"juniors somewhere today\"",
+     "timing": "2:59.34-3:08.72 in the take (9.4 s)"
+    },
+    {
+     "words": "Here's why this one matters to me. In 2008, I was a junior at Microsoft. Yes, the people who make Excel.",
+     "point": "The dull job, told about a new hire (in both takes he tells it as \"picture a new hire given a dull job\", not as his own)",
+     "picture": {
+      "kind": "card",
+      "what": "A new hire's desk drawn on the ink desk: one spreadsheet open, the same task waiting row after row. No company logo, no year, no name",
+      "source": "docs/plans/2026-11-02-monday/motion-system.md",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [
+      "one-person-story",
+      "mechanism-image"
+     ],
+     "motion": "the sheet opens on \"a new hire\"",
+     "timing": "3:08.72-3:11.20 in the take (2.5 s)"
+    },
+    {
+     "words": "I was asked to change the format of a spreadsheet with half a million rows, by hand. Same clicks, over and over.",
+     "point": "The same task by hand, for weeks",
+     "picture": {
+      "kind": "card",
+      "what": "The sheet's rows scroll while the same click repeats; a week counter ticks past week 1, 2, 3",
+      "source": "docs/plans/2026-11-02-monday/motion-system.md",
+      "source_label": ""
+     },
+     "on_screen_text": "WEEK 3",
+     "modules": [
+      "constant-motion"
+     ],
+     "motion": "the counter ticks on \"weeks and weeks\"",
+     "timing": "3:11.20-3:16.60 in the take (5.4 s)"
+    },
+    {
+     "words": "I had a hunch it wasn't meant to be done that way, so I looked online. I found Excel macros, which record what you do so the computer repeats it.",
+     "point": "They spot the repeat and go looking for a better way",
+     "picture": {
+      "kind": "card",
+      "what": "The same sheet: one recorded action now repeats itself down the rows; the first two tries stop part way, the third runs to the end",
+      "source": "docs/plans/2026-11-02-monday/motion-system.md",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [
+      "constant-motion"
+     ],
+     "motion": "the tries fail on \"the first attempt doesn't work\" and \"neither does the second\"",
+     "timing": "3:16.66-3:23.30 in the take (6.6 s)"
+    },
+    {
+     "words": "Getting mine to work took me a few days, and I knew I might be wasting them.",
+     "point": "It was a risk: days that might be wasted",
+     "picture": {
+      "kind": "face",
+      "what": "him to camera, his portrait in the full-height column, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [
+      "treated-background"
+     ],
+     "motion": "",
+     "timing": "3:23.30-3:27.20 in the take (3.9 s)"
+    },
+    {
+     "words": "Then three weeks of work became a few hours.",
+     "point": "Weeks of work shrink to a few hours",
+     "picture": {
+      "kind": "card",
+      "what": "The week counter collapses to a few hours on one day",
+      "source": "docs/plans/2026-11-02-monday/motion-system.md",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [
+      "constant-motion"
+     ],
+     "motion": "the collapse on \"shrink to a few hours\"",
+     "timing": "3:27.30-3:31.20 in the take (3.9 s)"
+    },
+    {
+     "words": "And the real lesson was bigger than the macro. I learned to spot the boring job that repeats. And to stick with the fix when it doesn't work at first. I only learned that because someone gave me the dull job.",
+     "point": "The lesson is the habit, and the dull job is where it forms",
+     "picture": {
+      "kind": "face",
+      "what": "him to camera, his portrait in the full-height column, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [
+      "treated-background"
+     ],
+     "motion": "",
+     "timing": "3:31.36-3:50.20 in the take (18.8 s)"
+    },
+    {
+     "words": "So here are two questions for your next hiring meeting, before you cut a junior role. Who on this team will be a senior in 2030? And what are they learning on today?",
+     "point": "Two questions for the next hiring meeting",
+     "picture": {
+      "kind": "card",
+      "what": "Two mint cards settle on the gap in the Ladder, one on each question",
+      "source": "docs/plans/2026-11-02-monday/motion-system.md",
+      "source_label": ""
+     },
+     "on_screen_text": "NEXT HIRING MEETING",
+     "modules": [
+      "mechanism-image"
+     ],
+     "motion": "one card per question, each on its question",
+     "timing": "3:48.92-3:58.90 in the take (10.0 s)"
+    },
+    {
+     "words": "Good juniors will ask you what they'll learn on, so have an answer. And if you're early in your career, ask in your next interview what real work you'll learn on. And when you find a boring job that repeats, learn how it works before you hand it to AI. Then build the fix, like my macro.",
+     "point": "A word to juniors: ask what you will learn on, then build the fix",
+     "picture": {
+      "kind": "face",
+      "what": "him to camera, his portrait in the full-height column, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [
+      "treated-background"
+     ],
+     "motion": "",
+     "timing": "3:59.58-4:16.46 in the take (16.9 s)"
+    },
+    {
+     "words": "Here's what I'd do with this info if I were you.",
+     "point": "He turns to what to do, as himself, before the three actions",
+     "picture": {
+      "kind": "face",
+      "what": "him to camera, his portrait in the full-height column, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [
+      "treated-background"
+     ],
+     "motion": "",
+     "timing": "4:18.10-4:19.86 in the take (1.8 s)"
+    },
+    {
+     "words": "For each team, write down who you expect to be senior in four years. And write down the real work they're learning on now.",
+     "point": "Action one: name each team's seniors for 2030 and what they learn on",
+     "picture": {
+      "kind": "card",
+      "what": "Action card 1 in mint on the ink desk",
+      "source": "docs/plans/2026-11-02-monday/motion-system.md",
+      "source_label": ""
+     },
+     "on_screen_text": "1 · EACH TEAM, 4 YEARS OUT",
+     "modules": [
+      "better-way"
+     ],
+     "motion": "card on \"For each team\"",
+     "timing": "4:20.52-4:27.90 in the take (7.4 s)"
+    },
+    {
+     "words": "Look at your last three hiring decisions. If AI was the reason a junior role went unfilled, ask where that learning happens now.",
+     "point": "Action two: check the last three hiring decisions",
+     "picture": {
+      "kind": "card",
+      "what": "Action card 2 in mint on the ink desk",
+      "source": "docs/plans/2026-11-02-monday/motion-system.md",
+      "source_label": ""
+     },
+     "on_screen_text": "2 · YOUR LAST 3 HIRES",
+     "modules": [
+      "better-way"
+     ],
+     "motion": "card on \"last three\"",
+     "timing": "4:28.08-4:35.42 in the take (7.3 s)"
+    },
+    {
+     "words": "And give one junior a dull weekly job to own. They do it by hand first, then build the fix with AI.",
+     "point": "Action three: give one junior a dull weekly job to own",
+     "picture": {
+      "kind": "card",
+      "what": "Action card 3 in mint on the ink desk",
+      "source": "docs/plans/2026-11-02-monday/motion-system.md",
+      "source_label": ""
+     },
+     "on_screen_text": "3 · ONE DULL WEEKLY JOB",
+     "modules": [
+      "better-way"
+     ],
+     "motion": "card on \"dull weekly job\"",
+     "timing": "4:35.42-4:41.42 in the take (6.0 s)"
+    },
+    {
+     "words": "The full deep dive is at makeyourmindup.ai.",
+     "point": "Where to read the rest",
+     "picture": {
+      "kind": "card",
+      "what": "The one house end card: makeyourmindup.ai",
+      "source": "config/studio.json",
+      "source_label": ""
+     },
+     "on_screen_text": "MAKEYOURMINDUP.AI",
+     "modules": [],
+     "motion": "one calm close, held long enough to read",
+     "timing": "4:41.98-4:45.60 in the take (3.6 s)"
+    }
+   ]
+  },
+  "short": {
+   "take": "on_camera",
+   "beats": [
+    {
+     "words": "Junior hiring at Anthropic, the AI company behind Claude, has collapsed. So where will your senior staff come from in 2030?",
+     "point": "The hook and the question",
+     "picture": {
+      "kind": "face",
+      "what": "him to camera, full frame, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "ANTHROPIC · ITS OWN STAFF",
+     "modules": [
+      "full-face-vertical"
+     ],
+     "motion": "the label types in on \"collapsed\"",
+     "timing": "0:00.85-0:09.83 in the take (9.0 s)"
+    },
+    {
+     "words": "Let me break down Anthropic's study of its staff. Its technical hires have gone from one in four juniors to fewer than one in ten.",
+     "point": "The big moment: junior hires fell from 27% to 9%",
+     "picture": {
+      "kind": "chart",
+      "what": "The Ladder above his face; the bottom rung's number counts down 27 to 9 and the rung thins to a hairline",
+      "source": "https://www-cdn.anthropic.com/72628f1863c53432195db83279252dfd2cb53158/Employment%20at%20Anthropic.pdf",
+      "source_label": "ANTHROPIC · OCT 2026"
+     },
+     "on_screen_text": "27% → 9%",
+     "modules": [
+      "one-stat-per-frame",
+      "number-in-scene"
+     ],
+     "motion": "the count starts on \"one in four\" and lands on \"one in ten\"",
+     "timing": "0:10.53-0:16.59 in the take (6.1 s)"
+    },
+    {
+     "words": "Many of its managers say AI is why.",
+     "point": "The managers say AI is why",
+     "picture": {
+      "kind": "document",
+      "what": "The report's line \"Around a third of ML and a fifth of SWE managers reported hiring less due to AI\", highlighted",
+      "source": "https://www-cdn.anthropic.com/72628f1863c53432195db83279252dfd2cb53158/Employment%20at%20Anthropic.pdf",
+      "source_label": "ANTHROPIC · OCT 2026"
+     },
+     "on_screen_text": "1 IN 3 ML MANAGERS",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "highlight sweeps on \"AI is why\"",
+     "timing": "0:16.99-0:19.25 in the take (2.3 s)"
+    },
+    {
+     "words": "Cash machines and spreadsheets took starter work before. Both times, beginners found new work to learn on.",
+     "point": "Twice before, the job came back bigger",
+     "picture": {
+      "kind": "chart",
+      "what": "Two quick frames: the branch copies itself to 43% more; 600,000 accountant marks stack over 400,000 fallen clerk marks",
+      "source": "https://www.imf.org/external/pubs/ft/fandd/2015/03/bessen.htm",
+      "source_label": "IMF · NPR PLANET MONEY"
+     },
+     "on_screen_text": "+43% BRANCHES · +600,000 ACCOUNTANTS",
+     "modules": [
+      "one-stat-per-frame"
+     ],
+     "motion": "one frame per tool, each on its name",
+     "timing": "0:19.91-0:25.11 in the take (5.2 s)"
+    },
+    {
+     "words": "But I think this time is different.",
+     "point": "His turn: why this time may not end like the last two",
+     "picture": {
+      "kind": "face",
+      "what": "him to camera, full frame, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [
+      "full-face-vertical"
+     ],
+     "motion": "",
+     "timing": "0:25.19-0:28.31 in the take (3.1 s)"
+    },
+    {
+     "words": "AI takes the first draft itself, the very work juniors learn on.",
+     "point": "This time the bottom rung goes",
+     "picture": {
+      "kind": "card",
+      "what": "The Ladder with no bottom rung, above his face",
+      "source": "docs/plans/2026-11-02-monday/motion-system.md",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [
+      "mechanism-image"
+     ],
+     "motion": "the rung lifts away on \"first draft itself\"",
+     "timing": "0:28.59-0:32.37 in the take (3.8 s)"
+    },
+    {
+     "words": "And no one notices, because no one gets fired. The junior job just never opens.",
+     "point": "Nobody is fired, the job never opens",
+     "picture": {
+      "kind": "document",
+      "what": "The report's line \"Employment protections for incumbents will not benefit those not hired to begin with\", highlighted",
+      "source": "https://www-cdn.anthropic.com/72628f1863c53432195db83279252dfd2cb53158/Employment%20at%20Anthropic.pdf",
+      "source_label": "ANTHROPIC · OCT 2026"
+     },
+     "on_screen_text": "",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "highlight sweeps on \"never opens\"",
+     "timing": "0:32.89-0:36.65 in the take (3.8 s)"
+    },
+    {
+     "words": "As a junior at Microsoft, I got a boring spreadsheet job. It taught me to spot work that repeats, and automate it.",
+     "point": "The dull job is where the lesson lives",
+     "picture": {
+      "kind": "card",
+      "what": "A spreadsheet of rows; the same action repeats itself down them",
+      "source": "docs/plans/2026-11-02-monday/motion-system.md",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [
+      "constant-motion"
+     ],
+     "motion": "the action repeats on \"repeats\"",
+     "timing": "0:37.19-0:44.41 in the take (7.2 s)"
+    },
+    {
+     "words": "Before you cut a junior role, ask two things. Who will your seniors be? And what are they learning on today?",
+     "point": "Two questions before cutting a junior role",
+     "picture": {
+      "kind": "card",
+      "what": "Two mint cards settle on the gap in the Ladder; the top rung reads 2030",
+      "source": "docs/plans/2026-11-02-monday/motion-system.md",
+      "source_label": ""
+     },
+     "on_screen_text": "BEFORE YOU CUT A JUNIOR ROLE",
+     "modules": [
+      "mechanism-image"
+     ],
+     "motion": "one card per question",
+     "timing": "0:45.79-0:50.37 in the take (4.6 s)"
+    },
+    {
+     "words": "Here's what I'd do with this info if I were you.",
+     "point": "He turns to what to do, before the two actions",
+     "picture": {
+      "kind": "face",
+      "what": "him to camera, full frame, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [
+      "full-face-vertical"
+     ],
+     "motion": "",
+     "timing": "0:51.61-0:52.47 in the take (0.9 s)"
+    },
+    {
+     "words": "Name each team's future seniors, and what they're learning on now. And give a junior a dull weekly job, by hand first so they learn it, then with AI.",
+     "point": "Two actions: name the future seniors, and give a junior one dull job",
+     "picture": {
+      "kind": "card",
+      "what": "Two mint action cards, one on each sentence",
+      "source": "docs/plans/2026-11-02-monday/motion-system.md",
+      "source_label": ""
+     },
+     "on_screen_text": "1 · NAME THEM · 2 · ONE DULL JOB",
+     "modules": [
+      "better-way"
+     ],
+     "motion": "one card per action",
+     "timing": "0:52.61-1:01.67 in the take (9.1 s)"
+    },
+    {
+     "words": "The full deep dive is at makeyourmindup.ai.",
+     "point": "Where to read the rest",
+     "picture": {
+      "kind": "card",
+      "what": "The one house end card: makeyourmindup.ai",
+      "source": "config/studio.json",
+      "source_label": ""
+     },
+     "on_screen_text": "MAKEYOURMINDUP.AI",
+     "modules": [],
+     "motion": "one calm close",
+     "timing": "1:02.31-1:03.47 in the take (1.2 s)"
+    }
+   ]
+  }
+ },
+ "article": {
+  "visuals": [
+   {
+    "point": "The past rungs came back bigger; this one may not",
+    "question": "Is this just another ATM moment?",
+    "what": "One chart from the checked numbers only: tellers per branch 20 to 13 with branches up 43%; bookkeeping clerks down 400,000 and accountants up 600,000; Anthropic's junior technical hires 27% to 9%, with the rung that came back left as an empty space",
+    "source": [
+     "https://www.imf.org/external/pubs/ft/fandd/2015/03/bessen.htm",
+     "https://www.npr.org/sections/money/2015/02/25/389027988/episode-606-spreadsheets",
+     "https://www-cdn.anthropic.com/72628f1863c53432195db83279252dfd2cb53158/Employment%20at%20Anthropic.pdf"
+    ]
+   }
+  ]
+ },
+ "do_not": [
+  "Never his name, his employer or a year of his life on screen: in both takes he tells the dull-job story about \"a new hire\", so no Microsoft or Excel logo and no 2008",
+  "No on-screen label repeats what he says (the burned captions carry his words); a label adds a number, a date or its producer",
+  "No figures or icons acting out a sentence; the Ladder only ever shows a number or the gap",
+  "No eyebrow text, asterisks, \"our read\" tags or AI notes",
+  "Never invent a word, number, label or picture; a gap goes back to Claude"
+ ],
+ "acceptance": [
+  "Watched end to end at full size, at the speed the audience sees it, by a reviewer who did not make the cut",
+  "Every spoken word heard continuously: no chopped syllable at any join (audio compared around each edit boundary)",
+  "Every picture lands on the words it proves, framing centred, logos at equal size, no shake left in",
+  "Brand matches the reference frame: wordmark, captions, palette and the intro sting",
+  "Fact, transport and editorial status reported separately; ready only when all three pass"
+ ],
+ "signed": {
+  "by": "",
+  "said": "",
+  "on": "",
+  "script_sha256": {}
+ },
+ "production_choices": {
+  "opening": "hook_is_intro",
+  "lead_picture": {
+   "series_picture": {
+    "what": "The money map and the receipt: flows between parties, width is the amount. Here: new technical hires split into senior hires and juniors, the junior flow 9% wide, with 27% struck through",
+    "still": "docs/plans/2026-11-02-monday/stills/series-picture.png"
+   },
+   "story_object": {
+    "what": "The Ladder with no bottom rung: 2030 lit on the top rung, the junior rung gone, 9% with 27% struck through beside the gap",
+    "still": "docs/plans/2026-11-02-monday/stills/story-object.png"
+   },
+   "proposed": "story_object",
+   "ticked": null
+  },
+  "big_moment_sound": "none"
+ },
+ "motion_system": {
+  "name": "The Ladder",
+  "file": "docs/plans/2026-11-02-monday/motion-system.md"
+ },
+ "take_edits": {
+  "ruling": "Krish, 2026-10-26: \"That's just how I talk. Unless you think there are serious flaws in it, they're not really slips as much as they are just me talking naturally.\"",
+  "rule": "Keep everything he said as he said it. Cut only a serious flaw, only where the cut is inaudible, judged by ear at full volume. If it cannot be cut cleanly, keep it.",
+  "long": [
+   {
+    "at": "0:00.08-0:02.52",
+    "words": "So we had one today, and that's a",
+    "why": "a lead-in before the hook; the cut opens on \"Junior hiring at Anthropic\" (the hook is the intro)",
+    "clean": "yes: it is the head of the file, so nothing is joined",
+    "recommended": true
+   },
+   {
+    "at": "0:05.00",
+    "words": "\"which is the AI company buying Claude\" (as transcribed)",
+    "why": "listen first: if he said \"buying\" rather than \"behind\", the line says Anthropic bought Claude, which is wrong. If it is \"behind\", keep it",
+    "clean": "only if the whole aside lifts out between \"Anthropic\" and \"has fallen off a cliff\" without a clipped breath; otherwise keep and correct the caption only if the words are \"behind\"",
+    "recommended": false
+   }
+  ],
+  "short": [],
+  "his_story": "In both takes he tells the dull-job story about \"a new hire\" instead of his own first job at Microsoft (long 3:08.7 to 3:50.2; short 0:37.2 to 0:44.7). Kept as he said it: the pictures follow his words, so nothing shows Microsoft, Excel or 2008.",
+  "heard_check": "Transcriber words to confirm by ear, not to cut: long 0:14 \"its own stuff\" (staff), 0:39 \"hiring lists\" (less), 4:43 \"make your mind hop\" (makeyourmindup); short 0:21 \"start to work\" (starter work), 0:24 \"lean on\" (learn on), 1:00 \"so that they learn it with AI\" (he may have dropped \"then\": kept either way, it cannot be added)."
+ },
+ "production_notes": [
+  "Both takes are portrait selfies (1080x1920) named \"Documentary VO draft\"; they are his on-camera takes of the signed words (matched word by word on 31 Oct and recorded on the piece). The 16:9 cut uses the portrait in a full-height column, as Monday 26.",
+  "Assess camera shake on both takes before composing (the media standard); record the decision.",
+  "The fact gate still holds one line of the article for his yes (the IMF piece's author, James Bessen). The on-screen credit \"IMF · BESSEN 2015\" rests on the same byline, so it waits on the same yes; if he says no, it reads \"IMF · 2015\"."
+ ]
+}
