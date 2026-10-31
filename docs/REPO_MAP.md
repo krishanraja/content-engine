@@ -36,7 +36,6 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `examples/`
 - `fixtures/`
 - `inspo/`
-- `now-notes/`
 - `packages/cli/`
 - `packages/contracts/`
 - `packages/core/`
@@ -51,6 +50,7 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `scripts/signals/`
 - `scripts/ve/`
 - `scripts/velib/`
+- `scripts/voice/`
 - `scripts/windowless/`
 - `supabase/migrations/`
 - `tests/`
@@ -1134,6 +1134,10 @@ The making record: where one piece is on its way from the workroom to
 - `const PRODUCTION_CHOICES`
 - `type ProductionChoice = (typeof PRODUCTION_CHOICES)[number]`
 - `type MakingProductionChoices = Partial<Record<ProductionChoice, string>> & { at: string }`
+- `const SPOKEN_COUNTS`
+- `const SPOKEN_KINDS`
+- `interface MakingSpokenExample`
+- `type MakingSpokenDelta`
 - `interface Making`
 - `type MakingPatch`
 - `const SCRIPT_SHA256`
