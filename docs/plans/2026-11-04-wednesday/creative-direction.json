@@ -1,0 +1,908 @@
+{
+ "piece_id": "b63d2507-dbb4-449d-bce4-f21e859ee2ad",
+ "publish_day": "2026-11-04",
+ "style": {
+  "script": "the-usable-rule",
+  "production": "face-with-proof",
+  "experiment": "his own Duet screen recording as the proof: the real app on the real phone, time-lapsed under his voice, private lines under ink bars (replaces the scoreboard test proposed on 26 Oct, which the narrative dropped when the piece moved from \"where to draw the line\" to \"what Duet adds for someone who already lives in Claude\")"
+ },
+ "brand": {
+  "series": "under.the.hood",
+  "reference": "docs/plans/2026-10-26-monday/storyboard-signoff.md (signed 26 Oct, re-signed 27 Oct, cuts accepted 28 Oct) and scripts/post-pack/tokens.css; series colour lilac #B7A6FF from config/studio.json, used only for the series pill, the queue line and the caption shadow",
+  "captions": "burned into every cut (Krish, 2026-10-27: captions burned into every cut). The house captions (docs/STUDIO.md): cream Archivo Black (Archivo 900) on an ink block, a hard shadow in under.the.hood's lilac (#B7A6FF; 12 px in the 9:16 cut, 8 px in the 16:9 cut), sentence case, at most one loud word per line. The caption file comes from the finished file's own transcript, corrected by hand: the transcriber hears 'Duet' as 'DeWitt' or 'Dewitt' (about 14 times across both takes) and 'Claire Vo' as 'Clairvaux'; every caption reads Duet and Claire Vo",
+  "intro_sting": "none: the hook is the intro (under test, ruling 8); wordmark and under.the.hood pill in the corners from the first frame",
+  "route": "the 19 Oct quick-edit route (kit.py, make.py, quality.py), as Monday 26 Oct's accepted cuts: every move is a change of picture on the word that names it, with the house crossfade; pictures sit beside his face (16:9) or above it (9:16), no full-frame cutaways"
+ },
+ "max_face_share": 0.6,
+ "cuts": {
+  "long": {
+   "take": "on_camera",
+   "beats": [
+    {
+     "words": "I got early access to Claude Duet. And the first thing that struck me is a really weird thing to say about an app. It knows what it knows about me.",
+     "point": "The hook: he has Duet already, and the strange thing is how much it knew him on day one",
+     "picture": {
+      "kind": "face",
+      "what": "To camera, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "CLAUDE DUET · RESEARCH PREVIEW · 21 OCT 2026",
+     "modules": [
+      "random-headline-hook",
+      "treated-background"
+     ],
+     "motion": "still; the label types in on \"early access\"",
+     "timing": "0:02.54-0:13.48 in the take (10.9 s)"
+    },
+    {
+     "words": "So what does it actually change if you already use Claude at work? Let me break it down.",
+     "point": "The question this piece answers, for people who already use Claude for work",
+     "picture": {
+      "kind": "face",
+      "what": "To camera, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [],
+     "motion": "",
+     "timing": "0:13.48-0:22.70 in the take (9.2 s)"
+    },
+    {
+     "words": "Duet is Anthropic's new Claude app, and it messages you first.",
+     "point": "It is the app that speaks first: the first message came from Duet, not from him",
+     "picture": {
+      "kind": "screen",
+      "what": "Duet's first message on the phone, set in a phone frame on the ink desk: the welcome bubble, with ink redaction bars (cut paper on the ink desk, part of the look) over the name in 'Hi ...' and the 'K' avatar top right (the screen recording is silent; it plays under his voice, sped to fit the beat)",
+      "source": "capture:Claude duet run-through.mp4@01:00-01:40",
+      "source_label": "CLAUDE DUET · ITS OWN SCREEN, 29 OCT"
+     },
+     "on_screen_text": "",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "the bubble slides up as it arrives; slow push in",
+     "timing": "0:22.70-0:25.20 in the take (2.5 s)"
+    },
+    {
+     "words": "Every few hours it checks your email, your calendar, Slack and whatever else you've connected.",
+     "point": "It checks the apps you already connected, on a timer",
+     "picture": {
+      "kind": "logo",
+      "what": "Gmail, Google Calendar and Slack logos at equal size slide onto the queue rail, then a small mint counter ticks to \"6,000+\"",
+      "source": "https://claude.com/resources/articles/claude-duet",
+      "source_label": ""
+     },
+     "on_screen_text": "EVERY FEW HOURS · 6,000+ CONNECTORS",
+     "modules": [
+      "words-in-scene"
+     ],
+     "motion": "each logo slides in on its name; the counter on \"whatever else\"",
+     "timing": "0:25.20-0:31.76 in the take (6.6 s)"
+    },
+    {
+     "words": "Each morning it sends you a short brief. And in the meantime, it drafts replies, meeting prep and documents for you.",
+     "point": "The morning brief and the drafts are real objects it makes and refreshes",
+     "picture": {
+      "kind": "screen",
+      "what": "The Morning brief card Duet built, 'Morning brief for Friday 30 October', with ink redaction bars (cut paper on the ink desk, part of the look) over every line of the brief body (it names his ventures and people); only the title and the 'Refresh it at 6:30 every morning' line stay readable (the screen recording is silent; it plays under his voice, sped to fit the beat)",
+      "source": "capture:Claude duet run-through.mp4@19:00-19:40",
+      "source_label": "CLAUDE DUET · ITS OWN SCREEN, 29 OCT"
+     },
+     "on_screen_text": "REFRESHES 6:30 EVERY MORNING",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "the card builds from blank to full, sped up; push in on the title",
+     "timing": "0:31.76-0:42.36 in the take (10.6 s)"
+    },
+    {
+     "words": "Then it stops. Before it sends a message, pays for something, signs or deletes anything, it shows you what it's about to do. And it waits for your yes.",
+     "point": "It prepares, then stops: four kinds of action wait for a yes",
+     "picture": {
+      "kind": "card",
+      "what": "The approval queue (motion system): four drafted actions arrive in the queue, SEND A MESSAGE, PAY, SIGN, DELETE, each stopping at a lilac line with an empty YES pill beside it",
+      "source": "https://claude.com/resources/articles/claude-duet",
+      "source_label": ""
+     },
+     "on_screen_text": "OFF-LIMITS EVEN WITH A YES: TRADES, MOVING MONEY",
+     "modules": [
+      "dark-object-card",
+      "words-in-scene"
+     ],
+     "motion": "each action slides in on its verb and halts at the line; the YES pills wait, unlit",
+     "timing": "0:42.36-0:52.52 in the take (10.2 s)"
+    },
+    {
+     "words": "The setup is really seamless. Most apps ask you ten questions to customise your experience. Duet skips all that.",
+     "point": "No quiz: two screens and it is in",
+     "picture": {
+      "kind": "screen",
+      "what": "The setup screens: 'Connect your apps' (Google Drive suite already connecting) then 'Get notified'; nothing private on these two screens (the screen recording is silent; it plays under his voice, sped to fit the beat)",
+      "source": "capture:Claude duet run-through.mp4@00:20-00:50",
+      "source_label": "CLAUDE DUET · ITS OWN SCREEN, 29 OCT"
+     },
+     "on_screen_text": "",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "one screen hands over to the next on the cut; no zoom needed",
+     "timing": "0:52.52-0:59.78 in the take (7.3 s)"
+    },
+    {
+     "words": "Anthropic says it carries over your memory, your skills and your connected apps from your Claude account.",
+     "point": "Anthropic says your Claude comes with it",
+     "picture": {
+      "kind": "document",
+      "what": "The Help Center line highlighted: 'Claude Duet carries over your memory, skills, and connected apps from your Claude account'",
+      "source": "https://support.claude.com/en/articles/17631495-get-started-with-claude-duet",
+      "source_label": "CLAUDE HELP CENTER"
+     },
+     "on_screen_text": "",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "slow push into the highlighted line",
+     "timing": "0:59.78-1:04.52 in the take (4.7 s)"
+    },
+    {
+     "words": "I've lived my life in this Claude account for a while, and I've got everything connected. So it pretty much walked in already knowing me.",
+     "point": "Why it already knew him: he lives in his Claude account",
+     "picture": {
+      "kind": "face",
+      "what": "To camera, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [],
+     "motion": "",
+     "timing": "1:04.52-1:13.08 in the take (8.6 s)"
+    },
+    {
+     "words": "There is one catch. It's tied to one email account.",
+     "point": "The catch: one email account",
+     "picture": {
+      "kind": "face",
+      "what": "To camera, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "ONE ACCOUNT PER DUET",
+     "modules": [],
+     "motion": "",
+     "timing": "1:13.08-1:17.74 in the take (4.7 s)"
+    },
+    {
+     "words": "If you're anyone over the age of 15, you've probably got a few email accounts. And they're all a bit of a jumble. The one I connected is full of bills and not really my work stuff.",
+     "point": "Most people split their life across several inboxes, so one account sees only part of it",
+     "picture": {
+      "kind": "face",
+      "what": "To camera, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [],
+     "motion": "",
+     "timing": "1:17.74-1:27.64 in the take (9.9 s)"
+    },
+    {
+     "words": "And if your work email runs on Microsoft, Duet can't connect to it yet.",
+     "point": "Work email on Microsoft is out for now",
+     "picture": {
+      "kind": "document",
+      "what": "The Help Center line highlighted: 'Microsoft 365 isn't available yet', with the Microsoft 365 logo beside it",
+      "source": "https://support.claude.com/en/articles/17631495-get-started-with-claude-duet",
+      "source_label": "CLAUDE HELP CENTER"
+     },
+     "on_screen_text": "MICROSOFT 365 · NOT YET",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "push in; the logo dims on \"can't connect\"",
+     "timing": "1:27.64-1:35.94 in the take (8.3 s)"
+    },
+    {
+     "words": "So what did it do? It pulled a bunch of tasks for me.",
+     "point": "What it did first: it filled a task list on its own",
+     "picture": {
+      "kind": "screen",
+      "what": "Tasks: the 'Active' and 'Up next' tabs, with ink redaction bars (cut paper on the ink desk, part of the look) over the item text (the screen recording is silent; it plays under his voice, sped to fit the beat)",
+      "source": "capture:Claude duet run-through.mp4@11:00-11:20",
+      "source_label": "CLAUDE DUET · ITS OWN SCREEN, 29 OCT"
+     },
+     "on_screen_text": "",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "push in on the two tabs",
+     "timing": "1:35.94-1:38.08 in the take (2.1 s)"
+    },
+    {
+     "words": "The first one was a job search, which was strange. So I said, get rid of that one and go and find ten tasks for my to-do list.",
+     "point": "He steered it in one line and it went back to his apps for more",
+     "picture": {
+      "kind": "screen",
+      "what": "His reply in the chat: 'Remove the ... from my active tasks and fill it with 10 more to-dos', with ink redaction bars (cut paper on the ink desk, part of the look) over the two words naming the first task, and Duet's answer 'Dropping ... now, then reading your inbox, calendar and Drive for ten more' (the screen recording is silent; it plays under his voice, sped to fit the beat)",
+      "source": "capture:Claude duet run-through.mp4@03:40-04:00",
+      "source_label": "CLAUDE DUET · ITS OWN SCREEN, 29 OCT"
+     },
+     "on_screen_text": "",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "his bubble slides up; Duet's answer types in",
+     "timing": "1:38.08-1:45.76 in the take (7.7 s)"
+    },
+    {
+     "words": "And it came back with things I know I need to do. But I'd probably only do them once they're on fire. Lots of life admin. Bills to clear, money admin, that kind of thing.",
+     "point": "It found real jobs he would only do when they became urgent: life admin",
+     "picture": {
+      "kind": "screen",
+      "what": "The Up next list it brought back, scrolling: every to-do keeps its verb ('Check in with...', 'Decide whether to keep...', 'Get the confirmed...', 'Pre-vote in...'), with ink redaction bars (cut paper on the ink desk, part of the look) over the people, places, providers and amounts after each verb (the screen recording is silent; it plays under his voice, sped to fit the beat)",
+      "source": "capture:Claude duet run-through.mp4@07:00-09:20",
+      "source_label": "CLAUDE DUET · ITS OWN SCREEN, 29 OCT"
+     },
+     "on_screen_text": "",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "slow scroll down the list; each card lifts slightly as it passes the centre",
+     "timing": "1:45.76-2:00.74 in the take (15.0 s)"
+    },
+    {
+     "words": "It's slow, though. In classic Claude style it loves a good long think, like me. It's clearly built for you to leave and come back.",
+     "point": "It is slow: it thinks for minutes, built for you to walk away",
+     "picture": {
+      "kind": "screen",
+      "what": "The 'Thinking it through' pill pulsing over the same chat for minutes, with ink redaction bars (cut paper on the ink desk, part of the look) over the inbox summary text above it (it names his ventures and a role search) (the screen recording is silent; it plays under his voice, sped to fit the beat)",
+      "source": "capture:Claude duet run-through.mp4@04:00-06:40",
+      "source_label": "CLAUDE DUET · ITS OWN SCREEN, 29 OCT"
+     },
+     "on_screen_text": "THE WAIT, SPED UP 8×",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "the wait time-lapsed 8x with a mono timer in the corner counting the real minutes",
+     "timing": "2:00.74-2:06.60 in the take (5.9 s)"
+    },
+    {
+     "words": "Here's what I think matters most. I clicked on the calendar scheduler.",
+     "point": "The press that mattered most: one suggested build",
+     "picture": {
+      "kind": "screen",
+      "what": "Make: 'Get started' with the 'Calendar scheduler' suggestion tile; the Artifacts row below it under ink redaction bars (its titles name his ventures) (the screen recording is silent; it plays under his voice, sped to fit the beat)",
+      "source": "capture:Claude duet run-through.mp4@11:40-12:00",
+      "source_label": "CLAUDE DUET · ITS OWN SCREEN, 29 OCT"
+     },
+     "on_screen_text": "",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "push in on the Calendar scheduler tile; it lights on \"clicked\"",
+     "timing": "2:06.60-2:09.26 in the take (2.7 s)"
+    },
+    {
+     "words": "And it went away and built me what Claude calls an artifact. Basically a little dashboard, custom to me, that I can send to people.",
+     "point": "It built a small working tool, a dashboard he can send to people",
+     "picture": {
+      "kind": "screen",
+      "what": "Make: the Calendar scheduler artifact building from grey skeleton to the finished card ('Calendar scheduler', 'Ready to paste', 'Copy times'), with ink redaction bars (cut paper on the ink desk, part of the look) over the owner name above the title and the dates (the screen recording is silent; it plays under his voice, sped to fit the beat)",
+      "source": "capture:Claude duet run-through.mp4@12:00-14:40",
+      "source_label": "CLAUDE DUET · ITS OWN SCREEN, 29 OCT"
+     },
+     "on_screen_text": "",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "time-lapsed build; on \"dashboard\" it snaps to the finished card and a mint SHARE tick appears",
+     "timing": "2:09.26-2:18.38 in the take (9.1 s)"
+    },
+    {
+     "words": "I asked for a one-off favour and I got a tool back. I didn't even know I was making a dashboard, but lo and behold, I've got a dashboard.",
+     "point": "The surprise: he asked for a favour and got a tool he did not know he was making",
+     "picture": {
+      "kind": "face",
+      "what": "To camera, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [],
+     "motion": "",
+     "timing": "2:18.38-2:26.32 in the take (7.9 s)"
+    },
+    {
+     "words": "If you're a calendar-scheduling business or a note-taking business, I'd be worried.",
+     "point": "Who should worry: apps that sell a single job like scheduling or notes",
+     "picture": {
+      "kind": "face",
+      "what": "To camera, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "SCHEDULING APPS · NOTE-TAKING APPS",
+     "modules": [],
+     "motion": "",
+     "timing": "2:26.32-2:30.82 in the take (4.5 s)"
+    },
+    {
+     "words": "Because that's the hint about where software is going. You ask once, and it builds you a system you can use again and again.",
+     "point": "Where software is going: one ask becomes a tool you reuse",
+     "picture": {
+      "kind": "card",
+      "what": "Mechanism: one chat bubble (a request) folds into a single tool tile; the tile is then used three times in a row (Mon, Wed, Fri tabs light up on it) while the bubble does not come back",
+      "source": "docs/plans/2026-11-04-wednesday/motion-system.md",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [
+      "mechanism-image",
+      "constant-motion"
+     ],
+     "motion": "the fold on \"ask once\"; the three uses tick on \"again and again\"",
+     "timing": "2:30.82-2:42.58 in the take (11.8 s)"
+    },
+    {
+     "words": "So here's what that changes if you already live in Claude. Today, you open Claude and paste in the email thread, the invite and your notes. Then you ask.",
+     "point": "Today: you gather the inputs and ask",
+     "picture": {
+      "kind": "card",
+      "what": "The before lane of the one picture: an email thread (Gmail logo), an invite (Google Calendar logo) and a notes page fly by hand into an empty Claude chat box, then a question mark bubble",
+      "source": "docs/plans/2026-10-26-week/narrative-wed.md",
+      "source_label": ""
+     },
+     "on_screen_text": "TODAY",
+     "modules": [
+      "mechanism-image"
+     ],
+     "motion": "each input drops into the box on its word",
+     "timing": "2:42.58-2:51.96 in the take (9.4 s)"
+    },
+    {
+     "words": "With Duet, the work turns up first, and your job becomes saying yes or no.",
+     "point": "With Duet the work arrives prepared and your job is yes or no",
+     "picture": {
+      "kind": "card",
+      "what": "The after lane under it: the same three inputs arrive already turned into a meeting prep, a draft reply and a note, queued, each with a YES and a NO pill; one YES lights mint",
+      "source": "docs/plans/2026-10-26-week/narrative-wed.md",
+      "source_label": ""
+     },
+     "on_screen_text": "WITH DUET",
+     "modules": [
+      "mechanism-image",
+      "dark-object-card"
+     ],
+     "motion": "the queue slides in on \"turns up first\"; YES slaps on \"yes\"",
+     "timing": "2:51.96-2:57.28 in the take (5.3 s)"
+    },
+    {
+     "words": "One small business owner on Reddit put it best. They said normal Claude could already do everything they used Duet for. They just hadn't thought to use it that way.",
+     "point": "A real user found Duet did nothing new, it just brought the work to them",
+     "picture": {
+      "kind": "document",
+      "what": "The Reddit comment, the line 'I'm not doing anything that I don't think a normal version of Claude could do. I just hadn't thought to use it this way.' highlighted, the username under an ink bar",
+      "source": "https://www.reddit.com/r/ClaudeAI/comments/1xeiaqv/has_anyone_actually_gotten_into_claude_duet_yet_i/19rlwqm6sryrm/",
+      "source_label": "REDDIT · r/ClaudeAI · 26 OCT 2026"
+     },
+     "on_screen_text": "",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "slow push into the highlighted line",
+     "timing": "2:57.28-3:07.24 in the take (10.0 s)"
+    },
+    {
+     "words": "They'd fallen behind on their work. Once Duet started bringing it to them, they caught up in a day and a half.",
+     "point": "How fast a small business caught up once the work came to them",
+     "picture": {
+      "kind": "chart",
+      "what": "One number: '36 hours', from the same user's comment ('I caught up in 36 hours'), drawn big in Anton on the ink desk",
+      "source": "https://www.reddit.com/r/ClaudeAI/comments/1xeiaqv/has_anyone_actually_gotten_into_claude_duet_yet_i/19rlqkmapowqp/",
+      "source_label": "REDDIT · r/ClaudeAI · 26 OCT 2026"
+     },
+     "on_screen_text": "36 HOURS",
+     "modules": [
+      "one-stat-per-frame",
+      "number-in-scene"
+     ],
+     "motion": "the number counts up to 36 on \"a day and a half\"",
+     "timing": "3:07.24-3:18.04 in the take (10.8 s)"
+    },
+    {
+     "words": "But here's the catch. A habit only sticks if something keeps pulling you back.",
+     "point": "The catch: a habit needs a pull",
+     "picture": {
+      "kind": "face",
+      "what": "To camera, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [],
+     "motion": "",
+     "timing": "3:18.04-3:22.04 in the take (4.0 s)"
+    },
+    {
+     "words": "Claire Vo reviewed it on Lenny's Newsletter. She loved how it looks, but she still forgot to use it.",
+     "point": "A careful reviewer liked it and still forgot it",
+     "picture": {
+      "kind": "document",
+      "what": "The review page headline, 'Claude Duet is beautiful. I still forgot to use it', highlighted",
+      "source": "https://www.chatprd.ai/how-i-ai/claude-duet-review",
+      "source_label": "HOW I AI · LENNY'S NEWSLETTER · 21 OCT 2026"
+     },
+     "on_screen_text": "",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "push into the headline; the second sentence highlights on \"forgot\"",
+     "timing": "3:22.04-3:26.32 in the take (4.3 s)"
+    },
+    {
+     "words": "And that's my read too. It's picking up things that really do need doing, but they'd only get done if someone nudged me. So it's only useful if it keeps doing the nudging.",
+     "point": "His read: useful only while it keeps nudging",
+     "picture": {
+      "kind": "face",
+      "what": "To camera, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [],
+     "motion": "",
+     "timing": "3:26.32-3:37.76 in the take (11.4 s)"
+    },
+    {
+     "words": "Two more things. All that checking in the background counts toward your Claude plan's usage limit, so you can hit it sooner.",
+     "point": "The background checks spend your plan limit",
+     "picture": {
+      "kind": "document",
+      "what": "The Help Center line highlighted: 'Work it does in the background, like the morning brief and check-ins, also counts, so you may reach your limits sooner than with chat alone.'",
+      "source": "https://support.claude.com/en/articles/17631495-get-started-with-claude-duet",
+      "source_label": "CLAUDE HELP CENTER"
+     },
+     "on_screen_text": "",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "slow push into the highlighted line",
+     "timing": "3:37.76-3:45.44 in the take (7.7 s)"
+    },
+    {
+     "words": "And right now Duet is only for Pro and Max plans in the US, through a waitlist. If your company pays for your Claude, you don't get it yet.",
+     "point": "Who can get it today, and who cannot",
+     "picture": {
+      "kind": "card",
+      "what": "Five plan tiles in a row, FREE, PRO, MAX, TEAM, ENTERPRISE: Pro and Max lit mint with a small \"US · WAITLIST\" tag; Team and Enterprise dim with \"LATER\"",
+      "source": "https://support.claude.com/en/articles/17631495-get-started-with-claude-duet",
+      "source_label": ""
+     },
+     "on_screen_text": "TEAM AND ENTERPRISE: LATER",
+     "modules": [
+      "dark-object-card"
+     ],
+     "motion": "Pro and Max light on their names; Team and Enterprise dim on \"company pays\"",
+     "timing": "3:45.44-3:55.48 in the take (10.0 s)"
+    },
+    {
+     "words": "So here's my question for you this week. Of the jobs in your week, which one only gets done when someone nudges you? That's the one to hand over first.",
+     "point": "The question for the viewer: which job only happens when nudged",
+     "picture": {
+      "kind": "face",
+      "what": "To camera, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [],
+     "motion": "",
+     "timing": "3:55.48-4:05.14 in the take (9.7 s)"
+    },
+    {
+     "words": "And if you run IT, a quick word. People will want to connect their work email to a personal Claude plan before your company gets Duet. That puts company email in an account your company doesn't control. So decide now whether that's allowed, before they ask.",
+     "point": "The risk for IT: company email inside an account the company does not control",
+     "picture": {
+      "kind": "card",
+      "what": "Two boxes on the desk: a company box and a personal Claude plan box; a work email card slides from the first to the second, and the company box loses its lock",
+      "source": "https://support.claude.com/en/articles/17631495-get-started-with-claude-duet",
+      "source_label": ""
+     },
+     "on_screen_text": "TEAM AND ENTERPRISE PLANS: NOT YET",
+     "modules": [
+      "mechanism-image"
+     ],
+     "motion": "the card slides on \"connect\"; the lock drops on \"doesn't control\"",
+     "timing": "4:05.14-4:21.96 in the take (16.8 s)"
+    },
+    {
+     "words": "Here's what I'd do with this info if I were you.",
+     "point": "The turn to what to do",
+     "picture": {
+      "kind": "face",
+      "what": "To camera, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [],
+     "motion": "",
+     "timing": "4:21.96-4:24.40 in the take (2.4 s)"
+    },
+    {
+     "words": "Pick that one job you only do when it's on fire. Make sure the information it needs sits in apps Duet can reach.",
+     "point": "Step one and two: the job, and where its inputs live",
+     "picture": {
+      "kind": "card",
+      "what": "Numbered steps 1 and 2 on the ink desk: 1, one queued job card labelled ON FIRE; 2, the job card wired to the Gmail, Google Calendar and Slack logos",
+      "source": "docs/plans/2026-11-04-wednesday/motion-system.md",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [
+      "numbered-level-chapters",
+      "words-in-scene"
+     ],
+     "motion": "step 1 drops on \"pick\", step 2 wires up on \"apps\"",
+     "timing": "4:24.40-4:31.90 in the take (7.5 s)"
+    },
+    {
+     "words": "When you get Duet, let it draft for a week and check every draft before you say yes. Then look in your Claude settings to see how much of your limit it used.",
+     "point": "Step three and four: a week of checked drafts, then read the usage meter",
+     "picture": {
+      "kind": "card",
+      "what": "Steps 3 and 4: a week of seven draft cards, each with a YES pill lit one by one; then a usage bar filling, labelled 'Settings · Usage'",
+      "source": "docs/plans/2026-11-04-wednesday/motion-system.md",
+      "source_label": ""
+     },
+     "on_screen_text": "SETTINGS · USAGE",
+     "modules": [
+      "numbered-level-chapters",
+      "dark-object-card"
+     ],
+     "motion": "the YES pills light in turn on \"check every draft\"; the bar fills on \"how much\"",
+     "timing": "4:31.90-4:41.80 in the take (9.9 s)"
+    },
+    {
+     "words": "The full deep dive is at makeyourmindup.ai.",
+     "point": "Where to read the whole piece",
+     "picture": {
+      "kind": "card",
+      "what": "End card: makeyourmindup.ai, the one house close",
+      "source": "docs/plans/2026-11-04-wednesday/motion-system.md",
+      "source_label": ""
+     },
+     "on_screen_text": "MAKEYOURMINDUP.AI",
+     "modules": [
+      "dark-object-card"
+     ],
+     "motion": "hold, one calm close",
+     "timing": "4:41.80-4:44.52 in the take (2.7 s)"
+    }
+   ],
+   "frame": "16:9: his portrait take in a full-height column, centred on the brand frame when he speaks alone; when a picture shows he slides to the left edge and the picture fills the right (the 19 Oct route: no full-frame cutaways). Phone captures sit in a phone frame on the ink desk, never stretched"
+  },
+  "short": {
+   "take": "on_camera",
+   "beats": [
+    {
+     "words": "I got early access to Claude Duet. So what does it actually change if you already use Claude? Let me break it down.",
+     "point": "The hook: he has Duet already; what changes if you already use Claude",
+     "picture": {
+      "kind": "face",
+      "what": "To camera, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "CLAUDE DUET · RESEARCH PREVIEW · 21 OCT 2026",
+     "modules": [
+      "random-headline-hook",
+      "full-face-vertical"
+     ],
+     "motion": "",
+     "timing": "0:01.04-0:10.34 in the take (9.3 s)"
+    },
+    {
+     "words": "Duet is Claude's new app, and it messages you first.",
+     "point": "It is the app that speaks first",
+     "picture": {
+      "kind": "screen",
+      "what": "Duet's first message on the phone, set in a phone frame on the ink desk: the welcome bubble, with ink redaction bars (cut paper on the ink desk, part of the look) over the name in 'Hi ...' and the 'K' avatar top right (the screen recording is silent; it plays under his voice, sped to fit the beat)",
+      "source": "capture:Claude duet run-through.mp4@01:00-01:40",
+      "source_label": "CLAUDE DUET · ITS OWN SCREEN, 29 OCT"
+     },
+     "on_screen_text": "",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "the bubble slides up as it arrives; slow push in",
+     "timing": "0:10.34-0:14.14 in the take (3.8 s)"
+    },
+    {
+     "words": "Every few hours it checks your email and calendar, then sends you a morning brief and drafts the work.",
+     "point": "It checks your apps and makes you a morning brief and drafts",
+     "picture": {
+      "kind": "screen",
+      "what": "The Morning brief card Duet built, 'Morning brief for Friday 30 October', with ink redaction bars (cut paper on the ink desk, part of the look) over every line of the brief body (it names his ventures and people); only the title and the 'Refresh it at 6:30 every morning' line stay readable (the screen recording is silent; it plays under his voice, sped to fit the beat)",
+      "source": "capture:Claude duet run-through.mp4@19:00-19:40",
+      "source_label": "CLAUDE DUET · ITS OWN SCREEN, 29 OCT"
+     },
+     "on_screen_text": "GMAIL · CALENDAR · SLACK · EVERY FEW HOURS",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "the card builds from blank to full, sped up; push in on the title",
+     "timing": "0:14.14-0:20.30 in the take (6.2 s)"
+    },
+    {
+     "words": "And it waits for your yes before it sends, pays or signs anything.",
+     "point": "It prepares, then stops for a yes",
+     "picture": {
+      "kind": "card",
+      "what": "The approval queue (motion system): four drafted actions arrive in the queue, SEND A MESSAGE, PAY, SIGN, DELETE, each stopping at a lilac line with an empty YES pill beside it",
+      "source": "https://claude.com/resources/articles/claude-duet",
+      "source_label": ""
+     },
+     "on_screen_text": "OFF-LIMITS EVEN WITH A YES: TRADES, MOVING MONEY",
+     "modules": [
+      "dark-object-card",
+      "words-in-scene"
+     ],
+     "motion": "each action slides in on its verb and halts at the line; the YES pills wait, unlit",
+     "timing": "0:20.30-0:25.30 in the take (5.0 s)"
+    },
+    {
+     "words": "There's no setup quiz, because it already knows what your Claude knows about you.",
+     "point": "No setup quiz: it walked in knowing him",
+     "picture": {
+      "kind": "screen",
+      "what": "The setup screens: 'Connect your apps' (Google Drive suite already connecting) then 'Get notified'; nothing private on these two screens (the screen recording is silent; it plays under his voice, sped to fit the beat)",
+      "source": "capture:Claude duet run-through.mp4@00:20-00:50",
+      "source_label": "CLAUDE DUET · ITS OWN SCREEN, 29 OCT"
+     },
+     "on_screen_text": "",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "one screen hands over to the next on the cut; no zoom needed",
+     "timing": "0:25.30-0:30.02 in the take (4.7 s)"
+    },
+    {
+     "words": "But it only reads one email account, and mine is mostly bills.",
+     "point": "The catch: one email account",
+     "picture": {
+      "kind": "face",
+      "what": "To camera, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "MICROSOFT 365 WORK EMAIL: NOT YET",
+     "modules": [
+      "full-face-vertical"
+     ],
+     "motion": "",
+     "timing": "0:30.02-0:36.98 in the take (7.0 s)"
+    },
+    {
+     "words": "It found me ten jobs I'd only do once they were on fire.",
+     "point": "It found real jobs he would only do when they became urgent",
+     "picture": {
+      "kind": "screen",
+      "what": "The Up next list it brought back, scrolling: every to-do keeps its verb ('Check in with...', 'Decide whether to keep...', 'Get the confirmed...', 'Pre-vote in...'), with ink redaction bars (cut paper on the ink desk, part of the look) over the people, places, providers and amounts after each verb (the screen recording is silent; it plays under his voice, sped to fit the beat)",
+      "source": "capture:Claude duet run-through.mp4@07:00-09:20",
+      "source_label": "CLAUDE DUET · ITS OWN SCREEN, 29 OCT"
+     },
+     "on_screen_text": "",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "slow scroll down the list; each card lifts slightly as it passes the centre",
+     "timing": "0:36.98-0:41.58 in the take (4.6 s)"
+    },
+    {
+     "words": "It's slow, though. It loves a long think, like me.",
+     "point": "It is slow: minutes of thinking",
+     "picture": {
+      "kind": "screen",
+      "what": "The 'Thinking it through' pill pulsing over the same chat for minutes, with ink redaction bars (cut paper on the ink desk, part of the look) over the inbox summary text above it (it names his ventures and a role search) (the screen recording is silent; it plays under his voice, sped to fit the beat)",
+      "source": "capture:Claude duet run-through.mp4@04:00-06:40",
+      "source_label": "CLAUDE DUET · ITS OWN SCREEN, 29 OCT"
+     },
+     "on_screen_text": "THE WAIT, SPED UP 8×",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "the wait time-lapsed 8x with a mono timer in the corner counting the real minutes",
+     "timing": "0:41.58-0:44.04 in the take (2.5 s)"
+    },
+    {
+     "words": "And it uses up your Claude limit.",
+     "point": "The background checks spend your plan limit",
+     "picture": {
+      "kind": "document",
+      "what": "The Help Center line highlighted: 'Work it does in the background, like the morning brief and check-ins, also counts, so you may reach your limits sooner than with chat alone.'",
+      "source": "https://support.claude.com/en/articles/17631495-get-started-with-claude-duet",
+      "source_label": "CLAUDE HELP CENTER"
+     },
+     "on_screen_text": "",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "slow push into the highlighted line",
+     "timing": "0:44.04-0:47.22 in the take (3.2 s)"
+    },
+    {
+     "words": "Now, the best bit. I asked for a calendar scheduler and it built me a dashboard I can share.",
+     "point": "He asked for a scheduler and it built him a working, shareable dashboard",
+     "picture": {
+      "kind": "screen",
+      "what": "Make: the Calendar scheduler artifact building from grey skeleton to the finished card ('Calendar scheduler', 'Ready to paste', 'Copy times'), with ink redaction bars (cut paper on the ink desk, part of the look) over the owner name above the title and the dates (the screen recording is silent; it plays under his voice, sped to fit the beat)",
+      "source": "capture:Claude duet run-through.mp4@12:00-14:40",
+      "source_label": "CLAUDE DUET · ITS OWN SCREEN, 29 OCT"
+     },
+     "on_screen_text": "",
+     "modules": [
+      "screen-proof"
+     ],
+     "motion": "time-lapsed build; on \"dashboard\" it snaps to the finished card and a mint SHARE tick appears",
+     "timing": "0:47.22-0:52.38 in the take (5.2 s)"
+    },
+    {
+     "words": "So I think that's where software is going. You ask once, and you get a tool.",
+     "point": "Where software is going: one ask becomes a tool you reuse",
+     "picture": {
+      "kind": "card",
+      "what": "Mechanism: one chat bubble (a request) folds into a single tool tile; the tile is then used three times in a row (Mon, Wed, Fri tabs light up on it) while the bubble does not come back",
+      "source": "docs/plans/2026-11-04-wednesday/motion-system.md",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [
+      "mechanism-image",
+      "constant-motion"
+     ],
+     "motion": "the fold on \"ask once\"; the three uses tick on \"again and again\"",
+     "timing": "0:52.38-0:59.48 in the take (7.1 s)"
+    },
+    {
+     "words": "Here's what I'd do with this info if I were you.",
+     "point": "The turn to what to do",
+     "picture": {
+      "kind": "face",
+      "what": "To camera, room treated (darkened and softened behind him)",
+      "source": "",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [
+      "full-face-vertical"
+     ],
+     "motion": "",
+     "timing": "0:59.48-1:03.58 in the take (4.1 s)"
+    },
+    {
+     "words": "Pick one job you only do when someone nudges you. Then check every draft Duet makes before you say yes.",
+     "point": "Two steps: the nudged job, then a checked draft before every yes",
+     "picture": {
+      "kind": "card",
+      "what": "Numbered 1 and 2 on the ink desk: 1, one queued job card labelled ON FIRE; 2, a draft card with its YES pill lighting mint only after a tick",
+      "source": "docs/plans/2026-11-04-wednesday/motion-system.md",
+      "source_label": ""
+     },
+     "on_screen_text": "",
+     "modules": [
+      "numbered-level-chapters",
+      "dark-object-card"
+     ],
+     "motion": "step 1 drops on \"pick\", step 2 lights on \"say yes\"",
+     "timing": "1:03.58-1:11.78 in the take (8.2 s)"
+    },
+    {
+     "words": "The full deep dive is at makeyourmindup.ai.",
+     "point": "Where to read the whole piece",
+     "picture": {
+      "kind": "card",
+      "what": "End card: makeyourmindup.ai, the one house close",
+      "source": "docs/plans/2026-11-04-wednesday/motion-system.md",
+      "source_label": ""
+     },
+     "on_screen_text": "MAKEYOURMINDUP.AI",
+     "modules": [
+      "dark-object-card"
+     ],
+     "motion": "hold, one calm close",
+     "timing": "1:11.78-1:14.28 in the take (2.5 s)"
+    }
+   ],
+   "frame": "9:16: his face full frame; when a picture shows it fills the top of the frame and his face sits in the band below (the 19 Oct route: no full-frame cutaways). Phone captures are cropped to the part that proves the words"
+  }
+ },
+ "article": {
+  "visuals": [
+   {
+    "point": "Your job moves from asking to approving",
+    "question": "What actually changes in my day?",
+    "source": "docs/plans/2026-10-26-week/narrative-wed.md (the one picture) and https://claude.com/resources/articles/claude-duet",
+    "what": "One working week drawn twice: before, you copy from email, calendar and notes into Claude and ask; after, the brief arrives with meeting prep, a draft reply and a note queued, each waiting for yes"
+   }
+  ]
+ },
+ "do_not": [
+  "No public word or pixel names him: his name in Duet's greeting, the 'K' avatar, the owner line on the Calendar scheduler and anything else that names him sits under an ink bar (floor 1)",
+  "Nothing private from his screen: the first task's two words (he says 'a job search' aloud; the screen never shows it), the inbox summary, his ventures (Mindmake, Legibility, Heartside, Full Time), the people, places, providers and amounts in the to-dos, the Google Play spend line, the morning brief's body and the Artifacts titles all sit under ink bars. A moment that cannot be covered cleanly is not used",
+  "Never a blur that leaves letters guessable; ink bars only",
+  "No reviewer or Reddit username on screen; Claire Vo and Lenny's Newsletter appear only because he names them",
+  "No on-screen label repeats what he says (the burned captions carry his words); a label adds a source, date, number or name",
+  "No figure or icon acting out an idea; every picture is his real screen, a checked page, a real logo or the queue",
+  "No named scheduling or note-taking company on screen: he names the categories, not companies",
+  "Never invent a word, number, label or picture; a gap goes back to Claude"
+ ],
+ "acceptance": [
+  "Watched end to end at full size, at the speed the audience sees it, by a reviewer who did not make the cut",
+  "Every spoken word heard continuously: no chopped syllable at any join (audio compared around each edit boundary)",
+  "Every picture lands on the words it proves, framing centred, logos at equal size, no shake left in",
+  "Brand matches the reference frame: wordmark, captions, palette and the intro sting",
+  "Fact, transport and editorial status reported separately; ready only when all three pass"
+ ],
+ "signed": {
+  "by": "",
+  "said": "",
+  "on": "",
+  "script_sha256": {}
+ },
+ "production_choices": {
+  "opening": "hook_is_intro",
+  "lead_picture": {
+   "series_picture": {
+    "what": "The under.the.hood series picture from the brand book: CLAUDE DUET in Anton beside the real Claude mark, the SCREWDRIVER INCLUDED sticker, wordmark and lilac pill",
+    "still": "docs/plans/2026-11-04-wednesday/stills/series-picture.png"
+   },
+   "story_object": {
+    "what": "The Queue: Anthropic's four actions (send a message, make a payment, sign a document, delete anything) waiting at the lilac line, one YES lit mint, beside THE WORK TURNS UP FIRST",
+    "still": "docs/plans/2026-11-04-wednesday/stills/story-object.png"
+   },
+   "proposed": "story_object",
+   "ticked": null
+  },
+  "big_moment_sound": "none"
+ },
+ "motion_system": {
+  "name": "The Queue",
+  "file": "docs/plans/2026-11-04-wednesday/motion-system.md"
+ },
+ "take_edits": {
+  "ruling": "Krish, 2026-10-26: \"Happy to cut those four slips as long as it doesn't make the output sound weird or glitchy.  That's just how I talk. Unless you think there are serious flaws in it, they're not really slips as much as they are just me talking naturally.\"",
+  "rule": "Keep everything he said as he said it. Cut only a serious flaw, only where the cut is inaudible (in the silence between words, under a picture), judged by ear at full volume. If it cannot be cut cleanly, keep it.",
+  "long": [],
+  "short": [],
+  "none_proposed": "No serious flaw in either take: no wrong fact, no legal risk. What he added (about 32% of the 5-minute and 29% of the 90-second is his own words) is how he talks and stays, including his asides \"Anthropic have typically always been pretty good at waiting until you're approved\", \"I was very lucky to get on that early waitlist\" and \"Remember, no sending, no spending without your permission.\"",
+  "check_by_ear": [
+   {
+    "cut": "long",
+    "at": "4:32",
+    "words": "\"let it draw for a week\"",
+    "why": "the script says \"draft\"; probably the transcriber, so the caption reads \"draft\" if the audio holds \"draft\""
+   },
+   {
+    "cut": "long",
+    "at": "3:21",
+    "words": "\"Clairvaux\"",
+    "why": "the transcriber for \"Claire Vo\"; caption reads Claire Vo"
+   },
+   {
+    "cut": "both",
+    "at": "throughout",
+    "words": "\"DeWitt\" / \"Dewitt\"",
+    "why": "the transcriber for \"Duet\"; every caption reads Duet"
+   }
+  ]
+ },
+ "production_notes": [
+  "2026-10-31, Claude Code: both takes are on camera, 1080x1920 portrait, read against the current Teleprompter words (both hashes match the record). The screen recording (Claude duet run-through.mp4, 720x1560, 22 min 26 s, silent) and the shorter 'claude duet - video run through.mp4' (3 min 26 s, silent) are the proof; only the longer one is used. Timestamps in each beat are recording time.",
+  "The to-do list, the morning brief and the inbox summary are mostly private. Each is shown for its shape (a list arrived, a brief exists, it thought for minutes), with the private words under ink bars. If after covering, a beat reads as mostly bars, production stops and says which beat; Claude replaces it with a queue card from the checked facts.",
+  "Logos: Gmail, Google Calendar, Slack, Microsoft 365 and Claude fetched by their official brand pages at production, equal size, never redrawn. The Claude mark already in the repository is docs/plans/2026-10-09-friday/logos/claude-cream.svg.",
+  "The 36 HOURS beat uses the Reddit user's own figure ('I caught up in 36 hours'); the article already says 'a day and a half'."
+ ]
+}
