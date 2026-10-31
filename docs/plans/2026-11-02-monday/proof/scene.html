@@ -1,0 +1,134 @@
+<!doctype html>
+<meta charset="utf-8">
+<!-- Monday 2 Nov proof, 16:9, 36.8 s: the opener, the hook on the branded frame, the report, the badges (27% to 9%), and
+     the six-to-one bars. render(t, layer) draws one frame: layer "bg" sits behind his face column, "fg" over it.
+     Built against the approved references (Monday 19's branded frame, Friday 23's headline style), 31 Oct 2026. -->
+<style>
+@font-face{font-family:Anton;src:url('../../../../assets/fonts/makeyourmindup/Anton-Regular.ttf')}
+@font-face{font-family:Archivo;src:url('../../../../assets/fonts/makeyourmindup/Archivo-Variable.ttf')}
+@font-face{font-family:Plex;src:url('../../../../assets/fonts/makeyourmindup/IBMPlexMono-Medium.ttf')}
+@font-face{font-family:Fraunces;src:local('Georgia')}
+html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:transparent}
+.L{position:absolute;inset:0}
+#cam{position:absolute;inset:0;transform-origin:50% 50%}
+.abs{position:absolute}
+.anton{font-family:Anton;line-height:.92;text-transform:uppercase}
+.mono{font-family:Plex;font-weight:500;letter-spacing:2px;text-transform:uppercase}
+.hl{display:inline-block;position:relative;z-index:0}
+.hl::before{content:'';position:absolute;left:-6px;right:-6px;top:6%;bottom:2%;background:var(--hl,#FFD84D);z-index:-1;transform-origin:left;transform:scaleX(var(--k,1))}
+#grain{position:absolute;inset:0;opacity:.07;pointer-events:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' seed='3'/></filter><rect width='240' height='240' filter='url(%23n)'/></svg>")}
+.badge{position:absolute;width:58px;height:82px;border-radius:7px;background:#f3eee2 url('../../../../assets/plates/two-passports/paper.jpg') center/220px;box-shadow:0 8px 14px rgba(0,0,0,.5),inset 0 0 0 1px rgba(12,21,18,.2);overflow:hidden}
+.badge::before{content:'';position:absolute;inset:0;background:url('../../../../assets/plates/two-passports/guilloche.svg') center/110px;opacity:.3}
+.badge::after{content:'';position:absolute;left:20px;top:6px;width:18px;height:5px;border-radius:3px;background:#0C1512;opacity:.65}
+.badge i{position:absolute;left:0;right:0;bottom:14px;height:12px;background:rgba(12,21,18,.13)}
+.badge.j i{background:#FFD84D}
+#cap{position:absolute;left:0;right:0;bottom:64px;text-align:center}
+#cap span{display:inline-block;font:900 50px Archivo;color:#F4EFE4;background:#0C1512;padding:8px 20px 10px;box-shadow:9px 9px 0 #FFD84D;white-space:nowrap}
+</style>
+<div class="L" id="root"><div id="cam"></div><div id="grain"></div><div id="corners"></div><div id="cap"></div></div>
+<script>
+const Q=new URLSearchParams(location.search), LAYER=Q.get('layer')||'fg';
+const WM='../../../../.cache/makeyourmindup/wordmark.png', REPORT='../imagery/src/report-cover.jpg';
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const eo=x=>{x=clamp(x);return 1-Math.pow(1-x,3)};                       // ease out
+const back=x=>{x=clamp(x);const c=1.9;return 1+(c+1)*Math.pow(x-1,3)+c*Math.pow(x-1,2)}; // overshoot
+const W=(t,a,d)=>eo((t-a)/d), B=(t,a,d)=>back((t-a)/d);
+const OFF=0.6;                      // output time = take time + 0.6
+// captions: phrases with take times, words revealed on their own clock
+const WORDS=[["Junior",2.52],["hiring",3.3],["at",4.0],["Anthropic,",4.34],["the",5.4],["AI",5.72],["company",5.88],["behind",6.14],["Claude,",6.44],["has",6.74],["fallen",7.5],["off",7.8],["a",8.02],["cliff.",8.16],
+["So",9.36],["if",9.94],["they're",10.52],["not",10.9],["hiring",11.2],["juniors,",11.76],["who's",12.22],["going",12.44],["to",12.52],["train",12.64],["the",12.82],["seniors",12.96],["you'll",13.4],["need",13.74],["in",13.86],["2030?",14.0],
+["Anthropic",14.44],["recently",15.24],["studied",15.44],["its",15.9],["own",16.08],["staff.",16.28],["And",16.66],["what",17.12],["it",17.2],["found",17.3],["matters",17.62],["to",17.96],["anyone",18.18],["who",18.56],["hires.",18.8],
+["Now",20.06],["one",20.64],["number",20.8],["stands",20.94],["out.",21.2],["In",21.42],["early",21.54],["2025,",21.92],["about",22.52],["one",23.1],["in",23.74],["four",23.86],["of",24.2],["its",24.34],["new",24.46],["technical",24.64],["hires",24.96],["were",25.28],["juniors.",25.44],
+["Now",25.8],["it's",26.04],["fewer",26.34],["than",26.82],["one",27.14],["in",27.48],["ten,",27.62],["27%",27.84],["down",28.7],["to",28.88],["9%.",29.0],
+["But",29.42],["why",29.82],["is",29.98],["that?",30.14],["By",30.36],["August,",31.32],["its",31.58],["AI",31.76],["agents,",31.98],["which",32.26],["work",32.5],["on",32.9],["tasks",33.1],["by",33.4],["themselves,",33.64],["were",34.02],["putting",34.28],["in",34.5],["far",34.64],["more",35.02],["hours",35.2],["than",35.54],["its",35.74],["people.",35.9]];
+const BREAK=new Set(["cliff.","juniors,","2030?","staff.","hires.","out.","2025,","juniors.","ten,","9%.","that?","themselves,","people.","Claude,","Anthropic,"]);
+const PHR=[];{let cur=[];for(const w of WORDS){cur.push(w);if(BREAK.has(w[0])||cur.length>=6){PHR.push(cur);cur=[]}}if(cur.length)PHR.push(cur)}
+function caps(t){const el=document.getElementById('cap');if(LAYER!=='fg'||t<3.0){el.innerHTML='';return}
+  const tt=t-OFF;let p=null;for(let i=0;i<PHR.length;i++){const s=PHR[i][0][1]-0.05,e=(PHR[i+1]?PHR[i+1][0][1]:s+4)-0.05;if(tt>=s&&tt<e){p=PHR[i];break}}
+  if(!p){el.innerHTML='';return} const shown=p.filter(w=>tt>=w[1]-0.03).map(w=>w[0]);el.innerHTML='<span>'+shown.join(' ')+'</span>'}
+// the camera never rests
+function camera(t){let x=Math.sin(t*.37)*7,y=Math.cos(t*.29)*5,s=1.012+Math.sin(t*.21)*.008;
+  const shake=(a,amp)=>{const k=clamp(1-(t-a)/0.45);return t>=a&&k>0?amp*k*Math.sin((t-a)*70):0};
+  x+=shake(1.55,14)+shake(29.62,10);y+=shake(1.55,9)+shake(29.62,7);
+  return `translate(${x}px,${y}px) scale(${s})`}
+const html=[];
+function put(s){html.push(s)}
+function badges(t){ // two trays of 100 hire badges; on "27%" 18 juniors lift off and fall
+  const js=[];for(let k=0;k<27;k++)js.push(Math.floor(k*100/27+1)%100);const keep=new Set(js.filter((_,i)=>i%3===0).slice(0,9));
+  let s='';const fill=W(t,20.6,2.4);
+  for(let i=0;i<100;i++){const r=Math.floor(i/10),c=i%10,isj=js.includes(i);
+    const appear=clamp((fill*100-i)/6);if(appear<=0)continue;
+    let x=c*66+((i*37)%7)-3,y=r*92+((i*53)%5)-2,rot=((i*29)%9)-4,op=appear,sc=.6+.4*back(appear);
+    if(isj&&!keep.has(i)){const f=(t-(28.44+(i%9)*0.045));if(f>0){x+=f*((i%2)?60:-60);y+=f*f*1800-f*260;rot+=f*((i%2)?260:-260);sc*=1+f*.4;op*=clamp(1-f*1.6)}}
+    s+=`<div class="badge ${isj?'j':''}" style="left:${x}px;top:${y}px;opacity:${op};transform:rotate(${rot}deg) scale(${sc})"><i></i></div>`}
+  return s}
+function render(t){html.length=0;const cam=document.getElementById('cam');cam.style.transform=camera(t);
+  const yellow=(t>=2.55&&t<20.4)||(t>=29.75);
+  // ---------- background layer ----------
+  if(LAYER==='bg'){
+    if(yellow){const wipeIn=t<3.2?W(t,2.55,0.5):1;put(`<div class="abs" style="left:${(1-wipeIn)*1920}px;top:0;width:1920px;height:1080px;background:#FFD84D"></div>`);
+      // the branded frame, as Monday 19: the series tag, his title, the sticker, the MONDAYS card (left and right of his column)
+      const out=W(t,12.6,0.5)*(t<29.75?1:0), back2=t>=29.75?W(t,29.8,0.5):1, show=(t<12.6?1:1-out)*back2*(t>=31.9?1-W(t,31.9,0.4):1);
+      const a=B(t,3.0,0.55), b=B(t,3.18,0.55), c=B(t,3.36,0.6), d=B(t,3.1,0.6), fl=Math.sin(t*1.3)*4;
+      if(show>0.01){
+        put(`<div class="abs mono" style="left:${66-(1-a)*500}px;top:${370+fl}px;opacity:${show};font-size:30px;color:#F4EFE4;background:#0C1512;padding:8px 18px">FOLLOW.THE.MONEY</div>`);
+        put(`<div class="abs anton" style="left:${66-(1-b)*600}px;top:${440+fl*.6}px;opacity:${show};width:560px;font-size:64px;color:#0C1512">Claude's AI is eating the jobs of its own <span class="hl" style="--hl:#F4EFE4;--k:${W(t,3.9,0.5)}">humans.</span></div>`);
+        put(`<div class="abs mono" style="left:66px;top:${740+fl*1.2}px;opacity:${show};transform:rotate(${-3+Math.sin(t*.9)*1.5}deg) scale(${c});font-size:30px;color:#0C1512;background:#F4EFE4;border:4px solid #0C1512;border-radius:40px;padding:12px 28px;box-shadow:7px 7px 0 #0C1512">BRING A CALCULATOR</div>`);
+        put(`<div class="abs" style="left:${1340+(1-d)*700}px;top:${380-fl}px;opacity:${show};width:510px;height:310px;background:#0C1512;border-radius:22px;box-shadow:14px 14px 0 rgba(12,21,18,.25)">
+          <img src="${WM}" style="position:absolute;left:38px;top:44px;width:430px"><div class="anton" style="position:absolute;left:38px;top:118px;font-size:96px;color:#FFD84D">Mondays</div>
+          <div class="mono" style="position:absolute;left:40px;top:236px;font-size:30px;color:#F4EFE4;text-transform:none;letter-spacing:0">makeyourmindup.ai</div></div>`);}
+    } else {put(`<div class="abs" style="inset:0;background:#0C1512"></div>`)}
+  }
+  // ---------- foreground layer ----------
+  if(LAYER==='fg'){
+    // the opener: the ladder's bottom rung cracks and falls; the statement slams in
+    if(t<3.2){const out=t>2.55?W(t,2.55,0.5):0;
+      put(`<div class="abs" style="inset:0;background:#0C1512;transform:translateX(${-out*1920}px)">`);
+      const L=360,R=600,rail=W(t,0.05,0.5);let sv=`<svg width="1920" height="1080" style="position:absolute;left:0;top:0">`;
+      sv+=`<g stroke="#F4EFE4" stroke-width="16" stroke-linecap="round" fill="none"><line x1="${L}" y1="120" x2="${L}" y2="${120+860*rail}"/><line x1="${R}" y1="120" x2="${R}" y2="${120+860*rail}"/>`;
+      [230,400,570,740].forEach((y,i)=>{const p=W(t,0.2+i*0.12,0.25);sv+=`<line x1="${L}" y1="${y}" x2="${L+(R-L)*p}" y2="${y}"/>`});
+      const f=t-1.35; const dy=f>0?f*f*2600:0, rot=f>0?f*120:0;
+      sv+=`<g transform="translate(${(L+R)/2},${910+dy}) rotate(${rot})"><line x1="${-(R-L)/2}" y1="0" x2="${(R-L)/2*W(t,0.66,0.25)}" y2="0" stroke="#FFD84D"/></g></g>`;
+      if(t>1.3&&t<1.6){sv+=`<path d="M${L+90} 900 l25 20 l-18 12 l30 22" stroke="#FFD84D" stroke-width="6" fill="none" opacity="${1-W(t,1.45,0.15)}"/>`}
+      sv+='</svg>';put(sv);
+      const sl=B(t,1.5,0.35);
+      put(`<div class="abs anton" style="left:740px;top:290px;font-size:150px;white-space:nowrap;color:#F4EFE4;transform:scale(${2.2-1.2*sl});transform-origin:left center;opacity:${clamp((t-1.5)/0.08)}">The bottom rung</div>`);
+      put(`<div class="abs anton" style="left:740px;top:450px;font-size:150px;white-space:nowrap;color:#0C1512;opacity:${clamp((t-1.7)/0.08)}"><span class="hl" style="--k:${W(t,1.7,0.3)};color:#0C1512">is going.</span></div>`);
+      put(`<div class="abs" style="left:748px;top:640px;font:italic 46px Georgia,serif;color:#F4EFE4;opacity:${W(t,2.0,0.35)}">Anthropic's own hiring data, October 2026.</div>`);
+      put('</div>');}
+    // C: the ladder with 2030, then the report flies in (right of his column)
+    if(t>=12.6&&t<20.6){const o=t>20.2?1-W(t,20.2,0.3):1,X=820;
+      let sv=`<svg width="1920" height="1080" style="position:absolute;left:0;top:0;opacity:${o}"><g stroke="#0C1512" stroke-width="14" stroke-linecap="round">`;
+      const rail=W(t,12.8,0.6);sv+=`<line x1="${X}" y1="160" x2="${X}" y2="${160+780*rail}"/><line x1="${X+260}" y1="160" x2="${X+260}" y2="${160+780*rail}"/>`;
+      [260,420,580,740].forEach((y,i)=>{const p=W(t,13.0+i*.12,.3);sv+=`<line x1="${X}" y1="${y}" x2="${X+260*p}" y2="${y}"/>`});
+      sv+=`<line x1="${X}" y1="900" x2="${X+260}" y2="900" stroke-dasharray="10 18" opacity=".45"/></g>`;
+      const lit=W(t,14.5,0.35);sv+=`<rect x="${X-10}" y="${190}" width="280" height="56" rx="8" fill="#0C1512" opacity="${lit}"/><text x="${X+130}" y="235" font-family="Anton" font-size="52" fill="#7EF0C0" text-anchor="middle" opacity="${lit}">2030</text></svg>`;put(sv);
+      const fly=B(t,15.0,0.7),pu=W(t,15.0,5);
+      put(`<div class="abs" style="left:${1180+(1-fly)*900}px;top:${150+(1-fly)*-80}px;width:600px;opacity:${o};transform:rotate(${-5+4*fly}deg) scale(${.96+pu*.08});box-shadow:0 30px 60px rgba(12,21,18,.45);transform-origin:center"><img src="${REPORT}" style="width:600px;display:block"></div>`);
+      put(`<div class="abs mono" style="left:1188px;top:${930}px;font-size:22px;color:#0C1512;opacity:${W(t,15.4,.4)*o}">ANTHROPIC · 16 OCT 2026</div>`);}
+    // D: the badges, full frame
+    if(t>=20.2&&t<30.1){const inn=W(t,20.2,0.45),out=t>29.75?W(t,29.75,0.35):0;
+      put(`<div class="abs" style="inset:0;background:#0C1512;opacity:${inn};transform:translateX(${-out*1920}px)">`);
+      const push=1+W(t,20.4,9)*0.12;
+      put(`<div class="abs" style="left:250px;top:150px;width:700px;height:960px;transform:perspective(1600px) rotateX(${32-8*W(t,20.4,8)}deg) rotateZ(-5deg) scale(${push});transform-origin:50% 40%">${badges(t)}</div>`);
+      put(`<div class="abs mono" style="left:1130px;top:190px;font-size:30px;color:#F4EFE4;opacity:${W(t,22.1,.4)}">${t<26.6?'New technical hires · early 2025':'New technical hires · now'}</div>`);
+      let v=0;if(t>=23.7&&t<28.44)v=Math.round(27*W(t,23.7,1.4));else if(t>=28.44)v=Math.round(27-18*W(t,28.44,1.2));
+      const pop=t>=29.62?1+.12*(1-W(t,29.62,.25)):1;
+      if(t>=23.7)put(`<div class="abs anton" style="left:1120px;top:300px;font-size:330px;color:#F4EFE4;transform:scale(${pop});transform-origin:left">${v}%</div><div class="abs" style="left:1130px;top:640px;height:22px;width:${520*W(t,29.0,.4)}px;background:#FFD84D"></div>`);
+      if(t>=28.44)put(`<div class="abs anton" style="left:1130px;top:700px;font-size:90px;color:#5b625e;text-decoration:line-through;opacity:${W(t,28.44,.3)}">27%</div>`);
+      put(`<div class="abs mono" style="left:1130px;top:860px;font-size:22px;color:#a9b4ae">Anthropic · How employment is changing at Anthropic · Oct 2026</div></div>`);}
+    // E: the hours bars (right of his column)
+    if(t>=31.9){const o=W(t,31.9,.4);const base=900,u=88,staff=u*W(t,32.3,.5),agents=u*6*W(t,35.0,1.2);
+      put(`<div class="abs" style="left:1000px;top:${base-staff}px;width:200px;height:${staff}px;background:#0C1512;opacity:${o}"></div><div class="abs" style="left:1300px;top:${base-agents}px;width:200px;height:${agents}px;background:#0C1512;opacity:${o};box-shadow:12px 12px 0 #7EF0C0"></div>`);
+      put(`<div class="abs mono" style="left:1000px;top:${base+18}px;font-size:24px;color:#0C1512;opacity:${o}">Staff</div><div class="abs mono" style="left:1300px;top:${base+18}px;font-size:24px;color:#0C1512;opacity:${o}">AI agents</div>`);
+      const r=B(t,36.0,.4);if(t>=36.0)put(`<div class="abs anton" style="left:1540px;top:360px;font-size:120px;white-space:nowrap;color:#0C1512;transform:scale(${r});transform-origin:left">6 to 1</div>`);
+      put(`<div class="abs mono" style="left:1000px;top:200px;font-size:22px;color:#0C1512;opacity:${o}">Hours worked · August 2026 · Anthropic</div>`);}
+  }
+  cam.innerHTML=html.join('');
+  // the corners, always: wordmark tile and the series pill (fg only)
+  document.getElementById('corners').innerHTML=LAYER==='fg'&&t>=0.3?`<div class="abs" style="left:40px;top:34px;background:#0C1512;border-radius:10px;padding:12px 16px;opacity:${W(t,0.3,.4)}"><img src="${WM}" style="height:30px;display:block"></div><div class="abs mono" style="right:40px;top:40px;font-size:24px;background:#FFD84D;color:#0C1512;padding:8px 16px;border-radius:999px;box-shadow:0 0 0 3px #0C1512;opacity:${W(t,0.3,.4)}">follow.the.money</div>`:'';
+  document.getElementById('grain').style.display=LAYER==='bg'?'block':'none';
+  caps(t);
+}
+render(0);
+</script>
