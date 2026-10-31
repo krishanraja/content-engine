@@ -148,6 +148,23 @@ def cues(cut, mapping, shape, paged=False):
     return out
 
 
+def face_pushes(cut, mapping):
+    """A push in on the second half of every face beat, so his face is never a still frame: the framing changes
+    at least once a beat (Krish, 2026-10-31: "way more animation than ever before and movement")."""
+    words, _ = take_words(cut)
+    out = []
+    for n, b in enumerate(D['cuts'][cut]['beats'], 1):
+        if n in mapping or b['picture']['kind'] != 'face':
+            continue
+        s, e = window(b)
+        inside = [w for w in words if s - 0.05 <= w['s'] < e - 0.02 and norm(w['w'])]
+        if len(inside) < 8:
+            continue
+        mid = inside[len(inside) // 2:]
+        out.append({'start': ' '.join(w['w'].strip() for w in mid[:3]), 'end': ' '.join(w['w'].strip() for w in mid[-3:])})
+    return out
+
+
 def configure(cut, shape, cue_list, extra):
     path = KIT / f'{cut}.json'
     cfg = json.loads(path.read_text(encoding='utf-8'))
@@ -168,9 +185,7 @@ if __name__ == '__main__':
         # Krish, 2026-10-31: "way more animation than ever before and movement": his face is never a still frame
         # either: the framing changes at each hidden pause cut, and pushes in on the lines that carry the piece.
         configure('long', '16x9', c, {'music_mode': 'episode', 'music_seconds': 100, 'reframe': True,
-                                      'emphasis': [{'start': 'It knows what it knows', 'end': 'about me'},
-                                                   {'start': 'I asked for a one-off', 'end': 'a tool back'},
-                                                   {'start': 'Of the jobs in your week', 'end': 'nudges you'}]})
+                                      'emphasis': face_pushes('long', LONG)})
         print(f'long: {len(c)} cues')
     if 'short' in which:
         c = cues('short', SHORT, '9x16', paged=True)
