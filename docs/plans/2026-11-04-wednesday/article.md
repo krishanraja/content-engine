@@ -60,6 +60,6 @@ And a quick word to whoever runs IT. People will want to connect work email to a
 
 ## 3 things you can do tomorrow
 
-1. Write down the one Claude job you do every week by copying and pasting. If its inputs come from your email, calendar, CRM or Slack, that's your first Duet job.
-2. Check where that job's inputs live. If any of it sits in files on your computer or behind a custom connector, move it into a connected app, or pick a different first job.
-3. Note how much of your Claude allowance you use in a normal week now. Then you'll see what Duet costs you once you're in.
+- Write down the one Claude job you do every week by copying and pasting. If its inputs come from your email, calendar, CRM or Slack, that's your first Duet job.
+- Check where that job's inputs live. If any of it sits in files on your computer or behind a custom connector, move it into a connected app, or pick a different first job.
+- Note how much of your Claude allowance you use in a normal week now. Then you'll see what Duet costs you once you're in.

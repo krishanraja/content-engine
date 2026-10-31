@@ -50,6 +50,6 @@ And if you're early in your career, ask in your next interview what real work yo
 
 ## 3 things you can do tomorrow
 
-1. Name your 2030 seniors. For each team, write down who you expect to be senior in four years' time, and the real work they're learning on now.
-2. Look at your last three hiring decisions. If AI was the reason a junior role went unfilled, write down who now does the learning that role used to do.
-3. Give one junior one dull job to own. Pick a task that repeats every week. Have them do it by hand first, then build the fix with AI, so they learn how the work works before the tool does it for them.
+- Name your 2030 seniors. For each team, write down who you expect to be senior in four years' time, and the real work they're learning on now.
+- Look at your last three hiring decisions. If AI was the reason a junior role went unfilled, write down who now does the learning that role used to do.
+- Give one junior one dull job to own. Pick a task that repeats every week. Have them do it by hand first, then build the fix with AI, so they learn how the work works before the tool does it for them.
