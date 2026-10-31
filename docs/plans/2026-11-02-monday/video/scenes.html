@@ -180,7 +180,7 @@ const SCENES={
  // the two questions as mint cards settling on the gap
  questions(t){camera(t);const L=ladder(t,{extraTop:1,juniorGone:1,label2030:1});const g=L.g;SVG.innerHTML=L.svg;
    const q=P.cards.map(()=>'');HTML.innerHTML=
-   q.map((s,i)=>{const a=pop(t,ev('q'+i,0.6+i*1.4),0.55);return `<div class="card" style="left:${TALL?W*0.08:g.R+W*0.04}px;top:${TALL?H*(0.56+i*0.2):H*(0.30+i*0.27)}px;max-width:${TALL?W*0.84:W-g.R-W*0.10}px;font-size:${H*0.042}px;opacity:${a};transform:translateY(${(1-a)*80}px) rotate(${(i?2:-2)*(1-a)+Math.sin(t+i)*0.6}deg)"></div>`}).join('');},
+   q.map((s,i)=>{const a=pop(t,ev('q'+i,0.6+i*1.4),0.55);return `<div class="card" style="left:${TALL?W*0.08:g.R+W*0.04}px;top:${TALL?H*(0.56+i*0.2):H*(0.30+i*0.27)}px;width:${TALL?W*0.6:W-g.R-W*0.12}px;height:${H*0.13}px;box-sizing:border-box;font-size:${H*0.042}px;opacity:${a};transform:translateY(${(1-a)*80}px) rotate(${(i?2:-2)*(1-a)+Math.sin(t+i)*0.6}deg)"></div>`}).join('');},
  // the 90-second cut's two past frames: the branches copy to 43% more, then the accountants stack past the clerks
  past(t){const sw=ev('switch',2.4);if(t<sw){document.getElementById('credit').textContent='IMF · BESSEN 2015';return SCENES.copies(t)}
    document.getElementById('credit').textContent='NPR PLANET MONEY · 2015';const keep=E;E={gone:sw+0.2,added:sw+0.9};SCENES.ledger(t);E=keep;},
