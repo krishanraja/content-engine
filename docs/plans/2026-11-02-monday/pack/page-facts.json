@@ -1,0 +1,69 @@
+{
+ "subchannel": "follow.the.money",
+ "date": "2026-11-02",
+ "headline": "Claude's AI is eating the jobs of its own humans. What does that signal for the rest of us?",
+ "deck": "Anthropic's own study shows juniors fell from 27% to 9% of its new technical hires as AI took on the first draft. If nobody hires juniors, who trains the seniors you'll need in 2030?",
+ "video_title": "Claude's AI is eating the jobs of its own humans. What does that signal for the rest of us?",
+ "video_title_emphasis": "eating the jobs",
+ "comment_question": "WHO WILL BE YOUR SENIORS IN 2030?",
+ "cover": {
+  "headline": [
+   "CLAUDE IS EATING THE JOBS",
+   "OF ITS OWN HUMANS"
+  ],
+  "portrait": "../../../../.cache/pack/mon/portrait.jpg",
+  "rows": [
+   {
+    "name": "Anthropic",
+    "logo": "../logos/anthropic-symbol-cream.svg",
+    "tag": "27% TO 9%",
+    "colour": "butter"
+   }
+  ]
+ },
+ "body": "../article.md",
+ "endnote": "Figures checked on 31 October 2026 against the sources below.",
+ "figures": [
+  {
+   "after": "and the job came back bigger.",
+   "image": "../../../../.cache/pack/mon/figure-ladder.png",
+   "alt": "Twice the job came back bigger: city bank branches needed 13 tellers instead of 20 but opened 43% more branches, and spreadsheets cut 400,000 clerk jobs while adding 600,000 accounting jobs. At Anthropic, juniors fell from 27% to 9% of new technical hires."
+  }
+ ],
+ "sources": {
+  "s1": [
+   "Anthropic: How Employment is Changing at Anthropic (16 Oct 2026)",
+   "https://www-cdn.anthropic.com/72628f1863c53432195db83279252dfd2cb53158/Employment%20at%20Anthropic.pdf"
+  ],
+  "s2": [
+   "Hosseini Maasoum and Lichtinger: Generative AI as Seniority-Biased Technological Change (Stanford Digital Economy Lab)",
+   "https://digitaleconomy.stanford.edu/event/seyed-m-hosseini-and-guy-lichtinger-generative-ai-as-seniority-biased-technological-change-evidence-from-u-s-resume-and-job-posting-data/"
+  ],
+  "s3": [
+   "James Bessen: Toil and Technology, IMF Finance & Development, March 2015",
+   "https://www.imf.org/external/pubs/ft/fandd/2015/03/bessen.htm"
+  ],
+  "s4": [
+   "NPR Planet Money: Episode 606, Spreadsheets! (25 Feb 2015)",
+   "https://www.npr.org/sections/money/2015/02/25/389027988/episode-606-spreadsheets"
+  ]
+ },
+ "links": [
+  [
+   "How Employment is Changing at Anthropic",
+   "s1"
+  ],
+  [
+   "Seyed Hosseini Maasoum and Guy Lichtinger",
+   "s2"
+  ],
+  [
+   "James Bessen",
+   "s3"
+  ],
+  [
+   "NPR's Planet Money",
+   "s4"
+  ]
+ ]
+}
