@@ -3,12 +3,12 @@ import { mkdtempSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { mergeMaking, parseMakingPatch } from '../apps/control-plane/api/_making.js'
+import { mergeMaking, parseMakingPatch } from '../../apps/control-plane/api/_making.js'
 
 // scripts/voice/spoken_delta.py: what Krish changes reading his script aloud (Krish, 2026-10-31:
 // "start the script vs recording comparison"), and the making record field that keeps it.
 
-const ROOT = join(__dirname, '..')
+const ROOT = join(__dirname, '..', '..')
 const PY = process.platform === 'win32' ? 'python' : 'python3'
 const DELTA = join(ROOT, 'scripts', 'voice', 'spoken_delta.py')
 const NOW = '2026-10-31T16:00:00.000Z'

@@ -50,6 +50,7 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `scripts/signals/`
 - `scripts/ve/`
 - `scripts/velib/`
+- `scripts/voice/`
 - `scripts/windowless/`
 - `supabase/migrations/`
 - `tests/`
