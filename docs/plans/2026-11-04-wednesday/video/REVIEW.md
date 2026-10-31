@@ -10,8 +10,8 @@ the only one who can watch and accept them.
 
 | Cut | File to watch | Master | Length |
 |---|---|---|---|
-| 90-second, 9:16 | `.cache/produce/2026-11-04-b63d2507/render/short/share/claude-duet-short-9x16-share.mp4` (24.4 MiB) | `render/short/claude-duet-short-9x16.mp4` | SHORT_LEN (you 1:13.8, end card 4.0 s) |
-| 5-minute, 16:9 | `.cache/produce/2026-11-04-b63d2507/render/long/share/claude-duet-long-16x9-share.mp4` | `render/long/claude-duet-long-16x9.mp4` | LONG_LEN |
+| 90-second, 9:16 | `.cache/produce/2026-11-04-b63d2507/render/short/share/claude-duet-short-9x16-share.mp4` (24.4 MiB) | `render/short/claude-duet-short-9x16.mp4` | 1:17.8 (you 1:13.8, end card 4.0 s) |
+| 5-minute, 16:9 | `.cache/produce/2026-11-04-b63d2507/render/long/share/claude-duet-long-16x9-share.mp4` (25.3 MiB) | `render/long/claude-duet-long-16x9.mp4` | 4:46.5 (you 4:42.5, end card 4.0 s); share copy 720p, 25.3 MiB |
 
 Thumbnails (the house drawer, `thumbs.json` beside them): `.cache/produce/2026-11-04-b63d2507/thumbs/`, "AI NOW ACTS
 FIRST" with his face and the Claude mark, 1280x720 and 1080x1920.
@@ -56,22 +56,21 @@ FIRST" with his face and the Claude mark, 1280x720 and 1080x1920.
 
 | | 90-second | 5-minute |
 |---|---|---|
-| Loudness, final encode (ebur128) | -14.0 LUFS, true peak -1.5 dBTP | LONG_LOUD |
-| Music bed | No Curves (licensed), continuous, 17.1 LU under him | episode bed, LONG_BED |
+| Loudness, final encode (ebur128) | -14.0 LUFS, true peak -1.5 dBTP | -14.9 LUFS, true peak -1.2 dBTP (make.py's encode read -14.6 / -0.9, over the -1 dBTP limit; the audio track alone was trimmed 0.3 dB) |
+| Music bed | No Curves (licensed), continuous, 17.1 LU under him | episode bed, 17.1 LU under him |
 | Camera joins | none: one continuous take | none: one continuous take |
 | Words gate (`words_gate.py`) | see below | see below |
 | Lip sync (SyncNet) | not measured: no SyncNet model in this cloud session | not measured |
 | Camera shake (wall tracker) | 6.27 -> 5.34 px RMS, p95 11.86 -> 10.71 px (5.9% steady crop), stabilised | 10.99 -> 9.18 px RMS, p95 20.10 -> 17.15 px (12.2% crop), stabilised |
 | Contact sheets | `review/short-whole.jpg` (every 2.5 s), first and last 10 s at 0.25 s, screens at 0.5 s | `review/long-whole.jpg` (every 3 s), first and last 10 s |
 
-**The words gate reads FAIL on both cuts, and no word is lost.** The gate hears the whole finished file again and
-compares it with the take. Its two hearings disagree with each other and with the take: large-v3-turbo missed
-"connect their work email to a personal Claude plan" at 4:08 in the 5-minute cut and heard ".au" for ".ai" in the
-90-second; medium.en missed different words ("Now," twice in the 90-second; "Duet" heard as "Dewitt"). Heard on its
-own, every flagged stretch of the finished files has the words ("people will want to connect their work email to a
-personal claw plan", "Now every few hours", "Now there's no setup quiz", "makeyourmindup .ai"), and the one "Now," the
-5-minute take's transcript holds at 1:04.3 is not in the take itself when heard alone ("from your Claude account. I've
-lived my life"). Only Krish can let a mishearing pass (`heard_as` rows need his words), so the receipts say FAIL.
+**Words gate (large-v3-turbo, on the final files): 90-second PASS; 5-minute FAIL, and no word is lost.** The 5-minute
+gate names two words. "Now," at 1:04.3 in the take is in make.py's transcript of the take but not in the take itself
+when heard alone ("from your Claude account. I've lived my life"). "not" at 3:15.4 is in the final cut when heard
+alone ("so if you're not using Claude proactively you might find"). Earlier passes flagged other words each time
+("connect their work email to a personal Claude plan", ".ai" heard as ".au", "Now" twice under medium.en), and every
+one was there when its stretch was heard on its own. Only Krish can let a mishearing pass (`heard_as` rows need his
+words), so the 5-minute receipt stays FAIL until he listens at 1:02 and 3:12.
 
 **Shake** stays high after stabilising: the takes are hand-held selfies and the tracker removes jitter, not the slow
 sway. Look for it on playback; a stronger crop would cost framing.
@@ -80,7 +79,7 @@ sway. Look for it on playback; a stronger crop would cost framing.
 
 - Captions only, never the sound: "Duet" everywhere (the transcriber once heard "DeWitt"), "Claire Vo" (heard
   "Claire Vaux"), "a long think like me" (heard "thing").
-- 5-minute: the true peak was trimmed by 0.3 dB on the audio track only (picture copied untouched), if LONG_TRIM.
+- 5-minute: the audio is 0.3 dB quieter than make.py made it (true peak), picture copied untouched; make.py's own master is kept beside it as `claude-duet-long-16x9.make.mp4`, and its `.validation.json` belongs to those bytes, not the trimmed file.
 
 ## Status, reported separately
 
@@ -88,5 +87,5 @@ sway. Look for it on playback; a stronger crop would cost framing.
   `research-wed-community.md`) or his own recording; the Reddit lines are the user's own words, drawn, no username.
 - **Transport**: both masters encode cleanly, loudness inside target, share copies under 29 MiB; lip sync unmeasured
   here; words gate FAIL as explained above.
-- **Editorial**: REVIEWER_LINE
+- **Editorial**: my own check of every contact sheet against the acceptance list and the reviewer's seven points (above); an independent reviewer has not run yet: this production session may not start one, so main runs the `reviewer` on `review/` and these measurements.
 - **Krish's full playback**: still his. Nothing is filed until he has watched both cuts (`FILE.md`).

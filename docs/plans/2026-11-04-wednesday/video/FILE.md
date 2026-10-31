@@ -39,12 +39,12 @@ then the same without `--dry-run`.
 ## 4. The record
 
 ```
-python scripts/post-pack/making.py b63d2507-dbb4-449d-bce4-f21e859ee2ad video long "Long cut, 16:9" "3 Video/Claude Duet - wide 16x9 - YouTube, Substack.mp4" --seconds LONG_SECONDS --thumb "3 Video/Claude Duet - wide 16x9 - thumbnail.jpg" --thumb-file WORK/thumbs/thumb-wide-1280x720.jpg --music no-curves-instrumental
+python scripts/post-pack/making.py b63d2507-dbb4-449d-bce4-f21e859ee2ad video long "Long cut, 16:9" "3 Video/Claude Duet - wide 16x9 - YouTube, Substack.mp4" --seconds 286.54 --thumb "3 Video/Claude Duet - wide 16x9 - thumbnail.jpg" --thumb-file WORK/thumbs/thumb-wide-1280x720.jpg --music no-curves-instrumental
 python scripts/post-pack/making.py b63d2507-dbb4-449d-bce4-f21e859ee2ad video short "Short cut, 9:16" "3 Video/Claude Duet - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4" --seconds 77.75 --thumb "3 Video/Claude Duet - tall 9x16 - thumbnail.jpg" --thumb-file WORK/thumbs/thumb-tall-1080x1920.jpg --music no-curves-instrumental
 python scripts/post-pack/making.py b63d2507-dbb4-449d-bce4-f21e859ee2ad show
 ```
 
-`LONG_SECONDS` is the long cut's report `total_seconds` (`WORK/render/long/claude-duet-long.report.json`). Use the
+The long file is the 0.3 dB peak-trimmed one (`REVIEW.md`); make.py's own master is `claude-duet-long-16x9.make.mp4`. Use the
 paths `archive.py` printed if they differ from the names above.
 
 ## Rebuilding a cut
