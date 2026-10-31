@@ -3161,8 +3161,10 @@ def today_model(monday, days, videos, posted, offdays, parsed, now=None, gates=N
                 out['asks'].append({'what': f'Words, {short(when)}', 'detail': f'{n} call{"s" if n != 1 else ""} wait on you',
                                     'cta': 'Open', 'href': f'#{name}/drafts', 'day': key})
             elif state == 'made' and not live:
+                # Straight to the button, not the top of the step: it sits under the whole download list
+                # (Krish, 2026-10-31: "THERE IS NO FUCKING APPROVE BUTTON").
                 out['asks'].append({'what': f'Publish, {short(when)}', 'detail': 'Approve, then post it',
-                                    'cta': 'Approve', 'href': f'#{name}/publish', 'day': key})
+                                    'cta': 'Approve', 'href': f'#{key}-signoff', 'day': key})
         opts = (offdays or {}).get(key) or []
         for o in opts:
             copy = ' '.join(str(o.get('copy') or '').split())
@@ -4393,9 +4395,9 @@ def _v3_checks(check, mon):
               gp.count('href="https://example.com/board#friday">Watch cut</a>') == 2 and 'Gate 2, Mon ' in gp)
         panel = page[page.find('id="panel-today"'):]
         check('layout A: the board opens on Today, a made Monday asks for its publish approval and links to that step',
-              'aria-selected="true" tabindex="0" data-day="today"' in page and 'href="#monday/publish">Approve</a>' in panel
+              'aria-selected="true" tabindex="0" data-day="today"' in page and 'href="#mon-signoff">Approve</a>' in panel and 'id="mon-signoff"' in page
               and 'data-today="1"' in page)
-        broken = page.replace('href="#monday/publish">Approve</a></li>', 'href="#monday/publish">Approve this now please</a></li>', 1)
+        broken = page.replace('href="#mon-signoff">Approve</a></li>', 'href="#mon-signoff">Approve this now please</a></li>', 1)
         check('layout A: verify refuses a Today button label longer than its button holds',
               any('Today button label' in p for p in fixed_problems(broken)))
         # The week's mix ask once broke every v3 build that had off-day options: its detail ran past DETAIL_MAX.
