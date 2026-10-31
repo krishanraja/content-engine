@@ -1,0 +1,1177 @@
+{
+ "label": "Wed 4 Nov 5-minute",
+ "script": "script-long.md",
+ "words": "takes/long.words.json",
+ "rates": {
+  "script_words": 814,
+  "said_words": 1034,
+  "word_for_word": 704,
+  "said_more_pct": 27.0,
+  "own_words_pct": 31.9,
+  "script_kept_pct": 86.5,
+  "minutes": 4.7,
+  "words_a_minute": 220.0,
+  "words_a_minute_talking": 220.4,
+  "differences": 82,
+  "differences_a_minute": 17.4,
+  "tags": {
+   "rephrase": 36,
+   "filler": 20,
+   "to the viewer": 16,
+   "aside": 14,
+   "signpost": 11,
+   "addition": 10,
+   "hedge": 9,
+   "intensifier": 4,
+   "skip": 2,
+   "contraction": 1,
+   "dropped": 1,
+   "number": 1
+  },
+  "tags_a_minute": {
+   "rephrase": 7.66,
+   "filler": 4.26,
+   "to the viewer": 3.4,
+   "aside": 2.98,
+   "signpost": 2.34,
+   "addition": 2.13,
+   "hedge": 1.92,
+   "intensifier": 0.85,
+   "skip": 0.43,
+   "contraction": 0.21,
+   "dropped": 0.21,
+   "number": 0.21
+  },
+  "sentence_words_said": 13.3,
+  "sentence_words_script": 10.6,
+  "sentences_starting_with_a_joiner_pct": {
+   "said": 47.4,
+   "script": 26.0
+  },
+  "top_starts_said": [
+   [
+    "so",
+    19
+   ],
+   [
+    "and",
+    13
+   ],
+   [
+    "it",
+    5
+   ],
+   [
+    "i",
+    4
+   ],
+   [
+    "the",
+    4
+   ],
+   [
+    "now",
+    3
+   ],
+   [
+    "what",
+    2
+   ],
+   [
+    "dewitt",
+    2
+   ]
+  ],
+  "top_words_added": [
+   [
+    "and",
+    12
+   ],
+   [
+    "you",
+    11
+   ],
+   [
+    "so",
+    11
+   ],
+   [
+    "dewitt",
+    10
+   ],
+   [
+    "i",
+    8
+   ],
+   [
+    "your",
+    7
+   ],
+   [
+    "this",
+    5
+   ],
+   [
+    "if",
+    5
+   ],
+   [
+    "now",
+    5
+   ],
+   [
+    "what",
+    4
+   ],
+   [
+    "about",
+    4
+   ],
+   [
+    "you're",
+    4
+   ],
+   [
+    "on",
+    4
+   ],
+   [
+    "get",
+    4
+   ],
+   [
+    "really",
+    3
+   ],
+   [
+    "mean",
+    3
+   ],
+   [
+    "does",
+    3
+   ],
+   [
+    "been",
+    3
+   ],
+   [
+    "claude",
+    3
+   ],
+   [
+    "was",
+    3
+   ]
+  ],
+  "top_words_dropped": [
+   [
+    "duet",
+    11
+   ],
+   [
+    "your",
+    4
+   ],
+   [
+    "and",
+    3
+   ],
+   [
+    "let",
+    2
+   ],
+   [
+    "it's",
+    2
+   ],
+   [
+    "i'd",
+    2
+   ],
+   [
+    "claude",
+    2
+   ],
+   [
+    "with",
+    2
+   ],
+   [
+    "here's",
+    2
+   ],
+   [
+    "this",
+    2
+   ],
+   [
+    "me",
+    1
+   ],
+   [
+    "break",
+    1
+   ],
+   [
+    "down",
+    1
+   ],
+   [
+    "calendar",
+    1
+   ],
+   [
+    "connected",
+    1
+   ]
+  ]
+ },
+ "differences": [
+  {
+   "at": 4.62,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "Duet.",
+   "said": "DeWitt",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 6.68,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "intensifier"
+   ],
+   "script": "",
+   "said": "really",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 13.82,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "it",
+   "said": "that mean? What does that",
+   "script_words": 1,
+   "said_words": 5
+  },
+  {
+   "at": 17.78,
+   "kind": "said differently",
+   "tags": [
+    "hedge",
+    "to the viewer",
+    "aside",
+    "rephrase"
+   ],
+   "script": "Let me break it down. Duet",
+   "said": "What does knowing what it knows about you mean that's different from knowing stuff about you? DeWitt",
+   "script_words": 6,
+   "said_words": 17
+  },
+  {
+   "at": 25.2,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "So",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 27.52,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "your calendar,",
+   "said": "checks your calendar, your",
+   "script_words": 2,
+   "said_words": 4
+  },
+  {
+   "at": 30.1,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "connected. Each morning it sends",
+   "said": "got connected. And every morning it shoots",
+   "script_words": 5,
+   "said_words": 7
+  },
+  {
+   "at": 35.04,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "that",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 38.68,
+   "kind": "added",
+   "tags": [
+    "signpost",
+    "aside"
+   ],
+   "script": "",
+   "said": "So it's taking this step to being proactive rather than answering and",
+   "script_words": 0,
+   "said_words": 12
+  },
+  {
+   "at": 48.84,
+   "kind": "added",
+   "tags": [
+    "hedge",
+    "to the viewer",
+    "aside"
+   ],
+   "script": "",
+   "said": "Anthropic have typically always been pretty good at waiting until you're approved. So",
+   "script_words": 0,
+   "said_words": 13
+  },
+  {
+   "at": 57.24,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "Duet",
+   "said": "DeWitt",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 58.14,
+   "kind": "added",
+   "tags": [
+    "to the viewer",
+    "aside"
+   ],
+   "script": "",
+   "said": "if you've been using Claude.",
+   "script_words": 0,
+   "said_words": 5
+  },
+  {
+   "at": 62.76,
+   "kind": "said differently",
+   "tags": [
+    "to the viewer",
+    "rephrase"
+   ],
+   "script": "your",
+   "said": "you're",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 64.46,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "Now",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 66.8,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "hedge"
+   ],
+   "script": "",
+   "said": "quite",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 68.94,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "there.",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 72.84,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "Now",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 74.74,
+   "kind": "said differently",
+   "tags": [
+    "contraction"
+   ],
+   "script": "It's",
+   "said": "It is",
+   "script_words": 1,
+   "said_words": 2
+  },
+  {
+   "at": 76.2,
+   "kind": "added",
+   "tags": [
+    "to the viewer",
+    "aside"
+   ],
+   "script": "",
+   "said": "for now and you can't combine them. So",
+   "script_words": 0,
+   "said_words": 8
+  },
+  {
+   "at": 78.94,
+   "kind": "said differently",
+   "tags": [
+    "to the viewer",
+    "rephrase"
+   ],
+   "script": "over the age of",
+   "said": "if you're over",
+   "script_words": 4,
+   "said_words": 3
+  },
+  {
+   "at": 82.72,
+   "kind": "said differently",
+   "tags": [
+    "hedge",
+    "rephrase"
+   ],
+   "script": "all",
+   "said": "probably in",
+   "script_words": 1,
+   "said_words": 2
+  },
+  {
+   "at": 84.6,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "And",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 86.5,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "it's",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 90.22,
+   "kind": "said differently",
+   "tags": [
+    "to the viewer",
+    "rephrase"
+   ],
+   "script": "Duet",
+   "said": "you",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 92.12,
+   "kind": "added",
+   "tags": [
+    "hedge",
+    "signpost",
+    "to the viewer",
+    "aside"
+   ],
+   "script": "",
+   "said": "So think about the emails that go into your account that is connected to.",
+   "script_words": 0,
+   "said_words": 14
+  },
+  {
+   "at": 100.14,
+   "kind": "said differently",
+   "tags": [
+    "intensifier",
+    "rephrase"
+   ],
+   "script": "strange.",
+   "said": "not really my top priority.",
+   "script_words": 1,
+   "said_words": 5
+  },
+  {
+   "at": 103.26,
+   "kind": "skipped",
+   "tags": [
+    "dropped"
+   ],
+   "script": "and",
+   "said": "",
+   "script_words": 1,
+   "said_words": 0
+  },
+  {
+   "at": 108.58,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "I'd",
+   "said": "I",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 109.92,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "them",
+   "said": "those things like",
+   "script_words": 1,
+   "said_words": 3
+  },
+  {
+   "at": 111.58,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "Lots of life",
+   "said": "like",
+   "script_words": 3,
+   "said_words": 1
+  },
+  {
+   "at": 114.08,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "subscriptions,",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 115.9,
+   "kind": "said differently",
+   "tags": [
+    "hedge",
+    "signpost",
+    "rephrase"
+   ],
+   "script": "It's slow, though. In classic Claude style it loves a good long",
+   "said": "So it was useful in building awareness of that, but it is a bit slow. It loves to",
+   "script_words": 12,
+   "said_words": 18
+  },
+  {
+   "at": 124.98,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "while it thinks. Now,",
+   "script_words": 0,
+   "said_words": 4
+  },
+  {
+   "at": 127.42,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "the",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 130.76,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "it",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 134.02,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "Basically a little dashboard,",
+   "said": "An artifact in Claude world is a dashboard, basically",
+   "script_words": 4,
+   "said_words": 9
+  },
+  {
+   "at": 138.36,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "So",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 139.54,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "from Dewitt",
+   "script_words": 0,
+   "said_words": 2
+  },
+  {
+   "at": 143.8,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "I've",
+   "said": "I",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 145.72,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost",
+    "to the viewer"
+   ],
+   "script": "",
+   "said": "So, you know,",
+   "script_words": 0,
+   "said_words": 3
+  },
+  {
+   "at": 150.2,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "now",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 152.4,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "where this stuff is going,",
+   "script_words": 0,
+   "said_words": 5
+  },
+  {
+   "at": 157.22,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "that",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 158.86,
+   "kind": "added",
+   "tags": [
+    "to the viewer",
+    "aside"
+   ],
+   "script": "",
+   "said": "and again, instead of replying to your message. And",
+   "script_words": 0,
+   "said_words": 9
+  },
+  {
+   "at": 166.26,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "I mean,",
+   "script_words": 0,
+   "said_words": 2
+  },
+  {
+   "at": 167.32,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "to the viewer"
+   ],
+   "script": "",
+   "said": "you",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 169.46,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "the invite and your notes.",
+   "said": "invite on your notes, and",
+   "script_words": 5,
+   "said_words": 5
+  },
+  {
+   "at": 171.44,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "With Duet,",
+   "said": "it a question with Dewitt.",
+   "script_words": 2,
+   "said_words": 5
+  },
+  {
+   "at": 182.04,
+   "kind": "skipped",
+   "tags": [
+    "skip"
+   ],
+   "script": "already",
+   "said": "",
+   "script_words": 1,
+   "said_words": 0
+  },
+  {
+   "at": 183.24,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "Duet",
+   "said": "Dewitt",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 185.98,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "in",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 187.58,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "fallen",
+   "said": "been falling",
+   "script_words": 1,
+   "said_words": 2
+  },
+  {
+   "at": 189.08,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "Once Duet",
+   "said": "And once Dewitt",
+   "script_words": 2,
+   "said_words": 3
+  },
+  {
+   "at": 192.84,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "on it",
+   "script_words": 0,
+   "said_words": 2
+  },
+  {
+   "at": 194.8,
+   "kind": "said differently",
+   "tags": [
+    "intensifier",
+    "signpost",
+    "to the viewer",
+    "aside",
+    "rephrase"
+   ],
+   "script": "But here's the",
+   "said": "So if you're not using Claude proactively, you might find this really useful. But there's a",
+   "script_words": 3,
+   "said_words": 16
+  },
+  {
+   "at": 199.88,
+   "kind": "said differently",
+   "tags": [
+    "to the viewer",
+    "rephrase"
+   ],
+   "script": "something keeps",
+   "said": "you stop",
+   "script_words": 2,
+   "said_words": 2
+  },
+  {
+   "at": 201.66,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "Claire Vo reviewed it",
+   "said": "Clairvaux reviewed this",
+   "script_words": 4,
+   "said_words": 3
+  },
+  {
+   "at": 206.54,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "hedge"
+   ],
+   "script": "",
+   "said": "kind of",
+   "script_words": 0,
+   "said_words": 2
+  },
+  {
+   "at": 207.84,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "the",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 210.12,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "they'd only",
+   "said": "they don't",
+   "script_words": 2,
+   "said_words": 2
+  },
+  {
+   "at": 213.6,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "it",
+   "said": "someone",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 215.32,
+   "kind": "added",
+   "tags": [
+    "to the viewer",
+    "aside"
+   ],
+   "script": "",
+   "said": "On a phone, you can get those alerts come in. The",
+   "script_words": 0,
+   "said_words": 11
+  },
+  {
+   "at": 218.44,
+   "kind": "added",
+   "tags": [
+    "hedge",
+    "number",
+    "aside"
+   ],
+   "script": "",
+   "said": "two more things I want to talk about.",
+   "script_words": 0,
+   "said_words": 8
+  },
+  {
+   "at": 221.62,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "toward your Claude plan's",
+   "said": "towards your Claude's plan",
+   "script_words": 4,
+   "said_words": 4
+  },
+  {
+   "at": 226.0,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "Duet",
+   "said": "Dewitt",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 228.38,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "So",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 229.42,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "And",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 231.88,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "again,",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 233.46,
+   "kind": "added",
+   "tags": [
+    "intensifier",
+    "aside"
+   ],
+   "script": "",
+   "said": "I was very lucky to get on that early waitlist.",
+   "script_words": 0,
+   "said_words": 10
+  },
+  {
+   "at": 236.64,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "this week. Of",
+   "said": "for the week. Of all",
+   "script_words": 3,
+   "said_words": 5
+  },
+  {
+   "at": 241.3,
+   "kind": "added",
+   "tags": [
+    "aside"
+   ],
+   "script": "",
+   "said": "to get it done?",
+   "script_words": 0,
+   "said_words": 4
+  },
+  {
+   "at": 242.84,
+   "kind": "added",
+   "tags": [
+    "hedge",
+    "to the viewer"
+   ],
+   "script": "",
+   "said": "you probably want",
+   "script_words": 0,
+   "said_words": 3
+  },
+  {
+   "at": 245.78,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "at a company,",
+   "script_words": 0,
+   "said_words": 3
+  },
+  {
+   "at": 251.14,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "gets Duet. That puts",
+   "said": "does get Dewitt. And that puts every",
+   "script_words": 4,
+   "said_words": 7
+  },
+  {
+   "at": 259.42,
+   "kind": "said differently",
+   "tags": [
+    "aside",
+    "rephrase"
+   ],
+   "script": "Here's what I'd do with this info if I were you. Pick that one job",
+   "said": "Because otherwise the productivity may hurt. So here's what I do if I was with this information. If I would pick one job that you do, that",
+   "script_words": 15,
+   "said_words": 27
+  },
+  {
+   "at": 269.46,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "it",
+   "said": "that",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 270.38,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "apps Duet can reach.",
+   "said": "the email that Dewitt can reach. And",
+   "script_words": 4,
+   "said_words": 7
+  },
+  {
+   "at": 272.34,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "Duet, let it draft",
+   "said": "it, let it draw",
+   "script_words": 4,
+   "said_words": 4
+  },
+  {
+   "at": 274.1,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "and",
+   "said": "Let it",
+   "script_words": 1,
+   "said_words": 2
+  },
+  {
+   "at": 276.6,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "And",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 277.76,
+   "kind": "skipped",
+   "tags": [
+    "skip"
+   ],
+   "script": "to",
+   "said": "",
+   "script_words": 1,
+   "said_words": 0
+  },
+  {
+   "at": 279.48,
+   "kind": "added",
+   "tags": [
+    "to the viewer",
+    "aside"
+   ],
+   "script": "",
+   "said": "Remember, no sending, no spending without your permission.",
+   "script_words": 0,
+   "said_words": 8
+  }
+ ]
+}

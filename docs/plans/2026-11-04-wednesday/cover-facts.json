@@ -1,0 +1,23 @@
+{
+ "subchannel": "under.the.hood",
+ "date": "2026-11-04",
+ "piece_id": "b63d2507-dbb4-449d-bce4-f21e859ee2ad",
+ "headline": "AI used to reply. Now it acts first. Claude Duet is the start.",
+ "video_title": "AI used to reply. Now it acts first. Claude Duet is the start.",
+ "thumbs": {
+  "headline": [
+   "AI NOW",
+   "ACTS FIRST"
+  ],
+  "portrait": "../../../.cache/produce/2026-11-04-b63d2507/portrait.jpg",
+  "rows": [
+   {
+    "name": "Claude",
+    "logo": "logos/claude.svg",
+    "tag": "CLAUDE DUET",
+    "colour": "lilac"
+   }
+  ]
+ },
+ "video_length": "4:46"
+}

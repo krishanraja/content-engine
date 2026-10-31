@@ -1,0 +1,114 @@
+{
+ "piece_id": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67",
+ "date": "2026-11-02",
+ "subchannel": "follow.the.money",
+ "subject": "Who trains your 2030 seniors",
+ "headline": "Claude's AI is eating the jobs of its own humans. What does that signal for the rest of us?",
+ "files": [
+  {
+   "kind": "fact-checked-text",
+   "file": "../article.md"
+  },
+  {
+   "kind": "substack-copy",
+   "file": "../../../../.cache/pack/mon/pages/substack.html",
+   "logos": [
+    "Anthropic"
+   ]
+  },
+  {
+   "kind": "web-page",
+   "file": "../../../../.cache/pack/mon/pages/page.html",
+   "logos": [
+    "Anthropic"
+   ]
+  },
+  {
+   "kind": "email-pictures-off",
+   "file": "../../../../.cache/pack/mon/pages/email-pictures-off.html",
+   "logos": [
+    "Anthropic"
+   ]
+  },
+  {
+   "kind": "cover",
+   "file": "../../../../.cache/pack/mon/pages/cover.png",
+   "logos": [
+    "Anthropic"
+   ]
+  },
+  {
+   "kind": "substack-cover",
+   "file": "../../../../.cache/pack/mon/pages/cover-1200x630.png",
+   "logos": [
+    "Anthropic"
+   ]
+  },
+  {
+   "kind": "share-card-cover",
+   "file": "../../../../.cache/pack/mon/pages/cover-1200x675.png",
+   "logos": [
+    "Anthropic"
+   ]
+  },
+  {
+   "kind": "square-cover",
+   "file": "../../../../.cache/pack/mon/pages/cover-1080x1080.png",
+   "logos": [
+    "Anthropic"
+   ]
+  },
+  {
+   "kind": "vertical-cover",
+   "file": "../../../../.cache/pack/mon/pages/cover-1080x1920.png",
+   "logos": [
+    "Anthropic"
+   ]
+  },
+  {
+   "kind": "cover-crops",
+   "file": "../../../../.cache/pack/mon/pages/cover-crops.png"
+  },
+  {
+   "kind": "phone-check",
+   "file": "../../../../.cache/pack/mon/pages/phone-images.png"
+  },
+  {
+   "kind": "image",
+   "file": "../../../../.cache/pack/mon/figure-ladder.png",
+   "purpose": "The article's one figure: twice the job came back bigger (tellers, clerks); Anthropic's junior hires fell from 27% to 9%.",
+   "logos": [],
+   "shows": "chart",
+   "data_source": "IMF (Bessen, 2015), NPR Planet Money (2015), Anthropic report (16 Oct 2026); numbers as in the fact-checked article",
+   "measures": "Each panel counts jobs: tellers per city branch (20 to 13) and branch count (+43%); clerk jobs lost (400,000) and accountant jobs added (600,000); juniors as a share of Anthropic's new technical hires (27% to 9%)"
+  },
+  {
+   "kind": "video-script",
+   "file": "../script-long.md",
+   "name": "video-script-5-minute.md",
+   "purpose": "The 5-minute script he recorded from (Teleprompter)."
+  },
+  {
+   "kind": "video-script",
+   "file": "../script-short.md",
+   "name": "video-script-90-second.md",
+   "purpose": "The 90-second script he recorded from (Teleprompter)."
+  },
+  {
+   "kind": "video-words",
+   "file": "publish-words.json"
+  },
+  {
+   "kind": "linkedin-post",
+   "text": "Anthropic just published a study of its own staff. Juniors went from 27% of its new technical hires to 9%, and many of its managers say AI is why.\n\nCash machines and spreadsheets took the dull bottom of jobs before, and the jobs came back bigger. This time AI takes the first draft, the very work juniors learned on.\n\nTwo questions for your next hiring meeting: who on this team will be a senior in 2030, and what are they learning on today?\n\nThe full deep dive is at makeyourmindup.ai."
+  },
+  {
+   "kind": "publish-manager",
+   "file": "../../../../.cache/pack/mon/manager/publish-manager.html"
+  },
+  {
+   "kind": "publish-kit",
+   "file": "../../../../.cache/pack/mon/kit/publish.html"
+  }
+ ]
+}

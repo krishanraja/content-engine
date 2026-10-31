@@ -1,0 +1,54 @@
+{
+ "title": "AI used to reply. Now it acts first. Claude Duet is the start.",
+ "subtitle": "Claude Duet checks your apps, briefs you each morning and drafts the work before you ask, then waits for your yes. If you already live in Claude, here is what changes, and what it costs.",
+ "date": "2026-11-04",
+ "kicker": "under.the.hood",
+ "body": "../article.md",
+ "words": "publish-words.json",
+ "images": [
+  {
+   "id": "cover",
+   "role": "cover",
+   "file": "../../../../.cache/pack/wed/pages/cover-1200x630.png",
+   "alt": "AI now acts first. Claude Duet is the start: Anthropic's new Claude app, beside Google's Gmail."
+  },
+  {
+   "id": "vertical-cover",
+   "role": "vertical-cover",
+   "file": "../../../../.cache/pack/wed/pages/cover-1080x1920.png",
+   "alt": "AI now acts first. Claude Duet is the start: Anthropic's new Claude app, beside Google's Gmail."
+  },
+  {
+   "id": "square-cover",
+   "role": "square-cover",
+   "file": "../../../../.cache/pack/wed/pages/cover-1080x1080.png",
+   "alt": "AI now acts first. Claude Duet is the start: Anthropic's new Claude app, beside Google's Gmail."
+  },
+  {
+   "id": "share-card-cover",
+   "role": "share-card-cover",
+   "file": "../../../../.cache/pack/wed/pages/cover-1200x675.png",
+   "alt": "AI now acts first. Claude Duet is the start: Anthropic's new Claude app, beside Google's Gmail."
+  },
+  {
+   "id": "asking-to-approving",
+   "file": "../../../../.cache/pack/wed/figure-asking-to-approving.png",
+   "alt": "From asking to approving: today you open Claude, copy the email thread, the invite and your notes, paste them in and ask; with Claude Duet a morning brief, meeting prep, a draft reply and a note to the team arrive first, each waiting for your yes.",
+   "after_heading": "FROM ASKING TO APPROVING"
+  }
+ ],
+ "scripts": [
+  {
+   "label": "5-minute script",
+   "file": "../script-long.md"
+  },
+  {
+   "label": "90-second script",
+   "file": "../script-short.md"
+  }
+ ],
+ "status": [
+  "The article passed the fact gate and every publish check on 31 October 2026.",
+  "Both videos are finished and passed an independent review; watch them at full size before you press Approve for publish."
+ ]
+}

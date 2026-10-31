@@ -1,0 +1,19 @@
+{
+ "piece_id": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67",
+ "date": "2026-11-02",
+ "subchannel": "follow_the_money",
+ "subject": "Who trains your 2030 seniors",
+ "video_title": "Claude's AI is eating the jobs of its own humans. What does that signal for the rest of us?",
+ "files": [
+  {
+   "kind": "video-script",
+   "cut": "long",
+   "file": "script-long.md"
+  },
+  {
+   "kind": "video-script",
+   "cut": "short",
+   "file": "script-short.md"
+  }
+ ]
+}

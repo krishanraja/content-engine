@@ -1,0 +1,939 @@
+{
+ "label": "Mon 2 Nov 5-minute",
+ "script": "docs/plans/2026-11-02-monday/script-long.md",
+ "words": "docs/plans/2026-11-02-monday/takes/long.words.json",
+ "rates": {
+  "script_words": 828,
+  "said_words": 925,
+  "word_for_word": 567,
+  "said_more_pct": 11.7,
+  "own_words_pct": 38.7,
+  "script_kept_pct": 68.5,
+  "minutes": 4.8,
+  "words_a_minute": 192.7,
+  "words_a_minute_talking": 193.6,
+  "differences": 62,
+  "differences_a_minute": 12.9,
+  "tags": {
+   "rephrase": 41,
+   "aside": 9,
+   "to the viewer": 8,
+   "filler": 8,
+   "addition": 7,
+   "signpost": 5,
+   "number": 5,
+   "hedge": 4,
+   "intensifier": 4,
+   "skip": 1,
+   "restart": 1
+  },
+  "tags_a_minute": {
+   "rephrase": 8.54,
+   "aside": 1.87,
+   "to the viewer": 1.67,
+   "filler": 1.67,
+   "addition": 1.46,
+   "signpost": 1.04,
+   "number": 1.04,
+   "hedge": 0.83,
+   "intensifier": 0.83,
+   "skip": 0.21,
+   "restart": 0.21
+  },
+  "sentence_words_said": 84.1,
+  "sentence_words_script": 10.8,
+  "sentences_starting_with_a_joiner_pct": {
+   "said": 36.4,
+   "script": 32.5
+  },
+  "top_starts_said": [
+   [
+    "so",
+    4
+   ],
+   [
+    "you",
+    2
+   ],
+   [
+    "their",
+    1
+   ],
+   [
+    "it's",
+    1
+   ],
+   [
+    "here",
+    1
+   ],
+   [
+    "good",
+    1
+   ],
+   [
+    "i'll",
+    1
+   ]
+  ],
+  "top_words_added": [
+   [
+    "and",
+    14
+   ],
+   [
+    "they",
+    8
+   ],
+   [
+    "so",
+    6
+   ],
+   [
+    "but",
+    6
+   ],
+   [
+    "you",
+    6
+   ],
+   [
+    "this",
+    6
+   ],
+   [
+    "now",
+    5
+   ],
+   [
+    "first",
+    5
+   ],
+   [
+    "work",
+    4
+   ],
+   [
+    "are",
+    4
+   ],
+   [
+    "on",
+    4
+   ],
+   [
+    "weeks",
+    4
+   ],
+   [
+    "way",
+    4
+   ],
+   [
+    "which",
+    3
+   ],
+   [
+    "if",
+    3
+   ],
+   [
+    "juniors",
+    3
+   ],
+   [
+    "anthropic",
+    3
+   ],
+   [
+    "what",
+    3
+   ],
+   [
+    "draft",
+    3
+   ],
+   [
+    "there's",
+    3
+   ]
+  ],
+  "top_words_dropped": [
+   [
+    "i",
+    12
+   ],
+   [
+    "me",
+    6
+   ],
+   [
+    "and",
+    5
+   ],
+   [
+    "then",
+    4
+   ],
+   [
+    "this",
+    4
+   ],
+   [
+    "was",
+    4
+   ],
+   [
+    "work",
+    4
+   ],
+   [
+    "anthropic's",
+    3
+   ],
+   [
+    "staff",
+    3
+   ],
+   [
+    "you",
+    3
+   ],
+   [
+    "so",
+    3
+   ],
+   [
+    "one",
+    3
+   ],
+   [
+    "first",
+    3
+   ],
+   [
+    "draft",
+    3
+   ],
+   [
+    "here's",
+    3
+   ]
+  ]
+ },
+ "differences": [
+  {
+   "at": 0.08,
+   "kind": "added",
+   "tags": [
+    "signpost",
+    "to the viewer",
+    "number",
+    "aside"
+   ],
+   "script": "",
+   "said": "So we had one today and that's a",
+   "script_words": 0,
+   "said_words": 8
+  },
+  {
+   "at": 5.0,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "which is",
+   "script_words": 0,
+   "said_words": 2
+  },
+  {
+   "at": 6.14,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "behind",
+   "said": "buying",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 9.94,
+   "kind": "said differently",
+   "tags": [
+    "aside",
+    "rephrase"
+   ],
+   "script": "who trains",
+   "said": "if they're not hiring juniors who's going to train",
+   "script_words": 2,
+   "said_words": 9
+  },
+  {
+   "at": 14.44,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "I've been reading Anthropic's study of its own staff. It matters if you hire, so let me break it down. One number stopped me.",
+   "said": "anthropic recently studied its own stuff And what it found matters to anyone who hires Now one number stands out",
+   "script_words": 24,
+   "said_words": 20
+  },
+  {
+   "at": 25.28,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "were",
+   "said": "of",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 27.62,
+   "kind": "said differently",
+   "tags": [
+    "number",
+    "rephrase"
+   ],
+   "script": "ten, 27%",
+   "said": "ten twenty seven",
+   "script_words": 2,
+   "said_words": 1
+  },
+  {
+   "at": 29.42,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "Why?",
+   "said": "But why is that",
+   "script_words": 1,
+   "said_words": 4
+  },
+  {
+   "at": 37.94,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "that",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 39.7,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "less.",
+   "said": "lists.",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 41.86,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "first draft, there's less",
+   "said": "first draft There's left",
+   "script_words": 4,
+   "said_words": 3
+  },
+  {
+   "at": 45.14,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "And",
+   "said": "makes sense But",
+   "script_words": 1,
+   "said_words": 3
+  },
+  {
+   "at": 49.78,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "brought",
+   "said": "bought",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 54.14,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "and",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 64.88,
+   "kind": "said differently",
+   "tags": [
+    "signpost",
+    "rephrase"
+   ],
+   "script": "You'd think",
+   "said": "So you'd have thought",
+   "script_words": 2,
+   "said_words": 4
+  },
+  {
+   "at": 68.56,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "and they may have",
+   "script_words": 0,
+   "said_words": 4
+  },
+  {
+   "at": 71.14,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "went from needing",
+   "said": "when from meeting",
+   "script_words": 3,
+   "said_words": 3
+  },
+  {
+   "at": 73.54,
+   "kind": "said differently",
+   "tags": [
+    "signpost",
+    "rephrase"
+   ],
+   "script": "But banks used",
+   "said": "so but banks use",
+   "script_words": 3,
+   "said_words": 4
+  },
+  {
+   "at": 85.7,
+   "kind": "said differently",
+   "tags": [
+    "hedge",
+    "rephrase"
+   ],
+   "script": "Then came spreadsheets. Since",
+   "said": "Another example is spreadsheets since about",
+   "script_words": 4,
+   "said_words": 6
+  },
+  {
+   "at": 96.06,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "and",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 101.12,
+   "kind": "added",
+   "tags": [
+    "to the viewer"
+   ],
+   "script": "",
+   "said": "you see a pattern",
+   "script_words": 0,
+   "said_words": 4
+  },
+  {
+   "at": 103.78,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "of a",
+   "said": "layer of the",
+   "script_words": 2,
+   "said_words": 3
+  },
+  {
+   "at": 106.0,
+   "kind": "said differently",
+   "tags": [
+    "intensifier",
+    "rephrase"
+   ],
+   "script": "got bigger. Here's what worries me this time. Back then, there was still",
+   "said": "Actually got bigger But here is the worry this time out back then that was",
+   "script_words": 13,
+   "said_words": 15
+  },
+  {
+   "at": 113.64,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "Tellers moved",
+   "said": "still tellers move",
+   "script_words": 2,
+   "said_words": 3
+  },
+  {
+   "at": 115.72,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "account",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 118.28,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "but",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 120.52,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "first draft itself, the very work juniors learned on. Anthropic's own report says staff",
+   "said": "first draft itself Which is the work that juniors are learning on anthropic zone reports their stuff",
+   "script_words": 14,
+   "said_words": 16
+  },
+  {
+   "at": 128.86,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "I reckon juniors feel that",
+   "said": "juniors are the ones who feel that the",
+   "script_words": 5,
+   "said_words": 8
+  },
+  {
+   "at": 134.82,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "intensifier"
+   ],
+   "script": "",
+   "said": "really",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 137.56,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "get",
+   "said": "got",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 140.1,
+   "kind": "said differently",
+   "tags": [
+    "intensifier",
+    "rephrase"
+   ],
+   "script": "Hiring managers at",
+   "said": "really Hiring managers",
+   "script_words": 3,
+   "said_words": 3
+  },
+  {
+   "at": 145.58,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "as a skill",
+   "script_words": 0,
+   "said_words": 3
+  },
+  {
+   "at": 148.54,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "first draft,",
+   "said": "first draft.",
+   "script_words": 2,
+   "said_words": 1
+  },
+  {
+   "at": 150.86,
+   "kind": "skipped",
+   "tags": [
+    "skip"
+   ],
+   "script": "work",
+   "said": "",
+   "script_words": 1,
+   "said_words": 0
+  },
+  {
+   "at": 156.98,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "years,",
+   "said": "work is",
+   "script_words": 1,
+   "said_words": 2
+  },
+  {
+   "at": 158.84,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "and",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 160.66,
+   "kind": "said differently",
+   "tags": [
+    "to the viewer",
+    "rephrase"
+   ],
+   "script": "Take away the",
+   "said": "I certainly did you take away those",
+   "script_words": 3,
+   "said_words": 7
+  },
+  {
+   "at": 168.74,
+   "kind": "said differently",
+   "tags": [
+    "hedge",
+    "rephrase"
+   ],
+   "script": "I think this is",
+   "said": "this kind of looks like",
+   "script_words": 4,
+   "said_words": 5
+  },
+  {
+   "at": 172.86,
+   "kind": "said differently",
+   "tags": [
+    "aside",
+    "rephrase"
+   ],
+   "script": "Anthropic's staff expect AI",
+   "said": "because they're implementing it first Of course, they are anthropic staff expect they are",
+   "script_words": 4,
+   "said_words": 14
+  },
+  {
+   "at": 180.06,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "much AI",
+   "said": "however much it",
+   "script_words": 2,
+   "said_words": 3
+  },
+  {
+   "at": 181.28,
+   "kind": "said differently",
+   "tags": [
+    "to the viewer",
+    "rephrase"
+   ],
+   "script": "you'll",
+   "said": "but you",
+   "script_words": 1,
+   "said_words": 2
+  },
+  {
+   "at": 185.82,
+   "kind": "said differently",
+   "tags": [
+    "signpost",
+    "rephrase"
+   ],
+   "script": "somewhere today.",
+   "said": "right now So",
+   "script_words": 2,
+   "said_words": 3
+  },
+  {
+   "at": 188.72,
+   "kind": "said differently",
+   "tags": [
+    "number",
+    "rephrase"
+   ],
+   "script": "Here's why this one matters to me. In 2008, I was a junior at Microsoft. Yes, the people who make Excel. I was asked to change the format of a spreadsheet with half a million rows, by hand. Same clicks,",
+   "said": "and picture a new hire given a dull job Now the same task",
+   "script_words": 40,
+   "said_words": 13
+  },
+  {
+   "at": 193.38,
+   "kind": "said differently",
+   "tags": [
+    "restart",
+    "aside"
+   ],
+   "script": "I had a hunch it wasn't meant",
+   "said": "by hand weeks and weeks weeks of it somewhere along the way They notice there's repetition and wonder if there's a better way. So they go looking the first attempt doesn't work Neither does the second they keep at it knowing the days their spending might be wasted then the weeks of work shrink to a few hours Now the real lesson here isn't the shortcut. It's the habit spotting the job that repeats asking whether it has",
+   "script_words": 7,
+   "said_words": 78
+  },
+  {
+   "at": 218.78,
+   "kind": "said differently",
+   "tags": [
+    "number",
+    "rephrase"
+   ],
+   "script": "that way, so I looked online. I found Excel macros, which record what you do so the computer repeats it. Getting mine to work took me a few days, and I knew I might be wasting them. Then three weeks of work became a few hours. And the real lesson was bigger than the macro. I learned to spot the boring job that repeats. And to stick",
+   "said": "this way and Sticking",
+   "script_words": 67,
+   "said_words": 4
+  },
+  {
+   "at": 221.94,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "hedge"
+   ],
+   "script": "",
+   "said": "quite",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 222.88,
+   "kind": "said differently",
+   "tags": [
+    "to the viewer",
+    "aside",
+    "rephrase"
+   ],
+   "script": "I only learned that because someone gave me the",
+   "said": "Which is how you use AI too and that habit only forms because someone handed over that",
+   "script_words": 9,
+   "said_words": 17
+  },
+  {
+   "at": 229.36,
+   "kind": "added",
+   "tags": [
+    "hedge",
+    "to the viewer",
+    "aside"
+   ],
+   "script": "",
+   "said": "what can you do about this?",
+   "script_words": 0,
+   "said_words": 6
+  },
+  {
+   "at": 237.16,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "leaning on and",
+   "script_words": 0,
+   "said_words": 3
+  },
+  {
+   "at": 241.24,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "they'll",
+   "said": "they",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 242.98,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "prepared",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 244.16,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "on",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 245.86,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "ask in",
+   "said": "Asking",
+   "script_words": 2,
+   "said_words": 1
+  },
+  {
+   "at": 248.72,
+   "kind": "said differently",
+   "tags": [
+    "aside",
+    "rephrase"
+   ],
+   "script": "And when",
+   "said": "as opposed to just administering AI if",
+   "script_words": 2,
+   "said_words": 7
+  },
+  {
+   "at": 255.38,
+   "kind": "said differently",
+   "tags": [
+    "aside",
+    "rephrase"
+   ],
+   "script": "fix, like my macro. Here's what I'd do with this info if I were you.",
+   "said": "better way like the new hire So here's what to do with info that like this It's a big topic",
+   "script_words": 15,
+   "said_words": 20
+  },
+  {
+   "at": 263.28,
+   "kind": "added",
+   "tags": [
+    "to the viewer"
+   ],
+   "script": "",
+   "said": "your team in",
+   "script_words": 0,
+   "said_words": 3
+  },
+  {
+   "at": 264.38,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "then",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 267.52,
+   "kind": "said differently",
+   "tags": [
+    "signpost",
+    "rephrase"
+   ],
+   "script": "now.",
+   "said": "right now and",
+   "script_words": 1,
+   "said_words": 3
+  },
+  {
+   "at": 274.66,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "happens",
+   "said": "is happening",
+   "script_words": 1,
+   "said_words": 2
+  },
+  {
+   "at": 275.9,
+   "kind": "said differently",
+   "tags": [
+    "number",
+    "rephrase"
+   ],
+   "script": "one",
+   "said": "a",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 279.52,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "then",
+   "said": "and they",
+   "script_words": 1,
+   "said_words": 2
+  },
+  {
+   "at": 283.02,
+   "kind": "said differently",
+   "tags": [
+    "intensifier",
+    "to the viewer",
+    "aside",
+    "rephrase"
+   ],
+   "script": "is at makeyourmindup ai.",
+   "said": "on this very passionate topic for me is at make your mind hop .ai. I'll see you there",
+   "script_words": 4,
+   "said_words": 18
+  }
+ ]
+}

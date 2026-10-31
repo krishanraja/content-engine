@@ -1,0 +1,54 @@
+{
+ "title": "Claude's AI is eating the jobs of its own humans. What does that signal for the rest of us?",
+ "subtitle": "Anthropic's own study shows juniors fell from 27% to 9% of its new technical hires as AI took on the first draft. If nobody hires juniors, who trains the seniors you'll need in 2030?",
+ "date": "2026-11-02",
+ "kicker": "follow.the.money",
+ "body": "../article.md",
+ "words": "publish-words.json",
+ "images": [
+  {
+   "id": "cover",
+   "role": "cover",
+   "file": "../../../../.cache/pack/mon/pages/cover-1200x630.png",
+   "alt": "Claude is eating the jobs of its own humans: Anthropic's junior technical hires fell from 27% to 9%."
+  },
+  {
+   "id": "vertical-cover",
+   "role": "vertical-cover",
+   "file": "../../../../.cache/pack/mon/pages/cover-1080x1920.png",
+   "alt": "Claude is eating the jobs of its own humans: Anthropic's junior technical hires fell from 27% to 9%."
+  },
+  {
+   "id": "square-cover",
+   "role": "square-cover",
+   "file": "../../../../.cache/pack/mon/pages/cover-1080x1080.png",
+   "alt": "Claude is eating the jobs of its own humans: Anthropic's junior technical hires fell from 27% to 9%."
+  },
+  {
+   "id": "share-card-cover",
+   "role": "share-card-cover",
+   "file": "../../../../.cache/pack/mon/pages/cover-1200x675.png",
+   "alt": "Claude is eating the jobs of its own humans: Anthropic's junior technical hires fell from 27% to 9%."
+  },
+  {
+   "id": "ladder",
+   "file": "../../../../.cache/pack/mon/figure-ladder.png",
+   "alt": "Twice the job came back bigger: city bank branches needed 13 tellers instead of 20 but opened 43% more branches, and spreadsheets cut 400,000 clerk jobs while adding 600,000 accounting jobs. At Anthropic, juniors fell from 27% to 9% of new technical hires.",
+   "after_heading": "WE'VE BEEN HERE BEFORE"
+  }
+ ],
+ "scripts": [
+  {
+   "label": "5-minute script",
+   "file": "../script-long.md"
+  },
+  {
+   "label": "90-second script",
+   "file": "../script-short.md"
+  }
+ ],
+ "status": [
+  "The article passed the fact gate and every publish check on 31 October 2026.",
+  "Both videos are finished and passed an independent review; watch them at full size before you press Approve for publish."
+ ]
+}

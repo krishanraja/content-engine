@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Monday imagery board</title>
+<style>
+:root{--ink:#0C1512;--cream:#F4EFE4;--muted:#a9b4ae;--line:#2b3832;--butter:#FFD84D;--mint:#7EF0C0;--card:#15201b}
+@font-face{font-family:Anton;src:url('../../../../assets/fonts/makeyourmindup/Anton-Regular.ttf')}
+@font-face{font-family:Archivo;src:url('../../../../assets/fonts/makeyourmindup/Archivo-Variable.ttf')}
+@font-face{font-family:Plex;src:url('../../../../assets/fonts/makeyourmindup/IBMPlexMono-Medium.ttf')}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--cream);font:16px/1.5 Archivo,system-ui,sans-serif}
+main{max-width:1180px;margin:0 auto;padding:28px 16px 80px}
+header .pill{display:inline-block;font:500 13px Plex;background:var(--butter);color:var(--ink);padding:4px 10px;border-radius:999px}
+h1{font:400 clamp(34px,6vw,64px)/1.02 Anton;margin:14px 0 8px;letter-spacing:.3px}
+.lede{color:var(--muted);max-width:760px;margin:0 0 8px}
+h2{font:400 30px/1.1 Anton;margin:44px 0 6px;letter-spacing:.3px}
+h2 small{font:500 13px Plex;color:var(--muted);letter-spacing:1px;margin-left:8px;vertical-align:middle}
+.why{color:var(--muted);margin:0 0 16px;max-width:820px}
+.grid{display:grid;gap:14px;align-items:start;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+.grid.wide{grid-template-columns:repeat(auto-fill,minmax(420px,1fr))}
+figure{margin:0;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+figure img,figure video{display:block;width:100%;height:auto;background:#000}
+figcaption{padding:10px 12px 12px;font-size:14px}
+figcaption b{display:block;font-weight:800;margin-bottom:2px}
+figcaption span{color:var(--muted)}
+.slot{display:flex;flex-direction:column;justify-content:center;min-height:180px;padding:18px;border:1px dashed var(--line);border-radius:10px;color:var(--muted)}
+.slot b{color:var(--cream)}
+.tag{font:500 12px Plex;color:var(--ink);background:var(--mint);padding:2px 8px;border-radius:999px;margin-right:6px}
+@media (max-width:520px){.grid.wide{grid-template-columns:1fr}}
+</style>
+</head>
+<body><main>
+<header>
+ <span class="pill">follow.the.money · Monday 2 November</span>
+ <h1>Who trains your 2030 seniors? What goes on screen</h1>
+ <p class="lede">The header cards and infographics you saw are one layer. Below is everything else that goes in: your own takes,
+ the real pages that prove each number, the custom objects Codex builds to the AI passports' standard, and how it all moves.
+ Your note, 31 October: "way more animation than ever before and movement". So nothing holds still for more than about a second and a half.</p>
+</header>
+
+<h2>1 · How it moves <small>MOTION TEST · 16 S · YOUR TAKE, YOUR VOICE</small></h2>
+<p class="why">A real 16 seconds of the 5-minute cut (your take, 0:20 to 0:36), drawn by the engine's renderer. The ladder builds as you start,
+four hires land on "one in four", the count drops from 27 to 9 as the junior rung thins, then the ladder slides aside for the hours
+bars, which grow to six to one. The camera never stops. Captions land word by word.</p>
+<div class="grid wide">
+ <figure><video src="motion/ladder-motion-test.mp4" controls playsinline preload="metadata" poster="yours/column-layout.jpg"></video>
+ <figcaption><b>The big moment, moving</b><span>Long beats 4 to 6. Still to tune: one credit line touches the ladder's rail as it slides.</span></figcaption></figure>
+</div>
+
+<h2>2 · Your takes <small>FILMED BY YOU</small></h2>
+<p class="why">Your face carries 12 of the 43 beats in the 5-minute cut and 3 of the 12 in the 90-second one: the hook, the turns, the lesson, the close.
+In the 5-minute cut you sit in a full-height column with the pictures beside you; in the 90-second cut you fill the frame with pictures above you.</p>
+<div class="grid">
+ <figure><img src="yours/column-layout.jpg" alt="The 5-minute layout: your portrait column beside the ladder"><figcaption><b>5-minute layout</b><span>You on the left, the evidence on the right.</span></figcaption></figure>
+ <figure><img src="yours/long-take.jpg" alt="A frame of the 5-minute take"><figcaption><b>The 5-minute take</b><span>The new-hire story, 3:20.</span></figcaption></figure>
+ <figure><img src="yours/short-take.jpg" alt="A frame of the 90-second take"><figcaption><b>The 90-second take</b><span>Full frame, pictures above you.</span></figcaption></figure>
+</div>
+
+<h2>3 · The real proof <small>SCREENSHOTS OF THE ACTUAL SOURCES</small></h2>
+<p class="why">Each number is shown on the page it came from, with the line highlighted, and the camera travels down to it. Nothing is redrawn or retyped.</p>
+<div class="grid">
+ <figure><img src="src/report-cover.jpg" alt="Anthropic report cover"><figcaption><b>Anthropic's own report</b><span>"I've been reading Anthropic's study of its own staff." Beat 3.</span></figcaption></figure>
+ <figure><img src="src/report-27-9.jpg" alt="27% to 9% line"><figcaption><b>27% to 9%</b><span>The source for the big moment. Beats 4 to 5.</span></figcaption></figure>
+ <figure><img src="src/report-6-1.jpg" alt="6 to 1 line"><figcaption><b>Agent hours, 6 to 1</b><span>"far more hours than its people". Beat 6.</span></figcaption></figure>
+ <figure><img src="src/report-managers.jpg" alt="Managers line"><figcaption><b>Managers hiring less</b><span>"many of its managers say AI is why". Beat 7.</span></figcaption></figure>
+ <figure><img src="src/report-object-level.jpg" alt="Object-level work line"><figcaption><b>The work that built their skills</b><span>Beat 22.</span></figcaption></figure>
+ <figure><img src="src/report-not-hired.jpg" alt="Not hired line"><figcaption><b>Those not hired to begin with</b><span>"the cut is quiet". Beat 24.</span></figcaption></figure>
+ <figure><img src="src/report-judgment.jpg" alt="Judgment line"><figcaption><b>Autonomy and judgment</b><span>Beat 25.</span></figcaption></figure>
+ <figure><img src="src/report-75.jpg" alt="75% line"><figcaption><b>75% of their work by 2030</b><span>Beat 28.</span></figcaption></figure>
+ <figure><img src="src/stanford.jpg" alt="Stanford study page"><figcaption><b>The study of US firms</b><span>Stanford Digital Economy Lab page. Beats 9 to 11.</span></figcaption></figure>
+ <figure><img src="src/imf.jpg" alt="IMF article"><figcaption><b>Cash machines and tellers</b><span>IMF, Finance &amp; Development, 2015: branches up 43%. Beats 13 to 15.</span></figcaption></figure>
+ <figure><img src="src/npr.jpg" alt="NPR transcript"><figcaption><b>Spreadsheets and clerks</b><span>NPR Planet Money, 2015: 400,000 gone, 600,000 added. Beat 16.</span></figcaption></figure>
+</div>
+
+<h2>4 · Custom art-directed objects <small>CODEX BUILDS THESE</small></h2>
+<p class="why">Built like the AI passports: real material (paper, guilloche, print detail), in layers so they can move. Here is the passports precedent beside this piece's first object mock. The full list of five plates is in codex-plates.md.</p>
+<div class="grid wide">
+ <figure><img src="ref/passports-P-f1.jpg" alt="AI passports precedent"><figcaption><b>The precedent: AI passports</b><span>Friday 23's approved design frame.</span></figcaption></figure>
+ <figure><img src="codex/badges.jpg" alt="Hire badges mock"><figcaption><b>New: the hire badges (mock)</b><span>Two trays of 100 badges; the junior ones carry a stripe. 27, then 9. On "27% down to 9%", 18 junior badges lift off and fall away.</span></figcaption></figure>
+</div>
+<div class="grid" style="margin-top:14px">
+ <div class="slot"><b>The ladder, made</b>Painted wood, rungs as separate pieces; the junior rung cracks and lifts away. The camera orbits the gap.</div>
+ <div class="slot"><b>The teller branch</b>A paper-cut counter of 20 windows; seven close their blinds, then the branch stamps out 43% more copies.</div>
+ <div class="slot"><b>The clerks' ledger</b>Green-ruled ledger rows wipe into a spreadsheet grid; accountant cards stack higher than the clerk marks.</div>
+ <div class="slot"><b>The new hire's sheet</b>A spreadsheet with no brand on it; the same click repeats down the rows, two tries fail, the third runs, three weeks fold into an afternoon.</div>
+</div>
+
+<h2>5 · Header cards and infographics <small>THE STILLS YOU HAVE</small></h2>
+<div class="grid wide">
+ <figure><img src="../stills/story-object.png" alt="The ladder with no bottom rung"><figcaption><b>The ladder (recommended lead picture)</b></figcaption></figure>
+ <figure><img src="../stills/series-picture.png" alt="The money map"><figcaption><b>The money map (the other option)</b></figcaption></figure>
+</div>
+
+<h2>6 · Archive photographs <small>STILL TO SOURCE</small></h2>
+<p class="why">Real photographs of 1980s cash machines, a bank teller's counter, and an early spreadsheet on screen (VisiCalc or Lotus 1-2-3), under the
+cash-machine and spreadsheet beats, behind the paper-cut objects. Only licensed images, with the credit kept in the record. The open photo libraries
+refused this session's requests, so these are not in front of you yet; the next session fetches them, or Codex sources them on the home computer.</p>
+<div class="grid">
+ <div class="slot"><span><span class="tag">beats 12 to 14</span></span><b>A 1980s cash machine</b>A real photo; the teller branch object sits over it.</div>
+ <div class="slot"><span><span class="tag">beat 15</span></span><b>A teller at the counter</b>The job that moved to the customer side.</div>
+ <div class="slot"><span><span class="tag">beat 16</span></span><b>VisiCalc or Lotus 1-2-3 on screen</b>Where the clerks' ledger turns into a grid.</div>
+</div>
+</main></body></html>

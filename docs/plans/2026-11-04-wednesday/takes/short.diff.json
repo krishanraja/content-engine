@@ -1,0 +1,417 @@
+{
+ "label": "Wed 4 Nov 90-second",
+ "script": "script-short.md",
+ "words": "takes/short.words.json",
+ "rates": {
+  "script_words": 195,
+  "said_words": 237,
+  "word_for_word": 169,
+  "said_more_pct": 21.5,
+  "own_words_pct": 28.7,
+  "script_kept_pct": 86.7,
+  "minutes": 1.22,
+  "words_a_minute": 194.2,
+  "words_a_minute_talking": 194.7,
+  "differences": 17,
+  "differences_a_minute": 13.9,
+  "tags": {
+   "rephrase": 10,
+   "filler": 3,
+   "signpost": 3,
+   "to the viewer": 2,
+   "aside": 2,
+   "number": 1,
+   "hedge": 1,
+   "dropped": 1
+  },
+  "tags_a_minute": {
+   "rephrase": 8.19,
+   "filler": 2.46,
+   "signpost": 2.46,
+   "to the viewer": 1.64,
+   "aside": 1.64,
+   "number": 0.82,
+   "hedge": 0.82,
+   "dropped": 0.82
+  },
+  "sentence_words_said": 14.8,
+  "sentence_words_script": 9.8,
+  "sentences_starting_with_a_joiner_pct": {
+   "said": 56.2,
+   "script": 30.0
+  },
+  "top_starts_said": [
+   [
+    "so",
+    4
+   ],
+   [
+    "now",
+    3
+   ],
+   [
+    "and",
+    2
+   ],
+   [
+    "i",
+    1
+   ],
+   [
+    "dewitt",
+    1
+   ],
+   [
+    "it",
+    1
+   ],
+   [
+    "you",
+    1
+   ],
+   [
+    "when",
+    1
+   ]
+  ],
+  "top_words_added": [
+   [
+    "dewitt",
+    4
+   ],
+   [
+    "so",
+    3
+   ],
+   [
+    "and",
+    3
+   ],
+   [
+    "now",
+    2
+   ],
+   [
+    "for",
+    2
+   ],
+   [
+    "me",
+    2
+   ],
+   [
+    "when",
+    2
+   ],
+   [
+    "i",
+    2
+   ],
+   [
+    "no",
+    2
+   ],
+   [
+    "your",
+    1
+   ],
+   [
+    "calendar",
+    1
+   ],
+   [
+    "signs",
+    1
+   ],
+   [
+    "or",
+    1
+   ],
+   [
+    "pays",
+    1
+   ],
+   [
+    "anything",
+    1
+   ],
+   [
+    "one",
+    1
+   ],
+   [
+    "reads",
+    1
+   ],
+   [
+    "used",
+    1
+   ],
+   [
+    "they're",
+    1
+   ],
+   [
+    "on",
+    1
+   ]
+  ],
+  "top_words_dropped": [
+   [
+    "duet",
+    3
+   ],
+   [
+    "then",
+    2
+   ],
+   [
+    "calendar",
+    1
+   ],
+   [
+    "pays",
+    1
+   ],
+   [
+    "or",
+    1
+   ],
+   [
+    "signs",
+    1
+   ],
+   [
+    "anything",
+    1
+   ],
+   [
+    "mine",
+    1
+   ],
+   [
+    "they",
+    1
+   ],
+   [
+    "were",
+    1
+   ],
+   [
+    "on",
+    1
+   ],
+   [
+    "fire",
+    1
+   ],
+   [
+    "it's",
+    1
+   ],
+   [
+    "slow",
+    1
+   ],
+   [
+    "though",
+    1
+   ]
+  ]
+ },
+ "differences": [
+  {
+   "at": 3.06,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "Duet.",
+   "said": "Dewitt.",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 8.52,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "So",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 10.14,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "Duet",
+   "said": "Dewitt",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 14.06,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "Now",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 16.66,
+   "kind": "said differently",
+   "tags": [
+    "to the viewer",
+    "rephrase"
+   ],
+   "script": "calendar, then",
+   "said": "your calendar and it",
+   "script_words": 2,
+   "said_words": 4
+  },
+  {
+   "at": 22.6,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "pays or signs anything.",
+   "said": "signs or pays for anything. Now",
+   "script_words": 4,
+   "said_words": 6
+  },
+  {
+   "at": 32.66,
+   "kind": "said differently",
+   "tags": [
+    "number",
+    "rephrase"
+   ],
+   "script": "mine",
+   "said": "the one it reads for me",
+   "script_words": 1,
+   "said_words": 6
+  },
+  {
+   "at": 36.3,
+   "kind": "added",
+   "tags": [
+    "signpost"
+   ],
+   "script": "",
+   "said": "So when I used it,",
+   "script_words": 0,
+   "said_words": 5
+  },
+  {
+   "at": 38.2,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "that",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 39.42,
+   "kind": "said differently",
+   "tags": [
+    "hedge",
+    "rephrase"
+   ],
+   "script": "they were on fire. It's slow, though.",
+   "said": "they're on fire. It is a bit slow and",
+   "script_words": 7,
+   "said_words": 9
+  },
+  {
+   "at": 44.42,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "uses",
+   "said": "does use",
+   "script_words": 1,
+   "said_words": 2
+  },
+  {
+   "at": 52.4,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "I think that's",
+   "said": "gave me a little clue as to",
+   "script_words": 3,
+   "said_words": 7
+  },
+  {
+   "at": 56.58,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "tool. Here's what I'd",
+   "said": "custom dashboard instead of a response. And so here's what I",
+   "script_words": 4,
+   "said_words": 11
+  },
+  {
+   "at": 62.12,
+   "kind": "added",
+   "tags": [
+    "to the viewer",
+    "aside"
+   ],
+   "script": "",
+   "said": "When you get Claude Dewitt eventually",
+   "script_words": 0,
+   "said_words": 6
+  },
+  {
+   "at": 66.76,
+   "kind": "skipped",
+   "tags": [
+    "dropped"
+   ],
+   "script": "Then",
+   "said": "",
+   "script_words": 1,
+   "said_words": 0
+  },
+  {
+   "at": 67.94,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "Duet",
+   "said": "Dewitt",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 70.16,
+   "kind": "added",
+   "tags": [
+    "aside"
+   ],
+   "script": "",
+   "said": "Make sure no sending, no spending.",
+   "script_words": 0,
+   "said_words": 6
+  }
+ ]
+}
