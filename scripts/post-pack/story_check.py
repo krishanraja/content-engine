@@ -652,6 +652,8 @@ def warnings(text):
                      '(house rule PERSONAL_INTRO; his line is in config/golden-examples.json; a warning, not a refusal)')
     # How he says it, measured from his takes (SCRIPT_AS_HE_TALKS).
     found += spoken_habit_warnings(beats)
+    # What a slow listener can hold, heard once (LISTENING, proposed 2026-10-31).
+    found += listening_warnings(beats)
     # The share of long words: a rough figure (names left out), told, never refused.
     if beats:
         r = reading(beats)
@@ -718,6 +720,87 @@ def spoken_habit_warnings(beats):
     for rx, say in HIS_WORDS:
         if rx.search(text):
             found.append(f'write his words: {say} (house rule SCRIPT_AS_HE_TALKS; a warning, not a refusal)')
+    return found
+
+
+# ---------------------------------------------------------------- what a listener can hold
+
+# Krish, 2026-10-31, reading his voiceovers aloud: "I still feel like all my video scripts
+# are a little bit hard to follow", "I think it's so complex, and then the last paragraph
+# of all my scripts still sounds a bit bossy and preachy." The reading gate above passes
+# every script of 19 to 30 October (their sentences average 8 to 11 words), yet they say up
+# to 45 figures and name up to 42 things, and their closes run to 13 sentences of orders.
+# Short sentences do not make a script easy to hear; how much it asks the listener to hold
+# does. These are warnings while Krish decides the limits (house rule LISTENING, proposed in
+# docs/audits/2026-10-31-script-clarity.md); a year is a date, not a figure to hold.
+LISTEN_LIMITS = {'long': {'figures': 3, 'names': 8}, 'short': {'figures': 1, 'names': 4},
+                 'feature': {'figures': 8, 'names': 16}}
+CLOSE_MOST = 3  # the close: its lead line and at most two sentences, before the last line
+FIGURE = re.compile(r"[$\u00a3\u20ac]?\b\d[\d,.]*(?:%|\s*(?:per\s*cent|percent))?|\b(?:twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|"
+                    r"hundred|thousand|million|billion|trillion|half a million)(?:[- ]\w+)?(?:\s+(?:per\s*cent|percent|dollars|pounds))?", re.I)
+YEAR = re.compile(r"^(?:19|20)\d\d$")
+NAME = re.compile(r"\b((?:[A-Z][a-z]+(?:[.-][A-Z]?[a-z]+)*|[A-Z]{2,}[a-z]*)(?:\s+(?:[A-Z][a-z]+|[A-Z]{2,}))*)\b")
+NOT_NAMES = {'I', 'AI', 'OK', 'US', 'UK', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
+             'September', 'October', 'November', 'December', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday',
+             'Saturday', 'Sunday', 'Here', 'So', 'And', 'But', 'Now', 'See', 'The', 'Yes', 'No'}
+ORDER = re.compile(r"^(?:and\s+|then\s+|so\s+|first,?\s+|second,?\s+|third,?\s+|now,?\s+)?(?:pick|ask|look|give|make|check|write|tell|"
+                   r"find|set|decide|line|keep|put|try|name|connect|let|start|stop|use|get|send|move|note|go|read|plan|build|"
+                   r"learn|change|turn|book|call|test|compare|list|choose|cut|hand)\b|\b(?:you should|you must|you need to|make sure|"
+                   r"decide now|don't forget)\b", re.I)
+
+
+def figures_in(text):
+    """The figures a listener is asked to hold: amounts, counts and shares, not years."""
+    out = [m.group(0).strip().rstrip('.,;:') for m in FIGURE.finditer(text)]
+    return [f for f in out if f and not YEAR.match(f)]
+
+
+def names_in(sents):
+    """The distinct names a listener meets (a capital word not opening its sentence)."""
+    seen = []
+    for x in sents:
+        for m in NAME.finditer(x.strip()):
+            name = m.group(1)
+            if not m.start():  # the sentence opener: drop its first word, keep a name after it
+                name = ' '.join(name.split()[1:])
+            if name and name not in NOT_NAMES and name not in seen:
+                seen.append(name)
+    return seen
+
+
+def close_orders(beats):
+    """The close's sentences after the lead line (before the last line), and which are orders."""
+    sents = sentences(beats)
+    lead = next((i for i in range(len(sents) - 1, -1, -1) if CLOSE_LEAD.search(_plain(sents[i]))), None)
+    if lead is None:
+        return [], []
+    tail = [x for x in sents[lead + 1:] if _plain(x).rstrip('"\' ').lower() != CLOSE_LAST]
+    return tail, [x for x in tail if ORDER.search(x.strip())]
+
+
+def listening_warnings(beats, cut=None):
+    """How much a script asks a listener to hold, heard once: warnings, never refusals."""
+    if not beats:
+        return []
+    text = ' '.join(beats)
+    count = len(text.split())
+    cut = cut or ('short' if count < 400 else 'feature' if count > 1500 else 'long')
+    limit = LISTEN_LIMITS[cut]
+    found = []
+    figs = figures_in(text)
+    if len(figs) > limit['figures']:
+        found.append(f'it asks the listener to hold {len(figs)} figures ({", ".join(figs[:10])}); a listener keeps about '
+                     f'{limit["figures"]} in a {cut} cut: keep the ones the story turns on, say them as people do ("one in four"), '
+                     'and leave the rest to the article (house rule LISTENING, proposed 2026-10-31; a warning, not a refusal)')
+    names = names_in(sentences(beats))
+    if len(names) > limit['names']:
+        found.append(f'it names {len(names)} things ({", ".join(names[:12])}); keep one story and at most two players beside it, '
+                     f'about {limit["names"]} names in a {cut} cut (house rule LISTENING, proposed 2026-10-31; a warning, not a refusal)')
+    tail, orders = close_orders(beats)
+    if len(tail) > CLOSE_MOST - 1 or len(orders) > 1:
+        found.append(f'its close runs to {len(tail)} sentences with {len(orders)} orders ("' + '", "'.join(o.strip()[:40] for o in orders[:4])
+                     + '"); Krish, 2026-10-31: the last paragraph "sounds a bit bossy and preachy". Say one thing he would do, in two '
+                     'sentences at most, and no list of orders (house rule LISTENING, proposed 2026-10-31; a warning, not a refusal)')
     return found
 
 
@@ -863,7 +946,7 @@ def self_test():
     check('a word explained once stays explained for the rest of the script', 'models' in once or 'model' in once, False)
     def warns(t):
         # The voice check alone: the intro and the spoken-habit warnings have their own tests.
-        return [w for w in warnings(t) if 'PERSONAL_INTRO' not in w and 'SCRIPT_AS_HE_TALKS' not in w]
+        return [w for w in warnings(t) if 'PERSONAL_INTRO' not in w and 'SCRIPT_AS_HE_TALKS' not in w and 'LISTENING' not in w]
     check('a long script with no opinion gets a warning, never a refusal', len(warns(GOOD)), 1)
     check('a script whose opening beat skips the personal intro gets a PERSONAL_INTRO warning',
           any('PERSONAL_INTRO' in w for w in warnings(GOOD)), True)
@@ -1017,6 +1100,17 @@ def self_test():
           any('not in the script' in p for p in chapter_problems(fine.replace('That is the whole story.', 'Some of both.'), listed)), True)
     check('chapter starts out of order are refused',
           any('before the chapter above it' in p for p in chapter_problems(fine, '- Two | starts: "That is the whole"\n- One | starts: "Why does it"\n')), True)
+
+    # What a listener can hold (LISTENING, proposed 2026-10-31): warnings only.
+    check('a year is not a figure to hold', figures_in('By 2030, about 27% of jobs, 400,000 clerks.'), ['27%', '400,000'])
+    check('names skip the sentence opener and I', names_in(['Disney hired the team.', 'Then I asked Google and Disney.']), ['Google', 'Disney'])
+    bossy = GOOD.replace("Ask any AI firm how it counts its sales. Then check who pays for its ads.",
+                         "Pick one tool. Ask its maker four things. Look at your last three hires. Make sure you check every draft.")
+    check('a close of four orders is told', any('bossy' in w for w in listening_warnings(spoken_paragraphs(bossy), 'long')), True)
+    calm = GOOD.replace("Ask any AI firm how it counts its sales. Then check who pays for its ads.",
+                        "If I ran a team, I'd write down who'll be senior in 2030. If that list is empty, that's my answer.")
+    check('one thing he would do is not told', any('bossy' in w for w in listening_warnings(spoken_paragraphs(calm), 'long')), False)
+    check('a listening warning never refuses', problems(bossy) == problems(GOOD), True)
 
     if failures:
         print('story check self-test FAILED:\n  ' + '\n  '.join(failures))
