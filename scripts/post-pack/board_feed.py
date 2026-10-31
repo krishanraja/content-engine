@@ -110,6 +110,10 @@ def gather(week, call=None, out_dir=None):
         'queue': queue.get('queue') or [],
         'combine': queue.get('combine') or [],
         'scheduled': {s.get('slug'): s.get('scheduled') or [] for s in options.get('series') or []},
+        # Krish, 2026-10-31: every card he typed words on (asks, each also in must_cover) and the pieces of the last 21
+        # days the board may not offer again (cover, no-repeat).
+        'asks': inspo.get('asks') or [],
+        'recent': inspo.get('recent') if isinstance(inspo.get('recent'), list) else None,
     }
     folder = Path(out_dir) if out_dir else ROOT / 'docs' / 'plans' / f'{wk}-week'
     folder.mkdir(parents=True, exist_ok=True)
@@ -119,7 +123,9 @@ def gather(week, call=None, out_dir=None):
     lines = [f'sources for the week of {wk}: his {counts.get("his", 0)}, inspo {counts.get("inspo", 0)}, engine {counts.get("engine", 0)}; '
              f'queue {len(out["queue"])}, could combine {len(out["combine"])} group(s); his relayed words {len(out["his_relayed"])}']
     ic = inspo.get('counts') or {}
-    lines.append('  inspiration house: ' + ', '.join(f'{k} {ic.get(k, 0)}' for k in ('routed', 'study_style', 'liked', 'fresh', 'corpora', 'creators', 'claims')))
+    lines.append('  inspiration house: ' + ', '.join(f'{k} {ic.get(k, 0)}' for k in ('routed', 'study_style', 'liked', 'fresh', 'corpora', 'creators', 'claims', 'asks')))
+    if out['recent'] is None:
+        lines.append('  recent pieces: not in the engine\'s answer (the route on production predates them); cover cannot check repeats')
     cc = out['cues'].get('counts') if out['cues'] else None
     lines.append('  feedback cues: ' + (', '.join(f'{k.replace("_", " ")} {cc.get(k, 0)}' for k in ('future_pieces', 'wider_pieces', 'wider_themes', 'tracked', 'briefs', 'not_for_us'))
                                          if isinstance(cc, dict) else 'not in the engine\'s answer (the route on production predates them)'))
@@ -129,15 +135,79 @@ def gather(week, call=None, out_dir=None):
     return path, lines
 
 
+PUBLISHING_DAYS = (('mon', 'Monday'), ('wed', 'Wednesday'), ('fri', 'Friday'))
+HIS_KINDS = ('his', 'inspo')
+
+
+def all_options(ideas):
+    """Every idea on the Ideas tab: the three publishing days and the off-day options."""
+    days = (ideas or {}).get('days') if isinstance((ideas or {}).get('days'), dict) else {}
+    offdays = (ideas or {}).get('offdays') if isinstance((ideas or {}).get('offdays'), dict) else {}
+    return [i for v in days.values() if isinstance(v, list) for i in v if isinstance(i, dict)] + \
+           [o for v in offdays.values() if isinstance(v, list) for o in v if isinstance(o, dict)]
+
+
+def style_answered(ideas, sources):
+    """sources with each style-only ask that some idea names in `style_from` taken out of must_cover: a card he
+    routed to Study style is answered by its style used in an idea, never forced into a topic."""
+    used = {str(s) for i in all_options(ideas) for s in (i.get('style_from') or []) if isinstance(i.get('style_from'), list)}
+    owed = [m for m in (sources or {}).get('must_cover') or []
+            if not (isinstance(m, dict) and m.get('style_only') and str(m.get('id')) in used)]
+    return dict(sources or {}, must_cover=owed)
+
+
+def halves_problems(ideas):
+    """Krish, 2026-10-31: ideas come half and half. Each publishing day has at least one option from his asks
+    (source_kind his or inspo) and at least one from the engine's research (source_kind engine)."""
+    days = (ideas or {}).get('days') if isinstance((ideas or {}).get('days'), dict) else {}
+    out = []
+    for key, name in PUBLISHING_DAYS:
+        kinds = [i.get('source_kind') for i in days.get(key) or [] if isinstance(i, dict)]
+        if not any(k in HIS_KINDS for k in kinds):
+            out.append(f'{name}: no option from his asks (source_kind his or inspo); half and half, each day has at least one')
+        if 'engine' not in kinds:
+            out.append(f'{name}: no option from engine research (source_kind engine); half and half, each day has at least one')
+    return out
+
+
+def repeat_problems(ideas, sources):
+    """No idea repeats a piece made or scheduled in the 21 days before the week: its id is not a recent piece's, and
+    its covers name no recent piece and no id a recent piece already answered (sources.json recent)."""
+    recent = (sources or {}).get('recent')
+    if not isinstance(recent, list):
+        return ['sources.json has no recent pieces (gather predates them); gather again so repeats can be checked']
+    pieces = {str(p.get('id')): p for p in recent if isinstance(p, dict) and p.get('id')}
+    answered = {str(c): p for p in pieces.values() for c in (p.get('covers') or [])}
+    owed = {str(m.get('id')): m for m in (sources or {}).get('must_cover') or [] if isinstance(m, dict) and m.get('piece_id')}
+    out = []
+    for i in all_options(ideas):
+        label = i.get('pick') or i.get('id') or str(i.get('story') or i.get('idea') or '')[:40]
+        if str(i.get('id')) in pieces:
+            p = pieces[str(i['id'])]
+            out.append(f'repeat: idea {label} is the piece "{p.get("idea")}" scheduled {p.get("scheduled_for")}')
+        for c in i.get('covers') or []:
+            p = pieces.get(str(c)) or answered.get(str(c)) or pieces.get(str((owed.get(str(c)) or {}).get('piece_id')))
+            if p:
+                out.append(f'repeat: idea {label} covers {c}, already made as "{p.get("idea")}" ({p.get("scheduled_for")}); '
+                           'account for it instead, or find a new angle under a new id')
+    return out
+
+
 def cover(week, ideas_path=None):
-    """Problems with the week's ideas.json against its sources.json: every must_cover id carried by an idea's
-    `covers` or accounted for with a reason, and the style rules (week_board.style_problems). [] when ready."""
+    """Problems with the week's ideas.json against its sources.json: every must_cover id (his asks included) carried
+    by an idea's `covers` (a style-only ask by `style_from`) or accounted for with a reason, the style rules
+    (week_board.style_problems), half and half each publishing day, and no repeat of the last 21 days. [] when ready."""
     import week_board
     wk = monday(week).isoformat()
     folder = ROOT / 'docs' / 'plans' / f'{wk}-week'
     sources = json.loads((folder / 'sources.json').read_text(encoding='utf-8'))
     ideas = json.loads(Path(ideas_path or folder / 'ideas.json').read_text(encoding='utf-8'))
-    return week_board.coverage_problems(ideas, sources) + week_board.style_problems(ideas)
+    return check(ideas, sources, week_board)
+
+
+def check(ideas, sources, week_board):
+    return (week_board.coverage_problems(ideas, style_answered(ideas, sources)) + week_board.style_problems(ideas)
+            + halves_problems(ideas) + repeat_problems(ideas, sources))
 
 
 COMBINE_DOC = re.compile(r'^combine-\d{1,3}$')
@@ -280,6 +350,48 @@ def self_test():
         problems.append('a tap carries no said: the board\'s words are never his')
     if not skipped or 'combine-2' not in skipped[0]:
         problems.append('a tap a session wrote is skipped and said so')
+    problems += cover_self_test()
+    return problems
+
+
+def cover_self_test():
+    """Krish, 2026-10-31: his asks used or accounted, half and half each publishing day, no repeat of 21 days."""
+    import week_board
+    problems = []
+    his = lambda **kw: dict({'source_kind': 'inspo', 'covers': []}, **kw)
+    eng = lambda **kw: dict({'source_kind': 'engine', 'covers': []}, **kw)
+    days = {k: [his(), eng()] for k, _ in PUBLISHING_DAYS}
+    sources = {'recent': [], 'must_cover': [
+        {'id': 'a397253e', 'what': 'Inspiration card "granny" you wrote on, then dismissed', 'ask': True, 'state': 'dismissed', 'style_only': False},
+        {'id': '45e0ead0', 'what': 'Inspiration card "Git" you wrote on and routed to Study style', 'ask': True, 'state': 'style_only', 'style_only': True}]}
+    # (a) every ask covered or accounted: a dismissed ask left out is said; a style-only ask is answered by style_from.
+    left = week_board.coverage_problems({'days': days}, style_answered({'days': days}, sources))
+    if not any('a397253e' in x for x in left) or not any('45e0ead0' in x for x in left):
+        problems.append('an ask he typed words on, dismissed or style-only, left off the board must be said')
+    used = {'days': dict(days, mon=[his(covers=['a397253e']), eng(style_from=['45e0ead0'])])}
+    if week_board.coverage_problems(used, style_answered(used, sources)):
+        problems.append('an ask in covers, and a style-only ask in style_from, are answered')
+    topic_only = dict(sources, must_cover=[dict(sources['must_cover'][0], style_only=False, id='x1')])
+    named = {'days': dict(days, mon=[his(), eng(style_from=['x1'])])}
+    if not week_board.coverage_problems(named, style_answered(named, topic_only)):
+        problems.append('style_from answers only a style-only ask, never a topic ask')
+    # (b) half and half on each publishing day.
+    if halves_problems({'days': days}):
+        problems.append('a day with one ask-led and one engine option passes half and half')
+    lop = halves_problems({'days': dict(days, wed=[eng(), eng()], fri=[his(source_kind='his')])})
+    if lop != ['Wednesday: no option from his asks (source_kind his or inspo); half and half, each day has at least one',
+               'Friday: no option from engine research (source_kind engine); half and half, each day has at least one']:
+        problems.append(f'a day without his asks, or without engine research, is said ({lop})')
+    # (c) no repeat of a piece made or scheduled in the last 21 days.
+    recent = {'recent': [{'id': 'p1', 'idea': 'Who pays', 'scheduled_for': '2026-10-26', 'covers': ['card-9']}],
+              'must_cover': [{'id': 'made-card', 'piece_id': 'p1'}]}
+    reps = repeat_problems({'days': {'mon': [eng(id='p1')], 'wed': [his(covers=['card-9'])], 'fri': [his(covers=['made-card'])]}}, recent)
+    if len(reps) != 3 or not all('Who pays' in x for x in reps):
+        problems.append(f'an idea that is a recent piece, or covers what one answered, or covers a card made into it, is a repeat ({reps})')
+    if repeat_problems({'days': days}, recent):
+        problems.append('fresh ideas are not repeats')
+    if not repeat_problems({'days': days}, {}):
+        problems.append('a sources.json without recent pieces says repeats cannot be checked')
     return problems
 
 
@@ -326,7 +438,7 @@ def main(argv=None):
         except (FeedError, OSError, ValueError) as error:
             print(f'board_feed cover: {error}', file=sys.stderr)
             return 1
-        print('cover: ' + ('NOT READY:\n  ' + '\n  '.join(problems) if problems else 'every routed card and relayed word is on the board or accounted for; styles pass'))
+        print('cover: ' + ('NOT READY:\n  ' + '\n  '.join(problems) if problems else 'every ask, routed card and relayed word is on the board or accounted for; styles, half and half and no-repeat pass'))
         return 1 if problems else 0
     if args.cmd != 'gather':
         ap.print_help()

@@ -84,6 +84,45 @@ Teleprompter only when the server could not. It never drafts a script, an
 article or a visual: each piece's make session does, from its signed lock
 (`.agents/skills/make-piece/SKILL.md`).
 
+## The channel, the idea tests and his asks (Krish, 2026-10-31)
+
+The channel is smart entertainment: "Make Your Mind Up takes the strangest,
+funniest and quietly biggest things AI did this week and makes them make
+sense to a busy leader in one listen, so they walk into Monday with an
+opinion of their own." Every idea passes five tests before it reaches him:
+
+1. **Wait, what headline.** The first line makes a busy person stop.
+2. **Pub test.** One real-world example he could tell a friend at the pub.
+3. **One mechanism.** It explains one thing that works one way.
+4. **Make-your-mind-up ending.** It closes on our take, never on orders.
+5. **Chain test.** It can be told as a chain of 5 to 8 everyday
+   cause-and-effect links, like Hannah Fry's short "your neurons are dated by
+   nuclear bombs": an impossible-sounding claim, "let me explain", single
+   steps with everyday objects, one number at a time, then a close that
+   calls back to the hook. An idea that cannot be chained is not ready.
+
+**His asks.** Every card he typed words on in the 45 days before the week
+(`why_here`, a typed `why_like`, `would_do`), dismissed, style-only or
+already a piece included, is in `sources.json` `asks` (newest first, his
+words verbatim, its state) and in `must_cover` (`ask: true`). Each one is
+used (an idea's `covers`), combined with others into one idea, or declined
+in `accounted` with a reason. A `style_only` ask may be answered by its
+style instead: name its id in an idea's `style_from`. One already made
+(`piece_id`) is accounted, never offered again.
+
+**Half and half.** Each publishing day (Monday, Wednesday, Friday) has at
+least one option from his asks (`source_kind` `his` or `inspo`) and at least
+one from engine research (`source_kind` `engine`). No idea repeats a piece
+made or scheduled in the 21 days before the week (`sources.json` `recent`).
+`board_feed.py cover <Monday>` checks all three.
+
+**Every idea is a full story pitch.** Beside its existing fields an idea may
+carry `pitch`: `{"headline": "<the wait, what line>", "hook": "<the opening
+sentence>", "examples": ["<2 to 3 pub-test examples>"], "chain": ["<5 to 8
+cause-and-effect links>"], "take": "<our take, the ending>"}`. Each carousel
+option carries `cards`: `[{"words": "<what the card says>", "picture":
+"<what it shows>"}]` (the board renders both).
+
 ## Steps
 
 0. **Close out the week that is ending.** Copy Krish's ticks from its
@@ -198,7 +237,9 @@ article or a visual: each piece's make session does, from its signed lock
    yet; `study_style`, production references (they feed the style, never a
    topic); `corpora`, content-watcher readings he dropped in; `creators`,
    creator moves with his angle; `claims`, taste claims (form only;
-   evidence, never a rule until he approves one). `must_cover` lists every routed card and every
+   evidence, never a rule until he approves one); `asks`, every card he
+   typed words on (see "his asks" above); `recent`, the pieces of the last
+   21 days. `must_cover` lists every routed card, every ask and every
    board item holding his words: each one goes in some idea's `covers`, or
    in ideas.json `accounted` with the reason it is not on the board. The
    gather stops when production has no `inspiration` block, and the board
