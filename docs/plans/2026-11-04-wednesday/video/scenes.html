@@ -113,7 +113,6 @@ const SCENES = {
         const q = pop(t, P.off + 0.25 + i*0.3); if(!q) return;
         h += order({title}, 170 + i*360, 280 + (1-Math.min(q,1))*300 + float(t,i), Math.sin(t+i)*1.2, 0, true);
       });
-      h += label(t, P.off + 0.2, 'OFF-LIMITS EVEN WITH A YES', 60, 880);
     }
     world.innerHTML = h; },
   // A real page, the proving line marked in mint: it slides up, the camera travels down to the line and keeps pushing.
@@ -242,7 +241,7 @@ const SCENES = {
     const box = pop(t,0.0); h += el(`<div class="card" style="width:520px;height:440px;padding:24px"><img src="${LOGO}gmail.svg" style="width:52px"></div>`, 240, 200 + float(t), `transform:scale(${box})`);
     for (let i=0;i<5;i++){ const p = pop(t, 0.4 + i*0.25); if(!p) continue; const bill = i!==2;
       h += el(`<div style="width:450px;height:56px;border-radius:10px;background:${bill?'#e9e2d2':'#fff'};display:flex;align-items:center;gap:14px;padding:0 18px;font:22px Plex;color:#0C1512">
-        <span style="width:30px;height:22px;border:3px solid #0C1512;border-radius:4px"></span>${bill?'BILL':''}${bill&&t>P.bills+i*0.1?'<span class="chip" style="margin-left:auto;font-size:16px;padding:4px 10px;background:#B7A6FF">BILL</span>':''}</div>`, 275, 290 + i*66, `transform:translateX(${(1-Math.min(p,1))*-60}px);opacity:${Math.min(1,p)}`); }
+        <span style="width:30px;height:22px;border:3px solid #0C1512;border-radius:4px"></span><span style="height:10px;width:${120+(i*37)%90}px;background:#cfc8b8;border-radius:5px"></span></div>`, 275, 290 + i*66, `transform:translateX(${(1-Math.min(p,1))*-60}px);opacity:${Math.min(1,p)}`); }
     const m = pop(t,P.ms); if (m) h += el(`<div class="card" style="padding:16px 22px;display:flex;gap:14px;align-items:center;font:22px Plex"><img src="${LOGO}microsoft-365.svg" style="width:44px">MICROSOFT 365 WORK EMAIL: NOT YET</div>`, 150, 700 + float(t,2), `transform:scale(${m})`);
     world.innerHTML = h; },
   // Short 12: the turn to what to do: two empty steps arrive on the rail, waiting to be filled.
@@ -269,7 +268,8 @@ SCENES.ambient = function(t,T){ cam(t,T,0.06,30); let h=''; const LINE=760, SP=3
   }
   if (P.label) h += label(t, 0.3, P.label, 60, 120);
   world.innerHTML = h; };
-function show(id, params) { SCENE = SCENES[id]; P = params || {}; }
+function show(id, params) { SCENE = SCENES[id]; P = params || {};
+  if (H < 1080) { const band = document.createElement('div'); band.style.cssText = 'position:absolute;left:0;right:0;top:0;height:150px;z-index:20;background:linear-gradient(#0C1512 0%,#0C1512 75%,rgba(12,21,18,0) 100%)'; stage.appendChild(band); } }
 function render(t) { SCENE(t, P.T || 6); document.getElementById('grain').style.transform = `translate(${(t*37)%40-20}px,${(t*23)%40-20}px)`; }
 </script>
 </body>

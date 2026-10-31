@@ -42,21 +42,29 @@ def sec(at):
 
 
 # name: (source stretches [(from, to)], the bars, seconds on screen, the 16:9 label, focus y (0..1) of the tall crop)
+# Bars cover whole lines, never a word inside a line, so no fragment can be read or guessed (Krish's reviewer, 31 Oct):
+# the reply and the thinking screen share one layout; frame px of the 720x1560 recording.
+REPLY = [AV, (30, 15, 625, 440), (120, 640, 620, 690), (50, 800, 575, 845)]
+TODO = [AV, (120, 170, 610, 212), (130, 345, 545, 416), (130, 525, 545, 596), (130, 702, 545, 774), (130, 878, 545, 952),
+        (130, 1058, 545, 1130)]
+TASKS = [AV, (85, 418, 690, 456), (85, 458, 690, 496), (88, 500, 660, 540)]
+BRIEF = G['morning-brief'][1] + [(70, 470, 590, 535), (60, 660, 690, 1100)]   # the "Prepared ... London" header too
+
 SHOTS = {
     # Long 3, short 2: its first message arriving.
     'first': ([('01:02', '01:40')], G['first-message'][1], 10.5, '', 0.30),
-    # Long 5, short 3: the morning brief it wrote, body covered; the card settles.
-    'brief': ([('19:09', '19:40')], G['morning-brief'][1] + [(60, 640, 690, 1100)], 11.6, 'REFRESHES 6:30 EVERY MORNING', 0.24),
+    # Long 5, short 3: the morning brief it wrote, header and body covered; the card settles.
+    'brief': ([('19:09', '19:40')], BRIEF, 11.6, '', 0.24),
     # Long 7, short 5: no setup quiz: the onboarding, then Google Drive connecting (never the account chooser).
     'setup': ([('00:22', '00:31'), ('00:44', '00:50')], [], 8.3, '', 0.32),
     # Long 13: the tasks it pulled.
-    'tasks': ([('11:03', '11:20')], G['tasks-up-next'][1] + [(88, 500, 660, 540)], 3.2, '', 0.30),
+    'tasks': ([('11:03', '11:20')], TASKS, 3.2, '', 0.30),
     # Long 14: his reply: drop the first task, find ten more.
-    'reply': ([('03:48', '04:00')], G['reply-to-dos'][1], 8.7, '', 0.40),
-    # Long 15, short 7: the ten jobs it brought back, each verb kept.
-    'todo': ([('07:12', '09:18')], G['todo-list'][1] + [(410, 521, 572, 558), (410, 1055, 560, 1092)], 16.0, '', 0.40),
-    # Long 16, short 8: the wait, 8 times faster ("Thinking it through").
-    'think': ([('05:00', '06:30')], G['reply-to-dos'][1], 6.9, 'THE WAIT, SPED UP 8×', 0.25),
+    'reply': ([('03:48', '04:00')], REPLY, 8.7, '', 0.40),
+    # Long 15, short 7: the ten jobs it brought back, titles covered whole.
+    'todo': ([('07:12', '09:18')], TODO, 16.0, '', 0.40),
+    # Long 16, short 8: the wait, sped up 8 times ("Thinking it through").
+    'think': ([('05:00', '06:30')], REPLY, 6.9, '', 0.25),
     # Long 17: Make, the Calendar scheduler tile he tapped.
     'make': ([('11:48', '11:51')], G['make-artifacts'][1], 3.7, '', 0.55),
     # Long 18, short 10: the dashboard it built from one ask, building, then done.
@@ -153,7 +161,9 @@ def frame9(view, t, T, text, focus):
     cy = big.height * focus + 18 * math.sin(t * 0.5 + 0.7)
     x0 = int(min(max(0, cx - W / 2), big.width - W))
     y0 = int(min(max(0, cy - H / 2), big.height - H))
-    canvas = big.crop((x0, y0, x0 + W, y0 + H))
+    TOP = 150   # the tall cut's wordmark and series pill sit here: the phone stays below them
+    canvas = desk(W, H).copy()
+    canvas.paste(big.crop((x0, y0, x0 + W, y0 + H - TOP)), (0, TOP))
     if text:
         a = min(1.0, max(0.0, (t - 0.3) / 0.4))
         if a > 0:
@@ -205,7 +215,7 @@ def render(job):
             view = phone_view(covered(src, bars, name))
             last = src
         t = i / FPS
-        img = frame16(view, t, seconds, text) if shape == '16x9' else frame9(view, t, seconds, text if name != 'brief' else 'GMAIL · CALENDAR · SLACK', focus)
+        img = frame16(view, t, seconds, text) if shape == '16x9' else frame9(view, t, seconds, text, focus)
         enc.stdin.write(img.tobytes())
     enc.stdin.close(); enc.wait()
     return f'{out.name} {n} frames'
