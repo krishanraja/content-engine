@@ -764,6 +764,25 @@ def cmd_compile(args) -> int:
     return 0
 
 
+def cmd_receipt(args) -> int:
+    """The cut's validation receipt from its own piece folder (velib/receipt.py): what quality.delivery_problems reads
+    before making.py records the cut or send.py files it. Prints each row and what still holds the cut."""
+    from velib.receipt import build
+    ve = ROOT / 'docs' / 'plans' / args.piece / 've'
+    result = build(args.video, piece_id=args.piece_id, library_path=args.library_path, props=ve / f'props.{args.cut}.json',
+                   spec=ve / 'spec.json', take_words=ve / 'words.json', script=args.script,
+                   rulings=ve / f'rulings.{args.cut}.json', qc=args.qc or ve / f'qc.{args.cut}.json',
+                   verdict=args.verdict or ve / f'verdict.{args.cut}.json', clarity_dir=args.clarity, model=args.model)
+    receipt = load_json(result['receipt'])
+    for name, check in receipt['checks'].items():
+        print(f"{check.get('status', '?'):15} {name}")
+    for name, why in receipt['missing'].items():
+        print(f"{'missing':15} {name}: {why}")
+    print(chr(10).join(f'held: {p}' for p in result['problems']) or 'ready for delivery: quality.delivery_problems finds nothing')
+    print(result['receipt'])
+    return 1 if result['problems'] else 0
+
+
 def cmd_premix(args) -> int:
     """The cut's premixed stem from the spec's own bed: the ledger track (by id, checked by hash, from
     MINDMAKE_MUSIC_ROOT), the ledger's approved levels, the cut's length from its props and the first and last word
@@ -867,6 +886,15 @@ def main() -> int:
     p.add_argument('--captions-drawn-by', default='faster-whisper', help='the aligner whose words drew the captions')
     p.add_argument('--edl', help='the EDL ve conform wrote: QC measures its joins')
     p.set_defaults(fn=cmd_qc)
+    p = sub.add_parser('receipt', help="write a cut's validation receipt from its piece folder (velib/receipt.py)")
+    p.add_argument('video'); p.add_argument('--piece', required=True, help='the plan folder (docs/plans/PIECE/ve)')
+    p.add_argument('--cut', required=True); p.add_argument('--piece-id', required=True, help="the making record's piece id")
+    p.add_argument('--library-path', required=True, help='where the cut is filed (3 Posts/...)')
+    p.add_argument('--script', required=True, help='the signed script, for the words gate')
+    p.add_argument('--qc', help='ve qc on these bytes (default: the piece folder copy)')
+    p.add_argument('--verdict', help='the Critic verdict on these bytes (default: the piece folder copy)')
+    p.add_argument('--clarity', help='folder with visual-clarity.manifest.json and visual-clarity.review.json')
+    p.add_argument('--model', default='small.en'); p.set_defaults(fn=cmd_receipt)
     p = sub.add_parser('keyframes', help='compare rendered beats with approved stills')
     p.add_argument('format'); p.add_argument('video'); p.add_argument('props'); p.add_argument('--sheet')
     p.set_defaults(fn=cmd_keyframes)
