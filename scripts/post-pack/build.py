@@ -542,7 +542,7 @@ def story_gate(entry, text, label, series=None):
     """Krish, 2026-10-06 (walk log F75): a script that does not make sense out
     loud, or stops dead on the number, is not packed; nor one a 12-year-old
     could not follow (house rule R7), nor one of a minute or more that does
-    not close on "Here's what I'd do with this info if I were you" and end
+    not close on the one thing Krish would do (never a list of orders, 2026-10-31) and end
     on "The full deep dive is at makeyourmindup.ai." (house rule SCRIPT_CLOSE;
     series is the post's subchannel as a lane_slot, passed on and no longer
     checked: the series line is retired, house rule SERIES_OPENER). Only his

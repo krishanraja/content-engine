@@ -45,8 +45,9 @@ it fits best, ranked first that day. It is one short cut, nothing else:
 
 1. Write the script from his words: 160 to 195 spoken words (it finishes under
    89 seconds), opening on a question, for the ear, a 12-year-old can follow
-   it, never his name, and closing on what he would do ("Here's what I'd do
-   with this info if I were you", then the action). There is no article, so
+   it, never his name, and closing on the one thing he would do, in his first
+   person and one short beat, never a list of orders (house rule SCRIPT_CLOSE,
+   2026-10-31). There is no article, so
    it never says "The full deep dive is at makeyourmindup.ai.".
 2. Check it: `python3 scripts/post-pack/story_check.py --cut short <file>`
    (every finding but the article close must be fixed), the copy lint and

@@ -114,8 +114,8 @@ Inbox.
 
 <a id="rule-11"></a>
 
-**Every video script opens straight on its hook, closes on what he would do,
-and a 12-year-old can follow it; every article ends with "3 things you can do
+**Every video script opens straight on its hook, closes on the one thing he
+would do, and a slow listener can follow it heard once; every article ends with "3 things you can do
 tomorrow".** Krish, 2026-10-21: "we need to cut that opening line from every
 content piece moving forward and just launch straight in to "I put GrokBot
 and Muse head to head" etc. Also trim the closing to "the full deep dive is
@@ -126,8 +126,12 @@ tomorrow" at the end of every piece too." So a script has no series line and
 no "I'm Krish" (house rule `SERIES_OPENER`, which retires the lines he
 picked on 2026-10-12; they stay in `SERIES_OPENERS` in
 `apps/control-plane/api/_houseRules.ts` only for records made under them).
-After the call it closes on a beat that starts "Here's what I'd do with this
-info if I were you" and says the actions, and its final sentence is exactly
+After the call it closes on one short beat saying the one thing he would do,
+in his first person, never a list of orders and never the retired "Here's
+what I'd do with this info if I were you" (Ruling, Krish, 2026-10-31: "the
+last paragraph of all my scripts still sounds a bit bossy and preachy"), and
+a slow listener can hold it heard once (house rule `LISTENING`: 3 figures and
+about 8 names in the long cut, 1 and about 4 in the short); its final sentence is exactly
 "The full deep dive is at makeyourmindup.ai." (house rule `SCRIPT_CLOSE`,
 refused by `scripts/post-pack/story_check.py`). An article ends with a
 section headed "3 things you can do tomorrow" holding exactly three concrete

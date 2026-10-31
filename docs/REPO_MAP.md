@@ -36,7 +36,6 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `examples/`
 - `fixtures/`
 - `inspo/`
-- `now-notes/`
 - `packages/cli/`
 - `packages/contracts/`
 - `packages/core/`
@@ -51,6 +50,7 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `scripts/signals/`
 - `scripts/ve/`
 - `scripts/velib/`
+- `scripts/voice/`
 - `scripts/windowless/`
 - `supabase/migrations/`
 - `tests/`
@@ -106,6 +106,7 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/content-ideas/[id]/package`
 - `/api/content-ideas/[id]/production-brief`
 - `/api/content-ideas/[id]/revise`
+- `/api/content-ideas/[id]/routed-clips`
 - `/api/content-ideas/[id]/save-draft`
 - `/api/content-ideas/[id]/schedule`
 - `/api/content-ideas/[id]/score`
@@ -130,6 +131,7 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/judge/ladder`
 - `/api/judge/sweep`
 - `/api/learning/compile`
+- `/api/learning/spoken-rules`
 - `/api/library/confirm`
 - `/api/library/file`
 - `/api/library/pending`
@@ -902,6 +904,9 @@ Krish's house rules, in one place.
 - `function retiredSeriesOpener(series?: string | null): string | null`
 - `interface ScriptReading`
 - `const SCRIPT_READING: Readonly<ScriptReading>`
+- `interface ListenLimits`
+- `interface Listening`
+- `const LISTENING: Readonly<Listening>`
 - `const HOUSE_RULES: readonly HouseRule[]`
 - `function rulesFor(stage: Stage, subchannel?: string | null): HouseRule[]`
 - `function subchannelRulesBlock(stage: Stage, subchannel?: string | null): string`
@@ -1134,6 +1139,10 @@ The making record: where one piece is on its way from the workroom to
 - `const PRODUCTION_CHOICES`
 - `type ProductionChoice = (typeof PRODUCTION_CHOICES)[number]`
 - `type MakingProductionChoices = Partial<Record<ProductionChoice, string>> & { at: string }`
+- `const SPOKEN_COUNTS`
+- `const SPOKEN_KINDS`
+- `interface MakingSpokenExample`
+- `type MakingSpokenDelta`
 - `interface Making`
 - `type MakingPatch`
 - `const SCRIPT_SHA256`
@@ -1469,6 +1478,18 @@ _revisePrompt — the prompt behind /api/content-ideas/:id/revise.
 - `function buildReviseSystem(ctx: ReviseContext, r: Pick<ReviseRequest, 'value' | 'humour'>): string`
 - `function buildReviseUser(ctx: ReviseContext, r: ReviseRequest): string`
 - `function buildRevisePrompt(ctx: ReviseContext, r: ReviseRequest): { system: string; user: string }`
+
+### `apps/control-plane/api/_routedClips.ts`
+
+Clips routed to a piece (Krish, 2026-10-31: "route the two videos to it once they're read, so a new session knows
+
+- `const ROUTED_CLIP_COLS`
+- `type ClipUse = 'show_with_sound' | 'reference'`
+- `interface ClipUseRecord`
+- `interface RoutedClip`
+- `function presentClip(card: Record<string, any>, uses?: Record<string, ClipUseRecord> | null): RoutedClip`
+- `interface ClipPlacement`
+- `function missingClips(clips: RoutedClip[], placements: Record<string, ClipPlacement> | null | undefined): RoutedClip[]`
 
 ### `apps/control-plane/api/_runArtifacts.ts`
 
@@ -2158,6 +2179,10 @@ POST /api/content-ideas/:id/fact-check run the fact gate on the current body
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 - `const config`
 
+### `apps/control-plane/api/content-ideas/[id]/routed-clips.ts`
+
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
+
 ### `apps/control-plane/api/content-ideas/[id]/save-draft.ts`
 
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
@@ -2346,10 +2371,23 @@ What the compiler looks for, as pure functions.
 - `function repeatedEditClassProposals(rows: EditRow[], now: number = Date.now()): Proposal[]`
 - `const MAX_EVIDENCE`
 - `function toProposalRow(p: Proposal, batch: string): { ok: true; row: Record<string, unknown> } | { ok: false; reason: s…`
+- `interface SpokenExample`
+- `interface SpokenDelta`
+- `interface SpokenRow`
+- `function scoreContext(rows: SpokenRow[], showing: Set<string>): string`
+- `const SPOKEN_PER_PIECE`
+- `function likeness(a: string, b: string): number`
+- `function plainer(script: string, said: string): boolean`
+- `function aside(said: string): boolean`
+- `function spokenProposals(rows: SpokenRow[]): Proposal[]`
 
 ### `apps/control-plane/api/learning/compile.ts`
 
 - `export default withContentRun('learning_compile', handler)`
+
+### `apps/control-plane/api/learning/spoken-rules.ts`
+
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
 
 ### `apps/control-plane/api/library/_inboxDrive.ts`
 

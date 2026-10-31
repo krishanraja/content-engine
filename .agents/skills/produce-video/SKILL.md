@@ -520,6 +520,21 @@ either.
 
 ## 4. Plan, then render each cut
 
+**First, the clips Krish linked to the piece.** Run `python3
+scripts/post-pack/making.py PIECE_ID clips`. Each `show_with_sound` clip
+carries his own words asking to play it with its sound (Krish, 2026-10-31:
+"so a new session knows they will need to be referenced with audio on during
+my video post production"): watch it whole with sound, put it in the cut at
+the line the creative direction names, with its own audio on and the bed out
+of its way, and record where: `making.py PIECE_ID clips long CARD_ID --at-s
+SECONDS --end-s SECONDS --audio on`. Leaving one out of a cut, or playing it
+silent, takes his words (`--omit` or `--audio off`, with `--krish-words
+"Krish, YYYY-MM-DD: ..."`). Step 9 warns on a cut that has not placed each
+one; say so in the report and to Krish, never call that cut done quietly.
+No renderer plays an outside clip with its own sound yet (every embedded
+video is muted, and ve's compile refuses outside plates until Phase 2): when
+a piece has one, tell Krish before the render, never after.
+
 **First, the style recipe** (`docs/STYLE_REFERENCES.md`). If
 `config/style-references.json` has a recipe for this piece, plan the cut
 with its editing, camerawork and graphics modules, always on top of the
@@ -810,6 +825,10 @@ python scripts/post-pack/making.py PIECE_ID video long "Long cut, 16:9" "3 Video
 python scripts/post-pack/making.py PIECE_ID video short "Short cut, 9:16" "3 Video/SUBJECT - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4" --seconds N --thumb "3 Video/SUBJECT - tall 9x16 - thumbnail.jpg" --thumb-file WORK/thumbs/thumb-tall-1080x1920.jpg --music TRACK_ID
 python scripts/post-pack/making.py PIECE_ID show
 ```
+
+`video` also reads the clips linked to the piece (step 4) and prints a
+WARNING for each `show_with_sound` clip the cut does not play: carry it into
+the report and to Krish.
 
 With no thumbnail drawn for that cut, leave out `--thumb` and
 `--thumb-file`: the step then reads "thumbnail still to make", which is the

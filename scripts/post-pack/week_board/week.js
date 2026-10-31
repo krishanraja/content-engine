@@ -303,7 +303,9 @@ tabs.forEach((t, i) => {
   });
 });
 window.addEventListener("hashchange", fromHash);
-if (!fromHash()) { const r = remembered(); if (r && tabs.some(t => t.dataset.day === r)) select(r) }
+// A board with Today (layout A) always opens on it unless the link names a tab: a remembered day would hide the
+// Needs you queue (Krish, 2026-10-31: "right now there is no approve button").
+if (!fromHash() && !tabs.some(t => t.dataset.day === "today")) { const r = remembered(); if (r && tabs.some(t => t.dataset.day === r)) select(r) }
 const setH = () => document.documentElement.style.setProperty("--tabh", bar.offsetHeight + "px");
 setH();
 try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("resize", setH) }

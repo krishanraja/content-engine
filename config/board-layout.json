@@ -8,9 +8,9 @@
     "add_tabs": [{"key": "today", "label": "Today", "sub": "Needs you"}]
   },
   "v3": {
-    "_about": "Layout v3, from the board of the week of 9 November 2026 (W2.1). Krish, 2026-10-29: \"backfill every piece we've done historically, and allow me to add a score out of 10 for narrative quality and production quality\". It adds a sixth tab, Archive (every piece from the Launch on 6 October, each with its date, series, title, live links, his two scores and a Scores press), a Scores press on each made day's Publish step, and the recording_sunday rhythm: the board for week W is recorded on Sunday W-8 and goes live on Monday W, so every day's brief and scripts are due on that Sunday. Boards before from keep version 2.",
+    "_about": "Layout v3, from the board of the week of 2 November 2026 (W2.1; moved from 9 November by Krish, 2026-10-31: \"Every board from 2 Nov onwards should be the new upgraded UI system\"). Krish, 2026-10-29: \"backfill every piece we've done historically, and allow me to add a score out of 10 for narrative quality and production quality\". It adds a sixth tab, Archive (every piece from the Launch on 6 October, each with its date, series, title, live links, his two scores and a Scores press), a Scores press on each made day's Publish step, and the recording_sunday rhythm: the board for week W is recorded on Sunday W-8 and goes live on Monday W, so every day's brief and scripts are due on that Sunday. Boards before from keep version 2.",
     "version": 3,
-    "from": "2026-11-09",
+    "from": "2026-11-02",
     "add_tabs": [{"key": "archive", "label": "Archive", "sub": "Every piece"}],
     "rhythm": {
       "rule": "recording_sunday",
