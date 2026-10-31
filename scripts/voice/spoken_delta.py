@@ -36,8 +36,15 @@ barely match the script on file (another piece recorded the same day), is
 listed as unmatched, never guessed. The recording and its words stay in
 .cache, which git ignores; the recording is deleted once transcribed.
 
-A signal for the voice profile and the weekly learner, never a gate: a draft is
-not held because he would change it.
+Where it runs: the place-takes job compares each take as it is placed, against
+the exact script whose hash the piece's record holds (recording_match.py
+--spoken), and the Sunday learning compiler (apps/control-plane/api/learning/
+compile.ts) proposes what repeats across three pieces onto Krish's list, never
+applying it. backfill stays a by-hand tool: it pairs by the Inbox name, not by
+hash, so its counts are evidence to read, never a proposal.
+
+A signal for the voice profile and the learner, never a gate: a draft is not
+held because he would change it.
 """
 import argparse
 import difflib

@@ -34,6 +34,25 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === 'GET') {
     if (guardVideoStudioOperatorRead(req, res, ['GET'])) return
     if (await enforceVideoStudioRateLimit(res, 'operator:learning:list', videoStudioOperatorIdentity(req), 120, 60)) return
+    // ?decided=spoken: the read-aloud rules he kept or reworded, live for drafting spoken scripts (scripts/voice/
+    // spoken_rules.py; Krish, 2026-10-31: "you know that I want the ability to make this better iteratively").
+    // His wording, when he gave one, wins over the engine's.
+    if (req.query?.decided === 'spoken') {
+      const { data, error } = await supabase
+        .from('mindmake_studio_learning_proposals')
+        .select(`${PROPOSAL_FIELDS}, decision_note, decided_at`)
+        .in('status', ['approved', 'corrected'])
+        .like('scope->>key', 'spoken:%')
+        .order('decided_at', { ascending: false })
+        .limit(40)
+      if (error) return sendVideoStudioError(res, 503, 'learning_store_unavailable')
+      return res.status(200).json({
+        ok: true,
+        schema_version: VIDEO_STUDIO_CONTROL_SCHEMA_VERSION,
+        rules: (data || []).map(r => ({ ...withVenture(r), rule: (r as { decision_note?: string | null }).decision_note || r.assertion })),
+        server_time: new Date().toISOString(),
+      })
+    }
     const { data, error } = await supabase
       .from('mindmake_studio_learning_proposals')
       .select(PROPOSAL_FIELDS)

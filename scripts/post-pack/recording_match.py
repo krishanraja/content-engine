@@ -13,7 +13,7 @@ without me having to give the exact filename)".
     python scripts/post-pack/recording_match.py --record --board --by "Recordings lane" --json
                                                                   ... and ask Krish about each unsure take on the
                                                                   board, once (what the runners run each pass)
-    python scripts/post-pack/recording_match.py --record --board --clock --by "Place takes" --json
+    python scripts/post-pack/recording_match.py --record --board --clock --spoken --by "Place takes" --json
                                                                   ... and build each placed take's word clock
                                                                   first (what .github/workflows/place-takes.yml
                                                                   runs, on GitHub's machine)
@@ -551,6 +551,23 @@ def committed(path, refs=GIT_REFS, repo=REPO):
             except UnicodeDecodeError:
                 return None
     return None
+
+
+def spoken_for(piece_id, cut, script, words_file, call, by, post=None):
+    """What he changed reading this cut's script aloud (scripts/voice/spoken_delta.py), written onto the piece as
+    spoken_delta.<cut>. Only against the exact words he was given: a script whose hash is the record's (current);
+    any other copy could be a later edit, which would count its changes as his (Krish, 2026-10-31: "do all the other
+    things on your list"). Returns what was recorded, or the reason it was not; it never stops the take being placed."""
+    if not script or not script.get('current'):
+        return {'piece_id': piece_id, 'cut': cut, 'skipped': 'the script he read is not on file by its hash'}
+    sys.path.insert(0, str(REPO / 'scripts' / 'voice'))
+    import spoken_delta
+    try:
+        result = spoken_delta.delta(script['text'], json.loads(Path(words_file).read_text(encoding='utf-8')))
+        (post or making.post)(piece_id, spoken_delta.record_patch(cut, script['text'], result), call, by=by)
+    except (OSError, ValueError, spoken_delta.DeltaError, making.MakingError) as error:
+        return {'piece_id': piece_id, 'cut': cut, 'skipped': f'the comparison failed: {error}'[:200]}
+    return {'piece_id': piece_id, 'cut': cut, 'changes_per_100_words': result['changes_per_100_words'], 'changes': result['changes']}
 
 
 def scripts_for(piece, plans=PLANS, roots=None, show=committed):
@@ -1524,6 +1541,12 @@ def run(opts, call, list_items, get_file=local_copy, transcribe=transcribe_head,
                 out(f'failed: "{answer["name"]}" was not recorded on {label(piece)}: {error}')
                 continue
             recorded.add((answer['piece_id'], answer['cut']))
+            if opts.get('spoken') and opts.get('clock'):
+                spoke = spoken_for(answer['piece_id'], answer['cut'], (scripts.get(answer['piece_id']) or {}).get(answer['cut']),
+                                   built['words_file'], call, by)
+                report.setdefault('spoken', []).append(spoke)
+                out(f'spoken: {label(piece)} {answer["cut"]} cut, ' + (f'{spoke["changes_per_100_words"]} changes per 100 script words'
+                                                                      if 'changes' in spoke else spoke['skipped']))
             report['recorded'].append({'piece_id': answer['piece_id'], 'cut': answer['cut'], 'path': answer['path'], 'by': by,
                                        **({'script_sha256': patch['recordings'][0]['script_sha256']} if 'script_sha256' in patch['recordings'][0] else {})})
             out(f'recorded on the board, by {by}: {label(piece)} {answer["cut"]} cut, "{answer["name"]}" ({answer["path"]})')
@@ -2096,6 +2119,21 @@ def self_test():
         check('used/: the book records each take as moved to used/, never as moved in Drive',
               sorted((v['names'], v['piece_id'], v['to'], v['moved']) for v in used_book.values()),
               sorted([(['monday long.mp4'], MON, 'used/', False), (['IMG_0001.mov'], FRI, 'used/', False)]))
+        # --spoken: the take against the exact script he read, recorded on the piece; never against another copy.
+        sp_posts = []
+        sp_words = tmp / 'spoken.words.json'
+        sp_words.write_text(json.dumps({'words': [{'w': w, 's': n * 0.4, 'e': n * 0.4 + 0.3}
+                                                  for n, w in enumerate("it's not about the model so worry about the cost".split())]}))
+        keep = lambda pid, patch, call, by=None: sp_posts.append((pid, patch))
+        got = spoken_for(MON, 'long', {'text': 'It is not about the model. Worry about the price.', 'current': True}, sp_words, None,
+                         'Place takes', post=keep)
+        check('--spoken: the take is compared with the exact script and written on its piece as spoken_delta.<cut>',
+              (got.get('changes'), sp_posts[0][0], list(sp_posts[0][1]['spoken_delta']),
+               [sp_posts[0][1]['spoken_delta']['long'][k] for k in ('contracted', 'swapped', 'added')]),
+              (3, MON, ['long'], [1, 1, 1]))
+        check('--spoken: a script not matched by its hash is never compared, so a later edit is never counted as his change',
+              (spoken_for(MON, 'long', {'text': 'Other words.', 'current': False}, sp_words, None, 'Place takes', post=keep)['skipped'],
+               len(sp_posts)), ('the script he read is not on file by its hash', 1))
         # A clock that cannot be built: the take is not recorded, so the next run tries again.
         events.clear()
         before_posts = len(posts)
@@ -2351,6 +2389,8 @@ def main(argv=None):
                     'and record a take only once its clock is built')
     ap.add_argument('--by', help=f'who is recording it: Codex, Claude Code (default: {making.BY_ENV}, else {making.DEFAULT_BY})')
     ap.add_argument('--words', action='append', metavar='NAME=FILE', help='what was said in a take\'s first 45 seconds, instead of hearing it (for tests)')
+    ap.add_argument('--spoken', action='store_true', help='with --record and --clock: compare each recorded take with the exact '
+                    'script it was read from and record spoken_delta on its piece (scripts/voice/spoken_delta.py)')
     ap.add_argument('--json', action='store_true', help='print the whole answer as JSON')
     ap.add_argument('--self-test', action='store_true', help='check the matching against stand-ins (no network, no transcriber)')
     ap.add_argument('--check-transcriber', action='store_true', help='decode a second of sound with faster-whisper, as the lane\'s -Check does: '
@@ -2379,7 +2419,7 @@ def main(argv=None):
             except recording.RecordingError as error:
                 raise MatchError(str(error))
             list_items = lambda: items
-        code, report = run({'week': a.week, 'by': a.by, 'record': a.record, 'board': a.board, 'clock': a.clock, 'words': a.words},
+        code, report = run({'week': a.week, 'by': a.by, 'record': a.record, 'board': a.board, 'clock': a.clock, 'spoken': a.spoken, 'words': a.words},
                            making._engine_call, list_items, out=out)
     except (MatchError, making.MakingError) as error:
         print(f'recording_match: {error}', file=sys.stderr)
