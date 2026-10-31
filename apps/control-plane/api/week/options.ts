@@ -72,6 +72,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (formats.error || rows.error || held.error) return res.status(500).json({ ok: false, error: (formats.error || rows.error || held.error)!.message })
     const all = (rows.data || []) as Array<Record<string, any>>
     const scheduledRows = (held.data || []) as Array<Record<string, any>>
+    // The title of record (content_ideas.title, 20261120090000_content_ideas_title.sql); none until that migration runs.
+    const titled = scheduledRows.length ? await supabase.from('content_ideas').select('id,title').in('id', scheduledRows.map(r => r.id)) : null
+    const titleOf = new Map(((titled && !titled.error && titled.data) || []).map((r: Record<string, any>) => [r.id, r.title || null]))
     const series = ((formats.data || []) as Array<Record<string, any>>).map(f => {
       const mine = all.filter(r => r.lane_slot === f.slug)
       const score = (r: Record<string, any>) => Number(r.meta?.ladder?.final?.score ?? r.meta?.ladder?.score ?? -1)
@@ -81,7 +84,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           .map(r => ({ id: r.id, idea: r.idea, state: r.state, ...r.meta.week_option })).sort((a, b) => a.rank - b.rank),
         in_flight: mine.filter(r => ['drafting', 'review', 'approved'].includes(r.state)).map(r => ({ id: r.id, idea: r.idea, state: r.state, scheduled_for: r.scheduled_for })),
         scheduled: scheduledRows.filter(r => r.lane_slot === f.slug)
-          .map(r => ({ id: r.id, idea: r.idea, state: r.state, scheduled_for: r.scheduled_for }))
+          .map(r => ({ id: r.id, idea: r.idea, title: titleOf.get(r.id) ?? null, state: r.state, scheduled_for: r.scheduled_for }))
           .sort((a, b) => String(a.scheduled_for).localeCompare(String(b.scheduled_for)) || String(a.id).localeCompare(String(b.id))),
         judged_best: mine.filter(r => (r.state === 'seeded' || r.state === 'researching') && score(r) >= 0)
           .sort((a, b) => score(b) - score(a)).slice(0, 8)
