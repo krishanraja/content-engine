@@ -94,11 +94,83 @@
   {
    "title": "WITH CLAUDE DUET, YOUR JOB IS YES OR NO",
    "surface": "cover",
-   "verdict": "picked",
-   "why": "Picked in the one post-recording sign-off round (31 Oct), option A",
-   "krish": "Yes, signed off, all recommended for both days",
+   "verdict": "rejected",
+   "why": "Rejected 31 Oct: a correct summary of the finding reads as boring; lead with the most dramatic true claim in the piece (who is doing what to whom), not the statistic",
+   "krish": "no we need better titles, that is boring and not sensational enough",
    "on": "2026-10-31",
    "piece": "b63d2507-dbb4-449d-bce4-f21e859ee2ad"
+  },
+  {
+   "title": "Claude Duet turns your job into yes or no",
+   "surface": "substack",
+   "verdict": "rejected",
+   "why": "Rejected 31 Oct: a correct summary of the finding reads as boring; lead with the most dramatic true claim in the piece (who is doing what to whom), not the statistic",
+   "krish": "no we need better titles, that is boring and not sensational enough",
+   "on": "2026-10-31",
+   "piece": "b63d2507-dbb4-449d-bce4-f21e859ee2ad"
+  },
+  {
+   "title": "DUET MESSAGES YOU FIRST",
+   "surface": "thumbnail",
+   "verdict": "rejected",
+   "why": "Rejected 31 Oct: a correct summary of the finding reads as boring; lead with the most dramatic true claim in the piece (who is doing what to whom), not the statistic",
+   "krish": "no we need better titles, that is boring and not sensational enough",
+   "on": "2026-10-31",
+   "piece": "b63d2507-dbb4-449d-bce4-f21e859ee2ad"
+  },
+  {
+   "title": "Claude Duet: asked once, got a dashboard",
+   "surface": "youtube",
+   "verdict": "rejected",
+   "why": "Rejected 31 Oct: a correct summary of the finding reads as boring; lead with the most dramatic true claim in the piece (who is doing what to whom), not the statistic",
+   "krish": "no we need better titles, that is boring and not sensational enough",
+   "on": "2026-10-31",
+   "piece": "b63d2507-dbb4-449d-bce4-f21e859ee2ad"
+  },
+  {
+   "title": "I asked Claude Duet for a favour. It built me a tool.",
+   "surface": "youtube",
+   "verdict": "rejected",
+   "why": "Rejected 31 Oct: a correct summary of the finding reads as boring; lead with the most dramatic true claim in the piece (who is doing what to whom), not the statistic",
+   "krish": "no we need better titles, that is boring and not sensational enough",
+   "on": "2026-10-31",
+   "piece": "b63d2507-dbb4-449d-bce4-f21e859ee2ad"
+  },
+  {
+   "title": "ANTHROPIC JUNIOR HIRES: 27% TO 9%",
+   "surface": "cover",
+   "verdict": "rejected",
+   "why": "Rejected 31 Oct: a correct summary of the finding reads as boring; lead with the most dramatic true claim in the piece (who is doing what to whom), not the statistic",
+   "krish": "no we need better titles, that is boring and not sensational enough",
+   "on": "2026-10-31",
+   "piece": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67"
+  },
+  {
+   "title": "Anthropic's junior hires fell from 27% to 9%. Who trains the seniors we'll need in 2030?",
+   "surface": "substack",
+   "verdict": "rejected",
+   "why": "Rejected 31 Oct: a correct summary of the finding reads as boring; lead with the most dramatic true claim in the piece (who is doing what to whom), not the statistic",
+   "krish": "no we need better titles, that is boring and not sensational enough",
+   "on": "2026-10-31",
+   "piece": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67"
+  },
+  {
+   "title": "ANTHROPIC HIRES FEWER JUNIORS",
+   "surface": "thumbnail",
+   "verdict": "rejected",
+   "why": "Rejected 31 Oct: a correct summary of the finding reads as boring; lead with the most dramatic true claim in the piece (who is doing what to whom), not the statistic",
+   "krish": "no we need better titles, that is boring and not sensational enough",
+   "on": "2026-10-31",
+   "piece": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67"
+  },
+  {
+   "title": "Anthropic's junior hires fell from 27% to 9%. Who trains your seniors?",
+   "surface": "youtube",
+   "verdict": "rejected",
+   "why": "Rejected 31 Oct: a correct summary of the finding reads as boring; lead with the most dramatic true claim in the piece (who is doing what to whom), not the statistic",
+   "krish": "no we need better titles, that is boring and not sensational enough",
+   "on": "2026-10-31",
+   "piece": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67"
   },
   {
    "title": "VIDEO: I asked Claude Duet for a favour. It built me a tool.",
@@ -110,80 +182,8 @@
    "piece": "b63d2507-dbb4-449d-bce4-f21e859ee2ad"
   },
   {
-   "title": "Claude Duet turns your job into yes or no",
-   "surface": "substack",
-   "verdict": "picked",
-   "why": "Picked in the one post-recording sign-off round (31 Oct), option A",
-   "krish": "Yes, signed off, all recommended for both days",
-   "on": "2026-10-31",
-   "piece": "b63d2507-dbb4-449d-bce4-f21e859ee2ad"
-  },
-  {
-   "title": "DUET MESSAGES YOU FIRST",
-   "surface": "thumbnail",
-   "verdict": "picked",
-   "why": "Picked in the one post-recording sign-off round (31 Oct), option A",
-   "krish": "Yes, signed off, all recommended for both days",
-   "on": "2026-10-31",
-   "piece": "b63d2507-dbb4-449d-bce4-f21e859ee2ad"
-  },
-  {
-   "title": "Claude Duet: asked once, got a dashboard",
-   "surface": "youtube",
-   "verdict": "picked",
-   "why": "Picked in the one post-recording sign-off round (31 Oct), option A",
-   "krish": "Yes, signed off, all recommended for both days",
-   "on": "2026-10-31",
-   "piece": "b63d2507-dbb4-449d-bce4-f21e859ee2ad"
-  },
-  {
-   "title": "I asked Claude Duet for a favour. It built me a tool.",
-   "surface": "youtube",
-   "verdict": "picked",
-   "why": "Picked in the one post-recording sign-off round (31 Oct), option A",
-   "krish": "Yes, signed off, all recommended for both days",
-   "on": "2026-10-31",
-   "piece": "b63d2507-dbb4-449d-bce4-f21e859ee2ad"
-  },
-  {
-   "title": "ANTHROPIC JUNIOR HIRES: 27% TO 9%",
-   "surface": "cover",
-   "verdict": "picked",
-   "why": "Picked in the one post-recording sign-off round (31 Oct), option A",
-   "krish": "Yes, signed off, all recommended for both days",
-   "on": "2026-10-31",
-   "piece": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67"
-  },
-  {
    "title": "VIDEO: Anthropic's junior hires fell from 27% to 9%. Who trains your seniors?",
    "surface": "substack",
-   "verdict": "picked",
-   "why": "Picked in the one post-recording sign-off round (31 Oct), option A",
-   "krish": "Yes, signed off, all recommended for both days",
-   "on": "2026-10-31",
-   "piece": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67"
-  },
-  {
-   "title": "Anthropic's junior hires fell from 27% to 9%. Who trains the seniors we'll need in 2030?",
-   "surface": "substack",
-   "verdict": "picked",
-   "why": "Picked in the one post-recording sign-off round (31 Oct), option A",
-   "krish": "Yes, signed off, all recommended for both days",
-   "on": "2026-10-31",
-   "piece": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67"
-  },
-  {
-   "title": "ANTHROPIC HIRES FEWER JUNIORS",
-   "surface": "thumbnail",
-   "verdict": "picked",
-   "why": "Picked in the one post-recording sign-off round (31 Oct), option A",
-   "krish": "Yes, signed off, all recommended for both days",
-   "on": "2026-10-31",
-   "piece": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67"
-  },
-  {
-   "title": "Anthropic's junior hires fell from 27% to 9%. Who trains your seniors?",
-   "surface": "youtube",
    "verdict": "picked",
    "why": "Picked in the one post-recording sign-off round (31 Oct), option A",
    "krish": "Yes, signed off, all recommended for both days",
