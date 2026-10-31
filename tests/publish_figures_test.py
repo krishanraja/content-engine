@@ -31,7 +31,10 @@ class Monday9Nov(unittest.TestCase):
     def test_the_plan_holds_no_article_picture(self):
         cd = json.loads((MON9 / 'creative-direction.json').read_text(encoding='utf-8'))
         self.assertEqual(cd['article']['visuals'], [], 'the signed creative direction plans no article picture')
-        self.assertEqual(sorted(p.name for p in MON9.rglob('page-facts*.json')), [], 'no page facts carry a figure')
+        # Krish, 2026-10-31: "Use it, rebuild Monday". The receipts figure is now planned in pack/page-facts.json,
+        # under WHO IS LEFT WITH THE SHELL; the publish page still has to be rebuilt from it.
+        facts = json.loads((MON9 / 'pack' / 'page-facts.json').read_text(encoding='utf-8'))
+        self.assertEqual([f['after'] for f in facts], ['Everyone else gets the empty box.'])
         self.assertEqual(sorted(p.name for p in MON9.rglob('*manager*.json')), [], 'no publish manifest is filed')
 
     def test_a_covers_only_manifest_made_six_headings_and_no_picture_and_nothing_failed(self):
