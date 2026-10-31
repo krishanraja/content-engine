@@ -78,6 +78,11 @@ def heard_check(take: list, heard: list, rulings: dict) -> dict:
         hit = next((i for i in range(len(seq) - n + 1) if n and same(seq[i:i + n], part)), None)
         return None if hit is None else seq[:hit] + seq[hit + n:]
 
+    noise_rows = []
+    for row in rulings.get('transcriber_differences') or []:
+        if not (isinstance(row, dict) and words_gate.krish_words(row.get('krish'))):
+            raise words_gate.WordsGateError(f'a transcriber_differences row clears a place only with his own words (starting "Krish"): {row!r}')
+        noise_rows.append({**row, 'master_t': words_gate.canonical(row.get('master', '')), 'cut_t': words_gate.canonical(row.get('cut', ''))})
     cleared, left = [], []
     for change in diff['changes']:
         at = list(range(change['expected_index'], change['expected_index'] + len(change['expected'])))
@@ -86,6 +91,11 @@ def heard_check(take: list, heard: list, rulings: dict) -> dict:
         if len(expected) < len(at):
             how.append({'by': 'removal', 'krish': removed[next(owner[i] for i in at if owner[i] in removed)]})
         heard_here = list(change['heard'])
+        # A difference he ruled the transcriber's, not the cut's, named exactly (master hearing and cut hearing).
+        noise = next((n for n in noise_rows if same(change['expected'], n['master_t']) and same(heard_here, n['cut_t'])), None)
+        if noise:
+            cleared.append({**change, 'by': 'transcriber', 'krish': noise['krish']})
+            continue
         # The cut's word in this place is one he cleared as a mishearing (Klen for Qwen): the cut holds that word,
         # whatever the transcriber made of the voice master there (Gwen), so the place is cleared, named with both.
         whole = next((r for r in rows if change['kind'] == 'replace' and expected and same(heard_here, r['heard_t'])), None)
@@ -141,7 +151,8 @@ def build(cut, *, piece_id: str, library_path: str, props, spec, take_words, voi
                                'heard': voice['provenance']}
     # The rulings' removals index the take's words, not this hearing, and the master already holds them: only his
     # heard_as rows apply here.
-    checks['heard'] = heard_check(voice['words'], heard['words'], {'heard_as': rules.get('heard_as', [])})
+    checks['heard'] = heard_check(voice['words'], heard['words'], {'heard_as': rules.get('heard_as', []),
+                                                                         'transcriber_differences': rules.get('transcriber_differences', [])})
 
     if receipt['footage']['camera_segments'] == 0:
         why = 'voiceover: the props hold no picture segments, so there is no camera footage'
