@@ -92,6 +92,24 @@
  ],
  "verdicts": [
   {
+   "title": "VIDEO: Claude's AI is eating the jobs of its own humans. What does that signal for the rest of us?",
+   "surface": "substack",
+   "verdict": "picked",
+   "why": "His own line (31 Oct), the dash made a full stop (no dashes in public copy): the dramatic claim first, then the question that points at the reader",
+   "krish": "2 Nov: Claude's Ai is eating the jobs of its own humans - what does that signal for the rest of us?",
+   "on": "2026-10-31",
+   "piece": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67"
+  },
+  {
+   "title": "Claude's AI is eating the jobs of its own humans. What does that signal for the rest of us?",
+   "surface": "youtube",
+   "verdict": "picked",
+   "why": "His own line (31 Oct), the dash made a full stop (no dashes in public copy): the dramatic claim first, then the question that points at the reader",
+   "krish": "2 Nov: Claude's Ai is eating the jobs of its own humans - what does that signal for the rest of us?",
+   "on": "2026-10-31",
+   "piece": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67"
+  },
+  {
    "title": "WITH CLAUDE DUET, YOUR JOB IS YES OR NO",
    "surface": "cover",
    "verdict": "rejected",
