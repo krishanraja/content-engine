@@ -124,14 +124,14 @@ def frame16(view, t, T, text):
     ox = int(40 + 30 * math.sin(t * 0.35))                 # the desk moves slower than the phone
     canvas = bg.crop((ox, 20, ox + W, 20 + H)).copy()
     z = 1.0 + 0.07 * p                                       # the camera pushes in across the beat
-    ph = int(1130 * z)
+    ph = int(1520 * z)
     pw = int(ph * 1080 / 1920)
     v = view.resize((pw, ph), Image.LANCZOS)
     rot = 1.4 * math.sin(t * 0.55 + 0.4)                     # a hand is never still
     v = v.convert('RGBA').rotate(rot, resample=Image.BICUBIC, expand=True)
     mask = v.split()[3]
     cx = (W * 0.62 if text else W * 0.5) + 16 * math.sin(t * 0.8)
-    cy = H * 0.52 + 12 * math.sin(t * 0.63 + 1.1)
+    cy = H * 0.56 + 12 * math.sin(t * 0.63 + 1.1)
     canvas.paste(v.convert('RGB'), (int(cx - v.width / 2), int(cy - v.height / 2)), mask)
     if text:
         a = min(1.0, max(0.0, (t - 0.3) / 0.4))

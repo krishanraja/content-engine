@@ -80,9 +80,9 @@ def stabilise(cut):
           after['shake_p95_px'], 'px; static zoom', record['treatment']['static_zoom'])
 
 def cfr(cut):
-    """A constant-frame-rate master at the take's own clock (24000/1001), every audio sample copied."""
+    """A constant-frame-rate master at the take's own clock conformed to 24 fps, as make.py does, every audio sample copied."""
     src, dst = TAKES / f'{cut}-raw.mp4', TAKES / f'{cut}-cfr.mp4'
-    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(src), '-map', '0:v:0', '-map', '0:a:0', '-vf', 'fps=24000/1001',
+    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(src), '-map', '0:v:0', '-map', '0:a:0', '-vf', 'fps=24',
                     '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '12', '-c:a', 'copy', str(dst)], check=True)
     print(cut, 'cfr', frames_of(dst), 'frames')
 
