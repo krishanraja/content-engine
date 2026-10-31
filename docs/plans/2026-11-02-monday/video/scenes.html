@@ -76,13 +76,13 @@ const SCENES={
  // a label beat on his face: the report's cover tilts in, the words type on
  label(t){camera(t);const n=Math.round(cl((t-0.3)/1.2)*P.text.length);const a=pop(t,0.0,0.7);
    HTML.innerHTML=(P.img?`<div class="doc" style="width:${W*0.40}px;left:${W*0.30}px;top:${H*0.10}px;transform:translateY(${(1-a)*H*0.5}px) rotate(${-6+4*a+Math.sin(t*0.8)*0.8}deg)"><img src="${P.img}"></div>`:'')+
-   `<div class="label" style="left:${W*0.08}px;top:${P.img?H*0.80:H*0.44}px;font-size:${TALL?40:34}px;color:${C.cream}">${esc(P.text.slice(0,n))}<span style="opacity:${(t*2|0)%2}">▍</span></div>`+
-   (P.words?P.words.map((w,i)=>{const b=pop(t,ev('w'+i,0.4+i*0.5),0.45);return `<div class="big" style="left:${W*(0.1+0.45*i)}px;top:${H*0.30}px;font-size:${H*0.15}px;opacity:${b};transform:translateY(${(1-b)*60}px) rotate(${(i?3:-3)*(1-b)}deg)">${esc(w)}</div>`}).join(''):'');
+   (P.words?'':`<div class="label" style="left:${W*0.08}px;top:${P.img?H*0.80:H*0.44}px;font-size:${TALL?40:34}px;color:${C.cream}">${esc(P.text.slice(0,n))}<span style="opacity:${(t*2|0)%2}">▍</span></div>`)+
+   (P.words?P.words.map((w,i)=>{const b=pop(t,ev('w'+i,0.4+i*0.5),0.45);return `<div class="big" style="left:${W*0.08}px;top:${H*(0.22+0.22*i)}px;font-size:${H*0.15}px;opacity:${b};transform:translateY(${(1-b)*60}px) rotate(${(i?3:-3)*(1-b)}deg)">${esc(w)}</div>`}).join(''):'');
    SVG.innerHTML='';},
  // a real page: it lifts onto the desk, the camera travels to the proving line and keeps pushing; a ring of light breathes on the line
  doc(t){const a=pop(t,0,0.6);const travel=at(t,0.2,Math.max(1.5,(P.dur||3)*0.8));
    // the page arrives, then the camera closes in on the proving line (the highlight sits at the crop's middle)
-   const wDoc=(TALL?W*1.30:W*1.15)*(1+0.18*travel);camera(t);
+   const wDoc=(TALL?W*1.30:W*1.15)*(1+0.18*travel)*(P.zoom||1);camera(t);
    HTML.innerHTML=`<div class="doc" style="width:${wDoc}px;left:50%;top:${50+(1-a)*60}%;transform:translate(-50%,-50%) rotate(${(1-a)*-5+Math.sin(t*0.6)*0.4}deg)"><img src="${P.img}"></div>`+
      (P.text?`<div class="label" style="left:${W*0.06}px;bottom:${H*0.12}px;background:${C.ink};padding:12px 18px;border-radius:6px;font-size:${H*0.034}px;opacity:${at(t,ev('label',0.8),0.4)};transform:translateX(${(1-at(t,ev('label',0.8),0.4))*-40}px)">${esc(P.text)}</div>`:'');
    SVG.innerHTML='';},
@@ -175,8 +175,14 @@ const SCENES={
  questions(t){camera(t);const L=ladder(t,{extraTop:1,juniorGone:1,label2030:1});const g=L.g;SVG.innerHTML=L.svg;
    const q=P.cards;HTML.innerHTML=(P.text?`<div class="label" style="left:${W*0.06}px;top:${H*0.04}px;opacity:${at(t,0.2)}">${esc(P.text)}</div>`:'')+
    q.map((s,i)=>{const a=pop(t,ev('q'+i,0.6+i*1.4),0.55);return `<div class="card" style="left:${TALL?W*0.08:g.R+W*0.04}px;top:${TALL?H*(0.56+i*0.2):H*(0.30+i*0.27)}px;max-width:${TALL?W*0.84:W-g.R-W*0.10}px;font-size:${H*0.042}px;opacity:${a};transform:translateY(${(1-a)*80}px) rotate(${(i?2:-2)*(1-a)+Math.sin(t+i)*0.6}deg)">${esc(s)}</div>`}).join('');},
+ // the 90-second cut's two past frames: the branches copy to 43% more, then the accountants stack past the clerks
+ past(t){const sw=ev('switch',2.4);if(t<sw){document.getElementById('credit').textContent='IMF · BESSEN 2015';return SCENES.copies(t)}
+   document.getElementById('credit').textContent='NPR PLANET MONEY · 2015';const keep=E;E={gone:sw+0.2,added:sw+0.9};SCENES.ledger(t);E=keep;},
  // an action card on the desk
- action(t){camera(t);const a=pop(t,0.05,0.55);const sub=P.sub||[];
+ action(t){camera(t);if(P.text2){const k=pop(t,ev('two',3),0.55);const a=pop(t,0.05,0.55);
+     HTML.innerHTML=`<div class="card" style="left:${W*0.08}px;top:${H*0.12-k*H*0.02}px;width:${W*0.80}px;font-size:${H*0.05}px;opacity:${a*(1-0.45*k)};transform:translateY(${(1-a)*90}px) scale(${1-0.08*k})"><small>${esc(P.kicker||'')}</small>${esc(P.text)}</div>`+
+     `<div class="card" style="left:${W*0.08}px;top:${H*0.52}px;width:${W*0.80}px;font-size:${H*0.05}px;opacity:${k};transform:translateY(${(1-k)*120}px) rotate(${Math.sin(t*0.7)*0.5}deg)"><small>${esc(P.kicker2||'')}</small>${esc(P.text2)}</div>`;SVG.innerHTML='';return}
+   const a=pop(t,0.05,0.55);const sub=P.sub||[];
    HTML.innerHTML=`<div class="card" style="left:${W*0.08}px;top:${H*0.2}px;width:${W*0.72}px;font-size:${H*0.06}px;opacity:${a};transform:translateY(${(1-a)*90}px) rotate(${-2*(1-a)+Math.sin(t*0.7)*0.5}deg)"><small>${esc(P.kicker||'')}</small>${esc(P.text)}</div>`+
      sub.map((s,i)=>{const b=pop(t,ev('s'+i,1.2+i*1.2),0.5);return `<div class="label" style="left:${W*0.1}px;top:${H*(0.62+i*0.08)}px;font-size:${H*0.028}px;opacity:${b};transform:translateX(${(1-b)*-30}px)">· ${esc(s)}</div>`}).join('');SVG.innerHTML='';},
 };

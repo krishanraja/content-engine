@@ -37,7 +37,7 @@ LONG = [
     ('l02', 2, 'build', {}, {'y2030': '2030'}),
     ('l03', 3, 'doc', {'img': SRC + 'report-cover.jpg', 'credit': R, 'travel': 0.02}, {}),
     ('l04', 4, 'four', {'credit': R, 'rebuild': True}, {'early': 'early', 'four': 'four'}),
-    ('l05', 5, 'drop', {'credit': R}, {'fewer': 'fewer', 'drop': 'twenty', 'land': 'nine'}),
+    ('l05', 5, 'drop', {'credit': R}, {'fewer': 'fewer', 'drop': '27', 'land': '9%'}),
     ('l06', 6, 'bars', {'credit': R, 'label': 'AUGUST · HOURS WORKED'}, {'august': 'august', 'staff': 'agents', 'hours': 'hours'}),
     ('l07', 7, 'doc', {'img': SRC + 'report-managers.jpg', 'credit': R, 'text': '1 IN 3 ML MANAGERS'}, {'label': 'managers'}),
     ('l09', 9, 'doc', {'img': SRC + 'stanford.jpg', 'credit': STAN, 'travel': 0.03}, {}),
@@ -45,8 +45,8 @@ LONG = [
     ('l11', 11, 'doc', {'img': SRC + 'stanford-slower.jpg', 'credit': STAN}, {}),
     ('l12', 12, 'label', {'text': 'ATMS · SPREADSHEETS', 'words': ['ATMS', 'SPREADSHEETS']}, {'w0': 'before', 'w1': 'twice'}),
     ('l13', 13, 'branch', {'credit': IMF, 'text': '1988 TO 2004'}, {'close': '13'}),
-    ('l14', 14, 'copies', {'credit': IMF}, {'more': 'more', 'pct': 'percent'}),
-    ('l15', 15, 'doc', {'img': SRC + 'imf.jpg', 'credit': IMF}, {}),
+    ('l14', 14, 'copies', {'credit': IMF}, {'more': 'more', 'pct': '43'}),
+    ('l15', 15, 'doc', {'img': SRC + 'imf-cash.jpg', 'credit': IMF, 'zoom': 0.78}, {}),
     ('l16', 16, 'ledger', {'credit': NPR}, {'gone': 'gone', 'added': 'added'}),
     ('l18', 18, 'taller', {}, {'bigger': 'bigger'}),
     ('l20', 20, 'firststep', {}, {'tellers': 'tellers', 'accountant': 'accountant'}),
@@ -68,26 +68,28 @@ LONG = [
     ('l42', 42, 'action', {'kicker': '3 · ONE DULL WEEKLY JOB', 'text': 'By hand first, then the fix with AI'}, {}),
 ]
 SHORT = [
-    ('s01', 1, 'label', {'text': 'ANTHROPIC · ITS OWN STAFF', 'img': SRC + 'report-cover.jpg'}, {}),
+    ('s01', 1, 'label', {'text': 'ANTHROPIC · ITS OWN STAFF', 'img': SRC + 'report-cover.jpg'}, {'so': 'so where'}),
     ('s02', 2, 'drop', {'credit': R, 'cx': 0.32}, {'fewer': 'fewer', 'drop': 'one', 'land': '10'}),
     ('s03', 3, 'doc', {'img': SRC + 'report-managers.jpg', 'credit': R, 'text': '1 IN 3 ML MANAGERS'}, {'label': 'managers'}),
-    ('s04', 4, 'copies', {'credit': 'IMF · NPR PLANET MONEY', 'n': 10}, {'more': 'cash', 'pct': 'spreadsheets'}),
+    ('s04', 4, 'past', {'n': 10}, {'more': 'cash', 'pct': 'took', 'switch': 'both'}),
     ('s06', 6, 'gap', {'cx': 0.5, 'y2030': True}, {'first': 'first'}),
-    ('s07', 7, 'doc', {'img': SRC + 'report-not-hired.jpg', 'credit': R}, {}),
+    ('s07', 7, 'doc', {'img': SRC + 'report-not-hired.jpg', 'credit': R}, {'junior': 'the junior job'}),
     ('s08', 8, 'sheet', {'mode': 'macro'}, {'first': 'job', 'second': 'spot', 'third': 'better'}),
     ('s09', 9, 'questions', {'text': 'BEFORE YOU CUT A JUNIOR ROLE', 'cards': ['Who will your seniors be?', 'What are they learning on today?'], 'cx': 0.5},
      {'q0': 'seniors', 'q1': 'learning'}),
-    ('s11', 11, 'action', {'kicker': '1 · NAME THEM  ·  2 · ONE DULL JOB', 'text': "Name each team's future seniors. Give a junior one dull weekly job."}, {}),
+    ('s11', 11, 'action', {'kicker': '1 · NAME THEM', 'text': "Each team's future seniors, and what they learn on", 'kicker2': '2 · ONE DULL JOB', 'text2': 'By hand first, then with AI'}, {'two': 'give'}),
 ]
 # where the 90-second cut's panels turn the page (event names); every other beat is one page
-SHORT_PAGES = {'s02': ['drop', 'land'], 's04': ['pct'], 's06': ['first'], 's08': ['second', 'third'], 's09': ['q0', 'q1']}
+SHORT_PAGES = {'s01': ['so'], 's02': ['drop', 'fewer'], 's04': ['pct', 'switch'], 's07': ['junior'], 's11': ['two'], 's06': ['first'], 's08': ['second', 'third'], 's09': ['q0', 'q1']}
 # the 90-second cut's beat 5 ("But I think this time is different", 3.1 s on his face alone) would leave a 3.1 s gap
 # under make.py's 9:16 gate: s04's past scene holds through it, still settling (recorded in production_notes).
-SHORT_HOLD = {'s04': 5}
+SHORT_HOLD = {'s04': 5, 's11': 12}
 
 
 def words_of(cut):
-    return json.loads((PLAN / 'takes' / f'{cut}.words.json').read_text())['words']
+    """make.py's own hearing of the take once it has one (its cues are matched against it), else the take's transcript."""
+    own = sorted((WORK / cut).glob('*.words.json')) if (WORK / cut).is_dir() else []
+    return json.loads((own[0] if own else PLAN / 'takes' / f'{cut}.words.json').read_text())['words']
 
 
 def norm(w):
@@ -200,7 +202,8 @@ def page_words(item):
         if k not in item['events']:
             continue
         t = item['s'] + item['events'][k]
-        idx = next(i for i, w in enumerate(item['heard']) if abs(w['s'] - t) < 0.02)
+        idx = min(range(len(item['heard'])), key=lambda i: abs(item['heard'][i]['s'] - t))
+        idx = min(idx, len(item['heard']) - 1)
         out.append(' '.join(w['w'].strip() for w in item['heard'][idx:idx + 3]))
     return out
 
@@ -222,8 +225,8 @@ def configure():
     # hear "behind Claude" at 0:05 of the long take (31 Oct); the rest are the transcriber's spellings of his words.
     long_replace = [['buying Claude', 'behind Claude'], ['its own stuff', 'its own staff'], ['hiring lists', 'hiring less'],
                     ['make your mind hop .ai', 'makeyourmindup.ai'], ['make your mind hop.ai', 'makeyourmindup.ai'],
-                    ['makeyourmindup .ai', 'makeyourmindup.ai'], ['twenty seven percent', '27%'], ['nine percent', '9%']]
-    short_replace = [['start to work', 'starter work'], ['makeyourmindup .ai', 'makeyourmindup.ai']]
+                    ['makeyourmindup .ai', 'makeyourmindup.ai'], ['twenty seven percent', '27%'], ['nine percent', '9%'], ['27 %', '27%'], ['43 %', '43%'], ['75 %', '75%']]
+    short_replace = [['Junior hiring Anthropic,', 'Junior hiring at Anthropic,'], ['start to work', 'starter work'], ['new, higher -handed, dull', 'new hire handed a dull'], ['MakeYourMindUp .ai', 'makeyourmindup.ai'], ['makeyourmindup .ai', 'makeyourmindup.ai']]
     for cut, shape, extra in (('long', '16x9', {'remove': [{'say': "So we had one today and that's a"}], 'replacements': long_replace,
                                                  'music_mode': 'episode', 'music_seconds': 100}),
                               ('short', '9x16', {'remove': [], 'replacements': short_replace, 'music_seconds': 90})):
