@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { mergeMaking, parseMakingPatch } from '../../apps/control-plane/api/_making.js'
-import { clipUse, missingClips, presentClip } from '../../apps/control-plane/api/_routedClips.js'
+import { missingClips, presentClip } from '../../apps/control-plane/api/_routedClips.js'
 
 // Clips routed to a piece (Krish, 2026-10-31: "route the two videos to it once they're read, so a new session knows they
 // will need to be referenced with audio on during my video post production").
@@ -15,31 +15,32 @@ const card = (over: Record<string, unknown> = {}) => ({
 })
 
 describe('how a cut uses a card linked to its piece', () => {
-  it('plays it with its sound when his words ask to keep the audio', () => {
-    expect(clipUse(card({ why_here: 'a video that we are going to want to keep the video and audio for' })).use).toBe('show_with_sound')
-    expect(clipUse(card({ note_for_claude: 'referenced with its audio ON during post-production. Never mute it.' })).use).toBe('show_with_sound')
-    expect(clipUse(card({ would_do: 'show it with its own sound' })).use).toBe('show_with_sound')
+  const said = 'Krish, 2026-10-31: keep the video and audio'
+  const uses = { [A]: { use: 'show_with_sound' as const, said, at: NOW, by: 'Claude Code' } }
+  it('plays it with its sound only when his words are on the record', () => {
+    const c = presentClip(card(), uses)
+    expect([c.use, c.said]).toEqual(['show_with_sound', said])
   })
-  it('keeps it a reference when nothing he wrote asks for its sound', () => {
-    expect(clipUse(card({ why_here: 'I love the infographic style.' }))).toEqual({ use: 'reference', because: null })
-    expect(clipUse(card())).toEqual({ use: 'reference', because: null })
+  it('never guesses from the card text: sound words with no record stay a reference', () => {
+    for (const words of ['keep the video and audio', 'audio ON', 'it must never be muted', 'the sound is on point']) {
+      expect(presentClip(card({ why_here: words, note_for_claude: words })).use, words).toBe('reference')
+    }
   })
-  it('never plays an image or a document', () => {
-    expect(clipUse(card({ kind: 'image', why_here: 'keep the audio' })).use).toBe('reference')
+  it('never plays an image, whatever the record says', () => {
+    expect(presentClip(card({ kind: 'image' }), uses).use).toBe('reference')
   })
-  it('lets words asking for silence win', () => {
-    expect(clipUse(card({ why_here: 'keep the audio', would_do: 'actually, mute it' })).use).toBe('reference')
-  })
-  it('gives the session the links and his words', () => {
-    const c = presentClip(card({ why_here: 'keep the video and audio' }))
+  it('gives the session the links, his words and the note apart', () => {
+    const c = presentClip(card({ why_here: 'keep the video and audio', note_for_claude: 'a session note' }))
     expect(c.drive_url).toBe('https://drive.google.com/file/d/1Dd2TMonugi1BWSj-i7zoa5ThRIpJwXtx/view')
     expect(c.source_url).toBe('https://www.youtube.com/shorts/oEODyXtV49M')
-    expect(c.because).toBe('keep the video and audio')
+    expect(c.his_words.why_here).toBe('keep the video and audio')
+    expect(c.note_for_claude).toBe('a session note')
   })
 })
 
 describe('what a cut still lacks', () => {
-  const clips = [presentClip(card({ why_here: 'keep the video and audio' })), presentClip(card({ id: B, why_here: 'nice style' }))]
+  const clips = [presentClip(card(), { [A]: { use: 'show_with_sound', said: 'Krish, 2026-10-31: keep the audio', at: NOW, by: 'Claude Code' } }),
+    presentClip(card({ id: B, why_here: 'nice style' }))]
   it('names a sound clip with no place, never a reference', () => {
     expect(missingClips(clips, {}).map(c => c.card_id)).toEqual([A])
   })
@@ -49,6 +50,24 @@ describe('what a cut still lacks', () => {
   it('counts silence or leaving it out only on his words', () => {
     expect(missingClips(clips, { [A]: { at_s: 10, audio: 'off', at: NOW, by: 'Claude Code' } }).length).toBe(1)
     expect(missingClips(clips, { [A]: { omitted: true, said: 'Krish, 2026-11-05: leave it out', at: NOW, by: 'Claude Code' } })).toEqual([])
+  })
+})
+
+describe('the making record keeps his words on each clip', () => {
+  it('takes his words and merges card by card', () => {
+    const one = parseMakingPatch({ clip_uses: { [A]: { use: 'show_with_sound', said: 'Krish, 2026-10-31: keep the video and audio' } } }, NOW)
+    expect(one.problems).toEqual([])
+    const two = parseMakingPatch({ clip_uses: { [B]: { use: 'show_with_sound', said: 'Krish, 2026-10-31: referenced with audio on' } } }, NOW)
+    const next = mergeMaking(mergeMaking(null, one.patch, 'Claude Code', NOW), two.patch, 'Claude Code', NOW)
+    expect(Object.keys(next.clip_uses || {}).sort()).toEqual([A, B].sort())
+  })
+  it('refuses a use without his words, or a bad use', () => {
+    for (const bad of [{ [A]: { use: 'show_with_sound' } }, { [A]: { use: 'show_with_sound', said: 'the editor decided' } },
+      { [A]: { use: 'loud', said: 'Krish, 2026-10-31: x' } }, { 'not-a-card': { use: 'reference', said: 'Krish, 2026-10-31: x' } }]) {
+      const { patch, problems } = parseMakingPatch({ clip_uses: bad }, NOW)
+      expect(problems.length, JSON.stringify(bad)).toBeGreaterThan(0)
+      expect(patch.clip_uses).toBeUndefined()
+    }
   })
 })
 

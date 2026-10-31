@@ -22,7 +22,7 @@
 import { activeManualReviews, bodyHash, effectiveBlocking } from './_factGate.js'
 import { MediaRefSchema, mediaReviewProblems, type MediaRef } from '../../../packages/core/src/media-quality.js'
 import { mediaQualityEnforced } from '../../../packages/core/src/media-rollout.js'
-import type { ClipPlacement } from './_routedClips.js'
+import type { ClipPlacement, ClipUseRecord } from './_routedClips.js'
 
 /** Every channel a piece can go to, in the order Krish posts them
  *  (docs/AMPLIFICATION.md). Krish, 2026-10-11: "I always want to repost to
@@ -162,6 +162,9 @@ export interface Making {
    *  cut by cut and clip by clip. making.py video refuses a cut that leaves out a clip his words say to play with
    *  its sound. */
   clip_placements?: Partial<Record<MakingCut, Record<string, ClipPlacement>>>
+  /** Krish's own words on how a linked card is used (show_with_sound or reference), keyed by card id; merged card by
+   *  card. Never inferred: a card with no entry is a reference. */
+  clip_uses?: Record<string, ClipUseRecord>
   /** Retired on 2026-10-12, when Descript was (Krish: "Descript is
    *  permanently gone"). Records written before then still hold it; it is
    *  kept as it is, so they still parse, and nothing reads it. */
@@ -190,7 +193,6 @@ const MAX_TELEPROMPTER_NAME = 200
 function count(v: unknown): number | null { return typeof v === 'number' && Number.isInteger(v) && v >= 0 && v <= 100000 ? v : null }
 function rate(v: unknown): number | null | undefined { return v === null ? null : typeof v === 'number' && Number.isFinite(v) && v >= 0 && v <= 100000 ? v : undefined }
 
-/** One cut of a spoken_delta patch, or the reason it is refused. Only counts and short examples are taken. */
 const CARD_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 const SECONDS_MAX = 4 * 3600
 function seconds(v: unknown): number | null | undefined {
@@ -220,6 +222,7 @@ function parseClipPlacement(at: string, card: string, v: unknown, by: string, no
   return { entry: { at_s: start, ...(end !== undefined ? { end_s: end } : {}), audio: v.audio, ...(said ? { said } : {}), at: when(v.at, now), by } }
 }
 
+/** One cut of a spoken_delta patch, or the reason it is refused. Only counts and short examples are taken. */
 function parseSpokenDelta(cut: string, v: unknown, now: string): { entry?: MakingSpokenDelta; problem?: string } {
   const at = `spoken_delta.${cut}`
   if (!isCut(cut)) return { problem: `unknown cut "${cut}" in spoken_delta (long, short, feature)` }
@@ -474,6 +477,23 @@ export function parseMakingPatch(body: unknown, now: string): { patch: MakingPat
       if (problems.length === before) patch.spoken_delta = cuts
     }
   }
+  if (body.clip_uses !== undefined) {
+    const v = body.clip_uses
+    if (!isObj(v) || !Object.keys(v).length) problems.push('clip_uses maps an Inspiration card id to {use, said}')
+    else {
+      const uses: Record<string, ClipUseRecord> = {}
+      const before = problems.length
+      for (const [card, u] of Object.entries(v)) {
+        const at = `clip_uses.${card}`
+        const said = isObj(u) ? str(u.said, MAX_TEXT) : null
+        if (!CARD_ID.test(card)) problems.push(`${at}: the key is the Inspiration card's id (inspiration_items.id, a uuid)`)
+        else if (!isObj(u) || (u.use !== 'show_with_sound' && u.use !== 'reference')) problems.push(`${at}.use is show_with_sound or reference`)
+        else if (!said || !/^Krish\b/.test(said)) problems.push(`${at}.said is Krish's own words, starting "Krish" and the date: how a clip is used is his call`)
+        else uses[card] = { use: u.use, said, at: when(u.at, now), by: str(body.by, 60) || 'Claude Code' }
+      }
+      if (problems.length === before) patch.clip_uses = uses
+    }
+  }
   if (body.clip_placements !== undefined) {
     const v = body.clip_placements
     if (!isObj(v) || !Object.keys(v).length) problems.push('clip_placements needs a cut: long, short or feature')
@@ -557,6 +577,10 @@ export function mergeMaking(prev: Making | null | undefined, patch: MakingPatch,
     // Cut by cut: the short's delta never drops the long's.
     const held = isObj(base.spoken_delta) ? base.spoken_delta : {}
     next.spoken_delta = { ...held, ...patch.spoken_delta }
+  }
+  if (patch.clip_uses) {
+    // Card by card: his words on one clip keep the others.
+    next.clip_uses = { ...(isObj(base.clip_uses) ? base.clip_uses : {}), ...patch.clip_uses }
   }
   if (patch.clip_placements) {
     // Cut by cut, clip by clip: placing a clip in the short keeps the long's placements.

@@ -106,6 +106,7 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/content-ideas/[id]/package`
 - `/api/content-ideas/[id]/production-brief`
 - `/api/content-ideas/[id]/revise`
+- `/api/content-ideas/[id]/routed-clips`
 - `/api/content-ideas/[id]/save-draft`
 - `/api/content-ideas/[id]/schedule`
 - `/api/content-ideas/[id]/score`
@@ -1474,6 +1475,18 @@ _revisePrompt — the prompt behind /api/content-ideas/:id/revise.
 - `function buildReviseUser(ctx: ReviseContext, r: ReviseRequest): string`
 - `function buildRevisePrompt(ctx: ReviseContext, r: ReviseRequest): { system: string; user: string }`
 
+### `apps/control-plane/api/_routedClips.ts`
+
+Clips routed to a piece (Krish, 2026-10-31: "route the two videos to it once they're read, so a new session knows
+
+- `const ROUTED_CLIP_COLS`
+- `type ClipUse = 'show_with_sound' | 'reference'`
+- `interface ClipUseRecord`
+- `interface RoutedClip`
+- `function presentClip(card: Record<string, any>, uses?: Record<string, ClipUseRecord> | null): RoutedClip`
+- `interface ClipPlacement`
+- `function missingClips(clips: RoutedClip[], placements: Record<string, ClipPlacement> | null | undefined): RoutedClip[]`
+
 ### `apps/control-plane/api/_runArtifacts.ts`
 
 What a failed run is allowed to leave behind.
@@ -2161,6 +2174,10 @@ POST /api/content-ideas/:id/fact-check run the fact gate on the current body
 
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 - `const config`
+
+### `apps/control-plane/api/content-ideas/[id]/routed-clips.ts`
+
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
 
 ### `apps/control-plane/api/content-ideas/[id]/save-draft.ts`
 

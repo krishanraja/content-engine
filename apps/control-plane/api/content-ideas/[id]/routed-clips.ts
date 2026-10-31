@@ -9,9 +9,10 @@ import { ROUTED_CLIP_COLS, missingClips, presentClip } from '../../_routedClips.
 //   -> { ok, clips: [RoutedClip], placements: {long|short|feature: {card_id: place}}, missing: {cut: [card_id]} }
 //
 // Every Inspiration card Krish linked to this piece (inspiration_items.piece_id), with how the cut uses it
-// (_routedClips.ts): `show_with_sound` when his words on the card ask to keep its sound, else `reference`.
-// `missing` names, per cut, each show_with_sound clip the making record has not placed with its sound on, nor left out
-// on his words. make-piece reads this before the creative direction; making.py video refuses a cut it names.
+// (_routedClips.ts): `show_with_sound` only when the making record holds his quoted words saying so (clip_uses), else
+// `reference`. `missing` names, per cut, each show_with_sound clip the making record has not placed with its sound on,
+// nor left out on his words. make-piece reads this before the creative direction; making.py video warns on a cut it
+// names (whether that should stop the cut is his call, not made yet).
 // Read only: nothing here writes, sends or spends.
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -27,8 +28,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   ])
   if (idea.error || cards.error) return res.status(500).json({ ok: false, error: (idea.error || cards.error)!.message })
   if (!idea.data) return res.status(404).json({ ok: false, error: 'idea not found' })
-  const clips = ((cards.data || []) as Array<Record<string, any>>).map(presentClip)
   const making = (idea.data.meta as Record<string, any> | null)?.making
+  const uses = making && typeof making.clip_uses === 'object' && making.clip_uses ? making.clip_uses : {}
+  const clips = ((cards.data || []) as Array<Record<string, any>>).map(card => presentClip(card, uses))
   const placements = making && typeof making.clip_placements === 'object' && making.clip_placements ? making.clip_placements : {}
   const missing: Record<string, string[]> = {}
   for (const cut of MAKING_ALL_CUTS) missing[cut] = missingClips(clips, placements[cut]).map(c => c.card_id)

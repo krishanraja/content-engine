@@ -1332,8 +1332,9 @@ def video_patch(cut, name, path, url=None, seconds=None, thumb=None, thumb_url=N
 
 # Clips routed to the piece (apps/control-plane/api/_routedClips.ts). Krish, 2026-10-31: "route the two videos to it
 # once they're read, so a new session knows they will need to be referenced with audio on during my video post
-# production". The engine says which linked Inspiration cards his words ask to play with their own sound; a cut is not
-# recorded as finished until each is placed with its sound on, or left out (or silenced) on his words.
+# production". The engine lists every Inspiration card linked to the piece; a card is `show_with_sound` only once his
+# own words saying so are on the record (`clips sound`). `video` warns, loudly, on a cut that has not placed each one;
+# whether that should stop the cut instead is his call, not made yet.
 CLIP_ID = re.compile(r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$', re.I)
 
 
@@ -1359,7 +1360,7 @@ def clip_lines(answer):
     lines = []
     for c in answer.get('clips') or []:
         where = c.get('drive_url') or c.get('source_url') or 'no link'
-        why = f'  ("{c["because"][:120]}")' if c.get('because') else ''
+        why = f'  ({c["said"][:140]})' if c.get('said') else ''
         lines.append(f"{c.get('use', 'reference'):15} {c.get('kind', ''):6} {c.get('card_id')}  {c.get('name', '')}  {where}{why}")
     if not lines:
         lines.append('no Inspiration cards are linked to this piece')
@@ -1370,18 +1371,31 @@ def clip_lines(answer):
 
 
 def clip_gate(piece_id, cut, call=None):
-    """None when the cut places every clip his words ask to play with its sound; else why not. Fails closed: when the
-    engine cannot say, the cut is not recorded."""
-    answer = routed_clips(piece_id, call)
+    """None when the cut places every clip Krish asked to play with its sound; else what it lacks, as a warning for
+    the session and its report. It never stops the cut (that is his call, not made yet), and says so when the engine
+    cannot answer."""
+    try:
+        answer = routed_clips(piece_id, call)
+    except MakingError as error:
+        return f'could not check the clips linked to this piece ({error}); run making.py {piece_id} clips before calling the {cut} cut done'
     missing = set((answer.get('missing') or {}).get(cut) or [])
     if not missing:
         return None
     named = [f"{c.get('name') or c['card_id']} ({c['card_id']}; {c.get('drive_url') or c.get('source_url') or 'no link'})"
              for c in answer['clips'] if c.get('card_id') in missing]
-    return (f'the {cut} cut does not yet play {len(named)} clip(s) Krish linked to this piece and asked to keep the sound of: '
-            + '; '.join(named) + f'. Place each in the cut with its sound on and record it: making.py {piece_id} clips {cut} '
-            '<card_id> --at-s <seconds> [--end-s <seconds>] --audio on. Leaving one out, or playing it silent, takes his words: '
-            '--omit (or --audio off) with --krish-words "Krish, YYYY-MM-DD: his words"')
+    return (f'the {cut} cut does not yet play {len(named)} clip(s) Krish asked to play with their own sound: '
+            + '; '.join(named) + '. Tell him before calling the cut done. Once placed: making.py '
+            f'{piece_id} clips {cut} <card_id> --at-s <seconds> [--end-s <seconds>] --audio on; left out or silent only '
+            'on his words (--omit or --audio off, with --krish-words "Krish, YYYY-MM-DD: his words")')
+
+
+def clip_use_patch(card_id, use, said):
+    """His words on how one linked card is used: show_with_sound, or back to reference."""
+    if not CLIP_ID.match(card_id or ''):
+        raise MakingError("the clip is the Inspiration card's id (making.py <piece> clips lists them)")
+    if not krish_words(said):
+        raise MakingError('how a linked clip is used is Krish\'s call: give his words, --krish-words "Krish, YYYY-MM-DD: his words"')
+    return {'clip_uses': {card_id: {'use': use, 'said': said.strip()}}}
 
 
 def clip_patch(cut, card_id, at_s=None, end_s=None, audio=None, omit=False, said=None):
@@ -2488,13 +2502,19 @@ def self_test():
             return 500, 'unexpected'
         return fake
     why = clip_gate(pid, 'long', clips_answer([card]))
-    check('clips: the gate names a clip the cut lacks', bool(why and card in why and 'youtube_oEODyXtV49M.mp4' in why), True)
-    check('clips: the gate passes a cut that places it', clip_gate(pid, 'long', clips_answer([])), None)
-    try:
-        clip_gate(pid, 'long', lambda m, p, b: (503, 'down'))
-        check('clips: the gate fails closed when the engine cannot say', 'passed', 'blocked')
-    except MakingError:
-        check('clips: the gate fails closed when the engine cannot say', 'blocked', 'blocked')
+    check('clips: the warning names a clip the cut lacks', bool(why and card in why and 'youtube_oEODyXtV49M.mp4' in why), True)
+    check('clips: no warning for a cut that places it', clip_gate(pid, 'long', clips_answer([])), None)
+    why = clip_gate(pid, 'long', lambda m, p, b: (503, 'down'))
+    check('clips: says so when the engine cannot answer, and never stops the cut', bool(why and 'could not check' in why), True)
+    check('clips: his words set a clip to play with its sound',
+          clip_use_patch(card, 'show_with_sound', 'Krish, 2026-10-31: keep the video and audio'),
+          {'clip_uses': {card: {'use': 'show_with_sound', 'said': 'Krish, 2026-10-31: keep the video and audio'}}})
+    for label, said in (('no words', None), ('words that are not his', 'the session thinks so')):
+        try:
+            clip_use_patch(card, 'show_with_sound', said)
+            check(f'clips: a use set with {label} is refused', 'accepted', 'refused')
+        except MakingError:
+            check(f'clips: a use set with {label} is refused', 'refused', 'refused')
 
     if fails:
         print('making self-test FAILED:\n  ' + '\n  '.join(fails))
@@ -2574,8 +2594,12 @@ def main(argv=None, call=None):
             patch = visual_gate_patch(a.args[0])
         elif a.what == 'clips':
             if len(a.args) != 2:
-                ap.error('give the cut and the card id: clips long <card_id> --at-s 12.5 --audio on (or no arguments to list them)')
-            patch = clip_patch(a.args[0], a.args[1], a.at_s, a.end_s, a.audio, a.omit, a.krish_words)
+                ap.error('give the cut and the card id: clips long <card_id> --at-s 12.5 --audio on; or his words on a clip: '
+                         'clips sound|reference <card_id> --krish-words "Krish, ..."; or no arguments to list them')
+            if a.args[0] in ('sound', 'reference'):
+                patch = clip_use_patch(a.args[1], 'show_with_sound' if a.args[0] == 'sound' else 'reference', a.krish_words)
+            else:
+                patch = clip_patch(a.args[0], a.args[1], a.at_s, a.end_s, a.audio, a.omit, a.krish_words)
         elif a.what == 'choices':
             patch = choices_patch(a.args[0] if a.args else None, a.opening, a.lead_picture, a.big_moment_sound)
         elif a.what == 'scripts':
@@ -2640,11 +2664,11 @@ def main(argv=None, call=None):
                     problems.append('receipt names a different video path')
             if problems:
                 raise MakingError('Video recording blocked: '+'; '.join(problems))
-            # After the receipt (which refuses before any network call): a finished cut plays every clip Krish
-            # linked to the piece and asked to keep the sound of.
+            # After the receipt (which refuses before any network call): a warning, never a stop, for each clip Krish
+            # asked to play with its sound that this cut has not placed.
             why = clip_gate(a.piece_id, patch['video_assets'][0]['cut'], call)
             if why:
-                raise MakingError('Video recording blocked: ' + why)
+                print('making: WARNING: ' + why, file=sys.stderr)
             import media_standard
             if media_standard.enforced():
                 binding=json.loads(Path(a.video_file+'.media-quality.json').read_text(encoding='utf8'))
