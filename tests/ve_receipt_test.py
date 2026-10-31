@@ -55,6 +55,11 @@ class HeardRowTests(unittest.TestCase):
         self.assertEqual(row['status'], 'pass', row)
         self.assertEqual(sorted(c['by'] for c in row['cleared']), ['heard_as', 'removal', 'spelling'])
 
+    def test_a_cleared_mishearing_in_the_cut_clears_whatever_the_master_was_heard_as(self):
+        row = receipt.heard_check(words('Gwen fights'), words('Klen fights'), self.rulings)
+        self.assertEqual(row['status'], 'pass', row)
+        self.assertEqual(receipt.heard_check(words('Gwen fights'), words('Glen fights'), self.rulings)['status'], 'fail')
+
     def test_a_difference_he_never_cleared_fails_the_row(self):
         row = receipt.heard_check(words('Grok checks posts'), words('rock checks posts'), self.rulings)
         self.assertEqual(row['status'], 'fail')

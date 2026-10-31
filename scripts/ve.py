@@ -770,7 +770,8 @@ def cmd_receipt(args) -> int:
     from velib.receipt import build
     ve = ROOT / 'docs' / 'plans' / args.piece / 've'
     result = build(args.video, piece_id=args.piece_id, library_path=args.library_path, props=ve / f'props.{args.cut}.json',
-                   spec=ve / 'spec.json', take_words=ve / 'words.json', script=args.script,
+                   spec=ve / 'spec.json', take_words=ve / 'words.json', voice_master=args.voice_master,
+                   script=args.script,
                    rulings=ve / f'rulings.{args.cut}.json', qc=args.qc or ve / f'qc.{args.cut}.json',
                    verdict=args.verdict or ve / f'verdict.{args.cut}.json', clarity_dir=args.clarity, model=args.model)
     receipt = load_json(result['receipt'])
@@ -891,6 +892,7 @@ def main() -> int:
     p.add_argument('--cut', required=True); p.add_argument('--piece-id', required=True, help="the making record's piece id")
     p.add_argument('--library-path', required=True, help='where the cut is filed (3 Posts/...)')
     p.add_argument('--script', required=True, help='the signed script, for the words gate')
+    p.add_argument('--voice-master', required=True, help='the voice-only master the cut was mixed from, for the heard row')
     p.add_argument('--qc', help='ve qc on these bytes (default: the piece folder copy)')
     p.add_argument('--verdict', help='the Critic verdict on these bytes (default: the piece folder copy)')
     p.add_argument('--clarity', help='folder with visual-clarity.manifest.json and visual-clarity.review.json')
