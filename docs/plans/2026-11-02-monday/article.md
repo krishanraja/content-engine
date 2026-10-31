@@ -42,7 +42,7 @@ That's why this is every business's problem, and Anthropic's staff are only earl
 
 Picture a new hire given a dull job: the same task, by hand, for weeks. Somewhere along the way they notice it repeats, and wonder if there's a better way. So they go looking. The first attempt doesn't work. Neither does the second. They keep at it, knowing the days they're spending might be wasted. Then weeks of work shrink to a few hours.
 
-The real lesson isn't the shortcut. It's the habit: spotting the job that repeats, asking whether it has to be done this way, and sticking with the fix when it doesn't work at first. That's how you use AI well, too. And that habit only forms because someone handed over the dull job.
+The real lesson is the habit: spotting the job that repeats, asking whether it has to be done this way, and sticking with the fix when it doesn't work at first. That's how you use AI well, too. And that habit only forms because someone handed over the dull job.
 
 So, a question to take into your next hiring meeting. Before you cut a junior role, ask who on this team will be a senior in 2030, and what they're learning on today.
 

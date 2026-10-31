@@ -92,6 +92,51 @@
  ],
  "verdicts": [
   {
+   "title": "VIDEO: AI used to reply. Now it acts first. Claude Duet is the start.",
+   "surface": "substack",
+   "verdict": "picked",
+   "why": "Picked 31 Oct after he asked for bigger: the shift from AI that replies to AI that acts first, with Claude Duet as the start",
+   "krish": "Recommended for Wednesday, and sign off the Monday line",
+   "on": "2026-10-31",
+   "piece": "b63d2507-dbb4-449d-bce4-f21e859ee2ad"
+  },
+  {
+   "title": "AI NOW ACTS FIRST. CLAUDE DUET IS THE START.",
+   "surface": "cover",
+   "verdict": "picked",
+   "why": "Picked 31 Oct after he asked for bigger: the shift from AI that replies to AI that acts first, with Claude Duet as the start",
+   "krish": "Recommended for Wednesday, and sign off the Monday line",
+   "on": "2026-10-31",
+   "piece": "b63d2507-dbb4-449d-bce4-f21e859ee2ad"
+  },
+  {
+   "title": "AI NOW ACTS FIRST",
+   "surface": "thumbnail",
+   "verdict": "picked",
+   "why": "Picked 31 Oct after he asked for bigger: the shift from AI that replies to AI that acts first, with Claude Duet as the start",
+   "krish": "Recommended for Wednesday, and sign off the Monday line",
+   "on": "2026-10-31",
+   "piece": "b63d2507-dbb4-449d-bce4-f21e859ee2ad"
+  },
+  {
+   "title": "AI just stopped waiting to be asked. Claude Duet changes everything.",
+   "surface": "youtube",
+   "verdict": "picked",
+   "why": "Picked 31 Oct after he asked for bigger: the shift from AI that replies to AI that acts first, with Claude Duet as the start",
+   "krish": "Recommended for Wednesday, and sign off the Monday line",
+   "on": "2026-10-31",
+   "piece": "b63d2507-dbb4-449d-bce4-f21e859ee2ad"
+  },
+  {
+   "title": "AI used to reply. Now it acts first. Claude Duet is the start.",
+   "surface": "youtube",
+   "verdict": "picked",
+   "why": "Picked 31 Oct after he asked for bigger: the shift from AI that replies to AI that acts first, with Claude Duet as the start",
+   "krish": "Recommended for Wednesday, and sign off the Monday line",
+   "on": "2026-10-31",
+   "piece": "b63d2507-dbb4-449d-bce4-f21e859ee2ad"
+  },
+  {
    "title": "VIDEO: Claude's AI is eating the jobs of its own humans. What does that signal for the rest of us?",
    "surface": "substack",
    "verdict": "picked",
