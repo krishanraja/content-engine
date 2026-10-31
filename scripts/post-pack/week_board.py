@@ -4337,6 +4337,8 @@ def _self_test():
           'v.at < built' in js and 'b.dataset.builtAt' in js)
     check('the page saves each review block to edits/<day>-<item> and opens the comment box on it',
           'rdb.doc("edits/" + id).set(' in js and 'comments.openComposer({ element:' in js and 'window.claude.use("comments")' in js)
+    check('a board with Today opens on it: the tab a viewer last opened is remembered only on boards without Today',
+          'if (!fromHash() && !tabs.some(t => t.dataset.day === "today")) { const r = remembered();' in js)
     check('a kept day drawn before section ticks (no sec-head) loses the dropped channels too',
           'notes' not in drop_channels('<section id="wed-s8"><h2>8. Substack Notes</h2><p>x</p></section>', 'wed').lower())
     check('finished videos: each cut offers its thumbnail, and one not linked yet says where it is',

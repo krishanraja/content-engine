@@ -1,9 +1,9 @@
 {
  "_about": "The fixed layout of the publish board, as check_board_layout.py reads it from three fed weeks, the hash of its layout file and colours, and the words Krish approved it in. It changes only with --update --approved (Ruling, Krish, 2026-10-21: the layout is held by CI and changes only with his recorded words).",
  "layout_version": 3,
- "approved": "Krish, 2026-10-30: approve the week's mix once, let Growth fill it",
+ "approved": "Krish, 2026-10-31: \"Every board from 2 Nov onwards should be the new upgraded UI system\"",
  "files": {
-  "config/board-layout.json": "970820443675c3722ebd3f6857489f738e28ed1affb223a0f5e8ea64be2552f9",
+  "config/board-layout.json": "8a950d89d3440ffcf1b620bb81248986bcb6bacda4023750a6aa22178c1743ed",
   "scripts/post-pack/tokens.css": "a38811b2df781b9169b3576986fa59cca5d870469190560bf8f5e9515c4de42f"
  },
  "weeks": {
