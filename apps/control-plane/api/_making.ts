@@ -22,6 +22,7 @@
 import { activeManualReviews, bodyHash, effectiveBlocking } from './_factGate.js'
 import { MediaRefSchema, mediaReviewProblems, type MediaRef } from '../../../packages/core/src/media-quality.js'
 import { mediaQualityEnforced } from '../../../packages/core/src/media-rollout.js'
+import type { ClipPlacement } from './_routedClips.js'
 
 /** Every channel a piece can go to, in the order Krish posts them
  *  (docs/AMPLIFICATION.md). Krish, 2026-10-11: "I always want to repost to
@@ -157,6 +158,10 @@ export interface Making {
   production_choices?: MakingProductionChoices
   /** What he changed reading each cut aloud; merged cut by cut. */
   spoken_delta?: Partial<Record<MakingCut, MakingSpokenDelta>>
+  /** Where each cut plays the Inspiration clips routed to the piece (_routedClips.ts), keyed by card id; merged
+   *  cut by cut and clip by clip. making.py video refuses a cut that leaves out a clip his words say to play with
+   *  its sound. */
+  clip_placements?: Partial<Record<MakingCut, Record<string, ClipPlacement>>>
   /** Retired on 2026-10-12, when Descript was (Krish: "Descript is
    *  permanently gone"). Records written before then still hold it; it is
    *  kept as it is, so they still parse, and nothing reads it. */
@@ -186,6 +191,35 @@ function count(v: unknown): number | null { return typeof v === 'number' && Numb
 function rate(v: unknown): number | null | undefined { return v === null ? null : typeof v === 'number' && Number.isFinite(v) && v >= 0 && v <= 100000 ? v : undefined }
 
 /** One cut of a spoken_delta patch, or the reason it is refused. Only counts and short examples are taken. */
+const CARD_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+const SECONDS_MAX = 4 * 3600
+function seconds(v: unknown): number | null | undefined {
+  if (v === undefined) return undefined
+  return typeof v === 'number' && Number.isFinite(v) && v >= 0 && v <= SECONDS_MAX ? Math.round(v * 100) / 100 : null
+}
+
+/** One clip's place in one cut. Playing it, with its sound on or off, gives where (at_s, and end_s when known); leaving
+ *  it out is omitted: true. Silence and leaving it out each take his words ("Krish, YYYY-MM-DD: ..."), checked again by
+ *  missingClips, so a session never decides either alone. */
+function parseClipPlacement(at: string, card: string, v: unknown, by: string, now: string): { entry?: ClipPlacement; problem?: string } {
+  if (!CARD_ID.test(card)) return { problem: `${at}: the key is the Inspiration card's id (inspiration_items.id, a uuid)` }
+  if (!isObj(v)) return { problem: `${at} must be an object` }
+  const said = v.said === undefined ? undefined : str(v.said, MAX_TEXT)
+  if (said === null || (said !== undefined && !/^Krish\b/.test(said))) return { problem: `${at}.said is Krish's own words, starting "Krish" and the date` }
+  if (v.omitted === true) {
+    if (!said) return { problem: `${at}: leaving a routed clip out of a cut takes Krish's words in said` }
+    return { entry: { omitted: true, said, at: when(v.at, now), by } }
+  }
+  if (v.omitted !== undefined && v.omitted !== false) return { problem: `${at}.omitted is true or left out` }
+  const start = seconds(v.at_s)
+  const end = seconds(v.end_s)
+  if (start === undefined || start === null) return { problem: `${at}.at_s is where the clip starts in the cut, in seconds` }
+  if (end === null || (end !== undefined && end <= start)) return { problem: `${at}.end_s is where it ends, after at_s` }
+  if (v.audio !== 'on' && v.audio !== 'off') return { problem: `${at}.audio is on or off: whether the clip's own sound plays` }
+  if (v.audio === 'off' && !said) return { problem: `${at}: playing a routed clip silent takes Krish's words in said` }
+  return { entry: { at_s: start, ...(end !== undefined ? { end_s: end } : {}), audio: v.audio, ...(said ? { said } : {}), at: when(v.at, now), by } }
+}
+
 function parseSpokenDelta(cut: string, v: unknown, now: string): { entry?: MakingSpokenDelta; problem?: string } {
   const at = `spoken_delta.${cut}`
   if (!isCut(cut)) return { problem: `unknown cut "${cut}" in spoken_delta (long, short, feature)` }
@@ -440,6 +474,26 @@ export function parseMakingPatch(body: unknown, now: string): { patch: MakingPat
       if (problems.length === before) patch.spoken_delta = cuts
     }
   }
+  if (body.clip_placements !== undefined) {
+    const v = body.clip_placements
+    if (!isObj(v) || !Object.keys(v).length) problems.push('clip_placements needs a cut: long, short or feature')
+    else {
+      const cuts: NonNullable<Making['clip_placements']> = {}
+      const before = problems.length
+      for (const [cut, clips] of Object.entries(v)) {
+        if (!isCut(cut)) { problems.push(`unknown cut "${cut}" in clip_placements (long, short, feature)`); continue }
+        if (!isObj(clips) || !Object.keys(clips).length) { problems.push(`clip_placements.${cut} maps a card id to its place`); continue }
+        const held: Record<string, ClipPlacement> = {}
+        for (const [card, p] of Object.entries(clips)) {
+          const { entry, problem } = parseClipPlacement(`clip_placements.${cut}.${card}`, card, p, str(body.by, 60) || 'Claude Code', now)
+          if (problem || !entry) problems.push(problem || `${cut}.${card}: no placement`)
+          else held[card] = entry
+        }
+        cuts[cut as MakingCut] = held
+      }
+      if (problems.length === before) patch.clip_placements = cuts
+    }
+  }
   // Descript was retired on 2026-10-12; a record of a send there is not taken.
   if (body.descript !== undefined) problems.push('descript was retired on 2026-10-12 (Krish: "Descript is permanently gone, teleprompter.com is permanently in"): record the Teleprompter send in teleprompter')
   return { patch, problems }
@@ -503,6 +557,16 @@ export function mergeMaking(prev: Making | null | undefined, patch: MakingPatch,
     // Cut by cut: the short's delta never drops the long's.
     const held = isObj(base.spoken_delta) ? base.spoken_delta : {}
     next.spoken_delta = { ...held, ...patch.spoken_delta }
+  }
+  if (patch.clip_placements) {
+    // Cut by cut, clip by clip: placing a clip in the short keeps the long's placements.
+    const held = isObj(base.clip_placements) ? base.clip_placements : {}
+    const merged: NonNullable<Making['clip_placements']> = { ...held }
+    for (const [cut, clips] of Object.entries(patch.clip_placements)) {
+      const before = isObj(held[cut as MakingCut]) ? held[cut as MakingCut] : {}
+      merged[cut as MakingCut] = { ...before, ...clips }
+    }
+    next.clip_placements = merged
   }
   if (patch.teleprompter) {
     // Cut by cut: a send of one cut keeps the other, and the folder the

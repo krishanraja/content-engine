@@ -121,6 +121,7 @@ Models are named by constant (`api/_models.ts`): `SYNTHESIS_MODEL` and
 | `/api/arcs/surface` (cron) | composes, lints and scores arc cards; surfaces 7 | Sonnet [`arcs-*`] |
 | `/api/content-decisions/[id]`, `likely-reasons` | resolves a weekly queue card; predicts reject reasons | Haiku [`content-decisions`] |
 | `/api/idea-queue` | the one idea queue: `GET` reads it (and the oldest two untriaged as the A/B pair); `POST` queues an idea, triages it (story, angle, cute, curious with his reason, drop; only `decided_by: 'Krish'`) or takes it out. Rows are `content_ideas` with `queued_at` and `protected_at`; no purge, expiry, bury or stale sweep touches them | none |
+| `/api/content-ideas/[id]/routed-clips` | `GET`: every Inspiration card linked to the piece (`inspiration_items.piece_id`), each `show_with_sound` (his words on it ask to keep its sound) or `reference`, the making record's `clip_placements`, and per cut the sound clips still unplaced (`_routedClips.ts`). Read by make-piece before the creative direction and by `making.py clips`; `making.py video` refuses a cut it names (Krish, 2026-10-31) | none, keyless |
 
 **When the judges cannot reach the model** (since 2026-09-28, walk log F28).
 A panel on which every model judge failed with an error is a failed run
