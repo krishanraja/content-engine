@@ -52,6 +52,18 @@ FIRST" with his face and the Claude mark, 1280x720 and 1080x1920.
 7. Captions spell Duet, Claude, Claire Vo, Lenny's Newsletter, Anthropic and makeyourmindup.ai as written (checked in
    both .srt files).
 
+## Second fix round (main's privacy review, 31 Oct)
+
+- The morning brief's "Prepared Thursday 29 October, 4:00pm London" line is barred in every frame, both cuts.
+- Every bar now covers whole lines (the reply, "Dropping the ... one now", every to-do title, the task row): no word
+  fragment is left to guess from. Checked on the covered stretches every 0.5 s before rendering, and on the finished
+  cuts (`review/short-screens.jpg`, `review/long-screens-*.jpg`).
+- Gone: the BILL labels and pills, GMAIL · CALENDAR · SLACK, OFF-LIMITS EVEN WITH A YES, THE WAIT, SPED UP 8×, and
+  REFRESHES 6:30 EVERY MORNING.
+- In the 9:16 cut the top 150 px of every picture is ink, so the phone never passes over the wordmark or the pill.
+- Kept: the Rosa's Bakery invoice (Duet's own sample) and the scheduler's grey blocks (Duet's own loading shimmer,
+  seen in the raw recording at 12:40).
+
 ## What I measured on the final files
 
 | | 90-second | 5-minute |
