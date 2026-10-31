@@ -10,8 +10,8 @@ words by `video/panels.py`. Captions burned in. Krish's full playback is still h
 
 | Cut | Share copy (under 29 MiB) | Master | Length |
 |---|---|---|---|
-| 5-minute, 16:9 | `.cache/produce/2026-11-02-9a0c97af/long/share/who-trains-your-2030-seniors-long-16x9.mp4` (28.2 MiB) | `long/who-trains-your-2030-seniors-long-16x9.mp4` (sha256 `787b5232ca1ee39cdd2d413588e08b833a986fc5114480f0fd922c900d16303b`) | 4:42.7 |
-| 90-second, 9:16 | `.cache/produce/2026-11-02-9a0c97af/short/share/who-trains-your-2030-seniors-short-9x16.mp4` (27.9 MiB) | `short/who-trains-your-2030-seniors-short-9x16.mp4` (sha256 `54de981596ae332d07378c99de1ff1ba1516060070a071198537a9959fa7f1bb`) | 1:07.0 |
+| 5-minute, 16:9 | `.cache/produce/2026-11-02-9a0c97af/long/share/who-trains-your-2030-seniors-long-16x9.mp4` (28.2 MiB) | `long/who-trains-your-2030-seniors-long-16x9.mp4` (sha256 `af739aa1db088bdf8cef9d3f15773db2650f5ffa3119352e1cbe1d9fde4441aa`) | 4:42.7 |
+| 90-second, 9:16 | `.cache/produce/2026-11-02-9a0c97af/short/share/who-trains-your-2030-seniors-short-9x16.mp4` (27.9 MiB) | `short/who-trains-your-2030-seniors-short-9x16.mp4` (sha256 `25c9a1f1437dab26d85bffdcc614fd3ea799f9379d393d2f71179b48636f314a`) | 1:07.0 |
 
 Thumbnails (his picked words "CLAUDE IS EATING ITS OWN JOBS", over his face and the ladder): `thumbs/thumb-16x9.jpg`
 (1280x720) and `thumbs/thumb-9x16.jpg` (1080x1920), drawn by `video/thumbnails.py --words`.
