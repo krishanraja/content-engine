@@ -139,7 +139,9 @@ def build(cut, *, piece_id: str, library_path: str, props, spec, take_words, voi
     voice = heard_words(master, model, kept=cut.with_name(cut.name + '.voice-master.heard.json'))
     receipt['voice_master'] = {'path': str(master), 'sha256': voice['provenance']['source_sha256'],
                                'heard': voice['provenance']}
-    checks['heard'] = heard_check(voice['words'], heard['words'], rules)
+    # The rulings' removals index the take's words, not this hearing, and the master already holds them: only his
+    # heard_as rows apply here.
+    checks['heard'] = heard_check(voice['words'], heard['words'], {'heard_as': rules.get('heard_as', [])})
 
     if receipt['footage']['camera_segments'] == 0:
         why = 'voiceover: the props hold no picture segments, so there is no camera footage'
