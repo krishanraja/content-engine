@@ -113,6 +113,28 @@ export const SCRIPT_READING: Readonly<ScriptReading> = Object.freeze({
 })
 // SCRIPT_READING:END
 
+/** What a listener can hold, heard once (house rule LISTENING). */
+export interface ListenLimits { figures: number; names: number }
+export interface Listening { long: ListenLimits; short: ListenLimits; feature: ListenLimits; close_most_sentences: number; close_most_orders: number }
+
+// The listening gate's numbers, in one place: scripts/post-pack/story_check.py
+// reads the object between the two marker lines below as JSON, so it stays
+// JSON and keeps its markers. Ruling (Krish, 2026-10-31): his "Yes, a hard
+// rule" to the limits in docs/plans/2026-10-31-script-clarity-audit.md, after
+// "I still feel like all my video scripts are a little bit hard to follow".
+// A figure is an amount, count or share said aloud (a year is a date, not
+// counted); a name is a distinct capitalised thing; the close is the beat
+// before the deep dive line.
+// LISTENING:BEGIN
+export const LISTENING: Readonly<Listening> = Object.freeze({
+  "long": { "figures": 3, "names": 8 },
+  "short": { "figures": 1, "names": 4 },
+  "feature": { "figures": 8, "names": 16 },
+  "close_most_sentences": 3,
+  "close_most_orders": 1
+})
+// LISTENING:END
+
 const JARGON_LIST = SCRIPT_READING.jargon.join(', ')
 
 export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
@@ -311,7 +333,7 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
   },
   {
     id: 'STORY_ARC', name: 'One story, start to finish',
-    text: 'Every piece and every script tells one story. Open on one clear question, in plain words. Every section or beat either sets that question up or answers it, and each one follows from the last. Set up every claim before judging it: say what was claimed and why it matters before stamping it real or theatre. Every takeaway follows from something already told. The ending answers the opening question, then makes the call. A spoken script of a minute or more then closes as SCRIPT_CLOSE says, after the call: what Krish would do with this info, then where the full deep dive is; it never ends on the number.',
+    text: 'Every piece and every script tells one story. Open on one clear question, in plain words. Every section or beat either sets that question up or answers it, and each one follows from the last. Set up every claim before judging it: say what was claimed and why it matters before stamping it real or theatre. Every takeaway follows from something already told. The ending answers the opening question, then makes the call. A spoken script of a minute or more then closes as SCRIPT_CLOSE says, after the call: the one thing Krish would do, then where the full deep dive is; it never ends on the number.',
     said: 'what does that mean? We\'ve never introduced that concept yet, and I dont get why it matters to whats been said thus far. It also barely connects to the next bits, the takeaways. ... now it just ends randomly on 85%, with nothing after that, no outro. Then, of the five-point story check: yes, i agree with it being there. happy with that idea.',
     on: '2026-10-06', source: 'walk log F75', status: 'live',
     stages: ['judge_draft', 'write', 'final_pass'],
@@ -353,7 +375,7 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
   },
   {
     id: 'HOOK_AND_CTA', name: 'Open on a provocation, close on the article',
-    text: 'A video opens straight on the hook (SERIES_OPENER): the most provocative true thing in the piece, said in the first two sentences, such as what he did ("I put GrokBot and Muse head to head"), a surprising number, a comparison or a claim that makes the viewer feel they are missing something, then the one question the video answers. It never opens on a series line, a greeting, throat-clearing or a definition. It closes as SCRIPT_CLOSE says: "Here\'s what I\'d do with this info if I were you", the actions, and then the last sentence, "The full deep dive is at makeyourmindup.ai.", said out loud so the line works on every channel without "link below". No question for the comments and no sign-off. The vertical cut keeps both, inside 90 seconds.',
+    text: 'A video opens straight on the hook (SERIES_OPENER): the most provocative true thing in the piece, said in the first two sentences, such as what he did ("I put GrokBot and Muse head to head"), a surprising number, a comparison or a claim that makes the viewer feel they are missing something, then the one question the video answers. It never opens on a series line, a greeting, throat-clearing or a definition. It closes as SCRIPT_CLOSE says: the one thing Krish would do, in a short beat, and then the last sentence, "The full deep dive is at makeyourmindup.ai.", said out loud so the line works on every channel without "link below". No question for the comments and no sign-off. The vertical cut keeps both, inside 90 seconds.',
     said: 'make the intro more provocative and hooking, and the outro more CTA based, acknowledging there is a full article. Then, 2026-10-21: "we need to cut that opening line from every content piece moving forward and just launch straight in to "I put GrokBot and Muse head to head" etc. Also trim the closing to "the full deep dive is at makeyourmindup.ai." right after a "Here\'s what I\'d do with this info if I were you" closing line. That needs to be the format moving forward for all scripts."',
     on: '2026-10-09', source: 'chat, Friday piece 2 script review, then the 2026-10-21 ruling; checked by scripts/post-pack/story_check.py', status: 'live',
     stages: ['judge_draft', 'write', 'final_pass'],
@@ -366,10 +388,17 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
     stages: ['write', 'judge_draft', 'final_pass'],
   },
   {
-    id: 'SCRIPT_CLOSE', name: 'Every script closes on what he would do, then the deep dive line',
-    text: 'Every video script of a minute or more closes in two parts. After the call comes a beat that starts exactly "Here\'s what I\'d do with this info if I were you" and then says, in plain words, the concrete things the listener can do. The script\'s final sentence is exactly "The full deep dive is at makeyourmindup.ai." with nothing after it: no sign-off, no "I\'m Krish", no question for the comments, no ask to like or subscribe. Both cuts carry it, and the deep cut too. scripts/post-pack/story_check.py refuses a script that has no such beat in its last three beats, or that ends on any other sentence.',
-    said: 'Also trim the closing to "the full deep dive is at makeyourmindup.ai." right after a "Here\'s what I\'d do with this info if I were you" closing line. That needs to be the format moving forward for all scripts.',
-    on: '2026-10-21', source: 'chat, the 2026-10-21 ruling on every script; checked by scripts/post-pack/story_check.py (close_problems), which build.py and making.py scripts run before a script is packed or recorded; the writer closes on it (api/_video.ts SCRIPT_CLOSE)', status: 'live',
+    id: 'SCRIPT_CLOSE', name: 'Every script closes on the one thing he would do, then the deep dive line',
+    text: `Every video script of a minute or more closes in two parts. After the call comes one short beat, at most ${LISTENING.close_most_sentences} sentences, saying the one thing Krish himself would do with this, in his own first person ("If I ran a team, I\'d do one thing this week. I\'d write down who my experts will be in five years."). It is never a list of orders for the viewer: at most ${LISTENING.close_most_orders} sentence that tells the listener to do something, and no "you should", "make sure" or "decide now". It no longer opens on "Here\'s what I\'d do with this info if I were you" (retired 2026-10-31: the line led into a list of orders, which sounded bossy). Advice for particular people (people in IT, people early in their career) goes in the article, not the close. The script\'s final sentence is exactly "The full deep dive is at makeyourmindup.ai." with nothing after it: no sign-off, no "I\'m Krish", no question for the comments, no ask to like or subscribe. Both cuts carry it, and the deep cut too. scripts/post-pack/story_check.py refuses a close that is a list of orders, runs long, keeps the retired line, or ends on any other sentence.`,
+    said: 'I think it\'s so complex, and then the last paragraph of all my scripts still sounds a bit bossy and preachy. (2026-10-31; then "Yes, replace it" to one thing he would do, in his first person, in a short beat. It replaces his ruling of 2026-10-21: "Also trim the closing to "the full deep dive is at makeyourmindup.ai." right after a "Here\'s what I\'d do with this info if I were you" closing line. That needs to be the format moving forward for all scripts.")',
+    on: '2026-10-31', source: 'chat, the 2026-10-31 ruling on the close (docs/plans/2026-10-31-script-clarity-audit.md), replacing the 2026-10-21 one; checked by scripts/post-pack/story_check.py (close_problems), which build.py and making.py scripts run before a script is packed or recorded; the writer closes on it (api/_video.ts STORY_OUTRO)', status: 'live',
+    stages: ['write', 'judge_draft', 'final_pass'],
+  },
+  {
+    id: 'LISTENING', name: 'A slow listener can follow every script, heard once',
+    text: `Write every script for a slow, non-technical listener hearing it once, who should come away feeling they got a complex topic quickly. Short sentences are not enough: what loses a listener is how much they must hold. So: one story, with at most one side-story; at most ${LISTENING.long.figures} figures in a 5-minute cut and ${LISTENING.short.figures} in a 90-second cut, said the way people say them ("one in four became fewer than one in ten", never "27% to 9%"), every other figure left to the article (a year is a date, not a figure); about ${LISTENING.long.names} names in a 5-minute cut and ${LISTENING.short.names} in a 90-second cut; the first time a hard idea comes up, compare it to something the listener already knows; the hook says what happened and the question it raises, never the twist first; say the parts up front ("there are three parts") and the one thing to remember just before the close. scripts/post-pack/story_check.py refuses a script over the figure and name limits, and the two fresh readers check the map, the recap and the comparisons.`,
+    said: 'I still feel like all my video scripts are a little bit hard to follow. ... If the audience is a slow, non-technical listener, am I making every point as crystal clear as I possibly can? ... They can be followed along with by anyone and have them feel like they get a really complex topic in a short amount of time, which I don\'t think is the case right now. (2026-10-31; then "Yes, a hard rule" to the limits in docs/plans/2026-10-31-script-clarity-audit.md)',
+    on: '2026-10-31', source: 'chat, 2026-10-31, after the audit of the scripts of 12 to 30 October (docs/plans/2026-10-31-script-clarity-audit.md); the numbers are LISTENING in this file, read by scripts/post-pack/story_check.py (listening_problems); the two read-back readers in make-piece check the rest', status: 'live',
     stages: ['write', 'judge_draft', 'final_pass'],
   },
   {

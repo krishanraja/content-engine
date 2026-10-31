@@ -36,7 +36,7 @@ Counted by `story_check.py`'s new listening counts (`listening_warnings`). A fig
 7. **The close turned bossy the day the fixed line arrived (21 Oct).** "Here's what I'd do with this info if I were you" is followed by up to 11 sentences of orders: Pick, Ask, Look, Give, Make sure, Check. On 28 and 30 Oct a second instruction paragraph sits just before it ("And if you run IT ... decide now", "Good juniors will ask you ... so have an answer"). The words say "I'd", but the shape is a to-do list for the viewer. The scripts of 9 to 14 October ended on a prediction and a question, and read warmer.
 8. **Articles.** "3 things you can do tomorrow" works on the page, because a reader can scan and skip. The articles have the same density (a figure in most sentences), but a reader can slow down, and a listener can't.
 
-## The fix, proposed (needs Krish's yes, because it changes house rules)
+## The fix (Krish said yes to both on 31 October; now house rules SCRIPT_CLOSE and LISTENING)
 
 **The close (replaces SCRIPT_CLOSE's fixed line and the list of orders).** Say one thing Krish would do, in his first person, in at most two sentences. No list, and none of "you should", "make sure" or "decide now". Then end on "The full deep dive is at makeyourmindup.ai." as now. The advice for particular people (IT, people early in their career) moves to the article.
 
@@ -47,11 +47,11 @@ Counted by `story_check.py`'s new listening counts (`listening_warnings`). A fig
 - **The hook.** Say what happened, then the question it raises. Never give the twist away first.
 - **A map and a recap.** Say the parts at the start ("three parts"). Say the one thing to remember just before the close.
 
-**What is already built (a warning, never a refusal, until he decides).** `story_check.py` counts figures, names, close sentences and orders in the close on every script. It warns over the limits above, and cites his words. It refuses nothing until he makes LISTENING a house rule.
+**What is built.** `story_check.py` refuses a script over the figure and name limits (LISTENING, numbers in `apps/control-plane/api/_houseRules.ts`) and a close that is a list of orders, runs over three sentences, is not in his first person or keeps the retired line (SCRIPT_CLOSE). The two fresh readers check the map, the recap and the comparisons, which a rule can't see.
 
 ## Worked example: 30 Oct, long cut, rewritten
 
-It passes the reading gate (no sentence over 20 words), the kill list, the copy lint and the listening counts, with 0 figures held, 5 names and a 2-sentence close. Its voice distance is 0.444, against 0.528 for the draft (lower is closer to Krish). The only check it fails is SCRIPT_CLOSE, because it drops the fixed line. That failure is the decision this audit asks for.
+It passes the reading gate (no sentence over 20 words), the kill list, the copy lint and the listening counts, with 0 figures held, 5 names and a 2-sentence close. Its voice distance is 0.444, against 0.528 for the draft (lower is closer to Krish). It passes every check, including the new close.
 
 ```text
 Anthropic, which makes the AI called Claude, has almost stopped hiring beginners. So if AI now does the work beginners learn on, where will tomorrow's experts come from?
@@ -89,7 +89,7 @@ The full deep dive is at makeyourmindup.ai.
 
 ## Worked example: 30 Oct, 90-second cut, rewritten
 
-This one passes the same gates and fails only SCRIPT_CLOSE. It is 188 words.
+This one passes every check too. It is 188 words.
 
 ```text
 Anthropic, which makes the AI called Claude, has almost stopped hiring beginners. So where will tomorrow's experts come from?

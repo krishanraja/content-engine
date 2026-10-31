@@ -904,6 +904,9 @@ Krish's house rules, in one place.
 - `function retiredSeriesOpener(series?: string | null): string | null`
 - `interface ScriptReading`
 - `const SCRIPT_READING: Readonly<ScriptReading>`
+- `interface ListenLimits`
+- `interface Listening`
+- `const LISTENING: Readonly<Listening>`
 - `const HOUSE_RULES: readonly HouseRule[]`
 - `function rulesFor(stage: Stage, subchannel?: string | null): HouseRule[]`
 - `function subchannelRulesBlock(stage: Stage, subchannel?: string | null): string`

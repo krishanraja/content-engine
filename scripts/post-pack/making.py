@@ -56,7 +56,7 @@ The scripts' words. `scripts` runs story_check.py on each script with the
 piece's series (--series, its lane_slot from the engine, or --series given
 here; the series line is retired since 2026-10-21, so it is passed on and
 no longer checked, house rule SERIES_OPENER). A script of a minute or more
-must close on "Here's what I'd do with this info if I were you" and end on
+must close on the one thing Krish would do, never a list of orders (2026-10-31), and end on
 "The full deep dive is at makeyourmindup.ai." (house rule SCRIPT_CLOSE). It records the
 sha256 of each script's words
 (script_hash: NFC, LF line endings, trailing spaces stripped, blank lines

@@ -99,7 +99,7 @@ Read linked detail before domain work; every moved paragraph remains verbatim.
 
 **The home computers place each take on its piece and cut by themselves.** ([detail](docs/AGENTS-REFERENCE.md#rule-10))
 
-**Every video script opens straight on its hook, closes on what he would do, and a 12-year-old can follow it; every article ends with "3 things you can do tomorrow".** ([detail](docs/AGENTS-REFERENCE.md#rule-11))
+**Every video script opens straight on its hook, closes on the one thing he would do, and a slow listener can follow it heard once; every article ends with "3 things you can do tomorrow".** ([detail](docs/AGENTS-REFERENCE.md#rule-11))
 
 **Each script goes to Krish's teleprompter.com account once he approves its exact words, and nothing there is ever deleted.** ([detail](docs/AGENTS-REFERENCE.md#rule-12))
 

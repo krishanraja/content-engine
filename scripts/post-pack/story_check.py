@@ -12,10 +12,13 @@ A model cannot be trusted to grade its own story, so this file checks the
 parts a rule can see, and refuses to pack a script that fails one:
 
   - it opens on a question (in the first 90 spoken words);
-  - a script of a minute or more closes the way Krish ruled on 2026-10-21
-    (house rule SCRIPT_CLOSE): a beat that says "Here's what I'd do with
-    this info if I were you" and the actions, then, as its last sentence
-    and nothing after it, "The full deep dive is at makeyourmindup.ai.";
+  - a script of a minute or more closes the way Krish ruled on 2026-10-31
+    (house rule SCRIPT_CLOSE): one short beat saying the one thing he would
+    do, in his first person, never a list of orders, then, as its last
+    sentence and nothing after it, "The full deep dive is at makeyourmindup.ai.";
+  - a listener can hold it, heard once (house rule LISTENING, Ruling, Krish,
+    2026-10-31): no more figures or names than LISTENING in
+    apps/control-plane/api/_houseRules.ts allows for its cut;
   - it never speaks the article's headings or stamps aloud
     ("The billion: REAL, with small print", "One: the billion.");
   - nothing in it is still marked NOT YET FACT-CHECKED;
@@ -103,9 +106,10 @@ CUTS = {
 # and, in a script recorded on the old lines, the full article (house rule HOOK_AND_CTA).
 OUTRO = re.compile(r'makeyourmindup', re.I)
 ARTICLE = re.compile(r'\b(article|full piece|full story|full teardown|full deep dive|read it|the rest)\b', re.I)
-# House rule SCRIPT_CLOSE (Krish, 2026-10-21): "trim the closing to "the full deep
-# dive is at makeyourmindup.ai." right after a "Here's what I'd do with this info if
-# I were you" closing line. That needs to be the format moving forward for all scripts."
+# House rule SCRIPT_CLOSE. Krish, 2026-10-21, asked for the close to lead in with
+# "Here's what I'd do with this info if I were you"; on 2026-10-31 he retired that line
+# ("the last paragraph of all my scripts still sounds a bit bossy and preachy", then
+# "Yes, replace it"), so a close that still says it is refused.
 CLOSE_LEAD = re.compile(r"\bhere's what i'd do with this info if i were you\b[:.,]?", re.I)
 CLOSE_LAST = "the full deep dive is at makeyourmindup.ai."
 CLOSE_BEATS = 3  # the lead-in sits in the last three beats of the script
@@ -207,17 +211,33 @@ def name_problems(spoken):
 def close_problems(beats):
     """Why the script's close breaks house rule SCRIPT_CLOSE, or [].
 
-    Krish, 2026-10-21: "trim the closing to "the full deep dive is at
-    makeyourmindup.ai." right after a "Here's what I'd do with this info if
-    I were you" closing line. That needs to be the format moving forward for
-    all scripts." So a script of SHORT_WORDS or more has the lead-in sentence
-    in its last three beats, and its last sentence is exactly the line:
-    nothing after it, no sign-off, no question for the comments."""
+    Ruling (Krish, 2026-10-31): "the last paragraph of all my scripts still
+    sounds a bit bossy and preachy", then "Yes, replace it": the close is one
+    short beat saying the one thing he would do, in his own first person,
+    never a list of orders, and never the retired lead-in "Here's what I'd do
+    with this info if I were you". Its last sentence is still exactly the
+    line he set on 2026-10-21: nothing after it, no sign-off, no question for
+    the comments."""
     found = []
-    tail = _plain(' '.join(beats[-CLOSE_BEATS:]))
-    if not CLOSE_LEAD.search(tail):
-        found.append('it does not close the way Krish ruled: in its last beats, after the call, say "Here\'s what I\'d do with this '
-                     'info if I were you" and then the actions (house rule SCRIPT_CLOSE, Krish, 2026-10-21)')
+    rules = listen_rules()
+    if CLOSE_LEAD.search(_plain(' '.join(beats[-CLOSE_BEATS:]))):
+        found.append('it still says "Here\'s what I\'d do with this info if I were you", which Krish retired on 2026-10-31 because '
+                     'what followed it was a list of orders ("sounds a bit bossy and preachy"): say the one thing he would do, '
+                     'in his own first person (house rule SCRIPT_CLOSE)')
+    tail, orders = close_orders(beats)
+    if not tail:
+        found.append('it has no close before the last line: after the call, one short beat saying the one thing Krish would do, '
+                     'in his own first person (house rule SCRIPT_CLOSE, Krish, 2026-10-31)')
+    else:
+        if len(tail) > rules['close_most_sentences'] or len(orders) > rules['close_most_orders']:
+            found.append(f'its close runs to {len(tail)} sentences with {len(orders)} orders'
+                         + (' ("' + '", "'.join(o.strip()[:40] for o in orders[:4]) + '")' if orders else '')
+                         + f'; Krish, 2026-10-31: the last paragraph "sounds a bit bossy and preachy". Say the one thing he would do, '
+                         f'in {rules["close_most_sentences"]} sentences at most, with no list of orders; advice for particular people '
+                         'goes in the article (house rule SCRIPT_CLOSE)')
+        if not FIRST_PERSON.search(' '.join(tail)):
+            found.append(f'its close does not say what Krish would do in his own first person ("{_plain(tail[0])[:70]}"): '
+                         '"If I ran a team, I\'d do one thing this week..." (house rule SCRIPT_CLOSE, Krish, 2026-10-31)')
     last = (sentences(beats) or [''])[-1]
     if _plain(last).rstrip('"\' ').lower() != CLOSE_LAST:
         found.append('its last sentence must be exactly "The full deep dive is at makeyourmindup.ai." with nothing after it: no sign-off, '
@@ -592,6 +612,7 @@ def problems(text, cut=None, series=None):
                          'and leave REAL or THEATRE to the stamp on screen')
             break
     found += reading_problems(beats)
+    found += listening_problems(beats, cut)
     return found
 
 
@@ -652,8 +673,6 @@ def warnings(text):
                      '(house rule PERSONAL_INTRO; his line is in config/golden-examples.json; a warning, not a refusal)')
     # How he says it, measured from his takes (SCRIPT_AS_HE_TALKS).
     found += spoken_habit_warnings(beats)
-    # What a slow listener can hold, heard once (LISTENING, proposed 2026-10-31).
-    found += listening_warnings(beats)
     # The share of long words: a rough figure (names left out), told, never refused.
     if beats:
         r = reading(beats)
@@ -725,17 +744,13 @@ def spoken_habit_warnings(beats):
 
 # ---------------------------------------------------------------- what a listener can hold
 
-# Krish, 2026-10-31, reading his voiceovers aloud: "I still feel like all my video scripts
-# are a little bit hard to follow", "I think it's so complex, and then the last paragraph
-# of all my scripts still sounds a bit bossy and preachy." The reading gate above passes
-# every script of 19 to 30 October (their sentences average 8 to 11 words), yet they say up
-# to 45 figures and name up to 42 things, and their closes run to 13 sentences of orders.
-# Short sentences do not make a script easy to hear; how much it asks the listener to hold
-# does. These are warnings while Krish decides the limits (house rule LISTENING, proposed in
-# docs/audits/2026-10-31-script-clarity.md); a year is a date, not a figure to hold.
-LISTEN_LIMITS = {'long': {'figures': 3, 'names': 8}, 'short': {'figures': 1, 'names': 4},
-                 'feature': {'figures': 8, 'names': 16}}
-CLOSE_MOST = 3  # the close: its lead line and at most two sentences, before the last line
+# Ruling (Krish, 2026-10-31): "I still feel like all my video scripts are a little bit
+# hard to follow", then "Yes, a hard rule" (house rule LISTENING). The reading gate above
+# passed every script of 19 to 30 October (their sentences average 8 to 11 words), yet
+# they said up to 24 figures and named up to 27 things, and their closes ran to 11
+# sentences of orders. Short sentences do not make a script easy to hear; how much it
+# asks the listener to hold does. The limits are LISTENING in the house rules; a year is
+# a date, not a figure to hold. docs/plans/2026-10-31-script-clarity-audit.md.
 FIGURE = re.compile(r"[$\u00a3\u20ac]?\b\d[\d,.]*(?:%|\s*(?:per\s*cent|percent))?|\b(?:twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|"
                     r"hundred|thousand|million|billion|trillion|half a million)(?:[- ]\w+)?(?:\s+(?:per\s*cent|percent|dollars|pounds))?", re.I)
 YEAR = re.compile(r"^(?:19|20)\d\d$")
@@ -747,6 +762,17 @@ ORDER = re.compile(r"^(?:and\s+|then\s+|so\s+|first,?\s+|second,?\s+|third,?\s+|
                    r"find|set|decide|line|keep|put|try|name|connect|let|start|stop|use|get|send|move|note|go|read|plan|build|"
                    r"learn|change|turn|book|call|test|compare|list|choose|cut|hand)\b|\b(?:you should|you must|you need to|make sure|"
                    r"decide now|don't forget)\b", re.I)
+FIRST_PERSON = re.compile(r"\b(?:I|I'd|I'm|I'll|I've|me|my)\b|\bI\u2019(?:d|m|ll|ve)\b")
+
+
+@functools.lru_cache(maxsize=None)
+def listen_rules():
+    """The listening gate's numbers (LISTENING in the house rules)."""
+    rules = house_block('LISTENING')
+    for key in ('long', 'short', 'feature', 'close_most_sentences', 'close_most_orders'):
+        if key not in rules:
+            raise ValueError(f'LISTENING has no {key}')
+    return rules
 
 
 def figures_in(text):
@@ -769,40 +795,47 @@ def names_in(sents):
 
 
 def close_orders(beats):
-    """The close's sentences after the lead line (before the last line), and which are orders."""
-    sents = sentences(beats)
-    lead = next((i for i in range(len(sents) - 1, -1, -1) if CLOSE_LEAD.search(_plain(sents[i]))), None)
-    if lead is None:
+    """The close (the sentences of the beat before the last line, the last line left out) and which are orders."""
+    sents_by_beat = [sentences([b]) for b in beats]
+    flat = [(i, x) for i, ss in enumerate(sents_by_beat) for x in ss]
+    if not flat:
         return [], []
-    tail = [x for x in sents[lead + 1:] if _plain(x).rstrip('"\' ').lower() != CLOSE_LAST]
+    body = flat[:-1] if _plain(flat[-1][1]).rstrip('"\' ').lower() == CLOSE_LAST else flat
+    if not body:
+        return [], []
+    beat = body[-1][0]
+    tail = [x for i, x in body if i == beat]
     return tail, [x for x in tail if ORDER.search(x.strip())]
 
 
-def listening_warnings(beats, cut=None):
-    """How much a script asks a listener to hold, heard once: warnings, never refusals."""
+def cut_by_length(count):
+    """The cut a script's length says it is, or None between the cuts."""
+    for name, (low, high, _) in CUTS.items():
+        if low * 0.9 <= count <= high * 1.1:
+            return name
+    return None
+
+
+def listening_problems(beats, cut=None):
+    """Why a listener could not hold this script, heard once (house rule LISTENING), or []."""
     if not beats:
         return []
     text = ' '.join(beats)
-    count = len(text.split())
-    cut = cut or ('short' if count < 400 else 'feature' if count > 1500 else 'long')
-    limit = LISTEN_LIMITS[cut]
+    cut = cut if cut in ('long', 'short', 'feature') else cut_by_length(len(text.split()))
+    if cut not in ('long', 'short', 'feature'):
+        return []
+    limit = listen_rules()[cut]
     found = []
     figs = figures_in(text)
     if len(figs) > limit['figures']:
-        found.append(f'it asks the listener to hold {len(figs)} figures ({", ".join(figs[:10])}); a listener keeps about '
-                     f'{limit["figures"]} in a {cut} cut: keep the ones the story turns on, say them as people do ("one in four"), '
-                     'and leave the rest to the article (house rule LISTENING, proposed 2026-10-31; a warning, not a refusal)')
+        found.append(f'it asks the listener to hold {len(figs)} figures ({", ".join(figs[:10])}); a {cut} cut keeps at most '
+                     f'{limit["figures"]}: keep the ones the story turns on, say them the way people do ("one in four"), and leave '
+                     'the rest to the article (house rule LISTENING, Krish, 2026-10-31: "a little bit hard to follow")')
     names = names_in(sentences(beats))
     if len(names) > limit['names']:
-        found.append(f'it names {len(names)} things ({", ".join(names[:12])}); keep one story and at most two players beside it, '
-                     f'about {limit["names"]} names in a {cut} cut (house rule LISTENING, proposed 2026-10-31; a warning, not a refusal)')
-    tail, orders = close_orders(beats)
-    if len(tail) > CLOSE_MOST - 1 or len(orders) > 1:
-        found.append(f'its close runs to {len(tail)} sentences with {len(orders)} orders ("' + '", "'.join(o.strip()[:40] for o in orders[:4])
-                     + '"); Krish, 2026-10-31: the last paragraph "sounds a bit bossy and preachy". Say one thing he would do, in two '
-                     'sentences at most, and no list of orders (house rule LISTENING, proposed 2026-10-31; a warning, not a refusal)')
+        found.append(f'it names {len(names)} things ({", ".join(names[:12])}); a {cut} cut keeps about {limit["names"]}: one story, '
+                     'at most one side-story, and the rest to the article (house rule LISTENING, Krish, 2026-10-31)')
     return found
-
 
 CHAPTER_START = re.compile(r'starts:\s*"([^"]+)"')
 
@@ -873,7 +906,7 @@ One claim doesn't stand up. On a podcast, the founder was asked if Higgsfield pa
 
 So here's our call. We're eighty-five per cent sure, and we'll mark it right or wrong on the day.
 
-Here's what I'd do with this info if I were you. Ask any AI firm how it counts its sales. Then check who pays for its ads.
+If I ran an AI firm, I'd do one thing. I'd show everyone how I count my sales.
 
 The full deep dive is at makeyourmindup.ai.
 '''
@@ -927,18 +960,15 @@ def self_test():
     check('stage directions are more than words', any('SCRIPT_ONLY' in p for p in problems(HIGGSFIELD_V1)), True)
     # House rule SCRIPT_CLOSE (Krish, 2026-10-21): the lead-in, then exactly one last sentence.
     check('the old close (series sign-off and a question) is refused on its last sentence',
-          len([p for p in problems(GOOD.replace('The full deep dive is at makeyourmindup.ai.', "That's under.the.hood for this week. The full teardown is free at makeyourmindup.ai. What do you think? Make your mind up.")) if 'SCRIPT_CLOSE' in p]), 1)
-    check('a close that skips "Here\'s what I\'d do with this info if I were you" is refused',
-          [p for p in problems(GOOD.replace("Here's what I'd do with this info if I were you. ", '')) if 'SCRIPT_CLOSE' in p][0].startswith('it does not close the way Krish ruled'), True)
+          any('last sentence must be exactly' in p for p in problems(GOOD.replace('The full deep dive is at makeyourmindup.ai.', "That's under.the.hood for this week. The full teardown is free at makeyourmindup.ai. What do you think? Make your mind up."))), True)
+    check('the retired lead-in is refused (Krish, 2026-10-31)',
+          any('Krish retired on 2026-10-31' in p for p in problems(GOOD.replace("If I ran an AI firm", "Here's what I'd do with this info if I were you. If I ran an AI firm"))), True)
     check('a last sentence that is not the line is refused, with the sign-off named',
           any('last sentence must be exactly' in p for p in problems(GOOD.replace('The full deep dive is at makeyourmindup.ai.', 'Find us at makeyourmindup.ai.'))), True)
     check('anything after the line is refused', any('last sentence must be exactly' in p for p in problems(GOOD + "\nMake your mind up.\n")), True)
-    check('the lead-in may end in a colon or a comma, in any case, with curly apostrophes',
-          (problems(GOOD.replace("Here's what I'd do with this info if I were you.", "HERE\u2019S WHAT I\u2019D DO WITH THIS INFO IF I WERE YOU:")),
-           problems(GOOD.replace("if I were you.", "if I were you,")),
-           problems(GOOD.replace('The full deep dive is at makeyourmindup.ai.', 'the full deep dive is at makeyourmindup.ai.'))), ([], [], []))
-    check('the lead-in belongs in the last beats, not the opening',
-          any('does not close' in p for p in problems(GOOD.replace("Here's what I'd do with this info if I were you. ", '').replace('Higgsfield says it crossed a billion dollars a year.', "Here's what I'd do with this info if I were you."))), True)
+    check('the line in any case passes', problems(GOOD.replace('The full deep dive is at makeyourmindup.ai.', 'the full deep dive is at makeyourmindup.ai.')), [])
+    check('a close in the third person is refused', any('own first person' in p for p in problems(GOOD.replace(
+          "If I ran an AI firm, I'd do one thing. I'd show everyone how I count my sales.", "Firms that count their sales openly win trust."))), True)
     check('notes after the script are never spoken', any('heading or stamp' in p for p in problems(ONE_OFF)), False)
     short = 'Why does it matter? Because the price doubled. That is the whole story.\n'
     check('a short hook needs no outro', problems(short), [])
@@ -1027,7 +1057,7 @@ def self_test():
               ['it says his name ("Krish"): he speaks as I to camera and never says it, so cut the line '
                '(house rule NO_NAME; Krish, 2026-10-28: "Remember, no content refers to Krish, ever.")'])
     check('the old line is the only thing refused in it', len(problems(lines['under_the_hood'] + '\n\n' + GOOD, None, 'under_the_hood')), 1)
-    again = GOOD.replace('Then check who pays for its ads.', "I'm Krish. Then check who pays for its ads.")
+    again = GOOD.replace("I'd show everyone how I count my sales.", "I'm Krish. I'd show everyone how I count my sales.")
     check('"I\'m Krish" is refused, naming NO_NAME, and the series rule still asks nothing',
           (series_problems([again], 'under_the_hood'), [p for p in problems(again) if 'NO_NAME' in p] != []), ([], True))
     check('a name refused in any spelling or handle, and other names pass',
@@ -1101,16 +1131,18 @@ def self_test():
     check('chapter starts out of order are refused',
           any('before the chapter above it' in p for p in chapter_problems(fine, '- Two | starts: "That is the whole"\n- One | starts: "Why does it"\n')), True)
 
-    # What a listener can hold (LISTENING, proposed 2026-10-31): warnings only.
+    # What a listener can hold (LISTENING, Ruling, Krish, 2026-10-31).
     check('a year is not a figure to hold', figures_in('By 2030, about 27% of jobs, 400,000 clerks.'), ['27%', '400,000'])
     check('names skip the sentence opener and I', names_in(['Disney hired the team.', 'Then I asked Google and Disney.']), ['Google', 'Disney'])
-    bossy = GOOD.replace("Ask any AI firm how it counts its sales. Then check who pays for its ads.",
+    bossy = GOOD.replace("If I ran an AI firm, I'd do one thing. I'd show everyone how I count my sales.",
                          "Pick one tool. Ask its maker four things. Look at your last three hires. Make sure you check every draft.")
-    check('a close of four orders is told', any('bossy' in w for w in listening_warnings(spoken_paragraphs(bossy), 'long')), True)
-    calm = GOOD.replace("Ask any AI firm how it counts its sales. Then check who pays for its ads.",
-                        "If I ran a team, I'd write down who'll be senior in 2030. If that list is empty, that's my answer.")
-    check('one thing he would do is not told', any('bossy' in w for w in listening_warnings(spoken_paragraphs(calm), 'long')), False)
-    check('a listening warning never refuses', problems(bossy) == problems(GOOD), True)
+    check('a close of four orders is refused', any('bossy' in p for p in problems(bossy)), True)
+    check('one thing he would do passes', [p for p in problems(GOOD) if 'SCRIPT_CLOSE' in p], [])
+    check('the limits come from the house rules', listen_rules()['long']['figures'], 3)
+    many = ' '.join(f'It cost {n} dollars.' for n in range(11, 16))
+    check('a short cut holding five figures is refused', any('LISTENING' in p for p in listening_problems([many], 'short')), True)
+    check('a long cut holding three figures passes', listening_problems(['It cost 11 dollars, then 12, then 13.'], 'long'), [])
+    check('a script between the cuts is not held to a cut', listening_problems([many]), [])
 
     if failures:
         print('story check self-test FAILED:\n  ' + '\n  '.join(failures))

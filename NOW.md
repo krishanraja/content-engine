@@ -48,14 +48,15 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
-Everything to 29 October 2026 is in `docs/history/2026-10-29-NOW-changed-recently.md`, 30 October lines in `docs/history/2026-10-30-NOW-moved-3.md` and `-4.md`, `-5.md` and `-6.md`, all verbatim (W2.12); `npm run check:workbench` holds the byte cap.
+Everything to 29 October 2026 is in `docs/history/2026-10-29-NOW-changed-recently.md`, 30 October lines in `docs/history/2026-10-30-NOW-moved-3.md` and `-4.md`, `-5.md` and `-6.md`, all verbatim (W2.12); `npm run check:workbench` holds the byte cap. The 28 October waiting line is in `docs/history/2026-10-31-NOW-moved-4.md`.
+
+- 31 October: scripts close on the one thing Krish would do, never a list of orders, and a slow listener must hold them heard once (SCRIPT_CLOSE and LISTENING, `story_check.py`); `docs/plans/2026-10-31-script-clarity-audit.md`.
 
 ## What is next and what is waiting on Krish
 
 - Next (2026-10-31): when Krish presses Approve for publish on Friday, seal the manifest (piece_manifest.py seal) for Growth; if he changes any channel words, redraft and rebuild the board first.
 - Then: the dry run on Saturday 31 October, 18:00 New York (read both machines' preflight blocks first), and the first Sunday loop on 1 November, recording `production_choices` for each piece made. After that the plan is Wave 2 (`docs/plans/2026-11-07-wave-2.md`: unattended overnight cuts, calibrated gates, ve in shadow, Growth posting what he approved, by 7 November) and Wave 3 (`docs/plans/2026-11-14-wave-3.md`: the ve cutover, one inspiration source, the retrospective, by 14 November).
 - Waiting on Krish (as of 2026-10-29): Control Center's `GITHUB_TOKEN` needs Contents: write and Actions: read on this repository for the make press; whether a make run's pull request auto-merges on green CI; whether the $15 cap gets a reader; the Buffer plan (due 31 October); approving the three one-opening, one-close floor standards through the Rejections route; OUR TEST or MY TEST on a video label he presents; "we" in article titles while video titles keep "I".
-- Waiting on Krish (as of 2026-10-28): his Gate 2 verdict on the format H proof and Friday 23's cuts; his yes to the Bessen line for Friday 30; his recordings of Wednesday 28 and Friday 30; applying the three migrations above; the floor's Drive access and `FLOOR_SYNC_TOKEN`.
 - Waiting on Krish (as of 2026-10-29, Wave 2 and 3 production): by ear, the levels and a sound-effect set; Gate 2 on face-with-proof frames and six devices; 5 to 10 golden frames; 20 minutes on 9 Nov scoring shadow cuts. His 29 Oct answers and the home-computer steps: the handover above.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): CI stays advisory, so a session waits for green before it merges.
 - North Star check (2026-10-31): holds.
