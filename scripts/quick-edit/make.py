@@ -567,6 +567,8 @@ def cue_windows(ws, cues, total, strict=False):
             missing.append(c['id'])
             continue
         s = max(0.0, ws[a[0]]['s'] - c.get('lead', 0.15))
+        if edge_open(s):
+            s = 0.0   # a picture that opens the cut is there on its very first frame (edge_open)
         e = min(total, ws[b[1]]['e'] + c.get('tail', 0.35))
         found.append({**c, 's': round(s, 3), 'e': round(e, 3)})
     found.sort(key=lambda c: c['s'])
