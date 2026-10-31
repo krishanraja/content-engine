@@ -44,8 +44,8 @@ def sec(at):
 # name: (source stretches [(from, to)], the bars, seconds on screen, the 16:9 label, focus y (0..1) of the tall crop)
 # Bars cover whole lines, never a word inside a line, so no fragment can be read or guessed (Krish's reviewer, 31 Oct):
 # the reply and the thinking screen share one layout; frame px of the 720x1560 recording.
-REPLY = [AV, (30, 15, 625, 440), (120, 640, 620, 690), (50, 800, 575, 845)]
-TODO = [AV, (120, 170, 610, 212), (130, 345, 545, 416), (130, 525, 545, 596), (130, 702, 545, 774), (130, 878, 545, 952),
+REPLY = [AV, (30, 15, 625, 440), (120, 638, 620, 682), (50, 798, 575, 832)]
+TODO = [AV, (120, 168, 610, 204), (130, 345, 545, 416), (130, 525, 545, 596), (130, 702, 545, 774), (130, 878, 545, 952),
         (130, 1058, 545, 1130)]
 TASKS = [AV, (85, 418, 690, 456), (85, 458, 690, 496), (88, 500, 660, 540)]
 BRIEF = G['morning-brief'][1] + [(70, 470, 590, 535), (60, 660, 690, 1100)]   # the "Prepared ... London" header too
@@ -120,8 +120,14 @@ def label(img, text, x, y, size=30):
 
 
 def phone_view(screen):
-    """The covered screen in the hand-held plate, cropped to the approved 9:16 window (1080x1920)."""
-    return mi.framed(mi.in_phone(screen, scale=1.0), scale=1.0).convert('RGB')
+    """The covered screen in the hand-held plate, cropped to the approved 9:16 window (1080x1920). The room above the
+    phone is the desk itself (mi.framed pads with flat ink, which showed as a darker seam above the phone)."""
+    plate = mi.in_phone(screen, scale=1.0)
+    pad = 150
+    room = mi.desk((plate.width, plate.height + pad)).convert('RGBA')
+    room.alpha_composite(plate.convert('RGBA'), (0, pad))
+    x0, y0, x1, y1 = mi.VIEW
+    return room.resize((1080, 1920), Image.LANCZOS, box=(x0, y0, x1, y1)).convert('RGB')
 
 
 def frame16(view, t, T, text):
@@ -162,8 +168,13 @@ def frame9(view, t, T, text, focus):
     x0 = int(min(max(0, cx - W / 2), big.width - W))
     y0 = int(min(max(0, cy - H / 2), big.height - H))
     TOP = 150   # the tall cut's wordmark and series pill sit here: the phone stays below them
-    canvas = desk(W, H).copy()
-    canvas.paste(big.crop((x0, y0, x0 + W, y0 + H - TOP)), (0, TOP))
+    body = big.crop((x0, y0, x0 + W, y0 + H - TOP))
+    import numpy as _np
+    tone = tuple(int(v) for v in _np.median(_np.asarray(body.crop((0, 0, 140, 24))).reshape(-1, 3), axis=0))
+    canvas = Image.new('RGB', (W, H), tone)
+    canvas.paste(body, (0, TOP))
+    fade = Image.linear_gradient('L').resize((W, 40)).point(lambda v: 255 - v)   # the band softens into the picture
+    canvas.paste(Image.new('RGB', (W, 40), tone), (0, TOP), fade)
     if text:
         a = min(1.0, max(0.0, (t - 0.3) / 0.4))
         if a > 0:
