@@ -1,0 +1,37 @@
+{
+ "duet-announcement": {
+  "url": "https://claude.com/resources/articles/claude-duet",
+  "line": "waits for your approval",
+  "result": "ok"
+ },
+ "duet-carries-over": {
+  "url": "https://claude.com/resources/articles/claude-duet",
+  "line": "carries over your memory",
+  "result": "ok"
+ },
+ "help-microsoft": {
+  "url": "https://support.claude.com/en/articles/17631495-get-started-with-claude-duet",
+  "line": "Microsoft 365 isn",
+  "result": "ok"
+ },
+ "help-limits": {
+  "url": "https://support.claude.com/en/articles/17631495-get-started-with-claude-duet",
+  "line": "reach your limits sooner",
+  "result": "ok"
+ },
+ "claire-vo-review": {
+  "url": "https://www.chatprd.ai/how-i-ai/claude-duet-review",
+  "line": "I still forgot about the work",
+  "result": "ok"
+ },
+ "reddit-normal-claude": {
+  "url": "https://old.reddit.com/r/ClaudeAI/comments/1xeiaqv/has_anyone_actually_gotten_into_claude_duet_yet_i/19rlwqm6sryrm/",
+  "line": "hadn't thought to use it",
+  "result": "opened, but the proving line was not found on the page"
+ },
+ "reddit-36-hours": {
+  "url": "https://old.reddit.com/r/ClaudeAI/comments/1xeiaqv/has_anyone_actually_gotten_into_claude_duet_yet_i/19rlqkmapowqp/",
+  "line": "36 hours",
+  "result": "opened, but the proving line was not found on the page"
+ }
+}

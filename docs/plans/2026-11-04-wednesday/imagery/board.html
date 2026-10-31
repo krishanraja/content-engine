@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wednesday imagery</title>
+<style>
+@font-face{font-family:Anton;src:url('../../../../assets/fonts/makeyourmindup/Anton-Regular.ttf')}
+@font-face{font-family:Archivo;src:url('../../../../assets/fonts/makeyourmindup/Archivo-Variable.ttf')}
+@font-face{font-family:Plex;src:url('../../../../assets/fonts/makeyourmindup/IBMPlexMono-Medium.ttf')}
+:root{--ink:#0C1512;--soft:#16221D;--cream:#F4EFE4;--muted:#AEAEA5;--mint:#7EF0C0;--lilac:#B7A6FF}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--cream);font:17px/1.5 Archivo,system-ui,sans-serif}
+main{max-width:1200px;margin:0 auto;padding:28px 16px 80px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.wm{font:34px Anton;letter-spacing:.3px}.wm b{color:var(--mint);font-weight:400}
+.pill{font:15px Plex;background:var(--lilac);color:var(--ink);padding:4px 14px;border-radius:999px}
+h1{font:44px/1.05 Anton;margin:28px 0 8px;letter-spacing:.3px}
+.lede{color:var(--muted);max-width:760px;margin:0}
+h2{font:28px Anton;margin:48px 0 6px;letter-spacing:.4px}
+h2 span{color:var(--mint)}
+.why{color:var(--muted);margin:0 0 16px;max-width:780px}
+.grid{display:grid;gap:14px}
+.g5{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+.g3{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+.g2{grid-template-columns:repeat(auto-fill,minmax(420px,1fr))}
+@media (max-width:480px){.g2,.g3{grid-template-columns:1fr}}
+figure{margin:0;background:var(--soft);border-radius:12px;overflow:hidden}
+figure img,figure video{display:block;width:100%;height:auto;background:#000}
+figcaption{padding:10px 12px 12px;font-size:14px;line-height:1.4}
+figcaption b{display:block;font:13px Plex;color:var(--mint);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px}
+.logos{display:flex;flex-wrap:wrap;gap:12px}
+.logo{background:var(--cream);border-radius:12px;width:120px;padding:18px 12px 10px;text-align:center;color:var(--ink);font:12px Plex}
+.logo img{width:56px;height:56px;display:block;margin:0 auto 8px}
+.tag{display:inline-block;font:12px Plex;border:1px solid var(--lilac);color:var(--lilac);border-radius:999px;padding:1px 10px;margin-left:8px;vertical-align:middle}
+.note{border-left:3px solid var(--lilac);padding:6px 14px;color:var(--muted);margin:14px 0 0}
+</style>
+</head>
+<body><main>
+<header><div class="wm">make<b>your</b>mind<b>up</b></div><div class="pill">under.the.hood · Wed 4 Nov</div></header>
+<h1>Claude Duet: what goes on screen</h1>
+<p class="lede">Every kind of picture in Wednesday's cuts, rendered from the real material. The header cards and charts you
+have already seen sit between these. Everything moves: nothing holds still for more than about a second and a half.</p>
+
+<h2><span>1</span> Your screen grabs, in your hand</h2>
+<p class="why">Your 29 October Duet recording, set in the approved hand-held phone. Everything private sits under ink
+bars: your name, the K avatar, the job-hunt words, your ventures, the people, places and amounts in the to-dos, the
+morning brief's body, the Artifacts titles.</p>
+<div class="grid g5">
+<figure><img src="phone/first-message.jpg" alt=""><figcaption><b>Long beat 3 · Short 2</b>Its first message: it messages you first.</figcaption></figure>
+<figure><img src="phone/reply-to-dos.jpg" alt=""><figcaption><b>Long beat 14</b>Your reply: drop the first task, find ten more.</figcaption></figure>
+<figure><img src="phone/todo-list.jpg" alt=""><figcaption><b>Long beat 15 · Short 7</b>The ten jobs it brought back, each verb kept.</figcaption></figure>
+<figure><img src="phone/make-artifacts.jpg" alt=""><figcaption><b>Long beat 17</b>Make: the Calendar scheduler tile you tapped.</figcaption></figure>
+<figure><img src="phone/calendar-scheduler.jpg" alt=""><figcaption><b>Long beat 18 · Short 10</b>The dashboard it built from one ask.</figcaption></figure>
+</div>
+<div class="grid g5" style="margin-top:14px">
+<figure><img src="screens/connect-apps.png" alt=""><figcaption><b>Long beat 7 · Short 5</b>Setup: your apps carry over, no quiz.</figcaption></figure>
+<figure><img src="screens/tasks-up-next.png" alt=""><figcaption><b>Long beat 13</b>Tasks: Active and Up next.</figcaption></figure>
+<figure><img src="screens/morning-brief.png" alt=""><figcaption><b>Long beat 5 · Short 3</b>The morning brief it wrote, body covered.</figcaption></figure>
+</div>
+
+<h2><span>2</span> Video demo</h2>
+<p class="why">Your recording playing inside the phone, sped up five times, with the camera pushing in. This is how every
+screen beat plays: video, never a still.</p>
+<div class="grid g3">
+<figure><video poster="demo-first-message.jpg" src="demo-first-message.mp4" controls muted loop playsinline autoplay></video><figcaption><b>Long beat 3</b>Its first message arriving, 8 seconds.</figcaption></figure>
+</div>
+
+<h2><span>3</span> The real pages, the line marked</h2>
+<p class="why">Screenshots of the live pages, the proving words marked in mint. Each one slides in and pushes towards its
+line as you say it.</p>
+<div class="grid g2">
+<figure><img src="pages/duet-announcement.png" alt=""><figcaption><b>Long beat 6 · Short 4</b>Anthropic: it waits for your approval before it sends, pays, signs or deletes.</figcaption></figure>
+<figure><img src="pages/duet-carries-over.png" alt=""><figcaption><b>Long beat 8</b>Anthropic: it carries over your memory, skills and apps.</figcaption></figure>
+<figure><img src="pages/help-microsoft.png" alt=""><figcaption><b>Long beat 12</b>Help Center: Microsoft 365 isn't available yet.</figcaption></figure>
+<figure><img src="pages/help-limits.png" alt=""><figcaption><b>Long beat 29</b>Help Center: you may reach your limits sooner.</figcaption></figure>
+<figure><img src="pages/claire-vo-review.png" alt=""><figcaption><b>Long beat 27</b>Claire Vo's review: "I still forgot about the work."</figcaption></figure>
+</div>
+<p class="note">Reddit refused the browser (a login wall on both reddit.com and old.reddit.com), so the two Reddit lines
+(long beats 24 and 25) are not shown here. Production uses a screenshot taken in a signed-in browser, username covered, or
+the drawn number card alone.</p>
+
+<h2><span>4</span> Real logos</h2>
+<p class="why">The companies' own marks, unchanged, at equal size, each on the card it comes from.</p>
+<div class="logos">
+<div class="logo"><img src="logos/gmail.svg" alt="">Gmail</div>
+<div class="logo"><img src="logos/google-calendar.svg" alt="">Google Calendar</div>
+<div class="logo"><img src="logos/slack.svg" alt="">Slack</div>
+<div class="logo"><img src="logos/microsoft-365.svg" alt="">Microsoft 365</div>
+<div class="logo"><img src="logos/claude.svg" alt="">Claude</div>
+</div>
+
+<h2><span>5</span> Custom art-directed object: The Queue <span class="tag">mock for Codex</span></h2>
+<p class="why">This piece's version of the passports: one real object that carries the idea. Paper work orders on a
+dispatch rail stop at the lilac line until the mint YES is stamped. Drawn by Claude to fix the idea and the timing;
+Codex makes the finished plates (codex-plates.md).</p>
+<div class="grid g2">
+<figure><img src="queue/queue-plate-mock-waiting.png" alt=""><figcaption><b>Long beats 6, 23 · Short 4</b>The work turns up first and waits at the line.</figcaption></figure>
+<figure><img src="queue/queue-plate-mock-yes.png" alt=""><figcaption><b>Long beat 23 (the big moment)</b>Your yes, stamped; only then does it go.</figcaption></figure>
+</div>
+<div class="grid g3" style="margin-top:14px">
+<figure><img src="precedent/passports-P-f1.jpg" alt=""><figcaption><b>Precedent</b>Friday 23's passports: the bar this object is held to.</figcaption></figure>
+<figure><img src="precedent/hand-held-H-f1.jpg" alt=""><figcaption><b>Precedent</b>The approved hand-held format the phone shots use.</figcaption></figure>
+</div>
+
+<h2><span>6</span> Motion test</h2>
+<p class="why">The big moment, frame by frame at 30 fps with the brand's curves: orders slide in and sway, the camera
+pushes, the first stops at the line, YES stamps, it crosses and the queue moves up.</p>
+<div class="grid g2">
+<figure><video poster="motion-test-queue.jpg" src="motion-test-queue.mp4" controls muted loop playsinline autoplay></video><figcaption><b>Long beat 23</b>6.5 seconds.</figcaption></figure>
+</div>
+</main></body>
+</html>
