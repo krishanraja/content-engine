@@ -21,7 +21,7 @@ html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:transpa
 .badge::before{content:'';position:absolute;inset:0;background:url('../../../../assets/plates/two-passports/guilloche.svg') center/110px;opacity:.3}
 .badge::after{content:'';position:absolute;left:20px;top:6px;width:18px;height:5px;border-radius:3px;background:#0C1512;opacity:.65}
 .badge i{position:absolute;left:0;right:0;bottom:14px;height:12px;background:rgba(12,21,18,.13)}
-.badge.j i{background:#FFD84D}
+.badge.j i{background:#FFD84D;filter:brightness(var(--pulse,1))}
 #cap{position:absolute;left:0;right:0;bottom:64px;text-align:center}
 #cap span{display:inline-block;font:900 50px Archivo;color:#F4EFE4;background:#0C1512;padding:8px 20px 10px;box-shadow:9px 9px 0 #FFD84D;white-space:nowrap}
 </style>
@@ -62,7 +62,7 @@ function badges(t){ // two trays of 100 hire badges; on "27%" 18 juniors lift of
     if(isj&&!keep.has(i)){const f=(t-(28.44+(i%9)*0.045));if(f>0){x+=f*((i%2)?60:-60);y+=f*f*1800-f*260;rot+=f*((i%2)?260:-260);sc*=1+f*.4;op*=clamp(1-f*1.6)}}
     s+=`<div class="badge ${isj?'j':''}" style="left:${x}px;top:${y}px;opacity:${op};transform:rotate(${rot}deg) scale(${sc})"><i></i></div>`}
   return s}
-function render(t){html.length=0;const cam=document.getElementById('cam');cam.style.transform=camera(t);
+function render(t){html.length=0;document.documentElement.style.setProperty('--pulse',(1+.18*Math.max(0,Math.sin(t*3))).toFixed(3));const cam=document.getElementById('cam');cam.style.transform=camera(t);
   const yellow=(t>=2.55&&t<20.4)||(t>=29.75);
   // ---------- background layer ----------
   if(LAYER==='bg'){
@@ -71,10 +71,10 @@ function render(t){html.length=0;const cam=document.getElementById('cam');cam.st
       const out=W(t,12.6,0.5)*(t<29.75?1:0), back2=t>=29.75?W(t,29.8,0.5):1, show=(t<12.6?1:1-out)*back2*(t>=31.9?1-W(t,31.9,0.4):1);
       const a=B(t,3.0,0.55), b=B(t,3.18,0.55), c=B(t,3.36,0.6), d=B(t,3.1,0.6), fl=Math.sin(t*1.3)*4;
       if(show>0.01){
-        put(`<div class="abs mono" style="left:${66-(1-a)*500}px;top:${370+fl}px;opacity:${show};font-size:30px;color:#F4EFE4;background:#0C1512;padding:8px 18px">FOLLOW.THE.MONEY</div>`);
-        put(`<div class="abs anton" style="left:${66-(1-b)*600}px;top:${440+fl*.6}px;opacity:${show};width:560px;font-size:64px;color:#0C1512">Claude's AI is eating the jobs of its own <span class="hl" style="--hl:#F4EFE4;--k:${W(t,3.9,0.5)}">humans.</span></div>`);
-        put(`<div class="abs mono" style="left:66px;top:${740+fl*1.2}px;opacity:${show};transform:rotate(${-3+Math.sin(t*.9)*1.5}deg) scale(${c});font-size:30px;color:#0C1512;background:#F4EFE4;border:4px solid #0C1512;border-radius:40px;padding:12px 28px;box-shadow:7px 7px 0 #0C1512">BRING A CALCULATOR</div>`);
-        put(`<div class="abs" style="left:${1340+(1-d)*700}px;top:${380-fl}px;opacity:${show};width:510px;height:310px;background:#0C1512;border-radius:22px;box-shadow:14px 14px 0 rgba(12,21,18,.25)">
+        const sx=(1-show)*-760;put(`<div class="abs mono" style="left:${66-(1-a)*500+sx}px;top:${370+fl}px;font-size:30px;color:#F4EFE4;background:#0C1512;padding:8px 18px">FOLLOW.THE.MONEY</div>`);
+        put(`<div class="abs anton" style="left:${66-(1-b)*600+sx}px;top:${440+fl*.6}px;width:560px;font-size:64px;color:#0C1512">Claude's AI is eating the jobs of its own <span class="hl" style="--hl:#F4EFE4;--k:${W(t,3.9,0.5)}">humans.</span></div>`);
+        put(`<div class="abs mono" style="left:${66+sx}px;top:${740+fl*1.2}px;transform:rotate(${-3+Math.sin(t*.9)*1.5}deg) scale(${c});font-size:30px;color:#0C1512;background:#F4EFE4;border:4px solid #0C1512;border-radius:40px;padding:12px 28px;box-shadow:7px 7px 0 #0C1512">BRING A CALCULATOR</div>`);
+        put(`<div class="abs" style="left:${1340+(1-d)*700-sx}px;top:${380-fl}px;width:510px;height:310px;background:#0C1512;border-radius:22px;box-shadow:14px 14px 0 rgba(12,21,18,.25)">
           <img src="${WM}" style="position:absolute;left:38px;top:44px;width:430px"><div class="anton" style="position:absolute;left:38px;top:118px;font-size:96px;color:#FFD84D">Mondays</div>
           <div class="mono" style="position:absolute;left:40px;top:236px;font-size:30px;color:#F4EFE4;text-transform:none;letter-spacing:0">makeyourmindup.ai</div></div>`);}
     } else {put(`<div class="abs" style="inset:0;background:#0C1512"></div>`)}
@@ -99,9 +99,9 @@ function render(t){html.length=0;const cam=document.getElementById('cam');cam.st
     // C: the ladder with 2030, then the report flies in (right of his column)
     if(t>=12.6&&t<20.6){const o=t>20.2?1-W(t,20.2,0.3):1,X=820;
       let sv=`<svg width="1920" height="1080" style="position:absolute;left:0;top:0;opacity:${o}"><g stroke="#0C1512" stroke-width="14" stroke-linecap="round">`;
-      const rail=W(t,12.8,0.6);sv+=`<line x1="${X}" y1="160" x2="${X}" y2="${160+780*rail}"/><line x1="${X+260}" y1="160" x2="${X+260}" y2="${160+780*rail}"/>`;
-      [260,420,580,740].forEach((y,i)=>{const p=W(t,13.0+i*.12,.3);sv+=`<line x1="${X}" y1="${y}" x2="${X+260*p}" y2="${y}"/>`});
-      sv+=`<line x1="${X}" y1="900" x2="${X+260}" y2="900" stroke-dasharray="10 18" opacity=".45"/></g>`;
+      const rail=W(t,12.8,0.6);if(rail>.02)sv+=`<line x1="${X}" y1="160" x2="${X}" y2="${160+780*rail}"/><line x1="${X+260}" y1="160" x2="${X+260}" y2="${160+780*rail}"/>`;
+      [260,420,580,740].forEach((y,i)=>{const p=W(t,13.0+i*.12,.3);if(p>.02)sv+=`<line x1="${X}" y1="${y}" x2="${X+260*p}" y2="${y}"/>`});
+      sv+=`<line x1="${X}" y1="900" x2="${X+260}" y2="900" stroke-dasharray="10 18" opacity="${.45*W(t,13.6,.4)}"/></g>`;
       const lit=W(t,14.5,0.35);sv+=`<rect x="${X-10}" y="${190}" width="280" height="56" rx="8" fill="#0C1512" opacity="${lit}"/><text x="${X+130}" y="235" font-family="Anton" font-size="52" fill="#7EF0C0" text-anchor="middle" opacity="${lit}">2030</text></svg>`;put(sv);
       const fly=B(t,15.0,0.7),pu=W(t,15.0,5);
       put(`<div class="abs" style="left:${1180+(1-fly)*900}px;top:${150+(1-fly)*-80}px;width:600px;opacity:${o};transform:rotate(${-5+4*fly}deg) scale(${.96+pu*.08});box-shadow:0 30px 60px rgba(12,21,18,.45);transform-origin:center"><img src="${REPORT}" style="width:600px;display:block"></div>`);
@@ -113,16 +113,18 @@ function render(t){html.length=0;const cam=document.getElementById('cam');cam.st
       put(`<div class="abs" style="left:250px;top:150px;width:700px;height:960px;transform:perspective(1600px) rotateX(${32-8*W(t,20.4,8)}deg) rotateZ(-5deg) scale(${push});transform-origin:50% 40%">${badges(t)}</div>`);
       put(`<div class="abs mono" style="left:1130px;top:190px;font-size:30px;color:#F4EFE4;opacity:${W(t,22.1,.4)}">${t<26.6?'New technical hires · early 2025':'New technical hires · now'}</div>`);
       let v=0;if(t>=23.7&&t<28.44)v=Math.round(27*W(t,23.7,1.4));else if(t>=28.44)v=Math.round(27-18*W(t,28.44,1.2));
-      const pop=t>=29.62?1+.12*(1-W(t,29.62,.25)):1;
+      const pop=(t>=29.62?1+.12*(1-W(t,29.62,.25)):1)*(1+.035*Math.sin(t*2.4));
       if(t>=23.7)put(`<div class="abs anton" style="left:1120px;top:300px;font-size:330px;color:#F4EFE4;transform:scale(${pop});transform-origin:left">${v}%</div><div class="abs" style="left:1130px;top:640px;height:22px;width:${520*W(t,29.0,.4)}px;background:#FFD84D"></div>`);
       if(t>=28.44)put(`<div class="abs anton" style="left:1130px;top:700px;font-size:90px;color:#5b625e;text-decoration:line-through;opacity:${W(t,28.44,.3)}">27%</div>`);
       put(`<div class="abs mono" style="left:1130px;top:860px;font-size:22px;color:#a9b4ae">Anthropic · How employment is changing at Anthropic · Oct 2026</div></div>`);}
-    // E: the hours bars (right of his column)
-    if(t>=31.9){const o=W(t,31.9,.4);const base=900,u=88,staff=u*W(t,32.3,.5),agents=u*6*W(t,35.0,1.2);
-      put(`<div class="abs" style="left:1000px;top:${base-staff}px;width:200px;height:${staff}px;background:#0C1512;opacity:${o}"></div><div class="abs" style="left:1300px;top:${base-agents}px;width:200px;height:${agents}px;background:#0C1512;opacity:${o};box-shadow:12px 12px 0 #7EF0C0"></div>`);
-      put(`<div class="abs mono" style="left:1000px;top:${base+18}px;font-size:24px;color:#0C1512;opacity:${o}">Staff</div><div class="abs mono" style="left:1300px;top:${base+18}px;font-size:24px;color:#0C1512;opacity:${o}">AI agents</div>`);
-      const r=B(t,36.0,.4);if(t>=36.0)put(`<div class="abs anton" style="left:1540px;top:360px;font-size:120px;white-space:nowrap;color:#0C1512;transform:scale(${r});transform-origin:left">6 to 1</div>`);
-      put(`<div class="abs mono" style="left:1000px;top:200px;font-size:22px;color:#0C1512;opacity:${o}">Hours worked · August 2026 · Anthropic</div>`);}
+    // E: the hours bars, growing the whole time, and the report's own line beside them
+    if(t>=31.9){const o=W(t,31.9,.4),base=850,u=115,staff=u*W(t,32.2,.5),k=1+1.2*W(t,32.6,2.2)+3.8*W(t,35.0,1.2),agents=u*k*W(t,32.4,.5);
+      put(`<div class="abs" style="left:880px;top:${base-staff}px;width:180px;height:${staff}px;background:#0C1512;opacity:${o}"></div><div class="abs" style="left:1110px;top:${base-agents}px;width:180px;height:${agents}px;background:#0C1512;opacity:${o};box-shadow:12px 12px 0 #7EF0C0"></div>`);
+      put(`<div class="abs mono" style="left:880px;top:${base+16}px;font-size:24px;color:#0C1512;opacity:${o}">Staff</div><div class="abs mono" style="left:1110px;top:${base+16}px;font-size:24px;color:#0C1512;opacity:${o}">AI agents</div>`);
+      put(`<div class="abs anton" style="left:1110px;top:${base-agents-90}px;font-size:70px;color:#0C1512;opacity:${o}">×${k.toFixed(1)}</div>`);
+      const fly=B(t,32.1,.7);put(`<div class="abs" style="left:${1370+(1-fly)*700}px;top:150px;width:500px;transform:rotate(${3-2*fly}deg) scale(${1+W(t,32.6,4)*.05});box-shadow:0 26px 50px rgba(12,21,18,.4)"><img src="../imagery/src/report-6-1.jpg" style="width:500px;display:block"></div>`);
+      const r=B(t,36.0,.4);if(t>=36.0)put(`<div class="abs anton" style="left:1380px;top:520px;font-size:150px;white-space:nowrap;color:#0C1512;transform:scale(${r});transform-origin:left">6 to 1</div>`);
+      put(`<div class="abs mono" style="left:1372px;top:470px;font-size:20px;color:#0C1512;opacity:${W(t,32.4,.4)}">Anthropic · Aug 2026</div>`);}
   }
   cam.innerHTML=html.join('');
   // the corners, always: wordmark tile and the series pill (fg only)

@@ -95,8 +95,17 @@ def main():
                     '[1:a]aresample=48000,adelay=3000|3000,apad,atrim=0:%s,asplit[v][key];'
                     '[2:a]aresample=48000,atrim=0:%s,volume=0.55,afade=t=out:st=%s:d=0.8[m];'
                     '[m][key]sidechaincompress=threshold=0.03:ratio=9:attack=20:release=400[md];'
-                    '[v][md]amix=inputs=2:normalize=0,loudnorm=I=-14:TP=-1.5:LRA=11[a]' % (DUR, DUR, DUR - 0.8),
-                    '-map', '0:v', '-map', '[a]', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-shortest',
+                    '[v][md]amix=inputs=2:normalize=0[a]' % (DUR, DUR, DUR - 0.8),
+                    '-map', '[a]', '-ar', '48000', str(OUT / 'mix.wav')], check=True)
+    # two-pass loudness: measure, then correct to -14 LUFS with peaks held under -1.5 dBTP
+    import json, re
+    m = subprocess.run([FF, '-hide_banner', '-i', str(OUT / 'mix.wav'), '-af', 'loudnorm=I=-14:TP=-1.5:LRA=11:print_format=json',
+                        '-f', 'null', '-'], capture_output=True, text=True).stderr
+    j = json.loads(re.findall(r'\{[^{}]*\}', m)[-1])
+    ln = (f"loudnorm=I=-14:TP=-1.5:LRA=11:measured_I={j['input_i']}:measured_TP={j['input_tp']}:measured_LRA={j['input_lra']}"
+          f":measured_thresh={j['input_thresh']}:offset={j['target_offset']}:linear=true,alimiter=limit=0.8:level=false")
+    subprocess.run([FF, '-v', 'error', '-y', '-i', str(OUT / 'mon-proof-16x9.silent.mp4'), '-i', str(OUT / 'mix.wav'),
+                    '-af', ln, '-map', '0:v', '-map', '1:a', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-shortest',
                     str(OUT / 'mon-proof-16x9.mp4')], check=True)
     print('wrote', OUT / 'mon-proof-16x9.mp4')
 
