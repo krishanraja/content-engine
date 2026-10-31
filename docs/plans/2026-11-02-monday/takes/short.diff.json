@@ -1,0 +1,439 @@
+{
+ "label": "Mon 2 Nov 90-second",
+ "script": "docs/plans/2026-11-02-monday/script-short.md",
+ "words": "docs/plans/2026-11-02-monday/takes/short.words.json",
+ "rates": {
+  "script_words": 196,
+  "said_words": 213,
+  "word_for_word": 151,
+  "said_more_pct": 8.7,
+  "own_words_pct": 29.1,
+  "script_kept_pct": 77.0,
+  "minutes": 1.06,
+  "words_a_minute": 201.1,
+  "words_a_minute_talking": 202.2,
+  "differences": 19,
+  "differences_a_minute": 17.9,
+  "tags": {
+   "rephrase": 10,
+   "filler": 5,
+   "skip": 2,
+   "intensifier": 1,
+   "hedge": 1,
+   "addition": 1,
+   "aside": 1,
+   "signpost": 1,
+   "dropped": 1
+  },
+  "tags_a_minute": {
+   "rephrase": 9.44,
+   "filler": 4.72,
+   "skip": 1.89,
+   "intensifier": 0.94,
+   "hedge": 0.94,
+   "addition": 0.94,
+   "aside": 0.94,
+   "signpost": 0.94,
+   "dropped": 0.94
+  },
+  "sentence_words_said": 11.2,
+  "sentence_words_script": 9.8,
+  "sentences_starting_with_a_joiner_pct": {
+   "said": 42.1,
+   "script": 25.0
+  },
+  "top_starts_said": [
+   [
+    "and",
+    5
+   ],
+   [
+    "the",
+    2
+   ],
+   [
+    "junior",
+    1
+   ],
+   [
+    "so",
+    1
+   ],
+   [
+    "cash",
+    1
+   ],
+   [
+    "both",
+    1
+   ],
+   [
+    "but",
+    1
+   ],
+   [
+    "ai",
+    1
+   ]
+  ],
+  "top_words_added": [
+   [
+    "and",
+    4
+   ],
+   [
+    "actually",
+    1
+   ],
+   [
+    "own",
+    1
+   ],
+   [
+    "staff",
+    1
+   ],
+   [
+    "found",
+    1
+   ],
+   [
+    "start",
+    1
+   ],
+   [
+    "did",
+    1
+   ],
+   [
+    "find",
+    1
+   ],
+   [
+    "lean",
+    1
+   ],
+   [
+    "feel",
+    1
+   ],
+   [
+    "like",
+    1
+   ],
+   [
+    "this",
+    1
+   ],
+   [
+    "time",
+    1
+   ],
+   [
+    "might",
+    1
+   ],
+   [
+    "be",
+    1
+   ],
+   [
+    "bit",
+    1
+   ],
+   [
+    "which",
+    1
+   ],
+   [
+    "up",
+    1
+   ],
+   [
+    "picture",
+    1
+   ],
+   [
+    "new",
+    1
+   ]
+  ],
+  "top_words_dropped": [
+   [
+    "at",
+    2
+   ],
+   [
+    "me",
+    2
+   ],
+   [
+    "i",
+    2
+   ],
+   [
+    "and",
+    2
+   ],
+   [
+    "let",
+    1
+   ],
+   [
+    "break",
+    1
+   ],
+   [
+    "down",
+    1
+   ],
+   [
+    "staff",
+    1
+   ],
+   [
+    "starter",
+    1
+   ],
+   [
+    "found",
+    1
+   ],
+   [
+    "learn",
+    1
+   ],
+   [
+    "think",
+    1
+   ],
+   [
+    "this",
+    1
+   ],
+   [
+    "time",
+    1
+   ],
+   [
+    "as",
+    1
+   ]
+  ]
+ },
+ "differences": [
+  {
+   "at": 2.27,
+   "kind": "skipped",
+   "tags": [
+    "skip"
+   ],
+   "script": "at",
+   "said": "",
+   "script_words": 1,
+   "said_words": 0
+  },
+  {
+   "at": 4.81,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "intensifier"
+   ],
+   "script": "",
+   "said": "actually",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 10.49,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "Let me break down",
+   "said": "And",
+   "script_words": 4,
+   "said_words": 1
+  },
+  {
+   "at": 11.75,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "staff.",
+   "said": "own staff found that",
+   "script_words": 1,
+   "said_words": 4
+  },
+  {
+   "at": 16.95,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "And",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 18.49,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "that",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 21.49,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "starter",
+   "said": "start to",
+   "script_words": 1,
+   "said_words": 2
+  },
+  {
+   "at": 23.93,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "found",
+   "said": "did find",
+   "script_words": 1,
+   "said_words": 2
+  },
+  {
+   "at": 24.83,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "learn",
+   "said": "lean",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 26.11,
+   "kind": "said differently",
+   "tags": [
+    "hedge",
+    "rephrase"
+   ],
+   "script": "think this time is",
+   "said": "feel like this time might be a bit",
+   "script_words": 4,
+   "said_words": 8
+  },
+  {
+   "at": 30.61,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "which is",
+   "script_words": 0,
+   "said_words": 2
+  },
+  {
+   "at": 31.45,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "that",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 36.65,
+   "kind": "said differently",
+   "tags": [
+    "aside",
+    "rephrase"
+   ],
+   "script": "As a junior at Microsoft, I got a boring spreadsheet job. It taught me to spot work that repeats, and automate it.",
+   "said": "up. A picture of a new hire handed, a dull, repetitive job. It teaches them to spot a work, the repeats, and keep a better way until it works. And so",
+   "script_words": 22,
+   "said_words": 31
+  },
+  {
+   "at": 48.97,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "And",
+   "said": "in?",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 51.49,
+   "kind": "said differently",
+   "tags": [
+    "signpost",
+    "rephrase"
+   ],
+   "script": "Here's what I'd",
+   "said": "Now here's what to",
+   "script_words": 3,
+   "said_words": 4
+  },
+  {
+   "at": 52.61,
+   "kind": "skipped",
+   "tags": [
+    "skip"
+   ],
+   "script": "if I were you.",
+   "said": "",
+   "script_words": 4,
+   "said_words": 0
+  },
+  {
+   "at": 57.35,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "a",
+   "said": "that",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 60.19,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "that",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 60.79,
+   "kind": "skipped",
+   "tags": [
+    "dropped"
+   ],
+   "script": "then",
+   "said": "",
+   "script_words": 1,
+   "said_words": 0
+  }
+ ]
+}

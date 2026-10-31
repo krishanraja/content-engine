@@ -1,0 +1,19 @@
+{
+ "piece_id": "b63d2507-dbb4-449d-bce4-f21e859ee2ad",
+ "date": "2026-11-04",
+ "subchannel": "under_the_hood",
+ "subject": "Claude Duet",
+ "video_title": "AI used to reply. Now it acts first. Claude Duet is the start.",
+ "files": [
+  {
+   "kind": "video-script",
+   "cut": "long",
+   "file": "script-long.md"
+  },
+  {
+   "kind": "video-script",
+   "cut": "short",
+   "file": "script-short.md"
+  }
+ ]
+}

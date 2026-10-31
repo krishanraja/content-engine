@@ -92,6 +92,177 @@
  ],
  "verdicts": [
   {
+   "title": "CLAUDE IS EATING THE JOBS OF ITS OWN HUMANS",
+   "surface": "cover",
+   "verdict": "picked",
+   "why": "His own title's first sentence, set as the cover words; offered to him on 31 Oct as the cover unless he said otherwise, and his next message took Wednesday's recommendations and raised no change",
+   "krish": "2 Nov: Claude's Ai is eating the jobs of its own humans - what does that signal for the rest of us?",
+   "on": "2026-10-31",
+   "piece": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67"
+  },
+  {
+   "title": "VIDEO: AI used to reply. Now it acts first. Claude Duet is the start.",
+   "surface": "substack",
+   "verdict": "picked",
+   "why": "Picked 31 Oct after he asked for bigger: the shift from AI that replies to AI that acts first, with Claude Duet as the start",
+   "krish": "Recommended for Wednesday, and sign off the Monday line",
+   "on": "2026-10-31",
+   "piece": "b63d2507-dbb4-449d-bce4-f21e859ee2ad"
+  },
+  {
+   "title": "AI NOW ACTS FIRST. CLAUDE DUET IS THE START.",
+   "surface": "cover",
+   "verdict": "picked",
+   "why": "Picked 31 Oct after he asked for bigger: the shift from AI that replies to AI that acts first, with Claude Duet as the start",
+   "krish": "Recommended for Wednesday, and sign off the Monday line",
+   "on": "2026-10-31",
+   "piece": "b63d2507-dbb4-449d-bce4-f21e859ee2ad"
+  },
+  {
+   "title": "AI NOW ACTS FIRST",
+   "surface": "thumbnail",
+   "verdict": "picked",
+   "why": "Picked 31 Oct after he asked for bigger: the shift from AI that replies to AI that acts first, with Claude Duet as the start",
+   "krish": "Recommended for Wednesday, and sign off the Monday line",
+   "on": "2026-10-31",
+   "piece": "b63d2507-dbb4-449d-bce4-f21e859ee2ad"
+  },
+  {
+   "title": "AI just stopped waiting to be asked. Claude Duet changes everything.",
+   "surface": "youtube",
+   "verdict": "picked",
+   "why": "Picked 31 Oct after he asked for bigger: the shift from AI that replies to AI that acts first, with Claude Duet as the start",
+   "krish": "Recommended for Wednesday, and sign off the Monday line",
+   "on": "2026-10-31",
+   "piece": "b63d2507-dbb4-449d-bce4-f21e859ee2ad"
+  },
+  {
+   "title": "AI used to reply. Now it acts first. Claude Duet is the start.",
+   "surface": "youtube",
+   "verdict": "picked",
+   "why": "Picked 31 Oct after he asked for bigger: the shift from AI that replies to AI that acts first, with Claude Duet as the start",
+   "krish": "Recommended for Wednesday, and sign off the Monday line",
+   "on": "2026-10-31",
+   "piece": "b63d2507-dbb4-449d-bce4-f21e859ee2ad"
+  },
+  {
+   "title": "VIDEO: Claude's AI is eating the jobs of its own humans. What does that signal for the rest of us?",
+   "surface": "substack",
+   "verdict": "picked",
+   "why": "His own line (31 Oct), the dash made a full stop (no dashes in public copy): the dramatic claim first, then the question that points at the reader",
+   "krish": "2 Nov: Claude's Ai is eating the jobs of its own humans - what does that signal for the rest of us?",
+   "on": "2026-10-31",
+   "piece": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67"
+  },
+  {
+   "title": "Claude's AI is eating the jobs of its own humans. What does that signal for the rest of us?",
+   "surface": "youtube",
+   "verdict": "picked",
+   "why": "His own line (31 Oct), the dash made a full stop (no dashes in public copy): the dramatic claim first, then the question that points at the reader",
+   "krish": "2 Nov: Claude's Ai is eating the jobs of its own humans - what does that signal for the rest of us?",
+   "on": "2026-10-31",
+   "piece": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67"
+  },
+  {
+   "title": "WITH CLAUDE DUET, YOUR JOB IS YES OR NO",
+   "surface": "cover",
+   "verdict": "rejected",
+   "why": "Rejected 31 Oct: a correct summary of the finding reads as boring; lead with the most dramatic true claim in the piece (who is doing what to whom), not the statistic",
+   "krish": "no we need better titles, that is boring and not sensational enough",
+   "on": "2026-10-31",
+   "piece": "b63d2507-dbb4-449d-bce4-f21e859ee2ad"
+  },
+  {
+   "title": "Claude Duet turns your job into yes or no",
+   "surface": "substack",
+   "verdict": "rejected",
+   "why": "Rejected 31 Oct: a correct summary of the finding reads as boring; lead with the most dramatic true claim in the piece (who is doing what to whom), not the statistic",
+   "krish": "no we need better titles, that is boring and not sensational enough",
+   "on": "2026-10-31",
+   "piece": "b63d2507-dbb4-449d-bce4-f21e859ee2ad"
+  },
+  {
+   "title": "DUET MESSAGES YOU FIRST",
+   "surface": "thumbnail",
+   "verdict": "rejected",
+   "why": "Rejected 31 Oct: a correct summary of the finding reads as boring; lead with the most dramatic true claim in the piece (who is doing what to whom), not the statistic",
+   "krish": "no we need better titles, that is boring and not sensational enough",
+   "on": "2026-10-31",
+   "piece": "b63d2507-dbb4-449d-bce4-f21e859ee2ad"
+  },
+  {
+   "title": "Claude Duet: asked once, got a dashboard",
+   "surface": "youtube",
+   "verdict": "rejected",
+   "why": "Rejected 31 Oct: a correct summary of the finding reads as boring; lead with the most dramatic true claim in the piece (who is doing what to whom), not the statistic",
+   "krish": "no we need better titles, that is boring and not sensational enough",
+   "on": "2026-10-31",
+   "piece": "b63d2507-dbb4-449d-bce4-f21e859ee2ad"
+  },
+  {
+   "title": "I asked Claude Duet for a favour. It built me a tool.",
+   "surface": "youtube",
+   "verdict": "rejected",
+   "why": "Rejected 31 Oct: a correct summary of the finding reads as boring; lead with the most dramatic true claim in the piece (who is doing what to whom), not the statistic",
+   "krish": "no we need better titles, that is boring and not sensational enough",
+   "on": "2026-10-31",
+   "piece": "b63d2507-dbb4-449d-bce4-f21e859ee2ad"
+  },
+  {
+   "title": "ANTHROPIC JUNIOR HIRES: 27% TO 9%",
+   "surface": "cover",
+   "verdict": "rejected",
+   "why": "Rejected 31 Oct: a correct summary of the finding reads as boring; lead with the most dramatic true claim in the piece (who is doing what to whom), not the statistic",
+   "krish": "no we need better titles, that is boring and not sensational enough",
+   "on": "2026-10-31",
+   "piece": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67"
+  },
+  {
+   "title": "Anthropic's junior hires fell from 27% to 9%. Who trains the seniors we'll need in 2030?",
+   "surface": "substack",
+   "verdict": "rejected",
+   "why": "Rejected 31 Oct: a correct summary of the finding reads as boring; lead with the most dramatic true claim in the piece (who is doing what to whom), not the statistic",
+   "krish": "no we need better titles, that is boring and not sensational enough",
+   "on": "2026-10-31",
+   "piece": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67"
+  },
+  {
+   "title": "ANTHROPIC HIRES FEWER JUNIORS",
+   "surface": "thumbnail",
+   "verdict": "rejected",
+   "why": "Rejected 31 Oct: a correct summary of the finding reads as boring; lead with the most dramatic true claim in the piece (who is doing what to whom), not the statistic",
+   "krish": "no we need better titles, that is boring and not sensational enough",
+   "on": "2026-10-31",
+   "piece": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67"
+  },
+  {
+   "title": "Anthropic's junior hires fell from 27% to 9%. Who trains your seniors?",
+   "surface": "youtube",
+   "verdict": "rejected",
+   "why": "Rejected 31 Oct: a correct summary of the finding reads as boring; lead with the most dramatic true claim in the piece (who is doing what to whom), not the statistic",
+   "krish": "no we need better titles, that is boring and not sensational enough",
+   "on": "2026-10-31",
+   "piece": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67"
+  },
+  {
+   "title": "VIDEO: I asked Claude Duet for a favour. It built me a tool.",
+   "surface": "substack",
+   "verdict": "picked",
+   "why": "Picked in the one post-recording sign-off round (31 Oct), option A",
+   "krish": "Yes, signed off, all recommended for both days",
+   "on": "2026-10-31",
+   "piece": "b63d2507-dbb4-449d-bce4-f21e859ee2ad"
+  },
+  {
+   "title": "VIDEO: Anthropic's junior hires fell from 27% to 9%. Who trains your seniors?",
+   "surface": "substack",
+   "verdict": "picked",
+   "why": "Picked in the one post-recording sign-off round (31 Oct), option A",
+   "krish": "Yes, signed off, all recommended for both days",
+   "on": "2026-10-31",
+   "piece": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67"
+  },
+  {
    "title": "GOOGLE PAID $2.7B FIRST",
    "surface": "cover",
    "verdict": "picked",

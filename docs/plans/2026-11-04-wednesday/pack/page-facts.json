@@ -1,0 +1,95 @@
+{
+ "subchannel": "under.the.hood",
+ "date": "2026-11-04",
+ "headline": "AI used to reply. Now it acts first. Claude Duet is the start.",
+ "deck": "Claude Duet checks your apps, briefs you each morning and drafts the work before you ask, then waits for your yes. If you already live in Claude, here is what changes, and what it costs.",
+ "video_title": "AI used to reply. Now it acts first. Claude Duet is the start.",
+ "video_title_emphasis": "acts first",
+ "comment_question": "WHICH JOB WOULD YOU HAND IT FIRST?",
+ "cover": {
+  "headline": [
+   "AI NOW ACTS FIRST.",
+   "CLAUDE DUET IS THE START."
+  ],
+  "portrait": "../../../../.cache/pack/wed/portrait.jpg",
+  "rows": [
+   {
+    "name": "Anthropic",
+    "logo": "../logos/anthropic-symbol-cream.svg",
+    "tag": "DUET",
+    "colour": "lilac"
+   },
+   {
+    "name": "Google",
+    "logo": "../logos/google-cream.svg",
+    "tag": "GMAIL",
+    "colour": "mint"
+   }
+  ]
+ },
+ "body": "../article.md",
+ "endnote": "Checked on 31 October 2026 against the sources below. Claude Duet is a research preview and may change.",
+ "figures": [
+  {
+   "after": "which, if you manage people, will sound familiar",
+   "image": "../../../../.cache/pack/wed/figure-asking-to-approving.png",
+   "alt": "From asking to approving: today you open Claude, copy the email thread, the invite and your notes, paste them in and ask; with Claude Duet a morning brief, meeting prep, a draft reply and a note to the team arrive first, each waiting for your yes."
+  }
+ ],
+ "sources": {
+  "s1": [
+   "Anthropic: Introducing Claude Duet (21 Oct 2026)",
+   "https://claude.com/resources/articles/claude-duet"
+  ],
+  "s2": [
+   "Anthropic Help Center: Get started with Claude Duet",
+   "https://support.claude.com/en/articles/17631495-get-started-with-claude-duet"
+  ],
+  "s3": [
+   "Every: Vibe check, Duet, Anthropic's always-on agent",
+   "https://every.to/vibe-check/vibe-check-duet-anthropic-s-always-on-agent"
+  ],
+  "s4": [
+   "Claire Vo, How I AI: Claude Duet review (ChatPRD)",
+   "https://www.chatprd.ai/how-i-ai/claude-duet-review"
+  ],
+  "s5": [
+   "Reddit r/ClaudeAI: has anyone actually gotten into Claude Duet yet",
+   "https://www.reddit.com/r/ClaudeAI/comments/1xeiaqv/has_anyone_actually_gotten_into_claude_duet_yet_i/19rlqkmapowqp/"
+  ],
+  "s6": [
+   "Reddit r/accelerate: Anthropic unveils Claude Duet",
+   "https://www.reddit.com/r/accelerate/comments/1xcaw9x/anthropic_unveils_claude_duet_a_proactive_ai/19rhmddxlqnsw/"
+  ],
+  "s7": [
+   "Brian Govanlu on LinkedIn",
+   "https://www.linkedin.com/posts/bgovanlu_claude-anthropic-ai-activity-7520493937048969216-oOew"
+  ]
+ },
+ "links": [
+  [
+   "Its own page",
+   "s1"
+  ],
+  [
+   "carries over your memory, skills, and connected apps from your Claude account",
+   "s1"
+  ],
+  [
+   "Every's review",
+   "s3"
+  ],
+  [
+   "u/freakyslug",
+   "s5"
+  ],
+  [
+   "Brian Govanlu",
+   "s7"
+  ],
+  [
+   "Microsoft 365 isn't connected yet",
+   "s2"
+  ]
+ ]
+}

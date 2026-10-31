@@ -1,0 +1,44 @@
+<!doctype html>
+<meta charset="utf-8">
+<!-- Mock for Codex: "The hire badges", Monday 2 Nov's art-directed object, in the AI passports' material language
+     (assets/plates/two-passports: paper texture, guilloche, rosette). Two lanyard trays of 100 new technical hires'
+     badges, early 2025 and now; a junior badge carries the butter stripe. 27 of 100, then 9 of 100 (Anthropic's report).
+     A mock to show the look; Codex builds the real plates (codex-plates.md). -->
+<style>
+@font-face{font-family:Anton;src:url('../../../../../assets/fonts/makeyourmindup/Anton-Regular.ttf')}
+@font-face{font-family:Archivo;src:url('../../../../../assets/fonts/makeyourmindup/Archivo-Variable.ttf')}
+@font-face{font-family:Plex;src:url('../../../../../assets/fonts/makeyourmindup/IBMPlexMono-Medium.ttf')}
+html,body{margin:0;width:1920px;height:1080px;background:#0C1512;overflow:hidden;color:#F4EFE4}
+.pill{position:absolute;left:52px;top:44px;font:500 22px Plex;color:#0C1512;background:#FFD84D;padding:6px 14px;border-radius:999px}
+.mark{position:absolute;right:56px;top:40px;font:900 30px Archivo}
+.tray{position:absolute;top:170px;width:820px;height:780px;perspective:1600px}
+.deck{position:absolute;inset:0;transform:rotateX(38deg) rotateZ(-6deg);transform-style:preserve-3d}
+.badge{position:absolute;width:66px;height:94px;border-radius:7px;background:url('../../../../../assets/plates/two-passports/paper.jpg') center/240px;
+ box-shadow:0 6px 10px rgba(0,0,0,.55), inset 0 0 0 1px rgba(12,21,18,.25);overflow:hidden}
+.badge::before{content:'';position:absolute;inset:0;background:url('../../../../../assets/plates/two-passports/guilloche.svg') center/120px;opacity:.35}
+.badge::after{content:'';position:absolute;left:23px;top:6px;width:20px;height:5px;border-radius:3px;background:#0C1512;opacity:.7}
+.badge i{position:absolute;left:0;right:0;bottom:16px;height:14px}
+.badge.j i{background:#FFD84D}
+.badge.s i{background:#0C1512;opacity:.15}
+.year{position:absolute;top:120px;font:500 26px Plex;letter-spacing:2px}
+.n{position:absolute;bottom:40px;font-family:Anton;font-size:150px;line-height:1}
+.n small{font-size:60px;color:#a9b4ae}
+.credit{position:absolute;right:56px;bottom:40px;font:500 20px Plex;color:#a9b4ae;letter-spacing:1px}
+</style>
+<div class="pill">follow.the.money</div><div class="mark">makeyourmindup</div>
+<div class="year" style="left:150px">NEW TECHNICAL HIRES · EARLY 2025</div>
+<div class="year" style="left:1050px">NEW TECHNICAL HIRES · NOW</div>
+<div class="tray" style="left:80px"><div class="deck" id="a"></div></div>
+<div class="tray" style="left:990px"><div class="deck" id="b"></div></div>
+<div class="n" style="left:150px">27<small> of 100 junior</small></div>
+<div class="n" style="left:1050px">9<small> of 100 junior</small></div>
+<div class="credit">ANTHROPIC · OCT 2026</div>
+<script>
+function fill(id,juniors,seed){const d=document.getElementById(id);let h='';
+ // spread the juniors evenly so the count reads at a glance, with a little hand-placed jitter
+ const js=new Set();for(let k=0;k<juniors;k++)js.add(Math.floor(k*100/juniors+seed)%100);
+ for(let i=0;i<100;i++){const r=Math.floor(i/10),c=i%10,jx=((i*37)%7)-3,jy=((i*53)%5)-2,rot=((i*29)%9)-4;
+  h+=`<div class="badge ${js.has(i)?'j':'s'}" style="left:${40+c*74+jx}px;top:${r*60+jy-20}px;transform:rotate(${rot}deg) translateZ(${(i%3)}px)"><i></i></div>`}
+ d.innerHTML=h}
+fill('a',27,1);fill('b',9,4);
+</script>

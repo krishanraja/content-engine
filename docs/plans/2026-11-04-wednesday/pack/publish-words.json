@@ -1,0 +1,28 @@
+{
+ "title": "AI used to reply. Now it acts first. Claude Duet is the start.",
+ "subtitle": "Claude Duet checks your apps, briefs you each morning and drafts the work before you ask, then waits for your yes. If you already live in Claude, here is what changes, and what it costs.",
+ "date": "2026-11-04",
+ "long_name": "5-minute video",
+ "youtube_title": "AI used to reply. Now it acts first. Claude Duet is the start.",
+ "youtube_description": "Claude Duet is Anthropic's new Claude app, and it messages you first. Every few hours it checks your email, your calendar and the apps you've connected, sends you a morning brief and drafts the work. Before it sends, pays, signs or deletes anything, it waits for your yes.\n\nIf you already live in Claude, the big change is who starts the work: it turns up first, and your job becomes saying yes or no. We asked it for a calendar scheduler and got a dashboard we can share. You ask once, and you get a tool.\n\nThe catch: it reads one email account, it's slow, and its background checks count toward your Claude plan's limit.\n\nThe full deep dive is at makeyourmindup.ai",
+ "short_title": "AI just stopped waiting to be asked. Claude Duet changes everything.",
+ "short_caption": "Claude Duet messages you first: a morning brief, drafts waiting, and nothing sent without your yes. Pick one job you only do when someone nudges you, and check every draft before you say yes.\n\nThe full deep dive is at makeyourmindup.ai.",
+ "tiktok_caption": "Claude Duet messages you first: a morning brief, drafts waiting, and nothing sent without your yes. Pick one job you only do when someone nudges you, and check every draft before you say yes.\n\nThe full deep dive is at makeyourmindup.ai.",
+ "linkedin_post": "AI used to wait to be asked. Claude Duet doesn't. It checks your email and calendar every few hours, briefs you each morning, drafts the work, then waits for your yes before it sends, pays, signs or deletes.\n\nIf you already work in Claude, your job moves from asking to approving. That only sticks if you hand it one weekly job whose inputs already live in the apps it can reach.\n\nAnd if you run IT: decide now whether staff may connect work email to a personal Claude plan, before they ask.\n\nThe full deep dive is at makeyourmindup.ai.",
+ "spotify_title": "AI used to reply. Now it acts first. Claude Duet is the start.",
+ "spotify_description": "Claude Duet is Anthropic's new Claude app, and it messages you first. Every few hours it checks your email, your calendar and the apps you've connected, sends you a morning brief and drafts the work. Before it sends, pays, signs or deletes anything, it waits for your yes.\n\nIf you already live in Claude, the big change is who starts the work: it turns up first, and your job becomes saying yes or no. We asked it for a calendar scheduler and got a dashboard we can share. You ask once, and you get a tool.\n\nThe catch: it reads one email account, it's slow, and its background checks count toward your Claude plan's limit.\n\nThe full deep dive is at makeyourmindup.ai",
+ "comment_question": "Of the jobs in your week, which one only gets done when someone nudges you?",
+ "substack_title": "AI used to reply. Now it acts first. Claude Duet is the start.",
+ "substack_subtitle": "Claude Duet checks your apps, briefs you each morning and drafts the work before you ask, then waits for your yes. If you already live in Claude, here is what changes, and what it costs.",
+ "description": "Claude Duet is Anthropic's new Claude app, and it messages you first. Every few hours it checks your email, your calendar and the apps you've connected, sends you a morning brief and drafts the work. Before it sends, pays, signs or deletes anything, it waits for your yes.\n\nIf you already live in Claude, the big change is who starts the work: it turns up first, and your job becomes saying yes or no. We asked it for a calendar scheduler and got a dashboard we can share. You ask once, and you get a tool.\n\nThe catch: it reads one email account, it's slow, and its background checks count toward your Claude plan's limit.\n\nThe full deep dive is at makeyourmindup.ai",
+ "files": {
+  "long_video": "3 Video/Claude Duet - wide 16x9 - YouTube, Substack.mp4",
+  "short_video": "3 Video/Claude Duet - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4",
+  "wide_thumbnail": "3 Video/Claude Duet - wide 16x9 - thumbnail.jpg",
+  "vertical_cover": "2 Covers and images/vertical-cover-1080x1920-shorts-tiktok-reels.png",
+  "square": "2 Covers and images/square-1080x1080.png",
+  "share_card": "2 Covers and images/share-card-1200x675.png",
+  "cover": "2 Covers and images/substack-cover-1200x630.png",
+  "substack_copy": "1 Article/substack-copy.html"
+ }
+}

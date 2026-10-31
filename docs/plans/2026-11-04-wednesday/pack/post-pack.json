@@ -1,0 +1,133 @@
+{
+ "piece_id": "b63d2507-dbb4-449d-bce4-f21e859ee2ad",
+ "date": "2026-11-04",
+ "subchannel": "under.the.hood",
+ "subject": "Claude Duet",
+ "headline": "AI used to reply. Now it acts first. Claude Duet is the start.",
+ "files": [
+  {
+   "kind": "fact-checked-text",
+   "file": "../article.md"
+  },
+  {
+   "kind": "substack-copy",
+   "file": "../../../../.cache/pack/wed/pages/substack.html",
+   "logos": [
+    "Anthropic",
+    "Google"
+   ]
+  },
+  {
+   "kind": "web-page",
+   "file": "../../../../.cache/pack/wed/pages/page.html",
+   "logos": [
+    "Anthropic",
+    "Google"
+   ]
+  },
+  {
+   "kind": "email-pictures-off",
+   "file": "../../../../.cache/pack/wed/pages/email-pictures-off.html",
+   "logos": [
+    "Anthropic",
+    "Google"
+   ]
+  },
+  {
+   "kind": "cover",
+   "file": "../../../../.cache/pack/wed/pages/cover.png",
+   "logos": [
+    "Anthropic",
+    "Google"
+   ]
+  },
+  {
+   "kind": "substack-cover",
+   "file": "../../../../.cache/pack/wed/pages/cover-1200x630.png",
+   "logos": [
+    "Anthropic",
+    "Google"
+   ]
+  },
+  {
+   "kind": "share-card-cover",
+   "file": "../../../../.cache/pack/wed/pages/cover-1200x675.png",
+   "logos": [
+    "Anthropic",
+    "Google"
+   ]
+  },
+  {
+   "kind": "square-cover",
+   "file": "../../../../.cache/pack/wed/pages/cover-1080x1080.png",
+   "logos": [
+    "Anthropic",
+    "Google"
+   ]
+  },
+  {
+   "kind": "vertical-cover",
+   "file": "../../../../.cache/pack/wed/pages/cover-1080x1920.png",
+   "logos": [
+    "Anthropic",
+    "Google"
+   ]
+  },
+  {
+   "kind": "cover-crops",
+   "file": "../../../../.cache/pack/wed/pages/cover-crops.png"
+  },
+  {
+   "kind": "phone-check",
+   "file": "../../../../.cache/pack/wed/pages/phone-images.png"
+  },
+  {
+   "kind": "image",
+   "file": "../../../../.cache/pack/wed/figure-asking-to-approving.png",
+   "purpose": "The article's one figure: the same weekly job, today (you gather and ask) and with Claude Duet (the work turns up and waits for yes).",
+   "logos": [
+    "Anthropic",
+    "Google"
+   ],
+   "shows": "comparison",
+   "data_source": "Anthropic, Introducing Claude Duet (21 Oct 2026); logos per imagery/logos/sources.json",
+   "facts": [
+    "Claude Duet",
+    "Gmail",
+    "Google Calendar",
+    "Slack",
+    "Claude",
+    "morning brief",
+    "waits for your yes before it sends, pays, signs or deletes"
+   ]
+  },
+  {
+   "kind": "video-script",
+   "file": "../script-long.md",
+   "name": "video-script-5-minute.md",
+   "purpose": "The 5-minute script he recorded from (Teleprompter)."
+  },
+  {
+   "kind": "video-script",
+   "file": "../script-short.md",
+   "name": "video-script-90-second.md",
+   "purpose": "The 90-second script he recorded from (Teleprompter)."
+  },
+  {
+   "kind": "video-words",
+   "file": "publish-words.json"
+  },
+  {
+   "kind": "linkedin-post",
+   "text": "AI used to wait to be asked. Claude Duet doesn't. It checks your email and calendar every few hours, briefs you each morning, drafts the work, then waits for your yes before it sends, pays, signs or deletes.\n\nIf you already work in Claude, your job moves from asking to approving. That only sticks if you hand it one weekly job whose inputs already live in the apps it can reach.\n\nAnd if you run IT: decide now whether staff may connect work email to a personal Claude plan, before they ask.\n\nThe full deep dive is at makeyourmindup.ai."
+  },
+  {
+   "kind": "publish-manager",
+   "file": "../../../../.cache/pack/wed/manager/publish-manager.html"
+  },
+  {
+   "kind": "publish-kit",
+   "file": "../../../../.cache/pack/wed/kit/publish.html"
+  }
+ ]
+}
