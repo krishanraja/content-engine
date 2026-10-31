@@ -6,13 +6,17 @@ So, one question. What does Claude Duet actually change for someone who already 
 
 ## WHAT DUET DOES ON ITS OWN
 
+If you already work in Claude, the new part is that Duet works without you there.
+
 Duet runs on its own computer in the cloud, with its own browser, so your laptop can be shut. Every few hours it checks the apps you have connected: Gmail, Slack, your calendar, HubSpot, or any of the "over 6,000 connectors and plugins" Anthropic counts. Each morning it sends you a short brief on what matters. In between, in Anthropic's words, it "reads, drafts, and prepares work on its own".
 
 Then it stops. Before it sends a message, makes a payment, signs a document or deletes anything, it shows you exactly what it's about to do and waits for your yes. A few things stay off the table even with your yes, such as trading securities or moving money between accounts.
 
 For a Claude user, the interesting part is what comes along for the ride. Anthropic says Duet "carries over your memory, skills, and connected apps from your Claude account", and it can search your past chats so you don't have to repeat yourself. That means no awkward first date.
 
-## WHAT PEOPLE THINK OF DUET
+## WHAT PEOPLE WHO ALREADY USE CLAUDE ARE FINDING
+
+For people who already work in Claude, the early reviews say the change is to their habits more than to what Claude can do, and that's why they keep coming back to cost, speed and remembering to use it.
 
 In its first week, the mood is curious and mostly warm about the idea and the design, and sceptical about cost, speed and access. Most people talking about it haven't got in yet. On Reddit, getting in is the single biggest topic: the waitlist, the US-only rule, and one plaintive "You know, us Teams users need love, too :)".
 
