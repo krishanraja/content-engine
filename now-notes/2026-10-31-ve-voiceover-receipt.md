@@ -1,3 +1,0 @@
-Status: ve cuts can earn a validation receipt (`ve receipt`): heard again, bound to QC, the Critic verdict, Krish's final approval, the words gate and the visual clarity evidence; sync and motion stand as not applicable only when the props hold no picture segments (Ruling, Krish, 2026-10-31). Friday 6 Nov's tall cut passes every row but visual clarity: a blind three-second review finds six of its 19 screens unclear or off point.
-Next: Krish rules on those six screens (accept as they are, by name, or fix), then the tall cut goes on its making record and into the library; the long cut waits on his ear for the music-restart mix.
-North Star check (2026-10-31): holds.
