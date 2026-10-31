@@ -92,6 +92,15 @@
  ],
  "verdicts": [
   {
+   "title": "CLAUDE IS EATING THE JOBS OF ITS OWN HUMANS",
+   "surface": "cover",
+   "verdict": "picked",
+   "why": "His own title's first sentence, set as the cover words; offered to him on 31 Oct as the cover unless he said otherwise, and his next message took Wednesday's recommendations and raised no change",
+   "krish": "2 Nov: Claude's Ai is eating the jobs of its own humans - what does that signal for the rest of us?",
+   "on": "2026-10-31",
+   "piece": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67"
+  },
+  {
    "title": "VIDEO: AI used to reply. Now it acts first. Claude Duet is the start.",
    "surface": "substack",
    "verdict": "picked",
