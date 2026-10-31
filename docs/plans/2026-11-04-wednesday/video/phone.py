@@ -46,13 +46,13 @@ def sec(at):
 # the reply and the thinking screen share one layout; frame px of the 720x1560 recording.
 REPLY = [AV, (30, 15, 625, 440), (120, 638, 620, 682), (50, 798, 575, 832)]
 TODO = [AV, (120, 168, 610, 204), (130, 345, 545, 416), (130, 525, 545, 596), (130, 702, 545, 774), (130, 878, 545, 952),
-        (130, 1058, 545, 1130)]
+        (130, 1058, 545, 1130), (55, 1276, 545, 1320), (55, 1440, 545, 1505)]   # two rows faint behind the bars
 TASKS = [AV, (85, 418, 690, 456), (85, 458, 690, 496), (88, 500, 660, 540)]
 BRIEF = G['morning-brief'][1] + [(70, 470, 590, 535), (60, 660, 690, 1100)]   # the "Prepared ... London" header too
 
 SHOTS = {
     # Long 3, short 2: its first message arriving.
-    'first': ([('01:02', '01:40')], G['first-message'][1], 10.5, '', 0.30),
+    'first': ([('01:02', '01:40')], [AV, (86, 298, 168, 342)], 10.5, '', 0.30),   # the name only, never the W of welcome
     # Long 5, short 3: the morning brief it wrote, header and body covered; the card settles.
     'brief': ([('19:09', '19:40')], BRIEF, 11.6, '', 0.24),
     # Long 7, short 5: no setup quiz: the onboarding, then Google Drive connecting (never the account chooser).
