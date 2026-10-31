@@ -1,0 +1,39 @@
+{
+ "schema": "growth-offdays/1",
+ "week_of": "2026-11-02",
+ "_about": "Off-day options for the week of 2 Nov, written 31 Oct 2026 by the Publish board standardization session after Krish chose 'Propose 4 now'. Copy only; Growth makes the mocks for the ones he approves, before anything posts.",
+ "days": {
+  "2026-11-03": [
+   {"concept_id": "claudejobs", "lane": "Meme", "formats": ["Meme carousel, made fresh in the brand kit"], "source_url": null, "ready": false,
+    "draft": "Tue 3 Nov, the day after Monday's piece. Four cards, 4:5. Card 1: CLAUDE IS EATING THE JOBS OF ITS OWN HUMANS (huge yellow type, a cartoon robot holding a tiny office ladder). Card 2: The rungs juniors used to learn on are the ones AI does first (the ladder with its bottom rungs missing). Card 3: So who trains the seniors of 2030? (an empty chair at the top). Card 4: The full story is on Monday's video (Monday's cover).",
+    "needs": ["mock in the brand kit before Krish approves"]},
+   {"concept_id": "hirepoll", "lane": "Poll", "formats": ["Poll card"], "source_url": null, "ready": false,
+    "draft": "Tue 3 Nov. One card and a poll: If AI does the junior work, would you still hire a junior next year? Yes, to train them / No, AI covers it / Not sure yet. Links to Monday's piece.",
+    "needs": ["mock in the brand kit before Krish approves"]}
+  ],
+  "2026-11-05": [
+   {"concept_id": "actsfirst", "lane": "Carousel", "formats": ["Explainer carousel, infographic style"], "source_url": null, "ready": false,
+    "draft": "Thu 5 Nov, the day after Wednesday's piece. Five cards, 4:5. Card 1: AI USED TO REPLY. NOW IT ACTS FIRST. Card 2: Before: you ask, it answers (a speech bubble going one way). Card 3: Now: it notices, drafts and asks you to approve (an arrow looping back to you). Card 4: Good: less busywork. Worrying: it decides what you see first. Card 5: The full story is on Wednesday's video (Wednesday's cover).",
+    "needs": ["mock in the brand kit before Krish approves"]},
+   {"concept_id": "whileyouslept", "lane": "Meme", "formats": ["Meme, made fresh in the brand kit"], "source_url": null, "ready": false,
+    "draft": "Thu 5 Nov. Three panels. 1: You at 11pm: Night, AI. 2: Your AI at 3am: drafted 14 replies, booked 2 meetings, approved nothing (yet). 3: You at 8am, coffee in hand, staring.",
+    "needs": ["mock in the brand kit before Krish approves"]}
+  ],
+  "2026-11-07": [
+   {"concept_id": "goodnews", "lane": "Carousel", "formats": ["Uplifting AI news carousel, infographic style"], "source_url": null, "ready": false,
+    "draft": "Sat 7 Nov. Seven cards, 4:5. Card 1: GOOD THINGS AI DID THIS WEEK, 31 Oct to 7 Nov (sun-yellow headline, a small hand-drawn sun). Cards 2 to 6: one story each, a five-word headline, one line on what happened, one on why it matters, source and date in small type (a tight real photo, a yellow number badge). Card 7: Which one surprised you? One of these every Saturday.",
+    "needs": ["five stories dated 31 Oct to 7 Nov 2026, each checked against its primary source and through the fact gate", "mock in the brand kit before Krish approves"]},
+   {"concept_id": "aipassports", "lane": "Carousel", "formats": ["Carousel, from Friday's piece"], "source_url": null, "ready": false,
+    "draft": "Sat 7 Nov, the day after Friday's piece. Five cards, 4:5, the AI passports from the piece. Card 1: WHERE YOUR AI WAS BUILT DECIDES WHAT IT SAYS NO TO. Cards 2 to 4: one passport each, the country, one question it answered and one it refused, as the piece showed. Card 5: Every country wants its own AI. The full story is on Friday's video.",
+    "needs": ["the refusals shown are only the ones Friday's piece tested and the fact gate passed", "mock in the brand kit before Krish approves"]}
+  ],
+  "2026-11-08": [
+   {"concept_id": "samequestion", "lane": "Short", "formats": ["30-second short, cut from Friday's video"], "source_url": null, "ready": false,
+    "draft": "Sun 8 Nov. About 30 seconds cut from Friday's long video: the moment two AIs built in different countries get the same question and give different answers, captions at the fast pace you saved, ending on the full piece.",
+    "needs": ["Growth names the word range; content-engine cuts it from the approved master (snackable.py)"]},
+   {"concept_id": "weekin3", "lane": "Carousel", "formats": ["Recap carousel"], "source_url": null, "ready": false,
+    "draft": "Sun 8 Nov. Four cards, 4:5. Card 1: THIS WEEK IN AI, IN 3 CARDS. Card 2: Claude is eating its own jobs (Monday's cover). Card 3: AI stopped waiting to be asked (Wednesday's cover). Card 4: Where your AI was built decides what it refuses (Friday's cover). Follow for next week's three.",
+    "needs": ["mock in the brand kit before Krish approves"]}
+  ]
+ }
+}
