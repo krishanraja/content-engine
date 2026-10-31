@@ -1,7 +1,7 @@
 ---
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
-as_of: 2026-10-30
+as_of: 2026-10-31
 head: 262af4b
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
@@ -30,10 +30,11 @@ Stories a writer can carry without asking Krish:
 
 Objection it answers: "AI content is slop." Here is an engine that grades its judges against the editor, refuses to ship beneath his recorded rejections, and never counts its own actions as taste.
 
-## Where it is right now (as of 2026-10-30)
+## Where it is right now (as of 2026-10-31)
 
 <!-- north-star-state {"week_of":"2026-10-26","week_target":1,"current":1,"current_as_of":"2026-10-30","current_source":"Control Center content_ideas in the publication's series (1 published in the last 7 days)","urgency":1,"urgency_reason":"at 100% of this week's target"} --> **North Star number: U1, on pace.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 1, against 1 this week, on the way to 30 by 30 November 2026. Steady, and one proposal a week that would raise the ceiling.
 
+- SURFACE (primary) is calibrated on main at #290: every cut gate behaves as listed (mon26 long and short pass; wed21, the fri23 join reel and fri16 fail as expected) and the Critic judged all ten cases as required, so critic-calibrated.json (10 cases, 2026-10-30 12:52 UTC) is written and the overnight run may let its verdicts hold or pass a cut. Preflight 9/9; tesseract, SyncNet, the pinned ffmpeg and the locked av/faster-whisper/tzdata are installed. LORIMER (standby) still needs tesseract and SyncNet. (2026-10-31)
 - three ve faults fixed: the caption render check reads a word-by-word page once its last word is on screen and decodes in batches (it crashed on the 5-minute cut on Windows); ve's take words reach the words gate in its shape (words.lost raised on every ve cut); and the episode bed restarts a track where its body begins, never in its sparse intro (Friday 23's long-cut sag at 172.5 s). (2026-10-30)
 - ve dispatch runs Codex cards under the Studio's own Codex home (runtime\codex-home, built by scripts/overnight/codex_home.py): no MCP server, no plugin, sign-in and sessions shared with ~/.codex. Krish keeps buffer and teleprompter in his everyday Codex. LORIMER (standby) has it built and passes preflight 9/9. (2026-10-30)
 - **SURFACE calibration (2026-10-30).** Gate roots from `studio.json`, `.srt` caption pages, the Critic wired. Krish ruled: near-homophones pass, a word with no room in the final is unmeasured, mon26's unfiled joins and captions are accepted missing, wed21's lost words are real, short cross-fades pass the Critic.
@@ -52,13 +53,13 @@ Everything to 29 October 2026 is in `docs/history/2026-10-29-NOW-changed-recentl
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-10-30): Krish hears the re-bedded long cut and clears the two name mishearings, then the ve validation receipt and the voiceover rule for sync and motion.
+- Next (2026-10-31): the dry run on Saturday 31 October, 18:00 New York, with SURFACE on and signed in; Krish may check fri16's line, where the take says "5 %" and the final says "I'm 85".
 - Then: the dry run on Saturday 31 October, 18:00 New York (read both machines' preflight blocks first), and the first Sunday loop on 1 November, recording `production_choices` for each piece made. After that the plan is Wave 2 (`docs/plans/2026-11-07-wave-2.md`: unattended overnight cuts, calibrated gates, ve in shadow, Growth posting what he approved, by 7 November) and Wave 3 (`docs/plans/2026-11-14-wave-3.md`: the ve cutover, one inspiration source, the retrospective, by 14 November).
 - Waiting on Krish (as of 2026-10-29): Control Center's `GITHUB_TOKEN` needs Contents: write and Actions: read on this repository for the make press; whether a make run's pull request auto-merges on green CI; whether the $15 cap gets a reader; the Buffer plan (due 31 October); approving the three one-opening, one-close floor standards through the Rejections route; OUR TEST or MY TEST on a video label he presents; "we" in article titles while video titles keep "I".
 - Waiting on Krish (as of 2026-10-28): his Gate 2 verdict on the format H proof and Friday 23's cuts; his yes to the Bessen line for Friday 30; his recordings of Wednesday 28 and Friday 30; applying the three migrations above; the floor's Drive access and `FLOOR_SYNC_TOKEN`.
 - Waiting on Krish (as of 2026-10-29, Wave 2 and 3 production): by ear, the levels and a sound-effect set; Gate 2 on face-with-proof frames and six devices; 5 to 10 golden frames; 20 minutes on 9 Nov scoring shadow cuts. His 29 Oct answers and the home-computer steps: the handover above.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): CI stays advisory, so a session waits for green before it merges.
-- North Star check (2026-10-30): holds.
+- North Star check (2026-10-31): holds.
 
 ## Read next
 

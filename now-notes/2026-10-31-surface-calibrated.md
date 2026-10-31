@@ -1,3 +1,0 @@
-Status: SURFACE (primary) is calibrated on main at #290: every cut gate behaves as listed (mon26 long and short pass; wed21, the fri23 join reel and fri16 fail as expected) and the Critic judged all ten cases as required, so critic-calibrated.json (10 cases, 2026-10-30 12:52 UTC) is written and the overnight run may let its verdicts hold or pass a cut. Preflight 9/9; tesseract, SyncNet, the pinned ffmpeg and the locked av/faster-whisper/tzdata are installed. LORIMER (standby) still needs tesseract and SyncNet.
-Next: the dry run on Saturday 31 October, 18:00 New York, with SURFACE on and signed in; Krish may check fri16's line, where the take says "5 %" and the final says "I'm 85".
-North Star check (2026-10-31): holds.
