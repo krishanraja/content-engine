@@ -1,0 +1,98 @@
+name: Weekly voice learner
+
+# Krish, 2026-10-31: "start the weekly voice learner too". Once a week this
+# compares every new take in the engine's recordings with the script he was
+# given (scripts/voice/spoken_delta.py backfill), then lists the patterns that
+# repeat across three pieces or more as proposals (scripts/voice/learner.py).
+#
+# No model runs here, Claude or any other, so this is not a Claude routine
+# (Ruling, Krish, 2026-10-29: "I want zero Claude routines"). It writes no
+# board, no rule, no skill and no taste: its only output is the run's summary,
+# which proposes. A proposal becomes a rule only on Krish's yes, through
+# ai-harness krish-voice or his taste ledger. The transcriber runs on the
+# runner, so it spends Actions minutes and nothing else.
+#
+# Kept between runs: the delta report alone (counts and short examples, never
+# a transcript or a recording), so a take is transcribed once.
+
+on:
+  schedule:
+    - cron: '17 6 * * 6'  # Saturday 06:17 UTC, ahead of the Sunday plan
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: voice-learner
+  cancel-in-progress: false
+
+jobs:
+  learn:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      WHISPER_MODEL: small.en
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install hash-pinned FFmpeg
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          video_ffmpeg_build='ffmpeg-n8.1.2-53-g1005b294ff-linux64-gpl-8.1'
+          video_ffmpeg_sha256='e4a088c9b16d4b729396805e589394cef45a6d1e5427f8ca32ded8a86694d5b8'
+          video_ffmpeg_archive="$RUNNER_TEMP/$video_ffmpeg_build.tar.xz"
+          gh release download toolchain-ffmpeg-n8.1.2-53-g1005b294ff --repo "$GITHUB_REPOSITORY" --pattern "$video_ffmpeg_build.tar.xz" --dir "$RUNNER_TEMP"
+          echo "$video_ffmpeg_sha256  $video_ffmpeg_archive" | sha256sum --check --strict
+          tar -xJf "$video_ffmpeg_archive" -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/$video_ffmpeg_build/bin" >> "$GITHUB_PATH"
+      - name: Install the pinned transcriber
+        shell: bash
+        run: |
+          python -m pip install --require-hashes -r requirements.lock.txt \
+            || python -m pip install faster-whisper==1.2.0 ctranslate2==4.8.1 av==18.1.0
+      - name: Restore the faster-whisper model
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: faster-whisper-${{ env.WHISPER_MODEL }}-${{ runner.os }}-v1
+      - name: Restore the delta report
+        uses: actions/cache/restore@v4
+        with:
+          path: .cache/spoken/backfill.json
+          key: voice-learner-report-${{ github.run_id }}
+          restore-keys: voice-learner-report-
+      - name: Compare the new takes with their scripts
+        shell: bash
+        env:
+          ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
+        run: |
+          if [ -z "$ENGINE_OPERATOR_TOKEN" ]; then
+            echo "::error::The engine key (ENGINE_OPERATOR_TOKEN) is not set for this repository's Actions, so no recording can be read."
+            exit 1
+          fi
+          python scripts/voice/spoken_delta.py backfill --model "$WHISPER_MODEL"
+          # Transcripts are not kept: only the report goes into the cache.
+          rm -f .cache/spoken/*.words.json
+          rm -rf .cache/spoken/media
+      - name: Propose what repeats
+        if: always()
+        shell: bash
+        run: |
+          if [ -f .cache/spoken/backfill.json ]; then
+            python scripts/voice/learner.py >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "No delta report: the compare step stopped before it wrote one." >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Keep the delta report
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: .cache/spoken/backfill.json
+          key: voice-learner-report-${{ github.run_id }}
