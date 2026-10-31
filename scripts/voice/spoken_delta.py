@@ -141,6 +141,8 @@ def delta(script_text, take_doc):
                         examples[kind].append({'script': full, 'said': word} if kind == 'contracted'
                                               else {'script': word, 'said': full})
             continue
+        if op == 'replace' and ''.join(a[i1:i2]) == ''.join(b[j1:j2]):
+            continue  # a name the transcriber split ("open ai" for "openai") is the same words, not a change
         kind, n = {'delete': ('cut', i2 - i1), 'insert': ('added', j2 - j1)}.get(op, ('swapped', max(i2 - i1, j2 - j1)))
         counts[kind] += n
         if len(examples[kind]) < EXAMPLES:
