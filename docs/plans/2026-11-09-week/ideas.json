@@ -385,16 +385,6 @@
   ],
   "thu": [
    {
-    "id": "aitoai",
-    "format": "Meme video, made fresh in the brand kit",
-    "source": "Your saved clip (youtube 7olCmqWw9Wk), format credited; none of its footage is used",
-    "covers": [
-     "2b582f5a-52fb-49a3-8502-0e9bd914f772",
-     "e829fbfb-278d-45e2-9607-73af4c04310d"
-    ],
-    "copy": "Thu 12 Nov. The translator scene, recast: your AI agent and your customer's AI agent spend forty minutes politely agreeing on a refund nobody asked for. Two identical robots across a table, subtitles at your saved fast pace, one human in the corner checking his watch. Made to the visual quality and feeling of the short you saved on 31 Oct."
-   },
-   {
     "id": "gitbroke",
     "format": "Explainer carousel, infographic style",
     "source": {
@@ -405,6 +395,18 @@
      "45e0ead0-310b-4c74-9bd2-54305fb41539"
     ],
     "copy": "Thu 12 Nov, a day after Wednesday's piece if you pick it. Five cards, 4:5, the infographic style you saved. Card 1: ANTHROPIC'S AI WROTE SO MUCH CODE IT BROKE GIT (a cracked Git logo). Card 2: May: 2,500 changes a day (a short bar). Card 3: September: 30,000+ (a bar that runs off the card). Card 4: Seven people, five months, a new system built for agents (seven small figures, a calendar). Card 5: Your next software is built for robots to use and humans to check (a robot at a desk, a person holding a red pen)."
+   },
+   {
+    "id": "cointoss",
+    "format": "Short video experiment",
+    "source": {
+     "label": "Anthropic's own research post, 27 Oct 2026",
+     "url": "https://www.anthropic.com/research/agents-judgment-calls"
+    },
+    "copy": "Thu 12 Nov, the day before Friday. About 30 seconds. You flip a coin to choose which of two restaurants a friend's AI recommends, and they defend the choice as their own. Then the reveal: in Anthropic's trial, analysts went with an AI whose opinion was set by a coin toss 86% of the time. Made to the visual quality and feeling of the short you saved on 31 Oct.",
+    "covers": [
+     "e829fbfb-278d-45e2-9607-73af4c04310d"
+    ]
    }
   ],
   "sat": [
@@ -440,28 +442,27 @@
   ],
   "sun": [
    {
-    "id": "puppy",
-    "format": "Said to camera, 1-2-3",
-    "source": "Your two saved puppy-analogy clips (28 Oct) and the clean to-camera style you saved",
-    "covers": [
-     "7f43c6b5-a468-40f3-ad66-c988cdc16072",
-     "8685d47b-8aa8-4580-8f61-bf917b6c39ba",
-     "e829fbfb-278d-45e2-9607-73af4c04310d"
-    ],
-    "copy": "Sun 15 Nov. About 40 seconds, clean to camera, fast subtitles. Your AI is a puppy. One: it wants to please you. Two: so it tells you what you want to hear. Three: so ask it for the best case against your idea. Closes on Friday's piece. Made to the visual quality and feeling of the short you saved on 31 Oct."
+    "id": "weekin3",
+    "format": "Recap carousel",
+    "source": "This week's three pieces",
+    "copy": "Sun 15 Nov. Four cards, 4:5. Card 1: THIS WEEK IN AI, IN 3 CARDS. Cards 2 to 4: Monday's, Wednesday's and Friday's covers, each with its one-line headline. Follow for next week's three."
    },
    {
-    "id": "cointoss",
-    "format": "Short video experiment",
+    "id": "grannypoll",
+    "format": "Poll card",
     "source": {
-     "label": "Anthropic's own research post, 27 Oct 2026",
-     "url": "https://www.anthropic.com/research/agents-judgment-calls"
+     "label": "Yahoo Tech, 19 Oct 2026",
+     "url": "https://tech.yahoo.com/ai/claude/articles/granny-benchmark-did-claude-really-174036654.html"
     },
-    "copy": "Sun 15 Nov. About 30 seconds. You flip a coin to choose which of two restaurants a friend's AI recommends, and they defend the choice as their own. Then the reveal: in Anthropic's trial, analysts went with an AI whose opinion was set by a coin toss 86% of the time."
+    "covers": [
+     "a397253e-bfe1-4a84-babc-27d93fd2779d"
+    ],
+    "copy": "Sun 15 Nov, after Friday's piece. One card and a poll: Grandma on the tracks, or Justin Bieber's copyright? You choose. (The test was rigged so only singing could win; Friday's video explains.)"
    }
   ]
  },
  "accounted": {
-  "4077d778-8f73-410a-a142-26cd9e308d07": "Already made: this card (what Claude Duet does) became Wednesday 4 November's piece on Duet's approval gate (b63d2507), so offering it again within three weeks would repeat it."
+  "4077d778-8f73-410a-a142-26cd9e308d07": "Already made: this card (what Claude Duet does) became Wednesday 4 November's piece on Duet's approval gate (b63d2507), so offering it again within three weeks would repeat it.",
+  "2b582f5a-52fb-49a3-8502-0e9bd914f772": "Used this week instead: Krish said on 31 Oct the translator meme was meant for the coming week, so it is Tuesday 3 November's off-day option on the 2 November board."
  }
 }
