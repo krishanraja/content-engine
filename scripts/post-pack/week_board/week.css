@@ -332,3 +332,15 @@ button.dl-btn:disabled{opacity:.6;cursor:default}
 .rec.sc select,.rec.sc input{min-height:44px;font:inherit;font-weight:400;padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);max-width:100%}
 .rec.sc .sc-now{margin:0 0 10px;font-weight:700}
 .rec.sc.on{border-color:var(--ok)}
+.pitch{margin:0;display:grid;grid-template-columns:minmax(0,1fr);gap:2px;border-left:3px solid var(--ink);padding-left:10px}
+.pitch dt{font:600 11.5px "IBM Plex Mono",ui-monospace,monospace;color:var(--muted);text-transform:uppercase;margin-top:6px}
+.pitch dd{margin:0;font-size:15px;line-height:1.5;overflow-wrap:anywhere}
+.pitch dd[data-pitch="headline"]{font-weight:700;font-size:17px}
+.pitch-chain,.pitch-examples{margin:0;padding-left:22px;display:grid;gap:2px}
+.off-date{font-variant-numeric:tabular-nums}
+.off-cards{margin:0;padding:0;list-style:none;display:grid;gap:6px}
+.off-c{border:1px solid var(--line);border-radius:10px;padding:8px 10px;display:grid;gap:4px}
+.off-c-n{font:600 11.5px "IBM Plex Mono",ui-monospace,monospace;color:var(--muted);text-transform:uppercase}
+.off-c-words{margin:0;font-size:15px;line-height:1.45;overflow-wrap:anywhere}
+.off-c-pic{margin:0;font-size:13.5px;line-height:1.4;color:var(--muted);overflow-wrap:anywhere}
+main[data-checklists="hidden"] .st-note,main[data-checklists="hidden"] .ticks,main[data-checklists="hidden"] .run-tick,main[data-checklists="hidden"] .rec-tick input,main[data-checklists="hidden"] .rec-tick .box,main[data-checklists="hidden"] .rec-tick .t-when,.wk.no-ticks .wk-week .meter,.wk.no-ticks [data-weektxt]{display:none}

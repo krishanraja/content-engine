@@ -158,10 +158,19 @@ export function validBody(collection: string, id: string, body: unknown): boolea
     && Array.isArray(body.members) && body.members.length >= 2 && body.members.length <= 5
     && body.members.every(m => typeof m === 'string' && UUID.test(m)) && new Set(body.members).size === body.members.length
   // An off-day option he approved or skipped: queue/off-<day>-<option>, bound to the copy he was shown (copy_sha256).
-  if (collection === 'queue' && (OFFDAY_ID.test(id) || body.use === 'offday')) return OFFDAY_ID.test(id) && body.use === 'offday'
-    && body.pick === id && id.startsWith(`off-${String(body.day)}-`) && typeof body.approved === 'boolean'
+  // His comment on any option (Krish, 2026-10-31: every option takes a comment box) rides as its note: with his Approve
+  // or Skip, alone on an option he has not pressed (approved null), or added to one he pressed (note_only: the handler
+  // keeps the press as saved and only the note changes, so nothing it did runs again).
+  if (collection === 'queue' && (OFFDAY_ID.test(id) || body.use === 'offday')) {
+    const words = typeof body.note === 'string' && body.note.trim().length > 0
+    return OFFDAY_ID.test(id) && body.use === 'offday'
+    && body.pick === id && id.startsWith(`off-${String(body.day)}-`)
+    && (typeof body.approved === 'boolean' || body.approved === null && words && body.kind === undefined)
     && SHA256.test(String(body.copy_sha256)) && ['format', 'source', 'option_id'].every(k => !(k in body) || text(k, 1000))
+    && (!('note' in body) || body.note === null || text('note', 2000))
+    && (!('note_only' in body) || body.note_only === true && typeof body.note === 'string')
     && !('send' in body) && (body.kind === undefined || recordedOffday(body))
+  }
   // One of the four presses on an idea (PRESS_USES), or null to take it back: queue/<pick>, his optional note (a
   // theme or a note for a wider piece), his reason on a Reject (required, so every rejection carries his words to learn
   // from), and the Monday a Next week mark is for.

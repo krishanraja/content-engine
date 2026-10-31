@@ -162,7 +162,17 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         }
         // His presses (_presses.ts): an approval of scripts binds the hash of the words he saw, then sends them to
         // Teleprompter once they are checked and read back; a rejected asset files his reason in the rejection inbox.
-        const body = await preparePress(collection, id, req.body.body)
+        let incoming = req.body.body
+        if (collection === 'queue' && incoming.use === 'offday' && incoming.note_only === true) {
+          // His comment added to an off-day option he already pressed: the press stays exactly as saved (its send
+          // included) and only his note changes; afterPress then does nothing again.
+          const stored = await db.from('board_documents').select('body').eq('week', week).eq('collection', 'queue').eq('doc_id', id).maybeSingle()
+          must(stored)
+          const was = stored.data?.body
+          if (!was || was.use !== 'offday' || typeof was.approved !== 'boolean') throw new BoardError(409, 'offday_press_not_found')
+          incoming = { ...was, note: incoming.note, at: incoming.at ?? was.at, note_only: true }
+        }
+        const body = await preparePress(collection, id, incoming)
         const result = await db.rpc('board_save', { p_week: week, p_collection: collection, p_id: id, p_body: body, p_revision: req.body.revision, p_actor: who })
         must(result)
         const after = await afterPress(db, { week, collection, id, body, who, saved: result.data }, deps)

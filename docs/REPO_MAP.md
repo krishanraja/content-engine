@@ -2002,6 +2002,7 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `async function heldBecause(making: unknown, texts: Record<string, string>): Promise<string | null>`
 - `function feelReport(week: string, id: string, body: Body, now: string)`
 - `function scoreRow(week: string, id: string, body: Body, now: string)`
+- `async function recordTitle(db: SupabaseClient, body: Body): Promise<'recorded' | 'waits_on_migration' | 'failed' | null>`
 - `function offdayDate(week: string, day: string): string`
 - `async function placeOffday(db: SupabaseClient, ctx: { week: string; id: string; body: Body; who: string; now: string })…`
 - `async function afterPress(db: SupabaseClient, ctx: { week: string; collection: string; id: string; body: Body; who: str…`

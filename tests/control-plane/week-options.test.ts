@@ -169,7 +169,7 @@ describe('the week options', () => {
     const out = await call('GET', {}, { week_start: '2026-10-12' })
     const ftm = out.body.series.find((s: Row) => s.slug === 'follow_the_money')
     expect(ftm.in_flight.map((o: Row) => o.id)).not.toContain(PUB)
-    expect(ftm.scheduled).toEqual([{ id: PUB, idea: 'Monday, posted on Substack', state: 'published', scheduled_for: '2026-10-12' }])
+    expect(ftm.scheduled).toEqual([{ id: PUB, idea: 'Monday, posted on Substack', title: null, state: 'published', scheduled_for: '2026-10-12' }])
     const next = (await call('GET', {}, { week_start: '2026-10-19' })).body.series.find((s: Row) => s.slug === 'follow_the_money')
     expect(next.scheduled.map((o: Row) => o.id)).toEqual([NEXT])
   })

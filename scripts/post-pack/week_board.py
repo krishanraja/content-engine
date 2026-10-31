@@ -238,6 +238,11 @@ FIXED = False  # whether the board being built is in the fixed layout; set by us
 # layout_from, version 3 from v3.from (the Archive, the Scores press and the recording_sunday rhythm).
 TABS, RHYTHM, VERSION = TOP_TABS, LAYOUT['rhythm'], 2
 FEATURE_ONLY = set()
+# Krish, 2026-10-31: the checklists are no longer his to administer. A board in the fixed layout hides from his view the
+# step-count notes, the Publish checklist and its meter, the run and record ticks and the week's tick meter; the ticks
+# stay in the page (verify() and the saved ticks keep their ids), and the presses that matter stay: Approve for publish,
+# Titles, Scores and Reject. On by default; board-layout.json may set "hide_checklists": false (his words only).
+HIDE_CHECKLISTS = LAYOUT.get('hide_checklists', True) is not False
 LEGACY_LAYOUT = {'STEPS': STEPS, 'SECTION_STEP': SECTION_STEP, 'CUTS': CUTS,
                  'DROPPED_CHANNELS': {'whatsapp': 'WhatsApp', 'notes': 'Substack Notes'}}
 
@@ -1341,6 +1346,8 @@ def read_ideas(data, monday, where='--ideas'):
             covers = idea.get('covers')
             if covers is not None and (not isinstance(covers, list) or not all(isinstance(c, str) and c.strip() for c in covers)):
                 problems.append(f'{weekday} idea {n}: covers is a list of the must_cover ids (sources.json) this idea answers')
+            if idea.get('pitch') is not None:
+                problems.extend(f'{weekday} idea {n}: pitch {p}' for p in pitch_problems(idea['pitch']))
             pick = f'{key}-{n}'
             if pick in seen:
                 problems.append(f'{weekday}: {pick} twice')
@@ -1350,6 +1357,47 @@ def read_ideas(data, monday, where='--ideas'):
     if problems:
         raise BoardError(f'{where} is not ready to show:\n  ' + '\n  '.join(problems))
     return out
+
+
+# An idea as a full story pitch (Krish, 2026-10-31: ideas shown as full story pitches): the headline, what the first ten
+# seconds say, two or three real examples, the chain of cause and effect underneath (five to eight links), and where
+# the piece lands. Optional for now; so_what, story, why_now, fact and source stay required beside it.
+PITCH_FIELDS = (('headline', 'Headline'), ('hook', 'First 10 seconds'), ('examples', 'Real examples'),
+                ('chain', "What's actually going on"), ('take', 'Where we land'))
+PITCH_LISTS = {'examples': (2, 3), 'chain': (5, 8)}
+
+
+def pitch_problems(pitch):
+    """Why an idea's pitch is not ready to show, or []."""
+    if not isinstance(pitch, dict):
+        return ['is {"headline", "hook", "examples": [2 to 3], "chain": [5 to 8], "take"}']
+    out = [f'has {k}, which is not one of its parts' for k in pitch if k not in dict(PITCH_FIELDS)]
+    for k, _ in PITCH_FIELDS:
+        v = pitch.get(k)
+        if k in PITCH_LISTS:
+            lo, hi = PITCH_LISTS[k]
+            if not isinstance(v, list) or not lo <= len(v) <= hi or not all(isinstance(x, str) and x.strip() for x in v):
+                out.append(f'{k} is a list of {lo} to {hi} lines')
+        elif not isinstance(v, str) or not v.strip():
+            out.append(f'has no {k}')
+    return out
+
+
+def pitch_block(pitch):
+    """An idea's pitch, labelled part by part; the chain is numbered, cause to effect."""
+    if not isinstance(pitch, dict):
+        return ''
+    rows = []
+    for k, label in PITCH_FIELDS:
+        v = pitch.get(k)
+        if k == 'chain':
+            body = '<ol class="pitch-chain">' + ''.join(f'<li>{E(x.strip())}</li>' for x in v) + '</ol>'
+        elif k == 'examples':
+            body = '<ul class="pitch-examples">' + ''.join(f'<li>{E(x.strip())}</li>' for x in v) + '</ul>'
+        else:
+            body = E(v.strip())
+        rows.append(f'<dt>{E(label)}</dt><dd data-pitch="{k}">{body}</dd>')
+    return f'<dl class="pitch" aria-label="The pitch">{"".join(rows)}</dl>'
 
 
 TRIAGE = (('story', 'Story', 'I would run it'), ('angle', 'Angle', 'I would run it from this angle'),
@@ -1490,6 +1538,12 @@ def read_offdays(data, where='ideas.json offdays'):
                     problems.append(f'{weekday} option {n}: covers is a list of must_cover ids')
                 else:
                     row['covers'] = [c.strip() for c in covers]
+            cards = o.get('cards')
+            if cards is not None:
+                found = card_problems(cards)
+                problems.extend(f'{weekday} option {n}: cards {p}' for p in found)
+                if not found:
+                    row['cards'] = [{'words': ' '.join(c['words'].split()), 'picture': ' '.join(c['picture'].split())} for c in cards]
             if o.get('kind') == 'recorded' and key not in {k for k, *_ in OFF_DAYS}:
                 problems.append(f'{weekday} option {n}: a piece he records is a Tuesday, Thursday, Saturday or Sunday piece')
             elif o.get('kind') == 'recorded':
@@ -1503,6 +1557,37 @@ def read_offdays(data, where='ideas.json offdays'):
         out[key] = rows
     if problems:
         raise BoardError(f'{where} is not ready to show:\n  ' + '\n  '.join(problems))
+    return out
+
+
+OFF_CARDS = (2, 12)  # a carousel or a meme set, card by card (Krish, 2026-10-31: "carousels card by card")
+
+
+def card_problems(cards):
+    """Why an off-day option's cards ([{words, picture}], in order) are not ready to show, or []."""
+    if not isinstance(cards, list) or not OFF_CARDS[0] <= len(cards) <= OFF_CARDS[1]:
+        return [f'is a list of {OFF_CARDS[0]} to {OFF_CARDS[1]} cards, each {{"words", "picture"}}']
+    out = []
+    for i, c in enumerate(cards, 1):
+        if not isinstance(c, dict) or set(c) - {'words', 'picture'}:
+            out.append(f'{i} is {{"words", "picture"}} and nothing else')
+        elif not all(isinstance(c.get(k), str) and c[k].strip() for k in ('words', 'picture')):
+            out.append(f'{i} needs its words and what the picture shows')
+    return out
+
+
+def offday_duplicates(offdays):
+    """Two off-day options on different days that share a topic (a `covers` id), or []. Krish, 2026-10-31: two off-day
+    options on different days were the same topic. A teaser sharing a cover with a hero idea (Monday, Wednesday or
+    Friday) is allowed; only off-day options are held to one day each."""
+    seen, out = {}, []
+    for key, weekday, _ in MIX_DAYS:
+        for o in (offdays or {}).get(key) or []:
+            for c in o.get('covers') or []:
+                first = seen.setdefault(c, (key, weekday, o.get('id')))
+                if first[0] != key:
+                    out.append(f'{weekday} option {o.get("id")} and {first[1]} option {first[2]} cover the same topic ({c}); '
+                               'give each topic one day, or drop one')
     return out
 
 
@@ -1539,7 +1624,7 @@ def read_growth_offdays(data, monday, where='--offdays-plan'):
 def previous_option(o):
     """An off-day option as the previous board kept it, back in the shape read_offdays takes."""
     row = {'id': o['id'], 'format': o['format'], 'source': {'label': o['source'], 'url': o.get('url')} if o.get('url') else o['source'], 'copy': o['copy']}
-    for k in ('covers', 'kind', 'style', 'piece_id', 'series', 'title', 'script', 'share_line', 'needs'):
+    for k in ('covers', 'kind', 'style', 'piece_id', 'series', 'title', 'script', 'share_line', 'needs', 'cards'):
         if o.get(k) is not None:
             row[k] = o[k]
     if o.get('kind') == 'recorded':
@@ -1658,11 +1743,16 @@ def offdays_section(monday, offdays):
                             f'<p class="id-how">Approve puts this piece on {weekday} and sends these exact words to Teleprompter'
                             + (f' as "{E(title)}"' if title else '') + '. Skip leaves it for another week.</p>')
             covers = f' data-covers="{E(" ".join(o["covers"]))}"' if o.get('covers') else ''
+            cards = ''.join(f'<li class="off-c"><span class="off-c-n">Card {i}</span><p class="off-c-words">{E(c["words"])}</p>'
+                            f'<p class="off-c-pic"><span class="id-why-k">Picture</span> {E(c["picture"])}</p></li>'
+                            for i, c in enumerate(o.get('cards') or [], 1))
             parts.append(
                 f'<article class="off-card" id="{E(did)}" data-offday="{E(did)}" data-off-day="{key}" data-option-id="{E(o["id"])}" '
                 f'data-format="{E(o["format"])}" data-source="{E(o["source"])}" data-copy-sha256="{o["copy_sha256"]}"{covers}{rec_attrs}>'
-                f'<div class="id-flags"><span class="id-flag">{E(o["format"])}</span></div>'
-                f'<p class="off-copy">{E(o["copy"])}</p>{rec_body}'
+                f'<div class="id-flags"><span class="id-flag off-date" data-off-date="{when.isoformat()}">{E(short_date(when))}</span>'
+                f'<span class="id-flag">{E(o["format"])}</span></div>'
+                f'<p class="off-copy">{E(o["copy"])}</p>'
+                + (f'<ol class="off-cards" aria-label="Card by card">{cards}</ol>' if cards else '') + f'{rec_body}'
                 + (f'<p class="id-why"><span class="id-why-k">Share line</span> {E(o["share_line"])}</p>' if o.get('share_line') else '')
                 + (f'<p class="id-how">Still needs: {E("; ".join(o["needs"]))}</p>' if o.get('needs') else '')
                 + f'<p class="id-why"><span class="id-why-k">Source</span> {src}</p>'
@@ -1670,7 +1760,13 @@ def offdays_section(monday, offdays):
                 f'<div class="tri-row" role="group" aria-label="Approve or skip this option">'
                 f'<button type="button" class="tri" data-act="offday" data-value="approve" data-for="{E(did)}" aria-pressed="false" disabled>Approve</button>'
                 f'<button type="button" class="tri" data-act="offday" data-value="skip" data-for="{E(did)}" aria-pressed="false" disabled>Skip</button></div>'
-                f'<p class="tri-state" data-offstate="{E(did)}" aria-live="polite"></p>') + '</article>')
+                f'<p class="tri-state" data-offstate="{E(did)}" aria-live="polite"></p>')
+                # His comment on any option, saved as the note on its record (queue/off-<day>-<option>).
+                + f'<div class="tri-why off-note" data-off-note-for="{E(did)}"><input type="text" data-off-note="{E(did)}" maxlength="2000" '
+                  f'placeholder="Comment on this option" aria-label="Your comment on this option" disabled>'
+                  f'<button type="button" class="btn-s" data-act="save-off-note" data-for="{E(did)}" disabled>Save</button></div>'
+                + ('' if o.get('kind') == 'recorded' else f'<p class="tri-state" data-offstate="{E(did)}" aria-live="polite"></p>')
+                + '</article>')
         parts.append('</div>')
     parts.append('</section>')
     return ''.join(parts)
@@ -1734,6 +1830,7 @@ def ideas_panel(monday, ideas, hidden, queue=None, offdays=None):
                 + (f'<div class="id-flags">{flags}</div>' if flags else '') +
                 f'<p class="id-sowhat">{E(idea["so_what"])}</p>'
                 f'<p class="id-story">{E(idea["story"])}</p>'
+                + pitch_block(idea.get('pitch'))
                 + (f'<ol class="id-beats" aria-label="The story, beat by beat">{beats}</ol>' if beats else '')
                 + (f'<p class="id-why"><span class="id-why-k">Why it is here</span> {E(str(idea["why_here"]).strip())}</p>' if idea.get('why_here') else '') +
                 f'<dl class="id-facts"><dt>Why now</dt><dd>{E(idea["why_now"])}</dd>'
@@ -2641,7 +2738,40 @@ def picks_from_options(data, monday, warnings):
             warnings.append(f'{weekday}: {len(found)} pieces are scheduled for {when}; the board takes the first')
         if found:
             picks[key] = {'id': found[0]['id'], 'title': str(found[0].get('idea') or '').strip(), 'state': found[0].get('state')}
+            # The title of record (content_ideas.title, scheduled[].title): his pick, over the original pitch.
+            if str(found[0].get('title') or '').strip():
+                picks[key]['title_of_record'] = ' '.join(str(found[0]['title']).split())
     return picks
+
+
+TITLE_VERDICTS = Path(__file__).resolve().parents[2] / 'config' / 'title-verdicts.json'
+RECORD_SURFACES = ('article', 'substack')  # the surfaces whose picked line is the piece's title, best first
+FORMAT_LABEL = re.compile(r'^(?:VIDEO|PODCAST|AUDIO)\s*:\s*', re.I)
+
+
+def picked_titles(path=None):
+    """{piece uuid: its title of record} from config/title-verdicts.json (Krish's title picks, newest first): the
+    latest line he picked for the article, else for the Substack post with its format label ('VIDEO:') taken off.
+    Krish, 2026-10-31: the board's titles must match the article's."""
+    import os
+    path = Path(path or os.environ.get('MYMU_TITLE_VERDICTS') or TITLE_VERDICTS)
+    try:
+        data = json.loads(path.read_text(encoding='utf-8'))
+    except (OSError, ValueError):
+        return {}
+    out = {}
+    for surface in reversed(RECORD_SURFACES):
+        for v in reversed([v for v in data.get('verdicts') or [] if isinstance(v, dict)]):
+            piece, title = str(v.get('piece') or '').lower(), ' '.join(str(v.get('title') or '').split())
+            if v.get('verdict') == 'picked' and v.get('surface') == surface and UUID.match(piece) and title:
+                out[piece] = FORMAT_LABEL.sub('', title).strip()
+    return out
+
+
+def title_of_record(piece, pick, verdicts):
+    """The one title a day shows: content_ideas.title (scheduled[].title), else his picked line in title-verdicts.json,
+    else None (the publish page's title, then the pitch, as before)."""
+    return (pick or {}).get('title_of_record') or (verdicts or {}).get(str(piece or '').lower()) or None
 
 
 CONF_RE = re.compile(r'const CONF = (\{.*?\});\n', re.S)
@@ -3253,6 +3383,7 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
             f'aria-selected="{"true" if opened == "ideas" else "false"}" tabindex="{"0" if opened == "ideas" else "-1"}" data-day="ideas">'
             f'<span class="t-day">Ideas</span><span class="t-dot"> · </span>'
             f'<span class="t-prog" data-tabprog="ideas">pick {n}</span><span class="t-ch">Sunday</span></button>')
+    verdicts = picked_titles()  # his title picks, the title of record where the engine has none yet
     for key, name, weekday, offset, slug, series_label in DAYS:
         when = monday + timedelta(days=offset)
         page = parsed.get(key)
@@ -3263,7 +3394,7 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
         for other, label in ((pick.get('id'), 'the week\'s pick'), ((page or {}).get('piece'), 'its publish page')):
             if piece and other and other != piece:
                 warnings.append(f'{weekday}: {label} says {other}, the board uses {piece}')
-        title = pending.get(key) or (page or {}).get('title') or pick.get('title') or ''
+        title = pending.get(key) or title_of_record(piece, pick, verdicts) or (page or {}).get('title') or pick.get('title') or ''
         if key in kept_draft:
             if page or key in draft or (review or {}).get(key) or (materials or {}).get(key):
                 raise BoardError(f'--keep-draft {key}: give the retained tab alone, or rebuild it from new inputs')
@@ -3417,7 +3548,9 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
         'BASE_CSS': css, 'WEEK_CSS': template('week.css').strip() + (board_today.scoped_css() if TODAY_ON else ''), 'KICKER': E(week_span(monday)),
         'TABLIST_LABEL': E(f'Publishing days, week of {monday.day} {monday.strftime("%B")}'),
         'TABS': ''.join(tabs), 'ASIDE': aside, 'PANELS': ''.join(panels), 'SCRIPT': script(conf),
-        'WK_CLASS': ' fixed' if FIXED else '', 'MAIN_ATTRS': (f' data-layout="{VERSION}"' + (' data-today="1"' if TODAY_ON else '')) if FIXED else '',
+        'WK_CLASS': (' fixed' + (' no-ticks' if HIDE_CHECKLISTS else '')) if FIXED else '',
+        'MAIN_ATTRS': (f' data-layout="{VERSION}"' + (' data-today="1"' if TODAY_ON else '')
+                       + (' data-checklists="hidden"' if HIDE_CHECKLISTS else '')) if FIXED else '',
     }, 'page.html')
     problems = check_page(page)
     if problems:
@@ -3928,6 +4061,11 @@ def build(args, get=None):
         warnings.extend(plan_warnings)
         given = dict((offdays and {k: [previous_option(o) for o in v] for k, v in offdays.items()}) or {})
         offdays = read_offdays({**mixed, **given}, '--offdays-plan with ideas.json offdays')
+    if offdays:
+        # One topic, one off day (Krish, 2026-10-31): a build with two off-day options on different days sharing a cover fails.
+        same = offday_duplicates(offdays)
+        if same:
+            raise BoardError('the off days repeat a topic:\n  ' + '\n  '.join(same))
     queue = None
     if getattr(args, 'queue', None):
         saved = read_json(args.queue, '--queue')
@@ -4564,6 +4702,85 @@ def _growth_offday_checks(check, week, ideas):
         check('growth offdays: a recorded piece on a series day is refused', 'Tuesday, Thursday, Saturday or Sunday piece' in str(error))
 
 
+def _oct31_checks(check, week, ideas, opt):
+    """Krish, 2026-10-31: one title of record, no checklists in his view, every off-day option dated and open to his
+    comment, carousels card by card, ideas as full pitches, and one topic per off day."""
+    use_layout(week)
+    when = (week + timedelta(days=1)).isoformat()
+    options = {'week_start': week.isoformat(), 'series': [
+        {'slug': 'follow_the_money', 'scheduled': [{'id': MON_ID, 'idea': 'The original pitch', 'title': 'The title he picked',
+                                                    'state': 'drafting', 'scheduled_for': week.isoformat()}]}]}
+    picks = picks_from_options(options, week, [])
+    check('title of record: scheduled[].title rides on the pick beside the pitch',
+          picks['mon']['title_of_record'] == 'The title he picked' and picks['mon']['title'] == 'The original pitch')
+    with tempfile.TemporaryDirectory() as tmp:
+        path = Path(tmp) / 'verdicts.json'
+        path.write_text(json.dumps({'verdicts': [
+            {'title': 'VIDEO: His newer line', 'surface': 'substack', 'verdict': 'picked', 'piece': WED_ID},
+            {'title': 'His older line', 'surface': 'substack', 'verdict': 'picked', 'piece': WED_ID},
+            {'title': 'A rejected line', 'surface': 'article', 'verdict': 'rejected', 'piece': MON_ID},
+            {'title': 'His article line', 'surface': 'article', 'verdict': 'picked', 'piece': FRI_ID}]}), encoding='utf-8')
+        verdicts = picked_titles(path)
+    check('title of record: his picks in title-verdicts.json, newest first, the article over Substack, the format label off',
+          verdicts == {WED_ID: 'His newer line', FRI_ID: 'His article line'})
+    check('title of record: content_ideas.title first, then his picked line, then nothing',
+          title_of_record(MON_ID, picks['mon'], {MON_ID: 'x'}) == 'The title he picked'
+          and title_of_record(WED_ID, {'title': 'pitch'}, verdicts) == 'His newer line' and title_of_record(MON_ID, {}, {}) is None)
+    page, _, _ = board(week, picks=picks)
+    check('title of record: the day shows the title he picked, not the pitch',
+          'The title he picked' in page and 'The original pitch' not in div_at(page, page.find('id="panel-monday"')))
+    check('checklists: hidden from his view in the fixed layout, the ticks still in the page',
+          'data-checklists="hidden"' in page and 'class="wk fixed no-ticks"' in page and verify(page) == []
+          and 'main[data-checklists="hidden"] .run-tick' in page)
+    # Off days: the date on each card, his comment box on every option, and a carousel card by card.
+    cards = [{'words': f'Card words {n}.', 'picture': f'A chart of {n}.'} for n in (1, 2, 3)]
+    offdays = read_offdays({'tue': [opt(1, format='carousel', cards=cards), opt(2)], 'sat': [opt(1), opt(2), opt(3)]})
+    page, _, _ = board(week, ideas=ideas, offdays=offdays)
+    tue = date.fromisoformat(when)
+    check('off days: every card carries its full date', page.count(f'data-off-date="{when}">{short_date(tue)}</span>') == 2
+          and page.count('class="id-flag off-date"') == 5)
+    check('off days: every option takes his comment, saved through the board API',
+          page.count('class="btn-s" data-act="save-off-note"') == 5 and page.count('<input type="text" data-off-note="') == 5
+          and page.count('<p class="tri-state" data-offstate="') == 5
+          and 'save-off-note' in template('week.js') and 'note_only: true' in template('week.js'))
+    check('off days: a carousel is shown card by card, words and picture',
+          page.count('class="off-c"') == 3 and 'Card words 2.' in page and 'A chart of 3.' in page and verify(page) == [])
+    check('off days: a rebuild keeps the cards', read_offdays({k: [previous_option(o) for o in v] for k, v in offdays.items()}) == offdays)
+    for bad, want in (([{'words': 'One.', 'picture': 'Pic.'}], '2 to 12 cards'), ([{'words': 'x', 'picture': ''}] * 2, 'needs its words'),
+                      ([{'words': 'x', 'picture': 'y', 'alt': 'z'}] * 2, 'nothing else')):
+        try:
+            read_offdays({'tue': [opt(1, cards=bad), opt(2)]})
+            check(f'off days: cards refuse {want}', False)
+        except BoardError as error:
+            check(f'off days: cards refuse {want}', want in str(error))
+    # One topic, one off day: a cover shared across off days fails; the same day, or a hero idea, may share it.
+    check('duplicates: two off days with the same topic are named',
+          offday_duplicates({'tue': [{'id': 'a', 'covers': ['t1']}], 'thu': [{'id': 'b', 'covers': ['t1']}]})
+          == ['Thursday option b and Tuesday option a cover the same topic (t1); give each topic one day, or drop one'])
+    check('duplicates: one day, or distinct topics, pass', offday_duplicates(
+        {'tue': [{'id': 'a', 'covers': ['t1']}, {'id': 'b', 'covers': ['t1']}], 'thu': [{'id': 'c', 'covers': ['t2']}]}) == [])
+    # An idea as a full story pitch.
+    pitch = {'headline': 'The headline', 'hook': 'What the first ten seconds say.', 'examples': ['Example one.', 'Example two.'],
+             'chain': [f'Link {n}.' for n in range(1, 6)], 'take': 'Where we land.'}
+    one = lambda k, n, **kw: dict({'so_what': f'A leader finds out {k}{n}.', 'story': f'Story {k}{n}.', 'why_now': 'This week.',
+                                   'fact': 'A fact.', 'source': {'label': 'Src', 'url': f'https://example.com/{k}{n}'},
+                                   'source_kind': 'engine'}, **kw)
+    pitched = read_ideas({'week_start': week.isoformat(), 'days': {k: [one(k, n, pitch=pitch if (k, n) == ('mon', 1) else None)
+                                                                       for n in range(1, 5)] for k, *_ in DAYS}}, week)
+    page, _, _ = board(week, ideas=pitched)
+    block = page[page.find('id="idea-mon-1"'):page.find('</article>', page.find('id="idea-mon-1"'))]
+    check('pitch: shown as a labelled block, the chain numbered',
+          all(f'<dt>{E(label)}</dt>' in block for _, label in PITCH_FIELDS) and block.count('<li>Link') == 5
+          and '<ol class="pitch-chain">' in block and page.count('class="pitch"') == 1 and verify(page) == [])
+    for bad, want in (({**pitch, 'chain': ['Only one.']}, 'chain is a list of 5 to 8'), ({**pitch, 'examples': ['a'] * 4}, 'examples is a list of 2 to 3'),
+                      ({k: v for k, v in pitch.items() if k != 'take'}, 'has no take'), ({**pitch, 'extra': 'x'}, 'not one of its parts')):
+        try:
+            read_ideas({'week_start': week.isoformat(), 'days': {k: [one(k, n, pitch=bad) for n in range(1, 5)] for k, *_ in DAYS}}, week)
+            check(f'pitch: refuses one where {want}', False)
+        except BoardError as error:
+            check(f'pitch: refuses one where {want}', want in str(error))
+
+
 def _presses_checks(check, week, mon):
     """Krish's presses in the fixed layout (Krish, 2026-10-28): the five on an idea, the off days, Approve scripts,
     Titles, Approve for publish and Reject asset. Each is drawn from data, disabled until the store answers, and saved
@@ -4636,6 +4853,8 @@ def _presses_checks(check, week, mon):
           {'must_cover': [{'id': 'his-1', 'what': 'Your idea "x"'}]}) == [])
     check('presses: the off days ride in the page, so a rebuild keeps them', previous_conf(page, 'offdays') == offdays
           and manifest['offdays'] == offdays and 'decisions' in manifest['db']['picks'] and 'presses' in manifest['db']['queue'])
+    _oct31_checks(check, week, ideas, opt)
+    use_layout(week)
     # Approve scripts under a day's drafts, with the names its scripts take in Teleprompter.
     review = {'wed': [('article', 'Article draft', 'Words.'), ('five-minute-script', 'Five-minute script', 'Said long.'),
                       ('90-second-script', '90-second script', 'Said short.')]}
