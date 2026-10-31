@@ -40,32 +40,40 @@ LONG = [
     ('l05', 5, 'drop', {'credit': R}, {'fewer': 'fewer', 'drop': '27', 'land': '9%'}),
     ('l06', 6, 'bars', {'credit': R, 'label': 'AUGUST · HOURS WORKED'}, {'august': 'august', 'staff': 'agents', 'hours': 'hours'}),
     ('l07', 7, 'doc', {'img': SRC + 'report-managers.jpg', 'credit': R, 'text': '1 IN 3 ML MANAGERS'}, {'label': 'managers'}),
+    ('l08', 8, 'drift', {'num': '9%'}, {}),
     ('l09', 9, 'doc', {'img': SRC + 'stanford.jpg', 'credit': STAN, 'travel': 0.03}, {}),
     ('l10', 10, 'lines', {'text': 'SINCE 2023 · FIRMS USING AI', 'credit': STAN}, {'split': 'while'}),
     ('l11', 11, 'doc', {'img': SRC + 'stanford-slower.jpg', 'credit': STAN}, {}),
-    ('l12', 12, 'label', {'text': 'ATMS · SPREADSHEETS', 'words': ['ATMS', 'SPREADSHEETS']}, {'w0': 'before', 'w1': 'twice'}),
+    ('l12', 12, 'label', {'icons': True}, {'w0': 'before', 'w1': 'twice'}),
     ('l13', 13, 'branch', {'credit': IMF, 'text': '1988 TO 2004'}, {'close': '13'}),
     ('l14', 14, 'copies', {'credit': IMF}, {'more': 'more', 'pct': '43'}),
     ('l15', 15, 'doc', {'img': SRC + 'imf-cash.jpg', 'credit': IMF, 'zoom': 0.78}, {}),
     ('l16', 16, 'ledger', {'credit': NPR}, {'gone': 'gone', 'added': 'added'}),
+    ('l17', 17, 'ledger', {'credit': NPR, 'done': True}, {}),
     ('l18', 18, 'taller', {}, {'bigger': 'bigger'}),
     ('l20', 20, 'firststep', {}, {'tellers': 'tellers', 'accountant': 'accountant'}),
     ('l21', 21, 'gap', {'taller': True}, {'first': 'first'}),
     ('l22', 22, 'doc', {'img': SRC + 'report-object-level.jpg', 'credit': R}, {}),
+    ('l23', 23, 'drift', {'gap': True}, {}),
     ('l24', 24, 'doc', {'img': SRC + 'report-not-hired.jpg', 'credit': R}, {}),
     ('l25', 25, 'doc', {'img': SRC + 'report-judgment.jpg', 'credit': R}, {}),
+    ('l26', 26, 'drift', {'gap': True}, {}),
     ('l27', 27, 'judgement', {}, {'judgement': 'judgment.'}),
+    ('l28', 28, 'drift', {'gap': True}, {}),
     ('l29', 29, 'stat', {'credit': R}, {'n75': '75'}),
     ('l30', 30, 'line2030', {}, {'juniors': 'juniors'}),
     ('l31', 31, 'sheet', {'mode': 'open'}, {}),
     ('l32', 32, 'sheet', {'mode': 'weeks'}, {'weeks': 'weeks'}),
     ('l33', 33, 'sheet', {'mode': 'macro'}, {'first': 'first', 'second': 'second', 'third': 'does the second'}),
+    ('l34', 34, 'sheet', {'mode': 'macro'}, {}),
     ('l35', 35, 'calendar', {}, {'shrink': 'shrink'}),
-    ('l37', 37, 'questions', {'cx': 0.26, 'text': 'NEXT HIRING MEETING', 'cards': ['Who on this team will be a senior in 2030?', 'What are they learning on today?']},
+    ('l36', 36, 'sheet', {'mode': 'macro'}, {'first': 'real', 'second': 'real', 'third': 'real'}),
+    ('l37', 37, 'questions', {'cx': 0.26, 'cards': ['Who on this team will be a senior in 2030?', 'What are they learning on today?']},
      {'q0': 'senior', 'q1': 'learning'}),
-    ('l40', 40, 'action', {'kicker': '1 · EACH TEAM, 4 YEARS OUT', 'text': 'Who will be senior, and what they learn on now'}, {}),
-    ('l41', 41, 'action', {'kicker': '2 · YOUR LAST 3 HIRES', 'text': 'If AI left a junior role empty, where does that learning happen now?'}, {}),
-    ('l42', 42, 'action', {'kicker': '3 · ONE DULL WEEKLY JOB', 'text': 'By hand first, then the fix with AI'}, {}),
+    ('l38', 38, 'drift', {'gap': True}, {}),
+    ('l40', 40, 'action', {'nums': ['1']}, {}),
+    ('l41', 41, 'action', {'nums': ['2']}, {}),
+    ('l42', 42, 'action', {'nums': ['3']}, {}),
 ]
 SHORT = [
     ('s01', 1, 'label', {'text': 'ANTHROPIC · ITS OWN STAFF', 'img': SRC + 'report-cover.jpg'}, {'so': 'so where'}),
@@ -75,15 +83,17 @@ SHORT = [
     ('s06', 6, 'gap', {'cx': 0.5, 'y2030': True}, {'first': 'first'}),
     ('s07', 7, 'doc', {'img': SRC + 'report-not-hired.jpg', 'credit': R}, {'junior': 'the junior job'}),
     ('s08', 8, 'sheet', {'mode': 'macro'}, {'first': 'job', 'second': 'spot', 'third': 'better'}),
-    ('s09', 9, 'questions', {'text': 'BEFORE YOU CUT A JUNIOR ROLE', 'cards': ['Who will your seniors be?', 'What are they learning on today?'], 'cx': 0.5},
+    ('s09', 9, 'questions', {'cards': ['Who will your seniors be?', 'What are they learning on today?'], 'cx': 0.5},
      {'q0': 'seniors', 'q1': 'learning'}),
-    ('s11', 11, 'action', {'kicker': '1 · NAME THEM', 'text': "Each team's future seniors, and what they learn on", 'kicker2': '2 · ONE DULL JOB', 'text2': 'By hand first, then with AI'}, {'two': 'give'}),
+    ('s11', 11, 'action', {'nums': ['1', '2']}, {'two': 'give'}),
 ]
 # where the 90-second cut's panels turn the page (event names); every other beat is one page
 SHORT_PAGES = {'s01': ['so'], 's02': ['drop', 'fewer'], 's04': ['pct', 'switch'], 's07': ['junior'], 's11': ['two'], 's06': ['first'], 's08': ['second', 'third'], 's09': ['q0', 'q1']}
 # the 90-second cut's beat 5 ("But I think this time is different", 3.1 s on his face alone) would leave a 3.1 s gap
 # under make.py's 9:16 gate: s04's past scene holds through it, still settling (recorded in production_notes).
 SHORT_HOLD = {'s04': 5, 's11': 12}
+# the 16:9 cut: a short face beat is held under the picture before it, and the last card holds through his last line
+LONG_HOLD = {'l18': 19, 'l38': 39, 'l42': 43}
 
 
 def words_of(cut):
@@ -131,8 +141,9 @@ def plan(cut):
     out = []
     for cid, n, scene, params, evs in spec:
         s, e = window(bs[n - 1])
-        if cut == 'short' and cid in SHORT_HOLD:
-            e = window(bs[SHORT_HOLD[cid] - 1])[1]
+        hold = SHORT_HOLD if cut == 'short' else LONG_HOLD
+        if cid in hold:
+            e = window(bs[hold[cid] - 1])[1]
         heard = heard_between(ws, s, e)
         events = {k: event_time(ws, s, e, p) for k, p in evs.items()}
         missing = [k for k, v in events.items() if v is None]
@@ -210,6 +221,8 @@ def page_words(item):
 
 def cue(item, shape):
     c = {'id': item['id'], 'panel': f"../panels/{item['id']}-{shape}.mp4", 'start': item['start'], 'end': item['end']}
+    if item['id'] in ('l01', 's01'):
+        c['lead'] = 10.0          # from 0:00: no frame or bare face before the hook's picture
     if shape == '9x16' and item['id'] in SHORT_PAGES:
         on = page_words(item)
         files = [f"../panels/{item['id']}-p{i + 1}-{shape}.mp4" for i in range(len(on))]
@@ -234,6 +247,8 @@ def configure():
         cfg = json.loads(path.read_text(encoding='utf-8'))
         stable = WORK / 'takes' / f'{cut}-stable.mp4'
         cfg.update(common)
+        if cut == 'long':
+            cfg['frame16'] = 'frame-ink-16x9.png'
         cfg.update({'source': f"../takes/{cut}-stable.mp4" if stable.exists() else f"../takes/{cut}-cfr.mp4",
                     'cues': [cue(i, shape) for i in plan(cut)], **extra})
         path.write_text(json.dumps(cfg, indent=1, ensure_ascii=False) + '\n', encoding='utf-8')

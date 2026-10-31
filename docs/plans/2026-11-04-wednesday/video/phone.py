@@ -46,7 +46,7 @@ SHOTS = {
     # Long 3, short 2: its first message arriving.
     'first': ([('01:02', '01:40')], G['first-message'][1], 10.5, '', 0.30),
     # Long 5, short 3: the morning brief it wrote, body covered; the card settles.
-    'brief': ([('19:09', '19:40')], G['morning-brief'][1] + [(60, 640, 690, 1100)], 11.6, 'REFRESHES 6:30 EVERY MORNING', 0.45),
+    'brief': ([('19:09', '19:40')], G['morning-brief'][1] + [(60, 640, 690, 1100)], 11.6, 'REFRESHES 6:30 EVERY MORNING', 0.24),
     # Long 7, short 5: no setup quiz: the onboarding, then Google Drive connecting (never the account chooser).
     'setup': ([('00:22', '00:31'), ('00:44', '00:50')], [], 8.3, '', 0.32),
     # Long 13: the tasks it pulled.

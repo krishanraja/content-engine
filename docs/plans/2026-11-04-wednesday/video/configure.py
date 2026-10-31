@@ -32,6 +32,8 @@ SHORT = {1: 's01-open', 2: 'first', 3: 'brief', 4: 's04-stops', 5: 'setup', 6: '
          9: 's09-limits', 10: 'calendar', 11: 's11-tool', 12: 's12-doit', 13: 's13-steps'}
 # The 90-second cut's last picture holds over "The full deep dive..." to the end card (one close).
 SHORT_TAIL = {13: 3.4}
+# The opening panel starts 0.6 s in, so its first frame already shows the Claude mark landing, never an empty desk.
+OFFSET = {'s01-open': 0.6}
 PAGE_S = 2.6   # a continuous panel turns a page about this often in the 90-second cut (20 changes a minute)
 
 # The transcriber hears Duet as DeWitt or Dewitt, Claire Vo as Clairvaux and "draft" as "draw" (direction take_edits).
@@ -98,7 +100,7 @@ def pages_of(name, shape, inside, beat_s):
     picture plays on unbroken. Each page is the panel from that word on."""
     src = panel(name, shape)
     dur = float(subprocess.check_output(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', str(src)]))
-    cuts, last = [0.0], 0.0
+    cuts, last = [OFFSET.get(name, 0.0)], 0.0
     on = [None]
     for i, w in enumerate(inside[:-3]):
         t = w['s'] - beat_s
