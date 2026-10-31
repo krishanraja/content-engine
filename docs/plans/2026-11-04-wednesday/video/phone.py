@@ -54,11 +54,11 @@ SHOTS = {
     # Long 14: his reply: drop the first task, find ten more.
     'reply': ([('03:48', '04:00')], G['reply-to-dos'][1], 8.7, '', 0.40),
     # Long 15, short 7: the ten jobs it brought back, each verb kept.
-    'todo': ([('07:12', '09:18')], G['todo-list'][1], 16.0, '', 0.40),
+    'todo': ([('07:12', '09:18')], G['todo-list'][1] + [(410, 521, 572, 558), (410, 1055, 560, 1092)], 16.0, '', 0.40),
     # Long 16, short 8: the wait, 8 times faster ("Thinking it through").
     'think': ([('05:00', '06:30')], G['reply-to-dos'][1], 6.9, 'THE WAIT, SPED UP 8×', 0.25),
     # Long 17: Make, the Calendar scheduler tile he tapped.
-    'make': ([('11:48', '11:57')], G['make-artifacts'][1], 3.7, '', 0.55),
+    'make': ([('11:48', '11:51')], G['make-artifacts'][1], 3.7, '', 0.55),
     # Long 18, short 10: the dashboard it built from one ask, building, then done.
     'calendar': ([('12:00', '13:48'), ('14:28', '14:40')], G['calendar-scheduler'][1] + [(70, 440, 330, 500)], 10.1, '', 0.38),
 }
@@ -164,8 +164,28 @@ def frame9(view, t, T, text, focus):
     return canvas
 
 
-def covered(src, bars):
-    return mi.cover(src.copy(), bars)
+# Duet's own mark and its status pill ("Thinking it through", "Searching your email") sit over the covered chat: they are
+# the point of the wait, so they are put back on top of the bars, as the approved reply-to-dos still does. Both are opaque.
+MARK = (285, 64, 436, 202)
+PILL = (242, 196, 478, 247)
+KEEP_MARK = {'think', 'reply'}
+
+
+def covered(src, bars, name=None):
+    from PIL import ImageDraw as _D
+    im = mi.cover(src.copy(), bars)
+    if name in KEEP_MARK:
+        m = Image.new('L', src.size, 0)
+        d = _D.Draw(m)
+        d.ellipse(MARK, fill=255)
+        # the pill only while it is on screen: without it, that patch is his chat (a frame whose pill's top band is
+        # not white throughout keeps its bars)
+        import numpy as _np
+        band = _np.asarray(src.crop((PILL[0] + 20, PILL[1] + 4, PILL[2] - 20, PILL[1] + 10))).astype(int).mean(axis=2)
+        if (band > 246).mean() >= 0.97:
+            d.rounded_rectangle(PILL, radius=25, fill=255)
+        im.paste(src, (0, 0), m)
+    return im
 
 
 def render(job):
@@ -182,7 +202,7 @@ def render(job):
     last = None
     for i, src in enumerate(frames):
         if src is not last:   # a repeated frame (the tail) is drawn once
-            view = phone_view(covered(src, bars))
+            view = phone_view(covered(src, bars, name))
             last = src
         t = i / FPS
         img = frame16(view, t, seconds, text) if shape == '16x9' else frame9(view, t, seconds, text if name != 'brief' else 'GMAIL · CALENDAR · SLACK · EVERY FEW HOURS', focus)
@@ -209,7 +229,8 @@ if __name__ == '__main__':
         jobs.append((name, '16x9', SHOTS[name][2] + 1.0))
         if name not in LONG_ONLY:
             jobs.append((name, '9x16', SHORT_SECONDS[name] + 1.0))
-    with ProcessPoolExecutor(4) as pool:
+    import os
+    with ProcessPoolExecutor(int(os.environ.get('JOBS', 4))) as pool:
         for r in pool.map(render, jobs):
             print(r)
     if '--sheets' in sys.argv:

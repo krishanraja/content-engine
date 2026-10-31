@@ -131,7 +131,7 @@ const SCENES = {
       h += el(`<div class="card" style="width:520px;padding:22px 26px"><div class="src" style="color:#0C1512">SETTINGS · USAGE</div>
         <div style="margin-top:14px;height:30px;border-radius:15px;background:#d9d1bf;overflow:hidden"><div style="height:100%;width:${15+70*f}%;background:#B7A6FF"></div></div></div>`, 420, 700 + float(t), `opacity:${clamp((t-P.bar+0.4)/0.4)}`);
     }
-    h += label(t, P.labAt||0.4, P.label||'', 60, 880);
+    h += label(t, P.labAt||0.4, P.label||'', 60, 700);
     world.innerHTML = h; },
   // Long 21, short 11: you ask once and it builds you a tool you use again and again.
   tool(t,T){ cam(t,T,0.06); let h=''; const fold = P.fold, uses = P.uses;
