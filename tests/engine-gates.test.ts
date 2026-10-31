@@ -21,6 +21,7 @@ describe('the engine gates', () => {
     ['the engine stamp', ['scripts/post-pack/engine_stamp.py']],
     ['the week board, its publish check and its thumbnails', ['scripts/post-pack/week_board.py', '--self-test']],
     ['the publish page', ['scripts/post-pack/publish_manager.py', '--self-test']],
+    ['the article keeps its pictures: pack figures fed in, zero or stray pictures refused (Krish, 2026-10-31)', ['tests/publish_figures_test.py']],
     ['the making record, drive-link and thumbnails', ['scripts/post-pack/making.py', '--self-test']],
     ['one spine per piece', ['scripts/post-pack/spine_check.py', '--self-test']],
     ['the style references: cuts, zooms and the ledger', ['scripts/quick-edit/references.py', '--self-test']],
