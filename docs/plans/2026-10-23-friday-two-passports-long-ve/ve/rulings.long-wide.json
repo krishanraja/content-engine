@@ -1,0 +1,39 @@
+{
+  "note": "Krish's rulings on this cut, in his words. words_gate reads this file as the cut's EDL; velib/receipt.py reads all of it.",
+  "removals": [
+    {
+      "take_index": [
+        809,
+        809
+      ],
+      "krish": "Krish, 2026-10-31: \"agree with your recommendations\", answering the request for a yes to cutting the doubled \"one\" in \"And one to one from another country\" at 5:09, as the locked script notes say"
+    }
+  ],
+  "heard_as": [
+    {
+      "said": "want",
+      "heard": "I'm gonna",
+      "krish": "Krish, 2026-10-31: \"agree with your recommendations\", answering the request to clear Qwen, ChatGPT, Kimi, four, Grok, DeepSeek's and want as mishearings of words he said"
+    },
+    {
+      "said": "Kimi",
+      "heard": "Kimmy",
+      "krish": "Krish, 2026-10-31: \"agree with your recommendations\", answering the request to clear Qwen, ChatGPT, Kimi, four, Grok, DeepSeek's and want as mishearings of words he said"
+    },
+    {
+      "said": "four",
+      "heard": "for",
+      "krish": "Krish, 2026-10-31: \"agree with your recommendations\", answering the request to clear Qwen, ChatGPT, Kimi, four, Grok, DeepSeek's and want as mishearings of words he said"
+    },
+    {
+      "said": "Grok",
+      "heard": "rock",
+      "krish": "Krish, 2026-10-31: \"agree with your recommendations\", answering the request to clear Qwen, ChatGPT, Kimi, four, Grok, DeepSeek's and want as mishearings of words he said"
+    },
+    {
+      "said": "DeepSeek's",
+      "heard": "deep seeks",
+      "krish": "Krish, 2026-10-31: \"agree with your recommendations\", answering the request to clear Qwen, ChatGPT, Kimi, four, Grok, DeepSeek's and want as mishearings of words he said"
+    }
+  ]
+}
