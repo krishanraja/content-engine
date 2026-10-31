@@ -71,9 +71,9 @@ LONG = [
     ('l37', 37, 'questions', {'cx': 0.26, 'cards': ['Who on this team will be a senior in 2030?', 'What are they learning on today?']},
      {'q0': 'senior', 'q1': 'learning'}),
     ('l38', 38, 'drift', {'gap': True}, {}),
-    ('l40', 40, 'action', {'nums': ['1']}, {}),
-    ('l41', 41, 'action', {'nums': ['2']}, {}),
-    ('l42', 42, 'action', {'nums': ['3']}, {}),
+    ('l40', 40, 'action', {'nums': ['1'], 'onLadder': True}, {}),
+    ('l41', 41, 'action', {'nums': ['1', '2'], 'onLadder': True}, {}),
+    ('l42', 42, 'action', {'nums': ['1', '2', '3'], 'onLadder': True, 'close': True}, {'out': 'the full deep'}),
 ]
 SHORT = [
     ('s01', 1, 'label', {'text': 'ANTHROPIC · ITS OWN STAFF', 'img': SRC + 'report-cover.jpg'}, {'so': 'so where'}),

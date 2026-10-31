@@ -25,7 +25,7 @@ svg{position:absolute;inset:0;overflow:visible}
 .card{position:absolute;background:#7EF0C0;color:#0C1512;border-radius:16px;box-shadow:0 24px 50px rgba(0,0,0,.55);padding:34px 40px;font:900 46px/1.08 Archivo}
 .card small{display:block;font:500 22px Plex;letter-spacing:2px;margin-bottom:14px;opacity:.8}
 </style>
-<div id="root"><div id="glow"></div><div id="cam"><svg id="svg"></svg><div id="html"></div></div><div id="grain"></div><div class="credit" id="credit"></div></div>
+<div id="root"><div id="glow"></div><div id="cam"><svg id="svg"></svg><div id="html"></div></div><div id="grain"></div><div id="band" style="position:absolute;left:0;right:0;bottom:0;height:9%;background:#0C1512;z-index:39;display:none"></div><div class="credit" id="credit"></div></div>
 <script>
 const ROOT=document.getElementById('root'), CAM=document.getElementById('cam'), SVG=document.getElementById('svg'), HTML=document.getElementById('html');
 let W=1314,H=1080,S='',P={},E={},TALL=false;
@@ -75,12 +75,12 @@ function ladder(t,o){ // o: build (s), juniorStrength 0..1, juniorGone 0..1, lab
 // ---------- scenes ----------
 const SCENES={
  // a label beat on his face: the report's cover tilts in, the words type on
- label(t){camera(t,{s:0.10*at(t,0,6)});const a=pop(t,0.0,0.7);
+ label(t){camera(t,{s:0.06*at(t,0,6)});const a=pop(t,0.0,0.7);
    if(P.icons){let h='';const b=pop(t,ev('w0',0.4),0.5),c=pop(t,ev('w1',1.5),0.5);const u=Math.min(W,H)*0.05;
      for(let i=0;i<6;i++){const x=W*0.12+(i%3)*u*2.3,y=H*0.32+((i/3)|0)*u*2.4;h+=`<g transform="translate(${x} ${y+(1-b)*60})" opacity="${b}"><rect width="${u*1.8}" height="${u*1.9}" rx="8" fill="none" stroke="${C.cream}" stroke-width="5"/><path d="M${u*0.3} ${u*0.75} L${u*0.9} ${u*0.25} L${u*1.5} ${u*0.75}" stroke="${C.cream}" stroke-width="5" fill="none"/><rect x="${u*0.5}" y="${u*1.0}" width="${u*0.8}" height="${u*0.55}" fill="${C.butter}"/></g>`}
      for(let r=0;r<5;r++)for(let k=0;k<4;k++){const x=W*0.58+k*u*1.7,y=H*0.32+r*u*0.95;h+=`<rect x="${x}" y="${y+(1-c)*60}" width="${u*1.5}" height="${u*0.7}" rx="3" fill="${C.cream}" opacity="${c*(0.35+((r+k)%3)*0.2)}"/>`}
      SVG.innerHTML=h;HTML.innerHTML='';return}
-   HTML.innerHTML=`<div class="doc" style="width:${W*(TALL?0.46:0.42)}px;left:${W*(TALL?0.27:0.29)}px;top:${H*0.12}px;transform:perspective(1200px) translateY(${(1-a)*H*0.5}px) rotateY(${Math.sin(t*0.5)*12}deg) rotate(${-6+4*a+Math.sin(t*0.8)*1.2}deg)"><img src="${P.img}"></div>`;
+   HTML.innerHTML=`<div class="doc" style="width:${W*(TALL?0.40:0.42)}px;left:${W*(TALL?0.30:0.29)}px;top:${H*(TALL?0.10:0.12)}px;transform:perspective(1200px) scale(${0.86+0.14*a}) rotateY(${Math.sin(t*0.5)*12}deg) rotate(${-6+4*a+Math.sin(t*0.8)*1.2}deg)"><img src="${P.img}"></div>`;
    SVG.innerHTML='';},
  // a real page: it lifts onto the desk, the camera travels to the proving line and keeps pushing; a ring of light breathes on the line
  doc(t){const a=pop(t,0,0.6);const travel=at(t,0.2,Math.max(1.5,(P.dur||3)*0.8));
@@ -106,7 +106,8 @@ const SCENES={
  // agent hours grow to six times staff hours
  bars(t){camera(t);const unit=H*0.085, base=H*0.84, bw=W*0.12, x0=W*(TALL?0.28:0.34);const a=at(t,0.1,0.4);
    const staff=unit*at(t,0.3,0.6), agents=unit*6*at(t,ev('hours',2.0),1.3);
-   SVG.innerHTML=`<rect x="${x0}" y="${base-staff}" width="${bw}" height="${staff}" fill="${C.cream}" opacity="${a}"/><rect x="${x0+bw*1.5}" y="${base-agents}" width="${bw}" height="${agents}" fill="${C.mint}" opacity="${a}"/>`+
+   let grid='';for(let k=1;k<=6;k++){grid+=`<line x1="${x0-W*0.04}" y1="${base-unit*k}" x2="${x0+bw*2.6}" y2="${base-unit*k}" stroke="${C.muted}" stroke-width="2" stroke-dasharray="6 10" opacity="${0.6*at(t,0.05+k*0.05,0.3)}"/><text x="${x0-W*0.06}" y="${base-unit*k+H*0.012}" text-anchor="end" font-family="Plex" font-size="${H*0.026}" fill="${C.soft}" opacity="${at(t,0.05+k*0.05,0.3)}">${k}×</text>`}
+   SVG.innerHTML=grid+`<line x1="${x0-W*0.04}" y1="${base}" x2="${x0+bw*2.6}" y2="${base}" stroke="${C.cream}" stroke-width="3"/>`+`<rect x="${x0}" y="${base-staff}" width="${bw}" height="${staff}" fill="${C.cream}" opacity="${a}"/><rect x="${x0+bw*1.5}" y="${base-agents}" width="${bw}" height="${agents}" fill="${C.mint}" opacity="${a}"/>`+
      `<text x="${x0+bw/2}" y="${base+H*0.045}" text-anchor="middle" font-family="Plex" font-size="${H*0.024}" fill="${C.soft}" opacity="${a}">STAFF</text><text x="${x0+bw*2}" y="${base+H*0.045}" text-anchor="middle" font-family="Plex" font-size="${H*0.024}" fill="${C.soft}" opacity="${a}">AI AGENTS</text>`;
    const r=pop(t,ev('hours',2.0)+1.0,0.45);
    HTML.innerHTML=`<div class="big" style="left:${x0+bw*2.8}px;top:${H*0.22}px;font-size:${H*0.13}px;opacity:${r};transform:scale(${0.8+0.2*r})">6 TO 1</div>`;},
@@ -131,10 +132,10 @@ const SCENES={
  // 400,000 clerk marks fall away, 600,000 accountant marks stack above
  ledger(t){camera(t);let h='';const unit=H*0.06,bw=W*0.06,x0=W*0.14;
    const fall=P.done?1:at(t,ev('gone',1.5),1.2), rise=P.done?1:at(t,ev('added',3.5),1.4);
-   for(let i=0;i<4;i++){h+=`<rect x="${x0+i*bw*1.2}" y="${H*0.72-unit*2+fall*H*0.4}" width="${bw}" height="${unit*2}" fill="${C.muted}" opacity="${1-fall}"/>`}
+   for(let i=0;i<4;i++){const a=pop(t,0.1+i*0.08,0.4);h+=`<rect x="${x0+i*bw*1.2}" y="${H*0.72-unit*4*a+fall*H*0.4}" width="${bw}" height="${unit*4*a}" fill="${C.cream}" opacity="${(1-fall)*0.85}"/>`}
    for(let i=0;i<6;i++){const a=P.done?1:at(t,ev('added',3.5)+i*0.12,0.4);h+=`<rect x="${W*0.55+i*bw*1.2}" y="${H*0.72-unit*3*a}" width="${bw}" height="${unit*3*a}" fill="${C.cream}"/>`}
    SVG.innerHTML=h+`<line x1="${W*0.08}" y1="${H*0.72}" x2="${W*0.92}" y2="${H*0.72}" stroke="${C.muted}" stroke-width="2"/>`;
-   HTML.innerHTML=`<div class="big" style="left:${x0}px;top:${H*0.76}px;font-size:${H*0.09}px;opacity:${P.done?1:at(t,ev('gone',1.5))}">−400,000</div><div class="label" style="left:${x0}px;top:${H*0.88}px;font-size:${H*0.022}px;opacity:${at(t,ev('gone',1.5))}">BOOKKEEPING CLERKS</div>`+
+   HTML.innerHTML=`<div class="big" style="left:${x0}px;top:${H*0.76}px;font-size:${H*0.09}px;opacity:${P.done?1:at(t,ev('gone',1.5))}">−400,000</div><div class="label" style="left:${x0}px;top:${H*0.88}px;font-size:${H*0.022}px;opacity:${at(t,0.2)}">BOOKKEEPING CLERKS</div>`+
      `<div class="big" style="left:${W*0.55}px;top:${H*0.76}px;font-size:${H*0.09}px;opacity:${rise}">+600,000</div><div class="label" style="left:${W*0.55}px;top:${H*0.88}px;font-size:${H*0.022}px;opacity:${rise}">ACCOUNTANTS</div>`;},
  // both past scenes fold back into the ladder, taller than before
  taller(t){camera(t);const L=ladder(t,{extraTop:at(t,ev('bigger',2.5),1.2)});const g=L.g;SVG.innerHTML=L.svg;const a=pop(t,0.2,0.5),b=pop(t,0.8,0.5);
@@ -168,9 +169,13 @@ const SCENES={
    const wk=Math.min(3,1+Math.floor(at(t,ev('weeks',1.0),Math.max(1,(P.dur||4)*0.6))*2.99));
    HTML.innerHTML='';},
  // three weeks fold into an afternoon
- calendar(t){camera(t);let h='';const k=at(t,ev('shrink',1.2),1.2);const cw=W*0.11,ch=H*0.12,x0=W*0.12,y0=H*0.2;
-   for(let i=0;i<15;i++){const c=i%5,r=(i/5)|0;const x=x0+c*cw*1.25*(1-k)+(x0+cw*2.5)*k*0+ (W*0.4-x0-c*cw*1.25)*k;const y=y0+r*ch*1.3*(1-k)+(H*0.36-y0)*k;
-     h+=`<rect x="${x}" y="${y}" width="${cw}" height="${ch}" rx="8" fill="${i===0?C.mint:C.cream}" opacity="${i===0?1:1-k}"/>`}
+ calendar(t){camera(t);let h='';const k=at(t,ev('shrink',1.2),1.0);const cols=7,rows=3,cw=W*(TALL?0.105:0.095),ch=H*0.15,gx=cw*0.22,gy=ch*0.25;
+   const x0=(W-(cols*cw+(cols-1)*gx))/2,y0=(H-(rows*ch+(rows-1)*gy))/2;const tx=W/2-cw*1.9,ty=H/2-ch*1.6;
+   for(let i=0;i<cols*rows;i++){const c=i%cols,r=(i/cols)|0;const a=pop(t,0.05+i*0.02,0.35);const x=x0+c*(cw+gx),y=y0+r*(ch+gy);
+     const fx=x+(tx-x)*k,fy=y+(ty-y)*k,w=cw+(cw*3.8-cw)*k*(i===0?1:0),hh=ch+(ch*3.2-ch)*k*(i===0?1:0);
+     h+=`<rect x="${fx}" y="${fy+(1-a)*40}" width="${i===0?w:cw*(1-k*0.9)}" height="${i===0?hh:ch*(1-k*0.9)}" rx="${H*0.012}" fill="${i===0?(k>0.5?C.mint:C.cream):C.cream}" stroke="${C.ink}" stroke-width="2" opacity="${a*(i===0?1:1-k)}"/>`;
+     if(i!==0||k<0.5)h+=`<rect x="${fx+cw*0.12}" y="${fy+ch*0.62+(1-a)*40}" width="${cw*0.76*(1-k)}" height="${ch*0.14}" rx="3" fill="${C.ink}" opacity="${0.25*a*(1-k)}"/>`}
+   if(k>0.5){const p=at(t,ev('shrink',1.2)+0.6,1.2);h+=`<rect x="${tx+cw*0.35}" y="${ty+ch*2.35}" width="${cw*3.1*p}" height="${ch*0.32}" rx="8" fill="${C.ink}" opacity=".75"/>`}
    SVG.innerHTML=h;HTML.innerHTML='';},
  // the two questions as mint cards settling on the gap
  questions(t){camera(t);const L=ladder(t,{extraTop:1,juniorGone:1,label2030:1});const g=L.g;SVG.innerHTML=L.svg;
@@ -180,14 +185,18 @@ const SCENES={
  past(t){const sw=ev('switch',2.4);if(t<sw){document.getElementById('credit').textContent='IMF · BESSEN 2015';return SCENES.copies(t)}
    document.getElementById('credit').textContent='NPR PLANET MONEY · 2015';const keep=E;E={gone:sw+0.2,added:sw+0.9};SCENES.ledger(t);E=keep;},
  // an action card on the desk
- action(t){camera(t);const nums=P.nums||['1'];const top=TALL?0.30:0.22;
+ action(t){camera(t);const nums=P.nums||['1'];
+   if(P.onLadder){const out=P.close?at(t,ev('out',99),0.5):0;const L=ladder(t,{extraTop:1,juniorGone:1,label2030:1});const g=L.g;SVG.innerHTML=L.svg;
+     const sz=H*0.17;HTML.innerHTML=nums.map((n,i)=>{const a=pop(t,0.05+i*0.25,0.5);const x=g.cx-sz/2+(i-(nums.length-1)/2)*sz*1.15,y=g.junior-sz/2;
+       return `<div class="card" style="left:${x}px;top:${y}px;width:${sz}px;height:${sz}px;padding:0;display:flex;align-items:center;justify-content:center;font:400 ${sz*0.72}px/1 Anton;transform:translateY(${(1-a)*-H*0.35-out*H*0.9}px) scale(${0.7+0.3*a}) rotate(${(i%2?3:-3)*(1-a)+Math.sin(t*0.7+i)*1.2}deg)">${esc(n)}</div>`}).join('');return}
    if(P.close&&t>=ev('out',99)){const k=at(t,ev('out',99),0.5);const L=ladder(t,{extraTop:1,juniorGone:1,label2030:1,num:''});SVG.innerHTML=`<g opacity="${k}">${L.svg}</g>`;
-     HTML.innerHTML=nums.map((n,i)=>`<div class="card" style="left:${W*(0.10+i*0.42)}px;top:${H*top-k*H*0.8}px;width:${W*0.36}px;height:${H*0.46}px;display:flex;align-items:center;justify-content:center;font:400 ${H*0.34}px/1 Anton;opacity:${1-k}">${esc(n)}</div>`).join('');return}
-   HTML.innerHTML=nums.map((n,i)=>{const a=pop(t,i?ev('two',3):0.05,0.55);const dim=(i<nums.length-1&&nums.length>1)?1-0.4*pop(t,ev('two',3),0.55):1;
-     return `<div class="card" style="left:${W*(0.10+i*(TALL?0.42:0.36))}px;top:${H*top}px;width:${W*(TALL?0.36:0.30)}px;height:${H*0.46}px;display:flex;align-items:center;justify-content:center;font:400 ${H*0.34}px/1 Anton;opacity:${a*dim};transform:translateY(${(1-a)*120+Math.sin(t*0.8+i)*8}px) rotate(${(i?3:-3)*(1-a)+Math.sin(t*0.6+i)*0.8}deg)">${esc(n)}</div>`}).join('');SVG.innerHTML='';},
+     HTML.innerHTML=nums.map((n,i)=>`<div class="card" style="left:${W*(0.10+i*0.42)}px;top:${H*0.30-k*H*0.8}px;width:${W*0.36}px;height:${H*0.46}px;display:flex;align-items:center;justify-content:center;font:400 ${H*0.34}px/1 Anton">${esc(n)}</div>`).join('');return}
+   const top=TALL?0.30:0.22;
+   HTML.innerHTML=nums.map((n,i)=>{const a=pop(t,i?ev('two',3):0.05,0.55);const shown=i?(t>=ev('two',3)?1:0):1;const dim=(i<nums.length-1&&nums.length>1)?1-0.25*pop(t,ev('two',3),0.55):1;
+     return `<div class="card" style="left:${W*(0.10+i*(TALL?0.42:0.36))}px;top:${H*top}px;width:${W*(TALL?0.36:0.30)}px;height:${H*0.46}px;display:flex;align-items:center;justify-content:center;font:400 ${H*0.34}px/1 Anton;opacity:${shown*dim};transform:translateY(${(1-a)*H*0.5+Math.sin(t*0.8+i)*8}px) scale(${0.75+0.25*a}) rotate(${(i?3:-3)*(1-a)+Math.sin(t*0.6+i)*0.8}deg)">${esc(n)}</div>`}).join('');SVG.innerHTML='';},
  // a face beat in the 16:9 cut: the ladder keeps turning slowly behind his words (never the still brand frame)
  drift(t){const o=Math.sin(t*0.38)*18;CAM.style.transform=`perspective(1600px) rotateY(${o}deg) translate(${Math.sin(t*0.3)*W*0.01}px,${Math.cos(t*0.25)*H*0.008}px) scale(${1.02+0.02*Math.sin(t*0.2)})`;
    const L=ladder(t,{extraTop:1,juniorGone:P.gap?1:0,juniorStrength:P.gap?1:0.1,label2030:P.gap?1:0,num:P.num});SVG.innerHTML=L.svg;HTML.innerHTML='';},
 };
-function draw(t){(SCENES[S]||SCENES.label)(t);const cr=document.getElementById('credit');if(S==='doc'&&!TALL){cr.style.top='4%';cr.style.bottom='auto'}else{cr.style.top='';cr.style.bottom=''}}
+function draw(t){(SCENES[S]||SCENES.label)(t);document.getElementById('band').style.display=(S==='doc'&&P.credit)?'block':'none';}
 </script>
