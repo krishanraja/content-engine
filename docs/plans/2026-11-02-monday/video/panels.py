@@ -85,13 +85,15 @@ SHORT = [
     ('s08', 8, 'sheet', {'mode': 'macro'}, {'first': 'job', 'second': 'spot', 'third': 'better'}),
     ('s09', 9, 'questions', {'cards': ['Who will your seniors be?', 'What are they learning on today?'], 'cx': 0.5},
      {'q0': 'seniors', 'q1': 'learning'}),
-    ('s11', 11, 'action', {'nums': ['1', '2']}, {'two': 'give'}),
+    ('s11', 11, 'action', {'nums': ['1', '2'], 'close': True}, {'two': 'give', 'out': 'the full deep'}),
 ]
 # where the 90-second cut's panels turn the page (event names); every other beat is one page
 SHORT_PAGES = {'s01': ['so'], 's02': ['drop', 'fewer'], 's04': ['pct', 'switch'], 's07': ['junior'], 's11': ['two'], 's06': ['first'], 's08': ['second', 'third'], 's09': ['q0', 'q1']}
 # the 90-second cut's beat 5 ("But I think this time is different", 3.1 s on his face alone) would leave a 3.1 s gap
 # under make.py's 9:16 gate: s04's past scene holds through it, still settling (recorded in production_notes).
 SHORT_HOLD = {'s04': 5, 's11': 12}
+# the 90-second cut's last picture runs to his last word, so the end card follows it with no fade back to his face
+SHORT_TO_END = {'s11'}
 # the 16:9 cut: a short face beat is held under the picture before it, and the last card holds through his last line
 LONG_HOLD = {'l18': 19, 'l38': 39, 'l42': 43}
 
@@ -157,6 +159,11 @@ def plan(cut):
         hold = SHORT_HOLD if cut == 'short' else LONG_HOLD
         if cid in hold:
             e = window(bs[hold[cid] - 1])[1]
+        if cut == 'short' and cid in SHORT_TO_END:
+            e = max(e, ws[-1]['e'])
+        if cut == 'long':
+            later = [window(bs[m - 1])[0] for _, m, *_ in spec if m > n]
+            e = max(e, later[0]) if later else max(e, ws[-1]['e'])
         heard = heard_between(ws, s, e)
         events = {k: event_time(ws, s, e, p) for k, p in evs.items()}
         missing = [k for k, v in events.items() if v is None]
@@ -250,7 +257,7 @@ def configure():
     # Caption words where the transcriber and he differ, each with its evidence: medium.en and large-v3-turbo both
     # hear "behind Claude" at 0:05 of the long take (31 Oct); the rest are the transcriber's spellings of his words.
     long_replace = [['buying Claude', 'behind Claude'], ['its own stuff', 'its own staff'], ['hiring lists', 'hiring less'],
-                    ['make your mind hop .ai', 'makeyourmindup.ai'], ['make your mind hop.ai', 'makeyourmindup.ai'],
+                    ['makeyourmindhop .ai', 'makeyourmindup.ai'], ['makeyourmindhop.ai', 'makeyourmindup.ai'], ['make your mind hop .ai', 'makeyourmindup.ai'], ['make your mind hop.ai', 'makeyourmindup.ai'], ['MakeYourMindUp .ai', 'makeyourmindup.ai'],
                     ['makeyourmindup .ai', 'makeyourmindup.ai'], ['twenty seven percent', '27%'], ['nine percent', '9%'], ['27 %', '27%'], ['43 %', '43%'], ['75 %', '75%']]
     short_replace = [['Junior hiring Anthropic,', 'Junior hiring at Anthropic,'], ['start to work', 'starter work'], ['new, higher -handed, dull', 'new hire handed a dull'], ['MakeYourMindUp .ai', 'makeyourmindup.ai'], ['makeyourmindup .ai', 'makeyourmindup.ai']]
     for cut, shape, extra in (('long', '16x9', {'remove': [{'say': "So we had one today and that's a"}], 'replacements': long_replace,

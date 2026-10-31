@@ -33,9 +33,13 @@ The reviewer failed both cuts on editorial grounds. Changed:
 5. The 90-second cut's action cards sit lower, clear of the wordmark and the captions.
 6. "ATMS", "SPREADSHEETS" and "JUDGEMENT" are gone (drawn objects and the gap instead); the action cards are numerals
    only (1, 2, 3), picture only.
-7. The 5-minute cut is one continuous run of pictures, so every change is a panel-to-panel crossfade (0.35 s) on its
-   word; no frame-to-panel fades remain. Two short face-only stretches on ink remain where no beat had a panel (about
-   2 s at 0:15 and 2:45) and his last words after the cards (4:36).
+7. The 5-minute cut is one continuous run of pictures from his first word to his last, so every change is a
+   panel-to-panel crossfade (0.35 s) on its word and his column never moves.
+
+Second review (31 Oct), also fixed: the brand is captioned "makeyourmindup.ai" wherever he says it (the transcriber
+heard "makeyourmindhop"; caption words only, the sound untouched); the 90-second close has no cards over the last
+line and no fade back to his face before the end card; no WEEK boxes, no "TELLER · 13"; a page's credit sits at the
+top of the panel, clear of the page's footnotes; the question cards are blank mint cards on the gap, no sentence.
 
 ## What was made, and where
 
@@ -48,17 +52,16 @@ The reviewer failed both cuts on editorial grounds. Changed:
   Kept as said; the caption reads "behind".
 - **His story**: in both takes he tells the dull-job story about "a new hire"; the pictures follow a new hire's
   spreadsheet. No Microsoft, Excel or 2008 on screen.
-- **Pictures**: 32 moving panels in the 5-minute cut, 9 in the 90-second cut (21 pages), every one moving the whole time
+- **Pictures**: 40 moving panels in the 5-minute cut, 9 in the 90-second cut (21 pages), every one moving the whole time
   it is on screen (desk drift, parallax, objects that land on their word and keep floating; "I want way more animation
   than ever before and movement", Krish, 31 Oct). The real pages (Anthropic's report, Stanford, IMF) are screenshots of
   the sources with the proving line highlighted (`imagery/src`). Every number carries its producer and date.
 - **Production notes, for his playback**: the 90-second cut's beat 5 ("But I think this time is different", 3.1 s)
-  keeps beat 4's past scene on screen under it, and its last line keeps the two action cards, because make.py's 9:16
+  keeps beat 4's past scene on screen under it, and in its closing line the two numeral cards lift away to the ladder with its gap, held to his last word, because make.py's 9:16
   gate needs a picture over 90% of his words with no gap over 1.5 s and 20 changes a minute (it passes: 95.6% covered).
   Beat 4's two frames are the branches (+43%) then the accountants (+600,000).
-- **The 16:9 brand frame** (kit.py) behind him when he speaks alone carries his final title, the follow.the.money
-  sticker "Bring a calculator" (config/studio.json) and the Mondays card. It shows for about a quarter of a second at the
-  very start before the hook's first picture lands.
+- **The 16:9 frame behind him** is the brand's ink (`kit/frame-ink-16x9.png`), not kit.py's yellow card, and it is
+  never seen: from his first word to his last a moving panel sits beside him, so the layout never changes.
 - **One close**: the house end card, once, after his last word.
 
 ## What I measured on the final files
