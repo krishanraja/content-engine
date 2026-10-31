@@ -10,7 +10,13 @@ turns what repeats into candidate rules, each with its evidence:
   - a word he adds in MIN_TAKES pieces or more (an opener such as "look");
   - a scripted word or phrase he drops in MIN_TAKES pieces or more;
   - a direction across the takes: contractions he adds outnumbering those he
-    spells out, or a cut or ad-lib rate well above the swap rate.
+    spells out, or a cut or ad-lib rate well above the swap rate;
+  - a kind of change he makes in MIN_TAKES pieces or more, even when the words
+    differ each time: saying it plainer (a swap to shorter, everyday words, such
+    as "dollars" said as "bucks"), and a spoken aside (an added run of three
+    words or more, or one opening "which is", "obviously" or "you know").
+    A swap that sounds like the script word ("Krish" heard as "Chris") is
+    taken as the transcriber mishearing him and never counted.
 
 A candidate is a proposal. It changes no rule, no skill and no taste: the
 route for each is Krish's yes, a general rule through ai-harness krish-voice
@@ -24,6 +30,7 @@ drafts (draft against approved), rejections on the floor, and engagement per
 piece from growth-makeyourmindup.
 """
 import argparse
+import difflib
 import json
 import sys
 from collections import defaultdict
@@ -54,6 +61,60 @@ def _phrase(text):
 def _meaningful(phrase):
     words = phrase.split()
     return bool(words) and not all(w in STOP for w in words)
+
+
+ASIDE_OPENERS = ('which is', 'obviously', 'basically', 'you know', 'i mean', 'kind of', 'to be fair', 'of course')
+PER_PIECE = 2  # a piece shows a kind of change when its examples hold it this many times
+SHOWN = 4
+
+
+def misheard(script, said):
+    """A swap that sounds like the script word is the transcriber, not him."""
+    a, b = script.replace(' ', ''), said.replace(' ', '')
+    return difflib.SequenceMatcher(a=a, b=b).ratio() >= 0.6
+
+
+def plainer(script, said):
+    """Said in shorter, everyday words: the mean word length falls by half a letter or more."""
+    sw, dw = script.split(), said.split()
+    if not sw or not dw or misheard(script, said) or not (_meaningful(script) and _meaningful(said)):
+        return False
+    return sum(map(len, dw)) / len(dw) <= sum(map(len, sw)) / len(sw) - 0.5
+
+
+def aside(said):
+    words = said.split()
+    return len(words) >= 3 or any(said.startswith(o) for o in ASIDE_OPENERS)
+
+
+def kinds_of_change(takes, min_takes):
+    """Candidates for a kind of change seen in min_takes pieces, whatever the words. Pure."""
+    found = {'plainer': defaultdict(list), 'aside': defaultdict(list)}
+    for t in takes:
+        ex, name = t['delta'].get('examples') or {}, piece_of(t['name'])
+        for e in ex.get('swapped', []):
+            sc, sd = _phrase(e['script']), _phrase(e['said'])
+            if plainer(sc, sd):
+                # Clearest first: a short phrase with the biggest drop in word length.
+                drop = sum(map(len, sc.split())) / len(sc.split()) - sum(map(len, sd.split())) / len(sd.split())
+                found['plainer'][name].append((drop - len(sd.split()), f'"{sc}" said as "{sd}"'))
+        for e in ex.get('added', []):
+            sd = _phrase(e['said'])
+            if aside(sd):
+                found['aside'][name].append((len(sd.split()) if len(sd.split()) <= 6 else 0, f'"{sd}"'))
+    out = []
+    rules = {'plainer': 'He says it plainer than the script: write the everyday word first.',
+             'aside': 'He adds a short spoken aside: leave room for one where a name or number needs explaining.'}
+    for kind, by_piece in found.items():
+        pieces = sorted(p for p, hits in by_piece.items() if len(hits) >= PER_PIECE)
+        if len(pieces) >= min_takes:
+            shown = []
+            for _, text in sorted((h for p in pieces for h in by_piece[p]), reverse=True):
+                if text not in shown:
+                    shown.append(text)
+            shown = shown[:SHOWN]
+            out.append({'kind': kind, 'rule': rules[kind], 'takes': pieces, 'examples': shown})
+    return out
 
 
 def candidates(report, min_takes=MIN_TAKES):
@@ -103,6 +164,7 @@ def candidates(report, min_takes=MIN_TAKES):
         if rates and rates['added'] >= 2 * max(rates['swapped'], 1):
             out.append({'kind': 'direction', 'rule': f'He ad-libs {rates["added"]} words per 100 script words: leave room for asides rather than scripting every link.',
                         'takes': sorted({piece_of(t['name']) for t in takes})})
+    out += kinds_of_change(takes, min_takes)
     out.sort(key=lambda c: (-len(c['takes']), c['kind'], c['rule']))
     return {'matched_takes': len(takes), 'pieces': len(pieces), 'min_takes': min_takes, 'candidates': out}
 
@@ -116,6 +178,8 @@ def markdown(result):
     for n, c in enumerate(result['candidates'], 1):
         lines.append(f"{n}. **{c['rule']}** ({c['kind']}, {len(c['takes'])} pieces)")
         lines.append('   Evidence: ' + '; '.join(c['takes'][:6]) + (' ...' if len(c['takes']) > 6 else ''))
+        if c.get('examples'):
+            lines.append('   For example: ' + '; '.join(c['examples']))
     return '\n'.join(lines) + '\n'
 
 

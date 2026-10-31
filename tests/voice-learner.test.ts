@@ -50,6 +50,28 @@ describe('the weekly voice learner', () => {
   })
 })
 
+describe('kinds of change, whatever the words', () => {
+  const days = ['Mon 12 Oct', 'Wed 14 Oct', 'Fri 16 Oct']
+  it('proposes saying it plainer when each piece swaps to everyday words, different ones each time', () => {
+    const pairs = [['dollars', 'bucks'], ['polished', 'really nice'], ['looking', 'having a look']]
+    const got = learn(days.map((d, i) => take(`${d} - 5-minute - P.mp4`, { swapped: [
+      { script: pairs[i]![0], said: pairs[i]![1] }, { script: 'purchasing', said: 'buying' }] })))
+    const rule = got.candidates.find((c: { kind: string }) => c.kind === 'plainer')
+    expect(rule.takes).toHaveLength(3)
+    expect(rule.examples.join(' ')).toContain('"dollars" said as "bucks"')
+  })
+  it('takes a swap that sounds like the script word as a mishearing, never as plainer', () => {
+    const got = learn(days.map(d => take(`${d} - 5-minute - P.mp4`, { swapped: [
+      { script: 'krish', said: 'chris' }, { script: 'qwen', said: 'quinn' }] })))
+    expect(got.candidates.find((c: { kind: string }) => c.kind === 'plainer')).toBeUndefined()
+  })
+  it('proposes leaving room for an aside when each piece adds two', () => {
+    const got = learn(days.map(d => take(`${d} - 5-minute - P.mp4`, { added: [
+      { script: '', said: 'which is fair enough' }, { script: '', said: 'and you can guess who' }] })))
+    expect(got.candidates.map((c: { kind: string }) => c.kind)).toContain('aside')
+  })
+})
+
 describe('the learner workflow', () => {
   const text = readFileSync(join(ROOT, '.github', 'workflows', 'voice-learner.yml'), 'utf8')
   it('runs no model and writes nothing but its summary', () => {
