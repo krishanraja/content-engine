@@ -36,9 +36,11 @@ def claude_mark(size):
     import glob
     exe = sorted(glob.glob('/opt/pw-browsers/chromium-*/chrome-linux*/chrome'))[0]
     with sync_playwright() as p:
-        b = p.chromium.launch(executable_path=exe); pg = b.new_page(viewport={'width': size, 'height': size})
-        pg.set_content(f'<body style="margin:0;background:transparent"><img src="data:image/svg+xml;utf8,{CLAUDE.read_text().replace(chr(35), "%23")}" style="width:{size}px;height:{size}px">')
-        png = pg.screenshot(omit_background=True); b.close()
+        b = p.chromium.launch(executable_path=exe, args=['--allow-file-access-from-files']); pg = b.new_page(viewport={'width': size, 'height': size})
+        page = WORK / '.mark.html'
+        page.write_text(f'<body style="margin:0;background:transparent"><img src="{CLAUDE.as_uri()}" style="width:{size}px;height:{size}px">')
+        pg.goto(page.as_uri()); pg.wait_for_timeout(300)
+        png = pg.screenshot(omit_background=True); b.close(); page.unlink()
     return Image.open(BytesIO(png)).convert('RGBA')
 
 

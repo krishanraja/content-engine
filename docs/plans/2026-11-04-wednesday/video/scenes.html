@@ -222,6 +222,28 @@ const SCENES = {
         h += order({no:'DRAFT', title:'Reply to a client', logo:'gmail.svg', app:'GMAIL'}, 200, y - 120, Math.sin(t*1.2)*0.8, st); }
     });
     world.innerHTML = h; },
+  // Short 1: the opening: Claude Duet, the research preview he got into.
+  open(t,T){ cam(t,T,0.07); let h='';
+    const m = pop(t,0.2); h += el(`<div class="logo" style="width:200px;height:200px;border-radius:46px"><img src="${CLAUDE}" style="width:124px;height:124px"></div>`, 400, 150 + float(t), `transform:scale(${m}) rotate(${(1-Math.min(m,1))*-20}deg)`);
+    const word = 'CLAUDE DUET', n = Math.round(word.length * clamp((t-1.6)/0.6));
+    h += el(`<div class="big" style="font-size:170px;white-space:nowrap">${word.slice(0,n)}<span style="opacity:${Math.sin(t*8)>0?1:0}">${n<word.length?'|':''}</span></div>`, 70, 420);
+    const c = pop(t,2.4); if (c) h += el(`<div class="chip" style="background:#B7A6FF">RESEARCH PREVIEW · 21 OCT 2026</div>`, 200, 640 + float(t,2), `transform:scale(${c})`);
+    const q = pop(t,P.ask); if (q) h += el(`<div class="bubble" style="width:560px">What does it change if you already use Claude?</div>`, 220, 760 + float(t,3), `transform:scale(${q})`);
+    world.innerHTML = h; },
+  // Short 6: it reads one email account, and his is mostly bills; Microsoft 365 work email not yet.
+  email(t,T){ cam(t,T,0.06); let h='';
+    const box = pop(t,1.3); h += el(`<div class="card" style="width:520px;height:440px;padding:24px"><div style="display:flex;gap:12px;align-items:center;font:800 30px Archivo"><img src="${LOGO}gmail.svg" style="width:44px">One inbox</div></div>`, 240, 200 + float(t), `transform:scale(${box})`);
+    for (let i=0;i<5;i++){ const p = pop(t, 1.9 + i*0.22); if(!p) continue; const bill = i!==2;
+      h += el(`<div style="width:450px;height:56px;border-radius:10px;background:${bill?'#e9e2d2':'#fff'};display:flex;align-items:center;gap:14px;padding:0 18px;font:22px Plex;color:#0C1512">
+        <span style="width:30px;height:22px;border:3px solid #0C1512;border-radius:4px"></span>${bill?'BILL':'EVERYTHING ELSE'}${bill&&t>P.bills+i*0.1?'<span class="chip" style="margin-left:auto;font-size:16px;padding:4px 10px;background:#B7A6FF">BILL</span>':''}</div>`, 275, 290 + i*66, `transform:translateX(${(1-Math.min(p,1))*-60}px);opacity:${Math.min(1,p)}`); }
+    const m = pop(t,P.ms); if (m) h += el(`<div class="card" style="padding:16px 22px;display:flex;gap:14px;align-items:center;font:22px Plex"><img src="${LOGO}microsoft-365.svg" style="width:44px">MICROSOFT 365 WORK EMAIL: NOT YET</div>`, 150, 700 + float(t,2), `transform:scale(${m})`);
+    world.innerHTML = h; },
+  // Short 12: the turn to what to do: two empty steps arrive on the rail, waiting to be filled.
+  doit(t,T){ cam(t,T,0.06); let h='';
+    h += `<div class="rail" style="top:640px;background-position-x:${t*40}px"></div>`;
+    [1,2].forEach((n,i)=>{ const p = pop(t, 0.3 + i*0.4); if(!p) return;
+      h += el(`<div class="step" style="width:150px;height:150px;font-size:110px">${n}</div>`, 220 + i*360 - (1-Math.min(p,1))*400, 470 + float(t,i)); });
+    world.innerHTML = h; },
 };
 function show(id, params) { SCENE = SCENES[id]; P = params || {}; }
 function render(t) { SCENE(t, P.T || 6); document.getElementById('grain').style.transform = `translate(${(t*37)%40-20}px,${(t*23)%40-20}px)`; }
