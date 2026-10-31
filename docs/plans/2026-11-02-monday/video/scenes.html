@@ -174,7 +174,7 @@ const SCENES={
  // the two questions as mint cards settling on the gap
  questions(t){camera(t);const L=ladder(t,{extraTop:1,juniorGone:1,label2030:1});const g=L.g;SVG.innerHTML=L.svg;
    const q=P.cards;HTML.innerHTML=(P.text?`<div class="label" style="left:${W*0.06}px;top:${H*0.04}px;opacity:${at(t,0.2)}">${esc(P.text)}</div>`:'')+
-   q.map((s,i)=>{const a=pop(t,ev('q'+i,0.6+i*1.4),0.55);return `<div class="card" style="left:${TALL?W*0.08:g.R+W*0.03}px;top:${TALL?H*(0.56+i*0.2):H*(0.28+i*0.27)}px;max-width:${TALL?W*0.84:W*0.42}px;font-size:${H*0.042}px;opacity:${a};transform:translateY(${(1-a)*80}px) rotate(${(i?2:-2)*(1-a)+Math.sin(t+i)*0.6}deg)">${esc(s)}</div>`}).join('');},
+   q.map((s,i)=>{const a=pop(t,ev('q'+i,0.6+i*1.4),0.55);return `<div class="card" style="left:${TALL?W*0.08:g.R+W*0.04}px;top:${TALL?H*(0.56+i*0.2):H*(0.30+i*0.27)}px;max-width:${TALL?W*0.84:W-g.R-W*0.10}px;font-size:${H*0.042}px;opacity:${a};transform:translateY(${(1-a)*80}px) rotate(${(i?2:-2)*(1-a)+Math.sin(t+i)*0.6}deg)">${esc(s)}</div>`}).join('');},
  // an action card on the desk
  action(t){camera(t);const a=pop(t,0.05,0.55);const sub=P.sub||[];
    HTML.innerHTML=`<div class="card" style="left:${W*0.08}px;top:${H*0.2}px;width:${W*0.72}px;font-size:${H*0.06}px;opacity:${a};transform:translateY(${(1-a)*90}px) rotate(${-2*(1-a)+Math.sin(t*0.7)*0.5}deg)"><small>${esc(P.kicker||'')}</small>${esc(P.text)}</div>`+

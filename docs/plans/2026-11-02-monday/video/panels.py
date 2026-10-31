@@ -61,7 +61,7 @@ LONG = [
     ('l32', 32, 'sheet', {'mode': 'weeks'}, {'weeks': 'weeks'}),
     ('l33', 33, 'sheet', {'mode': 'macro'}, {'first': 'first', 'second': 'second', 'third': 'does the second'}),
     ('l35', 35, 'calendar', {}, {'shrink': 'shrink'}),
-    ('l37', 37, 'questions', {'text': 'NEXT HIRING MEETING', 'cards': ['Who on this team will be a senior in 2030?', 'What are they learning on today?']},
+    ('l37', 37, 'questions', {'cx': 0.26, 'text': 'NEXT HIRING MEETING', 'cards': ['Who on this team will be a senior in 2030?', 'What are they learning on today?']},
      {'q0': 'senior', 'q1': 'learning'}),
     ('l40', 40, 'action', {'kicker': '1 · EACH TEAM, 4 YEARS OUT', 'text': 'Who will be senior, and what they learn on now'}, {}),
     ('l41', 41, 'action', {'kicker': '2 · YOUR LAST 3 HIRES', 'text': 'If AI left a junior role empty, where does that learning happen now?'}, {}),
