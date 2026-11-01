@@ -28,25 +28,23 @@ We think the rest of the story turns on this moment. Disney had licensed its cha
 
 So Disney changed its approach. In September it hired Character.AI's chief executive as its first chief technology officer.
 
-As for why Disney chose Character.AI out of every AI company it could have picked, look at what each side owns. Disney owns Marvel, Pixar and Star Wars, and Character.AI's app lets millions of people chat with made-up characters. After Sora, Disney seems to have decided it would rather own the team that does this than rent space on someone else's app. The fit is almost too neat. That's our inference from the timing and the filings; Disney hasn't said it in those words.
+As for why Disney chose Character.AI out of every AI company it could have picked, look at what each side owns. Disney owns Marvel, Pixar and Star Wars, and Character.AI's app lets millions of people chat with made-up characters. After Sora, Disney seems to have decided it would rather own the team that does this than rent space on someone else's app. That's our inference from the timing and the filings; Disney hasn't said it in those words.
 
-Then came the court papers. Disney has offered jobs to 66 of Character.AI's staff, most of the workforce. Their pay comes to about $60 million a year for three years, around $180 million in all, according to the filings reported by Gizmodo. On top of that, Disney has made the opening $20 million bid for rights to Character.AI's technology, a bid other buyers can still beat. Wired reports that the list covers its code, its trust and safety tools, its training infrastructure and its age-prediction technology.
+Then came the court papers. Disney has offered jobs to 66 of Character.AI's staff, most of the workforce. Their pay comes to about $60 million a year for three years, around $180 million in all, according to the filings reported by Gizmodo. On top of that, Disney has made the opening $20 million bid for rights to Character.AI's technology, a bid other buyers can still beat. Wired reports that the list of what Disney is bidding for covers its code, its trust and safety tools, its training infrastructure and its age-prediction technology.
 
 Here's the part we keep coming back to. The filings say Disney required the deal to go through the bankruptcy court, because of Character.AI's "diminishing cash reserve and significant litigation and regulatory risks". Wired reports that a draft court order would leave Character.AI responsible for "any liability or other obligation" it might have.
 
 If the court approves, Disney gets the people and much of the code. Character.AI keeps the legal fights.
 
-Clever and cold, probably both.
-
 ## WHO IS LEFT WITH THE SHELL
 
 Two groups stay behind.
 
-First, the people who used the app. According to Wired, the list of what Disney is bidding for leaves out users' data and Character.AI's website, and the court filing leaves out its consumer-facing apps. What happens to the app now is up to the court. (If you'd spent two years chatting to a made-up character on there, you'd want to know where those chats end up.)
+First, the people who used the app. According to Wired, the list of what Disney is bidding for leaves out users' data and Character.AI's website, and the court filing leaves out its consumer-facing apps. What happens to the app now is up to the court. Anyone who spent two years chatting to a made-up character on there will want to know where those chats end up.
 
 Second, everyone with a claim against it. Families sued Character.AI, saying its chatbots harmed children; those families agreed to settle, and a referee approved each settlement on 11 October, the day before the bankruptcy. When it filed, 46 states and territories were investigating it, and several states have sued. Wired reports the deal is built so that whatever is left of Character.AI keeps responsibility for those legal battles, some of them still going.
 
-So the money followed the people. Google paid $2.7 billion to use the tech and hire the founders. Disney is paying millions for the rest of the team. Everyone else gets the empty box.
+So the money followed the people. Google paid $2.7 billion to use the tech and hire the founders. Disney is offering about $180 million in pay to most of the rest of the staff, plus a $20 million bid for the technology. Everyone else gets the empty box.
 
 If your business runs on someone else's AI, this is the part worth sitting with. You can't stop your supplier being bought or shut down. You can spot the signs early, and in this story they showed up years before the end.
 
@@ -54,7 +52,7 @@ If your business runs on someone else's AI, this is the part worth sitting with.
 
 Beyond Disney, our read is that the companies with the most to lose are deciding that renting their AI is too risky.
 
-Disney isn't alone. This year Netflix bought InterPositive, an AI filmmaking start-up, in a deal reported at $587 million. Warner Music bought Sureel AI in June. WildBrain, the company behind the Teletubbies, bought Personality AI in August. (Yes, the Teletubbies' owner now has an AI company.)
+Disney isn't alone. This year Netflix bought InterPositive, an AI filmmaking start-up, in a deal reported at $587 million. Warner Music bought Sureel AI in June. WildBrain, the company behind the Teletubbies, bought Personality AI in August.
 
 Put those together and a pattern shows. The big media companies are moving from renting AI to owning it.
 

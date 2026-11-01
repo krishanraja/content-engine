@@ -35,9 +35,9 @@ class Monday9Nov(unittest.TestCase):
         # under WHO IS LEFT WITH THE SHELL; the publish page still has to be rebuilt from it.
         facts = json.loads((MON9 / 'pack' / 'page-facts.json').read_text(encoding='utf-8'))
         # Krish, 2026-11-01: "the article should feel more visual in general, not like a wall of text": the timeline
-        # and the renting-to-owning figure joined it, one per section from DISNEY TRIED RENTING FIRST on.
+        # and the renting-to-owning figure joined it; the timeline sits under GOOGLE PAID FOR THE BRAINS, where its dates come up.
         self.assertEqual([f['after'] for f in facts['figures']],
-                         ['Everyone else gets the empty box.', 'and that app closed.', 'moving from renting AI to owning it.'])
+                         ['Everyone else gets the empty box.', 'it was easy to miss.', 'moving from renting AI to owning it.'])
         # Rebuilt 1 Nov from the original page Krish shared, with the figure fed in from page-facts.json.
         manifest = json.loads((MON9 / 'pack' / 'publish-manager.json').read_text(encoding='utf-8'))
         self.assertEqual(manifest['facts'], 'page-facts.json')

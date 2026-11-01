@@ -1,6 +1,6 @@
 Claude Duet comes to you before you go to it.
 
-Anthropic opened it on 21 October as a research preview (an early, unfinished release) for Pro and Max users in the US (off a waitlist, for now). Its own page says it "comes to you with what needs your attention, completes tasks you ask of it, keeps working even when you step away, and checks with you before it acts on your behalf." The reviews so far tell you whether it's any good. Most of them skip the question that matters if you already run half your working week through Claude.
+Anthropic opened it on 21 October as a research preview (an early, unfinished release) for people on Claude's paid Pro and Max plans in the US (off a waitlist, for now). Its own page says it "comes to you with what needs your attention, completes tasks you ask of it, keeps working even when you step away, and checks with you before it acts on your behalf." The reviews so far tell you whether it's any good. Most of them skip the question that matters if you already run half your working week through Claude.
 
 So this piece looks at one thing: what Claude Duet actually changes for someone who already works in Claude.
 
@@ -8,15 +8,15 @@ So this piece looks at one thing: what Claude Duet actually changes for someone 
 
 If you already work in Claude, the new part is that Duet works without you there.
 
-Duet runs on its own computer in the cloud, with its own browser, so your laptop can be shut. Every few hours it checks the apps you have connected: Gmail, Slack, your calendar, HubSpot, or any of the "over 6,000 connectors and plugins" Anthropic counts (the links that let Claude reach other apps). Each morning it sends you a short brief on what matters. In between, in Anthropic's words, it "reads, drafts, and prepares work on its own".
+Duet runs on its own computer in the cloud, with its own browser, so your laptop can be shut. Every few hours it checks the apps you have connected: Gmail, Slack, your calendar, HubSpot, or any of the "over 6,000 connectors and plugins" (the links that let Claude reach other apps) that Anthropic counts. Each morning it sends you a short brief on what matters. In between, in Anthropic's words, it "reads, drafts, and prepares work on its own".
 
 Then it stops. Before it sends a message, makes a payment, signs a document or deletes anything, it shows you exactly what it's about to do and waits for your yes. A few things stay off the table even with your yes, such as trading securities or moving money between accounts.
 
-For a Claude user, the interesting part is what comes along for the ride. Anthropic says Duet "carries over your memory, skills, and connected apps from your Claude account", and it can search your past chats so you don't have to repeat yourself.
+For a Claude user, the interesting part is what comes along for the ride. Anthropic says Duet "carries over your memory, skills, and connected apps from your Claude account" (skills are saved instructions Claude follows for a task), and it can search your past chats so you don't have to repeat yourself.
 
 ## FROM ASKING TO APPROVING
 
-Here's what neither the launch page nor the reviews say outright. For someone who already lives in Claude, Duet adds few new abilities. What it changes is who starts the work.
+Here's what neither the launch page nor the reviews say outright. For someone who already lives in Claude, the biggest change Duet makes is who starts the work.
 
 Today you open Claude, paste in the email thread and the calendar invite, add your notes from the sales system, and ask. With Duet, the work turns up first: a brief in the morning, a running list of "what it's working on and what it needs from me", as the review in the tech newsletter Every puts it, and drafts waiting for a yes or a no. Your job becomes checking its work and saying yes, no or not today (which, if you manage people, will sound familiar).
 
@@ -24,13 +24,19 @@ A small-business owner on Reddit, u/freakyslug, put it best: "I'm not doing anyt
 
 The catch is habit. A habit only forms around something that keeps coming back, and Claire Vo's test is the warning. Vo, who hosts the podcast "How I AI", put Duet to work on an inbox and a sales pipeline, and found that after the first few tasks, nothing "would pull me back in". Duet earns its place only when you give it a job that comes round every week. One job. Every week.
 
+Step back, and this is bigger than one app. Until now, AI at work has waited to be asked, so it was only as useful as the person who remembered to ask it. Duet is an early example of AI that starts the work itself and brings it to you for a decision. If that becomes normal, a manager's week tilts the same way. Less of it goes on gathering things up, and more on deciding what goes out. So the skill that matters most becomes judging an answer quickly and well, and teams will need to practise that on purpose.
+
 ## WHAT COMES WITH YOU AND WHAT STAYS BEHIND
 
 Power users have built a lot around Claude, and not all of it makes the trip.
 
-What comes: your memory, plus whatever is connected to your Claude account. The sales pipeline in Vo's test is the good example. Duet already had the CRM and the email to hand, so there was no need "to assemble and paste all the inputs myself".
+What comes: your memory, plus whatever is connected to your Claude account. The sales pipeline in Vo's test is the good example. Duet already had the CRM (the system that tracks customers and deals) and the email to hand, so there was no need "to assemble and paste all the inputs myself".
 
-What stays behind: files on your computer, and some of your Claude projects. Duet can't reach either. Some skills that lived on Vo's own computer didn't come across. The reviewer at Every found that its scheduled runs can't reach custom connectors (links to tools a company built itself), and that it can see the Claude sessions on the reviewer's computers but can't direct them. Brian Govanlu, a Duet user who wrote up the test on LinkedIn, asked it to work with the Claude Code sessions (Anthropic's tool for writing software) on a laptop; it couldn't, so it filed a feature request with Anthropic instead, which is at least very polite. Microsoft 365 isn't connected yet, and Slack has limits.
+What stays behind: files on your computer, and some of your Claude projects. Duet can't reach either.
+
+Some skills that lived on Vo's own computer didn't come across. The reviewer at Every found that its scheduled runs can't reach custom connectors (links to tools a company built itself), and that it can see the Claude sessions on the reviewer's computers but can't direct them. Brian Govanlu, a Duet user who wrote up the test on LinkedIn, asked it to work with the Claude Code sessions (Anthropic's tool for writing software) on a laptop; it couldn't, so Duet filed a feature request with Anthropic instead.
+
+Microsoft 365 isn't connected yet, and Slack has limits.
 
 And if your company pays for Claude Team or Enterprise, you don't get it yet. Anthropic says it plans to bring Duet to those plans later.
 

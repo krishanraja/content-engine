@@ -944,3 +944,17 @@ describe('nothing unfinished on the page (ARTICLE_FORMAT, Krish, 2026-11-01)', (
     assert.equal(fmt(`${PASSED}\n\n_Fact gate passed on the board for this exact text and nothing else at all._`).ok, false)
   })
 })
+
+describe('every Substack post is judged on six reader criteria (READER_TEST, Krish, 2026-11-01)', () => {
+  test('the rule is live, carries his words, names all six criteria and reaches writers, judges and the final pass', () => {
+    const r = HOUSE_RULES.find(x => x.id === 'READER_TEST')!
+    assert.ok(r)
+    assert.equal(r.status, 'live')
+    assert.match(r.said, /make those criteria the permanent judging criteria for all future Substack posts/)
+    for (const c of ['enjoyable', 'big picture', 'investigative', 'incredibly easy to follow', 'easy to learn from', 'visual cues']) assert.match(r.text, new RegExp(c))
+    assert.match(r.text, /every criterion scores 9 or more/)
+    assert.match(r.text, /at most one quip in an article/)
+    for (const stage of ['write', 'judge_draft', 'final_pass'] as Stage[]) assert.ok(r.stages.includes(stage), stage)
+    assert.ok(rulesFor('judge_draft').some(x => x.id === 'READER_TEST'))
+  })
+})

@@ -8,17 +8,17 @@ So every business now has to work out who trains the seniors it'll need in 2030,
 
 "How Employment is Changing at Anthropic" came out on 16 October, and it's unusually frank (it's not every day a company publishes the bit that makes it look awkward). Juniors' share of everyone on its technical teams, new hires or not, slipped from 21% to 14% over the same stretch. Postings for junior roles "have fallen particularly sharply since December 2025". By April, its engineering and research teams had cut back on hiring for junior technical roles, and around a third of its machine learning managers said they were hiring less because of AI.
 
-The same report shows why. By August, the hours its AI agents worked outnumbered its employees' hours six to one. When the agents write that much of the first draft, the first-draft job gets thin.
+The same report points to a reason. By August, the hours its AI agents (software that carries out tasks on its own) worked outnumbered its employees' hours six to one. When the agents write that much of the first draft, the first-draft job gets thin.
 
 Outside Anthropic, the picture looks much the same. Seyed Hosseini Maasoum and Guy Lichtinger studied US CVs and job postings, and found that from early 2023, junior employment at firms that adopted generative AI "declined sharply relative to non-adopters, while senior employment continued to rise". The drop came mainly from slower hiring. Fewer juniors were taken on in the first place.
 
 ## WE'VE BEEN HERE BEFORE
 
-Before anyone reaches for the panic button, it's worth remembering that machines have eaten the bottom of a job before. Twice, quite famously.
+It's worth remembering that machines have eaten the bottom of a job before. Twice, quite famously.
 
 You'd expect cash machines to have finished off bank tellers. James Bessen looked at what actually happened, in a piece for the IMF. Between 1988 and 2004, the number of tellers an average city branch needed fell from 20 to 13. But banks spent the savings on more branches, 43% more in cities, and the number of teller jobs held up. Tellers spent less time counting cash and more time talking to customers.
 
-Then came spreadsheets. Since 1980, as NPR's Planet Money put it, "400,000 bookkeeping and accounting clerk jobs have gone away. But 600,000 accounting jobs have been added." Planet Money's explanation is lovely in its simplicity: accounting got cheaper, and "when something gets cheaper, people buy a lot more of that thing."
+Then came spreadsheets. Since 1980, as NPR's Planet Money put it, "400,000 bookkeeping and accounting clerk jobs have gone away. But 600,000 accounting jobs have been added." Planet Money's explanation is simple: accounting got cheaper, and "when something gets cheaper, people buy a lot more of that thing."
 
 Our read of both: each tool took the dull bottom of a job, the work got cheaper, people wanted more of it, and the job came back bigger.
 

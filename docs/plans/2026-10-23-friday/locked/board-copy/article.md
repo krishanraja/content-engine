@@ -1,6 +1,6 @@
 Every country wants its own AI now, and the reason sits inside the AI your team already uses.
 
-Most of us pick an AI the way we pick a printer: it works, the price is fine, done. But Airbnb's boss, a popular coding tool and a fast-growing American startup have all said, in their own words, that they rely on AI built in China. Meanwhile Britain, France, the Gulf, India and Korea are spending serious money so they don't have to rely on anyone else's.
+Most of us pick an AI because it works and the price is fine. But Airbnb's boss, a popular coding tool and a fast-growing American startup have all said, in their own words, that they rely on AI built in China. Meanwhile Britain, France, the Gulf, India and Korea are spending serious money so they don't have to rely on anyone else's.
 
 So we spent the week working out whether it matters which country your AI comes from.
 
@@ -12,19 +12,19 @@ Everyone else wants a seat. The UK has a government-backed Sovereign AI fund. Fr
 
 That's what people mean by sovereign AI: a country making sure it can rely on an AI of its own.
 
-It's harder than it looks. South Korea dropped Naver Cloud from that national project because a piece of its model turned out to be borrowed from Alibaba's Qwen, a Chinese model. A national AI with an imported part. Awkward, and a fair preview of the problem for everyone else.
+It's harder than it looks. South Korea dropped Naver Cloud from that national project because a piece of its model turned out to be borrowed from Alibaba's Qwen, a Chinese model. A national AI with an imported part, and a fair preview of the problem for everyone else.
 
 ## THE AI YOU USE ALREADY CROSSES BORDERS
 
 Businesses are making the same choice countries are, mostly on price.
 
-Airbnb's boss, Brian Chesky, told Bloomberg last October that its customer service leans on Alibaba's Qwen: "We're relying a lot on Alibaba's Qwen model. It's very good. It's also fast and cheap." Which is also what most of us want from a holiday fling.
+Airbnb's boss, Brian Chesky, told Bloomberg last October, as Fortune reported, that its customer service leans on Alibaba's Qwen: "We're relying a lot on Alibaba's Qwen model. It's very good. It's also fast and cheap."
 
 Cursor, a coding tool lots of software teams use, built its newest model on top of Kimi, from China's Moonshot AI, and didn't say so at first. Once people spotted it, co-founder Aman Sanger said: "It was a miss to not mention the Kimi base in our blog from the start."
 
 And Lindy, an American startup, told NPR it had moved all its traffic onto DeepSeek. Its boss told NPR its biggest bill had been Anthropic, and DeepSeek "was just 10x cheaper."
 
-It runs the other way too. HSBC, a British bank, signed a deal with France's Mistral. Nobody in this story is doing anything strange. They're shopping.
+It runs the other way too. HSBC, a British bank, signed a deal with France's Mistral. Everyone in this story is doing the ordinary thing: shopping.
 
 ## WHERE IT WAS BUILT SHAPES WHAT IT SAYS
 
@@ -32,7 +32,7 @@ So here's the way we think about it. Every AI has two passports. One says where 
 
 The first passport shapes what it tells you. The Christian Science Monitor put 200 news questions to four Chinese chatbots (DeepSeek, Kimi, Qwen and GLM) and compared them with Claude. In 35% of cases the Chinese bots refused, used the Chinese government's preferred language, or got it wrong. For DeepSeek it was 63%. Claude, the paper found, "answered all of them."
 
-America has its own version. Last summer, Simon Willison caught Elon Musk's Grok searching X for Elon Musk's posts before it answered a question about Israel and Palestine. xAI later told it to stop. Which is one way to keep the boss happy.
+America has its own version. Last summer, the developer Simon Willison caught Elon Musk's Grok searching X for Elon Musk's posts before it answered a question about Israel and Palestine. xAI, Musk's AI company, later told it to stop.
 
 The lesson applies everywhere. Every maker's choices travel with its AI, and a model's birthplace is one of those choices.
 
@@ -42,9 +42,7 @@ The second passport decides who sees what you type. DeepSeek's own privacy polic
 
 You can bring an AI home, though. HSBC's deal with Mistral is for "self-hosted AI models that operate on HSBC's internal technology systems." The bank's data doesn't have to leave the bank.
 
-America's government tried the obvious fix with DeepSeek: download the model and run it on your own computers. Its AI standards centre at NIST, called CAISI, ran the downloaded model on its own servers and found that its models "echoed four times as many inaccurate and misleading CCP narratives as U.S. reference models did." (The CCP is the Chinese Communist Party.) Moving it changed the second passport. The first one came along.
-
-You can take DeepSeek out of China. You can't take China out of DeepSeek.
+America's government tried the obvious fix with DeepSeek: download the model and run it on your own computers. CAISI, the AI standards centre at NIST (the National Institute of Standards and Technology), ran the downloaded model on its own servers. It found that DeepSeek's models "echoed four times as many inaccurate and misleading CCP narratives as U.S. reference models did" (the CCP is the Chinese Communist Party). Moving it changed the second passport. The first one came along.
 
 How much of the first passport travels depends on the model and the version. So the honest rule is: run it yourself and you keep your data home, but test what it says.
 
