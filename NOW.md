@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-10-26","week_target":1,"current":0,"current_as_of":"2026-11-01","current_source":"Control Center content_ideas in the publication's series (0 published in the last 7 days)","urgency":4,"urgency_reason":"at 0% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 0, against 1 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- Off-day ideas are triaged like Mon/Wed/Fri (Ruling, Krish, 2026-11-01: "Mock looks right, lock it and build it"). Each off day takes 4 to 6 options, each an idea and a suggested creative direction with Approve, Improve and Reject on each side (the idea also takes Next week). Each press is bound to what that side showed. Improve and Reject words go to his taste ledger and come back on Sunday as offday_verdicts; Improve starts offday-revise.yml. Growth reads the approved options in place of the one mix press. Built and checked on synthetic data; not live until the next Sunday board build. (2026-11-01)
 - Codex lane: cloud queue to Lorimer proven live; venture lanes proven end to end against a stand-in Codex; Codex session logs now found in every Codex home. A real Codex card on Lorimer is still unproven. (2026-11-01)
 - Day tabs on the publish board say where each day is (made, in review, picked) instead of "7 steps" (Krish, 1 Nov: "sort day tabs out"). Monday 9 Nov's publish page is rebuilt from the original page Krish shared, word for word, plus the receipts figure under WHO IS LEFT WITH THE SHELL (docs/plans/2026-10-26-monday/pack); the 9 Nov board (ebcf031c) and the 2 Nov board (e90cff91) are republished and read back, Monday's Approve for publish still bound to dbb311e1. (2026-11-01)
 - Both boards are rebuilt on main after #310 (1 Nov): 2 Nov build 2e141052 (Krish's fri-publish and wed-feel presses kept), 9 Nov build b2bae4a3 (re-pitched ideas, every Inspiration ask used or accounted, one topic per off day). (2026-11-01)
@@ -48,12 +49,13 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
+- 2026-11-01 off-day options carry their own creative direction and are approved, improved or rejected per option; the week's mix press is gone.
 Everything to 29 October 2026 is in `docs/history/2026-10-29-NOW-changed-recently.md`, 30 October lines in `docs/history/2026-10-30-NOW-moved-3.md` and `-4.md`, `-5.md` and `-6.md`, and `docs/history/2026-10-31-NOW-moved-1.md`, all verbatim (W2.12); `npm run check:workbench` holds the byte cap. The 28 October waiting line is in `docs/history/2026-10-31-NOW-moved-4.md`.
 
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-01): Krish gives Ubuntu git access to GitHub, then one booked logo card proves Codex on Lorimer and the push back.
+- Next (2026-11-01): Krish adds OFFDAY_REVISE_DISPATCH_TOKEN (or PLACE_TAKES_DISPATCH_TOKEN) in Vercel so Improve starts a revision; revised cards go live at the board's next build, not at once; the 9 Nov Sunday run is the first live test.
 - Then: the dry run on Saturday 31 October, 18:00 New York (read both machines' preflight blocks first), and the first Sunday loop on 1 November, recording `production_choices` for each piece made. After that the plan is Wave 2 (`docs/plans/2026-11-07-wave-2.md`: unattended overnight cuts, calibrated gates, ve in shadow, Growth posting what he approved, by 7 November) and Wave 3 (`docs/plans/2026-11-14-wave-3.md`: the ve cutover, one inspiration source, the retrospective, by 14 November).
 - Waiting on Krish (as of 2026-10-29): Control Center's `GITHUB_TOKEN` needs Contents: write and Actions: read on this repository for the make press; whether a make run's pull request auto-merges on green CI; whether the $15 cap gets a reader; the Buffer plan (due 31 October); approving the three one-opening, one-close floor standards through the Rejections route; OUR TEST or MY TEST on a video label he presents; "we" in article titles while video titles keep "I".
 - Waiting on Krish (as of 2026-10-29, Wave 2 and 3 production): by ear, the levels and a sound-effect set; Gate 2 on face-with-proof frames and six devices; 5 to 10 golden frames; 20 minutes on 9 Nov scoring shadow cuts. His 29 Oct answers and the home-computer steps: the handover above.
