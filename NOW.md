@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-10-26","week_target":1,"current":0,"current_as_of":"2026-11-01","current_source":"Control Center content_ideas in the publication's series (0 published in the last 7 days)","urgency":4,"urgency_reason":"at 0% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 0, against 1 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- The Codex lane is built, not yet proven live: a session without Codex queues the card on the work board, and the PC with MINDMAKE_CODEX_WSL_REPO set builds it in WSL and writes built or failed back (scripts/velib/codex_lane.py). (2026-11-01)
 - Day tabs on the publish board say where each day is (made, in review, picked) instead of "7 steps" (Krish, 1 Nov: "sort day tabs out"). Monday 9 Nov's publish page is rebuilt from the original page Krish shared, word for word, plus the receipts figure under WHO IS LEFT WITH THE SHELL (docs/plans/2026-10-26-monday/pack); the 9 Nov board (ebcf031c) and the 2 Nov board (e90cff91) are republished and read back, Monday's Approve for publish still bound to dbb311e1. (2026-11-01)
 - Both boards are rebuilt on main after #310 (1 Nov): 2 Nov build 2e141052 (Krish's fri-publish and wed-feel presses kept), 9 Nov build b2bae4a3 (re-pitched ideas, every Inspiration ask used or accounted, one topic per off day). (2026-11-01)
 - Monday 2 Nov (follow.the.money, "Claude's AI is eating the jobs of its own humans. What does that signal for the rest of us?") and Wednesday 4 Nov (under.the.hood, "AI used to reply. Now it acts first. Claude Duet is the start.") are made days on the 2 Nov board (build c93a5b41): both cuts per day passed independent review (Wednesday privacy first), both articles pass the fact gate and the spine judge, packs are in the library, the off-days plan from growth is on the board. Engine fixes: make.py opens on the first picture and closes straight to the end card; week_board.py's off-days build no longer needs ideas.json and its Today lines fit; the thumbnail check shows the real length. (2026-10-31)
@@ -47,13 +48,14 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
+- 2026-11-01 Krish asked that no session ask him again how to reach Codex; ve dispatch now routes itself.
 Everything to 29 October 2026 is in `docs/history/2026-10-29-NOW-changed-recently.md`, 30 October lines in `docs/history/2026-10-30-NOW-moved-3.md` and `-4.md`, `-5.md` and `-6.md`, and `docs/history/2026-10-31-NOW-moved-1.md`, all verbatim (W2.12); `npm run check:workbench` holds the byte cap. The 28 October waiting line is in `docs/history/2026-10-31-NOW-moved-4.md`.
 
 - 31 October: scripts close on the one thing Krish would do, never a list of orders, and a slow listener must hold them heard once (SCRIPT_CLOSE and LISTENING, `story_check.py`); `docs/plans/2026-10-31-script-clarity-audit.md`.
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-01): Krish picks Wed 11 and Fri 13 and approves the off-day mix on the 9 Nov board.
+- Next (2026-11-01): Krish sets MINDMAKE_CODEX_WSL_REPO (his clone's path inside Ubuntu) as a Windows user setting on the Codex PC, then a session queues one small card and reads it back.
 - Then: the dry run on Saturday 31 October, 18:00 New York (read both machines' preflight blocks first), and the first Sunday loop on 1 November, recording `production_choices` for each piece made. After that the plan is Wave 2 (`docs/plans/2026-11-07-wave-2.md`: unattended overnight cuts, calibrated gates, ve in shadow, Growth posting what he approved, by 7 November) and Wave 3 (`docs/plans/2026-11-14-wave-3.md`: the ve cutover, one inspiration source, the retrospective, by 14 November).
 - Waiting on Krish (as of 2026-10-29): Control Center's `GITHUB_TOKEN` needs Contents: write and Actions: read on this repository for the make press; whether a make run's pull request auto-merges on green CI; whether the $15 cap gets a reader; the Buffer plan (due 31 October); approving the three one-opening, one-close floor standards through the Rejections route; OUR TEST or MY TEST on a video label he presents; "we" in article titles while video titles keep "I".
 - Waiting on Krish (as of 2026-10-29, Wave 2 and 3 production): by ear, the levels and a sound-effect set; Gate 2 on face-with-proof frames and six devices; 5 to 10 golden frames; 20 minutes on 9 Nov scoring shadow cuts. His 29 Oct answers and the home-computer steps: the handover above.
