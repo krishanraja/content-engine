@@ -195,9 +195,30 @@ class LipSync(unittest.TestCase):
         self.assertEqual(lipsync_gate.segment_spans(segs, 2.0), [(2.0, 6.0), (6.0, 9.5)])
 
     def test_no_model_here_is_not_run_and_holds(self):
-        result = lipsync_gate.check_cut('cut.mp4', [(0, 8)], [], self.cfg, env={})
+        cfg = {k: v for k, v in self.cfg.items() if k not in ('default_root', 'default_model', 'sources')}
+        result = lipsync_gate.check_cut('cut.mp4', [(0, 8)], [], cfg, env={})
         self.assertEqual(result['status'], 'not_run')
         self.assertIn('MINDMAKE_SYNCNET_MODEL', result['reason'])
+
+    def test_a_fetch_that_fails_is_not_run_and_holds(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            cfg = dict(self.cfg, default_root=f'{d}/src', default_model=f'{d}/m.model',
+                       sources={'model': ['https://invalid.invalid/m'], 'detector': ['https://invalid.invalid/d']})
+            import syncnet_fetch
+            real = syncnet_fetch.ensure
+            syncnet_fetch.ensure = lambda c: (_ for _ in ()).throw(syncnet_fetch.FetchError('no source answered'))
+            try:
+                result = lipsync_gate.check_cut('cut.mp4', [(0, 8)], [], cfg, env={})
+            finally:
+                syncnet_fetch.ensure = real
+        self.assertEqual(result['status'], 'not_run')
+        self.assertIn('fetching it failed', result['reason'])
+
+    def test_a_named_install_is_never_fetched_over(self):
+        self.assertFalse(lipsync_gate.fetchable(self.cfg, env={'MINDMAKE_SYNCNET_ROOT': '/x'}))
+        self.assertFalse(lipsync_gate.fetchable(self.cfg, env={'MINDMAKE_SYNCNET_NO_FETCH': '1'}))
+        self.assertTrue(lipsync_gate.fetchable(self.cfg, env={}))
 
     def test_a_broken_scorer_is_never_a_pass(self):
         class Broken:

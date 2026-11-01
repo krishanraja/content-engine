@@ -2,7 +2,8 @@
   "about": [
     "The lip-sync gate (scripts/quick-edit/lipsync_gate.py): SyncNet on every on-camera segment of a finished cut. Floor never 3, Krish's words: \"your words never cut, changed or out of sync\". A segment out of sync holds the cut; a segment that cannot be measured is never a pass.",
     "The model is not in this repository. Each machine that renders installs the SyncNet checkout at the pinned revision and the model file with the pinned digest, then names both here or in the environment variables below (the variables win). With neither present the gate records not_run and the cut stays held at delivery, as it was before this gate.",
-    "Thresholds are the ones sync_check.py has used since 21 Oct: at most one SyncNet step (40 ms) of offset, confidence at least 3 and the face found in at least 80% of a window's frames."
+    "Thresholds are the ones sync_check.py has used since 21 Oct: at most one SyncNet step (40 ms) of offset, confidence at least 3 and the face found in at least 80% of a window's frames.",
+    "Where it lives (Ruling, Krish, 2026-11-01: the content engine keeps the model, fetched and never committed): scripts/quick-edit/syncnet_fetch.py installs the checkout at default_root and the weights at default_model from the first source whose bytes match their pins, and lipsync_gate.py runs it the first time it finds the model missing. The environment variables and syncnet_root/model_path still win when set."
   ],
   "syncnet_root": null,
   "model_path": null,
@@ -10,6 +11,21 @@
   "model_path_env": "MINDMAKE_SYNCNET_MODEL",
   "syncnet_revision": "907c0b579c2e2d83f0eae1b2ac9e720cde4e5623",
   "model_sha256": "961e8696f888fce4f3f3a6c3d5b3267cf5b343100b238e79b2659bff2c605442",
+  "detector_sha256": "d54a87c2b7543b64729c9a25eafd188da15fd3f6e02f0ecec76ae1b30d86c491",
+  "default_root": ".cache/syncnet/src",
+  "default_model": ".cache/syncnet/syncnet_v2.model",
+  "sources": {
+    "model": [
+      "https://huggingface.co/lithiumice/syncnet/resolve/main/syncnet_v2.model",
+      "https://huggingface.co/nawta/syncnet/resolve/main/syncnet_v2.model",
+      "https://www.robots.ox.ac.uk/~vgg/software/lipsync/data/syncnet_v2.model"
+    ],
+    "detector": [
+      "https://huggingface.co/lithiumice/syncnet/resolve/main/sfd_face.pth",
+      "https://huggingface.co/nawta/syncnet/resolve/main/sfd_face.pth",
+      "https://www.robots.ox.ac.uk/~vgg/software/lipsync/data/sfd_face.pth"
+    ]
+  },
   "window_s": 6,
   "min_window_s": 2,
   "max_gap_s": 60,
