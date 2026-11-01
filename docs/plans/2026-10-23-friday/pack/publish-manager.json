@@ -1,0 +1,75 @@
+{
+ "title": "Why every country wants its own AI, and what that means for your business",
+ "date": "2026-11-06",
+ "kicker": "mind.the.gap",
+ "body": "../../2026-10-23-draft-body.md",
+ "images": [
+  {
+   "id": "cover",
+   "role": "cover",
+   "file": "../../../../.cache/friday-visual/cover/cover-1200x630.png",
+   "alt": "Cover: Why every country wants its own AI"
+  },
+  {
+   "id": "vertical-cover",
+   "role": "vertical-cover",
+   "file": "../../../../.cache/friday-visual/cover/cover-1080x1920.png",
+   "alt": "Vertical cover: Why every country wants its own AI"
+  },
+  {
+   "id": "every-country",
+   "file": "../../../../.cache/pack/fri/figure-every-country.png",
+   "alt": "Quote from Stanford's AI Index 2026: the US produced 59 notable AI models in 2025 to China's 35, while China leads on research papers and patents.",
+   "after_heading": "EVERY COUNTRY WANTS ITS OWN AI"
+  },
+  {
+   "id": "crosses-borders",
+   "file": "../../../../.cache/pack/fri/figure-crosses-borders.png",
+   "alt": "Quote from Fortune, 21 October 2025: Airbnb's boss Brian Chesky says the company relies a lot on Alibaba's Qwen model because it is good, fast and cheap.",
+   "after_heading": "THE AI YOU USE ALREADY CROSSES BORDERS"
+  },
+  {
+   "id": "where-built",
+   "file": "../../../../.cache/pack/fri/figure-where-built.png",
+   "alt": "Quote from the Christian Science Monitor, 23 September 2026: on 200 news questions, Chinese-owned chatbots refused, used government language or got it wrong in 35% of cases, 63% for DeepSeek, while Claude stayed factual.",
+   "after_heading": "WHERE IT WAS BUILT SHAPES WHAT IT SAYS"
+  },
+  {
+   "id": "where-runs",
+   "file": "../../../../.cache/pack/fri/figure-where-runs.png",
+   "alt": "Quote from DeepSeek's privacy policy, read 30 October 2026: it collects, processes and stores your personal data in the People's Republic of China.",
+   "after_heading": "WHERE IT RUNS DECIDES WHO SEES YOUR DATA"
+  },
+  {
+   "id": "square-cover",
+   "role": "square-cover",
+   "file": "../../../../.cache/pack/fri/square-cover.png",
+   "alt": "Square cover: Why every country wants its own AI"
+  },
+  {
+   "id": "share-card-cover",
+   "role": "share-card-cover",
+   "file": "../../../../.cache/pack/fri/share-card-cover.png",
+   "alt": "Share card cover: Why every country wants its own AI"
+  }
+ ],
+ "scripts": [
+  {
+   "label": "Video script (5-minute cut)",
+   "file": "../../2026-10-23-draft-script.md"
+  },
+  {
+   "label": "Video script (90-second cut)",
+   "file": "../../2026-10-23-draft-script-90s.md"
+  }
+ ],
+ "facts": "page-facts.json",
+ "_about": "Friday 6 Nov: its words, figures and scripts in the repository. The title is the substack_headline Krish signed off on 24 Oct (locked/titles.json); the subtitle is the one on the 2 Nov board, with its \"I tested\" made \"We tested\" (articles speak as \"we\"). Covers and thumbnails come from the post's library folder. The four figures under the first four sections are the ones already on the 2 Nov board (Krish approved Friday on it); the work-questions figure is redrawn from pack/figure-our-test.html so it says \"we\", not \"my test\".",
+ "words": "publish-words.json",
+ "subtitle": "Every AI has two passports: where it was built and where it runs. We tested three on work questions to see what each one changes.",
+ "status": [
+  "Fact check on these words (1 November 2026): every other line passed or was already signed off by Krish. 3 lines need his sign-off in his own words before publishing: \"xAI, Musk's AI company, later told it to stop.\" | \"So on 23 October we gave Claude, ChatGPT and DeepSeek the same work questions, three times each, changing only the country.\" | \"We ran it again on camera the next day, and it did it again.\"",
+  "Both cuts passed by Krish at Gate 2, 30 October 2026: \"The music now passes\".",
+  "Article pictures: the four source pictures approved by Krish (\"The pictures are fine\"); the two-passports figure and the redrawn test table (it said \"my test\") are new on 1 November, for his look."
+ ]
+}

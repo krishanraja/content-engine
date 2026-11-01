@@ -1,0 +1,34 @@
+/* The article figure's house look: the publish page's tokens and fonts (ink #0C1512, cream #F4EFE4, mint #7EF0C0,
+   amber #FFD84D; Anton headings, Archivo words, IBM Plex Mono labels). A figure links it from its pack:
+   <link rel="stylesheet" href="../../../../scripts/pages/figure.css">, and draws with render_figure.mjs. Everything flows,
+   so the figure is as tall as its content and nothing can sit on top of anything else. */
+@font-face{font-family:Anton;src:url('../../assets/fonts/makeyourmindup/Anton-Regular.ttf')}
+@font-face{font-family:Archivo;src:url('../../assets/fonts/makeyourmindup/Archivo-Variable.ttf')}
+@font-face{font-family:Plex;src:url('../../assets/fonts/makeyourmindup/IBMPlexMono-Medium.ttf')}
+html,body{margin:0;width:1200px;background:#0C1512;color:#F4EFE4}
+body{position:relative}
+*{box-sizing:border-box}
+.wrap{padding:56px 64px 48px}
+.mark{position:absolute;right:64px;top:62px;font:900 24px Archivo}
+h1{font:400 60px/1.02 Anton;margin:0 0 8px;letter-spacing:.3px;max-width:800px;text-transform:uppercase}
+.sub{font:600 22px/1.35 Archivo;color:#a9b4ae;margin:0 0 30px;max-width:960px}
+.k{font:500 16px Plex;letter-spacing:2px;color:#a9b4ae;text-transform:uppercase}
+.t{font:800 28px/1.12 Archivo;margin:6px 0 10px}
+.small{font:600 19px/1.32 Archivo;color:#cfd6d2}
+.big{font:400 76px/1 Anton}
+.mid{font:400 48px/1 Anton}
+.up{color:#7EF0C0}.down{color:#FFD84D}.dim{color:#5b625e}
+.card{background:#15201b;border:1px solid #2b3832;border-radius:14px;padding:22px 24px}
+.src{margin-top:28px;font:500 14px/1.4 Plex;color:#a9b4ae;letter-spacing:.5px;text-transform:uppercase}
+.row{display:flex;align-items:baseline;gap:12px}
+.arrow{font:400 40px Anton;color:#5b625e}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:22px}
+.pill{display:inline-block;font:700 16px Plex;letter-spacing:1px;padding:6px 12px;border-radius:999px;border:1px solid #2b3832;margin:0 8px 8px 0;text-transform:uppercase}
+.pill.up{border-color:#7EF0C0}.pill.down{border-color:#FFD84D}
+ul.list{list-style:none;margin:10px 0 0;padding:0}
+ul.list li{font:600 20px/1.3 Archivo;color:#e9e4d9;padding:9px 0 9px 30px;position:relative;border-top:1px solid #23302a}
+ul.list li:first-child{border-top:0}
+ul.list.yes li:before{content:'';position:absolute;left:4px;top:17px;width:12px;height:12px;border-radius:50%;background:#7EF0C0}
+ul.list.no li:before{content:'';position:absolute;left:4px;top:17px;width:12px;height:12px;border-radius:2px;border:2px solid #FFD84D}
+.logo{height:34px;width:auto;vertical-align:middle;margin-right:10px}

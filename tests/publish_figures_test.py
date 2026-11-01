@@ -34,7 +34,10 @@ class Monday9Nov(unittest.TestCase):
         # Krish, 2026-10-31: "Use it, rebuild Monday". The receipts figure is now planned in pack/page-facts.json,
         # under WHO IS LEFT WITH THE SHELL; the publish page still has to be rebuilt from it.
         facts = json.loads((MON9 / 'pack' / 'page-facts.json').read_text(encoding='utf-8'))
-        self.assertEqual([f['after'] for f in facts['figures']], ['Everyone else gets the empty box.'])
+        # Krish, 2026-11-01: "the article should feel more visual in general, not like a wall of text": the timeline
+        # and the renting-to-owning figure joined it; the timeline sits under GOOGLE PAID FOR THE BRAINS, where its dates come up.
+        self.assertEqual([f['after'] for f in facts['figures']],
+                         ['Everyone else gets the empty box.', 'it was easy to miss.', 'moving from renting AI to owning it.'])
         # Rebuilt 1 Nov from the original page Krish shared, with the figure fed in from page-facts.json.
         manifest = json.loads((MON9 / 'pack' / 'publish-manager.json').read_text(encoding='utf-8'))
         self.assertEqual(manifest['facts'], 'page-facts.json')
@@ -67,15 +70,19 @@ class FedFromThePack(unittest.TestCase):
         md = (NOV2 / m['body']).read_text(encoding='utf-8')
         bare = dict(m, images=[i for i in m['images'] if not i.get('after_heading')])
         fed = pm.planned_figures(bare, NOV2, md)
-        self.assertEqual(len(fed), 1)
+        self.assertEqual(len(fed), 3)  # the ladder, then the two figures added on 1 Nov
         self.assertEqual(fed[0]['after_heading'], hand['after_heading'])
         self.assertEqual((NOV2 / fed[0]['file']).resolve(), (NOV2 / hand['file']).resolve())
         self.assertEqual(fed[0]['alt'], hand['alt'])
-        self.assertEqual(pm.planned_figures(m, NOV2, md), [], 'a figure the manifest already carries is not added twice')
+        again = pm.planned_figures(m, NOV2, md)
+        self.assertEqual(len(again), 2, 'a figure the manifest already carries is not added twice')
+        self.assertNotIn((NOV2 / hand['file']).resolve(), {(NOV2 / f['file']).resolve() for f in again})
 
     def test_the_filed_manifests_pass_the_check(self):
-        for rel in ('2026-11-02-monday/pack/publish-manager.json', '2026-11-04-wednesday/pack/publish-manager.json'):
-            self.assertGreaterEqual(pm.check(ROOT / 'docs' / 'plans' / rel), 1, rel)
+        # Every ready article carries at least three pictures (Krish, 2026-11-01: "not like a wall of text").
+        for rel in ('2026-11-02-monday/pack/publish-manager.json', '2026-11-04-wednesday/pack/publish-manager.json',
+                    '2026-10-23-friday/pack/publish-manager.json', '2026-10-26-monday/pack/publish-manager.json'):
+            self.assertGreaterEqual(pm.check(ROOT / 'docs' / 'plans' / rel), pm.FIGURE_FLOOR, rel)
 
     def test_an_anchor_under_no_heading_is_refused(self):
         with self.assertRaisesRegex(pm.PublishCheckError, 'under no heading'):

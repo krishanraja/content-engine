@@ -6,6 +6,7 @@ import { buildSources, windows } from '../_weekSources.js'
 import { buildInspiration, RECENT_DAYS } from '../_inspirationSources.js'
 import { CUE_COLS, cuesFrom } from '../_feedbackCues.js'
 import { TASTE_VENTURE } from '../_taste.js'
+import { buildOffdayVerdicts, offdayWeeksBefore } from './_offdayVerdicts.js'
 
 // GET  /api/week/options?week_start=YYYY-MM-DD
 //        what the Sunday session needs to plan the week: each publishing
@@ -172,8 +173,22 @@ async function readSources(week: string, slugs: string[]) {
   // A said idea is a manual content idea and an inspiration card at once (20261118093200_inspiration_said_cards.sql);
   // the idea already read here is the one Sunday counts, so its card is not counted again.
   const listed = ((rows.data || []) as Array<Record<string, any>>).map(r => String(r.id))
-  const [inspiration, cues] = await Promise.all([readInspiration(week, listed), readCues()])
-  return { ...sources, empty: cues.empty ? [...sources.empty, cues.empty] : sources.empty, inspiration, cues: cues.cues }
+  const [inspiration, cues, offday] = await Promise.all([readInspiration(week, listed), readCues(), readOffdayVerdicts(week)])
+  const empty = [...sources.empty, ...(cues.empty ? [cues.empty] : []), ...(offday.empty ? [offday.empty] : [])]
+  return { ...sources, empty, inspiration, cues: cues.cues, offday_verdicts: offday.block }
+}
+
+/** His verdicts on the last weeks' off-day options (_offdayVerdicts.ts): what Sunday learns from. Never fails the
+ *  gather: a failed read is said in `empty`. */
+async function readOffdayVerdicts(week: string) {
+  try {
+    const res = await supabase.from('board_documents').select('week,doc_id,body').eq('collection', 'queue').like('doc_id', 'off-%')
+      .in('week', offdayWeeksBefore(week)).limit(2000)
+    if (res.error) throw new Error(res.error.message)
+    return { block: buildOffdayVerdicts((res.data || []) as Array<Record<string, unknown>>), empty: null }
+  } catch (e) {
+    return { block: buildOffdayVerdicts([]), empty: `his off-day verdicts could not be read (${String((e as Error).message || 'unknown error').slice(0, 160)}); Sunday's off-day options are made without them` }
+  }
 }
 
 /** His open feedback cues (_feedbackCues.ts), Make Your Mind Up's only (TASTE_VENTURE): a cue another venture's

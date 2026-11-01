@@ -173,5 +173,22 @@ export async function readPieces(db: SupabaseClient, week: string): Promise<{ st
   if (pressed.error) return { status: 503, body: { ok: false, error: 'board_store_unavailable' } }
   const m = isObj(pressed.data) && isObj(pressed.data.body) ? pressed.data.body : null
   const mix = m && m.kind === 'mix' ? { approved: m.approved === true, days: m.days, mix_sha256: m.mix_sha256, at: m.at ?? null } : null
-  return { status: 200, body: { days, mix } }
+  // Each off-day option he approved (Ruling, Krish, 2026-11-01: each option is judged on its own, idea and direction):
+  // Growth makes the mock from the direction he approved, exactly as it was shown (shown), and puts it back on the card.
+  // An option counts once its idea is approved and its direction, if it had one, is too; a returned mock he has not
+  // yet approved is said in mock.
+  const off = await db.from('board_documents').select('doc_id,body').eq('week', week).eq('collection', 'queue').like('doc_id', 'off-%')
+  if (off.error) return { status: 503, body: { ok: false, error: 'board_store_unavailable' } }
+  const offdays = (off.data || []).flatMap(row => {
+    const b = isObj(row.body) ? row.body : null
+    const idea = b && isObj(b.idea) ? b.idea : null
+    if (!b || !idea || idea.verdict !== 'approve') return []
+    const dir = isObj(b.direction) ? b.direction : null
+    if (dir && dir.verdict !== 'approve') return []
+    const mock = isObj(b.mock) ? b.mock : null
+    return [{ id: String(row.doc_id), day: b.day ?? null, option_id: b.option_id ?? null, format: b.format ?? null,
+      idea: idea.shown ?? null, direction: dir ? dir.shown ?? null : null,
+      mock: mock ? { verdict: mock.verdict ?? null, words: mock.words ?? null } : null, approved_at: dir?.at ?? idea.at ?? null }]
+  }).sort((a, b) => String(a.id).localeCompare(String(b.id)))
+  return { status: 200, body: { days, mix, offdays } }
 }

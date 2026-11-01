@@ -58,13 +58,23 @@ E = html.escape
 
 
 def inline(text):
-    """Markdown inline: **bold**, *italic* and [a source link](https://...), everything else escaped. The links are
-    the article's sources (Krish, 18 Oct, "linking the right assets"), so Copy article pastes them into Substack."""
+    """Markdown inline: **bold**, *italic*, _italic_ and [a source link](https://...), everything else escaped. The
+    links are the article's sources (Krish, 18 Oct, "linking the right assets"), so Copy article pastes them into
+    Substack."""
     out = E(text)
     out = re.sub(r'\[([^\]]+)\]\((https://[^)\s]+)\)', r'<a href="\2">\1</a>', out)
     out = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', out)
     out = re.sub(r'(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)', r'<em>\1</em>', out)
+    out = re.sub(r'(?<![\w/])_(?=\S)(.+?)(?<=\S)_(?!\w)', r'<em>\1</em>', out)
     return out
+
+
+def plain_inline(text):
+    """The same line as words only: link text, no ** or * or _ marks."""
+    t = re.sub(r'\[([^\]]+)\]\((https?://[^)\s]+)\)', r'\1', text)
+    t = re.sub(r'\*\*(.+?)\*\*', r'\1', t)
+    t = re.sub(r'(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)', r'\1', t)
+    return re.sub(r'(?<![\w/])_(?=\S)(.+?)(?<=\S)_(?!\w)', r'\1', t)
 
 
 def figure(img):
@@ -72,41 +82,131 @@ def figure(img):
             + (f'<figcaption>{E(img["caption"])}</figcaption>' if img.get('caption') else '') + '</figure>')
 
 
-def article_html(md, images):
-    """The article as the HTML Substack takes on paste: h2, p, strong, em,
-    and each picture as a figure right after its section's heading."""
+# Krish, 2026-11-01, on the 2 Nov board's article: the "3 things you can do tomorrow" list came out as one paragraph
+# with its hyphens inline ("can we make sure the article formatting is 11/10?"). The old reader split on blank lines
+# and joined every line of a block with spaces, so a list, a quote or a heading without a blank line after it was
+# flattened. This reads the article line by line, the way scripts/pages/build.py and week_board.md_block() do.
+_HEADING = re.compile(r'^\s{0,3}(#{1,6})\s+(.*?)\s*#*\s*$')
+_RULE = re.compile(r'^\s*([-*_])\s*(?:\1\s*){2,}$')
+_ITEM = re.compile(r'^\s*(?:([-*+\u2022])|(\d+)[.)])\s+(.*)$')
+_QUOTE = re.compile(r'^\s*>\s?(.*)$')
+
+
+def blocks(md):
+    """The article as blocks: ('h', level, text), ('p', text), ('ul', [items]), ('ol', [items]), ('q', text), ('hr',).
+    A paragraph's lines join with spaces; each list item is its own line (a wrapped item's next, indented line joins
+    it); a blank line ends any block."""
+    out, kind, run = [], None, []
+
+    def flush():
+        nonlocal kind
+        if kind in ('ul', 'ol'):
+            out.append((kind, [' '.join(x.split()) for x in run]))
+        elif kind == 'q':
+            out.append(('q', ' '.join(' '.join(run).split())))
+        elif kind == 'p':
+            out.append(('p', ' '.join(' '.join(run).split())))
+        kind, run[:] = None, []
+    for line in md.replace('\r', '').split('\n'):
+        if not line.strip():
+            flush()
+            continue
+        heading, item, quote = _HEADING.match(line), _ITEM.match(line), _QUOTE.match(line)
+        if heading:
+            flush()
+            out.append(('h', len(heading.group(1)), heading.group(2).strip()))
+        elif _RULE.match(line):
+            flush()
+            out.append(('hr',))
+        elif item:
+            k = 'ol' if item.group(2) else 'ul'
+            if kind != k:
+                flush()
+                kind = k
+            run.append(item.group(3))
+        elif quote and kind in (None, 'q'):
+            kind = 'q'
+            run.append(quote.group(1))
+        elif kind in ('ul', 'ol') and run and line[:1].isspace():
+            run[-1] += ' ' + line.strip()
+        else:
+            if kind != 'p':
+                flush()
+                kind = 'p'
+            run.append(line)
+    flush()
+    return out
+
+
+def _after(images):
     after = {}
     for i in images:
         if i.get('after_heading'):
             after.setdefault(i['after_heading'].strip().upper(), []).append(i)
-    parts, blocks = [], [b.strip() for b in md.replace('\r', '').split('\n\n') if b.strip()]
-    for block in blocks:
-        if block.startswith('## '):
-            heading = block[3:].strip()
-            parts.append(f'<h2>{inline(heading)}</h2>')
-            for img in after.get(heading.upper(), []):
+    return after
+
+
+def article_html(md, images):
+    """The article as the HTML Substack takes on paste: h2/h3, p, ul/ol, blockquote, hr, strong, em, links,
+    and each picture as a figure right after its section's heading."""
+    after, parts = _after(images), []
+    for b in blocks(md):
+        if b[0] == 'h':
+            tag = 'h2' if b[1] <= 2 else 'h3'
+            parts.append(f'<{tag}>{inline(b[2])}</{tag}>')
+            for img in after.get(b[2].upper(), []):
                 parts.append(figure(img))
+        elif b[0] in ('ul', 'ol'):
+            parts.append(f'<{b[0]}>' + ''.join(f'<li>{inline(x)}</li>' for x in b[1]) + f'</{b[0]}>')
+        elif b[0] == 'q':
+            parts.append(f'<blockquote><p>{inline(b[1])}</p></blockquote>')
+        elif b[0] == 'hr':
+            parts.append('<hr>')
         else:
-            parts.append(f'<p>{inline(" ".join(block.split()))}</p>')
+            parts.append(f'<p>{inline(b[1])}</p>')
     return '\n'.join(parts)
 
 
 def article_text(md, images):
-    """Plain text: the words, with a marker where each picture goes."""
-    after = {}
-    for i in images:
-        if i.get('after_heading'):
-            after.setdefault(i['after_heading'].strip().upper(), []).append(i)
-    out = []
-    for block in [b.strip() for b in md.replace('\r', '').split('\n\n') if b.strip()]:
-        if block.startswith('## '):
-            heading = block[3:].strip()
-            out.append(heading)
-            for img in after.get(heading.upper(), []):
+    """Plain text: the words, each list item on its own line, with a marker where each picture goes."""
+    after, out = _after(images), []
+    for b in blocks(md):
+        if b[0] == 'h':
+            out.append(b[2])
+            for img in after.get(b[2].upper(), []):
                 out.append(f'[Picture: {img.get("alt", img["id"])}]')
-        else:
-            out.append(re.sub(r'\[([^\]]+)\]\((https://[^)\s]+)\)', r'\1', re.sub(r'\*\*(.+?)\*\*', r'\1', ' '.join(block.split()))))
+        elif b[0] == 'ul':
+            out.append('\n'.join(f'\u2022 {plain_inline(x)}' for x in b[1]))
+        elif b[0] == 'ol':
+            out.append('\n'.join(f'{n}. {plain_inline(x)}' for n, x in enumerate(b[1], 1)))
+        elif b[0] == 'q':
+            out.append(f'\u201c{plain_inline(b[1])}\u201d')
+        elif b[0] == 'p':
+            out.append(plain_inline(b[1]))
     return '\n\n'.join(out)
+
+
+# What a reader must never see in the rendered article: Markdown that did not render, or a working note.
+_LEAKS = [
+    (re.compile(r'<p>\s*(?:[-*+\u2022]|\d+[.)])\s'), 'a paragraph that starts with a list marker (a list that did not render)'),
+    (re.compile(r'(?:^|>)\s*#{1,6}\s'), 'a "#" heading mark showing as text'),
+    (re.compile(r'\*\*|(?<![\w*])\*(?=\S)'), 'a "*" showing as text'),
+    (re.compile(r'\]\((?:https?://|/)'), 'a Markdown link showing as text'),
+    (re.compile(r'<p>\s*(?:&gt;|>)\s'), 'a ">" quote mark showing as text'),
+    (re.compile(r'`'), 'a backtick showing as text'),
+    (re.compile(r'(?i)fact gate|source of truth|signed off by|docs/plans/'), 'a working note (fact gate, source of truth, a repository path)'),
+]
+
+
+def format_leaks(html_text):
+    """Everything in the rendered article that is not finished prose: [(what, the text around it)]."""
+    found = []
+    for pattern, what in _LEAKS:
+        for m in pattern.finditer(html_text):
+            around = re.sub(r'<[^>]+>', ' ', html_text[max(0, m.start() - 40):m.end() + 40])
+            found.append((what, ' '.join(around.split())))
+            break
+    return found
 
 
 # ---------------------------------------------------------------- the article's pictures
@@ -115,6 +215,9 @@ def article_text(md, images):
 # nothing dropped its picture silently, and the pack's own figures (page-facts.json "figures", placed by
 # scripts/pages/build.py) never reached this page. So the planned figures are fed in here, and the page is refused
 # when the article would go out with no picture, or a picture names a heading the article does not have.
+
+FIGURE_FLOOR = 3
+
 
 class PublishCheckError(ValueError):
     """The publish page is not ready: its article's pictures are missing or misplaced."""
@@ -127,18 +230,20 @@ def _plain(md):
 
 
 def headings(md):
-    """The article's section headings, as written."""
-    return [b.strip()[3:].strip() for b in md.replace('\r', '').split('\n\n') if b.strip().startswith('## ')]
+    """The article's section headings (## and deeper), as written."""
+    return [b[2] for b in blocks(md) if b[0] == 'h' and b[1] >= 2]
 
 
 def heading_for(md, anchor):
     """The heading of the section whose words hold the anchor (page-facts "after"), or None."""
     current, want = None, ' '.join(anchor.split())
-    for block in [b.strip() for b in md.replace('\r', '').split('\n\n') if b.strip()]:
-        if block.startswith('## '):
-            current = block[3:].strip()
-        elif want in _plain(block):
-            return current
+    for b in blocks(md):
+        if b[0] == 'h':
+            current = b[2]
+        elif b[0] != 'hr':
+            words = b[1] if isinstance(b[1], str) else ' '.join(b[1])
+            if want in _plain(words):
+                return current
     return None
 
 
@@ -203,6 +308,16 @@ def check_figures(m, md, images, planned=None):
         raise PublishCheckError('publish_manager: the article has no pictures (no image with "after_heading", and no '
                                 'page-facts.json figures). Add the figures, or say why it goes out without one in '
                                 '"figures_none_reason".')
+    # Krish, 2026-11-01: "this article has only one visual, when there are clearly more we have at hand - the article
+    # should feel more visual in general, not like a wall of text". At least FIGURE_FLOOR pictures, and one for every
+    # two sections, each placed after the section it serves; the reason field still lets a words-only piece through.
+    sections = [h for h in headings(md) if not re.search(r'3\s+things\s+you\s+can\s+do\s+tomorrow', h, re.I)]
+    floor = max(FIGURE_FLOOR, -(-len(sections) // 2))
+    if placed and len(placed) < floor and not why:
+        raise PublishCheckError(f'publish_manager: the article has {len(placed)} picture(s) across {len(sections)} sections; '
+                                f'it needs at least {floor} (one for every two sections, never under {FIGURE_FLOOR}), so it '
+                                'never reads as a wall of text. Add figures from the piece\'s own scenes, plates and charts, '
+                                'or say why in "figures_none_reason".')
     if planned and len(placed) < planned and not why:
         raise PublishCheckError(f'publish_manager: the creative direction plans {planned} article picture(s); the page '
                                 f'has {len(placed)}. Add them, or say why in "figures_none_reason".')
@@ -246,6 +361,7 @@ pre.txt{margin:0;white-space:pre-wrap;word-break:break-word;font:15px/1.5 Archiv
 .article{background:#fff;color:#111;color-scheme:light;border-radius:8px;padding:18px;border:1px solid var(--line);max-height:560px;overflow:auto}
 .article h2{font:700 20px/1.25 Georgia,serif;margin:22px 0 8px}.article p{margin:0 0 12px;font:17px/1.6 Georgia,serif}
 .article figure{margin:14px 0}.article img{max-width:100%;height:auto;display:block;border-radius:4px}
+.article h3{font:700 18px/1.3 Georgia,serif;margin:18px 0 6px}.article ul,.article ol{margin:0 0 14px;padding-left:26px;font:17px/1.6 Georgia,serif}.article li{margin:0 0 8px;padding-left:4px}.article blockquote{margin:14px 0;padding:2px 0 2px 16px;border-left:3px solid #111}.article blockquote p{font-style:italic}.article hr{border:0;border-top:1px solid #ddd;margin:20px 0}.article a{color:inherit}
 .pic{display:grid;gap:8px}.pic img{width:100%;height:auto;border-radius:8px;border:1px solid var(--line);display:block}
 .status{font-size:12.5px;color:var(--muted);min-height:1.2em}.status.ok{color:var(--ok)}.status.bad{color:var(--bad)}
 ol.do{margin:0;padding-left:20px}.files{font:12px "IBM Plex Mono",ui-monospace,monospace;color:var(--muted)}
@@ -414,6 +530,10 @@ def page(m, base):
         data = 'data:image/png;base64,' + base64.b64encode(raw).decode()
         images.append({**i, 'data': data})
     body_imgs = [i for i in images if i.get('after_heading')]
+    leaks = format_leaks(article_html(md, []))
+    if leaks:
+        raise PublishCheckError('publish_manager: the article would go out with unfinished formatting:\n'
+                                + '\n'.join(f'  {what}: "{around}"' for what, around in leaks))
     words = json.loads((base / m['words']).read_text(encoding='utf-8')) if m.get('words') else {}
     links = words.get('links') or {}
     # Every title a reader sees first passes the anti-dumb filter, made from the piece's own words.
@@ -503,9 +623,16 @@ def build(src, out_dir):
     return target
 
 
+LIST_MD = ('We are _really_ sure.\n\nWhere to start:\n1. Email\n2. Calendar\n\n> We hire for 2030.\n\n### A SMALLER HEADING\n\n'
+           'Words.\n\n## 3 things you can do tomorrow\n\n- Name your seniors.\n- Look at your **last three** hires.\n'
+           '- Give one junior one dull job\n  to own, by hand first.\n')
+
+
 def self_test():
     import tempfile
-    fails = []
+    global FIGURE_FLOOR
+    fails, floor_kept = [], FIGURE_FLOOR
+    FIGURE_FLOOR = 1  # the fixtures below carry one picture; the floor itself is tested at the end
     with tempfile.TemporaryDirectory() as tmp, title_check.picked_for_tests(['Amazon locked Muse out <x>'], tmp):
         t = Path(tmp)
         png = base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==')
@@ -544,6 +671,9 @@ def self_test():
             check(t / 'pack' / 'm.json')
         except PublishCheckError as e:
             short = str(e)
+        FIGURE_FLOOR = floor_kept
+        one_pic = refused({**base, 'images': [cover, {'id': 'p', 'file': 'a.png', 'alt': 'A', 'after_heading': 'THE PART'}]})
+        three_pics = refused({**base, 'images': [cover] + [{'id': f'p{n}', 'file': 'a.png', 'alt': 'A', 'after_heading': 'THE PART'} for n in range(3)]})
     checks = [
         ('the article copies with its pictures', 'data-act="article"' in h and '<h2>THE PART</h2>\n<figure><img src="data:image/png;base64,' in h),
         ('a named file links to its Drive copy, and only an https one',
@@ -570,6 +700,22 @@ def self_test():
         ("the pack's page-facts figures reach the article after their section's heading",
          '<h2>THE PART</h2>\n<figure><img src="data:image/png;base64,' in fed and 'alt="Fed"' in fed),
         ('fewer pictures than the creative direction plans is refused', 'plans 2 article picture' in short),
+        # Krish, 2026-11-01: the "3 things you can do tomorrow" list rendered as one paragraph with its hyphens.
+        ('a list renders as a list, never one paragraph',
+         article_html(LIST_MD, []).endswith('<h2>3 things you can do tomorrow</h2>\n<ul><li>Name your seniors.</li>'
+                                            '<li>Look at your <strong>last three</strong> hires.</li><li>Give one junior one dull job '
+                                            'to own, by hand first.</li></ul>')),
+        ('a list straight under a paragraph splits from it', '<p>Where to start:</p>\n<ol><li>Email</li><li>Calendar</li></ol>' in article_html(LIST_MD, [])),
+        ('a quote, a ### heading and _italic_ render', '<blockquote><p>We hire for 2030.</p></blockquote>' in article_html(LIST_MD, [])
+         and '<h3>A SMALLER HEADING</h3>' in article_html(LIST_MD, []) and '<em>really</em>' in article_html(LIST_MD, [])),
+        ('the rendered article has no Markdown left in it', format_leaks(article_html(LIST_MD, [])) == []),
+        ('plain text keeps one item a line', '\u2022 Name your seniors.\n\u2022 Look at your last three hires.' in article_text(LIST_MD, [])
+         and '1. Email\n2. Calendar' in article_text(LIST_MD, [])),
+        ('a flattened list or a working note is caught', [w for w, _ in format_leaks('<p>- Name your seniors. - Look</p><p>_Fact gate passed 24 October_</p>')]
+         == ['a paragraph that starts with a list marker (a list that did not render)', 'a working note (fact gate, source of truth, a repository path)']),
+        ('one picture is a wall of text: refused under the floor of three (Krish, 2026-11-01)', 'needs at least 3' in one_pic),
+        ('three pictures pass the floor', three_pics == ''),
+        ('a heading with no blank line after it is still a heading', headings('Intro.\n## ONE\nWords.\n### TWO\nMore.') == ['ONE', 'TWO']),
     ]
     for name, ok in checks:
         if not ok:

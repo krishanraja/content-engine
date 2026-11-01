@@ -281,6 +281,27 @@ export function threeThingsTomorrow(body: string): { ok: boolean; detail: string
   return { ok: true, detail: 'Ends with "3 things you can do tomorrow" and its three actions.' }
 }
 
+/** ARTICLE_FORMAT (Krish, 2026-11-01, on the 2 Nov board's flattened list: "can we make sure the article
+ *  formatting is 11/10? Growth engine will start auto posting this"): nothing in the body a reader would see as
+ *  unfinished. A working note (a line in underscores, "fact gate", "source of truth", a repository path), a title
+ *  "#" inside the body, raw HTML, or a backtick. The rendered page is held to the same by publish_manager.py
+ *  format_leaks(). */
+export function articleFormat(body: string): string[] {
+  const found: string[] = []
+  const lines = String(body || '').replace(/\r\n/g, '\n').split('\n')
+  lines.forEach((l, i) => {
+    const t = l.trim()
+    if (!t) return
+    const at = `line ${i + 1}: "${t.slice(0, 60)}"`
+    if (/^_.*_$/.test(t) && t.length > 40) found.push(`a working note in underscores, ${at}`)
+    else if (/\b(?:fact gate|source of truth|signed off by)\b|docs\/plans\//i.test(t)) found.push(`a working note, ${at}`)
+    if (/^\s{0,3}#\s/.test(l)) found.push(`a "#" title inside the body (the title is set separately), ${at}`)
+    if (/<\/?[a-z][^>]*>/i.test(t)) found.push(`raw HTML, ${at}`)
+    if (t.includes('`')) found.push(`a backtick, ${at}`)
+  })
+  return found
+}
+
 /** Every mechanical check a piece must pass before it can be approved or
  *  published. `factGate` is the fact gate's own verdict for this exact text. */
 export function publishChecks(body: string, factGate: { ok: boolean; reason: string | null }, now: Date = new Date(), pieceId?: string): Check[] {
@@ -296,6 +317,8 @@ export function publishChecks(body: string, factGate: { ok: boolean; reason: str
   // his name, a spelling, a handle or a possessive anywhere in the piece.
   const names = [...new Set(copyLint(text, 'article_body').filter(h => h.id === 'no_name').map(h => h.match))]
   checks.push({ id: 'NO_NAME', name: 'Never names Krish', blocking: true, ok: names.length === 0, detail: names.length ? `Found: ${names.slice(0, 3).map(n => `"${n}"`).join(', ')}. No public word names him or credits him as its author.` : 'None found.' })
+  const format = articleFormat(text)
+  checks.push({ id: 'ARTICLE_FORMAT', name: 'Nothing unfinished on the page', blocking: true, ok: format.length === 0, detail: format.length ? `Found ${format.slice(0, 3).join('; ')}.` : 'No working notes, stray titles, HTML or backticks.' })
   const bangs = exclamationMarks(text)
   checks.push({ id: 'NO_EXCLAMATION', name: 'No exclamation marks', blocking: true, ok: bangs.length === 0, detail: bangs.length ? `${bangs.length} found outside quotations.` : 'None found.' })
   const us = americanSpellings(text)

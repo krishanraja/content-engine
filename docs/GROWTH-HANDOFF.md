@@ -23,15 +23,22 @@ posts only.
 - A clip from a past week is still cut here. Growth names the moment by word
   range; content-engine cuts it from the approved master and its word clock,
   so the word, caption and brand gates still hold.
-- Krish approves the week's mix once and Growth fills it (Ruling, Krish,
-  30 October 2026: "approve the week's mix once, let Growth fill it"). The
-  Sunday Off days section shows the mix by day (the formats Growth proposes)
-  with one Approve, saved in `picks/mix` with the mix and its sha256. Growth
-  reads it from `GET /api/board/<Monday>/pieces` (`mix`) and makes and posts
-  within it only once `approved` is true and the hash matches the mix it
-  proposed; nothing outside the approved mix goes out. A piece he records
-  himself keeps its own Approve on its exact words. This replaces the
-  earlier per-post Approve for the derived posts.
+- Each off-day option is judged on its own (Ruling, Krish, 1 November 2026,
+  locking `docs/handovers/board-mocks-2026-11-01-offdays/`: "Mock looks
+  right, lock it and build it"; he asked for "Ideas and a suggested creative
+  direction to approve or improve or flat out reject for a reason, and the
+  machine can learn over time"). This replaces the one press on the week's
+  mix (30 October). The Sunday Off days section shows 4 to 6 options a day,
+  each an idea and a suggested creative direction; he approves, improves or
+  rejects each side, saved in `queue/off-<day>-<option>`. Growth reads the
+  options whose idea and direction he approved from `GET
+  /api/board/<Monday>/pieces` (`offdays`, the idea and the direction exactly
+  as shown), makes the mock in the brand kit from that direction and returns
+  it on the option (`mock`) for his final yes; nothing he did not approve
+  goes out. A week he pressed the old mix on still reads `mix`. His Improve
+  and Reject words go to his taste ledger and come back on Sunday as
+  `offday_verdicts`. A piece he records himself keeps its own Approve on its
+  exact words.
 
 The sections below still hold for anything Growth asks content-engine to
 make. Where they say content-engine renders a carousel, this ruling comes

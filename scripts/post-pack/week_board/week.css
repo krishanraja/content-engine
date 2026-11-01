@@ -344,3 +344,58 @@ button.dl-btn:disabled{opacity:.6;cursor:default}
 .off-c-words{margin:0;font-size:15px;line-height:1.45;overflow-wrap:anywhere}
 .off-c-pic{margin:0;font-size:13.5px;line-height:1.4;color:var(--muted);overflow-wrap:anywhere}
 main[data-checklists="hidden"] .st-note,main[data-checklists="hidden"] .ticks,main[data-checklists="hidden"] .run-tick,main[data-checklists="hidden"] .rec-tick input,main[data-checklists="hidden"] .rec-tick .box,main[data-checklists="hidden"] .rec-tick .t-when,.wk.no-ticks .wk-week .meter,.wk.no-ticks [data-weektxt]{display:none}
+/* Off days, the shape Krish locked on 1 Nov 2026 (docs/handovers/board-mocks-2026-11-01-offdays/offdays.html): each
+   option is an idea and a suggested direction, each side with Approve, Improve and Reject in one fixed size and place. */
+.off-days .slate{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:0 0 18px}
+.off-days .sl{border:1px solid var(--line);border-radius:12px;background:var(--card);padding:10px 10px 9px;min-height:96px;display:grid;align-content:start;gap:4px;text-decoration:none;color:inherit}
+.off-days .sl .d{font:700 14px Archivo,system-ui,sans-serif;white-space:nowrap}
+.off-days .sl .s{font:600 11.5px "IBM Plex Mono",ui-monospace,monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.off-days .sl .s.ok{color:var(--ok)}.off-days .sl .s.ask{color:var(--bad)}
+.off-days .sl .t{font-size:12.5px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.off-days .sl.done{border:2px solid var(--ok)}
+.off-days .day-h{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:2px 10px;margin:0 0 10px;border-bottom:1px solid var(--line);padding-bottom:6px}
+.off-days .day-h h3{margin:0;white-space:nowrap}
+.off-days .day-h .n{font:600 12px "IBM Plex Mono",ui-monospace,monospace;color:var(--muted);white-space:nowrap}
+.off-days .opt{border-radius:14px;padding:14px 16px;gap:12px;margin:0 0 12px}
+.off-days .opt.out{opacity:.62}
+.off-days .id-flag.rec{background:var(--mint);border-color:var(--mint);color:#0C1512}
+.off-days .id-flag.feeds{background:#FFD84D;border-color:#FFD84D;color:#0C1512}
+.off-days .opt .hook{font:900 21px/1.25 Archivo,system-ui,sans-serif;margin:0}
+.off-days .opt .pitch{display:grid;gap:6px}
+.off-days .opt .row{display:block;margin:0;font-size:15px}
+.off-days .opt .src{display:grid;grid-template-columns:64px 1fr;gap:10px;align-items:center;border:1px dashed var(--line);border-radius:10px;padding:8px}
+.off-days .opt .thumb{width:64px;height:80px;border-radius:6px;background:linear-gradient(160deg,#2b3a35,#0C1512);color:#fff;font:700 10px Archivo,system-ui,sans-serif;display:flex;align-items:flex-end;padding:5px}
+.off-days .opt .src p{margin:0;font-size:14px}.off-days .opt .src a{color:var(--ok);font-weight:700}
+.off-days .opt .learned{font-size:13.5px;color:var(--muted);margin:0;padding-left:10px;border-left:3px solid var(--mint)}
+.off-days .opt .learned.rev{border-left-color:#FFD84D}
+.off-days .opt .dir{background:#eef6f1;border-radius:12px;padding:12px 12px 10px;display:grid;gap:8px}
+.off-days .opt .dir-h{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.off-days .opt .dir-h b{font:700 15px Archivo,system-ui,sans-serif}
+.off-days .opt .dir-f{font:600 11.5px "IBM Plex Mono",ui-monospace,monospace}
+.off-days .opt .frames{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.off-days .opt .fr{aspect-ratio:4/5;border-radius:6px;background:#0C1512;color:#FFD84D;padding:7px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
+.off-days .opt .fr .w{font:400 clamp(10px,2.1vw,15px)/1.05 Anton,Impact,sans-serif;text-transform:uppercase}
+.off-days .opt .fr .p{font:600 9.5px/1.2 "IBM Plex Mono",ui-monospace,monospace;color:#cfd8d4}
+.off-days .opt .dl{display:grid;grid-template-columns:auto 1fr;gap:3px 10px;margin:0;font-size:14px}
+.off-days .opt .dl dt{font:600 11.5px/1.9 "IBM Plex Mono",ui-monospace,monospace;text-transform:uppercase}
+.off-days .opt .dl dd{margin:0}
+.off-days .opt .press{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.off-days .opt .press.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.off-days .opt .pl{grid-column:1/-1;font:600 11.5px "IBM Plex Mono",ui-monospace,monospace;text-transform:uppercase;color:var(--muted);margin:0 0 -2px}
+.off-days .opt .b{min-height:44px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:700 14px Archivo,system-ui,sans-serif;white-space:nowrap;cursor:pointer}
+.off-days .opt .b:disabled{opacity:.5;cursor:not-allowed}
+.off-days .opt .b:focus-visible{outline:3px solid var(--ok);outline-offset:2px}
+.off-days .opt .b.approve[aria-pressed=true]{background:var(--ok);border-color:var(--ok);color:#fff}
+.off-days .opt .b.improve[aria-pressed=true]{background:#FFD84D;border-color:#e0b800}
+.off-days .opt .b.reject[aria-pressed=true]{background:var(--bad);border-color:var(--bad);color:#fff}
+.off-days .opt .b[data-value=next_week][aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.off-days .opt .say{display:flex;gap:8px}.off-days .opt .say[hidden]{display:none}
+.off-days .opt .say input{flex:1;min-width:0;min-height:44px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;font:15px Archivo,system-ui,sans-serif;background:var(--card);color:var(--ink)}
+.off-days .opt .say .go{min-width:96px;min-height:44px;border-radius:999px;border:1px solid var(--mint);background:var(--mint);color:#0C1512;font:700 13px Archivo,system-ui,sans-serif;white-space:nowrap}
+.off-days .opt .mockback{display:grid;grid-template-columns:112px 1fr;gap:12px;align-items:start;background:#fff4d6;border-radius:12px;padding:10px}
+.off-days .opt .mockback img{width:112px;aspect-ratio:4/5;object-fit:cover;border-radius:6px}
+.off-days .tri-state.wait{color:#8a6a00}
+@media (max-width:640px){.off-days .slate{grid-template-columns:repeat(2,minmax(0,1fr))}.off-days .opt .press{grid-template-columns:repeat(2,minmax(0,1fr))}.off-days .opt .press.three{grid-template-columns:repeat(3,minmax(0,1fr))}.off-days .opt .hook{font-size:19px}.off-days .opt .mockback{grid-template-columns:72px 1fr}.off-days .opt .mockback img{width:72px}.off-days .opt .mockback .press.three{grid-template-columns:1fr}}
+.off-days .opt .id-flags{align-items:center}
+.off-days .opt .id-flag{white-space:nowrap}
+.off-days .opt .pitch{border:0;padding:0;margin:0;background:none}
