@@ -35,9 +35,22 @@ from .common import ROOT
 PREFIX = 'codex-'
 AREA = 'Codex on your PC'
 STATES = ('queued', 'running', 'built', 'failed')
-# A running claim older than this is taken to have died with its machine and may be claimed again.
-STALE_HOURS = 3
+# A WSL build is stopped after BUILD_HOURS; a running claim older than STALE_HOURS (longer) died with its machine and
+# may be claimed again, at most MAX_ATTEMPTS times in all, so a card that keeps dying never spends allowance forever.
+BUILD_HOURS = 4
+STALE_HOURS = 5
+MAX_ATTEMPTS = 2
 LOCK = ROOT / '.cache' / 'lane' / 'serve.lock'
+REF = re.compile(r'^[A-Za-z0-9][A-Za-z0-9._/-]{0,100}$')
+FIELDS = re.compile(r'^docs/ve/cards/[A-Za-z0-9_][A-Za-z0-9_./-]*\.fields\.json$')
+
+
+def safe(fields_rel: str, ref: str) -> None:
+    """A board field never reaches git as an option: the ref and the fields path are checked first."""
+    if not REF.match(ref or '') or '..' in ref:
+        raise SystemExit(f've lane: {ref!r} is not a git ref the lane takes')
+    if not FIELDS.match(fields_rel or '') or '..' in fields_rel:
+        raise SystemExit(f've lane: {fields_rel!r} is not a card fields file under docs/ve/cards/')
 
 
 def item_id(card_id: str) -> str:
@@ -137,7 +150,8 @@ def queue_item(fields_rel: str, fields: dict, ref: str, piece: str | None, clien
 
 
 def on_ref(rel: str, ref: str) -> bool:
-    subprocess.run(['git', 'fetch', '-q', 'origin', ref], cwd=ROOT, capture_output=True)
+    safe(rel, ref)
+    subprocess.run(['git', 'fetch', '-q', 'origin', '--end-of-options', ref], cwd=ROOT, capture_output=True)
     return subprocess.run(['git', 'cat-file', '-e', f'origin/{ref}:{rel}'], cwd=ROOT, capture_output=True).returncode == 0
 
 
@@ -148,6 +162,11 @@ def queue(card: Path, piece: str | None, ref: str = 'main', client: str = 'claud
         raise SystemExit(f've lane: {rel} is not on origin/{ref}; push it first (the home computer reads it from there). '
                          'Everything the card reads must be on main, where its worktree is cut.')
     fields = json.loads(fields_file.read_text(encoding='utf-8'))
+    board = _call('GET', '/api/workbench')
+    held = next((i for i in lane_items(board) if i['id'] == item_id(fields['card_id']) and i.get('lane') == 'in_progress'
+                 and (i.get('close_ref') or {}).get('state') in ('queued', 'running')), None)
+    if held:
+        raise SystemExit(f've lane: {held["id"]} is already {held["close_ref"]["state"]}; wait for its result (ve lane status)')
     item = queue_item(rel, fields, ref, piece, client)
     _upsert(item, client)
     return item
@@ -161,7 +180,11 @@ def build(fields_rel: str, ref: str = 'main', piece: str | None = None) -> dict:
     from .common import card_worktree
     result: dict = {'fields': fields_rel, 'ref': ref, 'host': platform.node(), 'ok': False, 'problems': []}
     try:
-        subprocess.run(['git', 'fetch', '-q', 'origin', 'main'] + ([ref] if ref != 'main' else []), cwd=ROOT, check=True)
+        safe(fields_rel, ref)
+        if piece:
+            from .ledger import require_within
+            require_within(piece)  # the cap is checked again where it runs: other spend may have landed since it was queued
+        subprocess.run(['git', 'fetch', '-q', 'origin', '--end-of-options', 'main'] + ([ref] if ref != 'main' else []), cwd=ROOT, check=True)
         shown = subprocess.run(['git', 'show', f'origin/{ref}:{fields_rel}'], cwd=ROOT, check=True, capture_output=True, text=True)
         fields = json.loads(shown.stdout)
         card_id = fields['card_id']
@@ -212,51 +235,47 @@ def _quote(arg: str) -> str:
     return arg if re.fullmatch(r'[A-Za-z0-9_./:=-]+', arg) else "'" + arg.replace("'", "'\\''") + "'"
 
 
-def _locked() -> bool:
+def _take_lock() -> bool:
+    """An atomic lock, stale by its age (past the build timeout), never by a process id."""
+    LOCK.parent.mkdir(parents=True, exist_ok=True)
     try:
-        pid = int(LOCK.read_text(encoding='utf-8').strip())
-    except (OSError, ValueError):
-        return False
-    try:
-        os.kill(pid, 0)
-        return True
+        import time
+        if LOCK.exists() and time.time() - LOCK.stat().st_mtime > (BUILD_HOURS + 0.5) * 3600:
+            LOCK.unlink()
     except OSError:
+        pass
+    try:
+        fd = os.open(str(LOCK), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+    except FileExistsError:
         return False
+    with os.fdopen(fd, 'w', encoding='utf-8') as handle:
+        handle.write(str(os.getpid()))
+    return True
 
 
 def serve(client: str = 'codex') -> dict:
     """Claim the next job, build it here or in WSL, write the result back. One job a run; a second run waits."""
-    if _locked():
+    if not _take_lock():
         return {'served': None, 'why': 'another lane run is building'}
-    board = _call('GET', '/api/workbench')
-    job = next_job(board)
-    if not job:
-        return {'served': None, 'why': 'nothing queued'}
-    LOCK.parent.mkdir(parents=True, exist_ok=True)
-    LOCK.write_text(str(os.getpid()), encoding='utf-8')
     try:
+        board = _call('GET', '/api/workbench')
+        job = next_job(board)
+        if not job:
+            return {'served': None, 'why': 'nothing queued'}
         ref = dict(job['close_ref'])
-        ref.update({'state': 'running', 'claimed_at': now(), 'host': platform.node()[:60]})
+        attempts = int(ref.get('attempts') or 0) + 1
+        if attempts > MAX_ATTEMPTS:
+            _upsert(report_item(job, {'ok': False, 'host': platform.node(), 'problems': [
+                f'it died {MAX_ATTEMPTS} times without a result, so the lane stopped trying; fix the card and queue it again']}), client)
+            return {'served': job['id'], 'ok': False, 'problems': ['gave up']}
+        ref.update({'state': 'running', 'claimed_at': now(), 'host': platform.node()[:60], 'attempts': attempts})
         _upsert({'id': job['id'], 'close_ref': ref,
                  'detail': f'Codex is building it on {platform.node()} now. Claude checks the result when it lands.'}, client)
-        distro = os.environ.get('MINDMAKE_CODEX_WSL_DISTRO', '').strip()
-        repo = os.environ.get('MINDMAKE_CODEX_WSL_REPO', '').strip()
-        if has_companion():
-            result = build(ref['fields'], ref.get('ref', 'main'), ref.get('piece'))
-        elif sys.platform == 'win32' and distro and repo:
-            env = dict(os.environ)
-            # The engine key goes to the WSL build through its environment only (never a command line or a log), from
-            # the same Credential Manager entry scripts/engine.py reads; WSLENV carries it across.
-            env['ENGINE_OPERATOR_TOKEN'] = _engine().operator_key()
-            env['WSLENV'] = ':'.join(x for x in [env.get('WSLENV', ''), 'ENGINE_OPERATOR_TOKEN'] if x)
-            done = subprocess.run(wsl_command(ref['fields'], ref.get('ref', 'main'), ref.get('piece'), distro, repo),
-                                  capture_output=True, text=True, env=env, timeout=4 * 3600,
-                                  creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
-            result = last_json(done.stdout) or {'ok': False, 'host': distro, 'problems': [
-                'the WSL build printed no result: ' + ' '.join((done.stdout + done.stderr).strip().splitlines()[-4:])]}
-        else:
-            result = {'ok': False, 'host': platform.node(), 'problems': [
-                'Codex is not on this machine and no WSL route is set (MINDMAKE_CODEX_WSL_DISTRO and MINDMAKE_CODEX_WSL_REPO)']}
+        job = {**job, 'close_ref': ref}
+        try:
+            result = _run(ref)
+        except Exception as error:  # noqa: BLE001  every failure after the claim is written back, never left running
+            result = {'ok': False, 'host': platform.node(), 'problems': [f'{type(error).__name__}: {error}'[:600]]}
         _upsert(report_item(job, result), client)
         return {'served': job['id'], 'ok': bool(result.get('ok')), 'problems': result.get('problems', [])}
     finally:
@@ -264,6 +283,26 @@ def serve(client: str = 'codex') -> dict:
             LOCK.unlink()
         except OSError:
             pass
+
+
+def _run(ref: dict) -> dict:
+    distro = os.environ.get('MINDMAKE_CODEX_WSL_DISTRO', '').strip()
+    repo = os.environ.get('MINDMAKE_CODEX_WSL_REPO', '').strip()
+    if has_companion():
+        result = build(ref['fields'], ref.get('ref', 'main'), ref.get('piece'))
+    elif sys.platform == 'win32' and distro and repo:
+        # The WSL build needs no engine key (only this side writes the board), so none is passed: Codex never sees it.
+        env = {k: v for k, v in os.environ.items() if k != 'ENGINE_OPERATOR_TOKEN'}
+        safe(ref['fields'], ref.get('ref', 'main'))
+        done = subprocess.run(wsl_command(ref['fields'], ref.get('ref', 'main'), ref.get('piece'), distro, repo),
+                              capture_output=True, text=True, env=env, timeout=BUILD_HOURS * 3600,
+                              creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
+        result = last_json(done.stdout) or {'ok': False, 'host': distro, 'problems': [
+            'the WSL build printed no result: ' + ' '.join((done.stdout + done.stderr).strip().splitlines()[-4:])]}
+    else:
+        result = {'ok': False, 'host': platform.node(), 'problems': [
+            'Codex is not on this machine and no WSL route is set (MINDMAKE_CODEX_WSL_DISTRO and MINDMAKE_CODEX_WSL_REPO)']}
+    return result
 
 
 def last_json(text: str) -> dict | None:

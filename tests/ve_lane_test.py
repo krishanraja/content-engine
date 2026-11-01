@@ -93,6 +93,28 @@ class Report(unittest.TestCase):
         self.assertLessEqual(len(huge['detail']), 2000)
 
 
+class Guards(unittest.TestCase):
+    def test_a_board_field_never_reaches_git_as_an_option(self):
+        lane.safe('docs/ve/cards/w3-1-ports/ve-p-6-logo-card.fields.json', 'main')
+        for fields, ref in (('docs/ve/cards/x.fields.json', '--upload-pack=x'), ('docs/ve/cards/../../x.fields.json', 'main'),
+                            ('/etc/passwd', 'main'), ('docs/ve/cards/x.fields.json', 'a..b')):
+            with self.assertRaises(SystemExit):
+                lane.safe(fields, ref)
+
+    def test_a_running_build_is_not_taken_for_dead(self):
+        self.assertGreater(lane.STALE_HOURS, lane.BUILD_HOURS)
+
+    def test_the_lock_is_atomic(self):
+        with tempfile.TemporaryDirectory() as temp:
+            was = lane.LOCK
+            lane.LOCK = Path(temp) / 'serve.lock'
+            try:
+                self.assertTrue(lane._take_lock())
+                self.assertFalse(lane._take_lock())
+            finally:
+                lane.LOCK = was
+
+
 class Wsl(unittest.TestCase):
     def test_the_build_runs_in_the_named_distro_and_clone_with_no_key_on_the_line(self):
         cmd = lane.wsl_command('docs/ve/cards/x.fields.json', 'main', None, 'Ubuntu', '~/dev/content-engine')

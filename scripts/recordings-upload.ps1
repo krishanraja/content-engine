@@ -1177,8 +1177,12 @@ function Invoke-CodexLane {
   $last = Read-JsonFile $CodexLaneStatePath
   $previous = Get-Field $last 'process'
   if ($previous) {
+    # A reused process id must not stop the lane for good: only a Python started after the recorded time counts.
     $running = Get-Process -Id ([int]$previous) -ErrorAction SilentlyContinue
-    if ($running) { return }
+    $began = [string](Get-Field $last 'started_at')
+    if ($running -and $running.ProcessName -like 'python*' -and $began) {
+      try { if ($running.StartTime.ToUniversalTime() -ge ([DateTime]::Parse($began).ToUniversalTime().AddMinutes(-1))) { return } } catch { return }
+    }
   }
   $ve = Join-Path $RepoRoot 'scripts\ve.py'
   $id = Start-Hidden $StudioPython ('"' + $ve + '" lane serve')
