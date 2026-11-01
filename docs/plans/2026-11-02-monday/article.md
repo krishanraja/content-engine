@@ -20,7 +20,7 @@ You'd expect cash machines to have finished off bank tellers. James Bessen looke
 
 Then came spreadsheets. Since 1980, as NPR's Planet Money put it, "400,000 bookkeeping and accounting clerk jobs have gone away. But 600,000 accounting jobs have been added." Planet Money's explanation is simple: accounting got cheaper, and "when something gets cheaper, people buy a lot more of that thing."
 
-Our read of both: each tool took the dull bottom of a job, the work got cheaper, people wanted more of it, and the job came back bigger.
+Our read of both: each tool took the dull bottom of a job, the work got cheaper, people wanted more of it, and the job held up or came back bigger.
 
 ## WHAT'S DIFFERENT THIS TIME
 

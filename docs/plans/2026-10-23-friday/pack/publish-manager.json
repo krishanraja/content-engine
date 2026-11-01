@@ -11,7 +11,7 @@
    "alt": "Cover: Why every country wants its own AI"
   },
   {
-   "id": "vertical",
+   "id": "vertical-cover",
    "role": "vertical-cover",
    "file": "../../../../.cache/friday-visual/cover/cover-1080x1920.png",
    "alt": "Vertical cover: Why every country wants its own AI"
@@ -39,6 +39,18 @@
    "file": "../../../../.cache/pack/fri/figure-where-runs.png",
    "alt": "Quote from DeepSeek's privacy policy, read 30 October 2026: it collects, processes and stores your personal data in the People's Republic of China.",
    "after_heading": "WHERE IT RUNS DECIDES WHO SEES YOUR DATA"
+  },
+  {
+   "id": "square-cover",
+   "role": "square-cover",
+   "file": "../../../../.cache/pack/fri/square-cover.png",
+   "alt": "Square cover: Why every country wants its own AI"
+  },
+  {
+   "id": "share-card-cover",
+   "role": "share-card-cover",
+   "file": "../../../../.cache/pack/fri/share-card-cover.png",
+   "alt": "Share card cover: Why every country wants its own AI"
   }
  ],
  "scripts": [
@@ -52,5 +64,12 @@
   }
  ],
  "facts": "page-facts.json",
- "_about": "Friday 6 Nov: its words, figures and scripts in the repository. The title is the substack_headline Krish signed off on 24 Oct (locked/titles.json); no subtitle was signed, so none is set. Covers and thumbnails come from the post's library folder. The four figures under the first four sections are the ones already on the 2 Nov board (Krish approved Friday on it); the work-questions figure is redrawn from pack/figure-our-test.html so it says \"we\", not \"my test\"."
+ "_about": "Friday 6 Nov: its words, figures and scripts in the repository. The title is the substack_headline Krish signed off on 24 Oct (locked/titles.json); the subtitle is the one on the 2 Nov board, with its \"I tested\" made \"We tested\" (articles speak as \"we\"). Covers and thumbnails come from the post's library folder. The four figures under the first four sections are the ones already on the 2 Nov board (Krish approved Friday on it); the work-questions figure is redrawn from pack/figure-our-test.html so it says \"we\", not \"my test\".",
+ "words": "publish-words.json",
+ "subtitle": "Every AI has two passports: where it was built and where it runs. We tested three on work questions to see what each one changes.",
+ "status": [
+  "Fact check on these words (1 November 2026): every other line passed or was already signed off by Krish. 3 lines need his sign-off in his own words before publishing: \"xAI, Musk's AI company, later told it to stop.\" | \"So on 23 October we gave Claude, ChatGPT and DeepSeek the same work questions, three times each, changing only the country.\" | \"We ran it again on camera the next day, and it did it again.\"",
+  "Both cuts passed by Krish at Gate 2, 30 October 2026: \"The music now passes\".",
+  "Article pictures: the four source pictures approved by Krish (\"The pictures are fine\"); the two-passports figure and the redrawn test table (it said \"my test\") are new on 1 November, for his look."
+ ]
 }

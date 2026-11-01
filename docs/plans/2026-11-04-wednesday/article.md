@@ -34,11 +34,11 @@ What comes: your memory, plus whatever is connected to your Claude account. The 
 
 What stays behind: files on your computer, and some of your Claude projects. Duet can't reach either.
 
-Some skills that lived on Vo's own computer didn't come across. The reviewer at Every found that its scheduled runs can't reach custom connectors (links to tools a company built itself), and that it can see the Claude sessions on the reviewer's computers but can't direct them. Brian Govanlu, a Duet user who wrote up the test on LinkedIn, asked it to work with the Claude Code sessions (Anthropic's tool for writing software) on a laptop; it couldn't, so Duet filed a feature request with Anthropic instead.
+Some skills that lived on Vo's own computer didn't come across. The reviewer at Every found two more gaps. Duet's scheduled runs can't reach custom connectors (links to tools a company built itself). And Duet can see the Claude sessions on the reviewer's computers but can't direct them. Brian Govanlu, a Duet user who wrote up the test on LinkedIn, asked it to work with the Claude Code sessions (Anthropic's tool for writing software) on a laptop; it couldn't, so Duet filed a feature request with Anthropic instead.
 
 Microsoft 365 isn't connected yet, and Slack has limits.
 
-And if your company pays for Claude Team or Enterprise, you don't get it yet. Anthropic says it plans to bring Duet to those plans later.
+And if your company pays for Claude Team or Enterprise, you don't get it yet. Anthropic says it plans to bring Duet to those plans later. On a Team or Enterprise account, have your first job ready for when it arrives.
 
 ## WHERE TO HOOK IT IN FIRST
 
@@ -48,7 +48,7 @@ So start with one weekly job whose inputs already live in the apps Duet can reac
 - A weekly pipeline review: your CRM and your inbox, turned into a short note on which deals moved and which went quiet.
 - Your follow-ups: every thread that's waiting on you gets a draft, lined up for your yes.
 
-For the first week, let it draft. Check every draft before you say yes. Run it beside the way you do it now, and compare what it caught with what it missed. Then look at your usage at the end of the week, because Duet draws on the same usage limit as everything else you do in Claude. On a Team or Enterprise account, this is the job to have ready for when it arrives.
+For the first week, let it draft. Check every draft before you say yes. Run it beside the way you do it now, and compare what it caught with what it missed. Then look at your usage at the end of the week, because Duet draws on the same usage limit as everything else you do in Claude.
 
 ## THE JOB WE'D HAND IT FIRST
 

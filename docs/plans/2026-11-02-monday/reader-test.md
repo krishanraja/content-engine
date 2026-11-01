@@ -9,5 +9,6 @@ Readers: a new Claude Code subagent each round, no other context, the article re
 | 1 | 8 9 8 6 7 6 |
 | 2 | 9 9 8 8 9 8 |
 | 3 | 9 9 9 9 9 9 |
+| 4 | 9 9 9 9 8 8 |
 
-After the last round: nothing; it passes.
+After round 4 every fix that reader named was applied (hedges kept as the sources give them, look-alike numbers told apart, one job per paragraph, figures matching their words); not re-read since.

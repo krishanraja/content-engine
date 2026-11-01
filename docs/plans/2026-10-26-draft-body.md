@@ -12,7 +12,7 @@ The "vast majority" of the staff stayed at Character.AI, the same spokesperson s
 
 Our read on Google is simple: it wanted the people who built Character.AI, and a licence to use what they had built. So it paid for both, and left the company standing.
 
-Keep that date in your head. August 2024 is when the founders went to Google. The bankruptcy came in October 2026. That's the first warning sign in this story, and it was easy to miss.
+Keep that date in your head. August 2024 is when the founders went to Google. The bankruptcy came in October 2026. The founders leaving was the first warning sign in this story, and it was easy to miss.
 
 ## DISNEY TRIED RENTING FIRST
 
@@ -44,7 +44,7 @@ First, the people who used the app. According to Wired, the list of what Disney 
 
 Second, everyone with a claim against it. Families sued Character.AI, saying its chatbots harmed children; those families agreed to settle, and a referee approved each settlement on 11 October, the day before the bankruptcy. When it filed, 46 states and territories were investigating it, and several states have sued. Wired reports the deal is built so that whatever is left of Character.AI keeps responsibility for those legal battles, some of them still going.
 
-So the money followed the people. Google paid $2.7 billion to use the tech and hire the founders. Disney is offering about $180 million in pay to most of the rest of the staff, plus a $20 million bid for the technology. Everyone else gets the empty box.
+So the money followed the people. Google reportedly paid $2.7 billion to use the tech and hire the founders. Disney is offering about $180 million in pay to most of the rest of the staff, plus a $20 million bid for the technology. Everyone else gets the empty box.
 
 If your business runs on someone else's AI, this is the part worth sitting with. You can't stop your supplier being bought or shut down. You can spot the signs early, and in this story they showed up years before the end.
 
@@ -69,5 +69,5 @@ If the giants with the deepest pockets won't leave their AI in someone else's ha
 ## 3 things you can do tomorrow
 
 1. **Write down the AI tools your business would struggle without, and who makes each one.** Most leaders know the tools. Fewer know whether the maker is a giant, a start-up or a giant's side project.
-2. **For the one you lean on most, answer four questions about its maker.** Are its founders still there? Is your tool its main product or a side bet? Is it short of cash? Is it collecting lawsuits? Google hired Character.AI's founders in August 2024, two years before the bankruptcy; OpenAI shut its Sora video app; and the court filing warned about cash and litigation.
+2. **For the one you lean on most, answer four questions about its maker.** Are its founders still there? Is your tool its main product or a side bet? Is it short of cash? Is it collecting lawsuits? Google hired Character.AI's founders in August 2024, two years before the bankruptcy; OpenAI said it would shut its Sora video app; and the court filing warned about cash and litigation.
 3. **If two of those answers worry you, pick your plan B now.** Choose the tool you would move to, and try it on one real task this month, while you still have time to switch calmly.

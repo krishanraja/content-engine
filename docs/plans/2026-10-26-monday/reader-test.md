@@ -9,5 +9,6 @@ Readers: a new Claude Code subagent each round, no other context, the article re
 | 1 | 9 8 9 7 8 7 |
 | 2 | 9 9 9 8 9 8 |
 | 3 | 9 9 9 9 9 8 |
+| 4 | 9 9 9 8 9 9 |
 
-After the last round: after round 3 the receipts total became "$180M + $20M", the article's own numbers. Left as it is: "a referee approved each settlement" (the source says referee; "court-appointed" is not on file).
+After round 4 every fix that reader named was applied (hedges kept as the sources give them, look-alike numbers told apart, one job per paragraph, figures matching their words); not re-read since.
