@@ -5,6 +5,10 @@ Newest first. Entries are written by the docs steward (see the steward link in
 describes current behaviour; `NOW.md` and `docs/STATE.md` do.
 Files moved here keep their body verbatim under a Historical banner.
 
+## 2026-11-01
+
+- reconciled at `26fe294`: `NOW.md` carried `head: de5b942` while 192 non-steward commits had landed, the last two (`d7218e3`, `812ffe4`) after the sessions' own closeout; the strict validator failed on both. Moved `head` to `26fe294`. The 2 and 4 Nov cuts line now says Monday long's sync is inconclusive on two windows under SyncNet's confidence floor and the cut stays held, as `812ffe4` and `docs/plans/2026-11-02-week/FILE-REBUILT-CUTS.md` record; it had read as if only visual_clarity remained. `docs/history/2026-10-31-NOW-moved-4.md` gained the Historical banner it arrived without. The NOW.md audit passed and `now-notes/` held no notes. The digest's stale stamps (`README.md`, `docs/CONTENT_ENGINE.md`, `docs/GLOSSARY.md`, `docs/STUDIO.md`, `docs/SYSTEM_MAP.md`, `docs/CAROUSEL_ENGINE_STATE.md`) were not bumped: their bodies were not checked against this range, and NOW.md's "Do not trust" already names them.
+
 ## 2026-10-29
 
 - folded the eight closeout notes in `now-notes/` (2026-10-28-overnight-preflight and seven of 2026-10-29: copy, engine, floor, story, ve, vendor, video) into NOW.md with `foldRepository` from `.claude/hooks/harness-closeout.mjs`, which deleted them. The folded file (26,581 characters, 15 "Where it is right now" and 19 "What changed recently" bullets) is kept whole in `docs/history/2026-10-29-NOW-closeout-fold.md`; NOW.md was then rewritten to the audit's limits and checked against the code.
