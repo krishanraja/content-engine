@@ -46,6 +46,10 @@ def model_paths(cfg, env=None):
     env = os.environ if env is None else env
     root = env.get(cfg.get('syncnet_root_env') or '') or cfg.get('syncnet_root')
     model = env.get(cfg.get('model_path_env') or '') or cfg.get('model_path')
+    if not root and not model and cfg.get('default_root') and cfg.get('default_model'):
+        # The fetched install (syncnet_fetch.py) when nothing else is named.
+        base = Path(__file__).resolve().parents[2]
+        root, model = base / cfg['default_root'], base / cfg['default_model']
     return (Path(root) if root else None), (Path(model) if model else None)
 
 
@@ -76,6 +80,8 @@ def available(cfg, env=None):
             __import__(name)
         except ImportError:
             return False, f'{name} is not installed for the SyncNet scorer'
+        except Exception as error:  # an install that is there but broken is not a scorer either
+            return False, f'{name} is installed but cannot load: {str(error)[-160:]}'
     return True, ''
 
 
@@ -205,11 +211,27 @@ class SyncNetScorer:
         return results
 
 
+def fetchable(cfg, env=None):
+    """Whether check_cut may install SyncNet itself: only into the default place, never over paths a machine named."""
+    env = os.environ if env is None else env
+    named = env.get(cfg.get('syncnet_root_env') or '') or env.get(cfg.get('model_path_env') or '') \
+        or cfg.get('syncnet_root') or cfg.get('model_path')
+    return bool(cfg.get('sources')) and not named and env.get('MINDMAKE_SYNCNET_NO_FETCH') != '1'
+
+
 def check_cut(video, spans, covers, cfg=None, scorer=None, env=None):
     """make.py's entry: the sync check for one finished cut, or not_run when no scorer can run here."""
     cfg = cfg or load_config()
     if scorer is None:
         ok, why = available(cfg, env)
+        if not ok and fetchable(cfg, env):
+            try:
+                import syncnet_fetch
+                syncnet_fetch.ensure(cfg)
+            except Exception as error:  # a fetch that fails holds the cut, as a missing model always has
+                why = f'{why}; fetching it failed: {str(error)[-200:]}'
+            else:
+                ok, why = available(cfg, env)
         if not ok:
             return not_run(why)
         scorer = SyncNetScorer(*model_paths(cfg, env))
