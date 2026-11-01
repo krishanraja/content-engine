@@ -137,12 +137,36 @@ def card_limits(meta: dict) -> tuple[int, int]:
     return minutes, calls
 
 
+def codex_homes() -> list[Path]:
+    """Every folder a card's Codex session can log to: the Studio's own Codex home when it is built (codex_env sets
+    CODEX_HOME to it for every dispatch), CODEX_HOME when set, and ~/.codex. Reading only ~/.codex marked every card
+    run under the Studio home as having no session log (found 2026-11-01 proving the Codex lane)."""
+    homes = []
+    try:
+        sys.path.insert(0, str(ROOT / 'scripts' / 'overnight'))
+        import codex_home
+        built = codex_home.active()
+        if built:
+            homes.append(Path(built))
+    except (ImportError, OSError, ValueError):
+        pass
+    if os.environ.get('CODEX_HOME'):
+        homes.append(Path(os.environ['CODEX_HOME']))
+    homes.append(Path.home() / '.codex')
+    out = []
+    for home in homes:
+        if home not in out:
+            out.append(home)
+    return out
+
+
 def card_usage(card_id: str, cwd: str, logs: list[str] | None = None) -> dict | None:
     """{minutes, calls, log} for the newest Codex session that ran this card (its cwd is the card's worktree, or its
     prompt names the card), from the session's own timestamps and tool calls; None when no log is found."""
     from datetime import datetime
     if logs is None:
-        logs = sorted(glob.glob(str(Path.home() / '.codex' / 'sessions' / '*' / '*' / '*' / '*.jsonl')), key=os.path.getmtime)
+        logs = sorted((log for home in codex_homes() for log in glob.glob(str(home / 'sessions' / '*' / '*' / '*' / '*.jsonl'))),
+                      key=os.path.getmtime)
     want_cwd = str(Path(cwd)).replace('\\', '/').rstrip('/').lower() if cwd else None
     for log in reversed(logs[-40:]):
         lines = Path(log).read_text(encoding='utf-8', errors='replace').splitlines()
