@@ -161,13 +161,13 @@ def render_range(name, i0, i1, out_path=None, stills=None):
             # his face
             sc = C.push(t)
             if not V:
-                hidden = t < 2.8 or C.covered(t, s) or (s['mode'] == 'close' and t >= s['a'] + 0.55)
+                hidden = t < 2.5 or C.covered(t, s) or (s['mode'] == 'close' and t >= s['a'] + 0.55)
                 if not hidden:
                     cx = C.follow(t, lambda q: 960 if q['mode'] in ('face', 'full', 'close') else 304, 0.55)
                     cwid, chei = 1080 / sc, 1920 / sc
                     x0 = min(max(FX - cwid / 2, 0), 1080 - cwid); y0 = min(max(FY - chei * 0.42, 0), 1920 - chei)
                     tile = Image.fromarray(fr).crop((round(x0), round(y0), round(x0 + cwid), round(y0 + chei))).resize((608, 1080), Image.LANCZOS)
-                    al = min(1, (t - 2.8) / 0.25)
+                    al = 1
                     if al < 1:
                         tile = Image.blend(base.crop((round(cx - 304), 0, round(cx + 304), 1080)), tile, al)
                     base.paste(tile, (round(cx - 304), 0))
