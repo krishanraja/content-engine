@@ -1,0 +1,156 @@
+name: Revise an off-day option
+
+# Ruling (Krish, 2026-11-01), locking the off-day mock (docs/handovers/board-mocks-2026-11-01-offdays/): "Mock looks
+# right, lock it and build it". On each off-day option he presses the idea and the suggested direction: Approve,
+# Improve or Reject. Improve sends his words back "and a revised card returns in its place". This job is that
+# revision: Claude Code, on his subscription, revises that one side of that one option from his words and rebuilds
+# the week's board (plan-week references/offdays.md, "Revising one option").
+#
+# It has no schedule (Ruling, Krish, 2026-10-29: "I want zero Claude routines. No Claude schedules of any kind in this
+# architecture"). It starts only from his Improve press, which the board turns into a repository_dispatch of type
+# offday-revise (apps/control-plane/api/board/_offdayRevise.ts), or from Run workflow. It never builds a new board: it
+# rebuilds the week's existing one with the same inputs, one option changed.
+#
+# His words are read from the option's record on the board (only a document Krish saved counts), never from the
+# dispatch payload, which only names the option. The run is fenced by permissions, not by its prompt: Bash only for
+# the named engine scripts and git status and diff, writes only under docs/plans/, no read of /proc, and the checkout
+# keeps no GitHub credential. Only the keep step, after Claude has stopped, pushes, with the token passed for that one
+# command, to the branch that holds the week's ideas (a sunday-ideas/ branch), or to a new offday-revise/ branch when
+# the week's ideas are on main.
+
+on:
+  workflow_dispatch:
+    inputs:
+      week:
+        description: 'The Monday of the week, YYYY-MM-DD'
+        required: true
+      option:
+        description: 'The option, off-<day>-<id>'
+        required: true
+      side:
+        description: 'idea or direction'
+        required: true
+  repository_dispatch:
+    types: [offday-revise]
+
+concurrency:
+  group: offday-revise-${{ github.event.inputs.week || github.event.client_payload.week }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  revise:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Claude Code runs on Krish's subscription, never an API key
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
+        run: |
+          if [ -z "$CLAUDE_CODE_OAUTH_TOKEN" ]; then
+            echo "::error::No CLAUDE_CODE_OAUTH_TOKEN. One setup step for Krish: run 'claude setup-token' on your computer and add what it prints as the repository secret CLAUDE_CODE_OAUTH_TOKEN. This job never uses an API key instead."
+            exit 1
+          fi
+          if [ -z "$ENGINE_OPERATOR_TOKEN" ]; then
+            echo "::error::No ENGINE_OPERATOR_TOKEN, so the run cannot read or write the board."
+            exit 1
+          fi
+
+      - name: Which week, option and side
+        id: what
+        env:
+          WEEK: ${{ github.event.inputs.week || github.event.client_payload.week }}
+          OPTION: ${{ github.event.inputs.option || github.event.client_payload.option }}
+          SIDE: ${{ github.event.inputs.side || github.event.client_payload.side }}
+        run: |
+          [[ "$WEEK" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] || { echo "::error::week is a YYYY-MM-DD Monday."; exit 1; }
+          [[ "$OPTION" =~ ^off-(mon|tue|wed|thu|fri|sat|sun)-[A-Za-z0-9][A-Za-z0-9_.:-]{0,59}$ ]] || { echo "::error::option is off-<day>-<id>."; exit 1; }
+          [[ "$SIDE" =~ ^(idea|direction|mock)$ ]] || { echo "::error::side is idea, direction or mock."; exit 1; }
+          { echo "week=$WEEK"; echo "option=$OPTION"; echo "side=$SIDE"; } >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Find the branch that holds the week's ideas
+        id: ref
+        env:
+          WEEK: ${{ steps.what.outputs.week }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          file="docs/plans/$WEEK-week/ideas.json"
+          if [ -f "$file" ]; then
+            echo "from=main" >> "$GITHUB_OUTPUT"; echo "to=offday-revise/$WEEK-$RUN_ID" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          branch=$(git for-each-ref --sort=-committerdate --format='%(refname:short)' "refs/remotes/origin/sunday-ideas/$WEEK-*" | head -1)
+          [ -n "$branch" ] || { echo "::error::No ideas.json for the week of $WEEK on main or a sunday-ideas branch."; exit 1; }
+          git switch -q -c revise "$branch"
+          [ -f "$file" ] || { echo "::error::$branch has no $file."; exit 1; }
+          echo "from=$branch" >> "$GITHUB_OUTPUT"; echo "to=${branch#origin/}" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Install the tools the skill runs
+        run: |
+          python -m pip install --require-hashes --no-deps -r requirements-ci.txt
+          npm ci
+          mkdir -p "$HOME/.local/bin"
+
+      - name: Revise the one option, in Claude Code on his subscription
+        uses: anthropics/claude-code-action@v1
+        env:
+          ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
+          MONDAY: ${{ steps.what.outputs.week }}
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ github.token }}
+          claude_args: >-
+            --max-turns 120
+            --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/engine.py:*),Bash(python3 scripts/post-pack/week_board.py:*),Bash(python3 scripts/post-pack/board_web.py:*),Bash(python3 scripts/post-pack/copy_lint.py:*),Bash(node vendor/makeyourmindup/kill-list/kill-list.mjs:*),Bash(git status:*),Bash(git diff:*),Read,Glob,Grep,Edit(docs/plans/**),Write(docs/plans/**)"
+            --disallowedTools "Read(//proc/**)"
+          prompt: |
+            Revise one off-day option on the publish board for the week of ${{ steps.what.outputs.week }}, fired by
+            his Improve press (.github/workflows/offday-revise.yml). No one reads this run's chat.
+
+            The option is ${{ steps.what.outputs.option }}, the side is ${{ steps.what.outputs.side }}. Follow
+            .agents/skills/plan-week/references/offdays.md, "Revising one option", exactly: read his words on that
+            side from the board record (python3 scripts/post-pack/board_web.py read <Monday> queue; only a document
+            whose updated_by is Krish counts; if there is none, or its verdict on that side is not improve, stop and
+            say so), change only that side of that one option in docs/plans/<Monday>-week/ideas.json, keep its id,
+            set its revised field with his words verbatim, run the copy lint and the kill list, then rebuild and
+            publish the board with the same inputs as the last build (week_board.py --target web, then
+            board_web.py publish-web --apply). Change nothing else. If the board refuses the build, fix that option
+            and build again; if it still refuses, stop and say why. Do not commit or push: the workflow keeps the
+            folder.
+
+      - name: Keep the revised ideas
+        if: always()
+        env:
+          WEEK: ${{ steps.what.outputs.week }}
+          OPTION: ${{ steps.what.outputs.option }}
+          TO: ${{ steps.ref.outputs.to }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          folder="docs/plans/$WEEK-week"
+          [ -n "$TO" ] && [ -d "$folder" ] || exit 0
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- "$folder"
+          git diff --cached --quiet && { echo "Nothing changed in $folder."; exit 0; }
+          git commit -q -m "Revise $OPTION for the week of $WEEK from his Improve" \
+            -m 'Ruling (Krish, 2026-11-01): off-day options are approved, improved or rejected for a reason, and Improve returns a revised card.'
+          auth=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)
+          git -c http.extraheader="AUTHORIZATION: basic $auth" push origin "HEAD:refs/heads/$TO"
+          echo "::notice::The revised option is on $TO."

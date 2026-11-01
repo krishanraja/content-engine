@@ -896,7 +896,7 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
 // these (api/board/_contracts.ts hisOnlyRefusal); a session reads them.
 (() => {
   const rows = [...document.querySelectorAll("[data-presses-for]")];
-  const offs = [...document.querySelectorAll(".off-card[data-offday]")];
+  const offs = [...document.querySelectorAll(".off-card[data-offday]:not(.opt)")];
   if (!rows.length && !offs.length) return;
   const saved = {}, busy = {}, asking = {};
   // What the server did with an approved piece he records (apps/control-plane/api/board/_presses.ts, offdayRecorded).
@@ -1047,6 +1047,134 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
     }
   });
   document.addEventListener("input", e => { const i = e.target.closest && e.target.closest("input[data-press-note], input[data-off-note]"); if (i) i.dataset.unsaved = "true" });
+})();
+
+// The off days, in the shape Krish locked on 1 Nov 2026 (week_board.py off_option_card; Ruling, Krish, 2026-11-01:
+// "Mock looks right, lock it and build it"). He asked: "I need Ideas and a suggested creative direction to approve or
+// improve or flat out reject for a reason, and the machine can learn over time". Each option is one record,
+// queue/off-<day>-<option>, holding a side for the idea, the direction and (once Growth makes it) the mock: each with
+// his verdict, his words and the sha256 of what that side showed him. Improve and Reject keep his words, which the
+// server files to his taste ledger and Sunday's gather reads back; Improve also asks for a revised card. A second
+// tap on the same press takes it back. Only he writes these (api/board/_contracts.ts hisOnlyRefusal).
+(() => {
+  const cards = [...document.querySelectorAll(".off-card.opt[data-offday]")];
+  if (!cards.length) return;
+  const saved = {}, busy = {}, asking = {};
+  let qdb = null, mode = "loading";
+  const SIDES = ["idea", "direction", "mock"];
+  const ASK = { improve: "What would make it better?", reject: "Why not? (required, it is what the engine learns from)" };
+  const say = (id, msg, tone) => { const s = document.querySelector(`[data-offstate="${id}"]`); if (!s) return; s.textContent = msg; s.classList.toggle("bad", tone === "bad"); s.classList.toggle("wait", tone === "wait") };
+  const sha = (c, side) => c.dataset[side + "Sha256"] || "";
+  const has = (c, side) => side === "idea" || !!sha(c, side);
+  const json = v => { try { return JSON.parse(v || "null") } catch { return null } };
+  const side = (id, c, k) => { const v = saved[id] && saved[id][k]; return v && v.sha256 === sha(c, k) ? v : null };
+  const old = (id, c, k) => { const v = saved[id] && saved[id][k]; return v && v.sha256 !== sha(c, k) ? v : null };
+  function line(id, c){
+    const parts = [], name = { idea: "Idea", direction: "Direction", mock: "Mock" };
+    let tone = "";
+    for (const k of SIDES) {
+      if (!has(c, k)) continue;
+      const v = side(id, c, k), was = old(id, c, k);
+      if (v && v.verdict === "approve") parts.push(name[k] + " approved");
+      else if (v && v.verdict === "next_week") parts.push("Parked for next week");
+      else if (v && v.verdict === "reject") { parts.push(name[k] + " rejected: \"" + v.words + "\". Kept for next Sunday"); tone = tone || "bad" }
+      else if (v && v.verdict === "improve") { parts.push(name[k] + ": your note is kept. A revised " + k + " comes back on this card"); tone = "wait" }
+      else if (was && was.verdict === "improve") parts.push(name[k] + " revised from your note. Judge it again");
+    }
+    return [parts.length ? parts.join(". ") + "." : "", tone];
+  }
+  function render(){
+    const days = {};
+    for (const c of cards) {
+      const id = c.dataset.offday, day = c.dataset.offDay;
+      for (const b of c.querySelectorAll('[data-act="offpress"]')) {
+        const v = side(id, c, b.dataset.side), on = !!v && v.verdict === b.dataset.value;
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+        b.disabled = mode !== "live" || !!busy[id];
+      }
+      for (const box of c.querySelectorAll("[data-say-for]")) {
+        const k = box.dataset.saySide, v = side(id, c, k), want = asking[id + ":" + k];
+        const open = mode === "live" && (!!want || (!!v && (v.verdict === "improve" || v.verdict === "reject")));
+        box.hidden = !open;
+        const i = box.querySelector("input"), g = box.querySelector("button");
+        i.disabled = g.disabled = mode !== "live" || !!busy[id];
+        i.placeholder = ASK[want || (v && v.verdict)] || "";
+        if (document.activeElement !== i && i.dataset.unsaved !== "true") i.value = v && v.words ? v.words : "";
+      }
+      const idea = side(id, c, "idea"), dir = side(id, c, "direction");
+      const yes = !!idea && idea.verdict === "approve" && (!has(c, "direction") || (!!dir && dir.verdict === "approve"));
+      c.classList.toggle("on", yes);
+      c.classList.toggle("out", !!idea && (idea.verdict === "reject" || idea.verdict === "next_week"));
+      const d = days[day] = days[day] || { yes: 0, open: 0 };
+      if (yes) d.yes++; else if (!(idea && (idea.verdict === "reject" || idea.verdict === "next_week"))) d.open++;
+      if (!busy[id]) { const [msg, tone] = mode === "off" ? ["Presses are not saving in this view.", "bad"] : line(id, c); say(id, msg, tone) }
+    }
+    for (const [day, d] of Object.entries(days)) {
+      const s = document.querySelector(`[data-slate-state="${day}"]`), cell = s && s.closest(".sl");
+      if (!s) continue;
+      s.textContent = d.yes ? d.yes + " approved" + (d.open ? ", " + d.open + " open" : "") : d.open + " option" + (d.open === 1 ? "" : "s");
+      s.classList.toggle("ok", !!d.yes); s.classList.toggle("ask", !d.yes); cell.classList.toggle("done", !!d.yes);
+    }
+  }
+  render();
+  (async () => {
+    try { qdb = window.claude?.use ? await window.claude.use("db") : null } catch { qdb = null }
+    if (!qdb) { mode = "off"; render(); return }
+    try {
+      qdb.collection("queue").onSnapshot(snap => {
+        for (const k of Object.keys(saved)) delete saved[k];
+        for (const d of snap.docs) if (d.exists && d.id.startsWith("off-")) saved[d.id] = d.data() || {};
+        mode = "live"; render();
+      }, () => { mode = "broken"; for (const c of cards) say(c.dataset.offday, "Saved presses could not load. Reload the page to try again.", "bad") });
+    } catch { mode = "broken"; render() }
+  })();
+  // The whole record, with this one side changed: the others keep what he pressed, so no press undoes another.
+  function body(c, k, verdict, words){
+    const id = c.dataset.offday, prev = saved[id] || {}, at = new Date().toISOString();
+    const out = { pick: id, use: "offday", day: c.dataset.offDay, week: c.dataset.week, option_id: c.dataset.optionId,
+      format: c.dataset.format, source: c.dataset.source, copy_sha256: c.dataset.copySha256, at };
+    for (const s of SIDES) if (prev[s]) out[s] = prev[s];
+    const v = { verdict, words: words || null, sha256: sha(c, k), at };
+    if (verdict === "approve" && k === "idea") v.shown = json(c.dataset.shown);
+    if (verdict === "approve" && k === "direction") v.shown = json(c.dataset.direction);
+    out[k] = v;
+    return out;
+  }
+  async function save(c, b){
+    const id = c.dataset.offday;
+    if (mode !== "live" || !qdb || busy[id]) { render(); return false }
+    busy[id] = true; say(id, "Saving…"); render();
+    let stored = false;
+    try { await qdb.doc("queue/" + id).set(b); saved[id] = b; stored = true } catch {}
+    delete busy[id]; render();
+    if (!stored) say(id, "Not saved. Press it again.", "bad");
+    return stored;
+  }
+  document.addEventListener("click", e => {
+    const p = e.target.closest && e.target.closest('[data-act="offpress"]');
+    if (p) {
+      const c = document.getElementById(p.dataset.for); if (!c) return;
+      const id = c.dataset.offday, k = p.dataset.side, val = p.dataset.value, cur = side(id, c, k);
+      if (cur && cur.verdict === val) { delete asking[id + ":" + k]; save(c, body(c, k, null, null)); return }
+      if (val === "improve" || val === "reject") {
+        asking[id + ":" + k] = val; render();
+        c.querySelector(`input[data-say-side="${k}"]`)?.focus(); return;
+      }
+      delete asking[id + ":" + k];
+      save(c, body(c, k, val, null));
+      return;
+    }
+    const g = e.target.closest && e.target.closest('[data-act="offsay"]');
+    if (g) {
+      const c = document.getElementById(g.dataset.for); if (!c) return;
+      const id = c.dataset.offday, k = g.dataset.side, i = c.querySelector(`input[data-say-side="${k}"]`), text = i ? i.value.trim() : "";
+      const val = asking[id + ":" + k] || (side(id, c, k) || {}).verdict;
+      if (val !== "improve" && val !== "reject") return;
+      if (!text) { say(id, val === "reject" ? "Say why first: your reason is what the engine learns from." : "Say what would make it better first.", "bad"); return }
+      save(c, body(c, k, val, text)).then(ok => { if (!ok) return; delete asking[id + ":" + k]; if (i) i.dataset.unsaved = "false"; render() });
+    }
+  });
+  document.addEventListener("input", e => { const i = e.target.closest && e.target.closest("input[data-say]"); if (i) i.dataset.unsaved = "true" });
 })();
 
 // His decisions on a day's tab in the fixed layout (week_board.py approve_card, titles_card, signoff_card and
@@ -1301,34 +1429,5 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
     try { await fdb.doc("picks/" + id).set(body); saved[id] = body; delete box.dataset.dirty; say(id, "Saved") }
     catch { say(id, "Not saved. Try again", true) }
     sync(box);
-  });
-})();
-
-// The week's mix (week_board.py mix_bar; Ruling, Krish, 2026-10-30: "approve the week's mix once, let Growth fill it"):
-// one Approve, saved in picks/mix with the mix by day exactly as shown and its hash. Growth makes and posts within it.
-(() => {
-  const bar = document.querySelector(".mix[data-mix-sha256]"); if (!bar) return;
-  const btn = bar.querySelector('[data-act="mix"]'), st = bar.querySelector("[data-mixstate]");
-  let fdb = null, saved = null, busy = false;
-  const paint = () => {
-    const same = !!saved && saved.mix_sha256 === bar.dataset.mixSha256, on = same && saved.approved === true;
-    btn.classList.toggle("on", on); btn.setAttribute("aria-pressed", on ? "true" : "false"); btn.disabled = !fdb || busy || on;
-    bar.classList.toggle("on", on);
-    if (!busy) { st.textContent = !fdb ? "Presses are not saving in this view." : on ? "Approved. Growth fills this mix." : saved && !same ? "Growth changed the mix since you pressed. Press again." : "";
-      st.classList.toggle("bad", !fdb || (!!saved && !same)) }
-  };
-  paint();
-  (async () => {
-    try { fdb = window.claude?.use ? await window.claude.use("db") : null } catch { fdb = null }
-    paint(); if (!fdb) return;
-    try { fdb.collection("picks").onSnapshot(snap => { for (const d of snap.docs) if (d.exists && d.id === "mix") saved = d.data() || null; paint() }, () => {}) } catch {}
-  })();
-  btn.addEventListener("click", async () => {
-    if (!fdb || busy) return;
-    let days = {}; try { days = JSON.parse(bar.dataset.mix || "{}") } catch { return }
-    const body = { kind: "mix", approved: true, days, mix_sha256: bar.dataset.mixSha256, at: new Date().toISOString() };
-    busy = true; st.textContent = "Saving"; paint();
-    try { await fdb.doc("picks/mix").set(body); saved = body } catch { st.textContent = "Not saved. Try again"; st.classList.add("bad") }
-    busy = false; paint();
   });
 })();

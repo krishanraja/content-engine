@@ -161,6 +161,11 @@ export function validBody(collection: string, id: string, body: unknown): boolea
   // His comment on any option (Krish, 2026-10-31: every option takes a comment box) rides as its note: with his Approve
   // or Skip, alone on an option he has not pressed (approved null), or added to one he pressed (note_only: the handler
   // keeps the press as saved and only the note changes, so nothing it did runs again).
+  // His verdicts on an off-day option, side by side (Ruling, Krish, 2026-11-01: "Mock looks right, lock it and build
+  // it"; he asked for "Ideas and a suggested creative direction to approve or improve or flat out reject for a
+  // reason"): the idea, the direction and the mock Growth returns, each {verdict, words, sha256, at, shown}. Improve
+  // and Reject carry his words (required), and each side is bound to what it showed him (sha256).
+  if (collection === 'queue' && OFFDAY_ID.test(id) && OFFDAY_SIDES.some(k => k in body)) return offdayVerdicts(id, body)
   if (collection === 'queue' && (OFFDAY_ID.test(id) || body.use === 'offday')) {
     const words = typeof body.note === 'string' && body.note.trim().length > 0
     return OFFDAY_ID.test(id) && body.use === 'offday'
@@ -183,6 +188,29 @@ export function validBody(collection: string, id: string, body: unknown): boolea
   if (collection === 'comments') return text('text', 30000) && text('thread_id', 160) && validId(String(body.thread_id)) && text('anchor', 160) && validId(String(body.anchor))
     && commentExtras(body)
   return false
+}
+export const OFFDAY_SIDES = ['idea', 'direction', 'mock'] as const
+export const OFFDAY_VERDICTS = ['approve', 'improve', 'reject', 'next_week'] as const
+function offdayVerdicts(id: string, body: Record<string, unknown>): boolean {
+  const line = (v: unknown, max: number) => typeof v === 'string' && v.length > 0 && v.length <= max
+  if (body.use !== 'offday' || body.pick !== id || !id.startsWith(`off-${String(body.day)}-`) || 'send' in body || 'kind' in body
+    || 'approved' in body || 'note' in body) return false
+  if (!SHA256.test(String(body.copy_sha256)) || !['format', 'source', 'option_id'].every(k => !(k in body) || line(body[k], 1000))) return false
+  if ('week' in body && !(typeof body.week === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(body.week))) return false
+  const sides = OFFDAY_SIDES.filter(k => k in body)
+  return sides.length > 0 && sides.every(k => {
+    const v = body[k]
+    if (!object(v) || Object.keys(v).some(x => !['verdict', 'words', 'sha256', 'at', 'shown'].includes(x))) return false
+    const verdict = v.verdict
+    if (verdict !== null && !(OFFDAY_VERDICTS as readonly unknown[]).includes(verdict)) return false
+    if (verdict === 'next_week' && k !== 'idea') return false
+    const words = typeof v.words === 'string' && v.words.trim().length > 0
+    if ((verdict === 'improve' || verdict === 'reject') && !words) return false
+    if (v.words !== null && v.words !== undefined && !line(v.words, 2000)) return false
+    if (!SHA256.test(String(v.sha256))) return false
+    if ('shown' in v && v.shown !== null && !(object(v.shown) && JSON.stringify(v.shown).length <= 8000)) return false
+    return true
+  })
 }
 // An off-day piece he records (Ruling, Krish, 2026-10-29: an idea he drops in can be a Tuesday, Thursday, Saturday or
 // Sunday piece, one short cut, said to camera or a voiceover): his press on its option carries the piece, its series
