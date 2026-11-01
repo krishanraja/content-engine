@@ -3196,6 +3196,48 @@ SERIES_CHANNELS = ('substack', 'youtube', 'shorts', 'tiktok', 'reels', 'linkedin
 OFF_CHANNELS = ('shorts', 'tiktok', 'reels', 'instagram', 'linkedin', 'x', 'threads', 'facebook', 'substack-notes')
 OFF_KINDS = {'meme': 'meme', 'carousel': 'carousel', 'good_news': 'news', 'news': 'news', 'level_up': 'levelup', 'levelup': 'levelup',
              'explainer': 'explainer', 'short': 'short'}
+# A format is written as a phrase ("Meme video, made fresh in the brand kit"), so its kind is read from its words, the
+# shape first (a meme carousel is drawn as a carousel). Krish, 2026-11-01, on a meme labelled NOTE: "None of the two
+# screens show any level of ideation, inspiration, clarity, user flow".
+OFF_KIND_WORDS = (('carousel', 'carousel'), ('meme', 'meme'), ('good news', 'news'), ('good_news', 'news'), ('news', 'news'),
+                  ('level', 'levelup'), ('explainer', 'explainer'), ('short', 'short'), ('cut', 'short'),
+                  ('to camera', 'short'), ('to-camera', 'short'))
+OFF_TITLE_DATE = re.compile(r'^(mon|tue|wed|thu|fri|sat|sun)[a-z]*\.?\s+\d{1,2}\s+[a-z]{3,9}[.,:;]?\s*', re.I)
+OFF_TITLE_IDEA = re.compile(r'^your idea\s*(\([^)]*\))?\s*[:,.-]?\s*', re.I)
+OFF_TITLE_CARD1 = re.compile(r'\bcard 1:\s*(.+?)\s*(?:\(|\bcards? 2\b|$)', re.I)
+# Scheduling and making notes the card already shows another way; a title skips them.
+OFF_TITLE_SKIP = re.compile(r'^(the day (after|before)\b|about \d+ seconds\b|(two|three|four|five|six|\d+) cards\b)', re.I)
+
+
+def off_kind(o):
+    """The day card's kind for an off-day option: recorded pieces are shorts; otherwise the format's own words."""
+    if o.get('kind') == 'recorded':
+        return 'short'
+    for text in (o.get('format'), o.get('source')):
+        fmt = ' '.join(str(text or '').lower().split())
+        if fmt in OFF_KINDS:
+            return OFF_KINDS[fmt]
+        kind = next((k for w, k in OFF_KIND_WORDS if w in fmt), None)
+        if kind:
+            return kind
+    return 'note'
+
+
+def off_title(o):
+    """The day card's title: the option's hook, else its first card's words, else its copy's first sentence without the
+    date and the "Your idea (date):" lead the board already shows elsewhere."""
+    for k in ('hook', 'title'):
+        if str(o.get(k) or '').strip():
+            return ' '.join(str(o[k]).split())[:120]
+    copy = ' '.join(str(o.get('copy') or '').split())
+    m = OFF_TITLE_CARD1.search(copy)
+    if m and m.group(1).strip(' .'):
+        return m.group(1).strip(' .')[:120]
+    rest = OFF_TITLE_DATE.sub('', copy)
+    sentences = [OFF_TITLE_IDEA.sub('', x) for x in re.split(r'(?<=[.!?])\s+', rest) if x and not OFF_TITLE_SKIP.match(x)]
+    first = next((x for x in sentences if x.strip()), '')
+    first = first[:1].upper() + first[1:]
+    return first[:120] or str(o.get('format') or 'Off-day post')
 
 
 def moved_of(values):
@@ -3295,13 +3337,12 @@ def today_model(monday, days, videos, posted, offdays, parsed, now=None, gates=N
                                     'cta': 'Approve', 'href': f'#{name}/publish', 'day': key})
         opts = (offdays or {}).get(key) or []
         for o in opts:
-            copy = ' '.join(str(o.get('copy') or '').split())
-            posts.append({'kind': 'short' if o.get('kind') == 'recorded' else OFF_KINDS.get(str(o.get('format') or '').lower(), 'note'),
-                          'title': copy[:120] or str(o.get('format') or 'Off-day post'), 'claim': f'From: {o.get("source")}' if o.get('source') else None,
+            posts.append({'kind': off_kind(o),
+                          'title': off_title(o), 'claim': f'From: {o.get("source")}' if o.get('source') else None,
                           'status': 'concept', 'stage': 0, 'time': '12:30', 'channels': list(OFF_CHANNELS),
                           'assets': [{'slot': 'still', 'state': 'making'}], 'piece_id': o.get('piece_id'),
                           'action': {'label': 'Approve', 'href': f'#offdays-{key}'} if o.get('kind') == 'recorded'
-                          else {'label': 'See mix', 'href': '#ideas-offdays-mix'}})
+                          else {'label': 'See option', 'href': f'#off-{key}-{o["id"]}' if o.get('id') else f'#offdays-{key}'}})
         mine = [o for o in opts if o.get('kind') == 'recorded']
         if mine:
             out['asks'].append({'what': f'Record, {short(when)}', 'detail': f'{len(mine)} piece{"s" if len(mine) != 1 else ""} to approve',
@@ -4703,6 +4744,19 @@ def _growth_offday_checks(check, week, ideas):
         check('growth offdays: a recorded piece on a series day is refused', False)
     except BoardError as error:
         check('growth offdays: a recorded piece on a series day is refused', 'Tuesday, Thursday, Saturday or Sunday piece' in str(error))
+    # Krish, 2026-11-01, on the Tuesday day cards: a meme read NOTE, the title opened on its date, the button led to the mix.
+    check('off-day card: the kind is read from the format phrase, the shape first',
+          off_kind({'format': 'Meme video, made fresh in the brand kit'}) == 'meme'
+          and off_kind({'format': 'Meme carousel, made fresh in the brand kit'}) == 'carousel'
+          and off_kind({'format': 'Said to camera, 1-2-3', 'source': 'Short'}) == 'short' and off_kind({'format': 'x'}) == 'note')
+    check('off-day card: the title is the hook, else card 1, else the first sentence without its date and "Your idea" lead',
+          off_title({'hook': 'Your AI is a puppy', 'copy': 'Tue 3 Nov. x'}) == 'Your AI is a puppy'
+          and off_title({'copy': "Tue 3 Nov, the day after Monday's piece. Four cards, 4:5. Card 1: CLAUDE IS HUNGRY (huge type). Card 2: y"}) == 'CLAUDE IS HUNGRY'
+          and off_title({'copy': 'Tue 3 Nov. Your idea (28 Oct): the translator scene you saved. More.'}) == 'The translator scene you saved.')
+    model = today_model(week, {}, {}, {}, offdays, {})
+    posts = [p for d in model['days'] for p in d.get('posts') or [] if p.get('status') == 'concept']
+    check('off-day card: its button opens that option on the Ideas tab',
+              bool(posts) and all(p['action']['href'].startswith('#off-') and p['action']['label'] == 'See option' for p in posts))
 
 
 def _oct31_checks(check, week, ideas, opt):

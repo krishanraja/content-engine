@@ -1,0 +1,3 @@
+Status: Off-day day cards fixed. A meme no longer shows as NOTE, the title is the hook or card 1 rather than the date, the box on an unmade post asks about the idea, and "See option" opens that option. The off-day Ideas mock is made (docs/handovers/board-mocks-2026-11-01-offdays/): every option carries an idea and a suggested creative direction, each with Approve, Improve or Reject with a reason, and his words become cues for next Sunday. Plan: 4 to 6 options a day from the inspiration already gathered, then presses, revision and Growth's mock loop, built only after he locks the mock.
+Next: Krish reacts to the off-day mock; lock or revise it before any Ideas-tab code.
+- North Star check (2026-11-01): holds.

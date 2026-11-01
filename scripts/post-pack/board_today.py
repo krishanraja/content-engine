@@ -178,7 +178,13 @@ def _note(d, p, i):
     fid = _note_id(d, i)
     about = (f' data-piece="{E(p["piece_id"])}"' if p.get('piece_id') else '') + f' data-title="{E(p["title"])}"'
     return (f'<textarea class="fb" rows="1" maxlength="{NOTE_MAX}" data-fb="{fid}" data-fb-day="{d["key"]}"{about} '
-            f'aria-label="Your thoughts on {E(p["title"])}" placeholder="Your thoughts on how it landed" disabled></textarea>')
+            f'aria-label="Your thoughts on {E(p["title"])}" placeholder="{E(_note_prompt(p))}" disabled></textarea>')
+
+
+def _note_prompt(p):
+    # The box stays in its place on every card; only its prompt follows the post. A post not made yet has not landed
+    # (Krish, 2026-11-01, on "Your thoughts on how it landed" under an idea still waiting on his yes).
+    return 'Your thoughts on this idea' if p['status'] == 'concept' else 'Your thoughts on how it landed'
 
 
 def _open_panel(d, name, date):
