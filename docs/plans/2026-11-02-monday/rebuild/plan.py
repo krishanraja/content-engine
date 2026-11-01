@@ -50,7 +50,7 @@ def long():
     S.append(seg(20.6, 30.1, 'full', 'badges', count=23.7, fall=28.44, land=29.62))
     S.append(seg(29.75, 31.9, 'brand')); P += [(30.0, .22)]
     mg = A('and many of its managers', 30)
-    S.append(seg(31.9, mg, 'side', 'bars', six=36.0))
+    S.append(seg(31.9, mg, 'side', 'bars', six=34.2))
     first = A('so when AI writes', 36)
     S.append(paper(mg, first, 'report-managers.jpg', lift=A('hiring less', 36) - mg + 0.0))
     alone = A('makes sense but Anthropic', 40)
@@ -68,7 +68,7 @@ def long():
     another = A('another example is spreadsheets', 80)
     S.append(paper(held, another, 'imf-cash.jpg', lift=1.0, pw=520, sk=760))
     because = A('and that\'s because accounting', 90)
-    S.append(seg(another, because, 'full', 'ledgers', gone=A('have gone', 86, end=True) - 0.4, added=A('but 600,000', 92)))
+    S.append(seg(another, because, 'full', 'ledgers', count=A('about 400,000', 86), gone=A('have gone', 86, end=True) - 0.4, added=A('but 600,000', 92)))
     each = A('so each time', 98)
     S.append(paper(because, each, 'npr.jpg', lift=0.9, pw=600))
     worry = A('but here is the worry', 104)
@@ -136,7 +136,7 @@ def short():
     many = A('and many of its managers', 15)
     S.append(seg(st, many, 'full', 'badges', count=A('one in four', 12) - 0.2, fall=A('fewer than one', 14), land=A('in 10', 15)))
     cash = A('cash machines', 18)
-    S.append(paper(many, cash, 'report-managers.jpg', mode='band'))
+    S.append(seg(many, cash - 0.1, 'full', 'quote', img='report-managers.jpg', credit='ANTHROPIC · OCT 2026', text='Around a third of ML and a fifth of SWE managers reported hiring less due to AI.', hl=[11, 12, 13, 14, 15]))
     sp = A('and spreadsheets', 19)
     but = A('but I feel', 24)
     S.append(seg(cash - 0.1, sp + 0.9, 'full', 'branch', copy=cash + 0.2, pct=cash + 0.7))
@@ -146,13 +146,13 @@ def short():
     no = A('and no one notices', 31)
     S.append(seg(ai, no, 'full', 'ladder', drawn=1, lift=A('first draft itself', 28)))
     pic = A('a picture of a new hire', 36)
-    S.append(paper(no, pic, 'report-not-hired.jpg', mode='band'))
+    S.append(seg(no, pic, 'full', 'quote', img='report-not-hired.jpg', credit='ANTHROPIC · OCT 2026', text='Employment protections for incumbents will not benefit those not hired to begin with.', hl=[8, 9, 10, 11, 12]))
     before = A('and so before you cut', 44)
     S.append(seg(pic, before, 'full', 'sheet', tries=[pic + 2.4, pic + 4.2, pic + 6.0]))
     who = A('who will your seniors', 47)
     S.append(seg(before, who, 'face')); P += [(A('ask two things', 46), .22)]
     now = A('now here\'s what to do', 50)
-    S.append(seg(who, now, 'band', 'bcards', head='BEFORE YOU CUT A JUNIOR ROLE', cards=[dict(at=0.0, big='?', label='Who?'), dict(at=round(A('what are they learning', 48) - who, 2), big='?', label='Learning on what?')]))
+    S.append(seg(who, now, 'band', 'bcards', cards=[dict(at=0.0, big='?', label='Who?'), dict(at=round(A('what are they learning', 48) - who, 2), big='?', label='Learning on what?')]))
     name = A('name each', 52)
     S.append(seg(now, name, 'face')); P += [(now, .2)]
     full = A('the full deep dive', 60)
@@ -161,7 +161,7 @@ def short():
     S.append(seg(full, close, 'face')); P += [(full, .14), (A('makeyourmindup.ai.', 61), .2)]
     shakes = [[1.55, 14], [A('first draft itself', 28) + 0.1, 9]]
     return dict(cut='short', off=off, take_in=0.6, capFrom=0.6, closeAt=close, dur=round(close + 4.4, 2), take_end=round(close - off + 0.2, 2),
-                segs=S, push=P, shakes=shakes, dress=[[3.0, q - 0.3], [full, close]])
+                segs=S, push=P, shakes=shakes, dress=[[3.0, q - 0.3], [full, close - 0.75]])
 
 for T in (long(), short()):
     words = json.load(open(H / f"words_{T['cut']}.json"))

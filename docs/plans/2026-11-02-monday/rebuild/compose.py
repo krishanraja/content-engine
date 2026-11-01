@@ -133,7 +133,10 @@ def audio(cut, video):
     subprocess.run([FF, '-v', 'error', '-y', '-f', 'lavfi', '-t', f'{lead}', '-i', 'anullsrc=r=48000:cl=stereo', '-ss', f'{tin}', '-t', f'{spoken}', '-i', str(cut.take),
                     '-filter_complex', f'[1:a]aresample=48000,aformat=channel_layouts=stereo,afade=t=out:st={spoken - 0.25}:d=0.25[t];[0:a][t]concat=n=2:v=0:a=1,apad=whole_dur={dur}[o]',
                     '-map', '[o]', '-t', f'{dur}', str(v)], check=True)
-    subprocess.run([FF, '-v', 'error', '-y', '-stream_loop', '-1', '-i', str(MUSIC), '-af', f'aresample=48000,aformat=channel_layouts=stereo,atrim=0:{dur},volume=0.55,afade=t=out:st={dur - 1.2}:d=1.2',
+    subprocess.run([FF, '-v', 'error', '-y', '-stream_loop', '-1', '-i', str(MUSIC), '-af', f"aresample=48000,aformat=channel_layouts=stereo,atrim=0:{dur},volume=0.55,"
+                    # under his voice the bed stays down, all the way to his last word; it swells only once the close is on screen
+                    f"volume='if(lt(t,3.0),1,if(lt(t,{P['closeAt'] + 0.05}),0.45,min(1,0.45+0.55*(t-{P['closeAt'] + 0.05})/0.4)))':eval=frame,"
+                    f"afade=t=out:st={dur - 1.2}:d=1.2",
                     '-t', f'{dur}', str(m)], check=True)
     subprocess.run([FF, '-v', 'error', '-y', '-i', str(v), '-i', str(m), '-filter_complex',
                     '[0:a]asplit[a][k];[1:a][k]sidechaincompress=threshold=0.03:ratio=9:attack=20:release=400[md];[a][md]amix=inputs=2:normalize=0,atrim=0:%s[o]' % dur,

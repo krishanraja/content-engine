@@ -38,24 +38,22 @@
   },
   {
    "a": 19.35,
-   "b": 22.31,
-   "mode": "band",
-   "scene": "bpaper",
-   "d": 2.96,
+   "b": 22.209999999999997,
+   "mode": "full",
+   "scene": "quote",
+   "d": 2.86,
    "p": {
     "img": "report-managers.jpg",
-    "strip": [
-     150,
-     228,
-     800,
-     292
-    ],
-    "w": 935,
-    "h": 520,
     "credit": "ANTHROPIC \u00b7 OCT 2026",
-    "sweep": 1.7
-   },
-   "lift": 0.85
+    "text": "Around a third of ML and a fifth of SWE managers reported hiring less due to AI.",
+    "hl": [
+     11,
+     12,
+     13,
+     14,
+     15
+    ]
+   }
   },
   {
    "a": 22.209999999999997,
@@ -101,23 +99,21 @@
   {
    "a": 35.29,
    "b": 39.59,
-   "mode": "band",
-   "scene": "bpaper",
+   "mode": "full",
+   "scene": "quote",
    "d": 4.3,
    "p": {
     "img": "report-not-hired.jpg",
-    "strip": [
-     150,
-     241,
-     790,
-     302
-    ],
-    "w": 935,
-    "h": 520,
     "credit": "ANTHROPIC \u00b7 OCT 2026",
-    "sweep": 1.7
-   },
-   "lift": 0.85
+    "text": "Employment protections for incumbents will not benefit those not hired to begin with.",
+    "hl": [
+     8,
+     9,
+     10,
+     11,
+     12
+    ]
+   }
   },
   {
    "a": 39.59,
@@ -147,7 +143,6 @@
    "scene": "bcards",
    "d": 3.6,
    "p": {
-    "head": "BEFORE YOU CUT A JUNIOR ROLE",
     "cards": [
      {
       "at": 0.0,
@@ -241,7 +236,7 @@
   ],
   [
    64.71,
-   67.26
+   66.51
   ]
  ]
 }

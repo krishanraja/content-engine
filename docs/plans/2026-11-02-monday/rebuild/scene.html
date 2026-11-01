@@ -63,7 +63,7 @@ function camera(t){let x=Math.sin(t*.37)*7,y=Math.cos(t*.29)*5,s=1.012+Math.sin(
 
 // a scene is drawn in a 1200 x 800 box, placed by its mode: beside his column, full frame, or (phone) a full-frame plate
 function boxFor(mode){if(!V)return mode==='side'?{x:680,y:96,s:1}:{x:(1920-1200*1.32)/2,y:(1080-800*1.32)/2-30,s:1.32};
-  return mode==='band'?{x:60,y:1100,s:0.8}:{x:(1080-1200*0.9)/2,y:470,s:0.9}}
+  return mode==='band'?{x:70,y:1105,s:0.7167}:{x:(1080-1200*0.9)/2,y:470,s:0.9}}
 function wrap(box,inner,extra=''){return `<div class="abs" style="left:${box.x}px;top:${box.y}px;width:1200px;height:800px;transform:scale(${box.s});transform-origin:0 0;${extra}">${inner}</div>`}
 const credit=(txt,c,x=0,y=772,o=1)=>txt?`<div class="abs mono" style="left:${x}px;top:${y}px;font-size:21px;color:${c};opacity:${o};white-space:nowrap;background:${c===INK?'rgba(255,216,77,.0)':'rgba(12,21,18,0)'}">${txt}</div>`:'';
 
@@ -80,29 +80,29 @@ S.paper=(u,g,th)=>{const p=g.p,fly=B(u,0.0,0.75),pu=W(u,0,g.d);let s='';
   s+=credit(p.credit,th.fg,pw*0.55+40,772,W(u,0.5,.4));return s};
 // the ladder: rails, rungs, 2030, the gap, the taller ladder, labels, the line, the cards
 S.ladder=(u,g,th)=>{const p=g.p,X=p.x??470,Wd=p.w??280,top=60,bot=740,c=th.fg;let sv=`<svg width="1200" height="800" style="position:absolute;left:0;top:0;overflow:visible"><g stroke="${c}" stroke-width="15" stroke-linecap="round" fill="none">`;
-  const rail=p.drawn?1:W(u,0.05,0.6),grow=p.taller!=null?W(u,p.taller,0.8):0,t0=top-120*grow;
+  const rail=p.drawn?1:W(u,0.05,0.6),grow=p.taller!=null?W(u,p.taller,0.8):0,t0=top-50*grow;
   sv+=`<line x1="${X}" y1="${bot}" x2="${X}" y2="${bot-(bot-t0)*rail}"/><line x1="${X+Wd}" y1="${bot}" x2="${X+Wd}" y2="${bot-(bot-t0)*rail}"/>`;
   const ys=[150,300,450,600];ys.forEach((y,i)=>{const q=p.drawn?1:W(u,0.2+(3-i)*0.12,.3);if(q>.02)sv+=`<line x1="${X}" y1="${y}" x2="${X+Wd*q}" y2="${y}"/>`});
-  if(grow>.02)sv+=`<line x1="${X}" y1="${30}" x2="${X+Wd*grow}" y2="30" stroke="${th.acc}"/>`;
+  if(grow>.02)sv+=`<line x1="${X}" y1="${40}" x2="${X+Wd*grow}" y2="40" stroke="${th.acc}"/>`;
   // the bottom rung: solid, gone, or lifting away
   const by=730;let bo=1,bdx=0,bdy=0,brot=0;
   if(p.gap)bo=0;if(p.lift!=null&&u>p.lift){const f=u-p.lift;bdy=-f*f*500-f*120;bdx=f*260;brot=-f*40;bo=clamp(1-f*.9)}
   if(p.gap||p.lift!=null)sv+=`<line x1="${X}" y1="${by}" x2="${X+Wd}" y2="${by}" stroke-dasharray="12 20" opacity="${.4*(p.gap?1:W(u,(p.lift||0)+.5,.5))}"/>`;
   if(bo>0.01)sv+=`<g transform="translate(${X+Wd/2+bdx},${by+bdy}) rotate(${brot})" opacity="${bo}"><line x1="${-Wd/2}" y1="0" x2="${Wd/2}" y2="0" stroke="${p.bright!=null?(u>p.bright?th.acc:c):c}" stroke-width="${p.bright!=null&&u>p.bright?20+3*Math.sin(u*4):15}"/></g>`;
   sv+='</g>';
-  if(p.lit!=null){const lit=W(u,p.lit,.35);sv+=`<rect x="${X-12}" y="${top+(p.taller!=null?-150*grow:0)+62}" width="${Wd+24}" height="60" rx="8" fill="${INK}" opacity="${lit}" transform="translate(0,${-2*Math.sin(u*2)})"/><text x="${X+Wd/2}" y="${top+(p.taller!=null?-150*grow:0)+110}" font-family="Anton" font-size="54" fill="${MINT}" text-anchor="middle" opacity="${lit}">2030</text>`}
+  if(p.lit!=null){const lit=W(u,p.lit,.35);sv+=`<rect x="${X-12}" y="${top+62-112*grow}" width="${Wd+24}" height="60" rx="8" fill="${INK}" opacity="${lit}" transform="translate(0,${-2*Math.sin(u*2)})"/><text x="${X+Wd/2}" y="${top+110-112*grow}" font-family="Anton" font-size="54" fill="${MINT}" text-anchor="middle" opacity="${lit}">2030</text>`}
   if(p.line!=null){const q=W(u,p.line,1.2);sv+=`<line x1="${X+Wd+60}" y1="${150}" x2="${X+Wd+60}" y2="${150+(by-150)*q}" stroke="${MINT}" stroke-width="10" stroke-dasharray="4 16" stroke-linecap="round"/>`;
     if(q>.95)sv+=`<circle cx="${X+Wd+60}" cy="${by}" r="${16+5*Math.sin(u*5)}" fill="none" stroke="${MINT}" stroke-width="6"/>`}
   sv+='</svg>';let s=sv;
-  if(p.labels!=null){const q=W(u,p.labels,.4);s+=`<div class="abs mono" style="left:${X+Wd+40}px;top:${by-22}px;font-size:30px;color:${c};opacity:${q};transform:translateX(${(1-q)*40}px)">TELLER · CLERK</div>`}
+  if(p.labels!=null){const q=W(u,p.labels,.4);s+=`<div class="abs" style="left:${X+Wd+40}px;top:${by-28}px;font-size:44px;font-family:Archivo;font-weight:800;letter-spacing:0;text-transform:none;color:${c};opacity:${q};transform:translateX(${(1-q)*40}px)">Teller, clerk</div>`}
   if(p.judge!=null){const q=B(u,p.judge,.55);s+=`<div class="abs anton" style="left:${X+Wd/2}px;top:${150-78+Math.sin(u*1.4)*4}px;font-size:72px;color:${INK};background:${MINT};padding:6px 18px;transform:translateX(-50%) scale(${q});box-shadow:8px 8px 0 ${INK}">Judgement</div>`}
   if(p.qcards){p.qcards.forEach((a,i)=>{if(u<a)return;const q=B(u,a,.6),dx=i===0?-170:170;
     s+=`<div class="abs" style="left:${X+Wd/2+dx-150}px;top:${by-150+(1-q)*-500+Math.sin(u*1.3+i)*5}px;width:300px;height:190px;background:${MINT};border:5px solid ${INK};border-radius:18px;box-shadow:10px 10px 0 ${INK};transform:rotate(${(i?4:-4)*(1-q*.6)+Math.sin(u*.8+i)*1.2}deg)">
       <div class="anton" style="position:absolute;left:24px;top:18px;font-size:120px;color:${INK}">?</div><div class="anton" style="position:absolute;right:26px;bottom:14px;font-size:70px;color:${INK}">${i+1}</div></div>`});
-    if(p.qlabel!=null)s+=`<div class="abs mono" style="left:${X+Wd+70}px;top:${130}px;font-size:26px;color:${c};opacity:${W(u,p.qlabel,.4)}">NEXT HIRING MEETING</div>`}
+}
   if(p.cover!=null){const fly=B(u,p.cover,0.7),pu=W(u,p.cover,6);s+=`<div class="abs" style="left:${(X+Wd+110)+(1-fly)*900}px;top:${40+(1-fly)*-80}px;width:520px;transform:rotate(${-5+4*fly}deg) scale(${.96+pu*.08});box-shadow:0 30px 60px rgba(12,21,18,.45)"><img src="${SRC}report-cover.jpg" style="width:520px;display:block"></div>`;
     s+=credit('ANTHROPIC · 16 OCT 2026',c,X+Wd+118,772,W(u,p.cover+0.4,.4))}
-  const zp=p.lift!=null?.22*W(u,p.lift+.3,3):0;return `<div class="abs" style="inset:0;transform:translate(${Math.sin(u*.4)*8}px,${Math.cos(u*.33)*6}px) scale(${1+W(u,0,g.d)*.12+zp});transform-origin:${(X+Wd/2)/12}% 88%">${s}</div>`};
+  const zp=p.lift!=null?.22*W(u,p.lift+.3,3):0;return `<div class="abs" style="inset:0;transform:translate(${Math.sin(u*.4)*8}px,${Math.cos(u*.33)*6}px) scale(${1+W(u,0,g.d)*(p.taller!=null?.03:.12)+zp});transform-origin:${(X+Wd/2)/12}% 88%">${s}</div>`};
 // the hire badges: 100 in a tray, the juniors butter; on the fall 18 lift off and drop
 S.badges=(u,g,th)=>{const p=g.p,js=[];for(let k=0;k<27;k++)js.push(Math.floor(k*100/27+1)%100);const keep=new Set(js.filter((_,i)=>i%3===0).slice(0,9));
   let s='';const fill=W(u,0.2,2.0);
@@ -113,17 +113,16 @@ S.badges=(u,g,th)=>{const p=g.p,js=[];for(let k=0;k<27;k++)js.push(Math.floor(k*
   const push=1+W(u,0.2,g.d)*0.12;let out=`<div class="abs" style="left:${V?250:-20}px;top:${V?40:20}px;width:700px;height:960px;transform:perspective(1600px) rotateX(${32-8*W(u,0.2,8)}deg) rotateZ(-5deg) scale(${push*(V?.8:.82)});transform-origin:50% 40%">${s}</div>`;
   let v=0;if(u>=p.count&&u<p.fall)v=Math.round(27*W(u,p.count,1.4));else if(u>=p.fall)v=Math.round(27-18*W(u,p.fall,1.2));
   const pop=(u>=p.land?1+.12*(1-W(u,p.land,.25)):1)*(1+.035*Math.sin(u*2.4)),NX=V?40:720,NY=V?-330:120;
-  out+=`<div class="abs mono" style="left:${NX+10}px;top:${NY+10}px;font-size:28px;color:${CREAM};opacity:${W(u,0.8,.4)}">${u<p.fall-0.3?'New technical hires · early 2025':'New technical hires · now'}</div>`;
   if(u>=p.count)out+=`<div class="abs anton" style="left:${NX}px;top:${NY+60}px;font-size:300px;color:${CREAM};transform:scale(${pop});transform-origin:left">${v}%</div><div class="abs" style="left:${NX+10}px;top:${NY+370}px;height:20px;width:${460*W(u,p.land,.4)}px;background:${BUT}"></div>`;
   if(u>=p.fall)out+=`<div class="abs anton" style="left:${NX+(V?640:10)}px;top:${NY+(V?150:410)}px;font-size:84px;color:${GREY};text-decoration:line-through;opacity:${W(u,p.fall,.3)}">27%</div>`;
-  out+=credit('ANTHROPIC · HOW EMPLOYMENT IS CHANGING AT ANTHROPIC · OCT 2026','#a9b4ae',V?40:720,V?-372:700,W(u,.6,.4));return out};
+  out+=credit('ANTHROPIC · OCT 2026','#a9b4ae',V?40:720,V?-372:700,W(u,.6,.4));return out};
 // six to one: two bars, the agents' growing the whole time, the report's own line beside them
-S.bars=(u,g,th)=>{const p=g.p,base=640,un=115,staff=un*W(u,0.3,.5),k=1+1.2*W(u,0.7,2.2)+3.8*W(u,p.six,1.2),agents=un*k*W(u,0.5,.5);let s='';
+S.bars=(u,g,th)=>{const p=g.p,base=640,un=115,staff=un*W(u,0.3,.5),k=1+1.2*W(u,0.7,2.2)+3.8*W(u,p.six,1.0),agents=un*k*W(u,0.5,.5);let s='';
   s+=`<div class="abs" style="left:200px;top:${base-staff}px;width:180px;height:${staff}px;background:${INK}"></div><div class="abs" style="left:430px;top:${base-agents}px;width:180px;height:${agents}px;background:${INK};box-shadow:12px 12px 0 ${MINT}"></div>`;
-  s+=`<div class="abs mono" style="left:200px;top:${base+16}px;font-size:24px;color:${INK}">Staff</div><div class="abs mono" style="left:430px;top:${base+16}px;font-size:24px;color:${INK}">AI agents</div>`;
+  s+=`<div class="abs" style="left:200px;top:${base+14}px;font-size:38px;font-family:Archivo;font-weight:800;letter-spacing:0;text-transform:none;color:${INK}">Staff</div><div class="abs" style="left:430px;top:${base+14}px;font-size:38px;font-family:Archivo;font-weight:800;letter-spacing:0;text-transform:none;color:${INK}">AI agents</div>`;
   s+=`<div class="abs anton" style="left:430px;top:${base-agents-90}px;font-size:70px;color:${INK}">×${k.toFixed(1)}</div>`;
   const fly=B(u,0.2,.7);s+=`<div class="abs" style="left:${690+(1-fly)*700}px;top:40px;width:500px;transform:rotate(${3-2*fly}deg) scale(${1+W(u,0.7,4)*.05});box-shadow:0 26px 50px rgba(12,21,18,.4)"><img src="${SRC}report-6-1.jpg" style="width:500px;display:block"></div>`;
-  if(u>=p.six){const r=B(u,p.six,.4);s+=`<div class="abs anton" style="left:700px;top:420px;font-size:150px;white-space:nowrap;color:${INK};transform:scale(${r});transform-origin:left">6 to 1</div>`}
+  if(u>=p.six+1.0){const r=B(u,p.six+1.0,.4);s+=`<div class="abs anton" style="left:700px;top:420px;font-size:150px;white-space:nowrap;color:${INK};transform:scale(${r});transform-origin:left">6 to 1</div>`}
   s+=credit('ANTHROPIC · AUG 2026',INK,692,360,W(u,.5,.4));return s};
 // two lines from 2023: senior keeps rising, junior turns down. No numbers, only the direction the study reports
 S.lines=(u,g,th)=>{const p=g.p,c=th.fg,X0=80,X1=900,Y0=640;const q=W(u,0.3,p.part?Math.max(1,p.part):2.4),q2=W(u,p.part??1.5,1.6);let sv=`<svg width="1200" height="800" style="position:absolute;left:0;top:0;overflow:visible">`;
@@ -134,15 +133,14 @@ S.lines=(u,g,th)=>{const p=g.p,c=th.fg,X0=80,X1=900,Y0=640;const q=W(u,0.3,p.par
   sv+=`<path d="${pts(jun)}" fill="none" stroke="${th.acc}" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>`;
   sv+=`<line x1="${X0+.45*(X1-X0)}" y1="${Y0}" x2="${X0+.45*(X1-X0)}" y2="140" stroke="${c}" stroke-width="3" stroke-dasharray="6 10" opacity="${.5*W(u,0.8,.5)}"/></svg>`;
   let s=sv;const end=x=>X0+x*(X1-X0)+20,ex=Math.min(1,q*.45+q2*.55);
-  s+=`<div class="abs mono" style="left:${end(ex)}px;top:${sen(ex)-20}px;font-size:28px;color:${c};opacity:${q2}">Senior</div><div class="abs mono" style="left:${end(ex)}px;top:${jun(ex)-20}px;font-size:28px;color:${c};opacity:${q2}"><span style="background:${th.acc};color:${INK};padding:2px 8px">Junior</span></div>`;
+  s+=`<div class="abs" style="left:${end(ex)}px;top:${sen(ex)-26}px;font-size:40px;font-family:Archivo;font-weight:800;letter-spacing:0;text-transform:none;color:${c};opacity:${q2}">Senior jobs</div><div class="abs" style="left:${end(ex)}px;top:${jun(ex)-26}px;font-size:40px;font-family:Archivo;font-weight:800;letter-spacing:0;text-transform:none;color:${c};opacity:${q2}"><span style="background:${th.acc};color:${INK};padding:2px 8px">Junior jobs</span></div>`;
   s+=`<div class="abs mono" style="left:${X0}px;top:${Y0+16}px;font-size:24px;color:${c}">2015</div><div class="abs mono" style="left:${X0+.45*(X1-X0)-30}px;top:${Y0+16}px;font-size:24px;color:${c};opacity:${W(u,0.8,.5)}">2023</div>`;
-  s+=`<div class="abs mono" style="left:${X0}px;top:60px;font-size:26px;color:${c};opacity:${W(u,.4,.4)}">Since 2023 · firms using AI</div>`;
   s+=credit('HOSSEINI & LICHTINGER · 2025',c,X0,740,W(u,.6,.4));
   return `<div class="abs" style="inset:0;transform:scale(${1+W(u,0,g.d)*.06}) translate(${Math.sin(u*.5)*6}px,0);transform-origin:30% 50%">${s}</div>`};
 // a city branch with 20 teller windows, in depth; 7 shutter; then the branch copies down the street, +43%
 S.branch=(u,g,th)=>{const p=g.p;let s='';const copy=p.copy!=null?W(u,p.copy,1.4):0,cam=1-0.42*copy;
-  const facade=(k,shut,o)=>{let w='';for(let i=0;i<20;i++){const r=Math.floor(i/5),c=i%5,isShut=i>=13&&shut>0;const sh=isShut?clamp((shut*7-(i-13))/1.0):0;
-      w+=`<div class="abs" style="left:${40+c*92}px;top:${120+r*112}px;width:70px;height:88px;background:${sh>0.9?'#2a2f2c':BUT};box-shadow:inset 0 0 0 4px ${INK},0 0 ${20*(1-sh)}px rgba(255,216,77,.6)">
+  const facade=(k,shut,o)=>{let w='';for(let i=0;i<20;i++){const r=Math.floor(i/5),c=i%5,isShut=i>=13&&shut>0,lit=k===0&&p.shut!=null?W(u,0.3+i*((p.shut-0.6)/20),.25):1;const sh=isShut?clamp((shut*7-(i-13))/1.0):0;
+      w+=`<div class="abs" style="left:${40+c*92}px;top:${120+r*112}px;width:70px;height:88px;opacity:${.25+.75*lit};transform:scale(${.8+.2*back(lit)});background:${sh>0.9||lit<.5?'#2a2f2c':BUT};box-shadow:inset 0 0 0 4px ${INK},0 0 ${20*(1-sh)}px rgba(255,216,77,.6)">
         <div class="abs" style="left:21px;top:${18+Math.sin(u*2+i)*2}px;width:28px;height:28px;border-radius:50%;background:${INK};opacity:${1-sh}"></div><div class="abs" style="left:12px;top:48px;width:46px;height:40px;border-radius:20px 20px 0 0;background:${INK};opacity:${1-sh}"></div>
         <div class="abs" style="left:0;top:0;width:70px;height:${88*sh}px;background:repeating-linear-gradient(${GREY} 0 8px,#3b423e 8px 12px)"></div></div>`}
     return `<div class="abs" style="left:0;top:0;width:520px;height:600px;background:${CREAM};box-shadow:inset 0 0 0 8px ${INK};opacity:${o}"><div class="abs anton" style="left:40px;top:28px;font-size:60px;color:${INK}">Bank</div>${w}<div class="abs" style="left:200px;top:560px;width:120px;height:40px;background:${INK}"></div></div>
@@ -152,25 +150,25 @@ S.branch=(u,g,th)=>{const p=g.p;let s='';const copy=p.copy!=null?W(u,p.copy,1.4)
   let street='';const n=p.copy!=null?7:1;
   for(let k=n-1;k>=0;k--){const appear=k===0?1:B(u,(p.copy||0)+0.25+k*0.22,.5);if(appear<=0.01)continue;
     street+=`<div class="abs" style="left:${80+k*360}px;top:${120-k*0}px;transform:scale(${appear*(1-k*0.06)});transform-origin:50% 100%">${facade(k,k===0?shut:0,1)}</div>`}
-  s+=`<div class="abs" style="left:0;top:0;width:3200px;height:800px;transform-origin:20% 50%;transform:scale(${1+.07*W(u,0,p.shut??g.d)}) ${V?`translate(${260-copy*820+Math.sin(u*.4)*10}px,${120+copy*260}px) scale(${1.25-0.6*copy})`:`translate(${-copy*160+Math.sin(u*.4)*10}px,${60+copy*230}px) scale(${cam})`};transform-origin:0 0">${street}</div>`;
+  s+=`<div class="abs" style="left:0;top:0;width:3200px;height:800px;transform-origin:20% 50%;transform:scale(${1+.07*W(u,0,g.d)}) ${V?`translate(${200-copy*700+Math.sin(u*.4)*10}px,${80+copy*200}px) scale(${1.55-0.8*copy})`:`translate(${-copy*160+Math.sin(u*.4)*10}px,${60+copy*230}px) scale(${cam})`};transform-origin:0 0">${street}</div>`;
   // the numbers
-  const NX=V?60:900;let v=20;if(shut>0)v=Math.round(20-7*shut);
+  const NX=V?60:900;let v=p.shut!=null?Math.min(20,Math.floor((u-0.3)/((p.shut-0.6)/20))+1):20;v=Math.max(1,v);if(shut>0)v=Math.round(20-7*shut);
   if(p.copy==null||copy<.3){s+=`<div class="abs anton" style="left:${NX}px;top:${V?-380:90}px;font-size:${V?300:260}px;color:${CREAM};opacity:${W(u,0.4,.4)*(1-clamp(copy/0.3))};transform:scale(${1+.04*Math.sin(u*2.2)});transform-origin:left">${v}</div>`;
-    s+=`<div class="abs mono" style="left:${NX+8}px;top:${V?-60:370}px;white-space:nowrap;font-size:26px;color:${CREAM};opacity:${W(u,0.6,.4)*(1-clamp(copy/0.3))}">Tellers per city branch</div>`;
-    if(shut>.05)s+=`<div class="abs anton" style="left:${NX+8}px;top:${V?-10:430}px;font-size:80px;color:${GREY};text-decoration:line-through;opacity:${W(u,p.shut,.3)*(1-clamp(copy/0.3))}">20</div>`}
-  if(p.pct!=null&&u>=p.pct){const q=W(u,p.pct,1.0);s+=`<div class="abs anton" style="left:${V?60:640}px;top:${V?-280:150}px;font-size:${V?240:230}px;color:${BUT};transform:scale(${B(u,p.pct,.5)*(1+.04*Math.sin(u*2.4))});transform-origin:left">+${Math.round(43*q)}%</div><div class="abs mono" style="left:${V?70:650}px;top:${V?-320:110}px;font-size:28px;color:${CREAM};white-space:nowrap">Branches in cities · 1988 to 2004</div>`}
+    s+=`<div class="abs" style="left:${NX+8}px;top:${V?-60:360}px;white-space:nowrap;font-size:44px;font-family:Archivo;font-weight:800;letter-spacing:0;text-transform:none;color:${CREAM};opacity:${W(u,0.6,.4)*(1-clamp(copy/0.3))}">tellers in a city branch</div>`;
+    if(shut>.05)s+=`<div class="abs anton" style="left:${NX+8}px;top:${V?-10:440}px;font-size:80px;color:${GREY};text-decoration:line-through;opacity:${W(u,p.shut,.3)*(1-clamp(copy/0.3))}">20</div>`}
+  if(p.pct!=null&&u>=p.pct){const q=W(u,p.pct,1.0);s+=`<div class="abs anton" style="left:${V?60:640}px;top:${V?-280:150}px;font-size:${V?240:230}px;color:${BUT};transform:scale(${B(u,p.pct,.5)*(1+.04*Math.sin(u*2.4))});transform-origin:left">+${Math.round(43*q)}%</div><div class="abs" style="left:${V?70:650}px;top:${V?-40:400}px;font-size:44px;font-family:Archivo;font-weight:800;letter-spacing:0;text-transform:none;color:${CREAM};white-space:nowrap">more city branches</div>`}
   s+=credit('IMF · BESSEN 2015','#a9b4ae',V?60:0,V?1060:790,W(u,.6,.4));return s};
 // spreadsheets: the clerks' stack falls away, the accountants' grows taller
 S.ledgers=(u,g,th)=>{const p=g.p;let s='';const blk=(x,y,w,h,c,o,r)=>`<div class="abs" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;opacity:${o};transform:rotate(${r}deg)"><div class="abs" style="left:0;top:0;width:${w}px;height:${h}px;background:${c};box-shadow:inset 0 0 0 4px ${INK}"></div><div class="abs" style="left:${w}px;top:0;width:26px;height:${h}px;background:${c};filter:brightness(.72);transform-origin:0 0;transform:skewY(-40deg);box-shadow:inset 0 0 0 4px ${INK}"></div><div class="abs" style="left:0;top:-22px;width:${w}px;height:22px;background:${c};filter:brightness(1.12);transform-origin:0 100%;transform:skewX(-50deg);box-shadow:inset 0 0 0 4px ${INK}"></div></div>`;
-  const L0=V?80:120,R0=V?620:640,base=V?830:730,st=50,bh=44,bw=V?380:320;
-  for(let i=0;i<8;i++){let x=L0,y=base-(i+1)*st,o=W(u,0.1+i*.06,.3),r=0;const f=u-(p.gone+(7-i)*0.07);if(f>0){y+=f*f*1400;x-=f*180;r=-f*70;o*=clamp(1-f*1.2)}if(o>.01)s+=blk(x,y,bw,bh,'#cfc8b8',o,r)}
-  const m=p.added!=null?Math.round(10*W(u,p.added,1.8)):0;for(let i=0;i<m;i++){const q=B(u,p.added+i*.15,.4);s+=blk(R0,base-(i+1)*st+(1-q)*-300,bw,bh,BUT,q,0)}
-  const cl=p.gone!=null&&u>=p.gone?Math.round(400000*W(u,p.gone,1.2)):0,ac=p.added!=null&&u>=p.added?Math.round(600000*W(u,p.added,1.8)):0;
-  s+=`<div class="abs mono" style="left:${L0}px;top:110px;font-size:26px;color:${CREAM};opacity:${W(u,.3,.4)}">Bookkeeping clerks</div><div class="abs mono" style="left:${R0}px;top:110px;font-size:26px;color:${CREAM};opacity:${W(u,.3,.4)}">Accountants</div>`;
-  if(cl)s+=`<div class="abs anton" style="left:${L0}px;top:150px;font-size:96px;color:${CREAM};transform:scale(${1+.03*Math.sin(u*2)});transform-origin:left">−${fmt(cl)}</div>`;
-  if(ac)s+=`<div class="abs anton" style="left:${R0}px;top:150px;font-size:96px;color:${BUT};transform:scale(${1+.03*Math.sin(u*2.3)});transform-origin:left">+${fmt(ac)}</div>`;
-  s+=credit('NPR PLANET MONEY · 2015 · US JOBS SINCE 1980','#a9b4ae',L0,V?760:740,W(u,.6,.4));
-  return `<div class="abs" style="inset:0;transform:scale(${1+W(u,0,p.gone??g.d)*.07}) translate(${Math.sin(u*.45)*8}px,0);transform-origin:50% 55%">${s}</div>`};
+  const L0=V?80:120,R0=V?600:660,base=V?860:760,st=46,bh=40,bw=V?360:320,NY=V?190:150;
+  const step=p.count!=null?Math.max(0.25,(p.count-0.3)/8):0.12;
+  for(let i=0;i<8;i++){const a0=0.2+i*step;let x=L0,y=base-(i+1)*st,o=W(u,a0,.3),r=0;y-= (1-B(u,a0,.45))*120;const f=u-(p.gone+(7-i)*0.07);if(f>0){y+=f*f*1400;x-=f*180;r=-f*70;o*=clamp(1-f*1.2)}if(o>.01)s+=blk(x,y,bw,bh,'#cfc8b8',o,r)}
+  if(p.added!=null)for(let i=0;i<8;i++){const a0=p.added+i*0.12;if(u<a0)break;const q=B(u,a0,.4);s+=blk(R0,base-(i+1)*st+(1-q)*-300,bw,bh,BUT,q,0)}
+  const c0=p.count??p.gone,cl=u>=c0?Math.round(400000*W(u,c0,p.count!=null?Math.max(0.8,p.gone-c0):1.0)):0,ac=p.added!=null&&u>=p.added?Math.round(600000*W(u,p.added,1.0)):0;
+  if(cl)s+=`<div class="abs anton" style="left:${L0}px;top:${NY}px;font-size:96px;color:${CREAM};transform:scale(${1+.03*Math.sin(u*2)});transform-origin:left">−${fmt(cl)}</div><div class="abs" style="left:${L0}px;top:${NY+100}px;font-size:40px;font-family:Archivo;font-weight:800;color:${CREAM}">bookkeeping clerks</div>`;
+  if(ac)s+=`<div class="abs anton" style="left:${R0}px;top:${NY}px;font-size:96px;color:${BUT};transform:scale(${1+.03*Math.sin(u*2.3)});transform-origin:left">+${fmt(ac)}</div><div class="abs" style="left:${R0}px;top:${NY+100}px;font-size:40px;font-family:Archivo;font-weight:800;color:${CREAM}">accountants</div>`;
+  s+=credit('NPR PLANET MONEY · 2015',  '#a9b4ae',L0,V?900:790,W(u,.6,.4));
+  return `<div class="abs" style="inset:0;transform:scale(${1+W(u,0,g.d)*.05}) translate(${Math.sin(u*.45)*8}px,0);transform-origin:50% 55%">${s}</div>`};
 // a new hire's sheet: the same click down the rows, week after week; the tries; then weeks fold into an afternoon
 S.sheet=(u,g,th)=>{const p=g.p;let s='';const RH=44,cols=[60,250,170,170,170,120],X=120,Y=110,rows=14;
   const scroll=(u*1.6)%1,rowsUp=Math.floor(u*1.6);const tries=p.tries||[];const fold=p.fold!=null?W(u,p.fold,1.2):0;
@@ -196,9 +194,8 @@ S.sheet=(u,g,th)=>{const p=g.p;let s='';const RH=44,cols=[60,250,170,170,170,120
 // 75% against 28%
 S.pct2=(u,g,th)=>{const p=g.p,c=th.fg;let s='';const ring=(cx,cy,r,f,col)=>`<svg class="abs" style="left:${cx-r-20}px;top:${cy-r-20}px" width="${2*r+40}" height="${2*r+40}"><circle cx="${r+20}" cy="${r+20}" r="${r}" fill="none" stroke="${c}" stroke-opacity=".18" stroke-width="34"/><circle cx="${r+20}" cy="${r+20}" r="${r}" fill="none" stroke="${col}" stroke-width="34" stroke-dasharray="${2*Math.PI*r*f} 9999" transform="rotate(-90 ${r+20} ${r+20})"/></svg>`;
   const a=W(u,p.pa,1.1),b=p.pb!=null?W(u,p.pb,1.1):0;
-  s+=ring(270,330,190,.75*a,INK)+`<div class="abs anton" style="left:270px;top:330px;font-size:150px;color:${INK};transform:translate(-50%,-50%) scale(${B(u,p.pa,.5)})">${Math.round(75*a)}%</div><div class="abs mono" style="left:110px;top:570px;font-size:26px;color:${c}">Anthropic staff</div>`;
-  if(p.pb!=null&&u>=p.pb)s+=ring(770,380,140,.28*b,CREAM)+`<div class="abs anton" style="left:770px;top:380px;font-size:110px;color:${INK};transform:translate(-50%,-50%) scale(${B(u,p.pb,.5)})">${Math.round(28*b)}%</div><div class="abs mono" style="left:660px;top:570px;font-size:26px;color:${c}">Other Americans</div>`;
-  s+=`<div class="abs mono" style="left:110px;top:70px;font-size:26px;color:${c};opacity:${W(u,.3,.4)}">AI doing their own work, by 2030</div>`;
+  s+=ring(270,330,190,.75*a,INK)+`<div class="abs anton" style="left:270px;top:330px;font-size:150px;color:${INK};transform:translate(-50%,-50%) scale(${B(u,p.pa,.5)})">${Math.round(75*a)}%</div><div class="abs" style="left:90px;top:560px;font-size:40px;font-family:Archivo;font-weight:800;letter-spacing:0;text-transform:none;color:${c}">Anthropic staff</div>`;
+  if(p.pb!=null&&u>=p.pb)s+=ring(770,380,140,.28*b,CREAM)+`<div class="abs anton" style="left:770px;top:380px;font-size:110px;color:${INK};transform:translate(-50%,-50%) scale(${B(u,p.pb,.5)})">${Math.round(28*b)}%</div><div class="abs" style="left:640px;top:560px;font-size:40px;font-family:Archivo;font-weight:800;letter-spacing:0;text-transform:none;color:${c}">Other Americans</div>`;
   s+=credit('ANTHROPIC · AUG 2026',c,110,740,W(u,.5,.4));
   return `<div class="abs" style="inset:0;transform:scale(${1+W(u,0,g.d)*.06}) translate(${Math.sin(u*.5)*6}px,0)">${s}</div>`};
 // the actions: a numeral settles on each, the earlier cards step back
@@ -223,15 +220,22 @@ S.bcards=(u,g,th)=>{const p=g.p;let s='';p.cards.forEach((cd,i)=>{if(u<cd.at)ret
     s+=`<div class="abs" style="left:${70+i*560}px;top:${40+(1-q)*400+Math.sin(u*1.2+i)*5}px;width:500px;height:260px;background:${MINT};border:5px solid ${INK};border-radius:20px;box-shadow:10px 10px 0 ${INK};transform:rotate(${(i?3:-3)+Math.sin(u*.8+i)}deg)">
       <div class="anton" style="position:absolute;left:28px;top:12px;font-size:210px;color:${INK};transform:scale(${B(u,cd.at+.2,.5)});transform-origin:30% 70%">${cd.big}</div>
       <div class="anton" style="position:absolute;left:190px;top:${cd.label.length>12?50:80}px;width:290px;font-size:64px;color:${INK}">${cd.label}</div></div>`});
-  if(p.head)s+=`<div class="abs mono" style="left:70px;top:330px;font-size:30px;color:${INK};opacity:${W(u,.3,.4)}">${p.head}</div>`;return s};
+  return s};
+
+// a page's own highlighted words, set large over the page they come from (full frame on the phone)
+S.quote=(u,g,th)=>{const p=g.p;let s='';const fly=B(u,0,.7);
+  s+=`<div class="abs" style="left:${560+(1-fly)*500}px;top:${-330+Math.sin(u*.7)*6}px;width:560px;height:430px;overflow:hidden;background:#fff;opacity:.9;transform:rotate(${6-3*fly}deg) scale(${1+W(u,0,g.d)*.06});box-shadow:0 30px 60px rgba(0,0,0,.5)"><img src="${SRC+p.img}" style="width:560px;display:block"></div>`;
+  const words=p.text.split(' ');let line='';words.forEach((w,i)=>{const q=W(u,0.35+i*0.09,.3);line+=`<span style="display:inline-block;opacity:${q};transform:translateY(${(1-q)*24}px)">${p.hl.includes(i)?`<span class="hl" style="--k:${W(u,0.35+i*0.09+.2,.3)}">${w}</span>`:w}&nbsp;</span>`});
+  s+=`<div class="abs" style="left:20px;top:150px;width:1000px;font-family:Archivo;font-weight:900;font-size:76px;line-height:1.12;color:${CREAM}">“${line}”</div>`;
+  return s+credit(p.credit,'#a9b4ae',20,V?820:760,W(u,.6,.4))};
 // the close: the ladder with 2030 lit, the question, the house mark
 S.close=(u,g)=>{let s='';const lad=S.ladder(u+2,{d:6,p:{drawn:1,lit:0,gap:1,x:V?400:120,w:V?280:250}},{fg:CREAM,acc:MINT});
   s+=`<div class="abs" style="inset:0;background:${INK}"></div>`;
   s+=V?`<div class="abs" style="left:0;top:220px;width:1200px;height:800px;transform:scale(.9);transform-origin:0 0">${lad}</div>`:`<div class="abs" style="left:60px;top:150px;width:1200px;height:800px;transform:scale(1.05);transform-origin:0 0">${lad}</div>`;
   const q=B(u,0.25,.6),q2=W(u,0.9,.5);
-  s+=V?`<div class="abs anton" style="left:80px;top:1000px;width:920px;font-size:104px;color:${CREAM};transform:translateY(${(1-q)*60}px);opacity:${clamp(q)}">Who on your team will be a senior in <span class="hl" style="--k:${W(u,.8,.4)};--hl:${MINT};color:${INK}">2030?</span></div>`
+  s+=V?`<div class="abs anton" style="left:80px;top:930px;width:860px;font-size:100px;color:${CREAM};transform:translateY(${(1-q)*60}px);opacity:${clamp(q)}">Who on your team will be a senior in <span class="hl" style="--k:${W(u,.8,.4)};--hl:${MINT};color:${INK}">2030?</span></div>`
      :`<div class="abs anton" style="left:620px;top:250px;width:1180px;font-size:118px;color:${CREAM};transform:translateY(${(1-q)*60}px);opacity:${clamp(q)}">Who on your team will be a senior in <span class="hl" style="--k:${W(u,.8,.4)};--hl:${MINT};color:${INK}">2030?</span></div>`;
-  s+=`<div class="abs" style="left:${V?80:630}px;top:${V?1500:760}px;opacity:${q2};transform:translateY(${(1-q2)*30}px)"><img src="${WM}" style="height:${V?64:62}px;display:block;filter:brightness(1)"><div class="mono" style="font-size:${V?40:38}px;color:${BUT};margin-top:16px;text-transform:none;letter-spacing:1px">makeyourmindup.ai</div></div>`;
+  s+=`<div class="abs" style="left:${V?80:630}px;top:${V?1400:760}px;opacity:${q2};transform:translateY(${(1-q2)*30}px)"><img src="${WM}" style="height:${V?64:62}px;display:block;filter:brightness(1)"><div class="mono" style="font-size:${V?40:38}px;color:${BUT};margin-top:16px;text-transform:none;letter-spacing:1px">makeyourmindup.ai</div></div>`;
   return s};
 // the opener, as the proof: the ladder's bottom rung cracks and falls; the statement slams in
 S.opener=(t)=>{const out=t>2.55?W(t,2.55,0.5):0;let s=`<div class="abs" style="left:0;top:0;width:${FW}px;height:${FH}px;background:${INK};transform:translateX(${-out*FW}px)">`;
@@ -266,14 +270,14 @@ function render(t){html=[];document.documentElement.style.setProperty('--pulse',
   if(LAYER==='fg'){
     if(t<3.2)put(S.opener(t));
     for(const s of T.segs){if(s.mode==='brand'||s.mode==='face'||t<s.a-0.05||t>=s.b+0.6)continue;const u=t-s.a;
-      if(s.mode==='full'){const inn=W(t,s.a,0.45),out=t>s.b-0.35?W(t,s.b-0.35,0.35):0;if(out>=1)continue;
+      if(s.mode==='full'){const nx=T.segs[T.segs.indexOf(s)+1],joined=nx&&nx.mode==='full'&&nx.a<=s.b+0.05,inn=W(t,s.a,0.45),out=joined?(t>s.b+0.45?1:0):(t>s.b-0.35?W(t,s.b-0.35,0.35):0);if(out>=1)continue;const fade=V||s.wipe==='fade';
         let inner=`<div class="abs" style="left:0;top:0;width:${FW}px;height:${FH}px;background:${INK};background-image:radial-gradient(circle at ${50+10*Math.sin(t*.2)}% 40%,#1c2a24,${INK} 70%)"></div>`;
         inner+=wrap(boxFor('full'),S[s.scene](u,s,{fg:CREAM,acc:BUT}));
-        put(`<div class="abs" style="left:0;top:0;width:${FW}px;height:${FH}px;opacity:${s.wipe==='fade'?inn:1};transform:translateX(${s.wipe==='fade'?0:(1-inn)*FW-out*FW}px);overflow:hidden">${inner}</div>`)}
+        put(`<div class="abs" style="left:0;top:0;width:${FW}px;height:${FH}px;opacity:${fade?inn*(1-out):1};transform:translateX(${fade?0:(1-inn)*FW-out*FW}px);overflow:hidden">${inner}</div>`)}
       else if(s.mode==='side'||s.mode==='band'){if(t>=s.b+0.35)continue;const o=(t<s.a+0.3?W(t,s.a,0.3):1)*(t>s.b-0.1?1-W(t,s.b-0.1,0.4):1);
-        if(s.mode==='band'){lowBand=t<s.b;put(`<div class="abs" style="left:40px;top:1090px;width:1000px;height:${330}px;border-radius:26px;background:${BUT};box-shadow:10px 10px 0 ${INK};opacity:${o};transform:translateY(${(1-W(t,s.a,0.45))*500}px)"></div>`)}
+        if(s.mode==='band'){lowBand=t<s.b;put(`<div class="abs" style="left:70px;top:1090px;width:860px;height:${300}px;border-radius:26px;background:${BUT};box-shadow:8px 8px 0 ${INK};opacity:${o};transform:translateY(${(1-W(t,s.a,0.45))*500}px)"></div>`)}
         put(`<div class="abs" style="inset:0;opacity:${o};transform:translateX(${(1-W(t,s.a,0.45))*(s.mode==='band'?0:120)}px)">${wrap(boxFor(s.mode),S[s.scene](u,s,{fg:INK,acc:s.mode==='band'?CREAM:CREAM}))}</div>`)}}
-    if(t>=T.closeAt-0.6){const u=t-T.closeAt;put(`<div class="abs" style="left:0;top:0;width:${FW}px;height:${FH}px;transform:translateX(${(1-W(t,T.closeAt-0.5,0.5))*FW}px)">${S.close(u,{})}</div>`)}
+    if(t>=T.closeAt-0.6){const u=t-T.closeAt,q=W(t,T.closeAt-0.5,0.5);put(`<div class="abs" style="left:0;top:0;width:${FW}px;height:${FH}px;${V?`opacity:${q}`:`transform:translateX(${(1-q)*FW}px)`}">${S.close(u,{})}</div>`)}
     // phone: the dress in the top band while he speaks the hook, and again on the last line
     if(V){for(const d of T.dress){if(t<d[0]-0.1||t>d[1]+0.6)continue;const q=B(t,d[0],.55)*(1-W(t,d[1],.45));
         put(`<div class="abs" style="left:60px;top:${170+(1-q)*-300}px;width:820px;opacity:${clamp(q*1.5)}"><div class="abs mono" style="left:0;top:0;font-size:28px;color:${CREAM};background:${INK};padding:8px 16px">FOLLOW.THE.MONEY</div>
