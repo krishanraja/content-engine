@@ -1,5 +1,6 @@
 {
   "devices": {
+    "logo_card": { "verbs": ["enter", "highlight", "exit"] },
     "headline": { "verbs": ["enter", "exit"] },
     "sticker": { "verbs": ["enter", "exit"] },
     "stamp": { "verbs": ["stamp", "exit"] },
