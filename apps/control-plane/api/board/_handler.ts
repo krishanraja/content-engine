@@ -95,6 +95,22 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         return res.status(result.status).json(result.body)
       } catch { return res.status(503).json({ ok: false, error: 'board_store_unavailable' }) }
     }
+    if (op === 'build') {
+      // Growth's ledger read (Krish, 2026-11-01: "fix the board manifest unauthorized read"): the week's published
+      // build {build_id, revision, manifest}, read-only, on Growth's key or the operator's; never a browser.
+      if (!growthWriter(req)) return res.status(401).json({ ok: false, error: 'unauthorized' })
+      if (method !== 'GET') return res.status(405).json({ ok: false, error: 'method_not_allowed' })
+      const week = scalar(req.query.week)
+      if (!monday(week)) return res.status(400).json({ ok: false, error: 'invalid_week' })
+      try {
+        const state = await current(await getDb(), week)
+        if (!state.build_id) return res.status(404).json({ ok: false, error: 'board_not_published' })
+        return res.status(200).json({ ok: true, week, build_id: state.build_id, revision: state.revision, manifest: state.manifest })
+      } catch (error) {
+        if (error instanceof BoardError) return res.status(error.status).json({ ok: false, error: error.message })
+        return res.status(503).json({ ok: false, error: 'board_store_unavailable' })
+      }
+    }
     if (op === 'posted') {
       // Growth's write-back (_posted.ts): its own key, or the engine operator's; never a browser.
       if (!growthWriter(req)) return res.status(401).json({ ok: false, error: 'unauthorized' })

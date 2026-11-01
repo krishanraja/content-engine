@@ -141,6 +141,7 @@ function render(){
   });
   // The run-sheet's list of steps at the top of Publish: each says whether its tick is done.
   document.querySelectorAll("[data-tickstate]").forEach(el => el.classList.toggle("on", doneOf(el.dataset.tickstate)));
+  const HIDDEN_TICKS = !!document.querySelector('[data-checklists="hidden"]');
   let wDone = 0, wAll = 0;
   const live = mode === "live";
   for (const d of DAYS) {
@@ -149,7 +150,7 @@ function render(){
     const ids = STEPS.filter(s => s.standing).map(s => d.key + "-" + s.key);
     const n = ids.filter(doneOf).length;
     wDone += n; wAll += ids.length;
-    if (tab) tab.textContent = live ? `${n} of ${ids.length}` : `${ids.length} steps`;
+    if (tab) tab.textContent = HIDDEN_TICKS ? (tab.dataset.status || "") : live ? `${n} of ${ids.length}` : `${ids.length} steps`;
     const c = document.querySelector(`[data-count="${d.key}"]`);
     if (c) c.textContent = live ? `${n} of ${ids.length} · ${Math.round(100 * n / ids.length)}%` : `${ids.length} steps`;
     const m = document.querySelector(`[data-meter="${d.key}"]`); if (m) m.style.width = live ? (100 * n / ids.length) + "%" : "0";
