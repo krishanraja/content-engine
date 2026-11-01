@@ -1,0 +1,293 @@
+<!doctype html>
+<meta charset="utf-8">
+<!-- Monday 2 Nov rebuild: the proof's scene (proof/scene.html, approved 1 Nov 2026: "Good, build all four this way")
+     generalised to whole cuts. ?cut=long|short&layer=bg|fg. render(t) draws one frame; the timeline (tl_<cut>.js) is
+     written by plan.py from his word clock, so every picture lands on the word it belongs to. -->
+<style>
+@font-face{font-family:Anton;src:url('../../../../assets/fonts/makeyourmindup/Anton-Regular.ttf')}
+@font-face{font-family:Archivo;src:url('../../../../assets/fonts/makeyourmindup/Archivo-Variable.ttf')}
+@font-face{font-family:Plex;src:url('../../../../assets/fonts/makeyourmindup/IBMPlexMono-Medium.ttf')}
+html,body{margin:0;overflow:hidden;background:transparent}
+.L{position:absolute;inset:0}
+#cam{position:absolute;inset:0;transform-origin:50% 50%}
+.abs{position:absolute}
+.anton{font-family:Anton;line-height:.92;text-transform:uppercase}
+.mono{font-family:Plex;font-weight:500;letter-spacing:2px;text-transform:uppercase}
+.hl{display:inline-block;position:relative;z-index:0}
+.hl::before{content:'';position:absolute;left:-6px;right:-6px;top:6%;bottom:2%;background:var(--hl,#FFD84D);z-index:-1;transform-origin:left;transform:scaleX(var(--k,1))}
+#grain{position:absolute;inset:0;opacity:.07;pointer-events:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' seed='3'/></filter><rect width='240' height='240' filter='url(%23n)'/></svg>")}
+.badge{position:absolute;width:58px;height:82px;border-radius:7px;background:#f3eee2 url('../../../../assets/plates/two-passports/paper.jpg') center/220px;box-shadow:0 8px 14px rgba(0,0,0,.5),inset 0 0 0 1px rgba(12,21,18,.2);overflow:hidden}
+.badge::before{content:'';position:absolute;inset:0;background:url('../../../../assets/plates/two-passports/guilloche.svg') center/110px;opacity:.3}
+.badge::after{content:'';position:absolute;left:20px;top:6px;width:18px;height:5px;border-radius:3px;background:#0C1512;opacity:.65}
+.badge i{position:absolute;left:0;right:0;bottom:14px;height:12px;background:rgba(12,21,18,.13)}
+.badge.j i{background:#FFD84D;filter:brightness(var(--pulse,1))}
+.paper{background:#f3eee2 url('../../../../assets/plates/two-passports/paper.jpg') center/300px}
+#cap{position:absolute;left:0;right:0;text-align:center}
+#cap span{display:inline-block;font-family:Archivo;font-weight:900;color:#F4EFE4;background:#0C1512;box-shadow:9px 9px 0 #FFD84D}
+.cell{position:absolute;border-right:2px solid rgba(12,21,18,.12);border-bottom:2px solid rgba(12,21,18,.12)}
+</style>
+<div class="L" id="root"><div id="cam"></div><div id="grain"></div><div id="corners"></div><div id="cap"></div></div>
+<script>
+const Q=new URLSearchParams(location.search), LAYER=Q.get('layer')||'fg', CUT=Q.get('cut')||'long', V=CUT==='short';
+const FW=V?1080:1920, FH=V?1920:1080;
+document.documentElement.style.width=document.body.style.width=FW+'px';document.documentElement.style.height=document.body.style.height=FH+'px';
+document.getElementById('root').style.cssText=`position:absolute;left:0;top:0;width:${FW}px;height:${FH}px`;
+</script>
+<script src="tl_long.js"></script>
+<script src="tl_short.js"></script>
+<script>
+const T=V?TL_SHORT:TL_LONG;           // {off, words, segs, end, dur}
+const OFF=T.off, SRC='../imagery/src/', WM='../../../../.cache/makeyourmindup/wordmark.png';
+const INK='#0C1512',CREAM='#F4EFE4',BUT='#FFD84D',MINT='#7EF0C0',GREY='#5b625e';
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const eo=x=>{x=clamp(x);return 1-Math.pow(1-x,3)};
+const back=x=>{x=clamp(x);const c=1.9;return 1+(c+1)*Math.pow(x-1,3)+c*Math.pow(x-1,2)};
+const W=(t,a,d)=>eo((t-a)/d), B=(t,a,d)=>back((t-a)/d);
+const fmt=n=>Math.round(n).toLocaleString('en-GB');
+let html=[];const put=s=>html.push(s);
+
+// ---------------- captions: house style, phrase by phrase, each word on its own clock ----------------
+const BREAKS=/[.?!,]$/;
+const PHR=[];{let cur=[];for(const w of T.words){if(w[1]<T.capFrom-0.01)continue;cur.push(w);if((BREAKS.test(w[0])&&cur.length>=2)||cur.length>=(V?5:6)||/[.?!]$/.test(w[0])){PHR.push(cur);cur=[]}}if(cur.length)PHR.push(cur)}
+function caps(t,lowBand){const el=document.getElementById('cap');if(LAYER!=='fg'||t<3.0||t>=T.closeAt-0.05){el.innerHTML='';return}
+  const tt=t-OFF;let p=null;for(let i=0;i<PHR.length;i++){const s=PHR[i][0][1]-0.05,e=Math.min((PHR[i+1]?PHR[i+1][0][1]:s+4),PHR[i][PHR[i].length-1][2]+1.2)-0.05;if(tt>=s&&tt<e){p=PHR[i];break}}
+  if(!p){el.innerHTML='';return}const shown=p.filter(w=>tt>=w[1]-0.03).map(w=>w[0]);if(!shown.length){el.innerHTML='';return}
+  if(V){el.style.cssText=`position:absolute;left:70px;right:150px;top:${lowBand?1450:1280}px;text-align:center`;
+    el.innerHTML=`<span style="font-size:56px;line-height:1.18;padding:8px 18px 10px;-webkit-box-decoration-break:clone;box-decoration-break:clone;display:inline">${shown.join(' ')}</span>`}
+  else{el.style.cssText='position:absolute;left:0;right:0;bottom:64px;text-align:center';el.innerHTML=`<span style="font-size:50px;padding:8px 20px 10px;white-space:nowrap">${shown.join(' ')}</span>`}}
+
+// ---------------- the camera never rests ----------------
+function camera(t){let x=Math.sin(t*.37)*7,y=Math.cos(t*.29)*5,s=1.012+Math.sin(t*.21)*.008;
+  for(const a of T.shakes){const k=clamp(1-(t-a[0])/0.45);if(t>=a[0]&&k>0){x+=a[1]*k*Math.sin((t-a[0])*70);y+=a[1]*.65*k*Math.sin((t-a[0])*61)}}
+  return `translate(${x}px,${y}px) scale(${s})`}
+
+// a scene is drawn in a 1200 x 800 box, placed by its mode: beside his column, full frame, or (phone) a full-frame plate
+function boxFor(mode){if(!V)return mode==='side'?{x:680,y:96,s:1}:{x:(1920-1200*1.32)/2,y:(1080-800*1.32)/2-30,s:1.32};
+  return mode==='band'?{x:70,y:1105,s:0.7167}:{x:(1080-1200*0.9)/2,y:470,s:0.9}}
+function wrap(box,inner,extra=''){return `<div class="abs" style="left:${box.x}px;top:${box.y}px;width:1200px;height:800px;transform:scale(${box.s});transform-origin:0 0;${extra}">${inner}</div>`}
+const credit=(txt,c,x=0,y=772,o=1)=>txt?`<div class="abs mono" style="left:${x}px;top:${y}px;font-size:21px;color:${c};opacity:${o};white-space:nowrap;background:${c===INK?'rgba(255,216,77,.0)':'rgba(12,21,18,0)'}">${txt}</div>`:'';
+
+// ---------------- scenes ----------------
+const S={};
+// a real page flies in as paper; the highlighted line lifts off it, larger, and keeps drifting
+S.paper=(u,g,th)=>{const p=g.p,fly=B(u,0.0,0.75),pu=W(u,0,g.d);let s='';
+  const pw=p.pw||620,ph=pw*p.h/p.w,px=20+(1-fly)*900,py=30+(1-fly)*120;
+  s+=`<div class="abs" style="left:${px}px;top:${py+Math.sin(u*.8)*5}px;width:${pw}px;height:${Math.min(ph,720)}px;overflow:hidden;transform:rotate(${-5+3*fly+Math.sin(u*.5)*.6}deg) scale(${.97+pu*.06});box-shadow:0 30px 60px rgba(0,0,0,.42);background:#fff"><img src="${SRC+p.img}" style="width:${pw}px;display:block;transform:translateY(${-Math.max(0,(ph-720))*W(u,0.3,g.d*.6)}px)"></div>`;
+  const [x0,y0,x1,y1]=p.strip,sw=x1-x0,sh=y1-y0,k=Math.min(2.4,(p.sk||1130)/sw),lift=B(u,g.lift??0.85,0.6);
+  if(u>(g.lift??0.85)){const tx=(px+x0*pw/p.w)*(1-lift)+(1200-sw*k-10)*lift,ty=(py+y0*pw/p.w)*(1-lift)+(p.sy||520)*lift,sc=(pw/p.w)/k*(1-lift)+lift;
+    s+=`<div class="abs" style="left:${tx}px;top:${ty+Math.sin(u*1.1)*6}px;width:${sw*k}px;height:${sh*k}px;transform:scale(${sc}) rotate(${(1-lift)*-3+1.2*Math.sin(u*.6)}deg);transform-origin:0 0;background:#fff url('${SRC+p.img}') ${-x0*k}px ${-y0*k}px/${p.w*k}px ${p.h*k}px;box-shadow:0 ${10+24*lift}px ${20+40*lift}px rgba(0,0,0,.45);outline:4px solid ${INK}"></div>`;
+    s+=`<div class="abs" style="left:${1200-sw*k-10}px;top:${(p.sy||520)+sh*k+16+Math.sin(u*1.1)*6}px;height:12px;width:${sw*k*W(u,p.sweep??((g.lift??0.85)+0.5),0.9)}px;background:${th.acc}"></div>`;}
+  s+=credit(p.credit,th.fg,pw*0.55+40,772,W(u,0.5,.4));return s};
+// the ladder: rails, rungs, 2030, the gap, the taller ladder, labels, the line, the cards
+S.ladder=(u,g,th)=>{const p=g.p,X=p.x??470,Wd=p.w??280,top=60,bot=740,c=th.fg;let sv=`<svg width="1200" height="800" style="position:absolute;left:0;top:0;overflow:visible"><g stroke="${c}" stroke-width="15" stroke-linecap="round" fill="none">`;
+  const rail=p.drawn?1:W(u,0.05,0.6),grow=p.taller!=null?W(u,p.taller,0.8):0,t0=top-50*grow;
+  sv+=`<line x1="${X}" y1="${bot}" x2="${X}" y2="${bot-(bot-t0)*rail}"/><line x1="${X+Wd}" y1="${bot}" x2="${X+Wd}" y2="${bot-(bot-t0)*rail}"/>`;
+  const ys=[150,300,450,600];ys.forEach((y,i)=>{const q=p.drawn?1:W(u,0.2+(3-i)*0.12,.3);if(q>.02)sv+=`<line x1="${X}" y1="${y}" x2="${X+Wd*q}" y2="${y}"/>`});
+  if(grow>.02)sv+=`<line x1="${X}" y1="${40}" x2="${X+Wd*grow}" y2="40" stroke="${th.acc}"/>`;
+  // the bottom rung: solid, gone, or lifting away
+  const by=730;let bo=1,bdx=0,bdy=0,brot=0;
+  if(p.gap)bo=0;if(p.lift!=null&&u>p.lift){const f=u-p.lift;bdy=-f*f*500-f*120;bdx=f*260;brot=-f*40;bo=clamp(1-f*.9)}
+  if(p.gap||p.lift!=null)sv+=`<line x1="${X}" y1="${by}" x2="${X+Wd}" y2="${by}" stroke-dasharray="12 20" opacity="${.4*(p.gap?1:W(u,(p.lift||0)+.5,.5))}"/>`;
+  if(bo>0.01)sv+=`<g transform="translate(${X+Wd/2+bdx},${by+bdy}) rotate(${brot})" opacity="${bo}"><line x1="${-Wd/2}" y1="0" x2="${Wd/2}" y2="0" stroke="${p.bright!=null?(u>p.bright?th.acc:c):c}" stroke-width="${p.bright!=null&&u>p.bright?20+3*Math.sin(u*4):15}"/></g>`;
+  sv+='</g>';
+  if(p.lit!=null){const lit=W(u,p.lit,.35);sv+=`<rect x="${X-12}" y="${top+62-112*grow}" width="${Wd+24}" height="60" rx="8" fill="${INK}" opacity="${lit}" transform="translate(0,${-2*Math.sin(u*2)})"/><text x="${X+Wd/2}" y="${top+110-112*grow}" font-family="Anton" font-size="54" fill="${MINT}" text-anchor="middle" opacity="${lit}">2030</text>`}
+  if(p.line!=null){const q=W(u,p.line,1.2);sv+=`<line x1="${X+Wd+60}" y1="${150}" x2="${X+Wd+60}" y2="${150+(by-150)*q}" stroke="${MINT}" stroke-width="10" stroke-dasharray="4 16" stroke-linecap="round"/>`;
+    if(q>.95)sv+=`<circle cx="${X+Wd+60}" cy="${by}" r="${16+5*Math.sin(u*5)}" fill="none" stroke="${MINT}" stroke-width="6"/>`}
+  sv+='</svg>';let s=sv;
+  if(p.labels!=null){const q=W(u,p.labels,.4);s+=`<div class="abs" style="left:${X+Wd+40}px;top:${by-28}px;font-size:44px;font-family:Archivo;font-weight:800;letter-spacing:0;text-transform:none;color:${c};opacity:${q};transform:translateX(${(1-q)*40}px)">Teller, clerk</div>`}
+  if(p.judge!=null){const q=B(u,p.judge,.55);s+=`<div class="abs anton" style="left:${X+Wd/2}px;top:${150-78+Math.sin(u*1.4)*4}px;font-size:72px;color:${INK};background:${MINT};padding:6px 18px;transform:translateX(-50%) scale(${q});box-shadow:8px 8px 0 ${INK}">Judgement</div>`}
+  if(p.qcards){p.qcards.forEach((a,i)=>{if(u<a)return;const q=B(u,a,.6),dx=i===0?-170:170;
+    s+=`<div class="abs" style="left:${X+Wd/2+dx-150}px;top:${by-150+(1-q)*-500+Math.sin(u*1.3+i)*5}px;width:300px;height:190px;background:${MINT};border:5px solid ${INK};border-radius:18px;box-shadow:10px 10px 0 ${INK};transform:rotate(${(i?4:-4)*(1-q*.6)+Math.sin(u*.8+i)*1.2}deg)">
+      <div class="anton" style="position:absolute;left:24px;top:18px;font-size:120px;color:${INK}">?</div><div class="anton" style="position:absolute;right:26px;bottom:14px;font-size:70px;color:${INK}">${i+1}</div></div>`});
+}
+  if(p.cover!=null){const fly=B(u,p.cover,0.7),pu=W(u,p.cover,6);s+=`<div class="abs" style="left:${(X+Wd+110)+(1-fly)*900}px;top:${40+(1-fly)*-80}px;width:520px;transform:rotate(${-5+4*fly}deg) scale(${.96+pu*.08});box-shadow:0 30px 60px rgba(12,21,18,.45)"><img src="${SRC}report-cover.jpg" style="width:520px;display:block"></div>`;
+    s+=credit('ANTHROPIC · 16 OCT 2026',c,X+Wd+118,772,W(u,p.cover+0.4,.4))}
+  const zp=p.lift!=null?.22*W(u,p.lift+.3,3):0;return `<div class="abs" style="inset:0;transform:translate(${Math.sin(u*.4)*8}px,${Math.cos(u*.33)*6}px) scale(${1+W(u,0,g.d)*(p.taller!=null?.03:.12)+zp});transform-origin:${(X+Wd/2)/12}% 88%">${s}</div>`};
+// the hire badges: 100 in a tray, the juniors butter; on the fall 18 lift off and drop
+S.badges=(u,g,th)=>{const p=g.p,js=[];for(let k=0;k<27;k++)js.push(Math.floor(k*100/27+1)%100);const keep=new Set(js.filter((_,i)=>i%3===0).slice(0,9));
+  let s='';const fill=W(u,0.2,2.0);
+  for(let i=0;i<100;i++){const r=Math.floor(i/10),c=i%10,isj=js.includes(i);const appear=clamp((fill*100-i)/6);if(appear<=0)continue;
+    let x=c*66+((i*37)%7)-3,y=r*92+((i*53)%5)-2,rot=((i*29)%9)-4,op=appear,sc=.6+.4*back(appear);
+    if(isj&&!keep.has(i)){const f=(u-(p.fall+(i%9)*0.045));if(f>0){x+=f*((i%2)?60:-60);y+=f*f*1800-f*260;rot+=f*((i%2)?260:-260);sc*=1+f*.4;op*=clamp(1-f*1.6)}}
+    s+=`<div class="badge ${isj?'j':''}" style="left:${x}px;top:${y}px;opacity:${op};transform:rotate(${rot}deg) scale(${sc})"><i></i></div>`}
+  const push=1+W(u,0.2,g.d)*0.12;let out=`<div class="abs" style="left:${V?250:-20}px;top:${V?40:20}px;width:700px;height:960px;transform:perspective(1600px) rotateX(${32-8*W(u,0.2,8)}deg) rotateZ(-5deg) scale(${push*(V?.8:.82)});transform-origin:50% 40%">${s}</div>`;
+  let v=0;if(u>=p.count&&u<p.fall)v=Math.round(27*W(u,p.count,1.4));else if(u>=p.fall)v=Math.round(27-18*W(u,p.fall,1.2));
+  const pop=(u>=p.land?1+.12*(1-W(u,p.land,.25)):1)*(1+.035*Math.sin(u*2.4)),NX=V?40:720,NY=V?-330:120;
+  if(u>=p.count)out+=`<div class="abs anton" style="left:${NX}px;top:${NY+60}px;font-size:300px;color:${CREAM};transform:scale(${pop});transform-origin:left">${v}%</div><div class="abs" style="left:${NX+10}px;top:${NY+370}px;height:20px;width:${460*W(u,p.land,.4)}px;background:${BUT}"></div>`;
+  if(u>=p.fall)out+=`<div class="abs anton" style="left:${NX+(V?640:10)}px;top:${NY+(V?150:410)}px;font-size:84px;color:${GREY};text-decoration:line-through;opacity:${W(u,p.fall,.3)}">27%</div>`;
+  out+=credit('ANTHROPIC · OCT 2026','#a9b4ae',V?40:720,V?-372:700,W(u,.6,.4));return out};
+// six to one: two bars, the agents' growing the whole time, the report's own line beside them
+S.bars=(u,g,th)=>{const p=g.p,base=640,un=80,staff=un*W(u,0.3,.5),k=1+1.2*W(u,0.7,2.2)+3.8*W(u,p.six,1.0),agents=un*k*W(u,0.5,.5);let s='';
+  s+=`<div class="abs" style="left:200px;top:${base-staff}px;width:180px;height:${staff}px;background:${INK}"></div><div class="abs" style="left:430px;top:${base-agents}px;width:180px;height:${agents}px;background:${INK};box-shadow:12px 12px 0 ${MINT}"></div>`;
+  s+=`<div class="abs" style="left:200px;top:${base+14}px;font-size:38px;font-family:Archivo;font-weight:800;letter-spacing:0;text-transform:none;color:${INK}">Staff</div><div class="abs" style="left:430px;top:${base+14}px;font-size:38px;font-family:Archivo;font-weight:800;letter-spacing:0;text-transform:none;color:${INK}">AI agents</div>`;
+  s+=`<div class="abs anton" style="left:430px;top:${base-agents-90}px;font-size:70px;color:${INK}">×${k.toFixed(1)}</div>`;
+  const fly=B(u,0.2,.7);s+=`<div class="abs" style="left:${690+(1-fly)*700}px;top:40px;width:500px;transform:rotate(${3-2*fly}deg) scale(${1+W(u,0.7,4)*.05});box-shadow:0 26px 50px rgba(12,21,18,.4)"><img src="${SRC}report-6-1.jpg" style="width:500px;display:block"></div>`;
+  if(u>=p.six+1.0){const r=B(u,p.six+1.0,.4);s+=`<div class="abs anton" style="left:700px;top:420px;font-size:150px;white-space:nowrap;color:${INK};transform:scale(${r});transform-origin:left">6 to 1</div>`}
+  s+=credit('ANTHROPIC · AUG 2026',INK,692,360,W(u,.5,.4));return s};
+// two lines from 2023: senior keeps rising, junior turns down. No numbers, only the direction the study reports
+S.lines=(u,g,th)=>{const p=g.p,c=th.fg,X0=80,X1=900,Y0=640;const q=W(u,0.3,p.part?Math.max(1,p.part):2.4),q2=W(u,p.part??1.5,1.6);let sv=`<svg width="1200" height="800" style="position:absolute;left:0;top:0;overflow:visible">`;
+  sv+=`<line x1="${X0}" y1="${Y0}" x2="${X1+60}" y2="${Y0}" stroke="${c}" stroke-width="4" opacity=".5"/><line x1="${X0}" y1="${Y0}" x2="${X0}" y2="120" stroke="${c}" stroke-width="4" opacity=".5"/>`;
+  const pts=(f)=>{let d='';for(let i=0;i<=40;i++){const x=i/40;if(x>q*.45+q2*.55)break;d+=(d?'L':'M')+(X0+x*(X1-X0))+' '+f(x)}return d};
+  const sen=x=>430-80*x-(x>.45?420*(x-.45):0)+Math.sin(x*9)*6,jun=x=>450-80*x+(x>.45?300*(x-.45):0)+Math.sin(x*11)*5;
+  sv+=`<path d="${pts(sen)}" fill="none" stroke="${c}" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>`;
+  sv+=`<path d="${pts(jun)}" fill="none" stroke="${th.acc}" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>`;
+  sv+=`<line x1="${X0+.45*(X1-X0)}" y1="${Y0}" x2="${X0+.45*(X1-X0)}" y2="140" stroke="${c}" stroke-width="3" stroke-dasharray="6 10" opacity="${.5*W(u,0.8,.5)}"/></svg>`;
+  let s=sv;const end=x=>X0+x*(X1-X0)+20,ex=Math.min(1,q*.45+q2*.55);
+  s+=`<div class="abs" style="left:${end(ex)}px;top:${sen(ex)-26}px;font-size:40px;font-family:Archivo;font-weight:800;letter-spacing:0;text-transform:none;color:${c};opacity:${q2}">Senior jobs</div><div class="abs" style="left:${end(ex)}px;top:${jun(ex)-26}px;font-size:40px;font-family:Archivo;font-weight:800;letter-spacing:0;text-transform:none;color:${c};opacity:${q2}"><span style="background:${th.acc};color:${INK};padding:2px 8px">Junior jobs</span></div>`;
+  s+=`<div class="abs mono" style="left:${X0}px;top:${Y0+16}px;font-size:24px;color:${c}">2015</div><div class="abs mono" style="left:${X0+.45*(X1-X0)-30}px;top:${Y0+16}px;font-size:24px;color:${c};opacity:${W(u,0.8,.5)}">2023</div>`;
+  s+=credit('HOSSEINI & LICHTINGER · 2025',c,X0,740,W(u,.6,.4));
+  return `<div class="abs" style="inset:0;transform:scale(${1+W(u,0,g.d)*.06}) translate(${Math.sin(u*.5)*6}px,0);transform-origin:30% 50%">${s}</div>`};
+// a city branch with 20 teller windows, in depth; 7 shutter; then the branch copies down the street, +43%
+S.branch=(u,g,th)=>{const p=g.p;let s='';const copy=p.copy!=null?W(u,p.copy,1.4):0,cam=1-0.42*copy;
+  const facade=(k,shut,o)=>{let w='';for(let i=0;i<20;i++){const r=Math.floor(i/5),c=i%5,isShut=i>=13&&shut>0,lit=k===0&&p.shut!=null?W(u,0.3+i*((p.shut-0.6)/20),.25):1;const sh=isShut?clamp((shut*7-(i-13))/1.0):0;
+      w+=`<div class="abs" style="left:${40+c*92}px;top:${120+r*112}px;width:70px;height:88px;opacity:${.25+.75*lit};transform:scale(${.8+.2*back(lit)});background:${sh>0.9||lit<.5?'#2a2f2c':BUT};box-shadow:inset 0 0 0 4px ${INK},0 0 ${20*(1-sh)}px rgba(255,216,77,.6)">
+        <div class="abs" style="left:21px;top:${18+Math.sin(u*2+i)*2}px;width:28px;height:28px;border-radius:50%;background:${INK};opacity:${1-sh}"></div><div class="abs" style="left:12px;top:48px;width:46px;height:40px;border-radius:20px 20px 0 0;background:${INK};opacity:${1-sh}"></div>
+        <div class="abs" style="left:0;top:0;width:70px;height:${88*sh}px;background:repeating-linear-gradient(${GREY} 0 8px,#3b423e 8px 12px)"></div></div>`}
+    return `<div class="abs" style="left:0;top:0;width:520px;height:600px;background:${CREAM};box-shadow:inset 0 0 0 8px ${INK};opacity:${o}"><div class="abs anton" style="left:40px;top:28px;font-size:60px;color:${INK}">Bank</div>${w}<div class="abs" style="left:200px;top:560px;width:120px;height:40px;background:${INK}"></div></div>
+      <div class="abs" style="left:520px;top:0;width:160px;height:600px;background:#cfc8b8;transform-origin:0 0;transform:skewY(-30deg);box-shadow:inset 0 0 0 8px ${INK};opacity:${o}"></div>
+      <div class="abs" style="left:0;top:-90px;width:520px;height:90px;background:#e6dfcf;transform-origin:0 100%;transform:skewX(-60deg);box-shadow:inset 0 0 0 8px ${INK};opacity:${o}"></div>`};
+  const shut=p.shut!=null?W(u,p.shut,1.4):0;
+  let street='';const n=p.copy!=null?7:1;
+  for(let k=n-1;k>=0;k--){const appear=k===0?1:B(u,(p.copy||0)+0.25+k*0.22,.5);if(appear<=0.01)continue;
+    street+=`<div class="abs" style="left:${80+k*360}px;top:${120-k*0}px;transform:scale(${appear*(1-k*0.06)});transform-origin:50% 100%">${facade(k,k===0?shut:0,1)}</div>`}
+  s+=`<div class="abs" style="left:0;top:0;width:3200px;height:800px;transform-origin:20% 50%;transform:scale(${1+.07*W(u,0,g.d)}) ${V?`translate(${200-copy*700+Math.sin(u*.4)*10}px,${80+copy*200}px) scale(${1.55-0.8*copy})`:`translate(${-copy*160+Math.sin(u*.4)*10}px,${60+copy*230}px) scale(${cam})`};transform-origin:0 0">${street}</div>`;
+  // the numbers
+  const NX=V?60:900;let v=p.shut!=null?Math.min(20,Math.floor((u-0.3)/((p.shut-0.6)/20))+1):20;v=Math.max(1,v);if(shut>0)v=Math.round(20-7*shut);
+  if(p.copy==null||copy<.3){s+=`<div class="abs anton" style="left:${NX}px;top:${V?-380:90}px;font-size:${V?300:260}px;color:${CREAM};opacity:${W(u,0.4,.4)*(1-clamp(copy/0.3))};transform:scale(${1+.04*Math.sin(u*2.2)});transform-origin:left">${v}</div>`;
+    s+=`<div class="abs" style="left:${NX+8}px;top:${V?-60:360}px;width:300px;line-height:1.1;font-size:44px;font-family:Archivo;font-weight:800;letter-spacing:0;text-transform:none;color:${CREAM};opacity:${W(u,0.6,.4)*(1-clamp(copy/0.3))}">tellers in a city branch</div>`;
+    if(shut>.05)s+=`<div class="abs anton" style="left:${NX+8}px;top:${V?-10:480}px;font-size:80px;color:${GREY};text-decoration:line-through;opacity:${W(u,p.shut,.3)*(1-clamp(copy/0.3))}">20</div>`}
+  if(p.pct!=null&&u>=p.pct){const q=W(u,p.pct,1.0);if(!V)s+=`<div class="abs" style="left:610px;top:130px;width:600px;height:390px;background:${INK};border-radius:18px;opacity:${.92*W(u,p.pct,.3)};box-shadow:0 20px 40px rgba(0,0,0,.4)"></div>`;s+=`<div class="abs anton" style="left:${V?60:640}px;top:${V?-280:150}px;font-size:${V?240:230}px;color:${BUT};transform:scale(${B(u,p.pct,.5)*(1+.04*Math.sin(u*2.4))});transform-origin:left">+${Math.round(43*q)}%</div><div class="abs" style="left:${V?70:650}px;top:${V?-40:400}px;font-size:44px;font-family:Archivo;font-weight:800;letter-spacing:0;text-transform:none;color:${CREAM};white-space:nowrap">more city branches</div>`}
+  s+=V?credit('IMF · BESSEN 2015','#a9b4ae',60,1060,W(u,.6,.4)):(copy<.3?credit('IMF · BESSEN 2015','#a9b4ae',904,600,W(u,.6,.4)*(1-clamp(copy/.3))):credit('IMF · BESSEN 2015','#a9b4ae',652,470,W(u,(p.pct??0)+.3,.4)));return s;};
+// spreadsheets: the clerks' stack falls away, the accountants' grows taller
+S.ledgers=(u,g,th)=>{const p=g.p;let s='';const blk=(x,y,w,h,c,o,r)=>`<div class="abs" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;opacity:${o};transform:rotate(${r}deg)"><div class="abs" style="left:0;top:0;width:${w}px;height:${h}px;background:${c};box-shadow:inset 0 0 0 4px ${INK}"></div><div class="abs" style="left:${w}px;top:0;width:26px;height:${h}px;background:${c};filter:brightness(.72);transform-origin:0 0;transform:skewY(-40deg);box-shadow:inset 0 0 0 4px ${INK}"></div><div class="abs" style="left:0;top:-22px;width:${w}px;height:22px;background:${c};filter:brightness(1.12);transform-origin:0 100%;transform:skewX(-50deg);box-shadow:inset 0 0 0 4px ${INK}"></div></div>`;
+  const L0=V?80:120,R0=V?600:660,base=V?860:640,st=V?46:40,bh=V?40:34,bw=V?360:320,NY=V?190:120;
+  const step=p.count!=null?Math.max(0.25,(p.count-0.3)/8):0.12;
+  for(let i=0;i<8;i++){const a0=0.2+i*step;let x=L0,y=base-(i+1)*st,o=W(u,a0,.3),r=0;y-= (1-B(u,a0,.45))*120;const f=u-(p.gone+(7-i)*0.07);if(f>0){y+=f*f*1400;x-=f*180;r=-f*70;o*=clamp(1-f*1.2)}if(o>.01)s+=blk(x,y,bw,bh,'#cfc8b8',o,r)}
+  if(p.added!=null)for(let i=0;i<8;i++){const a0=p.added+i*0.12;if(u<a0)break;const q=B(u,a0,.4);s+=blk(R0,base-(i+1)*st+(1-q)*-300,bw,bh,BUT,q,0)}
+  const c0=p.count??p.gone,cl=u>=c0?Math.round(400000*W(u,c0,p.count!=null?Math.max(0.8,p.gone-c0):1.0)):0,ac=p.added!=null&&u>=p.added?Math.round(600000*W(u,p.added,1.0)):0;
+  if(cl)s+=`<div class="abs anton" style="left:${L0}px;top:${NY}px;font-size:96px;color:${CREAM};transform:scale(${1+.03*Math.sin(u*2)});transform-origin:left">−${fmt(cl)}</div><div class="abs" style="left:${L0}px;top:${NY+100}px;font-size:40px;font-family:Archivo;font-weight:800;color:${CREAM}">bookkeeping clerks</div>`;
+  if(ac)s+=`<div class="abs anton" style="left:${R0}px;top:${NY}px;font-size:96px;color:${BUT};transform:scale(${1+.03*Math.sin(u*2.3)});transform-origin:left">+${fmt(ac)}</div><div class="abs" style="left:${R0}px;top:${NY+100}px;font-size:40px;font-family:Archivo;font-weight:800;color:${CREAM}">accountants</div>`;
+  s+=credit('NPR PLANET MONEY · 2015',  '#a9b4ae',L0,V?900:668,W(u,.6,.4));
+  return `<div class="abs" style="inset:0;transform:scale(${1+W(u,0,g.d)*.05}) translate(${Math.sin(u*.45)*8}px,0);transform-origin:50% 55%">${s}</div>`};
+// a new hire's sheet: the same click down the rows, week after week; the tries; then weeks fold into an afternoon
+S.sheet=(u,g,th)=>{const p=g.p;let s='';const RH=44,cols=[60,250,170,170,170,120],X=120,Y=110,rows=14;
+  const scroll=(u*1.6)%1,rowsUp=Math.floor(u*1.6);const tries=p.tries||[];const fold=p.fold!=null?W(u,p.fold,1.2):0;
+  let grid=`<div class="abs paper" style="left:${X}px;top:${Y}px;width:940px;height:${RH*rows}px;overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,.45)">`;
+  grid+=`<div class="abs" style="left:0;top:0;width:940px;height:${RH}px;background:#d8d1c0;z-index:2"></div>`;
+  for(let r=0;r<rows+1;r++){const y=RH+r*RH-scroll*RH,n=rowsUp+r+1;let x=0;grid+=`<div class="abs mono" style="left:10px;top:${y+10}px;font-size:18px;color:${GREY}">${n}</div>`;
+    cols.forEach((w,ci)=>{if(ci>0)grid+=`<div class="cell" style="left:${x}px;top:${y}px;width:${w}px;height:${RH}px"></div><div class="abs" style="left:${x+14}px;top:${y+16}px;height:10px;width:${(w-40)*(.45+.4*((n*7+ci*13)%10)/10)}px;background:rgba(12,21,18,.22);border-radius:5px"></div>`;x+=w})}
+  // the tries: a recorded action runs down the rows; the first two stop, the third reaches the end
+  let run='';tries.forEach((a,i)=>{if(u<a)return;const last=i===tries.length-1,stopAt=last?1:(i===0?.38:.62),q=Math.min(stopAt,(u-a)/1.4);const h=RH*(rows-1)*q;
+    run+=`<div class="abs" style="left:${cols[0]+cols[1]+6}px;top:${RH+4}px;width:${cols[2]-12}px;height:${h}px;background:${last?MINT:'rgba(126,240,192,.55)'};opacity:${(last?1:clamp(1-(u-a-1.6)/0.6))}"></div>`;
+    if(!last&&q>=stopAt&&u-a<2.2)run+=`<div class="abs anton" style="left:${cols[0]+cols[1]+cols[2]/2-30}px;top:${RH+h-30}px;font-size:70px;color:#d9472b;transform:scale(${B(u,a+stopAt*1.4,.3)})">×</div>`;});
+  grid+=run;
+  // the same click, over and over (before the tries)
+  if(!tries.length||u<tries[0]){const k=(u*1.6)%1;grid+=`<div class="abs" style="left:${cols[0]+cols[1]+cols[2]/2-14}px;top:${RH*4+10}px;width:28px;height:28px;border-radius:50%;border:5px solid ${INK};transform:scale(${1+k*1.5});opacity:${1-k}"></div><svg class="abs" style="left:${cols[0]+cols[1]+cols[2]/2}px;top:${RH*4+14+k*4}px" width="40" height="50"><path d="M2 2 L2 38 L12 28 L20 46 L27 43 L19 26 L33 26 Z" fill="${CREAM}" stroke="${INK}" stroke-width="3"/></svg>`}
+  grid+='</div>';
+  s+=`<div class="abs" style="left:0;top:0;width:1200px;height:800px;transform:scale(${1-fold*.35}) rotate(${-fold*6}deg);opacity:${1-fold*.8};transform-origin:50% 50%">${grid}</div>`;
+  // the week counter
+  if(p.weeks!=null&&fold<1){const wk=clamp(Math.floor(1+(u-p.weeks)*0.9),1,3);s+=`<div class="abs" style="left:${V?720:930}px;top:${V?-300:150}px;background:${INK};border:4px solid ${CREAM};padding:10px 22px;opacity:${W(u,p.weeks,.3)*(1-fold)};transform:rotate(3deg) scale(${1+.08*(1-W(u,p.weeks+(wk-1)/0.9,.3))})"><div class="anton" style="font-size:80px;color:${BUT}">Week ${u>=p.weeks?wk:1}</div></div>`}
+  if(p.fold!=null&&u>=p.fold-0.2){let tiles='';for(let i=0;i<15;i++){const r=Math.floor(i/5),c=i%5,q=W(u,p.fold+0.1+i*.04,.6);const x=(c*130)*(1-q)+260*q,y=(r*110)*(1-q)+110*q;tiles+=`<div class="abs" style="left:${x}px;top:${y}px;width:110px;height:90px;background:${CREAM};border:4px solid ${INK};opacity:${1-q*.9}"></div>`}
+    s+=`<div class="abs" style="left:${V?220:220}px;top:150px">${tiles}</div>`;
+    const h=B(u,p.fold+0.9,.6);s+=`<div class="abs" style="left:${V?260:420}px;top:250px;width:360px;height:250px;background:${MINT};border:6px solid ${INK};border-radius:18px;box-shadow:12px 12px 0 ${INK};transform:scale(${h}) rotate(${-3+Math.sin(u)*1.5}deg)"><div class="anton" style="position:absolute;left:30px;top:40px;font-size:96px;color:${INK}">A few<br>hours</div></div>`}
+  return `<div class="abs" style="inset:0;transform:scale(${1+W(u,0,g.d)*.05}) translate(${Math.sin(u*.5)*8}px,${Math.cos(u*.4)*5}px);transform-origin:50% 50%">${s}</div>`};
+// 75% against 28%
+S.pct2=(u,g,th)=>{const p=g.p,c=th.fg;let s='';const ring=(cx,cy,r,f,col)=>`<svg class="abs" style="left:${cx-r-20}px;top:${cy-r-20}px" width="${2*r+40}" height="${2*r+40}"><circle cx="${r+20}" cy="${r+20}" r="${r}" fill="none" stroke="${c}" stroke-opacity=".18" stroke-width="34"/><circle cx="${r+20}" cy="${r+20}" r="${r}" fill="none" stroke="${col}" stroke-width="34" stroke-dasharray="${2*Math.PI*r*f} 9999" transform="rotate(-90 ${r+20} ${r+20})"/></svg>`;
+  const a=W(u,p.pa,1.1),b=p.pb!=null?W(u,p.pb,1.1):0;
+  s+=ring(270,330,190,.75*a,INK)+`<div class="abs anton" style="left:270px;top:330px;font-size:150px;color:${INK};transform:translate(-50%,-50%) scale(${B(u,p.pa,.5)})">${Math.round(75*a)}%</div><div class="abs" style="left:90px;top:560px;font-size:40px;font-family:Archivo;font-weight:800;letter-spacing:0;text-transform:none;color:${c}">Anthropic staff</div>`;
+  if(p.pb!=null&&u>=p.pb)s+=ring(770,380,140,.28*b,CREAM)+`<div class="abs anton" style="left:770px;top:380px;font-size:110px;color:${INK};transform:translate(-50%,-50%) scale(${B(u,p.pb,.5)})">${Math.round(28*b)}%</div><div class="abs" style="left:640px;top:560px;font-size:40px;font-family:Archivo;font-weight:800;letter-spacing:0;text-transform:none;color:${c}">Other Americans</div>`;
+  s+=credit('ANTHROPIC · AUG 2026',c,110,740,W(u,.5,.4));
+  return `<div class="abs" style="inset:0;transform:scale(${1+W(u,0,g.d)*.06}) translate(${Math.sin(u*.5)*6}px,0)">${s}</div>`};
+// the actions: a numeral settles on each, the earlier cards step back
+S.actions=(u,g,th)=>{const p=g.p;let s='';p.cards.forEach((cd,i)=>{if(u<cd.at)return;const q=B(u,cd.at,.6),next=p.cards[i+1]&&u>=p.cards[i+1].at?W(u,p.cards[i+1].at,.6):0,next2=p.cards[i+2]&&u>=p.cards[i+2].at?W(u,p.cards[i+2].at,.6):0;
+    const back1=next+next2,x=90+i*40-back1*30,y=80+(1-q)*600-back1*40,sc=(1-back1*.08)*(V?1:1);
+    s+=`<div class="abs" style="left:${x}px;top:${y+Math.sin(u*1.2+i)*5}px;width:900px;height:430px;background:${MINT};border:6px solid ${INK};border-radius:24px;box-shadow:14px 14px 0 ${INK};transform:scale(${sc}) rotate(${(i-1)*2.5+Math.sin(u*.7+i)}deg);transform-origin:0 0;filter:brightness(${1-back1*.12})">
+      <div class="anton" style="position:absolute;left:46px;top:20px;font-size:${330}px;color:${INK};transform:scale(${B(u,cd.at+.25,.5)});transform-origin:30% 70%">${i+1}</div>
+      <div class="anton" style="position:absolute;left:310px;top:110px;width:540px;font-size:84px;color:${INK}">${cd.label}</div></div>`});
+  return s};
+
+// ---- phone band scenes: a 1200 x 400 card under his chin ----
+S.bpaper=(u,g,th)=>{const p=g.p,[x0,y0,x1,y1]=p.strip,sw=x1-x0,sh=y1-y0,k=Math.min(2.2,1080/sw),lift=B(u,0.1,.6);let s='';
+  s+=`<div class="abs" style="left:${(1200-sw*k)/2}px;top:${(300-sh*k)/2+20+(1-lift)*200+Math.sin(u*1.1)*5}px;width:${sw*k}px;height:${sh*k}px;background:#fff url('${SRC+p.img}') ${-x0*k}px ${-y0*k}px/${p.w*k}px ${p.h*k}px;box-shadow:0 20px 40px rgba(0,0,0,.4);outline:4px solid ${INK};transform:scale(${.9+.1*lift+W(u,0,g.d)*.04}) rotate(${(1-lift)*-4+Math.sin(u*.6)}deg)"></div>`;
+  s+=`<div class="abs" style="left:${(1200-sw*k)/2}px;top:${(300+sh*k)/2+40}px;height:12px;width:${sw*k*W(u,0.7,.9)}px;background:${INK}"></div>`;
+  return s+credit(p.credit,INK,(1200-sw*k)/2,340,W(u,.5,.4))};
+S.bladder=(u,g,th)=>{const p=g.p;let sv=`<svg width="1200" height="400" style="position:absolute;left:0;top:0"><g stroke="${INK}" stroke-width="14" stroke-linecap="round">`;const r=W(u,0.05,.6);
+  sv+=`<line x1="120" y1="90" x2="${120+880*r}" y2="90"/><line x1="120" y1="290" x2="${120+880*r}" y2="290"/>`;
+  [300,500,700,900].forEach((x,i)=>{const q=W(u,.2+i*.12,.3);if(q>.02)sv+=`<line x1="${x}" y1="90" x2="${x}" y2="${90+200*q}"/>`});
+  sv+=`<line x1="160" y1="90" x2="160" y2="290" stroke-dasharray="10 18" opacity=".4"/></g></svg>`;
+  const lit=B(u,p.lit??0.8,.45);return sv+`<div class="abs anton" style="left:${900}px;top:${190}px;font-size:64px;color:${MINT};background:${INK};padding:6px 18px;transform:translate(-50%,-50%) scale(${lit}) rotate(${Math.sin(u*1.3)*2}deg)">2030</div>`};
+S.bcards=(u,g,th)=>{const p=g.p;let s='';p.cards.forEach((cd,i)=>{if(u<cd.at)return;const q=B(u,cd.at,.55);
+    s+=`<div class="abs" style="left:${70+i*560}px;top:${40+(1-q)*400+Math.sin(u*1.2+i)*5}px;width:500px;height:260px;background:${MINT};border:5px solid ${INK};border-radius:20px;box-shadow:10px 10px 0 ${INK};transform:rotate(${(i?3:-3)+Math.sin(u*.8+i)}deg)">
+      <div class="anton" style="position:absolute;left:28px;top:12px;font-size:210px;color:${INK};transform:scale(${B(u,cd.at+.2,.5)});transform-origin:30% 70%">${cd.big}</div>
+      <div class="anton" style="position:absolute;left:190px;top:${cd.label.length>12?50:80}px;width:290px;font-size:64px;color:${INK}">${cd.label}</div></div>`});
+  return s};
+
+// a page's own highlighted words, set large over the page they come from (full frame on the phone)
+S.quote=(u,g,th)=>{const p=g.p;let s='';const fly=B(u,0,.7);
+  s+=`<div class="abs" style="left:${560+(1-fly)*500}px;top:${-330+Math.sin(u*.7)*6}px;width:560px;height:430px;overflow:hidden;background:#fff;opacity:.9;transform:rotate(${6-3*fly}deg) scale(${1+W(u,0,g.d)*.06});box-shadow:0 30px 60px rgba(0,0,0,.5)"><img src="${SRC+p.img}" style="width:560px;display:block"></div>`;
+  const words=p.text.split(' ');let line='';words.forEach((w,i)=>{const q=W(u,0.35+i*0.09,.3);line+=`<span style="display:inline-block;opacity:${q};transform:translateY(${(1-q)*24}px)">${p.hl.includes(i)?`<span class="hl" style="--k:${W(u,0.35+i*0.09+.2,.3)}">${w}</span>`:w}&nbsp;</span>`});
+  s+=`<div class="abs" style="left:20px;top:150px;width:1000px;font-family:Archivo;font-weight:900;font-size:76px;line-height:1.12;color:${CREAM}">“${line}”</div>`;
+  return s+credit(p.credit,'#a9b4ae',20,V?820:760,W(u,.6,.4))};
+// the close: the ladder with 2030 lit, the question, the house mark
+S.close=(u,g)=>{let s='';const lad=S.ladder(u+2,{d:6,p:{drawn:1,lit:0,gap:1,x:V?400:120,w:V?280:250}},{fg:CREAM,acc:MINT});
+  s+=`<div class="abs" style="inset:0;background:${INK}"></div>`;
+  s+=V?`<div class="abs" style="left:0;top:220px;width:1200px;height:800px;transform:scale(.9);transform-origin:0 0">${lad}</div>`:`<div class="abs" style="left:60px;top:150px;width:1200px;height:800px;transform:scale(1.05);transform-origin:0 0">${lad}</div>`;
+  const q=B(u,0.25,.6),q2=W(u,0.9,.5);
+  s+=V?`<div class="abs anton" style="left:80px;top:930px;width:860px;font-size:100px;color:${CREAM};transform:translateY(${(1-q)*60}px);opacity:${clamp(q)}">Who on your team will be a senior in <span class="hl" style="--k:${W(u,.8,.4)};--hl:${MINT};color:${INK}">2030?</span></div>`
+     :`<div class="abs anton" style="left:620px;top:250px;width:1180px;font-size:118px;color:${CREAM};transform:translateY(${(1-q)*60}px);opacity:${clamp(q)}">Who on your team will be a senior in <span class="hl" style="--k:${W(u,.8,.4)};--hl:${MINT};color:${INK}">2030?</span></div>`;
+  s+=`<div class="abs" style="left:${V?80:630}px;top:${V?1400:760}px;opacity:${q2};transform:translateY(${(1-q2)*30}px)"><img src="${WM}" style="height:${V?64:62}px;display:block;filter:brightness(1)"><div class="mono" style="font-size:${V?40:38}px;color:${BUT};margin-top:16px;text-transform:none;letter-spacing:1px">makeyourmindup.ai</div></div>`;
+  return s};
+// the opener, as the proof: the ladder's bottom rung cracks and falls; the statement slams in
+S.opener=(t)=>{const out=t>2.55?W(t,2.55,0.5):0;let s=`<div class="abs" style="left:0;top:0;width:${FW}px;height:${FH}px;background:${INK};transform:translateX(${-out*FW}px)">`;
+  const L=V?400:360,R=V?680:600,TOP=V?140:120,H=V?760:860,rail=W(t,0.05,0.5);let sv=`<svg width="${FW}" height="${FH}" style="position:absolute;left:0;top:0">`;
+  sv+=`<g stroke="${CREAM}" stroke-width="16" stroke-linecap="round" fill="none"><line x1="${L}" y1="${TOP}" x2="${L}" y2="${TOP+H*rail}"/><line x1="${R}" y1="${TOP}" x2="${R}" y2="${TOP+H*rail}"/>`;
+  const ys=V?[260,400,540,680]:[230,400,570,740];ys.forEach((y,i)=>{const p=W(t,0.2+i*0.12,0.25);sv+=`<line x1="${L}" y1="${y}" x2="${L+(R-L)*p}" y2="${y}"/>`});
+  const BY=V?830:910,f=t-1.35,dy=f>0?f*f*2600:0,rot=f>0?f*120:0;
+  sv+=`<g transform="translate(${(L+R)/2},${BY+dy}) rotate(${rot})"><line x1="${-(R-L)/2}" y1="0" x2="${(R-L)/2*W(t,0.66,0.25)}" y2="0" stroke="${BUT}"/></g></g>`;
+  if(t>1.3&&t<1.6)sv+=`<path d="M${L+90} ${BY-10} l25 20 l-18 12 l30 22" stroke="${BUT}" stroke-width="6" fill="none" opacity="${1-W(t,1.45,0.15)}"/>`;
+  s+=sv+'</svg>';const sl=B(t,1.5,0.35),TX=V?70:740,TY=V?980:290,FS=V?122:150;
+  s+=`<div class="abs anton" style="left:${TX}px;top:${TY}px;font-size:${FS}px;white-space:nowrap;color:${CREAM};transform:scale(${2.2-1.2*sl});transform-origin:left center;opacity:${clamp((t-1.5)/0.08)}">The bottom rung</div>`;
+  s+=`<div class="abs anton" style="left:${TX}px;top:${TY+160}px;font-size:${FS}px;white-space:nowrap;color:${INK};opacity:${clamp((t-1.7)/0.08)}"><span class="hl" style="--k:${W(t,1.7,0.3)};color:${INK}">is going.</span></div>`;
+  s+=`<div class="abs" style="left:${TX+8}px;top:${TY+350}px;font:italic ${V?44:46}px Georgia,serif;color:${CREAM};opacity:${W(t,2.0,0.35)}">Anthropic's own hiring data, October 2026.</div>`;
+  return s+'</div>'};
+
+// ---------------- the frame, the brand and the timeline ----------------
+function segAt(t){for(const g of T.segs)if(t>=g.a&&t<g.b)return g;return null}
+function brandShow(t){let v=0;for(const g of T.segs){if(g.mode!=='brand')continue;const a=g.a<=3.05?2.55:g.a;v=Math.max(v,(a<=2.6?B(t,a+0.45,0.6):W(t,a,0.5))*(1-W(t,g.b-0.05,0.45)))}return v}
+function render(t){html=[];document.documentElement.style.setProperty('--pulse',(1+.18*Math.max(0,Math.sin(t*3))).toFixed(3));const cam=document.getElementById('cam');cam.style.transform=camera(t);
+  const g=segAt(t);let lowBand=!!(g&&g.mode==='full');
+  if(LAYER==='bg'){
+    if(!V){const wipeIn=t<3.2?W(t,2.55,0.5):1;put(`<div class="abs" style="left:${(1-wipeIn)*1920}px;top:0;width:1920px;height:1080px;background:${BUT}"></div>`);
+      const show=brandShow(t),fl=Math.sin(t*1.3)*4;
+      if(show>0.01&&t>=2.55){const sx=(1-show)*-760,a=t<4?B(t,3.0,0.55):1,b=t<4?B(t,3.18,0.55):1,c=t<4?B(t,3.36,0.6):1,d=t<4?B(t,3.1,0.6):1;
+        put(`<div class="abs mono" style="left:${66-(1-a)*500+sx}px;top:${370+fl}px;font-size:30px;color:${CREAM};background:${INK};padding:8px 18px">FOLLOW.THE.MONEY</div>`);
+        put(`<div class="abs anton" style="left:${66-(1-b)*600+sx}px;top:${440+fl*.6}px;width:560px;font-size:64px;color:${INK}">Claude's AI is eating the jobs of its own <span class="hl" style="--hl:${CREAM};--k:${t<5?W(t,3.9,0.5):1}">humans.</span></div>`);
+        put(`<div class="abs mono" style="left:${66+sx}px;top:${740+fl*1.2}px;transform:rotate(${-3+Math.sin(t*.9)*1.5}deg) scale(${c});font-size:30px;color:${INK};background:${CREAM};border:4px solid ${INK};border-radius:40px;padding:12px 28px;box-shadow:7px 7px 0 ${INK}">BRING A CALCULATOR</div>`);
+        put(`<div class="abs" style="left:${1340+(1-d)*700-sx}px;top:${380-fl}px;width:510px;height:310px;background:${INK};border-radius:22px;box-shadow:14px 14px 0 rgba(12,21,18,.25);transform:rotate(${Math.sin(t*.7)*.8}deg)">
+          <img src="${WM}" style="position:absolute;left:38px;top:44px;width:430px"><div class="anton" style="position:absolute;left:38px;top:118px;font-size:96px;color:${BUT}">Mondays</div>
+          <div class="mono" style="position:absolute;left:40px;top:236px;font-size:30px;color:${CREAM};text-transform:none;letter-spacing:0">makeyourmindup.ai</div></div>`)}}
+  }
+  if(LAYER==='fg'){
+    if(t<3.2)put(S.opener(t));
+    for(const s of T.segs){if(s.mode==='brand'||s.mode==='face'||t<s.a-0.05||t>=s.b+0.6)continue;const u=t-s.a;
+      if(s.mode==='full'){const nx=T.segs[T.segs.indexOf(s)+1],joined=nx&&nx.mode==='full'&&nx.a<=s.b+0.05,inn=W(t,s.a,0.45),out=joined?(t>s.b+0.45?1:0):(t>s.b-0.35?W(t,s.b-0.35,0.35):0);if(out>=1)continue;const fade=V||s.wipe==='fade';
+        let inner=`<div class="abs" style="left:0;top:0;width:${FW}px;height:${FH}px;background:${INK};background-image:radial-gradient(circle at ${50+10*Math.sin(t*.2)}% 40%,#1c2a24,${INK} 70%)"></div>`;
+        inner+=wrap(boxFor('full'),S[s.scene](u,s,{fg:CREAM,acc:BUT}));
+        put(`<div class="abs" style="left:0;top:0;width:${FW}px;height:${FH}px;opacity:${fade?inn*(1-out):1};transform:translateX(${fade?0:(1-inn)*FW-out*FW}px);overflow:hidden">${inner}</div>`)}
+      else if(s.mode==='side'||s.mode==='band'){if(t>=s.b+0.35)continue;const o=(t<s.a+0.3?W(t,s.a,0.3):1)*(t>s.b-0.1?1-W(t,s.b-0.1,0.4):1);
+        if(s.mode==='band'){lowBand=t<s.b;put(`<div class="abs" style="left:70px;top:1090px;width:860px;height:${300}px;border-radius:26px;background:${BUT};box-shadow:8px 8px 0 ${INK};opacity:${o};transform:translateY(${(1-W(t,s.a,0.45))*500}px)"></div>`)}
+        put(`<div class="abs" style="inset:0;opacity:${o};transform:translateX(${(1-W(t,s.a,0.45))*(s.mode==='band'?0:120)}px)">${wrap(boxFor(s.mode),S[s.scene](u,s,{fg:INK,acc:s.mode==='band'?CREAM:CREAM}))}</div>`)}}
+    if(t>=T.closeAt-0.6){const u=t-T.closeAt,q=W(t,T.closeAt-0.5,0.5);put(`<div class="abs" style="left:0;top:0;width:${FW}px;height:${FH}px;${V?`opacity:${q}`:`transform:translateX(${(1-q)*FW}px)`}">${S.close(u,{})}</div>`)}
+    // phone: the dress in the top band while he speaks the hook, and again on the last line
+    if(V){for(const d of T.dress){if(t<d[0]-0.1||t>d[1]+0.6)continue;const q=B(t,d[0],.55)*(1-W(t,d[1],.45));
+        put(`<div class="abs" style="left:60px;top:${170+(1-q)*-300}px;width:820px;opacity:${clamp(q*1.5)}"><div class="abs mono" style="left:0;top:0;font-size:28px;color:${CREAM};background:${INK};padding:8px 16px">FOLLOW.THE.MONEY</div>
+          <div class="abs anton" style="left:0;top:66px;width:800px;font-size:70px;line-height:.95;color:${INK};background:${BUT};padding:14px 20px;box-shadow:9px 9px 0 ${INK};transform:rotate(${-1.5+Math.sin(t*.8)}deg)">Claude's AI is eating the jobs of its own humans.</div></div>`)}}
+  }
+  cam.innerHTML=html.join('');
+  const cy=V?70:34;
+  document.getElementById('corners').innerHTML=LAYER==='fg'&&t>=0.3&&t<T.closeAt-0.2?`<div class="abs" style="left:40px;top:${cy}px;background:${INK};border-radius:10px;padding:12px 16px;opacity:${W(t,0.3,.4)}"><img src="${WM}" style="height:30px;display:block"></div><div class="abs mono" style="right:${V?150:40}px;top:${cy+6}px;font-size:24px;background:${BUT};color:${INK};padding:8px 16px;border-radius:999px;box-shadow:0 0 0 3px ${INK};opacity:${W(t,0.3,.4)}">follow.the.money</div>`:'';
+  document.getElementById('grain').style.display=LAYER==='bg'||V?'block':'none';
+  caps(t,lowBand);
+}
+render(0);
+</script>
