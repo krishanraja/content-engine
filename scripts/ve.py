@@ -376,7 +376,7 @@ def cmd_dispatch(args) -> int:
     if getattr(args, 'queue', False) or codex_lane.route() == 'queue':
         # Codex is not on this machine (a cloud session, Claude Desktop, a Windows-side Claude Code): the card goes to
         # the lane and his home computer builds it. Never a question to Krish about how to reach Codex.
-        item = codex_lane.queue(Path(args.card), getattr(args, 'piece', None))
+        item = codex_lane.queue(Path(args.card), getattr(args, 'piece', None), spend_id=getattr(args, 'spend_id', None))
         print(f've dispatch: Codex is not on this machine; queued {item["id"]} for Codex on the home computer '
               '(its recordings pass picks it up within five minutes). Read the result with ve lane status.')
         return 0
@@ -391,10 +391,16 @@ def cmd_lane(args) -> int:
     if args.action == 'route':
         print(codex_lane.route())
     elif args.action == 'queue':
-        item = codex_lane.queue(Path(args.card), args.piece, args.ref)
+        item = codex_lane.queue(Path(args.card), args.piece, args.ref, spend_id=args.spend_id)
         print(f've lane: queued {item["id"]} for Codex on the home computer')
+    elif args.action == 'pending':
+        print(json.dumps({'cards': codex_lane.all_pending()}))
+    elif args.action == 'build-venture':
+        result = codex_lane.build_venture(args.venture, args.branch, args.path)
+        print(json.dumps(result))
+        return 0 if result['ok'] else 1
     elif args.action == 'build':
-        result = codex_lane.build(args.fields, args.ref, args.piece)
+        result = codex_lane.build(args.fields, args.ref, args.piece, args.spend_id)
         if not args.json:
             for problem in result['problems']:
                 print(problem)
@@ -945,13 +951,19 @@ def main() -> int:
     p = sub.add_parser('dispatch'); p.add_argument('card'); p.add_argument('--wait', action='store_true')
     p.add_argument('--piece', help='refuse dispatch when this piece is over any budget cap')
     p.add_argument('--queue', action='store_true', help='send it to the Codex lane even when Codex is on this machine')
+    p.add_argument('--spend-id', help='with the lane: the Control Center reservation booked for this card')
     p.set_defaults(fn=cmd_dispatch)
     p = sub.add_parser('lane', help='the Codex lane: queue a card from any session; the home computer builds it')
     actions = p.add_subparsers(dest='action', required=True)
     actions.add_parser('route', help='local when Codex is on this machine, else queue')
     a = actions.add_parser('queue'); a.add_argument('card'); a.add_argument('--piece'); a.add_argument('--ref', default='main')
-    a = actions.add_parser('build', help='on the machine with Codex: write the card, dispatch, verify-card')
+    a.add_argument('--spend-id', help="the Control Center reservation (reserve_credit_spend, pool codex) booked for this card")
+    a = actions.add_parser('build', help='on the machine with Codex: write the card, dispatch, verify-card, push its branch')
     a.add_argument('fields'); a.add_argument('--ref', default='main'); a.add_argument('--piece'); a.add_argument('--json', action='store_true')
+    a.add_argument('--spend-id')
+    a = actions.add_parser('pending', help="the ventures' queued cards (config/codex-lanes.json)"); a.add_argument('--json', action='store_true')
+    a = actions.add_parser('build-venture', help="on the machine with Codex: build one venture card and push codex/<id>")
+    a.add_argument('venture'); a.add_argument('branch'); a.add_argument('path'); a.add_argument('--json', action='store_true')
     actions.add_parser('serve', help='the recordings pass: claim the next queued card and build it here or in WSL')
     actions.add_parser('status', help='the lane items and their state')
     p.set_defaults(fn=cmd_lane)

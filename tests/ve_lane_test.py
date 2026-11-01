@@ -115,6 +115,69 @@ class Guards(unittest.TestCase):
                 lane.LOCK = was
 
 
+class Booking(unittest.TestCase):
+    def test_a_card_is_never_queued_or_built_without_a_control_center_booking(self):
+        for bad in (None, '', 'not-a-uuid'):
+            with self.assertRaises(SystemExit):
+                lane.require_booking(bad)
+        good = '12345678-1234-4234-9234-123456789abc'
+        self.assertEqual(lane.require_booking(good), good)
+        item = lane.queue_item('docs/ve/cards/x.fields.json', FIELDS, 'main', None, 'claude_code', spend_id=good)
+        self.assertEqual(item['close_ref']['spend_id'], good)
+        self.assertLessEqual(len(json.dumps(item['close_ref'])), 1024)
+
+    def test_a_booked_dispatch_skips_the_local_credit_file(self):
+        from unittest.mock import patch
+        from velib import cards
+        with tempfile.TemporaryDirectory() as temp:
+            card = Path(temp) / 'c.md'
+            card.write_text('---\ncard: c\ncwd: ' + temp + '\n---\n## Acceptance\npnpm test\n## Return\n', encoding='utf-8')
+            self.assertEqual(cards.parse_card(card)['acceptance'], ['pnpm test'])
+            with patch.object(cards, '_admit'), patch.object(cards, '_reserve') as reserve, \
+                    patch.object(cards, 'companion', return_value='c.mjs'), patch.object(cards, 'codex_env', return_value={}), \
+                    patch.object(cards.subprocess, 'run') as run:
+                cards.dispatch(card, booked='12345678-1234-4234-9234-123456789abc')
+                reserve.assert_not_called()
+                run.assert_called_once()
+                cards.dispatch(card)
+                reserve.assert_called_once()
+
+
+class VentureQueue(unittest.TestCase):
+    def test_cards_wait_on_main_or_a_claude_branch_until_their_codex_branch_exists(self):
+        branches = ['main', 'claude/a', 'codex/done-card', 'feature/x']
+        files_on = {'main': ['codex/queue/new-card.md', 'codex/queue/done-card.md', 'codex/queue/README.md'],
+                    'claude/a': ['codex/queue/new-card.md', 'codex/queue/second.md', 'codex/queue/../evil.md']}
+        got = lane.queued_in(branches, files_on)
+        self.assertEqual([(c['branch'], c['card']) for c in got], [('main', 'new-card'), ('claude/a', 'second')])
+
+    def test_the_card_gets_this_machines_worktree_and_its_own_id(self):
+        text = '---\ncard: other\ncwd: C:/somewhere\nmax_minutes: 20\n---\n## Goal\nx\n'
+        out = lane._set_front(lane._set_front(text, 'cwd', '/home/k/wt'), 'card', 'mine')
+        self.assertIn('cwd: /home/k/wt', out)
+        self.assertIn('card: mine', out)
+        self.assertNotIn('C:/somewhere', out)
+        self.assertIn('max_minutes: 20', out)
+        self.assertTrue(out.endswith('## Goal\nx\n'))
+
+    def test_a_venture_result_names_its_branch(self):
+        job = {'id': 'codex-heartside-x', 'close_ref': {'lane': 'codex', 'venture': 'heartside', 'state': 'running'}}
+        got = lane.report_item(job, {'ok': True, 'host': 'Lorimer', 'card': 'x', 'branch': 'codex/x', 'sha': 'a' * 40})
+        self.assertEqual(got['close_ref']['branch'], 'codex/x')
+        self.assertEqual(got['close_ref']['sha'], 'a' * 12)
+
+    def test_the_board_queue_never_picks_a_venture_mirror(self):
+        board = {'items': [item('queued', id='codex-heartside-x', venture='heartside')]}
+        self.assertIsNone(lane.next_job(board))
+
+    def test_the_ventures_are_configured(self):
+        names = lane.ventures()
+        self.assertEqual(set(names), {'heartside', 'full-time'})
+        for v in names.values():
+            self.assertRegex(v['repo'], r'^krishanraja/')
+            self.assertTrue(v['engine'].startswith('growth-'))
+
+
 class Wsl(unittest.TestCase):
     def test_the_build_runs_in_the_named_distro_and_clone_with_no_key_on_the_line(self):
         cmd = lane.wsl_command('docs/ve/cards/x.fields.json', 'main', None, 'Ubuntu', '~/dev/content-engine')

@@ -1,0 +1,7 @@
+{
+  "_about": "The ventures whose Claude sessions queue Codex work on Krish's home computer (scripts/velib/codex_lane.py). Each venture's own repository is its queue: a card at codex/queue/<id>.md on main or a claude/ branch, built in that venture's clone beside content-engine's inside WSL, its result pushed back as the branch codex/<id> with codex/results/<id>.json. engine is the Control Center growth engine whose codex share the card is booked against (reserve_credit_spend) before it is queued. Ruling (Krish, 2026-11-01): Codex makes every venture's assets, motion design and animation; no session asks him how to reach it.",
+  "ventures": {
+    "heartside": {"repo": "krishanraja/heartside", "engine": "growth-heartside"},
+    "full-time": {"repo": "krishanraja/full-time", "engine": "growth-fulltime"}
+  }
+}
