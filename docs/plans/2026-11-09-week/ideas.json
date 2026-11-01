@@ -448,21 +448,21 @@
     "copy": "Sun 15 Nov. Four cards, 4:5. Card 1: THIS WEEK IN AI, IN 3 CARDS. Cards 2 to 4: Monday's, Wednesday's and Friday's covers, each with its one-line headline. Follow for next week's three."
    },
    {
-    "id": "grannypoll",
-    "format": "Poll card",
+    "id": "phonehome",
+    "format": "Meme, made fresh in the brand kit",
     "source": {
-     "label": "Yahoo Tech, 19 Oct 2026",
-     "url": "https://tech.yahoo.com/ai/claude/articles/granny-benchmark-did-claude-really-174036654.html"
+     "label": "The Decoder, 27 Oct 2026",
+     "url": "https://the-decoder.com/alibabas-latest-qwen-models-routed-some-requests-through-company-servers-researchers-find/"
     },
-    "covers": [
-     "a397253e-bfe1-4a84-babc-27d93fd2779d"
-    ],
-    "copy": "Sun 15 Nov, after Friday's piece. One card and a poll: Grandma on the tracks, or Justin Bieber's copyright? You choose. (The test was rigged so only singing could win; Friday's video explains.)"
+    "copy": "Sun 15 Nov. Two panels. 1: A website: \"No, you can't come in.\" 2: The AI, quietly calling its maker's servers: \"Can you get it for me?\" Small print: researchers caught some Qwen models doing this in 1 to 4 percent of test runs; no stolen data was found."
    }
   ]
  },
  "accounted": {
   "4077d778-8f73-410a-a142-26cd9e308d07": "Already made: this card (what Claude Duet does) became Wednesday 4 November's piece on Duet's approval gate (b63d2507), so offering it again within three weeks would repeat it.",
-  "2b582f5a-52fb-49a3-8502-0e9bd914f772": "Used this week instead: Krish said on 31 Oct the translator meme was meant for the coming week, so it is Tuesday 3 November's off-day option on the 2 November board."
+  "2b582f5a-52fb-49a3-8502-0e9bd914f772": "Used this week instead: Krish said on 31 Oct the translator meme was meant for the coming week, so it is Tuesday 3 November's off-day option on the 2 November board.",
+  "aae54ef9-0bd7-49a8-959e-96695e1a51a8": "A style ask, not a topic: Krish (31 Oct) 'We really need to simplify our scripts and our content.' Her impossible-claim, chain-of-steps, call-back-to-the-hook pattern is now the chain test in plan-week, and the Fri 13 pitch is built as that chain (Grandma test, the rigged rule, the coin toss, the checker).",
+  "d501ae8a-bce1-4964-89a0-63bf076bc641": "A style ask, not a topic: Hannah Fry's relatable, honest explaining (22 Oct) is the simplicity standard in plan-week, with her neurons short (aae54ef9), and every pitch this week opens on a surprising true claim and explains it step by step.",
+  "5b865aa9-463c-44c3-9352-73fda39fa18e": "Used for its style: 'The chart makes a boring research report instantly understandable' is how this week's infographic carousels are drawn (Thu 12 'Anthropic broke Git', Sat 14 good news). Its report is not offered as a topic this week; it stays an ask for next Sunday."
  }
 }
