@@ -28,7 +28,7 @@ let bad = 0
 try {
   for (let i = 0; i < args.length; i += 2) {
     const [src, out] = [resolve(args[i]), resolve(args[i + 1])]
-    const page = await browser.newPage({ deviceScaleFactor: 1 })
+    const page = await browser.newPage({ deviceScaleFactor: 2 })  // sharp on high-density screens, as the pack figures were
     await page.goto(pathToFileURL(src).href)
     await page.evaluate(() => document.fonts.ready)
     const size = await page.evaluate(() => {
@@ -44,6 +44,14 @@ try {
         if (!r.width || !r.height) continue
         if (r.right > w + 1 || r.bottom > h + 1 || r.left < -1 || r.top < -1) out.push(`${el.className || el.tagName}: outside the frame`)
         if (el.scrollWidth > el.clientWidth + 2 && getComputedStyle(el).overflow !== 'visible') out.push(`${el.className || el.tagName}: words overflow`)
+      }
+      // A card's words never run past the card's own edge (a fixed-height box with too much in it).
+      for (const box of document.querySelectorAll('.card, .col, .rcpt, .step')) {
+        const b = box.getBoundingClientRect()
+        for (const el of box.querySelectorAll('*')) {
+          const r = el.getBoundingClientRect()
+          if (r.height && r.bottom > b.bottom + 1) { out.push(`${el.className || el.tagName}: runs past its ${box.className.split(' ')[0]}`); break }
+        }
       }
       // The wordmark never touches the headline or any words.
       const mark = document.querySelector('.mark')

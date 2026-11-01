@@ -1,4 +1,4 @@
-Disney asked a dying AI company to go bust first, so it could hire the team and leave the lawsuits behind.
+Disney would only take on a dying AI company's team through the bankruptcy court, so it could hire the team and leave the lawsuits behind.
 
 That company is Character.AI, the app where millions of people chat with made-up characters. It filed for bankruptcy in Delaware on 12 October. Google and Disney have now paid for pieces of it, two years apart, for two very different reasons. And the people who used it are left holding whatever remains.
 
@@ -26,17 +26,17 @@ We think the rest of the story turns on this moment. Disney had licensed its cha
 
 ## NOW DISNEY IS BUYING THE TEAM
 
-So Disney changed its approach. In September it hired Character.AI's chief executive as its first chief technology officer. Then came the court papers.
+So Disney changed its approach. In September it hired Character.AI's chief executive as its first chief technology officer.
 
-Disney has offered jobs to 66 of Character.AI's staff, most of the workforce. Their pay comes to about $60 million a year for three years, around $180 million in all, according to the filings reported by Gizmodo. On top of that, Disney has made the opening $20 million bid for rights to Character.AI's technology, a bid other buyers can still beat. Wired reports that the list covers its code, its trust and safety tools, its training infrastructure and its age-prediction technology.
+As for why Disney chose Character.AI out of every AI company it could have picked, look at what each side owns. Disney owns Marvel, Pixar and Star Wars, and Character.AI's app lets millions of people chat with made-up characters. After Sora, Disney seems to have decided it would rather own the team that does this than rent space on someone else's app. The fit is almost too neat. That's our inference from the timing and the filings; Disney hasn't said it in those words.
+
+Then came the court papers. Disney has offered jobs to 66 of Character.AI's staff, most of the workforce. Their pay comes to about $60 million a year for three years, around $180 million in all, according to the filings reported by Gizmodo. On top of that, Disney has made the opening $20 million bid for rights to Character.AI's technology, a bid other buyers can still beat. Wired reports that the list covers its code, its trust and safety tools, its training infrastructure and its age-prediction technology.
 
 Here's the part we keep coming back to. The filings say Disney required the deal to go through the bankruptcy court, because of Character.AI's "diminishing cash reserve and significant litigation and regulatory risks". Wired reports that a draft court order would leave Character.AI responsible for "any liability or other obligation" it might have.
 
 If the court approves, Disney gets the people and much of the code. Character.AI keeps the legal fights.
 
 Clever and cold, probably both.
-
-As for why Disney chose Character.AI out of every AI company it could have picked, look at what each side owns. Disney owns Marvel, Pixar and Star Wars, and Character.AI's app lets millions of people chat with made-up characters. After Sora, Disney seems to have decided it would rather own the team that does this than rent space on someone else's app. The fit is almost too neat. That's our inference from the timing and the filings; Disney hasn't said it in those words.
 
 ## WHO IS LEFT WITH THE SHELL
 

@@ -6,7 +6,7 @@ So every business now has to work out who trains the seniors it'll need in 2030,
 
 ## THE BOTTOM RUNG IS GOING
 
-"How Employment is Changing at Anthropic" came out on 16 October, and it's unusually frank (it's not every day a company publishes the bit that makes it look awkward). Juniors' share of its technical teams slipped from 21% to 14% over the same stretch. Postings for junior roles "have fallen particularly sharply since December 2025". By April, its engineering and research teams had cut back on hiring for junior technical roles, and around a third of its machine learning managers said they were hiring less because of AI.
+"How Employment is Changing at Anthropic" came out on 16 October, and it's unusually frank (it's not every day a company publishes the bit that makes it look awkward). Juniors' share of everyone on its technical teams, new hires or not, slipped from 21% to 14% over the same stretch. Postings for junior roles "have fallen particularly sharply since December 2025". By April, its engineering and research teams had cut back on hiring for junior technical roles, and around a third of its machine learning managers said they were hiring less because of AI.
 
 The same report shows why. By August, the hours its AI agents worked outnumbered its employees' hours six to one. When the agents write that much of the first draft, the first-draft job gets thin.
 

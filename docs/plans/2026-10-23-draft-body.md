@@ -8,7 +8,7 @@ So we spent the week working out whether it matters which country your AI comes 
 
 Start with who's in the race. Stanford counts the most important new AI models each year, and in 2025 America made 59 and China made 35. At the very top it's closer than that sounds: by March 2026, Stanford found, Anthropic's best model led the best Chinese one by just 2.7%.
 
-Everyone else wants a seat. The UK has a government-backed Sovereign AI fund. France has Mistral. In the Gulf, the UAE's MBZUAI and G42 launched K2 Think, and Saudi Arabia's HUMAIN launched an Arabic chat app. India picked a company called Sarvam to build its national model. South Korea runs a national AI project of its own.
+Everyone else wants a seat. The UK has a government-backed Sovereign AI fund. France has Mistral. In the Gulf, the UAE's MBZUAI, an AI university, and G42, an AI company, launched K2 Think, and Saudi Arabia's HUMAIN launched an Arabic chat app. India picked a company called Sarvam to build its national model. South Korea runs a national AI project of its own.
 
 That's what people mean by sovereign AI: a country making sure it can rely on an AI of its own.
 
@@ -42,7 +42,7 @@ The second passport decides who sees what you type. DeepSeek's own privacy polic
 
 You can bring an AI home, though. HSBC's deal with Mistral is for "self-hosted AI models that operate on HSBC's internal technology systems." The bank's data doesn't have to leave the bank.
 
-America's government tried the obvious fix with DeepSeek: download the model and run it on your own computers. Its AI standards centre ran the downloaded model on its own servers and found that its models "echoed four times as many inaccurate and misleading CCP narratives as U.S. reference models did." Moving it changed the second passport. The first one came along.
+America's government tried the obvious fix with DeepSeek: download the model and run it on your own computers. Its AI standards centre at NIST, called CAISI, ran the downloaded model on its own servers and found that its models "echoed four times as many inaccurate and misleading CCP narratives as U.S. reference models did." (The CCP is the Chinese Communist Party.) Moving it changed the second passport. The first one came along.
 
 You can take DeepSeek out of China. You can't take China out of DeepSeek.
 

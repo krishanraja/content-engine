@@ -2,6 +2,12 @@
  "_about": "Friday 6 Nov (made as Fri 23 Oct): the article's figures, drawn by scripts/pages/render_figure.mjs from the HTML beside each.",
  "figures": [
   {
+   "after": "meaning whose computers it runs on.",
+   "image": "../../../../.cache/pack/fri/figure-passports.png",
+   "html": "figure-passports.html",
+   "alt": "Every AI has two passports. Passport one, where it was born, shapes what it tells you. Passport two, whose computers it runs on, decides who sees what you type. DeepSeek's app was born in China and lives in China. DeepSeek downloaded and run at home lives on your own computers, but its answers came along. Mistral at HSBC was born in France and lives on HSBC's own systems."
+  },
+  {
    "after": "and it did it again.",
    "image": "../../../../.cache/pack/fri/figure-our-test.png",
    "html": "figure-our-test.html",
