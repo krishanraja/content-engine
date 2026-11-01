@@ -143,6 +143,25 @@ class Booking(unittest.TestCase):
                 reserve.assert_called_once()
 
 
+class SessionLogs(unittest.TestCase):
+    def test_a_card_run_under_another_codex_home_is_still_found(self):
+        import os
+        from unittest.mock import patch
+        from velib import cards
+        with tempfile.TemporaryDirectory() as temp:
+            home = Path(temp) / 'studio-codex-home'
+            log = home / 'sessions' / '2026' / '11' / '01' / 'run.jsonl'
+            log.parent.mkdir(parents=True)
+            log.write_text('\n'.join(json.dumps(e) for e in [
+                {'type': 'session_meta', 'timestamp': '2026-11-01T10:00:00Z', 'payload': {'cwd': '/wt/demo'}},
+                {'type': 'response_item', 'timestamp': '2026-11-01T10:03:00Z', 'payload': {'type': 'function_call'}}]),
+                encoding='utf-8')
+            with patch.dict(os.environ, {'CODEX_HOME': str(home)}):
+                self.assertIn(home, cards.codex_homes())
+                usage = cards.card_usage('demo', '/wt/demo')
+            self.assertEqual((usage['minutes'], usage['calls']), (3.0, 1))
+
+
 class VentureQueue(unittest.TestCase):
     def test_cards_wait_on_main_or_a_claude_branch_until_their_codex_branch_exists(self):
         branches = ['main', 'claude/a', 'codex/done-card', 'feature/x']
