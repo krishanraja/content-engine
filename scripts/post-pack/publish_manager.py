@@ -361,6 +361,7 @@ pre.txt{margin:0;white-space:pre-wrap;word-break:break-word;font:15px/1.5 Archiv
 .article{background:#fff;color:#111;color-scheme:light;border-radius:8px;padding:18px;border:1px solid var(--line);max-height:560px;overflow:auto}
 .article h2{font:700 20px/1.25 Georgia,serif;margin:22px 0 8px}.article p{margin:0 0 12px;font:17px/1.6 Georgia,serif}
 .article figure{margin:14px 0}.article img{max-width:100%;height:auto;display:block;border-radius:4px}
+.article h3{font:700 18px/1.3 Georgia,serif;margin:18px 0 6px}.article ul,.article ol{margin:0 0 14px;padding-left:26px;font:17px/1.6 Georgia,serif}.article li{margin:0 0 8px;padding-left:4px}.article blockquote{margin:14px 0;padding:2px 0 2px 16px;border-left:3px solid #111}.article blockquote p{font-style:italic}.article hr{border:0;border-top:1px solid #ddd;margin:20px 0}.article a{color:inherit}
 .pic{display:grid;gap:8px}.pic img{width:100%;height:auto;border-radius:8px;border:1px solid var(--line);display:block}
 .status{font-size:12.5px;color:var(--muted);min-height:1.2em}.status.ok{color:var(--ok)}.status.bad{color:var(--bad)}
 ol.do{margin:0;padding-left:20px}.files{font:12px "IBM Plex Mono",ui-monospace,monospace;color:var(--muted)}

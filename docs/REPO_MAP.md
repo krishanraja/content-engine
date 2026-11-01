@@ -1403,6 +1403,7 @@ The mechanical checks a piece must pass before it can be approved or
 - `function predictionCheck(body: string): { ok: boolean; detail: string }`
 - `function bareScores(body: string): Array<{ number: string; sentence: string }>`
 - `function threeThingsTomorrow(body: string): { ok: boolean; detail: string }`
+- `function articleFormat(body: string): string[]`
 - `function publishChecks(body: string, factGate: { ok: boolean; reason: string | null }, now: Date = new Date(), pieceId?…`
 - `function publishStatus(checks: Check[]): { ok: boolean; reason: string | null; failing: Check[] }`
 

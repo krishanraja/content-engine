@@ -15,6 +15,30 @@
    "role": "vertical-cover",
    "file": "../../../../.cache/friday-visual/cover/cover-1080x1920.png",
    "alt": "Vertical cover: Why every country wants its own AI"
+  },
+  {
+   "id": "every-country",
+   "file": "../../../../.cache/pack/fri/figure-every-country.png",
+   "alt": "Quote from Stanford's AI Index 2026: the US produced 59 notable AI models in 2025 to China's 35, while China leads on research papers and patents.",
+   "after_heading": "EVERY COUNTRY WANTS ITS OWN AI"
+  },
+  {
+   "id": "crosses-borders",
+   "file": "../../../../.cache/pack/fri/figure-crosses-borders.png",
+   "alt": "Quote from Fortune, 21 October 2025: Airbnb's boss Brian Chesky says the company relies a lot on Alibaba's Qwen model because it is good, fast and cheap.",
+   "after_heading": "THE AI YOU USE ALREADY CROSSES BORDERS"
+  },
+  {
+   "id": "where-built",
+   "file": "../../../../.cache/pack/fri/figure-where-built.png",
+   "alt": "Quote from the Christian Science Monitor, 23 September 2026: on 200 news questions, Chinese-owned chatbots refused, used government language or got it wrong in 35% of cases, 63% for DeepSeek, while Claude stayed factual.",
+   "after_heading": "WHERE IT WAS BUILT SHAPES WHAT IT SAYS"
+  },
+  {
+   "id": "where-runs",
+   "file": "../../../../.cache/pack/fri/figure-where-runs.png",
+   "alt": "Quote from DeepSeek's privacy policy, read 30 October 2026: it collects, processes and stores your personal data in the People's Republic of China.",
+   "after_heading": "WHERE IT RUNS DECIDES WHO SEES YOUR DATA"
   }
  ],
  "scripts": [
@@ -28,5 +52,5 @@
   }
  ],
  "facts": "page-facts.json",
- "_about": "Friday 6 Nov: its words, figures and scripts in the repository. The title is the substack_headline Krish signed off on 24 Oct (locked/titles.json); no subtitle was signed, so none is set. Covers and thumbnails come from the post's library folder."
+ "_about": "Friday 6 Nov: its words, figures and scripts in the repository. The title is the substack_headline Krish signed off on 24 Oct (locked/titles.json); no subtitle was signed, so none is set. Covers and thumbnails come from the post's library folder. The four figures under the first four sections are the ones already on the 2 Nov board (Krish approved Friday on it); the work-questions figure is redrawn from pack/figure-our-test.html so it says \"we\", not \"my test\"."
 }
