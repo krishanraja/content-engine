@@ -37,7 +37,10 @@ class Cut:
         if cur is None and t < 3.0: cur = 0
         if cur is None: return None
         g = segs[cur]
-        if g['mode'] == 'full' and g['a'] + 0.45 <= t < g['b'] - 0.35: return None
+        if g['mode'] == 'full':
+            joined_in = cur > 0 and segs[cur - 1]['mode'] == 'full' and segs[cur - 1]['b'] >= g['a'] - 0.05
+            joined_out = cur + 1 < len(segs) and segs[cur + 1]['mode'] == 'full' and segs[cur + 1]['a'] <= g['b'] + 0.05
+            if (joined_in or g['a'] + 0.45 <= t) and (joined_out or t < g['b'] - 0.35): return None
         s = 1.0 + 0.022 * math.sin(t * 0.6) + 0.035 * W(t, g['a'], max(1, g['b'] - g['a']))
         for (p, k) in P['push']:
             if p - 0.05 <= t < p + 3.6:
@@ -135,13 +138,18 @@ def audio(cut, video):
     subprocess.run([FF, '-v', 'error', '-y', '-i', str(v), '-i', str(m), '-filter_complex',
                     '[0:a]asplit[a][k];[1:a][k]sidechaincompress=threshold=0.03:ratio=9:attack=20:release=400[md];[a][md]amix=inputs=2:normalize=0,atrim=0:%s[o]' % dur,
                     '-map', '[o]', str(mix)], check=True)
-    meas = subprocess.run([FF, '-hide_banner', '-i', str(mix), '-af', 'loudnorm=I=-14:TP=-2:LRA=11:print_format=json', '-f', 'null', '-'], capture_output=True, text=True).stderr
+    meas = subprocess.run([FF, '-hide_banner', '-i', str(mix), '-af', 'loudnorm=I=-14:TP=-2.5:LRA=11:print_format=json', '-f', 'null', '-'], capture_output=True, text=True).stderr
     j = json.loads(re.findall(r'\{[^{}]*\}', meas)[-1])
-    ln = (f"loudnorm=I=-14:TP=-2:LRA=11:measured_I={j['input_i']}:measured_TP={j['input_tp']}:measured_LRA={j['input_lra']}"
-          f":measured_thresh={j['input_thresh']}:offset={j['target_offset']}:linear=true,alimiter=limit=0.75:level=false")
     final = cut.out.with_suffix('.mp4')
-    subprocess.run([FF, '-v', 'error', '-y', '-i', str(video), '-i', str(mix), '-af', ln, '-map', '0:v', '-map', '1:a', '-c:v', 'copy',
-                    '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-t', f'{dur}', '-movflags', '+faststart', str(final)], check=True)
+    for lim in (0.7, 0.6, 0.5, 0.42):   # AAC overshoots the limiter: encode, measure the true peak, tighten until it holds -1 dBTP
+        ln = (f"loudnorm=I=-14:TP=-2.5:LRA=11:measured_I={j['input_i']}:measured_TP={j['input_tp']}:measured_LRA={j['input_lra']}"
+              f":measured_thresh={j['input_thresh']}:offset={j['target_offset']}:linear=true,alimiter=limit={lim}:level=false")
+        subprocess.run([FF, '-v', 'error', '-y', '-i', str(video), '-i', str(mix), '-af', ln, '-map', '0:v', '-map', '1:a', '-c:v', 'copy',
+                        '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-t', f'{dur}', '-movflags', '+faststart', str(final)], check=True)
+        r = subprocess.run([FF, '-hide_banner', '-i', str(final), '-map', '0:a', '-af', 'ebur128=peak=true', '-f', 'null', '-'], capture_output=True, text=True).stderr
+        tp = float(re.findall(r'Peak:\s+(-?[\d.]+)', r)[-1]); li = float(re.findall(r'I:\s+(-?[\d.]+) LUFS', r)[-1])
+        print(f'limit {lim}: {li} LUFS, true peak {tp} dBTP', flush=True)
+        if tp <= -1.1: break
     return final
 
 def stills(name, out, ts):

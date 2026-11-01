@@ -47,7 +47,9 @@ const isPhone=s=>s&&s.pic==='phone';
 // a quantity that follows each segment's target, eased over d seconds from the segment start
 function follow(t,target,d=0.5){const S=TL.segs,i=segAt(t),cur=target(S[i],t),prev=i>0?target(S[i-1],t):cur;return lerp(prev,cur,W(t,S[i].a,d))}
 // a full-frame panel's horizontal offset (slides in from the right, out to the left); the compositor uses the same rule
-function panelX(t,s){const inn=W(t,s.a,0.42),out=t>s.b-0.36?W(t,s.b-0.36,0.36):0;return (1-inn)*VW-out*VW}
+const isFull=q=>q&&q.mode==='full';
+function nb(s){const i=TL.segs.indexOf(s);return [TL.segs[i-1],TL.segs[i+1]]}
+function panelX(t,s){const [p,n]=nb(s);const inn=isFull(p)?1:W(t,s.a,0.42),out=(!isFull(n)&&t>s.b-0.36)?W(t,s.b-0.36,0.36):0;return (1-inn)*VW-out*VW}
 function caps(t){const el=document.getElementById('cap');if(LAYER!=='fg'||t<3.0){el.innerHTML='';return}
   const s=TL.segs[segAt(t)];if(s.mode==='close'&&t>s.a+0.5){el.innerHTML='';return}
   let p=null;for(let i=0;i<PHR.length;i++){const st=PHR[i][0][1]-0.05,e=(PHR[i+1]?PHR[i+1][0][1]:st+4)-0.05;if(t>=st&&t<e&&t<PHR[i][PHR[i].length-1][1]+1.6){p=PHR[i];break}}
@@ -127,7 +129,7 @@ P.logos=(t,s)=>{const e=env(t,s),ev=s.ev,ry=700,x0=700;
   put(`<div class="abs" style="left:660px;top:${ry}px;width:1200px;height:8px;background:${INK};opacity:${e.fade}"></div>`);
   put(`<div class="abs" style="left:1800px;top:${ry-330}px;width:10px;height:380px;background:${INK};opacity:${e.fade}"></div>`);
   for(let k=0;k<14;k++){const xx=660+((k*90-(t*120)%90)+1200)%1200;put(`<div class="abs" style="left:${xx}px;top:${ry+8}px;width:4px;height:16px;background:${INK};opacity:${.5*e.fade}"></div>`)}
-  [['gmail',ev.email],['google-calendar',ev.cal],['slack',ev.slack]].forEach(([n,at],i)=>{if(t<at-0.3)return;const d=B(t,at-0.15,0.45),ride=Math.max(0,t-at)*26;
+  [['gmail',Math.min(ev.email,s.a+0.5)],['google-calendar',ev.cal],['slack',ev.slack]].forEach(([n,at],i)=>{if(t<at-0.3)return;const d=B(t,at-0.15,0.45),ride=Math.max(0,t-at)*26;
     put(tile(n,x0+i*260+ride,ry-220-(1-d)*500,200,Math.sin(t*2+i)*3*(1-W(t,at,1.5))+Math.sin(t*1.1+i)*1.5,e.fade))});
   if(t>=ev.more-0.2){const k=W(t,ev.more,1.0),n=Math.round(6000*k);
     put(`<div class="abs" style="left:700px;top:${780+(1-B(t,ev.more,.4))*80}px;background:${INK};padding:16px 26px;opacity:${e.fade};box-shadow:8px 8px 0 ${CREAM}"><span class="anton" style="font-size:96px;color:${MINT}">${n.toLocaleString('en-GB')}${k>=1?'+':''}</span><span class="mono" style="font-size:26px;color:${CREAM};margin-left:20px">CONNECTORS</span></div>`)}
@@ -194,7 +196,7 @@ P.duet=(t,s)=>{const ev=s.ev,px=panelX(t,s);put(`<div class="abs" style="left:${
     put(workOrder(i+1,ti,tg,lerp(-400,stop,arr),ry-396,(1-arr)*-10+Math.sin(t*2.2+i)*1.6,yes,1.3,lg))});
   put('</div></div>')};
 P.hours=(t,s)=>{const ev=s.ev,px=panelX(t,s);put(`<div class="abs" style="left:${px}px;top:0;width:${VW}px;height:${VH}px;background:${INK}">`);
-  const k=W(t,ev.caught-0.1,1.8),n=Math.round(36*k),pop=1+.03*Math.sin(t*2.4)+(t>=ev.day?.1*clamp(1-(t-ev.day)/0.3):0);
+  const k=W(t,s.a+0.5,Math.max(1.5,ev.day-s.a)),n=Math.round(36*k),pop=1+.03*Math.sin(t*2.4)+(t>=ev.day?.1*clamp(1-(t-ev.day)/0.3):0);
   const R=230,cx=560,cy=540,ang=k*540;   // a day and a half: one and a half turns of the dial
   let sv=`<svg width="1920" height="1080" style="position:absolute;left:0;top:0"><circle cx="${cx}" cy="${cy}" r="${R}" stroke="${DIM}" stroke-width="22" fill="none"/>`;
   const turns=ang/360,full=Math.floor(turns),part=turns-full;
@@ -202,7 +204,7 @@ P.hours=(t,s)=>{const ev=s.ev,px=panelX(t,s);put(`<div class="abs" style="left:$
   if(part>0){const a=part*2*Math.PI,x=cx+R*Math.sin(a),y=cy-R*Math.cos(a);sv+=`<path d="M${cx} ${cy-R} A${R} ${R} 0 ${part>.5?1:0} 1 ${x} ${y}" stroke="${full>=1?LIL:MINT}" stroke-width="22" fill="none" stroke-linecap="round"/>`}
   const ha=ang*Math.PI/180;sv+=`<line x1="${cx}" y1="${cy}" x2="${cx+(R-50)*Math.sin(ha)}" y2="${cy-(R-50)*Math.cos(ha)}" stroke="${CREAM}" stroke-width="14" stroke-linecap="round"/><circle cx="${cx}" cy="${cy}" r="16" fill="${CREAM}"/></svg>`;put(sv);
   put(`<div class="abs anton" style="left:900px;top:240px;font-size:420px;color:${CREAM};transform:scale(${pop});transform-origin:left center">${n}</div>`);
-  put(`<div class="abs anton" style="left:910px;top:640px;font-size:140px;color:${MINT};opacity:${W(t,ev.caught,.4)}">HOURS</div>`);
+  put(`<div class="abs anton" style="left:910px;top:640px;font-size:140px;color:${MINT};opacity:${W(t,s.a+0.6,.4)}">HOURS</div>`);
   put(`<div class="abs mono" style="left:916px;top:820px;font-size:22px;color:#a9b4ae;text-transform:none;letter-spacing:.5px;opacity:${W(t,ev.caught+.4,.4)}">A small business owner on r/ClaudeAI: "I caught up in 36 hours"</div>`);
   put('</div>')};
 P.page=(t,s)=>{const e=env(t,s),w=1180,h=w*900/1440,x=680,y=150,pu=1+.32*W(t,s.a+0.5,Math.max(1,s.b-s.a-0.9)),[hx,hy]=s.hl;
@@ -275,7 +277,7 @@ function render(t){html.length=0;const cam=document.getElementById('cam');cam.st
     if(s.mode==='close')closer(t,s);
     else if(V&&s.mode==='face')topCard(t,s);
     else if(s.pic&&P[s.pic])P[s.pic](t,s);
-    if(isPhone(s)&&s.strip){const o=W(t,s.a+0.3,.3)*(t>s.b-.3?1-W(t,s.b-.3,.3):1);put(V?`<div class="abs mono" style="left:60px;top:150px;font-size:30px;background:${LIL};color:${INK};padding:10px 18px;opacity:${o};box-shadow:6px 6px 0 ${CREAM}">${s.strip}</div>`:strip(s.strip,1240,110,o,LIL,26))}
+    if(isPhone(s)&&s.strip){const o=W(t,s.a+0.3,.3)*(t>s.b-.3?1-W(t,s.b-.3,.3):1);put(V?`<div class="abs mono" style="left:60px;top:150px;font-size:30px;background:${LIL};color:${INK};padding:10px 18px;opacity:${o};box-shadow:6px 6px 0 ${CREAM}">${s.strip}</div>`:strip(s.strip,1290,900,o,LIL,26))}
   }
   cam.innerHTML=html.join('');
   const cw=V?52:40;

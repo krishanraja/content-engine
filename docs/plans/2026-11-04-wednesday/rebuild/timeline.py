@@ -134,7 +134,7 @@ def short_cut():
     seg(0.90, 10.34, 'face', 'brand')
     seg(10.34, 14.14, 'full', 'phone', clip=clip('first', '16x9'))
     seg(14.14, 20.30, 'full', 'phone', clip=clip('brief', '16x9'), strip='GMAIL · CALENDAR · EVERY FEW HOURS')
-    seg(20.30, 25.30, 'full', 'queue', ev=dict(send=f('sends', 20), pay=f('pays', 20), sign=f('signs', 20), delete=f('anything', 21) - 0.3,
+    seg(20.30, 25.30, 'full', 'queue', ev=dict(send=o(20.6), pay=o(21.0), sign=o(21.4), delete=o(21.8),
                                                yes=f('anything', 21) + 0.25, approved=f('anything', 21) + 0.9))
     seg(25.30, 30.02, 'full', 'phone', clip=clip('setup', '16x9'))
     seg(30.02, 36.98, 'face', 'top', tag='MICROSOFT 365 WORK EMAIL: NOT YET', tagAt=f('one email'))
@@ -142,7 +142,7 @@ def short_cut():
     seg(41.58, 44.04, 'full', 'phone', clip=clip('think', '16x9'), strip='THE WAIT, SPED UP 8×')
     seg(44.04, 47.22, 'face', 'top', bar=dict(at=f('use up'), full=f('limit', 44)), tag='COUNTS TOWARDS YOUR CLAUDE LIMIT', tagAt=f('use up'))
     seg(47.22, 52.38, 'full', 'phone', clip=clip('calendar', '16x9'))
-    seg(52.38, 59.48, 'full', 'tool', ev=dict(ask=f('ask', 52), builds=f('get', 56), again=f('instead', 56)))
+    seg(52.38, 59.48, 'full', 'tool', ev=dict(ask=f('ask', 52), builds=f('ask', 52) + 0.9, again=f('get', 56)))
     seg(59.48, 63.58, 'face', 'top', tag='WHEN YOU GET DUET', tagAt=f('when you get'))
     seg(63.58, 71.78, 'full', 'steps', ev=dict(one=f('pick'), fire=f('nudges'), draft=f('check every'), yes=f('yes', 66), never=f('no sending')))
     take_end = ws[-1][2]

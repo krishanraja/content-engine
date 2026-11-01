@@ -104,11 +104,17 @@ def long():
     lesson = A('now the real lesson', 208)
     S.append(seg(shrink, lesson, 'full', 'sheet', tries=[shrink - 1.2], fold=shrink + 0.9))
     q2 = A('here are two questions', 228)
-    S.append(seg(lesson, q2, 'brand')); P += [(lesson, .22), (A('it\'s the habit', 212), .14), (A('sticking with the fix', 216), .12), (A('which is how you use AI', 222), .2), (A('so what can you do', 227), .24)]
+    habit = A('it\'s the habit', 212); which = A('which is how you use AI', 222)
+    S.append(seg(lesson, habit, 'brand')); P += [(lesson, .22)]
+    S.append(seg(habit, which, 'side', 'sheet', tries=[A('asking whether', 216), A('sticking with the fix', 216) - 0.4, A('sticking with the fix', 216) + 1.0]))
+    S.append(seg(which, q2, 'brand')); P += [(which, .2), (A('so what can you do', 227), .24)]
     good = A('good juniors will ask', 237)
     S.append(seg(q2, good, 'side', 'ladder', drawn=1, gap=1, lit=q2 + 0.2, qcards=[A('who on this team', 232), A('and what are they', 235)], qlabel=q2 + 0.5))
     each_team = A('for each team', 255)
-    S.append(seg(good, each_team, 'brand')); P += [(good, .16), (A('if you\'re early on', 241), .2), (A('as opposed to just', 247), .14), (A('learn how it works', 250), .18), (A('here\'s what to do', 253), .22)]
+    boring = A('if you find a boring', 248); hire = A('like the new hire', 254, end=True)
+    S.append(seg(good, boring, 'brand')); P += [(good, .16), (A('if you\'re early on', 241), .2), (A('as opposed to just', 247), .16)]
+    S.append(seg(boring, hire, 'side', 'sheet', tries=[A('then build the better way', 253) - 0.2]))
+    S.append(seg(hire, each_team, 'brand')); P += [(A('here\'s what to do', 253), .22)]
     full = A('the full deep dive', 280)
     cards = [dict(at=each_team, label='Each team, 4 years out'), dict(at=A('look at your last three', 266), label='Your last 3 hires'), dict(at=A('and give a junior', 273), label='One dull weekly job')]
     for cd in cards: cd['at'] = round(cd['at'] - each_team, 2)

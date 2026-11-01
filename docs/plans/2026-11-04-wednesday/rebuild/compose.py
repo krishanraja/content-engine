@@ -44,9 +44,19 @@ class Cut:
         i = self.seg_i(t); cur = target(self.S[i]); prev = target(self.S[i - 1]) if i > 0 else cur
         return lerp(prev, cur, W(t, self.S[i]['a'], d))
 
+    def nb(self, s):
+        i = self.S.index(s)
+        full = lambda k: 0 <= k < len(self.S) and self.S[k]['mode'] == 'full'
+        return full(i - 1), full(i + 1)
+
     def panel_x(self, t, s):
-        inn = W(t, s['a'], 0.42); out = W(t, s['b'] - 0.36, 0.36) if t > s['b'] - 0.36 else 0
+        pf, nf = self.nb(s)
+        inn = 1 if pf else W(t, s['a'], 0.42); out = W(t, s['b'] - 0.36, 0.36) if (t > s['b'] - 0.36 and not nf) else 0
         return (1 - inn) * self.Wd - out * self.Wd
+
+    def covered(self, t, s):
+        pf, nf = self.nb(s)
+        return s['mode'] == 'full' and s['a'] + (0 if pf else 0.5) <= t < s['b'] - (0 if nf else 0.4)
 
     def push(self, t):
         s = 1.0 + 0.022 * math.sin(t * 0.6) + 0.03 * W(t, 3.0, 6)
@@ -151,7 +161,7 @@ def render_range(name, i0, i1, out_path=None, stills=None):
             # his face
             sc = C.push(t)
             if not V:
-                hidden = t < 2.8 or (s['mode'] == 'full' and s['a'] + 0.5 <= t < s['b'] - 0.4) or (s['mode'] == 'close' and t >= s['a'] + 0.55)
+                hidden = t < 2.8 or C.covered(t, s) or (s['mode'] == 'close' and t >= s['a'] + 0.55)
                 if not hidden:
                     cx = C.follow(t, lambda q: 960 if q['mode'] in ('face', 'full', 'close') else 304, 0.55)
                     cwid, chei = 1080 / sc, 1920 / sc

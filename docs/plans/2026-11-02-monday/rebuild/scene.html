@@ -102,7 +102,7 @@ S.ladder=(u,g,th)=>{const p=g.p,X=p.x??470,Wd=p.w??280,top=60,bot=740,c=th.fg;le
     if(p.qlabel!=null)s+=`<div class="abs mono" style="left:${X+Wd+70}px;top:${130}px;font-size:26px;color:${c};opacity:${W(u,p.qlabel,.4)}">NEXT HIRING MEETING</div>`}
   if(p.cover!=null){const fly=B(u,p.cover,0.7),pu=W(u,p.cover,6);s+=`<div class="abs" style="left:${(X+Wd+110)+(1-fly)*900}px;top:${40+(1-fly)*-80}px;width:520px;transform:rotate(${-5+4*fly}deg) scale(${.96+pu*.08});box-shadow:0 30px 60px rgba(12,21,18,.45)"><img src="${SRC}report-cover.jpg" style="width:520px;display:block"></div>`;
     s+=credit('ANTHROPIC · 16 OCT 2026',c,X+Wd+118,772,W(u,p.cover+0.4,.4))}
-  const zp=p.lift!=null?.22*W(u,p.lift+.3,3):0;return `<div class="abs" style="inset:0;transform:translate(${Math.sin(u*.4)*8}px,${Math.cos(u*.33)*6}px) scale(${1+W(u,0,g.d)*.05+zp});transform-origin:${(X+Wd/2)/12}% 88%">${s}</div>`};
+  const zp=p.lift!=null?.22*W(u,p.lift+.3,3):0;return `<div class="abs" style="inset:0;transform:translate(${Math.sin(u*.4)*8}px,${Math.cos(u*.33)*6}px) scale(${1+W(u,0,g.d)*.12+zp});transform-origin:${(X+Wd/2)/12}% 88%">${s}</div>`};
 // the hire badges: 100 in a tray, the juniors butter; on the fall 18 lift off and drop
 S.badges=(u,g,th)=>{const p=g.p,js=[];for(let k=0;k<27;k++)js.push(Math.floor(k*100/27+1)%100);const keep=new Set(js.filter((_,i)=>i%3===0).slice(0,9));
   let s='';const fill=W(u,0.2,2.0);
@@ -152,9 +152,9 @@ S.branch=(u,g,th)=>{const p=g.p;let s='';const copy=p.copy!=null?W(u,p.copy,1.4)
   let street='';const n=p.copy!=null?7:1;
   for(let k=n-1;k>=0;k--){const appear=k===0?1:B(u,(p.copy||0)+0.25+k*0.22,.5);if(appear<=0.01)continue;
     street+=`<div class="abs" style="left:${80+k*360}px;top:${120-k*0}px;transform:scale(${appear*(1-k*0.06)});transform-origin:50% 100%">${facade(k,k===0?shut:0,1)}</div>`}
-  s+=`<div class="abs" style="left:0;top:0;width:3200px;height:800px;transform:${V?`translate(${260-copy*820+Math.sin(u*.4)*10}px,${120+copy*260}px) scale(${1.25-0.6*copy})`:`translate(${-copy*160+Math.sin(u*.4)*10}px,${60+copy*230}px) scale(${cam})`};transform-origin:0 0">${street}</div>`;
+  s+=`<div class="abs" style="left:0;top:0;width:3200px;height:800px;transform-origin:20% 50%;transform:scale(${1+.07*W(u,0,p.shut??g.d)}) ${V?`translate(${260-copy*820+Math.sin(u*.4)*10}px,${120+copy*260}px) scale(${1.25-0.6*copy})`:`translate(${-copy*160+Math.sin(u*.4)*10}px,${60+copy*230}px) scale(${cam})`};transform-origin:0 0">${street}</div>`;
   // the numbers
-  const NX=V?60:830;let v=20;if(shut>0)v=Math.round(20-7*shut);
+  const NX=V?60:900;let v=20;if(shut>0)v=Math.round(20-7*shut);
   if(p.copy==null||copy<.3){s+=`<div class="abs anton" style="left:${NX}px;top:${V?-380:90}px;font-size:${V?300:260}px;color:${CREAM};opacity:${W(u,0.4,.4)*(1-clamp(copy/0.3))};transform:scale(${1+.04*Math.sin(u*2.2)});transform-origin:left">${v}</div>`;
     s+=`<div class="abs mono" style="left:${NX+8}px;top:${V?-60:370}px;white-space:nowrap;font-size:26px;color:${CREAM};opacity:${W(u,0.6,.4)*(1-clamp(copy/0.3))}">Tellers per city branch</div>`;
     if(shut>.05)s+=`<div class="abs anton" style="left:${NX+8}px;top:${V?-10:430}px;font-size:80px;color:${GREY};text-decoration:line-through;opacity:${W(u,p.shut,.3)*(1-clamp(copy/0.3))}">20</div>`}
@@ -170,7 +170,7 @@ S.ledgers=(u,g,th)=>{const p=g.p;let s='';const blk=(x,y,w,h,c,o,r)=>`<div class
   if(cl)s+=`<div class="abs anton" style="left:${L0}px;top:150px;font-size:96px;color:${CREAM};transform:scale(${1+.03*Math.sin(u*2)});transform-origin:left">−${fmt(cl)}</div>`;
   if(ac)s+=`<div class="abs anton" style="left:${R0}px;top:150px;font-size:96px;color:${BUT};transform:scale(${1+.03*Math.sin(u*2.3)});transform-origin:left">+${fmt(ac)}</div>`;
   s+=credit('NPR PLANET MONEY · 2015 · US JOBS SINCE 1980','#a9b4ae',L0,V?760:740,W(u,.6,.4));
-  return `<div class="abs" style="inset:0;transform:scale(${1+W(u,0,g.d)*.05}) translate(${Math.sin(u*.45)*8}px,0);transform-origin:50% 60%">${s}</div>`};
+  return `<div class="abs" style="inset:0;transform:scale(${1+W(u,0,p.gone??g.d)*.07}) translate(${Math.sin(u*.45)*8}px,0);transform-origin:50% 55%">${s}</div>`};
 // a new hire's sheet: the same click down the rows, week after week; the tries; then weeks fold into an afternoon
 S.sheet=(u,g,th)=>{const p=g.p;let s='';const RH=44,cols=[60,250,170,170,170,120],X=120,Y=110,rows=14;
   const scroll=(u*1.6)%1,rowsUp=Math.floor(u*1.6);const tries=p.tries||[];const fold=p.fold!=null?W(u,p.fold,1.2):0;
