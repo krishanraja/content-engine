@@ -84,7 +84,7 @@ def parse_card(path: Path) -> dict:
     for line in head.strip().splitlines():
         key, _, value = line.partition(':')
         meta[key.strip()] = value.strip()
-    meta['acceptance'] = re.findall(r'^\s*`?(npx [^`\n]+|npm run [^`\n]+|python [^`\n]+)`?\s*$', text.split('## Acceptance', 1)[1].split('## Return', 1)[0], re.M)
+    meta['acceptance'] = re.findall(r'^\s*`?(npx [^`\n]+|npm run [^`\n]+|pnpm [^`\n]+|python3? [^`\n]+|node [^`\n]+)`?\s*$', text.split('## Acceptance', 1)[1].split('## Return', 1)[0], re.M)
     return meta
 
 
@@ -298,11 +298,15 @@ def codex_env() -> dict:
     return env
 
 
-def dispatch(card_path: Path, background: bool = True) -> subprocess.CompletedProcess:
+def dispatch(card_path: Path, background: bool = True, booked: str | None = None) -> subprocess.CompletedProcess:
+    """booked: the id of a Control Center reservation (reserve_credit_spend) the queuing session already made for this
+    card. Control Center is then the guard that refused anything over the share, so the local cap file is not read;
+    the session settles the booking with settle_credit_spend once it has the result."""
     meta = parse_card(card_path)
     _require_design_lock(meta)
     _admit(card_path, meta)
-    _reserve(card_path, meta)
+    if not booked:
+        _reserve(card_path, meta)
     cwd = meta.get('cwd') or str(ROOT)
     minutes, _ = card_limits(meta)
     ensure_worktree(Path(cwd), meta.get('card', 'card'))

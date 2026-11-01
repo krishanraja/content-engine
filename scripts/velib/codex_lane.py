@@ -110,6 +110,8 @@ def next_job(board: dict, at: dt.datetime | None = None) -> dict | None:
         if item.get('lane') != 'in_progress':
             continue
         ref = item.get('close_ref') or {}
+        if ref.get('venture'):
+            continue  # a venture card's queue is its own repository; its board item is only the mirror
         if ref.get('state') == 'queued':
             return item
         if ref.get('state') == 'running':
@@ -135,10 +137,26 @@ def fields_path_for(card: Path) -> Path:
                      'the card with its own worktree path (ve card)')
 
 
-def queue_item(fields_rel: str, fields: dict, ref: str, piece: str | None, client: str, at: str | None = None) -> dict:
+SPEND_ID = re.compile(r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$')
+
+
+def require_booking(spend_id: str | None) -> str:
+    """The Control Center reservation the queuing session made (reserve_credit_spend), so no credit file has to live
+    on the computer that builds. A card is never queued without one: Control Center is the guard that refuses
+    over_share, held or no_pool, and the session settles it (settle_credit_spend) once the result is back."""
+    if not spend_id or not SPEND_ID.match(spend_id):
+        raise SystemExit('ve lane: book the card first: reserve_credit_spend (Control Center connector, the venture\'s '
+                         'engine, pool codex) and pass its spend_id with --spend-id')
+    return spend_id
+
+
+def queue_item(fields_rel: str, fields: dict, ref: str, piece: str | None, client: str, at: str | None = None,
+               spend_id: str | None = None) -> dict:
     card_id = fields['card_id']
     stamp = at or now()
     close_ref = {'lane': 'codex', 'fields': fields_rel, 'ref': ref, 'state': 'queued', 'queued_at': stamp, 'by': client}
+    if spend_id:
+        close_ref['spend_id'] = spend_id
     if piece:
         close_ref['piece'] = piece
     return {
@@ -155,7 +173,8 @@ def on_ref(rel: str, ref: str) -> bool:
     return subprocess.run(['git', 'cat-file', '-e', f'origin/{ref}:{rel}'], cwd=ROOT, capture_output=True).returncode == 0
 
 
-def queue(card: Path, piece: str | None, ref: str = 'main', client: str = 'claude_code') -> dict:
+def queue(card: Path, piece: str | None, ref: str = 'main', client: str = 'claude_code', spend_id: str | None = None) -> dict:
+    require_booking(spend_id)
     fields_file = fields_path_for(card.resolve())
     rel = fields_file.relative_to(ROOT).as_posix()
     if not on_ref(rel, ref):
@@ -167,14 +186,32 @@ def queue(card: Path, piece: str | None, ref: str = 'main', client: str = 'claud
                  and (i.get('close_ref') or {}).get('state') in ('queued', 'running')), None)
     if held:
         raise SystemExit(f've lane: {held["id"]} is already {held["close_ref"]["state"]}; wait for its result (ve lane status)')
-    item = queue_item(rel, fields, ref, piece, client)
+    item = queue_item(rel, fields, ref, piece, client, spend_id=spend_id)
     _upsert(item, client)
     return item
 
 
 # ---- build (the machine that has Codex) ---------------------------------------------------------------------------
 
-def build(fields_rel: str, ref: str = 'main', piece: str | None = None) -> dict:
+def publish_branch(worktree: Path, branch: str, message: str) -> tuple[str | None, str | None]:
+    """Commit what Codex changed in the card's worktree and push its branch, so the session that queued it, anywhere,
+    can read and check it. Returns (commit sha, None) or (None, why it could not be pushed)."""
+    git = ['git', '-C', str(worktree)]
+    subprocess.run(git + ['add', '-A'], check=True, capture_output=True)
+    if subprocess.run(git + ['diff', '--cached', '--quiet'], capture_output=True).returncode != 0:
+        subprocess.run(git + ['-c', 'user.name=Codex lane', '-c', 'user.email=codex-lane@users.noreply.github.com',
+                              'commit', '-q', '-m', message], check=True, capture_output=True)
+    pushed = subprocess.run(git + ['push', '-q', '-u', 'origin', '--end-of-options', f'HEAD:refs/heads/{branch}'],
+                            capture_output=True, text=True)
+    if pushed.returncode != 0:
+        tail = ' '.join((pushed.stderr or '').strip().splitlines()[-2:])
+        return None, (f'built, but the branch {branch} could not be pushed from this computer ({tail}); give WSL git '
+                      'access to GitHub (docs/ve/RUNBOOK.md, Codex lane)')
+    sha = subprocess.run(git + ['rev-parse', 'HEAD'], capture_output=True, text=True).stdout.strip()
+    return sha, None
+
+
+def build(fields_rel: str, ref: str = 'main', piece: str | None = None, spend_id: str | None = None) -> dict:
     """Write the card from its fields on this machine, dispatch it and wait, then verify-card. Returns a summary."""
     from .cards import dispatch, verify, write_card
     from .common import card_worktree
@@ -194,11 +231,15 @@ def build(fields_rel: str, ref: str = 'main', piece: str | None = None) -> dict:
         fields.pop('path', None)
         fields['cwd'] = card_worktree(card_id)
         write_card(out, **fields)
-        done = dispatch(out, background=False)
+        done = dispatch(out, background=False, booked=require_booking(spend_id))
         result['dispatch_code'] = done.returncode
         result['dispatch_tail'] = '\n'.join((done.stdout + done.stderr).strip().splitlines()[-8:])
         result['problems'] = verify(out, Path(fields['cwd']))
         result['worktree'] = fields['cwd']
+        sha, why = publish_branch(Path(fields['cwd']), f've-card/{card_id}', f'codex: {card_id}')
+        if why:
+            result['problems'].append(why)
+        result['sha'] = sha
         result['ok'] = done.returncode == 0 and not result['problems']
     except SystemExit as stop:
         result['problems'].append(str(stop.code))
@@ -210,10 +251,13 @@ def build(fields_rel: str, ref: str = 'main', piece: str | None = None) -> dict:
 def report_item(item: dict, result: dict, at: str | None = None) -> dict:
     ref = dict(item.get('close_ref') or {})
     ref.update({'state': 'built' if result.get('ok') else 'failed', 'finished_at': at or now(), 'host': result.get('host', '')[:60]})
-    if result.get('worktree'):
-        ref['branch'] = f've-card/{result.get("card")}'
+    if result.get('branch') or result.get('worktree'):
+        ref['branch'] = result.get('branch') or f've-card/{result.get("card")}'
+    if result.get('sha'):
+        ref['sha'] = str(result['sha'])[:12]
     if len(json.dumps(ref)) > 1000:
-        ref = {k: ref[k] for k in ('lane', 'fields', 'ref', 'piece', 'state', 'queued_at', 'finished_at') if k in ref}
+        ref = {k: ref[k] for k in ('lane', 'venture', 'fields', 'path', 'ref', 'piece', 'spend_id', 'state', 'queued_at',
+                                    'finished_at', 'branch', 'sha') if k in ref}
     if result.get('ok'):
         detail = (f'Codex built it on {result.get("host")} and verify-card passes (branch {ref.get("branch")}). '
                   'Claude now re-runs the acceptance and looks at the golden stills before it reaches you.')
@@ -225,10 +269,16 @@ def report_item(item: dict, result: dict, at: str | None = None) -> dict:
 
 # ---- serve (the home computer's recordings pass) ------------------------------------------------------------------
 
-def wsl_command(fields_rel: str, ref: str, piece: str | None, distro: str, repo: str) -> list[str]:
-    inner = ['python3', 'scripts/ve.py', 'lane', 'build', fields_rel, '--ref', ref, '--json'] + (['--piece', piece] if piece else [])
+def wsl_command(fields_rel: str, ref: str, piece: str | None, distro: str, repo: str, spend_id: str | None = None) -> list[str]:
+    inner = ['lane', 'build', fields_rel, '--ref', ref, '--json'] + (['--piece', piece] if piece else []) \
+        + (['--spend-id', spend_id] if spend_id else [])
+    return wsl_ve(inner, distro, repo)
+
+
+def wsl_ve(inner: list[str], distro: str, repo: str) -> list[str]:
+    """python3 scripts/ve.py <inner> in the content-engine clone inside WSL, after bringing it up to date."""
     return ['wsl.exe', '-d', distro, '--cd', repo, '--exec', 'bash', '-lc',
-            'git pull -q --ff-only && ' + ' '.join(_quote(a) for a in inner)]
+            'git pull -q --ff-only && ' + ' '.join(_quote(a) for a in ['python3', 'scripts/ve.py'] + inner)]
 
 
 def _quote(arg: str) -> str:
@@ -254,29 +304,47 @@ def _take_lock() -> bool:
 
 
 def serve(client: str = 'codex') -> dict:
-    """Claim the next job, build it here or in WSL, write the result back. One job a run; a second run waits."""
+    """Claim the next job, build it here or in WSL, write the result back. One job a run; a second run waits.
+    content-engine's own cards come first (the board is their queue); then the ventures' cards (their repositories are
+    their queue, config/codex-lanes.json), mirrored onto the board so Krish sees them."""
     if not _take_lock():
         return {'served': None, 'why': 'another lane run is building'}
     try:
         board = _call('GET', '/api/workbench')
         job = next_job(board)
-        if not job:
-            return {'served': None, 'why': 'nothing queued'}
-        ref = dict(job['close_ref'])
-        attempts = int(ref.get('attempts') or 0) + 1
-        if attempts > MAX_ATTEMPTS:
-            _upsert(report_item(job, {'ok': False, 'host': platform.node(), 'problems': [
-                f'it died {MAX_ATTEMPTS} times without a result, so the lane stopped trying; fix the card and queue it again']}), client)
-            return {'served': job['id'], 'ok': False, 'problems': ['gave up']}
-        ref.update({'state': 'running', 'claimed_at': now(), 'host': platform.node()[:60], 'attempts': attempts})
-        _upsert({'id': job['id'], 'close_ref': ref,
+        if job:
+            ref = dict(job['close_ref'])
+            attempts = int(ref.get('attempts') or 0) + 1
+            if attempts > MAX_ATTEMPTS:
+                _upsert(report_item(job, {'ok': False, 'host': platform.node(), 'problems': [
+                    f'it died {MAX_ATTEMPTS} times without a result, so the lane stopped trying; fix the card and queue it again']}), client)
+                return {'served': job['id'], 'ok': False, 'problems': ['gave up']}
+            ref.update({'state': 'running', 'claimed_at': now(), 'host': platform.node()[:60], 'attempts': attempts})
+            extra = {}
+            run = lambda: _run(ref)  # noqa: E731
+        else:
+            card = next_venture_card()
+            if not card:
+                return {'served': None, 'why': 'nothing queued'}
+            ref = {'lane': 'codex', 'venture': card['venture'], 'path': card['path'], 'ref': card['branch'],
+                   'state': 'running', 'queued_at': now(), 'claimed_at': now(), 'host': platform.node()[:60]}
+            job = {'id': item_id(f"{card['venture']}-{card['card']}"), 'close_ref': ref}
+            extra = {'lane': 'in_progress', 'area': AREA, 'closes_on': 'session',
+                     'title': f"Codex builds {card['card']} for {card['venture']}"[:200]}
+            run = lambda: _run_venture(card)  # noqa: E731
+        _upsert({'id': job['id'], 'close_ref': ref, **extra,
                  'detail': f'Codex is building it on {platform.node()} now. Claude checks the result when it lands.'}, client)
         job = {**job, 'close_ref': ref}
         try:
-            result = _run(ref)
+            result = run()
         except Exception as error:  # noqa: BLE001  every failure after the claim is written back, never left running
             result = {'ok': False, 'host': platform.node(), 'problems': [f'{type(error).__name__}: {error}'[:600]]}
-        _upsert(report_item(job, result), client)
+        report = report_item(job, result)
+        if ref.get('venture'):
+            # The venture's session reads its result from the codex/<id> branch; the board item is only the mirror,
+            # so the lane, which holds it, closes it with the outcome in its detail.
+            report['lane'] = 'done'
+        _upsert(report, client)
         return {'served': job['id'], 'ok': bool(result.get('ok')), 'problems': result.get('problems', [])}
     finally:
         try:
@@ -285,24 +353,188 @@ def serve(client: str = 'codex') -> dict:
             pass
 
 
-def _run(ref: dict) -> dict:
+def _wsl_route() -> tuple[str, str] | None:
     distro = os.environ.get('MINDMAKE_CODEX_WSL_DISTRO', '').strip()
     repo = os.environ.get('MINDMAKE_CODEX_WSL_REPO', '').strip()
+    return (distro, repo) if sys.platform == 'win32' and distro and repo else None
+
+
+def _in_wsl(inner: list[str]) -> dict:
+    distro, repo = _wsl_route()
+    # The WSL build needs no engine key (only this side writes the board), so none is passed: Codex never sees it.
+    env = {k: v for k, v in os.environ.items() if k != 'ENGINE_OPERATOR_TOKEN'}
+    done = subprocess.run(wsl_ve(inner, distro, repo), capture_output=True, text=True, env=env, timeout=BUILD_HOURS * 3600,
+                          creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
+    return last_json(done.stdout) or {'ok': False, 'host': distro, 'problems': [
+        'the WSL run printed no result: ' + ' '.join((done.stdout + done.stderr).strip().splitlines()[-4:])]}
+
+
+NO_ROUTE = 'Codex is not on this machine and no WSL route is set (MINDMAKE_CODEX_WSL_DISTRO and MINDMAKE_CODEX_WSL_REPO)'
+
+
+def _run(ref: dict) -> dict:
     if has_companion():
-        result = build(ref['fields'], ref.get('ref', 'main'), ref.get('piece'))
-    elif sys.platform == 'win32' and distro and repo:
-        # The WSL build needs no engine key (only this side writes the board), so none is passed: Codex never sees it.
-        env = {k: v for k, v in os.environ.items() if k != 'ENGINE_OPERATOR_TOKEN'}
+        return build(ref['fields'], ref.get('ref', 'main'), ref.get('piece'), ref.get('spend_id'))
+    if _wsl_route():
         safe(ref['fields'], ref.get('ref', 'main'))
-        done = subprocess.run(wsl_command(ref['fields'], ref.get('ref', 'main'), ref.get('piece'), distro, repo),
-                              capture_output=True, text=True, env=env, timeout=BUILD_HOURS * 3600,
-                              creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
-        result = last_json(done.stdout) or {'ok': False, 'host': distro, 'problems': [
-            'the WSL build printed no result: ' + ' '.join((done.stdout + done.stderr).strip().splitlines()[-4:])]}
+        inner = ['lane', 'build', ref['fields'], '--ref', ref.get('ref', 'main'), '--json'] \
+            + (['--piece', ref['piece']] if ref.get('piece') else []) + (['--spend-id', ref['spend_id']] if ref.get('spend_id') else [])
+        return _in_wsl(inner)
+    return {'ok': False, 'host': platform.node(), 'problems': [NO_ROUTE]}
+
+
+# ---- venture lanes: the venture's own repository is the queue -------------------------------------------------------
+
+LANES = ROOT / 'config' / 'codex-lanes.json'
+QUEUE_DIR = 'codex/queue'
+RESULTS_DIR = 'codex/results'
+CARD_ID = re.compile(r'^[a-z0-9][a-z0-9-]{1,60}$')
+QUEUE_PATH = re.compile(r'^codex/queue/([a-z0-9][a-z0-9-]{1,60})\.md$')
+ATTEMPTS = ROOT / '.cache' / 'lane' / 'venture-attempts.json'
+
+
+def ventures() -> dict:
+    return json.loads(LANES.read_text(encoding='utf-8'))['ventures']
+
+
+def venture_dir(name: str) -> Path:
+    """The venture's clone beside this one (in WSL: ~/dev/<name>), made on first use from its public https address."""
+    return ROOT.parent / name
+
+
+def _git(path: Path, *args, check=True) -> str:
+    return subprocess.run(['git', '-C', str(path), *args], check=check, capture_output=True, text=True).stdout
+
+
+def ensure_venture(name: str) -> Path:
+    if name not in ventures():
+        raise SystemExit(f've lane: {name!r} is not a venture in config/codex-lanes.json')
+    path = venture_dir(name)
+    if not (path / '.git').exists():
+        subprocess.run(['git', 'clone', '-q', f"https://github.com/{ventures()[name]['repo']}", str(path)], check=True,
+                       capture_output=True)
+    _git(path, 'fetch', '-q', '--prune', 'origin', '+refs/heads/*:refs/remotes/origin/*')
+    return path
+
+
+def queued_in(branches: list[str], files_on: dict[str, list[str]]) -> list[dict]:
+    """The cards waiting: a codex/queue/<id>.md on main or a claude/ branch with no codex/<id> branch yet. Pure."""
+    done = {b[len('codex/'):] for b in branches if b.startswith('codex/')}
+    out, seen = [], set()
+    for branch in [b for b in branches if b == 'main'] + sorted(b for b in branches if b.startswith('claude/')):
+        for path in files_on.get(branch, []):
+            match = QUEUE_PATH.match(path)
+            if not match or match.group(1) in done or match.group(1) in seen:
+                continue
+            seen.add(match.group(1))
+            out.append({'branch': branch, 'path': path, 'card': match.group(1)})
+    return out
+
+
+def pending(name: str) -> list[dict]:
+    path = ensure_venture(name)
+    branches = [b for b in _git(path, 'for-each-ref', '--format=%(refname:strip=3)', 'refs/remotes/origin').split() if b != 'HEAD']
+    files_on = {}
+    for branch in branches:
+        if branch == 'main' or branch.startswith('claude/'):
+            listed = _git(path, 'ls-tree', '--name-only', f'origin/{branch}', f'{QUEUE_DIR}/', check=False)
+            files_on[branch] = [line for line in listed.splitlines() if line.endswith('.md')]
+    return [{**c, 'venture': name} for c in queued_in(branches, files_on)]
+
+
+def _attempts() -> dict:
+    try:
+        return json.loads(ATTEMPTS.read_text(encoding='utf-8'))
+    except (OSError, ValueError):
+        return {}
+
+
+def all_pending() -> list[dict]:
+    """Every venture's waiting cards that have not already failed MAX_ATTEMPTS times on this computer."""
+    tried = _attempts()
+    out = []
+    for name in ventures():
+        try:
+            out += [c for c in pending(name) if tried.get(f"{name}/{c['card']}", 0) < MAX_ATTEMPTS]
+        except (OSError, subprocess.CalledProcessError, SystemExit):
+            continue
+    return out
+
+
+def next_venture_card() -> dict | None:
+    if has_companion():
+        cards = all_pending()
+    elif _wsl_route():
+        cards = _in_wsl(['lane', 'pending', '--json']).get('cards') or []
     else:
-        result = {'ok': False, 'host': platform.node(), 'problems': [
-            'Codex is not on this machine and no WSL route is set (MINDMAKE_CODEX_WSL_DISTRO and MINDMAKE_CODEX_WSL_REPO)']}
+        return None
+    return cards[0] if cards else None
+
+
+def _set_front(text: str, key: str, value: str) -> str:
+    head, _, body = text.partition('---')[2].partition('---')
+    lines = [l for l in head.strip().splitlines() if l.partition(':')[0].strip() != key] + [f'{key}: {value}']
+    return '---\n' + '\n'.join(lines) + '\n---' + body
+
+
+def build_venture(name: str, branch: str, path: str) -> dict:
+    """On the computer with Codex: cut a worktree for the card from the branch it was queued on, run it, check it,
+    and push the codex/<id> branch with Codex's work and codex/results/<id>.json, which marks the card done."""
+    from .cards import dispatch, parse_card, verify
+    from .common import local_root, native_path
+    result: dict = {'venture': name, 'path': path, 'ref': branch, 'host': platform.node(), 'ok': False, 'problems': []}
+    tried = _attempts()
+    try:
+        match = QUEUE_PATH.match(path or '')
+        if not match or not REF.match(branch or '') or '..' in branch:
+            raise SystemExit(f've lane: {path!r} on {branch!r} is not a card the lane takes')
+        card_id = match.group(1)
+        result['card'], result['branch'] = card_id, f'codex/{card_id}'
+        key = f'{name}/{card_id}'
+        tried[key] = tried.get(key, 0) + 1
+        ATTEMPTS.parent.mkdir(parents=True, exist_ok=True)
+        ATTEMPTS.write_text(json.dumps(tried), encoding='utf-8')
+        repo = ensure_venture(name)
+        text = _git(repo, 'show', f'origin/{branch}:{path}')
+        wt = native_path(local_root('worktrees', repo=name, branch=f'codex/{card_id}'))
+        if not wt.exists():
+            wt.parent.mkdir(parents=True, exist_ok=True)
+            _git(repo, 'worktree', 'add', '-q', '-B', f'codex/{card_id}', str(wt), f'origin/{branch}')
+        out = ROOT / '.cache' / 'lane' / f'{name}-{card_id}.md'
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(_set_front(_set_front(text, 'cwd', str(wt)), 'card', card_id), encoding='utf-8')
+        meta = parse_card(out)
+        if (wt / 'pnpm-lock.yaml').exists():
+            subprocess.run(['corepack', 'pnpm', 'install', '--frozen-lockfile'], cwd=wt, check=True, capture_output=True)
+        elif (wt / 'package-lock.json').exists():
+            subprocess.run(['npm', 'ci', '--no-audit', '--no-fund'], cwd=wt, check=True, capture_output=True)
+        done = dispatch(out, background=False, booked=require_booking(meta.get('spend_id')))
+        result['dispatch_code'] = done.returncode
+        result['dispatch_tail'] = '\n'.join((done.stdout + done.stderr).strip().splitlines()[-8:])
+        result['problems'] = verify(out, wt)
+        result['ok'] = done.returncode == 0 and not result['problems']
+        record = wt / RESULTS_DIR / f'{card_id}.json'
+        record.parent.mkdir(parents=True, exist_ok=True)
+        record.write_text(json.dumps({k: result.get(k) for k in ('card', 'ok', 'problems', 'dispatch_code', 'host')}
+                                     | {'finished_at': now(), 'queued_on': branch}, indent=2) + '\n', encoding='utf-8')
+        sha, why = publish_branch(wt, f'codex/{card_id}', f'codex: {card_id} ({"built" if result["ok"] else "failed"})')
+        if why:
+            result['problems'].append(why)
+            result['ok'] = False
+        result['sha'] = sha
+    except SystemExit as stop:
+        result['problems'].append(str(stop.code))
+    except (OSError, ValueError, KeyError, IndexError, subprocess.CalledProcessError) as error:
+        result['problems'].append(f'{type(error).__name__}: {error}')
     return result
+
+
+def _run_venture(card: dict) -> dict:
+    if has_companion():
+        return build_venture(card['venture'], card['branch'], card['path'])
+    if _wsl_route():
+        return _in_wsl(['lane', 'build-venture', card['venture'], card['branch'], card['path'], '--json'])
+    return {'ok': False, 'host': platform.node(), 'problems': [NO_ROUTE]}
 
 
 def last_json(text: str) -> dict | None:

@@ -48,10 +48,8 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
-- 2026-11-01 Krish asked that no session ask him again how to reach Codex; ve dispatch now routes itself.
 Everything to 29 October 2026 is in `docs/history/2026-10-29-NOW-changed-recently.md`, 30 October lines in `docs/history/2026-10-30-NOW-moved-3.md` and `-4.md`, `-5.md` and `-6.md`, and `docs/history/2026-10-31-NOW-moved-1.md`, all verbatim (W2.12); `npm run check:workbench` holds the byte cap. The 28 October waiting line is in `docs/history/2026-10-31-NOW-moved-4.md`.
 
-- 31 October: scripts close on the one thing Krish would do, never a list of orders, and a slow listener must hold them heard once (SCRIPT_CLOSE and LISTENING, `story_check.py`); `docs/plans/2026-10-31-script-clarity-audit.md`.
 
 ## What is next and what is waiting on Krish
 

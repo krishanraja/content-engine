@@ -9,12 +9,12 @@
     "runway": {
       "slot": "short animations of approved stills; reframe; background removal",
       "route": "Claude MCP (Codex MCP fallback)",
-      "rule": "short motion only, never cinematic, never type/numbers/logos/mouth; credits logged per piece; Heartside and Full Time keep the bulk (Krish 2026-10-27)"
+      "rule": "short motion only, never cinematic, never type/numbers/logos/mouth; credits logged per piece; Heartside and Full Time keep the bulk (Krish 2026-10-27); Krish 2026-11-01: \"happy to use both tools for makeyourmindup too, if there are spare credits and we can drastically improve production value for a specific piece\": Claude proposes the generation (tool, prompt, credits) for that piece, Codex never calls it (its settings folder keeps no tool connections) and designs from what it returns"
     },
     "higgsfield": {
       "slot": "short animations of approved stills; reference study (video_analysis_create); reframe",
       "route": "Claude MCP",
-      "rule": "as runway; virality_predictor advisory only"
+      "rule": "as runway; virality_predictor advisory only; Krish 2026-11-01: \"happy to use both tools for makeyourmindup too, if there are spare credits and we can drastically improve production value for a specific piece\": Claude proposes the generation (tool, prompt, credits) for that piece, Codex never calls it (its settings folder keeps no tool connections) and designs from what it returns"
     },
     "epidemic_sound": {
       "slot": "music bed (EditRecording to exact or loopable length), SFX house kit",
