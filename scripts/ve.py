@@ -9,6 +9,7 @@
   python scripts/ve.py card <card.json>              write a Codex task card from its fields
   python scripts/ve.py dispatch <card.md> [--wait]   send it to Codex (pinned model and effort)
   python scripts/ve.py verify-card <card.md> --cwd <worktree>
+  python scripts/ve.py lane route|queue|build|serve|status   the Codex lane: any session queues, the home PC builds
   python scripts/ve.py status <piece>                readiness, computed; nobody writes a pass
   python scripts/ve.py coverage                      failure register: behavioural guards vs markers
 
@@ -371,10 +372,40 @@ def cmd_dispatch(args) -> int:
     if getattr(args, 'piece', None):
         from velib.ledger import require_within
         require_within(args.piece)
+    from velib import codex_lane
+    if getattr(args, 'queue', False) or codex_lane.route() == 'queue':
+        # Codex is not on this machine (a cloud session, Claude Desktop, a Windows-side Claude Code): the card goes to
+        # the lane and his home computer builds it. Never a question to Krish about how to reach Codex.
+        item = codex_lane.queue(Path(args.card), getattr(args, 'piece', None))
+        print(f've dispatch: Codex is not on this machine; queued {item["id"]} for Codex on the home computer '
+              '(its recordings pass picks it up within five minutes). Read the result with ve lane status.')
+        return 0
     from velib.cards import dispatch
     result = dispatch(Path(args.card), background=not args.wait)
     print((result.stdout or result.stderr).strip()[-2000:])
     return result.returncode
+
+
+def cmd_lane(args) -> int:
+    from velib import codex_lane
+    if args.action == 'route':
+        print(codex_lane.route())
+    elif args.action == 'queue':
+        item = codex_lane.queue(Path(args.card), args.piece, args.ref)
+        print(f've lane: queued {item["id"]} for Codex on the home computer')
+    elif args.action == 'build':
+        result = codex_lane.build(args.fields, args.ref, args.piece)
+        if not args.json:
+            for problem in result['problems']:
+                print(problem)
+        print(json.dumps(result))
+        return 0 if result['ok'] else 1
+    elif args.action == 'serve':
+        print(json.dumps(codex_lane.serve()))
+    elif args.action == 'status':
+        for row in codex_lane.status():
+            print(json.dumps(row))
+    return 0
 
 
 def cmd_verify_card(args) -> int:
@@ -913,7 +944,17 @@ def main() -> int:
     p.set_defaults(fn=cmd_sprint)
     p = sub.add_parser('dispatch'); p.add_argument('card'); p.add_argument('--wait', action='store_true')
     p.add_argument('--piece', help='refuse dispatch when this piece is over any budget cap')
+    p.add_argument('--queue', action='store_true', help='send it to the Codex lane even when Codex is on this machine')
     p.set_defaults(fn=cmd_dispatch)
+    p = sub.add_parser('lane', help='the Codex lane: queue a card from any session; the home computer builds it')
+    actions = p.add_subparsers(dest='action', required=True)
+    actions.add_parser('route', help='local when Codex is on this machine, else queue')
+    a = actions.add_parser('queue'); a.add_argument('card'); a.add_argument('--piece'); a.add_argument('--ref', default='main')
+    a = actions.add_parser('build', help='on the machine with Codex: write the card, dispatch, verify-card')
+    a.add_argument('fields'); a.add_argument('--ref', default='main'); a.add_argument('--piece'); a.add_argument('--json', action='store_true')
+    actions.add_parser('serve', help='the recordings pass: claim the next queued card and build it here or in WSL')
+    actions.add_parser('status', help='the lane items and their state')
+    p.set_defaults(fn=cmd_lane)
     p = sub.add_parser('verify-card'); p.add_argument('card'); p.add_argument('--cwd', required=True); p.set_defaults(fn=cmd_verify_card)
     p = sub.add_parser('status'); p.add_argument('piece'); p.set_defaults(fn=cmd_status)
     p = sub.add_parser('verdict', help='record a hash-bound independent Critic review')

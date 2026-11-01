@@ -194,9 +194,25 @@ class PieceLedger(unittest.TestCase):
         self.assertIn(f"engine minutes 3 / {ledger.budget()['engine_minutes_cap']:g}", output.getvalue())
         self.assertEqual(self.path.read_bytes(), before)
 
+    def test_without_codex_here_dispatch_queues_for_the_home_computer_after_the_cap_check(self):
+        args = argparse.Namespace(card='test.md', wait=False, piece=self.piece, queue=False)
+        with patch('velib.codex_lane.route', return_value='queue'), patch('velib.codex_lane.queue') as queue, \
+                patch('velib.cards.dispatch') as dispatch:
+            queue.return_value = {'id': 'codex-test'}
+            with contextlib.redirect_stdout(io.StringIO()) as output:
+                self.assertEqual(ve.cmd_dispatch(args), 0)
+            queue.assert_called_once()
+            dispatch.assert_not_called()
+            self.assertIn('queued codex-test', output.getvalue())
+            queue.reset_mock()
+            ledger.add(self.piece, 'allowance_points', 1.21)
+            with self.assertRaises(SystemExit):
+                ve.cmd_dispatch(args)
+            queue.assert_not_called()
+
     def test_dispatch_guard_runs_before_dispatch_and_is_optional(self):
         args = argparse.Namespace(card='test.md', wait=False, piece=self.piece)
-        with patch('velib.cards.dispatch') as dispatch:
+        with patch('velib.codex_lane.route', return_value='local'), patch('velib.cards.dispatch') as dispatch:
             dispatch.return_value = subprocess.CompletedProcess([], 0, 'sent', '')
             with contextlib.redirect_stdout(io.StringIO()):
                 self.assertEqual(ve.cmd_dispatch(args), 0)
