@@ -3488,11 +3488,14 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
                     raise BoardError('Cannot place publishing materials in this day')
                 panels[-1] = panels[-1][:at] + card + panels[-1][at:]
         picked = state != 'not_picked'
+        # Krish, 2026-11-01: "sort day tabs out". With the checklists hidden, a day's tab says where the day is
+        # (one status per day), never a count of steps he no longer ticks.
+        tab_status = {'made': 'made', 'draft': 'in review', 'picked': 'picked'}.get(state, state.replace('_', ' '))
         tabs.append(
             f'<button type="button" role="tab" id="tab-{name}" aria-controls="panel-{name}" '
             f'aria-selected="{"true" if key == opened else "false"}" tabindex="{"0" if key == opened else "-1"}" data-day="{name}">'
             f'<span class="t-day"><span class="t-wd">{when.strftime("%a")}</span> <span class="t-dm">{when.day} {when.strftime("%b")}</span></span><span class="t-dot"> · </span>'
-            f'<span class="t-prog" data-tabprog="{key}">{f"{STANDING} steps" if picked else "moved" if key in (moved or {}) else "not picked"}</span>'
+            f'<span class="t-prog" data-tabprog="{key}" data-status="{E(tab_status)}">{tab_status if HIDE_CHECKLISTS and picked else f"{STANDING} steps" if picked else "moved" if key in (moved or {}) else "not picked"}</span>'
             f'<span class="t-ch">{series_label}</span></button>')
         days.append({
             'day': key, 'name': weekday, 'date': when.isoformat(), 'series': slug, 'series_label': series_label,

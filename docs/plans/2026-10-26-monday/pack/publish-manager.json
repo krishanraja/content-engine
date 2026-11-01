@@ -1,0 +1,50 @@
+{
+ "title": "Why is Disney eating the scraps of bankrupt Character.AI?",
+ "subtitle": "Why did Google and Disney both pay for Character.AI, and what does it mean for any business that runs on someone else's AI?",
+ "date": "2026-10-26",
+ "body": "../../2026-10-26-draft-body.md",
+ "words": "publish-words.json",
+ "images": [
+  {
+   "id": "cover",
+   "role": "cover",
+   "file": "../../../../.cache/pack/2026-10-26-monday/pages/cover.png",
+   "alt": "Cover: Google paid $2.7B first"
+  },
+  {
+   "id": "vertical",
+   "role": "vertical-cover",
+   "file": "../../../../.cache/pack/2026-10-26-monday/pages/vertical.png",
+   "alt": "Vertical cover: Disney is eating the scraps of bankrupt Character.AI"
+  },
+  {
+   "id": "square",
+   "role": "square-cover",
+   "file": "../../../../.cache/pack/2026-10-26-monday/pages/square.png",
+   "alt": "Square cover: Disney is eating the scraps of bankrupt Character.AI"
+  },
+  {
+   "id": "share",
+   "role": "share-card-cover",
+   "file": "../../../../.cache/pack/2026-10-26-monday/pages/share.png",
+   "alt": "Share card: Google paid $2.7B first"
+  }
+ ],
+ "scripts": [
+  {
+   "label": "Video script (5-minute cut)",
+   "file": "../../2026-10-26-draft-script.md"
+  },
+  {
+   "label": "Video script (90-second cut)",
+   "file": "../../2026-10-26-draft-script-90s.md"
+  }
+ ],
+ "facts": "page-facts.json",
+ "status": [
+  "Fact check passed on this exact text: eight sentences signed off by Krish on 28 October 2026",
+  "Prediction kept as recorded (1 March 2027, 75%)",
+  "Both cuts watched in full and approved by Krish on 28 October 2026"
+ ],
+ "kicker": "follow.the.money"
+}
