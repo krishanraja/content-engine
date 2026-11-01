@@ -224,6 +224,33 @@ class WhatCodexDid(unittest.TestCase):
             self.assertEqual(lane.changed_files(wt, base), ['b.txt', 'c.txt'])
 
 
+class BuildPaths(unittest.TestCase):
+    def test_build_hands_write_card_this_machines_own_path(self):
+        # 2026-11-01: inside WSL the card's cwd came out as /home/k/dev/.worktrees\\content-engine\\ve-card\\x and
+        # ensure_worktree refused it, so Codex never ran.
+        import os, subprocess
+        from unittest.mock import patch
+        from velib.common import card_worktree, native_path
+        seen = {}
+        def write_card(out, **fields):
+            seen['cwd'] = fields['cwd']
+            return out
+        done = subprocess.CompletedProcess([], 0, 'ok', '')
+        shown = subprocess.CompletedProcess([], 0, json.dumps({'card_id': 've-x', 'path': 'p.md'}), '')
+        def run(cmd, *a, **k):
+            return shown if 'show' in cmd else subprocess.CompletedProcess(cmd, 0, '', '')
+        with patch.dict(os.environ, {'MINDMAKE_LOCAL_WORKTREES': '/home/k/dev/.worktrees'}), \
+                patch('velib.cards.write_card', side_effect=write_card), patch('velib.cards.dispatch', return_value=done), \
+                patch('velib.cards.verify', return_value=[]), patch.object(lane, 'publish_branch', return_value=('a' * 40, None)), \
+                patch.object(lane, 'changed_files', return_value=['f.ts']), patch.object(lane.subprocess, 'run', side_effect=run):
+            result = lane.build('docs/ve/cards/x.fields.json', spend_id='12345678-1234-4234-9234-123456789abc')
+            expected = str(native_path(card_worktree('ve-x')))
+        self.assertTrue(result['ok'], result['problems'])
+        if os.sep == '/':
+            self.assertNotIn('\\', seen['cwd'])
+        self.assertEqual(seen['cwd'], expected)
+
+
 class Routes(unittest.TestCase):
     def test_an_explicit_wsl_route_wins_over_a_companion_here(self):
         from unittest.mock import patch

@@ -234,7 +234,7 @@ def dispatch_problems(done, changed: list[str]) -> list[str]:
 def build(fields_rel: str, ref: str = 'main', piece: str | None = None, spend_id: str | None = None) -> dict:
     """Write the card from its fields on this machine, dispatch it and wait, then verify-card. Returns a summary."""
     from .cards import dispatch, verify, write_card
-    from .common import card_worktree
+    from .common import card_worktree, native_path
     result: dict = {'fields': fields_rel, 'ref': ref, 'host': platform.node(), 'ok': False, 'problems': []}
     try:
         safe(fields_rel, ref)
@@ -249,7 +249,9 @@ def build(fields_rel: str, ref: str = 'main', piece: str | None = None, spend_id
         out = ROOT / '.cache' / 'lane' / f'{card_id}.md'
         out.parent.mkdir(parents=True, exist_ok=True)
         fields.pop('path', None)
-        fields['cwd'] = card_worktree(card_id)
+        # This machine's own form of the path: inside WSL a root given without placeholders gets the Windows-style
+        # {repo}\\{branch} tail, and ensure_worktree refused the card (2026-11-01).
+        fields['cwd'] = str(native_path(card_worktree(card_id)))
         write_card(out, **fields)
         done = dispatch(out, background=False, booked=require_booking(spend_id))
         result['dispatch_code'] = done.returncode
