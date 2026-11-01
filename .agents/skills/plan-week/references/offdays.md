@@ -5,36 +5,95 @@ Reference for the `plan-week` skill, read at step 3c (`.agents/skills/plan-week/
 **The Off days options** (Krish, 2026-10-28: "I'm happy to plan the
 Tuesday, Thursday, Saturday, and Sunday content within the Sunday ideas
 session if you give me a few options to approve as you do the
-Mon/wed/fri"). On the Ideas tab, 2 to 3 options each for Tuesday,
-Thursday, Saturday and Sunday of the week, for the Make Your Mind Up
-Instagram, TikTok and YouTube Shorts channels (Shorts takes video only,
-so a carousel goes there as a short slideshow). Each is one of four
-formats: a meme made fresh from a cue, in the makeyourmindup brand kit (a
-borrowed format is credited; someone else's image or clip is never
-reposted); an uplifting AI news carousel, every claim naming its primary
-source and dated within 7 days of its day, each checked against that
-source the same day and through the fact gate before it is made; one
-level-up move, a single practical way to get more from AI; or a
-snackable cut from a past week's approved master, named by its piece and
-word range. Each shows its format, its source and its draft copy, and
-its copy passes `python3 scripts/post-pack/copy_lint.py --applies-to
-channel_copy` (and `--applies-to carousel_text` for a carousel) and `node
-vendor/makeyourmindup/kill-list/kill-list.mjs` before it reaches the
-tab. Growth (growth-makeyourmindup) owns this lane and will feed it
-automatically; until it does, the room drafts the options. Write them
-into ideas.json as `offdays`, `{"tue": [...], "thu": [...], "sat": [...],
-"sun": [...]}`, each with its `format`, `source` and `copy`; a carousel
-option also carries `cards`, `[{"words": "<what the card says>", "picture":
-"<what it shows>"}]`, one per card in order, and any option may carry the
-`pitch` object and the `covers` or `style_from` of the asks it answers (core,
-"The channel, the idea tests and his asks"). They reach
-the tab only through `week_board.py --ideas`, never by patching the page,
-and only once the board has its Off days part (it lands with the board's
-own change); until then `week_board.py` does not show them, so say so in
-one line in the triage readback (step 8). His one press approves or skips
-each (`queue/<idea_id>` with `use: offday`, its `day` and `approved`);
-Growth makes and schedules what he approved, and this repository cuts any
+Mon/wed/fri"). Since 1 November 2026 they are judged like Monday, Wednesday
+and Friday (Ruling, Krish, 2026-11-01, locking
+`docs/handovers/board-mocks-2026-11-01-offdays/`: "Mock looks right, lock it
+and build it"; he had asked for "Ideas and a suggested creative direction to
+approve or improve or flat out reject for a reason, and the machine can learn
+over time").
+
+On the Ideas tab, 4 to 6 options each for Tuesday, Thursday, Saturday and
+Sunday (the board takes 2 to 6), for the Make Your Mind Up Instagram, TikTok
+and YouTube Shorts channels (Shorts takes video only, so a carousel goes
+there as a short slideshow). Each is one of four formats: a meme made fresh
+from a cue, in the makeyourmindup brand kit (a borrowed format is credited;
+someone else's image or clip is never reposted); an uplifting AI news
+carousel, every claim naming its primary source and dated within 7 days of
+its day, each checked against that source the same day and through the fact
+gate before it is made; one level-up move, a single practical way to get more
+from AI; or a snackable cut from a past week's approved master, named by its
+piece and word range. Mix them across the week: no day all one format, and at
+least two days feeding that week's Monday, Wednesday or Friday piece.
+
+**Where the ideas come from.** Add no source: there are many already (Krish,
+2026-11-01: "there are so many sources of inspiration by now throughout the
+engines"). Use what `board_feed.py gather` wrote to `sources.json`:
+`inspiration` (his routed and liked cards, Content Inspo and Production Inspo,
+creator moves; a card he routed to an off-day post comes first), the week's
+three pieces (an off-day option that sets one up or carries it on), `cues`,
+`must_cover` (`his_idea` and links saved with his words, below), and
+`offday_verdicts`, his Approve, Improve and Reject on the last eight weeks'
+off-day options, his words verbatim. Follow every Improve note; never offer
+an option he rejected again; weigh each Reject reason as a cue (it becomes a
+standing rule only when he approves one); make more of what he approved.
+
+**Each option** goes into ideas.json `offdays`, `{"tue": [...], "thu":
+[...], "sat": [...], "sun": [...]}`:
+
+```json
+{"id": "prices", "format": "Carousel, 4 cards", "source": {"label": "Content Inspo", "url": "https://..."},
+ "copy": "<two plain sentences: what it is and why it lands>",
+ "hook": "<the headline he reads first, one line>",
+ "pitch": {"see": "<what you see or hear>", "lands": "<why it is funny or useful>", "why_now": "<the dated reason, if any>", "share": "<the one line people send on>"},
+ "cards": [{"words": "...", "picture": "..."}],
+ "inspiration": {"label": "<the saved post it borrows from, as he would name it>", "url": "https://...", "saved": "Saved 29 Oct"},
+ "learned_from": ["<his words that shaped it, quoted, with their date>"],
+ "ties_to": "Mon: follow.the.money",
+ "recommended": true,
+ "direction": {"look": "<the look, named after the saved post it borrows>", "format": "4 cards, 4:5",
+               "frames": [{"words": "<on the card>", "picture": "<what it shows>"}],
+               "tone": "<one line>", "kit": "<the brand-kit pieces it uses>", "inspo_url": "https://..."},
+ "covers": ["<must_cover id>"]}
+```
+
+`hook`, `pitch` and `direction` are what he judges, so every option has them;
+`learned_from` quotes only his own words from `offday_verdicts` or `cues`,
+never a paraphrase, and is left out when none applies. One option a day is
+`recommended`. The copy and every line of the direction pass `python3
+scripts/post-pack/copy_lint.py --applies-to channel_copy` (and `--applies-to
+carousel_text` for a carousel) and `node
+vendor/makeyourmindup/kill-list/kill-list.mjs` before they reach the tab.
+They reach the tab only through `week_board.py --ideas`, never by patching
+the page; `week_board.py` refuses a wrong shape and names it.
+
+**His presses.** On each option he presses the idea, the direction and, once
+Growth returns it, the mock: Approve, Improve (his words) or Reject (his
+reason); the idea also takes Next week. They are saved in
+`queue/off-<day>-<option>`, each side `{verdict, words, sha256}`, bound to
+what that side showed him. His Improve and Reject words go to his taste ledger
+by themselves (`api/board/_presses.ts`, `offdayReports`) and come back next
+Sunday in `offday_verdicts`. An Improve on the idea or the direction also
+starts a revision run (`.github/workflows/offday-revise.yml`, below), whose
+revised card goes live at the board's next build. Growth reads each option whose
+idea and direction he approved (`GET /api/board/<Monday>/pieces`, `offdays`),
+makes the mock in the brand kit from the direction exactly as shown, and
+returns it on the option as `mock` for his final yes; this repository cuts any
 snackable clip.
+
+**Revising one option** (the revision run, or a session asked to). What waits
+is what `python3 scripts/post-pack/offday_pending.py
+docs/plans/<Monday>-week/ideas.json <queue.json>` lists, from `python3
+scripts/post-pack/board_web.py read <Monday> queue` saved as `queue.json`:
+each side whose record Krish saved says improve and whose hash is still that
+side's current hash. Revise only those. For each, change only that side of
+that option in `docs/plans/<Monday>-week/ideas.json` `offdays` to answer his
+words, keep its `id`, and set `"revised": {"side": "<idea or direction>",
+"words": "<his words, verbatim>"}`. Run the same checks as above and check
+the file builds (`week_board.py --ideas`, a local build). The side's hash
+changes with its words, so his old press reads as answered and he judges the
+new card when the board is next built from these ideas; a side already
+revised is never revised again from the same words. The revision run does not
+publish the board. A mock is Growth's to remake from his words.
 
 **An off-day piece he records** (Ruling, Krish, 2026-10-29: an idea he drops in
 "should appear on my Sunday board for either Tuesday, Thursday, Saturday, or

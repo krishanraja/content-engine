@@ -107,6 +107,9 @@ def gather(week, call=None, out_dir=None):
         # Krish, 2026-10-26: his feedback as cues to draw on (_feedbackCues.ts). Help, never a gate: a route without the
         # block writes an empty one and says so.
         'cues': sources.get('cues') if isinstance(sources.get('cues'), dict) else {},
+        # Ruling, Krish, 2026-11-01: his Approve, Improve and Reject on the last weeks' off-day options, his words
+        # verbatim, so the off-day options are made from what he said (plan-week references/offdays.md).
+        'offday_verdicts': sources.get('offday_verdicts') if isinstance(sources.get('offday_verdicts'), dict) else {'verdicts': [], 'counts': {}},
         'queue': queue.get('queue') or [],
         'combine': queue.get('combine') or [],
         'scheduled': {s.get('slug'): s.get('scheduled') or [] for s in options.get('series') or []},

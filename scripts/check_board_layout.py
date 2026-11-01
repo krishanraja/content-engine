@@ -424,7 +424,8 @@ def board_api(page, web, name, saved, answer=None):
 
 def presses_in_browser(page, web):
     """His presses on the Ideas tab by touch (Krish, 2026-10-28): Reject an idea, saved only once he says why; take a
-    press back; Next week for the Monday after; a note on his pick; and Approve on the week's mix, bound to its hash."""
+    press back; Next week for the Monday after; a note on his pick; and on the off days, Reject with his reason and
+    Approve, each bound to what the option showed (Ruling, Krish, 2026-11-01)."""
     saved, problems = [], []
     week = board_api(page, web, 'sunday', saved)
     nxt = (wb.LAYOUT_FROM + timedelta(days=7)).isoformat()
@@ -465,15 +466,34 @@ def presses_in_browser(page, web):
         until(page, lambda: (last('picks/fri') or {}).get('note'))
         if (last('picks/fri') or {}).get('note') != 'Lead with the deal.' or (last('picks/fri') or {}).get('pick') != 'fri-3':
             problems.append(f'sunday: his note on a pick is not saved with it ({last("picks/fri")})')
-        # The week's mix is one press (Ruling, Krish, 2026-10-30: "approve the week's mix once, let Growth fill it").
-        page.click('[data-act="mix"]')
-        until(page, lambda: last('picks/mix'))
-        mix = last('picks/mix') or {}
-        days = mix.get('days') or {}
-        want = hashlib.sha256(json.dumps(days, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
-        if (mix.get('kind') != 'mix' or mix.get('approved') is not True or mix.get('mix_sha256') != want
-                or set(days) != {k for k, *_ in wb.OFF_DAYS}):
-            problems.append(f'sunday: Approve this week\'s mix did not save picks/mix bound to the mix it showed ({mix})')
+        # Each off-day option is judged on its own (Ruling, Krish, 2026-11-01: "Mock looks right, lock it and build it"):
+        # Reject asks for his reason and saves nothing until he gives it; Approve saves the side bound to what it showed.
+        cards = page.eval_on_selector_all('.off-card.opt[data-offday]', 'els => els.map(e => [e.id, e.dataset.ideaSha256])')
+        if len(cards) < 2:
+            problems.append(f'sunday: the Off days show {len(cards)} option(s) to judge')
+        else:
+            (one, one_sha), (two, two_sha) = cards[0], cards[1]
+            page.wait_for_selector(f'#{one} [data-act="offpress"][data-side="idea"][data-value="reject"]:not([disabled])', timeout=5000)
+            page.click(f'#{one} [data-act="offpress"][data-side="idea"][data-value="reject"]')
+            page.wait_for_selector(f'#{one} [data-say-side="idea"]:not([hidden])', timeout=5000)
+            page.click(f'#{one} [data-act="offsay"][data-side="idea"]')
+            said = text_once(page, f'[data-offstate="{one}"]', 'Say why first')
+            if last(f'queue/{one}') or not said.startswith('Say why first'):
+                problems.append(f'sunday: an off-day Reject saved without his reason, or did not ask for it ({said!r})')
+            page.fill(f'#{one} input[data-say-side="idea"]', 'Every account does this joke.')
+            page.click(f'#{one} [data-act="offsay"][data-side="idea"]')
+            until(page, lambda: last(f'queue/{one}'))
+            idea = (last(f'queue/{one}') or {}).get('idea') or {}
+            if idea.get('verdict') != 'reject' or idea.get('words') != 'Every account does this joke.' or idea.get('sha256') != one_sha:
+                problems.append(f'sunday: an off-day Reject did not save its reason bound to the idea it showed ({last(f"queue/{one}")})')
+            page.click(f'#{two} [data-act="offpress"][data-side="idea"][data-value="approve"]')
+            until(page, lambda: last(f'queue/{two}'))
+            body = last(f'queue/{two}') or {}
+            if (body.get('use') != 'offday' or (body.get('idea') or {}).get('verdict') != 'approve'
+                    or (body.get('idea') or {}).get('sha256') != two_sha or not (body.get('idea') or {}).get('shown')):
+                problems.append(f'sunday: an off-day Approve did not save the idea as shown ({body})')
+        if page.query_selector('[data-act="mix"]'):
+            problems.append('sunday: the one mix press is still on the board (Ruling, Krish, 2026-11-01)')
     except Exception as error:  # noqa: BLE001 - a step that cannot run is reported, never passed
         problems.append(f'sunday: the presses could not be pressed ({str(error).splitlines()[0][:160]})')
     finally:

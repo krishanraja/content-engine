@@ -2,6 +2,7 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 import { DECISION_ID, canonical, digest } from './_contracts.js'
 import type { SendApprovedInput, SendResult } from '../_teleprompter.js'
 import type { Making } from '../_making.js'
+import { dispatchOffdayRevise, type ReviseDispatch } from './_offdayRevise.js'
 
 const PIECE_UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
@@ -41,7 +42,7 @@ const PIECE_UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12
 // nothing twice, and new words file once more.
 
 export type Sender = (input: SendApprovedInput) => Promise<SendResult>
-export interface PressDeps { send?: Sender; now?: () => string }
+export interface PressDeps { send?: Sender; now?: () => string; revise?: typeof import('./_offdayRevise.js').dispatchOffdayRevise }
 type Body = Record<string, unknown>
 type Saved = { ok: boolean; revision?: number; body?: Body; [key: string]: unknown }
 export class PressError extends Error { constructor(public status: number, message: string) { super(message) } }
@@ -170,6 +171,30 @@ export function feelReport(week: string, id: string, body: Body, now: string) {
     reported_at: now,
     meta: { press: what ? body.feel : 'note', week, day: body.day },
   }
+}
+
+/** His words on an off-day option, one taste_reports row per side he improved or rejected (Ruling, Krish,
+ *  2026-11-01: "...approve or improve or flat out reject for a reason, and the machine can learn over time"). */
+export function offdayReports(week: string, id: string, body: Body, now: string) {
+  const out: Array<ReturnType<typeof feelReport> & { meta: Record<string, unknown> }> = []
+  for (const side of ['idea', 'direction', 'mock']) {
+    const v = body[side] as Record<string, unknown> | undefined
+    if (!v || (v.verdict !== 'improve' && v.verdict !== 'reject')) continue
+    const words = typeof v.words === 'string' ? v.words.trim().slice(0, 2000) : ''
+    if (!words) continue
+    const what = typeof body.format === 'string' ? body.format.slice(0, 200) : 'off-day post'
+    out.push({
+      kind: 'krish_words', body: words, said_where: `publish board, ${week} queue/${id} (${side})`, said_at: now,
+      lane: 'production', polarity: v.verdict === 'reject' ? 'dislikes' : 'neutral',
+      subject_ref: `offday:${week}:${id}`, subject: `the ${side} of the ${String(body.day)} off-day option (${what})`,
+      session_ref: 'content.krishraja.com publish board', repository: 'krishanraja/content-engine', surface: 'publish_board',
+      emitter_id: 'content-engine-board',
+      client_report_id: `offday-${digest(canonical({ week, id, side, verdict: v.verdict, words, sha: v.sha256 }))}`.slice(0, 96),
+      reported_at: now,
+      meta: { press: v.verdict, verdict: v.verdict, side, week, day: body.day, option: id },
+    })
+  }
+  return out
 }
 
 export function scoreRow(week: string, id: string, body: Body, now: string) {
@@ -382,6 +407,35 @@ export async function afterPress(db: SupabaseClient, ctx: { week: string; collec
   if (collection === 'picks' && body.kind === 'titles') {
     const title = await recordTitle(db, body)
     return title ? { ...saved, title } : null
+  }
+  // His verdicts on an off-day option (Ruling, Krish, 2026-11-01): each Improve or Reject goes to his taste ledger in
+  // his own words, once (the same words on the same side file nothing twice), and an Improve on the idea or the
+  // direction not filed before asks GitHub for a revised card. A mock is Growth's to remake from his words (readPieces
+  // hands them over), so it starts no run. A run revises only sides whose hash is still current
+  // (scripts/post-pack/offday_pending.py), so a repeated ask never revises a side twice.
+  if (collection === 'queue' && body.use === 'offday' && ['idea', 'direction', 'mock'].some(k => k in body)) {
+    const rows = offdayReports(week, id, body, now)
+    if (!rows.length) return null
+    const taste: Record<string, string> = {}
+    const revise: Record<string, ReviseDispatch | { sent: false; reason: 'already_asked' }> = {}
+    for (const row of rows) {
+      const side = String(row.meta.side)
+      let fresh = false
+      try {
+        const filed = await db.from('taste_reports').upsert(row, { onConflict: 'emitter_id,client_report_id', ignoreDuplicates: true }).select('client_report_id')
+        const code = String((filed.error as { code?: string } | null)?.code || '')
+        taste[side] = !filed.error ? 'filed' : MISSING_TABLE.has(code) ? 'waits_on_migration' : 'failed'
+        fresh = !filed.error && Array.isArray(filed.data) && filed.data.length > 0
+      } catch {
+        taste[side] = 'failed'
+      }
+      if (row.meta.verdict === 'improve' && side !== 'mock') {
+        revise[side] = fresh || taste[side] !== 'filed'
+          ? await (deps.revise ?? dispatchOffdayRevise)({ week, option: id })
+          : { sent: false, reason: 'already_asked' }
+      }
+    }
+    return { ...saved, taste, ...(Object.keys(revise).length ? { revise } : {}) } as Saved
   }
   // A note added to an off-day option he already pressed changes nothing it did (the handler keeps the press as saved).
   if (collection === 'queue' && body.use === 'offday' && body.note_only === true) return null
