@@ -1907,6 +1907,31 @@
           "how": "route, queue, claim and report are tested"
         }
       ]
+    },
+    {
+      "id": "every-cut-through-the-gates",
+      "on": "2026-11-01",
+      "krish": "figure out how this can never happen again durably",
+      "why": "Four cuts made by per-piece compositors went around make.py's checks and reached the board as ready with no receipt, and their openings were weak: frame 0 nearly empty, the headline wiped after a second, his voice first at 3 s.",
+      "means": "However a cut is made, it reaches Krish's board as ready only with a passing delivery receipt for its exact bytes, and that receipt includes the opening check: his voice from the first half second, a finished first frame, a headline that holds, no flat frame. A cut that fails says review on the board with the reason; only his own words override it.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "scripts/post-pack/board_web.py",
+          "contains": "def ready_video_problems",
+          "how": "publish-web refuses a ready video without a passing receipt for its bytes"
+        },
+        {
+          "file": "scripts/quick-edit/quality.py",
+          "contains": "opening_gate.delivery_problems",
+          "how": "the delivery gate requires the opening check for posts dated from its required_from"
+        },
+        {
+          "file": "config/opening-gate.json",
+          "contains": "\"required_from\": \"2026-11-02\"",
+          "how": "the opening thresholds, calibrated on the four rejected openings"
+        }
+      ]
     }
   ]
 }

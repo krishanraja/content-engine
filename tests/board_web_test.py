@@ -57,6 +57,30 @@ class BoardWebTests(unittest.TestCase):
                 board_web.publish(args)
             self.assertNotIn('delivery_review',sent[0]['manifest'])
 
+    def test_a_ready_video_needs_a_passing_receipt_for_its_bytes(self):
+        import html as html_mod
+        def page_with(status):
+            data = {'piece_id': 'p', 'status': status, 'note': 'n', 'sections': [{'id': 'video', 'title': 'Finished videos', 'files': [
+                {'label': 'Download the 5-minute video (16:9)', 'url': 'https://board.local/mon-video-long', 'fills': 'video-long'},
+                {'label': 'Download its thumbnail', 'url': 'https://board.local/mon-thumb-long', 'fills': 'thumb-long'}]}]}
+            return f'<div class="dl-group mat" id="mon-materials" data-materials="{html_mod.escape(json.dumps(data), quote=True)}"></div>'
+        with tempfile.TemporaryDirectory() as directory:
+            cut = Path(directory)/'cut.mp4'; cut.write_bytes(b'cut bytes')
+            asset = dict(id='mon-video-long', path=str(cut), type='video/mp4', source_url='https://board.local/mon-video-long')
+            failing = lambda path: ['opening gate is not passed: first_frame']
+            passing = lambda path: []
+            problems = board_web.ready_video_problems(page_with('ready'), [asset], check=failing)
+            self.assertEqual(len(problems), 1); self.assertIn('opening gate', problems[0])
+            self.assertEqual(board_web.ready_video_problems(page_with('ready'), [asset], check=passing), [])
+            self.assertEqual(board_web.ready_video_problems(page_with('review'), [asset], check=failing), [])
+            self.assertIn('no asset mapping', board_web.ready_video_problems(page_with('ready'), [], check=passing)[0])
+            existing = dict(id='mon-video-long', existing_sha256='0'*64, source_url='https://board.local/mon-video-long')
+            self.assertIn('no local file', board_web.ready_video_problems(page_with('ready'), [existing], check=passing)[0])
+            self.assertIn('not the bytes', board_web.ready_video_problems(page_with('ready'), [dict(existing, checked_file=str(cut))], check=passing)[0])
+            words = dict(asset, krish='Krish, 2026-11-01: ship this one as it is')
+            self.assertEqual(board_web.ready_video_problems(page_with('ready'), [words], check=failing), [])
+            self.assertTrue(board_web.ready_video_problems(page_with('ready'), [dict(asset, krish='looks fine')], check=failing))
+
     def test_kept_friday_video_stays_a_deep_cut(self):
         monday=week_board.monday_of('2026-10-12');piece=week_board.deep_cut_piece(monday)
         self.assertTrue(piece)
