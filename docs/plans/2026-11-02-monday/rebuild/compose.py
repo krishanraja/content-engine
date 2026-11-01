@@ -146,18 +146,19 @@ def audio(cut, video):
     meas = subprocess.run([FF, '-hide_banner', '-i', str(mix), '-af', 'loudnorm=I=-14:TP=-2.5:LRA=11:print_format=json', '-f', 'null', '-'], capture_output=True, text=True).stderr
     j = json.loads(re.findall(r'\{[^{}]*\}', meas)[-1])
     final = cut.out.with_suffix('.mp4')
-    target = -14.0
-    for lim in (0.7, 0.7, 0.6, 0.6, 0.5, 0.42):   # AAC overshoots the limiter: encode, measure, tighten until it holds -1 dBTP;
-        # the limiter takes a little loudness, so a pass under -14.4 LUFS is tried again with the target raised by the shortfall
+    target, lim = float(os.environ.get('MON_TARGET', -14.0)), float(os.environ.get('MON_LIMIT', 0.75))   # a start the last run found
+    for attempt in range(6):   # AAC overshoots the limiter and the limiter takes a little loudness: measure the encoded file,
+        # lower the ceiling when the true peak is over -1.1 dBTP, raise the target by the shortfall when it is under -14.5 LUFS
         ln = (f"loudnorm=I={target:.1f}:TP=-2.5:LRA=11:measured_I={j['input_i']}:measured_TP={j['input_tp']}:measured_LRA={j['input_lra']}"
-              f":measured_thresh={j['input_thresh']}:offset={j['target_offset']}:linear=true,alimiter=limit={lim}:level=false")
+              f":measured_thresh={j['input_thresh']}:offset={j['target_offset']}:linear=true,alimiter=limit={lim:.2f}:level=false")
         subprocess.run([FF, '-v', 'error', '-y', '-i', str(video), '-i', str(mix), '-af', ln, '-map', '0:v', '-map', '1:a', '-c:v', 'copy',
                         '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-t', f'{dur}', '-movflags', '+faststart', str(final)], check=True)
         r = subprocess.run([FF, '-hide_banner', '-i', str(final), '-map', '0:a', '-af', 'ebur128=peak=true', '-f', 'null', '-'], capture_output=True, text=True).stderr
         tp = float(re.findall(r'Peak:\s+(-?[\d.]+)', r)[-1]); li = float(re.findall(r'I:\s+(-?[\d.]+) LUFS', r)[-1])
-        print(f'limit {lim}: {li} LUFS, true peak {tp} dBTP', flush=True)
-        if tp <= -1.1 and li >= -14.4: break
-        if li < -14.4: target = min(-12.0, target + (-14.0 - li))
+        print(f'target {target:.1f}, limit {lim:.2f}: {li} LUFS, true peak {tp} dBTP', flush=True)
+        if tp > -1.1: lim -= 0.05; continue
+        if li < -14.5: target = min(-12.0, target + (-14.0 - li)); continue
+        break
     return final
 
 def stills(name, out, ts):
