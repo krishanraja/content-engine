@@ -2,7 +2,7 @@
 
     python3 docs/plans/2026-11-02-week/sync_cuts.py [mon-long mon-short wed-long wed-short]
 
-His face is on camera in every segment that is not a full-frame picture or the close; those are the spans measured.
+His face is on camera in every segment that is not a full-frame picture or the close; each such segment is one span.
 Writes .cache/proof/<day>/<cut>.lipsync.json.
 """
 import json
@@ -30,10 +30,10 @@ def face_spans(plan):
         a, b = max(0.0, s['a']), min(end, s['b'])
         if b - a <= 0:
             continue
-        if spans and a <= spans[-1][1] + 0.05:
-            spans[-1][1] = max(spans[-1][1], b)
-        else:
-            spans.append([a, b])
+        # One span per timeline segment: inside a segment his face holds one place in the frame, and a window that
+        # straddles a layout move (the column sliding, the brand frame arriving) moves the face out of SyncNet's
+        # fixed crop, which reads as low confidence about the instrument, not the cut.
+        spans.append([a, b])
     return [tuple(x) for x in spans]
 
 

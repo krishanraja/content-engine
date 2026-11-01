@@ -215,6 +215,7 @@ class LipSync(unittest.TestCase):
         self.assertEqual(result['status'], 'not_run')
         self.assertIn('fetching it failed', result['reason'])
 
+    @unittest.skipUnless(__import__('importlib.util').util.find_spec('cv2'), 'OpenCV is not installed here (CI); the lip-sync scorer only runs where it is')
     def test_the_face_detector_is_s3fd_or_says_it_fell_back(self):
         import sync_check
         saved, sync_check._FINDER = sync_check._FINDER, None
