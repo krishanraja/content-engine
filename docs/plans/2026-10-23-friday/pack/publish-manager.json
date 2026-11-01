@@ -1,0 +1,32 @@
+{
+ "title": "Why every country wants its own AI, and what that means for your business",
+ "date": "2026-11-06",
+ "kicker": "mind.the.gap",
+ "body": "../../2026-10-23-draft-body.md",
+ "images": [
+  {
+   "id": "cover",
+   "role": "cover",
+   "file": "../../../../.cache/friday-visual/cover/cover-1200x630.png",
+   "alt": "Cover: Why every country wants its own AI"
+  },
+  {
+   "id": "vertical",
+   "role": "vertical-cover",
+   "file": "../../../../.cache/friday-visual/cover/cover-1080x1920.png",
+   "alt": "Vertical cover: Why every country wants its own AI"
+  }
+ ],
+ "scripts": [
+  {
+   "label": "Video script (5-minute cut)",
+   "file": "../../2026-10-23-draft-script.md"
+  },
+  {
+   "label": "Video script (90-second cut)",
+   "file": "../../2026-10-23-draft-script-90s.md"
+  }
+ ],
+ "facts": "page-facts.json",
+ "_about": "Friday 6 Nov: its words, figures and scripts in the repository. The title is the substack_headline Krish signed off on 24 Oct (locked/titles.json); no subtitle was signed, so none is set. Covers and thumbnails come from the post's library folder."
+}

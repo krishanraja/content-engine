@@ -34,6 +34,18 @@
    "after": "which, if you manage people, will sound familiar",
    "image": "../../../../.cache/pack/wed/figure-asking-to-approving.png",
    "alt": "From asking to approving: today you open Claude, copy the email thread, the invite and your notes, paste them in and ask; with Claude Duet a morning brief, meeting prep, a draft reply and a note to the team arrive first, each waiting for your yes."
+  },
+  {
+   "after": "moving money between accounts.",
+   "image": "../../../../.cache/pack/wed/figure-loop.png",
+   "html": "figure-loop.html",
+   "alt": "Duet starts the work and you say yes. Every few hours it checks your connected apps, such as Gmail, Slack and your calendar; each morning it sends a short brief; in between it reads, drafts and prepares. Then it stops: before it sends, pays, signs or deletes anything it shows you exactly what it will do and waits for your yes. Some things, such as trading securities or moving money between accounts, stay off the table even with your yes."
+  },
+  {
+   "after": "Microsoft 365 isn't connected yet, and Slack has limits.",
+   "image": "../../../../.cache/pack/wed/figure-trip.png",
+   "html": "figure-trip.html",
+   "alt": "What makes the trip from Claude to Duet. Comes with you: your memory, the skills and connectors on your Claude account, the apps you connect, and your past chats, which it can search. Stays behind: files on your computer, some Claude projects, skills that live on your own computer, custom connectors in its scheduled runs, Claude Code sessions on your laptop, and Microsoft 365, not connected yet. Claude Team and Enterprise plans don't get Duet yet."
   }
  ],
  "sources": {
