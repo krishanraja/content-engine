@@ -3519,6 +3519,16 @@ Run a Vercel serverless handler locally against the real environment.
 
 - `function kineticState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
+### `apps/renderer/src/engine/devices/logo_card/index.tsx`
+
+- `function logoCardState({ object, events, frame }: Pick<DeviceProps, 'object' | 'events' | 'frame'>, count: number)`
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/logo_card/schema.ts`
+
+- `function resolveLogo(id: string): string`
+- `const ParamsSchema`
+
 ### `apps/renderer/src/engine/devices/marquee/index.tsx`
 
 - `function Device({ object, events, tokens, frame }: DeviceProps)`
