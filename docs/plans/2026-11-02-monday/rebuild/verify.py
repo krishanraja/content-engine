@@ -22,6 +22,7 @@ print(f'{f.name}: {len(fr) / 10:.1f} s at 10 fps; median change {np.median(d):.2
       (', '.join(f'{a:.1f}-{b:.1f}' for a, b in runs) or 'none'))
 r = subprocess.run([FF, '-hide_banner', '-i', str(f), '-map', '0:a', '-af', 'ebur128=peak=true', '-f', 'null', '-'], capture_output=True, text=True).stderr
 print('loudness', re.findall(r'I:\s+(-?[\d.]+) LUFS', r)[-1], 'LUFS; true peak', re.findall(r'Peak:\s+(-?[\d.]+)', r)[-1], 'dBTP')
+import sys as _s; _s.modules.setdefault("torch", None)
 from faster_whisper import WhisperModel
 wav = OUT / f'{cut}-final.wav'
 subprocess.run([FF, '-v', 'error', '-y', '-i', str(f), '-ac', '1', '-ar', '16000', str(wav)], check=True)

@@ -261,10 +261,12 @@ S.open=(t)=>{if(t>=OPEN_END+0.6)return '';const ex=W(t,OPEN_END,0.5),br=1+0.012*
     s+=`<div class="abs" style="left:60px;top:${150-ex*500}px;width:870px;height:300px;background:${INK};border-radius:22px;box-shadow:10px 10px 0 rgba(0,0,0,.35);opacity:${1-ex};transform:scale(${br});transform-origin:50% 0">
       <div class="anton" style="position:absolute;left:30px;top:28px;font-size:108px;white-space:nowrap;color:${CREAM}">The bottom rung</div>
       <div class="anton" style="position:absolute;left:30px;top:150px;font-size:108px;white-space:nowrap"><span class="hl" style="--k:1;color:${INK}">is going.</span></div></div>`;
-    const L=70,R=250,TOP=480,BOT=1260,BY=1215;let sv=`<svg width="1080" height="1920" style="position:absolute;left:${-ex*400}px;top:0;overflow:visible"><g stroke="${BUT}" stroke-width="28" stroke-linecap="round" fill="none" style="filter:drop-shadow(0 0 6px rgba(0,0,0,.6))">`;
-    sv+=`<line x1="${L}" y1="${TOP}" x2="${L}" y2="${BOT}"/><line x1="${R}" y1="${TOP}" x2="${R}" y2="${BOT}"/>`;
-    [600,800,1000].forEach(y=>sv+=`<line x1="${L}" y1="${y}" x2="${R}" y2="${y}"/>`);
-    sv+=`</g><g transform="translate(${(L+R)/2+(f>0?f*60:0)},${BY+dy}) rotate(${rot})" opacity="${fo}"><line x1="${-(R-L)/2}" y1="0" x2="${(R-L)/2}" y2="0" stroke="${INK}" stroke-width="40" stroke-linecap="round"/><line x1="${-(R-L)/2}" y1="0" x2="${(R-L)/2}" y2="0" stroke="${CREAM}" stroke-width="20" stroke-linecap="round"/></g>`;
+    // the ladder lies on its side below him (his face is never covered); the bottom rung is the left one, and it snaps
+    const T0=1440,B0=1600,X0=80,X1=920,BX=130;let sv=`<svg width="1080" height="1920" style="position:absolute;left:${-ex*1100}px;top:0;overflow:visible"><g stroke-linecap="round" fill="none">`;
+    for(const [c,w] of [[INK,44],[BUT,26]]){sv+=`<g stroke="${c}" stroke-width="${w}"><line x1="${X0}" y1="${T0}" x2="${X1}" y2="${T0}"/><line x1="${X0}" y1="${B0}" x2="${X1}" y2="${B0}"/>`;
+      [360,590,820].forEach(x=>sv+=`<line x1="${x}" y1="${T0}" x2="${x}" y2="${B0}"/>`);sv+='</g>'}
+    sv+=`</g><g transform="translate(${BX-(f>0?f*f*900:0)},${(T0+B0)/2+(f>0?f*f*1800:0)}) rotate(${-rot})" opacity="${fo}"><line x1="0" y1="${-(B0-T0)/2}" x2="0" y2="${(B0-T0)/2}" stroke="${INK}" stroke-width="46" stroke-linecap="round"/><line x1="0" y1="${-(B0-T0)/2}" x2="0" y2="${(B0-T0)/2}" stroke="${CREAM}" stroke-width="24" stroke-linecap="round"/></g>`;
+    if(f>0)sv+=`<line x1="${BX}" y1="${T0}" x2="${BX}" y2="${B0}" stroke="${INK}" stroke-width="10" stroke-dasharray="12 20" opacity="${.6*W(t,snap+.3,.4)}"/>`;
     s+=sv+'</svg>';
   }
   return s};
