@@ -26,7 +26,7 @@ All four are on the 2 Nov publish board, build `739e66ab`, read back with each v
 
 ## The delivery checks, measured on these bytes
 
-`docs/plans/2026-11-02-week/receipts.py` writes each receipt beside its file, and `sync_cuts.py` runs SyncNet. Every one of these passes on all four cuts:
+`docs/plans/2026-11-02-week/receipts.py` writes each receipt beside its file, and `sync_cuts.py` runs SyncNet, one span per timeline segment. Every one of these passes on all four cuts, except sync on Monday long (below):
 - **opening:** `opening_gate.py`.
 - **words:** `words_gate.py`, machine-written. The two long cuts use Krish's heard_as clearances in their EDLs, `docs/plans/2026-11-0*/rebuild-long.edl.json`. Wednesday long is checked on two local aligners, faster-whisper small.en and medium.en: medium.en hears ".ai." at the very end, which small.en heard as nothing.
 - **loudness:** about -14.5 LUFS, true peak -1.0 to -1.8 dBTP.
@@ -36,6 +36,12 @@ All four are on the 2 Nov publish board, build `739e66ab`, read back with each v
 - **visuals** and **full_review.**
 
 ## What still blocks
+
+**Monday long's `sync`.** It is inconclusive, never a pass. 32 segments are in sync and none out. Two windows read under SyncNet's confidence floor of 3, with the face found in every frame:
+- 2:06.2: confidence 2.95, offset 800 ms.
+- 3:29.0: confidence 2.75, offset -40 ms, where he turns to profile.
+
+The thresholds are unchanged. A re-measure, or Krish's ear on those two moments, is the next step for that cut.
 
 **`visual_clarity`.** Krish's ruling on the words on screen is in hand. The gate also needs two more things:
 - a frame-exact inventory of every rendered text state, made from the frames;
