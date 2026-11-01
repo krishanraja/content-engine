@@ -4,6 +4,9 @@ import { EngineEventSchema } from '../props'
 import { DEVICES } from './registry'
 
 describe('device verb declarations', () => {
+  it('logo_card supports enter, highlight and exit', () => {
+    expect(manifest.devices.logo_card.verbs).toEqual(['enter', 'highlight', 'exit'])
+  })
   it('scribble enters by drawing and supports only drawing and exit', () => {
     expect(manifest.devices.scribble.verbs).toEqual(['draw', 'exit'])
   })
