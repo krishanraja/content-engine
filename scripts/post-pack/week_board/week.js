@@ -141,6 +141,7 @@ function render(){
   });
   // The run-sheet's list of steps at the top of Publish: each says whether its tick is done.
   document.querySelectorAll("[data-tickstate]").forEach(el => el.classList.toggle("on", doneOf(el.dataset.tickstate)));
+  const HIDDEN_TICKS = !!document.querySelector('[data-checklists="hidden"]');
   let wDone = 0, wAll = 0;
   const live = mode === "live";
   for (const d of DAYS) {
@@ -149,7 +150,7 @@ function render(){
     const ids = STEPS.filter(s => s.standing).map(s => d.key + "-" + s.key);
     const n = ids.filter(doneOf).length;
     wDone += n; wAll += ids.length;
-    if (tab) tab.textContent = live ? `${n} of ${ids.length}` : `${ids.length} steps`;
+    if (tab) tab.textContent = HIDDEN_TICKS ? (tab.dataset.status || "") : live ? `${n} of ${ids.length}` : `${ids.length} steps`;
     const c = document.querySelector(`[data-count="${d.key}"]`);
     if (c) c.textContent = live ? `${n} of ${ids.length} · ${Math.round(100 * n / ids.length)}%` : `${ids.length} steps`;
     const m = document.querySelector(`[data-meter="${d.key}"]`); if (m) m.style.width = live ? (100 * n / ids.length) + "%" : "0";
@@ -939,10 +940,16 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
         b.disabled = mode !== "live" || !!busy[id];
       }
       c.classList.toggle("on", same && v.approved === true);
+      // His comment on the option (Krish, 2026-10-31: every option takes a comment), filled with what he saved.
+      const ni = c.querySelector("[data-off-note]"), nb = c.querySelector('[data-act="save-off-note"]');
+      if (ni) { ni.disabled = mode !== "live" || !!busy[id]; if (document.activeElement !== ni && ni.dataset.unsaved !== "true") ni.value = v && typeof v.note === "string" ? v.note : "" }
+      if (nb) nb.disabled = mode !== "live" || !!busy[id];
+      const said = v && v.note ? " Your comment is saved." : "";
       const sent = same && v.approved && v.send ? OFF_SEND[v.send.status] : "";
       if (!busy[id]) say(`[data-offstate="${id}"]`, mode === "off" ? "Presses are not saving in this view." : !v ? ""
-        : !same ? "The copy changed since you pressed. Press again." : v.approved ? "Approved. Saved." + (sent ? " " + sent : "") : "Skipped. Saved.",
-        mode === "off" || (!!v && !same) || (!!sent && v.send.status !== "sent"));
+        : v.approved === null ? "Comment saved." : !same ? "The copy changed since you pressed. Press again."
+        : (v.approved ? "Approved. Saved." + (sent ? " " + sent : "") : "Skipped. Saved.") + said,
+        mode === "off" || (!!v && v.approved !== null && !same) || (!!sent && v.send.status !== "sent"));
     }
   }
   render();
@@ -1007,18 +1014,39 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
     if (o) {
       const c = document.getElementById(o.dataset.for); if (!c) return;
       const id = c.dataset.offday;
+      const typed = c.querySelector("[data-off-note]")?.value.trim() || (saved[id] && saved[id].note) || null;
       const body = { pick: id, use: "offday", day: c.dataset.offDay, approved: o.dataset.value === "approve", copy_sha256: c.dataset.copySha256,
-        format: c.dataset.format, source: c.dataset.source, option_id: c.dataset.optionId,
+        format: c.dataset.format, source: c.dataset.source, option_id: c.dataset.optionId, note: typed,
         week: c.closest("[data-week]")?.dataset.week, at: new Date().toISOString() };
       // A piece he records (Ruling, Krish, 2026-10-29): his Approve carries the exact words he saw, and the server puts
       // the piece on its day and sends those words to Teleprompter.
       if (c.dataset.kind === "recorded") Object.assign(body, { kind: "recorded", piece_id: c.dataset.piece, series: c.dataset.series,
         style: c.dataset.style, script: c.querySelector("[data-offscript]")?.textContent || "", script_sha256: c.dataset.scriptSha256,
         folder_title: c.dataset.folderTitle, title: c.dataset.tpTitle, readers: (c.dataset.readers || "").split("|").filter(Boolean) });
-      save(id, body, `[data-offstate="${id}"]`);
+      save(id, body, `[data-offstate="${id}"]`).then(ok => { const i = c.querySelector("[data-off-note]"); if (ok && i) i.dataset.unsaved = "false" });
+      return;
+    }
+    // His comment alone: on an option he pressed, the server keeps the press as saved and changes only the note
+    // (note_only); on one he has not pressed, the record holds his comment and no press (approved null).
+    const sn = e.target.closest && e.target.closest('[data-act="save-off-note"]');
+    if (sn) {
+      const c = document.getElementById(sn.dataset.for); if (!c) return;
+      const id = c.dataset.offday, prev = saved[id], i = c.querySelector("[data-off-note]"), text = i ? i.value.trim() : "";
+      const pressed = !!prev && typeof prev.approved === "boolean";
+      if (!text && !pressed) { say(`[data-offstate="${id}"]`, "Write your comment first.", true); return }
+      const body = pressed
+        ? { pick: id, use: "offday", day: c.dataset.offDay, approved: prev.approved, copy_sha256: prev.copy_sha256, note: text || null, note_only: true, at: new Date().toISOString() }
+        : { pick: id, use: "offday", day: c.dataset.offDay, approved: null, copy_sha256: c.dataset.copySha256, format: c.dataset.format,
+            source: c.dataset.source, option_id: c.dataset.optionId, note: text, week: c.closest("[data-week]")?.dataset.week, at: new Date().toISOString() };
+      if (pressed && !text) body.note = "";
+      save(id, body, `[data-offstate="${id}"]`).then(ok => {
+        if (!ok) return;
+        if (pressed) { saved[id] = Object.assign({}, prev, { note: body.note }); render() }
+        if (i && i.value.trim() === text) i.dataset.unsaved = "false";
+      });
     }
   });
-  document.addEventListener("input", e => { const i = e.target.closest && e.target.closest("input[data-press-note]"); if (i) i.dataset.unsaved = "true" });
+  document.addEventListener("input", e => { const i = e.target.closest && e.target.closest("input[data-press-note], input[data-off-note]"); if (i) i.dataset.unsaved = "true" });
 })();
 
 // His decisions on a day's tab in the fixed layout (week_board.py approve_card, titles_card, signoff_card and

@@ -247,3 +247,45 @@ describe('GET /api/board/<Monday>/pieces', () => {
     expect(JSON.stringify(v)).toContain('"source":"/api/board/:week/pieces","destination":"/api/board?week=:week&op=pieces"')
   })
 })
+
+describe('GET /api/board/<Monday>/build (Growth\'s ledger read, Krish 2026-11-01)', () => {
+  const BUILD = 'b'.repeat(64)
+  const manifest = { version: 1, week: '2026-11-09', html: { sha256: 'c'.repeat(64), bytes: 10, type: 'text/html', name: 'week-board.html', key: `boards/2026-11-09/${'c'.repeat(64)}` }, assets: {} }
+  const db = (published = true) => ({
+    from: (t: string) => {
+      const q: any = { select: () => q, eq: () => q,
+        maybeSingle: async () => t === 'board_weeks'
+          ? { data: published ? { week: '2026-11-09', build_id: BUILD, revision: 7 } : null, error: null }
+          : { data: { manifest }, error: null } }
+      return q
+    },
+  })
+  const call = async (auth: string, method = 'GET', published = true, week = '2026-11-09') => {
+    process.env.ENGINE_OPERATOR_TOKEN = 'synthetic-operator'
+    process.env.GROWTH_WRITEBACK_TOKEN = 'synthetic-growth'
+    process.env.ACCESS_CODE = 'synthetic-board-test'
+    const handler = createBoardHandler(async () => db(published) as never)
+    let status = 0; let out: any
+    const res = { setHeader() {}, status(code: number) { status = code; return this }, json(v: unknown) { out = v } } as unknown as VercelResponse
+    await handler({ method, headers: auth ? { authorization: auth } : {}, query: { week, op: 'build' } } as unknown as VercelRequest, res)
+    return { status, out }
+  }
+  it('gives Growth\'s key the published build, read-only', async () => {
+    const ok = await call('Bearer synthetic-growth')
+    expect(ok.status).toBe(200)
+    expect(ok.out).toEqual({ ok: true, week: '2026-11-09', build_id: BUILD, revision: 7, manifest })
+    expect((await call('Bearer synthetic-operator')).status).toBe(200)
+  })
+  it('refuses anyone else, any write and an unpublished week', async () => {
+    expect((await call('')).status).toBe(401)
+    expect((await call('Bearer wrong')).status).toBe(401)
+    expect((await call('Bearer synthetic-growth', 'PUT')).status).toBe(405)
+    expect((await call('Bearer synthetic-growth', 'GET', true, '2026-11-10')).out.error).toBe('invalid_week')
+    const none = await call('Bearer synthetic-growth', 'GET', false)
+    expect([none.status, none.out.error]).toEqual([404, 'board_not_published'])
+  })
+  it('is routed at /api/board/<Monday>/build', () => {
+    const v = JSON.parse(readFileSync('apps/control-plane/vercel.json', 'utf8'))
+    expect(JSON.stringify(v)).toContain('"source":"/api/board/:week/build","destination":"/api/board?week=:week&op=build"')
+  })
+})

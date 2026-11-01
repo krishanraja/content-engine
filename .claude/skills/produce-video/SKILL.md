@@ -128,6 +128,20 @@ set `MAKING_BY` in the preflight (step 1), or pass `--by Codex` or
 scripts, the cover, the pictures, the visual gate, the pack) and nothing
 after Video assets (the publish board, the posting) is this skill's to write.
 
+**Codex route, no hand-off conversation.** Krish, 2026-11-01: "How do we stop
+having this same clumsy conversation every single time? You just do it first
+time round when I ask you to produce a video seamlessly." Claude is the art
+director, the administrator and the standards and facts checker; Codex makes
+the plates and devices. Codex lives only on his home computer inside WSL
+Ubuntu, so never ask him to open a CLI, run a script or tell you it is done.
+Write the card (`ve card`), push its `.fields.json` to main, book it with
+Control Center's `reserve_credit_spend` (engine growth-makeyourmindup, pool
+codex), then `python scripts/ve.py dispatch <card.md> --spend-id <id>`: here it dispatches if Codex is on
+this machine, and otherwise queues it on the work board for his PC's
+recordings pass to build in WSL (`scripts/velib/codex_lane.py`). Read
+`python scripts/ve.py lane status`, check a built card yourself (acceptance,
+golden stills) and close its item.
+
 Both cuts render through `scripts/quick-edit/make.py`, the only path that
 makes 16:9 as well as 9:16 and the only one that carries music (the
 Studio renders 9:16 only and refuses it). Each cut is

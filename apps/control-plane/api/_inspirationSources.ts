@@ -20,10 +20,19 @@
 //   creators     creator moves: why a peer's post worked and Krish's own angle on it.
 //   claims       taste claims (form only, anti-echo), candidate or proposed: evidence of his taste, never a rule. A
 //                claim becomes a rule only when he approves its proposal (taste_profile_form, read by _taste.ts).
+//   asks         every card he typed words on (why_here, a typed why_like, would_do) in the ASK_DAYS before the week,
+//                newest words first, whatever became of the card: dismissed, routed to study_style, routed to a piece
+//                already. Each is in must_cover (ask: true): used, combined, or declined with a reason; a style-only
+//                ask may be answered by an idea's style_from. Krish, 2026-10-31: the Sunday run ignored his asks (a
+//                card dismissed on 26 Oct never reached it; one routed to study_style named its topic in his words).
+//   recent       pieces scheduled in the RECENT_DAYS before the week, with the must_cover ids each answered: the
+//                board may not offer them again (board_feed.py cover, no-repeat).
 //
 // Nothing here ranks for the judges (they stay blind, scripts/check-judges.ts) and nothing writes.
 
 export const INSPO_FRESH_DAYS = 21
+export const ASK_DAYS = 45
+export const RECENT_DAYS = 21
 export const EXCERPT = 280
 
 type Row = Record<string, any>
@@ -95,6 +104,25 @@ export function card(r: Row): InspoCard {
   }
 }
 
+/** A card he typed words on, and what became of it. */
+export interface Ask {
+  id: string
+  name: string
+  /** dismissed, style_only, piece (it already became one), routed (to make_piece), or open. */
+  state: 'dismissed' | 'style_only' | 'piece' | 'routed' | 'open'
+  dismissed: boolean
+  style_only: boolean
+  routed: boolean
+  piece_id: string | null
+  /** His words, verbatim: the paste-time note (why_here), a typed why_like, and would_do. */
+  his_words: { why_here: string | null; why_like: string | null; would_do: string | null }
+  words_at: string | null
+  heard: string | null
+  url: string | null
+}
+
+export interface RecentPiece { id: string; idea: string; state: string | null; scheduled_for: string | null; series: string | null; covers: string[] }
+
 export interface InspirationBlock {
   routed: InspoCard[]
   study_style: InspoCard[]
@@ -104,7 +132,9 @@ export interface InspirationBlock {
   creators: Array<{ id: string; creator: string; post_url: string | null; why_it_works: string | null; krish_angle: string | null; idea_id: string | null; created_at: string | null }>
   claims: Array<{ id: string; layer: string | null; status: string; statement: string; his_words: string | null; support: number | null }>
   /** Ids the Ideas tab must carry (an idea's `covers`) or account for (ideas.json `accounted`), never drop silently. */
-  must_cover: Array<{ id: string; what: string; his_words: string | null; endorsed: string | null }>
+  must_cover: Array<{ id: string; what: string; his_words: string | null; endorsed: string | null; ask?: true; state?: Ask['state']; style_only?: boolean; piece_id?: string | null }>
+  asks: Ask[]
+  recent: RecentPiece[]
   counts: Record<string, number>
 }
 
@@ -127,8 +157,55 @@ function readingExcerpt(md: string): string | null {
  * claim keeps its quote while the answer it quotes is withdrawn (migration 20261112090000_taste_quote_holds.sql), so a
  * quote counts as his words only while that row stands; with no list, no quote is shown.
  */
+/** His typed words on a card: why_here (never a guess), why_like only when typed, would_do. Null when none. */
+export function hisWords(r: Row): Ask['his_words'] | null {
+  const w = { why_here: clip(r.why_here, 600), why_like: r.why_like_source === 'typed' ? clip(r.why_like, 600) : null, would_do: clip(r.would_do, 600) }
+  return w.why_here || w.why_like || w.would_do ? w : null
+}
+
+/** Every card he typed words on within ASK_DAYS of the week, newest words first (see the header). */
+export function buildAsks(weekStart: string, items: Row[], skip: (r: Row) => boolean = () => false): Ask[] {
+  const since = new Date(Date.parse(`${weekStart}T00:00:00Z`) - ASK_DAYS * 86_400_000).toISOString()
+  const seen = new Set<string>()
+  const out: Ask[] = []
+  for (const r of items) {
+    const words = hisWords(r)
+    const id = String(r.id)
+    if (!words || seen.has(id) || skip(r)) continue
+    const at = String(r.answered_at || r.created_at || '')
+    if (!at || at < since) continue
+    seen.add(id)
+    const c = card(r)
+    const dismissed = Boolean(r.dismissed_at)
+    const styleOnly = c.routes.includes('study_style') && !c.routes.includes('make_piece')
+    const routed = c.routes.includes('make_piece')
+    const state: Ask['state'] = dismissed ? 'dismissed' : c.piece_id ? 'piece' : styleOnly ? 'style_only' : routed ? 'routed' : 'open'
+    out.push({ id, name: c.name, state, dismissed, style_only: styleOnly, routed, piece_id: c.piece_id, his_words: words,
+      words_at: at, heard: c.heard, url: c.link })
+  }
+  return out.sort((a, b) => String(b.words_at).localeCompare(String(a.words_at)))
+}
+
+/** Pieces scheduled in the RECENT_DAYS before the week, with the must_cover ids each answered (meta.covers). */
+export function buildRecent(weekStart: string, rows: Row[]): RecentPiece[] {
+  const start = Date.parse(`${weekStart}T00:00:00Z`)
+  const since = new Date(start - RECENT_DAYS * 86_400_000).toISOString().slice(0, 10)
+  return rows.filter(r => r.scheduled_for && String(r.scheduled_for).slice(0, 10) >= since && String(r.scheduled_for).slice(0, 10) < weekStart)
+    .map(r => {
+      const held = r.meta?.covers && typeof r.meta.covers === 'object' && !Array.isArray(r.meta.covers) ? Object.values(r.meta.covers) : []
+      const covers = [...new Set(held.flatMap(v => (Array.isArray(v) ? v : [])).filter((x): x is string => typeof x === 'string'))]
+      return { id: String(r.id), idea: String(r.idea || ''), state: r.state || null, scheduled_for: String(r.scheduled_for).slice(0, 10), series: r.lane_slot || null, covers }
+    })
+    .sort((a, b) => String(b.scheduled_for).localeCompare(String(a.scheduled_for)))
+}
+
+const ASK_WHAT: Record<Ask['state'], string> = {
+  dismissed: 'you wrote on, then dismissed', style_only: 'you wrote on and routed to Study style (style used in an idea, or a topic)',
+  piece: 'you wrote on; it already became a piece', routed: 'you wrote on and routed to Make a piece', open: 'you wrote on',
+}
+
 export function buildInspiration(input: { weekStart: string; items: Row[]; reads?: Row[]; moves?: Row[]; claims?: Row[];
-  quotesStanding?: string[]; listedIdeas?: string[] }): InspirationBlock {
+  quotesStanding?: string[]; listedIdeas?: string[]; recentPieces?: Row[] }): InspirationBlock {
   const freshSince = new Date(Date.parse(`${input.weekStart}T00:00:00Z`) - INSPO_FRESH_DAYS * 86_400_000).toISOString()
   // A said idea's card whose content idea is already on the board (listedIdeas) is the same idea twice; it is left
   // out unless he has answered or routed the card itself, which keeps his press.
@@ -181,15 +258,27 @@ export function buildInspiration(input: { weekStart: string; items: Row[]; reads
       support: typeof c.support_n === 'number' ? c.support_n : null }))
     .sort((a, b) => (a.status === 'proposed' ? 0 : 1) - (b.status === 'proposed' ? 0 : 1))
 
-  const must_cover = [
+  const must_cover: InspirationBlock['must_cover'] = [
     ...routed.map(c => ({ id: c.id, what: `Inspiration card "${c.name}" you routed to Make a piece`, his_words: c.why_like || c.would_do || c.saved_why || null, endorsed: c.endorsed })),
     // A link he saved with his own words, not routed and not yet a piece: those words ask for something too.
     ...cards.filter(c => c.saved_why && !c.piece_id && !c.routes.includes('make_piece') && !c.routes.includes('study_style'))
       .sort(byNewest).map(c => ({ id: c.id, what: `Inspiration card "${c.name}" you saved with your words`, his_words: c.saved_why, endorsed: null })),
   ]
+  // Every card he typed words on, dismissed and style-only included; a said card whose idea is already listed is
+  // counted once, as that idea (twice). An id already owed above keeps its entry.
+  const asks = buildAsks(input.weekStart, input.items.filter(r => !r.facets?.part_of), twice)
+  const owed = new Set(must_cover.map(m => m.id))
+  for (const a of asks) {
+    if (owed.has(a.id)) continue
+    const w = a.his_words
+    must_cover.push({ id: a.id, what: `Inspiration card "${a.name}" ${ASK_WHAT[a.state]}${a.piece_id ? ` (piece ${a.piece_id})` : ''}`,
+      his_words: [w.why_here, w.why_like, w.would_do].filter(Boolean).join(' / '), endorsed: null, ask: true, state: a.state,
+      style_only: a.style_only, piece_id: a.piece_id })
+  }
+  const recent = buildRecent(input.weekStart, input.recentPieces || [])
   return {
-    routed, study_style: studyStyle, liked, fresh, corpora, creators, claims, must_cover,
+    routed, study_style: studyStyle, liked, fresh, corpora, creators, claims, must_cover, asks, recent,
     counts: { routed: routed.length, study_style: studyStyle.length, liked: liked.length, fresh: fresh.length,
-      corpora: corpora.length, creators: creators.length, claims: claims.length },
+      corpora: corpora.length, creators: creators.length, claims: claims.length, asks: asks.length, recent: recent.length },
   }
 }

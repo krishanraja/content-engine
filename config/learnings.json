@@ -1872,6 +1872,41 @@
           "how": "The voice check counts the article's \"we\" as the person behind it, so an article in the publication's voice can pass"
         }
       ]
+    },
+    {
+      "id": "codex-route-no-handoff",
+      "on": "2026-11-01",
+      "krish": "How do we stop having this same clumsy conversation every single time? You just do it first time round when I ask you to produce a video seamlessly.",
+      "why": "Each video session on a surface without Codex asked him how to reach it, and he had to open a CLI in WSL, run a script and report back.",
+      "means": "Claude art-directs, administers and checks standards and facts; Codex makes the plates and devices. A session never asks him how to reach Codex: ve dispatch dispatches where Codex is, and otherwise queues the card on the work board for his home computer's recordings pass to build in WSL. The session checks the result itself.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "scripts/velib/codex_lane.py",
+          "contains": "def route(",
+          "how": "local when the companion is here, else queue; never a question"
+        },
+        {
+          "file": "scripts/ve.py",
+          "contains": "codex_lane.route() == 'queue'",
+          "how": "ve dispatch queues by itself when Codex is not on this machine"
+        },
+        {
+          "file": ".agents/skills/ve/SKILL.md",
+          "contains": "never ask Krish how to reach Codex",
+          "how": "the ve skill's Codex route"
+        },
+        {
+          "file": ".agents/skills/produce-video/SKILL.md",
+          "contains": "Codex route, no hand-off conversation.",
+          "how": "produce-video's Codex route"
+        },
+        {
+          "file": "tests/ve_lane_test.py",
+          "contains": "test_no_companion_means_queue",
+          "how": "route, queue, claim and report are tested"
+        }
+      ]
     }
   ]
 }

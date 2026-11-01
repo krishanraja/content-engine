@@ -23,7 +23,11 @@ vendor/makeyourmindup/kill-list/kill-list.mjs` before it reaches the
 tab. Growth (growth-makeyourmindup) owns this lane and will feed it
 automatically; until it does, the room drafts the options. Write them
 into ideas.json as `offdays`, `{"tue": [...], "thu": [...], "sat": [...],
-"sun": [...]}`, each with its `format`, `source` and `copy`. They reach
+"sun": [...]}`, each with its `format`, `source` and `copy`; a carousel
+option also carries `cards`, `[{"words": "<what the card says>", "picture":
+"<what it shows>"}]`, one per card in order, and any option may carry the
+`pitch` object and the `covers` or `style_from` of the asks it answers (core,
+"The channel, the idea tests and his asks"). They reach
 the tab only through `week_board.py --ideas`, never by patching the page,
 and only once the board has its Off days part (it lands with the board's
 own change); until then `week_board.py` does not show them, so say so in

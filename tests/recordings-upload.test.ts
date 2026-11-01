@@ -48,9 +48,11 @@ describe('the recordings upload on Krish\'s runner machines', () => {
       expect(line).toMatch(/-LiteralPath \$(LogPath|temporary) |WriteAllText\(\$temporary,/)
     }
     // The Saturday overnight preflight's last result is kept beside them too (tests/overnight-preflight.test.ts), and
-    // the week the overnight run was last started for (scripts/overnight/overnight.py, plan Wave 2, W2.6).
-    for (const line of body.split('\n').filter((l) => /Save-JsonFile \$/.test(l))) expect(line).toMatch(/Save-JsonFile \$(StatePath|PlacingStatePath|PreflightStatePath|OvernightStatePath) /)
+    // the week the overnight run was last started for (scripts/overnight/overnight.py, plan Wave 2, W2.6), and the
+    // Codex lane's last serve process (scripts/velib/codex_lane.py).
+    for (const line of body.split('\n').filter((l) => /Save-JsonFile \$/.test(l))) expect(line).toMatch(/Save-JsonFile \$(StatePath|PlacingStatePath|PreflightStatePath|OvernightStatePath|CodexLaneStatePath) /)
     expect(upload).toContain("$OvernightStatePath = Join-Path $StateRoot 'overnight.json'")
+    expect(upload).toContain("$CodexLaneStatePath = Join-Path $StateRoot 'codex-lane.json'")
     expect(upload).toContain("$PlacingStatePath = Join-Path $StateRoot 'placing.json'")
     expect(upload).toContain("$PreflightStatePath = Join-Path $StateRoot 'preflight.json'")
     expect(upload).toContain("$StateRoot = Join-Path $env:USERPROFILE 'Documents\\MindmakeVideoStudio\\recordings-upload'")

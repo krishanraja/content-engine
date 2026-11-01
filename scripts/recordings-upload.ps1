@@ -215,7 +215,7 @@ function Get-Setting([string]$Name) {
   return [Environment]::GetEnvironmentVariable($Name, 'Process')
 }
 
-$MindmakeSettings = @('MINDMAKE_DRIVE_ROOT', 'MINDMAKE_MEDIA_INBOX', 'MINDMAKE_ARCHIVE_ROOT', 'MINDMAKE_POSTS_ROOT', 'MINDMAKE_INSPIRATION', 'MINDMAKE_MUSIC_ROOT', 'MINDMAKE_OVERNIGHT_ROLE')
+$MindmakeSettings = @('MINDMAKE_DRIVE_ROOT', 'MINDMAKE_MEDIA_INBOX', 'MINDMAKE_ARCHIVE_ROOT', 'MINDMAKE_POSTS_ROOT', 'MINDMAKE_INSPIRATION', 'MINDMAKE_MUSIC_ROOT', 'MINDMAKE_OVERNIGHT_ROLE', 'MINDMAKE_CODEX_WSL_DISTRO', 'MINDMAKE_CODEX_WSL_REPO')
 
 function Sync-Settings {
   # This process's copy of each MINDMAKE_* setting, made equal to the
@@ -703,6 +703,7 @@ function Invoke-Pass {
     try { Invoke-Windows } catch { Write-Log "the scheduled tasks' windows were not checked this pass: $($_.Exception.Message)" }
     try { Invoke-Preflight } catch { Write-Log "the Saturday overnight preflight did not run this pass: $($_.Exception.Message)" }
     try { Invoke-Overnight } catch { Write-Log "the overnight run was not checked this pass: $($_.Exception.Message)" }
+    try { Invoke-CodexLane } catch { Write-Log "the Codex lane was not checked this pass: $($_.Exception.Message)" }
     Send-LaneReport
   }
   return ($sent -and $placed)
@@ -1160,6 +1161,33 @@ function Invoke-Overnight {
   }
   $status = Invoke-StudioPython @($OvernightScript, 'status', '--role', $role)
   if ($status.code -eq 0) { $script:Overnight = Read-LastJson $status.out }
+}
+
+# The Codex lane (scripts\velib\codex_lane.py; Krish, 2026-11-01: "You just do it first time round when I ask you to
+# produce a video seamlessly"). A Claude session with no Codex queues a card on the work board; the one computer where
+# Codex lives (MINDMAKE_CODEX_WSL_REPO set: his clone inside WSL Ubuntu, with MINDMAKE_CODEX_WSL_DISTRO, default Ubuntu)
+# claims it here, builds it in WSL with no window and writes the result back on the same item. Only the computer with
+# that setting serves, so two machines never claim one card. No Claude is started, nothing is published.
+$CodexLaneStatePath = Join-Path $StateRoot 'codex-lane.json'
+
+function Invoke-CodexLane {
+  if (-not (Get-Setting 'MINDMAKE_CODEX_WSL_REPO')) { return }
+  if (-not (Get-Setting 'MINDMAKE_CODEX_WSL_DISTRO')) { [Environment]::SetEnvironmentVariable('MINDMAKE_CODEX_WSL_DISTRO', 'Ubuntu', 'Process') }
+  if (-not (Test-Path -LiteralPath $StudioPython -PathType Leaf)) { return }
+  $last = Read-JsonFile $CodexLaneStatePath
+  $previous = Get-Field $last 'process'
+  if ($previous) {
+    # A reused process id must not stop the lane for good: only a Python started after the recorded time counts.
+    $running = Get-Process -Id ([int]$previous) -ErrorAction SilentlyContinue
+    $began = [string](Get-Field $last 'started_at')
+    if ($running -and $running.ProcessName -like 'python*' -and $began) {
+      try { if ($running.StartTime.ToUniversalTime() -ge ([DateTime]::Parse($began).ToUniversalTime().AddMinutes(-1))) { return } } catch { return }
+    }
+  }
+  $ve = Join-Path $RepoRoot 'scripts\ve.py'
+  $id = Start-Hidden $StudioPython ('"' + $ve + '" lane serve')
+  $at = [DateTime]::UtcNow.ToString("yyyy-MM-dd'T'HH:mm:ss'Z'", [System.Globalization.CultureInfo]::InvariantCulture)
+  Save-JsonFile $CodexLaneStatePath ([ordered]@{ started_at = $at; process = $id })
 }
 
 function Get-PreflightBlock {
