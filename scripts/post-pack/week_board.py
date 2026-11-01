@@ -4381,7 +4381,11 @@ def stand_in(tmp, name, title, kicker, words=None):
                    {'id': 'pic', 'file': 'a.png', 'alt': 'A', 'after_heading': 'THE PART'}],
         'scripts': [{'label': 'The 3-minute video', 'file': 'long.md'}, {'label': 'The 90-second cut', 'file': 'short.md'}],
     }), encoding='utf-8')
-    return publish_manager.build(d / 'm.json', d / 'out').read_text(encoding='utf-8')
+    floor, publish_manager.FIGURE_FLOOR = publish_manager.FIGURE_FLOOR, 1  # a one-picture stand-in; the floor has its own test
+    try:
+        return publish_manager.build(d / 'm.json', d / 'out').read_text(encoding='utf-8')
+    finally:
+        publish_manager.FIGURE_FLOOR = floor
 
 
 def self_test():

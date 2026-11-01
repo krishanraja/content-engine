@@ -42,7 +42,7 @@
  ],
  "facts": "page-facts.json",
  "status": [
-  "Fact check passed on this exact text: eight sentences signed off by Krish on 28 October 2026",
+  "Fact check on these words (1 November 2026): every other line passed or was already signed off by Krish. 3 lines need his sign-off in his own words before publishing: \"Google hired Character.AI's founders in August 2024, two years before the bankruptcy; OpenAI said it would shut its Sora video app; and the court filing warned about cash and litigation.\" | \"The founders leaving was the first warning sign in this story, and it was easy to miss.\" | \"That's our inference from the timing and the filings; Disney hasn't said it in those words.\"",
   "Prediction kept as recorded (1 March 2027, 75%)",
   "Both cuts watched in full and approved by Krish on 28 October 2026"
  ],

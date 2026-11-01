@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, test } from 'vitest'
 import { HOUSE_RULES, houseRulesBlock, rulesFor, type Stage } from '../../apps/control-plane/api/_houseRules.js'
-import { confidenceOf, predictionCheck, publishChecks, publishStatus, readingGrade } from '../../apps/control-plane/api/_publishChecks.js'
+import { articleFormat, confidenceOf, predictionCheck, publishChecks, publishStatus, readingGrade } from '../../apps/control-plane/api/_publishChecks.js'
 import { VOICE_GUARDRAILS } from '../../apps/control-plane/api/_content.js'
 import { bodyHash } from '../../apps/control-plane/api/_factGate.js'
 import { VOICE_ABSOLUTES } from '../../apps/control-plane/api/_finalPass.js'
@@ -926,5 +926,35 @@ describe('no public word names Krish, and every picture adds meaning (NO_NAME, A
     assert.doesNotMatch(relatable.text, /a picture never acts one out/)
     const gate = readFileSync(join(__dirname, '../../scripts/post-pack/visual_gate.py'), 'utf8')
     assert.match(gate, /pictures never add zero value above and beyond '\s+'the words\. They have to be additive in meaning\./)
+  })
+})
+
+describe('nothing unfinished on the page (ARTICLE_FORMAT, Krish, 2026-11-01)', () => {
+  const fmt = (body: string) => publishChecks(body, factsOk, NOW_SEP).find(c => c.id === 'ARTICLE_FORMAT')!
+  test('a clean article passes, and the check blocks', () => {
+    assert.equal(fmt(PASSED).ok, true, fmt(PASSED).detail)
+    assert.equal(fmt(PASSED).blocking, true)
+  })
+  test('a working note, a body title, raw HTML or a backtick is refused', () => {
+    assert.match(articleFormat('_Fact gate passed 24 October 2026 (six first-person test lines signed off)._').join(' '), /working note/)
+    assert.match(articleFormat('Source of truth: `docs/plans/2026-10-23-draft-body.md`.').join(' '), /working note/)
+    assert.match(articleFormat('# Why every country wants its own AI').join(' '), /"#" title inside the body/)
+    assert.match(articleFormat('A <b>bold</b> line.').join(' '), /raw HTML/)
+    assert.equal(articleFormat('## A SECTION\n\n- one\n- two\n\nPlain _words_ here.').length, 0)
+    assert.equal(fmt(`${PASSED}\n\n_Fact gate passed on the board for this exact text and nothing else at all._`).ok, false)
+  })
+})
+
+describe('every Substack post is judged on six reader criteria (READER_TEST, Krish, 2026-11-01)', () => {
+  test('the rule is live, carries his words, names all six criteria and reaches writers, judges and the final pass', () => {
+    const r = HOUSE_RULES.find(x => x.id === 'READER_TEST')!
+    assert.ok(r)
+    assert.equal(r.status, 'live')
+    assert.match(r.said, /make those criteria the permanent judging criteria for all future Substack posts/)
+    for (const c of ['enjoyable', 'big picture', 'investigative', 'incredibly easy to follow', 'easy to learn from', 'visual cues']) assert.match(r.text, new RegExp(c))
+    assert.match(r.text, /every criterion scores 9 or more/)
+    assert.match(r.text, /at most one quip in an article/)
+    for (const stage of ['write', 'judge_draft', 'final_pass'] as Stage[]) assert.ok(r.stages.includes(stage), stage)
+    assert.ok(rulesFor('judge_draft').some(x => x.id === 'READER_TEST'))
   })
 })
