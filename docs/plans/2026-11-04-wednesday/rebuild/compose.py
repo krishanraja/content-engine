@@ -213,11 +213,11 @@ def mix(name):
     subprocess.run([FF, '-v', 'error', '-y', '-i', str(v), '-i', str(m), '-filter_complex',
                     '[0:a]asplit[vo][key];[1:a][key]sidechaincompress=threshold=0.03:ratio=9:attack=20:release=500[md];[vo][md]amix=inputs=2:normalize=0:duration=first[a]',
                     '-map', '[a]', str(mx)], check=True)
-    meas = subprocess.run([FF, '-hide_banner', '-i', str(mx), '-af', 'loudnorm=I=-14:TP=-1.5:LRA=11:print_format=json', '-f', 'null', '-'],
+    meas = subprocess.run([FF, '-hide_banner', '-i', str(mx), '-af', 'loudnorm=I=-14:TP=-2:LRA=11:print_format=json', '-f', 'null', '-'],
                           capture_output=True, text=True).stderr
     j = json.loads(re.findall(r'\{[^{}]*\}', meas)[-1])
-    ln = (f"loudnorm=I=-14:TP=-1.5:LRA=11:measured_I={j['input_i']}:measured_TP={j['input_tp']}:measured_LRA={j['input_lra']}"
-          f":measured_thresh={j['input_thresh']}:offset={j['target_offset']}:linear=true,alimiter=limit=0.78:level=false")
+    ln = (f"loudnorm=I=-14:TP=-2:LRA=11:measured_I={j['input_i']}:measured_TP={j['input_tp']}:measured_LRA={j['input_lra']}"
+          f":measured_thresh={j['input_thresh']}:offset={j['target_offset']}:linear=true,alimiter=limit=0.72:level=false")
     subprocess.run([FF, '-v', 'error', '-y', '-i', str(silent), '-i', str(mx), '-af', ln, '-map', '0:v', '-map', '1:a', '-c:v', 'copy',
                     '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-movflags', '+faststart', str(final)], check=True)
     print('wrote', final)
