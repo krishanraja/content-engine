@@ -33,7 +33,9 @@ describe('the Inspiration House block', () => {
       item('made', { facets: link({}), why_here: note, piece_id: '11111111-2222-4333-8444-555555555555' }),
     ] })
     expect(out.fresh.find(c => c.id === 'meme')?.saved_why).toBe(note)
-    expect(out.must_cover).toEqual([{ id: 'meme', what: 'Inspiration card "meme.jpg" you saved with your words', his_words: note, endorsed: null }])
+    expect(out.must_cover[0]).toEqual({ id: 'meme', what: 'Inspiration card "meme.jpg" you saved with your words', his_words: note, endorsed: null })
+    // The style card and the one made into a piece are asks too (Krish, 2026-10-31), marked so each can be accounted.
+    expect(out.must_cover.slice(1).map(m => [m.id, m.state])).toEqual([['style', 'style_only'], ['made', 'piece']])
   })
 
   // Migration 20261118093200 makes every said idea an inspiration card too; Sunday counts the content idea it landed in.
@@ -69,7 +71,8 @@ describe('the Inspiration House block', () => {
     expect(out.study_style.map(c => c.id)).toEqual(['style'])
     expect(out.liked.map(c => c.id)).toEqual(['liked'])
     expect(out.fresh.map(c => c.id)).toEqual(['fresh'])
-    expect(out.must_cover).toEqual([])
+    // Both carry his typed words, so both are asks (Krish, 2026-10-31); the style card may be answered as style.
+    expect(out.must_cover.map(m => [m.id, m.state, m.style_only])).toEqual([['liked', 'open', false], ['style', 'style_only', true]])
   })
 
   it('a reading with no card is research he dropped in; one that became a card is not repeated', () => {
@@ -103,5 +106,58 @@ describe('the Inspiration House block', () => {
     expect(out.claims.map(c => [c.id, c.his_words])).toEqual([['kept', 'an invented line'], ['taken-back', null]])
     // With no list of standing rows, no quote is handed on.
     expect(buildInspiration({ weekStart: WEEK, items: [], claims: [claim('kept', 'e-standing')] }).claims[0]!.his_words).toBeNull()
+  })
+
+  // Krish, 2026-10-31: the Sunday run ignored his asks. Card a397253e carried his typed why and was dismissed on 26 Oct,
+  // so it never reached the run; card 45e0ead0 was routed to study_style though his words named the topic.
+  describe('asks: every card he typed words on', () => {
+    const granny = item('a397253e', { name: 'granny benchmark', dismissed_at: '2026-10-26T09:00:00Z', answered_at: '2026-10-25T20:00:00Z',
+      why_like: 'random headlines make boring ethics topics entertaining', why_like_source: 'typed', transcript: 'the granny benchmark asks',
+      facets: { platform: 'x', link: { url: 'https://x.com/a/status/1' } } })
+    const replaced = item('45e0ead0', { name: 'Anthropic just replaced Git', route: 'study_style', routes: ['study_style'],
+      would_do: 'do this topic: what replacing Git means for a team', answered_at: '2026-10-28T08:00:00Z' })
+
+    it('a dismissed ask is in asks and in must_cover, with his words verbatim', () => {
+      const out = buildInspiration({ weekStart: '2026-11-02', items: [granny] })
+      expect(out.fresh.map(c => c.id)).toEqual([])
+      expect(out.asks).toEqual([expect.objectContaining({ id: 'a397253e', state: 'dismissed', dismissed: true, url: 'https://x.com/a/status/1',
+        heard: 'the granny benchmark asks', his_words: { why_here: null, why_like: 'random headlines make boring ethics topics entertaining', would_do: null } })])
+      expect(out.must_cover).toEqual([expect.objectContaining({ id: 'a397253e', ask: true, state: 'dismissed', style_only: false,
+        his_words: 'random headlines make boring ethics topics entertaining' })])
+    })
+
+    it('a style-only ask is in must_cover flagged style_only, so it can be accounted as style used', () => {
+      const out = buildInspiration({ weekStart: '2026-11-02', items: [replaced] })
+      expect(out.study_style.map(c => c.id)).toEqual(['45e0ead0'])
+      expect(out.asks.map(a => [a.id, a.state, a.style_only])).toEqual([['45e0ead0', 'style_only', true]])
+      expect(out.must_cover).toEqual([expect.objectContaining({ id: '45e0ead0', ask: true, style_only: true, his_words: 'do this topic: what replacing Git means for a team' })])
+    })
+
+    it('asks rank newest words first, mark a card made into a piece, skip guesses and words older than 45 days', () => {
+      const out = buildInspiration({ weekStart: '2026-11-02', items: [
+        granny, replaced,
+        item('made', { why_here: 'make this', piece_id: '11111111-2222-4333-8444-555555555555', created_at: '2026-10-20T09:00:00Z' }),
+        item('guess', { why_like: 'a suggested why', why_like_source: 'picked', answered_at: '2026-10-29T09:00:00Z' }),
+        item('old', { would_do: 'too old', answered_at: '2026-09-01T09:00:00Z', created_at: '2026-09-01T09:00:00Z' }),
+      ] })
+      expect(out.asks.map(a => [a.id, a.state])).toEqual([['45e0ead0', 'style_only'], ['a397253e', 'dismissed'], ['made', 'piece']])
+      expect(out.must_cover.find(m => m.id === 'made')).toEqual(expect.objectContaining({ piece_id: '11111111-2222-4333-8444-555555555555' }))
+      expect(out.counts.asks).toBe(3)
+    })
+
+    it('a routed card already owed keeps its one entry', () => {
+      const out = buildInspiration({ weekStart: '2026-11-02', items: [item('r', { route: 'make_piece', routes: ['make_piece'], would_do: 'go', answered_at: '2026-10-28T08:00:00Z' })] })
+      expect(out.must_cover.map(m => m.id)).toEqual(['r'])
+      expect(out.asks.map(a => a.state)).toEqual(['routed'])
+    })
+  })
+
+  it('recent pieces are the ones scheduled in the 21 days before the week, with the ids they covered', () => {
+    const out = buildInspiration({ weekStart: '2026-11-02', items: [], recentPieces: [
+      { id: 'p1', idea: 'Who pays', state: 'published', lane_slot: 'follow_the_money', scheduled_for: '2026-10-26', meta: { covers: { '2026-10-26': ['card-9'] } } },
+      { id: 'p2', idea: 'Too old', state: 'published', scheduled_for: '2026-10-05', meta: {} },
+      { id: 'p3', idea: 'This week', state: 'drafting', scheduled_for: '2026-11-02', meta: {} },
+    ] })
+    expect(out.recent).toEqual([{ id: 'p1', idea: 'Who pays', state: 'published', scheduled_for: '2026-10-26', series: 'follow_the_money', covers: ['card-9'] }])
   })
 })

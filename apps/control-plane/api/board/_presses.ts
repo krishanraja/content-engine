@@ -190,6 +190,26 @@ export function scoreRow(week: string, id: string, body: Body, now: string) {
 // The table is made by the Wave 2 migration batch, applied after Krish's yes. Until then a Scores press is kept as his
 // board document and the answer says the score waits on the migration, so nothing is lost and nothing crashes.
 const MISSING_TABLE = new Set(['42P01', 'PGRST205'])
+// A column not made yet (content_ideas.title, 20261120090000_content_ideas_title.sql): Postgres and PostgREST codes.
+const MISSING_COLUMN = new Set(['42703', 'PGRST204'])
+
+/** One title of record (Krish, 2026-10-31: the board's titles did not match the article's): his long_title pick on the
+ *  Titles press becomes content_ideas.title, the title the board and every reader show. Until the column's migration
+ *  runs the press stays his board document and the answer says the title waits on it. */
+export async function recordTitle(db: SupabaseClient, body: Body): Promise<'recorded' | 'waits_on_migration' | 'failed' | null> {
+  const picks = isObj(body.picks) ? body.picks : {}
+  const title = typeof picks.long_title === 'string' ? picks.long_title.trim() : ''
+  const piece = typeof body.piece_id === 'string' ? body.piece_id : ''
+  if (!title || !piece) return null
+  try {
+    const written = await db.from('content_ideas').update({ title }).eq('id', piece).select('id')
+    const code = String((written.error as { code?: string } | null)?.code || '')
+    if (written.error) return MISSING_COLUMN.has(code) ? 'waits_on_migration' : 'failed'
+    return written.data?.length ? 'recorded' : 'failed'
+  } catch {
+    return 'failed'
+  }
+}
 
 /** The rejection inbox row for a Reject asset press with his reason, or null when it has none. */
 function inboxRow(week: string, id: string, revision: number | undefined, body: Body, now: string) {
@@ -359,6 +379,12 @@ export async function afterPress(db: SupabaseClient, ctx: { week: string; collec
       return { ...saved, taste: 'failed' }
     }
   }
+  if (collection === 'picks' && body.kind === 'titles') {
+    const title = await recordTitle(db, body)
+    return title ? { ...saved, title } : null
+  }
+  // A note added to an off-day option he already pressed changes nothing it did (the handler keeps the press as saved).
+  if (collection === 'queue' && body.use === 'offday' && body.note_only === true) return null
   if (isRecordedOffday(collection, body)) return offdayRecorded(db, { week, id, body, who, saved }, now, deps)
   if (collection === 'picks' && body.kind === 'approve_scripts' && body.approved === true) {
     let result: Omit<SendResult, 'status'> & { status: SendResult['status'] | 'held' }

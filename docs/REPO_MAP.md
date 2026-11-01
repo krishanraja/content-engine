@@ -951,11 +951,18 @@ The one idea queue (Krish, 2026-10-19: "mark ideas for a queue instead of select
 What Krish's Inspiration House holds, for Sunday's ideas (GET /api/week/options?include=sources, `inspiration`).
 
 - `const INSPO_FRESH_DAYS`
+- `const ASK_DAYS`
+- `const RECENT_DAYS`
 - `const EXCERPT`
 - `interface InspoCard`
 - `function savedWhy(r: Row): string | null`
 - `function card(r: Row): InspoCard`
+- `interface Ask`
+- `interface RecentPiece`
 - `interface InspirationBlock`
+- `function hisWords(r: Row): Ask['his_words'] | null`
+- `function buildAsks(weekStart: string, items: Row[], skip: (r: Row) => boolean = () => false): Ask[]`
+- `function buildRecent(weekStart: string, rows: Row[]): RecentPiece[]`
 - `function buildInspiration(input: { weekStart: string; items: Row[]; reads?: Row[]; moves?: Row[]; claims?: Row[]; quote…`
 
 ### `apps/control-plane/api/_investigation.ts`
@@ -1995,6 +2002,7 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `async function heldBecause(making: unknown, texts: Record<string, string>): Promise<string | null>`
 - `function feelReport(week: string, id: string, body: Body, now: string)`
 - `function scoreRow(week: string, id: string, body: Body, now: string)`
+- `async function recordTitle(db: SupabaseClient, body: Body): Promise<'recorded' | 'waits_on_migration' | 'failed' | null>`
 - `function offdayDate(week: string, day: string): string`
 - `async function placeOffday(db: SupabaseClient, ctx: { week: string; id: string; body: Body; who: string; now: string })…`
 - `async function afterPress(db: SupabaseClient, ctx: { week: string; collection: string; id: string; body: Body; who: str…`
