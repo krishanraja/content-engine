@@ -66,7 +66,7 @@ def clip(name, fmt):
 
 
 def long_cut():
-    ws = words('long'); F = finder(ws); OFF = 0.6
+    ws = words('long'); F = finder(ws); OFF = -2.4   # his take from output 0.0 (Krish, 2026-11-01: rebuild the openings)
     o = lambda x: round(x + OFF, 3)
     f = lambda p, a=0.0: o(F(p, a))
     S = []
@@ -121,13 +121,13 @@ def long_cut():
         (f('tool back'), .2), (f('dashboard', 143), .14), (f('worried'), .22),
         (f('catch', 197), .2), (f('read', 205), .1), (f('nudged'), .16), (f('nudging'), .14),
         (f('which', 238), .24), (f('hand', 243), .12), (f("here's what I do"), .2)]
-    return dict(cut='long', fmt='16x9', W=1920, H=1080, off=OFF, take='.cache/produce/2026-11-04-b63d2507/takes/long-stable.mp4',
+    return dict(cut='long', fmt='16x9', W=1920, H=1080, off=OFF, lead=0.0, take='.cache/produce/2026-11-04-b63d2507/takes/long-stable.mp4',
                 take_in=2.4, take_fps=24, face=[500, 780], dur=dur, voice_end=o(take_end), segs=S, pushes=pushes,
                 words=[[x[0], o(x[1])] for x in ws])
 
 
 def short_cut():
-    ws = words('short'); F = finder(ws); OFF = 2.1
+    ws = words('short'); F = finder(ws); OFF = -0.9
     o = lambda x: round(x + OFF, 3)
     f = lambda p, a=0.0: o(F(p, a))
     S = []
@@ -152,7 +152,7 @@ def short_cut():
     seg(71.78, dur - OFF, 'close', 'close')
     pushes = [(f('early access'), .14), (f('actually change'), .16), (f('break it down'), .12),
               (f('one email'), .16), (f('bills'), .2), (f('use up'), .14), (f("here's what I do"), .18), (f('when you get'), .1)]
-    return dict(cut='short', fmt='9x16', W=1080, H=1920, off=OFF, take='.cache/produce/2026-11-04-b63d2507/takes/short-stable.mp4',
+    return dict(cut='short', fmt='9x16', W=1080, H=1920, off=OFF, lead=0.0, take='.cache/produce/2026-11-04-b63d2507/takes/short-stable.mp4',
                 take_in=0.9, take_fps=24, face=[670, 790], dur=dur, voice_end=o(take_end), segs=S, pushes=pushes,
                 words=[[x[0], o(x[1])] for x in ws])
 
