@@ -1974,6 +1974,15 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 
 - `function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: PressDeps = {})`
 
+### `apps/control-plane/api/board/_offdayRevise.ts`
+
+A revised off-day card when Krish presses Improve (Ruling, Krish, 2026-11-01, locking the off-day mock: Improve
+
+- `const OFFDAY_REVISE_EVENT`
+- `const OFFDAY_REVISE_REPO`
+- `type ReviseDispatch`
+- `async function dispatchOffdayRevise( payload: { week: string; option: string }, env: Record<string, string | undefined>…`
+
 ### `apps/control-plane/api/board/_posted.ts`
 
 - `type PostedDay = keyof typeof DAY_OFFSET`
@@ -3050,6 +3059,15 @@ The content-watcher queue: what the home computers may claim, report and read, d
 ### `apps/control-plane/api/watch/upload.ts`
 
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
+
+### `apps/control-plane/api/week/_offdayVerdicts.ts`
+
+His verdicts on past off-day options, for Sunday's gather (GET /api/week/options?include=sources, `offday_verdicts`).
+
+- `const OFFDAY_WEEKS`
+- `interface OffdayVerdict`
+- `function buildOffdayVerdicts(rows: Row[]): { verdicts: OffdayVerdict[]; counts: Record<string, number> }`
+- `function offdayWeeksBefore(week: string, n = OFFDAY_WEEKS): string[]`
 
 ### `apps/control-plane/api/week/options.ts`
 

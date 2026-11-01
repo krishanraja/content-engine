@@ -1508,7 +1508,10 @@ def off_rich(o, problems, label):
     recommended, revised and a returned mock. Each is optional; a wrong shape is a problem, never dropped quietly."""
     row = {}
     if o.get('hook') is not None:
-        row['hook'] = _line(o['hook'], 140) or problems.append(f'{label}: hook is one line') or None
+        if not _line(o['hook'], 10_000) or len(' '.join(str(o['hook']).split())) > 140:
+            problems.append(f'{label}: hook is one line of up to 140 characters')
+        else:
+            row['hook'] = _line(o['hook'], 140)
     pitch = o.get('pitch')
     if pitch is not None:
         if not isinstance(pitch, dict) or set(pitch) - set(OFF_PITCH) or not any(_line(pitch.get(k), 600) for k in OFF_PITCH):
@@ -1524,8 +1527,8 @@ def off_rich(o, problems, label):
             row['inspiration'] = {'label': _line(ins['label'], 300), 'url': url or None, 'saved': _line(ins.get('saved'), 40)}
     learned = o.get('learned_from')
     if learned is not None:
-        if not isinstance(learned, list) or len(learned) > 3 or not all(_line(x, 400) for x in learned):
-            problems.append(f'{label}: learned_from is up to three of his words that shaped it')
+        if not isinstance(learned, list) or len(learned) > 3 or not all(_line(x, 10_000) and len(' '.join(x.split())) <= 400 for x in learned):
+            problems.append(f'{label}: learned_from is up to three of his words that shaped it, each up to 400 characters, never cut')
         else:
             row['learned_from'] = [_line(x, 400) for x in learned]
     d = o.get('direction')
@@ -1865,7 +1868,9 @@ def off_option_card(monday, key, when, o):
         mock = (f'<div class="mockback"><img src="{E(m["url"])}" alt="The mock Growth made" loading="lazy">'
                 f'<div><p class="row"><span class="id-why-k">Mock back</span> {E(m.get("note") or "Made in the brand kit from the direction you approved.")}</p>'
                 + off_press_row(did, 'mock', 'The mock') + '</div></div>')
-    shown = {'hook': o.get('hook') or off_title(o), 'format': o['format'], **({'pitch': pitch} if pitch else {})}
+    # What his Approve on the idea hands Growth: exactly the object its hash is taken over (side_sha), the copy and the
+    # cards included, so the words he approved are the words that get made.
+    shown = {'copy': o.get('copy'), 'hook': o.get('hook'), 'pitch': o.get('pitch'), 'cards': o.get('cards')}
     return (f'<article class="off-card opt" id="{E(did)}" data-offday="{E(did)}" data-off-day="{key}" data-option-id="{E(o["id"])}" '
             f'data-format="{E(o["format"])}" data-source="{E(o["source"])}" data-copy-sha256="{o["copy_sha256"]}" '
             f'data-idea-sha256="{o["idea_sha256"]}" data-direction-sha256="{o.get("direction_sha256", "") if d else ""}" '
@@ -4939,7 +4944,8 @@ def _growth_offday_checks(check, week, ideas):
           revised['tue'][0]['direction_sha256'] != six['tue'][0]['direction_sha256'] and revised['tue'][0]['idea_sha256'] == six['tue'][0]['idea_sha256']
           and 'Revised from your words on the direction: "warmer please"' in board(week, ideas=ideas, offdays=revised)[0])
     for bad, want in ((dict(rich, direction={'tone': 'no look'}), 'with its look'), (dict(rich, inspiration={'label': 'x', 'url': 'http://x'}), 'inspiration'),
-                      (dict(rich, pitch={'other': 'x'}), 'pitch'), (dict(rich, mock={'url': 'ftp://x'}), 'mock')):
+                      (dict(rich, pitch={'other': 'x'}), 'pitch'), (dict(rich, mock={'url': 'ftp://x'}), 'mock'),
+                      (dict(rich, hook='x' * 141), 'hook'), (dict(rich, learned_from=['y' * 401]), 'never cut')):
         try:
             read_offdays({'tue': [bad, plain]})
             check(f'off-day option: a bad {want} is refused', False)

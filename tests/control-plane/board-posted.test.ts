@@ -230,6 +230,7 @@ describe('GET /api/board/<Monday>/pieces', () => {
       { doc_id: 'off-tue-prices', body: { use: 'offday', day: 'tue', option_id: 'prices', format: 'Carousel', idea: side('approve', { hook: 'Three prices' }), direction: side('approve', { look: 'Dark ground' }) } },
       { doc_id: 'off-tue-puppy', body: { use: 'offday', day: 'tue', option_id: 'puppy', format: 'Short', idea: side('approve', { hook: 'Puppy' }), direction: side('improve', null, 'a real puppy') } },
       { doc_id: 'off-thu-plain', body: { use: 'offday', day: 'thu', option_id: 'plain', format: 'Meme', idea: side('approve', { hook: 'Plain' }) } },
+      { doc_id: 'off-thu-half', body: { use: 'offday', day: 'thu', option_id: 'half', format: 'Meme', idea: side('approve', { hook: 'Half' }), direction: { verdict: null, words: null, sha256: sha, at: null } } },
       { doc_id: 'off-sat-no', body: { use: 'offday', day: 'sat', option_id: 'no', idea: side('reject', null, 'done to death') } },
       { doc_id: 'off-sun-old', body: { use: 'offday', day: 'sun', approved: true, copy_sha256: sha } },
     ]

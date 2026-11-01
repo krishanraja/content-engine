@@ -208,7 +208,7 @@ function offdayVerdicts(id: string, body: Record<string, unknown>): boolean {
     if ((verdict === 'improve' || verdict === 'reject') && !words) return false
     if (v.words !== null && v.words !== undefined && !line(v.words, 2000)) return false
     if (!SHA256.test(String(v.sha256))) return false
-    if ('shown' in v && v.shown !== null && !(object(v.shown) && JSON.stringify(v.shown).length <= 8000)) return false
+    if ('shown' in v && v.shown !== null && !(object(v.shown) && JSON.stringify(v.shown).length <= 16000)) return false
     return true
   })
 }

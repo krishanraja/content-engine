@@ -61,17 +61,32 @@ describe('what the server does with his words', () => {
   }
   it('asks for a revised card on a new Improve, and not again for the same words', async () => {
     const asked: unknown[] = []
-    const revise = async (p: { week: string; option: string; side: string; words: string }) => { asked.push(p); return { sent: true as const } }
+    const revise = async (p: { week: string; option: string }) => { asked.push(p); return { sent: true as const } }
     const body = record({ idea: side('approve'), direction: side('improve', 'warmer, a real puppy') })
     const ctx = { week: WEEK, collection: 'queue', id: 'off-tue-prices', body, who: 'Krish', saved: { ok: true, revision: 2 } }
     const first = fakeDb(true)
     const out = await afterPress(first.db as never, ctx, { now: () => 'now', revise })
     expect(out).toMatchObject({ taste: { direction: 'filed' }, revise: { direction: { sent: true } } })
-    expect(asked).toEqual([{ week: WEEK, option: 'off-tue-prices', side: 'direction', words: 'warmer, a real puppy' }])
+    // The payload names the week and the option only: the run reads his words from his own record, never from here.
+    expect(asked).toEqual([{ week: WEEK, option: 'off-tue-prices' }])
     const second = fakeDb(false)
     const repeat = await afterPress(second.db as never, ctx, { now: () => 'now', revise })
     expect(repeat).toMatchObject({ revise: { direction: { sent: false, reason: 'already_asked' } } })
     expect(asked).toHaveLength(1)
+  })
+  it('files an Improve on the mock without starting a run: Growth remakes the mock from his words', async () => {
+    const asked: unknown[] = []
+    const revise = async () => { asked.push(1); return { sent: true as const } }
+    const out = await afterPress(fakeDb(true).db as never, { week: WEEK, collection: 'queue', id: 'off-tue-prices',
+      body: record({ idea: side('approve'), direction: side('approve'), mock: side('improve', 'brighter yellow') }), who: 'Krish', saved: { ok: true } }, { revise })
+    expect(out).toMatchObject({ taste: { mock: 'filed' } })
+    expect(out).not.toHaveProperty('revise')
+    expect(asked).toHaveLength(0)
+  })
+  it('takes an unpressed side as null, and a large direction as shown', () => {
+    expect(validBody('queue', 'off-tue-prices', record({ idea: side('approve'), direction: side(null) }))).toBe(true)
+    const frames = Array.from({ length: 12 }, () => ({ words: 'w'.repeat(200), picture: 'p'.repeat(300) }))
+    expect(validBody('queue', 'off-tue-prices', record({ direction: side('approve', null, { shown: { look: 'l'.repeat(600), frames } }) }))).toBe(true)
   })
   it('files a Reject without asking for a revision, and does nothing for a plain Approve', async () => {
     const asked: unknown[] = []
@@ -86,7 +101,7 @@ describe('what the server does with his words', () => {
 
 describe('the revise dispatch', () => {
   it('sends nothing without a token, and one repository_dispatch with one', async () => {
-    const payload = { week: WEEK, option: 'off-tue-prices', side: 'direction', words: 'warmer' }
+    const payload = { week: WEEK, option: 'off-tue-prices' }
     expect(await dispatchOffdayRevise(payload, {})).toEqual({ sent: false, reason: 'not_configured' })
     const calls: Array<{ url: string; body: string }> = []
     const fetcher = async (url: string, init: { body: string }) => { calls.push({ url, body: init.body }); return { status: 204, text: async () => '' } }
@@ -116,5 +131,14 @@ describe('Sunday reads his off-day verdicts back', async () => {
   })
   it('reads the eight weeks before the one being planned', () => {
     expect(offdayWeeksBefore('2026-11-09')).toEqual(['2026-11-02', '2026-10-26', '2026-10-19', '2026-10-12', '2026-10-05', '2026-09-28', '2026-09-21', '2026-09-14'])
+  })
+})
+
+describe('which sides wait on a revision', () => {
+  it('passes its own self-test: only his improve on a side whose hash is current, never twice', async () => {
+    const { spawnSync } = await import('node:child_process')
+    const run = spawnSync('python3', ['scripts/post-pack/offday_pending.py', '--self-test'], { encoding: 'utf8' })
+    expect(run.status, run.stderr).toBe(0)
+    expect(run.stdout).toContain('offday_pending self-test passed')
   })
 })

@@ -1,7 +1,9 @@
 // A revised off-day card when Krish presses Improve (Ruling, Krish, 2026-11-01, locking the off-day mock: Improve
 // sends his words back "and a revised card returns in its place"). The board asks GitHub to run
-// .github/workflows/offday-revise.yml (a repository_dispatch of type `offday-revise`), where Claude Code revises that
-// one option on his subscription from his exact words and rebuilds the week's board. That job has no schedule: this
+// .github/workflows/offday-revise.yml (a repository_dispatch of type `offday-revise`), where Claude Code revises every
+// side still waiting on his Improve, on his subscription, reading his words from his own records on the board (never
+// from this payload, which names only the week and the option). The revised cards go live at the board's next build.
+// That job has no schedule: this
 // dispatch, or a press of Run workflow, is the only way it starts (Ruling, Krish, 2026-10-29: "I want zero Claude
 // routines").
 //
@@ -16,7 +18,7 @@ export type ReviseDispatch = { sent: true } | { sent: false; reason: 'not_config
 type Fetcher = (url: string, init: { method: string; headers: Record<string, string>; body: string }) => Promise<{ status: number; text(): Promise<string> }>
 
 export async function dispatchOffdayRevise(
-  payload: { week: string; option: string; side: string; words: string },
+  payload: { week: string; option: string },
   env: Record<string, string | undefined> = process.env,
   fetcher: Fetcher = fetch as unknown as Fetcher,
 ): Promise<ReviseDispatch> {

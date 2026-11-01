@@ -34,7 +34,8 @@ three pieces (an off-day option that sets one up or carries it on), `cues`,
 `must_cover` (`his_idea` and links saved with his words, below), and
 `offday_verdicts`, his Approve, Improve and Reject on the last eight weeks'
 off-day options, his words verbatim. Follow every Improve note; never offer
-again what a Reject reason rules out; make more of what he approved.
+an option he rejected again; weigh each Reject reason as a cue (it becomes a
+standing rule only when he approves one); make more of what he approved.
 
 **Each option** goes into ideas.json `offdays`, `{"tue": [...], "thu":
 [...], "sat": [...], "sun": [...]}`:
@@ -71,24 +72,28 @@ reason); the idea also takes Next week. They are saved in
 `queue/off-<day>-<option>`, each side `{verdict, words, sha256}`, bound to
 what that side showed him. His Improve and Reject words go to his taste ledger
 by themselves (`api/board/_presses.ts`, `offdayReports`) and come back next
-Sunday in `offday_verdicts`. An Improve also starts one revision run
-(`.github/workflows/offday-revise.yml`, below). Growth reads each option whose
+Sunday in `offday_verdicts`. An Improve on the idea or the direction also
+starts a revision run (`.github/workflows/offday-revise.yml`, below), whose
+revised card goes live at the board's next build. Growth reads each option whose
 idea and direction he approved (`GET /api/board/<Monday>/pieces`, `offdays`),
 makes the mock in the brand kit from the direction exactly as shown, and
 returns it on the option as `mock` for his final yes; this repository cuts any
 snackable clip.
 
-**Revising one option** (the revision run, or a session asked to). Read his
-words on that side from the option's record (`python3
-scripts/post-pack/board_web.py read <Monday> queue`, the document
-`off-<day>-<option>`, only if `updated_by` is Krish). Change only that side of
-that one option in `docs/plans/<Monday>-week/ideas.json` `offdays` to answer
-his words, keep its `id`, and set `"revised": {"side": "<idea, direction or
-mock>", "words": "<his words, verbatim>"}`. A revised mock is Growth's to
-remake, so for the mock side change nothing and say so. Run the same checks as
-above, then rebuild and publish the board with the same inputs as the last
-build (step 7). The side's hash changes with its words, so his old press reads
-as answered and he judges the new card.
+**Revising one option** (the revision run, or a session asked to). What waits
+is what `python3 scripts/post-pack/offday_pending.py
+docs/plans/<Monday>-week/ideas.json <queue.json>` lists, from `python3
+scripts/post-pack/board_web.py read <Monday> queue` saved as `queue.json`:
+each side whose record Krish saved says improve and whose hash is still that
+side's current hash. Revise only those. For each, change only that side of
+that option in `docs/plans/<Monday>-week/ideas.json` `offdays` to answer his
+words, keep its `id`, and set `"revised": {"side": "<idea or direction>",
+"words": "<his words, verbatim>"}`. Run the same checks as above and check
+the file builds (`week_board.py --ideas`, a local build). The side's hash
+changes with its words, so his old press reads as answered and he judges the
+new card when the board is next built from these ideas; a side already
+revised is never revised again from the same words. The revision run does not
+publish the board. A mock is Growth's to remake from his words.
 
 **An off-day piece he records** (Ruling, Krish, 2026-10-29: an idea he drops in
 "should appear on my Sunday board for either Tuesday, Thursday, Saturday, or

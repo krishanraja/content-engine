@@ -409,8 +409,10 @@ export async function afterPress(db: SupabaseClient, ctx: { week: string; collec
     return title ? { ...saved, title } : null
   }
   // His verdicts on an off-day option (Ruling, Krish, 2026-11-01): each Improve or Reject goes to his taste ledger in
-  // his own words, once (the same words on the same side file nothing twice), and an Improve not filed before asks
-  // GitHub for a revised card.
+  // his own words, once (the same words on the same side file nothing twice), and an Improve on the idea or the
+  // direction not filed before asks GitHub for a revised card. A mock is Growth's to remake from his words (readPieces
+  // hands them over), so it starts no run. A run revises only sides whose hash is still current
+  // (scripts/post-pack/offday_pending.py), so a repeated ask never revises a side twice.
   if (collection === 'queue' && body.use === 'offday' && ['idea', 'direction', 'mock'].some(k => k in body)) {
     const rows = offdayReports(week, id, body, now)
     if (!rows.length) return null
@@ -427,9 +429,9 @@ export async function afterPress(db: SupabaseClient, ctx: { week: string; collec
       } catch {
         taste[side] = 'failed'
       }
-      if (row.meta.verdict === 'improve') {
+      if (row.meta.verdict === 'improve' && side !== 'mock') {
         revise[side] = fresh || taste[side] !== 'filed'
-          ? await (deps.revise ?? dispatchOffdayRevise)({ week, option: id, side, words: row.body })
+          ? await (deps.revise ?? dispatchOffdayRevise)({ week, option: id })
           : { sent: false, reason: 'already_asked' }
       }
     }

@@ -1078,7 +1078,7 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
       if (v && v.verdict === "approve") parts.push(name[k] + " approved");
       else if (v && v.verdict === "next_week") parts.push("Parked for next week");
       else if (v && v.verdict === "reject") { parts.push(name[k] + " rejected: \"" + v.words + "\". Kept for next Sunday"); tone = tone || "bad" }
-      else if (v && v.verdict === "improve") { parts.push(name[k] + ": your note is kept. A revised " + k + " comes back on this card"); tone = "wait" }
+      else if (v && v.verdict === "improve") { parts.push(name[k] + ": your note is kept. " + (k === "mock" ? "Growth remakes the mock from it" : "A revised " + k + " comes back on this card at the board's next build")); tone = "wait" }
       else if (was && was.verdict === "improve") parts.push(name[k] + " revised from your note. Judge it again");
     }
     return [parts.length ? parts.join(". ") + "." : "", tone];
@@ -1133,7 +1133,9 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
     const id = c.dataset.offday, prev = saved[id] || {}, at = new Date().toISOString();
     const out = { pick: id, use: "offday", day: c.dataset.offDay, week: c.dataset.week, option_id: c.dataset.optionId,
       format: c.dataset.format, source: c.dataset.source, copy_sha256: c.dataset.copySha256, at };
-    for (const s of SIDES) if (prev[s]) out[s] = prev[s];
+    // Every side the card has is in the record, unpressed ones as null, so no reader takes a side he never judged as
+    // approved (Growth counts an option only when the idea and its direction are both approved).
+    for (const s of SIDES) if (has(c, s)) out[s] = prev[s] || { verdict: null, words: null, sha256: sha(c, s), at };
     const v = { verdict, words: words || null, sha256: sha(c, k), at };
     if (verdict === "approve" && k === "idea") v.shown = json(c.dataset.shown);
     if (verdict === "approve" && k === "direction") v.shown = json(c.dataset.direction);
