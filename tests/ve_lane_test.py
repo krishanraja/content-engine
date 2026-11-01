@@ -251,6 +251,32 @@ class BuildPaths(unittest.TestCase):
         self.assertEqual(seen['cwd'], expected)
 
 
+class NodeModulesLink(unittest.TestCase):
+    def test_the_worktree_link_is_never_codex_work(self):
+        # 2026-11-01: the fourth live card was marked "outside write_allow: node_modules" and the link was committed.
+        import os, subprocess
+        from velib import cards
+        with tempfile.TemporaryDirectory() as temp, tempfile.TemporaryDirectory() as mods:
+            wt = Path(temp)
+            git = ['git', '-C', temp, '-c', 'user.name=t', '-c', 'user.email=t@t']
+            subprocess.run(['git', 'init', '-q', temp], check=True)
+            (wt / 'a.txt').write_text('a', encoding='utf-8')
+            subprocess.run(git + ['add', '-A'], check=True); subprocess.run(git + ['commit', '-q', '-m', 'base'], check=True)
+            base = subprocess.run(['git', '-C', temp, 'rev-parse', 'HEAD'], capture_output=True, text=True).stdout.strip()
+            os.symlink(mods, wt / 'node_modules')
+            (wt / 'out').mkdir(); (wt / 'out' / 'x.ts').write_text('x', encoding='utf-8')
+            self.assertEqual(lane.changed_files(wt, base), ['out/x.ts'])
+            card = wt.parent / (wt.name + '-card.md')
+            card.write_text('---\ncard: c\nwrite_allow: [out/*]\n---\n## Acceptance\n## Return\n', encoding='utf-8')
+            problems = [p for p in cards.verify(card, wt) if p.startswith('outside write_allow')]
+            self.assertEqual(problems, [])
+            subprocess.run(['git', '-C', temp, 'remote', 'add', 'origin', temp + '/.git'], check=True)
+            lane.publish_branch(wt, 'codex/c', 'codex: c')
+            files = subprocess.run(['git', '-C', temp, 'ls-tree', '-r', '--name-only', 'HEAD'], capture_output=True, text=True).stdout.split()
+            self.assertNotIn('node_modules', files)
+            self.assertIn('out/x.ts', files)
+
+
 class Routes(unittest.TestCase):
     def test_an_explicit_wsl_route_wins_over_a_companion_here(self):
         from unittest.mock import patch
