@@ -124,7 +124,8 @@ def long():
     S.append(seg(full, close, 'brand')); P += [(full, .16), (A('makeyourmindup.ai.', 283), .22)]
     shakes = [[1.2, 14], [26.62, 10], [A('first draft itself', 118) + 0.1, 9], [A('20 tellers to 13', 66) + 0.9, 6]]
     take_end = close - off + 0.25
-    return dict(cut='long', off=off, take_in=2.4, capFrom=2.4, closeAt=close, dur=round(close + 4.4, 2), take_end=round(take_end, 2),
+    url = round(A('makeyourmindup.ai.', 283) - 0.4, 2)
+    return dict(cut='long', url=url, off=off, take_in=2.4, capFrom=2.4, closeAt=close, dur=round(close + 4.4, 2), take_end=round(take_end, 2),
                 segs=S, push=P, shakes=shakes, dress=[])
 
 def short():
@@ -161,7 +162,8 @@ def short():
     close = round(A('makeyourmindup.ai.', 61, end=True) + 0.45, 2)
     S.append(seg(full, close, 'face')); P += [(full, .14), (A('makeyourmindup.ai.', 61), .2)]
     shakes = [[1.2, 14], [A('first draft itself', 28) + 0.1, 9]]
-    return dict(cut='short', off=off, take_in=0.8, capFrom=0.8, closeAt=close, dur=round(close + 4.4, 2), take_end=round(close - off + 0.2, 2),
+    url = round(A('makeyourmindup.ai.', 61) - 0.4, 2)
+    return dict(cut='short', url=url, off=off, take_in=0.8, capFrom=0.8, closeAt=close, dur=round(close + 4.4, 2), take_end=round(close - off + 0.2, 2),
                 segs=S, push=P, shakes=shakes, dress=[[3.0, q - 0.3], [full, close - 0.75]])
 
 for T in (long(), short()):
