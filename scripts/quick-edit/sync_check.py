@@ -43,6 +43,46 @@ def inspect(path):
     return min((24, 25, 30, 50, 60), key=lambda rate: abs(rate - a / b)), data
 
 
+_FINDER = None
+
+
+def face_detector():
+    """(name, find) where find(frame_bgr) gives the largest face as (x, y, w, h) or None. S3FD, the detector the pinned
+    SyncNet checkout ships (its weights pinned by sha in config/lipsync.json), when it loads; OpenCV's Haar cascade
+    only when it cannot. Haar misses a face under a cap and glasses (Wednesday 4 Nov's cuts: 20 to 29% of frames),
+    which is the instrument failing, not the cut. Thresholds stay where they are: this only changes who finds the face."""
+    global _FINDER
+    if _FINDER is not None:
+        return _FINDER
+    import cv2
+    try:
+        import numpy as np
+        cfg = json.loads((Path(__file__).resolve().parents[2] / 'config/lipsync.json').read_text(encoding='utf-8'))
+        root = next((Path(p) for p in sys.path if (Path(p) / 'detectors/s3fd/__init__.py').is_file()), None)
+        weights = root / 'detectors/s3fd/weights/sfd_face.pth' if root else None
+        if not weights or not weights.is_file() or sha256(weights) != cfg.get('detector_sha256'):
+            raise RuntimeError('S3FD weights missing or not the pinned bytes')
+        import detectors.s3fd as s3fd
+        s3fd.PATH_WEIGHT = str(weights)
+        net = s3fd.S3FD(device='cpu')
+
+        def find(frame):
+            boxes = net.detect_faces(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB), conf_th=0.9, scales=[1])
+            if not len(boxes):
+                return None
+            x1, y1, x2, y2, _ = max(boxes, key=lambda b: (b[2] - b[0]) * (b[3] - b[1]))
+            return np.array([x1, y1, x2 - x1, y2 - y1])
+        _FINDER = ('s3fd', find)
+    except Exception as error:  # noqa: BLE001 - any failure to load S3FD falls back to the cascade, and says so
+        cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+
+        def find(frame):
+            found = cascade.detectMultiScale(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY), scaleFactor=1.1, minNeighbors=5, minSize=(35, 35))
+            return max(found, key=lambda box: box[2]*box[3]) if len(found) else None
+        _FINDER = (f'haar (S3FD did not load: {str(error)[:120]})', find)
+    return _FINDER
+
+
 def extract(path, starts, seconds, out):
     import cv2
     import numpy as np
@@ -50,28 +90,39 @@ def extract(path, starts, seconds, out):
     windows = [(round(s * fps), round((s + seconds) * fps)) for s in starts]
     video = next(s for s in metadata['streams'] if s['codec_type'] == 'video')
     width, height = 480, round(video['height'] * 480 / video['width'] / 2) * 2
+    # Windows may overlap (lipsync_gate spreads them so no two are further apart than its gap), and a select
+    # filter emits a shared frame once: decode the union of their frames in one sequential pass and serve each
+    # window from a rolling cache, so no window reads past the end. Still no timestamp seeks.
+    needed = sorted({n for a, b in windows for n in range(a, b)})
     select = '+'.join(f'between(n,{a},{b-1})' for a, b in windows)
     command = ['ffmpeg', '-v', 'error', '-threads', '2', '-i', str(path), '-an', '-vf',
                f"select='{select}',scale={width}:{height}", '-fps_mode', 'passthrough',
                '-pix_fmt', 'bgr24', '-f', 'rawvideo', 'pipe:1']
     decoder = subprocess.Popen(command, stdout=subprocess.PIPE)
-    detector = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-    clips, detection_rates = [], []
-    for a, b in windows:
-        frames, boxes = [], []
-        for _ in range(b-a):
-            raw = decoder.stdout.read(width * height * 3)
-            if len(raw) != width * height * 3:
+    _, find_face = face_detector()
+    stream, cache = iter(needed), {}
+
+    def frame_at(n):
+        while n not in cache:
+            m = next(stream, None)
+            raw = decoder.stdout.read(width * height * 3) if m is not None else b''
+            if m is None or len(raw) != width * height * 3:
                 raise RuntimeError('Sequential decode ended before all diagnostic windows')
             frame = np.frombuffer(raw, np.uint8).reshape(height, width, 3)
-            found = detector.detectMultiScale(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY),
-                                             scaleFactor=1.1, minNeighbors=5, minSize=(35, 35))
-            boxes.append(max(found, key=lambda box: box[2]*box[3]) if len(found) else None)
-            frames.append(frame)
+            cache[m] = (frame, find_face(frame))
+        return cache[n]
+
+    order = sorted(range(len(windows)), key=lambda k: windows[k])
+    clip_of, rate_of = {}, {}
+    for k in order:
+        a, b = windows[k]
+        for n in [n for n in cache if n < a]:
+            del cache[n]
+        frames, boxes = zip(*[frame_at(n) for n in range(a, b)])
         good = [box for box in boxes if box is not None]
-        detection_rates.append(len(good) / len(boxes))
+        rate_of[k] = len(good) / len(boxes)
         if not good:
-            clips.append(None)
+            clip_of[k] = None
             continue
         # Match the upstream face crop geometry; a stable crop avoids jitter.
         x, y, w, h = np.median(good, axis=0)
@@ -86,8 +137,10 @@ def extract(path, starts, seconds, out):
             crops.append(cv2.resize(crop, (224,224)))
         # One conversion to SyncNet's 25 Hz analysis clock, from frame indices.
         indices = np.minimum((np.arange(round(seconds*25))*fps/25).astype(int), len(crops)-1)
-        clips.append(np.stack(crops)[indices])
+        clip_of[k] = np.stack(crops)[indices]
         print(f'extracted frame window {a}:{b}, face detection {len(good)/len(boxes):.1%}', flush=True)
+    clips = [clip_of[k] for k in range(len(windows))]
+    detection_rates = [rate_of[k] for k in range(len(windows))]
     decoder.stdout.close()
     if decoder.wait() != 0:
         raise RuntimeError('Sequential video decoder failed')

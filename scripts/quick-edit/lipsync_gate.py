@@ -236,7 +236,11 @@ def check_cut(video, spans, covers, cfg=None, scorer=None, env=None):
             return not_run(why)
         scorer = SyncNetScorer(*model_paths(cfg, env))
     try:
-        return gate(video, spans, covers, scorer, cfg)
+        result = gate(video, spans, covers, scorer, cfg)
+        if getattr(scorer, 'name', '') == 'syncnet':
+            import sync_check
+            result['face_detector'] = sync_check.face_detector()[0]
+        return result
     except Exception as error:  # a scorer that breaks is never a pass
         return not_run(f'the scorer failed: {str(error)[-300:]}')
 
