@@ -1486,11 +1486,103 @@ MIX_DAYS = (('mon', 'Monday', 0), ('tue', 'Tuesday', 1), ('wed', 'Wednesday', 2)
 RECORDED_STYLES = {'to_camera': 'Said to camera', 'voiceover': 'Voiceover with motion graphics'}
 RECORDED_WORDS = (160, 195)  # a 90-second cut that finishes under 89 seconds (story_check's short cut)
 SERIES_LABELS = {slug: label for *_, slug, label in DAYS}
+# Each off day is triaged like Monday, Wednesday and Friday (Ruling, Krish, 2026-11-01, locking the off-day mock in
+# docs/handovers/board-mocks-2026-11-01-offdays/: "Mock looks right, lock it and build it"). He asked for it: "I need
+# Ideas and a suggested creative direction to approve or improve or flat out reject for a reason, and the machine can
+# learn over time". So a day holds up to six options, each an idea (its hook and pitch, the saved post that inspired
+# it, the words of his that shaped it) and a suggested creative direction (the look, the frames, the tone, the kit),
+# and each side takes Approve, Improve (his words, then a revised card) or Reject (his reason).
+OFF_OPTIONS = (2, 6)
+OFF_FRAMES = (1, 12)
+OFF_PITCH = ('see', 'lands', 'why_now', 'share')
+OFF_DIRECTION = ('look', 'format', 'tone', 'kit', 'inspo_url')
+OFF_SIDES = ('idea', 'direction', 'mock')
+
+
+def _line(v, cap):
+    return ' '.join(str(v).split())[:cap] if isinstance(v, str) and v.strip() else None
+
+
+def off_rich(o, problems, label):
+    """The rich fields of an off-day option, checked: hook, pitch, inspiration, learned_from, direction, ties_to,
+    recommended, revised and a returned mock. Each is optional; a wrong shape is a problem, never dropped quietly."""
+    row = {}
+    if o.get('hook') is not None:
+        if not _line(o['hook'], 10_000) or len(' '.join(str(o['hook']).split())) > 140:
+            problems.append(f'{label}: hook is one line of up to 140 characters')
+        else:
+            row['hook'] = _line(o['hook'], 140)
+    pitch = o.get('pitch')
+    if pitch is not None:
+        if not isinstance(pitch, dict) or set(pitch) - set(OFF_PITCH) or not any(_line(pitch.get(k), 600) for k in OFF_PITCH):
+            problems.append(f'{label}: pitch is {{{", ".join(OFF_PITCH)}}}, each one line')
+        else:
+            row['pitch'] = {k: _line(pitch.get(k), 600) for k in OFF_PITCH if _line(pitch.get(k), 600)}
+    ins = o.get('inspiration')
+    if ins is not None:
+        url = ins.get('url') if isinstance(ins, dict) else None
+        if not isinstance(ins, dict) or not _line(ins.get('label'), 300) or (url and not str(url).startswith('https://')):
+            problems.append(f'{label}: inspiration is {{"label", "url" (https), "saved" (when he saved it)}}')
+        else:
+            row['inspiration'] = {'label': _line(ins['label'], 300), 'url': url or None, 'saved': _line(ins.get('saved'), 40)}
+    learned = o.get('learned_from')
+    if learned is not None:
+        if not isinstance(learned, list) or len(learned) > 3 or not all(_line(x, 10_000) and len(' '.join(x.split())) <= 400 for x in learned):
+            problems.append(f'{label}: learned_from is up to three of his words that shaped it, each up to 400 characters, never cut')
+        else:
+            row['learned_from'] = [_line(x, 400) for x in learned]
+    d = o.get('direction')
+    if d is not None:
+        frames = d.get('frames') if isinstance(d, dict) else None
+        bad = not isinstance(d, dict) or set(d) - set(OFF_DIRECTION) - {'frames'} or not _line(d.get('look'), 600)
+        if not bad and frames is not None:
+            bad = not isinstance(frames, list) or not OFF_FRAMES[0] <= len(frames) <= OFF_FRAMES[1] or not all(
+                isinstance(f, dict) and not set(f) - {'words', 'picture'} and _line(f.get('words'), 200) and _line(f.get('picture'), 300) for f in frames)
+        if not bad and d.get('inspo_url') and not str(d['inspo_url']).startswith('https://'):
+            bad = True
+        if bad:
+            problems.append(f'{label}: direction is {{"look", "format", "frames": [{{"words", "picture"}}], "tone", "kit", "inspo_url"}} with its look')
+        else:
+            row['direction'] = {k: _line(d.get(k), 600) for k in OFF_DIRECTION if _line(d.get(k), 600)}
+            if frames:
+                row['direction']['frames'] = [{'words': _line(f['words'], 200), 'picture': _line(f['picture'], 300)} for f in frames]
+    if o.get('ties_to') is not None:
+        row['ties_to'] = _line(o['ties_to'], 80) or problems.append(f'{label}: ties_to is one line') or None
+    if o.get('recommended') is not None:
+        if not isinstance(o['recommended'], bool):
+            problems.append(f'{label}: recommended is true or false')
+        elif o['recommended']:
+            row['recommended'] = True
+    rev = o.get('revised')
+    if rev is not None:
+        if not isinstance(rev, dict) or rev.get('side') not in ('idea', 'direction', 'mock') or not _line(rev.get('words'), 2000):
+            problems.append(f'{label}: revised is {{"side": idea, direction or mock, "words": his words it answers}}')
+        else:
+            row['revised'] = {'side': rev['side'], 'words': _line(rev['words'], 2000)}
+    mock = o.get('mock')
+    if mock is not None:
+        if not isinstance(mock, dict) or not str(mock.get('url') or '').startswith('https://'):
+            problems.append(f'{label}: mock is {{"url" (https, the image Growth made), "note"}}')
+        else:
+            row['mock'] = {'url': mock['url'], 'note': _line(mock.get('note'), 300)}
+    return {k: v for k, v in row.items() if v is not None}
+
+
+def side_sha(o, side):
+    """The sha256 his press on one side of an option is bound to: what that side showed him. A revision changes it,
+    so an old press reads as answered rather than as a press on the new words."""
+    if side == 'idea':
+        shown = {'copy': o.get('copy'), 'hook': o.get('hook'), 'pitch': o.get('pitch'), 'cards': o.get('cards')}
+    elif side == 'direction':
+        shown = o.get('direction') or {}
+    else:
+        shown = o.get('mock') or {}
+    return hashlib.sha256(json.dumps(shown, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
 
 
 def read_offdays(data, where='ideas.json offdays'):
     """{day: [{'id', 'format', 'source', 'url', 'copy', 'copy_sha256'}]}, or None when there are none. Each day given
-    holds 2 to 3 options; a day left out is said on the tab."""
+    holds 2 to 6 options; a day left out is said on the tab."""
     if data is None:
         return None
     if not isinstance(data, dict):
@@ -1502,8 +1594,8 @@ def read_offdays(data, where='ideas.json offdays'):
         opts = data.get(key)
         if opts is None:
             continue
-        if not isinstance(opts, list) or not 2 <= len(opts) <= 3:
-            problems.append(f'{weekday}: give 2 to 3 options')
+        if not isinstance(opts, list) or not OFF_OPTIONS[0] <= len(opts) <= OFF_OPTIONS[1]:
+            problems.append(f'{weekday}: give {OFF_OPTIONS[0]} to {OFF_OPTIONS[1]} options')
             continue
         rows, seen = [], set()
         for n, o in enumerate(opts, 1):
@@ -1544,6 +1636,10 @@ def read_offdays(data, where='ideas.json offdays'):
                 problems.extend(f'{weekday} option {n}: cards {p}' for p in found)
                 if not found:
                     row['cards'] = [{'words': ' '.join(c['words'].split()), 'picture': ' '.join(c['picture'].split())} for c in cards]
+            row.update(off_rich(o, problems, f'{weekday} option {n}'))
+            for side in OFF_SIDES:
+                if side != 'mock' or row.get('mock'):
+                    row[f'{side}_sha256'] = side_sha(row, side)
             if o.get('kind') == 'recorded' and key not in {k for k, *_ in OFF_DAYS}:
                 problems.append(f'{weekday} option {n}: a piece he records is a Tuesday, Thursday, Saturday or Sunday piece')
             elif o.get('kind') == 'recorded':
@@ -1609,14 +1705,17 @@ def read_growth_offdays(data, monday, where='--offdays-plan'):
             key = None
         if not key:
             raise BoardError(f'{where}: {day} is not a day of the week of {monday.isoformat()}')
-        opts = [o for o in opts or [] if isinstance(o, dict)][:3]
+        opts = [o for o in opts or [] if isinstance(o, dict)][:OFF_OPTIONS[1]]
         if len(opts) < 2:
             warnings.append(f'{where}: {day} has {len(opts)} option(s) from Growth, under the two the board shows')
             continue
         out[key] = [{'id': o.get('concept_id'), 'format': ', '.join(o.get('formats') or []) or o.get('lane'),
                      'source': {'label': 'Source', 'url': o['source_url']} if str(o.get('source_url') or '').startswith('https://') else (o.get('lane') or 'Growth'),
                      'copy': o.get('draft'), 'share_line': o.get('share_line'),
-                     'needs': list(o.get('needs') or []) + ([] if o.get('ready') else ['not ready yet'] if not o.get('needs') else [])}
+                     'needs': list(o.get('needs') or []) + ([] if o.get('ready') else ['not ready yet'] if not o.get('needs') else []),
+                     # The rich fields ride through as Growth wrote them (Ruling, Krish, 2026-11-01), never flattened into the copy.
+                     **{k: o[k] for k in ('hook', 'pitch', 'cards', 'inspiration', 'learned_from', 'direction', 'ties_to', 'recommended', 'revised', 'mock')
+                        if o.get(k) is not None}}
                     for o in opts]
     return out, warnings
 
@@ -1624,7 +1723,8 @@ def read_growth_offdays(data, monday, where='--offdays-plan'):
 def previous_option(o):
     """An off-day option as the previous board kept it, back in the shape read_offdays takes."""
     row = {'id': o['id'], 'format': o['format'], 'source': {'label': o['source'], 'url': o.get('url')} if o.get('url') else o['source'], 'copy': o['copy']}
-    for k in ('covers', 'kind', 'style', 'piece_id', 'series', 'title', 'script', 'share_line', 'needs', 'cards'):
+    for k in ('covers', 'kind', 'style', 'piece_id', 'series', 'title', 'script', 'share_line', 'needs', 'cards',
+              'hook', 'pitch', 'inspiration', 'learned_from', 'direction', 'ties_to', 'recommended', 'revised', 'mock'):
         if o.get(k) is not None:
             row[k] = o[k]
     if o.get('kind') == 'recorded':
@@ -1685,88 +1785,159 @@ def recorded_names(monday, key, o):
     return folder, (titles or {}).get('short')
 
 
-def week_mix(offdays):
-    """The week's mix Growth proposes, {day: [format, ...]}, from every option Growth fills (a piece he records is not
-    in it: his Approve on its exact words stays its own press), with the sha256 his one press is bound to."""
-    days = {}
-    for key, *_ in MIX_DAYS:
-        kinds = sorted({str(o.get('format') or 'post') for o in (offdays or {}).get(key) or [] if o.get('kind') != 'recorded'})
-        if kinds:
-            days[key] = kinds
-    return days, hashlib.sha256(json.dumps(days, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+def offday_slate(monday, offdays):
+    """The week's off days at a glance, above the options (the locked mock's strip): each day, how many options wait,
+    and what feeds the week's pieces. The script fills each day's state from his saved presses."""
+    cells = []
+    for key, weekday, offset in MIX_DAYS:
+        opts = (offdays or {}).get(key)
+        if not opts and key not in {k for k, *_ in OFF_DAYS}:
+            continue
+        when = monday + timedelta(days=offset)
+        n = len(opts or [])
+        ties = sorted({o['ties_to'] for o in opts or [] if o.get('ties_to')})
+        kinds = sorted({KIND_LABEL.get(off_kind(o), 'Post') for o in opts or []})
+        line = ('Feeds ' + ', '.join(ties)) if ties else ', '.join(kinds)
+        cells.append(f'<a class="sl" href="#offdays-{key}" data-slate="{key}"><span class="d">{weekday[:3]} {when.day}</span>'
+                     f'<span class="s ask" data-slate-state="{key}">{n} option{"s" if n != 1 else ""}</span>'
+                     f'<span class="t">{E(line) if n else "No options yet"}</span></a>')
+    return f'<div class="slate" aria-label="The week\'s off days at a glance">{"".join(cells)}</div>' if cells else ''
 
 
-def mix_bar(monday, offdays):
-    """One press for the week's filler (Ruling, Krish, 2026-10-30: "approve the week's mix once, let Growth fill it"):
-    the mix by day, and Approve, saved in picks/mix bound to the mix's hash. Growth then makes and posts within it."""
-    days, sha = week_mix(offdays)
-    if not days:
-        return ''
-    names = {k: n for k, n, _ in MIX_DAYS}
-    rows = ''.join(f'<li><b>{E(names[k])}</b> {E(", ".join(v))}</li>' for k, v in days.items())
-    return (f'<div class="mix" id="ideas-offdays-mix" data-mix-week="{monday.isoformat()}" data-mix-sha256="{sha}" '
-            f'data-mix="{E(json.dumps(days, sort_keys=True, separators=(",", ":")))}"><h3>This week\'s mix</h3>'
-            f'<p class="id-how">Approve once and Growth makes and posts these, filling each day from the options below. '
-            f'Nothing outside this mix goes out.</p><ul class="mix-days">{rows}</ul>'
-            f'<div class="tri-row"><button type="button" class="tri" data-act="mix" aria-pressed="false" disabled>Approve this week\'s mix</button></div>'
-            f'<p class="tri-state" data-mixstate aria-live="polite"></p></div>')
+KIND_LABEL = {'meme': 'Meme', 'carousel': 'Carousel', 'news': 'Good news', 'levelup': 'Level up', 'explainer': 'Explainer',
+              'short': 'Short', 'note': 'Note'}
+OFF_VERBS = (('approve', 'Approve'), ('improve', 'Improve'), ('reject', 'Reject'))
+PITCH_LABELS = (('see', 'What you see'), ('lands', 'Why it lands'), ('why_now', 'Why now'), ('share', 'Share line'))
+
+
+def off_press_row(did, side, label, extra=''):
+    """One side's presses: Approve, Improve, Reject (and Next week on the idea), one fixed size in one fixed place, then
+    the box his words go in, which Improve and Reject open (Reject will not save without his reason)."""
+    btns = ''.join(f'<button type="button" class="b {v}" data-act="offpress" data-side="{side}" data-value="{v}" data-for="{E(did)}" '
+                   f'aria-pressed="false" disabled>{t}</button>' for v, t in OFF_VERBS)
+    if side == 'idea':
+        btns += (f'<button type="button" class="b" data-act="offpress" data-side="idea" data-value="next_week" data-for="{E(did)}" '
+                 f'aria-pressed="false" disabled>Next week</button>')
+    cls = 'press' if side == 'idea' else 'press three'
+    return (f'<div class="{cls}" role="group" aria-label="{E(label)}"><p class="pl">{E(label)}</p>{btns}</div>'
+            f'<div class="say" data-say-for="{E(did)}" data-say-side="{side}" hidden><input type="text" maxlength="2000" '
+            f'data-say="{E(did)}" data-say-side="{side}" aria-label="Your words on the {side}" disabled>'
+            f'<button type="button" class="go" data-act="offsay" data-side="{side}" data-for="{E(did)}" disabled>Send</button></div>{extra}')
+
+
+def off_option_card(monday, key, when, o):
+    """An off-day option in the locked shape: chips, the hook, the pitch, the saved post that inspired it, the words of
+    his that shaped it, the suggested direction (frames drawn card by card), and the presses on each side."""
+    did = f'off-{key}-{o["id"]}'
+    src = (f'<a href="{E(o["url"])}" target="_blank" rel="noopener">{E(o["source"])}</a>' if o['url'] else E(o['source']))
+    flags = (f'<span class="id-flag off-date" data-off-date="{when.isoformat()}">{E(short_date(when))}</span>'
+             f'<span class="id-flag">{E(KIND_LABEL.get(off_kind(o), "Post"))}</span>'
+             + ('<span class="id-flag rec">Recommended</span>' if o.get('recommended') else '')
+             + (f'<span class="id-flag feeds">Feeds {E(o["ties_to"])}</span>' if o.get('ties_to') else ''))
+    pitch = o.get('pitch') or {}
+    if o.get('share_line') and not pitch.get('share'):
+        pitch = dict(pitch, share=o['share_line'])
+    rows = ''.join(f'<p class="row"><span class="id-why-k">{lab}</span> {E(pitch[k])}</p>' for k, lab in PITCH_LABELS if pitch.get(k))
+    copy = '' if o.get('hook') and rows else f'<p class="off-copy">{E(o["copy"])}</p>'
+    cards = ''.join(f'<li class="off-c"><span class="off-c-n">Card {i}</span><p class="off-c-words">{E(c["words"])}</p>'
+                    f'<p class="off-c-pic"><span class="id-why-k">Picture</span> {E(c["picture"])}</p></li>'
+                    for i, c in enumerate(o.get('cards') or [], 1))
+    ins = o.get('inspiration')
+    inspo = ''
+    if ins:
+        link = f' <a href="{E(ins["url"])}" target="_blank" rel="noopener">Open it</a>' if ins.get('url') else ''
+        inspo = (f'<div class="src"><div class="thumb">{E(ins.get("saved") or "Saved")}</div>'
+                 f'<p><span class="id-why-k">Inspired by</span> {E(ins["label"])}.{link}</p></div>')
+    learned = ''.join(f'<p class="learned">Learned from you: {E(x)}</p>' for x in o.get('learned_from') or [])
+    revised = (f'<p class="learned rev">Revised from your words on the {E(o["revised"]["side"])}: "{E(o["revised"]["words"])}"</p>'
+               if o.get('revised') else '')
+    d = o.get('direction')
+    direction = ''
+    if d:
+        frames = ''.join(f'<div class="fr"><span class="w">{E(f["words"])}</span><span class="p">{i} · {E(f["picture"])}</span></div>'
+                         for i, f in enumerate(d.get('frames') or [], 1))
+        dl = ''.join(f'<dt>{lab}</dt><dd>{E(d[k])}</dd>' for k, lab in (('look', 'Look'), ('tone', 'Tone'), ('kit', 'Kit')) if d.get(k))
+        if d.get('inspo_url'):
+            dl += f'<dt>Like</dt><dd><a href="{E(d["inspo_url"])}" target="_blank" rel="noopener">the saved post</a></dd>'
+        direction = (f'<div class="dir"><div class="dir-h"><b>Suggested direction</b>'
+                     + (f'<span class="dir-f">{E(d["format"])}</span>' if d.get('format') else '') + '</div>'
+                     + (f'<div class="frames">{frames}</div>' if frames else '') + f'<dl class="dl">{dl}</dl></div>')
+    mock = ''
+    if o.get('mock'):
+        m = o['mock']
+        mock = (f'<div class="mockback"><img src="{E(m["url"])}" alt="The mock Growth made" loading="lazy">'
+                f'<div><p class="row"><span class="id-why-k">Mock back</span> {E(m.get("note") or "Made in the brand kit from the direction you approved.")}</p>'
+                + off_press_row(did, 'mock', 'The mock') + '</div></div>')
+    # What his Approve on the idea hands Growth: exactly the object its hash is taken over (side_sha), the copy and the
+    # cards included, so the words he approved are the words that get made.
+    shown = {'copy': o.get('copy'), 'hook': o.get('hook'), 'pitch': o.get('pitch'), 'cards': o.get('cards')}
+    return (f'<article class="off-card opt" id="{E(did)}" data-offday="{E(did)}" data-off-day="{key}" data-option-id="{E(o["id"])}" '
+            f'data-format="{E(o["format"])}" data-source="{E(o["source"])}" data-copy-sha256="{o["copy_sha256"]}" '
+            f'data-idea-sha256="{o["idea_sha256"]}" data-direction-sha256="{o.get("direction_sha256", "") if d else ""}" '
+            f'data-mock-sha256="{o.get("mock_sha256", "")}" data-week="{monday.isoformat()}" '
+            f'data-shown="{E(json.dumps(shown, sort_keys=True, separators=(",", ":")))}"'
+            + (f' data-direction="{E(json.dumps(d, sort_keys=True, separators=(",", ":")))}"' if d else '')
+            + (f' data-covers="{E(" ".join(o["covers"]))}"' if o.get('covers') else '') + '>'
+            f'<div class="id-flags">{flags}</div><h4 class="hook">{E(o.get("hook") or off_title(o))}</h4>'
+            + (f'<div class="pitch">{rows}</div>' if rows else '') + copy
+            + (f'<ol class="off-cards" aria-label="Card by card">{cards}</ol>' if cards else '')
+            + inspo + learned + revised
+            + (f'<p class="id-how">Still needs: {E("; ".join(o["needs"]))}</p>' if o.get('needs') else '')
+            + f'<p class="id-why"><span class="id-why-k">Source</span> {src}</p>'
+            + mock + direction + off_press_row(did, 'idea', 'The idea')
+            # The idea's presses first, then the direction's, as in the locked mock.
+            + (off_press_row(did, 'direction', 'The direction') if d else '')
+            + f'<p class="tri-state" data-offstate="{E(did)}" aria-live="polite"></p></article>')
 
 
 def offdays_section(monday, offdays):
-    """The Off days part of the Ideas tab: the week's mix with its one Approve, each day's options under it (a piece
-    he records keeps its own Approve and Skip, on its exact words), or one plain line."""
+    """The Off days part of the Ideas tab, in the shape Krish locked on 1 Nov 2026: the slate across the top, then each
+    day's options, each an idea and a suggested creative direction he approves, improves or rejects for a reason. A
+    piece he records keeps its own Approve and Skip on its exact words (offdayRecorded on the server)."""
     head = f'<section class="off-days" id="ideas-offdays" data-week="{monday.isoformat()}"><div class="sec-head"><h2>Off days</h2></div>'
     if not offdays:
         return head + slot_empty('No options for Tuesday, Thursday, Saturday or Sunday yet.') + '</section>'
-    parts = [head, mix_bar(monday, offdays)]
+    parts = [head, '<p class="id-how">Each option comes with its idea and a suggested direction. Approve, improve or reject '
+                   'each one. Every reason you give is kept, and next Sunday\'s options are made from what you said.</p>',
+             offday_slate(monday, offdays)]
     # Tuesday, Thursday, Saturday and Sunday always; Monday, Wednesday and Friday only when Growth's mix fed them.
     shown = [d for d in MIX_DAYS if d[0] in {k for k, *_ in OFF_DAYS} or offdays.get(d[0])]
     for key, weekday, offset in shown:
         when = monday + timedelta(days=offset)
-        parts.append(f'<div class="off-day" id="offdays-{key}" data-off-day="{key}"><h3>{weekday} {when.day} {when.strftime("%B")}</h3>')
-        opts = offdays.get(key)
+        opts = offdays.get(key) or []
+        parts.append(f'<div class="off-day" id="offdays-{key}" data-off-day="{key}"><div class="day-h"><h3>{weekday} {when.day} {when.strftime("%B")}</h3>'
+                     f'<span class="n" data-day-count="{key}">{len(opts)} option{"s" if len(opts) != 1 else ""}</span></div>')
         if not opts:
             parts.append(f'<p class="id-how">No options for {weekday} yet.</p></div>')
             continue
         for o in opts:
+            if o.get('kind') != 'recorded':
+                parts.append(off_option_card(monday, key, when, o))
+                continue
             did = f'off-{key}-{o["id"]}'
-            src = (f'<a href="{E(o["url"])}" target="_blank" rel="noopener">{E(o["source"])}</a>' if o['url'] else E(o['source']))
-            rec_attrs, rec_body = '', ''
-            if o.get('kind') == 'recorded':
-                folder, title = recorded_names(monday, key, o)
-                rec_attrs = (f' data-kind="recorded" data-piece="{E(o["piece_id"])}" data-series="{E(o["series"])}" data-style="{E(o["style"])}"'
-                             f' data-script-sha256="{o["script_sha256"]}" data-folder-title="{E(folder or "")}" data-tp-title="{E(title or "")}"'
-                             f' data-readers="{E("|".join(o["read_back"]["readers"]))}"')
-                rec_body = (f'<p class="id-why"><span class="id-why-k">How it is made</span> {E(RECORDED_STYLES[o["style"]])}, one 90-second cut, '
-                            f'{E(SERIES_LABELS[o["series"]])}</p>'
-                            f'<div class="off-script" data-offscript="{E(did)}">{E(o["script"])}</div>'
-                            f'<p class="id-how">Approve puts this piece on {weekday} and sends these exact words to Teleprompter'
-                            + (f' as "{E(title)}"' if title else '') + '. Skip leaves it for another week.</p>')
-            covers = f' data-covers="{E(" ".join(o["covers"]))}"' if o.get('covers') else ''
-            cards = ''.join(f'<li class="off-c"><span class="off-c-n">Card {i}</span><p class="off-c-words">{E(c["words"])}</p>'
-                            f'<p class="off-c-pic"><span class="id-why-k">Picture</span> {E(c["picture"])}</p></li>'
-                            for i, c in enumerate(o.get('cards') or [], 1))
+            folder, title = recorded_names(monday, key, o)
             parts.append(
                 f'<article class="off-card" id="{E(did)}" data-offday="{E(did)}" data-off-day="{key}" data-option-id="{E(o["id"])}" '
-                f'data-format="{E(o["format"])}" data-source="{E(o["source"])}" data-copy-sha256="{o["copy_sha256"]}"{covers}{rec_attrs}>'
+                f'data-format="{E(o["format"])}" data-source="{E(o["source"])}" data-copy-sha256="{o["copy_sha256"]}"'
+                f' data-kind="recorded" data-piece="{E(o["piece_id"])}" data-series="{E(o["series"])}" data-style="{E(o["style"])}"'
+                f' data-script-sha256="{o["script_sha256"]}" data-folder-title="{E(folder or "")}" data-tp-title="{E(title or "")}"'
+                f' data-readers="{E("|".join(o["read_back"]["readers"]))}"'
+                + (f' data-covers="{E(" ".join(o["covers"]))}"' if o.get('covers') else '') + '>'
                 f'<div class="id-flags"><span class="id-flag off-date" data-off-date="{when.isoformat()}">{E(short_date(when))}</span>'
                 f'<span class="id-flag">{E(o["format"])}</span></div>'
                 f'<p class="off-copy">{E(o["copy"])}</p>'
-                + (f'<ol class="off-cards" aria-label="Card by card">{cards}</ol>' if cards else '') + f'{rec_body}'
-                + (f'<p class="id-why"><span class="id-why-k">Share line</span> {E(o["share_line"])}</p>' if o.get('share_line') else '')
-                + (f'<p class="id-how">Still needs: {E("; ".join(o["needs"]))}</p>' if o.get('needs') else '')
-                + f'<p class="id-why"><span class="id-why-k">Source</span> {src}</p>'
-                + ('' if o.get('kind') != 'recorded' else
+                f'<p class="id-why"><span class="id-why-k">How it is made</span> {E(RECORDED_STYLES[o["style"]])}, one 90-second cut, '
+                f'{E(SERIES_LABELS[o["series"]])}</p>'
+                f'<div class="off-script" data-offscript="{E(did)}">{E(o["script"])}</div>'
+                f'<p class="id-how">Approve puts this piece on {weekday} and sends these exact words to Teleprompter'
+                + (f' as "{E(title)}"' if title else '') + '. Skip leaves it for another week.</p>'
                 f'<div class="tri-row" role="group" aria-label="Approve or skip this option">'
                 f'<button type="button" class="tri" data-act="offday" data-value="approve" data-for="{E(did)}" aria-pressed="false" disabled>Approve</button>'
                 f'<button type="button" class="tri" data-act="offday" data-value="skip" data-for="{E(did)}" aria-pressed="false" disabled>Skip</button></div>'
-                f'<p class="tri-state" data-offstate="{E(did)}" aria-live="polite"></p>')
-                # His comment on any option, saved as the note on its record (queue/off-<day>-<option>).
-                + f'<div class="tri-why off-note" data-off-note-for="{E(did)}"><input type="text" data-off-note="{E(did)}" maxlength="2000" '
-                  f'placeholder="Comment on this option" aria-label="Your comment on this option" disabled>'
-                  f'<button type="button" class="btn-s" data-act="save-off-note" data-for="{E(did)}" disabled>Save</button></div>'
-                + ('' if o.get('kind') == 'recorded' else f'<p class="tri-state" data-offstate="{E(did)}" aria-live="polite"></p>')
-                + '</article>')
+                f'<div class="tri-why off-note" data-off-note-for="{E(did)}"><input type="text" data-off-note="{E(did)}" maxlength="2000" '
+                f'placeholder="Comment on this option" aria-label="Your comment on this option" disabled>'
+                f'<button type="button" class="btn-s" data-act="save-off-note" data-for="{E(did)}" disabled>Save</button></div>'
+                f'<p class="tri-state" data-offstate="{E(did)}" aria-live="polite"></p></article>')
         parts.append('</div>')
     parts.append('</section>')
     return ''.join(parts)
@@ -3196,6 +3367,48 @@ SERIES_CHANNELS = ('substack', 'youtube', 'shorts', 'tiktok', 'reels', 'linkedin
 OFF_CHANNELS = ('shorts', 'tiktok', 'reels', 'instagram', 'linkedin', 'x', 'threads', 'facebook', 'substack-notes')
 OFF_KINDS = {'meme': 'meme', 'carousel': 'carousel', 'good_news': 'news', 'news': 'news', 'level_up': 'levelup', 'levelup': 'levelup',
              'explainer': 'explainer', 'short': 'short'}
+# A format is written as a phrase ("Meme video, made fresh in the brand kit"), so its kind is read from its words, the
+# shape first (a meme carousel is drawn as a carousel). Krish, 2026-11-01, on a meme labelled NOTE: "None of the two
+# screens show any level of ideation, inspiration, clarity, user flow".
+OFF_KIND_WORDS = (('carousel', 'carousel'), ('meme', 'meme'), ('good news', 'news'), ('good_news', 'news'), ('news', 'news'),
+                  ('level', 'levelup'), ('explainer', 'explainer'), ('short', 'short'), ('cut', 'short'),
+                  ('to camera', 'short'), ('to-camera', 'short'))
+OFF_TITLE_DATE = re.compile(r'^(mon|tue|wed|thu|fri|sat|sun)[a-z]*\.?\s+\d{1,2}\s+[a-z]{3,9}[.,:;]?\s*', re.I)
+OFF_TITLE_IDEA = re.compile(r'^your idea\s*(\([^)]*\))?\s*[:,.-]?\s*', re.I)
+OFF_TITLE_CARD1 = re.compile(r'\bcard 1:\s*(.+?)\s*(?:\(|\bcards? 2\b|$)', re.I)
+# Scheduling and making notes the card already shows another way; a title skips them.
+OFF_TITLE_SKIP = re.compile(r'^(the day (after|before)\b|about \d+ seconds\b|(two|three|four|five|six|\d+) cards\b)', re.I)
+
+
+def off_kind(o):
+    """The day card's kind for an off-day option: recorded pieces are shorts; otherwise the format's own words."""
+    if o.get('kind') == 'recorded':
+        return 'short'
+    for text in (o.get('format'), o.get('source')):
+        fmt = ' '.join(str(text or '').lower().split())
+        if fmt in OFF_KINDS:
+            return OFF_KINDS[fmt]
+        kind = next((k for w, k in OFF_KIND_WORDS if w in fmt), None)
+        if kind:
+            return kind
+    return 'note'
+
+
+def off_title(o):
+    """The day card's title: the option's hook, else its first card's words, else its copy's first sentence without the
+    date and the "Your idea (date):" lead the board already shows elsewhere."""
+    for k in ('hook', 'title'):
+        if str(o.get(k) or '').strip():
+            return ' '.join(str(o[k]).split())[:120]
+    copy = ' '.join(str(o.get('copy') or '').split())
+    m = OFF_TITLE_CARD1.search(copy)
+    if m and m.group(1).strip(' .'):
+        return m.group(1).strip(' .')[:120]
+    rest = OFF_TITLE_DATE.sub('', copy)
+    sentences = [OFF_TITLE_IDEA.sub('', x) for x in re.split(r'(?<=[.!?])\s+', rest) if x and not OFF_TITLE_SKIP.match(x)]
+    first = next((x for x in sentences if x.strip()), '')
+    first = first[:1].upper() + first[1:]
+    return first[:120] or str(o.get('format') or 'Off-day post')
 
 
 def moved_of(values):
@@ -3295,13 +3508,12 @@ def today_model(monday, days, videos, posted, offdays, parsed, now=None, gates=N
                                     'cta': 'Approve', 'href': f'#{name}/publish', 'day': key})
         opts = (offdays or {}).get(key) or []
         for o in opts:
-            copy = ' '.join(str(o.get('copy') or '').split())
-            posts.append({'kind': 'short' if o.get('kind') == 'recorded' else OFF_KINDS.get(str(o.get('format') or '').lower(), 'note'),
-                          'title': copy[:120] or str(o.get('format') or 'Off-day post'), 'claim': f'From: {o.get("source")}' if o.get('source') else None,
+            posts.append({'kind': off_kind(o),
+                          'title': off_title(o), 'claim': f'From: {o.get("source")}' if o.get('source') else None,
                           'status': 'concept', 'stage': 0, 'time': '12:30', 'channels': list(OFF_CHANNELS),
                           'assets': [{'slot': 'still', 'state': 'making'}], 'piece_id': o.get('piece_id'),
                           'action': {'label': 'Approve', 'href': f'#offdays-{key}'} if o.get('kind') == 'recorded'
-                          else {'label': 'See mix', 'href': '#ideas-offdays-mix'}})
+                          else {'label': 'See option', 'href': f'#off-{key}-{o["id"]}' if o.get('id') else f'#offdays-{key}'}})
         mine = [o for o in opts if o.get('kind') == 'recorded']
         if mine:
             out['asks'].append({'what': f'Record, {short(when)}', 'detail': f'{len(mine)} piece{"s" if len(mine) != 1 else ""} to approve',
@@ -3310,11 +3522,13 @@ def today_model(monday, days, videos, posted, offdays, parsed, now=None, gates=N
         # to click through to Monday from that board if it is to act as my calendar board").
         out['days'].append({'key': key, 'date': f'{when.day} {when.strftime("%b")}', 'posts': posts,
                             **({'open': f'#{names[key]}'} if key in names else {})})
-    mix = week_mix(offdays)[0]
-    if mix:
-        # The week's filler is one press, not one per post (Ruling, Krish, 2026-10-30).
-        out['asks'].insert(0, {'what': "This week's mix", 'detail': 'One press, Growth fills it',
-                               'cta': 'Approve', 'href': '#ideas-offdays-mix', 'day': next(iter(mix))})
+    n = sum(1 for opts in (offdays or {}).values() for o in opts or [] if o.get('kind') != 'recorded')
+    if n:
+        # Each off-day option is approved, improved or rejected on its own (Ruling, Krish, 2026-11-01), so the ask
+        # opens the Off days part of the Ideas tab, where the slate shows what is still open.
+        first = next(k for k, *_ in MIX_DAYS if (offdays or {}).get(k))
+        out['asks'].insert(0, {'what': 'Off days', 'detail': f'{n} option{"s" if n != 1 else ""} to judge',
+                               'cta': 'Judge', 'href': '#ideas-offdays', 'day': first})
     return out
 
 
@@ -4672,7 +4886,7 @@ def _fixed_checks(check, mon):
 
 def _growth_offday_checks(check, week, ideas):
     """W2.9: Growth's Sunday Off-days section (growth-offdays/1) on the Ideas tab, every day under "Mix wins: every
-    day", 2 to 3 options a day, each with one Approve or Skip bound to Growth's draft copy."""
+    day", 2 to 6 options a day, each judged on its own (Ruling, Krish, 2026-11-01)."""
     o = lambda n, **kw: dict({'concept_id': f'meme-c{n}', 'lane': 'meme', 'formats': ['instagram:meme', 'tiktok:meme'],
                               'source_url': 'https://example.com/cue', 'draft': f'Synthetic meme draft {n}.', 'share_line': 'Send this to your CFO.',
                               'needs': [], 'ready': True}, **kw)
@@ -4684,9 +4898,9 @@ def _growth_offday_checks(check, week, ideas):
     page, _, _ = board(week, ideas=ideas, offdays=offdays)
     check('growth offdays: a day with two or three options shows, Monday too ("Mix wins: every day"), and a short day is said',
           set(offdays) == {'mon', 'tue'} and 'id="offdays-mon"' in page and any('under the two' in w for w in warnings))
-    check('growth offdays: the week\'s mix is one Approve, bound to its hash; no option has a press of its own (Ruling, Krish, 2026-10-30)',
-          'data-offday="off-mon-meme-c1"' in page and page.count('data-act="offday" data-value') == 0 and page.count('data-act="mix" aria-pressed') == 1
-          and f'data-mix-sha256="{week_mix(offdays)[1]}"' in page
+    check('growth offdays: each option is judged on its own, idea first; the one mix press is gone (Ruling, Krish, 2026-11-01)',
+          'data-offday="off-mon-meme-c1"' in page and page.count('data-act="offday" data-value') == 0 and 'data-act="mix"' not in page
+          and page.count('data-act="offpress" data-side="idea" data-value="approve"') == 5
           and offdays['mon'][0]['copy_sha256'] == hashlib.sha256(b'Synthetic meme draft 1.').hexdigest())
     check('growth offdays: the share line, the formats and what an option still needs are shown',
           'Send this to your CFO.' in page and 'instagram:meme, tiktok:meme' in page and 'Still needs: not ready yet' in page)
@@ -4703,6 +4917,55 @@ def _growth_offday_checks(check, week, ideas):
         check('growth offdays: a recorded piece on a series day is refused', False)
     except BoardError as error:
         check('growth offdays: a recorded piece on a series day is refused', 'Tuesday, Thursday, Saturday or Sunday piece' in str(error))
+    # Krish, 2026-11-01, on the Tuesday day cards: a meme read NOTE, the title opened on its date, the button led to the mix.
+    # The locked shape (Ruling, Krish, 2026-11-01): an idea and a suggested direction, each judged on its own.
+    rich = {'id': 'prices', 'format': 'Carousel, 4 cards', 'source': 'Content Inspo', 'copy': 'Three prices for one AI.',
+            'hook': 'Three prices for the same AI', 'pitch': {'see': 'One model, three tags.', 'lands': 'Owners never see the bill.', 'why_now': 'Prices moved.'},
+            'inspiration': {'label': 'A price-ladder carousel you saved', 'url': 'https://example.com/saved', 'saved': 'Saved 29 Oct'},
+            'learned_from': ['"too much text on card 1" (26 Oct)'], 'ties_to': 'Mon: follow.the.money', 'recommended': True,
+            'direction': {'look': 'One object per card, dark ground, yellow type.', 'format': '4 cards, 4:5', 'tone': 'Dry.', 'kit': 'Anton, brand yellow.',
+                          'frames': [{'words': 'Same AI. Three prices.', 'picture': 'huge type'}, {'words': 'Free', 'picture': 'price tag'}]}}
+    plain = {'id': 'plain', 'format': 'Meme', 'source': 'Meme', 'copy': 'A plain meme.'}
+    six = read_offdays({'tue': [rich, plain] + [dict(plain, id=f'p{n}') for n in range(4)]})
+    rpage, _, _ = board(week, ideas=ideas, offdays=six)
+    rcard = rpage[rpage.find('id="off-tue-prices"'):]
+    rcard = rcard[:rcard.find('</article>')]
+    check('off-day option: six a day show, each with its hook, pitch, inspiration, the words that shaped it and its direction',
+          len(six['tue']) == 6 and 'Three prices for the same AI</h4>' in rcard and 'What you see' in rcard and 'Why now' in rcard
+          and 'href="https://example.com/saved"' in rcard and 'Learned from you: &quot;too much text on card 1&quot; (26 Oct)' in rcard
+          and 'Recommended' in rcard and 'Feeds Mon: follow.the.money' in rcard and rcard.count('class="fr"') == 2
+          and 'Suggested direction' in rcard and verify(rpage) == [])
+    check('off-day option: the idea and the direction each take Approve, Improve and Reject, bound to what each showed',
+          rcard.count('data-side="direction" data-value=') == 3 and rcard.count('data-side="idea" data-value=') == 4
+          and f'data-idea-sha256="{six["tue"][0]["idea_sha256"]}"' in rcard and f'data-direction-sha256="{six["tue"][0]["direction_sha256"]}"' in rcard
+          and six['tue'][0]['idea_sha256'] != six['tue'][0]['direction_sha256'] and 'data-shown=' in rcard and 'data-direction=' in rcard)
+    revised = read_offdays({'tue': [dict(rich, direction=dict(rich['direction'], tone='Warm.'), revised={'side': 'direction', 'words': 'warmer please'}), plain]})
+    check('off-day option: a revised direction has a new hash, so his old press reads as answered, and says what it answers',
+          revised['tue'][0]['direction_sha256'] != six['tue'][0]['direction_sha256'] and revised['tue'][0]['idea_sha256'] == six['tue'][0]['idea_sha256']
+          and 'Revised from your words on the direction: "warmer please"' in board(week, ideas=ideas, offdays=revised)[0])
+    for bad, want in ((dict(rich, direction={'tone': 'no look'}), 'with its look'), (dict(rich, inspiration={'label': 'x', 'url': 'http://x'}), 'inspiration'),
+                      (dict(rich, pitch={'other': 'x'}), 'pitch'), (dict(rich, mock={'url': 'ftp://x'}), 'mock'),
+                      (dict(rich, hook='x' * 141), 'hook'), (dict(rich, learned_from=['y' * 401]), 'never cut')):
+        try:
+            read_offdays({'tue': [bad, plain]})
+            check(f'off-day option: a bad {want} is refused', False)
+        except BoardError as error:
+            check(f'off-day option: a bad {want} is refused', want in str(error))
+    model = today_model(week, {}, {}, {}, six, {})
+    check('off-day ask: one Needs you row opens the Off days, counting the options to judge',
+          any(a['href'] == '#ideas-offdays' and a['detail'] == '6 options to judge' for a in model['asks']))
+    check('off-day card: the kind is read from the format phrase, the shape first',
+          off_kind({'format': 'Meme video, made fresh in the brand kit'}) == 'meme'
+          and off_kind({'format': 'Meme carousel, made fresh in the brand kit'}) == 'carousel'
+          and off_kind({'format': 'Said to camera, 1-2-3', 'source': 'Short'}) == 'short' and off_kind({'format': 'x'}) == 'note')
+    check('off-day card: the title is the hook, else card 1, else the first sentence without its date and "Your idea" lead',
+          off_title({'hook': 'Your AI is a puppy', 'copy': 'Tue 3 Nov. x'}) == 'Your AI is a puppy'
+          and off_title({'copy': "Tue 3 Nov, the day after Monday's piece. Four cards, 4:5. Card 1: CLAUDE IS HUNGRY (huge type). Card 2: y"}) == 'CLAUDE IS HUNGRY'
+          and off_title({'copy': 'Tue 3 Nov. Your idea (28 Oct): the translator scene you saved. More.'}) == 'The translator scene you saved.')
+    model = today_model(week, {}, {}, {}, offdays, {})
+    posts = [p for d in model['days'] for p in d.get('posts') or [] if p.get('status') == 'concept']
+    check('off-day card: its button opens that option on the Ideas tab',
+              bool(posts) and all(p['action']['href'].startswith('#off-') and p['action']['label'] == 'See option' for p in posts))
 
 
 def _oct31_checks(check, week, ideas, opt):
@@ -4742,10 +5005,10 @@ def _oct31_checks(check, week, ideas, opt):
     tue = date.fromisoformat(when)
     check('off days: every card carries its full date', page.count(f'data-off-date="{when}">{short_date(tue)}</span>') == 2
           and page.count('class="id-flag off-date"') == 5)
-    check('off days: every option takes his comment, saved through the board API',
-          page.count('class="btn-s" data-act="save-off-note"') == 5 and page.count('<input type="text" data-off-note="') == 5
-          and page.count('<p class="tri-state" data-offstate="') == 5
-          and 'save-off-note' in template('week.js') and 'note_only: true' in template('week.js'))
+    check('off days: every option takes Approve, Improve, Reject and Next week, and a box for his words',
+          all(page.count(f'data-act="offpress" data-side="idea" data-value="{v}"') == 5 for v in ('approve', 'improve', 'reject', 'next_week'))
+          and page.count('data-say-side="idea" hidden>') == 5 and page.count('<p class="tri-state" data-offstate="') == 5
+          and 'data-act="offsay"' in page and '"offpress"' in template('week.js') and 'reject' in template('week.js'))
     check('off days: a carousel is shown card by card, words and picture',
           page.count('class="off-c"') == 3 and 'Card words 2.' in page and 'A chart of 3.' in page and verify(page) == [])
     check('off days: a rebuild keeps the cards', read_offdays({k: [previous_option(o) for o in v] for k, v in offdays.items()}) == offdays)
@@ -4807,13 +5070,13 @@ def _presses_checks(check, week, mon):
     check('presses: verify refuses an idea card without its presses',
           any('Friday has 3 checked' in w for w in verify(page.replace('data-press="not_for_us" data-for="fri-4"', 'data-x="not_for_us" data-for="fri-4"', 1))))
     check('presses: the off days show each option with its format, source and copy, bound to the copy\'s hash',
-          'id="off-tue-o1"' in page and 'id="off-sat-o3"' in page and page.count('data-act="mix" aria-pressed') == 1
+          'id="off-tue-o1"' in page and 'id="off-sat-o3"' in page and 'data-act="mix"' not in page
           and f'data-copy-sha256="{hashlib.sha256(b"Option 1 copy.").hexdigest()}"' in page and '>The release note</a>' in page
           and 'No options for Thursday yet.' in page and 'No options for Sunday yet.' in page)
     check('presses: with no off-day options the section says so in one plain line, also before the ideas come',
           'No options for Tuesday, Thursday, Saturday or Sunday yet.' in board(week, ideas=ideas)[0]
           and 'No options for Tuesday, Thursday, Saturday or Sunday yet.' in board(week)[0])
-    for bad, want in (({'tue': [opt(1)]}, '2 to 3 options'), ({'tue': [opt(1), opt(2, copy='')]}, 'no copy'),
+    for bad, want in (({'tue': [opt(1)]}, '2 to 6 options'), ({'tue': [opt(n) for n in range(1, 8)]}, '2 to 6 options'), ({'tue': [opt(1), opt(2, copy='')]}, 'no copy'),
                       ({'xyz': [opt(1), opt(2)]}, 'is not a day'), ({'tue': [opt(1), opt(1)]}, 'once a day'),
                       ({'tue': [opt(1), opt(2, source={'label': 'x', 'url': 'http://x'})]}, 'https')):
         try:
@@ -5623,7 +5886,7 @@ def parser():
     ap.add_argument('--publish-manifest', action='append', metavar='DAY=PATH', help='the piece\'s manifest: its sha256 rides on the '
                     'day\'s Approve for publish press; kept on rebuild')
     ap.add_argument('--offdays-plan', metavar='JSON', help='Growth\'s Sunday Off-days section (growth.py mix offdays, growth-offdays/1): '
-                    '2 to 3 options a day, each with Approve and Skip; ideas.json offdays wins for a day it gives')
+                    '2 to 6 options a day, each an idea and a direction he approves, improves or rejects; ideas.json offdays wins for a day it gives')
     ap.add_argument('--archive', metavar='JSON', help='the Archive (boards from layout v3 on): GET /api/board/<Monday>/archive as '
                     'board_feed.py archive writes it, every piece since the Launch with his scores')
     ap.add_argument('--verify', metavar='PAGE', help='say why this built board may not be published (the publish hook runs it); exit 1 if it may not')

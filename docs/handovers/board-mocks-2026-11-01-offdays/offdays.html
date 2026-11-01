@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Off-day ideas mock</title>
+<!-- Mock on synthetic data, 1 Nov 2026. Krish: "I need Ideas and a suggested creative direction to approve or improve
+     or flat out reject for a reason, and the machine can learn over time". Nothing here is wired; it is the shape to lock. -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;700;900&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+:root{--bg:#F4EFE4;--ink:#0C1512;--card:#fffdf8;--line:#d9d2c3;--muted:#5b625e;--mint:#7EF0C0;--ok:#1f7a52;--bad:#b0412e;--dir:#eef6f1;--warn:#fff4d6;--yel:#FFD84D}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 Archivo,system-ui,sans-serif}
+.wrap{max-width:820px;margin:0 auto;padding:20px 16px 60px}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+.mock-tag{font:600 11.5px "IBM Plex Mono",monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+h1{font-size:clamp(26px,5vw,36px);margin:4px 0 4px}
+.lede{color:var(--muted);margin:0 0 18px;font-size:15px}
+
+/* the slate: the week's off days at a glance */
+.slate{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:0 0 10px}
+.sl{border:1px solid var(--line);border-radius:12px;background:var(--card);padding:10px 10px 9px;min-height:104px;display:grid;align-content:start;gap:4px;text-decoration:none;color:inherit}
+.sl .d{font:700 14px Archivo,sans-serif;white-space:nowrap}
+.sl .s{font:600 11.5px "IBM Plex Mono",monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sl .s.ok{color:var(--ok)}.sl .s.ask{color:var(--bad)}
+.sl .t{font-size:12.5px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.sl.done{border:2px solid var(--ok)}
+.balance{font-size:13.5px;color:var(--muted);margin:0 0 22px}
+.balance b{color:var(--ink)}
+
+.day{margin:0 0 28px}
+.day-h{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:2px 10px;margin:0 0 10px;border-bottom:1px solid var(--line);padding-bottom:6px}
+.day-h h2{font-size:22px;margin:0;white-space:nowrap}
+.day-h .n{font:600 12px "IBM Plex Mono",monospace;color:var(--muted);white-space:nowrap}
+
+.opt{border:1px solid var(--line);border-radius:14px;background:var(--card);padding:14px 16px;display:grid;gap:12px;margin:0 0 12px}
+.opt.on{border:2px solid var(--ok)}
+.opt.out{opacity:.62}
+.flags{display:flex;gap:6px;flex-wrap:wrap}
+.flag{font:600 11.5px "IBM Plex Mono",monospace;padding:3px 8px;border-radius:999px;border:1px solid var(--line);white-space:nowrap}
+.flag.rec{background:var(--mint);border-color:var(--mint)}
+.flag.feeds{background:var(--yel);border-color:var(--yel)}
+.hook{font:900 21px/1.25 Archivo,sans-serif;margin:0}
+.k{font:600 11.5px "IBM Plex Mono",monospace;text-transform:uppercase;margin-right:6px;color:var(--ink)}
+.row{margin:0;font-size:15px}
+.pitch{display:grid;gap:6px}
+.src{display:grid;grid-template-columns:64px 1fr;gap:10px;align-items:center;border:1px dashed var(--line);border-radius:10px;padding:8px}
+.thumb{width:64px;height:80px;border-radius:6px;background:linear-gradient(160deg,#2b3a35,#0C1512);color:#fff;font:700 10px Archivo;display:flex;align-items:flex-end;padding:5px}
+.src p{margin:0;font-size:14px}.src a{color:var(--ok);font-weight:700}
+.learned{font-size:13.5px;color:var(--muted);margin:0;padding-left:10px;border-left:3px solid var(--mint)}
+
+/* the suggested creative direction, its own block with its own presses */
+.dir{background:var(--dir);border-radius:12px;padding:12px 12px 10px;display:grid;gap:8px}
+.dir-h{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.dir-h b{font:700 15px Archivo}
+.frames{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.fr{aspect-ratio:4/5;border-radius:6px;background:var(--ink);color:var(--yel);padding:7px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
+.fr .w{font:400 clamp(10px,2.1vw,15px)/1.05 Anton,Impact,sans-serif;text-transform:uppercase}
+.fr .p{font:600 9.5px/1.2 "IBM Plex Mono",monospace;color:#cfd8d4}
+.fr.vid{background:linear-gradient(180deg,#1c2a26,#0C1512)}
+.dl{display:grid;grid-template-columns:auto 1fr;gap:3px 10px;margin:0;font-size:14px}
+.dl dt{font:600 11.5px/1.9 "IBM Plex Mono",monospace;text-transform:uppercase}
+.dl dd{margin:0}
+
+/* presses: one fixed size, one fixed place, no label wraps */
+.press{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.press.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.pl{grid-column:1/-1;font:600 11.5px "IBM Plex Mono",monospace;text-transform:uppercase;color:var(--muted);margin:0 0 -2px}
+.b{min-height:44px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:700 14px Archivo,sans-serif;white-space:nowrap;cursor:pointer}
+.b.yes[aria-pressed=true]{background:var(--ok);border-color:var(--ok);color:#fff}
+.b.imp[aria-pressed=true]{background:var(--yel);border-color:#e0b800}
+.b.no[aria-pressed=true]{background:var(--bad);border-color:var(--bad);color:#fff}
+.say{display:flex;gap:8px}
+.say input{flex:1;min-width:0;min-height:44px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;font:15px Archivo,sans-serif;background:var(--card)}
+.say .go{min-width:96px;min-height:44px;border-radius:999px;border:1px solid var(--mint);background:var(--mint);font:700 13px Archivo;white-space:nowrap}
+.state{margin:0;font-size:14px;font-weight:700;color:var(--ok)}
+.state.wait{color:#8a6a00}.state.bad{color:var(--bad)}
+.more{width:100%;min-height:44px;border-radius:10px;border:1px dashed var(--line);background:transparent;font:700 14px Archivo;color:var(--ink)}
+.mockback{display:grid;grid-template-columns:112px 1fr;gap:12px;align-items:center;background:var(--warn);border-radius:12px;padding:10px}
+.mockback .fr{width:112px}
+.note{font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:14px;margin-top:30px}
+@media (max-width:640px){.mockback{grid-template-columns:72px 1fr}.mockback .fr{width:72px}.mockback .press.three{grid-template-columns:1fr}.slate{grid-template-columns:repeat(2,minmax(0,1fr))}.press{grid-template-columns:repeat(2,minmax(0,1fr))}.press.three{grid-template-columns:repeat(3,minmax(0,1fr))}.hook{font-size:19px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<p class="mock-tag">Ideas tab · Off days · mock on synthetic data</p>
+<h1>Off days, week of 9 November</h1>
+<p class="lede">Each option comes with its idea and a suggested direction. Approve, improve or reject each one. Every reason you give is kept, and next Sunday's options are made from what you said.</p>
+
+<div class="slate" aria-label="The week's off days at a glance">
+  <a class="sl done" href="#tue"><span class="d">Tue 10</span><span class="s ok">Approved</span><span class="t">Meme: the AI that agrees with everyone</span></a>
+  <a class="sl" href="#thu"><span class="d">Thu 12</span><span class="s ask">5 options</span><span class="t">Feeds Wed's under.the.hood</span></a>
+  <a class="sl" href="#sat"><span class="d">Sat 14</span><span class="s ask">4 options</span><span class="t">Good news, level up</span></a>
+  <a class="sl" href="#sun"><span class="d">Sun 15</span><span class="s ask">5 options</span><span class="t">Feeds Fri's mind.the.gap</span></a>
+</div>
+<p class="balance"><b>The mix so far:</b> 1 meme · 0 carousels · 0 shorts. Two days feed this week's pieces; one day is still open.</p>
+
+<!-- ============ TUESDAY ============ -->
+<section class="day" id="tue">
+  <div class="day-h"><h2>Tuesday 10 November</h2><span class="n">5 options · 1 approved</span></div>
+
+  <!-- option 1: idea and direction approved, mock back for a final yes -->
+  <article class="opt on">
+    <div class="flags"><span class="flag">Tue 10 Nov</span><span class="flag">Meme</span><span class="flag rec">Recommended</span><span class="flag feeds">Feeds Mon: follow.the.money</span></div>
+    <h3 class="hook">The AI that agrees with everyone in the meeting</h3>
+    <div class="pitch">
+      <p class="row"><span class="k">What you see</span>Four people pitch four opposite plans. The AI says "great idea" to each, in the same voice.</p>
+      <p class="row"><span class="k">Why it lands</span>Everyone has watched a tool flatter them. It sets up Monday's point that a yes from AI costs nothing.</p>
+      <p class="row"><span class="k">Share line</span>Send this to whoever ran your last AI pilot.</p>
+    </div>
+    <div class="mockback">
+      <div class="fr vid"><span class="w">Great idea!</span><span class="p">3 of 4</span></div>
+      <div><p class="row"><span class="k">Mock back</span>Made in the brand kit from the direction you approved.</p>
+        <div class="press three" style="margin-top:8px"><button class="b yes">Approve</button><button class="b imp">Improve</button><button class="b no">Reject</button></div></div>
+    </div>
+    <p class="state">Idea and direction approved, 1 Nov 18:04. Waiting on your yes for the mock.</p>
+  </article>
+
+  <!-- option 2: a fresh card, nothing pressed: the default state -->
+  <article class="opt">
+    <div class="flags"><span class="flag">Tue 10 Nov</span><span class="flag">Carousel</span><span class="flag feeds">Feeds Mon: follow.the.money</span></div>
+    <h3 class="hook">Three prices for the same AI, and who pays which</h3>
+    <div class="pitch">
+      <p class="row"><span class="k">What you see</span>One model, three price tags: the free tier, the business seat, the API bill.</p>
+      <p class="row"><span class="k">Why it lands</span>Owners compare seats and never the bill behind them. One swipe shows the gap.</p>
+      <p class="row"><span class="k">Why now</span>Two of the big three changed their business pricing this week.</p>
+    </div>
+    <div class="src"><div class="thumb">Saved 29 Oct</div>
+      <p><span class="k">Inspired by</span>A price-ladder carousel you saved to Content Inspo on 29 Oct. <a href="#">Open it</a></p></div>
+    <p class="learned">Learned from you: "too much text on card 1" (26 Oct), so card 1 is five words.</p>
+    <div class="dir">
+      <div class="dir-h"><b>Suggested direction</b><span class="mono" style="font-size:11.5px">4 cards · 4:5</span></div>
+      <div class="frames">
+        <div class="fr"><span class="w">Same AI. Three prices.</span><span class="p">1 · huge type</span></div>
+        <div class="fr"><span class="w">Free</span><span class="p">2 · price tag, $0</span></div>
+        <div class="fr"><span class="w">Seat</span><span class="p">3 · tag, $30 a month</span></div>
+        <div class="fr"><span class="w">The bill</span><span class="p">4 · tag torn open</span></div>
+      </div>
+      <dl class="dl"><dt>Look</dt><dd>The price-ladder carousel above: one object per card, dark ground, yellow type.</dd>
+        <dt>Tone</dt><dd>Dry, one number per card.</dd>
+        <dt>Kit</dt><dd>Anton headline, brand yellow, the mind.the.gap mark on card 4.</dd></dl>
+    </div>
+    <div class="press"><p class="pl">The idea</p><button class="b yes">Approve</button><button class="b imp">Improve</button><button class="b no">Reject</button><button class="b">Next week</button></div>
+    <div class="press three"><p class="pl">The direction</p><button class="b yes">Approve</button><button class="b imp">Improve</button><button class="b no">Reject</button></div>
+  </article>
+
+  <!-- option 3: idea liked, direction being improved: the box he types in -->
+  <article class="opt">
+    <div class="flags"><span class="flag">Tue 10 Nov</span><span class="flag">Short</span></div>
+    <h3 class="hook">Your AI is a puppy</h3>
+    <div class="pitch">
+      <p class="row"><span class="k">What you see</span>You, to camera, 1-2-3 in 40 seconds. It wants to please you, so it tells you what you want to hear, so ask it for the case against.</p>
+      <p class="row"><span class="k">Share line</span>Ask yours for the case against. Tell me what it said.</p>
+    </div>
+    <div class="src"><div class="thumb">Saved 31 Oct</div>
+      <p><span class="k">Inspired by</span>Your idea, 28 Oct, and the clean to-camera short you saved on 31 Oct. <a href="#">Open it</a></p></div>
+    <div class="dir">
+      <div class="dir-h"><b>Suggested direction</b><span class="mono" style="font-size:11.5px">40 s · 9:16</span></div>
+      <dl class="dl"><dt>Look</dt><dd>Well lit, plain wall, fast word-by-word subtitles, a number on screen for each beat.</dd>
+        <dt>Tone</dt><dd>Warm, quick, a smile on "puppy".</dd>
+        <dt>Thumb</dt><dd>Your face, the word PUPPY in yellow.</dd></dl>
+    </div>
+    <div class="press"><p class="pl">The idea</p><button class="b yes" aria-pressed="true">Approve</button><button class="b imp">Improve</button><button class="b no">Reject</button><button class="b">Next week</button></div>
+    <div class="press three"><p class="pl">The direction</p><button class="b yes">Approve</button><button class="b imp" aria-pressed="true">Improve</button><button class="b no">Reject</button></div>
+    <div class="say"><input value="Put a real puppy cutaway on beat one, and no numbers on screen" aria-label="What would make the direction better"><button class="go">Send</button></div>
+    <p class="state wait">Your note is kept. A new direction comes back on this card.</p>
+  </article>
+
+  <!-- option 4: rejected with a reason: folds down, the reason stays visible -->
+  <article class="opt out">
+    <div class="flags"><span class="flag">Tue 10 Nov</span><span class="flag">Meme</span></div>
+    <h3 class="hook">"Just one more prompt" at 2am</h3>
+    <p class="state bad">Rejected, 1 Nov: "every AI account is doing this joke". Kept as a cue for next Sunday.</p>
+  </article>
+
+  <button class="more">1 more option for Tuesday</button>
+</section>
+
+<!-- ============ THURSDAY (folded: same cards) ============ -->
+<section class="day" id="thu">
+  <div class="day-h"><h2>Thursday 12 November</h2><span class="n">5 options · none pressed</span></div>
+  <article class="opt">
+    <div class="flags"><span class="flag">Thu 12 Nov</span><span class="flag">Carousel</span><span class="flag rec">Recommended</span><span class="flag feeds">Feeds Wed: under.the.hood</span></div>
+    <h3 class="hook">AI used to reply. Now it acts first.</h3>
+    <div class="pitch">
+      <p class="row"><span class="k">What you see</span>Two inboxes side by side: last year the AI waits to be asked; this year it has already booked the meeting.</p>
+    </div>
+    <p class="learned">Learned from you: you approved before-and-after carousels twice in October.</p>
+    <div class="dir">
+      <div class="dir-h"><b>Suggested direction</b><span class="mono" style="font-size:11.5px">4 cards · 4:5</span></div>
+      <div class="frames">
+        <div class="fr"><span class="w">It used to wait.</span><span class="p">1 · empty inbox</span></div>
+        <div class="fr"><span class="w">Now it books.</span><span class="p">2 · calendar filled</span></div>
+        <div class="fr"><span class="w">Who said yes?</span><span class="p">3 · empty chair</span></div>
+        <div class="fr"><span class="w">Wed's video</span><span class="p">4 · Wed's cover</span></div>
+      </div>
+    </div>
+    <div class="press"><p class="pl">The idea</p><button class="b yes">Approve</button><button class="b imp">Improve</button><button class="b no">Reject</button><button class="b">Next week</button></div>
+    <div class="press three"><p class="pl">The direction</p><button class="b yes">Approve</button><button class="b imp">Improve</button><button class="b no">Reject</button></div>
+  </article>
+  <button class="more">4 more options for Thursday</button>
+</section>
+
+<p class="note">Mock, synthetic data, 1 Nov 2026. How it works once built: Approve on both the idea and its direction fills the day; Growth then makes the mock in the brand kit and puts it back on the card for your final yes. Improve sends your words back and a revised card returns in its place. Reject needs a reason. Every Improve and Reject is saved word for word as a cue for next Sunday's ideas and filed to your taste ledger. The "Learned from you" line shows which of your words shaped each option. The single "Approve this week's mix" press goes; the mix is whatever you approve.</p>
+</div>
+</body>
+</html>

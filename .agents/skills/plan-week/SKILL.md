@@ -365,15 +365,19 @@ option carries `cards`: `[{"words": "<what the card says>", "picture":
    Tuesday, Thursday, Saturday, and Sunday content within the Sunday ideas
    session if you give me a few options to approve as you do the
    Mon/wed/fri"). Read `.agents/skills/plan-week/references/offdays.md`
-   first: 2 to 3 options each for Tuesday, Thursday, Saturday and Sunday on
-   the Make Your Mind Up Instagram, TikTok and YouTube Shorts channels. Its
+   first: 4 to 6 options each for Tuesday, Thursday, Saturday and Sunday on
+   the Make Your Mind Up Instagram, TikTok and YouTube Shorts channels, each
+   an idea and a suggested creative direction he approves, improves or
+   rejects for a reason (Ruling, Krish, 2026-11-01, the locked off-day
+   mock), made from the inspiration already gathered and from his past
+   verdicts (`sources.json` `offday_verdicts`). Its
    gates: someone else's image or clip is never reposted; every news claim
    names its primary source, is checked against it the same day and passes
    the fact gate; each option's copy passes the copy lint and the kill list
    before it reaches the tab; they go into ideas.json `offdays` and reach
    the tab only through `week_board.py --ideas`, never by patching the page,
    and until the board has its Off days part the room says so in step 8.
-   Growth owns the lane; his one press approves or skips each. **His own
+   Growth makes what he approved. **His own
    ideas go here as pieces he records** (Ruling, Krish, 2026-10-29): every
    idea he dropped in (`must_cover`, `kind: his_idea`) is a recorded off-day
    option, one 90-second cut said to camera or as a voiceover, unless his
@@ -510,15 +514,17 @@ after his presses, by 10:00.
    piece by itself), Wider piece (`queue/<idea_id>` with `use:
    wider_piece_context`), Future trend (`use: track_over_time`), Next week
    (`use: next_week` with `target_week`) and Reject (`use: not_for_us`, with
-   his `reason`), and on the off-day options, approve or skip (`use:
-   offday` with `day` and `approved`). Read them: `python3
+   his `reason`), and on each off-day option his verdict on the idea, the
+   direction and any returned mock (`queue/off-<day>-<option>`, each side
+   `{verdict, words}`: approve, improve, reject or next week; a piece he
+   records keeps `approved`). Read them: `python3
    scripts/post-pack/board_web.py read <Monday> picks`, then the same with
    `queue` and `comments`. Only documents whose `updated_by` is Krish are
    his; nothing else is read back as his. Then say it back to him in one
    message, by day: what he picked, with his note in his exact words; each
    idea he kept for a wider piece, a future trend or next week, and each he
-   rejected with his reason in his exact words; and the off-day posts he
-   approved. Check that each pick reached its piece (`scheduled` in
+   rejected with his reason in his exact words; and the off-day options he
+   approved, improved (his words) or rejected (his reason). Check that each pick reached its piece (`scheduled` in
    `python3 scripts/engine.py GET "/api/week/options?week_start=<Monday>"
    --full`), and name any that did not; for one that did not, write the
    picked idea onto its piece as the day's rank 1 option through

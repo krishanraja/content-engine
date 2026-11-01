@@ -1957,6 +1957,8 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `const SCRIPT_CUTS`
 - `const TITLE_SURFACES`
 - `function validBody(collection: string, id: string, body: unknown): boolean`
+- `const OFFDAY_SIDES`
+- `const OFFDAY_VERDICTS`
 - `const RECORDED_STYLES`
 - `const RECORDED_SERIES`
 - `const COMMENT_ACTS`
@@ -1971,6 +1973,15 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 ### `apps/control-plane/api/board/_handler.ts`
 
 - `function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: PressDeps = {})`
+
+### `apps/control-plane/api/board/_offdayRevise.ts`
+
+A revised off-day card when Krish presses Improve (Ruling, Krish, 2026-11-01, locking the off-day mock: Improve
+
+- `const OFFDAY_REVISE_EVENT`
+- `const OFFDAY_REVISE_REPO`
+- `type ReviseDispatch`
+- `async function dispatchOffdayRevise( payload: { week: string; option: string }, env: Record<string, string | undefined>…`
 
 ### `apps/control-plane/api/board/_posted.ts`
 
@@ -2001,6 +2012,7 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `async function preparePress(collection: string, id: string, body: Body): Promise<Body>`
 - `async function heldBecause(making: unknown, texts: Record<string, string>): Promise<string | null>`
 - `function feelReport(week: string, id: string, body: Body, now: string)`
+- `function offdayReports(week: string, id: string, body: Body, now: string)`
 - `function scoreRow(week: string, id: string, body: Body, now: string)`
 - `async function recordTitle(db: SupabaseClient, body: Body): Promise<'recorded' | 'waits_on_migration' | 'failed' | null>`
 - `function offdayDate(week: string, day: string): string`
@@ -3047,6 +3059,15 @@ The content-watcher queue: what the home computers may claim, report and read, d
 ### `apps/control-plane/api/watch/upload.ts`
 
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
+
+### `apps/control-plane/api/week/_offdayVerdicts.ts`
+
+His verdicts on past off-day options, for Sunday's gather (GET /api/week/options?include=sources, `offday_verdicts`).
+
+- `const OFFDAY_WEEKS`
+- `interface OffdayVerdict`
+- `function buildOffdayVerdicts(rows: Row[]): { verdicts: OffdayVerdict[]; counts: Record<string, number> }`
+- `function offdayWeeksBefore(week: string, n = OFFDAY_WEEKS): string[]`
 
 ### `apps/control-plane/api/week/options.ts`
 
