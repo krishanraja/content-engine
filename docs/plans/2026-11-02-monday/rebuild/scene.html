@@ -246,8 +246,9 @@ S.open=(t)=>{if(t>=OPEN_END+0.6)return '';const ex=W(t,OPEN_END,0.5),br=1+0.012*
   const snap=1.2,f=t-snap,dy=f>0?f*f*2600:0,rot=f>0?f*110:0,fo=f>0?clamp(1-f*1.4):1;
   if(!V){
     s+=`<div class="abs" style="left:${50-ex*760}px;top:250px;width:600px;height:560px;background:${INK};border-radius:24px;box-shadow:14px 14px 0 rgba(12,21,18,.25);transform:scale(${br});transform-origin:40% 50%">
-      <div class="anton" style="position:absolute;left:36px;top:40px;width:540px;font-size:124px;color:${CREAM}">The bottom<br>rung</div>
-      <div class="anton" style="position:absolute;left:36px;top:300px;font-size:124px;white-space:nowrap"><span class="hl" style="--k:1;color:${INK}">is going.</span></div>
+      <div class="anton" style="position:absolute;left:36px;top:34px;font-size:118px;white-space:nowrap;color:${CREAM}">The bottom</div>
+      <div class="anton" style="position:absolute;left:36px;top:150px;font-size:118px;white-space:nowrap;color:${CREAM}">rung</div>
+      <div class="anton" style="position:absolute;left:36px;top:278px;font-size:118px;white-space:nowrap"><span class="hl" style="--k:1;color:${INK}">is going.</span></div>
       <div style="position:absolute;left:38px;top:470px;font:800 30px Archivo;color:${CREAM}">Anthropic's own hiring data</div></div>`;
     const L=1350,R=1770,TOP=110,BOT=990,BY=930;let sv=`<svg width="1920" height="1080" style="position:absolute;left:${ex*760}px;top:0;overflow:visible"><g stroke="${INK}" stroke-width="34" stroke-linecap="round" fill="none">`;
     sv+=`<line x1="${L}" y1="${TOP}" x2="${L}" y2="${BOT}"/><line x1="${R}" y1="${TOP}" x2="${R}" y2="${BOT}"/>`;

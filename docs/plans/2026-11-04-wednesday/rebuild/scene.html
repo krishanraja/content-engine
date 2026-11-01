@@ -89,7 +89,7 @@ function opener(t){if(t>=3.5)return; // finished on frame 0: the headline set, h
       <div class="anton" style="position:absolute;left:36px;top:22px;font-size:112px;color:${CREAM};white-space:nowrap">AI now</div>
       <div class="anton" style="position:absolute;left:36px;top:132px;font-size:112px;white-space:nowrap"><span class="hl" style="color:${INK}">acts first.</span></div>
       <div class="mono" style="position:absolute;right:30px;top:34px;font-size:24px;color:${LIL};background:#1b2622;padding:5px 12px">UNDER.THE.HOOD</div></div>`);
-    const arr=W(t,0,0.55),x=444+(1-arr)*160+out*700;
+    const arr=W(t,0,0.55),x=420+(1-arr)*40+out*700;
     put(workOrder(1,'Send a message','GMAIL',x,1150+(1-arr)*40,(1-arr)*-6+Math.sin(t*2.6)*1.4-3,t>=1.2?W(t,1.2,0.16):0,2.6,'gmail'))}}
 // ---------------- the close: the one question, the wordmark, the address ----------------
 function closer(t,s){const inn=W(t,s.a,0.5),pu=1+.07*W(t,s.a,TL.dur-s.a);
