@@ -197,6 +197,48 @@ class VentureQueue(unittest.TestCase):
             self.assertTrue(v['engine'].startswith('growth-'))
 
 
+class WhatCodexDid(unittest.TestCase):
+    def test_codex_doing_nothing_is_said_first_in_its_own_words(self):
+        import subprocess
+        quiet = subprocess.CompletedProcess([], 0, 'task finished', '')
+        self.assertIn('Codex made no changes', lane.dispatch_problems(quiet, [])[0])
+        self.assertIn('task finished', lane.dispatch_problems(quiet, [])[0])
+        broke = subprocess.CompletedProcess([], 2, '', 'not logged in')
+        self.assertIn('Codex exited 2', lane.dispatch_problems(broke, ['a.ts'])[0])
+        self.assertIn('not logged in', lane.dispatch_problems(broke, ['a.ts'])[0])
+        self.assertEqual(lane.dispatch_problems(quiet, ['a.ts']), [])
+
+    def test_changed_files_sees_commits_and_uncommitted_work(self):
+        import subprocess
+        with tempfile.TemporaryDirectory() as temp:
+            wt = Path(temp)
+            git = ['git', '-C', temp, '-c', 'user.name=t', '-c', 'user.email=t@t']
+            subprocess.run(['git', 'init', '-q', temp], check=True)
+            (wt / 'a.txt').write_text('a', encoding='utf-8')
+            subprocess.run(git + ['add', '-A'], check=True); subprocess.run(git + ['commit', '-q', '-m', 'base'], check=True)
+            base = subprocess.run(['git', '-C', temp, 'rev-parse', 'HEAD'], capture_output=True, text=True).stdout.strip()
+            self.assertEqual(lane.changed_files(wt, base), [])
+            (wt / 'b.txt').write_text('b', encoding='utf-8')
+            subprocess.run(git + ['add', '-A'], check=True); subprocess.run(git + ['commit', '-q', '-m', 'codex'], check=True)
+            (wt / 'c.txt').write_text('c', encoding='utf-8')
+            self.assertEqual(lane.changed_files(wt, base), ['b.txt', 'c.txt'])
+
+
+class Routes(unittest.TestCase):
+    def test_an_explicit_wsl_route_wins_over_a_companion_here(self):
+        from unittest.mock import patch
+        ref = {'fields': 'docs/ve/cards/x.fields.json', 'ref': 'main'}
+        with patch.object(lane, 'has_companion', return_value=True), \
+                patch.object(lane, '_wsl_route', return_value=('Ubuntu', '/home/k/dev/content-engine')), \
+                patch.object(lane, '_in_wsl', return_value={'ok': True, 'host': 'Ubuntu'}) as wsl, \
+                patch.object(lane, 'build') as local:
+            self.assertEqual(lane._run(ref)['host'], 'Ubuntu')
+            wsl.assert_called_once(); local.assert_not_called()
+        with patch.object(lane, 'has_companion', return_value=True), patch.object(lane, '_wsl_route', return_value=None), \
+                patch.object(lane, 'build', return_value={'ok': True, 'host': 'here'}) as local:
+            self.assertEqual(lane._run(ref)['host'], 'here')
+
+
 class Wsl(unittest.TestCase):
     def test_the_build_runs_in_the_named_distro_and_clone_with_no_key_on_the_line(self):
         cmd = lane.wsl_command('docs/ve/cards/x.fields.json', 'main', None, 'Ubuntu', '~/dev/content-engine')
