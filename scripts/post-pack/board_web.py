@@ -110,6 +110,45 @@ def upload(week, file, data):
     except urllib.error.URLError:
         raise ValueError('Storage upload failed; signed URL withheld') from None
 
+VIDEO_FILLS = ('video-long', 'video-short', 'video-feature')
+KRISH_WORDS = re.compile(r'^Krish, \d{4}-\d{2}-\d{2}: \S')
+
+
+def ready_video_problems(page, mappings, check=None):
+    """Each video a day's materials mark ready must be the exact bytes of a cut whose delivery receipt passes
+    (quality.delivery_problems, the opening check included), or carry Krish's own words on its asset. Krish, 2026-11-01,
+    after four cuts reached the board as ready with no receipt: "figure out how this can never happen again durably"."""
+    import board_materials
+    if check is None:
+        import quality
+        check = lambda path: quality.delivery_problems(path, str(path) + '.validation.json')
+    by_source = {m.get('source_url'): m for m in mappings}
+    problems = []
+    for day, data in board_materials.previous(page).items():
+        if data.get('status') != 'ready':
+            continue
+        for row, item in board_materials.fills(data).items():
+            if row not in VIDEO_FILLS:
+                continue
+            asset = by_source.get(item.get('url'))
+            if asset is None:
+                problems.append(f'{day} {row}: no asset mapping names its link, so its bytes cannot be checked')
+                continue
+            if KRISH_WORDS.match(str(asset.get('krish') or '')):
+                continue
+            path = asset.get('path') or asset.get('checked_file')
+            if not path:
+                problems.append(f'{day} {row}: no local file to check (give path, or checked_file for an existing asset)')
+                continue
+            if asset.get('existing_sha256') and sha(Path(path).read_bytes()) != asset['existing_sha256']:
+                problems.append(f'{day} {row}: checked_file is not the bytes of the existing asset')
+                continue
+            found = check(path)
+            if found:
+                problems.append(f'{day} {row}: ' + '; '.join(found))
+    return problems
+
+
 def publish(args):
     import week_board
     path = Path(args.page)
@@ -126,6 +165,11 @@ def publish(args):
     if getattr(args, 'expected_build', None) and state.get('build_id') != args.expected_build:
         raise ValueError('Active board changed since preparation; download it and rebuild before publishing')
     mappings = json.loads(Path(args.assets).read_text(encoding='utf-8')) if args.assets else []
+    held = ready_video_problems(page, mappings)
+    if held:
+        raise ValueError('A video shown ready has no passing delivery receipt for its bytes: ' + ' | '.join(held)
+                         + '. Set that day\'s materials to review with this reason in its note, or carry Krish\'s own '
+                         'words on the asset ("krish": "Krish, YYYY-MM-DD: ...")')
     for item in mappings:
         asset_id = item['id']
         if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.:-]{0,159}', asset_id) or asset_id in assets:

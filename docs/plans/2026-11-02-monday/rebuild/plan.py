@@ -42,15 +42,16 @@ def paper(a, b, img, mode='side', lift=0.85, **kw):
     g['lift'] = min(lift, 1.2); g['p']['sweep'] = round(max(lift, 1.7), 2); return g
 
 def long():
-    off = 0.6; c = Clock('long', off); A = c.at
+    off = -2.4; c = Clock('long', off); A = c.at        # take 2.40 ("Junior hiring") is output 0.0: his voice on the first frame
     S = []; P = []                                     # segments, push-ins (output seconds, strength)
     # 0 to 36.8: the approved proof, as it was
-    S.append(seg(3.0, 12.6, 'brand')); P += [(8.1, .25), (14.55, .10)]
-    S.append(seg(12.6, 20.6, 'side', 'ladder', lit=14.5, gap=1, cover=15.0, x=300))
-    S.append(seg(20.6, 30.1, 'full', 'badges', count=23.7, fall=28.44, land=29.62))
-    S.append(seg(29.75, 31.9, 'brand')); P += [(30.0, .22)]
+    # the proof's first 37 s, each time 3.0 s earlier now the music-only opener is gone
+    S.append(seg(0.0, 9.6, 'brand')); P += [(1.2, .16), (5.1, .25), (11.55, .10)]
+    S.append(seg(9.6, 17.6, 'side', 'ladder', lit=11.5, gap=1, cover=12.0, x=300))
+    S.append(seg(17.6, 27.1, 'full', 'badges', count=20.7, fall=25.44, land=26.62))
+    S.append(seg(26.75, 28.9, 'brand')); P += [(27.0, .22)]
     mg = A('and many of its managers', 30)
-    S.append(seg(31.9, mg, 'side', 'bars', six=34.2))
+    S.append(seg(28.9, mg, 'side', 'bars', six=31.2))
     first = A('so when AI writes', 36)
     S.append(paper(mg, first, 'report-managers.jpg', lift=A('hiring less', 36) - mg + 0.0))
     alone = A('makes sense but Anthropic', 40)
@@ -121,16 +122,17 @@ def long():
     S.append(seg(each_team, full, 'side', 'actions', cards=cards))
     close = round(A("I'll see you there", 286, end=True) + 0.35, 2)
     S.append(seg(full, close, 'brand')); P += [(full, .16), (A('makeyourmindup.ai.', 283), .22)]
-    shakes = [[1.55, 14], [29.62, 10], [A('first draft itself', 118) + 0.1, 9], [A('20 tellers to 13', 66) + 0.9, 6]]
+    shakes = [[1.2, 14], [26.62, 10], [A('first draft itself', 118) + 0.1, 9], [A('20 tellers to 13', 66) + 0.9, 6]]
     take_end = close - off + 0.25
-    return dict(cut='long', off=off, take_in=2.4, capFrom=2.4, closeAt=close, dur=round(close + 4.4, 2), take_end=round(take_end, 2),
+    url = round(A('makeyourmindup.ai.', 283) - 0.4, 2)
+    return dict(cut='long', url=url, off=off, take_in=2.4, capFrom=2.4, closeAt=close, dur=round(close + 4.4, 2), take_end=round(take_end, 2),
                 segs=S, push=P, shakes=shakes, dress=[])
 
 def short():
-    off = 2.4; c = Clock('short', off); A = c.at          # take 0.6 enters at output 3.0
+    off = -0.8; c = Clock('short', off); A = c.at         # take 0.80 is output 0.0: his first word on the first frame
     S = []; P = []
     q = A('so where will', 5)
-    S.append(seg(3.0, q, 'face')); P += [(A('has actually collapsed', 3), .2)]
+    S.append(seg(0.0, q, 'face')); P += [(1.2, .14), (A('has actually collapsed', 3), .2)]
     st = A('and Anthropic\'s study', 9)
     S.append(seg(q, st, 'band', 'bladder', lit=A('in 2030', 8)))
     many = A('and many of its managers', 15)
@@ -159,8 +161,9 @@ def short():
     S.append(seg(name, full, 'band', 'bcards', cards=[dict(at=0.0, big='1', label='Name them'), dict(at=round(A('and give that junior', 56) - name, 2), big='2', label='One dull job')]))
     close = round(A('makeyourmindup.ai.', 61, end=True) + 0.45, 2)
     S.append(seg(full, close, 'face')); P += [(full, .14), (A('makeyourmindup.ai.', 61), .2)]
-    shakes = [[1.55, 14], [A('first draft itself', 28) + 0.1, 9]]
-    return dict(cut='short', off=off, take_in=0.6, capFrom=0.6, closeAt=close, dur=round(close + 4.4, 2), take_end=round(close - off + 0.2, 2),
+    shakes = [[1.2, 14], [A('first draft itself', 28) + 0.1, 9]]
+    url = round(A('makeyourmindup.ai.', 61) - 0.4, 2)
+    return dict(cut='short', url=url, off=off, take_in=0.8, capFrom=0.8, closeAt=close, dur=round(close + 4.4, 2), take_end=round(close - off + 0.2, 2),
                 segs=S, push=P, shakes=shakes, dress=[[3.0, q - 0.3], [full, close - 0.75]])
 
 for T in (long(), short()):

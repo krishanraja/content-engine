@@ -58,7 +58,7 @@ class FilingTests(unittest.TestCase):
                 patch.object(produce_day.plan_files, 'pack_folder', return_value='2026-11-02 Mon follow.the.money - Who pays for AI'), \
                 patch.object(produce_day, 'review_sheet', side_effect=lambda src, out: Path(out).write_bytes(b'png')), \
                 patch('visual_clarity.delivery_problems', return_value=[]), patch('media_standard.enforced', return_value=False), \
-                patch('quality.motion_problems', return_value=[]):
+                patch('quality.motion_problems', return_value=[]), patch('opening_gate.delivery_problems', return_value=[]):
             return produce_day.file_and_record(self.work / 'post.json', 'p1', self.cuts, self.thumb, self.work)
 
     def test_a_cut_without_its_receipt_cannot_be_filed(self):

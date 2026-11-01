@@ -30,11 +30,10 @@ class Cut:
     def layout(self, t):
         """(column centre x, push scale) or None when no face shows. Phone: (None, scale)."""
         P = self.P
-        if t < 2.8 or t >= P['closeAt'] + 0.1: return None
+        if t >= P['closeAt'] + 0.1: return None
         segs = P['segs']; cur = None
         for i, g in enumerate(segs):
             if g['a'] <= t < g['b']: cur = i
-        if cur is None and t < 3.0: cur = 0
         if cur is None: return None
         g = segs[cur]
         if g['mode'] == 'full':
@@ -56,7 +55,6 @@ class Cut:
             prv = next((self.target(x) for x in reversed(segs[:cur]) if self.target(x) and x['mode'] != 'full'), tgt)
             prev_full = cur > 0 and segs[cur - 1]['mode'] == 'full'
             cx = tgt if prev_full else prv + (tgt - prv) * W(t, g['a'], 0.55)
-        if t < 3.05: s = 1.0
         return cx, max(1.0, s)
     def face_img(self, frame, s):
         h, w = frame.shape[:2]
@@ -107,8 +105,7 @@ def frame(cut, bg, fg, t, get):
         base = Image.open(io.BytesIO(bg.screenshot(type='jpeg', quality=95))).convert('RGB')
         f = get(t) if lay else None
         if lay and f is not None:
-            cx, s = lay; tile = cut.face_img(f, s); a = min(1, (t - 2.8) / 0.25)
-            if a < 1: tile = Image.blend(base.crop((round(cx - 304), 0, round(cx + 304), 1080)), tile, a)
+            cx, s = lay; tile = cut.face_img(f, s)
             base.paste(tile, (round(cx - 304), 0))
     top = Image.open(io.BytesIO(fg.screenshot(type='png', omit_background=True))).convert('RGBA')
     return Image.alpha_composite(base.convert('RGBA'), top).convert('RGB')
@@ -130,29 +127,38 @@ def audio(cut, video):
     P = cut.P; dur = P['dur']; tin = P['take_in']; spoken = P['take_end'] - tin; lead = P['off'] + tin   # = 3.0
     v, m, mix = OUT / f'{cut.name}-v.wav', OUT / f'{cut.name}-m.wav', OUT / f'{cut.name}-mix.wav'
     # his voice: three seconds of silence, then the take, padded to the end (concat, never adelay+atrim)
-    subprocess.run([FF, '-v', 'error', '-y', '-f', 'lavfi', '-t', f'{lead}', '-i', 'anullsrc=r=48000:cl=stereo', '-ss', f'{tin}', '-t', f'{spoken}', '-i', str(cut.take),
-                    '-filter_complex', f'[1:a]aresample=48000,aformat=channel_layouts=stereo,afade=t=out:st={spoken - 0.25}:d=0.25[t];[0:a][t]concat=n=2:v=0:a=1,apad=whole_dur={dur}[o]',
-                    '-map', '[o]', '-t', f'{dur}', str(v)], check=True)
+    if lead > 0.01:
+        subprocess.run([FF, '-v', 'error', '-y', '-f', 'lavfi', '-t', f'{lead}', '-i', 'anullsrc=r=48000:cl=stereo', '-ss', f'{tin}', '-t', f'{spoken}', '-i', str(cut.take),
+                        '-filter_complex', f'[1:a]aresample=48000,aformat=channel_layouts=stereo,afade=t=out:st={spoken - 0.25}:d=0.25[t];[0:a][t]concat=n=2:v=0:a=1,apad=whole_dur={dur}[o]',
+                        '-map', '[o]', '-t', f'{dur}', str(v)], check=True)
+    else:   # his voice on the first frame
+        subprocess.run([FF, '-v', 'error', '-y', '-ss', f'{tin}', '-t', f'{spoken}', '-i', str(cut.take),
+                        '-af', f'aresample=48000,aformat=channel_layouts=stereo,afade=t=out:st={spoken - 0.25}:d=0.25,apad=whole_dur={dur}',
+                        '-t', f'{dur}', str(v)], check=True)
     subprocess.run([FF, '-v', 'error', '-y', '-stream_loop', '-1', '-i', str(MUSIC), '-af', f"aresample=48000,aformat=channel_layouts=stereo,atrim=0:{dur},volume=0.55,"
                     # under his voice the bed stays down, all the way to his last word; it swells only once the close is on screen
-                    f"volume='if(lt(t,3.0),1,if(lt(t,{P['closeAt'] + 0.05}),0.45,min(1,0.45+0.55*(t-{P['closeAt'] + 0.05})/0.4)))':eval=frame,"
+                    f"volume='if(lt(t,{lead}),1,if(between(t,{P['url']},{P['closeAt'] + 0.05}),0.04,if(lt(t,{P['closeAt'] + 0.05}),0.225,min(1,0.04+0.96*(t-{P['closeAt'] + 0.05})/0.4))))':eval=frame,"   # almost silent under the address"
                     f"afade=t=out:st={dur - 1.2}:d=1.2",
                     '-t', f'{dur}', str(m)], check=True)
     subprocess.run([FF, '-v', 'error', '-y', '-i', str(v), '-i', str(m), '-filter_complex',
-                    '[0:a]asplit[a][k];[1:a][k]sidechaincompress=threshold=0.03:ratio=9:attack=20:release=400[md];[a][md]amix=inputs=2:normalize=0,atrim=0:%s[o]' % dur,
+                    '[0:a]asplit[a][k];[1:a][k]sidechaincompress=threshold=0.02:ratio=12:attack=20:release=400[md];[a][md]amix=inputs=2:normalize=0,atrim=0:%s[o]' % dur,
                     '-map', '[o]', str(mix)], check=True)
     meas = subprocess.run([FF, '-hide_banner', '-i', str(mix), '-af', 'loudnorm=I=-14:TP=-2.5:LRA=11:print_format=json', '-f', 'null', '-'], capture_output=True, text=True).stderr
     j = json.loads(re.findall(r'\{[^{}]*\}', meas)[-1])
     final = cut.out.with_suffix('.mp4')
-    for lim in (0.7, 0.6, 0.5, 0.42):   # AAC overshoots the limiter: encode, measure the true peak, tighten until it holds -1 dBTP
-        ln = (f"loudnorm=I=-14:TP=-2.5:LRA=11:measured_I={j['input_i']}:measured_TP={j['input_tp']}:measured_LRA={j['input_lra']}"
-              f":measured_thresh={j['input_thresh']}:offset={j['target_offset']}:linear=true,alimiter=limit={lim}:level=false")
+    target, lim = float(os.environ.get('MON_TARGET', -14.0)), float(os.environ.get('MON_LIMIT', 0.75))   # a start the last run found
+    for attempt in range(6):   # AAC overshoots the limiter and the limiter takes a little loudness: measure the encoded file,
+        # lower the ceiling when the true peak is over -1.1 dBTP, raise the target by the shortfall when it is under -14.5 LUFS
+        ln = (f"loudnorm=I={target:.1f}:TP=-2.5:LRA=11:measured_I={j['input_i']}:measured_TP={j['input_tp']}:measured_LRA={j['input_lra']}"
+              f":measured_thresh={j['input_thresh']}:offset={j['target_offset']}:linear=true,alimiter=limit={lim:.2f}:level=false")
         subprocess.run([FF, '-v', 'error', '-y', '-i', str(video), '-i', str(mix), '-af', ln, '-map', '0:v', '-map', '1:a', '-c:v', 'copy',
                         '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-t', f'{dur}', '-movflags', '+faststart', str(final)], check=True)
         r = subprocess.run([FF, '-hide_banner', '-i', str(final), '-map', '0:a', '-af', 'ebur128=peak=true', '-f', 'null', '-'], capture_output=True, text=True).stderr
         tp = float(re.findall(r'Peak:\s+(-?[\d.]+)', r)[-1]); li = float(re.findall(r'I:\s+(-?[\d.]+) LUFS', r)[-1])
-        print(f'limit {lim}: {li} LUFS, true peak {tp} dBTP', flush=True)
-        if tp <= -1.1: break
+        print(f'target {target:.1f}, limit {lim:.2f}: {li} LUFS, true peak {tp} dBTP', flush=True)
+        if tp > -1.1: lim -= 0.05; continue
+        if li < -14.5: target = min(-12.0, target + (-14.0 - li)); continue
+        break
     return final
 
 def stills(name, out, ts):

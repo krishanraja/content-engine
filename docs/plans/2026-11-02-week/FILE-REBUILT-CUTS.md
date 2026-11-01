@@ -1,57 +1,58 @@
 # Filing the four rebuilt cuts (2 and 4 November)
 
-Krish approved all four on 1 November 2026, in his words: "Approved, file them and put them on the boards". Filing is the agent's job, never his (Krish, 2026-11-01: "what are you talking about? I never do this step").
+Filing is the agent's job, never his (Krish, 2026-11-01: "what are you talking about? I never do this step").
 
-Done in the cloud session (1 Nov):
-- On the 2 Nov publish board (build `f8a4d486…`): the four cuts were uploaded to the board as assets, with the shas checked on readback, and both days' materials are set to ready.
-- The archive folders, named by `scripts/quick-edit/archive.py`, were built in that session's `.cache/archive`.
-- SyncNet now runs in a cloud session: the pinned checkout (revision 907c0b5) and the model, matching `config/lipsync.json`'s sha, come from the public mirror `huggingface.co/lithiumice/syncnet` (`syncnet_v2.model`, `sfd_face.pth`).
+## What Krish approved
 
-Not done: the library send and `making.py video`. Both stop at the delivery gate (`quality.delivery_problems`), and two of its checks fail when measured on these bytes. Neither gate was weakened.
-- **`heard`** needs the finished file's transcript to match the take's, word for word. faster-whisper `small.en` on each finished file, against the take words over the span the cut plays, finds these differences:
-  - Mon short: 10. Includes "makeyourmindup ai" heard as "make your mind up don't you".
-  - Mon long: 35. "Anthropic" is heard as "anthroppit" throughout.
-  - Wed short: 3: "set up", "limit", "makeyourmindup".
-  - Wed long: 37.
+These are the cuts with the rebuilt openings and the remixed audio. His words, all typed on 1 November 2026:
 
-  Most of the differences are mishearings under the music bed. The previous cuts failed this check the same way.
-- **`visual_clarity`** caps each picture at 16 words and refuses on-screen text that repeats the narration. The Monday cuts show highlighted report pages and spoken quotes, such as "Employment protections for incumbents will not benefit those not hired to begin with". The Wednesday cuts show the Duet screen. So the check fails unless Krish gives a ruling on words on screen, which the gate accepts only in his own words.
-
-The next step is a session decision, not his chore: either Krish rules on the two gates for these cuts in his own words, or the cuts are re-mixed so the finished voice transcribes cleanly and the text states are trimmed. Then build the receipts and run the steps below.
-
-`send.py` refuses a video without a passing receipt, and so does `making.py video --video-file`.
-
-## The files
-
-Download each from the board's Finished videos rows. The full-size files sit behind the board assets: content.krishraja.com/board/2026-11-02, Monday and Wednesday, "Download the 5-minute video" and "Download the 90-second video".
+- The set: "Approved, file them and put them on the boards".
+- The openings: "yes, rebuild the openings and fix the audio".
+- Monday's cuts: "I like it - looks good".
+- Monday long's four words: "yes all good".
+- Wednesday long's four words: "Heard them, all there".
+- The words on screen: "Yes, happy with the words on screen".
 
 | Cut | sha256 | Length |
 |---|---|---|
-| Mon long 16:9 | `bb83752650778d7177da436d8f980bb3f5a9477a66d1932f025b93c15d0a037c` | 293.47 s |
-| Mon short 9:16 | `ad4c916883521f431c306d2699a502f2617dc83dc01f3d0199040c6e279870f6` | 71.7 s |
-| Wed long 16:9 | `5dbd52f3efb673f41e7934b7a1d616137c0b9d199a1ba06583cd9b684bc8eeaa` | 289.7 s |
-| Wed short 9:16 | `4cc08b7afaae3ef7cc957df11397824521538b83abb6f9016c71376c504c4302` | 80.8 s |
+| Mon long 16:9 | `bda934f51674f3960ac7a1c6d43ff2d31c436f30b08f438a23b6c96c1cd792a1` | 290.47 s |
+| Mon short 9:16 | `cd64c0458814cb6c2710b18a31016f2fde66705e2cc10e722d73b5ec5158ed22` | 68.47 s |
+| Wed long 16:9 | `9ac6f10b757757615d8a373740ee38eef74c193335adf90bf2bbcfdbc9591a44` | 286.8 s |
+| Wed short 9:16 | `491cb78cf350dc80f4841ddd0d7c327abcbcb1c33cffde751719486400ca6201` | 77.8 s |
 
-The cuts were built by the scripts under `docs/plans/2026-11-02-monday/rebuild/` and `docs/plans/2026-11-04-wednesday/rebuild/`. Each take plays continuously with no joins, so the joins gate has nothing to join.
+## Where they are
 
-## Steps, from the repository root, with `MAKING_BY="Claude Code"`, `MINDMAKE_SYNCNET_ROOT` and `MINDMAKE_SYNCNET_MODEL` set
+All four are on the 2 Nov publish board, build `739e66ab`, read back with each video's sha matching. Monday and Wednesday are marked **review**, with the reason on the board. Friday stays ready: its videos carry Krish's approve-for-publish words (picks/fri-publish), and they now resolve to stored assets.
 
-1. Receipts. For each file, build `<file>.validation.json` as `.agents/skills/produce-video/SKILL.md` and Monday 26's `video/CODEX_FINISH.md` step 4 describe:
-   - `full_review`: Krish's words above, dated 2026-11-01.
-   - `heard`: from `scripts/quick-edit/words_gate.py`.
-   - `loudness`: measured on the file.
-   - `visuals`: the visual gate.
-   - `motion`: from the stabilised takes `.cache/produce/<piece>/takes/*-stable.mp4`.
-   - `visual_clarity`.
-   - `sync`: `scripts/quick-edit/sync_check.py`.
+## The delivery checks, measured on these bytes
 
-   If a check fails, stop and report it; never write a pass that was not measured.
-2. Archive: run `scripts/quick-edit/archive.py`, exactly as in `docs/plans/2026-11-02-monday/video/FILE.md` step 2 and `docs/plans/2026-11-04-wednesday/video/FILE.md` step 1, but on the four rebuilt files and the picked thumbnails:
-   - Mon: `.cache/produce/2026-11-02-9a0c97af/thumbs/thumb-16x9.jpg` and `thumb-9x16.jpg`.
-   - Wed: `.cache/produce/2026-11-04-b63d2507/thumbs/thumb-wide-1280x720.jpg` and `thumb-tall-1080x1920.jpg`.
-3. Library: `send.py "ARCHIVE FOLDER" --as "3 Posts/<pack folder>/3 Video" --purpose "The finished videos and their thumbnails: wide 16:9 for YouTube and Substack, tall 9:16 for Shorts, Reels, TikTok and LinkedIn"`, dry run first. The pack folders are:
-   - `2026-11-02 Mon follow.the.money - Who trains your 2030 seniors`
-   - `2026-11-04 Wed under.the.hood - Claude Duet`
-4. Record: `making.py <piece> video long|short ... --video-file <file> --seconds <length above> --music no-curves-instrumental`, with the paths and thumbnails named in each day's `video/FILE.md` step 4. Then `making.py <piece> show`.
+`docs/plans/2026-11-02-week/receipts.py` writes each receipt beside its file, and `sync_cuts.py` runs SyncNet. Every one of these passes on all four cuts:
+- **opening:** `opening_gate.py`.
+- **words:** `words_gate.py`, machine-written. The two long cuts use Krish's heard_as clearances in their EDLs, `docs/plans/2026-11-0*/rebuild-long.edl.json`. Wednesday long is checked on two local aligners, faster-whisper small.en and medium.en: medium.en hears ".ai." at the very end, which small.en heard as nothing.
+- **loudness:** about -14.5 LUFS, true peak -1.0 to -1.8 dBTP.
+- **sync:** SyncNet, now with the S3FD face detector, which finds the face in every frame.
+- **motion:** the takes' stabilisation evidence, plus a framing review of the finished frames.
+- **heard:** Krish's adjudication, with the raw recognizer result kept.
+- **visuals** and **full_review.**
 
-Readback: `making.py <piece> show` lists both Video assets as done for each piece.
+## What still blocks
+
+**`visual_clarity`.** Krish's ruling on the words on screen is in hand. The gate also needs two more things:
+- a frame-exact inventory of every rendered text state, made from the frames;
+- an independent, blinded three-second comprehension review of each state, by a reviewer that is not the author and has seen no sound and no captions.
+
+The plan segments are not fine-grained enough to stand in for the inventory: the opener and the changing counters sit inside larger segments. Mid-state frames of every segment are in `.cache/proof/vc/<cut>/`, as a starting point.
+
+Once a reviewer writes the inventory and the review and `receipts.py status` reads clean, the remaining steps are:
+1. Archive with `scripts/quick-edit/archive.py`, with `MINDMAKE_ARCHIVE_ROOT` set and the share copies in a `share/` folder beside each video.
+2. Send each folder with `send.py`, dry run first, to:
+   - `3 Posts/2026-11-02 Mon follow.the.money - Who trains your 2030 seniors/3 Video`
+   - `3 Posts/2026-11-04 Wed under.the.hood - Claude Duet/3 Video`
+3. Record each cut with `making.py <piece> video long|short --video-file <file>`, as in each day's `video/FILE.md` step 4, with the lengths above.
+4. Republish the board with both days set to ready.
+
+## Engine fixes made on the way
+
+- `sync_check.extract`: overlapping windows now decode. Before this, every real run ended with "Sequential decode ended before all diagnostic windows".
+- Face finding: S3FD, with its weights pinned, and Haar only as a fallback. Haar found the face in 20 to 29% of Wednesday's frames because of the cap and glasses.
+- The environment: torch reinstalled after a half-finished install, and opencv put back to its pinned 4.11 (5.0 has no CascadeClassifier).

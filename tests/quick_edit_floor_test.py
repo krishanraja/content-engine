@@ -215,6 +215,21 @@ class LipSync(unittest.TestCase):
         self.assertEqual(result['status'], 'not_run')
         self.assertIn('fetching it failed', result['reason'])
 
+    @unittest.skipUnless(__import__('importlib.util').util.find_spec('cv2'), 'OpenCV is not installed here (CI); the lip-sync scorer only runs where it is')
+    def test_the_face_detector_is_s3fd_or_says_it_fell_back(self):
+        import sync_check
+        saved, sync_check._FINDER = sync_check._FINDER, None
+        kept = [p for p in sys.path if (Path(p) / 'detectors/s3fd/__init__.py').is_file()]
+        for p in kept:
+            sys.path.remove(p)
+        try:
+            name, find = sync_check.face_detector()
+            self.assertTrue(name.startswith('haar (S3FD did not load'))
+            self.assertTrue(callable(find))
+        finally:
+            sys.path.extend(kept)
+            sync_check._FINDER = saved
+
     def test_a_named_install_is_never_fetched_over(self):
         self.assertFalse(lipsync_gate.fetchable(self.cfg, env={'MINDMAKE_SYNCNET_ROOT': '/x'}))
         self.assertFalse(lipsync_gate.fetchable(self.cfg, env={'MINDMAKE_SYNCNET_NO_FETCH': '1'}))

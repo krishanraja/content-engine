@@ -32,7 +32,7 @@ class Cut:
         self.Wd, self.Ht = tl['W'], tl['H']
         self.S = tl['segs']
         self.total = int(round(tl['dur'] * FPS))
-        tl['shakes'] = [1.55] + [s['ev']['yes'] for s in self.S if s['pic'] in ('queue', 'duet')]
+        tl['shakes'] = [1.2] + [s['ev']['yes'] for s in self.S if s['pic'] in ('queue', 'duet')]
 
     def seg_i(self, t):
         for i in range(len(self.S) - 1, -1, -1):
@@ -59,7 +59,7 @@ class Cut:
         return s['mode'] == 'full' and s['a'] + (0 if pf else 0.5) <= t < s['b'] - (0 if nf else 0.4)
 
     def push(self, t):
-        s = 1.0 + 0.022 * math.sin(t * 0.6) + 0.03 * W(t, 3.0, 6)
+        s = 1.04 + 0.022 * math.sin(t * 0.6) + 0.07 * W(t, 0.0, 3.0) - 0.04 * W(t, 3.0, 1.2)   # the opening push
         for p, a in self.tl['pushes']:
             if t >= p - 0.05:
                 s += a * W(t, p, 0.22) + 0.04 * W(t, p + 0.25, 1.4) - (a + 0.04) * W(t, p + 2.2, 0.9)
@@ -98,7 +98,8 @@ def render_range(name, i0, i1, out_path=None, stills=None):
     exe = sorted(glob.glob('/opt/pw-browsers/chromium-*/chrome-linux*/chrome'))
     frames = [round(x * FPS) for x in stills] if stills else list(range(i0, i1))
     t_first = frames[0] / FPS
-    take_t0 = tl['take_in'] + max(0.0, t_first - 3.0)
+    LEAD = tl['lead']
+    take_t0 = tl['take_in'] + max(0.0, t_first - LEAD)
     take = Reader(tl['take'], take_t0, 1080, 1920) if not stills else None
     clips = {}
     enc = None
@@ -123,11 +124,11 @@ def render_range(name, i0, i1, out_path=None, stills=None):
             base = Image.open(io.BytesIO(pages['bg'].screenshot(type='jpeg', quality=94))).convert('RGB')
             # the take frame for this moment
             if stills:
-                tt = min(tl['take_in'] + max(0.0, t - 3.0), float(subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', str(ROOT / tl['take'])], capture_output=True, text=True).stdout) - 0.2)
+                tt = min(tl['take_in'] + max(0.0, t - LEAD), float(subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', str(ROOT / tl['take'])], capture_output=True, text=True).stdout) - 0.2)
                 fr = np.frombuffer(subprocess.run([FF, '-v', 'error', '-ss', f'{tt:.3f}', '-i', str(ROOT / tl['take']), '-frames:v', '1',
                                                    '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-'], capture_output=True).stdout, np.uint8).reshape(1920, 1080, 3)
             else:
-                fr = take.get(int(round((max(t, 3.0) - 3.0 - (take_t0 - tl['take_in'])) * FPS)))
+                fr = take.get(int(round((max(t, LEAD) - LEAD - (take_t0 - tl['take_in'])) * FPS)))
             # the phone footage, playing (covers already burned in by the earlier production pass)
             clip_im = None
             if s.get('clip'):
@@ -161,7 +162,7 @@ def render_range(name, i0, i1, out_path=None, stills=None):
             # his face
             sc = C.push(t)
             if not V:
-                hidden = t < 2.5 or C.covered(t, s) or (s['mode'] == 'close' and t >= s['a'] + 0.55)
+                hidden = C.covered(t, s) or (s['mode'] == 'close' and t >= s['a'] + 0.55)
                 if not hidden:
                     cx = C.follow(t, lambda q: 960 if q['mode'] in ('face', 'full', 'close') else 304, 0.55)
                     cwid, chei = 1080 / sc, 1920 / sc
@@ -172,7 +173,7 @@ def render_range(name, i0, i1, out_path=None, stills=None):
                         tile = Image.blend(base.crop((round(cx - 304), 0, round(cx + 304), 1080)), tile, al)
                     base.paste(tile, (round(cx - 304), 0))
             else:
-                if t >= 2.5:
+                if True:
                     cwid, chei = 1080 / sc, 1920 / sc
                     x0 = min(max(FX * (1 - 1 / sc), 0), 1080 - cwid); y0 = min(max(FY * (1 - 1 / sc), 0), 1920 - chei)
                     face = Image.fromarray(fr).crop((round(x0), round(y0), round(x0 + cwid), round(y0 + chei))).resize((1080, 1920), Image.BICUBIC)
@@ -203,21 +204,22 @@ def mix(name):
     C = Cut(name); tl = C.tl; dur = tl['dur']; silent = OUT / f'wed-{name}.silent.mp4'
     final = OUT / (f'wed-long-16x9.mp4' if name == 'long' else 'wed-short-9x16.mp4')
     take = ROOT / tl['take']; v = OUT / f'{name}-voice.wav'; m = OUT / f'{name}-music.wav'; mx = OUT / f'{name}-mix.wav'
-    # his voice: 3 s of silence, then the take from take_in, padded to the cut (concat, never adelay+atrim)
-    subprocess.run([FF, '-v', 'error', '-y', '-f', 'lavfi', '-t', '3', '-i', 'anullsrc=r=48000:cl=stereo', '-ss', str(tl['take_in']), '-i', str(take),
-                    '-filter_complex', f'[1:a]aresample=48000,aformat=channel_layouts=stereo[v];[0:a][v]concat=n=2:v=0:a=1,apad=whole_dur={dur},atrim=0:{dur}[a]',
-                    '-map', '[a]', str(v)], check=True)
-    # the bed: looped, fuller under the opener and the close, ducked under his voice, faded at the end
+    # his voice from the first frame: the take from take_in, padded to the cut
+    subprocess.run([FF, '-v', 'error', '-y', '-ss', str(tl['take_in']), '-i', str(take),
+                    '-af', f'aresample=48000,aformat=channel_layouts=stereo,apad=whole_dur={dur},atrim=0:{dur}', str(v)], check=True)
+    # the bed: looped, about 6 dB lower while he speaks, fuller only under the close, ducked hard under his voice
+    close = C.S[-1]['a']; full, low = 0.5, 0.25
+    vol = f"volume='{low}+({full}-{low})*min(1,max(0,(t-{close + 0.4:.2f})/0.8))':eval=frame"
     subprocess.run([FF, '-v', 'error', '-y', '-stream_loop', '-1', '-i', str(MUSIC), '-af',
-                    f'aresample=48000,aformat=channel_layouts=stereo,atrim=0:{dur},volume=0.5,afade=t=in:st=0:d=0.3,afade=t=out:st={dur - 1.6}:d=1.6', str(m)], check=True)
+                    f'aresample=48000,aformat=channel_layouts=stereo,atrim=0:{dur},{vol},afade=t=in:st=0:d=0.2,afade=t=out:st={dur - 1.6}:d=1.6', str(m)], check=True)
     subprocess.run([FF, '-v', 'error', '-y', '-i', str(v), '-i', str(m), '-filter_complex',
-                    '[0:a]asplit[vo][key];[1:a][key]sidechaincompress=threshold=0.03:ratio=9:attack=20:release=500[md];[vo][md]amix=inputs=2:normalize=0:duration=first[a]',
+                    '[0:a]asplit[vo][key];[1:a][key]sidechaincompress=threshold=0.02:ratio=12:attack=15:release=450[md];[vo][md]amix=inputs=2:normalize=0:duration=first[a]',
                     '-map', '[a]', str(mx)], check=True)
-    meas = subprocess.run([FF, '-hide_banner', '-i', str(mx), '-af', 'loudnorm=I=-14:TP=-2:LRA=11:print_format=json', '-f', 'null', '-'],
+    meas = subprocess.run([FF, '-hide_banner', '-i', str(mx), '-af', 'loudnorm=I=-14:TP=-1.6:LRA=11:print_format=json', '-f', 'null', '-'],
                           capture_output=True, text=True).stderr
     j = json.loads(re.findall(r'\{[^{}]*\}', meas)[-1])
-    ln = (f"loudnorm=I=-14:TP=-2:LRA=11:measured_I={j['input_i']}:measured_TP={j['input_tp']}:measured_LRA={j['input_lra']}"
-          f":measured_thresh={j['input_thresh']}:offset={j['target_offset']}:linear=true,alimiter=limit=0.72:level=false")
+    ln = (f"loudnorm=I=-14:TP=-1.6:LRA=11:measured_I={j['input_i']}:measured_TP={j['input_tp']}:measured_LRA={j['input_lra']}"
+          f":measured_thresh={j['input_thresh']}:offset={j['target_offset']}:linear=true,alimiter=limit=0.8:level=false")
     subprocess.run([FF, '-v', 'error', '-y', '-i', str(silent), '-i', str(mx), '-af', ln, '-map', '0:v', '-map', '1:a', '-c:v', 'copy',
                     '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-movflags', '+faststart', str(final)], check=True)
     print('wrote', final)

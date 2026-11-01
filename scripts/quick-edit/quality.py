@@ -202,6 +202,10 @@ def delivery_problems(video, receipt, target=None):
         # The joins and captions checks (scripts/cutgates/receipt.py) hold a cut for a post dated from
         # config/gates.json required_from when one is missing, failed or bound to other bytes.
         problems += cut_gate_problems(report, target)
+        # The opening check (opening_gate.py) holds a cut for a post dated from config/opening-gate.json required_from
+        # whose first seconds do not land: Krish, 2026-11-01, "the first few seconds of each video aren't very powerful".
+        import opening_gate
+        problems += opening_gate.delivery_problems(report, opening_gate.required_for(target or report.get('library_path')))
         import visual_clarity
         import media_standard
         return problems + motion_problems(report) + visual_clarity.delivery_problems(report, Path(receipt).parent, video) + (media_standard.check('delivery', video, report.get('piece_id')) if media_standard.enforced() else [])

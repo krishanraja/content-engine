@@ -1490,6 +1490,35 @@
      "test": "python -m unittest tests.ve_audio_test"
     }
    ]
+  },
+  {
+   "id": "F21-openings-did-not-land",
+   "on": "2026-11-01",
+   "krish": "I would say the first few seconds of each video aren't very powerful. They aren't impactful, and the first frame moves on so quickly that you can barely even see what was there in the first place. As it stands, while we're on this topic, the first few seconds are kind of important because people have lower amounts of attention. I feel like these videos' weakest few seconds are the first few seconds in terms of engagement, setting the scene, and impact.",
+   "what": "All four 2 and 4 Nov cuts (Mon long and short, Wed long and short), rebuilt by per-piece compositors under docs/plans/2026-11-0*/rebuild/ and approved by Krish, opened on a 3 s music-only motion card: frame 0 nearly empty (edge density 0.0012 to 0.0058), the headline up for about a second before a wipe, and his voice first at 3.0 s. They reached the 2 Nov publish board as ready with no delivery receipt.",
+   "symptom": "He judged the first seconds the weakest part of every cut, after approving them.",
+   "cause": "The rebuild route bypassed make.py and its HOOK_IS_THE_INTRO check, no gate measured a finished file's opening, and board_web.py publish-web placed videos marked ready without asking for their delivery receipt.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "scripts/quick-edit/opening_gate.py",
+     "contains": "def check(",
+     "how": "voice from the first half second, a finished first frame, a headline that holds 2 s in the first 3 s, no flat frame, measured on the finished bytes",
+     "test": "python3 scripts/quick-edit/opening_gate.py --self-test"
+    },
+    {
+     "file": "scripts/quick-edit/quality.py",
+     "contains": "opening_gate.delivery_problems",
+     "how": "the delivery gate holds a cut for a post dated from config/opening-gate.json required_from without a passed opening check bound to its bytes",
+     "test": "python3 tests/quick_edit_produce_day_test.py"
+    },
+    {
+     "file": "scripts/post-pack/board_web.py",
+     "contains": "def ready_video_problems",
+     "how": "publish-web refuses a video a day's materials mark ready unless its exact bytes carry a passing delivery receipt, or the asset carries Krish's own words",
+     "test": "python3 tests/board_web_test.py"
+    }
+   ]
   }
  ]
 }

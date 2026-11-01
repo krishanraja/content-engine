@@ -1,0 +1,21 @@
+{
+  "about": [
+    "The opening gate (scripts/quick-edit/opening_gate.py): whether a finished video's first seconds land, measured on its own bytes. Krish, 2026-11-01, on four cuts he had already approved: \"the first few seconds of each video aren't very powerful. They aren't impactful, and the first frame moves on so quickly that you can barely even see what was there in the first place ... these videos' weakest few seconds are the first few seconds in terms of engagement, setting the scene, and impact.\" Then: \"figure out how this can never happen again durably\".",
+    "Calibrated 2026-11-01 on the four rejected openings (Mon 2 Nov long and short, Wed 4 Nov long and short, .cache/proof/{mon,wed}): frame 0 measured edge density 0.0012 to 0.0058 and luminance spread 3.8 to 8.1; finished frames of his face with text later in the same cuts measured edge 0.041 to 0.120 and spread 66.7 to 78.4. Every one of the first 26 to 30 frames sampled at 10 fps in the first 3 s was more than 85% one flat colour (dark opener, then a flat yellow or lilac wipe); his face in the branded frame measures 0.09 to 0.50. A full-screen headline on plain ink measures 0.85 to 0.88 and fails by design: the opening is his face and voice, with the headline over it.",
+    "Measured end to end on 2026-11-01 (opening_gate.py check): the four rejected openings fail all four measures: first word at 2.96 s, 3.18 s, 3.04 s and 3.00 s; frame 0 edge 0.0012 to 0.0058; flattest frame 0.989 to 0.997 at 0.0 to 0.2 s; longest headline hold 0.75 to 1.0 s. Two 5 s clips of the same shorts starting on his face under the title card (Mon from 3.0 s, Wed from 3.4 s) pass all four: first word 0.0 s, frame 0 edge 0.024 and 0.069, spread 74.5 and 72.0, flattest frame 0.164 and 0.176, headline held 2.75 s. The first-frame edge floor (0.02) has the least margin over a passing frame (0.024): a darker or softer finished first frame may fail it, and that is read as asking for a brighter, busier first frame, never as a reason to lower the floor without Krish.",
+    "required_from keys on the post date in the library destination, as words_gate.REQUIRED_FROM does: a cut for a post dated from it must carry checks.opening, passed and bound to its bytes, before delivery (quality.py) and before a publish board shows it ready (board_web.py)."
+  ],
+  "required_from": "2026-11-02",
+  "voice_onset_max_s": 0.5,
+  "voice_listen_s": 6.0,
+  "whisper_model": "base.en",
+  "first_frame_min_edge": 0.02,
+  "first_frame_min_spread": 30.0,
+  "headline_window_s": 3.0,
+  "headline_fps": 4,
+  "headline_min_hold_s": 2.0,
+  "large_text_min_frac": 0.05,
+  "dead_window_s": 3.0,
+  "dead_fps": 10,
+  "dead_flat_max": 0.85
+}
