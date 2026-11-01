@@ -211,6 +211,26 @@ def publish_branch(worktree: Path, branch: str, message: str) -> tuple[str | Non
     return sha, None
 
 
+def changed_files(worktree: Path, base: str) -> list[str]:
+    """What Codex changed in the card's worktree: committed since base, plus anything not yet committed."""
+    git = ['git', '-C', str(worktree)]
+    committed = subprocess.run(git + ['diff', '--name-only', f'{base}...HEAD'], capture_output=True, text=True).stdout.split()
+    pending = [line[3:].strip() for line in subprocess.run(git + ['status', '--porcelain', '--untracked-files=all'],
+                                                             capture_output=True, text=True).stdout.splitlines() if line.strip()]
+    return sorted(set(committed + pending))
+
+
+def dispatch_problems(done, changed: list[str]) -> list[str]:
+    """Why Codex produced nothing, said first and in Codex's own words: on 2026-11-01 a card came back with only
+    acceptance failures while Codex had changed nothing, so the real cause never reached the session."""
+    tail = ' | '.join((done.stdout + done.stderr).strip().splitlines()[-6:])[:600]
+    if done.returncode != 0:
+        return [f'Codex exited {done.returncode} and its work was not checked: {tail or "no output"}']
+    if not changed:
+        return [f'Codex made no changes, so its work was not checked: {tail or "no output"}']
+    return []
+
+
 def build(fields_rel: str, ref: str = 'main', piece: str | None = None, spend_id: str | None = None) -> dict:
     """Write the card from its fields on this machine, dispatch it and wait, then verify-card. Returns a summary."""
     from .cards import dispatch, verify, write_card
@@ -234,7 +254,8 @@ def build(fields_rel: str, ref: str = 'main', piece: str | None = None, spend_id
         done = dispatch(out, background=False, booked=require_booking(spend_id))
         result['dispatch_code'] = done.returncode
         result['dispatch_tail'] = '\n'.join((done.stdout + done.stderr).strip().splitlines()[-8:])
-        result['problems'] = verify(out, Path(fields['cwd']))
+        result['changed_files'] = changed_files(Path(fields['cwd']), 'origin/main')
+        result['problems'] = dispatch_problems(done, result['changed_files']) or verify(out, Path(fields['cwd']))
         result['worktree'] = fields['cwd']
         sha, why = publish_branch(Path(fields['cwd']), f've-card/{card_id}', f'codex: {card_id}')
         if why:
@@ -373,7 +394,9 @@ NO_ROUTE = 'Codex is not on this machine and no WSL route is set (MINDMAKE_CODEX
 
 
 def _run(ref: dict) -> dict:
-    if has_companion():
+    # An explicit WSL route wins over a companion found on this machine: on 2026-11-01 Lorimer's Windows side had a
+    # companion that did nothing, while Codex works inside WSL. Inside WSL itself _wsl_route() is None.
+    if has_companion() and not _wsl_route():
         return build(ref['fields'], ref.get('ref', 'main'), ref.get('piece'), ref.get('spend_id'))
     if _wsl_route():
         safe(ref['fields'], ref.get('ref', 'main'))
@@ -462,10 +485,10 @@ def all_pending() -> list[dict]:
 
 
 def next_venture_card() -> dict | None:
-    if has_companion():
-        cards = all_pending()
-    elif _wsl_route():
+    if _wsl_route():
         cards = _in_wsl(['lane', 'pending', '--json']).get('cards') or []
+    elif has_companion():
+        cards = all_pending()
     else:
         return None
     return cards[0] if cards else None
@@ -511,7 +534,8 @@ def build_venture(name: str, branch: str, path: str) -> dict:
         done = dispatch(out, background=False, booked=require_booking(meta.get('spend_id')))
         result['dispatch_code'] = done.returncode
         result['dispatch_tail'] = '\n'.join((done.stdout + done.stderr).strip().splitlines()[-8:])
-        result['problems'] = verify(out, wt)
+        result['changed_files'] = changed_files(wt, f'origin/{branch}')
+        result['problems'] = dispatch_problems(done, result['changed_files']) or verify(out, wt)
         result['ok'] = done.returncode == 0 and not result['problems']
         record = wt / RESULTS_DIR / f'{card_id}.json'
         record.parent.mkdir(parents=True, exist_ok=True)
@@ -530,7 +554,7 @@ def build_venture(name: str, branch: str, path: str) -> dict:
 
 
 def _run_venture(card: dict) -> dict:
-    if has_companion():
+    if has_companion() and not _wsl_route():
         return build_venture(card['venture'], card['branch'], card['path'])
     if _wsl_route():
         return _in_wsl(['lane', 'build-venture', card['venture'], card['branch'], card['path'], '--json'])
