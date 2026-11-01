@@ -355,6 +355,8 @@ def verify(card_path: Path, cwd: Path) -> list[str]:
     changed = subprocess.run(['git', 'status', '--porcelain', '--untracked-files=all'], capture_output=True, text=True, cwd=cwd).stdout.splitlines()
     for line in changed:
         path = line[3:].strip().strip('"').replace('\\', '/')
+        if path.rstrip('/') == 'node_modules':
+            continue  # the link ensure_worktree makes to the main checkout's packages, never Codex's work
         if not any(fnmatch.fnmatch(path, pattern) for pattern in allowed):
             problems.append(f'outside write_allow: {path}')
     for cmd in meta['acceptance']:

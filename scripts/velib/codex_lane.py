@@ -197,7 +197,8 @@ def publish_branch(worktree: Path, branch: str, message: str) -> tuple[str | Non
     """Commit what Codex changed in the card's worktree and push its branch, so the session that queued it, anywhere,
     can read and check it. Returns (commit sha, None) or (None, why it could not be pushed)."""
     git = ['git', '-C', str(worktree)]
-    subprocess.run(git + ['add', '-A'], check=True, capture_output=True)
+    # Never the node_modules link ensure_worktree made: on 2026-11-01 it was committed with Codex's work.
+    subprocess.run(git + ['add', '-A', '--', '.', ':(exclude)node_modules'], check=True, capture_output=True)
     if subprocess.run(git + ['diff', '--cached', '--quiet'], capture_output=True).returncode != 0:
         subprocess.run(git + ['-c', 'user.name=Codex lane', '-c', 'user.email=codex-lane@users.noreply.github.com',
                               'commit', '-q', '-m', message], check=True, capture_output=True)
@@ -217,6 +218,7 @@ def changed_files(worktree: Path, base: str) -> list[str]:
     committed = subprocess.run(git + ['diff', '--name-only', f'{base}...HEAD'], capture_output=True, text=True).stdout.split()
     pending = [line[3:].strip() for line in subprocess.run(git + ['status', '--porcelain', '--untracked-files=all'],
                                                              capture_output=True, text=True).stdout.splitlines() if line.strip()]
+    pending = [p for p in pending if p.rstrip('/') != 'node_modules']
     return sorted(set(committed + pending))
 
 
