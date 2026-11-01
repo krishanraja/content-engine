@@ -99,6 +99,7 @@ SPECIFIC = re.compile(r"\$?\d[\d,.]*%?|\b(?:January|February|March|April|May|Jun
                       r"\b[A-Z][a-z]+(?:\s[A-Z][a-z]+)+\b")
 ASIDE = re.compile(r"\([^)]{3,}\)")
 # The person behind the piece: "I" in a script he speaks, "we" in an article, which speaks for the publication.
+SINGULAR = re.compile(r"\b(?:I|I'm|I've|I'd|I'll|[Mm]y|[Mm]e|[Mm]yself)\b")
 FIRST_PERSON = re.compile(r"\b(?:I|I'm|I've|I'd|I'll|[Mm]y|[Mm]e|[Ww]e|[Oo]ur|[Oo]urs|[Uu]s)\b")
 
 
@@ -187,6 +188,22 @@ def check(text):
                 findings.append({'where': f'paragraph {i}: "{lead}"', 'habit': 'a question answered at once',
                                  'detail': f'"{a.strip()[:60]}" then "{b.strip()[:50]}"'})
         triads += len(TRIAD.findall(p))
+    # The articles' own rulings, which no score may buy back. Krish, 2026-10-28: "Even articles written are not
+    # authored by Krish" (the article speaks as "we"); 2026-10-31, voice profile Ruling 1: rhetorical questions are
+    # allowed on LinkedIn only, "banned in articles, scripts and emails". Quoted words and a list item (a checklist of
+    # questions to ask a supplier, say) are someone else's or the reader's, so they are not counted.
+    own_lines = [QUOTED.sub(' ', ln.replace('\u2019', "'")) for ln in text.split('\n')
+                 if ln.strip() and not re.match(r'^\s*(?:#|[-*+\u2022]\s|\d+[.)]\s|>|\|)', ln)]
+    singular = sorted({m.group(0) for ln in own_lines for m in SINGULAR.finditer(ln)})
+    if singular:
+        score += MAX_SCORE + 1
+        findings.append({'where': 'whole piece', 'habit': 'the writer as "I"',
+                         'detail': f'{", ".join(singular)} outside quotes. The article speaks as "we", the publication, never as one person'})
+    asked = [q.strip() for ln in own_lines for q in re.findall(r'[^.!?]*\?', ln) if len(q.split()) >= 2]
+    if asked:
+        score += MAX_SCORE + 1
+        findings.append({'where': 'whole piece', 'habit': 'a rhetorical question',
+                         'detail': f'{len(asked)}, e.g. "{asked[0][:70]}". Say it as a statement (Ruling 1: questions are for LinkedIn only)'})
     if paras and RECAP.match(paras[-1]):
         score += 2
         findings.append({'where': f'paragraph {len(paras)} (the last)', 'habit': 'a closing recap',
@@ -288,11 +305,11 @@ def scanner_layer(paras, sents, words):
         score += (0.08 - frags) * 40
         out.append({'where': 'whole piece', 'habit': 'no fragments',
                     'detail': f'{frags:.0%} of sentences are five words or fewer. People drop short ones in. Like this'})
-    asides = len(ASIDE.findall(text)) + text.count('?')
+    asides = len(ASIDE.findall(text))
     if asides * k < 2:
         score += 2
-        out.append({'where': 'whole piece', 'habit': 'no asides or questions',
-                    'detail': f'{asides} brackets or questions in {words} words. Add a (small) aside or a question you then sit with'})
+        out.append({'where': 'whole piece', 'habit': 'no asides',
+                    'detail': f'{asides} brackets in {words} words. Add a (small) aside in brackets'})
     specific = len(SPECIFIC.findall(text))
     if specific * k < 25:
         score += min(4, (25 - specific * k) * 0.2)
@@ -315,11 +332,11 @@ def self_test():
                'Moreover, the reality is that robust systems matter. They make work seamless, simple and safe. They are crucial for '
                'growth, trust and scale. They shape the future of work.\n\n'
                'Ultimately, the bottom line is clear: adoption is the key to success, speed and resilience in this new era.')
-    person = ('I tried it on a Tuesday. It booked the dentist, which nobody has managed for me in three years.\n\n'
-              'Then it got my cousin\'s name wrong twice, and I had to stop it before it emailed the wrong Raj. Funny, until it isn\'t. '
-              'My whole contact book sits behind that one tap, and I gave it away in about four seconds without reading a word of what I '
-              'was agreeing to, which is exactly what everyone else did too.\n\n'
-              'Would I keep it? For the dull stuff, yes.')
+    person = ('We tried it on a Tuesday. It booked the dentist, which nobody has managed for us in three years.\n\n'
+              'Then it got a cousin\'s name wrong twice, and we had to stop it before it emailed the wrong Raj. Funny, until it isn\'t. '
+              'Our whole contact book sits behind that one tap, and we gave it away in about four seconds without reading a word of what we '
+              'were agreeing to, which is exactly what everyone else did too.\n\n'
+              'We\'d keep it. For the dull stuff, anyway.')
     stiff = ('It is a good app. You are going to like it. I do not think it is perfect, and they are not saying it is. '
              'We are told it will not read your mail, and I would like to believe that.')
     quoted = ('Meta says people "do not need to worry, it is safe and you are in control". I\'m not so sure. It\'s early.')
@@ -365,7 +382,7 @@ def self_test():
         "So I rang their press office (a recorded message, then a woman called Dana who was lovely about it) and asked what changed. She sent me a link to a pricing page I had already read twice.",
         "Fair enough. Companies change prices all the time, and most of the time it's dull.",
         "What caught me was the timing. Google had cut Gemini by a third the week before, OpenAI kept GPT flat through September, and Mistral dropped its small model to almost nothing. Three rivals, three directions.",
-        "Would I switch? Not yet, honestly.",
+        "I wouldn't switch yet, honestly.",
         "My test was simple. I ran the same 40 invoices through each model on a Friday afternoon, timed them with a stopwatch app on my phone, and wrote the totals on the back of an envelope that's still on my desk.",
         "Claude was slowest by about nine seconds and cheapest per correct answer, because it got 38 right where the others managed 31 and 33.",
         "That's the bit the price page leaves out. A cheaper model that gets a quarter of your invoices wrong costs you a person on Monday morning fixing them.",
@@ -376,8 +393,15 @@ def self_test():
     as_we = re.sub(r"\b(I|My|my|me)\b", lambda m: {'I': 'we', 'My': 'Our', 'my': 'our', 'me': 'us'}[m.group(1)], mine)
     as_we = re.sub(r'(^|[.?!]\s+)we\b', lambda m: m.group(1) + 'We', as_we, flags=re.M)
     m1, m2 = check(mine), check(as_we)
-    checks.append(('a passing draft rewritten from "I" into our "we" scores about the same and still passes',
-                   (abs(m1['score'] - m2['score']) <= 1, m1['passes'], m2['passes']), (True, True, True)))
+    checks.append(('the same draft passes in our "we" and fails in "I" (Krish, 2026-10-28: articles speak as "we")',
+                   (m1['passes'], m2['passes'], any(f['habit'] == 'the writer as "I"' for f in m1['findings'])), (False, True, True)))
+    asks = lambda t: any(f['habit'] == 'a rhetorical question' for f in check(t)['findings'])  # noqa: E731
+    checks += [
+        ('a rhetorical question fails (Ruling 1, 31 Oct 2026)', (asks(as_we + '\n\nSo what does it mean? It means a lot.'),
+                                                                 check(as_we + '\n\nSo what does it mean? It means a lot.')['passes']), (True, False)),
+        ('a quoted question and a checklist of questions do not count',
+         asks(as_we + '\n\nShe asked, "Is this safe?" and we said yes.\n\n- Are its founders still there?\n- Is it short of cash?'), False),
+    ]
     bad = [(n, g, w) for n, g, w in checks if g != w]
     for n, g, w in bad:
         print(f'FAIL {n}: got {g!r}, want {w!r}')

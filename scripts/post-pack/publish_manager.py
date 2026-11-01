@@ -216,6 +216,9 @@ def format_leaks(html_text):
 # scripts/pages/build.py) never reached this page. So the planned figures are fed in here, and the page is refused
 # when the article would go out with no picture, or a picture names a heading the article does not have.
 
+FIGURE_FLOOR = 3
+
+
 class PublishCheckError(ValueError):
     """The publish page is not ready: its article's pictures are missing or misplaced."""
 
@@ -305,6 +308,16 @@ def check_figures(m, md, images, planned=None):
         raise PublishCheckError('publish_manager: the article has no pictures (no image with "after_heading", and no '
                                 'page-facts.json figures). Add the figures, or say why it goes out without one in '
                                 '"figures_none_reason".')
+    # Krish, 2026-11-01: "this article has only one visual, when there are clearly more we have at hand - the article
+    # should feel more visual in general, not like a wall of text". At least FIGURE_FLOOR pictures, and one for every
+    # two sections, each placed after the section it serves; the reason field still lets a words-only piece through.
+    sections = [h for h in headings(md) if not re.search(r'3\s+things\s+you\s+can\s+do\s+tomorrow', h, re.I)]
+    floor = max(FIGURE_FLOOR, -(-len(sections) // 2))
+    if placed and len(placed) < floor and not why:
+        raise PublishCheckError(f'publish_manager: the article has {len(placed)} picture(s) across {len(sections)} sections; '
+                                f'it needs at least {floor} (one for every two sections, never under {FIGURE_FLOOR}), so it '
+                                'never reads as a wall of text. Add figures from the piece\'s own scenes, plates and charts, '
+                                'or say why in "figures_none_reason".')
     if planned and len(placed) < planned and not why:
         raise PublishCheckError(f'publish_manager: the creative direction plans {planned} article picture(s); the page '
                                 f'has {len(placed)}. Add them, or say why in "figures_none_reason".')
@@ -616,7 +629,9 @@ LIST_MD = ('We are _really_ sure.\n\nWhere to start:\n1. Email\n2. Calendar\n\n>
 
 def self_test():
     import tempfile
-    fails = []
+    global FIGURE_FLOOR
+    fails, floor_kept = [], FIGURE_FLOOR
+    FIGURE_FLOOR = 1  # the fixtures below carry one picture; the floor itself is tested at the end
     with tempfile.TemporaryDirectory() as tmp, title_check.picked_for_tests(['Amazon locked Muse out <x>'], tmp):
         t = Path(tmp)
         png = base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==')
@@ -655,6 +670,9 @@ def self_test():
             check(t / 'pack' / 'm.json')
         except PublishCheckError as e:
             short = str(e)
+        FIGURE_FLOOR = floor_kept
+        one_pic = refused({**base, 'images': [cover, {'id': 'p', 'file': 'a.png', 'alt': 'A', 'after_heading': 'THE PART'}]})
+        three_pics = refused({**base, 'images': [cover] + [{'id': f'p{n}', 'file': 'a.png', 'alt': 'A', 'after_heading': 'THE PART'} for n in range(3)]})
     checks = [
         ('the article copies with its pictures', 'data-act="article"' in h and '<h2>THE PART</h2>\n<figure><img src="data:image/png;base64,' in h),
         ('a named file links to its Drive copy, and only an https one',
@@ -694,6 +712,8 @@ def self_test():
          and '1. Email\n2. Calendar' in article_text(LIST_MD, [])),
         ('a flattened list or a working note is caught', [w for w, _ in format_leaks('<p>- Name your seniors. - Look</p><p>_Fact gate passed 24 October_</p>')]
          == ['a paragraph that starts with a list marker (a list that did not render)', 'a working note (fact gate, source of truth, a repository path)']),
+        ('one picture is a wall of text: refused under the floor of three (Krish, 2026-11-01)', 'needs at least 3' in one_pic),
+        ('three pictures pass the floor', three_pics == ''),
         ('a heading with no blank line after it is still a heading', headings('Intro.\n## ONE\nWords.\n### TWO\nMore.') == ['ONE', 'TWO']),
     ]
     for name, ok in checks:
