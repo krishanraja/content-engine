@@ -43,9 +43,9 @@ REMOTE = {
     'masthead': ('/brand/masthead.png', 1600),
     'mark': ('/brand/mark.png', 400),
     'wordmark': ('/brand/wordmark.png', 1400),
-    'krish': ('/krish-closer-look.jpg', 160),
-    'krish-pointing': ('/krish-pointing.jpg', 160),
-    'krish-this-guy': ('/krish-this-guy.jpg', 160),
+    'krish': ('/editor-closer-look.jpg', 160),
+    'krish-pointing': ('/editor-pointing.jpg', 160),
+    'krish-this-guy': ('/editor-this-guy.jpg', 160),
 }
 
 # Krish's photo on covers and thumbnails turns over by publishing day (Monday, Wednesday, Friday), so no two
