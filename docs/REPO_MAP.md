@@ -3567,6 +3567,11 @@ Run a Vercel serverless handler locally against the real environment.
 - `function orbitState({ object, events, frame }: Pick<DeviceProps, 'object' | 'events' | 'frame'>, count: number, chips: …`
 - `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
 
+### `apps/renderer/src/engine/devices/logo_orbit/mark.tsx`
+
+- `const MARK_BOUNDS: Record<string, { canvas: [number, number, number, number]; drawn: [number, number, number, number] }>`
+- `function Mark({ id, size }: { id: string; size: number })`
+
 ### `apps/renderer/src/engine/devices/logo_orbit/schema.ts`
 
 - `export { resolveLogo }`
