@@ -130,13 +130,13 @@ describe('a pack Krish reads', () => {
     // series line (house rule SERIES_OPENER, Krish, 2026-10-21); a short one has no room for the close (SCRIPT_CLOSE).
     writeFileSync(join(work, 'script.md'), "I put Koa and the old way head to head.\n\nWhy does this matter? Say this.\n")
     // the house drawer's receipt beside the cover, so the visual gate takes it (visual_gate.py)
-    writeFileSync(join(work, 'cover.json'), JSON.stringify({ sha256: createHash('sha256').update(readFileSync(join(work, 'cover.png'))).digest('hex'), portrait: true, rows: [] }))
+    writeFileSync(join(work, 'cover.json'), JSON.stringify({ sha256: createHash('sha256').update(readFileSync(join(work, 'cover.png'))).digest('hex'), template: 'receipt', proof: { html: { path: 'figure.html' } }, portrait: false, rows: [] }))
     // A cover for every place it is shown, beside cover.png with its receipt (scripts/pages/build.py --cover).
     for (const [w, h] of [[1200, 630], [1200, 675], [1080, 1080], [1080, 1920]]) {
       const file = `cover-${w}x${h}.png`
       const drawnCover = spawnSync(PY, ['-c', 'import sys; from PIL import Image; Image.new("RGB", (int(sys.argv[2]), int(sys.argv[3]))).save(sys.argv[1])', join(work, file), String(w), String(h)], { encoding: 'utf8' })
       expect(drawnCover.status, drawnCover.stderr).toBe(0)
-      writeFileSync(join(work, `cover-${w}x${h}.json`), JSON.stringify({ sha256: createHash('sha256').update(readFileSync(join(work, file))).digest('hex'), portrait: true, rows: [] }))
+      writeFileSync(join(work, `cover-${w}x${h}.json`), JSON.stringify({ sha256: createHash('sha256').update(readFileSync(join(work, file))).digest('hex'), template: 'receipt', proof: { html: { path: 'figure.html' } }, portrait: false, rows: [] }))
     }
     // Each thumbnail at its size, with the drawer's receipt (scripts/pages/build.py --thumbs).
     mkdirSync(join(work, 'thumbs'))
@@ -144,7 +144,7 @@ describe('a pack Krish reads', () => {
       join(work, 'thumbs', 'thumb-wide-1280x720.jpg'), join(work, 'thumbs', 'thumb-tall-1080x1920.jpg')], { encoding: 'utf8' })
     expect(drawn.status, drawn.stderr).toBe(0)
     const hash = (name: string) => createHash('sha256').update(readFileSync(join(work, 'thumbs', name))).digest('hex')
-    writeFileSync(join(work, 'thumbs', 'thumbs.json'), JSON.stringify({ portrait: true, logos: [], files: [
+    writeFileSync(join(work, 'thumbs', 'thumbs.json'), JSON.stringify({ template: 'receipt', proof: { html: { path: 'figure.html' } }, portrait: false, logos: [], files: [
       { file: 'thumb-wide-1280x720.jpg', shape: 'wide', sha256: hash('thumb-wide-1280x720.jpg') },
       { file: 'thumb-tall-1080x1920.jpg', shape: 'tall', sha256: hash('thumb-tall-1080x1920.jpg') },
     ] }))
