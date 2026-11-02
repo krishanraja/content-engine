@@ -9,7 +9,7 @@
    "AI NOW",
    "ACTS FIRST"
   ],
-  "portrait": "../../../.cache/produce/2026-11-04-b63d2507/portrait.jpg",
+  "portrait": true,
   "rows": [
    {
     "name": "Claude",
