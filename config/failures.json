@@ -1546,6 +1546,12 @@
           "contains": "lane wait",
           "how": "the moment a card is queued, start ve lane wait in the background, never a timed check-in",
           "test": "python3 tests/ve_lane_test.py"
+        },
+        {
+          "file": "scripts/velib/cards.py",
+          "contains": "def refresh_worktree(",
+          "how": "a re-queued card first merges origin/main into its existing worktree, so it never builds on a stale main",
+          "test": "python3 tests/ve_lane_test.py"
         }
       ]
     }
