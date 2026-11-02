@@ -1568,6 +1568,14 @@ def off_rich(o, problems, label):
             problems.append(f'{label}: mock is {{"url" (https, the image Growth made), "note"}}')
         else:
             row['mock'] = {'url': mock['url'], 'note': _line(mock.get('note'), 300)}
+    # A finished file Krish takes away from the card (Krish, 2026-11-02: "put the translator video on the board as a
+    # download"): the board's own stored asset, so the link never moves.
+    download = o.get('download')
+    if download is not None:
+        if not isinstance(download, dict) or not str(download.get('url') or '').startswith('https://') or not _line(download.get('label'), 120):
+            problems.append(f'{label}: download is {{"url" (https, the finished file), "label"}}')
+        else:
+            row['download'] = {'url': download['url'], 'label': _line(download['label'], 120)}
     return {k: v for k, v in row.items() if v is not None}
 
 
@@ -1721,7 +1729,7 @@ def read_growth_offdays(data, monday, where='--offdays-plan'):
                      'copy': o.get('draft'), 'share_line': o.get('share_line'),
                      'needs': list(o.get('needs') or []) + ([] if o.get('ready') else ['not ready yet'] if not o.get('needs') else []),
                      # The rich fields ride through as Growth wrote them (Ruling, Krish, 2026-11-01), never flattened into the copy.
-                     **{k: o[k] for k in ('hook', 'pitch', 'cards', 'inspiration', 'learned_from', 'direction', 'ties_to', 'recommended', 'revised', 'mock')
+                     **{k: o[k] for k in ('hook', 'pitch', 'cards', 'inspiration', 'learned_from', 'direction', 'ties_to', 'recommended', 'revised', 'mock', 'download')
                         if o.get(k) is not None}}
                     for o in opts]
     return out, warnings
@@ -1731,7 +1739,7 @@ def previous_option(o):
     """An off-day option as the previous board kept it, back in the shape read_offdays takes."""
     row = {'id': o['id'], 'format': o['format'], 'source': {'label': o['source'], 'url': o.get('url')} if o.get('url') else o['source'], 'copy': o['copy']}
     for k in ('covers', 'kind', 'style', 'piece_id', 'series', 'title', 'script', 'share_line', 'needs', 'cards',
-              'hook', 'pitch', 'inspiration', 'learned_from', 'direction', 'ties_to', 'recommended', 'revised', 'mock'):
+              'hook', 'pitch', 'inspiration', 'learned_from', 'direction', 'ties_to', 'recommended', 'revised', 'mock', 'download'):
         if o.get(k) is not None:
             row[k] = o[k]
     if o.get('kind') == 'recorded':
@@ -1875,6 +1883,9 @@ def off_option_card(monday, key, when, o):
         mock = (f'<div class="mockback"><img src="{E(m["url"])}" alt="The mock Growth made" loading="lazy">'
                 f'<div><p class="row"><span class="id-why-k">Mock back</span> {E(m.get("note") or "Made in the brand kit from the direction you approved.")}</p>'
                 + off_press_row(did, 'mock', 'The mock') + '</div></div>')
+    if o.get('download'):
+        dl_file = o['download']
+        mock += (f'<p class="row"><a class="btn-s" href="{E(dl_file["url"])}" download>Download: {E(dl_file["label"])}</a></p>')
     # What his Approve on the idea hands Growth: exactly the object its hash is taken over (side_sha), the copy and the
     # cards included, so the words he approved are the words that get made.
     shown = {'copy': o.get('copy'), 'hook': o.get('hook'), 'pitch': o.get('pitch'), 'cards': o.get('cards')}
@@ -4963,12 +4974,16 @@ def _growth_offday_checks(check, week, ideas):
           and 'Revised from your words on the direction: "warmer please"' in board(week, ideas=ideas, offdays=revised)[0])
     for bad, want in ((dict(rich, direction={'tone': 'no look'}), 'with its look'), (dict(rich, inspiration={'label': 'x', 'url': 'http://x'}), 'inspiration'),
                       (dict(rich, pitch={'other': 'x'}), 'pitch'), (dict(rich, mock={'url': 'ftp://x'}), 'mock'),
+                      (dict(rich, download={'url': 'https://x'}), 'download'),
                       (dict(rich, hook='x' * 141), 'hook'), (dict(rich, learned_from=['y' * 401]), 'never cut')):
         try:
             read_offdays({'tue': [bad, plain]})
             check(f'off-day option: a bad {want} is refused', False)
         except BoardError as error:
             check(f'off-day option: a bad {want} is refused', want in str(error))
+    dl_page = board(week, ideas=ideas, offdays=read_offdays({'tue': [dict(rich, download={'url': 'https://board.asset/v.mp4', 'label': 'the video'}), plain]}))[0]
+    check('off-day option: a finished file is a Download link on its card',
+          '<a class="btn-s" href="https://board.asset/v.mp4" download>Download: the video</a>' in dl_page and verify(dl_page) == [])
     model = today_model(week, {}, {}, {}, six, {})
     check('off-day ask: one Needs you row opens the Off days, counting the options to judge',
           any(a['href'] == '#ideas-offdays' and a['detail'] == '6 options to judge' for a in model['asks']))
