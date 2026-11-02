@@ -1049,6 +1049,27 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
   document.addEventListener("input", e => { const i = e.target.closest && e.target.closest("input[data-press-note], input[data-off-note]"); if (i) i.dataset.unsaved = "true" });
 })();
 
+// His words on an off-day option, read by the rule Growth uses (growth-makeyourmindup engine/offday.py note_parts;
+// Ruling, Krish, 2026-11-02: "only where i specifically give a quote to use - i dont want requests put verbatim in the
+// posts"). The two are tested on the same cases (fixtures/offday-note-cases.json).
+// offdayNoteParts:start
+function offdayNoteParts(note){
+  const out = { on_media: [], direction: "", hold: null };
+  if (typeof note !== "string" || !note.trim()) return out;
+  const QUOTE = /["\u201c\u201d\u201e\u201f]([^"\u201c\u201d\u201e\u201f]{2,600})["\u201c\u201d\u201e\u201f]/g;
+  const NOT = /\b(not|don'?t|do not|never|avoid|instead of|rather than|no more)\b(\W+\w+){0,4}\W*$/i;
+  const rest = []; let last = 0, m;
+  while ((m = QUOTE.exec(note))) {
+    if (!m[1].trim()) continue;
+    if (NOT.test(note.slice(Math.max(0, m.index - 60), m.index))) out.hold = "quote_reads_as_counterexample";
+    out.on_media.push(m[1]); rest.push(note.slice(last, m.index)); last = m.index + m[0].length;
+  }
+  rest.push(note.slice(last));
+  out.direction = rest.join(" ").split(/\s+/).filter(Boolean).join(" ").replace(/^[ :]+|[ :]+$/g, "");
+  return out;
+}
+// offdayNoteParts:end
+
 // The off days, in the shape Krish locked on 1 Nov 2026 (week_board.py off_option_card; Ruling, Krish, 2026-11-01:
 // "Mock looks right, lock it and build it"). He asked: "I need Ideas and a suggested creative direction to approve or
 // improve or flat out reject for a reason, and the machine can learn over time". Each option is one record,
@@ -1114,7 +1135,16 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
       if (fs) fs.disabled = mode !== "live" || !!busy[id];
       if (!busy[id]) {
         let [msg, tone] = mode === "off" ? ["Presses are not saving in this view.", "bad"] : line(id, c);
-        if (mode !== "off" && note) msg = (msg ? msg + " " : "") + "Your words are saved.";
+        if (mode !== "off" && note) {
+          // How his words were read (Ruling, Krish, 2026-11-02): quotes go on the picture or video exactly as written;
+          // the rest is direction, never printed; a quote that reads as what not to say is held for him.
+          const parts = offdayNoteParts(note);
+          msg = (msg ? msg + " " : "") + "Your words are saved."
+            + (parts.hold ? " Held: a quote reads as what not to say, so Growth will ask you before using it."
+              : parts.on_media.map(q => " On the picture or video, exactly: \u201c" + q + "\u201d.").join(""))
+            + (parts.direction ? " The rest is direction, never printed." : "");
+          if (parts.hold) tone = "bad";
+        }
         say(id, msg, tone);
       }
     }
