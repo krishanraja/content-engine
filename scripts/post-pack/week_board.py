@@ -1887,6 +1887,13 @@ def off_option_card(monday, key, when, o):
             + mock + direction + off_press_row(did, 'idea', 'The idea')
             # The idea's presses first, then the direction's, as in the locked mock.
             + (off_press_row(did, 'direction', 'The direction') if d else '')
+            # His open words on anything, always there whatever he pressed (Krish, 2026-11-02: "I still need to be able
+            # to provide actual feedback on anything in open text format"; "it would contain the exact meme text to put
+            # above the meme video"). Several lines, kept exactly as typed, handed to Growth with the option.
+            + f'<div class="off-free"><label class="pl" for="note-{E(did)}">Your words</label>'
+              f'<textarea id="note-{E(did)}" rows="3" maxlength="2000" data-off-free="{E(did)}" '
+              f'placeholder="Anything on this option: feedback, the exact text to put on it, what to change" disabled></textarea>'
+              f'<button type="button" class="btn-s" data-act="offfree" data-for="{E(did)}" disabled>Save</button></div>'
             + f'<p class="tri-state" data-offstate="{E(did)}" aria-live="polite"></p></article>')
 
 
@@ -5012,6 +5019,8 @@ def _oct31_checks(check, week, ideas, opt):
     check('off days: every option takes Approve, Improve, Reject and Next week, and a box for his words',
           all(page.count(f'data-act="offpress" data-side="idea" data-value="{v}"') == 5 for v in ('approve', 'improve', 'reject', 'next_week'))
           and page.count('data-say-side="idea" hidden>') == 5 and page.count('<p class="tri-state" data-offstate="') == 5
+          # His open words on every option, always there (Krish, 2026-11-02: "feedback on anything in open text format").
+          and page.count('<textarea id="note-off-') == 5 and page.count('class="btn-s" data-act="offfree"') == 5 and '"offfree"' in template('week.js')
           and 'data-act="offsay"' in page and '"offpress"' in template('week.js') and 'reject' in template('week.js'))
     check('off days: a carousel is shown card by card, words and picture',
           page.count('class="off-c"') == 3 and 'Card words 2.' in page and 'A chart of 3.' in page and verify(page) == [])

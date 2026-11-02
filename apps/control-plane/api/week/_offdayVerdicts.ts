@@ -15,8 +15,8 @@ export interface OffdayVerdict {
   format: string | null
   /** The hook he saw when he approved the idea, when the press kept it. */
   hook: string | null
-  side: 'idea' | 'direction' | 'mock'
-  verdict: 'approve' | 'improve' | 'reject' | 'next_week'
+  side: 'idea' | 'direction' | 'mock' | 'note'
+  verdict: 'approve' | 'improve' | 'reject' | 'next_week' | 'note'
   /** His words, verbatim, or null for a bare press. */
   words: string | null
   at: string | null
@@ -32,6 +32,12 @@ export function buildOffdayVerdicts(rows: Row[]): { verdicts: OffdayVerdict[]; c
     const b = isObj(r.body) ? r.body : null
     if (!b || !String(r.doc_id || '').startsWith('off-')) continue
     const hook = isObj(b.idea) && isObj(b.idea.shown) && typeof b.idea.shown.hook === 'string' ? b.idea.shown.hook : null
+    // His open words on the option (Krish, 2026-11-02), verbatim.
+    if (isObj(b.note) && typeof b.note.words === 'string' && b.note.words.trim()) {
+      out.push({ week: String(r.week || ''), option: String(r.doc_id), day: typeof b.day === 'string' ? b.day : null,
+        format: typeof b.format === 'string' ? b.format : null, hook, side: 'note', verdict: 'note',
+        words: b.note.words, at: typeof b.note.at === 'string' ? b.note.at : null })
+    }
     for (const side of ['idea', 'direction', 'mock'] as const) {
       const v = b[side]
       if (!isObj(v) || !VERDICTS.has(v.verdict)) continue
@@ -41,7 +47,7 @@ export function buildOffdayVerdicts(rows: Row[]): { verdicts: OffdayVerdict[]; c
     }
   }
   out.sort((a, b) => String(b.at || '').localeCompare(String(a.at || '')) || a.option.localeCompare(b.option))
-  const counts: Record<string, number> = { approve: 0, improve: 0, reject: 0, next_week: 0 }
+  const counts: Record<string, number> = { approve: 0, improve: 0, reject: 0, next_week: 0, note: 0 }
   for (const v of out) counts[v.verdict]++
   return { verdicts: out, counts }
 }

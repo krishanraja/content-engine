@@ -68,7 +68,12 @@ the page; `week_board.py` refuses a wrong shape and names it.
 
 **His presses.** On each option he presses the idea, the direction and, once
 Growth returns it, the mock: Approve, Improve (his words) or Reject (his
-reason); the idea also takes Next week. They are saved in
+reason); the idea also takes Next week. Every option also has an open box for
+his own words on anything (Krish, 2026-11-02: "I still need to be able to provide
+actual feedback on anything in open text format"), saved exactly as typed in the
+record's `note`; it may be the exact text to put on the post ("it would contain
+the exact meme text to put above the meme video"), so Growth uses it word for
+word and nothing paraphrases it. They are saved in
 `queue/off-<day>-<option>`, each side `{verdict, words, sha256}`, bound to
 what that side showed him. His Improve and Reject words go to his taste ledger
 by themselves (`api/board/_presses.ts`, `offdayReports`) and come back next

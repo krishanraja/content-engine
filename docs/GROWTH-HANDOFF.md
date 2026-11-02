@@ -35,7 +35,10 @@ posts only.
   /api/board/<Monday>/pieces` (`offdays`, the idea and the direction exactly
   as shown), makes the mock in the brand kit from that direction and returns
   it on the option (`mock`) for his final yes; nothing he did not approve
-  goes out. A week he pressed the old mix on still reads `mix`. His Improve
+  goes out. Each option also carries his own words (`note`), exactly as he
+  typed them on the board (Krish, 2 November 2026: "it would contain the exact
+  meme text to put above the meme video"): Growth uses them word for word and
+  never paraphrases them. A week he pressed the old mix on still reads `mix`. His Improve
   and Reject words go to his taste ledger and come back on Sunday as
   `offday_verdicts`. A piece he records himself keeps its own Approve on its
   exact words.
