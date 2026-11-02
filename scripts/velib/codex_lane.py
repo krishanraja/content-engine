@@ -200,11 +200,16 @@ def queue(card: Path, piece: str | None, ref: str = 'main', client: str = 'claud
     require_booking(spend_id)
     fields_file = fields_path_for(card.resolve())
     rel = fields_file.relative_to(ROOT).as_posix()
-    missing = unknown_verbs(json.loads(fields_file.read_text(encoding='utf-8')))
+    # The home computer cuts the card's worktree from main, so the verbs must be on origin/main, not only here: on
+    # 2026-11-02 the fix sat on a session branch and ve-thu-2-logo-orbit failed on main's old list.
+    subprocess.run(['git', 'fetch', '-q', 'origin', 'main'], cwd=ROOT, capture_output=True)
+    main_props = subprocess.run(['git', 'show', 'origin/main:apps/renderer/src/engine/props.ts'], cwd=ROOT,
+                                capture_output=True, text=True).stdout or None
+    missing = unknown_verbs(json.loads(fields_file.read_text(encoding='utf-8')), main_props)
     if missing:
-        raise SystemExit(f've lane: {rel} uses verbs the engine does not accept: {", ".join(missing)}. Add them to '
-                         'EngineEventSchema in apps/renderer/src/engine/props.ts and push that first; the card cannot '
-                         'edit it, so Codex would fail its acceptance.')
+        raise SystemExit(f've lane: {rel} uses verbs main does not accept yet: {", ".join(missing)}. Add them to '
+                         'EngineEventSchema in apps/renderer/src/engine/props.ts and merge that to main first; the '
+                         'card cannot edit it and its worktree is cut from main, so Codex would fail its acceptance.')
     if not on_ref(rel, ref):
         raise SystemExit(f've lane: {rel} is not on origin/{ref}; push it first (the home computer reads it from there). '
                          'Everything the card reads must be on main, where its worktree is cut.')
