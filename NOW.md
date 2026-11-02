@@ -48,7 +48,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 - 2026-11-02 Krish approved the rebuilt openings and the words on screen, cleared the flagged pictures and two side-on sync windows ("1. accept. 2 clear"), and his eye may now clear a named sync window the scorer cannot read, never one it measures out of sync.
 - 2026-11-01 off-day options carry their own creative direction and are approved, improved or rejected per option; the week's mix press is gone.
-Everything to 29 October 2026 is in `docs/history/2026-10-29-NOW-changed-recently.md`, 30 October lines in `docs/history/2026-10-30-NOW-moved-3.md` and `-4.md`, `-5.md` and `-6.md`, and `docs/history/2026-10-31-NOW-moved-1.md`, all verbatim (W2.12); `npm run check:workbench` holds the byte cap. The 28 October waiting line is in `docs/history/2026-10-31-NOW-moved-4.md`.
+Everything to 29 October 2026 is in `docs/history/2026-10-29-NOW-changed-recently.md`, 30 October lines in `docs/history/2026-10-30-NOW-moved-3.md` and `-4.md`, `-5.md` and `-6.md`, and `docs/history/2026-10-31-NOW-moved-1.md`, and `docs/history/2026-11-02-NOW-moved-2.md`, all verbatim (W2.12); `npm run check:workbench` holds the byte cap. The 28 October waiting line is in `docs/history/2026-10-31-NOW-moved-4.md`.
 
 
 ## What is next and what is waiting on Krish
