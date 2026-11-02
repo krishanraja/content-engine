@@ -1,0 +1,13 @@
+{
+  "objects": [{"obj":"buddy","device":"cursor_buddy","meaning":"Eager assistant meets an approval boundary","params":{},"fromFrame":0,"toFrame":240}],
+  "events": [
+    {"id":"enter","obj":"buddy","verb":"enter","toState":"visible","atFrame":10},
+    {"id":"bounce","obj":"buddy","verb":"bounce","toState":"proud","atFrame":40},
+    {"id":"sulk","obj":"buddy","verb":"sulk","toState":"sulk","atFrame":70},
+    {"id":"wave","obj":"buddy","verb":"wave","toState":"visible","atFrame":100},
+    {"id":"move","obj":"buddy","verb":"move","toState":"{\"x\":0.75,\"y\":0.6}","atFrame":130},
+    {"id":"exit","obj":"buddy","verb":"exit","toState":"hidden","atFrame":180}
+  ],
+  "stills":[9,10,16,22,44,52,56,78,108,142,183,186],
+  "aspects":["9:16","16:9"]
+}
