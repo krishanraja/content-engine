@@ -36,18 +36,18 @@ All four are on the 2 Nov publish board, build `739e66ab`, read back with each v
 - **heard:** Krish's adjudication, with the raw recognizer result kept.
 - **visuals** and **full_review.**
 
-## What still blocks
+## Where filing stands (2 Nov)
 
-On 2 Nov the Monday counters were fixed so they land on their true values (+43%, 28%, 9%, 20 to 13). Only those frame spans were re-rendered, and the audio is byte-identical. Every check was measured again on the new Monday bytes:
-- **Sync:** the eight segments whose frames changed were re-scored. The rest decode identically by framemd5 and were reused. Monday long's two side-on windows are now `krish_cleared` under his words, and the cut passes.
+- **Delivery checks:** every check passes on all four cuts, `visual_clarity` included. An independent scorer marked each blinded answer, and every state predicted unclear or scored wrong is named in accepted_states under Krish's "1. accept. 2 clear". On Monday long, s06, s10 and s15 were marked as misleading, and each keeps its finding.
+- **Library:** all four cuts, their thumbnails and their receipts are archived and sent, and Library Sync has written them to Drive. The 720p share copies were left out, because each would need a receipt measured on its own bytes; they are in `.cache/share-copies/`.
+- **Records:** Wednesday's Video assets step is done, with both cuts, their thumbnails and their Drive links. Monday's two cuts and their Drive links are recorded, but the step stays open on the thumbnails.
+- **Monday's thumbnails:** they fail the house phone check, measured on the pages they were rendered from (`docs/plans/2026-11-02-monday/video/thumb_proof.py`). The follow.the.money label comes out at 7.3 px on the wide thumbnail and 11.3 px on the tall one, where 14 px is needed, and "2030" on the wide one comes out at 10 px. making.py will not record a thumbnail without a passing proof.
+- **The board:** `week_board.py` refuses any build while a recorded video has no thumbnail link, so it stays at build `739e66ab`, with Monday and Wednesday in review.
 
-Every check now passes on all four cuts except **`visual_clarity`**. Its inventory, the ruling block and the blinded answers are ready, and `receipts.py clarity` builds the check. It still needs one input: an independent scorer's `scores.json` for each cut, as `.cache/proof/vc/SCORING-REQUEST.md` describes. Every state the review predicts unclear, or scores wrong, is then named in accepted_states under "1. accept. 2 clear".
-
-After that, the remaining steps are:
-1. Archive with `scripts/quick-edit/archive.py`, with `MINDMAKE_ARCHIVE_ROOT` set and the share copies in `share/`.
-2. Send each folder with `send.py`, dry run first.
-3. Record each cut with `making.py <piece> video long|short --video-file <file>`.
-4. Republish the board with Monday and Wednesday ready.
+The next step is to redraw Monday's two thumbnails with the label and "2030" large enough (or removed), keeping the words Krish picked. Then:
+1. run `thumb_proof.py`;
+2. record both thumbnails with `making.py video` and `drive-link`;
+3. rebuild and publish the board with both days ready.
 
 ## Engine fixes made on the way
 
