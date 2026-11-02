@@ -28,6 +28,7 @@ import argparse
 import hashlib
 import json
 import math
+import re
 import os
 import sys
 import tempfile
@@ -135,9 +136,58 @@ def judge(point, covered, cfg):
     return 'pass' if abs(offset) <= cfg['max_offset_ms'] else 'fail'
 
 
-def gate(video, spans, covers, scorer, cfg=None):
-    """The check written to the cut's receipt as checks.sync."""
+KRISH = re.compile(r'^Krish\b')
+WINDOW_EPS_S = 0.05
+
+
+def clear_problems(clears):
+    """Why a list of Krish's sync clearances cannot be read, or []. Each is {"span_s": [a, b], "krish": "Krish, DATE: his
+    words", "reason": "..."}: his own words (a string starting "Krish"), the time span he looked at, and why."""
+    out = []
+    for c in clears or []:
+        span = c.get('span_s') if isinstance(c, dict) else None
+        if not isinstance(c, dict) or not KRISH.match(str(c.get('krish') or '')):
+            out.append(f'a sync clearance needs Krish\'s own words in "krish" (starting "Krish"): {c!r}')
+        elif not (isinstance(span, (list, tuple)) and len(span) == 2 and all(isinstance(x, (int, float)) for x in span) and span[0] < span[1]):
+            out.append(f'a sync clearance names its time span as [start, end] seconds: {c!r}')
+        elif not str(c.get('reason') or '').strip():
+            out.append(f'a sync clearance says why: {c!r}')
+    return out
+
+
+def _covers(clear, window):
+    a, b = clear['span_s']
+    return a - WINDOW_EPS_S <= window['at_s'] and window['at_s'] + window['seconds'] <= b + WINDOW_EPS_S
+
+
+def apply_clears(segments, clears):
+    """Krish's eye on a window the scorer could not read (Ruling, Krish, 2026-11-02: his eye may clear a named sync
+    window the scorer cannot measure, never one it measures out of sync). An inconclusive segment whose every unread
+    window lies inside one of his named spans becomes krish_cleared, never pass; a span that touches a window measured
+    out of sync is refused and listed. Returns the refused clearances."""
+    clears = list(clears or [])
+    touches = lambda c, w: w['at_s'] < c['span_s'][1] and w['at_s'] + w['seconds'] > c['span_s'][0]
+    windows = [w for seg in segments for w in seg['windows']]
+    bad = {i for i, c in enumerate(clears) if any(w['status'] == 'fail' and touches(c, w) for w in windows)}
+    refused = [{**clears[i], 'refused': 'a window measured out of sync is never cleared'} for i in sorted(bad)]
+    for seg in segments:
+        unread = [w for w in seg['windows'] if w['status'] == 'inconclusive']
+        if seg['status'] != 'inconclusive' or not unread or any(w['status'] == 'fail' for w in seg['windows']):
+            continue
+        by = next((c for i, c in enumerate(clears) if i not in bad and all(_covers(c, w) for w in unread)), None)
+        if by:
+            seg['status'] = 'krish_cleared'
+            seg['cleared_by'] = {k: by[k] for k in ('span_s', 'krish', 'reason')}
+    return refused
+
+
+def gate(video, spans, covers, scorer, cfg=None, clears=None):
+    """The check written to the cut's receipt as checks.sync. clears: Krish's named clearances of windows the scorer
+    could not read (apply_clears)."""
     cfg = cfg or load_config()
+    problems = clear_problems(clears)
+    if problems:
+        raise ValueError('; '.join(problems))
     windows, short = plan_windows(spans, covers, cfg)
     scored = scorer.score(video, [(s, n) for _, s, n, _ in windows]) if windows else []
     if len(scored) != len(windows):
@@ -152,23 +202,32 @@ def gate(video, spans, covers, scorer, cfg=None):
             states = [w['status'] for w in seg['windows']]
             seg['status'] = ('covered' if all(x == 'covered' for x in states)
                              else max((x for x in states if x != 'covered'), key=RANK.get))
+    refused = apply_clears(segments, clears)
+    return summarise(segments, spans, cfg, getattr(scorer, 'name', type(scorer).__name__), refused)
+
+
+def summarise(segments, spans, cfg, scorer_name, refused=()):
     on_camera = sum(b - a for (a, b), seg in zip(spans, segments) if seg['status'] != 'covered')
     unmeasured = sum(b - a for (a, b), seg in zip(spans, segments) if seg['status'] == 'short')
-    measured = [s for s in segments if s['status'] in ('pass', 'fail', 'inconclusive')]
+    measured = [s for s in segments if s['status'] in ('pass', 'fail', 'inconclusive', 'krish_cleared')]
     if any(s['status'] == 'fail' for s in segments):
         status = 'fail'
-    elif not measured or any(s['status'] == 'inconclusive' for s in segments):
+    elif not any(s['status'] == 'pass' for s in measured) or any(s['status'] == 'inconclusive' for s in segments):
         status = 'inconclusive'
     elif on_camera and unmeasured / on_camera > cfg['max_unmeasured_fraction']:
         status = 'inconclusive'
     else:
         status = 'pass'
-    counts = {k: sum(1 for s in segments if s['status'] == k) for k in ('pass', 'fail', 'inconclusive', 'covered', 'short')}
-    return {'status': status, 'floor_never': 3, 'blocking': True, 'scorer': getattr(scorer, 'name', type(scorer).__name__),
-            'thresholds': {k: cfg[k] for k in ('max_offset_ms', 'min_confidence', 'min_face_rate', 'max_unmeasured_fraction')},
-            'segments': segments, 'counts': counts, 'on_camera_s': round(on_camera, 3), 'unmeasured_s': round(unmeasured, 3),
-            'line': (f'lip sync: {status}; {counts["pass"]} segments in sync, {counts["fail"]} out, {counts["inconclusive"]} '
-                     f'unreadable, {counts["covered"]} under a picture, {counts["short"]} too short to read (floor never 3)')}
+    counts = {k: sum(1 for s in segments if s['status'] == k) for k in ('pass', 'fail', 'inconclusive', 'krish_cleared', 'covered', 'short')}
+    out = {'status': status, 'floor_never': 3, 'blocking': True, 'scorer': scorer_name,
+           'thresholds': {k: cfg[k] for k in ('max_offset_ms', 'min_confidence', 'min_face_rate', 'max_unmeasured_fraction')},
+           'segments': segments, 'counts': counts, 'on_camera_s': round(on_camera, 3), 'unmeasured_s': round(unmeasured, 3),
+           'line': (f'lip sync: {status}; {counts["pass"]} segments in sync, {counts["fail"]} out, {counts["inconclusive"]} '
+                    f'unreadable, {counts["krish_cleared"]} cleared by Krish\'s eye, {counts["covered"]} under a picture, '
+                    f'{counts["short"]} too short to read (floor never 3)')}
+    if refused:
+        out['refused_clears'] = list(refused)
+    return out
 
 
 def not_run(reason):
@@ -219,7 +278,7 @@ def fetchable(cfg, env=None):
     return bool(cfg.get('sources')) and not named and env.get('MINDMAKE_SYNCNET_NO_FETCH') != '1'
 
 
-def check_cut(video, spans, covers, cfg=None, scorer=None, env=None):
+def check_cut(video, spans, covers, cfg=None, scorer=None, env=None, clears=None):
     """make.py's entry: the sync check for one finished cut, or not_run when no scorer can run here."""
     cfg = cfg or load_config()
     if scorer is None:
@@ -236,7 +295,7 @@ def check_cut(video, spans, covers, cfg=None, scorer=None, env=None):
             return not_run(why)
         scorer = SyncNetScorer(*model_paths(cfg, env))
     try:
-        result = gate(video, spans, covers, scorer, cfg)
+        result = gate(video, spans, covers, scorer, cfg, clears)
         if getattr(scorer, 'name', '') == 'syncnet':
             import sync_check
             result['face_detector'] = sync_check.face_detector()[0]

@@ -169,6 +169,46 @@ class LipSync(unittest.TestCase):
         result = lipsync_gate.gate('cut.mp4', [(0, 8)], [], Scorer(lambda s, n: reading(0, confidence=1.0)), self.cfg)
         self.assertEqual(result['status'], 'inconclusive')
 
+    K = 'Krish, 2026-11-02: "1. accept. 2 clear"'
+
+    def _low_at(self, lo, hi, offset=0):
+        return Scorer(lambda s, n: reading(offset, confidence=1.0) if lo <= s < hi else reading(0))
+
+    def test_krish_clears_a_named_unreadable_window_and_it_is_never_a_pass(self):
+        clears = [{'span_s': [8, 14], 'krish': self.K, 'reason': 'he turns side-on; his eye on the cut'}]
+        result = lipsync_gate.gate('cut.mp4', [(0, 8), (8, 14)], [], self._low_at(8, 14), self.cfg, clears)
+        self.assertEqual([s['status'] for s in result['segments']], ['pass', 'krish_cleared'])
+        self.assertEqual(result['segments'][1]['cleared_by']['krish'], self.K)
+        self.assertEqual(result['status'], 'pass')
+        self.assertEqual(result['counts']['krish_cleared'], 1)
+
+    def test_a_clearance_that_does_not_cover_the_window_clears_nothing(self):
+        clears = [{'span_s': [8, 10], 'krish': self.K, 'reason': 'side-on'}]
+        result = lipsync_gate.gate('cut.mp4', [(0, 8), (8, 14)], [], self._low_at(8, 14), self.cfg, clears)
+        self.assertEqual(result['status'], 'inconclusive')
+
+    def test_a_window_measured_out_of_sync_is_never_cleared(self):
+        clears = [{'span_s': [8, 14], 'krish': self.K, 'reason': 'looks fine to me'}]
+        result = lipsync_gate.gate('cut.mp4', [(0, 8), (8, 14)], [],
+                                   Scorer(lambda s, n: reading(120 if s >= 8 else 0)), self.cfg, clears)
+        self.assertEqual(result['status'], 'fail')
+        self.assertEqual(result['segments'][1]['status'], 'fail')
+        self.assertEqual(result['refused_clears'][0]['refused'], 'a window measured out of sync is never cleared')
+
+    def test_a_cleared_cut_with_another_unreadable_segment_stays_inconclusive(self):
+        clears = [{'span_s': [8, 14], 'krish': self.K, 'reason': 'side-on'}]
+        scorer = Scorer(lambda s, n: reading(0, confidence=1.0) if s >= 8 else reading(0))
+        result = lipsync_gate.gate('cut.mp4', [(0, 8), (8, 14), (14, 20)], [], scorer, self.cfg, clears)
+        self.assertEqual([s['status'] for s in result['segments']], ['pass', 'krish_cleared', 'inconclusive'])
+        self.assertEqual(result['status'], 'inconclusive')
+
+    def test_only_krish_words_clear(self):
+        for bad in ({'span_s': [8, 14], 'krish': 'Claude: looks fine', 'reason': 'x'},
+                    {'span_s': [14, 8], 'krish': self.K, 'reason': 'x'},
+                    {'span_s': [8, 14], 'krish': self.K, 'reason': ' '}):
+            with self.assertRaises(ValueError):
+                lipsync_gate.gate('cut.mp4', [(0, 8), (8, 14)], [], self._low_at(8, 14), self.cfg, [bad])
+
     def test_a_window_under_a_picture_is_placed_in_the_open_part(self):
         scorer = Scorer(lambda s, n: reading(0))
         lipsync_gate.gate('cut.mp4', [(0, 20)], [(0, 12)], scorer, self.cfg)

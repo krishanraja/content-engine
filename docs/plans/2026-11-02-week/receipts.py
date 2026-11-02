@@ -186,7 +186,7 @@ def review(names):
             r['missing']['visual_clarity'] = ('the rendered-text inventory and an independent blinded three-second review of every visual state; '
                                               'Krish ruled on the words on screen ("Yes, happy with the words on screen", 2026-11-01) but the '
                                               'independent review has not run')
-        for k in [k for k in r['missing'] if k in r['checks']]:
+        for k in [k for k in list(r['missing']) if k in r['checks']]:
             r['missing'].pop(k)
         save(c, r)
         print(n, 'review', {k: v.get('status') for k, v in r['checks'].items()}, flush=True)
@@ -198,6 +198,63 @@ def status(names):
         print(n, quality.delivery_problems(str(P(c['video'])), str(receipt_path(c)), c['library']))
 
 
+ACCEPT = {'by': 'Krish', 'said': '1. accept. 2 clear', 'date': '2026-11-02',
+          'question': ('1. Do you accept the flagged pictures as they are: the states the blinded three-second review judged '
+                       'unclear, after watching all four cuts in full? (asked in the Claude Code session, krishanraja/content-engine)')}
+
+
+def clarity(names):
+    """visual_clarity from the inventory (manifest.json), the blinded answers (blind-answers.json) and an independent
+    scorer's correctness marks (scores.json: {id: {correct_subject, correct_point, misleading_inference, note}}), all in
+    .cache/proof/vc/<cut>/. A state predicted unclear or scored wrong is named in the ruling's accepted_states under
+    Krish's words; the review keeps its finding on it."""
+    for n in names:
+        c = CUTS[n]
+        r = load(c)
+        d = P('.cache/proof/vc') / n
+        manifest_p, scores_p = d / 'manifest.json', d / 'scores.json'
+        if not scores_p.is_file():
+            print(n, 'clarity: no scores.json from an independent scorer yet', flush=True)
+            continue
+        m = json.loads(manifest_p.read_text(encoding='utf-8'))
+        blind = json.loads((d / 'blind-answers.json').read_text(encoding='utf-8'))
+        scores = json.loads(scores_p.read_text(encoding='utf-8'))
+        narration = Path(str(P(c['video'])) + '.narration.txt')
+        frames = int(subprocess.check_output(['ffprobe', '-v', 'error', '-select_streams', 'v:0', '-count_packets',
+                                              '-show_entries', 'stream=nb_frames', '-of', 'csv=p=0', str(P(c['video']))], text=True).strip())
+        m.update({'video_sha256': r['video_sha256'], 'frames': frames, 'narration_sha256': quality.digest(narration),
+                  'narration': str(Path('../../../..') / narration.relative_to(ROOT))})
+        assert m['states'][-1]['end_frame'] == frames, f'{n}: inventory ends at {m["states"][-1]["end_frame"]}, video has {frames}'
+        accepted, responses = [], []
+        for resp in blind['responses']:
+            sc = scores[resp['id']]
+            row = {**resp, 'correct_subject': sc['correct_subject'], 'correct_point': sc['correct_point'],
+                   'misleading_inference': sc['misleading_inference'], 'scoring_note': sc.get('note'), 'exposure_seconds': None}
+            ok = (resp.get('predicted_under_three_seconds') is True and sc['correct_subject'] is True
+                  and sc['correct_point'] is True and sc['misleading_inference'] is False)
+            if not ok:
+                accepted.append(resp['id'])
+                row['finding'] = 'held as found; accepted by Krish as it is'
+            responses.append(row)
+        m['ruling']['accepted_states'] = accepted
+        m['ruling']['accepted_states_ruling'] = ACCEPT
+        manifest_p.write_text(json.dumps(m, indent=1), encoding='utf-8')
+        review = {k: blind[k] for k in ('reviewer', 'reviewer_kind', 'blinded', 'author_review', 'evidence_level')}
+        review.update({'video_sha256': r['video_sha256'], 'inventory_complete': True, 'semantic_nonduplication': 'pass',
+                       'scorer': scores.get('_scorer', 'independent scorer'), 'responses': responses})
+        review_p = d / 'review.json'
+        review_p.write_text(json.dumps(review, indent=1), encoding='utf-8')
+        base = receipt_path(c).parent
+        rel = lambda x: str(Path(__import__('os').path.relpath(x, base)))
+        r['checks']['visual_clarity'] = {'status': 'pass', 'ruling': m['ruling'],
+                                         'manifest': {'path': rel(manifest_p), 'sha256': quality.digest(manifest_p)},
+                                         'narration': {'path': rel(narration), 'sha256': quality.digest(narration)},
+                                         'review': {'path': rel(review_p), 'sha256': quality.digest(review_p)}}
+        r.get('missing', {}).pop('visual_clarity', None)
+        save(c, r)
+        print(n, 'clarity', len(accepted), 'states accepted by Krish', flush=True)
+
+
 if __name__ == '__main__':
     stage, names = sys.argv[1], (sys.argv[2:] or list(CUTS))
-    {'base': base, 'words': words, 'opening': opening, 'loudness': loudness, 'motion': motion, 'review': review, 'status': status}[stage](names)
+    {'base': base, 'words': words, 'opening': opening, 'loudness': loudness, 'motion': motion, 'review': review, 'status': status, 'clarity': clarity}[stage](names)
