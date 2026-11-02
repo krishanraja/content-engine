@@ -1,0 +1,13 @@
+{
+  "objects": [{"obj":"buddy","device":"cursor_buddy","meaning":"Eager helper learns a boundary","params":{"mood":"eager","prop":"card"},"fromFrame":0,"toFrame":180}],
+  "events": [
+    {"id":"in","obj":"buddy","verb":"enter","toState":"visible","atFrame":10},
+    {"id":"hop","obj":"buddy","verb":"bounce","toState":"proud","atFrame":30},
+    {"id":"wall","obj":"buddy","verb":"sulk","toState":"sulk","atFrame":50},
+    {"id":"wink","obj":"buddy","verb":"wave","toState":"wave","atFrame":70},
+    {"id":"glide","obj":"buddy","verb":"move","toState":"{\"x\":0.7,\"y\":0.4}","atFrame":90},
+    {"id":"out","obj":"buddy","verb":"exit","toState":"hidden","atFrame":120}
+  ],
+  "stills": [9,10,16,22,33,39,42,54,62,76,96,102,123,126],
+  "slots": [{"aspect":"9:16","box":{"left":0,"top":0,"width":1080,"height":1920}},{"aspect":"16:9","box":{"left":0,"top":0,"width":1920,"height":1080}}]
+}

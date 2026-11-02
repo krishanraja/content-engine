@@ -1,3 +1,6 @@
+import { Device as LogoOrbit } from './logo_orbit'
+import { Device as TypingBubble } from './typing_bubble'
+import { Device as CursorBuddy } from './cursor_buddy'
 import { Device as LogoCard } from './logo_card'
 import { Device as HandPhoneStage } from './hand_phone_stage'
 import type { DeviceRegistry } from './types'
@@ -19,7 +22,10 @@ import { Device as QuoteCard } from './quote_card'
 /** Device id (the spec's object.device, config/techniques.json render_adapter) -> component.
  *  Each device card adds exactly one line here. FormatMaster refuses an object whose device is missing. */
 export const DEVICES: DeviceRegistry = {
+  typing_bubble: TypingBubble,
+  cursor_buddy: CursorBuddy,
   logo_card: LogoCard,
+  logo_orbit: LogoOrbit,
   headline: Headline,
   sticker: Sticker,
   stamp: Stamp,
