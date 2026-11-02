@@ -1,13 +1,11 @@
 import React from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { EngineEventSchema, EngineObjectSchema } from '../../props'
 import type { DeviceProps } from '../types'
 import { Device, orbitState } from './index'
 import { ParamsSchema, resolveLogo } from './schema'
 import fixture from './fixture.json'
-vi.mock('../../../../../../config/logo-registry.json', () => ({ default: { marks:
-  ['Meta', 'Google', 'Amazon', 'xAI', 'Anthropic'].map(company => ({ company, variant: 'full_colour', file: `test-assets/${company}.svg` })) } }))
 const object = EngineObjectSchema.parse(fixture.objects[0])
 const events = fixture.events.map(e => EngineEventSchema.parse(e))
 const tokens = { ink: 'black', inkDeep: 'black', inkSoft: 'gray', cream: 'ivory', mint: 'aqua', channel: 'coral' }
@@ -42,7 +40,7 @@ describe('logo_orbit', () => {
   })
   it('highlights one mark, drifts positions, spins out and resets on reentry', () => {
     expect(state(65)!.logos.map(l => l.opacity)).toEqual([0.4, 0.4, 1, 0.4, 0.4])
-    expect(state(65)!.logos[2]!.scale).toBe(1.1)
+    expect(state(65)!.logos[2]!.scale).toBe(1.15)
     expect(state(80)!.angle).toBeGreaterThan(state(65)!.angle)
     expect(state(103)!.out).toBeGreaterThan(0)
     expect(still(106)).toBe('')
@@ -50,11 +48,95 @@ describe('logo_orbit', () => {
     expect(state(155, again)!.logos.map(l => l.opacity)).toEqual([1, 1, 1, 1, 1])
     expect(state(65, [...events].reverse())).toEqual(state(65))
   })
+  it('uses 160px rounded tiles, 96px aspect-fitted marks and visible ink rings in both slots', () => {
+    for (const aspect of fixture.aspects as DeviceProps['aspect'][]) {
+      const html = still(52, aspect)
+      expect((html.match(/data-tile=/g) ?? []).length).toBe(5)
+      expect((html.match(/width="160" height="160" rx="28"/g) ?? []).length).toBe(5)
+      expect((html.match(/data-mark=/g) ?? []).length).toBe(5)
+      expect((html.match(/stroke="gray" stroke-width="6" opacity="0.65"/g) ?? []).length).toBe(3)
+      expect(html).toContain('stroke-dasharray="0.018 0.018"')
+      expect(html).toContain('feDropShadow')
+      expect(html).toContain('font-size="' + (aspect === '9:16' ? 34 : 36) + '"')
+      expect(html).toContain('r="5" fill="aqua"')
+      expect(still(65, aspect)).toContain('data-highlight="2"')
+    }
+  })
+  it('overshoots on arrival, draws three fading copies and settles without rotation', () => {
+    const scales = Array.from({ length: 13 }, (_, age) => state(10 + age)!.logos[0]!.scale)
+    expect(Math.max(...scales)).toBeGreaterThanOrEqual(1.12)
+    expect(scales[12]).toBe(1)
+    expect((still(14).match(/data-trail=/g) ?? []).length).toBe(6)
+    expect(still(14)).not.toContain('rotate(')
+    expect(still(52)).not.toContain('data-trail=')
+  })
   it('refuses unregistered marks, bad counts and invalid event indices', () => {
     for (const params of [{ logos: [] }, { logos: Array(9).fill({ id: 'Meta' }) }, { logos: [{ id: 'invented' }] },
       { ...object.params, rings: 4 }, { ...object.params, chips: Array(7).fill('a') }]) expect(ParamsSchema.safeParse(params).success).toBe(false)
     expect(ParamsSchema.safeParse({ logos: Array(8).fill({ id: 'Meta' }), centre: 'buddy' }).success).toBe(true)
     expect(() => state(80, [...events, { ...events[2]!, toState: '5' }])).toThrow(/index/)
     expect(() => resolveLogo('invented')).toThrow(/Unregistered/)
+  })
+})
+
+// Pixel checks use the real approved SVGs, including their transparent padding.
+import { readFileSync } from 'node:fs'
+import { spawnSync } from 'node:child_process'
+import { Mark } from './mark'
+import houseProps from '../../../../../../docs/plans/2026-10-28-ve-format-h-proof/ve/props.proof-tall.json'
+const probe = (svg: string, points: number[][] = []) => {
+  const embedded = svg.replace(/href="(assets\/logos\/[^\"]+)"/g, (_, path: string) =>
+    `href="data:image/svg+xml;base64,${readFileSync(path).toString('base64')}"`)
+  const result = spawnSync('python3', ['apps/renderer/src/engine/devices/logo_orbit/raster.py', ...points.map(p => p.join(','))], { input: embedded, encoding: 'utf8', timeout: 20000, env: { ...process.env, OMP_NUM_THREADS: '1' } })
+  expect(result.status, result.stderr).toBe(0)
+  return JSON.parse(result.stdout) as { bbox: number[]; pixels: number[][] }
+}
+const luminance = (rgb: number[]) => rgb.slice(0, 3).map(v => {
+  const c = v / 255
+  return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4
+}).reduce((sum, v, i) => sum + v * [0.2126, 0.7152, 0.0722][i]!, 0)
+
+describe('logo_orbit pixel regressions', () => {
+  it('fits every painted mark to 96px, including just the Meta infinity', () => {
+    for (const { id } of fixture.objects[0]!.params.logos) {
+      const markup = renderToStaticMarkup(React.createElement('svg', { xmlns: 'http://www.w3.org/2000/svg', width: 160, height: 160 }, React.createElement('g', { transform: 'translate(80 80)' }, React.createElement(Mark, { id, size: 96 }))))
+      const { bbox } = probe(markup)
+      const long = Math.max(bbox[2]! - bbox[0]!, bbox[3]! - bbox[1]!)
+      expect(long, id).toBeGreaterThanOrEqual(96 * 0.9)
+      expect(long, id).toBeLessThanOrEqual(96 * 1.1)
+      if (id === 'Meta') expect((bbox[2]! - bbox[0]!) / (bbox[3]! - bbox[1]!)).toBeCloseTo(1.5, 1)
+    }
+  })
+  it('holds all rings fully drawn on every frame until exit in both aspects', () => {
+    for (const aspect of fixture.aspects as DeviceProps['aspect'][]) {
+      for (let frame = 22; frame < 100; frame++) {
+        const html = still(frame, aspect)
+        expect(state(frame)!.ring).toBe(1)
+        expect(html).not.toContain('<mask')
+        expect((html.match(/data-ring=/g) ?? []).length).toBe(3)
+      }
+    }
+  })
+  it('renders each ring above 1.6:1 contrast on the house cream in both aspects', () => {
+    // The house tokens a real ve render passes (the format H proof's props).
+    const realTokens = houseProps.tokens
+    for (const aspect of fixture.aspects as DeviceProps['aspect'][]) {
+      const width = aspect === '9:16' ? 1080 : 1920
+      const height = aspect === '9:16' ? 1920 : 1080
+      const radius = 1080 * (aspect === '9:16' ? 0.36 : 0.35)
+      const cy = height * (aspect === '9:16' ? 0.48 : 0.5)
+      const points = [[0, 0], ...[0, 1, 2].flatMap(i => Array.from({ length: 72 }, (_, n) => {
+        const a = n * Math.PI / 36, r = radius * (0.58 + 0.42 * (i + 1) / 3)
+        return [Math.round(width / 2 + Math.cos(a) * r), Math.round(cy + Math.sin(a) * r)]
+      }))]
+      const markup = renderToStaticMarkup(React.createElement(Device, { object, events, frame: 52, tokens: realTokens, aspect,
+        box: { left: 0, top: 0, width, height } }))
+      const { pixels } = probe(markup, points)
+      const ground = luminance(pixels[0]!)
+      for (let ring = 0; ring < 3; ring++) {
+        const contrasts = pixels.slice(1 + ring * 72, 1 + (ring + 1) * 72).map(p => (ground + 0.05) / (luminance(p) + 0.05))
+        expect(contrasts.filter(c => c >= 1.6).length, `${aspect} ring ${ring}`).toBeGreaterThan(20)
+      }
+    }
   })
 })
