@@ -3880,6 +3880,11 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 
 - `function slotsFor(layout: Layout, aspect: Aspect, count = 1): Box[]`
 
+### `apps/renderer/src/engine/mocks/face-with-proof.tsx`
+
+- `interface FWPMockProps`
+- `const FWP_MOCKS`
+
 ### `apps/renderer/src/engine/props.ts`
 
 - `const EngineTokensSchema`
