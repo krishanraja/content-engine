@@ -42,3 +42,29 @@ videos"
   - the source and the date.
 - What it will not do is repost someone else's clip or photo without permission, the standing rule. Where an
   organisation gives no press image, the card says so and links it.
+
+## Good news: where the stories come from (Krish, 2 Nov)
+
+His words: "Why are all the good news candidates about pharmaceuticals and bioscience? That's weird and unexpected
+given you have so much inspiration that shows you what I am interested in myself."
+
+The first candidates came from AI-news roundups, which lead with pharma and lab deals. The picks now come from his own
+Content Inspo:
+- **The format he saved:** the "Winning Mindset" carousel (28 Oct). Each card is one bold, human fact a reader feels
+  at once, such as a 17-year-old's invention, a law that changed, or a record broken.
+- **The subjects he follows:**
+  - personal agents (Muse, Duet, Dots) doing something useful for an ordinary person;
+  - AI music, and artists getting paid;
+  - small businesses;
+  - young people building with AI;
+  - frontier rivalry that lowers prices or opens things up.
+  - Lab and pharma deals go only when a person can feel the result.
+
+Candidates so far, each to be checked against its primary source:
+- Spotify is reported to plan a paid AI remix add-on whose royalties go to the original artists. This is FT reporting
+  around 2 Nov, a plan and not a launch.
+- LegalZoom made its AI assistant free to every small business owner. Dated 29 Oct, it falls outside the 31 Oct to
+  7 Nov window unless the window is widened.
+
+The final three are picked on Friday 6 Nov from the whole week, in these lanes. Each card carries the real headline,
+the source and the date.

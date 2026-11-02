@@ -5,35 +5,214 @@
     "A name may have several spellings; the first is how the logo list writes it."
   ],
   "companies": [
-    {"names": ["OpenAI", "ChatGPT", "Codex"], "domain": "openai.com"},
-    {"names": ["Anthropic", "Claude"], "domain": "anthropic.com"},
-    {"names": ["Google", "Gemini", "DeepMind"], "domain": "google.com"},
-    {"names": ["DeepSeek"], "domain": "deepseek.com"},
-    {"names": ["OpenRouter"], "domain": "openrouter.ai"},
-    {"names": ["SemiAnalysis"], "domain": "semianalysis.com"},
-    {"names": ["Reuters"], "domain": "reuters.com"},
-    {"names": ["Stanford"], "domain": "stanford.edu"},
-    {"names": ["Microsoft"], "domain": "microsoft.com"},
-    {"names": ["Amazon"], "domain": "amazon.com"},
-    {"names": ["Shopify"], "domain": "shopify.com"},
-    {"names": ["Meta", "Muse"], "domain": "meta.com"},
-    {"names": ["Higgsfield"], "domain": "higgsfield.ai"},
-    {"names": ["Substack"], "domain": "substack.com"},
-    {"names": ["YouTube"], "domain": "youtube.com"},
-    {"names": ["LinkedIn"], "domain": "linkedin.com"},
-    {"names": ["Suno"], "domain": "suno.com"},
-    {"names": ["Warner Music Group", "Warner Music", "Warner"], "domain": "wmg.com"},
-    {"names": ["BMG"], "domain": "bmg.com"},
-    {"names": ["Believe"], "domain": "believe.com"},
-    {"names": ["Sony Music", "Sony"], "domain": "sonymusic.com"},
-    {"names": ["Universal Music Group", "Universal Music", "Universal"], "domain": "universalmusic.com"},
-    {"names": ["Udio"], "domain": "udio.com"},
-    {"names": ["ElevenLabs"], "domain": "elevenlabs.io"}
+    {
+      "names": [
+        "OpenAI",
+        "ChatGPT",
+        "Codex"
+      ],
+      "domain": "openai.com"
+    },
+    {
+      "names": [
+        "Anthropic",
+        "Claude"
+      ],
+      "domain": "anthropic.com"
+    },
+    {
+      "names": [
+        "Google",
+        "Gemini",
+        "DeepMind"
+      ],
+      "domain": "google.com"
+    },
+    {
+      "names": [
+        "DeepSeek"
+      ],
+      "domain": "deepseek.com"
+    },
+    {
+      "names": [
+        "OpenRouter"
+      ],
+      "domain": "openrouter.ai"
+    },
+    {
+      "names": [
+        "SemiAnalysis"
+      ],
+      "domain": "semianalysis.com"
+    },
+    {
+      "names": [
+        "Reuters"
+      ],
+      "domain": "reuters.com"
+    },
+    {
+      "names": [
+        "Stanford"
+      ],
+      "domain": "stanford.edu"
+    },
+    {
+      "names": [
+        "Microsoft"
+      ],
+      "domain": "microsoft.com"
+    },
+    {
+      "names": [
+        "Amazon"
+      ],
+      "domain": "amazon.com"
+    },
+    {
+      "names": [
+        "Shopify"
+      ],
+      "domain": "shopify.com"
+    },
+    {
+      "names": [
+        "Meta",
+        "Muse"
+      ],
+      "domain": "meta.com"
+    },
+    {
+      "names": [
+        "Higgsfield"
+      ],
+      "domain": "higgsfield.ai"
+    },
+    {
+      "names": [
+        "Substack"
+      ],
+      "domain": "substack.com"
+    },
+    {
+      "names": [
+        "YouTube"
+      ],
+      "domain": "youtube.com"
+    },
+    {
+      "names": [
+        "LinkedIn"
+      ],
+      "domain": "linkedin.com"
+    },
+    {
+      "names": [
+        "Suno"
+      ],
+      "domain": "suno.com"
+    },
+    {
+      "names": [
+        "Warner Music Group",
+        "Warner Music",
+        "Warner"
+      ],
+      "domain": "wmg.com"
+    },
+    {
+      "names": [
+        "BMG"
+      ],
+      "domain": "bmg.com"
+    },
+    {
+      "names": [
+        "Believe"
+      ],
+      "domain": "believe.com"
+    },
+    {
+      "names": [
+        "Sony Music",
+        "Sony"
+      ],
+      "domain": "sonymusic.com"
+    },
+    {
+      "names": [
+        "Universal Music Group",
+        "Universal Music",
+        "Universal"
+      ],
+      "domain": "universalmusic.com"
+    },
+    {
+      "names": [
+        "Udio"
+      ],
+      "domain": "udio.com"
+    },
+    {
+      "names": [
+        "ElevenLabs"
+      ],
+      "domain": "elevenlabs.io"
+    },
+    {
+      "names": [
+        "xAI",
+        "Grok"
+      ],
+      "domain": "x.ai"
+    }
   ],
   "mentions_only": [
-    "Reuters", "Stanford", "Substack", "YouTube", "LinkedIn", "Microsoft"
+    "Reuters",
+    "Stanford",
+    "Substack",
+    "YouTube",
+    "LinkedIn",
+    "Microsoft"
   ],
   "mentions_only_about": "Named as a source or a channel, never as a subject: a piece that only cites them needs no logo. A piece about one of them moves it out of this list.",
-  "marks": [],
+  "marks": [
+    {
+      "company": "Meta",
+      "variant": "full_colour",
+      "file": "assets/logos/meta-logo.svg",
+      "sha256": "daaec757f09c07d3096d837690d6c917ef4895c3208fa375d726fd499aafb908",
+      "source": "https://cdn.brandfetch.io/idWvz5T3V7/theme/dark/logo.svg"
+    },
+    {
+      "company": "Google",
+      "variant": "full_colour",
+      "file": "assets/logos/google-symbol.svg",
+      "sha256": "4b16f5c6b68908d895f187ff4d13a6877b779b75f77482fee1b937adac334062",
+      "source": "https://cdn.brandfetch.io/id6O2oGzv-/theme/dark/symbol.svg"
+    },
+    {
+      "company": "Amazon",
+      "variant": "full_colour",
+      "file": "assets/logos/amazon-symbol.svg",
+      "sha256": "62f455986e6d07003b02ac7d3363493a608622f1bd41767f750c2b271acd2164",
+      "source": "https://cdn.brandfetch.io/idawOgYOsG/theme/dark/symbol.svg"
+    },
+    {
+      "company": "xAI",
+      "variant": "full_colour",
+      "file": "assets/logos/xai-logo.svg",
+      "sha256": "6149abb17b1bed7ef79723a3f661b5663e986a779b6b732443207ff88e841eab",
+      "source": "https://cdn.brandfetch.io/iddjpnb3_W/theme/dark/logo.svg"
+    },
+    {
+      "company": "Anthropic",
+      "variant": "full_colour",
+      "file": "assets/logos/anthropic-symbol.svg",
+      "sha256": "e129efc6982ff7df4baf15ed97486454a681286fcbaf16b6074517125e59fe88",
+      "source": "https://cdn.brandfetch.io/idmJWF3N06/theme/dark/symbol.svg"
+    }
+  ],
   "marks_about": "The official mark files a render may use (floor never 6: real logos, used with the rights, never redrawn). scripts/post-pack/logo_gate.py hash-matches every logo file a cover, thumbnail or card uses against this list and refuses any file not here. Each entry: {\"company\": the first name above, \"variant\": \"full_colour\" or \"one_colour\" (the company's own one-colour version), \"file\": the path in this repository, \"sha256\": the file's, \"source\": where it came from (the company's brand page or Brandfetch asset URL, without its per-request token)}. Add one with: python3 scripts/post-pack/logo_gate.py register FILE --company NAME --variant full_colour --source URL. It starts empty: whether the house cream recolours in docs/plans/*/logos count as a one-colour version is Krish's call."
 }

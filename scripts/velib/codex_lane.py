@@ -173,10 +173,43 @@ def on_ref(rel: str, ref: str) -> bool:
     return subprocess.run(['git', 'cat-file', '-e', f'origin/{ref}:{rel}'], cwd=ROOT, capture_output=True).returncode == 0
 
 
+ENGINE_PROPS = ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'props.ts'
+CARD_VERB = re.compile(r'^\s*\d+\.\s+`([a-z_]+)`', re.M)
+
+
+def engine_verbs(props_text: str | None = None) -> set[str]:
+    """The event verbs EngineEventSchema accepts (apps/renderer/src/engine/props.ts). Pure on its argument."""
+    text = props_text if props_text is not None else ENGINE_PROPS.read_text(encoding='utf-8')
+    match = re.search(r"verb:\s*z\.enum\(\[([^\]]*)\]", text)
+    return set(re.findall(r"'([a-z_]+)'", match.group(1))) if match else set()
+
+
+def unknown_verbs(fields: dict, props_text: str | None = None) -> list[str]:
+    """The verbs a device card's goal names (its numbered `verb` steps, `params` aside) that the engine does not
+    accept. A device card cannot edit props.ts (its write_allow), so a new verb has to be added before it is queued:
+    on 2026-11-02 ve-thu-1-cursor-buddy failed its acceptance on the home computer for exactly this, and the two cards
+    queued beside it would have failed the same way. Pure."""
+    if fields.get('kind') != 'device':
+        return []
+    named = [v for v in CARD_VERB.findall(fields.get('goal') or '') if v != 'params']
+    known = engine_verbs(props_text)
+    return sorted({v for v in named if v not in known})
+
+
 def queue(card: Path, piece: str | None, ref: str = 'main', client: str = 'claude_code', spend_id: str | None = None) -> dict:
     require_booking(spend_id)
     fields_file = fields_path_for(card.resolve())
     rel = fields_file.relative_to(ROOT).as_posix()
+    # The home computer cuts the card's worktree from main, so the verbs must be on origin/main, not only here: on
+    # 2026-11-02 the fix sat on a session branch and ve-thu-2-logo-orbit failed on main's old list.
+    subprocess.run(['git', 'fetch', '-q', 'origin', 'main'], cwd=ROOT, capture_output=True)
+    main_props = subprocess.run(['git', 'show', 'origin/main:apps/renderer/src/engine/props.ts'], cwd=ROOT,
+                                capture_output=True, text=True).stdout or None
+    missing = unknown_verbs(json.loads(fields_file.read_text(encoding='utf-8')), main_props)
+    if missing:
+        raise SystemExit(f've lane: {rel} uses verbs main does not accept yet: {", ".join(missing)}. Add them to '
+                         'EngineEventSchema in apps/renderer/src/engine/props.ts and merge that to main first; the '
+                         'card cannot edit it and its worktree is cut from main, so Codex would fail its acceptance.')
     if not on_ref(rel, ref):
         raise SystemExit(f've lane: {rel} is not on origin/{ref}; push it first (the home computer reads it from there). '
                          'Everything the card reads must be on main, where its worktree is cut.')
@@ -574,6 +607,36 @@ def last_json(text: str) -> dict | None:
             except ValueError:
                 return None
     return None
+
+
+TERMINAL = ('built', 'failed')
+
+
+def wait(ids: list[str], every: float = 30, limit_minutes: float = 120, out=print, read=None, sleep=None) -> dict:
+    """Follow queued cards until each is built or failed, printing a line each time one changes state, so the
+    session that queued them hears within `every` seconds. Krish, 2026-11-02: "Sending stuff to Codex cannot be this
+    ambiguous and take an hour to check in on." Start it right after `ve lane queue`, in the background (a Monitor), and
+    act on the first built or failed line. Returns {id: final state}; an id still queued or running at the limit
+    reads 'timed_out'."""
+    import time
+    read = read or status
+    sleep = sleep or time.sleep
+    wanted = [i if i.startswith(PREFIX) else item_id(i) for i in ids]
+    seen: dict[str, str] = {}
+    deadline = time.monotonic() + limit_minutes * 60
+    while True:
+        rows = {r['id']: r for r in read() if r['id'] in wanted}
+        for i in wanted:
+            row = rows.get(i) or {}
+            state = row.get('state') or 'missing'
+            if seen.get(i) != state:
+                seen[i] = state
+                out(f'{i} {state} {(row.get("branch") or "")} {(row.get("detail") or "")[:300]}'.strip())
+        if all(seen.get(i) in TERMINAL + ('missing',) for i in wanted):
+            return dict(seen)
+        if time.monotonic() > deadline:
+            return {i: (s if s in TERMINAL else 'timed_out') for i, s in seen.items()}
+        sleep(every)
 
 
 def status() -> list[dict]:

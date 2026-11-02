@@ -392,7 +392,12 @@ def cmd_lane(args) -> int:
         print(codex_lane.route())
     elif args.action == 'queue':
         item = codex_lane.queue(Path(args.card), args.piece, args.ref, spend_id=args.spend_id)
-        print(f've lane: queued {item["id"]} for Codex on the home computer')
+        print(f've lane: queued {item["id"]} for Codex on the home computer. Follow it now, in the background: '
+              f'python scripts/ve.py lane wait {item["id"]}')
+    elif args.action == 'wait':
+        result = codex_lane.wait(args.ids, every=args.every, limit_minutes=args.minutes)
+        print(json.dumps(result))
+        return 0 if all(s == 'built' for s in result.values()) else 1
     elif args.action == 'pending':
         print(json.dumps({'cards': codex_lane.all_pending()}))
     elif args.action == 'build-venture':
@@ -966,6 +971,8 @@ def main() -> int:
     a.add_argument('venture'); a.add_argument('branch'); a.add_argument('path'); a.add_argument('--json', action='store_true')
     actions.add_parser('serve', help='the recordings pass: claim the next queued card and build it here or in WSL')
     actions.add_parser('status', help='the lane items and their state')
+    a = actions.add_parser('wait', help='follow queued cards until each is built or failed (run it in the background right after queue)')
+    a.add_argument('ids', nargs='+'); a.add_argument('--every', type=float, default=30); a.add_argument('--minutes', type=float, default=120)
     p.set_defaults(fn=cmd_lane)
     p = sub.add_parser('verify-card'); p.add_argument('card'); p.add_argument('--cwd', required=True); p.set_defaults(fn=cmd_verify_card)
     p = sub.add_parser('status'); p.add_argument('piece'); p.set_defaults(fn=cmd_status)
