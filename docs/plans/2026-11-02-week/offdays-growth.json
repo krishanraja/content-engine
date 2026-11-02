@@ -14,8 +14,12 @@
     "ready": false,
     "draft": "Tue 3 Nov. Your idea (28 Oct): the translator scene you saved, reskinned for when your AI talks to your customer's AI. Two identical robots across a table, each insisting the other is the translator, forty minutes to agree a refund nobody asked for, one human in the corner checking his watch. Subtitles at the fast pace you saved. Format credited to the original clip; none of its footage is used.",
     "needs": [
-     "Codex mock being built: storyboard frames, his line above the video"
-    ]
+     "Finished: video made and sent to him; Growth posts it"
+    ],
+    "mock": {
+     "url": "https://board.asset/tue-translator-still.jpg",
+     "note": "Finished, 2 Nov: the 2:00 scene with its subtitles, its own title and logo cropped off, centred on 9:16 with your POV line above. The video was sent to you in this session; Growth posts it."
+    }
    },
    {
     "concept_id": "claudejobs",
