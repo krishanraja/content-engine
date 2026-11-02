@@ -191,7 +191,7 @@ class VentureQueue(unittest.TestCase):
 
     def test_the_ventures_are_configured(self):
         names = lane.ventures()
-        self.assertEqual(set(names), {'heartside', 'full-time'})
+        self.assertEqual(set(names), {'heartside', 'full-time', 'growth-makeyourmindup'})
         for v in names.values():
             self.assertRegex(v['repo'], r'^krishanraja/')
             self.assertTrue(v['engine'].startswith('growth-'))
