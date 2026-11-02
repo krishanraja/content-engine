@@ -23,7 +23,7 @@ These are the cuts with the rebuilt openings and the remixed audio. His words, a
 
 ## Where they are
 
-All four are on the 2 Nov publish board, build `739e66ab`, read back with each video's sha matching. Monday and Wednesday are marked **review**, with the reason on the board. Monday's two cuts on it are the bytes from before the counter fix. Friday stays ready: its videos carry Krish's approve-for-publish words (picks/fri-publish), and they now resolve to stored assets.
+All four are filed and on the 2 Nov publish board as **ready**, build `88e69f5b` (2 Nov). On readback, all 22 board assets match their local sha256: every video, every thumbnail, and the Drive download links mapped to stored assets. Monday, Wednesday and Friday all read ready. Friday stays ready on Krish's approve-for-publish words (picks/fri-publish).
 
 ## The delivery checks, measured on these bytes
 
@@ -36,18 +36,13 @@ All four are on the 2 Nov publish board, build `739e66ab`, read back with each v
 - **heard:** Krish's adjudication, with the raw recognizer result kept.
 - **visuals** and **full_review.**
 
-## Where filing stands (2 Nov)
+## Where filing stands (2 Nov): done
 
 - **Delivery checks:** every check passes on all four cuts, `visual_clarity` included. An independent scorer marked each blinded answer, and every state predicted unclear or scored wrong is named in accepted_states under Krish's "1. accept. 2 clear". On Monday long, s06, s10 and s15 were marked as misleading, and each keeps its finding.
-- **Library:** all four cuts, their thumbnails and their receipts are archived and sent, and Library Sync has written them to Drive. The 720p share copies were left out, because each would need a receipt measured on its own bytes; they are in `.cache/share-copies/`.
-- **Records:** Wednesday's Video assets step is done, with both cuts, their thumbnails and their Drive links. Monday's two cuts and their Drive links are recorded, but the step stays open on the thumbnails.
-- **Monday's thumbnails:** they fail the house phone check, measured on the pages they were rendered from (`docs/plans/2026-11-02-monday/video/thumb_proof.py`). The follow.the.money label comes out at 7.3 px on the wide thumbnail and 11.3 px on the tall one, where 14 px is needed, and "2030" on the wide one comes out at 10 px. making.py will not record a thumbnail without a passing proof.
-- **The board:** `week_board.py` refuses any build while a recorded video has no thumbnail link, so it stays at build `739e66ab`, with Monday and Wednesday in review.
-
-The next step is to redraw Monday's two thumbnails with the label and "2030" large enough (or removed), keeping the words Krish picked. Then:
-1. run `thumb_proof.py`;
-2. record both thumbnails with `making.py video` and `drive-link`;
-3. rebuild and publish the board with both days ready.
+- **Library:** all four cuts, their thumbnails and their receipts are archived and sent. The 720p share copies were left out, because each would need a receipt measured on its own bytes; they are in `.cache/share-copies/`.
+- **Records:** both pieces' Video assets steps are done, with the cuts, the thumbnails and the Drive links.
+- **Monday's thumbnails:** redrawn by `docs/plans/2026-11-02-monday/video/thumbnails.py --keep-face`, keeping his picked words and face. The follow.the.money label and "2030" are larger, and `thumb_proof.py` passes: the smallest text on a phone is 15.5 px on the wide one and 16.6 px on the tall one, against 14 needed (it was 7.3 and 10). The new files are sent to the library. Library Sync replaces the older copies at the same Drive links, and they had not landed by the time of the board build; the board serves the new thumbnails from its own stored assets.
+- **Not in scope, but seen:** both pieces' records show the "Fact-checked draft" step as FAIL ("the fact gate did not pass"). It was done on 31 Oct, so another session's article edits probably need a fresh fact-gate run.
 
 ## Engine fixes made on the way
 
