@@ -11,7 +11,7 @@
    "CLAUDE IS EATING THE JOBS",
    "OF ITS OWN HUMANS"
   ],
-  "portrait": "../../../../.cache/pack/mon/portrait.jpg",
+  "portrait": true,
   "rows": [
    {
     "name": "Anthropic",

@@ -273,6 +273,28 @@ def resolve(base, rel):
     return p if p.is_absolute() else base / p
 
 
+def portrait_name(value, date):
+    """The approved headshot a cover's "portrait" names, or a refusal. `true` takes
+    the date's turn in brand.PORTRAITS; a name must be one of them. A path is
+    refused: on 2 Nov 2026 a frame grabbed from his recorded take (cap, mid-word,
+    soft, a wall behind) went onto the share card, and Krish's words were "absolutely
+    fucking awful headshot ... It looks ridiculous." Only the photos on the cover
+    site (brand.REMOTE) are his headshots; a new one is added there, never per piece."""
+    if value is True:
+        return brand.portrait_for(date)
+    if isinstance(value, str) and value in brand.PORTRAITS:
+        return value
+    brand.fail(f'"cover": "portrait" is true or one of the approved headshots ({", ".join(brand.PORTRAITS)}), not {value!r}. '
+               'Never a frame from a take or any file path (Krish, 2026-11-02: "absolutely fucking awful headshot"); '
+               'a new headshot goes on the cover site and into brand.REMOTE and brand.PORTRAITS first')
+
+
+def portrait_source(c, facts, refresh=False):
+    """The approved headshot's file for a cover with "portrait", fetched from the cover site."""
+    name = brand.portrait_for(facts.get('date')) if c['portrait'] is True else portrait_name(c['portrait'], facts.get('date'))
+    return brand.fetch(name, refresh)
+
+
 def background(c, base):
     """The photo a cover or thumbnail is drawn over, or None. It is optional,
     unlike a logo: git keeps no pictures (every PNG and JPEG is ignored), so
@@ -948,7 +970,7 @@ def cover_html(facts, base, refresh=False):
                     f'<span class="tag mono" style="background:{colour}">{esc(row["tag"])}</span></div>')
     face = ''
     if c.get('portrait'):
-        source = brand.fetch(brand.portrait_for(facts.get('date')), refresh) if c['portrait'] is True else resolve(base, c['portrait'])
+        source = portrait_source(c, facts, refresh)
         face = f'<div class="face" aria-hidden="true" style="background-image:url({brand.data_uri(source, 600)})"></div>'
     photo = ''
     if background(c, base):
@@ -1250,7 +1272,7 @@ def cover_shape_html(facts, base, shape, refresh=False):
                     f'<span class="tag mono" style="background:{colour}">{esc(row["tag"])}</span></div>')
     face = ''
     if c.get('portrait'):
-        source = brand.fetch(brand.portrait_for(facts.get('date')), refresh) if c['portrait'] is True else resolve(base, c['portrait'])
+        source = portrait_source(c, facts, refresh)
         face = f'<div class="face" aria-hidden="true" style="background-image:url({brand.data_uri(source, 900)})"></div>'
     photo = ''
     if background(c, base):
@@ -1623,7 +1645,7 @@ def thumb_html(facts, base, shape, refresh=False):
         strip.append(f'<img src="{brand.data_uri(resolve(base, item["logo"]), 800)}" alt="{attr(item["name"])}">')
     face = ''
     if c.get('portrait'):
-        source = brand.fetch(brand.portrait_for(facts.get('date')), refresh) if c['portrait'] is True else resolve(base, c['portrait'])
+        source = portrait_source(c, facts, refresh)
         face = f'<div class="face" aria-hidden="true" style="background-image:url({brand.data_uri(source, 900)})"></div>'
     photo = ''
     if background(c, base):
@@ -1925,6 +1947,17 @@ def _self_test():
         count += 1
         if got != want:
             fails.append(f'{label}: got {got!r}, want {want!r}')
+
+    # The face is only ever an approved headshot (Krish, 2026-11-02, the frame grab on Monday's card).
+    check('"portrait": true takes the date\'s approved headshot', portrait_name(True, '2026-11-02') in brand.PORTRAITS, True)
+    check('a named approved headshot is kept', portrait_name(brand.PORTRAITS[0], '2026-11-02'), brand.PORTRAITS[0])
+    for bad in ('../../../../.cache/pack/mon/portrait.jpg', 'face-wide.jpg', 'krish-from-take', 1):
+        try:
+            portrait_name(bad, '2026-11-02')
+            refused = False
+        except SystemExit:
+            refused = True
+        check(f'"portrait": {bad!r} (a frame or unknown name) is refused', refused, True)
 
     # The shapes, and where each platform shows them.
     check('the wide thumbnail is 16:9', THUMBS['wide']['w'] * 9 == THUMBS['wide']['h'] * 16, True)

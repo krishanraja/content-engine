@@ -11,7 +11,7 @@
    "AI NOW ACTS FIRST.",
    "CLAUDE DUET IS THE START."
   ],
-  "portrait": "../../../../.cache/pack/wed/portrait.jpg",
+  "portrait": true,
   "rows": [
    {
     "name": "Anthropic",
