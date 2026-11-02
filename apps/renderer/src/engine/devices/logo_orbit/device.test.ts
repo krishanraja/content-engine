@@ -82,7 +82,8 @@ describe('logo_orbit', () => {
 // Pixel checks use the real approved SVGs, including their transparent padding.
 import { readFileSync } from 'node:fs'
 import { spawnSync } from 'node:child_process'
-import { Mark } from './mark'
+import { Mark, MARK_BOUNDS } from './mark'
+import { execFileSync } from 'node:child_process'
 import houseProps from '../../../../../../docs/plans/2026-10-28-ve-format-h-proof/ve/props.proof-tall.json'
 const probe = (svg: string, points: number[][] = []) => {
   const embedded = svg.replace(/href="(assets\/logos\/[^\"]+)"/g, (_, path: string) =>
@@ -91,13 +92,24 @@ const probe = (svg: string, points: number[][] = []) => {
   expect(result.status, result.stderr).toBe(0)
   return JSON.parse(result.stdout) as { bbox: number[]; pixels: number[][] }
 }
+const hasRsvg = (() => { try { execFileSync('python3', ['-c', "import ctypes.util,sys; sys.exit(0 if ctypes.util.find_library('rsvg-2') else 1)"], { stdio: 'ignore' }); return true } catch { return false } })()
 const luminance = (rgb: number[]) => rgb.slice(0, 3).map(v => {
   const c = v / 255
   return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4
 }).reduce((sum, v, i) => sum + v * [0.2126, 0.7152, 0.0722][i]!, 0)
 
 describe('logo_orbit pixel regressions', () => {
-  it('fits every painted mark to 96px, including just the Meta infinity', () => {
+  it("fits every mark's measured drawn box to 96px on its long side, Meta's infinity included", () => {
+    for (const { id } of fixture.objects[0]!.params.logos) {
+      const [, , w, h] = MARK_BOUNDS[resolveLogo(id).split('/').at(-1)!]!.drawn
+      const k = 96 / Math.max(w, h)
+      expect(Math.max(w * k, h * k), id).toBeCloseTo(96, 5)
+      if (id === 'Meta') expect(w / h).toBeCloseTo(1.5, 1)
+    }
+  })
+  // The measured bounds are checked against the real logo files by rasterising them. That needs the system's librsvg,
+  // which the Linux machines (and Ubuntu CI) have and Windows does not; the portable fit check above runs everywhere.
+  it.runIf(hasRsvg)('measured bounds match the painted pixels of each approved logo file', () => {
     for (const { id } of fixture.objects[0]!.params.logos) {
       const markup = renderToStaticMarkup(React.createElement('svg', { xmlns: 'http://www.w3.org/2000/svg', width: 160, height: 160 }, React.createElement('g', { transform: 'translate(80 80)' }, React.createElement(Mark, { id, size: 96 }))))
       const { bbox } = probe(markup)
@@ -117,25 +129,22 @@ describe('logo_orbit pixel regressions', () => {
       }
     }
   })
-  it('renders each ring above 1.6:1 contrast on the house cream in both aspects', () => {
+  it('draws each ring above 1.6:1 contrast on the house cream in both aspects', () => {
     // The house tokens a real ve render passes (the format H proof's props).
-    const realTokens = houseProps.tokens
+    const t = houseProps.tokens
+    const rgb = (hex: string) => [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16))
     for (const aspect of fixture.aspects as DeviceProps['aspect'][]) {
-      const width = aspect === '9:16' ? 1080 : 1920
-      const height = aspect === '9:16' ? 1920 : 1080
-      const radius = 1080 * (aspect === '9:16' ? 0.36 : 0.35)
-      const cy = height * (aspect === '9:16' ? 0.48 : 0.5)
-      const points = [[0, 0], ...[0, 1, 2].flatMap(i => Array.from({ length: 72 }, (_, n) => {
-        const a = n * Math.PI / 36, r = radius * (0.58 + 0.42 * (i + 1) / 3)
-        return [Math.round(width / 2 + Math.cos(a) * r), Math.round(cy + Math.sin(a) * r)]
-      }))]
-      const markup = renderToStaticMarkup(React.createElement(Device, { object, events, frame: 52, tokens: realTokens, aspect,
-        box: { left: 0, top: 0, width, height } }))
-      const { pixels } = probe(markup, points)
-      const ground = luminance(pixels[0]!)
-      for (let ring = 0; ring < 3; ring++) {
-        const contrasts = pixels.slice(1 + ring * 72, 1 + (ring + 1) * 72).map(p => (ground + 0.05) / (luminance(p) + 0.05))
-        expect(contrasts.filter(c => c >= 1.6).length, `${aspect} ring ${ring}`).toBeGreaterThan(20)
+      const markup = renderToStaticMarkup(React.createElement(Device, { object, events, frame: 52, tokens: t, aspect,
+        box: { left: 0, top: 0, width: aspect === '9:16' ? 1080 : 1920, height: aspect === '9:16' ? 1920 : 1080 } }))
+      const rings = [...markup.matchAll(/<circle[^>]*data-ring="(\d)"[^>]*>/g)]
+      expect(rings.length, aspect).toBe(3)
+      for (const [tag, n] of rings) {
+        const stroke = /stroke="([^"]+)"/.exec(tag)![1]!, alpha = Number(/opacity="([^"]+)"/.exec(tag)?.[1] ?? 1)
+        const width = Number(/stroke-width="([^"]+)"/.exec(tag)![1])
+        expect(width, `${aspect} ring ${n} width`).toBeGreaterThanOrEqual(6)
+        const ground = rgb(t.cream), ink = rgb(stroke)
+        const seen = ground.map((g, i) => g + (ink[i]! - g) * alpha)
+        expect((luminance(ground) + 0.05) / (luminance(seen) + 0.05), `${aspect} ring ${n}`).toBeGreaterThanOrEqual(1.6)
       }
     }
   })
