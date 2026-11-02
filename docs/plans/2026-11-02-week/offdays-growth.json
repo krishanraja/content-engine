@@ -14,7 +14,7 @@
     "ready": false,
     "draft": "Tue 3 Nov. Your idea (28 Oct): the translator scene you saved, reskinned for when your AI talks to your customer's AI. Two identical robots across a table, each insisting the other is the translator, forty minutes to agree a refund nobody asked for, one human in the corner checking his watch. Subtitles at the fast pace you saved. Format credited to the original clip; none of its footage is used.",
     "needs": [
-     "mock in the brand kit before Krish approves"
+     "Codex mock being built: storyboard frames, his line above the video"
     ]
    },
    {
@@ -27,7 +27,7 @@
     "ready": false,
     "draft": "Tue 3 Nov, the day after Monday's piece. Four cards, 4:5. Card 1: CLAUDE IS EATING THE JOBS OF ITS OWN HUMANS (huge yellow type, a cartoon robot holding a tiny office ladder). Card 2: The rungs juniors used to learn on are the ones AI does first (the ladder with its bottom rungs missing). Card 3: So who trains the seniors of 2030? (an empty chair at the top). Card 4: The full story is on Monday's video (Monday's cover).",
     "needs": [
-     "mock in the brand kit before Krish approves"
+     "Codex mock being built: cover, body and close cards"
     ]
    }
   ],
@@ -40,10 +40,14 @@
     ],
     "source_url": null,
     "ready": false,
-    "draft": "Thu 5 Nov, the day after Wednesday's 'AI now acts first' piece. Your idea (28 Oct): a clean, well-lit to-camera 1-2-3 with fast subtitle builds and a strong thumbnail. About 40 seconds. Your AI is a puppy. One: it wants to please you. Two: so it tells you what you want to hear. Three: so ask it for the best case against your idea. Made to the visual quality and feeling of the short you saved on 31 Oct.",
+    "draft": "Thu 5 Nov. The No-Spending, No-Sending rule: a to-camera short, his own script (193 words, in Teleprompter). AI assistants now act before you ask, so give yours one rule: it never spends your money or sends anything for you unless you say so. His prompt goes in the comments of every post, so people can copy it and let their AI interview them. Visuals: three simulated fails, the assistants' logos, and a NO SPENDING. NO SENDING. title card.",
     "needs": [
-     "Krish records it (about 40 seconds); script for his approval before Teleprompter"
-    ]
+     "Recording in the Inbox: cut and storyboard next, for his sign-off"
+    ],
+    "revised": {
+     "side": "idea",
+     "words": "Good, but let's do a piece on the proactive agents and literally give instructions as I gave my friend on how to have our AI tool set its own spending and sending limits, given proactive personal assistants are coming"
+    }
    },
    {
     "concept_id": "actsfirst",
@@ -53,10 +57,14 @@
     ],
     "source_url": null,
     "ready": false,
-    "draft": "Thu 5 Nov, the day after Wednesday's piece. Five cards, 4:5. Card 1: AI USED TO REPLY. NOW IT ACTS FIRST. Card 2: Before: you ask, it answers (a speech bubble going one way). Card 3: Now: it notices, drafts and asks you to approve (an arrow looping back to you). Card 4: Good: less busywork. Worrying: it decides what you see first. Card 5: The full story is on Wednesday's video (Wednesday's cover).",
+    "draft": "Merged into Thursday's to-camera piece above, as he asked: one strong piece on how AI acts first and the one rule you can give it.",
     "needs": [
-     "mock in the brand kit before Krish approves"
-    ]
+     "Merged into Thursday: nothing to make"
+    ],
+    "revised": {
+     "side": "idea",
+     "words": "Merge this concept in to the above Thursday idea to create one strong piece on how AI acts first, and therefore what you can do in 30 seconds to help it create its own rules."
+    }
    }
   ],
   "2026-11-07": [
@@ -68,11 +76,14 @@
     ],
     "source_url": null,
     "ready": false,
-    "draft": "Sat 7 Nov. Your idea (28 Oct), a positive ray of sunshine, in the infographic style you saved. Seven cards, 4:5. Card 1: GOOD THINGS AI DID THIS WEEK, 31 Oct to 7 Nov (sun-yellow headline, a small hand-drawn sun). Cards 2 to 6: one story each, a five-word headline, one line on what happened, one on why it matters, source and date in small type (a tight real photo, a yellow number badge). Card 7: Which one surprised you? One of these every Saturday.",
+    "draft": "Sat 7 Nov. Good things AI did this week: three real stories, each card the real headline, one line on why it is good, the source and the date. Picked on Fri 6 Nov from his own interests: personal agents helping ordinary people, AI music with artists paid, small businesses, young people building with AI.",
     "needs": [
-     "five stories dated 31 Oct to 7 Nov 2026, each checked against its primary source and through the fact gate",
-     "mock in the brand kit before Krish approves"
-    ]
+     "He said yes; he sees the three actual stories and the Codex mock before it is final"
+    ],
+    "revised": {
+     "side": "idea",
+     "words": "I want actual news items and the content we are going to use here - embedded real world images or videos"
+    }
    },
    {
     "concept_id": "aipassports",
@@ -82,11 +93,14 @@
     ],
     "source_url": null,
     "ready": false,
-    "draft": "Sat 7 Nov, the day after Friday's piece. Five cards, 4:5, the AI passports from the piece. Card 1: WHERE YOUR AI WAS BUILT DECIDES WHAT IT SAYS NO TO. Cards 2 to 4: one passport each, the country, one question it answered and one it refused, as the piece showed. Card 5: Every country wants its own AI. The full story is on Friday's video.",
+    "draft": "Sat 7 Nov. Sovereign AI, a completely serious shopping guide: five cards in the style of a duty-free sign. Card 1: SOVEREIGN AI: A SHOPPING GUIDE. Card 2: Want it cheap and fast? Buy from the country that makes everything else you own. Card 3: Want it to never say no? Buy from the one with no rules yet. Card 4: Want it to need a permit to answer? We have just the regulator. Card 5: Or ask the only question that matters: whose rules is it following? The joke is on the buyer's shopping logic and each country's AI rules, never on people.",
     "needs": [
-     "the refusals shown are only the ones Friday's piece tested and the fact gate passed",
-     "mock in the brand kit before Krish approves"
-    ]
+     "He said yes; he sees the Codex mock before it is final"
+    ],
+    "revised": {
+     "side": "idea",
+     "words": "a really fun, parodical Sovereign AI piece which mimics how we think about the supply chain right now (get it cheaper from China if I am an opportunist looking for margin, get it from Italy if I want something dodgy done). Make it a really hilarious caricature of different nationalities"
+    }
    }
   ],
   "2026-11-08": [
