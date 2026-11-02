@@ -1955,6 +1955,8 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `const SCORE_ID`
 - `const SCORE_BASES`
 - `function scoreBody(id: string, body: Record<string, unknown>): boolean`
+- `const YES_ID`
+- `function yesBody(id: string, body: Record<string, unknown>): boolean`
 - `const SCRIPT_CUTS`
 - `const TITLE_SURFACES`
 - `function validBody(collection: string, id: string, body: unknown): boolean`
@@ -2019,6 +2021,14 @@ A revised off-day card when Krish presses Improve (Ruling, Krish, 2026-11-01, lo
 - `function offdayDate(week: string, day: string): string`
 - `async function placeOffday(db: SupabaseClient, ctx: { week: string; id: string; body: Body; who: string; now: string })…`
 - `async function afterPress(db: SupabaseClient, ctx: { week: string; collection: string; id: string; body: Body; who: str…`
+
+### `apps/control-plane/api/board/_yes.ts`
+
+One yes anywhere (Ruling, Krish, 2026-11-02): his answer for each day, read from the board's picks. A day's answer is
+
+- `type YesRow`
+- `type DayYes`
+- `function yesByDay(rows: YesRow[]): Record<string, DayYes>`
 
 ### `apps/control-plane/api/board/index.ts`
 
@@ -3879,6 +3889,11 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 ### `apps/renderer/src/engine/layouts/index.ts`
 
 - `function slotsFor(layout: Layout, aspect: Aspect, count = 1): Box[]`
+
+### `apps/renderer/src/engine/mocks/face-with-proof.tsx`
+
+- `interface FWPMockProps`
+- `const FWP_MOCKS`
 
 ### `apps/renderer/src/engine/props.ts`
 

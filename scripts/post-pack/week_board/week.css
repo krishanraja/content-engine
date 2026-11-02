@@ -146,6 +146,10 @@ label.qmark input:disabled + .box{opacity:.4}
 .off-card{border:1px solid var(--line);border-radius:12px;background:var(--card);padding:12px 14px;display:grid;gap:8px}
 .mix{border:2px solid var(--ink);border-radius:12px;background:var(--card);padding:12px 14px;display:grid;gap:8px}.mix.on{border-color:var(--ok)}.mix h3{margin:0;font:700 16px/1.3 Archivo,system-ui,sans-serif}.mix-days{margin:0;padding-left:20px;display:grid;gap:2px;font-size:15px}.mix-days b{display:inline-block;min-width:96px}
 .off-card.on{border:2px solid var(--ok)}
+.off-lead{margin:0;font-size:15px;line-height:1.45}
+.off-more>summary{cursor:pointer;color:var(--muted);font-size:13px}
+.off-more[open]>summary{margin-bottom:8px}
+.off-more{display:grid;gap:8px}
 .off-copy{margin:0;font-size:16px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
 .off-script{margin:0;padding:10px 12px;border-left:3px solid var(--ink);background:var(--bg);font-size:16px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
 .tt-set{border:0;margin:0;padding:0;display:grid;gap:2px;min-width:0}
@@ -404,3 +408,9 @@ main[data-checklists="hidden"] .st-note,main[data-checklists="hidden"] .ticks,ma
 .off-days .opt .id-flags{align-items:center}
 .off-days .opt .id-flag{white-space:nowrap}
 .off-days .opt .pitch{border:0;padding:0;margin:0;background:none}
+
+/* The live Today (2026-11-02): an open tab that went stale says so, and a card says why it is in its state. */
+.stale-bar{position:sticky;top:0;z-index:50;background:#FFD84D;color:#0C1512;font:600 15px/1.4 Archivo,sans-serif;padding:10px 16px;text-align:center}
+.stale-bar[hidden]{display:none}
+.stale-bar a{color:inherit;font-weight:900;margin-left:8px}
+.yes-why:empty{display:none}

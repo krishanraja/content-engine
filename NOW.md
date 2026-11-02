@@ -50,14 +50,13 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 ## What changed recently
 
 - 2026-11-02 Krish found five faults on the 9 Nov Ideas tab, each a rule the engine held only in words; then asked for the Saturday good news to be found fresh on Sunday.
-- 2026-11-02 Krish approved the rebuilt openings and the words on screen, cleared the flagged pictures and two side-on sync windows ("1. accept. 2 clear"), and his eye may now clear a named sync window the scorer cannot read, never one it measures out of sync.
-- 2026-11-01 off-day options carry their own creative direction and are approved, improved or rejected per option; the week's mix press is gone.
-Everything to 29 October 2026 is in `docs/history/2026-10-29-NOW-changed-recently.md`, 30 October lines in `docs/history/2026-10-30-NOW-moved-3.md` and `-4.md`, `-5.md` and `-6.md`, and `docs/history/2026-10-31-NOW-moved-1.md`, and `docs/history/2026-11-02-NOW-moved-2.md`, all verbatim (W2.12); `npm run check:workbench` holds the byte cap. The 28 October waiting line is in `docs/history/2026-10-31-NOW-moved-4.md`.
+- 2026-11-02 one yes anywhere: his yes to a day counts from the board's Yes or from his typed words (`yes.py record`); the Today view reads live state (`/api/board/<week>/state`), says Live, Approved or Needs your yes, and flags a newer build; Ideas options show the idea, picture and buttons, the rest under Details.
+Everything to 29 October 2026 is in `docs/history/2026-10-29-NOW-changed-recently.md`, 30 October lines in `docs/history/2026-10-30-NOW-moved-3.md` and `-4.md`, `-5.md` and `-6.md`, and `docs/history/2026-10-31-NOW-moved-1.md`, and `docs/history/2026-11-02-NOW-moved-2.md` and `-5.md`, all verbatim (W2.12); `npm run check:workbench` holds the byte cap. The 28 October waiting line is in `docs/history/2026-10-31-NOW-moved-4.md`.
 
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-02): the Sunday run on Sat 7 Nov fills the 9 Nov Saturday good news; read the board back after it.
+- Next (2026-11-02): merge the live-board PR on green, record his chat yes for Wed, Fri and Sat, republish the 2 Nov board; then Thursday key frames round 2 (Codex). Then the Sunday run on Sat 7 Nov fills the 9 Nov Saturday good news; read the board back after it.
 - Waiting on Krish (as of 2026-10-29): Control Center's `GITHUB_TOKEN` needs Contents: write and Actions: read on this repository for the make press; whether a make run's pull request auto-merges on green CI; whether the $15 cap gets a reader; the Buffer plan (due 31 October); approving the three one-opening, one-close floor standards through the Rejections route; OUR TEST or MY TEST on a video label he presents; "we" in article titles while video titles keep "I".
 - Waiting on Krish (as of 2026-10-29, Wave 2 and 3 production): by ear, the levels and a sound-effect set; Gate 2 on face-with-proof frames and six devices; 5 to 10 golden frames; 20 minutes on 9 Nov scoring shadow cuts. His 29 Oct answers and the home-computer steps: the handover above.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): CI stays advisory, so a session waits for green before it merges.

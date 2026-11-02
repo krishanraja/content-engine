@@ -141,8 +141,54 @@
     collection: name => ({ doc: id => doc(name, id), onSnapshot: (next, error) => subscribe(name, null, next, error) }),
     doc: path => { const [collection, id] = path.split("/"); return doc(collection, id) }
   };
-  const refreshAll = () => { if (!document.hidden) for (const c of subscribers.keys()) refresh(c).catch(() => {}) };
-  setInterval(refreshAll, 5000); window.addEventListener("focus", refreshAll);
+  // The live Today (Krish, 2026-11-02: "the whole Today board seems totally outdated, and I can barely ever see what the
+  // current state of things are there"): every poll reads the week's state (his yes for each day, what Growth posted,
+  // the build that is live) and redraws each day's status and its one button. One yes anywhere (Ruling, Krish,
+  // 2026-11-02): his Yes here, his typed words in a session, or his Approve for publish all count; Undo takes it back.
+  let firstBuild = null, liveState = null;
+  const nice = d => ({ mon: "Monday", tue: "Tuesday", wed: "Wednesday", thu: "Thursday", fri: "Friday", sat: "Saturday", sun: "Sunday" })[d] || d;
+  function drawToday() {
+    if (!liveState) return;
+    for (const card of document.querySelectorAll("[data-live-day]")) {
+      const day = card.dataset.liveDay, yes = liveState.yes?.[day], posted = liveState.posted?.[day] || [];
+      const chip = card.querySelector(".c-st"), btn = card.querySelector("[data-yes-day]"), why = card.querySelector("[data-yes-why]");
+      // The chip says only what is true now: posted, his yes, or that it waits on his yes (never a build's guess).
+      const [label, tone] = posted.length ? ["Live", "live"] : yes?.approved ? ["Approved", "ok"] : ["Needs your yes", "ask"];
+      if (chip) { chip.textContent = label; chip.className = "c-st tone-" + tone; }
+      if (why) why.textContent = posted.length ? "Posted: " + posted.join(", ")
+        : yes?.approved ? (yes.via === "words" ? "Your yes, in your words: \u201c" + yes.words + "\u201d" : "Your yes, " + new Date(yes.at).toLocaleString())
+        : yes && !yes.approved ? "You took your yes back" : "";
+      if (btn) {
+        btn.hidden = posted.length > 0;
+        btn.textContent = yes?.approved ? "Undo yes" : "Yes";
+        btn.title = (yes?.approved ? "Take back your yes to " : "Say yes to ") + nice(day);
+        btn.className = "btn" + (yes?.approved ? " ghost" : " go");
+        btn.dataset.approved = yes?.approved ? "1" : "";
+      }
+    }
+  }
+  async function refreshState() {
+    if (document.hidden) return;
+    try {
+      const state = await request("/state");
+      firstBuild ??= state.build_id; liveState = state; drawToday();
+      const bar = document.getElementById("stale-bar");
+      if (bar && state.build_id && firstBuild && state.build_id !== firstBuild) bar.hidden = false;
+    } catch { /* the next poll tries again; the built page still shows */ }
+  }
+  document.addEventListener("click", async e => {
+    const btn = e.target.closest && e.target.closest("[data-yes-day]");
+    if (!btn) return;
+    const day = btn.dataset.yesDay, approved = btn.dataset.approved !== "1";
+    btn.disabled = true;
+    try {
+      await doc("picks", `yes-${day}-board`).set({ kind: "yes", day, via: "board", approved, at: new Date().toISOString() });
+      await refreshState();
+    } catch (err) { btn.textContent = err.message || "Not saved. Try again." }
+    btn.disabled = false;
+  });
+  const refreshAll = () => { if (!document.hidden) { for (const c of subscribers.keys()) refresh(c).catch(() => {}); refreshState() } };
+  setInterval(refreshAll, 5000); window.addEventListener("focus", refreshAll); refreshState();
   document.addEventListener("visibilitychange", refreshAll);
   // Preserve unsubmitted edits after blur as well as while a field has focus.
   document.addEventListener("input", e => {

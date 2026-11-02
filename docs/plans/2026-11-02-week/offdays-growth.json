@@ -59,6 +59,7 @@
    },
    {
     "concept_id": "actsfirst",
+    "closed": "Merged into Thursday's to-camera piece, as Krish asked (2 Nov)",
     "lane": "Carousel",
     "formats": [
      "Explainer carousel, infographic style"
@@ -78,6 +79,7 @@
   "2026-11-07": [
    {
     "concept_id": "goodnews",
+    "hook": "Five good things AI did for people this week",
     "lane": "Carousel",
     "formats": [
      "Uplifting AI news carousel, infographic style"
@@ -91,6 +93,14 @@
     "revised": {
      "side": "idea",
      "words": "I want actual news items and the content we are going to use here - embedded real world images or videos"
+    },
+    "mock": {
+     "url": "https://board.asset/sat-goodnews-cover.jpg",
+     "note": "Finished and approved, 2 Nov: five real stories of people AI helped, each with its real photo, Anwita Chaudhry on the cover, the light house skin; every source and photo credit is in the post description in the download."
+    },
+    "download": {
+     "url": "https://board.asset/sat-goodnews-carousel.zip",
+     "label": "the seven cards and the post description (zip, 6 MB)"
     }
    },
    {
