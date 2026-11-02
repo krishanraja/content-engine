@@ -1,3 +1,4 @@
+import { yesByDay, type YesRow } from './_yes.js'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { validBody } from './_contracts.js'
 import type { Making, MakingChannel, MakingChannelPost } from '../_making.js'
@@ -194,5 +195,10 @@ export async function readPieces(db: SupabaseClient, week: string): Promise<{ st
       note: isObj(b.note) && typeof b.note.words === 'string' ? b.note.words : null,
       approved_at: dir?.at ?? idea.at ?? null }]
   }).sort((a, b) => String(a.id).localeCompare(String(b.id)))
-  return { status: 200, body: { days, mix, offdays } }
+  // His yes for each day, from wherever he gave it (_yes.ts, one yes anywhere): Growth schedules a day's go-lives on it.
+  const said = await db.from('board_documents').select('doc_id,body,updated_by').eq('week', week).eq('collection', 'picks')
+    .or('doc_id.like.yes-%,doc_id.like.%-publish')
+  if (said.error) return { status: 503, body: { ok: false, error: 'board_store_unavailable' } }
+  const yes = yesByDay((said.data || []) as YesRow[])
+  return { status: 200, body: { days, mix, offdays, yes } }
 }
