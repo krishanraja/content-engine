@@ -20,6 +20,19 @@ const render = (p: DeviceProps) => renderToStaticMarkup(React.createElement(Devi
 const event = (verb: string, toState: string, atFrame: number): EngineEvent => ({ id: `${verb}-${atFrame}`, obj: object.obj, verb, toState, atFrame }) as EngineEvent
 
 describe('typing_bubble', () => {
+  it('keeps Unicode characters intact while typing', () => {
+    const p = props(50)
+    p.object = { ...object, params: { kind: 'email', rows: [{ text: 'Hi🙂!' }] } }
+    p.events = [events[0]!, event('type', '0', 30), event('send', 'sent', 70)]
+    expect(bubbleState(p)!.rows[0]!.shown).toBe('Hi')
+    expect(bubbleState({ ...p, frame: 60 })!.rows[0]!.shown).toBe('Hi🙂')
+  })
+  it('uses supplied colour tokens and gives mint replies an ink keyline', () => {
+    const html = render(props(115))
+    expect(html).toContain(`background:${tokens.mint};border:2px solid ${tokens.ink}`)
+    expect(html).not.toMatch(/#[0-9a-f]{3,8}\b/i)
+    expect(html).not.toContain(tokens.channel)
+  })
   it('hides until enter, and shows no row text before its type cue', () => {
     expect(render(props(9))).toBe('')
     expect(render(props(22))).not.toContain('Hello')

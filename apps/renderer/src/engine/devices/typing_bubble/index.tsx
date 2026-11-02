@@ -76,6 +76,7 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
       marginRight: row.side === 'right' ? 0 : '8%', padding: s.params.kind === 'chat' ? '16px 22px' : '8px 0',
       borderRadius: s.params.kind === 'chat' ? 24 : 0,
       background: s.params.kind === 'chat' && row.side === 'right' ? tokens.mint : tokens.cream,
+      border: s.params.kind === 'chat' && row.side === 'right' ? `2px solid ${tokens.ink}` : undefined,
       borderBottom: s.params.kind === 'email' || s.params.kind === 'order' ? `1px solid ${tokens.inkSoft}` : undefined,
       overflowWrap: 'anywhere', whiteSpace: 'pre-wrap' }}>
       {row.who && <div style={{ fontFamily: HOUSE_FONTS.data, fontSize: 30, marginBottom: 8 }}>{row.who}</div>}
