@@ -1,0 +1,3 @@
+Status: The off-day "Your words" box now says how his words were read, with the rule Growth uses (Ruling, Krish, 2026-11-02: "only where i specifically give a quote to use - i dont want requests put verbatim in the posts"). Quoted text goes on the picture or video exactly as written; the rest is direction, never printed; a quote that reads as what not to say is held. The page and Growth are tested on the same cases (fixtures/offday-note-cases.json).
+Next: Krish merges growth-makeyourmindup PR 52, which uses the rule in the maker, the mock briefs and the Canva lint.
+North Star check (2026-11-02): holds.
