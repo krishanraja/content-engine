@@ -44,6 +44,11 @@ def page(w, h, words, tall):
 
 
 def main():
+    sys.exit('Retired (Ruling, Krish, 2026-11-02): every thumbnail is the Receipt, drawn by the house drawer only:\n'
+             '  python scripts/pages/build.py docs/plans/2026-11-02-monday/pack/page-facts.json --out .cache/pack/mon/pages --thumbs')
+
+
+def _retired_main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--words', required=True, help='the thumbnail words Krish picked, exactly')
     a = ap.parse_args()

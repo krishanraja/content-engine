@@ -9,15 +9,35 @@
    "AI NOW",
    "ACTS FIRST"
   ],
-  "portrait": true,
   "rows": [
    {
     "name": "Claude",
-    "logo": "logos/claude.svg",
-    "tag": "CLAUDE DUET",
-    "colour": "lilac"
+    "logo": "logos/claude.svg"
+   },
+   {
+    "name": "Anthropic",
+    "logo": "logos/anthropic-symbol-cream.svg"
+   },
+   {
+    "name": "Google",
+    "logo": "logos/google-cream.svg"
    }
-  ]
+  ],
+  "proof": {
+   "page": {
+    "url": "https://claude.com/resources/articles/claude-duet",
+    "height": 900,
+    "crop": [
+     0.266,
+     0.244,
+     0.953,
+     0.833
+    ]
+   },
+   "source": "s1",
+   "tag": "ANTHROPIC'S LAUNCH PAGE",
+   "alt": "Anthropic's launch page: Introducing Claude Duet, 21 October 2026"
+  }
  },
  "video_length": "4:46"
 }

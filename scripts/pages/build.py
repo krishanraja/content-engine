@@ -1456,9 +1456,25 @@ def draw_cover_shape(facts, base, out, shape, refresh=False):
     return True
 
 
+# The Receipt is the floor for every cover and thumbnail drawn from 2 November
+# 2026 on, whatever the post's own date (Ruling, Krish, 2026-11-02: "make this the
+# floor level standard moving forward, inviolable"): receipt.py draws them, and the
+# older look with a face is never drawn again. Files already shipped stay as they are.
+RECEIPT_FROM = '2026-11-02'
+
+
+def receipt_required(facts):
+    """Always: there is no switch back to the older look."""
+    return True
+
+
 def draw_covers(facts, base, out, refresh=False):
     """--cover: the 3:2 cover (cover.png) and a cover for every other place
-    the post is shown (COVER_SHAPES). True when every one was written."""
+    the post is shown (COVER_SHAPES). True when every one was written.
+    From RECEIPT_FROM every shape is the Receipt (receipt.py)."""
+    if receipt_required(facts):
+        import receipt
+        return receipt.draw_covers(facts, base, out)
     done = [draw_cover(facts, base, out, refresh)]
     for shape in COVER_SHAPE_ORDER:
         done.append(draw_cover_shape(facts, base, out, shape, refresh))
@@ -1473,7 +1489,7 @@ def draw_covers(facts, base, out, refresh=False):
 # produced as an asset every time." --thumbs draws one for each shape a video
 # is made in, from the same cover facts the 3:2 cover reads and in the same
 # look: the wordmark, the headline with its last line in the subchannel's
-# colour, Krish's face and a row per real logo (house rule LOGOS_AND_FACE).
+# colour, and a row per real logo. From 2 November 2026 receipt.py draws them instead (house rule THE_RECEIPT).
 #
 #   wide  1280 x 720, for the 16:9 long cut: the size YouTube asks for in a
 #         custom thumbnail, and the Substack video post's. YouTube lays the
@@ -1746,7 +1762,11 @@ def draw_thumbs(facts, base, out, refresh=False):
     thumbs.json and thumbs-check.png. Writes all of them or none: an older set
     is removed first, and nothing is written when either shape cannot fit
     every word and logo where its platforms show it, or a word would be too
-    small to read. True when the set was written."""
+    small to read. True when the set was written. From RECEIPT_FROM both are
+    the Receipt (receipt.py)."""
+    if receipt_required(facts):
+        import receipt
+        return receipt.draw_thumbs(facts, base, out, thumb_facts, companies_of)
     out = Path(out)
     for name in [THUMBS[s]['file'] for s in THUMB_SHAPES] + [THUMB_RECEIPT, 'thumbs-check.png']:
         (out / name).unlink(missing_ok=True)
@@ -1958,6 +1978,23 @@ def _self_test():
         except SystemExit:
             refused = True
         check(f'"portrait": {bad!r} (a frame or unknown name) is refused', refused, True)
+
+    # The Receipt is the floor (Ruling, Krish, 2026-11-02: "inviolable"): always on, a real proof required, no face.
+    import receipt
+    check('every cover and thumbnail is the Receipt', receipt_required({'date': '2026-10-23'}) and receipt_required({}), True)
+    check('the Receipt draws every cover shape and both thumbnails', sorted(receipt.SHAPES), sorted([*receipt.COVER_FILES, *receipt.THUMB_FILES]))
+    check('a headline of two parts is kept as given', receipt.words_of({'headline': ['Claude is eating', 'its own jobs']}, {}), ('Claude is eating', 'its own jobs'))
+    with tempfile.TemporaryDirectory() as tmp:
+        for label, proof in [('no proof', None), ('a proof with no picture', {'tag': 'X'}), ('a missing picture', {'image': 'nope.png', 'tag': 'X'}),
+                             ('a proof with no tag', {'image': __file__}), ('a ring outside the picture', {'image': __file__, 'tag': 'X', 'ring': [0, 0, 1.4, 1]}),
+                             ('a picture not from a named source', {'image': __file__, 'tag': 'X', 'source': 's9'})]:
+            try:
+                receipt.proof_of({'proof': proof} if proof else {}, {'sources': {'s1': ['a', 'https://a.example']}}, tmp)
+                refused = False
+            except SystemExit:
+                refused = True
+            check(f'the Receipt refuses {label}', refused, True)
+    check('a lone short word on a line is refused', receipt.LONE_WORD_MAX >= 2, True)
 
     # The shapes, and where each platform shows them.
     check('the wide thumbnail is 16:9', THUMBS['wide']['w'] * 9 == THUMBS['wide']['h'] * 16, True)

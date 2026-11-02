@@ -11,7 +11,6 @@
    "DISNEY IS EATING THE SCRAPS",
    "OF BANKRUPT CHARACTER.AI"
   ],
-  "portrait": true,
   "rows": [
    {
     "name": "Google",
@@ -24,6 +23,10 @@
     "logo": "logos/disney-script-cream.svg",
     "tag": "$20M",
     "colour": "mint"
+   },
+   {
+    "name": "Character.AI",
+    "logo": "logos/characterai-cream.svg"
    }
   ],
   "strip": [
@@ -39,14 +42,34 @@
     "logo": "logos/universal-music-group-cream.svg",
     "name": "Universal Music Group"
    }
-  ]
+  ],
+  "proof": {
+   "pdf": {
+    "url": "https://cases.stretto.com/public/x936/14939/PLEADINGS/1493910132680000000114.pdf",
+    "page": 1,
+    "crop": [
+     0.09,
+     0.08,
+     0.9,
+     0.57
+    ]
+   },
+   "source": "court_filing",
+   "tag": "THE COURT FILING, 13 OCT",
+   "alt": "Character.AI's bankruptcy motion in Delaware, naming Disney Worldwide Services as the stalking horse purchaser",
+   "ring": [
+    0.49,
+    0.595,
+    0.99,
+    0.685
+   ]
+  }
  },
  "thumbs": {
   "headline": [
    "GOOGLE PAID",
    "$2.7B FIRST"
   ],
-  "portrait": true,
   "rows": [
    {
     "name": "Google",
@@ -80,7 +103,27 @@
     "logo": "logos/universal-music-group-cream.svg",
     "name": "Universal Music Group"
    }
-  ]
+  ],
+  "proof": {
+   "html": {
+    "path": "pack/figure-timeline.html",
+    "crop": [
+     0,
+     0,
+     1,
+     1
+    ]
+   },
+   "source": "figure-timeline",
+   "tag": "THE PAPER TRAIL",
+   "ring": [
+    0.44,
+    0.275,
+    0.6,
+    0.355
+   ],
+   "alt": "Two years, two buyers: Google reportedly paid $2.7 billion in August 2024"
+  }
  },
  "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430"
 }

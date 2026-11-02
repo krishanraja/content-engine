@@ -1561,7 +1561,7 @@
       "krish": "What was responsible for this absolutely fucking awful headshot inside the thumbnail cards for today's publish? How do we ensure that that never happens again? It looks ridiculous.",
       "what": "Monday 2 Nov's cover and share card (and Wednesday 4 Nov's) showed a frame grabbed from his recorded take, mid-word under a cap with a wall behind, instead of one of his approved headshots. A session on 31 Oct wrote a path to that grab into the pieces' cover facts.",
       "symptom": "A soft, mid-speech video still sat in the face circle on the publish cards.",
-      "cause": "scripts/pages/build.py took any file path as \"portrait\", so a one-off grab in .cache passed; the visual gate checked only that a portrait was present, never which one.",
+      "cause": "scripts/pages/build.py took any file path as \"portrait\", so a one-off grab in .cache passed; the visual gate checked only that a portrait was present, never which one. The cover site renamed his photos to editor-*.jpg on 29 Oct, so every headshot address returned 404 and the 31 Oct session, with nothing cached, grabbed a frame instead of stopping.",
       "status": "guarded",
       "guards": [
         {
@@ -1569,6 +1569,29 @@
           "contains": "def portrait_name(",
           "how": "\"portrait\" is true or a named approved headshot from brand.PORTRAITS; any path or frame is refused before drawing",
           "test": "python3 scripts/pages/build.py --self-test"
+        },
+        {
+          "file": "scripts/pages/receipt.py",
+          "contains": "def proof_of(",
+          "how": "every cover and thumbnail is the Receipt: a real proof from a checked source is required, and no face is ever drawn",
+          "test": "python3 scripts/pages/build.py --self-test"
+        },
+        {
+          "file": "scripts/pages/build.py",
+          "contains": "def receipt_required(",
+          "how": "--cover and --thumbs always draw the Receipt; there is no switch back to the face look",
+          "test": "python3 scripts/pages/build.py --self-test"
+        },
+        {
+          "file": "scripts/post-pack/visual_gate.py",
+          "contains": "def not_receipt(",
+          "how": "the pack refuses any cover or thumbnail whose receipt is not the Receipt, has no proof or carries a face",
+          "test": "python3 scripts/post-pack/visual_gate.py --self-test"
+        },
+        {
+          "file": "scripts/pages/brand.py",
+          "contains": "/editor-this-guy.jpg",
+          "how": "the cover site's renamed photos are where the drawer looks, so a missing file never forces a stand-in"
         }
       ]
     }
