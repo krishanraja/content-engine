@@ -12,8 +12,10 @@ and build it"; he had asked for "Ideas and a suggested creative direction to
 approve or improve or flat out reject for a reason, and the machine can learn
 over time").
 
-On the Ideas tab, 4 to 6 options each for Tuesday, Thursday, Saturday and
-Sunday (the board takes 2 to 6), for the Make Your Mind Up Instagram, TikTok
+On the Ideas tab, 4 to 6 options each for Tuesday, Thursday and Saturday
+(the board takes 2 to 6; Sunday is a rest day and nothing is published on it:
+Ruling, Krish, 2026-11-02, "Let's eliminate Sunday from Publishing anythign
+permanently. Sunday is rest and planning and ideation day."), for the Make Your Mind Up Instagram, TikTok
 and YouTube Shorts channels (Shorts takes video only, so a carousel goes
 there as a short slideshow). Each is one of four formats: a meme made fresh
 from a cue, in the makeyourmindup brand kit (a borrowed format is credited;
@@ -38,7 +40,7 @@ an option he rejected again; weigh each Reject reason as a cue (it becomes a
 standing rule only when he approves one); make more of what he approved.
 
 **Each option** goes into ideas.json `offdays`, `{"tue": [...], "thu":
-[...], "sat": [...], "sun": [...]}`:
+[...], "sat": [...]}`:
 
 ```json
 {"id": "prices", "format": "Carousel, 4 cards", "source": {"label": "Content Inspo", "url": "https://..."},

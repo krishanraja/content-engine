@@ -54,7 +54,8 @@ export const PRESS_USES = ['wider_piece_context', 'track_over_time', 'next_week'
 // Growth's off-day lane runs every day (Krish, 2026-10-29: "Mix wins: every day"), so its options may sit on any day;
 // a piece he records stays a Tuesday, Thursday, Saturday or Sunday piece (recordedOffday).
 export const OFFDAY_ID = /^off-(mon|tue|wed|thu|fri|sat|sun)-[a-zA-Z0-9][a-zA-Z0-9_.:-]{0,59}$/
-const RECORDED_DAYS = ['tue', 'thu', 'sat', 'sun']
+// Sunday is a rest day (Ruling, Krish, 2026-11-02: "Let's eliminate Sunday from Publishing anythign permanently").
+const RECORDED_DAYS = ['tue', 'thu', 'sat']
 // His decisions on a day's tab, stored in picks beside the day's pick: <day>-scripts (Approve scripts), <day>-titles
 // (Titles), <day>-publish (Approve for publish) and <day>-reject-<asset> (Reject asset).
 export const DECISION_ID = /^(mon|wed|fri)-(scripts|titles|publish|reject-([a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}))$/

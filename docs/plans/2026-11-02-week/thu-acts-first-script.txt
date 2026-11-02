@@ -1,0 +1,19 @@
+Is your AI about to start doing things before you even ask? I reckon yes, and sooner than you think.
+
+So last week I set up a friend's assistant before that happens to him. These new assistants don't wait to be asked. They book the meeting and pay the invoice. They even reply to your biggest client late at night, with feeling.
+
+And that's great, right up until it orders a whole new set of office chairs. Because you once said the place felt a bit empty.
+
+So here's the most useful thing you'll do this week. It takes thirty seconds. Give your AI its own rules, in writing, before it needs them.
+
+This is what I told my friend to paste into his assistant's instructions. That's the box where you tell it how to behave.
+
+Never spend money without asking me first.
+
+Never send anything to someone outside my team until I've seen it.
+
+And if you're not sure whether something counts, stop and ask.
+
+That's it. Your assistant can still surprise you. But now it has to surprise you inside the limits you set.
+
+I've put those three lines in mine, today.

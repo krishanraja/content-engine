@@ -1470,7 +1470,10 @@ def presses_row(pid, key, monday):
 # Sunday ideas session if you give me a few options to approve as you do the Mon/wed/fri"): two or three options a
 # day, from ideas.json's `offdays`, each with its format, its source and its draft copy, and his Approve or Skip, saved
 # in queue/off-<day>-<option> bound to the copy he saw (copy_sha256). Growth makes and schedules what he approved.
-OFF_DAYS = (('tue', 'Tuesday', 1), ('thu', 'Thursday', 3), ('sat', 'Saturday', 5), ('sun', 'Sunday', 6))
+OFF_DAYS = (('tue', 'Tuesday', 1), ('thu', 'Thursday', 3), ('sat', 'Saturday', 5))
+# Ruling (Krish, 2026-11-02): "Let's eliminate Sunday from Publishing anythign permanently. Sunday is rest and planning
+# and ideation day." Nothing is offered or published on Sunday; it stays the day the ideas board is built.
+REST_DAYS = {'sun'}
 OFF_ID = re.compile(r'^[A-Za-z0-9][A-Za-z0-9_.:-]{0,59}$')
 # Growth's off-day lane runs every day (Krish, 2026-10-29, choosing between two rulings: "Mix wins: every day"), so its
 # options (growth.py mix offdays, schema growth-offdays/1) may name Monday, Wednesday and Friday too; the series slot on
@@ -1586,13 +1589,14 @@ def read_offdays(data, where='ideas.json offdays'):
     if data is None:
         return None
     if not isinstance(data, dict):
-        raise BoardError(f'{where}: give {{"tue": [options], "thu": [...], "sat": [...], "sun": [...]}}')
+        raise BoardError(f'{where}: give {{"tue": [options], "thu": [...], "sat": [...]}}')
     days = {k for k, *_ in MIX_DAYS}
     problems = [f'{k} is not a day ({", ".join(d for d, *_ in MIX_DAYS)})' for k in data if k not in days]
+    problems += [f'{k}: Sunday is a rest day, nothing is published (Ruling, Krish, 2026-11-02)' for k in data if k in REST_DAYS]
     out = {}
     for key, weekday, _ in MIX_DAYS:
         opts = data.get(key)
-        if opts is None:
+        if opts is None or key in REST_DAYS:
             continue
         if not isinstance(opts, list) or not OFF_OPTIONS[0] <= len(opts) <= OFF_OPTIONS[1]:
             problems.append(f'{weekday}: give {OFF_OPTIONS[0]} to {OFF_OPTIONS[1]} options')
@@ -1705,6 +1709,9 @@ def read_growth_offdays(data, monday, where='--offdays-plan'):
             key = None
         if not key:
             raise BoardError(f'{where}: {day} is not a day of the week of {monday.isoformat()}')
+        if key in REST_DAYS:
+            warnings.append(f'{where}: {day} is a Sunday, a rest day (Ruling, Krish, 2026-11-02); its options are left off')
+            continue
         opts = [o for o in opts or [] if isinstance(o, dict)][:OFF_OPTIONS[1]]
         if len(opts) < 2:
             warnings.append(f'{where}: {day} has {len(opts)} option(s) from Growth, under the two the board shows')
@@ -5085,7 +5092,17 @@ def _presses_checks(check, week, mon):
     check('presses: the off days show each option with its format, source and copy, bound to the copy\'s hash',
           'id="off-tue-o1"' in page and 'id="off-sat-o3"' in page and 'data-act="mix"' not in page
           and f'data-copy-sha256="{hashlib.sha256(b"Option 1 copy.").hexdigest()}"' in page and '>The release note</a>' in page
-          and 'No options for Thursday yet.' in page and 'No options for Sunday yet.' in page)
+          and 'No options for Thursday yet.' in page and 'id="offdays-sun"' not in page)
+    # Ruling (Krish, 2026-11-02): Sunday is a rest day. A Sunday option is refused; Growth's Sunday is left off, said.
+    try:
+        read_offdays({'sun': [{'id': 'a', 'format': 'Meme', 'source': 's', 'copy': 'c'}, {'id': 'b', 'format': 'Meme', 'source': 's', 'copy': 'c'}]})
+        check('rest day: a Sunday option is refused', False)
+    except BoardError as error:
+        check('rest day: a Sunday option is refused', 'Sunday is a rest day' in str(error))
+    g = lambda n: {'concept_id': f'c{n}', 'lane': 'meme', 'formats': ['x:meme'], 'draft': f'd{n}', 'needs': [], 'ready': True}
+    kept, said = read_growth_offdays({'schema': 'growth-offdays/1', 'week_of': week.isoformat(),
+                                      'days': {(week + timedelta(days=6)).isoformat(): [g(1), g(2)], (week + timedelta(days=5)).isoformat(): [g(3), g(4)]}}, week)
+    check('rest day: Growth\'s Sunday options are left off and said', set(kept) == {'sat'} and any('rest day' in w for w in said))
     check('presses: with no off-day options the section says so in one plain line, also before the ideas come',
           'No options for Tuesday, Thursday, Saturday or Sunday yet.' in board(week, ideas=ideas)[0]
           and 'No options for Tuesday, Thursday, Saturday or Sunday yet.' in board(week)[0])
