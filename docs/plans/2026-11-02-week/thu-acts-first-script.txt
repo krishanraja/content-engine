@@ -1,21 +1,15 @@
-Has your AI started doing stuff before you even ask? I reckon it's coming, and FAST. So I've been setting up mine, and a friend's, before it does.
+Has your AI started doing things before you even ask? I reckon it's coming, and FAST, so I've been putting a fence around mine.
 
-These new assistants book your meetings and pay your invoices. They reply to your biggest client at midnight, with feeling, probably with emojis. And I don't know about you, but that's a bit keen.
-
-Picture this. You once said the office felt a bit empty, and your AI heard an order. A truckload of beanbags, arriving Tuesday.
+These new assistants book your meetings and pay for stuff. They'll reply to your mum at midnight, with feeling, probably with emojis. And I don't know about you, but that's a bit keen.
 
 Now, don't get me wrong, I love a helpful AI. But helpful with no limits is basically a toddler holding your credit card.
 
-See, the fix takes thirty seconds. Give your AI its own house rules, in writing, before it needs them.
+So I gave mine one rule, and I call it the No-Spending, No-Sending rule. It doesn't spend my money, and it doesn't send anything for me, unless I say so.
 
-Here's what I told my friend to paste in. It goes in the instructions box, where you tell it how to behave.
+And here's the fun part. I didn't write the rules myself. I put one prompt into ChatGPT, and it started asking me questions back. So it worked out its own limits, with me. And it works in any AI tool you use.
 
-Never spend money without asking me first.
+The prompt is in the comments. So copy it, paste it, and let your AI interview you.
 
-Never send anything outside my team until I've seen it.
+No spending. No sending. Not without asking.
 
-And if you're not sure, stop and ask.
-
-That's it. Your AI can still surprise you, but only inside the fence.
-
-I've put those three lines in mine, today.
+That's my rule now.
