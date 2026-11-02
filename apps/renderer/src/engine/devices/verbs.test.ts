@@ -4,6 +4,9 @@ import { EngineEventSchema } from '../props'
 import { DEVICES } from './registry'
 
 describe('device verb declarations', () => {
+  it('logo_orbit declares its exact cue verbs', () => {
+    expect(manifest.devices.logo_orbit.verbs).toEqual(['enter', 'add', 'chip', 'highlight', 'exit'])
+  })
   it('logo_card supports enter, highlight and exit', () => {
     expect(manifest.devices.logo_card.verbs).toEqual(['enter', 'highlight', 'exit'])
   })

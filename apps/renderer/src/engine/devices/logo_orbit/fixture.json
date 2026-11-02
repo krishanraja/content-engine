@@ -1,0 +1,11 @@
+{
+  "objects": [{"obj":"orbit","device":"logo_orbit","meaning":"Assistants arrive around an empty centre","params":{"logos":[{"id":"Meta"},{"id":"Google"},{"id":"Amazon"},{"id":"xAI"},{"id":"Anthropic"}],"chips":["No spending","No sending"],"rings":3,"centre":"buddy"},"fromFrame":0,"toFrame":180}],
+  "events":[
+    {"id":"enter","obj":"orbit","verb":"enter","toState":"visible","atFrame":10},
+    {"id":"chip","obj":"orbit","verb":"chip","toState":"0","atFrame":45},
+    {"id":"highlight","obj":"orbit","verb":"highlight","toState":"2","atFrame":60},
+    {"id":"exit","obj":"orbit","verb":"exit","toState":"hidden","atFrame":100}
+  ],
+  "aspects":["9:16","16:9"],
+  "stills":[9,10,13,22,40,57,65,103,106]
+}
