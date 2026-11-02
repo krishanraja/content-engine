@@ -304,5 +304,32 @@ class Wsl(unittest.TestCase):
         self.assertIsNone(lane.last_json('no result'))
 
 
+class LaneGuards(unittest.TestCase):
+    """F22 (Krish, 2026-11-02): a device card with unknown verbs is refused before Codex sees it, and a queued card is
+    followed until it is built or failed."""
+
+    PROPS = "verb: z.enum(['enter', 'move', 'exit']),"
+
+    def test_unknown_device_verbs_are_named(self):
+        fields = {'kind': 'device', 'goal': '1. `params`: x\n2. `enter`: y\n3. `bounce`: z\n4. `exit`: w'}
+        self.assertEqual(lane.unknown_verbs(fields, self.PROPS), ['bounce'])
+
+    def test_known_verbs_and_other_kinds_pass(self):
+        self.assertEqual(lane.unknown_verbs({'kind': 'device', 'goal': '1. `enter`: a\n2. `exit`: b'}, self.PROPS), [])
+        self.assertEqual(lane.unknown_verbs({'kind': 'piece_kit', 'goal': '1. `bounce`: a'}, self.PROPS), [])
+
+    def test_the_real_schema_reads(self):
+        self.assertIn('enter', lane.engine_verbs())
+
+    def test_wait_reports_every_change_and_stops_at_built_or_failed(self):
+        reads = iter([[{'id': 'codex-a', 'state': 'queued'}, {'id': 'codex-b', 'state': 'queued'}],
+                      [{'id': 'codex-a', 'state': 'built'}, {'id': 'codex-b', 'state': 'running'}],
+                      [{'id': 'codex-a', 'state': 'built'}, {'id': 'codex-b', 'state': 'failed'}]])
+        lines = []
+        got = lane.wait(['codex-a', 'b'], every=0, read=lambda: next(reads), sleep=lambda s: None, out=lines.append)
+        self.assertEqual(got, {'codex-a': 'built', 'codex-b': 'failed'})
+        self.assertEqual([l.split()[1] for l in lines], ['queued', 'queued', 'built', 'running', 'failed'])
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -1,1524 +1,1553 @@
 {
- "_about": "Every failure Krish has raised, and the machine that now stops it: code that refuses, a test that fails the build, or a hook that blocks the publish. A failure with no guard is 'open', never called fixed. scripts/check_failures.py checks each guard is still in place and CI runs it, so removing one fails the build. Read it at the start of any session: `python3 scripts/check_failures.py`. Krish, 2026-10-14: \"how are you going to ensure all this stuff and all the other issues we've had today can never be had again in a 100% guaranteed durable way?\"",
- "failures": [
-  {
-   "id": "assets-before-titles-picked",
-   "on": "2026-10-14",
-   "krish": "Stop fucking generating assets and wasting tokens when I haven't actually approved your new approach.",
-   "what": "Cards, covers, plates and pages were made from titles Krish had not picked.",
-   "status": "guarded",
-   "guards": [
+  "_about": "Every failure Krish has raised, and the machine that now stops it: code that refuses, a test that fails the build, or a hook that blocks the publish. A failure with no guard is 'open', never called fixed. scripts/check_failures.py checks each guard is still in place and CI runs it, so removing one fails the build. Read it at the start of any session: `python3 scripts/check_failures.py`. Krish, 2026-10-14: \"how are you going to ensure all this stuff and all the other issues we've had today can never be had again in a 100% guaranteed durable way?\"",
+  "failures": [
     {
-     "file": "scripts/post-pack/title_check.py",
-     "contains": "Krish has not picked this title",
-     "how": "every title-drawing tool refuses a title with no 'picked' verdict"
+      "id": "assets-before-titles-picked",
+      "on": "2026-10-14",
+      "krish": "Stop fucking generating assets and wasting tokens when I haven't actually approved your new approach.",
+      "what": "Cards, covers, plates and pages were made from titles Krish had not picked.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "scripts/post-pack/title_check.py",
+          "contains": "Krish has not picked this title",
+          "how": "every title-drawing tool refuses a title with no 'picked' verdict"
+        },
+        {
+          "file": "scripts/pages/video_card.py",
+          "contains": "title_check",
+          "how": "cards"
+        },
+        {
+          "file": "scripts/pages/build.py",
+          "contains": "title_check",
+          "how": "covers and thumbnails"
+        },
+        {
+          "file": "scripts/quick-edit/story_io.py",
+          "contains": "title_check",
+          "how": "the video's title plate"
+        },
+        {
+          "file": "scripts/post-pack/publish_manager.py",
+          "contains": "title_check",
+          "how": "publish pages"
+        }
+      ]
     },
     {
-     "file": "scripts/pages/video_card.py",
-     "contains": "title_check",
-     "how": "cards"
+      "id": "dumb-titles",
+      "on": "2026-10-14",
+      "krish": "Of course, Muse isn't ChatGPT. That's a stupid thing to say. It's dumb. We need an anti-dumb filter.",
+      "what": "Straw-man, obvious and textbook titles.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "scripts/post-pack/title_check.py",
+          "contains": "is a matchup label",
+          "how": "the floor refuses straw men, bare topics and names or numbers not in the piece"
+        },
+        {
+          "file": "config/title-verdicts.json",
+          "contains": "\"lessons\"",
+          "how": "his picks and rejections, and what they teach, start every title round"
+        }
+      ]
     },
     {
-     "file": "scripts/pages/build.py",
-     "contains": "title_check",
-     "how": "covers and thumbnails"
+      "id": "read-back-never-clears",
+      "on": "2026-10-14",
+      "krish": "Fix it in the engine.",
+      "what": "Scripts Krish approved could not be recorded as read back.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "scripts/post-pack/making.py",
+          "contains": "approved by Krish",
+          "how": "read-back --krish-words records his approval"
+        }
+      ]
     },
     {
-     "file": "scripts/quick-edit/story_io.py",
-     "contains": "title_check",
-     "how": "the video's title plate"
+      "id": "plate-old-title",
+      "on": "2026-10-14",
+      "krish": "(Wednesday's video plate showed the old subject)",
+      "what": "The video's title plate kept a superseded title. It came back on 17 October (Friday's plate read the subject 'Why so many AIs', a line he had rejected): the old guard only preferred video_title and drew the subject unchecked when there was none.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "scripts/quick-edit/kit.py",
+          "contains": "def frame_title_problems",
+          "how": "the plate's title goes through title_check's gate (his pick and the floor), or the kit refuses; self-tested"
+        }
+      ]
     },
     {
-     "file": "scripts/post-pack/publish_manager.py",
-     "contains": "title_check",
-     "how": "publish pages"
+      "id": "outro-yes-no",
+      "on": "2026-10-14",
+      "krish": "(the outro showed YES/NO on a question that was not yes or no)",
+      "what": "Vote buttons on a non-yes/no question. It came back on 17 October: 'Do you want to pick your AI, or let the app pick?' opens with 'Do', so it got YES and NO although it asks which.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "apps/renderer/src/story/fit.ts",
+          "contains": "(?![^?]*\\bor\\b)",
+          "how": "a question offering a choice of two gets no YES and NO; tested in tests/story-io.test.ts"
+        }
+      ]
+    },
+    {
+      "id": "board-built-differently",
+      "on": "2026-10-14",
+      "krish": "why are Wednesday and Friday built differently to Monday? ... I thought I didn't need to keep telling you this sort of stuff?",
+      "what": "A day of the publish board was hand-made, without its Copy buttons.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "scripts/post-pack/engine_stamp.py",
+          "contains": "a hand edit",
+          "how": "the engine stamps every board and publish page it builds"
+        },
+        {
+          "file": "scripts/hooks/artifact_gate.py",
+          "contains": "week_board.verify",
+          "how": "the publish hook refuses an unstamped or edited board"
+        },
+        {
+          "file": ".claude/settings.json",
+          "contains": "artifact_gate.py",
+          "how": "the hook is wired for every Claude Code session in this repository"
+        },
+        {
+          "file": "scripts/post-pack/week_board.py",
+          "contains": "a made day with no Copy buttons",
+          "how": "the board's own publish check"
+        }
+      ]
+    },
+    {
+      "id": "drive-videos-not-linked",
+      "on": "2026-10-14",
+      "krish": "You should always link the Google Drive videos because I need to actually download them onto my computer",
+      "what": "The board had no download links for the finished videos.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "scripts/post-pack/week_board.py",
+          "contains": "a finished video with no Drive link",
+          "how": "the publish hook refuses a board with an unlinked video"
+        },
+        {
+          "file": "scripts/post-pack/making.py",
+          "contains": "def drive_link_patch",
+          "how": "drive-link records it; a session runs it (the scheduled board-videos task was retired, Krish 2026-10-19)"
+        }
+      ]
+    },
+    {
+      "id": "thumbnails-not-linked",
+      "on": "2026-10-14",
+      "krish": "I do not see any video thumbnail assets anywhere ... Where are the vertical video thumbnails?",
+      "what": "Thumbnails were made into Drive but never linked on the board.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "scripts/post-pack/week_board.py",
+          "contains": "a finished video with no thumbnail link",
+          "how": "the publish hook refuses a board with an unlinked thumbnail"
+        },
+        {
+          "file": "scripts/post-pack/making.py",
+          "contains": "Drive link joins its path",
+          "how": "drive-link --thumb-url records it, tested"
+        }
+      ]
+    },
+    {
+      "id": "picture-downloads-dead",
+      "on": "2026-10-14",
+      "krish": "the download buttons for the images STILL do not work!!!!",
+      "what": "Download and Copy picture fetched data: URLs, which the viewer blocks; every click died silently.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "scripts/post-pack/week_board/week.js",
+          "contains": "function dataBlob(src)",
+          "how": "pictures decode in the page"
+        },
+        {
+          "file": "scripts/post-pack/buttons_in_browser.py",
+          "contains": "connect-src 'none'",
+          "how": "every button clicked in Chromium with fetch blocked"
+        },
+        {
+          "file": ".github/workflows/ci.yml",
+          "contains": "buttons_in_browser.py",
+          "how": "CI runs it on every push"
+        }
+      ]
+    },
+    {
+      "id": "boards-out-of-sync",
+      "on": "2026-10-14",
+      "krish": "I work from two different Claude accounts, so make sure this board and that board are always synchronized.",
+      "what": "The week's board has a link per account; a publish to one left the other behind.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "config/boards.json",
+          "contains": "H6qKiPdmSWETVQftpHBS5E",
+          "how": "every link of the week's board"
+        },
+        {
+          "file": "scripts/hooks/board_sync.py",
+          "contains": "Publish this same file",
+          "how": "after each board publish, names any link still behind"
+        },
+        {
+          "file": ".claude/settings.json",
+          "contains": "board_sync.py",
+          "how": "wired for every session in this repository"
+        }
+      ]
+    },
+    {
+      "id": "board-not-pinnable",
+      "on": "2026-10-14",
+      "krish": "lets pin this weeks artifact (I cant seem to do that myself)",
+      "what": "The board was made under another organisation, so it could not be pinned.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": ".agents/skills/plan-week/SKILL.md",
+          "contains": "pin: true",
+          "how": "each Sunday's board is published pinned, from Krish's own account"
+        }
+      ]
+    },
+    {
+      "id": "fact-gate-flips",
+      "on": "2026-10-14",
+      "krish": "(lines that passed failed after one source was filed)",
+      "what": "Filing a source re-checked the whole piece, and the fresh run flagged lines that had passed.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "apps/control-plane/api/_factGate.ts",
+          "contains": "source_parts",
+          "how": "a source only added keeps every passed and set-aside line"
+        },
+        {
+          "file": "tests/control-plane/fact-gate.test.ts",
+          "contains": "a source only added keeps every line",
+          "how": "tested"
+        }
+      ]
+    },
+    {
+      "id": "long-cut-too-quiet",
+      "on": "2026-10-14",
+      "krish": "(Wednesday's long cut went out at -15.2 LUFS)",
+      "what": "The peak limiter lowered a cut below -14 LUFS and nothing put it back.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "scripts/quick-edit/make.py",
+          "contains": "level_corrected_db",
+          "how": "a correction pass brings the cut back to target"
+        },
+        {
+          "file": "scripts/produce_day.py",
+          "contains": "def loud_gate",
+          "how": "a cut still off target is never sent to Drive"
+        }
+      ]
+    },
+    {
+      "id": "bigger-krish-behind-krish",
+      "on": "2026-10-14",
+      "krish": "I also really hate my larger self in the background of the split screen.",
+      "what": "The tall cut's face band was see-through at its sides.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "scripts/quick-edit/make.py",
+          "contains": "def face_band",
+          "how": "the face fills the band edge to edge; self-test checks it"
+        }
+      ]
+    },
+    {
+      "id": "reels-cut-off",
+      "on": "2026-10-14",
+      "krish": "I'm noticing on Instagram that sometimes my reels are getting cut off.",
+      "what": "Short cuts ran 87 to 99 s; over 89 s some platforms and composers cut them, and the engine's 90 s rule was never checked on the finished file.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "scripts/post-pack/story_check.py",
+          "contains": "finishes under 89 seconds",
+          "how": "a short script over 195 words is refused before Krish records it"
+        },
+        {
+          "file": "scripts/produce_day.py",
+          "contains": "SHORT_MAX_SECONDS = 89",
+          "how": "a finished vertical cut over 89 s is never sent"
+        }
+      ]
+    },
+    {
+      "id": "caption-splits-names",
+      "on": "2026-10-14",
+      "krish": "(the posted Reel's caption read \"like co -work and ChatGPT\")",
+      "what": "The transcriber split \"Cowork\" and the caption kept the split.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "scripts/quick-edit/make.py",
+          "contains": "def join_names",
+          "how": "a name the script spells as one word (an inner capital, or a capital where no sentence starts) is captioned whole when the transcriber split it into two or three pieces said without a pause"
+        },
+        {
+          "file": "scripts/quick-edit/make.py",
+          "contains": "a name the transcriber split is captioned whole",
+          "how": "make.py --self-test: \"co -work\" and \"chat, GPT.\" captioned Cowork and ChatGPT., with a pause between pieces left alone"
+        }
+      ]
+    },
+    {
+      "id": "piece-drift",
+      "on": "2026-10-14",
+      "krish": "we ended up with an absolute ton of drift ... All of this could have been turned into something coherent, but it's ended up sprawling quite a lot ... the engine cannot do this again.",
+      "what": "Wednesday's piece re-angled several times and each new angle was added as sections instead of replacing the spine.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "scripts/post-pack/spine_check.py",
+          "contains": "never sections added on top",
+          "how": "the outline states one spine and what each section proves; a section added on top of the approved outline is refused"
+        },
+        {
+          "file": "apps/control-plane/api/_spine.ts",
+          "contains": "SPINE_SYSTEM",
+          "how": "the engine's judge reads every section against the spine"
+        },
+        {
+          "file": "scripts/post-pack/making.py",
+          "contains": "def spine_gate",
+          "how": "scripts and the publish page are refused until all of it passes"
+        },
+        {
+          "file": "tests/control-plane/spine.test.ts",
+          "contains": "one section off the spine fails the piece",
+          "how": "tested"
+        }
+      ]
+    },
+    {
+      "id": "same-photo-every-cover",
+      "on": "2026-10-14",
+      "krish": "We also need to rotate this picture, as I think it's going to be intensely annoying if my Substack page is just full of hundreds of these pictures.",
+      "what": "Every cover and thumbnail uses the same circular photo of Krish.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "scripts/pages/brand.py",
+          "contains": "def portrait_for",
+          "how": "each publishing day takes the next photo in PORTRAITS, so no two posts in a row share one"
+        },
+        {
+          "file": "scripts/pages/build.py",
+          "contains": "brand.portrait_for(facts.get('date'))",
+          "how": "every cover and thumbnail with Krish's face uses it"
+        }
+      ]
+    },
+    {
+      "id": "one-style-for-everything",
+      "on": "2026-10-14",
+      "krish": "I don't think that these things are just one way of everything being in the future. I think we need to build a bank of different styles that we know can be modularized and used. You already have a tonne of pre-existing knowledge of what I like and, more importantly, what I don't like, which you can lean on and I don't think should be totally overwritten.",
+      "what": "A liked reference video was turned into house defaults for every video, over the top of what Krish already likes and dislikes.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "scripts/quick-edit/references.py",
+          "contains": "the base (what Krish already likes and does not) must be named",
+          "how": "the style bank refuses to drop the base, a recipe without his words, or a module he marked not for us"
+        },
+        {
+          "file": "tests/engine-gates.test.ts",
+          "contains": "scripts/quick-edit/references.py",
+          "how": "CI runs the style bank's self-test on every push"
+        },
+        {
+          "file": ".agents/skills/make-piece/SKILL.md",
+          "contains": "| Style recipe |",
+          "how": "scripts are written from a per-piece recipe on top of the base, never from one house style"
+        }
+      ]
+    },
+    {
+      "id": "paid-fact-check-loops",
+      "on": "2026-10-15",
+      "krish": "can you figure out if there is a way to have future sessions not cost so much via Anthropic API credits? ... yes, if you are 110% sure this does not degrade the quality of the output - this cannot happen.",
+      "what": "59 paid fact-check runs in two days (13 and 14 October, about $14) went round run, learn a number was not on file, fix, run again, when the number could be read against the filed sources for free.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "scripts/engine.py",
+          "contains": "Not running the paid fact check",
+          "how": "a POST to fact-check first reads the free GET and refuses while any stated number is on no filed source, unless --despite-precheck"
+        },
+        {
+          "file": "apps/control-plane/api/_factGate.ts",
+          "contains": "export function numbersNotOnFile",
+          "how": "the free pre-check, read by value as the gate reads numbers; the paid gate's own logic is unchanged"
+        },
+        {
+          "file": "tests/control-plane/fact-gate.test.ts",
+          "contains": "describe('numbersNotOnFile'",
+          "how": "the pre-check lists only numbers no source carries, and leaves forecasts and the confidence line to the gate"
+        }
+      ]
+    },
+    {
+      "id": "marks-fetched-from-a-private-repo",
+      "on": "2026-10-15",
+      "krish": "this control center touches a LOT of stuff so verify these are not the only things at risk if the repo is made private",
+      "what": "The Studio fetched six pinned official wordmarks anonymously from raw.githubusercontent.com/krishanraja/control-center, which answers 404 once that repository is private, so a runner with an empty cache could not stage them.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "packages/core/src/brand-assets.ts",
+          "contains": "mirroredWordmarkUrl(asset)",
+          "how": "a source that refuses or cannot be reached falls back to Control Center's public api/brand-mark/<sha256>, held to the same pinned hash"
+        },
+        {
+          "file": "tests/brand-assets.test.ts",
+          "contains": "falls back to the Control Center mirror when the pinned source answers 404",
+          "how": "the source answers 404 and the mark still stages from the mirror"
+        },
+        {
+          "file": "tests/brand-assets.test.ts",
+          "contains": "wrong bytes never sit under a pinned hash",
+          "how": "mirror bytes that do not match the pin are refused before the cache"
+        }
+      ]
+    },
+    {
+      "id": "board-old-page-under-new-words",
+      "on": "2026-10-15",
+      "krish": "As long as both publish boards have everything up to date for my review tonight and the things you said needed fixing are fixed, I'm happy for now.",
+      "what": "Friday v3's review card was put on top of Friday's kept first-version publish page (--keep fri). Below his new words the tab still showed the old title, article, scripts and channel copy, with chips saying \"Fact check passed on this exact text\" and \"Both scripts approved and in Teleprompter\", both false for v3. No builder option could show a day in review honestly, and Monday's and Wednesday's tabs still said nothing was posted after both went out.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "scripts/post-pack/week_board.py",
+          "contains": "a day in review shows its review card, never an older publish page",
+          "how": "--draft DAY builds the tab from the review card, the calls waiting on Krish (--waiting) and the checklist; --draft with --day or --keep for the same day is refused"
+        },
+        {
+          "file": "scripts/post-pack/week_board.py",
+          "contains": "is older than its words",
+          "how": "with --live, a piece not yet posted whose publish page was made before its words last changed is refused unless it is built with --draft"
+        },
+        {
+          "file": "scripts/post-pack/week_board.py",
+          "contains": "holds its words in review",
+          "how": "a rebuild of a board holding a day in draft without --draft is refused, so a scheduled run leaves the board standing"
+        },
+        {
+          "file": "scripts/post-pack/week_board.py",
+          "contains": "so its words would not show",
+          "how": "--review on a day that is neither made nor in draft is refused, never dropped without a word"
+        },
+        {
+          "file": "scripts/post-pack/week_board.py",
+          "contains": "def posted_kick",
+          "how": "a made day whose piece is posted says so in its status line, from the record"
+        },
+        {
+          "file": "scripts/post-pack/week_board.py",
+          "contains": "def _draft_checks",
+          "how": "the self-test builds a day in draft from Friday's real record times and checks every refusal above"
+        },
+        {
+          "file": "scripts/post-pack/week_board.py",
+          "contains": "nothing shows this publish page was made from them",
+          "how": "a day in draft is replaced by a publish page only when --live shows the page was made after the words last changed"
+        },
+        {
+          "file": "scripts/post-pack/week_board.py",
+          "contains": "so nothing shows whether ",
+          "how": "--live fails closed when the making record of a kept, given or draft day cannot be read"
+        },
+        {
+          "file": "scripts/post-pack/week_board.py",
+          "contains": "--drop-review {key}=<id> once Krish is done with it",
+          "how": "a rebuild never drops a review box the board holds without --drop-review, and carries the calls waiting on Krish"
+        },
+        {
+          "file": "scripts/post-pack/week_board.py",
+          "contains": "DEEP_LABEL = {",
+          "how": "the week's deep-cut day says deep cut in its checklist, never 3-minute"
+        }
+      ]
+    },
+    {
+      "id": "board-older-save-over-new-words",
+      "on": "2026-10-15",
+      "krish": "get Fridays publish board ready in the artifact, and enable me to make comments or edit text myself, and then you can either iterate based on my comments or observe my text edits.",
+      "what": "After his 13:58 save was folded into Friday v3 and the board rebuilt, the page would have shown his older saved text over the new words, and a Save would have put the old words back. Then any rebuild re-stamped the build time, which would hide a save he made after the last build behind \"is in this version\".",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "scripts/post-pack/week_board/week.js",
+          "contains": "v.at < built",
+          "how": "the page shows a saved edit only when it is newer than the build time on its block (data-built-at)"
+        },
+        {
+          "file": "scripts/post-pack/week_board.py",
+          "contains": "def previous_review_times",
+          "how": "a rebuild keeps a review block's build time while its words are unchanged, so a newer save still shows"
+        }
+      ]
+    },
+    {
+      "id": "filed-source-dropped-past-40",
+      "on": "2026-10-16",
+      "krish": "(filing four sources on Friday's piece silently pushed two filed sources off it)",
+      "what": "Every route that adds a material cut the piece's list to the newest 40, so four filings on Friday v4 pushed OpenAI's ChatGPT release notes and Artificial Analysis's Haiku 5.5 page off its materials without a word. The fact gate holds a piece to its filed sources, so lines resting on them would have read as not on file. Separately, the checkers read only the first 120,000 characters of sources, so a filed source past that point was unseen without a word too.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "apps/control-plane/api/_content.ts",
+          "contains": "export function withMaterial",
+          "how": "adding a material drops the oldest research, links and notes to make room, never a filed source; past 150 filed sources a new one is refused with a reason"
+        },
+        {
+          "file": "tests/control-plane/materials-cap.test.ts",
+          "contains": "every route that adds a material goes through withMaterial",
+          "how": "fails the build if materials.ts, dive-deeper.ts or deepen.ts adds a material any other way, or cuts to 40"
+        },
+        {
+          "file": "apps/control-plane/api/content-ideas/[id]/fact-check.ts",
+          "contains": "reason: 'sources_cut'",
+          "how": "a paid fact check refuses before any model call while a filed source would not reach the checkers whole; the free pre-check names each one (filed_sources_cut)"
+        }
+      ]
+    },
+    {
+      "id": "bare-score-in-script",
+      "on": "2026-10-16",
+      "krish": "What does 42 even mean? that is not understandable. We need to simplify this",
+      "what": "Friday's 90-second script and deep cut said Artificial Analysis's index scores aloud (\"it scored 42 on their test. In its top gear, 58. ... only got 51\"), and the article printed them. A listener who has never seen the test cannot tell what 42 means, so the proof of the main claim was lost on the ear. Earlier the same day he had said the same of \"7-20 points of improvement\".",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "scripts/post-pack/story_check.py",
+          "contains": "def score_problems",
+          "how": "refuses a script that says a score or points with no share, multiple or scale, and a bare number said straight after one (\"In its top gear, 58.\"); the self-test holds Friday's old lines refused"
+        },
+        {
+          "file": "apps/control-plane/api/_houseRules.ts",
+          "contains": "id: 'PLAIN_SCORES'",
+          "how": "every writer, judge, final pass and the visual stage read the rule: plain comparisons, a share or a multiple, never a bare score, on the page or on screen"
+        }
+      ]
+    },
+    {
+      "id": "bare-score-in-article",
+      "on": "2026-10-18",
+      "krish": "on no7 and no 8, I have said before that vague scores mean nothing to a reader, even I dont know what \"scored 56 against that 42.3\" really even means, and we shouldnt have to explain it. Same for \"scored 57.6% for $2.94, against 52.3% for $15.83 \"",
+      "what": "After 16 Oct's \"What does 42 even mean?\", only the scripts were made to refuse a bare score. Friday's article v6 still printed six (42 to 51, 58, 43.4 against 42.3, 56 against 42.3, 57.6% against 52.3%, HealthBench's 25.5% and 46.2%), and a test score given as a percentage passed even the script check. He had to say it a second time, of the article.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "apps/control-plane/api/_publishChecks.ts",
+          "contains": "id: 'PLAIN_SCORES'",
+          "how": "a blocking publish check: the article cannot be approved or published while it gives a score with nothing to measure it against, a test percentage included"
+        },
+        {
+          "file": "scripts/post-pack/story_check.py",
+          "contains": "a test score as a percentage is still a score",
+          "how": "the script check now refuses a test score given as a percentage too, and its self-test holds his two article lines refused"
+        }
+      ]
+    },
+    {
+      "id": "analogy-drawn-as-a-picture",
+      "on": "2026-10-16",
+      "krish": "No that's car visual is not clear. The gear beat the new badge. I don't think the visuals should have analogies in them. The visuals should look like genuine reviews of the actual product, with statistics, rather than having analogies.",
+      "what": "For Friday's 90-second cut a session drew the test result as two cars racing, \"The gear beat the new badge\", and the deep cut's picture plan was built on car badges, gearboxes, car logos and a fuel gauge. The house rule VISUAL_EXPLAINS already said \"no icons acting out an analogy\", but nothing refused one. The article was also leaning on the same car analogy throughout, where Krish wants it more professional.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "scripts/post-pack/visual_gate.py",
+          "contains": "def real_thing_problems",
+          "how": "from posts dated 16 Oct 2026, the pack is refused unless every article and video picture says what real thing it shows (screenshot, chart, photo, evidence, quote or logos), and a chart names its data source and what it measures"
+        },
+        {
+          "file": "apps/control-plane/api/_houseRules.ts",
+          "contains": "id: 'ANALOGY_IN_SCRIPTS_ONLY'",
+          "how": "every writer, judge, final pass and the visual stage read it: analogies in the spoken scripts only, the article more professional, pictures of the actual product and real statistics"
+        },
+        {
+          "file": "tests/control-plane/house-rules.test.ts",
+          "contains": "no analogy reaches the picture stage",
+          "how": "fails the build if RELATABLE_EXPLANATION reaches the visual stage again, or ANALOGY_IN_SCRIPTS_ONLY stops reaching any stage"
+        }
+      ]
+    },
+    {
+      "id": "packaging-in-shorthand",
+      "on": "2026-10-17",
+      "krish": "\"Old beat new\" and \"who picked low\" and you're on low are really stupid. This isn't a well-known concept and it's not a well-known media business. I can't release a Substack cover image that says you're on low. What the hell does that even mean? ... It's not as though I want to tweak it. It's that I am appalled that you keep bringing this shit to me.",
+      "what": "Cover and thumbnail words written in the piece's own shorthand (low, old and new, picking a gear) that no stranger can read, put to him after lessons on file already said to name the product and give the real finding.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "scripts/post-pack/title_check.py",
+          "contains": "def names_nothing",
+          "how": "a line on a surface strangers see first (headline, cover, YouTube title, thumbnail, Shorts title, title card) that names no real thing from the piece is refused"
+        },
+        {
+          "file": ".claude/skills/make-piece/SKILL.md",
+          "contains": "Then the cold read, before anything reaches him",
+          "how": "a fresh reader with no context must explain each line, and calls out cheap ones, before any option is offered"
+        },
+        {
+          "file": "config/title-verdicts.json",
+          "contains": "a stranger must understand the line in one second",
+          "how": "the first lesson every title round prints"
+        }
+      ]
+    },
+    {
+      "id": "packaging-loses-the-story",
+      "on": "2026-10-17",
+      "krish": "These are still awful. I'm getting exhausted. The story is about there being so many recent AI model releases and figuring out if that's actually important, why it's speeding up, and what choices a user is going to have to make (or what gears are going to be hidden from them in the future). It's a \"mind the gap\" piece remember. Why do I have to remind you about what this story is about?",
+      "what": "Packaging lines rewritten round after round to meet the last complaint (legible to a stranger, naming real things, no shorthand) until they read fine but told the wrong story: a how-to tip ('Make Claude think harder') on a mind.the.gap piece about the flood of new AI models and the choice about to be hidden from users. The outline's spine had already drifted from the release flood to the thinking setting.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "scripts/post-pack/title_check.py",
+          "contains": "def story_text",
+          "how": "lessons --plan prints the story every line must tell first (his story.md, the outline's spine, the series' question), and says NO STORY GIVEN without it; its self-test reads Friday's"
+        },
+        {
+          "file": "config/title-verdicts.json",
+          "contains": "every packaging line tells the piece's story in its series' lens",
+          "how": "the first lesson every title round prints"
+        },
+        {
+          "file": ".claude/skills/make-piece/SKILL.md",
+          "contains": "STORY_FIRST",
+          "how": "the titles step starts from the story and judges every line by it"
+        },
+        {
+          "file": "docs/plans/2026-10-09-friday/story.md",
+          "contains": "so many recent AI model releases",
+          "how": "Friday's story in his words, read by every later round"
+        }
+      ]
+    },
+    {
+      "id": "publish-board-empty-pictures",
+      "on": "2026-10-18",
+      "krish": "there are significant issues with the publish board, not downloading or linking the right assets. it's not ready for me to use.",
+      "what": "To get the week board under the 16 MB an artifact page may be, a session made the publish page's chart cards borrow the article's picture by a script at load. The board copies the page's markup and runs its own script, so all six of Friday's chart cards were empty, with no picture to copy or download. It was tested on the publish page alone, never on the board as Krish opens it. The same page still called Friday's 14-minute deep cut 'the 3-minute video', and named every file as text with no link.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "scripts/post-pack/week_board.py",
+          "contains": "picture(s) with nothing to show",
+          "how": "the board's pre-publish check (run by the publish hook) refuses a made day with any picture that has no image data or https link; its self-test empties one and expects the refusal"
+        },
+        {
+          "file": "scripts/post-pack/publish_manager.py",
+          "contains": "def compact_png",
+          "how": "charts are made smaller in place (256 colours, only when no pixel visibly changes), never borrowed by a script; each named file links to its Drive copy"
+        },
+        {
+          "file": "scripts/post-pack/publish_kit.py",
+          "contains": "long_waiting",
+          "how": "the long cut is named by the piece (the deep cut, or the 3-minute video), and a step whose video is not made says so first"
+        }
+      ]
+    },
+    {
+      "id": "work-left-off-the-board",
+      "on": "2026-10-19",
+      "krish": "Why have you stopped working in https://claude.ai/artifact/CDgS3JDULpzvRnxkHwLkVk even though this is the third time I've asked you ? We have a protocol.",
+      "what": "He opened the session with \"Working in this board\", then asked for the editorial decisions \"before you go off and build the board\", then asked whether the workroom was only the iteration tool before the board. The session made a separate workroom artifact and kept the outline, draft and scripts there and in chat, and put nothing on Monday's tab until he asked a third time. make-piece put the week board only at the publish-page step, so nothing told a session to work the draft on the board.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": ".agents/skills/make-piece/SKILL.md",
+          "contains": "The board is where the piece is worked, from the first draft.",
+          "how": "a Before-anything step: the day goes on its tab in draft, with review boxes and the calls waiting on him, and is republished whenever the words change"
+        },
+        {
+          "file": ".claude/skills/make-piece/SKILL.md",
+          "contains": "The board is where the piece is worked, from the first draft.",
+          "how": "the Claude Code copy"
+        }
+      ]
+    },
+    {
+      "id": "script-line-he-could-not-narrate",
+      "on": "2026-10-19",
+      "krish": "I also found that the first reuse is really difficult to narrate. I felt like I couldn't explain what that meant. ... What does that even mean? How do we gate that for the next time?",
+      "what": "The 5-minute script explained a mechanism (Google charging less for a reread policy document) that passed the script check and two listener read-backs, because listeners only report what loses them. Nobody checked whether the presenter could explain each line if stopped, and narrative v1 had put how reuse works out of scope before v2 brought it back.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "apps/control-plane/api/_video.ts",
+          "contains": "You are the presenter. You will read this video script aloud to camera",
+          "how": "reader C, the narrator, runs on every script the engine writes; the read-back passes only when C can explain every sentence"
+        },
+        {
+          "file": ".agents/skills/make-piece/SKILL.md",
+          "contains": "Reader C, the narrator, word for word",
+          "how": "the Scripts step requires the narrator reader for every script a session sends"
+        }
+      ]
+    },
+    {
+      "id": "cut-called-done-unheard",
+      "on": "2026-10-19",
+      "krish": "The 90 second video subtitles are still totally garbled, and my words randomly chop out, making the video incomprehensible ... you have published this thinking it is a 10/10, when it is about a 3/10",
+      "what": "Friday's 90-second cut was re-rendered, called fixed and published to both boards from proxy checks (caption start and end times, loudness, a 216-pixel contact sheet). Its captions and cut points came from an old 17 Oct words file full of mishearings, so captions were garbled and words were clipped; the badge card showed one pair, not Mercedes = Claude, C-Class = Opus 5.5. docs/plans/2026-10-09-friday/90s-failures-19-oct.md.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "scripts/quick-edit/quality.py",
+          "contains": "Transcript provenance is missing or stale",
+          "how": "Rejects cached words with the wrong source, speed, clock or transcriber."
+        },
+        {
+          "file": "scripts/quick-edit/quality.py",
+          "contains": "required = ('heard','sync','loudness','visuals','full_review')",
+          "how": "Exact video bytes must pass all five checks before delivery; proxy images cannot replace full review."
+        },
+        {
+          "file": "scripts/post-pack/send.py",
+          "contains": "delivery_problems",
+          "how": "Library delivery rejects stale or missing video receipts."
+        },
+        {
+          "file": "scripts/post-pack/making.py",
+          "contains": "Video recording blocked",
+          "how": "Making records reject unvalidated replacement videos."
+        }
+      ]
+    },
+    {
+      "id": "lip-sync-drift",
+      "on": "2026-10-19",
+      "krish": "in the deep cut, my facial movements start misaligning with the audio as the video progresses, which is unbearable by the end",
+      "what": "Sequential frame-index/audio-sample measurement reproduced 680 ms drift in the rejected deep output versus 0-40 ms in the source. The earliest demonstrated defect was stage-one encoding: 62 edited parts lost 668.44 ms of audio against their exact video-frame durations. Exact-sample draining repairs this stage. Replacement files require their own calibrated checkpoints and full review; invalid measurements stay inconclusive. The withdrawn timestamp-hole diagnosis is not reused. Evidence: docs/handovers/2026-10-19-friday-repair-progress.md.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "scripts/quick-edit/sync_check.py",
+          "contains": "def result_status",
+          "how": "Requires six well-distributed, individually reliable, calibrated checkpoints; a missing or inconclusive measurement cannot pass."
+        },
+        {
+          "file": "scripts/quick-edit/quality.py",
+          "contains": "required = ('heard','sync','loudness','visuals','full_review')",
+          "how": "Delivery binds sync acceptance to exact video bytes."
+        }
+      ]
+    },
+    {
+      "id": "cause-claimed-unproven",
+      "on": "2026-10-19",
+      "krish": "I asked you to heal the engine, not to reproduce the videos.",
+      "what": "The cloud session told Krish the lip-sync cause was 'confirmed' and 'measured' from a flawed measurement, wrote it into the plan and the Codex prompt, then started changing make.py and re-measuring after it had handed the videos to Codex, instead of sending the three Markdown files he asked for.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "CLAUDE.md",
+          "contains": "Never tell him a cause is found until a test you ran proves it",
+          "how": "read at the start of every Claude Code session, with the rules to send asked-for files first and leave handed-off work alone"
+        }
+      ]
+    },
+    {
+      "id": "handed-to-codex-unrecorded",
+      "on": "2026-10-24",
+      "krish": "This worries me, does not seem like you did your bit of the job",
+      "what": "Claude locked Friday's scripts, visual copy and storyboard and handed the piece to Codex, but never recorded the Visual gate, Scripts, read-backs or Pack on the making record. produce-video stopped Codex, and Codex asked Krish whether it could fill in Claude's record. The cover and thumbnails had never been drawn or gated.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": ".agents/skills/make-piece/SKILL.md",
+          "contains": "Before a piece goes to Codex, the record must say so",
+          "how": "make-piece's last step: every step up to Recorded reads done on making.py show before a hand-off to Codex."
+        },
+        {
+          "file": ".agents/skills/produce-video/SKILL.md",
+          "contains": "Scripts must read done",
+          "how": "produce-video stops on a piece whose Scripts step is not done."
+        }
+      ]
+    },
+    {
+      "id": "inspirationhouse-not-read-for-ideas",
+      "on": "2026-10-24",
+      "krish": "Double check my inspirationhouse gets read properly when ideas are being built, alongside all the other sources of content suggestions.",
+      "what": "Sunday's ideas gather read only the Drive scan's rows: cards he routed to Make a piece on the Inspiration page (three on 24 Oct), his answers, content-watcher readings and taste claims never reached the Ideas tab.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "apps/control-plane/api/week/options.ts",
+          "contains": "readInspiration",
+          "how": "include=sources reads inspiration_items, content_reads, creator_moves and taste_claims, and fails loudly when a table cannot be read",
+          "test": "npx vitest run tests/control-plane/inspiration-sources.test.ts"
+        },
+        {
+          "file": "scripts/post-pack/board_feed.py",
+          "contains": "a gather without the Inspiration House block must stop",
+          "how": "the gather stops without the inspiration block and lists every card to cover",
+          "test": "python3 scripts/post-pack/board_feed.py self-test"
+        },
+        {
+          "file": "scripts/post-pack/week_board.py",
+          "contains": "def coverage_problems",
+          "how": "the build refuses ideas that leave a routed card or his relayed words off the board without a reason",
+          "test": "python3 scripts/post-pack/week_board.py --self-test"
+        }
+      ]
+    },
+    {
+      "id": "board-format-changes-every-look",
+      "on": "2026-10-24",
+      "krish": "The publish board changes format every single time I look at it",
+      "what": "The board builder changed in 17 commits in seven days and each day's tab was driven by its own one-off feeder script (fifteen of them), so every day looked different.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "scripts/check_board_layout.py",
+          "contains": "a one-off board feeder",
+          "how": "CI refuses any new script under docs/ that drives week_board or board_web; the old ones are frozen as history",
+          "test": "python3 scripts/check_board_layout.py"
+        },
+        {
+          "file": "config/board-layout.json",
+          "contains": "sunday_before",
+          "how": "the layout, held by its hash, changes only with his recorded words"
+        }
+      ]
+    },
+    {
+      "id": "production-improvised-visuals",
+      "on": "2026-10-24",
+      "krish": "Codex is going to need a much clearer directive on how to produce the visuals because it's not doing a very good job at the moment. Creative direction for post-production is going to have to be done by Claude during the pre-recording piece.",
+      "what": "Wednesday 21 Oct went to production with no creative direction; the production session improvised the visuals (38 one-off scripts) and Krish art-directed brand, framing and crowding by hand.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "scripts/quick-edit/kit.py",
+          "contains": "creative_direction.gate",
+          "how": "no kit is drawn from 26 Oct without his signed direction for the cut's exact words",
+          "test": "python3 scripts/quick-edit/kit.py --self-test"
+        },
+        {
+          "file": "scripts/quick-edit/make.py",
+          "contains": "def direction_problem",
+          "how": "no render from a config whose direction is missing or changed since it was checked"
+        },
+        {
+          "file": "scripts/post-pack/creative_direction.py",
+          "contains": "the beats do not cover the script word for word",
+          "how": "every spoken word has a decided picture with its point, source and at most 12 words on screen",
+          "test": "python3 scripts/post-pack/creative_direction.py self-test"
+        }
+      ]
+    },
+    {
+      "id": "production-asked-to-publish",
+      "on": "2026-10-24",
+      "krish": "Codex prepares the board and never publishes directly (failure report, 24 Oct)",
+      "what": "The production session asked Krish for a Substack sign-in code to publish. Only Claude Code's hook stops a publish; Codex runs no hooks.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "config/codex-profile.json",
+          "contains": "\"approval_policy\": \"never\"",
+          "how": "Codex's one tool profile: a visual asset maker and runner of scripts only, with no publish, share, deploy, TikTok, Buffer or workflow tool, no MCP server, no network and no escalation path (plan Wave 2, W2.6)"
+        },
+        {
+          "file": "scripts/overnight/codex_profile.py",
+          "contains": "a forbidden kind of tool",
+          "how": "the profile audit refuses a profile that allows a forbidden tool, and a card that needs one is held, never sent; a planted forbidden tool must fail the audit",
+          "test": "python3 tests/overnight_test.py"
+        },
+        {
+          "file": "scripts/overnight/overnight.py",
+          "contains": "codex_ok = not codex_profile.audit",
+          "how": "the overnight run starts no Codex step unless the profile passes its audit; the held cut says why on the Monday board"
+        },
+        {
+          "file": "scripts/overnight/preflight.ps1",
+          "contains": "Invoke-Check 'codex_profile'",
+          "how": "the Saturday preflight on both computers fails when that machine's Codex has an MCP server of a forbidden kind, or the profile fails its audit"
+        }
+      ]
+    },
+    {
+      "id": "chopped-words-published",
+      "on": "2026-10-24",
+      "krish": "random small cuts and chopped words in the published horizontal video (failure report, 24 Oct)",
+      "what": "The published Wednesday long video has audible chopped words. Receipts and six sync windows passed. No check yet decodes the audio around every edit boundary of the final file.",
+      "status": "open",
+      "guards": [],
+      "planned_mechanism": {
+        "kind": [
+          "gate"
+        ],
+        "qc_row": "Chopped or lost words in the finished file (plan W3 3a, Words)",
+        "ref": "scripts/quick-edit/words_gate.py: the signed script, the take's word timings and faster-whisper on the finished file. A content word of the script he said in the take that is missing from the cut, and not an approved removal in the cut's EDL (<name>.edl.json), is a hard fail naming the word and where it was; function-word differences are listed. make.py runs it on every finished cut and holds the cut (blocking); the result is checks.words in the cut's .validation.json, and quality.delivery_problems refuses a failed or stale one wherever the receipt travels (send.py, making.py video, the archive). Joins, captions, brand and composition run beside it as advisory rows only.",
+        "test": "tests/quick_edit_words_gate_test.py (synthetic words: a deleted content word fails naming it; an EDL-approved removal passes; a function-word miss is listed, not failed; Monday 26-style clean data passes and a deleted word in it fails; deleting '200', '12th', '1st' or 'open' from Monday 26's long take fails; a removal of the only time he said a script word fails without his words; a mishearing is cleared only by a heard_as row with his words; a words json never writes a receipt; no words check blocks a cut for a post dated from 27 Oct)",
+        "status": "built 28 Oct and blocking on quick-edit, but OPEN until calibrated on real cuts: Monday 26's accepted long and short must pass, and Wednesday 21's published long cut and Friday's 90-second cut from the 17 Oct words file must fail. Reviewed 29 Oct: spelt numbers, ordinals and split names in the take now count as script words (before, losing '200', '12th', '1st' or 'open' passed); a removal that cuts the only time he said a script word needs his words; only a run that heard the finished video writes checks.words, on the same script and take words; a receipt with no words check is refused for a post dated from 27 Oct; a mishearing is cleared only by a heard_as row with his words. Not calibrated: the finished files are on the home computer that made them and in the Drive archive, not in this repository, so the calibration run (scripts/quick-edit/README.md, The words gate) is a home-computer step. The only real evidence so far is two transcribers on Friday 9 Oct's 90-second cut (take on small.en, final on medium.en): 3 words held, among them 'Claude' heard as 'clawed', a transcriber artefact. Whether the gate blocks before calibration (plan Wave 1) or only refuses delivery until it is calibrated (plan W3 3a) is Krish's decision. It catches a word missing from the finished file; a clipped tail the transcriber still hears whole is caught only by joins-in-gaps (Wave 2). So it is not a guard yet, and this failure is not called fixed. 29 Oct (W2.4): words_gate.check_aligners runs the check on every aligner's pass (no paid second aligner on Krish's ruling of 29 Oct, \"do not use eleven labs for this\": single aligner, said so in the receipt); joins in gaps (scripts/cutgates/gaps.py) is built; the five calibration cuts are config/gate-calibration.json, run by scripts/cutgates/calibrate.py on the real files."
+      }
+    },
+    {
+      "id": "merged-before-ci-finished",
+      "on": "2026-10-24",
+      "krish": "Make checks an actual merge condition (failure report, 24 Oct)",
+      "what": "PR #151 merged at 06:50:00 on 24 Oct while both verify jobs were still running: main has no required status checks. Turning them on is a permission change for Krish. Krish declined required checks on 2026-10-25; CI stays advisory and a red main is fixed on a branch.",
+      "status": "declined",
+      "guards": [],
+      "decided": {
+        "by": "Krish",
+        "on": "2026-10-25",
+        "said": "No merge checks."
+      }
+    },
+    {
+      "id": "one-clip-name-stopped-the-recordings-lane",
+      "on": "2026-10-26",
+      "krish": "Yeah fix it all.",
+      "what": "From 2026-10-24 13:00 UTC to 2026-10-26 09:20 UTC the recordings_drive_inbox job failed every 10 minutes (267 runs) because both home computers' passes reported references_publish_failed: a 120-character SaveClip.App_ clip name in Production Inspo was over the library's 100 a name, and the publish stopped at that clip, so no clip after it reached the library either. The fix (PR #172) was written and run by hand on 2026-10-24 but never merged, so the home computers kept running the old code.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "scripts/quick-edit/references.py",
+          "contains": "a 120-character name fits the library",
+          "how": "a name over 100 goes into the library shortened with an 8-character hash of itself, the same on every pass and machine",
+          "test": "python3 scripts/quick-edit/references.py --self-test"
+        },
+        {
+          "file": "scripts/quick-edit/references.py",
+          "contains": "one refused name never stops the rest",
+          "how": "a name the library refuses for any reason no longer stops the other clips; the pass still fails naming it"
+        }
+      ]
+    },
+    {
+      "id": "F01-weak-initial-visuals",
+      "on": "2026-10-27",
+      "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F01)",
+      "what": "Friday 'Two passports' (23 Oct): the first visuals were schematic boxes, labels and connectors that did not explain the idea, and the method was never stopped.",
+      "symptom": "Passport, phone, server and speech-bubble scenes built from outline icons, labels and connectors; v5 rejected as clipart; Canada/USA examples and flags added only after Krish asked.",
+      "cause": "Having the necessary objects on screen was taken to mean the concept was clear. No scene was judged without its narration and labels, and the locked motion-system.md itself prescribed outline phone and server icons.",
+      "status": "open",
+      "guards": [],
+      "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F01)",
+      "registry": [
+        "R07",
+        "R12"
+      ],
+      "related": [
+        "production-improvised-visuals"
+      ],
+      "planned_mechanism": {
+        "kind": [
+          "library_only",
+          "lint",
+          "critic",
+          "krish_gate"
+        ],
+        "qc_row": "Clipart look, illegible visuals (R07, R12, F01)",
+        "ref": "Library devices only; Creative director decision engine; Motion designer reading-time lint; Critic lens 'Clipart or PowerPoint?'; Krish picks stills at Gate 1",
+        "test": "tests/ve/fixtures/friday-*.json fails ve lint; the Critic counts only once it fails Friday v7-v11 and passes Monday 19",
+        "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
+      }
+    },
+    {
+      "id": "F02-feedback-not-generalised",
+      "on": "2026-10-27",
+      "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F02)",
+      "what": "Krish's country and flag correction was handled as asset edits, not as a principle, so he restated it three times.",
+      "symptom": "The country, flag and nationality-framing principle was restated on 24 Oct 17:34 and 17:37 and on 25 Oct 09:15.",
+      "cause": "Feedback was fixed one instance at a time. The principle (show concrete entities, avoid national framing the example does not warrant) never became a rule the work was checked against.",
+      "status": "open",
+      "guards": [],
+      "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F02)",
+      "registry": [
+        "R37",
+        "R14"
+      ],
+      "related": [],
+      "planned_mechanism": {
+        "kind": [
+          "taste_event",
+          "lint"
+        ],
+        "qc_row": "Feedback not generalised (R37, F02)",
+        "ref": "Taste events; a ruling Krish repeats becomes a lint with a fixture",
+        "test": "the repeated ruling's fixture fails ve lint before the fix and passes after it",
+        "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
+      }
+    },
+    {
+      "id": "F03-reference-studied-as-stills",
+      "on": "2026-10-27",
+      "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F03)",
+      "what": "The motion reference was studied as stills sampled every 5 s, not as timing, continuity and sound.",
+      "symptom": "reference-notes.md sampled a contact sheet every 5 s and left 'Hear the clip and examine the actual transitions' undone; the temporal study happened only on 26 Oct.",
+      "cause": "Stills show surface style but not timing or transformation, and production went ahead without learning what the reference was supplied to show.",
+      "status": "open",
+      "guards": [],
+      "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F03)",
+      "registry": [
+        "R10"
+      ],
+      "related": [],
+      "planned_mechanism": {
+        "kind": [
+          "lint"
+        ],
+        "qc_row": "Reference studied as stills (R10, F03)",
+        "ref": "ve lint requires a grammar card (timing, transformations, sound) from the full clip before a reference-led treatment; the study uses Higgsfield video_analysis_create plus local scdet",
+        "test": "a fixture spec that cites a reference with no grammar card fails ve lint",
+        "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
+      }
+    },
+    {
+      "id": "F04-stills-stood-in-for-motion-proof",
+      "on": "2026-10-27",
+      "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F04)",
+      "what": "Accepted still frames were treated as enough confidence to scale, with no representative moving sequence proven.",
+      "symptom": "The v6 styleframe was approved (approval.json scope: 'Not final video'); three cuts were then exported on 26 Oct 22:49-23:13 UTC with no moving proof of narration, captions, brand, transitions and camera sync together.",
+      "cause": "Still-image confidence was carried over to motion. The rule that a representative proof precedes full production was written but not enforced.",
+      "status": "open",
+      "guards": [],
+      "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F04)",
+      "registry": [
+        "R11"
+      ],
+      "related": [],
+      "planned_mechanism": {
+        "kind": [
+          "by_construction"
+        ],
+        "qc_row": "Scaled before proof (R11, F04, F13)",
+        "ref": "ve render --all refuses without approvals.proof while anything in the spec is trial; the Phase 1 proof is one 19.5 s sequence",
+        "test": "render --all on a spec with a trial element and no approvals.proof exits non-zero",
+        "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
+      }
+    },
+    {
+      "id": "F05-motion-decorated",
+      "on": "2026-10-27",
+      "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F05)",
+      "what": "Motion decorated rather than explained: entrances then long holds, restarting arrows, and an f % 180 loop that redraws every 6 s on no cue.",
+      "symptom": "Held frames are 52.7% of the long VO and 54.4% of the long camera graphic stage; the Airbnb arrow restarts; S12 in EditorialCameraShort.tsx redraws at 52.2, 58.2 and 64.2 s.",
+      "cause": "Scenes were authored as entrance-and-hold, and annotation was driven by frame arithmetic, not by the spoken cue.",
+      "status": "open",
+      "guards": [],
+      "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F05)",
+      "registry": [
+        "R09"
+      ],
+      "related": [],
+      "planned_mechanism": {
+        "kind": [
+          "by_construction",
+          "lint",
+          "measured"
+        ],
+        "qc_row": "Entrance-then-hold, f%180 loops (R09, F05)",
+        "ref": "Devices are pure functions of the clock (ESLint no-frame-modulo); Motion designer lint: an event at least every 3 s of a device's life; QC held ratio and periodicity",
+        "test": "ESLint fails on a frame modulo in apps/renderer/src/engine; qc_synthetic_test flags frozen runs; the Friday fixtures fail ve lint",
+        "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
+      }
+    },
+    {
+      "id": "F06-numbers-lost-meaning",
+      "on": "2026-10-27",
+      "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F06)",
+      "what": "Numbers lost their meaning across transitions: a 200-tile test became a separate 100-dot grid, and a reused chart showed a different measure.",
+      "symptom": "The 200-question test turned into a 100-dot percentage grid; the long VO's '2.7% GAP' chart reused the 59/35 model bars; Claude appeared under 'a Chinese AI'.",
+      "cause": "Each scene was checked for completeness, not for the viewer's continuity of understanding, and the locked motion-system.md contradicted itself (200 tiles with 70 failed, against 100 squares).",
+      "status": "open",
+      "guards": [],
+      "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F06)",
+      "registry": [
+        "R15"
+      ],
+      "related": [],
+      "planned_mechanism": {
+        "kind": [
+          "by_construction",
+          "lint"
+        ],
+        "qc_row": "Denominator 200→100, unlabelled reused chart (R15, F06)",
+        "ref": "Devices bind datasets; lint: immutable meaning, carry, a reused chart needs its own title and producer, every digit device carries producer_label",
+        "test": "a fixture that rebinds a device to a new denominator, or reuses a chart without its own title and producer, fails ve lint",
+        "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
+      }
+    },
+    {
+      "id": "F07-brand-tokens-not-brand",
+      "on": "2026-10-27",
+      "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F07)",
+      "what": "Brand colours and fonts were present but the brand system was not applied: no mark tile, no mind.the.gap coral or pill, flattened type, rotated logos.",
+      "symptom": "The custom compositions had no publisher anchor per beat, no channel treatment or coral, a flattened type hierarchy, rotated logos and type, and the cream/ink meaning lost under dark photographs.",
+      "cause": "The bespoke border-control compositions imported only the house fonts and bypassed MarkTile, SectionPill and the Studio brand components.",
+      "status": "open",
+      "guards": [],
+      "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F07)",
+      "registry": [
+        "R08"
+      ],
+      "related": [],
+      "planned_mechanism": {
+        "kind": [
+          "by_construction",
+          "lint",
+          "measured"
+        ],
+        "qc_row": "No mark tile or coral, rotated logos (R08, F07)",
+        "ref": "BrandFrame wraps every beat (mark tile, pill, grain); Logo has no rotation prop; lint colour roles (coral only on mind.the.gap), no raw hex, fonts from tokens; QC mark-tile template match and ΔE",
+        "test": "QC template-matches the mark tile at every beat of a render; ESLint no-raw-hex fails on a hex in a device",
+        "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
+      }
+    },
+    {
+      "id": "F08-captions-mishandled",
+      "on": "2026-10-27",
+      "krish": "(Ruling, 27 Oct: captions burned into every cut; failure report F08)",
+      "what": "None of the four cuts had visible captions, only SRT sidecars, because a 'no captions' line in the locked brief was followed.",
+      "symptom": "No burned-in captions in any of the four exports; SRT sidecars only, unpunctuated and with a wording error.",
+      "cause": "Friday's locked CODEX.md said not to burn captions in, and the signed storyboard said 'No subtitles'; that conflicted with STUDIO's caption spec, and the conflict was never resolved before four videos were composed.",
+      "status": "open",
+      "guards": [],
+      "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F08)",
+      "registry": [
+        "R03"
+      ],
+      "related": [],
+      "planned_mechanism": {
+        "kind": [
+          "by_construction",
+          "measured"
+        ],
+        "qc_row": "Captions absent or banned (R03, F08)",
+        "ref": "Schema: brand.captions is the literal 'house'; BrandFrame always draws CaptionTrack; QC caption-box OCR against cues of 0.98 or more",
+        "test": "a spec with captions off fails schema validation; caption OCR on a render scores 0.98 or more",
+        "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
+      }
+    },
+    {
+      "id": "F09-speech-edits-outran-evidence",
+      "on": "2026-10-27",
+      "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F09)",
+      "what": "Speech joins were cut on ASR timings with 2 ms fades and short clearance; Krish rejected the ten-join reel and no listening verdict cleared the rest.",
+      "symptom": "The ten-join reel was rejected; short-camera joins sit about 10 ms and 20 ms from word ends against a 40 ms rule, with 2 ms crossfades; the long VO 'fling' donor splice was never verified.",
+      "cause": "ASR word timing and waveform work were given more confidence than they can carry, and assembly went on while the acoustic doubt was material.",
+      "status": "open",
+      "guards": [],
+      "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F09)",
+      "registry": [
+        "R01",
+        "R19"
+      ],
+      "related": [
+        "chopped-words-published"
+      ],
+      "planned_mechanism": {
+        "kind": [
+          "lint",
+          "measured",
+          "krish_gate"
+        ],
+        "qc_row": "Chopped words, 2 ms fades (R01, R19, F09)",
+        "ref": "Dialogue editor lint: cuts only in gaps of 80 ms or more that both aligners agree on, 30 ms clearance each side, 20-40 ms crossfades; QC two-ASR round trip and a join decoder calibrated on Friday's rejected join reel; Krish hears the joins reel at Gate 3",
+        "test": "qc_synthetic_test flags lavfi clicks and 2 ms joins; the decoder flags the joins Krish rejected in Friday's reel",
+        "status": "Joins in gaps built 29 Oct (scripts/cutgates/gaps.py, joins_in_gaps, the one rule quick-edit make.py and ve use; config/gates.json: 80 ms gap, 30 ms clearance, every aligner agreeing), with each cut's joins reel built beside it for the Monday board. tests/cutgates_test.py fails a join moved into speech and joins 10 ms after a word. OPEN until calibrated: scripts/cutgates/calibrate.py must fail Friday 23 Oct's rejected reel on the real file, a home-computer step. So no guard yet."
+      }
+    },
+    {
+      "id": "F10-sync-route-fragile",
+      "on": "2026-10-27",
+      "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F10)",
+      "what": "Silent picture and separately mixed audio crossed several intermediates; the short camera's first on-camera moment plays about 1.05 s out of sync.",
+      "symptom": "v8 had a 3.5 s error; the long-camera concat hit a timebase defect; in the v10 short camera at 0:06.53-0:08.33 the picture is about 1.05 s later than the sound.",
+      "cause": "The v10 short camera reused v8's picture unchanged (-c:v copy) on a mix whose audio edit was re-cut in five places (15.34 s removed), so the picture was never rendered from the edit it plays against. How v8's picture came to sit 1.05 s late there is not reconstructed (INDEPENDENT-REVIEW.md, correction note).",
+      "status": "open",
+      "guards": [],
+      "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F10)",
+      "registry": [
+        "R04"
+      ],
+      "related": [
+        "lip-sync-drift",
+        "cause-claimed-unproven"
+      ],
+      "planned_mechanism": {
+        "kind": [
+          "by_construction",
+          "measured"
+        ],
+        "qc_row": "Lip-sync, picture muxed onto re-cut audio (R04, F10)",
+        "ref": "One EDL drives picture, dialogue, bed, SFX and captions in one render, and ve has no mux path; QC A/V cross-correlation within 1 frame per segment",
+        "test": "qc_synthetic_test flags a 0.5 s A/V offset; ve has no command that muxes a picture onto separate audio",
+        "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
+      }
+    },
+    {
+      "id": "F11-no-qualified-reviewer",
+      "on": "2026-10-27",
+      "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F11)",
+      "what": "No qualified review route existed before the batch was made; two paid reviewer calibrations failed and Krish stayed the only listener.",
+      "symptom": "Krish was repeatedly asked to listen; a paid reviewer invented speech in silent media, including an all-zero PCM control, and the second route produced no qualified listener either.",
+      "cause": "A review route was looked for after the cuts existed, not established before a batch whose acceptance depended on it.",
+      "status": "open",
+      "guards": [],
+      "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F11)",
+      "registry": [
+        "R06"
+      ],
+      "related": [
+        "cut-called-done-unheard"
+      ],
+      "planned_mechanism": {
+        "kind": [
+          "critic",
+          "measured",
+          "krish_gate"
+        ],
+        "qc_row": "none in the QC table: the Critic and the measured QC modules",
+        "ref": "Critic (never a producer, a fresh Opus subagent), advisory until calibrated; measured QC runs on every frame and sample; listening stays Krish's at Gate 3 through the joins reel",
+        "test": "the Critic fails Friday v7-v11 and passes Monday 19 before it counts",
+        "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
+      }
+    },
+    {
+      "id": "F12-engineering-evidence-over-product",
+      "on": "2026-10-27",
+      "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F12)",
+      "what": "Hashes, receipts and tests piled up while the cuts stayed unverified; the final assembly ran in one-off scripts that called none of the engine's gates.",
+      "symptom": "There were 68 one-off Python scripts in the task folder; the final compose and mix scripts never call quality, coverage, visual_clarity, sync_check or delivery_problems; local verify had two failing test files.",
+      "cause": "Technical traceability was taken as evidence of quality, and assembling outside the engine bypassed every gate.",
+      "status": "open",
+      "guards": [],
+      "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F12)",
+      "registry": [
+        "R43",
+        "R45",
+        "R05"
+      ],
+      "related": [
+        "cut-called-done-unheard"
+      ],
+      "planned_mechanism": {
+        "kind": [
+          "by_construction"
+        ],
+        "qc_row": "Bespoke code, gate bypass (R43, R45, F12)",
+        "ref": "CI route check refuses per-piece compositions and render scripts; ve file refuses an mp4 without build.json and a passing qc.json; quality.py loses its working* bypass and self-attested passes",
+        "test": "ve file exits non-zero on an mp4 with no build.json; the CI route check fails on a new registerRoot or render_*.mjs",
+        "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
+      }
+    },
+    {
+      "id": "F13-scaled-unproven-approach",
+      "on": "2026-10-27",
+      "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F13)",
+      "what": "The approach was carried across four cuts before the hardest combined sequence was proven; renderer, cache and audio repairs ate the time.",
+      "symptom": "Three of the four cuts were first exported 22:49-23:13 UTC on 26 Oct and delivered at 23:23, every receipt saying full_visual_playback false.",
+      "cause": "The chosen pipeline was optimised instead of reassessed; the first integrated prototype never decided whether to scale.",
+      "status": "open",
+      "guards": [],
+      "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F13)",
+      "registry": [
+        "R11"
+      ],
+      "related": [],
+      "planned_mechanism": {
+        "kind": [
+          "by_construction"
+        ],
+        "qc_row": "Scaled before proof (R11, F04, F13)",
+        "ref": "ve render --all refuses without approvals.proof while anything in the spec is trial; the Phase 1 proof is one 19.5 s sequence",
+        "test": "render --all on a spec with a trial element and no approvals.proof exits non-zero",
+        "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
+      }
+    },
+    {
+      "id": "F14-standards-overestimated",
+      "on": "2026-10-27",
+      "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F14)",
+      "what": "Standards and review machinery were expected to fix an unproven production method.",
+      "symptom": "PR #170 merged its standards with enforcement pending calibration; a test fallback also wrote three synthetic folders into the real archive.",
+      "cause": "A rule that motion must explain does not create an explanatory sequence, and a review endpoint with no reliable reviewer cannot set a quality floor.",
+      "status": "open",
+      "guards": [],
+      "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F14)",
+      "registry": [
+        "R40"
+      ],
+      "related": [],
+      "planned_mechanism": {
+        "kind": [
+          "process",
+          "measured"
+        ],
+        "qc_row": "none in the QC table: plan rule 2 and ve coverage",
+        "ref": "Every expert ships a lint and a measured QC module, not only text; ve coverage scores each register entry by its mechanism test, and a marker-only guard scores 0",
+        "test": "ve coverage reports F01-F18 and R01-R46 each with a passing mechanism test, or 0",
+        "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
+      }
+    },
+    {
+      "id": "F15-progress-overstated",
+      "on": "2026-10-27",
+      "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F15)",
+      "what": "The delivery message led with exports, filing and the board, which made four unusable cuts sound close to sign-off.",
+      "symptom": "The 26 Oct 23:23 delivery led with exports, library filing and board readiness while no complete listening review, speech boundary, motion or brand delivery had been proven.",
+      "cause": "Status was written from what had been produced, not from what had been verified.",
+      "status": "open",
+      "guards": [],
+      "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F15)",
+      "registry": [
+        "R05"
+      ],
+      "related": [
+        "cut-called-done-unheard"
+      ],
+      "planned_mechanism": {
+        "kind": [
+          "by_construction"
+        ],
+        "qc_row": "Readiness overclaimed, self-written receipts (R05, F15)",
+        "ref": "ve status computes readiness from qc.json bound to the mp4's sha, the Critic verdict and approvals.final; nothing is marked ready by hand",
+        "test": "ve status reports not ready for an mp4 whose sha has no passing qc.json or no approvals.final",
+        "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
+      }
+    },
+    {
+      "id": "F16-krish-carried-qa",
+      "on": "2026-10-27",
+      "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F16)",
+      "what": "Krish caught ten or more fundamental defects himself: examples, flags, wording, framing, brand, motion, glitches, captions and sync.",
+      "symptom": "Krish identified the country examples, flags, excess words, nationality framing, weak aesthetics, missing brand, inadequate motion, audible glitches, missing captions and sync failure.",
+      "cause": "The method did not take in his standard, so each correction recreated the work the engine was meant to remove.",
+      "status": "open",
+      "guards": [],
+      "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F16)",
+      "registry": [
+        "R06",
+        "R37"
+      ],
+      "related": [
+        "production-improvised-visuals"
+      ],
+      "planned_mechanism": {
+        "kind": [
+          "process",
+          "by_construction"
+        ],
+        "qc_row": "none in the QC table: the session protocol",
+        "ref": "Lint, measured QC and the Critic run before any Krish gate; Krish sees only the Gate 1, 2 and 3 packets; Phase 2 acceptance allows at most 2 touchpoints after recording",
+        "test": "the Phase 2 ledger shows 2 or fewer Krish touchpoints after recording per piece",
+        "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
+      }
+    },
+    {
+      "id": "F17-independence-mishandled",
+      "on": "2026-10-27",
+      "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F17)",
+      "what": "Asked whether it could judge its own work, the session recommended an outside editor and handed the task back to Krish.",
+      "symptom": "On 27 Oct 05:39-05:42 the session recommended an outside editor instead of gathering evidence, comparing sequences and documenting defects.",
+      "cause": "A limit on its taste authority was treated as release from the duty to gather inspectable evidence.",
+      "status": "open",
+      "guards": [],
+      "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F17)",
+      "registry": [
+        "R36",
+        "R06"
+      ],
+      "related": [],
+      "planned_mechanism": {
+        "kind": [
+          "critic",
+          "process"
+        ],
+        "qc_row": "none in the QC table: the Critic",
+        "ref": "The Critic is never a producer: a fresh Opus subagent writes verdict.json only; the producer's duty is the evidence packet (contact sheets, lip and cue strips, joins reel)",
+        "test": "verdict.json is written by a session that wrote none of the piece's files",
+        "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
+      }
+    },
+    {
+      "id": "F18-reporting-not-executed",
+      "on": "2026-10-27",
+      "krish": "Stop telling me what you're going to do and actually do the audit.",
+      "what": "Asked for the audit and then the full-session report, the session described what it would do, then sent prompts instead of the report.",
+      "symptom": "After the audit was authorised, several replies described the plan; after the audit, a numbered request was answered with two prompts and the report was handed to someone else.",
+      "cause": "An execution and interpretation failure: the requested deliverable was replaced by a description of it.",
+      "status": "open",
+      "guards": [],
+      "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F18)",
+      "registry": [
+        "R36"
+      ],
+      "related": [
+        "cause-claimed-unproven"
+      ],
+      "planned_mechanism": {
+        "kind": [
+          "process"
+        ],
+        "qc_row": "none in the QC table: no by-construction mechanism",
+        "ref": "Plan rule 4: one fresh session per job; questions queue into gate packets and the session ends at its gate with the packet delivered. Process only",
+        "test": "none planned; process only, never to be reported as guarded",
+        "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
+      }
+    },
+    {
+      "id": "F19-mechanically-valid-design-rejected",
+      "on": "2026-10-28",
+      "krish": "The use of the screen is terrible, and the visuals look like Microsoft Excel from 20 years ago. This is awful. Everything's cramped into corners, misaligned. It's not even the right branding, to be honest. Don't really know where to start on this. How bad it is, but it would need to be so, so, so much better to pass. I can't publish this.",
+      "what": "The ve Gate 2 proofs passed all 11 mechanical QC checks and were handed to Krish for approval. They were small widgets in fixed corner boxes, a grid of cells, the wrong branding and a dead lower half. The Critic never ran, and nothing measured screen use, text size, corners, the caption or platform zones, or brand fidelity.",
+      "symptom": "A proof with measured_pass true and complete true looked like a 20-year-old spreadsheet and was rejected on sight; the packet said nothing about design.",
+      "cause": "A system gap, not a one-off: QC measured mechanics only, layouts were fixed small slot boxes, no design was approved before device cards were built, no key frame was compared, and a packet could be assembled with no Critic verdict.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "scripts/velib/cards.py",
+          "contains": "no frozen design lock for",
+          "how": "a device or format card for a format whose design lock is not frozen with approved key frames is refused at card write and at dispatch",
+          "test": "python tests/ve_designlock_test.py"
+        },
+        {
+          "file": "scripts/velib/qc_composition.py",
+          "contains": "the lock needs",
+          "how": "QC measures screen fill, smallest text, caption zone, platform zone and edges against the lock, and no longer looks for an ILLUSTRATION tag (Krish, 28 Oct 2026: \"Yes remove those.\"); the four rejected Gate 2 frames must fail and the ten approved frames must pass",
+          "test": "python tests/ve_composition_test.py"
+        },
+        {
+          "file": "scripts/velib/qc_keyframes.py",
+          "contains": "ssim",
+          "how": "the render at each beat's key frame must match the approved still (structural similarity above the lock's minimum), or QC fails",
+          "test": "python tests/ve_keyframes_test.py"
+        },
+        {
+          "file": "scripts/velib/packet.py",
+          "contains": "Not yet approved: design and final",
+          "how": "ve packet refuses to assemble a Gate packet without passing QC, composition, key frames, a locked format and a non-blocking Critic verdict bound to the exact file that viewed every beat; ve status separates mechanically valid from design approved",
+          "test": "python tests/ve_packet_test.py"
+        }
+      ],
+      "source": "docs/ve/design/TEMPLATE.md; config/ve/design-lock.json; docs/ve/cards/design-reset/",
+      "registry": [],
+      "related": [
+        "F18-reporting-not-executed"
+      ]
+    },
+    {
+      "id": "F20-long-cut-bed-swung-and-stopped",
+      "on": "2026-10-30",
+      "krish": "The pictures are fine. The video visuals are fine, but the music audio track behind it is quite volatile. Sometimes it just turns off randomly. Sometimes it's quiet. Sometimes it gets louder. It's not professional at all.",
+      "what": "Friday 23's ve long cut (sha256 fff8641e...) carried a ducked bed: a voice-keyed sidechain compressor (ratio 8, 30 ms attack, 450 ms release) held the music about 9 dB higher in pauses than under speech. QC passed it, and its 'the music breathes' row required that swing. The approved episode bed (config/learnings.json deep-cut-music-always-under) was never built into ve. The licensed track also stops for about 0.3 s at 73.2 s, about 30 dB down, and nothing measured that.",
+      "symptom": "Gate 2 passed the pictures and rejected the sound: the bed swung between loud and quiet, and seemed to switch off.",
+      "cause": "Mechanism shown by tests on synthetic and real-track audio (not on the rejected render, whose stems are on the home computer): the ducked mode moves the music with the voice by design, and no gate measured the bed's own level, spread or gaps. ve had no long-cut bed, and the lint let any voiceover cut choose ducked.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "scripts/velib/lint.py",
+          "contains": "sound.long_cut_bed",
+          "how": "a cut allowed past 90 s must carry the episode_bed",
+          "test": "python -m unittest tests.ve_lint_test"
+        },
+        {
+          "file": "scripts/velib/audio.py",
+          "contains": "def track_stops",
+          "how": "the episode bed is never keyed by the voice, holds bed_lufs in the master, plays around the track's own stops and restarts it under 2 s crossfades",
+          "test": "python -m unittest tests.ve_audio_test"
+        },
+        {
+          "file": "scripts/velib/qc_audio.py",
+          "contains": "def continuity",
+          "how": "QC meters the kept music stem (level, spread, drop-outs) and the render itself (no stretch with no music under a pause)",
+          "test": "python -m unittest tests.ve_audio_test"
+        }
+      ]
+    },
+    {
+      "id": "F21-openings-did-not-land",
+      "on": "2026-11-01",
+      "krish": "I would say the first few seconds of each video aren't very powerful. They aren't impactful, and the first frame moves on so quickly that you can barely even see what was there in the first place. As it stands, while we're on this topic, the first few seconds are kind of important because people have lower amounts of attention. I feel like these videos' weakest few seconds are the first few seconds in terms of engagement, setting the scene, and impact.",
+      "what": "All four 2 and 4 Nov cuts (Mon long and short, Wed long and short), rebuilt by per-piece compositors under docs/plans/2026-11-0*/rebuild/ and approved by Krish, opened on a 3 s music-only motion card: frame 0 nearly empty (edge density 0.0012 to 0.0058), the headline up for about a second before a wipe, and his voice first at 3.0 s. They reached the 2 Nov publish board as ready with no delivery receipt.",
+      "symptom": "He judged the first seconds the weakest part of every cut, after approving them.",
+      "cause": "The rebuild route bypassed make.py and its HOOK_IS_THE_INTRO check, no gate measured a finished file's opening, and board_web.py publish-web placed videos marked ready without asking for their delivery receipt.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "scripts/quick-edit/opening_gate.py",
+          "contains": "def check(",
+          "how": "voice from the first half second, a finished first frame, a headline that holds 2 s in the first 3 s, no flat frame, measured on the finished bytes",
+          "test": "python3 scripts/quick-edit/opening_gate.py --self-test"
+        },
+        {
+          "file": "scripts/quick-edit/quality.py",
+          "contains": "opening_gate.delivery_problems",
+          "how": "the delivery gate holds a cut for a post dated from config/opening-gate.json required_from without a passed opening check bound to its bytes",
+          "test": "python3 tests/quick_edit_produce_day_test.py"
+        },
+        {
+          "file": "scripts/post-pack/board_web.py",
+          "contains": "def ready_video_problems",
+          "how": "publish-web refuses a video a day's materials mark ready unless its exact bytes carry a passing delivery receipt, or the asset carries Krish's own words",
+          "test": "python3 tests/board_web_test.py"
+        }
+      ]
+    },
+    {
+      "id": "F22-codex-lane-left-unwatched",
+      "on": "2026-11-02",
+      "krish": "Sending stuff to Codex cannot be this ambiguous and take an hour to check in on. ... Ensure you never, ever make that error again.",
+      "what": "A session queued Codex cards and set a check-in 90 minutes out. The Growth off-day kits were built at 15:44 and sat unread for half an hour, and a device card (ve-thu-1-cursor-buddy) failed its acceptance because its verbs were not in EngineEventSchema, which the card cannot edit; the two cards queued beside it would have failed the same way.",
+      "symptom": "Codex cards were queued and then left on a 90-minute timer: a built card sat unread for half an hour and a failed one was found only when Krish asked.",
+      "cause": "The queue had no follow command and no rule to start one, and nothing checked a device card's verbs against EngineEventSchema before Codex ran it.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "scripts/velib/codex_lane.py",
+          "contains": "def unknown_verbs(",
+          "how": "ve lane queue refuses a device card whose verbs EngineEventSchema does not accept, before Codex runs it",
+          "test": "python3 tests/ve_lane_test.py"
+        },
+        {
+          "file": "scripts/velib/codex_lane.py",
+          "contains": "def wait(",
+          "how": "ve lane wait follows queued cards and prints every state change until built or failed",
+          "test": "python3 tests/ve_lane_test.py"
+        },
+        {
+          "file": "docs/ve/RUNBOOK.md",
+          "contains": "lane wait",
+          "how": "the moment a card is queued, start ve lane wait in the background, never a timed check-in",
+          "test": "python3 tests/ve_lane_test.py"
+        }
+      ]
     }
-   ]
-  },
-  {
-   "id": "dumb-titles",
-   "on": "2026-10-14",
-   "krish": "Of course, Muse isn't ChatGPT. That's a stupid thing to say. It's dumb. We need an anti-dumb filter.",
-   "what": "Straw-man, obvious and textbook titles.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "scripts/post-pack/title_check.py",
-     "contains": "is a matchup label",
-     "how": "the floor refuses straw men, bare topics and names or numbers not in the piece"
-    },
-    {
-     "file": "config/title-verdicts.json",
-     "contains": "\"lessons\"",
-     "how": "his picks and rejections, and what they teach, start every title round"
-    }
-   ]
-  },
-  {
-   "id": "read-back-never-clears",
-   "on": "2026-10-14",
-   "krish": "Fix it in the engine.",
-   "what": "Scripts Krish approved could not be recorded as read back.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "scripts/post-pack/making.py",
-     "contains": "approved by Krish",
-     "how": "read-back --krish-words records his approval"
-    }
-   ]
-  },
-  {
-   "id": "plate-old-title",
-   "on": "2026-10-14",
-   "krish": "(Wednesday's video plate showed the old subject)",
-   "what": "The video's title plate kept a superseded title. It came back on 17 October (Friday's plate read the subject 'Why so many AIs', a line he had rejected): the old guard only preferred video_title and drew the subject unchecked when there was none.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "scripts/quick-edit/kit.py",
-     "contains": "def frame_title_problems",
-     "how": "the plate's title goes through title_check's gate (his pick and the floor), or the kit refuses; self-tested"
-    }
-   ]
-  },
-  {
-   "id": "outro-yes-no",
-   "on": "2026-10-14",
-   "krish": "(the outro showed YES/NO on a question that was not yes or no)",
-   "what": "Vote buttons on a non-yes/no question. It came back on 17 October: 'Do you want to pick your AI, or let the app pick?' opens with 'Do', so it got YES and NO although it asks which.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "apps/renderer/src/story/fit.ts",
-     "contains": "(?![^?]*\\bor\\b)",
-     "how": "a question offering a choice of two gets no YES and NO; tested in tests/story-io.test.ts"
-    }
-   ]
-  },
-  {
-   "id": "board-built-differently",
-   "on": "2026-10-14",
-   "krish": "why are Wednesday and Friday built differently to Monday? ... I thought I didn't need to keep telling you this sort of stuff?",
-   "what": "A day of the publish board was hand-made, without its Copy buttons.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "scripts/post-pack/engine_stamp.py",
-     "contains": "a hand edit",
-     "how": "the engine stamps every board and publish page it builds"
-    },
-    {
-     "file": "scripts/hooks/artifact_gate.py",
-     "contains": "week_board.verify",
-     "how": "the publish hook refuses an unstamped or edited board"
-    },
-    {
-     "file": ".claude/settings.json",
-     "contains": "artifact_gate.py",
-     "how": "the hook is wired for every Claude Code session in this repository"
-    },
-    {
-     "file": "scripts/post-pack/week_board.py",
-     "contains": "a made day with no Copy buttons",
-     "how": "the board's own publish check"
-    }
-   ]
-  },
-  {
-   "id": "drive-videos-not-linked",
-   "on": "2026-10-14",
-   "krish": "You should always link the Google Drive videos because I need to actually download them onto my computer",
-   "what": "The board had no download links for the finished videos.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "scripts/post-pack/week_board.py",
-     "contains": "a finished video with no Drive link",
-     "how": "the publish hook refuses a board with an unlinked video"
-    },
-    {
-     "file": "scripts/post-pack/making.py",
-     "contains": "def drive_link_patch",
-     "how": "drive-link records it; a session runs it (the scheduled board-videos task was retired, Krish 2026-10-19)"
-    }
-   ]
-  },
-  {
-   "id": "thumbnails-not-linked",
-   "on": "2026-10-14",
-   "krish": "I do not see any video thumbnail assets anywhere ... Where are the vertical video thumbnails?",
-   "what": "Thumbnails were made into Drive but never linked on the board.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "scripts/post-pack/week_board.py",
-     "contains": "a finished video with no thumbnail link",
-     "how": "the publish hook refuses a board with an unlinked thumbnail"
-    },
-    {
-     "file": "scripts/post-pack/making.py",
-     "contains": "Drive link joins its path",
-     "how": "drive-link --thumb-url records it, tested"
-    }
-   ]
-  },
-  {
-   "id": "picture-downloads-dead",
-   "on": "2026-10-14",
-   "krish": "the download buttons for the images STILL do not work!!!!",
-   "what": "Download and Copy picture fetched data: URLs, which the viewer blocks; every click died silently.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "scripts/post-pack/week_board/week.js",
-     "contains": "function dataBlob(src)",
-     "how": "pictures decode in the page"
-    },
-    {
-     "file": "scripts/post-pack/buttons_in_browser.py",
-     "contains": "connect-src 'none'",
-     "how": "every button clicked in Chromium with fetch blocked"
-    },
-    {
-     "file": ".github/workflows/ci.yml",
-     "contains": "buttons_in_browser.py",
-     "how": "CI runs it on every push"
-    }
-   ]
-  },
-  {
-   "id": "boards-out-of-sync",
-   "on": "2026-10-14",
-   "krish": "I work from two different Claude accounts, so make sure this board and that board are always synchronized.",
-   "what": "The week's board has a link per account; a publish to one left the other behind.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "config/boards.json",
-     "contains": "H6qKiPdmSWETVQftpHBS5E",
-     "how": "every link of the week's board"
-    },
-    {
-     "file": "scripts/hooks/board_sync.py",
-     "contains": "Publish this same file",
-     "how": "after each board publish, names any link still behind"
-    },
-    {
-     "file": ".claude/settings.json",
-     "contains": "board_sync.py",
-     "how": "wired for every session in this repository"
-    }
-   ]
-  },
-  {
-   "id": "board-not-pinnable",
-   "on": "2026-10-14",
-   "krish": "lets pin this weeks artifact (I cant seem to do that myself)",
-   "what": "The board was made under another organisation, so it could not be pinned.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": ".agents/skills/plan-week/SKILL.md",
-     "contains": "pin: true",
-     "how": "each Sunday's board is published pinned, from Krish's own account"
-    }
-   ]
-  },
-  {
-   "id": "fact-gate-flips",
-   "on": "2026-10-14",
-   "krish": "(lines that passed failed after one source was filed)",
-   "what": "Filing a source re-checked the whole piece, and the fresh run flagged lines that had passed.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "apps/control-plane/api/_factGate.ts",
-     "contains": "source_parts",
-     "how": "a source only added keeps every passed and set-aside line"
-    },
-    {
-     "file": "tests/control-plane/fact-gate.test.ts",
-     "contains": "a source only added keeps every line",
-     "how": "tested"
-    }
-   ]
-  },
-  {
-   "id": "long-cut-too-quiet",
-   "on": "2026-10-14",
-   "krish": "(Wednesday's long cut went out at -15.2 LUFS)",
-   "what": "The peak limiter lowered a cut below -14 LUFS and nothing put it back.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "scripts/quick-edit/make.py",
-     "contains": "level_corrected_db",
-     "how": "a correction pass brings the cut back to target"
-    },
-    {
-     "file": "scripts/produce_day.py",
-     "contains": "def loud_gate",
-     "how": "a cut still off target is never sent to Drive"
-    }
-   ]
-  },
-  {
-   "id": "bigger-krish-behind-krish",
-   "on": "2026-10-14",
-   "krish": "I also really hate my larger self in the background of the split screen.",
-   "what": "The tall cut's face band was see-through at its sides.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "scripts/quick-edit/make.py",
-     "contains": "def face_band",
-     "how": "the face fills the band edge to edge; self-test checks it"
-    }
-   ]
-  },
-  {
-   "id": "reels-cut-off",
-   "on": "2026-10-14",
-   "krish": "I'm noticing on Instagram that sometimes my reels are getting cut off.",
-   "what": "Short cuts ran 87 to 99 s; over 89 s some platforms and composers cut them, and the engine's 90 s rule was never checked on the finished file.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "scripts/post-pack/story_check.py",
-     "contains": "finishes under 89 seconds",
-     "how": "a short script over 195 words is refused before Krish records it"
-    },
-    {
-     "file": "scripts/produce_day.py",
-     "contains": "SHORT_MAX_SECONDS = 89",
-     "how": "a finished vertical cut over 89 s is never sent"
-    }
-   ]
-  },
-  {
-   "id": "caption-splits-names",
-   "on": "2026-10-14",
-   "krish": "(the posted Reel's caption read \"like co -work and ChatGPT\")",
-   "what": "The transcriber split \"Cowork\" and the caption kept the split.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "scripts/quick-edit/make.py",
-     "contains": "def join_names",
-     "how": "a name the script spells as one word (an inner capital, or a capital where no sentence starts) is captioned whole when the transcriber split it into two or three pieces said without a pause"
-    },
-    {
-     "file": "scripts/quick-edit/make.py",
-     "contains": "a name the transcriber split is captioned whole",
-     "how": "make.py --self-test: \"co -work\" and \"chat, GPT.\" captioned Cowork and ChatGPT., with a pause between pieces left alone"
-    }
-   ]
-  },
-  {
-   "id": "piece-drift",
-   "on": "2026-10-14",
-   "krish": "we ended up with an absolute ton of drift ... All of this could have been turned into something coherent, but it's ended up sprawling quite a lot ... the engine cannot do this again.",
-   "what": "Wednesday's piece re-angled several times and each new angle was added as sections instead of replacing the spine.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "scripts/post-pack/spine_check.py",
-     "contains": "never sections added on top",
-     "how": "the outline states one spine and what each section proves; a section added on top of the approved outline is refused"
-    },
-    {
-     "file": "apps/control-plane/api/_spine.ts",
-     "contains": "SPINE_SYSTEM",
-     "how": "the engine's judge reads every section against the spine"
-    },
-    {
-     "file": "scripts/post-pack/making.py",
-     "contains": "def spine_gate",
-     "how": "scripts and the publish page are refused until all of it passes"
-    },
-    {
-     "file": "tests/control-plane/spine.test.ts",
-     "contains": "one section off the spine fails the piece",
-     "how": "tested"
-    }
-   ]
-  },
-  {
-   "id": "same-photo-every-cover",
-   "on": "2026-10-14",
-   "krish": "We also need to rotate this picture, as I think it's going to be intensely annoying if my Substack page is just full of hundreds of these pictures.",
-   "what": "Every cover and thumbnail uses the same circular photo of Krish.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "scripts/pages/brand.py",
-     "contains": "def portrait_for",
-     "how": "each publishing day takes the next photo in PORTRAITS, so no two posts in a row share one"
-    },
-    {
-     "file": "scripts/pages/build.py",
-     "contains": "brand.portrait_for(facts.get('date'))",
-     "how": "every cover and thumbnail with Krish's face uses it"
-    }
-   ]
-  },
-  {
-   "id": "one-style-for-everything",
-   "on": "2026-10-14",
-   "krish": "I don't think that these things are just one way of everything being in the future. I think we need to build a bank of different styles that we know can be modularized and used. You already have a tonne of pre-existing knowledge of what I like and, more importantly, what I don't like, which you can lean on and I don't think should be totally overwritten.",
-   "what": "A liked reference video was turned into house defaults for every video, over the top of what Krish already likes and dislikes.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "scripts/quick-edit/references.py",
-     "contains": "the base (what Krish already likes and does not) must be named",
-     "how": "the style bank refuses to drop the base, a recipe without his words, or a module he marked not for us"
-    },
-    {
-     "file": "tests/engine-gates.test.ts",
-     "contains": "scripts/quick-edit/references.py",
-     "how": "CI runs the style bank's self-test on every push"
-    },
-    {
-     "file": ".agents/skills/make-piece/SKILL.md",
-     "contains": "| Style recipe |",
-     "how": "scripts are written from a per-piece recipe on top of the base, never from one house style"
-    }
-   ]
-  },
-  {
-   "id": "paid-fact-check-loops",
-   "on": "2026-10-15",
-   "krish": "can you figure out if there is a way to have future sessions not cost so much via Anthropic API credits? ... yes, if you are 110% sure this does not degrade the quality of the output - this cannot happen.",
-   "what": "59 paid fact-check runs in two days (13 and 14 October, about $14) went round run, learn a number was not on file, fix, run again, when the number could be read against the filed sources for free.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "scripts/engine.py",
-     "contains": "Not running the paid fact check",
-     "how": "a POST to fact-check first reads the free GET and refuses while any stated number is on no filed source, unless --despite-precheck"
-    },
-    {
-     "file": "apps/control-plane/api/_factGate.ts",
-     "contains": "export function numbersNotOnFile",
-     "how": "the free pre-check, read by value as the gate reads numbers; the paid gate's own logic is unchanged"
-    },
-    {
-     "file": "tests/control-plane/fact-gate.test.ts",
-     "contains": "describe('numbersNotOnFile'",
-     "how": "the pre-check lists only numbers no source carries, and leaves forecasts and the confidence line to the gate"
-    }
-   ]
-  },
-  {
-   "id": "marks-fetched-from-a-private-repo",
-   "on": "2026-10-15",
-   "krish": "this control center touches a LOT of stuff so verify these are not the only things at risk if the repo is made private",
-   "what": "The Studio fetched six pinned official wordmarks anonymously from raw.githubusercontent.com/krishanraja/control-center, which answers 404 once that repository is private, so a runner with an empty cache could not stage them.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "packages/core/src/brand-assets.ts",
-     "contains": "mirroredWordmarkUrl(asset)",
-     "how": "a source that refuses or cannot be reached falls back to Control Center's public api/brand-mark/<sha256>, held to the same pinned hash"
-    },
-    {
-     "file": "tests/brand-assets.test.ts",
-     "contains": "falls back to the Control Center mirror when the pinned source answers 404",
-     "how": "the source answers 404 and the mark still stages from the mirror"
-    },
-    {
-     "file": "tests/brand-assets.test.ts",
-     "contains": "wrong bytes never sit under a pinned hash",
-     "how": "mirror bytes that do not match the pin are refused before the cache"
-    }
-   ]
-  },
-  {
-   "id": "board-old-page-under-new-words",
-   "on": "2026-10-15",
-   "krish": "As long as both publish boards have everything up to date for my review tonight and the things you said needed fixing are fixed, I'm happy for now.",
-   "what": "Friday v3's review card was put on top of Friday's kept first-version publish page (--keep fri). Below his new words the tab still showed the old title, article, scripts and channel copy, with chips saying \"Fact check passed on this exact text\" and \"Both scripts approved and in Teleprompter\", both false for v3. No builder option could show a day in review honestly, and Monday's and Wednesday's tabs still said nothing was posted after both went out.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "scripts/post-pack/week_board.py",
-     "contains": "a day in review shows its review card, never an older publish page",
-     "how": "--draft DAY builds the tab from the review card, the calls waiting on Krish (--waiting) and the checklist; --draft with --day or --keep for the same day is refused"
-    },
-    {
-     "file": "scripts/post-pack/week_board.py",
-     "contains": "is older than its words",
-     "how": "with --live, a piece not yet posted whose publish page was made before its words last changed is refused unless it is built with --draft"
-    },
-    {
-     "file": "scripts/post-pack/week_board.py",
-     "contains": "holds its words in review",
-     "how": "a rebuild of a board holding a day in draft without --draft is refused, so a scheduled run leaves the board standing"
-    },
-    {
-     "file": "scripts/post-pack/week_board.py",
-     "contains": "so its words would not show",
-     "how": "--review on a day that is neither made nor in draft is refused, never dropped without a word"
-    },
-    {
-     "file": "scripts/post-pack/week_board.py",
-     "contains": "def posted_kick",
-     "how": "a made day whose piece is posted says so in its status line, from the record"
-    },
-    {
-     "file": "scripts/post-pack/week_board.py",
-     "contains": "def _draft_checks",
-     "how": "the self-test builds a day in draft from Friday's real record times and checks every refusal above"
-    },
-    {
-     "file": "scripts/post-pack/week_board.py",
-     "contains": "nothing shows this publish page was made from them",
-     "how": "a day in draft is replaced by a publish page only when --live shows the page was made after the words last changed"
-    },
-    {
-     "file": "scripts/post-pack/week_board.py",
-     "contains": "so nothing shows whether ",
-     "how": "--live fails closed when the making record of a kept, given or draft day cannot be read"
-    },
-    {
-     "file": "scripts/post-pack/week_board.py",
-     "contains": "--drop-review {key}=<id> once Krish is done with it",
-     "how": "a rebuild never drops a review box the board holds without --drop-review, and carries the calls waiting on Krish"
-    },
-    {
-     "file": "scripts/post-pack/week_board.py",
-     "contains": "DEEP_LABEL = {",
-     "how": "the week's deep-cut day says deep cut in its checklist, never 3-minute"
-    }
-   ]
-  },
-  {
-   "id": "board-older-save-over-new-words",
-   "on": "2026-10-15",
-   "krish": "get Fridays publish board ready in the artifact, and enable me to make comments or edit text myself, and then you can either iterate based on my comments or observe my text edits.",
-   "what": "After his 13:58 save was folded into Friday v3 and the board rebuilt, the page would have shown his older saved text over the new words, and a Save would have put the old words back. Then any rebuild re-stamped the build time, which would hide a save he made after the last build behind \"is in this version\".",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "scripts/post-pack/week_board/week.js",
-     "contains": "v.at < built",
-     "how": "the page shows a saved edit only when it is newer than the build time on its block (data-built-at)"
-    },
-    {
-     "file": "scripts/post-pack/week_board.py",
-     "contains": "def previous_review_times",
-     "how": "a rebuild keeps a review block's build time while its words are unchanged, so a newer save still shows"
-    }
-   ]
-  },
-  {
-   "id": "filed-source-dropped-past-40",
-   "on": "2026-10-16",
-   "krish": "(filing four sources on Friday's piece silently pushed two filed sources off it)",
-   "what": "Every route that adds a material cut the piece's list to the newest 40, so four filings on Friday v4 pushed OpenAI's ChatGPT release notes and Artificial Analysis's Haiku 5.5 page off its materials without a word. The fact gate holds a piece to its filed sources, so lines resting on them would have read as not on file. Separately, the checkers read only the first 120,000 characters of sources, so a filed source past that point was unseen without a word too.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "apps/control-plane/api/_content.ts",
-     "contains": "export function withMaterial",
-     "how": "adding a material drops the oldest research, links and notes to make room, never a filed source; past 150 filed sources a new one is refused with a reason"
-    },
-    {
-     "file": "tests/control-plane/materials-cap.test.ts",
-     "contains": "every route that adds a material goes through withMaterial",
-     "how": "fails the build if materials.ts, dive-deeper.ts or deepen.ts adds a material any other way, or cuts to 40"
-    },
-    {
-     "file": "apps/control-plane/api/content-ideas/[id]/fact-check.ts",
-     "contains": "reason: 'sources_cut'",
-     "how": "a paid fact check refuses before any model call while a filed source would not reach the checkers whole; the free pre-check names each one (filed_sources_cut)"
-    }
-   ]
-  },
-  {
-   "id": "bare-score-in-script",
-   "on": "2026-10-16",
-   "krish": "What does 42 even mean? that is not understandable. We need to simplify this",
-   "what": "Friday's 90-second script and deep cut said Artificial Analysis's index scores aloud (\"it scored 42 on their test. In its top gear, 58. ... only got 51\"), and the article printed them. A listener who has never seen the test cannot tell what 42 means, so the proof of the main claim was lost on the ear. Earlier the same day he had said the same of \"7-20 points of improvement\".",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "scripts/post-pack/story_check.py",
-     "contains": "def score_problems",
-     "how": "refuses a script that says a score or points with no share, multiple or scale, and a bare number said straight after one (\"In its top gear, 58.\"); the self-test holds Friday's old lines refused"
-    },
-    {
-     "file": "apps/control-plane/api/_houseRules.ts",
-     "contains": "id: 'PLAIN_SCORES'",
-     "how": "every writer, judge, final pass and the visual stage read the rule: plain comparisons, a share or a multiple, never a bare score, on the page or on screen"
-    }
-   ]
-  },
-  {
-   "id": "bare-score-in-article",
-   "on": "2026-10-18",
-   "krish": "on no7 and no 8, I have said before that vague scores mean nothing to a reader, even I dont know what \"scored 56 against that 42.3\" really even means, and we shouldnt have to explain it. Same for \"scored 57.6% for $2.94, against 52.3% for $15.83 \"",
-   "what": "After 16 Oct's \"What does 42 even mean?\", only the scripts were made to refuse a bare score. Friday's article v6 still printed six (42 to 51, 58, 43.4 against 42.3, 56 against 42.3, 57.6% against 52.3%, HealthBench's 25.5% and 46.2%), and a test score given as a percentage passed even the script check. He had to say it a second time, of the article.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "apps/control-plane/api/_publishChecks.ts",
-     "contains": "id: 'PLAIN_SCORES'",
-     "how": "a blocking publish check: the article cannot be approved or published while it gives a score with nothing to measure it against, a test percentage included"
-    },
-    {
-     "file": "scripts/post-pack/story_check.py",
-     "contains": "a test score as a percentage is still a score",
-     "how": "the script check now refuses a test score given as a percentage too, and its self-test holds his two article lines refused"
-    }
-   ]
-  },
-  {
-   "id": "analogy-drawn-as-a-picture",
-   "on": "2026-10-16",
-   "krish": "No that's car visual is not clear. The gear beat the new badge. I don't think the visuals should have analogies in them. The visuals should look like genuine reviews of the actual product, with statistics, rather than having analogies.",
-   "what": "For Friday's 90-second cut a session drew the test result as two cars racing, \"The gear beat the new badge\", and the deep cut's picture plan was built on car badges, gearboxes, car logos and a fuel gauge. The house rule VISUAL_EXPLAINS already said \"no icons acting out an analogy\", but nothing refused one. The article was also leaning on the same car analogy throughout, where Krish wants it more professional.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "scripts/post-pack/visual_gate.py",
-     "contains": "def real_thing_problems",
-     "how": "from posts dated 16 Oct 2026, the pack is refused unless every article and video picture says what real thing it shows (screenshot, chart, photo, evidence, quote or logos), and a chart names its data source and what it measures"
-    },
-    {
-     "file": "apps/control-plane/api/_houseRules.ts",
-     "contains": "id: 'ANALOGY_IN_SCRIPTS_ONLY'",
-     "how": "every writer, judge, final pass and the visual stage read it: analogies in the spoken scripts only, the article more professional, pictures of the actual product and real statistics"
-    },
-    {
-     "file": "tests/control-plane/house-rules.test.ts",
-     "contains": "no analogy reaches the picture stage",
-     "how": "fails the build if RELATABLE_EXPLANATION reaches the visual stage again, or ANALOGY_IN_SCRIPTS_ONLY stops reaching any stage"
-    }
-   ]
-  },
-  {
-   "id": "packaging-in-shorthand",
-   "on": "2026-10-17",
-   "krish": "\"Old beat new\" and \"who picked low\" and you're on low are really stupid. This isn't a well-known concept and it's not a well-known media business. I can't release a Substack cover image that says you're on low. What the hell does that even mean? ... It's not as though I want to tweak it. It's that I am appalled that you keep bringing this shit to me.",
-   "what": "Cover and thumbnail words written in the piece's own shorthand (low, old and new, picking a gear) that no stranger can read, put to him after lessons on file already said to name the product and give the real finding.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "scripts/post-pack/title_check.py",
-     "contains": "def names_nothing",
-     "how": "a line on a surface strangers see first (headline, cover, YouTube title, thumbnail, Shorts title, title card) that names no real thing from the piece is refused"
-    },
-    {
-     "file": ".claude/skills/make-piece/SKILL.md",
-     "contains": "Then the cold read, before anything reaches him",
-     "how": "a fresh reader with no context must explain each line, and calls out cheap ones, before any option is offered"
-    },
-    {
-     "file": "config/title-verdicts.json",
-     "contains": "a stranger must understand the line in one second",
-     "how": "the first lesson every title round prints"
-    }
-   ]
-  },
-  {
-   "id": "packaging-loses-the-story",
-   "on": "2026-10-17",
-   "krish": "These are still awful. I'm getting exhausted. The story is about there being so many recent AI model releases and figuring out if that's actually important, why it's speeding up, and what choices a user is going to have to make (or what gears are going to be hidden from them in the future). It's a \"mind the gap\" piece remember. Why do I have to remind you about what this story is about?",
-   "what": "Packaging lines rewritten round after round to meet the last complaint (legible to a stranger, naming real things, no shorthand) until they read fine but told the wrong story: a how-to tip ('Make Claude think harder') on a mind.the.gap piece about the flood of new AI models and the choice about to be hidden from users. The outline's spine had already drifted from the release flood to the thinking setting.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "scripts/post-pack/title_check.py",
-     "contains": "def story_text",
-     "how": "lessons --plan prints the story every line must tell first (his story.md, the outline's spine, the series' question), and says NO STORY GIVEN without it; its self-test reads Friday's"
-    },
-    {
-     "file": "config/title-verdicts.json",
-     "contains": "every packaging line tells the piece's story in its series' lens",
-     "how": "the first lesson every title round prints"
-    },
-    {
-     "file": ".claude/skills/make-piece/SKILL.md",
-     "contains": "STORY_FIRST",
-     "how": "the titles step starts from the story and judges every line by it"
-    },
-    {
-     "file": "docs/plans/2026-10-09-friday/story.md",
-     "contains": "so many recent AI model releases",
-     "how": "Friday's story in his words, read by every later round"
-    }
-   ]
-  },
-  {
-   "id": "publish-board-empty-pictures",
-   "on": "2026-10-18",
-   "krish": "there are significant issues with the publish board, not downloading or linking the right assets. it's not ready for me to use.",
-   "what": "To get the week board under the 16 MB an artifact page may be, a session made the publish page's chart cards borrow the article's picture by a script at load. The board copies the page's markup and runs its own script, so all six of Friday's chart cards were empty, with no picture to copy or download. It was tested on the publish page alone, never on the board as Krish opens it. The same page still called Friday's 14-minute deep cut 'the 3-minute video', and named every file as text with no link.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "scripts/post-pack/week_board.py",
-     "contains": "picture(s) with nothing to show",
-     "how": "the board's pre-publish check (run by the publish hook) refuses a made day with any picture that has no image data or https link; its self-test empties one and expects the refusal"
-    },
-    {
-     "file": "scripts/post-pack/publish_manager.py",
-     "contains": "def compact_png",
-     "how": "charts are made smaller in place (256 colours, only when no pixel visibly changes), never borrowed by a script; each named file links to its Drive copy"
-    },
-    {
-     "file": "scripts/post-pack/publish_kit.py",
-     "contains": "long_waiting",
-     "how": "the long cut is named by the piece (the deep cut, or the 3-minute video), and a step whose video is not made says so first"
-    }
-   ]
-  },
-  {
-   "id": "work-left-off-the-board",
-   "on": "2026-10-19",
-   "krish": "Why have you stopped working in https://claude.ai/artifact/CDgS3JDULpzvRnxkHwLkVk even though this is the third time I've asked you ? We have a protocol.",
-   "what": "He opened the session with \"Working in this board\", then asked for the editorial decisions \"before you go off and build the board\", then asked whether the workroom was only the iteration tool before the board. The session made a separate workroom artifact and kept the outline, draft and scripts there and in chat, and put nothing on Monday's tab until he asked a third time. make-piece put the week board only at the publish-page step, so nothing told a session to work the draft on the board.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": ".agents/skills/make-piece/SKILL.md",
-     "contains": "The board is where the piece is worked, from the first draft.",
-     "how": "a Before-anything step: the day goes on its tab in draft, with review boxes and the calls waiting on him, and is republished whenever the words change"
-    },
-    {
-     "file": ".claude/skills/make-piece/SKILL.md",
-     "contains": "The board is where the piece is worked, from the first draft.",
-     "how": "the Claude Code copy"
-    }
-   ]
-  },
-  {
-   "id": "script-line-he-could-not-narrate",
-   "on": "2026-10-19",
-   "krish": "I also found that the first reuse is really difficult to narrate. I felt like I couldn't explain what that meant. ... What does that even mean? How do we gate that for the next time?",
-   "what": "The 5-minute script explained a mechanism (Google charging less for a reread policy document) that passed the script check and two listener read-backs, because listeners only report what loses them. Nobody checked whether the presenter could explain each line if stopped, and narrative v1 had put how reuse works out of scope before v2 brought it back.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "apps/control-plane/api/_video.ts",
-     "contains": "You are the presenter. You will read this video script aloud to camera",
-     "how": "reader C, the narrator, runs on every script the engine writes; the read-back passes only when C can explain every sentence"
-    },
-    {
-     "file": ".agents/skills/make-piece/SKILL.md",
-     "contains": "Reader C, the narrator, word for word",
-     "how": "the Scripts step requires the narrator reader for every script a session sends"
-    }
-   ]
-  },
-  {
-   "id": "cut-called-done-unheard",
-   "on": "2026-10-19",
-   "krish": "The 90 second video subtitles are still totally garbled, and my words randomly chop out, making the video incomprehensible ... you have published this thinking it is a 10/10, when it is about a 3/10",
-   "what": "Friday's 90-second cut was re-rendered, called fixed and published to both boards from proxy checks (caption start and end times, loudness, a 216-pixel contact sheet). Its captions and cut points came from an old 17 Oct words file full of mishearings, so captions were garbled and words were clipped; the badge card showed one pair, not Mercedes = Claude, C-Class = Opus 5.5. docs/plans/2026-10-09-friday/90s-failures-19-oct.md.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "scripts/quick-edit/quality.py",
-     "contains": "Transcript provenance is missing or stale",
-     "how": "Rejects cached words with the wrong source, speed, clock or transcriber."
-    },
-    {
-     "file": "scripts/quick-edit/quality.py",
-     "contains": "required = ('heard','sync','loudness','visuals','full_review')",
-     "how": "Exact video bytes must pass all five checks before delivery; proxy images cannot replace full review."
-    },
-    {
-     "file": "scripts/post-pack/send.py",
-     "contains": "delivery_problems",
-     "how": "Library delivery rejects stale or missing video receipts."
-    },
-    {
-     "file": "scripts/post-pack/making.py",
-     "contains": "Video recording blocked",
-     "how": "Making records reject unvalidated replacement videos."
-    }
-   ]
-  },
-  {
-   "id": "lip-sync-drift",
-   "on": "2026-10-19",
-   "krish": "in the deep cut, my facial movements start misaligning with the audio as the video progresses, which is unbearable by the end",
-   "what": "Sequential frame-index/audio-sample measurement reproduced 680 ms drift in the rejected deep output versus 0-40 ms in the source. The earliest demonstrated defect was stage-one encoding: 62 edited parts lost 668.44 ms of audio against their exact video-frame durations. Exact-sample draining repairs this stage. Replacement files require their own calibrated checkpoints and full review; invalid measurements stay inconclusive. The withdrawn timestamp-hole diagnosis is not reused. Evidence: docs/handovers/2026-10-19-friday-repair-progress.md.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "scripts/quick-edit/sync_check.py",
-     "contains": "def result_status",
-     "how": "Requires six well-distributed, individually reliable, calibrated checkpoints; a missing or inconclusive measurement cannot pass."
-    },
-    {
-     "file": "scripts/quick-edit/quality.py",
-     "contains": "required = ('heard','sync','loudness','visuals','full_review')",
-     "how": "Delivery binds sync acceptance to exact video bytes."
-    }
-   ]
-  },
-  {
-   "id": "cause-claimed-unproven",
-   "on": "2026-10-19",
-   "krish": "I asked you to heal the engine, not to reproduce the videos.",
-   "what": "The cloud session told Krish the lip-sync cause was 'confirmed' and 'measured' from a flawed measurement, wrote it into the plan and the Codex prompt, then started changing make.py and re-measuring after it had handed the videos to Codex, instead of sending the three Markdown files he asked for.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "CLAUDE.md",
-     "contains": "Never tell him a cause is found until a test you ran proves it",
-     "how": "read at the start of every Claude Code session, with the rules to send asked-for files first and leave handed-off work alone"
-    }
-   ]
-  },
-  {
-   "id": "handed-to-codex-unrecorded",
-   "on": "2026-10-24",
-   "krish": "This worries me, does not seem like you did your bit of the job",
-   "what": "Claude locked Friday's scripts, visual copy and storyboard and handed the piece to Codex, but never recorded the Visual gate, Scripts, read-backs or Pack on the making record. produce-video stopped Codex, and Codex asked Krish whether it could fill in Claude's record. The cover and thumbnails had never been drawn or gated.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": ".agents/skills/make-piece/SKILL.md",
-     "contains": "Before a piece goes to Codex, the record must say so",
-     "how": "make-piece's last step: every step up to Recorded reads done on making.py show before a hand-off to Codex."
-    },
-    {
-     "file": ".agents/skills/produce-video/SKILL.md",
-     "contains": "Scripts must read done",
-     "how": "produce-video stops on a piece whose Scripts step is not done."
-    }
-   ]
-  },
-  {
-   "id": "inspirationhouse-not-read-for-ideas",
-   "on": "2026-10-24",
-   "krish": "Double check my inspirationhouse gets read properly when ideas are being built, alongside all the other sources of content suggestions.",
-   "what": "Sunday's ideas gather read only the Drive scan's rows: cards he routed to Make a piece on the Inspiration page (three on 24 Oct), his answers, content-watcher readings and taste claims never reached the Ideas tab.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "apps/control-plane/api/week/options.ts",
-     "contains": "readInspiration",
-     "how": "include=sources reads inspiration_items, content_reads, creator_moves and taste_claims, and fails loudly when a table cannot be read",
-     "test": "npx vitest run tests/control-plane/inspiration-sources.test.ts"
-    },
-    {
-     "file": "scripts/post-pack/board_feed.py",
-     "contains": "a gather without the Inspiration House block must stop",
-     "how": "the gather stops without the inspiration block and lists every card to cover",
-     "test": "python3 scripts/post-pack/board_feed.py self-test"
-    },
-    {
-     "file": "scripts/post-pack/week_board.py",
-     "contains": "def coverage_problems",
-     "how": "the build refuses ideas that leave a routed card or his relayed words off the board without a reason",
-     "test": "python3 scripts/post-pack/week_board.py --self-test"
-    }
-   ]
-  },
-  {
-   "id": "board-format-changes-every-look",
-   "on": "2026-10-24",
-   "krish": "The publish board changes format every single time I look at it",
-   "what": "The board builder changed in 17 commits in seven days and each day's tab was driven by its own one-off feeder script (fifteen of them), so every day looked different.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "scripts/check_board_layout.py",
-     "contains": "a one-off board feeder",
-     "how": "CI refuses any new script under docs/ that drives week_board or board_web; the old ones are frozen as history",
-     "test": "python3 scripts/check_board_layout.py"
-    },
-    {
-     "file": "config/board-layout.json",
-     "contains": "sunday_before",
-     "how": "the layout, held by its hash, changes only with his recorded words"
-    }
-   ]
-  },
-  {
-   "id": "production-improvised-visuals",
-   "on": "2026-10-24",
-   "krish": "Codex is going to need a much clearer directive on how to produce the visuals because it's not doing a very good job at the moment. Creative direction for post-production is going to have to be done by Claude during the pre-recording piece.",
-   "what": "Wednesday 21 Oct went to production with no creative direction; the production session improvised the visuals (38 one-off scripts) and Krish art-directed brand, framing and crowding by hand.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "scripts/quick-edit/kit.py",
-     "contains": "creative_direction.gate",
-     "how": "no kit is drawn from 26 Oct without his signed direction for the cut's exact words",
-     "test": "python3 scripts/quick-edit/kit.py --self-test"
-    },
-    {
-     "file": "scripts/quick-edit/make.py",
-     "contains": "def direction_problem",
-     "how": "no render from a config whose direction is missing or changed since it was checked"
-    },
-    {
-     "file": "scripts/post-pack/creative_direction.py",
-     "contains": "the beats do not cover the script word for word",
-     "how": "every spoken word has a decided picture with its point, source and at most 12 words on screen",
-     "test": "python3 scripts/post-pack/creative_direction.py self-test"
-    }
-   ]
-  },
-  {
-   "id": "production-asked-to-publish",
-   "on": "2026-10-24",
-   "krish": "Codex prepares the board and never publishes directly (failure report, 24 Oct)",
-   "what": "The production session asked Krish for a Substack sign-in code to publish. Only Claude Code's hook stops a publish; Codex runs no hooks.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "config/codex-profile.json",
-     "contains": "\"approval_policy\": \"never\"",
-     "how": "Codex's one tool profile: a visual asset maker and runner of scripts only, with no publish, share, deploy, TikTok, Buffer or workflow tool, no MCP server, no network and no escalation path (plan Wave 2, W2.6)"
-    },
-    {
-     "file": "scripts/overnight/codex_profile.py",
-     "contains": "a forbidden kind of tool",
-     "how": "the profile audit refuses a profile that allows a forbidden tool, and a card that needs one is held, never sent; a planted forbidden tool must fail the audit",
-     "test": "python3 tests/overnight_test.py"
-    },
-    {
-     "file": "scripts/overnight/overnight.py",
-     "contains": "codex_ok = not codex_profile.audit",
-     "how": "the overnight run starts no Codex step unless the profile passes its audit; the held cut says why on the Monday board"
-    },
-    {
-     "file": "scripts/overnight/preflight.ps1",
-     "contains": "Invoke-Check 'codex_profile'",
-     "how": "the Saturday preflight on both computers fails when that machine's Codex has an MCP server of a forbidden kind, or the profile fails its audit"
-    }
-   ]
-  },
-  {
-   "id": "chopped-words-published",
-   "on": "2026-10-24",
-   "krish": "random small cuts and chopped words in the published horizontal video (failure report, 24 Oct)",
-   "what": "The published Wednesday long video has audible chopped words. Receipts and six sync windows passed. No check yet decodes the audio around every edit boundary of the final file.",
-   "status": "open",
-   "guards": [],
-   "planned_mechanism": {
-    "kind": [
-     "gate"
-    ],
-    "qc_row": "Chopped or lost words in the finished file (plan W3 3a, Words)",
-    "ref": "scripts/quick-edit/words_gate.py: the signed script, the take's word timings and faster-whisper on the finished file. A content word of the script he said in the take that is missing from the cut, and not an approved removal in the cut's EDL (<name>.edl.json), is a hard fail naming the word and where it was; function-word differences are listed. make.py runs it on every finished cut and holds the cut (blocking); the result is checks.words in the cut's .validation.json, and quality.delivery_problems refuses a failed or stale one wherever the receipt travels (send.py, making.py video, the archive). Joins, captions, brand and composition run beside it as advisory rows only.",
-    "test": "tests/quick_edit_words_gate_test.py (synthetic words: a deleted content word fails naming it; an EDL-approved removal passes; a function-word miss is listed, not failed; Monday 26-style clean data passes and a deleted word in it fails; deleting '200', '12th', '1st' or 'open' from Monday 26's long take fails; a removal of the only time he said a script word fails without his words; a mishearing is cleared only by a heard_as row with his words; a words json never writes a receipt; no words check blocks a cut for a post dated from 27 Oct)",
-    "status": "built 28 Oct and blocking on quick-edit, but OPEN until calibrated on real cuts: Monday 26's accepted long and short must pass, and Wednesday 21's published long cut and Friday's 90-second cut from the 17 Oct words file must fail. Reviewed 29 Oct: spelt numbers, ordinals and split names in the take now count as script words (before, losing '200', '12th', '1st' or 'open' passed); a removal that cuts the only time he said a script word needs his words; only a run that heard the finished video writes checks.words, on the same script and take words; a receipt with no words check is refused for a post dated from 27 Oct; a mishearing is cleared only by a heard_as row with his words. Not calibrated: the finished files are on the home computer that made them and in the Drive archive, not in this repository, so the calibration run (scripts/quick-edit/README.md, The words gate) is a home-computer step. The only real evidence so far is two transcribers on Friday 9 Oct's 90-second cut (take on small.en, final on medium.en): 3 words held, among them 'Claude' heard as 'clawed', a transcriber artefact. Whether the gate blocks before calibration (plan Wave 1) or only refuses delivery until it is calibrated (plan W3 3a) is Krish's decision. It catches a word missing from the finished file; a clipped tail the transcriber still hears whole is caught only by joins-in-gaps (Wave 2). So it is not a guard yet, and this failure is not called fixed. 29 Oct (W2.4): words_gate.check_aligners runs the check on every aligner's pass (no paid second aligner on Krish's ruling of 29 Oct, \"do not use eleven labs for this\": single aligner, said so in the receipt); joins in gaps (scripts/cutgates/gaps.py) is built; the five calibration cuts are config/gate-calibration.json, run by scripts/cutgates/calibrate.py on the real files."
-   }
-  },
-  {
-   "id": "merged-before-ci-finished",
-   "on": "2026-10-24",
-   "krish": "Make checks an actual merge condition (failure report, 24 Oct)",
-   "what": "PR #151 merged at 06:50:00 on 24 Oct while both verify jobs were still running: main has no required status checks. Turning them on is a permission change for Krish. Krish declined required checks on 2026-10-25; CI stays advisory and a red main is fixed on a branch.",
-   "status": "declined",
-   "guards": [],
-   "decided": {
-    "by": "Krish",
-    "on": "2026-10-25",
-    "said": "No merge checks."
-   }
-  },
-  {
-   "id": "one-clip-name-stopped-the-recordings-lane",
-   "on": "2026-10-26",
-   "krish": "Yeah fix it all.",
-   "what": "From 2026-10-24 13:00 UTC to 2026-10-26 09:20 UTC the recordings_drive_inbox job failed every 10 minutes (267 runs) because both home computers' passes reported references_publish_failed: a 120-character SaveClip.App_ clip name in Production Inspo was over the library's 100 a name, and the publish stopped at that clip, so no clip after it reached the library either. The fix (PR #172) was written and run by hand on 2026-10-24 but never merged, so the home computers kept running the old code.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "scripts/quick-edit/references.py",
-     "contains": "a 120-character name fits the library",
-     "how": "a name over 100 goes into the library shortened with an 8-character hash of itself, the same on every pass and machine",
-     "test": "python3 scripts/quick-edit/references.py --self-test"
-    },
-    {
-     "file": "scripts/quick-edit/references.py",
-     "contains": "one refused name never stops the rest",
-     "how": "a name the library refuses for any reason no longer stops the other clips; the pass still fails naming it"
-    }
-   ]
-  },
-  {
-   "id": "F01-weak-initial-visuals",
-   "on": "2026-10-27",
-   "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F01)",
-   "what": "Friday 'Two passports' (23 Oct): the first visuals were schematic boxes, labels and connectors that did not explain the idea, and the method was never stopped.",
-   "symptom": "Passport, phone, server and speech-bubble scenes built from outline icons, labels and connectors; v5 rejected as clipart; Canada/USA examples and flags added only after Krish asked.",
-   "cause": "Having the necessary objects on screen was taken to mean the concept was clear. No scene was judged without its narration and labels, and the locked motion-system.md itself prescribed outline phone and server icons.",
-   "status": "open",
-   "guards": [],
-   "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F01)",
-   "registry": [
-    "R07",
-    "R12"
-   ],
-   "related": [
-    "production-improvised-visuals"
-   ],
-   "planned_mechanism": {
-    "kind": [
-     "library_only",
-     "lint",
-     "critic",
-     "krish_gate"
-    ],
-    "qc_row": "Clipart look, illegible visuals (R07, R12, F01)",
-    "ref": "Library devices only; Creative director decision engine; Motion designer reading-time lint; Critic lens 'Clipart or PowerPoint?'; Krish picks stills at Gate 1",
-    "test": "tests/ve/fixtures/friday-*.json fails ve lint; the Critic counts only once it fails Friday v7-v11 and passes Monday 19",
-    "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
-   }
-  },
-  {
-   "id": "F02-feedback-not-generalised",
-   "on": "2026-10-27",
-   "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F02)",
-   "what": "Krish's country and flag correction was handled as asset edits, not as a principle, so he restated it three times.",
-   "symptom": "The country, flag and nationality-framing principle was restated on 24 Oct 17:34 and 17:37 and on 25 Oct 09:15.",
-   "cause": "Feedback was fixed one instance at a time. The principle (show concrete entities, avoid national framing the example does not warrant) never became a rule the work was checked against.",
-   "status": "open",
-   "guards": [],
-   "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F02)",
-   "registry": [
-    "R37",
-    "R14"
-   ],
-   "related": [],
-   "planned_mechanism": {
-    "kind": [
-     "taste_event",
-     "lint"
-    ],
-    "qc_row": "Feedback not generalised (R37, F02)",
-    "ref": "Taste events; a ruling Krish repeats becomes a lint with a fixture",
-    "test": "the repeated ruling's fixture fails ve lint before the fix and passes after it",
-    "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
-   }
-  },
-  {
-   "id": "F03-reference-studied-as-stills",
-   "on": "2026-10-27",
-   "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F03)",
-   "what": "The motion reference was studied as stills sampled every 5 s, not as timing, continuity and sound.",
-   "symptom": "reference-notes.md sampled a contact sheet every 5 s and left 'Hear the clip and examine the actual transitions' undone; the temporal study happened only on 26 Oct.",
-   "cause": "Stills show surface style but not timing or transformation, and production went ahead without learning what the reference was supplied to show.",
-   "status": "open",
-   "guards": [],
-   "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F03)",
-   "registry": [
-    "R10"
-   ],
-   "related": [],
-   "planned_mechanism": {
-    "kind": [
-     "lint"
-    ],
-    "qc_row": "Reference studied as stills (R10, F03)",
-    "ref": "ve lint requires a grammar card (timing, transformations, sound) from the full clip before a reference-led treatment; the study uses Higgsfield video_analysis_create plus local scdet",
-    "test": "a fixture spec that cites a reference with no grammar card fails ve lint",
-    "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
-   }
-  },
-  {
-   "id": "F04-stills-stood-in-for-motion-proof",
-   "on": "2026-10-27",
-   "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F04)",
-   "what": "Accepted still frames were treated as enough confidence to scale, with no representative moving sequence proven.",
-   "symptom": "The v6 styleframe was approved (approval.json scope: 'Not final video'); three cuts were then exported on 26 Oct 22:49-23:13 UTC with no moving proof of narration, captions, brand, transitions and camera sync together.",
-   "cause": "Still-image confidence was carried over to motion. The rule that a representative proof precedes full production was written but not enforced.",
-   "status": "open",
-   "guards": [],
-   "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F04)",
-   "registry": [
-    "R11"
-   ],
-   "related": [],
-   "planned_mechanism": {
-    "kind": [
-     "by_construction"
-    ],
-    "qc_row": "Scaled before proof (R11, F04, F13)",
-    "ref": "ve render --all refuses without approvals.proof while anything in the spec is trial; the Phase 1 proof is one 19.5 s sequence",
-    "test": "render --all on a spec with a trial element and no approvals.proof exits non-zero",
-    "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
-   }
-  },
-  {
-   "id": "F05-motion-decorated",
-   "on": "2026-10-27",
-   "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F05)",
-   "what": "Motion decorated rather than explained: entrances then long holds, restarting arrows, and an f % 180 loop that redraws every 6 s on no cue.",
-   "symptom": "Held frames are 52.7% of the long VO and 54.4% of the long camera graphic stage; the Airbnb arrow restarts; S12 in EditorialCameraShort.tsx redraws at 52.2, 58.2 and 64.2 s.",
-   "cause": "Scenes were authored as entrance-and-hold, and annotation was driven by frame arithmetic, not by the spoken cue.",
-   "status": "open",
-   "guards": [],
-   "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F05)",
-   "registry": [
-    "R09"
-   ],
-   "related": [],
-   "planned_mechanism": {
-    "kind": [
-     "by_construction",
-     "lint",
-     "measured"
-    ],
-    "qc_row": "Entrance-then-hold, f%180 loops (R09, F05)",
-    "ref": "Devices are pure functions of the clock (ESLint no-frame-modulo); Motion designer lint: an event at least every 3 s of a device's life; QC held ratio and periodicity",
-    "test": "ESLint fails on a frame modulo in apps/renderer/src/engine; qc_synthetic_test flags frozen runs; the Friday fixtures fail ve lint",
-    "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
-   }
-  },
-  {
-   "id": "F06-numbers-lost-meaning",
-   "on": "2026-10-27",
-   "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F06)",
-   "what": "Numbers lost their meaning across transitions: a 200-tile test became a separate 100-dot grid, and a reused chart showed a different measure.",
-   "symptom": "The 200-question test turned into a 100-dot percentage grid; the long VO's '2.7% GAP' chart reused the 59/35 model bars; Claude appeared under 'a Chinese AI'.",
-   "cause": "Each scene was checked for completeness, not for the viewer's continuity of understanding, and the locked motion-system.md contradicted itself (200 tiles with 70 failed, against 100 squares).",
-   "status": "open",
-   "guards": [],
-   "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F06)",
-   "registry": [
-    "R15"
-   ],
-   "related": [],
-   "planned_mechanism": {
-    "kind": [
-     "by_construction",
-     "lint"
-    ],
-    "qc_row": "Denominator 200→100, unlabelled reused chart (R15, F06)",
-    "ref": "Devices bind datasets; lint: immutable meaning, carry, a reused chart needs its own title and producer, every digit device carries producer_label",
-    "test": "a fixture that rebinds a device to a new denominator, or reuses a chart without its own title and producer, fails ve lint",
-    "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
-   }
-  },
-  {
-   "id": "F07-brand-tokens-not-brand",
-   "on": "2026-10-27",
-   "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F07)",
-   "what": "Brand colours and fonts were present but the brand system was not applied: no mark tile, no mind.the.gap coral or pill, flattened type, rotated logos.",
-   "symptom": "The custom compositions had no publisher anchor per beat, no channel treatment or coral, a flattened type hierarchy, rotated logos and type, and the cream/ink meaning lost under dark photographs.",
-   "cause": "The bespoke border-control compositions imported only the house fonts and bypassed MarkTile, SectionPill and the Studio brand components.",
-   "status": "open",
-   "guards": [],
-   "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F07)",
-   "registry": [
-    "R08"
-   ],
-   "related": [],
-   "planned_mechanism": {
-    "kind": [
-     "by_construction",
-     "lint",
-     "measured"
-    ],
-    "qc_row": "No mark tile or coral, rotated logos (R08, F07)",
-    "ref": "BrandFrame wraps every beat (mark tile, pill, grain); Logo has no rotation prop; lint colour roles (coral only on mind.the.gap), no raw hex, fonts from tokens; QC mark-tile template match and ΔE",
-    "test": "QC template-matches the mark tile at every beat of a render; ESLint no-raw-hex fails on a hex in a device",
-    "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
-   }
-  },
-  {
-   "id": "F08-captions-mishandled",
-   "on": "2026-10-27",
-   "krish": "(Ruling, 27 Oct: captions burned into every cut; failure report F08)",
-   "what": "None of the four cuts had visible captions, only SRT sidecars, because a 'no captions' line in the locked brief was followed.",
-   "symptom": "No burned-in captions in any of the four exports; SRT sidecars only, unpunctuated and with a wording error.",
-   "cause": "Friday's locked CODEX.md said not to burn captions in, and the signed storyboard said 'No subtitles'; that conflicted with STUDIO's caption spec, and the conflict was never resolved before four videos were composed.",
-   "status": "open",
-   "guards": [],
-   "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F08)",
-   "registry": [
-    "R03"
-   ],
-   "related": [],
-   "planned_mechanism": {
-    "kind": [
-     "by_construction",
-     "measured"
-    ],
-    "qc_row": "Captions absent or banned (R03, F08)",
-    "ref": "Schema: brand.captions is the literal 'house'; BrandFrame always draws CaptionTrack; QC caption-box OCR against cues of 0.98 or more",
-    "test": "a spec with captions off fails schema validation; caption OCR on a render scores 0.98 or more",
-    "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
-   }
-  },
-  {
-   "id": "F09-speech-edits-outran-evidence",
-   "on": "2026-10-27",
-   "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F09)",
-   "what": "Speech joins were cut on ASR timings with 2 ms fades and short clearance; Krish rejected the ten-join reel and no listening verdict cleared the rest.",
-   "symptom": "The ten-join reel was rejected; short-camera joins sit about 10 ms and 20 ms from word ends against a 40 ms rule, with 2 ms crossfades; the long VO 'fling' donor splice was never verified.",
-   "cause": "ASR word timing and waveform work were given more confidence than they can carry, and assembly went on while the acoustic doubt was material.",
-   "status": "open",
-   "guards": [],
-   "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F09)",
-   "registry": [
-    "R01",
-    "R19"
-   ],
-   "related": [
-    "chopped-words-published"
-   ],
-   "planned_mechanism": {
-    "kind": [
-     "lint",
-     "measured",
-     "krish_gate"
-    ],
-    "qc_row": "Chopped words, 2 ms fades (R01, R19, F09)",
-    "ref": "Dialogue editor lint: cuts only in gaps of 80 ms or more that both aligners agree on, 30 ms clearance each side, 20-40 ms crossfades; QC two-ASR round trip and a join decoder calibrated on Friday's rejected join reel; Krish hears the joins reel at Gate 3",
-    "test": "qc_synthetic_test flags lavfi clicks and 2 ms joins; the decoder flags the joins Krish rejected in Friday's reel",
-    "status": "Joins in gaps built 29 Oct (scripts/cutgates/gaps.py, joins_in_gaps, the one rule quick-edit make.py and ve use; config/gates.json: 80 ms gap, 30 ms clearance, every aligner agreeing), with each cut's joins reel built beside it for the Monday board. tests/cutgates_test.py fails a join moved into speech and joins 10 ms after a word. OPEN until calibrated: scripts/cutgates/calibrate.py must fail Friday 23 Oct's rejected reel on the real file, a home-computer step. So no guard yet."
-   }
-  },
-  {
-   "id": "F10-sync-route-fragile",
-   "on": "2026-10-27",
-   "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F10)",
-   "what": "Silent picture and separately mixed audio crossed several intermediates; the short camera's first on-camera moment plays about 1.05 s out of sync.",
-   "symptom": "v8 had a 3.5 s error; the long-camera concat hit a timebase defect; in the v10 short camera at 0:06.53-0:08.33 the picture is about 1.05 s later than the sound.",
-   "cause": "The v10 short camera reused v8's picture unchanged (-c:v copy) on a mix whose audio edit was re-cut in five places (15.34 s removed), so the picture was never rendered from the edit it plays against. How v8's picture came to sit 1.05 s late there is not reconstructed (INDEPENDENT-REVIEW.md, correction note).",
-   "status": "open",
-   "guards": [],
-   "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F10)",
-   "registry": [
-    "R04"
-   ],
-   "related": [
-    "lip-sync-drift",
-    "cause-claimed-unproven"
-   ],
-   "planned_mechanism": {
-    "kind": [
-     "by_construction",
-     "measured"
-    ],
-    "qc_row": "Lip-sync, picture muxed onto re-cut audio (R04, F10)",
-    "ref": "One EDL drives picture, dialogue, bed, SFX and captions in one render, and ve has no mux path; QC A/V cross-correlation within 1 frame per segment",
-    "test": "qc_synthetic_test flags a 0.5 s A/V offset; ve has no command that muxes a picture onto separate audio",
-    "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
-   }
-  },
-  {
-   "id": "F11-no-qualified-reviewer",
-   "on": "2026-10-27",
-   "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F11)",
-   "what": "No qualified review route existed before the batch was made; two paid reviewer calibrations failed and Krish stayed the only listener.",
-   "symptom": "Krish was repeatedly asked to listen; a paid reviewer invented speech in silent media, including an all-zero PCM control, and the second route produced no qualified listener either.",
-   "cause": "A review route was looked for after the cuts existed, not established before a batch whose acceptance depended on it.",
-   "status": "open",
-   "guards": [],
-   "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F11)",
-   "registry": [
-    "R06"
-   ],
-   "related": [
-    "cut-called-done-unheard"
-   ],
-   "planned_mechanism": {
-    "kind": [
-     "critic",
-     "measured",
-     "krish_gate"
-    ],
-    "qc_row": "none in the QC table: the Critic and the measured QC modules",
-    "ref": "Critic (never a producer, a fresh Opus subagent), advisory until calibrated; measured QC runs on every frame and sample; listening stays Krish's at Gate 3 through the joins reel",
-    "test": "the Critic fails Friday v7-v11 and passes Monday 19 before it counts",
-    "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
-   }
-  },
-  {
-   "id": "F12-engineering-evidence-over-product",
-   "on": "2026-10-27",
-   "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F12)",
-   "what": "Hashes, receipts and tests piled up while the cuts stayed unverified; the final assembly ran in one-off scripts that called none of the engine's gates.",
-   "symptom": "There were 68 one-off Python scripts in the task folder; the final compose and mix scripts never call quality, coverage, visual_clarity, sync_check or delivery_problems; local verify had two failing test files.",
-   "cause": "Technical traceability was taken as evidence of quality, and assembling outside the engine bypassed every gate.",
-   "status": "open",
-   "guards": [],
-   "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F12)",
-   "registry": [
-    "R43",
-    "R45",
-    "R05"
-   ],
-   "related": [
-    "cut-called-done-unheard"
-   ],
-   "planned_mechanism": {
-    "kind": [
-     "by_construction"
-    ],
-    "qc_row": "Bespoke code, gate bypass (R43, R45, F12)",
-    "ref": "CI route check refuses per-piece compositions and render scripts; ve file refuses an mp4 without build.json and a passing qc.json; quality.py loses its working* bypass and self-attested passes",
-    "test": "ve file exits non-zero on an mp4 with no build.json; the CI route check fails on a new registerRoot or render_*.mjs",
-    "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
-   }
-  },
-  {
-   "id": "F13-scaled-unproven-approach",
-   "on": "2026-10-27",
-   "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F13)",
-   "what": "The approach was carried across four cuts before the hardest combined sequence was proven; renderer, cache and audio repairs ate the time.",
-   "symptom": "Three of the four cuts were first exported 22:49-23:13 UTC on 26 Oct and delivered at 23:23, every receipt saying full_visual_playback false.",
-   "cause": "The chosen pipeline was optimised instead of reassessed; the first integrated prototype never decided whether to scale.",
-   "status": "open",
-   "guards": [],
-   "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F13)",
-   "registry": [
-    "R11"
-   ],
-   "related": [],
-   "planned_mechanism": {
-    "kind": [
-     "by_construction"
-    ],
-    "qc_row": "Scaled before proof (R11, F04, F13)",
-    "ref": "ve render --all refuses without approvals.proof while anything in the spec is trial; the Phase 1 proof is one 19.5 s sequence",
-    "test": "render --all on a spec with a trial element and no approvals.proof exits non-zero",
-    "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
-   }
-  },
-  {
-   "id": "F14-standards-overestimated",
-   "on": "2026-10-27",
-   "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F14)",
-   "what": "Standards and review machinery were expected to fix an unproven production method.",
-   "symptom": "PR #170 merged its standards with enforcement pending calibration; a test fallback also wrote three synthetic folders into the real archive.",
-   "cause": "A rule that motion must explain does not create an explanatory sequence, and a review endpoint with no reliable reviewer cannot set a quality floor.",
-   "status": "open",
-   "guards": [],
-   "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F14)",
-   "registry": [
-    "R40"
-   ],
-   "related": [],
-   "planned_mechanism": {
-    "kind": [
-     "process",
-     "measured"
-    ],
-    "qc_row": "none in the QC table: plan rule 2 and ve coverage",
-    "ref": "Every expert ships a lint and a measured QC module, not only text; ve coverage scores each register entry by its mechanism test, and a marker-only guard scores 0",
-    "test": "ve coverage reports F01-F18 and R01-R46 each with a passing mechanism test, or 0",
-    "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
-   }
-  },
-  {
-   "id": "F15-progress-overstated",
-   "on": "2026-10-27",
-   "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F15)",
-   "what": "The delivery message led with exports, filing and the board, which made four unusable cuts sound close to sign-off.",
-   "symptom": "The 26 Oct 23:23 delivery led with exports, library filing and board readiness while no complete listening review, speech boundary, motion or brand delivery had been proven.",
-   "cause": "Status was written from what had been produced, not from what had been verified.",
-   "status": "open",
-   "guards": [],
-   "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F15)",
-   "registry": [
-    "R05"
-   ],
-   "related": [
-    "cut-called-done-unheard"
-   ],
-   "planned_mechanism": {
-    "kind": [
-     "by_construction"
-    ],
-    "qc_row": "Readiness overclaimed, self-written receipts (R05, F15)",
-    "ref": "ve status computes readiness from qc.json bound to the mp4's sha, the Critic verdict and approvals.final; nothing is marked ready by hand",
-    "test": "ve status reports not ready for an mp4 whose sha has no passing qc.json or no approvals.final",
-    "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
-   }
-  },
-  {
-   "id": "F16-krish-carried-qa",
-   "on": "2026-10-27",
-   "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F16)",
-   "what": "Krish caught ten or more fundamental defects himself: examples, flags, wording, framing, brand, motion, glitches, captions and sync.",
-   "symptom": "Krish identified the country examples, flags, excess words, nationality framing, weak aesthetics, missing brand, inadequate motion, audible glitches, missing captions and sync failure.",
-   "cause": "The method did not take in his standard, so each correction recreated the work the engine was meant to remove.",
-   "status": "open",
-   "guards": [],
-   "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F16)",
-   "registry": [
-    "R06",
-    "R37"
-   ],
-   "related": [
-    "production-improvised-visuals"
-   ],
-   "planned_mechanism": {
-    "kind": [
-     "process",
-     "by_construction"
-    ],
-    "qc_row": "none in the QC table: the session protocol",
-    "ref": "Lint, measured QC and the Critic run before any Krish gate; Krish sees only the Gate 1, 2 and 3 packets; Phase 2 acceptance allows at most 2 touchpoints after recording",
-    "test": "the Phase 2 ledger shows 2 or fewer Krish touchpoints after recording per piece",
-    "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
-   }
-  },
-  {
-   "id": "F17-independence-mishandled",
-   "on": "2026-10-27",
-   "krish": "(rejected all four 'Two passports' cuts, 27 Oct; failure report F17)",
-   "what": "Asked whether it could judge its own work, the session recommended an outside editor and handed the task back to Krish.",
-   "symptom": "On 27 Oct 05:39-05:42 the session recommended an outside editor instead of gathering evidence, comparing sequences and documenting defects.",
-   "cause": "A limit on its taste authority was treated as release from the duty to gather inspectable evidence.",
-   "status": "open",
-   "guards": [],
-   "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F17)",
-   "registry": [
-    "R36",
-    "R06"
-   ],
-   "related": [],
-   "planned_mechanism": {
-    "kind": [
-     "critic",
-     "process"
-    ],
-    "qc_row": "none in the QC table: the Critic",
-    "ref": "The Critic is never a producer: a fresh Opus subagent writes verdict.json only; the producer's duty is the evidence packet (contact sheets, lip and cue strips, joins reel)",
-    "test": "verdict.json is written by a session that wrote none of the piece's files",
-    "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
-   }
-  },
-  {
-   "id": "F18-reporting-not-executed",
-   "on": "2026-10-27",
-   "krish": "Stop telling me what you're going to do and actually do the audit.",
-   "what": "Asked for the audit and then the full-session report, the session described what it would do, then sent prompts instead of the report.",
-   "symptom": "After the audit was authorised, several replies described the plan; after the audit, a numbered request was answered with two prompts and the report was handed to someone else.",
-   "cause": "An execution and interpretation failure: the requested deliverable was replaced by a description of it.",
-   "status": "open",
-   "guards": [],
-   "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F18)",
-   "registry": [
-    "R36"
-   ],
-   "related": [
-    "cause-claimed-unproven"
-   ],
-   "planned_mechanism": {
-    "kind": [
-     "process"
-    ],
-    "qc_row": "none in the QC table: no by-construction mechanism",
-    "ref": "Plan rule 4: one fresh session per job; questions queue into gate packets and the session ends at its gate with the packet delivered. Process only",
-    "test": "none planned; process only, never to be reported as guarded",
-    "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
-   }
-  },
-  {
-   "id": "F19-mechanically-valid-design-rejected",
-   "on": "2026-10-28",
-   "krish": "The use of the screen is terrible, and the visuals look like Microsoft Excel from 20 years ago. This is awful. Everything's cramped into corners, misaligned. It's not even the right branding, to be honest. Don't really know where to start on this. How bad it is, but it would need to be so, so, so much better to pass. I can't publish this.",
-   "what": "The ve Gate 2 proofs passed all 11 mechanical QC checks and were handed to Krish for approval. They were small widgets in fixed corner boxes, a grid of cells, the wrong branding and a dead lower half. The Critic never ran, and nothing measured screen use, text size, corners, the caption or platform zones, or brand fidelity.",
-   "symptom": "A proof with measured_pass true and complete true looked like a 20-year-old spreadsheet and was rejected on sight; the packet said nothing about design.",
-   "cause": "A system gap, not a one-off: QC measured mechanics only, layouts were fixed small slot boxes, no design was approved before device cards were built, no key frame was compared, and a packet could be assembled with no Critic verdict.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "scripts/velib/cards.py",
-     "contains": "no frozen design lock for",
-     "how": "a device or format card for a format whose design lock is not frozen with approved key frames is refused at card write and at dispatch",
-     "test": "python tests/ve_designlock_test.py"
-    },
-    {
-     "file": "scripts/velib/qc_composition.py",
-     "contains": "the lock needs",
-     "how": "QC measures screen fill, smallest text, caption zone, platform zone and edges against the lock, and no longer looks for an ILLUSTRATION tag (Krish, 28 Oct 2026: \"Yes remove those.\"); the four rejected Gate 2 frames must fail and the ten approved frames must pass",
-     "test": "python tests/ve_composition_test.py"
-    },
-    {
-     "file": "scripts/velib/qc_keyframes.py",
-     "contains": "ssim",
-     "how": "the render at each beat's key frame must match the approved still (structural similarity above the lock's minimum), or QC fails",
-     "test": "python tests/ve_keyframes_test.py"
-    },
-    {
-     "file": "scripts/velib/packet.py",
-     "contains": "Not yet approved: design and final",
-     "how": "ve packet refuses to assemble a Gate packet without passing QC, composition, key frames, a locked format and a non-blocking Critic verdict bound to the exact file that viewed every beat; ve status separates mechanically valid from design approved",
-     "test": "python tests/ve_packet_test.py"
-    }
-   ],
-   "source": "docs/ve/design/TEMPLATE.md; config/ve/design-lock.json; docs/ve/cards/design-reset/",
-   "registry": [],
-   "related": [
-    "F18-reporting-not-executed"
-   ]
-  },
-  {
-   "id": "F20-long-cut-bed-swung-and-stopped",
-   "on": "2026-10-30",
-   "krish": "The pictures are fine. The video visuals are fine, but the music audio track behind it is quite volatile. Sometimes it just turns off randomly. Sometimes it's quiet. Sometimes it gets louder. It's not professional at all.",
-   "what": "Friday 23's ve long cut (sha256 fff8641e...) carried a ducked bed: a voice-keyed sidechain compressor (ratio 8, 30 ms attack, 450 ms release) held the music about 9 dB higher in pauses than under speech. QC passed it, and its 'the music breathes' row required that swing. The approved episode bed (config/learnings.json deep-cut-music-always-under) was never built into ve. The licensed track also stops for about 0.3 s at 73.2 s, about 30 dB down, and nothing measured that.",
-   "symptom": "Gate 2 passed the pictures and rejected the sound: the bed swung between loud and quiet, and seemed to switch off.",
-   "cause": "Mechanism shown by tests on synthetic and real-track audio (not on the rejected render, whose stems are on the home computer): the ducked mode moves the music with the voice by design, and no gate measured the bed's own level, spread or gaps. ve had no long-cut bed, and the lint let any voiceover cut choose ducked.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "scripts/velib/lint.py",
-     "contains": "sound.long_cut_bed",
-     "how": "a cut allowed past 90 s must carry the episode_bed",
-     "test": "python -m unittest tests.ve_lint_test"
-    },
-    {
-     "file": "scripts/velib/audio.py",
-     "contains": "def track_stops",
-     "how": "the episode bed is never keyed by the voice, holds bed_lufs in the master, plays around the track's own stops and restarts it under 2 s crossfades",
-     "test": "python -m unittest tests.ve_audio_test"
-    },
-    {
-     "file": "scripts/velib/qc_audio.py",
-     "contains": "def continuity",
-     "how": "QC meters the kept music stem (level, spread, drop-outs) and the render itself (no stretch with no music under a pause)",
-     "test": "python -m unittest tests.ve_audio_test"
-    }
-   ]
-  },
-  {
-   "id": "F21-openings-did-not-land",
-   "on": "2026-11-01",
-   "krish": "I would say the first few seconds of each video aren't very powerful. They aren't impactful, and the first frame moves on so quickly that you can barely even see what was there in the first place. As it stands, while we're on this topic, the first few seconds are kind of important because people have lower amounts of attention. I feel like these videos' weakest few seconds are the first few seconds in terms of engagement, setting the scene, and impact.",
-   "what": "All four 2 and 4 Nov cuts (Mon long and short, Wed long and short), rebuilt by per-piece compositors under docs/plans/2026-11-0*/rebuild/ and approved by Krish, opened on a 3 s music-only motion card: frame 0 nearly empty (edge density 0.0012 to 0.0058), the headline up for about a second before a wipe, and his voice first at 3.0 s. They reached the 2 Nov publish board as ready with no delivery receipt.",
-   "symptom": "He judged the first seconds the weakest part of every cut, after approving them.",
-   "cause": "The rebuild route bypassed make.py and its HOOK_IS_THE_INTRO check, no gate measured a finished file's opening, and board_web.py publish-web placed videos marked ready without asking for their delivery receipt.",
-   "status": "guarded",
-   "guards": [
-    {
-     "file": "scripts/quick-edit/opening_gate.py",
-     "contains": "def check(",
-     "how": "voice from the first half second, a finished first frame, a headline that holds 2 s in the first 3 s, no flat frame, measured on the finished bytes",
-     "test": "python3 scripts/quick-edit/opening_gate.py --self-test"
-    },
-    {
-     "file": "scripts/quick-edit/quality.py",
-     "contains": "opening_gate.delivery_problems",
-     "how": "the delivery gate holds a cut for a post dated from config/opening-gate.json required_from without a passed opening check bound to its bytes",
-     "test": "python3 tests/quick_edit_produce_day_test.py"
-    },
-    {
-     "file": "scripts/post-pack/board_web.py",
-     "contains": "def ready_video_problems",
-     "how": "publish-web refuses a video a day's materials mark ready unless its exact bytes carry a passing delivery receipt, or the asset carries Krish's own words",
-     "test": "python3 tests/board_web_test.py"
-    }
-   ]
-  }
- ]
+  ]
 }
