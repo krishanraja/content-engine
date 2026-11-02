@@ -365,7 +365,8 @@ option carries `cards`: `[{"words": "<what the card says>", "picture":
    Tuesday, Thursday, Saturday, and Sunday content within the Sunday ideas
    session if you give me a few options to approve as you do the
    Mon/wed/fri"). Read `.agents/skills/plan-week/references/offdays.md`
-   first: 4 to 6 options each for Tuesday, Thursday, Saturday and Sunday on
+   first: 4 to 6 options each for Tuesday, Thursday and Saturday (Sunday is
+   a rest day, Ruling, Krish, 2026-11-02) on
    the Make Your Mind Up Instagram, TikTok and YouTube Shorts channels, each
    an idea and a suggested creative direction he approves, improves or
    rejects for a reason (Ruling, Krish, 2026-11-01, the locked off-day

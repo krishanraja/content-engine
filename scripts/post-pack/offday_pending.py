@@ -6,7 +6,7 @@ and its sha256 is still the hash of that side as ideas.json holds it now. Once a
 so the same words never revise it twice, and a cancelled run's side is picked up by the next one. The mock side is
 Growth's to remake, so it never waits here.
 
-IDEAS.json is docs/plans/<Monday>-week/ideas.json; QUEUE.json is what `board_web.py read <Monday> queue` printed.
+IDEAS.json is docs/plans/<Monday>-week/ideas.json, or offdays-growth.json for a week whose off days Growth fed; QUEUE.json is what `board_web.py read <Monday> queue` printed.
 Prints [{"option", "day", "id", "side", "words"}], oldest press first. Read-only."""
 import json
 import sys
@@ -18,8 +18,18 @@ import week_board as wb  # noqa: E402
 SIDES = ('idea', 'direction')
 
 
+def offdays_of(ideas):
+    """The week's off-day options from ideas.json `offdays`, or from Growth's growth-offdays/1 file when the week's
+    off days came from Growth (week_board.py --offdays-plan), as the board read them."""
+    if isinstance(ideas, dict) and ideas.get('schema') == 'growth-offdays/1':
+        from datetime import date
+        rows, _ = wb.read_growth_offdays(ideas, date.fromisoformat(str(ideas.get('week_of'))))
+        return wb.read_offdays(rows, 'offdays-growth.json') or {}
+    return wb.read_offdays(ideas.get('offdays')) or {}
+
+
 def pending(ideas, queue):
-    offdays = wb.read_offdays(ideas.get('offdays')) or {}
+    offdays = offdays_of(ideas)
     current = {f'off-{day}-{o["id"]}': o for day, opts in offdays.items() for o in opts}
     out = []
     for doc in queue.get('documents') or []:
@@ -52,6 +62,13 @@ def self_test():
     assert [(r['option'], r['side'], r['words']) for r in got] == [('off-tue-a', 'direction', 'warmer')], got
     revised = {'offdays': {'tue': [dict(a, direction={'look': 'warm'}, revised={'side': 'direction', 'words': 'warmer'}), b]}}
     assert pending(revised, queue) == [], 'a revised side is answered and never revised twice'
+    # A week whose off days Growth fed (Krish's Improve on 2 Nov reached no revision because only ideas.json was read).
+    growth = {'schema': 'growth-offdays/1', 'week_of': '2026-11-02', 'days': {'2026-11-07': [
+        {'concept_id': 'goodnews', 'lane': 'positive_news', 'formats': ['instagram:carousel'], 'draft': 'Good things AI did.', 'needs': [], 'ready': True},
+        {'concept_id': 'aipassports', 'lane': 'meme', 'formats': ['instagram:carousel'], 'draft': 'Where your AI was built.', 'needs': [], 'ready': True}]}}
+    sat = offdays_of(growth)['sat']
+    gq = {'documents': [{'id': 'off-sat-goodnews', 'updated_by': 'Krish', 'body': {'idea': side('improve', sat[0]['idea_sha256'], 'real news items')}}]}
+    assert [(r['option'], r['words']) for r in pending(growth, gq)] == [('off-sat-goodnews', 'real news items')]
     print('offday_pending self-test passed')
 
 
