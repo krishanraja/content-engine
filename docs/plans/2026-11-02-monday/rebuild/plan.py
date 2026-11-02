@@ -95,7 +95,7 @@ def long():
     s75 = A('Anthropic staff expect', 170)
     S.append(seg(every, s75, 'brand')); P += [(A('every company\'s problem', 168), .22), (A('of course', 172), .12)]
     however = A('however however much', 178)
-    S.append(seg(s75, however, 'side', 'pct2', pa=A('75%', 174), pb=A('75%', 174) + 1.3))
+    S.append(seg(s75, however, 'side', 'pct2', pa=A('75%', 174), pb=A('75%', 174) + 0.7))
     picture = A('and picture a new hire', 186)
     S.append(seg(however, picture, 'side', 'ladder', drawn=1, gap=1, lit=however + 0.3, line=A('seniors are juniors', 182)))
     keep = A('they keep at it', 200)
@@ -141,7 +141,7 @@ def short():
     S.append(seg(many, cash - 0.1, 'full', 'quote', img='report-managers.jpg', credit='ANTHROPIC · OCT 2026', text='Around a third of ML and a fifth of SWE managers reported hiring less due to AI.', hl=[11, 12, 13, 14, 15]))
     sp = A('and spreadsheets', 19)
     but = A('but I feel', 24)
-    S.append(seg(cash - 0.1, sp + 0.9, 'full', 'branch', copy=cash + 0.2, pct=cash + 0.7))
+    S.append(seg(cash - 0.1, sp + 0.9, 'full', 'branch', copy=cash + 0.2, pct=cash + 0.2))
     S.append(seg(sp + 0.9, but, 'full', 'ledgers', gone=sp + 1.2, added=A('both times', 22) + 0.2, wipe='fade'))
     ai = A('AI takes the first draft', 27)
     S.append(seg(but, ai, 'face')); P += [(A('a bit different', 26), .24)]
