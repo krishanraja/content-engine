@@ -42,13 +42,35 @@ describe('logo_orbit', () => {
   })
   it('highlights one mark, drifts positions, spins out and resets on reentry', () => {
     expect(state(65)!.logos.map(l => l.opacity)).toEqual([0.4, 0.4, 1, 0.4, 0.4])
-    expect(state(65)!.logos[2]!.scale).toBe(1.1)
+    expect(state(65)!.logos[2]!.scale).toBe(1.15)
     expect(state(80)!.angle).toBeGreaterThan(state(65)!.angle)
     expect(state(103)!.out).toBeGreaterThan(0)
     expect(still(106)).toBe('')
     const again = [...events, { ...events[0]!, id: 'again', atFrame: 120 }]
     expect(state(155, again)!.logos.map(l => l.opacity)).toEqual([1, 1, 1, 1, 1])
     expect(state(65, [...events].reverse())).toEqual(state(65))
+  })
+  it('uses 160px rounded tiles, 96px aspect-fitted marks and stronger mint rings in both slots', () => {
+    for (const aspect of fixture.aspects as DeviceProps['aspect'][]) {
+      const html = still(52, aspect)
+      expect((html.match(/data-tile=/g) ?? []).length).toBe(5)
+      expect((html.match(/width="160" height="160" rx="28"/g) ?? []).length).toBe(5)
+      expect((html.match(/width="96" height="96" preserveAspectRatio="xMidYMid meet"/g) ?? []).length).toBe(5)
+      expect((html.match(/stroke="aqua" stroke-width="5" opacity="0.5"/g) ?? []).length).toBe(3)
+      expect(html).toContain('stroke-dasharray="0.018 0.018"')
+      expect(html).toContain('feDropShadow')
+      expect(html).toContain('font-size="' + (aspect === '9:16' ? 34 : 36) + '"')
+      expect(html).toContain('r="5" fill="aqua"')
+      expect(still(65, aspect)).toContain('data-highlight="2"')
+    }
+  })
+  it('overshoots on arrival, draws three fading copies and settles without rotation', () => {
+    const scales = Array.from({ length: 13 }, (_, age) => state(10 + age)!.logos[0]!.scale)
+    expect(Math.max(...scales)).toBeGreaterThanOrEqual(1.12)
+    expect(scales[12]).toBe(1)
+    expect((still(14).match(/data-trail=/g) ?? []).length).toBe(6)
+    expect(still(14)).not.toContain('rotate(')
+    expect(still(52)).not.toContain('data-trail=')
   })
   it('refuses unregistered marks, bad counts and invalid event indices', () => {
     for (const params of [{ logos: [] }, { logos: Array(9).fill({ id: 'Meta' }) }, { logos: [{ id: 'invented' }] },
