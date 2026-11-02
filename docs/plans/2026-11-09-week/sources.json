@@ -1,6 +1,6 @@
 {
  "week_start": "2026-11-09",
- "gathered_at": "2026-11-02T18:58:53Z",
+ "gathered_at": "2026-11-02T19:31:20Z",
  "how": "Read-only gather (board_feed.py). Write ideas.json from series[].pool and inspiration (routed, liked, fresh, corpora, creators) and his feedback cues (cues), his ideas first, each with source_kind, why_here, beats and style (config/styles.json); every must_cover id is in some idea's covers or in ideas.json accounted with a reason (board_feed.py cover); write combine.json; build with --ideas --queue --combine.",
  "counts": {
   "his": 0,
@@ -4293,58 +4293,13 @@
   ],
   "corpora": [
    {
-    "id": "dbb7dba0-033f-4657-8661-f95e833e3be2",
-    "title": "instagram_DfAY9PWFuEX_07.jpg",
-    "shape": "carousel",
-    "platform": "instagram",
-    "source_url": "https://www.instagram.com/p/DfAY9PWFuEX/",
-    "excerpt": "Link: https://www.instagram.com/p/DfAY9PWFuEX/ Slide 7 of 16 Text on it: 30 words, 8% of the area. Colours: #090e0d 21%, #b0aea2 15%, #16484b 7%, #48524b 6%, #48431e 5% Text: fs REPUBL jii CALIFORNIA HAS OFFICIALLY BANNED THE CRUEL PRACTICE OF OCTOPUS FARMING AND THE SALE OF FAR…",
-    "created_at": "2026-10-28T06:03:52.795035+00:00"
-   },
-   {
-    "id": "cf019ece-48b3-4752-8475-65b3286d8797",
-    "title": "instagram_DfAY9PWFuEX_16.jpg",
-    "shape": "carousel",
-    "platform": "instagram",
-    "source_url": "https://www.instagram.com/p/DfAY9PWFuEX/",
-    "excerpt": "Link: https://www.instagram.com/p/DfAY9PWFuEX/ Slide 16 of 16 Text on it: 23 words, 13% of the area. Colours: #151413 27%, #494425 10%, #80784b 9%, #4f4a3d 8%, #b2ad80 5% Text: “er TIRED OF SEEING NEGATIVE NEWS? FOLLOW WINNING MINDSET: HERE YOU'LL FIND STORIES THAT RESTORE YOUR …",
-    "created_at": "2026-10-28T06:03:52.795035+00:00"
-   },
-   {
-    "id": "611a1c3c-e9cd-4cec-948b-d2c7d97af2a0",
-    "title": "instagram_DfAY9PWFuEX_15.jpg",
-    "shape": "carousel",
-    "platform": "instagram",
-    "source_url": "https://www.instagram.com/p/DfAY9PWFuEX/",
-    "excerpt": "Link: https://www.instagram.com/p/DfAY9PWFuEX/ Slide 15 of 16 Text on it: 23 words, 8% of the area. Colours: #070809 25%, #444c4d 8%, #174550 7%, #7f817b 5%, #4c777e 5% Text: So JAPAN HAS ACHIEVED A RECORD INTERNET SPEED: 1.02 PETABITS PER SECOND, ALLOWING YOU TO DOWNLOAD ALL OF…",
-    "created_at": "2026-10-28T06:03:52.795035+00:00"
-   },
-   {
-    "id": "bafaa7c3-0e3e-4d8e-ac36-4ff5f4fb2658",
-    "title": "instagram_DfAY9PWFuEX_13.jpg",
-    "shape": "carousel",
-    "platform": "instagram",
-    "source_url": "https://www.instagram.com/p/DfAY9PWFuEX/",
-    "excerpt": "Link: https://www.instagram.com/p/DfAY9PWFuEX/ Slide 13 of 16 Text on it: 33 words, 9% of the area. Colours: #4f4b49 16%, #0f0c0a 16%, #7c7a7f 10%, #441f13 6%, #b4abaf 6% Text: im oe re WAI Fs WILL FIRST PLACE IN THE WORLD WHERE POLI ING DURING ELECTIONS WILL BE A CRIMINAL OFFEN…",
-    "created_at": "2026-10-28T06:03:52.795035+00:00"
-   },
-   {
-    "id": "853f9298-8ef3-4754-b2c9-4627a8b89617",
-    "title": "instagram_DfAY9PWFuEX_02.jpg",
-    "shape": "carousel",
-    "platform": "instagram",
-    "source_url": "https://www.instagram.com/p/DfAY9PWFuEX/",
-    "excerpt": "Link: https://www.instagram.com/p/DfAY9PWFuEX/ Slide 2 of 16 Text on it: 20 words, 5% of the area. Colours: #11130f 28%, #c5c0b9 15%, #cdc8c0 10%, #dedfdc 9%, #7c7875 4% Text: oa BY THE END OF 2026, EYE DROPS WILL BE AVAILABLE THAT CORRECT NEAR VISION WITHOUT THE NEED T0 ASSES.",
-    "created_at": "2026-10-28T06:03:52.795035+00:00"
-   },
-   {
-    "id": "bb9dc343-ebb8-40cd-8596-074291f388d9",
-    "title": "instagram_DfAY9PWFuEX_04.jpg",
-    "shape": "carousel",
-    "platform": "instagram",
-    "source_url": "https://www.instagram.com/p/DfAY9PWFuEX/",
-    "excerpt": "Link: https://www.instagram.com/p/DfAY9PWFuEX/ Slide 4 of 16 Text on it: 18 words, 5% of the area. Colours: #0b0c0f 15%, #4e4b46 10%, #bab5ad 7%, #807b78 5%, #886e4f 5% Text: TALENT A17 YEAR OLD STUDENT CREATED SURGICAL SUTURES THAT CHANGE COLOR WHEN THEY DETECT AN INFECTION THE…",
-    "created_at": "2026-10-28T06:03:52.795035+00:00"
+    "id": "5865a3e2-460c-422f-9d40-ae4cf851cf0f",
+    "title": "YTDown.com_YouTube_Media_foT9rsHmS24_The-World-s-Worst-Translator-Alternatino_003_480p.mp4",
+    "shape": "video",
+    "platform": "own",
+    "source_url": null,
+    "excerpt": "- Words: \"Este trato es muy grande. Yo\" - Screen text: wi / nan E - Cuts: 0 - Face on screen: no - 88 shots, 22.3 cuts a minute, median shot 2.0 s (shortest 0.59 s, longest 10.84 s). - 110.4 words a minute; speech covers 52% of the time; 36 pauses over 0.6 s, longest 13.06 s. - …",
+    "created_at": "2026-11-02T19:03:39.283266+00:00"
    },
    {
     "id": "80aa72bd-03a5-4411-8820-7e3ccd866147",
@@ -4353,33 +4308,6 @@
     "platform": "instagram",
     "source_url": "https://www.instagram.com/p/DfAY9PWFuEX/",
     "excerpt": "Link: https://www.instagram.com/p/DfAY9PWFuEX/ Slide 5 of 16 Text on it: 13 words, 9% of the area. Colours: #e1dbd6 29%, #d3bbaa 12%, #070804 11%, #bfb6a9 6%, #dad1c6 6% Text: DANISH ENGINEERS HAVE DEVELOPED IMPLANTS THAT DETECT BLOOD SUGAR LEVELS AND RELEASE INSULIN",
-    "created_at": "2026-10-28T06:03:52.795035+00:00"
-   },
-   {
-    "id": "66d3cd6e-b1a3-4eec-a87b-232d98adf065",
-    "title": "instagram_DfAY9PWFuEX_10.jpg",
-    "shape": "carousel",
-    "platform": "instagram",
-    "source_url": "https://www.instagram.com/p/DfAY9PWFuEX/",
-    "excerpt": "Link: https://www.instagram.com/p/DfAY9PWFuEX/ Slide 10 of 16 Text on it: 22 words, 6% of the area. Colours: #100e0e 23%, #dce0e0 14%, #b8b8b6 6%, #504d48 6%, #b9a180 5% Text: Be wi ry. ii SS MEXICAN SCIENTIST EVA RAMON GALLEGOS BECAME THE FIRST PERSON IN HISTORY TO SUCCESSFULLY…",
-    "created_at": "2026-10-28T06:03:52.795035+00:00"
-   },
-   {
-    "id": "86eaea5b-ce9d-4a60-92dc-b0a67bdc18b3",
-    "title": "instagram_DfAY9PWFuEX_09.jpg",
-    "shape": "carousel",
-    "platform": "instagram",
-    "source_url": "https://www.instagram.com/p/DfAY9PWFuEX/",
-    "excerpt": "Link: https://www.instagram.com/p/DfAY9PWFuEX/ Slide 9 of 16 Text on it: 20 words, 4% of the area. Colours: #0b0c0d 13%, #4bedde 10%, #187a81 10%, #7c7e7e 9%, #494b4c 8% Text: Sz w w A HISTORIC BREAKTHROUGH IN MEDICINE: THE WORLD'S FIRST 3D PRINTED CORNEA HAS RESTORED SIGHT TO A…",
-    "created_at": "2026-10-28T06:03:52.795035+00:00"
-   },
-   {
-    "id": "5168e2a2-be86-465d-b068-b2dc996941c5",
-    "title": "instagram_DfAY9PWFuEX_08.jpg",
-    "shape": "carousel",
-    "platform": "instagram",
-    "source_url": "https://www.instagram.com/p/DfAY9PWFuEX/",
-    "excerpt": "Link: https://www.instagram.com/p/DfAY9PWFuEX/ Slide 8 of 16 Text on it: 21 words, 7% of the area. Colours: #0d0504 17%, #b20202 16%, #a8b0ba 7%, #880303 6%, #aec1d6 5% Text: CHILDREN WILL NO LONGER BE BORN WITH DOWN SYNDROME: JAPANESE SCIENTISTS MANAGED TO REMOVE THE CHROMOSOME…",
     "created_at": "2026-10-28T06:03:52.795035+00:00"
    },
    {
@@ -4425,6 +4353,87 @@
     "platform": "instagram",
     "source_url": "https://www.instagram.com/p/DfAY9PWFuEX/",
     "excerpt": "Link: https://www.instagram.com/p/DfAY9PWFuEX/ Slide 14 of 16 Text on it: 18 words, 4% of the area. Colours: #0c110f 20%, #4c5049 8%, #4e4320 7%, #214148 5%, #80724c 5% Text: In if ai, FRENCH DOCTORS RESTORED SIGHT TO A COMPLETELY BLIND PERSON USING PROTEINS FROM ALGAE. on aS.",
+    "created_at": "2026-10-28T06:03:52.795035+00:00"
+   },
+   {
+    "id": "853f9298-8ef3-4754-b2c9-4627a8b89617",
+    "title": "instagram_DfAY9PWFuEX_02.jpg",
+    "shape": "carousel",
+    "platform": "instagram",
+    "source_url": "https://www.instagram.com/p/DfAY9PWFuEX/",
+    "excerpt": "Link: https://www.instagram.com/p/DfAY9PWFuEX/ Slide 2 of 16 Text on it: 20 words, 5% of the area. Colours: #11130f 28%, #c5c0b9 15%, #cdc8c0 10%, #dedfdc 9%, #7c7875 4% Text: oa BY THE END OF 2026, EYE DROPS WILL BE AVAILABLE THAT CORRECT NEAR VISION WITHOUT THE NEED T0 ASSES.",
+    "created_at": "2026-10-28T06:03:52.795035+00:00"
+   },
+   {
+    "id": "bb9dc343-ebb8-40cd-8596-074291f388d9",
+    "title": "instagram_DfAY9PWFuEX_04.jpg",
+    "shape": "carousel",
+    "platform": "instagram",
+    "source_url": "https://www.instagram.com/p/DfAY9PWFuEX/",
+    "excerpt": "Link: https://www.instagram.com/p/DfAY9PWFuEX/ Slide 4 of 16 Text on it: 18 words, 5% of the area. Colours: #0b0c0f 15%, #4e4b46 10%, #bab5ad 7%, #807b78 5%, #886e4f 5% Text: TALENT A17 YEAR OLD STUDENT CREATED SURGICAL SUTURES THAT CHANGE COLOR WHEN THEY DETECT AN INFECTION THE…",
+    "created_at": "2026-10-28T06:03:52.795035+00:00"
+   },
+   {
+    "id": "dbb7dba0-033f-4657-8661-f95e833e3be2",
+    "title": "instagram_DfAY9PWFuEX_07.jpg",
+    "shape": "carousel",
+    "platform": "instagram",
+    "source_url": "https://www.instagram.com/p/DfAY9PWFuEX/",
+    "excerpt": "Link: https://www.instagram.com/p/DfAY9PWFuEX/ Slide 7 of 16 Text on it: 30 words, 8% of the area. Colours: #090e0d 21%, #b0aea2 15%, #16484b 7%, #48524b 6%, #48431e 5% Text: fs REPUBL jii CALIFORNIA HAS OFFICIALLY BANNED THE CRUEL PRACTICE OF OCTOPUS FARMING AND THE SALE OF FAR…",
+    "created_at": "2026-10-28T06:03:52.795035+00:00"
+   },
+   {
+    "id": "5168e2a2-be86-465d-b068-b2dc996941c5",
+    "title": "instagram_DfAY9PWFuEX_08.jpg",
+    "shape": "carousel",
+    "platform": "instagram",
+    "source_url": "https://www.instagram.com/p/DfAY9PWFuEX/",
+    "excerpt": "Link: https://www.instagram.com/p/DfAY9PWFuEX/ Slide 8 of 16 Text on it: 21 words, 7% of the area. Colours: #0d0504 17%, #b20202 16%, #a8b0ba 7%, #880303 6%, #aec1d6 5% Text: CHILDREN WILL NO LONGER BE BORN WITH DOWN SYNDROME: JAPANESE SCIENTISTS MANAGED TO REMOVE THE CHROMOSOME…",
+    "created_at": "2026-10-28T06:03:52.795035+00:00"
+   },
+   {
+    "id": "86eaea5b-ce9d-4a60-92dc-b0a67bdc18b3",
+    "title": "instagram_DfAY9PWFuEX_09.jpg",
+    "shape": "carousel",
+    "platform": "instagram",
+    "source_url": "https://www.instagram.com/p/DfAY9PWFuEX/",
+    "excerpt": "Link: https://www.instagram.com/p/DfAY9PWFuEX/ Slide 9 of 16 Text on it: 20 words, 4% of the area. Colours: #0b0c0d 13%, #4bedde 10%, #187a81 10%, #7c7e7e 9%, #494b4c 8% Text: Sz w w A HISTORIC BREAKTHROUGH IN MEDICINE: THE WORLD'S FIRST 3D PRINTED CORNEA HAS RESTORED SIGHT TO A…",
+    "created_at": "2026-10-28T06:03:52.795035+00:00"
+   },
+   {
+    "id": "66d3cd6e-b1a3-4eec-a87b-232d98adf065",
+    "title": "instagram_DfAY9PWFuEX_10.jpg",
+    "shape": "carousel",
+    "platform": "instagram",
+    "source_url": "https://www.instagram.com/p/DfAY9PWFuEX/",
+    "excerpt": "Link: https://www.instagram.com/p/DfAY9PWFuEX/ Slide 10 of 16 Text on it: 22 words, 6% of the area. Colours: #100e0e 23%, #dce0e0 14%, #b8b8b6 6%, #504d48 6%, #b9a180 5% Text: Be wi ry. ii SS MEXICAN SCIENTIST EVA RAMON GALLEGOS BECAME THE FIRST PERSON IN HISTORY TO SUCCESSFULLY…",
+    "created_at": "2026-10-28T06:03:52.795035+00:00"
+   },
+   {
+    "id": "bafaa7c3-0e3e-4d8e-ac36-4ff5f4fb2658",
+    "title": "instagram_DfAY9PWFuEX_13.jpg",
+    "shape": "carousel",
+    "platform": "instagram",
+    "source_url": "https://www.instagram.com/p/DfAY9PWFuEX/",
+    "excerpt": "Link: https://www.instagram.com/p/DfAY9PWFuEX/ Slide 13 of 16 Text on it: 33 words, 9% of the area. Colours: #4f4b49 16%, #0f0c0a 16%, #7c7a7f 10%, #441f13 6%, #b4abaf 6% Text: im oe re WAI Fs WILL FIRST PLACE IN THE WORLD WHERE POLI ING DURING ELECTIONS WILL BE A CRIMINAL OFFEN…",
+    "created_at": "2026-10-28T06:03:52.795035+00:00"
+   },
+   {
+    "id": "611a1c3c-e9cd-4cec-948b-d2c7d97af2a0",
+    "title": "instagram_DfAY9PWFuEX_15.jpg",
+    "shape": "carousel",
+    "platform": "instagram",
+    "source_url": "https://www.instagram.com/p/DfAY9PWFuEX/",
+    "excerpt": "Link: https://www.instagram.com/p/DfAY9PWFuEX/ Slide 15 of 16 Text on it: 23 words, 8% of the area. Colours: #070809 25%, #444c4d 8%, #174550 7%, #7f817b 5%, #4c777e 5% Text: So JAPAN HAS ACHIEVED A RECORD INTERNET SPEED: 1.02 PETABITS PER SECOND, ALLOWING YOU TO DOWNLOAD ALL OF…",
+    "created_at": "2026-10-28T06:03:52.795035+00:00"
+   },
+   {
+    "id": "cf019ece-48b3-4752-8475-65b3286d8797",
+    "title": "instagram_DfAY9PWFuEX_16.jpg",
+    "shape": "carousel",
+    "platform": "instagram",
+    "source_url": "https://www.instagram.com/p/DfAY9PWFuEX/",
+    "excerpt": "Link: https://www.instagram.com/p/DfAY9PWFuEX/ Slide 16 of 16 Text on it: 23 words, 13% of the area. Colours: #151413 27%, #494425 10%, #80784b 9%, #4f4a3d 8%, #b2ad80 5% Text: “er TIRED OF SEEING NEGATIVE NEWS? FOLLOW WINNING MINDSET: HERE YOU'LL FIND STORIES THAT RESTORE YOUR …",
     "created_at": "2026-10-28T06:03:52.795035+00:00"
    }
   ],
@@ -5110,7 +5119,7 @@
    {
     "id": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67",
     "idea": "Anthropic's Own Hiring Data Is the Most Honest Labour Market Report Published This Year",
-    "state": "drafting",
+    "state": "published",
     "scheduled_for": "2026-11-02",
     "series": "follow_the_money",
     "covers": []
@@ -5137,7 +5146,7 @@
    "study_style": 1,
    "liked": 1,
    "fresh": 58,
-   "corpora": 15,
+   "corpora": 16,
    "creators": 7,
    "claims": 27,
    "asks": 15,
@@ -6372,7 +6381,7 @@
   {
    "id": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67",
    "idea": "Anthropic's Own Hiring Data Is the Most Honest Labour Market Report Published This Year",
-   "state": "drafting",
+   "state": "published",
    "scheduled_for": "2026-11-02",
    "series": "follow_the_money",
    "covers": []

@@ -639,6 +639,76 @@
   ],
   "sat": [
    {
+    "id": "goodnews",
+    "format": "Uplifting AI news carousel, 6 cards, 4:5",
+    "source": "Your saved post asking for a positive ray of sunshine (28 Oct)",
+    "copy": "Good things AI did this week, as real news with the real picture or clip of each one. It is a weekly Saturday series: the four stories are found fresh by the Sunday run on 8 Nov, as your Improve on 2 Nov asked (actual news items with real images or video).",
+    "hook": "Good things AI did this week.",
+    "pitch": {
+     "see": "A title card, then one card for each of four real good-news AI stories from the week before Sunday 8 November: its real headline, a real photo or clip, one line on why it matters, and the source and date. A last card asks which one surprised you.",
+     "lands": "A weekly dose of good news that people save and come back to, because every story is real and shown.",
+     "share": "Something good AI did this week."
+    },
+    "direction": {
+     "look": "The positive post you saved, in the infographic style you saved, with real photos and clips",
+     "format": "Uplifting AI news carousel, 6 cards, 4:5",
+     "frames": [
+      {
+       "words": "GOOD THINGS AI DID THIS WEEK, 7 TO 14 NOV",
+       "picture": "A big sun-yellow headline, a small hand-drawn sun"
+      },
+      {
+       "words": "STORY ONE: ITS REAL HEADLINE",
+       "picture": "The real photo or clip, cropped tight, source and date small"
+      },
+      {
+       "words": "STORY TWO: ITS REAL HEADLINE",
+       "picture": "The real photo or clip, source and date"
+      },
+      {
+       "words": "STORY THREE: ITS REAL HEADLINE",
+       "picture": "The real photo or clip, source and date"
+      },
+      {
+       "words": "STORY FOUR: ITS REAL HEADLINE",
+       "picture": "The real photo or clip, source and date"
+      },
+      {
+       "words": "WHICH ONE SURPRISED YOU?",
+       "picture": "Four thumbnails in a row"
+      }
+     ],
+     "tone": "Warm and true",
+     "kit": "Brand kit, sun yellow"
+    },
+    "covers": [
+     "87a82f7f-6411-41c9-92b1-a52c4f3e4f8a",
+     "501c4fd1-4aa1-4cdd-b716-03e70c89c283"
+    ],
+    "inspiration": {
+     "label": "The positive ray of sunshine post you saved",
+     "saved": "Saved 28 Oct"
+    },
+    "adds": "Real, dated news from this week with each story's own picture or clip, where the saved post is a one-off with no sources.",
+    "needs": [
+     "the four stories are found by the Sunday run on 8 Nov: dated in the 7 days to that Sunday, each checked against its primary source, each with its own photo or clip"
+    ],
+    "weekly": "good_news",
+    "stories_due": "2026-11-08",
+    "read_back": {
+     "readers": [
+      "Fresh reader A (Haiku, a 12-year-old reading once)",
+      "Fresh reader B (Sonnet, a 12-year-old reading once)"
+     ],
+     "says": [
+      "A weekly Saturday series that shows four real AI good-news stories from the week before 8 November, each with its real headline, photo or clip, a line on why it matters, and its source and date, ending with a card asking which one surprised you.",
+      "A weekly Saturday series post: a title card, then four cards, each with a real good-news AI story from that week (headline, photo or clip, why it matters, source and date), and a last card asking which one surprised you."
+     ],
+     "against": 13,
+     "versus": "Ours turns the saver's unsourced wish for a positive week of AI into dated, sourced real stories with photos, the sourced substance the original lacks. (Fresh reader C, Sonnet, saw both)"
+    }
+   },
+   {
     "id": "spotai",
     "format": "Quiz carousel, 6 cards, 4:5",
     "source": {
@@ -821,8 +891,6 @@
   "7f43c6b5-a468-40f3-ad66-c988cdc16072": "A style ask, used: the clean to-camera 1-2-3 shot is how Thursday 5 November's short is made; no off day next week is to camera.",
   "e73a0110-a108-456c-8781-350259b1b196": "A style ask: the fast, engaging subtitles are the subtitle style of Tuesday's MCP short (mcpskin) and Thursday 5 November's short.",
   "e829fbfb-278d-45e2-9607-73af4c04310d": "A style ask: the visual and emotional quality you want for shorts is the bar for Tuesday's MCP short (mcpskin); its voice-tool topic is not offered.",
-  "87a82f7f-6411-41c9-92b1-a52c4f3e4f8a": "Cut on 2 Nov: both fresh readers said Saturday's good-news carousel repeats Sat 7 Nov's (the same weekly format, which waits on your Improve). Whether good news is a weekly Saturday series is your call.",
-  "501c4fd1-4aa1-4cdd-b716-03e70c89c283": "A style ask: the infographic style is how Thursday's gitbroke and Saturday's infosys and oldproof carousels are drawn.",
   "a397253e-bfe1-4a84-babc-27d93fd2779d": "Answered by Friday's Grandma pitch (56bb9c22), which explains the rigged test; it is not also offered as an off-day meme (Krish, 2 Nov: the off-day version was a weaker copy)."
  },
  "locked": {
