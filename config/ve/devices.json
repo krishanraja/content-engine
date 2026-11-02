@@ -15,6 +15,7 @@
     "scribble": { "verbs": ["draw", "exit"] },
     "passport_page": { "verbs": ["enter", "stamp", "mark", "exit"] },
     "hand_phone_stage": { "verbs": ["enter", "move", "fill", "exit"] },
-    "thread_card": { "verbs": ["enter", "mark", "stamp", "exit"] }
+    "thread_card": { "verbs": ["enter", "mark", "stamp", "exit"] },
+    "typing_bubble": { "verbs": ["enter", "type", "send", "pick", "exit"] }
   }
 }

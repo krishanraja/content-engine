@@ -1,0 +1,12 @@
+{
+  "objects": [{"obj":"bubble","device":"typing_bubble","meaning":"Simulated message from an invented sender","params":{"kind":"chat","rows":[{"who":"Mira Vale","text":"Hello there!","side":"left"},{"text":"Please wait.","side":"right"}],"status":"Sent"},"fromFrame":0,"toFrame":240}],
+  "events": [
+    {"id":"enter","obj":"bubble","verb":"enter","toState":"visible","atFrame":10},
+    {"id":"first","obj":"bubble","verb":"type","toState":"0","atFrame":30},
+    {"id":"second","obj":"bubble","verb":"type","toState":"1","atFrame":70},
+    {"id":"send","obj":"bubble","verb":"send","toState":"sent","atFrame":110},
+    {"id":"exit","obj":"bubble","verb":"exit","toState":"hidden","atFrame":180}
+  ],
+  "aspects":["9:16","16:9"],
+  "stills":[9,22,30,55,75,115,186]
+}
