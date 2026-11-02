@@ -1,0 +1,10 @@
+{
+  "objects": [{"obj":"bubble","device":"typing_bubble","meaning":"Simulated fictional message","params":{"kind":"chat","rows":[{"who":"Mira Vale","text":"Hello there!","side":"right"}],"status":"Sent"},"fromFrame":0,"toFrame":180}],
+  "events": [
+    {"id":"in","obj":"bubble","verb":"enter","toState":"visible","atFrame":0},
+    {"id":"typing","obj":"bubble","verb":"type","toState":"0","atFrame":20},
+    {"id":"sent","obj":"bubble","verb":"send","toState":"sent","atFrame":47},
+    {"id":"out","obj":"bubble","verb":"exit","toState":"hidden","atFrame":100}
+  ],
+  "aspects":["9:16","16:9"], "stills":[0,19,20,35,47,52,103,106]
+}
