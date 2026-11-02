@@ -6,6 +6,8 @@ import { DEVICES } from './registry'
 describe('device verb declarations', () => {
   it('logo_orbit declares its five cues', () => {
     expect(manifest.devices.logo_orbit.verbs).toEqual(['enter', 'add', 'chip', 'highlight', 'exit'])
+  it('typing_bubble declares its five verbs', () => {
+    expect(manifest.devices.typing_bubble.verbs).toEqual(['enter', 'type', 'send', 'pick', 'exit'])
   })
   it('logo_card supports enter, highlight and exit', () => {
     expect(manifest.devices.logo_card.verbs).toEqual(['enter', 'highlight', 'exit'])
