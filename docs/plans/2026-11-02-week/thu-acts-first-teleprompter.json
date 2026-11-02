@@ -1,0 +1,20 @@
+{
+  "piece": "Thu 5 Nov off-day to-camera short: Give your AI its own house rules (his puppy approval with actsfirst merged in)",
+  "approved": {
+    "by": "Krish",
+    "at": "2026-11-02T14:11:00Z",
+    "where": "Claude Code session in krishanraja/content-engine",
+    "words": "approve the thursday script, send to teleprompter, 53 is merged"
+  },
+  "script_file": "docs/plans/2026-11-02-week/thu-acts-first-script.txt",
+  "script_sha256": "4eee68101a9e49d8c06ed55151f2b5833cfe2c1ae5312862d14072eaf4c2d52e",
+  "sent": {
+    "at": "2026-11-02T14:16:01Z",
+    "route": "Teleprompter connector from a session (teleprompter_send.py's fallback); this merged off-day piece has no making record or board press for plan to read",
+    "folder": {"id": "4F9825A0-FB17-4B78-A9A4-0EAB9A61ACED", "name": "Thu 5 Nov under.the.hood - Give your AI its own house rules"},
+    "script": {"id": "A55B6A69-E41E-4DDA-B5F4-EEE2E3A1C764", "title": "Thu 5 Nov - 90-second - Give your AI its own house rules", "duration_s": 78},
+    "read_back": "identical to the approved words, same sha256",
+    "names_from": "week_board.tp_names (teleprompter_send.folder_name and script_title)"
+  },
+  "read_back_by_fresh_readers": ["reader A: nothing lost, lively", "reader B: nothing lost, lively"]
+}
