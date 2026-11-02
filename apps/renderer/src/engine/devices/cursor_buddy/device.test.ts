@@ -73,6 +73,17 @@ describe('cursor buddy', () => {
     expect(buddyState({ ...p, frame: 147 })!.x).toBeCloseTo(0.2)
     expect(buddyState({ ...p, frame: 147 })!.y).toBeCloseTo(0.3)
   })
+  it('keeps the floor shadow grounded during the double hop', () => {
+    const shadowY = (frame: number) => still(props(frame)).match(/<ellipse[^>]+cy="([^"]+)"/)?.[1]
+    expect(shadowY(44)).toBe(shadowY(56))
+    expect(shadowY(52)).toBe(shadowY(56))
+  })
+  it('uses the sulk event target mood, including a return to cool', () => {
+    const p = props(78)
+    p.events = events.map(e => String(e.verb) === 'sulk' ? { ...e, toState: 'cool' } : e)
+    expect(buddyState(p)).toMatchObject({ mood: 'cool', slump: 0 })
+    expect(still(p)).toContain('data-eyes="sunglasses"')
+  })
   it('resets on reentry and ignores unrelated objects', () => {
     const p = props(212); p.events = [...events, { ...events[0]!, id: 'again', atFrame: 200 }]
     expect(buddyState(p)).toMatchObject({ mood: 'eager', x: 0.5, y: 0.5, slump: 0 })

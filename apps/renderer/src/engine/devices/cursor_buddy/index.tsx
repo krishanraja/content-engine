@@ -56,14 +56,17 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
   const size = Math.min(box.width * (tall ? 0.28 : 0.18), box.height * (tall ? 0.24 : 0.38))
   const scale = size / 160
   const x = box.width * s.x - (box.width * s.x + size) * (1 - s.zip) + (box.width + size) * s.out - s.recoil * size * 0.12
-  const y = box.height * s.y - size * 0.7 * 4 * s.zip * (1 - s.zip) - size * 0.3 * s.hop + size * 0.13 * s.slump
+  const groundY = box.height * s.y
+  const y = groundY - size * 0.7 * 4 * s.zip * (1 - s.zip) - size * 0.3 * s.hop + size * 0.13 * s.slump
   const tilt = -8 * (1 - s.zip) - 14 * s.slump + 15 * s.wave
   return <svg width={box.width} height={box.height} viewBox={`0 0 ${box.width} ${box.height}`}
     style={{ position: 'absolute', left: box.left, top: box.top, overflow: 'hidden' }}>
+    <ellipse cx={x + 3 * scale} cy={groundY + 88 * scale}
+      rx={(58 - s.hop * 14) * scale} ry={9 * scale} fill={tokens.ink}
+      opacity={(0.06 + 0.06 * (1 - s.hop)) * s.zip * (1 - s.out)} />
     <g transform={`translate(${x} ${y}) scale(${scale})`}>
       {s.entry < 1 && [0, 1, 2].map(i => <path key={i} d={`M ${-115 - i * 25} ${10 + i * 18} q -28 -10 -46 2`}
         fill="none" stroke={tokens.mint} strokeWidth={9 - i * 2} strokeLinecap="round" opacity={(1 - s.entry) * (0.5 - i * 0.12)} />)}
-      <ellipse cx="3" cy="88" rx={58 - s.hop * 14} ry="9" fill={tokens.ink} opacity={0.06 + 0.06 * (1 - s.hop)} />
       <g transform={`rotate(${tilt}) scale(${s.scaleX} ${s.scaleY})`}>
         <path d="M -57 -70 Q -60 -83 -48 -75 L 64 16 Q 76 27 60 30 L 20 34 L 3 73 Q -2 85 -12 76 L -37 40 L -67 57 Q -80 64 -77 47 Z"
           transform="translate(2 5)" fill={tokens.ink} opacity="0.12" />
