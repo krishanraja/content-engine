@@ -23,6 +23,7 @@ describe('cursor buddy', () => {
     expect(still(props(186))).toBe('')
   })
   it('double hops and returns to rest height', () => {
+    expect(at(44)!.mood).toBe('proud')
     expect(at(44)!.hop).toBeGreaterThan(0.8)
     expect(at(48)!.hop).toBeCloseTo(0)
     expect(at(52)!.hop).toBeGreaterThan(0.6)
@@ -61,6 +62,16 @@ describe('cursor buddy', () => {
     expect(ParamsSchema.safeParse({ mood: 'angry' }).success).toBe(false)
     const p = props(150); p.events = [...events, { ...events[0]!, verb: 'move', atFrame: 145, toState: '{"x":2,"y":0}' }]
     expect(() => buddyState(p)).toThrow()
+  })
+  it('honours object lifetime and glides continuously when a move is interrupted', () => {
+    expect(still({ ...props(22), object: { ...object, fromFrame: 30 } })).toBe('')
+    expect(still(props(240))).toBe('')
+    const p = props(135)
+    const before = buddyState(p)!
+    p.events = [...events, { ...events[0]!, id: 'interrupt', verb: 'move', atFrame: 135, toState: '{"x":0.2,"y":0.3}' }]
+    expect(buddyState(p)).toMatchObject({ x: before.x, y: before.y })
+    expect(buddyState({ ...p, frame: 147 })!.x).toBeCloseTo(0.2)
+    expect(buddyState({ ...p, frame: 147 })!.y).toBeCloseTo(0.3)
   })
   it('resets on reentry and ignores unrelated objects', () => {
     const p = props(212); p.events = [...events, { ...events[0]!, id: 'again', atFrame: 200 }]

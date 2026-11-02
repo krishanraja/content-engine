@@ -4,11 +4,12 @@ import type { DeviceProps } from '../types'
 import { MoodSchema, ParamsSchema, PositionSchema } from './schema'
 
 const linear = (t: number) => t
-const pulse = (t: number) => Math.sin(Math.PI * t)
+const pulse = (t: number) => t <= 0 || t >= 1 ? 0 : Math.sin(Math.PI * t)
 
 /** All poses are evaluated from the event history, including interrupted moves. */
 export function buddyState({ object, events, frame }: Pick<DeviceProps, 'object' | 'events' | 'frame'>) {
   const params = ParamsSchema.parse(object.params)
+  if (frame < object.fromFrame || frame >= object.toFrame) return null
   const fired = stateAt(events, object.obj, frame).fired
   const enter = fired.filter(e => e.verb === 'enter').at(-1)
   if (!enter) return null
@@ -31,8 +32,8 @@ export function buddyState({ object, events, frame }: Pick<DeviceProps, 'object'
     moveAt = event.atFrame
   }
   // String comparison allows the new device verbs while the shared schema awaits extension.
-  const moodEvent = active.filter(e => String(e.verb) === 'sulk').at(-1)
-  const mood = moodEvent ? MoodSchema.parse(moodEvent.toState) : params.mood
+  const moodEvent = active.filter(e => ['sulk', 'bounce'].includes(String(e.verb))).at(-1)
+  const mood = String(moodEvent?.verb) === 'bounce' ? 'proud' : moodEvent ? MoodSchema.parse(moodEvent.toState) : params.mood
   const gesture = active.filter(e => ['bounce', 'sulk', 'wave'].includes(String(e.verb))).at(-1)
   const verb = String(gesture?.verb ?? '')
   const age = gesture ? frame - gesture.atFrame : Infinity
@@ -72,7 +73,7 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
           <path d="M -48 -17 L -25 -17 L -28 -4 Q -38 4 -46 -5 Z M -15 -17 L 8 -17 L 5 -4 Q -5 4 -13 -5 Z" />
           <path d="M -25 -13 L -15 -13 M -55 -19 L 13 -19" fill="none" />
         </g> : <g data-eyes={s.mood === 'sulk' ? 'half-closed' : 'open'} fill={tokens.ink}>
-          {s.mood === 'sulk' ? <path d="M -45 -8 q 7 7 14 0 M -17 -8 q 7 7 14 0" fill="none" stroke={tokens.ink} strokeWidth="4" strokeLinecap="round" /> : <>
+          {s.mood === 'sulk' ? <path d={s.wave > 0.3 ? 'M -45 -8 q 7 7 14 0 M -13 -12 q 6 6 12 0' : 'M -45 -8 q 7 7 14 0 M -17 -8 q 7 7 14 0'} fill="none" stroke={tokens.ink} strokeWidth="4" strokeLinecap="round" /> : <>
             <ellipse cx="-37" cy="-13" rx="5" ry="6" />
             {s.wave > 0.3 ? <path d="M -13 -12 q 6 6 12 0" fill="none" stroke={tokens.ink} strokeWidth="4" strokeLinecap="round" /> : <ellipse cx="-9" cy="-13" rx="5" ry="6" />}
           </>}
