@@ -7,6 +7,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
@@ -329,6 +330,29 @@ class LaneGuards(unittest.TestCase):
         got = lane.wait(['codex-a', 'b'], every=0, read=lambda: next(reads), sleep=lambda s: None, out=lines.append)
         self.assertEqual(got, {'codex-a': 'built', 'codex-b': 'failed'})
         self.assertEqual([l.split()[1] for l in lines], ['queued', 'queued', 'built', 'running', 'failed'])
+
+
+class StaleWorktree(unittest.TestCase):
+    """F22: a re-queued card's existing worktree takes in origin/main before Codex runs."""
+
+    def test_existing_worktree_takes_in_main(self):
+        import subprocess, tempfile
+        from velib import cards
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp = Path(tmp)
+            git = lambda *a, cwd: subprocess.run(['git', *a], cwd=cwd, check=True, capture_output=True)
+            git('init', '-q', '--bare', '-b', 'main', str(tmp / 'origin.git'), cwd=tmp)
+            git('clone', '-q', str(tmp / 'origin.git'), str(tmp / 'seed'), cwd=tmp)
+            seed = tmp / 'seed'
+            for k, v in (('user.name', 't'), ('user.email', 't@t')):
+                git('config', k, v, cwd=seed)
+            (seed / 'props.ts').write_text('old')
+            git('add', '.', cwd=seed); git('commit', '-qm', 'one', cwd=seed); git('push', '-q', 'origin', 'HEAD:main', cwd=seed)
+            git('clone', '-q', str(tmp / 'origin.git'), str(tmp / 'card'), cwd=tmp)
+            (seed / 'props.ts').write_text('new')
+            git('commit', '-qam', 'fix', cwd=seed); git('push', '-q', 'origin', 'HEAD:main', cwd=seed)
+            cards.refresh_worktree(tmp / 'card')
+            self.assertEqual((tmp / 'card' / 'props.ts').read_text(), 'new')
 
 
 if __name__ == '__main__':

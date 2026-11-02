@@ -210,8 +210,10 @@ def ensure_worktree(cwd: Path, card_id: str) -> None:
     """A card runs in its own worktree cut from origin/main, with node_modules junctioned from the main checkout.
     A new worktree is made only where the local layout puts it (velib.common.card_worktree: config/studio.json
     local_roots.worktrees, W2.11): a card still naming a typed path is refused and rewritten with ve card. One that
-    already exists is used where it is."""
+    already exists (a re-queued card) first takes in the current origin/main: on 2026-11-02 three re-queued cards were
+    built on their first attempt's stale main and failed on a fix main already had (F22)."""
     if cwd.exists():
+        refresh_worktree(cwd)
         return
     try:
         expected = native_path(card_worktree(card_id))
@@ -229,6 +231,22 @@ def ensure_worktree(cwd: Path, card_id: str) -> None:
             subprocess.run(['cmd', '/c', 'mklink', '/J', str(cwd / 'node_modules'), str(modules.resolve())], check=True, capture_output=True)
         else:
             os.symlink(modules.resolve(), cwd / 'node_modules')
+
+
+def refresh_worktree(cwd: Path) -> None:
+    """Bring an existing card worktree up to origin/main by a merge, so its branch still pushes as a fast-forward and
+    any earlier attempt's work is kept. A merge that conflicts is aborted and the dispatch stops, naming the worktree.
+    A folder that is not a git checkout is left alone."""
+    if not (cwd / '.git').exists():
+        return
+    subprocess.run(['git', '-C', str(cwd), 'fetch', '-q', 'origin', 'main'], check=True, capture_output=True)
+    merged = subprocess.run(['git', '-C', str(cwd), '-c', 'user.name=Codex lane', '-c',
+                             'user.email=codex-lane@users.noreply.github.com', 'merge', '-q', '--no-edit', 'origin/main'],
+                            capture_output=True, text=True)
+    if merged.returncode != 0:
+        subprocess.run(['git', '-C', str(cwd), 'merge', '--abort'], capture_output=True)
+        sys.exit(f've dispatch: the worktree {cwd} cannot take in origin/main cleanly; remove it so the card starts '
+                 f'fresh ({(merged.stderr or merged.stdout).strip()[-300:]})')
 
 
 def _is_link(path: Path) -> bool:
