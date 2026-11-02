@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-02","week_target":4,"current":0,"current_as_of":"2026-11-02","current_source":"Control Center content_ideas in the publication's series (0 published in the last 7 days)","urgency":5,"urgency_reason":"under 40% of the week's target two weeks running (0% now)"} --> **North Star number: U5, stalled.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 0, against 4 this week, on the way to 30 by 30 November 2026. Everything else pauses unless it moves the number.
 
+- Krish approved the v3 cursor buddy and typing bubble at Gate 2 ("I agree", 2 Nov); both are merged into the engine. The logo orbit goes back to Codex as v4: its rings did not show and the Meta and xAI marks were smaller than the rest. (2026-11-02)
 - Off-day cards can now carry a finished file as a Download link (`download` {url, label}, read through `read_offdays`). Tuesday's translator video is on the 2 Nov board as a download, build 696dc375, and the link serves bytes identical to the local file (sha256 42e02585). (2026-11-02)
 - Thursday's three new ve devices (cursor_buddy, logo_orbit, typing_bubble) are built by the Codex lane, pass their acceptance (132 device tests) and are merged into one branch; their stills went to Krish for Gate 2. (2026-11-02)
 - The Codex lane now follows every queued card live (ve lane wait), refuses a device card whose verbs main does not accept, and makes a re-queued card take in main before it builds (F22). Thursday's three device cards are re-issued as -v2 and building. (2026-11-02)
@@ -56,7 +57,7 @@ Everything to 29 October 2026 is in `docs/history/2026-10-29-NOW-changed-recentl
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-02): Krish's Gate 2 on the Thursday device polish (v3 cards), then cut Thursday from his recording.
+- Next (2026-11-02): Codex builds the logo orbit v4; then its stills go to Krish for Gate 2.
 - Waiting on Krish (as of 2026-10-29): Control Center's `GITHUB_TOKEN` needs Contents: write and Actions: read on this repository for the make press; whether a make run's pull request auto-merges on green CI; whether the $15 cap gets a reader; the Buffer plan (due 31 October); approving the three one-opening, one-close floor standards through the Rejections route; OUR TEST or MY TEST on a video label he presents; "we" in article titles while video titles keep "I".
 - Waiting on Krish (as of 2026-10-29, Wave 2 and 3 production): by ear, the levels and a sound-effect set; Gate 2 on face-with-proof frames and six devices; 5 to 10 golden frames; 20 minutes on 9 Nov scoring shadow cuts. His 29 Oct answers and the home-computer steps: the handover above.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): CI stays advisory, so a session waits for green before it merges.
