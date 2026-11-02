@@ -165,7 +165,7 @@ export function validBody(collection: string, id: string, body: unknown): boolea
   // it"; he asked for "Ideas and a suggested creative direction to approve or improve or flat out reject for a
   // reason"): the idea, the direction and the mock Growth returns, each {verdict, words, sha256, at, shown}. Improve
   // and Reject carry his words (required), and each side is bound to what it showed him (sha256).
-  if (collection === 'queue' && OFFDAY_ID.test(id) && OFFDAY_SIDES.some(k => k in body)) return offdayVerdicts(id, body)
+  if (collection === 'queue' && OFFDAY_ID.test(id) && (OFFDAY_SIDES.some(k => k in body) || object(body.note))) return offdayVerdicts(id, body)
   if (collection === 'queue' && (OFFDAY_ID.test(id) || body.use === 'offday')) {
     const words = typeof body.note === 'string' && body.note.trim().length > 0
     return OFFDAY_ID.test(id) && body.use === 'offday'
@@ -194,11 +194,14 @@ export const OFFDAY_VERDICTS = ['approve', 'improve', 'reject', 'next_week'] as 
 function offdayVerdicts(id: string, body: Record<string, unknown>): boolean {
   const line = (v: unknown, max: number) => typeof v === 'string' && v.length > 0 && v.length <= max
   if (body.use !== 'offday' || body.pick !== id || !id.startsWith(`off-${String(body.day)}-`) || 'send' in body || 'kind' in body
-    || 'approved' in body || 'note' in body) return false
+    || 'approved' in body) return false
+  // His open words on the option (Krish, 2026-11-02: "feedback on anything in open text format"), exactly as typed.
+  if ('note' in body && body.note !== null && !(object(body.note) && Object.keys(body.note).every(k => ['words', 'at'].includes(k))
+    && typeof body.note.words === 'string' && body.note.words.trim().length > 0 && body.note.words.length <= 2000)) return false
   if (!SHA256.test(String(body.copy_sha256)) || !['format', 'source', 'option_id'].every(k => !(k in body) || line(body[k], 1000))) return false
   if ('week' in body && !(typeof body.week === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(body.week))) return false
   const sides = OFFDAY_SIDES.filter(k => k in body)
-  return sides.length > 0 && sides.every(k => {
+  return (sides.length > 0 || object(body.note)) && sides.every(k => {
     const v = body[k]
     if (!object(v) || Object.keys(v).some(x => !['verdict', 'words', 'sha256', 'at', 'shown'].includes(x))) return false
     const verdict = v.verdict

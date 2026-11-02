@@ -395,6 +395,11 @@ main[data-checklists="hidden"] .st-note,main[data-checklists="hidden"] .ticks,ma
 .off-days .opt .mockback{display:grid;grid-template-columns:112px 1fr;gap:12px;align-items:start;background:#fff4d6;border-radius:12px;padding:10px}
 .off-days .opt .mockback img{width:112px;aspect-ratio:4/5;object-fit:cover;border-radius:6px}
 .off-days .tri-state.wait{color:#8a6a00}
+.off-days .opt .off-free{display:grid;grid-template-columns:1fr auto;gap:6px 8px;align-items:end}
+.off-days .opt .off-free .pl{grid-column:1/-1}
+.off-days .opt .off-free textarea{min-height:76px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;font:15px/1.45 Archivo,system-ui,sans-serif;background:var(--card);color:var(--ink);resize:vertical;white-space:pre-wrap}
+.off-days .opt .off-free .btn-s{min-width:96px}
+@media (max-width:640px){.off-days .opt .off-free{grid-template-columns:1fr}}
 @media (max-width:640px){.off-days .slate{grid-template-columns:repeat(2,minmax(0,1fr))}.off-days .opt .press{grid-template-columns:repeat(2,minmax(0,1fr))}.off-days .opt .press.three{grid-template-columns:repeat(3,minmax(0,1fr))}.off-days .opt .hook{font-size:19px}.off-days .opt .mockback{grid-template-columns:72px 1fr}.off-days .opt .mockback img{width:72px}.off-days .opt .mockback .press.three{grid-template-columns:1fr}}
 .off-days .opt .id-flags{align-items:center}
 .off-days .opt .id-flag{white-space:nowrap}

@@ -176,25 +176,32 @@ export function feelReport(week: string, id: string, body: Body, now: string) {
 /** His words on an off-day option, one taste_reports row per side he improved or rejected (Ruling, Krish,
  *  2026-11-01: "...approve or improve or flat out reject for a reason, and the machine can learn over time"). */
 export function offdayReports(week: string, id: string, body: Body, now: string) {
-  const out: Array<ReturnType<typeof feelReport> & { meta: Record<string, unknown> }> = []
+  const out: Array<ReturnType<typeof offdayRow>> = []
   for (const side of ['idea', 'direction', 'mock']) {
     const v = body[side] as Record<string, unknown> | undefined
     if (!v || (v.verdict !== 'improve' && v.verdict !== 'reject')) continue
     const words = typeof v.words === 'string' ? v.words.trim().slice(0, 2000) : ''
     if (!words) continue
-    const what = typeof body.format === 'string' ? body.format.slice(0, 200) : 'off-day post'
-    out.push({
-      kind: 'krish_words', body: words, said_where: `publish board, ${week} queue/${id} (${side})`, said_at: now,
-      lane: 'production', polarity: v.verdict === 'reject' ? 'dislikes' : 'neutral',
-      subject_ref: `offday:${week}:${id}`, subject: `the ${side} of the ${String(body.day)} off-day option (${what})`,
-      session_ref: 'content.krishraja.com publish board', repository: 'krishanraja/content-engine', surface: 'publish_board',
-      emitter_id: 'content-engine-board',
-      client_report_id: `offday-${digest(canonical({ week, id, side, verdict: v.verdict, words, sha: v.sha256 }))}`.slice(0, 96),
-      reported_at: now,
-      meta: { press: v.verdict, verdict: v.verdict, side, week, day: body.day, option: id },
-    })
+    out.push(offdayRow(week, id, body, side, v.verdict as string, words, v.sha256, now))
   }
+  // His open words on the option, filed verbatim (line breaks kept); a note never starts a revision.
+  const note = isObj(body.note) && typeof body.note.words === 'string' && body.note.words.trim() ? body.note.words.slice(0, 2000) : ''
+  if (note) out.push(offdayRow(week, id, body, 'note', 'note', note, null, now))
   return out
+}
+
+function offdayRow(week: string, id: string, body: Body, side: string, verdict: string, words: string, sha: unknown, now: string) {
+  const what = typeof body.format === 'string' ? body.format.slice(0, 200) : 'off-day post'
+  return {
+    kind: 'krish_words', body: words, said_where: `publish board, ${week} queue/${id} (${side})`, said_at: now,
+    lane: 'production', polarity: verdict === 'reject' ? 'dislikes' : 'neutral',
+    subject_ref: `offday:${week}:${id}`, subject: `the ${side === 'note' ? 'notes on' : side + ' of'} the ${String(body.day)} off-day option (${what})`,
+    session_ref: 'content.krishraja.com publish board', repository: 'krishanraja/content-engine', surface: 'publish_board',
+    emitter_id: 'content-engine-board',
+    client_report_id: `offday-${digest(canonical({ week, id, side, verdict, words, sha }))}`.slice(0, 96),
+    reported_at: now,
+    meta: { press: verdict, verdict, side, week, day: body.day, option: id } as Record<string, unknown>,
+  }
 }
 
 export function scoreRow(week: string, id: string, body: Body, now: string) {
@@ -413,7 +420,7 @@ export async function afterPress(db: SupabaseClient, ctx: { week: string; collec
   // direction not filed before asks GitHub for a revised card. A mock is Growth's to remake from his words (readPieces
   // hands them over), so it starts no run. A run revises only sides whose hash is still current
   // (scripts/post-pack/offday_pending.py), so a repeated ask never revises a side twice.
-  if (collection === 'queue' && body.use === 'offday' && ['idea', 'direction', 'mock'].some(k => k in body)) {
+  if (collection === 'queue' && body.use === 'offday' && (['idea', 'direction', 'mock'].some(k => k in body) || isObj(body.note))) {
     const rows = offdayReports(week, id, body, now)
     if (!rows.length) return null
     const taste: Record<string, string> = {}

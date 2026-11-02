@@ -127,7 +127,7 @@ describe('Sunday reads his off-day verdicts back', async () => {
       ['off-tue-a', 'direction', 'improve', 'a real puppy', 'The AI that agrees'],
       ['off-tue-a', 'idea', 'approve', null, 'The AI that agrees'],
     ])
-    expect(out.counts).toEqual({ approve: 1, improve: 1, reject: 1, next_week: 0 })
+    expect(out.counts).toEqual({ approve: 1, improve: 1, reject: 1, next_week: 0, note: 0 })
   })
   it('reads the eight weeks before the one being planned', () => {
     expect(offdayWeeksBefore('2026-11-09')).toEqual(['2026-11-02', '2026-10-26', '2026-10-19', '2026-10-12', '2026-10-05', '2026-09-28', '2026-09-21', '2026-09-14'])
@@ -140,5 +140,36 @@ describe('which sides wait on a revision', () => {
     const run = spawnSync('python3', ['scripts/post-pack/offday_pending.py', '--self-test'], { encoding: 'utf8' })
     expect(run.status, run.stderr).toBe(0)
     expect(run.stdout).toContain('offday_pending self-test passed')
+  })
+})
+
+describe('his open words on any option (Krish, 2026-11-02)', () => {
+  const MEME = 'WHEN YOUR AI MEETS\nYOUR CUSTOMER\'S AI'
+  it('takes a note alone or beside his presses, exactly as typed, and refuses an empty or oversized one', () => {
+    expect(validBody('queue', 'off-tue-prices', record({}, { note: { words: MEME, at: 'now' } }))).toBe(true)
+    expect(validBody('queue', 'off-tue-prices', record({ idea: side('approve') }, { note: { words: MEME, at: 'now' } }))).toBe(true)
+    expect(validBody('queue', 'off-tue-prices', record({ idea: side('approve') }, { note: null }))).toBe(true)
+    expect(validBody('queue', 'off-tue-prices', record({}, { note: { words: '   ', at: 'now' } }))).toBe(false)
+    expect(validBody('queue', 'off-tue-prices', record({}, { note: { words: 'x'.repeat(2001), at: 'now' } }))).toBe(false)
+    expect(validBody('queue', 'off-tue-prices', record({}, { note: 'loose text' }))).toBe(false)
+  })
+  it('files his words verbatim, line breaks kept, once, and never starts a revision', async () => {
+    const rows = offdayReports(WEEK, 'off-tue-prices', record({ idea: side('approve') }, { note: { words: MEME, at: 'now' } }), 'now')
+    expect(rows.map(r => [r.meta.side, r.body])).toEqual([['note', MEME]])
+    const asked: unknown[] = []
+    const revise = async () => { asked.push(1); return { sent: true as const } }
+    const filed: unknown[] = []
+    const db = { from: () => ({ upsert: (row: unknown) => { filed.push(row); return { select: async () => ({ data: [{ client_report_id: 'x' }], error: null }) } } }) }
+    const out = await afterPress(db as never, { week: WEEK, collection: 'queue', id: 'off-tue-prices',
+      body: record({ idea: side('approve') }, { note: { words: MEME, at: 'now' } }), who: 'Krish', saved: { ok: true } }, { revise })
+    expect(out).toMatchObject({ taste: { note: 'filed' } })
+    expect(asked).toHaveLength(0)
+    expect(offdayReports(WEEK, 'off-tue-prices', record({}, { note: { words: MEME, at: 'later' } }), 'later')[0].client_report_id).toBe(rows[0].client_report_id)
+  })
+  it('comes back on Sunday as his words', async () => {
+    const { buildOffdayVerdicts } = await import('../../apps/control-plane/api/week/_offdayVerdicts.js')
+    const out = buildOffdayVerdicts([{ week: '2026-11-02', doc_id: 'off-tue-a', body: { day: 'tue', note: { words: MEME, at: '2026-11-02T10:00:00Z' } } }])
+    expect(out.verdicts).toEqual([expect.objectContaining({ side: 'note', verdict: 'note', words: MEME })])
+    expect(out.counts.note).toBe(1)
   })
 })

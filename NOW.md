@@ -1,7 +1,7 @@
 ---
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
-as_of: 2026-11-01
+as_of: 2026-11-02
 head: de5b942
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
@@ -30,10 +30,11 @@ Stories a writer can carry without asking Krish:
 
 Objection it answers: "AI content is slop." Here is an engine that grades its judges against the editor, refuses to ship beneath his recorded rejections, and never counts its own actions as taste.
 
-## Where it is right now (as of 2026-11-01)
+## Where it is right now (as of 2026-11-02)
 
 <!-- north-star-state {"week_of":"2026-11-02","week_target":4,"current":0,"current_as_of":"2026-11-02","current_source":"Control Center content_ideas in the publication's series (0 published in the last 7 days)","urgency":5,"urgency_reason":"under 40% of the week's target two weeks running (0% now)"} --> **North Star number: U5, stalled.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 0, against 4 this week, on the way to 30 by 30 November 2026. Everything else pauses unless it moves the number.
 
+- Every off-day option now has an always-open box for Krish's own words, whatever he pressed (Krish, 2026-11-02: "I still need to be able to provide actual feedback on anything in open text format"). His words are saved exactly as typed in the option's record, filed to his taste ledger, read back on Sunday, and handed to Growth word for word as the post's text when he gives it ("it would contain the exact meme text to put above the meme video"). (2026-11-02)
 - The four ready articles are live on both boards (1 Nov, builds e2662aee and b95bda25): lists render, "we" voice, one quip each, 3 to 6 figures, reader-tested on house rule READER_TEST (Krish's six criteria, bar 9). Each status line names the fact lines left for his sign-off (12 in all).
 - Off-day ideas are triaged like Mon/Wed/Fri (Ruling, Krish, 2026-11-01: "Mock looks right, lock it and build it"). Each off day takes 4 to 6 options, each an idea and a suggested creative direction with Approve, Improve and Reject on each side (the idea also takes Next week). Each press is bound to what that side showed. Improve and Reject words go to his taste ledger and come back on Sunday as offday_verdicts; Improve starts offday-revise.yml. Growth reads the approved options in place of the one mix press. Built and checked on synthetic data; not live until the next Sunday board build. (2026-11-01)
 - Codex lane: cloud queue to Lorimer proven live; venture lanes proven end to end against a stand-in Codex; Codex session logs now found in every Codex home. A real Codex card on Lorimer is still unproven. (2026-11-01)
@@ -53,13 +54,13 @@ Everything to 29 October 2026 is in `docs/history/2026-10-29-NOW-changed-recentl
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-01): Krish adds OFFDAY_REVISE_DISPATCH_TOKEN (or PLACE_TAKES_DISPATCH_TOKEN) in Vercel so Improve starts a revision; revised cards go live at the board's next build, not at once; the 9 Nov Sunday run is the first live test.
+- Next (2026-11-02): the live 2 Nov board shows the box once it is next rebuilt; Growth's maker puts an approved option's note on the post verbatim.
 - Also next (2026-11-01): Krish signs off the 12 named fact lines on the four articles (each status line on the board lists them) before each publishes; then Growth posts from the sealed manifests, which these changes did not touch.
 - Then: the dry run on Saturday 31 October, 18:00 New York (read both machines' preflight blocks first), and the first Sunday loop on 1 November, recording `production_choices` for each piece made. After that the plan is Wave 2 (`docs/plans/2026-11-07-wave-2.md`: unattended overnight cuts, calibrated gates, ve in shadow, Growth posting what he approved, by 7 November) and Wave 3 (`docs/plans/2026-11-14-wave-3.md`: the ve cutover, one inspiration source, the retrospective, by 14 November).
 - Waiting on Krish (as of 2026-10-29): Control Center's `GITHUB_TOKEN` needs Contents: write and Actions: read on this repository for the make press; whether a make run's pull request auto-merges on green CI; whether the $15 cap gets a reader; the Buffer plan (due 31 October); approving the three one-opening, one-close floor standards through the Rejections route; OUR TEST or MY TEST on a video label he presents; "we" in article titles while video titles keep "I".
 - Waiting on Krish (as of 2026-10-29, Wave 2 and 3 production): by ear, the levels and a sound-effect set; Gate 2 on face-with-proof frames and six devices; 5 to 10 golden frames; 20 minutes on 9 Nov scoring shadow cuts. His 29 Oct answers and the home-computer steps: the handover above.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): CI stays advisory, so a session waits for green before it merges.
-- North Star check (2026-11-01): holds.
+- North Star check (2026-11-02): holds.
 
 ## Read next
 
