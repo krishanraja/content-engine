@@ -23,7 +23,7 @@ These are the cuts with the rebuilt openings and the remixed audio. His words, a
 
 ## Where they are
 
-All four are on the 2 Nov publish board, build `739e66ab`, read back with each video's sha matching. Monday and Wednesday are marked **review**, with the reason on the board. Monday's two cuts on it are the bytes from before the counter fix. Friday stays ready: its videos carry Krish's approve-for-publish words (picks/fri-publish), and they now resolve to stored assets.
+All four are filed and on the 2 Nov publish board as **ready**, build `88e69f5b` (2 Nov). On readback, all 22 board assets match their local sha256: every video, every thumbnail, and the Drive download links mapped to stored assets. Monday, Wednesday and Friday all read ready. Friday stays ready on Krish's approve-for-publish words (picks/fri-publish).
 
 ## The delivery checks, measured on these bytes
 
@@ -36,18 +36,13 @@ All four are on the 2 Nov publish board, build `739e66ab`, read back with each v
 - **heard:** Krish's adjudication, with the raw recognizer result kept.
 - **visuals** and **full_review.**
 
-## What still blocks
+## Where filing stands (2 Nov): done
 
-On 2 Nov the Monday counters were fixed so they land on their true values (+43%, 28%, 9%, 20 to 13). Only those frame spans were re-rendered, and the audio is byte-identical. Every check was measured again on the new Monday bytes:
-- **Sync:** the eight segments whose frames changed were re-scored. The rest decode identically by framemd5 and were reused. Monday long's two side-on windows are now `krish_cleared` under his words, and the cut passes.
-
-Every check now passes on all four cuts except **`visual_clarity`**. Its inventory, the ruling block and the blinded answers are ready, and `receipts.py clarity` builds the check. It still needs one input: an independent scorer's `scores.json` for each cut, as `.cache/proof/vc/SCORING-REQUEST.md` describes. Every state the review predicts unclear, or scores wrong, is then named in accepted_states under "1. accept. 2 clear".
-
-After that, the remaining steps are:
-1. Archive with `scripts/quick-edit/archive.py`, with `MINDMAKE_ARCHIVE_ROOT` set and the share copies in `share/`.
-2. Send each folder with `send.py`, dry run first.
-3. Record each cut with `making.py <piece> video long|short --video-file <file>`.
-4. Republish the board with Monday and Wednesday ready.
+- **Delivery checks:** every check passes on all four cuts, `visual_clarity` included. An independent scorer marked each blinded answer, and every state predicted unclear or scored wrong is named in accepted_states under Krish's "1. accept. 2 clear". On Monday long, s06, s10 and s15 were marked as misleading, and each keeps its finding.
+- **Library:** all four cuts, their thumbnails and their receipts are archived and sent. The 720p share copies were left out, because each would need a receipt measured on its own bytes; they are in `.cache/share-copies/`.
+- **Records:** both pieces' Video assets steps are done, with the cuts, the thumbnails and the Drive links.
+- **Monday's thumbnails:** redrawn by `docs/plans/2026-11-02-monday/video/thumbnails.py --keep-face`, keeping his picked words and face. The follow.the.money label and "2030" are larger, and `thumb_proof.py` passes: the smallest text on a phone is 15.5 px on the wide one and 16.6 px on the tall one, against 14 needed (it was 7.3 and 10). The new files are sent to the library. Library Sync replaces the older copies at the same Drive links, and they had not landed by the time of the board build; the board serves the new thumbnails from its own stored assets.
+- **Not in scope, but seen:** both pieces' records show the "Fact-checked draft" step as FAIL ("the fact gate did not pass"). It was done on 31 Oct, so another session's article edits probably need a fresh fact-gate run.
 
 ## Engine fixes made on the way
 
