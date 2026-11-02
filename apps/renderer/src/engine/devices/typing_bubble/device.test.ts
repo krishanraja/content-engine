@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest'
 import { EngineEventSchema, EngineObjectSchema } from '../../props'
 import type { DeviceProps } from '../types'
 import { Device, bubbleState } from './index'
+import { HOUSE_FONTS } from '../../../house/geometry'
 import { ParamsSchema } from './schema'
 import fixture from './fixture.json'
 
@@ -55,6 +56,83 @@ describe('typing_bubble', () => {
         expect(html).not.toMatch(/#[0-9a-f]{3,8}\b/i)
       }
     }
+  })
+  it('authors readable phone UI at both aspects with both bubble sides', () => {
+    for (const aspect of fixture.aspects as DeviceProps['aspect'][]) {
+      const p = props(80, aspect)
+      p.object = { ...object, params: { kind: 'chat', status: '09:41', rows: [
+        { who: 'Mira Vale', text: 'Hello there!', side: 'left' },
+        { text: 'All set.', side: 'right' },
+      ] } }
+      p.events = [...events, { id: 'reply', obj: 'bubble', verb: 'type', toState: '1', atFrame: 50 }]
+      const html = render(p)
+      expect(Number(html.match(/width:([0-9.]+)px/)![1])).toBeGreaterThanOrEqual(920)
+      expect(html).toContain('data-chat-header')
+      expect(html).toContain('data-avatar')
+      expect(html).toContain('MV')
+      expect(html).toContain('online')
+      expect(html).toContain('Mira Vale')
+      expect(html).toContain('data-bubble-side="left"')
+      expect(html).toContain('data-bubble-side="right"')
+      expect(html).toContain('background:ivory')
+      expect(html).toContain('background:aqua')
+      expect(html).toContain('data-timestamp')
+      expect(html).toContain('09:41')
+      expect(html).toContain(HOUSE_FONTS.structure)
+      for (const match of html.matchAll(/font-size:([0-9.]+)px/g)) expect(Number(match[1])).toBeGreaterThanOrEqual(44)
+    }
+    expect(render(props(46))).not.toContain('Delivered')
+    expect(render(props(47))).toContain('Delivered')
+    expect(render(props(52))).toContain('data-delivered-ticks')
+  })
+  it('gives order, email and choice their own app anatomy without adding copy fields', () => {
+    for (const aspect of fixture.aspects as DeviceProps['aspect'][]) {
+      const p = props(80, aspect)
+      p.object = { ...object, params: { kind: 'order', rows: [{ who: 'Notebook', text: 'Qty 2 · £24' }], status: 'Confirmed' } }
+      expect(render(p)).toContain('Order placed')
+      expect(render(p)).toContain('✓')
+      expect(render(p)).toContain('data-product-row')
+      expect(render(p)).toContain('Notebook')
+      expect(render(p)).toContain('Qty 2 · £24')
+      expect(render(p)).toContain('Confirmed')
+      p.object = { ...object, params: { kind: 'email', rows: [
+        { who: 'Your weekly update', text: 'Hello there!' },
+        { who: '3,000 recipients', text: 'Preview' },
+      ] } }
+      p.events = [...events, { id: 'recipient', obj: 'bubble', verb: 'type', toState: '1', atFrame: 50 }]
+      expect(render(p)).toContain('data-subject')
+      expect(render(p)).toContain('Your weekly update')
+      expect(render(p)).toContain('To: 3,000 recipients')
+      expect(render(p)).toContain('Hello there!')
+      p.object = { ...object, params: { kind: 'choice', rows: [{ text: 'Preferences' }], options: ['Allow', 'Ask', 'Deny'] } }
+      p.events = [...events, { id: 'pick', obj: 'bubble', verb: 'pick', toState: '2', atFrame: 60 }]
+      const html = render(p)
+      expect(html.match(/data-section/g)).toHaveLength(3)
+      for (const section of ['A', 'B', 'C']) expect(html).toContain('>' + section + '</div>')
+      expect(html.match(/data-radio="/g)).toHaveLength(3)
+      expect(html.match(/data-radio-dot/g)).toHaveLength(1)
+      expect(html).toContain('data-radio-ring')
+    }
+  })
+  it('uses 36px corners, a soft token shadow and a 0.92 entrance on every kind', () => {
+    for (const kind of ['chat', 'notification', 'order', 'email', 'choice']) {
+      const p = props(0)
+      p.object = { ...object, params: { ...object.params, kind, options: ['Allow', 'Ask'] } }
+      const html = render(p)
+      expect(html).toContain('border-radius:36px')
+      expect(html).toContain('scale(0.92)')
+      expect(html).toContain('box-shadow:0 28px 64px color-mix')
+      expect(html).not.toMatch(/#[0-9a-f]{3,8}\b/i)
+      expect(render({ ...p, frame: 12 })).toContain('scale(1)')
+    }
+  })
+  it('moves all three typing dots deterministically using drift and removes them after the lead', () => {
+    const a = render(props(20))
+    const b = render(props(21))
+    expect(a.match(/data-dot="/g)).toHaveLength(3)
+    expect(a).not.toBe(b)
+    expect(b).toBe(render(props(21)))
+    expect(render(props(23))).not.toContain('data-typing-dots')
   })
   it('rejects invalid bounds and ignores other objects and input event ordering', () => {
     for (const params of [{ ...object.params, rows: [] }, { ...object.params, rows: [{ text: 'x'.repeat(81) }] },
