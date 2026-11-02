@@ -83,7 +83,7 @@ describe('logo_orbit', () => {
 import { readFileSync } from 'node:fs'
 import { spawnSync } from 'node:child_process'
 import { Mark } from './mark'
-import studio from '../../../../../../config/studio.json'
+import houseProps from '../../../../../../docs/plans/2026-10-28-ve-format-h-proof/ve/props.proof-tall.json'
 const probe = (svg: string, points: number[][] = []) => {
   const embedded = svg.replace(/href="(assets\/logos\/[^\"]+)"/g, (_, path: string) =>
     `href="data:image/svg+xml;base64,${readFileSync(path).toString('base64')}"`)
@@ -118,9 +118,8 @@ describe('logo_orbit pixel regressions', () => {
     }
   })
   it('renders each ring above 1.6:1 contrast on the house cream in both aspects', () => {
-    const theme = Object.values(studio.brand_themes).find(t => t.tokens.ink_soft)!
-    const t = theme.tokens
-    const realTokens = { ink: t.ink, inkDeep: t.ink_deep, inkSoft: t.ink_soft, cream: t.cream, mint: t.mint, channel: 'coral' }
+    // The house tokens a real ve render passes (the format H proof's props).
+    const realTokens = houseProps.tokens
     for (const aspect of fixture.aspects as DeviceProps['aspect'][]) {
       const width = aspect === '9:16' ? 1080 : 1920
       const height = aspect === '9:16' ? 1920 : 1080
