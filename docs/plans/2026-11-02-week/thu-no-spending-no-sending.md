@@ -3,7 +3,7 @@
 His brief (Krish, 2026-11-02): "It's the no-spending, no-sending rule. Let's call it that. Make it memorable." It is
 for individuals locking down their own accounts, with no specific rules prescribed.
 
-Script (Krish wrote it himself, 2 Nov): `thu-acts-first-script.txt`, 227 words, verbatim. The gates flag three things:
+Script (Krish wrote it himself, 2 Nov): `thu-script-krish-original.txt`, 227 words, verbatim. The gates flag three things:
 - it runs about 1:33 as he talks, over the 90-second cut;
 - three sentences are over 20 words;
 - the closing "!" breaks the no-exclamation rule.
@@ -11,12 +11,12 @@ Script (Krish wrote it himself, 2 Nov): `thu-acts-first-script.txt`, 227 words, 
 There is also one fact flag: "their default access is always switched on". It is unchecked. Claude Duet, for example,
 asks before sensitive actions.
 
-`thu-script-tidied.txt` is his words trimmed to 193 words, and it passes the lint and the kill list. The two changes:
+`thu-acts-first-script.txt` is his words trimmed to 193 words, and it passes the lint and the kill list. The two changes:
 - the access line becomes "once they're connected, they're in everything";
 - the close has no "!".
 
-Status: waiting on his pick between the two, and his Approve of the exact words. Teleprompter
-A55B6A69-E41E-4DDA-B5F4-EEE2E3A1C764 is then updated in place.
+Status: Krish picked the tidied version ("Tidied, 193 words (Recommended)", 2 Nov). It is in Teleprompter
+A55B6A69-E41E-4DDA-B5F4-EEE2E3A1C764, updated in place and read back identical. His own text is kept in thu-script-krish-original.txt.
 
 ## Pinned comment on every social post of this piece (Growth: verbatim, copy-paste ready)
 
