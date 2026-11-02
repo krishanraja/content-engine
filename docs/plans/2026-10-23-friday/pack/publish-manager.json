@@ -43,13 +43,13 @@
   {
    "id": "square-cover",
    "role": "square-cover",
-   "file": "../../../../.cache/pack/fri/square-cover.png",
+   "file": "../../../../.cache/friday-visual/cover/cover-1080x1080.png",
    "alt": "Square cover: Why every country wants its own AI"
   },
   {
    "id": "share-card-cover",
    "role": "share-card-cover",
-   "file": "../../../../.cache/pack/fri/share-card-cover.png",
+   "file": "../../../../.cache/friday-visual/cover/cover-1200x675.png",
    "alt": "Share card cover: Why every country wants its own AI"
   }
  ],
