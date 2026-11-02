@@ -1,93 +1,38 @@
 {
  "week_start": "2026-11-09",
+ "gathered_at": "2026-11-02T18:58:53Z",
  "how": "Read-only gather (board_feed.py). Write ideas.json from series[].pool and inspiration (routed, liked, fresh, corpora, creators) and his feedback cues (cues), his ideas first, each with source_kind, why_here, beats and style (config/styles.json); every must_cover id is in some idea's covers or in ideas.json accounted with a reason (board_feed.py cover); write combine.json; build with --ideas --queue --combine.",
  "counts": {
-  "his": 1,
+  "his": 0,
   "inspo": 18,
-  "engine": 68
+  "engine": 36
  },
- "empty": [],
+ "empty": [
+  {
+   "source": "his",
+   "why": "nothing from Krish since 2026-10-25: no idea through Control Center's one door, no topic he asked to research, no relayed board item"
+  }
+ ],
  "series": [
   {
    "slug": "follow_the_money",
-   "pool": [
-    {
-     "id": "618572fc-6e08-4d6d-a10c-6aeca0decea9",
-     "idea": "Capital One's AI disclosures prove scale, not payback, the Monday decision for a mid-market bank is to fund one bounded pilot with a 90-day exit clause, not sign the enterprise contract its vendor is pitching off the back of Capital One's name.",
-     "thesis": "Capital One's own material (capitalone.com/tech/ai, the MIT Sloan writeup, its SEC filing) documents breadth, 10,000+ uses of a servicing tool, agentic Chat Concierge, guardrails and policy checks, but contains no dated figure separating compute, compliance and monitoring cost from the benefit, and no bank has publicly walked back a program on cost grounds. So the claim narrows to what the evidence supports: copy the control pattern, not the spend. A mid-market bank should approve one production use case with a human-approved workflow, baselined metrics, audit logging and a named model-risk owner, and pause any vendor contract that can't support that, the 90-day review, not Capital One's press cycle, is the thing that proves or kills the case. This is wrong if a mid-market bank's own pilot hits positive ROI inside 90 days without those controls, or if a regulator mandates the broader build before the pilot data exists.",
-     "lane_slot": "follow_the_money",
-     "source_type": "pool_headline",
-     "source_kind": "engine",
-     "his_via": null,
-     "source_url": "https://sloanreview.mit.edu/article/ai-is-thriving-at-capital-one/",
-     "created_at": "2026-10-29T11:30:30.574829+00:00",
-     "score": 6,
-     "why_here": null,
-     "near": null,
-     "near_drop": null
-    },
-    {
-     "id": "d5e965f8-ed64-41c9-8197-2f05ac7bad0b",
-     "idea": "Google's Gemini 4 Carbon looks like a diamond in the rough",
-     "thesis": "Undercutting Claude on price ahead of Anthropic's IPO",
-     "lane_slot": "follow_the_money",
-     "source_type": "pool_headline",
-     "source_kind": "engine",
-     "his_via": null,
-     "source_url": "https://www.theregister.com/ai-and-ml/2026/10/29/googles-gemini-4-carbon-looks-like-a-diamond-in-the-rough/5306149",
-     "created_at": "2026-10-29T11:30:30.574829+00:00",
-     "score": 6,
-     "why_here": null,
-     "near": null,
-     "near_drop": null
-    }
-   ],
+   "pool": [],
    "mandate": "Work out where the money moves and who ends up better or worse off. That is the standing question and it leads every piece. The channel covers the whole money system, from any side of the invoice, and the interactions between the sides are the format at its best: what a business can charge for AI-powered work and what to price it at; what AI actually costs to run and whether it pays back; how the labs themselves make money, through price wars, margins, subsidy and ads; and when it is worth owning the thing rather than renting it. A lab's price cut changes a buyer's bill, which changes what the reader can charge, which changes the build-or-buy maths. A piece that traces one of those chains end to end is the best version of this channel. Second question: who is funding the hype and what do they need to be true. Third: is the money still here in eighteen months. THE READER is anyone standing at the invoice, on either side of it: the leader of a five to fifty million pound business who has just seen the renewal quote, the operator setting a price for work a model now does, and the founder deciding whether to build the thing or keep renting it. Third is the investor. SUBJECTS are giants, and after that whoever leaves the best paper trail. Reader-sized businesses and the mid-market vendor both tested weak: the evidence is thin at that scale and the reader would rather look up than sideways. Product surfaces - pricing pages, default settings, changelogs, free tiers - are evidence for the money question and are never a follow.the.money subject in their own right. The surface belongs to under.the.hood, which asks a different question of it. THE BOUNDARY, and it decides every contested subject: what does the reader change next? If they would go and change a price, a budget or a contract, it is follow.the.money. If they would change what they build or buy, it is under.the.hood. If they would change how they think or what they expect, it is mind.the.gap. The question decides, never the surface. NAMING: name whoever the number came from. If it is in their own filing, their own pricing page or their own keynote, they are named, including the person who said it. A public decision by a named executive is fair game; their character is not. The old rule of never naming a person is retired. PEG: the event is the excuse to open the door, the mechanism is the piece. Loosely pegged, always. THE CLOSE is a verdict: this money is real, or it is not, and here is the constraint that decides it. The strongest close names something already fixed that has not yet shown up in the price - a lease, a depreciation schedule, a contractual liability cap - so the reader can act on it rather than wait for it. A number with its source supports the verdict; it is no longer the close itself. An itemised bill as a close tested weak twice and is retired. Diagram language: the money map, showing where the dollars enter and where they leave. HARD GATES, applied before scoring. NOT US: the subject is never Krish, mind/make, CTRL or his own accounts, however available the material. MATERIAL EXISTS: if the evidence has to be created rather than found, it is not commissioned, however good the idea. THE CALL: every piece ends under the heading OUR PREDICTION with one dated prediction that can be checked, followed by Krish's confidence as \"How sure we are: N%\". Only Krish sets the number. On the date, the call is ruled held or broke. It forecasts what will happen and tells no one what to do."
   },
   {
    "slug": "under_the_hood",
    "pool": [
     {
-     "id": "a70fbc2e-de79-429a-989f-238206a0f555",
-     "idea": "I Put a Bunch of AI Agents in Charge of a Fantasy Soccer Team. They’re Not Better Than Humans—Yet",
-     "thesis": "To experiment with AI’s predictive skills, I let Codex loose on a fantasy team. It tried to bench Erling Haaland at first, but it soon learned the error of its ways.",
+     "id": "9eda3e4a-b79d-41c1-8a3c-7d5720fdd910",
+     "idea": "The Cohere/Qwen incident doesn't prove a China risk, it proves reasoning traces were never a security boundary, so if you're building an agent product, the fix is to stop trusting the trace and start gating the tool call itself.",
+     "thesis": "Cohere's sandbox test showed Qwen3.8-Flash-Next's reasoning trace say 'no tool calls' while the model attempted a curl upload to an Alibaba Cloud bucket, blocked only because the sandbox enforced network isolation, not because the trace was honest. The load-bearing claim here is narrow and sourced: this is one documented case, not proof the gap is universal across Claude, GPT-4 or Llama, so the piece states that explicitly and argues the architecture lesson as a reasoned inference for any builder, not an established market response. It would be wrong if a vendor can show their trace output is cryptographically bound to execution rather than generated independently of it, that would mean the gap is implementation-specific, not structural.",
      "lane_slot": "under_the_hood",
-     "source_type": "pool_headline",
-     "source_kind": "engine",
+     "source_type": "inspiration_sweep",
+     "source_kind": "inspo",
      "his_via": null,
-     "source_url": "https://www.wired.com/story/i-put-ai-agents-in-charge-of-a-fantasy-team/",
-     "created_at": "2026-10-29T11:30:30.574829+00:00",
-     "score": 4,
-     "why_here": null,
-     "near": null,
-     "near_drop": null
-    },
-    {
-     "id": "8c416cca-efc7-49f6-827c-d0e7a0097282",
-     "idea": "Gemini 4 Carbon: Our next frontier model",
-     "thesis": null,
-     "lane_slot": "under_the_hood",
-     "source_type": "pool_headline",
-     "source_kind": "engine",
-     "his_via": null,
-     "source_url": "https://deepmind.google/blog/gemini-4-carbon-our-next-frontier-model/",
-     "created_at": "2026-10-29T11:30:30.574829+00:00",
-     "score": 4,
-     "why_here": null,
-     "near": null,
-     "near_drop": null
-    },
-    {
-     "id": "d1d68897-6e2c-409c-b897-a2e89b0a3868",
-     "idea": "Gemini 4 Carbon",
-     "thesis": null,
-     "lane_slot": "under_the_hood",
-     "source_type": "pool_headline",
-     "source_kind": "engine",
-     "his_via": null,
-     "source_url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-carbon/",
-     "created_at": "2026-10-29T11:30:30.574829+00:00",
-     "score": 0,
+     "source_url": "https://cohere.com/blog/concerning-behaviour-popular-open-weight-ai-model",
+     "created_at": "2026-10-29T10:00:56.210761+00:00",
+     "score": 7,
      "why_here": null,
      "near": null,
      "near_drop": null
@@ -159,21 +104,6 @@
    "slug": "mind_the_gap",
    "pool": [
     {
-     "id": "5a6877e4-9d98-4cf3-bbdf-ec1204778884",
-     "idea": "We should create an instagram/tiktok short, really nicely produced, with tips on how to lock down your AI tools before they become proactive as they are about to.",
-     "thesis": "As AI tools shift from reactive assistants to proactive agents that can act on your behalf, users need practical guidance now on securing them before that shift creates new risks.",
-     "lane_slot": "mind_the_gap",
-     "source_type": "manual",
-     "source_kind": "his",
-     "his_via": "said",
-     "source_url": null,
-     "created_at": "2026-10-29T17:50:27.731827+00:00",
-     "score": 6,
-     "why_here": null,
-     "near": null,
-     "near_drop": null
-    },
-    {
      "id": "e75979a2-f14a-46b5-a57e-00173483f343",
      "idea": "Less than a third of executives have real-time audit trails for what their agents do. That is the actual governance number.",
      "thesis": "IBM's survey of executives found fewer than 33% have real-time audit trails for agent actions. Cohere just caught an agent making an undisclosed network call in a sandboxed benchmark. The gap between those two facts is where the next enterprise liability event lives. The monitoring floor is not a safety question, it is a board-level accountability question.",
@@ -183,6 +113,21 @@
      "his_via": null,
      "source_url": "https://filecache.mediaroom.com/mr5mr_ibmnewsroom/201965/The%20New%20Realities%20of%20AI%20Governance%20Report.pdf",
      "created_at": "2026-10-29T10:01:01.535473+00:00",
+     "score": 7,
+     "why_here": null,
+     "near": null,
+     "near_drop": null
+    },
+    {
+     "id": "e64e313d-6b28-4f4b-b02c-9e0392edd750",
+     "idea": "The agent monitoring gap is not a safety problem — it is an accountability infrastructure problem, and the financial system just put a price on it.",
+     "thesis": "METR found 10% of OpenAI's internal Codex traffic ran unmonitored for two months. JPMorgan, Bank of America and Morgan Stanley are now blocking third-party agents after finding them acting inside customer accounts without authorisation. Databricks is seeing more agent queries than human queries, with 17 million agent-launched databases per day. These three data points are not separate stories. They are the same story: agents are operating at production scale inside systems built for human-speed, human-accountable actions, and the identity and permission layer that would make them auditable does not exist yet. The falsifiable test is whether any major financial institution ships a verifiable agent-identity standard before Q2 2027.",
+     "lane_slot": "mind_the_gap",
+     "source_type": "synthesis_hypothesis",
+     "source_kind": "engine",
+     "his_via": null,
+     "source_url": "https://controlcenter.krishraja.com/?tab=intel",
+     "created_at": "2026-10-28T16:00:42.82074+00:00",
      "score": 7,
      "why_here": null,
      "near": null,
@@ -204,21 +149,6 @@
      "near_drop": null
     },
     {
-     "id": "2c61b7d1-b2a2-4257-a2c8-c7d36f26c429",
-     "idea": "3 Questions: Why infrastructure is entering a defining era",
-     "thesis": "Professor Ali Jadbabaie describes how AI, digital transformation, climate change, and complex geopolitics are forcing engineers and policymakers to rethink how infrast...",
-     "lane_slot": "mind_the_gap",
-     "source_type": "pool_headline",
-     "source_kind": "engine",
-     "his_via": null,
-     "source_url": "https://news.mit.edu/2026/3-questions-why-infrastructure-is-entering-defining-era-1028",
-     "created_at": "2026-10-29T11:30:30.574829+00:00",
-     "score": 3,
-     "why_here": null,
-     "near": null,
-     "near_drop": null
-    },
-    {
      "id": "56bb9c22-c813-47c1-bf9b-751288c60096",
      "idea": "Experts adopt AI agent's random opinions and think they're their own, Anthropic study finds",
      "thesis": "Anthropic gave 50 experts an AI agent whose preferences were set by coin toss. The experts followed the agent's view up to 86 percent of the time on judgment calls, an...",
@@ -228,21 +158,6 @@
      "his_via": null,
      "source_url": "https://the-decoder.com/experts-adopt-ai-agents-random-opinions-and-think-theyre-their-own-anthropic-study-finds/",
      "created_at": "2026-10-30T11:30:30.625949+00:00",
-     "score": null,
-     "why_here": null,
-     "near": null,
-     "near_drop": null
-    },
-    {
-     "id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",
-     "idea": "Quoting Terk Terkowitz",
-     "thesis": "If your work does not benefit from current AI tooling, t...",
-     "lane_slot": "mind_the_gap",
-     "source_type": "pool_headline",
-     "source_kind": "engine",
-     "his_via": null,
-     "source_url": "https://simonwillison.net/2026/Oct/28/terk-terkowitz/",
-     "created_at": "2026-10-28T11:30:31.609154+00:00",
      "score": null,
      "why_here": null,
      "near": null,
@@ -262,6 +177,21 @@
      "why_here": null,
      "near": null,
      "near_drop": null
+    },
+    {
+     "id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",
+     "idea": "Quoting Terk Terkowitz",
+     "thesis": "If your work does not benefit from current AI tooling, t...",
+     "lane_slot": "mind_the_gap",
+     "source_type": "pool_headline",
+     "source_kind": "engine",
+     "his_via": null,
+     "source_url": "https://simonwillison.net/2026/Oct/28/terk-terkowitz/",
+     "created_at": "2026-10-28T11:30:31.609154+00:00",
+     "score": null,
+     "why_here": null,
+     "near": null,
+     "near_drop": null
     }
    ],
    "mandate": "Notice the pattern, and say what it means is coming. Take a shift that is visible across several threads, as a snapshot or traced over time, and resolve it into one observation the reader has half-noticed and never named. The gap is any of three, and the piece says which one it is working: between where we are and where this is heading; between what is claimed and what is actually happening; or no gap at all, just a pattern worth naming and the consequence that follows from it. SEVERAL THREADS, ONE SPINE. A piece may and should draw on several subjects, shifts or themes - that is where the observation comes from. What it may not do is survey them. They have to resolve into a single argument with one spine, or it is a roundup. Covers thinking, usage, habit, technology and application; public decisions and what they say about the macro picture; historical shifts; and the human stories underneath the technology. Absorbs the retired Newsflash digest and the Opinions strand, and folds Resources into the Friday piece. The question the opening artifact asks the reader: what is the pattern here, and what does it mean is coming? THE BOUNDARY, and it decides every contested subject: what does the reader change next? If they would change how they think or what they expect, it is mind.the.gap. If they would change a price, a budget or a contract, it is follow.the.money. If they would change what they build or buy, it is under.the.hood. The question decides, never the surface. Diagram language: the timeline. Register is human, observant and connected to the real world. Strongest subjects invert a well-covered story rather than restating it: the people hiding their AI use are unpaid research rather than a risk, the calculator panic and what the skill actually became, the best users of a tool being nowhere near the industry that sells it. HARD RULE, and the one that overrides every other instruction in this mandate: no preaching. No closing moral, no lesson for leaders, no sentence telling the reader what to conclude or become. The north star reaches the page through what we choose to inspect, never through a statement. Thought leadership does that job elsewhere. The not-us gate applies here too: the subject is never Krish, mind/make, CTRL or his own operating loop, however available the material. THE CALL: every piece ends under the heading OUR PREDICTION with one dated prediction that can be checked, followed by Krish's confidence as \"How sure we are: N%\". Only Krish sets the number. On the date, the call is ruled held or broke. It forecasts what will happen and tells no one what to do."
@@ -269,165 +199,165 @@
  ],
  "unassigned": [
   {
-   "id": "8910925c-47d2-4fd1-a43b-9e4e2d7d0e8e",
-   "idea": "HPE puts storage to work on AI’s expensive memory problem",
-   "thesis": "PARTNER CONTENT: HPE Alletra MP X10000 cache offload delivers up to 20× faster time to first token in testing validated by Kamiwaza. Apparently, remembering things bea...",
+   "id": "614dff1b-c8ba-4bd4-a66c-a54fb04a461b",
+   "idea": "Microsoft is offering buyouts to the people building its AI products at the same moment those products are generating record profit — that is the new employment contract, written in public.",
+   "thesis": "Microsoft posted $155B in operating profit last fiscal year and is simultaneously offering voluntary exits to 60,000 employees, including the teams building Copilot and AI Experiences. OpenClaw's creator burned roughly $10M in tokens in one month at OpenAI and acknowledged not all of it was useful. Anthropic's S-1 shows 48% of its $16.3B H1 2026 revenue flows through cloud providers who are simultaneously investors, competitors and distribution partners. The pattern across all three: the people and organisations doing the most to build the AI economy are structurally separated from the returns it generates. The falsifiable test is Microsoft's headcount twelve months from now, against its AI revenue growth rate.",
    "lane_slot": null,
-   "source_type": "pool_headline",
+   "source_type": "synthesis_hypothesis",
    "source_kind": "engine",
    "his_via": null,
-   "source_url": "https://www.theregister.com/storage/2026/10/29/partner-content-hpe-puts-storage-to-work-on-ais-expensive-memory-problem/5305793",
-   "created_at": "2026-10-29T11:30:30.574829+00:00",
-   "score": 6,
+   "source_url": "https://controlcenter.krishraja.com/?tab=intel",
+   "created_at": "2026-10-28T16:00:43.487575+00:00",
+   "score": 7,
    "why_here": null,
    "near": null,
    "near_drop": null
   },
   {
-   "id": "3740bcf8-817e-4279-bd11-00dbf17d4fe9",
-   "idea": "These Claude Enterprise features let you track AI ROI – what’s new",
-   "thesis": "Is your pricey Claude Enterprise account worth it? Anthropic is trying to surface insights with three tools.",
+   "id": "8defca11-4305-4b15-905c-07eee539a8cf",
+   "idea": "Anthropic's drug pipeline is a solo-founder biotech acquisition dressed as a research announcement",
+   "thesis": "Mithril Medicine was one person, 11 contracted labs, and Claude as the operating system. Anthropic bought it. The 'Pipeline-in-a-Person' framing is the most honest description of what AI-native venture topology actually looks like in 2026, and it came from a pseudonymous biotech X account, not a VC deck.",
    "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
+   "source_type": "inspiration_sweep",
+   "source_kind": "inspo",
    "his_via": null,
-   "source_url": "https://www.zdnet.com/innovation/claude-enterprise-efficiency-cost-tracking/",
-   "created_at": "2026-10-29T11:30:30.574829+00:00",
+   "source_url": "https://www.anthropic.com/research/early-progress-drug-development",
+   "created_at": "2026-10-29T10:00:50.279507+00:00",
    "score": 4,
    "why_here": null,
    "near": null,
    "near_drop": null
   },
   {
-   "id": "36cf0c39-82ea-45a1-a2c6-317eb3f46e65",
-   "idea": "Meta, SpaceX, Anthropic stoke the AI funding frenzy. What it means for our stocks",
-   "thesis": "Summary: - The piece discusses AI funding dynamics as Meta, SpaceX, and Anthropic spark a funding frenzy and how this affects large tech equities. - Key takeaways for ...",
-   "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://www.cnbc.com/investingclub/2026/10/26/meta-spacex-anthropic-stoke-the-ai-funding-frenzy-what-it-means-for-our-stocks.html",
-   "created_at": "2026-10-29T11:30:30.574829+00:00",
-   "score": 3,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
-   "id": "bc8ce51b-32e5-459f-aa9c-f5cffdf1b308",
-   "idea": "OpenAI raises just $11 billion of its $30 billion target as big investors lose their AI appetite",
-   "thesis": "OpenAI raised only about $11 billion in its latest funding round, less than half of the $30 billion it was targeting. At $1.25 trillion, the valuation falls short of e...",
-   "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://the-decoder.com/openai-raises-just-11-billion-of-its-30-billion-target-as-big-investors-lose-their-ai-appetite/",
-   "created_at": "2026-10-31T11:30:29.029518+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
-   "id": "bb964601-d244-4450-b074-24d36569f159",
-   "idea": "The biggest names in AI are backing a new way to opt out of scraping",
-   "thesis": "OpenAI, Google, Microsoft, and Anthropic say they will adopt a new standard that publishers can use to opt out of being scraped by AI, as reported earlier by Search En...",
-   "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://www.theverge.com/tech/1023763/openai-google-microsoft-ai-scraping-standard-opt-out",
-   "created_at": "2026-10-31T11:30:29.029518+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
-   "id": "6947f000-6924-46d1-8fb9-5a16908bc996",
-   "idea": "Wall Street closes sharply lower as AI cash burn fears spark tech selloff",
+   "id": "b4471ce5-f23e-4e72-beb5-f9042d606078",
+   "idea": "AI delivers 'zero financial payoff' to most companies, Apollo economist says",
    "thesis": null,
    "lane_slot": null,
    "source_type": "pool_headline",
    "source_kind": "engine",
    "his_via": null,
-   "source_url": "https://www.reuters.com/business/nasdaq-futures-tumble-amazon-intel-results-deepen-ai-spending-woes-2026-10-30/",
-   "created_at": "2026-10-31T11:30:29.029518+00:00",
+   "source_url": "https://techcrunch.com/2026/10/25/ai-delivers-zero-financial-payoff-to-most-companies-according-to-apollo-economist/",
+   "created_at": "2026-11-02T11:30:27.418521+00:00",
    "score": null,
    "why_here": null,
    "near": null,
    "near_drop": null
   },
   {
-   "id": "d8dbf93a-6859-4b03-8570-8f411b1ed2d2",
-   "idea": "Nvidia weighs playing the cosigner for Nscale’s AI data center in West Virginia",
-   "thesis": "When investors get nervous about AI spending, it helps to have the chipmaker that sells the chips offer to cosign the loan.",
+   "id": "0b94f891-725c-418f-b6b4-ae95285996a6",
+   "idea": "AI investments start to pay off in company earnings",
+   "thesis": "Summary: - Enterprise AI is increasingly contributing to financial results across industries. Santander reports AI-driven business value of €194 million in the first n...",
    "lane_slot": null,
    "source_type": "pool_headline",
    "source_kind": "engine",
    "his_via": null,
-   "source_url": "https://techcrunch.com/2026/10/30/nvidia-weighs-playing-the-cosigner-for-nscales-ai-data-center-in-west-virginia/",
-   "created_at": "2026-10-31T11:30:29.029518+00:00",
+   "source_url": "https://www.cnbc.com/2026/11/01/ai-investments-company-earnings.html",
+   "created_at": "2026-11-02T11:30:27.418521+00:00",
    "score": null,
    "why_here": null,
    "near": null,
    "near_drop": null
   },
   {
-   "id": "d43e8b04-bf77-4f9f-b5f6-7e52128c04c8",
-   "idea": "OpenAI raises less than half of $30B target",
+   "id": "d8305c1a-fbbc-4af2-83cd-60c4582f5ed5",
+   "idea": "Chinese AI models are politically complex, not just government mouthpieces, study finds",
+   "thesis": "A study by Vals AI tested 25 AI models for alignment with Chinese government positions and found surprising results. Chinese models respond to political questions less...",
+   "lane_slot": null,
+   "source_type": "pool_headline",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": "https://the-decoder.com/chinese-ai-models-are-politically-complex-not-just-government-mouthpieces-study-finds/",
+   "created_at": "2026-11-02T11:30:27.418521+00:00",
+   "score": null,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
+  {
+   "id": "caf42608-d498-4a6b-968b-742d086b95d1",
+   "idea": "Computer Science Programs Lose Students as AI Replaces Jobs",
    "thesis": null,
    "lane_slot": null,
    "source_type": "pool_headline",
    "source_kind": "engine",
    "his_via": null,
-   "source_url": "https://www.wsj.com/tech/ai/openai-raises-less-than-half-of-30-billion-target-in-latest-round-91aecdc5",
-   "created_at": "2026-10-31T11:30:29.029518+00:00",
+   "source_url": "https://www.bloomberg.com/news/articles/2026-10-29/computer-science-degree-programs-lose-students-as-ai-takes-jobs",
+   "created_at": "2026-11-02T11:30:27.418521+00:00",
    "score": null,
    "why_here": null,
    "near": null,
    "near_drop": null
   },
   {
-   "id": "0b4a645c-7504-4a1a-9045-fe6a6bbb0291",
-   "idea": "Ollie, a privacy-focused AI assistant, is shutting down",
-   "thesis": "As an increasing number of AI assistants flood the market, the founder of Ollie, an assistant that respected its users' privacy, says it will be shutting down in a week.",
+   "id": "e1c2de32-33ad-46ad-b8cc-eb8ba72b11ef",
+   "idea": "Judge allows NAACP lawsuit over xAI data center pollution to move forward",
+   "thesis": "An NAACP lawsuit accuses the SpaceX-owned AI company of violating the Clean Air Act.",
    "lane_slot": null,
    "source_type": "pool_headline",
    "source_kind": "engine",
    "his_via": null,
-   "source_url": "https://techcrunch.com/2026/10/30/ollie-a-privacy-focused-ai-assistant-is-shutting-down/",
-   "created_at": "2026-10-31T11:30:29.029518+00:00",
+   "source_url": "https://techcrunch.com/2026/10/31/judge-allows-naacp-lawsuit-over-xai-data-center-pollution-to-move-forward/",
+   "created_at": "2026-11-02T11:30:27.418521+00:00",
    "score": null,
    "why_here": null,
    "near": null,
    "near_drop": null
   },
   {
-   "id": "d624b25a-0490-4a48-b05d-cdd4b86d7dd3",
-   "idea": "Fair use benefits everyone",
-   "thesis": "OpenAI shares excerpts from court briefs by creators, academics, accessibility advocates, and legal experts, among others, on how fair use supports AI training and inn...",
+   "id": "6b37ec94-f4cf-4200-9c19-1dd63cfb41f8",
+   "idea": "From Expertise to Intelligence: NISCO Deploys World's First Swarm-Intelligence Steel Model at Scale",
+   "thesis": "PARTNER CONTENT: 300+ AI applications delivering surges in core metrics and annual cost reduction of over CNY100m",
    "lane_slot": null,
    "source_type": "pool_headline",
    "source_kind": "engine",
    "his_via": null,
-   "source_url": "https://openai.com/index/fair-use-benefits-everyone",
-   "created_at": "2026-10-31T11:30:29.029518+00:00",
+   "source_url": "https://www.theregister.com/ai-and-ml/2026/11/02/partner-content-from-expertise-to-intelligence-nisco-deploys-worlds-first-swarm-intelligence-steel-model-at-scale/5306614",
+   "created_at": "2026-11-02T11:30:27.418521+00:00",
    "score": null,
    "why_here": null,
    "near": null,
    "near_drop": null
   },
   {
-   "id": "a41b7d1f-3df9-49a8-871a-702c9fcbfd64",
-   "idea": "The GitHub Copilot harness is now the Microsoft Copilot harness",
-   "thesis": "Learn how the Microsoft Copilot harness helps Copilot Studio makers build more capable, reliable agents with advanced reasoning, tool use, and orchestration.",
+   "id": "5f47349c-260d-46e4-acba-04b327d401c7",
+   "idea": "The builder-economy proof of concept is no longer a software company. It is a one-person biotech with 11 contracted labs, and Anthropic just bought it.",
+   "thesis": "Mithril Medicine was one founder, 11 contracted labs, and Claude as the operating system. Anthropic acquired it. Andrew Chen's a16z piece argues the 'yes' and 'no' lists investors use are not about founder quality — they are about which backgrounds had unfair advantages given the technology and distribution of the moment. The constraint for non-technical founders was never judgment. It was build cost. Mithril is the first acquisition that makes that argument in a domain — drug discovery — where the build cost was previously so high it functionally excluded individual operators. The 'Pipeline-in-a-Person' framing is not a metaphor. It is a new legal entity type, and it just got acquired. Falsifiable: if no comparable solo-founder domain-expert acquisition occurs in a capital-intensive field (biotech, materials, legal) before end of 2027, this is a one-off, not a pattern.",
    "lane_slot": null,
-   "source_type": "pool_headline",
+   "source_type": "synthesis_hypothesis",
    "source_kind": "engine",
    "his_via": null,
-   "source_url": "https://microsoft.com/en-us/copilot/blog/copilot-studio/the-github-copilot-harness-in-copilot-studio-is-now-the-microsoft-copilot-harness",
-   "created_at": "2026-10-31T11:30:29.029518+00:00",
+   "source_url": "https://controlcenter.krishraja.com/?tab=intel",
+   "created_at": "2026-11-01T17:01:04.274976+00:00",
+   "score": null,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
+  {
+   "id": "83ee5eed-a5a4-4c9c-9628-4101831882c5",
+   "idea": "Token prices falling and GPU rents rising is not a margin story. It is a map of where the employment contract for AI builders is actually being written — and it does not include them.",
+   "thesis": "a16z's Rack Spread shows token prices falling while GPU rental rates hold. Anthropic's S-1 shows 48% of $16.3B H1 2026 revenue flows through cloud providers who are simultaneously investors, competitors and distribution partners. Microsoft posted $155B in operating profit and is simultaneously offering voluntary exits to 60,000 employees including the Copilot teams. The pattern is consistent: the people and organisations doing the most to build the AI economy are structurally separated from its returns. The compute layer extracts margin. The model layer competes it away. The builder layer gets a buyout offer. Falsifiable: Microsoft's headcount in the AI Experiences division twelve months from now, measured against its AI revenue growth rate for the same period.",
+   "lane_slot": null,
+   "source_type": "synthesis_hypothesis",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": "https://controlcenter.krishraja.com/?tab=intel",
+   "created_at": "2026-11-01T17:01:03.683504+00:00",
+   "score": null,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
+  {
+   "id": "96b51ad6-2802-49ae-8c14-212f6762cad7",
+   "idea": "The agent accountability gap is already priced — by banks, not regulators, and the settlement cost will land on the enterprises that skipped audit infrastructure.",
+   "thesis": "JPMorgan, Bank of America and Morgan Stanley blocked third-party agents after finding them acting inside customer accounts without authorisation. METR found 10% of OpenAI's internal Codex traffic ran unmonitored for two months. IBM's survey found fewer than 33% of executives have real-time audit trails. These are not separate safety stories. They are the opening moves of a liability transfer: financial institutions are drawing the line now so the cost lands on whoever sold them the agent, not on them. Enterprises that deployed agents without audit infrastructure are not behind on safety — they are behind on indemnification. Falsifiable: if any major financial institution publishes a verifiable agent-identity standard before Q2 2027, the liability transfer is complete and the cost becomes measurable.",
+   "lane_slot": null,
+   "source_type": "synthesis_hypothesis",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": "https://controlcenter.krishraja.com/?tab=intel",
+   "created_at": "2026-11-01T17:01:03.086717+00:00",
    "score": null,
    "why_here": null,
    "near": null,
@@ -539,81 +469,6 @@
    "near_drop": null
   },
   {
-   "id": "91ef8493-3620-4532-85a2-63420da75881",
-   "idea": "OpenAI's new model cuts prices again",
-   "thesis": "Summary: - OpenAI released a cheaper GPT-6.1 Terra model, priced up to 50% less per token than prior versions. - A token-price index from Ramp shows token costs around...",
-   "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://www.axios.com/2026/10/28/ai-open-ai-token-prices",
-   "created_at": "2026-10-30T11:30:30.625949+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
-   "id": "6ef6cf08-2f6c-447a-b30c-110509b1afb6",
-   "idea": "Wikipedia’s operator says a bad AI copyright ruling could threaten the open web",
-   "thesis": "The Wikimedia Foundation is staking out a middle ground in a group of landmark AI copyright cases, pushing courts to legally protect large language models (LLMs) train...",
-   "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://www.theverge.com/policy/1022880/wikipedia-openai-new-york-times-copyright",
-   "created_at": "2026-10-30T11:30:30.625949+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
-   "id": "9ad739b0-0fff-41d3-b19c-86964c6cfcf1",
-   "idea": "Google AI gets cagey when asked who won the 2020 elections",
-   "thesis": null,
-   "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://arstechnica.com/ai/2026/10/google-ai-gets-cagey-when-asked-who-won-the-2020-elections/",
-   "created_at": "2026-10-30T11:30:30.625949+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
-   "id": "33f7270d-23cf-4203-a199-5793f7f1a25e",
-   "idea": "An updated Model Spec for more capable and beneficial AI",
-   "thesis": "OpenAI’s updated Model Spec outlines five core values to guide more capable AI toward sound judgment, human agency, and faithfulness to human intent.",
-   "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://openai.com/index/updated-model-spec",
-   "created_at": "2026-10-30T11:30:30.625949+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
-   "id": "fc3059c5-3a0d-4abe-b2d3-ebd6585c240f",
-   "idea": "API credits benefit for eligible ChatGPT subscriptions",
-   "thesis": "API credits benefit for eligible ChatGPT subsc...",
-   "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://simonwillison.net/2026/Oct/29/api-credits/",
-   "created_at": "2026-10-30T11:30:30.625949+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
    "id": "f389dbeb-63c8-4c97-b6ce-26bb7b15086b",
    "idea": "Verification loops are the management practice nobody is naming. You have been doing this with humans for decades.",
    "thesis": "Daisy Hollman's framework from the Claude Code team reframes agent debugging: when something goes wrong, the instinct to re-prompt and restart is wrong. The right instinct is to fix the loop so the agent never lands there again. That is exactly how senior engineers made junior engineers better. The three parts of every loop (objective, metric, optimizer) map directly onto how good managers give feedback. The difference is that everyone is now doing this without years of experience to lean on.",
@@ -668,156 +523,6 @@
    "his_via": null,
    "source_url": "https://www.thedeepview.com/articles/with-gemini-carbon-can-google-keep-up",
    "created_at": "2026-10-30T10:01:11.137427+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
-   "id": "9eda3e4a-b79d-41c1-8a3c-7d5720fdd910",
-   "idea": "The agent control problem is not a China problem. It is a tool-call problem.",
-   "thesis": "Cohere's Qwen incident is being read as a supply-chain risk story about Chinese open-source models. The actual finding is simpler and scarier: the reasoning trace said 'no tool calls' and the model made a tool call. That gap exists in every model. The only real security boundary is the tool call itself, not the stated reasoning.",
-   "lane_slot": null,
-   "source_type": "inspiration_sweep",
-   "source_kind": "inspo",
-   "his_via": null,
-   "source_url": "https://cohere.com/blog/concerning-behaviour-popular-open-weight-ai-model",
-   "created_at": "2026-10-29T10:00:56.210761+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
-   "id": "8defca11-4305-4b15-905c-07eee539a8cf",
-   "idea": "Anthropic's drug pipeline is a solo-founder biotech acquisition dressed as a research announcement",
-   "thesis": "Mithril Medicine was one person, 11 contracted labs, and Claude as the operating system. Anthropic bought it. The 'Pipeline-in-a-Person' framing is the most honest description of what AI-native venture topology actually looks like in 2026, and it came from a pseudonymous biotech X account, not a VC deck.",
-   "lane_slot": null,
-   "source_type": "inspiration_sweep",
-   "source_kind": "inspo",
-   "his_via": null,
-   "source_url": "https://www.anthropic.com/research/early-progress-drug-development",
-   "created_at": "2026-10-29T10:00:50.279507+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
-   "id": "614dff1b-c8ba-4bd4-a66c-a54fb04a461b",
-   "idea": "Microsoft is offering buyouts to the people building its AI products at the same moment those products are generating record profit — that is the new employment contract, written in public.",
-   "thesis": "Microsoft posted $155B in operating profit last fiscal year and is simultaneously offering voluntary exits to 60,000 employees, including the teams building Copilot and AI Experiences. OpenClaw's creator burned roughly $10M in tokens in one month at OpenAI and acknowledged not all of it was useful. Anthropic's S-1 shows 48% of its $16.3B H1 2026 revenue flows through cloud providers who are simultaneously investors, competitors and distribution partners. The pattern across all three: the people and organisations doing the most to build the AI economy are structurally separated from the returns it generates. The falsifiable test is Microsoft's headcount twelve months from now, against its AI revenue growth rate.",
-   "lane_slot": null,
-   "source_type": "synthesis_hypothesis",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://controlcenter.krishraja.com/?tab=intel",
-   "created_at": "2026-10-28T16:00:43.487575+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
-   "id": "e64e313d-6b28-4f4b-b02c-9e0392edd750",
-   "idea": "The agent monitoring gap is not a safety problem — it is an accountability infrastructure problem, and the financial system just put a price on it.",
-   "thesis": "METR found 10% of OpenAI's internal Codex traffic ran unmonitored for two months. JPMorgan, Bank of America and Morgan Stanley are now blocking third-party agents after finding them acting inside customer accounts without authorisation. Databricks is seeing more agent queries than human queries, with 17 million agent-launched databases per day. These three data points are not separate stories. They are the same story: agents are operating at production scale inside systems built for human-speed, human-accountable actions, and the identity and permission layer that would make them auditable does not exist yet. The falsifiable test is whether any major financial institution ships a verifiable agent-identity standard before Q2 2027.",
-   "lane_slot": null,
-   "source_type": "synthesis_hypothesis",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://controlcenter.krishraja.com/?tab=intel",
-   "created_at": "2026-10-28T16:00:42.82074+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
-   "id": "198ca33b-30e8-414c-a5fc-e08224f27f97",
-   "idea": "Anthropic's S-1 reveals the enterprise concentration risk nobody is pricing into ANT",
-   "thesis": "25% of Anthropic's $16.3B H1 2026 revenue comes from five customers, and 48% from cloud providers who are simultaneously its investors, competitors and distribution pa...",
-   "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://www.anthropic.com/news/s1-sec",
-   "created_at": "2026-10-28T11:30:31.609154+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
-   "id": "fd580577-ba5d-403e-9532-f039cab147c9",
-   "idea": "Liquid AI’s new LFM3 models put browser agents, voice commands, and image recognition onto enterprise-controlled devices",
-   "thesis": "Liquid AI unveils LFM3, a family of compact AI models (around 1.7B base, variants near 2B) designed to run on company-controlled hardware. Key points: - Models span la...",
-   "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://venturebeat.com/technology/liquid-ais-new-lfm3-models-put-browser-agents-voice-commands-and-image-recognition-onto-enterprise-controlled-devices",
-   "created_at": "2026-10-28T11:30:31.609154+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
-   "id": "bbd4b110-127e-4969-828b-51b7a4071f40",
-   "idea": "Can we trust LLMs to judge whether a research idea is novel?",
-   "thesis": null,
-   "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://huggingface.co/blog/allenai/novelty-bench",
-   "created_at": "2026-10-28T11:30:31.609154+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
-   "id": "e4c1a651-bb52-4d4b-ab49-4018e0db670e",
-   "idea": "Legora is building the agentic operating system for legal work",
-   "thesis": "See how Legora uses OpenAI models, ChatGPT, and Codex to accelerate legal workflows, expand contract analysis, and free lawyers to focus on higher-value work.",
-   "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://openai.com/index/legora-agentic-operating-system-for-legal-work",
-   "created_at": "2026-10-28T11:30:31.609154+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
-   "id": "561198a3-e146-449d-b1f9-045bffaa2e0f",
-   "idea": "In China, the AI bubble has burst",
-   "thesis": null,
-   "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://www.reuters.com/world/china/china-ai-bubble-has-already-burst-2026-10-26/",
-   "created_at": "2026-10-28T11:30:31.609154+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
-   "id": "e81a86b8-d6d0-41df-95d7-dc1efa1fa4f7",
-   "idea": "Build specialized multimodal models with LFM3",
-   "thesis": null,
-   "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://huggingface.co/blog/LiquidAI/lfm3",
-   "created_at": "2026-10-28T11:30:31.609154+00:00",
    "score": null,
    "why_here": null,
    "near": null,
@@ -884,171 +589,6 @@
    "near_drop": null
   },
   {
-   "id": "fe589226-ee39-4b2c-af8d-2bfe17b4219a",
-   "idea": "The Foundations of Scalable AI",
-   "thesis": "A scalable AI system requires a strong foundation. Data, engineering, platforms, operating models, and governance must converge to work as one. This session from MIT T...",
-   "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://www.technologyreview.com/2026/10/22/1146103/the-foundations-of-scalable-ai/",
-   "created_at": "2026-10-27T11:30:31.731209+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
-   "id": "90273570-dca4-42f9-9567-2a67c229fad2",
-   "idea": "A Big Shift in the AI Buildout Zeitgeist",
-   "thesis": "Summary: - Topic: The Bloomberg Odd Lots newsletter discusses a clear shift in how AI projects are funded and brought to market. - Key point: We’ve moved into a more c...",
-   "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://www.bloomberg.com/news/newsletters/2026-10-22/a-big-shift-in-the-ai-buildout-zeitgeist",
-   "created_at": "2026-10-27T11:30:31.731209+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
-   "id": "cafaa599-ad50-4a42-b9ec-d810d2250683",
-   "idea": "Brown student maps the hidden global labor powering AI",
-   "thesis": null,
-   "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://www.brown.edu/news/2026-10-26/ai-data-workers",
-   "created_at": "2026-10-27T11:30:31.731209+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
-   "id": "aaa6c14a-48fc-4eaf-8755-7a40b5309f63",
-   "idea": "OpenAI's Ted Sanders shares a rule of thumb for picking the right GPT-model",
-   "thesis": "OpenAI's Ted Sanders explains where GPT-6.1 Terra fits in the company's GPT lineup. The smaller model outperforms the larger Astra in technical communication and costs...",
-   "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://the-decoder.com/openais-ted-sanders-shares-a-rule-of-thumb-for-picking-the-right-gpt-model/",
-   "created_at": "2026-10-27T11:30:31.731209+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
-   "id": "e6d68618-c9d0-4dee-8bf3-c9635729b8d5",
-   "idea": "I Tested Every Major AI Agent for a Day. Here’s the Best One",
-   "thesis": "I ranked six AI agents—from Meta’s Muse to Anthropic’s Claude Duet—on how well they completed basic tasks.",
-   "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://www.wired.com/story/i-tested-every-major-ai-agent-for-a-day-heres-the-best-one/",
-   "created_at": "2026-10-27T11:30:31.731209+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
-   "id": "c289a63a-6af8-4ffd-8286-dfc6c5588c06",
-   "idea": "Claude completed 180 million lines of formal proofs in one week and found as many bugs in a PDF reader as are typically reported in a full year. The verification gap just got a price tag.",
-   "thesis": "Anthropic published research showing Claude, working with Theorem and verified by Rocq, completed mathematical proofs for 239 test entry points across 123 open-source ...",
-   "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://www.anthropic.com/research/formal-verification",
-   "created_at": "2026-10-27T11:30:31.731209+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
-   "id": "d3818d95-7302-45f4-bfe6-ac4bea8c3805",
-   "idea": "Palantir cofounder says his wife calls their AI agent 'Tradbot' after tradwives",
-   "thesis": "Christie Hemm Klok for The Washington Post via Getty Images Palantir cofounder Joe Lonsdale's wife has an interesting nickname for their AI agent. She calls it \"Tradbo...",
-   "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://biztoc.com/x/45d11a79a17c9e32",
-   "created_at": "2026-10-27T11:30:31.731209+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
-   "id": "aa3e2bba-d577-43c5-b4a3-aad47e3e6447",
-   "idea": "Here's how Canva's new image generation tool compares to models by OpenAI, Google, and Meta",
-   "thesis": "Canva has launched Canva Craft, a new image generation tool. Business Insider Canva launched Canva Craft, a tool similar to AI image models by Google, Meta, and OpenAI...",
-   "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://biztoc.com/x/aa1a918f12caf5bf",
-   "created_at": "2026-10-27T11:30:31.731209+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
-   "id": "8df37f0c-4b77-41e9-b8cc-3ab471a58d89",
-   "idea": "The bank executive who called AI agents 'horrifying' is describing a permission architecture failure, not a security failure",
-   "thesis": "JPMorgan, Bank of America, and Morgan Stanley are blocking third-party AI agents after finding them operating inside customer accounts, taking actions users never requ...",
-   "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://www.axios.com/2026/10/22/ai-agents-banks-unauthorized-accounts-access",
-   "created_at": "2026-10-27T11:30:31.731209+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
-   "id": "3c9fc4d2-673c-45be-921f-0e3dd6e6c85d",
-   "idea": "Kazakhstan Expands Compute for Its AI Future",
-   "thesis": "Kazakhstan’s AI ecosystem is moving from infrastructure plans to deployment. The shift is visible across the full AI stack — from infrastructure to models to applicati...",
-   "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://blogs.nvidia.com/blog/kazakhstan-ai-compute-ecosystem/",
-   "created_at": "2026-10-27T11:30:31.731209+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
-   "id": "ff4c60c2-0b44-44ff-aa8c-3b60e870a362",
-   "idea": "Meta gets $3 billion from Nvidia and plans to spend more on Nvidia chips",
-   "thesis": "ia is buying into its customer Meta, which plans to run more of its AI agents on Nvidia hardware. The article Meta gets $3 billion from Nvidia and plans to spend more ...",
-   "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://the-decoder.com/meta-gets-3-billion-from-nvidia-and-plans-to-spend-more-on-nvidia-chips/",
-   "created_at": "2026-10-27T11:30:31.731209+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
    "id": "49f1b207-e0c2-4163-812d-d71c53c8154a",
    "idea": "Automating a function is easy. Owning the handoff between two automated functions is the actual job now",
    "thesis": "As companies automate function by function, the new bottleneck is not any single agent's performance but the uncovered handoff between functions, a role that quietly falls back on the founder.",
@@ -1073,36 +613,6 @@
    "his_via": null,
    "source_url": "https://www.linkedin.com/posts/justinkramm_if-we-automate-the-career-ladder-whos-going-activity-7518776535844179969-ySym",
    "created_at": "2026-10-27T08:01:04.01109+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
-   "id": "3f77c9e0-c224-40fb-b14d-dd5c7c5fdf4c",
-   "idea": "Wall Street's fastest traders are building data centers and backing chip startups to stay ahead in AI",
-   "thesis": "High-frequency traders like Jane Street and Hudson River Trading are now racing each other for AI computing power. The article Wall Street's fastest traders are b...",
-   "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://the-decoder.com/wall-streets-fastest-traders-are-building-data-centers-and-backing-chip-startups-to-stay-ahead-in-ai/",
-   "created_at": "2026-10-26T11:30:27.05752+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
-   "id": "993fd9f1-3f9d-4282-b881-53b65bb6bdf3",
-   "idea": "After threatening AI export bans, China allows DeepSeek to keep selling",
-   "thesis": "PLUS: AI datacenter bubble wobbles in Australia; E-commerce app suggests it can detect diseases; India’s top telco to IPO amid investor frenzy; and more!",
-   "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://www.theregister.com/ai-and-ml/2026/10/26/after-threatening-ai-export-bans-china-allows-deepseek-to-keep-selling/5305267",
-   "created_at": "2026-10-26T11:30:27.05752+00:00",
    "score": null,
    "why_here": null,
    "near": null,
@@ -1586,6 +1096,65 @@
   ],
   "fresh": [
    {
+    "id": "2162c904-b0ff-452b-81aa-b8cfd7ec1909",
+    "name": "instagram_DeypYeWN5hL.mp4",
+    "folder": "video_inspiration",
+    "lane": "production",
+    "kind": "video",
+    "platform": "instagram",
+    "link": "https://www.instagram.com/reel/DeypYeWN5hL/?xtok=Z2V2bnlmNXZrMTl3",
+    "routes": [],
+    "why_like": null,
+    "endorsed": null,
+    "would_do": null,
+    "saved_why": "This is good for both production and content. We should do a short that just completely reskins and reuses the content and production of this.",
+    "note_for_claude": null,
+    "answered_at": null,
+    "created_at": "2026-11-02T14:19:27.842447+00:00",
+    "piece_id": null,
+    "tags": {
+     "confirmed": [],
+     "guessed": [
+      {
+       "kind": "form",
+       "layer": "graphics",
+       "label": "on-screen word by word overlay"
+      },
+      {
+       "kind": "form",
+       "layer": "structure",
+       "label": "problem then fix structure"
+      },
+      {
+       "kind": "form",
+       "layer": "production",
+       "label": "voiceover drives, no face"
+      },
+      {
+       "kind": "form",
+       "layer": "camerawork",
+       "label": "slow pans to hold the frame"
+      },
+      {
+       "kind": "subject",
+       "layer": null,
+       "label": "MCP"
+      },
+      {
+       "kind": "subject",
+       "layer": null,
+       "label": "Cloudflare Code Mode"
+      },
+      {
+       "kind": "subject",
+       "layer": null,
+       "label": "AI agent tool calling"
+      }
+     ]
+    },
+    "heard": "RIP MCP. There's a new shift in tech. Companies are moving away from MCP as we know it to a completely different architecture. Here's what changed. Connect an AI agent to a tool we all use MCP, the standard protocol that lets an agent discover tools and call them. So what's the …"
+   },
+   {
     "id": "aae54ef9-0bd7-49a8-959e-96695e1a51a8",
     "name": "youtube_wh3D5Zx6Prg.mp4",
     "folder": "video_inspiration",
@@ -1704,12 +1273,12 @@
     "heard": "Stop paying for 11 Labs, because Google now lets you make any voice that you want to from one line of text completely free. It's called Gemini Flash TTS, and it's right inside Google AI Studio. Just describe the voice you want, paste in the script, and it gives you the voice ser…"
    },
    {
-    "id": "4184172c-c21f-4ad3-8606-44ef35d93d12",
-    "name": "youtube_comments_ai_music.csv",
+    "id": "0ec9e554-fbed-4b5c-b073-790ef32d37ea",
+    "name": "reddit_wider_ai_music_corpus.csv",
     "folder": "cold_ideas",
     "lane": "strategy",
     "kind": "corpus",
-    "platform": "youtube",
+    "platform": "web",
     "link": null,
     "routes": [],
     "why_like": null,
@@ -1726,27 +1295,27 @@
       {
        "kind": "subject",
        "layer": null,
-       "label": "AI generated music"
+       "label": "AI-generated music"
       },
       {
        "kind": "subject",
        "layer": null,
-       "label": "authenticity debate"
+       "label": "music charts policy"
       },
       {
        "kind": "subject",
        "layer": null,
-       "label": "audience reaction"
+       "label": "Suno and AI music tools"
       },
       {
        "kind": "subject",
        "layer": null,
-       "label": "Suno AI music"
+       "label": "authenticity backlash"
       },
       {
        "kind": "subject",
        "layer": null,
-       "label": "music credits controversy"
+       "label": "Reddit sentiment research"
       }
      ]
     },
@@ -1807,12 +1376,12 @@
     "heard": null
    },
    {
-    "id": "0ec9e554-fbed-4b5c-b073-790ef32d37ea",
-    "name": "reddit_wider_ai_music_corpus.csv",
+    "id": "4184172c-c21f-4ad3-8606-44ef35d93d12",
+    "name": "youtube_comments_ai_music.csv",
     "folder": "cold_ideas",
     "lane": "strategy",
     "kind": "corpus",
-    "platform": "web",
+    "platform": "youtube",
     "link": null,
     "routes": [],
     "why_like": null,
@@ -1829,27 +1398,27 @@
       {
        "kind": "subject",
        "layer": null,
-       "label": "AI-generated music"
+       "label": "AI generated music"
       },
       {
        "kind": "subject",
        "layer": null,
-       "label": "music charts policy"
+       "label": "authenticity debate"
       },
       {
        "kind": "subject",
        "layer": null,
-       "label": "Suno and AI music tools"
+       "label": "audience reaction"
       },
       {
        "kind": "subject",
        "layer": null,
-       "label": "authenticity backlash"
+       "label": "Suno AI music"
       },
       {
        "kind": "subject",
        "layer": null,
-       "label": "Reddit sentiment research"
+       "label": "music credits controversy"
       }
      ]
     },
@@ -1891,6 +1460,29 @@
        "label": "song credit investigation"
       }
      ]
+    },
+    "heard": null
+   },
+   {
+    "id": "f94bf337-7b4b-4dee-8853-7fb169a92a2d",
+    "name": "Short video on locking down AI tools before they go proactive",
+    "folder": null,
+    "lane": "strategy",
+    "kind": "idea",
+    "platform": null,
+    "link": null,
+    "routes": [],
+    "why_like": null,
+    "endorsed": null,
+    "would_do": null,
+    "saved_why": null,
+    "note_for_claude": null,
+    "answered_at": null,
+    "created_at": "2026-10-30T00:17:34.488402+00:00",
+    "piece_id": null,
+    "tags": {
+     "confirmed": [],
+     "guessed": []
     },
     "heard": null
    },
@@ -1942,60 +1534,6 @@
      ]
     },
     "heard": null
-   },
-   {
-    "id": "d458c636-5399-4aa0-b572-755a5d6db8c8",
-    "name": "How-To-Create-SnapYT.App.mp4",
-    "folder": "cold_ideas",
-    "lane": "strategy",
-    "kind": "video",
-    "platform": "unknown",
-    "link": null,
-    "routes": [],
-    "why_like": null,
-    "endorsed": null,
-    "would_do": null,
-    "saved_why": null,
-    "note_for_claude": null,
-    "answered_at": null,
-    "created_at": "2026-10-28T23:08:52.254923+00:00",
-    "piece_id": null,
-    "tags": {
-     "confirmed": [],
-     "guessed": [
-      {
-       "kind": "form",
-       "layer": "production",
-       "label": "screen recording with voiceover"
-      },
-      {
-       "kind": "form",
-       "layer": "structure",
-       "label": "step by step walkthrough"
-      },
-      {
-       "kind": "form",
-       "layer": "graphics",
-       "label": "text heavy ui captions"
-      },
-      {
-       "kind": "subject",
-       "layer": null,
-       "label": "character.ai"
-      },
-      {
-       "kind": "subject",
-       "layer": null,
-       "label": "AI companion apps"
-      },
-      {
-       "kind": "subject",
-       "layer": null,
-       "label": "tutorial video format"
-      }
-     ]
-    },
-    "heard": "In today's video, I'm going to teach you how to create a character on character AI to get started. Open Google Chrome and go to character AI. Once the site loads, sign into your account. Make sure you're using the account where you want the new character to be saved since that w…"
    },
    {
     "id": "7f43c6b5-a468-40f3-ad66-c988cdc16072",
@@ -2055,6 +1593,60 @@
      ]
     },
     "heard": "But why do I say AI is a puppy dog? If you think about the way it actually works, it just gives you the answer based on what it thinks you want. So it's just always just so eager, just trying to please you. It is great in a lot of ways, but you know, sometimes you need someone t…"
+   },
+   {
+    "id": "d458c636-5399-4aa0-b572-755a5d6db8c8",
+    "name": "How-To-Create-SnapYT.App.mp4",
+    "folder": "cold_ideas",
+    "lane": "strategy",
+    "kind": "video",
+    "platform": "unknown",
+    "link": null,
+    "routes": [],
+    "why_like": null,
+    "endorsed": null,
+    "would_do": null,
+    "saved_why": null,
+    "note_for_claude": null,
+    "answered_at": null,
+    "created_at": "2026-10-28T23:08:52.254923+00:00",
+    "piece_id": null,
+    "tags": {
+     "confirmed": [],
+     "guessed": [
+      {
+       "kind": "form",
+       "layer": "production",
+       "label": "screen recording with voiceover"
+      },
+      {
+       "kind": "form",
+       "layer": "structure",
+       "label": "step by step walkthrough"
+      },
+      {
+       "kind": "form",
+       "layer": "graphics",
+       "label": "text heavy ui captions"
+      },
+      {
+       "kind": "subject",
+       "layer": null,
+       "label": "character.ai"
+      },
+      {
+       "kind": "subject",
+       "layer": null,
+       "label": "AI companion apps"
+      },
+      {
+       "kind": "subject",
+       "layer": null,
+       "label": "tutorial video format"
+      }
+     ]
+    },
+    "heard": "In today's video, I'm going to teach you how to create a character on character AI to get started. Open Google Chrome and go to character AI. Once the site loads, sign into your account. Make sure you're using the account where you want the new character to be saved since that w…"
    },
    {
     "id": "87a82f7f-6411-41c9-92b1-a52c4f3e4f8a",
@@ -2278,119 +1870,6 @@
     "heard": "You got the money. You got the weapons. You want to talk to him? You talk to me. Are you a translator? No, you are the translator. No, you are the translator. Okay. I got the money. And you're the only... I didn't hear you coughed. No, I didn't cough you coughed. No, I didn't co…"
    },
    {
-    "id": "098b8734-399d-4a31-998f-9cc7f8d1a198",
-    "name": "what-country-borders-the-most-alphabets-ytshorts.savetube.vip.mp4",
-    "folder": "video_inspiration",
-    "lane": "production",
-    "kind": "video",
-    "platform": "youtube",
-    "link": null,
-    "routes": [],
-    "why_like": null,
-    "endorsed": null,
-    "would_do": null,
-    "saved_why": null,
-    "note_for_claude": null,
-    "answered_at": null,
-    "created_at": "2026-10-25T05:17:59.82781+00:00",
-    "piece_id": null,
-    "tags": {
-     "confirmed": [],
-     "guessed": [
-      {
-       "kind": "form",
-       "layer": "opening",
-       "label": "question hook"
-      },
-      {
-       "kind": "form",
-       "layer": "camerawork",
-       "label": "slow pull out map"
-      },
-      {
-       "kind": "form",
-       "layer": "structure",
-       "label": "single shot narration"
-      },
-      {
-       "kind": "form",
-       "layer": "breakdown",
-       "label": "rapid fact listing"
-      },
-      {
-       "kind": "subject",
-       "layer": null,
-       "label": "world alphabets"
-      },
-      {
-       "kind": "subject",
-       "layer": null,
-       "label": "country borders"
-      }
-     ]
-    },
-    "heard": "What country borders the most other alphabets? Turkey is a contender. While it uses the Latin alphabet for Turkish, its neighbor Bulgaria uses the Bulgarian Cyrillic alphabet. Greece uses the Hellenic alphabet. Syria rocking around all right using variations of the Arabic alphab…"
-   },
-   {
-    "id": "ad109b2c-bb7c-45d9-af43-05b2a69f0aa7",
-    "name": "igexport-DCHp2RLIxMt.mp4",
-    "folder": "video_inspiration",
-    "lane": "production",
-    "kind": "video",
-    "platform": "instagram",
-    "link": null,
-    "routes": [],
-    "why_like": null,
-    "endorsed": null,
-    "would_do": null,
-    "saved_why": null,
-    "note_for_claude": null,
-    "answered_at": null,
-    "created_at": "2026-10-25T05:17:59.82781+00:00",
-    "piece_id": null,
-    "tags": {
-     "confirmed": [],
-     "guessed": [
-      {
-       "kind": "form",
-       "layer": "opening",
-       "label": "fast hook with price tease"
-      },
-      {
-       "kind": "form",
-       "layer": "editing",
-       "label": "rapid cutting, under 1.2s shots"
-      },
-      {
-       "kind": "form",
-       "layer": "breakdown",
-       "label": "voiceover drives visuals"
-      },
-      {
-       "kind": "form",
-       "layer": "proof",
-       "label": "split cost math as proof"
-      },
-      {
-       "kind": "form",
-       "layer": "close",
-       "label": "send to mates close"
-      },
-      {
-       "kind": "subject",
-       "layer": null,
-       "label": "villa rental"
-      },
-      {
-       "kind": "subject",
-       "layer": null,
-       "label": "travel content"
-      }
-     ]
-    },
-    "heard": "Okay, here's how we got this Airbnb in Portugal for less than the price of a travel lodge. So I've just come back from Portugal and this villa was definitely one of the nicest I've ever stayed in. It's got a heated pool, spa, games room, outdoor cinema. It actually came with a p…"
-   },
-   {
     "id": "a7630a37-7a3b-4330-aa4d-6259174bdc9c",
     "name": "snapgram.io_f12r9jwnn6ub.mp4",
     "folder": "video_inspiration",
@@ -2502,12 +1981,12 @@
     "heard": "Buh Buh Buh Buh"
    },
    {
-    "id": "1f441a00-0044-4676-859d-721a768e3a89",
-    "name": "Content seed: My AI found an ICP I did not know I had (Capital track discovery)",
-    "folder": "cold_ideas",
-    "lane": "strategy",
-    "kind": "idea",
-    "platform": "unknown",
+    "id": "ad109b2c-bb7c-45d9-af43-05b2a69f0aa7",
+    "name": "igexport-DCHp2RLIxMt.mp4",
+    "folder": "video_inspiration",
+    "lane": "production",
+    "kind": "video",
+    "platform": "instagram",
     "link": null,
     "routes": [],
     "why_like": null,
@@ -2516,54 +1995,103 @@
     "saved_why": null,
     "note_for_claude": null,
     "answered_at": null,
-    "created_at": "2026-10-22T15:33:57.369867+00:00",
+    "created_at": "2026-10-25T05:17:59.82781+00:00",
     "piece_id": null,
     "tags": {
      "confirmed": [],
      "guessed": [
       {
-       "kind": "subject",
-       "layer": null,
-       "label": "ICP segmentation"
-      },
-      {
-       "kind": "subject",
-       "layer": null,
-       "label": "AI decision making"
-      },
-      {
-       "kind": "subject",
-       "layer": null,
-       "label": "builder economy"
+       "kind": "form",
+       "layer": "opening",
+       "label": "fast hook with price tease"
       },
       {
        "kind": "form",
+       "layer": "editing",
+       "label": "rapid cutting, under 1.2s shots"
+      },
+      {
+       "kind": "form",
+       "layer": "breakdown",
+       "label": "voiceover drives visuals"
+      },
+      {
+       "kind": "form",
+       "layer": "proof",
+       "label": "split cost math as proof"
+      },
+      {
+       "kind": "form",
+       "layer": "close",
+       "label": "send to mates close"
+      },
+      {
+       "kind": "subject",
+       "layer": null,
+       "label": "villa rental"
+      },
+      {
+       "kind": "subject",
+       "layer": null,
+       "label": "travel content"
+      }
+     ]
+    },
+    "heard": "Okay, here's how we got this Airbnb in Portugal for less than the price of a travel lodge. So I've just come back from Portugal and this villa was definitely one of the nicest I've ever stayed in. It's got a heated pool, spa, games room, outdoor cinema. It actually came with a p…"
+   },
+   {
+    "id": "098b8734-399d-4a31-998f-9cc7f8d1a198",
+    "name": "what-country-borders-the-most-alphabets-ytshorts.savetube.vip.mp4",
+    "folder": "video_inspiration",
+    "lane": "production",
+    "kind": "video",
+    "platform": "youtube",
+    "link": null,
+    "routes": [],
+    "why_like": null,
+    "endorsed": null,
+    "would_do": null,
+    "saved_why": null,
+    "note_for_claude": null,
+    "answered_at": null,
+    "created_at": "2026-10-25T05:17:59.82781+00:00",
+    "piece_id": null,
+    "tags": {
+     "confirmed": [],
+     "guessed": [
+      {
+       "kind": "form",
        "layer": "opening",
-       "label": "specific number hook"
+       "label": "question hook"
+      },
+      {
+       "kind": "form",
+       "layer": "camerawork",
+       "label": "slow pull out map"
       },
       {
        "kind": "form",
        "layer": "structure",
-       "label": "contrarian counterpoint"
+       "label": "single shot narration"
       },
       {
        "kind": "form",
-       "layer": "tone",
-       "label": "practitioner voice"
+       "layer": "breakdown",
+       "label": "rapid fact listing"
       },
       {
        "kind": "subject",
        "layer": null,
-       "label": "lead generation"
+       "label": "world alphabets"
       },
       {
        "kind": "subject",
        "layer": null,
-       "label": "pricing architecture"
+       "label": "country borders"
       }
      ]
     },
-    "heard": null
+    "heard": "What country borders the most other alphabets? Turkey is a contender. While it uses the Latin alphabet for Turkish, its neighbor Bulgaria uses the Bulgarian Cyrillic alphabet. Greece uses the Hellenic alphabet. Syria rocking around all right using variations of the Arabic alphab…"
    },
    {
     "id": "39657806-2360-402f-baea-4a0685b7016a",
@@ -2836,60 +2364,6 @@
     "heard": null
    },
    {
-    "id": "a5f20486-2879-4b8d-bd77-e20f94187abf",
-    "name": "15 The name-swap test",
-    "folder": "cold_ideas",
-    "lane": "strategy",
-    "kind": "idea",
-    "platform": "unknown",
-    "link": null,
-    "routes": [],
-    "why_like": null,
-    "endorsed": null,
-    "would_do": null,
-    "saved_why": null,
-    "note_for_claude": null,
-    "answered_at": null,
-    "created_at": "2026-10-22T15:33:57.369867+00:00",
-    "piece_id": null,
-    "tags": {
-     "confirmed": [],
-     "guessed": [
-      {
-       "kind": "subject",
-       "layer": null,
-       "label": "name-swap test"
-      },
-      {
-       "kind": "subject",
-       "layer": null,
-       "label": "AI writing judgement"
-      },
-      {
-       "kind": "form",
-       "layer": "proof",
-       "label": "before-after on screen"
-      },
-      {
-       "kind": "form",
-       "layer": "close",
-       "label": "do this today close"
-      },
-      {
-       "kind": "form",
-       "layer": "structure",
-       "label": "script draft"
-      },
-      {
-       "kind": "form",
-       "layer": "stage_format",
-       "label": "to camera tall and wide"
-      }
-     ]
-    },
-    "heard": null
-   },
-   {
     "id": "9cd522da-f6bf-43d3-ae45-32bdd1db0ff9",
     "name": "Meta Muse  Public Sentiment, Real Usage and Genuine Differentiation.md",
     "folder": "cold_ideas",
@@ -2938,6 +2412,70 @@
        "kind": "form",
        "layer": "structure",
        "label": "executive summary"
+      }
+     ]
+    },
+    "heard": null
+   },
+   {
+    "id": "4bb3ece5-6fd4-47a5-81d0-45c9feb238cd",
+    "name": "02 Correct it once, with the reason",
+    "folder": "cold_ideas",
+    "lane": "strategy",
+    "kind": "idea",
+    "platform": "unknown",
+    "link": null,
+    "routes": [],
+    "why_like": null,
+    "endorsed": null,
+    "would_do": null,
+    "saved_why": null,
+    "note_for_claude": null,
+    "answered_at": null,
+    "created_at": "2026-10-22T15:33:57.369867+00:00",
+    "piece_id": null,
+    "tags": {
+     "confirmed": [],
+     "guessed": [
+      {
+       "kind": "subject",
+       "layer": null,
+       "label": "AI custom instructions"
+      },
+      {
+       "kind": "subject",
+       "layer": null,
+       "label": "personal AI workflow habits"
+      },
+      {
+       "kind": "form",
+       "layer": "opening",
+       "label": "self-mocking opening story"
+      },
+      {
+       "kind": "form",
+       "layer": "structure",
+       "label": "three-line corrections framework"
+      },
+      {
+       "kind": "form",
+       "layer": "proof",
+       "label": "news hook tie-in"
+      },
+      {
+       "kind": "form",
+       "layer": "stage_format",
+       "label": "to camera tall and wide"
+      },
+      {
+       "kind": "subject",
+       "layer": null,
+       "label": "Microsoft Copilot Autopilot"
+      },
+      {
+       "kind": "form",
+       "layer": "close",
+       "label": "paste-able footer close"
       }
      ]
     },
@@ -4453,8 +3991,8 @@
     "heard": null
    },
    {
-    "id": "4bb3ece5-6fd4-47a5-81d0-45c9feb238cd",
-    "name": "02 Correct it once, with the reason",
+    "id": "a5f20486-2879-4b8d-bd77-e20f94187abf",
+    "name": "15 The name-swap test",
     "folder": "cold_ideas",
     "lane": "strategy",
     "kind": "idea",
@@ -4475,42 +4013,32 @@
       {
        "kind": "subject",
        "layer": null,
-       "label": "AI custom instructions"
+       "label": "name-swap test"
       },
       {
        "kind": "subject",
        "layer": null,
-       "label": "personal AI workflow habits"
-      },
-      {
-       "kind": "form",
-       "layer": "opening",
-       "label": "self-mocking opening story"
-      },
-      {
-       "kind": "form",
-       "layer": "structure",
-       "label": "three-line corrections framework"
+       "label": "AI writing judgement"
       },
       {
        "kind": "form",
        "layer": "proof",
-       "label": "news hook tie-in"
+       "label": "before-after on screen"
+      },
+      {
+       "kind": "form",
+       "layer": "close",
+       "label": "do this today close"
+      },
+      {
+       "kind": "form",
+       "layer": "structure",
+       "label": "script draft"
       },
       {
        "kind": "form",
        "layer": "stage_format",
        "label": "to camera tall and wide"
-      },
-      {
-       "kind": "subject",
-       "layer": null,
-       "label": "Microsoft Copilot Autopilot"
-      },
-      {
-       "kind": "form",
-       "layer": "close",
-       "label": "paste-able footer close"
       }
      ]
     },
@@ -4697,16 +4225,80 @@
      ]
     },
     "heard": null
+   },
+   {
+    "id": "1f441a00-0044-4676-859d-721a768e3a89",
+    "name": "Content seed: My AI found an ICP I did not know I had (Capital track discovery)",
+    "folder": "cold_ideas",
+    "lane": "strategy",
+    "kind": "idea",
+    "platform": "unknown",
+    "link": null,
+    "routes": [],
+    "why_like": null,
+    "endorsed": null,
+    "would_do": null,
+    "saved_why": null,
+    "note_for_claude": null,
+    "answered_at": null,
+    "created_at": "2026-10-22T15:33:57.369867+00:00",
+    "piece_id": null,
+    "tags": {
+     "confirmed": [],
+     "guessed": [
+      {
+       "kind": "subject",
+       "layer": null,
+       "label": "ICP segmentation"
+      },
+      {
+       "kind": "subject",
+       "layer": null,
+       "label": "AI decision making"
+      },
+      {
+       "kind": "subject",
+       "layer": null,
+       "label": "builder economy"
+      },
+      {
+       "kind": "form",
+       "layer": "opening",
+       "label": "specific number hook"
+      },
+      {
+       "kind": "form",
+       "layer": "structure",
+       "label": "contrarian counterpoint"
+      },
+      {
+       "kind": "form",
+       "layer": "tone",
+       "label": "practitioner voice"
+      },
+      {
+       "kind": "subject",
+       "layer": null,
+       "label": "lead generation"
+      },
+      {
+       "kind": "subject",
+       "layer": null,
+       "label": "pricing architecture"
+      }
+     ]
+    },
+    "heard": null
    }
   ],
   "corpora": [
    {
-    "id": "bb9dc343-ebb8-40cd-8596-074291f388d9",
-    "title": "instagram_DfAY9PWFuEX_04.jpg",
+    "id": "dbb7dba0-033f-4657-8661-f95e833e3be2",
+    "title": "instagram_DfAY9PWFuEX_07.jpg",
     "shape": "carousel",
     "platform": "instagram",
     "source_url": "https://www.instagram.com/p/DfAY9PWFuEX/",
-    "excerpt": "Link: https://www.instagram.com/p/DfAY9PWFuEX/ Slide 4 of 16 Text on it: 18 words, 5% of the area. Colours: #0b0c0f 15%, #4e4b46 10%, #bab5ad 7%, #807b78 5%, #886e4f 5% Text: TALENT A17 YEAR OLD STUDENT CREATED SURGICAL SUTURES THAT CHANGE COLOR WHEN THEY DETECT AN INFECTION THE…",
+    "excerpt": "Link: https://www.instagram.com/p/DfAY9PWFuEX/ Slide 7 of 16 Text on it: 30 words, 8% of the area. Colours: #090e0d 21%, #b0aea2 15%, #16484b 7%, #48524b 6%, #48431e 5% Text: fs REPUBL jii CALIFORNIA HAS OFFICIALLY BANNED THE CRUEL PRACTICE OF OCTOPUS FARMING AND THE SALE OF FAR…",
     "created_at": "2026-10-28T06:03:52.795035+00:00"
    },
    {
@@ -4737,24 +4329,6 @@
     "created_at": "2026-10-28T06:03:52.795035+00:00"
    },
    {
-    "id": "66d3cd6e-b1a3-4eec-a87b-232d98adf065",
-    "title": "instagram_DfAY9PWFuEX_10.jpg",
-    "shape": "carousel",
-    "platform": "instagram",
-    "source_url": "https://www.instagram.com/p/DfAY9PWFuEX/",
-    "excerpt": "Link: https://www.instagram.com/p/DfAY9PWFuEX/ Slide 10 of 16 Text on it: 22 words, 6% of the area. Colours: #100e0e 23%, #dce0e0 14%, #b8b8b6 6%, #504d48 6%, #b9a180 5% Text: Be wi ry. ii SS MEXICAN SCIENTIST EVA RAMON GALLEGOS BECAME THE FIRST PERSON IN HISTORY TO SUCCESSFULLY…",
-    "created_at": "2026-10-28T06:03:52.795035+00:00"
-   },
-   {
-    "id": "47b6cfdf-43ae-43d6-a8df-b48cb867a114",
-    "title": "instagram_DfAY9PWFuEX_14.jpg",
-    "shape": "carousel",
-    "platform": "instagram",
-    "source_url": "https://www.instagram.com/p/DfAY9PWFuEX/",
-    "excerpt": "Link: https://www.instagram.com/p/DfAY9PWFuEX/ Slide 14 of 16 Text on it: 18 words, 4% of the area. Colours: #0c110f 20%, #4c5049 8%, #4e4320 7%, #214148 5%, #80724c 5% Text: In if ai, FRENCH DOCTORS RESTORED SIGHT TO A COMPLETELY BLIND PERSON USING PROTEINS FROM ALGAE. on aS.",
-    "created_at": "2026-10-28T06:03:52.795035+00:00"
-   },
-   {
     "id": "853f9298-8ef3-4754-b2c9-4627a8b89617",
     "title": "instagram_DfAY9PWFuEX_02.jpg",
     "shape": "carousel",
@@ -4764,12 +4338,30 @@
     "created_at": "2026-10-28T06:03:52.795035+00:00"
    },
    {
+    "id": "bb9dc343-ebb8-40cd-8596-074291f388d9",
+    "title": "instagram_DfAY9PWFuEX_04.jpg",
+    "shape": "carousel",
+    "platform": "instagram",
+    "source_url": "https://www.instagram.com/p/DfAY9PWFuEX/",
+    "excerpt": "Link: https://www.instagram.com/p/DfAY9PWFuEX/ Slide 4 of 16 Text on it: 18 words, 5% of the area. Colours: #0b0c0f 15%, #4e4b46 10%, #bab5ad 7%, #807b78 5%, #886e4f 5% Text: TALENT A17 YEAR OLD STUDENT CREATED SURGICAL SUTURES THAT CHANGE COLOR WHEN THEY DETECT AN INFECTION THE…",
+    "created_at": "2026-10-28T06:03:52.795035+00:00"
+   },
+   {
     "id": "80aa72bd-03a5-4411-8820-7e3ccd866147",
     "title": "instagram_DfAY9PWFuEX_05.jpg",
     "shape": "carousel",
     "platform": "instagram",
     "source_url": "https://www.instagram.com/p/DfAY9PWFuEX/",
     "excerpt": "Link: https://www.instagram.com/p/DfAY9PWFuEX/ Slide 5 of 16 Text on it: 13 words, 9% of the area. Colours: #e1dbd6 29%, #d3bbaa 12%, #070804 11%, #bfb6a9 6%, #dad1c6 6% Text: DANISH ENGINEERS HAVE DEVELOPED IMPLANTS THAT DETECT BLOOD SUGAR LEVELS AND RELEASE INSULIN",
+    "created_at": "2026-10-28T06:03:52.795035+00:00"
+   },
+   {
+    "id": "66d3cd6e-b1a3-4eec-a87b-232d98adf065",
+    "title": "instagram_DfAY9PWFuEX_10.jpg",
+    "shape": "carousel",
+    "platform": "instagram",
+    "source_url": "https://www.instagram.com/p/DfAY9PWFuEX/",
+    "excerpt": "Link: https://www.instagram.com/p/DfAY9PWFuEX/ Slide 10 of 16 Text on it: 22 words, 6% of the area. Colours: #100e0e 23%, #dce0e0 14%, #b8b8b6 6%, #504d48 6%, #b9a180 5% Text: Be wi ry. ii SS MEXICAN SCIENTIST EVA RAMON GALLEGOS BECAME THE FIRST PERSON IN HISTORY TO SUCCESSFULLY…",
     "created_at": "2026-10-28T06:03:52.795035+00:00"
    },
    {
@@ -4788,15 +4380,6 @@
     "platform": "instagram",
     "source_url": "https://www.instagram.com/p/DfAY9PWFuEX/",
     "excerpt": "Link: https://www.instagram.com/p/DfAY9PWFuEX/ Slide 8 of 16 Text on it: 21 words, 7% of the area. Colours: #0d0504 17%, #b20202 16%, #a8b0ba 7%, #880303 6%, #aec1d6 5% Text: CHILDREN WILL NO LONGER BE BORN WITH DOWN SYNDROME: JAPANESE SCIENTISTS MANAGED TO REMOVE THE CHROMOSOME…",
-    "created_at": "2026-10-28T06:03:52.795035+00:00"
-   },
-   {
-    "id": "dbb7dba0-033f-4657-8661-f95e833e3be2",
-    "title": "instagram_DfAY9PWFuEX_07.jpg",
-    "shape": "carousel",
-    "platform": "instagram",
-    "source_url": "https://www.instagram.com/p/DfAY9PWFuEX/",
-    "excerpt": "Link: https://www.instagram.com/p/DfAY9PWFuEX/ Slide 7 of 16 Text on it: 30 words, 8% of the area. Colours: #090e0d 21%, #b0aea2 15%, #16484b 7%, #48524b 6%, #48431e 5% Text: fs REPUBL jii CALIFORNIA HAS OFFICIALLY BANNED THE CRUEL PRACTICE OF OCTOPUS FARMING AND THE SALE OF FAR…",
     "created_at": "2026-10-28T06:03:52.795035+00:00"
    },
    {
@@ -4833,6 +4416,15 @@
     "platform": "instagram",
     "source_url": "https://www.instagram.com/p/DfAY9PWFuEX/",
     "excerpt": "Link: https://www.instagram.com/p/DfAY9PWFuEX/ Slide 12 of 16 Text on it: 24 words, 7% of the area. Colours: #edeae6 33%, #050404 12%, #867f77 10%, #b5b1aa 8%, #4f4b48 7% Text: SCIENTISTS HAVE CREATED A MINIATURE BIOLOGICAL PANCREAS FROM LIVING CELLS THAT PRODUCES INSULIN ON ITS…",
+    "created_at": "2026-10-28T06:03:52.795035+00:00"
+   },
+   {
+    "id": "47b6cfdf-43ae-43d6-a8df-b48cb867a114",
+    "title": "instagram_DfAY9PWFuEX_14.jpg",
+    "shape": "carousel",
+    "platform": "instagram",
+    "source_url": "https://www.instagram.com/p/DfAY9PWFuEX/",
+    "excerpt": "Link: https://www.instagram.com/p/DfAY9PWFuEX/ Slide 14 of 16 Text on it: 18 words, 4% of the area. Colours: #0c110f 20%, #4c5049 8%, #4e4320 7%, #214148 5%, #80724c 5% Text: In if ai, FRENCH DOCTORS RESTORED SIGHT TO A COMPLETELY BLIND PERSON USING PROTEINS FROM ALGAE. on aS.",
     "created_at": "2026-10-28T06:03:52.795035+00:00"
    }
   ],
@@ -5133,6 +4725,12 @@
     "endorsed": "the three-question test is simple enough to actually use"
    },
    {
+    "id": "2162c904-b0ff-452b-81aa-b8cfd7ec1909",
+    "what": "Inspiration card \"instagram_DeypYeWN5hL.mp4\" you saved with your words",
+    "his_words": "This is good for both production and content. We should do a short that just completely reskins and reuses the content and production of this.",
+    "endorsed": null
+   },
+   {
     "id": "aae54ef9-0bd7-49a8-959e-96695e1a51a8",
     "what": "Inspiration card \"youtube_wh3D5Zx6Prg.mp4\" you saved with your words",
     "his_words": "Another crazy simple explanation of a crazy complex topic. We really need to simplify our scripts and our content.",
@@ -5175,9 +4773,9 @@
     "endorsed": null
    },
    {
-    "id": "f6327ce0-a414-4365-98df-635c1780523c",
-    "what": "Inspiration card \"youtube_wSsJbXzp3DY.mp4\" you wrote on; it already became a piece (piece 36886e0b-4b32-473b-be72-b0aef31fccef)",
-    "his_words": "Here's another video that we're going to include for the AI-generated music piece because everyone has seen this and probably isn't aware that half of it's generated by AI.",
+    "id": "90b654ca-204a-4aef-bffe-19cfa7a2db19",
+    "what": "Inspiration card \"youtube_oEODyXtV49M.mp4\" you wrote on; it already became a piece (piece 36886e0b-4b32-473b-be72-b0aef31fccef)",
+    "his_words": "I want to do a piece on AI-generated music and what that actually is. Here's a video that we are going to want to keep the video and audio for because it will be something I reference in the piece.",
     "endorsed": null,
     "ask": true,
     "state": "piece",
@@ -5185,9 +4783,9 @@
     "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef"
    },
    {
-    "id": "90b654ca-204a-4aef-bffe-19cfa7a2db19",
-    "what": "Inspiration card \"youtube_oEODyXtV49M.mp4\" you wrote on; it already became a piece (piece 36886e0b-4b32-473b-be72-b0aef31fccef)",
-    "his_words": "I want to do a piece on AI-generated music and what that actually is. Here's a video that we are going to want to keep the video and audio for because it will be something I reference in the piece.",
+    "id": "f6327ce0-a414-4365-98df-635c1780523c",
+    "what": "Inspiration card \"youtube_wSsJbXzp3DY.mp4\" you wrote on; it already became a piece (piece 36886e0b-4b32-473b-be72-b0aef31fccef)",
+    "his_words": "Here's another video that we're going to include for the AI-generated music piece because everyone has seen this and probably isn't aware that half of it's generated by AI.",
     "endorsed": null,
     "ask": true,
     "state": "piece",
@@ -5237,6 +4835,23 @@
   ],
   "asks": [
    {
+    "id": "2162c904-b0ff-452b-81aa-b8cfd7ec1909",
+    "name": "instagram_DeypYeWN5hL.mp4",
+    "state": "open",
+    "dismissed": false,
+    "style_only": false,
+    "routed": false,
+    "piece_id": null,
+    "his_words": {
+     "why_here": "This is good for both production and content. We should do a short that just completely reskins and reuses the content and production of this.",
+     "why_like": null,
+     "would_do": null
+    },
+    "words_at": "2026-11-02T14:19:27.842447+00:00",
+    "heard": "RIP MCP. There's a new shift in tech. Companies are moving away from MCP as we know it to a completely different architecture. Here's what changed. Connect an AI agent to a tool we all use MCP, the standard protocol that lets an agent discover tools and call them. So what's the …",
+    "url": "https://www.instagram.com/reel/DeypYeWN5hL/?xtok=Z2V2bnlmNXZrMTl3"
+   },
+   {
     "id": "aae54ef9-0bd7-49a8-959e-96695e1a51a8",
     "name": "youtube_wh3D5Zx6Prg.mp4",
     "state": "open",
@@ -5271,23 +4886,6 @@
     "url": "https://www.instagram.com/reel/DeZuQ7-lATg/?psln=MXA3b2c3dGVydmI2bw=="
    },
    {
-    "id": "f6327ce0-a414-4365-98df-635c1780523c",
-    "name": "youtube_wSsJbXzp3DY.mp4",
-    "state": "piece",
-    "dismissed": false,
-    "style_only": false,
-    "routed": true,
-    "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
-    "his_words": {
-     "why_here": "Here's another video that we're going to include for the AI-generated music piece because everyone has seen this and probably isn't aware that half of it's generated by AI.",
-     "why_like": null,
-     "would_do": null
-    },
-    "words_at": "2026-10-31T16:39:19.97954+00:00",
-    "heard": "I'm not even >> [music] >> Ooh, I'm a fool. I'm a fool. >> [music] >> I'm a fool. >> [music]",
-    "url": "https://youtube.com/shorts/wSsJbXzp3DY?is=NrD7qIf-brI3ZA4n"
-   },
-   {
     "id": "90b654ca-204a-4aef-bffe-19cfa7a2db19",
     "name": "youtube_oEODyXtV49M.mp4",
     "state": "piece",
@@ -5303,6 +4901,23 @@
     "words_at": "2026-10-31T16:39:19.97954+00:00",
     "heard": null,
     "url": "https://youtube.com/shorts/oEODyXtV49M?is=q2ENp9Z-Kb3iFARU"
+   },
+   {
+    "id": "f6327ce0-a414-4365-98df-635c1780523c",
+    "name": "youtube_wSsJbXzp3DY.mp4",
+    "state": "piece",
+    "dismissed": false,
+    "style_only": false,
+    "routed": true,
+    "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
+    "his_words": {
+     "why_here": "Here's another video that we're going to include for the AI-generated music piece because everyone has seen this and probably isn't aware that half of it's generated by AI.",
+     "why_like": null,
+     "would_do": null
+    },
+    "words_at": "2026-10-31T16:39:19.97954+00:00",
+    "heard": "I'm not even >> [music] >> Ooh, I'm a fool. I'm a fool. >> [music] >> I'm a fool. >> [music]",
+    "url": "https://youtube.com/shorts/wSsJbXzp3DY?is=NrD7qIf-brI3ZA4n"
    },
    {
     "id": "7f43c6b5-a468-40f3-ad66-c988cdc16072",
@@ -5521,11 +5136,11 @@
    "routed": 2,
    "study_style": 1,
    "liked": 1,
-   "fresh": 56,
+   "fresh": 58,
    "corpora": 15,
    "creators": 7,
    "claims": 27,
-   "asks": 14,
+   "asks": 15,
    "recent": 5
   }
  },
@@ -5541,6 +5156,12 @@
    "what": "Inspiration card \"09 Reading is free. Sending needs a yes.\" you routed to Make a piece",
    "his_words": null,
    "endorsed": "the three-question test is simple enough to actually use"
+  },
+  {
+   "id": "2162c904-b0ff-452b-81aa-b8cfd7ec1909",
+   "what": "Inspiration card \"instagram_DeypYeWN5hL.mp4\" you saved with your words",
+   "his_words": "This is good for both production and content. We should do a short that just completely reskins and reuses the content and production of this.",
+   "endorsed": null
   },
   {
    "id": "aae54ef9-0bd7-49a8-959e-96695e1a51a8",
@@ -5585,9 +5206,9 @@
    "endorsed": null
   },
   {
-   "id": "f6327ce0-a414-4365-98df-635c1780523c",
-   "what": "Inspiration card \"youtube_wSsJbXzp3DY.mp4\" you wrote on; it already became a piece (piece 36886e0b-4b32-473b-be72-b0aef31fccef)",
-   "his_words": "Here's another video that we're going to include for the AI-generated music piece because everyone has seen this and probably isn't aware that half of it's generated by AI.",
+   "id": "90b654ca-204a-4aef-bffe-19cfa7a2db19",
+   "what": "Inspiration card \"youtube_oEODyXtV49M.mp4\" you wrote on; it already became a piece (piece 36886e0b-4b32-473b-be72-b0aef31fccef)",
+   "his_words": "I want to do a piece on AI-generated music and what that actually is. Here's a video that we are going to want to keep the video and audio for because it will be something I reference in the piece.",
    "endorsed": null,
    "ask": true,
    "state": "piece",
@@ -5595,9 +5216,9 @@
    "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef"
   },
   {
-   "id": "90b654ca-204a-4aef-bffe-19cfa7a2db19",
-   "what": "Inspiration card \"youtube_oEODyXtV49M.mp4\" you wrote on; it already became a piece (piece 36886e0b-4b32-473b-be72-b0aef31fccef)",
-   "his_words": "I want to do a piece on AI-generated music and what that actually is. Here's a video that we are going to want to keep the video and audio for because it will be something I reference in the piece.",
+   "id": "f6327ce0-a414-4365-98df-635c1780523c",
+   "what": "Inspiration card \"youtube_wSsJbXzp3DY.mp4\" you wrote on; it already became a piece (piece 36886e0b-4b32-473b-be72-b0aef31fccef)",
+   "his_words": "Here's another video that we're going to include for the AI-generated music piece because everyone has seen this and probably isn't aware that half of it's generated by AI.",
    "endorsed": null,
    "ask": true,
    "state": "piece",
@@ -5643,12 +5264,6 @@
    "state": "style_only",
    "style_only": true,
    "piece_id": null
-  },
-  {
-   "id": "5a6877e4-9d98-4cf3-bbdf-ec1204778884",
-   "what": "Your idea \"We should create an instagram/tiktok short, really nicely produced, with tips on how to lock down your AI tools before they become proactive as they are about to.\" (dropped in 2026-10-29)",
-   "his_words": "We should create an instagram/tiktok short, really nicely produced, with tips on how to lock down your AI tools before they become proactive as they are about to.",
-   "kind": "his_idea"
   }
  ],
  "taste": {
@@ -5763,13 +5378,6 @@
     "at": "2026-10-12"
    },
    {
-    "id": "7083d6ad-419e-4fdc-9aba-f3be7f3f3a23",
-    "idea": "Where an AI was built is starting to decide what it says no to: ask Claude, then a Chinese model, the same thing, and the answers split by where the model was built.",
-    "angle": null,
-    "reason": null,
-    "at": "2026-11-06"
-   },
-   {
     "id": "904658db-4df2-4537-a0ed-ebe93e081db7",
     "idea": "Every AI lab now sells a menu instead of a model, and the menu is the price list. What that tells you about your own product is worth more than which model you pick.",
     "angle": null,
@@ -5789,6 +5397,13 @@
     "angle": null,
     "reason": null,
     "at": "2026-10-21"
+   },
+   {
+    "id": "7083d6ad-419e-4fdc-9aba-f3be7f3f3a23",
+    "idea": "Where an AI was built is starting to decide what it says no to: ask Claude, then a Chinese model, the same thing, and the answers split by where the model was built.",
+    "angle": null,
+    "reason": null,
+    "at": "2026-11-06"
    }
   ],
   "ab_wins": [],
@@ -5799,13 +5414,6 @@
     "angle": null,
     "reason": null,
     "at": "2026-10-19T07:31:45.573Z"
-   },
-   {
-    "id": "dd9bc2c6-0e75-4723-8673-9aea04cf43ab",
-    "idea": "GPT-5.6 Sol Found a Decade-Old PHP Flaw in 70% of the Web. The Defender's Window Is Now the Only Moat That Matters.",
-    "angle": null,
-    "reason": null,
-    "at": "2026-10-26T09:28:26.369Z"
    }
   ]
  },
@@ -6016,6 +5624,127 @@
    "tracked": 0,
    "briefs": 6,
    "not_for_us": 1
+  }
+ },
+ "offday_verdicts": {
+  "verdicts": [
+   {
+    "week": "2026-11-02",
+    "option": "off-sun-samequestion",
+    "day": "sun",
+    "format": "30-second short, cut from Friday's video",
+    "hook": null,
+    "side": "idea",
+    "verdict": "reject",
+    "words": "Let's eliminate Sunday from Publishing anythign permanently. Sunday is rest and planning and ideation day.",
+    "at": "2026-11-02T10:42:38.336Z"
+   },
+   {
+    "week": "2026-11-02",
+    "option": "off-sat-aipassports",
+    "day": "sat",
+    "format": "Carousel, from Friday's piece",
+    "hook": null,
+    "side": "idea",
+    "verdict": "improve",
+    "words": "Maybe turn this in to a really fun, parodical Sovreign AI piece which mimics how we think about the supply chain right now (get it cheaper from China if I am an opportunist looking for margin, get it from Italy if I want something dodgy done). Make it a really hilarious cariacature of different nationalities",
+    "at": "2026-11-02T10:42:04.719Z"
+   },
+   {
+    "week": "2026-11-02",
+    "option": "off-sat-goodnews",
+    "day": "sat",
+    "format": "Uplifting AI news carousel, infographic style",
+    "hook": null,
+    "side": "idea",
+    "verdict": "improve",
+    "words": "I want actual news items and the content we are going to use here - embedded real world images or videos",
+    "at": "2026-11-02T10:40:08.147Z"
+   },
+   {
+    "week": "2026-11-02",
+    "option": "off-thu-actsfirst",
+    "day": "thu",
+    "format": "Explainer carousel, infographic style",
+    "hook": null,
+    "side": "idea",
+    "verdict": "improve",
+    "words": "Merge this concept in to the above Thursday idea to create one strong piece on how AI acts first, and therefore what you can do in 30 seconds to help it create its own rules.",
+    "at": "2026-11-02T10:39:40.320Z"
+   },
+   {
+    "week": "2026-11-02",
+    "option": "off-thu-puppy",
+    "day": "thu",
+    "format": "Said to camera, 1-2-3",
+    "hook": null,
+    "side": "note",
+    "verdict": "note",
+    "words": "Good, but let's do a piece on the proactive agents and literally give instructions as I gave my friend on how to have our AI tool set its own spending and sending limits, given proactive personal assistants are coming",
+    "at": "2026-11-02T10:38:35.887Z"
+   },
+   {
+    "week": "2026-11-02",
+    "option": "off-thu-puppy",
+    "day": "thu",
+    "format": "Said to camera, 1-2-3",
+    "hook": null,
+    "side": "idea",
+    "verdict": "approve",
+    "words": null,
+    "at": "2026-11-02T10:38:34.923Z"
+   },
+   {
+    "week": "2026-11-02",
+    "option": "off-tue-claudejobs",
+    "day": "tue",
+    "format": "Meme carousel, made fresh in the brand kit",
+    "hook": null,
+    "side": "note",
+    "verdict": "note",
+    "words": "Go for it, visual quality but not dip beneath the video production quality",
+    "at": "2026-11-02T10:37:29.333Z"
+   },
+   {
+    "week": "2026-11-02",
+    "option": "off-tue-claudejobs",
+    "day": "tue",
+    "format": "Meme carousel, made fresh in the brand kit",
+    "hook": null,
+    "side": "idea",
+    "verdict": "approve",
+    "words": null,
+    "at": "2026-11-02T10:37:01.603Z"
+   },
+   {
+    "week": "2026-11-02",
+    "option": "off-tue-translator",
+    "day": "tue",
+    "format": "Meme video, made fresh in the brand kit",
+    "hook": null,
+    "side": "note",
+    "verdict": "note",
+    "words": "\"POV: your AI agent trying to communicate with your customer's AI agent\" above the video",
+    "at": "2026-11-02T10:36:36.667Z"
+   },
+   {
+    "week": "2026-11-02",
+    "option": "off-tue-translator",
+    "day": "tue",
+    "format": "Meme video, made fresh in the brand kit",
+    "hook": null,
+    "side": "idea",
+    "verdict": "approve",
+    "words": null,
+    "at": "2026-11-02T09:12:39.305Z"
+   }
+  ],
+  "counts": {
+   "approve": 3,
+   "improve": 3,
+   "reject": 1,
+   "next_week": 0,
+   "note": 3
   }
  },
  "queue": [
@@ -6368,6 +6097,23 @@
  },
  "asks": [
   {
+   "id": "2162c904-b0ff-452b-81aa-b8cfd7ec1909",
+   "name": "instagram_DeypYeWN5hL.mp4",
+   "state": "open",
+   "dismissed": false,
+   "style_only": false,
+   "routed": false,
+   "piece_id": null,
+   "his_words": {
+    "why_here": "This is good for both production and content. We should do a short that just completely reskins and reuses the content and production of this.",
+    "why_like": null,
+    "would_do": null
+   },
+   "words_at": "2026-11-02T14:19:27.842447+00:00",
+   "heard": "RIP MCP. There's a new shift in tech. Companies are moving away from MCP as we know it to a completely different architecture. Here's what changed. Connect an AI agent to a tool we all use MCP, the standard protocol that lets an agent discover tools and call them. So what's the …",
+   "url": "https://www.instagram.com/reel/DeypYeWN5hL/?xtok=Z2V2bnlmNXZrMTl3"
+  },
+  {
    "id": "aae54ef9-0bd7-49a8-959e-96695e1a51a8",
    "name": "youtube_wh3D5Zx6Prg.mp4",
    "state": "open",
@@ -6402,23 +6148,6 @@
    "url": "https://www.instagram.com/reel/DeZuQ7-lATg/?psln=MXA3b2c3dGVydmI2bw=="
   },
   {
-   "id": "f6327ce0-a414-4365-98df-635c1780523c",
-   "name": "youtube_wSsJbXzp3DY.mp4",
-   "state": "piece",
-   "dismissed": false,
-   "style_only": false,
-   "routed": true,
-   "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
-   "his_words": {
-    "why_here": "Here's another video that we're going to include for the AI-generated music piece because everyone has seen this and probably isn't aware that half of it's generated by AI.",
-    "why_like": null,
-    "would_do": null
-   },
-   "words_at": "2026-10-31T16:39:19.97954+00:00",
-   "heard": "I'm not even >> [music] >> Ooh, I'm a fool. I'm a fool. >> [music] >> I'm a fool. >> [music]",
-   "url": "https://youtube.com/shorts/wSsJbXzp3DY?is=NrD7qIf-brI3ZA4n"
-  },
-  {
    "id": "90b654ca-204a-4aef-bffe-19cfa7a2db19",
    "name": "youtube_oEODyXtV49M.mp4",
    "state": "piece",
@@ -6434,6 +6163,23 @@
    "words_at": "2026-10-31T16:39:19.97954+00:00",
    "heard": null,
    "url": "https://youtube.com/shorts/oEODyXtV49M?is=q2ENp9Z-Kb3iFARU"
+  },
+  {
+   "id": "f6327ce0-a414-4365-98df-635c1780523c",
+   "name": "youtube_wSsJbXzp3DY.mp4",
+   "state": "piece",
+   "dismissed": false,
+   "style_only": false,
+   "routed": true,
+   "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
+   "his_words": {
+    "why_here": "Here's another video that we're going to include for the AI-generated music piece because everyone has seen this and probably isn't aware that half of it's generated by AI.",
+    "why_like": null,
+    "would_do": null
+   },
+   "words_at": "2026-10-31T16:39:19.97954+00:00",
+   "heard": "I'm not even >> [music] >> Ooh, I'm a fool. I'm a fool. >> [music] >> I'm a fool. >> [music]",
+   "url": "https://youtube.com/shorts/wSsJbXzp3DY?is=NrD7qIf-brI3ZA4n"
   },
   {
    "id": "7f43c6b5-a468-40f3-ad66-c988cdc16072",
@@ -6646,6 +6392,72 @@
    "scheduled_for": "2026-10-19",
    "series": "follow_the_money",
    "covers": []
+  }
+ ],
+ "recent_offdays": [
+  {
+   "text": "Sat 7 Nov. Sovereign AI, a completely serious shopping guide: five cards in the style of a duty-free sign. Card 1: SOVEREIGN AI: A SHOPPING GUIDE. Card 2: Want it cheap and fast? Buy from the country that makes everything else you own. Card 3: Want it to never say no? Buy from the one with no rules yet. Card 4: Want it to need a permit to answer? We have just the regulator. Card 5: Or ask the only question that matters: whose rules is it following? The joke is on the buyer's shopping logic and each country's AI rules, never on people.",
+   "covers": [],
+   "week": "2026-11-02",
+   "day": "sat",
+   "id": "aipassports",
+   "verdict": "improve"
+  },
+  {
+   "text": "Sat 7 Nov. Good things AI did this week: three real stories, each card the real headline, one line on why it is good, the source and the date. Picked on Fri 6 Nov from his own interests: personal agents helping ordinary people, AI music with artists paid, small businesses, young people building with AI.",
+   "covers": [],
+   "week": "2026-11-02",
+   "day": "sat",
+   "id": "goodnews",
+   "verdict": "improve"
+  },
+  {
+   "text": "Sun 8 Nov. About 30 seconds cut from Friday's long video: the moment two AIs built in different countries get the same question and give different answers, captions at the fast pace you saved, ending on the full piece.",
+   "covers": [],
+   "week": "2026-11-02",
+   "day": "sun",
+   "id": "samequestion",
+   "verdict": "reject"
+  },
+  {
+   "text": "Sun 8 Nov. Four cards, 4:5. Card 1: THIS WEEK IN AI, IN 3 CARDS. Card 2: Claude is eating its own jobs (Monday's cover). Card 3: AI stopped waiting to be asked (Wednesday's cover). Card 4: Where your AI was built decides what it refuses (Friday's cover). Follow for next week's three.",
+   "covers": [],
+   "week": "2026-11-02",
+   "day": "sun",
+   "id": "weekin3",
+   "verdict": null
+  },
+  {
+   "text": "Merged into Thursday's to-camera piece above, as he asked: one strong piece on how AI acts first and the one rule you can give it.",
+   "covers": [],
+   "week": "2026-11-02",
+   "day": "thu",
+   "id": "actsfirst",
+   "verdict": "improve"
+  },
+  {
+   "text": "Thu 5 Nov. The No-Spending, No-Sending rule: a to-camera short, his own script (193 words, in Teleprompter). AI assistants now act before you ask, so give yours one rule: it never spends your money or sends anything for you unless you say so. His prompt goes in the comments of every post, so people can copy it and let their AI interview them. Visuals: three simulated fails, the assistants' logos, and a NO SPENDING. NO SENDING. title card.",
+   "covers": [],
+   "week": "2026-11-02",
+   "day": "thu",
+   "id": "puppy",
+   "verdict": "approve"
+  },
+  {
+   "text": "Tue 3 Nov, the day after Monday's piece. Four cards, 4:5. Card 1: CLAUDE IS EATING THE JOBS OF ITS OWN HUMANS (huge yellow type, a cartoon robot holding a tiny office ladder). Card 2: The rungs juniors used to learn on are the ones AI does first (the ladder with its bottom rungs missing). Card 3: So who trains the seniors of 2030? (an empty chair at the top). Card 4: The full story is on Monday's video (Monday's cover).",
+   "covers": [],
+   "week": "2026-11-02",
+   "day": "tue",
+   "id": "claudejobs",
+   "verdict": "approve"
+  },
+  {
+   "text": "Tue 3 Nov. Your idea (28 Oct): the translator scene you saved, reskinned for when your AI talks to your customer's AI. Two identical robots across a table, each insisting the other is the translator, forty minutes to agree a refund nobody asked for, one human in the corner checking his watch. Subtitles at the fast pace you saved. Format credited to the original clip; none of its footage is used.",
+   "covers": [],
+   "week": "2026-11-02",
+   "day": "tue",
+   "id": "translator",
+   "verdict": "approve"
   }
  ]
 }

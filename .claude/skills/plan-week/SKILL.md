@@ -391,7 +391,10 @@ option carries `cards`: `[{"words": "<what the card says>", "picture":
    `covers` is the board idea's own `covers` list, unchanged: the engine keeps it on the piece (`meta.covers`, never
    cleared), so once he picks it the Inspiration card the piece became is known for good
    (`inspiration_card_pieces`; krishanraja/inspirationhouse `docs/TWO_WAY.md`, step 3).
-   A piece already scheduled for its day (a pick carried over) needs no options.
+   A piece already scheduled for its day (a pick carried over) needs no options: write it into ideas.json
+   `locked`, `{"mon": {"piece_id", "so_what", "why"}}`, and give that day none. The board shows it as Already
+   picked; `board_feed.py cover` and the build refuse options on a scheduled day (Krish, 2026-11-02: "Monday's piece
+   is already done").
    A new idea that is not yet a row is created first with
    `POST /api/content-ideas {"raw_text": "...", "source_type": "week_research"}`.
    Never leave out `source_type` and never use `manual`: a manual row is what

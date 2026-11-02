@@ -18,20 +18,22 @@ rhythm moves over in the plan's later waves; the board's new layout (rule
 - **Monday, Wednesday and Friday: the three hero pieces.** Each has an article
   and two cuts (the 5-minute and the 90-second). They go live on Monday S+8,
   Wednesday S+10 and Friday S+12.
-- **Tuesday, Thursday, Saturday and Sunday: off-day posts** on Instagram,
+- **Tuesday, Thursday and Saturday: off-day posts** on Instagram,
   TikTok and YouTube Shorts: memes, uplifting AI news carousels, simple advice
   on levelling up with AI, and short clips from past weeks. Growth owns this
   lane and makes the posts. He approves them in the same Sunday session
   (Krish, 2026-10-28: "I'm happy to plan the Tuesday, Thursday, Saturday, and
   Sunday content within the Sunday ideas session if you give me a few options
-  to approve as you do the Mon/wed/fri"). The first off-day posts go out on
-  Tuesday 10 November.
+  to approve as you do the Mon/wed/fri"). Sunday is a rest day and nothing is
+  published on it (Ruling, Krish, 2026-11-02: "Let's eliminate Sunday from
+  Publishing anythign permanently. Sunday is rest and planning and ideation
+  day."). The first off-day posts go out on Tuesday 10 November.
 
 **The clock.** Times are his, in New York.
 
 | When | What happens | Who |
 |---|---|---|
-| Saturday, ready by Sunday 06:00 | The Sunday ideas board: 3 or 4 options for each of Monday, Wednesday and Friday, with last week's "next week" items first, and 2 or 3 off-day options for each of Tuesday, Thursday, Saturday and Sunday (Krish, 2026-10-28: "on a Sunday, Claude Code proactively brings me ideas") | the Sunday ideas run: Claude Code in GitHub Actions on his subscription (`.github/workflows/sunday-ideas.yml`); Growth for the off days |
+| Saturday, ready by Sunday 06:00 | The Sunday ideas board: 3 or 4 options for each of Monday, Wednesday and Friday, with last week's "next week" items first, and 4 to 6 off-day options for each of Tuesday, Thursday and Saturday, each read back by two fresh readers (Krish, 2026-10-28: "on a Sunday, Claude Code proactively brings me ideas") | the Sunday ideas run: Claude Code in GitHub Actions on his subscription (`.github/workflows/sunday-ideas.yml`); Growth for the off days |
 | Sunday, by 10:00 | One press on every idea: pick it for a day (with a note if he likes), keep it for a wider piece, track it as a future trend, queue it for next week, or reject it. Approve or skip each off-day option | Krish, about 15 minutes |
 | Sunday, 10:00 to 11:45 | The interview, one question at a time, ending in one signed narrative lock per piece (Krish, 2026-10-28: "Claude interviews me on all three ideas to nail down the narrative arc") | the Sunday room session, with Krish |
 | As each lock is signed | One fresh make run per piece (`.github/workflows/make-piece.yml`, Claude Code in GitHub Actions on his subscription). The two scripts come first (reading age, kill list, copy lint, two fresh readers, a fact check of what they claim); the article follows | Claude Code |

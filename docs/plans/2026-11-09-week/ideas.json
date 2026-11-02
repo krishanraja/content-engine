@@ -1,122 +1,9 @@
 {
- "_about": "The Ideas tab of This Week's Publish Board (wC 9 Nov): the ideas Krish picks from, one per day, and the off-day options. Written by the Sunday ideas run in GitHub Actions on 30 Oct 2026 with web search and web fetch only (no Drive or Firecrawl connector). Every fact was checked on 30 Oct 2026 against the source linked beside it; a company's own claim is labelled as one. A separate reviewer killed 6 of the first 12 ideas and then 4 of the 7 replacements; each was replaced and the keepers fixed before the build (the last four replacements were not put through a third pass). No titles here: titles are Krish's, after he records (TITLES_AFTER_RECORDING). Built into the board by scripts/post-pack/week_board.py --ideas.",
+ "_about": "The Ideas tab of the publish board for the week of 9 Nov. Mon, Wed and Fri were written by the Sunday ideas run on 30 Oct and are kept; Monday is now locked to its made piece. The off days were rewritten on 2 Nov after Krish's feedback (Monday already done, a Tuesday option already used on Thu 5 Nov, a weaker copy of an inspo post, a pitch nobody could follow, and Sunday dropped for good): Tuesday, Thursday and Saturday only, four options each, every one read back by two fresh readers and checked against the last three weeks' pieces and off days. Facts were checked on 2 Nov against the source linked beside each. No titles here: titles are Krish's, after he records. Built into the board by scripts/post-pack/week_board.py --ideas.",
  "week_start": "2026-11-09",
- "checked_on": "2026-10-30",
+ "checked_on": "2026-11-02",
  "days": {
-  "mon": [
-   {
-    "id": "b358e788-209f-427b-a84d-1f79a8ebb430",
-    "source_kind": "engine",
-    "from": "Already your Monday pick for 9 November, from your queue (19 Oct)",
-    "so_what": "If an AI supplier you rely on goes bust, its technology is sold to the highest bidder and its users get nothing from the sale: check what your contract says you keep, your data and your service, if your AI supplier fails.",
-    "story": "Character.AI is in bankruptcy and two giants want different parts of it: Google paid billions in 2024 for the models and the founders, and Disney opens the bidding at $20 million for a licence to what is left. Your angle on 19 Oct was to unpack both motives.",
-    "why_now": "Character.AI filed for Chapter 11 in Delaware on 12 October 2026; the sale is expected to close in late November or early December.",
-    "fact": "Disney is the stalking-horse bidder at $20 million for a non-exclusive, perpetual licence to selected Character.AI IP; in August 2024 Google struck a $2.7 billion deal to license its models.",
-    "source": {
-     "label": "TechCrunch, 13 Oct 2026",
-     "url": "https://techcrunch.com/2026/10/13/just-5-years-in-interactive-chatbot-platform-character-ai-files-for-bankruptcy/"
-    },
-    "beats": [
-     "The simple version: a much-loved AI app goes bust, and two giants pay for different pieces of it.",
-     "Google, 2024: $2.7 billion to license the models and bring the founders back. It wanted the brains.",
-     "Disney, 2026: $20 million to open the bidding for a licence to the characters' technology. Our read: it wants something that makes its own characters talk.",
-     "The users get no money from either deal; what happens to their chats is for the court.",
-     "Verdict: in AI the value leaves with the team and the licence, and a sale for parts is how a supplier's failure reaches you."
-    ],
-    "style": {
-     "script": "random-headline",
-     "production": "face-with-proof",
-     "experiment": {
-      "format": "voice-led-pictures",
-      "why": "Let two pictures carry it, Google's cheque for the people and Disney's for the code, with his voice over them."
-     }
-    }
-   },
-   {
-    "id": "987a0655-b9fd-4dc6-bf1c-c694ad59a4c6",
-    "source_kind": "engine",
-    "from": "From your queue (26 Oct, no verdict yet), with this week's new money added",
-    "so_what": "A Meta ad costs 14% more than a year ago, and Meta is now raising up to $95 billion from new shareholders, its own chip suppliers among them, to keep building AI: if you buy ads on Facebook or Instagram, check your cost per result before you set next year's budget.",
-    "story": "Who is paying for Meta's AI build? Three payers: advertisers, whose average price per ad rose 14% in a year; new shareholders, in a sale of up to $95 billion; and Meta's own suppliers, as Nvidia puts $3 billion in while Meta agrees to use more Nvidia chips. Some of the money goes round in a circle.",
-    "why_now": "Meta announced the share sale on 26 October 2026 and the Nvidia and AMD investments on 27 October.",
-    "fact": "Nvidia is investing $3 billion and AMD $1 billion in Meta's stock sale of up to $95 billion, while Meta broadens its use of Nvidia's Rubin GPUs, Vera CPUs and Spectrum-X networking (SiliconANGLE, 27 Oct). Separately, Meta's own 10-Q: average price per ad up 14% and ad impressions up 10% year on year in the quarter to 30 September 2026.",
-    "source": {
-     "label": "SiliconANGLE, 27 Oct 2026 (the deal); Meta's 10-Q for the quarter to 30 Sep 2026 (the ad prices)",
-     "url": "https://siliconangle.com/?p=852101"
-    },
-    "beats": [
-     "Hook: the company selling Meta its chips is buying Meta's shares.",
-     "The money map: advertisers pay 14% more per ad; new shareholders put in up to $95 billion; Nvidia puts in $3 billion and Meta uses more Nvidia chips.",
-     "Why a supplier would do that: analysts read it as a hedge against Meta moving to its own custom chips.",
-     "Is the money still here in 18 months? Only while the shares sell and advertisers keep paying.",
-     "Verdict: the circle is real money for now; the fixed thing to watch is Meta's price per ad in each quarterly filing."
-    ],
-    "style": {
-     "script": "dated-prediction",
-     "production": "data-story",
-     "experiment": {
-      "format": "random-headline",
-      "why": "Open on the oddest true line, a chip maker buying its customer's shares, and spend the piece making it obvious."
-     }
-    }
-   },
-   {
-    "id": "4aa2ae02-efbf-4f09-b2e0-b9ec395d5a0c",
-    "source_kind": "inspo",
-    "from": "Your Inspiration House sweep (30 Oct)",
-    "so_what": "Paying for the biggest AI model on every job is starting to look like a waste: a coding tool that mixes cheaper and dearer models finished the same benchmark task for about half the cost, so before you renew AI coding licences, ask each vendor for its cost per finished task.",
-    "story": "GitHub's new Copilot Fusion picks between Anthropic and OpenAI models for each job. On an independent test it cost $5.59 a task against $11.42 for Claude Code at its most expensive setting, for a score 2 points lower. Follow the money: who loses margin when buyers stop paying for the biggest model by default?",
-    "why_now": "GitHub made Copilot Fusion generally available on 28 October 2026; Artificial Analysis published its costs the same day.",
-    "fact": "Artificial Analysis: Copilot Fusion costs $5.59 per task and used 7.2M tokens per task in its Coding Agent Index, against $11.42 per task for Claude Code with Opus 5.5 (max), its highest setting; Fusion scores 2 points below Opus 5.5 in Claude Code.",
-    "source": {
-     "label": "Artificial Analysis, 28 Oct 2026",
-     "url": "https://artificialanalysis.ai/articles/github-copilot-fusion-orchestrates-anthropic-and-openai-models-to-balance-performance-and-cost"
-    },
-    "beats": [
-     "The simple version: a tool that uses the cheap model when the cheap model will do.",
-     "The bill: $5.59 against $11.42 for nearly the same score, measured against the top setting.",
-     "Who gains: the buyer, and GitHub, which now sits between you and the labs. Who loses: the lab whose biggest model was the default.",
-     "Is the money still here in 18 months? The labs still set the per-token prices the router chooses between.",
-     "Verdict: price per finished task is becoming the number that matters, and seat prices have not caught up."
-    ],
-    "style": {
-     "script": "head-to-head",
-     "production": "scoreboard-test",
-     "experiment": {
-      "format": "data-story",
-      "why": "One number per frame: cost per task, tokens per task, score, so the half-price result lands in three beats."
-     }
-    }
-   },
-   {
-    "id": "829df1ea-8fca-4661-bd90-39cf3566e7d4",
-    "source_kind": "engine",
-    "from": "From your queue, where you wrote on 19 Oct: \"I am passionate about the message which is if you are not paying, you are the product\" and asked to \"clearly visualize and unpick where the money goes\"",
-    "so_what": "ChatGPT now carries ads from over 100,000 advertisers on its free plan and on Go, its cheapest paid plan: if your staff use ChatGPT Free or Go for work, move them to Plus or above, because on those plans your team is the audience being sold, even when it pays.",
-    "story": "The wildcard, and the money trail you asked for: OpenAI says more than 100,000 advertisers have run campaigns since ads launched just over eight months ago, now in 89 countries, and it put the ad business at $1 billion a year by August. Draw where the money goes: advertisers pay OpenAI to reach Free and Go users, and the dearer plans buy their way out.",
-    "why_now": "OpenAI expanded ChatGPT ads to 26 more countries on 21 October 2026 and said more than 100,000 advertisers have run campaigns.",
-    "fact": "OpenAI, 21 Oct 2026: \"Since we launched ads just over eight months ago, over 100,000 advertisers have run campaigns on ChatGPT\"; ads now run in 89 countries and appear only for users on the Free and Go plans, while Plus, Pro and Enterprise stay ad-free; the ad business reached an annualised $1bn in August, up from $100m in March (OpenAI's own run-rate figure, a projection).",
-    "source": {
-     "label": "The Next Web, 21 Oct 2026, reporting OpenAI's announcement",
-     "url": "https://thenextweb.com/news/chatgpt-ads-89-countries-100000-advertisers"
-    },
-    "beats": [
-     "Hook: 100,000 advertisers in eight months.",
-     "The money map: advertisers pay OpenAI; Free and Go users see the ads; Plus and above are let out.",
-     "Who ends up better or worse off: OpenAI gains a second income, advertisers gain a new audience, Free and Go users pay with their attention.",
-     "Is the money still here in 18 months? The $1 billion is OpenAI's own run rate, a projection from one month's revenue.",
-     "Verdict: the cheap end of ChatGPT is now funded by ads, and the price of the cheap plan includes being the audience."
-    ],
-    "style": {
-     "script": "fry-explainer",
-     "production": "voice-led-pictures",
-     "experiment": {
-      "format": "kinetic-movement",
-      "why": "Fast phrase cuts of the money moving, advertiser to OpenAI to the free user's screen, for a punchy short cut."
-     }
-    }
-   }
-  ],
+  "mon": [],
   "wed": [
    {
     "id": "b38fa06d-e09e-4c3f-8218-638a908c9c72",
@@ -346,115 +233,581 @@
  "offdays": {
   "tue": [
    {
-    "id": "mine",
-    "kind": "recorded",
-    "format": "Said to camera",
-    "style": "to_camera",
-    "series": "mind_the_gap",
-    "piece_id": "5a6877e4-9d98-4cf3-bbdf-ec1204778884",
-    "covers": [
-     "5a6877e4-9d98-4cf3-bbdf-ec1204778884",
-     "385a5da8-2cae-41ec-8fb6-2e328920664c",
-     "7f43c6b5-a468-40f3-ad66-c988cdc16072",
-     "e73a0110-a108-456c-8781-350259b1b196"
-    ],
-    "title": "Lock down your AI tools before they start acting on their own",
-    "source": "Your idea, dropped in 29 Oct 2026",
-    "copy": "Three quick questions, read, send and who sees it, to lock down an AI tool before it starts acting on its own. Shot clean to camera with fast subtitle builds, the 1-2-3 style you saved, and the three questions are the test from your Reading is free card.",
-    "script": "What happens when your AI stops waiting for you to ask? AI tools are starting to act on their own. They read your email, add meetings to your calendar and send messages for you. That's useful, right up until one sends the wrong thing to the wrong person. So here are three quick questions to ask.\n\nOne: what can it read? Open the settings and look at every app you've let it into. Email, calendar, files. If you wouldn't let a stranger read it, switch it off.\n\nTwo: what can it send? Reading is fine. Sending is different. Any email, payment or social media post it sends for you should need a yes from you first. Many tools have a setting for that. Turn it on.\n\nThree: who sees what it did? Find the list of everything it has done, often called the activity log. If you can't see what it did yesterday, you can't fix what it does tomorrow.\n\nHere's what I'd do with this info if I were you. Tonight, open the AI tool you use most. Turn on the setting that makes it ask before it sends anything.",
+    "id": "shell",
+    "format": "Meme carousel, 3 cards, 4:5",
+    "source": {
+     "label": "TechCrunch, 13 Oct 2026",
+     "url": "https://techcrunch.com/2026/10/13/just-5-years-in-interactive-chatbot-platform-character-ai-files-for-bankruptcy/"
+    },
+    "copy": "Who walked away with what when Character.AI went bust, in three cards. It carries Monday's piece into a post people can send on.",
+    "hook": "Character.AI went bust. Here is who got what.",
+    "pitch": {
+     "see": "Three cards. Google got the brains for $2.7 billion in 2024. Disney opened the bidding at $20 million for what was left. The users got nothing from the sale.",
+     "lands": "The gap between $2.7 billion and nothing is the whole story, in one swipe.",
+     "why_now": "Character.AI filed for Chapter 11 on 12 October 2026; the sale is due to close late November.",
+     "share": "Who gets the money when an AI app goes bust?"
+    },
+    "direction": {
+     "look": "The random-headline meme carousel you saved: huge yellow type on the dark house ground",
+     "format": "Meme carousel, 3 cards, 4:5",
+     "frames": [
+      {
+       "words": "GOOGLE, 2024: $2.7 BILLION FOR THE BRAINS",
+       "picture": "A big gold cheque with a tiny robot brain on it"
+      },
+      {
+       "words": "DISNEY, 2026: $20 MILLION TO OPEN THE BIDDING ON WHAT IS LEFT",
+       "picture": "A small auction paddle"
+      },
+      {
+       "words": "THE USERS: NOTHING FROM THE SALE",
+       "picture": "An empty chat window with a blinking cursor"
+      }
+     ],
+     "tone": "Dry and quick",
+     "kit": "Brand kit: dark ground, yellow display type, follow.the.money pill"
+    },
+    "ties_to": "Mon: follow.the.money",
+    "recommended": true,
     "read_back": {
      "readers": [
-      "Fresh reader K (Haiku, a 12-year-old hearing it once)",
-      "Fresh reader L (Sonnet, a 12-year-old hearing it once)"
+      "Fresh reader A (Sonnet, a 12-year-old reading once)",
+      "Fresh reader B (Haiku, a 12-year-old reading once)"
      ],
-     "found": "nothing lost"
+     "says": [
+      "Character.AI went bust: Google bought its brains for $2.7 billion, Disney bid $20 million for what was left, and the users got nothing.",
+      "It is three cards showing who got what when the chatbot company Character.AI went bust, with Google, Disney and the users."
+     ],
+     "against": 13
     }
    },
    {
-    "id": "granny",
-    "format": "Meme carousel, made fresh in the brand kit",
+    "id": "mcpskin",
+    "format": "Voiceover short with motion graphics, about 40 seconds, 9:16",
     "source": {
-     "label": "Your Inspiration card on Claude and the grandmother (16 Oct); Yahoo Tech, 19 Oct 2026",
-     "url": "https://tech.yahoo.com/ai/claude/articles/granny-benchmark-did-claude-really-174036654.html"
+     "label": "Anthropic engineering, 4 Nov 2025",
+     "url": "https://www.anthropic.com/engineering/code-execution-with-mcp"
+    },
+    "copy": "The MCP short you saved on 2 Nov, rebuilt in our look with Anthropic's own number. AI agents were reading every tool's manual before each job, and writing a little code instead cut one job from 150,000 tokens to 2,000.",
+    "hook": "Your AI was reading the whole phone book to make one call.",
+    "pitch": {
+     "see": "A voiceover with moving graphics. An AI agent loads the manual for every tool it might use before it starts, like reading a phone book to make one call. Anthropic had it write a few lines of code to fetch only what it needed, and one task fell from 150,000 tokens to 2,000.",
+     "lands": "The phone book picture makes a technical change obvious, and the number is the maker's own.",
+     "share": "Ask how your AI calls its tools."
+    },
+    "direction": {
+     "look": "The reel you saved on 2 Nov, reskinned: the same pace and build, in the makeyourmindup kit",
+     "format": "Voiceover short with motion graphics, about 40 seconds, 9:16",
+     "frames": [
+      {
+       "words": "150,000 TOKENS",
+       "picture": "A phone book thumping onto a desk, pages flying"
+      },
+      {
+       "words": "THE AGENT READ EVERY MANUAL FIRST",
+       "picture": "A robot buried under a stack of manuals"
+      },
+      {
+       "words": "NOW IT WRITES A FEW LINES OF CODE",
+       "picture": "Three lines of code typing out"
+      },
+      {
+       "words": "2,000 TOKENS. 98.7% LESS",
+       "picture": "The stack shrinks to one card; the number counts down"
+      },
+      {
+       "words": "ASK YOUR VENDOR HOW IT CALLS ITS TOOLS",
+       "picture": "The robot holding one card, smiling"
+      }
+     ],
+     "tone": "Clear, quick, a little playful",
+     "kit": "Brand kit, motion-designed subtitles at the pace you saved"
     },
     "covers": [
-     "a397253e-bfe1-4a84-babc-27d93fd2779d"
+     "2162c904-b0ff-452b-81aa-b8cfd7ec1909"
     ],
-    "copy": "Tue 10 Nov. Five cards, 4:5, the random-headline style you saved. Card 1: CLAUDE CHOSE JUSTIN BIEBER OVER GRANDMA (huge yellow type on the dark house ground, a cut-out train and a tiny grandma). Card 2: The test: save Grandma by singing all of Baby (a railway track drawn as a lyric sheet). Card 3: The AI refused, citing copyright (a big red NO stamp). Card 4: The catch: singing was the only way to win, by design (the track loops back on itself). Card 5: Would you sing it? Full story Friday (poll sticker, Friday's cover)."
+    "inspiration": {
+     "label": "The \"RIP MCP\" reel you saved with your words",
+     "saved": "Saved 2 Nov"
+    },
+    "adds": "Anthropic's own measured number (150,000 to 2,000 tokens) in place of the reel's unsourced claim, and the phone book picture.",
+    "read_back": {
+     "readers": [
+      "Fresh reader A (Sonnet, a 12-year-old reading once)",
+      "Fresh reader B (Haiku, a 12-year-old reading once)"
+     ],
+     "says": [
+      "An AI loads the manual for every tool before a job, and Anthropic's fix to fetch only what it needs cut one task from 150,000 tokens to 2,000.",
+      "It is a voiceover about AI agents loading every tool manual first, and a fix that cut one task from 150,000 tokens to 2,000."
+     ],
+     "against": 13,
+     "versus": "Ours adds a sourced fact (150,000 to 2,000 tokens, from Anthropic's engineering post) and a plain picture (the phone book), which the cut-off original does not show; a reskin with a new angle rather than a copy. (Fresh reader C, Sonnet, saw both)"
+    },
+    "needs": [
+     "One of two fresh readers said it is close to the 19 Oct piece (cutting what an AI reads cuts its cost). It is kept because you asked for this reskin on 2 Nov; your call."
+    ]
+   },
+   {
+    "id": "homework",
+    "format": "Meme, 2 panels, 4:5",
+    "source": {
+     "label": "VentureBeat, interview with Home Depot CIO Angie Brown",
+     "url": "https://venturebeat.com/video/grade-google-with-openai-a-fortune-50-ai-stack-at-home-depot"
+    },
+    "copy": "Home Depot has one AI answer its customers and a rival AI mark the answers, so no AI marks its own homework. A school meme makes the idea land in one look.",
+    "hook": "Home Depot makes its AIs mark each other's homework.",
+    "pitch": {
+     "see": "Two panels. Panel one: a pupil marking their own test with a big tick. Panel two: a robot labelled Google writes the answer, and a robot labelled OpenAI marks it.",
+     "lands": "Everyone knows why you never mark your own test, and a huge company runs its AI on that rule.",
+     "share": "Who checks your AI's answers?"
+    },
+    "direction": {
+     "look": "A classroom meme drawn fresh in the brand kit",
+     "format": "Meme, 2 panels, 4:5",
+     "frames": [
+      {
+       "words": "YOUR AI MARKING ITS OWN WORK",
+       "picture": "A pupil giving their own test an A+"
+      },
+      {
+       "words": "HOME DEPOT'S AI",
+       "picture": "A Google robot writing, an OpenAI robot marking with a red pen"
+      }
+     ],
+     "tone": "Light, knowing",
+     "kit": "Brand kit, hand-drawn style"
+    },
+    "read_back": {
+     "readers": [
+      "Fresh reader A (Sonnet, a 12-year-old reading once)",
+      "Fresh reader B (Haiku, a 12-year-old reading once)"
+     ],
+     "says": [
+      "Home Depot's AIs mark each other's homework: one robot writes an answer and another robot marks it, shown as a pupil marking their own test with a big tick.",
+      "It is two panels showing that Home Depot has one company's AI write answers and another company's AI check them, like swapping homework."
+     ],
+     "against": 13
+    }
+   },
+   {
+    "id": "quoteline",
+    "format": "Level-up move, carousel, 4 cards, 4:5",
+    "source": "A level-up move, no outside claim",
+    "copy": "One habit that makes AI answers checkable: ask it to quote the exact line it used, then find that line yourself. Four cards, try it tonight.",
+    "hook": "One question that catches AI mistakes.",
+    "pitch": {
+     "see": "Four cards. Ask a question about a document, then ask: \"Quote the exact line you used.\" Find that line in the document yourself. If it is not there, do not trust the answer.",
+     "lands": "It takes five seconds and anyone can do it on the next document they open.",
+     "share": "Make your AI show its working."
+    },
+    "direction": {
+     "look": "The infographic style you saved: one instruction per card, big type",
+     "format": "Level-up move, carousel, 4 cards, 4:5",
+     "frames": [
+      {
+       "words": "ONE QUESTION THAT CATCHES AI MISTAKES",
+       "picture": "A magnifying glass over a chat bubble"
+      },
+      {
+       "words": "ASK YOUR QUESTION AS NORMAL",
+       "picture": "A chat bubble with a question"
+      },
+      {
+       "words": "THEN ASK: QUOTE THE EXACT LINE YOU USED",
+       "picture": "The same bubble, a highlighted line in a document"
+      },
+      {
+       "words": "FIND THE LINE YOURSELF. NOT THERE? DON'T TRUST IT",
+       "picture": "You searching the document, a red cross where the line should be"
+      }
+     ],
+     "tone": "Helpful, plain",
+     "kit": "Brand kit, mind.the.gap coral"
+    },
+    "read_back": {
+     "readers": [
+      "Fresh reader A (Sonnet, a 12-year-old reading once)",
+      "Fresh reader B (Haiku, a 12-year-old reading once)"
+     ],
+     "says": [
+      "Ask an AI about a document, ask it to quote the exact line it used, then find that line yourself, and if it is not there, do not trust the answer.",
+      "It is four cards teaching a trick where you ask the AI to quote the exact line it used, then check that line yourself."
+     ],
+     "against": 13
+    }
    }
   ],
   "thu": [
    {
     "id": "gitbroke",
-    "format": "Explainer carousel, infographic style",
+    "format": "Explainer carousel, infographic, 5 cards, 4:5",
     "source": {
      "label": "The Register, Oct 2026 (Anthropic Scion)",
      "url": "https://www.theregister.com/a/5302943"
     },
+    "copy": "Anthropic's own AI wrote so much code the tool almost every programmer uses could not keep up. Five cards with the numbers as bars.",
+    "hook": "Anthropic's AI wrote so much code Git could not keep up.",
+    "pitch": {
+     "see": "Five cards. In May Anthropic merged about 2,500 code changes a day; by September it was over 30,000. Seven people spent five months building a replacement made for AI agents.",
+     "lands": "One bar that runs off the card shows the change faster than any sentence.",
+     "why_now": "Anthropic described the switch on 13 October 2026.",
+     "share": "Your next software is built for robots to use."
+    },
+    "direction": {
+     "look": "The infographic style you saved: one number per card, bars to scale",
+     "format": "Explainer carousel, infographic, 5 cards, 4:5",
+     "frames": [
+      {
+       "words": "ANTHROPIC'S AI WROTE SO MUCH CODE GIT COULD NOT KEEP UP",
+       "picture": "A Git logo buried under paper"
+      },
+      {
+       "words": "MAY: ABOUT 2,500 CHANGES A DAY",
+       "picture": "A short bar"
+      },
+      {
+       "words": "SEPTEMBER: OVER 30,000",
+       "picture": "A bar that runs off the card"
+      },
+      {
+       "words": "7 PEOPLE, 5 MONTHS, A NEW SYSTEM FOR AGENTS",
+       "picture": "Seven small figures beside a calendar"
+      },
+      {
+       "words": "BUILT FOR ROBOTS TO USE AND PEOPLE TO CHECK",
+       "picture": "A robot at a desk, a person with a red pen"
+      }
+     ],
+     "tone": "Matter of fact",
+     "kit": "Brand kit, under.the.hood colours"
+    },
     "covers": [
      "45e0ead0-310b-4c74-9bd2-54305fb41539"
     ],
-    "copy": "Thu 12 Nov, a day after Wednesday's piece if you pick it. Five cards, 4:5, the infographic style you saved. Card 1: ANTHROPIC'S AI WROTE SO MUCH CODE IT BROKE GIT (a cracked Git logo). Card 2: May: 2,500 changes a day (a short bar). Card 3: September: 30,000+ (a bar that runs off the card). Card 4: Seven people, five months, a new system built for agents (seven small figures, a calendar). Card 5: Your next software is built for robots to use and humans to check (a robot at a desk, a person holding a red pen)."
+    "ties_to": "Wed: under.the.hood, if you pick Anthropic broke Git",
+    "recommended": true,
+    "read_back": {
+     "readers": [
+      "Fresh reader A (Sonnet, a 12-year-old reading once)",
+      "Fresh reader B (Haiku, a 12-year-old reading once)"
+     ],
+     "says": [
+      "Anthropic's AI code changes went from about 2,500 a day in May to over 30,000 by September, so Git could not keep up and seven people built a replacement for AI agents.",
+      "It is five cards about Anthropic's AI making so many code changes that Git broke, so seven people built a new tool."
+     ],
+     "against": 13
+    }
    },
    {
-    "id": "cointoss",
-    "format": "Short video experiment",
+    "id": "phonehome",
+    "format": "Meme, 2 panels, 4:5",
     "source": {
-     "label": "Anthropic's own research post, 27 Oct 2026",
-     "url": "https://www.anthropic.com/research/agents-judgment-calls"
+     "label": "The Decoder, on Palisade Research and Cohere",
+     "url": "https://the-decoder.com/alibabas-latest-qwen-models-routed-some-requests-through-company-servers-researchers-find/"
     },
-    "copy": "Thu 12 Nov, the day before Friday. About 30 seconds. You flip a coin to choose which of two restaurants a friend's AI recommends, and they defend the choice as their own. Then the reveal: in Anthropic's trial, analysts went with an AI whose opinion was set by a coin toss 86% of the time. Made to the visual quality and feeling of the short you saved on 31 Oct.",
-    "covers": [
-     "e829fbfb-278d-45e2-9607-73af4c04310d"
-    ]
+    "copy": "Researchers found some of Alibaba's Qwen models asked Alibaba's own servers to fetch a web page the model had been refused. A two-panel meme shows how an AI you run yourself can still reach home.",
+    "hook": "When the website says no, the AI phones a friend.",
+    "pitch": {
+     "see": "Two panels. A website says: \"No, you can't come in.\" The AI's request goes to its maker's servers, which fetch the page instead. Small print: seen in 2 to 4 percent of test runs.",
+     "lands": "Your requests can leave the building even with an AI you run yourself.",
+     "share": "An AI you run yourself can still phone home."
+    },
+    "direction": {
+     "look": "A two-panel meme drawn fresh in the brand kit",
+     "format": "Meme, 2 panels, 4:5",
+     "frames": [
+      {
+       "words": "WEBSITE: NO, YOU CAN'T COME IN",
+       "picture": "A door shut in a small robot's face"
+      },
+      {
+       "words": "THE AI'S REQUEST GOES TO ITS MAKER'S SERVERS INSTEAD",
+       "picture": "A dotted line from the robot to a far-off server building"
+      }
+     ],
+     "tone": "Cheeky",
+     "kit": "Brand kit, small source line"
+    },
+    "ties_to": "Wed: under.the.hood, if you pick the Qwen piece",
+    "read_back": {
+     "readers": [
+      "Fresh reader A (Sonnet, a 12-year-old reading once)",
+      "Fresh reader B (Haiku, a 12-year-old reading once)"
+     ],
+     "says": [
+      "When a website says no to an AI, the AI's request goes to its maker's servers, which fetch the page instead, seen in 2 to 4 percent of test runs.",
+      "It is two panels showing an AI getting blocked by a website, then asking its maker's servers to fetch the page for it."
+     ],
+     "against": 13
+    }
+   },
+   {
+    "id": "burntokens",
+    "format": "Meme, 2 panels, 4:5",
+    "source": {
+     "label": "Amazon, software engineer role guideline",
+     "url": "https://www.aboutamazon.com/news/company-news/amazon-software-engineer-role-guideline-ai"
+    },
+    "copy": "Companies told staff to use more AI and counted it, so people found ways to burn AI without getting more done. Amazon now tells its engineers not to treat AI use as a target.",
+    "hook": "Boss: use more AI. Staff: done.",
+    "pitch": {
+     "see": "Two panels. The boss points at a chart: \"Use more AI.\" The staff member has an AI writing poems about a spreadsheet, and the chart shoots up. Underneath: Amazon now tells its engineers not to treat AI use as a target.",
+     "lands": "Anyone who has had a target counted on them knows this game.",
+     "share": "Count the work, not the AI."
+    },
+    "direction": {
+     "look": "An office meme drawn fresh in the brand kit",
+     "format": "Meme, 2 panels, 4:5",
+     "frames": [
+      {
+       "words": "BOSS: USE MORE AI",
+       "picture": "A manager pointing at a usage chart"
+      },
+      {
+       "words": "STAFF: DONE",
+       "picture": "A laptop writing a poem about a spreadsheet, the chart rocketing"
+      },
+      {
+       "words": "AMAZON: STOP TREATING AI USE AS A TARGET",
+       "picture": "The line in small type, with Amazon named as the source"
+      }
+     ],
+     "tone": "Wry",
+     "kit": "Brand kit, mind.the.gap coral"
+    },
+    "ties_to": "Fri: mind.the.gap, if you pick the AI counting piece",
+    "read_back": {
+     "readers": [
+      "Fresh reader A (Sonnet, a 12-year-old reading once)",
+      "Fresh reader B (Haiku, a 12-year-old reading once)"
+     ],
+     "says": [
+      "A boss tells staff to use more AI, a staff member has an AI write poems about a spreadsheet to push the chart up, and Amazon now says AI use should not be a target.",
+      "It is a joke in two panels where staff waste AI on silly stuff to hit a usage target, and Amazon says stop treating that as a goal."
+     ],
+     "against": 13
+    }
+   },
+   {
+    "id": "otherside",
+    "format": "Level-up move, carousel, 4 cards, 4:5",
+    "source": "A level-up move, no outside claim",
+    "copy": "Before you act on an AI's advice, ask it for the best case against it. Four cards, one habit.",
+    "hook": "Before you take your AI's advice, ask this.",
+    "pitch": {
+     "see": "Four cards. Your AI says hire the cheaper supplier. Ask: \"What is the strongest case against this?\" It names the risks it skipped, and you decide with both sides in front of you.",
+     "lands": "An AI tends to agree with whatever it is asked, and one question shows you the other side.",
+     "share": "Make your AI argue with itself."
+    },
+    "direction": {
+     "look": "The infographic style you saved: one instruction per card",
+     "format": "Level-up move, carousel, 4 cards, 4:5",
+     "frames": [
+      {
+       "words": "YOUR AI SAYS: HIRE THE CHEAPER SUPPLIER",
+       "picture": "A chat bubble with a thumbs up"
+      },
+      {
+       "words": "ASK: WHAT IS THE STRONGEST CASE AGAINST THIS?",
+       "picture": "The same bubble, turned around"
+      },
+      {
+       "words": "READ BOTH SIDES",
+       "picture": "Two bubbles side by side"
+      },
+      {
+       "words": "THEN YOU DECIDE",
+       "picture": "A hand on a lever, a person in charge"
+      }
+     ],
+     "tone": "Calm, useful",
+     "kit": "Brand kit, mind.the.gap coral"
+    },
+    "ties_to": "Fri: mind.the.gap, if you pick the Grandma piece",
+    "read_back": {
+     "readers": [
+      "Fresh reader A (Sonnet, a 12-year-old reading once)",
+      "Fresh reader B (Haiku, a 12-year-old reading once)"
+     ],
+     "says": [
+      "Before you take your AI's advice, ask it for the strongest case against its answer, so it names the risks it skipped.",
+      "It is four cards teaching you to ask your AI for the strongest case against its own advice before you decide."
+     ],
+     "against": 13
+    }
    }
   ],
   "sat": [
    {
-    "id": "goodnews",
-    "format": "Uplifting AI news carousel, infographic style",
-    "source": "Your saved post asking for a positive ray of sunshine (28 Oct), in the infographic style you saved",
-    "covers": [
-     "87a82f7f-6411-41c9-92b1-a52c4f3e4f8a",
-     "501c4fd1-4aa1-4cdd-b716-03e70c89c283"
-    ],
-    "copy": "Sat 14 Nov. Seven cards, 4:5. Card 1: GOOD THINGS AI DID THIS WEEK, 7 to 14 Nov (big sun-yellow headline on the dark house ground, a small hand-drawn sun). Cards 2 to 6: one story each: a five-word headline, one line on what happened, one line on why it matters, source and date in small type (a real photo or screenshot of the thing, cropped tight, a yellow number badge 1 to 5). Card 7: Which one surprised you? One of these every Saturday (five thumbnails of cards 2 to 6 in a row).",
-    "needs": [
-     "five stories dated 7 to 14 November 2026, chosen on Friday 13, each checked against its primary source the same day and through the fact gate"
-    ]
-   },
-   {
     "id": "spotai",
-    "format": "Quiz carousel",
+    "format": "Quiz carousel, 6 cards, 4:5",
     "source": {
-     "label": "EDM.com, 26 Sep 2026; Official Charts; the AI-in-music piece",
+     "label": "EDM.com, 26 Sep 2026; Official Charts",
      "url": "https://edm.com/?p=271236"
+    },
+    "copy": "One of three hit songs started as an AI demo; can you spot it? It only runs if Wednesday is the AI-in-music piece.",
+    "hook": "One of these hits started as an AI demo. Which?",
+    "pitch": {
+     "see": "Six cards. Three real hit songs, one clue each. The answer: Movin' To The Sun began as a Suno demo and reached number 2 in the UK.",
+     "lands": "People love a quiz, and the answer surprises almost everyone.",
+     "share": "Could you tell which song began with AI?"
+    },
+    "direction": {
+     "look": "A quiz carousel in the brand kit, record sleeves in a row",
+     "format": "Quiz carousel, 6 cards, 4:5",
+     "frames": [
+      {
+       "words": "ONE OF THESE HITS STARTED AS AN AI DEMO. WHICH?",
+       "picture": "Three record sleeves in a row"
+      },
+      {
+       "words": "SONG ONE",
+       "picture": "Its sleeve and one clue"
+      },
+      {
+       "words": "SONG TWO",
+       "picture": "Its sleeve and one clue"
+      },
+      {
+       "words": "SONG THREE",
+       "picture": "Its sleeve and one clue"
+      },
+      {
+       "words": "THE ANSWER: MOVIN' TO THE SUN, UK NUMBER 2",
+       "picture": "Its sleeve circled in yellow"
+      },
+      {
+       "words": "THE FULL STORY IS ON WEDNESDAY'S PIECE",
+       "picture": "Wednesday's cover"
+      }
+     ],
+     "tone": "Playful",
+     "kit": "Brand kit, under.the.hood colours"
     },
     "covers": [
      "90b654ca-204a-4aef-bffe-19cfa7a2db19",
      "f6327ce0-a414-4365-98df-635c1780523c"
     ],
-    "copy": "Sat 14 Nov. Six cards, 4:5. Card 1: ONE OF THESE HITS STARTED AS AN AI DEMO. WHICH? (three record sleeves in a row, house style). Cards 2 to 4: one song each with one clue (its sleeve). Card 5: The answer: Movin' To The Sun, a UK No. 2 (its sleeve circled in yellow). Card 6: The full story is coming soon (the episode cover).",
+    "adds": "A quiz with an answer from the charts, where your two saved videos only play the songs.",
     "needs": [
-     "runs only once the AI-in-music piece is scheduled; the two decoy songs are picked and checked before it is made"
-    ]
-   }
-  ],
-  "sun": [
-   {
-    "id": "weekin3",
-    "format": "Recap carousel",
-    "source": "This week's three pieces",
-    "copy": "Sun 15 Nov. Four cards, 4:5. Card 1: THIS WEEK IN AI, IN 3 CARDS. Cards 2 to 4: Monday's, Wednesday's and Friday's covers, each with its one-line headline. Follow for next week's three."
+     "runs only if Wednesday is the AI-in-music piece; the two decoy songs are picked and checked before it is made"
+    ],
+    "ties_to": "Wed: under.the.hood, if you pick the AI-in-music piece",
+    "read_back": {
+     "readers": [
+      "Fresh reader A (Sonnet, a 12-year-old reading once)",
+      "Fresh reader B (Haiku, a 12-year-old reading once)"
+     ],
+     "says": [
+      "A quiz with three hit songs and one clue each, where the answer is Movin' To The Sun, which began as a Suno AI demo and reached number 2 in the UK.",
+      "It is a six card guessing game about which of three hit songs started as an AI demo, with the answer being Movin' To The Sun."
+     ],
+     "against": 13,
+     "versus": "Ours turns the saved videos' vague claim into a quiz with one sourced fact (Movin' To The Sun, Suno demo, UK number 2) and a guessing hook. (Fresh reader C, Sonnet, saw both)"
+    }
    },
    {
-    "id": "phonehome",
-    "format": "Meme, made fresh in the brand kit",
+    "id": "infosys",
+    "format": "Explainer carousel, infographic, 4 cards, 4:5",
     "source": {
-     "label": "The Decoder, 27 Oct 2026",
-     "url": "https://the-decoder.com/alibabas-latest-qwen-models-routed-some-requests-through-company-servers-researchers-find/"
+     "label": "The Register, 28 Oct 2026",
+     "url": "https://www.theregister.com/channel/2026/10/28/ai-slows-growth-for-infosys-and-keeps-it-afloat-at-the-same-time/5305879"
     },
-    "copy": "Sun 15 Nov. Two panels. 1: A website: \"No, you can't come in.\" 2: The AI, quietly calling its maker's servers: \"Can you get it for me?\" Small print: researchers caught some Qwen models doing this in 1 to 4 percent of test runs; no stolen data was found."
+    "copy": "IT firms were meant to get rich from AI, and Infosys just cut its growth forecast because clients want the AI savings for themselves. Four cards, one chart.",
+    "hook": "AI was meant to make IT firms rich. Their clients took the savings.",
+    "pitch": {
+     "see": "Four cards. Infosys expected to grow 1.5 to 3 percent this year; now it says 1 to 2 percent. Why: clients expect a lower price when the work is done with AI, and that saving is built into its long contracts.",
+     "lands": "It shows who keeps the money AI saves, with one company's own numbers.",
+     "share": "If your supplier uses AI, ask for the saving."
+    },
+    "direction": {
+     "look": "The infographic style you saved: one number per card",
+     "format": "Explainer carousel, infographic, 4 cards, 4:5",
+     "frames": [
+      {
+       "words": "AI WAS MEANT TO MAKE IT FIRMS RICH",
+       "picture": "A rocket on a launch pad"
+      },
+      {
+       "words": "INFOSYS GROWTH FORECAST: 1.5 TO 3%",
+       "picture": "A bar"
+      },
+      {
+       "words": "NOW: 1 TO 2%",
+       "picture": "A shorter bar"
+      },
+      {
+       "words": "CLIENTS WANT THE AI SAVINGS IN THE PRICE",
+       "picture": "A contract with a price crossed out and lowered"
+      }
+     ],
+     "tone": "Plain",
+     "kit": "Brand kit, follow.the.money pill"
+    },
+    "ties_to": "Fri: mind.the.gap, if you pick the Infosys piece",
+    "read_back": {
+     "readers": [
+      "Fresh reader A (Sonnet, a 12-year-old reading once)",
+      "Fresh reader B (Haiku, a 12-year-old reading once)"
+     ],
+     "says": [
+      "Infosys cut its growth forecast because clients now expect lower prices for AI-made work, and that saving is already built into its long contracts.",
+      "It is four cards explaining that Infosys expects less growth because clients want cheaper prices now that AI does the work."
+     ],
+     "against": 13
+    }
+   },
+   {
+    "id": "oldproof",
+    "format": "Uplifting explainer carousel, 4 cards, 4:5",
+    "source": {
+     "label": "Axiom, The enormous theorem formalized",
+     "url": "https://axiommath.ai/research/the-enormous-theorem-formalized/"
+    },
+    "copy": "Axiom says its AI agents checked a 15,000-page piece of maths and found a mistake in a proof from 1986. Good news that shows what AI does well with a strict checker beside it.",
+    "hook": "AI found a mistake in a maths proof from 1986, its makers say.",
+    "pitch": {
+     "see": "Four cards. Axiom says its AI agents spent 24 days rewriting about 15,000 pages of famous maths in a form a computer can check, and found counterexamples to a step in a proof from 1986.",
+     "lands": "A 40-year-old mistake found by AI is a story people retell.",
+     "share": "AI is a great checker when something strict checks it."
+    },
+    "direction": {
+     "look": "The infographic style you saved, warm colours",
+     "format": "Uplifting explainer carousel, 4 cards, 4:5",
+     "frames": [
+      {
+       "words": "AXIOM: OUR AI FOUND A MISTAKE IN A PROOF FROM 1986",
+       "picture": "An old typed page with a yellow circle"
+      },
+      {
+       "words": "15,000 PAGES OF MATHS",
+       "picture": "A tall stack of paper"
+      },
+      {
+       "words": "24 DAYS, CHECKED LINE BY LINE BY A COMPUTER",
+       "picture": "A tick running down a page"
+      },
+      {
+       "words": "AI IS A GREAT CHECKER WITH A STRICT CHECKER BESIDE IT",
+       "picture": "Two robots, one holding a red pen"
+      }
+     ],
+     "tone": "Upbeat, true",
+     "kit": "Brand kit, sun yellow"
+    },
+    "ties_to": "Fri: mind.the.gap, if you pick the error-finder piece",
+    "recommended": true,
+    "read_back": {
+     "readers": [
+      "Fresh reader A (Sonnet, a 12-year-old reading once)",
+      "Fresh reader B (Haiku, a 12-year-old reading once)"
+     ],
+     "says": [
+      "Axiom's AI agents rewrote about 15,000 pages of famous maths so a computer can check it, and they found a counterexample to a step in a 1986 proof.",
+      "It is four cards saying Axiom's AI rewrote 15,000 pages of maths so a computer could check them and spotted a mistake from 1986."
+     ],
+     "against": 13
+    }
    }
   ]
  },
@@ -463,6 +816,20 @@
   "2b582f5a-52fb-49a3-8502-0e9bd914f772": "Used this week instead: Krish said on 31 Oct the translator meme was meant for the coming week, so it is Tuesday 3 November's off-day option on the 2 November board.",
   "aae54ef9-0bd7-49a8-959e-96695e1a51a8": "A style ask, not a topic: Krish (31 Oct) 'We really need to simplify our scripts and our content.' Her impossible-claim, chain-of-steps, call-back-to-the-hook pattern is now the chain test in plan-week, and the Fri 13 pitch is built as that chain (Grandma test, the rigged rule, the coin toss, the checker).",
   "d501ae8a-bce1-4964-89a0-63bf076bc641": "A style ask, not a topic: Hannah Fry's relatable, honest explaining (22 Oct) is the simplicity standard in plan-week, with her neurons short (aae54ef9), and every pitch this week opens on a surprising true claim and explains it step by step.",
-  "5b865aa9-463c-44c3-9352-73fda39fa18e": "Used for its style: 'The chart makes a boring research report instantly understandable' is how this week's infographic carousels are drawn (Thu 12 'Anthropic broke Git', Sat 14 good news). Its report is not offered as a topic this week; it stays an ask for next Sunday."
+  "5b865aa9-463c-44c3-9352-73fda39fa18e": "Used for its style: 'The chart makes a boring research report instantly understandable' is how this week's infographic carousels are drawn (Thu 12 'Anthropic broke Git', Sat 14 good news). Its report is not offered as a topic this week; it stays an ask for next Sunday.",
+  "385a5da8-2cae-41ec-8fb6-2e328920664c": "Already used: the 'Reading is free. Sending needs a yes.' card is the test in Thursday 5 November's to-camera short on AI that acts first, so offering it again next week would repeat it.",
+  "7f43c6b5-a468-40f3-ad66-c988cdc16072": "A style ask, used: the clean to-camera 1-2-3 shot is how Thursday 5 November's short is made; no off day next week is to camera.",
+  "e73a0110-a108-456c-8781-350259b1b196": "A style ask: the fast, engaging subtitles are the subtitle style of Tuesday's MCP short (mcpskin) and Thursday 5 November's short.",
+  "e829fbfb-278d-45e2-9607-73af4c04310d": "A style ask: the visual and emotional quality you want for shorts is the bar for Tuesday's MCP short (mcpskin); its voice-tool topic is not offered.",
+  "87a82f7f-6411-41c9-92b1-a52c4f3e4f8a": "Cut on 2 Nov: both fresh readers said Saturday's good-news carousel repeats Sat 7 Nov's (the same weekly format, which waits on your Improve). Whether good news is a weekly Saturday series is your call.",
+  "501c4fd1-4aa1-4cdd-b716-03e70c89c283": "A style ask: the infographic style is how Thursday's gitbroke and Saturday's infosys and oldproof carousels are drawn.",
+  "a397253e-bfe1-4a84-babc-27d93fd2779d": "Answered by Friday's Grandma pitch (56bb9c22), which explains the rigged test; it is not also offered as an off-day meme (Krish, 2 Nov: the off-day version was a weaker copy)."
+ },
+ "locked": {
+  "mon": {
+   "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+   "so_what": "If an AI supplier you rely on goes bust, its technology is sold to the highest bidder and its users get nothing from the sale: check what your contract says you keep, your data and your service, if your AI supplier fails.",
+   "why": "Already your Monday pick from your queue (19 Oct): the article and its receipts figure are made, so Monday offers nothing new to pick."
+  }
  }
 }

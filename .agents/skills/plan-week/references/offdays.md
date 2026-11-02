@@ -58,6 +58,26 @@ standing rule only when he approves one); make more of what he approved.
  "covers": ["<must_cover id>"]}
 ```
 
+**Read back before the tab, from the 9 Nov week** (Krish, 2026-11-02, of the 9 Nov off days: a Tuesday option
+"already being used this week", a meme "just a copy of a post from my inspo board but way worse", and of a Thursday
+pitch, "I have zero idea what this even means"). Before an option reaches the tab:
+
+1. Two fresh readers (separate subagents, none of your reasoning, each an ordinary 12-year-old reading once) get the
+   option's `hook` and `pitch.see` only, and each says in one line what the post is. A reader who cannot, or says
+   something else, sends it back to be rewritten or cut. The same readers are shown every piece and off day in
+   `sources.json` `recent` and `recent_offdays` (this week's and the two before) and say whether the option is one of
+   them under new words; if it is, cut it.
+2. An option made from one of his inspiration cards (it `covers` the card, or names the saved post in `inspiration`)
+   says in `adds` what it has that the original does not: a newer dated fact, our angle, the tie to the week's piece.
+   A third fresh reader sees the original and ours side by side and says whether ours adds something
+   (`read_back.versus`). If not, cut it: a weaker copy of a post he saved is never offered.
+3. Save it on the option: `"read_back": {"readers": ["<reader>", "<reader>"], "says": ["<one line>", "<one line>"],
+   "against": <the count of recent plus recent_offdays>, "versus": "<the side-by-side verdict, inspo options only>"}`.
+
+`board_feed.py cover` refuses an option without these, and the build (`week_board.py --ideas`) refuses an option with
+no `hook`, `pitch.see`, `pitch.lands` and `direction`, a gather older than two days before the week, a recorded
+option for an idea that has left the pool, and an option covering an off day of the last three weeks.
+
 `hook`, `pitch` and `direction` are what he judges, so every option has them;
 `learned_from` quotes only his own words from `offday_verdicts` or `cues`,
 never a paraphrase, and is left out when none applies. One option a day is
@@ -111,7 +131,7 @@ publish the board. A mock is Growth's to remake from his words.
 Sunday publish, and queue the script up in teleprompter for me and pick up the
 recording in my inbox"; asked what he records: "could be a short with motion
 designed subtitles and branding, or voiceover with motion designed
-infographics"). This is the fifth kind of option, and the one his own ideas
+infographics"; Sunday is a rest day since 2 November, so Tuesday, Thursday or Saturday). This is the fifth kind of option, and the one his own ideas
 take. Every idea he dropped in through Control Center is in `sources.json`
 `must_cover` (`kind: his_idea`, its id the idea's own row). Unless his words
 name Monday, Wednesday or Friday, offer it as a recorded option on the off day

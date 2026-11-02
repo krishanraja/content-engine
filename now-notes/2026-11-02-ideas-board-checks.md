@@ -1,0 +1,5 @@
+# 2026-11-02: the Ideas board is checked at build, and the 9 Nov off days are rewritten
+
+Status: Krish's five faults on the 9 Nov Ideas tab (a made Monday offering options, a Tuesday option already used on Thu 5 Nov, an inspo copy, an unreadable pitch, Sunday options) are each refused by code now (F23): a scheduled day is locked, the gather reads the last three weeks' off days with his presses, a recorded option for an idea that left the pool is refused, every off-day option from 9 Nov carries two fresh readers' read-back and an inspo-made one says what it adds, and a board for a week not yet started is built only from a gather of the last two days with board_feed.check run whole. The 9 Nov ideas.json is rewritten: Monday locked, Tuesday, Thursday and Saturday with 4, 4 and 3 new options, no Sunday; it builds and passes --verify locally. Not republished: waits on Krish's yes.
+Next: Krish says yes to republishing the 9 Nov board (week_board.py --week 2026-11-09 --live --ideas ... --previous <live> --keep mon --target web, then board_web.py publish-web), and decides whether Saturday good news is a weekly series.
+North Star check (2026-11-02): holds.
