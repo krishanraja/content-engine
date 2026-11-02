@@ -1,0 +1,51 @@
+{
+ "about": "Shared cases for the off-day note rule. Growth: engine/offday.py NOTE_CASES (note_parts); content-engine: scripts/post-pack/week_board/week.js offdayNoteParts. Ruling, Krish, 2026-11-02.",
+ "cases": [
+  {
+   "note": "Make it faster. Caption:\n\"WHEN YOUR AI MEETS\nYOUR CUSTOMER'S AI\"",
+   "want": {
+    "on_media": [
+     "WHEN YOUR AI MEETS\nYOUR CUSTOMER'S AI"
+    ],
+    "direction": "Make it faster. Caption",
+    "hold": null
+   }
+  },
+  {
+   "note": "“Who said yes?” on the last card",
+   "want": {
+    "on_media": [
+     "Who said yes?"
+    ],
+    "direction": "on the last card",
+    "hold": null
+   }
+  },
+  {
+   "note": "warmer, and a real puppy",
+   "want": {
+    "on_media": [],
+    "direction": "warmer, and a real puppy",
+    "hold": null
+   }
+  },
+  {
+   "note": "don't say \"game changer\", keep it dry",
+   "want": {
+    "on_media": [
+     "game changer"
+    ],
+    "direction": "don't say , keep it dry",
+    "hold": "quote_reads_as_counterexample"
+   }
+  },
+  {
+   "note": "",
+   "want": {
+    "on_media": [],
+    "direction": "",
+    "hold": null
+   }
+  }
+ ]
+}

@@ -73,7 +73,11 @@ his own words on anything (Krish, 2026-11-02: "I still need to be able to provid
 actual feedback on anything in open text format"), saved exactly as typed in the
 record's `note`; it may be the exact text to put on the post ("it would contain
 the exact meme text to put above the meme video"), so Growth uses it word for
-word and nothing paraphrases it. They are saved in
+word and nothing paraphrases it. Only text he puts in quotation marks is used
+exactly, on the picture or video; his other words are direction, never printed,
+and a quote that reads as what not to say is held for him (Krish, 2026-11-02:
+"only where i specifically give a quote to use - i dont want requests put
+verbatim in the posts"; Growth `offday.note_parts`). They are saved in
 `queue/off-<day>-<option>`, each side `{verdict, words, sha256}`, bound to
 what that side showed him. His Improve and Reject words go to his taste ledger
 by themselves (`api/board/_presses.ts`, `offdayReports`) and come back next
