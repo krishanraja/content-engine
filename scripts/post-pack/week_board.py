@@ -1570,6 +1570,14 @@ def off_rich(o, problems, label):
             row['mock'] = {'url': mock['url'], 'note': _line(mock.get('note'), 300)}
     # A finished file Krish takes away from the card (Krish, 2026-11-02: "put the translator video on the board as a
     # download"): the board's own stored asset, so the link never moves.
+    # A settled option leaves the Today view (Krish, 2026-11-02, on Today: "I can barely ever see what the current state
+    # of things are there"): merged into another, or not chosen. It stays on the Ideas tab as history.
+    closed = o.get('closed')
+    if closed is not None:
+        if not _line(closed, 300):
+            problems.append(f'{label}: closed is one line saying why it is settled')
+        else:
+            row['closed'] = _line(closed, 300)
     download = o.get('download')
     if download is not None:
         if not isinstance(download, dict) or not str(download.get('url') or '').startswith('https://') or not _line(download.get('label'), 120):
@@ -1729,7 +1737,7 @@ def read_growth_offdays(data, monday, where='--offdays-plan'):
                      'copy': o.get('draft'), 'share_line': o.get('share_line'),
                      'needs': list(o.get('needs') or []) + ([] if o.get('ready') else ['not ready yet'] if not o.get('needs') else []),
                      # The rich fields ride through as Growth wrote them (Ruling, Krish, 2026-11-01), never flattened into the copy.
-                     **{k: o[k] for k in ('hook', 'pitch', 'cards', 'inspiration', 'learned_from', 'direction', 'ties_to', 'recommended', 'revised', 'mock', 'download')
+                     **{k: o[k] for k in ('hook', 'pitch', 'cards', 'inspiration', 'learned_from', 'direction', 'ties_to', 'recommended', 'revised', 'mock', 'download', 'closed')
                         if o.get(k) is not None}}
                     for o in opts]
     return out, warnings
@@ -1739,7 +1747,7 @@ def previous_option(o):
     """An off-day option as the previous board kept it, back in the shape read_offdays takes."""
     row = {'id': o['id'], 'format': o['format'], 'source': {'label': o['source'], 'url': o.get('url')} if o.get('url') else o['source'], 'copy': o['copy']}
     for k in ('covers', 'kind', 'style', 'piece_id', 'series', 'title', 'script', 'share_line', 'needs', 'cards',
-              'hook', 'pitch', 'inspiration', 'learned_from', 'direction', 'ties_to', 'recommended', 'revised', 'mock', 'download'):
+              'hook', 'pitch', 'inspiration', 'learned_from', 'direction', 'ties_to', 'recommended', 'revised', 'mock', 'download', 'closed'):
         if o.get(k) is not None:
             row[k] = o[k]
     if o.get('kind') == 'recorded':
@@ -1897,14 +1905,19 @@ def off_option_card(monday, key, when, o):
             + (f' data-direction="{E(json.dumps(d, sort_keys=True, separators=(",", ":")))}"' if d else '')
             + (f' data-covers="{E(" ".join(o["covers"]))}"' if o.get('covers') else '') + '>'
             f'<div class="id-flags">{flags}</div><h4 class="hook">{E(o.get("hook") or off_title(o))}</h4>'
-            + (f'<div class="pitch">{rows}</div>' if rows else '') + copy
+            # Cut back (Krish, 2026-11-02: "confusing outdated verbal diahorrea of a mess of a section"): the card shows
+            # the idea, its picture and his buttons; everything else waits one tap away under Details, unchanged.
+            + (f'<p class="off-lead">{E(pitch["see"])}</p>' if pitch.get('see') else copy)
+            + mock + off_press_row(did, 'idea', 'The idea')
+            + f'<details class="off-more"><summary>Details</summary>'
+            + (f'<div class="pitch">{rows}</div>' if rows else '') + (copy if pitch.get('see') else '')
             + (f'<ol class="off-cards" aria-label="Card by card">{cards}</ol>' if cards else '')
             + inspo + learned + revised
             + (f'<p class="id-how">Still needs: {E("; ".join(o["needs"]))}</p>' if o.get('needs') else '')
             + f'<p class="id-why"><span class="id-why-k">Source</span> {src}</p>'
-            + mock + direction + off_press_row(did, 'idea', 'The idea')
+            + direction
             # The idea's presses first, then the direction's, as in the locked mock.
-            + (off_press_row(did, 'direction', 'The direction') if d else '')
+            + (off_press_row(did, 'direction', 'The direction') if d else '') + '</details>'
             # His open words on anything, always there whatever he pressed (Krish, 2026-11-02: "I still need to be able
             # to provide actual feedback on anything in open text format"; "it would contain the exact meme text to put
             # above the meme video"). Several lines, kept exactly as typed, handed to Growth with the option.
@@ -1920,6 +1933,9 @@ def offdays_section(monday, offdays):
     day's options, each an idea and a suggested creative direction he approves, improves or rejects for a reason. A
     piece he records keeps its own Approve and Skip on its exact words (offdayRecorded on the server)."""
     head = f'<section class="off-days" id="ideas-offdays" data-week="{monday.isoformat()}"><div class="sec-head"><h2>Off days</h2></div>'
+    # A settled option (closed: merged into another piece, as he asked) leaves the Ideas tab and its counts.
+    offdays = {k: [o for o in v or [] if not o.get('closed')] for k, v in (offdays or {}).items()}
+    offdays = {k: v for k, v in offdays.items() if v}
     if not offdays:
         return head + slot_empty('No options for Tuesday, Thursday, Saturday or Sunday yet.') + '</section>'
     parts = [head, '<p class="id-how">Each option comes with its idea and a suggested direction. Approve, improve or reject '
@@ -2754,13 +2770,20 @@ def run_sheet_problems(name, panel, tag):
     return out
 
 
+def open_offday_count(offdays):
+    """How many off-day options still wait on him: every option not closed."""
+    return sum(1 for v in (offdays or {}).values() for o in v or [] if not o.get('closed'))
+
+
 def ideas_waiting_panel(monday, hidden, offdays=None):
     sunday = monday - timedelta(days=1)
     return (f'<div class="pm fixed" id="panel-ideas" role="tabpanel" aria-labelledby="tab-ideas" data-day="ideas" '
             f'data-state="ideas-waiting" tabindex="-1"{" hidden" if hidden else ""}>'
             f'<div class="day-head"><div class="kick">{E(week_span(monday))}</div><h1>Ideas</h1></div>'
-            + slot_empty(f'This week\'s ideas arrive by {short_date(sunday)}: fresh ones from the ideas you drop in Control Center, '
-                         'Content Inspo (once Cold Ideas and Inspo) and the engine\'s own research, with what you queued earlier first.')
+            # Once the week is under way the waiting note is out of date; only an empty week before its Sunday shows it.
+            + ('' if open_offday_count(offdays) else
+               slot_empty(f'This week\'s ideas arrive by {short_date(sunday)}: fresh ones from the ideas you drop in Control Center, '
+                          'Content Inspo (once Cold Ideas and Inspo) and the engine\'s own research, with what you queued earlier first.'))
             + offdays_section(monday, offdays) + '</div>')
 
 
@@ -3541,7 +3564,7 @@ def today_model(monday, days, videos, posted, offdays, parsed, now=None, gates=N
             elif state == 'made' and not live:
                 out['asks'].append({'what': f'Publish, {short(when)}', 'detail': 'Approve, then post it',
                                     'cta': 'Approve', 'href': f'#{name}/publish', 'day': key})
-        opts = (offdays or {}).get(key) or []
+        opts = [o for o in (offdays or {}).get(key) or [] if not o.get('closed')]
         for o in opts:
             posts.append({'kind': off_kind(o),
                           'title': off_title(o), 'claim': f'From: {o.get("source")}' if o.get('source') else None,
@@ -3617,7 +3640,8 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
             f'<button type="button" role="tab" id="tab-ideas" aria-controls="panel-ideas" '
             f'aria-selected="{"true" if opened == "ideas" else "false"}" tabindex="{"0" if opened == "ideas" else "-1"}" data-day="ideas">'
             f'<span class="t-day">Ideas</span><span class="t-dot"> · </span>'
-            f'<span class="t-prog" data-tabprog="ideas">{f"pick {n}" if n else "not yet"}</span><span class="t-ch">Sunday</span></button>')
+            f'<span class="t-prog" data-tabprog="ideas">{f"pick {n}" if n else (f"{m} off-day" if (m := open_offday_count(offdays)) else "not yet")}</span>'
+            f'<span class="t-ch">{"Sunday" if n or not m else "options"}</span></button>')
         panels.append(queue_panel(monday, queue, True, combine))
         tabs.append(
             '<button type="button" role="tab" id="tab-queue" aria-controls="panel-queue" aria-selected="false" tabindex="-1" data-day="queue">'
@@ -4995,6 +5019,15 @@ def _growth_offday_checks(check, week, ideas):
             check(f'off-day option: a bad {want} is refused', False)
         except BoardError as error:
             check(f'off-day option: a bad {want} is refused', want in str(error))
+    shut = today_model(week, {}, {}, {}, read_offdays({'tue': [dict(rich, closed='Merged into the to-camera piece'), plain]}), {})
+    check('off-day option: a closed option leaves the Today view, its day keeping the rest',
+          [p['title'] for d in shut['days'] if d['key'] == 'tue' for p in d['posts']] == [off_title(read_offdays({'tue': [plain, rich]})['tue'][0])])
+    shut_sec = offdays_section(week, read_offdays({'tue': [dict(rich, closed='Merged into the to-camera piece'), plain]}))
+    check('off-day option: a closed option leaves the Ideas tab and its day\'s count',
+          shut_sec.count('class="off-card opt"') == 1 and 'data-day-count="tue">1 option<' in shut_sec)
+    check('the Ideas tab drops its waiting note and says what waits once off-day options are in',
+          'arrive by' not in ideas_waiting_panel(week, False, read_offdays({'tue': [plain, rich]}))
+          and 'arrive by' in ideas_waiting_panel(week, False, {}))
     dl_page = board(week, ideas=ideas, offdays=read_offdays({'tue': [dict(rich, download={'url': 'https://board.asset/v.mp4', 'label': 'the video'}), plain]}))[0]
     check('off-day option: a finished file is a Download link on its card',
           '<a class="btn-s" href="https://board.asset/v.mp4" download>Download: the video</a>' in dl_page and verify(dl_page) == [])

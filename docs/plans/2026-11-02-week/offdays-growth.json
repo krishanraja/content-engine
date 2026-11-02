@@ -59,6 +59,7 @@
    },
    {
     "concept_id": "actsfirst",
+    "closed": "Merged into Thursday's to-camera piece, as Krish asked (2 Nov)",
     "lane": "Carousel",
     "formats": [
      "Explainer carousel, infographic style"
@@ -78,6 +79,7 @@
   "2026-11-07": [
    {
     "concept_id": "goodnews",
+    "hook": "Five good things AI did for people this week",
     "lane": "Carousel",
     "formats": [
      "Uplifting AI news carousel, infographic style"
