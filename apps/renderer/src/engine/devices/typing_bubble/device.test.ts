@@ -78,7 +78,7 @@ describe('typing_bubble', () => {
       expect(html).toContain('background:aqua')
       expect(html).toContain('data-timestamp')
       expect(html).toContain('09:41')
-      expect(html).toContain(HOUSE_FONTS.structure)
+      expect(html).toContain(HOUSE_FONTS.structure.replaceAll('"', '&quot;'))
       for (const match of html.matchAll(/font-size:([0-9.]+)px/g)) expect(Number(match[1])).toBeGreaterThanOrEqual(44)
     }
     expect(render(props(46))).not.toContain('Delivered')

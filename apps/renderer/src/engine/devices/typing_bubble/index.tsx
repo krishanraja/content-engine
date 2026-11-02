@@ -52,7 +52,7 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
   const name = s.rows.find(row => row.visible && row.who)?.who
   const initials = name?.split(/\s+/).map(word => Array.from(word)[0]).slice(0, 2).join('')
   const edge = `color-mix(in srgb, ${tokens.inkSoft} 20%, ${tokens.cream})`
-  const ground = `color-mix(in srgb, ${tokens.cream} 94%, ${tokens.inkSoft})`
+  const ground = tokens.cream
   const label: React.CSSProperties = { fontFamily: HOUSE_FONTS.data, fontSize: 44, lineHeight: 1.25 }
   const heading: React.CSSProperties = { fontFamily: HOUSE_FONTS.structure, fontSize: 56, fontWeight: 700, lineHeight: 1.15 }
   return <div data-kind={kind} style={{ position: 'absolute', left: box.left + (box.width - width) / 2,
