@@ -1,3 +1,0 @@
-Status: Every off-day option now has an always-open box for Krish's own words, whatever he pressed (Krish, 2026-11-02: "I still need to be able to provide actual feedback on anything in open text format"). His words are saved exactly as typed in the option's record, filed to his taste ledger, read back on Sunday, and handed to Growth word for word as the post's text when he gives it ("it would contain the exact meme text to put above the meme video").
-Next: the live 2 Nov board shows the box once it is next rebuilt; Growth's maker puts an approved option's note on the post verbatim.
-North Star check (2026-11-02): holds.
