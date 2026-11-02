@@ -1107,7 +1107,16 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
       c.classList.toggle("out", !!idea && (idea.verdict === "reject" || idea.verdict === "next_week"));
       const d = days[day] = days[day] || { yes: 0, open: 0 };
       if (yes) d.yes++; else if (!(idea && (idea.verdict === "reject" || idea.verdict === "next_week"))) d.open++;
-      if (!busy[id]) { const [msg, tone] = mode === "off" ? ["Presses are not saving in this view.", "bad"] : line(id, c); say(id, msg, tone) }
+      // His open words (Krish, 2026-11-02): the box is always there, filled with what he saved, exactly as he typed it.
+      const free = c.querySelector("[data-off-free]"), fs = c.querySelector('[data-act="offfree"]');
+      const note = saved[id] && saved[id].note && typeof saved[id].note.words === "string" ? saved[id].note.words : "";
+      if (free) { free.disabled = mode !== "live" || !!busy[id]; if (document.activeElement !== free && free.dataset.unsaved !== "true") free.value = note }
+      if (fs) fs.disabled = mode !== "live" || !!busy[id];
+      if (!busy[id]) {
+        let [msg, tone] = mode === "off" ? ["Presses are not saving in this view.", "bad"] : line(id, c);
+        if (mode !== "off" && note) msg = (msg ? msg + " " : "") + "Your words are saved.";
+        say(id, msg, tone);
+      }
     }
     for (const [day, d] of Object.entries(days)) {
       const s = document.querySelector(`[data-slate-state="${day}"]`), cell = s && s.closest(".sl");
@@ -1136,6 +1145,8 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
     // Every side the card has is in the record, unpressed ones as null, so no reader takes a side he never judged as
     // approved (Growth counts an option only when the idea and its direction are both approved).
     for (const s of SIDES) if (has(c, s)) out[s] = prev[s] || { verdict: null, words: null, sha256: sha(c, s), at };
+    if (prev.note) out.note = prev.note;
+    if (k === "note") { out.note = verdict === null ? null : { words: verdict, at }; return out }
     const v = { verdict, words: words || null, sha256: sha(c, k), at };
     if (verdict === "approve" && k === "idea") v.shown = json(c.dataset.shown);
     if (verdict === "approve" && k === "direction") v.shown = json(c.dataset.direction);
@@ -1166,6 +1177,14 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
       save(c, body(c, k, val, null));
       return;
     }
+    // His open words: saved exactly as typed (no trimming inside, line breaks kept); empty takes them back.
+    const f = e.target.closest && e.target.closest('[data-act="offfree"]');
+    if (f) {
+      const c = document.getElementById(f.dataset.for); if (!c) return;
+      const box = c.querySelector("[data-off-free]"), text = box ? box.value : "";
+      save(c, body(c, "note", text.trim() ? text : null)).then(ok => { if (ok && box) box.dataset.unsaved = "false" });
+      return;
+    }
     const g = e.target.closest && e.target.closest('[data-act="offsay"]');
     if (g) {
       const c = document.getElementById(g.dataset.for); if (!c) return;
@@ -1176,7 +1195,7 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
       save(c, body(c, k, val, text)).then(ok => { if (!ok) return; delete asking[id + ":" + k]; if (i) i.dataset.unsaved = "false"; render() });
     }
   });
-  document.addEventListener("input", e => { const i = e.target.closest && e.target.closest("input[data-say]"); if (i) i.dataset.unsaved = "true" });
+  document.addEventListener("input", e => { const i = e.target.closest && e.target.closest("input[data-say], textarea[data-off-free]"); if (i) i.dataset.unsaved = "true" });
 })();
 
 // His decisions on a day's tab in the fixed layout (week_board.py approve_card, titles_card, signoff_card and

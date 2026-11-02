@@ -188,7 +188,11 @@ export async function readPieces(db: SupabaseClient, week: string): Promise<{ st
     const mock = isObj(b.mock) ? b.mock : null
     return [{ id: String(row.doc_id), day: b.day ?? null, option_id: b.option_id ?? null, format: b.format ?? null,
       idea: idea.shown ?? null, direction: dir ? dir.shown ?? null : null,
-      mock: mock ? { verdict: mock.verdict ?? null, words: mock.words ?? null } : null, approved_at: dir?.at ?? idea.at ?? null }]
+      mock: mock ? { verdict: mock.verdict ?? null, words: mock.words ?? null } : null,
+      // His open words on the option, exactly as typed (Krish, 2026-11-02: "it would contain the exact meme text to
+      // put above the meme video"): Growth makes the post with them.
+      note: isObj(b.note) && typeof b.note.words === 'string' ? b.note.words : null,
+      approved_at: dir?.at ?? idea.at ?? null }]
   }).sort((a, b) => String(a.id).localeCompare(String(b.id)))
   return { status: 200, body: { days, mix, offdays } }
 }
