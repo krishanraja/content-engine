@@ -3050,6 +3050,16 @@ def kept_panel(text, key):
     return drop_channels(panel, key)
 
 
+def with_kept_covers(parsed, kept):
+    """The parsed day pages, plus a cover for each kept day whose panel holds a ready cover download. A kept day has no
+    publish page to parse, so without this a rebuild turned its ready cover back to missing (2 Nov 2026)."""
+    seen = dict(parsed)
+    for k, panel in (kept or {}).items():
+        if k not in seen and re.search(r'data-state="ready"[^>]*data-formats="cover"', panel):
+            seen[k] = {'images': [{'id': 'cover', 'role': 'cover'}]}
+    return seen
+
+
 DAY_ATTR = re.compile(r'(?<=["\'#\s])((?:rvs?|rvp)-)?(mon|wed|fri)-')
 
 
@@ -3751,7 +3761,7 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
             f'data-day="{ARCHIVE_TAB}"><span class="t-day">Archive</span><span class="t-dot"> · </span>'
             f'<span class="t-prog" data-tabprog="{ARCHIVE_TAB}">{len(archive or [])} pieces</span><span class="t-ch">Every piece</span></button>')
     if TODAY_ON:
-        model = today_model(monday, days, videos or {}, posted, offdays, parsed, gates=gates)
+        model = today_model(monday, days, videos or {}, posted, offdays, with_kept_covers(parsed, kept), gates=gates)
         panels.insert(0, f'<div class="pm fixed" id="panel-{TODAY_TAB}" role="tabpanel" aria-labelledby="tab-{TODAY_TAB}" '
                          f'data-day="{TODAY_TAB}" tabindex="-1"><div class="day-head"><div class="kick">{E(week_span(monday))}</div>'
                          f'<h1>{E(model["label"])}</h1></div>{board_today.inner(model, heading=False)}</div>')
@@ -4682,6 +4692,10 @@ def _self_test():
           kept_mon == original and 'ready-stage' not in kept_page and original.split('>', 1)[1] in kept_page
           and [d['state'] for d in kept_manifest['days']] == ['made', 'not_picked', 'not_picked']
           and re.search(r'<div class="pm" id="panel-monday"[^>]*hidden>', kept_page) is None)
+    ready_cover = '<li class="dl-item" data-dl="img-cover" data-state="ready" data-asset="img-cover" data-formats="cover"></li>'
+    covers = with_kept_covers({}, {'mon': f'<div>{ready_cover}</div>', 'wed': '<div>no cover</div>'})
+    check('--keep: a kept day with a ready cover download keeps its cover; one without does not',
+          [im['role'] for im in covers['mon']['images']] == ['cover'] and 'wed' not in covers)
     try:
         kept_panel(page, 'wed')
         check('--keep: a day the board does not hold as made is refused', False)
