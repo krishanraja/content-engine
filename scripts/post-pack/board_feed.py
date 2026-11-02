@@ -95,7 +95,8 @@ def recent_offdays(wk, read=None, plans=None):
             for day, opts in (json.loads(ideas.read_text(encoding='utf-8')).get('offdays') or {}).items():
                 for o in opts if isinstance(opts, list) else []:
                     if isinstance(o, dict) and o.get('id'):
-                        shown[(day, str(o['id']))] = {'text': offday_text(o), 'covers': list(o.get('covers') or []) + ([o['piece_id']] if o.get('piece_id') else [])}
+                        shown[(day, str(o['id']))] = {'text': offday_text(o), 'covers': list(o.get('covers') or []) + ([o['piece_id']] if o.get('piece_id') else []),
+                                                     'urls': [str(st.get('source', {}).get('url')) for st in o.get('stories') or [] if isinstance(st, dict) and isinstance(st.get('source'), dict)]}
         growth = plans / f'{w}-week' / 'offdays-growth.json'
         if growth.exists():
             for when, opts in (json.loads(growth.read_text(encoding='utf-8')).get('days') or {}).items():
@@ -274,6 +275,42 @@ def locked_problems(ideas, sources):
 READ_FROM = '2026-11-09'  # Krish, 2026-11-02, of the 9 Nov off days; older weeks keep the shape they were made in
 
 
+def goodnews_problems(ideas, sources, today=None):
+    """A weekly series option (the Saturday good news) names when its stories are found (stories_due, the Sunday before
+    its week). Once that day has come it holds its four stories, each dated in the seven days up to it, none a story a
+    recent off day already ran. Krish, 2026-11-02: "You will need to find the actual good news on Sunday as per the usual
+    system so that the news items are fresh"."""
+    import week_board
+    today = today or date.today()
+    used = {u for o in (sources or {}).get('recent_offdays') or [] if isinstance(o, dict) for u in o.get('urls') or []}
+    out = []
+    offdays = (ideas or {}).get('offdays') if isinstance((ideas or {}).get('offdays'), dict) else {}
+    for day, opts in offdays.items():
+        for o in opts if isinstance(opts, list) else []:
+            if not isinstance(o, dict) or not o.get('weekly'):
+                continue
+            label = f'{day} {o.get("id")}'
+            try:
+                due = date.fromisoformat(str(o.get('stories_due')))
+            except ValueError:
+                out.append(f'{label}: a weekly series names stories_due, the Sunday its stories are found (YYYY-MM-DD)')
+                continue
+            stories = o.get('stories') or []
+            if today < due and not stories:
+                continue
+            bad = week_board.story_problems(stories)
+            if bad:
+                out += [f'{label}: stories {p} (due {due.isoformat()})' for p in bad]
+                continue
+            for i, st in enumerate(stories, 1):
+                when = date.fromisoformat(str(st['date']))
+                if not due - timedelta(days=7) <= when <= due:
+                    out.append(f'{label}: story {i} is dated {when.isoformat()}; the stories are from the seven days up to {due.isoformat()}')
+                if str(st['source']['url']) in used:
+                    out.append(f'{label}: story {i} ran on a recent off day already ({st["source"]["url"]})')
+    return out
+
+
 def readback_problems(ideas, sources):
     """Every off-day option, from the 9 Nov week, carries its fresh readers' read-back: two readers with none of the
     session's reasoning each say in one line what the post is (`says`, both, never empty), having been shown every
@@ -365,7 +402,7 @@ def cover(week, ideas_path=None):
 def check(ideas, sources, week_board):
     return (week_board.coverage_problems(ideas, style_answered(ideas, sources)) + week_board.style_problems(ideas)
             + halves_problems(ideas) + locked_problems(ideas, sources) + repeat_problems(ideas, sources)
-            + readback_problems(ideas, sources))
+            + readback_problems(ideas, sources) + goodnews_problems(ideas, sources))
 
 
 COMBINE_DOC = re.compile(r'^combine-\d{1,3}$')
@@ -568,6 +605,21 @@ def cover_self_test():
         problems.append('a read-back that skipped recent pieces and off days is refused')
     if readback_problems({'week_start': '2026-11-02', 'offdays': {'thu': [{'id': 'old'}]}}, rsrc):
         problems.append('a week before 9 Nov keeps the shape it was made in')
+    # (a5) Krish, 2026-11-02: the weekly good news is filled on Sunday with fresh stories.
+    stry = lambda n, **kw: dict({'headline': f'S{n}', 'what': 'What.', 'why': 'Why.', 'date': '2026-11-05',
+                                 'source': {'label': 'L', 'url': f'https://e.com/{n}'}, 'media': {'kind': 'clip', 'url': 'https://e.com/v'}}, **kw)
+    wk = lambda st: {'offdays': {'sat': [{'id': 'goodnews', 'weekly': 'good_news', 'stories_due': '2026-11-08', 'stories': st}]}}
+    gsrc = {'recent_offdays': [{'urls': ['https://e.com/used']}]}
+    if goodnews_problems(wk([]), gsrc, date(2026, 11, 3)):
+        problems.append('a weekly option before its Sunday may wait for its stories')
+    if not any('stories is a list of 4' in x for x in goodnews_problems(wk([]), gsrc, date(2026, 11, 8))):
+        problems.append('a weekly option on its Sunday with no stories is refused')
+    if goodnews_problems(wk([stry(n) for n in range(1, 5)]), gsrc, date(2026, 11, 8)):
+        problems.append('four fresh stories with sources and pictures pass')
+    old_one = goodnews_problems(wk([stry(1, date='2026-10-20')] + [stry(n) for n in range(2, 5)]), gsrc, date(2026, 11, 8))
+    rerun = goodnews_problems(wk([stry(1, source={'label': 'L', 'url': 'https://e.com/used'})] + [stry(n) for n in range(2, 5)]), gsrc, date(2026, 11, 8))
+    if not any('dated 2026-10-20' in x for x in old_one) or not any('ran on a recent off day' in x for x in rerun):
+        problems.append('a stale story and a story a recent off day ran are refused')
     # (b) half and half on each publishing day.
     if halves_problems({'days': days}):
         problems.append('a day with one ask-led and one engine option passes half and half')

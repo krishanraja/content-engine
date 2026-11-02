@@ -378,6 +378,8 @@ option carries `cards`: `[{"words": "<what the card says>", "picture":
    before it reaches the tab; they go into ideas.json `offdays` and reach
    the tab only through `week_board.py --ideas`, never by patching the page,
    and until the board has its Off days part the room says so in step 8.
+   Saturday carries the weekly good news (`references/offdays.md`, "The Saturday good news"): its format each week,
+   its four fresh stories found by the Sunday run before that week.
    Growth makes what he approved. **His own
    ideas go here as pieces he records** (Ruling, Krish, 2026-10-29): every
    idea he dropped in (`must_cover`, `kind: his_idea`) is a recorded off-day

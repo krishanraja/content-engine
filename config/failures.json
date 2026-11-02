@@ -1593,6 +1593,12 @@
           "contains": "he judges an option by these",
           "how": "from the 9 Nov week an off-day option with no hook, pitch.see, pitch.lands or direction is refused",
           "test": "python3 scripts/post-pack/week_board.py --self-test"
+        },
+        {
+          "file": "scripts/post-pack/board_feed.py",
+          "contains": "def goodnews_problems(",
+          "how": "the weekly Saturday good news holds four stories from the seven days before its Sunday, each with its source and its own photo or clip, none a recent off day ran; the Sunday run fills them (sunday_ideas.py goodnews)",
+          "test": "python3 scripts/post-pack/board_feed.py self-test"
         }
       ]
     }

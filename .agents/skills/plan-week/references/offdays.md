@@ -74,6 +74,9 @@ pitch, "I have zero idea what this even means"). Before an option reaches the ta
 3. Save it on the option: `"read_back": {"readers": ["<reader>", "<reader>"], "says": ["<one line>", "<one line>"],
    "against": <the count of recent plus recent_offdays>, "versus": "<the side-by-side verdict, inspo options only>"}`.
 
+A **weekly series** (an option with `"weekly"`, today only the Saturday good news) recurs every week by design: its
+format coming back is never a repeat, and its readers judge only whether its stories could repeat.
+
 `board_feed.py cover` refuses an option without these, and the build (`week_board.py --ideas`) refuses an option with
 no `hook`, `pitch.see`, `pitch.lands` and `direction`, a gather older than two days before the week, a recorded
 option for an idea that has left the pool, and an option covering an off day of the last three weeks.
@@ -171,4 +174,38 @@ format ("We should reskin this as a hilarious video meme for when your AI
 talks to your customer's AI.", 29 October), offer it on an off day in that
 format, its `covers` holding the card's id: a meme is made fresh in the brand
 kit from the format he pointed at, credited, and never reposts the clip itself.
+
+## The Saturday good news
+
+A weekly series (Krish, 2026-11-02: "you focus on w/c 9 Nov for the Saturday weekly good news. You will need to find
+the actual good news on Sunday as per the usual system so that the news items are fresh"; his Improve on the 7 Nov
+good news: "I want actual news items and the content we are going to use here - embedded real world images or
+videos"). Each week's board carries it on Saturday as `{"id": "goodnews", "weekly": "good_news", "stories_due":
+"<the Sunday before the week>", ...}` with the rest of an option (hook, pitch, direction, read-back), and no stories.
+He approves the format on the board; the stories are found by the Sunday run.
+
+**The Sunday run fills it** (`.github/workflows/sunday-ideas.yml`, the step after the ideas stage, for the week
+`python3 scripts/sunday_ideas.py goodnews` names, the one that starts the day after that Sunday):
+
+1. Find four real AI stories that are good news for ordinary people (health, science, safety, access, work made
+   better), each published in the seven days up to `stories_due`, none already run (`sources.json`
+   `recent_offdays` urls). Prefer a primary source: the organisation's own page, the paper, the official
+   announcement; a press story only names where it read it.
+2. Check each against its primary source the same day: the headline, the number and the date must be on that page.
+   A claim the source does not carry is cut, never softened.
+3. Each story has its own picture: a photo or clip of the thing itself from the source or the organisation (`media`,
+   https), never a stock image.
+4. Write them into that week's `docs/plans/<Monday>-week/ideas.json`, on the good-news option only, as
+   `"stories": [{"headline", "what", "why", "date": "YYYY-MM-DD", "source": {"label", "url"}, "media": {"kind": "photo"
+   or "clip", "url"}}]`, four of them, in plain English a 12-year-old follows. Change nothing else.
+5. `python3 scripts/post-pack/copy_lint.py --applies-to carousel_text` on the words, then
+   `python3 scripts/post-pack/board_feed.py gather <Monday>` and `cover <Monday>`: it refuses a story dated outside
+   the seven days, one with no source or picture, and one a recent off day ran.
+6. Rebuild that week's board from its live build: `board_web.py download <Monday> --output live.html`, then
+   `week_board.py --week <Monday> --live --ideas docs/plans/<Monday>-week/ideas.json --previous live.html --keep <each
+   made day> --target web`, then `--verify`. Publish with `board_web.py publish-web PAGE --assets MAP
+   --expected-build <the live build id> --apply`, mapping each kept download to the live manifest's asset by
+   `existing_sha256` (`docs/PUBLISH_BOARDS.md`). Read the live page back: the good-news card shows four stories.
+
+Growth makes the carousel from the stories as shown, and its mock comes back for his final yes as with any off day.
 

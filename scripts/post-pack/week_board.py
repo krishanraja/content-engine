@@ -1711,6 +1711,14 @@ def read_offdays(data, where='ideas.json offdays', whole=False):
                 if not found:
                     row['cards'] = [{'words': ' '.join(c['words'].split()), 'picture': ' '.join(c['picture'].split())} for c in cards]
             row.update(off_rich(o, problems, f'{weekday} option {n}'))
+            if o.get('stories'):
+                found = story_problems(o['stories'])
+                problems.extend(f'{weekday} option {n}: stories {p}' for p in found)
+                if not found:
+                    row['stories'] = [{k: s[k] for k in ('headline', 'what', 'why', 'date', 'source', 'media')} for s in o['stories']]
+            for k in ('weekly', 'stories_due'):
+                if o.get(k) is not None:
+                    row[k] = str(o[k])
             if whole:
                 # Krish, 2026-11-02, of a one-blob Thursday option: "I have zero idea what this even means". From the
                 # 9 Nov week every option he judges shows its hook, what he will see and why it lands, and its direction.
@@ -1734,6 +1742,33 @@ def read_offdays(data, where='ideas.json offdays', whole=False):
         out[key] = rows
     if problems:
         raise BoardError(f'{where} is not ready to show:\n  ' + '\n  '.join(problems))
+    return out
+
+
+STORY_COUNT = 4  # the weekly good news (Krish, 2026-11-02: "find the actual good news on Sunday ... so that the news items are fresh")
+
+
+def story_problems(stories):
+    """Why a weekly good-news option's stories are not ready to show, or []: four real stories, each with its headline,
+    what happened, why it matters, its date, its source and its own photo or clip (Krish, 2026-11-02, Improve on the
+    7 Nov good news: "I want actual news items and the content we are going to use here - embedded real world images or
+    videos")."""
+    if not isinstance(stories, list) or len(stories) != STORY_COUNT:
+        return [f'is a list of {STORY_COUNT} stories']
+    out = []
+    for i, st in enumerate(stories, 1):
+        st = st if isinstance(st, dict) else {}
+        src, media = st.get('source') or {}, st.get('media') or {}
+        if not all(_line(st.get(k), 400) for k in ('headline', 'what', 'why')):
+            out.append(f'{i} needs its headline, what happened and why it matters')
+        try:
+            date.fromisoformat(str(st.get('date')))
+        except ValueError:
+            out.append(f'{i} needs its date, YYYY-MM-DD')
+        if not (isinstance(src, dict) and _line(src.get('label'), 200) and str(src.get('url') or '').startswith('https://')):
+            out.append(f'{i} needs its source {{"label", "url" (https)}}')
+        if not (isinstance(media, dict) and media.get('kind') in ('photo', 'clip') and str(media.get('url') or '').startswith('https://')):
+            out.append(f'{i} needs its own photo or clip {{"kind": "photo" or "clip", "url" (https)}}')
     return out
 
 
@@ -1808,7 +1843,8 @@ def previous_option(o):
     """An off-day option as the previous board kept it, back in the shape read_offdays takes."""
     row = {'id': o['id'], 'format': o['format'], 'source': {'label': o['source'], 'url': o.get('url')} if o.get('url') else o['source'], 'copy': o['copy']}
     for k in ('covers', 'kind', 'style', 'piece_id', 'series', 'title', 'script', 'share_line', 'needs', 'cards',
-              'hook', 'pitch', 'inspiration', 'learned_from', 'direction', 'ties_to', 'recommended', 'revised', 'mock', 'download'):
+              'hook', 'pitch', 'inspiration', 'learned_from', 'direction', 'ties_to', 'recommended', 'revised', 'mock', 'download',
+              'stories', 'weekly', 'stories_due'):
         if o.get(k) is not None:
             row[k] = o[k]
     if o.get('kind') == 'recorded':
@@ -1968,6 +2004,7 @@ def off_option_card(monday, key, when, o):
             f'<div class="id-flags">{flags}</div><h4 class="hook">{E(o.get("hook") or off_title(o))}</h4>'
             + (f'<div class="pitch">{rows}</div>' if rows else '') + copy
             + (f'<ol class="off-cards" aria-label="Card by card">{cards}</ol>' if cards else '')
+            + stories_block(o)
             + inspo + learned + revised
             + (f'<p class="id-how">Still needs: {E("; ".join(o["needs"]))}</p>' if o.get('needs') else '')
             + f'<p class="id-why"><span class="id-why-k">Source</span> {src}</p>'
@@ -1982,6 +2019,22 @@ def off_option_card(monday, key, when, o):
               f'placeholder="Anything on this option: feedback, the exact text to put on it, what to change" disabled></textarea>'
               f'<button type="button" class="btn-s" data-act="offfree" data-for="{E(did)}" disabled>Save</button></div>'
             + f'<p class="tri-state" data-offstate="{E(did)}" aria-live="polite"></p></article>')
+
+
+def stories_block(o):
+    """A weekly good-news option's real stories, each with its source and its own photo or clip; before they are found,
+    the day they are due."""
+    if o.get('stories'):
+        items = ''.join(
+            f'<li class="story"><b>{E(st["headline"])}</b> <span class="st-date">{E(st["date"])}</span>'
+            f'<p>{E(st["what"])}</p><p class="st-why">{E(st["why"])}</p>'
+            f'<p class="st-links"><a href="{E(st["source"]["url"])}" target="_blank" rel="noopener">{E(st["source"]["label"])}</a> · '
+            f'<a href="{E(st["media"]["url"])}" target="_blank" rel="noopener">its {E(st["media"]["kind"])}</a></p></li>'
+            for st in o['stories'])
+        return f'<ol class="off-stories" data-stories="{len(o["stories"])}" aria-label="This week\'s stories">{items}</ol>'
+    if o.get('weekly'):
+        return f'<p class="id-how" data-stories="0">A weekly series: this week\'s stories are found fresh on Sunday {E(o.get("stories_due") or "")}.</p>'
+    return ''
 
 
 def offdays_section(monday, offdays):
@@ -5061,6 +5114,22 @@ def _growth_offday_checks(check, week, ideas):
         check('off days: from 9 Nov an option with no hook, pitch or direction is refused', False)
     except BoardError as error:
         check('off days: from 9 Nov an option with no hook, pitch or direction is refused', 'option 2: no hook, pitch.see' in str(error))
+    # Krish, 2026-11-02: the weekly good news, its four real stories found on Sunday, each with its source and its own picture.
+    st = lambda n, **kw: dict({'headline': f'Story {n}', 'what': 'What happened.', 'why': 'Why it matters.', 'date': '2026-11-05',
+                               'source': {'label': 'Src', 'url': 'https://example.com/s'}, 'media': {'kind': 'photo', 'url': 'https://example.com/p.jpg'}}, **kw)
+    weekly = dict(rich, id='goodnews', weekly='good_news', stories_due='2026-11-08')
+    got = read_offdays({'sat': [weekly, plain]})
+    check('off days: a weekly option before Sunday says its stories are found then',
+          'found fresh on Sunday 2026-11-08' in stories_block(got['sat'][0]) and 'data-stories="0"' in stories_block(got['sat'][0]))
+    got = read_offdays({'sat': [dict(weekly, stories=[st(n) for n in range(1, 5)]), plain]})
+    check('off days: its four stories show with their source and their own photo or clip',
+          stories_block(got['sat'][0]).count('<li class="story">') == 4 and 'its photo' in stories_block(got['sat'][0])
+          and previous_option(got['sat'][0])['stories'] == got['sat'][0]['stories'])
+    try:
+        read_offdays({'sat': [dict(weekly, stories=[st(1), st(2), st(3), st(4, media={'kind': 'photo', 'url': ''})]), plain]})
+        check('off days: a story with no photo or clip is refused', False)
+    except BoardError as error:
+        check('off days: a story with no photo or clip is refused', 'its own photo or clip' in str(error))
     revised = read_offdays({'tue': [dict(rich, direction=dict(rich['direction'], tone='Warm.'), revised={'side': 'direction', 'words': 'warmer please'}), plain]})
     check('off-day option: a revised direction has a new hash, so his old press reads as answered, and says what it answers',
           revised['tue'][0]['direction_sha256'] != six['tue'][0]['direction_sha256'] and revised['tue'][0]['idea_sha256'] == six['tue'][0]['idea_sha256']
