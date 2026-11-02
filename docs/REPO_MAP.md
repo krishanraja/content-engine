@@ -3486,6 +3486,17 @@ Run a Vercel serverless handler locally against the real environment.
 - `function progress(sinceFrames: number, durationFrames: number, easing: (t: number) => number = ENTER): number`
 - `function drift(frame: number, fromFrame: number, toFrame: number, pct: number = MOTION.driftPct): number`
 
+### `apps/renderer/src/engine/devices/cursor_buddy/index.tsx`
+
+- `function buddyState({ object, events, frame }: Pick<DeviceProps, 'object' | 'events' | 'frame'>)`
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/cursor_buddy/schema.ts`
+
+- `const MoodSchema`
+- `const ParamsSchema`
+- `const PositionSchema`
+
 ### `apps/renderer/src/engine/devices/evidence_card/index.tsx`
 
 - `function evidenceMediaStyle(crop: Params['crop']): React.CSSProperties`
@@ -3549,6 +3560,16 @@ Run a Vercel serverless handler locally against the real environment.
 ### `apps/renderer/src/engine/devices/logo_card/schema.ts`
 
 - `function resolveLogo(id: string): string`
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/logo_orbit/index.tsx`
+
+- `function orbitState({ object, events, frame }: Pick<DeviceProps, 'object' | 'events' | 'frame'>, count: number, chips: …`
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/logo_orbit/schema.ts`
+
+- `export { resolveLogo }`
 - `const ParamsSchema`
 
 ### `apps/renderer/src/engine/devices/marquee/index.tsx`
@@ -3699,6 +3720,15 @@ Run a Vercel serverless handler locally against the real environment.
 - `interface DeviceProps`
 - `type DeviceComponent = (props: DeviceProps) => React.ReactElement | null`
 - `type DeviceRegistry = Readonly<Record<string, DeviceComponent>>`
+
+### `apps/renderer/src/engine/devices/typing_bubble/index.tsx`
+
+- `function bubbleState({ object, events, frame }: Pick<DeviceProps, 'object' | 'events' | 'frame'>)`
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/typing_bubble/schema.ts`
+
+- `const ParamsSchema`
 
 ### `apps/renderer/src/engine/fit.ts`
 
