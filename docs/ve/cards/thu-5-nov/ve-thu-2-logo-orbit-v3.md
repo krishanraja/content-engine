@@ -1,0 +1,44 @@
+---
+card: ve-thu-2-logo-orbit-v3
+format: hand-held-screen
+kind: device
+model: gpt-6.1-sol
+effort: medium
+max_minutes: 60
+max_calls: 60
+cwd: /tmp/v3home\dev\makeyourmindup\.worktrees\content-engine\ve-card\ve-thu-2-logo-orbit-v3
+write_allow: [apps/renderer/src/engine/devices/logo_orbit/*]
+read: apps/renderer/src/engine/devices/CONTRACT.md, apps/renderer/src/engine/devices/sticker/**, apps/renderer/src/engine/devices/logo_card/**, apps/renderer/src/engine/clock.ts, apps/renderer/src/engine/props.ts, apps/renderer/src/engine/kit/**, docs/ve/design/TEMPLATE.md, config/ve/design-lock.json, config/ve/devices.json, config/logo-registry.json, config/style-references.json
+never: NOW.md, WORKBENCH.md, docs/plans/**, git commands, network, MCP tools, publishing, new dependencies, raw hex colours, useCurrentFrame outside apps/renderer/src/engine/clock.ts, edits outside write_allow
+---
+
+# The logo orbit, polished
+
+## Goal
+Krish sent these back for marked improvements (2 Nov). Match the polish of his Production Inspo references in config/style-references.json: instagram_DeypYeWN5hL (cute blue cursor character on a light ground, soft shadows, real UI), instagram_DdCY4cJAQZk (app icons on white rounded tiles orbiting a centre, motion-blurred arrivals), instagram_DeZuQ7-lATg (product UI on floating cards with glow). Keep the device's verbs, schema and existing behaviour; improve only the look. Every number below is a minimum the tests must check.
+
+1. Every mark sits on a white rounded tile (tokens.cream, radius 28 px, at least 150 px square) with a soft drop shadow, as app icons do.
+2. Equal visual size: each mark is fitted inside the same 96 px box by its own aspect, so a wide wordmark (Meta, xAI) is no smaller in its tile than a square mark (Google, Amazon). Use the symbol where the registry has one.
+3. Rings: stroke at least 2.5 times today's, tokens.mint at 50% opacity, with a drawn dashed inner ring.
+4. Arrival: each tile overshoots to 1.12 scale then settles (back easing), with a drawn speed trail of three fading copies.
+5. Chips: pills at least 34 px Archivo with a small mint dot.
+6. highlight: the chosen tile lifts to 1.15 with a mint ring around it.
+
+## Tests
+- every logo is inside a tile at least 150 px square; every mark's drawn box is within 10% of 96 px on its long side
+- ring stroke width at least 2.5 times the v2 value
+- arrival reaches 1.12 scale before settling at 1; logos never rotate
+- tall and wide fixtures render
+
+## Contract
+Rules for every device (apps/renderer/src/engine/devices/CONTRACT.md): `Device({object, events, box, tokens, aspect, frame})`, a pure function of its props; state only from `stateAt(events, object.obj, frame)`, animation only from `progress()` and `drift()` with `MOTION` timing; colours only from `tokens` (raw hex refused); type roles from `HOUSE_FONTS`; no `Math.random`, no `f % N`, no wall clock; author 1080x1920 and 1920x1080 slots separately. Register the device in `devices/registry.ts` (one line) and in `config/ve/devices.json` with exactly the verbs below, and update `verbs.test.ts`. No person, no real brand mascot, no on-screen text beyond what params give. Look: the house tokens on a light ground, soft shadows, real-UI realism, as in Krish's references (light-grey kinetic explainer with a cute cursor character; app logos orbiting a central icon on rings with motion blur on arrival).
+
+## Acceptance (every command must exit 0 inside your sandbox)
+npx vitest run apps/renderer/src/engine/devices/logo_orbit
+npx vitest run apps/renderer/src/engine/devices/verbs.test.ts
+python scripts/ve/check_route.py
+
+## Return
+Your final message is only JSON matching config/ve/task-result.schema.json:
+{"card": "ve-thu-2-logo-orbit-v3", "files_changed": [...], "commands": [{"cmd": "...", "exit_code": 0}], "open_questions": [...]}
+Stop after two failed attempts at the same acceptance command and report the failure in open_questions.
