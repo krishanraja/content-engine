@@ -1,6 +1,6 @@
 Claude Duet comes to you before you go to it.
 
-Anthropic opened it on 21 October as a research preview (an early, unfinished release) for people on Claude's paid Pro and Max plans in the US (off a waitlist, for now). Its own page says it "comes to you with what needs your attention, completes tasks you ask of it, keeps working even when you step away, and checks with you before it acts on your behalf." The reviews so far tell you whether it's any good. Most of them skip the question that matters if you already run half your working week through Claude.
+Anthropic opened it on 21 October as a research preview (an early, unfinished release), starting with people on Claude's paid plans in the US (off a waitlist, for now). Its own page says it "comes to you with what needs your attention, completes tasks you ask of it, keeps working even when you step away, and checks with you before it acts on your behalf." The reviews so far tell you whether it's any good. Most of them skip the question that matters if you already run half your working week through Claude.
 
 So this piece looks at one thing: what Claude Duet actually changes for someone who already works in Claude.
 
@@ -8,7 +8,7 @@ So this piece looks at one thing: what Claude Duet actually changes for someone 
 
 If you already work in Claude, the new part is that Duet works without you there.
 
-Duet runs on its own computer in the cloud, with its own browser, so your laptop can be shut. Every few hours it checks the apps you have connected: Gmail, Slack, your calendar, HubSpot, or any of the "over 6,000 connectors and plugins" (the links that let Claude reach other apps) that Anthropic counts. Each morning it sends you a short brief on what matters. In between, in Anthropic's words, it "reads, drafts, and prepares work on its own".
+Duet runs on its own computer in the cloud, with its own browser, so your laptop can be shut. Every few hours it checks the apps you have connected: Gmail, Slack, your calendar, HubSpot, or any of the thousands of connectors and plugins (the links that let Claude reach other apps) in Claude's marketplace. Each morning it sends you a short brief on what matters. In between, in Anthropic's words, it "reads, drafts, and prepares work on its own".
 
 Then it stops. Before it sends a message, makes a payment, signs a document or deletes anything, it shows you exactly what it's about to do and waits for your yes. A few things stay off the table even with your yes, such as trading securities or moving money between accounts.
 
