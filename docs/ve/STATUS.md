@@ -3,6 +3,7 @@
 Read `docs/ve/RUNBOOK.md` to produce and `docs/ve/design/TEMPLATE.md` for what a frame must look like. This page says what ve can and cannot do right now.
 
 ## Can do
+- **One motion standard:** every cut is held to the signed [motion standard](MOTION_STANDARD.md); each piece names one style from the bank (`style.motion`, required by `ve lint` `motion.required` from 9 Nov 2026) and its piece cards carry it. Channel safe zones are listed in `ve qc`, not counted, until card ve-motion-4.
 - **Spec to picture in one clock:** `ve lint`, `ve compile`, `ve render` (tall 9:16 and wide 16:9) through one `FormatMaster`. Compile refuses a verb the device does not draw and anything it cannot draw truthfully.
 - **Design is a gate, not a hope (F19):** `config/ve/design-lock.json` holds the approved zones, type roles, thresholds, scribble, plate rules and the ten approved key frames (formats `hand-held-screen` and `two-passports`, frozen 28 Oct). `ve lock check|show|freeze`. A device card or spec for a format without a frozen lock is refused.
 - **Formats and devices:** format H (hand-held screen) and the two-passports module on the full-canvas `STAGE` layout. Devices: `hand_phone_stage` (real hand and phone, camera that never cuts, UI on the glass in perspective, glass kinds prompt, cards, footage, bubble), `headline`, `sticker`, `stamp`, `stat_strip`, `marquee`, `scribble` (hand-drawn draw-on, one per beat), `thread_card`, `passport_page`; the original five devices remain.

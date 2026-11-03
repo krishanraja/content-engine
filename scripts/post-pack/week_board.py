@@ -1683,11 +1683,37 @@ def off_rich(o, problems, label):
 NOT_IN_POSTS = 'Not in its 3 Posts folder yet: file it there and link the folder (drive) before it counts as ready'
 
 
-def posts_needs(o):
-    """The needs line a finished off-day option carries until it links its 3 Posts folder."""
+IN_GROWTH = ('Filed in 4 Growth, which is not where Krish looks: move it to its post\'s 3 Posts folder and link that '
+             'folder (drive) before it counts as ready')
+NOT_NAMED = ('Its 3 Posts folder is not named: say "3 Posts › YYYY-MM-DD Ddd off.day - Subject" (or posts_folder) so '
+             'the link can be checked against the post it belongs to')
+NAMED_FOLDER = re.compile(r'3 Posts\s*›\s*([^;›]+?)\s*(?:;|$)')
+
+
+def posts_needs(o, day=None):
+    """The needs line a finished option carries until it is in its own post's 3 Posts folder: it links a Drive
+    folder (drive), names that folder (posts_folder, or "3 Posts › <folder>" in its needs) as a post folder the
+    library takes, and never points at 4 Growth. A bare Drive link is not enough: any folder would pass."""
     finished = bool(o.get('download')) or bool(o.get('video')) or bool(o.get('slides')) or bool(o.get('ready'))
+    needs = [str(x) for x in (o.get('needs') or []) if isinstance(x, str)] if isinstance(o.get('needs'), list) else []
+    if any('4 Growth' in line for line in needs):
+        return [IN_GROWTH]
+    if not finished:
+        return []
     drive = o.get('drive')
-    return [NOT_IN_POSTS] if finished and not (isinstance(drive, str) and DRIVE_FOLDER.match(drive)) else []
+    if not (isinstance(drive, str) and DRIVE_FOLDER.match(drive)):
+        return [NOT_IN_POSTS]
+    named = o.get('posts_folder') or next((m[1] for line in needs for m in [NAMED_FOLDER.search(line)] if m), None)
+    if not (isinstance(named, str) and _library().is_post_folder(named.strip())):
+        return [NOT_NAMED]
+    if day and not named.strip().startswith(str(day)):
+        return [f'Its 3 Posts folder ({named.strip()}) is another day\'s post, not {day}\'s: link this post\'s own folder']
+    return []
+
+
+def _library():
+    import library  # scripts/post-pack/library.py, the one folder rule
+    return library
 
 
 def side_sha(o, side):
@@ -1780,6 +1806,9 @@ def read_offdays(data, where='ideas.json offdays', whole=False):
                                         ('pitch.lands', (row.get('pitch') or {}).get('lands')), ('direction', row.get('direction'))) if not ok]
                 if gaps:
                     problems.append(f'{weekday} option {n}: no {", ".join(gaps)}; he judges an option by these')
+            extra = [line for line in posts_needs({**o, **row}) if line not in row.get('needs', [])]
+            if extra:
+                row['needs'] = row.get('needs', []) + extra
             if (row.get('slides') or row.get('video')) and not row.get('drive'):
                 problems.append(f'{weekday} option {n}: a finished asset on the board carries its Drive folder (drive), '
                                 'so he can open it there too (Ruling, Krish, 2026-11-03)')
@@ -1889,9 +1918,9 @@ def read_growth_offdays(data, monday, where='--offdays-plan'):
                      'source': {'label': 'Source', 'url': o['source_url']} if str(o.get('source_url') or '').startswith('https://') else (o.get('lane') or 'Growth'),
                      'copy': o.get('draft'), 'share_line': o.get('share_line'),
                      'needs': list(o.get('needs') or []) + ([] if o.get('ready') else ['not ready yet'] if not o.get('needs') else [])
-                     + posts_needs(o),
+                     + posts_needs(o, day),
                      # The rich fields ride through as Growth wrote them (Ruling, Krish, 2026-11-01), never flattened into the copy.
-                     **{k: o[k] for k in ('hook', 'pitch', 'cards', 'inspiration', 'learned_from', 'direction', 'ties_to', 'recommended', 'revised', 'mock', 'slides', 'video', 'drive', 'download', 'closed')
+                     **{k: o[k] for k in ('hook', 'pitch', 'cards', 'inspiration', 'learned_from', 'direction', 'ties_to', 'recommended', 'revised', 'mock', 'slides', 'video', 'drive', 'posts_folder', 'download', 'closed')
                         if o.get(k) is not None}}
                     for o in opts]
     return out, warnings

@@ -103,3 +103,17 @@ Shot lengths and cuts: `python scripts/ve.py study <reel>` (ffmpeg scene detecti
 cut until the mean frame-to-frame change falls under 1.2 grey levels, at 30 fps on a 90x160 grey copy. Sizes and
 positions: full frames at 3, 12, 13, 17 and 33 s read on a 128 px grid. Face boxes: OpenCV 4's frontal face cascade on
 frames 600 and 990 of each reel.
+
+## Engine notes (not part of the signed text; audit, 3 Nov 2026)
+
+- **Where the per-piece style comes from.** This standard is the floor every cut holds. Each piece also names one
+  motion style from the bank, the `motion` layer of `config/style-references.json` (17 styles), as `style.motion`
+  `{module, reason}` in its spec. ve lint refuses a spec without it from `creative_direction.MOTION_FROM` (9 Nov 2026,
+  `motion.required`), and a Codex card written for that piece carries the style as its own `## Motion style` section
+  (`scripts/velib/cards.py`). The format's own motion notes (`docs/ve/design/formats/*-motion.md`) hold its frame;
+  the style works inside them, and this standard wins where they differ.
+- **Channel safe zones are listed, not counted, today.** `scripts/velib/qc_channel.py` has `ADVISORY = True`: `ve qc`
+  shows a box under a channel's buttons but does not fail the cut until card `ve-motion-4-channel-safe-tall` moves the
+  tall layouts out of the zones. Until then a session reads the `channel.safe_zones` row itself before calling a tall
+  cut ready.
+

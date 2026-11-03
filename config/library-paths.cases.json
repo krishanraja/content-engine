@@ -505,6 +505,13 @@
       "subchannel": "off.day",
       "subject": "AI agents translator",
       "folder": "2026-11-03 Tue off.day - AI agents translator"
+    },
+    {
+      "why": "an off-day post that wears a series' house dress still files as off.day",
+      "date": "2026-11-05",
+      "subchannel": "under.the.hood",
+      "subject": "No spending no sending",
+      "folder": "2026-11-05 Thu off.day - No spending no sending"
     }
   ],
   "library_names": [

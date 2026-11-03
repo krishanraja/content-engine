@@ -10,6 +10,7 @@ from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts' / 'post-pack'))
 from velib.lint import lint, no_name_pattern  # noqa: E402
 
 FIXTURE = json.loads((ROOT / 'fixtures/ve/my-test-19s/spec.json').read_text(encoding='utf-8'))
@@ -207,6 +208,16 @@ class ReferencesAreRequired(unittest.TestCase):
         bad = {k: v for k, v in JACK.items() if k != 'drive_id'}
         found = lint_lines(mutate(lambda s: dated(s, [GEORGIA, bad])))
         self.assertTrue(any('drive_id' in line for line in found), found)
+
+    def test_a_new_piece_names_one_motion_style_from_the_bank(self):
+        # The same rule the creative direction holds (creative_direction.motion_problems), on the ve route too.
+        self.assertIn('motion.required', codes_for(mutate(lambda s: dated(s, [GEORGIA, JACK]))))
+        module = next(iter(__import__('creative_direction').motion_modules()))
+        good = mutate(lambda s: (dated(s, [GEORGIA, JACK]), s.update(style={'motion': {
+            'module': module, 'reason': 'the money moves on screen as he names it'}})))
+        self.assertNotIn('motion.required', codes_for(good))
+        bad = mutate(lambda s: (dated(s, [GEORGIA, JACK]), s.update(style={'motion': {'module': 'not-a-style', 'reason': 'x y z w'}})))
+        self.assertIn('motion.required', codes_for(bad))
 
     def test_pieces_in_flight_on_5_nov_are_exempt(self):
         spec = mutate(lambda s: s.update(publish_day='2026-11-05'))
