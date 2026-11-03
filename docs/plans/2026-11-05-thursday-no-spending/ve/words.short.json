@@ -2,889 +2,889 @@
   {
     "w": 0,
     "word": "Proactive",
-    "onset_s": 0.38,
-    "end_s": 0.9
+    "onset_s": 0.1333,
+    "end_s": 0.781
   },
   {
     "w": 1,
     "word": "AI",
-    "onset_s": 0.9,
-    "end_s": 1.42
+    "onset_s": 0.941,
+    "end_s": 1.381
   },
   {
     "w": 2,
     "word": "is",
-    "onset_s": 1.42,
-    "end_s": 1.82
+    "onset_s": 1.541,
+    "end_s": 1.721
   },
   {
     "w": 3,
     "word": "coming.",
-    "onset_s": 1.82,
-    "end_s": 2.32
+    "onset_s": 1.981,
+    "end_s": 2.281
   },
   {
     "w": 4,
     "word": "AI",
-    "onset_s": 2.62,
-    "end_s": 2.62
+    "onset_s": 2.361,
+    "end_s": 2.581
   },
   {
     "w": 5,
     "word": "that",
-    "onset_s": 2.62,
-    "end_s": 2.86
+    "onset_s": 2.621,
+    "end_s": 2.721
   },
   {
     "w": 6,
     "word": "does",
-    "onset_s": 2.86,
-    "end_s": 3.22
+    "onset_s": 2.941,
+    "end_s": 3.141
   },
   {
     "w": 7,
     "word": "things",
-    "onset_s": 3.22,
-    "end_s": 3.48
+    "onset_s": 3.222,
+    "end_s": 3.422
   },
   {
     "w": 8,
     "word": "before",
-    "onset_s": 3.48,
-    "end_s": 3.8
+    "onset_s": 3.462,
+    "end_s": 3.742
   },
   {
     "w": 9,
     "word": "you",
-    "onset_s": 3.8,
-    "end_s": 3.94
+    "onset_s": 3.762,
+    "end_s": 3.842
   },
   {
     "w": 10,
     "word": "ask",
-    "onset_s": 3.94,
-    "end_s": 4.22
+    "onset_s": 3.942,
+    "end_s": 4.182
   },
   {
     "w": 11,
     "word": "offers",
-    "onset_s": 4.22,
-    "end_s": 4.62
+    "onset_s": 4.282,
+    "end_s": 4.622
   },
   {
     "w": 12,
     "word": "to",
-    "onset_s": 4.62,
-    "end_s": 4.86
+    "onset_s": 4.662,
+    "end_s": 4.742
   },
   {
     "w": 13,
     "word": "do",
-    "onset_s": 4.86,
-    "end_s": 5.04
+    "onset_s": 4.802,
+    "end_s": 4.882
   },
   {
     "w": 14,
     "word": "things.",
-    "onset_s": 5.04,
-    "end_s": 5.38
+    "onset_s": 5.002,
+    "end_s": 5.282
   },
   {
     "w": 15,
     "word": "Awesome,",
-    "onset_s": 6.1,
-    "end_s": 6.3
+    "onset_s": 5.882,
+    "end_s": 6.283
   },
   {
     "w": 16,
     "word": "really",
-    "onset_s": 6.48,
-    "end_s": 6.84
+    "onset_s": 6.523,
+    "end_s": 6.843
   },
   {
     "w": 17,
     "word": "cool",
-    "onset_s": 6.84,
-    "end_s": 7.26
+    "onset_s": 6.923,
+    "end_s": 7.143
   },
   {
     "w": 18,
     "word": "features",
-    "onset_s": 7.26,
-    "end_s": 7.7
+    "onset_s": 7.223,
+    "end_s": 7.803
   },
   {
     "w": 19,
     "word": "and",
-    "onset_s": 7.7,
-    "end_s": 8.28
+    "onset_s": 8.003,
+    "end_s": 8.183
   },
   {
     "w": 20,
     "word": "really",
-    "onset_s": 8.6,
-    "end_s": 8.86
+    "onset_s": 8.583,
+    "end_s": 8.844
   },
   {
     "w": 21,
     "word": "helpful",
-    "onset_s": 8.86,
-    "end_s": 9.3
+    "onset_s": 8.924,
+    "end_s": 9.324
   },
   {
     "w": 22,
     "word": "but",
-    "onset_s": 9.9333,
-    "end_s": 10.02
+    "onset_s": 9.8333,
+    "end_s": 9.924
   },
   {
     "w": 23,
     "word": "a",
-    "onset_s": 10.02,
-    "end_s": 10.1
+    "onset_s": 9.964,
+    "end_s": 9.984
   },
   {
     "w": 24,
     "word": "bit",
-    "onset_s": 10.1,
-    "end_s": 10.24
+    "onset_s": 10.024,
+    "end_s": 10.164
   },
   {
     "w": 25,
     "word": "dangerous",
-    "onset_s": 10.24,
-    "end_s": 10.66
+    "onset_s": 10.224,
+    "end_s": 10.624
   },
   {
     "w": 26,
     "word": "because",
-    "onset_s": 10.66,
-    "end_s": 10.84
+    "onset_s": 10.624,
+    "end_s": 10.784
   },
   {
     "w": 27,
     "word": "once",
-    "onset_s": 10.84,
-    "end_s": 11.04
+    "onset_s": 10.844,
+    "end_s": 11.004
   },
   {
     "w": 28,
     "word": "they're",
-    "onset_s": 11.04,
-    "end_s": 11.28
+    "onset_s": 11.024,
+    "end_s": 11.164
   },
   {
     "w": 29,
     "word": "connected",
-    "onset_s": 11.28,
-    "end_s": 11.74
+    "onset_s": 11.184,
+    "end_s": 11.685
   },
   {
     "w": 30,
     "word": "Muse",
-    "onset_s": 12.2333,
-    "end_s": 12.48
+    "onset_s": 12.185,
+    "end_s": 12.485
   },
   {
     "w": 31,
     "word": "into",
-    "onset_s": 12.48,
-    "end_s": 12.78
+    "onset_s": 12.505,
+    "end_s": 12.685
   },
   {
     "w": 32,
     "word": "your",
-    "onset_s": 12.78,
-    "end_s": 12.96
+    "onset_s": 12.725,
+    "end_s": 12.825
   },
   {
     "w": 33,
     "word": "WhatsApp,",
-    "onset_s": 12.96,
-    "end_s": 13.24
+    "onset_s": 12.865,
+    "end_s": 13.305
   },
   {
     "w": 34,
     "word": "Amazon",
-    "onset_s": 13.66,
-    "end_s": 13.66
+    "onset_s": 13.405,
+    "end_s": 13.705
   },
   {
     "w": 35,
     "word": "for",
-    "onset_s": 13.66,
-    "end_s": 13.94
+    "onset_s": 13.745,
+    "end_s": 13.825
   },
   {
     "w": 36,
     "word": "your",
-    "onset_s": 13.94,
-    "end_s": 14.08
+    "onset_s": 13.845,
+    "end_s": 13.965
   },
   {
     "w": 37,
     "word": "groceries,",
-    "onset_s": 14.08,
-    "end_s": 14.54
+    "onset_s": 13.985,
+    "end_s": 14.586
   },
   {
     "w": 38,
     "word": "Google",
-    "onset_s": 15.4,
-    "end_s": 15.5
+    "onset_s": 15.2667,
+    "end_s": 15.546
   },
   {
     "w": 39,
     "word": "for",
-    "onset_s": 15.5,
-    "end_s": 15.76
+    "onset_s": 15.566,
+    "end_s": 15.626
   },
   {
     "w": 40,
     "word": "your",
-    "onset_s": 15.76,
-    "end_s": 15.88
+    "onset_s": 15.646,
+    "end_s": 15.746
   },
   {
     "w": 41,
     "word": "emails,",
-    "onset_s": 15.88,
-    "end_s": 16.14
+    "onset_s": 15.806,
+    "end_s": 16.246
   },
   {
     "w": 42,
     "word": "it",
-    "onset_s": 16.8667,
-    "end_s": 17.0
+    "onset_s": 16.807,
+    "end_s": 16.887
   },
   {
     "w": 43,
     "word": "can",
-    "onset_s": 17.0,
-    "end_s": 17.36
+    "onset_s": 16.967,
+    "end_s": 17.287
   },
   {
     "w": 44,
     "word": "get",
-    "onset_s": 17.36,
-    "end_s": 17.8
+    "onset_s": 17.587,
+    "end_s": 17.707
   },
   {
     "w": 45,
     "word": "a",
-    "onset_s": 17.8,
-    "end_s": 17.88
+    "onset_s": 17.747,
+    "end_s": 17.767
   },
   {
     "w": 46,
     "word": "bit",
-    "onset_s": 17.88,
-    "end_s": 18.0
+    "onset_s": 17.787,
+    "end_s": 17.907
   },
   {
     "w": 47,
     "word": "dangerous.",
-    "onset_s": 18.0,
-    "end_s": 18.4
+    "onset_s": 17.967,
+    "end_s": 18.367
   },
   {
     "w": 48,
     "word": "So",
-    "onset_s": 18.68,
-    "end_s": 18.76
+    "onset_s": 18.447,
+    "end_s": 18.547
   },
   {
     "w": 49,
     "word": "my",
-    "onset_s": 18.76,
-    "end_s": 19.16
+    "onset_s": 18.947,
+    "end_s": 19.047
   },
   {
     "w": 50,
     "word": "first",
-    "onset_s": 19.16,
-    "end_s": 19.4
+    "onset_s": 19.127,
+    "end_s": 19.347
   },
   {
     "w": 51,
     "word": "step",
-    "onset_s": 19.4,
-    "end_s": 19.64
+    "onset_s": 19.367,
+    "end_s": 19.588
   },
   {
     "w": 52,
     "word": "is",
-    "onset_s": 19.64,
-    "end_s": 19.84
+    "onset_s": 19.648,
+    "end_s": 19.748
   },
   {
     "w": 53,
     "word": "the",
-    "onset_s": 19.84,
-    "end_s": 20.02
+    "onset_s": 19.788,
+    "end_s": 19.868
   },
   {
     "w": 54,
     "word": "no",
-    "onset_s": 20.02,
-    "end_s": 20.24
+    "onset_s": 19.948,
+    "end_s": 20.048
   },
   {
     "w": 55,
     "word": "spending,",
-    "onset_s": 20.24,
-    "end_s": 20.68
+    "onset_s": 20.308,
+    "end_s": 20.748
   },
   {
     "w": 56,
     "word": "no",
-    "onset_s": 20.86,
-    "end_s": 21.04
+    "onset_s": 20.828,
+    "end_s": 20.908
   },
   {
     "w": 57,
     "word": "sending",
-    "onset_s": 21.04,
-    "end_s": 21.38
+    "onset_s": 21.048,
+    "end_s": 21.348
   },
   {
     "w": 58,
     "word": "rule.",
-    "onset_s": 21.38,
-    "end_s": 21.58
+    "onset_s": 21.388,
+    "end_s": 21.528
   },
   {
     "w": 59,
     "word": "It",
-    "onset_s": 21.64,
-    "end_s": 21.68
+    "onset_s": 21.528,
+    "end_s": 21.588
   },
   {
     "w": 60,
     "word": "doesn't",
-    "onset_s": 21.68,
-    "end_s": 21.94
+    "onset_s": 21.608,
+    "end_s": 21.908
   },
   {
     "w": 61,
     "word": "spend",
-    "onset_s": 21.94,
-    "end_s": 22.24
+    "onset_s": 21.988,
+    "end_s": 22.209
   },
   {
     "w": 62,
     "word": "my",
-    "onset_s": 22.24,
-    "end_s": 22.42
+    "onset_s": 22.229,
+    "end_s": 22.329
   },
   {
     "w": 63,
     "word": "money,",
-    "onset_s": 22.42,
-    "end_s": 22.72
+    "onset_s": 22.389,
+    "end_s": 22.589
   },
   {
     "w": 64,
     "word": "doesn't",
-    "onset_s": 23.1667,
-    "end_s": 23.44
+    "onset_s": 23.069,
+    "end_s": 23.349
   },
   {
     "w": 65,
     "word": "send",
-    "onset_s": 23.44,
-    "end_s": 23.7
+    "onset_s": 23.449,
+    "end_s": 23.649
   },
   {
     "w": 66,
     "word": "anything",
-    "onset_s": 23.7,
-    "end_s": 23.94
+    "onset_s": 23.689,
+    "end_s": 23.989
   },
   {
     "w": 67,
     "word": "out",
-    "onset_s": 23.94,
-    "end_s": 24.22
+    "onset_s": 24.029,
+    "end_s": 24.149
   },
   {
     "w": 68,
     "word": "for",
-    "onset_s": 24.22,
-    "end_s": 24.38
+    "onset_s": 24.169,
+    "end_s": 24.269
   },
   {
     "w": 69,
     "word": "me",
-    "onset_s": 24.38,
-    "end_s": 24.48
+    "onset_s": 24.289,
+    "end_s": 24.329
   },
   {
     "w": 70,
     "word": "unless",
-    "onset_s": 24.48,
-    "end_s": 24.64
+    "onset_s": 24.409,
+    "end_s": 24.629
   },
   {
     "w": 71,
     "word": "I",
-    "onset_s": 24.64,
-    "end_s": 24.88
+    "onset_s": 24.749,
+    "end_s": 24.769
   },
   {
     "w": 72,
     "word": "say",
-    "onset_s": 24.88,
-    "end_s": 25.06
+    "onset_s": 24.829,
+    "end_s": 24.97
   },
   {
     "w": 73,
     "word": "so.",
-    "onset_s": 25.06,
-    "end_s": 25.32
+    "onset_s": 25.07,
+    "end_s": 25.15
   },
   {
     "w": 74,
     "word": "And",
-    "onset_s": 25.58,
-    "end_s": 25.64
+    "onset_s": 25.47,
+    "end_s": 25.55
   },
   {
     "w": 75,
     "word": "the",
-    "onset_s": 25.64,
-    "end_s": 25.74
+    "onset_s": 25.55,
+    "end_s": 25.61
   },
   {
     "w": 76,
     "word": "fun",
-    "onset_s": 25.74,
-    "end_s": 25.9
+    "onset_s": 25.67,
+    "end_s": 25.81
   },
   {
     "w": 77,
     "word": "part",
-    "onset_s": 25.9,
-    "end_s": 26.16
+    "onset_s": 25.87,
+    "end_s": 26.09
   },
   {
     "w": 78,
     "word": "is",
-    "onset_s": 26.16,
-    "end_s": 26.3
+    "onset_s": 26.11,
+    "end_s": 26.21
   },
   {
     "w": 79,
     "word": "I",
-    "onset_s": 26.3,
-    "end_s": 26.42
+    "onset_s": 26.29,
+    "end_s": 26.31
   },
   {
     "w": 80,
     "word": "didn't",
-    "onset_s": 26.42,
-    "end_s": 26.56
+    "onset_s": 26.33,
+    "end_s": 26.51
   },
   {
     "w": 81,
     "word": "even",
-    "onset_s": 26.56,
-    "end_s": 26.82
+    "onset_s": 26.53,
+    "end_s": 26.71
   },
   {
     "w": 82,
     "word": "write",
-    "onset_s": 26.82,
-    "end_s": 27.26
+    "onset_s": 26.99,
+    "end_s": 27.25
   },
   {
     "w": 83,
     "word": "this",
-    "onset_s": 27.26,
-    "end_s": 27.48
+    "onset_s": 27.27,
+    "end_s": 27.41
   },
   {
     "w": 84,
     "word": "myself.",
-    "onset_s": 27.48,
-    "end_s": 27.88
+    "onset_s": 27.45,
+    "end_s": 27.831
   },
   {
     "w": 85,
     "word": "I",
-    "onset_s": 28.36,
-    "end_s": 28.38
+    "onset_s": 28.251,
+    "end_s": 28.291
   },
   {
     "w": 86,
     "word": "just",
-    "onset_s": 28.38,
-    "end_s": 28.5
+    "onset_s": 28.311,
+    "end_s": 28.431
   },
   {
     "w": 87,
     "word": "put",
-    "onset_s": 28.5,
-    "end_s": 28.68
+    "onset_s": 28.471,
+    "end_s": 28.611
   },
   {
     "w": 88,
     "word": "one",
-    "onset_s": 28.68,
-    "end_s": 28.9
+    "onset_s": 28.711,
+    "end_s": 28.831
   },
   {
     "w": 89,
     "word": "prompt",
-    "onset_s": 28.9,
-    "end_s": 29.16
+    "onset_s": 28.851,
+    "end_s": 29.131
   },
   {
     "w": 90,
     "word": "into",
-    "onset_s": 29.16,
-    "end_s": 29.36
+    "onset_s": 29.171,
+    "end_s": 29.291
   },
   {
     "w": 91,
     "word": "my",
-    "onset_s": 29.36,
-    "end_s": 29.54
+    "onset_s": 29.311,
+    "end_s": 29.411
   },
   {
     "w": 92,
     "word": "AI",
-    "onset_s": 29.54,
-    "end_s": 29.78
+    "onset_s": 29.511,
+    "end_s": 29.751
   },
   {
     "w": 93,
     "word": "tool",
-    "onset_s": 29.78,
-    "end_s": 30.02
+    "onset_s": 29.791,
+    "end_s": 29.951
   },
   {
     "w": 94,
     "word": "and",
-    "onset_s": 30.02,
-    "end_s": 30.12
+    "onset_s": 29.971,
+    "end_s": 30.051
   },
   {
     "w": 95,
     "word": "it",
-    "onset_s": 30.12,
-    "end_s": 30.22
+    "onset_s": 30.051,
+    "end_s": 30.111
   },
   {
     "w": 96,
     "word": "started",
-    "onset_s": 30.22,
-    "end_s": 30.4
+    "onset_s": 30.151,
+    "end_s": 30.372
   },
   {
     "w": 97,
     "word": "asking",
-    "onset_s": 30.4,
-    "end_s": 30.66
+    "onset_s": 30.432,
+    "end_s": 30.652
   },
   {
     "w": 98,
     "word": "me",
-    "onset_s": 30.66,
-    "end_s": 30.84
+    "onset_s": 30.652,
+    "end_s": 30.692
   },
   {
     "w": 99,
     "word": "questions",
-    "onset_s": 30.84,
-    "end_s": 31.14
+    "onset_s": 30.772,
+    "end_s": 31.172
   },
   {
     "w": 100,
     "word": "back,",
-    "onset_s": 31.14,
-    "end_s": 31.52
+    "onset_s": 31.212,
+    "end_s": 31.452
   },
   {
     "w": 101,
     "word": "then",
-    "onset_s": 31.8667,
-    "end_s": 32.0
+    "onset_s": 31.772,
+    "end_s": 31.912
   },
   {
     "w": 102,
     "word": "it",
-    "onset_s": 32.0,
-    "end_s": 32.24
+    "onset_s": 32.032,
+    "end_s": 32.112
   },
   {
     "w": 103,
     "word": "locks",
-    "onset_s": 32.24,
-    "end_s": 32.48
+    "onset_s": 32.212,
+    "end_s": 32.452
   },
   {
     "w": 104,
     "word": "itself",
-    "onset_s": 32.48,
-    "end_s": 32.8
+    "onset_s": 32.492,
+    "end_s": 32.772
   },
   {
     "w": 105,
     "word": "down",
-    "onset_s": 32.8,
-    "end_s": 33.06
+    "onset_s": 32.812,
+    "end_s": 33.012
   },
   {
     "w": 106,
     "word": "or",
-    "onset_s": 33.06,
-    "end_s": 33.18
+    "onset_s": 33.032,
+    "end_s": 33.113
   },
   {
     "w": 107,
     "word": "tells",
-    "onset_s": 33.18,
-    "end_s": 33.36
+    "onset_s": 33.133,
+    "end_s": 33.373
   },
   {
     "w": 108,
     "word": "you",
-    "onset_s": 33.36,
-    "end_s": 33.6
+    "onset_s": 33.413,
+    "end_s": 33.513
   },
   {
     "w": 109,
     "word": "how",
-    "onset_s": 33.6,
-    "end_s": 33.74
+    "onset_s": 33.553,
+    "end_s": 33.653
   },
   {
     "w": 110,
     "word": "to",
-    "onset_s": 33.74,
-    "end_s": 33.86
+    "onset_s": 33.693,
+    "end_s": 33.753
   },
   {
     "w": 111,
     "word": "lock",
-    "onset_s": 33.86,
-    "end_s": 33.98
+    "onset_s": 33.793,
+    "end_s": 33.913
   },
   {
     "w": 112,
     "word": "it",
-    "onset_s": 33.98,
-    "end_s": 34.1
+    "onset_s": 33.933,
+    "end_s": 33.993
   },
   {
     "w": 113,
     "word": "down.",
-    "onset_s": 34.1,
-    "end_s": 34.38
+    "onset_s": 34.033,
+    "end_s": 34.193
   },
   {
     "w": 114,
     "word": "Prompt's",
-    "onset_s": 34.88,
-    "end_s": 35.06
+    "onset_s": 34.6667,
+    "end_s": 34.953
   },
   {
     "w": 115,
     "word": "in",
-    "onset_s": 35.06,
-    "end_s": 35.14
+    "onset_s": 34.993,
+    "end_s": 35.053
   },
   {
     "w": 116,
     "word": "the",
-    "onset_s": 35.14,
-    "end_s": 35.28
+    "onset_s": 35.073,
+    "end_s": 35.133
   },
   {
     "w": 117,
     "word": "comments,",
-    "onset_s": 35.28,
-    "end_s": 35.56
+    "onset_s": 35.173,
+    "end_s": 35.593
   },
   {
     "w": 118,
     "word": "make",
-    "onset_s": 36.2667,
-    "end_s": 36.4
+    "onset_s": 36.174,
+    "end_s": 36.334
   },
   {
     "w": 119,
     "word": "sure",
-    "onset_s": 36.4,
-    "end_s": 36.56
+    "onset_s": 36.374,
+    "end_s": 36.514
   },
   {
     "w": 120,
     "word": "you",
-    "onset_s": 36.56,
-    "end_s": 36.7
+    "onset_s": 36.534,
+    "end_s": 36.614
   },
   {
     "w": 121,
     "word": "do",
-    "onset_s": 36.7,
-    "end_s": 36.84
+    "onset_s": 36.654,
+    "end_s": 36.714
   },
   {
     "w": 122,
     "word": "this,",
-    "onset_s": 36.84,
-    "end_s": 37.06
+    "onset_s": 36.794,
+    "end_s": 36.974
   },
   {
     "w": 123,
     "word": "no",
-    "onset_s": 37.16,
-    "end_s": 37.24
+    "onset_s": 37.054,
+    "end_s": 37.114
   },
   {
     "w": 124,
     "word": "spending,",
-    "onset_s": 37.24,
-    "end_s": 37.56
+    "onset_s": 37.214,
+    "end_s": 37.574
   },
   {
     "w": 125,
     "word": "no",
-    "onset_s": 37.76,
-    "end_s": 37.8
+    "onset_s": 37.594,
+    "end_s": 37.654
   },
   {
     "w": 126,
     "word": "sending,",
-    "onset_s": 37.8,
-    "end_s": 38.08
+    "onset_s": 37.794,
+    "end_s": 38.074
   },
   {
     "w": 127,
     "word": "one",
-    "onset_s": 38.18,
-    "end_s": 38.3
+    "onset_s": 38.134,
+    "end_s": 38.254
   },
   {
     "w": 128,
     "word": "easy",
-    "onset_s": 38.3,
-    "end_s": 38.58
+    "onset_s": 38.314,
+    "end_s": 38.535
   },
   {
     "w": 129,
     "word": "step",
-    "onset_s": 38.58,
-    "end_s": 38.92
+    "onset_s": 38.635,
+    "end_s": 38.875
   },
   {
     "w": 130,
     "word": "so",
-    "onset_s": 38.92,
-    "end_s": 39.1
+    "onset_s": 38.915,
+    "end_s": 38.975
   },
   {
     "w": 131,
     "word": "you",
-    "onset_s": 39.1,
-    "end_s": 39.2
+    "onset_s": 39.035,
+    "end_s": 39.095
   },
   {
     "w": 132,
     "word": "can",
-    "onset_s": 39.2,
-    "end_s": 39.32
+    "onset_s": 39.115,
+    "end_s": 39.215
   },
   {
     "w": 133,
     "word": "save",
-    "onset_s": 39.32,
-    "end_s": 39.56
+    "onset_s": 39.275,
+    "end_s": 39.515
   },
   {
     "w": 134,
     "word": "yourself",
-    "onset_s": 39.56,
-    "end_s": 39.92
+    "onset_s": 39.535,
+    "end_s": 39.915
   },
   {
     "w": 135,
     "word": "and",
-    "onset_s": 39.92,
-    "end_s": 40.12
+    "onset_s": 39.955,
+    "end_s": 40.035
   },
   {
     "w": 136,
     "word": "enjoy",
-    "onset_s": 40.12,
-    "end_s": 40.4
+    "onset_s": 40.035,
+    "end_s": 40.355
   },
   {
     "w": 137,
     "word": "these",
-    "onset_s": 40.4,
-    "end_s": 40.64
+    "onset_s": 40.375,
+    "end_s": 40.575
   },
   {
     "w": 138,
     "word": "new",
-    "onset_s": 40.64,
-    "end_s": 40.8
+    "onset_s": 40.595,
+    "end_s": 40.715
   },
   {
     "w": 139,
     "word": "technologies",
-    "onset_s": 40.8,
-    "end_s": 41.3
+    "onset_s": 40.735,
+    "end_s": 41.316
   },
   {
     "w": 140,
     "word": "without",
-    "onset_s": 41.8333,
-    "end_s": 41.96
+    "onset_s": 41.736,
+    "end_s": 41.956
   },
   {
     "w": 141,
     "word": "any",
-    "onset_s": 41.96,
-    "end_s": 42.16
+    "onset_s": 41.976,
+    "end_s": 42.036
   },
   {
     "w": 142,
     "word": "of",
-    "onset_s": 42.16,
-    "end_s": 42.24
+    "onset_s": 42.076,
+    "end_s": 42.136
   },
   {
     "w": 143,
     "word": "those",
-    "onset_s": 42.24,
-    "end_s": 42.38
+    "onset_s": 42.156,
+    "end_s": 42.336
   },
   {
     "w": 144,
     "word": "weird",
-    "onset_s": 42.38,
-    "end_s": 42.62
+    "onset_s": 42.396,
+    "end_s": 42.596
   },
   {
     "w": 145,
     "word": "moments",
-    "onset_s": 42.62,
-    "end_s": 43.02
+    "onset_s": 42.636,
+    "end_s": 43.036
   },
   {
     "w": 146,
     "word": "or",
-    "onset_s": 43.02,
-    "end_s": 43.32
+    "onset_s": 43.136,
+    "end_s": 43.196
   },
   {
     "w": 147,
     "word": "fails.",
-    "onset_s": 43.32,
-    "end_s": 43.56
+    "onset_s": 43.236,
+    "end_s": 43.616
   }
 ]

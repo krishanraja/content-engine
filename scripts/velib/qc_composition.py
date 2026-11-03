@@ -47,6 +47,20 @@ def _fused(text, allowed) -> bool:
                     reach[i + len(w)] = True
     return reach[-1]
 
+def split_seam() -> int:
+    """FWP_SPLIT_SEAM_Y, read from the mocks file the renderer imports, never copied."""
+    import re  # noqa: PLC0415
+    mocks = (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'mocks' / 'face-with-proof.tsx').read_text(encoding='utf-8')
+    return int(re.search(r'export const FWP_SPLIT_SEAM_Y = (\d+)', mocks).group(1))
+
+
+def _fragment(text, allowed) -> bool:
+    """OCR clips a caption word at the box edge or inside the highlight ("emails," read as "mails,", "dangerous." as
+    "ero", Thursday 5 Nov): three or more letters found inside a caption word on screen are that word, not a stray."""
+    target = ''.join(qc_captions.fold(t) for t in qc_captions._tokens(text))
+    return len(target) >= 3 and any(target in qc_captions.fold(a) for a in allowed if qc_captions.fold(a))
+
+
 def _inside(x, y, box):
     if isinstance(box, dict):
         box = [box[k] for k in ('x', 'y', 'w', 'h')]
@@ -94,7 +108,7 @@ def measure(image, lock, *, exempt=(), caption_words=None, ocr_words=None) -> di
             small.append(word)
         if ((solid or float(word['conf']) >= 90) and _inside(x + w / 2, y + h / 2, zones['caption'])
                 and not {qc_captions.fold(t) for t in qc_captions._tokens(word['text'])}.issubset({qc_captions.fold(a) for a in allowed})
-                and not _fused(word['text'], allowed)):
+                and not _fused(word['text'], allowed) and not _fragment(word['text'], allowed)):
             caption.append(word)
         strong = solid or float(word['conf']) >= 90  # one stray glyph on a photo is OCR noise, not a layout fault
         if (strong and not _inside(x + w / 2, y + h / 2, zones['marquee'])
@@ -156,12 +170,16 @@ def composition_checks(video, props, lock) -> dict:
                    for word in page['words']
                    for token in qc_captions._tokens(word['text'] if isinstance(word, dict) else str(word))}
         allowed |= call_card_tokens(props, beat)
-        beat_lock = lock
+        beat_lock, exempt = lock, _footage_boxes(props, at)
         if beat.get('layout') == 'SPLIT':
             # A SPLIT beat's caption sits in the frozen split zone; the house zone there is his face and hands.
             from .qc import _split_geometry
             x, y, w, h = _split_geometry()[1]
             beat_lock = {**lock, 'zones': {**lock['zones'], 'caption': {**lock['zones']['caption'], 'x': x, 'y': y, 'w': w, 'h': h}}}
-        rows[beat['id']] = measure(image, beat_lock, caption_words=allowed, exempt=_footage_boxes(props, at))
+            if at < (props.get('ending') or {}).get('fromFrame', props.get('durationFrames', at + 1)):
+                # Below the seam is his take: a fingertip or the print on his top read as "4" (Thursday 5 Nov) is
+                # picture, not type. The caption zone inside it is still checked; the ending band is never exempt.
+                exempt += [(0, split_seam(), 1080, y - split_seam()), (0, y + h, 1080, 1920 - (y + h))]
+        rows[beat['id']] = measure(image, beat_lock, caption_words=allowed, exempt=exempt)
         rows[beat['id']]['frame'] = at
     return {'applies': True, 'pass': bool(rows) and all(row['pass'] for row in rows.values()), 'beats': rows}
