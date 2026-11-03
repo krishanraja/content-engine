@@ -124,8 +124,10 @@ class DesignLockTest(unittest.TestCase):
             self.freeze(mapping)
         lock = self.freeze(mapping, force=True)
         self.assertTrue(designlock.frozen(lock, FMT, self.root)[0])
-        other = 'two-passports'
-        lock = designlock.freeze(other, self.src, self.images(other), lock_path=self.path)
+        # The lock reads frozen only once every format is: two-passports, then face-with-proof (frozen 3 Nov 2026).
+        for other in [name for name in self.lock['formats'] if name != FMT]:
+            self.assertEqual(lock['status'], 'direction_approved')
+            lock = designlock.freeze(other, self.src, self.images(other), lock_path=self.path)
         self.assertEqual(lock['status'], 'frozen')
 
     def test_keyframe_coverage_and_missing_file(self):
