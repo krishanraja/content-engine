@@ -254,8 +254,9 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
             event_frame = at(event['at_w'])
             # The hook is the intro: an entrance on the cut's first word lands on frame 0, so the first frame is the
             # hook in the brand's dress, never a bare stage waiting for the first syllable (Krish, 2026-11-03: "We
-            # fucking have standards for intro, background audio and outro").
-            if index == 0 and event['verb'] == 'enter' and event['at_w'] == beat['span']['from_w']:
+            # fucking have standards for intro, background audio and outro"). Text typed on that word is typed by then
+            # too (the renderer lands frame-0 entrances and typing whole, ve-thu-9).
+            if index == 0 and event['verb'] in ('enter', 'type') and event['at_w'] == beat['span']['from_w']:
                 event_frame = 0
             if not start <= event_frame < end:
                 raise ValueError(f'event outside beat {beat["id"]}')

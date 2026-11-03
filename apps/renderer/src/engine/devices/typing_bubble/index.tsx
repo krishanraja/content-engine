@@ -1,10 +1,9 @@
 import React from 'react'
 import { HOUSE_FONTS } from '../../../house/geometry'
-import { EXIT, MOTION, drift, progress, stateAt } from '../../clock'
+import { EXIT, MOTION, drift, progress, stateAt, typingProgress } from '../../clock'
 import type { DeviceProps } from '../types'
 import { ParamsSchema } from './schema'
 
-const linear = (t: number) => t
 export function bubbleState({ object, events, frame }: Pick<DeviceProps, 'object' | 'events' | 'frame'>) {
   const params = ParamsSchema.parse(object.params)
   const fired = stateAt(events, object.obj, frame).fired
@@ -32,9 +31,9 @@ export function bubbleState({ object, events, frame }: Pick<DeviceProps, 'object
       const end = Math.min(object.toFrame, ...events.filter(e => e.obj === object.obj && e.atFrame > cue.atFrame).map(e => e.atFrame))
       const span = Math.max(1, end - cue.atFrame)
       const lead = params.kind === 'chat' ? Math.min(MOTION.staggerFrames, span / 4) : 0
-      const p = progress(frame - cue.atFrame - lead, Math.max(1, span - lead), linear)
+      const p = typingProgress(frame, cue, Math.max(1, span - lead), lead)
       return { ...row, text: Array.from(row.text).slice(0, Math.floor(Array.from(row.text).length * p)).join(''),
-        visible: true, dots: frame < cue.atFrame + lead }
+        visible: true, dots: p < 1 && frame < cue.atFrame + lead }
     }),
   }
 }
