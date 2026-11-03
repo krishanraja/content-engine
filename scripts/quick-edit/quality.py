@@ -182,6 +182,8 @@ def delivery_problems(video, receipt, target=None):
             return ['video validation receipt belongs to different bytes']
         if target is not None and report.get('library_path') != target:
             return ['video validation receipt names a different library destination']
+        if report.get('kind') == 'social_clip':
+            return social_clip_problems(report, target)
         required = ('heard','sync','loudness','visuals','full_review')
         # A check either ran and wrote what it measured, or the receipt names it under `missing` with the reason
         # (plan W2.4): no receipt carries a placeholder status, and a missing check holds the cut.
@@ -211,6 +213,28 @@ def delivery_problems(video, receipt, target=None):
         return problems + motion_problems(report) + visual_clarity.delivery_problems(report, Path(receipt).parent, video) + (media_standard.check('delivery', video, report.get('piece_id')) if media_standard.enforced() else [])
     except (OSError, ValueError, TypeError, AttributeError):
         return ['video validation receipt cannot be read']
+
+
+SOCIAL_CLIP_CHECKS = ('heard', 'loudness', 'visuals', 'full_review', 'source', 'approval')
+
+
+def social_clip_problems(report, target=None):
+    """A social clip for an off-day post: someone else's footage under Krish's caption (the translator meme, Tue
+    3 Nov), not a cut of his recorded words. The words, joins, opening and lip-sync gates measure his takes and do
+    not apply; each check that does apply must have run and passed, the source must be named, and the approval must
+    be his own words. Only an off-day post takes one (Krish, 2026-11-03: "put the translator video in Drive FFS")."""
+    path = target or report.get('library_path') or ''
+    if ' off.day - ' not in path:
+        return ['a social clip receipt files only into an off-day post']
+    checks = report.get('checks', {})
+    problems = [f'{key} is missing' if key not in checks else f'{key} is not passed'
+                for key in SOCIAL_CLIP_CHECKS if checks.get(key, {}).get('status') != 'pass']
+    if not str(checks.get('source', {}).get('name', '')).strip():
+        problems.append('source names no original')
+    words = checks.get('approval', {})
+    if not str(words.get('krish_words', '')).strip() or not words.get('where'):
+        problems.append('approval carries no words of Krish and where he said them')
+    return problems
 
 
 def cut_gate_problems(report, target=None):

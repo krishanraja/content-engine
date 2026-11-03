@@ -142,7 +142,7 @@
     },
     {
       "fromFrame": 176,
-      "toFrame": 257,
+      "toFrame": 240,
       "words": [
         {
           "text": "Awesome,",
@@ -159,18 +159,18 @@
         {
           "text": "features",
           "atFrame": 217
-        },
-        {
-          "text": "and",
-          "atFrame": 240
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 257,
-      "toFrame": 307,
+      "fromFrame": 240,
+      "toFrame": 295,
       "words": [
+        {
+          "text": "and",
+          "atFrame": 240
+        },
         {
           "text": "really",
           "atFrame": 257
@@ -178,7 +178,14 @@
         {
           "text": "helpful",
           "atFrame": 268
-        },
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 295,
+      "toFrame": 325,
+      "words": [
         {
           "text": "but",
           "atFrame": 295
@@ -190,14 +197,7 @@
         {
           "text": "bit",
           "atFrame": 301
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 307,
-      "toFrame": 331,
-      "words": [
+        },
         {
           "text": "dangerous",
           "atFrame": 307
@@ -205,18 +205,18 @@
         {
           "text": "because",
           "atFrame": 319
-        },
+        }
+      ],
+      "swipeIndex": 3
+    },
+    {
+      "fromFrame": 325,
+      "toFrame": 366,
+      "words": [
         {
           "text": "once",
           "atFrame": 325
-        }
-      ],
-      "swipeIndex": 0
-    },
-    {
-      "fromFrame": 331,
-      "toFrame": 366,
-      "words": [
+        },
         {
           "text": "they're",
           "atFrame": 331
@@ -299,7 +299,7 @@
     },
     {
       "fromFrame": 504,
-      "toFrame": 528,
+      "toFrame": 532,
       "words": [
         {
           "text": "it",
@@ -308,18 +308,18 @@
         {
           "text": "can",
           "atFrame": 509
+        },
+        {
+          "text": "get",
+          "atFrame": 528
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 528,
+      "fromFrame": 532,
       "toFrame": 553,
       "words": [
-        {
-          "text": "get",
-          "atFrame": 528
-        },
         {
           "text": "a",
           "atFrame": 532
@@ -333,7 +333,7 @@
           "atFrame": 539
         }
       ],
-      "swipeIndex": 3
+      "swipeIndex": 2
     },
     {
       "fromFrame": 553,
@@ -360,7 +360,7 @@
     },
     {
       "fromFrame": 589,
-      "toFrame": 609,
+      "toFrame": 625,
       "words": [
         {
           "text": "is",
@@ -373,29 +373,22 @@
         {
           "text": "no",
           "atFrame": 598
-        }
-      ],
-      "swipeIndex": 2
-    },
-    {
-      "fromFrame": 609,
-      "toFrame": 631,
-      "words": [
+        },
         {
           "text": "spending,",
           "atFrame": 609
-        },
+        }
+      ],
+      "swipeIndex": 3
+    },
+    {
+      "fromFrame": 625,
+      "toFrame": 646,
+      "words": [
         {
           "text": "no",
           "atFrame": 625
-        }
-      ],
-      "swipeIndex": 1
-    },
-    {
-      "fromFrame": 631,
-      "toFrame": 646,
-      "words": [
+        },
         {
           "text": "sending",
           "atFrame": 631
@@ -497,7 +490,7 @@
     },
     {
       "fromFrame": 764,
-      "toFrame": 789,
+      "toFrame": 783,
       "words": [
         {
           "text": "And",
@@ -514,18 +507,18 @@
         {
           "text": "part",
           "atFrame": 776
-        },
-        {
-          "text": "is",
-          "atFrame": 783
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 789,
-      "toFrame": 824,
+      "fromFrame": 783,
+      "toFrame": 810,
       "words": [
+        {
+          "text": "is",
+          "atFrame": 783
+        },
         {
           "text": "I",
           "atFrame": 789
@@ -537,7 +530,14 @@
         {
           "text": "even",
           "atFrame": 796
-        },
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 810,
+      "toFrame": 848,
+      "words": [
         {
           "text": "write",
           "atFrame": 810
@@ -545,18 +545,18 @@
         {
           "text": "this",
           "atFrame": 818
+        },
+        {
+          "text": "myself.",
+          "atFrame": 824
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 824,
-      "toFrame": 861,
+      "fromFrame": 848,
+      "toFrame": 875,
       "words": [
-        {
-          "text": "myself.",
-          "atFrame": 824
-        },
         {
           "text": "I",
           "atFrame": 848
@@ -568,14 +568,7 @@
         {
           "text": "put",
           "atFrame": 854
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 861,
-      "toFrame": 894,
-      "words": [
+        },
         {
           "text": "one",
           "atFrame": 861
@@ -583,7 +576,14 @@
         {
           "text": "prompt",
           "atFrame": 866
-        },
+        }
+      ],
+      "swipeIndex": 4
+    },
+    {
+      "fromFrame": 875,
+      "toFrame": 894,
+      "words": [
         {
           "text": "into",
           "atFrame": 875
@@ -597,7 +597,7 @@
           "atFrame": 885
         }
       ],
-      "swipeIndex": 1
+      "swipeIndex": null
     },
     {
       "fromFrame": 894,
@@ -647,7 +647,7 @@
     },
     {
       "fromFrame": 953,
-      "toFrame": 991,
+      "toFrame": 984,
       "words": [
         {
           "text": "then",
@@ -664,18 +664,18 @@
         {
           "text": "itself",
           "atFrame": 975
-        },
-        {
-          "text": "down",
-          "atFrame": 984
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 991,
+      "fromFrame": 984,
       "toFrame": 1002,
       "words": [
+        {
+          "text": "down",
+          "atFrame": 984
+        },
         {
           "text": "or",
           "atFrame": 991
@@ -689,7 +689,7 @@
     },
     {
       "fromFrame": 1002,
-      "toFrame": 1021,
+      "toFrame": 1018,
       "words": [
         {
           "text": "you",
@@ -706,22 +706,29 @@
         {
           "text": "lock",
           "atFrame": 1014
-        },
-        {
-          "text": "it",
-          "atFrame": 1018
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 1021,
-      "toFrame": 1085,
+      "fromFrame": 1018,
+      "toFrame": 1040,
       "words": [
+        {
+          "text": "it",
+          "atFrame": 1018
+        },
         {
           "text": "down.",
           "atFrame": 1021
-        },
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1040,
+      "toFrame": 1085,
+      "words": [
         {
           "text": "Prompt's",
           "atFrame": 1040
@@ -1045,10 +1052,10 @@
         "mood": "proud",
         "place": {
           "left": 66,
-          "top": 426,
+          "top": 477,
           "width": 900,
           "height": 1100,
-          "scale": 0.8
+          "scale": 0.6
         }
       }
     },
@@ -1131,7 +1138,14 @@
           {
             "id": "Google"
           }
-        ]
+        ],
+        "place": {
+          "left": -120,
+          "top": 260,
+          "width": 960,
+          "height": 520,
+          "scale": 1.45
+        }
       }
     },
     {
@@ -1146,10 +1160,10 @@
         "seed": "fwp",
         "shape": "loop",
         "target": {
-          "x": 420,
-          "y": 220,
-          "w": 240,
-          "h": 240
+          "x": 400,
+          "y": 460,
+          "w": 350,
+          "h": 350
         }
       }
     },
@@ -1283,10 +1297,10 @@
         ],
         "place": {
           "left": 139,
-          "top": 52,
+          "top": 100,
           "width": 920,
           "height": 100,
-          "scale": 0.95
+          "scale": 0.9
         }
       }
     }
@@ -1323,7 +1337,7 @@
     {
       "id": "hook-4",
       "obj": "buddy",
-      "verb": "bounce",
+      "verb": "wave",
       "toState": "proud",
       "atFrame": 128
     },
@@ -1353,6 +1367,13 @@
       "obj": "logos",
       "verb": "highlight",
       "toState": "2",
+      "atFrame": 458
+    },
+    {
+      "id": "proof-4",
+      "obj": "amazon_loop",
+      "verb": "exit",
+      "toState": "gone",
       "atFrame": 458
     },
     {
@@ -1506,7 +1527,7 @@
       "id": "close-3",
       "obj": "buddy_rule",
       "verb": "wave",
-      "toState": "cool",
+      "toState": "sulk",
       "atFrame": 1201
     }
   ],
