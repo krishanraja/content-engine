@@ -435,6 +435,13 @@
        "verb": "draw",
        "to_state": "Amazon",
        "silent": true
+      },
+      {
+       "at_w": 38,
+       "obj": "logos",
+       "verb": "highlight",
+       "to_state": "2",
+       "silent": true
       }
      ]
     },
@@ -579,6 +586,7 @@
      "uses": [
       "slab_spend",
       "slab_send",
+      "tick",
       "ask"
      ],
      "events": [
@@ -592,6 +600,13 @@
       {
        "at_w": 92,
        "obj": "slab_send",
+       "verb": "exit",
+       "to_state": "gone",
+       "silent": true
+      },
+      {
+       "at_w": 92,
+       "obj": "tick",
        "verb": "exit",
        "to_state": "gone",
        "silent": true

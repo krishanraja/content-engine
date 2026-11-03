@@ -182,4 +182,19 @@ def composition_checks(video, props, lock) -> dict:
                 exempt += [(0, split_seam(), 1080, y - split_seam()), (0, y + h, 1080, 1920 - (y + h))]
         rows[beat['id']] = measure(image, beat_lock, caption_words=allowed, exempt=exempt)
         rows[beat['id']]['frame'] = at
+    ending = props.get('ending')
+    if ending and ending.get('fromFrame', props.get('durationFrames', 0)) < props.get('durationFrames', 0):
+        # The ending band closes every whole cut and no beat's key frame falls inside it (Thursday 5 Nov: the close
+        # beat was sampled at 1273, the band runs 1320 to 1425), so it is measured on its own, at its middle.
+        start, end = ending['fromFrame'], props['durationFrames']
+        image, at = _frame(video, {'fromFrame': start, 'toFrame': end, 'keyFrame': (start + end) // 2})
+        row = measure(image, lock, caption_words=set())
+        # The band is the house's designed close: a dark panel (fill does not apply) with no captions under it (its
+        # url sits where captions would). It answers for its type: size, platform zone and edges.
+        held = ('small_text', 'platform_zone', 'edges')
+        row['checks'] = {name: row['checks'][name] for name in held}
+        row['findings'] = [f for f in row['findings'] if f.split(' ', 1)[0] in held]
+        row['pass'] = all(check['pass'] for check in row['checks'].values())
+        row['frame'] = at
+        rows['ending'] = row
     return {'applies': True, 'pass': bool(rows) and all(row['pass'] for row in rows.values()), 'beats': rows}
