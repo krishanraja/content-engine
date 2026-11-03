@@ -17,6 +17,17 @@ const BUCKET = 'content-library'
 const TTL = 300
 const scalar = (v: unknown) => typeof v === 'string' ? v : ''
 const weekDate = (v: string | Date) => (v instanceof Date ? v.toISOString() : v).slice(0, 10)
+/** The board page's content security policy. A board picture or video is served at /api/board/<week>/assets/<id>,
+ *  which redirects to a signed link on the engine's file store, so img-src and media-src name that store's origin
+ *  too: without it every image on the board is blocked (Krish, 2026-11-03, of the Saturday mock: "Permanently ensure
+ *  the publish board doesn't look as stupid and shitty as this when a carousel is complete"). Nothing else widens. */
+export function boardPolicy(storeUrl?: string) {
+  let store = ''
+  try { const u = new URL(storeUrl || ''); if (u.protocol === 'https:') store = ' ' + u.origin } catch { /* no store: same-site only */ }
+  return "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+    + `img-src 'self' data: blob:${store}; media-src 'self' blob:${store}; connect-src 'self'; font-src 'self' data: https://fonts.gstatic.com; `
+    + "object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'"
+}
 class BoardError extends Error { constructor(public status: number, message: string) { super(message) } }
 function must(result: { error?: unknown }) { if (result.error) throw new BoardError(503, 'board_store_unavailable') }
 
@@ -306,7 +317,7 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         if (!upstream.ok || !upstream.body) throw new BoardError(503, 'board_html_unavailable')
         res.setHeader('Content-Type', 'text/html; charset=utf-8')
         res.setHeader('X-Frame-Options', 'DENY')
-        res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob:; connect-src 'self'; font-src 'self' data: https://fonts.gstatic.com; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'")
+        res.setHeader('Content-Security-Policy', boardPolicy(process.env.SUPABASE_URL))
         res.setHeader('X-Board-Build', state.build_id)
         res.status(200)
         await pipeline(Readable.fromWeb(upstream.body as Parameters<typeof Readable.fromWeb>[0]), res)

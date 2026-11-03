@@ -1562,6 +1562,10 @@ OFF_FRAMES = (1, 12)
 OFF_PITCH = ('see', 'lands', 'why_now', 'share')
 OFF_DIRECTION = ('look', 'format', 'tone', 'kit', 'inspo_url')
 OFF_SIDES = ('idea', 'direction', 'mock')
+OFF_SLIDES = (1, 20)
+DRIVE_FOLDER = re.compile(r'^https://drive\.google\.com/drive/(?:u/\d/)?folders/[A-Za-z0-9_-]{10,}(?:\?[^\s"<>]*)?$')
+# The finished-asset fields an off-day option may carry (off_rich), shown inline on its card and on its day's tab.
+OFF_ASSET_KEYS = ('mock', 'slides', 'video', 'drive', 'download')
 
 
 def _line(v, cap):
@@ -1646,6 +1650,30 @@ def off_rich(o, problems, label):
             problems.append(f'{label}: download is {{"url" (https, the finished file), "label"}}')
         else:
             row['download'] = {'url': download['url'], 'label': _line(download['label'], 120)}
+    # The finished asset shown on the board itself (Ruling, Krish, 2026-11-03: "I should be able to see the assets directly
+    # in the publish board or have a link to the Google Drive where the assets are. I shouldn't have to download a fucking
+    # zip and then look at it that way"): every slide as its own picture, or the video to play, and the Drive folder.
+    slides = o.get('slides')
+    if slides is not None:
+        if (not isinstance(slides, list) or not OFF_SLIDES[0] <= len(slides) <= OFF_SLIDES[1]
+                or not all(isinstance(x, dict) and not set(x) - {'url', 'label'} and str(x.get('url') or '').startswith('https://')
+                           for x in slides)):
+            problems.append(f'{label}: slides is [{{"url" (https, one finished slide), "label"}}], {OFF_SLIDES[0]} to {OFF_SLIDES[1]} of them, in order')
+        else:
+            row['slides'] = [{'url': x['url'], 'label': _line(x.get('label'), 120) or f'Slide {i}'} for i, x in enumerate(slides, 1)]
+    video = o.get('video')
+    if video is not None:
+        if (not isinstance(video, dict) or set(video) - {'url', 'poster'} or not str(video.get('url') or '').startswith('https://')
+                or (video.get('poster') and not str(video['poster']).startswith('https://'))):
+            problems.append(f'{label}: video is {{"url" (https, the finished video), "poster" (https)}}')
+        else:
+            row['video'] = {'url': video['url'], 'poster': video.get('poster') or None}
+    drive = o.get('drive')
+    if drive is not None:
+        if not isinstance(drive, str) or not DRIVE_FOLDER.match(drive):
+            problems.append(f'{label}: drive is the https://drive.google.com/drive/folders/... link to the asset\'s folder')
+        else:
+            row['drive'] = drive
     return {k: v for k, v in row.items() if v is not None}
 
 
@@ -1657,7 +1685,12 @@ def side_sha(o, side):
     elif side == 'direction':
         shown = o.get('direction') or {}
     else:
-        shown = o.get('mock') or {}
+        shown = dict(o.get('mock') or {})
+        # His Approve on the mock covers every slide and the video he saw, so a re-render reads as a new mock to judge.
+        if o.get('slides'):
+            shown['slides'] = [x['url'] for x in o['slides']]
+        if o.get('video'):
+            shown['video'] = o['video']['url']
     return hashlib.sha256(json.dumps(shown, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
 
 
@@ -1734,8 +1767,11 @@ def read_offdays(data, where='ideas.json offdays', whole=False):
                                         ('pitch.lands', (row.get('pitch') or {}).get('lands')), ('direction', row.get('direction'))) if not ok]
                 if gaps:
                     problems.append(f'{weekday} option {n}: no {", ".join(gaps)}; he judges an option by these')
+            if (row.get('slides') or row.get('video')) and not row.get('drive'):
+                problems.append(f'{weekday} option {n}: a finished asset on the board carries its Drive folder (drive), '
+                                'so he can open it there too (Ruling, Krish, 2026-11-03)')
             for side in OFF_SIDES:
-                if side != 'mock' or row.get('mock'):
+                if side != 'mock' or finished(row):
                     row[f'{side}_sha256'] = side_sha(row, side)
             if o.get('kind') == 'recorded' and key not in {k for k, *_ in OFF_DAYS}:
                 problems.append(f'{weekday} option {n}: a piece he records is a Tuesday, Thursday, Saturday or Sunday piece')
@@ -1841,7 +1877,7 @@ def read_growth_offdays(data, monday, where='--offdays-plan'):
                      'copy': o.get('draft'), 'share_line': o.get('share_line'),
                      'needs': list(o.get('needs') or []) + ([] if o.get('ready') else ['not ready yet'] if not o.get('needs') else []),
                      # The rich fields ride through as Growth wrote them (Ruling, Krish, 2026-11-01), never flattened into the copy.
-                     **{k: o[k] for k in ('hook', 'pitch', 'cards', 'inspiration', 'learned_from', 'direction', 'ties_to', 'recommended', 'revised', 'mock', 'download', 'closed')
+                     **{k: o[k] for k in ('hook', 'pitch', 'cards', 'inspiration', 'learned_from', 'direction', 'ties_to', 'recommended', 'revised', 'mock', 'slides', 'video', 'drive', 'download', 'closed')
                         if o.get(k) is not None}}
                     for o in opts]
     return out, warnings
@@ -1851,7 +1887,7 @@ def previous_option(o):
     """An off-day option as the previous board kept it, back in the shape read_offdays takes."""
     row = {'id': o['id'], 'format': o['format'], 'source': {'label': o['source'], 'url': o.get('url')} if o.get('url') else o['source'], 'copy': o['copy']}
     for k in ('covers', 'kind', 'style', 'piece_id', 'series', 'title', 'script', 'share_line', 'needs', 'cards',
-              'hook', 'pitch', 'inspiration', 'learned_from', 'direction', 'ties_to', 'recommended', 'revised', 'mock', 'download',
+              'hook', 'pitch', 'inspiration', 'learned_from', 'direction', 'ties_to', 'recommended', 'revised', 'mock', 'slides', 'video', 'drive', 'download',
               'stories', 'weekly', 'stories_due', 'closed'):
         if o.get(k) is not None:
             row[k] = o[k]
@@ -1991,14 +2027,12 @@ def off_option_card(monday, key, when, o):
                      + (f'<span class="dir-f">{E(d["format"])}</span>' if d.get('format') else '') + '</div>'
                      + (f'<div class="frames">{frames}</div>' if frames else '') + f'<dl class="dl">{dl}</dl></div>')
     mock = ''
-    if o.get('mock'):
-        m = o['mock']
-        mock = (f'<div class="mockback"><img src="{E(m["url"])}" alt="The mock Growth made" loading="lazy">'
+    if finished(o):
+        m = o.get('mock') or {}
+        mock = (f'<div class="mockback">{asset_view(o)}'
                 f'<div><p class="row"><span class="id-why-k">Mock back</span> {E(m.get("note") or "Made in the brand kit from the direction you approved.")}</p>'
                 + off_press_row(did, 'mock', 'The mock') + '</div></div>')
-    if o.get('download'):
-        dl_file = o['download']
-        mock += (f'<p class="row"><a class="btn-s" href="{E(dl_file["url"])}" download>Download: {E(dl_file["label"])}</a></p>')
+    mock += asset_links(o)
     # What his Approve on the idea hands Growth: exactly the object its hash is taken over (side_sha), the copy and the
     # cards included, so the words he approved are the words that get made.
     shown = {'copy': o.get('copy'), 'hook': o.get('hook'), 'pitch': o.get('pitch'), 'cards': o.get('cards')}
@@ -2032,6 +2066,82 @@ def off_option_card(monday, key, when, o):
               f'placeholder="Anything on this option: feedback, the exact text to put on it, what to change" disabled></textarea>'
               f'<button type="button" class="btn-s" data-act="offfree" data-for="{E(did)}" disabled>Save</button></div>'
             + f'<p class="tri-state" data-offstate="{E(did)}" aria-live="polite"></p></article>')
+
+
+def finished(o):
+    """Whether an off-day option carries a finished asset he judges: the mock, its slides or its video."""
+    return bool(o.get('mock') or o.get('slides') or o.get('video'))
+
+
+def asset_view(o):
+    """The finished asset itself, seen on the board (Ruling, Krish, 2026-11-03: "I should be able to see the assets
+    directly in the publish board"): every slide as its own picture, in order, each opening full size; the video to
+    play; else the one mock picture."""
+    out = ''
+    if o.get('slides'):
+        out += ('<ol class="off-slides" aria-label="Every slide, in order">' + ''.join(
+            f'<li><a href="{E(x["url"])}" target="_blank" rel="noopener"><img src="{E(x["url"])}" alt="{E(x["label"])}" '
+            f'loading="lazy"></a><span class="off-slide-n">{i}</span></li>' for i, x in enumerate(o['slides'], 1)) + '</ol>')
+    if o.get('video'):
+        v = o['video']
+        out += (f'<video class="off-video" controls playsinline preload="metadata" src="{E(v["url"])}"'
+                + (f' poster="{E(v["poster"])}"' if v.get('poster') else '') + '></video>')
+    if not out and o.get('mock'):
+        out = f'<img src="{E(o["mock"]["url"])}" alt="The mock Growth made" loading="lazy">'
+    return out
+
+
+def asset_links(o):
+    """Open in Drive first, the folder the asset is filed in; the download after it, never the only way to see it."""
+    links = ''
+    if o.get('drive'):
+        links += f'<a class="btn-s" href="{E(o["drive"])}" target="_blank" rel="noopener" data-drive="1">Open in Drive</a>'
+    if o.get('download'):
+        dl = o['download']
+        links += f'<a class="lnk-s" href="{E(dl["url"])}" download>Download: {E(dl["label"])}</a>'
+    return f'<p class="row off-links">{links}</p>' if links else ''
+
+
+# The off days that get their own tab once a finished asset is on the board (Ruling, Krish, 2026-11-03: "I should also see
+# Saturday on this inside the top navigation bar. I should see Tuesday and Thursday with the approved assets in all
+# published boards moving forward in the future"), between the series days in calendar order. Sunday stays off
+# (Ruling, Krish, 2026-11-02).
+OFF_TABS = {'tue': 'tuesday', 'thu': 'thursday', 'sat': 'saturday'}
+TAB_ORDER = ('today', 'ideas', 'queue', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'archive')
+
+
+def offday_tab_options(offdays, key):
+    """A day's options that carry a finished asset to see: open (not closed), with slides or a video."""
+    return [o for o in (offdays or {}).get(key) or [] if not o.get('closed') and (o.get('slides') or o.get('video'))]
+
+
+def offday_tab(monday, key, opts, hidden):
+    """(tab, panel) for an off day with finished assets: each asset seen in full, its Drive folder, its download, and
+    his presses on it (the same presses as its card on the Ideas tab, saved to the same record)."""
+    name = OFF_TABS[key]
+    weekday, offset = next((w, off) for k, w, off in OFF_DAYS if k == key)
+    when = monday + timedelta(days=offset)
+    items = []
+    for o in opts:
+        did = f'off-{key}-{o["id"]}'
+        m = o.get('mock') or {}
+        items.append(
+            f'<div class="off-asset" id="asset-{E(did)}" data-asset-for="{E(did)}"><div class="id-flags">'
+            f'<span class="id-flag">{E(KIND_LABEL.get(off_kind(o), "Post"))}</span></div>'
+            f'<h3 class="hook">{E(o.get("hook") or off_title(o))}</h3>'
+            + (f'<p class="off-lead">{E(m["note"])}</p>' if m.get('note') else '')
+            + asset_view(o) + asset_links(o) + off_press_row(did, 'mock', 'The finished asset')
+            + f'<p class="id-how"><a href="#{E(did)}">Its idea, direction and your words are on the Ideas tab</a></p>'
+            + f'<p class="tri-state" data-offstate-tab="{E(did)}" aria-live="polite"></p></div>')
+    n = len(opts)
+    tab = (f'<button type="button" role="tab" id="tab-{name}" aria-controls="panel-{name}" aria-selected="false" tabindex="-1" '
+           f'data-day="{name}"><span class="t-day"><span class="t-wd">{when.strftime("%a")}</span> '
+           f'<span class="t-dm">{when.day} {when.strftime("%b")}</span></span><span class="t-dot"> · </span>'
+           f'<span class="t-prog" data-tabprog="{name}">{n} asset{"s" if n != 1 else ""}</span><span class="t-ch">Off day</span></button>')
+    panel = (f'<div class="pm fixed" id="panel-{name}" role="tabpanel" aria-labelledby="tab-{name}" data-day="{name}" '
+             f'data-off-tab="{key}" tabindex="-1"{" hidden" if hidden else ""}><div class="day-head"><div class="kick">'
+             f'{E(weekday)} {when.day} {when.strftime("%B")} · off day</div><h1>The finished assets</h1></div>' + ''.join(items) + '</div>')
+    return tab, panel
 
 
 def stories_block(o):
@@ -3784,7 +3894,17 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
             f'<span class="t-day">Ideas</span><span class="t-dot"> · </span>'
             f'<span class="t-prog" data-tabprog="ideas">pick {n}</span><span class="t-ch">Sunday</span></button>')
     verdicts = picked_titles()  # his title picks, the title of record where the engine has none yet
+    # The off days with a finished asset, each its own tab between the series days (Ruling, Krish, 2026-11-03).
+    off_tabs = [(off, k) for k, _, off in OFF_DAYS if FIXED and offday_tab_options(offdays, k)]
+
+    def add_off_tabs(before):
+        while off_tabs and off_tabs[0][0] < before:
+            k = off_tabs.pop(0)[1]
+            tab, panel = offday_tab(monday, k, offday_tab_options(offdays, k), True)
+            tabs.append(tab)
+            panels.append(panel)
     for key, name, weekday, offset, slug, series_label in DAYS:
+        add_off_tabs(offset)
         when = monday + timedelta(days=offset)
         page = parsed.get(key)
         pick = dict(picks.get(key) or {})
@@ -3904,6 +4024,7 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
             'waiting': list(calls.get(key) or []) or None,
             'tick_ids': [f'{key}-{k}' for k, *_ in STEPS] if picked else [],
         })
+    add_off_tabs(7)
     if VERSION >= 3:
         # Layout v3: the Archive, last, with every piece since the Launch and his scores (W2.1).
         panels.append(archive_panel(archive, True))
@@ -4152,11 +4273,14 @@ def fixed_problems(page):
     today = bool(re.search(r'<main id="week" data-layout="\d+" data-today="1"', page))
     TABS = ((TODAY_TAB,) if today else ()) + TOP_TABS + ((ARCHIVE_TAB,) if version >= 3 else ())
     tabs = re.findall(r'<button type="button" role="tab" id="tab-([a-z]+)"', page)
-    if tuple(tabs) != TABS:
-        out.append(f'layout: the tabs are {tabs}, not {list(TABS)}')
+    # An off day with a finished asset is its own tab, in calendar order between the series days (Ruling, Krish, 2026-11-03).
+    offs = set(OFF_TABS.values())
+    want = [t for t in TAB_ORDER if t in TABS or (t in offs and t in tabs)]
+    if tabs != want or tuple(t for t in tabs if t not in offs) != TABS:
+        out.append(f'layout: the tabs are {tabs}, not {list(TABS)} with any off day in its place')
     panels = re.findall(r'<div class="(pm[^"]*)" id="panel-([a-z]+)"', page)
-    if tuple(n for _, n in panels) != TABS:
-        out.append(f'layout: the tab panels are {[n for _, n in panels]}, not {list(TABS)}')
+    if [n for _, n in panels] != tabs:
+        out.append(f'layout: the tab panels are {[n for _, n in panels]}, not {tabs}')
     if any(c != 'pm fixed' for c, _ in panels):
         out.append('layout: a tab not drawn in the fixed layout (a kept or hand-made panel)')
     if page.count('<style>') != 1:
@@ -4203,6 +4327,16 @@ def fixed_problems(page):
                 piece = re.search(r'data-piece="([^"]*)"', row)
                 if piece and UUID.match(piece.group(1)) and f'data-scores-piece="{piece.group(1)}"' not in row:
                     out.append(f'layout: an Archive row without its Scores press ({piece.group(1)})')
+            continue
+        if name in offs:
+            # An off day's tab: its heading, then each finished asset, seen on the board with its Drive folder.
+            if not kinds or kinds[0] != 'day-head' or len(kinds) < 2 or set(kinds[1:]) != {'off-asset'}:
+                out.append(f'layout: {name} holds {kinds}, not its heading and its finished assets')
+            for item in re.findall(r'<div class="off-asset".*?<p class="tri-state"', panel, re.S):
+                if not re.search(r'<(?:img|video)\b[^>]*\ssrc="(?:https://|/api/board/)', item):
+                    out.append(f'layout: an asset on {name} that cannot be seen on the board')
+                if not re.search(r'<a class="btn-s" href="https://drive\.google\.com/[^"]+"[^>]*>Open in Drive</a>', item):
+                    out.append(f'layout: an asset on {name} without its Open in Drive link')
             continue
         if name in ('ideas', 'queue'):
             if not kinds or kinds[0] != 'day-head':
@@ -5192,7 +5326,37 @@ def _growth_offday_checks(check, week, ideas):
           and 'arrive by' in ideas_waiting_panel(week, False, {}))
     dl_page = board(week, ideas=ideas, offdays=read_offdays({'tue': [dict(rich, download={'url': 'https://board.asset/v.mp4', 'label': 'the video'}), plain]}))[0]
     check('off-day option: a finished file is a Download link on its card',
-          '<a class="btn-s" href="https://board.asset/v.mp4" download>Download: the video</a>' in dl_page and verify(dl_page) == [])
+          '<a class="lnk-s" href="https://board.asset/v.mp4" download>Download: the video</a>' in dl_page and verify(dl_page) == [])
+    # Ruling (Krish, 2026-11-03): the finished asset is seen on the board, each slide as a picture or the video to play,
+    # with Open in Drive; the zip stays a secondary link; each off day with one gets its own tab between the series days.
+    drive = 'https://drive.google.com/drive/folders/1AbCdEfGhIjKlMnOp'
+    slides = [{'url': f'https://board.asset/s{i}.jpg', 'label': f'Card {i}'} for i in range(1, 8)]
+    sat = dict(rich, id='goodnews', mock={'url': 'https://board.asset/s1.jpg', 'note': 'Remade'}, slides=slides, drive=drive,
+               download={'url': 'https://board.asset/all.zip', 'label': 'the seven cards (zip)'})
+    tue = dict(rich, id='translator', video={'url': 'https://board.asset/t.mp4', 'poster': 'https://board.asset/t.jpg'}, drive=drive)
+    fin = read_offdays({'tue': [tue, plain], 'sat': [sat, plain]})
+    fin_page = board(week, ideas=ideas, offdays=fin)[0]
+    fin_tabs = re.findall(r'role="tab" id="tab-([a-z]+)"', fin_page)
+    check('off-day asset: every slide shows as its own picture, in order, with Open in Drive before the zip',
+          all(f'<img src="https://board.asset/s{i}.jpg" alt="Card {i}"' in fin_page for i in range(1, 8))
+          and fin_page.index('>Open in Drive</a>') < fin_page.index('>Download: the seven cards (zip)</a>')
+          and verify(fin_page) == [])
+    check('off-day asset: a finished video plays on the board',
+          '<video class="off-video" controls playsinline preload="metadata" src="https://board.asset/t.mp4" poster="https://board.asset/t.jpg">' in fin_page)
+    check('off-day asset: Tuesday and Saturday get their own tabs between the series days; Thursday, with none, does not',
+          [t for t in fin_tabs if t not in ('today', 'archive')] == ['ideas', 'queue', 'monday', 'tuesday', 'wednesday', 'friday', 'saturday']
+          and 'id="panel-saturday"' in fin_page and 'thursday' not in fin_tabs)
+    check('off-day asset: its day\'s tab carries the same presses as its card, bound to the whole finished set',
+          fin_page.count('data-act="offpress" data-side="mock" data-value="approve" data-for="off-sat-goodnews"') == 2
+          and fin['sat'][0]['mock_sha256'] != side_sha({'mock': sat['mock']}, 'mock'))
+    try:
+        read_offdays({'sat': [dict(sat, drive=None), plain]})
+        check('off-day asset: slides without their Drive folder are refused', False)
+    except BoardError as error:
+        check('off-day asset: slides without their Drive folder are refused', 'Drive folder' in str(error))
+    bare = fin_page.replace(f'<a class="btn-s" href="{drive}" target="_blank" rel="noopener" data-drive="1">Open in Drive</a>', '')
+    check('off-day asset: verify refuses a day tab asset without Open in Drive',
+          any('without its Open in Drive link' in x for x in fixed_problems(bare)))
     model = today_model(week, {}, {}, {}, six, {})
     check('off-day ask: one Needs you row opens the Off days, counting the options to judge',
           any(a['href'] == '#ideas-offdays' and a['detail'] == '6 options to judge' for a in model['asks']))

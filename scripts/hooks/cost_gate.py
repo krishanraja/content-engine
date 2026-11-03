@@ -6,8 +6,8 @@ cost outlays." One six-day session read 1,086M tokens because every step re-read
 (docs/COST_AUDIT_2026-10-18.md). A rule in a document can be skipped; this hook cannot. Exit 2 blocks a tool call
 and tells the session why. Wired in .claude/settings.json.
 
-G1  context nudge: past 500k tokens of context each prompt is told to write its handover and start a fresh session.
-    It only advises; nothing is refused for the size of the context.
+G1  removed (Ruling, Krish, 2026-11-03: "Remove that stupid fucking limit as well. You waste my life whinging about
+    limits when you're only at 52% context"): no context nudge, no handover prompt; a session finishes its job.
 G5  no full board in the chat: an `Artifact read` of a week's board link (config/boards.json) is refused; the
     builder reads the saved copy (`week_board.py --previous`).
 G6  agents and workflows only for work that needs a separate reader: an Agent prompt must say what the separate
@@ -22,37 +22,9 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-WARN = 500_000
-TAIL_BYTES = 4_000_000
 
 # Database tools are never refused, whatever any rule below says (Krish, 2026-10-18).
 NEVER_BLOCKED = re.compile(r'^(mcp__[Ss]upabase__|ArtifactData$)')
-
-
-def context_tokens(transcript_path):
-    """The context the last model call read: its input, cache reads and cache writes."""
-    try:
-        p = Path(transcript_path)
-        with p.open('rb') as f:
-            size = p.stat().st_size
-            f.seek(max(0, size - TAIL_BYTES))
-            lines = f.read().decode('utf-8', 'ignore').splitlines()
-    except (OSError, TypeError):
-        return 0
-    for line in reversed(lines):
-        if '"usage"' not in line:
-            continue
-        try:
-            e = json.loads(line)
-        except ValueError:
-            continue
-        if e.get('type') != 'assistant' or e.get('isSidechain'):
-            continue
-        u = (e.get('message') or {}).get('usage') or {}
-        n = sum(u.get(k) or 0 for k in ('input_tokens', 'cache_read_input_tokens', 'cache_creation_input_tokens'))
-        if n:
-            return n
-    return 0
 
 
 def board_links():
@@ -92,12 +64,7 @@ def main():
         return 0
     name = event.get('hook_event_name')
     if name == 'UserPromptSubmit':
-        n = context_tokens(event.get('transcript_path'))
-        if n >= WARN:
-            print(f'[cost guard G1] This session\'s context is {n // 1000}k tokens; every step re-reads all of it. '
-                  'Finish the step in hand, write the handover to '
-                  'docs/handovers/<date>-<job>.md, commit it, and tell Krish to start a fresh session from it.')
-        return 0
+        return 0  # G1 removed (Krish, 2026-11-03)
     if name != 'PreToolUse':
         return 0
     tool = event.get('tool_name') or ''

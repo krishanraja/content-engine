@@ -1084,7 +1084,8 @@ function offdayNoteParts(note){
   let qdb = null, mode = "loading";
   const SIDES = ["idea", "direction", "mock"];
   const ASK = { improve: "What would make it better?", reject: "Why not? (required, it is what the engine learns from)" };
-  const say = (id, msg, tone) => { const s = document.querySelector(`[data-offstate="${id}"]`); if (!s) return; s.textContent = msg; s.classList.toggle("bad", tone === "bad"); s.classList.toggle("wait", tone === "wait") };
+  // The card's state line, and the same line under the finished asset on its day's tab (Ruling, Krish, 2026-11-03).
+  const say = (id, msg, tone) => { for (const s of document.querySelectorAll(`[data-offstate="${id}"],[data-offstate-tab="${id}"]`)) { s.textContent = msg; s.classList.toggle("bad", tone === "bad"); s.classList.toggle("wait", tone === "wait") } };
   const sha = (c, side) => c.dataset[side + "Sha256"] || "";
   const has = (c, side) => side === "idea" || !!sha(c, side);
   const json = v => { try { return JSON.parse(v || "null") } catch { return null } };
@@ -1108,7 +1109,8 @@ function offdayNoteParts(note){
     const days = {};
     for (const c of cards) {
       const id = c.dataset.offday, day = c.dataset.offDay;
-      for (const b of c.querySelectorAll('[data-act="offpress"]')) {
+      // Its presses on the Ideas tab and on its day's tab are one record, so both show the same press.
+      for (const b of document.querySelectorAll(`[data-act="offpress"][data-for="${id}"]`)) {
         const v = side(id, c, b.dataset.side), on = !!v && v.verdict === b.dataset.value;
         b.setAttribute("aria-pressed", on ? "true" : "false");
         b.disabled = mode !== "live" || !!busy[id];
@@ -1201,6 +1203,8 @@ function offdayNoteParts(note){
       if (cur && cur.verdict === val) { delete asking[id + ":" + k]; save(c, body(c, k, null, null)); return }
       if (val === "improve" || val === "reject") {
         asking[id + ":" + k] = val; render();
+        // From a day's tab his words go in the card's box on the Ideas tab, where every reason is kept.
+        if (!c.contains(p)) { try { location.hash = id } catch {} }
         c.querySelector(`input[data-say-side="${k}"]`)?.focus(); return;
       }
       delete asking[id + ":" + k];
