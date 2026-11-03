@@ -3912,7 +3912,7 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 
 - `interface FWPMockProps`
 - `const FWP_SPLIT_SEAM_Y`
-- `const FWP_STAGE_SCALE`
+- `const FWP_MOCK_STAGE_SCALE`
 - `const FWP_SPLIT_CAPTION_ZONE`
 - `const FWP_POSTER_POSITIONS`
 - `const FWP_PLACEMENTS`

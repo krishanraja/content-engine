@@ -213,6 +213,16 @@ class ReferencesAreRequired(unittest.TestCase):
         self.assertNotIn('reference.required', codes_for(spec))
 
 
+class WordCaptionsByDefault(unittest.TestCase):
+    """Signed by Krish, 3 Nov 2026: word captions are the face-with-proof default."""
+
+    def test_face_with_proof_in_house_captions_is_refused_and_word_passes(self):
+        house = mutate(lambda s: (dated(s, [GEORGIA, JACK]), s.update(format='face-with-proof'), s['brand'].update(captions='house')))
+        word = mutate(lambda s: (dated(s, [GEORGIA, JACK]), s.update(format='face-with-proof'), s['brand'].update(captions='word')))
+        self.assertIn('captions.word_default', codes_for(house))
+        self.assertNotIn('captions.word_default', codes_for(word))
+
+
 class StampsNeverCarryTheHero(unittest.TestCase):
     def test_a_stamp_hero_is_refused(self):
         spec = mutate(lambda s: s['signature']['hero'].update(device='stamp'))

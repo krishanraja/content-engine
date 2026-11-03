@@ -154,7 +154,6 @@ class FileTest(unittest.TestCase):
         self.archive.mkdir()
         self.library = self.root / 'makeyourmindup'
         (self.library / '3 Posts').mkdir(parents=True)
-        (self.library / '4 Growth').mkdir(parents=True)
         self.ve = self.root / 'piece' / 've'
         self.ve.mkdir(parents=True)
         self.videos = {}
@@ -195,41 +194,18 @@ class FileTest(unittest.TestCase):
             for item in record['files']:
                 self.assertEqual(sha256_file(item['archive']), item['sha256'])
             self.assertTrue((self.ve / 'filed.json').is_file())
-            # The folder Krish opens: 4 Growth, named by Growth's rule, one folder per shape's channels.
-            tall = self.library / '4 Growth' / '2026-11-06 - Two passports - Instagram, TikTok, YouTube Shorts and X'
-            wide = self.library / '4 Growth' / '2026-11-06 - Two passports - YouTube'
-            for folder in (tall, wide):
-                self.assertEqual(len(list(folder.glob('*.mp4'))), 1, folder)
+            # Done means the 3 Posts copy reads back (Ruling, Krish, 2026-11-03: "everything ready for post goes in the
+            # posts folder, not the growth folder"); nothing is written anywhere else.
             for item in record['files']:
-                self.assertEqual(sha256_file(self.library / item['growth']), item['sha256'])
-                self.assertEqual(filing.delivered(record, self.library, item['cut'])[0], True)
-            (self.library / record['files'][0]['growth']).unlink()
+                self.assertTrue(filing.delivered(record, self.library, item['cut'])[0])
+            self.assertFalse((self.library / '4 Growth').exists())
+            (self.library / record['files'][0]['library']).unlink()
             there, why = filing.delivered(record, self.library, record['files'][0]['cut'])
             self.assertFalse(there)
             self.assertIn('missing from Drive', why)
             with self.assertRaises(ValueError):  # nothing is ever overwritten
                 filing.file(self.spec, self.ve, ['proof-tall'], subject='Two passports', when='2026-11-06',
                             archive_at=str(self.archive), library_at=str(self.library))
-
-    def test_refuses_a_library_without_4_growth(self):
-        (self.library / '4 Growth').rmdir()
-        with patch.object(packet, 'readiness', self.ready), self.assertRaises(ValueError) as caught:
-            filing.file(self.spec, self.ve, ['proof-tall'], subject='Two passports', when='2026-11-06',
-                        archive_at=str(self.archive), library_at=str(self.library))
-        self.assertIn('4 Growth', str(caught.exception))
-        self.assertEqual(list((self.library / '3 Posts').iterdir()), [])
-
-    def test_growth_only_adds_the_growth_copy_to_an_older_filing(self):
-        with patch.object(packet, 'readiness', self.ready):
-            record = filing.file(self.spec, self.ve, ['proof-tall'], subject='Two passports', when='2026-11-06',
-                                 archive_at=str(self.archive), library_at=str(self.library), today='2026-11-06')
-        (self.library / record['files'][0]['growth']).unlink()
-        for item in record['files']:
-            item.pop('growth')
-        (self.ve / 'filed.json').write_text(json.dumps(record), encoding='utf-8')
-        self.assertIn('not in 4 Growth', filing.delivered(record, self.library, 'proof-tall')[1])
-        again = filing.file_growth_only(self.ve, library_at=str(self.library))
-        self.assertTrue(filing.delivered(again, self.library, 'proof-tall')[0])
 
     def test_no_record_is_not_delivered(self):
         self.assertEqual(filing.delivered(None, self.library, 'proof-tall'), (False, 'not filed: run ve file'))
