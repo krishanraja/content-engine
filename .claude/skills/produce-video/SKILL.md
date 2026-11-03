@@ -688,8 +688,10 @@ make a feature for any other piece). What changes for it:
 
 Krish, 2026-10-12: "I always want a video thumbnail for all video sizes
 produced as an asset every time" (house rule THUMBNAIL_EVERY_SIZE): wide
-1280 x 720 for the long cut, tall 1080 x 1920 for the short cut, with his
-face and the real logos (LOGOS_AND_FACE), drawn from the piece's cover facts.
+1280 x 720 for the long cut, tall 1080 x 1920 for the short cut, as the
+Receipt (house rule THE_RECEIPT, Krish, 2026-11-02: "inviolable"): a real proof
+from one of the piece's checked sources ("proof" in the cover facts), the
+wordmark and the real logos, and never his face or a frame from a take.
 
 ```
 $env:MYMU_BROWSER = "msedge"     # Windows; in the cloud container: MYMU_BROWSER=/opt/pw-browsers/chromium-1194/chrome-linux/chrome
@@ -697,9 +699,9 @@ python scripts/pages/build.py docs/plans/PLAN/cover-facts.json --thumbs --out WO
 ```
 
 It writes `thumb-wide-1280x720.jpg`, `thumb-tall-1080x1920.jpg`,
-`thumbs.json` (each file's sha256, the portrait, the logos) and
-`thumbs-check.png`, both or neither. It needs the internet for Krish's
-portrait and the wordmark. Never pass `--assets`: the logo paths are
+`thumbs.json` (each file's sha256, the proof, the logos), both or neither.
+It needs the internet for the proof (it fetches the source PDF or page named in
+the facts) and the wordmark. Never pass `--assets`: the logo paths are
 relative to the facts file.
 
 - A plan keeps its real logos as SVG in `docs/plans/PLAN/logos/`, so any

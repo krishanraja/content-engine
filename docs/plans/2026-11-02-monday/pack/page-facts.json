@@ -8,18 +8,40 @@
  "comment_question": "WHO WILL BE YOUR SENIORS IN 2030?",
  "cover": {
   "headline": [
-   "CLAUDE IS EATING THE JOBS",
-   "OF ITS OWN HUMANS"
+   "Claude is eating the jobs",
+   "of its own humans"
   ],
-  "portrait": "../../../../.cache/pack/mon/portrait.jpg",
   "rows": [
    {
+    "name": "Claude",
+    "logo": "../../2026-11-04-wednesday/logos/claude.svg"
+   },
+   {
     "name": "Anthropic",
-    "logo": "../logos/anthropic-symbol-cream.svg",
-    "tag": "27% TO 9%",
-    "colour": "butter"
+    "logo": "../logos/anthropic-symbol-cream.svg"
    }
-  ]
+  ],
+  "proof": {
+   "pdf": {
+    "url": "https://www-cdn.anthropic.com/72628f1863c53432195db83279252dfd2cb53158/Employment%20at%20Anthropic.pdf",
+    "page": 4,
+    "crop": [
+     0.0967,
+     0.142,
+     0.5143,
+     0.4217
+    ]
+   },
+   "source": "s1",
+   "tag": "ANTHROPIC'S OWN DATA",
+   "ring": [
+    0.9,
+    0.5753,
+    1.0,
+    0.6733
+   ],
+   "alt": "Anthropic's own chart: the junior share of its technical hires falls to 9%"
+  }
  },
  "body": "../article.md",
  "endnote": "Figures checked on 31 October 2026 against the sources below.",

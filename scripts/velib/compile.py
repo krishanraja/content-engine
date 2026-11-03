@@ -114,35 +114,59 @@ def _held(rows: list[dict], end: int) -> bool:
     return rows[end]['atFrame'] - rows[end - 1]['atFrame'] >= LAST_WORD_HELD_FRAMES
 
 
+# Words a caption page should not end on: the reader is left mid-phrase (Thursday 5 Nov: "really helpful but a bit |
+# dangerous", "or tells | you how to lock it").
+_WEAK_ENDS = {'a', 'an', 'the', 'to', 'of', 'in', 'on', 'for', 'and', 'but', 'or', 'so', 'my', 'your', 'our', 'their',
+              'its', 'it', 'i', 'you', 'we', 'they', 'is', 'are', 'was', 'be', 'once', 'that', 'this', 'no', 'not',
+              'with', 'at', 'by', 'as', 'if', 'how', 'just', 'can', 'will'}
+_END = re.compile(r'[.!?]["\x27)\u2019\u201d]*$')
+_PAUSE = re.compile(r'[,.!?;:]["\x27)\u2019\u201d]*$')
+
+
+def _page_cost(rows: list[dict], start: int, n: int) -> int:
+    """How badly a page of rows[start:start+n] reads. Lower is better; every rule here is a reading, not a limit."""
+    page = rows[start:start + n]
+    last = re.sub(r'[^a-z\']', '', page[-1]['text'].lower())
+    cost = 0
+    if any(_END.search(r['text']) for r in page[:-1]):
+        cost += 6   # a page runs past the end of a sentence ("myself. I just put")
+    if start + n < len(rows) and not _PAUSE.search(page[-1]['text']) and last in _WEAK_ENDS:
+        cost += 4   # it ends mid-phrase on a small word
+    if any(_PAUSE.search(r['text']) for r in page[:-1]):
+        cost += 3   # a clause break inside the page ("Amazon for your groceries, Google")
+    if not _held(rows, start + n):
+        cost += 5   # its last word flips away before it can be read
+    if not _PAUSE.search(page[-1]['text']) and start + n < len(rows):
+        cost += 1   # a break at punctuation reads best
+    if n == 2:
+        cost += 1   # very short pages flicker
+    return cost
+
+
 def _caption_groups(rows: list[dict], aspect: str = '9:16', emphasis=()) -> list[list[dict]]:
-    """Fit 2-5 words per page, preferring punctuation without stranding orphans."""
+    """Fit 2-5 words per page, choosing the breaks that read best over the whole run, never stranding an orphan."""
     size, available = (54, 1316) if aspect == '16:9' else (68, 816)
     for row in rows:
         caption_line_count([row], aspect, emphasis)
-    # Suffix feasibility prevents greedy punctuation choices leaving an orphan.
-    choices = {len(rows): 0}
+    # best[start] = (cost, page length) for the rest of the run from start; the run's end costs nothing.
+    best = {len(rows): (0, 0)}
     for start in range(len(rows) - 1, -1, -1):
-        candidates = [n for n in range(2, min(5, len(rows) - start) + 1)
-                      if start + n in choices
-                      and sum(r['w'] in emphasis for r in rows[start:start + n]) <= 1
-                      and caption_line_count(rows[start:start + n], aspect, emphasis) <= 2]
-        # A page's last word is on screen long enough to read before the page flips, where another split allows it
-        # (Thursday 5 Nov: "one easy step so you" showed "you" for 2 frames before "can save yourself").
-        held = [n for n in candidates if _held(rows, start + n)]
-        candidates = held or candidates
-        punctuated = [n for n in candidates if re.search(r'[,.!?;:]["\x27)\u2019\u201d]*$', rows[start + n - 1]['text'])]
-        if candidates:
-            choices[start] = punctuated[0] if punctuated else candidates[-1]
-        elif start + 1 in choices:
+        options = [(_page_cost(rows, start, n) + best[start + n][0], n) for n in range(2, min(5, len(rows) - start) + 1)
+                   if start + n in best
+                   and sum(r['w'] in emphasis for r in rows[start:start + n]) <= 1
+                   and caption_line_count(rows[start:start + n], aspect, emphasis) <= 2]
+        if options:
+            best[start] = min(options, key=lambda option: (option[0], -option[1]))
+        elif start + 1 in best:
             row = rows[start]
             width = _text_width(row['text'], size) + (0.2 * size if row['w'] in emphasis else 0)
             if width >= available - _text_width(' ', size):
-                choices[start] = 1
-    if not rows or 0 not in choices:
+                best[start] = (best[start + 1][0], 1)
+    if not rows or 0 not in best:
         raise ValueError('captions cannot fit 2-5 words per page without a one-word orphan')
     groups, start = [], 0
     while start < len(rows):
-        size = choices[start]
+        size = best[start][1]
         groups.append(rows[start:start + size])
         start += size
     return groups

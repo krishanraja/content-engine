@@ -1,0 +1,2564 @@
+{
+  "file": ".cache/produce/2026-11-05-no-spending/out/thu-short.mp4",
+  "sha256": "517cdd9472636c3a5aad20df0725e7c59d1369bf045ffb103228207b2c41d90d",
+  "duration_s": 47.51,
+  "format": "face-with-proof",
+  "checks": {
+    "loudness.integrated": {
+      "value": -14.1,
+      "target": "-14 ±1",
+      "pass": true
+    },
+    "loudness.true_peak": {
+      "value": -1.6,
+      "target": "<= -1",
+      "pass": true
+    },
+    "loudness.long_silence": {
+      "value": [],
+      "target": "none over 0.7 s below -50 dB",
+      "pass": true
+    },
+    "motion.change_density": {
+      "value": 0.936,
+      "target": ">= 0.5",
+      "pass": true
+    },
+    "motion.longest_still": {
+      "value": 3,
+      "target": "<= 4 s",
+      "pass": true,
+      "runs": [
+        [
+          44,
+          3
+        ]
+      ]
+    },
+    "motion.periodicity": {
+      "value": null,
+      "target": "no repeating loop 2-10 s",
+      "pass": true
+    },
+    "sync.av_xcorr": {
+      "value": [
+        {
+          "segment": 0,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999994
+        },
+        {
+          "segment": 1,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999994
+        },
+        {
+          "segment": 2,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.99998
+        },
+        {
+          "segment": 3,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999981
+        },
+        {
+          "segment": 4,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999988
+        },
+        {
+          "segment": 5,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999987
+        },
+        {
+          "segment": 6,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999988
+        },
+        {
+          "segment": 7,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999983
+        }
+      ],
+      "target": "every segment |lag| <= 33 ms; correlation >= 0.5",
+      "pass": true,
+      "status": "measured"
+    },
+    "joins.decoder": {
+      "value": [],
+      "target": "RMS step <= 6 dB, click <= 6x median, spectral flux <= 0.5",
+      "pass": true,
+      "status": "measured",
+      "join_times_s": [],
+      "failed_join_times_s": []
+    },
+    "captions.ocr": {
+      "value": [
+        {
+          "page": 0,
+          "frame": 65,
+          "text": "Proactive Alis\ncoming.",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
+        },
+        {
+          "page": 1,
+          "frame": 109,
+          "text": "Al that does things\nbefore",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 2,
+          "frame": 134,
+          "text": "you ask offers",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 3,
+          "frame": 163,
+          "text": "to do things.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 4,
+          "frame": 229,
+          "text": "Awesome, really\ncool features",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 5,
+          "frame": 282,
+          "text": "and really helpful",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 6,
+          "frame": 322,
+          "text": "but a bit dangerous\nbecause",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
+        },
+        {
+          "page": 7,
+          "frame": 351,
+          "text": "once they're\nconnected",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 8,
+          "frame": 394,
+          "text": "Muse into your\nWhatsApp,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 9,
+          "frame": 439,
+          "text": "Amazon for your\ngroceries,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 10,
+          "frame": 489,
+          "text": "Google for your\nemails,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 11,
+          "frame": 530,
+          "text": "it can get",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 12,
+          "frame": 546,
+          "text": "a bit dangerous.",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
+        },
+        {
+          "page": 13,
+          "frame": 585,
+          "text": "So my first step",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 14,
+          "frame": 617,
+          "text": "is the no spending,",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
+        },
+        {
+          "page": 15,
+          "frame": 644,
+          "text": "no sending rule.",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
+        },
+        {
+          "page": 16,
+          "frame": 682,
+          "text": "it doesn't spend my\nmoney,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 17,
+          "frame": 716,
+          "text": "doesn't send\nanything",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 18,
+          "frame": 737,
+          "text": "out for me unless",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 19,
+          "frame": 758,
+          "text": "I say so.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 20,
+          "frame": 780,
+          "text": "And the fun part",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 21,
+          "frame": 803,
+          "text": "is I didn't even",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 22,
+          "frame": 836,
+          "text": "write this myself.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 23,
+          "frame": 871,
+          "text": "Ijust put one prompt",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
+        },
+        {
+          "page": 24,
+          "frame": 890,
+          "text": "into my Al",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 25,
+          "frame": 917,
+          "text": "tool and it started\nasking",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 26,
+          "frame": 945,
+          "text": "me questions back,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 27,
+          "frame": 980,
+          "text": "then it locks itself",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 28,
+          "frame": 998,
+          "text": "down or tells",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 29,
+          "frame": 1016,
+          "text": "you how to lock",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 30,
+          "frame": 1031,
+          "text": "it down.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 31,
+          "frame": 1070,
+          "text": "Prompt's in the\ncomments,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 32,
+          "frame": 1108,
+          "text": "make sure you do\nthis,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 33,
+          "frame": 1122,
+          "text": "no spending,",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
+        },
+        {
+          "page": 34,
+          "frame": 1139,
+          "text": "no sending,",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
+        },
+        {
+          "page": 35,
+          "frame": 1163,
+          "text": "one easy step",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 36,
+          "frame": 1193,
+          "text": "so you can save\nyourself",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 37,
+          "frame": 1237,
+          "text": "and enjoy these new\ntechnologies",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 38,
+          "frame": 1276,
+          "text": "without any of those\nweird",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 39,
+          "frame": 1309,
+          "text": "moments or fails.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        }
+      ],
+      "target": "token agreement >= 0.98 on every page",
+      "pass": true,
+      "status": "measured"
+    },
+    "brand.mark_tile": {
+      "value": [
+        {
+          "beat": "hook",
+          "frame": 87,
+          "score": 0.9784497601514062,
+          "pass": true
+        },
+        {
+          "beat": "face",
+          "frame": 270,
+          "score": 0.9780565886802044,
+          "pass": true
+        },
+        {
+          "beat": "proof",
+          "frame": 434,
+          "score": 0.9780579008893497,
+          "pass": true
+        },
+        {
+          "beat": "b4-8am",
+          "frame": 528,
+          "score": 0.978012170120297,
+          "pass": true
+        },
+        {
+          "beat": "b5-rule",
+          "frame": 599,
+          "score": 0.9785270367007923,
+          "pass": true
+        },
+        {
+          "beat": "own-words",
+          "frame": 704,
+          "score": 0.9780199545085976,
+          "pass": true
+        },
+        {
+          "beat": "b7-prompt",
+          "frame": 924,
+          "score": 0.9780297433036134,
+          "pass": true
+        },
+        {
+          "beat": "close",
+          "frame": 1254,
+          "score": 0.9784811792446821,
+          "pass": true
+        }
+      ],
+      "target": "mark NCC >= 0.8 at every beat midpoint",
+      "pass": true,
+      "status": "measured"
+    },
+    "motion.cue_sync": {
+      "value": [
+        {
+          "event": "hook-0",
+          "atFrame": 0,
+          "peak_frame": 4,
+          "lag_frames": 4,
+          "peak_difference": 0.1876591145992279,
+          "event_difference": 0.16993489861488342,
+          "threshold": 1e-06,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "hook-1",
+          "atFrame": 0,
+          "peak_frame": 5,
+          "lag_frames": 5,
+          "peak_difference": 0.000535768223926425,
+          "event_difference": 0.00021943698811810464,
+          "threshold": 1e-06,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "hook-2",
+          "atFrame": 0,
+          "peak_frame": 5,
+          "lag_frames": 5,
+          "peak_difference": 0.000535768223926425,
+          "event_difference": 0.00021943698811810464,
+          "threshold": 1e-06,
+          "gradual": true,
+          "pass": true
+        },
+        {
+          "event": "hook-3",
+          "atFrame": 88,
+          "peak_frame": 89,
+          "lag_frames": 1,
+          "peak_difference": 19.639318466186523,
+          "event_difference": 19.639318466186523,
+          "threshold": 1e-06,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "hook-4",
+          "atFrame": 128,
+          "peak_frame": 129,
+          "lag_frames": 1,
+          "peak_difference": 3.713886022567749,
+          "event_difference": 3.713886022567749,
+          "threshold": 0.23446699976921082,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "proof-0",
+          "atFrame": 366,
+          "peak_frame": 366,
+          "lag_frames": 0,
+          "peak_difference": 71.57819366455078,
+          "event_difference": 71.57819366455078,
+          "threshold": 1.943749487400055,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "proof-1",
+          "atFrame": 402,
+          "peak_frame": 403,
+          "lag_frames": 1,
+          "peak_difference": 3.4516077041625977,
+          "event_difference": 3.4516077041625977,
+          "threshold": 0.011045239632949233,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "proof-2",
+          "atFrame": 412,
+          "peak_frame": 413,
+          "lag_frames": 1,
+          "peak_difference": 8.89851188659668,
+          "event_difference": 8.89851188659668,
+          "threshold": 0.014004291035234928,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "proof-3",
+          "atFrame": 458,
+          "peak_frame": 458,
+          "lag_frames": 0,
+          "peak_difference": 4.277260780334473,
+          "event_difference": 4.277260780334473,
+          "threshold": 0.007853403221815825,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "proof-4",
+          "atFrame": 458,
+          "peak_frame": 459,
+          "lag_frames": 1,
+          "peak_difference": 11.759587287902832,
+          "event_difference": 11.759587287902832,
+          "threshold": 0.0009587289823684841,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "b4-8am-0",
+          "atFrame": 504,
+          "peak_frame": 504,
+          "lag_frames": 0,
+          "peak_difference": 7.427957057952881,
+          "event_difference": 7.427957057952881,
+          "threshold": 0.009758301079273224,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "b4-8am-1",
+          "atFrame": 504,
+          "peak_frame": 504,
+          "lag_frames": 0,
+          "peak_difference": 7.427957057952881,
+          "event_difference": 7.427957057952881,
+          "threshold": 1e-06,
+          "gradual": true,
+          "pass": true
+        },
+        {
+          "event": "b4-8am-2",
+          "atFrame": 528,
+          "peak_frame": 534,
+          "lag_frames": 6,
+          "peak_difference": 5.2840776443481445,
+          "event_difference": 3.374826192855835,
+          "threshold": 1e-06,
+          "gradual": true,
+          "pass": true
+        },
+        {
+          "event": "b4-8am-3",
+          "atFrame": 534,
+          "peak_frame": 534,
+          "lag_frames": 0,
+          "peak_difference": 5.2840776443481445,
+          "event_difference": 5.2840776443481445,
+          "threshold": 1e-06,
+          "gradual": true,
+          "pass": true
+        },
+        {
+          "event": "b5-rule-0",
+          "atFrame": 594,
+          "peak_frame": 598,
+          "lag_frames": 4,
+          "peak_difference": 25.552980422973633,
+          "event_difference": 5.88916015625,
+          "threshold": 0.002070627291686833,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "b5-rule-1",
+          "atFrame": 598,
+          "peak_frame": 598,
+          "lag_frames": 0,
+          "peak_difference": 62.50678253173828,
+          "event_difference": 62.50678253173828,
+          "threshold": 0.0009231242293026298,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "b5-rule-2",
+          "atFrame": 625,
+          "peak_frame": 625,
+          "lag_frames": 0,
+          "peak_difference": 25.786571502685547,
+          "event_difference": 25.786571502685547,
+          "threshold": 0.08997837267816067,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "b5-rule-3",
+          "atFrame": 625,
+          "peak_frame": 625,
+          "lag_frames": 0,
+          "peak_difference": 60.32510757446289,
+          "event_difference": 60.32510757446289,
+          "threshold": 0.0005000256205676123,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "b5-rule-4",
+          "atFrame": 642,
+          "peak_frame": 646,
+          "lag_frames": 4,
+          "peak_difference": 73.78125,
+          "event_difference": 9.221866607666016,
+          "threshold": 1e-06,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "b7-prompt-0",
+          "atFrame": 885,
+          "peak_frame": 891,
+          "lag_frames": 6,
+          "peak_difference": 27.34539031982422,
+          "event_difference": 10.0495023727417,
+          "threshold": 1e-06,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "b7-prompt-1",
+          "atFrame": 885,
+          "peak_frame": 891,
+          "lag_frames": 6,
+          "peak_difference": 32.21915054321289,
+          "event_difference": 5.327517032623291,
+          "threshold": 1e-06,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "b7-prompt-2",
+          "atFrame": 885,
+          "peak_frame": 891,
+          "lag_frames": 6,
+          "peak_difference": 14.3631010055542,
+          "event_difference": 2.6551637649536133,
+          "threshold": 1e-06,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "b7-prompt-3",
+          "atFrame": 885,
+          "peak_frame": 891,
+          "lag_frames": 6,
+          "peak_difference": 10.914019584655762,
+          "event_difference": 2.8277363777160645,
+          "threshold": 1e-06,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "b7-prompt-4",
+          "atFrame": 899,
+          "peak_frame": 899,
+          "lag_frames": 0,
+          "peak_difference": 3.961697816848755,
+          "event_difference": 3.961697816848755,
+          "threshold": 1e-06,
+          "gradual": true,
+          "pass": true
+        },
+        {
+          "event": "b7-prompt-5",
+          "atFrame": 953,
+          "peak_frame": 953,
+          "lag_frames": 0,
+          "peak_difference": 2.5076935291290283,
+          "event_difference": 2.5076935291290283,
+          "threshold": 1e-06,
+          "gradual": true,
+          "pass": true
+        },
+        {
+          "event": "b7-prompt-6",
+          "atFrame": 966,
+          "peak_frame": 966,
+          "lag_frames": 0,
+          "peak_difference": 4.231561183929443,
+          "event_difference": 4.231561183929443,
+          "threshold": 1e-06,
+          "gradual": true,
+          "pass": true
+        },
+        {
+          "event": "b7-prompt-7",
+          "atFrame": 1014,
+          "peak_frame": 1012,
+          "lag_frames": -2,
+          "peak_difference": 5.585724830627441,
+          "event_difference": 5.585724830627441,
+          "threshold": 1e-06,
+          "gradual": true,
+          "pass": true
+        },
+        {
+          "event": "b7-prompt-8",
+          "atFrame": 1021,
+          "peak_frame": 1021,
+          "lag_frames": 0,
+          "peak_difference": 5.270995616912842,
+          "event_difference": 5.270995616912842,
+          "threshold": 1e-06,
+          "gradual": true,
+          "pass": true
+        },
+        {
+          "event": "close-0",
+          "atFrame": 1112,
+          "peak_frame": 1112,
+          "lag_frames": 0,
+          "peak_difference": 62.254180908203125,
+          "event_difference": 62.254180908203125,
+          "threshold": 1e-06,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "close-1",
+          "atFrame": 1128,
+          "peak_frame": 1128,
+          "lag_frames": 0,
+          "peak_difference": 60.31525802612305,
+          "event_difference": 60.31525802612305,
+          "threshold": 1e-06,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "close-2",
+          "atFrame": 1134,
+          "peak_frame": 1128,
+          "lag_frames": -6,
+          "peak_difference": 48.15259552001953,
+          "event_difference": 9.218668937683105,
+          "threshold": 1e-06,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "close-3",
+          "atFrame": 1201,
+          "peak_frame": 1202,
+          "lag_frames": 1,
+          "peak_difference": 4.509030342102051,
+          "event_difference": 4.509030342102051,
+          "threshold": 0.08107426017522812,
+          "gradual": false,
+          "pass": true
+        }
+      ],
+      "target": "change within +/-2 frames > max(FLOOR, 3x median of previous 15 frames)",
+      "pass": true,
+      "status": "measured"
+    },
+    "audio.bed": {
+      "value": [
+        {
+          "check": "bed present",
+          "value": true,
+          "pass": true
+        },
+        {
+          "check": "under speech",
+          "value": -17.13,
+          "target": "-21.0 to -12.0 dB re voice",
+          "pass": true
+        },
+        {
+          "check": "true peak",
+          "value": -1.69,
+          "target": "<= -1.0 dBTP",
+          "pass": true
+        },
+        {
+          "check": "a steady bed",
+          "value": "episode_bed",
+          "target": "episode_bed or continuous",
+          "pass": true
+        },
+        {
+          "check": "bed level in the master",
+          "value": -32.0,
+          "target": "-31 ±1.5 LUFS short-term median",
+          "pass": true
+        },
+        {
+          "check": "bed holds one level",
+          "value": 3.9,
+          "target": "<= 4.0 LU short-term p95-p5 outside lifts",
+          "pass": true
+        },
+        {
+          "check": "bed never swells or sags",
+          "value": 2.9,
+          "target": "<= 3.0 LU from the median, held 1.0 s, outside lifts",
+          "pass": true
+        },
+        {
+          "check": "bed never drops out",
+          "value": [],
+          "target": "no 0.25 s 15 dB under its own running level (50 ms windows)",
+          "pass": true
+        }
+      ],
+      "target": "bed present, under speech in range, true peak, (ducked) breathing in pauses, (episode) one steady level with no drop-outs",
+      "pass": true,
+      "status": "measured"
+    },
+    "audio.bed_continuity": {
+      "value": [],
+      "target": "no 0.25 s under -49.0 dBFS (50 ms RMS) from 1.5 to 46.0 s",
+      "pass": true,
+      "status": "measured"
+    },
+    "words.lost": {
+      "value": {
+        "machine": "scripts/quick-edit/words_gate.py",
+        "version": "words-gate/4",
+        "status": "pass",
+        "lost": [],
+        "unapproved_removals": [],
+        "function_word_differences": [],
+        "adlib_losses": [
+          {
+            "word": "Prompts",
+            "token": "prompts",
+            "take_index": 114,
+            "take_s": 35.553,
+            "take_e": 35.853,
+            "final_between_s": [
+              34.187,
+              34.987
+            ],
+            "context": "... to lock it down. [Prompts] in the comments, make ...",
+            "final_heard_there": "Prompt's"
+          }
+        ],
+        "heard_differently": [],
+        "cleared_by_krish": [],
+        "added_in_final": [
+          {
+            "word": "Prompt's",
+            "final_s": 34.647
+          }
+        ],
+        "approved_removals": [],
+        "unmeasured": [],
+        "calibration": {
+          "status": "uncalibrated",
+          "note": "OPEN until calibrated on real cuts (plan W3 3a): Monday 26 Oct's accepted long and short must pass; Wednesday 21 Oct's published long cut and Friday's 90-second cut from the 17 Oct words file must fail. A clipped tail the transcriber still hears whole is caught by joins-in-gaps (scripts/cutgates/gaps.py). The harness is scripts/cutgates/calibrate.py on config/gate-calibration.json."
+        },
+        "counts": {
+          "script_words": 148,
+          "take_words": 148,
+          "final_words": 148,
+          "removed_by_edl": 0,
+          "compared": 148,
+          "take_tokens_not_in_script": 1,
+          "script_content_words_not_said_in_take": 0,
+          "lost": 0,
+          "unapproved_removals": 0,
+          "cleared_by_krish": 0,
+          "unmeasured": 0,
+          "near_homophones": 0,
+          "function_word_differences": 0,
+          "adlib_losses": 1,
+          "heard_by_one_aligner": 0
+        },
+        "aligners": [
+          "mms",
+          "w2v"
+        ],
+        "agreement": "2 aligners",
+        "per_aligner": {
+          "mms": {
+            "status": "pass",
+            "lost": []
+          },
+          "w2v": {
+            "status": "pass",
+            "lost": []
+          }
+        },
+        "heard_by_one_aligner": [],
+        "not_compared": []
+      },
+      "target": "no content word of the signed script lost on every aligner's pass",
+      "pass": true,
+      "status": "measured",
+      "agreement": "2 aligners",
+      "summary": "no content word lost"
+    },
+    "joins.in_gaps": {
+      "value": {
+        "machine": "scripts/cutgates/gaps.py",
+        "version": "joins-in-gaps/1",
+        "rule": {
+          "min_gap_ms": 80.0,
+          "clearance_ms": 30.0
+        },
+        "aligners": [
+          "mms",
+          "w2v"
+        ],
+        "agreement": "2 aligners",
+        "joins": [],
+        "failed": [],
+        "status": "pass"
+      },
+      "target": "every join in an agreed gap >= 80 ms, 30 ms clear each side",
+      "pass": true,
+      "status": "measured",
+      "agreement": "2 aligners",
+      "summary": "every join is in an agreed gap (2 aligners)"
+    },
+    "captions.clock": {
+      "value": {
+        "machine": "scripts/cutgates/captions.py",
+        "version": "captions/1",
+        "part": "clock",
+        "drawn_by": "mms",
+        "heard_by": "w2v",
+        "independent": true,
+        "agreement": "heard by the aligner that did not draw the captions",
+        "tolerance_frames": 2,
+        "tolerance_status": "placeholder, to be measured on Monday 26",
+        "pages": [
+          {
+            "page": 0,
+            "fromFrame": 4,
+            "text": "Proactive AI is coming.",
+            "heard_word": "Proactive",
+            "heard_s": 0.16,
+            "heard_frame": 5,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 1,
+            "fromFrame": 71,
+            "text": "AI that does things before",
+            "heard_word": "AI",
+            "heard_s": 2.38,
+            "heard_frame": 71,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 2,
+            "fromFrame": 113,
+            "text": "you ask offers",
+            "heard_word": "you",
+            "heard_s": 3.761,
+            "heard_frame": 113,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 3,
+            "fromFrame": 140,
+            "text": "to do things.",
+            "heard_word": "to",
+            "heard_s": 4.661,
+            "heard_frame": 140,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 4,
+            "fromFrame": 176,
+            "text": "Awesome, really cool features",
+            "heard_word": "Awesome,",
+            "heard_s": 5.901,
+            "heard_frame": 177,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 5,
+            "fromFrame": 240,
+            "text": "and really helpful",
+            "heard_word": "and",
+            "heard_s": 8.042,
+            "heard_frame": 241,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 6,
+            "fromFrame": 295,
+            "text": "but a bit dangerous because",
+            "heard_word": "but",
+            "heard_s": 9.822,
+            "heard_frame": 295,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 7,
+            "fromFrame": 325,
+            "text": "once they're connected",
+            "heard_word": "once",
+            "heard_s": 10.862,
+            "heard_frame": 326,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 8,
+            "fromFrame": 366,
+            "text": "Muse into your WhatsApp,",
+            "heard_word": "Muse",
+            "heard_s": 12.202,
+            "heard_frame": 366,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 9,
+            "fromFrame": 402,
+            "text": "Amazon for your groceries,",
+            "heard_word": "Amazon",
+            "heard_s": 13.423,
+            "heard_frame": 403,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 10,
+            "fromFrame": 458,
+            "text": "Google for your emails,",
+            "heard_word": "Google",
+            "heard_s": 15.243,
+            "heard_frame": 457,
+            "delta_frames": 1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 11,
+            "fromFrame": 504,
+            "text": "it can get",
+            "heard_word": "it",
+            "heard_s": 16.823,
+            "heard_frame": 505,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 12,
+            "fromFrame": 532,
+            "text": "a bit dangerous.",
+            "heard_word": "a",
+            "heard_s": 17.743,
+            "heard_frame": 532,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 13,
+            "fromFrame": 553,
+            "text": "So my first step",
+            "heard_word": "So",
+            "heard_s": 18.444,
+            "heard_frame": 553,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 14,
+            "fromFrame": 589,
+            "text": "is the no spending,",
+            "heard_word": "is",
+            "heard_s": 19.684,
+            "heard_frame": 591,
+            "delta_frames": -2,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 15,
+            "fromFrame": 625,
+            "text": "no sending rule.",
+            "heard_word": "no",
+            "heard_s": 20.844,
+            "heard_frame": 625,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 16,
+            "fromFrame": 646,
+            "text": "It doesn't spend my money,",
+            "heard_word": "It",
+            "heard_s": 21.544,
+            "heard_frame": 646,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 17,
+            "fromFrame": 692,
+            "text": "doesn't send anything",
+            "heard_word": "doesn't",
+            "heard_s": 23.065,
+            "heard_frame": 692,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 18,
+            "fromFrame": 721,
+            "text": "out for me unless",
+            "heard_word": "out",
+            "heard_s": 24.045,
+            "heard_frame": 721,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 19,
+            "fromFrame": 742,
+            "text": "I say so.",
+            "heard_word": "I",
+            "heard_s": 24.705,
+            "heard_frame": 741,
+            "delta_frames": 1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 20,
+            "fromFrame": 764,
+            "text": "And the fun part",
+            "heard_word": "And",
+            "heard_s": 25.465,
+            "heard_frame": 764,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 21,
+            "fromFrame": 783,
+            "text": "is I didn't even",
+            "heard_word": "is",
+            "heard_s": 26.145,
+            "heard_frame": 784,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 22,
+            "fromFrame": 810,
+            "text": "write this myself.",
+            "heard_word": "write",
+            "heard_s": 27.025,
+            "heard_frame": 811,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 23,
+            "fromFrame": 848,
+            "text": "I just put one prompt",
+            "heard_word": "I",
+            "heard_s": 28.226,
+            "heard_frame": 847,
+            "delta_frames": 1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 24,
+            "fromFrame": 875,
+            "text": "into my AI",
+            "heard_word": "into",
+            "heard_s": 29.186,
+            "heard_frame": 876,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 25,
+            "fromFrame": 894,
+            "text": "tool and it started asking",
+            "heard_word": "tool",
+            "heard_s": 29.786,
+            "heard_frame": 894,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 26,
+            "fromFrame": 920,
+            "text": "me questions back,",
+            "heard_word": "me",
+            "heard_s": 30.686,
+            "heard_frame": 921,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 27,
+            "fromFrame": 953,
+            "text": "then it locks itself",
+            "heard_word": "then",
+            "heard_s": 31.786,
+            "heard_frame": 954,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 28,
+            "fromFrame": 984,
+            "text": "down or tells",
+            "heard_word": "down",
+            "heard_s": 32.826,
+            "heard_frame": 985,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 29,
+            "fromFrame": 1002,
+            "text": "you how to lock",
+            "heard_word": "you",
+            "heard_s": 33.427,
+            "heard_frame": 1003,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 30,
+            "fromFrame": 1018,
+            "text": "it down.",
+            "heard_word": "it",
+            "heard_s": 33.947,
+            "heard_frame": 1018,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 31,
+            "fromFrame": 1040,
+            "text": "Prompt's in the comments,",
+            "heard_word": "Prompt's",
+            "heard_s": 34.667,
+            "heard_frame": 1040,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 32,
+            "fromFrame": 1085,
+            "text": "make sure you do this,",
+            "heard_word": "make",
+            "heard_s": 36.187,
+            "heard_frame": 1086,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 33,
+            "fromFrame": 1112,
+            "text": "no spending,",
+            "heard_word": "no",
+            "heard_s": 37.047,
+            "heard_frame": 1111,
+            "delta_frames": 1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 34,
+            "fromFrame": 1128,
+            "text": "no sending,",
+            "heard_word": "no",
+            "heard_s": 37.607,
+            "heard_frame": 1128,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 35,
+            "fromFrame": 1144,
+            "text": "one easy step",
+            "heard_word": "one",
+            "heard_s": 38.147,
+            "heard_frame": 1144,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 36,
+            "fromFrame": 1167,
+            "text": "so you can save yourself",
+            "heard_word": "so",
+            "heard_s": 38.908,
+            "heard_frame": 1167,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 37,
+            "fromFrame": 1199,
+            "text": "and enjoy these new technologies",
+            "heard_word": "and",
+            "heard_s": 39.968,
+            "heard_frame": 1199,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 38,
+            "fromFrame": 1252,
+            "text": "without any of those weird",
+            "heard_word": "without",
+            "heard_s": 41.728,
+            "heard_frame": 1252,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 39,
+            "fromFrame": 1279,
+            "text": "moments or fails.",
+            "heard_word": "moments",
+            "heard_s": 42.648,
+            "heard_frame": 1279,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          }
+        ],
+        "failed": [],
+        "located_fraction": 1.0,
+        "status": "pass"
+      },
+      "target": "each page's first frame within 2 frames of its first word as heard",
+      "pass": true,
+      "status": "measured",
+      "agreement": "heard by the aligner that did not draw the captions",
+      "summary": "every caption page is on the heard clock"
+    },
+    "captions.render": {
+      "value": {
+        "machine": "scripts/cutgates/captions.py",
+        "version": "captions/1",
+        "part": "renderer",
+        "region": [
+          72,
+          1460,
+          900,
+          180
+        ],
+        "window_frames": 3,
+        "min_score": 0.98,
+        "pixel_change_status": "placeholder, to be measured on Monday 26",
+        "pages": [
+          {
+            "page": 0,
+            "fromFrame": 4,
+            "text": "Proactive AI is coming.",
+            "change_frame": 2,
+            "frame": 59,
+            "read": "Proactive Alis\ncoming.",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 1,
+            "fromFrame": 71,
+            "text": "AI that does things before",
+            "change_frame": 71,
+            "frame": 104,
+            "read": "Al that does things\nbefore",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 2,
+            "fromFrame": 113,
+            "text": "you ask offers",
+            "change_frame": 113,
+            "frame": 128,
+            "read": "you ask offers",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 3,
+            "fromFrame": 140,
+            "text": "to do things.",
+            "change_frame": 140,
+            "frame": 150,
+            "read": "to do things.",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 4,
+            "fromFrame": 366,
+            "text": "Muse into your WhatsApp,",
+            "change_frame": 366,
+            "frame": 386,
+            "read": "Muse into your\nWhatsApp,",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 5,
+            "fromFrame": 402,
+            "text": "Amazon for your groceries,",
+            "change_frame": 402,
+            "frame": 420,
+            "read": "Amazon for your\ngroceries,",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 6,
+            "fromFrame": 458,
+            "text": "Google for your emails,",
+            "change_frame": 458,
+            "frame": 474,
+            "read": "Google for your\nemails,",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 7,
+            "fromFrame": 504,
+            "text": "it can get",
+            "change_frame": 504,
+            "frame": 528,
+            "read": "it can get",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 8,
+            "fromFrame": 532,
+            "text": "a bit dangerous.",
+            "change_frame": 532,
+            "frame": 539,
+            "read": "a bit dangerous.",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 9,
+            "fromFrame": 553,
+            "text": "So my first step",
+            "change_frame": 553,
+            "frame": 581,
+            "read": "So my first step",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 10,
+            "fromFrame": 589,
+            "text": "is the no spending,",
+            "change_frame": 589,
+            "frame": 609,
+            "read": "is the no spending,",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 11,
+            "fromFrame": 625,
+            "text": "no sending rule.",
+            "change_frame": 625,
+            "frame": 642,
+            "read": "no sending rule.",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 12,
+            "fromFrame": 764,
+            "text": "And the fun part",
+            "change_frame": 763,
+            "frame": 776,
+            "read": "And the fun part",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 13,
+            "fromFrame": 783,
+            "text": "is I didn't even",
+            "change_frame": 783,
+            "frame": 796,
+            "read": "is I didn't even",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 14,
+            "fromFrame": 810,
+            "text": "write this myself.",
+            "change_frame": 810,
+            "frame": 824,
+            "read": "write this myself.",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 15,
+            "fromFrame": 848,
+            "text": "I just put one prompt",
+            "change_frame": 848,
+            "frame": 866,
+            "read": "Ijust put one prompt",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 16,
+            "fromFrame": 875,
+            "text": "into my AI",
+            "change_frame": 875,
+            "frame": 885,
+            "read": "into my Al",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 17,
+            "fromFrame": 894,
+            "text": "tool and it started asking",
+            "change_frame": 894,
+            "frame": 913,
+            "read": "tool and it started\nasking",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 18,
+            "fromFrame": 920,
+            "text": "me questions back,",
+            "change_frame": 920,
+            "frame": 936,
+            "read": "me questions back,",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 19,
+            "fromFrame": 953,
+            "text": "then it locks itself",
+            "change_frame": 953,
+            "frame": 975,
+            "read": "then it locks itself",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 20,
+            "fromFrame": 984,
+            "text": "down or tells",
+            "change_frame": 984,
+            "frame": 994,
+            "read": "down or tells",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 21,
+            "fromFrame": 1002,
+            "text": "you how to lock",
+            "change_frame": 1002,
+            "frame": 1014,
+            "read": "you how to lock",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 22,
+            "fromFrame": 1018,
+            "text": "it down.",
+            "change_frame": 1018,
+            "frame": 1021,
+            "read": "it down.",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 23,
+            "fromFrame": 1040,
+            "text": "Prompt's in the comments,",
+            "change_frame": 1040,
+            "frame": 1055,
+            "read": "Prompt's in the\ncomments,",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 24,
+            "fromFrame": 1085,
+            "text": "make sure you do this,",
+            "change_frame": 1085,
+            "frame": 1104,
+            "read": "make sure you do\nthis,",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 25,
+            "fromFrame": 1112,
+            "text": "no spending,",
+            "change_frame": 1112,
+            "frame": 1116,
+            "read": "no spending,",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 26,
+            "fromFrame": 1128,
+            "text": "no sending,",
+            "change_frame": 1128,
+            "frame": 1134,
+            "read": "no sending,",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 27,
+            "fromFrame": 1144,
+            "text": "one easy step",
+            "change_frame": 1144,
+            "frame": 1159,
+            "read": "one easy step",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 28,
+            "fromFrame": 1167,
+            "text": "so you can save yourself",
+            "change_frame": 1167,
+            "frame": 1186,
+            "read": "so you can save\nyourself",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 29,
+            "fromFrame": 1199,
+            "text": "and enjoy these new technologies",
+            "change_frame": 1199,
+            "frame": 1222,
+            "read": "and enjoy these new\ntechnologies",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 30,
+            "fromFrame": 1252,
+            "text": "without any of those weird",
+            "change_frame": 1252,
+            "frame": 1272,
+            "read": "without any of those\nweird",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 31,
+            "fromFrame": 1279,
+            "text": "moments or fails.",
+            "change_frame": 1279,
+            "frame": 1297,
+            "read": "moments or fails.",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 0,
+            "fromFrame": 176,
+            "text": "Awesome, really cool features",
+            "change_frame": 176,
+            "frame": 217,
+            "read": "Awesome, really\ncool features",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 1,
+            "fromFrame": 240,
+            "text": "and really helpful",
+            "change_frame": 240,
+            "frame": 268,
+            "read": "and really helpful",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 2,
+            "fromFrame": 295,
+            "text": "but a bit dangerous because",
+            "change_frame": 295,
+            "frame": 319,
+            "read": "but a bit dangerous\nbecause",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 3,
+            "fromFrame": 325,
+            "text": "once they're connected",
+            "change_frame": 325,
+            "frame": 336,
+            "read": "once they're\nconnected",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 4,
+            "fromFrame": 646,
+            "text": "It doesn't spend my money,",
+            "change_frame": 646,
+            "frame": 672,
+            "read": "it doesn't spend my\nmoney,",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 5,
+            "fromFrame": 692,
+            "text": "doesn't send anything",
+            "change_frame": 692,
+            "frame": 711,
+            "read": "doesn't send\nanything",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 6,
+            "fromFrame": 721,
+            "text": "out for me unless",
+            "change_frame": 721,
+            "frame": 732,
+            "read": "out for me unless",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 7,
+            "fromFrame": 742,
+            "text": "I say so.",
+            "change_frame": 742,
+            "frame": 752,
+            "read": "I say so.",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          }
+        ],
+        "failed": [],
+        "changes_found": 115,
+        "status": "pass",
+        "pass": true,
+        "regions": [
+          [
+            72,
+            1460,
+            900,
+            180
+          ],
+          [
+            72,
+            1180,
+            900,
+            217
+          ]
+        ]
+      },
+      "target": "a page change within 3 frames of each start; exact text, OCR score >= 0.98",
+      "pass": true,
+      "status": "measured",
+      "agreement": null,
+      "summary": "every caption page reads as the props say"
+    },
+    "keyframe_match": {
+      "value": {
+        "hook": {
+          "ssim": 0.7880290959370123,
+          "min": 0.75,
+          "pass": true,
+          "golden": "face-with-proof",
+          "frame": 141
+        },
+        "face": {
+          "ssim": 0.8396878907737663,
+          "min": 0.75,
+          "pass": true,
+          "golden": "face-with-proof",
+          "frame": 328
+        },
+        "proof": {
+          "ssim": 0.8406541967766835,
+          "min": 0.75,
+          "pass": true,
+          "golden": "face-with-proof",
+          "frame": 476
+        },
+        "b4-8am": {
+          "ssim": null,
+          "min": 0.75,
+          "pass": true,
+          "golden": null,
+          "note": "extra beat: no golden, composition-checked"
+        },
+        "b5-rule": {
+          "ssim": null,
+          "min": 0.75,
+          "pass": true,
+          "golden": null,
+          "note": "extra beat: no golden, composition-checked"
+        },
+        "own-words": {
+          "ssim": null,
+          "min": 0.75,
+          "pass": true,
+          "golden": null,
+          "note": "extra beat: no golden, composition-checked"
+        },
+        "b7-prompt": {
+          "ssim": null,
+          "min": 0.75,
+          "pass": true,
+          "golden": null,
+          "note": "extra beat: no golden, composition-checked"
+        },
+        "close": {
+          "ssim": 0.8213135028292148,
+          "min": 0.75,
+          "pass": true,
+          "golden": "face-with-proof",
+          "frame": 1273
+        }
+      },
+      "target": "approved golden keyframes",
+      "pass": true,
+      "status": "measured"
+    },
+    "composition": {
+      "value": {
+        "hook": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 99.95
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 141
+        },
+        "face": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 328
+        },
+        "proof": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 476
+        },
+        "b4-8am": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 543
+        },
+        "b5-rule": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 627
+        },
+        "own-words": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 740
+        },
+        "b7-prompt": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 1021
+        },
+        "close": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 1273
+        },
+        "ending": {
+          "pass": true,
+          "checks": {
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 1372
+        }
+      },
+      "target": "design lock composition thresholds",
+      "pass": true,
+      "status": "measured"
+    }
+  },
+  "keyframes": {
+    "applies": true,
+    "pass": true,
+    "beats": {
+      "hook": {
+        "ssim": 0.7880290959370123,
+        "min": 0.75,
+        "pass": true,
+        "golden": "face-with-proof",
+        "frame": 141
+      },
+      "face": {
+        "ssim": 0.8396878907737663,
+        "min": 0.75,
+        "pass": true,
+        "golden": "face-with-proof",
+        "frame": 328
+      },
+      "proof": {
+        "ssim": 0.8406541967766835,
+        "min": 0.75,
+        "pass": true,
+        "golden": "face-with-proof",
+        "frame": 476
+      },
+      "b4-8am": {
+        "ssim": null,
+        "min": 0.75,
+        "pass": true,
+        "golden": null,
+        "note": "extra beat: no golden, composition-checked"
+      },
+      "b5-rule": {
+        "ssim": null,
+        "min": 0.75,
+        "pass": true,
+        "golden": null,
+        "note": "extra beat: no golden, composition-checked"
+      },
+      "own-words": {
+        "ssim": null,
+        "min": 0.75,
+        "pass": true,
+        "golden": null,
+        "note": "extra beat: no golden, composition-checked"
+      },
+      "b7-prompt": {
+        "ssim": null,
+        "min": 0.75,
+        "pass": true,
+        "golden": null,
+        "note": "extra beat: no golden, composition-checked"
+      },
+      "close": {
+        "ssim": 0.8213135028292148,
+        "min": 0.75,
+        "pass": true,
+        "golden": "face-with-proof",
+        "frame": 1273
+      }
+    },
+    "findings": []
+  },
+  "composition": {
+    "applies": true,
+    "pass": true,
+    "beats": {
+      "hook": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 99.95
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 141
+      },
+      "face": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 328
+      },
+      "proof": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 476
+      },
+      "b4-8am": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 543
+      },
+      "b5-rule": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 627
+      },
+      "own-words": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 740
+      },
+      "b7-prompt": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 1021
+      },
+      "close": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 1273
+      },
+      "ending": {
+        "pass": true,
+        "checks": {
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 1372
+      }
+    }
+  },
+  "measured_pass": true,
+  "complete": true
+}

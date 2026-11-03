@@ -235,6 +235,19 @@ class CompileTest(unittest.TestCase):
         self.assertEqual(sorted((e['verb'], e['atFrame']) for e in props['events'] if e['obj'] == 'note'),
                          [('enter', 0), ('type', 0)])
 
+    def test_caption_pages_break_where_a_reader_would(self):
+        # Thursday 5 Nov: "really helpful but a bit | dangerous", "myself. I just put", "groceries, Google".
+        def pages(text, gap=10):
+            rows = [{'w': i, 'text': t, 'atFrame': i * gap} for i, t in enumerate(text.split())]
+            return [' '.join(r['text'] for r in g) for g in _caption_groups(rows)]
+        got = pages('Amazon for your groceries, Google for your emails, it can get a bit dangerous.')
+        self.assertIn('Amazon for your groceries,', got)
+        self.assertIn('Google for your emails,', got)
+        got = pages('I didn\'t even write this myself. I just put one prompt into my AI tool')
+        self.assertFalse([p for p in got if 'myself.' in p and not p.endswith('myself.')], got)
+        for page in pages('really cool features and really helpful but a bit dangerous because once they\'re connected')[:-1]:
+            self.assertNotIn(page.split()[-1], {'a', 'the', 'but', 'once'}, page)
+
     def test_the_hook_is_the_intro(self):
         # Under test (Krish, 29 Oct 2026, "Let's go with number one for now."): the first beat, the hook, owns
         # frame 0 even when the first word comes later; no story card or logo sting is compiled ahead of it, and the

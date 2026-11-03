@@ -1,0 +1,167 @@
+{
+  "schema": "ve-verdict/1",
+  "piece": "2026-11-05-thursday-no-spending",
+  "cut": "short",
+  "sha256": "517cdd9472636c3a5aad20df0725e7c59d1369bf045ffb103228207b2c41d90d",
+  "reviewer": "ve-critic (independent subagent, rounds 4-5)",
+  "reviewed_at": "2026-11-03T16:49:20.646175+00:00",
+  "lens_sha256": "fa26b91a9d667bb637c79215ef804790e805febaf0a40d2545e4f89c24f622a3",
+  "frames_viewed": [
+    {
+      "at_s": 0.0
+    },
+    {
+      "at_s": 2.0
+    },
+    {
+      "at_s": 4.17
+    },
+    {
+      "at_s": 4.37
+    },
+    {
+      "at_s": 4.67
+    },
+    {
+      "at_s": 5.5
+    },
+    {
+      "at_s": 7.0
+    },
+    {
+      "at_s": 9.5
+    },
+    {
+      "at_s": 11.5
+    },
+    {
+      "at_s": 12.0
+    },
+    {
+      "at_s": 13.4
+    },
+    {
+      "at_s": 14.47
+    },
+    {
+      "at_s": 15.3
+    },
+    {
+      "at_s": 16.0
+    },
+    {
+      "at_s": 17.0
+    },
+    {
+      "at_s": 17.8
+    },
+    {
+      "at_s": 18.2
+    },
+    {
+      "at_s": 19.0
+    },
+    {
+      "at_s": 20.0
+    },
+    {
+      "at_s": 20.83
+    },
+    {
+      "at_s": 21.4
+    },
+    {
+      "at_s": 22.0
+    },
+    {
+      "at_s": 23.5
+    },
+    {
+      "at_s": 25.0
+    },
+    {
+      "at_s": 26.67
+    },
+    {
+      "at_s": 29.5
+    },
+    {
+      "at_s": 30.0
+    },
+    {
+      "at_s": 33.0
+    },
+    {
+      "at_s": 34.0
+    },
+    {
+      "at_s": 34.67
+    },
+    {
+      "at_s": 35.5
+    },
+    {
+      "at_s": 36.5
+    },
+    {
+      "at_s": 37.08
+    },
+    {
+      "at_s": 37.8
+    },
+    {
+      "at_s": 39.93
+    },
+    {
+      "at_s": 40.13
+    },
+    {
+      "at_s": 40.43
+    },
+    {
+      "at_s": 43.0
+    },
+    {
+      "at_s": 44.0
+    },
+    {
+      "at_s": 45.0
+    },
+    {
+      "at_s": 47.0
+    }
+  ],
+  "findings": [
+    {
+      "severity": "note",
+      "area": "composition",
+      "frame_s": 4.37,
+      "text": "CLOSED. Hook wave in place; clear of the note card at 125-140."
+    },
+    {
+      "severity": "note",
+      "area": "composition",
+      "frame_s": 40.13,
+      "text": "CLOSED. Close wave in place; NO SENDING reads whole at 1198-1213."
+    },
+    {
+      "severity": "note",
+      "area": "composition",
+      "frame_s": 12.0,
+      "text": "The split opens about 6 frames before the logos land."
+    },
+    {
+      "severity": "note",
+      "area": "composition",
+      "frame_s": 14.47,
+      "text": "The logo row fills about half the top panel's height."
+    },
+    {
+      "severity": "note",
+      "area": "composition",
+      "frame_s": 34.67,
+      "text": "Advisory: card body text looks near the 30 px floor; QC small_text passes."
+    }
+  ],
+  "blocking": false
+}
