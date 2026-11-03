@@ -251,3 +251,39 @@ class QualityTests(unittest.TestCase):
 
 
 if __name__=='__main__': unittest.main()
+
+
+class SocialClipReceipt(unittest.TestCase):
+    """Tue 3 Nov: a meme clip (someone else's footage under Krish's caption) files with the checks that apply to it."""
+
+    def setUp(self):
+        import tempfile
+        self.dir = Path(tempfile.mkdtemp())
+        self.video = self.dir / 'clip.mp4'
+        self.video.write_bytes(b'clip bytes')
+        self.target = '3 Posts/2026-11-03 Tue off.day - X/3 Video/clip.mp4'
+
+    def receipt(self, **change):
+        import hashlib
+        checks = {key: {'status': 'pass'} for key in quality.SOCIAL_CLIP_CHECKS}
+        checks['source']['name'] = 'Original sketch'
+        checks['approval'].update(krish_words='POV: line', where='Ideas board')
+        report = {'kind': 'social_clip', 'video_sha256': hashlib.sha256(b'clip bytes').hexdigest(),
+                  'library_path': change.pop('library_path', self.target), 'checks': checks}
+        for key in change.pop('drop', ()):
+            del checks[key]
+        path = self.dir / 'clip.mp4.validation.json'
+        path.write_text(json.dumps(report))
+        return path
+
+    def test_passes_with_every_applicable_check(self):
+        self.assertEqual(quality.delivery_problems(self.video, self.receipt(), self.target), [])
+
+    def test_holds_without_a_check_or_his_words(self):
+        self.assertIn('loudness is missing', quality.delivery_problems(self.video, self.receipt(drop=['loudness']), self.target))
+        self.assertTrue(quality.delivery_problems(self.video, self.receipt(drop=['approval']), self.target))
+
+    def test_only_an_off_day_post_takes_one(self):
+        target = '3 Posts/2026-11-04 Wed under.the.hood - X/3 Video/clip.mp4'
+        self.assertEqual(quality.delivery_problems(self.video, self.receipt(library_path=target), target),
+                         ['a social clip receipt files only into an off-day post'])
