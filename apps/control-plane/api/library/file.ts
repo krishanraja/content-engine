@@ -5,9 +5,9 @@ import { hashVideoStudioIdentity } from '../_videoStudioAuth.js'
 import { VIDEO_STUDIO_CONTROL_SCHEMA_VERSION, sendVideoStudioError } from '../video-studio/_contracts.js'
 import { enforceVideoStudioRateLimit } from '../video-studio/_data.js'
 import { isSignedPreviewUrlAllowed } from '../video-studio/_previewStorage.js'
-import { checkLibraryPath, configuredLibraryStore, libraryFileRow, libraryFileView } from './_library.js'
+import { checkLibraryPath, configuredLibraryStore, libraryFileRow, libraryFileView, parseLibraryName } from './_library.js'
 
-// GET /api/library/file?path=<library path>, on the engine key (or Krish's cookie).
+// GET /api/library/file?path=<library path>[&library=heartside], on the engine key (or Krish's cookie).
 //
 // The newest ready copy of one library file, with a signed download URL that
 // lasts an hour. It lets any machine that renders (GitHub's, a cloud session,
@@ -23,7 +23,9 @@ const READER_IDENTITY = hashVideoStudioIdentity('library', 'file-reader')
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (guardEngine(req, res, ['GET'])) return
   const raw = Array.isArray(req.query?.path) ? req.query.path[0] : req.query?.path
-  const checked = checkLibraryPath(raw)
+  const library = parseLibraryName(Array.isArray(req.query?.library) ? req.query.library[0] : req.query?.library)
+  if (!library) return sendVideoStudioError(res, 400, 'invalid_library')
+  const checked = checkLibraryPath(raw, library)
   if (!checked.ok) return sendVideoStudioError(res, 400, 'invalid_library_path')
   const sha = req.query?.sha256
   if (sha !== undefined && (typeof sha !== 'string' || !/^[a-f0-9]{64}$/.test(sha))) return sendVideoStudioError(res, 400, 'invalid_library_hash')
@@ -35,6 +37,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   let query = supabase
     .from('content_library_files')
     .select('*')
+    .eq('library', library)
     .eq('path', checked.path)
     .eq('state', 'ready')
   if (sha) query = query.eq('sha256', sha)

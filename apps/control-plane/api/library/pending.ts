@@ -10,9 +10,11 @@ import {
   isLibraryObjectKey,
   libraryPurpose,
   parseLibraryPendingQuery,
+  type LibraryName,
 } from './_library.js'
 
-// GET /api/library/pending?machine=<id>&limit=<1..100>, on the runner bearer.
+// GET /api/library/pending?machine=<id>&limit=<1..100>[&library=heartside], on the runner bearer.
+// Each library is asked for on its own; without one it is makeyourmindup.
 //
 // What Krish's machine has still to write into the library folder: for each
 // path, the newest ready version, when this machine has not written it yet.
@@ -37,10 +39,10 @@ interface PendingRow {
   previous_sha256: string | null
 }
 
-function pendingRow(value: unknown): PendingRow | null {
+function pendingRow(value: unknown, library: LibraryName): PendingRow | null {
   if (!value || typeof value !== 'object') return null
   const row = value as Record<string, unknown>
-  const path = checkLibraryPath(row.path)
+  const path = checkLibraryPath(row.path, library)
   const purpose = libraryPurpose(row.purpose)
   if (
     !path.ok
@@ -81,6 +83,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const { data, error } = await supabase.rpc('content_library_pending', {
     p_machine_hash: machineHash,
     p_limit: query.limit + 1,
+    p_library: query.library,
   })
   if (error || !Array.isArray(data)) return sendVideoStudioError(res, 503, 'library_index_unavailable')
   const more = data.length > query.limit
@@ -89,7 +92,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   for (const raw of data.slice(0, query.limit)) {
     // A row that breaks the path rule never reaches Drive. It is counted, so
     // the sync says so, and never retried as though it could pass.
-    const row = pendingRow(raw)
+    const row = pendingRow(raw, query.library)
     if (row) rows.push(row)
     else skipped += 1
   }
@@ -129,6 +132,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     ok: true,
     schema_version: VIDEO_STUDIO_CONTROL_SCHEMA_VERSION,
     machine: machineHash.slice(0, 8),
+    library: query.library,
     files,
     skipped,
     more,
