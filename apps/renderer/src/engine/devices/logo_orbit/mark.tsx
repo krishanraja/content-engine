@@ -1,4 +1,5 @@
 import React from 'react'
+import { staticFile } from 'remotion'
 import { resolveLogo } from './schema'
 
 // Bounds in the approved SVG's own coordinate system, measured from painted
@@ -19,6 +20,6 @@ export function Mark({ id, size }: { id: string; size: number }) {
   const [x, y, width, height] = bounds.canvas
   return <svg data-mark={id} x={-size / 2} y={-size / 2} width={size} height={size}
     viewBox={bounds.drawn.join(' ')} preserveAspectRatio="xMidYMid meet" overflow="hidden">
-    <image href={href} x={x} y={y} width={width} height={height} preserveAspectRatio="none" />
+    <image href={staticFile(href)} x={x} y={y} width={width} height={height} preserveAspectRatio="none" />
   </svg>
 }

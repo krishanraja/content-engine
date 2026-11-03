@@ -26,6 +26,17 @@ ENDING_FRAMES = 105
 OPENING = 'hook'
 
 
+
+def _series_day(series_day: str, publish_day: str | None) -> str:
+    """The day the ending band and its strip name. A piece published on its series' own day keeps the series day
+    ("Wednesdays"); one published on another day names that day ("Thursday"), so an off-day cut never claims the
+    wrong day (Thursday 5 Nov's under.the.hood cut read WEDNESDAYS; Krish, 2026-11-03)."""
+    if not publish_day:
+        return series_day
+    from datetime import date
+    weekday = date.fromisoformat(publish_day).strftime('%A')
+    return series_day if series_day.lower().rstrip('s') == weekday.lower() else weekday
+
 def source(path: str, assets_dir: str | Path) -> str:
     """Resolve only relative media paths contained by the assets folder."""
     root = Path(assets_dir).resolve()
@@ -205,6 +216,11 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         beats[-1]['keyFrame'] = min(end - 1, start + round((end - start) * fraction))
         for event_index, event in enumerate(beat.get('events', [])):
             event_frame = at(event['at_w'])
+            # The hook is the intro: an entrance on the cut's first word lands on frame 0, so the first frame is the
+            # hook in the brand's dress, never a bare stage waiting for the first syllable (Krish, 2026-11-03: "We
+            # fucking have standards for intro, background audio and outro").
+            if index == 0 and event['verb'] == 'enter' and event['at_w'] == beat['span']['from_w']:
+                event_frame = 0
             if not start <= event_frame < end:
                 raise ValueError(f'event outside beat {beat["id"]}')
             compiled = {'id': f'{beat["id"]}-{event_index}', 'obj': event['obj'], 'verb': event['verb'],
@@ -285,7 +301,7 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         'fps': FPS, 'durationFrames': duration,
         'tokens': {'ink': tokens['ink'], 'inkDeep': tokens['ink_deep'], 'inkSoft': tokens['ink_soft'],
                    'cream': tokens['cream'], 'mint': tokens['mint'], 'channel': publication['channel_colors'][channel]},
-        'series': {'label': spec['brand']['series'], 'day': identity['day'], 'promise': identity['promise'], 'site': house['copy']['site']},
+        'series': {'label': spec['brand']['series'], 'day': _series_day(identity['day'], spec.get('publish_day')), 'promise': identity['promise'], 'site': house['copy']['site']},
         'brand': {key: {'src': resolve_source(publication[key]['source_path']), 'pixelWidth': publication[key]['pixel_width'],
                         'pixelHeight': publication[key]['pixel_height']} for key in ('mark', 'logo', 'stacked')},
         'segments': [] if spec['audio']['master'] == 'vo' else [
@@ -314,7 +330,10 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
             report['edl'] = {'cut': cut_id, 'joins_s': [join['at_s'] for join in edl.get('joins', [])],
                              'duration_frames': edl.get('duration_frames'),
                              'picture_short_frames': max(0, duration - int(edl.get('duration_frames') or 0))}
-    if spec.get('call') and not cut.get('excerpt', False):
+    # Every whole cut closes on the ending band (one calm close, held long enough to read: config/ve/formats
+    # intro_outro; Krish, 2026-11-03: "We fucking have standards for intro, background audio and outro"), not only a
+    # cut that carries a dated call; the call card still needs a call.
+    if not cut.get('excerpt', False):
         props['ending'] = {'fromFrame': duration, 'url': props['series']['site']}
         if spec.get('style', {}).get('ending_ticker') is False:
             props['ending']['ticker'] = False  # no scrolling promise strip (Krish: no marquee)

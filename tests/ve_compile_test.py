@@ -204,8 +204,23 @@ class CompileTest(unittest.TestCase):
         self.assertEqual(excerpt['beats'][-1]['toFrame'], base)
         self.assertTrue(all(o['toFrame'] == base + ENDING_FRAMES for o in whole['objects'] if o['toFrame'] > base - 1
                             and o['toFrame'] >= excerpt['beats'][-1]['fromFrame']))
+        # Every whole cut closes on the ending band, with or without a dated call (Krish, 2026-11-03: "We fucking
+        # have standards for intro, background audio and outro").
         del spec['call']
-        self.assertNotIn('ending', compile_cut(spec, 'proof-tall', words, FIXTURE))
+        self.assertEqual(compile_cut(spec, 'proof-tall', words, FIXTURE)['ending'], {'fromFrame': base, 'url': whole['series']['site']})
+
+    def test_first_word_entrances_land_on_frame_zero(self):
+        # Krish, 2026-11-03: "We fucking have standards for intro, background audio and outro". An entrance on the
+        # cut's first word is on screen from frame 0; later events keep their word's frame.
+        spec = load_json(FIXTURE / 'spec.json')
+        words = timed_words()
+        first = spec['cuts']['proof-tall']['beats'][0]
+        entrances = [e for e in first['events'] if e['verb'] == 'enter' and e['at_w'] == first['span']['from_w']]
+        self.assertTrue(entrances)
+        props = compile_cut(spec, 'proof-tall', words, FIXTURE)
+        for event in props['events']:
+            if event['id'].startswith(first['id'] + '-') and event['verb'] == 'enter' and event['obj'] in {e['obj'] for e in entrances}:
+                self.assertEqual(event['atFrame'], 0)
 
     def test_the_hook_is_the_intro(self):
         # Under test (Krish, 29 Oct 2026, "Let's go with number one for now."): the first beat, the hook, owns

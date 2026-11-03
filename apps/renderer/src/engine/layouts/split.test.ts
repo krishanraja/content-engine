@@ -1,3 +1,4 @@
+import { MarkTile } from '../chrome/MarkTile'
 import { isValidElement, type ReactElement, type ReactNode } from 'react'
 import { OffthreadVideo } from 'remotion'
 import { describe, expect, it, vi } from 'vitest'
@@ -60,7 +61,10 @@ describe('frozen SPLIT geometry', () => {
     expect(elements(scaled[0]!.props.children as ReactNode).some((n) => n.type === BrandFrame)).toBe(false)
     const stage = nodes.find((n) => (n.props.style as Record<string, unknown>)?.backgroundColor === props.tokens.cream)!
     expect(stage.props.style).toMatchObject({ height: FWP_SPLIT_SEAM_Y, overflow: 'hidden' })
-    expect(elements(BrandFrame({ props, beat: props.beats[1]!, frame: 75 })).some((n) => n.type === StageHeader)).toBe(true)
+    // The mark tile and pill, legible on cream, not the ink-only horizontal logo (Krish, 2026-11-03).
+    const chrome = elements(BrandFrame({ props, beat: props.beats[1]!, frame: 75 }))
+    expect(chrome.some((n) => n.type === StageHeader)).toBe(false)
+    expect(chrome.some((n) => n.type === MarkTile)).toBe(true)
   })
   it('places one and two caption lines inside the frozen zone and preserves normal captions', () => {
     const props = propsForSplit()

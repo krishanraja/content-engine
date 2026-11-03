@@ -1,3 +1,4 @@
+import { staticFile } from 'remotion'
 import React from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
@@ -34,7 +35,8 @@ describe('face-with-proof Gate 2 stills', () => {
   it('uses all five official marks in two large, unrotated rows', () => {
     const html = render('proof')
     for (const company of ['Meta', 'Amazon', 'Google', 'xAI', 'Anthropic']) {
-      expect(html).toContain(`href="${registry.marks.find(m => m.company === company)!.file}"`)
+      // Marks draw through staticFile so the render bundle finds the staged registry file (ve-thu-8-mint-and-logos).
+      expect(html).toContain(`href="${staticFile(registry.marks.find(m => m.company === company)!.file)}"`)
     }
     const marks = [...html.matchAll(/<svg data-mark="([^"]+)"[^>]*width="([\d.]+)" height="([\d.]+)" viewBox="([^"]+)"/g)]
     expect(marks).toHaveLength(5)

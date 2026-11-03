@@ -106,6 +106,34 @@ class ConformTest(unittest.TestCase):
         self.assertEqual([w['w'] for w in edl['words']], list(range(len(SCRIPT))))
         self.assertEqual(conform.lint_edl(edl, conform.records_for(edl, self.ve), spec()), [])
 
+    def test_silent_spans_find_a_pause_and_ignore_a_breath(self):
+        loud, quiet = [-18.0] * 30, [-55.0] * 12
+        self.assertEqual(takes.silent_spans(loud + quiet + loud), [[1.0, 1.4]])
+        self.assertEqual(takes.silent_spans(loud + [-55.0] * 3 + loud), [])
+
+    def test_a_pause_folded_into_a_word_moves_its_onset_to_the_voice(self):
+        # Thursday 5 Nov: the aligner ran "connected" edge to edge into "Muse", so Muse's caption showed in his pause.
+        self.assertEqual(takes.voiced_onset(11.73, 12.48, [[11.80, 12.20]]), 12.20)
+        self.assertEqual(takes.voiced_onset(11.73, 12.48, [[12.30, 12.40]]), 11.73)  # a pause late in the word stays
+        self.assertEqual(takes.voiced_onset(11.73, 12.48, []), 11.73)
+
+    @unittest.skipUnless(have_ffmpeg(), 'ffmpeg is not installed')
+    def test_conform_starts_a_word_when_the_take_speaks_not_in_the_pause_before(self):
+        words, duration = clock(SCRIPT)
+        second = SCRIPT.index('The')
+        # The aligner gives "The" a start 0.4 s early, inside the silence after "models."
+        words[second]['onset_s'] = round(words[second]['onset_s'] - 0.4, 4)
+        tones = '+'.join(f"between(t,{w['onset_s'] + (0.4 if i == second else 0)},{w['end_s']})"
+                         for i, w in enumerate(words))
+        media = self.dir / 'take-1.wav'
+        subprocess.run(['ffmpeg', '-v', 'error', '-y', '-f', 'lavfi', '-i', f'sine=f=220:d={duration}',
+                        '-af', f"volume='if({tones},1,0.001)':eval=frame", str(media)], check=True)
+        self.ingest('take-1', words, duration, media=media)
+        edl = conform.conform(spec(), 'short', self.script, self.ve)
+        row = next(w for w in edl['words'] if w['w'] == second)
+        self.assertIn('heard_onset_s', row)
+        self.assertAlmostEqual(row['onset_s'] - row['heard_onset_s'], 0.4, delta=1 / 30 + 0.01)
+
     def test_a_restart_is_removed_with_a_join_in_an_agreed_gap(self):
         flubbed = SCRIPT[:4] + ['The', 'answer,'] + SCRIPT[4:]
         words, duration = clock(flubbed, extra_pause={5: 0.10})

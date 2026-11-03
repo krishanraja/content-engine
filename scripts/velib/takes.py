@@ -63,6 +63,64 @@ def align_local(media: str | Path, aligner: str) -> list[dict]:
     return normalise([{'word': w.word, 'start': w.start, 'end': w.end} for s in segments for w in (s.words or [])])
 
 
+SILENCE_BELOW_DB = 25    # quieter than the take's loud speech (90th percentile) by this much is a pause
+SILENCE_MIN_S = 0.2      # a pause shorter than this is a breath inside speech, not a gap
+_SILENCES: dict = {}
+
+
+def silent_spans(levels_db, fps: int = 30) -> list[list[float]]:
+    """[[start_s, end_s], ...] where a take's level (dB per 1/fps s) stays below its pause line for SILENCE_MIN_S."""
+    import numpy as np  # noqa: PLC0415
+    levels = np.asarray(levels_db, dtype=float)
+    if not len(levels):
+        return []
+    line = max(-60.0, float(np.percentile(levels, 90)) - SILENCE_BELOW_DB)
+    quiet = levels < line
+    spans, start = [], None
+    for i, q in enumerate(list(quiet) + [False]):
+        if q and start is None:
+            start = i
+        elif not q and start is not None:
+            if (i - start) / fps >= SILENCE_MIN_S:
+                spans.append([round(start / fps, 4), round(i / fps, 4)])
+            start = None
+    return spans
+
+
+def silences(record: dict, fps: int = 30) -> list[list[float]]:
+    """The take's pauses, measured from its own audio (read only; cached per media hash). Aligners make words
+    run edge to edge, so a pause is folded into the next word's start; this is where the voice actually is."""
+    if 'silences' in record:
+        return record['silences']
+    media = record['media']
+    key = media.get('sha256') or media['path']
+    if key not in _SILENCES and not Path(media['path']).is_file():
+        return []  # check_media names a missing take; with no audio there is nothing to move a word by
+    if key not in _SILENCES:
+        import subprocess  # noqa: PLC0415
+        import numpy as np  # noqa: PLC0415
+        from .common import ffmpeg  # noqa: PLC0415
+        rate = 16000
+        decoded = subprocess.run([ffmpeg(), '-v', 'error', '-i', media['path'], '-map', '0:a:0', '-ac', '1', '-ar', str(rate),
+                                  '-f', 'f32le', '-'], capture_output=True)
+        if decoded.returncode:
+            return []  # no audio stream to measure (a stub take); render refuses a take it cannot decode
+        raw = decoded.stdout
+        audio = np.frombuffer(raw, np.float32)
+        n = rate // fps
+        frames = audio[:len(audio) // n * n].reshape(-1, n)
+        _SILENCES[key] = silent_spans(20 * np.log10(np.sqrt((frames ** 2).mean(1)) + 1e-9), fps)
+    return _SILENCES[key]
+
+
+def voiced_onset(onset: float, end: float, spans) -> float:
+    """A word's onset moved past a pause that opens its span: a caption page then starts when he speaks."""
+    for start, stop in spans:
+        if start < onset + (end - onset) / 2 and stop > onset and stop < end:
+            onset = stop
+    return onset
+
+
 def take_path(ve_dir: Path, take: str) -> Path:
     if not TAKE_ID.fullmatch(take or ''):
         raise ValueError('a take id is a slug: lower-case letters, digits, - and _')

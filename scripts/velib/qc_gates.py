@@ -73,6 +73,20 @@ def captions_render(path: str, pages, region, ocr=None) -> dict:
     """Caption pages found from pixel changes in the caption zone and read by OCR within the window of each start."""
     _, captions, _, settings, _ = _cutgates()
     rule = settings.rule('captions')
-    result = captions.renderer_truth(path, pages, region, ocr=ocr)
+    # Pages in another zone (a SPLIT beat's) are read in that zone, each group by the same renderer truth.
+    groups = {}
+    for page in pages:
+        groups.setdefault(tuple(page.get('region', region)), []).append(page)
+    if len(groups) <= 1:
+        result = captions.renderer_truth(path, pages, tuple(next(iter(groups), region)), ocr=ocr,
+                                         compact=any('region' in p for p in pages))
+    else:
+        # A page with its own region is a SPLIT page: read its compact box only (cutgates TesseractReader).
+        parts = [captions.renderer_truth(path, group, zone, ocr=ocr, compact=any('region' in p for p in group))
+                 for zone, group in groups.items()]
+        result = dict(parts[0])
+        result['pages'] = [row for part in parts for row in part.get('pages', [])]
+        result['pass'] = all(part.get('pass') for part in parts)
+        result['regions'] = [list(zone) for zone in groups]
     return _gate_row(result, f"a page change within {rule['ocr_window_frames']} frames of each start; exact text, OCR score >= "
                              f"{rule['ocr_min_score']}", captions.summary)

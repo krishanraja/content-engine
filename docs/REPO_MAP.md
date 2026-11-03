@@ -3853,7 +3853,7 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 ### `apps/renderer/src/engine/kit/overlay.ts`
 
 - `const houseTokens = (tokens: EngineTokens) =>`
-- `const halftone = (tokens: EngineTokens) =>`
+- `const halftone = (tokens: EngineTokens, colour = tokens.channel) =>`
 - `function overlayState(object: EngineObject, events: readonly EngineEvent[], frame: number, verb = 'enter', duration: nu…`
 - `function canvasRect(x: number, y: number, w: number, h: number)`
 - `function rotatedBounds(x: number, y: number, w: number, h: number, degrees: number, shadow = 0)`

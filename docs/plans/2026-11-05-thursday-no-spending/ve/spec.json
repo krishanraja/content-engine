@@ -31,10 +31,10 @@
     "mood": "proud",
     "place": {
      "left": 66,
-     "top": 190,
+     "top": 426,
      "width": 900,
      "height": 1100,
-     "scale": 1
+     "scale": 0.8
     }
    }
   },
@@ -50,10 +50,10 @@
     "mood": "sulk",
     "place": {
      "left": 390,
-     "top": 400,
+     "top": 480,
      "width": 640,
      "height": 800,
-     "scale": 1
+     "scale": 0.75
     }
    }
   },
@@ -74,7 +74,7 @@
     ],
     "place": {
      "left": 56,
-     "top": 160,
+     "top": 340,
      "width": 920,
      "height": 300,
      "scale": 1
@@ -95,7 +95,7 @@
     "shape": "underline",
     "target": {
      "x": 120,
-     "y": 256,
+     "y": 436,
      "w": 126,
      "h": 58
     }
@@ -175,7 +175,7 @@
     "status": "Sent",
     "place": {
      "left": 56,
-     "top": 160,
+     "top": 250,
      "width": 920,
      "height": 420,
      "scale": 1
@@ -203,7 +203,7 @@
     "paint": "mint",
     "place": {
      "left": 72,
-     "top": 230,
+     "top": 300,
      "width": 345,
      "height": 68,
      "scale": 2.4
@@ -231,7 +231,7 @@
     "paint": "mint",
     "place": {
      "left": 72,
-     "top": 440,
+     "top": 500,
      "width": 345,
      "height": 68,
      "scale": 2.4
@@ -251,37 +251,45 @@
     "seed": "fwp",
     "shape": "tick",
     "cx": 926,
-    "cy": 522,
+    "cy": 592,
     "size": 72
    }
   },
   {
    "obj": "ask",
    "device": "typing_bubble",
-   "meaning": "his AI tool asking him its questions back, and his three picks",
+   "meaning": "his AI tool asking him its question back, and his three answers staying on screen as its rules",
    "persist": {
     "from_beat": "b7-prompt",
     "to_beat": "b7-prompt"
    },
    "params": {
-    "kind": "choice",
+    "kind": "chat",
     "rows": [
      {
-      "who": "AI",
-      "text": "Before I act for you, which of these should need your yes?"
+      "who": "Your AI",
+      "text": "Before I act for you, which of these should need your yes?",
+      "side": "left"
+     },
+     {
+      "text": "Approve every individual send",
+      "side": "right"
+     },
+     {
+      "text": "Approve every financial commitment",
+      "side": "right"
+     },
+     {
+      "text": "Zero unapproved usage costs",
+      "side": "right"
      }
     ],
-    "options": [
-     "Approve every individual send",
-     "Approve every financial commitment",
-     "Zero unapproved usage costs"
-    ],
     "place": {
-     "left": 56,
-     "top": 60,
+     "left": 139,
+     "top": 52,
      "width": 920,
-     "height": 640,
-     "scale": 1
+     "height": 100,
+     "scale": 0.95
     }
    }
   }
@@ -291,7 +299,7 @@
   "master": "take",
   "bed": {
    "ledger_id": "no-curves-instrumental",
-   "mode": "continuous",
+   "mode": "episode_bed",
    "under_vo_lu": -20
   },
   "sfx_kit": "house-v1"
@@ -588,22 +596,22 @@
       {
        "at_w": 101,
        "obj": "ask",
-       "verb": "pick",
-       "to_state": "0",
+       "verb": "type",
+       "to_state": "1",
        "silent": true
       },
       {
        "at_w": 103,
        "obj": "ask",
-       "verb": "pick",
-       "to_state": "1",
+       "verb": "type",
+       "to_state": "2",
        "silent": true
       },
       {
        "at_w": 111,
        "obj": "ask",
-       "verb": "pick",
-       "to_state": "2",
+       "verb": "type",
+       "to_state": "3",
        "silent": true
       },
       {
@@ -680,6 +688,7 @@
  "style": {
   "storyboard": "docs/plans/2026-11-02-week/thu-storyboard.md",
   "signed_storyboard": "Krish, 2026-11-02: \"Approved, add those 3 too\"",
-  "keyframes": "face-with-proof lock frozen 2026-11-03: \"Looks good to me.\""
+  "keyframes": "face-with-proof lock frozen 2026-11-03: \"Looks good to me.\"",
+  "ending_ticker": false
  }
 }
