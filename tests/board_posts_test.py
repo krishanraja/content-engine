@@ -39,10 +39,10 @@ class FinishedMeansInPosts(unittest.TestCase):
         self.assertEqual(len(got), 1)
         self.assertIn('another day', got[0])
 
-    def test_the_claude_jobs_card_still_in_4_growth_is_flagged(self):
+    def test_the_claude_jobs_card_moved_to_its_3_posts_folder(self):
         data = json.loads((ROOT / 'docs/plans/2026-11-02-week/offdays-growth.json').read_text(encoding='utf-8'))
         card = next(o for o in data['days']['2026-11-03'] if o['concept_id'] == 'claudejobs')
-        self.assertEqual(wb.posts_needs(card, '2026-11-03'), [wb.IN_GROWTH])
+        self.assertEqual(wb.posts_needs(card, '2026-11-03'), [])
 
     def test_an_unfinished_idea_needs_nothing(self):
         self.assertEqual(wb.posts_needs({'draft': 'an idea'}), [])
