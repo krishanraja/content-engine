@@ -93,9 +93,11 @@ Step 11, once a piece's lock is signed and pushed; one fresh run per piece, neve
   `{"piece_id": "<uuid>", "ref": "<the room's branch>"}`), then `gh run list --workflow make-piece.yml --limit 3` to
   see it queued. Its concurrency group is the piece, so a second dispatch waits for the first and never runs beside
   it.
-- It cannot be dispatched from the room (no GitHub access here): say so to him in one line, with the page to press,
-  https://github.com/krishanraja/content-engine/actions/workflows/make-piece.yml (Run workflow, the room's branch,
-  the piece id).
+- The room dispatches it itself, never Krish (Krish, 2026-11-03: "Stop making me do shit you can easily do"): in a
+  cloud session with the GitHub tools, the workflow-run tool (`run_workflow`, `make-piece.yml`, the ref, input
+  `piece_id`), then read its run back and check its head commit holds the signed lock. Only when no route here can
+  dispatch it does he get the page, https://github.com/krishanraja/content-engine/actions/workflows/make-piece.yml,
+  with the exact branch: never `main` before the room's pull request has merged.
 
 ## When the server answered no_key
 
