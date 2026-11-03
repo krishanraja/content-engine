@@ -2,7 +2,7 @@ import React from 'react'
 import { HOUSE, HOUSE_FONTS } from '../../house/geometry'
 import { Device as Buddy } from '../devices/cursor_buddy'
 import { Device as Bubble } from '../devices/typing_bubble'
-import { Device as Logos } from '../devices/logo_card'
+import { Mark } from '../devices/logo_orbit/mark'
 import { Device as Stamp } from '../devices/stamp'
 import { Device as Scribble } from '../devices/scribble'
 import type { DeviceComponent, Box } from '../devices/types'
@@ -17,6 +17,9 @@ export interface FWPMockProps {
   series: string
   posterPosition?: string
 }
+export const FWP_SPLIT_CAPTION_ZONE = { left: 72, top: 1460, width: 900, height: 180 } as const
+/** Poster crop defaults for the Thursday still; override after camera-plate review. */
+export const FWP_POSTER_POSITIONS = { hook: '50% 25%', face: '50% 0%', proof: '50% 25%', close: '50% 25%' } as const
 const box = (left: number, top: number, width: number, height: number): Box => ({ left, top, width, height })
 function Still({ component: Component, id, params, slot, tokens, verb = 'enter', scale = 1, left = 0, top = 0 }:
   { component: DeviceComponent; id: string; params: EngineObject['params']; slot: Box; tokens: EngineTokens;
@@ -45,53 +48,69 @@ function Frame({ children, caption, face = false, tokens, posterSrc, logoSrc, se
       <span data-series style={{ fontFamily: HOUSE_FONTS.data, fontSize: 30, background: tokens.channel,
         color: tokens.ink, padding: '8px 12px' }}>{series}</span>
     </header>
-    <div data-caption-zone style={{ position: 'absolute', left: 72, top: 1180, width: 900, height: 320 }}>
+    <div data-caption-zone style={{ position: 'absolute', ...(face ? { left: 72, top: 1180, width: 900, height: 320 } : FWP_SPLIT_CAPTION_ZONE) }}>
       <div style={{ boxSizing: 'border-box', background: tokens.ink, color: tokens.cream,
-        padding: `${HOUSE.caption.paddingTop}px ${HOUSE.caption.paddingX}px ${HOUSE.caption.paddingBottom}px`,
+        padding: `${face ? HOUSE.caption.paddingTop : 10}px ${HOUSE.caption.paddingX}px ${face ? HOUSE.caption.paddingBottom : 10}px`,
         fontFamily: HOUSE_FONTS.structure, fontWeight: HOUSE.caption.weight, fontSize: HOUSE.caption.size,
         lineHeight: HOUSE.caption.lineHeight, letterSpacing: `${HOUSE.caption.letterSpacingEm}em`,
         boxShadow: `${HOUSE.caption.shadow}px ${HOUSE.caption.shadow}px 0 ${tokens.channel}` }}>{caption}</div>
     </div>
   </div>
 }
-function Annotation({ tokens, from, to }: { tokens: EngineTokens; from: number[]; to: number[] }) {
-  return <Still component={Scribble} id="scribble" verb="draw" params={{ shape: 'underline', from, to,
-    colour: 'mint', seed: 'fwp' }} slot={box(0, 0, 1080, 1920)} tokens={tokens} />
+// Annotation targets in frame pixels. Done! starts after the notification's
+// 40px card padding and 24px row padding; its line starts at y=256.
+export const FWP_TARGETS = {
+  done: { x: 120, y: 256, w: 126, h: 58 },
+  amazon: { x: 420, y: 220, w: 240, h: 240 },
+  noSending: { x: 72, y: 440, w: 828, h: 163.2 },
+} as const
+function Annotation({ tokens, name, params }: { tokens: EngineTokens; name: keyof typeof FWP_TARGETS;
+  params: EngineObject['params'] }) {
+  return <div data-scribble-target={name} data-target-box={JSON.stringify(FWP_TARGETS[name])} data-scribble-shape={String(params.shape)}>
+    <Still component={Scribble} id="scribble" verb="draw" params={{ ...params,
+      colour: 'mint', seed: 'fwp' }} slot={box(0, 0, 1080, 1920)} tokens={tokens} />
+  </div>
 }
 function Hook(props: FWPMockProps) {
-  return <Frame {...props} caption="Proactive AI is coming">
+  return <Frame {...props} posterPosition={props.posterPosition ?? FWP_POSTER_POSITIONS.hook} caption="Proactive AI is coming">
     <Still component={Bubble} id="typing_bubble" params={{ kind: 'notification', rows: [
       { text: 'Done! Booked the team offsite in Ibiza' },
     ] }} slot={box(56, 160, 920, 300)} tokens={props.tokens} />
     <Still component={Buddy} id="cursor_buddy" params={{ mood: 'proud' }}
       slot={box(0, 0, 900, 1100)} tokens={props.tokens} left={66} top={190} />
-    <Annotation tokens={props.tokens} from={[180, 450]} to={[840, 450]} />
+    <Annotation tokens={props.tokens} name="done" params={{ shape: 'underline', target: FWP_TARGETS.done, double: false }} />
   </Frame>
 }
 function Face(props: FWPMockProps) {
   return <Frame {...props} face caption="It doesn't spend my money" />
 }
 function Proof(props: FWPMockProps) {
-  return <Frame {...props} caption="Amazon for your groceries">
-    <Still component={Logos} id="logo_card-top" params={{ logos: [{ id: 'Meta' }, { id: 'Amazon' }, { id: 'Google' }] }}
-      slot={box(72, 220, 880, 500)} tokens={props.tokens} />
-    <Still component={Logos} id="logo_card-bottom" params={{ logos: [{ id: 'xAI' }, { id: 'Anthropic' }] }}
-      slot={box(172, 570, 680, 500)} tokens={props.tokens} />
-    <Annotation tokens={props.tokens} from={[402, 555]} to={[610, 555]} />
+  return <Frame {...props} posterPosition={props.posterPosition ?? FWP_POSTER_POSITIONS.proof} caption="Amazon for your groceries">
+    <svg width={1080} height={1000}>
+      {['Meta', 'Amazon', 'Google', 'xAI', 'Anthropic'].map((id, i) => {
+        const x = i < 3 ? 120 + i * 300 : 270 + (i - 3) * 300
+        const y = i < 3 ? 220 : 570
+        return <g key={id} data-logo-tile={id} transform={`translate(${x} ${y})`}>
+          <rect width={240} height={240} rx={24} fill="white" />
+          <g transform="translate(120 120)"><Mark id={id} size={140} /></g>
+        </g>
+      })}
+    </svg>
+    <Annotation tokens={props.tokens} name="amazon" params={{ shape: 'loop', target: FWP_TARGETS.amazon }} />
   </Frame>
 }
 function Close(props: FWPMockProps) {
   // Existing block stamp's paint slot is channel. Bind it to the answer mint;
   // the header and caption shadow retain the actual series identity colour.
   const slabTokens = { ...props.tokens, channel: props.tokens.mint }
-  return <Frame {...props} caption="no spending, no sending">
+  return <Frame {...props} posterPosition={props.posterPosition ?? FWP_POSTER_POSITIONS.close} caption="no spending, no sending">
     {['NO SPENDING', 'NO SENDING'].map((main, i) => <Still key={main} component={Stamp}
       id={`stamp-${i}`} verb="stamp" params={{ kind: 'block', main, tiltDeg: 0,
         at: { x: 0, y: 0, w: 345, h: 68 } }} slot={box(0, 0, 345, 68)}
       tokens={slabTokens} scale={2.4} left={72} top={230 + i * 210} />)}
     <Still component={Buddy} id="cursor_buddy" params={{ mood: 'sulk' }}
       slot={box(0, 0, 640, 800)} tokens={props.tokens} left={390} top={400} />
-    <Annotation tokens={props.tokens} from={[100, 665]} to={[430, 665]} />
+    <Annotation tokens={props.tokens} name="noSending" params={{ shape: 'tick', cx: 926, cy: 522, size: 72 }} />
   </Frame>
 }
 export const FWP_MOCKS = { hook: Hook, face: Face, proof: Proof, close: Close } as const

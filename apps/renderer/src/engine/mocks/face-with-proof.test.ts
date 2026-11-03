@@ -1,7 +1,8 @@
 import React from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
-import { FWP_MOCKS, type FWPMockProps } from './face-with-proof'
+import { FWP_MOCKS, FWP_SPLIT_CAPTION_ZONE, FWP_POSTER_POSITIONS, FWP_TARGETS, type FWPMockProps } from './face-with-proof'
+import { MARK_BOUNDS } from '../devices/logo_orbit/mark'
 import registry from '../../../../../config/logo-registry.json'
 
 const props: FWPMockProps = {
@@ -18,7 +19,8 @@ describe('face-with-proof Gate 2 stills', () => {
       expect(html).toContain('src="fixture-recording-poster.jpg"')
       expect(html).toContain('src="house-logo.svg"')
       expect(html).toContain('mind.the.gap')
-      expect(html).toContain('left:72px;top:1180px;width:900px;height:320px')
+      expect(html).toContain(beat === 'face' ? 'left:72px;top:1180px;width:900px;height:320px'
+        : 'left:72px;top:1460px;width:900px;height:180px')
       expect(html).not.toMatch(/ILLUSTRATIVE|PROVENANCE|Krish.s read|#[0-9a-f]{3,8}\b/i)
       expect(html.includes('data-proof-stage')).toBe(beat !== 'face')
     })
@@ -34,12 +36,19 @@ describe('face-with-proof Gate 2 stills', () => {
     for (const company of ['Meta', 'Amazon', 'Google', 'xAI', 'Anthropic']) {
       expect(html).toContain(`href="${registry.marks.find(m => m.company === company)!.file}"`)
     }
-    const images = [...html.matchAll(/<image[^>]+width="([\d.]+)" height="([\d.]+)"/g)]
-    expect(images).toHaveLength(5)
-    for (const image of images) {
-      expect(Number(image[1])).toBeGreaterThanOrEqual(140)
-      expect(Number(image[2])).toBeGreaterThanOrEqual(140)
+    const marks = [...html.matchAll(/<svg data-mark="([^"]+)"[^>]*width="([\d.]+)" height="([\d.]+)" viewBox="([^"]+)"/g)]
+    expect(marks).toHaveLength(5)
+    for (const mark of marks) {
+      const file = registry.marks.find(m => m.company === mark[1])!.file.split('/').at(-1)!
+      const bounds = MARK_BOUNDS[file]!
+      expect(mark[4]).toBe(bounds.drawn.join(' '))
+      const [, , w, h] = bounds.drawn
+      const scale = Math.min(Number(mark[2]) / w, Number(mark[3]) / h)
+      expect(Math.abs(Math.max(w * scale, h * scale) - 140)).toBeLessThanOrEqual(1)
     }
+    expect(html.match(/<rect width="240" height="240" rx="24" fill="white"/g)).toHaveLength(5)
+    expect(html.match(/translate\(\d+ 220\)/g)).toHaveLength(3)
+    expect(html.match(/translate\(\d+ 570\)/g)).toHaveLength(2)
     expect(html).not.toMatch(/rotate\((?!0\))/)
   })
   it('uses mint answer slabs with 72px type and a sulking buddy', () => {
@@ -55,5 +64,40 @@ describe('face-with-proof Gate 2 stills', () => {
     const html = render('face')
     expect(html).not.toContain('data-device')
     expect(html).toContain('It doesn&#x27;t spend my money')
+  })
+})
+
+// Check rendered layout as well as exported defaults so a disconnected constant cannot pass.
+describe('round 2 geometry', () => {
+  for (const beat of ['hook', 'proof', 'close'] as const) {
+    it(`${beat} keeps caption and its shadow below the eye band`, () => {
+      const html = render(beat)
+      const zone = html.match(/data-caption-zone="true" style="([^"]+)"/)![1]!
+      const top = Number(zone.match(/top:(\d+)px/)![1])
+      expect(top).toBeGreaterThanOrEqual(1260)
+      expect(top).toBe(FWP_SPLIT_CAPTION_ZONE.top)
+      expect(top + FWP_SPLIT_CAPTION_ZONE.height).toBeLessThanOrEqual(1640)
+      expect(html).toContain(`object-position:${FWP_POSTER_POSITIONS[beat]}`)
+      const override = renderToStaticMarkup(React.createElement(FWP_MOCKS[beat], { ...props, posterPosition: '45% 20%' }))
+      expect(override).toContain('object-position:45% 20%')
+    })
+  }
+  it('gives exactly one annotation to each named element', () => {
+    const elements = { done: { x: 120, y: 256, w: 126, h: 58 },
+      amazon: { x: 420, y: 220, w: 240, h: 240 },
+      noSending: { x: 72, y: 440, w: 828, h: 163.2 } }
+    for (const [beat, name] of [['hook', 'done'], ['proof', 'amazon'], ['close', 'noSending']] as const) {
+      const html = render(beat)
+      expect(html.match(/data-device="scribble"/g)).toHaveLength(1)
+      expect(html).toContain(`data-scribble-target="${name}"`)
+      expect(html).toContain(`data-scribble-shape="${{ hook: 'underline', proof: 'loop', close: 'tick' }[beat]}"`)
+      const encoded = html.match(/data-target-box="([^"]+)"/)![1]!
+      const t = JSON.parse(encoded.replaceAll('&quot;', '"')), e = elements[name]
+      expect(t).toEqual(FWP_TARGETS[name])
+      if (beat === 'proof') expect(html).toContain('data-logo-tile="Amazon" transform="translate(420 220)"')
+      if (beat === 'close') expect(html).toContain('data-device="stamp-1" data-scale="2.4" style="position:absolute;left:72px;top:440px;')
+      expect(Math.min(t.x + t.w, e.x + e.w)).toBeGreaterThan(Math.max(t.x, e.x))
+      expect(Math.min(t.y + t.h, e.y + e.h)).toBeGreaterThan(Math.max(t.y, e.y))
+    }
   })
 })
