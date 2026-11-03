@@ -272,9 +272,10 @@
     if (!bar) return;
     barBaked ??= bar.innerHTML;
     if (state.build_id && firstBuild && state.build_id !== firstBuild) { bar.innerHTML = barBaked; bar.hidden = false; return; }
-    if (!lines.length && !state.rebuild_needed) { bar.hidden = true; return; }
-    bar.textContent = lines.length ? "This page was built before the record changed. " + lines.join(". ") + "."
-      : "This page was built before the record changed. The steps here are live; a rebuild shows the rest.";
+    // Only something the overlay cannot draw asks for a rebuild: a write it already shows (a step, a post, Growth's
+    // tick) leaves the bar quiet, so the calendar never cries wolf (rebuild_needed alone is not a reason).
+    if (!lines.length) { bar.hidden = true; return; }
+    bar.textContent = "This page was built before the record changed. " + lines.join(". ") + ".";
     bar.hidden = false;
   }
   async function refreshState() {

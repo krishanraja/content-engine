@@ -92,7 +92,8 @@ easily, which can be saved, or I can: mark an idea as being useful in a future
 wider piece OR mark it as being an idea that should be stored for a future trend
 OR queue it for next week OR reject it", and of the off days, "I'm happy to plan
 the Tuesday, Thursday, Saturday, and Sunday content within the Sunday ideas
-session if you give me a few options to approve as you do the Mon/wed/fri". On
+session if you give me a few options to approve as you do the Mon/wed/fri" (Sunday
+is now a rest day and nothing is published: Ruling, Krish, 2026-11-02). On
 the day tabs: "Once I approve, the two scripts will go to teleprompter" and
 "Server sends directly"; titles are a "Sunday evening press"; go-live is
 "Approve each day Monday".
@@ -301,11 +302,11 @@ What refreshes by itself:
 What still needs a rebuild, and how the page says so: the yellow bar names it,
 line by line, when the record holds something the page has no place for ("Monday's
 piece is on the record", "Monday's short cut is on the record", "Monday's short
-script changed on the record"; each ends "rebuild to show it"). When the state's
-`rebuild_needed` is true (a piece of the week was written after the live build
-was made, `board_builds.created_at`) and nothing more precise applies, the bar
-says "This page was built before the record changed. The steps here are live; a
-rebuild shows the rest." A newer build than the open tab still says "A newer
+script changed on the record"; each ends "rebuild to show it"). The state's
+`rebuild_needed` (a piece of the week was written after the live build was made,
+`board_builds.created_at`) never raises the bar on its own: a write the overlay
+already draws (a step, a post, Growth's tick) needs no rebuild, so the bar speaks
+only when it can name what is missing. A newer build than the open tab still says "A newer
 version of this board is live" with Reload. The hooks are `data-live-day`,
 `data-live-piece`, `data-live-cuts`, `data-live-thumbs` on a day's tab,
 `data-live-step` on its step chips and `data-live-sha-<cut>` on Approve scripts;
@@ -364,8 +365,8 @@ selected build, never newer interaction data.
 ## Compatibility and cutover
 
 `config/boards.json.weeks` retains the original artifact addresses for source
-provenance and explicit legacy builds. Artifact mode remains the generator's
-default for compatibility, so live board workflows must pass `--target web`.
+provenance and explicit legacy builds. `--target web` is the generator's default
+and the only target that is published; artifact mode builds a legacy copy for comparison only.
 After active cutover, do not create a new Claude weekly board or synchronize old
 copies. The artifact synchronization hook reports the web destination instead.
 
