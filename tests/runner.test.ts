@@ -599,7 +599,7 @@ describe('Codex-independent runner', () => {
       await rm(runtimeRoot, { recursive: true, force: true })
       runtimeRoot = ''
     }
-  })
+  }, 30_000) // 7 roots x 3 mutations, each a runner start: 5 s was too tight on a loaded CI runner (PR #369)
 
   it('rejects misnamed or linked authority staging residue before any runner network or discovery work', async () => {
     for (const scenario of ['misnamed', 'linked'] as const) {
