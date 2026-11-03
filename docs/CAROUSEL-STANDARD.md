@@ -174,3 +174,15 @@ A finished carousel goes back to the board with every slide as its own image (`s
 and the zip only as a secondary download (`download`), in the off-day option `week_board.py` reads
 (docs/PUBLISH_BOARDS.md). A finished video goes back as `video` with its `drive`. The board refuses slides or a video
 without the Drive folder.
+
+## Where off-day assets are filed (Ruling, Krish, 3 November 2026)
+
+His words: "Ultimately, the entire week's schedule should just be in one Posts folder, well named. We don't need to
+pretend that this is two different engines. We already have Monday, Wednesday, and Friday going into the posts folder.
+From now on, we should just have Tuesday, Thursday, and Saturday also going into the posts folder with a similar naming
+convention and contents."
+
+- Every finished off-day asset goes into the library's `3 Posts` with `scripts/post-pack/send.py`, in a folder named
+  like the series days: `YYYY-MM-DD Tue off.day - Subject` (Thu, Sat likewise), with the same sections (`3 Video` for
+  a cut, `4 Social` for carousel cards and the post description).
+- The board's `drive` link for an off-day option is that `3 Posts` folder, never a separate Growth folder.
