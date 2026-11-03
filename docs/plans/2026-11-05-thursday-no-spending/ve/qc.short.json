@@ -1,6 +1,6 @@
 {
   "file": ".cache/produce/2026-11-05-no-spending/out/thu-short.mp4",
-  "sha256": "806e66ecee03a752d9195efac5c997dddfc576aa5a44153d3f3addcce4de29ff",
+  "sha256": "e83de283632fb23ab78e6de347f773bcf337e94ff8cdc6ae316214d07f9e1071",
   "duration_s": 47.51,
   "format": "face-with-proof",
   "checks": {
@@ -139,24 +139,24 @@
         },
         {
           "page": 4,
-          "frame": 249,
-          "text": "Awesome, really\ncool features and",
+          "frame": 229,
+          "text": "Awesome, really\ncool features",
           "agreement": 1.0,
           "variant": "raw",
           "pass": true
         },
         {
           "page": 5,
-          "frame": 304,
-          "text": "really helpful buta\nbit",
+          "frame": 282,
+          "text": "and really helpful",
           "agreement": 1.0,
           "variant": "raw",
           "pass": true
         },
         {
           "page": 6,
-          "frame": 328,
-          "text": "dangerous because\nonce",
+          "frame": 322,
+          "text": "but a bit dangerous\nbecause",
           "agreement": 1.0,
           "variant": "normalised",
           "pass": true
@@ -164,7 +164,7 @@
         {
           "page": 7,
           "frame": 351,
-          "text": "they're connected",
+          "text": "once they're\nconnected",
           "agreement": 1.0,
           "variant": "raw",
           "pass": true
@@ -195,8 +195,8 @@
         },
         {
           "page": 11,
-          "frame": 519,
-          "text": "itcan",
+          "frame": 530,
+          "text": "it can get",
           "agreement": 1.0,
           "variant": "raw",
           "pass": true
@@ -204,7 +204,7 @@
         {
           "page": 12,
           "frame": 546,
-          "text": "getabit dangerous.",
+          "text": "a bit dangerous.",
           "agreement": 1.0,
           "variant": "normalised",
           "pass": true
@@ -219,30 +219,22 @@
         },
         {
           "page": 14,
-          "frame": 604,
-          "text": "is the/no]",
+          "frame": 617,
+          "text": "is the no spending,",
           "agreement": 1.0,
-          "variant": "highlight",
+          "variant": "normalised",
           "pass": true
         },
         {
           "page": 15,
-          "frame": 628,
-          "text": "spending,/no]",
+          "frame": 644,
+          "text": "no sending rule.",
           "agreement": 1.0,
-          "variant": "highlight",
+          "variant": "normalised",
           "pass": true
         },
         {
           "page": 16,
-          "frame": 644,
-          "text": "sending [rule.]",
-          "agreement": 1.0,
-          "variant": "highlight",
-          "pass": true
-        },
-        {
-          "page": 17,
           "frame": 682,
           "text": "it doesn't spend my\nmoney,",
           "agreement": 1.0,
@@ -250,7 +242,7 @@
           "pass": true
         },
         {
-          "page": 18,
+          "page": 17,
           "frame": 716,
           "text": "doesn't send\nanything",
           "agreement": 1.0,
@@ -258,7 +250,7 @@
           "pass": true
         },
         {
-          "page": 19,
+          "page": 18,
           "frame": 737,
           "text": "out for me unless",
           "agreement": 1.0,
@@ -266,7 +258,7 @@
           "pass": true
         },
         {
-          "page": 20,
+          "page": 19,
           "frame": 758,
           "text": "I say so.",
           "agreement": 1.0,
@@ -274,35 +266,43 @@
           "pass": true
         },
         {
+          "page": 20,
+          "frame": 780,
+          "text": "And the fun part",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
           "page": 21,
-          "frame": 786,
-          "text": "And the fun partis",
+          "frame": 803,
+          "text": "is I didn't even",
           "agreement": 1.0,
           "variant": "raw",
           "pass": true
         },
         {
           "page": 22,
-          "frame": 821,
-          "text": "I didn't even write\nthis",
+          "frame": 836,
+          "text": "write this myself.",
           "agreement": 1.0,
           "variant": "raw",
           "pass": true
         },
         {
           "page": 23,
-          "frame": 858,
-          "text": "myself. I just put",
+          "frame": 871,
+          "text": "Ijust put one prompt",
           "agreement": 1.0,
-          "variant": "raw",
+          "variant": "normalised",
           "pass": true
         },
         {
           "page": 24,
           "frame": 890,
-          "text": "one prompt into my\nAl",
+          "text": "into my Al",
           "agreement": 1.0,
-          "variant": "normalised",
+          "variant": "raw",
           "pass": true
         },
         {
@@ -323,8 +323,8 @@
         },
         {
           "page": 27,
-          "frame": 988,
-          "text": "then it locks itself\ndown",
+          "frame": 980,
+          "text": "then it locks itself",
           "agreement": 1.0,
           "variant": "raw",
           "pass": true
@@ -332,29 +332,37 @@
         {
           "page": 28,
           "frame": 998,
-          "text": "or tells",
+          "text": "down or tells",
           "agreement": 1.0,
           "variant": "raw",
           "pass": true
         },
         {
           "page": 29,
-          "frame": 1020,
-          "text": "you how to lock it",
+          "frame": 1016,
+          "text": "you how to lock",
           "agreement": 1.0,
           "variant": "raw",
           "pass": true
         },
         {
           "page": 30,
-          "frame": 1070,
-          "text": "down. Prompt's in\nthe comments,",
+          "frame": 1031,
+          "text": "it down.",
           "agreement": 1.0,
           "variant": "raw",
           "pass": true
         },
         {
           "page": 31,
+          "frame": 1070,
+          "text": "Prompt's in the\ncomments,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
+        },
+        {
+          "page": 32,
           "frame": 1108,
           "text": "make sure you do\nthis,",
           "agreement": 1.0,
@@ -362,7 +370,7 @@
           "pass": true
         },
         {
-          "page": 32,
+          "page": 33,
           "frame": 1122,
           "text": "no spending,",
           "agreement": 1.0,
@@ -370,7 +378,7 @@
           "pass": true
         },
         {
-          "page": 33,
+          "page": 34,
           "frame": 1139,
           "text": "no sending,",
           "agreement": 1.0,
@@ -378,7 +386,7 @@
           "pass": true
         },
         {
-          "page": 34,
+          "page": 35,
           "frame": 1163,
           "text": "one easy step",
           "agreement": 1.0,
@@ -386,7 +394,7 @@
           "pass": true
         },
         {
-          "page": 35,
+          "page": 36,
           "frame": 1193,
           "text": "so you can save\nyourself",
           "agreement": 1.0,
@@ -394,7 +402,7 @@
           "pass": true
         },
         {
-          "page": 36,
+          "page": 37,
           "frame": 1237,
           "text": "and enjoy these new\ntechnologies",
           "agreement": 1.0,
@@ -402,7 +410,7 @@
           "pass": true
         },
         {
-          "page": 37,
+          "page": 38,
           "frame": 1276,
           "text": "without any of those\nweird",
           "agreement": 1.0,
@@ -410,7 +418,7 @@
           "pass": true
         },
         {
-          "page": 38,
+          "page": 39,
           "frame": 1309,
           "text": "moments or fails.",
           "agreement": 1.0,
@@ -439,25 +447,25 @@
         {
           "beat": "proof",
           "frame": 434,
-          "score": 0.9780565886802044,
+          "score": 0.9780579008893497,
           "pass": true
         },
         {
           "beat": "b4-8am",
           "frame": 528,
-          "score": 0.9780176115669423,
+          "score": 0.978012170120297,
           "pass": true
         },
         {
           "beat": "b5-rule",
           "frame": 599,
-          "score": 0.978549271192353,
+          "score": 0.9785270367007923,
           "pass": true
         },
         {
           "beat": "own-words",
           "frame": 704,
-          "score": 0.978067102469719,
+          "score": 0.9780199545085976,
           "pass": true
         },
         {
@@ -539,9 +547,9 @@
           "atFrame": 366,
           "peak_frame": 366,
           "lag_frames": 0,
-          "peak_difference": 67.88965606689453,
-          "event_difference": 67.88965606689453,
-          "threshold": 1.3729459047317505,
+          "peak_difference": 71.57819366455078,
+          "event_difference": 71.57819366455078,
+          "threshold": 1.943749487400055,
           "gradual": false,
           "pass": true
         },
@@ -550,9 +558,9 @@
           "atFrame": 402,
           "peak_frame": 403,
           "lag_frames": 1,
-          "peak_difference": 1.537476897239685,
-          "event_difference": 1.537476897239685,
-          "threshold": 0.0003728070150827989,
+          "peak_difference": 3.4516077041625977,
+          "event_difference": 3.4516077041625977,
+          "threshold": 0.011045239632949233,
           "gradual": false,
           "pass": true
         },
@@ -561,9 +569,9 @@
           "atFrame": 412,
           "peak_frame": 413,
           "lag_frames": 1,
-          "peak_difference": 15.475632667541504,
-          "event_difference": 15.475632667541504,
-          "threshold": 0.009455796098336577,
+          "peak_difference": 8.89851188659668,
+          "event_difference": 8.89851188659668,
+          "threshold": 0.014004291035234928,
           "gradual": false,
           "pass": true
         },
@@ -572,9 +580,9 @@
           "atFrame": 458,
           "peak_frame": 458,
           "lag_frames": 0,
-          "peak_difference": 1.9020321369171143,
-          "event_difference": 1.9020321369171143,
-          "threshold": 0.0003106725125689991,
+          "peak_difference": 4.277260780334473,
+          "event_difference": 4.277260780334473,
+          "threshold": 0.007853403221815825,
           "gradual": false,
           "pass": true
         },
@@ -583,9 +591,9 @@
           "atFrame": 458,
           "peak_frame": 459,
           "lag_frames": 1,
-          "peak_difference": 13.067315101623535,
-          "event_difference": 13.067315101623535,
-          "threshold": 0.0013224889116827399,
+          "peak_difference": 11.759587287902832,
+          "event_difference": 11.759587287902832,
+          "threshold": 0.0009587289823684841,
           "gradual": false,
           "pass": true
         },
@@ -594,9 +602,9 @@
           "atFrame": 504,
           "peak_frame": 504,
           "lag_frames": 0,
-          "peak_difference": 5.031867504119873,
-          "event_difference": 5.031867504119873,
-          "threshold": 0.00027859348483616486,
+          "peak_difference": 7.427957057952881,
+          "event_difference": 7.427957057952881,
+          "threshold": 0.009758301079273224,
           "gradual": false,
           "pass": true
         },
@@ -605,8 +613,8 @@
           "atFrame": 504,
           "peak_frame": 504,
           "lag_frames": 0,
-          "peak_difference": 5.031867504119873,
-          "event_difference": 5.031867504119873,
+          "peak_difference": 7.427957057952881,
+          "event_difference": 7.427957057952881,
           "threshold": 1e-06,
           "gradual": true,
           "pass": true
@@ -616,8 +624,8 @@
           "atFrame": 528,
           "peak_frame": 534,
           "lag_frames": 6,
-          "peak_difference": 5.277659893035889,
-          "event_difference": 3.374314069747925,
+          "peak_difference": 5.2840776443481445,
+          "event_difference": 3.374826192855835,
           "threshold": 1e-06,
           "gradual": true,
           "pass": true
@@ -627,8 +635,8 @@
           "atFrame": 534,
           "peak_frame": 534,
           "lag_frames": 0,
-          "peak_difference": 5.277659893035889,
-          "event_difference": 5.277659893035889,
+          "peak_difference": 5.2840776443481445,
+          "event_difference": 5.2840776443481445,
           "threshold": 1e-06,
           "gradual": true,
           "pass": true
@@ -638,9 +646,9 @@
           "atFrame": 594,
           "peak_frame": 598,
           "lag_frames": 4,
-          "peak_difference": 25.50328826904297,
-          "event_difference": 5.899904727935791,
-          "threshold": 0.007145546609535813,
+          "peak_difference": 25.552980422973633,
+          "event_difference": 5.88916015625,
+          "threshold": 0.002070627291686833,
           "gradual": false,
           "pass": true
         },
@@ -649,9 +657,9 @@
           "atFrame": 598,
           "peak_frame": 598,
           "lag_frames": 0,
-          "peak_difference": 62.49365234375,
-          "event_difference": 62.49365234375,
-          "threshold": 0.00019231755140936002,
+          "peak_difference": 62.50678253173828,
+          "event_difference": 62.50678253173828,
+          "threshold": 0.0009231242293026298,
           "gradual": false,
           "pass": true
         },
@@ -660,9 +668,9 @@
           "atFrame": 625,
           "peak_frame": 625,
           "lag_frames": 0,
-          "peak_difference": 25.791461944580078,
-          "event_difference": 25.791461944580078,
-          "threshold": 0.08700432814657688,
+          "peak_difference": 25.786571502685547,
+          "event_difference": 25.786571502685547,
+          "threshold": 0.08997837267816067,
           "gradual": false,
           "pass": true
         },
@@ -671,9 +679,9 @@
           "atFrame": 625,
           "peak_frame": 625,
           "lag_frames": 0,
-          "peak_difference": 60.3249397277832,
-          "event_difference": 60.3249397277832,
-          "threshold": 0.0007308066997211426,
+          "peak_difference": 60.32510757446289,
+          "event_difference": 60.32510757446289,
+          "threshold": 0.0005000256205676123,
           "gradual": false,
           "pass": true
         },
@@ -682,8 +690,8 @@
           "atFrame": 642,
           "peak_frame": 646,
           "lag_frames": 4,
-          "peak_difference": 73.6473388671875,
-          "event_difference": 9.141402244567871,
+          "peak_difference": 73.78125,
+          "event_difference": 9.221866607666016,
           "threshold": 1e-06,
           "gradual": false,
           "pass": true
@@ -825,9 +833,9 @@
           "atFrame": 1201,
           "peak_frame": 1202,
           "lag_frames": 1,
-          "peak_difference": 8.598738670349121,
-          "event_difference": 8.598738670349121,
-          "threshold": 0.08696827478706837,
+          "peak_difference": 8.603629112243652,
+          "event_difference": 8.603629112243652,
+          "threshold": 0.080353282392025,
           "gradual": false,
           "pass": true
         }
@@ -1056,7 +1064,7 @@
           {
             "page": 4,
             "fromFrame": 176,
-            "text": "Awesome, really cool features and",
+            "text": "Awesome, really cool features",
             "heard_word": "Awesome,",
             "heard_s": 5.901,
             "heard_frame": 177,
@@ -1066,34 +1074,34 @@
           },
           {
             "page": 5,
-            "fromFrame": 257,
-            "text": "really helpful but a bit",
-            "heard_word": "really",
-            "heard_s": 8.582,
-            "heard_frame": 257,
-            "delta_frames": 0,
+            "fromFrame": 240,
+            "text": "and really helpful",
+            "heard_word": "and",
+            "heard_s": 8.042,
+            "heard_frame": 241,
+            "delta_frames": -1,
             "matched_exactly": true,
             "status": "pass"
           },
           {
             "page": 6,
-            "fromFrame": 307,
-            "text": "dangerous because once",
-            "heard_word": "dangerous",
-            "heard_s": 10.222,
-            "heard_frame": 307,
+            "fromFrame": 295,
+            "text": "but a bit dangerous because",
+            "heard_word": "but",
+            "heard_s": 9.822,
+            "heard_frame": 295,
             "delta_frames": 0,
             "matched_exactly": true,
             "status": "pass"
           },
           {
             "page": 7,
-            "fromFrame": 331,
-            "text": "they're connected",
-            "heard_word": "they're",
-            "heard_s": 11.022,
-            "heard_frame": 331,
-            "delta_frames": 0,
+            "fromFrame": 325,
+            "text": "once they're connected",
+            "heard_word": "once",
+            "heard_s": 10.862,
+            "heard_frame": 326,
+            "delta_frames": -1,
             "matched_exactly": true,
             "status": "pass"
           },
@@ -1133,7 +1141,7 @@
           {
             "page": 11,
             "fromFrame": 504,
-            "text": "it can",
+            "text": "it can get",
             "heard_word": "it",
             "heard_s": 16.823,
             "heard_frame": 505,
@@ -1143,12 +1151,12 @@
           },
           {
             "page": 12,
-            "fromFrame": 528,
-            "text": "get a bit dangerous.",
-            "heard_word": "get",
-            "heard_s": 17.583,
-            "heard_frame": 527,
-            "delta_frames": 1,
+            "fromFrame": 532,
+            "text": "a bit dangerous.",
+            "heard_word": "a",
+            "heard_s": 17.743,
+            "heard_frame": 532,
+            "delta_frames": 0,
             "matched_exactly": true,
             "status": "pass"
           },
@@ -1166,7 +1174,7 @@
           {
             "page": 14,
             "fromFrame": 589,
-            "text": "is the no",
+            "text": "is the no spending,",
             "heard_word": "is",
             "heard_s": 19.684,
             "heard_frame": 591,
@@ -1176,28 +1184,17 @@
           },
           {
             "page": 15,
-            "fromFrame": 609,
-            "text": "spending, no",
-            "heard_word": "spending,",
-            "heard_s": 20.324,
-            "heard_frame": 610,
-            "delta_frames": -1,
-            "matched_exactly": true,
-            "status": "pass"
-          },
-          {
-            "page": 16,
-            "fromFrame": 631,
-            "text": "sending rule.",
-            "heard_word": "sending",
-            "heard_s": 21.044,
-            "heard_frame": 631,
+            "fromFrame": 625,
+            "text": "no sending rule.",
+            "heard_word": "no",
+            "heard_s": 20.844,
+            "heard_frame": 625,
             "delta_frames": 0,
             "matched_exactly": true,
             "status": "pass"
           },
           {
-            "page": 17,
+            "page": 16,
             "fromFrame": 646,
             "text": "It doesn't spend my money,",
             "heard_word": "It",
@@ -1208,7 +1205,7 @@
             "status": "pass"
           },
           {
-            "page": 18,
+            "page": 17,
             "fromFrame": 692,
             "text": "doesn't send anything",
             "heard_word": "doesn't",
@@ -1219,7 +1216,7 @@
             "status": "pass"
           },
           {
-            "page": 19,
+            "page": 18,
             "fromFrame": 721,
             "text": "out for me unless",
             "heard_word": "out",
@@ -1230,7 +1227,7 @@
             "status": "pass"
           },
           {
-            "page": 20,
+            "page": 19,
             "fromFrame": 742,
             "text": "I say so.",
             "heard_word": "I",
@@ -1241,9 +1238,9 @@
             "status": "pass"
           },
           {
-            "page": 21,
+            "page": 20,
             "fromFrame": 764,
-            "text": "And the fun part is",
+            "text": "And the fun part",
             "heard_word": "And",
             "heard_s": 25.465,
             "heard_frame": 764,
@@ -1252,34 +1249,45 @@
             "status": "pass"
           },
           {
+            "page": 21,
+            "fromFrame": 783,
+            "text": "is I didn't even",
+            "heard_word": "is",
+            "heard_s": 26.145,
+            "heard_frame": 784,
+            "delta_frames": -1,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
             "page": 22,
-            "fromFrame": 789,
-            "text": "I didn't even write this",
-            "heard_word": "I",
-            "heard_s": 26.265,
-            "heard_frame": 788,
-            "delta_frames": 1,
+            "fromFrame": 810,
+            "text": "write this myself.",
+            "heard_word": "write",
+            "heard_s": 27.025,
+            "heard_frame": 811,
+            "delta_frames": -1,
             "matched_exactly": true,
             "status": "pass"
           },
           {
             "page": 23,
-            "fromFrame": 824,
-            "text": "myself. I just put",
-            "heard_word": "myself.",
-            "heard_s": 27.465,
-            "heard_frame": 824,
-            "delta_frames": 0,
+            "fromFrame": 848,
+            "text": "I just put one prompt",
+            "heard_word": "I",
+            "heard_s": 28.226,
+            "heard_frame": 847,
+            "delta_frames": 1,
             "matched_exactly": true,
             "status": "pass"
           },
           {
             "page": 24,
-            "fromFrame": 861,
-            "text": "one prompt into my AI",
-            "heard_word": "one",
-            "heard_s": 28.726,
-            "heard_frame": 862,
+            "fromFrame": 875,
+            "text": "into my AI",
+            "heard_word": "into",
+            "heard_s": 29.186,
+            "heard_frame": 876,
             "delta_frames": -1,
             "matched_exactly": true,
             "status": "pass"
@@ -1309,7 +1317,7 @@
           {
             "page": 27,
             "fromFrame": 953,
-            "text": "then it locks itself down",
+            "text": "then it locks itself",
             "heard_word": "then",
             "heard_s": 31.786,
             "heard_frame": 954,
@@ -1319,19 +1327,19 @@
           },
           {
             "page": 28,
-            "fromFrame": 991,
-            "text": "or tells",
-            "heard_word": "or",
-            "heard_s": 33.026,
-            "heard_frame": 991,
-            "delta_frames": 0,
+            "fromFrame": 984,
+            "text": "down or tells",
+            "heard_word": "down",
+            "heard_s": 32.826,
+            "heard_frame": 985,
+            "delta_frames": -1,
             "matched_exactly": true,
             "status": "pass"
           },
           {
             "page": 29,
             "fromFrame": 1002,
-            "text": "you how to lock it",
+            "text": "you how to lock",
             "heard_word": "you",
             "heard_s": 33.427,
             "heard_frame": 1003,
@@ -1341,17 +1349,28 @@
           },
           {
             "page": 30,
-            "fromFrame": 1021,
-            "text": "down. Prompt's in the comments,",
-            "heard_word": "down.",
-            "heard_s": 34.027,
-            "heard_frame": 1021,
+            "fromFrame": 1018,
+            "text": "it down.",
+            "heard_word": "it",
+            "heard_s": 33.947,
+            "heard_frame": 1018,
             "delta_frames": 0,
             "matched_exactly": true,
             "status": "pass"
           },
           {
             "page": 31,
+            "fromFrame": 1040,
+            "text": "Prompt's in the comments,",
+            "heard_word": "Prompt's",
+            "heard_s": 34.667,
+            "heard_frame": 1040,
+            "delta_frames": 0,
+            "matched_exactly": true,
+            "status": "pass"
+          },
+          {
+            "page": 32,
             "fromFrame": 1085,
             "text": "make sure you do this,",
             "heard_word": "make",
@@ -1362,7 +1381,7 @@
             "status": "pass"
           },
           {
-            "page": 32,
+            "page": 33,
             "fromFrame": 1112,
             "text": "no spending,",
             "heard_word": "no",
@@ -1373,7 +1392,7 @@
             "status": "pass"
           },
           {
-            "page": 33,
+            "page": 34,
             "fromFrame": 1128,
             "text": "no sending,",
             "heard_word": "no",
@@ -1384,7 +1403,7 @@
             "status": "pass"
           },
           {
-            "page": 34,
+            "page": 35,
             "fromFrame": 1144,
             "text": "one easy step",
             "heard_word": "one",
@@ -1395,7 +1414,7 @@
             "status": "pass"
           },
           {
-            "page": 35,
+            "page": 36,
             "fromFrame": 1167,
             "text": "so you can save yourself",
             "heard_word": "so",
@@ -1406,7 +1425,7 @@
             "status": "pass"
           },
           {
-            "page": 36,
+            "page": 37,
             "fromFrame": 1199,
             "text": "and enjoy these new technologies",
             "heard_word": "and",
@@ -1417,7 +1436,7 @@
             "status": "pass"
           },
           {
-            "page": 37,
+            "page": 38,
             "fromFrame": 1252,
             "text": "without any of those weird",
             "heard_word": "without",
@@ -1428,7 +1447,7 @@
             "status": "pass"
           },
           {
-            "page": 38,
+            "page": 39,
             "fromFrame": 1279,
             "text": "moments or fails.",
             "heard_word": "moments",
@@ -1544,21 +1563,21 @@
           {
             "page": 7,
             "fromFrame": 504,
-            "text": "it can",
+            "text": "it can get",
             "change_frame": 504,
-            "frame": 509,
-            "read": "it can",
+            "frame": 528,
+            "read": "it can get",
             "score": 1.0,
             "exact": true,
             "status": "pass"
           },
           {
             "page": 8,
-            "fromFrame": 528,
-            "text": "get a bit dangerous.",
-            "change_frame": 528,
+            "fromFrame": 532,
+            "text": "a bit dangerous.",
+            "change_frame": 532,
             "frame": 539,
-            "read": "getabit dangerous.",
+            "read": "a bit dangerous.",
             "score": 1.0,
             "exact": true,
             "status": "pass"
@@ -1577,76 +1596,76 @@
           {
             "page": 10,
             "fromFrame": 589,
-            "text": "is the no",
+            "text": "is the no spending,",
             "change_frame": 589,
-            "frame": 598,
-            "read": "is the/no]",
+            "frame": 609,
+            "read": "is the no spending,",
             "score": 1.0,
             "exact": true,
             "status": "pass"
           },
           {
             "page": 11,
-            "fromFrame": 609,
-            "text": "spending, no",
-            "change_frame": 609,
-            "frame": 625,
-            "read": "spending,/no]",
+            "fromFrame": 625,
+            "text": "no sending rule.",
+            "change_frame": 625,
+            "frame": 642,
+            "read": "no sending rule.",
             "score": 1.0,
             "exact": true,
             "status": "pass"
           },
           {
             "page": 12,
-            "fromFrame": 631,
-            "text": "sending rule.",
-            "change_frame": 631,
-            "frame": 642,
-            "read": "sending [rule.]",
+            "fromFrame": 764,
+            "text": "And the fun part",
+            "change_frame": 763,
+            "frame": 776,
+            "read": "And the fun part",
             "score": 1.0,
             "exact": true,
             "status": "pass"
           },
           {
             "page": 13,
-            "fromFrame": 764,
-            "text": "And the fun part is",
-            "change_frame": 763,
-            "frame": 783,
-            "read": "And the fun partis",
+            "fromFrame": 783,
+            "text": "is I didn't even",
+            "change_frame": 783,
+            "frame": 796,
+            "read": "is I didn't even",
             "score": 1.0,
             "exact": true,
             "status": "pass"
           },
           {
             "page": 14,
-            "fromFrame": 789,
-            "text": "I didn't even write this",
-            "change_frame": 789,
-            "frame": 818,
-            "read": "I didn't even write\nthis",
+            "fromFrame": 810,
+            "text": "write this myself.",
+            "change_frame": 810,
+            "frame": 824,
+            "read": "write this myself.",
             "score": 1.0,
             "exact": true,
             "status": "pass"
           },
           {
             "page": 15,
-            "fromFrame": 824,
-            "text": "myself. I just put",
-            "change_frame": 824,
-            "frame": 854,
-            "read": "myself. I just put",
+            "fromFrame": 848,
+            "text": "I just put one prompt",
+            "change_frame": 848,
+            "frame": 866,
+            "read": "Ijust put one prompt",
             "score": 1.0,
             "exact": true,
             "status": "pass"
           },
           {
             "page": 16,
-            "fromFrame": 861,
-            "text": "one prompt into my AI",
-            "change_frame": 861,
+            "fromFrame": 875,
+            "text": "into my AI",
+            "change_frame": 875,
             "frame": 885,
-            "read": "one prompt into my\nAl",
+            "read": "into my Al",
             "score": 1.0,
             "exact": true,
             "status": "pass"
@@ -1676,21 +1695,21 @@
           {
             "page": 19,
             "fromFrame": 953,
-            "text": "then it locks itself down",
+            "text": "then it locks itself",
             "change_frame": 953,
-            "frame": 984,
-            "read": "then it locks itself\ndown",
+            "frame": 975,
+            "read": "then it locks itself",
             "score": 1.0,
             "exact": true,
             "status": "pass"
           },
           {
             "page": 20,
-            "fromFrame": 991,
-            "text": "or tells",
-            "change_frame": 991,
+            "fromFrame": 984,
+            "text": "down or tells",
+            "change_frame": 984,
             "frame": 994,
-            "read": "or tells",
+            "read": "down or tells",
             "score": 1.0,
             "exact": true,
             "status": "pass"
@@ -1698,27 +1717,38 @@
           {
             "page": 21,
             "fromFrame": 1002,
-            "text": "you how to lock it",
+            "text": "you how to lock",
             "change_frame": 1002,
-            "frame": 1018,
-            "read": "you how to lock it",
+            "frame": 1014,
+            "read": "you how to lock",
             "score": 1.0,
             "exact": true,
             "status": "pass"
           },
           {
             "page": 22,
-            "fromFrame": 1021,
-            "text": "down. Prompt's in the comments,",
-            "change_frame": 1021,
-            "frame": 1055,
-            "read": "down. Prompt's in\nthe comments,",
+            "fromFrame": 1018,
+            "text": "it down.",
+            "change_frame": 1018,
+            "frame": 1021,
+            "read": "it down.",
             "score": 1.0,
             "exact": true,
             "status": "pass"
           },
           {
             "page": 23,
+            "fromFrame": 1040,
+            "text": "Prompt's in the comments,",
+            "change_frame": 1040,
+            "frame": 1055,
+            "read": "Prompt's in the\ncomments,",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 24,
             "fromFrame": 1085,
             "text": "make sure you do this,",
             "change_frame": 1085,
@@ -1729,7 +1759,7 @@
             "status": "pass"
           },
           {
-            "page": 24,
+            "page": 25,
             "fromFrame": 1112,
             "text": "no spending,",
             "change_frame": 1112,
@@ -1740,7 +1770,7 @@
             "status": "pass"
           },
           {
-            "page": 25,
+            "page": 26,
             "fromFrame": 1128,
             "text": "no sending,",
             "change_frame": 1128,
@@ -1751,7 +1781,7 @@
             "status": "pass"
           },
           {
-            "page": 26,
+            "page": 27,
             "fromFrame": 1144,
             "text": "one easy step",
             "change_frame": 1144,
@@ -1762,7 +1792,7 @@
             "status": "pass"
           },
           {
-            "page": 27,
+            "page": 28,
             "fromFrame": 1167,
             "text": "so you can save yourself",
             "change_frame": 1167,
@@ -1773,7 +1803,7 @@
             "status": "pass"
           },
           {
-            "page": 28,
+            "page": 29,
             "fromFrame": 1199,
             "text": "and enjoy these new technologies",
             "change_frame": 1199,
@@ -1784,7 +1814,7 @@
             "status": "pass"
           },
           {
-            "page": 29,
+            "page": 30,
             "fromFrame": 1252,
             "text": "without any of those weird",
             "change_frame": 1252,
@@ -1795,7 +1825,7 @@
             "status": "pass"
           },
           {
-            "page": 30,
+            "page": 31,
             "fromFrame": 1279,
             "text": "moments or fails.",
             "change_frame": 1279,
@@ -1808,43 +1838,43 @@
           {
             "page": 0,
             "fromFrame": 176,
-            "text": "Awesome, really cool features and",
+            "text": "Awesome, really cool features",
             "change_frame": 176,
-            "frame": 240,
-            "read": "Awesome, really\ncool features and",
+            "frame": 217,
+            "read": "Awesome, really\ncool features",
             "score": 1.0,
             "exact": true,
             "status": "pass"
           },
           {
             "page": 1,
-            "fromFrame": 257,
-            "text": "really helpful but a bit",
-            "change_frame": 257,
-            "frame": 301,
-            "read": "really helpful buta\nbit",
+            "fromFrame": 240,
+            "text": "and really helpful",
+            "change_frame": 240,
+            "frame": 268,
+            "read": "and really helpful",
             "score": 1.0,
             "exact": true,
             "status": "pass"
           },
           {
             "page": 2,
-            "fromFrame": 307,
-            "text": "dangerous because once",
-            "change_frame": 307,
-            "frame": 325,
-            "read": "dangerous because\nonce",
+            "fromFrame": 295,
+            "text": "but a bit dangerous because",
+            "change_frame": 295,
+            "frame": 319,
+            "read": "but a bit dangerous\nbecause",
             "score": 1.0,
             "exact": true,
             "status": "pass"
           },
           {
             "page": 3,
-            "fromFrame": 331,
-            "text": "they're connected",
-            "change_frame": 331,
+            "fromFrame": 325,
+            "text": "once they're connected",
+            "change_frame": 325,
             "frame": 336,
-            "read": "they're connected",
+            "read": "once they're\nconnected",
             "score": 1.0,
             "exact": true,
             "status": "pass"
@@ -1895,7 +1925,7 @@
           }
         ],
         "failed": [],
-        "changes_found": 108,
+        "changes_found": 115,
         "status": "pass",
         "pass": true,
         "regions": [
@@ -1929,14 +1959,14 @@
           "frame": 141
         },
         "face": {
-          "ssim": 0.8396787823631195,
+          "ssim": 0.8396878907737663,
           "min": 0.75,
           "pass": true,
           "golden": "face-with-proof",
           "frame": 328
         },
         "proof": {
-          "ssim": 0.8518160614981619,
+          "ssim": 0.8406541967766835,
           "min": 0.75,
           "pass": true,
           "golden": "face-with-proof",
@@ -2237,14 +2267,14 @@
         "frame": 141
       },
       "face": {
-        "ssim": 0.8396787823631195,
+        "ssim": 0.8396878907737663,
         "min": 0.75,
         "pass": true,
         "golden": "face-with-proof",
         "frame": 328
       },
       "proof": {
-        "ssim": 0.8518160614981619,
+        "ssim": 0.8406541967766835,
         "min": 0.75,
         "pass": true,
         "golden": "face-with-proof",
