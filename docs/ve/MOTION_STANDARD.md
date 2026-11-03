@@ -56,7 +56,7 @@ to 7 frames; a ring or waveform keeps moving underneath. A move that restarts on
 | Word colour and weight | white, heavy sans, soft shadow, no box | white Archivo bold, shadow |
 | Word position, face shot | centre at 66% of the height, on the chest, under the chin | centre at about y 1270 to 1440, and never on the face |
 | Held title | yellow, two lines, top at 19% of the height, about 44 px cap height of 718 | `brand.title`, top at y 250, 66 px |
-| Loud word | a large upright serif in quotes ("SPEAK") over the chest in the jackroberts reel | the italic house serif until an upright licensed serif is approved |
+| Loud word | a large upright serif in quotes ("SPEAK") over the chest in the jackroberts reel | the house serif (Fraunces); see "The brand may evolve" below |
 
 **Never on the face.** `ve qc` fails any caption page whose box overlaps the face found in that frame, grown by 10%
 (`captions.off_face`, `scripts/velib/qc_faces.py`). On a SPLIT beat his face is in the lower half, so a word at chest
@@ -80,11 +80,20 @@ a takeaway in words). `ve lint` refuses a spec publishing after 5 Nov without on
 `ve refs <piece> <cut>` puts the cut's frames above each reference's frames at the same points of their length; the
 Critic scores the cut 0 to 10 against each card, and below 8 the cut is not ready (`scripts/velib/refgate.py`).
 
+## The brand may evolve, never into an AI cliché
+
+Krish, 2026-11-03: "no, instrument serif is over used in AI production, stick to BRAND", then "evolve my brand if you
+need, but do not use bog standard AI cliches". So a look the references need is first sought inside the brand kit. When
+the kit has nothing that does the job, the brand may grow, as a proposal to Krish naming what it adds that the kit
+cannot. A face, colour or device that is everywhere in AI-made content is never proposed (Instrument Serif and the
+other fashionable free display serifs, purple-to-blue gradients, glowing neural meshes, robots and brains, sparkle
+icons). For the loud word that means the house serif: the kit carries Fraunces italic only, and the upright cut of the
+same family is the evolution to propose, not a borrowed face.
+
 ## Waiting on Krish
 
 - Sign this standard, and word mode as the default caption build for face-with-proof.
-- An upright serif for the loud word: the house serif (Fraunces) ships italic only. Proposed: Instrument Serif
-  (SIL Open Font License, free) or a licensed upright cut of the house serif. Nothing is added until he picks.
+- Whether the loud word gets the upright Fraunces cut added to the kit, or stays italic.
 - Spend for the four Codex cards above (each is written, none dispatched).
 
 ## How it was measured
