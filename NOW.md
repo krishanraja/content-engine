@@ -56,11 +56,11 @@ Everything to 29 October 2026 is in `docs/history/2026-10-29-NOW-changed-recentl
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-02): merge the live-board PR on green, record his chat yes for Wed, Fri and Sat, republish the 2 Nov board; then Thursday key frames round 2 (Codex). Then the Sunday run on Sat 7 Nov fills the 9 Nov Saturday good news; read the board back after it.
+- Next (2026-11-03): Codex builds Thursday key frames round 3 (split at y 760, his whole head in frame; Krish approved the mock); check its stills, freeze the lock, render Thursday. Then the Sunday run on Sat 7 Nov fills the 9 Nov Saturday good news.
 - Waiting on Krish (as of 2026-10-29): Control Center's `GITHUB_TOKEN` needs Contents: write and Actions: read on this repository for the make press; whether a make run's pull request auto-merges on green CI; whether the $15 cap gets a reader; the Buffer plan (due 31 October); approving the three one-opening, one-close floor standards through the Rejections route; OUR TEST or MY TEST on a video label he presents; "we" in article titles while video titles keep "I".
 - Waiting on Krish (as of 2026-10-29, Wave 2 and 3 production): by ear, the levels and a sound-effect set; Gate 2 on face-with-proof frames and six devices; 5 to 10 golden frames; 20 minutes on 9 Nov scoring shadow cuts. His 29 Oct answers and the home-computer steps: the handover above.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): CI stays advisory, so a session waits for green before it merges.
-- North Star check (2026-11-02): holds.
+- North Star check (2026-11-03): holds.
 
 ## Read next
 
