@@ -23,7 +23,12 @@
     "download": {
      "url": "https://board.asset/tue-translator-video.mp4",
      "label": "the finished video, 9:16 MP4, 2:10 (19 MB)"
-    }
+    },
+    "video": {
+     "url": "https://board.asset/tue-translator-video.mp4",
+     "poster": "https://board.asset/tue-translator-still.jpg"
+    },
+    "drive": "https://drive.google.com/drive/folders/1EKDa-jCN1UWs0KQAZNCVTghUHejUWZYX"
    },
    {
     "concept_id": "claudejobs",

@@ -152,3 +152,25 @@ His words: "we need 5 stories", then "take the five stories" and "encode that 2n
 - Every Saturday good-news carousel carries exactly five stories.
 - Each story is about real people who benefited from AI in a way a reader feels at once: a named person or group, what changed for them. His words: "Frontier models lowering prices isn't really fitting with how humans are benefitting from AI". Price cuts, model launches, funding rounds and lab or pharma deals are not stories.
 - Each story is checked against its primary source and dated as close to the week as the stories allow. Every card carries its source and its date.
+
+## Brand mark on news, roundup and text-led carousels (Ruling, Krish, 3 November 2026)
+
+His words, of the Saturday 7 November good-news carousel: "You've fabricated my brand logo. The brand word mark and
+logo don't need to go at the top of this. They need to go in the bottom corner, subtly, on all carousels of this
+nature."
+
+- The mark comes only from the house brand files named in `config/studio.json` (`publication.mark`, `publication.logo`,
+  `publication.stacked`, sourced from krishanraja/control-center). It is never set as type or redrawn.
+- On every carousel of this nature (news, roundup, text-led) it sits small and subtle in a bottom corner, never at
+  the top.
+- Before delivery, check every slide at full size for both.
+
+## Seeing a finished carousel (Ruling, Krish, 3 November 2026)
+
+His words: "I should be able to see the assets directly in the publish board or have a link to the Google Drive where
+the assets are. I shouldn't have to download a fucking zip and then look at it that way."
+
+A finished carousel goes back to the board with every slide as its own image (`slides`), its Drive folder (`drive`)
+and the zip only as a secondary download (`download`), in the off-day option `week_board.py` reads
+(docs/PUBLISH_BOARDS.md). A finished video goes back as `video` with its `drive`. The board refuses slides or a video
+without the Drive folder.
