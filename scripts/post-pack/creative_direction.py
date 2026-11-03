@@ -41,6 +41,10 @@ BAR = ROOT / 'config' / 'reference-cuts.json'  # the bar; its `under_test` holds
 FILE = 'creative-direction.json'
 # Pieces published on or after this day render only from a signed direction (the first Sunday of the new loop).
 FROM = date(2026, 10, 26)
+# Pieces published on or after this day name one motion system from the bank's motion layer (learning
+# visuals-add-not-repeat: "one named motion system per piece, decided before the storyboard").
+MOTION_FROM = '2026-11-09'
+DEVICES = ROOT / 'config' / 've' / 'devices.json'
 PICTURES = ('face', 'screen', 'chart', 'card', 'photo', 'footage', 'logo', 'document')
 MAX_SCREEN_WORDS = 12        # Wednesday's figures were "too wordy"; a viewer reads about this many in a beat
 MIN_POINT_WORDS = 4
@@ -97,6 +101,61 @@ def bank():
             {x['id']: x for x in f.get('script') or []}, {x['id']: x for x in f.get('production') or []})
 
 
+def motion_modules(path=STYLES):
+    """id -> module for the bank's motion layer (the styles a piece's motion system is picked from)."""
+    data = json.loads(Path(path).read_text(encoding='utf-8'))
+    return {m['id']: m for m in data.get('bank') or [] if m.get('layer') == 'motion'}
+
+
+FITS = {'often': 2, 'sometimes': 1, 'rarely': -2}
+
+
+def pick_motion(point_types, fmt, top=3, modules=None, devices=None):
+    """A ranked shortlist of motion modules for a piece: only those made for this format, never one Krish marked not
+    for us; his liked ones first, then the most point types matched, how often the style suits the channel, and one
+    the ve library can already draw. Returns [(id, score, why)]; the session names one and says why."""
+    modules = motion_modules() if modules is None else modules
+    if devices is None:
+        devices = set(json.loads(DEVICES.read_text(encoding='utf-8')).get('devices') or {})
+    wanted = set(point_types or [])
+    out = []
+    for mid, m in modules.items():
+        verdict = m.get('krish_verdict')
+        if verdict == 'not for us' or fmt not in (m.get('formats') or []):
+            continue
+        hit = sorted(wanted & set(m.get('point_types') or []))
+        ready = [d for d in m.get('ve_route') or [] if d in devices]
+        score = (10 if verdict == 'liked' else 0) + 3 * len(hit) + FITS.get(m.get('fits'), 0) + (1 if ready else 0)
+        why = (f"{verdict}; matches {', '.join(hit) or 'no point type'}; suits the channel {m.get('fits')}; "
+               + (f"drawn by {', '.join(ready)}" if ready else 'needs a ve device card first'))
+        out.append((mid, score, why))
+    out.sort(key=lambda x: -x[1])  # stable: ties keep the bank's order
+    return out[:top]
+
+
+def motion_problems(doc, modules=None):
+    """style.motion is {module, reason}: one module from the motion layer, with the point it lands, never one Krish
+    turned down. Required for pieces published from MOTION_FROM; checked whenever it is given."""
+    modules = motion_modules() if modules is None else modules
+    motion = (doc.get('style') or {}).get('motion')
+    if motion is None:
+        if str(doc.get('publish_day') or '') >= MOTION_FROM:
+            return ['style.motion is missing: name one motion system from the bank\'s motion layer and why '
+                    '(creative_direction.py motion --points ... --format ...)']
+        return []
+    if not isinstance(motion, dict):
+        return ['style.motion is one {"module", "reason"}: one motion system per piece, never a list']
+    mid = motion.get('module')
+    if mid not in modules:
+        return [f'style.motion.module {mid!r} is not a motion module in config/style-references.json']
+    out = []
+    if modules[mid].get('krish_verdict') == 'not for us':
+        out.append(f'style.motion.module {mid!r} is one Krish marked not for us')
+    if len(str(motion.get('reason') or '').split()) < MIN_POINT_WORDS:
+        out.append('style.motion.reason says which point this motion makes land faster')
+    return out
+
+
 def krish_said(signed):
     return isinstance(signed, dict) and signed.get('by') == 'Krish' and len(str(signed.get('said') or '').split()) >= 2 \
         and re.match(r'^\d{4}-\d{2}-\d{2}$', str(signed.get('on') or ''))
@@ -114,6 +173,7 @@ def check(doc, scripts=None, for_render=False):
         out.append(f'style.script {style.get("script")!r} is not a script format in config/style-references.json')
     if style.get('production') not in production_formats:
         out.append(f'style.production {style.get("production")!r} is not a production format in config/style-references.json')
+    out += motion_problems(doc)
     brand = doc.get('brand') or {}
     for key in ('series', 'reference', 'captions', 'intro_sting'):
         if not brand.get(key):
@@ -270,7 +330,7 @@ def template(plan, cut, script_text, take='on_camera'):
               'on_screen_text': '', 'modules': [], 'motion': '', 'timing': 'from the take (narration_diff.py)'} for s in sentences]
     path = Path(plan) / FILE
     doc = json.loads(path.read_text(encoding='utf-8')) if path.exists() else {
-        'piece_id': '', 'publish_day': '', 'style': {'script': '', 'production': ''},
+        'piece_id': '', 'publish_day': '', 'style': {'script': '', 'production': '', 'motion': {'module': '', 'reason': ''}},
         'brand': {'series': '', 'reference': '', 'captions': '', 'intro_sting': ''},
         'max_face_share': DEFAULT_MAX_FACE_SHARE, 'cuts': {}, 'article': {'visuals': []}, 'do_not': [],
         'acceptance': ACCEPTANCE, 'signed': {'by': '', 'said': '', 'on': '', 'script_sha256': {}}}
@@ -402,6 +462,33 @@ def _self_test():
         probs.append('his tick on the other picture wins')
     if production_choices(good) != {}:
         probs.append('a direction with no choices records none')
+    # One named motion system per piece, from the bank's motion layer.
+    mm = {'a': {'formats': ['short_video'], 'point_types': ['number'], 'fits': 'often', 've_route': ['kinetic_stat'], 'krish_verdict': 'untested'},
+          'b': {'formats': ['short_video'], 'point_types': ['mood'], 'fits': 'rarely', 've_route': ['needs_device'], 'krish_verdict': 'liked'},
+          'c': {'formats': ['short_video'], 'point_types': ['number'], 'fits': 'often', 've_route': [], 'krish_verdict': 'not for us'},
+          'd': {'formats': ['cover'], 'point_types': ['number'], 'fits': 'often', 've_route': [], 'krish_verdict': 'untested'}}
+    ranked = [x[0] for x in pick_motion(['number'], 'short_video', modules=mm, devices={'kinetic_stat'})]
+    if ranked != ['b', 'a']:
+        probs.append(f'the picker puts his liked first, drops not for us and other formats: {ranked}')
+    if len(pick_motion(['number'], 'short_video', top=1, modules=mm, devices=set())) != 1:
+        probs.append('the picker returns at most top')
+    if len(motion_modules()) < 17 or not pick_motion(['number'], 'long_video'):
+        probs.append('the committed bank has the motion layer and the picker finds a style for a number in a long cut')
+    new = json.loads(json.dumps(good)); new['publish_day'] = MOTION_FROM
+    if not any('style.motion is missing' in p for p in check(new)):
+        probs.append('a piece from MOTION_FROM with no motion system is refused')
+    new['style']['motion'] = {'module': 'data-story', 'reason': 'the cost drop lands as a drawn bar'}
+    if motion_problems(new):
+        probs.append(f'a named motion module with its reason passes: {motion_problems(new)}')
+    new['style']['motion'] = [{'module': 'data-story'}, {'module': 'dark-keynote'}]
+    if not any('never a list' in p for p in motion_problems(new)):
+        probs.append('two motion systems are refused')
+    new['style']['motion'] = {'module': 'live-scoreboard', 'reason': 'the score lands as it changes'}
+    if not any('not a motion module' in p for p in motion_problems(new)):
+        probs.append('a module from another layer is refused as the motion system')
+    new['style']['motion'] = {'module': 'c', 'reason': 'four words of reason'}
+    if not any('not for us' in p for p in motion_problems(new, mm)):
+        probs.append('a motion module he turned down is refused')
     return probs
 
 
@@ -421,6 +508,10 @@ def main(argv=None):
     h.add_argument('script')
     k = sub.add_parser('choices', help='the choices under test, as the storyboard shows them and the record keeps them')
     k.add_argument('path')
+    mo = sub.add_parser('motion', help='a ranked shortlist of motion systems for a piece, from the bank\'s motion layer')
+    mo.add_argument('--points', required=True, help='comma list of point types (config/style-references.json motion_point_types)')
+    mo.add_argument('--format', required=True, help='long_video, short_video, carousel, cover, thumbnail or article')
+    mo.add_argument('--top', type=int, default=3)
     sub.add_parser('self-test')
     args = ap.parse_args(argv)
     if args.cmd == 'hash':
@@ -430,6 +521,15 @@ def main(argv=None):
         doc = json.loads(Path(args.path).read_text(encoding='utf-8'))
         print('\n'.join(choice_lines(doc)))
         print('Recorded as: ' + json.dumps(production_choices(doc)))
+        return 0
+    if args.cmd == 'motion':
+        points = [x.strip() for x in args.points.split(',') if x.strip()]
+        known = json.loads(STYLES.read_text(encoding='utf-8')).get('motion_point_types') or {}
+        if set(points) - set(known):
+            print(f'unknown point types {sorted(set(points) - set(known))}; known: {", ".join(known)}')
+            return 2
+        for mid, score, why in pick_motion(points, args.format, args.top):
+            print(f'{mid}  ({score})  {why}')
         return 0
     if args.cmd == 'self-test':
         probs = _self_test()
