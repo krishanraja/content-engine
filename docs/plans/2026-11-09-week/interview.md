@@ -26,6 +26,8 @@ Each line: the question, the best guess offered, then his exact answer. His word
 
 - Friday takeaways, re-offered: scrap AI-use targets and rankings; make "AI didn't help here" a good answer; judge AI on a number you already track. Krish: "Agreed on those"
 
+- Friday lock put to him whole. Krish: "Approved." (signed, lock sha256 4110d446)
+
 ## Still open
 
-- Friday: his signature on the lock.
+- Nothing in the room. Both makes wait on his Run workflow press (make-piece.yml).
