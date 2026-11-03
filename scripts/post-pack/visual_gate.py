@@ -36,13 +36,13 @@ The five checks:
      cover.json receipt matches the PNG byte for byte (and each cover for
      another place, cover-1200x630.png, cover-1200x675.png,
      cover-1080x1080.png and cover-1080x1920.png, its own receipt), it carries Krish's
-     portrait, and when the piece names companies it carries at least one
+     the Receipt (a real proof, no face), and when the piece names companies it carries at least one
      logo row.
   4. THUMBNAILS. Each video thumbnail (Krish, 2026-10-12: "I always want a
      video thumbnail for all video sizes produced as an asset every time")
      was drawn by scripts/pages/build.py --thumbs: its thumbs.json receipt
      holds a file of its shape that matches it byte for byte, it carries
-     Krish's portrait, and every logo its entry declares is one the drawer
+     the Receipt (a real proof, no face), and every logo its entry declares is one the drawer
      drew, in a row or the strip. So a thumbnail cannot claim a logo it
      does not show.
   5. REAL THINGS. From posts dated 16 October 2026, every article and
@@ -139,6 +139,20 @@ COVER_RECEIPTS = {
 }
 
 
+def not_receipt(r):
+    """Why a drawer's receipt is not the Receipt, or None. The Receipt is the floor for every cover and
+    thumbnail (Ruling, Krish, 2026-11-02: "make this the floor level standard moving forward, inviolable"):
+    a real proof from one of the piece's sources, the wordmark and the logos, and never his face."""
+    if r.get('template') != 'receipt':
+        return 'is not in the Receipt (scripts/pages/receipt.py): draw it again with "proof" in the cover facts'
+    proof = r.get('proof') or {}
+    if not any(proof.get(k) for k in ('image', 'pdf', 'page', 'html')):
+        return 'carries no proof: give the cover facts a "proof" from one of the piece\'s checked sources'
+    if r.get('portrait'):
+        return 'carries a face: the Receipt never does'
+    return None
+
+
 def problems(post, planned, body, base, reg=None):
     """Plain-words reasons the pack fails the gate, or [] when it passes.
     `planned` is build.py's plan: dicts with 'kind' (as given), 'logos',
@@ -199,7 +213,7 @@ def problems(post, planned, body, base, reg=None):
         receipt = src.with_name(name)
         if not receipt.is_file():
             found.append(f'{what} was not drawn by the house drawer (no {receipt.name} beside it): draw it with scripts/pages/build.py --cover, '
-                         'with "portrait": true and logo rows, so it carries the wordmark, Krish and the real logos')
+                         'with "proof" and logo rows, so it is the Receipt: the wordmark, a real proof and the real logos')
             continue
         try:
             r = json.loads(receipt.read_text(encoding='utf-8'))
@@ -207,8 +221,9 @@ def problems(post, planned, body, base, reg=None):
             r = {}
         if r.get('sha256') != hashlib.sha256(src.read_bytes()).hexdigest():
             found.append(f'{receipt.name} does not match {src.name}: {what} was changed after the drawer made it. Draw it again')
-        if not r.get('portrait'):
-            found.append(f'{what} has no portrait: draw it with "portrait": true (house rule LOGOS_AND_FACE)')
+        why = not_receipt(r)
+        if why:
+            found.append(f'{what} {why} (house rule THE_RECEIPT)')
         if names and not r.get('rows'):
             found.append(f'{what} has no logo rows although the piece names companies: add "rows" with each real logo')
     # 4. THUMBNAILS
@@ -218,7 +233,7 @@ def problems(post, planned, body, base, reg=None):
         receipt = src.with_name('thumbs.json')
         if not receipt.is_file():
             found.append(f'the {shape} thumbnail {src.name} was not drawn by the house drawer (no thumbs.json beside it): draw it with '
-                         'scripts/pages/build.py COVER_FACTS --thumbs, so it carries the wordmark, Krish and the real logos')
+                         'scripts/pages/build.py COVER_FACTS --thumbs, so it is the Receipt: the wordmark, a real proof and the real logos')
             continue
         try:
             r = json.loads(receipt.read_text(encoding='utf-8'))
@@ -231,8 +246,9 @@ def problems(post, planned, body, base, reg=None):
             continue
         if made.get('shape') != shape:
             found.append(f'{src.name} is the drawer\'s {made.get("shape")} thumbnail, packed as the {shape} one')
-        if not r.get('portrait'):
-            found.append(f'the {shape} thumbnail has no portrait: draw it with "portrait": true (house rule LOGOS_AND_FACE)')
+        why = not_receipt(r)
+        if why:
+            found.append(f'the {shape} thumbnail {why} (house rule THE_RECEIPT)')
         shown = [l for l in (t.get('logos') or []) if not declared_drawn(l, r.get('logos'), reg)]
         if shown:
             found.append(f'the {shape} thumbnail declares the logo of {", ".join(shown)}, but the drawer drew no row or strip for it: '
@@ -342,7 +358,7 @@ def self_test():
         t = Path(tmp)
         png = b'\x89PNG fake'
         (t / 'cover.png').write_bytes(png)
-        good_receipt = {'sha256': hashlib.sha256(png).hexdigest(), 'portrait': True, 'rows': ['OpenAI', 'Anthropic']}
+        good_receipt = {'sha256': hashlib.sha256(png).hexdigest(), 'template': 'receipt', 'proof': {'pdf': {'url': 'https://example.com/a.pdf'}}, 'portrait': False, 'rows': ['OpenAI', 'Anthropic']}
         (t / 'cover.json').write_text(json.dumps(good_receipt))
         for i in range(6):
             (t / f's{i}.png').write_bytes(b'x')
@@ -362,8 +378,12 @@ def self_test():
         check('a volume piece with no evidence picture fails', any('built from real pages' in x for x in problems({}, [full[0], full[1], full[3]], body, t, reg)), True)
         check('five pages are not enough', any('at least 6' in x for x in problems({}, [full[0], full[1], full[2] | {'evidence': {'pages': pages[:5]}}, full[3]], body, t, reg)), True)
         check('a quiet piece needs no evidence', problems({}, [full[0], full[1], full[3]], 'Open Claude today. ChatGPT too.', t, reg), [])
-        (t / 'cover.json').write_text(json.dumps(good_receipt | {'portrait': False}))
-        check('a cover without the portrait fails', any('no portrait' in x for x in problems({}, full, body, t, reg)), True)
+        (t / 'cover.json').write_text(json.dumps(good_receipt | {'template': None}))
+        check('a cover not in the Receipt fails', any('is not in the Receipt' in x for x in problems({}, full, body, t, reg)), True)
+        (t / 'cover.json').write_text(json.dumps(good_receipt | {'portrait': True}))
+        check('a cover with a face fails (Krish, 2026-11-02)', any('carries a face' in x for x in problems({}, full, body, t, reg)), True)
+        (t / 'cover.json').write_text(json.dumps(good_receipt | {'proof': {}}))
+        check('a cover with no proof fails', any('carries no proof' in x for x in problems({}, full, body, t, reg)), True)
         (t / 'cover.json').write_text(json.dumps(good_receipt | {'sha256': 'nope'}))
         check('a cover edited after the drawer fails', any('does not match' in x for x in problems({}, full, body, t, reg)), True)
         (t / 'cover.json').unlink()
@@ -384,15 +404,15 @@ def self_test():
         vert = {'kind': 'vertical-cover', 'source': t / 'cover-1080x1920.png', 'logos': ['OpenAI', 'Anthropic'], 'path': '2/vertical.png'}
         (t / 'cover-1080x1920.json').write_text(json.dumps(good_receipt | {'sha256': hashlib.sha256(tall_png).hexdigest()}))
         check('a vertical cover drawn by the house drawer passes', problems({}, full + [vert], body, t, reg), [])
-        (t / 'cover-1080x1920.json').write_text(json.dumps(good_receipt | {'sha256': hashlib.sha256(tall_png).hexdigest(), 'portrait': False}))
-        check('a vertical cover without the portrait fails', any('the vertical cover has no portrait' in x for x in problems({}, full + [vert], body, t, reg)), True)
+        (t / 'cover-1080x1920.json').write_text(json.dumps(good_receipt | {'sha256': hashlib.sha256(tall_png).hexdigest(), 'portrait': True}))
+        check('a vertical cover with a face fails', any('the vertical cover carries a face' in x for x in problems({}, full + [vert], body, t, reg)), True)
         # 4. THUMBNAILS: drawn by the house drawer, with the face and every logo they declare.
         (t / 'cover.json').write_text(json.dumps(good_receipt))
         (t / 'thumbs').mkdir()
         wide_jpg, tall_jpg = b'\xff\xd8 wide', b'\xff\xd8 tall'
         (t / 'thumbs' / 'thumb-wide-1280x720.jpg').write_bytes(wide_jpg)
         (t / 'thumbs' / 'thumb-tall-1080x1920.jpg').write_bytes(tall_jpg)
-        thumbs_receipt = {'portrait': True, 'logos': ['OpenAI', 'Claude by Anthropic'],
+        thumbs_receipt = {'template': 'receipt', 'proof': {'html': {'path': 'figure.html'}}, 'portrait': False, 'logos': ['OpenAI', 'Claude by Anthropic'],
                           'files': [{'file': 'thumb-wide-1280x720.jpg', 'shape': 'wide', 'sha256': hashlib.sha256(wide_jpg).hexdigest()},
                                     {'file': 'thumb-tall-1080x1920.jpg', 'shape': 'tall', 'sha256': hashlib.sha256(tall_jpg).hexdigest()}]}
         (t / 'thumbs' / 'thumbs.json').write_text(json.dumps(thumbs_receipt))
@@ -411,8 +431,10 @@ def self_test():
         (t / 'thumbs' / 'thumbs.json').write_text(json.dumps(thumbs_receipt | {'logos': ['OpenAI']}))
         check('a thumbnail that declares a logo it does not show fails',
               any('declares the logo of Anthropic, but the drawer drew no row or strip' in x for x in problems({}, full + thumbs, body, t, reg)), True)
-        (t / 'thumbs' / 'thumbs.json').write_text(json.dumps(thumbs_receipt | {'portrait': False}))
-        check('a thumbnail without the portrait fails', any('wide thumbnail has no portrait' in x for x in problems({}, full + thumbs, body, t, reg)), True)
+        (t / 'thumbs' / 'thumbs.json').write_text(json.dumps(thumbs_receipt | {'portrait': True}))
+        check('a thumbnail with a face fails (Krish, 2026-11-02)', any('wide thumbnail carries a face' in x for x in problems({}, full + thumbs, body, t, reg)), True)
+        (t / 'thumbs' / 'thumbs.json').write_text(json.dumps(thumbs_receipt | {'template': None}))
+        check('a thumbnail not in the Receipt fails', any('wide thumbnail is not in the Receipt' in x for x in problems({}, full + thumbs, body, t, reg)), True)
         (t / 'thumbs' / 'thumbs.json').write_text(json.dumps(thumbs_receipt))
         (t / 'thumbs' / 'thumb-wide-1280x720.jpg').write_bytes(wide_jpg + b' edited')
         check('a thumbnail edited after the drawer fails', any('does not match thumb-wide-1280x720.jpg' in x for x in problems({}, full + thumbs, body, t, reg)), True)

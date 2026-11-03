@@ -715,7 +715,7 @@ def self_test():
         for _, file, size in COVER_SET:
             Image.new('RGB', size, (12, 21, 18)).save(work / 'out' / file)
             (work / 'out' / file.replace('.png', '.json')).write_text(json.dumps({'sha256': sha256_of(work / 'out' / file),
-                                                                                 'portrait': True, 'rows': []}), encoding='utf-8')
+                                                                                 'template': 'receipt', 'proof': {'html': {'path': 'figure.html'}}, 'portrait': False, 'rows': []}), encoding='utf-8')
         Image.new('RGB', (1200, 800), (12, 21, 18)).save(work / 'img/three-two.png')
         # A thumbnail for each video size, with the drawer's receipt beside them
         # (scripts/pages/build.py --thumbs), so the visual gate takes them.
@@ -724,7 +724,7 @@ def self_test():
         Image.new('RGB', (1080, 1920), (12, 21, 18)).save(work / 'thumbs/thumb-tall-1080x1920.jpg')
         Image.new('RGB', (1080, 1350), (12, 21, 18)).save(work / 'thumbs/thumb-4x5.jpg')
         (work / 'thumbs/thumb.gif').write_bytes(b'GIF89a')
-        (work / 'thumbs/thumbs.json').write_text(json.dumps({'portrait': True, 'logos': [], 'files': [
+        (work / 'thumbs/thumbs.json').write_text(json.dumps({'template': 'receipt', 'proof': {'html': {'path': 'figure.html'}}, 'portrait': False, 'logos': [], 'files': [
             {'file': name, 'shape': shape, 'sha256': hashlib.sha256((work / 'thumbs' / name).read_bytes()).hexdigest()}
             for name, shape in (('thumb-wide-1280x720.jpg', 'wide'), ('thumb-tall-1080x1920.jpg', 'tall'))]}), encoding='utf-8')
         (work / 'package.json').write_text(json.dumps({'ok': True, 'package': {
@@ -756,7 +756,7 @@ def self_test():
         }
         # the house drawer's receipt, so the visual gate takes the cover (visual_gate.py)
         (work / 'out' / 'cover.json').write_text(json.dumps({'sha256': hashlib.sha256((work / 'out' / 'cover.png').read_bytes()).hexdigest(),
-                                                             'portrait': True, 'rows': []}), encoding='utf-8')
+                                                             'template': 'receipt', 'proof': {'html': {'path': 'figure.html'}}, 'portrait': False, 'rows': []}), encoding='utf-8')
         (work / 'post.json').write_text(json.dumps(post), encoding='utf-8')
         out = tmp / 'packs'
         built = build(work / 'post.json', out, today='2026-10-06')

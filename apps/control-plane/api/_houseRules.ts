@@ -255,10 +255,10 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
     stages: ['judge_draft', 'write', 'final_pass', 'visual'],
   },
   {
-    id: 'LOGOS_AND_FACE', name: 'Real logos, and Krish\'s face on the cover',
-    text: 'Show the real logo of every company a visual names, taken from the company\'s own brand files (Brandfetch), never redrawn or imitated, in its own colours where they read and in its light version on dark. Put Krish\'s face on the cover and on the social share picture, one of his funny headshots, so the reader sees him taking the subject apart: scripts/pages draws the cover site\'s "closer look" photo with "portrait": true in the cover\'s facts.',
-    said: 'Once again don\'t be afraid to use the real logos for any companies mentioned. And even one of the funny headshots on the cover pictures or social share pictures like this that make it even more personal that it\'s me analysing it',
-    on: '2026-10-06', source: 'chat, the Higgsfield piece for under.the.hood', status: 'live',
+    id: 'THE_RECEIPT', name: 'The Receipt: every cover and thumbnail, real proof and real logos, no face',
+    text: 'Every cover and every video thumbnail is the Receipt, drawn by scripts/pages/build.py (scripts/pages/receipt.py) from the piece\'s cover facts, in every shape. It shows a real proof from one of the piece\'s checked sources (a chart, a page, a court filing, the piece\'s own test), pinned on a sage ground, never flat black. It carries a ring around the one number it is about and a tag saying whose it is. The words are big, with the last part on the subchannel\'s colour, never a short word alone on a line, and every word reads on a phone. It carries the Make Your Mind Up wordmark and the real logo of every company the piece names, taken from the company\'s own brand files (Brandfetch), never redrawn or imitated. It never shows Krish\'s face or a frame from a take. Nothing else is packed or put on the board.',
+    said: 'Go with the number one, make the vertical versions, and redo every piece on the Publish Board, purging all old thumbnails and covers and replacing with the new versions for all publish ready pieces until 9 Nov - and then make this the floor level standard moving forward, inviolable',
+    on: '2026-11-02', source: 'chat, after a frame grabbed from his take went onto Monday 2 Nov\'s card ("absolutely fucking awful headshot"); replaces LOGOS_AND_FACE (2026-10-06), keeping its real logos and dropping the face; required by scripts/pages/build.py and scripts/post-pack/visual_gate.py', status: 'live',
     stages: ['visual'],
   },
   {
@@ -431,7 +431,7 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
   },
   {
     id: 'THUMBNAIL_EVERY_SIZE', name: 'A thumbnail for every video size, every time',
-    text: 'Every video comes with its own thumbnail, every time: 1280 x 720 for the wide 16:9 cut (YouTube and the Substack video) and 1080 x 1920 for the tall 9:16 cut (the cover on Reels and TikTok), drawn by the house cover drawer from the piece\'s cover facts, with Krish\'s face and the real logo of every company the piece names (LOGOS_AND_FACE), inside each platform\'s safe area. A cut without the thumbnail of its shape is not packed, and its Video assets step is not done; only Krish\'s own words in "thumbnail_override" let a pack through without one.',
+    text: 'Every video comes with its own thumbnail, every time: 1280 x 720 for the wide 16:9 cut (YouTube and the Substack video) and 1080 x 1920 for the tall 9:16 cut (the cover on Reels and TikTok), drawn by the house cover drawer from the piece\'s cover facts as the Receipt (THE_RECEIPT): a real proof and the real logo of every company the piece names, no face, inside each platform\'s safe area. A cut without the thumbnail of its shape is not packed, and its Video assets step is not done; only Krish\'s own words in "thumbnail_override" let a pack through without one.',
     said: 'I always want a video thumbnail for all video sizes produced as an asset every time.',
     on: '2026-10-12', source: 'chat, the video production request; drawn by scripts/pages/build.py --thumbs, required by scripts/post-pack/build.py and scripts/post-pack/visual_gate.py and by the Video assets step (apps/control-plane/api/_making.ts)', status: 'live',
     stages: ['production'],
