@@ -188,6 +188,8 @@ def inputs_from_props(props: dict) -> dict:
     aspect, beats, events = props['aspect'], props['beats'], props['events']
     objects = {o['obj']: o for o in props.get('objects', [])}
     split_scale, split_caption = _split_geometry()
+    split_seam = int(re.search(r'export const FWP_SPLIT_SEAM_Y = (\d+)', (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'mocks'
+                                / 'face-with-proof.tsx').read_text(encoding='utf-8')).group(1))
     slots = {}
     for event in events:
         at = event['atFrame']
@@ -216,6 +218,10 @@ def inputs_from_props(props: dict) -> dict:
             s = split_scale
             w, h = place['width'] * place.get('scale', 1), place['height'] * place.get('scale', 1)
             box = (round(540 + (place['left'] - 540) * s), round(place['top'] * s), round(w * s), round(h * s))
+            if (objects.get(event['obj']) or {}).get('device') == 'typing_bubble':
+                # A bubble grows down from its box with every row it types, past the box it was placed in (Thursday
+                # 5 Nov: three answers typed below a 100 px place box read as no change). Measure it to the seam.
+                box = (box[0], box[1], box[2], max(box[3], split_seam - box[1]))
         slots[event.get('id', event['obj'])] = box
         slots.setdefault(event['obj'], box)
     # boxFor('caption') in apps/renderer/src/engine/geometry.ts, using
