@@ -151,7 +151,10 @@ export const ProductionSpecV2Schema = z.object({
   theme: SlugSchema,
   brand: z.object({
     series: VeSeriesSchema,
-    captions: z.literal('house'),
+    // 'word': one word at a time, off the face, under a held title (Krish, 2026-11-03: "its the georgia subtitles
+    // build, and the motion and graphics of the other one"; inspiration card instagram_DePHDr_jRed).
+    captions: z.enum(['house', 'word']),
+    title: z.string().min(3).max(48).optional(),
     reference: z.string().min(1).optional(),
     intro_sting: z.string().min(1).optional(),
   }).strict(),

@@ -8,6 +8,7 @@ import { CaptionTrack } from './chrome/CaptionTrack'
 import { ChannelPill } from './chrome/ChannelPill'
 import { MarkTile } from './chrome/MarkTile'
 import { StageHeader } from './chrome/StageHeader'
+import { HeldTitle, WordCaption } from './chrome/WordCaption'
 import type { EngineBeat, EngineRenderProps } from './props'
 
 /** The mandatory chrome on every beat (INV-BRANDFRAME, INV-CAPTIONS): mark tile top-left with the channel
@@ -29,8 +30,11 @@ export function BrandFrame({ props, beat, frame }: BrandFrameProps): React.React
       <MarkTile props={props} />
       <ChannelPill props={props} beat={beat} />
     </>}
+    {/* The title holds over the face beats; graphics own the top of SPLIT and STAGE. */}
+    {props.captionStyle === 'word' && !call && beat.layout !== 'SPLIT' && beat.layout !== 'STAGE' && <HeldTitle props={props} frame={frame} />}
     {ending ? <EndingBand props={props} frame={frame} />
       : call ? <CallCard props={props} frame={frame} />
+        : props.captionStyle === 'word' ? <WordCaption props={props} frame={frame} />
         : beat.layout === 'SPLIT' ? <SplitCaptionTrack props={props} frame={frame} /> : <CaptionTrack props={props} frame={frame} />}
   </>
 }
