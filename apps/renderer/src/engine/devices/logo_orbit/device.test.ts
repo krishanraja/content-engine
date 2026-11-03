@@ -1,4 +1,5 @@
 import React from 'react'
+import { staticFile } from 'remotion'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 import { EngineEventSchema, EngineObjectSchema } from '../../props'
@@ -31,7 +32,7 @@ describe('logo_orbit', () => {
       }
       const html = still(52, aspect)
       expect((html.match(/<image /g) ?? []).length).toBe(5)
-      for (const logo of fixture.objects[0]!.params.logos) expect(html).toContain(`href="${resolveLogo(logo.id)}"`)
+      for (const logo of fixture.objects[0]!.params.logos) expect(html).toContain(`href="${staticFile(resolveLogo(logo.id))}"`)
       expect(html).toContain('Research')
       expect(html).not.toContain('Draft')
       expect(html).not.toContain('>Meta<')
@@ -86,7 +87,7 @@ import { Mark, MARK_BOUNDS } from './mark'
 import { execFileSync } from 'node:child_process'
 import houseProps from '../../../../../../docs/plans/2026-10-28-ve-format-h-proof/ve/props.proof-tall.json'
 const probe = (svg: string, points: number[][] = []) => {
-  const embedded = svg.replace(/href="(assets\/logos\/[^\"]+)"/g, (_, path: string) =>
+  const embedded = svg.replace(/href="\/?(assets\/logos\/[^\"]+)"/g, (_, path: string) =>
     `href="data:image/svg+xml;base64,${readFileSync(path).toString('base64')}"`)
   const result = spawnSync('python3', ['apps/renderer/src/engine/devices/logo_orbit/raster.py', ...points.map(p => p.join(','))], { input: embedded, encoding: 'utf8', timeout: 20000, env: { ...process.env, OMP_NUM_THREADS: '1' } })
   expect(result.status, result.stderr).toBe(0)

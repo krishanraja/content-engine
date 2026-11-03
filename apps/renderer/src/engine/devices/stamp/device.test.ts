@@ -50,5 +50,10 @@ it('uses mint for answer blocks and preserves channel paint by default', () => {
       ...overlayTestProps, object: { ...object, params }, events, frame: 40,
     }))
     expect(html).toContain(`background:${paint === 'mint' ? overlayTestProps.tokens.mint : overlayTestProps.tokens.channel}`)
+    const colour = paint === 'mint' ? overlayTestProps.tokens.mint : overlayTestProps.tokens.channel
+    expect(html).toContain(`background-color:${colour}`)
+    expect(html).toContain(`background-image:radial-gradient(circle at 7px 7px, color-mix(in srgb, ${overlayTestProps.tokens.ink} 38%, ${colour}) 1.5px, ${colour} 1.9px)`)
+    if (paint === 'mint') expect(html).not.toContain(overlayTestProps.tokens.channel)
+
   }
 })
