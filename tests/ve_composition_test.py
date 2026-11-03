@@ -81,6 +81,11 @@ class Composition(unittest.TestCase):
         self.assertTrue(self.measure([self.word(y=1250)], caption_words=['hello'])['checks']['caption_zone']['pass'])
         self.assertTrue(self.measure([self.word(text='CAPTION', y=1250)])['checks']['caption_zone']['pass'])
         self.assertFalse(self.measure([self.word(y=1250)], caption_words=[])['checks']['caption_zone']['pass'])
+        # Thursday 5 Nov: OCR clipped "emails," and read "ero" inside the highlighted "dangerous."
+        for clipped in ('mails,', 'ero'):
+            self.assertTrue(self.measure([self.word(text=clipped, y=1250)], caption_words=['emails,', 'dangerous.'])
+                            ['checks']['caption_zone']['pass'], clipped)
+        self.assertFalse(self.measure([self.word(text='xyz', y=1250)], caption_words=['emails,'])['checks']['caption_zone']['pass'])
         self.assertTrue(self.measure([self.word(h=21)])['checks']['small_text']['pass'])
         self.assertTrue(self.measure([self.word(y=1750)])['checks']['platform_zone']['pass'])
         self.assertTrue(self.measure([self.word(h=14, conf=59)])['checks']['small_text']['pass'])

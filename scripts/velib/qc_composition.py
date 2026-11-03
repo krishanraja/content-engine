@@ -54,6 +54,13 @@ def split_seam() -> int:
     return int(re.search(r'export const FWP_SPLIT_SEAM_Y = (\d+)', mocks).group(1))
 
 
+def _fragment(text, allowed) -> bool:
+    """OCR clips a caption word at the box edge or inside the highlight ("emails," read as "mails,", "dangerous." as
+    "ero", Thursday 5 Nov): three or more letters found inside a caption word on screen are that word, not a stray."""
+    target = ''.join(qc_captions.fold(t) for t in qc_captions._tokens(text))
+    return len(target) >= 3 and any(target in qc_captions.fold(a) for a in allowed if qc_captions.fold(a))
+
+
 def _inside(x, y, box):
     if isinstance(box, dict):
         box = [box[k] for k in ('x', 'y', 'w', 'h')]
@@ -101,7 +108,7 @@ def measure(image, lock, *, exempt=(), caption_words=None, ocr_words=None) -> di
             small.append(word)
         if ((solid or float(word['conf']) >= 90) and _inside(x + w / 2, y + h / 2, zones['caption'])
                 and not {qc_captions.fold(t) for t in qc_captions._tokens(word['text'])}.issubset({qc_captions.fold(a) for a in allowed})
-                and not _fused(word['text'], allowed)):
+                and not _fused(word['text'], allowed) and not _fragment(word['text'], allowed)):
             caption.append(word)
         strong = solid or float(word['conf']) >= 90  # one stray glyph on a photo is OCR noise, not a layout fault
         if (strong and not _inside(x + w / 2, y + h / 2, zones['marquee'])
