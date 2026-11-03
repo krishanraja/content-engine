@@ -157,9 +157,55 @@ def call_card_tokens(props, beat) -> set:
     return set(qc_captions._tokens(text))
 
 
+def mark_box(aspect):
+    """Read boxFor('mark') and its imported house dimensions; fail on source drift."""
+    import re
+    engine = ROOT / 'apps/renderer/src/engine'
+    source = (engine / 'geometry.ts').read_text(encoding='utf-8')
+    house = (engine.parent / 'house/geometry.ts').read_text(encoding='utf-8')
+    def field(block, name):
+        return float(re.search(r'\b' + name + r':\s*(\d+)', block).group(1))
+    if aspect == '16:9':
+        block = re.search(r'mark: \{([^}]+)\}', source).group(1)
+        return tuple(field(block, k) for k in ('left', 'top', 'size', 'size', 'shadow'))
+    block = re.search(r'mark: \{([^}]+)\}', house).group(1)
+    tall = re.search(r': \{ left: (\d+), top: (\d+), width: HOUSE.mark.size, height: HOUSE.mark.size \}', source)
+    return (float(tall[1]), float(tall[2]), field(block, 'size'), field(block, 'size'), field(block, 'shadow'))
+
+
+def mark_clearance(box, aspect):
+    """Smaller intersection axis in pixels, matching layouts.markClearance."""
+    x, y, w, h = box
+    left, top, width, height, shadow = mark_box(aspect)
+    pad = shadow + 24
+    return max(0, min(min(x + w, left + width + pad) - max(x, left - pad),
+                      min(y + h, top + height + pad) - max(y, top - pad)))
+
+
+def beat_mark_clearance(props, beat):
+    from .qc import inputs_from_props
+    # Resolve every used object, including static ones without an animation event.
+    events = [dict(id=f'mark-{i}', obj=obj, atFrame=beat['fromFrame'], verb='enter')
+              for i, obj in enumerate(beat.get('uses', []))]
+    resolved = inputs_from_props({**props, 'beats': [beat], 'events': events,
+                                  'durationFrames': props.get('durationFrames', beat['toFrame']),
+                                  'captions': [], 'audio': {'stem': {'src': ''}},
+                                  'brand': {'mark': {'src': ''}}}) if events else {'slots': {}}
+    overlaps = [{'obj': event['obj'], 'overlap_px': overlap}
+                for event in events
+                if (overlap := mark_clearance(resolved['slots'][event['id']], props['aspect'])) > 0]
+    return {'pass': not overlaps, 'value': overlaps}
+
+
 def composition_checks(video, props, lock) -> dict:
     if props.get('aspect') == '16:9':
-        return {'applies': False, 'note': 'the design lock is 9:16 only'}
+        if not props.get('beats'):
+            return {'applies': False, 'note': 'the design lock is 9:16 only'}
+        rows = {beat['id']: {'checks': {'mark_clearance': beat_mark_clearance(props, beat)}}
+                for beat in props['beats']}
+        for row in rows.values():
+            row['pass'] = row['checks']['mark_clearance']['pass']
+        return {'applies': True, 'pass': all(row['pass'] for row in rows.values()), 'beats': rows}
     if props.get('aspect') != '9:16':
         raise ValueError('Composition needs an explicit 9:16 or 16:9 aspect')
     rows = {}
@@ -181,7 +227,12 @@ def composition_checks(video, props, lock) -> dict:
                 # picture, not type. The caption zone inside it is still checked; the ending band is never exempt.
                 exempt += [(0, split_seam(), 1080, y - split_seam()), (0, y + h, 1080, 1920 - (y + h))]
         rows[beat['id']] = measure(image, beat_lock, caption_words=allowed, exempt=exempt)
-        rows[beat['id']]['frame'] = at
+        row = rows[beat['id']]
+        row['checks']['mark_clearance'] = beat_mark_clearance(props, beat)
+        if not row['checks']['mark_clearance']['pass']:
+            row['findings'].append(f"mark_clearance overlaps: {row['checks']['mark_clearance']['value']}")
+        row['pass'] = all(check['pass'] for check in row['checks'].values())
+        row['frame'] = at
     ending = props.get('ending')
     if ending and ending.get('fromFrame', props.get('durationFrames', 0)) < props.get('durationFrames', 0):
         # The ending band closes every whole cut and no beat's key frame falls inside it (Thursday 5 Nov: the close
