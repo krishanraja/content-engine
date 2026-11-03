@@ -43,6 +43,8 @@ def _audio(media, rate):
 
 
 def align(media, words: list[str], model: str) -> list[dict]:
+    if model not in MODELS:  # before loading torch: an unknown aligner is refused on any machine
+        raise ValueError(f'{model}: the forced aligners are {", ".join(MODELS)}')
     import torch  # noqa: PLC0415
     import torchaudio  # noqa: PLC0415
     if model == 'mms-fa':
@@ -72,7 +74,6 @@ def align(media, words: list[str], model: str) -> list[dict]:
             k += len(n) + 1  # the word separator
             out.append({'w': w, 's': round(chars[0].start * ratio, 3), 'e': round(chars[-1].end * ratio, 3)})
         return out
-    raise ValueError(f'{model}: the forced aligners are {", ".join(MODELS)}')
 
 
 def main(argv: list[str]) -> int:
