@@ -275,6 +275,19 @@ class BriefTest(unittest.TestCase):
         wide = brief.build_briefs(self.spec, cut='proof-wide', beats=['b1-ban'])[0]
         self.assertEqual(wide['slot']['plate_min_px'], [3344, 1882])
 
+    def test_the_motion_system_carries_its_rules_into_the_brief(self):
+        plain = brief.build_briefs(self.spec, cut='proof-tall', script=self.script)[0]
+        self.assertIsNone(plain['style']['motion_system'])
+        spec = {**self.spec, 'style': {'motion': {'module': 'data-story', 'reason': 'the drop lands as a drawn bar'}}}
+        b = brief.build_briefs(spec, cut='proof-tall', script=self.script)[0]
+        self.assertEqual(b['style']['motion_system']['id'], 'data-story')
+        self.assertIn('3D charts', b['style']['never_in_plate'])
+        self.assertTrue(set(plain['style']['must_say']) < set(b['style']['must_say']))
+        self.assertEqual(brief.card_fields(b)['motion_style'], 'data-story')
+        self.assertNotIn('motion_style', brief.card_fields(plain))
+        with self.assertRaises(ValueError):
+            brief.build_briefs({**self.spec, 'style': {'motion': {'module': 'live-scoreboard'}}}, cut='proof-tall')
+
     def test_card_fields_make_a_card_and_nothing_is_dispatched(self):
         b = brief.build_briefs(self.spec, cut='proof-tall', script=self.script)[0]
         fields = dict(b['card_fields'])

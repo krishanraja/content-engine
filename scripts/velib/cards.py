@@ -61,6 +61,23 @@ def _require_design_lock(meta: dict) -> None:
             sys.exit(f'no frozen design lock for {fmt}: run ve lock freeze')
 
 
+def motion_section(style_id: str) -> str:
+    """A card's own copy of the piece's motion style, from the style bank's motion layer, so Codex builds to the same
+    rules Claude picked by: its name, what it is, its rules and what it never does. Brand roles and the design lock
+    still win. A style the bank does not hold, or one Krish marked not for us, is refused."""
+    bank = load_json(ROOT / 'config' / 'style-references.json').get('bank') or []
+    m = next((x for x in bank if x.get('id') == style_id and x.get('layer') == 'motion'), None)
+    if m is None:
+        sys.exit(f've card: motion_style {style_id!r} is not a motion style in config/style-references.json')
+    if m.get('krish_verdict') == 'not for us':
+        sys.exit(f've card: Krish marked motion style {style_id!r} not for us')
+    rules = '\n'.join(f'- {r}' for r in m.get('rules') or [])
+    avoid = '\n'.join(f'- {r}' for r in m.get('avoid') or [])
+    return (f'\n## Motion style: {m["name"]} ({style_id}, {m.get("krish_verdict")})\n{m["how"]}\n'
+            f'Build to these rules; brand roles (config/ve/brand-tokens.json) and the design lock win where they differ.\n'
+            f'{rules}\nNever:\n{avoid}\n')
+
+
 def write_card(path: Path, **fields) -> Path:
     _require_design_lock(fields)
     fields.setdefault('model', MODEL)
@@ -70,6 +87,9 @@ def write_card(path: Path, **fields) -> Path:
     text = CARD_TEMPLATE.format(**fields)
     if fields.get('format'):
         text = text.replace('\nkind:', f'\nformat: {fields["format"]}\nkind:', 1)
+    if fields.get('motion_style'):
+        text = text.replace('\nkind:', f'\nmotion_style: {fields["motion_style"]}\nkind:', 1)
+        text = text.replace('\n## Acceptance', motion_section(fields['motion_style']) + '\n## Acceptance', 1)
     if len(text.encode('utf-8')) > 6144:
         sys.exit(f've card: {path.name} is {len(text.encode())} bytes; a card is 6 KB or less')
     path.parent.mkdir(parents=True, exist_ok=True)

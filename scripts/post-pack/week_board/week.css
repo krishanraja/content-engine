@@ -397,7 +397,7 @@ main[data-checklists="hidden"] .st-note,main[data-checklists="hidden"] .ticks,ma
 .off-days .opt .say input{flex:1;min-width:0;min-height:44px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;font:15px Archivo,system-ui,sans-serif;background:var(--card);color:var(--ink)}
 .off-days .opt .say .go{min-width:96px;min-height:44px;border-radius:999px;border:1px solid var(--mint);background:var(--mint);color:#0C1512;font:700 13px Archivo,system-ui,sans-serif;white-space:nowrap}
 .off-days .opt .mockback{display:grid;grid-template-columns:112px 1fr;gap:12px;align-items:start;background:#fff4d6;border-radius:12px;padding:10px}
-.off-days .opt .mockback img{width:112px;aspect-ratio:4/5;object-fit:cover;border-radius:6px}
+.off-days .opt .mockback>img{width:112px;aspect-ratio:4/5;object-fit:cover;border-radius:6px}
 .off-days .tri-state.wait{color:#8a6a00}
 .off-days .opt .off-free{display:grid;grid-template-columns:1fr auto;gap:6px 8px;align-items:end}
 .off-days .opt .off-free .pl{grid-column:1/-1}
@@ -414,3 +414,31 @@ main[data-checklists="hidden"] .st-note,main[data-checklists="hidden"] .ticks,ma
 .stale-bar[hidden]{display:none}
 .stale-bar a{color:inherit;font-weight:900;margin-left:8px}
 .yes-why:empty{display:none}
+/* The finished asset seen on the board (Ruling, Krish, 2026-11-03): every slide, the video, Open in Drive first. */
+.off-days .opt .mockback:has(.off-slides),.off-days .opt .mockback:has(.off-video){grid-template-columns:1fr}
+.off-slides{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px}
+.off-slides li{position:relative}
+.off-slides a{display:block;min-height:44px}
+.off-slides img,.off-days .opt .mockback .off-slides img{display:block;width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;border-radius:6px;border:1px solid var(--line);background:#16221D}
+.off-slide-n{position:absolute;left:6px;top:6px;min-width:20px;padding:1px 6px;border-radius:999px;background:rgba(12,21,18,.8);color:#F4EFE4;font:600 11px "IBM Plex Mono",ui-monospace,monospace;text-align:center}
+.off-video{display:block;width:100%;max-width:360px;max-height:70vh;border-radius:8px;background:#000}
+.off-links{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
+.lnk-s{display:inline-flex;align-items:center;min-height:44px;color:var(--ink);font:600 13px Archivo,system-ui,sans-serif}
+.off-asset{border:1px solid var(--line);border-radius:12px;background:var(--card);padding:12px 14px;display:grid;grid-template-columns:minmax(0,1fr);gap:10px;margin:0 0 14px;min-width:0}
+.off-asset .hook{margin:0;font:700 20px/1.25 Archivo,system-ui,sans-serif}
+.off-asset .off-slides{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+.off-asset .press{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.off-asset .press.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.off-asset .pl{grid-column:1/-1;font:600 11.5px "IBM Plex Mono",ui-monospace,monospace;text-transform:uppercase;color:var(--muted);margin:0 0 -2px}
+.off-asset .b{min-height:44px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:700 14px Archivo,system-ui,sans-serif;white-space:nowrap;cursor:pointer}
+.off-asset .b:disabled{opacity:.5;cursor:not-allowed}
+.off-asset .b:focus-visible{outline:3px solid var(--ok);outline-offset:2px}
+.off-asset .b.approve[aria-pressed=true]{background:var(--ok);border-color:var(--ok);color:#fff}
+.off-asset .b.improve[aria-pressed=true]{background:#FFD84D;border-color:#e0b800}
+.off-asset .b.reject[aria-pressed=true]{background:var(--bad);border-color:var(--bad);color:#fff}
+.off-asset .b[data-value=next_week][aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.off-asset .say{display:flex;gap:8px}.off-days .opt .say[hidden]{display:none}
+.off-asset .say input{flex:1;min-width:0;min-height:44px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;font:15px Archivo,system-ui,sans-serif;background:var(--card);color:var(--ink)}
+.off-asset .say .go{min-width:96px;min-height:44px;border-radius:999px;border:1px solid var(--mint);background:var(--mint);color:#0C1512;font:700 13px Archivo,system-ui,sans-serif;white-space:nowrap}
+.off-asset .off-free .pl{grid-column:1/-1}
+.off-asset .tri-state.wait{color:#8a6a00}

@@ -68,7 +68,7 @@ separate reader (cost rule 6, guard G6), and pick by the job:
 
 `.claude/settings.json` registers these; they are not optional and not to be worked around.
 
-- `scripts/hooks/cost_gate.py`: the cost guards G1, G5 and G6.
+- `scripts/hooks/cost_gate.py`: the cost guards G5 and G6 (G1, the context nudge, removed by Krish on 2026-11-03).
 - `.claude/hooks/secret-guard.mjs`: refuses a secret-shaped string in a command or a file, and any
   `.env` write. Its patterns are read from `scripts/secret-patterns.ts`, the list `check:no-secrets` uses.
 - `.claude/hooks/publish-guard.mjs`: puts every send, post, publish, schedule, deploy or push to
@@ -105,6 +105,5 @@ like you're just off doing more random shit. I asked you to heal the engine, not
 ## Keep the session cheap
 
 The six cost rules are in AGENTS.md. In Claude Code they come down to: search the map, never open
-files to browse; cap command output (`| tail -20`, logs to `.cache/logs/`); and past 500k tokens (the guard G1)
-keep finishing Krish's job in the same session, never hand it on part-way or mention cost to him (Krish, 2026-11-03:
-"just finish all in this session, stop whining about costs").
+files to browse; cap command output (`| tail -20`, logs to `.cache/logs/`); and finish the job in the session he
+asked for it (no context nudge since 2026-11-03).

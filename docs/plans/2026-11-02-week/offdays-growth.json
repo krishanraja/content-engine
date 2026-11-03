@@ -27,7 +27,12 @@
     "growth_drive": {
      "file_id": "1ox6jRwrX0TUlSTclbV1_zbD6zD8-ILum",
      "folder_id": "1EKDa-jCN1UWs0KQAZNCVTghUHejUWZYX"
-    }
+    },
+    "video": {
+     "url": "https://board.asset/tue-translator-video.mp4",
+     "poster": "https://board.asset/tue-translator-still.jpg"
+    },
+    "drive": "https://drive.google.com/drive/folders/1iQV79HhSYABa4Wh6EM7i6-lQ-8rP5r8G"
    },
    {
     "concept_id": "claudejobs",
@@ -99,13 +104,44 @@
      "words": "I want actual news items and the content we are going to use here - embedded real world images or videos"
     },
     "mock": {
-     "url": "https://board.asset/sat-goodnews-cover.jpg",
-     "note": "Finished and approved, 2 Nov: five real stories of people AI helped, each with its real photo, Anwita Chaudhry on the cover, the light house skin; every source and photo credit is in the post description in the download."
+     "url": "https://board.asset/sat-gn2-0-cover.png",
+     "note": "Remade 3 Nov: the official brand mark, small in the bottom corner of every card, nothing at the top. The words and photos are the ones you approved; every source and photo credit is in the post description."
     },
     "download": {
-     "url": "https://board.asset/sat-goodnews-carousel.zip",
+     "url": "https://board.asset/sat-gn2-carousel.zip",
      "label": "the seven cards and the post description (zip, 6 MB)"
-    }
+    },
+    "slides": [
+     {
+      "url": "https://board.asset/sat-gn2-0-cover.png",
+      "label": "Cover"
+     },
+     {
+      "url": "https://board.asset/sat-gn2-1-item.png",
+      "label": "Story 1"
+     },
+     {
+      "url": "https://board.asset/sat-gn2-2-item.png",
+      "label": "Story 2"
+     },
+     {
+      "url": "https://board.asset/sat-gn2-3-item.png",
+      "label": "Story 3"
+     },
+     {
+      "url": "https://board.asset/sat-gn2-4-item.png",
+      "label": "Story 4"
+     },
+     {
+      "url": "https://board.asset/sat-gn2-5-item.png",
+      "label": "Story 5"
+     },
+     {
+      "url": "https://board.asset/sat-gn2-6-close.png",
+      "label": "Close"
+     }
+    ],
+    "drive": "https://drive.google.com/drive/folders/1eWIntRSWqVbt-JW3bvYruynh1aMWdV4j"
    },
    {
     "concept_id": "aipassports",
