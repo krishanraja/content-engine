@@ -49,8 +49,10 @@ alter table public.content_library_files
     and path !~ '(^|/) '
   );
 
-alter table public.content_library_files
-  drop constraint if exists content_library_files_path_sha256_key;
+-- The old (path, sha256) key stays: the two libraries' paths can never be the
+-- same (makeyourmindup's start with a numbered folder, Heartside's with
+-- Posts), so it costs nothing, and the code deployed before this one keeps
+-- working until the new code lands. The new key is what the routes use.
 alter table public.content_library_files
   drop constraint if exists content_library_files_library_path_sha256_key;
 alter table public.content_library_files
