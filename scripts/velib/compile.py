@@ -343,7 +343,9 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     channel = spec['brand']['series'].replace('.', '_')
     identity = house['channels'][channel]
     emphasis = set(cut['captions'].get('emphasis', []))
-    groups = [g for part in _zone_runs(rows, beats) for g in _caption_groups(part, cut['aspect'], emphasis)]
+    word_mode = spec['brand'].get('captions') == 'word'
+    groups = [[row] for row in rows] if word_mode else \
+        [g for part in _zone_runs(rows, beats) for g in _caption_groups(part, cut['aspect'], emphasis)]
     captions = []
     for index, group in enumerate(groups):
         hits = [i for i, word in enumerate(group) if word['w'] in emphasis]
@@ -372,7 +374,9 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         'segments': [] if spec['audio']['master'] == 'vo' else [
             {'src': take, 'trimBeforeFrames': 0, 'fromFrame': 0, 'durationFrames': duration}],
         'audio': {'stem': {'src': resolve_source(f'audio.{cut_id}.wav'), 'trimBeforeFrames': 0}, 'sfx': []},
-        'captions': captions, 'beats': beats, 'objects': objects, 'events': events,
+        'captions': captions, 'captionStyle': 'word' if word_mode else 'house',
+        **({'title': spec['brand']['title']} if spec['brand'].get('title') else {}),
+        'beats': beats, 'objects': objects, 'events': events,
     }
     sfx, missing = [], []
     kit_path = ROOT / 'config' / 've' / 'sfx-kits' / f"{spec['audio']['sfx_kit']}.json"
