@@ -58,7 +58,7 @@ Everything to 29 October 2026 is in `docs/history/2026-10-29-NOW-changed-recentl
 - Waiting on Krish (as of 2026-10-29, Wave 2 and 3 production): by ear, the levels and a sound-effect set; Gate 2 on face-with-proof frames and six devices; 5 to 10 golden frames; 20 minutes on 9 Nov scoring shadow cuts. His 29 Oct answers and the home-computer steps: the handover above.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): CI stays advisory, so a session waits for green before it merges.
 - 9 Nov week (2026-11-03): Wed, Fri locks signed (`docs/plans/2026-11-09-week/`), briefs agreed (board ea1c8653). Next: rerun make-piece.yml for both. Gaps: picks not in `scheduled_for`; Monday fact gate fails; mcpskin needs his Next week press.
-- North Star check (2026-11-02): holds.
+- North Star check (2026-11-03): holds.
 
 ## Read next
 
