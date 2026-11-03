@@ -2,6 +2,17 @@
 
 [Story correction and Growth handoff, 26 Oct](docs/history/2026-10-26-story-closeout.md).
 
+## 3 November: Friday 13 Nov (f3fcd5e1, cobra bounty / AI leaderboards) waits on its lock (Claude Code, make-piece run)
+
+Krish picked fri-2 on the 9 Nov week's Ideas tab (3 Nov 06:52:49, after fri-4 at 06:52:46).
+The make-piece run found no narrative lock, so it made nothing. Friday's tab is now in draft
+with one review box (`docs/plans/2026-11-09-week/fri-lock-question.md`: the deeper story, the
+measure or the manager, best guess A) and one waiting line; build 5bb61393 on the web board,
+Monday kept as made, Wednesday picked, the Ideas tab unchanged. Next: the Sunday room
+(`plan-week`, steps 10 and 11) reads his answer from the comments, writes
+`narrative-lock-fri.md` for his signature, then make-piece runs again. Not recorded: this
+run's session link (the run could not read its own Actions URL).
+
 ## 29 October: the Sunday loop, no name, the bar, zero routines (Claude Code)
 
 On session branch `claude/fervent-brown-d8e55b`, going to main by pull request (the ve part by hand after green CI). `NOW.md` has the detail; the plan for what follows is `docs/plans/2026-11-07-wave-2.md`, then `docs/plans/2026-11-14-wave-3.md`.
