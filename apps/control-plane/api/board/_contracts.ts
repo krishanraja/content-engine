@@ -202,7 +202,11 @@ export function validBody(collection: string, id: string, body: unknown): boolea
   if (collection === 'queue' && 'use' in body) return body.pick === id && text('pick', 160) && typeof body.queued === 'boolean'
     && (body.use === null || (PRESS_USES as readonly unknown[]).includes(body.use))
     && ['note', 'reason'].every(k => !(k in body) || body[k] === null || text(k, 2000)) && (!('theme' in body) || body.theme === null || text('theme', 120))
-    && (body.use !== 'not_for_us' || typeof body.reason === 'string' && body.reason.trim().length > 0)
+    // A No pressed on Control Center's one list (via 'list') carries no words, and none are made up for it: a
+    // reason is his typed words or absent, never a line written for him (Ruling, Krish, 2026-11-03: Control Center's
+    // Content tab approves ideas).
+    && (!('via' in body) || body.via === 'list')
+    && (body.use !== 'not_for_us' || typeof body.reason === 'string' && body.reason.trim().length > 0 || body.via === 'list')
     && (body.use === 'next_week' ? monday(String(body.target_week)) : !('target_week' in body) || body.target_week === null)
   if (collection === 'queue') return text('pick', 160) && typeof body.queued === 'boolean'
   if (collection === 'comments') return text('text', 30000) && text('thread_id', 160) && validId(String(body.thread_id)) && text('anchor', 160) && validId(String(body.anchor))
