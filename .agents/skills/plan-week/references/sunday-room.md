@@ -93,6 +93,11 @@ Step 11, once a piece's lock is signed and pushed; one fresh run per piece, neve
   `{"piece_id": "<uuid>", "ref": "<the room's branch>"}`), then `gh run list --workflow make-piece.yml --limit 3` to
   see it queued. Its concurrency group is the piece, so a second dispatch waits for the first and never runs beside
   it.
+- Before dispatching, give the make what it cannot reach. The make runs in GitHub Actions with no Drive access and
+  cannot watch a video, so the research the lock rests on (his corpus in Drive, the readings of routed clips) is
+  excerpted, facts with their sources, into `docs/plans/<Monday>-week/<day>-research.md` and named in the lock's
+  Facts to check (two Wednesday runs on 3 Nov 2026 stopped with nothing made; suspected cause, Drive research out of
+  reach).
 - The room dispatches it itself, never Krish (Krish, 2026-11-03: "Stop making me do shit you can easily do"): in a
   cloud session with the GitHub tools, the workflow-run tool (`run_workflow`, `make-piece.yml`, the ref, input
   `piece_id`), then read its run back and check its head commit holds the signed lock. Only when no route here can

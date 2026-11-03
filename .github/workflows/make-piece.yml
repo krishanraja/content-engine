@@ -112,6 +112,7 @@ jobs:
           git switch -c "claude/make-${{ steps.piece.outputs.short }}-${{ github.run_id }}"
 
       - name: Make the piece, in Claude Code on his subscription
+        id: claude
         uses: anthropics/claude-code-action@v1
         env:
           ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
@@ -135,6 +136,29 @@ jobs:
             the current branch; do not push or open a pull request: the workflow pushes the branch and opens one when
             you stop.
 
+            This run cannot read Google Drive or watch videos. The research a piece rests on is in docs/plans (for
+            example docs/plans/<week>/<day>-research.md, written by the Sunday room). If a step needs something that is
+            not there, put that one question on the day's tab with your best guess, write a short note under docs/plans
+            naming exactly what was missing, commit it, and stop. Never end a run without a commit: a run with no
+            commit goes red.
+
+      # A run's chat is not printed, so two Wednesday runs on 3 Nov 2026 ended green with nothing made and no
+      # way to see why. Keep the whole session record, and write what it was refused onto the run's page.
+      - name: Keep the session record
+        if: always() && steps.claude.outputs.execution_file != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: make-session-${{ steps.piece.outputs.short }}-${{ github.run_id }}
+          path: ${{ steps.claude.outputs.execution_file }}
+          retention-days: 14
+          if-no-files-found: warn
+
+      - name: Say what the run was refused, and how it ended
+        if: always() && steps.claude.outputs.execution_file != ''
+        env:
+          EXEC: ${{ steps.claude.outputs.execution_file }}
+        run: python3 scripts/make_run_report.py "$EXEC" >> "$GITHUB_STEP_SUMMARY"
+
       - name: Keep what the run made
         if: always()
         env:
@@ -143,7 +167,9 @@ jobs:
           PIECE: ${{ steps.piece.outputs.id }}
           GH_TOKEN: ${{ github.token }}
         run: |
-          if [ -z "$(git log --oneline "origin/$BASE..HEAD" 2>/dev/null)" ]; then echo "No commits from this run."; exit 0; fi
+          # A make always leaves something: its work, or a note of the question it put to Krish. Nothing means it hit a
+          # wall it did not report, so the run goes red rather than green (3 Nov 2026).
+          if [ -z "$(git log --oneline "origin/$BASE..HEAD" 2>/dev/null)" ]; then echo "::error::No commits from this run: it made nothing and recorded no question. Read the run summary and the session record artifact."; exit 1; fi
           # The checkout kept no credential, so the token is passed to this one push only.
           auth=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)
           git -c http.extraheader="AUTHORIZATION: basic $auth" push origin "HEAD:refs/heads/$BRANCH"
