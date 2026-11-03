@@ -51,3 +51,5 @@ Answer: It is already both, at every layer, so the question no longer works.
 
 ## Music bed
 NO CURVES (Instrumental Version) (no-curves-instrumental, approved in config/music-library.json), under the talking sections, out under the song clips so they do not clash.
+
+Signed by Krish: "Happy with weds.", 2026-11-03, lock sha256 f4857357c3a5cf13f8f139255e01e1fce8c54005442fdd43522fae1fced85898
