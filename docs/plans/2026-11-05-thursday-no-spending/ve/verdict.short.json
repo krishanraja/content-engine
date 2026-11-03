@@ -1,50 +1,59 @@
 {
-  "schema": "ve-verdict/1",
+  "schema": "ve-verdict/2",
   "piece": "2026-11-05-thursday-no-spending",
   "cut": "short",
-  "sha256": "517cdd9472636c3a5aad20df0725e7c59d1369bf045ffb103228207b2c41d90d",
-  "reviewer": "ve-critic (independent subagent, rounds 4-5)",
-  "reviewed_at": "2026-11-03T16:49:20.646175+00:00",
+  "sha256": "dea8951d0e078fcd9a678fa0fcc724c2394f2f0f12bcbeaa1737ffd5f343a7c4",
+  "reviewer": "ve-critic (separate reader)",
+  "reviewed_at": "2026-11-03T23:22:14.160298+00:00",
   "lens_sha256": "fa26b91a9d667bb637c79215ef804790e805febaf0a40d2545e4f89c24f622a3",
   "frames_viewed": [
     {
       "at_s": 0.0
     },
     {
+      "at_s": 1.0
+    },
+    {
       "at_s": 2.0
     },
     {
-      "at_s": 4.17
+      "at_s": 3.0
     },
     {
-      "at_s": 4.37
+      "at_s": 4.0
     },
     {
-      "at_s": 4.67
+      "at_s": 5.0
     },
     {
-      "at_s": 5.5
+      "at_s": 6.0
     },
     {
       "at_s": 7.0
     },
     {
-      "at_s": 9.5
+      "at_s": 8.0
     },
     {
-      "at_s": 11.5
+      "at_s": 9.0
+    },
+    {
+      "at_s": 10.0
+    },
+    {
+      "at_s": 11.0
     },
     {
       "at_s": 12.0
     },
     {
-      "at_s": 13.4
+      "at_s": 13.0
     },
     {
-      "at_s": 14.47
+      "at_s": 14.0
     },
     {
-      "at_s": 15.3
+      "at_s": 15.0
     },
     {
       "at_s": 16.0
@@ -53,10 +62,7 @@
       "at_s": 17.0
     },
     {
-      "at_s": 17.8
-    },
-    {
-      "at_s": 18.2
+      "at_s": 18.0
     },
     {
       "at_s": 19.0
@@ -65,28 +71,40 @@
       "at_s": 20.0
     },
     {
-      "at_s": 20.83
-    },
-    {
-      "at_s": 21.4
+      "at_s": 21.0
     },
     {
       "at_s": 22.0
     },
     {
-      "at_s": 23.5
+      "at_s": 23.0
+    },
+    {
+      "at_s": 24.0
     },
     {
       "at_s": 25.0
     },
     {
-      "at_s": 26.67
+      "at_s": 26.0
     },
     {
-      "at_s": 29.5
+      "at_s": 27.0
+    },
+    {
+      "at_s": 28.0
+    },
+    {
+      "at_s": 29.0
     },
     {
       "at_s": 30.0
+    },
+    {
+      "at_s": 31.0
+    },
+    {
+      "at_s": 32.0
     },
     {
       "at_s": 33.0
@@ -95,28 +113,28 @@
       "at_s": 34.0
     },
     {
-      "at_s": 34.67
+      "at_s": 35.0
     },
     {
-      "at_s": 35.5
+      "at_s": 36.0
     },
     {
-      "at_s": 36.5
+      "at_s": 37.0
     },
     {
-      "at_s": 37.08
+      "at_s": 38.0
     },
     {
-      "at_s": 37.8
+      "at_s": 39.0
     },
     {
-      "at_s": 39.93
+      "at_s": 40.0
     },
     {
-      "at_s": 40.13
+      "at_s": 41.0
     },
     {
-      "at_s": 40.43
+      "at_s": 42.0
     },
     {
       "at_s": 43.0
@@ -128,40 +146,75 @@
       "at_s": 45.0
     },
     {
+      "at_s": 46.0
+    },
+    {
       "at_s": 47.0
     }
   ],
   "findings": [
     {
-      "severity": "note",
+      "severity": "block",
       "area": "composition",
-      "frame_s": 4.37,
-      "text": "CLOSED. Hook wave in place; clear of the note card at 125-140."
+      "frame_s": 8.0,
+      "text": "SPLIT beats face, b4-8am, own-words, fails: the card is cut by the seam and the NOBODY ASKED stamp is hidden"
     },
     {
-      "severity": "note",
+      "severity": "block",
       "area": "composition",
-      "frame_s": 40.13,
-      "text": "CLOSED. Close wave in place; NO SENDING reads whole at 1198-1213."
+      "frame_s": 7.0,
+      "text": "split-screen captions sit on the seam over the card and his head; captions.ocr and captions.off_face fail at 16.9 s"
     },
     {
-      "severity": "note",
-      "area": "composition",
+      "severity": "fix",
+      "area": "brand",
+      "frame_s": 0.0,
+      "text": "brand.title is never drawn as a held title"
+    },
+    {
+      "severity": "fix",
+      "area": "brand",
       "frame_s": 12.0,
-      "text": "The split opens about 6 frames before the logos land."
+      "text": "orbit small, off-centre and clipped; mark washed out on cream; brand.mark_tile fails"
+    },
+    {
+      "severity": "fix",
+      "area": "composition",
+      "frame_s": 25.0,
+      "text": "empty flat-black frames holding one centred word at 25 and 36 s; top card over 70% empty screen at 26-31 s"
+    },
+    {
+      "severity": "fix",
+      "area": "motion",
+      "frame_s": 0.0,
+      "text": "opening 0-5 s: the same card and a still character for 6 s"
     },
     {
       "severity": "note",
       "area": "composition",
-      "frame_s": 14.47,
-      "text": "The logo row fills about half the top panel's height."
+      "frame_s": 44.0,
+      "text": "ending band static for 4 s"
     },
     {
       "severity": "note",
       "area": "composition",
-      "frame_s": 34.67,
-      "text": "Advisory: card body text looks near the 30 px floor; QC small_text passes."
+      "frame_s": 41.0,
+      "text": "the caption 'technologies' sits on the character"
     }
   ],
-  "blocking": false
+  "blocking": true,
+  "references": [
+    {
+      "card": "instagram_DePHDr_jRed",
+      "score": 5,
+      "matches": false,
+      "note": "One white heavy word is right on full-screen beats, but no held two-line title appears, and on split beats the word lands on the seam over his hair and the card; at 41 s it sits on the character."
+    },
+    {
+      "card": "instagram_DeZuQ7-lATg",
+      "score": 4,
+      "matches": false,
+      "note": "Flat black or cream with no glow instead of glowing full-width cards on a pale wash; empty black frames at 25 and 36 s; split cards cut by the seam; small off-centre orbit; the opening holds one card and a still character for 6 s."
+    }
+  ]
 }
