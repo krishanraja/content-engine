@@ -146,12 +146,17 @@ export const VeCallSchema = z.object({
 // A card on Krish's inspiration board that this piece is held to (Krish, 2026-11-03: "I even gave literal inspiration in
 // the inspiration board on the quality I expect, and also the subtitle builds we could have"). `card` is the board's
 // own name for the clip (its file stem, instagram_DePHDr_jRed); `drive_id` is where its video lives, read at packet
-// time and never copied into the repository; `takeaway` says in words what the cut must match.
+// time and never copied into the repository; `takeaway` says in words what the cut must match. `id` is the card's
+// inspiration_items.id, what the board, the making record's clip_uses and card_uses all key on; ve lint requires it
+// from 6 Nov 2026 and `ve refs` checks it against GET /api/inspiration/cards. `offered: true` marks a card `ve init`
+// pre-filled from GET /api/inspiration/candidates: the session confirms it by deleting the flag, or replaces the card.
 export const VeReferenceSchema = z.object({
+  id: z.string().regex(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i, 'the Inspiration card id (inspiration_items.id, a uuid)').optional(),
   card: z.string().regex(/^[a-z]+_[A-Za-z0-9_-]{4,}$/, 'the board card name, the clip file stem (instagram_DePHDr_jRed)'),
   for: z.array(z.enum(['look', 'motion', 'captions'])).min(1),
   drive_id: z.string().regex(/^[A-Za-z0-9_-]{20,}$/, 'the Drive file id of the reference video'),
   takeaway: z.string().min(12),
+  offered: z.boolean().optional(),
 }).strict()
 
 export const ProductionSpecV2Schema = z.object({

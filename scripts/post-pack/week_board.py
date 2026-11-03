@@ -623,6 +623,33 @@ def script_cuts(items, feature):
     return found, twice
 
 
+def live_sha_attrs(items, cuts, order):
+    """The live overlay's hooks on Approve scripts (docs/PUBLISH_BOARDS.md, "Always current: the live overlay"): for each
+    cut, data-live-sha-<cut> holds the hashes of the words this page shows for it, as the scripts' check hashes them
+    (making.script_hash of the draft, and of its spoken words, the two a check may hold). When the piece's record holds
+    another hash for a cut, its words changed after this page was built, and the page says so and holds the press."""
+    import making  # noqa: E402  the scripts' check's own hash
+    import teleprompter_send as tps  # noqa: E402  the spoken words, never a second copy of how they are made
+    text = {slug: t for slug, _, t in items or []}
+    out = ''
+    for c in order:
+        words = text.get(cuts[c])
+        if not isinstance(words, str):
+            continue
+        shas = dict.fromkeys([making.script_hash(words), making.script_hash(tps.spoken_text(words))])
+        out += f' data-live-sha-{c}="{" ".join(shas)}"'
+    return out
+
+
+def live_attrs(piece, videos):
+    """The live overlay's hooks on a day (docs/PUBLISH_BOARDS.md): the piece the page was built for, and the cuts and
+    thumbnails it shows, so the page can say precisely what a rebuild would add."""
+    vids = [v for v in videos or [] if isinstance(v, dict) and v.get('cut')]
+    cuts = sorted({str(v['cut']) for v in vids})
+    thumbs = sorted({str(v['cut']) for v in vids if isinstance(v.get('thumbnail'), dict) and v['thumbnail'].get('path')})
+    return f' data-live-piece="{E(piece or "")}" data-live-cuts="{E(" ".join(cuts))}" data-live-thumbs="{E(" ".join(thumbs))}"'
+
+
 def approve_card(day, p, weekday, items, piece, tp, when, series_label, subject, feature, warnings):
     """Approve scripts, under the drafts: his press records the exact words of each script as the Drafts step shows
     them (his saved edits included), and the server sends them to Teleprompter once the scripts' check passed on those
@@ -647,6 +674,7 @@ def approve_card(day, p, weekday, items, piece, tp, when, series_label, subject,
         f' data-box-{c}="{E(f"{day}-{cuts[c]}")}" data-title-{c}="{E((held.get(c) or {}).get("title") or titles[c])}"'
         + (f' data-script-id-{c}="{E(held[c]["script_id"])}"' if (held.get(c) or {}).get('script_id') else '') for c in order)
     names = ' and the '.join(tp_cut_name(c) for c in order)
+    attrs += live_sha_attrs(items, cuts, order)
     return (f'<div class="rec ap" id="{p}approve" role="region" aria-labelledby="{p}approve-h" data-approve-day="{day}" '
             f'data-piece="{E(piece)}" data-cuts="{" ".join(order)}" data-folder-title="{E(folder)}"'
             + (f' data-folder-id="{E(tp["folder_id"])}"' if (tp or {}).get('folder_id') else '') + attrs + '>'
@@ -2578,7 +2606,7 @@ def step_nav(p, weekday, opened, notes):
         k = step['key']
         on = k == opened
         buttons.append(
-            f'<button type="button" role="tab" class="st" id="{p}st-{k}" aria-controls="{p}sub-{k}" data-sub="{k}" '
+            f'<button type="button" role="tab" class="st" id="{p}st-{k}" aria-controls="{p}sub-{k}" data-sub="{k}" data-live-step="{k}" '
             f'aria-selected="{"true" if on else "false"}" tabindex="{"0" if on else "-1"}">'
             f'<span class="st-n">{n}</span><span class="st-label">{E(step["label"])}</span>'
             f'<span class="st-note">{E(notes.get(k) or "")}</span></button>')
@@ -2599,7 +2627,7 @@ def fixed_day_panel(day, name, weekday, when, series_label, state, hidden, head,
     p = f'{day}-'
     opened = {'not_picked': 'brief', 'picked': 'brief', 'draft': 'drafts', 'made': 'publish'}[state]
     return (f'<div class="pm fixed" id="panel-{name}" role="tabpanel" aria-labelledby="tab-{name}" data-prefix="{p}" '
-            f'data-day="{day}" data-state="{state}"{attrs} tabindex="-1"{" hidden" if hidden else ""}>'
+            f'data-day="{day}" data-live-day="{day}" data-state="{state}"{attrs} tabindex="-1"{" hidden" if hidden else ""}>'
             f'<div class="day-head">{head}</div>' + step_nav(p, weekday, opened, notes)
             + ''.join(step_panel(p, k, opened, slots.get(k) or '') for k in DAY_STEPS) + '</div>')
 
@@ -3610,7 +3638,7 @@ def fixed_day(key, name, weekday, when, series_label, page, piece, pick, title, 
             raise BoardError(str(error)) from error
     brief_due, drafts_due = due(when, RHYTHM['brief']), due(when, RHYTHM['drafts'])
     files = board_materials.render(key, delivery) if delivery else ''
-    attrs = ' data-feature="true"' if feature else ''
+    attrs = (' data-feature="true"' if feature else '') + live_attrs(piece, (videos or {}).get(key))
     sweep = (sweeps or {}).get(key)
     if sweep and not (rv and (page or key in draft)):
         raise BoardError(f'--sweep {key}: {weekday} has no drafts in review, so where the change was carried would not show; '

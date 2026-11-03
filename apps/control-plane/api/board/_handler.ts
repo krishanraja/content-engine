@@ -9,6 +9,7 @@ import { PressError, afterPress, preparePress, type PressDeps } from './_presses
 import { readArchive } from './_archive.js'
 import { readPieces, recordPosted } from './_posted.js'
 import { carryDay } from './_carry.js'
+import { weekLive } from './_live.js'
 import { operatorBearerAllowed } from '../_auth.js'
 import { MediaQualityError, qualifyBoard } from '../_mediaQuality.js'
 import { mediaQualityEnforced, mediaQualityRollout } from '../../../../packages/core/src/media-rollout.js'
@@ -50,6 +51,14 @@ async function current(db: SupabaseClient, week: string, build?: string) {
   must(result)
   if (!result.data || !validManifest(week, result.data.manifest)) throw new BoardError(404, 'board_build_not_found')
   return { manifest: result.data.manifest as Manifest, revision: pointer.data?.revision || 0, build_id: id }
+}
+/** When the week's live build was made (board_builds.created_at), or null when the week has none. */
+async function builtAt(db: SupabaseClient, week: string, build: string | null): Promise<string | null> {
+  if (!build) return null
+  const result = await db.from('board_builds').select('created_at').eq('week', week).eq('build_id', build).maybeSingle()
+  must(result)
+  const at = result.data?.created_at
+  return typeof at === 'string' && Number.isFinite(Date.parse(at)) ? at : at instanceof Date ? at.toISOString() : null
 }
 async function signed(db: SupabaseClient, file: BoardFile, download = false) {
   const result = await db.storage.from(BUCKET).createSignedUrl(file.key, TTL, download ? { download: file.name } : undefined)
@@ -158,6 +167,9 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         // The live state the Today view reads on every poll (Krish, 2026-11-02: "the whole Today board seems totally
         // outdated, and I can barely ever see what the current state of things are there"): his yes for each day
         // (_yes.ts), what Growth has posted (its ticks), and the build that is live, so an open tab can say it is old.
+        // And the live overlay (_live.ts; Ruling, Krish, 2026-11-03: "The Publish Board should just be makeyourmindup
+        // weekly content calendar, always up to date"): each day's piece as its making record holds it now, and
+        // whether any piece was written after the live build was made (rebuild_needed).
         if (method !== 'GET') throw new BoardError(405, 'method_not_allowed')
         const said = await db.from('board_documents').select('doc_id,body,updated_by').eq('week', week).eq('collection', 'picks')
           .or('doc_id.like.yes-%,doc_id.like.%-publish')
@@ -170,8 +182,13 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
           if (!b || b.done !== true || t.updated_by !== 'growth' || typeof b.day !== 'string' || typeof b.step !== 'string') continue
           ;(posted[b.day] ||= []).push(b.step)
         }
-        const live = await current(db, week)
-        return res.status(200).json({ ok: true, week, build_id: live.build_id, yes: yesByDay((said.data || []) as YesRow[]), posted })
+        const active = await current(db, week)
+        const built_at = await builtAt(db, week, active.build_id)
+        // An overlay that cannot be read never costs him his yes or Growth's ticks: live is null, and the page keeps
+        // what it was built with until the next poll.
+        const overlay = await weekLive(db, week, built_at).catch(() => ({ live: null, rebuild_needed: false }))
+        return res.status(200).json({ ok: true, week, build_id: active.build_id, built_at, yes: yesByDay((said.data || []) as YesRow[]), posted,
+          live: overlay.live, rebuild_needed: overlay.rebuild_needed })
       }
       if (collection === 'archive') {
         // The Archive (_archive.ts): every published piece and his scores, read-only.

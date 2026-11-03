@@ -58,6 +58,35 @@ The build, in order:
    The board shows each card's uses and surfaces the ones never used.
 5. `config/style-references.json`'s reference entries are generated from studied cards, never kept by hand.
 
+### Built (3 Nov 2026, the smallest robust version; not deployed, migration not applied)
+
+- **Cards by id.** `VeReferenceSchema` (`packages/contracts/src/production-spec.ts`) gains `id`, the
+  `inspiration_items.id`, and `offered`; `card` stays as the label, so older specs still parse. `ve lint`
+  (`scripts/velib/lint.py`, `reference_lints`) refuses, from 6 Nov, a reference with no `id` (`reference.id`), an
+  `offered: true` left in (`reference.offered`) and one id named twice. Lint stays offline.
+- **Read routes.** `GET /api/inspiration/cards?ids=` and `GET /api/inspiration/candidates?role=&format=&limit=`
+  (`apps/control-plane/api/inspiration/`, the engine guard as `api/week/options.ts`; shared code in `_cards.ts`).
+  A card is refused for a cut when Krish dismissed it (`dismissed_at`), it is outside the production lane, or its kind
+  is not a clip or still. Candidates rank by `teaches` holding the role (his word before the engine's guess), then his
+  kept signal (study_style, then why he likes it), then the asked clip format, then never used, then newest. The
+  ranking is deterministic: `content_reads` carries no stored embedding, and embedding every reading per request
+  would be a paid call per offer, so `q=` similarity was not built.
+- **Online check.** `ve refs` asks `GET /api/inspiration/cards` before any sheet (`scripts/velib/board.py`) and
+  refuses an unknown, dismissed, strategy-lane or non-clip card, or a Drive id or label that is not the card's.
+  Unreachable (no key, no network), it prints `board NOT CHECKED` and goes on.
+- **Migration** `supabase/migrations/20261122090000_inspiration_teaches_and_card_uses.sql`:
+  `inspiration_items.teaches text[]` (look, motion, captions, hook, pacing, layout) with `teaches_source`
+  (`krish` | `engine_guess`), and `card_uses` (card, piece, spec path, cut, role, Critic score, published, his verdict;
+  one row per card, spec, cut and role). Service role only. The routes answer `migration_pending` until it runs.
+- **Write-back.** `ve verdict` posts one `card_uses` row per reference and role with the Critic's score
+  (`POST /api/inspiration/uses`; the piece uuid from the spec or the plan folder's `post.json`); unreachable, it says
+  `card uses NOT RECORDED`. The making route marks a piece's uses published when a channel is posted.
+- **Pre-fill.** `ve init <piece>` writes the top candidate per unnamed role into `brand.references` marked
+  `offered: true`; the ve and make-piece skills say references come from the board, by id.
+- **Not built yet:** step 2's `teaches` filling (from his answer, or the tagger's guess in inspirationhouse); the
+  board showing each card's uses; Codex cards and the carousel standard naming their cards; step 5. Nothing writes
+  `krish_verdict` yet.
+
 ## Then: the taste ledger (Wave 4, a proposal for Krish; nothing becomes a rule without his yes)
 
 - Control Center holds **no approved taste rules** for Make Your Mind Up (`get_approved_taste`, 3 Nov 2026: count 0).
