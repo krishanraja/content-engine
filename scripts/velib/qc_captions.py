@@ -142,13 +142,27 @@ def _normalise(pixels):
     return normalised
 
 
+def _highlight(pixels):
+    """Dark text on the mint emphasis box, made the same ink as the cream words around it: inside a mid-grey box
+    (the mint), dark pixels are text; outside it, light pixels are. Tesseract reads one polarity at a time, so without
+    this an emphasised word ("no", "prompt") reads as a bar or junk although it is drawn crisply (Thursday 5 Nov)."""
+    from PIL import Image, ImageFilter
+    grey = pixels.astype(float)
+    band = (((grey > 165) & (grey < 222)) * 255).astype('uint8')
+    box = Image.fromarray(band).filter(ImageFilter.MinFilter(5)).filter(ImageFilter.MaxFilter(21))
+    inside = np.asarray(box) > 0
+    return np.where(np.where(inside, grey < 110, grey > 200), 0, 255).astype('uint8')
+
+
 def _read_candidates(executable, pixels, expected):
     normalised = _normalise(pixels)
+    highlight = _highlight(pixels)
     expected = [fold(token) for token in expected]
     best = None
     for variant, image in (('raw', pixels), ('normalised', normalised),
                            ('raw_2x', pixels.repeat(2, axis=0).repeat(2, axis=1)),
-                           ('normalised_2x', normalised.repeat(2, axis=0).repeat(2, axis=1))):
+                           ('normalised_2x', normalised.repeat(2, axis=0).repeat(2, axis=1)),
+                           ('highlight', highlight)):
         seen = _recognise(executable, image)
         # A lone pipe is the heavy sans capital I read as a bar; it counts as the word I only where I is expected.
         if 'i' in expected:
