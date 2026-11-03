@@ -1,6 +1,6 @@
 {
   "file": ".cache/produce/2026-11-05-no-spending/out/thu-short.mp4",
-  "sha256": "eb07b30740efe1fb572b4d3f6d833f943529486ec243018e473bcf56dabf1a4a",
+  "sha256": "cfe4ece225028e7a7a45a651a084c20a11bc4cf4cb6ba703547791a2f1cd19a7",
   "duration_s": 47.51,
   "format": "face-with-proof",
   "checks": {
@@ -204,7 +204,7 @@
         {
           "page": 12,
           "frame": 546,
-          "text": "geta bit dangerous.",
+          "text": "getabit dangerous.",
           "agreement": 1.0,
           "variant": "normalised",
           "pass": true
@@ -236,15 +236,15 @@
         {
           "page": 16,
           "frame": 644,
-          "text": "sending [rule.|",
+          "text": "sending rule.",
           "agreement": 1.0,
-          "variant": "highlight",
+          "variant": "normalised",
           "pass": true
         },
         {
           "page": 17,
           "frame": 682,
-          "text": "It doesn't spend my\nmoney,",
+          "text": "it doesn't spend my\nmoney,",
           "agreement": 1.0,
           "variant": "raw",
           "pass": true
@@ -300,9 +300,9 @@
         {
           "page": 24,
           "frame": 890,
-          "text": "one[prompt]into my\nAl",
+          "text": "one prompt into my\nAl",
           "agreement": 1.0,
-          "variant": "highlight",
+          "variant": "normalised",
           "pass": true
         },
         {
@@ -445,25 +445,25 @@
         {
           "beat": "b4-8am",
           "frame": 528,
-          "score": 0.9780218550437889,
+          "score": 0.9780193950986293,
           "pass": true
         },
         {
           "beat": "b5-rule",
           "frame": 599,
-          "score": 0.9785130158139123,
+          "score": 0.978434810342501,
           "pass": true
         },
         {
           "beat": "own-words",
           "frame": 704,
-          "score": 0.978016698952082,
+          "score": 0.9780394413699538,
           "pass": true
         },
         {
           "beat": "b7-prompt",
           "frame": 924,
-          "score": 0.9779571413190828,
+          "score": 0.977966289234067,
           "pass": true
         },
         {
@@ -568,13 +568,24 @@
           "pass": true
         },
         {
+          "event": "proof-3",
+          "atFrame": 458,
+          "peak_frame": 458,
+          "lag_frames": 0,
+          "peak_difference": 1.9024549722671509,
+          "event_difference": 1.9024549722671509,
+          "threshold": 0.0003289473752374761,
+          "gradual": false,
+          "pass": true
+        },
+        {
           "event": "b4-8am-0",
           "atFrame": 504,
           "peak_frame": 504,
           "lag_frames": 0,
-          "peak_difference": 7.3270463943481445,
-          "event_difference": 7.3270463943481445,
-          "threshold": 0.0002861230314010754,
+          "peak_difference": 6.911404609680176,
+          "event_difference": 6.911404609680176,
+          "threshold": 0.0029892328893765807,
           "gradual": false,
           "pass": true
         },
@@ -583,8 +594,8 @@
           "atFrame": 504,
           "peak_frame": 504,
           "lag_frames": 0,
-          "peak_difference": 7.3270463943481445,
-          "event_difference": 7.3270463943481445,
+          "peak_difference": 6.911404609680176,
+          "event_difference": 6.911404609680176,
           "threshold": 1e-06,
           "gradual": true,
           "pass": true
@@ -594,8 +605,8 @@
           "atFrame": 528,
           "peak_frame": 534,
           "lag_frames": 6,
-          "peak_difference": 5.281487464904785,
-          "event_difference": 3.365178346633911,
+          "peak_difference": 5.284049987792969,
+          "event_difference": 3.383537769317627,
           "threshold": 1e-06,
           "gradual": true,
           "pass": true
@@ -605,8 +616,8 @@
           "atFrame": 534,
           "peak_frame": 534,
           "lag_frames": 0,
-          "peak_difference": 5.281487464904785,
-          "event_difference": 5.281487464904785,
+          "peak_difference": 5.284049987792969,
+          "event_difference": 5.284049987792969,
           "threshold": 1e-06,
           "gradual": true,
           "pass": true
@@ -616,9 +627,9 @@
           "atFrame": 594,
           "peak_frame": 598,
           "lag_frames": 4,
-          "peak_difference": 25.546180725097656,
-          "event_difference": 5.895672798156738,
-          "threshold": 0.0015661470824852586,
+          "peak_difference": 25.561357498168945,
+          "event_difference": 5.895991802215576,
+          "threshold": 0.009133348474279046,
           "gradual": false,
           "pass": true
         },
@@ -627,9 +638,9 @@
           "atFrame": 598,
           "peak_frame": 598,
           "lag_frames": 0,
-          "peak_difference": 62.51991271972656,
-          "event_difference": 62.51991271972656,
-          "threshold": 0.0008077337115537375,
+          "peak_difference": 62.59100341796875,
+          "event_difference": 62.59100341796875,
+          "threshold": 0.0006923431938048452,
           "gradual": false,
           "pass": true
         },
@@ -638,9 +649,9 @@
           "atFrame": 625,
           "peak_frame": 625,
           "lag_frames": 0,
-          "peak_difference": 25.789779663085938,
-          "event_difference": 25.789779663085938,
-          "threshold": 0.082137705758214,
+          "peak_difference": 25.7857723236084,
+          "event_difference": 25.7857723236084,
+          "threshold": 0.07759553007781506,
           "gradual": false,
           "pass": true
         },
@@ -649,9 +660,9 @@
           "atFrame": 625,
           "peak_frame": 625,
           "lag_frames": 0,
-          "peak_difference": 60.3249397277832,
-          "event_difference": 60.3249397277832,
-          "threshold": 0.0005769526760559529,
+          "peak_difference": 60.32496643066406,
+          "event_difference": 60.32496643066406,
+          "threshold": 0.00030770809098612517,
           "gradual": false,
           "pass": true
         },
@@ -660,8 +671,8 @@
           "atFrame": 642,
           "peak_frame": 646,
           "lag_frames": 4,
-          "peak_difference": 73.68925476074219,
-          "event_difference": 9.179025650024414,
+          "peak_difference": 73.72443389892578,
+          "event_difference": 9.170777320861816,
           "threshold": 1e-06,
           "gradual": false,
           "pass": true
@@ -671,8 +682,8 @@
           "atFrame": 885,
           "peak_frame": 891,
           "lag_frames": 6,
-          "peak_difference": 32.537925720214844,
-          "event_difference": 3.171598434448242,
+          "peak_difference": 32.672420501708984,
+          "event_difference": 3.041079044342041,
           "threshold": 1e-06,
           "gradual": false,
           "pass": true
@@ -682,8 +693,8 @@
           "atFrame": 885,
           "peak_frame": 891,
           "lag_frames": 6,
-          "peak_difference": 32.5002555847168,
-          "event_difference": 3.6340324878692627,
+          "peak_difference": 32.49530792236328,
+          "event_difference": 3.5884788036346436,
           "threshold": 1e-06,
           "gradual": false,
           "pass": true
@@ -693,47 +704,58 @@
           "atFrame": 885,
           "peak_frame": 891,
           "lag_frames": 6,
-          "peak_difference": 10.716166496276855,
-          "event_difference": 1.8886545896530151,
+          "peak_difference": 14.583284378051758,
+          "event_difference": 1.978958010673523,
           "threshold": 1e-06,
           "gradual": false,
           "pass": true
         },
         {
           "event": "b7-prompt-3",
-          "atFrame": 899,
-          "peak_frame": 899,
-          "lag_frames": 0,
-          "peak_difference": 3.9800660610198975,
-          "event_difference": 3.9800660610198975,
+          "atFrame": 885,
+          "peak_frame": 891,
+          "lag_frames": 6,
+          "peak_difference": 10.82657527923584,
+          "event_difference": 1.8812018632888794,
           "threshold": 1e-06,
-          "gradual": true,
+          "gradual": false,
           "pass": true
         },
         {
           "event": "b7-prompt-4",
-          "atFrame": 953,
-          "peak_frame": 953,
+          "atFrame": 899,
+          "peak_frame": 899,
           "lag_frames": 0,
-          "peak_difference": 2.531522035598755,
-          "event_difference": 2.531522035598755,
+          "peak_difference": 3.9839630126953125,
+          "event_difference": 3.9839630126953125,
           "threshold": 1e-06,
           "gradual": true,
           "pass": true
         },
         {
           "event": "b7-prompt-5",
-          "atFrame": 966,
-          "peak_frame": 966,
+          "atFrame": 953,
+          "peak_frame": 953,
           "lag_frames": 0,
-          "peak_difference": 4.232651233673096,
-          "event_difference": 4.232651233673096,
+          "peak_difference": 2.533686876296997,
+          "event_difference": 2.533686876296997,
           "threshold": 1e-06,
           "gradual": true,
           "pass": true
         },
         {
           "event": "b7-prompt-6",
+          "atFrame": 966,
+          "peak_frame": 966,
+          "lag_frames": 0,
+          "peak_difference": 4.229275226593018,
+          "event_difference": 4.229275226593018,
+          "threshold": 1e-06,
+          "gradual": true,
+          "pass": true
+        },
+        {
+          "event": "b7-prompt-7",
           "atFrame": 1014,
           "peak_frame": 1012,
           "lag_frames": -2,
@@ -744,7 +766,7 @@
           "pass": true
         },
         {
-          "event": "b7-prompt-7",
+          "event": "b7-prompt-8",
           "atFrame": 1021,
           "peak_frame": 1021,
           "lag_frames": 0,
@@ -759,8 +781,8 @@
           "atFrame": 1112,
           "peak_frame": 1112,
           "lag_frames": 0,
-          "peak_difference": 62.270320892333984,
-          "event_difference": 62.270320892333984,
+          "peak_difference": 62.254180908203125,
+          "event_difference": 62.254180908203125,
           "threshold": 1e-06,
           "gradual": false,
           "pass": true
@@ -770,9 +792,9 @@
           "atFrame": 1128,
           "peak_frame": 1128,
           "lag_frames": 0,
-          "peak_difference": 60.29798889160156,
-          "event_difference": 60.29798889160156,
-          "threshold": 3.8463511373265646e-05,
+          "peak_difference": 60.3151969909668,
+          "event_difference": 60.3151969909668,
+          "threshold": 1e-06,
           "gradual": false,
           "pass": true
         },
@@ -781,9 +803,9 @@
           "atFrame": 1134,
           "peak_frame": 1128,
           "lag_frames": -6,
-          "peak_difference": 44.261173248291016,
-          "event_difference": 13.970793724060059,
-          "threshold": 0.0022725359885953367,
+          "peak_difference": 48.15259552001953,
+          "event_difference": 9.202676773071289,
+          "threshold": 1e-06,
           "gradual": false,
           "pass": true
         },
@@ -792,9 +814,9 @@
           "atFrame": 1201,
           "peak_frame": 1202,
           "lag_frames": 1,
-          "peak_difference": 4.511938095092773,
-          "event_difference": 4.511938095092773,
-          "threshold": 0.08280461467802525,
+          "peak_difference": 4.518289089202881,
+          "event_difference": 4.518289089202881,
+          "threshold": 0.09107786603271961,
           "gradual": false,
           "pass": true
         }
@@ -1525,7 +1547,7 @@
             "text": "get a bit dangerous.",
             "change_frame": 528,
             "frame": 539,
-            "read": "geta bit dangerous.",
+            "read": "getabit dangerous.",
             "score": 1.0,
             "exact": true,
             "status": "pass"
@@ -1569,7 +1591,7 @@
             "text": "sending rule.",
             "change_frame": 631,
             "frame": 642,
-            "read": "sending [rule.|",
+            "read": "sending rule.",
             "score": 1.0,
             "exact": true,
             "status": "pass"
@@ -1613,7 +1635,7 @@
             "text": "one prompt into my AI",
             "change_frame": 861,
             "frame": 885,
-            "read": "one[prompt]into my\nAl",
+            "read": "one prompt into my\nAl",
             "score": 1.0,
             "exact": true,
             "status": "pass"
@@ -1903,7 +1925,7 @@
           "frame": 328
         },
         "proof": {
-          "ssim": 0.8625925959187214,
+          "ssim": 0.8610498037875781,
           "min": 0.75,
           "pass": true,
           "golden": "face-with-proof",
@@ -1938,7 +1960,7 @@
           "note": "extra beat: no golden, composition-checked"
         },
         "close": {
-          "ssim": 0.8213031956722805,
+          "ssim": 0.8213135028292148,
           "min": 0.75,
           "pass": true,
           "golden": "face-with-proof",
@@ -2166,6 +2188,25 @@
           },
           "findings": [],
           "frame": 1273
+        },
+        "ending": {
+          "pass": true,
+          "checks": {
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 1372
         }
       },
       "target": "design lock composition thresholds",
@@ -2192,7 +2233,7 @@
         "frame": 328
       },
       "proof": {
-        "ssim": 0.8625925959187214,
+        "ssim": 0.8610498037875781,
         "min": 0.75,
         "pass": true,
         "golden": "face-with-proof",
@@ -2227,7 +2268,7 @@
         "note": "extra beat: no golden, composition-checked"
       },
       "close": {
-        "ssim": 0.8213031956722805,
+        "ssim": 0.8213135028292148,
         "min": 0.75,
         "pass": true,
         "golden": "face-with-proof",
@@ -2455,6 +2496,25 @@
         },
         "findings": [],
         "frame": 1273
+      },
+      "ending": {
+        "pass": true,
+        "checks": {
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 1372
       }
     }
   },
