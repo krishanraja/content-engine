@@ -1,5 +1,7 @@
 # THE HAND-HELD SCREEN: motion notes (mind.the.gap, tall 1080x1920, 30 fps, about 20 s)
 
+> Motion for every cut in this format is held to [the signed motion standard](../../MOTION_STANDARD.md); each piece's own style comes from the bank (`config/style-references.json`, `motion` layer, `style.motion` in the spec) and works inside the frame these notes set.
+
 ## Governing idea
 
 One real phone in one real hand is the whole stage, and the camera is the editor. It never cuts: it pushes, rolls and re-frames the same handset (1.8x, then 1.9x, then 2.1x, then a 104 degree roll to landscape, then back out to 1.55x), so every beat is the same object seen closer, tilted or turned. A hand-drawn marker lands on the one thing that matters in each beat and lifts off before the next one, so the eye is always told where to look. The brand kit (stickers that slap, a stamp with a leader, brutal cards, the coral swipe, grain, halftone) is the annotation layer printed on top of a photograph. The evidence is never redrawn: in beat 4 the camera rolls the phone onto its side and the real DeepSeek recording becomes the glass.

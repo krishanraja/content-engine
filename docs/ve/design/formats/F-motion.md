@@ -1,5 +1,7 @@
 # FACE WITH PROOF: motion notes (draft lock, awaiting Krish's Gate 2)
 
+> Motion for every cut in this format is held to [the signed motion standard](../../MOTION_STANDARD.md); each piece's own style comes from the bank (`config/style-references.json`, `motion` layer, `style.motion` in the spec) and works inside the frame these notes set.
+
 Draft, 29 Oct 2026. Motion comes from `config/ve/brand-tokens.json` (`motion`): slide, drop and slap; nothing moves
 for its own sake; nothing fully stops except a declared silence beat (ambient drift 1.5%).
 

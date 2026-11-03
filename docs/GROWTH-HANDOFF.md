@@ -12,8 +12,18 @@ This supersedes the 26 October split for carousels and the other derived
 posts only.
 
 - Growth makes the derived carousels, Substack Notes, memes and off-day posts
-  itself. The off days are Tuesday, Thursday, Saturday and Sunday on
-  Instagram, TikTok and YouTube Shorts.
+  itself. The off days are Tuesday, Thursday and Saturday on Instagram,
+  TikTok and YouTube Shorts; Sunday is a rest day and nothing is published
+  (Ruling, Krish, 2026-11-02).
+- Everything ready to post is filed in its post's `3 Posts` folder in the
+  makeyourmindup library, through `scripts/post-pack/send.py`, never in
+  `4 Growth` (Ruling, Krish, 2026-11-03: "everything ready for post goes in
+  the posts folder, not the growth folder"). An off-day post's folder is
+  `YYYY-MM-DD Ddd off.day - Subject`, even when it wears a series' house
+  dress (`scripts/post-pack/library.py` `post_folder` names it so). Its board
+  card links that folder (`drive`) and names it (`posts_folder`, or
+  "3 Posts › <folder>" in its needs); the board calls it not ready until
+  both are there and the folder is that day's post.
 - It makes them to [CAROUSEL-STANDARD.md](CAROUSEL-STANDARD.md), the
   rejection floor (`python3 scripts/floor.py --format carousel` in this
   repository) and the copy lint (`config/copy-lint.json`, which Growth's

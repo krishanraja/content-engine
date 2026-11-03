@@ -185,7 +185,11 @@ export const ProductionSpecV2Schema = z.object({
     credits: z.object({ higgsfield: z.number().nonnegative().default(0), runway: z.number().nonnegative().default(0) }).strict().default({ higgsfield: 0, runway: 0 }),
   }).strict().default({ tokens_cap: 12_600_000, credits: { higgsfield: 0, runway: 0 } }),
   signed: z.object({ by: z.literal('Krish'), said: z.string().min(2), on: DateSchema, script_sha256: Sha256V1Schema }).strict().optional(),
-  style: z.record(z.string(), z.unknown()).optional(),
+  // style.motion is one module from the motion layer of config/style-references.json and the point it lands; ve lint
+  // (motion.required) checks the module against the bank and requires it from creative_direction.MOTION_FROM.
+  style: z.object({
+    motion: z.object({ module: z.string().min(1), reason: z.string().min(1) }).strict().optional(),
+  }).catchall(z.unknown()).optional(),
   max_face_share: z.number().min(0).max(1).optional(),
 }).strict().superRefine((spec, c) => {
   if (spec.brand.series === 'mind.the.gap' && !spec.call) c.addIssue({ code: 'custom', path: ['call'], message: 'mind.the.gap ends in a dated call: add call.statement, call.due and call.confidence_percent' })

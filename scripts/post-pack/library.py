@@ -79,6 +79,8 @@ class LibraryError(ValueError):
 # An off-day post has no series; its folder carries this label where a series name would go
 # (config/library-paths.cases.json, off_day_label; Krish, 2026-11-03).
 OFF_DAY = json.loads(CASES.read_text(encoding='utf-8'))['off_day_label']
+# The days with no series: Tuesday, Thursday and Saturday (Sunday rests; Krish, 2026-11-02).
+OFF_WEEKDAYS = ('Tue', 'Thu', 'Sat')
 
 
 def subchannels():
@@ -244,7 +246,13 @@ def post_folder(when, subject, subchannel=None, launch=False, day=None):
         raise LibraryError('a launch post has no subchannel in its folder name: leave subchannel out, or launch')
     if not launch and not subchannel:
         raise LibraryError('a post needs its subchannel (follow.the.money, mind.the.gap or under.the.hood), or "launch": true')
-    head = f'{when} Launch - ' if launch else f'{when} {weekday} {subchannel_name(subchannel)} - '
+    name = None if launch else subchannel_name(subchannel)
+    if name and weekday in OFF_WEEKDAYS:
+        # An off-day post has no series, whatever house dress it wears, so its folder carries off.day and every
+        # writer (ve file, the post pack, produce-video) names it the same way (config/library-paths.cases.json;
+        # Krish, 2026-11-03, of Thursday's under.the.hood tag: "The branding is wrong").
+        name = OFF_DAY
+    head = f'{when} Launch - ' if launch else f'{when} {weekday} {name} - '
     clean = archive.safe_text(subject or '')
     if not clean:
         raise LibraryError('the subject has nothing a folder name can keep')
