@@ -58,7 +58,7 @@ describe('ve', () => {
     ['a cut is scored beside its inspiration-board references and under 8/10 is not ready (F26)', 'tests/ve_refgate_test.py'],
     ['no caption page sits on his face (F28)', 'tests/ve_qc_faces_test.py'],
     ['nothing to read under a channel button, zones measured on his phone (F30)', 'tests/channel_safe_test.py'],
-    ['a finished off-day card is not ready until its 4 Growth file is recorded (F27)', 'tests/board_growth_test.py'],
+    ['a finished off-day card is not ready until it links its 3 Posts folder (F27)', 'tests/board_posts_test.py'],
   ] as const) {
     it(name, () => {
       const r = py([file])
