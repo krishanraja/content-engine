@@ -76,6 +76,11 @@ class LibraryError(ValueError):
     """A reason to stop, in words a person can act on."""
 
 
+# An off-day post has no series; its folder carries this label where a series name would go
+# (config/library-paths.cases.json, off_day_label; Krish, 2026-11-03).
+OFF_DAY = json.loads(CASES.read_text(encoding='utf-8'))['off_day_label']
+
+
 def subchannels():
     """The live subchannels as the brand writes them, in the order of the
     week, from the house style in config/studio.json."""
@@ -85,10 +90,10 @@ def subchannels():
 def subchannel_name(value):
     """'follow.the.money' from 'follow.the.money', 'follow_the_money' or any capitals."""
     wanted = str(value or '').strip().lower().replace('_', '.')
-    for name in subchannels():
+    for name in subchannels() + [OFF_DAY]:
         if name == wanted:
             return name
-    raise LibraryError(f'"{value}" is not a subchannel: use {", ".join(subchannels())}')
+    raise LibraryError(f'"{value}" is not a subchannel: use {", ".join(subchannels())}, or {OFF_DAY} for an off-day post')
 
 
 def utf16_length(text):
@@ -97,7 +102,7 @@ def utf16_length(text):
 
 
 def _post_folder_pattern():
-    names = '|'.join(re.escape(name) for name in subchannels())
+    names = '|'.join(re.escape(name) for name in subchannels() + [OFF_DAY])
     return re.compile(rf'([0-9]{{4}})-([0-9]{{2}})-([0-9]{{2}}) (?:({"|".join(WEEKDAYS)}) ({names})|Launch) - \S.*', re.S)
 
 
@@ -244,6 +249,7 @@ def check_cases(cases):
     check('max bytes', MAX_BYTES, cases['max_bytes'])
     check('content types', CONTENT_TYPES, cases['content_types'])
     check('subchannels', sorted(subchannels()), sorted(cases['subchannels']))
+    check('off-day label', OFF_DAY, cases['off_day_label'])
     for item in cases['paths']:
         check(f'path: {item["why"]}', refusal(item['path']), item.get('refused'))
     for item in cases['post_folders']:

@@ -15,7 +15,7 @@
   },
   "opening_break": "the cursor buddy lands with a notification it should not have sent, on the first word",
   "finish_pack": "house_grain",
-  "sound_palette": "house-v1",
+  "sound_palette": "house-v1 (no kit exists yet: the effects named in the storyboard are left out, the music bed carries the cut; docs/ve/STATUS.md, \"No sound effects kit\")",
   "variants": {}
  },
  "objects": [
@@ -80,19 +80,19 @@
     "tiles": true,
     "logos": [
      {
-      "id": "meta"
+      "id": "Meta"
      },
      {
-      "id": "amazon"
+      "id": "Amazon"
      },
      {
-      "id": "google"
+      "id": "Google"
      },
      {
-      "id": "xai"
+      "id": "xAI"
      },
      {
-      "id": "anthropic"
+      "id": "Anthropic"
      }
     ]
    }
@@ -283,14 +283,21 @@
        "obj": "buddy",
        "verb": "enter",
        "to_state": "proud",
-       "sfx": "pop"
+       "silent": true
       },
       {
        "at_w": 0,
        "obj": "note",
        "verb": "enter",
        "to_state": "visible",
-       "sfx": "ping"
+       "silent": true
+      },
+      {
+       "at_w": 1,
+       "obj": "note",
+       "verb": "type",
+       "to_state": "0",
+       "silent": true
       },
       {
        "at_w": 6,
@@ -349,7 +356,7 @@
        "obj": "logos",
        "verb": "enter",
        "to_state": "visible",
-       "sfx": "click"
+       "silent": true
       },
       {
        "at_w": 34,
@@ -390,10 +397,17 @@
        "obj": "chat",
        "verb": "enter",
        "to_state": "visible",
-       "sfx": "ping"
+       "silent": true
       },
       {
-       "at_w": 43,
+       "at_w": 42,
+       "obj": "chat",
+       "verb": "type",
+       "to_state": "0",
+       "silent": true
+      },
+      {
+       "at_w": 44,
        "obj": "chat",
        "verb": "type",
        "to_state": "1",
@@ -403,8 +417,8 @@
        "at_w": 46,
        "obj": "chat",
        "verb": "send",
-       "to_state": "2",
-       "sfx": "whoosh"
+       "to_state": "1",
+       "silent": true
       }
      ]
     },
@@ -434,14 +448,14 @@
        "obj": "slab_spend",
        "verb": "stamp",
        "to_state": "NO SPENDING",
-       "sfx": "slap"
+       "silent": true
       },
       {
        "at_w": 56,
        "obj": "slab_send",
        "verb": "stamp",
        "to_state": "NO SENDING",
-       "sfx": "slap"
+       "silent": true
       },
       {
        "at_w": 56,
@@ -461,7 +475,7 @@
     },
     {
      "id": "own-words",
-     "role": "payoff",
+     "role": "anchor",
      "span": {
       "from_w": 59,
       "to_w": 73
@@ -499,13 +513,13 @@
        "obj": "ask",
        "verb": "enter",
        "to_state": "visible",
-       "sfx": "ping"
+       "silent": true
       },
       {
        "at_w": 97,
        "obj": "ask",
        "verb": "type",
-       "to_state": "1",
+       "to_state": "0",
        "silent": true
       },
       {
@@ -513,34 +527,34 @@
        "obj": "ask",
        "verb": "pick",
        "to_state": "0",
-       "sfx": "click"
+       "silent": true
       },
       {
        "at_w": 103,
        "obj": "ask",
        "verb": "pick",
        "to_state": "1",
-       "sfx": "click"
+       "silent": true
       },
       {
        "at_w": 111,
        "obj": "ask",
        "verb": "pick",
        "to_state": "2",
-       "sfx": "click"
+       "silent": true
       },
       {
        "at_w": 113,
        "obj": "ask",
        "verb": "send",
-       "to_state": "locked",
-       "sfx": "whoosh"
+       "to_state": "0",
+       "silent": true
       }
      ]
     },
     {
      "id": "close",
-     "role": "call",
+     "role": "payoff",
      "span": {
       "from_w": 118,
       "to_w": 147
@@ -564,14 +578,14 @@
        "obj": "slab_spend",
        "verb": "stamp",
        "to_state": "NO SPENDING",
-       "sfx": "slap"
+       "silent": true
       },
       {
        "at_w": 125,
        "obj": "slab_send",
        "verb": "stamp",
        "to_state": "NO SENDING",
-       "sfx": "slap"
+       "silent": true
       },
       {
        "at_w": 126,

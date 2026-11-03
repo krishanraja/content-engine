@@ -27,7 +27,7 @@ function elements(node: ReactNode): ReactElement<Record<string, unknown>>[] {
   return [node, ...elements(node.props.children as ReactNode)]
 }
 
-const layouts: Exclude<EngineBeat['layout'], 'STAGE'>[] = ['P1', 'P3', 'P6', 'F1', 'F3']
+const layouts: Exclude<EngineBeat['layout'], 'STAGE' | 'SPLIT'>[] = ['P1', 'P3', 'P6', 'F1', 'F3']
 const aspects: EngineRenderProps['aspect'][] = ['9:16', '16:9']
 
 describe('ve layouts', () => {

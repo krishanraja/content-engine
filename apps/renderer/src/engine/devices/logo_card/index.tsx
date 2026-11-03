@@ -2,6 +2,7 @@ import React from 'react'
 import { HOUSE_FONTS } from '../../../house/geometry'
 import { EXIT, MOTION, progress, stateAt } from '../../clock'
 import type { DeviceProps } from '../types'
+import { Mark } from '../logo_orbit/mark'
 import { ParamsSchema, resolveLogo } from './schema'
 
 // Monday's E.back, with its 1.9 overshoot. The card pins the house duration.
@@ -39,6 +40,36 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
   const params = ParamsSchema.parse(object.params)
   const s = logoCardState({ object, events, frame }, params.logos.length)
   if (!s) return null
+  if (params.tiles) {
+    const rows = Math.ceil(params.logos.length / 3)
+    // Preserve the proof's 1080-wide stage proportions; constrain short slots too.
+    const unit = Math.min(box.width / 1080, box.height / (rows * 240 + (rows - 1) * 60))
+    const side = 240 * unit
+    const gap = 60 * unit
+    const height = rows * side + (rows - 1) * gap
+    return <svg width={box.width} height={box.height} viewBox={`0 0 ${box.width} ${box.height}`}
+      style={{ position: 'absolute', left: box.left, top: box.top, overflow: 'hidden' }}>
+      <g transform={`translate(${-box.width * s.out} 0)`}>
+        {params.logos.map((logo, i) => {
+          const l = s.logos[i]!
+          if (!l.visible) return null
+          const row = Math.floor(i / 3)
+          const columns = Math.min(3, params.logos.length - row * 3)
+          const x = (box.width - (columns * side + (columns - 1) * gap)) / 2 + (i - row * 3) * (side + gap) + side / 2
+          const y = (box.height - height) / 2 + row * (side + gap) + side / 2
+          return <g key={i} data-tile-side={side} data-row={row} opacity={l.opacity}
+            transform={`translate(${x} ${y}) scale(${l.scale})`}>
+            <rect x={-side / 2} y={-side / 2} width={side} height={side} rx={24 * unit} fill="white" />
+            <Mark id={logo.id} size={140 * unit} />
+          </g>
+        })}
+        {params.label && <text x={box.width / 2} y={(box.height + height) / 2 + 48 * unit}
+          textAnchor="middle" fill={tokens.cream} fontFamily={HOUSE_FONTS.data} fontSize={32 * unit} letterSpacing="0.14em">
+          {params.label.slice(0, Math.floor(params.label.length * s.labelProgress))}
+        </text>}
+      </g>
+    </svg>
+  }
   // Independently authored slot proportions, with identical equal-width cells.
   const layout = aspect === '9:16'
     ? { inset: 0.05, rowY: 0.23, rowH: 0.42, labelY: 0.77, font: 32 }
