@@ -25,10 +25,36 @@
    "meaning": "the proactive assistant as a cursor with a face, proud then sulking then behaving",
    "persist": {
     "from_beat": "hook",
+    "to_beat": "hook"
+   },
+   "params": {
+    "mood": "proud",
+    "place": {
+     "left": 66,
+     "top": 190,
+     "width": 900,
+     "height": 1100,
+     "scale": 1
+    }
+   }
+  },
+  {
+   "obj": "buddy_rule",
+   "device": "cursor_buddy",
+   "meaning": "the same cursor buddy at the rule, sulking by the fence, then behaving",
+   "persist": {
+    "from_beat": "b5-rule",
     "to_beat": "close"
    },
    "params": {
-    "mood": "proud"
+    "mood": "sulk",
+    "place": {
+     "left": 390,
+     "top": 400,
+     "width": 640,
+     "height": 800,
+     "scale": 1
+    }
    }
   },
   {
@@ -45,7 +71,14 @@
      {
       "text": "Done! Booked the team offsite in Ibiza"
      }
-    ]
+    ],
+    "place": {
+     "left": 56,
+     "top": 160,
+     "width": 920,
+     "height": 300,
+     "scale": 1
+    }
    }
   },
   {
@@ -139,7 +172,14 @@
       "side": "right"
      }
     ],
-    "status": "Sent"
+    "status": "Sent",
+    "place": {
+     "left": 56,
+     "top": 160,
+     "width": 920,
+     "height": 420,
+     "scale": 1
+    }
    }
   },
   {
@@ -155,10 +195,18 @@
     "main": "NO SPENDING",
     "tiltDeg": 0,
     "at": {
-     "x": 72,
-     "y": 230,
-     "w": 828,
-     "h": 163.2
+     "x": 0,
+     "y": 0,
+     "w": 345,
+     "h": 68
+    },
+    "paint": "mint",
+    "place": {
+     "left": 72,
+     "top": 230,
+     "width": 345,
+     "height": 68,
+     "scale": 2.4
     }
    }
   },
@@ -175,10 +223,18 @@
     "main": "NO SENDING",
     "tiltDeg": 0,
     "at": {
-     "x": 72,
-     "y": 440,
-     "w": 828,
-     "h": 163.2
+     "x": 0,
+     "y": 0,
+     "w": 345,
+     "h": 68
+    },
+    "paint": "mint",
+    "place": {
+     "left": 72,
+     "top": 440,
+     "width": 345,
+     "height": 68,
+     "scale": 2.4
     }
    }
   },
@@ -219,7 +275,14 @@
      "Approve every individual send",
      "Approve every financial commitment",
      "Zero unapproved usage costs"
-    ]
+    ],
+    "place": {
+     "left": 56,
+     "top": 60,
+     "width": 920,
+     "height": 640,
+     "scale": 1
+    }
    }
   }
  ],
@@ -439,7 +502,7 @@
      "uses": [
       "slab_spend",
       "slab_send",
-      "buddy",
+      "buddy_rule",
       "tick"
      ],
      "events": [
@@ -452,16 +515,16 @@
       },
       {
        "at_w": 56,
-       "obj": "slab_send",
-       "verb": "stamp",
-       "to_state": "NO SENDING",
+       "obj": "buddy_rule",
+       "verb": "enter",
+       "to_state": "sulk",
        "silent": true
       },
       {
        "at_w": 56,
-       "obj": "buddy",
-       "verb": "sulk",
-       "to_state": "sulk",
+       "obj": "slab_send",
+       "verb": "stamp",
+       "to_state": "NO SENDING",
        "silent": true
       },
       {
@@ -569,7 +632,7 @@
      "uses": [
       "slab_spend",
       "slab_send",
-      "buddy",
+      "buddy_rule",
       "tick"
      ],
      "events": [
@@ -596,7 +659,7 @@
       },
       {
        "at_w": 136,
-       "obj": "buddy",
+       "obj": "buddy_rule",
        "verb": "wave",
        "to_state": "cool",
        "silent": true

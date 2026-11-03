@@ -23,6 +23,23 @@ const STAGE_LEFT = (1080 - 1080 * FWP_STAGE_SCALE) / 2
 export const FWP_SPLIT_CAPTION_ZONE = { left: 72, top: 1460, width: 900, height: 180 } as const
 /** Poster crop defaults for the Thursday still; override after camera-plate review. */
 export const FWP_POSTER_POSITIONS = { hook: '50% 88%', face: '50% 0%', proof: '50% 88%', close: '50% 88%' } as const
+/** Copy these stage-coordinate placements into SPLIT object.params.place. */
+export const FWP_PLACEMENTS = {
+  hook: {
+    bubble: { left: 56, top: 160, width: 920, height: 300, scale: 1 },
+    buddy: { left: 66, top: 190, width: 900, height: 1100, scale: 1 },
+  },
+  close: {
+    stamps: [
+      { left: 72, top: 230, width: 345, height: 68, scale: 2.4 },
+      { left: 72, top: 440, width: 345, height: 68, scale: 2.4 },
+    ],
+    buddy: { left: 390, top: 400, width: 640, height: 800, scale: 1 },
+  },
+} as const
+const placementProps = ({ left, top, width, height, scale }: {
+  left: number; top: number; width: number; height: number; scale: number
+}) => ({ left, top, scale, slot: { left: 0, top: 0, width, height } })
 const box = (left: number, top: number, width: number, height: number): Box => ({ left, top, width, height })
 function Still({ component: Component, id, params, slot, tokens, verb = 'enter', scale = 1, left = 0, top = 0 }:
   { component: DeviceComponent; id: string; params: EngineObject['params']; slot: Box; tokens: EngineTokens;
@@ -88,9 +105,9 @@ function Hook(props: FWPMockProps) {
   return <Frame {...props} posterPosition={props.posterPosition ?? FWP_POSTER_POSITIONS.hook} caption="Proactive AI is coming">
     <Still component={Bubble} id="typing_bubble" params={{ kind: 'notification', rows: [
       { text: 'Done! Booked the team offsite in Ibiza' },
-    ] }} slot={box(56, 160, 920, 300)} tokens={props.tokens} />
+    ] }} {...placementProps(FWP_PLACEMENTS.hook.bubble)} tokens={props.tokens} />
     <Still component={Buddy} id="cursor_buddy" params={{ mood: 'proud' }}
-      slot={box(0, 0, 900, 1100)} tokens={props.tokens} left={66} top={190} />
+      {...placementProps(FWP_PLACEMENTS.hook.buddy)} tokens={props.tokens} />
     <Annotation tokens={props.tokens} name="done" params={{ shape: 'underline', target: FWP_TARGETS.done, double: false }} />
   </Frame>
 }
@@ -113,16 +130,13 @@ function Proof(props: FWPMockProps) {
   </Frame>
 }
 function Close(props: FWPMockProps) {
-  // Existing block stamp's paint slot is channel. Bind it to the answer mint;
-  // the header and caption shadow retain the actual series identity colour.
-  const slabTokens = { ...props.tokens, channel: props.tokens.mint }
   return <Frame {...props} posterPosition={props.posterPosition ?? FWP_POSTER_POSITIONS.close} caption="no spending, no sending">
     {['NO SPENDING', 'NO SENDING'].map((main, i) => <Still key={main} component={Stamp}
-      id={`stamp-${i}`} verb="stamp" params={{ kind: 'block', main, tiltDeg: 0,
-        at: { x: 0, y: 0, w: 345, h: 68 } }} slot={box(0, 0, 345, 68)}
-      tokens={slabTokens} scale={2.4} left={72} top={230 + i * 210} />)}
+      id={`stamp-${i}`} verb="stamp" params={{ kind: 'block', paint: 'mint', main, tiltDeg: 0,
+        at: { x: 0, y: 0, w: 345, h: 68 } }} {...placementProps(FWP_PLACEMENTS.close.stamps[i]!)}
+      tokens={props.tokens} />)}
     <Still component={Buddy} id="cursor_buddy" params={{ mood: 'sulk' }}
-      slot={box(0, 0, 640, 800)} tokens={props.tokens} left={390} top={400} />
+      {...placementProps(FWP_PLACEMENTS.close.buddy)} tokens={props.tokens} />
     <Annotation tokens={props.tokens} name="noSending" params={{ shape: 'tick', cx: 926, cy: 522, size: 72 }} />
   </Frame>
 }

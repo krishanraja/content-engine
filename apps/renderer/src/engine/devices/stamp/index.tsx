@@ -25,7 +25,7 @@ export function Device({ object, events, tokens, frame }: DeviceProps) {
     <div style={{ ...canvasRect(x, y, w, h), display: 'flex', flexDirection: 'column', justifyContent: 'center',
       alignItems: 'center', fontFamily: HOUSE_FONTS.data, fontSize: 30, fontWeight: 700, lineHeight: 1,
       letterSpacing: '0.18em', color: s.kind === 'block' ? tokens.ink : tokens.cream,
-      background: s.kind === 'block' ? tokens.channel : tokens.ink, ...(s.kind === 'block' ? halftone(tokens) : {}),
+      background: s.kind === 'block' ? tokens[s.paint] : tokens.ink, ...(s.kind === 'block' ? halftone(tokens) : {}),
       border: `3px ${s.kind === 'dashed' ? 'dashed' : 'solid'} ${s.kind === 'block' ? tokens.ink : tokens.cream}`,
       transform: `rotate(${s.tiltDeg}deg) scale(${s.scale})`, opacity: s.visible ? 1 - s.exit : 0,
       gap: 8, whiteSpace: 'nowrap' }}>
