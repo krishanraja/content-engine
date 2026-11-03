@@ -2,7 +2,8 @@ import { AbsoluteFill, OffthreadVideo, Sequence } from 'remotion'
 import { BrandFrame } from './BrandFrame'
 import { useEngineFrame } from './clock'
 import { DEVICES } from './devices/registry'
-import { slotsFor } from './layouts'
+import { FWP_STAGE_SCALE } from './mocks/face-with-proof'
+import { slotsFor, splitCameraBox, splitObjectPosition } from './layouts'
 import { setActiveCanvas } from './kit/lock'
 import { EngineAudio } from './audio'
 import type { EngineRenderProps } from './props'
@@ -14,19 +15,22 @@ export function FormatMaster(props: EngineRenderProps) {
   const width = props.aspect === '9:16' ? 1080 : 1920
   const height = props.aspect === '9:16' ? 1920 : 1080
   setActiveCanvas(width, height)
+  const activeBeat = props.beats.find((beat) => frame >= beat.fromFrame && frame < beat.toFrame)
+  const split = activeBeat?.layout === 'SPLIT'
+  const camera = split ? splitCameraBox(props.aspect) : undefined
 
   return (
     <AbsoluteFill style={{ backgroundColor: props.tokens.ink, overflow: 'hidden' }}>
       {props.segments.map((segment, index) => (
         <Sequence key={`segment-${index}`} from={segment.fromFrame} durationInFrames={segment.durationFrames}>
-          <AbsoluteFill style={{ overflow: 'hidden' }}>
+          <AbsoluteFill style={{ overflow: 'hidden', ...(camera ?? {}) }}>
             <OffthreadVideo
               src={segment.src}
               trimBefore={segment.trimBeforeFrames}
               muted
               style={{
                 width: '100%', height: '100%', objectFit: 'cover',
-                ...(segment.crop ? {
+                ...(split ? { objectPosition: splitObjectPosition(activeBeat?.plate?.crop) } : segment.crop ? {
                   transformOrigin: 'center center',
                   transform: `translate(${segment.crop.x}px, ${segment.crop.y}px) scale(${segment.crop.scale})`,
                 } : {}),
@@ -41,7 +45,12 @@ export function FormatMaster(props: EngineRenderProps) {
         if (frame < beat.fromFrame || frame >= beat.toFrame) return null
         const slots = slotsFor(beat.layout, props.aspect, beat.uses.length)
         return (
-          <AbsoluteFill key={`devices-${beat.id}`}>
+          <AbsoluteFill key={`devices-${beat.id}`} style={beat.layout === 'SPLIT' ? {
+            height: slots[0]?.height ?? splitCameraBox(props.aspect).top, backgroundColor: props.tokens.cream, overflow: 'hidden',
+          } : undefined}>
+            <AbsoluteFill style={beat.layout === 'SPLIT' ? {
+              transform: `scale(${FWP_STAGE_SCALE})`, transformOrigin: 'top center',
+            } : undefined}>
             {beat.uses.map((id, index) => {
               const object = objects.get(id)
               if (!object) throw new Error(`ve: no object ${id}`)
@@ -51,13 +60,14 @@ export function FormatMaster(props: EngineRenderProps) {
               if (!box) throw new Error(`ve: no slot ${index} in ${beat.layout}`)
               // Clip in frame coordinates so the device receives the original slot box.
               // STAGE shares the whole canvas; other layouts retain their slot clips.
-              const clipPath = `inset(${box.top}px ${width - box.left - box.width}px ${height - box.top - box.height}px ${box.left}px${beat.layout === 'P6' && index === 1 ? ' round 40px' : ''})`
+              const clipPath = `inset(${box.top}px ${width - box.left - box.width}px ${(beat.layout === 'SPLIT' ? box.height : height) - box.top - box.height}px ${box.left}px${beat.layout === 'P6' && index === 1 ? ' round 40px' : ''})`
               return (
                 <AbsoluteFill key={id} style={{ clipPath }}>
                   <Device object={object} events={props.events} box={box} tokens={props.tokens} aspect={props.aspect} frame={frame} />
                 </AbsoluteFill>
               )
             })}
+            </AbsoluteFill>
           </AbsoluteFill>
         )
       })}

@@ -40,13 +40,15 @@ export const EngineObjectSchema = z.object({
 export const EngineBeatSchema = z.object({
   id: z.string().min(1),
   role: z.enum(['hook', 'anchor', 'bridge', 'pivot', 'payoff', 'call']),
-  layout: z.enum(['P1', 'P3', 'P6', 'F1', 'F3', 'STAGE']),
+  layout: z.enum(['P1', 'P3', 'P6', 'F1', 'F3', 'STAGE', 'SPLIT']),
   fromFrame: Frame,
   toFrame: Frame,
   uses: z.array(z.string()),
   transitionOut: z.enum(['cut', 'cut_on_curve', 'carry', 'zoom_out']),
   /** Approved frame within this beat; when absent, use 80% through the beat. */
   keyFrame: Frame.optional(),
+  /** Optional source plate metadata carried from the production beat. */
+  plate: z.object({ source: z.string().optional(), crop: z.string().optional() }).strict().optional(),
   sectionBeat: z.boolean().default(false), // the beat that carries the channel pill
 }).strict()
 

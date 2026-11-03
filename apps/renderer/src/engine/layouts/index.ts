@@ -1,3 +1,4 @@
+import { FWP_SPLIT_SEAM_Y, FWP_POSTER_POSITIONS } from '../mocks/face-with-proof'
 import type { Box } from '../devices/types'
 import type { EngineBeat, EngineRenderProps } from '../props'
 
@@ -6,7 +7,7 @@ type Aspect = EngineRenderProps['aspect']
 
 // These are key-content regions. The segment plate itself remains full bleed.
 // Each aspect is authored in its own frame coordinates, never scaled.
-const TALL: Record<Layout, readonly Box[]> = {
+const TALL: Record<Exclude<Layout, 'SPLIT'>, readonly Box[]> = {
   STAGE: [
     { left: 0, top: 0, width: 1080, height: 1920 },
   ],
@@ -34,7 +35,7 @@ const TALL: Record<Layout, readonly Box[]> = {
   ],
 }
 
-const WIDE: Record<Layout, readonly Box[]> = {
+const WIDE: Record<Exclude<Layout, 'SPLIT'>, readonly Box[]> = {
   STAGE: [
     { left: 0, top: 0, width: 1920, height: 1080 },
   ],
@@ -66,7 +67,28 @@ const WIDE: Record<Layout, readonly Box[]> = {
  * F1: slot 0 is the persistent context object (the grid), slot 1 the dominant focus object,
  * and slot 2 a stat strip. */
 export function slotsFor(layout: Layout, aspect: Aspect, count = 1): Box[] {
+  if (layout === 'SPLIT') {
+    assertSplitAspect(aspect)
+    return Array.from({ length: count }, () => ({ left: 0, top: 0, width: 1080, height: FWP_SPLIT_SEAM_Y }))
+  }
   const boxes = (aspect === '9:16' ? TALL : WIDE)[layout]
   if (layout === 'STAGE') return Array.from({ length: count }, () => ({ ...boxes[0]! }))
   return boxes.map((box) => ({ ...box }))
+}
+
+function assertSplitAspect(aspect: Aspect): void {
+  if (aspect !== '9:16') throw new Error('ve: SPLIT requires 9:16; no wide design lock yet')
+}
+
+export function splitCameraBox(aspect: Aspect): Box {
+  assertSplitAspect(aspect)
+  return { left: 0, top: FWP_SPLIT_SEAM_Y, width: 1080, height: 1920 - FWP_SPLIT_SEAM_Y }
+}
+
+/** Named crop presets are not CSS positions; retain the frozen split default for those. */
+export function splitObjectPosition(crop?: string): string {
+  const tokens = crop?.trim().split(/\s+/) ?? []
+  const position = /^(?:left|right|top|bottom|center|[-+]?(?:\d+(?:\.\d+)?|\.\d+)(?:%|px)|0)$/
+  return tokens.length > 0 && tokens.length <= 4 && tokens.every((token) => position.test(token))
+    ? crop!.trim() : FWP_POSTER_POSITIONS.proof
 }
