@@ -1,0 +1,1801 @@
+{
+  "schema": "ve-take/1",
+  "piece": "2026-11-05-thursday-no-spending",
+  "take": "thursday-take-1",
+  "media": {
+    "path": "/home/user/content-engine/.cache/produce/2026-11-05-no-spending/thurs5Novrecording-nospendingnosending.mp4",
+    "sha256": "203d10c946954c5343ccec5b0e3a3626e9b2dfd7ef376485ff1bbbf4f35dddd5",
+    "duration_s": 47.0
+  },
+  "aligners": {
+    "a": {
+      "name": "faster-whisper:small.en",
+      "words": [
+        {
+          "i": 0,
+          "text": "Proactive",
+          "onset_s": 1.18,
+          "end_s": 1.7
+        },
+        {
+          "i": 1,
+          "text": "AI",
+          "onset_s": 1.7,
+          "end_s": 2.22
+        },
+        {
+          "i": 2,
+          "text": "is",
+          "onset_s": 2.22,
+          "end_s": 2.62
+        },
+        {
+          "i": 3,
+          "text": "coming.",
+          "onset_s": 2.62,
+          "end_s": 3.12
+        },
+        {
+          "i": 4,
+          "text": "AI",
+          "onset_s": 3.42,
+          "end_s": 3.42
+        },
+        {
+          "i": 5,
+          "text": "that",
+          "onset_s": 3.42,
+          "end_s": 3.66
+        },
+        {
+          "i": 6,
+          "text": "does",
+          "onset_s": 3.66,
+          "end_s": 4.02
+        },
+        {
+          "i": 7,
+          "text": "things",
+          "onset_s": 4.02,
+          "end_s": 4.28
+        },
+        {
+          "i": 8,
+          "text": "before",
+          "onset_s": 4.28,
+          "end_s": 4.6
+        },
+        {
+          "i": 9,
+          "text": "you",
+          "onset_s": 4.6,
+          "end_s": 4.74
+        },
+        {
+          "i": 10,
+          "text": "ask",
+          "onset_s": 4.74,
+          "end_s": 5.02
+        },
+        {
+          "i": 11,
+          "text": "offers",
+          "onset_s": 5.02,
+          "end_s": 5.42
+        },
+        {
+          "i": 12,
+          "text": "to",
+          "onset_s": 5.42,
+          "end_s": 5.66
+        },
+        {
+          "i": 13,
+          "text": "do",
+          "onset_s": 5.66,
+          "end_s": 5.84
+        },
+        {
+          "i": 14,
+          "text": "things.",
+          "onset_s": 5.84,
+          "end_s": 6.18
+        },
+        {
+          "i": 15,
+          "text": "Awesome,",
+          "onset_s": 6.9,
+          "end_s": 7.1
+        },
+        {
+          "i": 16,
+          "text": "really",
+          "onset_s": 7.28,
+          "end_s": 7.64
+        },
+        {
+          "i": 17,
+          "text": "cool",
+          "onset_s": 7.64,
+          "end_s": 8.06
+        },
+        {
+          "i": 18,
+          "text": "features",
+          "onset_s": 8.06,
+          "end_s": 8.5
+        },
+        {
+          "i": 19,
+          "text": "and",
+          "onset_s": 8.5,
+          "end_s": 9.08
+        },
+        {
+          "i": 20,
+          "text": "really",
+          "onset_s": 9.08,
+          "end_s": 9.66
+        },
+        {
+          "i": 21,
+          "text": "helpful",
+          "onset_s": 9.66,
+          "end_s": 10.1
+        },
+        {
+          "i": 22,
+          "text": "but",
+          "onset_s": 10.1,
+          "end_s": 10.82
+        },
+        {
+          "i": 23,
+          "text": "a",
+          "onset_s": 10.82,
+          "end_s": 10.9
+        },
+        {
+          "i": 24,
+          "text": "bit",
+          "onset_s": 10.9,
+          "end_s": 11.04
+        },
+        {
+          "i": 25,
+          "text": "dangerous",
+          "onset_s": 11.04,
+          "end_s": 11.46
+        },
+        {
+          "i": 26,
+          "text": "because",
+          "onset_s": 11.46,
+          "end_s": 11.64
+        },
+        {
+          "i": 27,
+          "text": "once",
+          "onset_s": 11.64,
+          "end_s": 11.84
+        },
+        {
+          "i": 28,
+          "text": "they're",
+          "onset_s": 11.84,
+          "end_s": 12.08
+        },
+        {
+          "i": 29,
+          "text": "connected",
+          "onset_s": 12.08,
+          "end_s": 12.54
+        },
+        {
+          "i": 30,
+          "text": "muse",
+          "onset_s": 12.54,
+          "end_s": 13.28
+        },
+        {
+          "i": 31,
+          "text": "into",
+          "onset_s": 13.28,
+          "end_s": 13.58
+        },
+        {
+          "i": 32,
+          "text": "your",
+          "onset_s": 13.58,
+          "end_s": 13.76
+        },
+        {
+          "i": 33,
+          "text": "WhatsApp,",
+          "onset_s": 13.76,
+          "end_s": 14.04
+        },
+        {
+          "i": 34,
+          "text": "Amazon",
+          "onset_s": 14.46,
+          "end_s": 14.46
+        },
+        {
+          "i": 35,
+          "text": "for",
+          "onset_s": 14.46,
+          "end_s": 14.74
+        },
+        {
+          "i": 36,
+          "text": "your",
+          "onset_s": 14.74,
+          "end_s": 14.88
+        },
+        {
+          "i": 37,
+          "text": "groceries,",
+          "onset_s": 14.88,
+          "end_s": 15.34
+        },
+        {
+          "i": 38,
+          "text": "Google",
+          "onset_s": 16.2,
+          "end_s": 16.3
+        },
+        {
+          "i": 39,
+          "text": "for",
+          "onset_s": 16.3,
+          "end_s": 16.56
+        },
+        {
+          "i": 40,
+          "text": "your",
+          "onset_s": 16.56,
+          "end_s": 16.68
+        },
+        {
+          "i": 41,
+          "text": "emails,",
+          "onset_s": 16.68,
+          "end_s": 16.94
+        },
+        {
+          "i": 42,
+          "text": "it",
+          "onset_s": 17.58,
+          "end_s": 17.8
+        },
+        {
+          "i": 43,
+          "text": "can",
+          "onset_s": 17.8,
+          "end_s": 18.16
+        },
+        {
+          "i": 44,
+          "text": "get",
+          "onset_s": 18.16,
+          "end_s": 18.6
+        },
+        {
+          "i": 45,
+          "text": "a",
+          "onset_s": 18.6,
+          "end_s": 18.68
+        },
+        {
+          "i": 46,
+          "text": "bit",
+          "onset_s": 18.68,
+          "end_s": 18.8
+        },
+        {
+          "i": 47,
+          "text": "dangerous.",
+          "onset_s": 18.8,
+          "end_s": 19.2
+        },
+        {
+          "i": 48,
+          "text": "So",
+          "onset_s": 19.48,
+          "end_s": 19.56
+        },
+        {
+          "i": 49,
+          "text": "my",
+          "onset_s": 19.56,
+          "end_s": 19.96
+        },
+        {
+          "i": 50,
+          "text": "first",
+          "onset_s": 19.96,
+          "end_s": 20.2
+        },
+        {
+          "i": 51,
+          "text": "step",
+          "onset_s": 20.2,
+          "end_s": 20.44
+        },
+        {
+          "i": 52,
+          "text": "is",
+          "onset_s": 20.44,
+          "end_s": 20.64
+        },
+        {
+          "i": 53,
+          "text": "the",
+          "onset_s": 20.64,
+          "end_s": 20.82
+        },
+        {
+          "i": 54,
+          "text": "no",
+          "onset_s": 20.82,
+          "end_s": 21.04
+        },
+        {
+          "i": 55,
+          "text": "spending,",
+          "onset_s": 21.04,
+          "end_s": 21.48
+        },
+        {
+          "i": 56,
+          "text": "no",
+          "onset_s": 21.66,
+          "end_s": 21.84
+        },
+        {
+          "i": 57,
+          "text": "sending",
+          "onset_s": 21.84,
+          "end_s": 22.18
+        },
+        {
+          "i": 58,
+          "text": "rule.",
+          "onset_s": 22.18,
+          "end_s": 22.38
+        },
+        {
+          "i": 59,
+          "text": "It",
+          "onset_s": 22.44,
+          "end_s": 22.48
+        },
+        {
+          "i": 60,
+          "text": "doesn't",
+          "onset_s": 22.48,
+          "end_s": 22.74
+        },
+        {
+          "i": 61,
+          "text": "spend",
+          "onset_s": 22.74,
+          "end_s": 23.04
+        },
+        {
+          "i": 62,
+          "text": "my",
+          "onset_s": 23.04,
+          "end_s": 23.22
+        },
+        {
+          "i": 63,
+          "text": "money,",
+          "onset_s": 23.22,
+          "end_s": 23.52
+        },
+        {
+          "i": 64,
+          "text": "doesn't",
+          "onset_s": 23.84,
+          "end_s": 24.24
+        },
+        {
+          "i": 65,
+          "text": "send",
+          "onset_s": 24.24,
+          "end_s": 24.5
+        },
+        {
+          "i": 66,
+          "text": "anything",
+          "onset_s": 24.5,
+          "end_s": 24.74
+        },
+        {
+          "i": 67,
+          "text": "out",
+          "onset_s": 24.74,
+          "end_s": 25.02
+        },
+        {
+          "i": 68,
+          "text": "for",
+          "onset_s": 25.02,
+          "end_s": 25.18
+        },
+        {
+          "i": 69,
+          "text": "me",
+          "onset_s": 25.18,
+          "end_s": 25.28
+        },
+        {
+          "i": 70,
+          "text": "unless",
+          "onset_s": 25.28,
+          "end_s": 25.44
+        },
+        {
+          "i": 71,
+          "text": "I",
+          "onset_s": 25.44,
+          "end_s": 25.68
+        },
+        {
+          "i": 72,
+          "text": "say",
+          "onset_s": 25.68,
+          "end_s": 25.86
+        },
+        {
+          "i": 73,
+          "text": "so.",
+          "onset_s": 25.86,
+          "end_s": 26.12
+        },
+        {
+          "i": 74,
+          "text": "And",
+          "onset_s": 26.38,
+          "end_s": 26.44
+        },
+        {
+          "i": 75,
+          "text": "the",
+          "onset_s": 26.44,
+          "end_s": 26.54
+        },
+        {
+          "i": 76,
+          "text": "fun",
+          "onset_s": 26.54,
+          "end_s": 26.7
+        },
+        {
+          "i": 77,
+          "text": "part",
+          "onset_s": 26.7,
+          "end_s": 26.96
+        },
+        {
+          "i": 78,
+          "text": "is",
+          "onset_s": 26.96,
+          "end_s": 27.1
+        },
+        {
+          "i": 79,
+          "text": "I",
+          "onset_s": 27.1,
+          "end_s": 27.22
+        },
+        {
+          "i": 80,
+          "text": "didn't",
+          "onset_s": 27.22,
+          "end_s": 27.36
+        },
+        {
+          "i": 81,
+          "text": "even",
+          "onset_s": 27.36,
+          "end_s": 27.62
+        },
+        {
+          "i": 82,
+          "text": "write",
+          "onset_s": 27.62,
+          "end_s": 28.06
+        },
+        {
+          "i": 83,
+          "text": "this",
+          "onset_s": 28.06,
+          "end_s": 28.28
+        },
+        {
+          "i": 84,
+          "text": "myself.",
+          "onset_s": 28.28,
+          "end_s": 28.68
+        },
+        {
+          "i": 85,
+          "text": "I",
+          "onset_s": 29.16,
+          "end_s": 29.18
+        },
+        {
+          "i": 86,
+          "text": "just",
+          "onset_s": 29.18,
+          "end_s": 29.3
+        },
+        {
+          "i": 87,
+          "text": "put",
+          "onset_s": 29.3,
+          "end_s": 29.48
+        },
+        {
+          "i": 88,
+          "text": "one",
+          "onset_s": 29.48,
+          "end_s": 29.7
+        },
+        {
+          "i": 89,
+          "text": "prompt",
+          "onset_s": 29.7,
+          "end_s": 29.96
+        },
+        {
+          "i": 90,
+          "text": "into",
+          "onset_s": 29.96,
+          "end_s": 30.16
+        },
+        {
+          "i": 91,
+          "text": "my",
+          "onset_s": 30.16,
+          "end_s": 30.34
+        },
+        {
+          "i": 92,
+          "text": "AI",
+          "onset_s": 30.34,
+          "end_s": 30.58
+        },
+        {
+          "i": 93,
+          "text": "tool",
+          "onset_s": 30.58,
+          "end_s": 30.82
+        },
+        {
+          "i": 94,
+          "text": "and",
+          "onset_s": 30.82,
+          "end_s": 30.92
+        },
+        {
+          "i": 95,
+          "text": "it",
+          "onset_s": 30.92,
+          "end_s": 31.02
+        },
+        {
+          "i": 96,
+          "text": "started",
+          "onset_s": 31.02,
+          "end_s": 31.2
+        },
+        {
+          "i": 97,
+          "text": "asking",
+          "onset_s": 31.2,
+          "end_s": 31.46
+        },
+        {
+          "i": 98,
+          "text": "me",
+          "onset_s": 31.46,
+          "end_s": 31.64
+        },
+        {
+          "i": 99,
+          "text": "questions",
+          "onset_s": 31.64,
+          "end_s": 31.94
+        },
+        {
+          "i": 100,
+          "text": "back,",
+          "onset_s": 31.94,
+          "end_s": 32.32
+        },
+        {
+          "i": 101,
+          "text": "then",
+          "onset_s": 32.56,
+          "end_s": 32.8
+        },
+        {
+          "i": 102,
+          "text": "it",
+          "onset_s": 32.8,
+          "end_s": 33.04
+        },
+        {
+          "i": 103,
+          "text": "locks",
+          "onset_s": 33.04,
+          "end_s": 33.28
+        },
+        {
+          "i": 104,
+          "text": "itself",
+          "onset_s": 33.28,
+          "end_s": 33.6
+        },
+        {
+          "i": 105,
+          "text": "down",
+          "onset_s": 33.6,
+          "end_s": 33.86
+        },
+        {
+          "i": 106,
+          "text": "or",
+          "onset_s": 33.86,
+          "end_s": 33.98
+        },
+        {
+          "i": 107,
+          "text": "tells",
+          "onset_s": 33.98,
+          "end_s": 34.16
+        },
+        {
+          "i": 108,
+          "text": "you",
+          "onset_s": 34.16,
+          "end_s": 34.4
+        },
+        {
+          "i": 109,
+          "text": "how",
+          "onset_s": 34.4,
+          "end_s": 34.54
+        },
+        {
+          "i": 110,
+          "text": "to",
+          "onset_s": 34.54,
+          "end_s": 34.66
+        },
+        {
+          "i": 111,
+          "text": "lock",
+          "onset_s": 34.66,
+          "end_s": 34.78
+        },
+        {
+          "i": 112,
+          "text": "it",
+          "onset_s": 34.78,
+          "end_s": 34.9
+        },
+        {
+          "i": 113,
+          "text": "down.",
+          "onset_s": 34.9,
+          "end_s": 35.18
+        },
+        {
+          "i": 114,
+          "text": "Prompts",
+          "onset_s": 35.68,
+          "end_s": 35.86
+        },
+        {
+          "i": 115,
+          "text": "in",
+          "onset_s": 35.86,
+          "end_s": 35.94
+        },
+        {
+          "i": 116,
+          "text": "the",
+          "onset_s": 35.94,
+          "end_s": 36.08
+        },
+        {
+          "i": 117,
+          "text": "comments,",
+          "onset_s": 36.08,
+          "end_s": 36.36
+        },
+        {
+          "i": 118,
+          "text": "make",
+          "onset_s": 36.96,
+          "end_s": 37.2
+        },
+        {
+          "i": 119,
+          "text": "sure",
+          "onset_s": 37.2,
+          "end_s": 37.36
+        },
+        {
+          "i": 120,
+          "text": "you",
+          "onset_s": 37.36,
+          "end_s": 37.5
+        },
+        {
+          "i": 121,
+          "text": "do",
+          "onset_s": 37.5,
+          "end_s": 37.64
+        },
+        {
+          "i": 122,
+          "text": "this,",
+          "onset_s": 37.64,
+          "end_s": 37.86
+        },
+        {
+          "i": 123,
+          "text": "no",
+          "onset_s": 37.96,
+          "end_s": 38.04
+        },
+        {
+          "i": 124,
+          "text": "spending,",
+          "onset_s": 38.04,
+          "end_s": 38.36
+        },
+        {
+          "i": 125,
+          "text": "no",
+          "onset_s": 38.56,
+          "end_s": 38.6
+        },
+        {
+          "i": 126,
+          "text": "sending,",
+          "onset_s": 38.6,
+          "end_s": 38.88
+        },
+        {
+          "i": 127,
+          "text": "one",
+          "onset_s": 38.98,
+          "end_s": 39.1
+        },
+        {
+          "i": 128,
+          "text": "easy",
+          "onset_s": 39.1,
+          "end_s": 39.38
+        },
+        {
+          "i": 129,
+          "text": "step",
+          "onset_s": 39.38,
+          "end_s": 39.72
+        },
+        {
+          "i": 130,
+          "text": "so",
+          "onset_s": 39.72,
+          "end_s": 39.9
+        },
+        {
+          "i": 131,
+          "text": "you",
+          "onset_s": 39.9,
+          "end_s": 40.0
+        },
+        {
+          "i": 132,
+          "text": "can",
+          "onset_s": 40.0,
+          "end_s": 40.12
+        },
+        {
+          "i": 133,
+          "text": "save",
+          "onset_s": 40.12,
+          "end_s": 40.36
+        },
+        {
+          "i": 134,
+          "text": "yourself",
+          "onset_s": 40.36,
+          "end_s": 40.72
+        },
+        {
+          "i": 135,
+          "text": "and",
+          "onset_s": 40.72,
+          "end_s": 40.92
+        },
+        {
+          "i": 136,
+          "text": "enjoy",
+          "onset_s": 40.92,
+          "end_s": 41.2
+        },
+        {
+          "i": 137,
+          "text": "these",
+          "onset_s": 41.2,
+          "end_s": 41.44
+        },
+        {
+          "i": 138,
+          "text": "new",
+          "onset_s": 41.44,
+          "end_s": 41.6
+        },
+        {
+          "i": 139,
+          "text": "technologies",
+          "onset_s": 41.6,
+          "end_s": 42.1
+        },
+        {
+          "i": 140,
+          "text": "without",
+          "onset_s": 42.1,
+          "end_s": 42.76
+        },
+        {
+          "i": 141,
+          "text": "any",
+          "onset_s": 42.76,
+          "end_s": 42.96
+        },
+        {
+          "i": 142,
+          "text": "of",
+          "onset_s": 42.96,
+          "end_s": 43.04
+        },
+        {
+          "i": 143,
+          "text": "those",
+          "onset_s": 43.04,
+          "end_s": 43.18
+        },
+        {
+          "i": 144,
+          "text": "weird",
+          "onset_s": 43.18,
+          "end_s": 43.42
+        },
+        {
+          "i": 145,
+          "text": "moments",
+          "onset_s": 43.42,
+          "end_s": 43.82
+        },
+        {
+          "i": 146,
+          "text": "or",
+          "onset_s": 43.82,
+          "end_s": 44.12
+        },
+        {
+          "i": 147,
+          "text": "fails.",
+          "onset_s": 44.12,
+          "end_s": 44.36
+        }
+      ],
+      "file_sha256": "67242cb01fe131fa1633830e75940dc9926424c8a4aa9707e61fc87de6512f6e"
+    },
+    "b": {
+      "name": "faster-whisper:base.en",
+      "words": [
+        {
+          "i": 0,
+          "text": "Proactive",
+          "onset_s": 0.92,
+          "end_s": 1.44
+        },
+        {
+          "i": 1,
+          "text": "AI",
+          "onset_s": 1.44,
+          "end_s": 1.96
+        },
+        {
+          "i": 2,
+          "text": "is",
+          "onset_s": 1.96,
+          "end_s": 2.62
+        },
+        {
+          "i": 3,
+          "text": "coming.",
+          "onset_s": 2.62,
+          "end_s": 3.02
+        },
+        {
+          "i": 4,
+          "text": "AI",
+          "onset_s": 3.24,
+          "end_s": 3.32
+        },
+        {
+          "i": 5,
+          "text": "that",
+          "onset_s": 3.32,
+          "end_s": 3.62
+        },
+        {
+          "i": 6,
+          "text": "does",
+          "onset_s": 3.62,
+          "end_s": 3.96
+        },
+        {
+          "i": 7,
+          "text": "things",
+          "onset_s": 3.96,
+          "end_s": 4.22
+        },
+        {
+          "i": 8,
+          "text": "before",
+          "onset_s": 4.22,
+          "end_s": 4.52
+        },
+        {
+          "i": 9,
+          "text": "you",
+          "onset_s": 4.52,
+          "end_s": 4.72
+        },
+        {
+          "i": 10,
+          "text": "ask",
+          "onset_s": 4.72,
+          "end_s": 4.94
+        },
+        {
+          "i": 11,
+          "text": "offers",
+          "onset_s": 4.94,
+          "end_s": 5.38
+        },
+        {
+          "i": 12,
+          "text": "to",
+          "onset_s": 5.38,
+          "end_s": 5.62
+        },
+        {
+          "i": 13,
+          "text": "do",
+          "onset_s": 5.62,
+          "end_s": 5.76
+        },
+        {
+          "i": 14,
+          "text": "things.",
+          "onset_s": 5.76,
+          "end_s": 6.14
+        },
+        {
+          "i": 15,
+          "text": "Awesome,",
+          "onset_s": 6.56,
+          "end_s": 6.84
+        },
+        {
+          "i": 16,
+          "text": "really",
+          "onset_s": 7.56,
+          "end_s": 7.56
+        },
+        {
+          "i": 17,
+          "text": "cool",
+          "onset_s": 7.56,
+          "end_s": 7.96
+        },
+        {
+          "i": 18,
+          "text": "features",
+          "onset_s": 7.96,
+          "end_s": 8.36
+        },
+        {
+          "i": 19,
+          "text": "and",
+          "onset_s": 8.36,
+          "end_s": 9.0
+        },
+        {
+          "i": 20,
+          "text": "really",
+          "onset_s": 9.0,
+          "end_s": 9.58
+        },
+        {
+          "i": 21,
+          "text": "helpful",
+          "onset_s": 9.58,
+          "end_s": 9.96
+        },
+        {
+          "i": 22,
+          "text": "but",
+          "onset_s": 9.96,
+          "end_s": 10.78
+        },
+        {
+          "i": 23,
+          "text": "a",
+          "onset_s": 10.78,
+          "end_s": 10.86
+        },
+        {
+          "i": 24,
+          "text": "bit",
+          "onset_s": 10.86,
+          "end_s": 11.0
+        },
+        {
+          "i": 25,
+          "text": "dangerous",
+          "onset_s": 11.0,
+          "end_s": 11.4
+        },
+        {
+          "i": 26,
+          "text": "because",
+          "onset_s": 11.4,
+          "end_s": 11.6
+        },
+        {
+          "i": 27,
+          "text": "once",
+          "onset_s": 11.6,
+          "end_s": 11.76
+        },
+        {
+          "i": 28,
+          "text": "they're",
+          "onset_s": 11.76,
+          "end_s": 12.02
+        },
+        {
+          "i": 29,
+          "text": "connected,",
+          "onset_s": 12.02,
+          "end_s": 12.6
+        },
+        {
+          "i": 30,
+          "text": "mues",
+          "onset_s": 12.98,
+          "end_s": 13.26
+        },
+        {
+          "i": 31,
+          "text": "into",
+          "onset_s": 13.26,
+          "end_s": 13.44
+        },
+        {
+          "i": 32,
+          "text": "your",
+          "onset_s": 13.44,
+          "end_s": 13.7
+        },
+        {
+          "i": 33,
+          "text": "WhatsApp,",
+          "onset_s": 13.7,
+          "end_s": 14.02
+        },
+        {
+          "i": 34,
+          "text": "Amazon",
+          "onset_s": 14.38,
+          "end_s": 14.42
+        },
+        {
+          "i": 35,
+          "text": "for",
+          "onset_s": 14.42,
+          "end_s": 14.7
+        },
+        {
+          "i": 36,
+          "text": "your",
+          "onset_s": 14.7,
+          "end_s": 14.8
+        },
+        {
+          "i": 37,
+          "text": "groceries,",
+          "onset_s": 14.8,
+          "end_s": 15.14
+        },
+        {
+          "i": 38,
+          "text": "Google",
+          "onset_s": 16.2,
+          "end_s": 16.24
+        },
+        {
+          "i": 39,
+          "text": "for",
+          "onset_s": 16.24,
+          "end_s": 16.52
+        },
+        {
+          "i": 40,
+          "text": "your",
+          "onset_s": 16.52,
+          "end_s": 16.62
+        },
+        {
+          "i": 41,
+          "text": "emails,",
+          "onset_s": 16.62,
+          "end_s": 16.86
+        },
+        {
+          "i": 42,
+          "text": "it",
+          "onset_s": 17.46,
+          "end_s": 17.74
+        },
+        {
+          "i": 43,
+          "text": "can",
+          "onset_s": 17.74,
+          "end_s": 18.04
+        },
+        {
+          "i": 44,
+          "text": "get",
+          "onset_s": 18.04,
+          "end_s": 18.54
+        },
+        {
+          "i": 45,
+          "text": "a",
+          "onset_s": 18.54,
+          "end_s": 18.62
+        },
+        {
+          "i": 46,
+          "text": "bit",
+          "onset_s": 18.62,
+          "end_s": 18.76
+        },
+        {
+          "i": 47,
+          "text": "dangerous.",
+          "onset_s": 18.76,
+          "end_s": 19.12
+        },
+        {
+          "i": 48,
+          "text": "So",
+          "onset_s": 19.48,
+          "end_s": 19.48
+        },
+        {
+          "i": 49,
+          "text": "my",
+          "onset_s": 19.48,
+          "end_s": 19.9
+        },
+        {
+          "i": 50,
+          "text": "first",
+          "onset_s": 19.9,
+          "end_s": 20.12
+        },
+        {
+          "i": 51,
+          "text": "step",
+          "onset_s": 20.12,
+          "end_s": 20.4
+        },
+        {
+          "i": 52,
+          "text": "is",
+          "onset_s": 20.4,
+          "end_s": 20.6
+        },
+        {
+          "i": 53,
+          "text": "the",
+          "onset_s": 20.6,
+          "end_s": 20.74
+        },
+        {
+          "i": 54,
+          "text": "no",
+          "onset_s": 20.74,
+          "end_s": 20.98
+        },
+        {
+          "i": 55,
+          "text": "spending,",
+          "onset_s": 20.98,
+          "end_s": 21.42
+        },
+        {
+          "i": 56,
+          "text": "no",
+          "onset_s": 21.64,
+          "end_s": 21.8
+        },
+        {
+          "i": 57,
+          "text": "sending",
+          "onset_s": 21.8,
+          "end_s": 22.08
+        },
+        {
+          "i": 58,
+          "text": "rule.",
+          "onset_s": 22.08,
+          "end_s": 22.34
+        },
+        {
+          "i": 59,
+          "text": "It",
+          "onset_s": 22.46,
+          "end_s": 22.46
+        },
+        {
+          "i": 60,
+          "text": "doesn't",
+          "onset_s": 22.46,
+          "end_s": 22.72
+        },
+        {
+          "i": 61,
+          "text": "spend",
+          "onset_s": 22.72,
+          "end_s": 22.96
+        },
+        {
+          "i": 62,
+          "text": "my",
+          "onset_s": 22.96,
+          "end_s": 23.18
+        },
+        {
+          "i": 63,
+          "text": "money,",
+          "onset_s": 23.18,
+          "end_s": 23.48
+        },
+        {
+          "i": 64,
+          "text": "doesn't",
+          "onset_s": 23.82,
+          "end_s": 24.18
+        },
+        {
+          "i": 65,
+          "text": "send",
+          "onset_s": 24.18,
+          "end_s": 24.42
+        },
+        {
+          "i": 66,
+          "text": "anything",
+          "onset_s": 24.42,
+          "end_s": 24.7
+        },
+        {
+          "i": 67,
+          "text": "out",
+          "onset_s": 24.7,
+          "end_s": 24.98
+        },
+        {
+          "i": 68,
+          "text": "for",
+          "onset_s": 24.98,
+          "end_s": 25.12
+        },
+        {
+          "i": 69,
+          "text": "me",
+          "onset_s": 25.12,
+          "end_s": 25.24
+        },
+        {
+          "i": 70,
+          "text": "unless",
+          "onset_s": 25.24,
+          "end_s": 25.38
+        },
+        {
+          "i": 71,
+          "text": "I",
+          "onset_s": 25.38,
+          "end_s": 25.62
+        },
+        {
+          "i": 72,
+          "text": "say",
+          "onset_s": 25.62,
+          "end_s": 25.82
+        },
+        {
+          "i": 73,
+          "text": "so.",
+          "onset_s": 25.82,
+          "end_s": 26.08
+        },
+        {
+          "i": 74,
+          "text": "And",
+          "onset_s": 26.34,
+          "end_s": 26.42
+        },
+        {
+          "i": 75,
+          "text": "the",
+          "onset_s": 26.42,
+          "end_s": 26.5
+        },
+        {
+          "i": 76,
+          "text": "fun",
+          "onset_s": 26.5,
+          "end_s": 26.64
+        },
+        {
+          "i": 77,
+          "text": "part",
+          "onset_s": 26.64,
+          "end_s": 26.84
+        },
+        {
+          "i": 78,
+          "text": "is",
+          "onset_s": 26.84,
+          "end_s": 27.08
+        },
+        {
+          "i": 79,
+          "text": "I",
+          "onset_s": 27.08,
+          "end_s": 27.16
+        },
+        {
+          "i": 80,
+          "text": "didn't",
+          "onset_s": 27.16,
+          "end_s": 27.36
+        },
+        {
+          "i": 81,
+          "text": "even",
+          "onset_s": 27.36,
+          "end_s": 27.56
+        },
+        {
+          "i": 82,
+          "text": "write",
+          "onset_s": 27.56,
+          "end_s": 27.98
+        },
+        {
+          "i": 83,
+          "text": "this",
+          "onset_s": 27.98,
+          "end_s": 28.22
+        },
+        {
+          "i": 84,
+          "text": "myself.",
+          "onset_s": 28.22,
+          "end_s": 28.6
+        },
+        {
+          "i": 85,
+          "text": "I",
+          "onset_s": 29.06,
+          "end_s": 29.14
+        },
+        {
+          "i": 86,
+          "text": "just",
+          "onset_s": 29.14,
+          "end_s": 29.26
+        },
+        {
+          "i": 87,
+          "text": "put",
+          "onset_s": 29.26,
+          "end_s": 29.44
+        },
+        {
+          "i": 88,
+          "text": "one",
+          "onset_s": 29.44,
+          "end_s": 29.66
+        },
+        {
+          "i": 89,
+          "text": "prompt",
+          "onset_s": 29.66,
+          "end_s": 29.86
+        },
+        {
+          "i": 90,
+          "text": "into",
+          "onset_s": 29.86,
+          "end_s": 30.1
+        },
+        {
+          "i": 91,
+          "text": "my",
+          "onset_s": 30.1,
+          "end_s": 30.28
+        },
+        {
+          "i": 92,
+          "text": "AI",
+          "onset_s": 30.28,
+          "end_s": 30.5
+        },
+        {
+          "i": 93,
+          "text": "tool",
+          "onset_s": 30.5,
+          "end_s": 30.76
+        },
+        {
+          "i": 94,
+          "text": "and",
+          "onset_s": 30.76,
+          "end_s": 30.9
+        },
+        {
+          "i": 95,
+          "text": "it",
+          "onset_s": 30.9,
+          "end_s": 30.98
+        },
+        {
+          "i": 96,
+          "text": "started",
+          "onset_s": 30.98,
+          "end_s": 31.12
+        },
+        {
+          "i": 97,
+          "text": "asking",
+          "onset_s": 31.12,
+          "end_s": 31.46
+        },
+        {
+          "i": 98,
+          "text": "me",
+          "onset_s": 31.46,
+          "end_s": 31.6
+        },
+        {
+          "i": 99,
+          "text": "questions",
+          "onset_s": 31.6,
+          "end_s": 31.9
+        },
+        {
+          "i": 100,
+          "text": "back.",
+          "onset_s": 31.9,
+          "end_s": 32.22
+        },
+        {
+          "i": 101,
+          "text": "Then",
+          "onset_s": 32.62,
+          "end_s": 32.76
+        },
+        {
+          "i": 102,
+          "text": "it",
+          "onset_s": 32.76,
+          "end_s": 32.96
+        },
+        {
+          "i": 103,
+          "text": "locks",
+          "onset_s": 32.96,
+          "end_s": 33.18
+        },
+        {
+          "i": 104,
+          "text": "itself",
+          "onset_s": 33.18,
+          "end_s": 33.56
+        },
+        {
+          "i": 105,
+          "text": "down",
+          "onset_s": 33.56,
+          "end_s": 33.82
+        },
+        {
+          "i": 106,
+          "text": "or",
+          "onset_s": 33.82,
+          "end_s": 33.96
+        },
+        {
+          "i": 107,
+          "text": "tells",
+          "onset_s": 33.96,
+          "end_s": 34.12
+        },
+        {
+          "i": 108,
+          "text": "you",
+          "onset_s": 34.12,
+          "end_s": 34.36
+        },
+        {
+          "i": 109,
+          "text": "how",
+          "onset_s": 34.36,
+          "end_s": 34.52
+        },
+        {
+          "i": 110,
+          "text": "to",
+          "onset_s": 34.52,
+          "end_s": 34.6
+        },
+        {
+          "i": 111,
+          "text": "lock",
+          "onset_s": 34.6,
+          "end_s": 34.76
+        },
+        {
+          "i": 112,
+          "text": "it",
+          "onset_s": 34.76,
+          "end_s": 34.86
+        },
+        {
+          "i": 113,
+          "text": "down.",
+          "onset_s": 34.86,
+          "end_s": 35.02
+        },
+        {
+          "i": 114,
+          "text": "Prompts",
+          "onset_s": 35.42,
+          "end_s": 35.84
+        },
+        {
+          "i": 115,
+          "text": "in",
+          "onset_s": 35.84,
+          "end_s": 35.9
+        },
+        {
+          "i": 116,
+          "text": "the",
+          "onset_s": 35.9,
+          "end_s": 36.0
+        },
+        {
+          "i": 117,
+          "text": "comments,",
+          "onset_s": 36.0,
+          "end_s": 36.26
+        },
+        {
+          "i": 118,
+          "text": "make",
+          "onset_s": 36.76,
+          "end_s": 37.12
+        },
+        {
+          "i": 119,
+          "text": "sure",
+          "onset_s": 37.12,
+          "end_s": 37.32
+        },
+        {
+          "i": 120,
+          "text": "you",
+          "onset_s": 37.32,
+          "end_s": 37.48
+        },
+        {
+          "i": 121,
+          "text": "do",
+          "onset_s": 37.48,
+          "end_s": 37.6
+        },
+        {
+          "i": 122,
+          "text": "this,",
+          "onset_s": 37.6,
+          "end_s": 37.78
+        },
+        {
+          "i": 123,
+          "text": "no",
+          "onset_s": 37.98,
+          "end_s": 37.98
+        },
+        {
+          "i": 124,
+          "text": "spending,",
+          "onset_s": 37.98,
+          "end_s": 38.26
+        },
+        {
+          "i": 125,
+          "text": "no",
+          "onset_s": 38.46,
+          "end_s": 38.54
+        },
+        {
+          "i": 126,
+          "text": "sending",
+          "onset_s": 38.54,
+          "end_s": 38.8
+        },
+        {
+          "i": 127,
+          "text": "one",
+          "onset_s": 38.8,
+          "end_s": 39.02
+        },
+        {
+          "i": 128,
+          "text": "easy",
+          "onset_s": 39.02,
+          "end_s": 39.26
+        },
+        {
+          "i": 129,
+          "text": "step",
+          "onset_s": 39.26,
+          "end_s": 39.68
+        },
+        {
+          "i": 130,
+          "text": "so",
+          "onset_s": 39.68,
+          "end_s": 39.84
+        },
+        {
+          "i": 131,
+          "text": "you",
+          "onset_s": 39.84,
+          "end_s": 39.96
+        },
+        {
+          "i": 132,
+          "text": "can",
+          "onset_s": 39.96,
+          "end_s": 40.06
+        },
+        {
+          "i": 133,
+          "text": "save",
+          "onset_s": 40.06,
+          "end_s": 40.26
+        },
+        {
+          "i": 134,
+          "text": "yourself",
+          "onset_s": 40.26,
+          "end_s": 40.54
+        },
+        {
+          "i": 135,
+          "text": "and",
+          "onset_s": 40.54,
+          "end_s": 40.88
+        },
+        {
+          "i": 136,
+          "text": "enjoy",
+          "onset_s": 40.88,
+          "end_s": 41.1
+        },
+        {
+          "i": 137,
+          "text": "these",
+          "onset_s": 41.1,
+          "end_s": 41.4
+        },
+        {
+          "i": 138,
+          "text": "new",
+          "onset_s": 41.4,
+          "end_s": 41.54
+        },
+        {
+          "i": 139,
+          "text": "technologies",
+          "onset_s": 41.54,
+          "end_s": 41.92
+        },
+        {
+          "i": 140,
+          "text": "without",
+          "onset_s": 41.92,
+          "end_s": 42.68
+        },
+        {
+          "i": 141,
+          "text": "any",
+          "onset_s": 42.68,
+          "end_s": 42.92
+        },
+        {
+          "i": 142,
+          "text": "of",
+          "onset_s": 42.92,
+          "end_s": 43.0
+        },
+        {
+          "i": 143,
+          "text": "those",
+          "onset_s": 43.0,
+          "end_s": 43.12
+        },
+        {
+          "i": 144,
+          "text": "weird",
+          "onset_s": 43.12,
+          "end_s": 43.38
+        },
+        {
+          "i": 145,
+          "text": "moments",
+          "onset_s": 43.38,
+          "end_s": 43.68
+        },
+        {
+          "i": 146,
+          "text": "or",
+          "onset_s": 43.68,
+          "end_s": 44.04
+        },
+        {
+          "i": 147,
+          "text": "fails.",
+          "onset_s": 44.04,
+          "end_s": 44.28
+        }
+      ],
+      "file_sha256": "e97a5ebe50eb9351ce1fde8dea14bd1eaf78b06dc76047520603d1a1f147dd4b"
+    }
+  },
+  "ingested_on": "2026-11-03"
+}
