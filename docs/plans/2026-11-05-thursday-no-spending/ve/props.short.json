@@ -1337,7 +1337,7 @@
     {
       "id": "hook-4",
       "obj": "buddy",
-      "verb": "bounce",
+      "verb": "wave",
       "toState": "proud",
       "atFrame": 128
     },
@@ -1526,7 +1526,7 @@
     {
       "id": "close-3",
       "obj": "buddy_rule",
-      "verb": "bounce",
+      "verb": "wave",
       "toState": "sulk",
       "atFrame": 1201
     }
