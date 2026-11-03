@@ -16,6 +16,26 @@ const props = (frame: number, aspect: DeviceProps['aspect'] = '9:16'): DevicePro
   box: { left: 0, top: 0, width: aspect === '9:16' ? 1080 : 1920, height: aspect === '9:16' ? 1920 : 1080 } })
 const render = (p: DeviceProps) => renderToStaticMarkup(React.createElement(Device, p))
 describe('typing_bubble', () => {
+  it('lands opening notifications with full text, while later type cues still reveal', () => {
+    const p = props(0)
+    const text = 'Done! Booked the team offsite in Ibiza'
+    p.object = { ...object, params: { kind: 'notification', rows: [{ text }] } }
+    p.events = events.map(e => e.verb === 'type' ? { ...e, atFrame: 0 } : e)
+    expect(bubbleState(p)).toMatchObject({ enter: 1, rows: [{ text, visible: true, dots: false }] })
+    expect(render(p)).toContain(text)
+    expect(render(p)).toContain('opacity:1')
+    expect(render(p)).toContain('translateY(0px) scale(1)')
+    expect(render(p)).not.toContain('data-typing-dots')
+    p.object = { ...p.object, params: { kind: 'chat', rows: [{ text }] } }
+    expect(render(p)).not.toContain('data-typing-dots')
+    expect(render(p)).toContain(text)
+    p.events = p.events.map(e => e.verb === 'type' ? { ...e, atFrame: 30 } : e)
+    expect(bubbleState({ ...p, frame: 30 })!.rows[0]).toMatchObject({ text: '', dots: true })
+    const partial = bubbleState({ ...p, frame: 40 })!.rows[0]!.text
+    expect(partial.length).toBeGreaterThan(0)
+    expect(partial.length).toBeLessThan(text.length)
+  })
+
   it('reveals no row before type, leads with dots, then types linearly', () => {
     expect(render(props(19))).not.toContain('Mira Vale')
     expect(state(19).rows[0]!.text).toBe('')
@@ -116,14 +136,15 @@ describe('typing_bubble', () => {
   })
   it('uses 36px corners, a soft token shadow and a 0.92 entrance on every kind', () => {
     for (const kind of ['chat', 'notification', 'order', 'email', 'choice']) {
-      const p = props(0)
+      const p = props(10)
+      p.events = events.map(e => e.verb === 'enter' ? { ...e, atFrame: 10 } : e)
       p.object = { ...object, params: { ...object.params, kind, options: ['Allow', 'Ask'] } }
       const html = render(p)
       expect(html).toContain('border-radius:36px')
       expect(html).toContain('scale(0.92)')
       expect(html).toContain('box-shadow:0 28px 64px color-mix')
       expect(html).not.toMatch(/#[0-9a-f]{3,8}\b/i)
-      expect(render({ ...p, frame: 12 })).toContain('scale(1)')
+      expect(render({ ...p, frame: 22 })).toContain('scale(1)')
     }
   })
   it('moves all three typing dots deterministically using drift and removes them after the lead', () => {

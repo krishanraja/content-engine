@@ -3503,6 +3503,7 @@ Run a Vercel serverless handler locally against the real environment.
 - `function stateAt(events: readonly EngineEvent[], obj: string, frame: number): DeviceState`
 - `function progress(sinceFrames: number, durationFrames: number, easing: (t: number) => number = ENTER): number`
 - `function drift(frame: number, fromFrame: number, toFrame: number, pct: number = MOTION.driftPct): number`
+- `function typingProgress(frame: number, cue: EngineEvent, durationFrames: number, leadFrames: number): number`
 
 ### `apps/renderer/src/engine/devices/cursor_buddy/index.tsx`
 

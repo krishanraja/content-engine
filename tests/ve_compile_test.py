@@ -221,6 +221,19 @@ class CompileTest(unittest.TestCase):
         for event in props['events']:
             if event['id'].startswith(first['id'] + '-') and event['verb'] == 'enter' and event['obj'] in {e['obj'] for e in entrances}:
                 self.assertEqual(event['atFrame'], 0)
+        # Text typed on the first word is typed on frame 0 too (Thursday 5 Nov: the card landed whole, empty).
+        typed = json.loads(json.dumps(spec))
+        hook = typed['cuts']['proof-tall']['beats'][0]
+        typed['objects'].append({'obj': 'note', 'device': 'typing_bubble', 'meaning': 'the opening notification',
+                                 'persist': {'from_beat': hook['id'], 'to_beat': hook['id']},
+                                 'params': {'kind': 'notification', 'rows': [{'text': 'Done! Booked it'}]}})
+        hook['uses'] = list(hook.get('uses', [])) + ['note']
+        hook['events'] += [{'at_w': hook['span']['from_w'], 'obj': 'note', 'verb': verb, 'to_state': state, 'silent': True}
+                           for verb, state in (('enter', 'visible'), ('type', '0'))]
+        late = [dict(word, onset_s=word['onset_s'] + 1.0, end_s=word['end_s'] + 1.0) for word in words]
+        props = compile_cut(typed, 'proof-tall', late, FIXTURE)
+        self.assertEqual(sorted((e['verb'], e['atFrame']) for e in props['events'] if e['obj'] == 'note'),
+                         [('enter', 0), ('type', 0)])
 
     def test_the_hook_is_the_intro(self):
         # Under test (Krish, 29 Oct 2026, "Let's go with number one for now."): the first beat, the hook, owns
