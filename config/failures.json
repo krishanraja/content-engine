@@ -1601,6 +1601,41 @@
           "test": "python3 scripts/post-pack/board_feed.py self-test"
         }
       ]
+    },
+    {
+      "id": "F24-cut-below-house-intro-bed-outro",
+      "on": "2026-11-03",
+      "krish": "This is not acceptable per the standards of what this engine produces. We fucking have standards for intro, background audio and outro",
+      "what": "Thursday 5 Nov's ve preview went to Krish with no outro (the ending band was only compiled for a cut with a dated call), a flat continuous music bed instead of the approved episode bed (no intro or outro lift), and an opening frame of bare cream waiting for the first word, with the horizontal logo unreadable on cream.",
+      "symptom": "Krish had to restate three standards the engine already holds in config/music-library.json levels, the face-with-proof intro_outro rule and the rejection floor (floor.py --format intro_outro / short_video).",
+      "cause": "The session never ran floor.py --format short_video or intro_outro before building the spec, as CLAUDE.md requires; compile tied the ending band to spec.call; lint let a short finished cut use a continuous bed; nothing put the hook on frame 0.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "scripts/velib/compile.py",
+          "contains": "if not cut.get('excerpt', False):\n        props['ending']",
+          "how": "every whole cut closes on the ending band, call or not",
+          "test": "python3 -m unittest tests/ve_compile_test.py"
+        },
+        {
+          "file": "scripts/velib/lint.py",
+          "contains": "sound.whole_cut_bed",
+          "how": "lint refuses a finished cut whose bed is not the approved episode bed (intro and outro lifts)",
+          "test": "python3 scripts/ve.py lint <spec>"
+        },
+        {
+          "file": "scripts/velib/compile.py",
+          "contains": "if index == 0 and event['verb'] == 'enter' and event['at_w'] == beat['span']['from_w']:",
+          "how": "an entrance on the first word lands on frame 0, so the hook is the first frame",
+          "test": "python3 -m unittest tests/ve_compile_test.py"
+        },
+        {
+          "file": "apps/renderer/src/engine/BrandFrame.tsx",
+          "contains": "{beat.layout === 'STAGE' ? <StageHeader props={props} /> : <>",
+          "how": "SPLIT beats keep the legible mark tile and series pill",
+          "test": "npx vitest run apps/renderer/src/engine/layouts/split.test.ts"
+        }
+      ]
     }
   ]
 }
