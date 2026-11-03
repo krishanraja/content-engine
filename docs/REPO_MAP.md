@@ -3893,6 +3893,12 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 ### `apps/renderer/src/engine/mocks/face-with-proof.tsx`
 
 - `interface FWPMockProps`
+- `const FWP_SPLIT_SEAM_Y`
+- `const FWP_STAGE_SCALE`
+- `const FWP_SPLIT_CAPTION_ZONE`
+- `const FWP_POSTER_POSITIONS`
+- `const FWP_TARGETS`
+- `const FWP_SCALED_TARGETS`
 - `const FWP_MOCKS`
 
 ### `apps/renderer/src/engine/props.ts`
